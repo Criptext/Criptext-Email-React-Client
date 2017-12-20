@@ -1,8 +1,8 @@
-import * as ActionTypes from './ActionTypes';
+import * as Types from './types';
 
 export const addThreads = threads => {
   return {
-    type: ActionTypes.Thread.ADD_BATCH,
+    type: Types.Thread.ADD_BATCH,
     threads: threads
   };
 };

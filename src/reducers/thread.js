@@ -1,8 +1,8 @@
-import * as types from '../actions/ActionTypes';
+import * as Types from '../actions/types';
 
 export default (state = {}, action) => {
   switch (action.type) {
-    case types.Thread.ADD_BATCH:
+    case Types.Thread.ADD_BATCH:
       return {
         ...state,
         threads: { ...action.threads }
