@@ -18,7 +18,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "criptext-js-tools lint"
   },
-  "proxy": "http://localhost:9080"
+  "proxy": "http://localhost:9080",
+  "devDependencies": {
+    "criptext-js-tools": "^0.3.0"
+  }
 }
