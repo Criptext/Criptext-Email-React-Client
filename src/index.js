@@ -5,16 +5,17 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import registerServiceWorker from './registerServiceWorker';
 import rootReducer from './reducers/index';
-import {  BrowserRouter as Router, Route } from 'react-router-dom' 
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-const store = createStore(rootReducer)
+const store = createStore(rootReducer);
 
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <Route path='/' component={App} />
+      <Route path="/" component={App} />
     </Router>
-  </Provider>, 
-document.getElementById('root'));
+  </Provider>,
+  document.getElementById('root')
+);
 
 registerServiceWorker();

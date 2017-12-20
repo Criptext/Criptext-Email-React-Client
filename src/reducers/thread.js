@@ -1,14 +1,13 @@
-import * as types from '../actions/ActionTypes'
+import * as types from '../actions/ActionTypes';
 
 export default (state = {}, action) => {
-  switch(action.type){
+  switch (action.type) {
     case types.Thread.ADD_BATCH:
       return {
         ...state,
-        threads: {...action.threads}
-      }
-    default: 
+        threads: { ...action.threads }
+      };
+    default:
       return state;
   }
-}
-
+};
