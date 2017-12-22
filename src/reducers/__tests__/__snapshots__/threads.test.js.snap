@@ -1,24 +1,42 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actions should create an 1`] = `
+exports[`thread actions should add threads to state 1`] = `
 Object {
-  "threads": Object {
-    "13": Object {
-      "emails": Array [
-        11,
-        21,
-      ],
-      "id": 13,
-      "subject": "test subject 13",
-    },
-    "23": Object {
-      "emails": Array [
-        10,
-        43,
-      ],
-      "id": 23,
-      "subject": "test subject 23",
-    },
+  "13": Object {
+    "date": 1234567891,
+    "emails": Array [
+      11,
+      21,
+    ],
+    "id": 13,
+    "preview": "preview 13",
+    "subject": "test subject 13",
+  },
+  "23": Object {
+    "date": 1234567890,
+    "emails": Array [
+      10,
+      43,
+    ],
+    "id": 23,
+    "preview": "preview 23",
+    "subject": "test subject 23",
+  },
+}
+`;
+
+exports[`thread actions should set thread as read 1`] = `
+Object {
+  "23": Object {
+    "date": 1234567890,
+    "emails": Array [
+      10,
+      43,
+    ],
+    "id": 23,
+    "preview": "preview 23",
+    "subject": "test subject 23",
+    "unread": false,
   },
 }
 `;

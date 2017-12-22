@@ -18,4 +18,8 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+window.getState = () => {
+  return store.getState();
+};
+
 registerServiceWorker();

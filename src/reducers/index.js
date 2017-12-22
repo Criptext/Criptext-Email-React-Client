@@ -1,6 +1,10 @@
 import { combineReducers } from 'redux';
-import thread from './thread'
+import threads from './thread';
+import users from './user';
+import activities from './activity';
 
 export default combineReducers({
-  thread
+  threads,
+  users,
+  activities
 });
