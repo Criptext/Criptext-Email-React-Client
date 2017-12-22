@@ -12,16 +12,9 @@ export default (state = {}, action) => {
         }
       };
     case Types.Thread.ADD_BATCH:
-      let newThreads = action.threads;
-      if (Array.isArray(newThreads)) {
-        newThreads = {};
-        action.threads.forEach(thread => {
-          newThreads[thread.id.toString()] = thread;
-        });
-      }
       return {
         ...state,
-        ...newThreads
+        ...action.threads
       };
     default:
       return state;

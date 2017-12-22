@@ -1,9 +1,16 @@
 import * as Types from './types';
 
 export const addThreads = threads => {
+  let newThreads = threads;
+  if (Array.isArray(newThreads)) {
+    newThreads = {};
+    threads.forEach(thread => {
+      newThreads[thread.id.toString()] = thread;
+    });
+  }
   return {
     type: Types.Thread.ADD_BATCH,
-    threads: threads
+    threads: newThreads
   };
 };
 
