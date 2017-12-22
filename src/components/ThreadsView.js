@@ -4,15 +4,16 @@ import ThreadView from './ThreadView';
 
 class ThreadsView extends Component {
   componentDidMount() {
-    const req = new XMLHttpRequest();
-    req.open('GET', '/threads.json', true);
-    req.onload = ev => {
-      if (req.status === 200) {
-        this.props.onAddThreads(JSON.parse(req.responseText).threads);
-        return;
+    fetch('/threads.json').then( response => {
+      if (response.status === 200) {
+        return response.json()
       }
-    };
-    req.send();
+      return Promise.reject(response.status)
+    }).then( json => {
+      this.props.onAddThreads(json.threads);
+    }).catch( err => {
+      console.error(err);
+    })
   }
 
   render() {
