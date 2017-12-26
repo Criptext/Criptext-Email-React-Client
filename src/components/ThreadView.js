@@ -3,22 +3,25 @@ import './threads.css';
 import * as TimeUtils from '../utils/TimeUtils';
 import * as UserUtils from '../utils/UserUtils';
 
-const getThreadClass = (thread, selectedThread) => {
-  if(thread.id === selectedThread){
+const getThreadClass = (thread, threadPos, selectedThread) => {
+  if (threadPos === selectedThread) {
     return 'thread-selected';
-  }else if(thread.unread && thread.id !== selectedThread){
+  } else if (thread.unread && threadPos !== selectedThread) {
     return 'thread-unread';
   }
   return 'thread-read';
-}
+};
 
 const ThreadView = props => {
-  const thread = props.thread;
+  const thread = props.thread.toObject();
   return (
     <div
-      className={'thread-container ' + getThreadClass(thread, props.selectedThread) }
+      className={
+        'thread-container ' +
+        getThreadClass(thread, props.myIndex, props.selectedThread)
+      }
       onClick={() => {
-        props.onSelectThread(thread.id);
+        props.onSelectThread(props.myIndex);
       }}
     >
       <div>
