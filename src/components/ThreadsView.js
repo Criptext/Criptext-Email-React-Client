@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './threads.css';
-import ThreadView from './ThreadView';
+import ThreadItem from './ThreadItem';
 
 class ThreadsView extends Component {
   componentDidMount() {
@@ -12,11 +12,10 @@ class ThreadsView extends Component {
       <div className="threads-container">
         {this.props.threads.map((thread, index) => {
           return (
-            <ThreadView
-              key={thread.get('id')}
+            <ThreadItem
+              key={index}
               myIndex={index}
               thread={thread}
-              onSelectThread={this.props.onSelectThread}
               selectedThread={this.props.selectedThread}
             />
           );

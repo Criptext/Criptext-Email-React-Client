@@ -13,9 +13,6 @@ const mapDispatchToProps = dispatch => {
   return {
     onLoadThreads: () => {
       dispatch(actions.loadThreads(dispatch));
-    },
-    onSelectThread: threadPosition => {
-      dispatch(actions.selectThread(threadPosition));
     }
   };
 };

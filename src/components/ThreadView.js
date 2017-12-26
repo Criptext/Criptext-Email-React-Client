@@ -1,32 +1,18 @@
 import React from 'react';
 import './threads.css';
-import * as TimeUtils from '../utils/TimeUtils';
-import * as UserUtils from '../utils/UserUtils';
-
-const getThreadClass = (thread, threadPos, selectedThread) => {
-  if (threadPos === selectedThread) {
-    return 'thread-selected';
-  } else if (thread.unread && threadPos !== selectedThread) {
-    return 'thread-unread';
-  }
-  return 'thread-read';
-};
 
 const ThreadView = props => {
-  const thread = props.thread.toObject();
+  const thread = props.thread;
   return (
     <div
-      className={
-        'thread-container ' +
-        getThreadClass(thread, props.myIndex, props.selectedThread)
-      }
+      className={'thread-container ' + props.class}
       onClick={() => {
         props.onSelectThread(props.myIndex);
       }}
     >
       <div>
-        <div>{UserUtils.parseContact(thread.sender).name}</div>
-        <div>{TimeUtils.defineTimeByToday(thread.lastEmailDate)}</div>
+        <div>{thread.header}</div>
+        <div>{thread.date}</div>
       </div>
       <div>
         <div>{thread.subject}</div>
