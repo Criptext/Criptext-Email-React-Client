@@ -8,10 +8,10 @@ export default (state = {}, action) => {
         ...action.users
       };
     case Types.User.ADD:
-      const userId = action.user.id.toString();
+      const email = action.user.email.toString();
       return {
         ...state,
-        [userId]: action.user
+        [email]: action.user
       };
     default:
       return state;
