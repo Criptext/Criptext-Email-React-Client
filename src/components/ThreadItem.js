@@ -1,40 +1,63 @@
-import { connect } from 'react-redux';
-import * as actions from '../actions/index';
-import ThreadView from './ThreadView';
-import * as TimeUtils from '../utils/TimeUtils';
-import * as UserUtils from '../utils/UserUtils';
+import React from 'react';
+import './threads.css';
 
-const getThreadClass = (thread, threadPos, selectedThread) => {
-  if (threadPos === selectedThread) {
-    return 'thread-selected';
-  } else if (thread.unread && threadPos !== selectedThread) {
-    return 'thread-unread';
+const ThreadItem = props => {
+  const thread = props.thread;
+  return (
+    <div
+      className={'thread-container ' + props.class}
+      onClick={() => {
+        props.onSelectThread(props.myIndex);
+      }}
+    >
+      <div>
+        <div>{thread.header}</div>
+        <div>{thread.date}</div>
+      </div>
+      <div>
+        <div>{thread.subject}</div>
+        <div>{thread.emails ? thread.emails.length : null}</div>
+      </div>
+      <div>
+        <div>{thread.preview}</div>
+        <div className='thread-icons'>
+          {willDisplayOpenIcon(thread)}
+          {willDisplayAttachIcon(thread)}
+          {willDisplayOpenAttachIcon(thread)}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const willDisplayOpenIcon = thread => {
+  if(thread.timesOpened > 0){
+    return (<div>
+      <i className="material-icons">drafts</i>
+      {thread.timesOpened}
+    </div>)
   }
-  return 'thread-read';
-};
 
-const mapStateToProps = (state, myProps) => {
-  const selectedThread = myProps.selectedThread;
-  const thread = myProps.thread.toObject();
-  const myThread = {
-    ...thread,
-    header: UserUtils.parseContact(thread.sender).name,
-    date: TimeUtils.defineTimeByToday(thread.lastEmailDate)
+  return null
+}
+
+const willDisplayAttachIcon = thread => {
+  if(thread.totalAttachments > 0){
+    return (<div>
+      <i className="material-icons">attach_file</i>
+      {thread.totalAttachments}
+    </div>)
   }
-  return {
-    class: getThreadClass(thread, myProps.myIndex, selectedThread),
-    thread: myThread
-  };
-};
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onSelectThread: threadPosition => {
-      dispatch(actions.selectThread(threadPosition));
-    }
-  };
-};
+  return null
+}
 
-const ThreadItem = connect(mapStateToProps, mapDispatchToProps)(ThreadView);
+const willDisplayOpenAttachIcon = thread => {
+  if(thread.timesOpened > 0){
+    return <i className="material-icons">file_download</i>;
+  }
+
+  return null
+}
 
 export default ThreadItem;
