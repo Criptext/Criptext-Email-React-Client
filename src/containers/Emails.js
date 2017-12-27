@@ -4,7 +4,7 @@ import EmailsView from '../components/Emails'
 
 const emailsArray = (emailsMap, emailsId) => {
   return emailsId.map( emailId => {
-    return emailsMap.get(`${emailId}`) ? emailsMap.get(`${emailId}`).toObject() : {};    
+    return emailsMap.get(emailId.toString()) ? emailsMap.get(emailId.toString()) : Map({});    
   });
 }
 
