@@ -1,12 +1,7 @@
 import * as Types from './types';
 
-export const addThreads = threads => {
-  return {
-    type: Types.Thread.ADD_BATCH,
-    threads: threads
-  };
-};
-
+/* USER
+   ----------------------------- */
 export const addUsers = users => {
   return {
     type: Types.User.ADD_BATCH,
@@ -18,6 +13,15 @@ export const addUser = user => {
   return {
     type: Types.User.ADD,
     user: user
+  };
+};
+
+/* THREAD
+   ----------------------------- */
+export const addThreads = threads => {
+  return {
+    type: Types.Thread.ADD_BATCH,
+    threads: threads
   };
 };
 
@@ -45,3 +49,29 @@ export const loadThreads = () => {
       });
   };
 };
+/* EMAIL
+   ----------------------------- */
+export const addEmails = emails => {
+  return {
+    type: Types.Email.ADD_BATCH,
+    emails: emails
+  };
+};
+
+export const loadEmails = () => {
+  return dispatch => {
+    return fetch('/emails.json')
+      .then(response => {
+        if(response.status === 200){
+          return response.json();
+        }
+        return Promise.reject(response.status);
+      })
+      .then(json => {
+        dispatch(addEmails(json.emails));
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+}

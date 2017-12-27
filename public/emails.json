@@ -1,0 +1,22 @@
+{
+  "emails" : {
+    "1": { 
+      "id": 1,
+      "subject": "Test subject 1",
+      "preview": "Test content 1",
+      "content": "Test content 1"
+    },
+    "2": {
+      "id": 2,
+      "subject": "Test subject 2",
+      "preview": "Test content 2",
+      "content": "Test content 2"
+    },
+    "3": {
+      "id": 3,
+      "subject": "Test subject 3",
+      "preview": "Test content 3",
+      "content": "Test content 3"
+    }
+  }
+}
