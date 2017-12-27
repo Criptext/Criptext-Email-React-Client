@@ -1,0 +1,50 @@
+.threads-container{
+  width: 310px;
+  overflow: auto;
+  height: 100%;
+  border-right: 1px dotted gray;
+}
+
+.thread-container{
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid gray;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.thread-selected, .thread-selected:hover{
+  color: white;
+  background-color: rgb(62, 107, 255);
+}
+
+.thread-read{
+  color: black;
+  background-color: white;  
+}
+
+.thread-unread{
+  color: black;
+  background-color: rgb(186, 207, 221);  
+}
+
+.thread-read:hover, .thread-unread:hover{
+  color: black;
+  background-color: rgb(228, 228, 228);
+}
+
+.thread-container > div {
+  padding: 2px;
+  display: flex;
+  justify-content: space-between
+}
+
+.thread-container i{
+  font-size: 15px;
+  vertical-align: text-top;
+}
+
+.thread-icons{
+  display: flex;
+}

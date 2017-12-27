@@ -1,0 +1,82 @@
+{
+  "threads": [
+    {
+      "sender": "Pedro Iniguez <pedroi@criptext.com>",
+      "hasOpenAttachments": false,
+      "lastEmailDate": 1513779941000,
+      "lastEmailId": "<serial_key>",
+      "preview": "Hello again!",
+      "subject": "Hello again gaumala!",
+      "id": 532322,
+      "timesOpened": 2,
+      "totalAttachments": 1,
+      "unread": true,
+      "emails": [25, 23, 34]
+    },
+    {
+      "sender": "Pedro Iniguez <pedroi@criptext.com>",
+      "hasOpenAttachments": false,
+      "lastEmailDate": 1512915941000,
+      "lastEmailId": "<serial_key>",
+      "preview": "Hello!",
+      "subject": "Hello gaumala!",
+      "id": 63542,
+      "timesOpened": 0,
+      "totalAttachments": 4,
+      "unread": true,
+      "emails": [65, 8 , 9, 14]
+    },
+    {
+      "sender": "Gianni Gianni <gianni@criptext.com>",
+      "hasOpenAttachments": true,
+      "lastEmailDate": 1513347941000,
+      "lastEmailId": "<serial_key>",
+      "preview": "Habla!",
+      "subject": "Habla gaumala!",
+      "id": 635,
+      "timesOpened": 1,
+      "totalAttachments": 1,
+      "unread": false,
+      "emails": [55, 43, 34]
+    },
+    {
+      "sender": "Perugaaaachi <peru@criptext.com>",
+      "hasOpenAttachments": false,
+      "lastEmailDate": 1513088741000,
+      "lastEmailId": "<serial_key>",
+      "preview": "Hallo!",
+      "subject": "Hallo gaumala!",
+      "id": 63567,
+      "timesOpened": 0,
+      "totalAttachments": 0,
+      "unread": true,
+      "emails": [23, 34]
+    },
+    {
+      "sender": "Vagita <vagita@criptext.com>",
+      "hasOpenAttachments": false,
+      "lastEmailDate": 1510496741000,
+      "lastEmailId": "<serial_key>",
+      "preview": "Konnichiwa!",
+      "subject": "Konnichiwa gaumala!",
+      "id": 63511,
+      "timesOpened": 10,
+      "totalAttachments": 0,
+      "unread": false,
+      "emails": [6, 4]
+    },
+    {
+      "sender": "Habla <habla@criptext.com>",
+      "hasOpenAttachments": true,
+      "lastEmailDate": 1512051941000,
+      "lastEmailId": "<serial_key>",
+      "preview": "Cya!",
+      "subject": "Cya gaumala!",
+      "id": 63512,
+      "timesOpened": 2,
+      "totalAttachments": 2,
+      "unread": false,
+      "emails": [23, 14]
+    }
+  ]
+}

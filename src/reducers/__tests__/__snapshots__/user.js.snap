@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`user actions should add user to state 1`] = `
+Object {
+  "test1@criptext.com": Object {
+    "email": "test1@criptext.com",
+    "name": "test 1",
+  },
+  "test3@criptext.com": Object {
+    "email": "test3@criptext.com",
+    "name": "test 3",
+  },
+}
+`;
+
+exports[`user actions should add users to state 1`] = `
+Object {
+  "test1@criptext.com": Object {
+    "email": "test1@criptext.com",
+    "name": "test 1",
+  },
+  "test3@criptext.com": Object {
+    "email": "test3@criptext.com",
+    "name": "test 3",
+  },
+}
+`;
