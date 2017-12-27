@@ -44,3 +44,7 @@
   font-size: 15px;
   vertical-align: text-top;
 }
+
+.thread-icons{
+  display: flex;
+}
