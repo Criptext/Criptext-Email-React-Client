@@ -3,7 +3,9 @@ import * as Types from './types';
 export const addThreads = threads => {
   return {
     type: Types.Thread.ADD_BATCH,
-    threads: threads
+    threads: threads.sort((t1, t2) => {
+      return t1.lastEmailDate <= t2.lastEmailDate;
+    })
   };
 };
 

@@ -1,17 +1,31 @@
+.neutral-highlight{
+  color: #0091ff;
+}
+
+.error-highlight{
+  color: #fe5e82;
+}
+
 .threads-container{
-  width: 310px;
+  margin: 5%;
+  width: 90%;
   overflow: auto;
   height: 100%;
-  border-right: 1px dotted gray;
+  -webkit-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
+  -moz-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
+  box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
 }
 
 .thread-container{
-  width: 300px;
+  width: calc(100% - 10px);
   display: flex;
-  flex-direction: column;
-  border-bottom: 1px solid gray;
+  flex-direction: row;
+  border-bottom: 1px solid #ebebeb;
   cursor: pointer;
   padding: 5px;
+  align-items: center;
+  font-size: 12px;
+  height: 36px;
 }
 
 .thread-selected, .thread-selected:hover{
@@ -21,17 +35,13 @@
 
 .thread-read{
   color: black;
-  background-color: white;  
+  background-color: rgb(247, 247, 248);   
 }
 
 .thread-unread{
   color: black;
-  background-color: rgb(186, 207, 221);  
-}
-
-.thread-read:hover, .thread-unread:hover{
-  color: black;
-  background-color: rgb(228, 228, 228);
+  background-color: white;
+  font-weight: bold;
 }
 
 .thread-container > div {
@@ -47,4 +57,128 @@
 
 .thread-icons{
   display: flex;
+}
+
+.thread-letters{
+  padding: 5px;
+  border-radius: 50%;
+  color: white;
+  width: 11px;
+  height: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 9px;
+  font-weight: normal;
+}
+
+.thread-container > div:nth-child(1){
+  padding: 0 13px 0 19px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.thread-container > div:nth-child(2){
+  width: 150px;
+  flex-shrink: 0;
+}
+
+.thread-container > div:nth-child(3){
+  padding: 0 5px;  
+  color: #b8b9bd;
+  width: 15px;
+}
+
+.thread-container > div:nth-child(3) > i{
+  font-size: 12px;
+}
+
+.thread-container > div:nth-child(4){
+  flex: 1 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  align-items: center;
+  min-width: 250px;
+}
+
+.thread-label{
+  padding: 3px 8px;
+  font-size: 10px;
+  margin: 0 10px 0 0px;
+  background-color: #ffbb63;
+  border-radius: 10px;
+  color: white;
+  font-weight: normal;
+  width: 34px;
+  position: relative;
+}
+
+.thread-label > div:nth-child(1){
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.thread-label > div:nth-child(2){
+  position: absolute;
+  right: -4px;
+  bottom: -7px;
+  padding: 2px;
+  border-radius: 50%;
+  font-size: 9px;
+  height: 10px;
+  width: 10px;
+  color: rgb(0, 0, 0);
+  background-color: #d5d5d5;
+}
+
+.thread-subject{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.thread-preview span{
+  white-space: pre;
+}
+
+.thread-preview{
+  color: #6a707e;
+  flex: 1 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+} 
+
+.thread-container > div:nth-child(5){
+  width: 50px;
+  color: #d5d5d5;
+  flex-shrink: 0;
+  padding: 0 5px;
+}
+
+.thread-container > div:nth-child(5) > div{
+  width: 15px;
+}
+
+.thread-container > div:nth-child(6){
+  color: #6a707e;
+  width: 80px;
+  flex-shrink: 0;
+  justify-content: center;
+}
+
+.thread-container > div:nth-child(7){
+  display: none;
+  padding: 0 5px;
+  color: #d5d5d5;
+}
+
+.thread-container:hover > div:nth-child(7){
+  display: block;
+  padding-right: 15px;
 }

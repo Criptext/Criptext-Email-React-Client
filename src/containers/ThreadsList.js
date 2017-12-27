@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import {loadThreads} from '../actions/index';
+import { loadThreads } from '../actions/index';
 import ThreadsListView from '../components/ThreadsList';
 
 const mapStateToProps = state => {
@@ -17,6 +17,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const ThreadsList = connect(mapStateToProps, mapDispatchToProps)(ThreadsListView);
+const ThreadsList = connect(mapStateToProps, mapDispatchToProps)(
+  ThreadsListView
+);
 
 export default ThreadsList;

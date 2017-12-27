@@ -6,6 +6,7 @@
     "immutable": "^3.8.2",
     "moment": "^2.20.1",
     "node-sass-chokidar": "^0.0.3",
+    "randomcolor": "^0.5.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",

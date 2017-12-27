@@ -9,11 +9,11 @@ export const defineTimeByToday = time => {
   if (diffTime <= oneDay) {
     result = moment(time).format('hh:mm A');
   } else if (diffTime < oneDay * 2) {
-    result = moment(time).format('[Ayer,] hh:mm A');
+    result = moment(time).format('[Ayer]');
   } else if (diffTime < oneDay * 7) {
-    result = moment(time).format('dddd, hh:mm A');
+    result = moment(time).format('dddd');
   } else {
-    result = moment(time).format('MMM DD, YYYY hh:mm A');
+    result = moment(time).format('MMM DD');
   }
 
   return result;

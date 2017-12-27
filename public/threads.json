@@ -1,82 +1,103 @@
 {
   "threads": [
     {
-      "sender": "Pedro Iniguez <pedroi@criptext.com>",
+      "participants": "Pedro Iniguez <pedroi@criptext.com>",
       "hasOpenAttachments": false,
       "lastEmailDate": 1513779941000,
       "lastEmailId": "<serial_key>",
       "preview": "Hello again!",
       "subject": "Hello again gaumala!",
       "id": 532322,
+      "secure": true,
+      "status": 1,
       "timesOpened": 2,
+      "timer": 1,
       "totalAttachments": 1,
       "unread": true,
-      "emails": [25, 23, 34]
+      "emails": [25, 23, 34],
+      "labels": ["Starred", "Spam", "Custom 1"]
     },
     {
-      "sender": "Pedro Iniguez <pedroi@criptext.com>",
+      "participants": "Pedro Iniguez <pedroi@criptext.com>, Gianni Carlo <giannic@criptext.com>",
       "hasOpenAttachments": false,
       "lastEmailDate": 1512915941000,
       "lastEmailId": "<serial_key>",
       "preview": "Hello!",
       "subject": "Hello gaumala!",
       "id": 63542,
+      "secure": false,
+      "status": 1,
       "timesOpened": 0,
       "totalAttachments": 4,
       "unread": true,
-      "emails": [65, 8 , 9, 14]
+      "emails": [65, 8 , 9, 14],
+      "labels": ["Custom 1"]
     },
     {
-      "sender": "Gianni Gianni <gianni@criptext.com>",
+      "participants": "Gianni Gianni <gianni@criptext.com>, Perugaaaachi <peru@criptext.com>, Vagita <vagita@criptext.com>",
       "hasOpenAttachments": true,
       "lastEmailDate": 1513347941000,
       "lastEmailId": "<serial_key>",
       "preview": "Habla!",
       "subject": "Habla gaumala!",
       "id": 635,
+      "secure": true,
+      "status": -1,
+      "timer": -1,
       "timesOpened": 1,
       "totalAttachments": 1,
       "unread": false,
-      "emails": [55, 43, 34]
+      "emails": [55, 43, 34],
+      "labels": ["Starred"]
     },
     {
-      "sender": "Perugaaaachi <peru@criptext.com>",
+      "participants": "Perugaaaachi <peru@criptext.com>",
       "hasOpenAttachments": false,
       "lastEmailDate": 1513088741000,
       "lastEmailId": "<serial_key>",
-      "preview": "Hallo!",
-      "subject": "Hallo gaumala!",
+      "preview": "Hallo! wie geht es dir? danke gut und ihnen? was hast du heute gemacht?",
+      "subject": "Hallo gaumala! alles gut?",
       "id": 63567,
+      "secure": true,
+      "status": 0,
       "timesOpened": 0,
       "totalAttachments": 0,
       "unread": true,
-      "emails": [23, 34]
+      "emails": [23, 34],
+      "labels": []
     },
     {
-      "sender": "Vagita <vagita@criptext.com>",
+      "participants": "Vagita <vagita@criptext.com>",
       "hasOpenAttachments": false,
       "lastEmailDate": 1510496741000,
       "lastEmailId": "<serial_key>",
       "preview": "Konnichiwa!",
-      "subject": "Konnichiwa gaumala!",
+      "subject": "Konnichiwa gaumala! watashi no namae wa Pedro desu! Watashi wa Espol no gakusei desu. Yoroshiku",
       "id": 63511,
+      "secure": true,
+      "status": 2,
       "timesOpened": 10,
+      "timer": 0,
       "totalAttachments": 0,
       "unread": false,
-      "emails": [6, 4]
+      "emails": [6, 4],
+      "labels": ["Custom Label"]
     },
     {
-      "sender": "Habla <habla@criptext.com>",
+      "participants": "Habla <habla@criptext.com>",
       "hasOpenAttachments": true,
       "lastEmailDate": 1512051941000,
       "lastEmailId": "<serial_key>",
       "preview": "Cya!",
       "subject": "Cya gaumala!",
       "id": 63512,
+      "status": 2,
+      "secure": true,
       "timesOpened": 2,
       "totalAttachments": 2,
       "unread": false,
-      "emails": [23, 14]
+      "emails": [23, 14],
+      "labels": ["Starred", "Custom 1"]
     }
   ]
 }

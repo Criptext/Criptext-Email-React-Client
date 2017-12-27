@@ -1,6 +1,5 @@
 import React from 'react';
 import './threads.css';
-import * as Status from '../utils/ConstUtils'
 
 const ThreadView = props => {
   const thread = props.thread;
@@ -18,7 +17,7 @@ const ThreadView = props => {
       </div>
       <div>{thread.get('header')}</div>
       <div>
-        {willDisplaySecureIcon(thread)}
+        <i className="material-icons">lock</i>
       </div>
       <div>
         {willRenderLabels(thread.get('labels'))}
@@ -41,30 +40,16 @@ const ThreadView = props => {
   );
 };
 
-const willDisplaySecureIcon = thread => {
-  if(!thread.get('secure')){
-    return null;
-  }
-
-  return <i className="material-icons">lock</i>
-}
-
 const willDisplayTimerIcon = thread => {
-  const timerStatus = thread.get('timer');
-  switch (timerStatus) {
-    case Status.Timer.EXPIRED:
-      return <i className="material-icons error-highlight">timer</i>;
-    case Status.Timer.ENABLED:
-      return <i className="material-icons">timer</i>;
-    case Status.Timer.RUNNING:
-      return <i className="material-icons neutral-highlight">timer</i>;
-    default:
-      return null;
+  if (true) {
+    return <i className="material-icons">timer</i>;
   }
+
+  return null;
 };
 
 const willDisplayAttachIcon = thread => {
-  if (thread.get('totalAttachments') > 0) {
+  if (true) {
     return <i className="material-icons">attach_file</i>;
   }
 
@@ -72,19 +57,11 @@ const willDisplayAttachIcon = thread => {
 };
 
 const willDisplayAckIcon = thread => {
-  const status = thread.get('status');
-  switch (status) {
-    case Status.Email.UNSENT:
-      return <i className="material-icons error-highlight">undo</i>;
-    case Status.Email.SENT:
-      return <i className="material-icons">done</i>;
-    case Status.Email.RECEIVED:
-      return <i className="material-icons">done_all</i>;
-    case Status.Email.OPENED:
-      return <i className="material-icons neutral-highlight">done_all</i>;
-    default:
-      return null;
+  if (true) {
+    return <i className="material-icons">done_all</i>;
   }
+
+  return null;
 };
 
 const willRenderLabels = labels => {
