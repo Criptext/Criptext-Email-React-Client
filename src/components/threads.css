@@ -88,6 +88,7 @@
   padding: 0 5px;  
   color: #b8b9bd;
   width: 15px;
+  flex-shrink: 0;
 }
 
 .thread-container > div:nth-child(3) > i{
@@ -114,6 +115,7 @@
   font-weight: normal;
   width: 34px;
   position: relative;
+  text-align: center;
 }
 
 .thread-label > div:nth-child(1){

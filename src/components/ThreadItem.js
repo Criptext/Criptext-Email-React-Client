@@ -2,7 +2,7 @@ import React from 'react';
 import './threads.css';
 import * as Status from '../utils/ConstUtils'
 
-const ThreadView = props => {
+const ThreadItem = props => {
   const thread = props.thread;
   return (
     <div
@@ -24,6 +24,8 @@ const ThreadView = props => {
         {willRenderLabels(thread.get('labels'))}
         <div className="thread-subject">{thread.get('subject')}</div>
         <div className="thread-preview">
+          <span> </span>
+          <span> </span>
           <span> </span>
           {thread.get('preview')}
         </div>
@@ -107,4 +109,4 @@ const willRenderLabels = labels => {
   );
 };
 
-export default ThreadView;
+export default ThreadItem;

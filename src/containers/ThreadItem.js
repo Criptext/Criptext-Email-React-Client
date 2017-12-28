@@ -23,7 +23,7 @@ const getCapitalLetters = name => {
   return firstName;
 };
 
-const buildThreadUsers = contacts => {
+const buildParticipantsColumnString = contacts => {
   if (contacts.length === 1) {
     return contacts[0].name;
   }
@@ -46,7 +46,7 @@ const mapStateToProps = (state, myProps) => {
   const letters = getCapitalLetters(contacts[0].name);
   const myThread = thread.merge({
     letters: letters,
-    header: buildThreadUsers(contacts),
+    header: buildParticipantsColumnString(contacts),
     date: TimeUtils.defineTimeByToday(thread.get('lastEmailDate'))
   });
   return {
