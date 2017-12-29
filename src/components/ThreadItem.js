@@ -1,44 +1,93 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './threads.css';
 import * as Status from '../utils/ConstUtils';
 
-const ThreadItem = props => {
-  const thread = props.thread;
-  return (
-    <div
-      className={'thread-container ' + props.class}
-      onClick={() => {
-        props.onSelectThread(props.myIndex);
-      }}
-    >
-      <div>
-        <div style={{ background: props.color }} className="thread-letters">
-          {thread.get('letters')}
+class ThreadItem extends Component{
+  
+  constructor(){
+    super();
+    this.state={
+      menuVisible: false
+    }
+
+    this.myself = null;
+  }
+
+  render() {
+    const thread = this.props.thread;
+    return (
+      <div
+        className={'thread-container ' + this.props.class}
+        onClick={() => {
+          this.props.onSelectThread(this.props.myIndex);
+        }}
+        ref={(c) => {this.myself = c}}
+      >
+        <div>
+          <div style={{ background: this.props.color }} className="thread-letters">
+            {thread.get('letters')}
+          </div>
         </div>
-      </div>
-      <div>{thread.get('header')}</div>
-      <div>{willDisplaySecureIcon(thread)}</div>
-      <div>
-        {willRenderLabels(thread.get('labels'))}
-        <div className="thread-subject">{thread.get('subject')}</div>
-        <div className="thread-preview">
-          <span> </span>
-          <span> </span>
-          <span> </span>
-          {thread.get('preview')}
+        <div>{thread.get('header')}</div>
+        <div>
+          {willDisplaySecureIcon(thread)}
         </div>
+        <div>
+          {willRenderLabels(thread.get('labels'))}
+          <div className="thread-subject">{thread.get('subject')}</div>
+          <div className="thread-preview">
+            <span> </span>
+            <span> </span>
+            <span> </span>
+            {thread.get('preview')}
+          </div>
+        </div>
+        <div>
+          <div>{willDisplayTimerIcon(thread)}</div>
+          <div>{willDisplayAttachIcon(thread)}</div>
+          <div>{willDisplayAckIcon(thread)}</div>
+        </div>
+        <div>{thread.get('date')}</div>
+        <div onClick={(e) => {
+          e.stopPropagation();
+          this.setState({menuVisible: true})
+        }}>
+          <i className="material-icons">more_vert</i>
+        </div>
+        {this.renderMenu()}
       </div>
-      <div>
-        <div>{willDisplayTimerIcon(thread)}</div>
-        <div>{willDisplayAttachIcon(thread)}</div>
-        <div>{willDisplayAckIcon(thread)}</div>
+    );
+  }
+
+  renderMenu = () => {
+    if(!this.state.menuVisible){
+      return null;
+    }
+
+    const top = this.myself.offsetTop - this.myself.parentElement.scrollTop;
+    const right = (window.innerWidth - this.myself.clientWidth)/2 + 1;
+
+    return (<div>
+      <div className='thread-overlay' onClick={(e) => {
+          e.stopPropagation();
+          this.setState({menuVisible: false})
+        }}>
+
       </div>
-      <div>{thread.get('date')}</div>
-      <div>
-        <i className="material-icons">more_vert</i>
+      <div className='thread-menu' style={{
+        top,
+        right,
+        position: 'fixed',
+        zIndex: 1
+      }}>
+        <ul>
+          <li>Holi</li>
+          <li>Bye</li>
+          <li>Cancelar</li>
+        </ul>
       </div>
-    </div>
-  );
+    </div>)
+  }
 };
 
 const willDisplaySecureIcon = thread => {

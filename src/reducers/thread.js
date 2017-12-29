@@ -8,7 +8,7 @@ export default (state = List([]), action) => {
         return thread.set('unread', false);
       });
     case Types.Thread.ADD_BATCH:
-      return state.merge(fromJS(action.threads));
+      return state.concat(fromJS(action.threads));
     default:
       return state;
   }

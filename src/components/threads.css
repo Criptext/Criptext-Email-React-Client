@@ -6,11 +6,21 @@
   color: #fe5e82;
 }
 
+.mailbox-container{
+  height: 200px;
+  margin: 0 21px;
+}
+
+.threads-info-header{
+  display: flex;
+  height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 19px;
+}
+
 .threads-container{
-  margin: 5%;
-  width: 90%;
   overflow: auto;
-  height: 100%;
   -webkit-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
   -moz-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
   box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
@@ -26,6 +36,7 @@
   align-items: center;
   font-size: 12px;
   height: 36px;
+  position: relative;
 }
 
 .thread-selected, .thread-selected:hover{
@@ -183,4 +194,40 @@
 .thread-container:hover > div:nth-child(7){
   display: block;
   padding-right: 15px;
+}
+
+.thread-menu{
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: white;
+  width: 150px;
+  -webkit-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
+  -moz-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
+  box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
+}
+
+.thread-menu > ul {
+  list-style-type: none;
+  padding: 0px;
+}
+
+.thread-menu li {
+  padding: 10px;
+  padding-left: 30px;
+  font-weight: normal;
+  color: black;
+}
+
+.thread-menu li:hover {
+  background-color: #d5d5d5;
+}
+
+.thread-overlay{
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
