@@ -1,6 +1,6 @@
 export const parseAllContacts = contacts => {
   const resContacts = [];
-  if (contacts.isEmpty()) {
+  if (!contacts) {
     return resContacts;
   }
   const conts = contacts.split(',');

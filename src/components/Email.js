@@ -1,5 +1,5 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const Email = props => (
   <div>
@@ -7,7 +7,7 @@ const Email = props => (
     <span>{props.email.get(preview.toString())}</span>
     <p>{props.email.get(content.toString())}</p>
   </div>
-)
+);
 
 Email.propTypes = {
   email: PropTypes.shape({
@@ -16,6 +16,6 @@ Email.propTypes = {
     preview: PropTypes.string,
     content: PropTypes.string
   })
-}
+};
 
-export default Email
+export default Email;

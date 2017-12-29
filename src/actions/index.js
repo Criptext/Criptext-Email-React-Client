@@ -1,7 +1,6 @@
-import * as Types from './types';
-import {addUsers, addUser} from'./users';
-import {addThreads, selectThread, loadThreads} from './threads';
-import {addEmails, loadEmails} from './emails';
+import { addUsers, addUser } from './users';
+import { addThreads, selectThread, loadThreads } from './threads';
+import { addEmails, loadEmails } from './emails';
 
 export {
   addUsers,
@@ -11,4 +10,4 @@ export {
   loadThreads,
   addEmails,
   loadEmails
-}
+};
