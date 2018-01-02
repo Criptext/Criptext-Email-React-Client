@@ -1,0 +1,11 @@
+@import "./../styles/index.scss";
+
+aside.navigation-feed{
+  display: inline-table;
+  width: 288px;
+
+  header{
+    background-color: #f7f7f8;
+    height: $_HEIGHT_HEADER;
+  }
+}
