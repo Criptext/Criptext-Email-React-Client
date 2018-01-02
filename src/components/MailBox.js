@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import './mailbox.css'
+import './mailbox.css';
 
-const MailBox = Component => class extends Component {
-  render() {
-    return (
-      <div className="mailbox-container">
-        <header></header>
-        <div>
-          <Component {...this.props}/>
+const MailBox = Component =>
+  class extends Component {
+    render() {
+      return (
+        <div className="mailbox-container">
+          <header />
+          <div>
+            <Component {...this.props} />
+          </div>
         </div>
-      </div>
-    )
-  }
-}
+      );
+    }
+  };
 
 export default MailBox;

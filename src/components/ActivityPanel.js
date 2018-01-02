@@ -4,8 +4,7 @@ import './activitypanel.css';
 
 const ActivityPanel = props => (
   <aside className="navigation-feed">
-    <header>
-    </header>
+    <header />
   </aside>
 );
 
