@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './threads.css';
+import './fonts.css'
 import ThreadItem from '../containers/ThreadItem';
 
 class ThreadsList extends Component {

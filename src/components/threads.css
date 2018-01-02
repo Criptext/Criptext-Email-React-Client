@@ -7,8 +7,10 @@
 }
 
 .mailbox-container{
-  height: 200px;
-  margin: 0 21px;
+  height: 100%;
+  padding: 0 21px;
+  font-family: 'nunito';
+  background-color: #f7f7f8;
 }
 
 .threads-info-header{
@@ -20,7 +22,9 @@
 }
 
 .threads-container{
-  overflow: auto;
+  height: calc(100% - 44px);
+  overflow-y: auto;
+  overflow-x: hidden;
   -webkit-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
   -moz-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
   box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
@@ -117,35 +121,36 @@
 }
 
 .thread-label{
-  padding: 3px 8px;
+  display: flex;
   font-size: 10px;
-  margin: 0 10px 0 0px;
+  margin-right: 8px;
+}
+
+.thread-label > div:nth-child(1){
+  padding: 3px 4px;
   background-color: #ffbb63;
   border-radius: 10px;
   color: white;
   font-weight: normal;
-  width: 34px;
+  max-width: 92px;
   position: relative;
   text-align: center;
-}
-
-.thread-label > div:nth-child(1){
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-weight: 900;
 }
 
 .thread-label > div:nth-child(2){
-  position: absolute;
-  right: -4px;
-  bottom: -7px;
-  padding: 2px;
+  padding: 3px;
+  margin-left: 4px;
   border-radius: 50%;
-  font-size: 9px;
-  height: 10px;
-  width: 10px;
+  height: 12px;
+  width: 12px;
   color: rgb(0, 0, 0);
-  background-color: #d5d5d5;
+  background-color: #e5e5e6;
+  color: #6a707e;
+  font-weight: 600;
 }
 
 .thread-subject{

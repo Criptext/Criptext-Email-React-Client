@@ -7,7 +7,8 @@ class ThreadItem extends Component{
   constructor(){
     super();
     this.state={
-      menuVisible: false
+      menuVisible: false,
+      hovering: false
     }
 
     this.myself = null;
@@ -21,6 +22,8 @@ class ThreadItem extends Component{
         onClick={() => {
           this.props.onSelectThread(this.props.myIndex);
         }}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
         ref={(c) => {this.myself = c}}
       >
         <div>
@@ -57,6 +60,18 @@ class ThreadItem extends Component{
         {this.renderMenu()}
       </div>
     );
+  }
+
+  onMouseEnter = () => {
+    this.setState({
+      hovering: true
+    })
+  }
+
+  onMouseLeave = () => {
+    this.setState({
+      hovering: false
+    })
   }
 
   renderMenu = () => {
@@ -151,7 +166,7 @@ const willRenderLabels = labels => {
   return (
     <div className="thread-label">
       <div>{labels.first()}</div>
-      <div>+{labels.size - 1}</div>
+      <div>{labels.size - 1}+</div>
     </div>
   );
 };
