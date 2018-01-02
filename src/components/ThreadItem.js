@@ -1,6 +1,6 @@
 import React from 'react';
 import './threads.css';
-import * as Status from '../utils/ConstUtils'
+import * as Status from '../utils/ConstUtils';
 
 const ThreadItem = props => {
   const thread = props.thread;
@@ -17,9 +17,7 @@ const ThreadItem = props => {
         </div>
       </div>
       <div>{thread.get('header')}</div>
-      <div>
-        {willDisplaySecureIcon(thread)}
-      </div>
+      <div>{willDisplaySecureIcon(thread)}</div>
       <div>
         {willRenderLabels(thread.get('labels'))}
         <div className="thread-subject">{thread.get('subject')}</div>
@@ -44,12 +42,12 @@ const ThreadItem = props => {
 };
 
 const willDisplaySecureIcon = thread => {
-  if(!thread.get('secure')){
+  if (!thread.get('secure')) {
     return null;
   }
 
-  return <i className="material-icons">lock</i>
-}
+  return <i className="material-icons">lock</i>;
+};
 
 const willDisplayTimerIcon = thread => {
   const timerStatus = thread.get('timer');
