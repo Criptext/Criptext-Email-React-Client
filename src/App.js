@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ThreadsList from './containers/ThreadsList';
+import SideBar from './components/SideBar';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
@@ -17,10 +18,8 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div className="App">
-            <header className="App-header">
-              <h1 className="App-title">Welcome to React</h1>
-            </header>
+          <div className="wrapper">
+            <SideBar />
             <Route path="/" component={ThreadsList} />
           </div>
         </Router>
