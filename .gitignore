@@ -8,6 +8,8 @@
 
 # production
 /build
+/src/*.css
+/src/styles/*.css
 /src/components/*.css
 
 # misc
