@@ -8,9 +8,7 @@
 
 # production
 /build
-/src/*.css
-/src/styles/*.css
-/src/components/*.css
+/src/**/*.css
 
 # misc
 .DS_Store
