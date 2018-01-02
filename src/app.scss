@@ -1,0 +1,37 @@
+
+/***
+
+FILE: app.css
+
+TABLE OF CONTENTS
+
+1.- FONTS
+2.- CONTENT
+
+***/
+
+@import "./styles/index.scss";
+
+/* 1.- FONTS
+   ----------------------------- */
+@font-face {
+  font-family: 'NunitoSans-800';
+  src: url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800.eot);
+  src: url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800.woff) format('woff'),
+       url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800.ttf) format('truetype'),
+       url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800.svg) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 2.- CONTENT
+   ----------------------------- */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper{
+  display: flex;
+  flex-direction: row;
+}
