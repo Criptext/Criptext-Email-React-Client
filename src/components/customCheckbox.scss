@@ -1,0 +1,63 @@
+
+/*---------------------------------------
+             CUSTOM CHECKBOX
+---------------------------------------*/
+
+.container {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  width: 19px;
+  height: 21px;
+  margin-top: 4px;
+  margin-left: 2px;
+
+  input{
+    position: absolute;
+    opacity: 0;
+  }
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 13px;
+  width: 13px;
+  border-radius: 2px;
+  border: solid 2px #e3e3e3;
+  background-color: #eee;
+
+  &:after{
+    content: "";
+    position: absolute;
+    display: none;
+  }
+}
+
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+  border: none;
+  height: 17px;
+  width: 17px;
+}
+
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.container .checkmark:after {
+  left: 5px;
+  top: 0;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}

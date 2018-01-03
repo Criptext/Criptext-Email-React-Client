@@ -1,0 +1,31 @@
+.neutral-highlight{
+  color: #0091ff;
+}
+
+.error-highlight{
+  color: #fe5e82;
+}
+
+.threads-wrapper{
+  height: 100%;
+  padding: 0 21px;
+  font-family: 'NunitoSans';
+  background-color: #f7f7f8;
+}
+
+.threads-info-header{
+  display: flex;
+  height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 19px;
+}
+
+.threads-container{
+  height: calc(100% - 44px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
+  -moz-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
+  box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
+}

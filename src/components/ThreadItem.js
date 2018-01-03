@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import './threads.css';
+import './thread.css';
+import './customCheckbox.css';
 import * as Status from '../utils/ConstUtils';
 
 class ThreadItem extends Component {

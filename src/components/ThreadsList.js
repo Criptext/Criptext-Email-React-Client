@@ -9,7 +9,7 @@ class ThreadsList extends Component {
 
   render() {
     return (
-      <div className="mailbox-wrapper">
+      <div className="threads-wrapper">
         <div className="threads-info-header">
           <div>INBOX</div>
           <div>Unread O-- All</div>

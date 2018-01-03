@@ -4,6 +4,7 @@ import ThreadItemView from '../components/ThreadItem';
 import randomcolor from 'randomcolor';
 import * as TimeUtils from '../utils/TimeUtils';
 import * as UserUtils from '../utils/UserUtils';
+import {Label} from '../utils/ConstUtils';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
   if (thread.get('unread') && threadPos !== selectedThread) {
@@ -55,8 +56,8 @@ const mapStateToProps = (state, myProps) => {
       luminosity: 'dark'
     }),
     multiselect: state.get('activities').multiselect,
-    starred: thread.get('labels').contains('Starred'),
-    important: thread.get('labels').contains('Important')
+    starred: thread.get('labels').contains(Label.STARRED),
+    important: thread.get('labels').contains(Label.IMPORTANT)
   };
 };
 
@@ -70,18 +71,18 @@ const mapDispatchToProps = (dispatch, myProps) => {
     },
     onStarClick: () => {
       const thread = myProps.thread;
-      if (thread.get('labels').contains('Starred')) {
-        dispatch(actions.removeLabel(thread.get('id'), 'Starred'));
+      if (thread.get('labels').contains(Label.STARRED)) {
+        dispatch(actions.removeLabel(thread.get('id'), Label.STARRED));
       } else {
-        dispatch(actions.addLabel(thread.get('id'), 'Starred'));
+        dispatch(actions.addLabel(thread.get('id'), Label.STARRED));
       }
     },
     onImportantClick: () => {
       const thread = myProps.thread;
-      if (thread.get('labels').contains('Important')) {
-        dispatch(actions.removeLabel(thread.get('id'), 'Important'));
+      if (thread.get('labels').contains(Label.IMPORTANT)) {
+        dispatch(actions.removeLabel(thread.get('id'), Label.IMPORTANT));
       } else {
-        dispatch(actions.addLabel(thread.get('id'), 'Important'));
+        dispatch(actions.addLabel(thread.get('id'), Label.IMPORTANT));
       }
     }
   };
