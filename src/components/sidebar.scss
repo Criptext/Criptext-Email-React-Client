@@ -38,10 +38,10 @@ aside.navigation-app{
       a {
         color: black;
         display: block;
-        margin: 0 20px;
+        margin-left: 20px;
         text-align: left;
         text-decoration: none;
-        width: calc(100% - 115px);
+        width: calc(100% - 135px);
       }
     }
   }
@@ -60,13 +60,25 @@ button{
   background-color: #0091ff;
   border-radius: 100px;
   color: white;
-  font-family: 'NunitoSans-800';
-  font-size: 12px;
-  font-weight: bold;
   height: 31px;
   margin: 15px 0;
   text-transform: uppercase;
   width: 141px;
+
+  i{
+    font-size: 18px;
+    left: -8px;
+    margin-right: 10px;
+    position: relative;
+    top: 2px;
+  }
+
+  span{
+    font-family: 'NunitoSans-800';
+    font-size: 13px;
+    position: relative;
+    top: -1px;
+  }
 }
 
 .nav-item{
@@ -82,7 +94,7 @@ button{
 
 .nav-item-icon{
   height: 15px;
-  margin-right: 10px;
+  margin: 0 10px 0 32px;
   width: 15px;
 }
 
@@ -90,6 +102,7 @@ button{
   background-color: #65bdff;
   border-radius: 13px;
   height: 17px;
+  margin-left: 15px;
   width: 26px;
 
   span {
