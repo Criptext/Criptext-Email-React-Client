@@ -15,7 +15,8 @@
       "totalAttachments": 1,
       "unread": true,
       "emails": [25, 23, 34],
-      "labels": ["Starred", "Spam", "Custom 1"]
+      "labels": ["Starred", "Spam", "Custom 1"],
+      "selected": false
     },
     {
       "participants": "Pedro Iniguez <pedroi@criptext.com>, Gianni Carlo <giannic@criptext.com>",
@@ -31,7 +32,8 @@
       "totalAttachments": 4,
       "unread": true,
       "emails": [65, 8 , 9, 14],
-      "labels": ["Custom 1"]
+      "labels": ["Custom 1"],
+      "selected": false
     },
     {
       "participants": "Gianni Gianni <gianni@criptext.com>, Perugaaaachi <peru@criptext.com>, Vagita <vagita@criptext.com>",
@@ -48,7 +50,8 @@
       "totalAttachments": 1,
       "unread": false,
       "emails": [55, 43, 34],
-      "labels": ["Starred"]
+      "labels": ["Starred"],
+      "selected": false
     },
     {
       "participants": "Perugaaaachi <peru@criptext.com>",
@@ -64,7 +67,8 @@
       "totalAttachments": 0,
       "unread": true,
       "emails": [23, 34],
-      "labels": []
+      "labels": [],
+      "selected": false
     },
     {
       "participants": "Vagita <vagita@criptext.com>",
@@ -81,7 +85,8 @@
       "totalAttachments": 0,
       "unread": false,
       "emails": [6, 4],
-      "labels": ["Custom Label"]
+      "labels": ["Custom Label"],
+      "selected": false
     },
     {
       "participants": "Habla <habla@criptext.com>",
@@ -97,7 +102,8 @@
       "totalAttachments": 2,
       "unread": false,
       "emails": [23, 14],
-      "labels": ["Starred", "Custom 1"]
+      "labels": ["Starred", "Important"],
+      "selected": false
     }
   ]
 }

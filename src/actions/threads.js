@@ -16,6 +16,30 @@ export const selectThread = threadId => {
   };
 };
 
+export const multiSelectThread = (threadId, value) => {
+  return {
+    type: Types.Thread.MULTISELECT,
+    selectedThread: threadId,
+    value: value
+  };
+};
+
+export const addLabel = (threadId, label) => {
+  return {
+    type: Types.Thread.ADD_LABEL,
+    targetThread: threadId,
+    label: label
+  };
+};
+
+export const removeLabel = (threadId, label) => {
+  return {
+    type: Types.Thread.REMOVE_LABEL,
+    targetThread: threadId,
+    label: label
+  };
+};
+
 export const loadThreads = () => {
   return dispatch => {
     return fetch('/threads.json')

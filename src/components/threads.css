@@ -6,10 +6,10 @@
   color: #fe5e82;
 }
 
-.mailbox-container{
+.mailbox-wrapper{
   height: 100%;
   padding: 0 21px;
-  font-family: 'nunito';
+  font-family: 'NunitoSans';
   background-color: #f7f7f8;
 }
 
@@ -43,9 +43,11 @@
   position: relative;
 }
 
-.thread-selected, .thread-selected:hover{
-  color: white;
-  background-color: rgb(62, 107, 255);
+.thread-container:hover{
+  -webkit-box-shadow: 0px 4px 28px -12px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 4px 28px -12px rgba(0,0,0,0.75);
+  box-shadow: 0px 4px 28px -12px rgba(0,0,0,0.75);
+  z-index: 1;
 }
 
 .thread-read{
@@ -60,7 +62,6 @@
 }
 
 .thread-container > div {
-  padding: 2px;
   display: flex;
   justify-content: space-between
 }
@@ -88,10 +89,16 @@
 }
 
 .thread-container > div:nth-child(1){
-  padding: 0 13px 0 19px;
+  padding: 1px 13px 0 19px;
   flex-shrink: 0;
   display: flex;
   justify-content: center;
+  height: 100%;
+  align-items: center;
+}
+
+.thread-container > div:nth-child(1) > input{
+  margin: 3px 4px;
 }
 
 .thread-container > div:nth-child(2){
@@ -127,7 +134,7 @@
 }
 
 .thread-label > div:nth-child(1){
-  padding: 3px 4px;
+  padding: 3px 10px;
   background-color: #ffbb63;
   border-radius: 10px;
   color: white;
@@ -142,12 +149,11 @@
 }
 
 .thread-label > div:nth-child(2){
-  padding: 3px;
+  padding: 4px;
   margin-left: 4px;
   border-radius: 50%;
   height: 12px;
   width: 12px;
-  color: rgb(0, 0, 0);
   background-color: #e5e5e6;
   color: #6a707e;
   font-weight: 600;
@@ -192,13 +198,44 @@
 
 .thread-container > div:nth-child(7){
   display: none;
-  padding: 0 5px;
+  padding-right: 10px;
   color: #d5d5d5;
+  position: absolute;
+  right: 0;
+  height: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.thread-read > div:nth-child(7) > div{
+  background-color: white;
+}
+
+.thread-unread > div:nth-child(7) > div{
+  background-color: #f7f7f8;
+}
+
+.thread-container > div:nth-child(7) > div{
+  height: 31px;
+  width: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border-radius: 50%;
+  margin-right: 9px;
 }
 
 .thread-container:hover > div:nth-child(7){
-  display: block;
-  padding-right: 15px;
+  display: flex;
+}
+
+.thread-container:hover > div:nth-child(5){
+  visibility: hidden;
+}
+
+.thread-container:hover > div:nth-child(6){
+  visibility: hidden;
 }
 
 .thread-menu{
@@ -235,4 +272,81 @@
   top: 0;
   left: 0;
   z-index: 1;
+}
+
+.thread-label-mark{
+  background-color: #f7f7f8;
+  border: solid 1px #ffdf32;
+  color: #ffdf32;
+}
+
+/*---------------------------------------
+             CUSTOM CHECKBOX
+---------------------------------------*/
+
+/* Customize the label (the container) */
+.container {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  width: 19px;
+  height: 21px;
+  margin-top: 4px;
+  margin-left: 2px;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 13px;
+  width: 13px;
+  border-radius: 2px;
+  border: solid 2px #e3e3e3;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+  border: none;
+  height: 17px;
+  width: 17px;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 5px;
+  top: 0;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }

@@ -6,9 +6,7 @@ import * as TimeUtils from '../utils/TimeUtils';
 import * as UserUtils from '../utils/UserUtils';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
-  if (threadPos === selectedThread) {
-    return 'thread-selected';
-  } else if (thread.get('unread') && threadPos !== selectedThread) {
+  if (thread.get('unread') && threadPos !== selectedThread) {
     return 'thread-unread';
   }
   return 'thread-read';
@@ -55,14 +53,36 @@ const mapStateToProps = (state, myProps) => {
     color: randomcolor({
       seed: contacts[0].email,
       luminosity: 'dark'
-    })
+    }),
+    multiselect: state.get('activities').multiselect,
+    starred: thread.get('labels').contains('Starred'),
+    important: thread.get('labels').contains('Important')
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, myProps) => {
   return {
     onSelectThread: threadPosition => {
       dispatch(actions.selectThread(threadPosition));
+    },
+    onMultiSelect: (threadId, value) => {
+      dispatch(actions.multiSelectThread(threadId, value));
+    },
+    onStarClick: () => {
+      const thread = myProps.thread;
+      if (thread.get('labels').contains('Starred')) {
+        dispatch(actions.removeLabel(thread.get('id'), 'Starred'));
+      } else {
+        dispatch(actions.addLabel(thread.get('id'), 'Starred'));
+      }
+    },
+    onImportantClick: () => {
+      const thread = myProps.thread;
+      if (thread.get('labels').contains('Important')) {
+        dispatch(actions.removeLabel(thread.get('id'), 'Important'));
+      } else {
+        dispatch(actions.addLabel(thread.get('id'), 'Important'));
+      }
     }
   };
 };

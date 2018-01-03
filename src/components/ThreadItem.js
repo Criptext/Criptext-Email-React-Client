@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import './threads.css';
 import * as Status from '../utils/ConstUtils';
 
-class ThreadItem extends Component{
-  
-  constructor(){
+class ThreadItem extends Component {
+  constructor() {
     super();
-    this.state={
-      menuVisible: false,
-      hovering: false
-    }
+    this.state = {
+      hoveringName: false
+    };
 
     this.myself = null;
   }
@@ -19,22 +17,16 @@ class ThreadItem extends Component{
     return (
       <div
         className={'thread-container ' + this.props.class}
-        onClick={() => {
-          this.props.onSelectThread(this.props.myIndex);
+        onClick={this.onSelectThread}
+        ref={c => {
+          this.myself = c;
         }}
-        onMouseEnter={this.onMouseEnter}
-        onMouseLeave={this.onMouseLeave}
-        ref={(c) => {this.myself = c}}
       >
-        <div>
-          <div style={{ background: this.props.color }} className="thread-letters">
-            {thread.get('letters')}
-          </div>
+        <div onMouseEnter={this.onMultiEnter} onMouseLeave={this.onMultiLeave}>
+          {this.renderFirstColumn()}
         </div>
         <div>{thread.get('header')}</div>
-        <div>
-          {willDisplaySecureIcon(thread)}
-        </div>
+        <div>{willDisplaySecureIcon(thread)}</div>
         <div>
           {willRenderLabels(thread.get('labels'))}
           <div className="thread-subject">{thread.get('subject')}</div>
@@ -51,59 +43,90 @@ class ThreadItem extends Component{
           <div>{willDisplayAckIcon(thread)}</div>
         </div>
         <div>{thread.get('date')}</div>
-        <div onClick={(e) => {
-          e.stopPropagation();
-          this.setState({menuVisible: true})
-        }}>
-          <i className="material-icons">more_vert</i>
-        </div>
         {this.renderMenu()}
       </div>
     );
   }
 
-  onMouseEnter = () => {
+  onMultiEnter = () => {
     this.setState({
-      hovering: true
-    })
-  }
+      hoveringName: true
+    });
+  };
 
-  onMouseLeave = () => {
+  onMultiLeave = () => {
     this.setState({
-      hovering: false
-    })
-  }
+      hoveringName: false
+    });
+  };
+
+  onSelectThread = () => {
+    this.props.onSelectThread(this.props.myIndex);
+  };
+
+  stopPropagation = ev => {
+    ev.stopPropagation();
+  };
+
+  onCheck = ev => {
+    const value = ev.target.checked;
+    this.props.onMultiSelect(this.props.thread.get('id'), value);
+  };
+
+  renderFirstColumn = () => {
+    if (this.props.multiselect || this.state.hoveringName) {
+      return (
+        <label className="container">
+          <input
+            type="checkbox"
+            onClick={this.stopPropagation}
+            checked={this.props.thread.get('selected')}
+            onChange={this.onCheck}
+          />
+          <span className="checkmark" />
+        </label>
+      );
+    }
+
+    return (
+      <div style={{ background: this.props.color }} className="thread-letters">
+        {this.props.thread.get('letters')}
+      </div>
+    );
+  };
 
   renderMenu = () => {
-    if(!this.state.menuVisible){
+    if (false) {
       return null;
     }
 
-    const top = this.myself.offsetTop - this.myself.parentElement.scrollTop;
-    const right = (window.innerWidth - this.myself.clientWidth)/2 + 1;
-
-    return (<div>
-      <div className='thread-overlay' onClick={(e) => {
-          e.stopPropagation();
-          this.setState({menuVisible: false})
-        }}>
-
+    return (
+      <div>
+        <div
+          className={this.props.starred ? 'thread-label-mark' : ''}
+          onClick={ev => {
+            ev.stopPropagation();
+            this.props.onStarClick();
+          }}
+        >
+          <i className="material-icons">star</i>
+        </div>
+        <div
+          className={this.props.important ? 'thread-label-mark' : ''}
+          onClick={ev => {
+            ev.stopPropagation();
+            this.props.onImportantClick();
+          }}
+        >
+          <i className="material-icons">label_outline</i>
+        </div>
+        <div>
+          <i className="material-icons">delete</i>
+        </div>
       </div>
-      <div className='thread-menu' style={{
-        top,
-        right,
-        position: 'fixed',
-        zIndex: 1
-      }}>
-        <ul>
-          <li>Holi</li>
-          <li>Bye</li>
-          <li>Cancelar</li>
-        </ul>
-      </div>
-    </div>)
-  }
-};
+    );
+  };
+}
 
 const willDisplaySecureIcon = thread => {
   if (!thread.get('secure')) {

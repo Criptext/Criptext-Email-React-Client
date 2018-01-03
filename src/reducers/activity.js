@@ -5,7 +5,13 @@ export default (state = {}, action) => {
     case Types.Thread.SELECT:
       return {
         ...state,
-        selectedThread: action.selectedThread
+        selectedThread: action.selectedThread,
+        multiselect: false
+      };
+    case Types.Thread.MULTISELECT:
+      return {
+        ...state,
+        multiselect: true
       };
     default:
       return state;

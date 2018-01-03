@@ -1,5 +1,12 @@
 import { addUsers, addUser } from './users';
-import { addThreads, selectThread, loadThreads } from './threads';
+import {
+  addThreads,
+  selectThread,
+  loadThreads,
+  multiSelectThread,
+  addLabel,
+  removeLabel
+} from './threads';
 import { addEmails, loadEmails } from './emails';
 
 export {
@@ -9,5 +16,8 @@ export {
   selectThread,
   loadThreads,
   addEmails,
-  loadEmails
+  loadEmails,
+  multiSelectThread,
+  addLabel,
+  removeLabel
 };

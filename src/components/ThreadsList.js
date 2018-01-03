@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './threads.css';
-import './fonts.css'
 import ThreadItem from '../containers/ThreadItem';
 
 class ThreadsList extends Component {
@@ -10,18 +9,12 @@ class ThreadsList extends Component {
 
   render() {
     return (
-      <div className='mailbox-container'>
-        <div className='threads-info-header'>
-          <div>
-            INBOX
-          </div>
-          <div>
-            Unread O-- All
-          </div>
+      <div className="mailbox-wrapper">
+        <div className="threads-info-header">
+          <div>INBOX</div>
+          <div>Unread O-- All</div>
         </div>
-        <div 
-          className="threads-container"
-          onScroll={this.handleTableScrolled}>
+        <div className="threads-container" onScroll={this.handleTableScrolled}>
           {this.props.threads.map((thread, index) => {
             return (
               <ThreadItem
@@ -44,13 +37,10 @@ class ThreadsList extends Component {
     const height = e.target.clientHeight;
     const scrollHeight = e.target.scrollHeight;
 
-    if (
-      scrollTop + height > scrollHeight - 25
-    ) {
+    if (scrollTop + height > scrollHeight - 25) {
       this.props.onLoadThreads();
     }
   };
-
 }
 
 export default ThreadsList;
