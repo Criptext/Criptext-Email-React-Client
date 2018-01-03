@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
-import ThreadItemView from '../components/ThreadItem';
+import ThreadWrapper from '../components/ThreadWrapper';
 import randomcolor from 'randomcolor';
 import * as TimeUtils from '../utils/TimeUtils';
 import * as UserUtils from '../utils/UserUtils';
-import {Label} from '../utils/ConstUtils';
+import { Label } from '../utils/ConstUtils';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
   if (thread.get('unread') && threadPos !== selectedThread) {
@@ -35,7 +35,7 @@ const buildParticipantsColumnString = contacts => {
 
   return `${contacts[0].name.split(' ')[0]}, ${
     contacts[1].name.split(' ')[0]
-  }... (${contacts.length})`;
+  }... (${contacts.length - 2})`;
 };
 
 const mapStateToProps = (state, myProps) => {
@@ -55,7 +55,7 @@ const mapStateToProps = (state, myProps) => {
       seed: contacts[0].email,
       luminosity: 'dark'
     }),
-    multiselect: state.get('activities').multiselect,
+    multiselect: state.get('activities').get('multiselect'),
     starred: thread.get('labels').contains(Label.STARRED),
     important: thread.get('labels').contains(Label.IMPORTANT)
   };
@@ -88,6 +88,6 @@ const mapDispatchToProps = (dispatch, myProps) => {
   };
 };
 
-const ThreadItem = connect(mapStateToProps, mapDispatchToProps)(ThreadItemView);
+const ThreadItem = connect(mapStateToProps, mapDispatchToProps)(ThreadWrapper);
 
 export default ThreadItem;

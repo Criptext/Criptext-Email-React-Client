@@ -30,8 +30,6 @@ class ThreadsList extends Component {
     );
   }
 
-  /* MODE: INFINITY SCROLL
-   ----------------------------- */
   handleTableScrolled = e => {
     const scrollTop = e.target.scrollTop;
     const height = e.target.clientHeight;

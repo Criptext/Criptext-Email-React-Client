@@ -14,4 +14,4 @@ export const Timer = {
 export const Label = {
   IMPORTANT: 'Important',
   STARRED: 'Starred'
-}
+};

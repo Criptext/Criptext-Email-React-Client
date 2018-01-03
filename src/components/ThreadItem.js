@@ -8,8 +8,6 @@ class ThreadItem extends Component {
     this.state = {
       hoveringName: false
     };
-
-    this.myself = null;
   }
 
   render() {
@@ -18,11 +16,11 @@ class ThreadItem extends Component {
       <div
         className={'thread-container ' + this.props.class}
         onClick={this.onSelectThread}
-        ref={c => {
-          this.myself = c;
-        }}
       >
-        <div onMouseEnter={this.onMultiEnter} onMouseLeave={this.onMultiLeave}>
+        <div
+          onMouseEnter={this.props.onRegionEnter}
+          onMouseLeave={this.props.onRegionLeave}
+        >
           {this.renderFirstColumn()}
         </div>
         <div>{thread.get('header')}</div>
@@ -31,9 +29,7 @@ class ThreadItem extends Component {
           {willRenderLabels(thread.get('labels'))}
           <div className="thread-subject">{thread.get('subject')}</div>
           <div className="thread-preview">
-            <span> </span>
-            <span> </span>
-            <span> </span>
+            {this.renderMultipleSpaces(3)}
             {thread.get('preview')}
           </div>
         </div>
@@ -47,18 +43,6 @@ class ThreadItem extends Component {
       </div>
     );
   }
-
-  onMultiEnter = () => {
-    this.setState({
-      hoveringName: true
-    });
-  };
-
-  onMultiLeave = () => {
-    this.setState({
-      hoveringName: false
-    });
-  };
 
   onSelectThread = () => {
     this.props.onSelectThread(this.props.myIndex);
@@ -74,8 +58,14 @@ class ThreadItem extends Component {
     this.props.onMultiSelect(this.props.thread.get('id'), value);
   };
 
+  renderMultipleSpaces = times => {
+    return Array.from(Array(times).keys()).map(index => {
+      return <span key={index}> </span>;
+    });
+  };
+
   renderFirstColumn = () => {
-    if (this.props.multiselect || this.state.hoveringName) {
+    if (this.props.multiselect || this.props.hovering) {
       return (
         <label className="container" onClick={this.stopPropagation}>
           <input
