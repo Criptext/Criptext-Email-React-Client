@@ -7,5 +7,87 @@ aside.navigation-feed{
   header{
     background-color: #f7f7f8;
     height: $_HEIGHT_HEADER;
+
+    .header-content {
+      margin: 0%;
+
+      .header-title {
+        padding: 8% 0% 8% 10%;
+        width: 70%;
+      }
+
+      .header-button {
+        width: 30%;
+      }
+    }
+
+    .navigation-feed-header{
+      width: 70%;
+
+      h3{
+        margin: 0%;
+    	padding-top: 3%;
+      }
+    }
+
+    .navigation-feed-button{
+      width: 30%;
+    }
   }
+
+
+  nav {
+
+    .new-feeds{
+      padding-left: 0%;
+      list-style-type: none;
+      font-size: 0.9em;
+
+      .feed-section-title {
+        .text{
+          padding-left: 10%;
+          margin: 0% 0% 2% 0%;
+        }
+      }
+      
+      .feed-item {
+        height: 50px;
+        padding: 5% 5% 3% 20%;
+        margin-bottom: 3px;
+      
+        .feed-content{
+          .feed-name{
+            font-weight: bold;
+            margin: 0% 0% 2% 0%;
+          }
+
+          .feed-subject{
+            color: silver;
+            float: left;
+            margin: 0%;
+            width: 70%;
+    		white-space: nowrap; 
+    		overflow: hidden;
+    		text-overflow: ellipsis;
+          }
+
+          .feed-time{
+            margin: 0%;
+            float: right;
+            width: 30%;
+          }
+
+          .feed-clear{
+            clear: both;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  
 }
