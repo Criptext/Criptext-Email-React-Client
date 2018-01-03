@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './thread.css';
-import './customCheckbox.css';
 import * as Status from '../utils/ConstUtils';
 
 class ThreadItem extends Component {
@@ -70,6 +69,7 @@ class ThreadItem extends Component {
   };
 
   onCheck = ev => {
+    ev.stopPropagation();
     const value = ev.target.checked;
     this.props.onMultiSelect(this.props.thread.get('id'), value);
   };
@@ -77,10 +77,9 @@ class ThreadItem extends Component {
   renderFirstColumn = () => {
     if (this.props.multiselect || this.state.hoveringName) {
       return (
-        <label className="container">
+        <label className="container" onClick={this.stopPropagation}>
           <input
             type="checkbox"
-            onClick={this.stopPropagation}
             checked={this.props.thread.get('selected')}
             onChange={this.onCheck}
           />
