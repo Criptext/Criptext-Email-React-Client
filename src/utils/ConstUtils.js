@@ -10,3 +10,8 @@ export const Timer = {
   ENABLED: 0,
   RUNNING: 1
 };
+
+export const Label = {
+  IMPORTANT: 'Important',
+  STARRED: 'Starred'
+};

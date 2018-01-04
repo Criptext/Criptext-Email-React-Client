@@ -1,45 +1,122 @@
-import React from 'react';
-import './threads.css';
+import React, { Component } from 'react';
+import './thread.css';
 import * as Status from '../utils/ConstUtils';
 
-const ThreadItem = props => {
-  const thread = props.thread;
-  return (
-    <div
-      className={'thread-container ' + props.class}
-      onClick={() => {
-        props.onSelectThread(props.myIndex);
-      }}
-    >
+class ThreadItem extends Component {
+  constructor() {
+    super();
+    this.state = {
+      hoveringName: false
+    };
+  }
+
+  render() {
+    const thread = this.props.thread;
+    return (
+      <div
+        className={'thread-container ' + this.props.class}
+        onClick={this.onSelectThread}
+      >
+        <div
+          onMouseEnter={this.props.onRegionEnter}
+          onMouseLeave={this.props.onRegionLeave}
+        >
+          {this.renderFirstColumn()}
+        </div>
+        <div>{thread.get('header')}</div>
+        <div>{willDisplaySecureIcon(thread)}</div>
+        <div>
+          {willRenderLabels(thread.get('labels'))}
+          <div className="thread-subject">{thread.get('subject')}</div>
+          <div className="thread-preview">
+            {this.renderMultipleSpaces(3)}
+            {thread.get('preview')}
+          </div>
+        </div>
+        <div>
+          <div>{willDisplayTimerIcon(thread)}</div>
+          <div>{willDisplayAttachIcon(thread)}</div>
+          <div>{willDisplayAckIcon(thread)}</div>
+        </div>
+        <div>{thread.get('date')}</div>
+        {this.renderMenu()}
+      </div>
+    );
+  }
+
+  onSelectThread = () => {
+    this.props.onSelectThread(this.props.myIndex);
+  };
+
+  stopPropagation = ev => {
+    ev.stopPropagation();
+  };
+
+  onCheck = ev => {
+    ev.stopPropagation();
+    const value = ev.target.checked;
+    this.props.onMultiSelect(this.props.thread.get('id'), value);
+  };
+
+  renderMultipleSpaces = times => {
+    return Array.from(Array(times).keys()).map(index => {
+      return <span key={index}> </span>;
+    });
+  };
+
+  renderFirstColumn = () => {
+    if (this.props.multiselect || this.props.hovering) {
+      return (
+        <label className="container" onClick={this.stopPropagation}>
+          <input
+            type="checkbox"
+            checked={this.props.thread.get('selected')}
+            onChange={this.onCheck}
+          />
+          <span className="checkmark" />
+        </label>
+      );
+    }
+
+    return (
+      <div style={{ background: this.props.color }} className="thread-letters">
+        {this.props.thread.get('letters')}
+      </div>
+    );
+  };
+
+  renderMenu = () => {
+    if (false) {
+      return null;
+    }
+
+    return (
       <div>
-        <div style={{ background: props.color }} className="thread-letters">
-          {thread.get('letters')}
+        <div
+          className={this.props.starred ? 'thread-label-mark' : ''}
+          onClick={ev => {
+            ev.stopPropagation();
+            this.props.onStarClick();
+          }}
+        >
+          <i className="material-icons">star</i>
+        </div>
+        <div
+          className={this.props.important ? 'thread-label-mark' : ''}
+          onClick={ev => {
+            ev.stopPropagation();
+            this.props.onImportantClick();
+          }}
+        >
+          <i className="material-icons">label_outline</i>
+        </div>
+        <div>
+          <i className="material-icons">delete</i>
         </div>
       </div>
-      <div>{thread.get('header')}</div>
-      <div>{willDisplaySecureIcon(thread)}</div>
-      <div>
-        {willRenderLabels(thread.get('labels'))}
-        <div className="thread-subject">{thread.get('subject')}</div>
-        <div className="thread-preview">
-          <span> </span>
-          <span> </span>
-          <span> </span>
-          {thread.get('preview')}
-        </div>
-      </div>
-      <div>
-        <div>{willDisplayTimerIcon(thread)}</div>
-        <div>{willDisplayAttachIcon(thread)}</div>
-        <div>{willDisplayAckIcon(thread)}</div>
-      </div>
-      <div>{thread.get('date')}</div>
-      <div>
-        <i className="material-icons">more_vert</i>
-      </div>
-    </div>
-  );
-};
+    );
+  };
+}
 
 const willDisplaySecureIcon = thread => {
   if (!thread.get('secure')) {
@@ -102,7 +179,7 @@ const willRenderLabels = labels => {
   return (
     <div className="thread-label">
       <div>{labels.first()}</div>
-      <div>+{labels.size - 1}</div>
+      <div>{labels.size - 1}+</div>
     </div>
   );
 };
