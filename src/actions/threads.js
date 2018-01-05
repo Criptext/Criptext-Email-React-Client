@@ -24,6 +24,13 @@ export const multiSelectThread = (threadId, value) => {
   };
 };
 
+export const filterThreadsByUnread = enabled => {
+  return {
+    type: Types.Thread.UNREAD_FILTER,
+    enabled: enabled
+  };
+};
+
 export const addLabel = (threadId, label) => {
   return {
     type: Types.Thread.ADD_LABEL,

@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import './thread.css';
 import * as Status from '../utils/ConstUtils';
+import ReactTooltip from 'react-tooltip';
+import randomcolor from 'randomcolor';
 
 class ThreadItem extends Component {
-  constructor() {
-    super();
-    this.state = {
-      hoveringName: false
-    };
-  }
-
   render() {
+    const style = this.mustShowStyle();
     const thread = this.props.thread;
     return (
       <div
@@ -26,23 +22,33 @@ class ThreadItem extends Component {
         <div>{thread.get('header')}</div>
         <div>{willDisplaySecureIcon(thread)}</div>
         <div>
-          {willRenderLabels(thread.get('labels'))}
+          {willRenderLabels(thread.get('labels'), thread.get('id'))}
           <div className="thread-subject">{thread.get('subject')}</div>
           <div className="thread-preview">
             {this.renderMultipleSpaces(3)}
             {thread.get('preview')}
           </div>
         </div>
-        <div>
-          <div>{willDisplayTimerIcon(thread)}</div>
+        <div style={style}>
+          <div />
           <div>{willDisplayAttachIcon(thread)}</div>
           <div>{willDisplayAckIcon(thread)}</div>
         </div>
-        <div>{thread.get('date')}</div>
+        <div style={style}>{thread.get('date')}</div>
         {this.renderMenu()}
       </div>
     );
   }
+
+  mustShowStyle = () => {
+    if (!this.props.multiselect) {
+      return null;
+    }
+
+    return {
+      visibility: 'visible'
+    };
+  };
 
   onSelectThread = () => {
     this.props.onSelectThread(this.props.myIndex);
@@ -86,7 +92,7 @@ class ThreadItem extends Component {
   };
 
   renderMenu = () => {
-    if (false) {
+    if (this.props.multiselect) {
       return null;
     }
 
@@ -164,22 +170,50 @@ const willDisplayAckIcon = thread => {
   }
 };
 
-const willRenderLabels = labels => {
+const willRenderLabels = (labels, threadId) => {
   if (!labels || labels.size === 0) {
     return null;
   }
+
+  const labelColor = randomcolor({
+    seed: labels.first(),
+    luminosity: 'light'
+  });
+
   if (labels.size === 1) {
     return (
       <div className="thread-label">
-        <div>{labels.first()}</div>
+        <div style={{ backgroundColor: labelColor }}>{labels.first()}</div>
       </div>
     );
   }
 
   return (
     <div className="thread-label">
-      <div>{labels.first()}</div>
-      <div>{labels.size - 1}+</div>
+      <div style={{ backgroundColor: labelColor }}>{labels.first()}</div>
+      <div data-tip data-for={`labelstip${threadId}`}>
+        {labels.size - 1}+
+      </div>
+      <ReactTooltip
+        place="top"
+        className="labels-tooltip"
+        id={`labelstip${threadId}`}
+        type="dark"
+        effect="solid"
+      >
+        {labels.map(label => {
+          const lColor = randomcolor({
+            seed: label,
+            luminosity: 'light'
+          });
+          return (
+            <div style={{ backgroundColor: lColor }} className="innerLabel">
+              {label}
+            </div>
+          );
+        })}
+        <div className="tooltip-tip"> </div>
+      </ReactTooltip>
     </div>
   );
 };

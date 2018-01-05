@@ -5,7 +5,8 @@ import {
   loadThreads,
   multiSelectThread,
   addLabel,
-  removeLabel
+  removeLabel,
+  filterThreadsByUnread
 } from './threads';
 import { addEmails, loadEmails } from './emails';
 
@@ -18,6 +19,7 @@ export {
   addEmails,
   loadEmails,
   multiSelectThread,
+  filterThreadsByUnread,
   addLabel,
   removeLabel
 };

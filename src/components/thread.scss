@@ -68,7 +68,7 @@
       color: #b8b9bd;
       width: 15px;
       flex-shrink: 0;
-
+      visibility: hidden;
       i{
         font-size: 12px;
       }
@@ -147,7 +147,7 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      font-weight: 800;
+      font-weight: 600;
     }
 
     &:nth-child(2){
@@ -165,7 +165,7 @@
 
 .thread-read{
   color: black;
-  background-color: rgb(247, 247, 248);   
+  background-color: rgba(229, 229, 234, 0.3);   
   font-weight: 300;
 
   > div{
@@ -177,6 +177,11 @@
   }
 }
 
+.thread-read-selected{
+  @extend .thread-read;
+  background-color: #fdfbea; 
+}
+
 .thread-unread{
   color: black;
   background-color: white;
@@ -185,10 +190,15 @@
   > div{
     &:nth-child(7){
       > div{
-        background-color: #f7f7f8;
+        background-color: rgb(247, 247, 248);
       }
     }
   }
+}
+
+.thread-unread-selected{
+  @extend .thread-unread;
+  background-color: #fdfbea; 
 }
 
 .thread-icons{
@@ -257,5 +267,81 @@
   top: 0;
   left: 0;
   z-index: 1;
+}
+
+.labels-tooltip{
+  box-shadow: 0 0 5px 0 rgba(0, 0, 3, 0.13) !important;
+  display: flex !important;
+  max-width: 262px !important;
+  padding: 10px !important;
+  background-color: white !important;
+  opacity: 1 !important;
+  border-radius: 5px !important;
+
+  .innerLabel{
+    background-color: rgb(255, 187, 99);
+    color: white;
+    max-width: 92px;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 10px;
+    margin: 0 3px;
+  }
+
+  &:after{
+    visibility: hidden !important;
+  }
+
+}
+
+.place-bottom{
+  .tooltip-tip{
+    width: 40px;
+    height: 15px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    overflow: hidden;
+  
+    &:after{
+      content: "";
+      height: 15px;
+      width: 15px;
+      background-color: white;
+      left: 50%;
+      transform: translateX(-50%) translateY(60%) rotate(45deg);
+      box-shadow: 0 0 5px 0 rgba(0, 0, 3, 0.13);
+      position: absolute;
+    }
+  }
+}
+
+.place-top{
+  .tooltip-tip{
+    width: 40px;
+    height: 15px;
+    position: absolute;
+    bottom: 0.1px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    overflow: hidden;
+  
+    &:after{
+      content: "";
+      height: 15px;
+      width: 15px;
+      background-color: white;
+      left: 50%;
+      transform: translateX(-50%) translateY(-60%) rotate(45deg);
+      box-shadow: 0 0 5px 0 rgba(0, 0, 3, 0.13);
+      position: absolute;
+    }
+  }
 }
 

@@ -11,6 +11,8 @@ Immutable.List [
       10,
       43,
     ],
+    labels: Immutable.Set [
+    ],
   },
   Immutable.Map {
     id: 13,
@@ -20,6 +22,8 @@ Immutable.List [
     emails: Immutable.List [
       11,
       21,
+    ],
+    labels: Immutable.Set [
     ],
   },
 ]
@@ -36,6 +40,9 @@ Immutable.List [
       10,
       43,
     ],
+    labels: Immutable.Set [
+    ],
+    selected: false,
     unread: false,
   },
 ]
