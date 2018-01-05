@@ -54,7 +54,7 @@ class ThreadItem extends Component {
   };
 
   onSelectThread = () => {
-    this.props.onSelectThread(this.props.myIndex);
+    this.props.onSelectThread(this.props.thread.get('id'));
   };
 
   stopPropagation = ev => {

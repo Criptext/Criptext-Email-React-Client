@@ -6,9 +6,11 @@ export default (state = List([]), action) => {
     case Types.Thread.SELECT:
       const newThreads = state
         .map(thread => thread.set('selected', false))
-        .update(action.selectedThread, thread => {
-          return thread.set('unread', false);
-        });
+        .update(state.findIndex(function(item) {
+          return item.get('id') === action.selectedThread;
+        }), function(item) {
+          return item.set('unread', false);
+        })
       return newThreads;
     case Types.Thread.ADD_BATCH:
       const threads = action.threads.map(thread => {
