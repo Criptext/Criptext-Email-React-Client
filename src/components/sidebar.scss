@@ -2,6 +2,7 @@
 
 aside.navigation-app{
   display: inline-table;
+  height: 100%;
   width: 210px;
 
   header{
@@ -24,6 +25,10 @@ aside.navigation-app{
 .navigation-partial-mail{
   border-right: solid 1px #d8d8d8;
   border-top: solid 1px #d8d8d8;
+  display: flex;
+  height: calc(100% - 61px);
+  flex-direction: column;
+  overflow: auto;
   width: calc(100% - 1px);
 
   nav ul{
@@ -38,10 +43,12 @@ aside.navigation-app{
       a {
         color: black;
         display: block;
-        margin-left: 20px;
+        font-family: NunitoSans;
+        font-size: 13px;
+        margin-left: 15px;
         text-align: left;
         text-decoration: none;
-        width: calc(100% - 135px);
+        width: calc(100% - 131px);
       }
     }
   }
@@ -74,43 +81,66 @@ button{
   }
 
   span{
-    font-family: 'NunitoSans-800';
+    font-family: NunitoSans;
     font-size: 13px;
+    font-weight: 800;
     position: relative;
     top: -1px;
   }
 }
 
-.nav-item{
-  align-items: center;
-  display: flex;
-  height: 37px;
-  width: 100%;
-}
 
-.nav-item-selected{
-  background-color: #f2f8ff;
-}
+.nav-item-more{
+  height: auto;
+  flex-direction: column;
 
-.nav-item-icon{
-  height: 15px;
-  margin: 0 10px 0 32px;
-  width: 15px;
-}
+  .nav-item-container{
+    align-items: center;
+    display: flex;
+    height: 37px;
+    width: 100%;
+  }
 
-.nav-notif{
-  background-color: #65bdff;
-  border-radius: 13px;
-  height: 17px;
-  margin-left: 15px;
-  width: 26px;
-
-  span {
-    color: white;
-    font-size: 11px;
+  ul{
+    max-height: 75px;
+    overflow: auto;
+    width: 100%;
   }
 }
 
-.nav-item-expand{
-  border-top: 0.5px solid #d8d8d8;
+.nav-item-collapse{
+  height: 75px;
+}
+
+.line-separator{
+  border-top: solid 1px #d8d8d8;
+  left: 30px;
+  height: 1px;
+  position: absolute;
+  top: 0;
+  width: 144px;
+}
+
+.nav-item-option{
+  color: #d8d8d8;
+  font-size: 10px;
+}
+
+.nav-item-label{
+  align-items: center;
+  height: 25px;
+  width: 100%;
+
+  div{
+    background: #7ed321;
+    border-radius: 3px;
+    margin: 0 12px 0 55px;
+    height: 6px;
+    width: 6px;
+  }
+
+  span{
+    font-family: NunitoSans;
+    font-size: 13px;
+  }
 }

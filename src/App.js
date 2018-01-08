@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ThreadsList from './containers/ThreadsList';
 import MailBox from './components/MailBox';
-import SideBar from './components/SideBar';
+import SideBar from './containers/SideBar';
 import ActivityPanel from './components/ActivityPanel';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
@@ -23,10 +23,12 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div className="wrapper">
-            <SideBar />
-            <Route path="/" component={Inbox} />
-            <ActivityPanel />
+          <div className="wrapper-out">
+            <div className="wrapper-in">
+              <SideBar />
+              <Route path="/" component={Inbox} />
+              <ActivityPanel />
+            </div>
           </div>
         </Router>
       </Provider>
