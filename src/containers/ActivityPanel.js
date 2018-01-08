@@ -1,11 +1,15 @@
 import { connect } from 'react-redux';
 import { loadFeeds } from '../actions/index';
 import ActivityPanelView from '../components/ActivityPanel';
-import { fromJS } from 'immutable';
+import * as TimeUtils from '../utils/TimeUtils';
+
 
 const clasifyFeeds = (feeds) => {
   const newFeeds = [], oldFeeds = [];
-  feeds.map(feed => {
+  let myfeeds = feeds.map(feed => {
+    return feed.set("feedtime", TimeUtils.defineTimeByToday(feed.get('time')));
+  });
+  myfeeds.map(feed => {
     feed.get("state") === "new" ? newFeeds.push(feed) : oldFeeds.push(feed);
   })
   return {

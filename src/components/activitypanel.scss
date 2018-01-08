@@ -1,6 +1,8 @@
 @import "./../styles/index.scss";
 
 aside.navigation-feed{
+  font-family: 'NunitoSans';
+  font-size: 0.9em;
   display: inline-table;
   width: 288px;
 
@@ -12,36 +14,56 @@ aside.navigation-feed{
       margin: 0%;
 
       .header-title {
-        padding: 8% 0% 8% 10%;
-        width: 70%;
+        width: 65%;
+        padding: 7% 0% 7% 10%;
+        margin: 0%;
+        font-weight: 900;
+        float: left;
       }
 
       .header-button {
-        width: 30%;
-      }
-    }
-
-    .navigation-feed-header{
-      width: 70%;
-
-      h3{
         margin: 0%;
-    	padding-top: 3%;
+        width: 25%;
+        height: $_HEIGHT_HEADER;
+        background-color: #0390FC;
+        float: left;
       }
-    }
 
-    .navigation-feed-button{
-      width: 30%;
+      .header-clear {
+        clear: both;
+      }
     }
   }
 
 
   nav {
+    hr {
+      margin: 0px 0px 0px 10px;
+      border: 0;
+      height: 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
 
     .new-feeds{
       padding-left: 0%;
+      margin-bottom: 0%;
       list-style-type: none;
       font-size: 0.9em;
+
+      .unread-feed {
+        background-color: #f2f8ff;
+        .feed-content {
+          .feed-name {
+            font-weight: bold;
+          }
+        }
+        .feed-content {
+          .feed-time {
+            font-weight: bold;
+          }
+        }
+      }
 
       .feed-section-title {
         .text{
@@ -52,12 +74,11 @@ aside.navigation-feed{
       
       .feed-item {
         height: 50px;
-        padding: 5% 5% 3% 20%;
+        padding: 5% 8% 3% 20%;
         margin-bottom: 3px;
       
         .feed-content{
           .feed-name{
-            font-weight: bold;
             margin: 0% 0% 2% 0%;
           }
 
@@ -66,12 +87,13 @@ aside.navigation-feed{
             float: left;
             margin: 0%;
             width: 70%;
-    		white-space: nowrap; 
-    		overflow: hidden;
-    		text-overflow: ellipsis;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           .feed-time{
+            text-align: right;
             margin: 0%;
             float: right;
             width: 30%;
