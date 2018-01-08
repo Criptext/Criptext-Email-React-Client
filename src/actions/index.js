@@ -1,23 +1,25 @@
 import { addUsers, addUser } from './users';
 import {
+  addLabel,
   addThreads,
-  selectThread,
+  filterThreadsByUnread,
   loadThreads,
   multiSelectThread,
-  addLabel,
-  removeLabel
+  removeLabel,
+  selectThread
 } from './threads';
 import { addEmails, loadEmails } from './emails';
 
 export {
+  addEmails,
+  addLabel,
+  addThreads,
   addUsers,
   addUser,
-  addThreads,
-  selectThread,
-  loadThreads,
-  addEmails,
+  filterThreadsByUnread,
   loadEmails,
+  loadThreads,
   multiSelectThread,
-  addLabel,
-  removeLabel
+  removeLabel,
+  selectThread
 };

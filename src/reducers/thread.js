@@ -4,12 +4,18 @@ import { Map, Set, List } from 'immutable';
 export default (state = List([]), action) => {
   switch (action.type) {
     case Types.Thread.SELECT:
-      return state.update(action.selectedThread, thread => {
-        return thread.set('unread', false);
-      });
+      const newThreads = state
+        .map(thread => thread.set('selected', false))
+        .update(action.selectedThread, thread => {
+          return thread.set('unread', false);
+        });
+      return newThreads;
     case Types.Thread.ADD_BATCH:
       const threads = action.threads.map(thread => {
-        return Map(thread).set('labels', Set(thread.labels));
+        return Map(thread).merge({
+          labels: Set(thread.labels),
+          emails: List(thread.emails)
+        });
       });
       return state.concat(List(threads));
     case Types.Thread.MULTISELECT:
@@ -43,6 +49,8 @@ export default (state = List([]), action) => {
           });
         }
       );
+    case Types.Thread.UNREAD_FILTER:
+      return state.map(thread => thread.set('selected', false));
     default:
       return state;
   }

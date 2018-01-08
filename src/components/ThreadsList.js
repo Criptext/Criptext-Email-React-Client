@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './threads.css';
 import ThreadItem from '../containers/ThreadItem';
+import { Switch } from 'react-switch-input';
 
 class ThreadsList extends Component {
   componentDidMount() {
@@ -11,8 +12,17 @@ class ThreadsList extends Component {
     return (
       <div className="threads-wrapper">
         <div className="threads-info-header">
-          <div>INBOX</div>
-          <div>Unread O-- All</div>
+          <div className="threads-mailbox-label">INBOX</div>
+          <div className="threads-toggle-container">
+            <span>Unread</span>
+            <Switch
+              style={'two'}
+              name="unreadSwitch"
+              onChange={this.handleSwitchChange}
+              checked={!this.props.unreadFilter}
+            />
+            <span>All</span>
+          </div>
         </div>
         <div className="threads-container" onScroll={this.handleTableScrolled}>
           {this.props.threads.map((thread, index) => {
@@ -29,6 +39,10 @@ class ThreadsList extends Component {
       </div>
     );
   }
+
+  handleSwitchChange = ev => {
+    this.props.onUnreadToggle(!ev.target.checked);
+  };
 
   handleTableScrolled = e => {
     const scrollTop = e.target.scrollTop;

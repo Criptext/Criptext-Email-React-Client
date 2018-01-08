@@ -8,9 +8,9 @@ import { Label } from '../utils/ConstUtils';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
   if (thread.get('unread') && threadPos !== selectedThread) {
-    return 'thread-unread';
+    return thread.get('selected') ? 'thread-unread-selected' : 'thread-unread';
   }
-  return 'thread-read';
+  return thread.get('selected') ? 'thread-read-selected' : 'thread-read';
 };
 
 const getCapitalLetters = name => {
@@ -53,7 +53,7 @@ const mapStateToProps = (state, myProps) => {
     thread: myThread,
     color: randomcolor({
       seed: contacts[0].email,
-      luminosity: 'dark'
+      luminosity: 'bright'
     }),
     multiselect: state.get('activities').get('multiselect'),
     starred: thread.get('labels').contains(Label.STARRED),

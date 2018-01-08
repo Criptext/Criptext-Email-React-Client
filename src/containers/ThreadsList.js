@@ -1,11 +1,19 @@
 import { connect } from 'react-redux';
-import { loadThreads } from '../actions/index';
+import { loadThreads, filterThreadsByUnread } from '../actions/index';
 import ThreadsListView from '../components/ThreadsList';
+import { Label } from '../utils/ConstUtils';
 
 const mapStateToProps = state => {
+  const unreadFilter = state.get('activities').get('unreadFilter');
+  const threads = unreadFilter
+    ? state.get('threads').filter(thread => {
+        return thread.get('unread');
+      })
+    : state.get('threads');
   return {
-    threads: state.get('threads'),
-    selectedThread: state.get('activities').selectedThread
+    threads: threads,
+    selectedThread: state.get('activities').get('selectedThread'),
+    unreadFilter: unreadFilter
   };
 };
 
@@ -13,6 +21,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onLoadThreads: () => {
       dispatch(loadThreads(dispatch));
+    },
+    onUnreadToggle: enabled => {
+      dispatch(filterThreadsByUnread(enabled));
     }
   };
 };

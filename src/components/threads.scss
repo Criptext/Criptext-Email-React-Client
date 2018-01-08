@@ -21,6 +21,21 @@
   padding: 0 19px;
 }
 
+.threads-toggle-container{
+  display: flex;
+  font-size: 11px;
+  font-weight: 500;
+
+  > *{
+    margin: 0 10px;
+  }
+}
+
+.threads-mailbox-label{
+  font-size: 13px;
+  font-weight: bold;
+}
+
 .threads-container{
   height: calc(100% - 44px);
   overflow-y: auto;
