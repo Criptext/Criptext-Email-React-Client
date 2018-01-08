@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { loadLabels, addLabel } from '../actions';
+import { loadLabels } from '../actions';
 import SideBarView from '../components/SideBar';
 
 const mapStateToProps = (state, ownProps) => {

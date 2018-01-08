@@ -1,4 +1,5 @@
 import { Label } from './types';
+const inLabel = 10;
 
 export const addLabels = labels => {
   return {
@@ -9,12 +10,11 @@ export const addLabels = labels => {
 
 export const addLabel = label => {
   let labels = {
-    '10': {
-      id: 10,
+    inLabel: {
+      id: inLabel,
       text: label
     }
   };
-  console.log(labels);
   return {
     type: Label.ADD_BATCH,
     labels: labels

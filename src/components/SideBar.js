@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import SideBarItem from './../components/SideBarItem';
 import LabelEdit from './../containers/LabelEdit';
+import { MailItems } from './../utils/const';
 import './sidebar.css';
 
 class SideBar extends Component {
@@ -13,7 +14,7 @@ class SideBar extends Component {
   }
 
   render() {
-    return (
+    return ( 
       <aside className="navigation-app">
         <header>
           <div className="header-icon" />
@@ -27,70 +28,18 @@ class SideBar extends Component {
           </div>
           <nav>
             <ul>
-              <li className="nav-item nav-item-selected">
-                <div className="nav-item-icon">
-                  <i className="icon-mailbox" />
-                </div>
-                <Link to="/inbox">Inbox</Link>
-              </li>
-              <li className="nav-item">
-                <div className="nav-item-icon">
-                  <i className="icon-sent" />
-                </div>
-                <Link to="/">Sent</Link>
-                <div className="nav-item-notif">
-                  <span>+99</span>
-                </div>
-              </li>
-              <li className="nav-item">
-                <div className="nav-item-icon">
-                  <i className="icon-doc" />
-                </div>
-                <Link to="/">Draft</Link>
-                <div className="nav-item-notif">
-                  <span>10</span>
-                </div>
-              </li>
-              <li className="nav-item">
-                <div className="nav-item-icon">
-                  <i className="icon-start" />
-                </div>
-                <Link to="/">Starred</Link>
-              </li>
-              <li className="nav-item">
-                <div className="nav-item-icon">
-                  <i className="icon-not" />
-                </div>
-                <Link to="/">Spam</Link>
-              </li>
-              <li className="nav-item">
-                <div className="nav-item-icon">
-                  <i className="icon-trash" />
-                </div>
-                <Link to="/">Trash</Link>
-              </li>
-              <li className="nav-item">
-                <div className="nav-item-icon">
-                  <i className="icon-calendar" />
-                </div>
-                <Link to="/">Send Later</Link>
-              </li>
-              <li className="nav-item">
-                <div className="nav-item-icon">
-                  <i className="icon-bell-inclined" />
-                </div>
-                <Link to="/">Reminders</Link>
-                <div className="nav-item-notif">
-                  <span>3</span>
-                </div>
-              </li>
+              {
+                MailItems.map((item, key) => {
+                  return <SideBarItem key={key} item={item}/>
+                })
+              }
               <li className="nav-item nav-item-more">
                 <div className="line-separator" />
                 <div className="nav-item-container">
                   <div className="nav-item-icon">
                     <i className="icon-tag" />
                   </div>
-                  <Link to="/">Labels</Link>
+                  <a>Labels</a>
                   <div
                     className="nav-item-option"
                     onClick={e => this.handleToggleShowLabelButtonClick(e)}
@@ -104,19 +53,7 @@ class SideBar extends Component {
                     />
                   </div>
                 </div>
-                {this.state.showLabels ? (
-                  <ul>
-                    {' '}
-                    {this.props.labels.valueSeq().map((label, key) => {
-                      return (
-                        <li key={key} className="nav-item-label">
-                          <div />
-                          <span>{label.get('text')}</span>
-                        </li>
-                      );
-                    })}{' '}
-                  </ul>
-                ) : null}
+                {this.renderLabels()}
               </li>
             </ul>
           </nav>
@@ -133,6 +70,23 @@ class SideBar extends Component {
   handleToggleShowLabelButtonClick = () => {
     this.setState({ showLabels: !this.state.showLabels });
   };
+
+  renderLabels = () => {
+    return ( 
+      <ul>
+      {this.state.showLabels ? 
+          this.props.labels.valueSeq().map((label, key) => {
+            return (
+              <li key={key} className="nav-item-label">
+                <div />
+                <span>{label.get('text')}</span>
+              </li>
+            );
+          })
+       : null}
+      </ul>
+    )
+  }
 }
 
 SideBar.propTypes = {
