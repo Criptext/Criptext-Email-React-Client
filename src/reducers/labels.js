@@ -1,10 +1,10 @@
-import * as Types from '../actions/types';
+import { Label } from '../actions/types';
 import { Map, fromJS } from 'immutable';
 
 export default (state = new Map({}), action) => {
   switch (action.type) {
-    case Types.Email.ADD_BATCH:
-      return state.merge(fromJS(action.emails));
+    case Label.ADD_BATCH:
+      return state.merge(fromJS(action.labels));
     default:
       return state;
   }

@@ -9,15 +9,18 @@ import {
   selectThread
 } from './threads';
 import { addEmails, loadEmails } from './emails';
+import { addLabels, addLabel, loadLabels } from './labels';
 
 export {
   addEmails,
   addLabel,
+  addLabels,
   addThreads,
-  addUsers,
   addUser,
+  addUsers,
   filterThreadsByUnread,
   loadEmails,
+  loadLabels,
   loadThreads,
   multiSelectThread,
   removeLabel,

@@ -15,3 +15,8 @@ export const User = {
 export const Email = {
   ADD_BATCH: 'ADD_EMAILS'
 };
+
+export const Label = {
+  ADD_BATCH: 'ADD_LABELS',
+  ADD_LABEL: 'ADD_LABEL'
+};
