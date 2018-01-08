@@ -1,6 +1,5 @@
 import { addUsers, addUser } from './users';
 import {
-  addLabel,
   addThreads,
   filterThreadsByUnread,
   loadThreads,
