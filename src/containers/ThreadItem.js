@@ -8,9 +8,9 @@ import { Label } from '../utils/ConstUtils';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
   if (thread.get('unread') && threadPos !== selectedThread) {
-    return thread.get('selected') ? ' thread-unread-selected' : 'thread-unread';
+    return thread.get('selected') ? 'thread-unread-selected' : 'thread-unread';
   }
-  return thread.get('selected') ? ' thread-read-selected' : 'thread-read';
+  return thread.get('selected') ? 'thread-read-selected' : 'thread-read';
 };
 
 const getCapitalLetters = name => {

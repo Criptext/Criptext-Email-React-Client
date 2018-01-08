@@ -6,7 +6,7 @@ import randomcolor from 'randomcolor';
 
 class ThreadItem extends Component {
   render() {
-    const style = this.mustShowStyle();
+    const visibleStyle = this.getStyleVisibilityByMultiselect();
     const thread = this.props.thread;
     return (
       <div
@@ -29,18 +29,18 @@ class ThreadItem extends Component {
             {thread.get('preview')}
           </div>
         </div>
-        <div style={style}>
+        <div style={visibleStyle}>
           <div />
           <div>{willDisplayAttachIcon(thread)}</div>
           <div>{willDisplayAckIcon(thread)}</div>
         </div>
-        <div style={style}>{thread.get('date')}</div>
+        <div style={visibleStyle}>{thread.get('date')}</div>
         {this.renderMenu()}
       </div>
     );
   }
 
-  mustShowStyle = () => {
+  getStyleVisibilityByMultiselect = () => {
     if (!this.props.multiselect) {
       return null;
     }
