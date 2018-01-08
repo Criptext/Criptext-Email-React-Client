@@ -8,14 +8,7 @@ class ActivityPanel extends Component {
     this.props.onLoadFeeds();
   }
 
-  render(){
-    let newSectionTitle = null, oldSectionTitle = null;
-    if (this.props.newFeeds && this.props.newFeeds.length>0) {
-      newSectionTitle = <li className="feed-section-title"><p className="text">NEW</p></li>
-    }
-    if (this.props.oldFeeds && this.props.oldFeeds.length>0) {
-      oldSectionTitle = <li className="feed-section-title"><p className="text">OLDER</p></li>
-    }
+  render() {
     return (
       <aside className="navigation-feed">
         <header>
@@ -27,7 +20,10 @@ class ActivityPanel extends Component {
         </header>
         <nav>
           <ul className="new-feeds">
-            {newSectionTitle}
+            { this.props.newFeeds && this.props.newFeeds.length>0 ? 
+              <li className="feed-section-title"><p className="text">NEW</p></li>
+              : null
+            }
             {this.props.newFeeds.map((feed, index) => {
               const unread = feed.get('unread');
               return <Feed key={index} feed={feed} unread={unread} />;
@@ -35,7 +31,10 @@ class ActivityPanel extends Component {
           </ul>
           <hr />
           <ul className="new-feeds">
-            {oldSectionTitle}
+            { this.props.oldFeeds && this.props.oldFeeds.length>0 ? 
+              <li className="feed-section-title"><p className="text">OLDER</p></li>
+              : null
+            }
             {this.props.oldFeeds.map((feed, index) => {
               const unread = feed.get('unread');
               return <Feed key={index} feed={feed} unread={unread} />;
