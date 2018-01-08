@@ -20,3 +20,7 @@ export const Label = {
   ADD_BATCH: 'ADD_LABELS',
   ADD_LABEL: 'ADD_LABEL'
 };
+
+export const Feed = {
+  ADD_BATCH: 'ADD_FEEDS'
+}
