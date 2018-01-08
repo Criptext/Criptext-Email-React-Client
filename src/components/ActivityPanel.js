@@ -19,27 +19,27 @@ class ActivityPanel extends Component {
           </div>
         </header>
         <nav>
-          <ul className="new-feeds">
-            { this.props.newFeeds && this.props.newFeeds.length>0 ? 
+          { this.props.newFeeds && this.props.newFeeds.length>0 ? 
+            <ul className="new-feeds">
               <li className="feed-section-title"><p className="text">NEW</p></li>
-              : null
-            }
-            {this.props.newFeeds.map((feed, index) => {
-              const unread = feed.get('unread');
-              return <Feed key={index} feed={feed} unread={unread} />;
-            })}
-          </ul>
-          <hr />
-          <ul className="new-feeds">
-            { this.props.oldFeeds && this.props.oldFeeds.length>0 ? 
+              {this.props.newFeeds.map((feed, index) => {
+                const unread = feed.get('unread');
+                return <Feed key={index} feed={feed} unread={unread} />;
+              })}
+              <hr />
+            </ul>
+            : null
+          }
+          { this.props.oldFeeds && this.props.oldFeeds.length>0 ? 
+            <ul className="new-feeds">
               <li className="feed-section-title"><p className="text">OLDER</p></li>
-              : null
-            }
-            {this.props.oldFeeds.map((feed, index) => {
-              const unread = feed.get('unread');
-              return <Feed key={index} feed={feed} unread={unread} />;
-            })}
-          </ul>
+              {this.props.oldFeeds.map((feed, index) => {
+                const unread = feed.get('unread');
+                return <Feed key={index} feed={feed} unread={unread} />;
+              })}
+            </ul>
+            : null
+          }
         </nav>
       </aside>
     );
