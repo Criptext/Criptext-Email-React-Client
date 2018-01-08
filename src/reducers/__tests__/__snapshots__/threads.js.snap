@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`thread actions should add label Starred 1`] = `
+Immutable.List [
+  Immutable.Map {
+    id: 23,
+    subject: "test subject 23",
+    preview: "preview 23",
+    date: 1234567890,
+    emails: Immutable.List [
+      10,
+      43,
+    ],
+    labels: Immutable.Set [
+      "Starred",
+    ],
+  },
+]
+`;
+
 exports[`thread actions should add threads to state 1`] = `
 Immutable.List [
   Immutable.Map {
@@ -29,6 +47,23 @@ Immutable.List [
 ]
 `;
 
+exports[`thread actions should remove label Starred 1`] = `
+Immutable.List [
+  Immutable.Map {
+    id: 23,
+    subject: "test subject 23",
+    preview: "preview 23",
+    date: 1234567890,
+    emails: Immutable.List [
+      10,
+      43,
+    ],
+    labels: Immutable.Set [
+    ],
+  },
+]
+`;
+
 exports[`thread actions should set thread as read 1`] = `
 Immutable.List [
   Immutable.Map {
@@ -44,6 +79,24 @@ Immutable.List [
     ],
     selected: false,
     unread: false,
+  },
+]
+`;
+
+exports[`thread actions should set thread as selected 1`] = `
+Immutable.List [
+  Immutable.Map {
+    id: 23,
+    subject: "test subject 23",
+    preview: "preview 23",
+    date: 1234567890,
+    emails: Immutable.List [
+      10,
+      43,
+    ],
+    labels: Immutable.Set [
+    ],
+    selected: true,
   },
 ]
 `;
