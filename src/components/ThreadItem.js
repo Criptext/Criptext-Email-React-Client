@@ -99,9 +99,12 @@ class ThreadItem extends Component {
       return null;
     }
 
+    const threadId = this.props.thread.get('id');
+
     return (
       <div className="thread-label-option">
         <div
+          data-tip data-for={`starred${threadId}`}
           className={this.props.starred ? 'thread-label-mark' : ''}
           onClick={ev => {
             ev.stopPropagation();
@@ -109,8 +112,19 @@ class ThreadItem extends Component {
           }}
         >
           <i className="material-icons">star</i>
+          <ReactTooltip
+            place="top"
+            className="labels-tooltip"
+            id={`starred${threadId}`}
+            type="dark"
+            effect="solid"
+          >
+            Favorite
+            <div className="tooltip-tip"> </div>
+          </ReactTooltip>
         </div>
         <div
+          data-tip data-for={`important${threadId}`}
           className={this.props.important ? 'thread-label-mark' : ''}
           onClick={ev => {
             ev.stopPropagation();
@@ -118,13 +132,43 @@ class ThreadItem extends Component {
           }}
         >
           <i className="material-icons">label_outline</i>
+          <ReactTooltip
+            //ref = { r => { this.important = r } }
+            place="top"
+            className="labels-tooltip"
+            id={`important${threadId}`}
+            type="dark"
+            effect="solid"
+          >
+            Important
+            <div className="tooltip-tip"> </div>
+          </ReactTooltip>
         </div>
-        <div>
+        
+        <div
+          data-tip data-for={`remove${threadId}`} 
+          onClick={this.onRemove}
+        >
           <i className="material-icons">delete</i>
+          <ReactTooltip
+            place="top"
+            className="labels-tooltip"
+            id={`remove${threadId}`}
+            type="dark"
+            effect="solid"
+          >
+            Move to trash
+            <div className="tooltip-tip"> </div>
+          </ReactTooltip>
         </div>
       </div>
     );
   };
+
+  onRemove = (ev) => {
+    ev.stopPropagation();
+    this.props.onRemove();
+  }
 }
 
 const willDisplaySecureIcon = thread => {
@@ -196,7 +240,7 @@ const willRenderLabels = (labels, threadId) => {
             luminosity: 'light'
           });
           return (
-            <div style={{ backgroundColor: lColor }} className="innerLabel">
+            <div key={label} style={{ backgroundColor: lColor }} className="innerLabel">
               {label}
             </div>
           );

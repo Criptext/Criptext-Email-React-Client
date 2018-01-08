@@ -53,6 +53,9 @@ export default (state = List([]), action) => {
       );
     case Types.Thread.UNREAD_FILTER:
       return state.map(thread => thread.set('selected', false));
+    case Types.Thread.REMOVE:
+      console.log(action.targetThread);    
+      return state.filterNot( thread => thread.get('id') === action.targetThread)
     default:
       return state;
   }

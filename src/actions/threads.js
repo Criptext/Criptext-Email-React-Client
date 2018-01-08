@@ -47,6 +47,13 @@ export const removeLabel = (threadId, label) => {
   };
 };
 
+export const removeThread = (threadId) => {
+  return {
+    type: Types.Thread.REMOVE,
+    targetThread: threadId
+  }
+}
+
 export const loadThreads = () => {
   return dispatch => {
     return fetch('/threads.json')

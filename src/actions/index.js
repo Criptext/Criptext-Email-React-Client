@@ -7,6 +7,7 @@ import {
   removeLabel,
   selectThread,
   removeLabel,
+  removeThread
 } from './threads';
 import { addEmails, loadEmails } from './emails';
 import { addLabels, addLabel, loadLabels } from './labels';
@@ -28,5 +29,8 @@ export {
   multiSelectThread,
   removeLabel,
   selectThread,
-  removeLabel
+  removeLabel,
+  addLabel,
+  removeLabel,
+  removeThread
 };

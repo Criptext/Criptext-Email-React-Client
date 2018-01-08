@@ -69,6 +69,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onMultiSelect: (threadId, value) => {
       dispatch(actions.multiSelectThread(threadId, value));
     },
+    onRemove: () => {
+      const threadId = myProps.thread.get('id');
+      dispatch(actions.removeThread(threadId))
+    },
     onStarClick: () => {
       const thread = ownProps.thread;
       if (thread.get('labels').contains(Label.STARRED)) {
