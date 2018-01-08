@@ -14,19 +14,28 @@ aside.navigation-feed{
       margin: 0%;
 
       .header-title {
-        width: 65%;
-        padding: 7% 0% 7% 10%;
+        width: 109px;
+        padding-top: 21px;
+        padding-left: 57px;
         margin: 0%;
-        font-weight: 900;
         float: left;
+        height: 19px;
+        font-size: 13px;
+        font-weight: 900;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        text-align: left;
+        color: #000000;
       }
 
       .header-button {
         margin: 0%;
         width: 25%;
         height: $_HEIGHT_HEADER;
-        background-color: #0390FC;
-        float: left;
+        background-color: #0091ff;
+        float: right;
       }
 
       .header-clear {
@@ -46,10 +55,10 @@ aside.navigation-feed{
     }
 
     .new-feeds{
-      padding-left: 0%;
-      margin-bottom: 0%;
+      padding-left: 0px;
+      margin-bottom: 0px;
+      margin-top: 0px;
       list-style-type: none;
-      font-size: 0.9em;
 
       .unread-feed {
         background-color: #f2f8ff;
@@ -61,39 +70,57 @@ aside.navigation-feed{
         .feed-content {
           .feed-time {
             font-weight: bold;
+            font-style: normal;
           }
         }
       }
 
       .feed-section-title {
         .text{
-          padding-left: 10%;
+          width: 30px;
+          height: 16px;
+          font-size: 12px;
+          color: #8a9dad;
+          padding-left: 33px;
+          padding-top: 12px;
           margin: 0% 0% 2% 0%;
         }
       }
       
       .feed-item {
-        height: 50px;
-        padding: 5% 8% 3% 20%;
-        margin-bottom: 3px;
+        height: 55px;
+        padding-top: 12px;
+        padding-bottom: 0px;
+        padding-left: 53px;
+        margin-bottom: 2px;
       
         .feed-content{
           .feed-name{
+            height: 16px;
             margin: 0% 0% 2% 0%;
+            font-size: 12px;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           .feed-subject{
-            color: silver;
+            color: #9b9b9b;
             float: left;
             margin: 0%;
             width: 70%;
+            font-size: 12px;
             white-space: nowrap; 
             overflow: hidden;
             text-overflow: ellipsis;
           }
 
           .feed-time{
-            text-align: right;
+            padding-top: 2px;
+            height: 14px;
+            font-size: 10px;
+            font-size: 10px;
+            text-align: left;
             margin: 0%;
             float: right;
             width: 30%;

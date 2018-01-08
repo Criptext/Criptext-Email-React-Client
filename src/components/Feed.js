@@ -9,7 +9,7 @@ const Feed = props => (
       </div>
       <span className="feed-subject">{props.feed.get("subtitle")}</span>
       <span className="feed-time">
-        <small>{props.feed.get("feedtime")}</small>
+        {props.feed.get("feedtime")}
       </span>
       <span className="feed-clear"></span>
     </div>
