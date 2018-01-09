@@ -12,7 +12,6 @@ Immutable.List [
       43,
     ],
     labels: Immutable.Set [
-      "Starred",
     ],
   },
 ]

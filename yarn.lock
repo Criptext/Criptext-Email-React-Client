@@ -5887,9 +5887,9 @@ react-scripts@1.0.17:
   optionalDependencies:
     fsevents "1.1.2"
 
-react-switch-input@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/react-switch-input/-/react-switch-input-0.1.6.tgz#505c1decb41c291c76eacc5e7e8cbda19682f51e"
+react-switch-input@^0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/react-switch-input/-/react-switch-input-0.1.10.tgz#5e6f6fdf51b225d7466a21b717e2b88f400f25bb"
 
 react-tooltip@^3.4.0:
   version "3.4.0"
