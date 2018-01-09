@@ -1,22 +1,41 @@
 import React, { Component } from 'react';
 import SelectHeader from './SelectHeader';
+import Header from './Header'
+import './header.css';
 
-const headerWrapper = Header =>
-  class HeaderWrapper extends Component {
-    constructor() {
-      super();
-      this.state = {
-        search: false
-      };
-    }
+class HeaderWrapper extends Component {
+  constructor() {
+    super();
+    this.state = {
+      search: "",
+      displayMoveMenu: false,
+      displayTagsMenu: false
+    };
+  }
 
-    render() {
-      return (
-        <Header />
-      );
-    }
-  };
+  render() {
+    return this.props.multiselect 
+      ? <SelectHeader 
+        displayMoveMenu={this.state.displayMoveMenu} 
+        displayTagsMenu={this.state.displayTagsMenu}
+        toggleMoveMenu={this.toggleMoveMenu}
+        toggleTagsMenu={this.toggleTagsMenu} 
+        {...this.props} />
+      : <Header {...this.props}/>;
+  }
 
-const Wrapper = headerWrapper(SelectHeader);
+  toggleMoveMenu = () => {
+    this.setState({
+      displayMoveMenu: !this.state.displayMoveMenu
+    })
+  }
 
-export default Wrapper;
+  toggleTagsMenu = () => {
+    this.setState({
+      displayTagsMenu: !this.state.displayTagsMenu
+    })
+  }
+
+};
+
+export default HeaderWrapper;

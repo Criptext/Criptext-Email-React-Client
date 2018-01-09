@@ -11,6 +11,9 @@ export default (state = Map({}), action) => {
       return state.set('multiselect', true);
     case Types.Thread.UNREAD_FILTER:
       return state.set('unreadFilter', action.enabled);
+    case Types.Thread.DESELECT_THREADS:
+    case Types.Thread.MOVE_THREADS:
+      return state.set('multiselect', false);
     default:
       return state;
   }

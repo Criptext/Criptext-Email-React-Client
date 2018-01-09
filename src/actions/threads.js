@@ -54,6 +54,33 @@ export const removeThread = (threadId) => {
   }
 }
 
+export const removeThreads = (threadsIds) => {
+  return {
+    type: Types.Thread.REMOVE_THREADS,
+    targetThreads: threadsIds
+  }
+}
+
+export const deselectThreads = () => {
+  return {
+    type: Types.Thread.DESELECT_THREADS
+  }
+}
+
+export const selectThreads = () => {
+  return {
+    type: Types.Thread.SELECT_THREADS
+  }
+}
+
+export const moveThreads = (threadsIds, label) => {
+  return {
+    label,
+    threadsIds,
+    type: Types.Thread.MOVE_THREADS,
+  }
+} 
+
 export const loadThreads = () => {
   return dispatch => {
     return fetch('/threads.json')

@@ -133,7 +133,6 @@ class ThreadItem extends Component {
         >
           <i className="material-icons">label_outline</i>
           <ReactTooltip
-            //ref = { r => { this.important = r } }
             place="top"
             className="labels-tooltip"
             id={`important${threadId}`}

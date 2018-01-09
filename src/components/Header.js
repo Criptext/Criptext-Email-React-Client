@@ -4,7 +4,7 @@ import './header.css';
 const Header = props =>{
   return (<header className='mailbox-header'>
     <div className='header-search'>
-      <i className='icon-user'>
+      <i className='icon-search'>
       </i>
       <input />
     </div>

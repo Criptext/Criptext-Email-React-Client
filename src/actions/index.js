@@ -7,7 +7,12 @@ import {
   removeLabel,
   selectThread,
   removeLabel,
-  removeThread
+  removeThread,
+  filterThreadsByUnread,
+  deselectThreads,
+  selectThreads,
+  removeThreads,
+  moveThreads,
 } from './threads';
 import { addEmails, loadEmails } from './emails';
 import { addLabels, addLabel, loadLabels } from './labels';
@@ -32,5 +37,9 @@ export {
   removeLabel,
   addLabel,
   removeLabel,
-  removeThread
+  removeThread,
+  deselectThreads,
+  selectThreads,
+  removeThreads,
+  moveThreads
 };

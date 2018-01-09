@@ -1,11 +1,11 @@
 import React from 'react';
-import HeaderWrapper from './HeaderWrapper'
+import Header from '../containers/Header'
 import ThreadsList from '../containers/ThreadsList';
 import './mailbox.css';
 
 const MailBox = props => (
   <div className="mailbox-container">
-    <HeaderWrapper />
+    <Header />
     <ThreadsList mailbox={props.match.params.mailbox} />
   </div>
 );

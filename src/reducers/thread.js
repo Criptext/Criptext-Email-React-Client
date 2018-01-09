@@ -54,8 +54,15 @@ export default (state = List([]), action) => {
     case Types.Thread.UNREAD_FILTER:
       return state.map(thread => thread.set('selected', false));
     case Types.Thread.REMOVE:
-      console.log(action.targetThread);    
       return state.filterNot( thread => thread.get('id') === action.targetThread)
+    case Types.Thread.DESELECT_THREADS:
+      return state.map(thread => thread.set('selected', false));
+    case Types.Thread.SELECT_THREADS:
+      return state.map(thread => thread.set('selected', true));
+    case Types.Thread.MOVE_THREADS:
+      return state.filterNot( thread => {
+        return action.threadsIds.includes(thread.get('id'))
+      })
     default:
       return state;
   }
