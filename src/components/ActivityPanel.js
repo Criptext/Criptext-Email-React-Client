@@ -9,7 +9,6 @@ const ActivityPanel = props => (
         <div className="header-button" />
       </div>
     </header>
-
     <nav>
       <ul className="new-feeds">
         <li className="feed-section-title">
