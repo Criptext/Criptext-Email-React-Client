@@ -132,20 +132,6 @@ const willDisplaySecureIcon = thread => {
   return <i className="material-icons">lock</i>;
 };
 
-const willDisplayTimerIcon = thread => {
-  const timerStatus = thread.get('timer');
-  switch (timerStatus) {
-    case Status.Timer.EXPIRED:
-      return <i className="material-icons error-highlight">timer</i>;
-    case Status.Timer.ENABLED:
-      return <i className="material-icons">timer</i>;
-    case Status.Timer.RUNNING:
-      return <i className="material-icons neutral-highlight">timer</i>;
-    default:
-      return null;
-  }
-};
-
 const willDisplayAttachIcon = thread => {
   if (thread.get('totalAttachments') > 0) {
     return <i className="material-icons">attach_file</i>;

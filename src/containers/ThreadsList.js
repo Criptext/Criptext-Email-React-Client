@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { loadThreads, filterThreadsByUnread } from '../actions/index';
 import ThreadsListView from '../components/ThreadsList';
-import { Label } from '../utils/ConstUtils';
 
 const mapStateToProps = state => {
   const unreadFilter = state.get('activities').get('unreadFilter');

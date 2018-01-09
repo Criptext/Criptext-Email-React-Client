@@ -16,7 +16,7 @@ class ThreadsList extends Component {
           <div className="threads-toggle-container">
             <span>Unread</span>
             <Switch
-              style={'two'}
+              style="two"
               name="unreadSwitch"
               onChange={this.handleSwitchChange}
               checked={!this.props.unreadFilter}
