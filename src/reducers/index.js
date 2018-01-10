@@ -11,6 +11,6 @@ export default combineReducers({
   users,
   activities,
   emails,
-  labels
+  labels,
   feeds
 });

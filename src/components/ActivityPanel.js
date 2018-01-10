@@ -4,9 +4,6 @@ import './activitypanel.css';
 import Feed from './Feed';
 
 class ActivityPanel extends Component {
-  componentDidMount() {
-    this.props.onLoadFeeds();
-  }
 
   render() {
     return (
@@ -19,31 +16,36 @@ class ActivityPanel extends Component {
           </div>
         </header>
         <nav>
-          { this.props.newFeeds && this.props.newFeeds.length>0 ? 
-            <ul className="new-feeds">
-              <li className="feed-section-title"><p className="text">NEW</p></li>
-              {this.props.newFeeds.map((feed, index) => {
-                const unread = feed.get('unread');
-                return <Feed key={index} feed={feed} unread={unread} />;
-              })}
-              <hr />
-            </ul>
-            : null
-          }
-          { this.props.oldFeeds && this.props.oldFeeds.length>0 ? 
-            <ul className="new-feeds">
-              <li className="feed-section-title"><p className="text">OLDER</p></li>
-              {this.props.oldFeeds.map((feed, index) => {
-                const unread = feed.get('unread');
-                return <Feed key={index} feed={feed} unread={unread} />;
-              })}
-            </ul>
-            : null
-          }
+          {this.renderFeedList(this.props.newFeeds, "NEW")}
+          {this.renderFeedList(this.props.oldFeeds, "OLDER")}
         </nav>
       </aside>
     );
   }
+
+
+  componentDidMount() {
+    this.props.onLoadFeeds();
+    console.log();
+  }
+
+
+  renderFeedList = (feedList, listName) => {
+    if ( feedList && feedList.length>0 ) {
+      return (
+        <ul className="new-feeds">
+          <li className="feed-section-title"><p className="text">{listName}</p></li>
+          {feedList.map((feed, index) => {
+            return <Feed key={index} feed={feed} unread={feed.get('unread')} />;
+          })}
+        </ul>  
+      );
+    }
+    else {
+      return null
+    }
+  }
+
 
 };
 
