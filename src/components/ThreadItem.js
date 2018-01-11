@@ -14,7 +14,7 @@ class ThreadItem extends Component {
         className={'thread-item-container ' + this.props.class}
         onClick={this.onSelectThread}
       >
-        <Link to={'/' + this.props.mailbox + '/' + thread.get('id')}>
+        <Link to={`/${this.props.mailbox}/${thread.get('id')}`}>
           <div
             onMouseEnter={this.props.onRegionEnter}
             onMouseLeave={this.props.onRegionLeave}

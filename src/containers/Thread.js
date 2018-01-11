@@ -3,14 +3,12 @@ import { loadEmails, loadThreads } from '../actions';
 import ThreadView from '../components/Thread';
 import { List, Map } from 'immutable';
 
-const emailsArray = (emailsMap, emailsId) => {
+const emailList = (emailsMap, emailIds) => {
   let result =
-    emailsMap.size === 0 || !emailsId
+    emailsMap.size === 0 || !emailIds
       ? List()
-      : emailsId.map(emailId => {
-          return emailsMap.has(emailId.toString())
-            ? emailsMap.get(emailId.toString())
-            : Map();
+      : emailIds.map(emailId => {
+          return emailsMap.get(emailId.toString()) || Map();
         });
   return result;
 };
@@ -20,7 +18,7 @@ const getEmails = (state, threadId) => {
     return thread.get('id') === threadId;
   });
   let email = thread ? thread.get('emails') : null;
-  return emailsArray(state.get('emails'), email);
+  return emailList(state.get('emails'), email);
 };
 
 const mapStateToProps = (state, ownProps) => {
