@@ -1,4 +1,4 @@
-import {Email} from './types';
+import { Email } from './types';
 
 export const addEmails = emails => {
   return {

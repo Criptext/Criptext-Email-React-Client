@@ -5,7 +5,7 @@ const Email = props => (
   <div>
     <span>{props.email.get('from')}</span>
     <span>"Lorem Ipsum is simply dummy text of the printing and"</span>
-    <div></div>
+    <div />
     <span>{props.email.get('date')}</span>
   </div>
 );

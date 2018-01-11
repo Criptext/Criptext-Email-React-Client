@@ -4,7 +4,6 @@ import threadsReducer from '../thread';
 import * as actions from '../../actions/index';
 
 describe('thread actions', () => {
-
   const threads = [
     {
       id: 23,
@@ -68,5 +67,4 @@ describe('thread actions', () => {
     const newState = threadsReducer(state, actionSelect);
     expect(newState).toMatchSnapshot();
   });
-
 });

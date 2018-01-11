@@ -1,4 +1,4 @@
-import {Email} from '../actions/types';
+import { Email } from '../actions/types';
 import { Map, fromJS } from 'immutable';
 
 export default (state = new Map({}), action) => {
