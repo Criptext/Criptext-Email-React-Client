@@ -287,6 +287,10 @@ html, body {
   width: 100%;
 }
 
+.main-container{
+  position: relative;
+  width: calc(100% - 498px);
+}
 /* 3.- INPUT
    ----------------------------- */
 input[type="text"]:focus {

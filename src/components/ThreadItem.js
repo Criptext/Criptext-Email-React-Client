@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import './thread.css';
+import { Link } from 'react-router-dom';
 import * as Status from '../utils/ConstUtils';
 import ReactTooltip from 'react-tooltip';
 import randomcolor from 'randomcolor';
+import './threaditem.css';
 
 class ThreadItem extends Component {
   render() {
@@ -10,31 +11,33 @@ class ThreadItem extends Component {
     const thread = this.props.thread;
     return (
       <div
-        className={'thread-container ' + this.props.class}
+        className={'thread-item-container ' + this.props.class}
         onClick={this.onSelectThread}
       >
-        <div
-          onMouseEnter={this.props.onRegionEnter}
-          onMouseLeave={this.props.onRegionLeave}
-        >
-          {this.renderFirstColumn()}
-        </div>
-        <div>{thread.get('header')}</div>
-        <div>{willDisplaySecureIcon(thread)}</div>
-        <div>
-          {willRenderLabels(thread.get('labels'), thread.get('id'))}
-          <div className="thread-subject">{thread.get('subject')}</div>
-          <div className="thread-preview">
-            {this.renderMultipleSpaces(3)}
-            {thread.get('preview')}
+        <Link to={"/"+this.props.mailbox+"/"+thread.get('id')}>
+          <div
+            onMouseEnter={this.props.onRegionEnter}
+            onMouseLeave={this.props.onRegionLeave}
+          >
+            {this.renderFirstColumn()}
           </div>
-        </div>
-        <div style={visibleStyle}>
-          <div />
-          <div>{willDisplayAttachIcon(thread)}</div>
-          <div>{willDisplayAckIcon(thread)}</div>
-        </div>
-        <div style={visibleStyle}>{thread.get('date')}</div>
+          <div>{thread.get('header')}</div>
+          <div>{willDisplaySecureIcon(thread)}</div>
+          <div>
+            {willRenderLabels(thread.get('labels'), thread.get('id'))}
+            <div className="thread-subject">{thread.get('subject')}</div>
+            <div className="thread-preview">
+              {this.renderMultipleSpaces(3)}
+              {thread.get('preview')}
+            </div>
+          </div>
+          <div style={visibleStyle}>
+            <div />
+            <div>{willDisplayAttachIcon(thread)}</div>
+            <div>{willDisplayAckIcon(thread)}</div>
+          </div>
+          <div style={visibleStyle}>{thread.get('date')}</div>
+        </Link>
         {this.renderMenu()}
       </div>
     );
@@ -97,7 +100,7 @@ class ThreadItem extends Component {
     }
 
     return (
-      <div>
+      <div className="thread-label-option">
         <div
           className={this.props.starred ? 'thread-label-mark' : ''}
           onClick={ev => {

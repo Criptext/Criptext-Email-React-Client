@@ -1,18 +1,12 @@
 import React from 'react';
+import ThreadsList from '../containers/ThreadsList';
 import './mailbox.css';
 
-const MailBox = Component =>
-  class extends Component {
-    render() {
-      return (
-        <div className="mailbox-container">
-          <header />
-          <div>
-            <Component {...this.props} />
-          </div>
-        </div>
-      );
-    }
-  };
+const MailBox = props => (
+  <div className="mailbox-container">
+    <header />
+    <ThreadsList mailbox={props.match.params.mailbox}/>
+  </div>
+);
 
 export default MailBox;

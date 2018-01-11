@@ -38,9 +38,9 @@ const buildParticipantsColumnString = contacts => {
   }... (${contacts.length - 2})`;
 };
 
-const mapStateToProps = (state, myProps) => {
-  const selectedThread = myProps.selectedThread;
-  const thread = myProps.thread;
+const mapStateToProps = (state, ownProps) => {
+  const selectedThread = ownProps.selectedThread;
+  const thread = ownProps.thread;
   const contacts = UserUtils.parseAllContacts(thread.get('participants'));
   const letters = getCapitalLetters(contacts[0].name);
   const myThread = thread.merge({
@@ -49,7 +49,7 @@ const mapStateToProps = (state, myProps) => {
     date: TimeUtils.defineTimeByToday(thread.get('lastEmailDate'))
   });
   return {
-    class: getThreadClass(thread, myProps.myIndex, selectedThread),
+    class: getThreadClass(thread, ownProps.myIndex, selectedThread),
     thread: myThread,
     color: randomcolor({
       seed: contacts[0].email,
@@ -61,7 +61,7 @@ const mapStateToProps = (state, myProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, myProps) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onSelectThread: threadPosition => {
       dispatch(actions.selectThread(threadPosition));
@@ -70,7 +70,7 @@ const mapDispatchToProps = (dispatch, myProps) => {
       dispatch(actions.multiSelectThread(threadId, value));
     },
     onStarClick: () => {
-      const thread = myProps.thread;
+      const thread = ownProps.thread;
       if (thread.get('labels').contains(Label.STARRED)) {
         dispatch(actions.removeLabel(thread.get('id'), Label.STARRED));
       } else {
@@ -78,7 +78,7 @@ const mapDispatchToProps = (dispatch, myProps) => {
       }
     },
     onImportantClick: () => {
-      const thread = myProps.thread;
+      const thread = ownProps.thread;
       if (thread.get('labels').contains(Label.IMPORTANT)) {
         dispatch(actions.removeLabel(thread.get('id'), Label.IMPORTANT));
       } else {

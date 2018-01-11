@@ -1,7 +1,7 @@
 {
   "threads": [
     {
-      "participants": "Pedro Iniguez <pedroi@criptext.com>",
+      "participants": "Criptext Info <no-reply@criptext.com>",
       "hasOpenAttachments": false,
       "lastEmailDate": 1513779941000,
       "lastEmailId": "<serial_key>",
@@ -14,7 +14,7 @@
       "timer": 1,
       "totalAttachments": 1,
       "unread": true,
-      "emails": [25, 23, 34],
+      "emails": [1],
       "labels": ["Starred", "Spam", "Custom 1"],
       "selected": false
     },
