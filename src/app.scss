@@ -281,8 +281,8 @@ TABLE OF CONTENTS
 .icon-box:before {
   content: "\e915"
 }
-.icon-tag:before {
-  content: "\e90d"
+.icon-time:before {
+  content: "\e916"
 }
 
 /* 2.- CONTENT
@@ -309,7 +309,6 @@ html, body {
 }
 
 .main-container{
-  position: relative;
   width: calc(100% - 498px);
 }
 /* 3.- INPUT

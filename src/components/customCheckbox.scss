@@ -1,5 +1,5 @@
 
-.container {
+.checkmark-container {
   display: block;
   position: relative;
   cursor: pointer;
@@ -12,6 +12,11 @@
     position: absolute;
     opacity: 0;
   }
+
+  > div {
+    margin-left: 30px;
+    width: 100px;
+  }
 }
 
 .checkmark {
@@ -22,6 +27,7 @@
   width: 10px;
   border-radius: 3px;
   border: solid 2px #e3e3e3;
+  margin-left: 0px;
 
   &:after{
     content: "";
@@ -30,26 +36,40 @@
   }
 }
 
-.container input:checked ~ .checkmark {
+.checkmark-checked {
   background-color: #2196F3;
   border: none;
   height: 14px;
   width: 14px;
+
+  &:after{
+    display: block;
+    left: 5px;
+    top: 0;
+    width: 3px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    border-radius: 2px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
 }
 
-.container input:checked ~ .checkmark:after {
-  display: block;
-}
+.checkmark-partial{
+  background-color: #2196F3;
+  border: none;
+  height: 14px;
+  width: 14px;
 
-.container .checkmark:after {
-  left: 5px;
-  top: 0;
-  width: 3px;
-  height: 9px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  border-radius: 2px;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
+  &:after{
+    display: block;
+    left: 3px;
+    top: -3px;
+    width: 8px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 0px 2px 0;
+  }
 }

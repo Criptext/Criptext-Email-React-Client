@@ -31,10 +31,18 @@ export const filterThreadsByUnread = enabled => {
   };
 };
 
-export const addLabel = (threadId, label) => {
+export const addThreadLabel = (threadId, label) => {
   return {
-    type: Types.Thread.ADD_LABEL,
+    type: Types.Thread.ADD_THREAD_LABEL,
     targetThread: threadId,
+    label: label
+  };
+};
+
+export const addThreadsLabel = (threadId, label) => {
+  return {
+    type: Types.Thread.ADD_THREADS_LABEL,
+    threadsIds: threadId,
     label: label
   };
 };
@@ -43,6 +51,14 @@ export const removeLabel = (threadId, label) => {
   return {
     type: Types.Thread.REMOVE_LABEL,
     targetThread: threadId,
+    label: label
+  };
+};
+
+export const removeThreadsLabel = (threadId, label) => {
+  return {
+    type: Types.Thread.REMOVE_THREADS_LABEL,
+    threadsIds: threadId,
     label: label
   };
 };
@@ -61,9 +77,10 @@ export const removeThreads = (threadsIds) => {
   }
 }
 
-export const deselectThreads = () => {
+export const deselectThreads = (spread) => {
   return {
-    type: Types.Thread.DESELECT_THREADS
+    type: Types.Thread.DESELECT_THREADS,
+    spread
   }
 }
 
@@ -81,20 +98,22 @@ export const moveThreads = (threadsIds, label) => {
   }
 } 
 
+export  const markThreadsRead = (threadsIds, read) => {
+  return {
+    threadsIds,
+    read,
+    type: Types.Thread.THREAD_READ
+  }
+}
+
 export const loadThreads = () => {
-  return dispatch => {
-    return fetch('/threads.json')
-      .then(response => {
-        if (response.status === 200) {
-          return response.json();
-        }
-        return Promise.reject(response.status);
-      })
-      .then(json => {
-        dispatch(addThreads(json.threads));
-      })
-      .catch(err => {
-        console.error(err);
-      });
+  return async dispatch => {
+    try {
+      const response = await fetch('/threads.json');
+      const json = await response.json();
+      dispatch(addThreads(json.threads));
+    }catch(e){
+      console.log(e);
+    }
   };
 };

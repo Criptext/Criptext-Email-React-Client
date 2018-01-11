@@ -29,7 +29,7 @@ export default (state = List([]), action) => {
           return item.set('selected', action.value);
         }
       );
-    case Types.Thread.ADD_LABEL:
+    case Types.Thread.ADD_THREAD_LABEL:
       return state.update(
         state.findIndex(function(thread) {
           return thread.get('id') === action.targetThread;
@@ -40,6 +40,13 @@ export default (state = List([]), action) => {
           });
         }
       );
+    case Types.Thread.ADD_THREADS_LABEL:
+      return state.map(thread => {
+        if(!action.threadsIds.includes(thread.get('id'))){
+          return thread;
+        }
+        return thread.update('labels', labels => labels.add(action.label))
+      });
     case Types.Thread.REMOVE_LABEL:
       return state.update(
         state.findIndex(function(thread) {
@@ -51,6 +58,20 @@ export default (state = List([]), action) => {
           });
         }
       );
+    case Types.Thread.REMOVE_THREADS_LABEL:
+      return state.map(thread => {
+        if(!action.threadsIds.includes(thread.get('id'))){
+          return thread;
+        }
+        return thread.update('labels', labels => labels.delete(action.label))
+      });
+    case Types.Thread.THREAD_READ:
+      return state.map(thread => {
+        if(!action.threadsIds.includes(thread.get('id'))){
+          return thread;
+        }
+        return thread.set('unread', !action.read)
+      });
     case Types.Thread.UNREAD_FILTER:
       return state.map(thread => thread.set('selected', false));
     case Types.Thread.REMOVE:

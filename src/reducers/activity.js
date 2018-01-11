@@ -12,6 +12,11 @@ export default (state = Map({}), action) => {
     case Types.Thread.UNREAD_FILTER:
       return state.set('unreadFilter', action.enabled);
     case Types.Thread.DESELECT_THREADS:
+      if(action.spread){
+        console.log(action.spread);
+        return state.set('multiselect', false);
+      }
+      return state;
     case Types.Thread.MOVE_THREADS:
       return state.set('multiselect', false);
     default:

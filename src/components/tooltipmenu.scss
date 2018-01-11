@@ -3,8 +3,7 @@
 }
 
 .tooltip-menu-wrapper{
-  width: 204px;
-  height: 109.7px;
+  min-width: 204px;
   background-color: #fdfdfd;
   box-shadow: 1px 7px 19px 0 rgba(0, 0, 0, 0.14);
   border: solid 0.5px #ececee;
@@ -15,33 +14,18 @@
   z-index: 200;
   border-radius: 2px;
   z-index: 10;
+  padding: 10px 0px;
 
   h3{
     padding: 0px 14px;
+    margin: 5px 0px;
   }
-
-  ul{
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    margin-bottom: 7px;
-  }
-
-  li{
-    padding: 7px 16px;
-    
-    &:hover{
-      background-color: #edf5ff;
-      cursor: pointer;
-    }
-  }
-
+  
   .tooltip-menu-tip{
     width: 40px;
     height: 11px;
     position: absolute;
     top: 0;
-    left: 7%;
     transform: translateX(-50%) translateY(-100%);
     overflow: hidden;
   
@@ -55,6 +39,14 @@
       box-shadow: 0 0 5px 0 rgba(0, 0, 3, 0.13);
       position: absolute;
     }
+  }
+
+  .tip-to-right{
+    left: 7%;
+  }
+
+  .tip-to-left{
+    left: 93%;
   }
 
 }

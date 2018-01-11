@@ -49,7 +49,7 @@ const mapStateToProps = (state, ownProps) => {
     date: TimeUtils.defineTimeByToday(thread.get('lastEmailDate'))
   });
   return {
-    class: getThreadClass(thread, ownProps.myIndex, selectedThread),
+    myClass: getThreadClass(thread, ownProps.myIndex, selectedThread),
     thread: myThread,
     color: randomcolor({
       seed: contacts[0].email,
@@ -57,7 +57,8 @@ const mapStateToProps = (state, ownProps) => {
     }),
     multiselect: state.get('activities').get('multiselect'),
     starred: thread.get('labels').contains(Label.STARRED),
-    important: thread.get('labels').contains(Label.IMPORTANT)
+    important: thread.get('labels').contains(Label.IMPORTANT),
+    labels: state.get('labels')
   };
 };
 
@@ -70,7 +71,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(actions.multiSelectThread(threadId, value));
     },
     onRemove: () => {
-      const threadId = myProps.thread.get('id');
+      const threadId = ownProps.thread.get('id');
       dispatch(actions.removeThread(threadId))
     },
     onStarClick: () => {
@@ -78,7 +79,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (thread.get('labels').contains(Label.STARRED)) {
         dispatch(actions.removeLabel(thread.get('id'), Label.STARRED));
       } else {
-        dispatch(actions.addLabel(thread.get('id'), Label.STARRED));
+        dispatch(actions.addThreadLabel(thread.get('id'), Label.STARRED));
       }
     },
     onImportantClick: () => {
@@ -86,7 +87,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (thread.get('labels').contains(Label.IMPORTANT)) {
         dispatch(actions.removeLabel(thread.get('id'), Label.IMPORTANT));
       } else {
-        dispatch(actions.addLabel(thread.get('id'), Label.IMPORTANT));
+        dispatch(actions.addThreadLabel(thread.get('id'), Label.IMPORTANT));
       }
     }
   };

@@ -15,7 +15,7 @@
       "totalAttachments": 1,
       "unread": true,
       "emails": [1],
-      "labels": ["Starred", "Spam", "Custom 1"],
+      "labels": [7, 3, 10],
       "selected": false
     },
     {
@@ -32,7 +32,7 @@
       "totalAttachments": 4,
       "unread": true,
       "emails": [65, 8 , 9, 14],
-      "labels": ["Custom 1"],
+      "labels": [10],
       "selected": false
     },
     {
@@ -50,7 +50,7 @@
       "totalAttachments": 1,
       "unread": false,
       "emails": [55, 43, 34],
-      "labels": ["Starred"],
+      "labels": [7],
       "selected": false
     },
     {
@@ -85,7 +85,7 @@
       "totalAttachments": 0,
       "unread": false,
       "emails": [6, 4],
-      "labels": ["Custom Label"],
+      "labels": [11],
       "selected": false
     },
     {
@@ -102,7 +102,7 @@
       "totalAttachments": 2,
       "unread": false,
       "emails": [23, 14],
-      "labels": ["Starred", "Important"],
+      "labels": [7, 6],
       "selected": false
     }
   ]

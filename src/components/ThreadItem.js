@@ -3,28 +3,29 @@ import { Link } from 'react-router-dom';
 import * as Status from '../utils/ConstUtils';
 import ReactTooltip from 'react-tooltip';
 import randomcolor from 'randomcolor';
+import CustomCheckbox from './CustomCheckbox';
 import './threaditem.css';
 
 class ThreadItem extends Component {
   render() {
     const visibleStyle = this.getStyleVisibilityByMultiselect();
-    const thread = this.props.thread;
+    const {mailbox, thread, myClass, onRegionEnter, onRegionLeave } = this.props;
     return (
       <div
-        className={'thread-item-container ' + this.props.class}
+        className={'thread-item-container ' + myClass}
         onClick={this.onSelectThread}
       >
-        <Link to={`/${this.props.mailbox}/${thread.get('id')}`}>
+        <Link to={`/${mailbox}/${thread.get('id')}`}>
           <div
-            onMouseEnter={this.props.onRegionEnter}
-            onMouseLeave={this.props.onRegionLeave}
+            onMouseEnter={onRegionEnter}
+            onMouseLeave={onRegionLeave}
           >
             {this.renderFirstColumn()}
           </div>
           <div>{thread.get('header')}</div>
-          <div>{willDisplaySecureIcon(thread)}</div>
+          <div>{this.willDisplaySecureIcon(thread)}</div>
           <div>
-            {willRenderLabels(thread.get('labels'), thread.get('id'))}
+            {this.willRenderLabels(thread.get('labels'), thread.get('id'))}
             <div className="thread-subject">{thread.get('subject')}</div>
             <div className="thread-preview">
               {this.renderMultipleSpaces(3)}
@@ -33,8 +34,8 @@ class ThreadItem extends Component {
           </div>
           <div style={visibleStyle}>
             <div />
-            <div>{willDisplayAttachIcon(thread)}</div>
-            <div>{willDisplayAckIcon(thread)}</div>
+            <div>{this.willDisplayAttachIcon(thread)}</div>
+            <div>{this.willDisplayAckIcon(thread)}</div>
           </div>
           <div style={visibleStyle}>{thread.get('date')}</div>
         </Link>
@@ -61,9 +62,7 @@ class ThreadItem extends Component {
     ev.stopPropagation();
   };
 
-  onCheck = ev => {
-    ev.stopPropagation();
-    const value = ev.target.checked;
+  onCheck = value => {
     this.props.onMultiSelect(this.props.thread.get('id'), value);
   };
 
@@ -75,16 +74,9 @@ class ThreadItem extends Component {
 
   renderFirstColumn = () => {
     if (this.props.multiselect || this.props.hovering) {
-      return (
-        <label className="container" onClick={this.stopPropagation}>
-          <input
-            type="checkbox"
-            checked={this.props.thread.get('selected')}
-            onChange={this.onCheck}
-          />
-          <span className="checkmark" />
-        </label>
-      );
+      return <CustomCheckbox
+        status={this.props.thread.get('selected')}
+        onCheck={this.onCheck} />
     }
 
     return (
@@ -168,86 +160,89 @@ class ThreadItem extends Component {
     ev.stopPropagation();
     this.props.onRemove();
   }
-}
 
-const willDisplaySecureIcon = thread => {
-  if (!thread.get('secure')) {
-    return null;
-  }
-
-  return <i className="material-icons">lock</i>;
-};
-
-const willDisplayAttachIcon = thread => {
-  if (thread.get('totalAttachments') > 0) {
-    return <i className="material-icons">attach_file</i>;
-  }
-
-  return null;
-};
-
-const willDisplayAckIcon = thread => {
-  const status = thread.get('status');
-  switch (status) {
-    case Status.Email.UNSENT:
-      return <i className="material-icons error-highlight">undo</i>;
-    case Status.Email.SENT:
-      return <i className="material-icons">done</i>;
-    case Status.Email.RECEIVED:
-      return <i className="material-icons">done_all</i>;
-    case Status.Email.OPENED:
-      return <i className="material-icons neutral-highlight">done_all</i>;
-    default:
+  willDisplaySecureIcon = thread => {
+    if (!thread.get('secure')) {
       return null;
-  }
-};
-
-const willRenderLabels = (labels, threadId) => {
-  if (!labels || labels.size === 0) {
+    }
+  
+    return <i className="material-icons">lock</i>;
+  };
+  
+  willDisplayAttachIcon = thread => {
+    if (thread.get('totalAttachments') > 0) {
+      return <i className="material-icons">attach_file</i>;
+    }
+  
     return null;
-  }
-
-  const labelColor = randomcolor({
-    seed: labels.first(),
-    luminosity: 'light'
-  });
-
-  if (labels.size === 1) {
+  };
+  
+  willDisplayAckIcon = thread => {
+    const status = thread.get('status');
+    switch (status) {
+      case Status.Email.UNSENT:
+        return <i className="material-icons error-highlight">undo</i>;
+      case Status.Email.SENT:
+        return <i className="material-icons">done</i>;
+      case Status.Email.RECEIVED:
+        return <i className="material-icons">done_all</i>;
+      case Status.Email.OPENED:
+        return <i className="material-icons neutral-highlight">done_all</i>;
+      default:
+        return null;
+    }
+  };
+  
+  willRenderLabels = (labels, threadId) => {
+    if (!labels || labels.size === 0) {
+      return null;
+    }
+  
+    const labelColor = randomcolor({
+      seed: labels.first(),
+      luminosity: 'bright'
+    });
+    const firstLabel = this.props.labels.get(labels.first().toString()).get('text')
+    if (labels.size === 1) {
+      return (
+        <div className="thread-label">
+          <div style={{ backgroundColor: labelColor }}>
+            {firstLabel}
+          </div>
+        </div>
+      );
+    }
+  
     return (
       <div className="thread-label">
-        <div style={{ backgroundColor: labelColor }}>{labels.first()}</div>
+        <div style={{ backgroundColor: labelColor }}>{firstLabel}</div>
+        <div data-tip data-for={`labelstip${threadId}`}>
+          {labels.size - 1}+
+        </div>
+        <ReactTooltip
+          place="top"
+          className="labels-tooltip"
+          id={`labelstip${threadId}`}
+          type="dark"
+          effect="solid"
+        >
+          {labels.map(label => {
+            const lColor = randomcolor({
+              seed: label,
+              luminosity: 'bright'
+            });
+            return (
+              <div key={label} style={{ backgroundColor: lColor }} className="innerLabel">
+                {this.props.labels.get(label.toString()).get('text')}
+              </div>
+            );
+          })}
+          <div className="tooltip-tip"> </div>
+        </ReactTooltip>
       </div>
     );
-  }
+  };
 
-  return (
-    <div className="thread-label">
-      <div style={{ backgroundColor: labelColor }}>{labels.first()}</div>
-      <div data-tip data-for={`labelstip${threadId}`}>
-        {labels.size - 1}+
-      </div>
-      <ReactTooltip
-        place="top"
-        className="labels-tooltip"
-        id={`labelstip${threadId}`}
-        type="dark"
-        effect="solid"
-      >
-        {labels.map(label => {
-          const lColor = randomcolor({
-            seed: label,
-            luminosity: 'light'
-          });
-          return (
-            <div key={label} style={{ backgroundColor: lColor }} className="innerLabel">
-              {label}
-            </div>
-          );
-        })}
-        <div className="tooltip-tip"> </div>
-      </ReactTooltip>
-    </div>
-  );
-};
+}
 
 export default ThreadItem;

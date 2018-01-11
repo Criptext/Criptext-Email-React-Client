@@ -6,6 +6,10 @@
   color: #fe5e82;
 }
 
+.container-height{
+  height: 100%;
+}
+
 .threads-wrapper{
   height: 100%;
   padding: 0 21px;
@@ -37,7 +41,7 @@
 }
 
 .threads-container{
-  height: calc(100% - 44px);
+  max-height: calc(100% - 44px);
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-box-shadow: 0 2px 10px 0 rgba(0, 0, 1, 0.09);

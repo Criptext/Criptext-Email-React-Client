@@ -1,5 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`thread actions should add label 1 to threads 1`] = `
+Immutable.List [
+  Immutable.Map {
+    id: 23,
+    subject: "test subject 23",
+    preview: "preview 23",
+    date: 1234567890,
+    emails: Immutable.List [
+      10,
+      43,
+    ],
+    labels: Immutable.Set [
+      1,
+    ],
+  },
+  Immutable.Map {
+    id: 13,
+    subject: "test subject 13",
+    preview: "preview 13",
+    date: 1234567891,
+    emails: Immutable.List [
+      11,
+      21,
+    ],
+    labels: Immutable.Set [
+      1,
+    ],
+  },
+]
+`;
+
 exports[`thread actions should add label Starred 1`] = `
 Immutable.List [
   Immutable.Map {
@@ -12,6 +43,7 @@ Immutable.List [
       43,
     ],
     labels: Immutable.Set [
+      1,
     ],
   },
 ]
@@ -59,6 +91,68 @@ Immutable.List [
     ],
     labels: Immutable.Set [
     ],
+  },
+]
+`;
+
+exports[`thread actions should set all threads as not selected 1`] = `
+Immutable.List [
+  Immutable.Map {
+    id: 23,
+    subject: "test subject 23",
+    preview: "preview 23",
+    date: 1234567890,
+    emails: Immutable.List [
+      10,
+      43,
+    ],
+    labels: Immutable.Set [
+    ],
+    selected: false,
+  },
+  Immutable.Map {
+    id: 13,
+    subject: "test subject 13",
+    preview: "preview 13",
+    date: 1234567891,
+    emails: Immutable.List [
+      11,
+      21,
+    ],
+    labels: Immutable.Set [
+    ],
+    selected: false,
+  },
+]
+`;
+
+exports[`thread actions should set all threads as selected 1`] = `
+Immutable.List [
+  Immutable.Map {
+    id: 23,
+    subject: "test subject 23",
+    preview: "preview 23",
+    date: 1234567890,
+    emails: Immutable.List [
+      10,
+      43,
+    ],
+    labels: Immutable.Set [
+    ],
+    selected: true,
+  },
+  Immutable.Map {
+    id: 13,
+    subject: "test subject 13",
+    preview: "preview 13",
+    date: 1234567891,
+    emails: Immutable.List [
+      11,
+      21,
+    ],
+    labels: Immutable.Set [
+    ],
+    selected: true,
   },
 ]
 `;
