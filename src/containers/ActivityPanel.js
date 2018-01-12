@@ -1,20 +1,22 @@
 import { connect } from 'react-redux';
-import { loadFeeds } from '../actions/index';
+import * as actions from '../actions/index';
 import ActivityPanelView from '../components/ActivityPanel';
 import * as TimeUtils from '../utils/TimeUtils';
 
 
-const clasifyFeeds = (feeds) => {
-  const newFeeds = [], oldFeeds = [];
-  let myfeeds = feeds.map(feed => {
-    return feed.set("feedtime", TimeUtils.defineTimeByToday(feed.get('time')));
-  });
-  myfeeds.map(feed => {
-    feed.get("state") === "new" ? newFeeds.push(feed) : oldFeeds.push(feed);
-  })
+const setFeedTime = (feed, field) => {
+  return feed.set(field, TimeUtils.defineTimeByToday(feed.get(field)));
+}
+
+
+const clasifyFeeds = feeds => {
+  const newsFiltered = feeds.filter( item => item.get("state")==="new" );
+  const oldsFiltered = feeds.filter( item => item.get("state")==="older" );
+  newsFiltered.forEach(newFeed => setFeedTime(newFeed, "time") );
+  oldsFiltered.forEach(oldFeed => setFeedTime(oldFeed, "time") );
   return {
-    newFeeds: newFeeds,
-    oldFeeds: oldFeeds
+    newFeeds: newsFiltered,
+    oldFeeds: oldsFiltered
   }
 }
 
@@ -22,15 +24,15 @@ const mapStateToProps = (state, ownProps) => {
   return clasifyFeeds(state.get('feeds'));
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onLoadFeeds: () => {
-      dispatch(loadFeeds(dispatch));
-    }
+    onLoadFeeds: () => dispatch(actions.loadFeeds())
   };
 };
 
 
-const ActivityPanel = connect(mapStateToProps, mapDispatchToProps)(ActivityPanelView);
+const ActivityPanel = connect(mapStateToProps, mapDispatchToProps)(
+  ActivityPanelView
+);
 
 export default ActivityPanel;

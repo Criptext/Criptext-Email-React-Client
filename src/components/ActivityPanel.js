@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import './activitypanel.css';
 import Feed from './Feed';
 
@@ -26,12 +25,11 @@ class ActivityPanel extends Component {
 
   componentDidMount() {
     this.props.onLoadFeeds();
-    console.log();
   }
 
 
   renderFeedList = (feedList, listName) => {
-    if ( feedList && feedList.length>0 ) {
+    if ( feedList && feedList.size>0 ) {
       return (
         <ul className="new-feeds">
           <li className="feed-section-title"><p className="text">{listName}</p></li>
