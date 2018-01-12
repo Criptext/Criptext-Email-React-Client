@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MailBox from './components/MailBox';
 import Thread from './containers/Thread';
 import SideBar from './containers/SideBar';
-import ActivityPanel from './components/ActivityPanel';
+import ActivityPanel from './containers/ActivityPanel';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
