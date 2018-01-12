@@ -17,8 +17,8 @@ const getEmails = (state, threadId) => {
   let thread = state.get('threads').find(thread => {
     return thread.get('id') === threadId;
   });
-  let email = thread ? thread.get('emails') : null;
-  return emailsMapToList(state.get('emails'), email);
+  let emailIds = thread ? thread.get('emails') : null;
+  return emailsMapToList(state.get('emails'), emailIds);
 };
 
 const mapStateToProps = (state, ownProps) => {
