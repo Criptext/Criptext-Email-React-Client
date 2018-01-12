@@ -14,7 +14,7 @@ class SideBar extends Component {
   }
 
   render() {
-    return ( 
+    return (
       <aside className="navigation-app">
         <header>
           <div className="header-icon" />
@@ -28,11 +28,9 @@ class SideBar extends Component {
           </div>
           <nav>
             <ul>
-              {
-                MailItems.map((item, key) => {
-                  return <SideBarItem key={key} item={item}/>
-                })
-              }
+              {MailItems.map((item, key) => {
+                return <SideBarItem key={key} item={item} />;
+              })}
               <li className="nav-item nav-item-more">
                 <div className="line-separator" />
                 <div className="nav-item-container">
@@ -72,21 +70,21 @@ class SideBar extends Component {
   };
 
   renderLabels = () => {
-    return ( 
+    return (
       <ul>
-      {this.state.showLabels ? 
-          this.props.labels.valueSeq().map((label, key) => {
-            return (
-              <li key={key} className="nav-item-label">
-                <div />
-                <span>{label.get('text')}</span>
-              </li>
-            );
-          })
-       : null}
+        {this.state.showLabels
+          ? this.props.labels.valueSeq().map((label, key) => {
+              return (
+                <li key={key} className="nav-item-label">
+                  <div />
+                  <span>{label.get('text')}</span>
+                </li>
+              );
+            })
+          : null}
       </ul>
-    )
-  }
+    );
+  };
 }
 
 SideBar.propTypes = {

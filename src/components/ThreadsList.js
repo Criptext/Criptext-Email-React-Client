@@ -4,10 +4,6 @@ import ThreadItem from '../containers/ThreadItem';
 import { Switch } from 'react-switch-input';
 
 class ThreadsList extends Component {
-  componentDidMount() {
-    this.props.onLoadThreads();
-  }
-
   render() {
     return (
       <div className="threads-wrapper">
@@ -30,6 +26,7 @@ class ThreadsList extends Component {
               <ThreadItem
                 key={index}
                 myIndex={index}
+                mailbox={this.props.mailbox}
                 thread={thread}
                 selectedThread={this.props.selectedThread}
               />
@@ -38,6 +35,10 @@ class ThreadsList extends Component {
         </div>
       </div>
     );
+  }
+
+  componentDidMount() {
+    this.props.onLoadThreads();
   }
 
   handleSwitchChange = ev => {

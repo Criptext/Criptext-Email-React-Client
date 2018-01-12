@@ -1,8 +1,8 @@
-import * as Types from './types';
+import { Email } from './types';
 
 export const addEmails = emails => {
   return {
-    type: Types.Email.ADD_BATCH,
+    type: Email.ADD_BATCH,
     emails: emails
   };
 };
@@ -17,7 +17,11 @@ export const loadEmails = () => {
         return Promise.reject(response.status);
       })
       .then(json => {
-        dispatch(addEmails(json.emails));
+        let emails = {};
+        json.emails.forEach(element => {
+          emails[element.id] = element;
+        });
+        dispatch(addEmails(emails));
       })
       .catch(err => {
         console.log(err);
