@@ -31,8 +31,8 @@ describe('thread actions', () => {
     }
   ];
 
-  function initState(threads){
-    return threadsReducer(undefined, actions.addThreads(threads))
+  function initState(threads) {
+    return threadsReducer(undefined, actions.addThreads(threads));
   }
 
   it('should add threads to state', () => {
@@ -62,14 +62,14 @@ describe('thread actions', () => {
 
   it('should remove label Starred', () => {
     const state = initState(threads);
-    const action = actions.removeLabel(23, 1);
+    const action = actions.removeThreadLabel(23, 1);
     const newState = threadsReducer(state, action);
     expect(newState).toMatchSnapshot();
   });
 
   it('should set all threads as selected', () => {
     const state = initState(manyThreads);
-    const action = actions.selectThreads()
+    const action = actions.selectThreads();
     const newState = threadsReducer(state, action);
     expect(newState).toMatchSnapshot();
   });

@@ -1,8 +1,8 @@
-import * as Types from './types';
+import {Thread} from './types';
 
 export const addThreads = threads => {
   return {
-    type: Types.Thread.ADD_BATCH,
+    type: Thread.ADD_BATCH,
     threads: threads.sort((t1, t2) => {
       return t1.lastEmailDate <= t2.lastEmailDate;
     })
@@ -11,14 +11,14 @@ export const addThreads = threads => {
 
 export const selectThread = threadId => {
   return {
-    type: Types.Thread.SELECT,
+    type: Thread.SELECT,
     selectedThread: threadId
   };
 };
 
 export const multiSelectThread = (threadId, value) => {
   return {
-    type: Types.Thread.MULTISELECT,
+    type: Thread.MULTISELECT,
     selectedThread: threadId,
     value: value
   };
@@ -26,14 +26,14 @@ export const multiSelectThread = (threadId, value) => {
 
 export const filterThreadsByUnread = enabled => {
   return {
-    type: Types.Thread.UNREAD_FILTER,
+    type: Thread.UNREAD_FILTER,
     enabled: enabled
   };
 };
 
 export const addThreadLabel = (threadId, label) => {
   return {
-    type: Types.Thread.ADD_THREAD_LABEL,
+    type: Thread.ADD_THREAD_LABEL,
     targetThread: threadId,
     label: label
   };
@@ -41,15 +41,15 @@ export const addThreadLabel = (threadId, label) => {
 
 export const addThreadsLabel = (threadId, label) => {
   return {
-    type: Types.Thread.ADD_THREADS_LABEL,
+    type: Thread.ADD_THREADS_LABEL,
     threadsIds: threadId,
     label: label
   };
 };
 
-export const removeLabel = (threadId, label) => {
+export const removeThreadLabel = (threadId, label) => {
   return {
-    type: Types.Thread.REMOVE_LABEL,
+    type: Thread.REMOVE_LABEL,
     targetThread: threadId,
     label: label
   };
@@ -57,54 +57,54 @@ export const removeLabel = (threadId, label) => {
 
 export const removeThreadsLabel = (threadId, label) => {
   return {
-    type: Types.Thread.REMOVE_THREADS_LABEL,
+    type: Thread.REMOVE_THREADS_LABEL,
     threadsIds: threadId,
     label: label
   };
 };
 
-export const removeThread = (threadId) => {
+export const removeThread = threadId => {
   return {
-    type: Types.Thread.REMOVE,
+    type: Thread.REMOVE,
     targetThread: threadId
-  }
-}
+  };
+};
 
-export const removeThreads = (threadsIds) => {
+export const removeThreads = threadsIds => {
   return {
-    type: Types.Thread.REMOVE_THREADS,
+    type: Thread.REMOVE_THREADS,
     targetThreads: threadsIds
-  }
-}
+  };
+};
 
-export const deselectThreads = (spread) => {
+export const deselectThreads = spread => {
   return {
-    type: Types.Thread.DESELECT_THREADS,
+    type: Thread.DESELECT_THREADS,
     spread
-  }
-}
+  };
+};
 
 export const selectThreads = () => {
   return {
-    type: Types.Thread.SELECT_THREADS
-  }
-}
+    type: Thread.SELECT_THREADS
+  };
+};
 
 export const moveThreads = (threadsIds, label) => {
   return {
     label,
     threadsIds,
-    type: Types.Thread.MOVE_THREADS,
-  }
-} 
+    type: Thread.MOVE_THREADS
+  };
+};
 
-export  const markThreadsRead = (threadsIds, read) => {
+export const markThreadsRead = (threadsIds, read) => {
   return {
     threadsIds,
     read,
-    type: Types.Thread.THREAD_READ
-  }
-}
+    type: Thread.READ_THREADS
+  };
+};
 
 export const loadThreads = () => {
   return async dispatch => {
@@ -112,7 +112,7 @@ export const loadThreads = () => {
       const response = await fetch('/threads.json');
       const json = await response.json();
       dispatch(addThreads(json.threads));
-    }catch(e){
+    } catch (e) {
       console.log(e);
     }
   };

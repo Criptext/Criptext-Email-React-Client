@@ -1,23 +1,23 @@
-import * as Types from '../actions/types';
+import {Thread} from '../actions/types';
 import { Map } from 'immutable';
 export default (state = Map({}), action) => {
   switch (action.type) {
-    case Types.Thread.SELECT:
+    case Thread.SELECT:
       return state.merge({
         selectedThread: action.selectedThread,
         multiselect: false
       });
-    case Types.Thread.MULTISELECT:
+    case Thread.MULTISELECT:
       return state.set('multiselect', true);
-    case Types.Thread.UNREAD_FILTER:
+    case Thread.UNREAD_FILTER:
       return state.set('unreadFilter', action.enabled);
-    case Types.Thread.DESELECT_THREADS:
-      if(action.spread){
+    case Thread.DESELECT_THREADS:
+      if (action.spread) {
         console.log(action.spread);
         return state.set('multiselect', false);
       }
       return state;
-    case Types.Thread.MOVE_THREADS:
+    case Thread.MOVE_THREADS:
       return state.set('multiselect', false);
     default:
       return state;

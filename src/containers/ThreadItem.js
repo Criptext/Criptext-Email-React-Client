@@ -72,12 +72,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onRemove: () => {
       const threadId = ownProps.thread.get('id');
-      dispatch(actions.removeThread(threadId))
+      dispatch(actions.removeThread(threadId));
     },
     onStarClick: () => {
       const thread = ownProps.thread;
       if (thread.get('labels').contains(Label.STARRED)) {
-        dispatch(actions.removeLabel(thread.get('id'), Label.STARRED));
+        dispatch(actions.removeThreadLabel(thread.get('id'), Label.STARRED));
       } else {
         dispatch(actions.addThreadLabel(thread.get('id'), Label.STARRED));
       }
@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onImportantClick: () => {
       const thread = ownProps.thread;
       if (thread.get('labels').contains(Label.IMPORTANT)) {
-        dispatch(actions.removeLabel(thread.get('id'), Label.IMPORTANT));
+        dispatch(actions.removeThreadLabel(thread.get('id'), Label.IMPORTANT));
       } else {
         dispatch(actions.addThreadLabel(thread.get('id'), Label.IMPORTANT));
       }

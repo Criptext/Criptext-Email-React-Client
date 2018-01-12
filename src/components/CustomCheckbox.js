@@ -1,7 +1,9 @@
 import React from 'react';
 import './customCheckbox.css';
 
-const CustomCheckbox = props => (<div className="checkmark-container" onClick={ ev => onClick(ev, props) }>
+const CustomCheckbox = props => (<div 
+  className="checkmark-container" 
+  onClick={ ev => onClick(ev, props) }>
   <span className={"checkmark " + getClass(props.status)} />
   <div>{props.label}</div>
 </div>)
