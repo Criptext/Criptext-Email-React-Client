@@ -22,26 +22,20 @@ export const addLabel = label => {
 };
 
 export const loadLabels = () => {
-  return dispatch => {
-    return fetch('/labels.json')
-      .then(response => {
-        if (response.status === 200) {
-          return response.json();
-        }
-        return Promise.reject(response.status);
-      })
-      .then(json => {
-        let labels = {};
-        json.labels.forEach(element => {
-          labels[element.id] = {
-            id: element.id,
-            text: element.text
-          };
-        });
-        dispatch(addLabels(labels));
-      })
-      .catch(err => {
-        console.error(err);
+  return async dispatch => {
+    try {
+      const response = await fetch('/labels.json');
+      const json = await response.json();
+      let labels = {};
+      json.labels.forEach(element => {
+        labels[element.id] = {
+          id: element.id,
+          text: element.text
+        };
       });
+      dispatch(addLabels(labels));
+    }catch(e){
+      console.log(e);
+    }
   };
 };
