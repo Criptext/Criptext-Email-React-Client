@@ -8,19 +8,14 @@ export const addFeeds = feeds => {
 };
 
 export const loadFeeds = () => {
-  return dispatch => {
-    return fetch('/feeds.json')
-      .then(response => {
-        if (response.status === 200) {
-          return response.json();
-        }
-        return Promise.reject(response.status);
-      })
-      .then(json => {
-        dispatch(addFeeds(json.feeds));
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  return async dispatch => {
+    try {
+      const response = await fetch('/feeds.json');
+      const json = await response.json();
+      let feeds = json.feeds;
+      dispatch(addFeeds(feeds));
+    }catch(e){
+      console.log(e);
+    }
   };
 };
