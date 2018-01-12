@@ -3,11 +3,9 @@ import * as actions from '../actions/index';
 import ActivityPanelView from '../components/ActivityPanel';
 import * as TimeUtils from '../utils/TimeUtils';
 
-
 const orderFeedsByDate = feeds => {
-  return feeds.sortBy(feed => feed.get("time")).reverse();
-}
-
+  return feeds.sortBy(feed => feed.get('time')).reverse();
+};
 
 const setFeedTime = (feed, field) => {
   return feed.set(field, TimeUtils.defineTimeByToday(feed.get(field)));
@@ -22,15 +20,13 @@ const clasifyFeeds = feeds => {
   };
 };
 
-
 const mapStateToProps = (state, ownProps) => {
   const orderedFeeds = orderFeedsByDate(state.get('feeds'));
-  const feeds = orderedFeeds.map(feed => { 
-    return setFeedTime(feed, "time");
+  const feeds = orderedFeeds.map(feed => {
+    return setFeedTime(feed, 'time');
   });
   return clasifyFeeds(feeds);
 };
-
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
