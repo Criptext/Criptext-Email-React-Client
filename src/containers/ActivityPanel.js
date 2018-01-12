@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import ActivityPanelView from '../components/ActivityPanel';
 import * as TimeUtils from '../utils/TimeUtils';
-import { List } from 'immutable';
 
 
 const setFeedTime = (feed, field) => {
@@ -13,20 +12,17 @@ const setFeedTime = (feed, field) => {
 const clasifyFeeds = feeds => {
   const newsFiltered = feeds.filter( item => item.get("state")==="new" );
   const oldsFiltered = feeds.filter( item => item.get("state")==="older" );
-  const news = newsFiltered.map(newFeed => { 
-    return setFeedTime(newFeed, "time");
-  });
-  const olds = oldsFiltered.map(oldFeed => { 
-    return setFeedTime(oldFeed, "time")
-  });
   return {
-    newFeeds: List(news),
-    oldFeeds: List(olds)
+    newFeeds: newsFiltered,
+    oldFeeds: oldsFiltered
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return clasifyFeeds(state.get('feeds'));
+  const feeds = state.get('feeds').map(feed => { 
+    return setFeedTime(feed, "time");
+  });
+  return clasifyFeeds(feeds);
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
