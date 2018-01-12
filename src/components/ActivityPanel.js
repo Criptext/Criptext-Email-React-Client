@@ -39,9 +39,7 @@ class ActivityPanel extends Component {
         </ul>  
       );
     }
-    else {
-      return null
-    }
+    return null
   }
 
 
