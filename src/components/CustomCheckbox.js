@@ -10,11 +10,19 @@ const CustomCheckbox = props => (
 
 function getClass(status) {
   if (typeof status === 'boolean') {
-    if (status) {
-      return 'checkmark-checked';
-    }
-    return '';
+    return getClassWhenBoolean(status);
   }
+  return getClassWhenString(status);
+}
+
+function getClassWhenBoolean(status){
+  if (status) {
+    return 'checkmark-checked';
+  }
+  return '';  
+}
+
+function getClassWhenString(status){
   if (status === 'all') {
     return 'checkmark-checked';
   } else if (status === 'partial') {
@@ -27,12 +35,19 @@ function onClick(ev, props) {
   ev.stopPropagation();
   ev.preventDefault();
   if (typeof props.status === 'boolean') {
-    if (props.status) {
-      return props.onCheck(false);
-    }
-    return props.onCheck(true);
+    return clickHandlerWhenBoolean(props);
   }
+  return clickHandlerWhenString(props);
+}
 
+function clickHandlerWhenBoolean(props){
+  if (props.status) {
+    return props.onCheck(false);
+  }
+  return props.onCheck(true);
+}
+
+function clickHandlerWhenString(props){
   if (props.status === 'all') {
     return props.onCheck(false);
   } else if (props.status === 'partial') {
