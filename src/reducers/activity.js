@@ -1,4 +1,4 @@
-import {Thread} from '../actions/types';
+import { Thread } from '../actions/types';
 import { Map } from 'immutable';
 export default (state = Map({}), action) => {
   switch (action.type) {

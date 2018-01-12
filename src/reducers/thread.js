@@ -1,4 +1,4 @@
-import {Thread} from '../actions/types';
+import { Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
 
 export default (state = List([]), action) => {

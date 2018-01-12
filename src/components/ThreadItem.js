@@ -9,17 +9,20 @@ import './threaditem.css';
 class ThreadItem extends Component {
   render() {
     const visibleStyle = this.getStyleVisibilityByMultiselect();
-    const {mailbox, thread, myClass, onRegionEnter, onRegionLeave } = this.props;
+    const {
+      mailbox,
+      thread,
+      myClass,
+      onRegionEnter,
+      onRegionLeave
+    } = this.props;
     return (
       <div
         className={'thread-item-container ' + myClass}
         onClick={this.onSelectThread}
       >
         <Link to={`/${mailbox}/${thread.get('id')}`}>
-          <div
-            onMouseEnter={onRegionEnter}
-            onMouseLeave={onRegionLeave}
-          >
+          <div onMouseEnter={onRegionEnter} onMouseLeave={onRegionLeave}>
             {this.renderFirstColumn()}
           </div>
           <div>{thread.get('header')}</div>
@@ -74,9 +77,12 @@ class ThreadItem extends Component {
 
   renderFirstColumn = () => {
     if (this.props.multiselect || this.props.hovering) {
-      return <CustomCheckbox
-        status={this.props.thread.get('selected')}
-        onCheck={this.onCheck} />
+      return (
+        <CustomCheckbox
+          status={this.props.thread.get('selected')}
+          onCheck={this.onCheck}
+        />
+      );
     }
 
     return (
@@ -96,7 +102,8 @@ class ThreadItem extends Component {
     return (
       <div className="thread-label-option">
         <div
-          data-tip data-for={`starred${threadId}`}
+          data-tip
+          data-for={`starred${threadId}`}
           className={this.props.starred ? 'thread-label-mark' : ''}
           onClick={ev => {
             ev.stopPropagation();
@@ -116,7 +123,8 @@ class ThreadItem extends Component {
           </ReactTooltip>
         </div>
         <div
-          data-tip data-for={`important${threadId}`}
+          data-tip
+          data-for={`important${threadId}`}
           className={this.props.important ? 'thread-label-mark' : ''}
           onClick={ev => {
             ev.stopPropagation();
@@ -135,11 +143,8 @@ class ThreadItem extends Component {
             <div className="tooltip-tip"> </div>
           </ReactTooltip>
         </div>
-        
-        <div
-          data-tip data-for={`remove${threadId}`} 
-          onClick={this.onRemove}
-        >
+
+        <div data-tip data-for={`remove${threadId}`} onClick={this.onRemove}>
           <i className="material-icons">delete</i>
           <ReactTooltip
             place="top"
@@ -156,27 +161,27 @@ class ThreadItem extends Component {
     );
   };
 
-  onRemove = (ev) => {
+  onRemove = ev => {
     ev.stopPropagation();
     this.props.onRemove();
-  }
+  };
 
   willDisplaySecureIcon = thread => {
     if (!thread.get('secure')) {
       return null;
     }
-  
+
     return <i className="material-icons">lock</i>;
   };
-  
+
   willDisplayAttachIcon = thread => {
     if (thread.get('totalAttachments') > 0) {
       return <i className="material-icons">attach_file</i>;
     }
-  
+
     return null;
   };
-  
+
   willDisplayAckIcon = thread => {
     const status = thread.get('status');
     switch (status) {
@@ -192,27 +197,27 @@ class ThreadItem extends Component {
         return null;
     }
   };
-  
+
   willRenderLabels = (labels, threadId) => {
     if (!labels || labels.size === 0) {
       return null;
     }
-  
+
     const labelColor = randomcolor({
       seed: labels.first(),
       luminosity: 'bright'
     });
-    const firstLabel = this.props.labels.get(labels.first().toString()).get('text')
+    const firstLabel = this.props.labels
+      .get(labels.first().toString())
+      .get('text');
     if (labels.size === 1) {
       return (
         <div className="thread-label">
-          <div style={{ backgroundColor: labelColor }}>
-            {firstLabel}
-          </div>
+          <div style={{ backgroundColor: labelColor }}>{firstLabel}</div>
         </div>
       );
     }
-  
+
     return (
       <div className="thread-label">
         <div style={{ backgroundColor: labelColor }}>{firstLabel}</div>
@@ -232,7 +237,11 @@ class ThreadItem extends Component {
               luminosity: 'bright'
             });
             return (
-              <div key={label} style={{ backgroundColor: lColor }} className="innerLabel">
+              <div
+                key={label}
+                style={{ backgroundColor: lColor }}
+                className="innerLabel"
+              >
                 {this.props.labels.get(label.toString()).get('text')}
               </div>
             );
@@ -242,7 +251,6 @@ class ThreadItem extends Component {
       </div>
     );
   };
-
 }
 
 export default ThreadItem;

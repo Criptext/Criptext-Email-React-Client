@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../containers/Header'
+import Header from '../containers/Header';
 import ThreadsList from '../containers/ThreadsList';
 import './mailbox.css';
 

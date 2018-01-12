@@ -1,4 +1,4 @@
-import {Thread} from './types';
+import { Thread } from './types';
 
 export const addThreads = threads => {
   return {
