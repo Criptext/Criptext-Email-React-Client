@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Email = props => (
-  <div>
+  <div className="email-container">
     <span>{props.email.get('from')}</span>
     <span>"Lorem Ipsum is simply dummy text of the printing and"</span>
     <div />
