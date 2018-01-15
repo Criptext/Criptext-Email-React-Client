@@ -60,15 +60,15 @@ const HintsMenu = props => (
           {renderLabels(props.allLabels)}
         </select>
       </div>
-      <SearchInputFiled
+      <SearchInputBox
         label="From"
         placeholder="People by name or email address"
       />
-      <SearchInputFiled
+      <SearchInputBox
         label="To"
         placeholder="People by name or email address"
       />
-      <SearchInputFiled label="Subject" placeholder="Enter a text" />
+      <SearchInputBox label="Subject" placeholder="Enter a text" />
       <div className="search-option-last">
         <div>
           <CustomCheckbox
@@ -103,7 +103,7 @@ const SearchSuggestion = props => (
   </div>
 );
 
-const SearchInputFiled = props => (
+const SearchInputBox = props => (
   <div>
     <div>{props.label}</div>
     <input placeholder={props.placeholder} />

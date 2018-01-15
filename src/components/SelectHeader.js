@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import HeaderActionTooltip from './HeaderActionTooltip';
 import StandardOptions from './StandardOptions';
+import HeaderOption from './HeaderOption';
 import TooltipMenu from './TooltipMenu';
 import CustomCheckbox from './CustomCheckbox';
 import './selectheader.css';
@@ -62,24 +62,23 @@ class SelectHeader extends Component {
   renderSelectionInteraction = () => (
     <div>
       <div className="header-action">
-        <div
-          data-tip
-          data-for="actionDismiss"
+        <HeaderOption
           onClick={this.props.onMultiSelectDismiss}
-        >
-          <i className="icon-back" />
-          <HeaderActionTooltip target="actionDismiss" tip="Dismiss" />
-        </div>
-        <div
-          className={this.props.allSelected ? 'menu-select-all' : ''}
+          tip="Dismiss"
+          enableTip={true}
+          icon="icon-back"
+          targetName="actionDismiss"
+        />
+        <HeaderOption
           onClick={
             this.props.allSelected
               ? this.props.onDeselectThreads
               : this.props.onSelectThreads
           }
-        >
-          <i className={this.props.allSelected ? 'icon-check' : 'icon-box'} />
-        </div>
+          enableTip={false}
+          myClass={this.props.allSelected ? 'menu-select-all' : ''}
+          icon={this.props.allSelected ? 'icon-check' : 'icon-box'}
+        />
       </div>
       <span>{this.props.threadsSelected.length} Selected</span>
     </div>
@@ -87,9 +86,12 @@ class SelectHeader extends Component {
 
   renderMoreOptions = () => (
     <div className="header-action">
-      <div id="actionDots" onClick={this.onDotsClick}>
-        <i className="icon-dots" />
-      </div>
+      <HeaderOption
+        onClick={this.onDotsClick}
+        targetName="actionDots"
+        icon="icon-dots"
+        enableTip={false}
+      />
     </div>
   );
 
