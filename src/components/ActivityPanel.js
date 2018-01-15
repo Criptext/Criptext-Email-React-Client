@@ -9,7 +9,7 @@ class ActivityPanel extends Component {
       <aside className="navigation-feed">
         <header>
           <div className="header-content">
-            { this.renderHeaderIcon(this.props.unreadFeeds) }
+            { this.renderHeaderIcon() }
             <div className="header-title">ACTIVITY FEED</div>
             <div className="header-button"><i className="icon-next"></i></div>
             <div className="header-clear"></div>
@@ -71,31 +71,10 @@ class ActivityPanel extends Component {
     }
   }
 
-  renderHeaderIcon = unreadFeeds => {
-    if( unreadFeeds>0 && unreadFeeds<10 ){
-      return(
-        <div className="feed-header-icon">
-          <i className="icon-bell badge small-badge" data-badge={unreadFeeds}></i>
-        </div>
-      );
-    }
-    if( unreadFeeds>9 && unreadFeeds<100 ){
-      return(
-        <div className="feed-header-icon">
-          <i className="icon-bell badge big-badge" data-badge={unreadFeeds}></i>
-        </div>
-      );
-    }
-    if( unreadFeeds>99 ){
-      return(
-        <div className="feed-header-icon">
-          <i className="icon-bell badge very-big-badge" data-badge="+99"></i>
-        </div>
-      );
-    }
+  renderHeaderIcon = () => {
     return(
       <div className="feed-header-icon">
-        <i className="icon-bell"></i>
+        <i className={'icon-bell ' + this.props.badgeClass} data-badge={this.props.badgeData}></i>
       </div>
     );
   }

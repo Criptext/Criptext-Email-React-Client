@@ -15,6 +15,32 @@ const countUnreadFeeds = feeds => {
   return feeds.filter(item => item.get('unread') === true).size;
 };
 
+const getBadgeClass = unreadFeeds => {
+  switch (true) {
+    case ( unreadFeeds>0 && unreadFeeds<10 ):
+      return "badge small-badge";
+    case ( unreadFeeds>9 && unreadFeeds<100 ):
+      return "badge medium-badge";
+    case ( unreadFeeds>99 ):
+      return "badge large-badge";
+    default:
+      return "";
+  }
+}
+
+const getBadgeData = unreadFeeds => {
+  switch (true) {
+    case ( unreadFeeds>0 && unreadFeeds<10 ):
+      return String(unreadFeeds);
+    case ( unreadFeeds>9 && unreadFeeds<100 ):
+      return String(unreadFeeds);
+    case ( unreadFeeds>99 ):
+      return "+99";
+    default:
+      return "";
+  }
+}
+
 const clasifyFeeds = feeds => {
   const newsFiltered = feeds.filter(item => item.get('state') === 'new');
   const oldsFiltered = feeds.filter(item => item.get('state') === 'older');
@@ -27,10 +53,13 @@ const mapStateToProps = (state, ownProps) => {
     return setFeedTime(feed, 'time');
   });
   const { newsFiltered, oldsFiltered } = clasifyFeeds(feeds);
+  const unreadFeeds = countUnreadFeeds(feeds);
   return {
     newFeeds: newsFiltered,
     oldFeeds: oldsFiltered,
-    unreadFeeds: countUnreadFeeds(feeds)
+    unreadFeeds: unreadFeeds,
+    badgeClass: getBadgeClass(unreadFeeds),
+    badgeData: getBadgeData(unreadFeeds)
   };
 };
 

@@ -24,7 +24,7 @@ aside.navigation-feed{
 
         i {
           position: relative;
-          top: calc(50% - 14px);
+          top: calc(50% - 11px);
           color: #000000;
         }
 
@@ -50,11 +50,11 @@ aside.navigation-feed{
            font-size: 13px;
            padding: 1px 5px 2px 5px;
         }
-        .big-badge[data-badge]:after {
+        .medium-badge[data-badge]:after {
            font-size: 13px;
            padding: 2px;
         }
-        .very-big-badge[data-badge]:after {
+        .large-badge[data-badge]:after {
            font-size: 11px;
            padding: 4px 1px 4px 1px;
         }
