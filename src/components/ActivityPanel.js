@@ -33,13 +33,29 @@ class ActivityPanel extends Component {
             <p className="text">{listName}</p>
           </li>
           {feedList.map((feed, index) => {
-            return <Feed key={index} feed={feed} unread={feed.get('unread')} />;
+            return <Feed key={index} feed={feed} unread={feed.get('unread')} renderIcon={() => this.renderFeedIcon(feed.get('cmd'))} />;
           })}
         </ul>
       );
     }
     return null;
-  };
+  }
+
+
+  renderFeedIcon = (cmd) => {
+    switch (cmd) {
+      case 1:
+        return <i className="icon-bell"></i>
+      case 2:
+        return <i className="icon-attach"></i>
+      case 3:
+        return <i className="icon-checked"></i>
+      default:
+        return null;
+    }
+  }
+
+
 }
 
 export default ActivityPanel;
