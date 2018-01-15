@@ -12,7 +12,7 @@ class Thread extends Component {
           <div className="thread-info" />
           <div className="thread-emails">
             {this.props.emails.map((email, index) => {
-              const isLast = this.props.emails.size -1 === index
+              const isLast = this.props.emails.size - 1 === index;
               return <Email key={index} email={email} isOpen={isLast} />;
             })}
           </div>

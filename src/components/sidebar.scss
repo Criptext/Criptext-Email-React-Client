@@ -59,33 +59,14 @@ aside.navigation-app{
   width: 100%;
 }
 
-button{
-  border: none;
-}
-
 .button-compose{
   background-color: #0091ff;
-  border-radius: 100px;
-  color: white;
-  height: 31px;
   margin: 15px 0;
-  text-transform: uppercase;
   width: 141px;
 
   i{
-    font-size: 18px;
     left: -8px;
     margin-right: 10px;
-    position: relative;
-    top: 2px;
-  }
-
-  span{
-    font-family: NunitoSans;
-    font-size: 13px;
-    font-weight: 800;
-    position: relative;
-    top: -1px;
   }
 }
 

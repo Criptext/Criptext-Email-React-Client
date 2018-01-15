@@ -9,7 +9,9 @@ TABLE OF CONTENTS
  1.1.- Text
  1.2.- Icon
 2.- CONTENT
-3.- INPUT
+3.- CONTROLS
+ 3.1.- Button
+ 3.2.- Input Text
 
 ***/
 
@@ -311,8 +313,37 @@ html, body {
 .main-container{
   width: calc(100% - 498px);
 }
-/* 3.- INPUT
+/* 3.- CONTROLS
+   ----------------------------- */
+/* 3.1.- CONTROLS: Button
    ----------------------------- */
 input[type="text"]:focus {
   outline: 0;
+}
+
+/* 3.2.- CONTROLS: Input text
+   ----------------------------- */
+button{
+  border: none;
+}
+
+.button-a{
+  border-radius: 100px;
+  color: white;
+  height: 31px;
+  text-transform: uppercase;
+
+  i{
+    font-size: 18px;
+    position: relative;
+    top: 2px;
+  }
+
+  span{
+    font-family: NunitoSans;
+    font-size: 13px;
+    font-weight: 800;
+    position: relative;
+    top: -1px;
+  }
 }

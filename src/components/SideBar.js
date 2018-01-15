@@ -21,7 +21,7 @@ class SideBar extends Component {
         </header>
         <div className="navigation-partial-mail">
           <div className="nav-item-free">
-            <button className="button button-compose">
+            <button className="button button-a button-compose">
               <i className="icon-edit" />
               <span>Compose</span>
             </button>
