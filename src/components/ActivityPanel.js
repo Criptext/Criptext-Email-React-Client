@@ -8,9 +8,10 @@ class ActivityPanel extends Component {
       <aside className="navigation-feed">
         <header>
           <div className="header-content">
-            <div className="header-title"> ACTIVITY FEED </div>
-            <div className="header-button" />
-            <div className="header-clear" />
+            { this.renderHeaderIcon(100) }
+            <div className="header-title">ACTIVITY FEED</div>
+            <div className="header-button"><i className="icon-next"></i></div>
+            <div className="header-clear"></div>
           </div>
         </header>
         <nav>
@@ -45,14 +46,46 @@ class ActivityPanel extends Component {
   renderFeedIcon = (cmd) => {
     switch (cmd) {
       case 1:
-        return <i className="icon-bell"></i>
+        return <i className="icon-calendar"></i>;
       case 2:
-        return <i className="icon-attach"></i>
+        return <i className="icon-attach"></i>;
       case 3:
-        return <i className="icon-checked"></i>
+        return <i className="icon-checked"></i>;
       default:
         return null;
     }
+  }
+
+
+  renderHeaderIcon = unreadFeeds => {
+    console.log(unreadFeeds<10)
+    console.log(unreadFeeds>10)
+    if (unreadFeeds>0 && unreadFeeds<10) {
+      return(
+        <div className="feed-header-icon">
+          <i className="icon-bell badge small-badge" data-badge={unreadFeeds}></i>
+        </div>
+      );
+    }
+    if (unreadFeeds>9 && unreadFeeds<100) {
+      return(
+        <div className="feed-header-icon">
+          <i className="icon-bell badge big-badge" data-badge={unreadFeeds}></i>
+        </div>
+      );
+    }
+    if (unreadFeeds>99) {
+      return(
+        <div className="feed-header-icon">
+          <i className="icon-bell badge very-big-badge" data-badge="+99"></i>
+        </div>
+      );
+    }
+    return(
+      <div className="feed-header-icon">
+        <i className="icon-bell"></i>
+      </div>
+    );
   }
 
 
