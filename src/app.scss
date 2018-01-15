@@ -209,11 +209,17 @@ TABLE OF CONTENTS
 .icon-toogle-up:before {
   content: "\e914";
 }
+.icon-search:before {
+  content: "\e917";
+}
 .icon-attach:before {
   content: "\e900";
 }
 .icon-bell:before {
   content: "\e901";
+}
+.icon-back:before {
+  content: "\e91b";
 }
 .icon-next:before {
   content: "\e902";
@@ -263,6 +269,21 @@ TABLE OF CONTENTS
 .icon-checked:before {
   content: "\e912";
 }
+.icon-check:before {
+  content: "\e919";
+}
+.icon-dots:before {
+  content: "\e918"
+}
+.icon-archive:before {
+  content: "\e91a"
+}
+.icon-box:before {
+  content: "\e915"
+}
+.icon-time:before {
+  content: "\e916"
+}
 
 /* 2.- CONTENT
    ----------------------------- */
@@ -288,7 +309,6 @@ html, body {
 }
 
 .main-container{
-  position: relative;
   width: calc(100% - 498px);
 }
 /* 3.- INPUT

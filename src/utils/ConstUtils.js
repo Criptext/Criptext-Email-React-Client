@@ -12,6 +12,6 @@ export const Timer = {
 };
 
 export const Label = {
-  IMPORTANT: 'Important',
-  STARRED: 'Starred'
+  IMPORTANT: 6,
+  STARRED: 7
 };

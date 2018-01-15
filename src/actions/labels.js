@@ -34,7 +34,7 @@ export const loadLabels = () => {
         };
       });
       dispatch(addLabels(labels));
-    }catch(e){
+    } catch (e) {
       console.log(e);
     }
   };

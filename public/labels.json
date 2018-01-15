@@ -1,15 +1,43 @@
 {
   "labels" : [
-    { 
+    {
       "id": 1,
-      "text": "Text 1"
+      "text": "Inbox"
     },
     {
       "id": 2,
-      "text": "Text 2"
+      "text": "Sent"
     },
     {
       "id": 3,
+      "text": "Spam"
+    },
+    {
+      "id": 4,
+      "text": "Trash"
+    },
+    {
+      "id": 5,
+      "text": "Draft"
+    },
+    {
+      "id": 6,
+      "text": "Important"
+    },
+    {
+      "id": 7,
+      "text": "Starred"
+    },
+    { 
+      "id": 10,
+      "text": "Text 1"
+    },
+    {
+      "id": 11,
+      "text": "Text 2"
+    },
+    {
+      "id": 12,
       "text": "Text 3"
     }
   ]

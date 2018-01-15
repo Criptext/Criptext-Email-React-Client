@@ -1,11 +1,20 @@
 import { addUsers, addUser } from './users';
 import {
   addThreads,
+  addThreadLabel,
+  addThreadsLabel,
   filterThreadsByUnread,
   loadThreads,
+  markThreadsRead,
+  moveThreads,
   multiSelectThread,
-  removeLabel,
-  selectThread
+  selectThread,
+  removeThread,
+  removeThreadLabel,
+  deselectThreads,
+  selectThreads,
+  removeThreads,
+  removeThreadsLabel
 } from './threads';
 import { addEmails, loadEmails } from './emails';
 import { addLabels, addLabel, loadLabels } from './labels';
@@ -17,6 +26,8 @@ export {
   addLabel,
   addLabels,
   addThreads,
+  addThreadLabel,
+  addThreadsLabel,
   addUser,
   addUsers,
   filterThreadsByUnread,
@@ -24,7 +35,14 @@ export {
   loadFeeds,
   loadLabels,
   loadThreads,
+  markThreadsRead,
+  moveThreads,
   multiSelectThread,
-  removeLabel,
-  selectThread
+  selectThread,
+  removeThread,
+  removeThreadLabel,
+  deselectThreads,
+  selectThreads,
+  removeThreads,
+  removeThreadsLabel
 };
