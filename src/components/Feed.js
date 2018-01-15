@@ -4,10 +4,14 @@ import PropTypes from 'prop-types';
 const Feed = props => (
   <li className={'feed-item ' + (props.unread ? 'unread-feed' : '')}>
     <div className="feed-content">
-      <div className="feed-name">{props.feed.get('title')}</div>
-      <span className="feed-subject">{props.feed.get('subtitle')}</span>
-      <span className="feed-time">{props.feed.get('time')}</span>
-      <span className="feed-clear" />
+      <div className="feed-icon"><i className="icon-bell"></i></div>
+      <div className="feed-data"> 
+        <div className="feed-title">{props.feed.get('title')}</div>
+        <div className="feed-subject">{props.feed.get('subtitle')}</div>
+        <div className="feed-time">{props.feed.get('time')}</div>
+        <div className="feed-clear"></div>
+      </div>
+      <div className="feed-clear"></div>
     </div>
   </li>
 );
