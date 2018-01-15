@@ -24,7 +24,7 @@ aside.navigation-feed{
 
         i {
           position: relative;
-          top: calc(50% - 12px);
+          top: calc(50% - 14px);
           color: #000000;
         }
 
@@ -143,12 +143,11 @@ aside.navigation-feed{
             height: 100%;
             float: left;
             text-align: center;
+            font-size: 18px;
 
             i {
               position:relative;
-              top: calc(50% - 8px);
-              width: 16px;
-              height: 16px;
+              top: calc(50% - 9px);
               color: #d4d4d4;
             }
           }

@@ -30,5 +30,6 @@ export const Label = {
 };
 
 export const Feed = {
-  ADD_BATCH: 'ADD_FEEDS'
+  ADD_BATCH: 'ADD_FEEDS',
+  SELECT: 'SELECT_FEED'
 };

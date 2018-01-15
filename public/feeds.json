@@ -6,7 +6,9 @@
   	  "subtitle": "Why we all should flate text",
   	  "time": 1515794888909,
       "state": "new",
-      "unread": false
+      "unread": false,
+      "threadId": 532322,
+      "id": 1
   	},
   	{
   	  "cmd": 2,
@@ -14,7 +16,9 @@
   	  "subtitle": "Re: Last Meeting",
   	  "time": 1515432919000,
       "state": "new",
-      "unread": true
+      "unread": true,
+      "threadId": 63542,
+      "id": 2
   	},
   	{
   	  "cmd": 3,
@@ -22,7 +26,9 @@
   	  "subtitle": "Re: Last Meeting",
   	  "time": 1515704888909,
       "state": "new",
-      "unread": true
+      "unread": true,
+      "threadId": 635,
+      "id": 3
   	},
     {
       "cmd": 2,
@@ -30,7 +36,9 @@
       "subtitle": "Re: Last Meeting",
       "time": 1515346519000,
       "state": "older",
-      "unread": false
+      "unread": false,
+      "threadId": 63567,
+      "id": 4
     },
     {
       "cmd": 3,
@@ -38,7 +46,9 @@
       "subtitle": "Re: Last Meeting",
       "time": 1515432919000,
       "state": "older",
-      "unread": true
+      "unread": true,
+      "threadId": 532322,
+      "id": 5
     }
   ]
 }

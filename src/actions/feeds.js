@@ -7,6 +7,13 @@ export const addFeeds = feeds => {
   };
 };
 
+export const selectFeed = feedId => {
+  return {
+    type: Types.Feed.SELECT,
+    selectedFeed: feedId
+  };
+};
+
 export const loadFeeds = () => {
   return async dispatch => {
     try {

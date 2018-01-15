@@ -8,6 +8,14 @@ export default (state = List([]), action) => {
         return Map(feed);
       });
       return state.concat(List(feeds));
+    case Types.Feed.SELECT:
+      const index = state
+      .findIndex(feed => feed.get("id")===action.selectedFeed);
+      const newFeeds = state
+      .update(index, feed => {
+        return feed.set("unread", false);
+      });
+      return newFeeds;
     default:
       return state;
   }

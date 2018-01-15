@@ -36,7 +36,12 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onLoadFeeds: () => dispatch(actions.loadFeeds())
+    onLoadFeeds: () => {
+      dispatch(actions.loadFeeds())
+    },
+    onSelectFeed: feedPos => {
+      dispatch(actions.selectFeed(feedPos))
+    }
   };
 };
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './activitypanel.css';
 import Feed from './Feed';
 
@@ -34,13 +35,32 @@ class ActivityPanel extends Component {
             <p className="text">{listName}</p>
           </li>
           {feedList.map((feed, index) => {
-            return <Feed key={index} feed={feed} unread={feed.get('unread')} renderIcon={() => this.renderFeedIcon(feed.get('cmd'))} />;
+            return (
+              <div onClick={ () => this.onSelectFeed(feed) }>
+              <Link to={`/inbox/${feed.get('threadId')}`}>
+                <Feed key={index} 
+                  feed={feed} 
+                  unread={feed.get('unread')} 
+                  renderIcon={() => this.renderFeedIcon(feed.get('cmd'))} />
+              </Link>
+              </div>
+            );
           })}
         </ul>
       );
     }
     return null;
   }
+
+  handleClick = () => {
+    console.log("Clicked")
+  }
+
+  onSelectFeed = (feed) => {
+    if (feed.get('unread')) {
+      this.props.onSelectFeed(feed.get("id"));
+    }
+  };
 
 
   renderFeedIcon = (cmd) => {
