@@ -11,13 +11,14 @@ const setFeedTime = (feed, field) => {
   return feed.set(field, TimeUtils.defineTimeByToday(feed.get(field)));
 };
 
+const countUnreadFeeds = feeds => {
+  return feeds.filter(item => item.get('unread') === true).size;
+};
+
 const clasifyFeeds = feeds => {
   const newsFiltered = feeds.filter(item => item.get('state') === 'new');
   const oldsFiltered = feeds.filter(item => item.get('state') === 'older');
-  return {
-    newFeeds: newsFiltered,
-    oldFeeds: oldsFiltered
-  };
+  return { newsFiltered, oldsFiltered };
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -25,7 +26,12 @@ const mapStateToProps = (state, ownProps) => {
   const feeds = orderedFeeds.map(feed => {
     return setFeedTime(feed, 'time');
   });
-  return clasifyFeeds(feeds);
+  const { newsFiltered, oldsFiltered } = clasifyFeeds(feeds);
+  return {
+    newFeeds: newsFiltered,
+    oldFeeds: oldsFiltered,
+    unreadFeeds: countUnreadFeeds(feeds)
+  };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {

@@ -8,7 +8,7 @@ class ActivityPanel extends Component {
       <aside className="navigation-feed">
         <header>
           <div className="header-content">
-            { this.renderHeaderIcon(100) }
+            { this.renderHeaderIcon(this.props.unreadFeeds) }
             <div className="header-title">ACTIVITY FEED</div>
             <div className="header-button"><i className="icon-next"></i></div>
             <div className="header-clear"></div>
@@ -58,23 +58,21 @@ class ActivityPanel extends Component {
 
 
   renderHeaderIcon = unreadFeeds => {
-    console.log(unreadFeeds<10)
-    console.log(unreadFeeds>10)
-    if (unreadFeeds>0 && unreadFeeds<10) {
+    if( unreadFeeds>0 && unreadFeeds<10 ){
       return(
         <div className="feed-header-icon">
           <i className="icon-bell badge small-badge" data-badge={unreadFeeds}></i>
         </div>
       );
     }
-    if (unreadFeeds>9 && unreadFeeds<100) {
+    if( unreadFeeds>9 && unreadFeeds<100 ){
       return(
         <div className="feed-header-icon">
           <i className="icon-bell badge big-badge" data-badge={unreadFeeds}></i>
         </div>
       );
     }
-    if (unreadFeeds>99) {
+    if( unreadFeeds>99 ){
       return(
         <div className="feed-header-icon">
           <i className="icon-bell badge very-big-badge" data-badge="+99"></i>
