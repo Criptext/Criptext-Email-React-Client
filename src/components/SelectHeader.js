@@ -1,21 +1,34 @@
 import React, { Component } from 'react';
 import HeaderActionTooltip from './HeaderActionTooltip';
+import StandardOptions from './StandardOptions';
 import TooltipMenu from './TooltipMenu';
 import CustomCheckbox from './CustomCheckbox';
 import './selectheader.css';
 
 class SelectHeader extends Component {
   render() {
+    const {
+      displayMoveMenu,
+      displayTagsMenu,
+      displayDotsMenu,
+      markAsUnread
+    } = this.props;
     return (
       <header className="mailbox-header">
         {this.renderSelectionInteraction()}
-        {this.renderStandardOptions()}
+        <StandardOptions
+          onActionMove={this.onActionMove}
+          onMoveClick={this.onMoveClick}
+          onTagsClick={this.onTagsClick}
+          displayMoveMenu={displayMoveMenu}
+          displayTagsMenu={displayTagsMenu}
+        />
         {this.renderMoreOptions()}
         <TooltipMenu
           title="Move to:"
           dismiss={this.onMoveClick}
           targetId="actionMove"
-          display={this.props.displayMoveMenu}
+          display={displayMoveMenu}
         >
           <ul className="multiselect-list">
             <li onClick={this.onActionMove}>Spam</li>
@@ -26,7 +39,7 @@ class SelectHeader extends Component {
           title="Add Label:"
           dismiss={this.onTagsClick}
           targetId="actionTag"
-          display={this.props.displayTagsMenu}
+          display={displayTagsMenu}
         >
           <ul className="multiselect-list">{this.renderLabels()}</ul>
         </TooltipMenu>
@@ -34,11 +47,11 @@ class SelectHeader extends Component {
           toLeft={true}
           dismiss={this.onDotsClick}
           targetId="actionDots"
-          display={this.props.displayDotsMenu}
+          display={displayDotsMenu}
         >
           <ul className="multiselect-list">
             <li onClick={this.markAsRead}>
-              {this.props.markAsUnread ? 'Mark as Unread' : 'Mark as Read'}
+              {markAsUnread ? 'Mark as Unread' : 'Mark as Read'}
             </li>
           </ul>
         </TooltipMenu>
@@ -69,45 +82,6 @@ class SelectHeader extends Component {
         </div>
       </div>
       <span>{this.props.threadsSelected.length} Selected</span>
-    </div>
-  );
-
-  renderStandardOptions = () => (
-    <div className="header-action">
-      <div onClick={this.onActionMove} data-tip data-for="actionArchive">
-        <i className="icon-archive" />
-        <HeaderActionTooltip target="actionArchive" tip="Archive" />
-      </div>
-      <div onClick={this.onActionMove} data-tip data-for="actionSpam">
-        <i className="icon-not" />
-        <HeaderActionTooltip target="actionSpam" tip="Spam" />
-      </div>
-      <div onClick={this.onActionMove} data-tip data-for="actionTrash">
-        <i className="icon-trash" />
-        <HeaderActionTooltip target="actionTrash" tip="Trash" />
-      </div>
-      <div
-        id="actionMove"
-        onClick={this.onMoveClick}
-        data-tip
-        data-for="actionMove"
-      >
-        <i className="icon-file" />
-        {this.props.displayMoveMenu ? null : (
-          <HeaderActionTooltip target="actionMove" tip="Move to" />
-        )}
-      </div>
-      <div
-        id="actionTag"
-        onClick={this.onTagsClick}
-        data-tip
-        data-for="actionTag"
-      >
-        <i className="icon-tag" />
-        {this.props.displayTagsMenu ? null : (
-          <HeaderActionTooltip target="actionTag" tip="Add Labels" />
-        )}
-      </div>
     </div>
   );
 

@@ -25,11 +25,15 @@ class ThreadItem extends Component {
           <div onMouseEnter={onRegionEnter} onMouseLeave={onRegionLeave}>
             {this.renderFirstColumn()}
           </div>
-          <div>{thread.get('header')}</div>
+          <div>
+            <span>{thread.get('header')}</span>
+          </div>
           <div>{this.willDisplaySecureIcon(thread)}</div>
           <div>
             {this.willRenderLabels(thread.get('labels'), thread.get('id'))}
-            <div className="thread-subject">{thread.get('subject')}</div>
+            <div className="thread-subject">
+              <span>{thread.get('subject')}</span>
+            </div>
             <div className="thread-preview">
               {this.renderMultipleSpaces(3)}
               {thread.get('preview')}
@@ -40,7 +44,9 @@ class ThreadItem extends Component {
             <div>{this.willDisplayAttachIcon(thread)}</div>
             <div>{this.willDisplayAckIcon(thread)}</div>
           </div>
-          <div style={visibleStyle}>{thread.get('date')}</div>
+          <div style={visibleStyle}>
+            <span>{thread.get('date')}</span>
+          </div>
         </Link>
         {this.renderMenu()}
       </div>

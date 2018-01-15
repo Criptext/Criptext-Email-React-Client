@@ -15,14 +15,14 @@ function getClass(status) {
   return getClassWhenString(status);
 }
 
-function getClassWhenBoolean(status){
+function getClassWhenBoolean(status) {
   if (status) {
     return 'checkmark-checked';
   }
-  return '';  
+  return '';
 }
 
-function getClassWhenString(status){
+function getClassWhenString(status) {
   if (status === 'all') {
     return 'checkmark-checked';
   } else if (status === 'partial') {
@@ -40,14 +40,14 @@ function onClick(ev, props) {
   return clickHandlerWhenString(props);
 }
 
-function clickHandlerWhenBoolean(props){
+function clickHandlerWhenBoolean(props) {
   if (props.status) {
     return props.onCheck(false);
   }
   return props.onCheck(true);
 }
 
-function clickHandlerWhenString(props){
+function clickHandlerWhenString(props) {
   if (props.status === 'all') {
     return props.onCheck(false);
   } else if (props.status === 'partial') {

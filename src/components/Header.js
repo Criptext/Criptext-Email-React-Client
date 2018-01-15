@@ -11,7 +11,7 @@ const Header = props => {
         <input onFocus={() => props.toggleSearchHints(true)} />
         <i className="icon-toogle-down" onClick={props.toggleSearchOptions} />
       </div>
-      <div className="header-profile">DM</div>
+      <span className="header-profile">DM</span>
       <OptionsMenu {...props} />
       <HintsMenu {...props} />
     </header>
@@ -26,19 +26,11 @@ const OptionsMenu = props => (
     display={props.displaySearchHints}
   >
     <div>
-      <div className="search-recent">
-        <i className="icon-time" />
-        <ul>
-          <li>Subject Design</li>
-          <li>Subject Design 2</li>
-        </ul>
-      </div>
-      <div className="search-recent">
-        <i className="icon-search" />
-        <ul>
-          <li>Subject Design</li>
-        </ul>
-      </div>
+      <SearchSuggestion
+        icon="icon-time"
+        items={['Subject Design', 'Subject Design 2']}
+      />
+      <SearchSuggestion icon="icon-search" items={['Subject Design']} />
       <div className="search-mail">
         <i className="icon-mail" />
         <div>
@@ -68,18 +60,15 @@ const HintsMenu = props => (
           {renderLabels(props.allLabels)}
         </select>
       </div>
-      <div>
-        <div>From</div>
-        <input placeholder="People by name or email address" />
-      </div>
-      <div>
-        <div>To</div>
-        <input placeholder="People by name or email address" />
-      </div>
-      <div>
-        <div>Subject</div>
-        <input placeholder="Enter a text" />
-      </div>
+      <SearchInputFiled
+        label="From"
+        placeholder="People by name or email address"
+      />
+      <SearchInputFiled
+        label="To"
+        placeholder="People by name or email address"
+      />
+      <SearchInputFiled label="Subject" placeholder="Enter a text" />
       <div className="search-option-last">
         <div>
           <CustomCheckbox
@@ -106,5 +95,19 @@ const renderLabels = labels => {
   }, []);
   return labelsView;
 };
+
+const SearchSuggestion = props => (
+  <div className="search-recent">
+    <i className={props.icon} />
+    <ul>{props.items.map(item => <li>{item}</li>)}</ul>
+  </div>
+);
+
+const SearchInputFiled = props => (
+  <div>
+    <div>{props.label}</div>
+    <input placeholder={props.placeholder} />
+  </div>
+);
 
 export default Header;
