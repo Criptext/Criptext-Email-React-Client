@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Email from './Email';
+import Email from './../containers/Email';
 import './thread.css';
 
 class Thread extends Component {
@@ -12,7 +12,8 @@ class Thread extends Component {
           <div className="thread-info" />
           <div className="thread-emails">
             {this.props.emails.map((email, index) => {
-              return <Email key={index} email={email} />;
+              const isLast = this.props.emails.size -1 === index
+              return <Email key={index} email={email} isOpen={isLast} />;
             })}
           </div>
         </div>
