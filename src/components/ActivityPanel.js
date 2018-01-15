@@ -52,16 +52,11 @@ class ActivityPanel extends Component {
     return null;
   }
 
-  handleClick = () => {
-    console.log("Clicked")
-  }
-
   onSelectFeed = (feed) => {
     if (feed.get('unread')) {
       this.props.onSelectFeed(feed.get("id"));
     }
   };
-
 
   renderFeedIcon = (cmd) => {
     switch (cmd) {
@@ -75,7 +70,6 @@ class ActivityPanel extends Component {
         return null;
     }
   }
-
 
   renderHeaderIcon = unreadFeeds => {
     if( unreadFeeds>0 && unreadFeeds<10 ){
