@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Email from './../containers/Email';
+import ThreadHeader from './../containers/ThreadHeader';
 import './thread.css';
 
 class Thread extends Component {
   render() {
     return (
       <div className="thread-container">
-        <header />
+        <ThreadHeader
+          thread={this.props.thread}
+          threadsSelected={this.props.threadId}
+        />
         <div className="thread-content">
           <div className="thread-info" />
           <div className="thread-emails">

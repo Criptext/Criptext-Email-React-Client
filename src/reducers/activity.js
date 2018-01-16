@@ -13,7 +13,6 @@ export default (state = Map({}), action) => {
       return state.set('unreadFilter', action.enabled);
     case Thread.DESELECT_THREADS:
       if (action.spread) {
-        console.log(action.spread);
         return state.set('multiselect', false);
       }
       return state;

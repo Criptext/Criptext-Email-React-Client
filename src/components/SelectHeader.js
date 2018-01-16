@@ -6,10 +6,16 @@ import CustomCheckbox from './CustomCheckbox';
 import './selectheader.css';
 
 class SelectHeader extends Component {
+  constructor() {
+    super();
+    this.state = {
+      displayTagsMenu: false
+    };
+  }
+
   render() {
     const {
       displayMoveMenu,
-      displayTagsMenu,
       displayDotsMenu,
       markAsUnread
     } = this.props;
@@ -21,7 +27,7 @@ class SelectHeader extends Component {
           onMoveClick={this.onMoveClick}
           onTagsClick={this.onTagsClick}
           displayMoveMenu={displayMoveMenu}
-          displayTagsMenu={displayTagsMenu}
+          displayTagsMenu={this.state.displayTagsMenu}
         />
         {this.renderMoreOptions()}
         <TooltipMenu
@@ -39,7 +45,7 @@ class SelectHeader extends Component {
           title="Add Label:"
           dismiss={this.onTagsClick}
           targetId="actionTag"
-          display={displayTagsMenu}
+          display={this.state.displayTagsMenu}
         >
           <ul className="multiselect-list">{this.renderLabels()}</ul>
         </TooltipMenu>
@@ -63,24 +69,28 @@ class SelectHeader extends Component {
     <div>
       <div className="header-action">
         <HeaderOption
-          onClick={this.props.onMultiSelectDismiss}
+          onClick={this.props.onBackOption}
           tip="Dismiss"
           enableTip={true}
           icon="icon-back"
           targetName="actionDismiss"
         />
-        <HeaderOption
-          onClick={
-            this.props.allSelected
-              ? this.props.onDeselectThreads
-              : this.props.onSelectThreads
-          }
-          enableTip={false}
-          myClass={this.props.allSelected ? 'menu-select-all' : ''}
-          icon={this.props.allSelected ? 'icon-check' : 'icon-box'}
-        />
+        {this.props.showSelectAllOption ? (
+          <HeaderOption
+            onClick={
+              this.props.allSelected
+                ? this.props.onDeselectThreads
+                : this.props.onSelectThreads
+            }
+            enableTip={false}
+            myClass={this.props.allSelected ? 'menu-select-all' : ''}
+            icon={this.props.allSelected ? 'icon-check' : 'icon-box'}
+          />
+        ) : null}
       </div>
-      <span>{this.props.threadsSelected.length} Selected</span>
+      {this.props.showSelectAllOption ? (
+        <span>{this.props.threadsSelected.length} Selected</span>
+      ) : null}
     </div>
   );
 
@@ -107,7 +117,9 @@ class SelectHeader extends Component {
   };
 
   onTagsClick = () => {
-    this.props.toggleTagsMenu();
+    this.setState({
+      displayTagsMenu: !this.state.displayTagsMenu
+    });
   };
 
   onDotsClick = () => {

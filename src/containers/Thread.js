@@ -13,17 +13,26 @@ const emailsMapToList = (emailsMap, emailIds) => {
   return result;
 };
 
-const getEmails = (state, threadId) => {
-  let thread = state.get('threads').find(thread => {
+const getEmails = (emails, thread, threadId) => {
+  let emailIds = thread ? thread.get('emails') : null;
+  return emailsMapToList(emails, emailIds);
+};
+
+const getThread = (threads, threadId) => {
+  return threads.find(thread => {
     return thread.get('id') === threadId;
   });
-  let emailIds = thread ? thread.get('emails') : null;
-  return emailsMapToList(state.get('emails'), emailIds);
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const threadId = Number(ownProps.match.params.threadId);
+  const thread = getThread(state.get('threads'), threadId);
+  const emailIds = getEmails(state.get('emails'), thread, threadId);
   return {
-    emails: getEmails(state, Number(ownProps.match.params.threadId))
+    threadId,
+    thread,
+    labels: thread ? thread.get('labels') : [],
+    emails: emailIds
   };
 };
 
