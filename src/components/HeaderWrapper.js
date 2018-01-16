@@ -41,6 +41,8 @@ class HeaderWrapper extends Component {
         displaySearchOptions={this.state.displaySearchOptions}
         toggleSearchHints={this.toggleSearchHints}
         toggleSearchOptions={this.toggleSearchOptions}
+        onSearchChange={this.onSearchChange}
+        searchText={this.state.searchText}
         {...this.props}
       />
     );
@@ -58,15 +60,16 @@ class HeaderWrapper extends Component {
     });
   };
 
-  toggleSearchHints = value => {
+  toggleSearchHints = () => {
     this.setState({
-      displaySearchHints: value || !this.state.displaySearchHints
+      displaySearchHints: this.state.displaySearchOptions ? false : !this.state.displaySearchHints,
     });
   };
 
-  toggleSearchOptions = value => {
+  toggleSearchOptions = () => {
     this.setState({
-      displaySearchOptions: value
+      displaySearchOptions: !this.state.displaySearchOptions,
+      displaySearchHints: false
     });
   };
 
@@ -80,6 +83,14 @@ class HeaderWrapper extends Component {
       }
     );
   };
+
+  onSearchChange = (ev) => {
+    const search = ev.target.value;
+    this.setState({
+      search,
+      displaySearchHints: this.state.displaySearchOptions ? false : true
+    })
+  }
 }
 
 export default HeaderWrapper;

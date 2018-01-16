@@ -1,27 +1,28 @@
-import React from 'react';
+import React, { Component } from 'react';
 import TooltipMenu from './TooltipMenu';
 import './threadheader.css';
 import CustomCheckbox from './CustomCheckbox';
+import SearchBox from './SearchBox'
 
-const Header = props => {
-  return (
-    <header className="mailbox-header">
-      <div className="header-search" id="headerSearch">
-        <i className="icon-search" />
-        <input onFocus={() => props.toggleSearchHints(true)} />
-        <i className="icon-toogle-down" onClick={props.toggleSearchOptions} />
-      </div>
-      <span className="header-profile">DM</span>
-      <OptionsMenu {...props} />
-      <HintsMenu {...props} />
-    </header>
-  );
-};
+class Header extends Component{
 
-const OptionsMenu = props => (
+  render(){
+    return (
+      <header className="mailbox-header">
+        <SearchBox hold={this.props.displaySearchOptions} {...this.props} />
+        <span className="header-profile">DM</span>
+        <OptionsMenu {...this.props} />
+        <HintsMenu {...this.props} />
+      </header>
+    );
+  };
+
+}
+
+const HintsMenu = props => (
   <TooltipMenu
     class="search-tooltip"
-    dismiss={() => props.toggleSearchHints(false)}
+    dismiss={props.toggleSearchHints}
     targetId="headerSearch"
     display={props.displaySearchHints}
   >
@@ -45,10 +46,10 @@ const OptionsMenu = props => (
   </TooltipMenu>
 );
 
-const HintsMenu = props => (
+const OptionsMenu = props => (
   <TooltipMenu
     toLeft={true}
-    dismiss={() => props.toggleSearchOptions(false)}
+    dismiss={props.toggleSearchOptions}
     targetId="headerSearch"
     display={props.displaySearchOptions}
   >
@@ -99,7 +100,7 @@ const renderLabels = labels => {
 const SearchSuggestion = props => (
   <div className="search-recent">
     <i className={props.icon} />
-    <ul>{props.items.map(item => <li>{item}</li>)}</ul>
+    <ul>{props.items.map((item, index) => <li key={index}>{item}</li>)}</ul>
   </div>
 );
 

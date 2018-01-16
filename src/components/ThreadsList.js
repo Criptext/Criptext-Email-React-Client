@@ -10,14 +10,14 @@ class ThreadsList extends Component {
         <div className="threads-info-header">
           <div className="threads-mailbox-label">INBOX</div>
           <div className="threads-toggle-container">
-            <span>Unread</span>
+            <span>All</span>
             <Switch
               theme="two"
               name="unreadSwitch"
               onChange={this.handleSwitchChange}
-              checked={!this.props.unreadFilter}
+              checked={this.props.unreadFilter}
             />
-            <span>All</span>
+            <span>Unread</span>
           </div>
         </div>
         <div className="threads-container" onScroll={this.handleTableScrolled}>
@@ -42,7 +42,7 @@ class ThreadsList extends Component {
   }
 
   handleSwitchChange = ev => {
-    this.props.onUnreadToggle(!ev.target.checked);
+    this.props.onUnreadToggle(ev.target.checked);
   };
 
   handleTableScrolled = e => {
