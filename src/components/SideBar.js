@@ -29,7 +29,10 @@ class SideBar extends Component {
           <nav>
             <ul>
               {MailItems.map((item, key) => {
-                return <SideBarItem key={key} item={item} />;
+                const selected = item.id === this.props.optionSelected;
+                return (
+                  <SideBarItem key={key} item={item} selected={selected} />
+                );
               })}
               <li className="nav-item nav-item-more">
                 <div className="line-separator" />
@@ -88,7 +91,8 @@ class SideBar extends Component {
 }
 
 SideBar.propTypes = {
-  labels: PropTypes.object
+  labels: PropTypes.object,
+  optionSelected: PropTypes.string
 };
 
 export default SideBar;

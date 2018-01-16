@@ -7,10 +7,12 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import rootReducer from './reducers/index';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
 import './app.css';
 
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+
+const WSideBar = withRouter(SideBar);
 
 window.getState = () => {
   return store.getState();
@@ -23,7 +25,7 @@ class App extends Component {
         <Router>
           <div className="wrapper-out">
             <div className="wrapper-in">
-              <SideBar />
+              <WSideBar />
               <div className="main-container">
                 <Route exact path="/:mailbox" component={MailBox} />
                 <Route exact path="/:mailbox/:threadId" component={Thread} />

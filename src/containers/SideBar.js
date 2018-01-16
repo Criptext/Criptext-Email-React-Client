@@ -4,7 +4,8 @@ import SideBarView from '../components/SideBar';
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    labels: state.get('labels')
+    labels: state.get('labels'),
+    optionSelected: ownProps.location.pathname.replace('/', '')
   };
 };
 
