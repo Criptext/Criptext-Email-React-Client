@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import './sidebaritem.css';
 
 const SideBarItem = props => (
-  <li className="nav-item">
+  <li className={props.selected ? 'nav-item nav-item-selected' : 'nav-item'}>
     <div className="nav-item-icon">
       <i className={props.item.icon} />
     </div>
@@ -18,7 +18,8 @@ const SideBarItem = props => (
 );
 
 SideBarItem.propTypes = {
-  item: PropTypes.object
+  item: PropTypes.object,
+  selected: PropTypes.bool
 };
 
 export default SideBarItem;
