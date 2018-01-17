@@ -13,7 +13,7 @@ const emailsMapToList = (emailsMap, emailIds) => {
   return result;
 };
 
-const getEmails = (emails, thread, threadId) => {
+const getEmails = (emails, thread) => {
   let emailIds = thread ? thread.get('emails') : null;
   return emailsMapToList(emails, emailIds);
 };
