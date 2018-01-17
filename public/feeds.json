@@ -1,7 +1,7 @@
 {
   "feeds": [
   	{
-  	  "cmd": 1,
+      "cmd": 1,
   	  "title": "Schedule email sent",
   	  "subtitle": "Why we all should flate text",
   	  "time": 1515794888909,

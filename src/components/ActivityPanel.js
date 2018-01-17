@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './activitypanel.css';
 import Feed from './Feed';
+import { FeedCommand } from './../utils/const';
 
 class ActivityPanel extends Component {
   render() {
@@ -64,11 +65,11 @@ class ActivityPanel extends Component {
 
   renderFeedIcon = cmd => {
     switch (cmd) {
-      case 1:
+      case FeedCommand.SENT:
         return <i className="icon-calendar" />;
-      case 2:
+      case FeedCommand.EXPIRED:
         return <i className="icon-attach" />;
-      case 3:
+      case FeedCommand.OPENED:
         return <i className="icon-checked" />;
       default:
         return null;
