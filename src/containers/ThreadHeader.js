@@ -18,7 +18,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onBackOption: () => {
-      return ownProps.history.goBack()
+      return ownProps.history.goBack();
     },
     onMoveThreads: (threadsIds, label) => {
       return dispatch(actions.moveThreads(threadsIds, label));
