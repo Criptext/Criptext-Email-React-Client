@@ -1,9 +1,16 @@
-import * as Types from './types';
+import { Feed } from './types';
 
 export const addFeeds = feeds => {
   return {
-    type: Types.Feed.ADD_BATCH,
+    type: Feed.ADD_BATCH,
     feeds: feeds
+  };
+};
+
+export const selectFeed = feedId => {
+  return {
+    type: Feed.SELECT,
+    selectedFeed: feedId
   };
 };
 
@@ -12,7 +19,7 @@ export const loadFeeds = () => {
     try {
       const response = await fetch('/feeds.json');
       const json = await response.json();
-      let feeds = json.feeds;
+      const feeds = json.feeds;
       dispatch(addFeeds(feeds));
     } catch (e) {
       console.log(e);

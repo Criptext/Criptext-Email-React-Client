@@ -5,6 +5,7 @@ aside.navigation-feed{
   font-size: 0.9em;
   display: inline-table;
   width: 288px;
+  overflow: hidden;
 
   header{
     background-color: #f7f7f8;
@@ -13,14 +14,58 @@ aside.navigation-feed{
     .header-content {
       margin: 0%;
 
-      .header-title {
-        width: 109px;
-        padding-top: 21px;
-        padding-left: 57px;
+      .feed-header-icon {
+        height: $_HEIGHT_HEADER;
+        width: 20%;
         margin: 0%;
         float: left;
-        height: 19px;
+        font-size: 20px;
+        text-align: center;
+
+        i {
+          position: relative;
+          top: calc(50% - 11px);
+          color: #000000;
+        }
+
+        .badge {
+          right: -10px;
+        }
+
+        .badge[data-badge]:after {
+          text-align: center;
+          width:18px;height:18px;
+          line-height: 2rem;
+          border-radius: 50%;
+          font-weight: bold;
+          content: attr(data-badge);
+          background: #ff3366;
+          color: white;
+          border: solid 2px #f7f7f8;
+          position: relative;
+          top: -10px;
+          right: 10px;
+        }
+        .small-badge[data-badge]:after {
+           font-size: 13px;
+           padding: 1px 5px 2px 5px;
+        }
+        .medium-badge[data-badge]:after {
+           font-size: 13px;
+           padding: 2px;
+        }
+        .large-badge[data-badge]:after {
+           font-size: 11px;
+           padding: 4px 1px 4px 1px;
+        }
+      }
+
+      .header-title {
         font-size: 13px;
+        padding-top: 23px;
+        height: 20px;
+        margin: 0%;
+        float: left;
         font-weight: 900;
         font-style: normal;
         font-stretch: normal;
@@ -36,6 +81,14 @@ aside.navigation-feed{
         height: $_HEIGHT_HEADER;
         background-color: #0091ff;
         float: right;
+        text-align: center;
+        font-size: 24px;
+
+        i {
+          position:relative;
+          top: calc(50% - 13px);
+          color: #000000;
+        }
       }
 
       .header-clear {
@@ -46,6 +99,8 @@ aside.navigation-feed{
 
 
   nav {
+    overflow: auto;
+
     hr {
       margin: 0px 0px 0px 10px;
       border: 0;
@@ -59,21 +114,6 @@ aside.navigation-feed{
       margin-bottom: 0px;
       margin-top: 0px;
       list-style-type: none;
-
-      .unread-feed {
-        background-color: #f2f8ff;
-        .feed-content {
-          .feed-name {
-            font-weight: bold;
-          }
-        }
-        .feed-content {
-          .feed-time {
-            font-weight: bold;
-            font-style: normal;
-          }
-        }
-      }
 
       .feed-section-title {
         .text{
@@ -89,44 +129,72 @@ aside.navigation-feed{
       
       .feed-item {
         height: 55px;
-        padding-top: 12px;
         padding-bottom: 0px;
-        padding-left: 53px;
         margin-bottom: 2px;
-      
-        .feed-content{
-          .feed-name{
-            height: 16px;
-            margin: 0% 0% 2% 0%;
-            font-size: 12px;
-            white-space: nowrap; 
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
 
-          .feed-subject{
-            color: #9b9b9b;
-            float: left;
+        .feed-content {
+          margin: 0%;
+          padding: 0%;
+          height: 100%;
+
+          .feed-icon {
             margin: 0%;
-            width: 70%;
-            font-size: 12px;
-            white-space: nowrap; 
-            overflow: hidden;
-            text-overflow: ellipsis;
+            width: 19%;
+            height: 100%;
+            float: left;
+            text-align: center;
+            font-size: 18px;
+
+            i {
+              position:relative;
+              top: calc(50% - 9px);
+              color: #d4d4d4;
+            }
           }
 
-          .feed-time{
-            padding-top: 2px;
-            height: 14px;
-            font-size: 10px;
-            font-size: 10px;
-            text-align: left;
+          .feed-data {
+            width: 81%;
+            padding: 12px 0px 10px 0px;
             margin: 0%;
             float: right;
-            width: 30%;
+            text-align: left;
+            color: #000000;
+
+            .feed-title {
+              height: 16px;
+              font-size: 12px;
+              white-space: nowrap; 
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .feed-subject {
+              color: #9b9b9b;
+              float: left;
+              margin: 0%;
+              width: 70%;
+              font-size: 12px;
+              white-space: nowrap; 
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .feed-time {
+              font-size: 10px;
+              margin: 0px 26px 0px 0px;
+              padding-top: 2px;
+              width: 40px;
+              height: 14px;
+              text-align: left;
+              float: right;
+            }
+
+            .feed-clear {
+              clear: both;
+            }
           }
 
-          .feed-clear{
+          .feed-clear {
             clear: both;
           }
 
@@ -134,9 +202,29 @@ aside.navigation-feed{
 
       }
 
+      .unread-feed {
+        background-color: #f2f8ff;
+        .feed-content {
+          .feed-icon {
+            i {
+              color: #000;
+            }
+          }
+          .feed-data {
+            .feed-title {
+              font-weight: bold;
+            }
+            .feed-time {
+              font-weight: bold;
+              font-style: normal;
+            }
+          }
+        }
+      }
+
+
     }
 
   }
-
   
 }
