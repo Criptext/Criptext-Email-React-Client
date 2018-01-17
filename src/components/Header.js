@@ -55,10 +55,10 @@ const SearchMail = props => (
     <i className="icon-mail" />
     <div>
       <div>
-        <div>{props.preview}</div>
-        <div>{props.date}</div>
+        <div><span>{props.preview}</span></div>
+        <div><span>{props.date}</span></div>
       </div>
-      <div>{props.participants}</div>
+      <div><span>{props.participants}</span></div>
     </div>
   </div>
 );
@@ -72,7 +72,7 @@ const OptionsMenu = props => (
   >
     <div className="search-options">
       <div>
-        <div>Search</div>
+        <div><span>Search</span></div>
         <select
           onChange={ev => {
             const value = ev.target.value;

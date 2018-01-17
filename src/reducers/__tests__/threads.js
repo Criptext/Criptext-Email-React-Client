@@ -2,66 +2,12 @@
 
 import threadsReducer from '../thread';
 import * as actions from '../../actions/index';
+import file from './../../../public/threads.json';
+const myThreads = file.threads;
 
 describe('thread actions', () => {
-  const threads = [
-    {
-      "participants": "Criptext Info <no-reply@criptext.com>",
-      "hasOpenAttachments": false,
-      "lastEmailDate": 1515601890000,
-      "lastEmailId": "<serial_key>",
-      "preview": "Hello again!",
-      "subject": "Hello again gaumala!",
-      "id": 532322,
-      "secure": true,
-      "status": 1,
-      "timesOpened": 2,
-      "timer": 1,
-      "totalAttachments": 1,
-      "unread": true,
-      "emails": [1],
-      "labels": [7, 3, 10],
-      "selected": false
-    }
-  ];
-
-  const manyThreads = [
-    {
-      "participants": "Criptext Info <no-reply@criptext.com>",
-      "hasOpenAttachments": false,
-      "lastEmailDate": 1515601890000,
-      "lastEmailId": "<serial_key>",
-      "preview": "Hello again!",
-      "subject": "Hello again gaumala!",
-      "id": 532322,
-      "secure": true,
-      "status": 1,
-      "timesOpened": 2,
-      "timer": 1,
-      "totalAttachments": 1,
-      "unread": true,
-      "emails": [1],
-      "labels": [7, 3, 10],
-      "selected": false
-    },
-    {
-      "participants": "Pedro Iniguez <pedroi@criptext.com>, Gianni Carlo <giannic@criptext.com>",
-      "hasOpenAttachments": false,
-      "lastEmailDate": 1512915941000,
-      "lastEmailId": "<serial_key>",
-      "preview": "Hello!",
-      "subject": "Hello gaumala!",
-      "id": 63542,
-      "secure": false,
-      "status": 1,
-      "timesOpened": 0,
-      "totalAttachments": 4,
-      "unread": true,
-      "emails": [65, 8 , 9, 14],
-      "labels": [10],
-      "selected": false
-    }
-  ];
+  const threads = [myThreads[0]];
+  const manyThreads = [myThreads[0], myThreads[1]];
 
   function initState(threads) {
     return threadsReducer(undefined, actions.addThreads(threads));

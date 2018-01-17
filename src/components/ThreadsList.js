@@ -18,7 +18,7 @@ class ThreadsList extends Component {
     return (
       <div className="threads-header-wrapper">
         <div className="threads-info-header">
-          <div className="threads-mailbox-label">INBOX</div>
+          <h1 className="threads-mailbox-label">INBOX</h1>
           <div className="threads-toggle-container">
             <span>All</span>
             <Switch
