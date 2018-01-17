@@ -1,31 +1,59 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
-const Feed = props => (
-  <div className={'feed-item ' + (props.unread ? 'unread-feed' : '')}>
-    <div className="feed-content">
-      <div className="feed-icon">{props.renderIcon()}</div>
-      <div className="feed-data">
-        <div className="feed-title">
-          <span>{props.feed.get('title')}</span>
+
+class Feed extends Component {
+
+  render(){
+    const { 
+      onRegionEnter, 
+      onRegionLeave
+    } = this.props;
+    return (
+      <li className={'feed-item ' + (this.props.unread ? 'unread-feed' : '')}>
+        <div 
+          className="feed-content" 
+          onMouseEnter={onRegionEnter} 
+          onMouseLeave={onRegionLeave}
+        >
+          <div className="feed-icon">{this.props.renderIcon()}</div>
+          <div className="feed-data">
+            <div className="feed-preview">
+              <div className="feed-title"><span>{this.props.feed.get('title')}</span></div>
+              <div className="feed-subject"><span>{this.props.feed.get('subtitle')}</span></div>
+            </div>
+            <div className="feed-actions-time">
+              { this.renderFeedActions() }
+            </div>
+          </div>
+          <div className="feed-clear" />
         </div>
-        <div className="feed-subject">
-          <span>{props.feed.get('subtitle')}</span>
+      </li>
+    );
+  }
+
+
+  renderFeedActions = () => {
+    if (this.props.hovering) {
+      return (
+        <div className="feed-actions">
+          <div className="feed-mute">
+            <i className="icon-bell" title="Mute"></i>
+          </div>
+          <div className="feed-delete">
+            <i className="icon-trash" title="Delete"></i>
+          </div>
         </div>
-        <div className="feed-time">
-          <span>{props.feed.get('time')}</span>
-        </div>
-        <div className="feed-clear" />
+      );
+    }
+    return (
+      <div className="feed-time">
+        <span>{this.props.feed.get('time')}</span>
       </div>
-      <div className="feed-clear" />
-    </div>
-  </div>
-);
+    );
+  };
 
-Feed.propTypes = {
-  feed: PropTypes.object,
-  unread: PropTypes.bool,
-  renderIcon: PropTypes.func
-};
+
+}
+
 
 export default Feed;

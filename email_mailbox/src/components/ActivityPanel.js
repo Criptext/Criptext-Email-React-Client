@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './activitypanel.css';
-import Feed from './Feed';
+import FeedWrapper from './FeedWrapper';
 import { FeedCommand } from './../utils/const';
 
 class ActivityPanel extends Component {
@@ -42,7 +42,7 @@ class ActivityPanel extends Component {
             return (
               <li key={index} onClick={() => this.onSelectFeed(feed)}>
                 <Link to={`/inbox/${feed.get('threadId')}`}>
-                  <Feed
+                  <FeedWrapper
                     key={index}
                     feed={feed}
                     unread={feed.get('unread')}

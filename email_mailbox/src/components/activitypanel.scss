@@ -3,9 +3,13 @@
 aside.navigation-feed{
   font-family: 'NunitoSans';
   font-size: 0.9em;
-  display: inline-table;
-  width: 288px;
   overflow: hidden;
+  width: 288px;
+  display: inline-table;
+  height: 100%;
+  position: relative;
+  top: 0px;
+  bottom: 0px;
 
   header{
     background-color: #f7f7f8;
@@ -67,10 +71,6 @@ aside.navigation-feed{
         margin: 0%;
         float: left;
         font-weight: 900;
-        font-style: normal;
-        font-stretch: normal;
-        line-height: normal;
-        letter-spacing: normal;
         text-align: left;
         color: #000000;
       }
@@ -100,14 +100,7 @@ aside.navigation-feed{
 
   nav {
     overflow: auto;
-
-    hr {
-      margin: 0px 0px 0px 10px;
-      border: 0;
-      height: 0;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    }
+    height: calc(100% - 61px);
 
     .new-feeds{
       padding-left: 0px;
@@ -153,53 +146,77 @@ aside.navigation-feed{
           }
 
           .feed-data {
-            width: 81%;
-            padding: 12px 0px 10px 0px;
-            margin: 0%;
+            height: 100%;
+            width: 72%;
+            padding: 0%;
+            margin: 0% 9% 0% 0%;
             float: right;
             text-align: left;
             color: #000000;
 
-            .feed-title {
-              height: 16px;
-              font-size: 12px;
-              white-space: nowrap; 
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-
-            .feed-subject {
-              color: #9b9b9b;
-              float: left;
+            .feed-preview {
+              width: 75%;
+              height: 31px;
+              padding: 12px 0px 12px 0px;
               margin: 0%;
-              width: 70%;
-              font-size: 12px;
-              white-space: nowrap; 
-              overflow: hidden;
-              text-overflow: ellipsis;
+              float: left;
+
+              .feed-title {
+                width: 100%;
+                height: 16px;
+                font-size: 12px;
+                white-space: nowrap; 
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .feed-subject {
+                width: 100%;
+                color: #9b9b9b;
+                float: left;
+                margin: 0%;
+                font-size: 12px;
+                white-space: nowrap; 
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
             }
 
-            .feed-time {
-              font-size: 10px;
-              margin: 0px 26px 0px 0px;
-              padding-top: 2px;
-              width: 40px;
-              height: 14px;
-              text-align: left;
-              float: right;
-            }
+            .feed-actions-time {
+              width: 25%;
+              height: 31px;
+              padding: 12px 0px 12px 0px;
+              margin: 0%;
+              float: left;
+              text-align: right;
+              color: #dcdde0;
 
-            .feed-clear {
-              clear: both;
+              .feed-time {
+                width: 100%;
+                font-size: 10px;
+                position: relative;
+                bottom: -20px;
+              }
+
+              .feed-actions {
+                height: 100%;
+                width: 100%;
+
+                .icon-bell:hover {
+                  color: #daa520;
+                }
+
+                .icon-trash:hover {
+                  color: red;
+                }
+              }
             }
           }
 
           .feed-clear {
             clear: both;
           }
-
         }
-
       }
 
       .unread-feed {
@@ -211,17 +228,21 @@ aside.navigation-feed{
             }
           }
           .feed-data {
-            .feed-title {
-              font-weight: bold;
-            }
-            .feed-time {
-              font-weight: bold;
-              font-style: normal;
+            .feed-preview {
+              .feed-title {
+                 font-weight: bold;
+               }
+             }
+            .feed-actions-time {
+              .feed-time {
+                font-weight: bold;
+                font-style: normal;
+                color: #000000;
+              }
             }
           }
         }
       }
-
 
     }
 
