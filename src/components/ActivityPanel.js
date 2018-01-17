@@ -9,10 +9,12 @@ class ActivityPanel extends Component {
       <aside className="navigation-feed">
         <header>
           <div className="header-content">
-            { this.renderHeaderIcon() }
+            {this.renderHeaderIcon()}
             <div className="header-title">ACTIVITY FEED</div>
-            <div className="header-button"><i className="icon-next"></i></div>
-            <div className="header-clear"></div>
+            <div className="header-button">
+              <i className="icon-next" />
+            </div>
+            <div className="header-clear" />
           </div>
         </header>
         <nav>
@@ -36,13 +38,15 @@ class ActivityPanel extends Component {
           </li>
           {feedList.map((feed, index) => {
             return (
-              <div onClick={ () => this.onSelectFeed(feed) }>
-              <Link to={`/inbox/${feed.get('threadId')}`}>
-                <Feed key={index} 
-                  feed={feed} 
-                  unread={feed.get('unread')} 
-                  renderIcon={() => this.renderFeedIcon(feed.get('cmd'))} />
-              </Link>
+              <div onClick={() => this.onSelectFeed(feed)}>
+                <Link to={`/inbox/${feed.get('threadId')}`}>
+                  <Feed
+                    key={index}
+                    feed={feed}
+                    unread={feed.get('unread')}
+                    renderIcon={() => this.renderFeedIcon(feed.get('cmd'))}
+                  />
+                </Link>
               </div>
             );
           })}
@@ -50,36 +54,37 @@ class ActivityPanel extends Component {
       );
     }
     return null;
-  }
+  };
 
-  onSelectFeed = (feed) => {
+  onSelectFeed = feed => {
     if (feed.get('unread')) {
-      this.props.onSelectFeed(feed.get("id"));
+      this.props.onSelectFeed(feed.get('id'));
     }
   };
 
-  renderFeedIcon = (cmd) => {
+  renderFeedIcon = cmd => {
     switch (cmd) {
       case 1:
-        return <i className="icon-calendar"></i>;
+        return <i className="icon-calendar" />;
       case 2:
-        return <i className="icon-attach"></i>;
+        return <i className="icon-attach" />;
       case 3:
-        return <i className="icon-checked"></i>;
+        return <i className="icon-checked" />;
       default:
         return null;
     }
-  }
+  };
 
   renderHeaderIcon = () => {
-    return(
+    return (
       <div className="feed-header-icon">
-        <i className={'icon-bell ' + this.props.badgeClass} data-badge={this.props.badgeData}></i>
+        <i
+          className={'icon-bell ' + this.props.badgeClass}
+          data-badge={this.props.badgeData}
+        />
       </div>
     );
-  }
-
-
+  };
 }
 
 export default ActivityPanel;

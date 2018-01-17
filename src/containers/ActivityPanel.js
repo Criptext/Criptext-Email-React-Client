@@ -17,29 +17,29 @@ const countUnreadFeeds = feeds => {
 
 const getBadgeClass = unreadFeeds => {
   switch (true) {
-    case ( unreadFeeds>0 && unreadFeeds<10 ):
-      return "badge small-badge";
-    case ( unreadFeeds>9 && unreadFeeds<100 ):
-      return "badge medium-badge";
-    case ( unreadFeeds>99 ):
-      return "badge large-badge";
+    case unreadFeeds > 0 && unreadFeeds < 10:
+      return 'badge small-badge';
+    case unreadFeeds > 9 && unreadFeeds < 100:
+      return 'badge medium-badge';
+    case unreadFeeds > 99:
+      return 'badge large-badge';
     default:
-      return "";
+      return '';
   }
-}
+};
 
 const getBadgeData = unreadFeeds => {
   switch (true) {
-    case ( unreadFeeds>0 && unreadFeeds<10 ):
+    case unreadFeeds > 0 && unreadFeeds < 10:
       return String(unreadFeeds);
-    case ( unreadFeeds>9 && unreadFeeds<100 ):
+    case unreadFeeds > 9 && unreadFeeds < 100:
       return String(unreadFeeds);
-    case ( unreadFeeds>99 ):
-      return "+99";
+    case unreadFeeds > 99:
+      return '+99';
     default:
-      return "";
+      return '';
   }
-}
+};
 
 const clasifyFeeds = feeds => {
   const newsFiltered = feeds.filter(item => item.get('state') === 'new');
@@ -47,7 +47,7 @@ const clasifyFeeds = feeds => {
   return { newsFiltered, oldsFiltered };
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   const orderedFeeds = orderFeedsByDate(state.get('feeds'));
   const feeds = orderedFeeds.map(feed => {
     return setFeedTime(feed, 'time');
@@ -63,13 +63,13 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
   return {
     onLoadFeeds: () => {
-      dispatch(actions.loadFeeds())
+      dispatch(actions.loadFeeds());
     },
     onSelectFeed: feedPos => {
-      dispatch(actions.selectFeed(feedPos))
+      dispatch(actions.selectFeed(feedPos));
     }
   };
 };

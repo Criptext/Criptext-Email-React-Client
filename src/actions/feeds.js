@@ -19,7 +19,7 @@ export const loadFeeds = () => {
     try {
       const response = await fetch('/feeds.json');
       const json = await response.json();
-      let feeds = json.feeds;
+      const feeds = json.feeds;
       dispatch(addFeeds(feeds));
     } catch (e) {
       console.log(e);
