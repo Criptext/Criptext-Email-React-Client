@@ -18,7 +18,8 @@ const mapStateToProps = state => {
     labels,
     allLabels: state.get('labels'),
     markAsUnread,
-    allSelected: threadsSelected.length === state.get('threads').size
+    allSelected: threadsSelected.length === state.get('threads').size,
+    showSelectAllOption: true
   };
 };
 
@@ -27,7 +28,7 @@ const mapDispatchToProps = dispatch => {
     onDeselectThreads: () => {
       return dispatch(actions.deselectThreads(false));
     },
-    onMultiSelectDismiss: () => {
+    onBackOption: () => {
       return dispatch(actions.deselectThreads(true));
     },
     onSelectThreads: () => {
