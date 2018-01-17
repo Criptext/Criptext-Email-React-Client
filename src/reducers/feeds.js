@@ -21,6 +21,7 @@ export default (state = List([]), action) => {
           return feed.set('unread', false);
         });
       }
+      break;
     }
     default:
       return state;
