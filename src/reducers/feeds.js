@@ -19,7 +19,7 @@ export default (state = List([]), action) => {
           return feed.set('unread', false);
         });
       }
-      break;
+      return state;
     }
     default:
       return state;
