@@ -5,11 +5,13 @@ import CustomCheckbox from './CustomCheckbox';
 import SearchBox from './SearchBox'
 
 class Header extends Component{
-
+  
   render(){
+    const {searchParams, setSearchParam, displaySearchOptions} = this.props;
     return (
       <header className="mailbox-header">
-        <SearchBox hold={this.props.displaySearchOptions} {...this.props} />
+        <SearchBox setSearchParam={setSearchParam} 
+          hold={displaySearchOptions} searchText={searchParams.text} {...this.props} />
         <span className="header-profile">DM</span>
         <OptionsMenu {...this.props} />
         <HintsMenu {...this.props} />
@@ -32,19 +34,31 @@ const HintsMenu = props => (
         items={['Subject Design', 'Subject Design 2']}
       />
       <SearchSuggestion icon="icon-search" items={['Subject Design']} />
-      <div className="search-mail">
-        <i className="icon-mail" />
-        <div>
-          <div>
-            <div>Design Review - 14/Dec/2017</div>
-            <div>10:50</div>
-          </div>
-          <div>Gianni Carlo</div>
-        </div>
-      </div>
+      {props.threads  
+        ? props.threads.map( (thread, index) => (
+          <SearchMail 
+            key={index}
+            preview={thread.get('preview')}
+            date={thread.get('date')}
+            participants={thread.get('header')}
+          />
+        ))
+        : null
+      }
     </div>
   </TooltipMenu>
 );
+
+const SearchMail = props => (<div className="search-mail">
+  <i className="icon-mail" />
+  <div>
+    <div>
+      <div>{props.preview}</div>
+      <div>{props.date}</div>
+    </div>
+    <div>{props.participants}</div>
+  </div>
+</div>)
 
 const OptionsMenu = props => (
   <TooltipMenu
@@ -56,7 +70,10 @@ const OptionsMenu = props => (
     <div className="search-options">
       <div>
         <div>Search</div>
-        <select>
+        <select onChange={ ev => {
+          const value = ev.target.value;
+          props.setSearchParam('mailbox', value)
+        }}>
           <option value={-1}>All Mail</option>
           {renderLabels(props.allLabels)}
         </select>
@@ -64,20 +81,40 @@ const OptionsMenu = props => (
       <SearchInputBox
         label="From"
         placeholder="People by name or email address"
+        value={props.searchParams.from}
+        onChange={ ev => {
+          const value = ev.target.value;
+          props.setSearchParam('from', value)
+        }}
       />
       <SearchInputBox
         label="To"
         placeholder="People by name or email address"
+        value={props.searchParams.to}
+        onChange={ ev => {
+          const value = ev.target.value;
+          props.setSearchParam('to', value)
+        }}
       />
-      <SearchInputBox label="Subject" placeholder="Enter a text" />
+      <SearchInputBox 
+        label="Subject" 
+        placeholder="Enter a text" 
+        value={props.searchParams.subject}
+        onChange={ ev => {
+          const value = ev.target.value;
+          props.setSearchParam('subject', value)
+        }}/>
       <div className="search-option-last">
         <div>
           <CustomCheckbox
             label="Has attachment"
-            onCheck={value => console.log(value)}
+            status={props.searchParams.hasAttachments}
+            onCheck={value => {
+              props.setSearchParam('hasAttachments', value)
+            }}
           />
         </div>
-        <button>
+        <button onClick={props.onSearchThreads}>
           <i className="icon-search" /> SEARCH
         </button>
       </div>
@@ -107,7 +144,7 @@ const SearchSuggestion = props => (
 const SearchInputBox = props => (
   <div>
     <div>{props.label}</div>
-    <input placeholder={props.placeholder} />
+    <input onChange={props.onChange} placeholder={props.placeholder} />
   </div>
 );
 

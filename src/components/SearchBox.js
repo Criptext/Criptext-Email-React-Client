@@ -22,15 +22,29 @@ class SearchBox extends Component{
   }
 
   render(){
-    const {searchText, onSearchChange} = this.props;
+    const {searchText} = this.props;
     return (
       <div className="header-search" id="headerSearch">
         <i className="icon-search" />
-        <input ref={r => this.input = r} onFocus={this.onExpandBox} onBlur={this.onShrinkBox} onChange={onSearchChange} value={searchText} />
+        <input ref={r => this.input = r} onFocus={this.onExpandBox} onChange={this.onChange}
+          onBlur={this.onShrinkBox} value={searchText} onKeyPress={this.onKeyPress} />
         <i className="icon-toogle-down" onClick={this.onToggleSearchOptions} />
       </div>
     );
   };
+
+  onChange = ev => {
+    const value = ev.target.value;
+    this.props.setSearchParam('text', value)
+  }
+
+  onKeyPress = ev => {
+    if (ev.which === 13 || ev.keyCode === 13) {
+      ev.preventDefault();
+      this.input.blur();
+      this.props.onTriggerSearch()
+    }
+  }
 
   onToggleSearchOptions = () => {
     if(this.state.extended){

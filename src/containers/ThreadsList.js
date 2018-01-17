@@ -12,7 +12,8 @@ const mapStateToProps = state => {
   return {
     threads: threads,
     selectedThread: state.get('activities').get('selectedThread'),
-    unreadFilter: unreadFilter
+    unreadFilter: unreadFilter,
+    labels: state.get('labels')
   };
 };
 

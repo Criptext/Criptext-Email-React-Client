@@ -92,19 +92,6 @@
         flex-wrap: nowrap;
         align-items: center;
         min-width: 250px;
-
-        .labels-tooltip{
-          background-color: white;
-          color: black;
-          font-weight: normal;
-          font-size: 12px;
-  
-          .tooltip-tip{
-            &:after{
-              background-color: white;
-            }
-          }
-        }
       }
   
       &:nth-child(5){
@@ -153,19 +140,6 @@
       border: solid 1px #ffdf32;
       color: #ffdf32;
     }
-
-    .labels-tooltip{
-      background-color: white;
-      color: black;
-      font-weight: normal;
-      font-size: 12px;
-    
-      .tooltip-tip{
-        &:after{
-          background-color: white;
-        }
-      }
-    }
   }
 }
 
@@ -203,7 +177,7 @@
 
 .thread-read{
   color: black;
-  background-color: rgba(229, 229, 234, 0.3);   
+  background-color: #f4f4f4;;   
   font-weight: 300;
 
   .thread-label-option{

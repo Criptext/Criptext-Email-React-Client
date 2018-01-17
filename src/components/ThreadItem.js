@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as Status from '../utils/ConstUtils';
-import ReactTooltip from 'react-tooltip';
 import randomcolor from 'randomcolor';
 import CustomCheckbox from './CustomCheckbox';
 import './threaditem.css';
@@ -107,64 +106,41 @@ class ThreadItem extends Component {
 
     return (
       <div className="thread-label-option">
-        <div
-          data-tip
-          data-for={`starred${threadId}`}
-          className={this.props.starred ? 'thread-label-mark' : ''}
-          onClick={ev => {
-            ev.stopPropagation();
-            this.props.onStarClick();
-          }}
-        >
-          <i className="material-icons">star</i>
-          <ReactTooltip
-            place="top"
-            className="labels-tooltip"
-            id={`starred${threadId}`}
-            type="dark"
-            effect="solid"
-          >
-            Favorite
-            <div className="tooltip-tip"> </div>
-          </ReactTooltip>
-        </div>
-        <div
-          data-tip
-          data-for={`important${threadId}`}
-          className={this.props.important ? 'thread-label-mark' : ''}
-          onClick={ev => {
-            ev.stopPropagation();
-            this.props.onImportantClick();
-          }}
-        >
-          <i className="material-icons">label_outline</i>
-          <ReactTooltip
-            place="top"
-            className="labels-tooltip"
-            id={`important${threadId}`}
-            type="dark"
-            effect="solid"
-          >
-            Important
-            <div className="tooltip-tip"> </div>
-          </ReactTooltip>
-        </div>
-
-        <div data-tip data-for={`remove${threadId}`} onClick={this.onRemove}>
-          <i className="material-icons">delete</i>
-          <ReactTooltip
-            place="top"
-            className="labels-tooltip"
-            id={`remove${threadId}`}
-            type="dark"
-            effect="solid"
-          >
-            Move to trash
-            <div className="tooltip-tip"> </div>
-          </ReactTooltip>
-        </div>
+        <HoverMenuItem
+          targetId={`starred${threadId}`}
+          tip="Favorite"
+          icon="star"
+          myClass={this.props.starred ? 'thread-label-mark' : ''}
+          onClick={this.onStarClick}
+          onMouseEnterItem={this.props.onMouseEnterItem}
+          onMouserLeaveItem={this.props.onMouserLeaveItem} />
+        <HoverMenuItem
+          targetId={`important${threadId}`}
+          tip="Important"
+          icon="label_outline"
+          myClass={this.props.important ? 'thread-label-mark' : ''}
+          onClick={this.onImportantClick}
+          onMouseEnterItem={this.props.onMouseEnterItem}
+          onMouserLeaveItem={this.props.onMouserLeaveItem} />
+        <HoverMenuItem
+          targetId={`remove${threadId}`}
+          tip="Move to Trash"
+          icon="delete"
+          onClick={this.onRemove}
+          onMouseEnterItem={this.props.onMouseEnterItem}
+          onMouserLeaveItem={this.props.onMouserLeaveItem} />
       </div>
     );
+  };
+
+  onStarClick = ev => {
+    ev.stopPropagation();
+    this.props.onStarClick();
+  };
+
+  onImportantClick = ev => {
+    ev.stopPropagation();
+    this.props.onImportantClick();
   };
 
   onRemove = ev => {
@@ -227,36 +203,31 @@ class ThreadItem extends Component {
     return (
       <div className="thread-label">
         <div style={{ backgroundColor: labelColor }}>{firstLabel}</div>
-        <div data-tip data-for={`labelstip${threadId}`}>
+        <div data-tip data-for={`labelstip${threadId}`}
+          onMouseEnter={ () => {
+            this.props.onMouseEnterItem(`labelstip${threadId}`, labels)
+          }}
+          onMouseLeave={ () => {
+            this.props.onMouserLeaveItem(`labelstip${threadId}`)
+          }}>
           {labels.size - 1}+
         </div>
-        <ReactTooltip
-          place="top"
-          className="labels-tooltip"
-          id={`labelstip${threadId}`}
-          type="dark"
-          effect="solid"
-        >
-          {labels.map(label => {
-            const lColor = randomcolor({
-              seed: label,
-              luminosity: 'bright'
-            });
-            return (
-              <div
-                key={label}
-                style={{ backgroundColor: lColor }}
-                className="innerLabel"
-              >
-                {this.props.labels.get(label.toString()).get('text')}
-              </div>
-            );
-          })}
-          <div className="tooltip-tip"> </div>
-        </ReactTooltip>
       </div>
     );
   };
 }
+
+const HoverMenuItem = props => (<div 
+  className={props.myClass || ''}
+  data-tip data-for={props.targetId}
+  onClick={props.onClick}
+  onMouseEnter={ () => {
+    props.onMouseEnterItem(props.targetId, props.tip)
+  }}
+  onMouseLeave={ () => {
+    props.onMouserLeaveItem(props.targetId)
+  }}>
+  <i className="material-icons">{props.icon}</i>
+</div>)
 
 export default ThreadItem;

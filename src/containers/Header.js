@@ -4,19 +4,20 @@ import HeaderWrapper from '../components/HeaderWrapper';
 
 const mapStateToProps = state => {
   const multiselect = state.get('activities').get('multiselect');
-  const threadsSelected = getThreadsSelected(state.get('threads'), multiselect);
+  const threadsSelected = getThreadsSelected(state.get('threads'), true);
   const labels = getLabelIncluded(
     state.get('labels'),
     state.get('threads'),
     threadsSelected,
-    multiselect
+    true
   );
-  const markAsUnread = shouldMarkAsUnread(state.get('threads'), multiselect);
+  const markAsUnread = shouldMarkAsUnread(state.get('threads'), true);
   return {
     multiselect,
     threadsSelected,
     labels,
     allLabels: state.get('labels'),
+    allThreads: state.get('threads'),
     markAsUnread,
     allSelected: threadsSelected.length === state.get('threads').size,
     showSelectAllOption: true
@@ -45,6 +46,9 @@ const mapDispatchToProps = dispatch => {
     },
     onMarkRead: (threadsIds, read) => {
       return dispatch(actions.markThreadsRead(threadsIds, read));
+    },
+    onSearchThreads: params => {
+      return dispatch(actions.searchThreads(params))
     }
   };
 };

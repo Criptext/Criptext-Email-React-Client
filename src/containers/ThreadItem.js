@@ -1,9 +1,6 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import ThreadWrapper from '../components/ThreadWrapper';
-import randomcolor from 'randomcolor';
-import * as TimeUtils from '../utils/TimeUtils';
-import * as UserUtils from '../utils/UserUtils';
 import { Label } from '../utils/ConstUtils';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
@@ -13,48 +10,13 @@ const getThreadClass = (thread, threadPos, selectedThread) => {
   return thread.get('selected') ? 'thread-read-selected' : 'thread-read';
 };
 
-const getCapitalLetters = name => {
-  const names = name.split(' ');
-  const firstName = names[0].charAt(0);
-  if (names.length > 1) {
-    return firstName + names[1].charAt(0);
-  }
-  return firstName;
-};
-
-const buildParticipantsColumnString = contacts => {
-  if (contacts.length === 1) {
-    return contacts[0].name;
-  }
-
-  if (contacts.length === 2) {
-    return `${contacts[0].name.split(' ')[0]}, ${
-      contacts[1].name.split(' ')[0]
-    }`;
-  }
-
-  return `${contacts[0].name.split(' ')[0]}, ${
-    contacts[1].name.split(' ')[0]
-  }... (${contacts.length - 2})`;
-};
-
 const mapStateToProps = (state, ownProps) => {
   const selectedThread = ownProps.selectedThread;
   const thread = ownProps.thread;
-  const contacts = UserUtils.parseAllContacts(thread.get('participants'));
-  const letters = getCapitalLetters(contacts[0].name);
-  const myThread = thread.merge({
-    letters: letters,
-    header: buildParticipantsColumnString(contacts),
-    date: TimeUtils.defineTimeByToday(thread.get('lastEmailDate'))
-  });
   return {
     myClass: getThreadClass(thread, ownProps.myIndex, selectedThread),
-    thread: myThread,
-    color: randomcolor({
-      seed: contacts[0].email,
-      luminosity: 'bright'
-    }),
+    thread: thread,
+    color: thread.get('color'),
     multiselect: state.get('activities').get('multiselect'),
     starred: thread.get('labels').contains(Label.STARRED),
     important: thread.get('labels').contains(Label.IMPORTANT),

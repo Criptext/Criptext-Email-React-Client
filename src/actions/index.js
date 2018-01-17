@@ -12,6 +12,7 @@ import {
   removeThread,
   removeThreadLabel,
   deselectThreads,
+  searchThreads,
   selectThreads,
   removeThreads,
   removeThreadsLabel
@@ -41,6 +42,7 @@ export {
   removeThread,
   removeThreadLabel,
   deselectThreads,
+  searchThreads,
   selectThreads,
   removeThreads,
   removeThreadsLabel,
