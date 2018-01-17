@@ -4,27 +4,26 @@ import feedsReducer from '../feeds';
 import * as actions from '../../actions/index';
 
 describe('feed actions', () => {
-  
   const feeds = [
     {
-      "cmd": 1,
-      "title": "Schedule email sent",
-      "subtitle": "Why we all should flate text",
-      "time": 1515794888909,
-      "state": "new",
-      "unread": true,
-      "threadId": 532322,
-      "id": 6
+      cmd: 1,
+      title: 'Schedule email sent',
+      subtitle: 'Why we all should flate text',
+      time: 1515794888909,
+      state: 'new',
+      unread: true,
+      threadId: 532322,
+      id: 6
     },
     {
-      "cmd": 1,
-      "title": "Schedule email sent",
-      "subtitle": "Why we all should flate text",
-      "time": 1515794888909,
-      "state": "new",
-      "unread": true,
-      "threadId": 532322,
-      "id": 7
+      cmd: 1,
+      title: 'Schedule email sent',
+      subtitle: 'Why we all should flate text',
+      time: 1515794888909,
+      state: 'new',
+      unread: true,
+      threadId: 532322,
+      id: 7
     }
   ];
 
@@ -49,5 +48,4 @@ describe('feed actions', () => {
     const newState = feedsReducer(state, action);
     expect(newState).toMatchSnapshot();
   });
-
 });

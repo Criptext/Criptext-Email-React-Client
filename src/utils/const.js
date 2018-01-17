@@ -41,9 +41,8 @@ export const MailItems = [
   }
 ];
 
-
 export const FeedCommand = {
   SENT: 1,
   EXPIRED: 2,
   OPENED: 3
-}
+};

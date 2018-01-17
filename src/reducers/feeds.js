@@ -10,12 +10,10 @@ export default (state = List([]), action) => {
       return state.concat(List(feeds));
     }
     case Types.Feed.SELECT: {
-      const item = state.find(
-        feed => feed.get('id') === action.selectedFeed 
-      );
-      if ( item !== undefined ) {
+      const item = state.find(feed => feed.get('id') === action.selectedFeed);
+      if (item !== undefined) {
         const index = state.findIndex(
-          feed => feed.get('id') === action.selectedFeed 
+          feed => feed.get('id') === action.selectedFeed
         );
         return state.update(index, feed => {
           return feed.set('unread', false);

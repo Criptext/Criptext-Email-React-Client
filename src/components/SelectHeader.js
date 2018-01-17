@@ -14,11 +14,7 @@ class SelectHeader extends Component {
   }
 
   render() {
-    const {
-      displayMoveMenu,
-      displayDotsMenu,
-      markAsUnread
-    } = this.props;
+    const { displayMoveMenu, displayDotsMenu, markAsUnread } = this.props;
     return (
       <header className="mailbox-header">
         {this.renderSelectionInteraction()}
