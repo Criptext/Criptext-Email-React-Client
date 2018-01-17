@@ -10,14 +10,15 @@ const mapStateToProps = (state, ownProps) => {
   return {
     threadsSelected: [ownProps.thread ? ownProps.thread.get('id') : null],
     labels,
-    allLabels: state.get('labels')
+    allLabels: state.get('labels'),
+    history: ownProps.history
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onBackOption: () => {
-      // TO DO
+      return ownProps.history.goBack()
     },
     onMoveThreads: (threadsIds, label) => {
       return dispatch(actions.moveThreads(threadsIds, label));

@@ -11,6 +11,7 @@ class Thread extends Component {
         <ThreadHeader
           thread={this.props.thread}
           threadsSelected={this.props.threadId}
+          history={this.props.history}
         />
         <div className="thread-content">
           <div className="thread-info" />
