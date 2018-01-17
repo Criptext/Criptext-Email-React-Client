@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`feed actions should add feeds to state 1`] = `
+Immutable.List [
+  Immutable.Map {
+    cmd: 1,
+    title: "Schedule email sent",
+    subtitle: "Why we all should flate text",
+    time: 1515794888909,
+    state: "new",
+    unread: true,
+    threadId: 532322,
+    id: 6,
+  },
+  Immutable.Map {
+    cmd: 1,
+    title: "Schedule email sent",
+    subtitle: "Why we all should flate text",
+    time: 1515794888909,
+    state: "new",
+    unread: true,
+    threadId: 532322,
+    id: 7,
+  },
+]
+`;
+
+exports[`feed actions should not set feed as read 1`] = `
+Immutable.List [
+  Immutable.Map {
+    cmd: 1,
+    title: "Schedule email sent",
+    subtitle: "Why we all should flate text",
+    time: 1515794888909,
+    state: "new",
+    unread: true,
+    threadId: 532322,
+    id: 6,
+  },
+  Immutable.Map {
+    cmd: 1,
+    title: "Schedule email sent",
+    subtitle: "Why we all should flate text",
+    time: 1515794888909,
+    state: "new",
+    unread: true,
+    threadId: 532322,
+    id: 7,
+  },
+]
+`;
+
+exports[`feed actions should set feed as read 1`] = `
+Immutable.List [
+  Immutable.Map {
+    cmd: 1,
+    title: "Schedule email sent",
+    subtitle: "Why we all should flate text",
+    time: 1515794888909,
+    state: "new",
+    unread: false,
+    threadId: 532322,
+    id: 6,
+  },
+  Immutable.Map {
+    cmd: 1,
+    title: "Schedule email sent",
+    subtitle: "Why we all should flate text",
+    time: 1515794888909,
+    state: "new",
+    unread: true,
+    threadId: 532322,
+    id: 7,
+  },
+]
+`;

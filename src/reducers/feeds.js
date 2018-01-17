@@ -10,13 +10,17 @@ export default (state = List([]), action) => {
       return state.concat(List(feeds));
     }
     case Types.Feed.SELECT: {
-      const index = state.findIndex(feed => {
-        return feed.get('id') === action.selectedFeed;
-      });
-      const newFeeds = state.update(index, feed => {
-        return feed.set('unread', false);
-      });
-      return newFeeds;
+      const item = state.find(
+        feed => feed.get('id') === action.selectedFeed 
+      );
+      if ( item !== undefined ) {
+        const index = state.findIndex(
+          feed => feed.get('id') === action.selectedFeed 
+        );
+        return state.update(index, feed => {
+          return feed.set('unread', false);
+        });
+      }
     }
     default:
       return state;
