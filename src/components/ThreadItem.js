@@ -113,7 +113,8 @@ class ThreadItem extends Component {
           myClass={this.props.starred ? 'thread-label-mark' : ''}
           onClick={this.onStarClick}
           onMouseEnterItem={this.props.onMouseEnterItem}
-          onMouserLeaveItem={this.props.onMouserLeaveItem} />
+          onMouserLeaveItem={this.props.onMouserLeaveItem}
+        />
         <HoverMenuItem
           targetId={`important${threadId}`}
           tip="Important"
@@ -121,14 +122,16 @@ class ThreadItem extends Component {
           myClass={this.props.important ? 'thread-label-mark' : ''}
           onClick={this.onImportantClick}
           onMouseEnterItem={this.props.onMouseEnterItem}
-          onMouserLeaveItem={this.props.onMouserLeaveItem} />
+          onMouserLeaveItem={this.props.onMouserLeaveItem}
+        />
         <HoverMenuItem
           targetId={`remove${threadId}`}
           tip="Move to Trash"
           icon="delete"
           onClick={this.onRemove}
           onMouseEnterItem={this.props.onMouseEnterItem}
-          onMouserLeaveItem={this.props.onMouserLeaveItem} />
+          onMouserLeaveItem={this.props.onMouserLeaveItem}
+        />
       </div>
     );
   };
@@ -203,13 +206,16 @@ class ThreadItem extends Component {
     return (
       <div className="thread-label">
         <div style={{ backgroundColor: labelColor }}>{firstLabel}</div>
-        <div data-tip data-for={`labelstip${threadId}`}
-          onMouseEnter={ () => {
-            this.props.onMouseEnterItem(`labelstip${threadId}`, labels)
+        <div
+          data-tip
+          data-for={`labelstip${threadId}`}
+          onMouseEnter={() => {
+            this.props.onMouseEnterItem(`labelstip${threadId}`, labels);
           }}
-          onMouseLeave={ () => {
-            this.props.onMouserLeaveItem(`labelstip${threadId}`)
-          }}>
+          onMouseLeave={() => {
+            this.props.onMouserLeaveItem(`labelstip${threadId}`);
+          }}
+        >
           {labels.size - 1}+
         </div>
       </div>
@@ -217,17 +223,21 @@ class ThreadItem extends Component {
   };
 }
 
-const HoverMenuItem = props => (<div 
-  className={props.myClass || ''}
-  data-tip data-for={props.targetId}
-  onClick={props.onClick}
-  onMouseEnter={ () => {
-    props.onMouseEnterItem(props.targetId, props.tip)
-  }}
-  onMouseLeave={ () => {
-    props.onMouserLeaveItem(props.targetId)
-  }}>
-  <i className="material-icons">{props.icon}</i>
-</div>)
+const HoverMenuItem = props => (
+  <div
+    className={props.myClass || ''}
+    data-tip
+    data-for={props.targetId}
+    onClick={props.onClick}
+    onMouseEnter={() => {
+      props.onMouseEnterItem(props.targetId, props.tip);
+    }}
+    onMouseLeave={() => {
+      props.onMouserLeaveItem(props.targetId);
+    }}
+  >
+    <i className="material-icons">{props.icon}</i>
+  </div>
+);
 
 export default ThreadItem;

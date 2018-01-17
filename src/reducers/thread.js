@@ -1,7 +1,11 @@
 import { Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
 import * as TimeUtils from '../utils/TimeUtils';
-import {parseAllContacts, getCapitalLetters, buildParticipantsColumnString} from '../utils/UserUtils';
+import {
+  parseAllContacts,
+  getCapitalLetters,
+  buildParticipantsColumnString
+} from '../utils/UserUtils';
 import randomcolor from 'randomcolor';
 
 export default (state = List([]), action) => {
@@ -30,12 +34,14 @@ export default (state = List([]), action) => {
           color: randomcolor({
             seed: contacts[0].email,
             luminosity: 'bright'
-          }),
+          })
         });
       });
-      return state.concat(List(threads).sort( (t1, t2) => {
-        return t2.get('lastEmailDate') - t1.get('lastEmailDate')
-      }));
+      return state.concat(
+        List(threads).sort((t1, t2) => {
+          return t2.get('lastEmailDate') - t1.get('lastEmailDate');
+        })
+      );
     case Thread.MULTISELECT:
       return state.update(
         state.findIndex(function(item) {
@@ -104,18 +110,37 @@ export default (state = List([]), action) => {
       });
     case Thread.SEARCH_THREADS:
       return state.filter(thread => {
-        const {from, to, subject, text, hasAttachments, mailbox, plain} = action.params;
-        const mySubject = thread.get("subject");
-        const myUsers = thread.get("participants");
-        const myHasAtt = thread.get("totalAttachments") > 0;
-        const myPreview = thread.get("preview");
-        const myLabels = thread.get("labels");
-        if(plain){
-          return mySubject.includes(text) || myUsers.includes(text) || myPreview.includes(text);
+        const {
+          from,
+          to,
+          subject,
+          text,
+          hasAttachments,
+          mailbox,
+          plain
+        } = action.params;
+        const mySubject = thread.get('subject');
+        const myUsers = thread.get('participants');
+        const myHasAtt = thread.get('totalAttachments') > 0;
+        const myPreview = thread.get('preview');
+        const myLabels = thread.get('labels');
+        if (plain) {
+          return (
+            mySubject.includes(text) ||
+            myUsers.includes(text) ||
+            myPreview.includes(text)
+          );
         }
-        return mySubject.includes(subject) && myUsers.includes(from) && 
-          myUsers.includes(to) && myHasAtt === hasAttachments && (parseInt(mailbox, 10) === -1 ? true : myLabels.has(parseInt(mailbox, 10)))
-          && myPreview.includes(text)
+        return (
+          mySubject.includes(subject) &&
+          myUsers.includes(from) &&
+          myUsers.includes(to) &&
+          myHasAtt === hasAttachments &&
+          (parseInt(mailbox, 10) === -1
+            ? true
+            : myLabels.has(parseInt(mailbox, 10))) &&
+          myPreview.includes(text)
+        );
       });
     default:
       return state;

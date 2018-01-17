@@ -48,7 +48,7 @@ const mapDispatchToProps = dispatch => {
       return dispatch(actions.markThreadsRead(threadsIds, read));
     },
     onSearchThreads: params => {
-      return dispatch(actions.searchThreads(params))
+      return dispatch(actions.searchThreads(params));
     }
   };
 };

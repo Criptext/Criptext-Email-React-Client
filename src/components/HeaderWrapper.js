@@ -11,11 +11,11 @@ class HeaderWrapper extends Component {
       displaySearchHints: false,
       displaySearchOptions: false,
       searchParams: {
-        text: "",
-        mailbox: "-1",
-        from: "",
-        to: "",
-        subject: "",
+        text: '',
+        mailbox: '-1',
+        from: '',
+        to: '',
+        subject: '',
         hasAttachments: false
       }
     };
@@ -35,13 +35,19 @@ class HeaderWrapper extends Component {
   render() {
     const search = this.state.searchParams.text;
     const threads = this.state.displaySearchHints
-      ? this.props.allThreads.filter( thread => {
-        const mySubject = thread.get("subject");
-        const myUsers = thread.get("participants");
-        const myPreview = thread.get("preview");      
-        return mySubject.includes(search) || myUsers.includes(search) || myPreview.includes(search);
-      }).slice(0, 3)
-      : null
+      ? this.props.allThreads
+          .filter(thread => {
+            const mySubject = thread.get('subject');
+            const myUsers = thread.get('participants');
+            const myPreview = thread.get('preview');
+            return (
+              mySubject.includes(search) ||
+              myUsers.includes(search) ||
+              myPreview.includes(search)
+            );
+          })
+          .slice(0, 3)
+      : null;
     return this.props.multiselect ? (
       <SelectHeader
         displayMoveMenu={this.state.displayMoveMenu}
@@ -70,38 +76,48 @@ class HeaderWrapper extends Component {
   }
 
   onSearchThreads = () => {
-    this.setState({
-      displaySearchOptions: false
-    }, () => {
-      this.props.onSearchThreads(this.state.searchParams)
-    })
-  }
+    this.setState(
+      {
+        displaySearchOptions: false
+      },
+      () => {
+        this.props.onSearchThreads(this.state.searchParams);
+      }
+    );
+  };
 
   onTriggerSearch = () => {
-    if(this.state.displaySearchOptions || !this.state.searchParams.text){
+    if (this.state.displaySearchOptions || !this.state.searchParams.text) {
       return;
     }
 
-    this.setState({
-      displaySearchHints: false
-    }, () => {
-      this.props.onSearchThreads({
-        text: this.state.searchParams.text,
-        plain: true
-      })
-    })
-  }
+    this.setState(
+      {
+        displaySearchHints: false
+      },
+      () => {
+        this.props.onSearchThreads({
+          text: this.state.searchParams.text,
+          plain: true
+        });
+      }
+    );
+  };
 
   setSearchParam = (key, value) => {
-    const displayHint = key === 'text' 
-      ? true : ((this.state.displaySearchOptions) ? false : this.state.displaySearchHints) 
+    const displayHint =
+      key === 'text'
+        ? true
+        : this.state.displaySearchOptions
+          ? false
+          : this.state.displaySearchHints;
     const searchParams = this.state.searchParams;
     searchParams[key] = value;
     this.setState({
       searchParams,
       displaySearchHints: displayHint
-    })
-  }
+    });
+  };
 
   toggleMoveMenu = () => {
     this.setState({
@@ -117,7 +133,9 @@ class HeaderWrapper extends Component {
 
   toggleSearchHints = () => {
     this.setState({
-      displaySearchHints: this.state.displaySearchOptions ? false : !this.state.displaySearchHints,
+      displaySearchHints: this.state.displaySearchOptions
+        ? false
+        : !this.state.displaySearchHints
     });
   };
 
@@ -138,7 +156,6 @@ class HeaderWrapper extends Component {
       }
     );
   };
-
 }
 
 export default HeaderWrapper;

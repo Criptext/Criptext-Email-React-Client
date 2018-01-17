@@ -78,10 +78,10 @@ export const markThreadsRead = (threadsIds, read) => ({
   type: Thread.READ_THREADS
 });
 
-export const searchThreads = (params) => ({
+export const searchThreads = params => ({
   params,
   type: Thread.SEARCH_THREADS
-})
+});
 
 export const loadThreads = () => {
   return async dispatch => {

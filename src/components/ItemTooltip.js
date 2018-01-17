@@ -15,4 +15,3 @@ const ItemTooltip = props => (
 );
 
 export default ItemTooltip;
-
