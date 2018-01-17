@@ -6,28 +6,60 @@ import * as actions from '../../actions/index';
 describe('thread actions', () => {
   const threads = [
     {
-      id: 23,
-      subject: 'test subject 23',
-      preview: 'preview 23',
-      date: 1234567890,
-      emails: [10, 43]
+      "participants": "Criptext Info <no-reply@criptext.com>",
+      "hasOpenAttachments": false,
+      "lastEmailDate": 1515601890000,
+      "lastEmailId": "<serial_key>",
+      "preview": "Hello again!",
+      "subject": "Hello again gaumala!",
+      "id": 532322,
+      "secure": true,
+      "status": 1,
+      "timesOpened": 2,
+      "timer": 1,
+      "totalAttachments": 1,
+      "unread": true,
+      "emails": [1],
+      "labels": [7, 3, 10],
+      "selected": false
     }
   ];
 
   const manyThreads = [
     {
-      id: 23,
-      subject: 'test subject 23',
-      preview: 'preview 23',
-      date: 1234567890,
-      emails: [10, 43]
+      "participants": "Criptext Info <no-reply@criptext.com>",
+      "hasOpenAttachments": false,
+      "lastEmailDate": 1515601890000,
+      "lastEmailId": "<serial_key>",
+      "preview": "Hello again!",
+      "subject": "Hello again gaumala!",
+      "id": 532322,
+      "secure": true,
+      "status": 1,
+      "timesOpened": 2,
+      "timer": 1,
+      "totalAttachments": 1,
+      "unread": true,
+      "emails": [1],
+      "labels": [7, 3, 10],
+      "selected": false
     },
     {
-      id: 13,
-      subject: 'test subject 13',
-      preview: 'preview 13',
-      date: 1234567891,
-      emails: [11, 21]
+      "participants": "Pedro Iniguez <pedroi@criptext.com>, Gianni Carlo <giannic@criptext.com>",
+      "hasOpenAttachments": false,
+      "lastEmailDate": 1512915941000,
+      "lastEmailId": "<serial_key>",
+      "preview": "Hello!",
+      "subject": "Hello gaumala!",
+      "id": 63542,
+      "secure": false,
+      "status": 1,
+      "timesOpened": 0,
+      "totalAttachments": 4,
+      "unread": true,
+      "emails": [65, 8 , 9, 14],
+      "labels": [10],
+      "selected": false
     }
   ];
 
