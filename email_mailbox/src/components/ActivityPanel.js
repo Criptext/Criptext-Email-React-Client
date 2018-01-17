@@ -66,12 +66,12 @@ class ActivityPanel extends Component {
 
   renderFeedIcon = cmd => {
     switch (cmd) {
-      case FeedCommand.SENT:
-        return <i className="icon-calendar" />;
-      case FeedCommand.EXPIRED:
-        return <i className="icon-attach" />;
-      case FeedCommand.OPENED:
-        return <i className="icon-checked" />;
+      case FeedCommand.SENT.value:
+        return <i className={FeedCommand.SENT.icon}></i>;
+      case FeedCommand.EXPIRED.value:
+        return <i className={FeedCommand.EXPIRED.icon}></i>;
+      case FeedCommand.OPENED.value:
+        return <i className={FeedCommand.OPENED.icon}></i>;
       default:
         return null;
     }
