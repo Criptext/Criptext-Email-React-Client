@@ -1,15 +1,15 @@
-import * as Types from './types';
+import { Feed } from './types';
 
 export const addFeeds = feeds => {
   return {
-    type: Types.Feed.ADD_BATCH,
+    type: Feed.ADD_BATCH,
     feeds: feeds
   };
 };
 
 export const selectFeed = feedId => {
   return {
-    type: Types.Feed.SELECT,
+    type: Feed.SELECT,
     selectedFeed: feedId
   };
 };
