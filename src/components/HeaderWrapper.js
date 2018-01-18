@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import SelectHeader from './SelectHeader';
 import Header from './Header';
 
+const ALL_MAIL = -1;
+const MAX_SUGGESTIONS = 3;
+
 class HeaderWrapper extends Component {
   constructor() {
     super();
@@ -12,7 +15,7 @@ class HeaderWrapper extends Component {
       displaySearchOptions: false,
       searchParams: {
         text: '',
-        mailbox: '-1',
+        mailbox: ALL_MAIL,
         from: '',
         to: '',
         subject: '',
@@ -46,7 +49,7 @@ class HeaderWrapper extends Component {
               myPreview.includes(search)
             );
           })
-          .slice(0, 3)
+          .slice(0, MAX_SUGGESTIONS)
       : null;
     return this.props.multiselect ? (
       <SelectHeader

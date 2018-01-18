@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import anime from 'animejs';
 
+const KEY_NEW_LINE = 13;
 let currentAnimation = null;
 
 class SearchBox extends Component {
@@ -48,7 +49,7 @@ class SearchBox extends Component {
   };
 
   onKeyPress = ev => {
-    if (ev.which === 13 || ev.keyCode === 13) {
+    if (ev.which === KEY_NEW_LINE || ev.keyCode === KEY_NEW_LINE) {
       ev.preventDefault();
       this.input.blur();
       this.props.onTriggerSearch();
