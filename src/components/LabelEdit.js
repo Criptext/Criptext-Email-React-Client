@@ -55,7 +55,8 @@ class LabelEdit extends Component {
 }
 
 LabelEdit.propTypes = {
-  labels: PropTypes.object
+  labels: PropTypes.object,
+  onAddLabel: PropTypes.func
 };
 
 export default LabelEdit;

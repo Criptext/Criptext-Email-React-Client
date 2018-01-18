@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
-import HeaderWrapper from '../components/HeaderWrapper';
+import MailboxHeaderView from '../components/MailboxHeader';
 
 const mapStateToProps = state => {
   const multiselect = state.get('activities').get('multiselect');
@@ -52,8 +52,6 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-
-const Header = connect(mapStateToProps, mapDispatchToProps)(HeaderWrapper);
 
 function getThreadsSelected(threads, multiselect) {
   if (!multiselect) {
@@ -123,4 +121,8 @@ function getLabelIncluded(labels, threads, selectThreads, multiselect) {
   }, []);
 }
 
-export default Header;
+const MailboxHeader = connect(mapStateToProps, mapDispatchToProps)(
+  MailboxHeaderView
+);
+
+export default MailboxHeader;

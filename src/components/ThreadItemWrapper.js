@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ThreadItem from './ThreadItem';
 
-const threadWrapper = ThreadItem =>
-  class ThreadWrapper extends Component {
+const threadItemWrapper = ThreadItem =>
+  class ThreadItemWrapper extends Component {
     constructor() {
       super();
       this.state = {
@@ -34,6 +34,6 @@ const threadWrapper = ThreadItem =>
     }
   };
 
-const Wrapper = threadWrapper(ThreadItem);
+const Wrapper = threadItemWrapper(ThreadItem);
 
 export default Wrapper;

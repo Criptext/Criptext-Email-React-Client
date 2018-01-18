@@ -1,15 +1,15 @@
-import * as Types from './types';
+import { User } from './types';
 
 export const addUsers = users => {
   return {
-    type: Types.User.ADD_BATCH,
+    type: User.ADD_BATCH,
     users: users
   };
 };
 
 export const addUser = user => {
   return {
-    type: Types.User.ADD,
+    type: User.ADD,
     user: user
   };
 };

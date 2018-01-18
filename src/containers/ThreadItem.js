@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
-import ThreadWrapper from '../components/ThreadWrapper';
+import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import { Label } from '../utils/ConstUtils';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
@@ -55,6 +55,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const ThreadItem = connect(mapStateToProps, mapDispatchToProps)(ThreadWrapper);
+const ThreadItem = connect(mapStateToProps, mapDispatchToProps)(
+  ThreadItemWrapper
+);
 
 export default ThreadItem;

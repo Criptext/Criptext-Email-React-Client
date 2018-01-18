@@ -22,7 +22,7 @@ export const loadFeeds = () => {
       const feeds = json.feeds;
       dispatch(addFeeds(feeds));
     } catch (e) {
-      console.log(e);
+      // TO DO
     }
   };
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './customCheckbox.css';
 
 const CustomCheckbox = props => (
@@ -55,5 +56,10 @@ function clickHandlerWhenString(props) {
   }
   return props.onCheck(true);
 }
+
+CustomCheckbox.propTypes = {
+  label: PropTypes.string,
+  status: PropTypes.bool
+};
 
 export default CustomCheckbox;

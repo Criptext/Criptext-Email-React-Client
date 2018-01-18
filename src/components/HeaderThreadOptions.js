@@ -1,29 +1,28 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import StandardOptions from './StandardOptions';
-import HeaderOption from './HeaderOption';
+import ButtonCircle from './ButtonCircle';
 import TooltipMenu from './TooltipMenu';
 import CustomCheckbox from './CustomCheckbox';
-import './selectheader.css';
+import './headerthreadoptions.css';
 
-class SelectHeader extends Component {
-  constructor() {
-    super();
-    this.state = {
-      displayTagsMenu: false
-    };
-  }
-
+class HeaderThreadOptions extends Component {
   render() {
-    const { displayMoveMenu, displayDotsMenu, markAsUnread } = this.props;
+    const {
+      displayMoveMenu,
+      displayTagsMenu,
+      displayDotsMenu,
+      markAsUnread
+    } = this.props;
     return (
-      <header className="mailbox-header">
+      <div className="header-threadoptions">
         {this.renderSelectionInteraction()}
         <StandardOptions
           onActionMove={this.onActionMove}
           onMoveClick={this.onMoveClick}
           onTagsClick={this.onTagsClick}
           displayMoveMenu={displayMoveMenu}
-          displayTagsMenu={this.state.displayTagsMenu}
+          displayTagsMenu={displayTagsMenu}
         />
         {this.renderMoreOptions()}
         <TooltipMenu
@@ -41,7 +40,7 @@ class SelectHeader extends Component {
           title="Add Label:"
           dismiss={this.onTagsClick}
           targetId="actionTag"
-          display={this.state.displayTagsMenu}
+          display={displayTagsMenu}
         >
           <ul className="multiselect-list">{this.renderLabels()}</ul>
         </TooltipMenu>
@@ -57,22 +56,22 @@ class SelectHeader extends Component {
             </li>
           </ul>
         </TooltipMenu>
-      </header>
+      </div>
     );
   }
 
   renderSelectionInteraction = () => (
-    <div>
-      <div className="header-action">
-        <HeaderOption
-          onClick={this.props.onBackOption}
-          tip="Dismiss"
-          enableTip={true}
-          icon="icon-back"
-          targetName="actionDismiss"
-        />
-        {this.props.showSelectAllOption ? (
-          <HeaderOption
+    <div className="header-action">
+      <ButtonCircle
+        onClick={this.props.onBackOption}
+        tip="Dismiss"
+        enableTip={true}
+        icon="icon-back"
+        targetName="actionDismiss"
+      />
+      {this.props.showSelectAllOption ? (
+        <div className="button-string-container">
+          <ButtonCircle
             onClick={
               this.props.allSelected
                 ? this.props.onDeselectThreads
@@ -82,17 +81,15 @@ class SelectHeader extends Component {
             myClass={this.props.allSelected ? 'menu-select-all' : ''}
             icon={this.props.allSelected ? 'icon-check' : 'icon-box'}
           />
-        ) : null}
-      </div>
-      {this.props.showSelectAllOption ? (
-        <span>{this.props.threadsSelected.length} Selected</span>
+          <span>{this.props.threadsSelected.length} Selected</span>
+        </div>
       ) : null}
     </div>
   );
 
   renderMoreOptions = () => (
     <div className="header-action">
-      <HeaderOption
+      <ButtonCircle
         onClick={this.onDotsClick}
         targetName="actionDots"
         icon="icon-dots"
@@ -101,7 +98,7 @@ class SelectHeader extends Component {
     </div>
   );
 
-  onActionMove = ev => {
+  onActionMove = () => {
     if (this.props.threadsSelected.length === 0) {
       return;
     }
@@ -113,9 +110,7 @@ class SelectHeader extends Component {
   };
 
   onTagsClick = () => {
-    this.setState({
-      displayTagsMenu: !this.state.displayTagsMenu
-    });
+    this.props.toggleTagsMenu();
   };
 
   onDotsClick = () => {
@@ -153,4 +148,25 @@ class SelectHeader extends Component {
   };
 }
 
-export default SelectHeader;
+HeaderThreadOptions.propTypes = {
+  allSelected: PropTypes.string,
+  displayMoveMenu: PropTypes.bool,
+  displayTagsMenu: PropTypes.bool,
+  displayDotsMenu: PropTypes.bool,
+  labels: PropTypes.array,
+  markAsUnread: PropTypes.bool,
+  onAddLabel: PropTypes.bool,
+  onBackOption: PropTypes.func,
+  onMarkAsRead: PropTypes.func,
+  onMoveThreads: PropTypes.func,
+  onDeselectThreads: PropTypes.func,
+  onRemoveLabel: PropTypes.func,
+  onSelectThreads: PropTypes.func,
+  showSelectAllOption: PropTypes.bool,
+  threadsSelected: PropTypes.object,
+  toggleDotsMenu: PropTypes.func,
+  toggleMoveMenu: PropTypes.func,
+  toggleTagsMenu: PropTypes.func
+};
+
+export default HeaderThreadOptions;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import * as Status from '../utils/ConstUtils';
 import randomcolor from 'randomcolor';
@@ -225,7 +226,7 @@ class ThreadItem extends Component {
 
 const HoverMenuItem = props => (
   <div
-    className={props.myClass || ''}
+    className={props.myClass}
     data-tip
     data-for={props.targetId}
     onClick={props.onClick}
@@ -239,5 +240,40 @@ const HoverMenuItem = props => (
     <i className="material-icons">{props.icon}</i>
   </div>
 );
+
+HoverMenuItem.propTypes = {
+  icon: PropTypes.string,
+  myClass: PropTypes.string,
+  onClick: PropTypes.func,
+  onMouseEnterItem: PropTypes.func,
+  onMouserLeaveItem: PropTypes.func,
+  targetId: PropTypes.string,
+  tip: PropTypes.string
+};
+
+ThreadItem.defaultProps = {
+  myClass: ''
+};
+
+ThreadItem.propTypes = {
+  color: PropTypes.string,
+  hovering: PropTypes.bool,
+  important: PropTypes.bool,
+  labels: PropTypes.object,
+  mailbox: PropTypes.string,
+  multiselect: PropTypes.bool,
+  myClass: PropTypes.string,
+  onImportantClick: PropTypes.func,
+  onMouseEnterItem: PropTypes.func,
+  onMouserLeaveItem: PropTypes.func,
+  onMultiSelect: PropTypes.func,
+  onRegionEnter: PropTypes.func,
+  onRegionLeave: PropTypes.func,
+  onSelectThread: PropTypes.func,
+  onStarClick: PropTypes.func,
+  onRemove: PropTypes.func,
+  starred: PropTypes.bool,
+  thread: PropTypes.object
+};
 
 export default ThreadItem;

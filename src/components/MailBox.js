@@ -1,13 +1,18 @@
 import React from 'react';
-import Header from '../containers/Header';
-import ThreadsList from '../containers/ThreadsList';
+import PropTypes from 'prop-types';
+import MailboxHeader from '../containers/MailboxHeader';
+import Threads from '../containers/Threads';
 import './mailbox.css';
 
 const MailBox = props => (
   <div className="mailbox-container">
-    <Header />
-    <ThreadsList mailbox={props.match.params.mailbox} />
+    <MailboxHeader />
+    <Threads mailbox={props.match.params.mailbox} />
   </div>
 );
+
+MailBox.propTypes = {
+  match: PropTypes.object
+};
 
 export default MailBox;

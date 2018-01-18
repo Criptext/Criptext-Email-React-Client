@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { loadThreads, filterThreadsByUnread } from '../actions/index';
-import ThreadsListView from '../components/ThreadsList';
+import ThreadsView from '../components/Threads';
 
 const mapStateToProps = state => {
   const unreadFilter = state.get('activities').get('unreadFilter');
@@ -28,8 +28,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const ThreadsList = connect(mapStateToProps, mapDispatchToProps)(
-  ThreadsListView
-);
+const Threads = connect(mapStateToProps, mapDispatchToProps)(ThreadsView);
 
-export default ThreadsList;
+export default Threads;

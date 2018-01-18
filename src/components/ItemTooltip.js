@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 
 const ItemTooltip = props => (
@@ -13,5 +14,10 @@ const ItemTooltip = props => (
     <div className="tooltip-tip"> </div>
   </ReactTooltip>
 );
+
+ItemTooltip.propTypes = {
+  target: PropTypes.number,
+  tip: PropTypes.string
+};
 
 export default ItemTooltip;
