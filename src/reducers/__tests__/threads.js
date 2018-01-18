@@ -2,34 +2,12 @@
 
 import threadsReducer from '../thread';
 import * as actions from '../../actions/index';
+import file from './../../../public/threads.json';
+const myThreads = file.threads;
 
 describe('thread actions', () => {
-  const threads = [
-    {
-      id: 23,
-      subject: 'test subject 23',
-      preview: 'preview 23',
-      date: 1234567890,
-      emails: [10, 43]
-    }
-  ];
-
-  const manyThreads = [
-    {
-      id: 23,
-      subject: 'test subject 23',
-      preview: 'preview 23',
-      date: 1234567890,
-      emails: [10, 43]
-    },
-    {
-      id: 13,
-      subject: 'test subject 13',
-      preview: 'preview 13',
-      date: 1234567891,
-      emails: [11, 21]
-    }
-  ];
+  const threads = [myThreads[0]];
+  const manyThreads = [myThreads[0], myThreads[1]];
 
   function initState(threads) {
     return threadsReducer(undefined, actions.addThreads(threads));

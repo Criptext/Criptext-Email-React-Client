@@ -1,5 +1,12 @@
 import { Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
+import * as TimeUtils from '../utils/TimeUtils';
+import {
+  parseAllContacts,
+  getCapitalLetters,
+  buildParticipantsColumnString
+} from '../utils/UserUtils';
+import randomcolor from 'randomcolor';
 
 export default (state = List([]), action) => {
   switch (action.type) {
@@ -17,12 +24,24 @@ export default (state = List([]), action) => {
       return newThreads;
     case Thread.ADD_BATCH:
       const threads = action.threads.map(thread => {
+        const contacts = parseAllContacts(thread.participants);
         return Map(thread).merge({
           labels: Set(thread.labels),
-          emails: List(thread.emails)
+          emails: List(thread.emails),
+          letters: getCapitalLetters(contacts[0].name),
+          header: buildParticipantsColumnString(contacts),
+          date: TimeUtils.defineTimeByToday(thread.lastEmailDate),
+          color: randomcolor({
+            seed: contacts[0].email,
+            luminosity: 'bright'
+          })
         });
       });
-      return state.concat(List(threads));
+      return state.concat(
+        List(threads).sort((t1, t2) => {
+          return t2.get('lastEmailDate') - t1.get('lastEmailDate');
+        })
+      );
     case Thread.MULTISELECT:
       return state.update(
         state.findIndex(function(item) {
@@ -88,6 +107,40 @@ export default (state = List([]), action) => {
     case Thread.MOVE_THREADS:
       return state.filterNot(thread => {
         return action.threadsIds.includes(thread.get('id'));
+      });
+    case Thread.SEARCH_THREADS:
+      return state.filter(thread => {
+        const {
+          from,
+          to,
+          subject,
+          text,
+          hasAttachments,
+          mailbox,
+          plain
+        } = action.params;
+        const mySubject = thread.get('subject');
+        const myUsers = thread.get('participants');
+        const myHasAtt = thread.get('totalAttachments') > 0;
+        const myPreview = thread.get('preview');
+        const myLabels = thread.get('labels');
+        if (plain) {
+          return (
+            mySubject.includes(text) ||
+            myUsers.includes(text) ||
+            myPreview.includes(text)
+          );
+        }
+        return (
+          mySubject.includes(subject) &&
+          myUsers.includes(from) &&
+          myUsers.includes(to) &&
+          myHasAtt === hasAttachments &&
+          (parseInt(mailbox, 10) === -1
+            ? true
+            : myLabels.has(parseInt(mailbox, 10))) &&
+          myPreview.includes(text)
+        );
       });
     default:
       return state;

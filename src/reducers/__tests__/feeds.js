@@ -28,5 +28,4 @@ describe('feed actions', () => {
     const newState = feedsReducer(state, action);
     expect(newState).toMatchSnapshot();
   });
-
 });
