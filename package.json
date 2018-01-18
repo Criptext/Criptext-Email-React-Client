@@ -30,10 +30,15 @@
     "build": "npm-run-all build-css build-js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "criptext-js-tools lint"
+    "lint": "criptext-js-tools lint",
+    "electron": "electron .",
+    "electron-dev": "ELECTRON_START_URL=http://localhost:3000 electron ."
   },
+  "main": "electron-starter.js",
   "proxy": "http://localhost:8000",
   "devDependencies": {
-    "criptext-js-tools": "^0.3.0"
-  }
+    "criptext-js-tools": "^0.3.0",
+    "electron": "^1.7.10"
+  },
+  "homepage": "./"
 }
