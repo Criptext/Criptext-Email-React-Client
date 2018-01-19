@@ -1,5 +1,5 @@
 {
-  "name": "criptext-email-react-client",
+  "name": "criptext-email-react-mailbox",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -35,5 +35,6 @@
   "proxy": "http://localhost:8000",
   "devDependencies": {
     "criptext-js-tools": "^0.3.0"
-  }
+  },
+  "homepage": "./"
 }
