@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SideBarItem from './../components/SideBarItem';
 import LabelEdit from './../containers/LabelEdit';
 import { MailItems } from './../utils/const';
-import { openComposerWindow } from '../utils/electronInterface'
+import { openComposerWindow } from '../utils/electronInterface';
 import './sidebar.css';
 
 class SideBar extends Component {
@@ -22,7 +22,10 @@ class SideBar extends Component {
         </header>
         <div className="navigation-partial-mail">
           <div className="nav-item-free">
-            <button className="button button-a button-compose" onClick={openComposerWindow}>
+            <button
+              className="button button-a button-compose"
+              onClick={openComposerWindow}
+            >
               <i className="icon-edit" />
               <span>Compose</span>
             </button>
