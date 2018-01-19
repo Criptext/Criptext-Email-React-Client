@@ -119,6 +119,15 @@ aside.navigation-feed{
           margin: 0% 0% 2% 0%;
         }
       }
+
+      .deleted-feed {
+        height: 55px;
+        padding: auto;
+        margin-bottom: 2px;
+        background-color: red;
+        color: #ffffff;
+        text-align: center;
+      }
       
       .feed-item {
         height: 55px;

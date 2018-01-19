@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import './activitypanel.css';
 import FeedWrapper from './FeedWrapper';
 import { FeedCommand } from './../utils/const';
@@ -40,17 +39,15 @@ class ActivityPanel extends Component {
           </li>
           {feedList.map((feed, index) => {
             return (
-              <li key={index} onClick={() => this.onSelectFeed(feed)}>
-                <Link to={`/inbox/${feed.get('threadId')}`}>
-                  <FeedWrapper
-                    feed={feed}
-                    unread={feed.get('unread')}
-                    renderIcon={() => this.renderFeedIcon(feed.get('cmd'))}
-                    removeFeed={(ev) => {
-                      this.removeFeed(feed);
-                    }}
-                  />
-                </Link>
+              <li key={index}>
+                <FeedWrapper
+                  feed={feed}
+                  myIndex={index}
+                  unread={feed.get('unread')}
+                  onSelectFeed={() => this.onSelectFeed(feed)}
+                  renderIcon={() => this.renderFeedIcon(feed)}
+                  onRemoveFeed={() => this.removeFeed(feed)}
+                />
               </li>
             );
           })}
@@ -67,11 +64,11 @@ class ActivityPanel extends Component {
   };
 
   removeFeed = feed => {
-    this.props.removeFeed(feed.get('id'));
+    this.props.onRemoveFeed(feed.get('id'));
   }
 
-  renderFeedIcon = cmd => {
-    switch (cmd) {
+  renderFeedIcon = feed => {
+    switch (feed.get('cmd')) {
       case FeedCommand.SENT.value:
         return <i className={FeedCommand.SENT.icon}></i>;
       case FeedCommand.EXPIRED.value:

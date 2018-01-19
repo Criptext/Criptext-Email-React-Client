@@ -71,7 +71,7 @@ const mapDispatchToProps = dispatch => {
     onSelectFeed: feedPos => {
       dispatch(actions.selectFeed(feedPos));
     },
-    removeFeed: feedId => {
+    onRemoveFeed: feedId => {
       dispatch(actions.removeFeed(feedId));
     }
   };

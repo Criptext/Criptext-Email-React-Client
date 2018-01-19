@@ -6,7 +6,8 @@ const feedWrapper = Feed =>
     constructor() {
       super();
       this.state = {
-        hovering: false
+        hovering: false,
+        isRemoved: false
       };
     }
 
@@ -22,6 +23,18 @@ const feedWrapper = Feed =>
       });
     };
 
+    onRemove = () => {
+      this.setState({
+        isRemoved: true
+      });
+    }
+
+    onClean = () => {
+      this.setState({
+        isRemoved: false
+      });
+    }
+
     render() {
       return (
         <Feed
@@ -29,6 +42,9 @@ const feedWrapper = Feed =>
           onRegionEnter={this.onRegionEnter}
           onRegionLeave={this.onRegionLeave}
           hovering={this.state.hovering}
+          isRemoved={this.state.isRemoved}
+          onRemove={this.onRemove}
+          onClean={this.onClean}
         />
       );
     }
