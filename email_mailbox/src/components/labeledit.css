@@ -1,0 +1,40 @@
+.label-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+  justify-content: flex-end;
+  min-height: 91px; }
+
+.label-input {
+  align-self: flex-end;
+  height: 49px;
+  text-align: center;
+  width: 100%; }
+  .label-input input[type="text"] {
+    border-radius: 2px;
+    border: 1px solid #e1e1e4;
+    box-shadow: 0px 5px 30px 1px rgba(100, 100, 100, 0.2);
+    color: #e1e1e4;
+    font-family: NunitoSans;
+    font-size: 12px;
+    height: 27px;
+    margin: 10px auto;
+    padding: 0 10px;
+    width: 157px; }
+
+.label-button {
+  align-items: center;
+  align-self: flex-end;
+  background-color: #f7f7f8;
+  border-radius: 11px;
+  cursor: pointer;
+  display: flex;
+  height: 22px;
+  margin: 10px auto;
+  position: relative;
+  width: 22px; }
+  .label-button span {
+    color: #858585;
+    font-size: 16px;
+    margin: 0 auto;
+    padding-left: 1px; }

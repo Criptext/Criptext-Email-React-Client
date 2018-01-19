@@ -1,0 +1,13 @@
+{
+  "name": "criptext-email-electron-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "electron": "electron .",
+    "electron-dev": "ELECTRON_START_URL=http://localhost:3000 electron ."
+  },
+  "main": "electron-starter.js",
+  "devDependencies": {
+    "electron": "^1.7.10"
+  }
+}

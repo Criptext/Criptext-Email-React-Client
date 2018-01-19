@@ -1,0 +1,13 @@
+{
+  "emails": [
+    {
+      "id": 1,
+      "bcc": "",
+      "cc": "",
+      "date": 1513350001000,
+      "from": "no-reply@criptext.com",
+      "s3key": "path/to/content",
+      "to": "gaumala@criptext.com"
+    }
+  ]
+}

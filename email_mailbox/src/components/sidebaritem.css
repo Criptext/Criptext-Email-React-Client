@@ -1,0 +1,32 @@
+.nav-item {
+  align-items: center;
+  display: flex;
+  height: 37px;
+  position: relative;
+  width: 100%; }
+
+.nav-item-selected {
+  background-color: #f2f8ff; }
+  .nav-item-selected .nav-item-icon {
+    color: black; }
+
+.nav-item-icon {
+  color: #d8d8d8;
+  height: 15px;
+  margin: 0 10px 0 32px;
+  width: 15px; }
+
+.nav-item-notif {
+  align-items: center;
+  background-color: #65bdff;
+  border-radius: 13px;
+  display: flex;
+  height: 17px;
+  margin-left: 15px;
+  width: 26px; }
+  .nav-item-notif span {
+    color: white;
+    display: block;
+    font-family: NunitoSans;
+    font-size: 11px;
+    margin: 0 auto; }

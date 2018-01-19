@@ -1,0 +1,78 @@
+/***
+
+FILE: index.css
+
+TABLE OF CONTENTS
+
+1.- PATHS
+2.- SIZES
+
+***/
+/* 1.- PATHS
+   ----------------------------- */
+/* 2.- SIZES
+   ----------------------------- */
+.mailbox-header {
+  background-color: #373a45;
+  display: flex;
+  padding: 0px 35px;
+  align-items: center;
+  justify-content: space-between;
+  height: 61px;
+  font-family: 'NunitoSans'; }
+  .mailbox-header > div {
+    display: flex;
+    align-items: center;
+    color: #8d9095;
+    font-size: 14px; }
+
+.menu-select-all {
+  background-color: #0091ff !important;
+  border-color: #0091ff !important; }
+  .menu-select-all > i {
+    color: white;
+    opacity: 1 !important; }
+
+.header-action {
+  display: flex; }
+  .header-action > div {
+    color: #ffffff;
+    margin: 0 5px;
+    width: 29px;
+    height: 29px;
+    background-color: rgba(247, 247, 248, 0.13);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(148, 148, 148, 0);
+    cursor: pointer; }
+    .header-action > div i {
+      opacity: 0.4; }
+    .header-action > div:hover {
+      border: solid 1px rgba(176, 178, 180, 0.5); }
+  .header-action .labels-tooltip {
+    background-color: #e1e1e1 !important;
+    color: black !important;
+    font-weight: normal;
+    font-size: 10.5px !important;
+    border-radius: 3px !important;
+    padding: 4px 16px !important; }
+    .header-action .labels-tooltip .tooltip-tip:after {
+      background-color: #e1e1e1; }
+
+.multiselect-list {
+  max-height: 300px;
+  overflow-y: scroll;
+  list-style-type: none;
+  padding: 0;
+  margin: 0; }
+  .multiselect-list li {
+    padding: 7px 16px; }
+    .multiselect-list li:hover {
+      background-color: #edf5ff;
+      cursor: pointer; }
+  .multiselect-list::-webkit-scrollbar {
+    display: none; }
+  .multiselect-list .checkmark-container {
+    margin-left: 31px; }

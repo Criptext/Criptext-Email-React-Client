@@ -1,0 +1,122 @@
+.header-main {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  width: 100%; }
+  .header-main > div {
+    display: flex;
+    align-items: center; }
+
+.header-profile {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: rgba(74, 108, 98, 0.96);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px; }
+
+.search-tooltip {
+  width: 550px; }
+
+.search-options {
+  width: 400px; }
+  .search-options > div {
+    display: flex;
+    align-content: center;
+    padding: 11px 0px;
+    font-size: 12px;
+    border-bottom: solid 0.5px #c8c8ca;
+    color: #6c7280; }
+    .search-options > div:last-child {
+      margin-top: 10px;
+      border-bottom: none; }
+      .search-options > div:last-child > div {
+        width: 115px; }
+    .search-options > div > div {
+      width: 50px;
+      margin: 0 20px;
+      display: flex;
+      align-items: center;
+      font-weight: 600; }
+    .search-options > div > input {
+      border: none;
+      width: calc(100% - 90px);
+      font-size: 12px;
+      outline: none; }
+    .search-options > div > select {
+      cursor: pointer;
+      width: 147px;
+      height: 26px;
+      border-radius: 3px;
+      background-color: #f0f0f0;
+      color: #6a707e;
+      border: none;
+      outline: none; }
+  .search-options button {
+    width: 96px;
+    height: 27px;
+    border-radius: 100px;
+    background-color: #0091ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+    .search-options button i {
+      font-size: 18px; }
+
+.search-recent {
+  display: flex;
+  margin-bottom: 5px; }
+  .search-recent i {
+    margin: 7px 10px 5px 10px;
+    font-size: 20px;
+    color: #6a707e; }
+  .search-recent ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex: 1 0;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #6a707e; }
+    .search-recent ul li {
+      margin-bottom: 7px; }
+
+.search-mail {
+  display: flex;
+  align-items: center;
+  cursor: pointer; }
+  .search-mail i {
+    margin: 5px 10px;
+    font-size: 20px;
+    color: #6a707e; }
+  .search-mail > div {
+    padding: 11px 0px;
+    margin-right: 18px;
+    border-top: 1px solid #d8d8d8;
+    overflow: hidden;
+    flex: 1 0;
+    font-size: 12px;
+    color: #6a707e; }
+    .search-mail > div > div {
+      display: flex;
+      justify-content: space-between; }
+      .search-mail > div > div > div:nth-child(1) {
+        flex: 1 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; }
+      .search-mail > div > div > div:nth-child(2) {
+        padding-right: 10px;
+        margin-left: 20px; }
+  .search-mail:hover {
+    background-color: #f7f7f7; }
+
+.search-option-last {
+  justify-content: center; }
+  .search-option-last > * {
+    margin: 0px 5px; }
