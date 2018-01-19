@@ -163,6 +163,38 @@ const SearchInputBox = props => (
   </div>
 );
 
+HintsMenu.propTypes = {
+  displaySearchHints: PropTypes.bool,
+  threads: PropTypes.object,
+  toggleSearchHints: PropTypes.func
+};
+
+SearchMail.propTypes = {
+  date: PropTypes.string,
+  participants: PropTypes.object,
+  preview: PropTypes.string
+};
+
+OptionsMenu.propTypes = {
+  allLabels: PropTypes.object,
+  displaySearchOptions: PropTypes.bool,
+  onSearchThreads: PropTypes.func,
+  searchParams: PropTypes.object,
+  setSearchParam: PropTypes.func,
+  toggleSearchOptions: PropTypes.func
+};
+
+SearchSuggestion.propTypes = {
+  icon: PropTypes.string,
+  items: PropTypes.array
+};
+
+SearchInputBox.propTypes = {
+  label: PropTypes.string,
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string
+};
+
 HeaderMain.propTypes = {
   displaySearchOptions: PropTypes.bool,
   searchParams: PropTypes.object,
