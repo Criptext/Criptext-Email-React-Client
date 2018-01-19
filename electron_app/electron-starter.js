@@ -23,7 +23,6 @@ function createWindow(){
   })
 
   ipcMain.on('create-composer', (ev, message) => {
-    //mainWindow.webContents.send('message');
     composerWindow = new BrowserWindow({width: 360, height: 280});
     composerWindow.webContents.openDevTools();
     composerWindow.loadURL(startUrl);
