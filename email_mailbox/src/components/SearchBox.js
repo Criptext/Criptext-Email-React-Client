@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import anime from 'animejs';
 import './searchbox.css';
@@ -21,7 +20,7 @@ class SearchBox extends Component {
       !nextProps.hold &&
       document.activeElement !== this.input
     ) {
-      return animateOut(ReactDOM.findDOMNode(this), () => {
+      return animateOut(this.node, () => {
         this.setState({ extended: false });
       });
     }
@@ -30,7 +29,11 @@ class SearchBox extends Component {
   render() {
     const { searchText } = this.props;
     return (
-      <div className="header-search" id="headerSearch">
+      <div
+        ref={node => (this.node = node)}
+        className="header-search"
+        id="headerSearch"
+      >
         <i className="icon-search" />
         <input
           ref={r => (this.input = r)}
@@ -67,7 +70,7 @@ class SearchBox extends Component {
       return this.props.toggleSearchOptions();
     }
 
-    return animateIn(ReactDOM.findDOMNode(this), () => {
+    return animateIn(this.node, () => {
       this.setState({ extended: true }, () => {
         this.props.toggleSearchOptions();
       });
@@ -75,7 +78,7 @@ class SearchBox extends Component {
   };
 
   onExpandBox = () => {
-    return animateIn(ReactDOM.findDOMNode(this), () => {
+    return animateIn(this.node, () => {
       this.setState({ extended: true });
     });
   };
@@ -84,7 +87,7 @@ class SearchBox extends Component {
     if (this.props.hold) {
       return;
     }
-    return animateOut(ReactDOM.findDOMNode(this), () => {
+    return animateOut(this.node, () => {
       this.setState({ extended: false });
     });
   };
@@ -97,7 +100,7 @@ const animateIn = (gridContainer, callback) => {
     width: 400,
     duration: 500,
     elasticity: 0,
-    complete: anim => {
+    complete: () => {
       callback();
     }
   });
@@ -111,7 +114,7 @@ const animateOut = (gridContainer, callback) => {
     duration: 500,
     elasticity: 0,
     delay: 200,
-    complete: anim => {
+    complete: () => {
       callback();
     }
   });
