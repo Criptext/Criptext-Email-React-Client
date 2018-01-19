@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import SideBarItem from './../components/SideBarItem';
 import LabelEdit from './../containers/LabelEdit';
 import { MailItems } from './../utils/const';
+import { openComposerWindow } from '../utils/electronInterface'
 import './sidebar.css';
-
-const electron = window.require('electron');
-const ipcRenderer  = electron.ipcRenderer;
 
 class SideBar extends Component {
   constructor() {
@@ -24,7 +22,7 @@ class SideBar extends Component {
         </header>
         <div className="navigation-partial-mail">
           <div className="nav-item-free">
-            <button className="button button-a button-compose" onClick={this.onComposerClick}>
+            <button className="button button-a button-compose" onClick={openComposerWindow}>
               <i className="icon-edit" />
               <span>Compose</span>
             </button>
@@ -69,10 +67,6 @@ class SideBar extends Component {
 
   componentDidMount() {
     this.props.onLoadLabels();
-  }
-
-  onComposerClick = () => {
-    ipcRenderer.send('create-composer')
   }
 
   handleToggleShowLabelButtonClick = () => {
