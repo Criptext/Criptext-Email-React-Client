@@ -42,3 +42,7 @@ jobs:
       - run:
           name: Unit test
           command: cd email_mailbox/ && yarn test
+
+      - run:
+          name: Lint
+          command: cd email_mailbox/ && yarn lint
