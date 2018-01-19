@@ -90,7 +90,7 @@ export const loadThreads = () => {
       const json = await response.json();
       dispatch(addThreads(json.threads));
     } catch (e) {
-      console.log(e);
+      // TO DO
     }
   };
 };

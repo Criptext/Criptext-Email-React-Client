@@ -9,7 +9,7 @@ export const addLabels = labels => {
 };
 
 export const addLabel = label => {
-  let labels = {
+  const labels = {
     inLabel: {
       id: inLabel,
       text: label
@@ -26,7 +26,7 @@ export const loadLabels = () => {
     try {
       const response = await fetch('/labels.json');
       const json = await response.json();
-      let labels = {};
+      const labels = {};
       json.labels.forEach(element => {
         labels[element.id] = {
           id: element.id,
@@ -35,7 +35,7 @@ export const loadLabels = () => {
       });
       dispatch(addLabels(labels));
     } catch (e) {
-      console.log(e);
+      // TO DO
     }
   };
 };

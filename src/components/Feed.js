@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Feed = props => (
-  <li className={'feed-item ' + (props.unread ? 'unread-feed' : '')}>
+  <div className={'feed-item ' + (props.unread ? 'unread-feed' : '')}>
     <div className="feed-content">
       <div className="feed-icon">{props.renderIcon()}</div>
       <div className="feed-data">
@@ -19,15 +19,13 @@ const Feed = props => (
       </div>
       <div className="feed-clear" />
     </div>
-  </li>
+  </div>
 );
 
 Feed.propTypes = {
-  feed: PropTypes.shape({
-    title: PropTypes.string,
-    subtitle: PropTypes.string,
-    time: PropTypes.string
-  })
+  feed: PropTypes.object,
+  unread: PropTypes.bool,
+  renderIcon: PropTypes.func
 };
 
 export default Feed;

@@ -9,7 +9,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
   return {
     onLoadLabels: () => {
       dispatch(loadLabels(dispatch));

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import anime from 'animejs';
+import './searchbox.css';
 
 const KEY_NEW_LINE = 13;
 let currentAnimation = null;
@@ -117,6 +119,14 @@ const animateOut = (gridContainer, callback) => {
 
 const clearCurrentAnimation = () => {
   if (currentAnimation) currentAnimation.pause();
+};
+
+SearchBox.propTypes = {
+  hold: PropTypes.bool,
+  onTriggerSearch: PropTypes.func,
+  searchText: PropTypes.string,
+  setSearchParam: PropTypes.func,
+  toggleSearchOptions: PropTypes.func
 };
 
 export default SearchBox;

@@ -8,11 +8,7 @@ class Thread extends Component {
   render() {
     return (
       <div className="thread-container">
-        <ThreadHeader
-          thread={this.props.thread}
-          threadsSelected={this.props.threadId}
-          history={this.props.history}
-        />
+        <ThreadHeader thread={this.props.thread} history={this.props.history} />
         <div className="thread-content">
           <div className="thread-info" />
           <div className="thread-emails">
@@ -32,7 +28,10 @@ class Thread extends Component {
 }
 
 Thread.propTypes = {
-  emails: PropTypes.object
+  emails: PropTypes.object,
+  history: PropTypes.string,
+  onLoadEmails: PropTypes.func,
+  thread: PropTypes.object
 };
 
 export default Thread;

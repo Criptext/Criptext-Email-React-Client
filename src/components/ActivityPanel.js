@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './activitypanel.css';
 import Feed from './Feed';
@@ -39,7 +40,7 @@ class ActivityPanel extends Component {
           </li>
           {feedList.map((feed, index) => {
             return (
-              <div onClick={() => this.onSelectFeed(feed)}>
+              <li key={index} onClick={() => this.onSelectFeed(feed)}>
                 <Link to={`/inbox/${feed.get('threadId')}`}>
                   <Feed
                     key={index}
@@ -48,7 +49,7 @@ class ActivityPanel extends Component {
                     renderIcon={() => this.renderFeedIcon(feed.get('cmd'))}
                   />
                 </Link>
-              </div>
+              </li>
             );
           })}
         </ul>
@@ -87,5 +88,14 @@ class ActivityPanel extends Component {
     );
   };
 }
+
+ActivityPanel.propTypes = {
+  newFeeds: PropTypes.object,
+  badgeClass: PropTypes.string,
+  badgeData: PropTypes.string,
+  oldFeeds: PropTypes.object,
+  onLoadFeeds: PropTypes.func,
+  onSelectFeed: PropTypes.func
+};
 
 export default ActivityPanel;

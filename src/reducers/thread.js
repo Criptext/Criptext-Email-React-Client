@@ -10,7 +10,7 @@ import randomcolor from 'randomcolor';
 
 export default (state = List([]), action) => {
   switch (action.type) {
-    case Thread.SELECT:
+    case Thread.SELECT: {
       const newThreads = state
         .map(thread => thread.set('selected', false))
         .update(
@@ -22,7 +22,8 @@ export default (state = List([]), action) => {
           }
         );
       return newThreads;
-    case Thread.ADD_BATCH:
+    }
+    case Thread.ADD_BATCH: {
       const threads = action.threads.map(thread => {
         const contacts = parseAllContacts(thread.participants);
         return Map(thread).merge({
@@ -37,12 +38,14 @@ export default (state = List([]), action) => {
           })
         });
       });
+
       return state.concat(
         List(threads).sort((t1, t2) => {
           return t2.get('lastEmailDate') - t1.get('lastEmailDate');
         })
       );
-    case Thread.MULTISELECT:
+    }
+    case Thread.MULTISELECT: {
       return state.update(
         state.findIndex(function(item) {
           return item.get('id') === action.selectedThread;
@@ -51,7 +54,8 @@ export default (state = List([]), action) => {
           return item.set('selected', action.value);
         }
       );
-    case Thread.ADD_THREAD_LABEL:
+    }
+    case Thread.ADD_THREAD_LABEL: {
       return state.update(
         state.findIndex(function(thread) {
           return thread.get('id') === action.targetThread;
@@ -62,14 +66,16 @@ export default (state = List([]), action) => {
           });
         }
       );
-    case Thread.ADD_THREADS_LABEL:
+    }
+    case Thread.ADD_THREADS_LABEL: {
       return state.map(thread => {
         if (!action.threadsIds.includes(thread.get('id'))) {
           return thread;
         }
         return thread.update('labels', labels => labels.add(action.label));
       });
-    case Thread.REMOVE_LABEL:
+    }
+    case Thread.REMOVE_LABEL: {
       return state.update(
         state.findIndex(function(thread) {
           return thread.get('id') === action.targetThread;
@@ -80,35 +86,43 @@ export default (state = List([]), action) => {
           });
         }
       );
-    case Thread.REMOVE_THREADS_LABEL:
+    }
+    case Thread.REMOVE_THREADS_LABEL: {
       return state.map(thread => {
         if (!action.threadsIds.includes(thread.get('id'))) {
           return thread;
         }
         return thread.update('labels', labels => labels.delete(action.label));
       });
-    case Thread.READ_THREADS:
+    }
+    case Thread.READ_THREADS: {
       return state.map(thread => {
         if (!action.threadsIds.includes(thread.get('id'))) {
           return thread;
         }
         return thread.set('unread', !action.read);
       });
-    case Thread.UNREAD_FILTER:
+    }
+    case Thread.UNREAD_FILTER: {
       return state.map(thread => thread.set('selected', false));
-    case Thread.REMOVE:
+    }
+    case Thread.REMOVE: {
       return state.filterNot(
         thread => thread.get('id') === action.targetThread
       );
-    case Thread.DESELECT_THREADS:
+    }
+    case Thread.DESELECT_THREADS: {
       return state.map(thread => thread.set('selected', false));
-    case Thread.SELECT_THREADS:
+    }
+    case Thread.SELECT_THREADS: {
       return state.map(thread => thread.set('selected', true));
-    case Thread.MOVE_THREADS:
+    }
+    case Thread.MOVE_THREADS: {
       return state.filterNot(thread => {
         return action.threadsIds.includes(thread.get('id'));
       });
-    case Thread.SEARCH_THREADS:
+    }
+    case Thread.SEARCH_THREADS: {
       return state.filter(thread => {
         const {
           from,
@@ -142,6 +156,7 @@ export default (state = List([]), action) => {
           myPreview.includes(text)
         );
       });
+    }
     default:
       return state;
   }

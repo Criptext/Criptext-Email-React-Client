@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import TooltipMenu from './TooltipMenu';
-import './threadheader.css';
 import CustomCheckbox from './CustomCheckbox';
 import SearchBox from './SearchBox';
+import './headermain.css';
 
-class Header extends Component {
+class HeaderMain extends Component {
   render() {
     const { searchParams, setSearchParam, displaySearchOptions } = this.props;
     return (
-      <header className="mailbox-header">
+      <div className="header-main">
         <SearchBox
           setSearchParam={setSearchParam}
           hold={displaySearchOptions}
@@ -18,7 +19,7 @@ class Header extends Component {
         <span className="header-profile">DM</span>
         <OptionsMenu {...this.props} />
         <HintsMenu {...this.props} />
-      </header>
+      </div>
     );
   }
 }
@@ -55,10 +56,16 @@ const SearchMail = props => (
     <i className="icon-mail" />
     <div>
       <div>
-        <div><span>{props.preview}</span></div>
-        <div><span>{props.date}</span></div>
+        <div>
+          <span>{props.preview}</span>
+        </div>
+        <div>
+          <span>{props.date}</span>
+        </div>
       </div>
-      <div><span>{props.participants}</span></div>
+      <div>
+        <span>{props.participants}</span>
+      </div>
     </div>
   </div>
 );
@@ -72,7 +79,9 @@ const OptionsMenu = props => (
   >
     <div className="search-options">
       <div>
-        <div><span>Search</span></div>
+        <div>
+          <span>Search</span>
+        </div>
         <select
           onChange={ev => {
             const value = ev.target.value;
@@ -154,4 +163,10 @@ const SearchInputBox = props => (
   </div>
 );
 
-export default Header;
+HeaderMain.propTypes = {
+  displaySearchOptions: PropTypes.bool,
+  searchParams: PropTypes.object,
+  setSearchParam: PropTypes.func
+};
+
+export default HeaderMain;

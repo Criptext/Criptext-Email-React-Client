@@ -21,9 +21,8 @@ export const parseContact = user => {
     }
     if (part.indexOf('@') > -1) {
       email = part;
-      return;
     } else {
-      if (name == null) {
+      if (name === null) {
         name = part;
       } else {
         name += ' ' + part;

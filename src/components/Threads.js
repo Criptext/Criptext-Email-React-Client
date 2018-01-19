@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import './threads.css';
+import PropTypes from 'prop-types';
 import ThreadItem from '../containers/ThreadItem';
 import { Switch } from 'react-switch-input';
 import ItemTooltip from './ItemTooltip';
 import ReactTooltip from 'react-tooltip';
 import randomcolor from 'randomcolor';
+import './threads.css';
 
-class ThreadsList extends Component {
+class Threads extends Component {
   constructor() {
     super();
     this.state = {
@@ -140,4 +141,14 @@ class ThreadsList extends Component {
   };
 }
 
-export default ThreadsList;
+Threads.propTypes = {
+  labels: PropTypes.object,
+  mailbox: PropTypes.string,
+  onLoadThreads: PropTypes.func,
+  onUnreadToggle: PropTypes.func,
+  selectedThread: PropTypes.string,
+  threads: PropTypes.object,
+  unreadFilter: PropTypes.string
+};
+
+export default Threads;

@@ -1,37 +1,39 @@
 import React from 'react';
-import HeaderOption from './HeaderOption';
+import PropTypes from 'prop-types';
+import ButtonCircle from './ButtonCircle';
+import './standardoptions.css';
 
 const StandardOptions = props => (
   <div className="header-action">
-    <HeaderOption
+    <ButtonCircle
       onClick={props.onActionMove}
       tip="Archive"
       enableTip={true}
       icon="icon-archive"
       targetName="actionArchive"
     />
-    <HeaderOption
+    <ButtonCircle
       onClick={props.onActionMove}
       tip="Spam"
       enableTip={true}
       icon="icon-not"
       targetName="actionSpam"
     />
-    <HeaderOption
+    <ButtonCircle
       onClick={props.onActionMove}
       tip="Trash"
       enableTip={true}
       icon="icon-trash"
       targetName="actionTrash"
     />
-    <HeaderOption
+    <ButtonCircle
       onClick={props.onMoveClick}
       tip="Move to"
       enableTip={!props.displayMoveMenu}
       icon="icon-file"
       targetName="actionMove"
     />
-    <HeaderOption
+    <ButtonCircle
       onClick={props.onTagsClick}
       tip="Add Labels"
       enableTip={!props.displayTagsMenu}
@@ -40,5 +42,13 @@ const StandardOptions = props => (
     />
   </div>
 );
+
+StandardOptions.propTypes = {
+  displayMoveMenu: PropTypes.bool,
+  displayTagsMenu: PropTypes.bool,
+  onActionMove: PropTypes.func,
+  onMoveClick: PropTypes.func,
+  onTagsClick: PropTypes.func
+};
 
 export default StandardOptions;

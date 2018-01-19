@@ -92,6 +92,7 @@ class SideBar extends Component {
 
 SideBar.propTypes = {
   labels: PropTypes.object,
+  onLoadLabels: PropTypes.func,
   optionSelected: PropTypes.string
 };
 

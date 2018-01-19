@@ -4,7 +4,7 @@ import ThreadView from '../components/Thread';
 import { List, Map } from 'immutable';
 
 const emailsMapToList = (emailsMap, emailIds) => {
-  let result =
+  const result =
     emailsMap.size === 0 || !emailIds
       ? List()
       : emailIds.map(emailId => {
@@ -14,7 +14,7 @@ const emailsMapToList = (emailsMap, emailIds) => {
 };
 
 const getEmails = (emails, thread) => {
-  let emailIds = thread ? thread.get('emails') : null;
+  const emailIds = thread ? thread.get('emails') : null;
   return emailsMapToList(emails, emailIds);
 };
 

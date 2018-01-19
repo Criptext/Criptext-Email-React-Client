@@ -1,0 +1,19 @@
+.header-action{
+  display: flex;
+
+  .labels-tooltip{
+    background-color: #e1e1e1 !important;
+    color: black !important;
+    font-weight: normal;
+    font-size: 10.5px !important;
+    border-radius: 3px !important;
+    padding: 4px 16px !important;
+
+
+    .tooltip-tip{
+      &:after{
+        background-color: #e1e1e1;
+      }
+    }
+  }
+}

@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import SelectHeader from './SelectHeader';
-import Header from './Header';
+import PropTypes from 'prop-types';
+import HeaderThreadOptionsWrapper from './HeaderThreadOptionsWrapper';
+import HeaderMain from './HeaderMain';
+import './mailboxheader.css';
 
 const ALL_MAIL = -1;
 const MAX_SUGGESTIONS = 3;
 
-class HeaderWrapper extends Component {
+class MailboxHeader extends Component {
   constructor() {
     super();
     this.state = {
-      displayMoveMenu: false,
-      displayDotsMenu: false,
       displaySearchHints: false,
       displaySearchOptions: false,
       searchParams: {
@@ -27,8 +27,6 @@ class HeaderWrapper extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.multiselect !== nextProps.multiselect) {
       this.setState({
-        displayMoveMenu: false,
-        displayDotsMenu: false,
         displaySearchHints: false,
         displaySearchOptions: false
       });
@@ -51,30 +49,27 @@ class HeaderWrapper extends Component {
           })
           .slice(0, MAX_SUGGESTIONS)
       : null;
-    return this.props.multiselect ? (
-      <SelectHeader
-        displayMoveMenu={this.state.displayMoveMenu}
-        displayDotsMenu={this.state.displayDotsMenu}
-        toggleMoveMenu={this.toggleMoveMenu}
-        toggleDotsMenu={this.toggleDotsMenu}
-        onMarkAsRead={this.onMarkAsRead}
-        {...this.props}
-      />
-    ) : (
-      <Header
-        {...this.props}
-        threads={threads}
-        setSearchParam={this.setSearchParam}
-        searchParams={this.state.searchParams}
-        displaySearchHints={this.state.displaySearchHints}
-        displaySearchOptions={this.state.displaySearchOptions}
-        toggleSearchHints={this.toggleSearchHints}
-        toggleSearchOptions={this.toggleSearchOptions}
-        onSearchChange={this.onSearchChange}
-        onTriggerSearch={this.onTriggerSearch}
-        searchText={this.state.searchText}
-        onSearchThreads={this.onSearchThreads}
-      />
+    return (
+      <header className="mailbox-header">
+        {this.props.multiselect ? (
+          <HeaderThreadOptionsWrapper {...this.props} />
+        ) : (
+          <HeaderMain
+            {...this.props}
+            threads={threads}
+            setSearchParam={this.setSearchParam}
+            searchParams={this.state.searchParams}
+            displaySearchHints={this.state.displaySearchHints}
+            displaySearchOptions={this.state.displaySearchOptions}
+            toggleSearchHints={this.toggleSearchHints}
+            toggleSearchOptions={this.toggleSearchOptions}
+            onSearchChange={this.onSearchChange}
+            onTriggerSearch={this.onTriggerSearch}
+            searchText={this.state.searchText}
+            onSearchThreads={this.onSearchThreads}
+          />
+        )}
+      </header>
     );
   }
 
@@ -148,17 +143,12 @@ class HeaderWrapper extends Component {
       displaySearchHints: false
     });
   };
-
-  onMarkAsRead = (threadsIds, read) => {
-    this.setState(
-      {
-        displayDotsMenu: false
-      },
-      () => {
-        this.props.onMarkRead(threadsIds, read);
-      }
-    );
-  };
 }
 
-export default HeaderWrapper;
+MailboxHeader.propTypes = {
+  allThreads: PropTypes.object,
+  multiselect: PropTypes.bool,
+  onSearchThreads: PropTypes.func
+};
+
+export default MailboxHeader;

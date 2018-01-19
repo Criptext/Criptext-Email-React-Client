@@ -1,14 +1,5 @@
 @import "./../styles/index.scss";
 
-.mailbox-container{
-  width: 100%;
-
-  header{
-    background-color: #373a45;
-    height: $_HEIGHT_HEADER;
-  }
-}
-
 .email-container{
   align-items: center;
   background-color: white;

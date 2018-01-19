@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
-import SelectHeader from '../components/SelectHeader';
+import ThreadHeaderView from '../components/ThreadHeader';
 
 const mapStateToProps = (state, ownProps) => {
   const labels = getLabelIncluded(
@@ -21,6 +21,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       return ownProps.history.goBack();
     },
     onMoveThreads: (threadsIds, label) => {
+      ownProps.history.goBack();
       return dispatch(actions.moveThreads(threadsIds, label));
     },
     onAddLabel: (threadsIds, label) => {
@@ -62,6 +63,8 @@ function getLabelIncluded(labels, threadLabels) {
   }, []);
 }
 
-const ThreadHeader = connect(mapStateToProps, mapDispatchToProps)(SelectHeader);
+const ThreadHeader = connect(mapStateToProps, mapDispatchToProps)(
+  ThreadHeaderView
+);
 
 export default ThreadHeader;

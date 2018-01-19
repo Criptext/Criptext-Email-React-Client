@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './tooltipmenu.css';
 
 class TooltipMenu extends Component {
@@ -22,7 +23,7 @@ class TooltipMenu extends Component {
             this.myself = r;
           }}
           style={this.state}
-          className={'tooltip-menu-wrapper ' + (this.props.class || '')}
+          className={'tooltip-menu-wrapper ' + this.props.class}
         >
           {this.props.title ? <h3>{this.props.title}</h3> : null}
           {this.props.children}
@@ -69,5 +70,18 @@ class TooltipMenu extends Component {
     }
   }
 }
+TooltipMenu.defaultProps = {
+  class: ''
+};
+
+TooltipMenu.propTypes = {
+  children: PropTypes.object,
+  class: PropTypes.string,
+  display: PropTypes.bool,
+  dismiss: PropTypes.func,
+  title: PropTypes.string,
+  targetId: PropTypes.string,
+  toLeft: PropTypes.bool
+};
 
 export default TooltipMenu;
