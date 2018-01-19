@@ -3,33 +3,36 @@ import PropTypes from 'prop-types';
 import './email.css';
 
 const Email = props =>
-  props.isOpen
-    ? renderEmailExpand(props.email)
-    : renderEmailCollapse(props.email);
+  props.displayEmail || props.staticOpen
+    ? renderEmailExpand(props)
+    : renderEmailCollapse(props);
 
-const renderEmailCollapse = email => (
-  <div className="email-container email-container-collapse">
-    <span className="email-from">{email.get('from')}</span>
+const renderEmailCollapse = props => (
+  <div
+    className="email-container email-container-collapse"
+    onClick={props.onToggleEmail}
+  >
+    <span className="email-from">{props.email.get('from')}</span>
     <span className="email-preview-content">
       Lorem Ipsum is simply dummy text of the printing and
     </span>
     <div />
-    <span className="email-date">{email.get('date')}</span>
+    <span className="email-date">{props.email.get('date')}</span>
   </div>
 );
 
-const renderEmailExpand = email => (
+const renderEmailExpand = props => (
   <div className="email-container email-container-expand">
-    <div className="email-info">
+    <div className="email-info" onClick={props.onToggleEmail}>
       <div className="email-icon-letter">
         <span>DM</span>
       </div>
       <div className="email-header-info">
-        <span>{email.get('from')}</span>
+        <span>{props.email.get('from')}</span>
         <span>Allison, Daniel, Gabriel, 2 others</span>
       </div>
       <div className="email-detail-info">
-        <span>{email.get('date')}</span>
+        <span>{props.email.get('date')}</span>
         <i className="icon-bell" />
         <i className="icon-bell" />
         <i className="icon-dots" />
@@ -54,6 +57,16 @@ const renderEmailExpand = email => (
     </div>
   </div>
 );
+
+renderEmailCollapse.propTypes = {
+  email: PropTypes.object,
+  onToggleEmail: PropTypes.func
+};
+
+renderEmailExpand.propTypes = {
+  email: PropTypes.object,
+  onToggleEmail: PropTypes.func
+};
 
 Email.propTypes = {
   email: PropTypes.object

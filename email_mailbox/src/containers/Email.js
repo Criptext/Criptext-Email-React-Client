@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import EmailView from '../components/Email';
+import EmailView from '../components/EmailWrapper';
 import * as TimeUtils from '../utils/TimeUtils';
 
 const mapStateToProps = (state, ownProps) => {
