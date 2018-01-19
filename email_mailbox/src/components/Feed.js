@@ -22,7 +22,7 @@ class Feed extends Component {
               <div className="feed-subject"><span>{this.props.feed.get('subtitle')}</span></div>
             </div>
             <div className="feed-actions-time">
-              { this.renderFeedActions() }
+              { this.renderFeedActions(this.props.feed) }
             </div>
           </div>
           <div className="feed-clear" />
@@ -32,14 +32,17 @@ class Feed extends Component {
   }
 
 
-  renderFeedActions = () => {
+  renderFeedActions = feed => {
     if (this.props.hovering) {
       return (
         <div className="feed-actions">
           <div className="feed-mute">
             <i className="icon-bell" title="Mute"></i>
           </div>
-          <div className="feed-delete">
+          <div className="feed-delete" 
+            onClick={ () => {
+              this.removeFeedFromPanel(this)} 
+            }>
             <i className="icon-trash" title="Delete"></i>
           </div>
         </div>
@@ -51,6 +54,11 @@ class Feed extends Component {
       </div>
     );
   };
+
+  removeFeedFromPanel = (parent) => {
+    console.log(parent)
+    this.props.removeFeed(this.props.feed.get('id'));
+  }
 
 
 }

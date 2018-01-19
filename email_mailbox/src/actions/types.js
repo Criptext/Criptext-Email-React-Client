@@ -13,7 +13,8 @@ export const Thread = {
   REMOVE_THREADS: 'REMOVE_THREADS',
   SEARCH_THREADS: 'SEARCH_THREADS',
   MOVE_THREADS: 'MOVE_THREADS',
-  READ_THREADS: 'READ_THREADS'
+  READ_THREADS: 'READ_THREADS',
+  MUTE_THREAD: 'MUTE_THREAD'
 };
 
 export const User = {
@@ -32,5 +33,6 @@ export const Label = {
 
 export const Feed = {
   ADD_BATCH: 'ADD_FEEDS',
-  SELECT: 'SELECT_FEED'
+  SELECT: 'SELECT_FEED',
+  REMOVE: 'REMOVE_FEED'
 };

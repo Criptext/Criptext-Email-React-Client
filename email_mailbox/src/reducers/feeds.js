@@ -21,6 +21,12 @@ export default (state = List([]), action) => {
       }
       return state;
     }
+    case Feed.REMOVE: {
+      const filteredFeeds = state.filter(feed => {
+        return feed.get('id') !== action.targetFeed
+      });
+      return filteredFeeds;
+    }
     default:
       return state;
   }

@@ -1,4 +1,4 @@
-import { Feed } from './types';
+import { Feed, Thread } from './types';
 
 export const addFeeds = feeds => {
   return {
@@ -6,6 +6,20 @@ export const addFeeds = feeds => {
     feeds: feeds
   };
 };
+
+export const muteNotifications = threadId => {
+  return {
+    type: Thread.MUTE_THREAD,
+    targetThread: threadId
+  }
+}
+
+export const removeFeed = feedId => {
+  return {
+    type: Feed.REMOVE,
+    targetFeed: feedId
+  }
+}
 
 export const selectFeed = feedId => {
   return {

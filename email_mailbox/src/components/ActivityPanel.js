@@ -43,10 +43,12 @@ class ActivityPanel extends Component {
               <li key={index} onClick={() => this.onSelectFeed(feed)}>
                 <Link to={`/inbox/${feed.get('threadId')}`}>
                   <FeedWrapper
-                    key={index}
                     feed={feed}
                     unread={feed.get('unread')}
                     renderIcon={() => this.renderFeedIcon(feed.get('cmd'))}
+                    removeFeed={(ev) => {
+                      this.removeFeed(feed);
+                    }}
                   />
                 </Link>
               </li>
@@ -63,6 +65,10 @@ class ActivityPanel extends Component {
       this.props.onSelectFeed(feed.get('id'));
     }
   };
+
+  removeFeed = feed => {
+    this.props.removeFeed(feed.get('id'));
+  }
 
   renderFeedIcon = cmd => {
     switch (cmd) {
