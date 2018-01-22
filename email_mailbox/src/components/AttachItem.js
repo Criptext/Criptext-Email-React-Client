@@ -6,7 +6,7 @@ const AttachItem = props => (
   <div className="attach-container">
     <div
       className="attach-preview"
-      style={{ backgroundImage: 'url(' + props.image + ')' }}
+      style={{ backgroundImage: `url(${props.image})` }}
     />
     <div className="attach-data">
       <i />
