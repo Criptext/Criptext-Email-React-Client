@@ -1,0 +1,20 @@
+.label-tag{
+  align-items: center;
+  align-self: flex-end;
+  border-radius: 10px;
+  display: flex;
+  font-family: NunitoSans;
+  font-size: 13px;
+  height: 21px;
+  margin-right: 10px;
+  padding: 0 15px;
+
+  span{
+    color: white;
+  }
+
+  i{
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 5px;
+  }
+}

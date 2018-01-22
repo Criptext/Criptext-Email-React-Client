@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Email from './../containers/Email';
 import ThreadHeader from './../containers/ThreadHeader';
+import Label from './Label';
 import './thread.css';
 
 class Thread extends Component {
@@ -10,7 +11,13 @@ class Thread extends Component {
       <div className="thread-container">
         <ThreadHeader thread={this.props.thread} history={this.props.history} />
         <div className="thread-content">
-          <div className="thread-info" />
+          <div className="thread-info">
+            <h1>Title</h1>
+            <div className="thread-labels">
+              <Label text="Large label" color={'#42d692'} />
+              <Label text="Label" color={'#ffbb63'} />
+            </div>
+          </div>
           <div className="thread-emails">
             {this.props.emails.map((email, index) => {
               const isLast = this.props.emails.size - 1 === index;

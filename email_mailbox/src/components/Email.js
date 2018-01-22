@@ -73,9 +73,18 @@ const renderEmailExpand = props => (
       </div>
     </div>
     <div className="email-segment-controls">
-      <div><i className="icon-replay"/><span>Replay</span></div>
-      <div><i className="icon-replay-all"/><span>Replay All</span></div>
-      <div><i className="icon-forward"/><span>Forward</span></div>
+      <div>
+        <i className="icon-replay" />
+        <span>Replay</span>
+      </div>
+      <div>
+        <i className="icon-replay-all" />
+        <span>Replay All</span>
+      </div>
+      <div>
+        <i className="icon-forward" />
+        <span>Forward</span>
+      </div>
     </div>
   </div>
 );
