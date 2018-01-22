@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test DBManager should add email to db 1`] = `
+Array [
+  Object {
+    "content": "Hello there",
+    "date": "2013-10-07 08:23:19.120",
+    "delivered": 0,
+    "isDraft": 0,
+    "isTrash": 0,
+    "key": "hdnfgdgsd",
+    "preview": "Hello there",
+    "s3Key": "hdnfgdgsd",
+    "secure": 1,
+    "subject": "Greetings",
+    "threadId": "hdnfgdgsd",
+    "unread": 0,
+  },
+]
+`;

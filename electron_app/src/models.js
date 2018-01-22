@@ -1,5 +1,8 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('mydb.db');
+const DB_TEST_PATH = './src/__tests__/test.db';
+const DB_PATH = './src/mydb.db'
+const myDBPath = process.env.NODE_ENV === 'test' ? DB_TEST_PATH  : DB_PATH;
+const db = new sqlite3.Database(myDBPath);
 
 db.serialize( () => {
   db.run('CREATE TABLE IF NOT EXISTS user(' + 
@@ -22,6 +25,7 @@ db.serialize( () => {
     'preview text, ' + 
     'subject text, ' + 
     'delivered integer, ' + 
+    'date datetime, ' +
     'isTrash integer, ' +
     'isDraft integer' + 
   ')');
@@ -39,6 +43,24 @@ db.serialize( () => {
     'type text, '+
     'FOREIGN KEY (userId) REFERENCES label(email), ' + 
     'FOREIGN KEY (emailId) REFERENCES email(key)' + 
+  ')');
+  db.run('CREATE TABLE IF NOT EXISTS file(' + 
+    'token text PRIMARY KEY, ' + 
+    'name text, ' +  
+    'size integer, ' + 
+    'status integer, ' + 
+    'date datetime, ' + 
+    'readOnly integer, ' + 
+    'emailId varchar, ' +
+    'FOREIGN KEY (emailId) REFERENCES email(key)' +
+  ')');
+  db.run('CREATE TABLE IF NOT EXISTS open(' + 
+    'id integer PRIMARY KEY AUTOINCREMENT, ' + 
+    'location text, ' +  
+    'type integer, ' + 
+    'date datetime, ' + 
+    'fileId text, ' +
+    'FOREIGN KEY (fileId) REFERENCES file(token)' +
   ')');
 })
 

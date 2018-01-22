@@ -1,16 +1,14 @@
 const db = require('./models.js');
 
-module.exports.getEmailsByThread = function(threadId){
-  const sql = 'SELECT * FROM email WHERE threadId = ?';
+module.exports.getRow = function(table, where){
+  const specs = buildSelectQuerySpecs(where);
+  const sql = `SELECT * FROM ${table} WHERE ${specs.whereKey.join(' AND ')}`;
 
   return new Promise( (resolve, reject) => {
-    db.all(sql, [threadId], (err, rows) => {
+    db.all(sql, specs.whereValue, (err, rows) => {
       if(err){
         reject(err);
       }
-      rows.forEach( row => {
-        console.log(row);
-      });
       resolve(rows);
     })
   }) 
@@ -41,6 +39,23 @@ module.exports.updateRows = function(table, params, where){
       resolve();
     })
   }) 
+}
+
+module.exports.closeDB = function(){
+  db.close();
+}
+
+const buildSelectQuerySpecs = function(where){
+  const whereKey = [];
+  const whereValue = [];
+  Object.keys(where).forEach( key => {
+    whereKey.push(`${key}=?`);
+    whereValue.push(where[key]);
+  })
+  return {
+    whereKey,
+    whereValue
+  }
 }
 
 const buildUpdateQuerySpecs = function(params, where){
