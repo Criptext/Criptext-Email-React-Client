@@ -4,10 +4,15 @@
   "private": true,
   "scripts": {
     "electron": "electron .",
-    "electron-dev": "ELECTRON_START_URL=http://localhost:3000 electron ."
+    "electron-dev": "ELECTRON_START_URL=http://localhost:3000 electron .",
+    "postinstall": "install-app-deps"
   },
   "main": "electron-starter.js",
   "devDependencies": {
-    "electron": "^1.7.10"
+    "electron": "^1.7.10",
+    "electron-builder": "^19.54.0"
+  },
+  "dependencies": {
+    "sqlite3": "^3.1.13"
   }
 }
