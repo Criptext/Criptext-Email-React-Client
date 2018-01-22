@@ -1,0 +1,37 @@
+.attach-container{
+  border: 1px solid #e7e5e5;
+  border-radius: 6px;
+  height: 116px;
+  width: 205px;
+}
+
+.attach-preview{
+  height: calc(100% - 34px);
+  width: 100%;
+  background-size: 100% auto;
+  background-position: center;
+}
+
+.attach-data{
+  align-items: center;
+  display: flex;
+  height: 34px;
+  width: 100%;
+
+  i{
+    margin: 0 10px;
+  }
+}
+
+.attach-data-name{
+  flex-grow: 2;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.attach-data-size{
+  color: #9b9b9b;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0 10px;
+}

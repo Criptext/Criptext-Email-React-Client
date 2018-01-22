@@ -12,7 +12,7 @@
 }
 
 .email-container-collapse{
-  border: 1px solid #ddd;
+  border: 1px solid #dcdde0;
   height: 45px;
   width: calc(100% - 2px);
 
@@ -24,9 +24,9 @@
   }
 }
 
-.email-from{
-  font-size: 14px;
-  font-weight: bold;
+.email-preview-from{
+  font-size: 13px;
+  font-weight: 600;
   margin-left: 20px;
   width: 180px;
 }
@@ -37,7 +37,18 @@
   margin-left: 5px;
 }
 
-.email-date{
+.email-preview-info{
+  display: flex;
+  margin: 0 5px;
+
+  i{
+    color: #d5d5d5;
+    font-size: 20px;
+    margin: 0 5px;
+  }
+}
+
+.email-preview-date{
   font-size: 13px;
   margin-right: 20px;
   text-align: right;
@@ -56,7 +67,7 @@
 }
 
 .email-info{
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dcdde0;
   display: flex;
   flex-direction: row;
 
@@ -90,18 +101,36 @@
   }
 }
 
+.email-header-info-from{
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.email-header-info-to{
+  color: #4a4a4a;
+  font-size: 15px;
+}
+
 .email-detail-info{
   align-items: flex-end;
   display: flex;
 
   span{
+    font-size: 14px;
     margin-right: 10px;
   }
 
   i{
-    color: #bbb;
-    margin: 5px;
+    color: #9197a1;
+    margin: 2px 5px;
 
+  }
+}
+
+.email-body{
+  > div{
+    margin-left: 12px;
+    margin-right: 12px;
   }
 }
 
@@ -109,11 +138,10 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  width: 100%;
   
   div{
     align-items: center;
-    border: 1px solid #ddd;
+    border: 1px solid #d5d5d5;
     border-radius: 50%;;
     display: flex;
     height: 30px;
@@ -121,7 +149,7 @@
     margin: 0 5px;
 
     i{
-      color: #ddd;
+      color: #d5d5d5;
       font-size: 20px;
       margin: 0 auto;
     }
@@ -129,7 +157,7 @@
 }
 
 .button-unsend{
-  background-color: red;
+  background-color: #dd4040;
   margin-left: 5px;
   width: 100px;
 
@@ -137,4 +165,9 @@
     left: -2px;
     margin-right: 2px;
   }
+}
+
+.email-attachs{
+  margin-bottom: 20px;
+  margin-top: 60px;
 }

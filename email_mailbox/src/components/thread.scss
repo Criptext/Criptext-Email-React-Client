@@ -6,6 +6,7 @@
 .thread-content{
   background-color: #f7f7f8;
   height: calc(100% - 61px);
+  overflow: auto;
 }
 
 .thread-info{
@@ -15,5 +16,5 @@
 
 .thread-emails{
   width: calc(100% - 50px);
-  margin: 0 25px;
+  margin: 0 25px 25px;
 }

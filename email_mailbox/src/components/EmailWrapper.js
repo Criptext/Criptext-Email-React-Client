@@ -14,13 +14,13 @@ class EmailWrapper extends Component {
     return (
       <Email
         displayEmail={this.state.displayEmail}
-        toggleEmail={this.toggleEmail}
+        onToggleEmail={this.onToggleEmail}
         {...this.props}
       />
     );
   }
 
-  toggleEmail = () => {
+  onToggleEmail = () => {
     if (!this.props.staticOpen) {
       this.setState({
         displayEmail: !this.state.displayEmail
