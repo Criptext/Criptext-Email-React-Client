@@ -44,7 +44,12 @@ class Feed extends Component {
     }
     return (
       <div className="deleted-feed">
-        <span>Deleted</span>
+        <div className="deleted-feed-icon">
+          <i className="icon-trash"></i>
+        </div>
+        <div className="deleted-feed-content">
+          <span>Deleted</span>
+        </div>
       </div>
     );
   };

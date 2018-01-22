@@ -88,7 +88,7 @@ class ActivityPanel extends Component {
   renderHeaderIcon = () => {
     return (
       <div className="feed-header-icon">
-        <i className={'icon-bell'} />
+        <i className={'icon-bell'}></i>
       </div>
     );
   };

@@ -122,11 +122,42 @@ aside.navigation-feed{
 
       .deleted-feed {
         height: 55px;
-        padding: auto;
-        margin-bottom: 2px;
+        padding: 0%;
+        margin: 0%;
         background-color: #dc4d48;
         color: #ffffff;
-        text-align: center;
+
+        .deleted-feed-icon {
+          margin: 0%;
+          width: 19%;
+          height: 100%;
+          float: left;
+          text-align: center;
+          font-size: 18px;
+          color: #ffffff;
+
+          i {
+            position:relative;
+            top: calc(50% - 9px);
+          }
+        }
+
+        .deleted-feed-content {
+          height: 100%;
+          width: 81%;
+          padding: 0%;
+          margin: 0%;
+          text-align: left;
+          line-height: 100%;
+          font-weight: 600;
+          float: right;
+
+          span {
+            position: relative;
+            top: 38%;
+          }
+        }
+
       }
       
       .feed-item {
