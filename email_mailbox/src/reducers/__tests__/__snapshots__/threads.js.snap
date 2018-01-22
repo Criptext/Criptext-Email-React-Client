@@ -24,6 +24,7 @@ Immutable.List [
     secure: true,
     id: 532322,
     selected: false,
+    allowNotifications: true,
     labels: Immutable.Set [
       7,
       3,
@@ -54,6 +55,7 @@ Immutable.List [
     secure: false,
     id: 63542,
     selected: false,
+    allowNotifications: true,
     labels: Immutable.Set [
       10,
     ],
@@ -85,6 +87,7 @@ Immutable.List [
     secure: true,
     id: 532322,
     selected: false,
+    allowNotifications: true,
     labels: Immutable.Set [
       7,
       3,
@@ -119,6 +122,7 @@ Immutable.List [
     secure: true,
     id: 532322,
     selected: false,
+    allowNotifications: true,
     labels: Immutable.Set [
       7,
       3,
@@ -149,6 +153,7 @@ Immutable.List [
     secure: false,
     id: 63542,
     selected: false,
+    allowNotifications: true,
     labels: Immutable.Set [
       10,
     ],
@@ -180,6 +185,7 @@ Immutable.List [
     secure: true,
     id: 532322,
     selected: false,
+    allowNotifications: true,
     labels: Immutable.Set [
       7,
       3,
@@ -213,6 +219,7 @@ Immutable.List [
     secure: true,
     id: 532322,
     selected: false,
+    allowNotifications: true,
     labels: Immutable.Set [
       7,
       3,
@@ -243,6 +250,7 @@ Immutable.List [
     secure: false,
     id: 63542,
     selected: false,
+    allowNotifications: true,
     labels: Immutable.Set [
       10,
     ],
@@ -274,6 +282,7 @@ Immutable.List [
     secure: true,
     id: 532322,
     selected: true,
+    allowNotifications: true,
     labels: Immutable.Set [
       7,
       3,
@@ -304,6 +313,7 @@ Immutable.List [
     secure: false,
     id: 63542,
     selected: true,
+    allowNotifications: true,
     labels: Immutable.Set [
       10,
     ],
@@ -335,6 +345,7 @@ Immutable.List [
     secure: true,
     id: 532322,
     selected: false,
+    allowNotifications: true,
     labels: Immutable.Set [
       7,
       3,
@@ -368,6 +379,7 @@ Immutable.List [
     secure: true,
     id: 532322,
     selected: true,
+    allowNotifications: true,
     labels: Immutable.Set [
       7,
       3,
