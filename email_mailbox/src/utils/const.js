@@ -41,7 +41,6 @@ export const MailItems = [
   }
 ];
 
-
 export const FeedCommand = {
   SENT: {
     value: 1,

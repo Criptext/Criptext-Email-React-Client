@@ -53,7 +53,7 @@ class Feed extends Component {
     if (this.props.hovering) {
       return (
         <div className="feed-actions">
-          {this.renderNotificationIcon(this.props.isMuted)}
+          {this.renderNotificationIcon(this.props.feed.get('isMuted'))}
           <div className="feed-delete" onClick={this.removeFeedFromPanel}>
             <i className="icon-trash" />
           </div>
@@ -71,7 +71,7 @@ class Feed extends Component {
     if (isMuted) {
       return (
         <div className="feed-mute" onClick={this.onToggleMute}>
-          <i className="icon-checked" />
+          <i className="icon-bell-mute" />
         </div>
       );
     }

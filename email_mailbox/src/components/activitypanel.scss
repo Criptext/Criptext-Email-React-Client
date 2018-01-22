@@ -23,12 +23,12 @@ aside.navigation-feed{
         width: 20%;
         margin: 0%;
         float: left;
-        font-size: 20px;
+        font-size: 24px;
         text-align: center;
 
         i {
           position: relative;
-          top: calc(50% - 11px);
+          top: calc(50% - 13px);
           color: #000000;
         }
 
@@ -124,7 +124,7 @@ aside.navigation-feed{
         height: 55px;
         padding: auto;
         margin-bottom: 2px;
-        background-color: red;
+        background-color: #dc4d48;
         color: #ffffff;
         text-align: center;
       }
@@ -211,13 +211,30 @@ aside.navigation-feed{
                 height: 100%;
                 width: 100%;
 
-                .icon-bell:hover {
-                  color: #daa520;
+                .feed-mute {
+                  font-size: 18px;
+                  height: 50%;
+                  i {
+                    position: relative;
+                    top: -3px;
+                  }
+                  i:hover {
+                    color: #c2c2c2;
+                  }
                 }
 
-                .icon-trash:hover {
-                  color: red;
+                .feed-delete {
+                  height: 50%;
+                  i {
+                    position: relative;
+                    right: 2px;
+                    bottom: -3px;
+                  }
+                  i:hover {
+                    color: #c2c2c2;
+                  }
                 }
+
               }
             }
           }
