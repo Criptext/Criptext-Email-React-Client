@@ -10,7 +10,7 @@ class Feed extends Component {
   renderFeedItem = props => {
     if (!props.isRemoved) {
       return (
-        <div
+        <li
           className={
             'feed-item ' + (props.feed.get('unread') ? 'unread-feed' : '')
           }
@@ -39,13 +39,13 @@ class Feed extends Component {
               <div className="feed-clear" />
             </div>
           </Link>
-        </div>
+        </li>
       );
     }
     return (
       <div className="deleted-feed">
         <div className="deleted-feed-icon">
-          <i className="icon-trash"></i>
+          <i className="icon-trash" />
         </div>
         <div className="deleted-feed-content">
           <span>Deleted</span>

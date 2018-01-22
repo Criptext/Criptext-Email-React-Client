@@ -39,16 +39,14 @@ class ActivityPanel extends Component {
           </li>
           {feedList.map((feed, index) => {
             return (
-              <li>
-                <FeedWrapper
-                  key={index}
-                  feed={feed}
-                  onSelectFeed={() => this.onSelectFeed(feed)}
-                  renderIcon={() => this.renderFeedIcon(feed)}
-                  onRemoveFeed={() => this.removeFeed(feed)}
-                  toggleMute={() => this.toggleMute(feed)}
-                />
-              </li>
+              <FeedWrapper
+                key={index}
+                feed={feed}
+                onSelectFeed={() => this.onSelectFeed(feed)}
+                renderIcon={() => this.renderFeedIcon(feed)}
+                onRemoveFeed={() => this.removeFeed(feed)}
+                toggleMute={() => this.toggleMute(feed)}
+              />
             );
           })}
         </ul>
@@ -89,7 +87,7 @@ class ActivityPanel extends Component {
   renderHeaderIcon = () => {
     return (
       <div className="feed-header-icon">
-        <i className={'icon-bell'}></i>
+        <i className={'icon-bell'} />
       </div>
     );
   };
