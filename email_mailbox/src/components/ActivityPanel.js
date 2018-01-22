@@ -39,8 +39,9 @@ class ActivityPanel extends Component {
           </li>
           {feedList.map((feed, index) => {
             return (
-              <li key={index}>
+              <li>
                 <FeedWrapper
+                  key={index}
                   feed={feed}
                   onSelectFeed={() => this.onSelectFeed(feed)}
                   renderIcon={() => this.renderFeedIcon(feed)}
