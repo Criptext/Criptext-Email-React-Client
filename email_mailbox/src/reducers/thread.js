@@ -157,6 +157,21 @@ export default (state = List([]), action) => {
         );
       });
     }
+    case Thread.MUTE_THREAD: {
+      const item = state.find(
+        thread => thread.get('id') === action.targetThread
+      );
+      if (item !== undefined) {
+        const index = state.findIndex(
+          thread => thread.get('id') === action.targetThread
+        );
+        return state.update(index, thread => {
+          const prevMutedState = thread.get('allowNotifications');
+          return thread.set('allowNotifications', !prevMutedState);
+        });
+      }
+      return state;
+    }
     default:
       return state;
   }

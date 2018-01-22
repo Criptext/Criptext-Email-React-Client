@@ -42,11 +42,10 @@ class ActivityPanel extends Component {
               <li key={index}>
                 <FeedWrapper
                   feed={feed}
-                  myIndex={index}
-                  unread={feed.get('unread')}
                   onSelectFeed={() => this.onSelectFeed(feed)}
                   renderIcon={() => this.renderFeedIcon(feed)}
                   onRemoveFeed={() => this.removeFeed(feed)}
+                  toggleMute={() => this.toggleMute(feed)}
                 />
               </li>
             );
@@ -65,16 +64,22 @@ class ActivityPanel extends Component {
 
   removeFeed = feed => {
     this.props.onRemoveFeed(feed.get('id'));
-  }
+  };
+
+  toggleMute = feed => {
+    const threadId = feed.get('threadId');
+    const feedId = feed.get('id');
+    this.props.toggleMute(threadId, feedId);
+  };
 
   renderFeedIcon = feed => {
     switch (feed.get('cmd')) {
       case FeedCommand.SENT.value:
-        return <i className={FeedCommand.SENT.icon}></i>;
+        return <i className={FeedCommand.SENT.icon} />;
       case FeedCommand.EXPIRED.value:
-        return <i className={FeedCommand.EXPIRED.icon}></i>;
+        return <i className={FeedCommand.EXPIRED.icon} />;
       case FeedCommand.OPENED.value:
-        return <i className={FeedCommand.OPENED.icon}></i>;
+        return <i className={FeedCommand.OPENED.icon} />;
       default:
         return null;
     }
@@ -83,10 +88,7 @@ class ActivityPanel extends Component {
   renderHeaderIcon = () => {
     return (
       <div className="feed-header-icon">
-        <i
-          className={'icon-bell ' + this.props.badgeClass}
-          data-badge={this.props.badgeData}
-        />
+        <i className={'icon-bell'} />
       </div>
     );
   };
@@ -94,11 +96,14 @@ class ActivityPanel extends Component {
 
 ActivityPanel.propTypes = {
   newFeeds: PropTypes.object,
+  oldFeeds: PropTypes.object,
+  unreadFeeds: PropTypes.number,
   badgeClass: PropTypes.string,
   badgeData: PropTypes.string,
-  oldFeeds: PropTypes.object,
   onLoadFeeds: PropTypes.func,
-  onSelectFeed: PropTypes.func
+  onSelectFeed: PropTypes.func,
+  onRemoveFeed: PropTypes.func,
+  toggleMute: PropTypes.func
 };
 
 export default ActivityPanel;

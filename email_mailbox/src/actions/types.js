@@ -34,5 +34,6 @@ export const Label = {
 export const Feed = {
   ADD_BATCH: 'ADD_FEEDS',
   SELECT: 'SELECT_FEED',
-  REMOVE: 'REMOVE_FEED'
+  REMOVE: 'REMOVE_FEED',
+  TOGGLE_MUTE: 'TOGGLE_MUTE'
 };

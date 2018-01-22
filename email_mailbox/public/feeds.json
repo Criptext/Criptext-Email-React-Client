@@ -1,53 +1,59 @@
 {
   "feeds": [
   	{
-      "cmd": 1,
   	  "title": "Schedule email sent",
   	  "subtitle": "Why we all should flate text",
   	  "time": 1515794888909,
-      "state": "new",
-      "unread": false,
       "threadId": 532322,
+      "isMuted": false,
+      "unread": false,
+      "state": "new",
+      "cmd": 1,
       "id": 1
   	},
   	{
-  	  "cmd": 2,
   	  "title": "Email expired",
   	  "subtitle": "Re: Last Meeting",
   	  "time": 1515432919000,
-      "state": "new",
-      "unread": true,
       "threadId": 3423,
+      "isMuted": false,
+      "unread": true,
+      "state": "new",
+      "cmd": 2,
       "id": 2
   	},
   	{
-  	  "cmd": 3,
+  	  
   	  "title": "Daniel Tigse Palma opened",
   	  "subtitle": "Re: Last Meeting",
   	  "time": 1515704888909,
-      "state": "new",
-      "unread": true,
       "threadId": 63512,
+      "isMuted": false,
+      "unread": true,
+      "state": "new",
+      "cmd": 3,
       "id": 3
   	},
     {
-      "cmd": 2,
       "title": "Email expired",
       "subtitle": "Re: Last Meeting",
       "time": 1515346519000,
+      "threadId": 63567,
+      "isMuted": false,
       "state": "older",
       "unread": false,
-      "threadId": 63567,
+      "cmd": 2,
       "id": 4
     },
     {
-      "cmd": 3,
       "title": "Daniel Tigse Palma opened",
       "subtitle": "Re: Last Meeting",
       "time": 1515432919000,
+      "threadId": 532322,
+      "isMuted": false,
       "state": "older",
       "unread": true,
-      "threadId": 532322,
+      "cmd": 3,
       "id": 5
     }
   ]

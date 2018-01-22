@@ -1,36 +1,39 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 class Feed extends Component {
-
-  render(){
-    return (
-      <div>{ this.renderFeedItem(this.props) }</div>
-    )
+  render() {
+    return <div>{this.renderFeedItem(this.props)}</div>;
   }
 
-
-  renderFeedItem = (props) => {
+  renderFeedItem = props => {
     if (!props.isRemoved) {
-      return(
-        <div 
-          className={'feed-item ' + (props.unread ? 'unread-feed' : '')}
+      return (
+        <div
+          className={
+            'feed-item ' + (props.feed.get('unread') ? 'unread-feed' : '')
+          }
           onClick={this.onSelectFeed}
         >
           <Link to={`/inbox/${props.feed.get('threadId')}`}>
-            <div 
-              className="feed-content" 
-              onMouseEnter={props.onRegionEnter} 
+            <div
+              className="feed-content"
+              onMouseEnter={props.onRegionEnter}
               onMouseLeave={props.onRegionLeave}
             >
               <div className="feed-icon">{props.renderIcon()}</div>
               <div className="feed-data">
                 <div className="feed-preview">
-                  <div className="feed-title"><span>{props.feed.get('title')}</span></div>
-                  <div className="feed-subject"><span>{props.feed.get('subtitle')}</span></div>
+                  <div className="feed-title">
+                    <span>{props.feed.get('title')}</span>
+                  </div>
+                  <div className="feed-subject">
+                    <span>{props.feed.get('subtitle')}</span>
+                  </div>
                 </div>
                 <div className="feed-actions-time">
-                  { this.renderFeedActions(props.feed) }
+                  {this.renderFeedActions(props.feed)}
                 </div>
               </div>
               <div className="feed-clear" />
@@ -39,24 +42,20 @@ class Feed extends Component {
         </div>
       );
     }
-    return(
+    return (
       <div className="deleted-feed">
         <span>Deleted</span>
       </div>
     );
-  }
-
+  };
 
   renderFeedActions = feed => {
     if (this.props.hovering) {
       return (
         <div className="feed-actions">
-          <div className="feed-mute">
-            <i className="icon-bell"></i>
-          </div>
-          <div className="feed-delete" 
-            onClick={this.removeFeedFromPanel}>
-            <i className="icon-trash"></i>
+          {this.renderNotificationIcon(this.props.isMuted)}
+          <div className="feed-delete" onClick={this.removeFeedFromPanel}>
+            <i className="icon-trash" />
           </div>
         </div>
       );
@@ -66,6 +65,27 @@ class Feed extends Component {
         <span>{feed.get('time')}</span>
       </div>
     );
+  };
+
+  renderNotificationIcon = isMuted => {
+    if (isMuted) {
+      return (
+        <div className="feed-mute" onClick={this.onToggleMute}>
+          <i className="icon-checked" />
+        </div>
+      );
+    }
+    return (
+      <div className="feed-mute" onClick={this.onToggleMute}>
+        <i className="icon-bell" />
+      </div>
+    );
+  };
+
+  onToggleMute = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.props.toggleMute();
   };
 
   onSelectFeed = () => {
@@ -78,12 +98,24 @@ class Feed extends Component {
     this.props.onRemove();
     window.setTimeout(() => {
       this.props.onRemoveFeed(this.props.feed);
-      this.props.onClean();
+      this.props.onCleanRemove();
     }, 1500);
-  }
-
-
+  };
 }
 
+Feed.propTypes = {
+  feed: PropTypes.object,
+  onRegionEnter: PropTypes.func,
+  onRegionLeave: PropTypes.func,
+  renderIcon: PropTypes.func,
+  hovering: PropTypes.bool,
+  isMuted: PropTypes.bool,
+  isRemoved: PropTypes.bool,
+  toggleMute: PropTypes.func,
+  onSelectFeed: PropTypes.func,
+  onRemove: PropTypes.func,
+  onRemoveFeed: PropTypes.func,
+  onCleanRemove: PropTypes.func
+};
 
 export default Feed;

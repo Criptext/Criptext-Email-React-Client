@@ -19,12 +19,13 @@ import {
 } from './threads';
 import { addEmails, loadEmails } from './emails';
 import { addLabels, addLabel, loadLabels } from './labels';
-import { 
-  addFeeds, 
-  loadFeeds, 
-  muteNotifications, 
-  removeFeed, 
-  selectFeed 
+import {
+  addFeeds,
+  loadFeeds,
+  muteNotifications,
+  removeFeed,
+  selectFeed,
+  toggleMuteFeed
 } from './feeds';
 
 export {
@@ -51,9 +52,10 @@ export {
   deselectThreads,
   searchThreads,
   selectThreads,
-  removeFeed, 
+  removeFeed,
   removeThreads,
   removeThreadsLabel,
   selectThread,
-  selectFeed
+  selectFeed,
+  toggleMuteFeed
 };

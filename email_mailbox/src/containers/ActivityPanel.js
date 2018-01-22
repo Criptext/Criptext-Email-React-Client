@@ -47,9 +47,22 @@ const clasifyFeeds = feeds => {
   return { newsFiltered, oldsFiltered };
 };
 
+const populateFeeds = (feeds, threads) => {
+  return feeds.map(feed => {
+    const thread = threads.find(
+      thread => thread.get('id') === feed.get('threadId')
+    );
+    if (thread !== undefined) {
+      return feed.set('isMuted', !thread.get('allowNotifications'));
+    }
+    return feed;
+  });
+};
+
 const mapStateToProps = state => {
   const orderedFeeds = orderFeedsByDate(state.get('feeds'));
-  const feeds = orderedFeeds.map(feed => {
+  const populated = populateFeeds(orderedFeeds, state.get('threads'));
+  const feeds = populated.map(feed => {
     return setFeedTime(feed, 'time');
   });
   const { newsFiltered, oldsFiltered } = clasifyFeeds(feeds);
@@ -73,6 +86,10 @@ const mapDispatchToProps = dispatch => {
     },
     onRemoveFeed: feedId => {
       dispatch(actions.removeFeed(feedId));
+    },
+    toggleMute: (threadId, feedId) => {
+      dispatch(actions.muteNotifications(threadId));
+      dispatch(actions.toggleMuteFeed(feedId));
     }
   };
 };
