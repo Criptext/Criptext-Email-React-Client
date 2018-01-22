@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { FeedCommand } from './../utils/const';
+
 
 class Feed extends Component {
+  
   render() {
     return <div>{this.renderFeedItem(this.props)}</div>;
   }
@@ -22,7 +25,7 @@ class Feed extends Component {
               onMouseEnter={props.onRegionEnter}
               onMouseLeave={props.onRegionLeave}
             >
-              <div className="feed-icon">{props.renderIcon()}</div>
+              <div className="feed-icon">{this.renderFeedIcon(this.props.feed)}</div>
               <div className="feed-data">
                 <div className="feed-preview">
                   <div className="feed-title">
@@ -106,6 +109,46 @@ class Feed extends Component {
       this.props.onCleanRemove();
     }, 1500);
   };
+
+
+
+
+
+
+  onSelectFeed = feed => {
+    if (feed.get('unread')) {
+      this.props.onSelectFeed(feed.get('id'));
+    }
+  };
+
+  removeFeed = feed => {
+    this.props.onRemoveFeed(feed.get('id'));
+  };
+
+  toggleMute = feed => {
+    const threadId = feed.get('threadId');
+    const feedId = feed.get('id');
+    this.props.toggleMute(threadId, feedId);
+  };
+
+  renderFeedIcon = feed => {
+    switch (feed.get('cmd')) {
+      case FeedCommand.SENT.value:
+        return <i className={FeedCommand.SENT.icon} />;
+      case FeedCommand.EXPIRED.value:
+        return <i className={FeedCommand.EXPIRED.icon} />;
+      case FeedCommand.OPENED.value:
+        return <i className={FeedCommand.OPENED.icon} />;
+      default:
+        return null;
+    }
+  };
+
+
+
+
+
+
 }
 
 Feed.propTypes = {

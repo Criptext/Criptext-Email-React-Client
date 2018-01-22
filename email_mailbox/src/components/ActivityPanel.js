@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './activitypanel.css';
-import FeedWrapper from './FeedWrapper';
-import { FeedCommand } from './../utils/const';
+import FeedWrapper from './../containers/Feed';
+
 
 class ActivityPanel extends Component {
+
   render() {
     return (
       <aside className="navigation-feed">
@@ -26,9 +27,11 @@ class ActivityPanel extends Component {
     );
   }
 
+
   componentDidMount() {
     this.props.onLoadFeeds();
   }
+
 
   renderFeedList = (feedList, listName) => {
     if (feedList && feedList.size > 0) {
@@ -39,14 +42,7 @@ class ActivityPanel extends Component {
           </li>
           {feedList.map((feed, index) => {
             return (
-              <FeedWrapper
-                key={index}
-                feed={feed}
-                onSelectFeed={() => this.onSelectFeed(feed)}
-                renderIcon={() => this.renderFeedIcon(feed)}
-                onRemoveFeed={() => this.removeFeed(feed)}
-                toggleMute={() => this.toggleMute(feed)}
-              />
+              <FeedWrapper key={index} feed={feed} />
             );
           })}
         </ul>
@@ -55,34 +51,6 @@ class ActivityPanel extends Component {
     return null;
   };
 
-  onSelectFeed = feed => {
-    if (feed.get('unread')) {
-      this.props.onSelectFeed(feed.get('id'));
-    }
-  };
-
-  removeFeed = feed => {
-    this.props.onRemoveFeed(feed.get('id'));
-  };
-
-  toggleMute = feed => {
-    const threadId = feed.get('threadId');
-    const feedId = feed.get('id');
-    this.props.toggleMute(threadId, feedId);
-  };
-
-  renderFeedIcon = feed => {
-    switch (feed.get('cmd')) {
-      case FeedCommand.SENT.value:
-        return <i className={FeedCommand.SENT.icon} />;
-      case FeedCommand.EXPIRED.value:
-        return <i className={FeedCommand.EXPIRED.icon} />;
-      case FeedCommand.OPENED.value:
-        return <i className={FeedCommand.OPENED.icon} />;
-      default:
-        return null;
-    }
-  };
 
   renderHeaderIcon = () => {
     return (
@@ -91,18 +59,13 @@ class ActivityPanel extends Component {
       </div>
     );
   };
+
 }
 
 ActivityPanel.propTypes = {
   newFeeds: PropTypes.object,
   oldFeeds: PropTypes.object,
-  unreadFeeds: PropTypes.number,
-  badgeClass: PropTypes.string,
-  badgeData: PropTypes.string,
-  onLoadFeeds: PropTypes.func,
-  onSelectFeed: PropTypes.func,
-  onRemoveFeed: PropTypes.func,
-  toggleMute: PropTypes.func
+  onLoadFeeds: PropTypes.func
 };
 
 export default ActivityPanel;
