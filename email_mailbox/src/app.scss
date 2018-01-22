@@ -202,6 +202,30 @@ TABLE OF CONTENTS
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-bell-inclined:before {
+  content: "\e903";
+}
+.icon-bell-mute:before {
+  content: "\e909";
+}
+.icon-bell:before {
+  content: "\e901";
+}
+.icon-sent-right:before {
+  content: "\e90d";
+}
+.icon-sent-left:before {
+  content: "\e916";
+}
+.icon-replay:before {
+  content: "\e91f";
+}
+.icon-replay-all:before {
+  content: "\e920";
+}
+.icon-forward:before {
+  content: "\e91c";
+}
 .icon-toggle-right:before {
   content: "\e90b";
 }
@@ -211,32 +235,41 @@ TABLE OF CONTENTS
 .icon-toogle-up:before {
   content: "\e914";
 }
-.icon-search:before {
-  content: "\e917";
-}
-.icon-attach:before {
-  content: "\e900";
-}
-.icon-bell:before {
-  content: "\e901";
-}
 .icon-back:before {
   content: "\e91b";
 }
 .icon-next:before {
   content: "\e902";
 }
-.icon-bell-inclined:before {
-  content: "\e903";
-}
-.icon-calendar:before {
-  content: "\e904";
-}
-.icon-trash:before {
-  content: "\e905";
+.icon-check:before {
+  content: "\e919";
 }
 .icon-not:before {
   content: "\e906";
+}
+.icon-plus:before {
+  content: "\e91d";
+}
+.icon-minus:before {
+  content: "\e921";
+}
+.icon-arrow-down:before {
+  content: "\e91e";
+}
+.icon-search:before {
+  content: "\e917";
+}
+.icon-time:before {
+  content: "\e922";
+}
+.icon-checked:before {
+  content: "\e912";
+}
+.icon-box:before {
+  content: "\e915";
+}
+.icon-archive:before {
+  content: "\e91a";
 }
 .icon-start:before {
   content: "\e907";
@@ -244,17 +277,14 @@ TABLE OF CONTENTS
 .icon-doc:before {
   content: "\e908";
 }
-.icon-sent:before {
-  content: "\e909";
-}
 .icon-mailbox:before {
   content: "\e90a";
 }
+.icon-dots:before {
+  content: "\e918";
+}
 .icon-file:before {
   content: "\e90c";
-}
-.icon-tag:before {
-  content: "\e90d";
 }
 .icon-user:before {
   content: "\e90e";
@@ -265,26 +295,20 @@ TABLE OF CONTENTS
 .icon-settings:before {
   content: "\e910";
 }
+.icon-attach:before {
+  content: "\e900";
+}
+.icon-calendar:before {
+  content: "\e904";
+}
+.icon-trash:before {
+  content: "\e905";
+}
 .icon-edit:before {
   content: "\e911";
 }
-.icon-checked:before {
-  content: "\e912";
-}
-.icon-check:before {
-  content: "\e919";
-}
-.icon-dots:before {
-  content: "\e918"
-}
-.icon-archive:before {
-  content: "\e91a"
-}
-.icon-box:before {
-  content: "\e915"
-}
-.icon-time:before {
-  content: "\e916"
+.icon-tag:before {
+  content: "\e923";
 }
 
 /* 2.- CONTENT
