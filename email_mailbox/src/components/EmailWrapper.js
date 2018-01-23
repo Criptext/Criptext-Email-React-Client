@@ -6,7 +6,8 @@ class EmailWrapper extends Component {
   constructor() {
     super();
     this.state = {
-      displayEmail: false
+      displayEmail: false,
+      displayMenu: false
     };
   }
 
@@ -14,7 +15,9 @@ class EmailWrapper extends Component {
     return (
       <Email
         displayEmail={this.state.displayEmail}
+        displayMenu={this.state.displayMenu}
         onToggleEmail={this.onToggleEmail}
+        onToogleMenu={this.onToggleMenu}
         {...this.props}
       />
     );
@@ -26,6 +29,12 @@ class EmailWrapper extends Component {
         displayEmail: !this.state.displayEmail
       });
     }
+  };
+
+  onToggleMenu = () => {
+    this.setState({
+      displayMenu: !this.state.displayMenu
+    });
   };
 }
 
