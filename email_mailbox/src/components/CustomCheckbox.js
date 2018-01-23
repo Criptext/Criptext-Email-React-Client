@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import './customCheckbox.css';
 
 const CustomCheckbox = props => (
-  <div className="checkmark-container" onClick={ev => onClick(ev, props)}>
+  <li className="checkmark-container" onClick={ev => onClick(ev, props)}>
     <span className={'checkmark ' + getClass(props.status)} />
-    <div>{props.label}</div>
-  </div>
+    <div>
+      <span>{props.label}</span>
+    </div>
+  </li>
 );
 
 function getClass(status) {
