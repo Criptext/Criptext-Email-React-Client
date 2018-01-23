@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "electron": "electron .",
-    "electron-dev": "ELECTRON_START_URL=http://localhost:3000 electron .",
+    "start": "ELECTRON_START_URL=http://localhost:3000 electron .",
     "postinstall": "install-app-deps",
-    "test": "criptext-js-tools test"
+    "test": "criptext-js-tools test",
+    "integration": "NODE_ENV=test criptext-js-tools integration",
+    "lint": "criptext-js-tools lint"
   },
   "main": "./src/electron-starter.js",
   "devDependencies": {
@@ -15,6 +17,7 @@
     "electron-builder": "^19.54.0"
   },
   "dependencies": {
+    "knex": "^0.14.2",
     "sqlite3": "^3.1.13"
   }
 }

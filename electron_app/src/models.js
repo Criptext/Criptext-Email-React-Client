@@ -1,67 +1,113 @@
-const sqlite3 = require('sqlite3').verbose();
 const DB_TEST_PATH = './src/__tests__/test.db';
-const DB_PATH = './src/mydb.db'
-const myDBPath = process.env.NODE_ENV === 'test' ? DB_TEST_PATH  : DB_PATH;
-const db = new sqlite3.Database(myDBPath);
+const DB_PATH = './src/mydb.db';
+const myDBPath = process.env.NODE_ENV === 'test' ? DB_TEST_PATH : DB_PATH;
+const MEDIUM_STRING_SIZE = 64;
+const SHORT_STRING_SIZE = 32;
+const TINY_STRING_SIZE = 10;
+const LONG_STRING_SIZE = 100;
 
-db.serialize( () => {
-  db.run('CREATE TABLE IF NOT EXISTS user(' + 
-    'email text PRIMARY KEY, ' + 
-    'name text, ' + 
-    'nickname text' + 
-  ')');
-  db.run('CREATE TABLE IF NOT EXISTS label(' +
-    'id integer PRIMARY KEY AUTOINCREMENT, ' + 
-    'text text, ' + 
-    'color text' + 
-  ')');
-  db.run('CREATE TABLE IF NOT EXISTS email(' + 
-    'key text PRIMARY KEY, ' + 
-    'threadId text, ' +  
-    's3Key text, ' + 
-    'unread integer, ' + 
-    'secure integer, ' + 
-    'content text, ' + 
-    'preview text, ' + 
-    'subject text, ' + 
-    'delivered integer, ' + 
-    'date datetime, ' +
-    'isTrash integer, ' +
-    'isDraft integer' + 
-  ')');
-  db.run('CREATE TABLE IF NOT EXISTS label_email(' + 
-    'id integer PRIMARY KEY AUTOINCREMENT, ' + 
-    'labelId integer, ' +  
-    'emailId text, ' +
-    'FOREIGN KEY (labelId) REFERENCES label(id), ' + 
-    'FOREIGN KEY (emailId) REFERENCES email(key)' + 
-  ')');
-  db.run('CREATE TABLE IF NOT EXISTS email_user(' + 
-    'id integer PRIMARY KEY AUTOINCREMENT, ' + 
-    'userId text, ' + 
-    'emailId text, ' +  
-    'type text, '+
-    'FOREIGN KEY (userId) REFERENCES label(email), ' + 
-    'FOREIGN KEY (emailId) REFERENCES email(key)' + 
-  ')');
-  db.run('CREATE TABLE IF NOT EXISTS file(' + 
-    'token text PRIMARY KEY, ' + 
-    'name text, ' +  
-    'size integer, ' + 
-    'status integer, ' + 
-    'date datetime, ' + 
-    'readOnly integer, ' + 
-    'emailId varchar, ' +
-    'FOREIGN KEY (emailId) REFERENCES email(key)' +
-  ')');
-  db.run('CREATE TABLE IF NOT EXISTS open(' + 
-    'id integer PRIMARY KEY AUTOINCREMENT, ' + 
-    'location text, ' +  
-    'type integer, ' + 
-    'date datetime, ' + 
-    'fileId text, ' +
-    'FOREIGN KEY (fileId) REFERENCES file(token)' +
-  ')');
-})
+const db = require('knex')({
+  client: 'sqlite3',
+  connection: {
+    filename: myDBPath
+  }
+});
 
-module.exports = db;
+const createUserColumns = table => {
+  table.string('email').primary();
+  table.string('name', MEDIUM_STRING_SIZE);
+  table.string('nickname', MEDIUM_STRING_SIZE);
+};
+
+const createLabelColumns = table => {
+  table.increments('id').primary();
+  table.string('text', MEDIUM_STRING_SIZE).unique();
+  table.string('color', TINY_STRING_SIZE);
+};
+
+const createEmailColumns = table => {
+  table.increments('id').primary();
+  table.string('key', SHORT_STRING_SIZE).unique();
+  table.string('threadId', SHORT_STRING_SIZE);
+  table.string('s3Key', SHORT_STRING_SIZE);
+  table.text('content');
+  table.string('preview', LONG_STRING_SIZE);
+  table.string('subject');
+  table.dateTime('date');
+  table.integer('delivered');
+  table.boolean('unread');
+  table.boolean('secure');
+  table.boolean('isTrash');
+  table.boolean('isDraft');
+  table.boolean('isMuted');
+};
+
+const createEmailLabelColumns = table => {
+  table.increments('id').primary();
+  table.integer('labelId');
+  table.string('emailId', SHORT_STRING_SIZE);
+  table
+    .foreign('labelId')
+    .references('id')
+    .inTable('label');
+  table
+    .foreign('emailId')
+    .references('id')
+    .inTable('email');
+};
+
+const createEmailUserColumns = table => {
+  table.increments('id').primary();
+  table.integer('userId');
+  table.string('emailId', SHORT_STRING_SIZE);
+  table.string('type', TINY_STRING_SIZE);
+  table
+    .foreign('userId')
+    .references('id')
+    .inTable('user');
+  table
+    .foreign('emailId')
+    .references('id')
+    .inTable('email');
+};
+
+const createFileColumns = table => {
+  table.string('token', SHORT_STRING_SIZE).primary();
+  table.string('name', SHORT_STRING_SIZE);
+  table.integer('size');
+  table.integer('status');
+  table.dateTime('date');
+  table.string('emailId', SHORT_STRING_SIZE);
+  table
+    .foreign('emailId')
+    .references('id')
+    .inTable('email');
+};
+
+const createOpenColumns = table => {
+  table.increments('id').primary();
+  table.string('location', SHORT_STRING_SIZE);
+  table.integer('type');
+  table.dateTime('date');
+  table.string('fileId', SHORT_STRING_SIZE);
+  table
+    .foreign('fileId')
+    .references('token')
+    .inTable('file');
+};
+
+const createTables = () => {
+  return db.schema
+    .createTableIfNotExists('email', createEmailColumns)
+    .createTableIfNotExists('label', createLabelColumns)
+    .createTableIfNotExists('emailLabel', createEmailLabelColumns)
+    .createTableIfNotExists('user', createUserColumns)
+    .createTableIfNotExists('emailUser', createEmailUserColumns)
+    .createTableIfNotExists('file', createFileColumns)
+    .createTableIfNotExists('open', createOpenColumns);
+};
+
+module.exports = {
+  db,
+  createTables
+};
