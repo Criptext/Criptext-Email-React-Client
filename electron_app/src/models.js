@@ -6,6 +6,16 @@ const SHORT_STRING_SIZE = 32;
 const TINY_STRING_SIZE = 10;
 const LONG_STRING_SIZE = 100;
 
+const Table = {
+  EMAIL: 'email',
+  LABEL: 'label',
+  EMAIL_LABEL: 'emailLabel',
+  USER: 'user',
+  EMAIL_USER: 'emailUser',
+  FILE: 'file',
+  OPEN: 'open'
+};
+
 const db = require('knex')({
   client: 'sqlite3',
   connection: {
@@ -49,11 +59,11 @@ const createEmailLabelColumns = table => {
   table
     .foreign('labelId')
     .references('id')
-    .inTable('label');
+    .inTable(Table.LABEL);
   table
     .foreign('emailId')
     .references('id')
-    .inTable('email');
+    .inTable(Table.EMAIL);
 };
 
 const createEmailUserColumns = table => {
@@ -64,11 +74,11 @@ const createEmailUserColumns = table => {
   table
     .foreign('userId')
     .references('id')
-    .inTable('user');
+    .inTable(Table.USER);
   table
     .foreign('emailId')
     .references('id')
-    .inTable('email');
+    .inTable(Table.EMAIL);
 };
 
 const createFileColumns = table => {
@@ -81,7 +91,7 @@ const createFileColumns = table => {
   table
     .foreign('emailId')
     .references('id')
-    .inTable('email');
+    .inTable(Table.EMAIL);
 };
 
 const createOpenColumns = table => {
@@ -93,21 +103,22 @@ const createOpenColumns = table => {
   table
     .foreign('fileId')
     .references('token')
-    .inTable('file');
+    .inTable(Table.FILE);
 };
 
 const createTables = () => {
   return db.schema
-    .createTableIfNotExists('email', createEmailColumns)
-    .createTableIfNotExists('label', createLabelColumns)
-    .createTableIfNotExists('emailLabel', createEmailLabelColumns)
-    .createTableIfNotExists('user', createUserColumns)
-    .createTableIfNotExists('emailUser', createEmailUserColumns)
-    .createTableIfNotExists('file', createFileColumns)
-    .createTableIfNotExists('open', createOpenColumns);
+    .createTableIfNotExists(Table.EMAIL, createEmailColumns)
+    .createTableIfNotExists(Table.LABEL, createLabelColumns)
+    .createTableIfNotExists(Table.EMAIL_LABEL, createEmailLabelColumns)
+    .createTableIfNotExists(Table.USER, createUserColumns)
+    .createTableIfNotExists(Table.EMAIL_USER, createEmailUserColumns)
+    .createTableIfNotExists(Table.FILE, createFileColumns)
+    .createTableIfNotExists(Table.OPEN, createOpenColumns);
 };
 
 module.exports = {
   db,
-  createTables
+  createTables,
+  Table
 };

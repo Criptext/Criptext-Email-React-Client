@@ -16,17 +16,17 @@ Array [
     "secure": 1,
     "subject": "Greetings",
     "threadId": "hdnfgdgsd",
-    "unread": 0,
+    "unread": 1,
   },
 ]
 `;
 
 exports[`Test DBManager should delete email 1`] = `Array []`;
 
-exports[`Test DBManager should update email to db 1`] = `
+exports[`Test DBManager should update thread emails as read 1`] = `
 Array [
   Object {
-    "content": "Bye bye",
+    "content": "Hello there",
     "date": "2013-10-07 08:23:19.120",
     "delivered": 0,
     "id": 1,
@@ -34,10 +34,10 @@ Array [
     "isMuted": 0,
     "isTrash": 0,
     "key": "hdnfgdgsd",
-    "preview": "Bye bye",
+    "preview": "Hello there",
     "s3Key": "hdnfgdgsd",
     "secure": 1,
-    "subject": "Farewell",
+    "subject": "Greetings",
     "threadId": "hdnfgdgsd",
     "unread": 0,
   },

@@ -1,27 +1,35 @@
-const { db, createTables } = require('./models.js');
+const { db, createTables, Table } = require('./models.js');
 
-const getRows = function(table, where) {
+const getEmailsByThreadId = function(threadId) {
   return db
     .select('*')
-    .from(table)
-    .where(where);
+    .from(Table.EMAIL)
+    .where({
+      threadId
+    });
 };
 
-const insertRows = function(table, params) {
-  return db.table(table).insert(params);
+const addEmail = function(params) {
+  return db.table(Table.EMAIL).insert(params);
 };
 
-const updateRows = function(table, params, where) {
+const markThreadAsRead = function(threadId) {
   return db
-    .table(table)
-    .where(where)
-    .update(params);
+    .table(Table.EMAIL)
+    .where({
+      threadId
+    })
+    .update({
+      unread: false
+    });
 };
 
-const deleteRows = function(table, where) {
+const deleteEmail = function(emailKey) {
   return db
-    .table(table)
-    .where(where)
+    .table(Table.EMAIL)
+    .where({
+      key: emailKey
+    })
     .del();
 };
 
@@ -32,9 +40,9 @@ const closeDB = function() {
 
 module.exports = {
   createTables,
-  getRows,
-  insertRows,
-  updateRows,
-  deleteRows,
+  getEmailsByThreadId,
+  addEmail,
+  markThreadAsRead,
+  deleteEmail,
   closeDB
 };

@@ -9,11 +9,11 @@ beforeAll(async () => {
 
 describe('Test DBManager', () => {
   it('should add email to db', async () => {
-    await DBManager.insertRows('email', {
+    await DBManager.addEmail({
       key: 'hdnfgdgsd',
       threadId: 'hdnfgdgsd',
       s3Key: 'hdnfgdgsd',
-      unread: false,
+      unread: true,
       secure: true,
       content: 'Hello there',
       preview: 'Hello there',
@@ -25,39 +25,19 @@ describe('Test DBManager', () => {
       isMuted: false
     });
 
-    const emails = await DBManager.getRows('email', {
-      threadId: 'hdnfgdgsd'
-    });
+    const emails = await DBManager.getEmailsByThreadId('hdnfgdgsd');
     expect(emails).toMatchSnapshot();
   });
 
-  it('should update email to db', async () => {
-    await DBManager.updateRows(
-      'email',
-      {
-        content: 'Bye bye',
-        preview: 'Bye bye',
-        subject: 'Farewell'
-      },
-      {
-        key: 'hdnfgdgsd'
-      }
-    );
-
-    const emails = await DBManager.getRows('email', {
-      threadId: 'hdnfgdgsd'
-    });
+  it('should update thread emails as read', async () => {
+    await DBManager.markThreadAsRead('hdnfgdgsd');
+    const emails = await DBManager.getEmailsByThreadId('hdnfgdgsd');
     expect(emails).toMatchSnapshot();
   });
 
   it('should delete email', async () => {
-    await DBManager.deleteRows('email', {
-      key: 'hdnfgdgsd'
-    });
-
-    const emails = await DBManager.getRows('email', {
-      threadId: 'hdnfgdgsd'
-    });
+    await DBManager.deleteEmail('hdnfgdgsd');
+    const emails = await DBManager.getEmailsByThreadId('hdnfgdgsd');
     expect(emails).toMatchSnapshot();
   });
 
