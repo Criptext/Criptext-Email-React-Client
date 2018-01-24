@@ -12,9 +12,7 @@ class Feed extends Component {
     if (!props.isRemoved) {
       return (
         <li
-          className={
-            'feed-item ' + (props.feed.get('unread') ? 'unread-feed' : '')
-          }
+          className={'feed-item ' + (props.feed.get('unread') ? 'unread-feed' : '')}
           onClick={this.onSelectFeed}
         >
           <Link to={`/inbox/${props.feed.get('threadId')}`}>
@@ -64,11 +62,11 @@ class Feed extends Component {
   renderFeedIcon = feed => {
     switch (feed.get('cmd')) {
       case FeedCommand.SENT.value:
-        return <i className={FeedCommand.SENT.icon} />;
+        return <i className={FeedCommand.SENT.icon}></i>;
       case FeedCommand.EXPIRED.value:
-        return <i className={FeedCommand.EXPIRED.icon} />;
+        return <i className={FeedCommand.EXPIRED.icon}></i>;
       case FeedCommand.OPENED.value:
-        return <i className={FeedCommand.OPENED.icon} />;
+        return <i className={FeedCommand.OPENED.icon}></i>;
       default:
         return null;
     }
@@ -78,9 +76,9 @@ class Feed extends Component {
     if (props.hovering) {
       return (
         <div className="feed-actions">
-          {this.renderNotificationIcon(props.feed.get('isMuted'))}
+          {this.renderNotificationIcon(props.isMuted)}
           <div className="feed-delete" onClick={this.removeFeedFromPanel}>
-            <i className="icon-trash" />
+            <i className="icon-trash"></i>
           </div>
         </div>
       );
@@ -96,13 +94,13 @@ class Feed extends Component {
     if (isMuted) {
       return (
         <div className="feed-mute" onClick={this.onToggleMute}>
-          <i className="icon-bell-mute" />
+          <i className="icon-bell-mute"></i>
         </div>
       );
     }
     return (
       <div className="feed-mute" onClick={this.onToggleMute}>
-        <i className="icon-bell" />
+        <i className="icon-bell"></i>
       </div>
     );
   };

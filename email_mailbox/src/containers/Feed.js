@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import * as actions from '../actions/index';
+import { muteNotifications, removeFeed, selectFeed } from '../actions/index';
 import FeedWrapperView from '../components/FeedWrapper';
 
 const mapStateToProps = (state, ownProps) => {
@@ -8,7 +8,7 @@ const mapStateToProps = (state, ownProps) => {
   let isMuted = false;
   threads.forEach(thread => {
     if (thread.get('id') === feed.get('threadId')) {
-      isMuted = thread.get('allowNotifications');
+      isMuted = !thread.get('allowNotifications');
     }
   });
   return {
@@ -19,13 +19,13 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     onSelectFeed: feedPos => {
-      dispatch(actions.selectFeed(feedPos));
+      dispatch(selectFeed(feedPos));
     },
     onRemoveFeed: feedId => {
-      dispatch(actions.removeFeed(feedId));
+      dispatch(removeFeed(feedId));
     },
     toggleMute: threadId => {
-      dispatch(actions.muteNotifications(threadId));
+      dispatch(muteNotifications(threadId));
     }
   };
 };

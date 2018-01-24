@@ -7,8 +7,7 @@ class FeedWrapper extends Component {
     super(props);
     this.state = {
       hovering: false,
-      isRemoved: false,
-      isMuted: this.props.isMuted
+      isRemoved: false
     };
   }
 
@@ -41,7 +40,6 @@ class FeedWrapper extends Component {
       <Feed
         {...this.props}
         hovering={this.state.hovering}
-        isMuted={this.state.isMuted}
         isRemoved={this.state.isRemoved}
         onCleanRemove={this.onCleanRemove}
         onRegionEnter={this.onRegionEnter}

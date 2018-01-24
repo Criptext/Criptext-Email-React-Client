@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './activitypanel.css';
-import FeedWrapper from './../containers/Feed';
+import Feed from './../containers/Feed';
 
 class ActivityPanel extends Component {
   render() {
@@ -37,7 +37,7 @@ class ActivityPanel extends Component {
             <p className="text">{listName}</p>
           </li>
           {feedList.map((feed, index) => {
-            return <FeedWrapper key={index} feed={feed} />;
+            return <Feed key={index} feed={feed} />;
           })}
         </ul>
       );

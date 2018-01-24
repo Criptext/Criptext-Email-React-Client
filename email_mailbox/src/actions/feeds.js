@@ -1,23 +1,9 @@
-import { Feed, Thread } from './types';
+import { Feed } from './types';
 
 export const addFeeds = feeds => {
   return {
     type: Feed.ADD_BATCH,
     feeds: feeds
-  };
-};
-
-export const muteNotifications = threadId => {
-  return {
-    type: Thread.MUTE,
-    targetThread: threadId
-  };
-};
-
-export const toggleMuteFeed = feedId => {
-  return {
-    type: Feed.TOGGLE_MUTE,
-    targetFeed: feedId
   };
 };
 

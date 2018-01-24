@@ -8,6 +8,7 @@ import {
   markThreadsRead,
   moveThreads,
   multiSelectThread,
+  muteNotifications,
   selectThread,
   removeThread,
   removeThreadLabel,
@@ -22,7 +23,6 @@ import { addLabels, addLabel, loadLabels } from './labels';
 import {
   addFeeds,
   loadFeeds,
-  muteNotifications,
   removeFeed,
   selectFeed,
   toggleMuteFeed
