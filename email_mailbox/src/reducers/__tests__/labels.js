@@ -3,6 +3,8 @@
 import labelReducer from './../labels';
 import * as actions from '../../actions/index';
 
+jest.mock('../../utils/electronInterface');
+
 describe('label actions: ', () => {
   it('should add labels to state', () => {
     const labels = {
