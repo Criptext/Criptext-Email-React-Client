@@ -19,8 +19,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoadThreads: () => {
-      dispatch(loadThreads(dispatch));
+    onLoadThreads: timestamp => {
+      dispatch(loadThreads(timestamp));
     },
     onUnreadToggle: enabled => {
       dispatch(filterThreadsByUnread(enabled));

@@ -185,10 +185,9 @@ class ThreadItem extends Component {
   };
 
   willRenderLabels = (labels, threadId) => {
-    if (!labels || labels.size === 0) {
+    if (!labels || labels.size === 0 || this.props.labels.size === 0) {
       return null;
     }
-
     const labelColor = randomcolor({
       seed: labels.first(),
       luminosity: 'bright'

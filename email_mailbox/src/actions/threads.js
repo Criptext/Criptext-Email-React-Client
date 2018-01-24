@@ -1,4 +1,5 @@
 import { Thread } from './types';
+import { getThreads } from '../utils/electronInterface';
 
 export const addThreads = threads => ({
   type: Thread.ADD_BATCH,
@@ -90,12 +91,11 @@ export const muteNotifications = threadId => {
   };
 };
 
-export const loadThreads = () => {
+export const loadThreads = timestamp => {
   return async dispatch => {
     try {
-      const response = await fetch('/threads.json');
-      const json = await response.json();
-      dispatch(addThreads(json.threads));
+      const threads = await getThreads(timestamp);
+      dispatch(addThreads(threads));
     } catch (e) {
       // TO DO
     }

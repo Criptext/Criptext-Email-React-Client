@@ -16,7 +16,7 @@ const ItemTooltip = props => (
 );
 
 ItemTooltip.propTypes = {
-  target: PropTypes.number,
+  target: PropTypes.string,
   tip: PropTypes.string
 };
 

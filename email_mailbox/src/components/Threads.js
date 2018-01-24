@@ -136,7 +136,8 @@ class Threads extends Component {
     const scrollHeight = e.target.scrollHeight;
 
     if (scrollTop + height > scrollHeight - 25) {
-      this.props.onLoadThreads();
+      const lastThread = this.props.threads.last();
+      this.props.onLoadThreads(lastThread.get('timestamp'));
     }
   };
 }

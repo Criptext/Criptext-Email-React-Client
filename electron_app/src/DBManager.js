@@ -9,6 +9,16 @@ const getEmailsByThreadId = function(threadId) {
     });
 };
 
+const getThreads = function(timestamp, limit, offset) {
+  return db
+    .select('*')
+    .from(Table.EMAIL)
+    .limit(limit || 20)
+    .offset(offset || 0)
+    .orderBy('date', 'DESC')
+    .where('date', '<', timestamp || 'now');
+};
+
 const addEmail = function(params) {
   return db.table(Table.EMAIL).insert(params);
 };
@@ -44,5 +54,6 @@ module.exports = {
   addEmail,
   markThreadAsRead,
   deleteEmail,
-  closeDB
+  closeDB,
+  getThreads
 };
