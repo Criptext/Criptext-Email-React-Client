@@ -7,7 +7,8 @@ class EmailWrapper extends Component {
     super();
     this.state = {
       displayEmail: false,
-      displayMenu: false
+      displayPopOverEmailDetail: false,
+      displayPopOverMenuAction: false
     };
   }
 
@@ -15,9 +16,11 @@ class EmailWrapper extends Component {
     return (
       <Email
         displayEmail={this.state.displayEmail}
-        displayMenu={this.state.displayMenu}
+        displayPopOverEmailDetail={this.state.displayPopOverEmailDetail}
+        displayPopOverMenuAction={this.state.displayPopOverMenuAction}
         onToggleEmail={this.onToggleEmail}
-        onToogleMenu={this.onToggleMenu}
+        onTooglePopOverEmailDetail={this.onTooglePopOverEmailDetail}
+        onTogglePopOverMenuAction={this.onTogglePopOverMenuAction}
         {...this.props}
       />
     );
@@ -31,9 +34,15 @@ class EmailWrapper extends Component {
     }
   };
 
-  onToggleMenu = () => {
+  onTooglePopOverEmailDetail = () => {
     this.setState({
-      displayMenu: !this.state.displayMenu
+      displayPopOverEmailDetail: !this.state.displayPopOverEmailDetail
+    });
+  };
+
+  onTogglePopOverMenuAction = () => {
+    this.setState({
+      displayPopOverMenuAction: !this.state.displayPopOverMenuAction
     });
   };
 }
