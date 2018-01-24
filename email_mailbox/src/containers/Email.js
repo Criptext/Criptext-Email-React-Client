@@ -8,7 +8,8 @@ const mapStateToProps = (state, ownProps) => {
     date: TimeUtils.defineTimeByToday(email.get('date'))
   });
   return {
-    email: myEmail
+    email: myEmail,
+    classStatus: myEmail.get('unsent') ? 'email-unsent' : 'email-normal'
   };
 };
 

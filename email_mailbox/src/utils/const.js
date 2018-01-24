@@ -6,7 +6,7 @@ export const MailItems = [
   },
   {
     id: 'sent',
-    icon: 'icon-sent-right',
+    icon: 'icon-sent',
     text: 'Sent'
   },
   {

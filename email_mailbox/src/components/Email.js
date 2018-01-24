@@ -10,7 +10,7 @@ const Email = props =>
 
 const renderEmailCollapse = props => (
   <div
-    className="email-container email-container-collapse"
+    className={`email-container email-container-collapse ${props.classStatus}`}
     onClick={props.onToggleEmail}
   >
     <span className="email-preview-from">{props.email.get('from')}</span>
@@ -36,15 +36,23 @@ const renderEmailExpand = props => (
           <span className="email-header-info-from">
             {props.email.get('from')}
           </span>
-          <span className="email-header-info-to">
-            Allison, Daniel, Gabriel, 2 others
-          </span>
+          <div>
+            <span className="email-header-info-to">
+              Allison, Daniel, Gabriel, 2 others
+            </span>
+            <i className="icon-arrow-down" />
+          </div>
         </div>
         <div className="email-detail-info">
           <span>{props.email.get('date')}</span>
           <i className="icon-bell" />
           <i className="icon-replay" />
-          <i className="icon-dots" />
+          <i
+            id="email-more"
+            className="icon-dots"
+            onClick={props.onToogleMenu}
+          />
+          {props.displayMenu ? renderMenu() : null}
         </div>
       </div>
       <div className="email-body">
@@ -56,7 +64,7 @@ const renderEmailExpand = props => (
             <i className="icon-checked" />
           </div>
           <button className="button-a button-unsend">
-            <i className="icon-sent-left" />
+            <i className="icon-unsend" />
             <span>unsend</span>
           </button>
         </div>
@@ -89,14 +97,45 @@ const renderEmailExpand = props => (
   </div>
 );
 
+const renderMenu = () => (
+  <div className="email-more-menu">
+    <ul>
+      <li>
+        <span>Replay</span>
+      </li>
+      <li>
+        <span>Replay All</span>
+      </li>
+      <li>
+        <span>Forward</span>
+      </li>
+      <li>
+        <span>Delete</span>
+      </li>
+      <li>
+        <span>Mark as Unread</span>
+      </li>
+      <li>
+        <span>Mark as Spam</span>
+      </li>
+      <li>
+        <span>Print</span>
+      </li>
+    </ul>
+  </div>
+);
+
 renderEmailCollapse.propTypes = {
+  classStatus: PropTypes.string,
   email: PropTypes.object,
   onToggleEmail: PropTypes.func
 };
 
 renderEmailExpand.propTypes = {
+  displayMenu: PropTypes.bool,
   email: PropTypes.object,
-  onToggleEmail: PropTypes.func
+  onToggleEmail: PropTypes.func,
+  onToogleMenu: PropTypes.func
 };
 
 Email.propTypes = {

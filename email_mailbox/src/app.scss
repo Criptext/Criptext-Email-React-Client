@@ -211,10 +211,10 @@ TABLE OF CONTENTS
 .icon-bell:before {
   content: "\e901";
 }
-.icon-sent-right:before {
+.icon-unsend:before {
   content: "\e90d";
 }
-.icon-sent-left:before {
+.icon-sent:before {
   content: "\e916";
 }
 .icon-replay:before {
@@ -253,6 +253,9 @@ TABLE OF CONTENTS
 .icon-minus:before {
   content: "\e921";
 }
+.icon-exit:before {
+  content: "\e924";
+}
 .icon-arrow-down:before {
   content: "\e91e";
 }
@@ -267,6 +270,9 @@ TABLE OF CONTENTS
 }
 .icon-box:before {
   content: "\e915";
+}
+.icon-download:before {
+  content: "\e925";
 }
 .icon-archive:before {
   content: "\e91a";

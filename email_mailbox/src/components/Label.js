@@ -5,7 +5,7 @@ import './label.css';
 const Label = props => (
   <div className="label-tag" style={{ backgroundColor: props.color }}>
     <span>{props.text}</span>
-    <i className="icon-plus" />
+    <i className="icon-exit" />
   </div>
 );
 

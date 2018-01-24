@@ -35,3 +35,44 @@
   font-weight: 500;
   margin: 0 10px;
 }
+
+.attach-download{
+  align-items: center;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  display: flex;
+  position: relative;
+
+  >div {
+    align-items: center;
+    background-color: black;
+    display: flex;
+    height: 23px;
+    position: absolute;
+    border-radius: 50%;
+    right: 6px;
+    top: 5px;
+    width: 23px;
+
+    i{
+      color: white;
+      margin: 0 auto;
+      position: relative;
+      top: -1px;
+    }
+  }
+}
+
+button.button-attach-preview{
+  background-color: transparent;
+  border: solid 1px #818080;
+  margin: 0 auto;
+
+  span{
+    font-size: 10px;
+    font-weight: 300;
+    margin: 0 20px;
+    top: 1px;
+  }
+}

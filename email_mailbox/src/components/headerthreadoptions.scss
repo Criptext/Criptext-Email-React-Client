@@ -45,11 +45,20 @@
   margin: 0;
 
   li{
-    padding: 7px 16px;
+    align-items: center;
+    display: flex;
+    height: 30px;
+    padding-left: 16px;
     
     &:hover{
       background-color: #edf5ff;
       cursor: pointer;
+    }
+
+    span{
+      color: black;
+      font-size: 13px;
+      font-weight: 200;
     }
   }
 
@@ -58,6 +67,6 @@
   }
 
   .checkmark-container{
-    margin-left: 31px;
+    margin-left: 16px;
   }
 }
