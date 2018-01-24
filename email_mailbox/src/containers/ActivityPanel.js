@@ -80,16 +80,6 @@ const mapDispatchToProps = dispatch => {
   return {
     onLoadFeeds: () => {
       dispatch(actions.loadFeeds());
-    },
-    onSelectFeed: feedPos => {
-      dispatch(actions.selectFeed(feedPos));
-    },
-    onRemoveFeed: feedId => {
-      dispatch(actions.removeFeed(feedId));
-    },
-    toggleMute: (threadId, feedId) => {
-      dispatch(actions.muteNotifications(threadId));
-      dispatch(actions.toggleMuteFeed(feedId));
     }
   };
 };

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import './activitypanel.css';
 import FeedWrapper from './../containers/Feed';
 
-
 class ActivityPanel extends Component {
-
   render() {
     return (
       <aside className="navigation-feed">
@@ -27,11 +25,9 @@ class ActivityPanel extends Component {
     );
   }
 
-
   componentDidMount() {
     this.props.onLoadFeeds();
   }
-
 
   renderFeedList = (feedList, listName) => {
     if (feedList && feedList.size > 0) {
@@ -41,16 +37,13 @@ class ActivityPanel extends Component {
             <p className="text">{listName}</p>
           </li>
           {feedList.map((feed, index) => {
-            return (
-              <FeedWrapper key={index} feed={feed} />
-            );
+            return <FeedWrapper key={index} feed={feed} />;
           })}
         </ul>
       );
     }
     return null;
   };
-
 
   renderHeaderIcon = () => {
     return (
@@ -59,7 +52,6 @@ class ActivityPanel extends Component {
       </div>
     );
   };
-
 }
 
 ActivityPanel.propTypes = {

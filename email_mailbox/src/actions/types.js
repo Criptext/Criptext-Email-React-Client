@@ -14,7 +14,7 @@ export const Thread = {
   SEARCH_THREADS: 'SEARCH_THREADS',
   MOVE_THREADS: 'MOVE_THREADS',
   READ_THREADS: 'READ_THREADS',
-  MUTE_THREAD: 'MUTE_THREAD'
+  MUTE: 'MUTE_THREAD'
 };
 
 export const User = {

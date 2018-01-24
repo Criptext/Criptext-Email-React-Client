@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Feed from './Feed';
 
 class FeedWrapper extends Component {
-
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       hovering: false,
-      isRemoved: false
+      isRemoved: false,
+      isMuted: this.props.isMuted
     };
   }
-
 
   onRegionEnter = () => {
     this.setState({
@@ -18,13 +18,11 @@ class FeedWrapper extends Component {
     });
   };
 
-
   onRegionLeave = () => {
     this.setState({
       hovering: false
     });
   };
-
 
   onRemove = () => {
     this.setState({
@@ -32,13 +30,11 @@ class FeedWrapper extends Component {
     });
   };
 
-
   onCleanRemove = () => {
     this.setState({
       isRemoved: false
     });
   };
-
 
   render() {
     return (
@@ -54,9 +50,10 @@ class FeedWrapper extends Component {
       />
     );
   }
+}
 
+FeedWrapper.propTypes = {
+  isMuted: PropTypes.bool
 };
-
-
 
 export default FeedWrapper;

@@ -9,7 +9,7 @@ export const addFeeds = feeds => {
 
 export const muteNotifications = threadId => {
   return {
-    type: Thread.MUTE_THREAD,
+    type: Thread.MUTE,
     targetThread: threadId
   };
 };

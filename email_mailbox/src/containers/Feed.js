@@ -1,15 +1,18 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import FeedWrapperView from '../components/FeedWrapper';
-import * as TimeUtils from '../utils/TimeUtils';
 
-
-const mapStateToProps = state => {
-  const feeds = state.get('feeds');
+const mapStateToProps = (state, ownProps) => {
+  const feed = ownProps.feed;
   const threads = state.get('threads');
+  let isMuted = false;
+  threads.forEach(thread => {
+    if (thread.get('id') === feed.get('threadId')) {
+      isMuted = thread.get('allowNotifications');
+    }
+  });
   return {
-  	feeds: feeds,
-  	threads: threads
+    isMuted: isMuted
   };
 };
 
@@ -21,14 +24,12 @@ const mapDispatchToProps = dispatch => {
     onRemoveFeed: feedId => {
       dispatch(actions.removeFeed(feedId));
     },
-    toggleMute: (threadId, feedId) => {
+    toggleMute: threadId => {
       dispatch(actions.muteNotifications(threadId));
     }
   };
 };
 
-const Feed = connect(mapStateToProps, mapDispatchToProps)(
-  FeedWrapperView
-);
+const Feed = connect(mapStateToProps, mapDispatchToProps)(FeedWrapperView);
 
 export default Feed;

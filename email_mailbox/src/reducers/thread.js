@@ -157,7 +157,7 @@ export default (state = List([]), action) => {
         );
       });
     }
-    case Thread.MUTE_THREAD: {
+    case Thread.MUTE: {
       const item = state.find(
         thread => thread.get('id') === action.targetThread
       );

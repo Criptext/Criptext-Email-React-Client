@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { FeedCommand } from './../utils/const';
 
-
 class Feed extends Component {
-  
   render() {
     return <div>{this.renderFeedItem(this.props)}</div>;
   }
@@ -25,7 +23,7 @@ class Feed extends Component {
               onMouseEnter={props.onRegionEnter}
               onMouseLeave={props.onRegionLeave}
             >
-              <div className="feed-icon">{this.renderFeedIcon(this.props.feed)}</div>
+              <div className="feed-icon">{this.renderFeedIcon(props.feed)}</div>
               <div className="feed-data">
                 <div className="feed-preview">
                   <div className="feed-title">
@@ -36,7 +34,7 @@ class Feed extends Component {
                   </div>
                 </div>
                 <div className="feed-actions-time">
-                  {this.renderFeedActions(props.feed)}
+                  {this.renderFeedActions(props)}
                 </div>
               </div>
               <div className="feed-clear" />
@@ -57,11 +55,30 @@ class Feed extends Component {
     );
   };
 
-  renderFeedActions = feed => {
-    if (this.props.hovering) {
+  onSelectFeed = () => {
+    if (this.props.feed.get('unread')) {
+      this.props.onSelectFeed(this.props.feed.get('id'));
+    }
+  };
+
+  renderFeedIcon = feed => {
+    switch (feed.get('cmd')) {
+      case FeedCommand.SENT.value:
+        return <i className={FeedCommand.SENT.icon} />;
+      case FeedCommand.EXPIRED.value:
+        return <i className={FeedCommand.EXPIRED.icon} />;
+      case FeedCommand.OPENED.value:
+        return <i className={FeedCommand.OPENED.icon} />;
+      default:
+        return null;
+    }
+  };
+
+  renderFeedActions = props => {
+    if (props.hovering) {
       return (
         <div className="feed-actions">
-          {this.renderNotificationIcon(this.props.feed.get('isMuted'))}
+          {this.renderNotificationIcon(props.feed.get('isMuted'))}
           <div className="feed-delete" onClick={this.removeFeedFromPanel}>
             <i className="icon-trash" />
           </div>
@@ -70,7 +87,7 @@ class Feed extends Component {
     }
     return (
       <div className="feed-time">
-        <span>{feed.get('time')}</span>
+        <span>{props.feed.get('time')}</span>
       </div>
     );
   };
@@ -93,77 +110,35 @@ class Feed extends Component {
   onToggleMute = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.props.toggleMute();
-  };
-
-  onSelectFeed = () => {
-    this.props.onSelectFeed(this.props.feed);
+    this.props.toggleMute(this.props.feed.get('threadId'));
   };
 
   removeFeedFromPanel = ev => {
     ev.preventDefault();
     ev.stopPropagation();
     this.props.onRemove();
-    window.setTimeout(() => {
-      this.props.onRemoveFeed(this.props.feed);
+    setTimeout(() => {
+      this.removeFeed(this.props.feed);
       this.props.onCleanRemove();
     }, 1500);
-  };
-
-
-
-
-
-
-  onSelectFeed = feed => {
-    if (feed.get('unread')) {
-      this.props.onSelectFeed(feed.get('id'));
-    }
   };
 
   removeFeed = feed => {
     this.props.onRemoveFeed(feed.get('id'));
   };
-
-  toggleMute = feed => {
-    const threadId = feed.get('threadId');
-    const feedId = feed.get('id');
-    this.props.toggleMute(threadId, feedId);
-  };
-
-  renderFeedIcon = feed => {
-    switch (feed.get('cmd')) {
-      case FeedCommand.SENT.value:
-        return <i className={FeedCommand.SENT.icon} />;
-      case FeedCommand.EXPIRED.value:
-        return <i className={FeedCommand.EXPIRED.icon} />;
-      case FeedCommand.OPENED.value:
-        return <i className={FeedCommand.OPENED.icon} />;
-      default:
-        return null;
-    }
-  };
-
-
-
-
-
-
 }
 
 Feed.propTypes = {
   feed: PropTypes.object,
+  hovering: PropTypes.bool,
+  isRemoved: PropTypes.bool,
+  onCleanRemove: PropTypes.func,
   onRegionEnter: PropTypes.func,
   onRegionLeave: PropTypes.func,
-  renderIcon: PropTypes.func,
-  hovering: PropTypes.bool,
-  isMuted: PropTypes.bool,
-  isRemoved: PropTypes.bool,
-  toggleMute: PropTypes.func,
-  onSelectFeed: PropTypes.func,
   onRemove: PropTypes.func,
   onRemoveFeed: PropTypes.func,
-  onCleanRemove: PropTypes.func
+  onSelectFeed: PropTypes.func,
+  toggleMute: PropTypes.func
 };
 
 export default Feed;
