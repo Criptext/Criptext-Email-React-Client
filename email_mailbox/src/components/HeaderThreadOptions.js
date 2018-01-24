@@ -138,14 +138,16 @@ class HeaderThreadOptions extends Component {
   renderLabels = () => {
     return this.props.labels.reduce((labelsView, label) => {
       labelsView.push(
-        <CustomCheckbox
-          key={label.id}
-          onCheck={checked => {
-            this.onTriggerLabel(checked, label.id);
-          }}
-          label={label.text}
-          status={label.checked}
-        />
+        <li>
+          <CustomCheckbox
+            key={label.id}
+            onCheck={checked => {
+              this.onTriggerLabel(checked, label.id);
+            }}
+            label={label.text}
+            status={label.checked}
+          />
+        </li>
       );
       return labelsView;
     }, []);

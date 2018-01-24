@@ -55,18 +55,15 @@
       cursor: pointer;
     }
 
-    span{
-      color: black;
-      font-size: 13px;
-      font-weight: 200;
+    .checkmark-container{
+  
+      &:hover{
+        background-color: transparent;
+      }
     }
   }
 
   &::-webkit-scrollbar { 
       display: none; 
-  }
-
-  .checkmark-container{
-    margin-left: 16px;
   }
 }
