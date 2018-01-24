@@ -9,9 +9,7 @@ const mapStateToProps = (state, ownProps) => {
     thread => thread.get('id') === feed.get('threadId')
   );
   const isMuted = item === undefined ? false : !item.get('allowNotifications');
-  return {
-    isMuted: isMuted
-  };
+  return { isMuted };
 };
 
 const mapDispatchToProps = dispatch => {
