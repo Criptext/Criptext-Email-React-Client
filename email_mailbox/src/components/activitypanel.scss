@@ -3,9 +3,13 @@
 aside.navigation-feed{
   font-family: 'NunitoSans';
   font-size: 0.9em;
-  display: inline-table;
-  width: 288px;
   overflow: hidden;
+  width: 288px;
+  display: inline-table;
+  height: 100%;
+  position: relative;
+  top: 0px;
+  bottom: 0px;
 
   header{
     background-color: #f7f7f8;
@@ -19,12 +23,12 @@ aside.navigation-feed{
         width: 20%;
         margin: 0%;
         float: left;
-        font-size: 20px;
+        font-size: 24px;
         text-align: center;
 
         i {
           position: relative;
-          top: calc(50% - 11px);
+          top: calc(50% - 13px);
           color: #000000;
         }
 
@@ -67,10 +71,6 @@ aside.navigation-feed{
         margin: 0%;
         float: left;
         font-weight: 900;
-        font-style: normal;
-        font-stretch: normal;
-        line-height: normal;
-        letter-spacing: normal;
         text-align: left;
         color: #000000;
       }
@@ -100,13 +100,42 @@ aside.navigation-feed{
 
   nav {
     overflow: auto;
+    height: calc(100% - 61px);
 
-    hr {
-      margin: 0px 0px 0px 10px;
-      border: 0;
-      height: 0;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    .empty-feed-content {
+      height: 110px;
+      width: 155px;
+      text-align: center;
+      margin: 60% auto;
+
+      .empty-list-image {
+        height: 50%;
+        margin-bottom: 10%;
+
+        .empty-icon {
+          height: 100%;
+          width: 32%;
+          position: relative;
+          left: 30%;
+          background: url(#{$_PATH_TO_IMAGES}/icon-notification.png) no-repeat center center;
+          background-size: 100%;
+        }
+
+      }
+
+      p {
+        margin: 0px;
+      }
+      .text {
+        height: 50%;
+        
+        .title {
+          color: #000000;
+        }
+        .subtitle {
+          color: #9b9b9b;
+        }
+      }
     }
 
     .new-feeds{
@@ -125,6 +154,46 @@ aside.navigation-feed{
           padding-top: 12px;
           margin: 0% 0% 2% 0%;
         }
+      }
+
+      .deleted-feed {
+        height: 55px;
+        padding: 0%;
+        margin: 0%;
+        background-color: #dc4d48;
+        color: #ffffff;
+
+        .deleted-feed-icon {
+          margin: 0%;
+          width: 19%;
+          height: 100%;
+          float: left;
+          text-align: center;
+          font-size: 18px;
+          color: #ffffff;
+
+          i {
+            position:relative;
+            top: calc(50% - 9px);
+          }
+        }
+
+        .deleted-feed-content {
+          height: 100%;
+          width: 81%;
+          padding: 0%;
+          margin: 0%;
+          text-align: left;
+          line-height: 100%;
+          font-weight: 600;
+          float: right;
+
+          span {
+            position: relative;
+            top: 38%;
+          }
+        }
+
       }
       
       .feed-item {
@@ -153,53 +222,94 @@ aside.navigation-feed{
           }
 
           .feed-data {
-            width: 81%;
-            padding: 12px 0px 10px 0px;
-            margin: 0%;
+            height: 100%;
+            width: 72%;
+            padding: 0%;
+            margin: 0% 9% 0% 0%;
             float: right;
             text-align: left;
             color: #000000;
 
-            .feed-title {
-              height: 16px;
-              font-size: 12px;
-              white-space: nowrap; 
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-
-            .feed-subject {
-              color: #9b9b9b;
-              float: left;
+            .feed-preview {
+              width: 75%;
+              height: 31px;
+              padding: 12px 0px 12px 0px;
               margin: 0%;
-              width: 70%;
-              font-size: 12px;
-              white-space: nowrap; 
-              overflow: hidden;
-              text-overflow: ellipsis;
+              float: left;
+
+              .feed-title {
+                width: 100%;
+                height: 16px;
+                font-size: 12px;
+                white-space: nowrap; 
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .feed-subject {
+                width: 100%;
+                color: #9b9b9b;
+                float: left;
+                margin: 0%;
+                font-size: 12px;
+                white-space: nowrap; 
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
             }
 
-            .feed-time {
-              font-size: 10px;
-              margin: 0px 26px 0px 0px;
-              padding-top: 2px;
-              width: 40px;
-              height: 14px;
-              text-align: left;
-              float: right;
-            }
+            .feed-actions-time {
+              width: 25%;
+              height: 31px;
+              padding: 12px 0px 12px 0px;
+              margin: 0%;
+              float: left;
+              text-align: right;
+              color: #dcdde0;
 
-            .feed-clear {
-              clear: both;
+              .feed-time {
+                width: 100%;
+                font-size: 10px;
+                position: relative;
+                bottom: -20px;
+              }
+
+              .feed-actions {
+                height: 100%;
+                width: 100%;
+
+                .feed-mute {
+                  font-size: 18px;
+                  height: 50%;
+                  i {
+                    position: relative;
+                    top: -3px;
+                  }
+                  i:hover {
+                    color: #c2c2c2;
+                  }
+                }
+
+                .feed-delete {
+                  height: 50%;
+                  i {
+                    position: relative;
+                    right: 2px;
+                    bottom: -3px;
+                  }
+                  i:hover {
+                    color: #c2c2c2;
+                  }
+                }
+
+              }
             }
           }
 
           .feed-clear {
             clear: both;
           }
-
         }
-
       }
 
       .unread-feed {
@@ -211,17 +321,21 @@ aside.navigation-feed{
             }
           }
           .feed-data {
-            .feed-title {
-              font-weight: bold;
-            }
-            .feed-time {
-              font-weight: bold;
-              font-style: normal;
+            .feed-preview {
+              .feed-title {
+                 font-weight: bold;
+               }
+             }
+            .feed-actions-time {
+              .feed-time {
+                font-weight: bold;
+                font-style: normal;
+                color: #000000;
+              }
             }
           }
         }
       }
-
 
     }
 

@@ -21,6 +21,9 @@ export default (state = List([]), action) => {
       }
       return state;
     }
+    case Feed.REMOVE: {
+      return state.filter(feed => feed.get('id') !== action.targetFeed);
+    }
     default:
       return state;
   }

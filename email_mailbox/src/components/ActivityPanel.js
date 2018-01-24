@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import './activitypanel.css';
-import Feed from './Feed';
-import { FeedCommand } from './../utils/const';
+import Feed from './../containers/Feed';
 
 class ActivityPanel extends Component {
   render() {
@@ -20,8 +18,7 @@ class ActivityPanel extends Component {
           </div>
         </header>
         <nav>
-          {this.renderFeedList(this.props.newFeeds, 'NEW')}
-          {this.renderFeedList(this.props.oldFeeds, 'OLDER')}
+          {this.renderFeedSection(this.props.newFeeds, this.props.oldFeeds)}
         </nav>
       </aside>
     );
@@ -31,6 +28,26 @@ class ActivityPanel extends Component {
     this.props.onLoadFeeds();
   }
 
+  renderHeaderIcon = () => {
+    return (
+      <div className="feed-header-icon">
+        <i className={'icon-bell'} />
+      </div>
+    );
+  };
+
+  renderFeedSection = (newFeeds, oldFeeds) => {
+    if (newFeeds.size < 1 && oldFeeds.size < 1) {
+      return <div>{this.renderEmptyFeedSection()}</div>;
+    }
+    return (
+      <div>
+        {this.renderFeedList(newFeeds, 'NEW')}
+        {this.renderFeedList(oldFeeds, 'OLDER')}
+      </div>
+    );
+  };
+
   renderFeedList = (feedList, listName) => {
     if (feedList && feedList.size > 0) {
       return (
@@ -39,18 +56,7 @@ class ActivityPanel extends Component {
             <p className="text">{listName}</p>
           </li>
           {feedList.map((feed, index) => {
-            return (
-              <li key={index} onClick={() => this.onSelectFeed(feed)}>
-                <Link to={`/inbox/${feed.get('threadId')}`}>
-                  <Feed
-                    key={index}
-                    feed={feed}
-                    unread={feed.get('unread')}
-                    renderIcon={() => this.renderFeedIcon(feed.get('cmd'))}
-                  />
-                </Link>
-              </li>
-            );
+            return <Feed key={index} feed={feed} />;
           })}
         </ul>
       );
@@ -58,32 +64,16 @@ class ActivityPanel extends Component {
     return null;
   };
 
-  onSelectFeed = feed => {
-    if (feed.get('unread')) {
-      this.props.onSelectFeed(feed.get('id'));
-    }
-  };
-
-  renderFeedIcon = cmd => {
-    switch (cmd) {
-      case FeedCommand.SENT:
-        return <i className="icon-calendar" />;
-      case FeedCommand.EXPIRED:
-        return <i className="icon-attach" />;
-      case FeedCommand.OPENED:
-        return <i className="icon-checked" />;
-      default:
-        return null;
-    }
-  };
-
-  renderHeaderIcon = () => {
+  renderEmptyFeedSection = () => {
     return (
-      <div className="feed-header-icon">
-        <i
-          className={'icon-bell ' + this.props.badgeClass}
-          data-badge={this.props.badgeData}
-        />
+      <div className="empty-feed-content">
+        <div className="empty-list-image">
+          <div className="empty-icon" />
+        </div>
+        <div className="text">
+          <p className="title">There&#39;s nothing new yet</p>
+          <p className="subtitle">Enjoy your day</p>
+        </div>
       </div>
     );
   };
@@ -91,11 +81,8 @@ class ActivityPanel extends Component {
 
 ActivityPanel.propTypes = {
   newFeeds: PropTypes.object,
-  badgeClass: PropTypes.string,
-  badgeData: PropTypes.string,
   oldFeeds: PropTypes.object,
-  onLoadFeeds: PropTypes.func,
-  onSelectFeed: PropTypes.func
+  onLoadFeeds: PropTypes.func
 };
 
 export default ActivityPanel;

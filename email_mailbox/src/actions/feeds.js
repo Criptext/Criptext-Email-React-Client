@@ -7,6 +7,13 @@ export const addFeeds = feeds => {
   };
 };
 
+export const removeFeed = feedId => {
+  return {
+    type: Feed.REMOVE,
+    targetFeed: feedId
+  };
+};
+
 export const selectFeed = feedId => {
   return {
     type: Feed.SELECT,

@@ -1,53 +1,54 @@
 {
   "feeds": [
   	{
-      "cmd": 1,
   	  "title": "Schedule email sent",
   	  "subtitle": "Why we all should flate text",
   	  "time": 1515794888909,
-      "state": "new",
+      "threadId": 6921,
       "unread": false,
-      "threadId": 532322,
+      "state": "new",
+      "cmd": 1,
       "id": 1
   	},
   	{
-  	  "cmd": 2,
   	  "title": "Email expired",
   	  "subtitle": "Re: Last Meeting",
   	  "time": 1515432919000,
-      "state": "new",
+      "threadId": 3423,
       "unread": true,
-      "threadId": 63542,
+      "state": "new",
+      "cmd": 2,
       "id": 2
   	},
   	{
-  	  "cmd": 3,
+  	  
   	  "title": "Daniel Tigse Palma opened",
   	  "subtitle": "Re: Last Meeting",
   	  "time": 1515704888909,
-      "state": "new",
+      "threadId": 63512,
       "unread": true,
-      "threadId": 635,
+      "state": "new",
+      "cmd": 3,
       "id": 3
   	},
     {
-      "cmd": 2,
       "title": "Email expired",
       "subtitle": "Re: Last Meeting",
       "time": 1515346519000,
+      "threadId": 63567,
       "state": "older",
       "unread": false,
-      "threadId": 63567,
+      "cmd": 2,
       "id": 4
     },
     {
-      "cmd": 3,
       "title": "Daniel Tigse Palma opened",
       "subtitle": "Re: Last Meeting",
       "time": 1515432919000,
+      "threadId": 532322,
       "state": "older",
       "unread": true,
-      "threadId": 532322,
+      "cmd": 3,
       "id": 5
     }
   ]
