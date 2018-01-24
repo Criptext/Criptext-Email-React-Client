@@ -56,7 +56,10 @@ class HeaderThreadOptions extends Component {
         >
           <ul className="multiselect-list">
             <li onClick={this.markAsRead}>
-              {markAsUnread ? 'Mark as Unread' : 'Mark as Read'}
+              <span>{markAsUnread ? 'Mark as Unread' : 'Mark as Read'}</span>
+            </li>
+            <li>
+              <span>Mark as Important</span>
             </li>
           </ul>
         </TooltipMenu>
@@ -136,11 +139,10 @@ class HeaderThreadOptions extends Component {
   };
 
   renderLabels = () => {
-    return this.props.labels.reduce((labelsView, label) => {
+    return this.props.labels.reduce((labelsView, label, index) => {
       labelsView.push(
-        <li>
+        <li key={index}>
           <CustomCheckbox
-            key={label.id}
             onCheck={checked => {
               this.onTriggerLabel(checked, label.id);
             }}
@@ -155,13 +157,13 @@ class HeaderThreadOptions extends Component {
 }
 
 HeaderThreadOptions.propTypes = {
-  allSelected: PropTypes.string,
+  allSelected: PropTypes.bool,
   displayMoveMenu: PropTypes.bool,
   displayTagsMenu: PropTypes.bool,
   displayDotsMenu: PropTypes.bool,
   labels: PropTypes.array,
   markAsUnread: PropTypes.bool,
-  onAddLabel: PropTypes.bool,
+  onAddLabel: PropTypes.func,
   onBackOption: PropTypes.func,
   onMarkAsRead: PropTypes.func,
   onMoveThreads: PropTypes.func,
@@ -169,7 +171,7 @@ HeaderThreadOptions.propTypes = {
   onRemoveLabel: PropTypes.func,
   onSelectThreads: PropTypes.func,
   showSelectAllOption: PropTypes.bool,
-  threadsSelected: PropTypes.object,
+  threadsSelected: PropTypes.array,
   toggleDotsMenu: PropTypes.func,
   toggleMoveMenu: PropTypes.func,
   toggleTagsMenu: PropTypes.func
