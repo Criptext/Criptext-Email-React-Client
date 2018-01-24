@@ -158,7 +158,9 @@ export default (state = List([]), action) => {
       });
     }
     case Thread.MUTE: {
-      const item = state.find( thread => thread.get('id')===action.targetThread );
+      const item = state.find(
+        thread => thread.get('id') === action.targetThread
+      );
       if (item !== undefined) {
         const index = state.findIndex(
           thread => thread.get('id') === action.targetThread
