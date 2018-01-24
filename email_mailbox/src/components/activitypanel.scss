@@ -102,6 +102,42 @@ aside.navigation-feed{
     overflow: auto;
     height: calc(100% - 61px);
 
+    .empty-feed-content {
+      height: 110px;
+      width: 155px;
+      text-align: center;
+      margin: 60% auto;
+
+      .empty-list-image {
+        height: 50%;
+        margin-bottom: 10%;
+
+        .empty-icon {
+          height: 100%;
+          width: 32%;
+          position: relative;
+          left: 30%;
+          background: url(#{$_PATH_TO_IMAGES}/icon-notification.png) no-repeat center center;
+          background-size: 100%;
+        }
+
+      }
+
+      p {
+        margin: 0px;
+      }
+      .text {
+        height: 50%;
+        
+        .title {
+          color: #000000;
+        }
+        .subtitle {
+          color: #9b9b9b;
+        }
+      }
+    }
+
     .new-feeds{
       padding-left: 0px;
       margin-bottom: 0px;

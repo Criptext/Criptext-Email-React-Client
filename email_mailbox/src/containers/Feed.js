@@ -5,12 +5,10 @@ import FeedWrapperView from '../components/FeedWrapper';
 const mapStateToProps = (state, ownProps) => {
   const feed = ownProps.feed;
   const threads = state.get('threads');
-  let isMuted = false;
-  threads.forEach(thread => {
-    if (thread.get('id') === feed.get('threadId')) {
-      isMuted = !thread.get('allowNotifications');
-    }
-  });
+  const item = threads.find(
+    thread => thread.get('id') === feed.get('threadId')
+  );
+  const isMuted = item === undefined ? false : !item.get('allowNotifications');
   return {
     isMuted: isMuted
   };

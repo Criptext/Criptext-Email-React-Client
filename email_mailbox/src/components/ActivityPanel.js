@@ -18,8 +18,7 @@ class ActivityPanel extends Component {
           </div>
         </header>
         <nav>
-          {this.renderFeedList(this.props.newFeeds, 'NEW')}
-          {this.renderFeedList(this.props.oldFeeds, 'OLDER')}
+          {this.renderFeedSection(this.props.newFeeds, this.props.oldFeeds)}
         </nav>
       </aside>
     );
@@ -28,6 +27,26 @@ class ActivityPanel extends Component {
   componentDidMount() {
     this.props.onLoadFeeds();
   }
+
+  renderHeaderIcon = () => {
+    return (
+      <div className="feed-header-icon">
+        <i className={'icon-bell'} />
+      </div>
+    );
+  };
+
+  renderFeedSection = (newFeeds, oldFeeds) => {
+    if (newFeeds.size < 1 && oldFeeds.size < 1) {
+      return <div>{this.renderEmptyFeedSection()}</div>;
+    }
+    return (
+      <div>
+        {this.renderFeedList(newFeeds, 'NEW')}
+        {this.renderFeedList(oldFeeds, 'OLDER')}
+      </div>
+    );
+  };
 
   renderFeedList = (feedList, listName) => {
     if (feedList && feedList.size > 0) {
@@ -45,10 +64,16 @@ class ActivityPanel extends Component {
     return null;
   };
 
-  renderHeaderIcon = () => {
+  renderEmptyFeedSection = () => {
     return (
-      <div className="feed-header-icon">
-        <i className={'icon-bell'} />
+      <div className="empty-feed-content">
+        <div className="empty-list-image">
+          <div className="empty-icon" />
+        </div>
+        <div className="text">
+          <p className="title">There&#39;s nothing new yet</p>
+          <p className="subtitle">Enjoy your day</p>
+        </div>
       </div>
     );
   };
