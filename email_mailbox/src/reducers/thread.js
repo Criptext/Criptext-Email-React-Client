@@ -28,8 +28,10 @@ export default (state = List([]), action) => {
         const testUsers = 'Criptext Info <no-reply@criptext.com>';
         const contacts = parseAllContacts(testUsers);
         return Map(thread).merge({
-          labels: Set([7, 3, 10]),
-          emails: List([1]),
+          labels: Set(
+            thread.labels ? thread.labels.split(',').map(Number) : []
+          ),
+          emails: List(thread.emails.split(',').map(Number)),
           letters: getCapitalLetters(contacts[0].name),
           header: buildParticipantsColumnString(contacts),
           date: TimeUtils.defineTimeByToday(thread.date),

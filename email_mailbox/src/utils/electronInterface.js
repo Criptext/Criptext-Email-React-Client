@@ -10,3 +10,7 @@ export const openComposerWindow = () => {
 export const getThreads = timestamp => {
   return dbManager.getThreads(timestamp);
 };
+
+export const getAllLabels = () => {
+  return dbManager.getAllLabels();
+};

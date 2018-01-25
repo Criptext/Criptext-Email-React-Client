@@ -30,12 +30,9 @@ Immutable.List [
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -71,12 +68,9 @@ Immutable.List [
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 5,
     selected: false,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -117,12 +111,9 @@ Immutable.List [
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -163,12 +154,9 @@ Immutable.List [
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -203,12 +191,9 @@ Immutable.List [
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 5,
     selected: false,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -248,12 +233,9 @@ Immutable.List [
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
->>>>>>> test fixes
     labels: Immutable.Set [
       10,
       3,
@@ -292,12 +274,9 @@ Immutable.List [
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -332,12 +311,9 @@ Immutable.List [
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 5,
     selected: false,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -377,12 +353,9 @@ Immutable.List [
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: true,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -417,12 +390,9 @@ Immutable.List [
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 5,
     selected: true,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -462,12 +432,9 @@ Immutable.List [
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,
@@ -507,12 +474,9 @@ Immutable.List [
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: true,
-<<<<<<< 30cb3ca17db216f81a93f6e5b545c9751b74e117
-    allowNotifications: true,
-=======
+    allowNotifications: 0,
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
->>>>>>> test fixes
     labels: Immutable.Set [
       7,
       3,

@@ -1,4 +1,5 @@
 import { Label } from './types';
+import { getAllLabels } from '../utils/electronInterface';
 const inLabel = 10;
 
 export const addLabels = labels => {
@@ -24,10 +25,9 @@ export const addLabel = label => {
 export const loadLabels = () => {
   return async dispatch => {
     try {
-      const response = await fetch('/labels.json');
-      const json = await response.json();
+      const dbLabels = await getAllLabels();
       const labels = {};
-      json.labels.forEach(element => {
+      dbLabels.forEach(element => {
         labels[element.id] = {
           id: element.id,
           text: element.text
