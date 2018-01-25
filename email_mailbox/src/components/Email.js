@@ -40,7 +40,14 @@ const renderEmailExpand = props => (
             <span className="email-header-info-to">
               Allison, Daniel, Gabriel, 2 others
             </span>
-            <i className="icon-arrow-down" />
+            <i
+              className="icon-arrow-down"
+              onClick={props.onTooglePopOverEmailDetail}
+            >
+              {props.displayPopOverEmailDetail
+                ? renderPopOverEmailDetail()
+                : null}
+            </i>
           </div>
         </div>
         <div className="email-detail-info">
@@ -50,9 +57,9 @@ const renderEmailExpand = props => (
           <i
             id="email-more"
             className="icon-dots"
-            onClick={props.onToogleMenu}
+            onClick={props.onTogglePopOverMenuAction}
           />
-          {props.displayMenu ? renderMenu() : null}
+          {props.displayPopOverMenuAction ? renderPopOverMenuAction() : null}
         </div>
       </div>
       <div className="email-body">
@@ -97,7 +104,50 @@ const renderEmailExpand = props => (
   </div>
 );
 
-const renderMenu = () => (
+const renderPopOverEmailDetail = () => (
+  <div className="email-more-detail">
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <span className="title">From:</span>
+          </td>
+          <td>
+            <span className="text">Minerva Mc Gonagall</span>
+            <span className="tag-text">{'<minervamcriptext.com>'}</span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span className="title">To:</span>
+          </td>
+          <td>
+            <span className="text">Minerva Mc Gonagall</span>
+            <span className="tag-text">{'<minervamcriptext.com>'}</span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span className="title">Date:</span>
+          </td>
+          <td>
+            <span className="text">Mon, Dec 4, 2017 at 3:26 PM</span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span className="title">Subject:</span>
+          </td>
+          <td>
+            <span className="text">Meeting lunes 04/Dic/2017</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+);
+
+const renderPopOverMenuAction = () => (
   <div className="email-more-menu">
     <ul>
       <li>
@@ -132,10 +182,12 @@ renderEmailCollapse.propTypes = {
 };
 
 renderEmailExpand.propTypes = {
-  displayMenu: PropTypes.bool,
+  displayPopOverEmailDetail: PropTypes.bool,
+  displayPopOverMenuAction: PropTypes.bool,
   email: PropTypes.object,
   onToggleEmail: PropTypes.func,
-  onToogleMenu: PropTypes.func
+  onTooglePopOverEmailDetail: PropTypes.func,
+  onTogglePopOverMenuAction: PropTypes.func
 };
 
 Email.propTypes = {

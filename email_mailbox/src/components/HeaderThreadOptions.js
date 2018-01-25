@@ -56,7 +56,10 @@ class HeaderThreadOptions extends Component {
         >
           <ul className="multiselect-list">
             <li onClick={this.markAsRead}>
-              {markAsUnread ? 'Mark as Unread' : 'Mark as Read'}
+              <span>{markAsUnread ? 'Mark as Unread' : 'Mark as Read'}</span>
+            </li>
+            <li>
+              <span>Mark as Important</span>
             </li>
           </ul>
         </TooltipMenu>
@@ -136,32 +139,28 @@ class HeaderThreadOptions extends Component {
   };
 
   renderLabels = () => {
-    return this.props.labels.reduce((labelsView, label) => {
-      labelsView.push(
-        <li>
-          <CustomCheckbox
-            key={label.id}
-            onCheck={checked => {
-              this.onTriggerLabel(checked, label.id);
-            }}
-            label={label.text}
-            status={label.checked}
-          />
-        </li>
-      );
-      return labelsView;
-    }, []);
+    return this.props.labels.map((label, index) => (
+      <li key={index}>
+        <CustomCheckbox
+          onCheck={checked => {
+            this.onTriggerLabel(checked, label.id);
+          }}
+          label={label.text}
+          status={label.checked}
+        />
+      </li>
+    ));
   };
 }
 
 HeaderThreadOptions.propTypes = {
-  allSelected: PropTypes.string,
+  allSelected: PropTypes.bool,
   displayMoveMenu: PropTypes.bool,
   displayTagsMenu: PropTypes.bool,
   displayDotsMenu: PropTypes.bool,
   labels: PropTypes.array,
   markAsUnread: PropTypes.bool,
-  onAddLabel: PropTypes.bool,
+  onAddLabel: PropTypes.func,
   onBackOption: PropTypes.func,
   onMarkAsRead: PropTypes.func,
   onMoveThreads: PropTypes.func,
@@ -169,7 +168,7 @@ HeaderThreadOptions.propTypes = {
   onRemoveLabel: PropTypes.func,
   onSelectThreads: PropTypes.func,
   showSelectAllOption: PropTypes.bool,
-  threadsSelected: PropTypes.object,
+  threadsSelected: PropTypes.array,
   toggleDotsMenu: PropTypes.func,
   toggleMoveMenu: PropTypes.func,
   toggleTagsMenu: PropTypes.func

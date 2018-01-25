@@ -36,7 +36,7 @@ attachPreview.propTypes = {
 };
 
 AttachItem.propTypes = {
-  image: PropTypes.object
+  image: PropTypes.string
 };
 
 export default AttachItem;

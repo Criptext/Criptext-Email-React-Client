@@ -55,6 +55,12 @@
       cursor: pointer;
     }
 
+    > span{
+      color: black;
+      font-size: 13px;
+      font-weight: 200;
+    }
+
     .checkmark-container{
   
       &:hover{

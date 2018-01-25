@@ -36,7 +36,7 @@ class Thread extends Component {
 
 Thread.propTypes = {
   emails: PropTypes.object,
-  history: PropTypes.string,
+  history: PropTypes.object,
   onLoadEmails: PropTypes.func,
   thread: PropTypes.object
 };
