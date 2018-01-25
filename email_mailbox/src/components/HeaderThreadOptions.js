@@ -139,8 +139,8 @@ class HeaderThreadOptions extends Component {
   };
 
   renderLabels = () => {
-    return this.props.labels.reduce((labelsView, label, index) => {
-      labelsView.push(
+    return this.props.labels.map((label, index) => {
+      return (
         <li key={index}>
           <CustomCheckbox
             onCheck={checked => {
@@ -151,8 +151,7 @@ class HeaderThreadOptions extends Component {
           />
         </li>
       );
-      return labelsView;
-    }, []);
+    });
   };
 }
 
