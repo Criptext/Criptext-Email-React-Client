@@ -3,6 +3,8 @@
 import threadsReducer from '../user';
 import * as actions from '../../actions/index';
 
+jest.mock('../../utils/electronInterface');
+
 describe('user actions', () => {
   it('should add users to state', () => {
     const users = {

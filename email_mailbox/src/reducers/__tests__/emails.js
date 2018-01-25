@@ -5,6 +5,8 @@ import * as actions from '../../actions/index';
 import file from './../../../public/emails.json';
 const emails = file.emails;
 
+jest.mock('../../utils/electronInterface');
+
 describe('email actions: ', () => {
   it('should add emails to state', () => {
     const data = {};

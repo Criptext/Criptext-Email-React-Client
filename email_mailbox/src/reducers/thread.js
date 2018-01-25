@@ -25,23 +25,35 @@ export default (state = List([]), action) => {
     }
     case Thread.ADD_BATCH: {
       const threads = action.threads.map(thread => {
-        const contacts = parseAllContacts(thread.participants);
+        const testUsers = 'Criptext Info <no-reply@criptext.com>';
+        const contacts = parseAllContacts(testUsers);
         return Map(thread).merge({
-          labels: Set(thread.labels),
-          emails: List(thread.emails),
+          labels: Set(
+            thread.labels ? thread.labels.split(',').map(Number) : []
+          ),
+          emails: List(thread.emails.split(',').map(Number)),
           letters: getCapitalLetters(contacts[0].name),
           header: buildParticipantsColumnString(contacts),
-          date: TimeUtils.defineTimeByToday(thread.lastEmailDate),
+          date: TimeUtils.defineTimeByToday(thread.date),
+          timestamp: thread.date,
           color: randomcolor({
             seed: contacts[0].email,
             luminosity: 'bright'
-          })
+          }),
+          hasOpenAttachments: false,
+          lastEmailId: thread.key,
+          status: 1,
+          timesOpened: 2,
+          timer: 1,
+          totalAttachments: 1,
+          unread: true,
+          selected: false,
+          participants: testUsers
         });
       });
-
       return state.concat(
         List(threads).sort((t1, t2) => {
-          return t2.get('lastEmailDate') - t1.get('lastEmailDate');
+          return t2.get('timestamp') - t1.get('timestamp');
         })
       );
     }

@@ -28,6 +28,8 @@ jobs:
 
       - run: cd email_mailbox/ && yarn install
 
+      - run: cd electron_app/ && yarn install
+
       - save_cache:
           paths:
             - email_mailbox/node_modules
@@ -46,3 +48,11 @@ jobs:
       - run:
           name: Lint
           command: cd email_mailbox/ && yarn lint
+
+      - run:
+          name: Electron Lint
+          command: cd electron_app/ && yarn lint
+
+      - run:
+          name: Electron Integration
+          command: cd electron_app/ && yarn integration 
