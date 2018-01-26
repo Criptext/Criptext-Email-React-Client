@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AttachItem from './AttachItem';
-import ButtonExpand from './ButtonExpandWrapper';
+import AttachItem, { AttachItemStatus } from './AttachItem';
+import ButtonExpand, { ButtonExpandType } from './ButtonExpandWrapper';
 import ButtonUnsend from './ButtonUnsendWrapper';
 import './email.css';
 
@@ -71,15 +71,21 @@ const renderEmailExpand = props => (
             info="Sheep Relevance.doc"
             title="Last Opened: "
             text="3:20PM"
-            status={true}
+            status={ButtonExpandType.NORMAL}
             renderList={renderAttachLastOpenedList}
           />
           <ButtonExpand
             icon="icon-checked"
             title="Last Opened: "
             text="3:20PM"
-            status={true}
+            status={ButtonExpandType.OPENED}
             renderList={renderLastOpenedList}
+          />
+          <ButtonExpand
+            icon="icon-unsend"
+            title="Unsent: "
+            text="3:20PM"
+            status={ButtonExpandType.UNSENT}
           />
           <ButtonUnsend onClicked={props.unsendButtonOnClicked} />
         </div>
@@ -88,10 +94,14 @@ const renderEmailExpand = props => (
         </div>
         <div disabled={props.hideView} className="email-attachs">
           <AttachItem
-            image={
-              'https://cdn-img-feed.streeteasy.com/nyc/image/50/300089950.jpg'
-            }
+            status={AttachItemStatus.COMPLETE}
+            image={{
+              data:
+                'https://cdn-img-feed.streeteasy.com/nyc/image/50/300089950.jpg'
+            }}
           />
+          <AttachItem status={AttachItemStatus.DOWNLOADED} image={{}} />
+          <AttachItem status={AttachItemStatus.UNSENT} image={{}} />
         </div>
       </div>
     </div>

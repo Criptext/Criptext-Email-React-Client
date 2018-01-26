@@ -33,7 +33,7 @@
   }
 }
 
-.email-opened{
+.button-expand-opened{
   border-color: rgba(0, 145, 255, 0.62);
 
   div i{
@@ -95,5 +95,29 @@
     border-bottom: 6px solid white;
     border-right: 6px solid transparent;
     border-left: 6px solid transparent;
+  }
+}
+
+.button-expand-unsend{
+  border-color: #ffa6b0;
+  >div i{
+    color: #d0021b;  
+  }
+
+  &:hover{
+    padding: 0 10px;
+    width: auto;
+
+    span{
+      display: flex;
+    }
+
+    .title{
+      font-weight: 600;
+    }
+
+    .text{
+      font-weight: 200;
+    }
   }
 }
