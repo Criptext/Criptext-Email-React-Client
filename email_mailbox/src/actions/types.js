@@ -36,3 +36,7 @@ export const Feed = {
   SELECT: 'SELECT_FEED',
   REMOVE: 'REMOVE_FEED'
 };
+
+export const ThreadSuggestions = {
+  SET_THREADS: 'SET_THREADS'
+}

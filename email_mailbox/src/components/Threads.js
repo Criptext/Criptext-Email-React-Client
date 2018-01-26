@@ -141,7 +141,8 @@ class Threads extends Component {
 
     if (scrollTop + height > scrollHeight - 25) {
       const lastThread = this.props.threads.last();
-      this.props.onLoadThreads(lastThread.get('timestamp'));
+      this.props.onLoadThreads(lastThread.get('timestamp'), 
+        this.props.mailbox === 'Search' ? this.props.searchParams : undefined);
     }
   };
 }
@@ -151,6 +152,7 @@ Threads.propTypes = {
   mailbox: PropTypes.string,
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,
+  searchParams: PropTypes.object,
   selectedThread: PropTypes.string,
   threads: PropTypes.object,
   unreadFilter: PropTypes.string

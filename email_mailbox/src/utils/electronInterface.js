@@ -7,10 +7,18 @@ export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
 };
 
-export const getThreads = timestamp => {
-  return dbManager.getThreads(timestamp);
+export const getThreads = (timestamp, params) => {
+  return dbManager.getThreads(timestamp, params);
 };
 
 export const getAllLabels = () => {
   return dbManager.getAllLabels();
 };
+
+export const simpleThreadsFilter = filter => {
+  return dbManager.simpleThreadsFilter(filter);
+}
+
+export const getThreadsFilter = (timestamp, params) => {
+  return dbManager.getThreadsFilter(timestamp, params)
+}

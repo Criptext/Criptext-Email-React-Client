@@ -15,9 +15,9 @@ const getThreads = function(timestamp, limit, offset) {
       `${Table.EMAIL}.*`,
       `${Table.EMAIL}.isMuted as allowNotifications`,
       db.raw(
-        `group_concat(CASE WHEN ${Table.LABEL}.id <> 1 THEN ${
-          Table.LABEL
-        }.id ELSE NULL END) as labels`
+        `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> 1 THEN ${
+          Table.EMAIL_LABEL
+        }.labelId ELSE NULL END) as labels`
       ),
       db.raw(`group_concat(distinct(${Table.EMAIL}.id)) as emails`)
     )
@@ -33,6 +33,80 @@ const getThreads = function(timestamp, limit, offset) {
     .orderBy('date', 'DESC')
     .limit(limit || 20)
     .offset(offset || 0);
+};
+
+const simpleThreadsFilter = function(filter){
+  return db
+  .select(
+    `${Table.EMAIL}.*`
+  )
+  .from(Table.EMAIL)
+  .where('preview', 'like', `%${filter}%`)
+  .orWhere('content', 'like', `%${filter}%`)
+  .orWhere('subject', 'like', `%${filter}%`)
+  .groupBy('threadId')
+  .orderBy('date', 'DESC')
+  .limit(5)
+}
+
+const getThreadsFilter = function(timestamp, params = {}, limit) {
+  const {
+    from,
+    to,
+    subject,
+    text,
+    hasAttachments,
+    mailbox,
+    plain
+  } = params;
+
+  let queryDb = db
+    .select(
+      `${Table.EMAIL}.*`,
+      `${Table.EMAIL}.isMuted as allowNotifications`,
+      db.raw(
+        `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> 1 THEN ${
+          Table.EMAIL_LABEL
+        }.labelId ELSE NULL END) as labels`
+      ),
+      db.raw(`group_concat(distinct(${Table.EMAIL}.id)) as emails`)
+    )
+    .from(Table.EMAIL)
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL}.id`,
+      `${Table.EMAIL_LABEL}.emailId`
+    )
+    .where('date', '<', timestamp || 'now')
+    .groupBy('threadId')
+    .orderBy('date', 'DESC')
+    .limit(limit || 20)
+    
+    if(plain){
+      queryDb = queryDb
+        .andWhere(function() {
+          this
+            .where('preview', 'like', `%${text}%`)
+            .orWhere('content', 'like', `%${text}%`)
+            .orWhere('subject', 'like', `%${text}%`) 
+        });
+      return queryDb;
+    }
+
+    if(text){
+      queryDb = queryDb
+      .andWhere('preview', 'like', `%${text}%`)
+      .andWhere('content', 'like', `%${text}%`)
+    }
+    if(subject){
+      queryDb = queryDb.andWhere('subject', 'like', `%${subject}%`)
+    }
+
+    if(mailbox && mailbox !== -1){
+      queryDb = queryDb.andWhere('labelId', '=', mailbox)
+    }
+
+    return queryDb;
 };
 
 const getAllLabels = function() {
@@ -69,12 +143,14 @@ const closeDB = function() {
 };
 
 module.exports = {
-  createTables,
-  getEmailsByThreadId,
   addEmail,
-  markThreadAsRead,
-  deleteEmail,
+  createTables,
   closeDB,
+  deleteEmail,
+  getAllLabels,
+  getEmailsByThreadId,
   getThreads,
-  getAllLabels
+  getThreadsFilter,
+  markThreadAsRead,
+  simpleThreadsFilter
 };
