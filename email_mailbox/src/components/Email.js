@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AttachItem from './AttachItem';
+import ButtonExpand from './ButtonExpandWrapper';
+import ButtonUnsend from './ButtonUnsendWrapper';
 import './email.css';
 
 const Email = props =>
@@ -64,21 +66,27 @@ const renderEmailExpand = props => (
       </div>
       <div className="email-body">
         <div className="email-options">
-          <div>
-            <i className="icon-attach" />
-          </div>
-          <div>
-            <i className="icon-checked" />
-          </div>
-          <button className="button-a button-unsend">
-            <i className="icon-unsend" />
-            <span>unsend</span>
-          </button>
+          <ButtonExpand
+            icon="icon-attach"
+            info="Sheep Relevance.doc"
+            title="Last Opened: "
+            text="3:20PM"
+            status={true}
+            renderList={renderAttachLastOpenedList}
+          />
+          <ButtonExpand
+            icon="icon-checked"
+            title="Last Opened: "
+            text="3:20PM"
+            status={true}
+            renderList={renderLastOpenedList}
+          />
+          <ButtonUnsend onClicked={props.unsendButtonOnClicked} />
         </div>
-        <div className="email-text">
+        <div disabled={props.hideView} className="email-text">
           <p>Lorem Ipsum is simply dummy text of the printing and</p>
         </div>
-        <div className="email-attachs">
+        <div disabled={props.hideView} className="email-attachs">
           <AttachItem
             image={
               'https://cdn-img-feed.streeteasy.com/nyc/image/50/300089950.jpg'
@@ -175,6 +183,58 @@ const renderPopOverMenuAction = () => (
   </div>
 );
 
+const renderLastOpenedList = () => (
+  <ul className="email-popover-lastopened">
+    <li>
+      <span>Gianni Carlo</span>
+      <span>3:20 PM</span>
+    </li>
+    <li>
+      <span>Gianni Carlo</span>
+      <span>3:20 PM</span>
+    </li>
+    <li>
+      <span>Gianni Carlo</span>
+      <span>3:20 PM</span>
+    </li>
+  </ul>
+);
+
+const renderAttachLastOpenedList = () => (
+  <ul className="email-popover-lastopened">
+    <li>
+      <div>
+        <div className="icon-pdf" />
+        <span>Look at ma Sheep.pdf</span>
+      </div>
+      <div>
+        <span className="title">Dowloaded:</span>
+        <span>3:20 PM</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div className="icon-pdf" />
+        <span>Look at ma Sheep.pdf</span>
+      </div>
+      <div>
+        <span className="title">Opened:</span>
+        <span>Yesterday</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div className="icon-pdf" />
+        <span>Look at ma Sheep.pdf</span>
+      </div>
+      <div>
+        <span className="title">Dowloaded:</span>
+        <span>Jul 22</span>
+      </div>
+    </li>
+  </ul>
+);
+
 renderEmailCollapse.propTypes = {
   classStatus: PropTypes.string,
   email: PropTypes.object,
@@ -185,9 +245,11 @@ renderEmailExpand.propTypes = {
   displayPopOverEmailDetail: PropTypes.bool,
   displayPopOverMenuAction: PropTypes.bool,
   email: PropTypes.object,
+  hideView: PropTypes.bool,
   onToggleEmail: PropTypes.func,
   onTooglePopOverEmailDetail: PropTypes.func,
-  onTogglePopOverMenuAction: PropTypes.func
+  onTogglePopOverMenuAction: PropTypes.func,
+  unsendButtonOnClicked: PropTypes.func
 };
 
 Email.propTypes = {

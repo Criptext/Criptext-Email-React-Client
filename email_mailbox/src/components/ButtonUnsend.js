@@ -10,7 +10,6 @@ const ButtonUnsend = props => (
     }
     onClick={props.onClick}
   >
-    {' '}
     {props.displayLoading ? renderLoading() : renderButton(props.onClick)}
   </button>
 );
