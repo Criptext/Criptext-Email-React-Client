@@ -1,0 +1,98 @@
+.button-unsend{
+  background-color: #dd4040;
+  margin-left: 5px;
+  padding: 0;
+  
+  i{
+    left: -2px;
+    margin-right: 2px;
+  }
+
+  .loading {
+    height: 31px;
+    position:relative;
+    width: 31px;
+
+    > div {
+      background-color:#FFFFFF;
+      height: 5px;
+      position:absolute;
+      width: 2px;
+      border-radius:2px;
+      -webkit-transform:scale(0.4);
+      -webkit-animation-name:loading;
+      -webkit-animation-duration:1.04s;
+      -webkit-animation-iteration-count:infinite;
+      -webkit-animation-direction:linear;
+    }
+
+    > div:nth-child(1) {
+      left: 7px;
+      top: 13px;
+      -webkit-transform:rotate(-90deg);
+      -webkit-animation-delay:0.39s;
+    }
+
+    > div:nth-child(2) {
+      left: 9px;
+      top: 7px;
+      -webkit-transform:rotate(-45deg);
+      -webkit-animation-delay:0.52s;
+    }
+
+    > div:nth-child(3) {
+      left: 15px;
+      top: 5px;
+      -webkit-transform:rotate(0deg);
+      -webkit-animation-delay:0.65s;
+    }
+
+    > div:nth-child(4) {
+      right: 8px;
+      top: 7px;
+      -webkit-transform:rotate(45deg);
+      -webkit-animation-delay:0.78s;
+    }
+
+    > div:nth-child(5) {
+      right: 7px;
+      top: 13px;
+      -webkit-transform:rotate(90deg);
+      -webkit-animation-delay:0.91s;
+    }
+
+    > div:nth-child(6) {
+      right: 8px;
+      bottom: 7px;
+      -webkit-transform:rotate(135deg);
+      -webkit-animation-delay:1.04s;
+    }
+
+    > div:nth-child(7) {
+      bottom: 5px;
+      left: 15px;
+      -webkit-transform:rotate(180deg);
+      -webkit-animation-delay:1.17s;
+    }
+
+    > div:nth-child(8) {
+      left: 9px;
+      bottom: 7px;
+      -webkit-transform:rotate(-135deg);
+      -webkit-animation-delay:1.3s;
+    }
+  }
+}
+
+.button-unsend-normal{
+  width: 100px;
+}
+
+.button-unsend-loading{
+  width: 31px;
+}
+
+@-webkit-keyframes loading {
+  0%{ background-color:#fff }
+  100%{ background-color:#dd4040 }
+}
