@@ -355,6 +355,10 @@ input[type="text"]:focus {
    ----------------------------- */
 button{
   border: none;
+
+  &:focus{
+    outline:0;
+  }
 }
 
 .button-a{

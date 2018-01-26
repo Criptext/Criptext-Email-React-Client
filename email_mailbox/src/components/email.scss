@@ -272,42 +272,25 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  
-  div{
-    align-items: center;
-    border: 1px solid #d5d5d5;
-    border-radius: 50%;;
-    display: flex;
-    height: 30px;
-    width: 30px;
-    margin: 0 5px;
-
-    i{
-      color: #d5d5d5;
-      font-size: 20px;
-      margin: 0 auto;
-    }
-  }
-}
-
-.button-unsend{
-  background-color: #dd4040;
-  margin-left: 5px;
-  width: 100px;
-
-  i{
-    left: -2px;
-    margin-right: 2px;
-  }
 }
 
 .email-text{
   font-weight: 200;
+
+  &[disabled]{
+    opacity: 0.2;
+    pointer-events: none;
+  }
 }
 
 .email-attachs{
   margin-bottom: 20px;
   margin-top: 60px;
+
+  &[disabled]{
+    opacity: 0.2;
+    pointer-events: none;
+  }
 }
 
 .email-segment-controls{
@@ -344,4 +327,41 @@
       font-size: 13px;
     }
   }
+}
+
+.email-popover-lastopened{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+
+  li{
+    align-items: center;
+    display: flex;
+    border-bottom: 1px solid #f5f5f5;
+    flex-direction: row;
+    height: 30px;
+    justify-content: space-between;
+    width: calc(100% - 20px);
+    margin: 0 10px;
+
+    span{
+      font-size: 12px;
+      font-weight: 200;
+    }
+
+    >div{
+      display: flex;
+    }
+  }
+
+  
+  li:last-child{
+    border: none;
+  }
+}
+
+.icon-pdf{
+  height: 20px;
+  width: 20px;
 }
