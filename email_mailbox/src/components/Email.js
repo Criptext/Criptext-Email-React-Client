@@ -94,13 +94,12 @@ const renderEmailExpand = props => (
         </div>
         <div disabled={props.hideView} className="email-attachs">
           <AttachItem
-            status={AttachItemStatus.COMPLETE}
+            status={AttachItemStatus.DOWNLOADED}
             image={{
               data:
                 'https://cdn-img-feed.streeteasy.com/nyc/image/50/300089950.jpg'
             }}
           />
-          <AttachItem status={AttachItemStatus.DOWNLOADED} image={{}} />
           <AttachItem status={AttachItemStatus.UNSENT} image={{}} />
         </div>
       </div>

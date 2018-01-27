@@ -9,10 +9,11 @@
 }
 
 .attach-preview{
-  height: calc(100% - 34px);
-  width: 100%;
-  background-size: 100% auto;
   background-position: center;
+  background-size: 100% auto;
+  height: calc(100% - 34px);
+  position: relative;
+  width: 100%;
 }
 
 .attach-data{
@@ -37,6 +38,64 @@
   }
 }
 
+.attach-downloaded{
+  >div{
+    height: 100%;
+    position: absolute;
+    width: 100%;
+
+    .button-attach-preview{
+      background-color: transparent;
+      border: solid 1px #818080;
+      display: none;
+      margin: 0 auto;
+    
+      span{
+        font-size: 10px;
+        font-weight: 300;
+        margin: 0 20px;
+        top: 1px;
+      }
+    }
+
+    >div {
+      align-items: center;
+      background-color: black;
+      display: none;
+      height: 23px;
+      position: absolute;
+      border-radius: 50%;
+      right: 6px;
+      top: 5px;
+      width: 23px;
+  
+      i{
+        color: white;
+        margin: 0 auto;
+        position: relative;
+        top: -1px;
+      }
+    }
+
+    &:hover{
+      align-items: center;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      display: flex;
+      position: relative;
+
+      .button-attach-preview{
+        display: flex;
+      }
+
+      >div{
+        display: flex;
+      }
+    }
+  }
+}
+
 .attach-data-name{
   flex-grow: 2;
   font-size: 12px;
@@ -50,45 +109,14 @@
   margin: 0 10px;
 }
 
+
+
+
+
+
+
 .attach-download{
-  align-items: center;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  display: flex;
-  position: relative;
-
-  >div {
-    align-items: center;
-    background-color: black;
-    display: flex;
-    height: 23px;
-    position: absolute;
-    border-radius: 50%;
-    right: 6px;
-    top: 5px;
-    width: 23px;
-
-    i{
-      color: white;
-      margin: 0 auto;
-      position: relative;
-      top: -1px;
-    }
-  }
-}
-
-button.button-attach-preview{
-  background-color: transparent;
-  border: solid 1px #818080;
-  margin: 0 auto;
-
-  span{
-    font-size: 10px;
-    font-weight: 300;
-    margin: 0 20px;
-    top: 1px;
-  }
+  
 }
 
 .attach-unavailable{

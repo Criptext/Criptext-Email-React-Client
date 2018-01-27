@@ -13,10 +13,8 @@ const AttachItem = props => (
 
 const defineView = (status, data) => {
   switch (status) {
-    case AttachItemStatus.COMPLETE:
-      return attachPreview(data);
     case AttachItemStatus.DOWNLOADED:
-      return attachToDownload();
+      return attachPreview(data);
     case AttachItemStatus.UNSENT:
       return attachUnavailable();
     default:
@@ -26,18 +24,16 @@ const defineView = (status, data) => {
 
 const attachPreview = props => (
   <div
-    className="attach-preview"
+    className="attach-preview attach-downloaded"
     style={{ backgroundImage: `url(${props.data})` }}
-  />
-);
-
-const attachToDownload = () => (
-  <div className="attach-preview attach-download">
-    <button className="button-a button-attach-preview">
-      <span>preview</span>
-    </button>
+  >
     <div>
-      <i className="icon-download" />
+      <button className="button-a button-attach-preview">
+        <span>preview</span>
+      </button>
+      <div>
+        <i className="icon-download" />
+      </div>
     </div>
   </div>
 );
@@ -66,9 +62,8 @@ const renderAttachWithoutInfo = () => (
 );
 
 export const AttachItemStatus = {
-  COMPLETE: 0,
-  DOWNLOADED: 1,
-  UNSENT: 2
+  DOWNLOADED: 0,
+  UNSENT: 1
 };
 
 attachPreview.propTypes = {
