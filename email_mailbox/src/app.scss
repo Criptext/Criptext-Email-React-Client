@@ -202,6 +202,9 @@ TABLE OF CONTENTS
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-lock:before {
+  content: "\e926";
+}
 .icon-bell-inclined:before {
   content: "\e903";
 }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './buttonexpand.css';
 
 const ButtonExpand = props => (
-  <div className={'button-expand ' + (props.status ? 'email-opened' : '')}>
+  <div className={'button-expand ' + defineClassButton(props.status)}>
     <div>
       <i className={props.icon} />
       {props.info ? <span className="info">{props.info}</span> : null}
@@ -16,6 +16,25 @@ const ButtonExpand = props => (
     ) : null}
   </div>
 );
+
+const defineClassButton = status => {
+  switch (status) {
+    case ButtonExpandType.NORMAL:
+      return '';
+    case ButtonExpandType.OPENED:
+      return 'button-expand-opened';
+    case ButtonExpandType.UNSENT:
+      return 'button-expand-unsend';
+    default:
+      return '';
+  }
+};
+
+export const ButtonExpandType = {
+  NORMAL: 0,
+  OPENED: 1,
+  UNSENT: 2
+};
 
 ButtonExpand.propTypes = {
   displayPopOver: PropTypes.bool,

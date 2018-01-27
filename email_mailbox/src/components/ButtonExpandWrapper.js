@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ButtonExpand from './ButtonExpand';
+import ButtonExpand, { ButtonExpandType } from './ButtonExpand';
 
 class ButtonExpandWrapper extends Component {
   constructor() {
@@ -32,4 +32,4 @@ ButtonExpandWrapper.propTypes = {
   onTogglePopOver: PropTypes.func
 };
 
-export default ButtonExpandWrapper;
+export { ButtonExpandWrapper as default, ButtonExpandType };
