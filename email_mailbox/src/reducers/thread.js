@@ -51,7 +51,7 @@ export default (state = List([]), action) => {
           participants: testUsers
         });
       });
-      if(action.clear){
+      if (action.clear) {
         return List(threads);
       }
       return state.concat(List(threads));

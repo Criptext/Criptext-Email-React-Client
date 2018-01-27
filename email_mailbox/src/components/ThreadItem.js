@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import * as Status from '../utils/ConstUtils';
 import randomcolor from 'randomcolor';
 import CustomCheckbox from './CustomCheckbox';
-import {replaceMatches} from '../utils/ReactUtils'
+import { replaceMatches } from '../utils/ReactUtils';
 import './threaditem.css';
 
 class ThreadItem extends Component {
@@ -56,21 +56,21 @@ class ThreadItem extends Component {
 
   renderPreview = () => {
     const preview = this.props.thread.get('preview');
-    if(this.props.mailbox !== 'Search'){
-      return preview
+    if (this.props.mailbox !== 'Search') {
+      return preview;
     }
 
     return replaceMatches(this.props.searchParams.text, preview);
-  }
+  };
 
   renderSubject = () => {
     const subject = this.props.thread.get('subject');
-    if(this.props.mailbox !== 'Search'){
-      return subject
+    if (this.props.mailbox !== 'Search') {
+      return subject;
     }
 
     return replaceMatches(this.props.searchParams.subject, subject);
-  }
+  };
 
   getStyleVisibilityByMultiselect = () => {
     if (!this.props.multiselect) {
@@ -290,6 +290,7 @@ ThreadItem.propTypes = {
   onSelectThread: PropTypes.func,
   onStarClick: PropTypes.func,
   onRemove: PropTypes.func,
+  searchParams: PropTypes.object,
   starred: PropTypes.bool,
   thread: PropTypes.object
 };

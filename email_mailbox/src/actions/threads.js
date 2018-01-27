@@ -1,5 +1,5 @@
 import { Thread } from './types';
-import { getThreads, getThreadsFilter } from '../utils/electronInterface';
+import { getThreadsFilter } from '../utils/electronInterface';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -78,20 +78,19 @@ export const markThreadsRead = (threadsIds, read) => ({
   type: Thread.READ_THREADS
 });
 
-export const searchThreads = params => { 
-  console.log(params);
+export const searchThreads = params => {
   return async dispatch => {
     dispatch({
       type: Thread.SEARCH_THREADS
-    })
+    });
     try {
       const threads = await getThreadsFilter(null, params);
       dispatch(addThreads(threads, true));
     } catch (e) {
-      console.log(e)
+      // TO DO
     }
   };
-}
+};
 
 export const muteNotifications = threadId => {
   return {
@@ -101,13 +100,12 @@ export const muteNotifications = threadId => {
 };
 
 export const loadThreads = (timestamp, params) => {
-  console.log(params);
   return async dispatch => {
     try {
       const threads = await getThreadsFilter(timestamp, params);
       dispatch(addThreads(threads));
     } catch (e) {
-      console.log(e)
+      // TO DO
     }
   };
 };

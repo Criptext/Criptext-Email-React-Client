@@ -82,7 +82,7 @@ class MailboxHeader extends Component {
         displaySearchHints: false
       },
       () => {
-        this.props.setSearchParams(this.state.searchParams)
+        this.props.setSearchParams(this.state.searchParams);
         this.props.onSearchThreads({
           text: this.state.searchParams.text,
           plain: true
@@ -93,21 +93,20 @@ class MailboxHeader extends Component {
 
   setSearchParam = (key, value) => {
     const displayHint =
-      key === 'text'
-        ? this.state.displaySearchOptions
-          ? false
-          : true
-        : false;
+      key === 'text' ? (this.state.displaySearchOptions ? false : true) : false;
     const searchParams = this.state.searchParams;
     searchParams[key] = value;
-    this.setState({
-      searchParams,
-      displaySearchHints: displayHint
-    }, () => {
-      if(displayHint && key === 'text'){
-        this.props.onSearchChange(value);
+    this.setState(
+      {
+        searchParams,
+        displaySearchHints: displayHint
+      },
+      () => {
+        if (displayHint && key === 'text') {
+          this.props.onSearchChange(value);
+        }
       }
-    });
+    );
   };
 
   toggleSearchHints = () => {
@@ -127,9 +126,11 @@ class MailboxHeader extends Component {
 }
 
 MailboxHeader.propTypes = {
-  threadsSuggestions: PropTypes.array,
+  threadsSuggestions: PropTypes.object,
   multiselect: PropTypes.bool,
-  onSearchThreads: PropTypes.func
+  onSearchChange: PropTypes.func,
+  onSearchThreads: PropTypes.func,
+  setSearchParams: PropTypes.func
 };
 
 export default MailboxHeader;

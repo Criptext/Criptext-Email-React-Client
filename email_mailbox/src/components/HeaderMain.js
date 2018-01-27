@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import TooltipMenu from './TooltipMenu';
 import CustomCheckbox from './CustomCheckbox';
 import SearchBox from './SearchBox';
-import {replaceMatches} from '../utils/ReactUtils'
+import { replaceMatches } from '../utils/ReactUtils';
 import './headermain.css';
 
 class HeaderMain extends Component {
@@ -55,23 +55,25 @@ const HintsMenu = props => (
 
 const SearchMail = props => {
   const previewMatches = replaceMatches(props.searchText, props.preview);
-  return (<div className="search-mail">
-    <i className="icon-mail" />
-    <div>
+  return (
+    <div className="search-mail">
+      <i className="icon-mail" />
       <div>
         <div>
-          <span>{previewMatches}</span>
+          <div>
+            <span>{previewMatches}</span>
+          </div>
+          <div>
+            <span>{props.date}</span>
+          </div>
         </div>
         <div>
-          <span>{props.date}</span>
+          <span>{props.participants}</span>
         </div>
-      </div>
-      <div>
-        <span>{props.participants}</span>
       </div>
     </div>
-  </div>);
-}
+  );
+};
 
 const OptionsMenu = props => (
   <TooltipMenu
@@ -168,14 +170,16 @@ const SearchInputBox = props => (
 
 HintsMenu.propTypes = {
   displaySearchHints: PropTypes.bool,
+  searchText: PropTypes.string,
   threads: PropTypes.object,
   toggleSearchHints: PropTypes.func
 };
 
 SearchMail.propTypes = {
   date: PropTypes.string,
-  participants: PropTypes.object,
-  preview: PropTypes.string
+  participants: PropTypes.string,
+  preview: PropTypes.string,
+  searchText: PropTypes.string
 };
 
 OptionsMenu.propTypes = {

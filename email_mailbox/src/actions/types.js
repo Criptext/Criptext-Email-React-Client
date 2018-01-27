@@ -39,4 +39,4 @@ export const Feed = {
 
 export const ThreadSuggestions = {
   SET_THREADS: 'SET_THREADS'
-}
+};

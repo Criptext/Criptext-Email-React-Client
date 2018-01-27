@@ -47,7 +47,6 @@ class Threads extends Component {
                   selectedThread={this.props.selectedThread}
                   onMouseEnterItem={this.onMouseEnterItem}
                   onMouserLeaveItem={this.onMouserLeaveItem}
-                  mailbox={this.props.mailbox}
                   searchParams={this.props.searchParams}
                 />
               );
@@ -143,8 +142,10 @@ class Threads extends Component {
 
     if (scrollTop + height > scrollHeight - 25) {
       const lastThread = this.props.threads.last();
-      this.props.onLoadThreads(lastThread.get('timestamp'), 
-        this.props.mailbox === 'Search' ? this.props.searchParams : undefined);
+      this.props.onLoadThreads(
+        lastThread.get('timestamp'),
+        this.props.mailbox === 'Search' ? this.props.searchParams : undefined
+      );
     }
   };
 }

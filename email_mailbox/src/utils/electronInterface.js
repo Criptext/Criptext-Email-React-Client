@@ -17,8 +17,8 @@ export const getAllLabels = () => {
 
 export const simpleThreadsFilter = filter => {
   return dbManager.simpleThreadsFilter(filter);
-}
+};
 
 export const getThreadsFilter = (timestamp, params) => {
-  return dbManager.getThreadsFilter(timestamp, params)
-}
+  return dbManager.getThreadsFilter(timestamp, params);
+};

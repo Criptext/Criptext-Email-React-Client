@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MailboxHeader from '../containers/MailboxHeader';
 import Threads from '../containers/Threads';
@@ -22,14 +22,18 @@ class MailBox extends Component {
   }
 
   render() {
-    console.log(this.state.searchParams);
-    return (<div className="mailbox-container">
-      <MailboxHeader setSearchParams={this.setSearchParams}/>
-      <Threads mailbox={this.props.match.params.mailbox} searchParams={this.state.searchParams} />
-    </div>)
+    return (
+      <div className="mailbox-container">
+        <MailboxHeader setSearchParams={this.setSearchParams} />
+        <Threads
+          mailbox={this.props.match.params.mailbox}
+          searchParams={this.state.searchParams}
+        />
+      </div>
+    );
   }
 
-  setSearchParams = (params) => {
+  setSearchParams = params => {
     this.setState({
       searchParams: {
         ...params

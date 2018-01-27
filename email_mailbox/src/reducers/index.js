@@ -5,7 +5,7 @@ import activities from './activity';
 import emails from './emails';
 import labels from './labels';
 import feeds from './feeds';
-import threadsSuggestions from './threadsSuggestions'
+import threadsSuggestions from './threadsSuggestions';
 
 export default combineReducers({
   threads,

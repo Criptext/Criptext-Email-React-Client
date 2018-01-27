@@ -52,7 +52,7 @@ const mapDispatchToProps = dispatch => {
     },
     onSearchChange: filter => {
       return dispatch(actions.loadThreadsSuggestions(filter));
-    } 
+    }
   };
 };
 
