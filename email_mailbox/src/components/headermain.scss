@@ -12,15 +12,16 @@
 }
 
 .header-profile{
-  width: 34px;
-  height: 34px;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 200;
+  height: 33px;
   border-radius: 50%;
   background-color: rgba(74, 108, 98, 0.96);
   color: white;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 15px;
+  width: 33px;
 }
 
 .search-tooltip{

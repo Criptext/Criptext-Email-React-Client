@@ -110,7 +110,7 @@ class ThreadItem extends Component {
         <HoverMenuItem
           targetId={`starred${threadId}`}
           tip="Favorite"
-          icon="star"
+          icon="icon-start"
           myClass={this.props.starred ? 'thread-label-mark' : ''}
           onClick={this.onStarClick}
           onMouseEnterItem={this.props.onMouseEnterItem}
@@ -119,7 +119,7 @@ class ThreadItem extends Component {
         <HoverMenuItem
           targetId={`important${threadId}`}
           tip="Important"
-          icon="label_outline"
+          icon="icon-tag"
           myClass={this.props.important ? 'thread-label-mark' : ''}
           onClick={this.onImportantClick}
           onMouseEnterItem={this.props.onMouseEnterItem}
@@ -128,7 +128,7 @@ class ThreadItem extends Component {
         <HoverMenuItem
           targetId={`remove${threadId}`}
           tip="Move to Trash"
-          icon="delete"
+          icon="icon-trash"
           onClick={this.onRemove}
           onMouseEnterItem={this.props.onMouseEnterItem}
           onMouserLeaveItem={this.props.onMouserLeaveItem}
@@ -157,12 +157,12 @@ class ThreadItem extends Component {
       return null;
     }
 
-    return <i className="material-icons">lock</i>;
+    return <i className="icon-lock" />;
   };
 
   willDisplayAttachIcon = thread => {
     if (thread.get('totalAttachments') > 0) {
-      return <i className="material-icons">attach_file</i>;
+      return <i className="icon-attach" />;
     }
 
     return null;
@@ -176,9 +176,9 @@ class ThreadItem extends Component {
       case Status.Email.SENT:
         return <i className="material-icons">done</i>;
       case Status.Email.RECEIVED:
-        return <i className="material-icons">done_all</i>;
+        return <i className="icon-checked" />;
       case Status.Email.OPENED:
-        return <i className="material-icons neutral-highlight">done_all</i>;
+        return <i className="icon-checked neutral-highlight" />;
       default:
         return null;
     }
@@ -236,7 +236,7 @@ const HoverMenuItem = props => (
       props.onMouserLeaveItem(props.targetId);
     }}
   >
-    <i className="material-icons">{props.icon}</i>
+    <i className={props.icon} />
   </div>
 );
 

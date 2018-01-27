@@ -202,9 +202,6 @@ TABLE OF CONTENTS
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-lock:before {
-  content: "\e926";
-}
 .icon-bell-inclined:before {
   content: "\e903";
 }
@@ -271,8 +268,14 @@ TABLE OF CONTENTS
 .icon-checked:before {
   content: "\e912";
 }
+.icon-lock:before {
+  content: "\e926";
+}
 .icon-box:before {
   content: "\e915";
+}
+.icon-important:before {
+  content: "\e927";
 }
 .icon-download:before {
   content: "\e925";
@@ -348,6 +351,10 @@ html, body {
 }
 /* 3.- CONTROLS
    ----------------------------- */
+.disabled{
+  opacity: 0.2;
+}
+
 /* 3.1.- CONTROLS: Button
    ----------------------------- */
 input[type="text"]:focus {
@@ -379,7 +386,7 @@ button{
   span{
     font-family: NunitoSans;
     font-size: 13px;
-    font-weight: 800;
+    font-weight: 700;
     position: relative;
     top: -1px;
   }

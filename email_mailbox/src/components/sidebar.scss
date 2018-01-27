@@ -17,9 +17,9 @@ aside.navigation-app{
   background-image: url(#{$_PATH_TO_IMAGES}/header-icon.png);
   background-position: center;
   background-size: 100%;
-  height: 33px;
+  height: 36px;
   margin: 0 auto;
-  width: 135px;
+  width: 150px;
 }
 
 .navigation-partial-mail{
@@ -61,11 +61,14 @@ aside.navigation-app{
 
 .navigation-partial-mail::-webkit-scrollbar{
   width: 6.5px;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .navigation-partial-mail::-webkit-scrollbar-thumb{
   border-radius: 10px;
-  background-color: #b0b2b4;
+  background-color: #d8d8d8;
 }
 
 .nav-item-free{
@@ -92,14 +95,20 @@ aside.navigation-app{
   .nav-item-container{
     align-items: center;
     display: flex;
-    height: 37px;
+    height: 40px;
+    padding-top: 20px;
     width: 100%;
   }
 
   ul{
-    max-height: 75px;
     overflow: auto;
     width: 100%;
+  }
+}
+
+.nav-item-more-selected{
+  a{
+    font-weight: 600;
   }
 }
 
@@ -111,6 +120,7 @@ aside.navigation-app{
   border-top: solid 1px #d8d8d8;
   left: 30px;
   height: 1px;
+  margin: 10px 0;
   position: absolute;
   top: 0;
   width: 144px;
@@ -123,19 +133,20 @@ aside.navigation-app{
 
 .nav-item-label{
   align-items: center;
-  height: 25px;
+  height: 26px;
   width: 100%;
 
   div{
     background: #7ed321;
-    border-radius: 3px;
+    border-radius: 50%;
     margin: 0 12px 0 55px;
-    height: 6px;
-    width: 6px;
+    height: 5px;
+    width: 5px;
   }
 
   span{
     font-family: NunitoSans;
     font-size: 13px;
+    font-weight: 300;
   }
 }

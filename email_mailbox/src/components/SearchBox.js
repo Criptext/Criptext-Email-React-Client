@@ -42,6 +42,7 @@ class SearchBox extends Component {
           onBlur={this.onShrinkBox}
           value={searchText}
           onKeyPress={this.onKeyPress}
+          placeholder="Search"
         />
         <i className="icon-toogle-down" onClick={this.onToggleSearchOptions} />
       </div>

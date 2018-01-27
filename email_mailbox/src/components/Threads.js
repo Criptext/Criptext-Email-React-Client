@@ -21,14 +21,18 @@ class Threads extends Component {
         <div className="threads-info-header">
           <h1 className="threads-mailbox-label">INBOX</h1>
           <div className="threads-toggle-container">
-            <span>All</span>
+            <span className={this.props.unreadFilter ? 'disabled' : ''}>
+              All
+            </span>
             <Switch
               theme="two"
               name="unreadSwitch"
               onChange={this.handleSwitchChange}
               checked={this.props.unreadFilter}
             />
-            <span>Unread</span>
+            <span className={this.props.unreadFilter ? '' : 'disabled'}>
+              Unread
+            </span>
           </div>
         </div>
         <div className="threads-wrapper" onScroll={this.handleTableScrolled}>
