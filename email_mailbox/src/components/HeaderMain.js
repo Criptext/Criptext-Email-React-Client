@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import TooltipMenu from './TooltipMenu';
 import CustomCheckbox from './CustomCheckbox';
 import SearchBox from './SearchBox';
+import {replaceMatches} from '../utils/ReactUtils'
 import './headermain.css';
 
 class HeaderMain extends Component {
@@ -44,6 +45,7 @@ const HintsMenu = props => (
               preview={thread.get('preview')}
               date={thread.get('date')}
               participants={thread.get('header')}
+              searchText={props.searchText}
             />
           ))
         : null}
@@ -51,13 +53,14 @@ const HintsMenu = props => (
   </TooltipMenu>
 );
 
-const SearchMail = props => (
-  <div className="search-mail">
+const SearchMail = props => {
+  const previewMatches = replaceMatches(props.searchText, props.preview);
+  return (<div className="search-mail">
     <i className="icon-mail" />
     <div>
       <div>
         <div>
-          <span>{props.preview}</span>
+          <span>{previewMatches}</span>
         </div>
         <div>
           <span>{props.date}</span>
@@ -67,8 +70,8 @@ const SearchMail = props => (
         <span>{props.participants}</span>
       </div>
     </div>
-  </div>
-);
+  </div>);
+}
 
 const OptionsMenu = props => (
   <TooltipMenu

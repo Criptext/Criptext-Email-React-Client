@@ -47,6 +47,8 @@ class Threads extends Component {
                   selectedThread={this.props.selectedThread}
                   onMouseEnterItem={this.onMouseEnterItem}
                   onMouserLeaveItem={this.onMouserLeaveItem}
+                  mailbox={this.props.mailbox}
+                  searchParams={this.props.searchParams}
                 />
               );
             })}

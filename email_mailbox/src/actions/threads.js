@@ -86,7 +86,6 @@ export const searchThreads = params => {
     })
     try {
       const threads = await getThreadsFilter(null, params);
-      console.log(threads)
       dispatch(addThreads(threads, true));
     } catch (e) {
       console.log(e)
@@ -106,10 +105,9 @@ export const loadThreads = (timestamp, params) => {
   return async dispatch => {
     try {
       const threads = await getThreadsFilter(timestamp, params);
-      console.log(threads);
       dispatch(addThreads(threads));
     } catch (e) {
-
+      console.log(e)
     }
   };
 };

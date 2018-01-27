@@ -4,12 +4,22 @@ import HeaderThreadOptionsWrapper from './HeaderThreadOptionsWrapper';
 import HeaderMain from './HeaderMain';
 import './mailboxheader.css';
 
+const ALL_MAIL = -1;
+
 class MailboxHeader extends Component {
   constructor() {
     super();
     this.state = {
       displaySearchHints: false,
       displaySearchOptions: false,
+      searchParams: {
+        text: '',
+        mailbox: ALL_MAIL,
+        from: '',
+        to: '',
+        subject: '',
+        hasAttachments: false
+      }
     };
   }
 
@@ -35,13 +45,13 @@ class MailboxHeader extends Component {
             {...this.props}
             threads={threads}
             setSearchParam={this.setSearchParam}
-            searchParams={this.props.searchParams}
+            searchParams={this.state.searchParams}
             displaySearchHints={this.state.displaySearchHints}
             displaySearchOptions={this.state.displaySearchOptions}
             toggleSearchHints={this.toggleSearchHints}
             toggleSearchOptions={this.toggleSearchOptions}
             onTriggerSearch={this.onTriggerSearch}
-            searchText={this.state.searchText}
+            searchText={this.state.searchParams.text}
             onSearchThreads={this.onSearchThreads}
           />
         )}
@@ -55,13 +65,13 @@ class MailboxHeader extends Component {
         displaySearchOptions: false
       },
       () => {
-        this.props.onSearchThreads(this.props.searchParams);
+        this.props.onSearchThreads(this.state.searchParams);
       }
     );
   };
 
   onTriggerSearch = () => {
-    if (this.state.displaySearchOptions || !this.props.searchParams.text) {
+    if (this.state.displaySearchOptions || !this.state.searchParams.text) {
       return this.setState({
         displaySearchHints: false
       });
@@ -72,8 +82,9 @@ class MailboxHeader extends Component {
         displaySearchHints: false
       },
       () => {
+        this.props.setSearchParams(this.state.searchParams)
         this.props.onSearchThreads({
-          text: this.props.searchParams.text,
+          text: this.state.searchParams.text,
           plain: true
         });
       }
@@ -87,8 +98,10 @@ class MailboxHeader extends Component {
           ? false
           : true
         : false;
-    this.props.setSearchParam(key, value);
+    const searchParams = this.state.searchParams;
+    searchParams[key] = value;
     this.setState({
+      searchParams,
       displaySearchHints: displayHint
     }, () => {
       if(displayHint && key === 'text'){

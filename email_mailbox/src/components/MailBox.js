@@ -22,17 +22,18 @@ class MailBox extends Component {
   }
 
   render() {
+    console.log(this.state.searchParams);
     return (<div className="mailbox-container">
-      <MailboxHeader setSearchParam={this.setSearchParam} searchParams={this.state.searchParams} />
+      <MailboxHeader setSearchParams={this.setSearchParams}/>
       <Threads mailbox={this.props.match.params.mailbox} searchParams={this.state.searchParams} />
     </div>)
   }
 
-  setSearchParam = (key, value) => {
-    const searchParams = this.state.searchParams;
-    searchParams[key] = value;
+  setSearchParams = (params) => {
     this.setState({
-      searchParams
+      searchParams: {
+        ...params
+      }
     });
   };
 }
