@@ -17,7 +17,8 @@ const mapStateToProps = state => {
     threadsSelected,
     labels,
     allLabels: state.get('labels'),
-    threadsSuggestions: state.get('threadsSuggestions'),
+    threadsSuggestions: state.get('threadsSuggestions').get('threads'),
+    hints: state.get('threadsSuggestions').get('hints'),
     markAsUnread,
     allSelected: threadsSelected.length === state.get('threads').size,
     showSelectAllOption: true

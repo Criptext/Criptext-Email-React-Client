@@ -33,9 +33,7 @@ class MailboxHeader extends Component {
   }
 
   render() {
-    const threads = this.state.displaySearchHints
-      ? this.props.threadsSuggestions
-      : null;
+    const threads = this.props.threadsSuggestions;
     return (
       <header className="mailbox-header">
         {this.props.multiselect ? (

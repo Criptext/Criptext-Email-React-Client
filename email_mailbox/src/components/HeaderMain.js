@@ -35,20 +35,23 @@ const HintsMenu = props => (
     <div>
       <SearchSuggestion
         icon="icon-time"
-        items={['Subject Design', 'Subject Design 2']}
+        items={props.hints}
+        searchText={props.searchParams.text}
       />
-      <SearchSuggestion icon="icon-search" items={['Subject Design']} />
-      {props.threads
-        ? props.threads.map((thread, index) => (
-            <SearchMail
-              key={index}
-              preview={thread.get('preview')}
-              date={thread.get('date')}
-              participants={thread.get('header')}
-              searchText={props.searchText}
-            />
-          ))
-        : null}
+      <SearchSuggestion 
+        icon="icon-search" 
+        items={[props.searchParams.text]} 
+        searchText={props.searchParams.text}/>
+
+      {props.threads.map((thread, index) => (
+        <SearchMail
+          key={index}
+          preview={thread.get('preview')}
+          date={thread.get('date')}
+          participants={thread.get('header')}
+          searchText={props.searchText}
+        />
+      ))}
     </div>
   </TooltipMenu>
 );
@@ -157,7 +160,9 @@ const renderLabels = labels => {
 const SearchSuggestion = props => (
   <div className="search-recent">
     <i className={props.icon} />
-    <ul>{props.items.map((item, index) => <li key={index}>{item}</li>)}</ul>
+    <ul>{props.items.map((item, index) => <li key={index}>
+      {replaceMatches(props.searchText, item)}
+    </li>)}</ul>
   </div>
 );
 
