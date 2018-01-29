@@ -68,6 +68,10 @@
           input::-ms-input-placeholder {
             color: rgba(255,255,255,0.6);
           }
+          input:focus{
+            outline: none;
+            border-bottom: solid 2px #ffffff;
+          }
           span {
             width: 40%;
             float: right;

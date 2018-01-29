@@ -12,9 +12,11 @@ class SignUp extends Component {
         placeholder: 'Username',
         type: 'text',
         label: {
-          text: '@criptext',
+          text: '@criptext.com',
           strong: ''
-        }
+        },
+        icon: '',
+        errorMessage: 'Username not available'
       },
       {
         name: 'fullname',
@@ -23,7 +25,9 @@ class SignUp extends Component {
         label: {
           text: '',
           strong: ''
-        }
+        },
+        icon: '',
+        errorMessage: ''
       },
       {
         name: 'password',
@@ -32,7 +36,9 @@ class SignUp extends Component {
         label: {
           text: '',
           strong: ''
-        }
+        },
+        icon: 'icon-eye',
+        errorMessage: ''
       },
       {
         name: 'confirmpassword',
@@ -41,7 +47,9 @@ class SignUp extends Component {
         label: {
           text: '',
           strong: ''
-        }
+        },
+        icon: 'icon-eye',
+        errorMessage: 'Password do not match'
       },
       {
         name: 'recoveryemail',
@@ -50,7 +58,9 @@ class SignUp extends Component {
         label: {
           text: '',
           strong: ''
-        }
+        },
+        icon: '',
+        errorMessage: ''
       },
       {
         name: 'acceptterms',
@@ -58,8 +68,10 @@ class SignUp extends Component {
         type: 'checkbox',
         label: {
           text: 'I have read and agree with the ',
-          strong: 'Terms and conditions'
-        }
+          strong: 'Terms and Conditions'
+        },
+        icon: '',
+        errorMessage: ''
       }
     ];
   }
@@ -102,7 +114,8 @@ class SignUp extends Component {
         <div className="signup-form">
           <form>
             {formItems.map((formItem, index) => {
-              return <FormItem key={index} formItem={formItem} />;
+              return <FormItem key={index} 
+                formItem={formItem}/>
             })}
             <div className="button">
               <button className="create-button">

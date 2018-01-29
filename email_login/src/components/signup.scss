@@ -82,85 +82,158 @@
       height: 80%;
 
       form {
-        width: 66%;
+        width: 100%;
         margin: 0 auto;
+
+        .form-item.hasError {
+          .input-data {
+            input {
+              border-bottom: solid 2px #191a1f;
+            }
+          }
+        }
 
         .form-item {
           width: 100%;
-          margin-bottom: 6%;
+          height: 36px;
 
-          .input-username {
-            color: #ffffff;
-            font-size: 12px;
-            padding-left: 7px;
-            padding-bottom: 5px;
-            background: transparent;
-            width: 55%;
-            border: 0px;
-            border-bottom: solid 2px rgba(255,255,255,0.19);
+          .validate-icon-section {
+            font-size: 16px;
             float: left;
+            height: 100%;
+            width: 59px;
+
+            .valid-icon{
+              color: #ffffff;
+              position: relative;
+              top: 0%;
+              left: calc(50% - 7px);
+              border: 1px solid #fff;
+              border-radius: 10px;
+            }
+            .invalid-icon{
+              color: #000000;
+              position: relative;
+              top: 0%;
+              left: calc(50% - 7px);
+              border: 1px solid #000;
+              border-radius: 10px;
+            }
+            .no-icon{
+              width: 10%;
+            }
           }
-          .label-username {
-            padding-left: 5%;
-            width: 35%;
+
+          .input-data {
             float: right;
-            font-size: 12px;
-            font-weight: 500;
-            color: #ffffff;
+            height: 100%;
+            width: calc(100% - 59px);
+
+            input[type='password']{
+              font-size: 12px;
+              -webkit-text-security: square;
+            }
+
+            span.input-icon{
+              color: #ffffff;
+              position: relative;
+              right: 8%;
+            }
+
+            .input-username {
+              color: #ffffff;
+              font-size: 12px;
+              padding-left: 7px;
+              padding-bottom: 3px;
+              background: transparent;
+              width: 39%;
+              border: 0px;
+              border-bottom: solid 2px rgba(255,255,255,0.19);
+              float: left;
+            }
+            .label-username {
+              width: 40%;
+              padding-left: 3%;
+              float: left;
+              font-size: 12px;
+              font-weight: 500;
+              color: #ffffff;
+            }
+            .input-fullname, 
+            .input-password,
+            .input-confirmpassword,
+            .input-recoveryemail {
+              width: calc(100% - 59px);
+              color: #ffffff;
+              font-size: 12px;
+              text-indent: 7px;
+              padding-bottom: 3px;
+              background: transparent;
+              border: 0px;
+              border-bottom: solid 2px rgba(255,255,255,0.19);
+            }
+            input::placeholder {
+              color: #ffffff;
+              opacity: 0.6;
+            }
+            input:-ms-input-placeholder {
+              color: #ffffff;
+              opacity: 0.6;
+            }
+            input::-ms-input-placeholder {
+              color: #ffffff;
+              opacity: 0.6;
+            }
+            input:focus{
+              outline: none;
+              border-bottom: solid 2px #ffffff;
+            }
+            .input-acceptterms{
+              float: left;
+              color: #ffffff;
+              margin: 0% 4% 0% 0%;
+            }
+            .label-acceptterms{
+              width: 76%;
+              float: left;
+              font-size: 10px;
+              font-weight: 500;
+              color: #ffffff;
+            }
+
+            .error-message.error-username {
+              float: left;
+              font-size: 9px;
+              color: #000;
+              position: relative;
+              bottom: -10%;
+              right: 40%
+            }
+            .error-message.error-confirmpassword {
+              float: left;
+              font-size: 9px;
+              color: #000;
+              position: relative;
+              bottom: -0%;
+              left: 0%;
+            }
           }
-          .input-fullname, 
-          .input-password,
-          .input-confirmpassword,
-          .input-recoveryemail {
-            width: 95%;
-            color: #ffffff;
-            font-size: 12px;
-            padding-left: 7px;
-            padding-bottom: 5px;
-            background: transparent;
-            border: 0px;
-            border-bottom: solid 2px rgba(255,255,255,0.19);
-          }
-          input::placeholder {
-            color: #ffffff;
-            opacity: 0.6;
-          }
-          input:-ms-input-placeholder {
-            color: #ffffff;
-            opacity: 0.6;
-          }
-          input::-ms-input-placeholder {
-            color: #ffffff;
-            opacity: 0.6;
-          }
-          input:focus{
-            outline: none;
-            border-bottom: solid 2px #191a1f;
-          }
-          .input-recoveryemail {
-            margin-bottom: 15%;
-          }
-          .input-acceptterms{
-            float: left;
-            color: #ffffff;
-            width: 10%;
-            margin: 0px;
-          }
-          .label-acceptterms{
-            width: 90%;
-            float: right;
-            font-size: 10px;
-            font-weight: 500;
-            color: #ffffff;
-          }
+
           .clear-item {
             clear: both;
           }
         }
 
+        .form-item:nth-child(5) {
+          margin-bottom: 10%;
+        }
+        .form-item:nth-child(6) {
+          margin-bottom: 5%;
+        }
+
         .button {
-          width: 100%;
-          margin: 0% 0% 0% 0%;
+          width: calc(100% - 118px);
+          margin: 0 auto;
           padding: 0px;
 
           .create-button {
@@ -169,11 +242,11 @@
             padding: 10px;
             background-color: #373a45;
             opacity: 0.5;
-            margin: 5px 0px 0px 0px;
+            margin: 0px;
             width: 100%;
 
             span {
-              color: #ffffff;
+              color: #fff;
               font-weight: 600;
               opacity: 0.5;
             }
