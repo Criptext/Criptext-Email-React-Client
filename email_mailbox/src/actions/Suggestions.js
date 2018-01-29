@@ -8,6 +8,11 @@ export const setSuggestions = (threads, hints) => ({
   hints
 });
 
+export const setSuggestionError = error => ({
+  type: Suggestions.SET_ERROR_SUGGESTIONS,
+  error: error
+});
+
 export const loadSuggestions = filter => {
   return async dispatch => {
     try {
@@ -15,7 +20,7 @@ export const loadSuggestions = filter => {
       const threads = await simpleThreadsFilter(filter);
       dispatch(setSuggestions(threads, hints));
     } catch (e) {
-      // TO DO
+      dispatch(setSuggestionError('Unable to load suggestions'));
     }
   };
 };

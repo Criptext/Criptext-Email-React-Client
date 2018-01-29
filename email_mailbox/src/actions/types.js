@@ -38,5 +38,6 @@ export const Feed = {
 };
 
 export const Suggestions = {
-  SET_THREADS: 'SET_THREADS'
+  SET_THREADS: 'SET_THREADS',
+  SET_ERROR_SUGGESTIONS: 'SET_ERROR_SUGGESTIONS'
 };

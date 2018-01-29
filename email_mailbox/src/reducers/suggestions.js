@@ -31,8 +31,12 @@ export default (
 
       return state.merge({
         hints: hintsList,
-        threads: threadsList
+        threads: threadsList,
+        error: null
       });
+    }
+    case Suggestions.SET_ERROR_SUGGESTIONS: {
+      return state.set('error', action.error);
     }
     default:
       return state;

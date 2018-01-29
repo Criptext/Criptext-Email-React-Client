@@ -19,7 +19,7 @@ export const getMatches = async function(substring) {
   const index = store.index('date');
   const request = index.openCursor(null, 'prev');
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const matches = [];
     request.onsuccess = ev => {
       const cursor = ev.target.result;

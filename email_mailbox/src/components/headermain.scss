@@ -172,3 +172,16 @@
     margin: 0px 5px;
   }
 }
+
+.search-hints-error{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #d26054;
+  font-size: 13px;
+
+  > div:first-child{
+    transform: rotateZ(90deg);
+  }
+}
