@@ -114,9 +114,9 @@ class SignUp extends Component {
         <div className="signup-form">
           <form>
             {formItems.map((formItem, index) => {
-              return <FormItem key={index} 
-                formItem={formItem}/>
+              return <FormItem key={index} formItem={formItem} />;
             })}
+
             <div className="button">
               <button className="create-button">
                 <span>Create account</span>
