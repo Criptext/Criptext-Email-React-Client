@@ -1,0 +1,186 @@
+@import "./../styles/index.scss";
+
+
+.signup {
+  font-family: 'NunitoSans';
+  height: 513px;
+  width: 328px;
+  border-radius: 7px;
+  background-image: linear-gradient(to bottom, #00c4ff, #0091ff);
+
+  .header {
+    height: 15%;
+    width: 100%;
+
+    .button-section {
+      height: 100%;
+      width: 20%;
+      float: left;
+
+      .back-button {
+        position: relative;
+        top: calc(50% - 18px);
+        left: calc(50% - 18px);
+        border: none;
+        border-radius: 100px;
+        width: 36px;
+        height: 36px;
+        background-color: rgba(255, 255, 255, 0.26);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.11);
+        font-size: 22px;
+        color: #ffffff;
+        padding: 5px 0px 0px 2px;
+      }
+    }
+
+    .criptext-logo {
+      height: 100%;
+      width: 80%;
+      float: right;
+
+      .icon {
+        height: 25px;
+        width: 96px;
+        float: right;
+        position: relative;
+        top: 20px;
+        right: 20px;
+        color: #ffffff;
+        background-image: url(#{$_PATH_TO_IMAGES}/header-icon.png);
+        background-position: center;
+        background-size: 100%;
+      }
+    }
+
+    .header-clear {
+      clear: both;
+    }
+  }
+
+
+  .form {
+    height: 85%;
+    width: 100%;
+
+    .header {
+      height: 20%;
+      color: #ffffff;
+      text-align: center;
+
+      p:nth-child(1) { 
+        font-size: 17px;
+        font-weight: 600;
+        margin: 0px;
+      }
+      p:nth-child(2) { 
+        font-size: 14px;
+        margin-top: 10px;
+      }
+    }
+
+    .signup-form {
+      height: 80%;
+
+      form {
+        width: 66%;
+        margin: 0 auto;
+
+        .form-item {
+          width: 100%;
+          margin-bottom: 6%;
+
+          .input-username {
+            color: #ffffff;
+            font-size: 12px;
+            padding-left: 7px;
+            padding-bottom: 5px;
+            background: transparent;
+            width: 55%;
+            border: 0px;
+            border-bottom: solid 2px rgba(255,255,255,0.19);
+            float: left;
+          }
+          .label-username {
+            padding-left: 5%;
+            width: 35%;
+            float: right;
+            font-size: 12px;
+            font-weight: 500;
+            color: #ffffff;
+          }
+          .input-fullname, 
+          .input-password,
+          .input-confirmpassword,
+          .input-recoveryemail {
+            width: 95%;
+            color: #ffffff;
+            font-size: 12px;
+            padding-left: 7px;
+            padding-bottom: 5px;
+            background: transparent;
+            border: 0px;
+            border-bottom: solid 2px rgba(255,255,255,0.19);
+          }
+          input::placeholder {
+            color: #ffffff;
+            opacity: 0.6;
+          }
+          input:-ms-input-placeholder {
+            color: #ffffff;
+            opacity: 0.6;
+          }
+          input::-ms-input-placeholder {
+            color: #ffffff;
+            opacity: 0.6;
+          }
+          input:focus{
+            outline: none;
+            border-bottom: solid 2px #191a1f;
+          }
+          .input-recoveryemail {
+            margin-bottom: 15%;
+          }
+          .input-acceptterms{
+            float: left;
+            color: #ffffff;
+            width: 10%;
+            margin: 0px;
+          }
+          .label-acceptterms{
+            width: 90%;
+            float: right;
+            font-size: 10px;
+            font-weight: 500;
+            color: #ffffff;
+          }
+          .clear-item {
+            clear: both;
+          }
+        }
+
+        .button {
+          width: 100%;
+          margin: 0% 0% 0% 0%;
+          padding: 0px;
+
+          .create-button {
+            border: none;
+            border-radius: 100px;
+            padding: 10px;
+            background-color: #373a45;
+            opacity: 0.5;
+            margin: 5px 0px 0px 0px;
+            width: 100%;
+
+            span {
+              color: #ffffff;
+              font-weight: 600;
+              opacity: 0.5;
+            }
+          }
+        }
+
+      }
+    }
+  }
+}

@@ -47,7 +47,7 @@ const renderFooter = () => (
     <div className="signup-message">
       <span>
         Not registered yet? &nbsp;
-        <Link to="/">
+        <Link to="/signup">
           <strong>Sign up</strong>
         </Link>
       </span>
@@ -56,7 +56,7 @@ const renderFooter = () => (
       <span>
         Can&#39;t
         <Link to="/">
-          <strong>Log In</strong>
+          <strong> Log In</strong>
         </Link>
         ?
       </span>

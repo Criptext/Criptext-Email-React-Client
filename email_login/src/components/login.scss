@@ -1,7 +1,8 @@
 @import "./../styles/index.scss";
 
 
-.login {  
+.login {
+  font-family: 'NunitoSans';
   height: 439px;
   width: 328px;
   // height: 100%;
@@ -35,7 +36,6 @@
       top: 5px;
       color: #ffffff;
       font-size: 20px;
-      font-family: 'AvenirNext';
     }
   }
 

@@ -1,3 +1,321 @@
+/***
+
+FILE: app.css
+
+TABLE OF CONTENTS
+
+1.- FONTS
+ 1.1.- Text
+ 1.2.- Icon
+2.- CONTENT
+
+***/
+
+@import "./styles/index.scss";
+
+/* 1.1.- FONTS: Text
+   ----------------------------- */
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-regular.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-regular.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-regular.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-regular.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-regular.svg) format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-italic.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-italic.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-italic.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-italic.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito/nunito-sans-v3-latin-italic.svg) format("svg");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200.svg) format("svg");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200italic.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200italic.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200italic.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200italic.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito200/nunito-sans-v3-latin-200italic.svg) format("svg");
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300.svg) format("svg");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300italic.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300italic.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300italic.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300italic.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito300/nunito-sans-v3-latin-300italic.svg) format("svg");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600.svg) format("svg");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600italic.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600italic.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600italic.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600italic.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito600/nunito-sans-v3-latin-600italic.svg) format("svg");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700.svg) format("svg");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700italic.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700italic.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700italic.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700italic.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito700/nunito-sans-v3-latin-700italic.svg) format("svg");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800.svg) format("svg");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800italic.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800italic.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800italic.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800italic.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito800/nunito-sans-v3-latin-800italic.svg) format("svg");
+  font-weight: 800;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900.svg) format("svg");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src:url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900italic.eot);
+  src:url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900italic.eot?#iefix) format("embedded-opentype"),
+    url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900italic.woff) format("woff"),
+    url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900italic.ttf) format("truetype"),
+    url(#{$_PATH_TO_FONTS}/nunito900/nunito-sans-v3-latin-900italic.svg) format("svg");
+  font-weight: 900;
+  font-style: italic;
+}
+
+/* 1.2.- FONTS: Icon
+   ----------------------------- */
+@font-face {
+  font-family: 'icomoon';
+  src:  url(#{$_PATH_TO_FONTS}/icon.eot?y4ei23);
+  src:  url(#{$_PATH_TO_FONTS}/icon.eot?y4ei23#iefix) format('embedded-opentype'),
+    url(#{$_PATH_TO_FONTS}/icon.ttf?y4ei23) format('truetype'),
+    url(#{$_PATH_TO_FONTS}/icon.woff?y4ei23) format('woff'),
+    url(#{$_PATH_TO_FONTS}/icon.svg?y4ei23#icomoon) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bell-inclined:before {
+  content: "\e903";
+}
+.icon-bell-mute:before {
+  content: "\e909";
+}
+.icon-bell:before {
+  content: "\e901";
+}
+.icon-unsend:before {
+  content: "\e90d";
+}
+.icon-sent:before {
+  content: "\e916";
+}
+.icon-replay:before {
+  content: "\e91f";
+}
+.icon-replay-all:before {
+  content: "\e920";
+}
+.icon-forward:before {
+  content: "\e91c";
+}
+.icon-toggle-right:before {
+  content: "\e90b";
+}
+.icon-toogle-down:before {
+  content: "\e913";
+}
+.icon-toogle-up:before {
+  content: "\e914";
+}
+.icon-back:before {
+  content: "\e91b";
+}
+.icon-next:before {
+  content: "\e902";
+}
+.icon-check:before {
+  content: "\e919";
+}
+.icon-not:before {
+  content: "\e906";
+}
+.icon-plus:before {
+  content: "\e91d";
+}
+.icon-minus:before {
+  content: "\e921";
+}
+.icon-exit:before {
+  content: "\e924";
+}
+.icon-arrow-down:before {
+  content: "\e91e";
+}
+.icon-search:before {
+  content: "\e917";
+}
+.icon-time:before {
+  content: "\e922";
+}
+.icon-checked:before {
+  content: "\e912";
+}
+.icon-box:before {
+  content: "\e915";
+}
+.icon-download:before {
+  content: "\e925";
+}
+.icon-archive:before {
+  content: "\e91a";
+}
+.icon-start:before {
+  content: "\e907";
+}
+.icon-doc:before {
+  content: "\e908";
+}
+.icon-mailbox:before {
+  content: "\e90a";
+}
+.icon-dots:before {
+  content: "\e918";
+}
+.icon-file:before {
+  content: "\e90c";
+}
+.icon-user:before {
+  content: "\e90e";
+}
+.icon-mail:before {
+  content: "\e90f";
+}
+.icon-settings:before {
+  content: "\e910";
+}
+.icon-attach:before {
+  content: "\e900";
+}
+.icon-calendar:before {
+  content: "\e904";
+}
+.icon-trash:before {
+  content: "\e905";
+}
+.icon-edit:before {
+  content: "\e911";
+}
+.icon-tag:before {
+  content: "\e923";
+}
+
+
+/* 2.- CONTENT
+   ----------------------------- */
 
 html, body {
   height: 100%;
