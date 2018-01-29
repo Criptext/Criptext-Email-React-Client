@@ -84,10 +84,12 @@ export const searchThreads = params => {
       type: Thread.SEARCH_THREADS
     });
     try {
-      const threads = await getThreadsFilter(null, params);
+      const threads = await getThreadsFilter(params);
       dispatch(addThreads(threads, true));
     } catch (e) {
-      // TO DO
+      /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
+        the request should not fail because of a bad query built or a non existing column/relation. Its fix should be a restore of
+        the db using a backup previously made. If the backup is also corrupted for some reason, user should log out.*/
     }
   };
 };
@@ -99,13 +101,15 @@ export const muteNotifications = threadId => {
   };
 };
 
-export const loadThreads = (timestamp, params) => {
+export const loadThreads = params => {
   return async dispatch => {
     try {
-      const threads = await getThreadsFilter(timestamp, params);
+      const threads = await getThreadsFilter(params);
       dispatch(addThreads(threads));
     } catch (e) {
-      // TO DO
+      /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
+        the request should not fail because of a bad query built or a non existing column/relation. Its fix should be a restore of
+        the db using a backup previously made. If the backup is also corrupted for some reason, user should log out.*/
     }
   };
 };

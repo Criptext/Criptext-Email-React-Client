@@ -9,32 +9,6 @@ const getEmailsByThreadId = function(threadId) {
     });
 };
 
-const getThreads = function(timestamp, limit, offset) {
-  return db
-    .select(
-      `${Table.EMAIL}.*`,
-      `${Table.EMAIL}.isMuted as allowNotifications`,
-      db.raw(
-        `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> 1 THEN ${
-          Table.EMAIL_LABEL
-        }.labelId ELSE NULL END) as labels`
-      ),
-      db.raw(`group_concat(distinct(${Table.EMAIL}.id)) as emails`)
-    )
-    .from(Table.EMAIL)
-    .leftJoin(
-      Table.EMAIL_LABEL,
-      `${Table.EMAIL}.id`,
-      `${Table.EMAIL_LABEL}.emailId`
-    )
-    .leftJoin(Table.LABEL, `${Table.EMAIL_LABEL}.labelId`, `${Table.LABEL}.id`)
-    .where('date', '<', timestamp || 'now')
-    .groupBy('threadId')
-    .orderBy('date', 'DESC')
-    .limit(limit || 20)
-    .offset(offset || 0);
-};
-
 const simpleThreadsFilter = function(filter) {
   return db
     .select(`${Table.EMAIL}.*`)
@@ -47,8 +21,8 @@ const simpleThreadsFilter = function(filter) {
     .limit(5);
 };
 
-const getThreadsFilter = function(timestamp, params = {}, limit) {
-  const { subject, text, mailbox, plain } = params;
+const getThreadsFilter = function(params = {}, limit) {
+  const { timestamp, subject, text, mailbox, plain } = params;
 
   let queryDb = baseThreadQuery(timestamp, limit);
 
@@ -142,7 +116,6 @@ module.exports = {
   deleteEmail,
   getAllLabels,
   getEmailsByThreadId,
-  getThreads,
   getThreadsFilter,
   markThreadAsRead,
   simpleThreadsFilter

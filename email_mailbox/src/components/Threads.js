@@ -142,10 +142,16 @@ class Threads extends Component {
 
     if (scrollTop + height > scrollHeight - 25) {
       const lastThread = this.props.threads.last();
-      this.props.onLoadThreads(
-        lastThread.get('timestamp'),
-        this.props.mailbox === 'Search' ? this.props.searchParams : undefined
-      );
+      const params =
+        this.props.mailbox === 'Search'
+          ? {
+              timestamp: lastThread.get('timestamp'),
+              ...this.props.searchParams
+            }
+          : {
+              timestamp: lastThread.get('timestamp')
+            };
+      this.props.onLoadThreads(params);
     }
   };
 }
