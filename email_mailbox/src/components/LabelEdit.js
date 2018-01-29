@@ -29,7 +29,7 @@ class LabelEdit extends Component {
           className="label-button"
           onClick={e => this.handleToggleAddLabelButtonClicked(e)}
         >
-          <span>{this.state.addLabel ? '-' : '+'}</span>
+          <i className={this.state.addLabel ? 'icon-minus' : 'icon-plus'} />
         </div>
       </div>
     );

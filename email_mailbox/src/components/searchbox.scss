@@ -10,17 +10,24 @@
   input{
     border: none;
     background: none;
+    color: white;
+    font-family: NunitoSans;
+    font-weight: 200;
+    letter-spacing: 0.3px;
     padding: 5px 0px;
     outline: none;
     flex: 1 0;
     width: 0;
-    color: white;
   }
   
+  input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #c8c8c8;
+  }
+
   i{
     font-size: 20px;
     margin: 0 8px;
-    color: white;
+    color: #c8c8c8;
   }
 
   .icon-toogle-down{

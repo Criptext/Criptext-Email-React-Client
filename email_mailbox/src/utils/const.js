@@ -28,16 +28,6 @@ export const MailItems = [
     id: 'trash',
     icon: 'icon-trash',
     text: 'Trash'
-  },
-  {
-    id: 'send-later',
-    icon: 'icon-calendar',
-    text: 'Send Later'
-  },
-  {
-    id: 'reminders',
-    icon: 'icon-bell-inclined',
-    text: 'reminders'
   }
 ];
 

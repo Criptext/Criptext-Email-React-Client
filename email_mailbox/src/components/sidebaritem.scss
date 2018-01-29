@@ -1,9 +1,13 @@
 .nav-item{
   align-items: center;
   display: flex;
-  height: 37px;
+  height: 40px;
   position: relative;
   width: 100%;
+
+  a{
+    font-weight: 300;
+  }
 }
 
 .nav-item-selected{
@@ -11,6 +15,10 @@
 
   .nav-item-icon{
     color: black;
+  }
+
+  a{
+    font-weight: 600;
   }
 }
 

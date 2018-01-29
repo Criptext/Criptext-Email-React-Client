@@ -38,7 +38,12 @@ class SideBar extends Component {
                   <SideBarItem key={key} item={item} selected={selected} />
                 );
               })}
-              <li className="nav-item nav-item-more">
+              <li
+                className={
+                  'nav-item nav-item-more ' +
+                  (this.state.showLabels ? 'nav-item-more-selected' : '')
+                }
+              >
                 <div className="line-separator" />
                 <div className="nav-item-container">
                   <div className="nav-item-icon">
