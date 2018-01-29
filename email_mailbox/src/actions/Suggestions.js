@@ -1,14 +1,14 @@
-import { ThreadSuggestions } from './types';
+import { Suggestions } from './types';
 import { simpleThreadsFilter } from '../utils/electronInterface';
-import { getMatches } from '../utils/storage'
+import { getMatches } from '../utils/storage';
 
 export const setSuggestions = (threads, hints) => ({
-  type: ThreadSuggestions.SET_THREADS,
+  type: Suggestions.SET_THREADS,
   threads,
   hints
 });
 
-export const loadThreadsSuggestions = filter => {
+export const loadSuggestions = filter => {
   return async dispatch => {
     try {
       const hints = await getMatches(filter);

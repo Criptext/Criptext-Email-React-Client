@@ -1,6 +1,6 @@
 import { Thread } from './types';
 import { getThreadsFilter } from '../utils/electronInterface';
-import { storeValue } from '../utils/storage'
+import { storeValue } from '../utils/storage';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,

@@ -38,10 +38,11 @@ const HintsMenu = props => (
         items={props.hints}
         searchText={props.searchParams.text}
       />
-      <SearchSuggestion 
-        icon="icon-search" 
-        items={[props.searchParams.text]} 
-        searchText={props.searchParams.text}/>
+      <SearchSuggestion
+        icon="icon-search"
+        items={[props.searchParams.text]}
+        searchText={props.searchParams.text}
+      />
 
       {props.threads.map((thread, index) => (
         <SearchMail
@@ -160,9 +161,11 @@ const renderLabels = labels => {
 const SearchSuggestion = props => (
   <div className="search-recent">
     <i className={props.icon} />
-    <ul>{props.items.map((item, index) => <li key={index}>
-      {replaceMatches(props.searchText, item)}
-    </li>)}</ul>
+    <ul>
+      {props.items.map((item, index) => (
+        <li key={index}>{replaceMatches(props.searchText, item)}</li>
+      ))}
+    </ul>
   </div>
 );
 

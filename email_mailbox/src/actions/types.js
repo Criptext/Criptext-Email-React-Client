@@ -37,6 +37,6 @@ export const Feed = {
   REMOVE: 'REMOVE_FEED'
 };
 
-export const ThreadSuggestions = {
+export const Suggestions = {
   SET_THREADS: 'SET_THREADS'
 };

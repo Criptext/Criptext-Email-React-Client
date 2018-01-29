@@ -27,7 +27,7 @@ import {
   selectFeed,
   toggleMuteFeed
 } from './feeds';
-import { setThreads, loadThreadsSuggestions } from './threadsSuggestions';
+import { setThreads, loadSuggestions } from './Suggestions';
 
 export {
   addEmails,
@@ -44,7 +44,7 @@ export {
   loadFeeds,
   loadLabels,
   loadThreads,
-  loadThreadsSuggestions,
+  loadSuggestions,
   markThreadsRead,
   moveThreads,
   multiSelectThread,

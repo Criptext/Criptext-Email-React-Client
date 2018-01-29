@@ -7,11 +7,6 @@ export const replaceMatches = (phrase, content) => {
   const reg = new RegExp(phrase, 'gi');
   const matches = content.match(reg);
   const splitPhrase = content.split(reg);
-  console.log(phrase);
-  console.log(content);
-  console.log(reg);
-  console.log(matches);
-  console.log(splitPhrase);
   return splitPhrase.reduce((prev, current, i) => {
     prev.push(<span key={i}>{current}</span>);
     if (matches && matches[i]) {
