@@ -18,6 +18,8 @@ export default (state = Map({}), action) => {
       return state;
     case Thread.MOVE_THREADS:
       return state.set('multiselect', false);
+    case Thread.SEARCH_THREADS:
+      return state.set('mailbox', 'Search');
     default:
       return state;
   }

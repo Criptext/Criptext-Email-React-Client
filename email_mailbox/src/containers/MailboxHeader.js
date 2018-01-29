@@ -17,7 +17,7 @@ const mapStateToProps = state => {
     threadsSelected,
     labels,
     allLabels: state.get('labels'),
-    allThreads: state.get('threads'),
+    threadsSuggestions: state.get('threadsSuggestions'),
     markAsUnread,
     allSelected: threadsSelected.length === state.get('threads').size,
     showSelectAllOption: true
@@ -49,6 +49,9 @@ const mapDispatchToProps = dispatch => {
     },
     onSearchThreads: params => {
       return dispatch(actions.searchThreads(params));
+    },
+    onSearchChange: filter => {
+      return dispatch(actions.loadThreadsSuggestions(filter));
     }
   };
 };

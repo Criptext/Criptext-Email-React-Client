@@ -12,6 +12,7 @@ const mapStateToProps = state => {
   return {
     threads: threads,
     selectedThread: state.get('activities').get('selectedThread'),
+    mailbox: state.get('activities').get('mailbox'),
     unreadFilter: unreadFilter,
     labels: state.get('labels')
   };
@@ -19,8 +20,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoadThreads: timestamp => {
-      dispatch(loadThreads(timestamp));
+    onLoadThreads: params => {
+      dispatch(loadThreads(params));
     },
     onUnreadToggle: enabled => {
       dispatch(filterThreadsByUnread(enabled));

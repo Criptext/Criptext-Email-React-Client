@@ -1,11 +1,10 @@
 import { Thread } from './types';
-import { getThreads } from '../utils/electronInterface';
+import { getThreadsFilter } from '../utils/electronInterface';
 
-export const addThreads = threads => ({
+export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
-  threads: threads.sort((t1, t2) => {
-    return t1.lastEmailDate <= t2.lastEmailDate;
-  })
+  threads: threads,
+  clear: clear
 });
 
 export const selectThread = threadId => ({
@@ -79,10 +78,21 @@ export const markThreadsRead = (threadsIds, read) => ({
   type: Thread.READ_THREADS
 });
 
-export const searchThreads = params => ({
-  params,
-  type: Thread.SEARCH_THREADS
-});
+export const searchThreads = params => {
+  return async dispatch => {
+    dispatch({
+      type: Thread.SEARCH_THREADS
+    });
+    try {
+      const threads = await getThreadsFilter(params);
+      dispatch(addThreads(threads, true));
+    } catch (e) {
+      /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
+        the request should not fail because of a bad query built or a non existing column/relation. Its fix should be a restore of
+        the db using a backup previously made. If the backup is also corrupted for some reason, user should log out.*/
+    }
+  };
+};
 
 export const muteNotifications = threadId => {
   return {
@@ -91,13 +101,15 @@ export const muteNotifications = threadId => {
   };
 };
 
-export const loadThreads = timestamp => {
+export const loadThreads = params => {
   return async dispatch => {
     try {
-      const threads = await getThreads(timestamp);
+      const threads = await getThreadsFilter(params);
       dispatch(addThreads(threads));
     } catch (e) {
-      // TO DO
+      /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
+        the request should not fail because of a bad query built or a non existing column/relation. Its fix should be a restore of
+        the db using a backup previously made. If the backup is also corrupted for some reason, user should log out.*/
     }
   };
 };
