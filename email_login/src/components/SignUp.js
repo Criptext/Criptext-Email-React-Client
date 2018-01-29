@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import FormItem from './FormItem';
 import './signup.css';
 
@@ -76,7 +77,10 @@ class SignUp extends Component {
     return (
       <div className="header">
         <div className="button-section">
-          <button className="back-button">
+          <button
+            className="back-button"
+            onClick={ev => this.props.toggleSignUp(ev)}
+          >
             <i className="icon-back" />
           </button>
         </div>
@@ -111,5 +115,9 @@ class SignUp extends Component {
     );
   };
 }
+
+SignUp.propTypes = {
+  toggleSignUp: PropTypes.func
+};
 
 export default SignUp;

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux-immutable';
-import login from './thread';
+import users from './users';
 
 export default combineReducers({
-  login
+  users
 });
