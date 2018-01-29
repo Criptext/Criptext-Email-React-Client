@@ -6000,6 +6000,10 @@ react-scripts@1.1.0:
   optionalDependencies:
     fsevents "1.1.2"
 
+react-tagsinput@^3.19.0:
+  version "3.19.0"
+  resolved "https://registry.yarnpkg.com/react-tagsinput/-/react-tagsinput-3.19.0.tgz#6e3b45595f2d295d4657bf194491988f948caabf"
+
 react@^16.2.0:
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.2.0.tgz#a31bd2dab89bff65d42134fa187f24d054c273ba"
