@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
-const dbManager = require('./DBManager');
+const dbManager = require('./src/DBManager');
 
 let mainWindow;
 let composerWindow;
@@ -17,7 +17,7 @@ async function createWindow() {
   const startUrl =
     process.env.ELECTRON_START_URL ||
     url.format({
-      pathname: path.join(__dirname, '../../email_mailbox/build/index.html'),
+      pathname: path.join(__dirname, './src/app/mailbox/index.html'),
       protocol: 'file:',
       slashes: true
     });

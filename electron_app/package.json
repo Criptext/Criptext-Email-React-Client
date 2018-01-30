@@ -2,19 +2,27 @@
   "name": "criptext-email-electron-app",
   "version": "0.1.0",
   "private": true,
+  "productName": "Criptext Email Client",
   "scripts": {
     "electron": "electron .",
     "start": "ELECTRON_START_URL=http://localhost:3000 electron .",
     "postinstall": "install-app-deps",
     "test": "criptext-js-tools test",
     "integration": "NODE_ENV=test criptext-js-tools integration",
-    "lint": "criptext-js-tools lint"
+    "lint": "criptext-js-tools lint",
+    "package-linux": "electron-packager . electron-criptext-email --overwrite --asar=true --platform=linux --arch=x64 --out=release-builds",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
+    "installer-linux": "electron-installer-debian --src release-builds/electron-criptext-email-linux-x64/ --arch amd64 --config debian.json",
+    "installer-mac": "electron-installer-dmg ./release-builds/Criptext\\ Email\\ Client-darwin-x64/Criptext\\ Email\\ Client.app electron-criptext-email --out=release-builds --overwrite"
   },
-  "main": "./src/electron-starter.js",
+  "main": "./electron-starter.js",
   "devDependencies": {
     "criptext-js-tools": "^0.5.0",
     "electron": "^1.7.10",
-    "electron-builder": "^19.54.0"
+    "electron-builder": "^19.54.0",
+    "electron-installer-debian": "^0.8.0",
+    "electron-installer-dmg": "^0.2.1",
+    "electron-packager": "^10.1.2"
   },
   "dependencies": {
     "knex": "^0.14.2",

@@ -1,0 +1,7 @@
+{
+  "dest": "release-builds/",
+  "categories": [
+    "Utility"
+  ],
+  "productDescription": "My client for criptext email"
+}

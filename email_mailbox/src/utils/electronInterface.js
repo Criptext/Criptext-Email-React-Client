@@ -1,6 +1,6 @@
 const electron = window.require('electron');
 const remote = electron.remote;
-const dbManager = remote.require('./DBManager');
+const dbManager = remote.require('./src/DBManager');
 const ipcRenderer = electron.ipcRenderer;
 
 export const openComposerWindow = () => {
