@@ -22,9 +22,10 @@ const simpleThreadsFilter = function(filter) {
 };
 
 const getThreadsFilter = function(params = {}, limit) {
+  console.log(params);
   const { timestamp, subject, text, mailbox, plain } = params;
 
-  let queryDb = baseThreadQuery(timestamp, limit);
+  let queryDb = baseThreadQuery(timestamp, mailbox, limit);
 
   if (plain) {
     return simpleFilterQuery(queryDb, text);
@@ -40,21 +41,24 @@ const getThreadsFilter = function(params = {}, limit) {
   }
 
   if (mailbox && mailbox !== -1) {
-    queryDb = queryDb.andWhere('labelId', '=', mailbox);
+    queryDb = queryDb.having('allLabels', 'like', `%${mailbox}%`);
   }
 
   return queryDb;
 };
 
-const baseThreadQuery = (timestamp, limit) =>
+const baseThreadQuery = (timestamp, mailbox, limit) =>
   db
     .select(
       `${Table.EMAIL}.*`,
       `${Table.EMAIL}.isMuted as allowNotifications`,
       db.raw(
-        `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> 1 THEN ${
+        `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> ${mailbox} THEN ${
           Table.EMAIL_LABEL
         }.labelId ELSE NULL END) as labels`
+      ),
+      db.raw(
+        `group_concat(${Table.EMAIL_LABEL}.labelId) as allLabels`
       ),
       db.raw(`group_concat(distinct(${Table.EMAIL}.id)) as emails`)
     )

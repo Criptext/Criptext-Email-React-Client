@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { FeedCommand } from './../utils/const';
 
 const Feed = props =>
@@ -22,7 +21,7 @@ const renderFeed = props => (
     className={'feed-item ' + (props.feed.get('unread') ? 'unread-feed' : '')}
     onClick={() => onSelectFeed(props)}
   >
-    <Link to={`/inbox/${props.feed.get('threadId')}`}>
+    <a>
       <div
         className="feed-content"
         onMouseEnter={props.onRegionEnter}
@@ -42,12 +41,17 @@ const renderFeed = props => (
         </div>
         <div className="feed-clear" />
       </div>
-    </Link>
+    </a>
   </li>
 );
 
-const onSelectFeed = props =>
-  props.feed.get('unread') ? props.onSelectFeed(props.feed.get('id')) : null;
+const onSelectFeed = props => {
+  if(props.feed.get('unread')){
+    props.onSelectFeed(props.feed.get('id'))
+  }
+  props.onOpenThread(props.thread);
+}
+  
 
 const renderFeedIcon = feed =>
   feed.get('cmd') === FeedCommand.SENT.value ? (

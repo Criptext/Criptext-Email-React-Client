@@ -60,7 +60,10 @@ class Threads extends Component {
   }
 
   componentDidMount() {
-    this.props.onLoadThreads();
+    this.props.onLoadThreads({
+      mailbox: this.props.mailbox,
+      clear: true
+    });
   }
 
   renderTooltipForThread = () => {
@@ -149,7 +152,8 @@ class Threads extends Component {
               ...this.props.searchParams
             }
           : {
-              timestamp: lastThread.get('timestamp')
+              timestamp: lastThread.get('timestamp'),
+              mailbox: this.props.mailbox
             };
       this.props.onLoadThreads(params);
     }

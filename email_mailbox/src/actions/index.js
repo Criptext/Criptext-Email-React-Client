@@ -3,6 +3,7 @@ import {
   addThreads,
   addThreadLabel,
   addThreadsLabel,
+  closeThread,
   filterThreadsByUnread,
   loadThreads,
   markThreadsRead,
@@ -27,7 +28,7 @@ import {
   selectFeed,
   toggleMuteFeed
 } from './feeds';
-import { setThreads, loadSuggestions } from './Suggestions';
+import { setThreads, loadSuggestions } from './suggestions';
 
 export {
   addEmails,
@@ -39,6 +40,7 @@ export {
   addThreadsLabel,
   addUser,
   addUsers,
+  closeThread,
   filterThreadsByUnread,
   loadEmails,
   loadFeeds,

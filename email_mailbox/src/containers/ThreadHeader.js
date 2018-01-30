@@ -18,10 +18,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onBackOption: () => {
-      return ownProps.history.goBack();
+      return dispatch(actions.closeThread())
     },
     onMoveThreads: (threadsIds, label) => {
-      ownProps.history.goBack();
+      dispatch(actions.closeThread())
       return dispatch(actions.moveThreads(threadsIds, label));
     },
     onAddLabel: (threadsIds, label) => {

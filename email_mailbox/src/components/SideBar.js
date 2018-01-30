@@ -35,7 +35,12 @@ class SideBar extends Component {
               {MailItems.map((item, key) => {
                 const selected = item.id === this.props.optionSelected;
                 return (
-                  <SideBarItem key={key} item={item} selected={selected} />
+                  <SideBarItem onClick={() => {
+                    this.props.onLoadThreads({
+                      clear: true,
+                      mailbox: item.id
+                    })
+                  }} key={key} item={item} selected={selected} />
                 );
               })}
               <li

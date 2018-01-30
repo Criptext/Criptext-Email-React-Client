@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import * as Status from '../utils/ConstUtils';
 import randomcolor from 'randomcolor';
 import CustomCheckbox from './CustomCheckbox';
@@ -15,14 +14,15 @@ class ThreadItem extends Component {
       thread,
       myClass,
       onRegionEnter,
-      onRegionLeave
+      onRegionLeave,
+      onSelectThread
     } = this.props;
     return (
       <div
         className={'thread-item-container ' + myClass}
-        onClick={this.onSelectThread}
+        onClick={onSelectThread}
       >
-        <Link to={`/${mailbox}/${thread.get('id')}`}>
+        <a>
           <div onMouseEnter={onRegionEnter} onMouseLeave={onRegionLeave}>
             {this.renderFirstColumn()}
           </div>
@@ -48,7 +48,7 @@ class ThreadItem extends Component {
           <div style={visibleStyle}>
             <span>{thread.get('date')}</span>
           </div>
-        </Link>
+        </a>
         {this.renderMenu()}
       </div>
     );
@@ -80,10 +80,6 @@ class ThreadItem extends Component {
     return {
       visibility: 'visible'
     };
-  };
-
-  onSelectThread = () => {
-    this.props.onSelectThread(this.props.thread.get('id'));
   };
 
   stopPropagation = ev => {
