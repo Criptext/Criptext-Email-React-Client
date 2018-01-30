@@ -4,20 +4,23 @@ import MailboxHeaderView from '../components/MailboxHeader';
 
 const mapStateToProps = state => {
   const multiselect = state.get('activities').get('multiselect');
-  const threadsSelected = getThreadsSelected(state.get('threads'), true);
+  const threadsSelected = getThreadsSelected(state.get('threads'), multiselect);
   const labels = getLabelIncluded(
     state.get('labels'),
     state.get('threads'),
     threadsSelected,
-    true
+    multiselect
   );
-  const markAsUnread = shouldMarkAsUnread(state.get('threads'), true);
+  const markAsUnread = shouldMarkAsUnread(state.get('threads'), multiselect);
+  const suggestions = state.get('suggestions');
   return {
     multiselect,
     threadsSelected,
     labels,
     allLabels: state.get('labels'),
-    threadsSuggestions: state.get('threadsSuggestions'),
+    threadsSuggestions: suggestions.get('threads'),
+    hints: suggestions.get('hints'),
+    errorSuggestions: suggestions.get('error'),
     markAsUnread,
     allSelected: threadsSelected.length === state.get('threads').size,
     showSelectAllOption: true
@@ -51,7 +54,7 @@ const mapDispatchToProps = dispatch => {
       return dispatch(actions.searchThreads(params));
     },
     onSearchChange: filter => {
-      return dispatch(actions.loadThreadsSuggestions(filter));
+      return dispatch(actions.loadSuggestions(filter));
     }
   };
 };

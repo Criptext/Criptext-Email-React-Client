@@ -1,4 +1,4 @@
-import { ThreadSuggestions } from '../actions/types';
+import { Suggestions } from '../actions/types';
 import { Map, List } from 'immutable';
 import * as TimeUtils from '../utils/TimeUtils';
 import {
@@ -6,10 +6,16 @@ import {
   buildParticipantsColumnString
 } from '../utils/UserUtils';
 
-export default (state = List([]), action) => {
+export default (
+  state = Map({
+    threads: List(),
+    hints: List()
+  }),
+  action
+) => {
   switch (action.type) {
-    case ThreadSuggestions.SET_THREADS: {
-      return List(
+    case Suggestions.SET_THREADS: {
+      const threadsList = List(
         action.threads.map(thread => {
           const testUsers = 'Criptext Info <no-reply@criptext.com>';
           const contacts = parseAllContacts(testUsers);
@@ -21,6 +27,16 @@ export default (state = List([]), action) => {
           });
         })
       );
+      const hintsList = List(action.hints);
+
+      return state.merge({
+        hints: hintsList,
+        threads: threadsList,
+        error: null
+      });
+    }
+    case Suggestions.SET_ERROR_SUGGESTIONS: {
+      return state.set('error', action.error);
     }
     default:
       return state;

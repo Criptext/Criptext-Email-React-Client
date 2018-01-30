@@ -1,5 +1,6 @@
 import { Thread } from './types';
 import { getThreadsFilter } from '../utils/electronInterface';
+import { storeValue } from '../utils/storage';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -84,6 +85,7 @@ export const searchThreads = params => {
       type: Thread.SEARCH_THREADS
     });
     try {
+      await storeValue(params.text);
       const threads = await getThreadsFilter(params);
       dispatch(addThreads(threads, true));
     } catch (e) {

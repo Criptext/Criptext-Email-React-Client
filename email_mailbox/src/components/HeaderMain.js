@@ -32,24 +32,39 @@ const HintsMenu = props => (
     targetId="headerSearch"
     display={props.displaySearchHints}
   >
-    <div>
-      <SearchSuggestion
-        icon="icon-time"
-        items={['Subject Design', 'Subject Design 2']}
-      />
-      <SearchSuggestion icon="icon-search" items={['Subject Design']} />
-      {props.threads
-        ? props.threads.map((thread, index) => (
-            <SearchMail
-              key={index}
-              preview={thread.get('preview')}
-              date={thread.get('date')}
-              participants={thread.get('header')}
-              searchText={props.searchText}
-            />
-          ))
-        : null}
-    </div>
+    {props.errorSuggestions ? (
+      <div className="search-hints-error">
+        <div>
+          <span>:C</span>
+        </div>
+        <div>
+          <span>{props.errorSuggestions}</span>
+        </div>
+      </div>
+    ) : (
+      <div>
+        <SearchSuggestion
+          icon="icon-time"
+          items={props.hints}
+          searchText={props.searchText}
+        />
+        <SearchSuggestion
+          icon="icon-search"
+          items={[props.searchText]}
+          searchText={props.searchText}
+        />
+
+        {props.threads.map((thread, index) => (
+          <SearchMail
+            key={index}
+            preview={thread.get('preview')}
+            date={thread.get('date')}
+            participants={thread.get('header')}
+            searchText={props.searchText}
+          />
+        ))}
+      </div>
+    )}
   </TooltipMenu>
 );
 
@@ -154,12 +169,21 @@ const renderLabels = labels => {
   return labelsView;
 };
 
-const SearchSuggestion = props => (
-  <div className="search-recent">
-    <i className={props.icon} />
-    <ul>{props.items.map((item, index) => <li key={index}>{item}</li>)}</ul>
-  </div>
-);
+const SearchSuggestion = props => {
+  if (props.items.size === 0) {
+    return null;
+  }
+  return (
+    <div className="search-recent">
+      <i className={props.icon} />
+      <ul>
+        {props.items.map((item, index) => (
+          <li key={index}>{replaceMatches(props.searchText, item)}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const SearchInputBox = props => (
   <div>
@@ -170,6 +194,8 @@ const SearchInputBox = props => (
 
 HintsMenu.propTypes = {
   displaySearchHints: PropTypes.bool,
+  errorSuggestions: PropTypes.string,
+  hints: PropTypes.object,
   searchText: PropTypes.string,
   threads: PropTypes.object,
   toggleSearchHints: PropTypes.func
@@ -193,7 +219,8 @@ OptionsMenu.propTypes = {
 
 SearchSuggestion.propTypes = {
   icon: PropTypes.string,
-  items: PropTypes.array
+  items: PropTypes.array,
+  searchText: PropTypes.string
 };
 
 SearchInputBox.propTypes = {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const replaceMatches = (phrase, content) => {
-  if (!phrase) {
+  if (!phrase || !content) {
     return <span>{content}</span>;
   }
   const reg = new RegExp(phrase, 'gi');
