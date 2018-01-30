@@ -1,6 +1,9 @@
 const path = require('path');
 const DB_TEST_PATH = './src/__tests__/test.db';
-const DB_PATH = path.join(__dirname, '/mydb.db').replace('/app.asar', '').replace('/src', '');;
+const DB_PATH = path
+  .join(__dirname, '/mydb.db')
+  .replace('/app.asar', '')
+  .replace('/src', '');
 const myDBPath = process.env.NODE_ENV === 'test' ? DB_TEST_PATH : DB_PATH;
 const MEDIUM_STRING_SIZE = 64;
 const SHORT_STRING_SIZE = 32;
@@ -16,7 +19,7 @@ const Table = {
   FILE: 'file',
   OPEN: 'open'
 };
-console.log(myDBPath);
+
 const db = require('knex')({
   client: 'sqlite3',
   connection: {

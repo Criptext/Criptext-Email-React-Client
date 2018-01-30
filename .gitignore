@@ -11,6 +11,8 @@
 */build
 */src/**/*.css
 */release-builds/
+*/src/app
+*/src/app/build
 
 # misc
 .DS_Store
