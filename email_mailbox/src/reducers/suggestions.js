@@ -8,8 +8,8 @@ import {
 
 export default (
   state = Map({
-    threads: List([]),
-    hints: List([])
+    threads: List(),
+    hints: List()
   }),
   action
 ) => {
