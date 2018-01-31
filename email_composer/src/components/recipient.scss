@@ -57,6 +57,10 @@
       height: 20px;
       margin: 2px 0;
     }
+
+    input::-webkit-input-placeholder{
+      color: #6a707e;
+    }
   }
 }
 
