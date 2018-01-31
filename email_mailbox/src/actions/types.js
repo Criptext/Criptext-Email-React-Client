@@ -45,4 +45,4 @@ export const Suggestions = {
 
 export const General = {
   CHANGE_MAILBOX: 'CHANGE_MAILBOX'
-}
+};

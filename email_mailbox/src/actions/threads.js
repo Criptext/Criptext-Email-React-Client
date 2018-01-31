@@ -11,11 +11,11 @@ export const addThreads = (threads, clear) => ({
 export const selectThread = thread => ({
   type: Thread.SELECT,
   thread
-})
+});
 
-export const closeThread = thread => ({
+export const closeThread = () => ({
   type: Thread.CLOSE_THREAD
-})
+});
 
 export const multiSelectThread = (threadId, value) => ({
   type: Thread.MULTISELECT,
@@ -110,7 +110,7 @@ export const muteNotifications = threadId => {
 
 export const loadThreads = params => {
   return async dispatch => {
-    if(params.mailbox && params.clear){
+    if (params.mailbox && params.clear) {
       dispatch({
         type: General.CHANGE_MAILBOX,
         mailbox: params.mailbox

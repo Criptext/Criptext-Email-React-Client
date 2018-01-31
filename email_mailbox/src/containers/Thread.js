@@ -18,7 +18,7 @@ const getEmails = (emails, thread) => {
   return emailsMapToList(emails, emailIds);
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   const thread = state.get('activities').get('selectedThread');
   const emailIds = getEmails(state.get('emails'), thread);
   return {

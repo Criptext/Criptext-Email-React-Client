@@ -24,8 +24,7 @@ const db = require('knex')({
   client: 'sqlite3',
   connection: {
     filename: myDBPath
-  },
-  debug: true
+  }
 });
 
 const createUserColumns = table => {

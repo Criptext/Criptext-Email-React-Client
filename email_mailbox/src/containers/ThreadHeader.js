@@ -15,13 +15,13 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
   return {
     onBackOption: () => {
-      return dispatch(actions.closeThread())
+      return dispatch(actions.closeThread());
     },
     onMoveThreads: (threadsIds, label) => {
-      dispatch(actions.closeThread())
+      dispatch(actions.closeThread());
       return dispatch(actions.moveThreads(threadsIds, label));
     },
     onAddLabel: (threadsIds, label) => {

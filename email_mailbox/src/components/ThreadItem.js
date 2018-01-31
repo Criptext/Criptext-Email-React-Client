@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as Status from '../utils/ConstUtils';
 import randomcolor from 'randomcolor';
-import CustomCheckbox from './CustomCheckbox';
+import { CustomCheckbox, Status as CheckStatus } from './CustomCheckbox';
 import { replaceMatches } from '../utils/ReactUtils';
 import './threaditem.css';
 
@@ -10,7 +10,6 @@ class ThreadItem extends Component {
   render() {
     const visibleStyle = this.getStyleVisibilityByMultiselect();
     const {
-      mailbox,
       thread,
       myClass,
       onRegionEnter,
@@ -87,7 +86,10 @@ class ThreadItem extends Component {
   };
 
   onCheck = value => {
-    this.props.onMultiSelect(this.props.thread.get('id'), value);
+    this.props.onMultiSelect(
+      this.props.thread.get('id'),
+      CheckStatus.toBoolean(value)
+    );
   };
 
   renderMultipleSpaces = times => {
@@ -100,7 +102,7 @@ class ThreadItem extends Component {
     if (this.props.multiselect || this.props.hovering) {
       return (
         <CustomCheckbox
-          status={this.props.thread.get('selected')}
+          status={CheckStatus.fromBoolean(this.props.thread.get('selected'))}
           onCheck={this.onCheck}
         />
       );

@@ -22,7 +22,6 @@ const simpleThreadsFilter = function(filter) {
 };
 
 const getThreadsFilter = function(params = {}, limit) {
-  console.log(params);
   const { timestamp, subject, text, mailbox, plain } = params;
 
   let queryDb = baseThreadQuery(timestamp, mailbox, limit);
@@ -53,13 +52,10 @@ const baseThreadQuery = (timestamp, mailbox, limit) =>
       `${Table.EMAIL}.*`,
       `${Table.EMAIL}.isMuted as allowNotifications`,
       db.raw(
-        `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> ${mailbox} THEN ${
-          Table.EMAIL_LABEL
-        }.labelId ELSE NULL END) as labels`
+        `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> ${mailbox ||
+          -1} THEN ${Table.EMAIL_LABEL}.labelId ELSE NULL END) as labels`
       ),
-      db.raw(
-        `group_concat(${Table.EMAIL_LABEL}.labelId) as allLabels`
-      ),
+      db.raw(`group_concat(${Table.EMAIL_LABEL}.labelId) as allLabels`),
       db.raw(`group_concat(distinct(${Table.EMAIL}.id)) as emails`)
     )
     .from(Table.EMAIL)

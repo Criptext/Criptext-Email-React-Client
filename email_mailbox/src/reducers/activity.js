@@ -1,13 +1,16 @@
 import { Thread, General } from '../actions/types';
 import { Map } from 'immutable';
-export default (state = Map({mailbox: 'inbox', stance: 'threads'}), action) => {
+export default (
+  state = Map({ mailbox: 'inbox', stance: 'threads' }),
+  action
+) => {
   switch (action.type) {
     case Thread.SELECT:
       return state.merge({
         selectedThread: action.thread,
         stance: 'emails',
         multiselect: false
-      })
+      });
     case Thread.MULTISELECT:
       return state.set('multiselect', true);
     case Thread.UNREAD_FILTER:
@@ -25,7 +28,7 @@ export default (state = Map({mailbox: 'inbox', stance: 'threads'}), action) => {
       return state.merge({
         selectedThread: null,
         stance: 'threads'
-      })
+      });
     default:
       return state;
   }

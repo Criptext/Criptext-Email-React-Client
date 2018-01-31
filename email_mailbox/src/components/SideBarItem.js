@@ -18,6 +18,7 @@ const SideBarItem = props => (
 
 SideBarItem.propTypes = {
   item: PropTypes.object,
+  onClick: PropTypes.func,
   selected: PropTypes.bool
 };
 

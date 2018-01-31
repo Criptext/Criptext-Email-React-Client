@@ -46,12 +46,11 @@ const renderFeed = props => (
 );
 
 const onSelectFeed = props => {
-  if(props.feed.get('unread')){
-    props.onSelectFeed(props.feed.get('id'))
+  if (props.feed.get('unread')) {
+    props.onSelectFeed(props.feed.get('id'));
   }
   props.onOpenThread(props.thread);
-}
-  
+};
 
 const renderFeedIcon = feed =>
   feed.get('cmd') === FeedCommand.SENT.value ? (

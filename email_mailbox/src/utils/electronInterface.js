@@ -19,52 +19,52 @@ export const simpleThreadsFilter = filter => {
   return dbManager.simpleThreadsFilter(filter);
 };
 
-export const getThreadsFilter = (params) => {
+export const getThreadsFilter = params => {
   return dbManager.getThreadsFilter(parseMailbox(params));
 };
 
-const parseMailbox = (params) => {
-  switch(params.mailbox){
-    case 'inbox': { 
-      return ({
+const parseMailbox = params => {
+  switch (params.mailbox) {
+    case 'inbox': {
+      return {
         ...params,
         mailbox: 1
-      }) 
+      };
     }
-    case 'spam': { 
-      return ({
+    case 'spam': {
+      return {
         ...params,
         mailbox: 2
-      }) 
+      };
     }
-    case 'sent': { 
-      return ({
+    case 'sent': {
+      return {
         ...params,
         mailbox: 3
-      }) 
+      };
     }
-    case 'draft': { 
-      return ({
+    case 'draft': {
+      return {
         ...params,
         mailbox: -1,
         getDrafts: true
-      }) 
+      };
     }
-    case 'trash': { 
-      return ({
+    case 'trash': {
+      return {
         ...params,
         mailbox: -1,
         getTrash: -1
-      }) 
+      };
     }
-    case 'starred': { 
-      return ({
+    case 'starred': {
+      return {
         ...params,
         mailbox: 7
-      }) 
+      };
     }
     default: {
       return params;
     }
   }
-}
+};

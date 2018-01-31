@@ -22,7 +22,7 @@ async function createWindow() {
       slashes: true
     });
   mainWindow.loadURL(startUrl);
-
+  mainWindow.maximize();
   mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', () => {
