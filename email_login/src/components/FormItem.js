@@ -35,7 +35,7 @@ const renderItem = props =>
     <div className="input-data">
       <CustomCheckbox
         status={props.isChecked}
-        onCheck={() => props.onCheck()}
+        onCheck={() => onCheck(props)}
       />
       <span className="label-acceptterms">
         {props.formItem.label.text}

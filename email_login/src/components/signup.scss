@@ -268,11 +268,27 @@
             opacity: 0.5;
             margin: 0px;
             width: 100%;
+            -webkit-transition: width 1s;
+            transition: opacity 1s;
 
             span {
               color: #fff;
               font-weight: 600;
               opacity: 0.5;
+              -webkit-transition: width 0.1s;
+              transition: opacity 0.1s;
+            }
+          }
+          .create-button:enabled {
+            opacity: 0.9;
+            span{
+              opacity: 0.9;
+            }
+          }
+          .create-button:hover:enabled {
+            opacity: 1.0;
+            span{
+              opacity: 1.0;
             }
           }
         }
