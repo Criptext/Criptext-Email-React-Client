@@ -1,47 +1,43 @@
 import React, { Component } from 'react';
 import FormItem from './FormItem';
-import PropTypes from 'prop-types';
-
 
 class FormItemWrapper extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       validated: false,
       hasError: false,
       isChecked: false
-    }
+    };
     this.onCheck = this.onCheck.bind(this);
   }
 
-
-  onValidate(){
+  onValidate() {
     this.setState({
       validated: true
-    })
+    });
   }
 
-  onHasError(){
+  onHasError() {
     this.setState({
       hasError: true
-    })
+    });
   }
 
-  onCleanError(){
+  onCleanError() {
     this.setState({
       hasError: false
-    })
+    });
   }
 
-  onCheck(){
+  onCheck() {
     this.setState({
       isChecked: !this.state.isChecked
-    })
+    });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <FormItem
         {...this.props}
         validated={this.state.validated}
@@ -52,10 +48,10 @@ class FormItemWrapper extends Component {
         onCleanError={this.onCleanError}
         onCheck={this.onCheck}
       />
-    )
+    );
   }
-
 }
 
+FormItemWrapper.propTypes = {};
 
 export default FormItemWrapper;

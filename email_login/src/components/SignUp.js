@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import FormItemWrapper from './FormItemWrapper';
 import './signup.css';
 
-
 const formItems = [
   {
     name: 'username',
@@ -73,9 +72,7 @@ const formItems = [
   }
 ];
 
-
 const SignUp = props => renderSignUp(props, formItems);
-
 
 const renderSignUp = (props, items) => (
   <div className="signup">
@@ -84,14 +81,10 @@ const renderSignUp = (props, items) => (
   </div>
 );
 
-
 const renderHeader = props => (
   <div className="header">
     <div className="button-section">
-      <button
-        className="back-button"
-        onClick={ev => props.toggleSignUp(ev)}
-      >
+      <button className="back-button" onClick={ev => props.toggleSignUp(ev)}>
         <i className="icon-back" />
       </button>
     </div>
@@ -101,7 +94,6 @@ const renderHeader = props => (
     <div className="header-clear" />
   </div>
 );
-
 
 const renderForm = items => (
   <div className="form">
@@ -124,10 +116,8 @@ const renderForm = items => (
   </div>
 );
 
-
-SignUp.propTypes = {
+renderHeader.propTypes = {
   toggleSignUp: PropTypes.func
 };
-
 
 export default SignUp;
