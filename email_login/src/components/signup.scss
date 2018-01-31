@@ -203,17 +203,25 @@
               outline: none;
               border-bottom: solid 2px #ffffff;
             }
-            .input-acceptterms{
+
+            .checkmark-container {
               float: left;
-              color: #ffffff;
-              margin: 0% 4% 0% 0%;
+              .checkmark-checked:after {
+                position: relative;
+                top: -2px;
+                left: 2px;
+              }
             }
             .label-acceptterms{
               width: 76%;
               float: left;
               font-size: 10px;
               font-weight: 500;
+              margin-left: 10px;
               color: #ffffff;
+              .strong{
+                font-weight: bolder;
+              }
             }
 
             .error-message.error-username {

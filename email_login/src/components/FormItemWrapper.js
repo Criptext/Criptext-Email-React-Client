@@ -52,6 +52,4 @@ class FormItemWrapper extends Component {
   }
 }
 
-FormItemWrapper.propTypes = {};
-
 export default FormItemWrapper;

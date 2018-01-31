@@ -37,12 +37,16 @@ const renderItem = props =>
       {renderErrorMessage(props)}
     </div>
   ) : (
-    <CustomCheckbox
-      label={props.formItem.label.text}
-      strong={props.formItem.label.strong}
-      status={props.isChecked}
-      onCheck={() => props.onCheck()}
-    />
+    <div className="input-data">
+      <CustomCheckbox
+        status={props.isChecked}
+        onCheck={() => props.onCheck()}
+      />
+      <span className="label-acceptterms">
+        {props.formItem.label.text}
+        <span className="strong">{props.formItem.label.strong}</span>
+      </span>
+    </div>
   );
 
 const renderInput = formItem => (
