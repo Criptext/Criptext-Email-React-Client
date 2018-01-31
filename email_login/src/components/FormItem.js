@@ -26,7 +26,7 @@ const renderValidateIcon = props => {
 const renderItem = props =>
   props.formItem.type !== 'checkbox' ? (
     <div className="input-data">
-      {renderInput(props.formItem)}
+      {renderInput(props)}
       {renderLabel(props.formItem)}
       {renderIcon(props.formItem)}
       {renderErrorMessage(props)}
@@ -44,11 +44,19 @@ const renderItem = props =>
     </div>
   );
 
-const renderInput = formItem => (
+const onCheck = props => {
+  props.onCheck();
+  const ev = { target: { value: !props.isChecked } }
+  props.onChange(ev, props.formItem.name)
+}
+
+const renderInput = props => (
   <input
-    className={`input-${formItem.name}`}
-    type={formItem.type}
-    placeholder={formItem.placeholder}
+    className={`input-${props.formItem.name}`}
+    name={props.formItem.name}
+    type={props.formItem.type}
+    placeholder={props.formItem.placeholder}
+    onChange={(ev, name) => props.onChange(ev, props.formItem.name)}
   />
 );
 

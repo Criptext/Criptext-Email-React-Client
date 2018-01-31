@@ -9,7 +9,7 @@
   background-image: linear-gradient(to bottom, #00c4ff, #0091ff);
 
   .header {
-    height: 15%;
+    height: 90px;
     width: 100%;
 
     .button-section {
@@ -46,7 +46,7 @@
         top: 20px;
         right: 20px;
         color: #ffffff;
-        background-image: url(#{$_PATH_TO_IMAGES}/header-icon.png);
+        background-image: url('./../images/logo-criptext@2x.png');
         background-position: center;
         background-size: 100%;
       }
@@ -59,7 +59,7 @@
 
 
   .form {
-    height: 85%;
+    height: calc(100% - 90px);
     width: 100%;
 
     .header {
@@ -83,6 +83,7 @@
 
       form {
         width: 100%;
+        height: 100%;
         margin: 0 auto;
 
         .form-item.hasError {

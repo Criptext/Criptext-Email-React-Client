@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SignUp from './SignUp';
+import SignUpWrapper from './SignUpWrapper';
 import './login.css';
 
 class Login extends Component {
@@ -16,7 +16,7 @@ class Login extends Component {
 
   renderLogin = () => {
     if (this.state.showSignUp) {
-      return <SignUp toggleSignUp={ev => this.toggleSignUp(ev)} />;
+      return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
     }
     return (
       <div className="login">
@@ -43,7 +43,7 @@ class Login extends Component {
   renderForm = () => {
     return (
       <div className="form">
-        <form>
+        <form autoComplete="off">
           <div className="label">
             <label>
               <input type="text" placeholder="Username" /> &nbsp;
