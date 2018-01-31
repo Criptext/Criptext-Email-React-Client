@@ -20,7 +20,7 @@ class DropfileFieldWrapper extends Component {
         onDragLeave={this.handleDragLeave}
         onDragOver={this.handleDragOver}
         onDrop={this.handleDrop}
-        onClearFile={this.handleClearFile.bind(this)}
+        onClearFile={this.handleClearFile}
       />
     );
   }
@@ -63,9 +63,7 @@ class DropfileFieldWrapper extends Component {
 
   setFiles = (_files, e) => {
     if (_files && _files.length > 0) {
-      const newFiles = Array.from(_files).map(file => {
-        return file;
-      });
+      const newFiles = Array.from(_files);
       const files = newFiles.concat(this.state.files);
       this.setState({
         files,
