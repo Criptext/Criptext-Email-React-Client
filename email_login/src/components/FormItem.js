@@ -13,20 +13,15 @@ const renderFormItem = props => (
   </div>
 );
 
-const renderValidateIcon = props =>
-  props.validated ? (
-    props.formItem.type !== 'checkbox' ? (
-      props.hasError ? (
-        <span className="invalid-icon icon-check" />
-      ) : (
-        <span className="valid-icon icon-check" />
-      )
-    ) : (
-      <span className="no-icon" />
-    )
-  ) : (
-    <span className="no-icon" />
-  );
+const renderValidateIcon = props => {
+  if ( props.validated === false || props.formItem.type === 'checkbox' ) {
+    return <span className="no-icon" />
+  }
+  if ( props.hasError ) {
+    return <span className="invalid-icon icon-check" />
+  }
+  return <span className="valid-icon icon-check" />
+}
 
 const renderItem = props =>
   props.formItem.type !== 'checkbox' ? (
