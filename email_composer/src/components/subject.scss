@@ -1,0 +1,20 @@
+.subject-container{
+  align-items: center;
+  display: flex;
+  margin-left: 10px;
+  height: 46px;
+  width: 100%;
+
+  input{
+    border: none;
+    color: black;
+    font-family: NunitoSans;
+    font-size: 16px;
+    font-weight: 600;
+    width: calc(100% - 30px);
+  }
+
+  input::-webkit-input-placeholder {
+    color: #6a707e;
+  }
+}
