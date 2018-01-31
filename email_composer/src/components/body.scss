@@ -3,26 +3,4 @@
   height: calc(100% - 95px);
   position: relative;
   width: 100%;
-
-  textarea{
-    border: none;
-    color: #6a707e;
-    flex-grow: 1;
-    font-family: NunitoSans;
-    font-size: 13px;
-    font-weight: 200;
-    padding: 0;
-    resize: none;
-    width: calc(100% - 5px);
-
-    &:focus{
-      outline: 0;
-    }
-  }
-
-
-
-  textarea::-webkit-input-placeholder{
-    color: #6a707e;
-  }
 }

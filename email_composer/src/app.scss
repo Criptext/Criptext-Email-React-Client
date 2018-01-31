@@ -337,6 +337,11 @@ html, body {
   width: 100%;
 }
 
+.wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
 /* 3.- CONTROLS
    ----------------------------- */
 

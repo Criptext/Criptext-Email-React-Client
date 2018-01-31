@@ -67,15 +67,13 @@ class DropfileFieldWrapper extends Component {
         return file;
       });
       const files = newFiles.concat(this.state.files);
-      this.setState(
-        {
-          files,
-          isDragActive: false
-        },
-        () => {
-          this.props.onDrop(e, files);
-        }
-      );
+      this.setState({
+        files,
+        isDragActive: false
+      });
+      if (this.props.onDrop) {
+        this.props.onDrop(e, files);
+      }
     }
   };
 }
