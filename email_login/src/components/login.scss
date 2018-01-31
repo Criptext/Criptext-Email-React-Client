@@ -1,0 +1,132 @@
+@import "./../styles/index.scss";
+
+
+.login {
+  font-family: 'NunitoSans';
+  height: 439px;
+  width: 328px;
+
+  border-radius: 7px;
+  background-image: linear-gradient(to bottom, #00c4ff, #0091ff);
+
+  .header {
+    height: 60%;
+    width: 100%;
+    text-align: center;
+
+    .logo {
+      height: 65%;
+      padding: 0 auto;
+
+      .icon {
+        height: 50px;
+        width: 57px;
+        margin: 0 auto;
+        position: relative;
+        top: 65%;
+        background: url(#{$_PATH_TO_IMAGES}/icon-criptext-shadow.png) no-repeat center center;
+        background-size: 100%;
+      }
+    }
+
+    .text {
+      height: 35%;
+      position: relative;
+      top: 5px;
+      color: #ffffff;
+      font-size: 20px;
+    }
+  }
+
+  .form {
+    height: 20%;
+    width: 60%;
+    margin: 0 auto;
+
+    form {
+      .label {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+
+        label {
+          input {
+            background: transparent;
+            width: 55%;
+            border: 0px;
+            border-bottom: solid 1px rgba(255,255,255,0.19);
+            color: #ffffff;
+            float: left;
+          }
+          input::placeholder {
+            color: rgba(255,255,255,0.6);
+            opacity: 1;
+          }
+          input:-ms-input-placeholder {
+            color: rgba(255,255,255,0.6);
+          }
+          input::-ms-input-placeholder {
+            color: rgba(255,255,255,0.6);
+          }
+          input:focus{
+            outline: none;
+            border-bottom: solid 2px #ffffff;
+          }
+          span {
+            width: 40%;
+            float: right;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ffffff;
+          }
+          .clear {
+            clear: both;
+          }
+        }
+      }
+
+      .button {
+        width: 100%;
+        margin: 5% 0% 0% 0%;
+        padding: 0px;
+
+        .button-login {
+          border: none;
+          border-radius: 100px;
+          padding: 10px;
+          background-color: #0091ff;
+          margin: 15px 0;
+          width: 100%;
+
+          span {
+            font-weight: 600;
+            opacity: 0.5;
+          }
+        }
+      }
+
+    }
+  }
+
+  .footer {
+    height: 20%;
+    color: #ffffff;
+    font-size: 13px;
+
+    a { color: inherit; }
+
+    .signup-message {
+      position: relative;
+      top: 7%;
+      text-align: center;
+    }
+
+    .login-problems {
+      position: relative;
+      top: 48%;
+      text-align: center;
+      text-decoration: underline;
+    }
+  }
+
+}
