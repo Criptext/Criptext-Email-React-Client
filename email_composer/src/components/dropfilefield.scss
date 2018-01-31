@@ -1,0 +1,126 @@
+.dropfilefiled-container{
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 30px);
+  margin: 10px auto 0;
+  overflow: auto;
+  position: relative;
+  width: calc(100% - 25px);
+
+  input{
+    display: none;
+  }
+}
+
+.dragActive{
+  border: 2px dashed #0091ff;
+  border-radius: 8px;
+
+  >div{
+    opacity: 0.2;
+  }
+
+  .dropfilefiled-content{
+    display: flex;
+    opacity: 1;
+  }
+}
+
+.dropfilefiled-content{
+  align-items: center;
+  display: none;
+  height: 80px;
+  position: absolute;
+  right: calc(50% - 65px);
+  top: calc(50% - 40px);
+  width: 130px;
+
+  span{
+    color: #4a4a4a;
+    font-family: NunitoSans;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 auto;
+  }
+}
+
+.files-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.file-container{
+  border: 1px solid rgba(216, 216, 216, 0.45);
+  background-color: #fafafa;
+  border-radius: 5px;
+  height: 40px;
+  margin: 5px 0;
+  position: relative;
+  width: 370px;
+
+  &:hover{
+    border-color: #bcdaff;
+    background-color: #edf5ff;
+
+    .file-delete{
+      display: flex;
+    }
+  }
+}
+
+.file-icon{
+  float: left;
+  height: 30px;
+  margin: 5px;
+  width: 30px;
+}
+
+.file-info{
+  align-items: center;
+  display: flex;
+  float: right;
+  height: 100%;
+  margin: 0 5px;
+  width: calc(100% - 50px);
+  
+  span{
+    display: block;
+    font-family: NunitoSans;
+    font-size: 13px;
+
+    &:first-child{
+      flex-grow: 2;
+      font-weight: 600;
+      margin-right: 5px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  
+    &:last-child{
+      color: #9b9b9b;
+      flex-grow: 1;
+      font-weight: 300;
+    }
+  }
+}
+
+.file-delete{
+  align-items: center;
+  background-color: white;
+  border: solid 1px #cdcdcd;
+  border-radius: 50%;
+  display: none;
+  height: 19px;
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  width: 19px;
+
+  i{
+    color: #6e6e6e;
+    font-size: 18px;
+    margin: 0 auto;
+  }
+}
