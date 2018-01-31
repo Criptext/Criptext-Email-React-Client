@@ -55,7 +55,7 @@ const renderInput = formItem => (
 
 const renderLabel = formItem =>
   formItem.label.text !== '' ? (
-    <label className={'label-' + formItem.name}>
+    <label className={`label-${formItem.name}`}>
       {formItem.label.text}
       <strong> {formItem.label.strong}</strong>
     </label>
