@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import MailboxHeaderView from '../components/MailboxHeader';
-import { Status } from '../components/CustomCheckbox';
+import { CustomCheckboxStatus } from '../components/CustomCheckbox';
 
 const mapStateToProps = state => {
   const multiselect = state.get('activities').get('multiselect');
@@ -113,11 +113,11 @@ function getLabelIncluded(labels, threads, selectThreads, multiselect) {
   return labels.reduce(function(lbs, label) {
     const labelId = label.get('id');
     const labelText = label.get('text');
-    let checked = Status.NONE;
+    let checked = CustomCheckboxStatus.NONE;
     if (hasLabels[labelId] === selectThreads.length) {
-      checked = Status.COMPLETE;
+      checked = CustomCheckboxStatus.COMPLETE;
     } else if (hasLabels[labelId]) {
-      checked = Status.PARTIAL;
+      checked = CustomCheckboxStatus.PARTIAL;
     }
     lbs.push({
       id: labelId,

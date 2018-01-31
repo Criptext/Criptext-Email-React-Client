@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as Status from '../utils/ConstUtils';
 import randomcolor from 'randomcolor';
-import { CustomCheckbox, Status as CheckStatus } from './CustomCheckbox';
+import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import { replaceMatches } from '../utils/ReactUtils';
 import './threaditem.css';
 
@@ -88,7 +88,7 @@ class ThreadItem extends Component {
   onCheck = value => {
     this.props.onMultiSelect(
       this.props.thread.get('id'),
-      CheckStatus.toBoolean(value)
+      CustomCheckboxStatus.toBoolean(value)
     );
   };
 
@@ -102,7 +102,9 @@ class ThreadItem extends Component {
     if (this.props.multiselect || this.props.hovering) {
       return (
         <CustomCheckbox
-          status={CheckStatus.fromBoolean(this.props.thread.get('selected'))}
+          status={CustomCheckboxStatus.fromBoolean(
+            this.props.thread.get('selected')
+          )}
           onCheck={this.onCheck}
         />
       );

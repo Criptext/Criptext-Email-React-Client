@@ -21,10 +21,10 @@ const simpleThreadsFilter = function(filter) {
     .limit(5);
 };
 
-const getThreadsFilter = function(params = {}, limit) {
-  const { timestamp, subject, text, mailbox, plain } = params;
+const getThreadsFilter = function(params = {}) {
+  const { timestamp, subject, text, mailbox, plain, limit } = params;
 
-  let queryDb = baseThreadQuery(timestamp, mailbox, limit);
+  let queryDb = baseThreadQuery({ timestamp, mailbox, limit });
 
   if (plain) {
     return simpleFilterQuery(queryDb, text);
@@ -46,7 +46,7 @@ const getThreadsFilter = function(params = {}, limit) {
   return queryDb;
 };
 
-const baseThreadQuery = (timestamp, mailbox, limit) =>
+const baseThreadQuery = ({ timestamp, mailbox, limit }) =>
   db
     .select(
       `${Table.EMAIL}.*`,

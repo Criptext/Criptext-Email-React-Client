@@ -52,4 +52,6 @@ const Status = {
   }
 };
 
-export { CustomCheckbox, Status };
+export default CustomCheckbox;
+
+export const CustomCheckboxStatus = Status;

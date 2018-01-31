@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TooltipMenu from './TooltipMenu';
-import { CustomCheckbox, Status } from './CustomCheckbox';
+import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import SearchBox from './SearchBox';
 import { replaceMatches } from '../utils/ReactUtils';
 import './headermain.css';
@@ -144,9 +144,14 @@ const OptionsMenu = props => (
         <div>
           <CustomCheckbox
             label="Has attachment"
-            status={Status.fromBoolean(props.searchParams.hasAttachments)}
+            status={CustomCheckboxStatus.fromBoolean(
+              props.searchParams.hasAttachments
+            )}
             onCheck={value => {
-              props.setSearchParam('hasAttachments', Status.toBoolean(value));
+              props.setSearchParam(
+                'hasAttachments',
+                CustomCheckboxStatus.toBoolean(value)
+              );
             }}
           />
         </div>

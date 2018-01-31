@@ -23,7 +23,6 @@ async function createWindow() {
     });
   mainWindow.loadURL(startUrl);
   mainWindow.maximize();
-  mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', () => {
     mainWindow = null;
