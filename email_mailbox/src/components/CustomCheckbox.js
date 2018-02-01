@@ -10,23 +10,9 @@ const CustomCheckbox = props => (
 );
 
 function getClass(status) {
-  if (typeof status === 'boolean') {
-    return getClassWhenBoolean(status);
-  }
-  return getClassWhenString(status);
-}
-
-function getClassWhenBoolean(status) {
-  if (status) {
+  if (status === Status.COMPLETE) {
     return 'checkmark-checked';
-  }
-  return '';
-}
-
-function getClassWhenString(status) {
-  if (status === 'all') {
-    return 'checkmark-checked';
-  } else if (status === 'partial') {
+  } else if (status === Status.PARTIAL) {
     return 'checkmark-partial';
   }
   return '';
@@ -35,31 +21,37 @@ function getClassWhenString(status) {
 function onClick(ev, props) {
   ev.stopPropagation();
   ev.preventDefault();
-  if (typeof props.status === 'boolean') {
-    return clickHandlerWhenBoolean(props);
+  if (props.status === Status.COMPLETE) {
+    return props.onCheck(Status.NONE);
+  } else if (props.status === Status.PARTIAL) {
+    return props.onCheck(Status.COMPLETE);
   }
-  return clickHandlerWhenString(props);
-}
-
-function clickHandlerWhenBoolean(props) {
-  if (props.status) {
-    return props.onCheck(false);
-  }
-  return props.onCheck(true);
-}
-
-function clickHandlerWhenString(props) {
-  if (props.status === 'all') {
-    return props.onCheck(false);
-  } else if (props.status === 'partial') {
-    return props.onCheck(true);
-  }
-  return props.onCheck(true);
+  return props.onCheck(Status.COMPLETE);
 }
 
 CustomCheckbox.propTypes = {
   label: PropTypes.string,
-  status: PropTypes.bool
+  status: PropTypes.string
+};
+
+const Status = {
+  NONE: 'none',
+  PARTIAL: 'partial',
+  COMPLETE: 'all',
+  toBoolean: status => {
+    if (status === Status.NONE || status === Status.PARTIAL) {
+      return false;
+    }
+    return true;
+  },
+  fromBoolean: bool => {
+    if (bool) {
+      return Status.COMPLETE;
+    }
+    return Status.NONE;
+  }
 };
 
 export default CustomCheckbox;
+
+export const CustomCheckboxStatus = Status;

@@ -25,9 +25,10 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const thread = ownProps.thread;
   return {
-    onSelectThread: threadPosition => {
-      dispatch(actions.selectThread(threadPosition));
+    onSelectThread: () => {
+      dispatch(actions.selectThread(thread));
     },
     onMultiSelect: (threadId, value) => {
       dispatch(actions.multiSelectThread(threadId, value));

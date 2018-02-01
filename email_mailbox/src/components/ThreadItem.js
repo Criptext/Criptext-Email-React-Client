@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import * as Status from '../utils/ConstUtils';
 import randomcolor from 'randomcolor';
-import CustomCheckbox from './CustomCheckbox';
+import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import { replaceMatches } from '../utils/ReactUtils';
 import './threaditem.css';
 
@@ -11,18 +10,18 @@ class ThreadItem extends Component {
   render() {
     const visibleStyle = this.getStyleVisibilityByMultiselect();
     const {
-      mailbox,
       thread,
       myClass,
       onRegionEnter,
-      onRegionLeave
+      onRegionLeave,
+      onSelectThread
     } = this.props;
     return (
       <div
         className={'thread-item-container ' + myClass}
-        onClick={this.onSelectThread}
+        onClick={onSelectThread}
       >
-        <Link to={`/${mailbox}/${thread.get('id')}`}>
+        <a>
           <div onMouseEnter={onRegionEnter} onMouseLeave={onRegionLeave}>
             {this.renderFirstColumn()}
           </div>
@@ -48,7 +47,7 @@ class ThreadItem extends Component {
           <div style={visibleStyle}>
             <span>{thread.get('date')}</span>
           </div>
-        </Link>
+        </a>
         {this.renderMenu()}
       </div>
     );
@@ -82,16 +81,15 @@ class ThreadItem extends Component {
     };
   };
 
-  onSelectThread = () => {
-    this.props.onSelectThread(this.props.thread.get('id'));
-  };
-
   stopPropagation = ev => {
     ev.stopPropagation();
   };
 
   onCheck = value => {
-    this.props.onMultiSelect(this.props.thread.get('id'), value);
+    this.props.onMultiSelect(
+      this.props.thread.get('id'),
+      CustomCheckboxStatus.toBoolean(value)
+    );
   };
 
   renderMultipleSpaces = times => {
@@ -104,7 +102,9 @@ class ThreadItem extends Component {
     if (this.props.multiselect || this.props.hovering) {
       return (
         <CustomCheckbox
-          status={this.props.thread.get('selected')}
+          status={CustomCheckboxStatus.fromBoolean(
+            this.props.thread.get('selected')
+          )}
           onCheck={this.onCheck}
         />
       );

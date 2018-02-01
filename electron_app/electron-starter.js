@@ -22,8 +22,7 @@ async function createWindow() {
       slashes: true
     });
   mainWindow.loadURL(startUrl);
-
-  mainWindow.webContents.openDevTools();
+  mainWindow.maximize();
 
   mainWindow.on('closed', () => {
     mainWindow = null;

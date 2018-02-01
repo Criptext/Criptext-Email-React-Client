@@ -1,4 +1,4 @@
-import { Thread } from './types';
+import { Thread, General } from './types';
 import { getThreadsFilter } from '../utils/electronInterface';
 import { storeValue } from '../utils/storage';
 
@@ -8,9 +8,13 @@ export const addThreads = (threads, clear) => ({
   clear: clear
 });
 
-export const selectThread = threadId => ({
+export const selectThread = thread => ({
   type: Thread.SELECT,
-  selectedThread: threadId
+  thread
+});
+
+export const closeThread = () => ({
+  type: Thread.CLOSE_THREAD
 });
 
 export const multiSelectThread = (threadId, value) => ({
@@ -82,7 +86,8 @@ export const markThreadsRead = (threadsIds, read) => ({
 export const searchThreads = params => {
   return async dispatch => {
     dispatch({
-      type: Thread.SEARCH_THREADS
+      type: General.CHANGE_MAILBOX,
+      mailbox: 'Search'
     });
     try {
       await storeValue(params.text);
@@ -105,9 +110,15 @@ export const muteNotifications = threadId => {
 
 export const loadThreads = params => {
   return async dispatch => {
+    if (params.mailbox && params.clear) {
+      dispatch({
+        type: General.CHANGE_MAILBOX,
+        mailbox: params.mailbox
+      });
+    }
     try {
       const threads = await getThreadsFilter(params);
-      dispatch(addThreads(threads));
+      dispatch(addThreads(threads, params.clear));
     } catch (e) {
       /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
         the request should not fail because of a bad query built or a non existing column/relation. Its fix should be a restore of

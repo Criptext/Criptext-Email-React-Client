@@ -25,10 +25,7 @@ class MailBox extends Component {
     return (
       <div className="mailbox-container">
         <MailboxHeader setSearchParams={this.setSearchParams} />
-        <Threads
-          mailbox={this.props.match.params.mailbox}
-          searchParams={this.state.searchParams}
-        />
+        <Threads searchParams={this.state.searchParams} />
       </div>
     );
   }

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import './sidebaritem.css';
 
 const SideBarItem = props => (
@@ -8,7 +7,7 @@ const SideBarItem = props => (
     <div className="nav-item-icon">
       <i className={props.item.icon} />
     </div>
-    <Link to={'/' + props.item.id}>{props.item.text}</Link>
+    <a onClick={props.onClick}>{props.item.text}</a>
     {props.item.notification ? (
       <div className="nav-item-notif">
         <span>+99</span>
@@ -19,6 +18,7 @@ const SideBarItem = props => (
 
 SideBarItem.propTypes = {
   item: PropTypes.object,
+  onClick: PropTypes.func,
   selected: PropTypes.bool
 };
 

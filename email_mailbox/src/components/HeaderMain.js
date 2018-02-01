@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TooltipMenu from './TooltipMenu';
-import CustomCheckbox from './CustomCheckbox';
+import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import SearchBox from './SearchBox';
 import { replaceMatches } from '../utils/ReactUtils';
 import './headermain.css';
+import { List } from 'immutable';
 
 class HeaderMain extends Component {
   render() {
@@ -50,7 +51,7 @@ const HintsMenu = props => (
         />
         <SearchSuggestion
           icon="icon-search"
-          items={[props.searchText]}
+          items={List([props.searchText])}
           searchText={props.searchText}
         />
 
@@ -143,9 +144,14 @@ const OptionsMenu = props => (
         <div>
           <CustomCheckbox
             label="Has attachment"
-            status={props.searchParams.hasAttachments}
+            status={CustomCheckboxStatus.fromBoolean(
+              props.searchParams.hasAttachments
+            )}
             onCheck={value => {
-              props.setSearchParam('hasAttachments', value);
+              props.setSearchParam(
+                'hasAttachments',
+                CustomCheckboxStatus.toBoolean(value)
+              );
             }}
           />
         </div>
@@ -219,7 +225,7 @@ OptionsMenu.propTypes = {
 
 SearchSuggestion.propTypes = {
   icon: PropTypes.string,
-  items: PropTypes.array,
+  items: PropTypes.object,
   searchText: PropTypes.string
 };
 

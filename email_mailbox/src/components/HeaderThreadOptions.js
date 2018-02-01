@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import StandardOptions from './StandardOptions';
 import ButtonCircle from './ButtonCircle';
 import TooltipMenu from './TooltipMenu';
-import CustomCheckbox from './CustomCheckbox';
+import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import './headerthreadoptions.css';
 
 class HeaderThreadOptions extends Component {
@@ -125,7 +125,7 @@ class HeaderThreadOptions extends Component {
   };
 
   onTriggerLabel = (checked, label) => {
-    if (checked) {
+    if (CustomCheckboxStatus.toBoolean(checked)) {
       return this.props.onAddLabel(this.props.threadsSelected, label);
     }
     return this.props.onRemoveLabel(this.props.threadsSelected, label);
