@@ -1,0 +1,26 @@
+.control-container{
+  align-items: center;
+  background-color: white;
+  display: flex;
+  height: 60px;
+  width: 100%;
+}
+
+button.button-send{
+  background-color: #0091ff;
+  margin-left: 10px;
+  padding: 0 12px;
+
+  i{
+    margin-right: 5px;
+  }
+
+  span{
+    font-weight: 500;
+  }
+}
+
+.buttons-container{
+  display: flex;
+  flex-direction: row;
+}

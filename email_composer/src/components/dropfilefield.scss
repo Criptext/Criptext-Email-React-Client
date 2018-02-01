@@ -1,33 +1,15 @@
+@import "./../styles/index.scss";
+
 .dropfilefiled-container{
   border: 2px solid transparent;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 30px);
-  margin: 10px auto 0;
+  height: calc(100% - 62px);
+  margin: 0 10px;
   overflow: auto;
   position: relative;
-  width: calc(100% - 25px);
+  width: calc(100% - 24px);
 
-  textarea{
-    border: none;
-    color: #6a707e;
-    flex-grow: 1;
-    font-family: NunitoSans;
-    font-size: 13px;
-    font-weight: 200;
-    padding: 0;
-    resize: none;
-    width: calc(100% - 5px);
-
-    &:focus{
-      outline: 0;
-    }
-  }
-
-  textarea::-webkit-input-placeholder{
-    color: #6a707e;
-  }
-  
   input{
     display: none;
   }
@@ -36,32 +18,33 @@
 .dragActive{
   border: 2px dashed #0091ff;
   border-radius: 8px;
-
-  >div{
-    opacity: 0.2;
-  }
-
-  .dropfilefiled-content{
-    display: flex;
-    opacity: 1;
-  }
 }
 
 .dropfilefiled-content{
   align-items: center;
-  display: none;
+  display: flex;
+  flex-direction: column;
   height: 80px;
   position: absolute;
   right: calc(50% - 65px);
   top: calc(50% - 40px);
   width: 130px;
 
+  >div{
+    background-image: url(../#{$_PATH_TO_IMAGES}/upload.png);
+    background-position: center;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    height: 45px;
+    width: 37px;
+  }
+
   span{
     color: #4a4a4a;
     font-family: NunitoSans;
     font-size: 18px;
     font-weight: 600;
-    margin: 0 auto;
+    margin: 10px auto 0;
   }
 }
 
