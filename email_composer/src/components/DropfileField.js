@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Editor from './EditorWrapper';
 import './dropfilefield.css';
 
 const DropfileField = props => (
@@ -11,7 +12,7 @@ const DropfileField = props => (
     onDragOver={props.onDragOver}
     onDrop={props.onDrop}
   >
-    <textarea placeholder={'Message'} />
+    <Editor toolbarHidden={props.isToolbarHidden} />
     <div className="files-container">
       {renderPreview(props.files, props.onClearFile)}
     </div>
@@ -21,10 +22,12 @@ const DropfileField = props => (
       multiple={props.multiple}
       onChange={props.onDrop}
     />
-    <div className="dropfilefiled-content">
-      <div />
-      <span>Drop files here</span>
-    </div>
+    {props.isDragActive ? (
+      <div className="dropfilefiled-content">
+        <div />
+        <span>Drop files here</span>
+      </div>
+    ) : null}
   </div>
 );
 
@@ -53,6 +56,7 @@ DropfileField.propTypes = {
   accept: PropTypes.string,
   files: PropTypes.array,
   isDragActive: PropTypes.bool,
+  isToolbarHidden: PropTypes.bool,
   multiple: PropTypes.bool,
   onClearFile: PropTypes.func,
   onDragLeave: PropTypes.func,

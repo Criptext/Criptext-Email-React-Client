@@ -1,6 +1,8 @@
 .body-container{
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
-  height: calc(100% - 95px);
+  height: calc(100% - 242px);
   position: relative;
   width: 100%;
 }
