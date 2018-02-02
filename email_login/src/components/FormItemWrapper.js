@@ -10,6 +10,7 @@ class FormItemWrapper extends Component {
       isChecked: false
     };
     this.onCheck = this.onCheck.bind(this);
+    this.onBlur = this.onBlur.bind(this);
   }
 
   onValidate() {
@@ -36,6 +37,16 @@ class FormItemWrapper extends Component {
     });
   }
 
+  onBlur() {
+    if ( !this.props.formItem.optional ) {
+      const isValid = this.props.validator ? this.props.validator() : false ;
+      this.setState({
+        validated: true,
+        hasError: !isValid
+      });
+    }
+  }
+
   render() {
     return (
       <FormItem
@@ -47,6 +58,7 @@ class FormItemWrapper extends Component {
         onHasError={this.onHasError}
         onCleanError={this.onCleanError}
         onCheck={this.onCheck}
+        onBlur={this.onBlur}
       />
     );
   }

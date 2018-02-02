@@ -13,7 +13,7 @@ let formItems = [
     icon: '',
     errorMessage: 'Username not available',
     value: '',
-    hasError: false
+    optional: false
   },
   {
     name: 'fullname',
@@ -26,7 +26,7 @@ let formItems = [
     icon: '',
     errorMessage: '',
     value: '',
-    hasError: false
+    optional: false
   },
   {
     name: 'password',
@@ -39,7 +39,7 @@ let formItems = [
     icon: 'icon-eye',
     errorMessage: '',
     value: '',
-    hasError: false
+    optional: false
   },
   {
     name: 'confirmpassword',
@@ -52,7 +52,7 @@ let formItems = [
     icon: 'icon-eye',
     errorMessage: 'Password do not match',
     value: '',
-    hasError: false
+    optional: false
   },
   {
     name: 'recoveryemail',
@@ -65,7 +65,7 @@ let formItems = [
     icon: '',
     errorMessage: '',
     value: '',
-    hasError: false
+    optional: true
   },
   {
     name: 'acceptterms',
@@ -78,7 +78,7 @@ let formItems = [
     icon: '',
     errorMessage: '',
     value: false,
-    hasError: false
+    optional: false
   }
 ];
 
@@ -90,6 +90,18 @@ const onInitState = (array, field) =>
    }, {})
 
 
+const checkRequired = (field) => {
+  return field!==undefined;
+}
+const checkminLength = (field, length) => {
+  return field.length>length;
+}
+const checkMatch = (field1, field2) => {
+  return field1===field2;
+}
+
+
+
 class SignUpWrapper extends Component {
 	constructor(props) {
 	  super(props);
@@ -97,34 +109,21 @@ class SignUpWrapper extends Component {
       values: onInitState(formItems, "name"),
       disabled: true
     };
-	  this.handleChange = this.handleChange.bind(this);
-	  this.handleSubmit = this.handleSubmit.bind(this);
+    this.validators = {}
 	}
 
   componentDidMount(){
     this.checkDisable();
+    this.validators = {
+      username: () => this.validateUsername(),
+      fullname: () => this.validateFullname(),
+      password: () => this.validatePassword(),
+      confirmpassword: () => this.validateConfirmPassword()
+    }
   }
 
-  checkDisable(){
-    const values = Object.values(this.state.values);
-    this.setState({
-      disabled: values.indexOf('')>-1 || values.indexOf(false)>-1
-    })
-  }
-
-	handleChange(event, field) {
-		let newState = this.state
-		newState.values[field] = event.target.value;
-    this.setState(newState);
-    this.checkDisable();
-	}
-
-	handleSubmit(event) {
-		event.preventDefault();
-	}
-
-	render(){
-		return(
+  render(){
+    return(
       <div>
         <SignUp
           {...this.props} 
@@ -133,10 +132,56 @@ class SignUpWrapper extends Component {
           onChangeField={this.handleChange}
           disabled={this.state.disabled}
           handleSubmit={this.handleSubmit}
+          validators={this.validators}
         />
       </div>
-		);
+    );
+  }
+
+  checkDisable = () => {
+    const values = [];
+    formItems.forEach(formItem => {
+      if (formItem.optional !== true) values.push(this.state.values[formItem.name]) 
+    });
+    this.setState({
+      disabled: values.indexOf('')>-1 || values.indexOf(false)>-1
+    })
+  }
+
+
+	handleChange = (event, field) => {
+		let newState = this.state
+		newState.values[field] = event.target.value;
+    this.setState(newState);
+    this.checkDisable();
 	}
+
+	handleSubmit = (event) => {
+		event.preventDefault();
+	}
+
+
+  validateUsername = () => {
+    const username = this.state.values['username'];
+    return checkRequired(username) && checkminLength(username,1);
+  }
+  validateFullname = () => {
+    const fullname = this.state.values['fullname'];
+    return checkRequired(fullname) && checkminLength(fullname,1);
+  }
+  validatePassword = () => {
+    const pass = this.state.values['password'];
+    return checkRequired(pass) && checkminLength(pass,1);
+  }
+  validateConfirmPassword = () => {
+    const field1 = this.state.values['password'];
+    const field2 = this.state.values['confirmpassword'];
+    const required = checkRequired(field1) && checkRequired(field2);
+    const length = checkminLength(field1,1) && checkminLength(field2,1);
+    const match = checkMatch(field1, field2);
+    return required && length && match;
+  }
+
 
 }
 

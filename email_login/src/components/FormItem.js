@@ -57,6 +57,7 @@ const renderInput = props => (
     type={props.formItem.type}
     placeholder={props.formItem.placeholder}
     onChange={(ev, name) => props.onChange(ev, props.formItem.name)}
+    onKeyUp={props.onBlur}
   />
 );
 

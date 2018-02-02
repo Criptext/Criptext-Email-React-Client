@@ -40,6 +40,7 @@ const renderForm = props => (
               key={index} 
               formItem={formItem} 
               onChange={props.onChangeField} 
+              validator={props.validators[formItem.name]}
             />;
         })}
         <div className="button">
