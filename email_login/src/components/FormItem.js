@@ -18,9 +18,9 @@ const renderValidateIcon = props => {
     return <span className="no-icon" />
   }
   if ( props.hasError ) {
-    return <span className="invalid-icon icon-check" />
+    return <span className="invalid-icon icon-incorret" />
   }
-  return <span className="valid-icon icon-check" />
+  return <span className="valid-icon icon-correct" />
 }
 
 const renderItem = props =>
@@ -54,7 +54,7 @@ const renderInput = props => (
   <input
     className={`input-${props.formItem.name}`}
     name={props.formItem.name}
-    type={props.formItem.type}
+    type={props.type}
     placeholder={props.formItem.placeholder}
     onChange={(ev, name) => props.onChange(ev, props.formItem.name)}
     onKeyUp={props.onValidate}
@@ -71,7 +71,7 @@ const renderLabel = formItem =>
 
 const renderIcon = props =>
   props.formItem.icon !== '' 
-  ? <span className={`input-icon ${props.formItem.icon}`} 
+  ? <span className={`input-icon ${props.icon}`} 
       onClick={props.onShowHide}/> : null;
 
 const renderErrorMessage = props =>

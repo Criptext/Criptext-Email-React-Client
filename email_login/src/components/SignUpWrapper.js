@@ -38,8 +38,8 @@ let formItems = [
       text: '',
       strong: ''
     },
-    icon: 'icon-search',
-    icon2: 'icon-trash',
+    icon: 'icon-show',
+    icon2: 'icon-not-show',
     errorMessage: '',
     value: '',
     optional: false
@@ -52,8 +52,8 @@ let formItems = [
       text: '',
       strong: ''
     },
-    icon: 'icon-search',
-    icon2: 'icon-trash',
+    icon: 'icon-show',
+    icon2: 'icon-not-show',
     errorMessage: 'Passwords do not match',
     value: '',
     optional: false

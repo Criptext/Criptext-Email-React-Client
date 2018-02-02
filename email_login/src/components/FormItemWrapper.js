@@ -9,6 +9,8 @@ class FormItemWrapper extends Component {
       hasError: false,
       isChecked: false,
       showField: true,
+      icon: props.formItem.icon,
+      type: props.formItem.type
     };
     this.onCheck = this.onCheck.bind(this);
     this.onValidate = this.onValidate.bind(this);
@@ -47,18 +49,24 @@ class FormItemWrapper extends Component {
     this.setState({
       showField: !this.state.showField,
     });
-    this.props.formItem.type = this.props.formItem.type==='text' 
-    ? 'password'
-    : 'text';
-    const icon = this.props.formItem.icon;
-    this.props.formItem.icon = this.props.formItem.icon2;
-    this.props.formItem.icon2 = icon;
+    this.setState({
+      type: this.state.type === 'text' 
+      ? 'password'
+      : 'text'
+    })
+    this.setState({
+      icon: this.state.icon === this.props.formItem.icon 
+      ? this.props.formItem.icon2
+      : this.props.formItem.icon
+    });
   }
 
   render() {
     return (
       <FormItem
         {...this.props}
+        icon={this.state.icon}
+        type={this.state.type}
         validated={this.state.validated}
         hasError={this.state.hasError}
         isChecked={this.state.isChecked}

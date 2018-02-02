@@ -114,7 +114,7 @@
           }
 
           .validate-icon-section {
-            font-size: 16px;
+            font-size: 19px;
             float: left;
             height: 100%;
             width: 59px;
@@ -124,16 +124,12 @@
               position: relative;
               top: 0%;
               left: calc(50% - 7px);
-              border: 1px solid #fff;
-              border-radius: 10px;
             }
             .invalid-icon{
               color: #000000;
               position: relative;
               top: 0%;
               left: calc(50% - 7px);
-              border: 1px solid #000;
-              border-radius: 10px;
             }
             .no-icon{
               width: 10%;
@@ -151,6 +147,7 @@
             }
 
             span.input-icon{
+              font-size: 18px;
               color: #ffffff;
               position: relative;
               right: 8%;
