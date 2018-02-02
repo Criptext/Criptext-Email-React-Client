@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Editor } from 'react-draft-wysiwyg';
-import './editor.css';
+import Editor from './EditorWrapper';
 import './dropfilefield.css';
 
 const DropfileField = props => (
@@ -13,27 +12,7 @@ const DropfileField = props => (
     onDragOver={props.onDragOver}
     onDrop={props.onDrop}
   >
-    <Editor
-      toolbarHidden={props.isToolbarHidden}
-      toolbar={{
-        options: [
-          'inline',
-          'fontSize',
-          'fontFamily',
-          'list',
-          'textAlign',
-          'colorPicker',
-          'link',
-          'emoji'
-        ],
-        inline: {
-          options: ['bold', 'italic', 'underline']
-        },
-        textAlign: { inDropdown: true },
-        link: { inDropdown: true },
-        history: { inDropdown: true }
-      }}
-    />
+    <Editor toolbarHidden={props.isToolbarHidden} />
     <div className="files-container">
       {renderPreview(props.files, props.onClearFile)}
     </div>
