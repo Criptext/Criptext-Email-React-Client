@@ -28,7 +28,7 @@ const renderItem = props =>
     <div className="input-data">
       {renderInput(props)}
       {renderLabel(props.formItem)}
-      {renderIcon(props.formItem)}
+      {renderIcon(props)}
       {renderErrorMessage(props)}
     </div>
   ) : (
@@ -57,7 +57,7 @@ const renderInput = props => (
     type={props.formItem.type}
     placeholder={props.formItem.placeholder}
     onChange={(ev, name) => props.onChange(ev, props.formItem.name)}
-    onKeyUp={props.onBlur}
+    onKeyUp={props.onValidate}
   />
 );
 
@@ -69,8 +69,10 @@ const renderLabel = formItem =>
     </label>
   ) : null;
 
-const renderIcon = formItem =>
-  formItem.icon !== '' ? <span className="input-icon icon-search" /> : null;
+const renderIcon = props =>
+  props.formItem.icon !== '' 
+  ? <span className={`input-icon ${props.formItem.icon}`} 
+      onClick={props.onShowHide}/> : null;
 
 const renderErrorMessage = props =>
   props.hasError ? (

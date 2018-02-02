@@ -233,6 +233,7 @@
               bottom: -10%;
               right: 40%
             }
+            .error-message.error-password,
             .error-message.error-confirmpassword {
               float: left;
               font-size: 9px;
@@ -268,8 +269,8 @@
             opacity: 0.5;
             margin: 0px;
             width: 100%;
-            -webkit-transition: width 1s;
-            transition: opacity 1s;
+            -webkit-transition: width 0.1s;
+            transition: opacity 0.1s;
 
             span {
               color: #fff;

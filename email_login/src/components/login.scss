@@ -94,13 +94,30 @@
           border: none;
           border-radius: 100px;
           padding: 10px;
-          background-color: #0091ff;
+          background-color: #373a45;
+          opacity: 0.5;
           margin: 15px 0;
           width: 100%;
-
+          -webkit-transition: width 0.1s;
+          transition: opacity 0.1s;
           span {
+            color: #fff;
             font-weight: 600;
-            opacity: 0.5;
+            opacity: 0.9;
+            -webkit-transition: width 0.1s;
+            transition: opacity 0.1s;
+          }
+        }
+        .button-login:enabled {
+          opacity: 0.9;
+          span{
+            opacity: 0.9;
+          }
+        }
+        .button-login:hover:enabled {
+          opacity: 1.0;
+          span{
+            opacity: 1.0;
           }
         }
       }

@@ -11,6 +11,7 @@ let formItems = [
       strong: ''
     },
     icon: '',
+    icon2: '',
     errorMessage: 'Username not available',
     value: '',
     optional: false
@@ -24,6 +25,7 @@ let formItems = [
       strong: ''
     },
     icon: '',
+    icon2: '',
     errorMessage: '',
     value: '',
     optional: false
@@ -36,7 +38,8 @@ let formItems = [
       text: '',
       strong: ''
     },
-    icon: 'icon-eye',
+    icon: 'icon-search',
+    icon2: 'icon-trash',
     errorMessage: '',
     value: '',
     optional: false
@@ -49,8 +52,9 @@ let formItems = [
       text: '',
       strong: ''
     },
-    icon: 'icon-eye',
-    errorMessage: 'Password do not match',
+    icon: 'icon-search',
+    icon2: 'icon-trash',
+    errorMessage: 'Passwords do not match',
     value: '',
     optional: false
   },
@@ -63,6 +67,7 @@ let formItems = [
       strong: ''
     },
     icon: '',
+    icon2: '',
     errorMessage: '',
     value: '',
     optional: true
@@ -76,6 +81,7 @@ let formItems = [
       strong: 'Terms and Conditions'
     },
     icon: '',
+    icon2: '',
     errorMessage: '',
     value: false,
     optional: false
@@ -109,17 +115,17 @@ class SignUpWrapper extends Component {
       values: onInitState(formItems, "name"),
       disabled: true
     };
-    this.validators = {}
-	}
-
-  componentDidMount(){
-    this.checkDisable();
     this.validators = {
       username: () => this.validateUsername(),
       fullname: () => this.validateFullname(),
       password: () => this.validatePassword(),
-      confirmpassword: () => this.validateConfirmPassword()
+      confirmpassword: () => this.validateConfirmPassword(),
+      acceptterms: () => this.validateAcceptTerms()
     }
+	}
+
+  componentDidMount(){
+    this.checkDisable();
   }
 
   render(){
@@ -139,12 +145,15 @@ class SignUpWrapper extends Component {
   }
 
   checkDisable = () => {
-    const values = [];
+    var disabled = false;
     formItems.forEach(formItem => {
-      if (formItem.optional !== true) values.push(this.state.values[formItem.name]) 
+      if (!formItem.optional) {
+        const result = this.validators[formItem.name]();
+        disabled = disabled || !result;
+      } 
     });
     this.setState({
-      disabled: values.indexOf('')>-1 || values.indexOf(false)>-1
+      disabled: disabled
     })
   }
 
@@ -171,7 +180,11 @@ class SignUpWrapper extends Component {
   }
   validatePassword = () => {
     const pass = this.state.values['password'];
-    return checkRequired(pass) && checkminLength(pass,1);
+    const pass2 = this.state.values['confirmpassword'];
+    const checkPass1 = checkRequired(pass) && checkminLength(pass,1);
+    const checkPass2 = checkRequired(pass2) && checkminLength(pass,2);
+    const match = checkMatch(pass,pass2);
+    return checkPass1 && checkPass2 && match;
   }
   validateConfirmPassword = () => {
     const field1 = this.state.values['password'];
@@ -180,6 +193,10 @@ class SignUpWrapper extends Component {
     const length = checkminLength(field1,1) && checkminLength(field2,1);
     const match = checkMatch(field1, field2);
     return required && length && match;
+  }
+  validateAcceptTerms = () => {
+    const field = this.state.values["acceptterms"];
+    return field===true;
   }
 
 

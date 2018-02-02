@@ -7,16 +7,12 @@ class FormItemWrapper extends Component {
     this.state = {
       validated: false,
       hasError: false,
-      isChecked: false
+      isChecked: false,
+      showField: true,
     };
     this.onCheck = this.onCheck.bind(this);
-    this.onBlur = this.onBlur.bind(this);
-  }
-
-  onValidate() {
-    this.setState({
-      validated: true
-    });
+    this.onValidate = this.onValidate.bind(this);
+    this.onShowHide = this.onShowHide.bind(this);
   }
 
   onHasError() {
@@ -37,7 +33,7 @@ class FormItemWrapper extends Component {
     });
   }
 
-  onBlur() {
+  onValidate() {
     if ( !this.props.formItem.optional ) {
       const isValid = this.props.validator ? this.props.validator() : false ;
       this.setState({
@@ -47,6 +43,18 @@ class FormItemWrapper extends Component {
     }
   }
 
+  onShowHide() {
+    this.setState({
+      showField: !this.state.showField,
+    });
+    this.props.formItem.type = this.props.formItem.type==='text' 
+    ? 'password'
+    : 'text';
+    const icon = this.props.formItem.icon;
+    this.props.formItem.icon = this.props.formItem.icon2;
+    this.props.formItem.icon2 = icon;
+  }
+
   render() {
     return (
       <FormItem
@@ -54,11 +62,12 @@ class FormItemWrapper extends Component {
         validated={this.state.validated}
         hasError={this.state.hasError}
         isChecked={this.state.isChecked}
-        onValidate={this.onValidate}
         onHasError={this.onHasError}
         onCleanError={this.onCleanError}
         onCheck={this.onCheck}
-        onBlur={this.onBlur}
+        onValidate={this.onValidate}
+        onShowHide={this.onShowHide}
+        showField={this.showField}
       />
     );
   }
