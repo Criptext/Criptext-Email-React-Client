@@ -35,6 +35,7 @@ class ComposerWrapper extends Component {
   }
 
   handleSendMessage = () => {
+    /*eslint-disable */
     const body = {
       subject: this.state.textSubject,
       recipientId: 'gaumala',
@@ -48,7 +49,7 @@ class ComposerWrapper extends Component {
         session: null
       }
     };
-    console.log(body);
+    /*eslint-enable */
   };
 
   handleGetToEmail = emails => {

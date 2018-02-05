@@ -26,7 +26,7 @@
     height: 0;
     width: 0;
     position: absolute;
-    left: 100px;
+    left: 136px;
     bottom: -6px;
     border-top: 6px solid white;
     border-right: 6px solid transparent;
@@ -54,7 +54,6 @@
 }
 
 .rdw-option-wrapper {
-  border: 1px solid #F1F1F1;
   padding: 5px;
   min-width: 25px;
   height: 20px;
@@ -68,7 +67,7 @@
 	text-transform: capitalize;
 	
 	&:hover{
-		box-shadow: 1px 1px 0px #BFBDBD;
+  	background-color: #d8d8d8;
 	}
 
 	&:active{
@@ -80,7 +79,6 @@
   height: 30px;
   background: white;
   cursor: pointer;
-  border: 1px solid #F1F1F1;
   border-radius: 2px;
   margin: 0 3px;
   text-transform: capitalize;
@@ -91,8 +89,7 @@
 	}
 
 	&:hover{
-		box-shadow: 1px 1px 0px #BFBDBD;
-  	background-color: #FFFFFF;
+  	background-color: #d8d8d8;
 	}
 
 	&:active{

@@ -12,7 +12,11 @@ const DropfileField = props => (
     onDragOver={props.onDragOver}
     onDrop={props.onDrop}
   >
-    <Editor toolbarHidden={props.isToolbarHidden} />
+    <Editor
+      htmlBody={props.htmlBody}
+      toolbarHidden={props.isToolbarHidden}
+      getHtmlBody={props.getHtmlBody}
+    />
     <div className="files-container">
       {renderPreview(props.files, props.onClearFile)}
     </div>
@@ -55,6 +59,8 @@ DropfileField.defaultProps = {
 DropfileField.propTypes = {
   accept: PropTypes.string,
   files: PropTypes.array,
+  getHtmlBody: PropTypes.func,
+  htmlBody: PropTypes.object,
   isDragActive: PropTypes.bool,
   isToolbarHidden: PropTypes.bool,
   multiple: PropTypes.bool,
