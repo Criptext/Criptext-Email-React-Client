@@ -4,7 +4,7 @@ import './control.css';
 
 const Control = props => (
   <div className="control-container">
-    <button className="button-a button-send">
+    <button className="button-a button-send" onClick={props.onClickSendMessage}>
       <i className="icon-sent" />
       <span>send</span>
     </button>
@@ -13,8 +13,16 @@ const Control = props => (
         <div className="button-editor">
           <i className="icon-attach" />
         </div>
-        <div className="button-editor" onClick={props.onClickTextEditor}>
-          <i className="icon-attach" />
+        <div
+          className="button-editor button-editor-border-left button-editor-border-right"
+          onClick={props.onClickTextEditor}
+        >
+          <i className="icon-text-edit" />
+        </div>
+      </div>
+      <div className="buttons-container">
+        <div className="button-editor">
+          <i className="icon-trash" />
         </div>
       </div>
     </div>
@@ -22,6 +30,7 @@ const Control = props => (
 );
 
 Control.propTypes = {
+  onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func
 };
 

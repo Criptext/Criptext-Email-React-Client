@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Body from './Body';
 
 class BodyWrapper extends Component {
@@ -13,6 +14,8 @@ class BodyWrapper extends Component {
     return (
       <Body
         {...this.props}
+        getHtmlBody={this.props.getHtmlBody}
+        htmlBody={this.props.htmlBody}
         isToolbarHidden={this.state.isToolbarHidden}
         onClickTextEditor={this.handleTextEditor}
       />
@@ -23,5 +26,10 @@ class BodyWrapper extends Component {
     this.setState({ isToolbarHidden: !this.state.isToolbarHidden });
   };
 }
+
+BodyWrapper.propTypes = {
+  getHtmlBody: PropTypes.func,
+  htmlBody: PropTypes.object
+};
 
 export default BodyWrapper;
