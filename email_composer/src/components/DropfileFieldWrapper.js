@@ -16,11 +16,13 @@ class DropfileFieldWrapper extends Component {
       <DropfileField
         {...this.props}
         files={this.state.files}
+        getHtmlBody={this.props.getHtmlBody}
+        htmlBody={this.props.htmlBody}
         isDragActive={this.state.isDragActive}
+        onClearFile={this.handleClearFile}
         onDragLeave={this.handleDragLeave}
         onDragOver={this.handleDragOver}
         onDrop={this.handleDrop}
-        onClearFile={this.handleClearFile}
       />
     );
   }
@@ -77,6 +79,8 @@ class DropfileFieldWrapper extends Component {
 }
 
 DropfileFieldWrapper.propTypes = {
+  getHtmlBody: PropTypes.func,
+  htmlBody: PropTypes.object,
   onDrop: PropTypes.func
 };
 

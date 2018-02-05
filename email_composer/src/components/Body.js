@@ -6,13 +6,23 @@ import './body.css';
 
 const Body = props => (
   <div className="body-container">
-    <DropfileField isToolbarHidden={props.isToolbarHidden} />
-    <Control onClickTextEditor={props.onClickTextEditor} />
+    <DropfileField
+      isToolbarHidden={props.isToolbarHidden}
+      htmlBody={props.htmlBody}
+      getHtmlBody={props.getHtmlBody}
+    />
+    <Control
+      onClickTextEditor={props.onClickTextEditor}
+      onClickSendMessage={props.onClickSendMessage}
+    />
   </div>
 );
 
 Body.propTypes = {
+  getHtmlBody: PropTypes.func,
+  htmlBody: PropTypes.object,
   isToolbarHidden: PropTypes.bool,
+  onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func
 };
 
