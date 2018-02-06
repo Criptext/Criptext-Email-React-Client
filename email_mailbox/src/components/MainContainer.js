@@ -6,16 +6,32 @@ import Thread from '../containers/Thread';
 const MainContainer = props => {
   switch (props.stance) {
     case 'threads':
-      return <MailBox />;
+      return (
+        <MailBox
+          mailbox={props.mailbox}
+          onClickThreadIdSelected={props.onClickThreadIdSelected}
+          onClickMailboxSelected={props.onClickMailboxSelected}
+        />
+      );
     case 'emails':
-      return <Thread />;
+      return (
+        <Thread
+          threadId={props.threadId}
+          onClickThreadBack={props.onClickThreadBack}
+        />
+      );
     default:
       return null;
   }
 };
 
 MainContainer.propTypes = {
-  stance: PropTypes.string
+  mailbox: PropTypes.string,
+  onClickMailboxSelected: PropTypes.func,
+  onClickThreadBack: PropTypes.func,
+  onClickThreadIdSelected: PropTypes.func,
+  stance: PropTypes.string,
+  threadId: PropTypes.string
 };
 
 export default MainContainer;

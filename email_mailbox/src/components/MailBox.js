@@ -24,8 +24,15 @@ class MailBox extends Component {
   render() {
     return (
       <div className="mailbox-container">
-        <MailboxHeader setSearchParams={this.setSearchParams} />
-        <Threads searchParams={this.state.searchParams} />
+        <MailboxHeader
+          setSearchParams={this.setSearchParams}
+          onClickMailboxSelected={this.props.onClickMailboxSelected}
+        />
+        <Threads
+          mailbox={this.props.mailbox}
+          searchParams={this.state.searchParams}
+          onClickThreadIdSelected={this.props.onClickThreadIdSelected}
+        />
       </div>
     );
   }
@@ -40,7 +47,9 @@ class MailBox extends Component {
 }
 
 MailBox.propTypes = {
-  match: PropTypes.object
+  mailbox: PropTypes.string,
+  onClickMailboxSelected: PropTypes.func,
+  onClickThreadIdSelected: PropTypes.func
 };
 
 export default MailBox;

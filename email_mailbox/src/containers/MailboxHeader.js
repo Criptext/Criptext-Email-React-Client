@@ -28,7 +28,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onDeselectThreads: () => {
       return dispatch(actions.deselectThreads(false));
@@ -52,6 +52,7 @@ const mapDispatchToProps = dispatch => {
       return dispatch(actions.markThreadsRead(threadsIds, read));
     },
     onSearchThreads: params => {
+      ownProps.onClickMailboxSelected('search');
       return dispatch(actions.searchThreads(params));
     },
     onSearchChange: filter => {

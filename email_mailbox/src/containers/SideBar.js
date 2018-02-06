@@ -1,11 +1,10 @@
 import { connect } from 'react-redux';
-import { loadLabels, loadThreads } from '../actions';
+import { loadLabels } from '../actions';
 import SideBarView from '../components/SideBar';
 
 const mapStateToProps = state => {
   return {
-    labels: state.get('labels'),
-    optionSelected: state.get('activities').get('mailbox')
+    labels: state.get('labels')
   };
 };
 
@@ -13,9 +12,6 @@ const mapDispatchToProps = dispatch => {
   return {
     onLoadLabels: () => {
       dispatch(loadLabels(dispatch));
-    },
-    onLoadThreads: params => {
-      dispatch(loadThreads(params));
     }
   };
 };

@@ -40,7 +40,7 @@ aside.navigation-app{
       display: flex;
       text-align: center;
 
-      a {
+      span {
         color: black;
         display: block;
         font-family: NunitoSans;
@@ -107,7 +107,7 @@ aside.navigation-app{
 }
 
 .nav-item-more-selected{
-  a{
+  span{
     font-weight: 600;
   }
 }

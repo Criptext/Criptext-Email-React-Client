@@ -33,14 +33,11 @@ class SideBar extends Component {
           <nav>
             <ul>
               {MailItems.map((item, key) => {
-                const selected = item.id === this.props.optionSelected;
+                const selected = item.id === this.props.mailboxSelected;
                 return (
                   <SideBarItem
                     onClick={() => {
-                      this.props.onLoadThreads({
-                        clear: true,
-                        mailbox: item.id
-                      });
+                      this.props.onClickMailboxSelected(item.id);
                     }}
                     key={key}
                     item={item}
@@ -59,7 +56,7 @@ class SideBar extends Component {
                   <div className="nav-item-icon">
                     <i className="icon-tag" />
                   </div>
-                  <a>Labels</a>
+                  <span>Labels</span>
                   <div
                     className="nav-item-option"
                     onClick={e => this.handleToggleShowLabelButtonClick(e)}
@@ -111,8 +108,9 @@ class SideBar extends Component {
 
 SideBar.propTypes = {
   labels: PropTypes.object,
+  mailboxSelected: PropTypes.string,
+  onClickMailboxSelected: PropTypes.func,
   onLoadLabels: PropTypes.func,
-  onLoadThreads: PropTypes.func,
   optionSelected: PropTypes.string
 };
 

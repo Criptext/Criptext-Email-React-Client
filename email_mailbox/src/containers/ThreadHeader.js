@@ -15,10 +15,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onBackOption: () => {
-      return dispatch(actions.closeThread());
+      ownProps.onClickThreadBack();
     },
     onMoveThreads: (threadsIds, label) => {
       dispatch(actions.closeThread());

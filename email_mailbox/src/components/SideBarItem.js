@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import './sidebaritem.css';
 
 const SideBarItem = props => (
-  <li className={props.selected ? 'nav-item nav-item-selected' : 'nav-item'}>
+  <li
+    className={props.selected ? 'nav-item nav-item-selected' : 'nav-item'}
+    onClick={props.onClick}
+  >
     <div className="nav-item-icon">
       <i className={props.item.icon} />
     </div>
-    <a onClick={props.onClick}>{props.item.text}</a>
+    <span>{props.item.text}</span>
     {props.item.notification ? (
       <div className="nav-item-notif">
         <span>+99</span>

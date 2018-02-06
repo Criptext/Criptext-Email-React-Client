@@ -18,9 +18,16 @@ const getEmails = (emails, thread) => {
   return emailsMapToList(emails, emailIds);
 };
 
-const mapStateToProps = state => {
-  const thread = state.get('activities').get('selectedThread');
+const getThread = (threads, threadId) => {
+  return threads.find(thread => {
+    return thread.get('id') === threadId;
+  });
+};
+
+const mapStateToProps = (state, ownProps) => {
+  const thread = getThread(state.get('threads'), ownProps.threadId);
   const emailIds = getEmails(state.get('emails'), thread);
+
   return {
     thread,
     labels: thread ? thread.get('labels') : [],
