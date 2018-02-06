@@ -14,8 +14,7 @@ export const Thread = {
   SEARCH_THREADS: 'SEARCH_THREADS',
   MOVE_THREADS: 'MOVE_THREADS',
   READ_THREADS: 'READ_THREADS',
-  MUTE: 'MUTE_THREAD',
-  CLOSE_THREAD: 'CLOSE_THREAD'
+  MUTE: 'MUTE_THREAD'
 };
 
 export const User = {
@@ -41,8 +40,4 @@ export const Feed = {
 export const Suggestions = {
   SET_THREADS: 'SET_THREADS',
   SET_ERROR_SUGGESTIONS: 'SET_ERROR_SUGGESTIONS'
-};
-
-export const General = {
-  CHANGE_MAILBOX: 'CHANGE_MAILBOX'
 };

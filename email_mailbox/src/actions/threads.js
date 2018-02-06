@@ -1,4 +1,4 @@
-import { Thread, General } from './types';
+import { Thread } from './types';
 import { getThreadsFilter } from '../utils/electronInterface';
 import { storeValue } from '../utils/storage';
 
@@ -8,13 +8,9 @@ export const addThreads = (threads, clear) => ({
   clear: clear
 });
 
-export const selectThread = thread => ({
+export const selectThread = threadId => ({
   type: Thread.SELECT,
-  thread
-});
-
-export const closeThread = () => ({
-  type: Thread.CLOSE_THREAD
+  threadId: threadId
 });
 
 export const multiSelectThread = (threadId, value) => ({
@@ -85,10 +81,6 @@ export const markThreadsRead = (threadsIds, read) => ({
 
 export const searchThreads = params => {
   return async dispatch => {
-    dispatch({
-      type: General.CHANGE_MAILBOX,
-      mailbox: 'Search'
-    });
     try {
       await storeValue(params.text);
       const threads = await getThreadsFilter(params);
@@ -110,12 +102,6 @@ export const muteNotifications = threadId => {
 
 export const loadThreads = params => {
   return async dispatch => {
-    if (params.mailbox && params.clear) {
-      dispatch({
-        type: General.CHANGE_MAILBOX,
-        mailbox: params.mailbox
-      });
-    }
     try {
       const threads = await getThreadsFilter(params);
       dispatch(addThreads(threads, params.clear));
