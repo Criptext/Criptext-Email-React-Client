@@ -71,7 +71,7 @@ attachPreview.propTypes = {
 };
 
 AttachItem.propTypes = {
-  image: PropTypes.string,
+  image: PropTypes.object,
   status: PropTypes.number
 };
 

@@ -30,7 +30,7 @@ class ButtonUnsendWrapper extends Component {
 
 ButtonUnsendWrapper.propTypes = {
   displayPopOver: PropTypes.bool,
-  onClicked: PropTypes.bool,
+  onClicked: PropTypes.func,
   onTogglePopOver: PropTypes.func
 };
 
