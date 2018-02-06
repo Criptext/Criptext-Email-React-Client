@@ -12,7 +12,6 @@ const mapStateToProps = state => {
   return {
     threads: threads,
     selectedThread: state.get('activities').get('selectedThread'),
-    mailbox: state.get('activities').get('mailbox'),
     unreadFilter: unreadFilter,
     labels: state.get('labels')
   };

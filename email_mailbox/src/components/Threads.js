@@ -15,6 +15,16 @@ class Threads extends Component {
       tip: ''
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.mailbox !== nextProps.mailbox) {
+      this.props.onLoadThreads({
+        mailbox: nextProps.mailbox,
+        clear: true
+      });
+    }
+  }
+
   render() {
     return (
       <div className="threads-header-wrapper">
@@ -44,7 +54,7 @@ class Threads extends Component {
                   myIndex={index}
                   mailbox={this.props.mailbox}
                   thread={thread}
-                  selectedThread={this.props.selectedThread}
+                  onClickThreadIdSelected={this.props.onClickThreadIdSelected}
                   onMouseEnterItem={this.onMouseEnterItem}
                   onMouserLeaveItem={this.onMouserLeaveItem}
                   searchParams={this.props.searchParams}
@@ -163,10 +173,10 @@ class Threads extends Component {
 Threads.propTypes = {
   labels: PropTypes.object,
   mailbox: PropTypes.string,
+  onClickThreadIdSelected: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,
   searchParams: PropTypes.object,
-  selectedThread: PropTypes.string,
   threads: PropTypes.object,
   unreadFilter: PropTypes.string
 };

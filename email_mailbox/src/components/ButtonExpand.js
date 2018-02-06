@@ -42,7 +42,7 @@ ButtonExpand.propTypes = {
   info: PropTypes.string,
   onTogglePopOver: PropTypes.func,
   renderList: PropTypes.func,
-  status: PropTypes.bool,
+  status: PropTypes.number,
   text: PropTypes.string,
   title: PropTypes.string
 };

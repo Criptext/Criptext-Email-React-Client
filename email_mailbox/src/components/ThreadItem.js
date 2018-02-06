@@ -19,7 +19,9 @@ class ThreadItem extends Component {
     return (
       <div
         className={'thread-item-container ' + myClass}
-        onClick={onSelectThread}
+        onClick={() => {
+          onSelectThread(thread.get('id'));
+        }}
       >
         <a>
           <div onMouseEnter={onRegionEnter} onMouseLeave={onRegionLeave}>
@@ -55,7 +57,7 @@ class ThreadItem extends Component {
 
   renderPreview = () => {
     const preview = this.props.thread.get('preview');
-    if (this.props.mailbox !== 'Search') {
+    if (this.props.mailbox !== 'search') {
       return preview;
     }
 
@@ -64,7 +66,7 @@ class ThreadItem extends Component {
 
   renderSubject = () => {
     const subject = this.props.thread.get('subject');
-    if (this.props.mailbox !== 'Search') {
+    if (this.props.mailbox !== 'search') {
       return subject;
     }
 

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import MainContainer from './containers/MainContainer';
-import SideBar from './containers/SideBar';
-import ActivityPanel from './containers/ActivityPanel';
+import Panel from './components/PanelWrapper';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
@@ -19,13 +17,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div className="wrapper-out">
-          <div className="wrapper-in">
-            <SideBar />
-            <div className="main-container">
-              <MainContainer />
-            </div>
-            <ActivityPanel />
-          </div>
+          <Panel />
         </div>
       </Provider>
     );

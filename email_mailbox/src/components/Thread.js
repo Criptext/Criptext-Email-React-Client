@@ -9,7 +9,10 @@ class Thread extends Component {
   render() {
     return (
       <div className="thread-container">
-        <ThreadHeader thread={this.props.thread} history={this.props.history} />
+        <ThreadHeader
+          thread={this.props.thread}
+          onClickThreadBack={this.props.onClickThreadBack}
+        />
         <div className="thread-content">
           <div className="thread-info">
             <h1>Title</h1>
@@ -36,7 +39,7 @@ class Thread extends Component {
 
 Thread.propTypes = {
   emails: PropTypes.object,
-  history: PropTypes.object,
+  onClickThreadBack: PropTypes.func,
   onLoadEmails: PropTypes.func,
   thread: PropTypes.object
 };

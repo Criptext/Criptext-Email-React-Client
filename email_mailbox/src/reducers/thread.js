@@ -15,7 +15,7 @@ export default (state = List([]), action) => {
         .map(thread => thread.set('selected', false))
         .update(
           state.findIndex(function(item) {
-            return item.get('id') === action.selectedThread;
+            return item.get('id') === action.threadId;
           }),
           function(item) {
             return item.set('unread', false);

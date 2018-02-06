@@ -1,18 +1,19 @@
 import { connect } from 'react-redux';
 import MainContainerView from '../components/MainContainer';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  let stance = '';
+  if (ownProps.threadId) {
+    stance = 'emails';
+  } else if (ownProps.mailbox) {
+    stance = 'threads';
+  }
+
   return {
-    stance: state.get('activities').get('stance')
+    stance
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
-};
-
-const MainContainer = connect(mapStateToProps, mapDispatchToProps)(
-  MainContainerView
-);
+const MainContainer = connect(mapStateToProps, null)(MainContainerView);
 
 export default MainContainer;

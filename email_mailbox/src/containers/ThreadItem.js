@@ -25,10 +25,10 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const thread = ownProps.thread;
   return {
-    onSelectThread: () => {
-      dispatch(actions.selectThread(thread));
+    onSelectThread: threadId => {
+      dispatch(actions.selectThread(threadId));
+      ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
     },
     onMultiSelect: (threadId, value) => {
       dispatch(actions.multiSelectThread(threadId, value));
