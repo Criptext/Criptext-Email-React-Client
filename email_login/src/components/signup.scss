@@ -4,7 +4,7 @@
 .signup {
   font-family: 'NunitoSans';
   height: 513px;
-  width: 100%;
+  width: 328px;
   border-radius: 0px 0px 7px 7px;
   background: linear-gradient(to bottom, #00c4ff, #0091ff);
 
@@ -114,7 +114,7 @@
           }
 
           .validate-icon-section {
-            font-size: 19px;
+            font-size: 20px;
             float: left;
             height: 100%;
             width: 59px;
@@ -123,13 +123,13 @@
               color: #ffffff;
               position: relative;
               top: 0%;
-              left: calc(50% - 7px);
+              left: calc(50% - 6px);
             }
             .invalid-icon{
               color: #000000;
               position: relative;
               top: 0%;
-              left: calc(50% - 7px);
+              left: calc(50% - 6px);
             }
             .no-icon{
               width: 10%;
@@ -178,6 +178,7 @@
             .input-recoveryemail {
               width: calc(100% - 59px);
               color: #ffffff;
+              float: left;
               font-size: 12px;
               text-indent: 7px;
               padding-bottom: 3px;
@@ -238,6 +239,14 @@
               position: relative;
               bottom: -0%;
               left: 0%;
+            }
+            .error-message.error-recoveryemail {
+              float: left;
+              font-size: 9px;
+              color: #000;
+              position: relative;
+              bottom: -60%;
+              left: -77%;
             }
           }
 

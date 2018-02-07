@@ -6,12 +6,14 @@ import './signup.css';
 
 const SignUp = props => renderSignUp(props);
 
+
 const renderSignUp = (props) => (
   <div className="signup">
     {renderHeader(props)}
     {renderForm(props)}
   </div>
 );
+
 
 const renderHeader = props => (
   <div className="header">
@@ -26,6 +28,7 @@ const renderHeader = props => (
     <div className="header-clear" />
   </div>
 );
+
 
 const renderForm = props => (
   <div className="form">
@@ -56,8 +59,10 @@ const renderForm = props => (
   </div>
 );
 
+
 renderHeader.propTypes = {
   toggleSignUp: PropTypes.func
 };
+
 
 export default SignUp;

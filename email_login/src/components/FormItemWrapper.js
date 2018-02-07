@@ -17,11 +17,13 @@ class FormItemWrapper extends Component {
     this.onShowHide = this.onShowHide.bind(this);
   }
 
+
   onHasError() {
     this.setState({
       hasError: true
     });
   }
+
 
   onCleanError() {
     this.setState({
@@ -29,21 +31,33 @@ class FormItemWrapper extends Component {
     });
   }
 
+
   onCheck() {
     this.setState({
       isChecked: !this.state.isChecked
     });
   }
 
-  onValidate() {
-    if ( !this.props.formItem.optional ) {
+
+  onValidate(e) {
+    let isOptional = this.props.formItem.optional;
+    let optionalDirty = isOptional && e.target.value!=="";
+    let optionalClean = isOptional && e.target.value==="";
+    if ( !isOptional || optionalDirty ) {
       const isValid = this.props.validator ? this.props.validator() : false ;
       this.setState({
         validated: true,
         hasError: !isValid
       });
     }
+    if ( isOptional && optionalClean ) {
+      this.setState({
+        validated: false,
+        hasError: false
+      });
+    }
   }
+
 
   onShowHide() {
     this.setState({
@@ -60,6 +74,7 @@ class FormItemWrapper extends Component {
       : this.props.formItem.icon
     });
   }
+
 
   render() {
     return (
@@ -79,6 +94,7 @@ class FormItemWrapper extends Component {
       />
     );
   }
+  
 }
 
 export default FormItemWrapper;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import validator from 'validator';
 import { 
   showDialog, 
   closeDialog, 
@@ -6,6 +7,7 @@ import {
   closeLogin
 } from './../utils/electronInterface';
 import SignUp from './SignUp';
+
 
 let formItems = [
   {
@@ -74,7 +76,7 @@ let formItems = [
     },
     icon: '',
     icon2: '',
-    errorMessage: '',
+    errorMessage: 'Email invalid',
     value: '',
     optional: true
   },
@@ -126,7 +128,8 @@ class SignUpWrapper extends Component {
       fullname: () => this.validateFullname(),
       password: () => this.validatePassword(),
       confirmpassword: () => this.validateConfirmPassword(),
-      acceptterms: () => this.validateAcceptTerms()
+      acceptterms: () => this.validateAcceptTerms(),
+      recoveryemail: () => this.validateEmail()
     }
 	}
 
@@ -152,10 +155,11 @@ class SignUpWrapper extends Component {
     );
   }
 
+
   checkDisable = () => {
     var disabled = false;
     formItems.forEach(formItem => {
-      if (!formItem.optional) {
+      if (!formItem.optional || (formItem.optional && this.state.values[formItem.name])){
         const result = this.validators[formItem.name]();
         disabled = disabled || !result;
       } 
@@ -223,6 +227,10 @@ class SignUpWrapper extends Component {
   validateAcceptTerms = () => {
     const field = this.state.values["acceptterms"];
     return field===true;
+  }
+  validateEmail = () => {
+    const field = this.state.values["recoveryemail"];
+    return validator.isEmail(field);
   }
 
 
