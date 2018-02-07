@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import SignUpWrapper from './SignUpWrapper';
 import './login.css';
+import { resizeLogin, resizeSignUp } from './../utils/electronInterface';
+
 
 class Login extends Component {
   constructor() {
@@ -81,10 +83,14 @@ class Login extends Component {
     );
   };
 
+  
   toggleSignUp = ev => {
     ev.preventDefault();
+    ev.stopPropagation();
     this.setState({ showSignUp: !this.state.showSignUp });
+    this.state.showSignUp ? resizeSignUp() : resizeLogin();
   };
+
 }
 
 export default Login;

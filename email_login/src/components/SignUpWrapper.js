@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+import { 
+  showDialog, 
+  closeDialog, 
+  openMailbox,
+  closeLogin
+} from './../utils/electronInterface';
 import SignUp from './SignUp';
 
 let formItems = [
@@ -124,9 +130,11 @@ class SignUpWrapper extends Component {
     }
 	}
 
+
   componentDidMount(){
     this.checkDisable();
   }
+
 
   render(){
     return(
@@ -165,9 +173,34 @@ class SignUpWrapper extends Component {
     this.checkDisable();
 	}
 
+
 	handleSubmit = (event) => {
 		event.preventDefault();
+    event.stopPropagation();
+    const values = this.state.values;
+
+    if ( values.recoveryemail !== '' ) {
+      this.onSubmit(values);
+    }
+    else {
+      showDialog( response => {
+        if ( response === "Confirm" ) {
+          closeDialog();
+          this.onSubmit(values);
+        }
+        closeDialog();
+        console.log("Esperar por email")
+      });
+    }
+
 	}
+
+
+  onSubmit = (formValues) => {
+    //console.log("Submitted:", formValues);
+    closeLogin();
+    openMailbox();
+  }
 
 
   validateUsername = () => {
@@ -180,11 +213,8 @@ class SignUpWrapper extends Component {
   }
   validatePassword = () => {
     const pass = this.state.values['password'];
-    const pass2 = this.state.values['confirmpassword'];
-    const checkPass1 = checkRequired(pass) && checkminLength(pass,1);
-    const checkPass2 = checkRequired(pass2) && checkminLength(pass,2);
-    const match = checkMatch(pass,pass2);
-    return checkPass1 && checkPass2 && match;
+    const checkPass = checkRequired(pass) && checkminLength(pass,1);
+    return checkPass;
   }
   validateConfirmPassword = () => {
     const field1 = this.state.values['password'];
