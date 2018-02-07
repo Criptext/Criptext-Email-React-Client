@@ -184,20 +184,16 @@ class SignUpWrapper extends Component {
     }
     else {
       showDialog( response => {
+        closeDialog();
         if ( response === "Confirm" ) {
-          closeDialog();
           this.onSubmit(values);
         }
-        closeDialog();
-        console.log("Esperar por email")
       });
     }
-
 	}
 
 
   onSubmit = (formValues) => {
-    //console.log("Submitted:", formValues);
     closeLogin();
     openMailbox();
   }

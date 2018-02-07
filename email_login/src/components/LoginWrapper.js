@@ -35,15 +35,15 @@ class LoginWrapper extends Component {
 
   render() {
   	if (this.state.showSignUp) {
-  		return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
+  		return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />
   	}
   	return <Login 
-				  		toggleSignUp={ev => this.toggleSignUp(ev)} 
-				  		handleSubmit={this.handleSubmit}
-				  		onChangeField={this.handleChange}
-				  		disabled={this.state.disabled}
-				  		validator={this.validators.username}
-  					/>;
+  		  			toggleSignUp={ev => this.toggleSignUp(ev)} 
+  					  handleSubmit={this.handleSubmit}
+  					  onChangeField={this.handleChange}
+  					  disabled={this.state.disabled}
+  					  validator={this.validators.username}
+  	  			/>;
   }
 
 
@@ -80,8 +80,6 @@ class LoginWrapper extends Component {
   handleSubmit = (event) => {
   	event.preventDefault();
     event.stopPropagation();
-    const values = this.state.values;
-    console.log(values);
   }
 
 }

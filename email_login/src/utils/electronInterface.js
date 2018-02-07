@@ -16,7 +16,7 @@ export const resizeLogin = () => {
 
 export const showDialog = (callback) => {
 	ipcRenderer.send('open-modal');
-	ipcRenderer.on('selectedOption' , (event, data) => { 
+	ipcRenderer.once('selectedOption' , (event, data) => { 
 		callback(data.selectedOption);
 	});
 };
