@@ -4,9 +4,14 @@
 .signup {
   font-family: 'NunitoSans';
   height: 513px;
-  width: 328px;
+  width: 100%;
   border-radius: 0px 0px 7px 7px;
   background: linear-gradient(to bottom, #00c4ff, #0091ff);
+  -webkit-transition: height 1s; 
+  -moz-transition: height 1s ease-in-out; 
+  -ms-transition: height 1s ease-in-out; 
+  -o-transition: height 1s ease-in-out; 
+  transition: height 1s ease-in-out;
 
   .header {
     height: 90px;
