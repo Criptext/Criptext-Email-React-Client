@@ -8,8 +8,3 @@ export const closeLoading = () => {
 export const openMailbox = () => {
   ipcRenderer.send('open-mailbox');
 };
-
-window.setTimeout(() => {
-  openMailbox();
-  closeLoading();
-}, 3000);
