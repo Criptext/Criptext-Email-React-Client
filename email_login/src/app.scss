@@ -174,11 +174,11 @@ TABLE OF CONTENTS
    ----------------------------- */
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?iptng1');
-  src:  url('fonts/icomoon.eot?iptng1#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?iptng1') format('truetype'),
-    url('fonts/icomoon.woff?iptng1') format('woff'),
-    url('fonts/icomoon.svg?iptng1#icomoon') format('svg');
+  src:  url(#{$_PATH_TO_FONTS}/icon.eot?iptng1);
+  src:  url(#{$_PATH_TO_FONTS}/icon.eot?iptng1#iefix) format('embedded-opentype'),
+    url(#{$_PATH_TO_FONTS}/icon.ttf?iptng1) format('truetype'),
+    url(#{$_PATH_TO_FONTS}/icon.woff?iptng1) format('woff'),
+    url(#{$_PATH_TO_FONTS}/icon.svg?iptng1#icomoon) format('svg');
   font-weight: normal;
   font-style: normal;
 }

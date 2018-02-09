@@ -14,7 +14,7 @@ const renderFormItem = props => (
 );
 
 const renderValidateIcon = props => {
-  if (props.validated === false || props.formItem.type === 'checkbox') {
+  if ( !props.validated || props.formItem.type === 'checkbox') {
     return <span className="no-icon" />;
   }
   if (props.hasError) {

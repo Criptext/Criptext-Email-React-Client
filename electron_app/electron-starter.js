@@ -32,7 +32,7 @@ async function createLoginWindow() {
   }
   
   const loginUrl = 
-    'http://localhost:3002' ||
+    process.env.LOGIN_URL || 
     url.format({
       pathname: path.join(__dirname, '../../email_login/build/index.html'),
       protocol: 'file:',
@@ -40,7 +40,7 @@ async function createLoginWindow() {
     });
 
   const modalUrl =
-    'http://localhost:3001' || 
+    process.env.DIALOG_URL || 
     url.format({
       pathname: path.join(__dirname, '../../email_dialog/build/index.html'),
       protocol: 'file:',
@@ -48,7 +48,7 @@ async function createLoginWindow() {
     });
 
   const mailboxUrl =
-    process.env.ELECTRON_START_URL ||
+    process.env.MAILBOX_URL ||
     'http://localhost:3000' ||
     url.format({
       pathname: path.join(__dirname, './src/app/email_mailbox/index.html'),
@@ -57,7 +57,7 @@ async function createLoginWindow() {
     });
 
   const loadingUrl =
-    'http://localhost:3003' ||
+    process.env.LOADING_URL || 
     url.format({
       pathname: path.join(__dirname, './src/app/email_loading/index.html'),
       protocol: 'file:',
@@ -65,7 +65,7 @@ async function createLoginWindow() {
     });
 
   const composerUrl =
-    'http://localhost:3004' ||
+    process.env.COMPOSER_URL ||
     url.format({
       pathname: path.join(__dirname, './src/app/email_composer/index.html'),
       protocol: 'file:',

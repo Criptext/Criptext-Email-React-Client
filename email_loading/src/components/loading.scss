@@ -2,68 +2,68 @@
 
 
 .loading-body {
-	font-family: 'NunitoSans';
-	width: 327px;
-	height: 141px;
-	border-radius: 7px;
-	background-color: #fff;
+  font-family: 'NunitoSans';
+  width: 327px;
+  height: 141px;
+  border-radius: 7px;
+  background-color: #fff;
 
-	.content {
-		.logo {
-			width: 100%;
-			height: 39%;
-			margin: 0px;
-			padding: 14px 148px;
-			.icon{
-				width: 31px;
-				height: 27px;
-				background: url('./../images/logo-2-copy@2x.png') no-repeat center center;
-				background-size: 100%;
-				-webkit-filter: invert(100%);
-				filter: invert(100%);
-			}
-		}
+  .content {
+    .logo {
+      width: 100%;
+      height: 39%;
+      margin: 0px;
+      padding: 14px 148px;
+      .icon{
+        width: 31px;
+        height: 27px;
+        background: url(../#{$_PATH_TO_IMAGES}/logo-2-copy@2x.png) no-repeat center center;
+        background-size: 100%;
+        -webkit-filter: invert(100%);
+        filter: invert(100%);
+      }
+    }
 
-		.bar {
-			width: 249px;
-			height: 9px;
-			margin: 0px 38px 9px 38px;
-			border-radius: 5px;
-			background-color: rgba(0, 145, 255, 0.25);
-			.content {
-				height: 100%;
-				width: 151px;
-				opacity: 1;
-				border-radius: 5px;
-				background: linear-gradient(294deg, #0091ff, #25b1ff 42%, #56c3ff 71%, #ffffff);
-			}
-		}
+    .bar {
+      width: 249px;
+      height: 9px;
+      margin: 0px 38px 9px 38px;
+      border-radius: 5px;
+      background-color: rgba(0, 145, 255, 0.25);
+      .content {
+        height: 100%;
+        width: 151px;
+        opacity: 1;
+        border-radius: 5px;
+        background: linear-gradient(294deg, #0091ff, #25b1ff 42%, #56c3ff 71%, #ffffff);
+      }
+    }
 
-		.percent {
-			width: 39px;
-			height: 22px;
-			padding: 0px 144px;
-			.content {
-				width: 39px;
-				height: 22px;
-				border-radius: 50px;
-				background-color: #373a45;
-				span {
-					margin: 0px 6px;
-					font-size: 13px;
-					color: #fff;
-				}
-			}
-		}
+    .percent {
+      width: 39px;
+      height: 22px;
+      padding: 0px 144px;
+      .content {
+        width: 39px;
+        height: 22px;
+        border-radius: 50px;
+        background-color: #373a45;
+        span {
+          margin: 0px 6px;
+          font-size: 13px;
+          color: #fff;
+        }
+      }
+    }
 
-		.message {
-			text-align: center;
-			span{
-				font-size: 12px;
-				font-weight: 600;
-				color: #373a45;
-			}
-		}
-	}
+    .message {
+      text-align: center;
+      span{
+        font-size: 12px;
+        font-weight: 600;
+        color: #373a45;
+      }
+    }
+  }
 
 }

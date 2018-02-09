@@ -57,16 +57,11 @@ class FormItemWrapper extends Component {
 
   onShowHide() {
     this.setState({
-      showField: !this.state.showField
-    });
-    this.setState({
-      type: this.state.type === 'text' ? 'password' : 'text'
-    });
-    this.setState({
-      icon:
-        this.state.icon === this.props.formItem.icon
-          ? this.props.formItem.icon2
-          : this.props.formItem.icon
+      showField: !this.state.showField,
+      type: this.state.type === 'text' ? 'password' : 'text',
+      icon: this.state.icon === this.props.formItem.icon
+        ? this.props.formItem.icon2
+        : this.props.formItem.icon
     });
   }
 

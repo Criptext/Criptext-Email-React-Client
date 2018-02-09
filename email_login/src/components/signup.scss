@@ -46,7 +46,7 @@
         top: 20px;
         right: 20px;
         color: #ffffff;
-        background-image: url('./../images/logo-criptext@2x.png');
+        background-image: url(../#{$_PATH_TO_IMAGES}/logo-criptext@2x.png);
         background-position: center;
         background-size: 100%;
       }
