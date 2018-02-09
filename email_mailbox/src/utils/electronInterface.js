@@ -30,24 +30,6 @@ export const getEmailsByThreadId = threadId => {
 
 const parseMailbox = params => {
   switch (params.mailbox) {
-    case 'inbox': {
-      return {
-        ...params,
-        mailbox: LabelType[params.mailbox].id
-      };
-    }
-    case 'spam': {
-      return {
-        ...params,
-        mailbox: LabelType[params.mailbox].id
-      };
-    }
-    case 'sent': {
-      return {
-        ...params,
-        mailbox: LabelType[params.mailbox].id
-      };
-    }
     case 'draft': {
       return {
         ...params,
@@ -62,20 +44,13 @@ const parseMailbox = params => {
         getTrash: -1
       };
     }
-    case 'important': {
-      return {
-        ...params,
-        mailbox: LabelType[params.mailbox].id
-      };
-    }
-    case 'starred': {
-      return {
-        ...params,
-        mailbox: LabelType[params.mailbox].id
-      };
-    }
     default: {
-      return params;
+      return {
+        ...params,
+        mailbox: LabelType[params.mailbox]
+          ? LabelType[params.mailbox].id
+          : params.mailbox
+      };
     }
   }
 };

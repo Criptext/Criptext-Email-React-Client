@@ -28,7 +28,7 @@ Panel.propTypes = {
   onClickMailboxSelected: PropTypes.func,
   onClickThreadBack: PropTypes.func,
   onClickThreadIdSelected: PropTypes.func,
-  threadIdSelected: PropTypes.string
+  threadIdSelected: PropTypes.number
 };
 
 export default Panel;

@@ -26,6 +26,10 @@ export const LabelType = {
   trash: {
     id: null,
     text: 'Trash'
+  },
+  search: {
+    id: null,
+    text: 'Search'
   }
 };
 

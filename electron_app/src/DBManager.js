@@ -2,11 +2,11 @@ const { db, createTables, Table } = require('./models.js');
 
 /* Email
    ----------------------------- */
-const addEmail = function(params) {
+const addEmail = params => {
   return db.table(Table.EMAIL).insert(params);
 };
 
-const getEmailsByThreadId = function(threadId) {
+const getEmailsByThreadId = threadId => {
   return db
     .select('*')
     .from(Table.EMAIL)
@@ -15,7 +15,7 @@ const getEmailsByThreadId = function(threadId) {
     });
 };
 
-const getEmailsGroupByThreadByMatchText = function(text) {
+const getEmailsGroupByThreadByMatchText = text => {
   return db
     .select(`${Table.EMAIL}.*`)
     .from(Table.EMAIL)
@@ -27,7 +27,7 @@ const getEmailsGroupByThreadByMatchText = function(text) {
     .limit(5);
 };
 
-const getEmailsGroupByThreadByParams = function(params = {}) {
+const getEmailsGroupByThreadByParams = (params = {}) => {
   const { timestamp, subject, text, mailbox, plain, limit } = params;
 
   let queryDb = baseThreadQuery({ timestamp, mailbox, limit });
@@ -82,7 +82,7 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
-const markThreadAsRead = function(threadId) {
+const markThreadAsRead = threadId => {
   return db
     .table(Table.EMAIL)
     .where({
@@ -93,7 +93,7 @@ const markThreadAsRead = function(threadId) {
     });
 };
 
-const deleteEmail = function(emailKey) {
+const deleteEmail = emailKey => {
   return db
     .table(Table.EMAIL)
     .where({
@@ -104,11 +104,11 @@ const deleteEmail = function(emailKey) {
 
 /* Label
    ----------------------------- */
-const getAllLabels = function() {
+const getAllLabels = () => {
   return db.select('*').from(Table.LABEL);
 };
 
-const closeDB = function() {
+const closeDB = () => {
   db.close();
   db.disconnect();
 };
