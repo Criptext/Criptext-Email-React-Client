@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Login from './Login';
 import SignUpWrapper from './SignUpWrapper';
+import ContinueLogin from './ContinueLogin';
+import { closeLogin, openMailbox } from './../utils/electronInterface';
 
 const checkRequired = field => {
   return field !== undefined;
@@ -14,6 +16,7 @@ class LoginWrapper extends Component {
     super();
     this.state = {
       showSignUp: false,
+      showContinue: false,
       values: {
         username: ''
       },
@@ -32,6 +35,9 @@ class LoginWrapper extends Component {
     if (this.state.showSignUp) {
       return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
     }
+    if (this.state.showContinue) {
+      return <ContinueLogin toggleContinue={ev => this.toggleContinue(ev)} />;
+    }
     return (
       <Login
         toggleSignUp={ev => this.toggleSignUp(ev)}
@@ -46,7 +52,19 @@ class LoginWrapper extends Component {
   toggleSignUp = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState({ showSignUp: !this.state.showSignUp });
+    this.setState({ 
+      showSignUp: !this.state.showSignUp, 
+      showContinue: false,
+    });
+  };
+
+  toggleContinue = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.setState({ 
+      showSignUp: false,
+      showContinue: !this.state.showContinue 
+    });
   };
 
   validateUsername = () => {
@@ -71,7 +89,16 @@ class LoginWrapper extends Component {
   handleSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
+    this.setState({
+      showSignUp: false,
+      showContinue: true
+    });
+    setTimeout(() => {
+      openMailbox();
+      closeLogin();
+    }, 8000);
   };
+
 }
 
 export default LoginWrapper;
