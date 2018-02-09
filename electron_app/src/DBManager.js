@@ -1,5 +1,11 @@
 const { db, createTables, Table } = require('./models.js');
 
+/* Email
+   ----------------------------- */
+const addEmail = function(params) {
+  return db.table(Table.EMAIL).insert(params);
+};
+
 const getEmailsByThreadId = function(threadId) {
   return db
     .select('*')
@@ -9,25 +15,25 @@ const getEmailsByThreadId = function(threadId) {
     });
 };
 
-const simpleThreadsFilter = function(filter) {
+const getEmailsGroupByThreadByMatchText = function(text) {
   return db
     .select(`${Table.EMAIL}.*`)
     .from(Table.EMAIL)
-    .where('preview', 'like', `%${filter}%`)
-    .orWhere('content', 'like', `%${filter}%`)
-    .orWhere('subject', 'like', `%${filter}%`)
+    .where('preview', 'like', `%${text}%`)
+    .orWhere('content', 'like', `%${text}%`)
+    .orWhere('subject', 'like', `%${text}%`)
     .groupBy('threadId')
     .orderBy('date', 'DESC')
     .limit(5);
 };
 
-const getThreadsFilter = function(params = {}) {
+const getEmailsGroupByThreadByParams = function(params = {}) {
   const { timestamp, subject, text, mailbox, plain, limit } = params;
 
   let queryDb = baseThreadQuery({ timestamp, mailbox, limit });
 
   if (plain) {
-    return simpleFilterQuery(queryDb, text);
+    return partThreadQueryByMatchText(queryDb, text);
   }
 
   if (text) {
@@ -69,20 +75,12 @@ const baseThreadQuery = ({ timestamp, mailbox, limit }) =>
     .orderBy('date', 'DESC')
     .limit(limit || 20);
 
-const simpleFilterQuery = (query, filter) =>
+const partThreadQueryByMatchText = (query, text) =>
   query.andWhere(function() {
-    this.where('preview', 'like', `%${filter}%`)
-      .orWhere('content', 'like', `%${filter}%`)
-      .orWhere('subject', 'like', `%${filter}%`);
+    this.where('preview', 'like', `%${text}%`)
+      .orWhere('content', 'like', `%${text}%`)
+      .orWhere('subject', 'like', `%${text}%`);
   });
-
-const getAllLabels = function() {
-  return db.select('*').from(Table.LABEL);
-};
-
-const addEmail = function(params) {
-  return db.table(Table.EMAIL).insert(params);
-};
 
 const markThreadAsRead = function(threadId) {
   return db
@@ -104,6 +102,12 @@ const deleteEmail = function(emailKey) {
     .del();
 };
 
+/* Label
+   ----------------------------- */
+const getAllLabels = function() {
+  return db.select('*').from(Table.LABEL);
+};
+
 const closeDB = function() {
   db.close();
   db.disconnect();
@@ -116,7 +120,7 @@ module.exports = {
   deleteEmail,
   getAllLabels,
   getEmailsByThreadId,
-  getThreadsFilter,
+  getEmailsGroupByThreadByParams,
   markThreadAsRead,
-  simpleThreadsFilter
+  getEmailsGroupByThreadByMatchText
 };
