@@ -25,6 +25,14 @@ export const closeDialog = () => {
 	ipcRenderer.send('close-modal');
 }
 
+export const openLoading = () => {
+	ipcRenderer.send('open-loading');
+}
+
+export const closeLoading = () => {
+	ipcRenderer.send('close-loading');
+}
+
 export const openMailbox = () => {
 	ipcRenderer.send('open-mailbox');
 }

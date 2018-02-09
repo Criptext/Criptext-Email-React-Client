@@ -1,0 +1,27 @@
+{
+  "name": "email_loading",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "node-sass-chokidar": "^0.0.3",
+    "npm-run-all": "^4.1.2",
+    "rc-progress": "^2.2.5",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.1.0"
+  },
+  "scripts": {
+    "build-css": "node-sass-chokidar src -o src",
+    "watch-css": "npm run build-css && node-sass-chokidar src -o src --watch --recursive",
+    "start-js": "react-scripts start",
+    "start": "PORT=3003 npm-run-all -p watch-css start-js",
+    "build-js": "react-scripts build",
+    "build": "npm-run-all build-css build-js",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "lint": "criptext-js-tools lint"
+  },
+  "devDependencies": {
+    "criptext-js-tools": "^0.5.0"
+  }
+}

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import validator from 'validator';
 import { 
+  closeDialog,
+  closeLoading,
+  closeLogin,
   showDialog, 
-  closeDialog, 
-  openMailbox,
-  closeLogin
+  openLoading,
+  openMailbox
 } from './../utils/electronInterface';
 import SignUp from './SignUp';
 
@@ -198,8 +200,8 @@ class SignUpWrapper extends Component {
 
 
   onSubmit = (formValues) => {
+    openLoading();
     closeLogin();
-    openMailbox();
   }
 
 
