@@ -1,6 +1,4 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
-const url = require('url');
 const dbManager = require('./src/DBManager');
 const { 
   loginUrl, 
