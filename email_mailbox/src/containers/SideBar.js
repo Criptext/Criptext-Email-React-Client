@@ -2,9 +2,15 @@ import { connect } from 'react-redux';
 import { loadLabels } from '../actions';
 import SideBarView from '../components/SideBar';
 
+const defineLabels = labels => {
+  return labels
+    .valueSeq()
+    .filter(element => element.get('id') > 5 || element.get('id') === 4);
+};
+
 const mapStateToProps = state => {
   return {
-    labels: state.get('labels')
+    labels: defineLabels(state.get('labels'))
   };
 };
 

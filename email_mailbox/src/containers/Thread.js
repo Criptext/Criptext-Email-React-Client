@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { loadEmails, loadThreads } from '../actions';
+import { loadEmails } from '../actions';
 import ThreadView from '../components/Thread';
 import { List, Map } from 'immutable';
 
@@ -24,24 +24,29 @@ const getThread = (threads, threadId) => {
   });
 };
 
+const defineLabels = (labelIds, labels) => {
+  const result = labelIds.toArray().map(labelId => {
+    return labels.get(labelId.toString()).toObject();
+  });
+
+  return result ? result : [];
+};
+
 const mapStateToProps = (state, ownProps) => {
   const thread = getThread(state.get('threads'), ownProps.threadId);
   const emailIds = getEmails(state.get('emails'), thread);
-
+  const labels = defineLabels(thread.get('labels'), state.get('labels'));
   return {
-    thread,
-    labels: thread ? thread.get('labels') : [],
-    emails: emailIds
+    emails: emailIds,
+    labels,
+    thread
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
   return {
-    onLoadEmails: () => {
-      if (!ownProps.emails) {
-        dispatch(loadThreads(dispatch));
-      }
-      dispatch(loadEmails(dispatch));
+    onLoadEmails: threadId => {
+      dispatch(loadEmails(threadId));
     }
   };
 };

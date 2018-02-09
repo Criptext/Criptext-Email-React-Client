@@ -15,10 +15,13 @@ class Thread extends Component {
         />
         <div className="thread-content">
           <div className="thread-info">
-            <h1>Title</h1>
+            <h1>{this.props.thread.get('subject')}</h1>
             <div className="thread-labels">
-              <Label text="Large label" color={'#42d692'} />
-              <Label text="Label" color={'#ffbb63'} />
+              {this.props.labels.map((label, index) => {
+                return (
+                  <Label key={index} text={label.text} color={label.color} />
+                );
+              })}
             </div>
           </div>
           <div className="thread-emails">
@@ -33,12 +36,13 @@ class Thread extends Component {
   }
 
   componentDidMount() {
-    this.props.onLoadEmails();
+    this.props.onLoadEmails(this.props.thread.get('threadId'));
   }
 }
 
 Thread.propTypes = {
   emails: PropTypes.object,
+  labels: PropTypes.array,
   onClickThreadBack: PropTypes.func,
   onLoadEmails: PropTypes.func,
   thread: PropTypes.object

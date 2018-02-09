@@ -34,7 +34,10 @@
     font-family: NunitoSans;
     font-size: 21px;
     font-weight: 600;
-    margin: 22px 0 0;
+    margin: 22px 10px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
