@@ -2,12 +2,20 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const dbManager = require('./src/DBManager');
+const { 
+  loginUrl, 
+  modalUrl,
+  mailboxUrl,
+  loadingUrl, 
+  composerUrl
+} = require('./src/window_routing');
 
-let mainWindow;
-let composerWindow;
+
 let loginWindow;
 let modalWindow;
 let loadingWindow;
+let mailboxWindow;
+let composerWindow;
 
 const loginSize = {
   width: 328,
@@ -19,9 +27,24 @@ const signUpSize = {
   height: 513
 }
 
+const modalSize = {
+  width: 393,
+  height: 267
+}
+
 const loadingSize = {
   width: 327,
   height: 141
+}
+
+const mailboxSize = {
+  width: 1094,
+  height: 604
+}
+
+const composerSize = {
+  width: 702,
+  height: 556
 }
 
 async function createLoginWindow() {
@@ -30,47 +53,6 @@ async function createLoginWindow() {
   } catch (ex) {
     console.log(ex);
   }
-  
-  const loginUrl = 
-    process.env.LOGIN_URL || 
-    url.format({
-      pathname: path.join(__dirname, '../../email_login/build/index.html'),
-      protocol: 'file:',
-      slashes: true
-    });
-
-  const modalUrl =
-    process.env.DIALOG_URL || 
-    url.format({
-      pathname: path.join(__dirname, '../../email_dialog/build/index.html'),
-      protocol: 'file:',
-      slashes: true
-    });
-
-  const mailboxUrl =
-    process.env.MAILBOX_URL ||
-    'http://localhost:3000' ||
-    url.format({
-      pathname: path.join(__dirname, './src/app/email_mailbox/index.html'),
-      protocol: 'file:',
-      slashes: true
-    });
-
-  const loadingUrl =
-    process.env.LOADING_URL || 
-    url.format({
-      pathname: path.join(__dirname, './src/app/email_loading/index.html'),
-      protocol: 'file:',
-      slashes: true
-    });
-
-  const composerUrl =
-    process.env.COMPOSER_URL ||
-    url.format({
-      pathname: path.join(__dirname, './src/app/email_composer/index.html'),
-      protocol: 'file:',
-      slashes: true
-    });
 
   loginWindow = new BrowserWindow({ 
     width: loginSize.width, 
@@ -169,8 +151,8 @@ async function createLoginWindow() {
 
   ipcMain.on('open-mailbox', () => {
     mailboxWindow = new BrowserWindow({ 
-      width: 800, 
-      height: 600,
+      width: mailboxSize.width, 
+      height: mailboxSize.height,
       show: false
     });
     mailboxWindow.loadURL(mailboxUrl);
@@ -187,8 +169,8 @@ async function createLoginWindow() {
 
   ipcMain.on('create-composer', () => {
     composerWindow = new BrowserWindow({ 
-      width: 360, 
-      height: 280 
+      width: composerSize.width, 
+      height: composerSize.height
     });
     composerWindow.loadURL(composerUrl);
 
