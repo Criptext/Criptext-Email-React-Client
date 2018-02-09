@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import FormItem from './FormItem';
 
 class FormItemWrapper extends Component {
@@ -17,13 +18,11 @@ class FormItemWrapper extends Component {
     this.onShowHide = this.onShowHide.bind(this);
   }
 
-
   onHasError() {
     this.setState({
       hasError: true
     });
   }
-
 
   onCleanError() {
     this.setState({
@@ -31,26 +30,24 @@ class FormItemWrapper extends Component {
     });
   }
 
-
   onCheck() {
     this.setState({
       isChecked: !this.state.isChecked
     });
   }
 
-
   onValidate(e) {
-    let isOptional = this.props.formItem.optional;
-    let optionalDirty = isOptional && e.target.value!=="";
-    let optionalClean = isOptional && e.target.value==="";
-    if ( !isOptional || optionalDirty ) {
-      const isValid = this.props.validator ? this.props.validator() : false ;
+    const isOptional = this.props.formItem.optional;
+    const optionalDirty = isOptional && e.target.value !== '';
+    const optionalClean = isOptional && e.target.value === '';
+    if (!isOptional || optionalDirty) {
+      const isValid = this.props.validator ? this.props.validator() : false;
       this.setState({
         validated: true,
         hasError: !isValid
       });
     }
-    if ( isOptional && optionalClean ) {
+    if (isOptional && optionalClean) {
       this.setState({
         validated: false,
         hasError: false
@@ -58,23 +55,20 @@ class FormItemWrapper extends Component {
     }
   }
 
-
   onShowHide() {
     this.setState({
-      showField: !this.state.showField,
+      showField: !this.state.showField
     });
     this.setState({
-      type: this.state.type === 'text' 
-      ? 'password'
-      : 'text'
-    })
+      type: this.state.type === 'text' ? 'password' : 'text'
+    });
     this.setState({
-      icon: this.state.icon === this.props.formItem.icon 
-      ? this.props.formItem.icon2
-      : this.props.formItem.icon
+      icon:
+        this.state.icon === this.props.formItem.icon
+          ? this.props.formItem.icon2
+          : this.props.formItem.icon
     });
   }
-
 
   render() {
     return (
@@ -94,7 +88,11 @@ class FormItemWrapper extends Component {
       />
     );
   }
-  
 }
+
+FormItemWrapper.propTypes = {
+  formItem: PropTypes.object,
+  validator: PropTypes.func
+};
 
 export default FormItemWrapper;

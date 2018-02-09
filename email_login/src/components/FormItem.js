@@ -14,14 +14,14 @@ const renderFormItem = props => (
 );
 
 const renderValidateIcon = props => {
-  if ( props.validated === false || props.formItem.type === 'checkbox' ) {
-    return <span className="no-icon" />
+  if (props.validated === false || props.formItem.type === 'checkbox') {
+    return <span className="no-icon" />;
   }
-  if ( props.hasError ) {
-    return <span className="invalid-icon icon-incorret" />
+  if (props.hasError) {
+    return <span className="invalid-icon icon-incorret" />;
   }
-  return <span className="valid-icon icon-correct" />
-}
+  return <span className="valid-icon icon-correct" />;
+};
 
 const renderItem = props =>
   props.formItem.type !== 'checkbox' ? (
@@ -33,10 +33,7 @@ const renderItem = props =>
     </div>
   ) : (
     <div className="input-data">
-      <CustomCheckbox
-        status={props.isChecked}
-        onCheck={() => onCheck(props)}
-      />
+      <CustomCheckbox status={props.isChecked} onCheck={() => onCheck(props)} />
       <span className="label-acceptterms">
         {props.formItem.label.text}
         <span className="strong">{props.formItem.label.strong}</span>
@@ -46,9 +43,9 @@ const renderItem = props =>
 
 const onCheck = props => {
   props.onCheck();
-  const ev = { target: { value: !props.isChecked } }
-  props.onChange(ev, props.formItem.name)
-}
+  const ev = { target: { value: !props.isChecked } };
+  props.onChange(ev, props.formItem.name);
+};
 
 const renderInput = props => (
   <input
@@ -56,7 +53,7 @@ const renderInput = props => (
     name={props.formItem.name}
     type={props.type}
     placeholder={props.formItem.placeholder}
-    onChange={(ev, name) => props.onChange(ev, props.formItem.name)}
+    onChange={ev => props.onChange(ev, props.formItem.name)}
     onKeyUp={props.onValidate}
     onBlur={props.onValidate}
   />
@@ -71,9 +68,9 @@ const renderLabel = formItem =>
   ) : null;
 
 const renderIcon = props =>
-  props.formItem.icon !== '' 
-  ? <span className={`input-icon ${props.icon}`} 
-      onClick={props.onShowHide}/> : null;
+  props.formItem.icon !== '' ? (
+    <span className={`input-icon ${props.icon}`} onClick={props.onShowHide} />
+  ) : null;
 
 const renderErrorMessage = props =>
   props.hasError ? (
@@ -94,8 +91,26 @@ renderValidateIcon.propTypes = {
 
 renderItem.propTypes = {
   formItem: PropTypes.object,
-  isChecked: PropTypes.bool,
-  onCheck: PropTypes.func
+  isChecked: PropTypes.bool
+};
+
+onCheck.propTypes = {
+  onCheck: PropTypes.func,
+  isChecked: PropTypes.bool
+};
+
+renderInput.propTypes = {
+  formItem: PropTypes.object,
+  type: PropTypes.string,
+  onChange: PropTypes.func,
+  onCheck: PropTypes.func,
+  onValidate: PropTypes.func
+};
+
+renderIcon.propTypes = {
+  formItem: PropTypes.object,
+  icon: PropTypes.string,
+  onShowHide: PropTypes.func
 };
 
 renderErrorMessage.propTypes = {

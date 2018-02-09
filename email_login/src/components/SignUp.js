@@ -3,17 +3,14 @@ import PropTypes from 'prop-types';
 import FormItemWrapper from './FormItemWrapper';
 import './signup.css';
 
-
 const SignUp = props => renderSignUp(props);
 
-
-const renderSignUp = (props) => (
+const renderSignUp = props => (
   <div className="signup">
     {renderHeader(props)}
     {renderForm(props)}
   </div>
 );
-
 
 const renderHeader = props => (
   <div className="header">
@@ -29,7 +26,6 @@ const renderHeader = props => (
   </div>
 );
 
-
 const renderForm = props => (
   <div className="form">
     <div className="header">
@@ -39,18 +35,21 @@ const renderForm = props => (
     <div className="signup-form">
       <form autoComplete="off">
         {props.items.map((formItem, index) => {
-          return <FormItemWrapper 
-              key={index} 
-              formItem={formItem} 
-              onChange={props.onChangeField} 
+          return (
+            <FormItemWrapper
+              key={index}
+              formItem={formItem}
+              onChange={props.onChangeField}
               validator={props.validators[formItem.name]}
-            />;
+            />
+          );
         })}
         <div className="button">
-          <button 
-            className="create-button" 
-            onClick={ev => props.handleSubmit(ev)} 
-            disabled={props.disabled}>
+          <button
+            className="create-button"
+            onClick={ev => props.handleSubmit(ev)}
+            disabled={props.disabled}
+          >
             <span>Create account</span>
           </button>
         </div>
@@ -59,10 +58,17 @@ const renderForm = props => (
   </div>
 );
 
-
 renderHeader.propTypes = {
   toggleSignUp: PropTypes.func
 };
 
+renderForm.propTypes = {
+  toggleSignUp: PropTypes.func,
+  items: PropTypes.array,
+  onChangeField: PropTypes.func,
+  validators: PropTypes.object,
+  handleSubmit: PropTypes.func,
+  disabled: PropTypes.bool
+};
 
 export default SignUp;
