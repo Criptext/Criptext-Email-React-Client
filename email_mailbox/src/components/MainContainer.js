@@ -31,7 +31,7 @@ MainContainer.propTypes = {
   onClickThreadBack: PropTypes.func,
   onClickThreadIdSelected: PropTypes.func,
   stance: PropTypes.string,
-  threadId: PropTypes.string
+  threadId: PropTypes.number
 };
 
 export default MainContainer;

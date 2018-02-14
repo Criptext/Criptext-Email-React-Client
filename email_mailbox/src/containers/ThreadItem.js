@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
-import { Label } from '../utils/ConstUtils';
+import { LabelType } from '../utils/const';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
   if (thread.get('unread') && threadPos !== selectedThread) {
@@ -10,17 +10,27 @@ const getThreadClass = (thread, threadPos, selectedThread) => {
   return thread.get('selected') ? 'thread-read-selected' : 'thread-read';
 };
 
+const defineLabels = (labelIds, labels) => {
+  const result = labelIds.toArray().map(labelId => {
+    return labels.get(labelId.toString()).toObject();
+  });
+
+  return result ? result : [];
+};
+
 const mapStateToProps = (state, ownProps) => {
   const selectedThread = ownProps.selectedThread;
   const thread = ownProps.thread;
+  const labels = defineLabels(thread.get('labels'), state.get('labels'));
+
   return {
     myClass: getThreadClass(thread, ownProps.myIndex, selectedThread),
     thread: thread,
     color: thread.get('color'),
     multiselect: state.get('activities').get('multiselect'),
-    starred: thread.get('labels').contains(Label.STARRED),
-    important: thread.get('labels').contains(Label.IMPORTANT),
-    labels: state.get('labels')
+    starred: thread.get('labels').contains(LabelType.starred.id),
+    important: thread.get('labels').contains(LabelType.important.id),
+    labels
   };
 };
 
@@ -39,18 +49,26 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onStarClick: () => {
       const thread = ownProps.thread;
-      if (thread.get('labels').contains(Label.STARRED)) {
-        dispatch(actions.removeThreadLabel(thread.get('id'), Label.STARRED));
+      if (thread.get('labels').contains(LabelType.starred.id)) {
+        dispatch(
+          actions.removeThreadLabel(thread.get('id'), LabelType.starred.id)
+        );
       } else {
-        dispatch(actions.addThreadLabel(thread.get('id'), Label.STARRED));
+        dispatch(
+          actions.addThreadLabel(thread.get('id'), LabelType.starred.id)
+        );
       }
     },
     onImportantClick: () => {
       const thread = ownProps.thread;
-      if (thread.get('labels').contains(Label.IMPORTANT)) {
-        dispatch(actions.removeThreadLabel(thread.get('id'), Label.IMPORTANT));
+      if (thread.get('labels').contains(LabelType.important.id)) {
+        dispatch(
+          actions.removeThreadLabel(thread.get('id'), LabelType.important.id)
+        );
       } else {
-        dispatch(actions.addThreadLabel(thread.get('id'), Label.IMPORTANT));
+        dispatch(
+          actions.addThreadLabel(thread.get('id'), LabelType.important.id)
+        );
       }
     }
   };

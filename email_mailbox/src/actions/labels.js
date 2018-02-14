@@ -25,11 +25,12 @@ export const addLabel = label => {
 export const loadLabels = () => {
   return async dispatch => {
     try {
-      const dbLabels = await getAllLabels();
+      const response = await getAllLabels();
       const labels = {};
-      dbLabels.forEach(element => {
+      response.forEach(element => {
         labels[element.id] = {
           id: element.id,
+          color: element.color,
           text: element.text
         };
       });

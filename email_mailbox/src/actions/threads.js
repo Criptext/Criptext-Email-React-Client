@@ -1,5 +1,5 @@
 import { Thread } from './types';
-import { getThreadsFilter } from '../utils/electronInterface';
+import { getEmailsGroupByThreadByParams } from '../utils/electronInterface';
 import { storeValue } from '../utils/storage';
 
 export const addThreads = (threads, clear) => ({
@@ -83,7 +83,7 @@ export const searchThreads = params => {
   return async dispatch => {
     try {
       await storeValue(params.text);
-      const threads = await getThreadsFilter(params);
+      const threads = await getEmailsGroupByThreadByParams(params);
       dispatch(addThreads(threads, true));
     } catch (e) {
       /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
@@ -103,7 +103,7 @@ export const muteNotifications = threadId => {
 export const loadThreads = params => {
   return async dispatch => {
     try {
-      const threads = await getThreadsFilter(params);
+      const threads = await getEmailsGroupByThreadByParams(params);
       dispatch(addThreads(threads, params.clear));
     } catch (e) {
       /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 

@@ -1,6 +1,7 @@
 import { Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
 import * as TimeUtils from '../utils/TimeUtils';
+import * as StringUtils from '../utils/StringUtils';
 import {
   parseAllContacts,
   getCapitalLetters,
@@ -27,6 +28,8 @@ export default (state = List([]), action) => {
       const threads = action.threads.map(thread => {
         const testUsers = 'Criptext Info <no-reply@criptext.com>';
         const contacts = parseAllContacts(testUsers);
+        const subject = StringUtils.removeActionsFromSubject(thread.subject);
+
         return Map(thread).merge({
           labels: Set(
             thread.labels ? thread.labels.split(',').map(Number) : []
@@ -34,6 +37,7 @@ export default (state = List([]), action) => {
           emails: List(thread.emails.split(',').map(Number)),
           letters: getCapitalLetters(contacts[0].name),
           header: buildParticipantsColumnString(contacts),
+          subject,
           date: TimeUtils.defineTimeByToday(thread.date),
           timestamp: thread.date,
           color: randomcolor({

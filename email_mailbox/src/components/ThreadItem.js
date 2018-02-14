@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as Status from '../utils/ConstUtils';
-import randomcolor from 'randomcolor';
+import { EmailStatus } from '../utils/const';
 import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import { replaceMatches } from '../utils/ReactUtils';
 import './threaditem.css';
@@ -14,7 +13,8 @@ class ThreadItem extends Component {
       myClass,
       onRegionEnter,
       onRegionLeave,
-      onSelectThread
+      onSelectThread,
+      labels
     } = this.props;
     return (
       <div
@@ -32,7 +32,7 @@ class ThreadItem extends Component {
           </div>
           <div>{this.willDisplaySecureIcon(thread)}</div>
           <div>
-            {this.willRenderLabels(thread.get('labels'), thread.get('id'))}
+            {this.renderLabels(labels, thread.get('id'))}
             <div className="thread-subject">
               <span>{this.renderSubject()}</span>
             </div>
@@ -192,53 +192,45 @@ class ThreadItem extends Component {
   willDisplayAckIcon = thread => {
     const status = thread.get('status');
     switch (status) {
-      case Status.Email.UNSENT:
+      case EmailStatus.UNSENT:
         return <i className="material-icons error-highlight">undo</i>;
-      case Status.Email.SENT:
+      case EmailStatus.SENT:
         return <i className="material-icons">done</i>;
-      case Status.Email.RECEIVED:
+      case EmailStatus.RECEIVED:
         return <i className="icon-checked" />;
-      case Status.Email.OPENED:
+      case EmailStatus.OPENED:
         return <i className="icon-checked neutral-highlight" />;
       default:
         return null;
     }
   };
 
-  willRenderLabels = (labels, threadId) => {
-    if (!labels || labels.size === 0 || this.props.labels.size === 0) {
+  renderLabels = (labels, threadId) => {
+    if (!labels.length) {
       return null;
-    }
-    const labelColor = randomcolor({
-      seed: labels.first(),
-      luminosity: 'bright'
-    });
-    const firstLabel = this.props.labels
-      .get(labels.first().toString())
-      .get('text');
-    if (labels.size === 1) {
-      return (
-        <div className="thread-label">
-          <div style={{ backgroundColor: labelColor }}>{firstLabel}</div>
-        </div>
-      );
     }
 
     return (
       <div className="thread-label">
-        <div style={{ backgroundColor: labelColor }}>{firstLabel}</div>
-        <div
-          data-tip
-          data-for={`labelstip${threadId}`}
-          onMouseEnter={() => {
-            this.props.onMouseEnterItem(`labelstip${threadId}`, labels);
-          }}
-          onMouseLeave={() => {
-            this.props.onMouserLeaveItem(`labelstip${threadId}`);
-          }}
-        >
-          {labels.size - 1}+
-        </div>
+        <div style={{ backgroundColor: labels[0].color }}>{labels[0].text}</div>
+        {labels.length > 1 ? this.renderMoreLabels(labels, threadId) : null}
+      </div>
+    );
+  };
+
+  renderMoreLabels = (labels, threadId) => {
+    return (
+      <div
+        data-tip
+        data-for={`labelstip${threadId}`}
+        onMouseEnter={() => {
+          this.props.onMouseEnterItem(`labelstip${threadId}`, labels);
+        }}
+        onMouseLeave={() => {
+          this.props.onMouserLeaveItem(`labelstip${threadId}`);
+        }}
+      >
+        <span>{labels.length - 1}+</span>
       </div>
     );
   };
@@ -279,7 +271,7 @@ ThreadItem.propTypes = {
   color: PropTypes.string,
   hovering: PropTypes.bool,
   important: PropTypes.bool,
-  labels: PropTypes.object,
+  labels: PropTypes.array,
   mailbox: PropTypes.string,
   multiselect: PropTypes.bool,
   myClass: PropTypes.string,

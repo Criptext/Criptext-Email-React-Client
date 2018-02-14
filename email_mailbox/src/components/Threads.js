@@ -4,7 +4,7 @@ import ThreadItem from '../containers/ThreadItem';
 import { Switch } from 'react-switch-input';
 import ItemTooltip from './ItemTooltip';
 import ReactTooltip from 'react-tooltip';
-import randomcolor from 'randomcolor';
+import { LabelType } from '../utils/const.js';
 import './threads.css';
 
 class Threads extends Component {
@@ -29,7 +29,9 @@ class Threads extends Component {
     return (
       <div className="threads-header-wrapper">
         <div className="threads-info-header">
-          <h1 className="threads-mailbox-label">INBOX</h1>
+          <h1 className="threads-mailbox-label">
+            {LabelType[this.props.mailbox].text}
+          </h1>
           <div className="threads-toggle-container">
             <span className={this.props.unreadFilter ? 'disabled' : ''}>
               All
@@ -99,17 +101,13 @@ class Threads extends Component {
         effect="solid"
       >
         {labels.map(label => {
-          const lColor = randomcolor({
-            seed: label,
-            luminosity: 'bright'
-          });
           return (
             <div
-              key={label}
-              style={{ backgroundColor: lColor }}
+              key={label.id}
+              style={{ backgroundColor: label.color }}
               className="innerLabel"
             >
-              {this.props.labels.get(label.toString()).get('text')}
+              {label.text}
             </div>
           );
         })}
@@ -171,7 +169,6 @@ class Threads extends Component {
 }
 
 Threads.propTypes = {
-  labels: PropTypes.object,
   mailbox: PropTypes.string,
   onClickThreadIdSelected: PropTypes.func,
   onLoadThreads: PropTypes.func,

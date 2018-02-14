@@ -92,10 +92,10 @@ class SideBar extends Component {
     return (
       <ul>
         {this.state.showLabels
-          ? this.props.labels.valueSeq().map((label, key) => {
+          ? this.props.labels.map((label, key) => {
               return (
                 <li key={key} className="nav-item-label">
-                  <div />
+                  <div style={{ backgroundColor: label.get('color') }} />
                   <span>{label.get('text')}</span>
                 </li>
               );

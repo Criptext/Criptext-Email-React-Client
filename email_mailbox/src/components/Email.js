@@ -16,9 +16,7 @@ const renderEmailCollapse = props => (
     onClick={props.onToggleEmail}
   >
     <span className="email-preview-from">{props.email.get('from')}</span>
-    <span className="email-preview-content">
-      Lorem Ipsum is simply dummy text of the printing and
-    </span>
+    <span className="email-preview-content">{props.email.get('preview')}</span>
     <div className="email-preview-info">
       <i className="icon-attach" />
       <i className="icon-checked" />

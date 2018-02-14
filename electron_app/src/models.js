@@ -28,7 +28,8 @@ const db = require('knex')({
 });
 
 const createUserColumns = table => {
-  table.string('email').primary();
+  table.increments('id').primary();
+  table.string('email', MEDIUM_STRING_SIZE);
   table.string('name', MEDIUM_STRING_SIZE);
   table.string('nickname', MEDIUM_STRING_SIZE);
 };

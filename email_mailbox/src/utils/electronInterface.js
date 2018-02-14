@@ -1,3 +1,4 @@
+import { LabelType } from './const.js';
 const electron = window.require('electron');
 const remote = electron.remote;
 const dbManager = remote.require('./src/DBManager');
@@ -15,34 +16,20 @@ export const getAllLabels = () => {
   return dbManager.getAllLabels();
 };
 
-export const simpleThreadsFilter = filter => {
-  return dbManager.simpleThreadsFilter(filter);
+export const getEmailsGroupByThreadByMatchText = filter => {
+  return dbManager.getEmailsGroupByThreadByMatchText(filter);
 };
 
-export const getThreadsFilter = params => {
-  return dbManager.getThreadsFilter(parseMailbox(params));
+export const getEmailsGroupByThreadByParams = params => {
+  return dbManager.getEmailsGroupByThreadByParams(parseMailbox(params));
+};
+
+export const getEmailsByThreadId = threadId => {
+  return dbManager.getEmailsByThreadId(threadId);
 };
 
 const parseMailbox = params => {
   switch (params.mailbox) {
-    case 'inbox': {
-      return {
-        ...params,
-        mailbox: 1
-      };
-    }
-    case 'spam': {
-      return {
-        ...params,
-        mailbox: 2
-      };
-    }
-    case 'sent': {
-      return {
-        ...params,
-        mailbox: 3
-      };
-    }
     case 'draft': {
       return {
         ...params,
@@ -57,14 +44,13 @@ const parseMailbox = params => {
         getTrash: -1
       };
     }
-    case 'starred': {
+    default: {
       return {
         ...params,
-        mailbox: 7
+        mailbox: LabelType[params.mailbox]
+          ? LabelType[params.mailbox].id
+          : params.mailbox
       };
-    }
-    default: {
-      return params;
     }
   }
 };

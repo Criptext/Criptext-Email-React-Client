@@ -1,4 +1,5 @@
 import { Email } from './types';
+import { getEmailsByThreadId } from '../utils/electronInterface';
 
 export const addEmails = emails => {
   return {
@@ -7,13 +8,12 @@ export const addEmails = emails => {
   };
 };
 
-export const loadEmails = () => {
+export const loadEmails = threadId => {
   return async dispatch => {
     try {
-      const response = await fetch('/emails.json');
-      const json = await response.json();
+      const response = await getEmailsByThreadId(threadId);
       const emails = {};
-      json.emails.forEach(element => {
+      response.forEach(element => {
         emails[element.id] = element;
       });
       dispatch(addEmails(emails));
