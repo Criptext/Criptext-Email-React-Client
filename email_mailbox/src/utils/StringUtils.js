@@ -1,13 +1,13 @@
 export const removeActionsFromSubject = subject => {
   const actions = ['Re:', 'RE:'];
-  return deleteSubstringsFirstPosition(actions, subject);
+  return deletePrefixingSubstrings(actions, subject);
 };
 
-export const deleteSubstringsFirstPosition = (substrings, subject) => {
+export const deletePrefixingSubstrings = (substrings, subject) => {
   const substringToDelete = hasAnySubstring(substrings, subject);
   if (substringToDelete) {
     subject = deleteSubstring(substringToDelete, subject);
-    return deleteSubstringsFirstPosition(substrings, subject);
+    return deletePrefixingSubstrings(substrings, subject);
   }
   return subject;
 };
