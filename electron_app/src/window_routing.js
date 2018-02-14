@@ -19,7 +19,6 @@ const modalUrl =
 
 const mailboxUrl =
   process.env.MAILBOX_URL ||
-  'http://localhost:3000' ||
   url.format({
     pathname: path.join(__dirname, './src/app/email_mailbox/index.html'),
     protocol: 'file:',
