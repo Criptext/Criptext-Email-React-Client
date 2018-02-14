@@ -131,7 +131,7 @@ class ThreadItem extends Component {
         <HoverMenuItem
           targetId={`starred${threadId}`}
           tip="Favorite"
-          icon="icon-start"
+          icon="icon-star"
           myClass={this.props.starred ? 'thread-label-mark' : ''}
           onClick={this.onStarClick}
           onMouseEnterItem={this.props.onMouseEnterItem}

@@ -202,101 +202,107 @@ TABLE OF CONTENTS
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-bell-inclined:before {
-  content: "\e903";
+.icon-mailbox:before {
+  content: "\e900";
 }
-.icon-bell-mute:before {
-  content: "\e909";
-}
-.icon-bell:before {
+.icon-doc:before {
   content: "\e901";
 }
-.icon-unsend:before {
+.icon-star:before {
+  content: "\e903";
+}
+.icon-trash:before {
+  content: "\e905";
+}
+.icon-lock:before {
+  content: "\e906";
+}
+.icon-archive:before {
+  content: "\e907";
+}
+.icon-tag:before {
+  content: "\e908";
+}
+.icon-not:before {
+  content: "\e909";
+}
+.icon-download:before {
+  content: "\e90a";
+}
+.icon-time:before {
+  content: "\e90b";
+}
+.icon-file:before {
+  content: "\e90c";
+}
+.icon-edit:before {
+  content: "\e911";
+}
+.icon-calendar:before {
+  content: "\e904";
+}
+.icon-forward:before {
   content: "\e90d";
 }
-.icon-sent:before {
+.icon-attach:before {
+  content: "\e912";
+}
+.icon-checked:before {
+  content: "\e913";
+}
+.icon-criptext:before {
+  content: "\e914";
+}
+.icon-text-edit:before {
+  content: "\e93a";
+}
+.icon-unsend:before {
   content: "\e916";
+}
+.icon-sent:before {
+  content: "\e91a";
+}
+.icon-bell-inclined:before {
+  content: "\e91b";
+}
+.icon-bell:before {
+  content: "\e91c";
+}
+.icon-bell-mute:before {
+  content: "\e91d";
+}
+.icon-replay-all:before {
+  content: "\e91e";
 }
 .icon-replay:before {
   content: "\e91f";
 }
-.icon-replay-all:before {
+.icon-correct:before {
   content: "\e920";
 }
-.icon-forward:before {
-  content: "\e91c";
-}
-.icon-toggle-right:before {
-  content: "\e90b";
-}
-.icon-toogle-down:before {
-  content: "\e913";
-}
-.icon-toogle-up:before {
-  content: "\e914";
-}
-.icon-back:before {
-  content: "\e91b";
-}
-.icon-next:before {
-  content: "\e902";
-}
-.icon-check:before {
-  content: "\e919";
-}
-.icon-not:before {
-  content: "\e906";
-}
-.icon-plus:before {
-  content: "\e91d";
-}
-.icon-minus:before {
+.icon-incorret:before {
   content: "\e921";
 }
-.icon-exit:before {
-  content: "\e924";
-}
-.icon-arrow-down:before {
-  content: "\e91e";
-}
-.icon-search:before {
-  content: "\e917";
-}
-.icon-time:before {
+.icon-show:before {
   content: "\e922";
 }
-.icon-checked:before {
-  content: "\e912";
+.icon-not-show:before {
+  content: "\e923";
 }
-.icon-lock:before {
+.icon-mobile:before {
+  content: "\e924";
+}
+.icon-desktop:before {
+  content: "\e925";
+}
+.icon-important:before {
   content: "\e926";
 }
 .icon-box:before {
   content: "\e915";
 }
-.icon-important:before {
-  content: "\e927";
-}
-.icon-download:before {
-  content: "\e925";
-}
-.icon-archive:before {
-  content: "\e91a";
-}
-.icon-start:before {
-  content: "\e907";
-}
-.icon-doc:before {
-  content: "\e908";
-}
-.icon-mailbox:before {
-  content: "\e90a";
-}
 .icon-dots:before {
   content: "\e918";
-}
-.icon-file:before {
-  content: "\e90c";
 }
 .icon-user:before {
   content: "\e90e";
@@ -307,20 +313,71 @@ TABLE OF CONTENTS
 .icon-settings:before {
   content: "\e910";
 }
-.icon-attach:before {
-  content: "\e900";
+.icon-video:before {
+  content: "\e927";
 }
-.icon-calendar:before {
-  content: "\e904";
+.icon-audio:before {
+  content: "\e928";
 }
-.icon-trash:before {
-  content: "\e905";
+.icon-word:before {
+  content: "\e929";
 }
-.icon-edit:before {
-  content: "\e911";
+.icon-ppt:before {
+  content: "\e92a";
 }
-.icon-tag:before {
-  content: "\e923";
+.icon-excel:before {
+  content: "\e92b";
+}
+.icon-pdf:before {
+  content: "\e92c";
+}
+.icon-zip:before {
+  content: "\e939";
+}
+.icon-file-default:before {
+  content: "\e92d";
+}
+.icon-image:before {
+  content: "\e92e";
+}
+.icon-lock-file:before {
+  content: "\e92f";
+}
+.icon-arrow-down:before {
+  content: "\e930";
+}
+.icon-arrow-up:before {
+  content: "\e931";
+}
+.icon-plus:before {
+  content: "\e932";
+}
+.icon-minus:before {
+  content: "\e933";
+}
+.icon-toogle-down:before {
+  content: "\e934";
+}
+.icon-toogle-up:before {
+  content: "\e935";
+}
+.icon-toggle-right:before {
+  content: "\e936";
+}
+.icon-exit:before {
+  content: "\e937";
+}
+.icon-search:before {
+  content: "\e917";
+}
+.icon-back:before {
+  content: "\e938";
+}
+.icon-next:before {
+  content: "\e902";
+}
+.icon-check:before {
+  content: "\e919";
 }
 
 /* 2.- CONTENT
