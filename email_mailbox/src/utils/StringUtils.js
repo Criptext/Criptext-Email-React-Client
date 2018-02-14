@@ -3,7 +3,7 @@ export const removeActionsFromSubject = subject => {
   return deleteSubstringsFirstPosition(actions, subject);
 };
 
-const deleteSubstringsFirstPosition = (substrings, subject) => {
+export const deleteSubstringsFirstPosition = (substrings, subject) => {
   const substringToDelete = hasAnySubstring(substrings, subject);
   if (substringToDelete) {
     subject = deleteSubstring(substringToDelete, subject);
@@ -19,5 +19,5 @@ const hasAnySubstring = (substrings, string) => {
 };
 
 const deleteSubstring = (substring, string) => {
-  return (string = string.replace(substring, '').trim());
+  return string.replace(substring, '').trim();
 };

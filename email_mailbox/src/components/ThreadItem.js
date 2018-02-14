@@ -213,20 +213,24 @@ class ThreadItem extends Component {
     return (
       <div className="thread-label">
         <div style={{ backgroundColor: labels[0].color }}>{labels[0].text}</div>
-        {labels.length > 1 ? (
-          <div
-            data-tip
-            data-for={`labelstip${threadId}`}
-            onMouseEnter={() => {
-              this.props.onMouseEnterItem(`labelstip${threadId}`, labels);
-            }}
-            onMouseLeave={() => {
-              this.props.onMouserLeaveItem(`labelstip${threadId}`);
-            }}
-          >
-            {labels.length - 1}+
-          </div>
-        ) : null}
+        {labels.length > 1 ? this.renderMoreLabels(labels, threadId) : null}
+      </div>
+    );
+  };
+
+  renderMoreLabels = (labels, threadId) => {
+    return (
+      <div
+        data-tip
+        data-for={`labelstip${threadId}`}
+        onMouseEnter={() => {
+          this.props.onMouseEnterItem(`labelstip${threadId}`, labels);
+        }}
+        onMouseLeave={() => {
+          this.props.onMouserLeaveItem(`labelstip${threadId}`);
+        }}
+      >
+        <span>{labels.length - 1}+</span>
       </div>
     );
   };
