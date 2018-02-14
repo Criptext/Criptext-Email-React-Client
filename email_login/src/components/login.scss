@@ -97,13 +97,13 @@
           opacity: 0.5;
           margin: 15px 0;
           width: 100%;
-          -webkit-transition: width 0.1s;
+          -webkit-transition: opacity 0.1s;
           transition: opacity 0.1s;
           span {
             color: #fff;
             font-weight: 600;
             opacity: 0.9;
-            -webkit-transition: width 0.1s;
+            -webkit-transition: opacity 0.1s;
             transition: opacity 0.1s;
           }
         }

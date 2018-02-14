@@ -7,7 +7,6 @@ class FormItemWrapper extends Component {
     super(props);
     this.state = {
       validated: false,
-      hasError: false,
       isChecked: false,
       showField: true,
       icon: props.formItem.icon,
@@ -19,15 +18,11 @@ class FormItemWrapper extends Component {
   }
 
   onHasError() {
-    this.setState({
-      hasError: true
-    });
+    this.props.onSetError(this.props.formItem.name, true);
   }
 
   onCleanError() {
-    this.setState({
-      hasError: false
-    });
+    this.props.onSetError(this.props.formItem.name, false);
   }
 
   onCheck() {
@@ -41,17 +36,15 @@ class FormItemWrapper extends Component {
     const optionalDirty = isOptional && e.target.value !== '';
     const optionalClean = isOptional && e.target.value === '';
     if (!isOptional || optionalDirty) {
-      const isValid = this.props.validator ? this.props.validator() : false;
-      this.setState({
-        validated: true,
-        hasError: !isValid
-      });
+      const isValid = this.props.validator
+        ? this.props.validator(this.props.formItem.name, e.target.value)
+        : false;
+      this.setState({ validated: true });
+      this.props.onSetError(this.props.formItem.name, !isValid);
     }
     if (isOptional && optionalClean) {
-      this.setState({
-        validated: false,
-        hasError: false
-      });
+      this.setState({ validated: false });
+      this.props.onSetError(this.props.formItem.name, false);
     }
   }
 
@@ -59,9 +52,10 @@ class FormItemWrapper extends Component {
     this.setState({
       showField: !this.state.showField,
       type: this.state.type === 'text' ? 'password' : 'text',
-      icon: this.state.icon === this.props.formItem.icon
-        ? this.props.formItem.icon2
-        : this.props.formItem.icon
+      icon:
+        this.state.icon === this.props.formItem.icon
+          ? this.props.formItem.icon2
+          : this.props.formItem.icon
     });
   }
 
@@ -72,7 +66,7 @@ class FormItemWrapper extends Component {
         icon={this.state.icon}
         type={this.state.type}
         validated={this.state.validated}
-        hasError={this.state.hasError}
+        hasError={this.state.validated && this.props.hasError}
         isChecked={this.state.isChecked}
         onHasError={this.onHasError}
         onCleanError={this.onCleanError}
@@ -87,7 +81,9 @@ class FormItemWrapper extends Component {
 
 FormItemWrapper.propTypes = {
   formItem: PropTypes.object,
-  validator: PropTypes.func
+  hasError: PropTypes.bool,
+  validator: PropTypes.func,
+  onSetError: PropTypes.func
 };
 
 export default FormItemWrapper;

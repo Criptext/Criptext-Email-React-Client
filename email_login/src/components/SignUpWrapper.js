@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import validator from 'validator';
+import {
+  validateUsername,
+  validateFullname,
+  validatePassword,
+  validateConfirmPassword,
+  validateAcceptTerms,
+  validateEmail
+} from './../validators/validators';
 import {
   closeDialog,
   closeLogin,
@@ -101,35 +108,22 @@ const onInitState = (array, field) =>
     return obj;
   }, {});
 
-const checkRequired = field => {
-  return field !== undefined;
-};
-const checkminLength = (field, length) => {
-  return field.length > length;
-};
-const checkMatch = (field1, field2) => {
-  return field1 === field2;
-};
+const onInitErrors = (array, field) =>
+  array.reduce((obj, item) => {
+    obj[item[field]] = false;
+    return obj;
+  }, {});
 
 class SignUpWrapper extends Component {
   constructor() {
     super();
     this.state = {
       values: onInitState(formItems, 'name'),
+      errors: onInitErrors(formItems, 'name'),
       disabled: true
     };
-    this.validators = {
-      username: () => this.validateUsername(),
-      fullname: () => this.validateFullname(),
-      password: () => this.validatePassword(),
-      confirmpassword: () => this.validateConfirmPassword(),
-      acceptterms: () => this.validateAcceptTerms(),
-      recoveryemail: () => this.validateEmail()
-    };
-  }
-
-  componentDidMount() {
-    this.checkDisable();
+    this.universalValidator = this.universalValidator.bind(this);
+    this.onSetError = this.onSetError.bind(this);
   }
 
   render() {
@@ -142,7 +136,9 @@ class SignUpWrapper extends Component {
           onChangeField={this.handleChange}
           disabled={this.state.disabled}
           handleSubmit={this.handleSubmit}
-          validators={this.validators}
+          validator={this.universalValidator}
+          errors={this.state.errors}
+          onSetError={this.onSetError}
         />
       </div>
     );
@@ -150,18 +146,30 @@ class SignUpWrapper extends Component {
 
   checkDisable = () => {
     var disabled = false;
+    const errors = {};
     formItems.forEach(formItem => {
       if (
         !formItem.optional ||
-        (formItem.optional && this.state.values[formItem.name])
+        (formItem.optional && this.state.values[formItem.name] !== '')
       ) {
-        const result = this.validators[formItem.name]();
+        const result = this.universalValidator(
+          formItem.name,
+          this.state.values[formItem.name]
+        );
+        errors[formItem.name] = !result;
         disabled = disabled || !result;
       }
     });
     this.setState({
-      disabled: disabled
+      disabled: disabled,
+      errors: errors
     });
+  };
+
+  onSetError = (formItemName, errorValue) => {
+    const errors = this.state.errors;
+    errors[formItemName] = errorValue;
+    this.setState({ errors: errors });
   };
 
   handleChange = (event, field) => {
@@ -193,34 +201,34 @@ class SignUpWrapper extends Component {
     closeLogin();
   };
 
-  validateUsername = () => {
-    const username = this.state.values['username'];
-    return checkRequired(username) && checkminLength(username, 1);
-  };
-  validateFullname = () => {
-    const fullname = this.state.values['fullname'];
-    return checkRequired(fullname) && checkminLength(fullname, 1);
-  };
-  validatePassword = () => {
-    const pass = this.state.values['password'];
-    const checkPass = checkRequired(pass) && checkminLength(pass, 1);
-    return checkPass;
-  };
-  validateConfirmPassword = () => {
-    const field1 = this.state.values['password'];
-    const field2 = this.state.values['confirmpassword'];
-    const required = checkRequired(field1) && checkRequired(field2);
-    const length = checkminLength(field1, 1) && checkminLength(field2, 1);
-    const match = checkMatch(field1, field2);
-    return required && length && match;
-  };
-  validateAcceptTerms = () => {
-    const field = this.state.values['acceptterms'];
-    return field === true;
-  };
-  validateEmail = () => {
-    const field = this.state.values['recoveryemail'];
-    return validator.isEmail(field);
+  universalValidator = (formItemName, formItemValue) => {
+    let result;
+    switch (formItemName) {
+      case 'username': {
+        result = validateUsername(formItemValue);
+        break;
+      }
+      case 'fullname': {
+        result = validateFullname(formItemValue);
+        break;
+      }
+      case 'password': {
+        result = validatePassword(formItemValue);
+        break;
+      }
+      case 'confirmpassword': {
+        const password = this.state.values['password'];
+        result = validateConfirmPassword(password, formItemValue);
+        break;
+      }
+      case 'recoveryemail': {
+        result = validateEmail(formItemValue);
+        break;
+      }
+      default:
+        result = validateAcceptTerms(formItemValue);
+    }
+    return result;
   };
 }
 

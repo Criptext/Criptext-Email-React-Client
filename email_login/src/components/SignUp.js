@@ -40,7 +40,9 @@ const renderForm = props => (
               key={index}
               formItem={formItem}
               onChange={props.onChangeField}
-              validator={props.validators[formItem.name]}
+              validator={props.validator}
+              hasError={props.errors[formItem.name]}
+              onSetError={props.onSetError}
             />
           );
         })}
@@ -63,12 +65,14 @@ renderHeader.propTypes = {
 };
 
 renderForm.propTypes = {
-  toggleSignUp: PropTypes.func,
+  disabled: PropTypes.bool,
+  handleSubmit: PropTypes.func,
+  errors: PropTypes.object,
   items: PropTypes.array,
   onChangeField: PropTypes.func,
-  validators: PropTypes.object,
-  handleSubmit: PropTypes.func,
-  disabled: PropTypes.bool
+  onSetError: PropTypes.func,
+  toggleSignUp: PropTypes.func,
+  validator: PropTypes.func
 };
 
 export default SignUp;

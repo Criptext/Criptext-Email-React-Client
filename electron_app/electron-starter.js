@@ -16,7 +16,7 @@ let mailboxWindow;
 let composerWindow;
 
 const loginSize = {
-  width: 328,
+  width: 328+300,
   height: 513
 }
 
@@ -90,8 +90,8 @@ async function createLoginWindow() {
   ipcMain.on('open-modal', (event, arg) => {
     modalWindow = new BrowserWindow({
       parent: loginWindow,
-      width: 393, 
-      height: 267,
+      width: modalSize.width, 
+      height: modalSize.height,
       frame: false,
       transparent: true,
       show: false,

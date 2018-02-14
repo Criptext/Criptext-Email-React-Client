@@ -14,7 +14,7 @@ const renderFormItem = props => (
 );
 
 const renderValidateIcon = props => {
-  if ( !props.validated || props.formItem.type === 'checkbox') {
+  if (!props.validated || props.formItem.type === 'checkbox') {
     return <span className="no-icon" />;
   }
   if (props.hasError) {
@@ -55,7 +55,6 @@ const renderInput = props => (
     placeholder={props.formItem.placeholder}
     onChange={ev => props.onChange(ev, props.formItem.name)}
     onKeyUp={props.onValidate}
-    onBlur={props.onValidate}
   />
 );
 
