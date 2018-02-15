@@ -51,7 +51,7 @@ export const MailItems = [
   },
   {
     id: 'starred',
-    icon: 'icon-start',
+    icon: 'icon-star',
     text: LabelType.starred.text
   },
   {
