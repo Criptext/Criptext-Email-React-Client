@@ -3,13 +3,9 @@ import Login from './Login';
 import SignUpWrapper from './SignUpWrapper';
 import ContinueLogin from './ContinueLogin';
 import { closeLogin, openMailbox } from './../utils/electronInterface';
+import { validateUsername } from './../validators/validators';
 
-const checkRequired = field => {
-  return field !== undefined;
-};
-const checkminLength = (field, length) => {
-  return field.length > length;
-};
+let timeCountdown;
 
 class LoginWrapper extends Component {
   constructor() {
@@ -17,13 +13,11 @@ class LoginWrapper extends Component {
     this.state = {
       showSignUp: false,
       showContinue: false,
+      stopContinue: false,
       values: {
         username: ''
       },
       disabled: true
-    };
-    this.validators = {
-      username: () => this.validateUsername()
     };
   }
 
@@ -44,7 +38,8 @@ class LoginWrapper extends Component {
         handleSubmit={this.handleSubmit}
         onChangeField={this.handleChange}
         disabled={this.state.disabled}
-        validator={this.validators.username}
+        validator={this.validateUsername}
+        value={this.state.values.username}
       />
     );
   }
@@ -56,24 +51,31 @@ class LoginWrapper extends Component {
       showSignUp: !this.state.showSignUp,
       showContinue: false
     });
+    this.checkDisable();
   };
 
   toggleContinue = ev => {
     ev.preventDefault();
     ev.stopPropagation();
+    this.stopCountdown();
     this.setState({
       showSignUp: false,
       showContinue: !this.state.showContinue
     });
+    this.checkDisable();
+  };
+
+  stopCountdown = () => {
+    clearTimeout(timeCountdown);
   };
 
   validateUsername = () => {
     const username = this.state.values['username'];
-    return checkRequired(username) && checkminLength(username, 2);
+    return validateUsername(username);
   };
 
   checkDisable = () => {
-    const isValid = this.validators['username']();
+    const isValid = this.validateUsername();
     this.setState({
       disabled: !isValid
     });
@@ -93,7 +95,7 @@ class LoginWrapper extends Component {
       showSignUp: false,
       showContinue: true
     });
-    setTimeout(() => {
+    timeCountdown = setTimeout(() => {
       openMailbox();
       closeLogin();
     }, 8000);

@@ -32,6 +32,7 @@ const renderForm = props => (
             type="text"
             name="username"
             placeholder="Username"
+            value={props.value}
             onChange={props.onChangeField}
             onKeyUp={props.validator}
           />{' '}
@@ -75,7 +76,8 @@ renderForm.propTypes = {
   onChangeField: PropTypes.func,
   validator: PropTypes.func,
   handleSubmit: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  value: PropTypes.string
 };
 
 renderFooter.propTypes = {
