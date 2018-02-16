@@ -52,18 +52,18 @@ class LoginWrapper extends Component {
   toggleSignUp = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState({ 
-      showSignUp: !this.state.showSignUp, 
-      showContinue: false,
+    this.setState({
+      showSignUp: !this.state.showSignUp,
+      showContinue: false
     });
   };
 
   toggleContinue = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState({ 
+    this.setState({
       showSignUp: false,
-      showContinue: !this.state.showContinue 
+      showContinue: !this.state.showContinue
     });
   };
 
@@ -98,7 +98,6 @@ class LoginWrapper extends Component {
       closeLogin();
     }, 8000);
   };
-
 }
 
 export default LoginWrapper;

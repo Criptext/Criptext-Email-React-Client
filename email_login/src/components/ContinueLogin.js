@@ -36,8 +36,29 @@ const renderContent = () => (
       <p>Tap Yes on the Criptext prompt to continue.</p>
     </div>
 
+    <div className="loading">
+      <div className="icon-lock" />
+      <div className="loader">
+        <div className="loader-arrow" />
+      </div>
+      <div className="sk-fading-circle">
+        <div className="sk-circle1 sk-circle" />
+        <div className="sk-circle2 sk-circle" />
+        <div className="sk-circle3 sk-circle" />
+        <div className="sk-circle4 sk-circle" />
+        <div className="sk-circle5 sk-circle" />
+        <div className="sk-circle6 sk-circle" />
+        <div className="sk-circle7 sk-circle" />
+        <div className="sk-circle8 sk-circle" />
+        <div className="sk-circle9 sk-circle" />
+        <div className="sk-circle10 sk-circle" />
+        <div className="sk-circle11 sk-circle" />
+        <div className="sk-circle12 sk-circle" />
+      </div>
+    </div>
+
     <div className="button">
-      <p>Didn't get the prompt?</p>
+      <p>Didn&39;t get the prompt?</p>
       <button className="resend-button">
         <span>Resend it</span>
       </button>
@@ -46,7 +67,7 @@ const renderContent = () => (
 );
 
 renderHeader.propTypes = {
-  toggleSignUp: PropTypes.func
+  toggleContinue: PropTypes.func
 };
 
 export default CcontinueLogin;
