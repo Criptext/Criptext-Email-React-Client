@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`label actions:: should add labels to state 1`] = `
+exports[`Label actions:: should add labels to state 1`] = `
 Immutable.Map {
   1: Immutable.Map {
     id: 1,
@@ -45,7 +45,7 @@ Immutable.Map {
 }
 `;
 
-exports[`label actions:: should modify label: color 1`] = `
+exports[`Label actions:: should modify label: color 1`] = `
 Immutable.Map {
   1: Immutable.Map {
     id: 1,
@@ -90,7 +90,7 @@ Immutable.Map {
 }
 `;
 
-exports[`label actions:: should modify label: text 1`] = `
+exports[`Label actions:: should modify label: text 1`] = `
 Immutable.Map {
   1: Immutable.Map {
     id: 1,
@@ -135,7 +135,7 @@ Immutable.Map {
 }
 `;
 
-exports[`label actions:: should modify label: text and color 1`] = `
+exports[`Label actions:: should modify label: text and color 1`] = `
 Immutable.Map {
   1: Immutable.Map {
     id: 1,
