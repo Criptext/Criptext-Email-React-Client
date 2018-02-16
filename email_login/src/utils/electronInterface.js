@@ -1,5 +1,7 @@
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
+const remote = electron.remote;
+const dbManager = remote.require('./src/DBManager');
 
 export const closeLogin = () => {
   ipcRenderer.send('close-login');
@@ -35,3 +37,7 @@ export const closeLoading = () => {
 export const openMailbox = () => {
   ipcRenderer.send('open-mailbox');
 };
+
+export const addUser = params => {
+  dbManager.createUser(params);
+}
