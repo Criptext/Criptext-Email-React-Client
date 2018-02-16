@@ -13,7 +13,6 @@ class LoginWrapper extends Component {
     this.state = {
       showSignUp: false,
       showContinue: false,
-      stopContinue: false,
       values: {
         username: ''
       },
