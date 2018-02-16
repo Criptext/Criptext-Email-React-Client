@@ -5,67 +5,129 @@ import {
   validateFullname,
   validatePassword,
   validateConfirmPassword,
-  validateEmail
+  validateEmail,
+  requiredLength
 } from './../validators';
 
-describe('Validators: ', () => {
-  it('Should mark the username as valid (true)', () => {
+describe('Validate username:', () => {
+  const fn = validateUsername;
+  const length = requiredLength.username;
+  const validMessage =
+    'Returns true if the username has more than ' +
+    String(length) +
+    ' characters';
+  const invalidMessage =
+    'Returns false if the username has less than ' +
+    String(length + 1) +
+    ' characters';
+
+  it(validMessage, () => {
     const username = 'myusername';
-    expect(validateUsername(username)).toMatchSnapshot();
+    expect(fn(username)).toBe(true);
   });
 
-  it('Should mark the username as invalid (false)', () => {
-    const username = 'u';
-    expect(validateUsername(username)).toMatchSnapshot();
+  it(invalidMessage, () => {
+    const username = 'un';
+    expect(fn(username)).toBe(false);
   });
+});
 
-  it('Should mark the fullname as valid (true)', () => {
+describe('Validate fullname:', () => {
+  const fn = validateFullname;
+  const length = requiredLength.fullname;
+  const validMessage =
+    'Returns true if the fullname has more than ' +
+    String(length) +
+    ' characters';
+  const invalidMessage =
+    'Returns false if the fullname has less than ' +
+    String(length + 1) +
+    ' characters';
+
+  it(validMessage, () => {
     const fullname = 'myfullname';
-    expect(validateFullname(fullname)).toMatchSnapshot();
+    expect(fn(fullname)).toBe(true);
   });
 
-  it('Should mark the fullname as invalid (false)', () => {
+  it(invalidMessage, () => {
     const fullname = 'f';
-    expect(validateFullname(fullname)).toMatchSnapshot();
+    expect(fn(fullname)).toBe(false);
   });
+});
 
-  it('Should mark the password as valid (true)', () => {
+describe('Validate password:', () => {
+  const fn = validatePassword;
+  const length = requiredLength.password;
+  const validMessage =
+    'Returns true if the password has more than ' +
+    String(length) +
+    ' characters';
+  const invalidMessage =
+    'Returns false if the password has less than ' +
+    String(length + 1) +
+    ' characters';
+
+  it(validMessage, () => {
     const password = '1234';
-    expect(validatePassword(password)).toMatchSnapshot();
+    expect(fn(password)).toBe(true);
   });
 
-  it('Should mark the password as invalid (false)', () => {
-    const password = 'p';
-    expect(validatePassword(password)).toMatchSnapshot();
+  it(invalidMessage, () => {
+    const password = '0';
+    expect(fn(password)).toBe(false);
   });
+});
 
-  it('Should mark the confirmation password as valid (true)', () => {
+describe('Validate password confirmation:', () => {
+  const fn = validateConfirmPassword;
+  const length = requiredLength.password;
+  const validMessage =
+    'Returns true if the password and its confirmation have more than ' +
+    String(length) +
+    ' characters and they are equals.';
+  const invalidMessage =
+    'Returns false if the password or its confirmation have less than ' +
+    String(length + 1) +
+    ' characters or they are not equals.';
+
+  it(validMessage, () => {
     const password = '1234';
     const confirmation = '1234';
-    expect(validateConfirmPassword(password, confirmation)).toMatchSnapshot();
+    expect(fn(password, confirmation)).toBe(true);
   });
 
-  it('Should mark the confirmation password as invalid (false)', () => {
+  it(invalidMessage, () => {
+    const password = '1234';
+    const confirmation = '123';
+    expect(fn(password, confirmation)).toBe(false);
+  });
+  it(invalidMessage, () => {
     const password = '1234';
     const confirmation = '1235';
-    expect(validateConfirmPassword(password, confirmation)).toMatchSnapshot();
+    expect(fn(password, confirmation)).toBe(false);
   });
+});
 
-  it('Should mark the email as valid (true)', () => {
+describe('Validate email:', () => {
+  const fn = validateEmail;
+  const validMessage = 'Returns true if the email has a valid format';
+  const invalidMessage = 'Returns false if the email has a invalid format';
+
+  it(validMessage, () => {
     const email = 'username@criptext.com';
-    expect(validateEmail(email)).toMatchSnapshot();
+    expect(fn(email)).toBe(true);
   });
 
-  it('Should mark the email as invalid (false)', () => {
+  it(invalidMessage, () => {
     const email = 'username.criptext.com';
-    expect(validateEmail(email)).toMatchSnapshot();
+    expect(fn(email)).toBe(false);
   });
-  it('Should mark the email as invalid (false)', () => {
+  it(invalidMessage, () => {
     const email = '@criptext.com';
-    expect(validateEmail(email)).toMatchSnapshot();
+    expect(fn(email)).toBe(false);
   });
-  it('Should mark the email as invalid (false)', () => {
+  it(invalidMessage, () => {
     const email = 'username@criptext';
-    expect(validateEmail(email)).toMatchSnapshot();
+    expect(fn(email)).toBe(false);
   });
 });

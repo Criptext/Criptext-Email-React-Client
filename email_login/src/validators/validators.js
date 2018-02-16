@@ -1,6 +1,6 @@
 import validator from 'validator';
 
-const requiredLength = {
+export const requiredLength = {
   username: 2,
   fullname: 2,
   password: 2
