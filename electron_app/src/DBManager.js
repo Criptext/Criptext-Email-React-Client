@@ -2,7 +2,7 @@ const { db, createTables, Table } = require('./models.js');
 
 /* Email
    ----------------------------- */
-const addEmail = params => {
+const createEmail = params => {
   return db.table(Table.EMAIL).insert(params);
 };
 
@@ -104,8 +104,25 @@ const deleteEmail = emailKey => {
 
 /* Label
    ----------------------------- */
+
+const createLabel = params => {
+  return db.table(Table.LABEL).insert(params);
+};
+
 const getAllLabels = () => {
   return db.select('*').from(Table.LABEL);
+};
+
+const updateLabel = ({ id, color, text }) => {
+  const params = {};
+  if (color) params.color = color;
+  if (text) params.text = text;
+  return db
+    .table(Table.LABEL)
+    .where({
+      id
+    })
+    .update(params);
 };
 
 const closeDB = () => {
@@ -114,13 +131,15 @@ const closeDB = () => {
 };
 
 module.exports = {
-  addEmail,
+  createEmail,
   createTables,
   closeDB,
+  createLabel,
   deleteEmail,
   getAllLabels,
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
   markThreadAsRead,
-  getEmailsGroupByThreadByMatchText
+  getEmailsGroupByThreadByMatchText,
+  updateLabel
 };

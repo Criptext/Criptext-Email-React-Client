@@ -9,7 +9,7 @@ beforeAll(async () => {
 
 describe('Test DBManager', () => {
   it('should add email to db', async () => {
-    await DBManager.addEmail({
+    await DBManager.createEmail({
       key: 'hdnfgdgsd',
       threadId: 'hdnfgdgsd',
       s3Key: 'hdnfgdgsd',

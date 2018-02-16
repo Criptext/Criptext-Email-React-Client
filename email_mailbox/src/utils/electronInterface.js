@@ -8,12 +8,20 @@ export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
 };
 
-export const getThreads = (timestamp, params) => {
-  return dbManager.getThreads(timestamp, params);
+export const createLabel = params => {
+  return dbManager.createLabel(params);
 };
 
 export const getAllLabels = () => {
   return dbManager.getAllLabels();
+};
+
+export const updateLabel = params => {
+  return dbManager.updateLabel(params);
+};
+
+export const getThreads = (timestamp, params) => {
+  return dbManager.getThreads(timestamp, params);
 };
 
 export const getEmailsGroupByThreadByMatchText = filter => {
