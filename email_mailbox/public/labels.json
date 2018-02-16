@@ -2,43 +2,43 @@
   "labels" : [
     {
       "id": 1,
+      "color": "#ffffff",
       "text": "Inbox"
     },
     {
       "id": 2,
+      "color": "#ffffff",
       "text": "Sent"
     },
     {
       "id": 3,
+      "color": "#ffffff",
       "text": "Spam"
     },
     {
       "id": 4,
+      "color": "#ffffff",
       "text": "Trash"
     },
     {
       "id": 5,
+      "color": "#ffffff",
       "text": "Draft"
     },
     {
       "id": 6,
+      "color": "#ffffff",
       "text": "Important"
     },
     {
       "id": 7,
+      "color": "#ffffff",
       "text": "Starred"
     },
     { 
       "id": 10,
+      "color": "#ffffff",
       "text": "Text 1"
-    },
-    {
-      "id": 11,
-      "text": "Text 2"
-    },
-    {
-      "id": 12,
-      "text": "Text 3"
     }
   ]
 }
