@@ -16,7 +16,7 @@ let mailboxWindow;
 let composerWindow;
 
 const loginSize = {
-  width: 328+300,
+  width: 328,
   height: 513
 }
 
