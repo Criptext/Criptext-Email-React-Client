@@ -14,29 +14,26 @@ const renderFormItem = props => (
 );
 
 const renderValidateIcon = props => {
-  if ( props.validated === false || props.formItem.type === 'checkbox' ) {
-    return <span className="no-icon" />
+  if (!props.validated || props.formItem.type === 'checkbox') {
+    return <span className="no-icon" />;
   }
-  if ( props.hasError ) {
-    return <span className="invalid-icon icon-check" />
+  if (props.hasError) {
+    return <span className="invalid-icon icon-incorret" />;
   }
-  return <span className="valid-icon icon-check" />
-}
+  return <span className="valid-icon icon-correct" />;
+};
 
 const renderItem = props =>
   props.formItem.type !== 'checkbox' ? (
     <div className="input-data">
-      {renderInput(props.formItem)}
+      {renderInput(props)}
       {renderLabel(props.formItem)}
-      {renderIcon(props.formItem)}
+      {renderIcon(props)}
       {renderErrorMessage(props)}
     </div>
   ) : (
     <div className="input-data">
-      <CustomCheckbox
-        status={props.isChecked}
-        onCheck={() => props.onCheck()}
-      />
+      <CustomCheckbox status={props.isChecked} onCheck={() => onCheck(props)} />
       <span className="label-acceptterms">
         {props.formItem.label.text}
         <span className="strong">{props.formItem.label.strong}</span>
@@ -44,11 +41,20 @@ const renderItem = props =>
     </div>
   );
 
-const renderInput = formItem => (
+const onCheck = props => {
+  props.onCheck();
+  const ev = { target: { value: !props.isChecked } };
+  props.onChange(ev, props.formItem.name);
+};
+
+const renderInput = props => (
   <input
-    className={`input-${formItem.name}`}
-    type={formItem.type}
-    placeholder={formItem.placeholder}
+    className={`input-${props.formItem.name}`}
+    name={props.formItem.name}
+    type={props.type}
+    placeholder={props.formItem.placeholder}
+    onChange={ev => props.onChange(ev, props.formItem.name)}
+    onKeyUp={props.onValidate}
   />
 );
 
@@ -60,8 +66,10 @@ const renderLabel = formItem =>
     </label>
   ) : null;
 
-const renderIcon = formItem =>
-  formItem.icon !== '' ? <span className="input-icon icon-search" /> : null;
+const renderIcon = props =>
+  props.formItem.icon !== '' ? (
+    <span className={`input-icon ${props.icon}`} onClick={props.onShowHide} />
+  ) : null;
 
 const renderErrorMessage = props =>
   props.hasError ? (
@@ -82,8 +90,26 @@ renderValidateIcon.propTypes = {
 
 renderItem.propTypes = {
   formItem: PropTypes.object,
-  isChecked: PropTypes.bool,
-  onCheck: PropTypes.func
+  isChecked: PropTypes.bool
+};
+
+onCheck.propTypes = {
+  onCheck: PropTypes.func,
+  isChecked: PropTypes.bool
+};
+
+renderInput.propTypes = {
+  formItem: PropTypes.object,
+  type: PropTypes.string,
+  onChange: PropTypes.func,
+  onCheck: PropTypes.func,
+  onValidate: PropTypes.func
+};
+
+renderIcon.propTypes = {
+  formItem: PropTypes.object,
+  icon: PropTypes.string,
+  onShowHide: PropTypes.func
 };
 
 renderErrorMessage.propTypes = {

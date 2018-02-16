@@ -5,11 +5,11 @@
   font-family: 'NunitoSans';
   height: 513px;
   width: 328px;
-  border-radius: 7px;
-  background-image: linear-gradient(to bottom, #00c4ff, #0091ff);
+  border-radius: 0px 0px 7px 7px;
+  background: linear-gradient(to bottom, #00c4ff, #0091ff);
 
   .header {
-    height: 15%;
+    height: 90px;
     width: 100%;
 
     .button-section {
@@ -46,7 +46,7 @@
         top: 20px;
         right: 20px;
         color: #ffffff;
-        background-image: url(#{$_PATH_TO_IMAGES}/header-icon.png);
+        background-image: url(../#{$_PATH_TO_IMAGES}/logo-criptext@2x.png);
         background-position: center;
         background-size: 100%;
       }
@@ -59,7 +59,7 @@
 
 
   .form {
-    height: 85%;
+    height: calc(100% - 90px);
     width: 100%;
 
     .header {
@@ -83,6 +83,7 @@
 
       form {
         width: 100%;
+        height: 100%;
         margin: 0 auto;
 
         .form-item.hasError {
@@ -113,7 +114,7 @@
           }
 
           .validate-icon-section {
-            font-size: 16px;
+            font-size: 20px;
             float: left;
             height: 100%;
             width: 59px;
@@ -122,17 +123,13 @@
               color: #ffffff;
               position: relative;
               top: 0%;
-              left: calc(50% - 7px);
-              border: 1px solid #fff;
-              border-radius: 10px;
+              left: calc(50% - 6px);
             }
             .invalid-icon{
               color: #000000;
               position: relative;
               top: 0%;
-              left: calc(50% - 7px);
-              border: 1px solid #000;
-              border-radius: 10px;
+              left: calc(50% - 6px);
             }
             .no-icon{
               width: 10%;
@@ -150,6 +147,7 @@
             }
 
             span.input-icon{
+              font-size: 18px;
               color: #ffffff;
               position: relative;
               right: 8%;
@@ -180,6 +178,7 @@
             .input-recoveryemail {
               width: calc(100% - 59px);
               color: #ffffff;
+              float: left;
               font-size: 12px;
               text-indent: 7px;
               padding-bottom: 3px;
@@ -232,6 +231,7 @@
               bottom: -10%;
               right: 40%
             }
+            .error-message.error-password,
             .error-message.error-confirmpassword {
               float: left;
               font-size: 9px;
@@ -239,6 +239,14 @@
               position: relative;
               bottom: -0%;
               left: 0%;
+            }
+            .error-message.error-recoveryemail {
+              float: left;
+              font-size: 9px;
+              color: #000;
+              position: relative;
+              bottom: -60%;
+              left: -77%;
             }
           }
 
@@ -267,11 +275,27 @@
             opacity: 0.5;
             margin: 0px;
             width: 100%;
+            -webkit-transition: width 0.1s;
+            transition: opacity 0.1s;
 
             span {
               color: #fff;
               font-weight: 600;
               opacity: 0.5;
+              -webkit-transition: width 0.1s;
+              transition: opacity 0.1s;
+            }
+          }
+          .create-button:enabled {
+            opacity: 0.9;
+            span{
+              opacity: 0.9;
+            }
+          }
+          .create-button:hover:enabled {
+            opacity: 1.0;
+            span{
+              opacity: 1.0;
             }
           }
         }

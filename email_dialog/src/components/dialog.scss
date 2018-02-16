@@ -1,0 +1,67 @@
+@import "./../styles/index.scss";
+
+
+.dialog-body {
+	font-family: 'NunitoSans';
+	width: 393px;
+	height: 267px;
+	border-radius: 5px;
+	background-color: #ffffff;
+
+	.header {
+		height: 30px;
+		border-radius: 5px 5px 0px 0px;
+		background-color: #e0e0e0;
+	}
+
+	.content{
+		padding: 24px 35px 35px 35px;
+
+		.title {
+			font-size: 16px;
+			font-weight: 600;
+			text-align: left;
+			color: #0091ff;
+			margin: 0px 0px 16px 0px;
+		}
+
+		.message {
+			font-size: 13px;
+			font-weight: normal;
+			text-align: left;
+			color: #373a45;
+			margin-bottom: 45px;
+		}
+
+		.options {
+			.cancel {
+				border: none;
+				border-radius: 100px;
+				padding: 10px;
+				background-color: #373a45;
+				margin: 0px;
+				width: 132px;
+				margin-right: 56px;
+				span {
+					font-size: 12px;
+				  color: #fff;
+				  font-weight: 600;
+				}
+			}
+			.confirm {
+				border: none;
+				border-radius: 100px;
+				padding: 10px;
+				background-color: #0091ff;
+				margin: 0px;
+				width: 132px;
+				span {
+					font-size: 12px;
+				  color: #fff;
+				  font-weight: 600;
+				}
+			}
+		}
+
+	}
+}

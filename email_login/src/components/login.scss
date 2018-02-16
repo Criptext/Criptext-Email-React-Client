@@ -3,11 +3,10 @@
 
 .login {
   font-family: 'NunitoSans';
-  height: 439px;
+  height: 513px;
   width: 328px;
-
-  border-radius: 7px;
-  background-image: linear-gradient(to bottom, #00c4ff, #0091ff);
+  border-radius: 0px 0px 7px 7px;
+  background: linear-gradient(to bottom, #00c4ff, #0091ff);
 
   .header {
     height: 60%;
@@ -19,12 +18,12 @@
       padding: 0 auto;
 
       .icon {
-        height: 50px;
+        height: 51px;
         width: 57px;
         margin: 0 auto;
         position: relative;
         top: 65%;
-        background: url(#{$_PATH_TO_IMAGES}/icon-criptext-shadow.png) no-repeat center center;
+        background: url('./../images/logo-2-copy@2x.png') no-repeat center center;
         background-size: 100%;
       }
     }
@@ -94,13 +93,28 @@
           border: none;
           border-radius: 100px;
           padding: 10px;
-          background-color: #0091ff;
+          background-color: #373a45;
+          opacity: 0.5;
           margin: 15px 0;
           width: 100%;
-
+          transition: opacity 0.1s;
           span {
+            color: #fff;
             font-weight: 600;
-            opacity: 0.5;
+            opacity: 0.9;
+            transition: opacity 0.1s;
+          }
+        }
+        .button-login:enabled {
+          opacity: 0.9;
+          span{
+            opacity: 0.9;
+          }
+        }
+        .button-login:hover:enabled {
+          opacity: 1.0;
+          span{
+            opacity: 1.0;
           }
         }
       }

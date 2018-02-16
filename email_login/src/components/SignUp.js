@@ -3,81 +3,12 @@ import PropTypes from 'prop-types';
 import FormItemWrapper from './FormItemWrapper';
 import './signup.css';
 
-const formItems = [
-  {
-    name: 'username',
-    placeholder: 'Username',
-    type: 'text',
-    label: {
-      text: '@criptext.com',
-      strong: ''
-    },
-    icon: '',
-    errorMessage: 'Username not available'
-  },
-  {
-    name: 'fullname',
-    placeholder: 'Full name',
-    type: 'text',
-    label: {
-      text: '',
-      strong: ''
-    },
-    icon: '',
-    errorMessage: ''
-  },
-  {
-    name: 'password',
-    placeholder: 'Password',
-    type: 'password',
-    label: {
-      text: '',
-      strong: ''
-    },
-    icon: 'icon-eye',
-    errorMessage: ''
-  },
-  {
-    name: 'confirmpassword',
-    placeholder: 'Confirm password',
-    type: 'password',
-    label: {
-      text: '',
-      strong: ''
-    },
-    icon: 'icon-eye',
-    errorMessage: 'Password do not match'
-  },
-  {
-    name: 'recoveryemail',
-    placeholder: 'Recovery email (optional)',
-    type: 'text',
-    label: {
-      text: '',
-      strong: ''
-    },
-    icon: '',
-    errorMessage: ''
-  },
-  {
-    name: 'acceptterms',
-    placeholder: '',
-    type: 'checkbox',
-    label: {
-      text: 'I have read and agree with the ',
-      strong: 'Terms and Conditions'
-    },
-    icon: '',
-    errorMessage: ''
-  }
-];
+const SignUp = props => renderSignUp(props);
 
-const SignUp = props => renderSignUp(props, formItems);
-
-const renderSignUp = (props, items) => (
+const renderSignUp = props => (
   <div className="signup">
     {renderHeader(props)}
-    {renderForm(items)}
+    {renderForm(props)}
   </div>
 );
 
@@ -95,19 +26,32 @@ const renderHeader = props => (
   </div>
 );
 
-const renderForm = items => (
+const renderForm = props => (
   <div className="form">
     <div className="header">
       <p>Sign Up</p>
       <p>Create your Criptext account</p>
     </div>
     <div className="signup-form">
-      <form>
-        {items.map((formItem, index) => {
-          return <FormItemWrapper key={index} formItem={formItem} />;
+      <form autoComplete="off">
+        {props.items.map((formItem, index) => {
+          return (
+            <FormItemWrapper
+              key={index}
+              formItem={formItem}
+              onChange={props.onChangeField}
+              validator={props.validator}
+              hasError={props.errors[formItem.name]}
+              onSetError={props.onSetError}
+            />
+          );
         })}
         <div className="button">
-          <button className="create-button">
+          <button
+            className="create-button"
+            onClick={ev => props.handleSubmit(ev)}
+            disabled={props.disabled}
+          >
             <span>Create account</span>
           </button>
         </div>
@@ -118,6 +62,17 @@ const renderForm = items => (
 
 renderHeader.propTypes = {
   toggleSignUp: PropTypes.func
+};
+
+renderForm.propTypes = {
+  disabled: PropTypes.bool,
+  handleSubmit: PropTypes.func,
+  errors: PropTypes.object,
+  items: PropTypes.array,
+  onChangeField: PropTypes.func,
+  onSetError: PropTypes.func,
+  toggleSignUp: PropTypes.func,
+  validator: PropTypes.func
 };
 
 export default SignUp;
