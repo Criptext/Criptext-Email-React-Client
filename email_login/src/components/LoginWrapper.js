@@ -31,7 +31,7 @@ class LoginWrapper extends Component {
   render() {
     switch (this.state.mode) {
       case mode.SIGNUP:
-        return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
+        return <SignUp toggleSignUp={ev => this.toggleSignUp(ev)} />;
       case mode.CONTINUE:
         return <ContinueLogin toggleContinue={ev => this.toggleContinue(ev)} />;
       default:

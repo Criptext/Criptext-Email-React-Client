@@ -1,26 +1,31 @@
 /* eslint-env node, jest */
 
-import userReducer from '../user';
-import { addUser } from '../../actions/index';
+import userReducer from './../users';
+import { addUser } from './../../actions/index';
 
 jest.mock('../../utils/electronInterface');
 
-describe('user actions', () => {
-  it('Add a new user to state', () => {
+describe('User actions:', () => {
+  it('Add a new user to database, state and localStorage', () => {
     const user = {
-      name: 'Testuser',
-      email: 'test1@criptext.com'
+      name: 'Test User',
+      email: 'test1@criptext.com',
+      nickname: 'testuser'
     };
     const action = addUser(user);
+    console.log(action);
     const state = userReducer(
       {
-        'test3@criptext.com': {
-          name: 'test 3',
-          email: 'test3@criptext.com'
+        'prevuser@criptext.com': {
+          name: 'Previous User',
+          email: 'prevuser@criptext.com',
+          nickname: 'prevuser'
         }
       },
       action
     );
+    console.log(state);
+    console.log(localStorage.getItem('sessionId'))
     expect(state).toMatchSnapshot();
   });
 });
