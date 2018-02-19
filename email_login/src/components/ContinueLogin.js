@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './continueLogin.css';
 
-const CcontinueLogin = props => renderContinue(props);
-
-const renderContinue = props => (
+const ContinueLogin = props => (
   <div className="signup">
     {renderHeader(props)}
     {renderContent()}
@@ -70,4 +68,4 @@ renderHeader.propTypes = {
   toggleContinue: PropTypes.func
 };
 
-export default CcontinueLogin;
+export default ContinueLogin;
