@@ -56,7 +56,8 @@ async function createLoginWindow() {
     width: loginSize.width, 
     height: loginSize.height, 
     show: false,
-    center: true
+    center: true,
+    transparent: true
   });    
   loginWindow.loadURL(loginUrl);
   loginWindow.setMenu(null);

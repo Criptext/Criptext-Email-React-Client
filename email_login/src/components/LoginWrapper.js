@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
 import Login from './Login';
 import SignUpWrapper from './SignUpWrapper';
+import ContinueLogin from './ContinueLogin';
+import { closeLogin, openMailbox } from './../utils/electronInterface';
+import { validateUsername } from './../validators/validators';
 
-const checkRequired = field => {
-  return field !== undefined;
-};
-const checkminLength = (field, length) => {
-  return field.length > length;
+const mode = {
+  SIGNUP: 'SIGNUP',
+  LOGIN: 'LOGIN',
+  CONTINUE: 'CONTINUE'
 };
 
 class LoginWrapper extends Component {
   constructor() {
     super();
     this.state = {
-      showSignUp: false,
+      mode: mode.LOGIN,
       values: {
         username: ''
       },
       disabled: true
     };
-    this.validators = {
-      username: () => this.validateUsername()
-    };
+    this.timeCountdown = 0;
   }
 
   componentDidMount() {
@@ -29,33 +29,55 @@ class LoginWrapper extends Component {
   }
 
   render() {
-    if (this.state.showSignUp) {
-      return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
+    switch (this.state.mode) {
+      case mode.SIGNUP:
+        return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
+      case mode.CONTINUE:
+        return <ContinueLogin toggleContinue={ev => this.toggleContinue(ev)} />;
+      default:
+        return (
+          <Login
+            toggleSignUp={ev => this.toggleSignUp(ev)}
+            handleSubmit={this.handleSubmit}
+            onChangeField={this.handleChange}
+            disabled={this.state.disabled}
+            validator={this.validateUsername}
+            value={this.state.values.username}
+          />
+        );
     }
-    return (
-      <Login
-        toggleSignUp={ev => this.toggleSignUp(ev)}
-        handleSubmit={this.handleSubmit}
-        onChangeField={this.handleChange}
-        disabled={this.state.disabled}
-        validator={this.validators.username}
-      />
-    );
   }
 
   toggleSignUp = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState({ showSignUp: !this.state.showSignUp });
+    this.setState({
+      mode: this.state.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN
+    });
+    this.checkDisable();
+  };
+
+  toggleContinue = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.stopCountdown();
+    this.setState({
+      mode: this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN
+    });
+    this.checkDisable();
+  };
+
+  stopCountdown = () => {
+    clearTimeout(this.timeCountdown);
   };
 
   validateUsername = () => {
     const username = this.state.values['username'];
-    return checkRequired(username) && checkminLength(username, 2);
+    return validateUsername(username);
   };
 
   checkDisable = () => {
-    const isValid = this.validators['username']();
+    const isValid = this.validateUsername();
     this.setState({
       disabled: !isValid
     });
@@ -71,6 +93,14 @@ class LoginWrapper extends Component {
   handleSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
+    this.setState({
+      mode: mode.CONTINUE
+    });
+    this.timeCountdown = setTimeout(() => {
+      openMailbox();
+      closeLogin();
+    }, 8000);
+    alert(this.timeCountdown);
   };
 }
 

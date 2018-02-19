@@ -8,7 +8,6 @@ import {
   validateEmail
 } from './../validators';
 
-
 describe('Validate username:', () => {
   const fn = validateUsername;
 
@@ -22,7 +21,6 @@ describe('Validate username:', () => {
     expect(fn(username)).toBe(false);
   });
 });
-
 
 describe('Validate fullname:', () => {
   const fn = validateFullname;
@@ -38,7 +36,6 @@ describe('Validate fullname:', () => {
   });
 });
 
-
 describe('Validate password:', () => {
   const fn = validatePassword;
 
@@ -52,7 +49,6 @@ describe('Validate password:', () => {
     expect(fn(password)).toBe(false);
   });
 });
-
 
 describe('Validate password confirmation:', () => {
   const fn = validateConfirmPassword;
@@ -74,7 +70,6 @@ describe('Validate password confirmation:', () => {
     expect(fn(password, confirmation)).toBe(false);
   });
 });
-
 
 describe('Validate email:', () => {
   const fn = validateEmail;
