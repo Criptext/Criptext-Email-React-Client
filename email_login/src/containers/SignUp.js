@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { addUser } from '../actions/index';
 import SignUpWrapper from '../components/SignUpWrapper';
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {};
 };
 
@@ -14,8 +14,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const SignUp = connect(mapStateToProps, mapDispatchToProps)(
-  SignUpWrapper
-);
+const SignUp = connect(mapStateToProps, mapDispatchToProps)(SignUpWrapper);
 
 export default SignUp;

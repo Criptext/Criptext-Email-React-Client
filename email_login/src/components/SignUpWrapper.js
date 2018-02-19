@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   validateUsername,
   validateFullname,
@@ -115,8 +116,8 @@ const onInitErrors = (array, field) =>
   }, {});
 
 class SignUpWrapper extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       values: onInitState(formItems, 'name'),
       errors: onInitErrors(formItems, 'name'),
@@ -196,7 +197,13 @@ class SignUpWrapper extends Component {
     }
   };
 
-  onSubmit = () => {
+  onSubmit = values => {
+    const submitValues = {
+      name: values.fullname,
+      nickname: values.username,
+      email: values.recoveryemail
+    };
+    this.props.onAddUser(submitValues);
     openLoading();
     closeLogin();
   };
@@ -231,5 +238,9 @@ class SignUpWrapper extends Component {
     return result;
   };
 }
+
+SignUpWrapper.propTypes = {
+  onAddUser: PropTypes.func
+};
 
 export default SignUpWrapper;

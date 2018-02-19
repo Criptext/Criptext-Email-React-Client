@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Login from './Login';
-import SignUpWrapper from './SignUpWrapper';
+import SignUp from './../containers/SignUp';
 import ContinueLogin from './ContinueLogin';
 import { closeLogin, openMailbox } from './../utils/electronInterface';
 import { validateUsername } from './../validators/validators';
@@ -100,7 +100,6 @@ class LoginWrapper extends Component {
       openMailbox();
       closeLogin();
     }, 8000);
-    alert(this.timeCountdown);
   };
 }
 
