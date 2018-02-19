@@ -19,7 +19,7 @@ export default (state = new Map({}), action) => {
 
 const label = (state, action) => {
   switch (action.type) {
-    case Label.MODIFY_LABEL:
+    case Label.UPDATE_SUCCESS:
       return state.merge({
         color: action.label.color ? action.label.color : state.get('color'),
         text: action.label.text ? action.label.text : state.get('text')

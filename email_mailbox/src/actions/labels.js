@@ -8,9 +8,9 @@ export const addLabels = labels => {
   };
 };
 
-export const modifyLabel = label => {
+export const updateLabelSuccess = label => {
   return {
-    type: Label.MODIFY_LABEL,
+    type: Label.UPDATE_SUCCESS,
     label: label
   };
 };
@@ -58,7 +58,7 @@ export const updateLabel = ({ id, color, text }) => {
     try {
       const response = await db.updateLabel({ id, color, text });
       if (response) {
-        dispatch(modifyLabel({ id, color, text }));
+        dispatch(updateLabelSuccess({ id, color, text }));
       }
     } catch (e) {
       // TO DO

@@ -5,12 +5,11 @@ import * as actions from '../../actions/index';
 import { Map } from 'immutable';
 import file from './../../../public/labels.json';
 const labels = file.labels;
-let store = Map();
 
 jest.mock('../../utils/electronInterface');
 
-describe('Label actions::', () => {
-  it('should add labels to state', () => {
+describe('Label actions:', () => {
+  it('should add labels', () => {
     const data = {};
     labels.forEach(element => {
       data[element.id] = {
@@ -20,38 +19,66 @@ describe('Label actions::', () => {
       };
     });
     const action = actions.addLabels(data);
-    store = labelReducer(store, action);
-    expect(store).toMatchSnapshot();
+    const state = labelReducer(undefined, action);
+    expect(state).toMatchSnapshot();
   });
 
-  it('should modify label: text and color', () => {
-    const action = actions.modifyLabel({
+  it('should update label: text and color', () => {
+    const data = Map({
+      [labels[0].id]: Map({
+        id: labels[0].id,
+        color: labels[0].color,
+        text: labels[0].text
+      })
+    });
+    const action = actions.updateLabelSuccess({
       id: 1,
       color: '#000000',
       text: 'labelmodified'
     });
-    const state = labelReducer(store, action);
+    const state = labelReducer(data, action);
     expect(state).toMatchSnapshot();
   });
 
-  it('should modify label: color', () => {
-    const action = actions.modifyLabel({ id: 1, color: '#000000' });
-    const state = labelReducer(store, action);
+  it('should update label: color', () => {
+    const data = Map({
+      [labels[0].id]: Map({
+        id: labels[0].id,
+        color: labels[0].color,
+        text: labels[0].text
+      })
+    });
+    const action = actions.updateLabelSuccess({ id: 1, color: '#000000' });
+    const state = labelReducer(data, action);
     expect(state).toMatchSnapshot();
   });
 
-  it('should modify label: text', () => {
-    const action = actions.modifyLabel({ id: 1, text: 'labelmodified' });
-    const state = labelReducer(store, action);
+  it('should update label: text', () => {
+    const data = Map({
+      [labels[0].id]: Map({
+        id: labels[0].id,
+        color: labels[0].color,
+        text: labels[0].text
+      })
+    });
+    const action = actions.updateLabelSuccess({ id: 1, text: 'labelmodified' });
+    const state = labelReducer(data, action);
     expect(state).toMatchSnapshot();
   });
 
-  it('should not modify label', () => {
-    const action = actions.modifyLabel({
+  it('should not update label', () => {
+    const data = Map({
+      [labels[0].id]: Map({
+        id: labels[0].id,
+        color: labels[0].color,
+        text: labels[0].text
+      })
+    });
+    const action = actions.updateLabelSuccess({
       color: '#000000',
       text: 'labelmodified'
     });
-    const state = labelReducer(store, action);
-    expect(state).toEqual(store);
+    const state = labelReducer(data, action);
+    expect(state).toEqual(data);
   });
 });

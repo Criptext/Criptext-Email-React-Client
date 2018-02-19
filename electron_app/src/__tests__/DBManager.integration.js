@@ -1,9 +1,9 @@
 /* eslint-env node, jest */
 
 const DBManager = require('../DBManager');
-const fs = require('fs');
 
 beforeAll(async () => {
+  await DBManager.cleanDataBase();
   await DBManager.createTables();
 });
 
@@ -39,9 +39,5 @@ describe('Test DBManager', () => {
     await DBManager.deleteEmail('hdnfgdgsd');
     const emails = await DBManager.getEmailsByThreadId('hdnfgdgsd');
     expect(emails).toMatchSnapshot();
-  });
-
-  afterAll(() => {
-    fs.unlinkSync('./src/__tests__/test.db');
   });
 });

@@ -16,6 +16,10 @@ export const getAllLabels = () => {
   return dbManager.getAllLabels();
 };
 
+export const getLabelById = id => {
+  return dbManager.getLabelById(id);
+};
+
 export const updateLabel = params => {
   return dbManager.updateLabel(params);
 };

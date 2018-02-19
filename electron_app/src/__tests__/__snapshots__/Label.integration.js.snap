@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test TABLE[Label]:: should create label to db 1`] = `
+exports[`TABLE[Label]: should create label to db 1`] = `
 Array [
   Object {
     "color": "#ffffff",
@@ -10,31 +10,31 @@ Array [
 ]
 `;
 
-exports[`Test TABLE[Label]:: should update label: color 1`] = `
+exports[`TABLE[Label]: should update label: color 1`] = `
 Array [
   Object {
     "color": "#111111",
-    "id": 1,
-    "text": "labelmodified",
+    "id": 3,
+    "text": "Spam",
   },
 ]
 `;
 
-exports[`Test TABLE[Label]:: should update label: color and text 1`] = `
+exports[`TABLE[Label]: should update label: color and text 1`] = `
 Array [
   Object {
     "color": "#000000",
-    "id": 1,
+    "id": 2,
     "text": "labelmodified",
   },
 ]
 `;
 
-exports[`Test TABLE[Label]:: should update label: text 1`] = `
+exports[`TABLE[Label]: should update label: text 1`] = `
 Array [
   Object {
-    "color": "#111111",
-    "id": 1,
+    "color": "#ffffff",
+    "id": 4,
     "text": "labelmodified2",
   },
 ]

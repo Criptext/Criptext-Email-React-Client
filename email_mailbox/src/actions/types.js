@@ -28,7 +28,7 @@ export const Email = {
 
 export const Label = {
   ADD_BATCH: 'ADD_LABELS',
-  MODIFY_LABEL: 'MODIFY_LABEL'
+  UPDATE_SUCCESS: 'UPDATE_LABEL_SUCCESS'
 };
 
 export const Feed = {

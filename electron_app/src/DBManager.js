@@ -1,4 +1,4 @@
-const { db, createTables, Table } = require('./models.js');
+const { db, cleanDataBase, createTables, Table } = require('./models.js');
 
 /* Email
    ----------------------------- */
@@ -113,6 +113,13 @@ const getAllLabels = () => {
   return db.select('*').from(Table.LABEL);
 };
 
+const getLabelById = id => {
+  return db
+    .select('*')
+    .from(Table.LABEL)
+    .where({ id });
+};
+
 const updateLabel = ({ id, color, text }) => {
   const params = {};
   if (color) params.color = color;
@@ -131,15 +138,17 @@ const closeDB = () => {
 };
 
 module.exports = {
-  createEmail,
-  createTables,
+  cleanDataBase,
   closeDB,
   createLabel,
+  createEmail,
+  createTables,
   deleteEmail,
   getAllLabels,
   getEmailsByThreadId,
-  getEmailsGroupByThreadByParams,
-  markThreadAsRead,
   getEmailsGroupByThreadByMatchText,
+  getEmailsGroupByThreadByParams,
+  getLabelById,
+  markThreadAsRead,
   updateLabel
 };

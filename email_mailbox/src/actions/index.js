@@ -24,8 +24,8 @@ import {
   addLabels,
   addLabel,
   loadLabels,
-  modifyLabel,
-  updateLabel
+  updateLabel,
+  updateLabelSuccess
 } from './labels';
 import {
   addFeeds,
@@ -47,6 +47,7 @@ export {
   addUser,
   addUsers,
   closeThread,
+  deselectThreads,
   filterThreadsByUnread,
   loadEmails,
   loadFeeds,
@@ -54,21 +55,20 @@ export {
   loadSuggestions,
   loadThreads,
   markThreadsRead,
-  modifyLabel,
   moveThreads,
   multiSelectThread,
   muteNotifications,
   removeThread,
   removeThreadLabel,
-  deselectThreads,
-  searchThreads,
-  selectThreads,
   removeFeed,
   removeThreads,
   removeThreadsLabel,
   selectThread,
+  selectThreads,
   selectFeed,
+  searchThreads,
   setThreads,
   toggleMuteFeed,
-  updateLabel
+  updateLabel,
+  updateLabelSuccess
 };
