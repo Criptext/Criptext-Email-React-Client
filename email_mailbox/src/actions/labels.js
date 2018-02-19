@@ -1,6 +1,5 @@
 import { Label } from './types';
-import { getAllLabels } from '../utils/electronInterface';
-const inLabel = 10;
+import * as db from '../utils/electronInterface';
 
 export const addLabels = labels => {
   return {
@@ -9,23 +8,36 @@ export const addLabels = labels => {
   };
 };
 
-export const addLabel = label => {
-  const labels = {
-    inLabel: {
-      id: inLabel,
-      text: label
-    }
-  };
+export const updateLabelSuccess = label => {
   return {
-    type: Label.ADD_BATCH,
-    labels: labels
+    type: Label.UPDATE_SUCCESS,
+    label: label
+  };
+};
+
+export const addLabel = label => {
+  return async dispatch => {
+    try {
+      const response = await db.createLabel(label);
+      const labelId = response[0];
+      const labels = {
+        [labelId]: {
+          id: labelId,
+          color: label.color,
+          text: label.text
+        }
+      };
+      dispatch(addLabels(labels));
+    } catch (e) {
+      //TO DO
+    }
   };
 };
 
 export const loadLabels = () => {
   return async dispatch => {
     try {
-      const response = await getAllLabels();
+      const response = await db.getAllLabels();
       const labels = {};
       response.forEach(element => {
         labels[element.id] = {
@@ -35,6 +47,19 @@ export const loadLabels = () => {
         };
       });
       dispatch(addLabels(labels));
+    } catch (e) {
+      // TO DO
+    }
+  };
+};
+
+export const updateLabel = ({ id, color, text }) => {
+  return async dispatch => {
+    try {
+      const response = await db.updateLabel({ id, color, text });
+      if (response) {
+        dispatch(updateLabelSuccess({ id, color, text }));
+      }
     } catch (e) {
       // TO DO
     }

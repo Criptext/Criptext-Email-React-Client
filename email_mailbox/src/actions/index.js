@@ -20,7 +20,13 @@ import {
   removeThreadsLabel
 } from './threads';
 import { addEmails, loadEmails } from './emails';
-import { addLabels, addLabel, loadLabels } from './labels';
+import {
+  addLabels,
+  addLabel,
+  loadLabels,
+  updateLabel,
+  updateLabelSuccess
+} from './labels';
 import {
   addFeeds,
   loadFeeds,
@@ -41,6 +47,7 @@ export {
   addUser,
   addUsers,
   closeThread,
+  deselectThreads,
   filterThreadsByUnread,
   loadEmails,
   loadFeeds,
@@ -53,14 +60,15 @@ export {
   muteNotifications,
   removeThread,
   removeThreadLabel,
-  deselectThreads,
-  searchThreads,
-  selectThreads,
   removeFeed,
   removeThreads,
   removeThreadsLabel,
   selectThread,
+  selectThreads,
   selectFeed,
+  searchThreads,
   setThreads,
-  toggleMuteFeed
+  toggleMuteFeed,
+  updateLabel,
+  updateLabelSuccess
 };

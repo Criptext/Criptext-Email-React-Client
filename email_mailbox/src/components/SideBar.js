@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SideBarItem from './../components/SideBarItem';
+import SideBarLabelItem from './../containers/SideBarLabelItem';
 import LabelEdit from './../containers/LabelEdit';
 import { MailItems } from './../utils/const';
 import { openComposerWindow } from '../utils/electronInterface';
@@ -93,12 +94,7 @@ class SideBar extends Component {
       <ul>
         {this.state.showLabels
           ? this.props.labels.map((label, key) => {
-              return (
-                <li key={key} className="nav-item-label">
-                  <div style={{ backgroundColor: label.get('color') }} />
-                  <span>{label.get('text')}</span>
-                </li>
-              );
+              return <SideBarLabelItem key={key} label={label} />;
             })
           : null}
       </ul>

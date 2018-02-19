@@ -1,10 +1,19 @@
 import { connect } from 'react-redux';
 import { addLabel } from '../actions';
 import LabelEditView from '../components/LabelEdit';
+import randomcolor from 'randomcolor';
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddLabel: label => {
+    onAddLabel: text => {
+      const color = randomcolor({
+        seed: text,
+        luminosity: 'bright'
+      });
+      const label = {
+        text,
+        color
+      };
       dispatch(addLabel(label));
     }
   };

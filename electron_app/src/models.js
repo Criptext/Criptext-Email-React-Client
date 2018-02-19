@@ -27,6 +27,17 @@ const db = require('knex')({
   }
 });
 
+const cleanDataBase = () => {
+  return db.schema
+    .dropTableIfExists(Table.EMAIL)
+    .dropTableIfExists(Table.LABEL)
+    .dropTableIfExists(Table.EMAIL_LABEL)
+    .dropTableIfExists(Table.USER)
+    .dropTableIfExists(Table.EMAIL_USER)
+    .dropTableIfExists(Table.FILE)
+    .dropTableIfExists(Table.OPEN);
+};
+
 const createUserColumns = table => {
   table.increments('id').primary();
   table.string('email', MEDIUM_STRING_SIZE);
@@ -124,6 +135,7 @@ const createTables = () => {
 
 module.exports = {
   db,
+  cleanDataBase,
   createTables,
   Table
 };

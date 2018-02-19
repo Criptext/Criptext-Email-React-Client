@@ -1,0 +1,31 @@
+@import "./../styles/index.scss";
+
+.nav-item-label{
+  align-items: center;
+  height: 26px;
+  width: 100%;
+
+  div{
+    border-radius: 50%;
+    margin: 0 12px 0 55px;
+    height: 5px;
+    width: 5px;
+  }
+
+  label{
+    font-family: NunitoSans;
+    font-size: 13px;
+    font-weight: 300;
+    text-align: left;
+    width: calc(100% - 100px);
+  }
+
+  input{
+    font-family: NunitoSans;
+    font-size: 13px;
+    font-weight: 300;
+    margin: 0;
+    padding: 0 1px;
+    width: calc(100% - 100px);
+  }
+}

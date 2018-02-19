@@ -88,7 +88,7 @@ const renderEmailExpand = props => (
           <ButtonUnsend onClicked={props.unsendButtonOnClicked} />
         </div>
         <div disabled={props.hideView} className="email-text">
-          <p>Lorem Ipsum is simply dummy text of the printing and</p>
+          <p>{props.email.get('content')}</p>
         </div>
         <div disabled={props.hideView} className="email-attachs">
           <AttachItem
