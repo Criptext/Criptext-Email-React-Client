@@ -62,7 +62,6 @@ async function createLoginWindow() {
   loginWindow.loadURL(loginUrl);
   loginWindow.setMenu(null);
   loginWindow.setResizable(false);
-  //loginWindow.webContents.openDevTools()
 
   loginWindow.once('ready-to-show', () => {
     loginWindow.show();

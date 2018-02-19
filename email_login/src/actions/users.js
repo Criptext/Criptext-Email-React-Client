@@ -4,7 +4,7 @@ import { createUser } from '../utils/electronInterface';
 export const addUsers = users => {
   return {
     type: User.ADD_BATCH,
-    user: users
+    users: users
   };
 };
 
@@ -18,10 +18,11 @@ export const addUser = user => {
           id: userId,
           email: user.email,
           name: user.name,
-          nickname: user.username
+          nickname: user.nickname
         }
       };
       dispatch(addUsers(users));
+      localStorage.setItem('sessionId', userId);
     } catch (e) {
       //TO DO
     }

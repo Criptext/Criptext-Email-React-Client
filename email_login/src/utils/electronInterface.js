@@ -39,5 +39,5 @@ export const openMailbox = () => {
 };
 
 export const createUser = params => {
-  dbManager.addUser(params);
+  return dbManager.createUser(params);
 };
