@@ -25,7 +25,7 @@ const db = require('knex')({
   connection: {
     filename: myDBPath
   },
-  useNullAsDefault: true
+  useNullAsDefault: false
 });
 
 const cleanDataBase = () => {
@@ -41,38 +41,44 @@ const cleanDataBase = () => {
 
 const createUserColumns = table => {
   table.increments('id').primary();
-  table.string('email', MEDIUM_STRING_SIZE);
-  table.string('name', MEDIUM_STRING_SIZE);
-  table.string('nickname', MEDIUM_STRING_SIZE);
+  table.string('email', MEDIUM_STRING_SIZE).notNullable();
+  table.string('name', MEDIUM_STRING_SIZE).notNullable();
+  table.string('nickname', MEDIUM_STRING_SIZE).notNullable();
 };
 
 const createLabelColumns = table => {
   table.increments('id').primary();
-  table.string('text', MEDIUM_STRING_SIZE).unique();
-  table.string('color', TINY_STRING_SIZE);
+  table
+    .string('text', MEDIUM_STRING_SIZE)
+    .unique()
+    .notNullable();
+  table.string('color', TINY_STRING_SIZE).notNullable();
 };
 
 const createEmailColumns = table => {
   table.increments('id').primary();
-  table.string('key', SHORT_STRING_SIZE).unique();
-  table.string('threadId', SHORT_STRING_SIZE);
-  table.string('s3Key', SHORT_STRING_SIZE);
-  table.text('content');
-  table.string('preview', LONG_STRING_SIZE);
-  table.string('subject');
-  table.dateTime('date');
-  table.integer('delivered');
-  table.boolean('unread');
-  table.boolean('secure');
-  table.boolean('isTrash');
-  table.boolean('isDraft');
-  table.boolean('isMuted');
+  table
+    .string('key', SHORT_STRING_SIZE)
+    .unique()
+    .notNullable();
+  table.string('threadId', SHORT_STRING_SIZE).notNullable();
+  table.string('s3Key', SHORT_STRING_SIZE).notNullable();
+  table.text('content').notNullable();
+  table.string('preview', LONG_STRING_SIZE).notNullable();
+  table.string('subject').notNullable();
+  table.dateTime('date').notNullable();
+  table.integer('delivered').notNullable();
+  table.boolean('unread').notNullable();
+  table.boolean('secure').notNullable();
+  table.boolean('isTrash').notNullable();
+  table.boolean('isDraft').notNullable();
+  table.boolean('isMuted').notNullable();
 };
 
 const createEmailLabelColumns = table => {
   table.increments('id').primary();
-  table.integer('labelId');
-  table.string('emailId', SHORT_STRING_SIZE);
+  table.integer('labelId').notNullable();
+  table.string('emailId', SHORT_STRING_SIZE).notNullable();
   table
     .foreign('labelId')
     .references('id')
@@ -85,9 +91,9 @@ const createEmailLabelColumns = table => {
 
 const createEmailUserColumns = table => {
   table.increments('id').primary();
-  table.integer('userId');
-  table.string('emailId', SHORT_STRING_SIZE);
-  table.string('type', TINY_STRING_SIZE);
+  table.integer('userId').notNullable();
+  table.string('emailId', SHORT_STRING_SIZE).notNullable();
+  table.string('type', TINY_STRING_SIZE).notNullable();
   table
     .foreign('userId')
     .references('id')
@@ -100,11 +106,11 @@ const createEmailUserColumns = table => {
 
 const createFileColumns = table => {
   table.string('token', SHORT_STRING_SIZE).primary();
-  table.string('name', SHORT_STRING_SIZE);
-  table.integer('size');
-  table.integer('status');
-  table.dateTime('date');
-  table.string('emailId', SHORT_STRING_SIZE);
+  table.string('name', SHORT_STRING_SIZE).notNullable();
+  table.integer('size').notNullable();
+  table.integer('status').notNullable();
+  table.dateTime('date').notNullable();
+  table.string('emailId', SHORT_STRING_SIZE).notNullable();
   table
     .foreign('emailId')
     .references('id')
@@ -113,10 +119,10 @@ const createFileColumns = table => {
 
 const createOpenColumns = table => {
   table.increments('id').primary();
-  table.string('location', SHORT_STRING_SIZE);
-  table.integer('type');
-  table.dateTime('date');
-  table.string('fileId', SHORT_STRING_SIZE);
+  table.string('location', SHORT_STRING_SIZE).notNullable();
+  table.integer('type').notNullable();
+  table.dateTime('date').notNullable();
+  table.string('fileId', SHORT_STRING_SIZE).notNullable();
   table
     .foreign('fileId')
     .references('token')
@@ -126,31 +132,14 @@ const createOpenColumns = table => {
 const createTables = async () => {
   const emailExists = await db.schema.hasTable(Table.EMAIL);
   if (!emailExists) {
-    await db.schema.createTable(Table.EMAIL, createEmailColumns);
-  }
-  const labelExists = await db.schema.hasTable(Table.LABEL);
-  if (!labelExists) {
-    await db.schema.createTable(Table.LABEL, createLabelColumns);
-  }
-  const emaiLabelExists = await db.schema.hasTable(Table.EMAIL_LABEL);
-  if (!emaiLabelExists) {
-    await db.schema.createTable(Table.EMAIL_LABEL, createEmailLabelColumns);
-  }
-  const userExists = await db.schema.hasTable(Table.USER);
-  if (!userExists) {
-    await db.schema.createTable(Table.USER, createUserColumns);
-  }
-  const emailUserExists = await db.schema.hasTable(Table.EMAIL_USER);
-  if (!emailUserExists) {
-    await db.schema.createTable(Table.EMAIL_USER, createEmailUserColumns);
-  }
-  const fileExists = await db.schema.hasTable(Table.FILE);
-  if (!fileExists) {
-    await db.schema.createTable(Table.FILE, createFileColumns);
-  }
-  const openExists = await db.schema.hasTable(Table.OPEN);
-  if (!openExists) {
-    await db.schema.createTable(Table.OPEN, createOpenColumns);
+    await db.schema
+      .createTable(Table.EMAIL, createEmailColumns)
+      .createTable(Table.LABEL, createLabelColumns)
+      .createTable(Table.EMAIL_LABEL, createEmailLabelColumns)
+      .createTable(Table.USER, createUserColumns)
+      .createTable(Table.EMAIL_USER, createEmailUserColumns)
+      .createTable(Table.FILE, createFileColumns)
+      .createTable(Table.OPEN, createOpenColumns);
   }
 };
 
