@@ -1,5 +1,5 @@
 const path = require('path');
-const DB_TEST_PATH = './src/__tests__/test.db';
+const DB_TEST_PATH = './src/__integrations__/test.db';
 const DB_PATH = path
   .join(__dirname, '/mydb.db')
   .replace('/app.asar', '')
@@ -24,7 +24,8 @@ const db = require('knex')({
   client: 'sqlite3',
   connection: {
     filename: myDBPath
-  }
+  },
+  useNullAsDefault: true
 });
 
 const cleanDataBase = () => {
@@ -122,15 +123,35 @@ const createOpenColumns = table => {
     .inTable(Table.FILE);
 };
 
-const createTables = () => {
-  return db.schema
-    .createTableIfNotExists(Table.EMAIL, createEmailColumns)
-    .createTableIfNotExists(Table.LABEL, createLabelColumns)
-    .createTableIfNotExists(Table.EMAIL_LABEL, createEmailLabelColumns)
-    .createTableIfNotExists(Table.USER, createUserColumns)
-    .createTableIfNotExists(Table.EMAIL_USER, createEmailUserColumns)
-    .createTableIfNotExists(Table.FILE, createFileColumns)
-    .createTableIfNotExists(Table.OPEN, createOpenColumns);
+const createTables = async () => {
+  const emailExists = await db.schema.hasTable(Table.EMAIL);
+  if (!emailExists) {
+    await db.schema.createTable(Table.EMAIL, createEmailColumns);
+  }
+  const labelExists = await db.schema.hasTable(Table.LABEL);
+  if (!labelExists) {
+    await db.schema.createTable(Table.LABEL, createLabelColumns);
+  }
+  const emaiLabelExists = await db.schema.hasTable(Table.EMAIL_LABEL);
+  if (!emaiLabelExists) {
+    await db.schema.createTable(Table.EMAIL_LABEL, createEmailLabelColumns);
+  }
+  const userExists = await db.schema.hasTable(Table.USER);
+  if (!userExists) {
+    await db.schema.createTable(Table.USER, createUserColumns);
+  }
+  const emailUserExists = await db.schema.hasTable(Table.EMAIL_USER);
+  if (!emailUserExists) {
+    await db.schema.createTable(Table.EMAIL_USER, createEmailUserColumns);
+  }
+  const fileExists = await db.schema.hasTable(Table.FILE);
+  if (!fileExists) {
+    await db.schema.createTable(Table.FILE, createFileColumns);
+  }
+  const openExists = await db.schema.hasTable(Table.OPEN);
+  if (!openExists) {
+    await db.schema.createTable(Table.OPEN, createOpenColumns);
+  }
 };
 
 module.exports = {

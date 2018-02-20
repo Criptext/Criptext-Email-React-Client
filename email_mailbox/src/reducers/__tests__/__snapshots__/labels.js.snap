@@ -49,7 +49,7 @@ exports[`Label actions: should update label: color 1`] = `
 Immutable.Map {
   1: Immutable.Map {
     id: 1,
-    color: "#ffffff",
+    color: "#000000",
     text: "Inbox",
   },
 }
@@ -60,7 +60,7 @@ Immutable.Map {
   1: Immutable.Map {
     id: 1,
     color: "#ffffff",
-    text: "Inbox",
+    text: "labelmodified",
   },
 }
 `;
@@ -69,8 +69,8 @@ exports[`Label actions: should update label: text and color 1`] = `
 Immutable.Map {
   1: Immutable.Map {
     id: 1,
-    color: "#ffffff",
-    text: "Inbox",
+    color: "#000000",
+    text: "labelmodified",
   },
 }
 `;

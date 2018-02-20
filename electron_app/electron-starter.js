@@ -8,7 +8,7 @@ const {
   composerUrl
 } = require('./src/window_routing');
 
-
+let mainWindow;
 let loginWindow;
 let modalWindow;
 let loadingWindow;
