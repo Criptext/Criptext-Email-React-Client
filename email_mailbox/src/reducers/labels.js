@@ -5,7 +5,7 @@ export default (state = new Map({}), action) => {
   switch (action.type) {
     case Label.ADD_BATCH:
       return state.merge(fromJS(action.labels));
-    case Label.MODIFY_LABEL: {
+    case Label.UPDATE_SUCCESS: {
       const labelId = action.label.id;
       if (!labelId) {
         return state;
