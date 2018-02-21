@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User actions: Add a new user to state 1`] = `
+Immutable.Map {
+  0: Immutable.Map {
+    id: "0",
+    name: "Previous User",
+    nickname: "prevuser",
+    email: "prevuser@criptext.com",
+  },
+  1: Immutable.Map {
+    id: "1",
+    name: "Test User",
+    nickname: "testuser",
+    email: "test1@criptext.com",
+  },
+}
+`;

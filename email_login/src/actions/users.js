@@ -1,5 +1,5 @@
 import { User } from './types';
-import { createUser } from '../utils/electronInterface';
+import * as db from '../utils/electronInterface';
 
 export const addUsers = users => {
   return {
@@ -11,7 +11,7 @@ export const addUsers = users => {
 export const addUser = user => {
   return async dispatch => {
     try {
-      const response = await createUser(user);
+      const response = await db.createUser(user);
       const userId = response[0];
       const users = {
         [userId]: {
