@@ -1,6 +1,6 @@
 /*global libsignal SignalProtocolStore util*/
 
-let KeyHelper = libsignal.KeyHelper;
+const KeyHelper = libsignal.KeyHelper;
 
 const createAddress = (name, deviceId) => {
   return new libsignal.SignalProtocolAddress(name, deviceId);
