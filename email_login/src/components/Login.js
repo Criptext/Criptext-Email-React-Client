@@ -58,15 +58,13 @@ const renderFooter = props => (
   <div className="footer">
     <div className="signup-message">
       <span>
-        Not registered yet? &nbsp;
+        Not registered? &nbsp;
         <strong onClick={ev => props.toggleSignUp(ev)}>Sign up</strong>
       </span>
     </div>
     <div className="login-problems">
       <span>
-        Can&#39;t
-        <strong> Log In</strong>
-        ?
+        Lost all your devices?
       </span>
     </div>
   </div>

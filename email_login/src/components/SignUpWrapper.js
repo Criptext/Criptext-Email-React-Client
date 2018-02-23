@@ -205,8 +205,6 @@ class SignUpWrapper extends Component {
     };
     if ( values.recoveryemail !== '' ) submitValues["recoveryEmail"] = values.recoveryemail;
     this.props.onAddUser(submitValues);
-    openLoading();
-    closeLogin();
   };
 
   universalValidator = (formItemName, formItemValue) => {

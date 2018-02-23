@@ -137,10 +137,6 @@ const createSessionUserColumns = table => {
   table.string('username', MEDIUM_STRING_SIZE).notNullable();
 }
 
-const cleanSession = () => {
-  return db.schema.dropTableIfExists(Table.SESSION);
-};
-
 const createTables = async () => {
   const emailExists = await db.schema.hasTable(Table.EMAIL);
   if (!emailExists) {
@@ -159,7 +155,6 @@ const createTables = async () => {
 module.exports = {
   db,
   cleanDataBase,
-  cleanSession,
   createTables,
   Table
 };

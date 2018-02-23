@@ -19,23 +19,18 @@ export const checkUser = user => {
 }
 
 export const addUser = user => {
-  return async dispatch => {
+  return async () => {
     try {
       const serverResponse = await client.postUser(user)
       const responseStatus = await serverResponse.status;
       if (responseStatus === 200){
         const localResponse = await createLocalData(user);
         const userId = await localResponse[0];
-        await createSession(userId, user);
-        const users = {
-          [userId]: {
-            id: userId,
-            recoveryEmail: user.recoveryEmail,
-            name: user.name,
-            username: user.username
-          }
-        };
-        dispatch(addUsers(users));
+        const terminated = await createSession(userId, user);
+        if (terminated) {
+          db.openLoading();
+          db.closeLogin();
+        }
       }
     } catch (e) {
       //TO DO
