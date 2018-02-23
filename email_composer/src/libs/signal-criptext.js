@@ -1,4 +1,4 @@
-/*global libsignal SignalProtocolStore util Internal*/
+/*global libsignal SignalProtocolStore util*/
 
 let KeyHelper = libsignal.KeyHelper;
 
@@ -75,11 +75,6 @@ const encryptMessage = (store, addressTo, sessionBuilderTo, textMessage) => {
   var sessionCipher = new libsignal.SessionCipher(store, addressTo);
   return store
     .loadSession(addressTo)
-    .then(function(record) {
-      /*eslint-disable */
-      var sessionRecord = Internal.SessionRecord.deserialize(record);
-      /*eslint-enable */
-    })
     .then(function() {
       return sessionCipher.encrypt(textMessage);
     })
