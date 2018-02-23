@@ -26,9 +26,13 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "email_mailbox/package.json" }}
+          - v1-dependencies-{{ checksum "email_composer/package.json" }}
+          - v2-dependencies-{{ checksum "email_mailbox/package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+          - v2-dependencies-
+
+      - run: cd email_composer/ && yarn install
 
       - run: cd email_mailbox/ && yarn install
 
@@ -36,21 +40,34 @@ jobs:
 
       - save_cache:
           paths:
+            - email_composer/node_modules
             - email_mailbox/node_modules
-          key: v1-dependencies-{{ checksum "email_mailbox/package.json" }}
+          key: v2-dependencies-{{ checksum "email_mailbox/package.json" }}
         
       # run tests!
       - checkout
       - run: 
-          name: Build
+          name: Composer Build
+          command: cd email_composer/ &&  yarn build
+
+      - run:
+          name: Composer Unit test
+          command: cd email_composer/ && yarn test
+
+      - run:
+          name: Composer Lint
+          command: cd email_composer/ && yarn lint
+
+      - run: 
+          name: Mailbox Build
           command: cd email_mailbox/ &&  yarn build
 
       - run:
-          name: Unit test
+          name: Mailbox Unit test
           command: cd email_mailbox/ && yarn test
 
       - run:
-          name: Lint
+          name: Mailbox Lint
           command: cd email_mailbox/ && yarn lint
 
       - run:
