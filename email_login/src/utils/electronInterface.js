@@ -41,3 +41,7 @@ export const openMailbox = () => {
 export const createUser = params => {
   return dbManager.createUser(params);
 };
+
+export const createSession = params => {
+  return dbManager.createSession(params);
+}

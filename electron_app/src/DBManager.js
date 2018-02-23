@@ -1,4 +1,4 @@
-const { db, cleanDataBase, createTables, Table } = require('./models.js');
+const { db, cleanDataBase, cleanSession, createTables, Table } = require('./models.js');
 
 /* Email
    ----------------------------- */
@@ -143,11 +143,19 @@ const createUser = params => {
   return db.table(Table.USER).insert(params);
 };
 
+/* Session
+   ----------------------------- */
+const createSession = params => {
+  return db.table(Table.SESSION).insert(params);
+}
+
 module.exports = {
   cleanDataBase,
+  cleanSession,
   closeDB,
   createLabel,
   createEmail,
+  createSession,
   createTables,
   createUser,
   deleteEmail,

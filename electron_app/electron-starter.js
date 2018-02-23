@@ -57,7 +57,8 @@ async function createLoginWindow() {
     height: loginSize.height, 
     show: false,
     center: true,
-    transparent: true
+    transparent: true,
+    webPreferences: {webSecurity: false}
   });    
   loginWindow.loadURL(loginUrl);
   loginWindow.setMenu(null);
@@ -143,7 +144,6 @@ async function createLoginWindow() {
     if ( loadingWindow !== null ) {
       loadingWindow.close();  
     }
-    
     loadingWindow = null;
   });
 

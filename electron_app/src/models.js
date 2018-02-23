@@ -17,7 +17,8 @@ const Table = {
   USER: 'user',
   EMAIL_USER: 'emailUser',
   FILE: 'file',
-  OPEN: 'open'
+  OPEN: 'open',
+  SESSION: 'session'
 };
 
 const db = require('knex')({
@@ -36,14 +37,15 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.USER)
     .dropTableIfExists(Table.EMAIL_USER)
     .dropTableIfExists(Table.FILE)
-    .dropTableIfExists(Table.OPEN);
+    .dropTableIfExists(Table.OPEN)
+    .dropTableIfExists(Table.SESSION);
 };
 
 const createUserColumns = table => {
   table.increments('id').primary();
-  table.string('email', MEDIUM_STRING_SIZE).notNullable();
+  table.string('recoveryEmail', MEDIUM_STRING_SIZE);
   table.string('name', MEDIUM_STRING_SIZE).notNullable();
-  table.string('nickname', MEDIUM_STRING_SIZE).notNullable();
+  table.string('username', MEDIUM_STRING_SIZE).notNullable();
 };
 
 const createLabelColumns = table => {
@@ -129,6 +131,16 @@ const createOpenColumns = table => {
     .inTable(Table.FILE);
 };
 
+const createSessionUserColumns = table => {
+  table.increments('id').primary();
+  table.string('sessionId', TINY_STRING_SIZE).notNullable();
+  table.string('username', MEDIUM_STRING_SIZE).notNullable();
+}
+
+const cleanSession = () => {
+  return db.schema.dropTableIfExists(Table.SESSION);
+};
+
 const createTables = async () => {
   const emailExists = await db.schema.hasTable(Table.EMAIL);
   if (!emailExists) {
@@ -139,13 +151,15 @@ const createTables = async () => {
       .createTable(Table.USER, createUserColumns)
       .createTable(Table.EMAIL_USER, createEmailUserColumns)
       .createTable(Table.FILE, createFileColumns)
-      .createTable(Table.OPEN, createOpenColumns);
+      .createTable(Table.OPEN, createOpenColumns)
+      .createTable(Table.SESSION, createSessionUserColumns);
   }
 };
 
 module.exports = {
   db,
   cleanDataBase,
+  cleanSession,
   createTables,
   Table
 };

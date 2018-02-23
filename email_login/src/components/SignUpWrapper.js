@@ -199,10 +199,11 @@ class SignUpWrapper extends Component {
 
   onSubmit = values => {
     const submitValues = {
-      name: values.fullname,
-      nickname: values.username,
-      email: values.recoveryemail
+      username: values.username,
+      password: values.password,
+      name: values.fullname
     };
+    if ( values.recoveryemail !== '' ) submitValues["recoveryEmail"] = values.recoveryemail;
     this.props.onAddUser(submitValues);
     openLoading();
     closeLogin();
