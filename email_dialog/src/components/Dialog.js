@@ -1,37 +1,55 @@
 import React from 'react';
-import { onResponseModal } from './../utils/electronInterface';
+import { remoteData, onResponseModal } from './../utils/electronInterface';
 import './dialog.css';
 
-const Dialog = () => renderDialog();
-
-const renderDialog = () => (
+const Dialog = () => (
   <div className="dialog-body">
     <div className="header" />
-
     <div className="content">
-      <h2 className="title">Warning!</h2>
-
-      <div className="message">
-        <p>
-          You did not set a <strong>Recovery Email</strong> so account recovery
-          is impossible if you forget your password.
-        </p>
-        <p>Proceed without recovery email?</p>
-      </div>
-
-      <div className="options">
-        <button className="cancel" onClick={e => onResponseModal(e, 'Cancel')}>
-          <span>Cancel</span>
-        </button>
-        <button
-          className="confirm"
-          onClick={e => onResponseModal(e, 'Confirm')}
-        >
-          <span>Confirm</span>
-        </button>
-      </div>
+      <h2 className="title">{remoteData.title}</h2>
+      {renderContent(remoteData.content)}
+      {renderOptions(remoteData.options)}
     </div>
   </div>
 );
+
+const renderContent = content => {
+  return (
+    <div className="message">
+      {content.map((paragraph, index) => {
+        return (
+          <p key={index}>
+            {paragraph.paragraphContent.map((item, subindex) => {
+              return item.type === 'strong' ? (
+                <strong key={subindex}>{item.text}</strong>
+              ) : (
+                <span key={subindex}>{item.text}</span>
+              );
+            })}
+          </p>
+        );
+      })}
+    </div>
+  );
+};
+
+const renderOptions = options => {
+  return (
+    <div className="options">
+      <button
+        className="cancel"
+        onClick={e => onResponseModal(e, options.cancelLabel)}
+      >
+        <span>{options.cancelLabel}</span>
+      </button>
+      <button
+        className="confirm"
+        onClick={e => onResponseModal(e, options.acceptLabel)}
+      >
+        <span>{options.acceptLabel}</span>
+      </button>
+    </div>
+  );
+};
 
 export default Dialog;

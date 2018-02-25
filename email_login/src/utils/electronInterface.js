@@ -16,7 +16,32 @@ export const resizeLogin = () => {
 };
 
 export const showDialog = callback => {
-  ipcRenderer.send('open-modal');
+  const dataForModal = {
+    title: 'Warning!',
+    content: [
+      {
+        paragraphContent: [
+          { type: 'text', text: 'You did not set a ' },
+          { type: 'strong', text: 'Recovery Email ' },
+          {
+            type: 'text',
+            text:
+              'so account recovery is impossible if you forget your password.'
+          }
+        ]
+      },
+      {
+        paragraphContent: [
+          { type: 'text', text: 'Proceed without recovery email?' }
+        ]
+      }
+    ],
+    options: {
+      cancelLabel: 'Cancel',
+      acceptLabel: 'Confirm'
+    }
+  };
+  ipcRenderer.send('open-modal', dataForModal);
   ipcRenderer.once('selectedOption', (event, data) => {
     callback(data.selectedOption);
   });
@@ -44,4 +69,4 @@ export const createUser = params => {
 
 export const createSession = params => {
   return dbManager.createSession(params);
-}
+};

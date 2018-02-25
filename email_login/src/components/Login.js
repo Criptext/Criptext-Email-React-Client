@@ -63,9 +63,7 @@ const renderFooter = props => (
       </span>
     </div>
     <div className="login-problems">
-      <span>
-        Lost all your devices?
-      </span>
+      <span>Lost all your devices?</span>
     </div>
   </div>
 );

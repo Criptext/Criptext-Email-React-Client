@@ -135,7 +135,7 @@ const createSessionUserColumns = table => {
   table.increments('id').primary();
   table.string('sessionId', TINY_STRING_SIZE).notNullable();
   table.string('username', MEDIUM_STRING_SIZE).notNullable();
-}
+};
 
 const createTables = async () => {
   const emailExists = await db.schema.hasTable(Table.EMAIL);

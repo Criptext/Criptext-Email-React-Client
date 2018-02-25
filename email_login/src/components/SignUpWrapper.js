@@ -8,12 +8,7 @@ import {
   validateAcceptTerms,
   validateEmail
 } from './../validators/validators';
-import {
-  closeDialog,
-  closeLogin,
-  showDialog,
-  openLoading
-} from './../utils/electronInterface';
+import { closeDialog, showDialog } from './../utils/electronInterface';
 import SignUp from './SignUp';
 
 const formItems = [
@@ -203,7 +198,8 @@ class SignUpWrapper extends Component {
       password: values.password,
       name: values.fullname
     };
-    if ( values.recoveryemail !== '' ) submitValues["recoveryEmail"] = values.recoveryemail;
+    if (values.recoveryemail !== '')
+      submitValues['recoveryEmail'] = values.recoveryemail;
     this.props.onAddUser(submitValues);
   };
 

@@ -146,10 +146,8 @@ const createUser = params => {
 /* Session
    ----------------------------- */
 const createSession = params => {
-  return db
-    .table(Table.SESSION)
-    .insert(params);
-}
+  return db.table(Table.SESSION).insert(params);
+};
 
 module.exports = {
   cleanDataBase,

@@ -14,6 +14,7 @@ let modalWindow;
 let loadingWindow;
 let mailboxWindow;
 let composerWindow;
+global.modalData = {};
 
 const loginSize = {
   width: 328,
@@ -89,7 +90,8 @@ async function createLoginWindow() {
   });
 
 
-  ipcMain.on('open-modal', (event, arg) => {
+  ipcMain.on('open-modal', (event, modalData) => {
+    global.modalData = modalData;
     modalWindow = new BrowserWindow({
       parent: loginWindow,
       width: modalSize.width, 
@@ -119,6 +121,7 @@ async function createLoginWindow() {
     if ( modalWindow !== null ) {
       modalWindow.close();  
     }
+    global.modalData = {};
     modalWindow = null;
   });
 
