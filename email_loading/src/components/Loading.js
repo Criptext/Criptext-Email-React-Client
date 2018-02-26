@@ -6,9 +6,8 @@ import {
   remoteData
 } from './../utils/electronInterface';
 import { createStore, generatePreKeyBundle } from './../libs/signal-criptext';
+import { API_URL } from './../utils/const';
 import './loading.css';
-
-const API_URL = process.env.REACT_APP_KEYSERVER_URL;
 
 const animation = async () => {
   const client = new ClientAPI(API_URL);

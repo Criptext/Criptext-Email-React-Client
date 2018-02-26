@@ -6,9 +6,8 @@ import {
   openCreateKeys,
   openMailbox
 } from '../utils/electronInterface';
+import { API_URL } from './../utils/const';
 import ClientAPI from '@criptext/email-http-client';
-
-const API_URL = process.env.REACT_APP_KEYSERVER_URL;
 
 export const addUsers = users => {
   return {
