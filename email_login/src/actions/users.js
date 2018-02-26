@@ -3,12 +3,12 @@ import {
   closeLogin,
   createSession,
   createUser,
-  openLoading,
+  openCreateKeys,
   openMailbox
 } from '../utils/electronInterface';
 import ClientAPI from '@criptext/email-http-client';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_KEYSERVER_URL;
 
 export const addUsers = users => {
   return {
@@ -28,7 +28,7 @@ export const addUser = user => {
         const userId = await localResponse[0];
         const terminated = await createLocalSession(userId, user);
         if (terminated) {
-          openLoading();
+          openCreateKeys(user);
           closeLogin();
         }
       }
@@ -67,10 +67,10 @@ export const loginUser = user => {
       const serverResponse = await client.login(userCredentials);
       const responseStatus = await serverResponse.status;
       if (responseStatus === 200) {
-        setTimeout(() => {
-          openMailbox();
-          closeLogin();
-        }, 10000);
+        openMailbox();
+        closeLogin();
+      } else {
+        alert(serverResponse.text);
       }
     } catch (e) {
       // To do

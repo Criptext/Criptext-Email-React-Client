@@ -37,13 +37,13 @@ const renderOptions = options => {
   return (
     <div className="options">
       <button
-        className="cancel"
+        className={options.acceptLabel !== '' ? 'cancel' : 'hidden'}
         onClick={e => onResponseModal(e, options.cancelLabel)}
       >
         <span>{options.cancelLabel}</span>
       </button>
       <button
-        className="confirm"
+        className={options.acceptLabel !== '' ? 'confirm' : 'hidden'}
         onClick={e => onResponseModal(e, options.acceptLabel)}
       >
         <span>{options.acceptLabel}</span>

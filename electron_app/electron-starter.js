@@ -14,7 +14,8 @@ let modalWindow;
 let loadingWindow;
 let mailboxWindow;
 let composerWindow;
-global.modalData = {};
+global.modalData = {}
+global.loadingData = {}
 
 const loginSize = {
   width: 328,
@@ -118,15 +119,17 @@ async function createLoginWindow() {
     modalWindow = null;
   });
 
-  /*  Loading
+  /*  Create keys
    ----------------------------- */
-  ipcMain.on('open-loading', (event, arg) => {
+  ipcMain.on('open-create-keys', (event, arg) => {
+    global.loadingData = arg;
     loadingWindow = new BrowserWindow({
       width: loadingSize.width, 
       height: loadingSize.height,
       frame: false,
       transparent: true,
-      show: false
+      show: false,
+      webPreferences: {webSecurity: false}
     });
     loadingWindow.loadURL(loadingUrl);
     loadingWindow.setMenu(null);
@@ -137,10 +140,11 @@ async function createLoginWindow() {
     });
   });
 
-  ipcMain.on('close-loading', () => {
+  ipcMain.on('close-create-keys', () => {
     if ( loadingWindow !== null ) {
       loadingWindow.close();  
     }
+    global.loadingData = {};
     loadingWindow = null;
   });
 

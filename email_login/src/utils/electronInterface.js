@@ -67,8 +67,8 @@ export const closeDialog = () => {
   ipcRenderer.send('close-modal');
 };
 
-export const openLoading = () => {
-  ipcRenderer.send('open-loading');
+export const openCreateKeys = params => {
+  ipcRenderer.send('open-create-keys', params);
 };
 
 export const closeLoading = () => {
