@@ -8,7 +8,7 @@ import {
   validateAcceptTerms,
   validateEmail
 } from './../validators/validators';
-import { closeDialog, showDialog } from './../utils/electronInterface';
+import { closeDialog, confirmEmptyEmail } from './../utils/electronInterface';
 import SignUp from './SignUp';
 
 const formItems = [
@@ -183,7 +183,7 @@ class SignUpWrapper extends Component {
     if (values.recoveryemail !== '') {
       this.onSubmit(values);
     } else {
-      showDialog(response => {
+      confirmEmptyEmail(response => {
         closeDialog();
         if (response === 'Confirm') {
           this.onSubmit(values);

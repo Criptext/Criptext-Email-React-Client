@@ -1,14 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './login.css';
+import './lostAllDevices.css';
 
-const Login = props => renderLogin(props);
-
-const renderLogin = props => (
-  <div className="login">
+const LostAllDevices = props => (
+  <div className="lost">
     {renderHeader()}
     {renderForm(props)}
-    {renderFooter(props)}
   </div>
 );
 
@@ -18,7 +15,7 @@ const renderHeader = () => (
       <div className="icon" />
     </div>
     <div className="text">
-      <span>Welcome to Criptext!</span>
+      <span>Confirm your identity</span>
     </div>
   </div>
 );
@@ -26,21 +23,32 @@ const renderHeader = () => (
 const renderForm = props => (
   <div className="form">
     <form autoComplete="off">
-      <div className="label">
+      <div className="label-username">
         <label>
           <input
             type="text"
             name="username"
             placeholder="Username"
-            value={props.value}
+            value={props.values.username}
             onChange={props.onChangeField}
             onKeyUp={props.validator}
-          />{' '}
-          &nbsp;
+          />
           <span>@criptext.com</span>
           <div className="clear" />
         </label>
       </div>
+
+      <div className="label-password">
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={props.values.password}
+          onChange={props.onChangeField}
+          onKeyUp={props.validator}
+        />
+      </div>
+
       <div className="button">
         <button
           className="button-login"
@@ -54,33 +62,12 @@ const renderForm = props => (
   </div>
 );
 
-const renderFooter = props => (
-  <div className="footer">
-    <div className="signup-message">
-      <span>
-        Not registered? &nbsp;
-        <strong onClick={ev => props.toggleSignUp(ev)}>Sign up</strong>
-      </span>
-    </div>
-    <div className="login-problems">
-      <span onClick={ev => props.handleLostDevices(ev)}>
-        Lost all your devices?
-      </span>
-    </div>
-  </div>
-);
-
 renderForm.propTypes = {
   onChangeField: PropTypes.func,
   validator: PropTypes.func,
   handleSubmit: PropTypes.func,
   disabled: PropTypes.bool,
-  value: PropTypes.string
+  values: PropTypes.object
 };
 
-renderFooter.propTypes = {
-  toggleSignUp: PropTypes.func,
-  handleLostDevices: PropTypes.func
-};
-
-export default Login;
+export default LostAllDevices;

@@ -7,15 +7,7 @@ export const closeLogin = () => {
   ipcRenderer.send('close-login');
 };
 
-export const resizeSignUp = () => {
-  ipcRenderer.send('resizeSignUp');
-};
-
-export const resizeLogin = () => {
-  ipcRenderer.send('resizeLogin');
-};
-
-export const showDialog = callback => {
+export const confirmEmptyEmail = callback => {
   const dataForModal = {
     title: 'Warning!',
     content: [
@@ -39,6 +31,30 @@ export const showDialog = callback => {
     options: {
       cancelLabel: 'Cancel',
       acceptLabel: 'Confirm'
+    }
+  };
+  ipcRenderer.send('open-modal', dataForModal);
+  ipcRenderer.once('selectedOption', (event, data) => {
+    callback(data.selectedOption);
+  });
+};
+
+export const confirmLostDevices = callback => {
+  const Modaltext =
+    "With your privacy in mind, Criptext doesn't keep " +
+    'any of your data stored in its servers. ' +
+    'If you no longer have access to a device linked to your account, ' +
+    "you'll start with a brand new inbox.";
+  const dataForModal = {
+    title: 'Lost all your devices',
+    content: [
+      {
+        paragraphContent: [{ type: 'text', text: Modaltext }]
+      }
+    ],
+    options: {
+      cancelLabel: 'Close',
+      acceptLabel: 'Continue'
     }
   };
   ipcRenderer.send('open-modal', dataForModal);

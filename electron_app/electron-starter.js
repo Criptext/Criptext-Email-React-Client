@@ -53,6 +53,8 @@ async function createLoginWindow() {
     console.log(ex);
   }
 
+  /*  Login
+   ----------------------------- */
   loginWindow = new BrowserWindow({ 
     width: loginSize.width, 
     height: loginSize.height, 
@@ -79,17 +81,9 @@ async function createLoginWindow() {
   loginWindow.on('closed', () => {
     loginWindow = null;
   });
-  
 
-  ipcMain.on('resizeSignUp', () => {
-    loginWindow.setSize(loginSize.width, loginSize.height);
-  });
-
-  ipcMain.on('resizeLogin', () => {
-    loginWindow.setSize(signUpSize.width, signUpSize.height);
-  });
-
-
+  /*  Modal
+   ----------------------------- */
   ipcMain.on('open-modal', (event, modalData) => {
     global.modalData = modalData;
     modalWindow = new BrowserWindow({
@@ -109,7 +103,6 @@ async function createLoginWindow() {
       modalWindow.show();
     });
   });
-
   
   ipcMain.on('response-modal', (event, response) => {
     loginWindow.webContents.send('selectedOption' , {
@@ -125,7 +118,8 @@ async function createLoginWindow() {
     modalWindow = null;
   });
 
-
+  /*  Loading
+   ----------------------------- */
   ipcMain.on('open-loading', (event, arg) => {
     loadingWindow = new BrowserWindow({
       width: loadingSize.width, 
@@ -150,7 +144,8 @@ async function createLoginWindow() {
     loadingWindow = null;
   });
 
-
+  /*  Mailbox
+   ----------------------------- */
   ipcMain.on('open-mailbox', () => {
     mailboxWindow = new BrowserWindow({ 
       width: mailboxSize.width, 
@@ -168,7 +163,8 @@ async function createLoginWindow() {
     });
   });
 
-
+  /*  Composer
+   ----------------------------- */
   ipcMain.on('create-composer', () => {
     composerWindow = new BrowserWindow({ 
       width: composerSize.width, 

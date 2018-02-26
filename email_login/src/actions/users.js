@@ -1,8 +1,14 @@
 import { User } from './types';
-import * as db from '../utils/electronInterface';
+import {
+  closeLogin,
+  createSession,
+  createUser,
+  openLoading,
+  openMailbox
+} from '../utils/electronInterface';
 import ClientAPI from '@criptext/email-http-client';
 
-const client = new ClientAPI('http://localhost:8000');
+const API_URL = 'http://localhost:8000';
 
 export const addUsers = users => {
   return {
@@ -11,25 +17,19 @@ export const addUsers = users => {
   };
 };
 
-export const checkUser = user => {
-  return {
-    type: User.CHECK,
-    user: user
-  };
-};
-
 export const addUser = user => {
   return async () => {
     try {
+      const client = new ClientAPI(API_URL);
       const serverResponse = await client.postUser(user);
       const responseStatus = await serverResponse.status;
       if (responseStatus === 200) {
         const localResponse = await createLocalData(user);
         const userId = await localResponse[0];
-        const terminated = await createSession(userId, user);
+        const terminated = await createLocalSession(userId, user);
         if (terminated) {
-          db.openLoading();
-          db.closeLogin();
+          openLoading();
+          closeLogin();
         }
       }
     } catch (e) {
@@ -44,34 +44,34 @@ const createLocalData = user => {
     name: user.name,
     recoveryEmail: user.recoveryEmail ? user.recoveryEmail : ''
   };
-  return db.createUser(localData);
+  return createUser(localData);
 };
 
-const createSession = (id, user) => {
+const createLocalSession = (id, user) => {
   const sessionData = {
     sessionId: id,
     username: user.username
   };
-  return db.createSession(sessionData);
+  return createSession(sessionData);
 };
 
-export const verifyUser = user => {
-  return async dispatch => {
+export const loginUser = user => {
+  return async () => {
     try {
-      const credentials = {
-        username: 'jadams',
-        password: '1234',
+      const userCredentials = {
+        username: user.username,
+        password: user.password,
         deviceId: 1
       };
-
-      await client
-        .login(credentials)
-        .then(() => {
-          dispatch(addUsers(user));
-        })
-        .catch(() => {
-          // Handle error
-        });
+      const client = new ClientAPI(API_URL);
+      const serverResponse = await client.login(userCredentials);
+      const responseStatus = await serverResponse.status;
+      if (responseStatus === 200) {
+        setTimeout(() => {
+          openMailbox();
+          closeLogin();
+        }, 10000);
+      }
     } catch (e) {
       // To do
     }

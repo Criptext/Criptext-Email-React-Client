@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import Login from './Login';
 import SignUp from './../containers/SignUp';
+import LostDevices from './../containers/LostDevices';
 import ContinueLogin from './ContinueLogin';
-import { closeLogin, openMailbox } from './../utils/electronInterface';
+import {
+  closeDialog,
+  closeLogin,
+  confirmLostDevices,
+  openMailbox
+} from './../utils/electronInterface';
 import { validateUsername } from './../validators/validators';
 
 const mode = {
   SIGNUP: 'SIGNUP',
   LOGIN: 'LOGIN',
-  CONTINUE: 'CONTINUE'
+  CONTINUE: 'CONTINUE',
+  LOST_DEVICES: 'LOST_DEVICES'
 };
 
 class LoginWrapper extends Component {
@@ -34,6 +41,8 @@ class LoginWrapper extends Component {
         return <SignUp toggleSignUp={ev => this.toggleSignUp(ev)} />;
       case mode.CONTINUE:
         return <ContinueLogin toggleContinue={ev => this.toggleContinue(ev)} />;
+      case mode.LOST_DEVICES:
+        return <LostDevices />;
       default:
         return (
           <Login
@@ -43,6 +52,7 @@ class LoginWrapper extends Component {
             disabled={this.state.disabled}
             validator={this.validateUsername}
             value={this.state.values.username}
+            handleLostDevices={this.handleLostDevices}
           />
         );
     }
@@ -99,7 +109,24 @@ class LoginWrapper extends Component {
     this.timeCountdown = setTimeout(() => {
       openMailbox();
       closeLogin();
-    }, 8000);
+    }, 10000);
+  };
+
+  handleLostDevices = event => {
+    event.preventDefault();
+    event.stopPropagation();
+    confirmLostDevices(response => {
+      closeDialog();
+      if (response === 'Continue') {
+        this.onLostDevices();
+      }
+    });
+  };
+
+  onLostDevices = () => {
+    this.setState({
+      mode: mode.LOST_DEVICES
+    });
   };
 }
 

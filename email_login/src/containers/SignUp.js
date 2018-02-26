@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { addUser } from '../actions/index';
-import SignUpWrapper from '../components/SignUpWrapper';
+import { addUser } from './../actions/index';
+import SignUpWrapper from './../components/SignUpWrapper';
 
 const mapStateToProps = () => {
   return {};
