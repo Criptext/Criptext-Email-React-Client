@@ -8,6 +8,7 @@ import {
 } from '../utils/electronInterface';
 import { API_URL } from './../utils/const';
 import ClientAPI from '@criptext/email-http-client';
+const client = new ClientAPI(API_URL);
 
 export const addUsers = users => {
   return {
@@ -19,12 +20,11 @@ export const addUsers = users => {
 export const addUser = user => {
   return async () => {
     try {
-      const client = new ClientAPI(API_URL);
       const serverResponse = await client.postUser(user);
-      const responseStatus = await serverResponse.status;
+      const responseStatus = serverResponse.status;
       if (responseStatus === 200) {
         const localResponse = await createLocalData(user);
-        const userId = await localResponse[0];
+        const userId = localResponse[0];
         const terminated = await createLocalSession(userId, user);
         if (terminated) {
           openCreateKeys(user);
@@ -62,9 +62,8 @@ export const loginUser = user => {
         password: user.password,
         deviceId: 1
       };
-      const client = new ClientAPI(API_URL);
       const serverResponse = await client.login(userCredentials);
-      const responseStatus = await serverResponse.status;
+      const responseStatus = serverResponse.status;
       if (responseStatus === 200) {
         openMailbox();
         closeLogin();
