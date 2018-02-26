@@ -19,8 +19,8 @@
   "scripts": {
     "build-css": "node-sass-chokidar src -o src",
     "watch-css": "npm run build-css && node-sass-chokidar src -o src --watch --recursive",
-    "start-js": "react-scripts start",
-    "start": "KEYSERVER_URL=http://localhost:8000 PORT=3005 npm-run-all -p watch-css start-js",
+    "start-js": "react-scripts start - uses .env",
+    "start": "PORT=3005 npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
     "test": "react-scripts test --env=jsdom",

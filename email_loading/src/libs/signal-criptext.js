@@ -2,10 +2,6 @@
 
 const KeyHelper = libsignal.KeyHelper;
 
-const createAddress = (name, deviceId) => {
-  return new libsignal.SignalProtocolAddress(name, deviceId);
-};
-
 const createStore = () => {
   var store = new SignalProtocolStore();
   return Promise.all([
@@ -50,43 +46,4 @@ const generatePreKeyBundle = (store, preKeyId, signedPreKeyId) => {
   });
 };
 
-const createSession = (store, addressTo, keyBundleTo) => {
-  var keys = {
-    identityKey: util.toArrayBufferFromBase64(keyBundleTo.identityPublicKey),
-    preKey: {
-      keyId: keyBundleTo.preKey.id,
-      publicKey: util.toArrayBufferFromBase64(keyBundleTo.preKey.publicKey)
-    },
-    registrationId: keyBundleTo.registrationId,
-    signedPreKey: {
-      keyId: keyBundleTo.signedPreKeyId,
-      publicKey: util.toArrayBufferFromBase64(keyBundleTo.signedPreKeyPublic),
-      signature: util.toArrayBufferFromBase64(keyBundleTo.signedPreKeySignature)
-    }
-  };
-
-  var sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
-  return sessionBuilder.processPreKey(keys).then(function() {
-    return sessionBuilder;
-  });
-};
-
-const encryptMessage = (store, addressTo, sessionBuilderTo, textMessage) => {
-  var sessionCipher = new libsignal.SessionCipher(store, addressTo);
-  return store
-    .loadSession(addressTo)
-    .then(function() {
-      return sessionCipher.encrypt(textMessage);
-    })
-    .then(function(ciphertext) {
-      return util.toBase64(util.toArrayBuffer(ciphertext.body));
-    });
-};
-
-export {
-  createAddress,
-  createSession,
-  createStore,
-  encryptMessage,
-  generatePreKeyBundle
-};
+export { createStore, generatePreKeyBundle };
