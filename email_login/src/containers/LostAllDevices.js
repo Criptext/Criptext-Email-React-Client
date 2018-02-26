@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { loginUser } from './../actions/index';
-import LostDevicesWrapper from './../components/LostDevicesWrapper';
+import LostAllDevicesWrapper from './../components/LostAllDevicesWrapper';
 
 const mapStateToProps = () => {
   return {};
@@ -15,7 +15,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const LostDevices = connect(mapStateToProps, mapDispatchToProps)(
-  LostDevicesWrapper
+  LostAllDevicesWrapper
 );
 
 export default LostDevices;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Login from './Login';
 import SignUp from './../containers/SignUp';
-import LostDevices from './../containers/LostDevices';
+import LostAllDevices from './../containers/LostAllDevices';
 import ContinueLogin from './ContinueLogin';
 import {
   closeDialog,
@@ -42,7 +42,7 @@ class LoginWrapper extends Component {
       case mode.CONTINUE:
         return <ContinueLogin toggleContinue={ev => this.toggleContinue(ev)} />;
       case mode.LOST_DEVICES:
-        return <LostDevices />;
+        return <LostAllDevices />;
       default:
         return (
           <Login
