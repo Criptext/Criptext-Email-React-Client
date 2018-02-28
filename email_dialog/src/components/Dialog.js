@@ -1,6 +1,6 @@
 import React from 'react';
 import { remoteData, onResponseModal } from './../utils/electronInterface';
-import * as messages from './../utils/contents'; 
+import * as messages from './../utils/contents';
 import './dialog.css';
 
 const Dialog = () => (
@@ -15,7 +15,7 @@ const Dialog = () => (
 );
 
 const renderContent = contentType => {
-  if ( contentType === 'EMPTY_RECOVERY_EMAIL' ){
+  if (contentType === 'EMPTY_RECOVERY_EMAIL') {
     return messages.EmptyRecoveryEmail();
   }
   return messages.LostAllDevices();

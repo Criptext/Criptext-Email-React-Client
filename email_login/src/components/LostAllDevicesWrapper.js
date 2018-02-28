@@ -66,9 +66,9 @@ class LostDevicesWrapper extends Component {
   };
 
   validator = (formItemName, formItemValue) => {
-    if(formItemName === 'username'){
+    if (formItemName === 'username') {
       return validateUsername(formItemValue);
-    } 
+    }
     return validatePassword(formItemValue);
   };
 }
