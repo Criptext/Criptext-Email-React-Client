@@ -14,6 +14,8 @@ let modalWindow;
 let loadingWindow;
 let mailboxWindow;
 let composerWindow;
+global.modalData = {}
+global.loadingData = {}
 
 const loginSize = {
   width: 328,
@@ -52,12 +54,15 @@ async function createLoginWindow() {
     console.log(ex);
   }
 
+  /*  Login
+   ----------------------------- */
   loginWindow = new BrowserWindow({ 
     width: loginSize.width, 
     height: loginSize.height, 
     show: false,
     center: true,
-    transparent: true
+    transparent: true,
+    webPreferences: {webSecurity: false}
   });    
   loginWindow.loadURL(loginUrl);
   loginWindow.setMenu(null);
@@ -77,18 +82,11 @@ async function createLoginWindow() {
   loginWindow.on('closed', () => {
     loginWindow = null;
   });
-  
 
-  ipcMain.on('resizeSignUp', () => {
-    loginWindow.setSize(loginSize.width, loginSize.height);
-  });
-
-  ipcMain.on('resizeLogin', () => {
-    loginWindow.setSize(signUpSize.width, signUpSize.height);
-  });
-
-
-  ipcMain.on('open-modal', (event, arg) => {
+  /*  Modal
+   ----------------------------- */
+  ipcMain.on('open-modal', (event, modalData) => {
+    global.modalData = modalData;
     modalWindow = new BrowserWindow({
       parent: loginWindow,
       width: modalSize.width, 
@@ -106,7 +104,6 @@ async function createLoginWindow() {
       modalWindow.show();
     });
   });
-
   
   ipcMain.on('response-modal', (event, response) => {
     loginWindow.webContents.send('selectedOption' , {
@@ -118,17 +115,21 @@ async function createLoginWindow() {
     if ( modalWindow !== null ) {
       modalWindow.close();  
     }
+    global.modalData = {};
     modalWindow = null;
   });
 
-
-  ipcMain.on('open-loading', (event, arg) => {
+  /*  Create keys
+   ----------------------------- */
+  ipcMain.on('open-create-keys', (event, arg) => {
+    global.loadingData = arg;
     loadingWindow = new BrowserWindow({
       width: loadingSize.width, 
       height: loadingSize.height,
       frame: false,
       transparent: true,
-      show: false
+      show: false,
+      webPreferences: {webSecurity: false}
     });
     loadingWindow.loadURL(loadingUrl);
     loadingWindow.setMenu(null);
@@ -139,15 +140,16 @@ async function createLoginWindow() {
     });
   });
 
-  ipcMain.on('close-loading', () => {
+  ipcMain.on('close-create-keys', () => {
     if ( loadingWindow !== null ) {
       loadingWindow.close();  
     }
-    
+    global.loadingData = {};
     loadingWindow = null;
   });
 
-
+  /*  Mailbox
+   ----------------------------- */
   ipcMain.on('open-mailbox', () => {
     mailboxWindow = new BrowserWindow({ 
       width: mailboxSize.width, 
@@ -165,7 +167,8 @@ async function createLoginWindow() {
     });
   });
 
-
+  /*  Composer
+   ----------------------------- */
   ipcMain.on('create-composer', () => {
     composerWindow = new BrowserWindow({ 
       width: composerSize.width, 

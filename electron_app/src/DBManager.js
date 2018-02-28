@@ -137,12 +137,26 @@ const closeDB = () => {
   db.disconnect();
 };
 
+/* User
+   ----------------------------- */
+const createUser = params => {
+  return db.table(Table.USER).insert(params);
+};
+
+/* Session
+   ----------------------------- */
+const createSession = params => {
+  return db.table(Table.SESSION).insert(params);
+};
+
 module.exports = {
   cleanDataBase,
   closeDB,
   createLabel,
   createEmail,
+  createSession,
   createTables,
+  createUser,
   deleteEmail,
   getAllLabels,
   getEmailsByThreadId,

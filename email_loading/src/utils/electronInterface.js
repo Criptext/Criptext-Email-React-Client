@@ -1,8 +1,10 @@
 const electron = window.require('electron');
-const ipcRenderer = electron.ipcRenderer;
+const { ipcRenderer } = electron;
 
-export const closeLoading = () => {
-  ipcRenderer.send('close-loading');
+export const remoteData = electron.remote.getGlobal('loadingData');
+
+export const closeCreatingKeys = () => {
+  ipcRenderer.send('close-create-keys');
 };
 
 export const openMailbox = () => {

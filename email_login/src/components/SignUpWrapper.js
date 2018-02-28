@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   validateUsername,
   validateFullname,
@@ -7,12 +8,7 @@ import {
   validateAcceptTerms,
   validateEmail
 } from './../validators/validators';
-import {
-  closeDialog,
-  closeLogin,
-  showDialog,
-  openLoading
-} from './../utils/electronInterface';
+import { closeDialog, confirmEmptyEmail } from './../utils/electronInterface';
 import SignUp from './SignUp';
 
 const formItems = [
@@ -115,8 +111,8 @@ const onInitErrors = (array, field) =>
   }, {});
 
 class SignUpWrapper extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       values: onInitState(formItems, 'name'),
       errors: onInitErrors(formItems, 'name'),
@@ -187,7 +183,7 @@ class SignUpWrapper extends Component {
     if (values.recoveryemail !== '') {
       this.onSubmit(values);
     } else {
-      showDialog(response => {
+      confirmEmptyEmail(response => {
         closeDialog();
         if (response === 'Confirm') {
           this.onSubmit(values);
@@ -196,9 +192,15 @@ class SignUpWrapper extends Component {
     }
   };
 
-  onSubmit = () => {
-    openLoading();
-    closeLogin();
+  onSubmit = values => {
+    const submitValues = {
+      username: values.username,
+      password: values.password,
+      name: values.fullname
+    };
+    if (values.recoveryemail !== '')
+      submitValues['recoveryEmail'] = values.recoveryemail;
+    this.props.onAddUser(submitValues);
   };
 
   universalValidator = (formItemName, formItemValue) => {
@@ -231,5 +233,9 @@ class SignUpWrapper extends Component {
     return result;
   };
 }
+
+SignUpWrapper.propTypes = {
+  onAddUser: PropTypes.func
+};
 
 export default SignUpWrapper;
