@@ -1,5 +1,6 @@
 import React from 'react';
 import { remoteData, onResponseModal } from './../utils/electronInterface';
+import * as messages from './../utils/contents'; 
 import './dialog.css';
 
 const Dialog = () => (
@@ -7,30 +8,17 @@ const Dialog = () => (
     <div className="header" />
     <div className="content">
       <h2 className="title">{remoteData.title}</h2>
-      {renderContent(remoteData.content)}
+      {renderContent(remoteData.contentType)}
       {renderOptions(remoteData.options)}
     </div>
   </div>
 );
 
-const renderContent = content => {
-  return (
-    <div className="message">
-      {content.map((paragraph, index) => {
-        return (
-          <p key={index}>
-            {paragraph.paragraphContent.map((item, subindex) => {
-              return item.type === 'strong' ? (
-                <strong key={subindex}>{item.text}</strong>
-              ) : (
-                <span key={subindex}>{item.text}</span>
-              );
-            })}
-          </p>
-        );
-      })}
-    </div>
-  );
+const renderContent = contentType => {
+  if ( contentType === 'EMPTY_RECOVERY_EMAIL' ){
+    return messages.EmptyRecoveryEmail();
+  }
+  return messages.LostAllDevices();
 };
 
 const renderOptions = options => {

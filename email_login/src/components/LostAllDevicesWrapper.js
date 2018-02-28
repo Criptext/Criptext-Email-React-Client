@@ -66,16 +66,10 @@ class LostDevicesWrapper extends Component {
   };
 
   validator = (formItemName, formItemValue) => {
-    let result;
-    switch (formItemName) {
-      case 'username': {
-        result = validateUsername(formItemValue);
-        break;
-      }
-      default:
-        result = validatePassword(formItemValue);
-    }
-    return result;
+    if(formItemName === 'username'){
+      return validateUsername(formItemValue);
+    } 
+    return validatePassword(formItemValue);
   };
 }
 

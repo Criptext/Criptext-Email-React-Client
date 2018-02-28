@@ -10,24 +10,7 @@ export const closeLogin = () => {
 export const confirmEmptyEmail = callback => {
   const dataForModal = {
     title: 'Warning!',
-    content: [
-      {
-        paragraphContent: [
-          { type: 'text', text: 'You did not set a ' },
-          { type: 'strong', text: 'Recovery Email ' },
-          {
-            type: 'text',
-            text:
-              'so account recovery is impossible if you forget your password.'
-          }
-        ]
-      },
-      {
-        paragraphContent: [
-          { type: 'text', text: 'Proceed without recovery email?' }
-        ]
-      }
-    ],
+    contentType: 'EMPTY_RECOVERY_EMAIL',
     options: {
       cancelLabel: 'Cancel',
       acceptLabel: 'Confirm'
@@ -40,18 +23,9 @@ export const confirmEmptyEmail = callback => {
 };
 
 export const confirmLostDevices = callback => {
-  const Modaltext =
-    "With your privacy in mind, Criptext doesn't keep " +
-    'any of your data stored in its servers. ' +
-    'If you no longer have access to a device linked to your account, ' +
-    "you'll start with a brand new inbox.";
   const dataForModal = {
     title: 'Lost all your devices',
-    content: [
-      {
-        paragraphContent: [{ type: 'text', text: Modaltext }]
-      }
-    ],
+    contentType: 'LOST_ALL_DEVICES',
     options: {
       cancelLabel: 'Close',
       acceptLabel: 'Continue'
