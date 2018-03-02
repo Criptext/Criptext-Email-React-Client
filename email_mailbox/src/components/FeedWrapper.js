@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Feed from './Feed';
 
 class FeedWrapper extends Component {
@@ -49,9 +48,5 @@ class FeedWrapper extends Component {
     );
   }
 }
-
-FeedWrapper.propTypes = {
-  isMuted: PropTypes.bool
-};
 
 export default FeedWrapper;

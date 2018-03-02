@@ -66,3 +66,11 @@ const parseMailbox = params => {
     }
   }
 };
+
+export const getEmailById = emailId => {
+  return dbManager.getEmailById(emailId);
+};
+
+export const getAllFeeds = () => {
+  return dbManager.getAllFeeds();
+};

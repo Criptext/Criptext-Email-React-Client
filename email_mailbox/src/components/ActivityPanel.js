@@ -17,9 +17,7 @@ class ActivityPanel extends Component {
             <div className="header-clear" />
           </div>
         </header>
-        <nav>
-          {this.renderFeedSection(this.props.newFeeds, this.props.oldFeeds)}
-        </nav>
+        <nav>{this.renderFeedSection(this.props)}</nav>
       </aside>
     );
   }
@@ -36,19 +34,27 @@ class ActivityPanel extends Component {
     );
   };
 
-  renderFeedSection = (newFeeds, oldFeeds) => {
-    if (newFeeds.size < 1 && oldFeeds.size < 1) {
+  renderFeedSection = props => {
+    if (props.newFeeds.size < 1 && props.oldFeeds.size < 1) {
       return <div>{this.renderEmptyFeedSection()}</div>;
     }
     return (
       <div>
-        {this.renderFeedList(newFeeds, 'NEW')}
-        {this.renderFeedList(oldFeeds, 'OLDER')}
+        {this.renderFeedList(
+          props.newFeeds,
+          props.onClickThreadIdSelected,
+          'NEW'
+        )}
+        {this.renderFeedList(
+          props.oldFeeds,
+          props.onClickThreadIdSelected,
+          'OLDER'
+        )}
       </div>
     );
   };
 
-  renderFeedList = (feedList, listName) => {
+  renderFeedList = (feedList, onClickThreadIdSelected, listName) => {
     if (feedList && feedList.size > 0) {
       return (
         <ul className="new-feeds">
@@ -56,7 +62,13 @@ class ActivityPanel extends Component {
             <p className="text">{listName}</p>
           </li>
           {feedList.map((feed, index) => {
-            return <Feed key={index} feed={feed} />;
+            return (
+              <Feed
+                key={index}
+                feed={feed}
+                onClickThreadIdSelected={onClickThreadIdSelected}
+              />
+            );
           })}
         </ul>
       );
