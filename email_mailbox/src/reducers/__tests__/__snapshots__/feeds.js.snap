@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`feed actions should add feeds to state 1`] = `
+Immutable.List [
+  Immutable.Map {
+    1: Object {
+      "action": "opened",
+      "date": 1515794888909,
+      "emailId": 1,
+      "fileId": null,
+      "id": 1,
+      "isFile": false,
+      "unread": false,
+      "username": "jadams",
+    },
+  },
+  Immutable.Map {
+    2: Object {
+      "action": "opened",
+      "date": 1515794888909,
+      "emailId": 1,
+      "fileId": null,
+      "id": 2,
+      "isFile": false,
+      "unread": false,
+      "username": "jadams",
+    },
+  },
+  Immutable.Map {
+    3: Object {
+      "action": "opened",
+      "date": 1515794888909,
+      "emailId": 1,
+      "fileId": null,
+      "id": 3,
+      "isFile": false,
+      "unread": false,
+      "username": "jadams",
+    },
+  },
+]
+`;
