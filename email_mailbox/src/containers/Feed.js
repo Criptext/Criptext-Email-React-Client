@@ -10,7 +10,7 @@ const mapStateToProps = (state, ownProps) => {
   return { isMuted, subtitle, title };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     onOpenThread: () => {
       dispatch();
