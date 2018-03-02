@@ -39,6 +39,7 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.EMAIL_USER)
     .dropTableIfExists(Table.FILE)
     .dropTableIfExists(Table.OPEN)
+    .dropTableIfExists(Table.FEED)
     .dropTableIfExists(Table.SESSION);
 };
 
