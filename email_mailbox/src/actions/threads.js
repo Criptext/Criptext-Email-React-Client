@@ -93,13 +93,6 @@ export const searchThreads = params => {
   };
 };
 
-export const muteNotifications = threadId => {
-  return {
-    type: Thread.MUTE,
-    targetThread: threadId
-  };
-};
-
 export const loadThreads = params => {
   return async dispatch => {
     try {

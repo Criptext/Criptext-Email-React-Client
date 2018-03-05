@@ -16,18 +16,4 @@ describe('feed actions', () => {
   it('should add feeds to state', () => {
     expect(initState(feeds)).toMatchSnapshot();
   });
-
-  it('should set feed as read', () => {
-    const state = initState(feeds);
-    const action = actions.selectFeed(2);
-    const newState = feedsReducer(state, action);
-    expect(newState).toMatchSnapshot();
-  });
-
-  it('should not set feed as read', () => {
-    const state = initState(feeds);
-    const action = actions.selectFeed(9);
-    const newState = feedsReducer(state, action);
-    expect(newState).toMatchSnapshot();
-  });
 });

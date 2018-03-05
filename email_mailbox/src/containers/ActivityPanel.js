@@ -11,49 +11,19 @@ const setFeedTime = (feed, field) => {
   return feed.set(field, TimeUtils.defineTimeByToday(feed.get(field)));
 };
 
-const countUnreadFeeds = feeds => {
-  return feeds.filter(item => item.get('unread') === true).size;
-};
-
-const getBadgeClass = unreadFeeds => {
-  switch (true) {
-    case unreadFeeds > 0 && unreadFeeds < 10:
-      return 'badge small-badge';
-    case unreadFeeds > 9 && unreadFeeds < 100:
-      return 'badge medium-badge';
-    case unreadFeeds > 99:
-      return 'badge large-badge';
-    default:
-      return '';
-  }
-};
-
-const getBadgeData = unreadFeeds => {
-  switch (true) {
-    case unreadFeeds > 0 && unreadFeeds < 10:
-      return String(unreadFeeds);
-    case unreadFeeds > 9 && unreadFeeds < 100:
-      return String(unreadFeeds);
-    case unreadFeeds > 99:
-      return '+99';
-    default:
-      return '';
-  }
-};
-
 const clasifyFeeds = feeds => {
-  const newsFiltered = feeds.filter(item => item.get('state') === 'new');
-  const oldsFiltered = feeds.filter(item => item.get('state') === 'older');
+  const newsFiltered = feeds.filter(item => item.get('time') === 'Today');
+  const oldsFiltered = feeds.filter(item => item.get('time') !== 'Today');
   return { newsFiltered, oldsFiltered };
 };
 
-const populateFeeds = (feeds, threads) => {
+const populateFeeds = (state, feeds) => {
+  const emails = state.get('emails');
   return feeds.map(feed => {
-    const thread = threads.find(
-      thread => thread.get('id') === feed.get('threadId')
-    );
-    if (thread !== undefined) {
-      return feed.set('isMuted', !thread.get('allowNotifications'));
+    const emailFeed = emails.get(feed.get('emailId'));
+    if (emailFeed !== undefined) {
+      feed = feed.set('emailFeed', emailFeed);
+      feed = feed.set('isMuted', emailFeed.get('isMuted'));
     }
     return feed;
   });
@@ -61,18 +31,14 @@ const populateFeeds = (feeds, threads) => {
 
 const mapStateToProps = state => {
   const orderedFeeds = orderFeedsByDate(state.get('feeds'));
-  const populated = populateFeeds(orderedFeeds, state.get('threads'));
+  const populated = populateFeeds(state, orderedFeeds);
   const feeds = populated.map(feed => {
     return setFeedTime(feed, 'time');
   });
   const { newsFiltered, oldsFiltered } = clasifyFeeds(feeds);
-  const unreadFeeds = countUnreadFeeds(feeds);
   return {
     newFeeds: newsFiltered,
-    oldFeeds: oldsFiltered,
-    unreadFeeds: unreadFeeds,
-    badgeClass: getBadgeClass(unreadFeeds),
-    badgeData: getBadgeData(unreadFeeds)
+    oldFeeds: oldsFiltered
   };
 };
 

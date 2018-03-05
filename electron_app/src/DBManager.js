@@ -102,6 +102,13 @@ const deleteEmail = emailKey => {
     .del();
 };
 
+const getEmailById = id => {
+  return db
+    .select('*')
+    .from(Table.EMAIL)
+    .where({ id });
+};
+
 /* Label
    ----------------------------- */
 
@@ -149,16 +156,29 @@ const createSession = params => {
   return db.table(Table.SESSION).insert(params);
 };
 
+/* Feed
+   ----------------------------- */
+const getAllFeeds = () => {
+  return db.select('*').from(Table.FEED);
+};
+
+const createFeed = params => {
+  return db.table(Table.FEED).insert(params);
+};
+
 module.exports = {
   cleanDataBase,
   closeDB,
   createLabel,
   createEmail,
+  createFeed,
   createSession,
   createTables,
   createUser,
   deleteEmail,
+  getAllFeeds,
   getAllLabels,
+  getEmailById,
   getEmailsByThreadId,
   getEmailsGroupByThreadByMatchText,
   getEmailsGroupByThreadByParams,

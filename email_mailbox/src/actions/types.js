@@ -13,8 +13,7 @@ export const Thread = {
   REMOVE_THREADS: 'REMOVE_THREADS',
   SEARCH_THREADS: 'SEARCH_THREADS',
   MOVE_THREADS: 'MOVE_THREADS',
-  READ_THREADS: 'READ_THREADS',
-  MUTE: 'MUTE_THREAD'
+  READ_THREADS: 'READ_THREADS'
 };
 
 export const User = {
@@ -23,7 +22,8 @@ export const User = {
 };
 
 export const Email = {
-  ADD_BATCH: 'ADD_EMAILS'
+  ADD_BATCH: 'ADD_EMAILS',
+  MUTE: 'MUTE_EMAIL'
 };
 
 export const Label = {

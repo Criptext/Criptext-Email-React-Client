@@ -40,8 +40,7 @@ export const addUser = user => {
 const createLocalData = user => {
   const localData = {
     username: user.username,
-    name: user.name,
-    recoveryEmail: user.recoveryEmail ? user.recoveryEmail : ''
+    name: user.name
   };
   return createUser(localData);
 };

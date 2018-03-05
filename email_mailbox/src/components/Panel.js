@@ -19,7 +19,10 @@ const Panel = props => (
         onClickThreadBack={props.onClickThreadBack}
       />
     </div>
-    <ActivityPanel />
+    <ActivityPanel
+      mailboxSelected={props.mailboxSelected}
+      onClickThreadIdSelected={props.onClickThreadIdSelected}
+    />
   </div>
 );
 

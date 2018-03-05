@@ -18,7 +18,8 @@ const Table = {
   EMAIL_USER: 'emailUser',
   FILE: 'file',
   OPEN: 'open',
-  SESSION: 'session'
+  SESSION: 'session',
+  FEED: 'feed'
 };
 
 const db = require('knex')({
@@ -38,12 +39,12 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.EMAIL_USER)
     .dropTableIfExists(Table.FILE)
     .dropTableIfExists(Table.OPEN)
+    .dropTableIfExists(Table.FEED)
     .dropTableIfExists(Table.SESSION);
 };
 
 const createUserColumns = table => {
   table.increments('id').primary();
-  table.string('recoveryEmail', MEDIUM_STRING_SIZE);
   table.string('name', MEDIUM_STRING_SIZE).notNullable();
   table.string('username', MEDIUM_STRING_SIZE).notNullable();
 };
@@ -137,6 +138,17 @@ const createSessionUserColumns = table => {
   table.string('username', MEDIUM_STRING_SIZE).notNullable();
 };
 
+const createFeedColumns = table => {
+  table.increments('id').primary();
+  table.string('username', MEDIUM_STRING_SIZE).notNullable();
+  table.boolean('isFile').notNullable();
+  table.string('fileId', MEDIUM_STRING_SIZE);
+  table.string('action', TINY_STRING_SIZE).notNullable();
+  table.dateTime('date').notNullable();
+  table.boolean('unread').notNullable();
+  table.string('emailId', MEDIUM_STRING_SIZE).notNullable();
+};
+
 const createTables = async () => {
   const emailExists = await db.schema.hasTable(Table.EMAIL);
   if (!emailExists) {
@@ -148,7 +160,8 @@ const createTables = async () => {
       .createTable(Table.EMAIL_USER, createEmailUserColumns)
       .createTable(Table.FILE, createFileColumns)
       .createTable(Table.OPEN, createOpenColumns)
-      .createTable(Table.SESSION, createSessionUserColumns);
+      .createTable(Table.SESSION, createSessionUserColumns)
+      .createTable(Table.FEED, createFeedColumns);
   }
 };
 

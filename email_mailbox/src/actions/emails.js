@@ -8,6 +8,13 @@ export const addEmails = emails => {
   };
 };
 
+export const muteNotifications = emailId => {
+  return {
+    type: Email.MUTE,
+    targetEmail: emailId
+  };
+};
+
 export const loadEmails = threadId => {
   return async dispatch => {
     try {

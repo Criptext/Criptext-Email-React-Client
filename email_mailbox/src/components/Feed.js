@@ -31,10 +31,10 @@ const renderFeed = props => (
         <div className="feed-data">
           <div className="feed-preview">
             <div className="feed-title">
-              <span>{props.feed.get('title')}</span>
+              <span>{props.title}</span>
             </div>
             <div className="feed-subject">
-              <span>{props.feed.get('subtitle')}</span>
+              <span>{props.subtitle}</span>
             </div>
           </div>
           <div className="feed-actions-time">{renderFeedActions(props)}</div>
@@ -47,9 +47,9 @@ const renderFeed = props => (
 
 const onSelectFeed = props => {
   if (props.feed.get('unread')) {
-    props.onSelectFeed(props.feed.get('id'));
+    props.onSelectFeed(props.feed);
   }
-  props.onOpenThread(props.thread);
+  //props.onOpenThread(props.thread);
 };
 
 const renderFeedIcon = feed =>
@@ -97,7 +97,7 @@ const renderUnmutedIcon = props => (
 const onToggleMute = (ev, props) => {
   ev.preventDefault();
   ev.stopPropagation();
-  props.toggleMute(props.feed.get('threadId'));
+  props.toggleMute(props.feed.get('emailId'));
 };
 
 const removeFeedFromPanel = (ev, props) => {
@@ -116,6 +116,8 @@ const removeFeed = props => {
 
 renderFeed.propTypes = {
   feed: PropTypes.object,
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
   onRegionEnter: PropTypes.func,
   onRegionLeave: PropTypes.func
 };

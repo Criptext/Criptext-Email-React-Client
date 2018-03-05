@@ -9,7 +9,6 @@ import {
   markThreadsRead,
   moveThreads,
   multiSelectThread,
-  muteNotifications,
   selectThread,
   removeThread,
   removeThreadLabel,
@@ -19,7 +18,7 @@ import {
   removeThreads,
   removeThreadsLabel
 } from './threads';
-import { addEmails, loadEmails } from './emails';
+import { addEmails, loadEmails, muteNotifications } from './emails';
 import {
   addLabels,
   addLabel,
