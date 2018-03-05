@@ -158,7 +158,7 @@ const createSignalstoreColumns = table => {
   table.integer('registrationId').notNullable();
   table.string('privKey', LONG_STRING_SIZE).notNullable();
   table.string('pubKey', LONG_STRING_SIZE).notNullable();
-}
+};
 
 const createKeysColumns = table => {
   table.increments('id').primary();
@@ -168,7 +168,7 @@ const createKeysColumns = table => {
   table.integer('signedPreKeyId').notNullable();
   table.string('signedPrivKey', LONG_STRING_SIZE).notNullable();
   table.string('signedPubKey', LONG_STRING_SIZE).notNullable();
-}
+};
 
 const createTables = async () => {
   const emailExists = await db.schema.hasTable(Table.EMAIL);
@@ -181,7 +181,6 @@ const createTables = async () => {
       .createTable(Table.EMAIL_USER, createEmailUserColumns)
       .createTable(Table.FILE, createFileColumns)
       .createTable(Table.OPEN, createOpenColumns)
-      .createTable(Table.SESSION, createSessionUserColumns)
       .createTable(Table.FEED, createFeedColumns)
       .createTable(Table.SESSION, createSessionColumns)
       .createTable(Table.SIGNALSTORE, createSignalstoreColumns)

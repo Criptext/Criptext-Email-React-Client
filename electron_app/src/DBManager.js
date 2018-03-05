@@ -158,38 +158,54 @@ const getAllFeeds = () => {
 
 const createFeed = params => {
   return db.table(Table.FEED).insert(params);
+};
 
 /* Signalstore
    ----------------------------- */
-const createSignalstore = (params) => {
+const createSignalstore = params => {
   return db.table(Table.SIGNALSTORE).insert(params);
 };
 
-const getIdentityKeyPair = (params) => {
-  return db.select('privKey', 'pubkey').from(Table.SIGNALSTORE).where(params);
-}
+const getIdentityKeyPair = params => {
+  return db
+    .select('privKey', 'pubkey')
+    .from(Table.SIGNALSTORE)
+    .where(params);
+};
 
-const getRegistrationId = (params) => {
-  return db.select('registrationId').from(Table.SIGNALSTORE).where(params);
-}
+const getRegistrationId = params => {
+  return db
+    .select('registrationId')
+    .from(Table.SIGNALSTORE)
+    .where(params);
+};
 
 /* Keys
    ----------------------------- */
-const createKeys = (params) => {
+const createKeys = params => {
   return db.table(Table.KEYS).insert(params);
-}
+};
 
-const getKeys = (params) => {
-  return db.select('*').from(Table.KEYS).where(params);
-}
+const getKeys = params => {
+  return db
+    .select('*')
+    .from(Table.KEYS)
+    .where(params);
+};
 
 const getPreKeyPair = params => {
-  return db.select('preKeyPrivKey', 'preKeyPubKey').from(Table.KEYS).where(params);
-}
+  return db
+    .select('preKeyPrivKey', 'preKeyPubKey')
+    .from(Table.KEYS)
+    .where(params);
+};
 
 const getSignedPreKey = params => {
-  return db.select('signedPrivKey', 'signedPubKey').from(Table.KEYS).where(params);
-}
+  return db
+    .select('signedPrivKey', 'signedPubKey')
+    .from(Table.KEYS)
+    .where(params);
+};
 
 const closeDB = () => {
   db.close();

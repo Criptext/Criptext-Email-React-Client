@@ -57,9 +57,8 @@ export default class SignalProtocolStore {
       throw new Error('Tried to get value for undefined/null key');
     if (key in this.store) {
       return this.store[key];
-    } else {
-      return defaultValue;
     }
+    return defaultValue;
   };
 
   remove = key => {
@@ -128,11 +127,11 @@ export default class SignalProtocolStore {
     return res;
   };
 
-  storePreKey = async (keyId, keyPair) => {
+  storePreKey = (keyId, keyPair) => {
     return Promise.resolve(this.put('25519KeypreKey' + keyId, keyPair));
   };
 
-  removePreKey = async keyId => {
+  removePreKey = keyId => {
     return Promise.resolve(this.remove('25519KeypreKey' + keyId));
   };
 
