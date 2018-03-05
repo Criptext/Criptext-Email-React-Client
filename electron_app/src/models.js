@@ -19,7 +19,9 @@ const Table = {
   FILE: 'file',
   OPEN: 'open',
   SESSION: 'session',
-  FEED: 'feed'
+  FEED: 'feed',
+  SIGNALSTORE: 'signalstore',
+  KEYS: 'keys'
 };
 
 const db = require('knex')({
@@ -40,7 +42,9 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.FILE)
     .dropTableIfExists(Table.OPEN)
     .dropTableIfExists(Table.FEED)
-    .dropTableIfExists(Table.SESSION);
+    .dropTableIfExists(Table.SESSION)
+    .dropTableIfExists(Table.SIGNALSTORE)
+    .dropTableIfExists(Table.KEYS);
 };
 
 const createUserColumns = table => {
@@ -132,7 +136,7 @@ const createOpenColumns = table => {
     .inTable(Table.FILE);
 };
 
-const createSessionUserColumns = table => {
+const createSessionColumns = table => {
   table.increments('id').primary();
   table.string('sessionId', TINY_STRING_SIZE).notNullable();
   table.string('username', MEDIUM_STRING_SIZE).notNullable();
@@ -149,6 +153,23 @@ const createFeedColumns = table => {
   table.string('emailId', MEDIUM_STRING_SIZE).notNullable();
 };
 
+const createSignalstoreColumns = table => {
+  table.increments('id').primary();
+  table.integer('registrationId').notNullable();
+  table.string('privKey', LONG_STRING_SIZE).notNullable();
+  table.string('pubKey', LONG_STRING_SIZE).notNullable();
+}
+
+const createKeysColumns = table => {
+  table.increments('id').primary();
+  table.integer('preKeyId').notNullable();
+  table.string('preKeyPrivKey', LONG_STRING_SIZE).notNullable();
+  table.string('preKeyPubKey', LONG_STRING_SIZE).notNullable();
+  table.integer('signedPreKeyId').notNullable();
+  table.string('signedPrivKey', LONG_STRING_SIZE).notNullable();
+  table.string('signedPubKey', LONG_STRING_SIZE).notNullable();
+}
+
 const createTables = async () => {
   const emailExists = await db.schema.hasTable(Table.EMAIL);
   if (!emailExists) {
@@ -161,7 +182,10 @@ const createTables = async () => {
       .createTable(Table.FILE, createFileColumns)
       .createTable(Table.OPEN, createOpenColumns)
       .createTable(Table.SESSION, createSessionUserColumns)
-      .createTable(Table.FEED, createFeedColumns);
+      .createTable(Table.FEED, createFeedColumns)
+      .createTable(Table.SESSION, createSessionColumns)
+      .createTable(Table.SIGNALSTORE, createSignalstoreColumns)
+      .createTable(Table.KEYS, createKeysColumns);
   }
 };
 
