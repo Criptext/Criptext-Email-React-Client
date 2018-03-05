@@ -95,12 +95,7 @@ export default class SignalProtocolStore {
     return Promise.resolve(this.put('identityKey' + identifier, identityKey));
   };
 
-  storeKeys = async (
-    preKeyId,
-    preKeyPair,
-    signedPreKeyId,
-    signedPreKeyPair
-  ) => {
+  storeKeys = (preKeyId, preKeyPair, signedPreKeyId, signedPreKeyPair) => {
     const params = {
       preKeyId,
       preKeyPrivKey: util.toBase64(preKeyPair.privKey),
@@ -109,7 +104,7 @@ export default class SignalProtocolStore {
       signedPrivKey: util.toBase64(signedPreKeyPair.privKey),
       signedPubKey: util.toBase64(signedPreKeyPair.pubKey)
     };
-    await db.createKeys(params);
+    Promise.resolve(db.createKeys(params));
   };
 
   loadPreKey = async keyId => {

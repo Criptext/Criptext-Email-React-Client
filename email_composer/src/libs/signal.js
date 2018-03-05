@@ -6,20 +6,26 @@ const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 const client = new ClientAPI('http://localhost:8000');
 
-const createUser = async data => {
-  return await client.postUser(data);
+const createUser = data => {
+  return client.postUser(data);
 };
 
-const authUser = async data => {
-  return await client.login(data);
+const authUser = data => {
+  return client.login(data);
 };
 
-const createStore = async (identityKey, registrationId) => {
+const createStore = (identityKey, registrationId) => {
   if (!identityKey && !registrationId) {
-    identityKey = await KeyHelper.generateIdentityKeyPair();
-    registrationId = await KeyHelper.generateRegistrationId();
+    return Promise.all([
+      KeyHelper.generateIdentityKeyPair(),
+      KeyHelper.generateRegistrationId()
+    ]).then(function(result) {
+      identityKey = result[0];
+      registrationId = result[1];
+      store.createStore(identityKey, registrationId);
+    });
   }
-  await store.createStore(identityKey, registrationId);
+  store.createStore(identityKey, registrationId);
 };
 
 const generatePreKeyBundle = async (preKeyId, signedPreKeyId) => {
@@ -40,16 +46,16 @@ const generatePreKeyBundle = async (preKeyId, signedPreKeyId) => {
     preKeys: [{ publicKey: util.toBase64(preKey.keyPair.pubKey), id: preKeyId }]
   };
   const res = await client.postKeyBundle(bundle);
-  if (res.status === 200) {
-    await store.storeKeys(
-      preKeyId,
-      preKey.keyPair,
-      signedPreKeyId,
-      signedPreKey.keyPair
-    );
-    return true;
+  if (res.status !== 200) {
+    return false;
   }
-  return false;
+  await store.storeKeys(
+    preKeyId,
+    preKey.keyPair,
+    signedPreKeyId,
+    signedPreKey.keyPair
+  );
+  return true;
 };
 
 const encryptText = async (name, deviceId, textMessage) => {

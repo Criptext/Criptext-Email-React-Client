@@ -153,7 +153,7 @@ const createFeedColumns = table => {
   table.string('emailId', MEDIUM_STRING_SIZE).notNullable();
 };
 
-const createSignalstoreColumns = table => {
+const createSignalStoreColumns = table => {
   table.increments('id').primary();
   table.integer('registrationId').notNullable();
   table.string('privKey', LONG_STRING_SIZE).notNullable();
@@ -183,7 +183,7 @@ const createTables = async () => {
       .createTable(Table.OPEN, createOpenColumns)
       .createTable(Table.FEED, createFeedColumns)
       .createTable(Table.SESSION, createSessionColumns)
-      .createTable(Table.SIGNALSTORE, createSignalstoreColumns)
+      .createTable(Table.SIGNALSTORE, createSignalStoreColumns)
       .createTable(Table.KEYS, createKeysColumns);
   }
 };
