@@ -144,6 +144,11 @@ const createUser = params => {
   return db.table(Table.USER).insert(params);
 };
 
+const getUserByUsername = username => {
+  console.log(username);
+  return db.table(Table.USER).select('*').where({ username });
+} 
+
 /* Session
    ----------------------------- */
 const createSession = params => {
@@ -236,6 +241,7 @@ module.exports = {
   getPreKeyPair,
   getRegistrationId,
   getSignedPreKey,
+  getUserByUsername,
   markThreadAsRead,
   updateLabel
 };

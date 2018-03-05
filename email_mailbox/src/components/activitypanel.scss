@@ -97,10 +97,22 @@ aside.navigation-feed{
     }
   }
 
+  nav::-webkit-scrollbar-track{
+    background-color: rgba(233, 233, 233, 0.76);
+    box-shadow: inset 0 0 10px rgba(220,220,220,0.1);
+  }
+  nav::-webkit-scrollbar{
+    width: 6.5px;
+  }
+  nav::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: #b0b2b4;
+  }
 
   nav {
     overflow: auto;
     height: calc(100% - 61px);
+    position: relative;
 
     .empty-feed-content {
       height: 110px;
@@ -247,7 +259,7 @@ aside.navigation-feed{
               }
 
               .feed-subject {
-                width: 100%;
+                width: 95%;
                 color: #9b9b9b;
                 float: left;
                 margin: 0%;
@@ -255,6 +267,10 @@ aside.navigation-feed{
                 white-space: nowrap; 
                 overflow: hidden;
                 text-overflow: ellipsis;
+
+                span {
+                  width: 100%;
+                }
               }
             }
 

@@ -5,7 +5,7 @@ import FeedWrapperView from '../components/FeedWrapper';
 const mapStateToProps = (state, ownProps) => {
   const feed = ownProps.feed;
   const isMuted = feed.get('isMuted');
-  const title = ownProps.feed.get('username');
+  const title = ownProps.feed.get('name') +' '+ ownProps.feed.get('action');
   const subtitle = ownProps.feed.get('emailFeed').get('subject');
   return { isMuted, subtitle, title };
 };

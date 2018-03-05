@@ -74,3 +74,7 @@ export const getEmailById = emailId => {
 export const getAllFeeds = () => {
   return dbManager.getAllFeeds();
 };
+
+export const getUserByUsername = username => {
+  return dbManager.getUserByUsername(username);
+}

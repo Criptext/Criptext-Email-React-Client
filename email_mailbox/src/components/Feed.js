@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FeedCommand } from './../utils/const';
+import { FeedActionType } from './../utils/const';
 
 const Feed = props =>
   props.isRemoved ? renderDeletedFeed() : renderFeed(props);
@@ -18,7 +18,7 @@ const renderDeletedFeed = () => (
 
 const renderFeed = props => (
   <li
-    className={'feed-item ' + (props.feed.get('unread') ? 'unread-feed' : '')}
+    className={'feed-item ' + (props.feed.get('unread') ==='true' ? 'unread-feed' : '')}
     onClick={() => onSelectFeed(props)}
   >
     <a>
@@ -34,7 +34,7 @@ const renderFeed = props => (
               <span>{props.title}</span>
             </div>
             <div className="feed-subject">
-              <span>{props.subtitle}</span>
+            <span>{props.subtitle}</span>
             </div>
           </div>
           <div className="feed-actions-time">{renderFeedActions(props)}</div>
@@ -46,20 +46,27 @@ const renderFeed = props => (
 );
 
 const onSelectFeed = props => {
+  console.log(props.feed)
   if (props.feed.get('unread')) {
     props.onSelectFeed(props.feed);
   }
   //props.onOpenThread(props.thread);
 };
 
-const renderFeedIcon = feed =>
-  feed.get('cmd') === FeedCommand.SENT.value ? (
-    <i className={FeedCommand.SENT.icon} />
-  ) : FeedCommand.EXPIRED.value ? (
-    <i className={FeedCommand.EXPIRED.icon} />
-  ) : FeedCommand.OPENED.value ? (
-    <i className={FeedCommand.OPENED.icon} />
-  ) : null;
+const renderFeedIcon = feed => {
+  const action = feed.get('action');
+  switch (action) {
+    case FeedActionType.SENT.value: {
+      return <i className={FeedActionType.SENT.icon} />;
+    }
+    case FeedActionType.DOWNLOADED.value: {
+      return <i className={FeedActionType.DOWNLOADED.icon} />;
+    }
+    default: {
+      return <i className={FeedActionType.OPENED.icon} />;
+    }
+  }
+}
 
 const renderFeedActions = props =>
   props.hovering ? renderHoveringActions(props) : renderTime(props);
@@ -75,12 +82,12 @@ const renderHoveringActions = props => (
 
 const renderTime = props => (
   <div className="feed-time">
-    <span>{props.feed.get('time')}</span>
+    <span>{props.feed.get('date')}</span>
   </div>
 );
 
 const renderNotificationIcon = props =>
-  props.isMuted ? renderMutedIcon(props) : renderUnmutedIcon(props);
+  props.isMuted === 'true' ? renderMutedIcon(props) : renderUnmutedIcon(props);
 
 const renderMutedIcon = props => (
   <div className="feed-mute" onClick={ev => onToggleMute(ev, props)}>

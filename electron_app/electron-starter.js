@@ -56,6 +56,7 @@ async function createLoginWindow() {
 
   /*  Login
    ----------------------------- */
+  /*
   loginWindow = new BrowserWindow({ 
     width: loginSize.width, 
     height: loginSize.height, 
@@ -81,6 +82,18 @@ async function createLoginWindow() {
 
   loginWindow.on('closed', () => {
     loginWindow = null;
+  });
+  */
+  mailboxWindow = new BrowserWindow({ 
+    width: mailboxSize.width, 
+    height: mailboxSize.height,
+    show: false
+  });
+  mailboxWindow.loadURL(mailboxUrl);
+  mailboxWindow.webContents.openDevTools();
+  mailboxWindow.once('ready-to-show', () => {
+    mailboxWindow.show();
+    mailboxWindow.maximize();
   });
 
   /*  Modal
