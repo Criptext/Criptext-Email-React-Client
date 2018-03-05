@@ -15,15 +15,15 @@ const isNew = date => {
   if (date.indexOf(':') > -1) {
     return true;
   }
-  if ( date === 'Today' ) {
+  if (date === 'Today') {
     return true;
   }
   return false;
-}
+};
 
 const clasifyFeeds = feeds => {
-  const newsFiltered = feeds.filter(item => isNew(item.get('date'))===true );
-  const oldsFiltered = feeds.filter(item => isNew(item.get('date'))===false);
+  const newsFiltered = feeds.filter(item => isNew(item.get('date')) === true);
+  const oldsFiltered = feeds.filter(item => isNew(item.get('date')) === false);
   return { newsFiltered, oldsFiltered };
 };
 
@@ -37,7 +37,7 @@ const populateFeeds = (state, feeds) => {
       feed = feed.set('emailFeed', emailFeed);
       feed = feed.set('isMuted', emailFeed.get('isMuted'));
     }
-    if ( userFeed !== undefined ){
+    if (userFeed !== undefined) {
       feed = feed.set('name', userFeed.name);
     }
     return feed;
@@ -47,10 +47,8 @@ const populateFeeds = (state, feeds) => {
 const mapStateToProps = state => {
   const orderedFeeds = orderFeedsByDate(state.get('feeds'));
   const populated = populateFeeds(state, orderedFeeds);
-  const feeds = populated.map(feed => {
-    return setFeedTime(feed, 'date');
-  });
-  const { newsFiltered, oldsFiltered } = clasifyFeeds(feeds);
+  const seeded = populated.map(feed => setFeedTime(feed, 'date'));
+  const { newsFiltered, oldsFiltered } = clasifyFeeds(seeded);
   return {
     newFeeds: newsFiltered,
     oldFeeds: oldsFiltered

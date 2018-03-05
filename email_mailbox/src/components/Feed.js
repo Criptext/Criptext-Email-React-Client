@@ -18,7 +18,9 @@ const renderDeletedFeed = () => (
 
 const renderFeed = props => (
   <li
-    className={'feed-item ' + (props.feed.get('unread') ==='true' ? 'unread-feed' : '')}
+    className={
+      'feed-item ' + (props.feed.get('unread') === 1 ? 'unread-feed' : '')
+    }
     onClick={() => onSelectFeed(props)}
   >
     <a>
@@ -34,7 +36,7 @@ const renderFeed = props => (
               <span>{props.title}</span>
             </div>
             <div className="feed-subject">
-            <span>{props.subtitle}</span>
+              <span>{props.subtitle}</span>
             </div>
           </div>
           <div className="feed-actions-time">{renderFeedActions(props)}</div>
@@ -46,9 +48,8 @@ const renderFeed = props => (
 );
 
 const onSelectFeed = props => {
-  console.log(props.feed)
-  if (props.feed.get('unread')) {
-    props.onSelectFeed(props.feed);
+  if (props.feed.get('unread') === 1) {
+    props.onSelectFeed(props.feed.get('id'));
   }
   //props.onOpenThread(props.thread);
 };
@@ -66,7 +67,7 @@ const renderFeedIcon = feed => {
       return <i className={FeedActionType.OPENED.icon} />;
     }
   }
-}
+};
 
 const renderFeedActions = props =>
   props.hovering ? renderHoveringActions(props) : renderTime(props);
@@ -87,7 +88,7 @@ const renderTime = props => (
 );
 
 const renderNotificationIcon = props =>
-  props.isMuted === 'true' ? renderMutedIcon(props) : renderUnmutedIcon(props);
+  props.isMuted === 1 ? renderMutedIcon(props) : renderUnmutedIcon(props);
 
 const renderMutedIcon = props => (
   <div className="feed-mute" onClick={ev => onToggleMute(ev, props)}>
@@ -104,7 +105,7 @@ const renderUnmutedIcon = props => (
 const onToggleMute = (ev, props) => {
   ev.preventDefault();
   ev.stopPropagation();
-  props.toggleMute(props.feed.get('emailId'));
+  props.toggleMute(props.feed);
 };
 
 const removeFeedFromPanel = (ev, props) => {
@@ -112,13 +113,16 @@ const removeFeedFromPanel = (ev, props) => {
   ev.stopPropagation();
   props.onRemove();
   setTimeout(() => {
-    removeFeed(props);
-    props.onCleanRemove();
-  }, 1500);
+    const terminated = removeFeed(props);
+    if (terminated) {
+      props.onCleanRemove();
+    }
+  }, 3000);
 };
 
-const removeFeed = props => {
-  props.onRemoveFeed(props.feed.get('id'));
+const removeFeed = async props => {
+  await props.onRemoveFeed(props.feed.get('id'));
+  return true;
 };
 
 renderFeed.propTypes = {

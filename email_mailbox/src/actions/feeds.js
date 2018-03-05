@@ -1,5 +1,11 @@
 import { Feed } from './types';
-import { getAllFeeds, getEmailById, getUserByUsername } from './../utils/electronInterface';
+import {
+  deleteFeedById,
+  getAllFeeds,
+  getEmailById,
+  getUserByUsername,
+  markFeedAsReadById
+} from './../utils/electronInterface';
 import { addEmails } from './emails';
 import { addUsers } from './users';
 
@@ -28,8 +34,8 @@ export const loadFeeds = () => {
   return async dispatch => {
     try {
       const feeds = await getAllFeeds();
-      const emailsToState = {}
-      const usersToState = {}
+      const emailsToState = {};
+      const usersToState = {};
       for (const feed of feeds) {
         const emailResponse = await getEmailById(feed.emailId);
         const userResponse = await getUserByUsername(feed.username);
@@ -41,6 +47,28 @@ export const loadFeeds = () => {
       dispatch(addEmails(emailsToState));
       dispatch(addUsers(usersToState));
       dispatch(addFeeds(feeds));
+    } catch (e) {
+      // TO DO
+    }
+  };
+};
+
+export const markFeedAsSelected = feedId => {
+  return async dispatch => {
+    try {
+      await markFeedAsReadById(feedId);
+      dispatch(selectFeed(feedId));
+    } catch (e) {
+      // TO DO
+    }
+  };
+};
+
+export const removeFeedById = feedId => {
+  return async dispatch => {
+    try {
+      await deleteFeedById(feedId);
+      dispatch(removeFeed(feedId));
     } catch (e) {
       // TO DO
     }

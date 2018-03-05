@@ -18,7 +18,7 @@ import {
   removeThreads,
   removeThreadsLabel
 } from './threads';
-import { addEmails, loadEmails, muteNotifications } from './emails';
+import { addEmails, loadEmails, muteEmailById } from './emails';
 import {
   addLabels,
   addLabel,
@@ -29,7 +29,8 @@ import {
 import {
   addFeeds,
   loadFeeds,
-  removeFeed,
+  markFeedAsSelected,
+  removeFeedById,
   selectFeed,
   toggleMuteFeed
 } from './feeds';
@@ -53,13 +54,14 @@ export {
   loadLabels,
   loadSuggestions,
   loadThreads,
+  markFeedAsSelected,
   markThreadsRead,
   moveThreads,
   multiSelectThread,
-  muteNotifications,
+  muteEmailById,
   removeThread,
   removeThreadLabel,
-  removeFeed,
+  removeFeedById,
   removeThreads,
   removeThreadsLabel,
   selectThread,

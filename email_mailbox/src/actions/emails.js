@@ -1,5 +1,8 @@
 import { Email } from './types';
-import { getEmailsByThreadId } from '../utils/electronInterface';
+import {
+  getEmailsByThreadId,
+  setMuteEmailById
+} from '../utils/electronInterface';
 
 export const addEmails = emails => {
   return {
@@ -26,6 +29,18 @@ export const loadEmails = threadId => {
       dispatch(addEmails(emails));
     } catch (e) {
       // TO DO
+    }
+  };
+};
+
+export const muteEmailById = feed => {
+  return async dispatch => {
+    try {
+      const valueToSet = feed.get('isMuted') === 1 ? false : true;
+      await setMuteEmailById(feed.get('emailId'), valueToSet);
+      dispatch(muteNotifications(feed.get('emailId')));
+    } catch (e) {
+      // To do
     }
   };
 };

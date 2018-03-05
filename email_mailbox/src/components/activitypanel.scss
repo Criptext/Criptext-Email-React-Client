@@ -168,12 +168,23 @@ aside.navigation-feed{
         }
       }
 
+      @keyframes fadeInRight {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      } 
+
       .deleted-feed {
         height: 55px;
         padding: 0%;
         margin: 0%;
         background-color: #dc4d48;
         color: #ffffff;
+        animation-name: fadeInRight;
+        animation-duration: 500ms;
 
         .deleted-feed-icon {
           margin: 0%;

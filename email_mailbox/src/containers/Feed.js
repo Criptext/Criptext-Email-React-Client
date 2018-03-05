@@ -1,11 +1,15 @@
 import { connect } from 'react-redux';
-import { muteNotifications, removeFeed, selectFeed } from '../actions/index';
+import {
+  markFeedAsSelected,
+  muteEmailById,
+  removeFeedById
+} from '../actions/index';
 import FeedWrapperView from '../components/FeedWrapper';
 
 const mapStateToProps = (state, ownProps) => {
   const feed = ownProps.feed;
   const isMuted = feed.get('isMuted');
-  const title = ownProps.feed.get('name') +' '+ ownProps.feed.get('action');
+  const title = ownProps.feed.get('name') + ' ' + ownProps.feed.get('action');
   const subtitle = ownProps.feed.get('emailFeed').get('subject');
   return { isMuted, subtitle, title };
 };
@@ -15,14 +19,14 @@ const mapDispatchToProps = dispatch => {
     onOpenThread: () => {
       dispatch();
     },
-    onSelectFeed: feed => {
-      dispatch(selectFeed(feed.get('id')));
+    onSelectFeed: feedId => {
+      dispatch(markFeedAsSelected(feedId));
     },
     onRemoveFeed: feedId => {
-      dispatch(removeFeed(feedId));
+      dispatch(removeFeedById(feedId));
     },
-    toggleMute: emailId => {
-      dispatch(muteNotifications(emailId));
+    toggleMute: feed => {
+      dispatch(muteEmailById(feed));
     }
   };
 };

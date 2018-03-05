@@ -82,17 +82,6 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
-const markThreadAsRead = threadId => {
-  return db
-    .table(Table.EMAIL)
-    .where({
-      threadId
-    })
-    .update({
-      unread: false
-    });
-};
-
 const deleteEmail = emailKey => {
   return db
     .table(Table.EMAIL)
@@ -107,6 +96,13 @@ const getEmailById = id => {
     .select('*')
     .from(Table.EMAIL)
     .where({ id });
+};
+
+const setMuteEmailById = (id, mutedValue) => {
+  return db
+    .table(Table.EMAIL)
+    .where({ id })
+    .update({ isMuted: mutedValue });
 };
 
 /* Label
@@ -145,9 +141,11 @@ const createUser = params => {
 };
 
 const getUserByUsername = username => {
-  console.log(username);
-  return db.table(Table.USER).select('*').where({ username });
-} 
+  return db
+    .table(Table.USER)
+    .select('*')
+    .where({ username });
+};
 
 /* Session
    ----------------------------- */
@@ -215,6 +213,20 @@ const getSignedPreKey = params => {
 const closeDB = () => {
   db.close();
   db.disconnect();
+}
+
+const markFeedAsReadById = id => {
+  return db
+    .table(Table.FEED)
+    .where({ id })
+    .update({ unread: false });
+};
+
+const deleteFeedById = id => {
+  return db
+    .table(Table.FEED)
+    .where({ id })
+    .del();
 };
 
 module.exports = {
@@ -229,6 +241,7 @@ module.exports = {
   createTables,
   createUser,
   deleteEmail,
+  deleteFeedById,
   getAllFeeds,
   getAllLabels,
   getEmailById,
@@ -242,6 +255,7 @@ module.exports = {
   getRegistrationId,
   getSignedPreKey,
   getUserByUsername,
-  markThreadAsRead,
+  markFeedAsReadById,
+  setMuteEmailById,
   updateLabel
 };

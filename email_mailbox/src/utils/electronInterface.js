@@ -77,4 +77,16 @@ export const getAllFeeds = () => {
 
 export const getUserByUsername = username => {
   return dbManager.getUserByUsername(username);
-}
+};
+
+export const markFeedAsReadById = feedId => {
+  return dbManager.markFeedAsReadById(feedId);
+};
+
+export const setMuteEmailById = (emailId, muteValue) => {
+  return dbManager.setMuteEmailById(emailId, muteValue);
+};
+
+export const deleteFeedById = feedId => {
+  return dbManager.deleteFeedById(feedId);
+};
