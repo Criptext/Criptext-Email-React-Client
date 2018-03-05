@@ -111,7 +111,6 @@ const getEmailById = id => {
 
 /* Label
    ----------------------------- */
-
 const createLabel = params => {
   return db.table(Table.LABEL).insert(params);
 };
@@ -139,11 +138,6 @@ const updateLabel = ({ id, color, text }) => {
     .update(params);
 };
 
-const closeDB = () => {
-  db.close();
-  db.disconnect();
-};
-
 /* User
    ----------------------------- */
 const createUser = params => {
@@ -166,6 +160,58 @@ const createFeed = params => {
   return db.table(Table.FEED).insert(params);
 };
 
+/* Signalstore
+   ----------------------------- */
+const createSignalstore = params => {
+  return db.table(Table.SIGNALSTORE).insert(params);
+};
+
+const getIdentityKeyPair = params => {
+  return db
+    .select('privKey', 'pubkey')
+    .from(Table.SIGNALSTORE)
+    .where(params);
+};
+
+const getRegistrationId = params => {
+  return db
+    .select('registrationId')
+    .from(Table.SIGNALSTORE)
+    .where(params);
+};
+
+/* Keys
+   ----------------------------- */
+const createKeys = params => {
+  return db.table(Table.KEYS).insert(params);
+};
+
+const getKeys = params => {
+  return db
+    .select('*')
+    .from(Table.KEYS)
+    .where(params);
+};
+
+const getPreKeyPair = params => {
+  return db
+    .select('preKeyPrivKey', 'preKeyPubKey')
+    .from(Table.KEYS)
+    .where(params);
+};
+
+const getSignedPreKey = params => {
+  return db
+    .select('signedPrivKey', 'signedPubKey')
+    .from(Table.KEYS)
+    .where(params);
+};
+
+const closeDB = () => {
+  db.close();
+  db.disconnect();
+};
+
 module.exports = {
   cleanDataBase,
   closeDB,
@@ -173,6 +219,8 @@ module.exports = {
   createEmail,
   createFeed,
   createSession,
+  createKeys,
+  createSignalstore,
   createTables,
   createUser,
   deleteEmail,
@@ -182,7 +230,12 @@ module.exports = {
   getEmailsByThreadId,
   getEmailsGroupByThreadByMatchText,
   getEmailsGroupByThreadByParams,
+  getIdentityKeyPair,
+  getKeys,
   getLabelById,
+  getPreKeyPair,
+  getRegistrationId,
+  getSignedPreKey,
   markThreadAsRead,
   updateLabel
 };
