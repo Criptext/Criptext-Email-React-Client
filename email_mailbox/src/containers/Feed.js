@@ -9,16 +9,18 @@ import FeedWrapperView from '../components/FeedWrapper';
 const mapStateToProps = (state, ownProps) => {
   const feed = ownProps.feed;
   const isMuted = feed.get('isMuted');
-  const title = ownProps.feed.get('name') + ' ' + ownProps.feed.get('action');
-  const subtitle = ownProps.feed.get('emailFeed').get('subject');
-  return { isMuted, subtitle, title };
+  const title = feed.get('name') + ' ' + feed.get('action');
+  const subtitle = feed.get('emailFeed').get('subject');
+  const emailId = feed.get('emailFeed').get('id');
+  const findedThread = state.get('threads').filter( 
+    thread => thread.get('emails').toArray().indexOf(emailId) > -1 
+  );
+  const threadId = findedThread.get(0).get('id');
+  return { isMuted, subtitle, title, threadId };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onOpenThread: () => {
-      dispatch();
-    },
     onSelectFeed: feedId => {
       dispatch(markFeedAsSelected(feedId));
     },

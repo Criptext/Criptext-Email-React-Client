@@ -51,7 +51,7 @@ const onSelectFeed = props => {
   if (props.feed.get('unread') === 1) {
     props.onSelectFeed(props.feed.get('id'));
   }
-  //props.onOpenThread(props.thread);
+  props.onClickThreadIdSelected(props.threadId, 'inbox');
 };
 
 const renderFeedIcon = feed => {
@@ -113,8 +113,8 @@ const removeFeedFromPanel = (ev, props) => {
   ev.stopPropagation();
   props.onRemove();
   setTimeout(() => {
-    const terminated = removeFeed(props);
-    if (terminated) {
+    const response = removeFeed(props);
+    if (response) {
       props.onCleanRemove();
     }
   }, 3000);

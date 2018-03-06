@@ -67,8 +67,10 @@ export const markFeedAsSelected = feedId => {
 export const removeFeedById = feedId => {
   return async dispatch => {
     try {
-      await deleteFeedById(feedId);
-      dispatch(removeFeed(feedId));
+      const terminated = await deleteFeedById(feedId);
+      if (terminated) {
+        dispatch(removeFeed(feedId));
+      }
     } catch (e) {
       // TO DO
     }
