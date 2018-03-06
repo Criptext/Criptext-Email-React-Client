@@ -38,7 +38,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onSelectThread: threadId => {
       dispatch(actions.selectThread(threadId));
-      console.log(threadId, ownProps.mailbox)
       ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
     },
     onMultiSelect: (threadId, value) => {

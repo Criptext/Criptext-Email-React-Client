@@ -163,6 +163,20 @@ const createFeed = params => {
   return db.table(Table.FEED).insert(params);
 };
 
+const markFeedAsReadById = id => {
+  return db
+    .table(Table.FEED)
+    .where({ id })
+    .update({ unread: false });
+};
+
+const deleteFeedById = id => {
+  return db
+    .table(Table.FEED)
+    .where({ id })
+    .del();
+};
+
 /* Signalstore
    ----------------------------- */
 const createSignalstore = params => {
@@ -213,20 +227,6 @@ const getSignedPreKey = params => {
 const closeDB = () => {
   db.close();
   db.disconnect();
-}
-
-const markFeedAsReadById = id => {
-  return db
-    .table(Table.FEED)
-    .where({ id })
-    .update({ unread: false });
-};
-
-const deleteFeedById = id => {
-  return db
-    .table(Table.FEED)
-    .where({ id })
-    .del();
 };
 
 module.exports = {

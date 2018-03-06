@@ -2,12 +2,51 @@
   "emails": [
     {
       "id": 1,
-      "bcc": "",
-      "cc": "",
-      "date": 1513350001000,
-      "from": "no-reply@criptext.com",
-      "s3key": "path/to/content",
-      "to": "gaumala@criptext.com"
+      "key": "fSaznwApj6ilX8U",
+      "threadId": "fSaznwApj6ilX8U",
+      "s3Key": "fSaznwApj6ilX8U",
+      "content": "Email content 1",
+      "preview": "Email content 1",
+      "subject": "Email subject 1",
+      "date": 1514231264772,
+      "delivered": 0,
+      "unread": 1,
+      "secure": 1,
+      "isTrash": 0,
+      "isDraft": 0,
+      "isMuted": 0
+    },
+    {
+      "id": 2,
+      "key": "k7ZtKjAXYFSwD",
+      "threadId": "k7ZtKjAXYFSwD",
+      "s3Key": "k7ZtKjAXYFSwD",
+      "content": "Email content 2",
+      "preview": "Email content 2",
+      "subject": "Email subject 2",
+      "date": 1515624279364,
+      "delivered": 0,
+      "unread": 1,
+      "secure": 1,
+      "isTrash": 0,
+      "isDraft": 0,
+      "isMuted": 0
+    },
+    {
+      "id": 3,
+      "key": "HuviK7TKUVK",
+      "threadId": "HuviK7TKUVK",
+      "s3Key": "HuviK7TKUVK",
+      "content": "Email content 3",
+      "preview": "Email content 3",
+      "subject": "Email subject 3",
+      "date": 1512744868344,
+      "delivered": 0,
+      "unread": 1,
+      "secure": 1,
+      "isTrash": 0,
+      "isDraft": 0,
+      "isMuted": 0
     }
   ]
 }

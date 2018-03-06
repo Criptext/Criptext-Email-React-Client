@@ -6,14 +6,30 @@ import json from './../../../public/feeds.json';
 
 jest.mock('../../utils/electronInterface');
 
-describe('feed actions', () => {
+describe('Feed actions: ', () => {
   const feeds = json.feeds;
 
   function initState(feeds) {
     return feedsReducer(undefined, actions.addFeeds(feeds));
   }
 
-  it('should add feeds to state', () => {
+  it('Add feeds to state', () => {
     expect(initState(feeds)).toMatchSnapshot();
+  });
+
+  it('Update unread field by feed id', () => {
+    const idToSelect = 1;
+    const prevState = initState(feeds);
+    const action = actions.selectFeed(idToSelect);
+    const nextState = feedsReducer(prevState, action);
+    expect(nextState).toMatchSnapshot();
+  });
+
+  it('Remove feed by id', () => {
+    const idToDelete = 3;
+    const prevState = initState(feeds);
+    const action = actions.removeFeed(idToDelete);
+    const nextState = feedsReducer(prevState, action);
+    expect(nextState).toMatchSnapshot();
   });
 });

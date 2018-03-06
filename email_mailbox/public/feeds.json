@@ -1,40 +1,34 @@
 {
   "feeds": [
     {
-      "1": {
-        "emailId": 1,
-        "unread": false,
-        "date": 1515794888909,
-        "action": "opened",
-        "fileId": null,
-        "isFile": false,
-        "username": "jadams",
-        "id": 1
-      }
+      "emailId": 1,
+      "unread": 1,
+      "date": 1515794888909,
+      "action": "opened",
+      "fileId": null,
+      "isFile": false,
+      "username": "jadams",
+      "id": 1
     },
   	{
-      "2": {
-        "emailId": 1,
-        "unread": false,
-        "date": 1515794888909,
-        "action": "opened",
-        "fileId": null,
-        "isFile": false,
-        "username": "jadams",
-        "id": 2
-      }
+      "emailId": 1,
+      "unread": 1,
+      "date": 1515794888909,
+      "action": "opened",
+      "fileId": null,
+      "isFile": false,
+      "username": "jadams",
+      "id": 2
   	},
   	{
-      "3": {
-        "emailId": 1,
-        "unread": false,
-        "date": 1515794888909,
-        "action": "opened",
-        "fileId": null,
-        "isFile": false,
-        "username": "jadams",
-        "id": 3
-      }
+      "emailId": 1,
+      "unread": 1,
+      "date": 1515794888909,
+      "action": "opened",
+      "fileId": null,
+      "isFile": false,
+      "username": "jadams",
+      "id": 3
   	}
   ]
 }
