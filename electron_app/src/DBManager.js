@@ -82,6 +82,17 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
+const markThreadAsRead = threadId => {
+  return db
+    .table(Table.EMAIL)
+    .where({
+      threadId
+    })
+    .update({
+      unread: false
+    });
+};
+
 const deleteEmail = emailKey => {
   return db
     .table(Table.EMAIL)
@@ -256,6 +267,7 @@ module.exports = {
   getSignedPreKey,
   getUserByUsername,
   markFeedAsReadById,
+  markThreadAsRead,
   setMuteEmailById,
   updateLabel
 };
