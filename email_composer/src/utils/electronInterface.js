@@ -29,3 +29,11 @@ export const getPreKeyPair = params => {
 export const getSignedPreKey = params => {
   return dbManager.getSignedPreKey(params);
 };
+
+export const createSession = params => {
+  return dbManager.createSession(params);
+};
+
+export const getKeyserverToken = () => {
+  return dbManager.getKeyserverToken();
+};
