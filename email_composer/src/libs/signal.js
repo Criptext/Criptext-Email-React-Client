@@ -43,7 +43,12 @@ const createUser = async ({ recipientId, password, name, recoveryEmail }) => {
   if (res.status !== 200) {
     return null;
   }
-  await store.storeKeys(preKeyId, preKeyPair, signedPreKeyId, signedPreKeyPair);
+  await store.storeKeys({
+    preKeyId,
+    preKeyPair,
+    signedPreKeyId,
+    signedPreKeyPair
+  });
   return res.text;
 };
 

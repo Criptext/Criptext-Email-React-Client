@@ -99,7 +99,7 @@ export default class SignalProtocolStore {
     return Promise.resolve(this.put('identityKey' + identifier, identityKey));
   };
 
-  storeKeys = (preKeyId, preKeyPair, signedPreKeyId, signedPreKeyPair) => {
+  storeKeys = ({ preKeyId, preKeyPair, signedPreKeyId, signedPreKeyPair }) => {
     const params = {
       preKeyId,
       preKeyPrivKey: util.toBase64(preKeyPair.privKey),

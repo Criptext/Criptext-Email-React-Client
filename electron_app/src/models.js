@@ -5,7 +5,8 @@ const DB_PATH = path
   .replace('/app.asar', '')
   .replace('/src', '');
 const myDBPath = process.env.NODE_ENV === 'test' ? DB_TEST_PATH : DB_PATH;
-const XSMALL_STRING_SIZE = 10;
+const TINY_STRING_SIZE = 8;
+const XSMALL_STRING_SIZE = 16;
 const SMALL_STRING_SIZE = 32;
 const MEDIUM_STRING_SIZE = 64;
 const LARGE_STRING_SIZE = 100;
@@ -60,7 +61,7 @@ const createLabelColumns = table => {
     .string('text', MEDIUM_STRING_SIZE)
     .unique()
     .notNullable();
-  table.string('color', XSMALL_STRING_SIZE).notNullable();
+  table.string('color', TINY_STRING_SIZE).notNullable();
 };
 
 const createEmailColumns = table => {
@@ -101,7 +102,7 @@ const createEmailUserColumns = table => {
   table.increments('id').primary();
   table.integer('userId').notNullable();
   table.string('emailId', SMALL_STRING_SIZE).notNullable();
-  table.string('type', XSMALL_STRING_SIZE).notNullable();
+  table.string('type', TINY_STRING_SIZE).notNullable();
   table
     .foreign('userId')
     .references('id')
@@ -140,7 +141,7 @@ const createOpenColumns = table => {
 const createSessionColumns = table => {
   table.increments('id').primary();
   table.string('sessionId', XSMALL_STRING_SIZE).notNullable();
-  table.string('username', MEDIUM_STRING_SIZE);
+  table.string('username', XSMALL_STRING_SIZE);
   table.string('keyserverToken', XLARGE_STRING_SIZE).notNullable();
 };
 
