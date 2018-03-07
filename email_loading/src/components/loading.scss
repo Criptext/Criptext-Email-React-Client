@@ -6,9 +6,10 @@
   width: 327px;
   height: 141px;
   border-radius: 7px;
-  background-color: #fff;
+  background-color: transparent;
 
   .content {
+    background-color: #fff;
     .logo {
       width: 100%;
       height: 39%;
@@ -32,22 +33,40 @@
       background-color: rgba(0, 145, 255, 0.25);
       .content {
         height: 100%;
-        width: 151px;
         opacity: 1;
         border-radius: 5px;
+      }
+      .running-animation {
+        width: 100%;
         background: linear-gradient(294deg, #0091ff, #25b1ff 42%, #56c3ff 71%, #ffffff);
+        animation: fadeInRight 15s linear;
+      }
+      .stop-animation {
+        width: 0%;
+        background-color: red;
+        animation: fadeDown 1s linear;
+      }
+      @keyframes fadeInRight {
+        0% { width: 0%; }
+        100% { width: 100%; }
+      }
+      @keyframes fadeDown {
+        0% { width: 100%; }
+        100% { width: 0%; }
       }
     }
 
     .percent {
-      width: 39px;
+      width: 45px;
       height: 22px;
-      padding: 0px 144px;
+      padding: 0px 141px;
       .content {
-        width: 39px;
+        width: 45px;
         height: 22px;
+        margin-top: 12px;
         border-radius: 50px;
         background-color: #373a45;
+        text-align: center;
         span {
           margin: 0px 6px;
           font-size: 13px;
@@ -58,12 +77,17 @@
 
     .message {
       text-align: center;
-      span{
+      .creating {
         font-size: 12px;
         font-weight: 600;
         color: #373a45;
       }
+      .retry {
+        font-size: 12px;
+        font-weight: 600;
+        color: #000;
+        text-decoration: underline;
+      }
     }
   }
-
 }
