@@ -12,13 +12,9 @@ const mapStateToProps = (state, ownProps) => {
   const title = feed.get('name') + ' ' + feed.get('action');
   const subtitle = feed.get('emailFeed').get('subject');
   const emailId = feed.get('emailFeed').get('id');
-  const findedThread = state.get('threads').filter(
-    thread =>
-      thread
-        .get('emails')
-        .toArray()
-        .indexOf(emailId) > -1
-  );
+  const findedThread = state
+    .get('threads')
+    .filter(thread => thread.get('emails').indexOf(emailId) > -1);
   const threadId = findedThread.get(0).get('id');
   return { isMuted, subtitle, title, threadId };
 };

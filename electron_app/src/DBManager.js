@@ -109,11 +109,13 @@ const getEmailById = id => {
     .where({ id });
 };
 
-const setMuteEmailById = (id, mutedValue) => {
+const updateEmail = ({ id, isMuted }) => {
+  const params = {};
+  if (isMuted) params.isMuted = isMuted;
   return db
     .table(Table.EMAIL)
     .where({ id })
-    .update({ isMuted: mutedValue });
+    .update(params);
 };
 
 /* Label
@@ -174,11 +176,13 @@ const createFeed = params => {
   return db.table(Table.FEED).insert(params);
 };
 
-const markFeedAsReadById = id => {
+const updateFeed = ({ id, unread }) => {
+  const params = {};
+  if (unread) params.unread = unread;
   return db
     .table(Table.FEED)
     .where({ id })
-    .update({ unread: false });
+    .update(params);
 };
 
 const deleteFeedById = id => {
@@ -266,8 +270,8 @@ module.exports = {
   getRegistrationId,
   getSignedPreKey,
   getUserByUsername,
-  markFeedAsReadById,
   markThreadAsRead,
-  setMuteEmailById,
+  updateEmail,
+  updateFeed,
   updateLabel
 };

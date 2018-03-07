@@ -12,10 +12,7 @@ const setFeedTime = (feed, field) => {
 };
 
 const isNew = date => {
-  if (date.indexOf(':') > -1) {
-    return true;
-  }
-  if (date === 'Today') {
+  if (date === 'Today' || date.indexOf(':') > -1) {
     return true;
   }
   return false;

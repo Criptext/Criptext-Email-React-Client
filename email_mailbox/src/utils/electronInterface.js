@@ -80,11 +80,11 @@ export const getUserByUsername = username => {
 };
 
 export const markFeedAsReadById = feedId => {
-  return dbManager.markFeedAsReadById(feedId);
+  return dbManager.updateFeed({ id: feedId, unread: false });
 };
 
 export const setMuteEmailById = (emailId, muteValue) => {
-  return dbManager.setMuteEmailById(emailId, muteValue);
+  return dbManager.updateEmail({ id: emailId, isMuted: muteValue });
 };
 
 export const deleteFeedById = feedId => {
