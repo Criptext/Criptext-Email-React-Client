@@ -65,8 +65,8 @@ async function createLoginWindow() {
     webPreferences: {webSecurity: false}
   });    
   loginWindow.loadURL(loginUrl);
-  loginWindow.setMenu(null);
-  loginWindow.setResizable(false);
+  //loginWindow.setMenu(null);
+  //loginWindow.setResizable(false);
 
   loginWindow.once('ready-to-show', () => {
     loginWindow.show();

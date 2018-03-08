@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import ClientAPI from '@criptext/email-http-client';
 import {
   closeCreatingKeys,
   openMailbox,
-  remoteData
+//  remoteData
 } from './../utils/electronInterface';
+import signal from './../libs/signal';
+import './loading.css';
+/*
 import { createStore, generatePreKeyBundle } from './../libs/signal-criptext';
 import { API_URL } from './../utils/const';
-import './loading.css';
+*/
 
 const animationTypes = {
   RUNNING: 'running-animation',
@@ -19,7 +21,7 @@ class Loading extends Component {
     super();
     this.state = {
       percent: 1, 
-      errors: 1,
+      simulatedErrors: 2,
       failed: false,
       animationClass: animationTypes.RUNNING
     }
@@ -40,11 +42,9 @@ class Loading extends Component {
           <div className="logo">
             <div className="icon" />
           </div>
-  
           <div className="bar">
             <div className={"content " + this.state.animationClass} />
           </div>
-  
           <div className="percent">
             <div className="content">
               <span className="number">{this.state.percent}%</span>
@@ -67,13 +67,13 @@ class Loading extends Component {
 
   increasePercent () {
     const percent = this.state.percent + 1;
-    if (percent === 70) {
-      this.createKeys();
-    }
-    if ( percent === 50 && this.state.errors > 0 ) {
+    if ( percent === 35 && this.state.errors > 0 ) {
       clearTimeout(this.tm);
       this.throwError();
       return;
+    }
+    if (percent === 70) {
+      this.createKeys();
     }
     if (percent > 100) {
       clearTimeout(this.tm);
@@ -86,9 +86,9 @@ class Loading extends Component {
   }
 
   async createKeys () {
-    const client = new ClientAPI(API_URL);
-    const store = await createStore();
-    const bundle = await generatePreKeyBundle(store, 1, 1);
+    const storeResponse = await signal.createStore();
+    console.log("storeResponse", storeResponse);
+    /*
     const credentials = {
       username: remoteData.username,
       password: remoteData.password,
@@ -110,6 +110,7 @@ class Loading extends Component {
     else {
       this.throwError();
     }
+    */
   }
 
   async throwError () {

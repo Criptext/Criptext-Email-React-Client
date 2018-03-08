@@ -1,7 +1,13 @@
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
-const remote = electron.remote;
-const dbManager = remote.require('./src/DBManager');
+
+export const closeDialog = () => {
+  ipcRenderer.send('close-modal');
+};
+
+export const closeLoading = () => {
+  ipcRenderer.send('close-loading');
+};
 
 export const closeLogin = () => {
   ipcRenderer.send('close-login');
@@ -37,16 +43,8 @@ export const confirmLostDevices = callback => {
   });
 };
 
-export const closeDialog = () => {
-  ipcRenderer.send('close-modal');
-};
-
 export const openCreateKeys = params => {
   ipcRenderer.send('open-create-keys', params);
-};
-
-export const closeLoading = () => {
-  ipcRenderer.send('close-loading');
 };
 
 export const openMailbox = () => {

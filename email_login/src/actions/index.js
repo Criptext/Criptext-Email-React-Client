@@ -1,3 +1,3 @@
-import { addUser, addUsers, loginUser } from './users';
+import { loginUser, signUpUser } from './users';
 
-export { addUser, addUsers, loginUser };
+export { loginUser, signUpUser };

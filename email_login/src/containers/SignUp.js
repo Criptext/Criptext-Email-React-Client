@@ -1,16 +1,14 @@
 import { connect } from 'react-redux';
-import { addUser } from './../actions/index';
+import { signUpUser } from './../actions/index';
 import SignUpWrapper from './../components/SignUpWrapper';
 
 const mapStateToProps = () => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = () => {
   return {
-    onAddUser: user => {
-      dispatch(addUser(user));
-    }
+    onAddUser: user => signUpUser(user)
   };
 };
 
