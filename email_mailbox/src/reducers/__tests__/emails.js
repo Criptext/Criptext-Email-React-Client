@@ -8,13 +8,24 @@ const emails = file.emails;
 jest.mock('../../utils/electronInterface');
 
 describe('email actions: ', () => {
-  it('should add emails to state', () => {
+  function initState(emails) {
     const data = {};
     emails.forEach(element => {
       data[element.id] = element;
     });
     const action = actions.addEmails(data);
-    const state = emailReducer(undefined, action);
-    expect(state).toMatchSnapshot();
+    return emailReducer(undefined, action);
+  }
+
+  it('Add emails to state', () => {
+    expect(initState(emails)).toMatchSnapshot();
+  });
+
+  it('Mute email by index', () => {
+    const indexToMute = '1';
+    const prevState = initState(emails);
+    const action = actions.muteNotifications(indexToMute);
+    const nextState = emailReducer(prevState, action);
+    expect(nextState).toMatchSnapshot();
   });
 });

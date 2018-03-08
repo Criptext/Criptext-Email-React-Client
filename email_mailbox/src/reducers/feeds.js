@@ -1,12 +1,10 @@
 import { Feed } from '../actions/types';
-import { List, Map } from 'immutable';
+import { List, fromJS } from 'immutable';
 
 export default (state = List([]), action) => {
   switch (action.type) {
     case Feed.ADD_BATCH: {
-      const feeds = action.feeds.map(feed => {
-        return Map(feed);
-      });
+      const feeds = fromJS(action.feeds);
       return state.concat(List(feeds));
     }
     case Feed.SELECT: {
@@ -16,7 +14,7 @@ export default (state = List([]), action) => {
           feed => feed.get('id') === action.selectedFeed
         );
         return state.update(index, feed => {
-          return feed.set('unread', false);
+          return feed.set('unread', 0);
         });
       }
       return state;

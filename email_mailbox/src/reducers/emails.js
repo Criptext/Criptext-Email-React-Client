@@ -7,15 +7,14 @@ export default (state = new Map(), action) => {
       return state.merge(fromJS(action.emails));
     }
     case Email.MUTE: {
-      const item = state.find(email => email.get('id') === action.targetEmail);
+      const item = state.get(action.targetEmail);
       if (item !== undefined) {
-        const index = state.findIndex(
-          email => email.get('id') === action.targetEmail
-        );
-        return state.update(index, email => {
-          const prevMutedState = email.get('isMuted');
-          return email.set('isMuted', !prevMutedState);
-        });
+        const prevMutedState = item.get('isMuted');
+        const newItem =
+          prevMutedState === 1
+            ? item.set('isMuted', 0)
+            : item.set('isMuted', 1);
+        return state.set(action.targetEmail, newItem);
       }
       return state;
     }

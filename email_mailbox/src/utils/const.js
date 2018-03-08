@@ -66,17 +66,17 @@ export const MailItems = [
   }
 ];
 
-export const FeedCommand = {
+export const FeedActionType = {
   SENT: {
-    value: 1,
+    value: 'sent',
     icon: 'icon-calendar'
   },
-  EXPIRED: {
-    value: 2,
+  DOWNLOADED: {
+    value: 'downloaded',
     icon: 'icon-attach'
   },
   OPENED: {
-    value: 3,
+    value: 'opened',
     icon: 'icon-checked'
   }
 };

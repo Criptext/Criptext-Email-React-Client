@@ -109,6 +109,15 @@ const getEmailById = id => {
     .where({ id });
 };
 
+const updateEmail = ({ id, isMuted }) => {
+  const params = {};
+  if (isMuted) params.isMuted = isMuted;
+  return db
+    .table(Table.EMAIL)
+    .where({ id })
+    .update(params);
+};
+
 /* Label
    ----------------------------- */
 const createLabel = params => {
@@ -144,6 +153,13 @@ const createUser = params => {
   return db.table(Table.USER).insert(params);
 };
 
+const getUserByUsername = username => {
+  return db
+    .table(Table.USER)
+    .select('*')
+    .where({ username });
+};
+
 /* Session
    ----------------------------- */
 const createSession = params => {
@@ -158,6 +174,22 @@ const getAllFeeds = () => {
 
 const createFeed = params => {
   return db.table(Table.FEED).insert(params);
+};
+
+const updateFeed = ({ id, unread }) => {
+  const params = {};
+  if (unread) params.unread = unread;
+  return db
+    .table(Table.FEED)
+    .where({ id })
+    .update(params);
+};
+
+const deleteFeedById = id => {
+  return db
+    .table(Table.FEED)
+    .where({ id })
+    .del();
 };
 
 /* Signalstore
@@ -224,6 +256,7 @@ module.exports = {
   createTables,
   createUser,
   deleteEmail,
+  deleteFeedById,
   getAllFeeds,
   getAllLabels,
   getEmailById,
@@ -236,6 +269,9 @@ module.exports = {
   getPreKeyPair,
   getRegistrationId,
   getSignedPreKey,
+  getUserByUsername,
   markThreadAsRead,
+  updateEmail,
+  updateFeed,
   updateLabel
 };
