@@ -170,6 +170,41 @@ const getUserByUsername = username => {
     .where({ username });
 };
 
+/* Session
+   ----------------------------- */
+const createSession = params => {
+  const { username, name, keyserverToken } = params;
+  return db
+    .transaction(trx => {
+      return trx
+        .insert({ name, username })
+        .into(Table.USER)
+        .then(res => {
+          return trx
+            .insert({
+              id: STORE_SESSION_ID,
+              sessionId: res[0],
+              username,
+              keyserverToken
+            })
+            .into(Table.SESSION);
+        });
+    })
+    .then(function() {
+      return true;
+    })
+    .catch(function() {
+      return false;
+    });
+};
+
+const getKeyserverToken = () => {
+  return db
+    .select('keyserverToken')
+    .from(Table.SESSION)
+    .where({ id: STORE_SESSION_ID });
+};
+
 /* Feed
    ----------------------------- */
 const getAllFeeds = () => {

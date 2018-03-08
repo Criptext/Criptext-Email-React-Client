@@ -1,3 +1,3 @@
-export default (state = {}, action) => {
-  return state;
+export default (state = {}, action = '') => {
+  if (action) return state;
 };

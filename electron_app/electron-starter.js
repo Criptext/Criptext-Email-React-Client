@@ -59,18 +59,13 @@ async function createLoginWindow() {
   loginWindow = new BrowserWindow({ 
     width: loginSize.width, 
     height: loginSize.height, 
-    show: false,
     center: true,
     transparent: true,
     webPreferences: {webSecurity: false}
   });    
   loginWindow.loadURL(loginUrl);
-  //loginWindow.setMenu(null);
-  //loginWindow.setResizable(false);
-
-  loginWindow.once('ready-to-show', () => {
-    loginWindow.show();
-  });
+  loginWindow.setMenu(null);
+  loginWindow.setResizable(false);
 
   ipcMain.on('close-login', () => {
     if ( loginWindow !== null ) {
@@ -93,16 +88,11 @@ async function createLoginWindow() {
       height: modalSize.height,
       frame: false,
       transparent: true,
-      show: false,
       alwaysOnTop: true
     });
     modalWindow.loadURL(modalUrl);
     modalWindow.setMenu(null);
     modalWindow.setResizable(false);
-
-    modalWindow.once('ready-to-show', () => {
-      modalWindow.show();
-    });
   });
   
   ipcMain.on('response-modal', (event, response) => {
@@ -128,16 +118,11 @@ async function createLoginWindow() {
       height: loadingSize.height,
       frame: false,
       transparent: true,
-      show: false,
       webPreferences: {webSecurity: false}
     });
     loadingWindow.loadURL(loadingUrl);
     loadingWindow.setMenu(null);
     loadingWindow.setResizable(false);
-
-    loadingWindow.once('ready-to-show', () => {
-      loadingWindow.show();
-    });
   });
 
   ipcMain.on('close-create-keys', () => {

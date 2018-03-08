@@ -5,14 +5,14 @@ import {
 } from '../utils/electronInterface';
 
 export const loginUser = user => {
-  return async () => {
+  return () => {
     try {
       const userCredentials = {
         username: user.username,
         password: user.password,
         deviceId: 1
       };
-      const serverResponse = { status: 200, text: '', userCredentials }
+      const serverResponse = { status: 200, text: '', userCredentials };
       const responseStatus = serverResponse.status;
       if (responseStatus === 200) {
         openMailbox();
@@ -28,5 +28,5 @@ export const loginUser = user => {
 
 export const signUpUser = user => {
   openCreateKeys(user);
-  //closeLogin();
+  closeLogin();
 };

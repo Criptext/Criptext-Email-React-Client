@@ -86,7 +86,13 @@
         font-size: 12px;
         font-weight: 600;
         color: #000;
-        text-decoration: underline;
+        .retry-link {
+          font-size: 12px;
+          font-weight: 600;
+          color: #000;
+          text-decoration: underline;
+          cursor: pointer;
+        }
       }
     }
   }

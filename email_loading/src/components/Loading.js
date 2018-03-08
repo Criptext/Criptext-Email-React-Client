@@ -1,30 +1,27 @@
 import React, { Component } from 'react';
 import {
   closeCreatingKeys,
+  createSession,
   openMailbox,
-//  remoteData
+  remoteData
 } from './../utils/electronInterface';
 import signal from './../libs/signal';
 import './loading.css';
-/*
-import { createStore, generatePreKeyBundle } from './../libs/signal-criptext';
-import { API_URL } from './../utils/const';
-*/
 
 const animationTypes = {
   RUNNING: 'running-animation',
   STOP: 'stop-animation'
-}
+};
 
 class Loading extends Component {
-  constructor (){
+  constructor() {
     super();
     this.state = {
-      percent: 1, 
-      simulatedErrors: 2,
+      percent: 0,
+      errors: 1,
       failed: false,
       animationClass: animationTypes.RUNNING
-    }
+    };
     this.remderMessage = this.remderMessage.bind(this);
     this.increasePercent = this.increasePercent.bind(this);
     this.throwError = this.throwError.bind(this);
@@ -35,7 +32,7 @@ class Loading extends Component {
     this.increasePercent();
   }
 
-  render () {
+  render() {
     return (
       <div className="loading-body">
         <div className="content">
@@ -43,31 +40,36 @@ class Loading extends Component {
             <div className="icon" />
           </div>
           <div className="bar">
-            <div className={"content " + this.state.animationClass} />
+            <div className={'content ' + this.state.animationClass} />
           </div>
           <div className="percent">
             <div className="content">
               <span className="number">{this.state.percent}%</span>
             </div>
           </div>
-          <div className="message">
-            {this.remderMessage()}
-          </div>
+          <div className="message">{this.remderMessage()}</div>
         </div>
       </div>
     );
   }
 
-  remderMessage () {
+  remderMessage() {
     if (this.state.failed === true) {
-      return <span className="retry" onClick={this.restart}> Retry </span>  
+      return (
+        <div className="retry">
+          <span>Error generating the keys. </span>
+          <span className="retry-link" onClick={this.restart}>
+            Retry
+          </span>?
+        </div>
+      );
     }
     return <span className="creating"> Creating Keys </span>;
   }
 
-  increasePercent () {
+  increasePercent() {
     const percent = this.state.percent + 1;
-    if ( percent === 35 && this.state.errors > 0 ) {
+    if (percent === 51 && this.state.errors > 0) {
       clearTimeout(this.tm);
       this.throwError();
       return;
@@ -75,7 +77,7 @@ class Loading extends Component {
     if (percent === 70) {
       this.createKeys();
     }
-    if (percent > 100) {
+    if (percent > 100 && this.state.failed === false) {
       clearTimeout(this.tm);
       openMailbox();
       closeCreatingKeys();
@@ -85,42 +87,41 @@ class Loading extends Component {
     this.tm = setTimeout(this.increasePercent, 150);
   }
 
-  async createKeys () {
-    const storeResponse = await signal.createStore();
-    console.log("storeResponse", storeResponse);
-    /*
-    const credentials = {
-      username: remoteData.username,
-      password: remoteData.password,
-      deviceId: 1
-    };
-    const loginResponse = await client.login(credentials);
-    if (loginResponse.status === 200) {
-      const serverResponse = await client.postKeyBundle(bundle);
-      if (serverResponse.status === 200) {
-        this.setState({ 
-          failed: false,
-          errors: 0
-        });
+  async createKeys() {
+    try {
+      await signal.createStore();
+      const userCredentials = {
+        recipientId: remoteData.username,
+        password: remoteData.password,
+        name: remoteData.name
+      };
+      if (remoteData.recoveryEmail !== '') {
+        userCredentials['recoveryEmail'] = remoteData.recoveryEmail;
       }
-      else {
-        this.throwError();
-      }
-    }
-    else {
+      const createResponse = await signal.createUser(userCredentials);
+      const sessionCredentials = {
+        username: remoteData.username,
+        name: remoteData.name,
+        keyserverToken: createResponse
+      };
+      await createSession(sessionCredentials);
+      this.setState({
+        failed: false,
+        errors: 0
+      });
+    } catch (e) {
       this.throwError();
     }
-    */
   }
 
-  async throwError () {
+  async throwError() {
     clearTimeout(this.tm);
-    this.setState({ 
+    this.setState({
       failed: true,
       animationClass: animationTypes.STOP
     });
     await setTimeout(() => {
-      this.setState({ 
+      this.setState({
         percent: 0
       });
     }, 1000);
@@ -129,16 +130,18 @@ class Loading extends Component {
   restart() {
     clearTimeout(this.tm);
     const prevErrors = this.state.errors;
-    this.setState({ 
-      percent: 0, 
-      animationClass: animationTypes.RUNNING,
-      failed: false,
-      errors: prevErrors-1
-    }, () => {
-      this.increasePercent();
-    });
+    this.setState(
+      {
+        percent: 0,
+        animationClass: animationTypes.RUNNING,
+        failed: false,
+        errors: prevErrors - 1
+      },
+      () => {
+        this.increasePercent();
+      }
+    );
   }
-
 }
 
 export default Loading;
