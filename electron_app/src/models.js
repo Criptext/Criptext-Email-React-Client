@@ -5,10 +5,12 @@ const DB_PATH = path
   .replace('/app.asar', '')
   .replace('/src', '');
 const myDBPath = process.env.NODE_ENV === 'test' ? DB_TEST_PATH : DB_PATH;
+const TINY_STRING_SIZE = 8;
+const XSMALL_STRING_SIZE = 16;
+const SMALL_STRING_SIZE = 32;
 const MEDIUM_STRING_SIZE = 64;
-const SHORT_STRING_SIZE = 32;
-const TINY_STRING_SIZE = 10;
-const LONG_STRING_SIZE = 100;
+const LARGE_STRING_SIZE = 100;
+const XLARGE_STRING_SIZE = 200;
 
 const Table = {
   EMAIL: 'email',
@@ -65,13 +67,13 @@ const createLabelColumns = table => {
 const createEmailColumns = table => {
   table.increments('id').primary();
   table
-    .string('key', SHORT_STRING_SIZE)
+    .string('key', SMALL_STRING_SIZE)
     .unique()
     .notNullable();
-  table.string('threadId', SHORT_STRING_SIZE).notNullable();
-  table.string('s3Key', SHORT_STRING_SIZE).notNullable();
+  table.string('threadId', SMALL_STRING_SIZE).notNullable();
+  table.string('s3Key', SMALL_STRING_SIZE).notNullable();
   table.text('content').notNullable();
-  table.string('preview', LONG_STRING_SIZE).notNullable();
+  table.string('preview', LARGE_STRING_SIZE).notNullable();
   table.string('subject').notNullable();
   table.dateTime('date').notNullable();
   table.integer('delivered').notNullable();
@@ -85,7 +87,7 @@ const createEmailColumns = table => {
 const createEmailLabelColumns = table => {
   table.increments('id').primary();
   table.integer('labelId').notNullable();
-  table.string('emailId', SHORT_STRING_SIZE).notNullable();
+  table.string('emailId', SMALL_STRING_SIZE).notNullable();
   table
     .foreign('labelId')
     .references('id')
@@ -99,7 +101,7 @@ const createEmailLabelColumns = table => {
 const createEmailUserColumns = table => {
   table.increments('id').primary();
   table.integer('userId').notNullable();
-  table.string('emailId', SHORT_STRING_SIZE).notNullable();
+  table.string('emailId', SMALL_STRING_SIZE).notNullable();
   table.string('type', TINY_STRING_SIZE).notNullable();
   table
     .foreign('userId')
@@ -112,12 +114,12 @@ const createEmailUserColumns = table => {
 };
 
 const createFileColumns = table => {
-  table.string('token', SHORT_STRING_SIZE).primary();
-  table.string('name', SHORT_STRING_SIZE).notNullable();
+  table.string('token', SMALL_STRING_SIZE).primary();
+  table.string('name', SMALL_STRING_SIZE).notNullable();
   table.integer('size').notNullable();
   table.integer('status').notNullable();
   table.dateTime('date').notNullable();
-  table.string('emailId', SHORT_STRING_SIZE).notNullable();
+  table.string('emailId', SMALL_STRING_SIZE).notNullable();
   table
     .foreign('emailId')
     .references('id')
@@ -126,10 +128,10 @@ const createFileColumns = table => {
 
 const createOpenColumns = table => {
   table.increments('id').primary();
-  table.string('location', SHORT_STRING_SIZE).notNullable();
+  table.string('location', SMALL_STRING_SIZE).notNullable();
   table.integer('type').notNullable();
   table.dateTime('date').notNullable();
-  table.string('fileId', SHORT_STRING_SIZE).notNullable();
+  table.string('fileId', SMALL_STRING_SIZE).notNullable();
   table
     .foreign('fileId')
     .references('token')
@@ -138,8 +140,9 @@ const createOpenColumns = table => {
 
 const createSessionColumns = table => {
   table.increments('id').primary();
-  table.string('sessionId', TINY_STRING_SIZE).notNullable();
-  table.string('username', MEDIUM_STRING_SIZE).notNullable();
+  table.string('sessionId', XSMALL_STRING_SIZE).notNullable();
+  table.string('username', XSMALL_STRING_SIZE);
+  table.string('keyserverToken', XLARGE_STRING_SIZE).notNullable();
 };
 
 const createFeedColumns = table => {
@@ -147,7 +150,7 @@ const createFeedColumns = table => {
   table.string('username', MEDIUM_STRING_SIZE).notNullable();
   table.boolean('isFile').notNullable();
   table.string('fileId', MEDIUM_STRING_SIZE);
-  table.string('action', TINY_STRING_SIZE).notNullable();
+  table.string('action', XSMALL_STRING_SIZE).notNullable();
   table.dateTime('date').notNullable();
   table.boolean('unread').notNullable();
   table.string('emailId', MEDIUM_STRING_SIZE).notNullable();
@@ -156,18 +159,18 @@ const createFeedColumns = table => {
 const createSignalStoreColumns = table => {
   table.increments('id').primary();
   table.integer('registrationId').notNullable();
-  table.string('privKey', LONG_STRING_SIZE).notNullable();
-  table.string('pubKey', LONG_STRING_SIZE).notNullable();
+  table.string('privKey', LARGE_STRING_SIZE).notNullable();
+  table.string('pubKey', LARGE_STRING_SIZE).notNullable();
 };
 
 const createKeysColumns = table => {
   table.increments('id').primary();
   table.integer('preKeyId').notNullable();
-  table.string('preKeyPrivKey', LONG_STRING_SIZE).notNullable();
-  table.string('preKeyPubKey', LONG_STRING_SIZE).notNullable();
+  table.string('preKeyPrivKey', LARGE_STRING_SIZE).notNullable();
+  table.string('preKeyPubKey', LARGE_STRING_SIZE).notNullable();
   table.integer('signedPreKeyId').notNullable();
-  table.string('signedPrivKey', LONG_STRING_SIZE).notNullable();
-  table.string('signedPubKey', LONG_STRING_SIZE).notNullable();
+  table.string('signedPrivKey', LARGE_STRING_SIZE).notNullable();
+  table.string('signedPubKey', LARGE_STRING_SIZE).notNullable();
 };
 
 const createTables = async () => {

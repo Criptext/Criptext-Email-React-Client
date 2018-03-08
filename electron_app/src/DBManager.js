@@ -1,5 +1,5 @@
 const { db, cleanDataBase, createTables, Table } = require('./models.js');
-
+const STORE_SESSION_ID = 1;
 /* Email
    ----------------------------- */
 const createEmail = params => {
@@ -163,7 +163,31 @@ const getUserByUsername = username => {
 /* Session
    ----------------------------- */
 const createSession = params => {
-  return db.table(Table.SESSION).insert(params);
+  const { username, name, keyserverToken } = params;
+  return db
+    .transaction(trx => {
+      return trx
+        .insert({ name, username })
+        .into(Table.USER)
+        .then(res => {
+          return trx
+            .insert({ id: STORE_SESSION_ID, sessionId: res[0], keyserverToken })
+            .into(Table.SESSION);
+        });
+    })
+    .then(function() {
+      return true;
+    })
+    .catch(function() {
+      return false;
+    });
+};
+
+const getKeyserverToken = () => {
+  return db
+    .select('keyserverToken')
+    .from(Table.SESSION)
+    .where({ id: STORE_SESSION_ID });
 };
 
 /* Feed
@@ -265,6 +289,7 @@ module.exports = {
   getEmailsGroupByThreadByParams,
   getIdentityKeyPair,
   getKeys,
+  getKeyserverToken,
   getLabelById,
   getPreKeyPair,
   getRegistrationId,

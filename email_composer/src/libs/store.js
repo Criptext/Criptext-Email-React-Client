@@ -13,9 +13,13 @@ export default class SignalProtocolStore {
     const pubKey = util.toBase64(identityKey.pubKey);
     const id = STORE_ID;
     const params = { id, privKey, pubKey, registrationId };
-    await db.createSignalstore(params);
+    const storeId = await db.createSignalstore(params);
+    if (storeId[0] !== STORE_ID) {
+      return false;
+    }
     this.put('identityKey', identityKey);
     this.put('registrationId', registrationId);
+    return true;
   };
 
   getIdentityKeyPair = async () => {
@@ -95,7 +99,7 @@ export default class SignalProtocolStore {
     return Promise.resolve(this.put('identityKey' + identifier, identityKey));
   };
 
-  storeKeys = (preKeyId, preKeyPair, signedPreKeyId, signedPreKeyPair) => {
+  storeKeys = ({ preKeyId, preKeyPair, signedPreKeyId, signedPreKeyPair }) => {
     const params = {
       preKeyId,
       preKeyPrivKey: util.toBase64(preKeyPair.privKey),
