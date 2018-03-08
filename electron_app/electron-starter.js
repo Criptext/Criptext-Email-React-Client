@@ -64,8 +64,8 @@ async function createLoginWindow() {
     webPreferences: {webSecurity: false}
   });    
   loginWindow.loadURL(loginUrl);
-  //loginWindow.setMenu(null);
-  //loginWindow.setResizable(false);
+  loginWindow.setMenu(null);
+  loginWindow.setResizable(false);
 
   ipcMain.on('close-login', () => {
     if ( loginWindow !== null ) {
