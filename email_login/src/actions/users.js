@@ -1,8 +1,8 @@
 import { User } from './types';
 import {
   closeLogin,
-  createSession,
-  createUser,
+  createAccount,
+  createContact,
   openCreateKeys,
   openMailbox
 } from '../utils/electronInterface';
@@ -42,7 +42,7 @@ const createLocalData = user => {
     username: user.username,
     name: user.name
   };
-  return createUser(localData);
+  return createContact(localData);
 };
 
 const createLocalSession = (id, user) => {
@@ -50,7 +50,7 @@ const createLocalSession = (id, user) => {
     sessionId: id,
     username: user.username
   };
-  return createSession(sessionData);
+  return createAccount(sessionData);
 };
 
 export const loginUser = user => {

@@ -1,5 +1,15 @@
 const { db, cleanDataBase, createTables, Table } = require('./models.js');
-const STORE_SESSION_ID = 1;
+
+/* Account
+   ----------------------------- */
+const createAccount = params => {
+  return db.table(Table.ACCOUNT).insert(params);
+};
+
+const getAccount = () => {
+  return db.table(Table.ACCOUNT).select('*');
+};
+
 /* Email
    ----------------------------- */
 const createEmail = params => {
@@ -147,47 +157,17 @@ const updateLabel = ({ id, color, text }) => {
     .update(params);
 };
 
-/* User
+/* Contact
    ----------------------------- */
-const createUser = params => {
-  return db.table(Table.USER).insert(params);
+const createContact = params => {
+  return db.table(Table.CONTACT).insert(params);
 };
 
 const getUserByUsername = username => {
   return db
-    .table(Table.USER)
+    .table(Table.CONTACT)
     .select('*')
     .where({ username });
-};
-
-/* Session
-   ----------------------------- */
-const createSession = params => {
-  const { username, name, keyserverToken } = params;
-  return db
-    .transaction(trx => {
-      return trx
-        .insert({ name, username })
-        .into(Table.USER)
-        .then(res => {
-          return trx
-            .insert({ id: STORE_SESSION_ID, sessionId: res[0], keyserverToken })
-            .into(Table.SESSION);
-        });
-    })
-    .then(function() {
-      return true;
-    })
-    .catch(function() {
-      return false;
-    });
-};
-
-const getKeyserverToken = () => {
-  return db
-    .select('keyserverToken')
-    .from(Table.SESSION)
-    .where({ id: STORE_SESSION_ID });
 };
 
 /* Feed
@@ -216,50 +196,30 @@ const deleteFeedById = id => {
     .del();
 };
 
-/* Signalstore
-   ----------------------------- */
-const createSignalstore = params => {
-  return db.table(Table.SIGNALSTORE).insert(params);
-};
-
-const getIdentityKeyPair = params => {
-  return db
-    .select('privKey', 'pubkey')
-    .from(Table.SIGNALSTORE)
-    .where(params);
-};
-
-const getRegistrationId = params => {
-  return db
-    .select('registrationId')
-    .from(Table.SIGNALSTORE)
-    .where(params);
-};
-
-/* Keys
+/* KeyRecord
    ----------------------------- */
 const createKeys = params => {
-  return db.table(Table.KEYS).insert(params);
+  return db.table(Table.KEYRECORD).insert(params);
 };
 
 const getKeys = params => {
   return db
     .select('*')
-    .from(Table.KEYS)
+    .from(Table.KEYRECORD)
     .where(params);
 };
 
 const getPreKeyPair = params => {
   return db
     .select('preKeyPrivKey', 'preKeyPubKey')
-    .from(Table.KEYS)
+    .from(Table.KEYRECORD)
     .where(params);
 };
 
 const getSignedPreKey = params => {
   return db
     .select('signedPrivKey', 'signedPubKey')
-    .from(Table.KEYS)
+    .from(Table.KEYRECORD)
     .where(params);
 };
 
@@ -271,28 +231,25 @@ const closeDB = () => {
 module.exports = {
   cleanDataBase,
   closeDB,
+  createAccount,
+  createContact,
   createLabel,
   createEmail,
   createFeed,
-  createSession,
   createKeys,
-  createSignalstore,
   createTables,
-  createUser,
   deleteEmail,
   deleteFeedById,
+  getAccount,
   getAllFeeds,
   getAllLabels,
   getEmailById,
   getEmailsByThreadId,
   getEmailsGroupByThreadByMatchText,
   getEmailsGroupByThreadByParams,
-  getIdentityKeyPair,
   getKeys,
-  getKeyserverToken,
   getLabelById,
   getPreKeyPair,
-  getRegistrationId,
   getSignedPreKey,
   getUserByUsername,
   markThreadAsRead,
