@@ -1,14 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { closeLogin, minimizeLogin } from './../utils/electronInterface';
 import './login.css';
 
 const Login = props => renderLogin(props);
 
 const renderLogin = props => (
-  <div className="login">
-    {renderHeader()}
-    {renderForm(props)}
-    {renderFooter(props)}
+  <div>
+    <div className="login-title-bar">
+      <span className="buttons">
+        <span class="login-close" onClick={ev => closeLogin()} />
+        <span class="login-minimize" onClick={ev => minimizeLogin()} />
+      </span>
+    </div>
+    <div className="clear-title"></div>
+    <div className="login">
+      {renderHeader()}
+      {renderForm(props)}
+      {renderFooter(props)}
+    </div>
   </div>
 );
 

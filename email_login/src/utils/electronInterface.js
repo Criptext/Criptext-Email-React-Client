@@ -43,6 +43,10 @@ export const confirmLostDevices = callback => {
   });
 };
 
+export const minimizeLogin = () =>{
+  ipcRenderer.send('minimize-login');
+}
+
 export const openCreateKeys = params => {
   ipcRenderer.send('open-create-keys', params);
 };

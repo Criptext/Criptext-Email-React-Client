@@ -22,11 +22,6 @@ const loginSize = {
   height: 513
 }
 
-const signUpSize = {
-  width: 328,
-  height: 513
-}
-
 const modalSize = {
   width: 393,
   height: 267
@@ -47,6 +42,8 @@ const composerSize = {
   height: 556
 }
 
+app.disableHardwareAcceleration();
+
 async function createLoginWindow() {
   try {
     await dbManager.createTables();
@@ -60,18 +57,29 @@ async function createLoginWindow() {
     width: loginSize.width, 
     height: loginSize.height, 
     center: true,
+    frame: false,
+    show: false,
     transparent: true,
     webPreferences: {webSecurity: false}
   });    
   loginWindow.loadURL(loginUrl);
   loginWindow.setMenu(null);
   loginWindow.setResizable(false);
+  loginWindow.once('ready-to-show', ()=>{
+    loginWindow.show();
+  })
 
   ipcMain.on('close-login', () => {
     if ( loginWindow !== null ) {
       loginWindow.close();  
     }
     loginWindow = null;
+  });
+
+  ipcMain.on('minimize-login', () => {
+    if ( loginWindow !== null ) {
+      loginWindow.minimize();  
+    }
   });
 
   loginWindow.on('closed', () => {
@@ -86,6 +94,7 @@ async function createLoginWindow() {
       parent: loginWindow,
       width: modalSize.width, 
       height: modalSize.height,
+      show: false,
       frame: false,
       transparent: true,
       alwaysOnTop: true
@@ -93,6 +102,9 @@ async function createLoginWindow() {
     modalWindow.loadURL(modalUrl);
     modalWindow.setMenu(null);
     modalWindow.setResizable(false);
+    modalWindow.once('ready-to-show', ()=>{
+      modalWindow.show();
+    });
   });
   
   ipcMain.on('response-modal', (event, response) => {
@@ -116,6 +128,7 @@ async function createLoginWindow() {
     loadingWindow = new BrowserWindow({
       width: loadingSize.width, 
       height: loadingSize.height,
+      show: false,
       frame: false,
       transparent: true,
       webPreferences: {webSecurity: false}
@@ -123,6 +136,9 @@ async function createLoginWindow() {
     loadingWindow.loadURL(loadingUrl);
     loadingWindow.setMenu(null);
     loadingWindow.setResizable(false);
+    loadingWindow.once('ready-to-show', ()=>{
+      loadingWindow.show();
+    });
   });
 
   ipcMain.on('close-create-keys', () => {

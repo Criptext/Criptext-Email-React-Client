@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { closeLogin, minimizeLogin } from './../utils/electronInterface';
 import './lostAllDevices.css';
 
 const LostAllDevices = props => (
-  <div className="lost">
-    {renderHeader()}
-    {renderForm(props)}
+  <div>
+    <div className="lost-title-bar">
+      <span className="buttons">
+        <span class="lost-close" onClick={ev => closeLogin()} />
+        <span class="lost-minimize" onClick={ev => minimizeLogin()} />
+      </span>
+    </div>
+    <div className="lost">
+      {renderHeader()}
+      {renderForm(props)}
+    </div>
   </div>
 );
 

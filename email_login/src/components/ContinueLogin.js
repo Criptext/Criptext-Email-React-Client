@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { closeLogin, minimizeLogin } from './../utils/electronInterface';
 import './continueLogin.css';
 
 const ContinueLogin = props => (
-  <div className="signup">
-    {renderHeader(props)}
-    {renderContent()}
+  <div>
+    <div className="continue-title-bar">
+      <span className="buttons">
+        <span class="continue-close" onClick={ev => closeLogin()} />
+        <span class="continue-minimize" onClick={ev => minimizeLogin()} />
+      </span>
+    </div>
+    <div className="signup">
+      {renderHeader(props)}
+      {renderContent()}
+    </div>
   </div>
 );
 
