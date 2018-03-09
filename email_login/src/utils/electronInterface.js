@@ -1,5 +1,5 @@
 const electron = window.require('electron');
-const ipcRenderer = electron.ipcRenderer;
+const { ipcRenderer } = electron;
 
 export const closeDialog = () => {
   ipcRenderer.send('close-modal');
@@ -49,12 +49,4 @@ export const openCreateKeys = params => {
 
 export const openMailbox = () => {
   ipcRenderer.send('open-mailbox');
-};
-
-export const createContact = params => {
-  return dbManager.createContact(params);
-};
-
-export const createAccount = params => {
-  return dbManager.createAccount(params);
 };
