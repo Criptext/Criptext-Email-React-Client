@@ -53,10 +53,10 @@ export const openMailbox = () => {
   ipcRenderer.send('open-mailbox');
 };
 
-export const createUser = params => {
-  return dbManager.createUser(params);
+export const createContact = params => {
+  return dbManager.createContact(params);
 };
 
-export const createSession = params => {
-  return dbManager.createSession(params);
+export const createAccount = params => {
+  return dbManager.createAccount(params);
 };

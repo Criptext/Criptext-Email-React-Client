@@ -1,38 +1,34 @@
 /*global libsignal util process*/
 import ClientAPI from '@criptext/email-http-client';
 import SignalProtocolStore from './store';
-import { getKeyserverToken } from './session';
+import * as account from './account';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 let client = {};
-getKeyserverToken().then(token => {
+account.getToken().then(token => {
   client = new ClientAPI(process.env.REACT_APP_KEYSERVER_URL, token);
 });
 
-const createStore = (identityKey, registrationId) => {
-  if (!identityKey && !registrationId) {
-    return Promise.all([
-      KeyHelper.generateIdentityKeyPair(),
-      KeyHelper.generateRegistrationId()
-    ])
-      .then(function(result) {
-        identityKey = result[0];
-        registrationId = result[1];
-        return store.createStore(identityKey, registrationId);
-      })
-      .then(function(result) {
-        return result;
-      });
-  }
-  return store.createStore(identityKey, registrationId);
-};
-
-const createUser = async ({ recipientId, password, name, recoveryEmail }) => {
+const createAccount = async ({
+  recipientId,
+  password,
+  name,
+  recoveryEmail
+}) => {
   const preKeyId = 1;
   const signedPreKeyId = 1;
-  const keys = await generatePreKeyBundle(preKeyId, signedPreKeyId);
-  const { keybundle, preKeyPair, signedPreKeyPair } = keys;
+  const { identityKey, registrationId } = await generateIdentity();
+  const {
+    keybundle,
+    preKeyPair,
+    signedPreKeyPair
+  } = await generatePreKeyBundle({
+    identityKey,
+    registrationId,
+    preKeyId,
+    signedPreKeyId
+  });
   const res = await client.postUser({
     recipientId,
     password,
@@ -41,31 +37,56 @@ const createUser = async ({ recipientId, password, name, recoveryEmail }) => {
     keybundle
   });
   if (res.status !== 200) {
-    return null;
+    return false;
   }
+
+  const privKey = util.toBase64(identityKey.privKey);
+  const pubKey = util.toBase64(identityKey.pubKey);
+  const jwt = res.text;
+  await account.create({
+    recipientId,
+    name,
+    jwt,
+    privKey,
+    pubKey,
+    registrationId
+  });
   await store.storeKeys({
     preKeyId,
     preKeyPair,
     signedPreKeyId,
     signedPreKeyPair
   });
-  return res.text;
+  return true;
 };
 
-const generatePreKeyBundle = async (preKeyId, signedPreKeyId) => {
-  const identity = await store.getIdentityKeyPair();
-  const registrationId = await store.getLocalRegistrationId();
+const generateIdentity = () => {
+  return Promise.all([
+    KeyHelper.generateIdentityKeyPair(),
+    KeyHelper.generateRegistrationId()
+  ]).then(function(result) {
+    const identityKey = result[0];
+    const registrationId = result[1];
+    return { identityKey, registrationId };
+  });
+};
+
+const generatePreKeyBundle = async ({
+  identityKey,
+  registrationId,
+  preKeyId,
+  signedPreKeyId
+}) => {
   const preKey = await KeyHelper.generatePreKey(preKeyId);
   const signedPreKey = await KeyHelper.generateSignedPreKey(
-    identity,
+    identityKey,
     signedPreKeyId
   );
-
   const keybundle = {
     signedPreKeySignature: util.toBase64(signedPreKey.signature),
     signedPreKeyPublic: util.toBase64(signedPreKey.keyPair.pubKey),
     signedPreKeyId: signedPreKeyId,
-    identityPublicKey: util.toBase64(identity.pubKey),
+    identityPublicKey: util.toBase64(identityKey.pubKey),
     registrationId: registrationId,
     preKeys: [{ publicKey: util.toBase64(preKey.keyPair.pubKey), id: preKeyId }]
   };
@@ -158,8 +179,7 @@ const decryptEmail = async (bodyKey, name, deviceId) => {
 };
 
 export default {
-  createStore,
-  createUser,
+  createAccount,
   decryptEmail,
   encryptEmail,
   generatePreKeyBundle,

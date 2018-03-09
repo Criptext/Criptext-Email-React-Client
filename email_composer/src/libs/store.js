@@ -1,34 +1,20 @@
 /*global util*/
 
 import * as db from './../utils/electronInterface';
-const STORE_ID = 1;
+import * as account from './account';
 
 export default class SignalProtocolStore {
   constructor() {
     this.store = {};
   }
 
-  createStore = async (identityKey, registrationId) => {
-    const privKey = util.toBase64(identityKey.privKey);
-    const pubKey = util.toBase64(identityKey.pubKey);
-    const id = STORE_ID;
-    const params = { id, privKey, pubKey, registrationId };
-    const storeId = await db.createSignalstore(params);
-    if (storeId[0] !== STORE_ID) {
-      return false;
-    }
-    this.put('identityKey', identityKey);
-    this.put('registrationId', registrationId);
-    return true;
-  };
-
   getIdentityKeyPair = async () => {
     let result = this.get('identityKey');
     if (!result) {
-      const res = await db.getIdentityKeyPair({ id: STORE_ID });
+      const res = await account.getIdentityKeyPair();
       result = {
-        privKey: util.toArrayBufferFromBase64(res[0].privKey),
-        pubKey: util.toArrayBufferFromBase64(res[0].pubKey)
+        privKey: util.toArrayBufferFromBase64(res.privKey),
+        pubKey: util.toArrayBufferFromBase64(res.pubKey)
       };
       this.put('identityKey', result);
     }
@@ -38,8 +24,7 @@ export default class SignalProtocolStore {
   getLocalRegistrationId = async () => {
     let result = this.get('registrationId');
     if (!result) {
-      const res = await db.getRegistrationId({ id: STORE_ID });
-      result = res[0].registrationId;
+      result = await account.getRegistrationId();
       this.store['registrationId'] = result;
     }
     return result;

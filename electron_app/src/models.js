@@ -16,14 +16,13 @@ const Table = {
   EMAIL: 'email',
   LABEL: 'label',
   EMAIL_LABEL: 'emailLabel',
-  USER: 'user',
-  EMAIL_USER: 'emailUser',
+  CONTACT: 'contact',
+  EMAIL_CONTACT: 'emailContact',
   FILE: 'file',
   OPEN: 'open',
-  SESSION: 'session',
+  ACCOUNT: 'account',
   FEED: 'feed',
-  SIGNALSTORE: 'signalstore',
-  KEYS: 'keys'
+  KEYRECORD: 'keyrecord'
 };
 
 const db = require('knex')({
@@ -39,20 +38,19 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.EMAIL)
     .dropTableIfExists(Table.LABEL)
     .dropTableIfExists(Table.EMAIL_LABEL)
-    .dropTableIfExists(Table.USER)
-    .dropTableIfExists(Table.EMAIL_USER)
+    .dropTableIfExists(Table.CONTACT)
+    .dropTableIfExists(Table.EMAIL_CONTACT)
     .dropTableIfExists(Table.FILE)
     .dropTableIfExists(Table.OPEN)
     .dropTableIfExists(Table.FEED)
-    .dropTableIfExists(Table.SESSION)
-    .dropTableIfExists(Table.SIGNALSTORE)
-    .dropTableIfExists(Table.KEYS);
+    .dropTableIfExists(Table.ACCOUNT)
+    .dropTableIfExists(Table.KEYRECORD);
 };
 
-const createUserColumns = table => {
+const createContactColumns = table => {
   table.increments('id').primary();
+  table.string('email', MEDIUM_STRING_SIZE).notNullable();
   table.string('name', MEDIUM_STRING_SIZE).notNullable();
-  table.string('username', MEDIUM_STRING_SIZE).notNullable();
 };
 
 const createLabelColumns = table => {
@@ -98,7 +96,7 @@ const createEmailLabelColumns = table => {
     .inTable(Table.EMAIL);
 };
 
-const createEmailUserColumns = table => {
+const createEmailContactColumns = table => {
   table.increments('id').primary();
   table.integer('userId').notNullable();
   table.string('emailId', SMALL_STRING_SIZE).notNullable();
@@ -106,7 +104,7 @@ const createEmailUserColumns = table => {
   table
     .foreign('userId')
     .references('id')
-    .inTable(Table.USER);
+    .inTable(Table.CONTACT);
   table
     .foreign('emailId')
     .references('id')
@@ -138,11 +136,13 @@ const createOpenColumns = table => {
     .inTable(Table.FILE);
 };
 
-const createSessionColumns = table => {
-  table.increments('id').primary();
-  table.string('sessionId', XSMALL_STRING_SIZE).notNullable();
-  table.string('username', XSMALL_STRING_SIZE);
-  table.string('keyserverToken', XLARGE_STRING_SIZE).notNullable();
+const createAccountColumns = table => {
+  table.string('recipientId', XSMALL_STRING_SIZE).primary();
+  table.string('name', MEDIUM_STRING_SIZE).notNullable();
+  table.string('jwt', XLARGE_STRING_SIZE).notNullable();
+  table.integer('registrationId').notNullable();
+  table.string('privKey', LARGE_STRING_SIZE).notNullable();
+  table.string('pubKey', LARGE_STRING_SIZE).notNullable();
 };
 
 const createFeedColumns = table => {
@@ -156,14 +156,7 @@ const createFeedColumns = table => {
   table.string('emailId', MEDIUM_STRING_SIZE).notNullable();
 };
 
-const createSignalStoreColumns = table => {
-  table.increments('id').primary();
-  table.integer('registrationId').notNullable();
-  table.string('privKey', LARGE_STRING_SIZE).notNullable();
-  table.string('pubKey', LARGE_STRING_SIZE).notNullable();
-};
-
-const createKeysColumns = table => {
+const createKeyRecordColumns = table => {
   table.increments('id').primary();
   table.integer('preKeyId').notNullable();
   table.string('preKeyPrivKey', LARGE_STRING_SIZE).notNullable();
@@ -180,14 +173,13 @@ const createTables = async () => {
       .createTable(Table.EMAIL, createEmailColumns)
       .createTable(Table.LABEL, createLabelColumns)
       .createTable(Table.EMAIL_LABEL, createEmailLabelColumns)
-      .createTable(Table.USER, createUserColumns)
-      .createTable(Table.EMAIL_USER, createEmailUserColumns)
+      .createTable(Table.CONTACT, createContactColumns)
+      .createTable(Table.EMAIL_CONTACT, createEmailContactColumns)
       .createTable(Table.FILE, createFileColumns)
       .createTable(Table.OPEN, createOpenColumns)
       .createTable(Table.FEED, createFeedColumns)
-      .createTable(Table.SESSION, createSessionColumns)
-      .createTable(Table.SIGNALSTORE, createSignalStoreColumns)
-      .createTable(Table.KEYS, createKeysColumns);
+      .createTable(Table.ACCOUNT, createAccountColumns)
+      .createTable(Table.KEYRECORD, createKeyRecordColumns);
   }
 };
 
