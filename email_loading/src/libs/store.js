@@ -63,7 +63,7 @@ export default class SignalProtocolStore {
     if (!(identityKey instanceof ArrayBuffer)) {
       throw new Error('Expected identityKey to be an ArrayBuffer');
     }
-    let trusted = this.get('identityKey' + identifier);
+    const trusted = this.get('identityKey' + identifier);
     if (trusted === undefined) {
       return Promise.resolve(true);
     }
@@ -155,7 +155,7 @@ export default class SignalProtocolStore {
   };
 
   removeAllSessions = identifier => {
-    for (let id in this.store) {
+    for (const id in this.store) {
       if (id.startsWith('session' + identifier)) {
         delete this.store[id];
       }
