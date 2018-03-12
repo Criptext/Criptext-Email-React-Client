@@ -22,7 +22,7 @@ class LoadingWrapper extends Component {
       animationClass: animationTypes.RUNNING
     };
     this.increasePercent = this.increasePercent.bind(this);
-    this.createKeys = this.createKeys.bind(this);
+    this.createAccount = this.createAccount.bind(this);
     this.throwError = this.throwError.bind(this);
     this.restart = this.restart.bind(this);
   }
@@ -50,7 +50,7 @@ class LoadingWrapper extends Component {
       return;
     }
     if (percent === 70) {
-      this.createKeys();
+      this.createAccount();
     }
     if (percent > 100 && this.state.failed === false) {
       clearTimeout(this.tm);
@@ -62,7 +62,7 @@ class LoadingWrapper extends Component {
     this.tm = setTimeout(this.increasePercent, 150);
   }
 
-  async createKeys() {
+  async createAccount() {
     try {
       const userCredentials = {
         recipientId: remoteData.username,
