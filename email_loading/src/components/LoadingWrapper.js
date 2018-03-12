@@ -44,12 +44,12 @@ class LoadingWrapper extends Component {
 
   increasePercent() {
     const percent = this.state.percent + 1;
-    if (percent === 51 && this.state.errors > 0) {
+    if (percent === 31 && this.state.errors > 0) {
       clearTimeout(this.tm);
       this.throwError();
       return;
     }
-    if (percent === 70) {
+    if (percent === 50) {
       this.createAccount();
     }
     if (percent > 100 && this.state.failed === false) {
@@ -72,11 +72,15 @@ class LoadingWrapper extends Component {
       if (remoteData.recoveryEmail !== '') {
         userCredentials['recoveryEmail'] = remoteData.recoveryEmail;
       }
-      await signal.createAccount(userCredentials);
-      this.setState({
-        failed: false,
-        errors: 0
-      });
+      const accountResponse = await signal.createAccount(userCredentials);
+      if (accountResponse === false) {
+        this.throwError();
+      } else {
+        this.setState({
+          failed: false,
+          errors: 0
+        });
+      }
     } catch (e) {
       this.throwError();
     }

@@ -8,8 +8,12 @@ import {
   validateAcceptTerms,
   validateEmail
 } from './../validators/validators';
-import { signUpAccount } from './../actions/index';
-import { closeDialog, confirmEmptyEmail } from './../utils/electronInterface';
+import {
+  closeDialog,
+  confirmEmptyEmail,
+  openCreateKeys,
+  closeLogin
+} from './../utils/electronInterface';
 import SignUp from './SignUp';
 
 const formItems = [
@@ -200,7 +204,8 @@ class SignUpWrapper extends Component {
       name: values.fullname,
       recoveryEmail: values.recoveryemail
     };
-    signUpAccount(submitValues);
+    openCreateKeys(submitValues);
+    closeLogin();
   };
 
   universalValidator = (formItemName, formItemValue) => {
