@@ -4,9 +4,17 @@ import './control.css';
 
 const Control = props => (
   <div className="control-container">
-    <button className="button-a button-send" onClick={props.onClickSendMessage}>
-      <i className="icon-sent" />
-      <span>send</span>
+    <button
+      className={
+        'button-a button-send ' +
+        (props.displayLoadingSendButton ? 'button-send-loading' : '')
+      }
+      onClick={props.onClickSendMessage}
+      disabled={props.displayLoadingSendButton || props.disabledSendButton}
+    >
+      {props.displayLoadingSendButton
+        ? renderSendLoadingButton()
+        : renderSendNormalButton()}
     </button>
     <div>
       <div className="buttons-container">
@@ -29,7 +37,29 @@ const Control = props => (
   </div>
 );
 
+const renderSendNormalButton = () => (
+  <div>
+    <i className="icon-sent" />
+    <span>send</span>
+  </div>
+);
+
+const renderSendLoadingButton = () => (
+  <div className="loading">
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
+
 Control.propTypes = {
+  disabledSendButton: PropTypes.bool,
+  displayLoadingSendButton: PropTypes.bool,
   onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func
 };

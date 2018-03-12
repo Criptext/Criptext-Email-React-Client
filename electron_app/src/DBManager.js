@@ -119,9 +119,10 @@ const getEmailById = id => {
     .where({ id });
 };
 
-const updateEmail = ({ id, isMuted }) => {
+const updateEmail = ({ id, isDraft, isMuted }) => {
   const params = {};
-  if (isMuted) params.isMuted = isMuted;
+  if (typeof isMuted === 'boolean') params.isMuted = isMuted;
+  if (typeof isDraft === 'boolean') params.isDraft = isDraft;
   return db
     .table(Table.EMAIL)
     .where({ id })

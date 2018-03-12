@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@criptext/email-http-client": "^0.3.0",
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.2",
     "node-sass-chokidar": "^0.0.3",

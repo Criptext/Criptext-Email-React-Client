@@ -63,7 +63,7 @@ export default class SignalProtocolStore {
     if (!(identityKey instanceof ArrayBuffer)) {
       throw new Error('Expected identityKey to be an ArrayBuffer');
     }
-    var trusted = this.get('identityKey' + identifier);
+    const trusted = this.get('identityKey' + identifier);
     if (trusted === undefined) {
       return Promise.resolve(true);
     }
@@ -97,7 +97,7 @@ export default class SignalProtocolStore {
   };
 
   loadPreKey = async keyId => {
-    var res = this.get('25519KeypreKey' + keyId);
+    let res = this.get('25519KeypreKey' + keyId);
     if (res) {
       res = { pubKey: res.pubKey, privKey: res.privKey };
     } else {
@@ -120,7 +120,7 @@ export default class SignalProtocolStore {
   };
 
   loadSignedPreKey = async keyId => {
-    var res = this.get('25519KeysignedKey' + keyId);
+    let res = this.get('25519KeysignedKey' + keyId);
     if (res) {
       res = { pubKey: res.pubKey, privKey: res.privKey };
     } else {

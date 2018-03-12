@@ -68,11 +68,11 @@ const createEmailColumns = table => {
     .string('key', SMALL_STRING_SIZE)
     .unique()
     .notNullable();
-  table.string('threadId', SMALL_STRING_SIZE).notNullable();
-  table.string('s3Key', SMALL_STRING_SIZE).notNullable();
+  table.string('threadId', SMALL_STRING_SIZE);
+  table.string('s3Key', SMALL_STRING_SIZE);
+  table.string('subject').notNullable();
   table.text('content').notNullable();
   table.string('preview', LARGE_STRING_SIZE).notNullable();
-  table.string('subject').notNullable();
   table.dateTime('date').notNullable();
   table.integer('delivered').notNullable();
   table.boolean('unread').notNullable();

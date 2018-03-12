@@ -14,9 +14,6 @@
 }
 
 button.button-send{
-  background-color: #0091ff;
-  padding: 0 12px;
-
   i{
     margin-right: 5px;
   }
@@ -24,6 +21,105 @@ button.button-send{
   span{
     font-weight: 500;
   }
+}
+
+.button-send{
+  background-color: #0091ff;
+  cursor: pointer;
+  padding: 0 12px;
+  transition: width 0.5s;
+  width: 84px;
+
+  &[disabled]{
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .loading {
+    height: 31px;
+    margin: 0 auto;
+    position:relative;
+    width: 31px;
+
+    > div {
+      background-color:#FFFFFF;
+      height: 5px;
+      position:absolute;
+      width: 2px;
+      border-radius:2px;
+      -webkit-transform:scale(0.4);
+      -webkit-animation-name:loading;
+      -webkit-animation-duration:1.04s;
+      -webkit-animation-iteration-count:infinite;
+      -webkit-animation-direction:linear;
+    }
+
+    > div:nth-child(1) {
+      left: 7px;
+      top: 13px;
+      -webkit-transform:rotate(-90deg);
+      -webkit-animation-delay:0.39s;
+    }
+
+    > div:nth-child(2) {
+      left: 9px;
+      top: 7px;
+      -webkit-transform:rotate(-45deg);
+      -webkit-animation-delay:0.52s;
+    }
+
+    > div:nth-child(3) {
+      left: 15px;
+      top: 5px;
+      -webkit-transform:rotate(0deg);
+      -webkit-animation-delay:0.65s;
+    }
+
+    > div:nth-child(4) {
+      right: 8px;
+      top: 7px;
+      -webkit-transform:rotate(45deg);
+      -webkit-animation-delay:0.78s;
+    }
+
+    > div:nth-child(5) {
+      right: 7px;
+      top: 13px;
+      -webkit-transform:rotate(90deg);
+      -webkit-animation-delay:0.91s;
+    }
+
+    > div:nth-child(6) {
+      right: 8px;
+      bottom: 7px;
+      -webkit-transform:rotate(135deg);
+      -webkit-animation-delay:1.04s;
+    }
+
+    > div:nth-child(7) {
+      bottom: 5px;
+      left: 15px;
+      -webkit-transform:rotate(180deg);
+      -webkit-animation-delay:1.17s;
+    }
+
+    > div:nth-child(8) {
+      left: 9px;
+      bottom: 7px;
+      -webkit-transform:rotate(-135deg);
+      -webkit-animation-delay:1.3s;
+    }
+  }
+}
+
+@-webkit-keyframes loading {
+  0%{ background-color:#fff }
+  100%{ background-color:#0091ff }
+}
+
+.button-send-loading{
+  padding: 0;
+  width: 31px;
 }
 
 .buttons-container{
