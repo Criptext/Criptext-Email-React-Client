@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { validateUsername, validatePassword } from './../validators/validators';
-import { openMailbox } from './../utils/electronInterface';
 import LostAllDevices from './LostAllDevices';
+import { openMailbox, closeLogin } from './../utils/electronInterface';
+import signal from './../libs/signal';
 
 class LostDevicesWrapper extends Component {
   constructor(props) {
@@ -56,10 +57,26 @@ class LostDevicesWrapper extends Component {
     this.checkDisable();
   };
 
-  handleSubmit = event => {
+  handleSubmit = async (event) => {
     event.preventDefault();
     event.stopPropagation();
+<<<<<<< 1eebb463e96e811fbe2565e6c4af88d28773171a
     openMailbox();
+=======
+    const submittedData = {
+      username: this.state.values.username,
+      password: this.state.values.password,
+      deviceId: 1
+    };
+    const loginResponse = await signal.login(submittedData);
+    const loginStatus = loginResponse.status;
+    if (loginStatus === 200) {
+      openMailbox();
+      closeLogin();
+    } else {
+      alert(loginResponse.text);
+    }
+>>>>>>> Signal libs for login on Lost all devices
   };
 
   validator = (formItemName, formItemValue) => {

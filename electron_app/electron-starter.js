@@ -42,10 +42,6 @@ const composerSize = {
   height: 556
 }
 
-/*  Hardware Acceleration 
------------------------------ */
-app.disableHardwareAcceleration();
-
 
 /*  Login window 
 ----------------------------- */
@@ -209,7 +205,6 @@ async function initApp() {
     showLoginWindow();
   }
 
-
   /*==========================
    *    Renderer events
    *=========================*/
@@ -286,6 +281,8 @@ async function initApp() {
 
 /*  App
 ----------------------------- */
+app.disableHardwareAcceleration();
+
 app.on('ready', initApp);
 
 app.on('window-all-closed', () => {
