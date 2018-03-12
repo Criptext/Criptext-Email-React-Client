@@ -8,6 +8,7 @@ import {
   validateAcceptTerms,
   validateEmail
 } from './../validators/validators';
+import { signUpAccount } from './../actions/index';
 import { closeDialog, confirmEmptyEmail } from './../utils/electronInterface';
 import SignUp from './SignUp';
 
@@ -199,7 +200,7 @@ class SignUpWrapper extends Component {
       name: values.fullname,
       recoveryEmail: values.recoveryemail
     };
-    this.props.onAddUser(submitValues);
+    signUpAccount(submitValues);
   };
 
   universalValidator = (formItemName, formItemValue) => {

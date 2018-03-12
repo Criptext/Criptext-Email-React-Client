@@ -1,3 +1,3 @@
-import { loginUser, signUpUser } from './users';
+import { loginAccount, signUpAccount } from './users';
 
-export { loginUser, signUpUser };
+export { loginAccount, signUpAccount };

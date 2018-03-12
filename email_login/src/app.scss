@@ -198,6 +198,9 @@ TABLE OF CONTENTS
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-clock:before {
+  content: "\e93b";
+}
 .icon-mailbox:before {
   content: "\e900";
 }
@@ -248,6 +251,9 @@ TABLE OF CONTENTS
 }
 .icon-criptext:before {
   content: "\e914";
+}
+.icon-text-edit:before {
+  content: "\e93a";
 }
 .icon-unsend:before {
   content: "\e916";
@@ -323,6 +329,9 @@ TABLE OF CONTENTS
 }
 .icon-pdf:before {
   content: "\e92c";
+}
+.icon-zip:before {
+  content: "\e939";
 }
 .icon-file-default:before {
   content: "\e92d";

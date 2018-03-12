@@ -4,7 +4,7 @@ import {
   openMailbox
 } from '../utils/electronInterface';
 
-export const loginUser = user => {
+export const loginAccount = user => {
   return () => {
     try {
       const userCredentials = {
@@ -26,7 +26,7 @@ export const loginUser = user => {
   };
 };
 
-export const signUpUser = user => {
+export const signUpAccount = user => {
   openCreateKeys(user);
   closeLogin();
 };

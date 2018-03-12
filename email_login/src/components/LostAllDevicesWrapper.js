@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { validateUsername, validatePassword } from './../validators/validators';
+import { loginAccount } from './../actions/index';
 import LostAllDevices from './LostAllDevices';
 
 class LostDevicesWrapper extends Component {
@@ -62,7 +63,7 @@ class LostDevicesWrapper extends Component {
       username: this.state.values.username,
       password: this.state.values.password
     };
-    this.props.onLoginUser(submittedData);
+    loginAccount(submittedData);
   };
 
   validator = (formItemName, formItemValue) => {
