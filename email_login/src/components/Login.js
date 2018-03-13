@@ -1,24 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { closeLogin, minimizeLogin } from './../utils/electronInterface';
 import './login.css';
 
 const Login = props => renderLogin(props);
 
 const renderLogin = props => (
-  <div>
-    <div className="login-title-bar">
-      <span className="buttons">
-        <span class="login-close" onClick={ev => closeLogin()} />
-        <span class="login-minimize" onClick={ev => minimizeLogin()} />
-      </span>
-    </div>
-    <div className="clear-title"></div>
-    <div className="login">
-      {renderHeader()}
-      {renderForm(props)}
-      {renderFooter(props)}
-    </div>
+  <div className="login">
+    {renderHeader()}
+    {renderForm(props)}
+    {renderFooter(props)}
   </div>
 );
 
@@ -72,11 +62,6 @@ const renderFooter = props => (
         <strong onClick={ev => props.toggleSignUp(ev)}>Sign up</strong>
       </span>
     </div>
-    <div className="login-problems">
-      <span onClick={ev => props.handleLostDevices(ev)}>
-        Lost all your devices?
-      </span>
-    </div>
   </div>
 );
 
@@ -89,8 +74,7 @@ renderForm.propTypes = {
 };
 
 renderFooter.propTypes = {
-  toggleSignUp: PropTypes.func,
-  handleLostDevices: PropTypes.func
+  toggleSignUp: PropTypes.func
 };
 
 export default Login;

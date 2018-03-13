@@ -15,10 +15,16 @@ const Dialog = () => (
 );
 
 const renderContent = contentType => {
-  if (contentType === 'EMPTY_RECOVERY_EMAIL') {
-    return messages.EmptyRecoveryEmail();
+  switch (contentType) {
+    case 'EMPTY_RECOVERY_EMAIL':
+      return messages.EmptyRecoveryEmail();
+    case 'FORGOT_PASSWORD_SENT_LINK':
+      return messages.ForgotPasswordSentLink();
+    case 'FORGOT_PASSWORD_EMPTY_EMAIL':
+      return messages.ForgotPasswordEmptyEmail();
+    default:
+      return messages.LostAllDevices();
   }
-  return messages.LostAllDevices();
 };
 
 const renderOptions = options => {

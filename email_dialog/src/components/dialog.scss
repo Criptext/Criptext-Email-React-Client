@@ -25,19 +25,50 @@
 			margin: 0px 0px 16px 0px;
 		}
 
-		.message {
+		.message-empty-recovery-email {
 			font-size: 13px;
 			font-weight: normal;
 			text-align: left;
 			color: #373a45;
-			margin-bottom: 45px;
+			position: relative;
+			top: 10px;
+		}
+		.message-lost-all-devices {
+			font-size: 13px;
+			font-weight: normal;
+			text-align: left;
+			color: #373a45;
+			position: relative;
+			top: 15px;
+		}
+		.message-forgot-sent-link {
+			font-size: 14px;
+			font-weight: normal;
+			text-align: left;
+			color: #373a45;
+			position: relative;
+			top: 20px;
+			p {
+				margin: 0px;
+			}
+		}
+		.message-forgot-empty-email {
+			font-size: 14px;
+			font-weight: normal;
+			text-align: left;
+			color: #373a45;
+			position: relative;
+			top: 20px;	
 		}
 
 		.options {
+			position: absolute;
+			bottom: 30px;
 			.cancel {
 				border: none;
+				outline: none;
 				border-radius: 100px;
-				padding: 10px;
+				padding: 8.5px;
 				background-color: #373a45;
 				margin: 0px;
 				width: 132px;
@@ -50,8 +81,9 @@
 			}
 			.confirm {
 				border: none;
+				outline: none;
 				border-radius: 100px;
-				padding: 10px;
+				padding: 8.5px;
 				background-color: #0091ff;
 				margin: 0px;
 				width: 132px;

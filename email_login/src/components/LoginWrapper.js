@@ -38,11 +38,19 @@ class LoginWrapper extends Component {
   render() {
     switch (this.state.mode) {
       case mode.SIGNUP:
-        return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
+        return <SignUpWrapper 
+          toggleSignUp={ev => this.toggleSignUp(ev)} 
+        />;
       case mode.CONTINUE:
-        return <ContinueLogin toggleContinue={ev => this.toggleContinue(ev)} />;
+        return <ContinueLogin 
+          toggleContinue={ev => this.toggleContinue(ev)} 
+          handleLostDevices={ev => this.handleLostDevices(ev) }
+        />;
       case mode.LOST_DEVICES:
-        return <LostAllDevicesWrapper />;
+        return <LostAllDevicesWrapper 
+          usernameValue={this.state.values.username}
+          toggleLostAllDevices={ev => this.toggleLostAllDevices(ev)}  
+        />;
       default:
         return (
           <Login
@@ -77,6 +85,15 @@ class LoginWrapper extends Component {
     this.checkDisable();
   };
 
+  toggleLostAllDevices = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.setState({
+      mode: mode.LOGIN
+    });
+    this.checkDisable();
+  };
+
   stopCountdown = () => {
     clearTimeout(this.timeCountdown);
   };
@@ -106,10 +123,6 @@ class LoginWrapper extends Component {
     this.setState({
       mode: mode.CONTINUE
     });
-    this.timeCountdown = setTimeout(() => {
-      openMailbox();
-      closeLogin();
-    }, 10000);
   };
 
   handleLostDevices = event => {
@@ -124,6 +137,7 @@ class LoginWrapper extends Component {
   };
 
   onLostDevices = () => {
+    this.stopCountdown();
     this.setState({
       mode: mode.LOST_DEVICES
     });

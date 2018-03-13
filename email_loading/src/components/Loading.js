@@ -6,7 +6,7 @@ const Loading = props => (
   <div className="loading-body">
     <div className="content">
       <div className="logo">
-        <div className="icon" />
+        <span className="icon-criptext"></span>
       </div>
       <div className="bar">
         <div className={'content ' + props.animationClass} />

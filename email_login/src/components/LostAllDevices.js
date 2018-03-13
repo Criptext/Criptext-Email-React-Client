@@ -1,30 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { closeLogin, minimizeLogin } from './../utils/electronInterface';
 import './lostAllDevices.css';
 
 const LostAllDevices = props => (
-  <div>
-    <div className="lost-title-bar">
-      <span className="buttons">
-        <span class="lost-close" onClick={ev => closeLogin()} />
-        <span class="lost-minimize" onClick={ev => minimizeLogin()} />
-      </span>
-    </div>
-    <div className="lost">
-      {renderHeader()}
-      {renderForm(props)}
-    </div>
+  <div className="lost">
+    {renderHeader(props)}
+    {renderSubHeader()}
+    {renderForm(props)}
   </div>
 );
 
-const renderHeader = () => (
+const renderHeader = props => (
   <div className="header">
-    <div className="logo">
+    <div className="button-section">
+      <button className="back-button" onClick={ev => props.toggleLostAllDevices(ev)}>
+        <i className="icon-back" />
+      </button>
+    </div>
+    <div className="criptext-logo">
       <div className="icon" />
     </div>
-    <div className="text">
-      <span>Confirm your identity</span>
+    <div className="header-clear" />
+  </div>
+);
+
+const renderSubHeader = () => (
+  <div className="subheader">
+    <div className="sub-logo">
+      <div className="sub-icon" />
+    </div>
+    <div className="sub-text">
+      <p>Log In</p>
+      <p>david.grindstaff@criptext.com</p>
     </div>
   </div>
 );
@@ -32,21 +39,6 @@ const renderHeader = () => (
 const renderForm = props => (
   <div className="form">
     <form autoComplete="off">
-      <div className="label-username">
-        <label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={props.values.username}
-            onChange={props.onChangeField}
-            onKeyUp={props.validator}
-          />
-          <span>@criptext.com</span>
-          <div className="clear" />
-        </label>
-      </div>
-
       <div className="label-password">
         <input
           type="password"
@@ -56,15 +48,18 @@ const renderForm = props => (
           onChange={props.onChangeField}
           onKeyUp={props.validator}
         />
+        <span 
+          className="forgot-password"
+          onClick={ev => props.handleForgot(ev)}
+        >Forgot?</span>
       </div>
-
       <div className="button">
         <button
           className="button-login"
           onClick={ev => props.handleSubmit(ev)}
           disabled={props.disabled}
         >
-          <span>Log In</span>
+          <span>Confirm</span>
         </button>
       </div>
     </form>

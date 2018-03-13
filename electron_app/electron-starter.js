@@ -23,7 +23,7 @@ global.loadingData = {}
 
 const loginSize = {
   width: 328,
-  height: 513
+  height: 543
 }
 const modalSize = {
   width: 393,
@@ -212,14 +212,14 @@ async function initApp() {
   /*  Login
   ------------------------ */
   ipcMain.on('close-login', () => {
-    if (loginWindow !== null) {
+    if (loginWindow !== undefined) {
       loginWindow.close();
     }
     loginWindow = undefined;
   });
 
   ipcMain.on('minimize-login', () => {
-    if (loginWindow !== null) {
+    if (loginWindow !== undefined) {
       loginWindow.minimize();
     }
   });
@@ -238,7 +238,7 @@ async function initApp() {
   });
 
   ipcMain.on('close-modal', () => {
-    if (dialogWindow !== null) {
+    if (dialogWindow !== undefined) {
       dialogWindow.close();
     }
     global.modalData = {};
@@ -253,7 +253,7 @@ async function initApp() {
   });
 
   ipcMain.on('close-create-keys', () => {
-    if (loadingWindow !== null) {
+    if (loadingWindow !== undefined) {
       loadingWindow.close();
     }
     global.loadingData = {};
@@ -292,7 +292,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  if (mainWindow === null) {
+  if (mainWindow === undefined) {
     createLoginWindow();
   }
 });

@@ -1,21 +1,32 @@
 import React from 'react';
 
 export const LostAllDevices = () => (
-  <div className="message">
+  <div className="message-lost-all-devices">
     <p>
-      With your privacy in mind, Criptext doesn&#39;t keep any of your data
-      stored in its servers. If you no longer have access to a device linked to
-      your account, you&#39;ll start with a brand new inbox.
+      You can also login using your password, however you won&#39;t have access to any email history that&#39;s stored on your verified devices.
     </p>
   </div>
 );
 
 export const EmptyRecoveryEmail = () => (
-  <div className="message">
+  <div className="message-empty-recovery-email">
     <p>
       You did not set a <strong>Recovery Email</strong> so account recovery is
       impossible if you forget your password.
     </p>
     <p>Proceed without recovery email?</p>
+  </div>
+);
+
+export const ForgotPasswordSentLink = () => (
+  <div className="message-forgot-sent-link">
+    <p>A reset link will be sent to d******@o****l.com</p>
+    <p>The link will be valid for 1 hour</p>
+  </div>
+);
+
+export const ForgotPasswordEmptyEmail = () => (
+  <div className="message-forgot-empty-email">
+    <p>You need to set a Recovery Email to reset your password.</p>
   </div>
 );

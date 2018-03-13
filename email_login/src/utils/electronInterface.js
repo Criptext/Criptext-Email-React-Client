@@ -44,6 +44,36 @@ export const confirmLostDevices = callback => {
   });
 };
 
+export const confirmForgotPasswordEmptyEmail = callback => {
+  const dataForModal = {
+    title: 'Alert!',
+    contentType: 'FORGOT_PASSWORD_EMPTY_EMAIL',
+    options: {
+      cancelLabel: 'Cancel',
+      acceptLabel: 'Ok'
+    }
+  };
+  ipcRenderer.send('open-modal', dataForModal);
+  ipcRenderer.once('selectedOption', (event, data) => {
+    callback(data.selectedOption);
+  });
+};
+
+export const confirmForgotPasswordSentLink = callback => {
+  const dataForModal = {
+    title: 'Forgot Password?',
+    contentType: 'FORGOT_PASSWORD_SENT_LINK',
+    options: {
+      cancelLabel: 'Cancel',
+      acceptLabel: 'Ok'
+    }
+  };
+  ipcRenderer.send('open-modal', dataForModal);
+  ipcRenderer.once('selectedOption', (event, data) => {
+    callback(data.selectedOption);
+  });
+};
+
 export const minimizeLogin = () =>{
   ipcRenderer.send('minimize-login');
 }

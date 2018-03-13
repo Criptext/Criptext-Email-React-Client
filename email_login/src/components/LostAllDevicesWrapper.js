@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { validateUsername, validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
-import { openMailbox, closeLogin } from './../utils/electronInterface';
+import { 
+  closeDialog, 
+  closeLogin, 
+  confirmForgotPasswordSentLink, 
+  confirmForgotPasswordEmptyEmail,
+  openMailbox
+} from './../utils/electronInterface';
 import signal from './../libs/signal';
 
 class LostDevicesWrapper extends Component {
@@ -10,10 +16,11 @@ class LostDevicesWrapper extends Component {
     super(props);
     this.state = {
       values: {
-        username: '',
+        username: props.usernameValue,
         password: ''
       },
-      disabled: true
+      disabled: true,
+      hasRecoveryEmail: false
     };
   }
 
@@ -24,6 +31,8 @@ class LostDevicesWrapper extends Component {
   render() {
     return (
       <LostAllDevices
+        {...this.props}
+        handleForgot={this.handleForgot}
         handleSubmit={this.handleSubmit}
         onChangeField={this.handleChange}
         disabled={this.state.disabled}
@@ -33,18 +42,13 @@ class LostDevicesWrapper extends Component {
     );
   }
 
-  validateUsername = () => {
-    const username = this.state.values['username'];
-    return validateUsername(username);
-  };
-
   validatePassword = () => {
     const password = this.state.values['password'];
     return validatePassword(password);
   };
 
   checkDisable = () => {
-    const isValid = this.validateUsername() && this.validatePassword();
+    const isValid = this.validatePassword();
     this.setState({
       disabled: !isValid
     });
@@ -79,11 +83,25 @@ class LostDevicesWrapper extends Component {
 >>>>>>> Signal libs for login on Lost all devices
   };
 
-  validator = (formItemName, formItemValue) => {
-    if (formItemName === 'username') {
-      return validateUsername(formItemValue);
+  handleForgot = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.state.hasRecoveryEmail === true) {
+      confirmForgotPasswordSentLink(response => {
+        closeDialog();
+      });
     }
-    return validatePassword(formItemValue);
+    else {
+      confirmForgotPasswordEmptyEmail(response => {
+        closeDialog();
+      });
+    }
+  }
+
+  validator = (formItemName, formItemValue) => {
+    if (formItemName !== '') {
+      return validatePassword(formItemValue);
+    }
   };
 }
 

@@ -1,20 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { closeLogin, minimizeLogin } from './../utils/electronInterface';
 import './continueLogin.css';
 
 const ContinueLogin = props => (
-  <div>
-    <div className="continue-title-bar">
-      <span className="buttons">
-        <span class="continue-close" onClick={ev => closeLogin()} />
-        <span class="continue-minimize" onClick={ev => minimizeLogin()} />
-      </span>
-    </div>
-    <div className="signup">
-      {renderHeader(props)}
-      {renderContent()}
-    </div>
+  <div className="continue">
+    {renderHeader(props)}
+    {renderContent(props)}
   </div>
 );
 
@@ -32,14 +23,14 @@ const renderHeader = props => (
   </div>
 );
 
-const renderContent = () => (
+const renderContent = props => (
   <div className="content">
-    <div className="header">
+    <div className="content-header">
       <p>Log In</p>
     </div>
     <div className="message">
-      <p>Unlock any of your devices.</p>
-      <p>Tap Yes on the Criptext prompt to continue.</p>
+      <p>Check and approve on your existing</p>
+      <p>Criptext device to continue.</p>
     </div>
     <div className="loading">
       <div className="icon-clock" />
@@ -66,6 +57,11 @@ const renderContent = () => (
       <button className="resend-button">
         <span>Resend it</span>
       </button>
+    </div>
+    <div className="cant-access">
+      <span onClick={ev => props.handleLostDevices(ev)}>
+        Can&#39;t access to your device?
+      </span>
     </div>
   </div>
 );
