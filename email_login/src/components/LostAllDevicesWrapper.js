@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { validateUsername, validatePassword } from './../validators/validators';
+import { openMailbox } from './../utils/electronInterface';
 import LostAllDevices from './LostAllDevices';
 
 class LostDevicesWrapper extends Component {
@@ -58,11 +59,7 @@ class LostDevicesWrapper extends Component {
   handleSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
-    const submittedData = {
-      username: this.state.values.username,
-      password: this.state.values.password
-    };
-    this.props.onLoginUser(submittedData);
+    openMailbox();
   };
 
   validator = (formItemName, formItemValue) => {

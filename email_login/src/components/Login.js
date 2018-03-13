@@ -35,7 +35,7 @@ const renderForm = props => (
             value={props.value}
             onChange={props.onChangeField}
             onKeyUp={props.validator}
-          />{' '}
+          />
           &nbsp;
           <span>@criptext.com</span>
           <div className="clear" />

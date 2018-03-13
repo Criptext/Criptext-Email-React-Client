@@ -1,57 +1,48 @@
 import React from 'react';
-import ClientAPI from '@criptext/email-http-client';
-import {
-  closeCreatingKeys,
-  openMailbox,
-  remoteData
-} from './../utils/electronInterface';
-import { createStore, generatePreKeyBundle } from './../libs/signal-criptext';
-import { API_URL } from './../utils/const';
+import PropTypes from 'prop-types';
 import './loading.css';
 
-const animation = async () => {
-  const client = new ClientAPI(API_URL);
-  const store = await createStore();
-  const bundle = await generatePreKeyBundle(store, 1, 1);
-  const credentials = {
-    username: remoteData.username,
-    password: remoteData.password,
-    deviceId: 1
-  };
-  const loginResponse = await client.login(credentials);
-  if (loginResponse.status === 200) {
-    const serverResponse = await client.postKeyBundle(bundle);
-    if (serverResponse.status === 200) {
-      openMailbox();
-      closeCreatingKeys();
-    }
-  }
-};
-
-const Loading = () => (
+const Loading = props => (
   <div className="loading-body">
     <div className="content">
       <div className="logo">
         <div className="icon" />
       </div>
-
       <div className="bar">
-        <div className="content" />
+        <div className={'content ' + props.animationClass} />
       </div>
-
       <div className="percent">
         <div className="content">
-          <span className="number">60%</span>
+          <span className="number">{props.percent}%</span>
         </div>
       </div>
-
-      <div className="message">
-        <span>Creating Keys</span>
-      </div>
+      <div className="message">{renderMessage(props)}</div>
     </div>
   </div>
 );
 
-animation();
+const renderMessage = props => {
+  if (props.failed === true) {
+    return (
+      <div className="retry">
+        <span>Error generating the keys. </span>
+        <span className="retry-link" onClick={() => props.restart()}>
+          Retry
+        </span>?
+      </div>
+    );
+  }
+  return <span className="creating"> Creating Keys </span>;
+};
+
+Loading.propTypes = {
+  animationClass: PropTypes.string,
+  percent: PropTypes.number
+};
+
+renderMessage.propTypes = {
+  failed: PropTypes.boolean,
+  restart: PropTypes.func
+};
 
 export default Loading;

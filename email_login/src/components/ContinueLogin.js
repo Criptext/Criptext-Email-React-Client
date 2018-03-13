@@ -28,14 +28,12 @@ const renderContent = () => (
     <div className="header">
       <p>Log In</p>
     </div>
-
     <div className="message">
       <p>Unlock any of your devices.</p>
       <p>Tap Yes on the Criptext prompt to continue.</p>
     </div>
-
     <div className="loading">
-      <div className="icon-lock" />
+      <div className="icon-clock" />
       <div className="loader">
         <div className="loader-arrow" />
       </div>
@@ -54,9 +52,8 @@ const renderContent = () => (
         <div className="sk-circle12 sk-circle" />
       </div>
     </div>
-
     <div className="button">
-      <p>Didn&39;t get the prompt?</p>
+      <p>Didn&#39;t get the prompt?</p>
       <button className="resend-button">
         <span>Resend it</span>
       </button>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Login from './Login';
-import SignUp from './../containers/SignUp';
-import LostAllDevices from './../containers/LostAllDevices';
+import SignUpWrapper from './SignUpWrapper';
+import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
   closeDialog,
@@ -38,11 +38,11 @@ class LoginWrapper extends Component {
   render() {
     switch (this.state.mode) {
       case mode.SIGNUP:
-        return <SignUp toggleSignUp={ev => this.toggleSignUp(ev)} />;
+        return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
       case mode.CONTINUE:
         return <ContinueLogin toggleContinue={ev => this.toggleContinue(ev)} />;
       case mode.LOST_DEVICES:
-        return <LostAllDevices />;
+        return <LostAllDevicesWrapper />;
       default:
         return (
           <Login

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Loading from './components/Loading';
+import LoadingWrapper from './components/LoadingWrapper';
 import './app.css';
 
 class App extends Component {
   render() {
-    return <Loading />;
+    return <LoadingWrapper />;
   }
 }
 
