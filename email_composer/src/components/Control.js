@@ -7,12 +7,12 @@ const Control = props => (
     <button
       className={
         'button-a button-send ' +
-        (props.displayLoadingSendButton ? 'button-send-loading' : '')
+        (props.isLoadingSendButton ? 'button-send-loading' : '')
       }
       onClick={props.onClickSendMessage}
-      disabled={props.displayLoadingSendButton || props.disabledSendButton}
+      disabled={props.isLoadingSendButton || props.isSendButtonDisabled}
     >
-      {props.displayLoadingSendButton
+      {props.isLoadingSendButton
         ? renderSendLoadingButton()
         : renderSendNormalButton()}
     </button>
@@ -58,8 +58,8 @@ const renderSendLoadingButton = () => (
 );
 
 Control.propTypes = {
-  disabledSendButton: PropTypes.bool,
-  displayLoadingSendButton: PropTypes.bool,
+  isSendButtonDisabled: PropTypes.bool,
+  isLoadingSendButton: PropTypes.bool,
   onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func
 };

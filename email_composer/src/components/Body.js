@@ -14,16 +14,16 @@ const Body = props => (
     <Control
       onClickTextEditor={props.onClickTextEditor}
       onClickSendMessage={props.onClickSendMessage}
-      disabledSendButton={props.disabledSendButton}
-      displayLoadingSendButton={props.displayLoadingSendButton}
+      isSendButtonDisabled={props.isSendButtonDisabled}
+      isLoadingSendButton={props.isLoadingSendButton}
     />
   </div>
 );
 
 Body.propTypes = {
   getHtmlBody: PropTypes.func,
-  disabledSendButton: PropTypes.bool,
-  displayLoadingSendButton: PropTypes.bool,
+  isSendButtonDisabled: PropTypes.bool,
+  isLoadingSendButton: PropTypes.bool,
   htmlBody: PropTypes.object,
   isToolbarHidden: PropTypes.bool,
   onClickSendMessage: PropTypes.func,

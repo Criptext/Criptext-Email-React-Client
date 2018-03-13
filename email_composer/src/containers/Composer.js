@@ -16,8 +16,8 @@ class ComposerWrapper extends Component {
       bccEmails: [],
       htmlBody: EditorState.createEmpty(),
       textSubject: '',
-      disabledSendButton: true,
-      displayLoadingSendButton: false
+      isSendButtonDisabled: true,
+      isLoadingSendButton: false
     };
   }
 
@@ -27,8 +27,8 @@ class ComposerWrapper extends Component {
         {...this.props}
         ccEmails={this.state.ccEmails}
         bccEmails={this.state.bccEmails}
-        disabledSendButton={this.state.disabledSendButton}
-        displayLoadingSendButton={this.state.displayLoadingSendButton}
+        isSendButtonDisabled={this.state.isSendButtonDisabled}
+        isLoadingSendButton={this.state.isLoadingSendButton}
         htmlBody={this.state.htmlBody}
         toEmails={this.state.toEmails}
         getBccEmails={this.handleGetBccEmail}
@@ -43,23 +43,34 @@ class ComposerWrapper extends Component {
   }
 
   handleGetToEmail = emails => {
-    this.setState({ toEmails: emails });
-    this.checkRecipients(emails, this.state.ccEmails, this.state.bccEmails);
+    const disabled = this.hasRecipients(
+      emails,
+      this.state.ccEmails,
+      this.state.bccEmails
+    );
+    this.setState({ toEmails: emails, isSendButtonDisabled: disabled });
   };
 
   handleGetCcEmail = emails => {
-    this.setState({ ccEmails: emails });
-    this.checkRecipients(this.state.toEmails, emails, this.state.bccEmails);
+    const disabled = this.hasRecipients(
+      this.state.toEmails,
+      emails,
+      this.state.bccEmails
+    );
+    this.setState({ ccEmails: emails, isSendButtonDisabled: disabled });
   };
 
   handleGetBccEmail = emails => {
-    this.setState({ bccEmails: emails });
-    this.checkRecipients(this.state.toEmails, this.state.ccEmails, emails);
+    const disabled = this.hasRecipients(
+      this.state.toEmails,
+      this.state.ccEmails,
+      emails
+    );
+    this.setState({ bccEmails: emails, isSendButtonDisabled: disabled });
   };
 
-  checkRecipients = (to, cc, bcc) => {
-    const value = to.length || cc.length || bcc.length ? false : true;
-    this.setState({ disabledSendButton: value });
+  hasRecipients = (to, cc, bcc) => {
+    return to.length || cc.length || bcc.length ? false : true;
   };
 
   handleGetSubject = text => {
@@ -71,7 +82,7 @@ class ComposerWrapper extends Component {
   };
 
   handleSendMessage = async () => {
-    this.setState({ displayLoadingSendButton: true });
+    this.setState({ isLoadingSendButton: true });
     const recipients = {
       to: this.state.toEmails,
       cc: this.state.ccEmails,
@@ -112,26 +123,25 @@ class ComposerWrapper extends Component {
       await updateEmail(params);
       closeComposerWindow();
     } catch (e) {
-      this.setState({ displayLoadingSendButton: false });
+      this.setState({ isLoadingSendButton: false });
       alert(e);
     }
   };
 
   formRecipients = recipients => {
-    const result = [];
+    let result = [];
     for (const key in recipients) {
-      if (recipients.hasOwnProperty(key)) {
-        const recipient = recipients[key];
-        recipient.forEach(email => {
-          if (email.indexOf('@criptext.com') > 0) {
-            result.push({
-              recipientId: removeCriptextDomain(email),
-              deviceId: 1,
-              type: key
-            });
-          }
-        });
-      }
+      const recipient = recipients[key];
+      result = recipient.reduce((array, email) => {
+        if (email.indexOf('@criptext.com') > 0) {
+          array.push({
+            recipientId: removeCriptextDomain(email),
+            deviceId: 1,
+            type: key
+          });
+        }
+        return array;
+      }, result);
     }
     return result;
   };
