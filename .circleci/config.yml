@@ -42,8 +42,6 @@ jobs:
 
       - run: cd email_dialog/ && yarn install
 
-      - run: cd email_login/ && yarn install
-
       - run: cd electron_app/ && yarn install
 
       - save_cache:
@@ -71,10 +69,6 @@ jobs:
       - run:
           name: Dialog Lint
           command: cd email_dialog/ && yarn lint
-
-      - run: 
-          name: Login Build
-          command: cd email_login/ &&  yarn build
 
       - run:
           name: Login Unit test
