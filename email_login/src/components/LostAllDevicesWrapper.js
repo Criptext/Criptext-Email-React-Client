@@ -64,9 +64,6 @@ class LostDevicesWrapper extends Component {
   handleSubmit = async event => {
     event.preventDefault();
     event.stopPropagation();
-<<<<<<< 1eebb463e96e811fbe2565e6c4af88d28773171a
-    openMailbox();
-=======
     const submittedData = {
       username: this.state.values.username,
       password: this.state.values.password,
@@ -80,7 +77,6 @@ class LostDevicesWrapper extends Component {
     } else {
       alert(loginResponse.text);
     }
->>>>>>> Signal libs for login on Lost all devices
   };
 
   handleForgot = event => {
