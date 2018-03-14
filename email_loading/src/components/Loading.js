@@ -28,7 +28,7 @@ const renderMessage = props => {
         <span>Error generating the keys. </span>
         <span className="retry-link" onClick={() => props.restart()}>
           Retry
-        </span>?
+        </span>
       </div>
     );
   }
