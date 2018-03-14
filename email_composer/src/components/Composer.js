@@ -19,6 +19,7 @@ const Composer = props => (
       onClickSendMessage={props.onClickSendMessage}
       htmlBody={props.htmlBody}
       getHtmlBody={props.getHtmlBody}
+      status={props.status}
     />
   </div>
 );
@@ -33,7 +34,8 @@ Composer.propTypes = {
   getToEmails: PropTypes.func,
   htmlBody: PropTypes.object,
   onClickSendMessage: PropTypes.func,
-  textSubject: PropTypes.func,
+  status: PropTypes.number,
+  textSubject: PropTypes.string,
   toEmails: PropTypes.array
 };
 

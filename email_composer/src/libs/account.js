@@ -33,9 +33,8 @@ export const getIdentityKeyPair = async () => {
   }
   const result = {
     privKey: res[0].privKey,
-    pubkey: res[0].pubKey
+    pubKey: res[0].pubKey
   };
-
   return result;
 };
 

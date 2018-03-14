@@ -157,7 +157,8 @@ async function createLoginWindow() {
   ipcMain.on('create-composer', () => {
     composerWindow = new BrowserWindow({ 
       width: composerSize.width, 
-      height: composerSize.height
+      height: composerSize.height,
+      webPreferences: {webSecurity: false}
     });
     composerWindow.loadURL(composerUrl);
 
@@ -172,7 +173,6 @@ async function createLoginWindow() {
   });
 
 }
-
 
 app.on('ready', createLoginWindow);
 

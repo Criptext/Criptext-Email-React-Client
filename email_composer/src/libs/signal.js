@@ -107,6 +107,9 @@ const login = data => {
 const encryptText = async (name, deviceId, textMessage) => {
   const addressTo = new libsignal.SignalProtocolAddress(name, deviceId);
   const res = await client.getKeyBundle(name, deviceId);
+  if (res.status !== 200) {
+    return null;
+  }
   const keysBundleTo = keysToArrayBuffer(res.body);
   const sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
   await sessionBuilder.processPreKey(keysBundleTo);
@@ -132,22 +135,31 @@ const keysToArrayBuffer = keys => {
   };
 };
 
-const encryptEmail = async (subject, to, body) => {
-  const criptextEmails = await Promise.all(
+const encryptPostEmail = async (subject, to, body) => {
+  const emailsEncrypted = await Promise.all(
     to.map(async item => {
       const { recipientId, deviceId, type } = item;
+      const bodyEncrypted = await encryptText(recipientId, deviceId, body);
+      if (!bodyEncrypted) {
+        return;
+      }
       return {
         recipientId,
         deviceId,
-        body: await encryptText(recipientId, deviceId, body),
+        body: bodyEncrypted,
         type
       };
     })
   );
+  const criptextEmails = emailsEncrypted.filter(email => email !== undefined);
+  if (!criptextEmails.length) {
+    throw new Error('Error encrypting, try again');
+  }
   const data = {
     subject,
     criptextEmails
   };
+
   return await client.postEmail(data);
 };
 
@@ -181,8 +193,7 @@ const decryptEmail = async (bodyKey, name, deviceId) => {
 export default {
   createAccount,
   decryptEmail,
-  encryptEmail,
-  generatePreKeyBundle,
+  encryptPostEmail,
   getEvents,
   login
 };

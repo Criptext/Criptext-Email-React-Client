@@ -4,11 +4,19 @@ import './control.css';
 
 const Control = props => (
   <div className="control-container">
-    <button className="button-a button-send" onClick={props.onClickSendMessage}>
-      <i className="icon-sent" />
-      <span>send</span>
+    <button
+      className={
+        'button-a button-send ' +
+        (props.status === Status.WAITING ? 'button-send-loading' : '')
+      }
+      onClick={props.onClickSendMessage}
+      disabled={props.status === Status.WAITING || !props.status}
+    >
+      {props.status === Status.WAITING
+        ? renderSendLoadingButton()
+        : renderSendNormalButton()}
     </button>
-    <div>
+    <div disabled={props.status === Status.WAITING}>
       <div className="buttons-container">
         <div className="button-editor">
           <i className="icon-attach" />
@@ -29,9 +37,35 @@ const Control = props => (
   </div>
 );
 
+const renderSendNormalButton = () => (
+  <div>
+    <i className="icon-sent" />
+    <span>send</span>
+  </div>
+);
+
+const renderSendLoadingButton = () => (
+  <div className="loading">
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
+
+export const Status = {
+  ENABLED: 1,
+  WAITING: 2
+};
+
 Control.propTypes = {
   onClickSendMessage: PropTypes.func,
-  onClickTextEditor: PropTypes.func
+  onClickTextEditor: PropTypes.func,
+  status: PropTypes.number
 };
 
 export default Control;

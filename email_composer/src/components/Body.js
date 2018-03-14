@@ -14,6 +14,7 @@ const Body = props => (
     <Control
       onClickTextEditor={props.onClickTextEditor}
       onClickSendMessage={props.onClickSendMessage}
+      status={props.status}
     />
   </div>
 );
@@ -23,7 +24,8 @@ Body.propTypes = {
   htmlBody: PropTypes.object,
   isToolbarHidden: PropTypes.bool,
   onClickSendMessage: PropTypes.func,
-  onClickTextEditor: PropTypes.func
+  onClickTextEditor: PropTypes.func,
+  status: PropTypes.number
 };
 
 export default Body;
