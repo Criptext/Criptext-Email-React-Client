@@ -29,12 +29,10 @@ jobs:
           - v1-dependencies-{{ checksum "email_composer/package.json" }}
           - v2-dependencies-{{ checksum "email_mailbox/package.json" }}
           - v3-dependencies-{{ checksum "email_dialog/package.json" }}
-          - v4-dependencies-{{ checksum "email_login/package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
           - v2-dependencies-
           - v3-dependencies-
-          - v4-dependencies-
 
       - run: cd email_composer/ && yarn install
 
@@ -48,7 +46,6 @@ jobs:
           paths:
             - email_composer/node_modules
             - email_dialog/node_modules
-            - email_login/node_modules
             - email_mailbox/node_modules
           key: v2-dependencies-{{ checksum "email_mailbox/package.json" }}
         
@@ -69,14 +66,6 @@ jobs:
       - run:
           name: Dialog Lint
           command: cd email_dialog/ && yarn lint
-
-      - run:
-          name: Login Unit test
-          command: cd email_login/ && yarn test
-
-      - run:
-          name: Login Lint
-          command: cd email_login/ && yarn lint
 
       - run: 
           name: Mailbox Build
