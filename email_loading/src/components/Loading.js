@@ -9,7 +9,7 @@ const Loading = props => (
         <span className="icon-criptext" />
       </div>
       <div className="bar">
-        <div className={'content ' + props.animationClass} />
+        <div className={`content ${props.animationClass}`} />
       </div>
       <div className="percent">
         <div className="content">
