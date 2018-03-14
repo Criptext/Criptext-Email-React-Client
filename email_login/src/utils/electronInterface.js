@@ -31,7 +31,7 @@ export const confirmEmptyEmail = callback => {
 
 export const confirmLostDevices = callback => {
   const dataForModal = {
-    title: 'Lost all your devices',
+    title: 'Password Login',
     contentType: 'LOST_ALL_DEVICES',
     options: {
       cancelLabel: 'Close',
@@ -74,9 +74,9 @@ export const confirmForgotPasswordSentLink = callback => {
   });
 };
 
-export const minimizeLogin = () =>{
+export const minimizeLogin = () => {
   ipcRenderer.send('minimize-login');
-}
+};
 
 export const openCreateKeys = params => {
   ipcRenderer.send('open-create-keys', params);
@@ -89,26 +89,26 @@ export const openMailbox = () => {
 /* Signal
   ----------------------------- */
 
-  export const createKeys = params => {
-    return dbManager.createKeys(params);
-  };
-  
-  export const getKeys = params => {
-    return dbManager.getKeys(params);
-  };
-  
-  export const getPreKeyPair = params => {
-    return dbManager.getPreKeyPair(params);
-  };
-  
-  export const getSignedPreKey = params => {
-    return dbManager.getSignedPreKey(params);
-  };
-  
-  export const createAccount = params => {
-    return dbManager.createAccount(params);
-  };
-  
-  export const getAccount = () => {
-    return dbManager.getAccount();
-  };
+export const createKeys = params => {
+  return dbManager.createKeys(params);
+};
+
+export const getKeys = params => {
+  return dbManager.getKeys(params);
+};
+
+export const getPreKeyPair = params => {
+  return dbManager.getPreKeyPair(params);
+};
+
+export const getSignedPreKey = params => {
+  return dbManager.getSignedPreKey(params);
+};
+
+export const createAccount = params => {
+  return dbManager.createAccount(params);
+};
+
+export const getAccount = () => {
+  return dbManager.getAccount();
+};

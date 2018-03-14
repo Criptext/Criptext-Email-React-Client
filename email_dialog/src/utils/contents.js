@@ -3,7 +3,8 @@ import React from 'react';
 export const LostAllDevices = () => (
   <div className="message-lost-all-devices">
     <p>
-      You can also login using your password, however you won&#39;t have access to any email history that&#39;s stored on your verified devices.
+      You can also login using your password, however you won&#39;t have access
+      to any email history that&#39;s stored on your verified devices.
     </p>
   </div>
 );

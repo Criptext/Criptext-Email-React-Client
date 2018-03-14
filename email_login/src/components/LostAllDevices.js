@@ -13,7 +13,10 @@ const LostAllDevices = props => (
 const renderHeader = props => (
   <div className="header">
     <div className="button-section">
-      <button className="back-button" onClick={ev => props.toggleLostAllDevices(ev)}>
+      <button
+        className="back-button"
+        onClick={ev => props.toggleLostAllDevices(ev)}
+      >
         <i className="icon-back" />
       </button>
     </div>
@@ -48,10 +51,12 @@ const renderForm = props => (
           onChange={props.onChangeField}
           onKeyUp={props.validator}
         />
-        <span 
+        <span
           className="forgot-password"
           onClick={ev => props.handleForgot(ev)}
-        >Forgot?</span>
+        >
+          Forgot?
+        </span>
       </div>
       <div className="button">
         <button
@@ -66,10 +71,15 @@ const renderForm = props => (
   </div>
 );
 
+renderHeader.propTypes = {
+  toggleLostAllDevices: PropTypes.func
+};
+
 renderForm.propTypes = {
   onChangeField: PropTypes.func,
   validator: PropTypes.func,
   handleSubmit: PropTypes.func,
+  handleForgot: PropTypes.func,
   disabled: PropTypes.bool,
   values: PropTypes.object
 };

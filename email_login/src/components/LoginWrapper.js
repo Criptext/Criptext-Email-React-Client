@@ -3,12 +3,7 @@ import Login from './Login';
 import SignUpWrapper from './SignUpWrapper';
 import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
-import {
-  closeDialog,
-  closeLogin,
-  confirmLostDevices,
-  openMailbox
-} from './../utils/electronInterface';
+import { closeDialog, confirmLostDevices } from './../utils/electronInterface';
 import { validateUsername } from './../validators/validators';
 
 const mode = {
@@ -38,19 +33,21 @@ class LoginWrapper extends Component {
   render() {
     switch (this.state.mode) {
       case mode.SIGNUP:
-        return <SignUpWrapper 
-          toggleSignUp={ev => this.toggleSignUp(ev)} 
-        />;
+        return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
       case mode.CONTINUE:
-        return <ContinueLogin 
-          toggleContinue={ev => this.toggleContinue(ev)} 
-          handleLostDevices={ev => this.handleLostDevices(ev) }
-        />;
+        return (
+          <ContinueLogin
+            toggleContinue={ev => this.toggleContinue(ev)}
+            handleLostDevices={ev => this.handleLostDevices(ev)}
+          />
+        );
       case mode.LOST_DEVICES:
-        return <LostAllDevicesWrapper 
-          usernameValue={this.state.values.username}
-          toggleLostAllDevices={ev => this.toggleLostAllDevices(ev)}  
-        />;
+        return (
+          <LostAllDevicesWrapper
+            usernameValue={this.state.values.username}
+            toggleLostAllDevices={ev => this.toggleLostAllDevices(ev)}
+          />
+        );
       default:
         return (
           <Login

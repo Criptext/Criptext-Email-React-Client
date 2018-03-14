@@ -20,6 +20,7 @@
         top: calc(50% - 18px);
         left: calc(50% - 18px);
         border: none;
+        outline: none;
         border-radius: 100px;
         width: 36px;
         height: 36px;
@@ -28,6 +29,9 @@
         font-size: 22px;
         color: #ffffff;
         padding: 5px 0px 0px 2px;
+      }
+      .back-button:hover{
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
       }
     }
     .criptext-logo {
@@ -62,7 +66,7 @@
       text-align: center;
       p { 
         font-size: 17px;
-        font-weight: 600;
+        font-weight: 800;
         margin: 0px;
         position: relative;
         top: 30%;

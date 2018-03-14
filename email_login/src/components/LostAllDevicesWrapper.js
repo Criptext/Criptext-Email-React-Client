@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { validateUsername, validatePassword } from './../validators/validators';
+import { validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
-import { 
-  closeDialog, 
-  closeLogin, 
-  confirmForgotPasswordSentLink, 
+import {
+  closeDialog,
+  closeLogin,
+  confirmForgotPasswordSentLink,
   confirmForgotPasswordEmptyEmail,
   openMailbox
 } from './../utils/electronInterface';
@@ -20,7 +20,7 @@ class LostDevicesWrapper extends Component {
         password: ''
       },
       disabled: true,
-      hasRecoveryEmail: false
+      hasRecoveryEmail: true
     };
   }
 
@@ -61,7 +61,7 @@ class LostDevicesWrapper extends Component {
     this.checkDisable();
   };
 
-  handleSubmit = async (event) => {
+  handleSubmit = async event => {
     event.preventDefault();
     event.stopPropagation();
 <<<<<<< 1eebb463e96e811fbe2565e6c4af88d28773171a
@@ -83,20 +83,23 @@ class LostDevicesWrapper extends Component {
 >>>>>>> Signal libs for login on Lost all devices
   };
 
-  handleForgot = (event) => {
+  handleForgot = event => {
     event.preventDefault();
     event.stopPropagation();
     if (this.state.hasRecoveryEmail === true) {
       confirmForgotPasswordSentLink(response => {
-        closeDialog();
+        if (response) {
+          closeDialog();
+        }
       });
-    }
-    else {
+    } else {
       confirmForgotPasswordEmptyEmail(response => {
-        closeDialog();
+        if (response) {
+          closeDialog();
+        }
       });
     }
-  }
+  };
 
   validator = (formItemName, formItemValue) => {
     if (formItemName !== '') {
@@ -106,7 +109,7 @@ class LostDevicesWrapper extends Component {
 }
 
 LostDevicesWrapper.propTypes = {
-  onLoginUser: PropTypes.func
+  usernameValue: PropTypes.string
 };
 
 export default LostDevicesWrapper;

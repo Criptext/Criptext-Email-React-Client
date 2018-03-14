@@ -70,4 +70,8 @@ renderHeader.propTypes = {
   toggleContinue: PropTypes.func
 };
 
+renderContent.propTypes = {
+  handleLostDevices: PropTypes.func
+};
+
 export default ContinueLogin;
