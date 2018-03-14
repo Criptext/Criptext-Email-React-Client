@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Composer from './../components/Composer';
+import { Status } from './../components/Control';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { removeCriptextDomain, removeHTMLTags } from '../utils/StringUtils';
 import { createEmail, updateEmail } from './../utils/electronInterface';
 import { closeComposerWindow } from '../utils/electronInterface';
+import { areEmptyAllArrays } from './../utils/ArrayUtils';
 import signal from '../libs/signal';
 
 class ComposerWrapper extends Component {
@@ -16,8 +18,7 @@ class ComposerWrapper extends Component {
       bccEmails: [],
       htmlBody: EditorState.createEmpty(),
       textSubject: '',
-      isSendButtonDisabled: true,
-      isLoadingSendButton: false
+      status: undefined
     };
   }
 
@@ -27,62 +28,63 @@ class ComposerWrapper extends Component {
         {...this.props}
         ccEmails={this.state.ccEmails}
         bccEmails={this.state.bccEmails}
-        isSendButtonDisabled={this.state.isSendButtonDisabled}
-        isLoadingSendButton={this.state.isLoadingSendButton}
         htmlBody={this.state.htmlBody}
         toEmails={this.state.toEmails}
         getBccEmails={this.handleGetBccEmail}
         getCcEmails={this.handleGetCcEmail}
         getTextSubject={this.handleGetSubject}
         getToEmails={this.handleGetToEmail}
+        getHtmlBody={this.handleGetHtmlBody}
         onClickSendMessage={this.handleSendMessage}
         textSubject={this.state.textSubject}
-        getHtmlBody={this.handleGetHtmlBody}
+        status={this.state.status}
       />
     );
   }
 
   handleGetToEmail = emails => {
-    const disabled = this.hasRecipients(
+    const status = areEmptyAllArrays(
       emails,
       this.state.ccEmails,
       this.state.bccEmails
-    );
-    this.setState({ toEmails: emails, isSendButtonDisabled: disabled });
+    )
+      ? undefined
+      : Status.ENABLED;
+    this.setState({ toEmails: emails, status });
   };
 
   handleGetCcEmail = emails => {
-    const disabled = this.hasRecipients(
+    const status = areEmptyAllArrays(
       this.state.toEmails,
       emails,
       this.state.bccEmails
-    );
-    this.setState({ ccEmails: emails, isSendButtonDisabled: disabled });
+    )
+      ? undefined
+      : Status.ENABLED;
+    this.setState({ ccEmails: emails, status });
   };
 
   handleGetBccEmail = emails => {
-    const disabled = this.hasRecipients(
+    const status = areEmptyAllArrays(
       this.state.toEmails,
       this.state.ccEmails,
       emails
-    );
-    this.setState({ bccEmails: emails, isSendButtonDisabled: disabled });
-  };
-
-  hasRecipients = (to, cc, bcc) => {
-    return to.length || cc.length || bcc.length ? false : true;
+    )
+      ? undefined
+      : Status.ENABLED;
+    this.setState({ bccEmails: emails, status });
   };
 
   handleGetSubject = text => {
     this.setState({ textSubject: text });
   };
 
-  handleGetHtmlBody = html => {
-    this.setState({ htmlBody: html });
+  handleGetHtmlBody = htmlBody => {
+    this.setState({ htmlBody });
   };
 
   handleSendMessage = async () => {
-    this.setState({ isLoadingSendButton: true });
+    this.setState({ status: Status.WAITING });
     const recipients = {
       to: this.state.toEmails,
       cc: this.state.ccEmails,
@@ -110,11 +112,10 @@ class ComposerWrapper extends Component {
     };
 
     try {
-      const emailResponse = await createEmail(email);
-      const emailId = emailResponse[0];
+      const [emailId] = await createEmail(email);
       const res = await signal.encryptPostEmail(subject, to, body);
       if (res.status !== 200) {
-        throw new Error('Error to encryption, try again');
+        throw new Error('Error encrypting, try again');
       }
       const params = {
         id: emailId,
@@ -123,28 +124,27 @@ class ComposerWrapper extends Component {
       await updateEmail(params);
       closeComposerWindow();
     } catch (e) {
-      this.setState({ isLoadingSendButton: false });
+      this.setState({ status: Status.ENABLED });
       alert(e);
     }
   };
 
   formRecipients = recipients => {
-    let result = [];
-    for (const key in recipients) {
-      const recipient = recipients[key];
-      result = recipient.reduce((array, email) => {
-        if (email.indexOf('@criptext.com') > 0) {
-          array.push({
-            recipientId: removeCriptextDomain(email),
-            deviceId: 1,
-            type: key
-          });
-        }
-        return array;
-      }, result);
-    }
-    return result;
+    return [
+      ...this.getCriptextRecipients(recipients.to, 'to'),
+      ...this.getCriptextRecipients(recipients.cc, 'cc'),
+      ...this.getCriptextRecipients(recipients.bcc, 'bcc')
+    ];
   };
+
+  getCriptextRecipients = (recipients, type) =>
+    recipients
+      .filter(email => email.indexOf('@criptext.com') > 0)
+      .map(email => ({
+        recipientId: removeCriptextDomain(email),
+        deviceId: 1,
+        type
+      }));
 }
 
 export default ComposerWrapper;

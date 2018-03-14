@@ -19,8 +19,7 @@ const Composer = props => (
       onClickSendMessage={props.onClickSendMessage}
       htmlBody={props.htmlBody}
       getHtmlBody={props.getHtmlBody}
-      isSendButtonDisabled={props.isSendButtonDisabled}
-      isLoadingSendButton={props.isLoadingSendButton}
+      status={props.status}
     />
   </div>
 );
@@ -28,8 +27,6 @@ const Composer = props => (
 Composer.propTypes = {
   bccEmails: PropTypes.array,
   ccEmails: PropTypes.array,
-  isSendButtonDisabled: PropTypes.bool,
-  isLoadingSendButton: PropTypes.bool,
   getBccEmails: PropTypes.func,
   getCcEmails: PropTypes.func,
   getHtmlBody: PropTypes.func,
@@ -37,6 +34,7 @@ Composer.propTypes = {
   getToEmails: PropTypes.func,
   htmlBody: PropTypes.object,
   onClickSendMessage: PropTypes.func,
+  status: PropTypes.number,
   textSubject: PropTypes.string,
   toEmails: PropTypes.array
 };

@@ -50,7 +50,7 @@ const cleanDataBase = () => {
 const createContactColumns = table => {
   table.increments('id').primary();
   table.string('email', MEDIUM_STRING_SIZE).notNullable();
-  table.string('name', MEDIUM_STRING_SIZE).notNullable();
+  table.string('name', MEDIUM_STRING_SIZE);
 };
 
 const createLabelColumns = table => {

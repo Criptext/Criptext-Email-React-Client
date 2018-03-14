@@ -153,7 +153,7 @@ const encryptPostEmail = async (subject, to, body) => {
   );
   const criptextEmails = emailsEncrypted.filter(email => email !== undefined);
   if (!criptextEmails.length) {
-    throw new Error('Error to encryption, try again');
+    throw new Error('Error encrypting, try again');
   }
   const data = {
     subject,
@@ -194,7 +194,6 @@ export default {
   createAccount,
   decryptEmail,
   encryptPostEmail,
-  generatePreKeyBundle,
   getEvents,
   login
 };
