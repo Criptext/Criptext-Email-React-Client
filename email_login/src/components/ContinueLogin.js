@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './continueLogin.css';
+import './clockLoading.css';
 
 const ContinueLogin = props => (
   <div className="continue">
@@ -37,20 +38,16 @@ const renderContent = props => (
       <div className="loader">
         <div className="loader-arrow" />
       </div>
-      <div className="sk-fading-circle">
-        <div className="sk-circle1 sk-circle" />
-        <div className="sk-circle2 sk-circle" />
-        <div className="sk-circle3 sk-circle" />
-        <div className="sk-circle4 sk-circle" />
-        <div className="sk-circle5 sk-circle" />
-        <div className="sk-circle6 sk-circle" />
-        <div className="sk-circle7 sk-circle" />
-        <div className="sk-circle8 sk-circle" />
-        <div className="sk-circle9 sk-circle" />
-        <div className="sk-circle10 sk-circle" />
-        <div className="sk-circle11 sk-circle" />
-        <div className="sk-circle12 sk-circle" />
+
+      <div className="roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
+
     </div>
     <div className="button">
       <p>Didn&#39;t get the prompt?</p>
