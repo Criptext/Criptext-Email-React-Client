@@ -2,6 +2,7 @@ import { LabelType } from './const.js';
 const electron = window.require('electron');
 const remote = electron.remote;
 const dbManager = remote.require('./src/DBManager');
+const clientManager = remote.require('./src/clientManager');
 const ipcRenderer = electron.ipcRenderer;
 
 export const openComposerWindow = () => {
@@ -90,3 +91,40 @@ export const setMuteEmailById = (emailId, muteValue) => {
 export const deleteFeedById = feedId => {
   return dbManager.deleteFeedById(feedId);
 };
+
+/* Signal
+  ----------------------------- */
+
+export const createKeys = params => {
+  return dbManager.createKeys(params);
+};
+
+export const getKeys = params => {
+  return dbManager.getKeys(params);
+};
+
+export const getPreKeyPair = params => {
+  return dbManager.getPreKeyPair(params);
+};
+
+export const getSignedPreKey = params => {
+  return dbManager.getSignedPreKey(params);
+};
+
+export const createAccount = params => {
+  return dbManager.createAccount(params);
+};
+
+export const getAccount = () => {
+  return dbManager.getAccount();
+};
+
+
+
+export const getEvents = () => {
+  return clientManager.getEvents();
+}
+
+export const createEmails = params => {
+  return dbManager.createEmail(params);
+}

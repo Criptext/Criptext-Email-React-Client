@@ -1,5 +1,10 @@
 import { Thread } from './types';
-import { getEmailsGroupByThreadByParams } from '../utils/electronInterface';
+import { 
+  createEmails, 
+  getEmailsGroupByThreadByParams,
+  getEvents 
+} from '../utils/electronInterface';
+import signal from './../libs/signal';
 import { storeValue } from '../utils/storage';
 
 export const addThreads = (threads, clear) => ({
@@ -105,3 +110,49 @@ export const loadThreads = params => {
     }
   };
 };
+
+export const loadEvents = () => {
+  return async dispatch => {
+    try {
+      const receivedEvents = await getEvents();
+      const events = receivedEvents.filter(item => item.cmd === 1);
+      const decryptedEmails = await Promise.all(
+        events.map(async item => {
+          const bodyKey = item.params.bodyKey;
+          const recipientId = 'erika';
+          const deviceId = 1;
+          const contentResponse = await signal.decryptEmail(
+            bodyKey, recipientId, deviceId
+          );
+          const email = {
+            key: item.params.metadataKey,
+            threadId: item.params.threadId,
+            s3Key: bodyKey,
+            content: '',
+            preview: '',
+            subject: item.params.subject,
+            date: item.params.date,
+            delivered: false,
+            unread: true,
+            secure: true,
+            isTrash: false,
+            isDraft: false,
+            isMuted: false
+          }
+          if (contentResponse !== undefined) {
+            email["content"] = contentResponse;
+            email["preview"] = contentResponse;
+          }
+          return email;
+        })
+      );
+      //const emails = decryptedEmails.filter(email => email !== undefined);
+      console.log("decryptedEmails", decryptedEmails);
+      const dbRes = await createEmails(decryptedEmails);
+      console.log("dbRes", dbRes);
+      dispatch(loadThreads({clear: true}));
+    } catch (e) {
+      // TO DO 
+    }
+  };
+}

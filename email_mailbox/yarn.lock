@@ -62,9 +62,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@criptext/email-http-client@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@criptext/email-http-client/-/email-http-client-0.1.0.tgz#3f36f9ca1cf56186a8348ca6214358fb0802e64d"
+"@criptext/email-http-client@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@criptext/email-http-client/-/email-http-client-0.4.0.tgz#39627889b64b01c23a744cc470fa881087af52de"
   dependencies:
     superagent "^3.8.2"
 
@@ -2911,8 +2911,8 @@ form-data@~2.3.1:
     mime-types "^2.1.12"
 
 formidable@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.1.1.tgz#96b8886f7c3c3508b932d6bd70c4d3a88f35f1a9"
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.2.0.tgz#ce291bfec67c176e282f891ece2c37de0c83ae84"
 
 forwarded@~0.1.2:
   version "0.1.2"

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@criptext/email-http-client": "^0.1.0",
+    "@criptext/email-http-client": "0.4.0",
     "animejs": "^2.2.0",
     "immutable": "^3.8.2",
     "moment": "^2.20.1",
@@ -23,7 +23,7 @@
   "scripts": {
     "build-css": "node-sass-chokidar src -o src",
     "watch-css": "npm run build-css && node-sass-chokidar src -o src --watch --recursive",
-    "start-js": "react-scripts start",
+    "start-js": "react-scripts start - uses .env",
     "start": "npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
