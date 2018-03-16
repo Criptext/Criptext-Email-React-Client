@@ -7,7 +7,7 @@ import {
   markFeedAsReadById
 } from './../utils/electronInterface';
 import { addEmails } from './emails';
-import { addUsers } from './users';
+import { addContacts } from './contacts';
 
 export const addFeeds = feeds => {
   return {
@@ -45,7 +45,7 @@ export const loadFeeds = () => {
         usersToState[user.username] = user;
       }
       dispatch(addEmails(emailsToState));
-      dispatch(addUsers(usersToState));
+      dispatch(addContacts(usersToState));
       dispatch(addFeeds(feeds));
     } catch (e) {
       // TO DO
