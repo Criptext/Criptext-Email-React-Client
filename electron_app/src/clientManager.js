@@ -20,6 +20,11 @@ const login = async data => {
   return client.login(data);
 };
 
+const findKeyBundles = async params => {
+  await checkClient();
+  return client.findKeyBundles(params);
+};
+
 const getEvents = async () => {
   await checkClient();
   const res = await client.getPendingEvents();
@@ -38,15 +43,21 @@ const getEmailBody = async bodyKey => {
   return client.getEmailBody(bodyKey);
 };
 
+const postEmail = async params => {
+  await checkClient();
+  return client.postEmail(params);
+};
+
 const postUser = async params => {
   await checkClient();
   return client.postUser(params);
 };
 
 module.exports = {
-  initClient,
+  findKeyBundles,
   getEmailBody,
   getEvents,
   login,
+  postEmail,
   postUser
 };

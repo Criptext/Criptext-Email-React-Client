@@ -155,7 +155,7 @@ export default class SignalProtocolStore {
   };
 
   removeAllSessions = identifier => {
-    for (var id in this.store) {
+    for (const id in this.store) {
       if (id.startsWith('session' + identifier)) {
         delete this.store[id];
       }
