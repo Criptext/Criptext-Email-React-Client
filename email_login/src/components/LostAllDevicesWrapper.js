@@ -7,9 +7,9 @@ import {
   closeLogin,
   confirmForgotPasswordSentLink,
   confirmForgotPasswordEmptyEmail,
+  login,
   openMailbox
 } from './../utils/electronInterface';
-import signal from './../libs/signal';
 
 class LostDevicesWrapper extends Component {
   constructor(props) {
@@ -69,7 +69,7 @@ class LostDevicesWrapper extends Component {
       password: this.state.values.password,
       deviceId: 1
     };
-    const loginResponse = await signal.login(submittedData);
+    const loginResponse = await login(submittedData);
     const loginStatus = loginResponse.status;
     if (loginStatus === 200) {
       openMailbox();

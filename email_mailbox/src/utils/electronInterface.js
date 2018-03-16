@@ -119,12 +119,14 @@ export const getAccount = () => {
   return dbManager.getAccount();
 };
 
-
-
 export const getEvents = () => {
   return clientManager.getEvents();
-}
+};
+
+export const getEmailBody = params => {
+  return clientManager.getEmailBody(params);
+};
 
 export const createEmails = params => {
   return dbManager.createEmail(params);
-}
+};

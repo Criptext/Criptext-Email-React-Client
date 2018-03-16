@@ -1,6 +1,7 @@
 const electron = window.require('electron');
 const { ipcRenderer, remote } = electron;
 const dbManager = remote.require('./src/DBManager');
+const clientManager = remote.require('./src/clientManager');
 
 export const remoteData = remote.getGlobal('loadingData');
 
@@ -18,7 +19,6 @@ export const openMailbox = () => {
 
 /* Signal
   ----------------------------- */
-
 export const createKeys = params => {
   return dbManager.createKeys(params);
 };
@@ -41,4 +41,8 @@ export const createAccount = params => {
 
 export const getAccount = () => {
   return dbManager.getAccount();
+};
+
+export const postUser = params => {
+  return clientManager.postUser(params);
 };

@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
-import { 
-  loadEvents, 
-  loadThreads, 
-  filterThreadsByUnread 
+import {
+  loadEvents,
+  loadThreads,
+  filterThreadsByUnread
 } from '../actions/index';
 import ThreadsView from '../components/Threads';
 

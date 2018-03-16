@@ -52,4 +52,4 @@ export const getRecipientId = async () => {
     return undefined;
   }
   return res[0].recipientId;
-}
+};

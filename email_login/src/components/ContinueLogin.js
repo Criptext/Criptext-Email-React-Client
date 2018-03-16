@@ -40,14 +40,13 @@ const renderContent = props => (
       </div>
 
       <div className="roller">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
       </div>
-
     </div>
     <div className="button">
       <p>Didn&#39;t get the prompt?</p>
