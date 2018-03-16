@@ -49,7 +49,10 @@ const cleanDataBase = () => {
 
 const createContactColumns = table => {
   table.increments('id').primary();
-  table.string('email', MEDIUM_STRING_SIZE).notNullable();
+  table
+    .string('email', MEDIUM_STRING_SIZE)
+    .unique()
+    .notNullable();
   table.string('name', MEDIUM_STRING_SIZE);
 };
 
@@ -98,11 +101,11 @@ const createEmailLabelColumns = table => {
 
 const createEmailContactColumns = table => {
   table.increments('id').primary();
-  table.integer('userId').notNullable();
+  table.integer('contactId').notNullable();
   table.string('emailId', SMALL_STRING_SIZE).notNullable();
   table.string('type', TINY_STRING_SIZE).notNullable();
   table
-    .foreign('userId')
+    .foreign('contactId')
     .references('id')
     .inTable(Table.CONTACT);
   table
