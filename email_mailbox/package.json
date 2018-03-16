@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@criptext/email-http-client": "0.4.0",
     "animejs": "^2.2.0",
     "immutable": "^3.8.2",
     "moment": "^2.20.1",

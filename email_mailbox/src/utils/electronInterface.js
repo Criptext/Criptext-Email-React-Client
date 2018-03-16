@@ -128,5 +128,5 @@ export const getEmailBody = params => {
 };
 
 export const createEmails = params => {
-  return dbManager.createEmail(params);
+  return dbManager.createMultipleEmails(params);
 };
