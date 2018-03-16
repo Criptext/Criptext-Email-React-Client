@@ -14,13 +14,9 @@
       height: 39%;
       margin: 0px;
       padding: 14px 148px;
-      .icon{
-        width: 31px;
-        height: 27px;
-        background: url(../#{$_PATH_TO_IMAGES}/logo-2-copy@2x.png) no-repeat center center;
-        background-size: 100%;
-        -webkit-filter: invert(100%);
-        filter: invert(100%);
+      .icon-criptext {
+        color: #0091ff;
+        font-size: 32px;
       }
     }
 
@@ -56,9 +52,10 @@
     }
 
     .percent {
-      width: 45px;
+      width: 46px;
       height: 22px;
       padding: 0px 141px;
+      margin-bottom: 3px;
       .content {
         width: 45px;
         height: 22px;
@@ -73,6 +70,16 @@
         }
       }
     }
+    .percent::before {
+      content: "";
+      position: absolute;
+      bottom: 40%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent #373a45 transparent;
+    }
 
     .message {
       text-align: center;
@@ -84,15 +91,17 @@
       .retry {
         font-size: 12px;
         font-weight: 600;
-        color: #000;
+        color: #373a45;
+        margin-top: 2%;
         .retry-link {
           font-size: 12px;
           font-weight: 600;
-          color: #000;
+          color: #0091ff;
           text-decoration: underline;
           cursor: pointer;
         }
       }
     }
+    
   }
 }

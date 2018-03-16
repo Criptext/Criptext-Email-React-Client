@@ -28,7 +28,7 @@ const renderHeader = props => (
 
 const renderForm = props => (
   <div className="form">
-    <div className="header">
+    <div className="form-header">
       <p>Sign Up</p>
       <p>Create your Criptext account</p>
     </div>

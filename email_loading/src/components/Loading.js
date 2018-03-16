@@ -6,10 +6,10 @@ const Loading = props => (
   <div className="loading-body">
     <div className="content">
       <div className="logo">
-        <div className="icon" />
+        <span className="icon-criptext" />
       </div>
       <div className="bar">
-        <div className={'content ' + props.animationClass} />
+        <div className={`content ${props.animationClass}`} />
       </div>
       <div className="percent">
         <div className="content">
@@ -28,7 +28,7 @@ const renderMessage = props => {
         <span>Error generating the keys. </span>
         <span className="retry-link" onClick={() => props.restart()}>
           Retry
-        </span>?
+        </span>
       </div>
     );
   }

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './continueLogin.css';
+import './clockLoading.css';
 
 const ContinueLogin = props => (
-  <div className="signup">
+  <div className="continue">
     {renderHeader(props)}
-    {renderContent()}
+    {renderContent(props)}
   </div>
 );
 
@@ -23,34 +24,30 @@ const renderHeader = props => (
   </div>
 );
 
-const renderContent = () => (
+const renderContent = props => (
   <div className="content">
-    <div className="header">
+    <div className="content-header">
       <p>Log In</p>
     </div>
     <div className="message">
-      <p>Unlock any of your devices.</p>
-      <p>Tap Yes on the Criptext prompt to continue.</p>
+      <p>Check and approve on your existing</p>
+      <p>Criptext device to continue.</p>
     </div>
     <div className="loading">
       <div className="icon-clock" />
       <div className="loader">
         <div className="loader-arrow" />
       </div>
-      <div className="sk-fading-circle">
-        <div className="sk-circle1 sk-circle" />
-        <div className="sk-circle2 sk-circle" />
-        <div className="sk-circle3 sk-circle" />
-        <div className="sk-circle4 sk-circle" />
-        <div className="sk-circle5 sk-circle" />
-        <div className="sk-circle6 sk-circle" />
-        <div className="sk-circle7 sk-circle" />
-        <div className="sk-circle8 sk-circle" />
-        <div className="sk-circle9 sk-circle" />
-        <div className="sk-circle10 sk-circle" />
-        <div className="sk-circle11 sk-circle" />
-        <div className="sk-circle12 sk-circle" />
+
+      <div className="roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
+
     </div>
     <div className="button">
       <p>Didn&#39;t get the prompt?</p>
@@ -58,11 +55,20 @@ const renderContent = () => (
         <span>Resend it</span>
       </button>
     </div>
+    <div className="cant-access">
+      <span onClick={ev => props.handleLostDevices(ev)}>
+        Can&#39;t access to your device?
+      </span>
+    </div>
   </div>
 );
 
 renderHeader.propTypes = {
   toggleContinue: PropTypes.func
+};
+
+renderContent.propTypes = {
+  handleLostDevices: PropTypes.func
 };
 
 export default ContinueLogin;

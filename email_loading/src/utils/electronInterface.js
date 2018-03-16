@@ -8,6 +8,10 @@ export const closeCreatingKeys = () => {
   ipcRenderer.send('close-create-keys');
 };
 
+export const createSession = params => {
+  return dbManager.createSession(params);
+};
+
 export const openMailbox = () => {
   ipcRenderer.send('open-mailbox');
 };

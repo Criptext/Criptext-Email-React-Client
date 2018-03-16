@@ -62,11 +62,6 @@ const renderFooter = props => (
         <strong onClick={ev => props.toggleSignUp(ev)}>Sign up</strong>
       </span>
     </div>
-    <div className="login-problems">
-      <span onClick={ev => props.handleLostDevices(ev)}>
-        Lost all your devices?
-      </span>
-    </div>
   </div>
 );
 
@@ -79,8 +74,7 @@ renderForm.propTypes = {
 };
 
 renderFooter.propTypes = {
-  toggleSignUp: PropTypes.func,
-  handleLostDevices: PropTypes.func
+  toggleSignUp: PropTypes.func
 };
 
 export default Login;

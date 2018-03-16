@@ -1,180 +1,82 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const dbManager = require('./src/DBManager');
-const { 
-  loginUrl, 
-  modalUrl,
-  mailboxUrl,
-  loadingUrl, 
-  composerUrl
-} = require('./src/window_routing');
 
-let mainWindow;
-let loginWindow;
-let modalWindow;
-let loadingWindow;
-let mailboxWindow;
-let composerWindow;
+const loginWindow = require('./src/windows/login');
+const dialogWindow = require('./src/windows/dialog');
+const mailboxWindow = require('./src/windows/mailbox');
+const loadingWindow = require('./src/windows/loading');
+const composerWindow = require('./src/windows/composer');
 global.modalData = {}
 global.loadingData = {}
 
-const loginSize = {
-  width: 328,
-  height: 513
-}
 
-const signUpSize = {
-  width: 328,
-  height: 513
-}
-
-const modalSize = {
-  width: 393,
-  height: 267
-}
-
-const loadingSize = {
-  width: 327,
-  height: 141
-}
-
-const mailboxSize = {
-  width: 1094,
-  height: 604
-}
-
-const composerSize = {
-  width: 702,
-  height: 556
-}
-
-async function createLoginWindow() {
+async function initApp() {
   try {
     await dbManager.createTables();
   } catch (ex) {
     console.log(ex);
   }
 
-  /*  Login
-   ----------------------------- */
-  loginWindow = new BrowserWindow({ 
-    width: loginSize.width, 
-    height: loginSize.height, 
-    center: true,
-    transparent: true,
-    webPreferences: {webSecurity: false}
-  });    
-  loginWindow.loadURL(loginUrl);
-  loginWindow.setMenu(null);
-  loginWindow.setResizable(false);
+  const existingAccount = await dbManager.getAccount();
+  if (existingAccount.length > 0) {
+    mailboxWindow.show();
+  } else {
+    loginWindow.show();
+  }
 
+  //   Login
   ipcMain.on('close-login', () => {
-    if ( loginWindow !== null ) {
-      loginWindow.close();  
-    }
-    loginWindow = null;
+    loginWindow.close();
   });
 
-  loginWindow.on('closed', () => {
-    loginWindow = null;
+  ipcMain.on('minimize-login', () => {
+    loginWindow.minimize();
   });
 
-  /*  Modal
-   ----------------------------- */
+  //   Dialog
   ipcMain.on('open-modal', (event, modalData) => {
     global.modalData = modalData;
-    modalWindow = new BrowserWindow({
-      parent: loginWindow,
-      width: modalSize.width, 
-      height: modalSize.height,
-      frame: false,
-      transparent: true,
-      alwaysOnTop: true
-    });
-    modalWindow.loadURL(modalUrl);
-    modalWindow.setMenu(null);
-    modalWindow.setResizable(false);
+    dialogWindow.show();
   });
-  
+
   ipcMain.on('response-modal', (event, response) => {
-    loginWindow.webContents.send('selectedOption' , {
-      selectedOption: response
-    });
+    loginWindow.responseFromModal(response);
   });
 
   ipcMain.on('close-modal', () => {
-    if ( modalWindow !== null ) {
-      modalWindow.close();  
-    }
-    global.modalData = {};
-    modalWindow = null;
+    dialogWindow.close();
   });
 
-  /*  Create keys
-   ----------------------------- */
+  //   Loading
   ipcMain.on('open-create-keys', (event, arg) => {
     global.loadingData = arg;
-    loadingWindow = new BrowserWindow({
-      width: loadingSize.width, 
-      height: loadingSize.height,
-      frame: false,
-      transparent: true,
-      webPreferences: {webSecurity: false}
-    });
-    loadingWindow.loadURL(loadingUrl);
-    loadingWindow.setMenu(null);
-    loadingWindow.setResizable(false);
+    loadingWindow.show();
   });
 
   ipcMain.on('close-create-keys', () => {
-    if ( loadingWindow !== null ) {
-      loadingWindow.close();  
-    }
+    loadingWindow.close();
     global.loadingData = {};
-    loadingWindow = null;
   });
 
-  /*  Mailbox
-   ----------------------------- */
+  //   Mailbox
   ipcMain.on('open-mailbox', () => {
-    mailboxWindow = new BrowserWindow({ 
-      width: mailboxSize.width, 
-      height: mailboxSize.height,
-      show: false
-    });
-    mailboxWindow.loadURL(mailboxUrl);
-    mailboxWindow.once('ready-to-show', () => {
-      mailboxWindow.show();
-      mailboxWindow.maximize();
-    });
-
-    mailboxWindow.on('closed', () => {
-      mainWindow = null;
-    });
+    mailboxWindow.show();
   });
 
-  /*  Composer
-   ----------------------------- */
+  //   Composer
   ipcMain.on('create-composer', () => {
-    composerWindow = new BrowserWindow({ 
-      width: composerSize.width, 
-      height: composerSize.height,
-      webPreferences: {webSecurity: false}
-    });
-    composerWindow.loadURL(composerUrl);
-
-    composerWindow.on('closed', () => {
-      composerWindow = null;
-    });
+    composerWindow.show();
   });
 
   ipcMain.on('close-composer', () => {
     composerWindow.close();
-    composerWindow = null;
   });
-
 }
 
-app.on('ready', createLoginWindow);
+//   App
+app.disableHardwareAcceleration();
+
+app.on('ready', initApp);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -183,8 +85,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  if (mainWindow === null) {
+  if (mainWindow === undefined) {
     createLoginWindow();
   }
 });
-
