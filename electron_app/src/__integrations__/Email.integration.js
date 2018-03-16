@@ -10,19 +10,21 @@ beforeAll(async () => {
 describe('TABLE[Email]:', () => {
   it('should create email to db', async () => {
     await DBManager.createEmail({
-      threadId: 'threadJ',
-      key: 'hdnfgdgsd',
-      s3Key: 'hdnfgdgsd',
-      subject: 'Greetings',
-      content: '<p>Hello there</p>',
-      preview: 'Hello there',
-      date: '2013-10-07 08:23:19.120',
-      delivered: 0,
-      unread: true,
-      secure: true,
-      isTrash: false,
-      isDraft: true,
-      isMuted: false
+      email: {
+        threadId: 'threadJ',
+        key: 'hdnfgdgsd',
+        s3Key: 'hdnfgdgsd',
+        subject: 'Greetings',
+        content: '<p>Hello there</p>',
+        preview: 'Hello there',
+        date: '2013-10-07 08:23:19.120',
+        delivered: 0,
+        unread: true,
+        secure: true,
+        isTrash: false,
+        isDraft: true,
+        isMuted: false
+      }
     });
     const emails = await DBManager.getEmailsByThreadId('threadJ');
     expect(emails).toMatchSnapshot();

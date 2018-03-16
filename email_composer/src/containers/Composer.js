@@ -110,9 +110,12 @@ class ComposerWrapper extends Component {
       isDraft: true,
       isMuted: false
     };
-
+    const data = {
+      email,
+      recipients
+    };
     try {
-      const [emailId] = await createEmail(email);
+      const [emailId] = await createEmail(data);
       const res = await signal.encryptPostEmail(subject, to, body);
       if (res.status !== 200) {
         throw new Error('Error encrypting, try again');

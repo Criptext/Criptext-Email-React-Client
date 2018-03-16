@@ -10,10 +10,104 @@ const getAccount = () => {
   return db.table(Table.ACCOUNT).select('*');
 };
 
+/* Contact
+   ----------------------------- */
+const createContact = params => {
+  return db.table(Table.CONTACT).insert(params);
+};
+
+const createContactsIfOrNorExist = async emails => {
+  const contacts = await db
+    .select('email')
+    .from(Table.CONTACT)
+    .whereIn('email', emails);
+  if (contacts.length === emails.length) return;
+  const emailsExist = contacts.map(contact => {
+    return contact.email;
+  });
+  const emailsNotExist = emails.filter(email => !emailsExist.includes(email));
+  const contactsRow = emailsNotExist.map(email => {
+    return { email };
+  });
+  return db.insert(contactsRow).into(Table.CONTACT);
+};
+
+const getUserByUsername = username => {
+  return db
+    .table(Table.CONTACT)
+    .select('*')
+    .where({ username });
+};
+
 /* Email
    ----------------------------- */
-const createEmail = params => {
-  return db.table(Table.EMAIL).insert(params);
+const createEmail = async params => {
+  if (!params.recipients) {
+    return db.table(Table.EMAIL).insert(params.email);
+  }
+
+  const emails = [
+    ...params.recipients.to,
+    ...params.recipients.cc,
+    ...params.recipients.bcc
+  ];
+  await createContactsIfOrNorExist(emails);
+
+  let emailId;
+  return db
+    .transaction(trx => {
+      return trx
+        .select('id', 'email')
+        .from(Table.CONTACT)
+        .whereIn('email', emails)
+        .then(contacts => {
+          return trx
+            .insert(params.email)
+            .into(Table.EMAIL)
+            .then(email => {
+              emailId = email[0];
+              const to = formEmailContact(
+                emailId,
+                contacts,
+                params.recipients.to,
+                'to'
+              );
+              const cc = formEmailContact(
+                emailId,
+                contacts,
+                params.recipients.cc,
+                'cc'
+              );
+              const bcc = formEmailContact(
+                emailId,
+                contacts,
+                params.recipients.cc,
+                'cc'
+              );
+              const emailContactRow = [...to, ...cc, ...bcc];
+              return trx
+                .insert(emailContactRow)
+                .into(Table.EMAIL_CONTACT)
+                .then(() => {
+                  return emailId;
+                });
+            });
+        });
+    })
+    .then(emailId => {
+      return [emailId];
+    });
+};
+
+const formEmailContact = (emailId, contacts, emails, type) => {
+  return emails.map(email => {
+    const { id } = contacts.find(contact => contact.email === email);
+    return {
+      emailId,
+      contactId: id,
+      type
+    };
+  });
 };
 
 const getEmailsByThreadId = threadId => {
@@ -156,19 +250,6 @@ const updateLabel = ({ id, color, text }) => {
       id
     })
     .update(params);
-};
-
-/* Contact
-   ----------------------------- */
-const createContact = params => {
-  return db.table(Table.CONTACT).insert(params);
-};
-
-const getUserByUsername = username => {
-  return db
-    .table(Table.CONTACT)
-    .select('*')
-    .where({ username });
 };
 
 /* Feed
