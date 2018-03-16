@@ -1,4 +1,4 @@
-import { addUsers, addUser } from './users';
+import { addContacts, addContact } from './contacts';
 import {
   addThreads,
   addThreadLabel,
@@ -43,6 +43,8 @@ import {
 import { setThreads, loadSuggestions } from './suggestions';
 
 export {
+  addContact,
+  addContacts,
   addEmails,
   addFeeds,
   addLabel,
@@ -50,8 +52,6 @@ export {
   addThreads,
   addThreadLabel,
   addThreadsLabel,
-  addUser,
-  addUsers,
   closeThread,
   deselectThreads,
   filterThreadsByUnread,

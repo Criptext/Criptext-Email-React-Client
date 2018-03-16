@@ -16,9 +16,9 @@ export const Thread = {
   READ_THREADS: 'READ_THREADS'
 };
 
-export const User = {
-  ADD: 'ADD_USER',
-  ADD_BATCH: 'ADD_USERS'
+export const Contact = {
+  ADD: 'ADD_CONTACT',
+  ADD_BATCH: 'ADD_CONTACTS'
 };
 
 export const Email = {

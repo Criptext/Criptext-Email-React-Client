@@ -1,15 +1,15 @@
-import { User } from '../actions/types';
+import { Contact } from '../actions/types';
 
 export default (state = {}, action) => {
   switch (action.type) {
-    case User.ADD_BATCH: {
+    case Contact.ADD_BATCH: {
       return {
         ...state,
         ...action.users
       };
     }
-    case User.ADD: {
-      const email = action.user.email.toString();
+    case Contact.ADD: {
+      const email = action.contact.email.toString();
       return {
         ...state,
         [email]: action.user
