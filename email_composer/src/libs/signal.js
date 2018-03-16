@@ -106,11 +106,14 @@ const login = data => {
 
 const encryptText = async (name, deviceId, textMessage) => {
   const addressTo = new libsignal.SignalProtocolAddress(name, deviceId);
-  const res = await client.getKeyBundle(name, deviceId);
+  const res = await client.findKeyBundles({
+    recipients: [name],
+    knownAddresses: {}
+  });
   if (res.status !== 200) {
     return null;
   }
-  const keysBundleTo = keysToArrayBuffer(res.body);
+  const keysBundleTo = keysToArrayBuffer(res.body[0]);
   const sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
   await sessionBuilder.processPreKey(keysBundleTo);
   const sessionCipher = new libsignal.SessionCipher(store, addressTo);
