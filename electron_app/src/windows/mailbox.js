@@ -1,5 +1,7 @@
 const { BrowserWindow } = require('electron');
 const { mailboxUrl } = require('./../window_routing');
+const clientManager = require('./../clientManager');
+
 let mailboxWindow;
 
 const mailboxSize = {
@@ -27,6 +29,7 @@ const create = () => {
 const show = async () => {
   if (mailboxWindow === undefined) {
     await create();
+    await clientManager.checkClient();
   }
   mailboxWindow.once('ready-to-show', () => {
     mailboxWindow.show();

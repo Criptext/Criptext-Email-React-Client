@@ -120,10 +120,10 @@ export const loadEvents = () => {
       const decryptedEmails = await Promise.all(
         events.map(async item => {
           const bodyKey = item.params.bodyKey;
-          const user = item.params.from.split('@')[0];
+          const user = getEmailUsername(item.params.from);
           const recipientId = user !== 'undefined' ? user : 'erika';
           const deviceId = 1;
-          const contentResponse = await signal.decryptEmail(
+          const { content, preview } = await getContentMessage(
             bodyKey,
             recipientId,
             deviceId
@@ -132,8 +132,8 @@ export const loadEvents = () => {
             key: item.params.metadataKey,
             threadId: item.params.threadId,
             s3Key: bodyKey,
-            content: '',
-            preview: '',
+            content,
+            preview,
             subject: item.params.subject,
             date: item.params.date,
             delivered: false,
@@ -143,10 +143,6 @@ export const loadEvents = () => {
             isDraft: false,
             isMuted: false
           };
-          if (contentResponse !== undefined) {
-            email['content'] = contentResponse;
-            email['preview'] = removeHTMLTags(contentResponse).slice(0, 21);
-          }
           return email;
         })
       );
@@ -156,4 +152,17 @@ export const loadEvents = () => {
       // TO DO
     }
   };
+};
+
+const getContentMessage = async (bodyKey, recipientId, deviceId) => {
+  const content = await signal.decryptEmail(bodyKey, recipientId, deviceId);
+  if (content === undefined) {
+    return { content: '', preview: '' };
+  }
+  const preview = removeHTMLTags(content).slice(0, 21);
+  return { content, preview };
+};
+
+const getEmailUsername = emailAddress => {
+  return emailAddress.split('@')[0];
 };

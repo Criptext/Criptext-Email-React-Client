@@ -15,18 +15,15 @@ const checkClient = async () => {
   }
 };
 
-const login = async data => {
-  await checkClient();
+const login = data => {
   return client.login(data);
 };
 
-const findKeyBundles = async params => {
-  await checkClient();
+const findKeyBundles = params => {
   return client.findKeyBundles(params);
 };
 
 const getEvents = async () => {
-  await checkClient();
   const res = await client.getPendingEvents();
   return formEvents(res.body);
 };
@@ -38,22 +35,20 @@ const formEvents = events => {
   });
 };
 
-const getEmailBody = async bodyKey => {
-  await checkClient();
+const getEmailBody = bodyKey => {
   return client.getEmailBody(bodyKey);
 };
 
-const postEmail = async params => {
-  await checkClient();
+const postEmail = params => {
   return client.postEmail(params);
 };
 
-const postUser = async params => {
-  await checkClient();
+const postUser = params => {
   return client.postUser(params);
 };
 
 module.exports = {
+  checkClient,
   findKeyBundles,
   getEmailBody,
   getEvents,
