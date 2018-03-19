@@ -100,6 +100,10 @@ const createEmail = async (params, trx) => {
     });
 };
 
+const createMultipleEmails = emails => {
+  return db.table(Table.EMAIL).insert(emails);
+};
+
 const formEmailContact = ({ emailId, contacts, emails, type }) => {
   return emails.map(email => {
     const { id } = contacts.find(contact => contact.email === email);
@@ -320,6 +324,7 @@ module.exports = {
   createEmail,
   createFeed,
   createKeys,
+  createMultipleEmails,
   createTables,
   deleteEmail,
   deleteFeedById,

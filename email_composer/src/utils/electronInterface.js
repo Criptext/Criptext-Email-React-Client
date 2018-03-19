@@ -1,6 +1,7 @@
 const electron = window.require('electron');
 const remote = electron.remote;
 const dbManager = remote.require('./src/DBManager');
+const clientManager = remote.require('./src/clientManager');
 const ipcRenderer = electron.ipcRenderer;
 
 export const closeComposerWindow = () => {
@@ -37,4 +38,12 @@ export const getAccount = () => {
 
 export const updateEmail = params => {
   return dbManager.updateEmail(params);
+};
+
+export const findKeyBundles = params => {
+  return clientManager.findKeyBundles(params);
+};
+
+export const postEmail = params => {
+  return clientManager.postEmail(params);
 };

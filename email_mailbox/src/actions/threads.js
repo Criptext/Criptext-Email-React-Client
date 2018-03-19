@@ -1,6 +1,12 @@
 import { Thread } from './types';
-import { getEmailsGroupByThreadByParams } from '../utils/electronInterface';
+import {
+  createEmails,
+  getEmailsGroupByThreadByParams,
+  getEvents
+} from '../utils/electronInterface';
+import signal from './../libs/signal';
 import { storeValue } from '../utils/storage';
+import { removeHTMLTags } from './../utils/StringUtils';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -104,4 +110,59 @@ export const loadThreads = params => {
         the db using a backup previously made. If the backup is also corrupted for some reason, user should log out.*/
     }
   };
+};
+
+export const loadEvents = () => {
+  return async dispatch => {
+    try {
+      const receivedEvents = await getEvents();
+      const events = receivedEvents.filter(item => item.cmd === 1);
+      const decryptedEmails = await Promise.all(
+        events.map(async item => {
+          const bodyKey = item.params.bodyKey;
+          const user = getEmailUsername(item.params.from);
+          const recipientId = user !== 'undefined' ? user : 'erika';
+          const deviceId = 1;
+          const { content, preview } = await getContentMessage(
+            bodyKey,
+            recipientId,
+            deviceId
+          );
+          const email = {
+            key: item.params.metadataKey,
+            threadId: item.params.threadId,
+            s3Key: bodyKey,
+            content,
+            preview,
+            subject: item.params.subject,
+            date: item.params.date,
+            delivered: false,
+            unread: true,
+            secure: true,
+            isTrash: false,
+            isDraft: false,
+            isMuted: false
+          };
+          return email;
+        })
+      );
+      await createEmails(decryptedEmails);
+      dispatch(loadThreads({ clear: true }));
+    } catch (e) {
+      // TO DO
+    }
+  };
+};
+
+const getContentMessage = async (bodyKey, recipientId, deviceId) => {
+  const content = await signal.decryptEmail(bodyKey, recipientId, deviceId);
+  if (content === undefined) {
+    return { content: '', preview: '' };
+  }
+  const preview = removeHTMLTags(content).slice(0, 21);
+  return { content, preview };
+};
+
+const getEmailUsername = emailAddress => {
+  return emailAddress.split('@')[0];
 };

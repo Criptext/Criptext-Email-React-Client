@@ -1,5 +1,9 @@
 import { connect } from 'react-redux';
-import { loadThreads, filterThreadsByUnread } from '../actions/index';
+import {
+  loadEvents,
+  loadThreads,
+  filterThreadsByUnread
+} from '../actions/index';
 import ThreadsView from '../components/Threads';
 
 const mapStateToProps = state => {
@@ -20,6 +24,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onLoadThreads: params => {
       dispatch(loadThreads(params));
+    },
+    onLoadEvents: () => {
+      dispatch(loadEvents());
     },
     onUnreadToggle: enabled => {
       dispatch(filterThreadsByUnread(enabled));

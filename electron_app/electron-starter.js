@@ -85,7 +85,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  if (mainWindow === undefined) {
-    createLoginWindow();
+  if (loginWindow === undefined) {
+    initApp();
   }
 });

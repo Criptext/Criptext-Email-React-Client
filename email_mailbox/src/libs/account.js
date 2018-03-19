@@ -33,9 +33,8 @@ export const getIdentityKeyPair = async () => {
   }
   const result = {
     privKey: res[0].privKey,
-    pubkey: res[0].pubKey
+    pubKey: res[0].pubKey
   };
-
   return result;
 };
 
@@ -45,4 +44,12 @@ export const getRegistrationId = async () => {
     return undefined;
   }
   return res[0].registrationId;
+};
+
+export const getRecipientId = async () => {
+  const res = await db.getAccount();
+  if (!res.length) {
+    return undefined;
+  }
+  return res[0].recipientId;
 };

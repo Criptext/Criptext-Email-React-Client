@@ -72,6 +72,7 @@ class Threads extends Component {
   }
 
   componentDidMount() {
+    this.props.onLoadEvents();
     this.props.onLoadThreads({
       mailbox: this.props.mailbox,
       clear: true
@@ -171,6 +172,7 @@ class Threads extends Component {
 Threads.propTypes = {
   mailbox: PropTypes.string,
   onClickThreadIdSelected: PropTypes.func,
+  onLoadEvents: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,
   searchParams: PropTypes.object,

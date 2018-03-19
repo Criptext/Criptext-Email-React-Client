@@ -18,14 +18,6 @@ export const create = async ({
   });
 };
 
-export const getToken = async () => {
-  const res = await db.getAccount();
-  if (!res.length) {
-    return undefined;
-  }
-  return res[0].jwt;
-};
-
 export const getIdentityKeyPair = async () => {
   const res = await db.getAccount();
   if (!res.length) {
