@@ -1,6 +1,6 @@
 import { Thread } from './types';
 import {
-  createEmails,
+  createEmailFromEvent,
   getEmailsGroupByThreadByParams,
   getEvents
 } from '../utils/electronInterface';
@@ -117,7 +117,7 @@ export const loadEvents = () => {
     try {
       const receivedEvents = await getEvents();
       const events = receivedEvents.filter(item => item.cmd === 1);
-      const decryptedEmails = await Promise.all(
+      await Promise.all(
         events.map(async item => {
           const bodyKey = item.params.bodyKey;
           const user = getEmailUsername(item.params.from);
@@ -143,10 +143,17 @@ export const loadEvents = () => {
             isDraft: false,
             isMuted: false
           };
-          return email;
+          const recipients = {
+            to: formRecipients(item.params.to),
+            cc: formRecipients(item.params.cc),
+            bcc: formRecipients(item.params.bcc),
+            from: formRecipients(item.params.from)
+          };
+          const params = { email, recipients };
+          const response = await createEmailFromEvent(params);
+          return response;
         })
       );
-      await createEmails(decryptedEmails);
       dispatch(loadThreads({ clear: true }));
     } catch (e) {
       // TO DO
@@ -165,4 +172,8 @@ const getContentMessage = async (bodyKey, recipientId, deviceId) => {
 
 const getEmailUsername = emailAddress => {
   return emailAddress.split('@')[0];
+};
+
+const formRecipients = recipientString => {
+  return recipientString === '' ? [] : recipientString.split(',');
 };

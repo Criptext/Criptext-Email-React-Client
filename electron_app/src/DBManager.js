@@ -65,7 +65,8 @@ const createEmail = async (params, trx) => {
   const emails = [
     ...params.recipients.to,
     ...params.recipients.cc,
-    ...params.recipients.bcc
+    ...params.recipients.bcc,
+    ...params.recipients.from
   ];
   await createContactsIfOrNotStore(emails);
 
@@ -89,19 +90,21 @@ const createEmail = async (params, trx) => {
         emailId,
         contacts,
         emails: params.recipients.cc,
-        type: 'cc'
+        type: 'bcc'
       });
-      const emailContactRow = [...to, ...cc, ...bcc];
+      const from = formEmailContact({
+        emailId,
+        contacts,
+        emails: params.recipients.from,
+        type: 'from'
+      });
+      const emailContactRow = [...to, ...cc, ...bcc, ...from];
       await createEmailContact(emailContactRow, trx);
       return emailId;
     })
     .then(emailId => {
       return [emailId];
     });
-};
-
-const createMultipleEmails = emails => {
-  return db.table(Table.EMAIL).insert(emails);
 };
 
 const formEmailContact = ({ emailId, contacts, emails, type }) => {
@@ -324,7 +327,6 @@ module.exports = {
   createEmail,
   createFeed,
   createKeys,
-  createMultipleEmails,
   createTables,
   deleteEmail,
   deleteFeedById,
