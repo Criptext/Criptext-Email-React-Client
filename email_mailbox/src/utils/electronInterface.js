@@ -1,9 +1,8 @@
 import { LabelType } from './const.js';
 const electron = window.require('electron');
-const remote = electron.remote;
+const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
-const ipcRenderer = electron.ipcRenderer;
 
 export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
