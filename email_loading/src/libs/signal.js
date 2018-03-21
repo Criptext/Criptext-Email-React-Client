@@ -1,6 +1,7 @@
 /*global libsignal util*/
 
-import { postUser } from './../utils/electronInterface';
+import { LabelType } from './../utils/const';
+import { createLabel, postUser } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
 import * as account from './account';
 
@@ -54,6 +55,9 @@ const createAccount = async ({
     signedPreKeyId,
     signedPreKeyPair
   });
+  const systemLabels = Object.values(LabelType);
+  await createLabel(systemLabels);
+
   return true;
 };
 

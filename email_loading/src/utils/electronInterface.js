@@ -46,3 +46,7 @@ export const getAccount = () => {
 export const postUser = params => {
   return clientManager.postUser(params);
 };
+
+export const createLabel = params => {
+  return dbManager.createLabel(params);
+};
