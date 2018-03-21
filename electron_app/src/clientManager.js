@@ -2,57 +2,54 @@ const ClientAPI = require('@criptext/email-http-client');
 const { db, Table } = require('./models.js');
 let client = {};
 
-const initClient = async () => {
-  const account = await db.table(Table.ACCOUNT).select('*');
-  const token = !account.length ? undefined : account[0].jwt;
-  client = new ClientAPI(process.env.REACT_APP_KEYSERVER_URL, token);
-};
-
 const checkClient = async () => {
   if (!client.login) {
-    await initClient();
-    return;
+    const account = await db.table(Table.ACCOUNT).select('*');
+    const token = !account.length ? undefined : account[0].jwt;
+    client = new ClientAPI(process.env.REACT_APP_KEYSERVER_URL, token);
   }
 };
 
-const login = data => {
-  return client.login(data);
-};
+class ClientManager {
+  constructor() {
+    this.check();
+  }
 
-const findKeyBundles = params => {
-  return client.findKeyBundles(params);
-};
+  async check() {
+    await checkClient();
+  }
 
-const getEvents = async () => {
-  const res = await client.getPendingEvents();
-  return formEvents(res.body);
-};
+  login(data) {
+    return client.login(data);
+  }
 
-const formEvents = events => {
-  return events.map(event => {
-    const { params, cmd } = event;
-    return { cmd, params: JSON.parse(params) };
-  });
-};
+  findKeyBundles(params) {
+    return client.findKeyBundles(params);
+  }
 
-const getEmailBody = bodyKey => {
-  return client.getEmailBody(bodyKey);
-};
+  async getEvents() {
+    const res = await client.getPendingEvents();
+    return this.formEvents(res.body);
+  }
 
-const postEmail = params => {
-  return client.postEmail(params);
-};
+  formEvents(events) {
+    return events.map(event => {
+      const { params, cmd } = event;
+      return { cmd, params: JSON.parse(params) };
+    });
+  }
 
-const postUser = params => {
-  return client.postUser(params);
-};
+  getEmailBody(bodyKey) {
+    return client.getEmailBody(bodyKey);
+  }
 
-module.exports = {
-  checkClient,
-  findKeyBundles,
-  getEmailBody,
-  getEvents,
-  login,
-  postEmail,
-  postUser
-};
+  postEmail(params) {
+    return client.postEmail(params);
+  }
+
+  postUser(params) {
+    return client.postUser(params);
+  }
+}
+
+module.exports = new ClientManager();

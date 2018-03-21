@@ -1,9 +1,10 @@
 import { Thread } from './types';
 import {
-  createEmails,
+  createEmail,
   getEmailsGroupByThreadByParams,
   getEvents
 } from '../utils/electronInterface';
+import { removeCriptextDomain } from './../utils/StringUtils';
 import signal from './../libs/signal';
 import { storeValue } from '../utils/storage';
 import { removeHTMLTags } from './../utils/StringUtils';
@@ -117,11 +118,10 @@ export const loadEvents = () => {
     try {
       const receivedEvents = await getEvents();
       const events = receivedEvents.filter(item => item.cmd === 1);
-      const decryptedEmails = await Promise.all(
+      await Promise.all(
         events.map(async item => {
           const bodyKey = item.params.bodyKey;
-          const user = getEmailUsername(item.params.from);
-          const recipientId = user !== 'undefined' ? user : 'erika';
+          const recipientId = getRecipientIdFromEmailAddress(item.params.from);
           const deviceId = 1;
           const { content, preview } = await getContentMessage(
             bodyKey,
@@ -143,10 +143,17 @@ export const loadEvents = () => {
             isDraft: false,
             isMuted: false
           };
-          return email;
+          const recipients = {
+            to: formRecipients(item.params.to),
+            cc: formRecipients(item.params.cc),
+            bcc: formRecipients(item.params.bcc),
+            from: formRecipients(item.params.from)
+          };
+          const params = { email, recipients };
+          const response = await createEmail(params);
+          return response;
         })
       );
-      await createEmails(decryptedEmails);
       dispatch(loadThreads({ clear: true }));
     } catch (e) {
       // TO DO
@@ -163,6 +170,10 @@ const getContentMessage = async (bodyKey, recipientId, deviceId) => {
   return { content, preview };
 };
 
-const getEmailUsername = emailAddress => {
-  return emailAddress.split('@')[0];
+const getRecipientIdFromEmailAddress = emailAddress => {
+  return removeCriptextDomain(emailAddress);
+};
+
+const formRecipients = recipientString => {
+  return recipientString === '' ? [] : recipientString.split(',');
 };
