@@ -126,6 +126,6 @@ export const getEmailBody = params => {
   return clientManager.getEmailBody(params);
 };
 
-export const createEmailFromEvent = params => {
+export const createEmail = params => {
   return dbManager.createEmail(params);
 };

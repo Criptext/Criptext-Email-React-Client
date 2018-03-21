@@ -1,14 +1,13 @@
 const ClientAPI = require('@criptext/email-http-client');
 const { db, Table } = require('./models.js');
-let token = undefined;
 let client = {};
 
 const checkClient = async () => {
-  if (token === undefined) {
+  if (!client.login) {
     const account = await db.table(Table.ACCOUNT).select('*');
-    token = !account.length ? undefined : account[0].jwt;
+    const token = !account.length ? undefined : account[0].jwt;
+    client = new ClientAPI(process.env.REACT_APP_KEYSERVER_URL, token);
   }
-  client = new ClientAPI(process.env.REACT_APP_KEYSERVER_URL, token);
 };
 
 class ClientManager {

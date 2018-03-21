@@ -1,9 +1,10 @@
 import { Thread } from './types';
 import {
-  createEmailFromEvent,
+  createEmail,
   getEmailsGroupByThreadByParams,
   getEvents
 } from '../utils/electronInterface';
+import { removeCriptextDomain } from './../utils/StringUtils';
 import signal from './../libs/signal';
 import { storeValue } from '../utils/storage';
 import { removeHTMLTags } from './../utils/StringUtils';
@@ -120,8 +121,7 @@ export const loadEvents = () => {
       await Promise.all(
         events.map(async item => {
           const bodyKey = item.params.bodyKey;
-          const user = getEmailUsername(item.params.from);
-          const recipientId = user !== 'undefined' ? user : 'erika';
+          const recipientId = getRecipientIdFromEmailAddress(item.params.from);
           const deviceId = 1;
           const { content, preview } = await getContentMessage(
             bodyKey,
@@ -150,7 +150,7 @@ export const loadEvents = () => {
             from: formRecipients(item.params.from)
           };
           const params = { email, recipients };
-          const response = await createEmailFromEvent(params);
+          const response = await createEmail(params);
           return response;
         })
       );
@@ -170,8 +170,8 @@ const getContentMessage = async (bodyKey, recipientId, deviceId) => {
   return { content, preview };
 };
 
-const getEmailUsername = emailAddress => {
-  return emailAddress.split('@')[0];
+const getRecipientIdFromEmailAddress = emailAddress => {
+  return removeCriptextDomain(emailAddress);
 };
 
 const formRecipients = recipientString => {
