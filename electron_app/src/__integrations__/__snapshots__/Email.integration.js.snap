@@ -3,9 +3,12 @@
 exports[`TABLE[Email]: should create email to db 1`] = `
 Array [
   Object {
+    "bcc": null,
+    "cc": null,
     "content": "<p>Hello there</p>",
     "date": "2013-10-07 08:23:19.120",
     "delivered": 0,
+    "from": null,
     "id": 1,
     "isDraft": 1,
     "isMuted": 0,
@@ -16,6 +19,7 @@ Array [
     "secure": 1,
     "subject": "Greetings",
     "threadId": "threadJ",
+    "to": null,
     "unread": 1,
   },
 ]
@@ -24,9 +28,12 @@ Array [
 exports[`TABLE[Email]: should update email: isDraft 1`] = `
 Array [
   Object {
+    "bcc": null,
+    "cc": null,
     "content": "<p>Hello there</p>",
     "date": "2013-10-07 08:23:19.120",
     "delivered": 0,
+    "from": null,
     "id": 1,
     "isDraft": 0,
     "isMuted": 0,
@@ -37,6 +44,7 @@ Array [
     "secure": 1,
     "subject": "Greetings",
     "threadId": "threadJ",
+    "to": null,
     "unread": 1,
   },
 ]
@@ -45,9 +53,12 @@ Array [
 exports[`TABLE[Email]: should update email: isMuted 1`] = `
 Array [
   Object {
+    "bcc": null,
+    "cc": null,
     "content": "<p>Hello there</p>",
     "date": "2013-10-07 08:23:19.120",
     "delivered": 0,
+    "from": null,
     "id": 1,
     "isDraft": 0,
     "isMuted": 1,
@@ -58,6 +69,7 @@ Array [
     "secure": 1,
     "subject": "Greetings",
     "threadId": "threadJ",
+    "to": null,
     "unread": 1,
   },
 ]
