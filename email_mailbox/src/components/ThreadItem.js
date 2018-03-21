@@ -14,7 +14,8 @@ class ThreadItem extends Component {
       onRegionEnter,
       onRegionLeave,
       onSelectThread,
-      labels
+      labels,
+      header
     } = this.props;
     return (
       <div
@@ -28,7 +29,7 @@ class ThreadItem extends Component {
             {this.renderFirstColumn()}
           </div>
           <div>
-            <span>{thread.get('header')}</span>
+            <span>{header}</span>
           </div>
           <div>{this.willDisplaySecureIcon(thread)}</div>
           <div>
@@ -114,7 +115,7 @@ class ThreadItem extends Component {
 
     return (
       <div style={{ background: this.props.color }} className="thread-letters">
-        {this.props.thread.get('letters')}
+        {this.props.letters}
       </div>
     );
   };
@@ -269,9 +270,11 @@ ThreadItem.defaultProps = {
 
 ThreadItem.propTypes = {
   color: PropTypes.string,
+  header: PropTypes.string,
   hovering: PropTypes.bool,
   important: PropTypes.bool,
   labels: PropTypes.array,
+  letters: PropTypes.string,
   mailbox: PropTypes.string,
   multiselect: PropTypes.bool,
   myClass: PropTypes.string,

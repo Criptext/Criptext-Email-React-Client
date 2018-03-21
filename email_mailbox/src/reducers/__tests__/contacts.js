@@ -18,4 +18,3 @@ describe('contacts actions', () => {
     expect(state).toMatchSnapshot();
   });
 });
-
