@@ -3,6 +3,7 @@ import {
   getEmailsByThreadId,
   setMuteEmailById
 } from '../utils/electronInterface';
+import { loadContacts } from './contacts';
 
 export const addEmails = emails => {
   return {
@@ -23,9 +24,22 @@ export const loadEmails = threadId => {
     try {
       const response = await getEmailsByThreadId(threadId);
       const emails = {};
+      let contactIds = [];
       response.forEach(element => {
+        element.from = element.from ? element.from.split(',') : null;
+        element.to = element.to ? element.to.split(',') : null;
+        element.cc = element.cc ? element.cc.split(',') : null;
+        element.bcc = element.bcc ? element.bcc.split(',') : null;
         emails[element.id] = element;
+        contactIds = [
+          ...contactIds,
+          ...element.from,
+          ...element.to,
+          ...element.cc,
+          ...element.bcc
+        ];
       });
+      dispatch(loadContacts(contactIds));
       dispatch(addEmails(emails));
     } catch (e) {
       // TO DO

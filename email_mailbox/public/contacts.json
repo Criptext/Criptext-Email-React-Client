@@ -1,0 +1,14 @@
+{
+  "contacts": [
+    {
+      "id": 1,
+      "name": "Erika Perugachi",
+      "email": "erika@criptext.com"
+    },
+    {
+      "id": 2,
+      "name": "Isabel",
+      "email": "isabel@criptext.com"
+    }
+  ]
+}

@@ -1,42 +1,21 @@
 /* eslint-env node, jest */
 
-import threadsReducer from '../contacts';
+import contactsReducer from '../contacts';
 import * as actions from '../../actions/index';
+import file from './../../../public/contacts.json';
+const contacts = file.contacts;
 
 jest.mock('../../utils/electronInterface');
 
-describe('user actions', () => {
-  it('should add users to state', () => {
-    const contacts = {
-      'test3@criptext.com': {
-        name: 'test 3',
-        email: 'test3@criptext.com'
-      },
-      'test1@criptext.com': {
-        name: 'test 1',
-        email: 'test1@criptext.com'
-      }
-    };
-    const action = actions.addContacts(contacts);
-    const state = threadsReducer(null, action);
-    expect(state).toMatchSnapshot();
-  });
-
-  it('should add user to state', () => {
-    const contact = {
-      name: 'test 1',
-      email: 'test1@criptext.com'
-    };
-    const action = actions.addContact(contact);
-    const state = threadsReducer(
-      {
-        'test3@criptext.com': {
-          name: 'test 3',
-          email: 'test3@criptext.com'
-        }
-      },
-      action
-    );
+describe('contacts actions', () => {
+  it('should add contacts', () => {
+    const data = {};
+    contacts.forEach(element => {
+      data[element.id] = element;
+    });
+    const action = actions.addContacts(data);
+    const state = contactsReducer(undefined, action);
     expect(state).toMatchSnapshot();
   });
 });
+

@@ -1,13 +1,6 @@
 import { Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
-import * as TimeUtils from '../utils/TimeUtils';
 import * as StringUtils from '../utils/StringUtils';
-import {
-  parseAllContacts,
-  getCapitalLetters,
-  buildParticipantsColumnString
-} from '../utils/UserUtils';
-import randomcolor from 'randomcolor';
 
 export default (state = List([]), action) => {
   switch (action.type) {
@@ -26,24 +19,15 @@ export default (state = List([]), action) => {
     }
     case Thread.ADD_BATCH: {
       const threads = action.threads.map(thread => {
-        const testUsers = 'Criptext Info <no-reply@criptext.com>';
-        const contacts = parseAllContacts(testUsers);
         const subject = StringUtils.removeActionsFromSubject(thread.subject);
-
         return Map(thread).merge({
           labels: Set(
             thread.labels ? thread.labels.split(',').map(Number) : []
           ),
-          emails: List(thread.emails.split(',').map(Number)),
-          letters: getCapitalLetters(contacts[0].name),
-          header: buildParticipantsColumnString(contacts),
+          emailIds: List(thread.emailIds.split(',').map(Number)),
           subject,
-          date: TimeUtils.defineTimeByToday(thread.date),
+          date: thread.date,
           timestamp: thread.date,
-          color: randomcolor({
-            seed: contacts[0].email,
-            luminosity: 'bright'
-          }),
           hasOpenAttachments: false,
           lastEmailId: thread.key,
           status: 1,
@@ -52,7 +36,7 @@ export default (state = List([]), action) => {
           totalAttachments: 1,
           unread: true,
           selected: false,
-          participants: testUsers
+          fromContactName: List(thread.fromContactName.split(','))
         });
       });
       if (action.clear) {

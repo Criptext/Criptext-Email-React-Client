@@ -16,8 +16,8 @@
       "isDraft":0,
       "isMuted":0,
       "labels": "7,3,10",
-      "emails": "1",
-      "allowNotifications": 0
+      "emailIds": "1",
+      "fromContactName": "1"
     },
     {
       "id":5,
@@ -35,8 +35,8 @@
       "isDraft":0,
       "isMuted":0,
       "labels": "7,3,10",
-      "emails": "1",
-      "allowNotifications": 0
+      "emailIds": "1",
+      "fromContactName": "1"
     }
   ]
 }
