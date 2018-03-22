@@ -7,7 +7,7 @@ import {
 import { removeAppDomain } from './../utils/StringUtils';
 import signal from './../libs/signal';
 import { storeValue } from '../utils/storage';
-import { removeHTMLTags } from './../utils/StringUtils';
+import { LabelType } from './../utils/const';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -149,7 +149,13 @@ export const loadEvents = () => {
             bcc: formRecipients(item.params.bcc),
             from: formRecipients(item.params.from)
           };
-          const params = { email, recipients };
+          const InboxLabel = LabelType.inbox;
+          const labels = [ InboxLabel.id ];
+          const params = { 
+            email, 
+            recipients,
+            labels
+          };
           const response = await createEmail(params);
           return response;
         })

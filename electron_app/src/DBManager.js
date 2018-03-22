@@ -61,6 +61,12 @@ const createEmailContact = (emailContacts, trx) => {
   return trx.insert(emailContacts).into(Table.EMAIL_CONTACT);
 };
 
+/* Email Label
+   ----------------------------- */
+const createEmailLabel = (emailLabels, trx) => {
+  return trx.insert(emailLabels).into(Table.EMAIL_LABEL);
+}
+
 /* Email
    ----------------------------- */
 const createEmail = async (params, trx) => {
@@ -107,6 +113,14 @@ const createEmail = async (params, trx) => {
       });
       const emailContactRow = [...from, ...to, ...cc, ...bcc];
       await createEmailContact(emailContactRow, trx);
+
+      const emailLabel = formEmailLabel({
+        emailId, 
+        labels: params.labels
+      });
+      const emailLabelRow = [...emailLabel];
+      await createEmailLabel(emailLabelRow, trx);
+
       return emailId;
     })
     .then(emailId => {
@@ -122,6 +136,15 @@ const formEmailContact = ({ emailId, contacts, emails, type }) => {
       contactId: id,
       type
     };
+  });
+};
+
+const formEmailLabel = ({ emailId, labels }) => {
+  return labels.map(labelId => {
+    return {
+      labelId,
+      emailId
+    }
   });
 };
 
