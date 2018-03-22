@@ -4,12 +4,17 @@ import { Status } from './../components/Control';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { removeAppDomain, removeHTMLTags } from '../utils/StringUtils';
-import { createEmail, updateEmail } from './../utils/electronInterface';
+import {
+  createEmail,
+  updateEmail,
+  updateEmailLabel
+} from './../utils/electronInterface';
 import { closeComposerWindow } from '../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
 import { appDomain } from '../utils/const';
 import signal from '../libs/signal';
 const myAccount = window.require('electron').remote.require('./src/Account');
+import { LabelType } from './../utils/const';
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -117,7 +122,8 @@ class ComposerWrapper extends Component {
 
     const data = {
       email,
-      recipients
+      recipients,
+      labels: [LabelType.draft.id]
     };
     try {
       const [emailId] = await createEmail(data);
@@ -125,11 +131,18 @@ class ComposerWrapper extends Component {
       if (res.status !== 200) {
         throw new Error('Error encrypting, try again');
       }
-      const params = {
+      const emailParams = {
         id: emailId,
         isDraft: false
       };
-      await updateEmail(params);
+      const emailLabelParams = {
+        emailId,
+        oldLabelId: LabelType.draft.id,
+        newLabelId: LabelType.sent.id
+      };
+      await updateEmail(emailParams);
+      await updateEmailLabel(emailLabelParams);
+
       closeComposerWindow();
     } catch (e) {
       this.setState({ status: Status.ENABLED });
