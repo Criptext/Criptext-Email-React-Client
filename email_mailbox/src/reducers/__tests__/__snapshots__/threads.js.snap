@@ -3,10 +3,11 @@
 exports[`thread actions should add label 6 to threads 1`] = `
 Immutable.List [
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
-    color: "#dbd230",
     delivered: 0,
     threadId: "6Za2dcMlE0OSSc9",
     timer: 1,
@@ -14,23 +15,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
@@ -41,10 +39,11 @@ Immutable.List [
     ],
   },
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "cuW6ElyoqsR7MMw",
-    color: "#dbd230",
     delivered: 0,
     threadId: "cuW6ElyoqsR7MMw",
     timer: 1,
@@ -52,23 +51,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 5,
     selected: false,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
     labels: Immutable.Set [
@@ -84,10 +80,11 @@ Immutable.List [
 exports[`thread actions should add label 9 1`] = `
 Immutable.List [
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
-    color: "#dbd230",
     delivered: 0,
     threadId: "6Za2dcMlE0OSSc9",
     timer: 1,
@@ -95,23 +92,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
@@ -127,10 +121,11 @@ Immutable.List [
 exports[`thread actions should add threads to state 1`] = `
 Immutable.List [
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
-    color: "#dbd230",
     delivered: 0,
     threadId: "6Za2dcMlE0OSSc9",
     timer: 1,
@@ -138,23 +133,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
@@ -164,10 +156,11 @@ Immutable.List [
     ],
   },
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "cuW6ElyoqsR7MMw",
-    color: "#dbd230",
     delivered: 0,
     threadId: "cuW6ElyoqsR7MMw",
     timer: 1,
@@ -175,23 +168,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 5,
     selected: false,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
     labels: Immutable.Set [
@@ -206,10 +196,11 @@ Immutable.List [
 exports[`thread actions should remove label 7 1`] = `
 Immutable.List [
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
-    color: "#dbd230",
     delivered: 0,
     threadId: "6Za2dcMlE0OSSc9",
     timer: 1,
@@ -217,23 +208,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
@@ -247,10 +235,11 @@ Immutable.List [
 exports[`thread actions should set all threads as not selected 1`] = `
 Immutable.List [
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
-    color: "#dbd230",
     delivered: 0,
     threadId: "6Za2dcMlE0OSSc9",
     timer: 1,
@@ -258,23 +247,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
@@ -284,10 +270,11 @@ Immutable.List [
     ],
   },
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "cuW6ElyoqsR7MMw",
-    color: "#dbd230",
     delivered: 0,
     threadId: "cuW6ElyoqsR7MMw",
     timer: 1,
@@ -295,23 +282,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 5,
     selected: false,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
     labels: Immutable.Set [
@@ -326,10 +310,11 @@ Immutable.List [
 exports[`thread actions should set all threads as selected 1`] = `
 Immutable.List [
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
-    color: "#dbd230",
     delivered: 0,
     threadId: "6Za2dcMlE0OSSc9",
     timer: 1,
@@ -337,23 +322,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: true,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
@@ -363,10 +345,11 @@ Immutable.List [
     ],
   },
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "cuW6ElyoqsR7MMw",
-    color: "#dbd230",
     delivered: 0,
     threadId: "cuW6ElyoqsR7MMw",
     timer: 1,
@@ -374,23 +357,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 5,
     selected: true,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
     labels: Immutable.Set [
@@ -405,10 +385,11 @@ Immutable.List [
 exports[`thread actions should set thread as read 1`] = `
 Immutable.List [
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
-    color: "#dbd230",
     delivered: 0,
     threadId: "6Za2dcMlE0OSSc9",
     timer: 1,
@@ -416,23 +397,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: false,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: false,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
@@ -447,10 +425,11 @@ Immutable.List [
 exports[`thread actions should set thread as selected 1`] = `
 Immutable.List [
   Immutable.Map {
-    participants: "Criptext Info <no-reply@criptext.com>",
+    fromContactName: Immutable.List [
+      "1",
+    ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
-    color: "#dbd230",
     delivered: 0,
     threadId: "6Za2dcMlE0OSSc9",
     timer: 1,
@@ -458,23 +437,20 @@ Immutable.List [
     hasOpenAttachments: false,
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     totalAttachments: 1,
-    letters: "CI",
-    header: "Criptext Info",
     isTrash: 0,
-    date: "ene. 20",
+    date: 1516455734588,
     timesOpened: 2,
     unread: true,
     status: 1,
     timestamp: 1516455734588,
-    emails: Immutable.List [
-      1,
-    ],
     isDraft: 0,
     secure: 1,
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     id: 18,
     selected: true,
-    allowNotifications: 0,
+    emailIds: Immutable.List [
+      1,
+    ],
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [

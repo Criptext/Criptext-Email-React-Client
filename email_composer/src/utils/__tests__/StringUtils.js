@@ -1,17 +1,18 @@
 /* eslint-env node, jest */
 
 import * as utils from '../StringUtils.js';
+import { appDomain } from '../const';
 
 describe('string utils:', () => {
   it('remove criptext domain to criptext email', () => {
-    const email = 'erika@criptext.com';
-    const state = utils.removeCriptextDomain(email);
+    const email = `erika@${appDomain}`;
+    const state = utils.removeAppDomain(email);
     expect(state).toEqual('erika');
   });
 
   it('remove criptext domain to any email', () => {
     const email = 'erika@signal.com';
-    const state = utils.removeCriptextDomain(email);
+    const state = utils.removeAppDomain(email);
     expect(state).toEqual(email);
   });
 

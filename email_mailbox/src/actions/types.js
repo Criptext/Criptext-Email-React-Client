@@ -17,7 +17,6 @@ export const Thread = {
 };
 
 export const Contact = {
-  ADD: 'ADD_CONTACT',
   ADD_BATCH: 'ADD_CONTACTS'
 };
 

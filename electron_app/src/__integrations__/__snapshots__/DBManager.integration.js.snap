@@ -3,9 +3,12 @@
 exports[`Test DBManager should add email to db 1`] = `
 Array [
   Object {
+    "bcc": null,
+    "cc": null,
     "content": "Hello there",
     "date": "2013-10-07 08:23:19.120",
     "delivered": 0,
+    "from": null,
     "id": 1,
     "isDraft": 0,
     "isMuted": 0,
@@ -16,6 +19,7 @@ Array [
     "secure": 1,
     "subject": "Greetings",
     "threadId": "hdnfgdgsd",
+    "to": null,
     "unread": 1,
   },
 ]
@@ -26,9 +30,12 @@ exports[`Test DBManager should delete email 1`] = `Array []`;
 exports[`Test DBManager should update thread emails as read 1`] = `
 Array [
   Object {
+    "bcc": null,
+    "cc": null,
     "content": "Hello there",
     "date": "2013-10-07 08:23:19.120",
     "delivered": 0,
+    "from": null,
     "id": 1,
     "isDraft": 0,
     "isMuted": 0,
@@ -39,6 +46,7 @@ Array [
     "secure": 1,
     "subject": "Greetings",
     "threadId": "hdnfgdgsd",
+    "to": null,
     "unread": 0,
   },
 ]

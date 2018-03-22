@@ -24,6 +24,12 @@ describe('TABLE[Email]:', () => {
         isTrash: false,
         isDraft: true,
         isMuted: false
+      },
+      recipients: {
+        from: ['user@criptext.com'],
+        to: [],
+        cc: [],
+        bcc: []
       }
     });
     const emails = await DBManager.getEmailsByThreadId('threadJ');

@@ -14,7 +14,7 @@ const emailsMapToList = (emailsMap, emailIds) => {
 };
 
 const getEmails = (emails, thread) => {
-  const emailIds = thread ? thread.get('emails') : null;
+  const emailIds = thread ? thread.get('emailIds') : null;
   return emailsMapToList(emails, emailIds);
 };
 
@@ -24,7 +24,7 @@ const getThread = (threads, threadId) => {
   });
 };
 
-const defineLabels = (labelIds, labels) => {
+const defineLabels = (labels, labelIds) => {
   const result = labelIds.toArray().map(labelId => {
     return labels.get(labelId.toString()).toObject();
   });
@@ -34,10 +34,10 @@ const defineLabels = (labelIds, labels) => {
 
 const mapStateToProps = (state, ownProps) => {
   const thread = getThread(state.get('threads'), ownProps.threadId);
-  const emailIds = getEmails(state.get('emails'), thread);
-  const labels = defineLabels(thread.get('labels'), state.get('labels'));
+  const emails = getEmails(state.get('emails'), thread);
+  const labels = defineLabels(state.get('labels'), thread.get('labels'));
   return {
-    emails: emailIds,
+    emails,
     labels,
     thread
   };

@@ -1,19 +1,10 @@
 import { Contact } from '../actions/types';
+import { Map, fromJS } from 'immutable';
 
-export default (state = {}, action) => {
+export default (state = new Map(), action) => {
   switch (action.type) {
     case Contact.ADD_BATCH: {
-      return {
-        ...state,
-        ...action.users
-      };
-    }
-    case Contact.ADD: {
-      const email = action.contact.email.toString();
-      return {
-        ...state,
-        [email]: action.user
-      };
+      return state.merge(fromJS(action.contacts));
     }
     default:
       return state;

@@ -2,6 +2,9 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import { LabelType } from '../utils/const';
+import { defineTimeByToday } from '../utils/TimeUtils';
+import { getCapitalLetters } from '../utils/UserUtils';
+import randomcolor from 'randomcolor';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
   if (thread.get('unread') && threadPos !== selectedThread) {
@@ -14,23 +17,34 @@ const defineLabels = (labelIds, labels) => {
   const result = labelIds.toArray().map(labelId => {
     return labels.get(labelId.toString()).toObject();
   });
-
   return result ? result : [];
 };
 
 const mapStateToProps = (state, ownProps) => {
   const selectedThread = ownProps.selectedThread;
-  const thread = ownProps.thread;
+  const header = ownProps.thread.get('fromContactName').first();
+  const letters = getCapitalLetters(
+    ownProps.thread.get('fromContactName').first()
+  );
+  const color = randomcolor({
+    seed: ownProps.thread.get('id'),
+    luminosity: 'bright'
+  });
+  const thread = ownProps.thread.merge({
+    date: defineTimeByToday(ownProps.thread.get('date'))
+  });
   const labels = defineLabels(thread.get('labels'), state.get('labels'));
 
   return {
     myClass: getThreadClass(thread, ownProps.myIndex, selectedThread),
-    thread: thread,
-    color: thread.get('color'),
+    thread,
+    color,
     multiselect: state.get('activities').get('multiselect'),
     starred: thread.get('labels').contains(LabelType.starred.id),
     important: thread.get('labels').contains(LabelType.important.id),
-    labels
+    labels,
+    letters,
+    header
   };
 };
 

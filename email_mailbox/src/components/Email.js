@@ -15,13 +15,13 @@ const renderEmailCollapse = props => (
     className={`email-container email-container-collapse ${props.classStatus}`}
     onClick={props.onToggleEmail}
   >
-    <span className="email-preview-from">{props.email.get('from')}</span>
-    <span className="email-preview-content">{props.email.get('preview')}</span>
+    <span className="email-preview-from">{props.email.from}</span>
+    <span className="email-preview-content">{props.email.preview}</span>
     <div className="email-preview-info">
       <i className="icon-attach" />
       <i className="icon-checked" />
     </div>
-    <span className="email-preview-date">{props.email.get('date')}</span>
+    <span className="email-preview-date">{props.email.date}</span>
   </div>
 );
 
@@ -34,11 +34,11 @@ const renderEmailExpand = props => (
         </div>
         <div className="email-header-info">
           <span className="email-header-info-from">
-            {props.email.get('from')}
+            {showContacts(props.email.from)}
           </span>
           <div>
             <span className="email-header-info-to">
-              Allison, Daniel, Gabriel, 2 others
+              {`to: ${showContacts(props.email.to)}`}
             </span>
             <i
               className="icon-arrow-down"
@@ -51,7 +51,7 @@ const renderEmailExpand = props => (
           </div>
         </div>
         <div className="email-detail-info">
-          <span>{props.email.get('date')}</span>
+          <span>{props.email.date}</span>
           <i className="icon-bell" />
           <i className="icon-replay" />
           <i
@@ -88,9 +88,7 @@ const renderEmailExpand = props => (
           <ButtonUnsend onClicked={props.unsendButtonOnClicked} />
         </div>
         <div disabled={props.hideView} className="email-text">
-          <div
-            dangerouslySetInnerHTML={{ __html: props.email.get('content') }}
-          />
+          <div dangerouslySetInnerHTML={{ __html: props.email.content }} />
         </div>
         <div disabled={props.hideView} className="email-attachs">
           <AttachItem
@@ -120,6 +118,13 @@ const renderEmailExpand = props => (
     </div>
   </div>
 );
+
+const showContacts = contacts => {
+  return contacts.reduce(
+    (result, contact) => `${result} ${contact.name || contact.email}`,
+    ''
+  );
+};
 
 const renderPopOverEmailDetail = () => (
   <div className="email-more-detail">

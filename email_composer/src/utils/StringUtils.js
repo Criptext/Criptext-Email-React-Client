@@ -1,7 +1,8 @@
 import { HTMLTagsRegex } from './RegexUtils';
+import { appDomain } from './const';
 
-export const removeCriptextDomain = email => {
-  return removeDomainFromEmail(email, 'criptext.com');
+export const removeAppDomain = email => {
+  return removeDomainFromEmail(email, appDomain);
 };
 
 const removeDomainFromEmail = (email, domain) => {

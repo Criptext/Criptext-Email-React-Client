@@ -40,6 +40,10 @@ export const getEmailsByThreadId = threadId => {
   return dbManager.getEmailsByThreadId(threadId);
 };
 
+export const getContactByIds = ids => {
+  return dbManager.getContactByIds(ids);
+};
+
 const parseMailbox = params => {
   switch (params.mailbox) {
     case 'draft': {

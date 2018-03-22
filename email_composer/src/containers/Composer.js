@@ -3,11 +3,13 @@ import Composer from './../components/Composer';
 import { Status } from './../components/Control';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import { removeCriptextDomain, removeHTMLTags } from '../utils/StringUtils';
+import { removeAppDomain, removeHTMLTags } from '../utils/StringUtils';
 import { createEmail, updateEmail } from './../utils/electronInterface';
 import { closeComposerWindow } from '../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
+import { appDomain } from '../utils/const';
 import signal from '../libs/signal';
+import * as account from './../libs/account';
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -110,6 +112,9 @@ class ComposerWrapper extends Component {
       isDraft: true,
       isMuted: false
     };
+    const from = await account.getRecipient();
+    recipients.from = [`${from}@${appDomain}`];
+
     const data = {
       email,
       recipients
@@ -142,9 +147,9 @@ class ComposerWrapper extends Component {
 
   getCriptextRecipients = (recipients, type) =>
     recipients
-      .filter(email => email.indexOf('@criptext.com') > 0)
+      .filter(email => email.indexOf(`@${appDomain}`) > 0)
       .map(email => ({
-        recipientId: removeCriptextDomain(email),
+        recipientId: removeAppDomain(email),
         deviceId: 1,
         type
       }));

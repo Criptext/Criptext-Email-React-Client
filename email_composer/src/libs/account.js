@@ -26,6 +26,14 @@ export const getToken = async () => {
   return res[0].jwt;
 };
 
+export const getRecipient = async () => {
+  const res = await db.getAccount();
+  if (!res.length) {
+    return undefined;
+  }
+  return res[0].recipientId;
+};
+
 export const getIdentityKeyPair = async () => {
   const res = await db.getAccount();
   if (!res.length) {

@@ -10,13 +10,6 @@ const getAccount = () => {
   return db.table(Table.ACCOUNT).select('*');
 };
 
-const getContactByEmails = (emails, trx) => {
-  return trx
-    .select('id', 'email')
-    .from(Table.CONTACT)
-    .whereIn('email', emails);
-};
-
 /* Contact
    ----------------------------- */
 const createContact = params => {
@@ -48,6 +41,20 @@ const getUserByUsername = username => {
     .where({ username });
 };
 
+const getContactByEmails = (emails, trx) => {
+  return trx
+    .select('id', 'email')
+    .from(Table.CONTACT)
+    .whereIn('email', emails);
+};
+
+const getContactByIds = ids => {
+  return db
+    .select('id', 'email')
+    .from(Table.CONTACT)
+    .whereIn('id', ids);
+};
+
 /* EmailContact
    ----------------------------- */
 const createEmailContact = (emailContacts, trx) => {
@@ -63,10 +70,10 @@ const createEmail = async (params, trx) => {
   }
 
   const emails = [
+    ...params.recipients.from,
     ...params.recipients.to,
     ...params.recipients.cc,
-    ...params.recipients.bcc,
-    ...params.recipients.from
+    ...params.recipients.bcc
   ];
   await createContactsIfOrNotStore(emails);
 
@@ -74,6 +81,12 @@ const createEmail = async (params, trx) => {
     .transaction(async trx => {
       const contacts = await getContactByEmails(emails, trx);
       const [emailId] = await createEmail({ email: params.email }, trx);
+      const from = formEmailContact({
+        emailId,
+        contacts,
+        emails: params.recipients.from,
+        type: 'from'
+      });
       const to = formEmailContact({
         emailId,
         contacts,
@@ -89,16 +102,10 @@ const createEmail = async (params, trx) => {
       const bcc = formEmailContact({
         emailId,
         contacts,
-        emails: params.recipients.cc,
+        emails: params.recipients.bcc,
         type: 'bcc'
       });
-      const from = formEmailContact({
-        emailId,
-        contacts,
-        emails: params.recipients.from,
-        type: 'from'
-      });
-      const emailContactRow = [...to, ...cc, ...bcc, ...from];
+      const emailContactRow = [...from, ...to, ...cc, ...bcc];
       await createEmailContact(emailContactRow, trx);
       return emailId;
     })
@@ -120,11 +127,33 @@ const formEmailContact = ({ emailId, contacts, emails, type }) => {
 
 const getEmailsByThreadId = threadId => {
   return db
-    .select('*')
+    .select(
+      `${Table.EMAIL}.*`,
+      db.raw(
+        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'from'
+        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'from'`
+      ),
+      db.raw(
+        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'to'
+        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'to'`
+      ),
+      db.raw(
+        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'cc'
+        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'cc'`
+      ),
+      db.raw(
+        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'bcc'
+        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'bcc'`
+      )
+    )
     .from(Table.EMAIL)
-    .where({
-      threadId
-    });
+    .leftJoin(
+      Table.EMAIL_CONTACT,
+      `${Table.EMAIL_CONTACT}.emailId`,
+      `${Table.EMAIL}.id`
+    )
+    .where({ threadId })
+    .groupBy(`${Table.EMAIL}.id`);
 };
 
 const getEmailsGroupByThreadByMatchText = text => {
@@ -168,19 +197,35 @@ const baseThreadQuery = ({ timestamp, mailbox, limit }) =>
   db
     .select(
       `${Table.EMAIL}.*`,
-      `${Table.EMAIL}.isMuted as allowNotifications`,
       db.raw(
         `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> ${mailbox ||
           -1} THEN ${Table.EMAIL_LABEL}.labelId ELSE NULL END) as labels`
       ),
       db.raw(`group_concat(${Table.EMAIL_LABEL}.labelId) as allLabels`),
-      db.raw(`group_concat(distinct(${Table.EMAIL}.id)) as emails`)
+      db.raw(`group_concat(distinct(${Table.EMAIL}.id)) as emailIds`),
+      db.raw(
+        `group_concat(distinct( CASE WHEN ${
+          Table.CONTACT
+        }.name IS NOT NULL THEN ${Table.CONTACT}.name ELSE ${
+          Table.CONTACT
+        }.email END)) as fromContactName`
+      )
     )
     .from(Table.EMAIL)
     .leftJoin(
       Table.EMAIL_LABEL,
       `${Table.EMAIL}.id`,
       `${Table.EMAIL_LABEL}.emailId`
+    )
+    .leftJoin(Table.EMAIL_CONTACT, builder => {
+      builder
+        .on(`${Table.EMAIL}.id`, `${Table.EMAIL_CONTACT}.emailId`)
+        .on(`${Table.EMAIL_CONTACT}.type`, db.raw('?', ['from']));
+    })
+    .leftJoin(
+      Table.CONTACT,
+      `${Table.EMAIL_CONTACT}.contactId`,
+      `${Table.CONTACT}.id`
     )
     .where('date', '<', timestamp || 'now')
     .groupBy('threadId')
@@ -333,6 +378,7 @@ module.exports = {
   getAccount,
   getAllFeeds,
   getAllLabels,
+  getContactByIds,
   getEmailById,
   getEmailsByThreadId,
   getEmailsGroupByThreadByMatchText,
