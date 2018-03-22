@@ -9,7 +9,7 @@ import { closeComposerWindow } from '../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
 import { appDomain } from '../utils/const';
 import signal from '../libs/signal';
-import * as account from './../libs/account';
+const myAccount = window.require('electron').remote.require('./src/Account');
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -112,7 +112,7 @@ class ComposerWrapper extends Component {
       isDraft: true,
       isMuted: false
     };
-    const from = await account.getRecipient();
+    const from = await myAccount.getRecipientId();
     recipients.from = [`${from}@${appDomain}`];
 
     const data = {

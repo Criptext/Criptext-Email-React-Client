@@ -3,8 +3,8 @@
 import { LabelType } from './../utils/const';
 import { createLabel, postUser } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
-import * as account from './account';
 
+const myAccount = window.require('electron').remote.require('./src/Account');
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 
@@ -41,7 +41,7 @@ const createAccount = async ({
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
   const jwt = res.text;
-  await account.create({
+  await myAccount.create({
     recipientId,
     name,
     jwt,

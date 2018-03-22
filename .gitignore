@@ -27,3 +27,4 @@
 */yarn-error.log*
 *.db
 .vscode
+npmtoken.sh

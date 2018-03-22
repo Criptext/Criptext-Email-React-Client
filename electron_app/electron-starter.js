@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const dbManager = require('./src/DBManager');
+const Account = require('./src/Account');
 
 const loginWindow = require('./src/windows/login');
 const dialogWindow = require('./src/windows/dialog');
@@ -8,7 +9,6 @@ const loadingWindow = require('./src/windows/loading');
 const composerWindow = require('./src/windows/composer');
 global.modalData = {}
 global.loadingData = {}
-
 
 async function initApp() {
   try {
