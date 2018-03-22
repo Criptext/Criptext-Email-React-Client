@@ -4,7 +4,7 @@ import {
   getEmailsGroupByThreadByParams,
   getEvents
 } from '../utils/electronInterface';
-import { removeCriptextDomain } from './../utils/StringUtils';
+import { removeAppDomain } from './../utils/StringUtils';
 import signal from './../libs/signal';
 import { storeValue } from '../utils/storage';
 import { removeHTMLTags } from './../utils/StringUtils';
@@ -171,7 +171,7 @@ const getContentMessage = async (bodyKey, recipientId, deviceId) => {
 };
 
 const getRecipientIdFromEmailAddress = emailAddress => {
-  return removeCriptextDomain(emailAddress);
+  return removeAppDomain(emailAddress);
 };
 
 const formRecipients = recipientString => {

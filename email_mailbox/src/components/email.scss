@@ -167,6 +167,10 @@
 
     td{
       padding: 4px 0;
+
+      span span:nth-child(2){
+        margin-left: 5px;
+      }
     }
 
     td:nth-child(1){
@@ -189,7 +193,6 @@
     .tag-text{
       color: #9b9b9b;
       font-size: 13px;
-      margin-left: 5px;
     }
   }
 }

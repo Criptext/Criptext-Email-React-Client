@@ -35,15 +35,6 @@ export const parseContact = user => {
   };
 };
 
-export const getCapitalLetters = name => {
-  const names = name.split(' ');
-  const firstName = names[0].charAt(0);
-  if (names.length > 1) {
-    return firstName + names[1].charAt(0);
-  }
-  return firstName;
-};
-
 export const buildParticipantsColumnString = contacts => {
   if (contacts.length === 1) {
     return contacts[0].name;

@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import EmailView from '../components/EmailWrapper';
 import { defineTimeByToday } from '../utils/TimeUtils';
+import { getTwoCapitalLetters } from '../utils/StringUtils';
+import randomcolor from 'randomcolor';
 
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
@@ -9,12 +11,22 @@ const mapStateToProps = (state, ownProps) => {
   const to = getContacts(contacts, email.get('to'));
   const cc = getContacts(contacts, email.get('cc'));
   const bcc = getContacts(contacts, email.get('bcc'));
+  const [{ name: senderName, email: senderEmail }] = from;
+  const color = senderEmail
+    ? randomcolor({
+        seed: senderName || senderEmail,
+        luminosity: 'bright'
+      })
+    : 'transparent';
+  const letters = getTwoCapitalLetters(senderName || senderEmail || '');
   const myEmail = email.merge({
     date: defineTimeByToday(email.get('date')),
     from,
     to,
     cc,
-    bcc
+    bcc,
+    color,
+    letters
   });
   return {
     email: myEmail.toJS(),
@@ -26,7 +38,9 @@ const getContacts = (contacts, contactIds) => {
   return !contactIds
     ? []
     : contactIds.toArray().map(contactId => {
-        return contacts.size ? contacts.get(contactId) : { id: contactId };
+        return contacts.size
+          ? contacts.get(contactId).toObject()
+          : { id: contactId };
       });
 };
 

@@ -1,3 +1,4 @@
+export const appDomain = 'criptext.com';
 export const LabelType = {
   inbox: {
     id: 1,

@@ -3,7 +3,7 @@ import * as actions from '../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import { LabelType } from '../utils/const';
 import { defineTimeByToday } from '../utils/TimeUtils';
-import { getCapitalLetters } from '../utils/UserUtils';
+import { getTwoCapitalLetters } from '../utils/StringUtils';
 import randomcolor from 'randomcolor';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
@@ -23,11 +23,11 @@ const defineLabels = (labelIds, labels) => {
 const mapStateToProps = (state, ownProps) => {
   const selectedThread = ownProps.selectedThread;
   const header = ownProps.thread.get('fromContactName').first();
-  const letters = getCapitalLetters(
+  const letters = getTwoCapitalLetters(
     ownProps.thread.get('fromContactName').first()
   );
   const color = randomcolor({
-    seed: ownProps.thread.get('id'),
+    seed: header,
     luminosity: 'bright'
   });
   const thread = ownProps.thread.merge({

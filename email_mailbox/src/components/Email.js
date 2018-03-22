@@ -29,8 +29,11 @@ const renderEmailExpand = props => (
   <div>
     <div className="email-container email-container-expand">
       <div className="email-info" onClick={props.onToggleEmail}>
-        <div className="email-icon-letter">
-          <span>DM</span>
+        <div
+          style={{ background: props.email.color }}
+          className="email-icon-letter"
+        >
+          <span>{props.email.letters}</span>
         </div>
         <div className="email-header-info">
           <span className="email-header-info-from">
@@ -45,7 +48,7 @@ const renderEmailExpand = props => (
               onClick={props.onTooglePopOverEmailDetail}
             >
               {props.displayPopOverEmailDetail
-                ? renderPopOverEmailDetail()
+                ? renderPopOverEmailDetail(props.email)
                 : null}
             </i>
           </div>
@@ -126,7 +129,7 @@ const showContacts = contacts => {
   );
 };
 
-const renderPopOverEmailDetail = () => (
+const renderPopOverEmailDetail = props => (
   <div className="email-more-detail">
     <table>
       <tbody>
@@ -135,8 +138,9 @@ const renderPopOverEmailDetail = () => (
             <span className="title">From:</span>
           </td>
           <td>
-            <span className="text">Minerva Mc Gonagall</span>
-            <span className="tag-text">{'<minervamcriptext.com>'}</span>
+            {props.from.map((contact, index) => {
+              return <ContactTag key={index} contact={contact} />;
+            })}
           </td>
         </tr>
         <tr>
@@ -144,8 +148,9 @@ const renderPopOverEmailDetail = () => (
             <span className="title">To:</span>
           </td>
           <td>
-            <span className="text">Minerva Mc Gonagall</span>
-            <span className="tag-text">{'<minervamcriptext.com>'}</span>
+            {props.to.map((contact, index) => {
+              return <ContactTag key={index} contact={contact} />;
+            })}
           </td>
         </tr>
         <tr>
@@ -153,7 +158,7 @@ const renderPopOverEmailDetail = () => (
             <span className="title">Date:</span>
           </td>
           <td>
-            <span className="text">Mon, Dec 4, 2017 at 3:26 PM</span>
+            <span className="text">{props.date}</span>
           </td>
         </tr>
         <tr>
@@ -161,7 +166,7 @@ const renderPopOverEmailDetail = () => (
             <span className="title">Subject:</span>
           </td>
           <td>
-            <span className="text">Meeting lunes 04/Dic/2017</span>
+            <span className="text">{props.subject}</span>
           </td>
         </tr>
       </tbody>
@@ -249,6 +254,15 @@ const renderAttachLastOpenedList = () => (
   </ul>
 );
 
+const ContactTag = props => (
+  <span>
+    {props.contact.name ? (
+      <span className="text">{props.contact.name}</span>
+    ) : null}
+    <span className="tag-text">{`<${props.contact.email}>`}</span>
+  </span>
+);
+
 renderEmailCollapse.propTypes = {
   classStatus: PropTypes.string,
   email: PropTypes.object,
@@ -264,6 +278,17 @@ renderEmailExpand.propTypes = {
   onTooglePopOverEmailDetail: PropTypes.func,
   onTogglePopOverMenuAction: PropTypes.func,
   unsendButtonOnClicked: PropTypes.func
+};
+
+renderPopOverEmailDetail.propTypes = {
+  date: PropTypes.string,
+  from: PropTypes.array,
+  subject: PropTypes.string,
+  to: PropTypes.array
+};
+
+ContactTag.propTypes = {
+  contact: PropTypes.object
 };
 
 Email.propTypes = {

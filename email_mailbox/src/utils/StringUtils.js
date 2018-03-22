@@ -1,4 +1,5 @@
 import { HTMLTagsRegex } from './RegexUtils';
+import { appDomain } from './const';
 
 export const removeActionsFromSubject = subject => {
   const actions = ['Re:', 'RE:'];
@@ -24,8 +25,8 @@ const deleteSubstring = (substring, string) => {
   return string.replace(substring, '').trim();
 };
 
-export const removeCriptextDomain = email => {
-  return removeDomainFromEmail(email, 'criptext.com');
+export const removeAppDomain = email => {
+  return removeDomainFromEmail(email, appDomain);
 };
 
 const removeDomainFromEmail = (email, domain) => {
@@ -34,4 +35,12 @@ const removeDomainFromEmail = (email, domain) => {
 
 export const removeHTMLTags = string => {
   return string.replace(HTMLTagsRegex, '');
+};
+
+export const getTwoCapitalLetters = string => {
+  const strings = string.split(' ');
+  if (strings.length === 1) {
+    return strings[0].slice(0, 2).toUpperCase();
+  }
+  return (strings[0].charAt(0) + strings[1].charAt(0)).toUpperCase();
 };
