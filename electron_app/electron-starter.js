@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const dbManager = require('./src/DBManager');
-const Account = require('./src/Account');
+const myAccount = require('./src/Account');
 
 const loginWindow = require('./src/windows/login');
 const dialogWindow = require('./src/windows/dialog');
@@ -17,8 +17,8 @@ async function initApp() {
     console.log(ex);
   }
 
-  const existingAccount = await dbManager.getAccount();
-  if (existingAccount.length > 0) {
+  await myAccount.initialize()
+  if (myAccount.getRecipientId()) {
     mailboxWindow.show();
   } else {
     loginWindow.show();
