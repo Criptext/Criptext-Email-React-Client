@@ -9,10 +9,13 @@ jest.mock('../../utils/electronInterface');
 
 describe('contacts actions', () => {
   it('should add contacts', () => {
-    const data = {};
-    contacts.forEach(element => {
-      data[element.id] = element;
-    });
+    const data = contacts.reduce(
+      (result, element) => ({
+        ...result,
+        [element.id]: element
+      }),
+      {}
+    );
     const action = actions.addContacts(data);
     const state = contactsReducer(undefined, action);
     expect(state).toMatchSnapshot();

@@ -23,24 +23,27 @@ export const loadEmails = threadId => {
   return async dispatch => {
     try {
       const response = await getEmailsByThreadId(threadId);
-      const emails = {};
-      let contactIds = [];
-      response.forEach(element => {
-        element.from = element.from ? element.from.split(',') : null;
-        element.to = element.to ? element.to.split(',') : null;
-        element.cc = element.cc ? element.cc.split(',') : null;
-        element.bcc = element.bcc ? element.bcc.split(',') : null;
-        emails[element.id] = element;
-        contactIds = [
-          ...contactIds,
-          ...element.from,
-          ...element.to,
-          ...element.cc,
-          ...element.bcc
-        ];
-      });
-      dispatch(loadContacts(contactIds));
-      dispatch(addEmails(emails));
+      const data = response.reduce(
+        (result, element) => {
+          element.from = element.from ? element.from.split(',') : [];
+          element.to = element.to ? element.to.split(',') : [];
+          element.cc = element.cc ? element.cc.split(',') : [];
+          element.bcc = element.bcc ? element.bcc.split(',') : [];
+          return {
+            emails: { ...result.emails, [element.id]: element },
+            contactIds: [
+              ...result.contactIds,
+              ...element.from,
+              ...element.to,
+              ...element.cc,
+              ...element.bcc
+            ]
+          };
+        },
+        { emails: {}, contactIds: [] }
+      );
+      dispatch(loadContacts(data.contactIds));
+      dispatch(addEmails(data.emails));
     } catch (e) {
       // TO DO
     }

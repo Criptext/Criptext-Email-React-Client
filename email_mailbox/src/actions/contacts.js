@@ -12,10 +12,13 @@ export const loadContacts = ids => {
   return async dispatch => {
     try {
       const response = await db.getContactByIds(ids);
-      const contacts = {};
-      response.forEach(element => {
-        contacts[element.id] = element;
-      });
+      const contacts = response.reduce(
+        (result, element) => ({
+          ...result,
+          [element.id]: element
+        }),
+        {}
+      );
       dispatch(addContacts(contacts));
     } catch (e) {
       // TO DO
