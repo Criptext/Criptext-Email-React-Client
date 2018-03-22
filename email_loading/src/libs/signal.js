@@ -55,8 +55,7 @@ const createAccount = async ({
     signedPreKeyId,
     signedPreKeyPair
   });
-  const systemLabels = Object.values(LabelType);
-  await createLabel(systemLabels);
+  await createLabel(LabelType);
 
   return true;
 };
