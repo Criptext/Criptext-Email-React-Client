@@ -4,7 +4,7 @@ import './attachitem.css';
 
 const AttachItem = props => (
   <div className="attach-container">
-    {defineView(props.status, props.image)}
+    {defineView(props.status, props.attachment)}
     {props.status !== AttachItemStatus.UNSENT
       ? renderAttachInfo()
       : renderAttachWithoutInfo()}
@@ -71,7 +71,7 @@ attachPreview.propTypes = {
 };
 
 AttachItem.propTypes = {
-  image: PropTypes.object,
+  attachment: PropTypes.object,
   status: PropTypes.number
 };
 
