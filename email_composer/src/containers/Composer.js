@@ -130,7 +130,6 @@ class ComposerWrapper extends Component {
       if (res.status !== 200) {
         throw new Error('Error encrypting, try again');
       }
-
       const emailParams = {
         id: emailId,
         isDraft: false
