@@ -15,7 +15,7 @@ const renderEmailCollapse = props => (
     className={`email-container email-container-collapse ${props.classStatus}`}
     onClick={props.onToggleEmail}
   >
-    <span className="email-preview-from">{props.email.from}</span>
+    <span className="email-preview-from">{showContacts(props.email.from)}</span>
     <span className="email-preview-content">{props.email.preview}</span>
     <div className="email-preview-info">
       <i className="icon-attach" />
