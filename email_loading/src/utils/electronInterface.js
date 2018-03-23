@@ -5,6 +5,8 @@ const clientManager = remote.require('./src/clientManager');
 
 export const myAccount = remote.require('./src/Account');
 
+export const LabelType = remote.require('./src/systemLabels');
+
 export const remoteData = remote.getGlobal('loadingData');
 
 export const closeCreatingKeys = () => {

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
-import { LabelType } from '../utils/const';
+import { LabelType } from '../utils/electronInterface';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
 import randomcolor from 'randomcolor';

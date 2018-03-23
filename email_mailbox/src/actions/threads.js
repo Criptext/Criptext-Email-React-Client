@@ -10,7 +10,7 @@ import {
 import { removeAppDomain, removeHTMLTags } from './../utils/StringUtils';
 import signal from './../libs/signal';
 import { storeValue } from '../utils/storage';
-import { LabelType } from './../utils/const';
+import { LabelType } from './../utils/electronInterface';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
