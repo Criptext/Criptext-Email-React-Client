@@ -67,42 +67,53 @@ const renderEmailExpand = props => (
       </div>
       <div className="email-body">
         <div className="email-options">
-          <ButtonExpand
-            icon="icon-attach"
-            info="Sheep Relevance.doc"
-            title="Last Opened: "
-            text="3:20PM"
-            status={ButtonExpandType.NORMAL}
-            renderList={renderAttachLastOpenedList}
-          />
-          <ButtonExpand
-            icon="icon-checked"
-            title="Last Opened: "
-            text="3:20PM"
-            status={ButtonExpandType.OPENED}
-            renderList={renderLastOpenedList}
-          />
-          <ButtonExpand
-            icon="icon-unsend"
-            title="Unsent: "
-            text="3:20PM"
-            status={ButtonExpandType.UNSENT}
-          />
-          <ButtonUnsend onClicked={props.unsendButtonOnClicked} />
+          {props.attachments.length ? (
+            <ButtonExpand
+              icon="icon-attach"
+              info="Sheep Relevance.doc"
+              title="Last Opened: "
+              text="3:20PM"
+              status={ButtonExpandType.NORMAL}
+              renderList={renderAttachLastOpenedList}
+            />
+          ) : null}
+          {props.isFromMe ? (
+            <ButtonExpand
+              icon="icon-checked"
+              title="Last Opened: "
+              text="3:20PM"
+              status={ButtonExpandType.OPENED}
+              renderList={renderLastOpenedList}
+            />
+          ) : null}
+          {props.isUnsend ? (
+            <ButtonExpand
+              icon="icon-unsend"
+              title="Unsent: "
+              text="3:20PM"
+              status={ButtonExpandType.UNSENT}
+            />
+          ) : null}
+          {props.isFromMe && !props.isUnsend ? (
+            <ButtonUnsend onClicked={props.unsendButtonOnClicked} />
+          ) : null}
         </div>
         <div disabled={props.hideView} className="email-text">
           <div dangerouslySetInnerHTML={{ __html: props.email.content }} />
         </div>
-        <div disabled={props.hideView} className="email-attachs">
-          <AttachItem
-            status={AttachItemStatus.DOWNLOADED}
-            image={{
-              data:
-                'https://cdn-img-feed.streeteasy.com/nyc/image/50/300089950.jpg'
-            }}
-          />
-          <AttachItem status={AttachItemStatus.UNSENT} image={{}} />
-        </div>
+        {props.attachments.length ? (
+          <div disabled={props.hideView} className="email-attachs">
+            {props.attachments.map((attachment, index) => {
+              return (
+                <AttachItem
+                  key={index}
+                  status={AttachItemStatus.UNSENT}
+                  attachment={attachment}
+                />
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     </div>
     <div className="email-segment-controls">
@@ -270,10 +281,13 @@ renderEmailCollapse.propTypes = {
 };
 
 renderEmailExpand.propTypes = {
+  attachments: PropTypes.array,
   displayPopOverEmailDetail: PropTypes.bool,
   displayPopOverMenuAction: PropTypes.bool,
   email: PropTypes.object,
   hideView: PropTypes.bool,
+  isFromMe: PropTypes.bool,
+  isUnsend: PropTypes.bool,
   onToggleEmail: PropTypes.func,
   onTooglePopOverEmailDetail: PropTypes.func,
   onTogglePopOverMenuAction: PropTypes.func,

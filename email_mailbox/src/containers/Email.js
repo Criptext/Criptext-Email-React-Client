@@ -30,7 +30,8 @@ const mapStateToProps = (state, ownProps) => {
   });
   return {
     email: myEmail.toJS(),
-    classStatus: myEmail.get('unsent') ? 'email-unsent' : 'email-normal'
+    classStatus: myEmail.get('unsent') ? 'email-unsent' : 'email-normal',
+    attachments: myEmail.get('attachments') ? myEmail.get('attachments') : []
   };
 };
 
