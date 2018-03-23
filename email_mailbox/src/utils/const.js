@@ -34,7 +34,7 @@ export const LabelType = {
   }
 };
 
-export const MailItems = [
+export const SideBarItems = [
   {
     id: 'inbox',
     icon: 'icon-mailbox',

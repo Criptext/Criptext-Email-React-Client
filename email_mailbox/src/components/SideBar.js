@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SideBarItem from './../components/SideBarItem';
 import SideBarLabelItem from './../containers/SideBarLabelItem';
 import LabelEdit from './../containers/LabelEdit';
-import { MailItems } from './../utils/const';
+import { SideBarItems } from './../utils/const';
 import { openComposerWindow } from '../utils/electronInterface';
 import './sidebar.css';
 
@@ -33,7 +33,7 @@ class SideBar extends Component {
           </div>
           <nav>
             <ul>
-              {MailItems.map((item, key) => {
+              {SideBarItems.map((item, key) => {
                 const selected = item.id === this.props.mailboxSelected;
                 return (
                   <SideBarItem

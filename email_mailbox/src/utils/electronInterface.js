@@ -1,4 +1,3 @@
-import { LabelType } from './const.js';
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
@@ -31,7 +30,7 @@ export const getThreads = (timestamp, params) => {
 };
 
 export const getEmailsGroupByThreadByParams = params => {
-  return dbManager.getEmailsGroupByThreadByParams(parseMailbox(params));
+  return dbManager.getEmailsGroupByThreadByParams(params);
 };
 
 export const getEmailsByThreadId = threadId => {
@@ -40,33 +39,6 @@ export const getEmailsByThreadId = threadId => {
 
 export const getContactByIds = ids => {
   return dbManager.getContactByIds(ids);
-};
-
-const parseMailbox = params => {
-  switch (params.mailbox) {
-    case 'draft': {
-      return {
-        ...params,
-        mailbox: -1,
-        getDrafts: true
-      };
-    }
-    case 'trash': {
-      return {
-        ...params,
-        mailbox: -1,
-        getTrash: -1
-      };
-    }
-    default: {
-      return {
-        ...params,
-        mailbox: LabelType[params.mailbox]
-          ? LabelType[params.mailbox].id
-          : params.mailbox
-      };
-    }
-  }
 };
 
 export const getEmailById = emailId => {
