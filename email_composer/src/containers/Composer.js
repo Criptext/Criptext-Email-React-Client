@@ -112,7 +112,7 @@ class ComposerWrapper extends Component {
       isDraft: true,
       isMuted: false
     };
-    const from = myAccount.getRecipientId();
+    const from = myAccount.recipientId;
     recipients.from = [`${from}@${appDomain}`];
 
     const data = {

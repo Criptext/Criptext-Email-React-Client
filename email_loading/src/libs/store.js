@@ -24,7 +24,7 @@ export default class SignalProtocolStore {
   getLocalRegistrationId = () => {
     let result = this.get('registrationId');
     if (!result) {
-      result = myAccount.getRegistrationId();
+      result = myAccount.registrationId;
       this.store['registrationId'] = result;
     }
     return Promise.resolve(result);
