@@ -64,8 +64,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onStarClick: () => {
       const thread = ownProps.thread;
       const threadParams = {
-        idThread: thread.get('id'),
-        threadId: thread.get('threadId')
+        threadIdStore: thread.get('id'),
+        threadIdDB: thread.get('threadId')
       };
       if (thread.get('labels').contains(LabelType.starred.id)) {
         dispatch(actions.removeThreadLabel(threadParams, LabelType.starred.id));
@@ -76,8 +76,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onImportantClick: () => {
       const thread = ownProps.thread;
       const threadParams = {
-        idThread: thread.get('id'),
-        threadId: thread.get('threadId')
+        threadIdStore: thread.get('id'),
+        threadIdDB: thread.get('threadId')
       };
       if (thread.get('labels').contains(LabelType.important.id)) {
         dispatch(

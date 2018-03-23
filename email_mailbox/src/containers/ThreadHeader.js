@@ -4,8 +4,8 @@ import ThreadHeaderView from '../components/ThreadHeader';
 
 const formThreadParams = thread => {
   return {
-    idThread: thread.get('id'),
-    threadId: thread.get('threadId')
+    threadIdStore: thread.get('id'),
+    threadIdDB: thread.get('threadId')
   };
 };
 

@@ -64,7 +64,7 @@ const createEmailContact = (emailContacts, trx) => {
 /* Email Label
    ----------------------------- */
 const createEmailLabel = (emailLabels, trx) => {
-  const knex = trx ? trx : db;
+  const knex = trx || db;
   return knex.insert(emailLabels).into(Table.EMAIL_LABEL);
 };
 

@@ -190,12 +190,12 @@ const formRecipients = recipientString => {
 export const addThreadLabel = (threadParams, labelId) => {
   return async dispatch => {
     try {
-      const { idThread, threadId } = threadParams;
-      const emails = await getEmailsByThreadId(threadId);
-      const params = formAddThreadLabel(emails, labelId);
+      const { threadIdStore, threadIdDB } = threadParams;
+      const emails = await getEmailsByThreadId(threadIdDB);
+      const params = formAddThreadLabelParams(emails, labelId);
       const dbResponse = await createEmailLabel(params);
       if (dbResponse) {
-        dispatch(addThreadLabelSuccess(idThread, labelId));
+        dispatch(addThreadLabelSuccess(threadIdStore, labelId));
       }
     } catch (e) {
       // TO DO
@@ -206,12 +206,12 @@ export const addThreadLabel = (threadParams, labelId) => {
 export const removeThreadLabel = (threadParams, labelId) => {
   return async dispatch => {
     try {
-      const { idThread, threadId } = threadParams;
-      const emails = await getEmailsByThreadId(threadId);
-      const params = formRemoveThreadLabel(emails, labelId);
+      const { threadIdStore, threadIdDB } = threadParams;
+      const emails = await getEmailsByThreadId(threadIdDB);
+      const params = formRemoveThreadLabelParams(emails, labelId);
       const dbResponse = await deleteEmailLabel(params);
       if (dbResponse) {
-        dispatch(removeThreadLabelSuccess(idThread, labelId));
+        dispatch(removeThreadLabelSuccess(threadIdStore, labelId));
       }
     } catch (e) {
       // TO DO
@@ -219,7 +219,7 @@ export const removeThreadLabel = (threadParams, labelId) => {
   };
 };
 
-const formAddThreadLabel = (emails, labelId) => {
+const formAddThreadLabelParams = (emails, labelId) => {
   return emails.map(email => {
     return {
       emailId: email.id,
@@ -228,7 +228,7 @@ const formAddThreadLabel = (emails, labelId) => {
   });
 };
 
-const formRemoveThreadLabel = (emails, labelId) => {
+const formRemoveThreadLabelParams = (emails, labelId) => {
   return {
     emailsId: emails.map(email => email.id),
     labelId
@@ -238,17 +238,17 @@ const formRemoveThreadLabel = (emails, labelId) => {
 export const addThreadsLabel = (threadsParams, labelId) => {
   return async dispatch => {
     try {
-      const idThreads = threadsParams.map(param => param.idThread);
-      const threadIds = threadsParams.map(param => param.threadId);
+      const storeIds = threadsParams.map(param => param.threadIdStore);
+      const threadIds = threadsParams.map(param => param.threadIdDB);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
           const threadEmails = await getEmailsByThreadId(threadId);
-          const params = formAddThreadLabel(threadEmails, labelId);
+          const params = formAddThreadLabelParams(threadEmails, labelId);
           return await createEmailLabel(params);
         })
       );
       if (dbReponse) {
-        dispatch(addThreadsLabelSuccess(idThreads, labelId));
+        dispatch(addThreadsLabelSuccess(storeIds, labelId));
       }
     } catch (e) {
       // TO DO
@@ -259,17 +259,17 @@ export const addThreadsLabel = (threadsParams, labelId) => {
 export const removeThreadsLabel = (threadsParams, labelId) => {
   return async dispatch => {
     try {
-      const idThreads = threadsParams.map(param => param.idThread);
-      const threadIds = threadsParams.map(param => param.threadId);
+      const storeIds = threadsParams.map(param => param.threadIdStore);
+      const threadIds = threadsParams.map(param => param.threadIdDB);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
           const emails = await getEmailsByThreadId(threadId);
-          const params = formRemoveThreadLabel(emails, labelId);
+          const params = formRemoveThreadLabelParams(emails, labelId);
           return await deleteEmailLabel(params);
         })
       );
       if (dbReponse) {
-        dispatch(removeThreadsLabelSuccess(idThreads, labelId));
+        dispatch(removeThreadsLabelSuccess(storeIds, labelId));
       }
     } catch (e) {
       // TO DO
