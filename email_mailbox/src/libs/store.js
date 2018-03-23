@@ -1,17 +1,20 @@
 /*global util*/
 
 import * as db from './../utils/electronInterface';
-import * as account from './account';
+
+const myAccount = window.require
+  ? window.require('electron').remote.require('./src/Account')
+  : {};
 
 export default class SignalProtocolStore {
   constructor() {
     this.store = {};
   }
 
-  getIdentityKeyPair = async () => {
+  getIdentityKeyPair = () => {
     let result = this.get('identityKey');
     if (!result) {
-      const res = await account.getIdentityKeyPair();
+      const res = myAccount.getIdentityKeyPair();
       result = {
         privKey: util.toArrayBufferFromBase64(res.privKey),
         pubKey: util.toArrayBufferFromBase64(res.pubKey)
@@ -21,10 +24,10 @@ export default class SignalProtocolStore {
     return result;
   };
 
-  getLocalRegistrationId = async () => {
+  getLocalRegistrationId = () => {
     let result = this.get('registrationId');
     if (!result) {
-      result = await account.getRegistrationId();
+      result = myAccount.registrationId;
       this.store['registrationId'] = result;
     }
     return result;

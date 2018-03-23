@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const dbManager = require('./src/DBManager');
+const myAccount = require('./src/Account');
 
 const loginWindow = require('./src/windows/login');
 const dialogWindow = require('./src/windows/dialog');
@@ -9,7 +10,6 @@ const composerWindow = require('./src/windows/composer');
 global.modalData = {}
 global.loadingData = {}
 
-
 async function initApp() {
   try {
     await dbManager.createTables();
@@ -17,8 +17,9 @@ async function initApp() {
     console.log(ex);
   }
 
-  const existingAccount = await dbManager.getAccount();
-  if (existingAccount.length > 0) {
+  const [existingAccount] = await dbManager.getAccount()
+  if (existingAccount) {
+    myAccount.initialize(existingAccount)
     mailboxWindow.show();
   } else {
     loginWindow.show();
