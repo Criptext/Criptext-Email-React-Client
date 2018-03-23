@@ -23,6 +23,7 @@ const create = () => {
   mailboxWindow.on('closed', () => {
     mailboxWindow = undefined;
   });
+  mailboxWindow.webContents.openDevTools();
 };
 
 const show = async () => {

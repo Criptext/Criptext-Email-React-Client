@@ -75,10 +75,11 @@ const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
     .update({ labelId: newLabelId });
 };
 
-const deleteEmailLabel = ({ emailId, labelId }) => {
+const deleteEmailLabel = ({emailsId, labelId}) => {
   return db
     .table(Table.EMAIL_LABEL)
-    .where({ emailId, labelId })
+    .where('labelId', labelId)
+    .whereIn('emailId', emailsId)
     .del();
 };
 
@@ -408,6 +409,7 @@ module.exports = {
   createContact,
   createLabel,
   createEmail,
+  createEmailLabel,
   createFeed,
   createKeys,
   createTables,

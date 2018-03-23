@@ -1,8 +1,10 @@
 import { Thread } from './types';
 import {
   createEmail,
+  createEmailLabel,
   getEmailsGroupByThreadByParams,
-  getEvents
+  getEvents,
+  deleteEmailLabel
 } from '../utils/electronInterface';
 import { removeAppDomain } from './../utils/StringUtils';
 import signal from './../libs/signal';
@@ -31,25 +33,25 @@ export const filterThreadsByUnread = enabled => ({
   enabled: enabled
 });
 
-export const addThreadLabel = (threadId, label) => ({
+export const addThreadLabelSuccess = (threadId, label) => ({
   type: Thread.ADD_THREAD_LABEL,
   targetThread: threadId,
   label: label
 });
 
-export const addThreadsLabel = (threadId, label) => ({
+export const addThreadsLabelSuccess = (threadId, label) => ({
   type: Thread.ADD_THREADS_LABEL,
   threadsIds: threadId,
   label: label
 });
 
-export const removeThreadLabel = (threadId, label) => ({
+export const removeThreadLabelSuccess = (threadId, label) => ({
   type: Thread.REMOVE_LABEL,
   targetThread: threadId,
   label: label
 });
 
-export const removeThreadsLabel = (threadId, label) => ({
+export const removeThreadsLabelSuccess = (threadId, label) => ({
   type: Thread.REMOVE_THREADS_LABEL,
   threadsIds: threadId,
   label: label
@@ -183,3 +185,61 @@ const getRecipientIdFromEmailAddress = emailAddress => {
 const formRecipients = recipientString => {
   return recipientString === '' ? [] : recipientString.split(',');
 };
+
+// Single Thread
+
+export const addThreadLabel = (threadParams, labelId) => {
+  return async dispatch => {
+    try {
+      const { idThread, threadId } = threadParams;
+      //const params = formThreadEmailLabel(threads, labelId);
+      //await createEmailLabel(params);
+      dispatch(addThreadLabelSuccess(idThread, labelId));
+    } catch (e) {
+      // TO DO
+    }
+  };
+}
+
+export const removeThreadLabel = (threadParams, labelId) => {
+  return async dispatch => {
+    try {
+      const { idThread, threadId } = threadParams;
+      //const params = formThreadEmailLabel(threads, labelId);
+      //await deleteEmailLabel(params);
+      dispatch(removeThreadLabelSuccess(idThread, labelId));
+    } catch (e) {
+      // TO DO
+    }
+  };
+}
+
+// Multiple Thread
+
+export const addThreadsLabel = (threadsParams, labelId) => {
+  return async dispatch => {
+    try {
+      const idThreads = threadsParams.map(param => param.idThread);
+      const threadIds = threadsParams.map(param => param.threadId);
+      //const params = formThreadEmailLabel(threads, labelId);
+      //await createEmailLabel(params);
+      dispatch(addThreadsLabelSuccess(idThreads, labelId));
+    } catch (e) {
+      // TO DO
+    }
+  };
+}
+
+export const removeThreadsLabel = (threadsParams, labelId) => {
+  return async dispatch => {
+    try {
+      const idThreads = threadsParams.map(param => param.idThread);
+      const threadIds = threadsParams.map(param => param.threadId);
+      //const params = formThreadEmailLabel(threads, labelId);
+      //await deleteEmailLabel(params);
+      dispatch(removeThreadsLabelSuccess(idThreads, labelId));
+    } catch (e) {
+      // TO DO
+    }
+  };
+}
