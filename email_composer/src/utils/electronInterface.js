@@ -47,3 +47,7 @@ export const findKeyBundles = params => {
 export const postEmail = params => {
   return clientManager.postEmail(params);
 };
+
+export const updateEmailLabel = params => {
+  return dbManager.updateEmailLabel(params);
+};

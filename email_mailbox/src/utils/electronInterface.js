@@ -133,3 +133,11 @@ export const getEmailBody = params => {
 export const createEmail = params => {
   return dbManager.createEmail(params);
 };
+
+export const createEmailLabel = params => {
+  return dbManager.createEmailLabel(params);
+};
+
+export const deleteEmailLabel = params => {
+  return dbManager.deleteEmailLabel(params);
+};

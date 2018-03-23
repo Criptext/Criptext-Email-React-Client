@@ -2,13 +2,22 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import ThreadHeaderView from '../components/ThreadHeader';
 
+const formThreadParams = thread => {
+  return {
+    threadIdStore: thread.get('id'),
+    threadIdDB: thread.get('threadId')
+  };
+};
+
 const mapStateToProps = (state, ownProps) => {
   const labels = getLabelIncluded(
     state.get('labels'),
     ownProps.thread ? ownProps.thread.get('labels') : null
   );
   return {
-    threadsSelected: [ownProps.thread ? ownProps.thread.get('id') : null],
+    threadsSelected: [
+      ownProps.thread ? formThreadParams(ownProps.thread) : null
+    ],
     labels,
     allLabels: state.get('labels'),
     history: ownProps.history

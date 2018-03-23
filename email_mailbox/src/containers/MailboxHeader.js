@@ -67,7 +67,11 @@ function getThreadsSelected(threads, multiselect) {
   }
   return threads.reduce(function(ids, thread) {
     if (thread.get('selected')) {
-      ids.push(thread.get('id'));
+      const selectedThread = {
+        threadIdStore: thread.get('id'),
+        threadIdDB: thread.get('threadId')
+      };
+      ids.push(selectedThread);
     }
     return ids;
   }, []);

@@ -61,6 +61,28 @@ const createEmailContact = (emailContacts, trx) => {
   return trx.insert(emailContacts).into(Table.EMAIL_CONTACT);
 };
 
+/* Email Label
+   ----------------------------- */
+const createEmailLabel = (emailLabels, trx) => {
+  const knex = trx || db;
+  return knex.insert(emailLabels).into(Table.EMAIL_LABEL);
+};
+
+const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
+  return db
+    .table(Table.EMAIL_LABEL)
+    .where({ emailId, labelId: oldLabelId })
+    .update({ labelId: newLabelId });
+};
+
+const deleteEmailLabel = ({ emailsId, labelId }) => {
+  return db
+    .table(Table.EMAIL_LABEL)
+    .where('labelId', labelId)
+    .whereIn('emailId', emailsId)
+    .del();
+};
+
 /* Email
    ----------------------------- */
 const createEmail = async (params, trx) => {
@@ -107,6 +129,14 @@ const createEmail = async (params, trx) => {
       });
       const emailContactRow = [...from, ...to, ...cc, ...bcc];
       await createEmailContact(emailContactRow, trx);
+
+      const emailLabel = formEmailLabel({
+        emailId,
+        labels: params.labels
+      });
+      const emailLabelRow = [...emailLabel];
+      await createEmailLabel(emailLabelRow, trx);
+
       return emailId;
     })
     .then(emailId => {
@@ -121,6 +151,15 @@ const formEmailContact = ({ emailId, contacts, emails, type }) => {
       emailId,
       contactId: id,
       type
+    };
+  });
+};
+
+const formEmailLabel = ({ emailId, labels }) => {
+  return labels.map(labelId => {
+    return {
+      labelId,
+      emailId
     };
   });
 };
@@ -370,10 +409,12 @@ module.exports = {
   createContact,
   createLabel,
   createEmail,
+  createEmailLabel,
   createFeed,
   createKeys,
   createTables,
   deleteEmail,
+  deleteEmailLabel,
   deleteFeedById,
   getAccount,
   getAllFeeds,
@@ -390,6 +431,7 @@ module.exports = {
   getUserByUsername,
   markThreadAsRead,
   updateEmail,
+  updateEmailLabel,
   updateFeed,
   updateLabel
 };
