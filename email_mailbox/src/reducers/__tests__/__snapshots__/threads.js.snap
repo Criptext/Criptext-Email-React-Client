@@ -35,7 +35,6 @@ Immutable.List [
       7,
       3,
       10,
-      6,
     ],
   },
   Immutable.Map {
@@ -71,7 +70,6 @@ Immutable.List [
       7,
       3,
       10,
-      6,
     ],
   },
 ]
@@ -112,7 +110,6 @@ Immutable.List [
       7,
       3,
       10,
-      9,
     ],
   },
 ]
@@ -225,8 +222,9 @@ Immutable.List [
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
-      10,
+      7,
       3,
+      10,
     ],
   },
 ]

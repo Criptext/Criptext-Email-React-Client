@@ -70,9 +70,8 @@ function getThreadsSelected(threads, multiselect) {
       const selectedThread = {
         idThread: thread.get('id'),
         threadId: thread.get('threadId')
-      }
+      };
       ids.push(selectedThread);
-      //ids.push(thread.get('id'));
     }
     return ids;
   }, []);

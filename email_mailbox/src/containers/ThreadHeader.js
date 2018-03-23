@@ -6,8 +6,8 @@ const formThreadParams = thread => {
   return {
     idThread: thread.get('id'),
     threadId: thread.get('threadId')
-  }
-}
+  };
+};
 
 const mapStateToProps = (state, ownProps) => {
   const labels = getLabelIncluded(
@@ -15,7 +15,9 @@ const mapStateToProps = (state, ownProps) => {
     ownProps.thread ? ownProps.thread.get('labels') : null
   );
   return {
-    threadsSelected: [ownProps.thread ? formThreadParams(ownProps.thread) : null],
+    threadsSelected: [
+      ownProps.thread ? formThreadParams(ownProps.thread) : null
+    ],
     labels,
     allLabels: state.get('labels'),
     history: ownProps.history

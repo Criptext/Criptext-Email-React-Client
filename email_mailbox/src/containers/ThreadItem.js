@@ -66,15 +66,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const threadParams = {
         idThread: thread.get('id'),
         threadId: thread.get('threadId')
-      }
+      };
       if (thread.get('labels').contains(LabelType.starred.id)) {
-        dispatch(
-          actions.removeThreadLabel(threadParams, LabelType.starred.id)
-        );
+        dispatch(actions.removeThreadLabel(threadParams, LabelType.starred.id));
       } else {
-        dispatch(
-          actions.addThreadLabel(threadParams, LabelType.starred.id)
-        );
+        dispatch(actions.addThreadLabel(threadParams, LabelType.starred.id));
       }
     },
     onImportantClick: () => {
@@ -82,15 +78,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const threadParams = {
         idThread: thread.get('id'),
         threadId: thread.get('threadId')
-      }
+      };
       if (thread.get('labels').contains(LabelType.important.id)) {
         dispatch(
           actions.removeThreadLabel(threadParams, LabelType.important.id)
         );
       } else {
-        dispatch(
-          actions.addThreadLabel(threadParams, LabelType.important.id)
-        );
+        dispatch(actions.addThreadLabel(threadParams, LabelType.important.id));
       }
     }
   };

@@ -30,7 +30,8 @@ describe('TABLE[Email]:', () => {
         to: [],
         cc: [],
         bcc: []
-      }
+      },
+      labels: [1]
     });
     const emails = await DBManager.getEmailsByThreadId('threadJ');
     expect(emails).toMatchSnapshot();

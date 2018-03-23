@@ -75,7 +75,7 @@ const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
     .update({ labelId: newLabelId });
 };
 
-const deleteEmailLabel = ({emailsId, labelId}) => {
+const deleteEmailLabel = ({ emailsId, labelId }) => {
   return db
     .table(Table.EMAIL_LABEL)
     .where('labelId', labelId)
