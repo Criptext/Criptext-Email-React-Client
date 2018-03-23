@@ -195,18 +195,6 @@ const getEmailsByThreadId = threadId => {
     .groupBy(`${Table.EMAIL}.id`);
 };
 
-const getEmailsGroupByThreadByMatchText = text => {
-  return db
-    .select(`${Table.EMAIL}.*`)
-    .from(Table.EMAIL)
-    .where('preview', 'like', `%${text}%`)
-    .orWhere('content', 'like', `%${text}%`)
-    .orWhere('subject', 'like', `%${text}%`)
-    .groupBy('threadId')
-    .orderBy('date', 'DESC')
-    .limit(5);
-};
-
 const getEmailsGroupByThreadByParams = (params = {}) => {
   const { timestamp, subject, text, mailbox, plain, limit } = params;
 
@@ -422,7 +410,6 @@ module.exports = {
   getContactByIds,
   getEmailById,
   getEmailsByThreadId,
-  getEmailsGroupByThreadByMatchText,
   getEmailsGroupByThreadByParams,
   getKeys,
   getLabelById,

@@ -54,7 +54,7 @@ const createAccount = async ({
     pubKey,
     registrationId
   });
-  const newAccount = (await getAccount())[0];
+  const [newAccount] = await dbManager.getAccount()
   myAccount.initialize(newAccount);
   await store.storeKeys({
     preKeyId,

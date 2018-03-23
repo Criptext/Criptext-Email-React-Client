@@ -28,10 +28,6 @@ export const getThreads = (timestamp, params) => {
   return dbManager.getThreads(timestamp, params);
 };
 
-export const getEmailsGroupByThreadByMatchText = filter => {
-  return dbManager.getEmailsGroupByThreadByMatchText(filter);
-};
-
 export const getEmailsGroupByThreadByParams = params => {
   return dbManager.getEmailsGroupByThreadByParams(parseMailbox(params));
 };

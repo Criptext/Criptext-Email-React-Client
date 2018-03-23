@@ -60,7 +60,7 @@ const HintsMenu = props => (
             key={index}
             preview={thread.get('preview')}
             date={thread.get('date')}
-            participants={thread.get('header')}
+            participants={thread.get('fromContactName')}
             searchText={props.searchText}
           />
         ))}
