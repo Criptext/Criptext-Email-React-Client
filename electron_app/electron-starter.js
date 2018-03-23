@@ -17,7 +17,7 @@ async function initApp() {
     console.log(ex);
   }
 
-  const existingAccount = (await dbManager.getAccount())[0]
+  const [existingAccount] = await dbManager.getAccount()
   if (existingAccount) {
     myAccount.initialize(existingAccount)
     mailboxWindow.show();
