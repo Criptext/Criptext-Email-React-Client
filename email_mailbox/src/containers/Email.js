@@ -2,7 +2,9 @@ import { connect } from 'react-redux';
 import EmailView from '../components/EmailWrapper';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
+import { matchOwnEmail } from '../utils/UserUtils';
 import randomcolor from 'randomcolor';
+import { myAccount } from '../utils/electronInterface';
 
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
@@ -31,7 +33,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     email: myEmail.toJS(),
     classStatus: myEmail.get('unsent') ? 'email-unsent' : 'email-normal',
-    attachments: myEmail.get('attachments') ? myEmail.get('attachments') : []
+    attachments: myEmail.get('attachments') ? myEmail.get('attachments') : [],
+    isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail)
   };
 };
 

@@ -4,6 +4,8 @@ const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const ipcRenderer = electron.ipcRenderer;
 
+export const myAccount = remote.require('./src/Account');
+
 export const closeComposerWindow = () => {
   ipcRenderer.send('close-composer');
 };

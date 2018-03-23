@@ -3,6 +3,8 @@ const { ipcRenderer, remote } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 
+export const myAccount = remote.require('./src/Account');
+
 export const remoteData = remote.getGlobal('loadingData');
 
 export const closeCreatingKeys = () => {

@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import MailboxHeaderView from '../components/MailboxHeader';
 import { CustomCheckboxStatus } from '../components/CustomCheckbox';
+import { myAccount } from '../utils/electronInterface';
+import { getTwoCapitalLetters } from '../utils/StringUtils';
 
 const mapStateToProps = state => {
   const multiselect = state.get('activities').get('multiselect');
@@ -24,7 +26,8 @@ const mapStateToProps = state => {
     errorSuggestions: suggestions.get('error'),
     markAsUnread,
     allSelected: threadsSelected.length === state.get('threads').size,
-    showSelectAllOption: true
+    showSelectAllOption: true,
+    accountLetters: getTwoCapitalLetters(myAccount.name)
   };
 };
 

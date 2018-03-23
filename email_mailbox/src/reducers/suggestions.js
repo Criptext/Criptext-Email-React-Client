@@ -15,7 +15,7 @@ export default (
         action.threads.map(thread => {
           return Map(thread).merge({
             date: TimeUtils.defineTimeByToday(thread.date),
-            totalAttachments: 1,
+            totalAttachments: 1
           });
         })
       );

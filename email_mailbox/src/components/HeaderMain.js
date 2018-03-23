@@ -9,7 +9,12 @@ import { List } from 'immutable';
 
 class HeaderMain extends Component {
   render() {
-    const { searchParams, setSearchParam, displaySearchOptions } = this.props;
+    const {
+      searchParams,
+      setSearchParam,
+      displaySearchOptions,
+      accountLetters
+    } = this.props;
     return (
       <div className="header-main">
         <SearchBox
@@ -18,7 +23,7 @@ class HeaderMain extends Component {
           searchText={searchParams.text}
           {...this.props}
         />
-        <span className="header-profile">DM</span>
+        <span className="header-profile">{accountLetters}</span>
         <OptionsMenu {...this.props} />
         <HintsMenu {...this.props} />
       </div>
@@ -236,6 +241,7 @@ SearchInputBox.propTypes = {
 };
 
 HeaderMain.propTypes = {
+  accountLetters: PropTypes.string,
   displaySearchOptions: PropTypes.bool,
   searchParams: PropTypes.object,
   setSearchParam: PropTypes.func

@@ -82,7 +82,7 @@ const renderEmailExpand = props => (
               icon="icon-checked"
               title="Last Opened: "
               text="3:20PM"
-              status={ButtonExpandType.OPENED}
+              status={ButtonExpandType.NORMAL}
               renderList={renderLastOpenedList}
             />
           ) : null}

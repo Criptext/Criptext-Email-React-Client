@@ -1,3 +1,5 @@
+import { appDomain } from './const';
+
 export const parseAllContacts = contacts => {
   const resContacts = [];
   if (!contacts) {
@@ -50,3 +52,6 @@ export const buildParticipantsColumnString = contacts => {
     contacts[1].name.split(' ')[0]
   }... (${contacts.length - 2})`;
 };
+
+export const matchOwnEmail = (myUsername, incomingEmail) =>
+  `${myUsername}@${appDomain}` === incomingEmail;

@@ -5,11 +5,11 @@ import {
   createLabel,
   postUser,
   createAccount as createAccountDB,
-  getAccount
+  getAccount,
+  myAccount
 } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
 
-const myAccount = window.require('electron').remote.require('./src/Account');
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 
@@ -54,7 +54,7 @@ const createAccount = async ({
     pubKey,
     registrationId
   });
-  const [newAccount] = await dbManager.getAccount()
+  const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
   await store.storeKeys({
     preKeyId,
