@@ -13,7 +13,9 @@ const mapStateToProps = (state, ownProps) => {
   const to = getContacts(contacts, email.get('to'));
   const cc = getContacts(contacts, email.get('cc'));
   const bcc = getContacts(contacts, email.get('bcc'));
-  const [{ name: senderName, email: senderEmail }] = from;
+
+  const senderName = from.length ? from[0].name : '';
+  const senderEmail = from.length ? from[0].email : '';
   const color = senderEmail
     ? randomcolor({
         seed: senderName || senderEmail,
@@ -42,7 +44,7 @@ const getContacts = (contacts, contactIds) => {
   return !contactIds
     ? []
     : contactIds.toArray().map(contactId => {
-        return contacts.size
+        return contacts.size && contacts.get(contactId)
           ? contacts.get(contactId).toObject()
           : { id: contactId };
       });
