@@ -74,7 +74,7 @@ class Threads extends Component {
   componentDidMount() {
     this.props.onLoadEvents();
     this.props.onLoadThreads({
-      mailbox: this.props.mailbox,
+      labelId: LabelType[this.props.mailbox].id,
       clear: true
     });
   }
