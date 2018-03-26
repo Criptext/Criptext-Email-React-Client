@@ -27,18 +27,27 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "email_composer/package.json" }}
-          - v2-dependencies-{{ checksum "email_mailbox/package.json" }}
-          - v3-dependencies-{{ checksum "email_dialog/package.json" }}
+          - v2-dependencies-{{ checksum "email_dialog/package.json" }}
+          - v3-dependencies-{{ checksum "email_loading/package.json" }}
+          - v4-dependencies-{{ checksum "email_login/package.json" }}
+          - v5-dependencies-{{ checksum "email_mailbox/package.json" }}
+          
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
           - v2-dependencies-
           - v3-dependencies-
+          - v4-dependencies-
+          - v5-dependencies-
 
       - run: cd email_composer/ && yarn install
 
-      - run: cd email_mailbox/ && yarn install
-
       - run: cd email_dialog/ && yarn install
+
+      - run: cd email_loading/ && yarn install
+
+      - run: cd email_login/ && yarn install
+
+      - run: cd email_mailbox/ && yarn install
 
       - run: cd electron_app/ && yarn install
 
@@ -46,8 +55,10 @@ jobs:
           paths:
             - email_composer/node_modules
             - email_dialog/node_modules
+            - email_loading/node_modules
+            - email_login/node_modules
             - email_mailbox/node_modules
-          key: v2-dependencies-{{ checksum "email_mailbox/package.json" }}
+          key: v5-dependencies-{{ checksum "email_mailbox/package.json" }}
         
       # run tests!
       - checkout
@@ -66,6 +77,26 @@ jobs:
       - run:
           name: Dialog Lint
           command: cd email_dialog/ && yarn lint
+
+      - run: 
+          name: Loading Build
+          command: cd email_loading/ &&  yarn build
+
+      - run:
+          name: Loading Lint
+          command: cd email_loading/ && yarn lint
+
+      - run: 
+          name: Login Build
+          command: cd email_login/ &&  yarn build
+
+      - run:
+          name: Login Unit test
+          command: cd email_login/ && yarn test
+
+      - run:
+          name: Login Lint
+          command: cd email_login/ && yarn lint
 
       - run: 
           name: Mailbox Build
