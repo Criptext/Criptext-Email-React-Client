@@ -14,15 +14,6 @@ export const LabelType = Object.assign(labels, searchLabel);
 
 export const myAccount = remote.require('./src/Account');
 
-const labels = remote.require('./src/systemLabels');
-const searchLabel = {
-  search: {
-    id: null,
-    text: 'Search'
-  }
-};
-export const LabelType = Object.assign(labels, searchLabel);
-
 export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
 };

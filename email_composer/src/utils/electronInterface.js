@@ -7,8 +7,6 @@ export const myAccount = remote.require('./src/Account');
 
 export const LabelType = remote.require('./src/systemLabels');
 
-export const LabelType = remote.require('./src/systemLabels');
-
 export const closeComposerWindow = () => {
   ipcRenderer.send('close-composer');
 };

@@ -4,17 +4,22 @@ import SignalProtocolStore from './store';
 
 const store = new SignalProtocolStore();
 
-const encryptText = async (params, textMessage) => {
-  const addressesTo = params.map(param => {
-    return new libsignal.SignalProtocolAddress(
-      param.recipientId,
-      param.deviceId
-    );
+const generateAddresses = recipientsAndDeviceIds => {
+  return recipientsAndDeviceIds.map(item => {
+    return new libsignal.SignalProtocolAddress(item.recipientId, item.deviceId);
   });
+};
 
-  const recipients = params.map(item => item.recipientId);
-  const deviceIds = params.map(item => item.deviceId);
-  const types = params.map(item => item.type);
+const formAddressesParams = to => {
+  return to.map(item => {
+    return {
+      recipientId: item.recipientId,
+      deviceId: item.deviceId
+    };
+  });
+};
+
+const getKeyBundlesOfRecipients = async recipients => {
   const res = await findKeyBundles({
     recipients,
     knownAddresses: {}
@@ -22,27 +27,16 @@ const encryptText = async (params, textMessage) => {
   if (res.status !== 200) {
     return new Array(recipients.length).fill(null);
   }
+  return res.body;
+};
 
-  const arrayBody = res.body;
-  const arrayKeysBundleTo = arrayBody.map(body => {
-    return keysToArrayBuffer(body);
-  });
-  return await Promise.all(
-    addressesTo.map(async (addressTo, index) => {
-      const sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
-      await sessionBuilder.processPreKey(arrayKeysBundleTo[index]);
-      const sessionCipher = new libsignal.SessionCipher(store, addressTo);
-      await store.loadSession(addressTo);
-      const ciphertext = await sessionCipher.encrypt(textMessage);
-      const body = util.toBase64(util.toArrayBuffer(ciphertext.body));
-      return {
-        body,
-        deviceId: deviceIds[index],
-        recipientId: recipients[index],
-        type: types[index]
-      };
-    })
-  );
+const encryptText = async (addressTo, arrayBufferKey, textMessage) => {
+  const sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
+  await sessionBuilder.processPreKey(arrayBufferKey);
+  const sessionCipher = new libsignal.SessionCipher(store, addressTo);
+  await store.loadSession(addressTo);
+  const ciphertext = await sessionCipher.encrypt(textMessage);
+  return util.toBase64(util.toArrayBuffer(ciphertext.body));
 };
 
 const keysToArrayBuffer = keys => {
@@ -62,11 +56,27 @@ const keysToArrayBuffer = keys => {
 };
 
 const encryptPostEmail = async (subject, to, body) => {
-  const emailsEncrypted = await encryptText(to, body);
-  const criptextEmails = emailsEncrypted.filter(email => email !== null);
-  if (!criptextEmails.length) {
-    throw new Error('Error encrypting, try again');
+  const recipients = to.map(item => item.recipientId);
+  const keyBundles = await getKeyBundlesOfRecipients(recipients);
+  const recipientKeys = keyBundles.filter(key => key !== null);
+  if (!recipientKeys.length) {
+    throw new Error('Error encrypting. No keys. Try again');
   }
+
+  const arrayKeyBundleTo = recipientKeys.map(keys => keysToArrayBuffer(keys));
+  const addressesParams = formAddressesParams(to);
+  const addresses = generateAddresses(addressesParams);
+  const textsEncrypted = await Promise.all(
+    addresses.map(async (address, index) => {
+      return await encryptText(address, arrayKeyBundleTo[index], body);
+    })
+  );
+
+  const criptextEmails = to.map((item, index) => {
+    return Object.assign(item, {
+      body: textsEncrypted[index]
+    });
+  });
   const data = {
     subject,
     criptextEmails
