@@ -1,5 +1,5 @@
 import { Suggestions } from './types';
-import { getEmailsGroupByThreadByMatchText } from '../utils/electronInterface';
+import { getEmailsGroupByThreadByParams } from '../utils/electronInterface';
 import { getMatches } from '../utils/storage';
 
 export const setSuggestions = (threads, hints) => ({
@@ -17,7 +17,12 @@ export const loadSuggestions = filter => {
   return async dispatch => {
     try {
       const hints = await getMatches(filter);
-      const threads = await getEmailsGroupByThreadByMatchText(filter);
+      const threads = await getEmailsGroupByThreadByParams({
+        plain: true,
+        text: filter,
+        mailbox: -1,
+        limit: 5
+      });
       dispatch(setSuggestions(threads, hints));
     } catch (e) {
       dispatch(setSuggestionError('Unable to load suggestions'));

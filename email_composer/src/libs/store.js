@@ -1,7 +1,11 @@
 /*global util*/
 
-import * as db from './../utils/electronInterface';
-const myAccount = window.require('electron').remote.require('./src/Account');
+import {
+  myAccount,
+  createKeys,
+  getPreKeyPair,
+  getSignedPreKey
+} from './../utils/electronInterface';
 
 export default class SignalProtocolStore {
   constructor() {
@@ -93,7 +97,7 @@ export default class SignalProtocolStore {
       signedPrivKey: util.toBase64(signedPreKeyPair.privKey),
       signedPubKey: util.toBase64(signedPreKeyPair.pubKey)
     };
-    Promise.resolve(db.createKeys(params));
+    Promise.resolve(createKeys(params));
   };
 
   loadPreKey = async keyId => {
@@ -101,7 +105,7 @@ export default class SignalProtocolStore {
     if (res) {
       res = { pubKey: res.pubKey, privKey: res.privKey };
     } else {
-      const resp = await db.getPreKeyPair({ preKeyId: keyId });
+      const resp = await getPreKeyPair({ preKeyId: keyId });
       res = {
         privKey: util.toArrayBufferFromBase64(resp[0].preKeyPrivKey),
         pubKey: util.toArrayBufferFromBase64(resp[0].preKeyPubKey)
@@ -124,7 +128,7 @@ export default class SignalProtocolStore {
     if (res) {
       res = { pubKey: res.pubKey, privKey: res.privKey };
     } else {
-      const resp = await db.getSignedPreKey({ signedPreKeyId: keyId });
+      const resp = await getSignedPreKey({ signedPreKeyId: keyId });
       res = {
         privKey: util.toArrayBufferFromBase64(resp[0].signedPrivKey),
         pubKey: util.toArrayBufferFromBase64(resp[0].signedPubKey)

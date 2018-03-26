@@ -4,6 +4,8 @@ const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 
+export const myAccount = remote.require('./src/Account');
+
 export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
 };
@@ -26,10 +28,6 @@ export const updateLabel = params => {
 
 export const getThreads = (timestamp, params) => {
   return dbManager.getThreads(timestamp, params);
-};
-
-export const getEmailsGroupByThreadByMatchText = filter => {
-  return dbManager.getEmailsGroupByThreadByMatchText(filter);
 };
 
 export const getEmailsGroupByThreadByParams = params => {

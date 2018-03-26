@@ -177,7 +177,7 @@ Threads.propTypes = {
   onUnreadToggle: PropTypes.func,
   searchParams: PropTypes.object,
   threads: PropTypes.object,
-  unreadFilter: PropTypes.string
+  unreadFilter: PropTypes.bool
 };
 
 export default Threads;

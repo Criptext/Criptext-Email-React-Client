@@ -9,11 +9,10 @@ import {
   updateEmail,
   updateEmailLabel
 } from './../utils/electronInterface';
-import { closeComposerWindow } from '../utils/electronInterface';
+import { myAccount, closeComposerWindow } from '../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
 import { appDomain } from '../utils/const';
 import signal from '../libs/signal';
-const myAccount = window.require('electron').remote.require('./src/Account');
 import { LabelType } from './../utils/const';
 
 class ComposerWrapper extends Component {
