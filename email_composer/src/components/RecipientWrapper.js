@@ -7,7 +7,7 @@ class RecipientWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayMoreRecipient: false
+      isCollapseMoreRecipient: true
     };
   }
 
@@ -18,7 +18,7 @@ class RecipientWrapper extends Component {
     return (
       <Recipient
         {...this.props}
-        displayMoreRecipient={this.state.displayMoreRecipient}
+        isCollapseMoreRecipient={this.state.isCollapseMoreRecipient}
         bccPlaceholder={bccPlaceholder}
         bccTags={this.props.bccEmails}
         ccPlaceholder={ccPlaceholder}
@@ -39,7 +39,7 @@ class RecipientWrapper extends Component {
 
   handleToggleRecipient = () => {
     this.setState({
-      displayMoreRecipient: !this.state.displayMoreRecipient
+      isCollapseMoreRecipient: !this.state.isCollapseMoreRecipient
     });
   };
 

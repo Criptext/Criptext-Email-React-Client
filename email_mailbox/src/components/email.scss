@@ -6,7 +6,7 @@
   border-radius: 4px;
   display: flex;
   font-family: NunitoSans;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   position: relative;
   width: 100%;
 }
@@ -44,10 +44,11 @@
   font-size: 13px;
   font-weight: 600;
   margin-left: 20px;
-  width: 180px;
+  width: 155px;
 }
 
 .email-preview-content{
+  color: #4a4a4a;
   flex-grow: 1;
   font-size: 13px;
   font-weight: 100;
@@ -88,10 +89,6 @@
   border-bottom: 1px solid #dcdde0;
   display: flex;
   flex-direction: row;
-
-  > div{
-    margin: 10px;
-  }
 }
 
 .email-icon-letter{
@@ -99,11 +96,13 @@
   background-color: blueviolet;
   border-radius: 50%;
   display: flex;
+  margin: 10px;
   height: 40px;
   width: 40px;
 
   span{
     color: white;
+    font-weight: 200;
     margin: 0 auto;
   }
 }
@@ -112,6 +111,7 @@
   display: flex;
   flex-direction: column;
   flex-grow: 2;
+  margin: 8px 5px;
   position: relative;
 
   span{
@@ -200,6 +200,7 @@
 .email-detail-info{
   align-items: flex-end;
   display: flex;
+  margin: 10px 5px;
   position: relative;
 
   span{
@@ -210,7 +211,7 @@
 
   i{
     color: #9197a1;
-    font-size: 22px;
+    font-size: 21px;
     margin: 0 4px;
   }
 }
@@ -340,7 +341,7 @@
     span{
       color: black;
       font-family: NunitoSans;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     &:hover{
