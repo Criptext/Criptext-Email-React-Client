@@ -73,9 +73,7 @@ const encryptPostEmail = async (subject, to, body) => {
   );
 
   const criptextEmails = to.map((item, index) => {
-    return Object.assign(item, {
-      body: textsEncrypted[index]
-    });
+    return { ...item, body: textsEncrypted[index] };
   });
   const data = {
     subject,
