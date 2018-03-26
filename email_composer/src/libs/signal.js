@@ -4,22 +4,45 @@ import SignalProtocolStore from './store';
 
 const store = new SignalProtocolStore();
 
-const encryptText = async (name, deviceId, textMessage) => {
-  const addressTo = new libsignal.SignalProtocolAddress(name, deviceId);
+const encryptText = async (params, textMessage) => {
+  const addressesTo = params.map(param => {
+    return new libsignal.SignalProtocolAddress(
+      param.recipientId,
+      param.deviceId
+    );
+  });
+
+  const recipients = params.map(item => item.recipientId);
+  const deviceIds = params.map(item => item.deviceId);
+  const types = params.map(item => item.type);
   const res = await findKeyBundles({
-    recipients: [name],
+    recipients,
     knownAddresses: {}
   });
   if (res.status !== 200) {
-    return null;
+    return new Array(recipients.length).fill(null);
   }
-  const keysBundleTo = keysToArrayBuffer(res.body[0]);
-  const sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
-  await sessionBuilder.processPreKey(keysBundleTo);
-  const sessionCipher = new libsignal.SessionCipher(store, addressTo);
-  await store.loadSession(addressTo);
-  const ciphertext = await sessionCipher.encrypt(textMessage);
-  return util.toBase64(util.toArrayBuffer(ciphertext.body));
+
+  const arrayBody = res.body;
+  const arrayKeysBundleTo = arrayBody.map(body => {
+    return keysToArrayBuffer(body);
+  });
+  return await Promise.all(
+    addressesTo.map(async (addressTo, index) => {
+      const sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
+      await sessionBuilder.processPreKey(arrayKeysBundleTo[index]);
+      const sessionCipher = new libsignal.SessionCipher(store, addressTo);
+      await store.loadSession(addressTo);
+      const ciphertext = await sessionCipher.encrypt(textMessage);
+      const body = util.toBase64(util.toArrayBuffer(ciphertext.body));
+      return {
+        body,
+        deviceId: deviceIds[index],
+        recipientId: recipients[index],
+        type: types[index]
+      };
+    })
+  );
 };
 
 const keysToArrayBuffer = keys => {
@@ -39,22 +62,8 @@ const keysToArrayBuffer = keys => {
 };
 
 const encryptPostEmail = async (subject, to, body) => {
-  const emailsEncrypted = await Promise.all(
-    to.map(async item => {
-      const { recipientId, deviceId, type } = item;
-      const bodyEncrypted = await encryptText(recipientId, deviceId, body);
-      if (!bodyEncrypted) {
-        return;
-      }
-      return {
-        recipientId,
-        deviceId,
-        body: bodyEncrypted,
-        type
-      };
-    })
-  );
-  const criptextEmails = emailsEncrypted.filter(email => email !== undefined);
+  const emailsEncrypted = await encryptText(to, body);
+  const criptextEmails = emailsEncrypted.filter(email => email !== null);
   if (!criptextEmails.length) {
     throw new Error('Error encrypting, try again');
   }
