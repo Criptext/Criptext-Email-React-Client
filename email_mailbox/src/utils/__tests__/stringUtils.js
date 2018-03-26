@@ -1,6 +1,8 @@
 /* eslint-env node, jest */
 
-import * as utils from '../StringUtils.js';
+import * as utils from './../StringUtils.js';
+
+jest.mock('../../utils/electronInterface');
 
 describe('string utils:', () => {
   it('remove actions from subject', () => {

@@ -18,3 +18,46 @@ export const getAllLabels = async () => {
   });
   return labels;
 };
+
+export const LabelType = {
+  inbox: {
+    id: 1,
+    text: 'Inbox',
+    color: '#0091ff'
+  },
+  spam: {
+    id: 2,
+    text: 'Spam',
+    color: '#ff0000'
+  },
+  sent: {
+    id: 3,
+    text: 'Sent',
+    color: '#1a9759'
+  },
+  important: {
+    id: 4,
+    text: 'Important',
+    color: '#ffdf32'
+  },
+  starred: {
+    id: 5,
+    text: 'Starred',
+    color: '#ffdf32'
+  },
+  draft: {
+    id: 6,
+    text: 'Draft',
+    color: '#666666'
+  },
+  trash: {
+    id: 7,
+    text: 'Trash',
+    color: '#b00e0e'
+  },
+  search: {
+    id: null,
+    text: 'Search',
+    color: '#000000'
+  }
+};

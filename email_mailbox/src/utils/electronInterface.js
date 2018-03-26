@@ -2,6 +2,15 @@ const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
+const labels = remote.require('./src/systemLabels');
+const searchLabel = {
+  search: {
+    id: null,
+    text: 'Search'
+  }
+};
+
+export const LabelType = Object.assign(labels, searchLabel);
 
 export const myAccount = remote.require('./src/Account');
 
@@ -67,7 +76,6 @@ export const deleteFeedById = feedId => {
 
 /* Signal
   ----------------------------- */
-
 export const createKeys = params => {
   return dbManager.createKeys(params);
 };

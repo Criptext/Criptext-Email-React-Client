@@ -1,10 +1,11 @@
 const electron = window.require('electron');
-const remote = electron.remote;
+const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
-const ipcRenderer = electron.ipcRenderer;
 
 export const myAccount = remote.require('./src/Account');
+
+export const LabelType = remote.require('./src/systemLabels');
 
 export const closeComposerWindow = () => {
   ipcRenderer.send('close-composer');

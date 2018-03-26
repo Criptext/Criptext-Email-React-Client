@@ -3,17 +3,18 @@ import Composer from './../components/Composer';
 import { Status } from './../components/Control';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import { removeAppDomain, removeHTMLTags } from '../utils/StringUtils';
+import { removeAppDomain, removeHTMLTags } from './../utils/StringUtils';
 import {
+  closeComposerWindow,
   createEmail,
+  LabelType,
+  myAccount,
   updateEmail,
   updateEmailLabel
 } from './../utils/electronInterface';
-import { myAccount, closeComposerWindow } from '../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
-import { appDomain } from '../utils/const';
 import signal from '../libs/signal';
-import { LabelType } from './../utils/const';
+import { appDomain } from './../utils/const';
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -130,7 +131,6 @@ class ComposerWrapper extends Component {
       if (res.status !== 200) {
         throw new Error('Error encrypting, try again');
       }
-
       const emailParams = {
         id: emailId,
         isDraft: false

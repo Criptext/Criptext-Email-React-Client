@@ -4,7 +4,7 @@ import ThreadItem from '../containers/ThreadItem';
 import { Switch } from 'react-switch-input';
 import ItemTooltip from './ItemTooltip';
 import ReactTooltip from 'react-tooltip';
-import { LabelType } from '../utils/const.js';
+import { LabelType } from '../utils/electronInterface';
 import './threads.css';
 
 class Threads extends Component {

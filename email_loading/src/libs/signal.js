@@ -1,6 +1,6 @@
 /*global libsignal util*/
 
-import { LabelType } from './../utils/const';
+import { LabelType } from './../utils/electronInterface';
 import {
   createLabel,
   postUser,
@@ -62,7 +62,8 @@ const createAccount = async ({
     signedPreKeyId,
     signedPreKeyPair
   });
-  await createLabel(LabelType);
+  const labels = Object.values(LabelType);
+  await createLabel(labels);
 
   return true;
 };
