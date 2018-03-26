@@ -22,7 +22,7 @@ export default class SignalProtocolStore {
       };
       this.put('identityKey', result);
     }
-    return result;
+    return Promise.resolve(result);
   };
 
   getLocalRegistrationId = () => {
@@ -31,7 +31,7 @@ export default class SignalProtocolStore {
       result = myAccount.registrationId;
       this.store['registrationId'] = result;
     }
-    return result;
+    return Promise.resolve(result);
   };
 
   put = (key, value) => {
