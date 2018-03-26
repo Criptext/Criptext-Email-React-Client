@@ -80,8 +80,6 @@ const createEmailColumns = table => {
   table.integer('delivered').notNullable();
   table.boolean('unread').notNullable();
   table.boolean('secure').notNullable();
-  table.boolean('isTrash').notNullable();
-  table.boolean('isDraft').notNullable();
   table.boolean('isMuted').notNullable();
 };
 

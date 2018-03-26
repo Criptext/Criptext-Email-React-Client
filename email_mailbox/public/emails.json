@@ -12,8 +12,6 @@
       "delivered": 0,
       "unread": 1,
       "secure": 1,
-      "isTrash": 0,
-      "isDraft": 0,
       "isMuted": 0
     },
     {
@@ -28,8 +26,6 @@
       "delivered": 0,
       "unread": 1,
       "secure": 1,
-      "isTrash": 0,
-      "isDraft": 0,
       "isMuted": 0
     },
     {
@@ -44,8 +40,6 @@
       "delivered": 0,
       "unread": 1,
       "secure": 1,
-      "isTrash": 0,
-      "isDraft": 0,
       "isMuted": 0
     }
   ]

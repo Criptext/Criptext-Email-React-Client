@@ -292,10 +292,9 @@ const getEmailById = id => {
     .where({ id });
 };
 
-const updateEmail = ({ id, isDraft, isMuted }) => {
+const updateEmail = ({ id, isMuted }) => {
   const params = {};
   if (typeof isMuted === 'boolean') params.isMuted = isMuted;
-  if (typeof isDraft === 'boolean') params.isDraft = isDraft;
   return db
     .table(Table.EMAIL)
     .where({ id })

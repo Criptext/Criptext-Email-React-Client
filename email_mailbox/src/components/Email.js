@@ -293,6 +293,7 @@ renderEmailExpand.propTypes = {
   onToggleEmail: PropTypes.func,
   onTooglePopOverEmailDetail: PropTypes.func,
   onTogglePopOverMenuAction: PropTypes.func,
+  staticOpen: PropTypes.func,
   unsendButtonOnClicked: PropTypes.func
 };
 
