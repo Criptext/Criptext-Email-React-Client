@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import './label.css';
 
 const Label = props => (
-  <div className="label-tag" style={{ backgroundColor: props.color }}>
-    <span>{props.text}</span>
-    <i className="icon-exit" />
+  <div className="label-tag" style={{ backgroundColor: props.label.color }}>
+    <span>{props.label.text}</span>
+    <i className="icon-exit" onClick={() => props.onClick(props.label.id)} />
   </div>
 );
 
 Label.propTypes = {
-  color: PropTypes.string,
-  text: PropTypes.string
+  label: PropTypes.object,
+  onClick: PropTypes.func
 };
 
 export default Label;

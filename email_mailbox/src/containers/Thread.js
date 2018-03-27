@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { loadEmails } from '../actions';
+import { loadEmails, removeThreadLabel } from '../actions';
 import ThreadView from '../components/Thread';
 import { List, Map } from 'immutable';
 
@@ -43,10 +43,14 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onLoadEmails: threadId => {
-      dispatch(loadEmails(threadId));
+      return dispatch(loadEmails(threadId));
+    },
+    onRemoveThreadLabel: (threadIdDB, labelId) => {
+      const threadParams = { threadIdStore: ownProps.threadId, threadIdDB };
+      return dispatch(removeThreadLabel(threadParams, labelId));
     }
   };
 };
