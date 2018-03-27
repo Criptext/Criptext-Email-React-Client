@@ -91,12 +91,14 @@ const createEmail = async (params, trx) => {
     return knex.table(Table.EMAIL).insert(params.email);
   }
 
-  const emails = [
-    ...params.recipients.from,
-    ...params.recipients.to,
-    ...params.recipients.cc,
-    ...params.recipients.bcc
-  ];
+  const emails = Array.from(
+    new Set([
+      ...params.recipients.from,
+      ...params.recipients.to,
+      ...params.recipients.cc,
+      ...params.recipients.bcc
+    ])
+  );
   await createContactsIfOrNotStore(emails);
 
   return db
