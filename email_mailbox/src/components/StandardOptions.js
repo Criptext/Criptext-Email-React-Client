@@ -37,7 +37,7 @@ const StandardOptions = props => (
       onClick={props.onTagsClick}
       tip="Add Labels"
       enableTip={!props.displayTagsMenu}
-      icon="icon-important"
+      icon="icon-tag"
       targetName="actionTag"
     />
   </div>

@@ -4,8 +4,15 @@
   padding: 0;
   
   i{
+    font-size: 17px;
     left: -2px;
     margin-right: 2px;
+  }
+
+  div span{
+    font-size: 12px;
+    font-weight: 400;
+    top: -2px;
   }
 
   .loading {
@@ -85,7 +92,7 @@
 }
 
 .button-unsend-normal{
-  width: 100px;
+  width: 94px;
 }
 
 .button-unsend-loading{

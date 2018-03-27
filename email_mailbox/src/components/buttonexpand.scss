@@ -12,9 +12,13 @@
     display: flex;
     margin: 0 auto;
 
+    .icon-attach{
+      font-size: 17px;
+    }
+
     i{
       color: #d5d5d5;
-      font-size: 20px;
+      font-size: 16px;
     }
 
     span{
@@ -78,6 +82,7 @@
 
 .button-expand-popover{
   background-color: white;
+  border: solid 1px #ececee;
   border-radius: 6px;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.14);
   position: absolute;
@@ -90,7 +95,7 @@
     height: 0;
     width: 0;
     position: absolute;
-    right: 82px;
+    right: 78px;
     top: -6px;
     border-bottom: 6px solid white;
     border-right: 6px solid transparent;
