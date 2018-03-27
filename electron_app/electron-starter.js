@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
+const wsClient = require('./src/socketClient')
 
 const loginWindow = require('./src/windows/login');
 const dialogWindow = require('./src/windows/dialog');
@@ -20,6 +21,7 @@ async function initApp() {
   const [existingAccount] = await dbManager.getAccount()
   if (existingAccount) {
     myAccount.initialize(existingAccount)
+    wsClient.start(myAccount)
     mailboxWindow.show();
   } else {
     loginWindow.show();
@@ -61,6 +63,7 @@ async function initApp() {
 
   //   Mailbox
   ipcMain.on('open-mailbox', () => {
+    wsClient.start(myAccount)
     mailboxWindow.show();
   });
 
@@ -72,6 +75,11 @@ async function initApp() {
   ipcMain.on('close-composer', () => {
     composerWindow.close();
   });
+
+  wsClient.setMessageListener( data => {
+    mailboxWindow.send('socket', data)
+    composerWindow.send('socket', data)
+  })
 }
 
 //   App

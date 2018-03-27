@@ -23,6 +23,7 @@ const create = () => {
   mailboxWindow.on('closed', () => {
     mailboxWindow = undefined;
   });
+  mailboxWindow.toggleDevTools();
 };
 
 const show = async () => {
@@ -42,7 +43,15 @@ const close = () => {
   mailboxWindow = undefined;
 };
 
+const send = (message, data) => {
+  if(!mailboxWindow){
+    return;
+  }
+  mailboxWindow.webContents.send(message, data)
+}
+
 module.exports = {
   show,
-  close
+  close,
+  send
 };

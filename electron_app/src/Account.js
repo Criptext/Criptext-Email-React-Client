@@ -6,6 +6,7 @@ class Account {
     this.privKey = accountObj.privKey;
     this.pubKey = accountObj.pubKey;
     this.registrationId = accountObj.registrationId;
+    this.deviceId = 1
   }
 
   getIdentityKeyPair() {

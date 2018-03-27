@@ -22,6 +22,7 @@ const create = () => {
   composerWindow.on('closed', () => {
     composerWindow = undefined;
   });
+  composerWindow.toggleDevTools();
 };
 
 const show = async () => {
@@ -40,7 +41,15 @@ const close = () => {
   composerWindow = undefined;
 };
 
+const send = (message, data) => {
+  if(!composerWindow){
+    return;
+  }
+  composerWindow.webContents.send(message, data)
+}
+
 module.exports = {
   close,
-  show
+  show,
+  send
 };
