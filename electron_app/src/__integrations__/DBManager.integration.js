@@ -21,8 +21,6 @@ describe('Test DBManager', () => {
         subject: 'Greetings',
         delivered: 0,
         date: '2013-10-07 08:23:19.120',
-        isTrash: false,
-        isDraft: false,
         isMuted: false
       }
     });

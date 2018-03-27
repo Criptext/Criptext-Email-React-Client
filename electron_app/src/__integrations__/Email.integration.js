@@ -21,8 +21,6 @@ describe('TABLE[Email]:', () => {
         delivered: 0,
         unread: true,
         secure: true,
-        isTrash: false,
-        isDraft: true,
         isMuted: false
       },
       recipients: {
@@ -32,15 +30,6 @@ describe('TABLE[Email]:', () => {
         bcc: []
       },
       labels: [1]
-    });
-    const emails = await DBManager.getEmailsByThreadId('threadJ');
-    expect(emails).toMatchSnapshot();
-  });
-
-  it('should update email: isDraft', async () => {
-    await DBManager.updateEmail({
-      id: 1,
-      isDraft: false
     });
     const emails = await DBManager.getEmailsByThreadId('threadJ');
     expect(emails).toMatchSnapshot();

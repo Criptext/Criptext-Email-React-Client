@@ -7,15 +7,18 @@ import './recipient.css';
 const Recipient = props => (
   <div className="recipient-container ">
     {renderRecipientTo(props)}
-    {props.displayMoreRecipient ? (
+    {props.isCollapsedMoreRecipient ? null : (
       <div>
         {renderRecipientCc(props)}
         {renderRecipientBcc(props)}
       </div>
-    ) : null}
-
+    )}
     <div className="recipient-toggle" onClick={props.onToggleRecipient}>
-      <i className="icon-arrow-down" />
+      <i
+        className={
+          props.isCollapsedMoreRecipient ? 'icon-arrow-up' : 'icon-arrow-down'
+        }
+      />
     </div>
   </div>
 );
@@ -96,7 +99,7 @@ const renderRecipientBcc = props => (
 );
 
 Recipient.propTypes = {
-  displayMoreRecipient: PropTypes.bool,
+  isCollapsedMoreRecipient: PropTypes.bool,
   onToggleRecipient: PropTypes.func
 };
 

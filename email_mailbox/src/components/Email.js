@@ -116,20 +116,22 @@ const renderEmailExpand = props => (
         ) : null}
       </div>
     </div>
-    <div className="email-segment-controls">
-      <div>
-        <i className="icon-replay" />
-        <span>Replay</span>
+    {props.staticOpen ? (
+      <div className="email-segment-controls">
+        <div>
+          <i className="icon-replay" />
+          <span>Replay</span>
+        </div>
+        <div>
+          <i className="icon-replay-all" />
+          <span>Replay All</span>
+        </div>
+        <div>
+          <i className="icon-forward" />
+          <span>Forward</span>
+        </div>
       </div>
-      <div>
-        <i className="icon-replay-all" />
-        <span>Replay All</span>
-      </div>
-      <div>
-        <i className="icon-forward" />
-        <span>Forward</span>
-      </div>
-    </div>
+    ) : null}
   </div>
 );
 
@@ -291,6 +293,7 @@ renderEmailExpand.propTypes = {
   onToggleEmail: PropTypes.func,
   onTooglePopOverEmailDetail: PropTypes.func,
   onTogglePopOverMenuAction: PropTypes.func,
+  staticOpen: PropTypes.func,
   unsendButtonOnClicked: PropTypes.func
 };
 

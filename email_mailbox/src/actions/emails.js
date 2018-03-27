@@ -29,19 +29,20 @@ export const loadEmails = threadId => {
           element.to = element.to ? element.to.split(',') : [];
           element.cc = element.cc ? element.cc.split(',') : [];
           element.bcc = element.bcc ? element.bcc.split(',') : [];
+          const contactIds = [
+            ...element.from,
+            ...element.to,
+            ...element.cc,
+            ...element.bcc
+          ];
           return {
             emails: { ...result.emails, [element.id]: element },
-            contactIds: [
-              ...result.contactIds,
-              ...element.from,
-              ...element.to,
-              ...element.cc,
-              ...element.bcc
-            ]
+            contactIds: new Set([...result.contactIds, ...contactIds])
           };
         },
-        { emails: {}, contactIds: [] }
+        { emails: {}, contactIds: new Set() }
       );
+      data.contactIds = Array.from(data.contactIds);
       dispatch(loadContacts(data.contactIds));
       dispatch(addEmails(data.emails));
     } catch (e) {

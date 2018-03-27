@@ -9,7 +9,6 @@ import {
   createEmail,
   LabelType,
   myAccount,
-  updateEmail,
   updateEmailLabel
 } from './../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
@@ -113,8 +112,6 @@ class ComposerWrapper extends Component {
       delivered: 0,
       unread: false,
       secure: true,
-      isTrash: false,
-      isDraft: true,
       isMuted: false
     };
     const from = myAccount.recipientId;
@@ -131,18 +128,12 @@ class ComposerWrapper extends Component {
       if (res.status !== 200) {
         throw new Error('Error encrypting, try again');
       }
-      const emailParams = {
-        id: emailId,
-        isDraft: false
-      };
       const emailLabelParams = {
         emailId,
         oldLabelId: LabelType.draft.id,
         newLabelId: LabelType.sent.id
       };
-      await updateEmail(emailParams);
       await updateEmailLabel(emailLabelParams);
-
       closeComposerWindow();
     } catch (e) {
       this.setState({ status: Status.ENABLED });

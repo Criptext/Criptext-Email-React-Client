@@ -142,8 +142,6 @@ export const loadEvents = () => {
             delivered: false,
             unread: true,
             secure: true,
-            isTrash: false,
-            isDraft: false,
             isMuted: false
           };
           const recipients = {
