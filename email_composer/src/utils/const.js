@@ -1,1 +1,1 @@
-export const appDomain = 'criptext.com';
+export const appDomain = 'jigl.com';

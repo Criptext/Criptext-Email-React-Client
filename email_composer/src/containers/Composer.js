@@ -9,6 +9,7 @@ import {
   createEmail,
   LabelType,
   myAccount,
+  updateEmail,
   updateEmailLabel
 } from './../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
@@ -102,9 +103,7 @@ class ComposerWrapper extends Component {
       convertToRaw(this.state.htmlBody.getCurrentContent())
     );
     const email = {
-      threadId: 1,
       key: Date.now(),
-      s3Key: Date.now(),
       subject,
       content: body,
       preview: removeHTMLTags(body).slice(0, 20),
@@ -128,6 +127,9 @@ class ComposerWrapper extends Component {
       if (res.status !== 200) {
         throw new Error('Error encrypting, try again');
       }
+      const { metadataKey, threadId, date } = res.body;
+      const emailParams = { id: emailId, key: metadataKey, threadId, date };
+      await updateEmail(emailParams);
       const emailLabelParams = {
         emailId,
         oldLabelId: LabelType.draft.id,

@@ -61,7 +61,7 @@ const createEmailContact = (emailContacts, trx) => {
   return trx.insert(emailContacts).into(Table.EMAIL_CONTACT);
 };
 
-/* Email Label
+/* EmailLabel
    ----------------------------- */
 const createEmailLabel = (emailLabels, trx) => {
   const knex = trx || db;
@@ -91,12 +91,14 @@ const createEmail = async (params, trx) => {
     return knex.table(Table.EMAIL).insert(params.email);
   }
 
-  const emails = [
-    ...params.recipients.from,
-    ...params.recipients.to,
-    ...params.recipients.cc,
-    ...params.recipients.bcc
-  ];
+  const emails = Array.from(
+    new Set([
+      ...params.recipients.from,
+      ...params.recipients.to,
+      ...params.recipients.cc,
+      ...params.recipients.bcc
+    ])
+  );
   await createContactsIfOrNotStore(emails);
 
   return db
@@ -292,8 +294,11 @@ const getEmailById = id => {
     .where({ id });
 };
 
-const updateEmail = ({ id, isMuted }) => {
+const updateEmail = ({ id, key, threadId, date, isMuted }) => {
   const params = {};
+  if (key) params.key = key;
+  if (threadId) params.threadId = threadId;
+  if (date) params.date = date;
   if (typeof isMuted === 'boolean') params.isMuted = isMuted;
   return db
     .table(Table.EMAIL)
