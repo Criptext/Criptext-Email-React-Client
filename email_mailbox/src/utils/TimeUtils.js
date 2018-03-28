@@ -4,16 +4,18 @@ export const defineTimeByToday = time => {
   let result;
   moment.locale('es');
   const oneDay = 86400000;
+  const timeUTC = moment.utc(time);
+  const timeLocal = moment(timeUTC).local();
 
-  const diffTime = moment().diff(moment(time));
+  const diffTime = moment().diff(moment(timeLocal));
   if (diffTime <= oneDay) {
-    result = moment(time).format('hh:mm A');
+    result = moment(timeLocal).format('hh:mm A');
   } else if (diffTime < oneDay * 2) {
-    result = moment(time).format('[Ayer]');
+    result = moment(timeLocal).format('[Ayer]');
   } else if (diffTime < oneDay * 7) {
-    result = moment(time).format('dddd');
+    result = moment(timeLocal).format('dddd');
   } else {
-    result = moment(time).format('MMM DD');
+    result = moment(timeLocal).format('MMM DD');
   }
 
   return result;

@@ -65,6 +65,7 @@ const renderEmailExpand = props => (
           {props.displayPopOverMenuAction ? renderPopOverMenuAction() : null}
         </div>
       </div>
+      <hr />
       <div className="email-body">
         <div className="email-options">
           {props.attachments.length ? (

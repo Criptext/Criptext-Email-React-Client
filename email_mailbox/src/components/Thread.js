@@ -19,7 +19,11 @@ class Thread extends Component {
             <div className="thread-labels">
               {this.props.labels.map((label, index) => {
                 return (
-                  <Label key={index} text={label.text} color={label.color} />
+                  <Label
+                    key={index}
+                    label={label}
+                    onClick={this.onRemoveLabel}
+                  />
                 );
               })}
             </div>
@@ -38,6 +42,10 @@ class Thread extends Component {
   componentDidMount() {
     this.props.onLoadEmails(this.props.thread.get('threadId'));
   }
+
+  onRemoveLabel = labelId => {
+    this.props.onRemoveThreadLabel(this.props.thread.get('threadId'), labelId);
+  };
 }
 
 Thread.propTypes = {
@@ -45,6 +53,7 @@ Thread.propTypes = {
   labels: PropTypes.array,
   onClickThreadBack: PropTypes.func,
   onLoadEmails: PropTypes.func,
+  onRemoveThreadLabel: PropTypes.func,
   thread: PropTypes.object
 };
 

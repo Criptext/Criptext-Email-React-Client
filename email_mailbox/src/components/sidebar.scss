@@ -14,12 +14,12 @@ aside.navigation-app{
 
 .header-icon{
   align-items: center;
-  background-image: url(#{$_PATH_TO_IMAGES}/header-icon.png);
+  background-image: url(../#{$_PATH_TO_IMAGES}/header-icon.png);
   background-position: center;
   background-size: 100%;
   height: 36px;
   margin: 0 auto;
-  width: 150px;
+  width: 135px;
 }
 
 .navigation-partial-mail{

@@ -129,10 +129,9 @@ aside.navigation-feed{
           width: 32%;
           position: relative;
           left: 30%;
-          background: url(#{$_PATH_TO_IMAGES}/icon-notification.png) no-repeat center center;
+          background: url(../#{$_PATH_TO_IMAGES}/icon-notification.png) no-repeat center center;
           background-size: 100%;
         }
-
       }
 
       p {

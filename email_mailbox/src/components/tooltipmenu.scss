@@ -6,15 +6,15 @@
   min-width: 204px;
   background-color: #fdfdfd;
   box-shadow: 1px 7px 19px 0 rgba(0, 0, 0, 0.14);
-  border: solid 0.5px #ececee;
+  border: solid 1px #ececee;
+  border-radius: 6px;
   color: black;
+  left: 601px;
+  padding: 10px 0px;
   position: fixed;
   top: 60px;
-  left: 601px;
   z-index: 200;
-  border-radius: 2px;
   z-index: 11;
-  padding: 10px 0px;
 
   h3{
     font-family: NunitoSans;
@@ -34,7 +34,7 @@
   
     &:after{
       content: "";
-      height: 15px;
+      height: 14px;
       width: 15px;
       left: 50%;
       background-color: white;
