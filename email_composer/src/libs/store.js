@@ -12,6 +12,11 @@ export default class SignalProtocolStore {
     this.store = {};
   }
 
+  Direction = {
+    SENDING: 1,
+    RECEIVING: 2
+  };
+
   getIdentityKeyPair = () => {
     let result = this.get('identityKey');
     if (!result) {
@@ -106,11 +111,15 @@ export default class SignalProtocolStore {
       res = { pubKey: res.pubKey, privKey: res.privKey };
     } else {
       const resp = await getPreKeyPair({ preKeyId: keyId });
-      res = {
-        privKey: util.toArrayBufferFromBase64(resp[0].preKeyPrivKey),
-        pubKey: util.toArrayBufferFromBase64(resp[0].preKeyPubKey)
-      };
-      await this.storePreKey(keyId, res);
+      if (resp.length) {
+        res = {
+          privKey: util.toArrayBufferFromBase64(resp[0].preKeyPrivKey),
+          pubKey: util.toArrayBufferFromBase64(resp[0].preKeyPubKey)
+        };
+        await this.storePreKey(keyId, res);
+      } else {
+        res = undefined;
+      }
     }
     return res;
   };
@@ -159,7 +168,7 @@ export default class SignalProtocolStore {
   };
 
   removeAllSessions = identifier => {
-    for (var id in this.store) {
+    for (const id in this.store) {
       if (id.startsWith('session' + identifier)) {
         delete this.store[id];
       }
