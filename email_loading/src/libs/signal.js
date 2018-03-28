@@ -39,6 +39,9 @@ const createAccount = async ({
     recoveryEmail,
     keybundle
   });
+  if (res.status === 400) {
+    throw new Error(res.text);
+  }
   if (res.status !== 200) {
     return false;
   }

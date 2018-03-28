@@ -1,7 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient')
+const errors = require('./src/errors');
 
 const loginWindow = require('./src/windows/login');
 const dialogWindow = require('./src/windows/dialog');
@@ -26,6 +27,10 @@ async function initApp() {
   } else {
     loginWindow.show();
   }
+  // Errors
+  ipcMain.on('throwError', (event, errorToShow) => {
+    dialog.showErrorBox(errorToShow.name, errorToShow.description);
+  });
 
   //   Login
   ipcMain.on('close-login', () => {
