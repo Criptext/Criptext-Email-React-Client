@@ -279,7 +279,7 @@ const ContactTag = props => (
 
 const renderMuteIcon = props => (
   <i
-    className={props.email.isMuted === 1 ? 'icon-bell-mute' : 'icon-bell'}
+    className={props.email.isMuted ? 'icon-bell-mute' : 'icon-bell'}
     onClick={ev => props.toggleMute(ev)}
   />
 );
