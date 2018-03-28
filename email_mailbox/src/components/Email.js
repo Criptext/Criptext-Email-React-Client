@@ -55,7 +55,7 @@ const renderEmailExpand = props => (
         </div>
         <div className="email-detail-info">
           <span>{props.email.date}</span>
-          <i className="icon-bell" />
+          {props.isFromMe ? renderMuteIcon(props) : null}
           <i className="icon-replay" />
           <i
             id="email-more"
@@ -277,6 +277,13 @@ const ContactTag = props => (
   </span>
 );
 
+const renderMuteIcon = props => (
+  <i
+    className={props.email.isMuted === 1 ? 'icon-bell-mute' : 'icon-bell'}
+    onClick={ev => props.toggleMute(ev)}
+  />
+);
+
 renderEmailCollapse.propTypes = {
   classStatus: PropTypes.string,
   email: PropTypes.object,
@@ -307,6 +314,11 @@ renderPopOverEmailDetail.propTypes = {
 
 ContactTag.propTypes = {
   contact: PropTypes.object
+};
+
+renderMuteIcon.propTypes = {
+  email: PropTypes.object,
+  toggleMute: PropTypes.func
 };
 
 Email.propTypes = {

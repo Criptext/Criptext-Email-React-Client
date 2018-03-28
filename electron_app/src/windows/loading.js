@@ -13,10 +13,7 @@ const create = () => {
     height: loadingSize.height,
     show: false,
     frame: false,
-    transparent: true,
-    webPreferences: {
-      webSecurity: false
-    }
+    transparent: true
   });
   loadingWindow.loadURL(loadingUrl);
   loadingWindow.setMenu(null);

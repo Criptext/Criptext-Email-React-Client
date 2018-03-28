@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import {
   markFeedAsSelected,
-  muteEmailById,
+  muteEmail,
   removeFeedById
 } from '../actions/index';
 import FeedWrapperView from '../components/FeedWrapper';
@@ -28,7 +28,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(removeFeedById(feedId));
     },
     toggleMute: feed => {
-      dispatch(muteEmailById(feed));
+      const emailId = String(feed.get('emailId'));
+      const valueToSet = feed.get('isMuted') === 1 ? false : true;
+      dispatch(muteEmail(emailId, valueToSet));
     }
   };
 };

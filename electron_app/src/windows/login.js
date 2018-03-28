@@ -14,10 +14,7 @@ const create = () => {
     center: true,
     frame: false,
     show: false,
-    transparent: true,
-    webPreferences: {
-      webSecurity: false
-    }
+    transparent: true
   });
   loginWindow.loadURL(loginUrl);
   loginWindow.setMenu(null);
