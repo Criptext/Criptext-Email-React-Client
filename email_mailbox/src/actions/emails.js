@@ -15,7 +15,7 @@ export const addEmails = emails => {
 export const muteNotifications = emailId => {
   return {
     type: Email.MUTE,
-    targetEmail: emailId
+    emailId
   };
 };
 
@@ -51,12 +51,11 @@ export const loadEmails = threadId => {
   };
 };
 
-export const muteEmailById = feed => {
+export const muteEmail = (emailId, valueToSet) => {
   return async dispatch => {
     try {
-      const valueToSet = feed.get('isMuted') === 1 ? false : true;
-      await setMuteEmailById(feed.get('emailId'), valueToSet);
-      dispatch(muteNotifications(feed.get('emailId')));
+      await setMuteEmailById(emailId, valueToSet);
+      dispatch(muteNotifications(emailId));
     } catch (e) {
       // To do
     }

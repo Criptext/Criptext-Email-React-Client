@@ -12,10 +12,7 @@ const create = () => {
     width: composerSize.width,
     height: composerSize.height,
     show: false,
-    title: 'New Secure Message',
-    webPreferences: {
-      webSecurity: false
-    }
+    title: 'New Secure Message'
   });
   composerWindow.loadURL(composerUrl);
   composerWindow.setMenu(null);

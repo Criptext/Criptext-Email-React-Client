@@ -7,14 +7,14 @@ export default (state = new Map(), action) => {
       return state.merge(fromJS(action.emails));
     }
     case Email.MUTE: {
-      const item = state.get(action.targetEmail);
+      const item = state.get(action.emailId);
       if (item !== undefined) {
         const prevMutedState = item.get('isMuted');
         const newItem =
           prevMutedState === 1
             ? item.set('isMuted', 0)
             : item.set('isMuted', 1);
-        return state.set(action.targetEmail, newItem);
+        return state.set(action.emailId, newItem);
       }
       return state;
     }

@@ -5,6 +5,7 @@ import { getTwoCapitalLetters } from '../utils/StringUtils';
 import { matchOwnEmail } from '../utils/UserUtils';
 import randomcolor from 'randomcolor';
 import { myAccount } from '../utils/electronInterface';
+import { muteEmail } from '../actions/index';
 
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
@@ -50,6 +51,17 @@ const getContacts = (contacts, contactIds) => {
       });
 };
 
-const Email = connect(mapStateToProps, null)(EmailView);
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const email = ownProps.email;
+  return {
+    toggleMute: () => {
+      const emailId = String(email.get('id'));
+      const valueToSet = email.get('isMuted') === 1 ? false : true;
+      dispatch(muteEmail(emailId, valueToSet));
+    }
+  };
+};
+
+const Email = connect(mapStateToProps, mapDispatchToProps)(EmailView);
 
 export default Email;

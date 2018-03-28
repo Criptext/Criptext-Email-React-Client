@@ -19,12 +19,7 @@ import {
   removeThreads,
   removeThreadsLabel
 } from './threads';
-import {
-  addEmails,
-  loadEmails,
-  muteEmailById,
-  muteNotifications
-} from './emails';
+import { addEmails, loadEmails, muteEmail, muteNotifications } from './emails';
 import {
   addLabels,
   addLabel,
@@ -66,7 +61,7 @@ export {
   markThreadsRead,
   moveThreads,
   multiSelectThread,
-  muteEmailById,
+  muteEmail,
   muteNotifications,
   removeThread,
   removeThreadLabel,
