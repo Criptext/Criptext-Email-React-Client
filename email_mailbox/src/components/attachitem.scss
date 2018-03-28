@@ -125,7 +125,7 @@
   display: flex;
   
   div{
-    background-image: url(#{$_PATH_TO_IMAGES}/file-unsent.png);
+    background-image: url(../#{$_PATH_TO_IMAGES}/file-unsent.png);
     background-position: center;
     background-size: 100%;
     height: 37px;
