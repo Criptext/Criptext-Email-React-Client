@@ -16,7 +16,7 @@ class PanelWrapper extends Component {
       const currentLabelId = LabelType[this.state.mailboxSelected].id;
       if (emailParams.labels.indexOf(currentLabelId) >= 0) {
         props.onLoadThreads({
-          mailbox: this.state.mailboxSelected,
+          labelId: Number(currentLabelId),
           clear: true,
           limit: this.props.threadsCount
         });
