@@ -2,11 +2,6 @@ import { connect } from 'react-redux';
 import { loadEmails, removeThreadLabel } from '../actions';
 import ThreadView from '../components/Thread';
 import { List, Map } from 'immutable';
-import { addEvent, removeEvent } from '../utils/electronEventInterface'
-
-addEvent('socket', data => {
-  console.log('HOLIS 2')
-})
 
 const emailsMapToList = (emailsMap, emailIds) => {
   const result =

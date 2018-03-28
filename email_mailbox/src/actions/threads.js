@@ -7,8 +7,10 @@ import {
   getEvents,
   deleteEmailLabel
 } from '../utils/electronInterface';
-import { removeAppDomain, removeHTMLTags } from './../utils/StringUtils';
-import signal from './../libs/signal';
+import {
+  buildNewEmailFromData,
+  getRecipientsFromData
+} from './../utils/EmailUtils';
 import { storeValue } from '../utils/storage';
 import { LabelType } from './../utils/electronInterface';
 
@@ -123,33 +125,8 @@ export const loadEvents = () => {
       const events = receivedEvents.filter(item => item.cmd === 1);
       await Promise.all(
         events.map(async item => {
-          const bodyKey = item.params.bodyKey;
-          const recipientId = getRecipientIdFromEmailAddress(item.params.from);
-          const deviceId = 1;
-          const { content, preview } = await getContentMessage(
-            bodyKey,
-            recipientId,
-            deviceId
-          );
-          const email = {
-            key: item.params.metadataKey,
-            threadId: item.params.threadId,
-            s3Key: bodyKey,
-            content,
-            preview,
-            subject: item.params.subject,
-            date: item.params.date,
-            delivered: false,
-            unread: true,
-            secure: true,
-            isMuted: false
-          };
-          const recipients = {
-            to: formRecipients(item.params.to),
-            cc: formRecipients(item.params.cc),
-            bcc: formRecipients(item.params.bcc),
-            from: formRecipients(item.params.from)
-          };
+          const email = await buildNewEmailFromData(item.params);
+          const recipients = getRecipientsFromData(item.params);
           const InboxLabel = LabelType.inbox;
           const labels = [InboxLabel.id];
           const params = {
@@ -166,23 +143,6 @@ export const loadEvents = () => {
       // TO DO
     }
   };
-};
-
-const getContentMessage = async (bodyKey, recipientId, deviceId) => {
-  const content = await signal.decryptEmail(bodyKey, recipientId, deviceId);
-  if (content === undefined) {
-    return { content: '', preview: '' };
-  }
-  const preview = removeHTMLTags(content).slice(0, 21);
-  return { content, preview };
-};
-
-const getRecipientIdFromEmailAddress = emailAddress => {
-  return removeAppDomain(emailAddress);
-};
-
-const formRecipients = recipientString => {
-  return recipientString === '' ? [] : recipientString.split(',');
 };
 
 export const addThreadLabel = (threadParams, labelId) => {

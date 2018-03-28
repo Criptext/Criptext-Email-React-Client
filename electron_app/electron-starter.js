@@ -77,8 +77,8 @@ async function initApp() {
   });
 
   wsClient.setMessageListener( data => {
-    mailboxWindow.send('socket', data)
-    composerWindow.send('socket', data)
+    mailboxWindow.send('socket-message', data)
+    composerWindow.send('socket-message', data)
   })
 }
 
