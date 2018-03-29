@@ -10,6 +10,7 @@ import {
   errors
 } from './../utils/electronInterface';
 import { CustomError } from './../utils/CustomError';
+import { PREKEY_INITIAL_QUANTITY } from './../utils/consts';
 import SignalProtocolStore from './store';
 
 const KeyHelper = libsignal.KeyHelper;
@@ -21,17 +22,16 @@ const createAccount = async ({
   name,
   recoveryEmail
 }) => {
-  const preKeyId = 1;
   const signedPreKeyId = 1;
   const { identityKey, registrationId } = await generateIdentity();
   const {
     keybundle,
-    preKeyPair,
-    signedPreKeyPair
+    preKeyPairArray,
+    signedPreKeyPair,
+    preKeyIds
   } = await generatePreKeyBundle({
     identityKey,
     registrationId,
-    preKeyId,
     signedPreKeyId
   });
   const res = await postUser({
@@ -62,12 +62,17 @@ const createAccount = async ({
   });
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  await store.storeKeys({
-    preKeyId,
-    preKeyPair,
-    signedPreKeyId,
-    signedPreKeyPair
+
+  preKeyPairArray.forEach(async (preKeyPair, index) => {
+    const keysToStore = {
+      preKeyId: preKeyIds[index],
+      preKeyPair,
+      signedPreKeyId,
+      signedPreKeyPair
+    };
+    await store.storeKeys(keysToStore);
   });
+
   const labels = Object.values(LabelType);
   await createLabel(labels);
 
@@ -88,27 +93,40 @@ const generateIdentity = () => {
 const generatePreKeyBundle = async ({
   identityKey,
   registrationId,
-  preKeyId,
   signedPreKeyId
 }) => {
-  const preKey = await KeyHelper.generatePreKey(preKeyId);
+  const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
+    (item, index) => index + 1
+  );
+  const preKeyPairArray = [];
+  const preKeys = await Promise.all(
+    preKeyIds.map(async preKeyId => {
+      const preKey = await KeyHelper.generatePreKey(preKeyId);
+      preKeyPairArray.push(preKey.keyPair);
+      return {
+        publicKey: util.toBase64(preKey.keyPair.pubKey),
+        id: preKeyId
+      };
+    })
+  );
   const signedPreKey = await KeyHelper.generateSignedPreKey(
     identityKey,
     signedPreKeyId
   );
+
   const keybundle = {
     signedPreKeySignature: util.toBase64(signedPreKey.signature),
     signedPreKeyPublic: util.toBase64(signedPreKey.keyPair.pubKey),
     signedPreKeyId: signedPreKeyId,
     identityPublicKey: util.toBase64(identityKey.pubKey),
     registrationId: registrationId,
-    preKeys: [{ publicKey: util.toBase64(preKey.keyPair.pubKey), id: preKeyId }]
+    preKeys
   };
-
   const data = {
     keybundle,
-    preKeyPair: preKey.keyPair,
-    signedPreKeyPair: signedPreKey.keyPair
+    preKeyPairArray,
+    signedPreKeyPair: signedPreKey.keyPair,
+    preKeyIds
   };
   return data;
 };

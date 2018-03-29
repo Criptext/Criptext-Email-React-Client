@@ -66,21 +66,23 @@ class LoadingWrapper extends Component {
     }
     try {
       const accountResponse = await signal.createAccount(userCredentials);
-      this.setState({ accountResponse });
-      if (this.state.accountResponse === false) {
+      if (accountResponse === false) {
         this.loadingThrowError();
       }
-      if (this.state.accountResponse === true) {
-        this.setState({ failed: false });
+      if (accountResponse === true) {
+        this.setState({
+          accountResponse,
+          failed: false
+        });
       }
     } catch (e) {
-      const errorToShow = {
-        name: e.name,
-        description: e.message
-      };
       if (e.code === 'ECONNREFUSED') {
         throwError(errors.UNABLE_TO_CONNECT);
       } else {
+        const errorToShow = {
+          name: e.name,
+          description: e.message
+        };
         throwError(errorToShow);
       }
       this.loadingThrowError();
