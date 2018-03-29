@@ -19,17 +19,11 @@ class LoadingWrapper extends Component {
     super(props);
     this.state = {
       percent: 0,
-      errors: 1,
       failed: false,
       animationClass: animationTypes.RUNNING,
       timeout: 0,
       accountResponse: undefined
     };
-    this.increasePercent = this.increasePercent.bind(this);
-    this.createAccount = this.createAccount.bind(this);
-    this.checkResult = this.checkResult.bind(this);
-    this.throwError = this.throwError.bind(this);
-    this.restart = this.restart.bind(this);
   }
 
   componentDidMount() {
@@ -47,7 +41,7 @@ class LoadingWrapper extends Component {
     );
   }
 
-  increasePercent() {
+  increasePercent = () => {
     const percent = this.state.percent + 1;
     if (percent === 2) {
       this.createAccount();
@@ -59,47 +53,53 @@ class LoadingWrapper extends Component {
     }
     this.setState({ percent });
     this.tm = setTimeout(this.increasePercent, 150);
-  }
+  };
 
-  async createAccount() {
+  createAccount = async () => {
+    const userCredentials = {
+      recipientId: remoteData.username,
+      password: remoteData.password,
+      name: remoteData.name
+    };
+    if (remoteData.recoveryEmail !== '') {
+      userCredentials['recoveryEmail'] = remoteData.recoveryEmail;
+    }
     try {
-      const userCredentials = {
-        recipientId: remoteData.username,
-        password: remoteData.password,
-        name: remoteData.name
-      };
-      if (remoteData.recoveryEmail !== '') {
-        userCredentials['recoveryEmail'] = remoteData.recoveryEmail;
-      }
       const accountResponse = await signal.createAccount(userCredentials);
-      this.setState({ accountResponse });
-      if (this.state.accountResponse === false) {
-        this.throwError();
+      if (accountResponse === false) {
+        this.loadingThrowError();
       }
-      if (this.state.accountResponse === true) {
-        this.setState({ failed: false, errors: 0 });
+      if (accountResponse === true) {
+        this.setState({
+          accountResponse,
+          failed: false
+        });
       }
     } catch (e) {
-      const errorToShow = {
-        name: e.name,
-        description: e.message
-      };
-      throwError(errorToShow);
-      this.throwError();
+      if (e.code === 'ECONNREFUSED') {
+        throwError(errors.UNABLE_TO_CONNECT);
+      } else {
+        const errorToShow = {
+          name: e.name,
+          description: e.message
+        };
+        throwError(errorToShow);
+      }
+      this.loadingThrowError();
       return;
     }
-  }
+  };
 
-  checkResult() {
+  checkResult = () => {
     if (this.state.timeout > 110 && this.state.accountResponse === undefined) {
       clearTimeout(this.state.timeout);
-      throwError(errors.UNABLE_TO_CONNECT);
-      this.throwError();
+      throwError(errors.NO_RESPONSE);
+      this.loadingThrowError();
       return;
     }
     if (this.state.accountResponse === false) {
       clearTimeout(this.state.timeout);
-      this.throwError();
+      this.loadingThrowError();
     }
     if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
@@ -109,9 +109,9 @@ class LoadingWrapper extends Component {
     this.setState({
       timeout: setTimeout(this.checkResult, 1000)
     });
-  }
+  };
 
-  async throwError() {
+  loadingThrowError = async () => {
     clearTimeout(this.tm);
     this.setState({
       failed: true,
@@ -122,23 +122,21 @@ class LoadingWrapper extends Component {
         percent: 0
       });
     }, 1000);
-  }
+  };
 
-  restart() {
+  restart = () => {
     clearTimeout(this.tm);
-    const prevErrors = this.state.errors;
     this.setState(
       {
         percent: 0,
         animationClass: animationTypes.RUNNING,
-        failed: false,
-        errors: prevErrors - 1
+        failed: false
       },
       () => {
         this.increasePercent();
       }
     );
-  }
+  };
 }
 
 export default LoadingWrapper;

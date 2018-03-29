@@ -27,6 +27,7 @@ async function initApp() {
   } else {
     loginWindow.show();
   }
+  
   // Errors
   ipcMain.on('throwError', (event, errorToShow) => {
     dialog.showErrorBox(errorToShow.name, errorToShow.description);
