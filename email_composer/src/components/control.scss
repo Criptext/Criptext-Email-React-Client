@@ -16,17 +16,20 @@
 button.button-send{
   i{
     margin-right: 5px;
+    top: 1px;
   }
 
   span{
+    font-size: 12px;
     font-weight: 500;
+    top: -2px;
   }
 }
 
 .button-send{
   background-color: #0091ff;
   cursor: pointer;
-  padding: 0 12px;
+  padding: 0 12px 0 9px;
   transition: width 0.5s;
   width: 84px;
 
