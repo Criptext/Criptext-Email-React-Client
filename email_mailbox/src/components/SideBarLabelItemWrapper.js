@@ -26,10 +26,12 @@ class SideBarLabelItemWrapper extends Component {
   }
 
   handleOnDoubleClick = () => {
-    this.setState({
-      isEditable: true,
-      textEditable: this.props.text
-    });
+    if (this.props.label.id > 7) {
+      this.setState({
+        isEditable: true,
+        textEditable: this.props.label.text
+      });
+    }
   };
 
   handleOnBlur = () => {
@@ -49,7 +51,7 @@ class SideBarLabelItemWrapper extends Component {
       }
       this.setState({
         isEditable: false,
-        text: ''
+        textEditable: ''
       });
     }
   };
@@ -57,7 +59,7 @@ class SideBarLabelItemWrapper extends Component {
 
 SideBarLabelItemWrapper.propTypes = {
   onUpdateLabel: PropTypes.func,
-  text: PropTypes.string
+  label: PropTypes.object
 };
 
 export default SideBarLabelItemWrapper;
