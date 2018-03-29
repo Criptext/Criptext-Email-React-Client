@@ -32,10 +32,10 @@ class HeaderThreadOptions extends Component {
           display={displayMoveMenu}
         >
           <ul className="multiselect-list">
-            <li onClick={this.onActionMove}>
+            <li>
               <span>Spam</span>
             </li>
-            <li onClick={this.onActionMove}>
+            <li>
               <span>Trash</span>
             </li>
           </ul>

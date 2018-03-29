@@ -6,21 +6,18 @@ import './standardoptions.css';
 const StandardOptions = props => (
   <div className="header-action">
     <ButtonCircle
-      onClick={props.onActionMove}
       tip="Archive"
       enableTip={true}
       icon="icon-archive"
       targetName="actionArchive"
     />
     <ButtonCircle
-      onClick={props.onActionMove}
       tip="Spam"
       enableTip={true}
       icon="icon-not"
       targetName="actionSpam"
     />
     <ButtonCircle
-      onClick={props.onActionMove}
       tip="Trash"
       enableTip={true}
       icon="icon-trash"
