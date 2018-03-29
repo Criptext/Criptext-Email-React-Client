@@ -48,6 +48,7 @@ const createAccount = async ({
   const jwt = res.text;
   await createAccountDB({
     recipientId,
+    deviceId: 1,
     name,
     jwt,
     privKey,

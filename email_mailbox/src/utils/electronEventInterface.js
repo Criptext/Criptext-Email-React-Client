@@ -4,7 +4,7 @@ import {
   getRecipientsFromData
 } from '../utils/EmailUtils';
 import { SocketCommand } from '../utils/const';
-import { LabelType } from '../utils/electronInterface';
+import { LabelType, myAccount } from '../utils/electronInterface';
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
 const { ipcRenderer } = electron;
@@ -23,7 +23,7 @@ ipcRenderer.on('socket-message', (event, message) => {
 });
 
 const hanldeNewMessageEvent = async emailObj => {
-  const email = await buildNewEmailFromData(emailObj);
+  const email = await buildNewEmailFromData(emailObj, myAccount.deviceId);
   const recipients = getRecipientsFromData(emailObj);
   const InboxLabel = LabelType.inbox;
   const labels = [InboxLabel.id];

@@ -139,6 +139,7 @@ const createOpenColumns = table => {
 
 const createAccountColumns = table => {
   table.string('recipientId', XSMALL_STRING_SIZE).primary();
+  table.integer('deviceId').notNullable();
   table.string('name', MEDIUM_STRING_SIZE).notNullable();
   table.string('jwt', XLARGE_STRING_SIZE).notNullable();
   table.integer('registrationId').notNullable();
