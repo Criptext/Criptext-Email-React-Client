@@ -3,6 +3,8 @@
 exports[`thread actions should add label 6 to threads 1`] = `
 Immutable.List [
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -36,6 +38,8 @@ Immutable.List [
     ],
   },
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -74,6 +78,8 @@ Immutable.List [
 exports[`thread actions should add label 9 1`] = `
 Immutable.List [
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -112,6 +118,8 @@ Immutable.List [
 exports[`thread actions should add threads to state 1`] = `
 Immutable.List [
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -145,6 +153,8 @@ Immutable.List [
     ],
   },
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -183,6 +193,8 @@ Immutable.List [
 exports[`thread actions should remove label 7 1`] = `
 Immutable.List [
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -221,6 +233,8 @@ Immutable.List [
 exports[`thread actions should set all threads as not selected 1`] = `
 Immutable.List [
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -254,6 +268,8 @@ Immutable.List [
     ],
   },
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -292,6 +308,8 @@ Immutable.List [
 exports[`thread actions should set all threads as selected 1`] = `
 Immutable.List [
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -325,6 +343,8 @@ Immutable.List [
     ],
   },
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -363,6 +383,8 @@ Immutable.List [
 exports[`thread actions should set thread as read 1`] = `
 Immutable.List [
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
@@ -401,6 +423,8 @@ Immutable.List [
 exports[`thread actions should set thread as selected 1`] = `
 Immutable.List [
   Immutable.Map {
+    allLabels: Immutable.Set [
+    ],
     fromContactName: Immutable.List [
       "1",
     ],
