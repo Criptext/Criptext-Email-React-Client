@@ -12,7 +12,7 @@ import {
   getRecipientsFromData
 } from './../utils/EmailUtils';
 import { storeValue } from '../utils/storage';
-import { LabelType } from './../utils/electronInterface';
+import { LabelType, myAccount } from './../utils/electronInterface';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -125,7 +125,10 @@ export const loadEvents = () => {
       const events = receivedEvents.filter(item => item.cmd === 1);
       await Promise.all(
         events.map(async item => {
-          const email = await buildNewEmailFromData(item.params);
+          const email = await buildNewEmailFromData(
+            item.params,
+            myAccount.deviceId
+          );
           const recipients = getRecipientsFromData(item.params);
           const InboxLabel = LabelType.inbox;
           const labels = [InboxLabel.id];

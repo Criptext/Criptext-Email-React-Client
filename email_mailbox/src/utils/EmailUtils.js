@@ -18,10 +18,9 @@ const formRecipients = recipientString => {
   return recipientString === '' ? [] : recipientString.split(',');
 };
 
-export const buildNewEmailFromData = async data => {
+export const buildNewEmailFromData = async (data, deviceId) => {
   const bodyKey = data.bodyKey;
   const recipientId = getRecipientIdFromEmailAddress(data.from);
-  const deviceId = 1;
   const { content, preview } = await getContentMessage(
     bodyKey,
     recipientId,
