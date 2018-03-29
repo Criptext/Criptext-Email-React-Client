@@ -4,21 +4,6 @@ import SignalProtocolStore from './store';
 
 const store = new SignalProtocolStore();
 
-const generateAddresses = recipientsAndDeviceIds => {
-  return recipientsAndDeviceIds.map(item => {
-    return new libsignal.SignalProtocolAddress(item.recipientId, item.deviceId);
-  });
-};
-
-const formAddressesParams = to => {
-  return to.map(item => {
-    return {
-      recipientId: item.recipientId,
-      deviceId: item.deviceId
-    };
-  });
-};
-
 const getKeyBundlesOfRecipients = async recipients => {
   const res = await findKeyBundles({
     recipients,
@@ -30,7 +15,13 @@ const getKeyBundlesOfRecipients = async recipients => {
   return res.body;
 };
 
-const encryptText = async (addressTo, arrayBufferKey, textMessage) => {
+const encryptText = async (
+  recipientId,
+  deviceId,
+  arrayBufferKey,
+  textMessage
+) => {
+  const addressTo = new libsignal.SignalProtocolAddress(recipientId, deviceId);
   const sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
   await sessionBuilder.processPreKey(arrayBufferKey);
   const sessionCipher = new libsignal.SessionCipher(store, addressTo);
@@ -40,12 +31,16 @@ const encryptText = async (addressTo, arrayBufferKey, textMessage) => {
 };
 
 const keysToArrayBuffer = keys => {
-  return {
-    identityKey: util.toArrayBufferFromBase64(keys.identityPublicKey),
-    preKey: {
+  let preKey = undefined;
+  if (keys.preKey) {
+    preKey = {
       keyId: keys.preKey.id,
       publicKey: util.toArrayBufferFromBase64(keys.preKey.publicKey)
-    },
+    };
+  }
+  return {
+    identityKey: util.toArrayBufferFromBase64(keys.identityPublicKey),
+    preKey,
     registrationId: keys.registrationId,
     signedPreKey: {
       keyId: keys.signedPreKeyId,
@@ -55,31 +50,43 @@ const keysToArrayBuffer = keys => {
   };
 };
 
-const encryptPostEmail = async (subject, to, body) => {
-  const recipients = to.map(item => item.recipientId);
-  const keyBundles = await getKeyBundlesOfRecipients(recipients);
-  const recipientKeys = keyBundles.filter(key => key !== null);
-  if (!recipientKeys.length) {
-    throw new Error('Error encrypting. No keys. Try again');
+const encryptPostEmail = async (subject, recipients, body) => {
+  const recipientIds = recipients.map(item => item.recipientId);
+  const keyBundles = await getKeyBundlesOfRecipients(recipientIds);
+
+  if (!keyBundles.length) {
+    throw new Error('Non existing users. Try again');
   }
 
-  const arrayKeyBundleTo = recipientKeys.map(keys => keysToArrayBuffer(keys));
-  const addressesParams = formAddressesParams(to);
-  const addresses = generateAddresses(addressesParams);
-  const textsEncrypted = await Promise.all(
-    addresses.map(async (address, index) => {
-      return await encryptText(address, arrayKeyBundleTo[index], body);
+  recipientIds.forEach(recipientId => {
+    const key = keyBundles.find(key => key.recipientId === recipientId);
+    if (key === undefined) {
+      throw new Error(`The user '${recipientId}' doesn't exist. Try again`);
+    }
+  });
+
+  const criptextEmails = await Promise.all(
+    recipients.map(async (item, index) => {
+      const { recipientId, deviceId } = item;
+      const keyBundle = keysToArrayBuffer(keyBundles[index]);
+      const bodyEncrypted = await encryptText(
+        recipientId,
+        deviceId,
+        keyBundle,
+        body
+      );
+      return {
+        ...item,
+        body: bodyEncrypted
+      };
     })
   );
-
-  const criptextEmails = to.map((item, index) => {
-    return { ...item, body: textsEncrypted[index] };
-  });
   const data = {
     subject,
     criptextEmails
   };
-  return await postEmail(data);
+  const res = await postEmail(data);
+  return res;
 };
 
 export default {
