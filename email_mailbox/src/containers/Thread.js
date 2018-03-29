@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { loadEmails, removeThreadLabel } from '../actions';
 import ThreadView from '../components/Thread';
 import { List, Map } from 'immutable';
+import { LabelType } from '../utils/electronInterface';
 
 const emailsMapToList = (emailsMap, emailIds) => {
   const result =
@@ -35,7 +36,11 @@ const defineLabels = (labels, labelIds) => {
 const mapStateToProps = (state, ownProps) => {
   const thread = getThread(state.get('threads'), ownProps.threadId);
   const emails = getEmails(state.get('emails'), thread);
-  const labels = defineLabels(state.get('labels'), thread.get('labels'));
+  const labelIds =
+    LabelType[ownProps.mailbox].id === LabelType['inbox'].id
+      ? thread.get('allLabels')
+      : thread.get('labels');
+  const labels = defineLabels(state.get('labels'), labelIds);
   return {
     emails,
     labels,

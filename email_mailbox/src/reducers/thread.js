@@ -24,6 +24,9 @@ export default (state = List([]), action) => {
           labels: Set(
             thread.labels ? thread.labels.split(',').map(Number) : []
           ),
+          allLabels: Set(
+            thread.allLabels ? thread.allLabels.split(',').map(Number) : []
+          ),
           emailIds: List(thread.emailIds.split(',').map(Number)),
           subject,
           date: thread.date,

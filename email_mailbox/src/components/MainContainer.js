@@ -16,8 +16,9 @@ const MainContainer = props => {
     case 'emails':
       return (
         <Thread
-          threadId={props.threadId}
+          mailbox={props.mailbox}
           onClickThreadBack={props.onClickThreadBack}
+          threadId={props.threadId}
         />
       );
     default:
