@@ -5,7 +5,7 @@
   "productName": "Criptext Email Client",
   "scripts": {
     "electron": "electron .",
-    "set-env": "MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3001 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004 REACT_APP_KEYSERVER_URL=http://localhost:8000",
+    "set-env": "MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3001 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004 REACT_APP_KEYSERVER_URL=http://localhost:8000 REACT_APP_SOCKETSERVER_URL=ws://localhost:8080",
     "start": "npm run set-env electron .",
     "postinstall": "install-app-deps",
     "test": "criptext-js-tools test",
@@ -28,6 +28,7 @@
   "dependencies": {
     "@criptext/email-http-client": "0.4.0",
     "knex": "^0.14.2",
-    "sqlite3": "^3.1.13"
+    "sqlite3": "^3.1.13",
+    "websocket": "^1.0.25"
   }
 }
