@@ -6,8 +6,10 @@ import {
   postUser,
   createAccount as createAccountDB,
   getAccount,
-  myAccount
+  myAccount,
+  errors
 } from './../utils/electronInterface';
+import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
 
 const KeyHelper = libsignal.KeyHelper;
@@ -39,6 +41,9 @@ const createAccount = async ({
     recoveryEmail,
     keybundle
   });
+  if (res.status === 400) {
+    throw CustomError(errors.USER_ALREADY_EXISTS);
+  }
   if (res.status !== 200) {
     return false;
   }
