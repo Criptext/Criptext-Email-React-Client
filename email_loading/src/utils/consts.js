@@ -1,1 +1,0 @@
-export const PREKEY_INITIAL_QUANTITY = 100;

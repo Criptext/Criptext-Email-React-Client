@@ -10,11 +10,11 @@ import {
   errors
 } from './../utils/electronInterface';
 import { CustomError } from './../utils/CustomError';
-import { PREKEY_INITIAL_QUANTITY } from './../utils/consts';
 import SignalProtocolStore from './store';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
+const PREKEY_INITIAL_QUANTITY = 100;
 
 const createAccount = async ({
   recipientId,
@@ -23,16 +23,20 @@ const createAccount = async ({
   recoveryEmail
 }) => {
   const signedPreKeyId = 1;
+  const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
+    (item, index) => index + 1
+  );
+
   const { identityKey, registrationId } = await generateIdentity();
   const {
     keybundle,
     preKeyPairArray,
-    signedPreKeyPair,
-    preKeyIds
+    signedPreKeyPair
   } = await generatePreKeyBundle({
     identityKey,
     registrationId,
-    signedPreKeyId
+    signedPreKeyId,
+    preKeyIds
   });
   const res = await postUser({
     recipientId,
@@ -93,11 +97,9 @@ const generateIdentity = () => {
 const generatePreKeyBundle = async ({
   identityKey,
   registrationId,
-  signedPreKeyId
+  signedPreKeyId,
+  preKeyIds
 }) => {
-  const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
-    (item, index) => index + 1
-  );
   const preKeyPairArray = [];
   const preKeys = await Promise.all(
     preKeyIds.map(async preKeyId => {
@@ -125,8 +127,7 @@ const generatePreKeyBundle = async ({
   const data = {
     keybundle,
     preKeyPairArray,
-    signedPreKeyPair: signedPreKey.keyPair,
-    preKeyIds
+    signedPreKeyPair: signedPreKey.keyPair
   };
   return data;
 };
