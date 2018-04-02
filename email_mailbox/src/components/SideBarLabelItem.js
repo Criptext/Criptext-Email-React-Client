@@ -4,7 +4,7 @@ import './sidebarlabelitem.css';
 
 const SideBarLabelItem = props => (
   <li className="nav-item-label">
-    <div style={{ backgroundColor: props.color }} />
+    <div style={{ backgroundColor: props.label.color }} />
     {props.isEditable ? (
       <input
         autoFocus={true}
@@ -15,19 +15,18 @@ const SideBarLabelItem = props => (
         value={props.textEditable}
       />
     ) : (
-      <label onDoubleClick={props.onDoubleClick}>{props.text}</label>
+      <label onDoubleClick={props.onDoubleClick}>{props.label.text}</label>
     )}
   </li>
 );
 
 SideBarLabelItem.propTypes = {
-  color: PropTypes.string,
   isEditable: PropTypes.bool,
+  label: PropTypes.object,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onKeyPress: PropTypes.func,
-  text: PropTypes.string,
   textEditable: PropTypes.string
 };
 

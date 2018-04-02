@@ -5,7 +5,7 @@ import SideBarView from '../components/SideBar';
 const defineLabels = labels => {
   return labels
     .valueSeq()
-    .filter(element => element.get('id') > 5 || element.get('id') === 4);
+    .filter(element => element.get('id') > 7 || element.get('id') === 4);
 };
 
 const mapStateToProps = state => {

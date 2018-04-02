@@ -4,8 +4,7 @@ import SideBarLabelItemView from '../components/SideBarLabelItemWrapper';
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    text: ownProps.label.get('text'),
-    color: ownProps.label.get('color')
+    label: ownProps.label.toJS()
   };
 };
 

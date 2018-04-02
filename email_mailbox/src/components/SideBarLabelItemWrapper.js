@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SideBarLabelItem from './SideBarLabelItem';
+import { LabelType } from './../utils/electronInterface';
 
 class SideBarLabelItemWrapper extends Component {
   constructor() {
@@ -26,10 +27,12 @@ class SideBarLabelItemWrapper extends Component {
   }
 
   handleOnDoubleClick = () => {
-    this.setState({
-      isEditable: true,
-      textEditable: this.props.text
-    });
+    if (this.props.label.id > Object.values(LabelType).length - 1) {
+      this.setState({
+        isEditable: true,
+        textEditable: this.props.label.text
+      });
+    }
   };
 
   handleOnBlur = () => {
@@ -49,7 +52,7 @@ class SideBarLabelItemWrapper extends Component {
       }
       this.setState({
         isEditable: false,
-        text: ''
+        textEditable: ''
       });
     }
   };
@@ -57,7 +60,7 @@ class SideBarLabelItemWrapper extends Component {
 
 SideBarLabelItemWrapper.propTypes = {
   onUpdateLabel: PropTypes.func,
-  text: PropTypes.string
+  label: PropTypes.object
 };
 
 export default SideBarLabelItemWrapper;
