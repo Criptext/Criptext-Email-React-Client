@@ -265,7 +265,8 @@ const baseThreadQuery = ({ timestamp, labelId, limit }) =>
         }.name IS NOT NULL THEN ${Table.CONTACT}.name ELSE ${
           Table.CONTACT
         }.email END)) as fromContactName`
-      )
+      ),
+      db.raw(`max(${Table.EMAIL}.unread) as isUnread`)
     )
     .from(Table.EMAIL)
     .leftJoin(
@@ -322,11 +323,12 @@ const getEmailById = id => {
     .where({ id });
 };
 
-const updateEmail = ({ id, key, threadId, date, isMuted }) => {
+const updateEmail = ({ id, key, threadId, date, isMuted, unread }) => {
   const params = {};
   if (key) params.key = key;
   if (threadId) params.threadId = threadId;
   if (date) params.date = date;
+  if (typeof unread === 'boolean') params.unread = unread;
   if (typeof isMuted === 'boolean') params.isMuted = isMuted;
   return db
     .table(Table.EMAIL)

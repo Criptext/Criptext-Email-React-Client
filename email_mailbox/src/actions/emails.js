@@ -1,7 +1,8 @@
 import { Email } from './types';
 import {
   getEmailsByThreadId,
-  setMuteEmailById
+  setMuteEmailById,
+  setUnreadEmailById
 } from '../utils/electronInterface';
 import { loadContacts } from './contacts';
 
@@ -16,6 +17,14 @@ export const muteNotifications = emailId => {
   return {
     type: Email.MUTE,
     emailId
+  };
+};
+
+export const markEmailUnreadSuccess = (emailId, unreadValue) => {
+  return {
+    type: Email.MARK_UNREAD,
+    emailId,
+    unread: unreadValue
   };
 };
 
@@ -56,6 +65,17 @@ export const muteEmail = (emailId, valueToSet) => {
     try {
       await setMuteEmailById(emailId, valueToSet);
       dispatch(muteNotifications(emailId));
+    } catch (e) {
+      // To do
+    }
+  };
+};
+
+export const markEmailUnread = (emailId, valueToSet) => {
+  return async dispatch => {
+    try {
+      await setUnreadEmailById(emailId, valueToSet ? true : false);
+      dispatch(markEmailUnreadSuccess(emailId, valueToSet));
     } catch (e) {
       // To do
     }

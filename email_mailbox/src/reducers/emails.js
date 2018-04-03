@@ -18,6 +18,15 @@ export default (state = new Map(), action) => {
       }
       return state;
     }
+    case Email.MARK_UNREAD: {
+      const item = state.get(action.emailId.toString());
+      if (item === undefined) {
+        return state;
+      }
+      const newItem = item.set('unread', action.unread);
+      const newState = state.set(action.emailId.toString(), newItem);
+      return newState;
+    }
     default:
       return state;
   }
