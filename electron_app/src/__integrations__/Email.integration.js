@@ -24,7 +24,7 @@ describe('TABLE[Email]:', () => {
         isMuted: false
       },
       recipients: {
-        from: ['user@criptext.com'],
+        from: ['Usuario <user@criptext.com>'],
         to: [],
         cc: [],
         bcc: []

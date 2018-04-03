@@ -16,22 +16,59 @@ const createContact = params => {
   return db.table(Table.CONTACT).insert(params);
 };
 
-const createContactsIfOrNotStore = async emailAddresses => {
-  const contacts = await db
+const createContactsIfOrNotStore = async contacts => {
+  const emailAddresses = Array.from(
+    new Set(
+      contacts.map(contact => {
+        const emailMatched = contact.match(/<(.*)>/);
+        return emailMatched ? emailMatched[1] : contact;
+      })
+    )
+  );
+
+  const contactsFound = await db
     .select('email')
     .from(Table.CONTACT)
     .whereIn('email', emailAddresses);
-  if (contacts.length === emailAddresses.length) return;
-  const storedEmailAddresses = contacts.map(contact => {
+  if (contactsFound.length === emailAddresses.length) return emailAddresses;
+  const storedEmailAddresses = contactsFound.map(contact => {
     return contact.email;
   });
-  const newEmailAddresses = emailAddresses.filter(
-    email => !storedEmailAddresses.includes(email)
+
+  const newContacts = contacts.filter(
+    contact =>
+      !storedEmailAddresses.includes(
+        contact.match(/<(.*)>/) ? contact.match(/<(.*)>/)[1] : contact
+      )
   );
-  const contactsRow = newEmailAddresses.map(email => {
-    return { email };
+
+  const contactsRow = newContacts.map(contact => {
+    const emailMatched = contact.match(/<(.*)>/);
+    const email = emailMatched ? emailMatched[1] : contact;
+    const name = emailMatched
+      ? contact.slice(0, contact.indexOf('<') - 1)
+      : null;
+    return { email, name };
   });
-  return db.insert(contactsRow).into(Table.CONTACT);
+  const contactsRowCkecked = checkContactDuplicated(contactsRow);
+
+  await db.insert(contactsRowCkecked).into(Table.CONTACT);
+  return emailAddresses;
+};
+
+const checkContactDuplicated = contacts => {
+  const contactsUnique = contacts.reduce(
+    (result, contact) => {
+      const obj = Object.assign(result);
+      if (!result.stack[contact.email]) {
+        obj.stack[contact.email] = contact;
+        obj.contacts.push(contact);
+      }
+      return obj;
+    },
+    { stack: {}, contacts: [] }
+  );
+  return contactsUnique.contacts;
 };
 
 const getUserByUsername = username => {
@@ -50,7 +87,7 @@ const getContactByEmails = (emails, trx) => {
 
 const getContactByIds = ids => {
   return db
-    .select('id', 'email')
+    .select('id', 'email', 'name')
     .from(Table.CONTACT)
     .whereIn('id', ids);
 };
@@ -90,43 +127,40 @@ const createEmail = async (params, trx) => {
     const knex = trx ? trx : db;
     return knex.table(Table.EMAIL).insert(params.email);
   }
-
-  const emails = Array.from(
-    new Set([
-      ...params.recipients.from,
-      ...params.recipients.to,
-      ...params.recipients.cc,
-      ...params.recipients.bcc
-    ])
-  );
-  await createContactsIfOrNotStore(emails);
+  const emails = [
+    ...params.recipients.from,
+    ...params.recipients.to,
+    ...params.recipients.cc,
+    ...params.recipients.bcc
+  ];
+  const emailAddresses = await createContactsIfOrNotStore(emails);
 
   return db
     .transaction(async trx => {
-      const contacts = await getContactByEmails(emails, trx);
+      const contactStored = await getContactByEmails(emailAddresses, trx);
       const [emailId] = await createEmail({ email: params.email }, trx);
       const from = formEmailContact({
         emailId,
-        contacts,
-        emails: params.recipients.from,
+        contactStored,
+        contacts: params.recipients.from,
         type: 'from'
       });
       const to = formEmailContact({
         emailId,
-        contacts,
-        emails: params.recipients.to,
+        contactStored,
+        contacts: params.recipients.to,
         type: 'to'
       });
       const cc = formEmailContact({
         emailId,
-        contacts,
-        emails: params.recipients.cc,
+        contactStored,
+        contacts: params.recipients.cc,
         type: 'cc'
       });
       const bcc = formEmailContact({
         emailId,
-        contacts,
-        emails: params.recipients.bcc,
+        contactStored,
+        contacts: params.recipients.bcc,
         type: 'bcc'
       });
       const emailContactRow = [...from, ...to, ...cc, ...bcc];
@@ -146,9 +180,11 @@ const createEmail = async (params, trx) => {
     });
 };
 
-const formEmailContact = ({ emailId, contacts, emails, type }) => {
-  return emails.map(email => {
-    const { id } = contacts.find(contact => contact.email === email);
+const formEmailContact = ({ emailId, contactStored, contacts, type }) => {
+  return contacts.map(contactToSearch => {
+    const emailMatched = contactToSearch.match(/<(.*)>/);
+    const email = emailMatched ? emailMatched[1] : contactToSearch;
+    const { id } = contactStored.find(contact => contact.email === email);
     return {
       emailId,
       contactId: id,

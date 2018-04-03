@@ -14,7 +14,6 @@ const mapStateToProps = (state, ownProps) => {
   const to = getContacts(contacts, email.get('to'));
   const cc = getContacts(contacts, email.get('cc'));
   const bcc = getContacts(contacts, email.get('bcc'));
-
   const senderName = from.length ? from[0].name : '';
   const senderEmail = from.length ? from[0].email : '';
   const color = senderEmail
