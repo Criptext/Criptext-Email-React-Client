@@ -9,7 +9,15 @@ const errors = {
   },
   USER_ALREADY_EXISTS: {
     name: 'User already exists',
-    description: 'User already exists. Try another username.'
+    description: 'User already exists. Try another username'
+  },
+  NON_EXISTING_USERS: {
+    name: 'Non existing users',
+    description: "One or more users doesn't exist. Check and try again"
+  },
+  ENCRYPTING_ERROR: {
+    name: 'Encryting error',
+    description: 'An error occurred while encrypting message. Please try again'
   },
   UNKNOWN_ERROR: {
     name: 'Error',

@@ -1,6 +1,11 @@
 /*global libsignal util*/
-import { findKeyBundles, postEmail } from './../utils/electronInterface';
+import {
+  errors,
+  findKeyBundles,
+  postEmail
+} from './../utils/electronInterface';
 import SignalProtocolStore from './store';
+import { CustomError } from './../utils/CustomError';
 
 const store = new SignalProtocolStore();
 
@@ -55,20 +60,28 @@ const encryptPostEmail = async (subject, recipients, body) => {
   const keyBundles = await getKeyBundlesOfRecipients(recipientIds);
 
   if (!keyBundles.length) {
-    throw new Error('Non existing users. Try again');
+    throw CustomError(errors.NON_EXISTING_USERS);
   }
 
+  const objKeyBundles = {};
+  keyBundles.forEach(keyBundle => {
+    objKeyBundles[keyBundle.recipientId] = keyBundle;
+  });
+
   recipientIds.forEach(recipientId => {
-    const key = keyBundles.find(key => key.recipientId === recipientId);
+    const key = objKeyBundles[recipientId];
     if (key === undefined) {
-      throw new Error(`The user '${recipientId}' doesn't exist. Try again`);
+      throw CustomError({
+        name: 'Error',
+        description: `The user '${recipientId}' doesn't exist. Try again`
+      });
     }
   });
 
   const criptextEmails = await Promise.all(
-    recipients.map(async (item, index) => {
+    recipients.map(async item => {
       const { recipientId, deviceId } = item;
-      const keyBundle = keysToArrayBuffer(keyBundles[index]);
+      const keyBundle = keysToArrayBuffer(objKeyBundles[recipientId]);
       const bodyEncrypted = await encryptText(
         recipientId,
         deviceId,
@@ -86,6 +99,9 @@ const encryptPostEmail = async (subject, recipients, body) => {
     criptextEmails
   };
   const res = await postEmail(data);
+  if (res.status !== 200) {
+    throw CustomError(errors.ENCRYPTING_ERROR);
+  }
   return res;
 };
 
