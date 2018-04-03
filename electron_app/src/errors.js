@@ -16,7 +16,7 @@ const errors = {
     description: "One or more users doesn't exist. Check and try again"
   },
   ENCRYPTING_ERROR: {
-    name: 'Encryting error',
+    name: 'Encrypting error',
     description: 'An error occurred while encrypting message. Please try again'
   },
   UNKNOWN_ERROR: {
