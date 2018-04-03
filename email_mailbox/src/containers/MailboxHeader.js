@@ -60,6 +60,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onSearchChange: filter => {
       return dispatch(actions.loadSuggestions(filter));
+    },
+    onSearchSelectThread: threadId => {
+      dispatch(actions.selectThread(threadId));
+      ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
     }
   };
 };

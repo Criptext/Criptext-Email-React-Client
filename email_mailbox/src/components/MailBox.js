@@ -25,8 +25,10 @@ class MailBox extends Component {
     return (
       <div className="mailbox-container">
         <MailboxHeader
+          mailbox={this.props.mailbox}
           setSearchParams={this.setSearchParams}
           onClickMailboxSelected={this.props.onClickMailboxSelected}
+          onClickThreadIdSelected={this.props.onClickThreadIdSelected}
         />
         <Threads
           mailbox={this.props.mailbox}

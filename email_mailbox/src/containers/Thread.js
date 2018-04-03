@@ -25,6 +25,12 @@ const getThread = (threads, threadId) => {
   });
 };
 
+const getThreadFromSuggestions = (suggestions, threadId) => {
+  return suggestions.get('threads').find(thread => {
+    return thread.get('id') === threadId;
+  });
+};
+
 const defineLabels = (labels, labelIds) => {
   const result = labelIds.toArray().map(labelId => {
     return labels.get(labelId.toString()).toObject();
@@ -34,7 +40,9 @@ const defineLabels = (labels, labelIds) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const thread = getThread(state.get('threads'), ownProps.threadId);
+  const thread =
+    getThread(state.get('threads'), ownProps.threadId) ||
+    getThreadFromSuggestions(state.get('suggestions'), ownProps.threadId);
   const emails = getEmails(state.get('emails'), thread);
   const labelIds =
     LabelType[ownProps.mailbox].id === LabelType['inbox'].id
