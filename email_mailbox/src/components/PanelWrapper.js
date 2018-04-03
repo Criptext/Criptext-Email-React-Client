@@ -18,7 +18,7 @@ class PanelWrapper extends Component {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
           clear: true,
-          limit: this.props.threadsCount
+          limit: this.props.threadsCount + 1
         });
       }
     });

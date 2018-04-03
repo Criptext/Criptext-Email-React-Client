@@ -26,5 +26,6 @@
   },
   "devDependencies": {
     "criptext-js-tools": "^0.5.0"
-  }
+  },
+  "homepage": "./"
 }

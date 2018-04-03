@@ -121,11 +121,11 @@ const renderEmailExpand = props => (
       <div className="email-segment-controls">
         <div>
           <i className="icon-replay" />
-          <span>Replay</span>
+          <span>Reply</span>
         </div>
         <div>
           <i className="icon-replay-all" />
-          <span>Replay All</span>
+          <span>Reply All</span>
         </div>
         <div>
           <i className="icon-forward" />
@@ -192,10 +192,10 @@ const renderPopOverMenuAction = () => (
   <div className="email-more-menu">
     <ul>
       <li>
-        <span>Replay</span>
+        <span>Reply</span>
       </li>
       <li>
-        <span>Replay All</span>
+        <span>Reply All</span>
       </li>
       <li>
         <span>Forward</span>
