@@ -64,6 +64,37 @@ class MailboxHeader extends Component {
         displaySearchOptions: false
       },
       () => {
+        if (this.state.searchParams.from && this.state.searchParams.to) {
+          this.props.onSearchThreads({
+            contactTypes: ['from', 'to'],
+            contactFilter: {
+              from: this.state.searchParams.from,
+              to: this.state.searchParams.to
+            },
+            ...this.state.searchParams
+          });
+          return;
+        }
+        if (this.state.searchParams.from) {
+          this.props.onSearchThreads({
+            contactTypes: ['from'],
+            contactFilter: {
+              from: this.state.searchParams.from
+            },
+            ...this.state.searchParams
+          });
+          return;
+        }
+        if (this.state.searchParams.to) {
+          this.props.onSearchThreads({
+            contactTypes: ['to'],
+            contactFilter: {
+              to: this.state.searchParams.to
+            },
+            ...this.state.searchParams
+          });
+          return;
+        }
         this.props.onSearchThreads(this.state.searchParams);
       }
     );
