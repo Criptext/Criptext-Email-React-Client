@@ -151,17 +151,18 @@
   border: solid 1px #ececee;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.14);
   height: auto;
+  padding: 0 10px;
   position: absolute;
-  right: -102px;
+  right: -125px;
   top: 28px;
-  width: 255px;
+  width: 275px;
 
   &:before{
     content: '';
     height: 0;
     width: 0;
     position: absolute;
-    right: 107px;
+    right: 128px;
     top: -6px;
     border-bottom: 6px solid white;
     border-right: 6px solid transparent;

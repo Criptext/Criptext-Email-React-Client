@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`data table utils: form contacts row 1`] = `
+Array [
+  Object {
+    "email": "gianni@criptext.com",
+    "name": "Gianni",
+  },
+  Object {
+    "email": "erika@criptext.com",
+    "name": null,
+  },
+  Object {
+    "email": "pedro@criptext.com",
+    "name": null,
+  },
+]
+`;

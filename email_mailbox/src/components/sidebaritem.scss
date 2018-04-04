@@ -1,5 +1,6 @@
 .nav-item{
   align-items: center;
+  cursor: pointer;
   display: flex;
   height: 40px;
   position: relative;
@@ -7,6 +8,16 @@
 
   span{
     font-weight: 300;
+  }
+
+  &:hover{
+    background-color: #f7fbff;
+  }
+
+  &:last-child {
+    &:hover{
+      background-color: transparent;
+    }
   }
 }
 

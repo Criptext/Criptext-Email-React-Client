@@ -17,7 +17,9 @@ class ActivityPanel extends Component {
             <div className="header-clear" />
           </div>
         </header>
-        <nav>{this.renderFeedSection(this.props)}</nav>
+        <div className="navigation-feed-container">
+          {this.renderFeedSection(this.props)}
+        </div>
       </aside>
     );
   }
@@ -36,7 +38,7 @@ class ActivityPanel extends Component {
 
   renderFeedSection = props => {
     if (props.newFeeds.size < 1 && props.oldFeeds.size < 1) {
-      return <div>{this.renderEmptyFeedSection()}</div>;
+      return this.renderEmptyFeedSection();
     }
     return (
       <div>
@@ -78,13 +80,12 @@ class ActivityPanel extends Component {
 
   renderEmptyFeedSection = () => {
     return (
-      <div className="empty-feed-content">
-        <div className="empty-list-image">
-          <div className="empty-icon" />
-        </div>
+      <div className="feed-content-empty">
+        <div className="icon" />
         <div className="text">
-          <p className="title">There&#39;s nothing new yet</p>
-          <p className="subtitle">Enjoy your day</p>
+          <span className="title">There&#39;s nothing new yet</span>
+          <br />
+          <span className="subtitle">Enjoy your day</span>
         </div>
       </div>
     );

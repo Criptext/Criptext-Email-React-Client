@@ -8,7 +8,7 @@ import {
   deleteEmailLabel
 } from '../utils/electronInterface';
 import {
-  buildNewEmailFromData,
+  formIncomingEmailFromData,
   getRecipientsFromData
 } from './../utils/EmailUtils';
 import { storeValue } from '../utils/storage';
@@ -125,7 +125,7 @@ export const loadEvents = () => {
       const events = receivedEvents.filter(item => item.cmd === 1);
       await Promise.all(
         events.map(async item => {
-          const email = await buildNewEmailFromData(
+          const email = await formIncomingEmailFromData(
             item.params,
             myAccount.deviceId
           );

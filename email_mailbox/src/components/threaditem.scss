@@ -19,11 +19,11 @@
 
     a {
       > div{
-        &:nth-child(5){
+        &:nth-child(4){
           visibility: hidden;
         }
   
-        &:nth-child(6){
+        &:nth-child(5){
           visibility: hidden;
         }
       }
@@ -35,7 +35,7 @@
   }
 
   i{
-    font-size: 17px;
+    font-size: 15px;
     vertical-align: text-top;
   }
 
@@ -73,8 +73,9 @@
       }
   
       &:nth-child(2){
-        width: 150px;
         flex-shrink: 0;
+        padding-right: 10px;
+        width: 150px;
 
         span{
           overflow: hidden;
@@ -83,17 +84,6 @@
       }
   
       &:nth-child(3){
-        padding: 0 5px;  
-        color: #b8b9bd;
-        width: 15px;
-        flex-shrink: 0;
-        visibility: hidden;
-        i{
-          font-size: 12px;
-        }
-      }
-  
-      &:nth-child(4){
         flex: 1 0;
         flex-direction: row;
         justify-content: flex-start;
@@ -102,18 +92,18 @@
         min-width: 250px;
       }
   
-      &:nth-child(5){
-        width: 50px;
+      &:nth-child(4){
+        width: 38px;
         color: #d5d5d5;
         flex-shrink: 0;
-        padding: 0 5px;
+        padding-right: 10px;
   
         div{
           width: 15px;
         }
       }
   
-      &:nth-child(6){
+      &:nth-child(5){
         color: #6a707e;
         width: 80px;
         flex-shrink: 0;
@@ -253,10 +243,11 @@
 .thread-preview{
   color: #6a707e;
   flex: 1 0;
-  white-space: nowrap;
+  margin-right: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
+  white-space: nowrap;
 } 
 
 .thread-menu{
@@ -331,7 +322,7 @@
     width: 40px;
     height: 15px;
     position: absolute;
-    top: 0;
+    top: 3px;
     left: 50%;
     transform: translateX(-50%) translateY(-100%);
     overflow: hidden;

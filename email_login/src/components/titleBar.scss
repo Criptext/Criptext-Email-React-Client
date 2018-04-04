@@ -6,6 +6,9 @@
   background-color: #00c4ff;
   -webkit-app-region: drag;
   .buttons:hover {
+    .close{
+      font-size: 14px;
+    }
     .close, .minimize {
       background-color: rgba(255,255, 255, 0.9);
     }
@@ -25,15 +28,15 @@
   .close:before {
     content: "×";
     position: relative;
-    top: -1px;
-    left: 2.5px;
+    top: 0px;
+    left: 3px;
     opacity: 0;
   }
   .minimize:before {
     content: "-";
     position: relative;
-    top: -2px;
-    left: 5px;
+    top: -3px;
+    left: 4px;
     opacity: 0;
   }
   .bar-clear{
