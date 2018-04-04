@@ -23,13 +23,12 @@ aside.navigation-app{
 }
 
 .navigation-partial-mail{
-  border-right: solid 1px #d8d8d8;
-  border-top: solid 1px #d8d8d8;
+  border-top: solid 1px #f3f3f3;
   display: flex;
   height: calc(100% - 61px);
   flex-direction: column;
   overflow: auto;
-  width: calc(100% - 1px);
+  width: 100%;
 
   nav ul{
     list-style: none;
@@ -96,7 +95,7 @@ aside.navigation-app{
     align-items: center;
     display: flex;
     height: 40px;
-    padding-top: 20px;
+    margin-top: 20px;
     width: 100%;
   }
 
@@ -117,7 +116,7 @@ aside.navigation-app{
 }
 
 .line-separator{
-  border-top: solid 1px #d8d8d8;
+  border-top: solid 1px #f3f3f3;
   left: 30px;
   height: 1px;
   margin: 10px 0;

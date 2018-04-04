@@ -1,5 +1,5 @@
 const { db, cleanDataBase, createTables, Table } = require('./models.js');
-const { formContactsRow } = require('./utils/dataUtil.js');
+const { formContactsRow } = require('./utils/dataTableUtils.js');
 
 /* Account
    ----------------------------- */

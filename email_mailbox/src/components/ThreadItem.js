@@ -31,7 +31,6 @@ class ThreadItem extends Component {
           <div>
             <span>{header}</span>
           </div>
-          <div>{this.willDisplaySecureIcon(thread)}</div>
           <div>
             {this.renderLabels(labels, thread.get('id'))}
             <div className="thread-subject">
@@ -43,7 +42,6 @@ class ThreadItem extends Component {
             </div>
           </div>
           <div style={visibleStyle}>
-            <div />
             <div>{this.willDisplayAttachIcon(thread)}</div>
             <div>{this.willDisplayAckIcon(thread)}</div>
           </div>
@@ -172,14 +170,6 @@ class ThreadItem extends Component {
   onRemove = ev => {
     ev.stopPropagation();
     this.props.onRemove();
-  };
-
-  willDisplaySecureIcon = thread => {
-    if (!thread.get('secure')) {
-      return null;
-    }
-
-    return <i className="icon-lock" />;
   };
 
   willDisplayAttachIcon = thread => {

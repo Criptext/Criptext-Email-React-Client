@@ -11,7 +11,7 @@ export const defineTimeByToday = time => {
   if (diffTime <= oneDay) {
     result = moment(timeLocal).format('hh:mm A');
   } else if (diffTime < oneDay * 2) {
-    result = moment(timeLocal).format('[Ayer]');
+    result = moment(timeLocal).format('[Yesterday]');
   } else if (diffTime < oneDay * 7) {
     result = moment(timeLocal).format('dddd');
   } else {

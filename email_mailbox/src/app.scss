@@ -404,8 +404,10 @@ html, body {
 }
 
 .main-container{
+  min-width: 637px;
   width: calc(100% - 498px);
 }
+
 /* 3.- CONTROLS
    ----------------------------- */
 .disabled{

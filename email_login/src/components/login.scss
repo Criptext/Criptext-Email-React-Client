@@ -51,6 +51,8 @@
             border: 0px;
             border-bottom: solid 1px rgba(255,255,255,0.19);
             color: #ffffff;
+            font-size: 13px;
+            font-weight: 300;
             text-indent: 7px;
             float: left;
           }
@@ -72,7 +74,7 @@
             width: 40%;
             float: right;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 300;
             color: #ffffff;
           }
           .clear {
@@ -124,6 +126,13 @@
       position: relative;
       top: -8%;
       text-align: center;
+      span{
+        font-weight: 300;
+        strong{
+          cursor: pointer;
+        }
+        
+      }
     }
   }
 
