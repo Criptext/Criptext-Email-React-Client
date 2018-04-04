@@ -12,6 +12,9 @@ export default (state = List([]), action) => {
             return item.get('id') === action.threadId;
           }),
           function(item) {
+            if (!item) {
+              return;
+            }
             return item.set('unread', false);
           }
         );

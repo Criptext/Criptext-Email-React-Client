@@ -98,6 +98,7 @@
 .search-recent{
   display: flex;
   margin-bottom: 5px;
+  cursor: pointer;
 
   i{
     margin: 7px 10px 5px 10px;
@@ -116,6 +117,10 @@
 
     li{
       margin-bottom: 7px;
+
+      &:hover{
+        background-color: #f7f7f7;
+      }
     }
   }
 }

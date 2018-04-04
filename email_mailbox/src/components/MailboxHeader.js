@@ -14,7 +14,7 @@ class MailboxHeader extends Component {
       displaySearchOptions: false,
       searchParams: {
         text: '',
-        mailbox: ALL_MAIL,
+        labelId: ALL_MAIL,
         from: '',
         to: '',
         subject: '',
@@ -51,6 +51,7 @@ class MailboxHeader extends Component {
             onTriggerSearch={this.onTriggerSearch}
             searchText={this.state.searchParams.text}
             onSearchThreads={this.onSearchThreads}
+            onSearchSelectThread={this.props.onSearchSelectThread}
           />
         )}
       </header>
@@ -127,6 +128,7 @@ MailboxHeader.propTypes = {
   threadsSuggestions: PropTypes.object,
   multiselect: PropTypes.bool,
   onSearchChange: PropTypes.func,
+  onSearchSelectThread: PropTypes.func,
   onSearchThreads: PropTypes.func,
   setSearchParams: PropTypes.func
 };

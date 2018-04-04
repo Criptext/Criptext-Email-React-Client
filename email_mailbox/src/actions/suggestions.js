@@ -20,7 +20,7 @@ export const loadSuggestions = filter => {
       const threads = await getEmailsGroupByThreadByParams({
         plain: true,
         text: filter,
-        mailbox: -1,
+        labelId: -1,
         limit: 5
       });
       dispatch(setSuggestions(threads, hints));

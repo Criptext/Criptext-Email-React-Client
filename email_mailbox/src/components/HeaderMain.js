@@ -25,10 +25,15 @@ class HeaderMain extends Component {
         />
         <span className="header-profile">{accountLetters}</span>
         <OptionsMenu {...this.props} />
-        <HintsMenu {...this.props} />
+        <HintsMenu onHintClick={this.onHintClick} {...this.props} />
       </div>
     );
   }
+
+  onHintClick = hint => {
+    this.props.setSearchParam('text', hint);
+    this.props.onTriggerSearch();
+  };
 }
 
 const HintsMenu = props => (
@@ -53,20 +58,24 @@ const HintsMenu = props => (
           icon="icon-time"
           items={props.hints}
           searchText={props.searchText}
+          onHintClick={props.onHintClick}
         />
         <SearchSuggestion
           icon="icon-search"
           items={List([props.searchText])}
           searchText={props.searchText}
+          onHintClick={props.onHintClick}
         />
 
         {props.threads.map((thread, index) => (
           <SearchMail
             key={index}
+            id={thread.get('id')}
             preview={thread.get('preview')}
             date={thread.get('date')}
             participants={thread.get('fromContactName')}
             searchText={props.searchText}
+            onSearchSelectThread={props.onSearchSelectThread}
           />
         ))}
       </div>
@@ -77,7 +86,12 @@ const HintsMenu = props => (
 const SearchMail = props => {
   const previewMatches = replaceMatches(props.searchText, props.preview);
   return (
-    <div className="search-mail">
+    <div
+      onClick={() => {
+        props.onSearchSelectThread(props.id);
+      }}
+      className="search-mail"
+    >
       <i className="icon-mail" />
       <div>
         <div>
@@ -111,7 +125,7 @@ const OptionsMenu = props => (
         <select
           onChange={ev => {
             const value = ev.target.value;
-            props.setSearchParam('mailbox', value);
+            props.setSearchParam('labelId', Number(value));
           }}
         >
           <option value={-1}>All Mail</option>
@@ -189,7 +203,14 @@ const SearchSuggestion = props => {
       <i className={props.icon} />
       <ul>
         {props.items.map((item, index) => (
-          <li key={index}>{replaceMatches(props.searchText, item)}</li>
+          <li
+            onClick={() => {
+              props.onHintClick(item);
+            }}
+            key={index}
+          >
+            {replaceMatches(props.searchText, item)}
+          </li>
         ))}
       </ul>
     </div>
@@ -209,14 +230,18 @@ HintsMenu.propTypes = {
   hints: PropTypes.object,
   searchText: PropTypes.string,
   threads: PropTypes.object,
-  toggleSearchHints: PropTypes.func
+  toggleSearchHints: PropTypes.func,
+  onHintClick: PropTypes.func,
+  onSearchSelectThread: PropTypes.func
 };
 
 SearchMail.propTypes = {
   date: PropTypes.string,
+  id: PropTypes.number,
   participants: PropTypes.string,
   preview: PropTypes.string,
-  searchText: PropTypes.string
+  searchText: PropTypes.string,
+  onSearchSelectThread: PropTypes.func
 };
 
 OptionsMenu.propTypes = {
@@ -243,6 +268,7 @@ SearchInputBox.propTypes = {
 HeaderMain.propTypes = {
   accountLetters: PropTypes.string,
   displaySearchOptions: PropTypes.bool,
+  onTriggerSearch: PropTypes.func,
   searchParams: PropTypes.object,
   setSearchParam: PropTypes.func
 };
