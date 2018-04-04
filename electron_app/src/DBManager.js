@@ -1,4 +1,5 @@
 const { db, cleanDataBase, createTables, Table } = require('./models.js');
+const { formContactsRow } = require('./utils/dataUtil.js');
 
 /* Account
    ----------------------------- */
@@ -41,22 +42,13 @@ const createContactsIfOrNotStore = async contacts => {
         contact.match(/<(.*)>/) ? contact.match(/<(.*)>/)[1] : contact
       )
   );
-
-  const contactsRow = newContacts.map(contact => {
-    const emailMatched = contact.match(/<(.*)>/);
-    const email = emailMatched ? emailMatched[1] : contact;
-    const name = emailMatched
-      ? contact.slice(0, contact.indexOf('<') - 1)
-      : null;
-    return { email, name };
-  });
-  const contactsRowCkecked = checkContactDuplicated(contactsRow);
+  const contactsRowCkecked = filterUniqueContacts(formContactsRow(newContacts));
 
   await db.insert(contactsRowCkecked).into(Table.CONTACT);
   return emailAddresses;
 };
 
-const checkContactDuplicated = contacts => {
+const filterUniqueContacts = contacts => {
   const contactsUnique = contacts.reduce(
     (result, contact) => {
       const obj = Object.assign(result);
