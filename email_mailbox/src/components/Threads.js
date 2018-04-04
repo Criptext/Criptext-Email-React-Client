@@ -17,7 +17,10 @@ class Threads extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.mailbox !== nextProps.mailbox) {
+    if (
+      this.props.mailbox !== nextProps.mailbox &&
+      LabelType[nextProps.mailbox].id !== null
+    ) {
       this.props.onLoadThreads({
         labelId: LabelType[nextProps.mailbox].id,
         clear: true

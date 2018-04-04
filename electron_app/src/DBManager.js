@@ -226,8 +226,23 @@ const getEmailsByThreadId = threadId => {
 };
 
 const getEmailsGroupByThreadByParams = (params = {}) => {
-  const { timestamp, subject, text, labelId, plain, limit } = params;
-  let queryDb = baseThreadQuery({ timestamp, labelId, limit });
+  const {
+    timestamp,
+    subject,
+    text,
+    labelId,
+    plain,
+    limit,
+    contactTypes = ['from'],
+    contactFilter
+  } = params;
+  let queryDb = baseThreadQuery({
+    timestamp,
+    labelId,
+    limit,
+    contactTypes,
+    contactFilter
+  });
 
   if (plain) {
     return partThreadQueryByMatchText(queryDb, text);
@@ -246,10 +261,57 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
     queryDb = queryDb.having('allLabels', 'like', `%${labelId}%`);
   }
 
+  if (contactFilter) {
+    queryDb = queryDb.havingRaw(buildMatchedContactFilterQuery(contactTypes));
+  }
   return queryDb;
 };
 
-const baseThreadQuery = ({ timestamp, labelId, limit }) =>
+const buildMatchedContactFilterQuery = contactTypes => {
+  return contactTypes.reduce((queryString, type) => {
+    const tempQuery = `matchedContacts like "%${type}%"`;
+    if (!queryString) {
+      return tempQuery;
+    }
+    return `${queryString} AND ${tempQuery}`;
+  }, '');
+};
+
+const buildParamsOrQuery = (builder, contactTypes) => {
+  let firstIteration = true;
+  contactTypes.forEach(type => {
+    if (firstIteration) {
+      firstIteration = false;
+      builder.on(`${Table.EMAIL_CONTACT}.type`, db.raw('?', [type]));
+    }
+    builder.orOn(`${Table.EMAIL_CONTACT}.type`, db.raw('?', [type]));
+  });
+};
+
+const buildContactMatchQuery = (contactTypes, contactFilter) => {
+  if (!contactFilter) {
+    return `${Table.CONTACT}.id is not null`;
+  }
+  return contactTypes.reduce((queryString, type) => {
+    const tempQuery = `(${Table.EMAIL_CONTACT}.type = "${type}" AND (${
+      Table.CONTACT
+    }.name LIKE "%${contactFilter[type]}%" OR ${Table.CONTACT}.email LIKE "%${
+      contactFilter[type]
+    }%"))`;
+    if (!queryString) {
+      return tempQuery;
+    }
+    return queryString + ' OR ' + tempQuery;
+  }, '');
+};
+
+const baseThreadQuery = ({
+  timestamp,
+  labelId,
+  limit,
+  contactTypes,
+  contactFilter
+}) =>
   db
     .select(
       `${Table.EMAIL}.*`,
@@ -259,6 +321,12 @@ const baseThreadQuery = ({ timestamp, labelId, limit }) =>
       ),
       db.raw(`group_concat(${Table.EMAIL_LABEL}.labelId) as allLabels`),
       db.raw(`group_concat(distinct(${Table.EMAIL}.id)) as emailIds`),
+      db.raw(
+        `group_concat(distinct(CASE WHEN ${buildContactMatchQuery(
+          contactTypes,
+          contactFilter
+        )} THEN ${Table.EMAIL_CONTACT}.type ELSE NULL END)) as matchedContacts`
+      ),
       db.raw(
         `group_concat(distinct( CASE WHEN ${
           Table.CONTACT
@@ -277,7 +345,9 @@ const baseThreadQuery = ({ timestamp, labelId, limit }) =>
     .leftJoin(Table.EMAIL_CONTACT, builder => {
       builder
         .on(`${Table.EMAIL}.id`, `${Table.EMAIL_CONTACT}.emailId`)
-        .on(`${Table.EMAIL_CONTACT}.type`, db.raw('?', ['from']));
+        .andOn(builder2 => {
+          buildParamsOrQuery(builder2, contactTypes);
+        });
     })
     .leftJoin(
       Table.CONTACT,
