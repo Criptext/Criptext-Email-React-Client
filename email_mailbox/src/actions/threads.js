@@ -7,7 +7,7 @@ import {
   getEvents
 } from '../utils/electronInterface';
 import { storeValue } from '../utils/storage';
-import { hanldeNewMessageEvent } from './../utils/electronEventInterface';
+import { handleNewMessageEvent } from './../utils/electronEventInterface';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -119,7 +119,7 @@ export const loadEvents = () => {
       const receivedEvents = await getEvents();
       const events = receivedEvents.filter(item => item.cmd === 1);
       await Promise.all(
-        events.map(async item => await hanldeNewMessageEvent(item.params))
+        events.map(async item => await handleNewMessageEvent(item.params))
       );
       dispatch(loadThreads({ clear: true }));
     } catch (e) {

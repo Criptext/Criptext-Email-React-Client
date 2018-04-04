@@ -1,7 +1,7 @@
 import { createEmail } from './electronInterface';
 import {
-  buildNewEmailFromData,
   formEmailLabel,
+  formIncomingEmailFromData,
   getRecipientsFromData
 } from '../utils/EmailUtils';
 import { SocketCommand } from '../utils/const';
@@ -29,13 +29,16 @@ ipcRenderer.on('socket-message', (event, message) => {
   }
 });
 
-export const hanldeNewMessageEvent = async emailObj => {
+export const handleNewMessageEvent = async emailObj => {
   const InboxLabel = LabelType.inbox;
   const labels = [InboxLabel.id];
+  const eventParams = {
+    labels
+  };
 
   const prevEmail = await getEmailByKey(emailObj.metadataKey);
   if (!prevEmail.length) {
-    const email = await buildNewEmailFromData(emailObj, myAccount.deviceId);
+    const email = await formIncomingEmailFromData(emailObj, myAccount.deviceId);
     const recipients = getRecipientsFromData(emailObj);
     const params = {
       email,
@@ -43,12 +46,12 @@ export const hanldeNewMessageEvent = async emailObj => {
       labels
     };
     await createEmail(params);
-    emitter.emit(Event.NEW_EMAIL, params);
   } else {
     const prevEmailId = prevEmail[0].id;
     const emailLabel = formEmailLabel({ emailId: prevEmailId, labels });
     await createEmailLabel(emailLabel);
   }
+  emitter.emit(Event.NEW_EMAIL, eventParams);
 };
 
 export const addEvent = (eventName, callback) => {
