@@ -1,11 +1,12 @@
 /* eslint-env node, jest */
 
-import contactsReducer from '../contacts';
-import * as actions from '../../actions/index';
+import contactsReducer from './../contacts';
+import * as actions from './../../actions/index';
 import file from './../../../public/contacts.json';
 const contacts = file.contacts;
 
-jest.mock('../../utils/electronInterface');
+jest.mock('./../../utils/electronInterface');
+jest.mock('./../../utils/electronEventInterface');
 
 describe('contacts actions', () => {
   it('should add contacts', () => {

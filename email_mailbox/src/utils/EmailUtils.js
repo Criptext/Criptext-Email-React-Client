@@ -50,3 +50,12 @@ export const getRecipientsFromData = data => {
     from: formRecipients(data.from)
   };
 };
+
+export const formEmailLabel = ({ emailId, labels }) => {
+  return labels.map(labelId => {
+    return {
+      labelId,
+      emailId
+    };
+  });
+};

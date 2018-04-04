@@ -1,18 +1,13 @@
 import { Thread } from './types';
 import {
-  createEmail,
   createEmailLabel,
+  deleteEmailLabel,
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
-  getEvents,
-  deleteEmailLabel
+  getEvents
 } from '../utils/electronInterface';
-import {
-  formIncomingEmailFromData,
-  getRecipientsFromData
-} from './../utils/EmailUtils';
 import { storeValue } from '../utils/storage';
-import { LabelType, myAccount } from './../utils/electronInterface';
+import { hanldeNewMessageEvent } from './../utils/electronEventInterface';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -124,22 +119,7 @@ export const loadEvents = () => {
       const receivedEvents = await getEvents();
       const events = receivedEvents.filter(item => item.cmd === 1);
       await Promise.all(
-        events.map(async item => {
-          const email = await formIncomingEmailFromData(
-            item.params,
-            myAccount.deviceId
-          );
-          const recipients = getRecipientsFromData(item.params);
-          const InboxLabel = LabelType.inbox;
-          const labels = [InboxLabel.id];
-          const params = {
-            email,
-            recipients,
-            labels
-          };
-          const response = await createEmail(params);
-          return response;
-        })
+        events.map(async item => await hanldeNewMessageEvent(item.params))
       );
       dispatch(loadThreads({ clear: true }));
     } catch (e) {

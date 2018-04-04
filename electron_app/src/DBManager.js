@@ -194,6 +194,13 @@ const formEmailLabel = ({ emailId, labels }) => {
   });
 };
 
+const getEmailByKey = key => {
+  return db
+    .select('*')
+    .from(Table.EMAIL)
+    .where({ key });
+};
+
 const getEmailsByThreadId = threadId => {
   return db
     .select(
@@ -512,6 +519,7 @@ module.exports = {
   getAllLabels,
   getContactByIds,
   getEmailById,
+  getEmailByKey,
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
   getKeys,

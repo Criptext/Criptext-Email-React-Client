@@ -1,5 +1,5 @@
 {
-  "name": "criptext-email-react-mailbox",
+  "name": "email_mailbox",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

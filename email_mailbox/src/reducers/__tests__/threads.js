@@ -1,10 +1,11 @@
 /* eslint-env node, jest */
 
-import threadsReducer from '../thread';
-import * as actions from '../../actions/index';
+import threadsReducer from './../thread';
+import * as actions from './../../actions/index';
 import file from './../../../public/threads.json';
 
 jest.mock('../../utils/electronInterface');
+jest.mock('../../utils/electronEventInterface');
 
 const myThreads = file.threads;
 
