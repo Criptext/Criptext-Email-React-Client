@@ -60,18 +60,21 @@ const encryptPostEmail = async (subject, recipients, body) => {
   const keyBundles = await getKeyBundlesOfRecipients(recipientIds);
 
   if (!keyBundles.length) {
-    throw CustomError(errors.NON_EXISTING_USERS);
+    throw new CustomError(errors.NON_EXISTING_USERS);
   }
 
-  const objKeyBundles = {};
-  keyBundles.forEach(keyBundle => {
-    objKeyBundles[keyBundle.recipientId] = keyBundle;
-  });
+  const objKeyBundles = keyBundles.reduce(
+    (result, keyBundle) => ({
+      ...result,
+      [keyBundle.recipientId]: keyBundle
+    }),
+    {}
+  );
 
   recipientIds.forEach(recipientId => {
     const key = objKeyBundles[recipientId];
     if (key === undefined) {
-      throw CustomError({
+      throw new CustomError({
         name: 'Error',
         description: `The user '${recipientId}' doesn't exist. Try again`
       });
@@ -100,7 +103,7 @@ const encryptPostEmail = async (subject, recipients, body) => {
   };
   const res = await postEmail(data);
   if (res.status !== 200) {
-    throw CustomError(errors.ENCRYPTING_ERROR);
+    throw new CustomError(errors.ENCRYPTING_ERROR);
   }
   return res;
 };
