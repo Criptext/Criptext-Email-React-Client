@@ -3,6 +3,8 @@ const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 
+export const errors = remote.require('./src/errors');
+
 export const myAccount = remote.require('./src/Account');
 
 export const LabelType = remote.require('./src/systemLabels');
@@ -53,4 +55,8 @@ export const postEmail = params => {
 
 export const updateEmailLabel = params => {
   return dbManager.updateEmailLabel(params);
+};
+
+export const throwError = error => {
+  ipcRenderer.send('throwError', error);
 };

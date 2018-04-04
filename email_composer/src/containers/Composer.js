@@ -9,6 +9,7 @@ import {
   createEmail,
   LabelType,
   myAccount,
+  throwError,
   updateEmail,
   updateEmailLabel
 } from './../utils/electronInterface';
@@ -124,9 +125,6 @@ class ComposerWrapper extends Component {
     try {
       const [emailId] = await createEmail(data);
       const res = await signal.encryptPostEmail(subject, to, body);
-      if (res.status !== 200) {
-        throw new Error('Error encrypting, try again');
-      }
       const { metadataKey, threadId, date } = res.body;
       const emailParams = { id: emailId, key: metadataKey, threadId, date };
       await updateEmail(emailParams);
@@ -139,7 +137,11 @@ class ComposerWrapper extends Component {
       closeComposerWindow();
     } catch (e) {
       this.setState({ status: Status.ENABLED });
-      alert(e);
+      const errorToShow = {
+        name: e.name,
+        description: e.message
+      };
+      throwError(errorToShow);
     }
   };
 
