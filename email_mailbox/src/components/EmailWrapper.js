@@ -13,6 +13,20 @@ class EmailWrapper extends Component {
     };
   }
 
+  componentDidMount() {
+    const email = this.props.email;
+    if (email.unread && (this.state.displayEmail || this.props.staticOpen)) {
+      this.props.markUnread();
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const email = nextProps.email;
+    if (email.unread && (this.state.displayEmail || this.props.staticOpen)) {
+      this.props.markUnread();
+    }
+  }
+
   render() {
     return (
       <Email
@@ -58,6 +72,8 @@ class EmailWrapper extends Component {
 
 EmailWrapper.propTypes = {
   displayEmail: PropTypes.func,
+  email: PropTypes.object,
+  markUnread: PropTypes.func,
   staticOpen: PropTypes.bool
 };
 

@@ -40,7 +40,7 @@ export default (state = List([]), action) => {
           timesOpened: 2,
           timer: 1,
           totalAttachments: 1,
-          unread: true,
+          unread: thread.isUnread ? true : false,
           selected: false,
           fromContactName: List(thread.fromContactName.split(','))
         });

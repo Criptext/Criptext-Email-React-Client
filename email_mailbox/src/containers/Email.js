@@ -5,7 +5,7 @@ import { getTwoCapitalLetters } from '../utils/StringUtils';
 import { matchOwnEmail } from '../utils/UserUtils';
 import randomcolor from 'randomcolor';
 import { myAccount } from '../utils/electronInterface';
-import { muteEmail } from '../actions/index';
+import { muteEmail, markEmailUnread } from '../actions/index';
 
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
@@ -57,6 +57,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const emailId = String(email.get('id'));
       const valueToSet = email.get('isMuted') === 1 ? false : true;
       dispatch(muteEmail(emailId, valueToSet));
+    },
+    markUnread: () => {
+      const unreadValue = email.get('unread') ? 0 : 1;
+      dispatch(markEmailUnread(email.get('id'), unreadValue));
     }
   };
 };

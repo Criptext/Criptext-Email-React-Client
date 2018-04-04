@@ -70,6 +70,10 @@ export const setMuteEmailById = (emailId, muteValue) => {
   return dbManager.updateEmail({ id: emailId, isMuted: muteValue });
 };
 
+export const setUnreadEmailById = (emailId, unreadValue) => {
+  return dbManager.updateEmail({ id: emailId, unread: unreadValue });
+};
+
 export const deleteFeedById = feedId => {
   return dbManager.deleteFeedById(feedId);
 };
