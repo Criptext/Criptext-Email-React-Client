@@ -52,23 +52,23 @@ export default (state = List([]), action) => {
     }
     case Thread.MULTISELECT: {
       return state.update(
-        state.findIndex(function(item) {
+        state.findIndex(item => {
           return item.get('id') === action.selectedThread;
         }),
-        function(item) {
+        item => {
           return item.set('selected', action.value);
         }
       );
     }
     case Thread.ADD_THREAD_LABEL: {
       return state.update(
-        state.findIndex(function(thread) {
+        state.findIndex(thread => {
           return thread.get('id') === action.targetThread;
         }),
-        function(thread) {
-          return thread.update('labels', labels => {
-            return labels.add(action.label);
-          });
+        thread => {
+          const allLabels = thread.get('allLabels').add(action.label);
+          const labels = thread.get('labels').add(action.label);
+          return thread.merge({ allLabels, labels });
         }
       );
     }
@@ -77,18 +77,18 @@ export default (state = List([]), action) => {
         if (!action.threadsIds.includes(thread.get('id'))) {
           return thread;
         }
-        return thread.update('labels', labels => labels.add(action.label));
+        const allLabels = thread.get('allLabels').add(action.label);
+        const labels = thread.get('labels').add(action.label);
+        return thread.merge({ allLabels, labels });
       });
     }
     case Thread.REMOVE_LABEL: {
       return state.update(
-        state.findIndex(function(thread) {
-          return thread.get('id') === action.targetThread;
-        }),
-        function(thread) {
-          return thread.update('labels', labels => {
-            return labels.delete(action.label);
-          });
+        state.findIndex(thread => thread.get('id') === action.targetThread),
+        thread => {
+          const allLabels = thread.get('allLabels').delete(action.label);
+          const labels = thread.get('labels').delete(action.label);
+          return thread.merge({ allLabels, labels });
         }
       );
     }
@@ -97,7 +97,9 @@ export default (state = List([]), action) => {
         if (!action.threadsIds.includes(thread.get('id'))) {
           return thread;
         }
-        return thread.update('labels', labels => labels.delete(action.label));
+        const allLabels = thread.get('allLabels').delete(action.label);
+        const labels = thread.get('labels').delete(action.label);
+        return thread.merge({ allLabels, labels });
       });
     }
     case Thread.READ_THREADS: {

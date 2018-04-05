@@ -44,10 +44,11 @@ const mapStateToProps = (state, ownProps) => {
     getThread(state.get('threads'), ownProps.threadId) ||
     getThreadFromSuggestions(state.get('suggestions'), ownProps.threadId);
   const emails = getEmails(state.get('emails'), thread);
-  const labelIds =
-    LabelType[ownProps.mailbox].id === LabelType['inbox'].id
+  let labelIds =
+    LabelType[ownProps.mailbox].id === LabelType.inbox.id
       ? thread.get('allLabels')
       : thread.get('labels');
+  labelIds = labelIds.filter(labelId => labelId !== LabelType.sent.id);
   const labels = defineLabels(state.get('labels'), labelIds);
   return {
     emails,
