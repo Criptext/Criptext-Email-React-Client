@@ -8,6 +8,8 @@ class PanelWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isOpenActivityPanel: true,
+      isOpenSideBar: true,
       mailboxSelected: 'inbox',
       threadIdSelected: null
     };
@@ -27,11 +29,15 @@ class PanelWrapper extends Component {
   render() {
     return (
       <Panel
+        isOpenActivityPanel={this.state.isOpenActivityPanel}
+        isOpenSideBar={this.state.isOpenSideBar}
         mailboxSelected={this.state.mailboxSelected}
         threadIdSelected={this.state.threadIdSelected}
         onClickMailboxSelected={this.handleOnClickMailboxSelected}
         onClickThreadBack={this.handleOnClickThreadBack}
         onClickThreadIdSelected={this.handleOnClickThreadIdSelected}
+        onToggleActivityPanel={this.handleOnClickToggleActivityPanel}
+        onToggleSideBar={this.handleOnClickToggleSideBar}
         {...this.props}
       />
     );
@@ -47,6 +53,14 @@ class PanelWrapper extends Component {
 
   handleOnClickThreadIdSelected = (threadId, mailbox) => {
     this.setState({ mailboxSelected: mailbox, threadIdSelected: threadId });
+  };
+
+  handleOnClickToggleActivityPanel = () => {
+    this.setState({ isOpenActivityPanel: !this.state.isOpenActivityPanel });
+  };
+
+  handleOnClickToggleSideBar = () => {
+    this.setState({ isOpenSideBar: !this.state.isOpenSideBar });
   };
 }
 

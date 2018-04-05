@@ -1,14 +1,22 @@
 @import "./../styles/index.scss";
 
-aside.navigation-app{
+.navigation-app-expand{
+  width: 210px;
+}
+
+.navigation-app{
   display: inline-table;
   height: 100%;
-  width: 210px;
 
   header{
     align-items: center;
     display: flex;
     height: $_HEIGHT_HEADER;
+    position: relative;
+
+    i{
+      display: none;
+    }
   }
 }
 
@@ -27,7 +35,7 @@ aside.navigation-app{
   display: flex;
   height: calc(100% - 61px);
   flex-direction: column;
-  overflow: auto;
+  overflow-y: auto;
   width: 100%;
 
   nav ul{
@@ -128,4 +136,138 @@ aside.navigation-app{
 .nav-item-option{
   color: #d8d8d8;
   font-size: 20px;
+}
+
+.navigation-app-collapse{
+  width: 79px;
+
+  header{
+    background-color: #0091ff;
+
+    &:before{
+      content: '';
+      height: 0;
+      width: 0;
+      position: absolute;
+      left: 79px;
+      top: 24px;
+      border-left: 8px solid #0091ff;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+
+    i{
+      color: white;
+      display: inline;
+      font-size: 38px;
+      margin: 0 auto;
+    }
+  }
+
+  .header-icon{
+    display: none;
+  }
+
+  button.button-compose{
+    border-radius: 50%;
+    height: 39px;
+    width: 39px;
+    padding: 0;
+
+    i{
+      font-size: 19px;
+      left: 1px;
+      margin: 0;
+      top: 0px;
+    }
+    span{
+      display: none;
+    }
+  }
+
+  .navigation-partial-mail nav ul li{
+    
+    &:last-child{
+      display: none;
+    }
+
+    span{
+      display: none
+    }
+  }
+
+  .nav-item-icon{
+    font-size: 18px;
+    height: 18px;
+    margin: 0 auto;
+    width: auto;
+  }
+
+  .label-container{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .navigation-app{
+    width: 79px;
+
+    header{
+      background-color: #0091ff;
+
+      &:before{
+        display: none;
+      }
+
+      i{
+        color: white;
+        display: inline;
+        font-size: 38px;
+        margin: 0 auto;
+      }
+    }
+  }
+
+  .header-icon{
+    display: none;
+  }
+
+  button.button-compose{
+    border-radius: 50%;
+    height: 39px;
+    width: 39px;
+    padding: 0;
+
+    i{
+      font-size: 19px;
+      left: 1px;
+      margin: 0;
+      top: 0px;
+    }
+    span{
+      display: none;
+    }
+  }
+
+  .navigation-partial-mail nav ul li{
+    
+    &:last-child{
+      display: none;
+    }
+
+    span{
+      display: none
+    }
+  }
+
+  .nav-item-icon{
+    font-size: 18px;
+    height: 18px;
+    margin: 0 auto;
+    width: auto;
+  }
+
+  .label-container{
+    display: none;
+  }
 }

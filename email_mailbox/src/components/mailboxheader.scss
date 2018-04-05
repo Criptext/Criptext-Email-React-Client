@@ -1,8 +1,9 @@
-@import "./../styles/index.scss";
+.mailbox-header{  
+  display: flex;
 
-.mailbox-header{
-  background-color: #373a45;
-  padding: 0px 25px 0 35px;
-  height: $_HEIGHT_HEADER;
-  font-family: 'NunitoSans';
+  .header-container{
+    flex-grow: 1;
+    height: 100%;
+    padding: 0px 25px 0 35px;
+  }
 }

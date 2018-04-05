@@ -25,10 +25,12 @@ class MailBox extends Component {
     return (
       <div className="mailbox-container">
         <MailboxHeader
+          isOpenActivityPanel={this.props.isOpenActivityPanel}
           mailbox={this.props.mailbox}
           setSearchParams={this.setSearchParams}
           onClickMailboxSelected={this.props.onClickMailboxSelected}
           onClickThreadIdSelected={this.props.onClickThreadIdSelected}
+          onToggleActivityPanel={this.props.onToggleActivityPanel}
         />
         <Threads
           mailbox={this.props.mailbox}
@@ -49,9 +51,11 @@ class MailBox extends Component {
 }
 
 MailBox.propTypes = {
+  isOpenActivityPanel: PropTypes.bool,
   mailbox: PropTypes.string,
   onClickMailboxSelected: PropTypes.func,
-  onClickThreadIdSelected: PropTypes.func
+  onClickThreadIdSelected: PropTypes.func,
+  onToggleActivityPanel: PropTypes.func
 };
 
 export default MailBox;

@@ -56,11 +56,12 @@
       justify-content: space-between;
   
       &:nth-child(1){
-        padding: 1px 13px 0 15px;
+        align-items: center;
         flex-shrink: 0;
         justify-content: center;
         height: 100%;
-        align-items: center;
+        padding: 1px 13px 0 15px;
+        width: 21px;
   
         .checkmark-container{
           margin-left: 3px;
@@ -84,12 +85,11 @@
       }
   
       &:nth-child(3){
-        flex: 1 0;
+        align-items: center;
         flex-direction: row;
         justify-content: flex-start;
         flex-wrap: nowrap;
-        align-items: center;
-        min-width: 250px;
+        width: calc(100% - 340px);
       }
   
       &:nth-child(4){
@@ -99,7 +99,7 @@
         padding-right: 10px;
   
         div{
-          width: 15px;
+          width: 18px;
         }
       }
   
@@ -244,6 +244,7 @@
   color: #6a707e;
   flex: 1 0;
   margin-right: 10px;
+  max-width: 300px;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
@@ -351,8 +352,8 @@
   
     &:after{
       content: "";
-      height: 15px;
-      width: 15px;
+      height: 10px;
+      width: 10px;
       left: 50%;
       transform: translateX(-50%) translateY(-60%) rotate(45deg);
       box-shadow: 0 0 5px 0 rgba(0, 0, 3, 0.13);

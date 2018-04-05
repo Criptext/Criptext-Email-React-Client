@@ -17,9 +17,17 @@ class SideBar extends Component {
 
   render() {
     return (
-      <aside className="navigation-app">
-        <header>
+      <aside
+        className={
+          'navigation-app' +
+          (!this.props.isOpenSideBar
+            ? ' navigation-app-collapse'
+            : ' navigation-app-expand')
+        }
+      >
+        <header onClick={() => this.props.onToggleSideBar()}>
           <div className="header-icon" />
+          <i className="icon-criptext" />
         </header>
         <div className="navigation-partial-mail">
           <div className="nav-item-free">
@@ -103,9 +111,11 @@ class SideBar extends Component {
 }
 
 SideBar.propTypes = {
+  isOpenSideBar: PropTypes.bool,
   labels: PropTypes.object,
   mailboxSelected: PropTypes.string,
   onClickMailboxSelected: PropTypes.func,
+  onToggleSideBar: PropTypes.func,
   onLoadLabels: PropTypes.func,
   optionSelected: PropTypes.string
 };

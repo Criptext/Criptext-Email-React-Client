@@ -8,16 +8,20 @@ const MainContainer = props => {
     case 'threads':
       return (
         <MailBox
+          isOpenActivityPanel={props.isOpenActivityPanel}
           mailbox={props.mailbox}
           onClickThreadIdSelected={props.onClickThreadIdSelected}
           onClickMailboxSelected={props.onClickMailboxSelected}
+          onToggleActivityPanel={props.onToggleActivityPanel}
         />
       );
     case 'emails':
       return (
         <Thread
+          isOpenActivityPanel={props.isOpenActivityPanel}
           mailbox={props.mailbox}
           onClickThreadBack={props.onClickThreadBack}
+          onToggleActivityPanel={props.onToggleActivityPanel}
           threadId={props.threadId}
         />
       );
@@ -27,10 +31,12 @@ const MainContainer = props => {
 };
 
 MainContainer.propTypes = {
+  isOpenActivityPanel: PropTypes.bool,
   mailbox: PropTypes.string,
   onClickMailboxSelected: PropTypes.func,
   onClickThreadBack: PropTypes.func,
   onClickThreadIdSelected: PropTypes.func,
+  onToggleActivityPanel: PropTypes.func,
   stance: PropTypes.string,
   threadId: PropTypes.number
 };

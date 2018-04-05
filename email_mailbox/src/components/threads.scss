@@ -31,11 +31,12 @@
 }
 
 .threads-wrapper{
-  overflow: auto;
+  overflow-y: auto;
   height: calc(100% - 150px);
   padding: 44px 20px;
   background-color: #f7f7f8;
   position: relative;
+  width: calc(100% - 40px);
 }
 
 .threads-wrapper::-webkit-scrollbar-track{
