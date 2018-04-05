@@ -1,12 +1,13 @@
 /* eslint-env node, jest */
 
 import labelReducer from './../labels';
-import * as actions from '../../actions/index';
+import * as actions from './../../actions/index';
 import { Map } from 'immutable';
 import file from './../../../public/labels.json';
 const labels = file.labels;
 
-jest.mock('../../utils/electronInterface');
+jest.mock('./../../utils/electronInterface');
+jest.mock('./../../utils/electronEventInterface');
 
 describe('Label actions:', () => {
   it('should add labels', () => {

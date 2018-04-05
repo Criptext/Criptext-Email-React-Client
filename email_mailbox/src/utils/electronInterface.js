@@ -78,6 +78,10 @@ export const deleteFeedById = feedId => {
   return dbManager.deleteFeedById(feedId);
 };
 
+export const getEmailByKey = emailKey => {
+  return dbManager.getEmailByKey(emailKey);
+};
+
 /* Signal
   ----------------------------- */
 export const createKeys = params => {

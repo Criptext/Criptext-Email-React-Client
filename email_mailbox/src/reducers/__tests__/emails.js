@@ -1,11 +1,12 @@
 /* eslint-env node, jest */
 
-import emailReducer from '../emails';
-import * as actions from '../../actions/index';
+import emailReducer from './../emails';
+import * as actions from './../../actions/index';
 import file from './../../../public/emails.json';
 const emails = file.emails;
 
-jest.mock('../../utils/electronInterface');
+jest.mock('./../../utils/electronInterface');
+jest.mock('./../../utils/electronEventInterface');
 
 describe('email actions: ', () => {
   function initState(emails) {

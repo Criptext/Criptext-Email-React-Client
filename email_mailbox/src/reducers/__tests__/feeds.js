@@ -1,10 +1,11 @@
 /* eslint-env node, jest */
 
-import feedsReducer from '../feeds';
-import * as actions from '../../actions/index';
+import feedsReducer from './../feeds';
+import * as actions from './../../actions/index';
 import json from './../../../public/feeds.json';
 
-jest.mock('../../utils/electronInterface');
+jest.mock('./../../utils/electronInterface');
+jest.mock('./../../utils/electronEventInterface');
 
 describe('Feed actions: ', () => {
   const feeds = json.feeds;
