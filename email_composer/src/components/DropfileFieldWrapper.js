@@ -38,7 +38,8 @@ class DropfileFieldWrapper extends Component {
   handleDragOver = e => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
-    if (!this.state.isDragActive) {
+    const dragType = e.dataTransfer.types;
+    if (!this.state.isDragActive && !dragType.includes('text/plain')) {
       this.setState({
         isDragActive: true
       });
