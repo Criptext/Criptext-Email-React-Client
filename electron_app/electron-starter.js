@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, ipcMain, dialog } = require('electron');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient')
