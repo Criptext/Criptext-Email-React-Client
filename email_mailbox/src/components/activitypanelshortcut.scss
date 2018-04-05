@@ -1,0 +1,26 @@
+.activity-panel-shortcut-container{
+  align-items: center;
+  background-color: #0091ff;
+  display: flex;
+  height: 61px;
+  position: relative;
+  width: 61px;
+
+  &:before{
+    content: '';
+    height: 0;
+    width: 0;
+    position: absolute;
+    right: 60px;
+    top: 24px;
+    border-right: 8px solid #0091ff;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+  }
+
+  i{
+    color: white;
+    font-size: 25px;
+    margin: 0 auto;
+  }
+}

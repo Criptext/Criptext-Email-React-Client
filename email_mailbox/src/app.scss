@@ -404,8 +404,13 @@ html, body {
 }
 
 .main-container{
-  min-width: 637px;
-  width: calc(100% - 498px);
+  flex-grow: 1;
+
+  header{
+    background-color: #373a45;
+    height: $_HEIGHT_HEADER;
+    font-family: 'NunitoSans';
+  }
 }
 
 /* 3.- CONTROLS

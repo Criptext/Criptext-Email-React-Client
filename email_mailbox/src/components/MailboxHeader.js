@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderThreadOptionsWrapper from './HeaderThreadOptionsWrapper';
 import HeaderMain from './HeaderMain';
+import ActivityPanelShortCut from './ActivityPanelShortCut';
 import './mailboxheader.css';
 
 const ALL_MAIL = -1;
@@ -36,24 +37,29 @@ class MailboxHeader extends Component {
     const threads = this.props.threadsSuggestions;
     return (
       <header className="mailbox-header">
-        {this.props.multiselect ? (
-          <HeaderThreadOptionsWrapper {...this.props} />
-        ) : (
-          <HeaderMain
-            {...this.props}
-            threads={threads}
-            setSearchParam={this.setSearchParam}
-            searchParams={this.state.searchParams}
-            displaySearchHints={this.state.displaySearchHints}
-            displaySearchOptions={this.state.displaySearchOptions}
-            toggleSearchHints={this.toggleSearchHints}
-            toggleSearchOptions={this.toggleSearchOptions}
-            onTriggerSearch={this.onTriggerSearch}
-            searchText={this.state.searchParams.text}
-            onSearchThreads={this.onSearchThreads}
-            onSearchSelectThread={this.props.onSearchSelectThread}
-          />
-        )}
+        <div className="header-container">
+          {this.props.multiselect ? (
+            <HeaderThreadOptionsWrapper {...this.props} />
+          ) : (
+            <HeaderMain
+              {...this.props}
+              threads={threads}
+              setSearchParam={this.setSearchParam}
+              searchParams={this.state.searchParams}
+              displaySearchHints={this.state.displaySearchHints}
+              displaySearchOptions={this.state.displaySearchOptions}
+              toggleSearchHints={this.toggleSearchHints}
+              toggleSearchOptions={this.toggleSearchOptions}
+              onTriggerSearch={this.onTriggerSearch}
+              searchText={this.state.searchParams.text}
+              onSearchThreads={this.onSearchThreads}
+              onSearchSelectThread={this.props.onSearchSelectThread}
+            />
+          )}
+        </div>
+        {!this.props.isOpenActivityPanel ? (
+          <ActivityPanelShortCut onClick={this.props.onToggleActivityPanel} />
+        ) : null}
       </header>
     );
   }
@@ -156,12 +162,14 @@ class MailboxHeader extends Component {
 }
 
 MailboxHeader.propTypes = {
-  threadsSuggestions: PropTypes.object,
+  isOpenActivityPanel: PropTypes.bool,
   multiselect: PropTypes.bool,
   onSearchChange: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onSearchThreads: PropTypes.func,
-  setSearchParams: PropTypes.func
+  onToggleActivityPanel: PropTypes.func,
+  setSearchParams: PropTypes.func,
+  threadsSuggestions: PropTypes.object
 };
 
 export default MailboxHeader;

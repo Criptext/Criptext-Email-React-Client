@@ -11,7 +11,10 @@ class ActivityPanel extends Component {
           <div className="header-content">
             {this.renderHeaderIcon()}
             <div className="header-title">ACTIVITY FEED</div>
-            <div className="header-button">
+            <div
+              className="header-button"
+              onClick={() => this.props.onToggleActivityPanel()}
+            >
               <i className="icon-next" />
             </div>
             <div className="header-clear" />
@@ -95,7 +98,8 @@ class ActivityPanel extends Component {
 ActivityPanel.propTypes = {
   newFeeds: PropTypes.object,
   oldFeeds: PropTypes.object,
-  onLoadFeeds: PropTypes.func
+  onLoadFeeds: PropTypes.func,
+  onToggleActivityPanel: PropTypes.func
 };
 
 export default ActivityPanel;

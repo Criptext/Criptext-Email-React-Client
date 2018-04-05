@@ -38,7 +38,7 @@ class ThreadItem extends Component {
             </div>
             <div className="thread-preview">
               {this.renderMultipleSpaces(3)}
-              {this.renderPreview()}
+              <span>{this.renderPreview()}</span>
             </div>
           </div>
           <div style={visibleStyle}>
