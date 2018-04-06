@@ -1,12 +1,14 @@
+#!/bin/bash
+
 mkdir -p ./src/app
 
-projects=( "email_composer" "email_dialog" "email_loading" "email_login" "email_mailbox")
+projects=("email_composer" "email_dialog" "email_loading" "email_login" "email_mailbox")
 
-for project in "${projects[@]}"
+for project in ${projects[*]}
 do
-    cd ../$project
+    cd ./../$project
     yarn build
-    cd ../electron_app 
+    cd ./../electron_app 
     mkdir -p ./src/app/$project
     cp -a ../$project/build/. ./src/app/$project/
 done

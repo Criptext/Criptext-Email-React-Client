@@ -1,7 +1,15 @@
 {
   "dest": "release-builds/",
+  "icon": "resources/icon.png",
+  "maintainer": "Criptext <info@criptext.com>",
+  "description": "Client for criptext email",
+  "productName": "Criptext Email",
+  "homepage": "https://criptext.com",
+  "name": "criptext-email-electron-app",
+  "bin": "electron-criptext-email",
+  "productDescription": "Client for criptext email",
+  "desktopTemplate": "./resources/desktop.ejs",
   "categories": [
     "Utility"
-  ],
-  "productDescription": "My client for criptext email"
+  ]
 }

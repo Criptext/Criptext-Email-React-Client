@@ -1,10 +1,28 @@
 const path = require('path');
-const DB_TEST_PATH = './src/__integrations__/test.db';
-const DB_PATH = path
-  .join(__dirname, '/mydb.db')
-  .replace('/app.asar', '')
-  .replace('/src', '');
-const myDBPath = process.env.NODE_ENV === 'test' ? DB_TEST_PATH : DB_PATH;
+const { app } = require('electron');
+
+const getDbPath = node_env => {
+  switch (node_env) {
+    case 'test': {
+      return './src/__integrations__/test.db';
+    }
+    case 'development': {
+      return path
+        .join(__dirname, '/Criptext.db')
+        .replace('/app.asar', '')
+        .replace('/src', '');
+    }
+    default: {
+      const userDataPath = app.getPath('userData');
+      return path
+        .join(userDataPath, '/Criptext.db')
+        .replace('/app.asar', '')
+        .replace('/src', '');
+    }
+  }
+};
+
+const myDBPath = getDbPath(process.env.NODE_ENV);
 const TINY_STRING_SIZE = 8;
 const XSMALL_STRING_SIZE = 16;
 const SMALL_STRING_SIZE = 32;
