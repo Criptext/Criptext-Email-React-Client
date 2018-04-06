@@ -3,8 +3,10 @@ const { composerUrl } = require('./../window_routing');
 let composerWindow;
 
 const composerSize = {
-  width: 702,
-  height: 556
+  width: 785,
+  height: 556,
+  minWidth: 785,
+  minHeight: 340
 };
 
 const template = [
@@ -31,7 +33,9 @@ const create = () => {
     width: composerSize.width,
     height: composerSize.height,
     show: false,
-    title: 'New Secure Message'
+    title: 'New Secure Message',
+    minWidth: composerSize.minWidth,
+    minHeight: composerSize.minHeight
   });
   composerWindow.loadURL(composerUrl);
   composerWindow.setMenu(null);

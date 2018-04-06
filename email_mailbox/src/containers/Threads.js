@@ -22,10 +22,13 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onLoadThreads: params => {
+      if (params.labelId === 3) {
+        params['contactTypes'] = ['to'];
+      }
       dispatch(loadThreads(params));
     },
-    onLoadEvents: () => {
-      dispatch(loadEvents());
+    onLoadEvents: params => {
+      dispatch(loadEvents(params));
     },
     onUnreadToggle: enabled => {
       dispatch(filterThreadsByUnread(enabled));

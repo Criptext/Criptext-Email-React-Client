@@ -113,7 +113,7 @@ export const loadThreads = params => {
   };
 };
 
-export const loadEvents = () => {
+export const loadEvents = params => {
   return async dispatch => {
     try {
       const receivedEvents = await getEvents();
@@ -121,7 +121,7 @@ export const loadEvents = () => {
       await Promise.all(
         events.map(async item => await handleNewMessageEvent(item.params))
       );
-      dispatch(loadThreads({ clear: true }));
+      dispatch(loadThreads(params));
     } catch (e) {
       // TO DO
     }

@@ -75,11 +75,12 @@ class Threads extends Component {
   }
 
   componentDidMount() {
-    this.props.onLoadEvents();
-    this.props.onLoadThreads({
+    const params = {
       labelId: LabelType[this.props.mailbox].id,
       clear: true
-    });
+    };
+    this.props.onLoadEvents(params);
+    this.props.onLoadThreads(params);
   }
 
   renderTooltipForThread = () => {
