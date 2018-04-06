@@ -1,4 +1,4 @@
-const { BrowserWindow } = require('electron');
+const { BrowserWindow, Menu } = require('electron');
 const { composerUrl } = require('./../window_routing');
 let composerWindow;
 
@@ -6,6 +6,25 @@ const composerSize = {
   width: 702,
   height: 556
 };
+
+const template = [
+  {
+    label: 'Edit',
+    submenu: [
+      { role: 'undo' },
+      { role: 'redo' },
+      { type: 'separator' },
+      { role: 'cut' },
+      { role: 'copy' },
+      { role: 'paste' },
+      { role: 'pasteandmatchstyle' },
+      { role: 'delete' },
+      { role: 'selectall' }
+    ]
+  }
+];
+
+const menu = Menu.buildFromTemplate(template);
 
 const create = () => {
   composerWindow = new BrowserWindow({
@@ -22,6 +41,7 @@ const create = () => {
   composerWindow.on('closed', () => {
     composerWindow = undefined;
   });
+  Menu.setApplicationMenu(menu);
 };
 
 const show = async () => {
