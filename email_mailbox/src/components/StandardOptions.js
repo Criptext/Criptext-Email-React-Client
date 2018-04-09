@@ -5,33 +5,44 @@ import './standardoptions.css';
 
 const StandardOptions = props => (
   <div className="header-action">
+    {props.isVisibleArchiveButton ? (
+      <ButtonCircle
+        tip="Archive"
+        enableTip={true}
+        icon="icon-archive"
+        targetName="actionArchive"
+      />
+    ) : null}
+    {props.isVisibleSpamButton ? (
+      <ButtonCircle
+        onClick={props.onClickMoveToSpam}
+        tip="Spam"
+        enableTip={true}
+        icon="icon-not"
+        targetName="actionSpam"
+      />
+    ) : null}
+    {props.isVisibleTrashButton ? (
+      <ButtonCircle
+        onClick={props.onClickMoveToTrash}
+        tip="Trash"
+        enableTip={true}
+        icon="icon-trash"
+        targetName="actionTrash"
+      />
+    ) : null}
+
+    {props.isVisibleFolderButton ? (
+      <ButtonCircle
+        onClick={props.onToggleFolderMenu}
+        tip="Move to"
+        enableTip={!props.displayFolderMenu}
+        icon="icon-file"
+        targetName="actionMove"
+      />
+    ) : null}
     <ButtonCircle
-      tip="Archive"
-      enableTip={true}
-      icon="icon-archive"
-      targetName="actionArchive"
-    />
-    <ButtonCircle
-      tip="Spam"
-      enableTip={true}
-      icon="icon-not"
-      targetName="actionSpam"
-    />
-    <ButtonCircle
-      tip="Trash"
-      enableTip={true}
-      icon="icon-trash"
-      targetName="actionTrash"
-    />
-    <ButtonCircle
-      onClick={props.onMoveClick}
-      tip="Move to"
-      enableTip={!props.displayMoveMenu}
-      icon="icon-file"
-      targetName="actionMove"
-    />
-    <ButtonCircle
-      onClick={props.onTagsClick}
+      onClick={props.onToggleTagsMenu}
       tip="Add Labels"
       enableTip={!props.displayTagsMenu}
       icon="icon-tag"
@@ -41,11 +52,16 @@ const StandardOptions = props => (
 );
 
 StandardOptions.propTypes = {
-  displayMoveMenu: PropTypes.bool,
+  displayFolderMenu: PropTypes.bool,
   displayTagsMenu: PropTypes.bool,
-  onActionMove: PropTypes.func,
-  onMoveClick: PropTypes.func,
-  onTagsClick: PropTypes.func
+  isVisibleArchiveButton: PropTypes.bool,
+  isVisibleFolderButton: PropTypes.bool,
+  isVisibleSpamButton: PropTypes.bool,
+  isVisibleTrashButton: PropTypes.bool,
+  onClickMoveToSpam: PropTypes.func,
+  onClickMoveToTrash: PropTypes.func,
+  onToggleFolderMenu: PropTypes.func,
+  onToggleTagsMenu: PropTypes.func
 };
 
 export default StandardOptions;

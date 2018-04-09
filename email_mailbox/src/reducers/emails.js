@@ -1,7 +1,7 @@
 import { Email } from '../actions/types';
 import { Map, fromJS } from 'immutable';
 
-export default (state = new Map(), action) => {
+const emails = (state = new Map(), action) => {
   switch (action.type) {
     case Email.ADD_BATCH: {
       return state.merge(fromJS(action.emails));
@@ -39,3 +39,5 @@ const email = (state, action) => {
       return state;
   }
 };
+
+export default emails;

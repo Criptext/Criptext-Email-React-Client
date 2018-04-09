@@ -33,17 +33,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onDeselectThreads: () => {
-      return dispatch(actions.deselectThreads(false));
-    },
     onBackOption: () => {
       return dispatch(actions.deselectThreads(true));
     },
+    onDeselectThreads: () => {
+      return dispatch(actions.deselectThreads(false));
+    },
     onSelectThreads: () => {
       return dispatch(actions.selectThreads());
-    },
-    onMoveThreads: (threadsIds, label) => {
-      return dispatch(actions.moveThreads(threadsIds, label));
     },
     onAddLabel: (threadsIds, label) => {
       return dispatch(actions.addThreadsLabel(threadsIds, label));
