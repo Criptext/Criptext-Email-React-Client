@@ -1,6 +1,9 @@
-const { BrowserWindow, Menu } = require('electron');
+const { BrowserWindow, Menu, dialog, nativeImage } = require('electron');
 const { composerUrl } = require('./../window_routing');
+const dbManager = require('./../DBManager');
 let composerWindow;
+let composerData = {};
+let showConfirmation = true;
 
 const composerSize = {
   width: 785,
@@ -25,10 +28,19 @@ const template = [
     ]
   }
 ];
-
 const menu = Menu.buildFromTemplate(template);
 
+const dialogTemplate = {
+  icon: nativeImage.createFromPath('./../assets/icon.png'),
+  title: 'Warning',
+  buttons: ['Discard changes', 'Continue writing', 'Save as Draft'],
+  message: 'You are closing a message that has not been sent',
+  detail:
+    "To save the message, click on 'Save as Draft'. The message will be saved on your Drafts folder"
+};
+
 const create = () => {
+  showConfirmation = true;
   composerWindow = new BrowserWindow({
     width: composerSize.width,
     height: composerSize.height,
@@ -38,14 +50,29 @@ const create = () => {
     minHeight: composerSize.minHeight
   });
   composerWindow.loadURL(composerUrl);
-  composerWindow.setMenu(null);
+  composerWindow.setMenu(menu);
   composerWindow.on('page-title-updated', event => {
     event.preventDefault();
   });
-  composerWindow.on('closed', () => {
-    composerWindow = undefined;
+
+  composerWindow.on('close', e => {
+    if (showConfirmation) {
+      e.preventDefault();
+      dialog.showMessageBox(dialogTemplate, async responseIndex => {
+        if (responseIndex === 0) {
+          showConfirmation = false;
+          composerData = {};
+          close();
+        }
+        if (responseIndex === 2) {
+          await saveDraftToDatabase(composerData);
+          showConfirmation = false;
+          close();
+        }
+      });
+    }
   });
-  Menu.setApplicationMenu(menu);
+  //composerWindow.webContents.openDevTools();
 };
 
 const show = async () => {
@@ -71,8 +98,17 @@ const send = (message, data) => {
   composerWindow.webContents.send(message, data);
 };
 
+const saveDraftChanges = incomingData => {
+  composerData = incomingData;
+};
+
+const saveDraftToDatabase = async dataDraft => {
+  await dbManager.createEmail(dataDraft);
+};
+
 module.exports = {
   close,
   show,
-  send
+  send,
+  saveDraftChanges
 };

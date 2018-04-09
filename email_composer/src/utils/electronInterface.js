@@ -60,3 +60,7 @@ export const updateEmailLabel = params => {
 export const throwError = error => {
   ipcRenderer.send('throwError', error);
 };
+
+export const saveDraftChanges = data => {
+  ipcRenderer.send('save-draft-changes', data);
+};

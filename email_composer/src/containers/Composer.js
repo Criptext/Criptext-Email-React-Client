@@ -11,7 +11,8 @@ import {
   myAccount,
   throwError,
   updateEmail,
-  updateEmailLabel
+  updateEmailLabel,
+  saveDraftChanges
 } from './../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
 import signal from '../libs/signal';
@@ -58,7 +59,7 @@ class ComposerWrapper extends Component {
     )
       ? undefined
       : Status.ENABLED;
-    this.setState({ toEmails: emails, status });
+    this.setState({ toEmails: emails, status }, () => this.saveTemporalState());
   };
 
   handleGetCcEmail = emails => {
@@ -69,7 +70,7 @@ class ComposerWrapper extends Component {
     )
       ? undefined
       : Status.ENABLED;
-    this.setState({ ccEmails: emails, status });
+    this.setState({ ccEmails: emails, status }, () => this.saveTemporalState());
   };
 
   handleGetBccEmail = emails => {
@@ -80,15 +81,17 @@ class ComposerWrapper extends Component {
     )
       ? undefined
       : Status.ENABLED;
-    this.setState({ bccEmails: emails, status });
+    this.setState({ bccEmails: emails, status }, () =>
+      this.saveTemporalState()
+    );
   };
 
   handleGetSubject = text => {
-    this.setState({ textSubject: text });
+    this.setState({ textSubject: text }, () => this.saveTemporalState());
   };
 
   handleGetHtmlBody = htmlBody => {
-    this.setState({ htmlBody });
+    this.setState({ htmlBody }, () => this.saveTemporalState());
   };
 
   handleSendMessage = async () => {
@@ -161,6 +164,38 @@ class ComposerWrapper extends Component {
         deviceId: 1,
         type
       }));
+
+  saveTemporalState = () => {
+    const recipients = {
+      to: this.state.toEmails,
+      cc: this.state.ccEmails,
+      bcc: this.state.bccEmails
+    };
+    const subject = this.state.textSubject;
+    const body = draftToHtml(
+      convertToRaw(this.state.htmlBody.getCurrentContent())
+    );
+    const email = {
+      key: Date.now(),
+      subject,
+      content: body,
+      preview: removeHTMLTags(body).slice(0, 21),
+      date: Date.now(),
+      delivered: 0,
+      unread: false,
+      secure: true,
+      isMuted: false
+    };
+    const from = myAccount.recipientId;
+    recipients.from = [`${from}@${appDomain}`];
+    const data = {
+      email,
+      recipients,
+      labels: [LabelType.draft.id]
+    };
+    alert(recipients);
+    saveDraftChanges(data);
+  };
 }
 
 export default ComposerWrapper;

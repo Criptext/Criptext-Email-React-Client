@@ -82,6 +82,10 @@ async function initApp() {
     composerWindow.close();
   });
 
+  ipcMain.on('save-draft-changes', (e, data) => {
+    composerWindow.saveDraftChanges(data);
+  });
+
   wsClient.setMessageListener( data => {
     mailboxWindow.send('socket-message', data)
     composerWindow.send('socket-message', data)
