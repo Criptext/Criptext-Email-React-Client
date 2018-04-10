@@ -29,10 +29,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onBackOption: () => {
       ownProps.onClickThreadBack();
     },
-    onMoveThreads: (threadsIds, label) => {
-      dispatch(actions.closeThread());
-      return dispatch(actions.moveThreads(threadsIds, label));
-    },
     onAddLabel: (threadsIds, label) => {
       return dispatch(actions.addThreadsLabel(threadsIds, label));
     },

@@ -3,46 +3,57 @@ import PropTypes from 'prop-types';
 import StandardOptions from './StandardOptions';
 import ButtonCircle from './ButtonCircle';
 import TooltipMenu from './TooltipMenu';
-import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
+import CustomCheckbox from './CustomCheckbox';
 import './headerthreadoptions.css';
 
 class HeaderThreadOptions extends Component {
   render() {
     const {
-      displayMoveMenu,
+      displayFolderMenu,
       displayTagsMenu,
       displayDotsMenu,
-      markAsUnread
+      isVisibleArchiveButton,
+      isVisibleSpamButton,
+      isVisibleTrashButton,
+      markAsUnread,
+      onClickMoveToSpam,
+      onClickMoveToTrash,
+      onToggleFolderMenu,
+      onToggleTagsMenu
     } = this.props;
     return (
       <div className="header-threadoptions">
         {this.renderSelectionInteraction()}
         <StandardOptions
-          onActionMove={this.onActionMove}
-          onMoveClick={this.onMoveClick}
-          onTagsClick={this.onTagsClick}
-          displayMoveMenu={displayMoveMenu}
+          displayFolderMenu={displayFolderMenu}
           displayTagsMenu={displayTagsMenu}
+          isVisibleArchiveButton={isVisibleArchiveButton}
+          isVisibleSpamButton={isVisibleSpamButton}
+          isVisibleTrashButton={isVisibleTrashButton}
+          onClickMoveToSpam={onClickMoveToSpam}
+          onClickMoveToTrash={onClickMoveToTrash}
+          onToggleFolderMenu={onToggleFolderMenu}
+          onToggleTagsMenu={onToggleTagsMenu}
         />
         {this.renderMoreOptions()}
         <TooltipMenu
           title="Move to:"
-          dismiss={this.onMoveClick}
+          dismiss={onToggleFolderMenu}
           targetId="actionMove"
-          display={displayMoveMenu}
+          display={displayFolderMenu}
         >
           <ul className="multiselect-list">
-            <li>
+            <li onClick={onClickMoveToSpam}>
               <span>Spam</span>
             </li>
-            <li>
+            <li onClick={onClickMoveToTrash}>
               <span>Trash</span>
             </li>
           </ul>
         </TooltipMenu>
         <TooltipMenu
           title="Add Label:"
-          dismiss={this.onTagsClick}
+          dismiss={onToggleTagsMenu}
           targetId="actionTag"
           display={displayTagsMenu}
         >
@@ -50,12 +61,12 @@ class HeaderThreadOptions extends Component {
         </TooltipMenu>
         <TooltipMenu
           toLeft={true}
-          dismiss={this.onDotsClick}
+          dismiss={this.props.onToggleDotsMenu}
           targetId="actionDots"
           display={displayDotsMenu}
         >
           <ul className="multiselect-list">
-            <li onClick={this.markAsRead}>
+            <li onClick={this.props.onClickMarkAsRead}>
               <span>{markAsUnread ? 'Mark as Unread' : 'Mark as Read'}</span>
             </li>
             <li>
@@ -97,46 +108,13 @@ class HeaderThreadOptions extends Component {
   renderMoreOptions = () => (
     <div className="header-action">
       <ButtonCircle
-        onClick={this.onDotsClick}
+        onClick={this.props.onToggleDotsMenu}
         targetName="actionDots"
         icon="icon-dots"
         enableTip={false}
       />
     </div>
   );
-
-  onActionMove = () => {
-    if (this.props.threadsSelected.length === 0) {
-      return;
-    }
-    this.props.onMoveThreads(this.props.threadsSelected);
-  };
-
-  onMoveClick = () => {
-    this.props.toggleMoveMenu();
-  };
-
-  onTagsClick = () => {
-    this.props.toggleTagsMenu();
-  };
-
-  onDotsClick = () => {
-    this.props.toggleDotsMenu();
-  };
-
-  onTriggerLabel = (checked, label) => {
-    if (CustomCheckboxStatus.toBoolean(checked)) {
-      return this.props.onAddLabel(this.props.threadsSelected, label);
-    }
-    return this.props.onRemoveLabel(this.props.threadsSelected, label);
-  };
-
-  markAsRead = () => {
-    this.props.onMarkAsRead(
-      this.props.threadsSelected,
-      !this.props.markAsUnread
-    );
-  };
 
   renderLabels = () => {
     return this.props.labels
@@ -145,7 +123,7 @@ class HeaderThreadOptions extends Component {
         <li key={index}>
           <CustomCheckbox
             onCheck={checked => {
-              this.onTriggerLabel(checked, label.id);
+              this.props.onClickLabelCheckbox(checked, label.id);
             }}
             label={label.text}
             status={label.checked}
@@ -157,23 +135,26 @@ class HeaderThreadOptions extends Component {
 
 HeaderThreadOptions.propTypes = {
   allSelected: PropTypes.bool,
-  displayMoveMenu: PropTypes.bool,
+  displayFolderMenu: PropTypes.bool,
   displayTagsMenu: PropTypes.bool,
   displayDotsMenu: PropTypes.bool,
+  isVisibleArchiveButton: PropTypes.bool,
+  isVisibleSpamButton: PropTypes.bool,
+  isVisibleTrashButton: PropTypes.bool,
   labels: PropTypes.array,
   markAsUnread: PropTypes.bool,
-  onAddLabel: PropTypes.func,
   onBackOption: PropTypes.func,
-  onMarkAsRead: PropTypes.func,
-  onMoveThreads: PropTypes.func,
+  onClickLabelCheckbox: PropTypes.func,
+  onClickMoveToSpam: PropTypes.func,
+  onClickMoveToTrash: PropTypes.func,
+  onClickMarkAsRead: PropTypes.func,
   onDeselectThreads: PropTypes.func,
-  onRemoveLabel: PropTypes.func,
   onSelectThreads: PropTypes.func,
+  onToggleDotsMenu: PropTypes.func,
+  onToggleFolderMenu: PropTypes.func,
+  onToggleTagsMenu: PropTypes.func,
   showSelectAllOption: PropTypes.bool,
-  threadsSelected: PropTypes.array,
-  toggleDotsMenu: PropTypes.func,
-  toggleMoveMenu: PropTypes.func,
-  toggleTagsMenu: PropTypes.func
+  threadsSelected: PropTypes.array
 };
 
 export default HeaderThreadOptions;

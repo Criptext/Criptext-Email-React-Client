@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderThreadOptions from './HeaderThreadOptions';
+import { CustomCheckboxStatus } from './CustomCheckbox';
+import { LabelType } from '../utils/electronInterface';
 
 class HeaderThreadOptionsWrapper extends Component {
   constructor() {
     super();
     this.state = {
-      displayMoveMenu: false,
+      displayFolderMenu: false,
       displayTagsMenu: false,
       displayDotsMenu: false
     };
@@ -15,50 +17,107 @@ class HeaderThreadOptionsWrapper extends Component {
   render() {
     return (
       <HeaderThreadOptions
-        displayMoveMenu={this.state.displayMoveMenu}
+        displayFolderMenu={this.state.displayFolderMenu}
         displayTagsMenu={this.state.displayTagsMenu}
         displayDotsMenu={this.state.displayDotsMenu}
-        toggleMoveMenu={this.toggleMoveMenu}
-        toggleTagsMenu={this.toggleTagsMenu}
-        toggleDotsMenu={this.toggleDotsMenu}
-        onMarkAsRead={this.onMarkAsRead}
+        isVisibleArchiveButton={this.isVisibleArchiveButton()}
+        isVisibleSpamButton={this.isVisibleSpamButton()}
+        isVisibleTrashButton={this.isVisibleTrashButton()}
+        onToggleFolderMenu={this.handleToggleFolderMenu}
+        onToggleTagsMenu={this.handleToggleTagsMenu}
+        onToggleDotsMenu={this.handleToggleDotsMenu}
+        onClickMarkAsRead={this.handleClickMarkAsRead}
+        onClickMoveToSpam={this.handleClickMoveToSpam}
+        onClickMoveToTrash={this.handleClickMoveToTrash}
+        onClickLabelCheckbox={this.handleOnClickLabelCheckbox}
         {...this.props}
       />
     );
   }
 
-  toggleMoveMenu = () => {
+  handleToggleFolderMenu = () => {
     this.setState({
-      displayMoveMenu: !this.state.displayMoveMenu
+      displayFolderMenu: !this.state.displayFolderMenu
     });
   };
 
-  toggleTagsMenu = () => {
+  handleToggleTagsMenu = () => {
     this.setState({
       displayTagsMenu: !this.state.displayTagsMenu
     });
   };
 
-  toggleDotsMenu = () => {
+  handleToggleDotsMenu = () => {
     this.setState({
       displayDotsMenu: !this.state.displayDotsMenu
     });
   };
 
-  onMarkAsRead = (threadsIds, read) => {
+  isVisibleArchiveButton = () => {
+    const currentLabelId = LabelType[this.props.mailbox].id;
+    return (
+      currentLabelId === LabelType.inbox.id ||
+      currentLabelId === LabelType.sent.id ||
+      currentLabelId === LabelType.starred.id
+    );
+  };
+
+  isVisibleSpamButton = () => {
+    const currentLabelId = LabelType[this.props.mailbox].id;
+    return (
+      currentLabelId === LabelType.inbox.id ||
+      currentLabelId === LabelType.sent.id ||
+      currentLabelId === LabelType.starred.id ||
+      currentLabelId === LabelType.trash.id
+    );
+  };
+
+  isVisibleTrashButton = () => {
+    const currentLabelId = LabelType[this.props.mailbox].id;
+    return (
+      currentLabelId === LabelType.inbox.id ||
+      currentLabelId === LabelType.sent.id ||
+      currentLabelId === LabelType.starred.id
+    );
+  };
+
+  handleClickMoveToSpam = () => {
+    this.props.onAddLabel(this.props.threadsSelected, LabelType.spam.id);
+  };
+
+  handleClickMoveToTrash = () => {
+    this.props.onAddLabel(this.props.threadsSelected, LabelType.trash.id);
+  };
+
+  handleOnClickLabelCheckbox = (checked, labelId) => {
+    if (CustomCheckboxStatus.toBoolean(checked)) {
+      return this.props.onAddLabel(this.props.threadsSelected, labelId);
+    }
+    return this.props.onRemoveLabel(this.props.threadsSelected, labelId);
+  };
+
+  handleClickMarkAsRead = () => {
     this.setState(
       {
         displayDotsMenu: false
       },
       () => {
-        this.props.onMarkRead(threadsIds, read);
+        this.props.onMarkRead(
+          this.props.threadsSelected,
+          !this.props.markAsUnread
+        );
       }
     );
   };
 }
 
 HeaderThreadOptionsWrapper.propTypes = {
-  onMarkRead: PropTypes.func
+  mailbox: PropTypes.string,
+  markAsUnread: PropTypes.bool,
+  onAddLabel: PropTypes.func,
+  onMarkRead: PropTypes.func,
+  onRemoveLabel: PropTypes.func,
+  threadsSelected: PropTypes.array
 };
 
 export default HeaderThreadOptionsWrapper;

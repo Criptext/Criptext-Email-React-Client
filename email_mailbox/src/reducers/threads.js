@@ -2,7 +2,7 @@ import { Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
 import * as StringUtils from '../utils/StringUtils';
 
-export default (state = List([]), action) => {
+const threads = (state = List([]), action) => {
   switch (action.type) {
     case Thread.SELECT: {
       const newThreads = state
@@ -133,3 +133,5 @@ export default (state = List([]), action) => {
       return state;
   }
 };
+
+export default threads;
