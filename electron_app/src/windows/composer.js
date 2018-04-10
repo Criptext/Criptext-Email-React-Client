@@ -1,9 +1,9 @@
-const { BrowserWindow, Menu, dialog, nativeImage } = require('electron');
+const { BrowserWindow, Menu, dialog } = require('electron');
 const { composerUrl } = require('./../window_routing');
 const dbManager = require('./../DBManager');
 let composerWindow;
 let composerData = {};
-let showConfirmation = true;
+let showConfirmation;
 
 const composerSize = {
   width: 785,
@@ -14,24 +14,24 @@ const composerSize = {
 
 const template = [
   {
-    label: 'Edit',
     submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      { role: 'pasteandmatchstyle' },
-      { role: 'delete' },
-      { role: 'selectall' }
+      { role: 'undo', accelerator: 'CmdOrCtrl+Z', visible: false },
+      { role: 'redo', accelerator: 'CmdOrCtrl+Y', visible: false },
+      { role: 'cut', accelerator: 'CmdOrCtrl+X', visible: false },
+      { role: 'copy', accelerator: 'CmdOrCtrl+C', visible: false },
+      { role: 'paste', accelerator: 'CmdOrCtrl+V', visible: false },
+      {
+        role: 'pasteandmatchstyle',
+        accelerator: 'CmdOrCtrl+Shift+V',
+        visible: false
+      }
     ]
   }
 ];
 const menu = Menu.buildFromTemplate(template);
 
 const dialogTemplate = {
-  icon: nativeImage.createFromPath('./../assets/icon.png'),
+  type: 'warning',
   title: 'Warning',
   buttons: ['Discard changes', 'Continue writing', 'Save as Draft'],
   message: 'You are closing a message that has not been sent',
@@ -51,28 +51,30 @@ const create = () => {
   });
   composerWindow.loadURL(composerUrl);
   composerWindow.setMenu(menu);
+  composerWindow.setMenuBarVisibility(false);
   composerWindow.on('page-title-updated', event => {
     event.preventDefault();
   });
 
   composerWindow.on('close', e => {
-    if (showConfirmation) {
+    if (showConfirmation && !isDraftEmpty()) {
       e.preventDefault();
       dialog.showMessageBox(dialogTemplate, async responseIndex => {
         if (responseIndex === 0) {
           showConfirmation = false;
           composerData = {};
-          close();
+          composerWindow.close();
         }
         if (responseIndex === 2) {
           await saveDraftToDatabase(composerData);
           showConfirmation = false;
-          close();
+          composerWindow.close();
         }
       });
+    } else {
+      composerWindow = undefined;
     }
   });
-  //composerWindow.webContents.openDevTools();
 };
 
 const show = async () => {
@@ -87,6 +89,13 @@ const show = async () => {
 const close = () => {
   if (composerWindow !== undefined) {
     composerWindow.close();
+  }
+  composerWindow = undefined;
+};
+
+const destroy = () => {
+  if (composerWindow !== undefined) {
+    composerWindow.destroy();
   }
   composerWindow = undefined;
 };
@@ -106,8 +115,27 @@ const saveDraftToDatabase = async dataDraft => {
   await dbManager.createEmail(dataDraft);
 };
 
+const isDraftEmpty = () => {
+  if (composerData === {}) {
+    return true;
+  }
+  const { recipients, email } = composerData;
+  if (recipients === undefined || email === undefined) {
+    return true;
+  }
+  let preview = email.preview;
+  const subject = email.subject;
+  preview = preview.replace('\n', '');
+  const hasRecipients =
+    recipients.to.length > 0 ||
+    recipients.cc.length > 0 ||
+    recipients.bcc.length > 0;
+  return !hasRecipients && !subject.length && !preview.length;
+};
+
 module.exports = {
   close,
+  destroy,
   show,
   send,
   saveDraftChanges
