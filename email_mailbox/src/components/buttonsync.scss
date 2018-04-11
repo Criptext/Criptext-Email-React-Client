@@ -1,0 +1,53 @@
+:root {
+  --width: 8px;
+}
+
+.threads-button-sync {
+  background-color: transparent;
+  cursor: pointer;
+  margin: 6px 0 0 10px;
+  width: calc(var(--width) + 4px);
+  height: calc(var(--width) + 4px);
+  padding: 0;
+  transition: 2s linear all;
+}
+
+.threads-button-sync .threads-sync-arrow {
+  position: absolute;
+  width: var(--width);
+  height: var(--width);
+  border: calc(var(--width) / 5) solid #d3d5d8;
+  border-radius: 50%;
+  border-right-color: transparent;
+  top: 0;
+  transition: transform 1s;
+}
+
+.threads-button-sync .threads-sync-arrow::after {
+  content: "";
+  position: absolute;
+  top: -14%;
+  left: 65%;
+  border: calc(var(--width) * 0.5) solid #fff;
+  border-bottom-color: #d3d5d8;
+  border-left-color: transparent;
+  border-top-width: 0;
+  border-right-width: 0;
+}
+
+@keyframes rotating{
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sync-load {
+  animation: rotating 2s linear infinite;
+}
+
+.sync-stop{
+  transform: rotate(0deg);
+}

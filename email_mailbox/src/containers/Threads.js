@@ -5,30 +5,56 @@ import {
   filterThreadsByUnread
 } from '../actions/index';
 import ThreadsView from '../components/Threads';
+import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  const mailboxTitle = LabelType[ownProps.mailbox].text;
   const unreadFilter = state.get('activities').get('unreadFilter');
+  const buttonSyncStatus = defineStatus(
+    state.get('activities').get('isSyncing')
+  );
   const threads = unreadFilter
     ? state.get('threads').filter(thread => {
         return thread.get('unread');
       })
     : state.get('threads');
   return {
-    threads: threads,
-    unreadFilter: unreadFilter
+    buttonSyncStatus,
+    mailboxTitle,
+    threads,
+    unreadFilter
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const defineStatus = isSyncing => {
+  return isSyncing ? ButtonSyncType.LOAD : ButtonSyncType.STOP;
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onLoadThreads: params => {
-      if (params.labelId === LabelType.sent.id) {
+    onLoadThreads: (mailbox, clear, timestamp) => {
+      const labelId = LabelType[mailbox].id;
+      const params =
+        mailbox === 'Search'
+          ? { labelId, clear, timestamp, ...ownProps.searchParams }
+          : {
+              labelId,
+              clear,
+              timestamp
+            };
+      if (labelId === LabelType.sent.id) {
         params['contactTypes'] = ['to'];
       }
       dispatch(loadThreads(params));
     },
-    onLoadEvents: params => {
+    onLoadEvents: () => {
+      const labelId = LabelType[ownProps.mailbox].id;
+      const clear = true;
+      const params = {
+        labelId,
+        clear
+      };
       dispatch(loadEvents(params));
     },
     onUnreadToggle: enabled => {

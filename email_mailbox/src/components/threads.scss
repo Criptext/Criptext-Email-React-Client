@@ -64,10 +64,19 @@
   width: calc(100% - 40px);
   padding: 0 10px;
   background-color: #f7f7f8;
-  
-  .threads-mailbox-label{
-    margin: 6px 0 0 20px;
-  }
+}
+
+.threads-mailbox-title-container{
+  align-items: center;
+  display: flex;
+  margin-left: 20px;
+}
+
+.threads-mailbox-title{
+  font-size: 13px;
+  font-weight: 800;
+  margin: 6px 0 0 0;
+  text-transform: uppercase;
 }
 
 .threads-toggle-container{
@@ -83,12 +92,6 @@
   .input-switch{
     margin-right: 5px;
   }
-}
-
-.threads-mailbox-label{
-  font-size: 13px;
-  font-weight: 800;
-  text-transform: uppercase;
 }
 
 .threads-container{

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ThreadItem from '../containers/ThreadItem';
 import { Switch } from 'react-switch-input';
+import ButtonSync from './ButtonSync';
 import ItemTooltip from './ItemTooltip';
 import ReactTooltip from 'react-tooltip';
-import { LabelType } from '../utils/electronInterface';
 import './threads.css';
 
 class Threads extends Component {
@@ -17,14 +17,8 @@ class Threads extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      this.props.mailbox !== nextProps.mailbox &&
-      LabelType[nextProps.mailbox].id !== null
-    ) {
-      this.props.onLoadThreads({
-        labelId: LabelType[nextProps.mailbox].id,
-        clear: true
-      });
+    if (this.props.mailbox !== nextProps.mailbox) {
+      this.props.onLoadThreads(nextProps.mailbox, true);
     }
   }
 
@@ -32,9 +26,13 @@ class Threads extends Component {
     return (
       <div className="threads-header-wrapper">
         <div className="threads-info-header">
-          <h1 className="threads-mailbox-label">
-            {LabelType[this.props.mailbox].text}
-          </h1>
+          <div className="threads-mailbox-title-container">
+            <h1 className="threads-mailbox-title">{this.props.mailboxTitle}</h1>
+            <ButtonSync
+              onClick={this.props.onLoadEvents}
+              status={this.props.buttonSyncStatus}
+            />
+          </div>
           <div className="threads-toggle-container">
             <span className={this.props.unreadFilter ? 'disabled' : ''}>
               All
@@ -75,12 +73,7 @@ class Threads extends Component {
   }
 
   componentDidMount() {
-    const params = {
-      labelId: LabelType[this.props.mailbox].id,
-      clear: true
-    };
-    this.props.onLoadEvents(params);
-    this.props.onLoadThreads(params);
+    this.props.onLoadThreads(this.props.mailbox, true);
   }
 
   renderTooltipForThread = () => {
@@ -158,23 +151,16 @@ class Threads extends Component {
 
     if (scrollTop + height > scrollHeight - 25) {
       const lastThread = this.props.threads.last();
-      const params =
-        this.props.mailbox === 'Search'
-          ? {
-              timestamp: lastThread.get('timestamp'),
-              ...this.props.searchParams
-            }
-          : {
-              timestamp: lastThread.get('timestamp'),
-              mailbox: this.props.mailbox
-            };
-      this.props.onLoadThreads(params);
+      const timestamp = lastThread.get('timestamp');
+      this.props.onLoadThreads(this.props.mailbox, false, timestamp);
     }
   };
 }
 
 Threads.propTypes = {
+  buttonSyncStatus: PropTypes.string,
   mailbox: PropTypes.string,
+  mailboxTitle: PropTypes.string,
   onClickThreadIdSelected: PropTypes.func,
   onLoadEvents: PropTypes.func,
   onLoadThreads: PropTypes.func,

@@ -41,3 +41,8 @@ export const Suggestions = {
   SET_THREADS: 'SET_THREADS',
   SET_ERROR_SUGGESTIONS: 'SET_ERROR_SUGGESTIONS'
 };
+
+export const Activity = {
+  START_LOAD_SYNC: 'START_LOAD_SYNC',
+  STOP_LOAD_SYNC: 'STOP_LOAD_SYNC'
+};
