@@ -16,7 +16,11 @@ const template = [
   {
     submenu: [
       { role: 'undo', accelerator: 'CmdOrCtrl+Z', visible: false },
-      { role: 'redo', accelerator: 'CmdOrCtrl+Y', visible: false },
+      {
+        role: 'redo',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Shift+Z' : 'Ctrl+Y',
+        visible: false
+      },
       { role: 'cut', accelerator: 'CmdOrCtrl+X', visible: false },
       { role: 'copy', accelerator: 'CmdOrCtrl+C', visible: false },
       { role: 'paste', accelerator: 'CmdOrCtrl+V', visible: false },
@@ -30,10 +34,29 @@ const template = [
 ];
 const menu = Menu.buildFromTemplate(template);
 
+const RESPONSES = {
+  DISCARD: {
+    index: 0,
+    label: 'Discard changes'
+  },
+  CONTINUE: {
+    index: 1,
+    label: 'Continue writing'
+  },
+  SAVE: {
+    index: 2,
+    label: 'Save as Draft'
+  }
+};
+
+const dialogResponses = Object.values(RESPONSES).map(
+  response => response.label
+);
+
 const dialogTemplate = {
   type: 'warning',
   title: 'Warning',
-  buttons: ['Discard changes', 'Continue writing', 'Save as Draft'],
+  buttons: dialogResponses,
   message: 'You are closing a message that has not been sent',
   detail:
     "To save the message, click on 'Save as Draft'. The message will be saved on your Drafts folder"
@@ -60,12 +83,12 @@ const create = () => {
     if (showConfirmation && !isDraftEmpty()) {
       e.preventDefault();
       dialog.showMessageBox(dialogTemplate, async responseIndex => {
-        if (responseIndex === 0) {
+        if (responseIndex === RESPONSES.DISCARD.index) {
           showConfirmation = false;
           composerData = {};
           composerWindow.close();
         }
-        if (responseIndex === 2) {
+        if (responseIndex === RESPONSES.SAVE.index) {
           await saveDraftToDatabase(composerData);
           showConfirmation = false;
           composerWindow.close();
