@@ -1,4 +1,5 @@
 import { Thread } from './types';
+import { startLoadSync, stopLoadSync } from './activity';
 import {
   createEmailLabel,
   deleteEmailLabel,
@@ -115,6 +116,7 @@ export const loadThreads = params => {
 
 export const loadEvents = params => {
   return async dispatch => {
+    dispatch(startLoadSync());
     try {
       const receivedEvents = await getEvents();
       const events = receivedEvents.filter(item => item.cmd === 1);
@@ -125,6 +127,7 @@ export const loadEvents = params => {
     } catch (e) {
       // TO DO
     }
+    dispatch(stopLoadSync());
   };
 };
 

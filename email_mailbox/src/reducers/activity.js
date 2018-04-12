@@ -1,6 +1,8 @@
-import { Thread } from '../actions/types';
+import { Thread, Activity } from '../actions/types';
 import { Map } from 'immutable';
-export default (state = Map(), action) => {
+
+const initActivity = Map({ isSyncing: false });
+const activity = (state = initActivity, action) => {
   switch (action.type) {
     case Thread.SELECT:
       return state.merge({
@@ -17,7 +19,13 @@ export default (state = Map(), action) => {
       return state;
     case Thread.MOVE_THREADS:
       return state.set('multiselect', false);
+    case Activity.START_LOAD_SYNC:
+      return state.set('isSyncing', true);
+    case Activity.STOP_LOAD_SYNC:
+      return state.set('isSyncing', false);
     default:
       return state;
   }
 };
+
+export default activity;
