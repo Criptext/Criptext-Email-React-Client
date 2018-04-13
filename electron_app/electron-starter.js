@@ -79,7 +79,11 @@ async function initApp() {
   });
 
   ipcMain.on('close-composer', () => {
-    composerWindow.close();
+    composerWindow.destroy();
+  });
+
+  ipcMain.on('save-draft-changes', (e, data) => {
+    composerWindow.saveDraftChanges(data);
   });
 
   wsClient.setMessageListener( data => {

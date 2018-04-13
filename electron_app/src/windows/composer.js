@@ -1,6 +1,9 @@
-const { BrowserWindow, Menu } = require('electron');
+const { BrowserWindow, Menu, dialog } = require('electron');
 const { composerUrl } = require('./../window_routing');
+const dbManager = require('./../DBManager');
 let composerWindow;
+let composerData = {};
+let showConfirmation;
 
 const composerSize = {
   width: 785,
@@ -11,24 +14,56 @@ const composerSize = {
 
 const template = [
   {
-    label: 'Edit',
     submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      { role: 'pasteandmatchstyle' },
-      { role: 'delete' },
-      { role: 'selectall' }
+      { role: 'undo', accelerator: 'CmdOrCtrl+Z', visible: false },
+      {
+        role: 'redo',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Shift+Z' : 'Ctrl+Y',
+        visible: false
+      },
+      { role: 'cut', accelerator: 'CmdOrCtrl+X', visible: false },
+      { role: 'copy', accelerator: 'CmdOrCtrl+C', visible: false },
+      { role: 'paste', accelerator: 'CmdOrCtrl+V', visible: false },
+      {
+        role: 'pasteandmatchstyle',
+        accelerator: 'CmdOrCtrl+Shift+V',
+        visible: false
+      }
     ]
   }
 ];
-
 const menu = Menu.buildFromTemplate(template);
 
+const RESPONSES = {
+  DISCARD: {
+    index: 0,
+    label: 'Discard changes'
+  },
+  CONTINUE: {
+    index: 1,
+    label: 'Continue writing'
+  },
+  SAVE: {
+    index: 2,
+    label: 'Save as Draft'
+  }
+};
+
+const dialogResponses = Object.values(RESPONSES).map(
+  response => response.label
+);
+
+const dialogTemplate = {
+  type: 'warning',
+  title: 'Warning',
+  buttons: dialogResponses,
+  message: 'You are closing a message that has not been sent',
+  detail:
+    "To save the message, click on 'Save as Draft'. The message will be saved on your Drafts folder"
+};
+
 const create = () => {
+  showConfirmation = true;
   composerWindow = new BrowserWindow({
     width: composerSize.width,
     height: composerSize.height,
@@ -38,14 +73,31 @@ const create = () => {
     minHeight: composerSize.minHeight
   });
   composerWindow.loadURL(composerUrl);
-  composerWindow.setMenu(null);
+  composerWindow.setMenu(menu);
+  composerWindow.setMenuBarVisibility(false);
   composerWindow.on('page-title-updated', event => {
     event.preventDefault();
   });
-  composerWindow.on('closed', () => {
-    composerWindow = undefined;
+
+  composerWindow.on('close', e => {
+    if (showConfirmation && !isDraftEmpty()) {
+      e.preventDefault();
+      dialog.showMessageBox(dialogTemplate, async responseIndex => {
+        if (responseIndex === RESPONSES.DISCARD.index) {
+          showConfirmation = false;
+          composerData = {};
+          composerWindow.close();
+        }
+        if (responseIndex === RESPONSES.SAVE.index) {
+          await saveDraftToDatabase(composerData);
+          showConfirmation = false;
+          composerWindow.close();
+        }
+      });
+    } else {
+      composerWindow = undefined;
+    }
   });
-  Menu.setApplicationMenu(menu);
 };
 
 const show = async () => {
@@ -64,6 +116,13 @@ const close = () => {
   composerWindow = undefined;
 };
 
+const destroy = () => {
+  if (composerWindow !== undefined) {
+    composerWindow.destroy();
+  }
+  composerWindow = undefined;
+};
+
 const send = (message, data) => {
   if (!composerWindow) {
     return;
@@ -71,8 +130,36 @@ const send = (message, data) => {
   composerWindow.webContents.send(message, data);
 };
 
+const saveDraftChanges = incomingData => {
+  composerData = incomingData;
+};
+
+const saveDraftToDatabase = async dataDraft => {
+  await dbManager.createEmail(dataDraft);
+};
+
+const isDraftEmpty = () => {
+  if (composerData === {}) {
+    return true;
+  }
+  const { recipients, email } = composerData;
+  if (recipients === undefined || email === undefined) {
+    return true;
+  }
+  let preview = email.preview;
+  const subject = email.subject;
+  preview = preview.replace('\n', '');
+  const hasRecipients =
+    recipients.to.length > 0 ||
+    recipients.cc.length > 0 ||
+    recipients.bcc.length > 0;
+  return !hasRecipients && !subject.length && !preview.length;
+};
+
 module.exports = {
   close,
+  destroy,
   show,
-  send
+  send,
+  saveDraftChanges
 };

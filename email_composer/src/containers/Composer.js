@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
-import { EditorState, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import { removeAppDomain, removeHTMLTags } from './../utils/StringUtils';
+import { EditorState } from 'draft-js';
 import {
   closeComposerWindow,
   createEmail,
   LabelType,
-  myAccount,
   throwError,
   updateEmail,
-  updateEmailLabel
+  updateEmailLabel,
+  saveDraftChanges
 } from './../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
-import signal from '../libs/signal';
-import { appDomain } from './../utils/const';
+import signal from './../libs/signal';
+import { formOutgoingEmailFromData } from './../utils/EmailUtils';
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -58,7 +56,7 @@ class ComposerWrapper extends Component {
     )
       ? undefined
       : Status.ENABLED;
-    this.setState({ toEmails: emails, status });
+    this.setState({ toEmails: emails, status }, () => this.saveTemporalDraft());
   };
 
   handleGetCcEmail = emails => {
@@ -69,7 +67,7 @@ class ComposerWrapper extends Component {
     )
       ? undefined
       : Status.ENABLED;
-    this.setState({ ccEmails: emails, status });
+    this.setState({ ccEmails: emails, status }, () => this.saveTemporalDraft());
   };
 
   handleGetBccEmail = emails => {
@@ -80,53 +78,31 @@ class ComposerWrapper extends Component {
     )
       ? undefined
       : Status.ENABLED;
-    this.setState({ bccEmails: emails, status });
+    this.setState({ bccEmails: emails, status }, () =>
+      this.saveTemporalDraft()
+    );
   };
 
   handleGetSubject = text => {
-    this.setState({ textSubject: text });
+    this.setState({ textSubject: text }, () => this.saveTemporalDraft());
   };
 
   handleGetHtmlBody = htmlBody => {
-    this.setState({ htmlBody });
+    this.setState({ htmlBody }, () => this.saveTemporalDraft());
   };
 
   handleSendMessage = async () => {
     this.setState({ status: Status.WAITING });
-    const recipients = {
-      to: this.state.toEmails,
-      cc: this.state.ccEmails,
-      bcc: this.state.bccEmails
-    };
-    const to = this.formRecipients(recipients);
-    const subject = this.state.textSubject;
-    const body = draftToHtml(
-      convertToRaw(this.state.htmlBody.getCurrentContent())
+    const { data, to, subject, body } = formOutgoingEmailFromData(
+      this.state,
+      LabelType.draft.id
     );
-    const email = {
-      key: Date.now(),
-      subject,
-      content: body,
-      preview: removeHTMLTags(body).slice(0, 20),
-      date: Date.now(),
-      delivered: 0,
-      unread: false,
-      secure: true,
-      isMuted: false
-    };
-    const from = myAccount.recipientId;
-    recipients.from = [`${from}@${appDomain}`];
-
-    const data = {
-      email,
-      recipients,
-      labels: [LabelType.draft.id]
-    };
     try {
       const [emailId] = await createEmail(data);
       const res = await signal.encryptPostEmail(subject, to, body);
       const { metadataKey, threadId, date } = res.body;
       const emailParams = { id: emailId, key: metadataKey, threadId, date };
+
       await updateEmail(emailParams);
       const emailLabelParams = {
         emailId,
@@ -134,6 +110,7 @@ class ComposerWrapper extends Component {
         newLabelId: LabelType.sent.id
       };
       await updateEmailLabel(emailLabelParams);
+
       closeComposerWindow();
     } catch (e) {
       this.setState({ status: Status.ENABLED });
@@ -145,22 +122,10 @@ class ComposerWrapper extends Component {
     }
   };
 
-  formRecipients = recipients => {
-    return [
-      ...this.getCriptextRecipients(recipients.to, 'to'),
-      ...this.getCriptextRecipients(recipients.cc, 'cc'),
-      ...this.getCriptextRecipients(recipients.bcc, 'bcc')
-    ];
+  saveTemporalDraft = () => {
+    const { data } = formOutgoingEmailFromData(this.state, LabelType.draft.id);
+    saveDraftChanges(data);
   };
-
-  getCriptextRecipients = (recipients, type) =>
-    recipients
-      .filter(email => email.indexOf(`@${appDomain}`) > 0)
-      .map(email => ({
-        recipientId: removeAppDomain(email),
-        deviceId: 1,
-        type
-      }));
 }
 
 export default ComposerWrapper;
