@@ -5,12 +5,12 @@ const clientManager = remote.require('./src/clientManager');
 const labels = remote.require('./src/systemLabels');
 const additionalLabels = {
   search: {
-    id: null,
+    id: -1,
     text: 'Search'
   },
   all: {
-    id: null,
-    text: 'All'
+    id: -1,
+    text: 'All Mail'
   }
 };
 

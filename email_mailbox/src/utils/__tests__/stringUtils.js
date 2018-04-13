@@ -2,7 +2,7 @@
 
 import * as utils from './../StringUtils.js';
 
-jest.mock('../../utils/electronInterface');
+jest.mock('./../../utils/electronInterface');
 
 describe('string utils:', () => {
   it('remove actions from subject', () => {

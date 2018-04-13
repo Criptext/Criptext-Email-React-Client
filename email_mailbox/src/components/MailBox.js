@@ -4,15 +4,12 @@ import MailboxHeader from '../containers/MailboxHeader';
 import Threads from '../containers/Threads';
 import './mailbox.css';
 
-const ALL_MAIL = -1;
-
 class MailBox extends Component {
   constructor() {
     super();
     this.state = {
       searchParams: {
         text: '',
-        mailbox: ALL_MAIL,
         from: '',
         to: '',
         subject: '',

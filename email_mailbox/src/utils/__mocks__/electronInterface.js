@@ -56,8 +56,13 @@ export const LabelType = {
     color: '#b00e0e'
   },
   search: {
-    id: null,
+    id: -1,
     text: 'Search',
     color: '#000000'
+  },
+  all: {
+    id: -1,
+    text: 'All Mail',
+    color: null
   }
 };
