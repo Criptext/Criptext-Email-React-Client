@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`string utils: Parse email by separators 1`] = `
+Array [
+  "julian_adams@signal.com",
+  "erika@criptext.com",
+  "gianni-carlo@signal.com",
+  "daniel_tigse@signal.com",
+  "pedro_iniguez@criptext.com",
+  "gabriel@signal.com",
+  "allison@signal.com",
+  "natasha@criptext.com",
+  "julian@signal.com",
+  "juan_piguave@signal.com",
+  "erick@criptext.com",
+]
+`;
