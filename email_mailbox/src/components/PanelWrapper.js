@@ -8,7 +8,7 @@ class PanelWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpenActivityPanel: true,
+      isOpenActivityPanel: false,
       isOpenSideBar: true,
       mailboxSelected: 'inbox',
       threadIdSelected: null
