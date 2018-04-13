@@ -1,34 +1,68 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './activitypanel.css';
 import Feed from './../containers/Feed';
+import anime from 'animejs';
+import './activitypanel.css';
+
+let componentAnime = null;
 
 class ActivityPanel extends Component {
   render() {
     return (
-      <aside className="navigation-feed">
+      <aside className="navigation-feed-container">
         <header>
           <div className="header-content">
             {this.renderHeaderIcon()}
             <div className="header-title">ACTIVITY FEED</div>
             <div
               className="header-button"
-              onClick={() => this.props.onToggleActivityPanel()}
+              onClick={() =>
+                this.animateOutComponent(this.props.onToggleActivityPanel)
+              }
             >
               <i className="icon-next" />
             </div>
             <div className="header-clear" />
           </div>
         </header>
-        <div className="navigation-feed-container">
+        <div className="navigation-feed-content">
           {this.renderFeedSection(this.props)}
         </div>
       </aside>
     );
   }
 
+  animateInComponent = () => {
+    componentAnime = anime.timeline({
+      direction: 'alternate',
+      loop: false,
+      autoplay: true
+    });
+    componentAnime.add({
+      targets: '.navigation-feed-container',
+      width: [0, 288],
+      duration: 500,
+      easing: 'linear'
+    });
+  };
+
+  animateOutComponent = action => {
+    componentAnime.pause();
+    componentAnime = anime.timeline().add({
+      targets: '.navigation-feed-container',
+      width: 0,
+      duration: 500,
+      elasticity: 0,
+      easing: 'linear',
+      complete: () => {
+        action();
+      }
+    });
+  };
+
   componentDidMount() {
     this.props.onLoadFeeds();
+    return this.animateInComponent();
   }
 
   renderHeaderIcon = () => {

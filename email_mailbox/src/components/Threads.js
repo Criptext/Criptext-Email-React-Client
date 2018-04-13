@@ -158,7 +158,7 @@ class Threads extends Component {
 }
 
 Threads.propTypes = {
-  buttonSyncStatus: PropTypes.string,
+  buttonSyncStatus: PropTypes.number,
   mailbox: PropTypes.string,
   mailboxTitle: PropTypes.string,
   onClickThreadIdSelected: PropTypes.func,

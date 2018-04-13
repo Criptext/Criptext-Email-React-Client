@@ -4,6 +4,14 @@
   display: flex;
   height: 61px;
   position: relative;
+}
+
+.activity-panel-shortcut-content{
+  align-items: center;
+  background-color: #0091ff;
+  display: flex;
+  height: 100%;
+  position: relative;
   width: 61px;
 
   &:before{
@@ -11,7 +19,7 @@
     height: 0;
     width: 0;
     position: absolute;
-    right: 60px;
+    left: -8px;
     top: 24px;
     border-right: 8px solid #0091ff;
     border-top: 8px solid transparent;
