@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TagsInput from 'react-tagsinput';
+import AutocompleteWrapper from './AutocompleteWrapper';
+import { pasteSplit } from './../utils/StringUtils';
 import 'react-tagsinput/react-tagsinput.css';
 import './recipient.css';
 
@@ -26,6 +28,7 @@ const Recipient = props => (
 const renderRecipientTo = props => (
   <div className="recipient-content">
     <TagsInput
+      renderInput={AutocompleteWrapper}
       onlyUnique={true}
       className="recipient-tags"
       focusedClassName={'cstm-tags-border'}
@@ -44,6 +47,7 @@ const renderRecipientTo = props => (
       value={props.toTags}
       onChange={props.onChangeToTag}
       onValidationReject={props.handleOnValidationRejectToTag}
+      pasteSplit={pasteSplit}
     />
   </div>
 );
@@ -51,6 +55,7 @@ const renderRecipientTo = props => (
 const renderRecipientCc = props => (
   <div className="recipient-content">
     <TagsInput
+      renderInput={AutocompleteWrapper}
       onlyUnique={true}
       className="recipient-tags"
       focusedClassName={'cstm-tags-border'}
@@ -69,6 +74,7 @@ const renderRecipientCc = props => (
       value={props.ccTags}
       onChange={props.onChangeCcTag}
       onValidationReject={props.handleOnValidationRejectCcTag}
+      pasteSplit={pasteSplit}
     />
   </div>
 );
@@ -76,6 +82,7 @@ const renderRecipientCc = props => (
 const renderRecipientBcc = props => (
   <div className="recipient-content">
     <TagsInput
+      renderInput={AutocompleteWrapper}
       onlyUnique={true}
       className="recipient-tags"
       focusedClassName={'cstm-tags-border'}
@@ -94,6 +101,7 @@ const renderRecipientBcc = props => (
       value={props.bccTags}
       onChange={props.onChangeBccTag}
       onValidationReject={props.handleOnValidationRejectBccTag}
+      pasteSplit={pasteSplit}
     />
   </div>
 );

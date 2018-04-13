@@ -84,6 +84,10 @@ const getContactByIds = ids => {
     .whereIn('id', ids);
 };
 
+const getAllContacts = () => {
+  return db.select('name', 'email').from(Table.CONTACT);
+};
+
 /* EmailContact
    ----------------------------- */
 const createEmailContact = (emailContacts, trx) => {
@@ -515,6 +519,7 @@ module.exports = {
   deleteEmailLabel,
   deleteFeedById,
   getAccount,
+  getAllContacts,
   getAllFeeds,
   getAllLabels,
   getContactByIds,

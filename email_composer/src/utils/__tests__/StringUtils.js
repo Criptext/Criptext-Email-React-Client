@@ -24,4 +24,12 @@ describe('string utils:', () => {
     const state = utils.removeHTMLTags(test);
     expect(state).toEqual(text + numbers);
   });
+
+  it('Parse email by separators', () => {
+    const emailAndSeparators =
+      'julian_adams@signal.com,erika@criptext.com;gianni-carlo@signal.com(daniel_tigse@signal.com)pedro_iniguez@criptext.com*gabriel@signal.com/allison@signal.com:natasha@criptext.com?julian@signal.com\njuan_piguave@signal.com\rerick@criptext.com';
+
+    const parsedEmails = utils.pasteSplit(emailAndSeparators);
+    expect(parsedEmails).toMatchSnapshot();
+  });
 });

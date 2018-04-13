@@ -64,3 +64,7 @@ export const throwError = error => {
 export const saveDraftChanges = data => {
   ipcRenderer.send('save-draft-changes', data);
 };
+
+export const getAllContacts = () => {
+  return dbManager.getAllContacts();
+};
