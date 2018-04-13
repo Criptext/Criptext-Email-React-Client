@@ -46,6 +46,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (labelId === LabelType.sent.id) {
         params['contactTypes'] = ['to'];
       }
+      if (mailbox === LabelType.all.id) {
+        params['contactTypes'] = ['from', 'to'];
+      }
       dispatch(loadThreads(params));
     },
     onLoadEvents: () => {

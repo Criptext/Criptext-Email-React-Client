@@ -32,6 +32,11 @@ export const SideBarItems = [
     id: 'trash',
     icon: 'icon-trash',
     text: 'Trash'
+  },
+  {
+    id: 'all',
+    icon: 'icon-mailbox',
+    text: 'All email'
   }
 ];
 

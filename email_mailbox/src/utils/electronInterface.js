@@ -3,14 +3,18 @@ const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const labels = remote.require('./src/systemLabels');
-const searchLabel = {
+const additionalLabels = {
   search: {
     id: null,
     text: 'Search'
+  },
+  all: {
+    id: null,
+    text: 'All'
   }
 };
 
-export const LabelType = Object.assign(labels, searchLabel);
+export const LabelType = Object.assign(labels, additionalLabels);
 
 export const myAccount = remote.require('./src/Account');
 
