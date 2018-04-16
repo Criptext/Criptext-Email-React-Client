@@ -17,7 +17,6 @@ const getCriptextRecipients = (recipients, type) => {
     .filter(email => email.indexOf(`@${appDomain}`) > 0)
     .map(email => ({
       recipientId: removeAppDomain(email),
-      deviceId: 1,
       type
     }));
 };
