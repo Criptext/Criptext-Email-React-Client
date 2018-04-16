@@ -16,7 +16,7 @@ export const SideBarItems = [
   {
     id: 'draft',
     icon: 'icon-doc',
-    text: 'Draft'
+    text: LabelType.draft.text
   },
   {
     id: 'starred',
@@ -31,7 +31,12 @@ export const SideBarItems = [
   {
     id: 'trash',
     icon: 'icon-trash',
-    text: 'Trash'
+    text: LabelType.trash.text
+  },
+  {
+    id: 'all',
+    icon: 'icon-mailbox',
+    text: LabelType.all.text
   }
 ];
 

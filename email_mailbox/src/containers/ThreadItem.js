@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import * as actions from '../actions/index';
+import * as actions from './../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import { LabelType } from '../utils/electronInterface';
 import { defineTimeByToday } from '../utils/TimeUtils';
@@ -20,12 +20,24 @@ const defineLabels = (labelIds, labels) => {
   return result ? result : [];
 };
 
+const getMailHeader = ownProps => {
+  const thread = ownProps.thread;
+  const ownMailbox = ownProps.mailbox;
+  if (ownMailbox === 'all' || ownMailbox === 'search') {
+    const isSent = thread.get('allLabels').includes(LabelType.sent.id);
+    const isDraft = thread.get('allLabels').includes(LabelType.draft.id);
+
+    const from = thread.get('fromContactName').first();
+    const to = thread.get('fromContactName').last();
+    return isSent || isDraft ? to : from;
+  }
+  return thread.get('fromContactName').first();
+};
+
 const mapStateToProps = (state, ownProps) => {
   const selectedThread = ownProps.selectedThread;
-  const header = ownProps.thread.get('fromContactName').first();
-  const letters = getTwoCapitalLetters(
-    ownProps.thread.get('fromContactName').first()
-  );
+  const header = getMailHeader(ownProps);
+  const letters = getTwoCapitalLetters(header);
   const color = randomcolor({
     seed: header,
     luminosity: 'bright'

@@ -5,8 +5,6 @@ import HeaderMain from './HeaderMain';
 import ActivityPanelShortCut from './ActivityPanelShortCut';
 import './mailboxheader.css';
 
-const ALL_MAIL = -1;
-
 class MailboxHeader extends Component {
   constructor() {
     super();
@@ -15,7 +13,6 @@ class MailboxHeader extends Component {
       displaySearchOptions: false,
       searchParams: {
         text: '',
-        labelId: ALL_MAIL,
         from: '',
         to: '',
         subject: '',

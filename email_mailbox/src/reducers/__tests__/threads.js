@@ -4,8 +4,8 @@ import threadsReducer from './../threads';
 import * as actions from './../../actions/index';
 import file from './../../../public/threads.json';
 
-jest.mock('../../utils/electronInterface');
-jest.mock('../../utils/electronEventInterface');
+jest.mock('./../../utils/electronInterface');
+jest.mock('./../../utils/electronEventInterface');
 
 const myThreads = file.threads;
 

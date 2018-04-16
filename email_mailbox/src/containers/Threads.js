@@ -31,21 +31,36 @@ const defineStatus = isSyncing => {
   return isSyncing ? ButtonSyncType.LOAD : ButtonSyncType.STOP;
 };
 
+const defineContactType = labelId => {
+  if (labelId === LabelType.sent.id || labelId === LabelType.draft.id) {
+    return ['to'];
+  }
+  if (labelId === LabelType.all.id) {
+    return ['from', 'to'];
+  }
+  return ['from'];
+};
+
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onLoadThreads: (mailbox, clear, timestamp) => {
       const labelId = LabelType[mailbox].id;
+      const contactTypes = defineContactType(labelId);
       const params =
-        mailbox === 'Search'
-          ? { labelId, clear, timestamp, ...ownProps.searchParams }
+        mailbox === 'search'
+          ? {
+              labelId,
+              clear,
+              timestamp,
+              contactTypes,
+              ...ownProps.searchParams
+            }
           : {
               labelId,
               clear,
-              timestamp
+              timestamp,
+              contactTypes
             };
-      if (labelId === LabelType.sent.id) {
-        params['contactTypes'] = ['to'];
-      }
       dispatch(loadThreads(params));
     },
     onLoadEvents: () => {
