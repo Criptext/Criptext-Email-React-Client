@@ -14,7 +14,9 @@ const mapStateToProps = (state, ownProps) => {
     state.get('labels'),
     ownProps.thread ? ownProps.thread.get('labels') : null
   );
+  const markAsUnread = shouldMarkAsUnread(state.get('threads'));
   return {
+    markAsUnread,
     threadsSelected: [
       ownProps.thread ? formThreadParams(ownProps.thread) : null
     ],
@@ -41,7 +43,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-function getLabelIncluded(labels, threadLabels) {
+const getLabelIncluded = (labels, threadLabels) => {
   if (!threadLabels) return [];
   const hasLabels = threadLabels.reduce((lbs, label) => {
     if (!lbs[label]) {
@@ -66,7 +68,23 @@ function getLabelIncluded(labels, threadLabels) {
     });
     return lbs;
   }, []);
-}
+};
+
+const shouldMarkAsUnread = threads => {
+  let markUnread = true;
+  threads.every(thread => {
+    if (!thread.get('selected')) {
+      return true;
+    }
+    if (thread.get('unread')) {
+      markUnread = false;
+      return false;
+    }
+    return true;
+  });
+
+  return markUnread;
+};
 
 const ThreadHeader = connect(mapStateToProps, mapDispatchToProps)(
   ThreadHeaderView

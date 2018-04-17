@@ -86,6 +86,10 @@ export const getEmailByKey = emailKey => {
   return dbManager.getEmailByKey(emailKey);
 };
 
+export const markThreadAsRead = (threadId, value) => {
+  return dbManager.markThreadAsRead(threadId, value);
+};
+
 /* Signal
   ----------------------------- */
 export const createKeys = params => {

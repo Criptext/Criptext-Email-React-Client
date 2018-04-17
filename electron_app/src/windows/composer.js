@@ -91,6 +91,7 @@ const create = () => {
         if (responseIndex === RESPONSES.SAVE.index) {
           await saveDraftToDatabase(composerData);
           showConfirmation = false;
+          composerData = {};
           composerWindow.close();
         }
       });

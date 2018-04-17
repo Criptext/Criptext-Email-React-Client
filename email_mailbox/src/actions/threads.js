@@ -5,7 +5,8 @@ import {
   deleteEmailLabel,
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
-  getEvents
+  getEvents,
+  markThreadAsRead
 } from '../utils/electronInterface';
 import { storeValue } from '../utils/storage';
 import { handleNewMessageEvent } from './../utils/electronEventInterface';
@@ -81,7 +82,26 @@ export const moveThreads = (threadsIds, label) => ({
   type: Thread.MOVE_THREADS
 });
 
-export const markThreadsRead = (threadsIds, read) => ({
+export const markThreadsRead = (threadsParams, read) => {
+  return async dispatch => {
+    try {
+      const storeIds = threadsParams.map(param => param.threadIdStore);
+      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const dbReponse = await Promise.all(
+        threadIds.map(async threadId => {
+          return await markThreadAsRead(threadId, !read);
+        })
+      );
+      if (dbReponse) {
+        dispatch(markThreadsReadSuccess(storeIds, read));
+      }
+    } catch (e) {
+      // To do
+    }
+  };
+};
+
+export const markThreadsReadSuccess = (threadsIds, read) => ({
   threadsIds,
   read,
   type: Thread.READ_THREADS

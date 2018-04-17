@@ -12,9 +12,6 @@ class FormItemWrapper extends Component {
       icon: props.formItem.icon,
       type: props.formItem.type
     };
-    this.onCheck = this.onCheck.bind(this);
-    this.onValidate = this.onValidate.bind(this);
-    this.onShowHide = this.onShowHide.bind(this);
   }
 
   onHasError() {
@@ -25,13 +22,14 @@ class FormItemWrapper extends Component {
     this.props.onSetError(this.props.formItem.name, false);
   }
 
-  onCheck() {
+  onCheck = () => {
     this.setState({
       isChecked: !this.state.isChecked
     });
-  }
+  };
 
-  onValidate(e) {
+  onValidate = e => {
+    if (e.keyCode === 20 || e.keyCode === 9) return;
     const isOptional = this.props.formItem.optional;
     const optionalDirty = isOptional && e.target.value !== '';
     const optionalClean = isOptional && e.target.value === '';
@@ -46,9 +44,9 @@ class FormItemWrapper extends Component {
       this.setState({ validated: false });
       this.props.onSetError(this.props.formItem.name, false);
     }
-  }
+  };
 
-  onShowHide() {
+  onShowHide = () => {
     this.setState({
       showField: !this.state.showField,
       type: this.state.type === 'text' ? 'password' : 'text',
@@ -57,7 +55,7 @@ class FormItemWrapper extends Component {
           ? this.props.formItem.icon2
           : this.props.formItem.icon
     });
-  }
+  };
 
   render() {
     return (

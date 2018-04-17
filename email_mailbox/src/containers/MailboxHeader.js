@@ -81,7 +81,7 @@ function getThreadsSelected(threads, multiselect) {
   }, []);
 }
 
-function shouldMarkAsUnread(threads, multiselect) {
+const shouldMarkAsUnread = (threads, multiselect) => {
   if (!multiselect) {
     return null;
   }
@@ -98,9 +98,9 @@ function shouldMarkAsUnread(threads, multiselect) {
   });
 
   return markUnread;
-}
+};
 
-function getLabelIncluded(labels, threads, selectThreads, multiselect) {
+const getLabelIncluded = (labels, threads, selectThreads, multiselect) => {
   if (!multiselect) {
     return [];
   }
@@ -135,7 +135,7 @@ function getLabelIncluded(labels, threads, selectThreads, multiselect) {
     });
     return lbs;
   }, []);
-}
+};
 
 const MailboxHeader = connect(mapStateToProps, mapDispatchToProps)(
   MailboxHeaderView

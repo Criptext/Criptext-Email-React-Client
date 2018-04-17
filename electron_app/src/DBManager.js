@@ -377,14 +377,14 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
-const markThreadAsRead = threadId => {
+const markThreadAsRead = (threadId, value) => {
   return db
     .table(Table.EMAIL)
     .where({
       threadId
     })
     .update({
-      unread: false
+      unread: value
     });
 };
 

@@ -54,6 +54,10 @@ class ClientManager {
   postUser(params) {
     return client.postUser(params);
   }
+
+  checkAvailableUsername(username) {
+    return client.checkAvailableUsername(username);
+  }
 }
 
 module.exports = new ClientManager();

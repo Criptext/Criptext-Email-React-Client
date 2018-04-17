@@ -6,7 +6,8 @@ import {
   validatePassword,
   validateConfirmPassword,
   validateAcceptTerms,
-  validateEmail
+  validateEmail,
+  checkUsernameAvailable
 } from './../validators/validators';
 import {
   closeDialog,
@@ -123,8 +124,6 @@ class SignUpWrapper extends Component {
       errors: onInitErrors(formItems, 'name'),
       disabled: true
     };
-    this.universalValidator = this.universalValidator.bind(this);
-    this.onSetError = this.onSetError.bind(this);
   }
 
   render() {
@@ -208,10 +207,23 @@ class SignUpWrapper extends Component {
     closeLogin();
   };
 
+  checkUsername = async user => {
+    const errorState = this.state.errors;
+    const isUsernameAvailable = await checkUsernameAvailable(user);
+    if (!isUsernameAvailable) {
+      errorState['username'] = true;
+      this.setState({
+        disabled: true,
+        errors: errorState
+      });
+    }
+  };
+
   universalValidator = (formItemName, formItemValue) => {
     let result;
     switch (formItemName) {
       case 'username': {
+        this.checkUsername(formItemValue);
         result = validateUsername(formItemValue);
         break;
       }

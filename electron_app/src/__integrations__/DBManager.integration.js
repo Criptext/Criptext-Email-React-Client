@@ -30,7 +30,7 @@ describe('Test DBManager', () => {
   });
 
   it('should update thread emails as read', async () => {
-    await DBManager.markThreadAsRead('hdnfgdgsd');
+    await DBManager.markThreadAsRead('hdnfgdgsd', false);
     const emails = await DBManager.getEmailsByThreadId('hdnfgdgsd');
     expect(emails).toMatchSnapshot();
   });
