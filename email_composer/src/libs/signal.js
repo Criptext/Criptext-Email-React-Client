@@ -55,8 +55,8 @@ const keysToArrayBuffer = keys => {
   };
 };
 
-const encryptPostEmail = async (subject, to, body) => {
-  const recipientIds = to.map(item => item.recipientId);
+const encryptPostEmail = async (subject, recipients, body) => {
+  const recipientIds = recipients.map(item => item.recipientId);
   const keyBundles = await getKeyBundlesOfRecipients(recipientIds);
 
   if (!keyBundles.length) {
@@ -88,7 +88,7 @@ const encryptPostEmail = async (subject, to, body) => {
         keyBundleArrayBuffer,
         body
       );
-      const item = to.filter(
+      const item = recipients.filter(
         recipient => recipient.recipientId === recipientId
       )[0];
       return {
