@@ -64,10 +64,7 @@ const encryptPostEmail = async (subject, recipients, body) => {
   }
 
   const objKeyBundles = keyBundles.reduce(
-    (result, keyBundle) => ({
-      ...result,
-      [keyBundle.recipientId]: keyBundle
-    }),
+    (result, keyBundle) => ({ ...result, [keyBundle.recipientId]: keyBundle }),
     {}
   );
 
@@ -82,17 +79,22 @@ const encryptPostEmail = async (subject, recipients, body) => {
   });
 
   const criptextEmails = await Promise.all(
-    recipients.map(async item => {
-      const { recipientId, deviceId } = item;
-      const keyBundle = keysToArrayBuffer(objKeyBundles[recipientId]);
+    keyBundles.map(async keyBundle => {
+      const { recipientId, deviceId } = keyBundle;
+      const keyBundleArrayBuffer = keysToArrayBuffer(keyBundle);
       const bodyEncrypted = await encryptText(
         recipientId,
         deviceId,
-        keyBundle,
+        keyBundleArrayBuffer,
         body
       );
+      const item = recipients.filter(
+        recipient => recipient.recipientId === recipientId
+      )[0];
       return {
-        ...item,
+        type: item.type,
+        recipientId,
+        deviceId,
         body: bodyEncrypted
       };
     })
