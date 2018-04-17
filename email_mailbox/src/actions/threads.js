@@ -6,7 +6,7 @@ import {
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
   getEvents,
-  markThreadAsRead
+  updateUnreadEmailByThreadId
 } from '../utils/electronInterface';
 import { storeValue } from '../utils/storage';
 import { handleNewMessageEvent } from './../utils/electronEventInterface';
@@ -89,7 +89,7 @@ export const markThreadsRead = (threadsParams, read) => {
       const threadIds = threadsParams.map(param => param.threadIdDB);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
-          return await markThreadAsRead(threadId, !read);
+          return await updateUnreadEmailByThreadId(threadId, !read);
         })
       );
       if (dbReponse) {
@@ -104,7 +104,7 @@ export const markThreadsRead = (threadsParams, read) => {
 export const markThreadsReadSuccess = (threadsIds, read) => ({
   threadsIds,
   read,
-  type: Thread.READ_THREADS
+  type: Thread.UPDATE_UNREAD
 });
 
 export const searchThreads = params => {

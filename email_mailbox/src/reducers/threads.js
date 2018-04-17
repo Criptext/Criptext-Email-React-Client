@@ -102,7 +102,7 @@ const threads = (state = List([]), action) => {
         return thread.merge({ allLabels, labels });
       });
     }
-    case Thread.READ_THREADS: {
+    case Thread.UPDATE_UNREAD: {
       return state.map(thread => {
         if (!action.threadsIds.includes(thread.get('id'))) {
           return thread;

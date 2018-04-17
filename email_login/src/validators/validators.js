@@ -28,10 +28,7 @@ export const checkUsernameAvailable = async username => {
   if (!isValidated) return false;
 
   const res = await checkAvailableUsername(username);
-  if (res.status !== 200) {
-    return false;
-  }
-  return true;
+  return res.status === 200;
 };
 
 export const validateFullname = fullname => {
