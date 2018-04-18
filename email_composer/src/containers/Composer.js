@@ -9,7 +9,11 @@ import {
   throwError,
   updateEmail,
   updateEmailLabel,
-  saveDraftChanges
+  saveDraftChanges,
+  errors,
+  deleteEmail,
+  getEmailByKey,
+  createEmailLabel
 } from './../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
 import signal from './../libs/signal';
@@ -97,11 +101,15 @@ class ComposerWrapper extends Component {
       this.state,
       LabelType.draft.id
     );
+    let backupEmailData = {};
     try {
       const [emailId] = await createEmail(data);
+      backupEmailData.emailId = emailId;
       const res = await signal.encryptPostEmail(subject, to, body);
+
       const { metadataKey, threadId, date } = res.body;
       const emailParams = { id: emailId, key: metadataKey, threadId, date };
+      backupEmailData.key = metadataKey;
 
       await updateEmail(emailParams);
       const emailLabelParams = {
@@ -110,15 +118,30 @@ class ComposerWrapper extends Component {
         newLabelId: LabelType.sent.id
       };
       await updateEmailLabel(emailLabelParams);
-
+      backupEmailData = {};
       closeComposerWindow();
     } catch (e) {
+      if (e.message.includes('SQLITE_CONSTRAINT')) {
+        await deleteEmail({
+          id: backupEmailData.emailId
+        });
+        const email = await getEmailByKey(backupEmailData.key);
+        const emailLabels = [
+          { emailId: email[0].id, labelId: LabelType.sent.id }
+        ];
+        await createEmailLabel(emailLabels);
+        backupEmailData = {};
+        closeComposerWindow();
+      } else if (e.code === 'ECONNREFUSED') {
+        throwError(errors.server.UNABLE_TO_CONNECT);
+      } else {
+        const errorToShow = {
+          name: e.name,
+          description: e.message
+        };
+        throwError(errorToShow);
+      }
       this.setState({ status: Status.ENABLED });
-      const errorToShow = {
-        name: e.name,
-        description: e.message
-      };
-      throwError(errorToShow);
     }
   };
 

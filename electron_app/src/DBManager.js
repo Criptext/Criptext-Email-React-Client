@@ -198,13 +198,6 @@ const formEmailLabel = ({ emailId, labels }) => {
   });
 };
 
-const getEmailByKey = key => {
-  return db
-    .select('*')
-    .from(Table.EMAIL)
-    .where({ key });
-};
-
 const getEmailsByThreadId = threadId => {
   return db
     .select(
@@ -377,12 +370,16 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
-const deleteEmail = emailKey => {
+const deleteEmail = ({ id, key }) => {
+  const params = {};
+  if (key) {
+    params.key = key;
+  } else {
+    params.id = id ? id : null;
+  }
   return db
     .table(Table.EMAIL)
-    .where({
-      key: emailKey
-    })
+    .where(params)
     .del();
 };
 
@@ -391,6 +388,13 @@ const getEmailById = id => {
     .select('*')
     .from(Table.EMAIL)
     .where({ id });
+};
+
+const getEmailByKey = key => {
+  return db
+    .select('*')
+    .from(Table.EMAIL)
+    .where({ key });
 };
 
 const updateEmail = ({ id, key, threadId, date, isMuted, unread }) => {

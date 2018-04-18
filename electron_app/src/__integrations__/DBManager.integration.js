@@ -38,7 +38,7 @@ describe('Test DBManager', () => {
   });
 
   it('should delete email', async () => {
-    await DBManager.deleteEmail('hdnfgdgsd');
+    await DBManager.deleteEmail({ key: 'hdnfgdgsd' });
     const emails = await DBManager.getEmailsByThreadId('hdnfgdgsd');
     expect(emails).toMatchSnapshot();
   });

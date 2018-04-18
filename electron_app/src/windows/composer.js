@@ -64,6 +64,7 @@ const dialogTemplate = {
 
 const create = () => {
   showConfirmation = true;
+  composerData = {};
   composerWindow = new BrowserWindow({
     width: composerSize.width,
     height: composerSize.height,

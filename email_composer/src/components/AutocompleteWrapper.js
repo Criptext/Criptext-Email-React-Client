@@ -31,9 +31,16 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
     return inputLength === 0
       ? []
       : people.filter(person => {
-          return person.name
-            ? person.name.toLowerCase().slice(0, inputLength) === inputValue
-            : person.email.toLowerCase().slice(0, inputLength) === inputValue;
+          if (person.name) {
+            const nameHasMatches =
+              person.name.toLowerCase().slice(0, inputLength) === inputValue;
+            const emailHasMatches =
+              person.email.toLowerCase().slice(0, inputLength) === inputValue;
+            return nameHasMatches || emailHasMatches;
+          }
+          return (
+            person.email.toLowerCase().slice(0, inputLength) === inputValue
+          );
         });
   };
   state.filteredSuggestions = getSuggestions();
