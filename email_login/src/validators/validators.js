@@ -1,4 +1,5 @@
 import validator from 'validator';
+import { checkAvailableUsername } from './../utils/electronInterface';
 
 const requiredLength = {
   username: 2,
@@ -20,6 +21,14 @@ export const validateUsername = username => {
   return (
     checkRequired(username) && checkminLength(username, requiredLength.username)
   );
+};
+
+export const checkUsernameAvailable = async username => {
+  const isValidated = validateUsername(username);
+  if (!isValidated) return false;
+
+  const res = await checkAvailableUsername(username);
+  return res.status === 200;
 };
 
 export const validateFullname = fullname => {

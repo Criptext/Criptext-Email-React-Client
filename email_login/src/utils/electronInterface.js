@@ -89,3 +89,7 @@ export const openMailbox = () => {
 export const login = params => {
   return clientManager.login(params);
 };
+
+export const checkAvailableUsername = username => {
+  return clientManager.checkAvailableUsername(username);
+};

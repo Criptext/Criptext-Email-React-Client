@@ -7,10 +7,11 @@ const checkClient = async () => {
   if (!client.login) {
     const account = await db.table(Table.ACCOUNT).select('*');
     const token = !account.length ? undefined : account[0].jwt;
-    client = new ClientAPI(
-      process.env.REACT_APP_KEYSERVER_URL || PROD_SERVER_URL,
+    const clientOptions = {
+      url: process.env.REACT_APP_KEYSERVER_URL || PROD_SERVER_URL,
       token
-    );
+    };
+    client = new ClientAPI(clientOptions);
   }
 };
 
@@ -53,6 +54,10 @@ class ClientManager {
 
   postUser(params) {
     return client.postUser(params);
+  }
+
+  checkAvailableUsername(username) {
+    return client.checkAvailableUsername(username);
   }
 }
 
