@@ -69,8 +69,12 @@ export const getAllContacts = () => {
   return dbManager.getAllContacts();
 };
 
-export const deleteEmail = params => {
-  return dbManager.deleteEmail(params);
+export const deleteEmailById = id => {
+  return dbManager.deleteEmail(id);
+};
+
+export const deleteEmailByKey = key => {
+  return dbManager.deleteEmail(key);
 };
 
 export const getEmailByKey = key => {

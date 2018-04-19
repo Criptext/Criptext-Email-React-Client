@@ -27,17 +27,18 @@ const Suggestion = (suggestion, { query }) => {
 };
 
 const getMatchesOnNameAndEmail = (name, email, query) => {
-  const response = {};
   const nameMatches = match(name, query);
   if (!nameMatches.length) {
-    response.name = [{ highlight: false, text: name }];
     const emailMatches = match(email, query);
-    response.email = parse(email, emailMatches);
-  } else {
-    response.name = parse(name, nameMatches);
-    response.email = [{ highlight: false, text: email }];
+    return {
+      name: [{ highlight: false, text: name }],
+      email: parse(email, emailMatches)
+    };
   }
-  return response;
+  return {
+    name: parse(name, nameMatches),
+    email: [{ highlight: false, text: email }]
+  };
 };
 
 const getMatchesOnEmail = (email, query) => {
