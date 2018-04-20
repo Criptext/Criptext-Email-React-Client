@@ -68,3 +68,19 @@ export const saveDraftChanges = data => {
 export const getAllContacts = () => {
   return dbManager.getAllContacts();
 };
+
+export const deleteEmailById = id => {
+  return dbManager.deleteEmail(id);
+};
+
+export const deleteEmailByKey = key => {
+  return dbManager.deleteEmail(key);
+};
+
+export const getEmailByKey = key => {
+  return dbManager.getEmailByKey(key);
+};
+
+export const createEmailLabel = params => {
+  return dbManager.createEmailLabel(params);
+};

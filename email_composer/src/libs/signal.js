@@ -59,8 +59,12 @@ const encryptPostEmail = async (subject, recipients, body) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const keyBundles = await getKeyBundlesOfRecipients(recipientIds);
 
+  if (keyBundles.includes(null)) {
+    throw new CustomError(errors.server.UNAUTHORIZED_ERROR);
+  }
+
   if (!keyBundles.length) {
-    throw new CustomError(errors.NON_EXISTING_USERS);
+    throw new CustomError(errors.message.NON_EXISTING_USERS);
   }
 
   const objKeyBundles = keyBundles.reduce(
@@ -100,12 +104,13 @@ const encryptPostEmail = async (subject, recipients, body) => {
     })
   );
   const data = {
-    subject,
     criptextEmails
   };
+  if (subject) data.subject = subject;
+
   const res = await postEmail(data);
   if (res.status !== 200) {
-    throw new CustomError(errors.ENCRYPTING_ERROR);
+    throw new CustomError(errors.message.ENCRYPTING);
   }
   return res;
 };

@@ -1,4 +1,11 @@
-const errors = {
+const USER_ERROR = {
+  ALREADY_EXISTS: {
+    name: 'User already exists',
+    description: 'User already exists. Try another username'
+  }
+};
+
+const SERVER_ERROR = {
   UNABLE_TO_CONNECT: {
     name: 'Unable to connect',
     description: 'Unable to connect to server'
@@ -7,22 +14,25 @@ const errors = {
     name: 'No response',
     description: 'No response from server'
   },
-  USER_ALREADY_EXISTS: {
-    name: 'User already exists',
-    description: 'User already exists. Try another username'
+  UNAUTHORIZED: {
+    name: 'Security error',
+    description: "There's a security failure in your request"
+  }
+};
+
+const MESSAGE_ERROR = {
+  ENCRYPTING: {
+    name: 'Encrypting error',
+    description: 'An error occurred while encrypting message. Please try again'
   },
   NON_EXISTING_USERS: {
     name: 'Non existing users',
     description: "One or more users doesn't exist. Check and try again"
-  },
-  ENCRYPTING_ERROR: {
-    name: 'Encrypting error',
-    description: 'An error occurred while encrypting message. Please try again'
-  },
-  UNKNOWN_ERROR: {
-    name: 'Error',
-    description: 'Unknown error'
   }
 };
 
-module.exports = errors;
+module.exports = {
+  user: USER_ERROR,
+  server: SERVER_ERROR,
+  message: MESSAGE_ERROR
+};

@@ -198,13 +198,6 @@ const formEmailLabel = ({ emailId, labels }) => {
   });
 };
 
-const getEmailByKey = key => {
-  return db
-    .select('*')
-    .from(Table.EMAIL)
-    .where({ key });
-};
-
 const getEmailsByThreadId = threadId => {
   return db
     .select(
@@ -326,6 +319,7 @@ const baseThreadQuery = ({
   db
     .select(
       `${Table.EMAIL}.*`,
+      db.raw(`IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId`),
       db.raw(
         `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> ${labelId ||
           -1} THEN ${Table.EMAIL_LABEL}.labelId ELSE NULL END) as labels`
@@ -366,7 +360,7 @@ const baseThreadQuery = ({
       `${Table.CONTACT}.id`
     )
     .where('date', '<', timestamp || 'now')
-    .groupBy('threadId')
+    .groupBy('uniqueId')
     .orderBy('date', 'DESC')
     .limit(limit || 20);
 
@@ -377,12 +371,17 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
-const deleteEmail = emailKey => {
+const deleteEmailById = id => {
   return db
     .table(Table.EMAIL)
-    .where({
-      key: emailKey
-    })
+    .where({ id })
+    .del();
+};
+
+const deleteEmailByKey = key => {
+  return db
+    .table(Table.EMAIL)
+    .where({ key })
     .del();
 };
 
@@ -391,6 +390,13 @@ const getEmailById = id => {
     .select('*')
     .from(Table.EMAIL)
     .where({ id });
+};
+
+const getEmailByKey = key => {
+  return db
+    .select('*')
+    .from(Table.EMAIL)
+    .where({ key });
 };
 
 const updateEmail = ({ id, key, threadId, date, isMuted, unread }) => {
@@ -513,7 +519,8 @@ module.exports = {
   createFeed,
   createKeys,
   createTables,
-  deleteEmail,
+  deleteEmailById,
+  deleteEmailByKey,
   deleteEmailLabel,
   deleteFeedById,
   getAccount,

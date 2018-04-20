@@ -77,7 +77,7 @@ class LoadingWrapper extends Component {
       }
     } catch (e) {
       if (e.code === 'ECONNREFUSED') {
-        throwError(errors.UNABLE_TO_CONNECT);
+        throwError(errors.server.UNABLE_TO_CONNECT);
       } else {
         const errorToShow = {
           name: e.name,
@@ -93,7 +93,7 @@ class LoadingWrapper extends Component {
   checkResult = () => {
     if (this.state.timeout > 110 && this.state.accountResponse === undefined) {
       clearTimeout(this.state.timeout);
-      throwError(errors.NO_RESPONSE);
+      throwError(errors.server.NO_RESPONSE);
       this.loadingThrowError();
       return;
     }

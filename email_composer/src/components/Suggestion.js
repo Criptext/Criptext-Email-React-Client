@@ -8,22 +8,46 @@ import './suggestion.css';
 const Suggestion = (suggestion, { query }) => {
   const { name, email } = suggestion;
   const suggestionText = name ? name : email;
-  const matches = match(suggestionText, query);
-  const parts = parse(suggestionText, matches);
-
   const letters = getTwoCapitalLetters(suggestionText);
   const color = randomcolor({
     seed: letters,
     luminosity: 'bright'
   });
+  const parts = name
+    ? getMatchesOnNameAndEmail(name, email, query)
+    : getMatchesOnEmail(email, query);
 
   return (
     <div className="recipient-suggestion">
       {renderCapitalLetters(color, letters)}
       {renderHighlightedText(parts, name)}
-      {name ? renderRightEmail(email) : null}
+      {name ? renderHighlightedRightEmail(parts.email) : null}
     </div>
   );
+};
+
+const getMatchesOnNameAndEmail = (name, email, query) => {
+  const nameMatches = match(name, query);
+  if (!nameMatches.length) {
+    const emailMatches = match(email, query);
+    return {
+      name: [{ highlight: false, text: name }],
+      email: parse(email, emailMatches)
+    };
+  }
+  return {
+    name: parse(name, nameMatches),
+    email: [{ highlight: false, text: email }]
+  };
+};
+
+const getMatchesOnEmail = (email, query) => {
+  const emailMatches = match(email, query);
+  const emailParts = parse(email, emailMatches);
+  return {
+    name: [{ highlight: false, text: '' }],
+    email: emailParts
+  };
 };
 
 const renderCapitalLetters = (color, letters) => (
@@ -35,7 +59,38 @@ const renderCapitalLetters = (color, letters) => (
 const renderHighlightedText = (parts, isName) => (
   <span className="highlighted-text">
     {isName ? null : '<'}
-    {parts.map((part, index) => {
+    {isName
+      ? renderHighlightedLeftName(parts.name)
+      : renderHighlightedLeftEmail(parts.email)}
+    {isName ? null : '>'}
+  </span>
+);
+
+const renderHighlightedLeftName = name => {
+  return name.map((part, index) => {
+    const className = part.highlight ? 'highlight' : null;
+    return (
+      <span className={className} key={index}>
+        {part.text}
+      </span>
+    );
+  });
+};
+
+const renderHighlightedLeftEmail = email => {
+  return email.map((part, index) => {
+    const className = part.highlight ? 'highlight' : null;
+    return (
+      <span className={className} key={index}>
+        {part.text}
+      </span>
+    );
+  });
+};
+
+const renderHighlightedRightEmail = email => (
+  <span className="sugestion-email-right">
+    {email.map((part, index) => {
       const className = part.highlight ? 'highlight' : null;
       return (
         <span className={className} key={index}>
@@ -43,12 +98,7 @@ const renderHighlightedText = (parts, isName) => (
         </span>
       );
     })}
-    {isName ? null : '>'}
   </span>
-);
-
-const renderRightEmail = email => (
-  <span className="sugestion-email-right">{email}</span>
 );
 
 export default Suggestion;

@@ -11,39 +11,14 @@ Array [
     "from": null,
     "id": 1,
     "isMuted": 0,
-    "key": "hdnfgdgsd",
+    "key": "1",
     "preview": "Hello there",
-    "s3Key": "hdnfgdgsd",
+    "s3Key": "1",
     "secure": 1,
     "subject": "Greetings",
-    "threadId": "hdnfgdgsd",
+    "threadId": "1",
     "to": null,
     "unread": 1,
-  },
-]
-`;
-
-exports[`Test DBManager should delete email 1`] = `Array []`;
-
-exports[`Test DBManager should update thread emails as read 1`] = `
-Array [
-  Object {
-    "bcc": null,
-    "cc": null,
-    "content": "Hello there",
-    "date": "2013-10-07 08:23:19.120",
-    "delivered": 0,
-    "from": null,
-    "id": 1,
-    "isMuted": 0,
-    "key": "hdnfgdgsd",
-    "preview": "Hello there",
-    "s3Key": "hdnfgdgsd",
-    "secure": 1,
-    "subject": "Greetings",
-    "threadId": "hdnfgdgsd",
-    "to": null,
-    "unread": 0,
   },
 ]
 `;

@@ -46,7 +46,7 @@ const createAccount = async ({
     keybundle
   });
   if (res.status === 400) {
-    throw CustomError(errors.USER_ALREADY_EXISTS);
+    throw CustomError(errors.user.ALREADY_EXISTS);
   }
   if (res.status !== 200) {
     return false;
