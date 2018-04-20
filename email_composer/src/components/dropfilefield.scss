@@ -10,7 +10,7 @@
   position: relative;
   width: calc(100% - 44px);
 
-  input{
+  input[type=file]{
     display: none;
   }
 }
