@@ -23,8 +23,10 @@ const mapStateToProps = (state, ownProps) => {
       })
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
+  const subject = email.get('subject');
   const myEmail = email.merge({
     date: defineTimeByToday(email.get('date')),
+    subject: subject.length === 0 ? '(No Subject)' : subject,
     from,
     to,
     cc,

@@ -42,14 +42,16 @@ const mapStateToProps = (state, ownProps) => {
     seed: header,
     luminosity: 'bright'
   });
+  const subject = ownProps.thread.get('subject');
   const thread = ownProps.thread.merge({
-    date: defineTimeByToday(ownProps.thread.get('date'))
+    date: defineTimeByToday(ownProps.thread.get('date')),
+    subject: subject.length === 0 ? '(No Subject)' : subject
   });
   const labels = defineLabels(thread.get('labels'), state.get('labels'));
 
   return {
     myClass: getThreadClass(thread, ownProps.myIndex, selectedThread),
-    thread,
+    thread: thread.toJS(),
     color,
     multiselect: state.get('activities').get('multiselect'),
     starred: thread.get('labels').contains(LabelType.starred.id),

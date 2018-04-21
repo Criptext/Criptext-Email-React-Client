@@ -40,9 +40,13 @@ const defineLabels = (labels, labelIds) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const thread =
+  let thread =
     getThread(state.get('threads'), ownProps.threadId) ||
     getThreadFromSuggestions(state.get('suggestions'), ownProps.threadId);
+  const subject = thread.get('subject');
+  thread = thread.merge({
+    subject: subject.length === 0 ? '(No Subject)' : subject
+  });
   const emails = getEmails(state.get('emails'), thread);
   let labelIds =
     LabelType[ownProps.mailbox].id === LabelType.inbox.id
@@ -53,7 +57,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     emails,
     labels,
-    thread
+    thread: thread.toJS()
   };
 };
 

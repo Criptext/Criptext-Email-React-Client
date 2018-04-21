@@ -21,7 +21,7 @@ class ThreadItem extends Component {
       <div
         className={'thread-item-container ' + myClass}
         onClick={() => {
-          onSelectThread(thread.get('id'));
+          onSelectThread(thread.id);
         }}
       >
         <a>
@@ -32,7 +32,7 @@ class ThreadItem extends Component {
             <span>{header}</span>
           </div>
           <div>
-            {this.renderLabels(labels, thread.get('id'))}
+            {this.renderLabels(labels, thread.id)}
             <div className="thread-subject">
               <span>{this.renderSubject()}</span>
             </div>
@@ -46,7 +46,7 @@ class ThreadItem extends Component {
             <div>{this.willDisplayAckIcon(thread)}</div>
           </div>
           <div style={visibleStyle}>
-            <span>{thread.get('date')}</span>
+            <span>{thread.date}</span>
           </div>
         </a>
         {this.renderMenu()}
@@ -55,7 +55,7 @@ class ThreadItem extends Component {
   }
 
   renderPreview = () => {
-    const preview = this.props.thread.get('preview');
+    const preview = this.props.thread.preview;
     if (this.props.mailbox !== 'search') {
       return preview;
     }
@@ -64,7 +64,7 @@ class ThreadItem extends Component {
   };
 
   renderSubject = () => {
-    const subject = this.props.thread.get('subject');
+    const subject = this.props.thread.subject;
     if (this.props.mailbox !== 'search') {
       return subject;
     }
@@ -88,7 +88,7 @@ class ThreadItem extends Component {
 
   onCheck = value => {
     this.props.onMultiSelect(
-      this.props.thread.get('id'),
+      this.props.thread.id,
       CustomCheckboxStatus.toBoolean(value)
     );
   };
@@ -103,9 +103,7 @@ class ThreadItem extends Component {
     if (this.props.multiselect || this.props.hovering) {
       return (
         <CustomCheckbox
-          status={CustomCheckboxStatus.fromBoolean(
-            this.props.thread.get('selected')
-          )}
+          status={CustomCheckboxStatus.fromBoolean(this.props.thread.selected)}
           onCheck={this.onCheck}
         />
       );
@@ -123,7 +121,7 @@ class ThreadItem extends Component {
       return null;
     }
 
-    const threadId = this.props.thread.get('id');
+    const threadId = this.props.thread.id;
 
     return (
       <div className="thread-label-option">
@@ -173,7 +171,7 @@ class ThreadItem extends Component {
   };
 
   willDisplayAttachIcon = thread => {
-    if (thread.get('totalAttachments') > 0) {
+    if (thread.totalAttachments > 0) {
       return <i className="icon-attach" />;
     }
 
@@ -181,7 +179,7 @@ class ThreadItem extends Component {
   };
 
   willDisplayAckIcon = thread => {
-    const status = thread.get('status');
+    const status = thread.status;
     switch (status) {
       case EmailStatus.UNSENT:
         return <i className="material-icons error-highlight">undo</i>;

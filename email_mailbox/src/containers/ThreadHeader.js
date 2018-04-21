@@ -4,15 +4,15 @@ import ThreadHeaderView from '../components/ThreadHeader';
 
 const formThreadParams = thread => {
   return {
-    threadIdStore: thread.get('id'),
-    threadIdDB: thread.get('threadId')
+    threadIdStore: thread.id,
+    threadIdDB: thread.threadId
   };
 };
 
 const mapStateToProps = (state, ownProps) => {
   const labels = getLabelIncluded(
     state.get('labels'),
-    ownProps.thread ? ownProps.thread.get('labels') : null
+    ownProps.thread ? ownProps.thread.labels : null
   );
   const markAsUnread = shouldMarkAsUnread(state.get('threads'));
   return {
@@ -55,8 +55,8 @@ const getLabelIncluded = (labels, threadLabels) => {
   }, {});
 
   return labels.reduce((lbs, label) => {
-    const labelId = label.get('id');
-    const labelText = label.get('text');
+    const labelId = label.id;
+    const labelText = label.text;
     let checked = 'none';
     if (hasLabels[labelId]) {
       checked = 'all';
@@ -73,10 +73,10 @@ const getLabelIncluded = (labels, threadLabels) => {
 const shouldMarkAsUnread = threads => {
   let markUnread = true;
   threads.every(thread => {
-    if (!thread.get('selected')) {
+    if (!thread.selected) {
       return true;
     }
-    if (thread.get('unread')) {
+    if (thread.unread) {
       markUnread = false;
       return false;
     }
