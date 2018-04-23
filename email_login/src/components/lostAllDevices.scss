@@ -122,7 +122,7 @@
         margin: 0% 0% 0% 0%;
         padding: 0px;
         
-        .button-login {
+        .button-lost {
           border: none;
           border-radius: 100px;
           padding: 8.5px;
@@ -131,6 +131,7 @@
           margin: 15px 0;
           width: 100%;
           transition: opacity 0.1s;
+          outline: none;
           span {
             color: #fff;
             font-weight: 600;
@@ -138,13 +139,13 @@
             transition: opacity 0.1s;
           }
         }
-        .button-login:enabled {
+        .button-lost:enabled {
           opacity: 0.9;
           span{
             opacity: 0.9;
           }
         }
-        .button-login:hover:enabled {
+        .button-lost:hover:enabled {
           opacity: 1.0;
           span{
             opacity: 1.0;

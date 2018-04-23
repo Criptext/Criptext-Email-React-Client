@@ -74,6 +74,7 @@ class Threads extends Component {
 
   componentDidMount() {
     this.props.onLoadThreads(this.props.mailbox, true);
+    this.props.onLoadEvents();
   }
 
   renderTooltipForThread = () => {

@@ -8,8 +8,11 @@ import {
   confirmForgotPasswordSentLink,
   confirmForgotPasswordEmptyEmail,
   login,
-  openMailbox
+  openMailbox,
+  throwError,
+  errors
 } from './../utils/electronInterface';
+import signal from './../libs/signal';
 
 class LostDevicesWrapper extends Component {
   constructor(props) {
@@ -66,16 +69,16 @@ class LostDevicesWrapper extends Component {
     event.stopPropagation();
     const submittedData = {
       username: this.state.values.username,
-      password: this.state.values.password,
-      deviceId: 1
+      password: this.state.values.password
     };
     const loginResponse = await login(submittedData);
     const loginStatus = loginResponse.status;
     if (loginStatus === 200) {
-      openMailbox();
-      closeLogin();
+      const recipientId = this.state.values.username;
+      const { deviceId, name, token } = loginResponse.body;
+      await this.loginAccount({ recipientId, deviceId, name, token });
     } else {
-      alert(loginResponse.text);
+      this.throwLoginError(errors.login.WRONG_CREDENTIALS);
     }
   };
 
@@ -101,6 +104,30 @@ class LostDevicesWrapper extends Component {
     if (formItemName !== '') {
       return validatePassword(formItemValue);
     }
+  };
+
+  loginAccount = async ({ recipientId, deviceId, name, token }) => {
+    try {
+      const response = await signal.registerAccount({
+        recipientId,
+        deviceId,
+        name,
+        token
+      });
+      if (response) {
+        openMailbox();
+        closeLogin();
+      }
+    } catch (e) {
+      this.throwLoginError(e);
+    }
+  };
+
+  throwLoginError = error => {
+    throwError({
+      name: error.name,
+      description: error.description
+    });
   };
 }
 

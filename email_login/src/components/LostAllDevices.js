@@ -5,7 +5,7 @@ import './lostAllDevices.css';
 const LostAllDevices = props => (
   <div className="lost">
     {renderHeader(props)}
-    {renderSubHeader()}
+    {renderSubHeader(props)}
     {renderForm(props)}
   </div>
 );
@@ -27,14 +27,14 @@ const renderHeader = props => (
   </div>
 );
 
-const renderSubHeader = () => (
+const renderSubHeader = props => (
   <div className="subheader">
     <div className="sub-logo">
       <div className="sub-icon" />
     </div>
     <div className="sub-text">
       <p>Log In</p>
-      <p>david.grindstaff@criptext.com</p>
+      <p>{`${props.values.username}@criptext.com`}</p>
     </div>
   </div>
 );
@@ -60,7 +60,7 @@ const renderForm = props => (
       </div>
       <div className="button">
         <button
-          className="button-login"
+          className="button-lost"
           onClick={ev => props.handleSubmit(ev)}
           disabled={props.disabled}
         >
