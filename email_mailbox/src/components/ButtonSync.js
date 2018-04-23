@@ -6,7 +6,7 @@ const ButtonSync = props => (
   <button
     className={'threads-button-sync ' + defineStatusClass(props.status)}
     onClick={() => props.onClick()}
-    disabled={props.status === ButtonSyncType.STOP}
+    disabled={props.status === ButtonSyncType.LOAD}
   >
     <div className="threads-sync-arrow" />
   </button>

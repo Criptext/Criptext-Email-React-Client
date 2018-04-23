@@ -26,7 +26,7 @@ const mapStateToProps = (state, ownProps) => {
   const subject = email.get('subject');
   const myEmail = email.merge({
     date: defineTimeByToday(email.get('date')),
-    subject: subject.length === 0 ? '(No Subject)' : subject,
+    subject: subject ? '(No Subject)' : subject,
     from,
     to,
     cc,

@@ -32,32 +32,38 @@ const getThreadFromSuggestions = (suggestions, threadId) => {
 };
 
 const defineLabels = (labels, labelIds) => {
-  const result = labelIds.toArray().map(labelId => {
+  const labelIdsFiltered = labelIds.filter(
+    labelId => labelId !== LabelType.sent.id
+  );
+  const result = labelIdsFiltered.toArray().map(labelId => {
     return labels.get(labelId.toString()).toObject();
   });
 
   return result ? result : [];
 };
 
+const createReadableThread = thread => {
+  const subject = thread.get('subject');
+  return thread
+    .set('subject', subject.length === 0 ? '(No Subject)' : subject)
+    .toJS();
+};
+
 const mapStateToProps = (state, ownProps) => {
-  let thread =
+  const thread =
     getThread(state.get('threads'), ownProps.threadId) ||
     getThreadFromSuggestions(state.get('suggestions'), ownProps.threadId);
-  const subject = thread.get('subject');
-  thread = thread.merge({
-    subject: subject.length === 0 ? '(No Subject)' : subject
-  });
   const emails = getEmails(state.get('emails'), thread);
-  let labelIds =
+  const labelIds =
     LabelType[ownProps.mailbox].id === LabelType.inbox.id
       ? thread.get('allLabels')
       : thread.get('labels');
-  labelIds = labelIds.filter(labelId => labelId !== LabelType.sent.id);
   const labels = defineLabels(state.get('labels'), labelIds);
+  const threadReadable = createReadableThread(thread);
   return {
     emails,
     labels,
-    thread: thread.toJS()
+    thread: threadReadable
   };
 };
 
