@@ -23,7 +23,8 @@ class LostDevicesWrapper extends Component {
         password: ''
       },
       disabled: true,
-      hasRecoveryEmail: true
+      hasRecoveryEmail: true,
+      isLoading: false
     };
   }
 
@@ -41,6 +42,7 @@ class LostDevicesWrapper extends Component {
         disabled={this.state.disabled}
         validator={this.validator}
         values={this.state.values}
+        isLoading={this.state.isLoading}
       />
     );
   }
@@ -67,6 +69,10 @@ class LostDevicesWrapper extends Component {
   handleSubmit = async event => {
     event.preventDefault();
     event.stopPropagation();
+    this.setState({
+      isLoading: true,
+      disabled: true
+    });
     const submittedData = {
       username: this.state.values.username,
       password: this.state.values.password
@@ -117,6 +123,8 @@ class LostDevicesWrapper extends Component {
       if (response) {
         openMailbox();
         closeLogin();
+      } else {
+        this.throwLoginError(errors.login.FAILED);
       }
     } catch (e) {
       this.throwLoginError(e);
@@ -124,6 +132,10 @@ class LostDevicesWrapper extends Component {
   };
 
   throwLoginError = error => {
+    this.setState({
+      isLoading: false,
+      disabled: false
+    });
     throwError({
       name: error.name,
       description: error.description

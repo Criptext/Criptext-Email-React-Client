@@ -50,6 +50,7 @@ const renderForm = props => (
           value={props.values.password}
           onChange={props.onChangeField}
           onKeyUp={props.validator}
+          disabled={props.isLoading}
         />
         <span
           className="forgot-password"
@@ -60,19 +61,40 @@ const renderForm = props => (
       </div>
       <div className="button">
         <button
-          className="button-lost"
+          className={`button-lost ${
+            props.isLoading ? 'button-is-loading' : ''
+          }`}
           onClick={ev => props.handleSubmit(ev)}
           disabled={props.disabled}
         >
-          <span>Confirm</span>
+          {props.isLoading ? renderLoadingContent() : renderBaseContent()}
         </button>
       </div>
     </form>
   </div>
 );
 
+const renderBaseContent = () => <span className="button-text">Confirm</span>;
+
+const renderLoadingContent = () => (
+  <div className="loading">
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
+
 renderHeader.propTypes = {
   toggleLostAllDevices: PropTypes.func
+};
+
+renderSubHeader.propTypes = {
+  values: PropTypes.object
 };
 
 renderForm.propTypes = {
@@ -81,7 +103,8 @@ renderForm.propTypes = {
   handleSubmit: PropTypes.func,
   handleForgot: PropTypes.func,
   disabled: PropTypes.bool,
-  values: PropTypes.object
+  values: PropTypes.object,
+  isLoading: PropTypes.bool
 };
 
 export default LostAllDevices;

@@ -5,6 +5,18 @@ const USER_ERROR = {
   }
 };
 
+const LOGIN_ERROR = {
+  WRONG_CREDENTIALS: {
+    name: 'Wrong credentials',
+    description:
+      'Incorrect username or password. Check credentials and try again.'
+  },
+  FAILED: {
+    name: 'Login error',
+    description: 'An error occurred while login. Please try again'
+  }
+};
+
 const SERVER_ERROR = {
   UNABLE_TO_CONNECT: {
     name: 'Unable to connect',
@@ -33,6 +45,7 @@ const MESSAGE_ERROR = {
 
 module.exports = {
   user: USER_ERROR,
+  login: LOGIN_ERROR,
   server: SERVER_ERROR,
   message: MESSAGE_ERROR
 };
