@@ -54,9 +54,7 @@ class MailboxHeader extends Component {
             />
           )}
         </div>
-        {!this.props.isOpenActivityPanel ? (
-          <ActivityPanelShortCut onClick={this.props.onToggleActivityPanel} />
-        ) : null}
+        <ActivityPanelShortCut onClick={this.props.onToggleActivityPanel} />
       </header>
     );
   }
@@ -159,7 +157,6 @@ class MailboxHeader extends Component {
 }
 
 MailboxHeader.propTypes = {
-  isOpenActivityPanel: PropTypes.bool,
   multiselect: PropTypes.bool,
   onSearchChange: PropTypes.func,
   onSearchSelectThread: PropTypes.func,

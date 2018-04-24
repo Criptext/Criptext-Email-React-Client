@@ -9,14 +9,11 @@ const ThreadHeader = props => (
     <div className="header-container">
       <HeaderThreadOptionsWrapper {...props} />
     </div>
-    {!props.isOpenActivityPanel ? (
-      <ActivityPanelShortCut onClick={props.onToggleActivityPanel} />
-    ) : null}
+    <ActivityPanelShortCut onClick={props.onToggleActivityPanel} />
   </header>
 );
 
 ThreadHeader.propTypes = {
-  isOpenActivityPanel: PropTypes.bool,
   onToggleActivityPanel: PropTypes.func
 };
 

@@ -1,9 +1,19 @@
+.navigation-feed-expand .activity-panel-shortcut-container{
+  width: 0;
+  opacity: 0;
+  transform: translateX(61px);
+  transition: transform 500ms linear, opacity 500ms linear, width 500ms linear;
+}
+
 .activity-panel-shortcut-container{
   align-items: center;
   background-color: #0091ff;
   display: flex;
   height: 61px;
+  opacity: 1;
   position: relative;
+  transition: width 250ms linear 300ms, opacity 250ms linear 300ms;
+  width: 61px;
 }
 
 .activity-panel-shortcut-content{

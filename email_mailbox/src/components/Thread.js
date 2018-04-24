@@ -10,7 +10,6 @@ class Thread extends Component {
     return (
       <div className="thread-container">
         <ThreadHeader
-          isOpenActivityPanel={this.props.isOpenActivityPanel}
           mailbox={this.props.mailbox}
           thread={this.props.thread}
           onClickThreadBack={this.props.onClickThreadBack}
@@ -53,7 +52,6 @@ class Thread extends Component {
 
 Thread.propTypes = {
   emails: PropTypes.object,
-  isOpenActivityPanel: PropTypes.bool,
   labels: PropTypes.array,
   mailbox: PropTypes.string,
   onClickThreadBack: PropTypes.func,

@@ -1,5 +1,15 @@
 @import "./../styles/index.scss";
 
+.navigation-feed-expand .navigation-feed-container{
+  transition: width $_DURATION_NAVIGATION_FEED_EXPAND linear $_DELAY_NAVIGATION_FEED_EXPAND;
+  width: 288px;
+}
+
+.navigation-feed-collapse .navigation-feed-container{
+  transition: width $_DURATION_NAVIGATION_FEED_COLLAPSE linear;
+  width: 0;
+}
+
 aside.navigation-feed-container{
   bottom: 0px;
   display: inline-table;

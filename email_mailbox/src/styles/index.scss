@@ -7,6 +7,7 @@ TABLE OF CONTENTS
 
 1.- PATHS
 2.- SIZES
+3.- ANIMATION
 
 ***/
 
@@ -18,3 +19,9 @@ $_PATH_TO_FONTS: "./fonts";
 /* 2.- SIZES
    ----------------------------- */
 $_HEIGHT_HEADER: 61px;
+
+/* 3.- ANIMATION
+   ----------------------------- */
+$_DELAY_NAVIGATION_FEED_EXPAND: 200ms;
+$_DURATION_NAVIGATION_FEED_EXPAND: 300ms;
+$_DURATION_NAVIGATION_FEED_COLLAPSE: 300ms;

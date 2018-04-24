@@ -2,6 +2,16 @@ import { connect } from 'react-redux';
 import { loadEmails, loadThreads } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 
+const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
+  const sidebarClass = isOpenSideBar
+    ? 'sidebar-app-expand'
+    : 'sidebar-app-collapse';
+  const navigationClass = isOpenActivityPanel
+    ? ' navigation-feed-expand'
+    : ' navigation-feed-collapse';
+  return sidebarClass.concat(navigationClass);
+};
+
 const mapStateToProps = state => {
   const threadsCount = state.get('threads').size;
   return {
@@ -16,6 +26,9 @@ const mapDispatchToProps = dispatch => {
     },
     onLoadThreads: params => {
       dispatch(loadThreads(params));
+    },
+    defineWrapperClass: (isOpenSideBar, isOpenActivityPanel) => {
+      return defineWrapperClass(isOpenSideBar, isOpenActivityPanel);
     }
   };
 };
