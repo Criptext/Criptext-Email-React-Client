@@ -6,6 +6,8 @@ const globalManager = require('./../globalManager');
 
 let composerWindow;
 let showConfirmation;
+global.composerData = {};
+global.emailToEdit = undefined;
 
 const composerSize = {
   width: 785,
@@ -149,7 +151,7 @@ const isDraftEmpty = () => {
   if (composerData === {}) {
     return true;
   }
-  const { recipients, email } = composerData;
+  const { recipients, email } = global.composerData;
   if (recipients === undefined || email === undefined) {
     return true;
   }
