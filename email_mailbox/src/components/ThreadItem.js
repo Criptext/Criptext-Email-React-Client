@@ -21,7 +21,7 @@ class ThreadItem extends Component {
       <div
         className={'thread-item-container ' + myClass}
         onClick={() => {
-          onSelectThread(thread.id);
+          onSelectThread(thread);
         }}
       >
         <a>

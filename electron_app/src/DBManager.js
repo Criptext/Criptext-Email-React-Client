@@ -77,8 +77,9 @@ const getContactByEmails = (emails, trx) => {
     .whereIn('email', emails);
 };
 
-const getContactByIds = ids => {
-  return db
+const getContactByIds = (ids, trx) => {
+  const knex = trx || db;
+  return knex
     .select('id', 'email', 'name')
     .from(Table.CONTACT)
     .whereIn('id', ids);
@@ -86,6 +87,31 @@ const getContactByIds = ids => {
 
 const getAllContacts = () => {
   return db.select('name', 'email').from(Table.CONTACT);
+};
+
+const getContactsByEmailId = emailId => {
+  return db.transaction(async trx => {
+    const emailContacts = await trx
+      .select('contactId', 'type')
+      .from(Table.EMAIL_CONTACT)
+      .where({ emailId });
+    const toContactsId = getContactsIdByType(emailContacts, 'to');
+    const ccContactsId = getContactsIdByType(emailContacts, 'cc');
+    const bccContactsId = getContactsIdByType(emailContacts, 'bcc');
+    const fromContactsId = getContactsIdByType(emailContacts, 'from');
+
+    const to = await getContactByIds(toContactsId, trx);
+    const cc = await getContactByIds(ccContactsId, trx);
+    const bcc = await getContactByIds(bccContactsId, trx);
+    const from = await getContactByIds(fromContactsId, trx);
+    return { to, cc, bcc, from };
+  });
+};
+
+const getContactsIdByType = (emailContacts, type) => {
+  return emailContacts
+    .filter(item => item.type === type)
+    .map(item => item.contactId);
 };
 
 /* EmailContact
@@ -513,6 +539,7 @@ module.exports = {
   closeDB,
   createAccount,
   createContact,
+  getContactsByEmailId,
   createLabel,
   createEmail,
   createEmailLabel,

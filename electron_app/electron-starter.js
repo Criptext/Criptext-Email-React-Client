@@ -11,6 +11,7 @@ const loadingWindow = require('./src/windows/loading');
 const composerWindow = require('./src/windows/composer');
 global.modalData = {}
 global.loadingData = {}
+global.composerDataToEdit = {}
 
 async function initApp() {
   try {
@@ -86,6 +87,11 @@ async function initApp() {
     composerWindow.saveDraftChanges(data);
   });
 
+  ipcMain.on('edit-draft', async (e, emailKeyToEdit) => {
+    await composerWindow.editDraft(emailKeyToEdit);
+  });
+
+  // Socket
   wsClient.setMessageListener( data => {
     mailboxWindow.send('socket-message', data)
     composerWindow.send('socket-message', data)

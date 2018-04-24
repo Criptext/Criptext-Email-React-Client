@@ -2,8 +2,9 @@ const { BrowserWindow, Menu, dialog } = require('electron');
 const { composerUrl } = require('./../window_routing');
 const dbManager = require('./../DBManager');
 let composerWindow;
-let composerData = {};
 let showConfirmation;
+global.composerData = {};
+global.emailToEdit = undefined;
 
 const composerSize = {
   width: 785,
@@ -64,7 +65,7 @@ const dialogTemplate = {
 
 const create = () => {
   showConfirmation = true;
-  composerData = {};
+  global.composerData = {};
   composerWindow = new BrowserWindow({
     width: composerSize.width,
     height: composerSize.height,
@@ -86,28 +87,20 @@ const create = () => {
       dialog.showMessageBox(dialogTemplate, async responseIndex => {
         if (responseIndex === RESPONSES.DISCARD.index) {
           showConfirmation = false;
-          composerData = {};
+          global.composerData = {};
           composerWindow.close();
         }
         if (responseIndex === RESPONSES.SAVE.index) {
-          await saveDraftToDatabase(composerData);
+          await saveDraftToDatabase(global.composerData);
           showConfirmation = false;
-          composerData = {};
+          global.composerData = {};
           composerWindow.close();
         }
       });
     } else {
       composerWindow = undefined;
+      setEmptyVariables();
     }
-  });
-};
-
-const show = async () => {
-  if (composerWindow === undefined) {
-    await create();
-  }
-  composerWindow.once('ready-to-show', () => {
-    composerWindow.show();
   });
 };
 
@@ -115,6 +108,7 @@ const close = () => {
   if (composerWindow !== undefined) {
     composerWindow.close();
   }
+  setEmptyVariables();
   composerWindow = undefined;
 };
 
@@ -122,6 +116,7 @@ const destroy = () => {
   if (composerWindow !== undefined) {
     composerWindow.destroy();
   }
+  setEmptyVariables();
   composerWindow = undefined;
 };
 
@@ -132,19 +127,16 @@ const send = (message, data) => {
   composerWindow.webContents.send(message, data);
 };
 
-const saveDraftChanges = incomingData => {
-  composerData = incomingData;
-};
-
-const saveDraftToDatabase = async dataDraft => {
-  await dbManager.createEmail(dataDraft);
+const editDraft = async emailToEdit => {
+  global.emailToEdit = emailToEdit;
+  await show();
 };
 
 const isDraftEmpty = () => {
-  if (composerData === {}) {
+  if (global.composerData === {}) {
     return true;
   }
-  const { recipients, email } = composerData;
+  const { recipients, email } = global.composerData;
   if (recipients === undefined || email === undefined) {
     return true;
   }
@@ -158,10 +150,33 @@ const isDraftEmpty = () => {
   return !hasRecipients && !subject.length && !preview.length;
 };
 
+const saveDraftChanges = incomingData => {
+  global.composerData = incomingData;
+};
+
+const saveDraftToDatabase = async dataDraft => {
+  await dbManager.createEmail(dataDraft);
+};
+
+const setEmptyVariables = () => {
+  global.composerData = {};
+  global.emailToEdit = undefined;
+};
+
+const show = async () => {
+  if (composerWindow === undefined) {
+    await create();
+  }
+  composerWindow.once('ready-to-show', () => {
+    composerWindow.show();
+  });
+};
+
 module.exports = {
   close,
   destroy,
   show,
   send,
-  saveDraftChanges
+  saveDraftChanges,
+  editDraft
 };
