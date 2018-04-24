@@ -40,7 +40,7 @@ class LostDevicesWrapper extends Component {
         handleSubmit={this.handleSubmit}
         onChangeField={this.handleChange}
         disabled={this.state.disabled}
-        validator={this.validator}
+        validator={this.validatePassword}
         values={this.state.values}
         isLoading={this.state.isLoading}
       />
@@ -60,10 +60,11 @@ class LostDevicesWrapper extends Component {
   };
 
   handleChange = event => {
-    const newState = this.state;
-    newState.values[event.target.name] = event.target.value;
-    this.setState(newState);
-    this.checkDisable();
+    const values = { ...this.state.values };
+    values[event.target.name] = event.target.value;
+    this.setState({ values }, () => {
+      this.checkDisable();
+    });
   };
 
   handleSubmit = async event => {
@@ -79,12 +80,14 @@ class LostDevicesWrapper extends Component {
     };
     const loginResponse = await login(submittedData);
     const loginStatus = loginResponse.status;
-    if (loginStatus === 200) {
+    if (loginStatus === 400) {
+      this.throwLoginError(errors.login.WRONG_CREDENTIALS);
+    } else if (loginStatus !== 200) {
+      this.throwLoginError(errors.login.FAILED);
+    } else {
       const recipientId = this.state.values.username;
       const { deviceId, name, token } = loginResponse.body;
       await this.loginAccount({ recipientId, deviceId, name, token });
-    } else {
-      this.throwLoginError(errors.login.WRONG_CREDENTIALS);
     }
   };
 
@@ -103,12 +106,6 @@ class LostDevicesWrapper extends Component {
           closeDialog();
         }
       });
-    }
-  };
-
-  validator = (formItemName, formItemValue) => {
-    if (formItemName !== '') {
-      return validatePassword(formItemValue);
     }
   };
 
