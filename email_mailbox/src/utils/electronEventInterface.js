@@ -29,6 +29,10 @@ ipcRenderer.on('socket-message', (event, message) => {
   }
 });
 
+ipcRenderer.on('update-drafts', () => {
+  emitter.emit(Event.UPDATE_SAVED_DRAFTS);
+});
+
 export const handleNewMessageEvent = async emailObj => {
   const InboxLabel = LabelType.inbox;
   const labels = [InboxLabel.id];
@@ -63,5 +67,6 @@ export const removeEvent = eventName => {
 };
 
 export const Event = {
-  NEW_EMAIL: 'new-email'
+  NEW_EMAIL: 'new-email',
+  UPDATE_SAVED_DRAFTS: 'update-drafts'
 };

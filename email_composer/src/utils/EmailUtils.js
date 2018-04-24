@@ -90,7 +90,6 @@ export const formDataToFillComposer = async emailKeyToEdit => {
     ccEmails,
     bccEmails,
     htmlBody,
-    textSubject,
-    status: undefined
+    textSubject
   };
 };

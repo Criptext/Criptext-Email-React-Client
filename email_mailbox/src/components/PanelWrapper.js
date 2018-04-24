@@ -24,6 +24,17 @@ class PanelWrapper extends Component {
         });
       }
     });
+
+    addEvent(Event.UPDATE_SAVED_DRAFTS, () => {
+      const currentLabelId = LabelType[this.state.mailboxSelected].id;
+      if (currentLabelId === LabelType.draft.id) {
+        props.onLoadThreads({
+          labelId: Number(currentLabelId),
+          clear: true,
+          limit: this.props.threadsCount + 1
+        });
+      }
+    });
   }
 
   render() {

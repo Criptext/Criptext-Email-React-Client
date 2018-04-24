@@ -65,13 +65,13 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onSelectThread: thread => {
-      const threadId = thread.get('id');
+      const threadId = thread.id;
       if (LabelType[ownProps.mailbox].id === LabelType.draft.id) {
-        editDraftInComposer(thread.get('key'));
+        editDraftInComposer(thread.key);
       } else if (LabelType[ownProps.mailbox].id === LabelType.all.id) {
-        const allLabels = thread.get('allLabels').toArray();
+        const allLabels = thread.allLabels;
         if (allLabels.includes(LabelType.draft.id)) {
-          editDraftInComposer(thread.get('key'));
+          editDraftInComposer(thread.key);
         } else {
           ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
         }

@@ -120,6 +120,14 @@ const createEmailContact = (emailContacts, trx) => {
   return trx.insert(emailContacts).into(Table.EMAIL_CONTACT);
 };
 
+const deleteEmailContactByEmailId = (emailId, trx) => {
+  const knex = trx || db;
+  return knex
+    .table(Table.EMAIL_CONTACT)
+    .where({ emailId })
+    .del();
+};
+
 /* EmailLabel
    ----------------------------- */
 const createEmailLabel = (emailLabels, trx) => {
@@ -139,6 +147,13 @@ const deleteEmailLabel = ({ emailsId, labelId }) => {
     .table(Table.EMAIL_LABEL)
     .where('labelId', labelId)
     .whereIn('emailId', emailsId)
+    .del();
+};
+
+const deleteEmailLabelsByEmailId = emailId => {
+  return db
+    .table(Table.EMAIL_LABEL)
+    .where({ emailId })
     .del();
 };
 
@@ -548,7 +563,9 @@ module.exports = {
   createTables,
   deleteEmailById,
   deleteEmailByKey,
+  deleteEmailContactByEmailId,
   deleteEmailLabel,
+  deleteEmailLabelsByEmailId,
   deleteFeedById,
   getAccount,
   getAllContacts,
