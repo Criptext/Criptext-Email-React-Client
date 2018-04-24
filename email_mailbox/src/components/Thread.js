@@ -18,7 +18,7 @@ class Thread extends Component {
         />
         <div className="thread-content">
           <div className="thread-info">
-            <h1>{this.props.thread.get('subject')}</h1>
+            <h1>{this.props.thread.subject}</h1>
             <div className="thread-labels">
               {this.props.labels.map((label, index) => {
                 return (
@@ -43,11 +43,11 @@ class Thread extends Component {
   }
 
   componentDidMount() {
-    this.props.onLoadEmails(this.props.thread.get('threadId'));
+    this.props.onLoadEmails(this.props.thread.threadId);
   }
 
   onRemoveLabel = labelId => {
-    this.props.onRemoveThreadLabel(this.props.thread.get('threadId'), labelId);
+    this.props.onRemoveThreadLabel(this.props.thread.threadId, labelId);
   };
 }
 

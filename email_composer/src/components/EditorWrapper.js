@@ -23,11 +23,12 @@ class EditorWrapper extends Component {
             options: ['bold', 'italic', 'underline']
           },
           textAlign: { inDropdown: true },
-          link: { inDropdown: true },
+          link: { inDropdown: false },
           history: { inDropdown: true }
         }}
         editorState={this.props.htmlBody}
         onEditorStateChange={this.onChangeHtmlBody}
+        placeholder={'Message'}
       />
     );
   }

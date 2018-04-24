@@ -134,8 +134,11 @@
             float: right;
             height: 100%;
             width: calc(100% - 59px);
+
             input[type='password']{
               font-size: 12px;
+              padding-right: 25px;
+              width: calc(100% - 84px);
               -webkit-text-security: square;
             }
             span.input-icon{
