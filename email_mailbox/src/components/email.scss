@@ -18,6 +18,12 @@
   }
 }
 
+.replay-button,
+.replay-all-button,
+.forward-button {
+  cursor: pointer;
+}
+
 .email-container-collapse{
   height: 45px;
   width: calc(100% - 2px);
@@ -226,6 +232,9 @@
     font-size: 21px;
     margin: 0 5px;
   }
+  .icon-replay {
+    cursor: pointer;
+  }
 }
 
 .email-more-menu{
@@ -264,6 +273,7 @@
       display: flex;
       height: 30px;
       padding-left: 16px;
+      cursor: pointer;
 
       &:hover{
         background-color: #edf5ff;

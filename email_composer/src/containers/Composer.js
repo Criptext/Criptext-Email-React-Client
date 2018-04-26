@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
-import { EditorState } from 'draft-js';
+import { EditorState, DefaultDraftBlockRenderMap } from 'draft-js';
 import {
   closeComposerWindow,
   createEmail,
@@ -20,8 +21,18 @@ import { areEmptyAllArrays } from './../utils/ArrayUtils';
 import signal from './../libs/signal';
 import {
   formOutgoingEmailFromData,
-  formDataToFillComposer
+  formDataToEditDraft,
+  formDataToReply
 } from './../utils/EmailUtils';
+import { Map } from 'immutable';
+
+const PrevMessage = props => (
+  <div className="content-prev-message">{props.children}</div>
+);
+
+const blockRenderMap = DefaultDraftBlockRenderMap.merge(
+  Map({ blockquote: { wrapper: <PrevMessage /> } })
+);
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -37,13 +48,22 @@ class ComposerWrapper extends Component {
   }
 
   async componentWillMount() {
-    const emailKeyToEdit = getEmailToEdit();
-    if (emailKeyToEdit) {
-      const emailData = await formDataToFillComposer(emailKeyToEdit);
+    const { key, type } = getEmailToEdit();
+    if (key) {
+      const emailData = await this.getComposerDataByType(key, type);
       const state = { ...emailData, status: Status.ENABLED };
       this.setState(state);
     }
   }
+
+  getComposerDataByType = async (key, type) => {
+    if (type === 'edit') {
+      return await formDataToEditDraft(key);
+    }
+    if (type === 'reply') {
+      return await formDataToReply(key);
+    }
+  };
 
   render() {
     return (
@@ -61,6 +81,7 @@ class ComposerWrapper extends Component {
         onClickSendMessage={this.handleSendMessage}
         textSubject={this.state.textSubject}
         status={this.state.status}
+        blockRenderMap={blockRenderMap}
       />
     );
   }
@@ -159,5 +180,9 @@ class ComposerWrapper extends Component {
     saveDraftChanges(data);
   };
 }
+
+PrevMessage.propTypes = {
+  children: PropTypes.array
+};
 
 export default ComposerWrapper;

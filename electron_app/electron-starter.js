@@ -85,8 +85,8 @@ async function initApp() {
     composerWindow.saveDraftChanges(data);
   });
 
-  ipcMain.on('edit-draft', async (e, emailKeyToEdit) => {
-    await composerWindow.editDraft(emailKeyToEdit);
+  ipcMain.on('edit-draft', async (e, toEdit) => {
+    await composerWindow.editDraft(toEdit);
   });
 
   // Socket

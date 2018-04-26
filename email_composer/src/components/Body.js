@@ -10,6 +10,7 @@ const Body = props => (
       isToolbarHidden={props.isToolbarHidden}
       htmlBody={props.htmlBody}
       getHtmlBody={props.getHtmlBody}
+      blockRenderMap={props.blockRenderMap}
     />
     <Control
       onClickTextEditor={props.onClickTextEditor}
@@ -20,6 +21,7 @@ const Body = props => (
 );
 
 Body.propTypes = {
+  blockRenderMap: PropTypes.func,
   getHtmlBody: PropTypes.func,
   htmlBody: PropTypes.object,
   isToolbarHidden: PropTypes.bool,

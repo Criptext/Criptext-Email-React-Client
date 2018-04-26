@@ -22,7 +22,7 @@ export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
 };
 
-export const editDraftInComposer = data => {
+export const openEmailInComposer = data => {
   ipcRenderer.send('edit-draft', data);
 };
 

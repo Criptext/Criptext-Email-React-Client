@@ -66,7 +66,55 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
   };
 };
 
-export const formDataToFillComposer = async emailKeyToEdit => {
+const replaceAllOccurrences = (text, search, replacement) => {
+  return text.split(search).join(replacement);
+};
+
+const formPrevMessageHeader = (date, from) => {
+  const emailDate = new Date(date);
+  const { monthName, day, year, strTime, diff } = getFormattedDate(emailDate);
+  return `<p>On ${monthName} ${day}, ${year}, ${strTime} ${diff}, ${from.name ||
+    ''} < ${from.email} > wrote: </p><br>`;
+};
+
+const insertEmptyLine = quantity => {
+  return quantity > 0 ? '<p></p>'.repeat(quantity) : '';
+};
+
+export const formDataToReply = async emailKeyToEdit => {
+  const [emailData] = await getEmailByKey(emailKeyToEdit);
+  const contacts = await getContactsByEmailId(emailData.id);
+  const [from] = contacts.from;
+
+  const firstLine = formPrevMessageHeader(emailData.date, from);
+  const newContent = `${firstLine}${emailData.content}`;
+
+  let content = replaceAllOccurrences(newContent, '<p>', '<blockquote>');
+  content = replaceAllOccurrences(content, '</p>', '</blockquote>');
+  content = `${insertEmptyLine(2)}${content}`;
+
+  const blocksFromHtml = htmlToDraft(content);
+  const { contentBlocks, entityMap } = blocksFromHtml;
+  const contentState = ContentState.createFromBlockArray(
+    contentBlocks,
+    entityMap
+  );
+  const htmlBody = EditorState.createWithContent(contentState);
+  const replySufix = 'RE: ';
+  const textSubject = replySufix + emailData.subject;
+
+  const toEmails = contacts.from.map(contact => contact.email);
+
+  return {
+    toEmails,
+    ccEmails: [],
+    bccEmails: [],
+    htmlBody,
+    textSubject
+  };
+};
+
+export const formDataToEditDraft = async emailKeyToEdit => {
   const [emailData] = await getEmailByKey(emailKeyToEdit);
   const contacts = await getContactsByEmailId(emailData.id);
 
@@ -90,4 +138,33 @@ export const formDataToFillComposer = async emailKeyToEdit => {
     htmlBody,
     textSubject
   };
+};
+
+const getFormattedDate = date => {
+  const [, day, monthName, year] = date.toGMTString().split(' ');
+  return {
+    monthName,
+    day,
+    year,
+    strTime: formatAMPM(date),
+    diff: getUtcTimeDiff(date)
+  };
+};
+
+const formatAMPM = date => {
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  return hours + ':' + minutes + ' ' + ampm;
+};
+
+const getUtcTimeDiff = date => {
+  var timezone = date.getTimezoneOffset();
+  timezone = timezone / 60 * -1;
+  var gmt = '';
+  gmt += timezone > 0 ? `+${timezone}:00` : `${timezone}:00`;
+  return gmt;
 };

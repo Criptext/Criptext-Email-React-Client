@@ -7,7 +7,7 @@ const globalManager = require('./../globalManager');
 let composerWindow;
 let showConfirmation;
 global.composerData = {};
-global.emailToEdit = undefined;
+global.emailToEdit = {};
 
 const composerSize = {
   width: 785,

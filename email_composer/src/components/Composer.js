@@ -20,12 +20,14 @@ const Composer = props => (
       htmlBody={props.htmlBody}
       getHtmlBody={props.getHtmlBody}
       status={props.status}
+      blockRenderMap={props.blockRenderMap}
     />
   </div>
 );
 
 Composer.propTypes = {
   bccEmails: PropTypes.array,
+  blockRenderMap: PropTypes.func,
   ccEmails: PropTypes.array,
   getBccEmails: PropTypes.func,
   getCcEmails: PropTypes.func,

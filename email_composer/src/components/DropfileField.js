@@ -16,6 +16,7 @@ const DropfileField = props => (
       htmlBody={props.htmlBody}
       toolbarHidden={props.isToolbarHidden}
       getHtmlBody={props.getHtmlBody}
+      blockRenderMap={props.blockRenderMap}
     />
     <div className="files-container">
       {renderPreview(props.files, props.onClearFile)}
@@ -58,6 +59,7 @@ DropfileField.defaultProps = {
 
 DropfileField.propTypes = {
   accept: PropTypes.string,
+  blockRenderMap: PropTypes.func,
   files: PropTypes.array,
   getHtmlBody: PropTypes.func,
   htmlBody: PropTypes.object,
