@@ -173,10 +173,11 @@ class SignUpWrapper extends Component {
   };
 
   handleChange = (event, field) => {
-    const newState = this.state;
-    newState.values[field] = event.target.value;
-    this.setState(newState);
-    this.checkDisable();
+    const values = { ...this.state.values };
+    values[field] = event.target.value;
+    this.setState({ values }, () => {
+      this.checkDisable();
+    });
   };
 
   handleSubmit = event => {

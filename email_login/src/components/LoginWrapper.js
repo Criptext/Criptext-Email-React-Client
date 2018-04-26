@@ -108,10 +108,11 @@ class LoginWrapper extends Component {
   };
 
   handleChange = event => {
-    const newState = this.state;
-    newState.values[event.target.name] = event.target.value;
-    this.setState(newState);
-    this.checkDisable();
+    const values = { ...this.state.values };
+    values[event.target.name] = event.target.value;
+    this.setState({ values }, () => {
+      this.checkDisable();
+    });
   };
 
   handleSubmit = event => {

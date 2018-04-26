@@ -122,7 +122,10 @@
         margin: 0% 0% 0% 0%;
         padding: 0px;
         
-        .button-login {
+        .button-lost.button-is-loading {
+          padding: 0px;
+        }
+        .button-lost {
           border: none;
           border-radius: 100px;
           padding: 8.5px;
@@ -131,27 +134,103 @@
           margin: 15px 0;
           width: 100%;
           transition: opacity 0.1s;
-          span {
+          outline: none;
+
+          .button-text {
             color: #fff;
             font-weight: 600;
             opacity: 0.9;
             transition: opacity 0.1s;
+            margin-top: 8.5px;
+          }
+
+          .loading {
+            height: 32px;
+            margin: 0px auto;
+            padding: 0px;
+            position: relative;
+            width: 32px;
+            div {
+              background-color: #FFFFFF;
+              height: 5px;
+              position: absolute;
+              width: 2px;
+              border-radius: 2px;
+              transform: scale(0.4);
+              animation-name: loading;
+              animation-duration: 1.04s;
+              animation-iteration-count: infinite;
+              animation-direction: linear;
+            }
+            div:nth-child(1) {
+              left: 7px;
+              top: 13px;
+              transform: rotate(-90deg);
+              animation-delay: 0.39s;
+            }
+            div:nth-child(2) {
+              left: 9px;
+              top: 7px;
+              transform: rotate(-45deg);
+              animation-delay: 0.52s;
+            }
+            div:nth-child(3) {
+              left: 15px;
+              top: 5px;
+              transform: rotate(0deg);
+              animation-delay: 0.65s;
+            }
+            div:nth-child(4) {
+              right: 8px;
+              top: 7px;
+              transform: rotate(45deg);
+              animation-delay: 0.78s;
+            }
+            div:nth-child(5) {
+              right: 7px;
+              top: 13px;
+              transform: rotate(90deg);
+              animation-delay: 0.91s;
+            }
+            div:nth-child(6) {
+              right: 8px;
+              bottom: 7px;
+              transform: rotate(135deg);
+              animation-delay: 1.04s;
+            }
+            div:nth-child(7) {
+              bottom: 5px;
+              left: 15px;
+              transform: rotate(180deg);
+              animation-delay: 1.17s;
+            }
+            div:nth-child(8) {
+              left: 9px;
+              bottom: 7px;
+              transform: rotate(-135deg);
+              animation-delay: 1.3s;
+            }
+          }
+          @keyframes loading {
+            0% { background-color: #fff }
+            100% { background-color: #0091ff }
           }
         }
-        .button-login:enabled {
+
+        .button-lost:enabled {
           opacity: 0.9;
-          span{
+          span {
             opacity: 0.9;
           }
         }
-        .button-login:hover:enabled {
+        .button-lost:hover:enabled {
           opacity: 1.0;
-          span{
+          span {
             opacity: 1.0;
           }
         }
+
       }
     }
   }
-
 }
