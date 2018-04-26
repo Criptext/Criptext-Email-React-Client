@@ -1,10 +1,6 @@
 @import "./../styles/index.scss";
 
-.navigation-app-expand{
-  width: 210px;
-}
-
-.navigation-app{
+.sidebar-app{
   display: inline-table;
   height: 100%;
 
@@ -137,7 +133,11 @@
   font-size: 20px;
 }
 
-.navigation-app-collapse{
+.sidebar-app-expand .sidebar-app{
+  width: 210px;
+}
+
+.sidebar-app-collapse .sidebar-app{
   width: 79px;
 
   header{
@@ -207,7 +207,7 @@
 }
 
 @media screen and (max-width: 800px) {
-  .navigation-app{
+  .sidebar-app-expand .sidebar-app{
     width: 79px;
 
     header{

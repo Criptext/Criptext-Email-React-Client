@@ -17,14 +17,7 @@ class SideBar extends Component {
 
   render() {
     return (
-      <aside
-        className={
-          'navigation-app' +
-          (!this.props.isOpenSideBar
-            ? ' navigation-app-collapse'
-            : ' navigation-app-expand')
-        }
-      >
+      <aside className="sidebar-app">
         <header onClick={() => this.props.onToggleSideBar()}>
           <div className="header-icon" />
           <i className="icon-criptext" />

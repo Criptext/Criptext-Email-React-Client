@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Feed from './../containers/Feed';
-import anime from 'animejs';
 import './activitypanel.css';
-
-let componentAnime = null;
 
 class ActivityPanel extends Component {
   render() {
@@ -16,9 +13,7 @@ class ActivityPanel extends Component {
             <div className="header-title">ACTIVITY FEED</div>
             <div
               className="header-button"
-              onClick={() =>
-                this.animateOutComponent(this.props.onToggleActivityPanel)
-              }
+              onClick={() => this.props.onToggleActivityPanel()}
             >
               <i className="icon-next" />
             </div>
@@ -32,37 +27,8 @@ class ActivityPanel extends Component {
     );
   }
 
-  animateInComponent = () => {
-    componentAnime = anime.timeline({
-      direction: 'alternate',
-      loop: false,
-      autoplay: true
-    });
-    componentAnime.add({
-      targets: '.navigation-feed-container',
-      width: [0, 288],
-      duration: 500,
-      easing: 'linear'
-    });
-  };
-
-  animateOutComponent = action => {
-    componentAnime.pause();
-    componentAnime = anime.timeline().add({
-      targets: '.navigation-feed-container',
-      width: 0,
-      duration: 500,
-      elasticity: 0,
-      easing: 'linear',
-      complete: () => {
-        action();
-      }
-    });
-  };
-
   componentDidMount() {
     this.props.onLoadFeeds();
-    return this.animateInComponent();
   }
 
   renderHeaderIcon = () => {
