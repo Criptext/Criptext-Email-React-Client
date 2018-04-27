@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Email utils: Form data to edit draft 1`] = `
+Object {
+  "bccEmails": Array [
+    "bccUser@jigl.com",
+  ],
+  "ccEmails": Array [
+    "ccUser@jigl.com",
+  ],
+  "htmlBody": "<p>Modified body content</p>",
+  "textSubject": "Email subject 1",
+  "toEmails": Array [
+    "toUser@jigl.com",
+  ],
+}
+`;
+
+exports[`Email utils: Form outgoing email from data 1`] = `
+Object {
+  "body": "<p></p>
+",
+  "data": Object {
+    "email": Object {
+      "content": "<p></p>
+",
+      "date": 1524861748481,
+      "delivered": false,
+      "isMuted": false,
+      "key": 1524861748481,
+      "preview": "
+",
+      "secure": true,
+      "subject": "Subject",
+      "unread": false,
+    },
+    "labels": Array [
+      6,
+    ],
+    "recipients": Object {
+      "bcc": Array [
+        "bccUser@jigl.com",
+      ],
+      "cc": Array [
+        "ccUser@jigl.com",
+      ],
+      "from": Array [
+        "julian@jigl.com",
+      ],
+      "to": Array [
+        "toUser@jigl.com",
+      ],
+    },
+  },
+  "subject": "Subject",
+  "to": Array [
+    Object {
+      "recipientId": "toUser",
+      "type": "to",
+    },
+    Object {
+      "recipientId": "ccUser",
+      "type": "cc",
+    },
+    Object {
+      "recipientId": "bccUser",
+      "type": "bcc",
+    },
+  ],
+}
+`;

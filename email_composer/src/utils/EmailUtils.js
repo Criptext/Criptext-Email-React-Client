@@ -1,10 +1,8 @@
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-
 import { removeAppDomain, removeHTMLTags } from './StringUtils';
 import { appDomain } from './const';
-
 import {
   myAccount,
   getEmailByKey,

@@ -3,15 +3,13 @@ const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient')
 const errors = require('./src/errors');
+const globalManager = require('./src/globalManager');
 
 const loginWindow = require('./src/windows/login');
 const dialogWindow = require('./src/windows/dialog');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindow = require('./src/windows/composer');
-global.modalData = {}
-global.loadingData = {}
-global.composerDataToEdit = {}
 
 async function initApp() {
   try {
@@ -45,7 +43,7 @@ async function initApp() {
 
   //   Dialog
   ipcMain.on('open-modal', (event, modalData) => {
-    global.modalData = modalData;
+    globalManager.modalData.set(modalData);
     dialogWindow.show();
   });
 
@@ -59,13 +57,13 @@ async function initApp() {
 
   //   Loading
   ipcMain.on('open-create-keys', (event, arg) => {
-    global.loadingData = arg;
+    globalManager.loadingData.set(arg);
     loadingWindow.show();
   });
 
   ipcMain.on('close-create-keys', () => {
     loadingWindow.close();
-    global.loadingData = {};
+    globalManager.loadingData.set({});
   });
 
   //   Mailbox

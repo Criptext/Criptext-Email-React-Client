@@ -30,6 +30,7 @@ class PanelWrapper extends Component {
       if (currentLabelId === LabelType.draft.id) {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
+          contactTypes: ['to'],
           clear: true,
           limit: this.props.threadsCount + 1
         });
