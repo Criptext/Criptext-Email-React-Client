@@ -61,7 +61,13 @@ class ComposerWrapper extends Component {
       return await formDataToEditDraft(key);
     }
     if (type === 'reply') {
-      return await formDataToReply(key);
+      return await formDataToReply(key, type);
+    }
+    if (type === 'reply-all') {
+      return await formDataToReply(key, type);
+    }
+    if (type === 'forward') {
+      return await formDataToReply(key, type);
     }
   };
 

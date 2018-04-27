@@ -315,6 +315,10 @@ renderEmailExpand.propTypes = {
   hideView: PropTypes.bool,
   isFromMe: PropTypes.bool,
   isUnsend: PropTypes.bool,
+  onForward: PropTypes.func,
+  onReplyAll: PropTypes.func,
+  onReplyEmail: PropTypes.func,
+  onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,
   onTooglePopOverEmailDetail: PropTypes.func,
   onTogglePopOverMenuAction: PropTypes.func,
@@ -327,6 +331,13 @@ renderPopOverEmailDetail.propTypes = {
   from: PropTypes.array,
   subject: PropTypes.string,
   to: PropTypes.array
+};
+
+renderPopOverMenuAction.propTypes = {
+  onForward: PropTypes.func,
+  onReplyAll: PropTypes.func,
+  onReplyEmail: PropTypes.func,
+  onTogglePopOverMenuAction: PropTypes.func
 };
 
 ContactTag.propTypes = {

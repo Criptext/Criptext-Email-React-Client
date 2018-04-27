@@ -3,8 +3,10 @@ const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 
+const globalManager = remote.require('./src/globalManager');
+
 export const getEmailToEdit = () => {
-  return remote.getGlobal('emailToEdit');
+  return globalManager.emailToEdit.get();
 };
 
 export const getContactsByEmailId = emailId => {

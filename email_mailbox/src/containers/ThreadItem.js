@@ -68,14 +68,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const threadId = thread.id;
       if (LabelType[ownProps.mailbox].id === LabelType.draft.id) {
         openEmailInComposer({
-          key: thread.get('key'),
+          key: thread.key,
           type: 'edit'
         });
       } else if (LabelType[ownProps.mailbox].id === LabelType.all.id) {
         const allLabels = thread.allLabels;
         if (allLabels.includes(LabelType.draft.id)) {
           openEmailInComposer({
-            key: thread.get('key'),
+            key: thread.key,
             type: 'edit'
           });
         } else {

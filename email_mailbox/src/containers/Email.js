@@ -79,9 +79,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onReplyAll: ev => {
       ev.stopPropagation();
+      const key = email.get('key');
+      openEmailInComposer({ key, type: 'reply-all' });
     },
     onForward: ev => {
       ev.stopPropagation();
+      const key = email.get('key');
+      openEmailInComposer({ key, type: 'forward' });
     }
   };
 };

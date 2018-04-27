@@ -66,6 +66,32 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
   };
 };
 
+export const formDataToEditDraft = async emailKeyToEdit => {
+  const [emailData] = await getEmailByKey(emailKeyToEdit);
+  const contacts = await getContactsByEmailId(emailData.id);
+
+  const blocksFromHtml = htmlToDraft(emailData.content);
+  const { contentBlocks, entityMap } = blocksFromHtml;
+  const contentState = ContentState.createFromBlockArray(
+    contentBlocks,
+    entityMap
+  );
+  const htmlBody = EditorState.createWithContent(contentState);
+  const textSubject = emailData.subject;
+
+  const toEmails = contacts.to.map(contact => contact.email);
+  const ccEmails = contacts.cc.map(contact => contact.email);
+  const bccEmails = contacts.bcc.map(contact => contact.email);
+
+  return {
+    toEmails,
+    ccEmails,
+    bccEmails,
+    htmlBody,
+    textSubject
+  };
+};
+
 const replaceAllOccurrences = (text, search, replacement) => {
   return text.split(search).join(replacement);
 };
@@ -81,7 +107,7 @@ const insertEmptyLine = quantity => {
   return quantity > 0 ? '<p></p>'.repeat(quantity) : '';
 };
 
-export const formDataToReply = async emailKeyToEdit => {
+export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const [emailData] = await getEmailByKey(emailKeyToEdit);
   const contacts = await getContactsByEmailId(emailData.id);
   const [from] = contacts.from;
@@ -103,33 +129,16 @@ export const formDataToReply = async emailKeyToEdit => {
   const replySufix = 'RE: ';
   const textSubject = replySufix + emailData.subject;
 
-  const toEmails = contacts.from.map(contact => contact.email);
+  const toEmails =
+    replyType === 'reply' || replyType === 'reply-all'
+      ? contacts.from.map(contact => contact.email)
+      : [];
 
-  return {
-    toEmails,
-    ccEmails: [],
-    bccEmails: [],
-    htmlBody,
-    textSubject
-  };
-};
+  const ccEmails =
+    replyType === 'reply-all' ? contacts.cc.map(contact => contact.email) : [];
 
-export const formDataToEditDraft = async emailKeyToEdit => {
-  const [emailData] = await getEmailByKey(emailKeyToEdit);
-  const contacts = await getContactsByEmailId(emailData.id);
-
-  const blocksFromHtml = htmlToDraft(emailData.content);
-  const { contentBlocks, entityMap } = blocksFromHtml;
-  const contentState = ContentState.createFromBlockArray(
-    contentBlocks,
-    entityMap
-  );
-  const htmlBody = EditorState.createWithContent(contentState);
-  const textSubject = emailData.subject;
-
-  const toEmails = contacts.to.map(contact => contact.email);
-  const ccEmails = contacts.cc.map(contact => contact.email);
-  const bccEmails = contacts.bcc.map(contact => contact.email);
+  const bccEmails =
+    replyType === 'reply-all' ? contacts.bcc.map(contact => contact.email) : [];
 
   return {
     toEmails,
