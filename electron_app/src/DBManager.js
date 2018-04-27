@@ -77,9 +77,8 @@ const getContactByEmails = (emails, trx) => {
     .whereIn('email', emails);
 };
 
-const getContactByIds = (ids, trx) => {
-  const knex = trx || db;
-  return knex
+const getContactByIds = ids => {
+  return db
     .select('id', 'email', 'name')
     .from(Table.CONTACT)
     .whereIn('id', ids);
