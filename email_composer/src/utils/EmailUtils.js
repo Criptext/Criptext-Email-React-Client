@@ -109,6 +109,7 @@ const insertEmptyLine = quantity => {
 
 export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const [emailData] = await getEmailByKey(emailKeyToEdit);
+  const threadId = emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
   const [from] = contacts.from;
 
@@ -145,7 +146,8 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     ccEmails,
     bccEmails,
     htmlBody,
-    textSubject
+    textSubject,
+    threadId
   };
 };
 

@@ -56,7 +56,7 @@ class ThreadItem extends Component {
   }
 
   renderPreview = () => {
-    const preview = replaceAllOccurrences(this.props.thread.preview, '\n', '');
+    const preview = replaceAllOccurrences(this.props.thread.preview, '\n', ' ');
     if (this.props.mailbox !== 'search') {
       return preview;
     }

@@ -55,7 +55,7 @@ const keysToArrayBuffer = keys => {
   };
 };
 
-const encryptPostEmail = async (subject, recipients, body) => {
+const encryptPostEmail = async (subject, threadId, recipients, body) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const keyBundles = await getKeyBundlesOfRecipients(recipientIds);
 
@@ -107,6 +107,7 @@ const encryptPostEmail = async (subject, recipients, body) => {
     criptextEmails
   };
   if (subject) data.subject = subject;
+  if (threadId) data.threadId = threadId;
 
   const res = await postEmail(data);
   if (res.status !== 200) {

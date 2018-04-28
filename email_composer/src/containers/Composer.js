@@ -43,7 +43,8 @@ class ComposerWrapper extends Component {
       bccEmails: [],
       htmlBody: EditorState.createEmpty(),
       textSubject: '',
-      status: undefined
+      status: undefined,
+      threadId: undefined
     };
   }
 
@@ -144,8 +145,16 @@ class ComposerWrapper extends Component {
     let emailId, key;
     try {
       [emailId] = await createEmail(data);
-      const res = await signal.encryptPostEmail(subject, to, body);
-      const { metadataKey, threadId, date } = res.body;
+      const postThreadId = this.state.threadId || undefined;
+
+      const res = await signal.encryptPostEmail(
+        subject,
+        postThreadId,
+        to,
+        body
+      );
+      const { metadataKey, date } = res.body;
+      const threadId = this.state.threadId || res.body.threadId;
       key = metadataKey;
       const emailParams = { id: emailId, key, threadId, date };
       await updateEmail(emailParams);

@@ -6,8 +6,6 @@ const globalManager = require('./../globalManager');
 
 let composerWindow;
 let showConfirmation;
-global.composerData = {};
-global.emailToEdit = {};
 
 const composerSize = {
   width: 785,
@@ -171,7 +169,7 @@ const saveDraftChanges = incomingData => {
 
 const saveDraftToDatabase = async dataDraft => {
   const emailToEdit = globalManager.emailToEdit.get();
-  if (!emailToEdit) {
+  if (!emailToEdit.key) {
     await dbManager.createEmail(dataDraft);
   } else {
     const [prevEmail] = await dbManager.getEmailByKey(emailToEdit);
