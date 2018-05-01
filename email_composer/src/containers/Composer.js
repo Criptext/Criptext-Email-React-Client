@@ -4,6 +4,7 @@ import Composer from './../components/Composer';
 import { Status } from './../components/Control';
 import { EditorState, DefaultDraftBlockRenderMap } from 'draft-js';
 import {
+  composerEvents,
   closeComposerWindow,
   createEmail,
   LabelType,
@@ -49,8 +50,9 @@ class ComposerWrapper extends Component {
   }
 
   async componentWillMount() {
-    const { key, type } = getEmailToEdit();
-    if (key) {
+    const emailToEdit = getEmailToEdit();
+    if (emailToEdit) {
+      const { key, type } = emailToEdit;
       const emailData = await this.getComposerDataByType(key, type);
       const state = { ...emailData, status: Status.ENABLED };
       this.setState(state);
@@ -58,16 +60,16 @@ class ComposerWrapper extends Component {
   }
 
   getComposerDataByType = async (key, type) => {
-    if (type === 'edit') {
+    if (type === composerEvents.EDIT_DRAFT) {
       return await formDataToEditDraft(key);
     }
-    if (type === 'reply') {
+    if (type === composerEvents.REPLY) {
       return await formDataToReply(key, type);
     }
-    if (type === 'reply-all') {
+    if (type === composerEvents.REPLY_ALL) {
       return await formDataToReply(key, type);
     }
-    if (type === 'forward') {
+    if (type === composerEvents.FORWARD) {
       return await formDataToReply(key, type);
     }
   };

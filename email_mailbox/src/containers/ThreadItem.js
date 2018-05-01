@@ -1,7 +1,11 @@
 import { connect } from 'react-redux';
 import * as actions from './../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
-import { LabelType, openEmailInComposer } from '../utils/electronInterface';
+import {
+  composerEvents,
+  LabelType,
+  openEmailInComposer
+} from '../utils/electronInterface';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
 import randomcolor from 'randomcolor';
@@ -69,14 +73,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (LabelType[ownProps.mailbox].id === LabelType.draft.id) {
         openEmailInComposer({
           key: thread.key,
-          type: 'edit'
+          type: composerEvents.EDIT_DRAFT
         });
       } else if (LabelType[ownProps.mailbox].id === LabelType.all.id) {
         const allLabels = thread.allLabels;
         if (allLabels.includes(LabelType.draft.id)) {
           openEmailInComposer({
             key: thread.key,
-            type: 'edit'
+            type: composerEvents.EDIT_DRAFT
           });
         } else {
           ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);

@@ -76,7 +76,7 @@ Object {
   "ccEmails": Array [],
   "htmlBody": "<p>Modified body content</p>",
   "textSubject": "RE: Email subject 1",
-  "threadId": "1",
+  "threadId": undefined,
   "toEmails": Array [],
 }
 `;

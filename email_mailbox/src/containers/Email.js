@@ -4,7 +4,11 @@ import { defineTimeByToday } from './../utils/TimeUtils';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/UserUtils';
 import randomcolor from 'randomcolor';
-import { myAccount, openEmailInComposer } from './../utils/electronInterface';
+import {
+  composerEvents,
+  myAccount,
+  openEmailInComposer
+} from './../utils/electronInterface';
 import { muteEmail, markEmailUnread } from './../actions/index';
 
 const mapStateToProps = (state, ownProps) => {
@@ -69,23 +73,23 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onReplyEmail: ev => {
       ev.stopPropagation();
       const key = email.get('key');
-      openEmailInComposer({ key, type: 'reply' });
+      openEmailInComposer({ key, type: composerEvents.REPLY });
     },
     onReplyLast: () => {
       if (isLast) {
         const key = email.get('key');
-        openEmailInComposer({ key, type: 'reply' });
+        openEmailInComposer({ key, type: composerEvents.REPLY });
       }
     },
     onReplyAll: ev => {
       ev.stopPropagation();
       const key = email.get('key');
-      openEmailInComposer({ key, type: 'reply-all' });
+      openEmailInComposer({ key, type: composerEvents.REPLY_ALL });
     },
     onForward: ev => {
       ev.stopPropagation();
       const key = email.get('key');
-      openEmailInComposer({ key, type: 'forward' });
+      openEmailInComposer({ key, type: composerEvents.FORWARD });
     }
   };
 };

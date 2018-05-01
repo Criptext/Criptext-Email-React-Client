@@ -4,6 +4,7 @@ import htmlToDraft from 'html-to-draftjs';
 import { removeAppDomain, removeHTMLTags } from './StringUtils';
 import { appDomain } from './const';
 import {
+  composerEvents,
   myAccount,
   getEmailByKey,
   getContactsByEmailId
@@ -109,7 +110,8 @@ const insertEmptyLine = quantity => {
 
 export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const [emailData] = await getEmailByKey(emailKeyToEdit);
-  const threadId = emailData.threadId;
+  const threadId =
+    replyType === composerEvents.FORWARD ? undefined : emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
   const [from] = contacts.from;
 
@@ -131,15 +133,19 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const textSubject = replySufix + emailData.subject;
 
   const toEmails =
-    replyType === 'reply' || replyType === 'reply-all'
+    replyType === composerEvents.REPLY || replyType === composerEvents.REPLY_ALL
       ? contacts.from.map(contact => contact.email)
       : [];
 
   const ccEmails =
-    replyType === 'reply-all' ? contacts.cc.map(contact => contact.email) : [];
+    replyType === composerEvents.REPLY_ALL
+      ? contacts.cc.map(contact => contact.email)
+      : [];
 
   const bccEmails =
-    replyType === 'reply-all' ? contacts.bcc.map(contact => contact.email) : [];
+    replyType === composerEvents.REPLY_ALL
+      ? contacts.bcc.map(contact => contact.email)
+      : [];
 
   return {
     toEmails,

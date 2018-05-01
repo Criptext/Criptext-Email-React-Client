@@ -22,6 +22,9 @@ export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
 };
 
+export const composerEvents = remote.require('./src/windows/composer')
+  .composerEvents;
+
 export const openEmailInComposer = data => {
   ipcRenderer.send('edit-draft', data);
 };

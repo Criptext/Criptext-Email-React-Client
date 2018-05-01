@@ -27,7 +27,7 @@ const Composer = props => (
 
 Composer.propTypes = {
   bccEmails: PropTypes.array,
-  blockRenderMap: PropTypes.func,
+  blockRenderMap: PropTypes.object,
   ccEmails: PropTypes.array,
   getBccEmails: PropTypes.func,
   getCcEmails: PropTypes.func,

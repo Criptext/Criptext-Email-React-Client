@@ -21,7 +21,7 @@ const Body = props => (
 );
 
 Body.propTypes = {
-  blockRenderMap: PropTypes.func,
+  blockRenderMap: PropTypes.object,
   getHtmlBody: PropTypes.func,
   htmlBody: PropTypes.object,
   isToolbarHidden: PropTypes.bool,

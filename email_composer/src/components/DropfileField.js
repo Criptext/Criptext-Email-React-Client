@@ -59,7 +59,7 @@ DropfileField.defaultProps = {
 
 DropfileField.propTypes = {
   accept: PropTypes.string,
-  blockRenderMap: PropTypes.func,
+  blockRenderMap: PropTypes.object,
   files: PropTypes.array,
   getHtmlBody: PropTypes.func,
   htmlBody: PropTypes.object,
