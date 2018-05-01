@@ -530,32 +530,122 @@ const deleteFeedById = id => {
     .del();
 };
 
-/* KeyRecord
+/* PreKeyRecord - SignedPreKeyRecord
    ----------------------------- */
 const createKeys = params => {
-  return db.table(Table.KEYRECORD).insert(params);
+  return db
+    .transaction(async trx => {
+      const {
+        preKeyId,
+        preKeyPrivKey,
+        preKeyPubKey,
+        signedPreKeyId,
+        signedPrivKey,
+        signedPubKey
+      } = params;
+      await createPreKeyRecord({ preKeyId, preKeyPrivKey, preKeyPubKey }, trx);
+      return await createSignedPreKeyRecord(
+        { signedPreKeyId, signedPrivKey, signedPubKey },
+        trx
+      );
+    })
+    .then(result => {
+      return result;
+    });
 };
 
-const getKeys = params => {
-  return db
-    .select('*')
-    .from(Table.KEYRECORD)
-    .where(params);
+const createPreKeyRecord = (params, trx) => {
+  const knex = trx || db;
+  return knex.table(Table.PREKEYRECORD).insert(params);
 };
+
+const createSignedPreKeyRecord = (params, trx) => {
+  const knex = trx || db;
+  return knex.table(Table.SIGNEDPREKEYRECORD).insert(params);
+};
+
+const deletePreKeyPair = params => {
+  return db
+    .table(Table.PREKEYRECORD)
+    .where(params)
+    .del();
+}
 
 const getPreKeyPair = params => {
   return db
     .select('preKeyPrivKey', 'preKeyPubKey')
-    .from(Table.KEYRECORD)
+    .from(Table.PREKEYRECORD)
     .where(params);
 };
 
 const getSignedPreKey = params => {
   return db
     .select('signedPrivKey', 'signedPubKey')
-    .from(Table.KEYRECORD)
+    .from(Table.SIGNEDPREKEYRECORD)
     .where(params);
 };
+
+/* SessionRecord
+   ----------------------------- */
+const createSessionRecord = params => {
+  const { recipientId, deviceId } = params;
+  return db
+    .transaction(async trx => {
+      await deleteSessionRecord({ recipientId, deviceId }, trx);
+      return trx.table(Table.SESSIONRECORD).insert(params);
+    })
+    .then(result => {
+      return result;
+    });
+};
+
+const deleteSessionRecord = (params, trx) => {
+  const kenx = trx || db;
+  return kenx
+    .table(Table.SESSIONRECORD)
+    .where(params)
+    .del();
+};
+
+const getSessionRecord = params => {
+  return db
+    .select('record')
+    .from(Table.SESSIONRECORD)
+    .where(params);
+};
+
+const getSessionRecordByRecipientIds = recipientIds => {
+  return db
+    .select(
+      'recipientId',
+      db.raw(
+        `group_concat(distinct(${Table.SESSIONRECORD}.deviceId)) as deviceIds`
+      )
+    )
+    .from(Table.SESSIONRECORD)
+    .whereIn('recipientId', recipientIds)
+    .groupBy(`${Table.SESSIONRECORD}.recipientId`);
+};
+
+/* IdentityKeyRecord
+   ----------------------------- */
+const getIdentityKeyRecord = params => {
+  return db
+    .select('identityKey')
+    .from(Table.IDENTITYKEYRECORD)
+    .where(params);
+};
+
+const createIdentityKeyRecord = params => {
+  return db.table(Table.IDENTITYKEYRECORD).insert(params);
+};
+
+const updateIdentityKeyRecord = ({recipientId, identityKey}) => {
+  return db
+    .table(Table.IDENTITYKEYRECORD)
+    .where({ recipientId })
+    .update({identityKey});
+}
 
 const closeDB = () => {
   db.close();
@@ -572,7 +662,9 @@ module.exports = {
   createEmail,
   createEmailLabel,
   createFeed,
+  createIdentityKeyRecord,
   createKeys,
+  createSessionRecord,
   createTables,
   deleteEmailById,
   deleteEmailByKey,
@@ -581,6 +673,8 @@ module.exports = {
   deleteEmailLabel,
   deleteEmailLabelsByEmailId,
   deleteFeedById,
+  deletePreKeyPair,
+  deleteSessionRecord,
   getAccount,
   getAllContacts,
   getAllFeeds,
@@ -590,14 +684,17 @@ module.exports = {
   getEmailByKey,
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
-  getKeys,
+  getIdentityKeyRecord,
   getLabelById,
   getPreKeyPair,
+  getSessionRecord,
+  getSessionRecordByRecipientIds,
   getSignedPreKey,
   getUserByUsername,
   updateEmail,
   updateEmailByThreadId,
   updateEmailLabel,
   updateFeed,
+  updateIdentityKeyRecord,
   updateLabel
 };

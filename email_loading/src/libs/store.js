@@ -2,9 +2,16 @@
 
 import {
   myAccount,
+  createIdentityKeyRecord,
   createKeys,
+  createSessionRecord,
+  deletePreKeyPair,
+  deleteSessionRecord,
+  getIdentityKeyRecord,
   getPreKeyPair,
-  getSignedPreKey
+  getSessionRecord,
+  getSignedPreKey,
+  updateIdentityKeyRecord
 } from './../utils/electronInterface';
 
 export default class SignalProtocolStore {
@@ -65,32 +72,61 @@ export default class SignalProtocolStore {
     delete this.store[key];
   };
 
-  isTrustedIdentity = (identifier, identityKey) => {
+  isTrustedIdentity = async (identifier, identityKey) => {
     if (identifier === null || identifier === undefined) {
       throw new Error('tried to check identity key for undefined/null key');
     }
     if (!(identityKey instanceof ArrayBuffer)) {
       throw new Error('Expected identityKey to be an ArrayBuffer');
     }
-    const trusted = this.get('identityKey' + identifier);
-    if (trusted === undefined) {
+
+    const identifierArray = identifier.split('.');
+    const recipientId = identifierArray[0];
+    const [identityKeyRecord] = await getIdentityKeyRecord({ recipientId });
+    if (identityKeyRecord === undefined) {
       return Promise.resolve(true);
     }
     return Promise.resolve(
-      util.toString(identityKey) === util.toString(trusted)
+      util.equalArrayBuffers(
+        util.toArrayBuffer(identityKeyRecord.identityKey),
+        identityKey
+      )
     );
   };
 
-  loadIdentityKey = identifier => {
+  loadIdentityKey = async identifier => {
     if (identifier === null || identifier === undefined)
       throw new Error('Tried to get identity key for undefined/null key');
-    return Promise.resolve(this.get('identityKey' + identifier));
+
+    const identifierArray = identifier.split('.');
+    const recipientId = identifierArray[0];
+    const [identityKeyRecord] = await getIdentityKeyRecord({ recipientId });
+    return Promise.resolve(util.toArrayBuffer(identityKeyRecord.identityKey));
   };
 
-  saveIdentity = (identifier, identityKey) => {
+  saveIdentity = async (identifier, identityKey) => {
     if (identifier === null || identifier === undefined)
       throw new Error('Tried to put identity key for undefined/null key');
-    return Promise.resolve(this.put('identityKey' + identifier, identityKey));
+
+    const identifierArray = identifier.split('.');
+    const recipientId = identifierArray[0];
+    const [oldIdentityKeyRecord] = await getIdentityKeyRecord({ recipientId });
+    if (!oldIdentityKeyRecord) {
+      await createIdentityKeyRecord({
+        recipientId,
+        identityKey: util.toString(identityKey)
+      });
+      return Promise.resolve(false);
+    } else if (
+      util.toString(identityKey) !== oldIdentityKeyRecord.identityKey
+    ) {
+      await updateIdentityKeyRecord({
+        recipientId,
+        identityKey: util.toString(identityKey)
+      });
+      return Promise.resolve(true);
+    }
+    return Promise.resolve(false);
   };
 
   storeKeys = ({ preKeyId, preKeyPair, signedPreKeyId, signedPreKeyPair }) => {
@@ -107,16 +143,14 @@ export default class SignalProtocolStore {
 
   loadPreKey = async keyId => {
     let res = this.get('25519KeypreKey' + keyId);
-    if (res) {
-      res = { pubKey: res.pubKey, privKey: res.privKey };
-    } else {
-      const resp = await getPreKeyPair({ preKeyId: keyId });
-      if (resp.length) {
+    if (!res) {
+      const [resp] = await getPreKeyPair({ preKeyId: keyId });
+      if (resp) {
         res = {
-          privKey: util.toArrayBufferFromBase64(resp[0].preKeyPrivKey),
-          pubKey: util.toArrayBufferFromBase64(resp[0].preKeyPubKey)
+          privKey: util.toArrayBufferFromBase64(resp.preKeyPrivKey),
+          pubKey: util.toArrayBufferFromBase64(resp.preKeyPubKey)
         };
-        await this.storePreKey(keyId, res);
+        this.put('25519KeypreKey' + keyId, res);
       } else {
         res = undefined;
       }
@@ -128,21 +162,24 @@ export default class SignalProtocolStore {
     return Promise.resolve(this.put('25519KeypreKey' + keyId, keyPair));
   };
 
-  removePreKey = keyId => {
+  removePreKey = async keyId => {
+    await deletePreKeyPair({ preKeyId: keyId });
     return Promise.resolve(this.remove('25519KeypreKey' + keyId));
   };
 
   loadSignedPreKey = async keyId => {
     let res = this.get('25519KeysignedKey' + keyId);
-    if (res) {
-      res = { pubKey: res.pubKey, privKey: res.privKey };
-    } else {
-      const resp = await getSignedPreKey({ signedPreKeyId: keyId });
-      res = {
-        privKey: util.toArrayBufferFromBase64(resp[0].signedPrivKey),
-        pubKey: util.toArrayBufferFromBase64(resp[0].signedPubKey)
-      };
-      await this.storeSignedPreKey(keyId, res);
+    if (!res) {
+      const [resp] = await getSignedPreKey({ signedPreKeyId: keyId });
+      if (resp) {
+        res = {
+          privKey: util.toArrayBufferFromBase64(resp.signedPrivKey),
+          pubKey: util.toArrayBufferFromBase64(resp.signedPubKey)
+        };
+        this.put('25519KeysignedKey' + keyId, res);
+      } else {
+        res = undefined;
+      }
     }
     return res;
   };
@@ -155,15 +192,35 @@ export default class SignalProtocolStore {
     return Promise.resolve(this.remove('25519KeysignedKey' + keyId));
   };
 
-  loadSession = identifier => {
-    return Promise.resolve(this.get('session' + identifier));
+  loadSession = async identifier => {
+    let recordText = this.get('session' + identifier);
+    if (!recordText) {
+      const identifierArray = identifier.split('.');
+      const recipientId = identifierArray[0];
+      const deviceId = Number(identifierArray[1]);
+      const [session] = await getSessionRecord({ recipientId, deviceId });
+      if (session) {
+        recordText = session.record;
+        this.put('session' + identifier, recordText);
+      }
+    }
+    return recordText ? JSON.parse(recordText) : undefined;
   };
 
-  storeSession = (identifier, record) => {
-    return Promise.resolve(this.put('session' + identifier, record));
+  storeSession = async (identifier, record) => {
+    const identifierArray = identifier.split('.');
+    const recipientId = identifierArray[0];
+    const deviceId = Number(identifierArray[1]);
+    const recordText = util.jsonThing(record);
+    await createSessionRecord({ recipientId, deviceId, record: recordText });
+    return Promise.resolve(this.put('session' + identifier, recordText));
   };
 
-  removeSession = identifier => {
+  removeSession = async identifier => {
+    const identifierArray = identifier.split('.');
+    const recipientId = identifierArray[0];
+    const deviceId = Number(identifierArray[1]);
+    await deleteSessionRecord({ recipientId, deviceId });
     return Promise.resolve(this.remove('session' + identifier));
   };
 
