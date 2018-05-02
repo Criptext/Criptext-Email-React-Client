@@ -11,11 +11,18 @@ const Body = props => (
       htmlBody={props.htmlBody}
       getHtmlBody={props.getHtmlBody}
       blockRenderMap={props.blockRenderMap}
+      files={props.files}
+      onDrop={props.onDrop}
+      onClearFile={props.onClearFile}
+      handleDragLeave={props.handleDragLeave}
+      handleDragOver={props.handleDragOver}
+      isDragActive={props.isDragActive}
     />
     <Control
       onClickTextEditor={props.onClickTextEditor}
       onClickSendMessage={props.onClickSendMessage}
       status={props.status}
+      onDrop={props.onDrop}
     />
   </div>
 );
@@ -27,7 +34,13 @@ Body.propTypes = {
   isToolbarHidden: PropTypes.bool,
   onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func,
-  status: PropTypes.number
+  status: PropTypes.number,
+  files: PropTypes.array,
+  onDrop: PropTypes.func,
+  onClearFile: PropTypes.func,
+  handleDragLeave: PropTypes.func,
+  handleDragOver: PropTypes.func,
+  isDragActive: PropTypes.bool
 };
 
 export default Body;
