@@ -125,9 +125,6 @@ const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
     );
     return [...result, ...criptextEmail];
   }, []);
-  const data = {
-    criptextEmails
-  };
   const data = objectUtils.noNulls({ criptextEmails, subject, threadId });
   const res = await postEmail(data);
 

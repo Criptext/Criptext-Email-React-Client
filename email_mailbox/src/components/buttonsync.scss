@@ -9,7 +9,7 @@
   width: calc(var(--width) + 4px);
   height: calc(var(--width) + 4px);
   padding: 0;
-  transition: 2s linear all;
+  transition: 1s linear all;
 }
 
 .threads-button-sync .threads-sync-arrow {
@@ -45,7 +45,7 @@
 }
 
 .sync-load {
-  animation: rotating 2s linear infinite;
+  animation: rotating 1s linear infinite;
 }
 
 .sync-stop{
