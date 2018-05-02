@@ -183,15 +183,21 @@ const createFeedColumns = table => {
 };
 
 const createPreKeyRecordColumns = table => {
-  table.integer('preKeyId').primary().notNullable();
+  table
+    .integer('preKeyId')
+    .primary()
+    .notNullable();
   table.string('preKeyPrivKey', LARGE_STRING_SIZE).notNullable();
   table.string('preKeyPubKey', LARGE_STRING_SIZE).notNullable();
 };
 
 const createSignedPreKeyRecordColumns = table => {
-  table.integer('signedPreKeyId').primary().notNullable();
-  table.string('signedPrivKey', LARGE_STRING_SIZE).notNullable();
-  table.string('signedPubKey', LARGE_STRING_SIZE).notNullable();
+  table
+    .integer('signedPreKeyId')
+    .primary()
+    .notNullable();
+  table.string('signedPreKeyPrivKey', LARGE_STRING_SIZE).notNullable();
+  table.string('signedPreKeyPubKey', LARGE_STRING_SIZE).notNullable();
 };
 
 const createSessionRecordColumns = table => {
@@ -202,7 +208,10 @@ const createSessionRecordColumns = table => {
 };
 
 const createIdentityKeyRecordColumns = table => {
-  table.string('recipientId', XSMALL_STRING_SIZE).notNullable().primary();
+  table
+    .string('recipientId', XSMALL_STRING_SIZE)
+    .notNullable()
+    .primary();
   table.string('identityKey', LARGE_STRING_SIZE).notNullable();
 };
 

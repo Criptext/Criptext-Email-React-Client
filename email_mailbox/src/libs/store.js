@@ -3,8 +3,9 @@
 import {
   myAccount,
   createIdentityKeyRecord,
-  createKeys,
+  createPreKeyRecord,
   createSessionRecord,
+  createSignedPreKeyRecord,
   deletePreKeyPair,
   deleteSessionRecord,
   getIdentityKeyRecord,
@@ -129,18 +130,6 @@ export default class SignalProtocolStore {
     return Promise.resolve(false);
   };
 
-  storeKeys = ({ preKeyId, preKeyPair, signedPreKeyId, signedPreKeyPair }) => {
-    const params = {
-      preKeyId,
-      preKeyPrivKey: util.toBase64(preKeyPair.privKey),
-      preKeyPubKey: util.toBase64(preKeyPair.pubKey),
-      signedPreKeyId,
-      signedPrivKey: util.toBase64(signedPreKeyPair.privKey),
-      signedPubKey: util.toBase64(signedPreKeyPair.pubKey)
-    };
-    Promise.resolve(createKeys(params));
-  };
-
   loadPreKey = async keyId => {
     let res = this.get('25519KeypreKey' + keyId);
     if (!res) {
@@ -159,7 +148,12 @@ export default class SignalProtocolStore {
   };
 
   storePreKey = (keyId, keyPair) => {
-    return Promise.resolve(this.put('25519KeypreKey' + keyId, keyPair));
+    const params = {
+      preKeyId: keyId,
+      preKeyPrivKey: util.toBase64(keyPair.privKey),
+      preKeyPubKey: util.toBase64(keyPair.pubKey)
+    };
+    return Promise.resolve(createPreKeyRecord(params));
   };
 
   removePreKey = async keyId => {
@@ -173,8 +167,8 @@ export default class SignalProtocolStore {
       const [resp] = await getSignedPreKey({ signedPreKeyId: keyId });
       if (resp) {
         res = {
-          privKey: util.toArrayBufferFromBase64(resp.signedPrivKey),
-          pubKey: util.toArrayBufferFromBase64(resp.signedPubKey)
+          privKey: util.toArrayBufferFromBase64(resp.signedPreKeyPrivKey),
+          pubKey: util.toArrayBufferFromBase64(resp.signedPreKeyPubKey)
         };
         this.put('25519KeysignedKey' + keyId, res);
       } else {
@@ -185,7 +179,12 @@ export default class SignalProtocolStore {
   };
 
   storeSignedPreKey = (keyId, keyPair) => {
-    return Promise.resolve(this.put('25519KeysignedKey' + keyId, keyPair));
+    const params = {
+      signedPreKeyId: keyId,
+      signedPreKeyPrivKey: util.toBase64(keyPair.privKey),
+      signedPreKeyPubKey: util.toBase64(keyPair.pubKey)
+    };
+    return Promise.resolve(createSignedPreKeyRecord(params));
   };
 
   removeSignedPreKey = keyId => {

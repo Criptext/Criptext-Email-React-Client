@@ -52,10 +52,6 @@ export const createEmail = params => {
   return dbManager.createEmail(params);
 };
 
-export const createKeys = params => {
-  return dbManager.createKeys(params);
-};
-
 export const createEmailLabel = params => {
   return dbManager.createEmailLabel(params);
 };
@@ -68,8 +64,16 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
+export const createPreKeyRecord = params => {
+  return dbManager.createPreKeyRecord(params);
+};
+
 export const createSessionRecord = params => {
   return dbManager.createSessionRecord(params);
+};
+
+export const createSignedPreKeyRecord = params => {
+  return dbManager.createSignedPreKeyRecord(params);
 };
 
 export const deleteEmailLabel = params => {

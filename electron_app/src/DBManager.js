@@ -530,38 +530,17 @@ const deleteFeedById = id => {
     .del();
 };
 
-/* PreKeyRecord - SignedPreKeyRecord
+/* PreKeyRecord
    ----------------------------- */
-const createKeys = params => {
+const createPreKeyRecord = params => {
+  return db.table(Table.PREKEYRECORD).insert(params);
+};
+
+const getPreKeyPair = params => {
   return db
-    .transaction(async trx => {
-      const {
-        preKeyId,
-        preKeyPrivKey,
-        preKeyPubKey,
-        signedPreKeyId,
-        signedPrivKey,
-        signedPubKey
-      } = params;
-      await createPreKeyRecord({ preKeyId, preKeyPrivKey, preKeyPubKey }, trx);
-      return await createSignedPreKeyRecord(
-        { signedPreKeyId, signedPrivKey, signedPubKey },
-        trx
-      );
-    })
-    .then(result => {
-      return result;
-    });
-};
-
-const createPreKeyRecord = (params, trx) => {
-  const knex = trx || db;
-  return knex.table(Table.PREKEYRECORD).insert(params);
-};
-
-const createSignedPreKeyRecord = (params, trx) => {
-  const knex = trx || db;
-  return knex.table(Table.SIGNEDPREKEYRECORD).insert(params);
+    .select('preKeyPrivKey', 'preKeyPubKey')
+    .from(Table.PREKEYRECORD)
+    .where(params);
 };
 
 const deletePreKeyPair = params => {
@@ -569,13 +548,13 @@ const deletePreKeyPair = params => {
     .table(Table.PREKEYRECORD)
     .where(params)
     .del();
-}
+};
 
-const getPreKeyPair = params => {
-  return db
-    .select('preKeyPrivKey', 'preKeyPubKey')
-    .from(Table.PREKEYRECORD)
-    .where(params);
+/* SignedPreKeyRecord
+   ----------------------------- */
+const createSignedPreKeyRecord = params => {
+  console.log(params);
+  return db.table(Table.SIGNEDPREKEYRECORD).insert(params);
 };
 
 const getSignedPreKey = params => {
@@ -640,12 +619,12 @@ const createIdentityKeyRecord = params => {
   return db.table(Table.IDENTITYKEYRECORD).insert(params);
 };
 
-const updateIdentityKeyRecord = ({recipientId, identityKey}) => {
+const updateIdentityKeyRecord = ({ recipientId, identityKey }) => {
   return db
     .table(Table.IDENTITYKEYRECORD)
     .where({ recipientId })
-    .update({identityKey});
-}
+    .update({ identityKey });
+};
 
 const closeDB = () => {
   db.close();
@@ -663,8 +642,9 @@ module.exports = {
   createEmailLabel,
   createFeed,
   createIdentityKeyRecord,
-  createKeys,
+  createPreKeyRecord,
   createSessionRecord,
+  createSignedPreKeyRecord,
   createTables,
   deleteEmailById,
   deleteEmailByKey,

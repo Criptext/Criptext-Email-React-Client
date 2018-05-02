@@ -120,12 +120,16 @@ export const createIdentityKeyRecord = params => {
   return dbManager.createIdentityKeyRecord(params);
 };
 
-export const createKeys = params => {
-  return dbManager.createKeys(params);
+export const createPreKeyRecord = params => {
+  return dbManager.createPreKeyRecord(params);
 };
 
 export const createSessionRecord = params => {
   return dbManager.createSessionRecord(params);
+};
+
+export const createSignedPreKeyRecord = params => {
+  return dbManager.createSignedPreKeyRecord(params);
 };
 
 export const createLabel = params => {
