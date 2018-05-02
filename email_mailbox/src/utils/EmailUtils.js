@@ -10,7 +10,11 @@ const getContentMessage = async (bodyKey, recipientId, deviceId) => {
   return { content, preview };
 };
 
-const getRecipientIdFromEmailAddress = emailAddress => {
+const getRecipientIdFromEmailAddressTag = emailAddressTag => {
+  const emailAddressMatched = emailAddressTag.match(/<(.*)>/);
+  const emailAddress = emailAddressMatched
+    ? emailAddressMatched[1]
+    : emailAddressTag;
   return removeAppDomain(emailAddress);
 };
 
@@ -20,7 +24,7 @@ const formRecipients = recipientString => {
 
 export const formIncomingEmailFromData = async (data, deviceId) => {
   const bodyKey = data.bodyKey;
-  const recipientId = getRecipientIdFromEmailAddress(data.from);
+  const recipientId = getRecipientIdFromEmailAddressTag(data.from);
   const { content, preview } = await getContentMessage(
     bodyKey,
     recipientId,
