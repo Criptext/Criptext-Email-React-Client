@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Editor from './EditorWrapper';
 import './dropfilefield.css';
+import { convertToHumanSize } from './../utils/StringUtils';
 
 const DropfileField = props => (
   <div
@@ -43,7 +44,7 @@ const renderPreview = (files, onClearFile) =>
         <div className="file-icon" />
         <div className="file-info">
           <span>{file.name}</span>
-          <span>{file.size}</span>
+          <span>{convertToHumanSize(file.size, true)}</span>
         </div>
         <div className="file-delete" onClick={() => onClearFile(file.name)}>
           <i className="icon-exit" />
