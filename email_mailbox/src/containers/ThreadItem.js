@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import * as actions from './../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
-import { LabelType } from '../utils/electronInterface';
+import { LabelType, editDraftInComposer } from '../utils/electronInterface';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
 import randomcolor from 'randomcolor';
@@ -64,9 +64,21 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onSelectThread: threadId => {
+    onSelectThread: thread => {
+      const threadId = thread.id;
+      if (LabelType[ownProps.mailbox].id === LabelType.draft.id) {
+        editDraftInComposer(thread.key);
+      } else if (LabelType[ownProps.mailbox].id === LabelType.all.id) {
+        const allLabels = thread.allLabels;
+        if (allLabels.includes(LabelType.draft.id)) {
+          editDraftInComposer(thread.key);
+        } else {
+          ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
+        }
+      } else {
+        ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
+      }
       dispatch(actions.selectThread(threadId));
-      ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
     },
     onMultiSelect: (threadId, value) => {
       dispatch(actions.multiSelectThread(threadId, value));

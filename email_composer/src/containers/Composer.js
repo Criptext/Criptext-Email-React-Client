@@ -13,11 +13,15 @@ import {
   errors,
   deleteEmailById,
   getEmailByKey,
-  createEmailLabel
+  createEmailLabel,
+  getEmailToEdit
 } from './../utils/electronInterface';
 import { areEmptyAllArrays } from './../utils/ArrayUtils';
 import signal from './../libs/signal';
-import { formOutgoingEmailFromData } from './../utils/EmailUtils';
+import {
+  formOutgoingEmailFromData,
+  formDataToFillComposer
+} from './../utils/EmailUtils';
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -30,6 +34,15 @@ class ComposerWrapper extends Component {
       textSubject: '',
       status: undefined
     };
+  }
+
+  async componentWillMount() {
+    const emailKeyToEdit = getEmailToEdit();
+    if (emailKeyToEdit) {
+      const emailData = await formDataToFillComposer(emailKeyToEdit);
+      const state = { ...emailData, status: Status.ENABLED };
+      this.setState(state);
+    }
   }
 
   render() {

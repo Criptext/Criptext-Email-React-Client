@@ -17,7 +17,7 @@ const createContact = params => {
   return db.table(Table.CONTACT).insert(params);
 };
 
-const createContactsIfOrNotStore = async contacts => {
+const createContactsIfOrNotStore = async (contacts, trx) => {
   const emailAddresses = Array.from(
     new Set(
       contacts.map(contact => {
@@ -26,8 +26,8 @@ const createContactsIfOrNotStore = async contacts => {
       })
     )
   );
-
-  const contactsFound = await db
+  const myDb = trx || db;
+  const contactsFound = await myDb
     .select('email')
     .from(Table.CONTACT)
     .whereIn('email', emailAddresses);
@@ -44,7 +44,7 @@ const createContactsIfOrNotStore = async contacts => {
   );
   const contactsRowCkecked = filterUniqueContacts(formContactsRow(newContacts));
 
-  await db.insert(contactsRowCkecked).into(Table.CONTACT);
+  await myDb.insert(contactsRowCkecked).into(Table.CONTACT);
   return emailAddresses;
 };
 
@@ -88,10 +88,41 @@ const getAllContacts = () => {
   return db.select('name', 'email').from(Table.CONTACT);
 };
 
+const getContactsByEmailId = async emailId => {
+  const emailContacts = await db
+    .select('contactId', 'type')
+    .from(Table.EMAIL_CONTACT)
+    .where({ emailId });
+  const toContactsId = getContactsIdByType(emailContacts, 'to');
+  const ccContactsId = getContactsIdByType(emailContacts, 'cc');
+  const bccContactsId = getContactsIdByType(emailContacts, 'bcc');
+  const fromContactsId = getContactsIdByType(emailContacts, 'from');
+
+  const to = await getContactByIds(toContactsId);
+  const cc = await getContactByIds(ccContactsId);
+  const bcc = await getContactByIds(bccContactsId);
+  const from = await getContactByIds(fromContactsId);
+  return { to, cc, bcc, from };
+};
+
+const getContactsIdByType = (emailContacts, type) => {
+  return emailContacts
+    .filter(item => item.type === type)
+    .map(item => item.contactId);
+};
+
 /* EmailContact
    ----------------------------- */
 const createEmailContact = (emailContacts, trx) => {
   return trx.insert(emailContacts).into(Table.EMAIL_CONTACT);
+};
+
+const deleteEmailContactByEmailId = (emailId, trx) => {
+  const knex = trx || db;
+  return knex
+    .table(Table.EMAIL_CONTACT)
+    .where({ emailId })
+    .del();
 };
 
 /* EmailLabel
@@ -116,6 +147,14 @@ const deleteEmailLabel = ({ emailsId, labelId }) => {
     .del();
 };
 
+const deleteEmailLabelsByEmailId = (emailId, trx) => {
+  const knex = trx || db;
+  return knex
+    .table(Table.EMAIL_LABEL)
+    .where({ emailId })
+    .del();
+};
+
 /* Email
    ----------------------------- */
 const createEmail = async (params, trx) => {
@@ -129,12 +168,14 @@ const createEmail = async (params, trx) => {
     ...params.recipients.cc,
     ...params.recipients.bcc
   ];
-  const emailAddresses = await createContactsIfOrNotStore(emails);
+  const emailAddresses = await createContactsIfOrNotStore(emails, trx);
 
-  return db
-    .transaction(async trx => {
-      const contactStored = await getContactByEmails(emailAddresses, trx);
-      const [emailId] = await createEmail({ email: params.email }, trx);
+  const myDb = trx || db;
+  return myDb
+    .transaction(async trx2 => {
+      const contactStored = await getContactByEmails(emailAddresses, trx2);
+      const [emailId] = await createEmail({ email: params.email }, trx2);
+
       const from = formEmailContact({
         emailId,
         contactStored,
@@ -160,14 +201,14 @@ const createEmail = async (params, trx) => {
         type: 'bcc'
       });
       const emailContactRow = [...from, ...to, ...cc, ...bcc];
-      await createEmailContact(emailContactRow, trx);
+      await createEmailContact(emailContactRow, trx2);
 
       const emailLabel = formEmailLabel({
         emailId,
         labels: params.labels
       });
       const emailLabelRow = [...emailLabel];
-      await createEmailLabel(emailLabelRow, trx);
+      await createEmailLabel(emailLabelRow, trx2);
 
       return emailId;
     })
@@ -371,8 +412,9 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
-const deleteEmailById = id => {
-  return db
+const deleteEmailById = (id, trx) => {
+  const knex = trx || db;
+  return knex
     .table(Table.EMAIL)
     .where({ id })
     .del();
@@ -383,6 +425,17 @@ const deleteEmailByKey = key => {
     .table(Table.EMAIL)
     .where({ key })
     .del();
+};
+
+const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
+  return db.transaction(async trx => {
+    await deleteEmailById(id, trx);
+    await deleteEmailContactByEmailId(id, trx);
+    await deleteEmailLabelsByEmailId(id, trx);
+    if (optionalEmailToSave) {
+      await createEmail(optionalEmailToSave, trx);
+    }
+  });
 };
 
 const getEmailById = id => {
@@ -513,6 +566,7 @@ module.exports = {
   closeDB,
   createAccount,
   createContact,
+  getContactsByEmailId,
   createLabel,
   createEmail,
   createEmailLabel,
@@ -521,7 +575,10 @@ module.exports = {
   createTables,
   deleteEmailById,
   deleteEmailByKey,
+  deleteEmailLabelAndContactByEmailId,
+  deleteEmailContactByEmailId,
   deleteEmailLabel,
+  deleteEmailLabelsByEmailId,
   deleteFeedById,
   getAccount,
   getAllContacts,

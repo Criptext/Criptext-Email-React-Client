@@ -1,8 +1,10 @@
 const { BrowserWindow, Menu, dialog } = require('electron');
 const { composerUrl } = require('./../window_routing');
+const mailboxWindow = require('./mailbox');
 const dbManager = require('./../DBManager');
+const globalManager = require('./../globalManager');
+
 let composerWindow;
-let composerData = {};
 let showConfirmation;
 
 const composerSize = {
@@ -64,7 +66,7 @@ const dialogTemplate = {
 
 const create = () => {
   showConfirmation = true;
-  composerData = {};
+  globalManager.composerData.set({});
   composerWindow = new BrowserWindow({
     width: composerSize.width,
     height: composerSize.height,
@@ -86,28 +88,20 @@ const create = () => {
       dialog.showMessageBox(dialogTemplate, async responseIndex => {
         if (responseIndex === RESPONSES.DISCARD.index) {
           showConfirmation = false;
-          composerData = {};
+          globalManager.composerData.set({});
           composerWindow.close();
         }
         if (responseIndex === RESPONSES.SAVE.index) {
-          await saveDraftToDatabase(composerData);
+          await saveDraftToDatabase(global.composerData);
           showConfirmation = false;
-          composerData = {};
+          globalManager.composerData.set({});
           composerWindow.close();
         }
       });
     } else {
       composerWindow = undefined;
+      setEmptyVariables();
     }
-  });
-};
-
-const show = async () => {
-  if (composerWindow === undefined) {
-    await create();
-  }
-  composerWindow.once('ready-to-show', () => {
-    composerWindow.show();
   });
 };
 
@@ -115,13 +109,26 @@ const close = () => {
   if (composerWindow !== undefined) {
     composerWindow.close();
   }
+  setEmptyVariables();
   composerWindow = undefined;
 };
 
-const destroy = () => {
+const destroy = async () => {
   if (composerWindow !== undefined) {
     composerWindow.destroy();
   }
+  const emailToEdit = globalManager.emailToEdit.get();
+  if (emailToEdit) {
+    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit);
+    await dbManager.deleteEmailLabelAndContactByEmailId(
+      prevEmail.id,
+      undefined
+    );
+  }
+  if (mailboxWindow) {
+    mailboxWindow.send('update-drafts');
+  }
+  setEmptyVariables();
   composerWindow = undefined;
 };
 
@@ -132,15 +139,13 @@ const send = (message, data) => {
   composerWindow.webContents.send(message, data);
 };
 
-const saveDraftChanges = incomingData => {
-  composerData = incomingData;
-};
-
-const saveDraftToDatabase = async dataDraft => {
-  await dbManager.createEmail(dataDraft);
+const editDraft = async emailToEdit => {
+  globalManager.emailToEdit.set(emailToEdit);
+  await show();
 };
 
 const isDraftEmpty = () => {
+  const composerData = globalManager.composerData.get();
   if (composerData === {}) {
     return true;
   }
@@ -158,10 +163,45 @@ const isDraftEmpty = () => {
   return !hasRecipients && !subject.length && !preview.length;
 };
 
+const saveDraftChanges = incomingData => {
+  globalManager.composerData.set(incomingData);
+};
+
+const saveDraftToDatabase = async dataDraft => {
+  const emailToEdit = globalManager.emailToEdit.get();
+  if (!emailToEdit) {
+    await dbManager.createEmail(dataDraft);
+  } else {
+    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit);
+    await dbManager.deleteEmailLabelAndContactByEmailId(
+      prevEmail.id,
+      dataDraft
+    );
+  }
+  if (mailboxWindow) {
+    mailboxWindow.send('update-drafts');
+  }
+};
+
+const setEmptyVariables = () => {
+  globalManager.composerData.set({});
+  globalManager.emailToEdit.set(undefined);
+};
+
+const show = async () => {
+  if (composerWindow === undefined) {
+    await create();
+  }
+  composerWindow.once('ready-to-show', () => {
+    composerWindow.show();
+  });
+};
+
 module.exports = {
   close,
   destroy,
   show,
   send,
-  saveDraftChanges
+  saveDraftChanges,
+  editDraft
 };

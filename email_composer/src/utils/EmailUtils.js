@@ -1,8 +1,13 @@
-import { convertToRaw } from 'draft-js';
+import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 import { removeAppDomain, removeHTMLTags } from './StringUtils';
 import { appDomain } from './const';
-import { myAccount } from './electronInterface';
+import {
+  myAccount,
+  getEmailByKey,
+  getContactsByEmailId
+} from './electronInterface';
 
 const formRecipients = recipients => {
   return [
@@ -58,5 +63,31 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
     to,
     subject,
     body
+  };
+};
+
+export const formDataToFillComposer = async emailKeyToEdit => {
+  const [emailData] = await getEmailByKey(emailKeyToEdit);
+  const contacts = await getContactsByEmailId(emailData.id);
+
+  const blocksFromHtml = htmlToDraft(emailData.content);
+  const { contentBlocks, entityMap } = blocksFromHtml;
+  const contentState = ContentState.createFromBlockArray(
+    contentBlocks,
+    entityMap
+  );
+  const htmlBody = EditorState.createWithContent(contentState);
+  const textSubject = emailData.subject;
+
+  const toEmails = contacts.to.map(contact => contact.email);
+  const ccEmails = contacts.cc.map(contact => contact.email);
+  const bccEmails = contacts.bcc.map(contact => contact.email);
+
+  return {
+    toEmails,
+    ccEmails,
+    bccEmails,
+    htmlBody,
+    textSubject
   };
 };

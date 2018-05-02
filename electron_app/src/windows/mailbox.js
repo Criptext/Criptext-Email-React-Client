@@ -52,5 +52,6 @@ const send = (message, data) => {
 module.exports = {
   show,
   close,
-  send
+  send,
+  mailboxWindow
 };

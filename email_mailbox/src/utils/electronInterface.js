@@ -22,6 +22,10 @@ export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
 };
 
+export const editDraftInComposer = data => {
+  ipcRenderer.send('edit-draft', data);
+};
+
 export const createLabel = params => {
   return dbManager.createLabel(params);
 };
