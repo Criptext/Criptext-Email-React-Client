@@ -2,7 +2,8 @@
 import {
   errors,
   findKeyBundles,
-  postEmail
+  postEmail,
+  objectUtils
 } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
 import { CustomError } from './../utils/CustomError';
@@ -55,7 +56,7 @@ const keysToArrayBuffer = keys => {
   };
 };
 
-const encryptPostEmail = async (subject, threadId, recipients, body) => {
+const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const keyBundles = await getKeyBundlesOfRecipients(recipientIds);
 
@@ -103,13 +104,10 @@ const encryptPostEmail = async (subject, threadId, recipients, body) => {
       };
     })
   );
-  const data = {
-    criptextEmails
-  };
-  if (subject) data.subject = subject;
-  if (threadId) data.threadId = threadId;
 
+  const data = objectUtils.noNulls({ criptextEmails, subject, threadId });
   const res = await postEmail(data);
+
   if (res.status !== 200) {
     throw new CustomError(errors.message.ENCRYPTING);
   }

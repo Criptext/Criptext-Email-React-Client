@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Recipient from './RecipientWrapper';
 import Subject from './SubjectWrapper';
 import Body from './BodyWrapper';
+import './composer.css';
 
 const Composer = props => (
   <div className="wrapper">

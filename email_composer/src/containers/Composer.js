@@ -49,31 +49,6 @@ class ComposerWrapper extends Component {
     };
   }
 
-  async componentWillMount() {
-    const emailToEdit = getEmailToEdit();
-    if (emailToEdit) {
-      const { key, type } = emailToEdit;
-      const emailData = await this.getComposerDataByType(key, type);
-      const state = { ...emailData, status: Status.ENABLED };
-      this.setState(state);
-    }
-  }
-
-  getComposerDataByType = async (key, type) => {
-    if (type === composerEvents.EDIT_DRAFT) {
-      return await formDataToEditDraft(key);
-    }
-    if (type === composerEvents.REPLY) {
-      return await formDataToReply(key, type);
-    }
-    if (type === composerEvents.REPLY_ALL) {
-      return await formDataToReply(key, type);
-    }
-    if (type === composerEvents.FORWARD) {
-      return await formDataToReply(key, type);
-    }
-  };
-
   render() {
     return (
       <Composer
@@ -94,6 +69,23 @@ class ComposerWrapper extends Component {
       />
     );
   }
+
+  async componentDidMount() {
+    const emailToEdit = getEmailToEdit();
+    if (emailToEdit) {
+      const { key, type } = emailToEdit;
+      const emailData = await this.getComposerDataByType(key, type);
+      const state = { ...emailData, status: Status.ENABLED };
+      this.setState(state);
+    }
+  }
+
+  getComposerDataByType = async (key, type) => {
+    if (type === composerEvents.EDIT_DRAFT) {
+      return await formDataToEditDraft(key);
+    }
+    return await formDataToReply(key, type);
+  };
 
   handleGetToEmail = emails => {
     const status = areEmptyAllArrays(
@@ -147,14 +139,15 @@ class ComposerWrapper extends Component {
     let emailId, key;
     try {
       [emailId] = await createEmail(data);
-      const postThreadId = this.state.threadId || undefined;
 
-      const res = await signal.encryptPostEmail(
+      const params = {
         subject,
-        postThreadId,
-        to,
+        threadId: this.state.threadId,
+        recipients: to,
         body
-      );
+      };
+      const res = await signal.encryptPostEmail(params);
+
       const { metadataKey, date } = res.body;
       const threadId = this.state.threadId || res.body.threadId;
       key = metadataKey;

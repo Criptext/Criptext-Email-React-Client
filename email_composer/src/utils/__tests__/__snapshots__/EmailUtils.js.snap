@@ -96,9 +96,7 @@ Object {
 
 exports[`[Reply, Reply-all, Forward]  Form data to reply-all 1`] = `
 Object {
-  "bccEmails": Array [
-    "bccUser@jigl.com",
-  ],
+  "bccEmails": Array [],
   "ccEmails": Array [
     "ccUser@jigl.com",
   ],

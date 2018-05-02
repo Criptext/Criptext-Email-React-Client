@@ -1,7 +1,12 @@
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import { removeAppDomain, removeHTMLTags } from './StringUtils';
+import {
+  removeAppDomain,
+  removeHTMLTags,
+  replaceAllOccurrences
+} from './StringUtils';
+import { getFormattedDate } from './DateUtils';
 import { appDomain } from './const';
 import {
   composerEvents,
@@ -93,11 +98,7 @@ export const formDataToEditDraft = async emailKeyToEdit => {
   };
 };
 
-const replaceAllOccurrences = (text, search, replacement) => {
-  return text.split(search).join(replacement);
-};
-
-const formPrevMessageHeader = (date, from) => {
+const formReplyHeader = (date, from) => {
   const emailDate = new Date(date);
   const { monthName, day, year, strTime, diff } = getFormattedDate(emailDate);
   return `<p>On ${monthName} ${day}, ${year}, ${strTime} ${diff}, ${from.name ||
@@ -115,7 +116,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const contacts = await getContactsByEmailId(emailData.id);
   const [from] = contacts.from;
 
-  const firstLine = formPrevMessageHeader(emailData.date, from);
+  const firstLine = formReplyHeader(emailData.date, from);
   const newContent = `${firstLine}${emailData.content}`;
 
   let content = replaceAllOccurrences(newContent, '<p>', '<blockquote>');
@@ -142,10 +143,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
       ? contacts.cc.map(contact => contact.email)
       : [];
 
-  const bccEmails =
-    replyType === composerEvents.REPLY_ALL
-      ? contacts.bcc.map(contact => contact.email)
-      : [];
+  const bccEmails = [];
 
   return {
     toEmails,
@@ -155,33 +153,4 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     textSubject,
     threadId
   };
-};
-
-const getFormattedDate = date => {
-  const [, day, monthName, year] = date.toGMTString().split(' ');
-  return {
-    monthName,
-    day,
-    year,
-    strTime: formatAMPM(date),
-    diff: getUtcTimeDiff(date)
-  };
-};
-
-const formatAMPM = date => {
-  let hours = date.getHours();
-  let minutes = date.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  minutes = minutes < 10 ? '0' + minutes : minutes;
-  return hours + ':' + minutes + ' ' + ampm;
-};
-
-const getUtcTimeDiff = date => {
-  var timezone = date.getTimezoneOffset();
-  timezone = timezone / 60 * -1;
-  var gmt = '';
-  gmt += timezone > 0 ? `+${timezone}:00` : `${timezone}:00`;
-  return gmt;
 };
