@@ -8,6 +8,7 @@ import {
 } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
 import { CustomError } from './../utils/CustomError';
+import { cleanUndefinedFields } from './../utils/ObjectUtils';
 
 const store = new SignalProtocolStore();
 
