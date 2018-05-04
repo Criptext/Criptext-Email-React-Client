@@ -93,3 +93,10 @@ export const getContactsByEmailId = id => {
   };
   return id === emailId ? response : emptyResponse;
 };
+
+export const composerEvents = {
+  EDIT_DRAFT: 'edit-draft',
+  REPLY: 'reply',
+  REPLY_ALL: 'reply-all',
+  FORWARD: 'forward'
+};

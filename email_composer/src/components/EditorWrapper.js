@@ -29,6 +29,7 @@ class EditorWrapper extends Component {
         editorState={this.props.htmlBody}
         onEditorStateChange={this.onChangeHtmlBody}
         placeholder={'Message'}
+        blockRenderMap={this.props.blockRenderMap}
       />
     );
   }
@@ -39,6 +40,7 @@ class EditorWrapper extends Component {
 }
 
 EditorWrapper.propTypes = {
+  blockRenderMap: PropTypes.object,
   getHtmlBody: PropTypes.func,
   htmlBody: PropTypes.object
 };

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { EmailStatus } from '../utils/const';
+import { EmailStatus } from './../utils/const';
 import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
-import { replaceMatches } from '../utils/ReactUtils';
+import { replaceMatches } from './../utils/ReactUtils';
+import { replaceAllOccurrences } from './../utils/StringUtils';
 import './threaditem.css';
 
 class ThreadItem extends Component {
@@ -55,7 +56,7 @@ class ThreadItem extends Component {
   }
 
   renderPreview = () => {
-    const preview = this.props.thread.preview;
+    const preview = replaceAllOccurrences(this.props.thread.preview, '\n', ' ');
     if (this.props.mailbox !== 'search') {
       return preview;
     }

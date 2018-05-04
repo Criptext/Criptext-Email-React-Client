@@ -56,13 +56,15 @@ const renderEmailExpand = props => (
         <div className="email-detail-info">
           <span>{props.email.date}</span>
           {props.isFromMe ? renderMuteIcon(props) : null}
-          <i className="icon-replay" />
+          <i className="icon-replay" onClick={ev => props.onReplyEmail(ev)} />
           <i
             id="email-more"
             className="icon-dots"
-            onClick={props.onTogglePopOverMenuAction}
+            onClick={ev => props.onTogglePopOverMenuAction(ev)}
           />
-          {props.displayPopOverMenuAction ? renderPopOverMenuAction() : null}
+          {props.displayPopOverMenuAction
+            ? renderPopOverMenuAction(props)
+            : null}
         </div>
       </div>
       <hr />
@@ -119,15 +121,15 @@ const renderEmailExpand = props => (
     </div>
     {props.staticOpen ? (
       <div className="email-segment-controls">
-        <div>
+        <div className="replay-button" onClick={() => props.onReplyLast()}>
           <i className="icon-replay" />
           <span>Reply</span>
         </div>
-        <div>
+        <div className="replay-all-button" onClick={ev => props.onReplyAll(ev)}>
           <i className="icon-replay-all" />
           <span>Reply All</span>
         </div>
-        <div>
+        <div className="forward-button" onClick={ev => props.onForward(ev)}>
           <i className="icon-forward" />
           <span>Forward</span>
         </div>
@@ -188,16 +190,31 @@ const renderPopOverEmailDetail = props => (
   </div>
 );
 
-const renderPopOverMenuAction = () => (
+const renderPopOverMenuAction = props => (
   <div className="email-more-menu">
     <ul>
-      <li>
+      <li
+        onClick={ev => {
+          props.onReplyEmail(ev);
+          props.onTogglePopOverMenuAction(ev);
+        }}
+      >
         <span>Reply</span>
       </li>
-      <li>
+      <li
+        onClick={ev => {
+          props.onReplyAll(ev);
+          props.onTogglePopOverMenuAction(ev);
+        }}
+      >
         <span>Reply All</span>
       </li>
-      <li>
+      <li
+        onClick={ev => {
+          props.onForward(ev);
+          props.onTogglePopOverMenuAction(ev);
+        }}
+      >
         <span>Forward</span>
       </li>
       <li>
@@ -298,6 +315,10 @@ renderEmailExpand.propTypes = {
   hideView: PropTypes.bool,
   isFromMe: PropTypes.bool,
   isUnsend: PropTypes.bool,
+  onForward: PropTypes.func,
+  onReplyAll: PropTypes.func,
+  onReplyEmail: PropTypes.func,
+  onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,
   onTooglePopOverEmailDetail: PropTypes.func,
   onTogglePopOverMenuAction: PropTypes.func,
@@ -310,6 +331,13 @@ renderPopOverEmailDetail.propTypes = {
   from: PropTypes.array,
   subject: PropTypes.string,
   to: PropTypes.array
+};
+
+renderPopOverMenuAction.propTypes = {
+  onForward: PropTypes.func,
+  onReplyAll: PropTypes.func,
+  onReplyEmail: PropTypes.func,
+  onTogglePopOverMenuAction: PropTypes.func
 };
 
 ContactTag.propTypes = {

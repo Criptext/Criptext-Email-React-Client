@@ -57,7 +57,8 @@ class EmailWrapper extends Component {
     });
   };
 
-  onTogglePopOverMenuAction = () => {
+  onTogglePopOverMenuAction = ev => {
+    ev.stopPropagation();
     this.setState({
       displayPopOverMenuAction: !this.state.displayPopOverMenuAction
     });

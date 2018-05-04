@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Email utils: Form data to edit draft 1`] = `
+exports[`[Edit draft]  Form data to edit draft 1`] = `
 Object {
   "bccEmails": Array [
     "bccUser@jigl.com",
@@ -16,7 +16,7 @@ Object {
 }
 `;
 
-exports[`Email utils: Form outgoing email from data 1`] = `
+exports[`[Form outgoing email]  Form outgoing email from data 1`] = `
 Object {
   "body": "<p></p>
 ",
@@ -66,6 +66,45 @@ Object {
       "recipientId": "bccUser",
       "type": "bcc",
     },
+  ],
+}
+`;
+
+exports[`[Reply, Reply-all, Forward]  Form data to forward 1`] = `
+Object {
+  "bccEmails": Array [],
+  "ccEmails": Array [],
+  "htmlBody": "<p>Modified body content</p>",
+  "textSubject": "RE: Email subject 1",
+  "threadId": undefined,
+  "toEmails": Array [],
+}
+`;
+
+exports[`[Reply, Reply-all, Forward]  Form data to reply email 1`] = `
+Object {
+  "bccEmails": Array [],
+  "ccEmails": Array [],
+  "htmlBody": "<p>Modified body content</p>",
+  "textSubject": "RE: Email subject 1",
+  "threadId": "1",
+  "toEmails": Array [
+    "fromUser@jigl.com",
+  ],
+}
+`;
+
+exports[`[Reply, Reply-all, Forward]  Form data to reply-all 1`] = `
+Object {
+  "bccEmails": Array [],
+  "ccEmails": Array [
+    "ccUser@jigl.com",
+  ],
+  "htmlBody": "<p>Modified body content</p>",
+  "textSubject": "RE: Email subject 1",
+  "threadId": "1",
+  "toEmails": Array [
+    "fromUser@jigl.com",
   ],
 }
 `;

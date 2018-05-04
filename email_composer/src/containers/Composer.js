@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
-import { EditorState } from 'draft-js';
+import { EditorState, DefaultDraftBlockRenderMap } from 'draft-js';
 import {
+  composerEvents,
   closeComposerWindow,
   createEmail,
   LabelType,
@@ -20,8 +22,18 @@ import { areEmptyAllArrays } from './../utils/ArrayUtils';
 import signal from './../libs/signal';
 import {
   formOutgoingEmailFromData,
-  formDataToFillComposer
+  formDataToEditDraft,
+  formDataToReply
 } from './../utils/EmailUtils';
+import { Map } from 'immutable';
+
+const PrevMessage = props => (
+  <div className="content-prev-message">{props.children}</div>
+);
+
+const blockRenderMap = DefaultDraftBlockRenderMap.merge(
+  Map({ blockquote: { wrapper: <PrevMessage /> } })
+);
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -32,17 +44,9 @@ class ComposerWrapper extends Component {
       bccEmails: [],
       htmlBody: EditorState.createEmpty(),
       textSubject: '',
-      status: undefined
+      status: undefined,
+      threadId: undefined
     };
-  }
-
-  async componentWillMount() {
-    const emailKeyToEdit = getEmailToEdit();
-    if (emailKeyToEdit) {
-      const emailData = await formDataToFillComposer(emailKeyToEdit);
-      const state = { ...emailData, status: Status.ENABLED };
-      this.setState(state);
-    }
   }
 
   render() {
@@ -61,9 +65,27 @@ class ComposerWrapper extends Component {
         onClickSendMessage={this.handleSendMessage}
         textSubject={this.state.textSubject}
         status={this.state.status}
+        blockRenderMap={blockRenderMap}
       />
     );
   }
+
+  async componentDidMount() {
+    const emailToEdit = getEmailToEdit();
+    if (emailToEdit) {
+      const { key, type } = emailToEdit;
+      const emailData = await this.getComposerDataByType(key, type);
+      const state = { ...emailData, status: Status.ENABLED };
+      this.setState(state);
+    }
+  }
+
+  getComposerDataByType = async (key, type) => {
+    if (type === composerEvents.EDIT_DRAFT) {
+      return await formDataToEditDraft(key);
+    }
+    return await formDataToReply(key, type);
+  };
 
   handleGetToEmail = emails => {
     const status = areEmptyAllArrays(
@@ -117,8 +139,17 @@ class ComposerWrapper extends Component {
     let emailId, key;
     try {
       [emailId] = await createEmail(data);
-      const res = await signal.encryptPostEmail(subject, to, body);
-      const { metadataKey, threadId, date } = res.body;
+
+      const params = {
+        subject,
+        threadId: this.state.threadId,
+        recipients: to,
+        body
+      };
+      const res = await signal.encryptPostEmail(params);
+
+      const { metadataKey, date } = res.body;
+      const threadId = this.state.threadId || res.body.threadId;
       key = metadataKey;
       const emailParams = { id: emailId, key, threadId, date };
       await updateEmail(emailParams);
@@ -159,5 +190,9 @@ class ComposerWrapper extends Component {
     saveDraftChanges(data);
   };
 }
+
+PrevMessage.propTypes = {
+  children: PropTypes.array
+};
 
 export default ComposerWrapper;

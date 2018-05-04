@@ -1,11 +1,15 @@
 import { connect } from 'react-redux';
-import EmailView from '../components/EmailWrapper';
-import { defineTimeByToday } from '../utils/TimeUtils';
-import { getTwoCapitalLetters } from '../utils/StringUtils';
-import { matchOwnEmail } from '../utils/UserUtils';
+import EmailView from './../components/EmailWrapper';
+import { defineTimeByToday } from './../utils/TimeUtils';
+import { getTwoCapitalLetters } from './../utils/StringUtils';
+import { matchOwnEmail } from './../utils/UserUtils';
 import randomcolor from 'randomcolor';
-import { myAccount } from '../utils/electronInterface';
-import { muteEmail, markEmailUnread } from '../actions/index';
+import {
+  composerEvents,
+  myAccount,
+  openEmailInComposer
+} from './../utils/electronInterface';
+import { muteEmail, markEmailUnread } from './../actions/index';
 
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
@@ -54,8 +58,10 @@ const getContacts = (contacts, contactIds) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const email = ownProps.email;
+  const isLast = ownProps.staticOpen;
   return {
-    toggleMute: () => {
+    toggleMute: ev => {
+      ev.stopPropagation();
       const emailId = String(email.get('id'));
       const valueToSet = email.get('isMuted') === 1 ? false : true;
       dispatch(muteEmail(emailId, valueToSet));
@@ -63,6 +69,27 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     markUnread: () => {
       const unreadValue = email.get('unread') ? 0 : 1;
       dispatch(markEmailUnread(email.get('id'), unreadValue));
+    },
+    onReplyEmail: ev => {
+      ev.stopPropagation();
+      const key = email.get('key');
+      openEmailInComposer({ key, type: composerEvents.REPLY });
+    },
+    onReplyLast: () => {
+      if (isLast) {
+        const key = email.get('key');
+        openEmailInComposer({ key, type: composerEvents.REPLY });
+      }
+    },
+    onReplyAll: ev => {
+      ev.stopPropagation();
+      const key = email.get('key');
+      openEmailInComposer({ key, type: composerEvents.REPLY_ALL });
+    },
+    onForward: ev => {
+      ev.stopPropagation();
+      const key = email.get('key');
+      openEmailInComposer({ key, type: composerEvents.FORWARD });
     }
   };
 };

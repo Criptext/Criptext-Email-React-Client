@@ -64,6 +64,13 @@ const dialogTemplate = {
     "To save the message, click on 'Save as Draft'. The message will be saved on your Drafts folder"
 };
 
+const composerEvents = {
+  EDIT_DRAFT: 'edit-draft',
+  REPLY: 'reply',
+  REPLY_ALL: 'reply-all',
+  FORWARD: 'forward'
+};
+
 const create = () => {
   showConfirmation = true;
   globalManager.composerData.set({});
@@ -119,7 +126,7 @@ const destroy = async () => {
   }
   const emailToEdit = globalManager.emailToEdit.get();
   if (emailToEdit) {
-    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit);
+    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit.key);
     await dbManager.deleteEmailLabelAndContactByEmailId(
       prevEmail.id,
       undefined
@@ -172,7 +179,7 @@ const saveDraftToDatabase = async dataDraft => {
   if (!emailToEdit) {
     await dbManager.createEmail(dataDraft);
   } else {
-    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit);
+    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit.key);
     await dbManager.deleteEmailLabelAndContactByEmailId(
       prevEmail.id,
       dataDraft
@@ -203,5 +210,6 @@ module.exports = {
   show,
   send,
   saveDraftChanges,
-  editDraft
+  editDraft,
+  composerEvents
 };

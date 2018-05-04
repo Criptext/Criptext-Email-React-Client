@@ -44,3 +44,7 @@ export const getTwoCapitalLetters = string => {
   }
   return (strings[0].charAt(0) + strings[1].charAt(0)).toUpperCase();
 };
+
+export const replaceAllOccurrences = (text, search, replacement) => {
+  return text.split(search).join(replacement);
+};

@@ -3,13 +3,20 @@ const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 
+const globalManager = remote.require('./src/globalManager');
+
 export const getEmailToEdit = () => {
-  return remote.getGlobal('emailToEdit');
+  return globalManager.emailToEdit.get();
 };
 
 export const getContactsByEmailId = emailId => {
   return dbManager.getContactsByEmailId(emailId);
 };
+
+export const composerEvents = remote.require('./src/windows/composer')
+  .composerEvents;
+
+export const objectUtils = remote.require('./src/utils/ObjectUtils');
 
 export const errors = remote.require('./src/errors');
 
