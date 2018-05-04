@@ -20,13 +20,13 @@ const Control = props => (
       <div className="buttons-container">
         <div className="button-editor">
           <input
-            id="select-att"
+            id="input-attachments"
             type="file"
             className="hide-file-input"
             onChange={props.onDrop}
             multiple={true}
           />
-          <label htmlFor="select-att">
+          <label htmlFor="input-attachments">
             <i className="icon-attach" />
           </label>
         </div>

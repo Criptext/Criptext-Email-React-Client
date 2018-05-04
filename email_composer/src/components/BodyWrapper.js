@@ -6,9 +6,7 @@ class BodyWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isToolbarHidden: true,
-      isDragActive: false,
-      files: []
+      isToolbarHidden: true
     };
   }
 
@@ -17,14 +15,6 @@ class BodyWrapper extends Component {
       <Body
         {...this.props}
         isToolbarHidden={this.state.isToolbarHidden}
-        htmlBody={this.props.htmlBody}
-        getHtmlBody={this.props.getHtmlBody}
-        files={this.state.files}
-        isDragActive={this.state.isDragActive}
-        onClearFile={this.handleClearFile}
-        onDrop={this.handleDrop}
-        handleDragLeave={this.handleDragLeave}
-        handleDragOver={this.handleDragOver}
         onClickTextEditor={this.handleTextEditor}
       />
     );
@@ -32,55 +22,6 @@ class BodyWrapper extends Component {
 
   handleTextEditor = () => {
     this.setState({ isToolbarHidden: !this.state.isToolbarHidden });
-  };
-
-  handleDrop = e => {
-    e.preventDefault();
-    let files;
-    if (e.dataTransfer) {
-      files = e.dataTransfer.files;
-    } else if (e.target) {
-      files = e.target.files;
-    }
-    this.setFiles(files, e);
-  };
-
-  setFiles = (_files, e) => {
-    if (_files && _files.length > 0) {
-      const newFiles = Array.from(_files);
-      const files = newFiles.concat(this.state.files);
-      this.setState({
-        isDragActive: false,
-        files
-      });
-      if (this.props.onDrop) this.props.onDrop(e, files);
-    }
-  };
-
-  handleClearFile = filename => {
-    const files = this.state.files.filter(file => {
-      return file.name !== filename;
-    });
-    this.setState({ files });
-  };
-
-  handleDragLeave = () => {
-    if (this.state.isDragActive) {
-      this.setState({
-        isDragActive: false
-      });
-    }
-  };
-
-  handleDragOver = e => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy';
-    const dragType = e.dataTransfer.types;
-    if (!this.state.isDragActive && !dragType.includes('text/plain')) {
-      this.setState({
-        isDragActive: true
-      });
-    }
   };
 }
 

@@ -39,7 +39,7 @@ export const getTwoCapitalLetters = string => {
 
 export const replaceAllOccurrences = (text, search, replacement) => {
   return text.split(search).join(replacement);
-}
+};
 
 export const convertToHumanSize = (bytes, si) => {
   const thresh = si ? 1000 : 1024;
