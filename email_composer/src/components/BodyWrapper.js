@@ -14,8 +14,11 @@ class BodyWrapper extends Component {
     return (
       <Body
         {...this.props}
+        getHtmlBody={this.props.getHtmlBody}
+        htmlBody={this.props.htmlBody}
         isToolbarHidden={this.state.isToolbarHidden}
         onClickTextEditor={this.handleTextEditor}
+        onDrop={this.props.onDrop}
       />
     );
   }

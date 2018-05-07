@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DropfileField from './DropfileFieldWrapper';
+import DropfileField from './DropfileField';
 import Control from './Control';
 import './body.css';
 
@@ -8,15 +8,15 @@ const Body = props => (
   <div className="body-container">
     <DropfileField
       isToolbarHidden={props.isToolbarHidden}
-      htmlBody={props.htmlBody}
-      getHtmlBody={props.getHtmlBody}
       blockRenderMap={props.blockRenderMap}
+      getHtmlBody={props.getHtmlBody}
+      htmlBody={props.htmlBody}
       files={props.files}
-      onDrop={props.onDrop}
-      onClearFile={props.onClearFile}
-      handleDragLeave={props.handleDragLeave}
-      handleDragOver={props.handleDragOver}
       isDragActive={props.isDragActive}
+      onDragLeave={props.handleDragLeave}
+      onDragOver={props.handleDragOver}
+      onClearFile={props.onClearFile}
+      onDrop={props.onDrop}
     />
     <Control
       onClickTextEditor={props.onClickTextEditor}

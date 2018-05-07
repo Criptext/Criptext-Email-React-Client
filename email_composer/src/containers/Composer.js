@@ -140,6 +140,9 @@ class ComposerWrapper extends Component {
 
   handleDrop = e => {
     e.preventDefault();
+    this.setState({
+      isDragActive: false
+    });
     let files;
     if (e.dataTransfer) {
       files = e.dataTransfer.files;
@@ -151,11 +154,16 @@ class ComposerWrapper extends Component {
 
   setFiles = _files => {
     if (_files && _files.length > 0) {
-      const newFiles = Array.from(_files);
-      const files = newFiles.concat(this.state.files);
-      this.setState({
-        isDragActive: false,
-        files
+      const addedFiles = Array.from(_files);
+      const file = addedFiles[0];
+      const files = [...this.state.files];
+      files.push(file);
+
+      this.setState({ files }, () => {
+        const remainingFiles = addedFiles.slice(1);
+        if (remainingFiles.length > 0) {
+          this.setFiles(remainingFiles);
+        }
       });
     }
   };
