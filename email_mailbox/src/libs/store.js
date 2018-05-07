@@ -117,7 +117,7 @@ export default class SignalProtocolStore {
         recipientId,
         identityKey: util.toString(identityKey)
       });
-      return Promise.resolve(false);
+      return false;
     } else if (
       util.toString(identityKey) !== oldIdentityKeyRecord.identityKey
     ) {
@@ -125,9 +125,9 @@ export default class SignalProtocolStore {
         recipientId,
         identityKey: util.toString(identityKey)
       });
-      return Promise.resolve(true);
+      return true;
     }
-    return Promise.resolve(false);
+    return false;
   };
 
   loadPreKey = async keyId => {

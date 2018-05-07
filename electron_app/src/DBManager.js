@@ -579,8 +579,8 @@ const createSessionRecord = params => {
 };
 
 const deleteSessionRecord = (params, trx) => {
-  const kenx = trx || db;
-  return kenx
+  const knex = trx || db;
+  return knex
     .table(Table.SESSIONRECORD)
     .where(params)
     .del();
