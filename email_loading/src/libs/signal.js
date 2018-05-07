@@ -66,20 +66,14 @@ const createAccount = async ({
   });
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-
-  preKeyPairArray.forEach(async (preKeyPair, index) => {
-    const keysToStore = {
-      preKeyId: preKeyIds[index],
-      preKeyPair,
-      signedPreKeyId,
-      signedPreKeyPair
-    };
-    await store.storeKeys(keysToStore);
-  });
-
+  await Promise.all(
+    Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
+      await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
+    }),
+    store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
+  );
   const labels = Object.values(LabelType);
   await createLabel(labels);
-
   return true;
 };
 

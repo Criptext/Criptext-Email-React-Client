@@ -6,6 +6,8 @@ export const errors = remote.require('./src/errors');
 export const myAccount = remote.require('./src/Account');
 export const LabelType = remote.require('./src/systemLabels');
 
+/* Window events
+   ----------------------------- */
 export const closeDialog = () => {
   ipcRenderer.send('close-modal');
 };
@@ -90,48 +92,78 @@ export const openMailbox = () => {
   ipcRenderer.send('open-mailbox');
 };
 
-export const login = params => {
-  return clientManager.login(params);
+export const throwError = error => {
+  ipcRenderer.send('throwError', error);
 };
 
+/* Criptext Client
+   ----------------------------- */
 export const checkAvailableUsername = username => {
   return clientManager.checkAvailableUsername(username);
 };
 
-/* Signal
-  ----------------------------- */
-export const createKeys = params => {
-  return dbManager.createKeys(params);
-};
-
-export const getKeys = params => {
-  return dbManager.getKeys(params);
-};
-
-export const getPreKeyPair = params => {
-  return dbManager.getPreKeyPair(params);
-};
-
-export const getSignedPreKey = params => {
-  return dbManager.getSignedPreKey(params);
-};
-
-export const createAccount = params => {
-  return dbManager.createAccount(params);
-};
-
-export const getAccount = () => {
-  return dbManager.getAccount();
+export const login = params => {
+  return clientManager.login(params);
 };
 
 export const postUser = params => {
   return clientManager.postUser(params);
 };
 
+/* DataBase
+   ----------------------------- */
+export const createAccount = params => {
+  return dbManager.createAccount(params);
+};
+
+export const createIdentityKeyRecord = params => {
+  return dbManager.createIdentityKeyRecord(params);
+};
+
+export const createPreKeyRecord = params => {
+  return dbManager.createPreKeyRecord(params);
+};
+
+export const createSessionRecord = params => {
+  return dbManager.createSessionRecord(params);
+};
+
+export const createSignedPreKeyRecord = params => {
+  return dbManager.createSignedPreKeyRecord(params);
+};
+
 export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const throwError = error => {
-  ipcRenderer.send('throwError', error);
+export const deletePreKeyPair = params => {
+  return dbManager.deletePreKeyPair(params);
+};
+
+export const deleteSessionRecord = params => {
+  return dbManager.deleteSessionRecord(params);
+};
+
+export const getAccount = () => {
+  return dbManager.getAccount();
+};
+
+export const getIdentityKeyRecord = params => {
+  return dbManager.getIdentityKeyRecord(params);
+};
+
+export const getPreKeyPair = params => {
+  return dbManager.getPreKeyPair(params);
+};
+
+export const getSessionRecord = params => {
+  return dbManager.getSessionRecord(params);
+};
+
+export const getSignedPreKey = params => {
+  return dbManager.getSignedPreKey(params);
+};
+
+export const updateIdentityKeyRecord = params => {
+  return dbManager.updateIdentityKeyRecord(params);
 };

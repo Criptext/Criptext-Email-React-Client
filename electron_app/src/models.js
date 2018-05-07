@@ -40,7 +40,10 @@ const Table = {
   OPEN: 'open',
   ACCOUNT: 'account',
   FEED: 'feed',
-  KEYRECORD: 'keyrecord'
+  PREKEYRECORD: 'prekeyrecord',
+  SIGNEDPREKEYRECORD: 'signedprekeyrecord',
+  SESSIONRECORD: 'sessionrecord',
+  IDENTITYKEYRECORD: 'identitykeyrecord'
 };
 
 const db = require('knex')({
@@ -62,7 +65,10 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.OPEN)
     .dropTableIfExists(Table.FEED)
     .dropTableIfExists(Table.ACCOUNT)
-    .dropTableIfExists(Table.KEYRECORD);
+    .dropTableIfExists(Table.PREKEYRECORD)
+    .dropTableIfExists(Table.SIGNEDPREKEYRECORD)
+    .dropTableIfExists(Table.SESSIONRECORD)
+    .dropTableIfExists(Table.IDENTITYKEYRECORD);
 };
 
 const createContactColumns = table => {
@@ -176,14 +182,37 @@ const createFeedColumns = table => {
   table.string('emailId', MEDIUM_STRING_SIZE).notNullable();
 };
 
-const createKeyRecordColumns = table => {
-  table.increments('id').primary();
-  table.integer('preKeyId').notNullable();
+const createPreKeyRecordColumns = table => {
+  table
+    .integer('preKeyId')
+    .primary()
+    .notNullable();
   table.string('preKeyPrivKey', LARGE_STRING_SIZE).notNullable();
   table.string('preKeyPubKey', LARGE_STRING_SIZE).notNullable();
-  table.integer('signedPreKeyId').notNullable();
-  table.string('signedPrivKey', LARGE_STRING_SIZE).notNullable();
-  table.string('signedPubKey', LARGE_STRING_SIZE).notNullable();
+};
+
+const createSignedPreKeyRecordColumns = table => {
+  table
+    .integer('signedPreKeyId')
+    .primary()
+    .notNullable();
+  table.string('signedPreKeyPrivKey', LARGE_STRING_SIZE).notNullable();
+  table.string('signedPreKeyPubKey', LARGE_STRING_SIZE).notNullable();
+};
+
+const createSessionRecordColumns = table => {
+  table.string('recipientId', XSMALL_STRING_SIZE).notNullable();
+  table.integer('deviceId').notNullable();
+  table.text('record').notNullable();
+  table.primary(['recipientId', 'deviceId']);
+};
+
+const createIdentityKeyRecordColumns = table => {
+  table
+    .string('recipientId', XSMALL_STRING_SIZE)
+    .notNullable()
+    .primary();
+  table.string('identityKey', LARGE_STRING_SIZE).notNullable();
 };
 
 const createTables = async () => {
@@ -199,7 +228,10 @@ const createTables = async () => {
       .createTable(Table.OPEN, createOpenColumns)
       .createTable(Table.FEED, createFeedColumns)
       .createTable(Table.ACCOUNT, createAccountColumns)
-      .createTable(Table.KEYRECORD, createKeyRecordColumns);
+      .createTable(Table.PREKEYRECORD, createPreKeyRecordColumns)
+      .createTable(Table.SIGNEDPREKEYRECORD, createSignedPreKeyRecordColumns)
+      .createTable(Table.SESSIONRECORD, createSessionRecordColumns)
+      .createTable(Table.IDENTITYKEYRECORD, createIdentityKeyRecordColumns);
   }
 };
 

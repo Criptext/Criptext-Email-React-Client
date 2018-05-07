@@ -11,12 +11,10 @@ export const LabelType = remote.require('./src/systemLabels');
 
 export const remoteData = remote.getGlobal('loadingData');
 
+/* Window events
+   ----------------------------- */
 export const closeCreatingKeys = () => {
   ipcRenderer.send('close-create-keys');
-};
-
-export const createSession = params => {
-  return dbManager.createSession(params);
 };
 
 export const openMailbox = () => {
@@ -27,36 +25,66 @@ export const throwError = error => {
   ipcRenderer.send('throwError', error);
 };
 
-/* Signal
-  ----------------------------- */
-export const createKeys = params => {
-  return dbManager.createKeys(params);
+/* Criptext Client
+   ----------------------------- */
+export const postUser = params => {
+  return clientManager.postUser(params);
 };
 
-export const getKeys = params => {
-  return dbManager.getKeys(params);
-};
-
-export const getPreKeyPair = params => {
-  return dbManager.getPreKeyPair(params);
-};
-
-export const getSignedPreKey = params => {
-  return dbManager.getSignedPreKey(params);
-};
-
+/* DataBase
+   ----------------------------- */
 export const createAccount = params => {
   return dbManager.createAccount(params);
+};
+
+export const createIdentityKeyRecord = params => {
+  return dbManager.createIdentityKeyRecord(params);
+};
+
+export const createLabel = params => {
+  return dbManager.createLabel(params);
+};
+
+export const createPreKeyRecord = params => {
+  return dbManager.createPreKeyRecord(params);
+};
+
+export const createSessionRecord = params => {
+  return dbManager.createSessionRecord(params);
+};
+
+export const createSignedPreKeyRecord = params => {
+  return dbManager.createSignedPreKeyRecord(params);
+};
+
+export const deletePreKeyPair = params => {
+  return dbManager.deletePreKeyPair(params);
+};
+
+export const deleteSessionRecord = params => {
+  return dbManager.deleteSessionRecord(params);
 };
 
 export const getAccount = () => {
   return dbManager.getAccount();
 };
 
-export const postUser = params => {
-  return clientManager.postUser(params);
+export const getIdentityKeyRecord = params => {
+  return dbManager.getIdentityKeyRecord(params);
 };
 
-export const createLabel = params => {
-  return dbManager.createLabel(params);
+export const getPreKeyPair = params => {
+  return dbManager.getPreKeyPair(params);
+};
+
+export const getSessionRecord = params => {
+  return dbManager.getSessionRecord(params);
+};
+
+export const getSignedPreKey = params => {
+  return dbManager.getSignedPreKey(params);
+};
+
+export const updateIdentityKeyRecord = params => {
+  return dbManager.updateIdentityKeyRecord(params);
 };
