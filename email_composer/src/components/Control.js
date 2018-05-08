@@ -19,7 +19,16 @@ const Control = props => (
     <div disabled={props.status === Status.WAITING}>
       <div className="buttons-container">
         <div className="button-editor">
-          <i className="icon-attach" />
+          <input
+            id="input-attachments"
+            type="file"
+            className="hide-file-input"
+            onChange={props.onDrop}
+            multiple={true}
+          />
+          <label htmlFor="input-attachments">
+            <i className="icon-attach" />
+          </label>
         </div>
         <div
           className="button-editor button-editor-border-left button-editor-border-right"
@@ -65,7 +74,8 @@ export const Status = {
 Control.propTypes = {
   onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func,
-  status: PropTypes.number
+  status: PropTypes.number,
+  onDrop: PropTypes.func
 };
 
 export default Control;

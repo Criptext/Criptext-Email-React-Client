@@ -1,6 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`string utils: Parse email by separators 1`] = `
+exports[`String Utils - Human File Size : Convert to human file sizes 1`] = `
+Array [
+  "100 B",
+  "1.0 KB",
+  "1.0 MB",
+  "1.0 GB",
+  "1.0 TB",
+]
+`;
+
+exports[`String Utils - Parse Separators : Parse email by separators 1`] = `
 Array [
   "julian_adams@signal.com",
   "erika@criptext.com",

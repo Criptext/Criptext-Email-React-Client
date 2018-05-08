@@ -35,7 +35,7 @@ export const SideBarItems = [
   },
   {
     id: 'all',
-    icon: 'icon-mailbox',
+    icon: 'icon-mail',
     text: LabelType.all.text
   }
 ];

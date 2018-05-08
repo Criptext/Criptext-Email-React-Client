@@ -1,0 +1,137 @@
+
+.files-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.file-container{
+  border: 1px solid rgba(216, 216, 216, 0.45);
+  background-color: #fafafa;
+  border-radius: 5px;
+  height: 40px;
+  margin: 5px 0;
+  position: relative;
+  width: 330px;
+
+  &:hover{
+    border-color: #bcdaff;
+    background-color: #edf5ff;
+
+    .file-delete{
+      display: flex;
+    }
+  }
+
+  .loading-file-bar {
+    height: 2px;
+    background-color: #0091ff;
+    animation: fadeInRight 3s linear;
+    position: relative;
+    top: 41px;
+  }
+  @keyframes fadeInRight {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+}
+
+.file-container.container-loading {
+  opacity: 0.6;
+}
+
+.file-icon{
+  float: left;
+  height: 30px;
+  margin: 5px 8px 5px 7px;
+  width: 30px;
+  font-size: 30px;
+  color: #fff;
+  
+  .icon-container-image { 
+    background-color: #99ccff; 
+    border-radius: 3px;
+  }
+  .icon-container-pdf { 
+    background-color: #ff4539; 
+    border-radius: 3px;
+  }
+  .icon-container-zip{ 
+    background-color: #ffe196; 
+    border-radius: 3px;
+  }
+  .icon-container-audio{ 
+    background-color: #f0ba02;
+    border-radius: 3px; 
+  }
+  .icon-container-video{ 
+    background-color: #00a49e; 
+    border-radius: 3px;
+  }
+  .icon-container-ppt{ 
+    background-color: #d64123;
+    border-radius: 3px; 
+  }
+  .icon-container-word{ 
+    background-color: #2b5697;
+    border-radius: 3px; 
+  }
+  .icon-container-excel{ 
+    background-color: #4d9c45;
+    border-radius: 3px; 
+  }
+  .icon-container-file-default { 
+    background-color: #4a90e2; 
+    border-radius: 3px;
+  }
+}
+
+.file-info{
+  align-items: center;
+  display: flex;
+  float: right;
+  height: 100%;
+  width: calc(100% - 50px);
+  
+  span{
+    display: block;
+    font-family: NunitoSans;
+    font-size: 13px;
+
+    &:first-child{
+      flex-grow: 2;
+      font-weight: bold;
+      margin-right: 5px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  
+    &:last-child{
+      color: #9b9b9b;
+      flex-grow: 1;
+      font-weight: 500;
+      padding-right: 30px;
+      text-align: right;
+    }
+  }
+}
+
+.file-delete{
+  align-items: center;
+  background-color: white;
+  border: solid 1px #cdcdcd;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.18);
+  border-radius: 50%;
+  display: none;
+  height: 19px;
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  width: 19px;
+
+  i{
+    color: #6e6e6e;
+    font-size: 18px;
+    margin: 0 auto;
+  }
+}

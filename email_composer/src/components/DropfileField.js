@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Editor from './EditorWrapper';
+import AttachmentWrapper from './AttachmentWrapper';
 import './dropfilefield.css';
 
 const DropfileField = props => (
@@ -39,16 +40,7 @@ const DropfileField = props => (
 const renderPreview = (files, onClearFile) =>
   files.map((file, index) => {
     return (
-      <div key={index} className="file-container">
-        <div className="file-icon" />
-        <div className="file-info">
-          <span>{file.name}</span>
-          <span>{file.size}</span>
-        </div>
-        <div className="file-delete" onClick={() => onClearFile(file.name)}>
-          <i className="icon-exit" />
-        </div>
-      </div>
+      <AttachmentWrapper key={index} file={file} onClearFile={onClearFile} />
     );
   });
 

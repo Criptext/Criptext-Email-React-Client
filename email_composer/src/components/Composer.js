@@ -22,6 +22,12 @@ const Composer = props => (
       getHtmlBody={props.getHtmlBody}
       status={props.status}
       blockRenderMap={props.blockRenderMap}
+      files={props.files}
+      isDragActive={props.isDragActive}
+      onClearFile={props.onClearFile}
+      onDrop={props.onDrop}
+      handleDragLeave={props.handleDragLeave}
+      handleDragOver={props.handleDragOver}
     />
   </div>
 );
@@ -39,7 +45,13 @@ Composer.propTypes = {
   onClickSendMessage: PropTypes.func,
   status: PropTypes.number,
   textSubject: PropTypes.string,
-  toEmails: PropTypes.array
+  toEmails: PropTypes.array,
+  files: PropTypes.array,
+  onDrop: PropTypes.func,
+  onClearFile: PropTypes.func,
+  handleDragLeave: PropTypes.func,
+  handleDragOver: PropTypes.func,
+  isDragActive: PropTypes.bool
 };
 
 export default Composer;

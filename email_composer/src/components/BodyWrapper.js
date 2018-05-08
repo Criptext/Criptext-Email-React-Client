@@ -18,6 +18,7 @@ class BodyWrapper extends Component {
         htmlBody={this.props.htmlBody}
         isToolbarHidden={this.state.isToolbarHidden}
         onClickTextEditor={this.handleTextEditor}
+        onDrop={this.props.onDrop}
       />
     );
   }
@@ -29,7 +30,8 @@ class BodyWrapper extends Component {
 
 BodyWrapper.propTypes = {
   getHtmlBody: PropTypes.func,
-  htmlBody: PropTypes.object
+  htmlBody: PropTypes.object,
+  onDrop: PropTypes.func
 };
 
 export default BodyWrapper;

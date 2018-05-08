@@ -1,4 +1,4 @@
-const { BrowserWindow } = require('electron');
+const { BrowserWindow, shell } = require('electron');
 const { mailboxUrl } = require('./../window_routing');
 
 let mailboxWindow;
@@ -22,6 +22,10 @@ const create = () => {
   });
   mailboxWindow.on('closed', () => {
     mailboxWindow = undefined;
+  });
+  mailboxWindow.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    shell.openExternal(url);
   });
 };
 
