@@ -1,13 +1,13 @@
 export const FILE_TYPES = {
-  IMAGE: 'IMAGE',
-  AUDIO: 'AUDIO',
-  VIDEO: 'VIDEO',
-  PDF: 'PDF',
-  OFFICE_DOC: 'OFFICE_DOC',
-  OFFICE_SHEET: 'OFFICE_SHEET',
-  OFFICE_PPT: 'OFFICE_PPT',
-  ZIP: 'ZIP',
-  DEFAULT: 'DEFAULT'
+  IMAGE: 'image',
+  AUDIO: 'audio',
+  VIDEO: 'video',
+  PDF: 'pdf',
+  OFFICE_DOC: 'word',
+  OFFICE_SHEET: 'excel',
+  OFFICE_PPT: 'ppt',
+  ZIP: 'zip',
+  DEFAULT: 'file-default'
 };
 
 const officeDocTypes = [

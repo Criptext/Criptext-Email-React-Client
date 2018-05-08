@@ -138,32 +138,25 @@ class ComposerWrapper extends Component {
     this.setState({ htmlBody }, () => this.saveTemporalDraft());
   };
 
+  getFilesFromEvent = ev => {
+    return ev.dataTransfer ? ev.dataTransfer.files : ev.target.files;
+  };
+
   handleDrop = e => {
     e.preventDefault();
     this.setState({
       isDragActive: false
     });
-    let files;
-    if (e.dataTransfer) {
-      files = e.dataTransfer.files;
-    } else if (e.target) {
-      files = e.target.files;
-    }
+    const files = this.getFilesFromEvent(e);
     this.setFiles(files);
   };
 
-  setFiles = _files => {
-    if (_files && _files.length > 0) {
-      const addedFiles = Array.from(_files);
-      const file = addedFiles[0];
-      const files = [...this.state.files];
-      files.push(file);
-
+  setFiles = newFiles => {
+    if (newFiles && newFiles.length > 0) {
+      const [firstNewFile, ...remainingNewFiles] = Array.from(newFiles);
+      const files = [...this.state.files, firstNewFile];
       this.setState({ files }, () => {
-        const remainingFiles = addedFiles.slice(1);
-        if (remainingFiles.length > 0) {
-          this.setFiles(remainingFiles);
-        }
+        this.setFiles(remainingNewFiles);
       });
     }
   };
