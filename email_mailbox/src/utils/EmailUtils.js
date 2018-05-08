@@ -23,17 +23,17 @@ const formRecipients = recipientString => {
 };
 
 export const formIncomingEmailFromData = async (data, deviceId) => {
-  const bodyKey = data.bodyKey;
+  const messageId = data.messageId;
   const recipientId = getRecipientIdFromEmailAddressTag(data.from);
   const { content, preview } = await getContentMessage(
-    bodyKey,
+    messageId,
     recipientId,
     deviceId
   );
   const email = {
     key: data.metadataKey,
     threadId: data.threadId,
-    s3Key: bodyKey,
+    s3Key: messageId,
     content,
     preview,
     subject: data.subject,
