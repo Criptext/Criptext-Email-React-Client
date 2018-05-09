@@ -559,7 +559,7 @@ const createSignedPreKeyRecord = params => {
 
 const getSignedPreKey = params => {
   return db
-    .select('signedPrivKey', 'signedPubKey')
+    .select('signedPreKeyPrivKey', 'signedPreKeyPubKey')
     .from(Table.SIGNEDPREKEYRECORD)
     .where(params);
 };
