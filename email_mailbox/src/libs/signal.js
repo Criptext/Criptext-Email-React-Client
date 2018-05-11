@@ -1,5 +1,5 @@
 /*global libsignal util*/
-import { getEmailBody } from './../utils/electronInterface';
+import { getEmailBody, getSessionRecord } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
 
 const store = new SignalProtocolStore();
@@ -15,11 +15,26 @@ const decryptEmail = async (bodyKey, recipientId, deviceId) => {
     deviceId
   );
   const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
-  const binaryText = await sessionCipher.decryptPreKeyWhisperMessage(
+  const [existsSessionRecord] = await getSessionRecord({
+    recipientId,
+    deviceId
+  });
+  const binaryText = await decryptMessage(
+    sessionCipher,
+    textEncrypted,
+    existsSessionRecord
+  );
+  return util.toString(binaryText);
+};
+
+const decryptMessage = async (sessionCipher, textEncrypted, existsSession) => {
+  if (existsSession) {
+    return await sessionCipher.decryptWhisperMessage(textEncrypted, 'binary');
+  }
+  return await sessionCipher.decryptPreKeyWhisperMessage(
     textEncrypted,
     'binary'
   );
-  return util.toString(binaryText);
 };
 
 export default {
