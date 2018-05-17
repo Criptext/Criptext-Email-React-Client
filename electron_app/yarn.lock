@@ -72,9 +72,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@criptext/email-http-client@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@criptext/email-http-client/-/email-http-client-0.5.1.tgz#7dcc5f5fd3c85060f59b0426fd8672b090ddc03c"
+"@criptext/email-http-client@0.7":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@criptext/email-http-client/-/email-http-client-0.7.0.tgz#b6cc63ae46738fe272fedbedddaac14c9a24522a"
   dependencies:
     superagent "^3.8.2"
 

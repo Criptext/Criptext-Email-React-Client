@@ -135,7 +135,7 @@ class SignUpWrapper extends Component {
           items={formItems}
           onChangeField={this.handleChange}
           disabled={this.state.disabled}
-          handleSubmit={this.handleSubmit}
+          onClickSignUp={this.handleClickSignUp}
           validator={this.universalValidator}
           errors={this.state.errors}
           onSetError={this.onSetError}
@@ -180,7 +180,7 @@ class SignUpWrapper extends Component {
     });
   };
 
-  handleSubmit = event => {
+  handleClickSignUp = event => {
     event.preventDefault();
     event.stopPropagation();
     const values = this.state.values;

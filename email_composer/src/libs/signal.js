@@ -36,7 +36,7 @@ const encryptText = async (
   const sessionCipher = new libsignal.SessionCipher(store, addressTo);
   const ciphertext = await sessionCipher.encrypt(textMessage);
   const body = util.toBase64(util.toArrayBuffer(ciphertext.body));
-  return {body, type: ciphertext.type};
+  return { body, type: ciphertext.type };
 };
 
 const keysToArrayBuffer = keys => {

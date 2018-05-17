@@ -49,7 +49,7 @@ const renderForm = props => (
         <div className="button">
           <button
             className="create-button"
-            onClick={ev => props.handleSubmit(ev)}
+            onClick={ev => props.onClickSignUp(ev)}
             disabled={props.disabled}
           >
             <span>Create account</span>
@@ -66,7 +66,7 @@ renderHeader.propTypes = {
 
 renderForm.propTypes = {
   disabled: PropTypes.bool,
-  handleSubmit: PropTypes.func,
+  onClickSignUp: PropTypes.func,
   errors: PropTypes.object,
   items: PropTypes.array,
   onChangeField: PropTypes.func,

@@ -44,7 +44,7 @@ const renderForm = props => (
       <div className="button">
         <button
           className="button-login"
-          onClick={ev => props.handleSubmit(ev)}
+          onClick={ev => props.onClickSignIn(ev)}
           disabled={props.disabled}
         >
           <span>Log In</span>
@@ -68,7 +68,7 @@ const renderFooter = props => (
 renderForm.propTypes = {
   onChangeField: PropTypes.func,
   validator: PropTypes.func,
-  handleSubmit: PropTypes.func,
+  onClickSignIn: PropTypes.func,
   disabled: PropTypes.bool,
   value: PropTypes.string
 };
