@@ -1,5 +1,6 @@
 const { BrowserWindow, shell } = require('electron');
 const { mailboxUrl } = require('./../window_routing');
+const path = require('path');
 
 let mailboxWindow;
 
@@ -8,8 +9,14 @@ const mailboxSize = {
   height: 604
 };
 
+const iconPath = path.join(
+  __dirname,
+  './../../resources/launch-icons/icon.png'
+);
+
 const create = () => {
   mailboxWindow = new BrowserWindow({
+    icon: iconPath,
     width: mailboxSize.width,
     height: mailboxSize.height,
     show: false,

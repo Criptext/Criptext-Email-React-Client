@@ -1,6 +1,6 @@
 {
   "dest": "release-builds/",
-  "icon": "resources/icon.png",
+  "icon": "resources/desktop-icon.png",
   "maintainer": "Criptext <info@criptext.com>",
   "description": "Client for criptext email",
   "productName": "Criptext Email",
@@ -11,5 +11,9 @@
   "desktopTemplate": "./resources/desktop.ejs",
   "categories": [
     "Utility"
-  ]
+  ],
+  "scripts": {
+    "preinst": "./installerResources/removeOldAppData-linux.sh",
+    "postrm": "./installerResources/removeOldAppData-linux.sh"
+  }
 }
