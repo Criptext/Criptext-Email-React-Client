@@ -11,12 +11,21 @@
     "test": "criptext-js-tools test",
     "integration": "NODE_ENV=test criptext-js-tools integration",
     "lint": "criptext-js-tools lint",
-    "package-linux": "bash converge_builds.sh && electron-packager . electron-criptext-email --overwrite --asar --platform=linux --arch=x64 --icon=resources/icon.png --out=release-builds --no-package-manager",
-    "package-mac": "sh converge_builds.sh && electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
-    "installer-linux": "electron-installer-debian --src release-builds/electron-criptext-email-linux-x64/ --arch amd64 --config debian.json",
+    "package-linux": "bash ./installerResources/converge_builds.sh && electron-packager . electron-criptext-email --overwrite --asar --platform=linux --arch=x64 --icon=resources/icon.png --out=release-builds --no-package-manager",
+    "package-mac": "sh ./installerResources/converge_builds.sh && electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
+    "installer-linux": "electron-installer-debian --src release-builds/electron-criptext-email-linux-x64/ --arch amd64 --config ./installerResources/debian.json",
     "installer-mac": "electron-installer-dmg ./release-builds/Criptext\\ Email\\ Client-darwin-x64/Criptext\\ Email\\ Client.app electron-criptext-email --out=release-builds --overwrite"
   },
   "main": "./electron-starter.js",
+  "build": {
+    "win": {
+      "target": "nsis",
+      "icon": "./resources/launch-icons/icon.ico"
+    },
+    "nsis": {
+      "deleteAppDataOnUninstall": true
+    }
+  },
   "devDependencies": {
     "criptext-js-tools": "^0.5.0",
     "electron": "^1.7.10",

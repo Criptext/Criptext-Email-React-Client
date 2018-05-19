@@ -1,5 +1,11 @@
 const path = require('path');
 const { app } = require('electron');
+const {
+  createVersionFile,
+  checkInstalledVersion,
+  removePrevFiles
+} = require('./versionManager');
+const { isProductionMode, isMacOS } = require('./utils/SystemUtils');
 
 const getDbPath = node_env => {
   switch (node_env) {
@@ -216,6 +222,7 @@ const createIdentityKeyRecordColumns = table => {
 };
 
 const createTables = async () => {
+  cleanPreviousData();
   const emailExists = await db.schema.hasTable(Table.EMAIL);
   if (!emailExists) {
     await db.schema
@@ -232,6 +239,22 @@ const createTables = async () => {
       .createTable(Table.SIGNEDPREKEYRECORD, createSignedPreKeyRecordColumns)
       .createTable(Table.SESSIONRECORD, createSessionRecordColumns)
       .createTable(Table.IDENTITYKEYRECORD, createIdentityKeyRecordColumns);
+    await initVersionFile();
+  }
+};
+
+const cleanPreviousData = () => {
+  if (isProductionMode() && isMacOS()) {
+    const isCurrentRelease = checkInstalledVersion();
+    if (!isCurrentRelease) {
+      return removePrevFiles();
+    }
+  }
+};
+
+const initVersionFile = async () => {
+  if (isProductionMode() && isMacOS()) {
+    await createVersionFile();
   }
 };
 
