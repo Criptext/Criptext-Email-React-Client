@@ -3,9 +3,7 @@ import { loadLabels } from '../actions';
 import SideBarView from '../components/SideBar';
 
 const defineLabels = labels => {
-  return labels
-    .valueSeq()
-    .filter(element => element.get('id') > 7 || element.get('id') === 4);
+  return labels.valueSeq().filter(element => element.get('type') === 'custom');
 };
 
 const mapStateToProps = state => {

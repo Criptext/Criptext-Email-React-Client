@@ -93,6 +93,7 @@ const createLabelColumns = table => {
     .unique()
     .notNullable();
   table.string('color', TINY_STRING_SIZE).notNullable();
+  table.string('type', TINY_STRING_SIZE).defaultTo('custom');
 };
 
 const createEmailColumns = table => {

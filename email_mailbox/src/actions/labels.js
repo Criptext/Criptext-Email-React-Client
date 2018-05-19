@@ -24,7 +24,8 @@ export const addLabel = label => {
         [labelId]: {
           id: labelId,
           color: label.color,
-          text: label.text
+          text: label.text,
+          type: 'custom'
         }
       };
       dispatch(addLabels(labels));
@@ -38,14 +39,13 @@ export const loadLabels = () => {
   return async dispatch => {
     try {
       const response = await db.getAllLabels();
-      const labels = {};
-      response.forEach(element => {
-        labels[element.id] = {
-          id: element.id,
-          color: element.color,
-          text: element.text
-        };
-      });
+      const labels = response.reduce(
+        (result, element) => ({
+          ...result,
+          [element.id]: element
+        }),
+        {}
+      );
       dispatch(addLabels(labels));
     } catch (e) {
       // TO DO

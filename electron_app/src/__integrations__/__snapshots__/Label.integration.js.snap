@@ -6,6 +6,7 @@ Array [
     "color": "#ffffff",
     "id": 1,
     "text": "Inbox",
+    "type": "custom",
   },
 ]
 `;
@@ -16,6 +17,7 @@ Array [
     "color": "#111111",
     "id": 3,
     "text": "Spam",
+    "type": "custom",
   },
 ]
 `;
@@ -26,6 +28,7 @@ Array [
     "color": "#000000",
     "id": 2,
     "text": "labelmodified",
+    "type": "custom",
   },
 ]
 `;
@@ -36,6 +39,7 @@ Array [
     "color": "#ffffff",
     "id": 4,
     "text": "labelmodified2",
+    "type": "custom",
   },
 ]
 `;

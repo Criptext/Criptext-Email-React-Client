@@ -34,7 +34,6 @@ const create = () => {
     e.preventDefault();
     shell.openExternal(url);
   });
-  mailboxWindow.webContents.openDevTools();
 };
 
 const show = async () => {

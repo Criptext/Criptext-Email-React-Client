@@ -9,7 +9,7 @@ const mapStateToProps = state => {
   const multiselect = state.get('activities').get('multiselect');
   const threadsSelected = getThreadsSelected(state.get('threads'), multiselect);
   const labels = getLabelIncluded(
-    state.get('labels'),
+    state.get('labels').filter(item => item.get('type') === 'custom'),
     state.get('threads'),
     threadsSelected,
     multiselect
