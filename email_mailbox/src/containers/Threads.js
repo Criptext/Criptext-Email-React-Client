@@ -8,6 +8,25 @@ import ThreadsView from '../components/Threads';
 import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';
 
+const filterThreasBySpamAndTrash = (mailbox, threads) => {
+  const mailboxId = LabelType[mailbox].id;
+  const trashId = LabelType.trash.id;
+  const spamId = LabelType.spam.id;
+
+  return threads
+    .map(thread => {
+      const threadLabels = thread.get('labels');
+      if (mailboxId === trashId) return thread;
+      if (mailboxId === spamId) {
+        return threadLabels.includes(trashId) ? null : thread;
+      }
+      return threadLabels.includes(trashId) || threadLabels.includes(spamId)
+        ? null
+        : thread;
+    })
+    .filter(item => item !== null);
+};
+
 const mapStateToProps = (state, ownProps) => {
   const mailboxTitle = LabelType[ownProps.mailbox].text;
   const unreadFilter = state.get('activities').get('unreadFilter');
@@ -19,10 +38,11 @@ const mapStateToProps = (state, ownProps) => {
         return thread.get('unread');
       })
     : state.get('threads');
+  const mailboxThreads = filterThreasBySpamAndTrash(ownProps.mailbox, threads);
   return {
     buttonSyncStatus,
     mailboxTitle,
-    threads,
+    threads: mailboxThreads,
     unreadFilter
   };
 };

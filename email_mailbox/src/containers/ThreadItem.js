@@ -94,8 +94,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(actions.multiSelectThread(threadId, value));
     },
     onRemove: () => {
-      const threadId = ownProps.thread.get('id');
-      dispatch(actions.removeThread(threadId));
+      const threadParams = {
+        threadIdStore: ownProps.thread.get('id'),
+        threadIdDB: ownProps.thread.get('threadId')
+      };
+      dispatch(actions.addThreadLabel(threadParams, LabelType.trash.id));
     },
     onStarClick: () => {
       const thread = ownProps.thread;
