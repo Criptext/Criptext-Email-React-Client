@@ -64,7 +64,7 @@ const renderForm = props => (
           className={`button-lost ${
             props.isLoading ? 'button-is-loading' : ''
           }`}
-          onClick={ev => props.handleSubmit(ev)}
+          onClick={ev => props.onCLickSignInWithPassword(ev)}
           disabled={props.disabled}
         >
           {props.isLoading ? renderLoadingContent() : renderBaseContent()}
@@ -100,7 +100,7 @@ renderSubHeader.propTypes = {
 renderForm.propTypes = {
   onChangeField: PropTypes.func,
   validator: PropTypes.func,
-  handleSubmit: PropTypes.func,
+  onCLickSignInWithPassword: PropTypes.func,
   handleForgot: PropTypes.func,
   disabled: PropTypes.bool,
   values: PropTypes.object,

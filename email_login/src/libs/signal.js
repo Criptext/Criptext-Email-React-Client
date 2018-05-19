@@ -5,7 +5,9 @@ import {
   createLabel,
   createAccount as createAccountDB,
   getAccount,
-  myAccount
+  myAccount,
+  postKeyBundle,
+  errors
 } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
 
@@ -13,19 +15,32 @@ const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
 
-const registerAccount = async ({ recipientId, deviceId, name, token }) => {
-  const signedPreKeyId = deviceId;
+const createAccountWithNewDevice = async ({
+  recipientId,
+  deviceId,
+  name,
+  token
+}) => {
+  const signedPreKeyId = 1;
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
     (item, index) => index + 1
   );
 
   const { identityKey, registrationId } = await generateIdentity();
-  const { preKeyPairArray, signedPreKeyPair } = await generatePreKeyBundle({
+  const {
+    keybundle,
+    preKeyPairArray,
+    signedPreKeyPair
+  } = await generatePreKeyBundle({
     identityKey,
     registrationId,
     signedPreKeyId,
     preKeyIds
   });
+  const res = await postKeyBundle(keybundle);
+  if (res.status !== 200) {
+    throw errors.login.FAILED;
+  }
 
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
@@ -102,6 +117,6 @@ const generatePreKeyBundle = async ({
 };
 
 export default {
-  registerAccount,
+  createAccountWithNewDevice,
   generatePreKeyBundle
 };

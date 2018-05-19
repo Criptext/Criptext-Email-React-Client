@@ -35,7 +35,8 @@ const encryptText = async (
   }
   const sessionCipher = new libsignal.SessionCipher(store, addressTo);
   const ciphertext = await sessionCipher.encrypt(textMessage);
-  return util.toBase64(util.toArrayBuffer(ciphertext.body));
+  const body = util.toBase64(util.toArrayBuffer(ciphertext.body));
+  return { body, type: ciphertext.type };
 };
 
 const keysToArrayBuffer = keys => {
@@ -74,7 +75,6 @@ const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
     recipientIds,
     knownAddresses
   );
-
   if (keyBundles.includes(null)) {
     throw new CustomError(errors.server.UNAUTHORIZED_ERROR);
   }
@@ -109,7 +109,7 @@ const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
         const deviceId = typeof item === 'number' ? item : item.deviceId;
         const keyBundleArrayBuffer =
           typeof item === 'object' ? keysToArrayBuffer(item) : undefined;
-        const bodyEncrypted = await encryptText(
+        const textEncrypted = await encryptText(
           recipientId,
           deviceId,
           body,
@@ -119,7 +119,8 @@ const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
           type,
           recipientId,
           deviceId,
-          body: bodyEncrypted
+          body: textEncrypted.body,
+          messageType: textEncrypted.type
         };
       })
     );

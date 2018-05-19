@@ -1,8 +1,18 @@
 import { removeAppDomain, removeHTMLTags } from './StringUtils';
 import signal from './../libs/signal';
 
-const getContentMessage = async (bodyKey, recipientId, deviceId) => {
-  const content = await signal.decryptEmail(bodyKey, recipientId, deviceId);
+const getContentMessage = async ({
+  bodyKey,
+  recipientId,
+  deviceId,
+  messageType
+}) => {
+  const content = await signal.decryptEmail({
+    bodyKey,
+    recipientId,
+    deviceId,
+    messageType
+  });
   if (content === undefined) {
     return { content: '', preview: '' };
   }
@@ -22,14 +32,15 @@ const formRecipients = recipientString => {
   return recipientString === '' ? [] : recipientString.split(',');
 };
 
-export const formIncomingEmailFromData = async (data, deviceId) => {
-  const messageId = data.messageId;
+export const formIncomingEmailFromData = async data => {
+  const { messageId, senderDeviceId, messageType } = data;
   const recipientId = getRecipientIdFromEmailAddressTag(data.from);
-  const { content, preview } = await getContentMessage(
-    messageId,
+  const { content, preview } = await getContentMessage({
+    bodyKey: messageId,
     recipientId,
-    deviceId
-  );
+    deviceId: senderDeviceId,
+    messageType
+  });
   const email = {
     key: data.metadataKey,
     threadId: data.threadId,

@@ -52,7 +52,7 @@ class LoginWrapper extends Component {
         return (
           <Login
             toggleSignUp={ev => this.toggleSignUp(ev)}
-            handleSubmit={this.handleSubmit}
+            onClickSignIn={this.handleClickSignIn}
             onChangeField={this.handleChange}
             disabled={this.state.disabled}
             validator={this.validateUsername}
@@ -115,7 +115,7 @@ class LoginWrapper extends Component {
     });
   };
 
-  handleSubmit = event => {
+  handleClickSignIn = event => {
     event.preventDefault();
     event.stopPropagation();
     this.setState({

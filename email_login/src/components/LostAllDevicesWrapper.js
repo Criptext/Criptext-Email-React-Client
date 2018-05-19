@@ -37,8 +37,8 @@ class LostDevicesWrapper extends Component {
       <LostAllDevices
         {...this.props}
         handleForgot={this.handleForgot}
-        handleSubmit={this.handleSubmit}
-        onChangeField={this.handleChange}
+        onCLickSignInWithPassword={this.handleClickSignInWithPassword}
+        onChangeField={this.handleChangeField}
         disabled={this.state.disabled}
         validator={this.validatePassword}
         values={this.state.values}
@@ -59,7 +59,7 @@ class LostDevicesWrapper extends Component {
     });
   };
 
-  handleChange = event => {
+  handleChangeField = event => {
     const values = { ...this.state.values };
     values[event.target.name] = event.target.value;
     this.setState({ values }, () => {
@@ -67,7 +67,7 @@ class LostDevicesWrapper extends Component {
     });
   };
 
-  handleSubmit = async event => {
+  handleClickSignInWithPassword = async event => {
     event.preventDefault();
     event.stopPropagation();
     this.setState({
@@ -87,7 +87,12 @@ class LostDevicesWrapper extends Component {
     } else {
       const recipientId = this.state.values.username;
       const { deviceId, name, token } = loginResponse.body;
-      await this.loginAccount({ recipientId, deviceId, name, token });
+      await this.createAccountWithNewDevice({
+        recipientId,
+        deviceId,
+        name,
+        token
+      });
     }
   };
 
@@ -109,20 +114,21 @@ class LostDevicesWrapper extends Component {
     }
   };
 
-  loginAccount = async ({ recipientId, deviceId, name, token }) => {
+  createAccountWithNewDevice = async ({
+    recipientId,
+    deviceId,
+    name,
+    token
+  }) => {
     try {
-      const response = await signal.registerAccount({
+      await signal.createAccountWithNewDevice({
         recipientId,
         deviceId,
         name,
         token
       });
-      if (response) {
-        openMailbox();
-        closeLogin();
-      } else {
-        this.throwLoginError(errors.login.FAILED);
-      }
+      openMailbox();
+      closeLogin();
     } catch (e) {
       this.throwLoginError(e);
     }

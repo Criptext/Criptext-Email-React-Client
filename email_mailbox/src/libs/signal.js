@@ -1,10 +1,18 @@
 /*global libsignal util*/
-import { getEmailBody, getSessionRecord } from './../utils/electronInterface';
+import { getEmailBody } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
-
 const store = new SignalProtocolStore();
+const ciphertextType = {
+  CIPHERTEXT: 1,
+  PREKEY_BUNDLE: 3
+};
 
-const decryptEmail = async (bodyKey, recipientId, deviceId) => {
+const decryptEmail = async ({
+  bodyKey,
+  recipientId,
+  deviceId,
+  messageType
+}) => {
   const res = await getEmailBody(bodyKey);
   if (res.status !== 200) {
     return;
@@ -15,26 +23,26 @@ const decryptEmail = async (bodyKey, recipientId, deviceId) => {
     deviceId
   );
   const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
-  const [existsSessionRecord] = await getSessionRecord({
-    recipientId,
-    deviceId
-  });
   const binaryText = await decryptMessage(
     sessionCipher,
     textEncrypted,
-    existsSessionRecord
+    messageType
   );
   return util.toString(binaryText);
 };
 
-const decryptMessage = async (sessionCipher, textEncrypted, existsSession) => {
-  if (existsSession) {
-    return await sessionCipher.decryptWhisperMessage(textEncrypted, 'binary');
+const decryptMessage = async (sessionCipher, textEncrypted, messageType) => {
+  switch (messageType) {
+    case ciphertextType.CIPHERTEXT:
+      return await sessionCipher.decryptWhisperMessage(textEncrypted, 'binary');
+    case ciphertextType.PREKEY_BUNDLE:
+      return await sessionCipher.decryptPreKeyWhisperMessage(
+        textEncrypted,
+        'binary'
+      );
+    default:
+      break;
   }
-  return await sessionCipher.decryptPreKeyWhisperMessage(
-    textEncrypted,
-    'binary'
-  );
 };
 
 export default {

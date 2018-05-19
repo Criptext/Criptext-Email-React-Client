@@ -106,6 +106,10 @@ export const login = params => {
   return clientManager.login(params);
 };
 
+export const postKeyBundle = params => {
+  return clientManager.postKeyBundle(params);
+};
+
 export const postUser = params => {
   return clientManager.postUser(params);
 };

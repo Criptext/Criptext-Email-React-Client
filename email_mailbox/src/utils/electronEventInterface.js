@@ -8,8 +8,7 @@ import { SocketCommand } from '../utils/const';
 import {
   createEmailLabel,
   getEmailByKey,
-  LabelType,
-  myAccount
+  LabelType
 } from '../utils/electronInterface';
 
 const EventEmitter = window.require('events');
@@ -42,7 +41,7 @@ export const handleNewMessageEvent = async emailObj => {
 
   const prevEmail = await getEmailByKey(emailObj.metadataKey);
   if (!prevEmail.length) {
-    const email = await formIncomingEmailFromData(emailObj, myAccount.deviceId);
+    const email = await formIncomingEmailFromData(emailObj);
     const recipients = getRecipientsFromData(emailObj);
     const params = {
       email,

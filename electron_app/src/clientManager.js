@@ -24,12 +24,16 @@ class ClientManager {
     await checkClient();
   }
 
-  login(data) {
-    return client.login(data);
+  checkAvailableUsername(username) {
+    return client.checkAvailableUsername(username);
   }
 
   findKeyBundles(params) {
     return client.findKeyBundles(params);
+  }
+
+  getEmailBody(bodyKey) {
+    return client.getEmailBody(bodyKey);
   }
 
   async getEvents() {
@@ -44,20 +48,20 @@ class ClientManager {
     });
   }
 
-  getEmailBody(bodyKey) {
-    return client.getEmailBody(bodyKey);
+  login(data) {
+    return client.login(data);
   }
 
   postEmail(params) {
     return client.postEmail(params);
   }
 
-  postUser(params) {
-    return client.postUser(params);
+  postKeyBundle(params) {
+    return client.postKeyBundle(params);
   }
 
-  checkAvailableUsername(username) {
-    return client.checkAvailableUsername(username);
+  postUser(params) {
+    return client.postUser(params);
   }
 }
 
