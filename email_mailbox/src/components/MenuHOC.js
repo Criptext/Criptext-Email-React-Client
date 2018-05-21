@@ -32,16 +32,21 @@ const MenuHOC = InComponent =>
 
     defineStyle = () => {
       const { top, bottom, left, right } = this.props.menuPosition;
-      const result = {};
-      if (!top & !bottom) result.top = 0;
-      else if (top) result.top = top;
-      else result.bottom = bottom;
+      const v = this.setVerticalPosition(top, bottom);
+      const h = this.setHorizontalPosition(left, right);
+      return { ...v, ...h };
+    };
 
-      if (!left & !right) result.left = 0;
-      else if (left) result.left = left;
-      else result.right = right;
+    setVerticalPosition = (top, bottom) => {
+      if (!top & !bottom) return { top: 0 };
+      else if (top) return { top };
+      return { bottom };
+    };
 
-      return result;
+    setHorizontalPosition = (left, right) => {
+      if (!left & !right) return { left: 0 };
+      else if (left) return { left };
+      return { right };
     };
   };
 

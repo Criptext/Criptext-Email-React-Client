@@ -23,7 +23,7 @@ const HeaderMain = props => (
 );
 
 HeaderMain.propTypes = {
-  allLabels: PropTypes.object,
+  allLabels: PropTypes.array,
   accountLetters: PropTypes.string,
   getSearchParams: PropTypes.func,
   hints: PropTypes.object,

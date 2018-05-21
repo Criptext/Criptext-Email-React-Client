@@ -157,7 +157,7 @@ const clearCurrentAnimation = () => {
 };
 
 SearchBox.propTypes = {
-  allLabels: PropTypes.object,
+  allLabels: PropTypes.array,
   getSearchParams: PropTypes.func,
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,

@@ -91,14 +91,11 @@ const SearchOptionRowInput = props => (
 );
 
 const renderLabels = labels => {
-  const labelsView = labels.reduce(function(lbs, label) {
-    lbs.push(
-      <option key={label.get('id')} value={label.get('id')}>
-        {label.get('text')}
-      </option>
-    );
-    return lbs;
-  }, []);
+  const labelsView = labels.map((label, index) => (
+    <option key={index} value={label.id}>
+      {label.text}
+    </option>
+  ));
   return labelsView;
 };
 
@@ -109,7 +106,7 @@ SearchOptionRowInput.propTypes = {
 };
 
 SearchOptions.propTypes = {
-  allLabels: PropTypes.object,
+  allLabels: PropTypes.array,
   onSearchThreads: PropTypes.func,
   getSearchParams: PropTypes.func,
   searchParams: PropTypes.object
