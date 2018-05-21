@@ -17,7 +17,6 @@
     border: 1px solid #e1e1e4;
     box-shadow: 1px 7px 19px 0 rgba(0, 0, 0, 0.14);
     color: black;
-    font-family: NunitoSans;
     font-size: 12px;
     font-weight: 200;
     height: 29px;
@@ -26,7 +25,7 @@
     width: 157px;
   }
 
-  input[type="text"]::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  input[type="text"]::-webkit-input-placeholder {
     color: #9b9b9b;
   }
 }

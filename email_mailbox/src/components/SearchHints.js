@@ -1,0 +1,119 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { List } from 'immutable';
+import { replaceMatches } from '../utils/ReactUtils';
+import './searchhints.css';
+
+const SearchHints = props => (
+  <div className="search-hints">
+    {props.errorSuggestions ? (
+      <div className="search-hints-error">
+        <div>
+          <span>:C</span>
+        </div>
+        <div>
+          <span>{props.errorSuggestions}</span>
+        </div>
+      </div>
+    ) : (
+      <div className="search-hints-success">
+        <SearchSuggestion
+          icon="icon-time"
+          items={props.hints}
+          searchText={props.searchText}
+          onClickSearchSuggestiontItem={props.onClickSearchSuggestiontItem}
+        />
+        <SearchSuggestion
+          icon="icon-search"
+          items={List([props.searchText])}
+          searchText={props.searchText}
+          onClickSearchSuggestiontItem={props.onClickSearchSuggestiontItem}
+        />
+
+        {props.threads.map((thread, index) => (
+          <SearchMail
+            key={index}
+            id={thread.get('id')}
+            preview={thread.get('preview')}
+            date={thread.get('date')}
+            participants={thread.get('fromContactName')}
+            searchText={props.searchText}
+            onSearchSelectThread={props.onSearchSelectThread}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+);
+
+const SearchSuggestion = props => {
+  if (props.items.size === 0) {
+    return null;
+  }
+  return (
+    <div className="search-recent">
+      <i className={props.icon} />
+      <ul>
+        {props.items.map((item, index) => (
+          <li
+            onClick={() => {
+              props.onClickSearchSuggestiontItem(item);
+            }}
+            key={index}
+          >
+            {replaceMatches(props.searchText, item)}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+const SearchMail = props => {
+  const previewMatches = replaceMatches(props.searchText, props.preview);
+  return (
+    <div
+      className="search-mail"
+      onClick={() => {
+        props.onSearchSelectThread(props.id);
+      }}
+    >
+      <i className="icon-mail" />
+      <div>
+        <div>
+          <span>{previewMatches}</span>
+          <span>{props.participants}</span>
+        </div>
+        <div>
+          <span>{props.date}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+SearchMail.propTypes = {
+  date: PropTypes.string,
+  id: PropTypes.number,
+  participants: PropTypes.string,
+  preview: PropTypes.string,
+  searchText: PropTypes.string,
+  onSearchSelectThread: PropTypes.func
+};
+
+SearchSuggestion.propTypes = {
+  icon: PropTypes.string,
+  items: PropTypes.object,
+  searchText: PropTypes.string
+};
+
+SearchHints.propTypes = {
+  errorSuggestions: PropTypes.string,
+  hints: PropTypes.object,
+  onClickSearchSuggestiontItem: PropTypes.func,
+  onSearchSelectThread: PropTypes.func,
+  searchText: PropTypes.string,
+  threads: PropTypes.object
+};
+
+export default SearchHints;

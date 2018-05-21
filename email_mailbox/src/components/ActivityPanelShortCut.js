@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './activitypanelshortcut.css';
 
-const ActivityPanelShortCut = () => (
+const ActivityPanelShortCut = props => (
   <div
     className="activity-panel-shortcut-container"
-    onClick={() => this.props.onClick()}
+    onClick={() => props.onClick()}
   >
     <div className="activity-panel-shortcut-content">
       <i className="icon-bell" />

@@ -1,0 +1,75 @@
+.search-options{
+  width: 390px;
+
+  table{
+    border-collapse: collapse;
+    width: 100%;
+
+    tr{
+      border-bottom: solid 0.5px #c8c8ca;
+
+      &:last-child{
+        border-bottom: none;
+      }
+    }
+
+    .search-options-label{
+      color: #6a707e;
+      font-size: 12px;
+      font-weight: 500;
+      margin-left: 18px;
+    }
+  
+    select{
+      margin: 9px 0;
+      width: 147px;
+    }
+  
+    input[type="text"]{
+      border: none;
+      color: black;
+      font-size: 12px;
+      height: 26px;
+      outline: none;
+      width: 100%;
+    }
+  
+    input[type="text"]::-webkit-input-placeholder {
+      color: #d7d7d7;
+    }
+
+    .checkmark-container{
+      float: left;
+      margin: 28px 50px 0 50px;
+      width: 120px;
+
+      .checkmark-text{
+        color: #6a707e;
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+  
+    .button-a{
+      background-color: #0091ff;
+      color: white;
+      height: 27px;
+      margin: 23px;
+      text-align: left;
+
+      i{
+        color: white;
+        font-size: 20px;
+        margin: 0 2px;
+        top: 1px;
+      }
+
+      span{
+        font-size: 11px;
+        font-weight: 500;
+        top: -4px;
+        margin-right: 8px;
+      }
+    }
+  }
+}

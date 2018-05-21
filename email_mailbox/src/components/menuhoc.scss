@@ -1,0 +1,98 @@
+.menu-wrapper{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.menu-container{
+  background-color: #fdfdfd;
+  box-shadow: 1px 7px 19px 0 rgba(0, 0, 0, 0.14);
+  border: solid 1px #ececee;
+  border-radius: 6px;
+  color: black;
+  position: absolute;
+  width: auto;
+  z-index: 200;
+  z-index: 11;
+
+  .menu-arrow{
+    background-color: white;
+    border: solid 1px #e9e9eb;
+    border-radius: 2px;
+    height: 10px;
+    position: absolute;
+    transform: rotate(45deg);
+    width: 10px;
+    
+    &:after{
+      content: "";
+      border-bottom: 5px solid red;
+    }
+    
+    &.arrow-top-left{
+      top: 0;
+    }
+
+    &.arrow-top-right{
+      top: -5px;
+    }
+  }
+  
+  &.menu-arrow{
+    &:before, &:after{
+      border-style:solid; 
+      content:'';
+      position:absolute; 
+    }
+
+    &:before{
+      border-color:#e9e9eb transparent;
+    }
+
+    &:after{
+      border-color:white transparent;
+    }
+
+    &.arrow-top-left{
+      &:before, &:after{
+        border-width:0 7px 7px;
+      }
+
+      &:before{
+        left: 7px;
+        top: -7px;
+      }
+
+      &:after{
+        left: 7px;
+        top: -5.5px;
+      }
+    }
+
+    &.arrow-top-right{
+      &:before, &:after{
+        border-width:0 7px 7px;
+      }
+
+      &:before{
+        right: 7px;
+        top: -7px;
+      }
+
+      &:after{
+        right: 7px;
+        top: -5.5px;
+      }
+    }
+
+  }
+}
+
+.menu-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+}

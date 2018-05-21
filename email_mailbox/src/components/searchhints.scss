@@ -1,0 +1,120 @@
+.header-search .menu-container.menu-arrow.arrow-top-left{
+  &:before {
+    left: 16px;
+  }
+  &:after{
+    left: 16px;
+  }
+}
+
+.search-hints{
+  width: 552px;
+
+  .match-string{
+    font-weight: bold;
+  }
+
+  .search-hints-error{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #d26054;
+    font-size: 13px;
+
+    > div:first-child{
+      transform: rotateZ(90deg);
+    }
+  }
+
+  .search-hints-success{
+    .search-recent{
+      display: flex;
+
+      &:first-child{
+        margin-top: 10px
+      }
+
+      &:last-child{
+        margin-bottom: 5px;
+      }
+
+      i{
+        color: #6a707e;
+        font-size: 16px;
+        margin: 5px 15px 0;
+      }
+
+      ul{
+        color: #6a707e;
+        flex: 1 0;
+        font-size: 12px;
+        list-style-type: none;
+        margin: 5px 0 0;
+        padding: 0;
+
+        li{
+          cursor: pointer;
+          height: 20px;
+
+          &:hover{
+            background-color: #f7f7f7;
+          }
+        }
+      }
+    }
+
+    .search-mail{
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      &:hover{
+        background-color: #f7f7f7;
+      }
+
+      i{
+        margin: 0 12px;
+        font-size: 20px;
+        color: #6a707e;
+      }
+
+      >div{
+        border-top: 1px solid #d8d8d8;
+        color: #6a707e;
+        display: flex;
+        flex: 1 0;
+        flex-direction: row;
+        font-size: 12px;
+        justify-content: space-between;
+        margin-right: 20px;
+        overflow: hidden;
+        padding: 10px 0px;
+
+        div{
+          display: flex;
+
+          &:first-child{
+            display: flex;
+            flex-direction: column;
+            margin-right: 15px;
+            text-align: left;
+            width: calc(100% - 115px);
+
+            span{
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+
+          &:last-child{
+            align-items: center;
+            justify-content: flex-end;
+            width: 100px;
+          }
+        }
+      }
+    }    
+  }
+}
