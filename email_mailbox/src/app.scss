@@ -203,11 +203,17 @@ TABLE OF CONTENTS
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-clock:before {
+  content: "\e93b";
+}
 .icon-mailbox:before {
   content: "\e900";
 }
 .icon-doc:before {
   content: "\e901";
+}
+.icon-mail:before {
+  content: "\e90f";
 }
 .icon-star:before {
   content: "\e903";
@@ -229,9 +235,6 @@ TABLE OF CONTENTS
 }
 .icon-download:before {
   content: "\e90a";
-}
-.icon-time:before {
-  content: "\e90b";
 }
 .icon-file:before {
   content: "\e90c";
@@ -296,6 +299,12 @@ TABLE OF CONTENTS
 .icon-desktop:before {
   content: "\e925";
 }
+.icon-time:before {
+  content: "\e93c";
+}
+.icon-search:before {
+  content: "\e93d";
+}
 .icon-important:before {
   content: "\e926";
 }
@@ -307,9 +316,6 @@ TABLE OF CONTENTS
 }
 .icon-user:before {
   content: "\e90e";
-}
-.icon-mail:before {
-  content: "\e90f";
 }
 .icon-settings:before {
   content: "\e910";
@@ -367,9 +373,6 @@ TABLE OF CONTENTS
 }
 .icon-exit:before {
   content: "\e937";
-}
-.icon-search:before {
-  content: "\e917";
 }
 .icon-back:before {
   content: "\e938";

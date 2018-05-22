@@ -1,0 +1,25 @@
+.profile-shortcut-container{
+  border-radius: 50%;
+  border: 1px solid transparent;
+  height: 39px;
+  position: relative;
+  width: 39px;
+
+  &.profile-opened{
+    border-color: rgba(256, 256, 256, 0.1);
+  }
+
+  .header-profile{
+    align-items: center;
+    background-color: rgba(74, 108, 98, 0.96);
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    font-size: 15px;
+    font-weight: 200;
+    height: 33px;
+    justify-content: center;
+    margin: 0 auto;
+    width: 33px;
+  }
+}

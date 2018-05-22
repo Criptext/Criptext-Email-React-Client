@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SearchBox from './SearchBox';
+import ProfileShortCutWrapper from './ProfileShortCutWrapper';
 import './headermain.css';
 
 const HeaderMain = props => (
@@ -18,13 +19,12 @@ const HeaderMain = props => (
       threads={props.threads}
       hints={props.hints}
     />
-    <span className="header-profile">{props.accountLetters}</span>
+    <ProfileShortCutWrapper />
   </div>
 );
 
 HeaderMain.propTypes = {
   allLabels: PropTypes.array,
-  accountLetters: PropTypes.string,
   getSearchParams: PropTypes.func,
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,
