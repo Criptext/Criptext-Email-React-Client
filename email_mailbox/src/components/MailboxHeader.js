@@ -9,8 +9,8 @@ class MailboxHeader extends Component {
   constructor() {
     super();
     this.state = {
-      displaySearchHints: false,
-      displaySearchOptions: false,
+      isHiddenMenuSearchHints: true,
+      isHiddenMenuSearchOptions: true,
       searchParams: {
         text: '',
         from: '',
@@ -24,8 +24,8 @@ class MailboxHeader extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.multiselect !== nextProps.multiselect) {
       this.setState({
-        displaySearchHints: false,
-        displaySearchOptions: false
+        isHiddenMenuSearchHints: true,
+        isHiddenMenuSearchOptions: true
       });
     }
   }
@@ -41,14 +41,13 @@ class MailboxHeader extends Component {
             <HeaderMain
               {...this.props}
               threads={threads}
-              setSearchParam={this.setSearchParam}
+              getSearchParams={this.handleGetSearchParams}
               searchParams={this.state.searchParams}
-              displaySearchHints={this.state.displaySearchHints}
-              displaySearchOptions={this.state.displaySearchOptions}
-              toggleSearchHints={this.toggleSearchHints}
-              toggleSearchOptions={this.toggleSearchOptions}
-              onTriggerSearch={this.onTriggerSearch}
-              searchText={this.state.searchParams.text}
+              isHiddenMenuSearchHints={this.state.isHiddenMenuSearchHints}
+              isHiddenMenuSearchOptions={this.state.isHiddenMenuSearchOptions}
+              onToggleMenuSearchHints={this.handleToggleMenuSearchHints}
+              onToggleMenuSearchOptions={this.handleToggleMenuSearchOptions}
+              onTriggerSearch={this.handleTriggerSearch}
               onSearchThreads={this.onSearchThreads}
               onSearchSelectThread={this.props.onSearchSelectThread}
             />
@@ -62,7 +61,7 @@ class MailboxHeader extends Component {
   onSearchThreads = () => {
     this.setState(
       {
-        displaySearchOptions: false
+        isHiddenMenuSearchOptions: true
       },
       () => {
         if (this.state.searchParams.from && this.state.searchParams.to) {
@@ -101,16 +100,19 @@ class MailboxHeader extends Component {
     );
   };
 
-  onTriggerSearch = () => {
-    if (this.state.displaySearchOptions || !this.state.searchParams.text) {
+  handleTriggerSearch = () => {
+    if (
+      !this.state.isHiddenMenuSearchOptions ||
+      !this.state.searchParams.text
+    ) {
       return this.setState({
-        displaySearchHints: false
+        isHiddenMenuSearchHints: true
       });
     }
 
     this.setState(
       {
-        displaySearchHints: false
+        isHiddenMenuSearchHints: true
       },
       () => {
         this.props.setSearchParams(this.state.searchParams);
@@ -122,36 +124,36 @@ class MailboxHeader extends Component {
     );
   };
 
-  setSearchParam = (key, value) => {
-    const displayHint =
-      key === 'text' ? (this.state.displaySearchOptions ? false : true) : false;
+  handleGetSearchParams = (key, value) => {
+    const isHiddenMenuSearchHints =
+      key === 'text'
+        ? this.state.isHiddenMenuSearchOptions ? false : true
+        : true;
     const searchParams = this.state.searchParams;
     searchParams[key] = value;
     this.setState(
       {
         searchParams,
-        displaySearchHints: displayHint
+        isHiddenMenuSearchHints
       },
       () => {
-        if (displayHint && key === 'text') {
+        if (!isHiddenMenuSearchHints && key === 'text') {
           this.props.onSearchChange(value);
         }
       }
     );
   };
 
-  toggleSearchHints = () => {
+  handleToggleMenuSearchHints = () => {
     this.setState({
-      displaySearchHints: this.state.displaySearchOptions
-        ? false
-        : !this.state.displaySearchHints
+      isHiddenMenuSearchHints: !this.state.isHiddenMenuSearchHints
     });
   };
 
-  toggleSearchOptions = () => {
+  handleToggleMenuSearchOptions = () => {
     this.setState({
-      displaySearchOptions: !this.state.displaySearchOptions,
-      displaySearchHints: false
+      isHiddenMenuSearchOptions: !this.state.isHiddenMenuSearchOptions,
+      isHiddenMenuSearchHints: true
     });
   };
 }

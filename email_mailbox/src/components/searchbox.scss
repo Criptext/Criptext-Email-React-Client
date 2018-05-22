@@ -1,10 +1,11 @@
 .header-search{
-  width: 191px;
-  height: 29.2px;
-  border-radius: 100px;
-  background-color: #1f242d;
-  justify-content: space-around;
   align-items: center;
+  background-color: #1f242d;
+  border-radius: 100px;
+  height: 29.2px;
+  justify-content: space-around;
+  position: relative;
+  width: 191px;
   z-index: 200;
 
   input{
@@ -20,18 +21,24 @@
     width: 0;
   }
   
-  input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  input::-webkit-input-placeholder {
     color: #c8c8c8;
   }
 
   i{
+    color: #c8c8c8;
     font-size: 20px;
     margin: 0 8px;
-    color: #c8c8c8;
   }
 
-  .icon-toogle-down{
-    font-size: 18px;
-    color: #0091ff;
+  .header-search-toggle{
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    i{
+      font-size: 18px;
+      color: #0091ff;
+    }
   }
 }

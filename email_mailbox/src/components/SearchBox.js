@@ -1,33 +1,37 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import SearchHints from './SearchHints';
+import SearchOptions from './SearchOptions';
+import MenuHOC, { MenuType } from './MenuHOC';
 import anime from 'animejs';
 import './searchbox.css';
 
 const KEY_NEW_LINE = 13;
 let currentAnimation = null;
 
+const MenuSearchOptions = MenuHOC(SearchOptions);
+const MenuSearchHints = MenuHOC(SearchHints);
+
 class SearchBox extends Component {
   constructor() {
     super();
     this.state = {
-      extended: false
+      isInputBoxExtended: false
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (
-      this.props.hold &&
-      !nextProps.hold &&
-      document.activeElement !== this.input
+      !this.props.isHiddenMenuSearchOptions &&
+      nextProps.isHiddenMenuSearchOptions
     ) {
       return animateOut(this.node, () => {
-        this.setState({ extended: false });
+        this.setState({ isInputBoxExtended: false });
       });
     }
   }
 
   render() {
-    const { searchText } = this.props;
     return (
       <div
         ref={node => (this.node = node)}
@@ -37,24 +41,61 @@ class SearchBox extends Component {
         <i className="icon-search" />
         <input
           ref={r => (this.input = r)}
-          onFocus={this.onExpandBox}
-          onChange={this.onChange}
-          onBlur={this.onShrinkBox}
-          value={searchText}
-          onKeyPress={this.onKeyPress}
+          onBlur={this.handleBlurInput}
+          onChange={this.handleChangeInput}
+          onFocus={this.handleFocusInput}
+          onKeyPress={this.handleKeyPressInput}
           placeholder="Search"
+          value={this.props.searchParams.text}
         />
-        <i className="icon-toogle-down" onClick={this.onToggleSearchOptions} />
+        <div className="header-search-toggle">
+          <i
+            className="icon-toogle-down"
+            onClick={this.onToggleMenuSearchOptions}
+          />
+          <MenuSearchOptions
+            allLabels={this.props.allLabels}
+            arrowPosition={MenuType.TOP_RIGHT}
+            getSearchParams={this.props.getSearchParams}
+            isHidden={this.props.isHiddenMenuSearchOptions}
+            onSearchThreads={this.props.onSearchThreads}
+            onToggleMenu={this.props.onToggleMenuSearchOptions}
+            menuPosition={{ right: '-32px', top: '32px' }}
+            searchParams={this.props.searchParams}
+          />
+        </div>
+        <MenuSearchHints
+          isHidden={this.props.isHiddenMenuSearchHints}
+          hints={this.props.hints}
+          onClickSearchSuggestiontItem={this.handleSearchSuggestiontItem}
+          onSearchSelectThread={this.props.onSearchSelectThread}
+          onToggleMenu={this.props.onToggleMenuSearchHints}
+          searchText={this.props.searchParams.text}
+          threads={this.props.threads}
+          menuPosition={{ top: '39px' }}
+        />
       </div>
     );
   }
 
-  onChange = ev => {
-    const value = ev.target.value;
-    this.props.setSearchParam('text', value);
+  handleBlurInput = () => {
+    return animateOut(this.node, () => {
+      this.setState({ isInputBoxExtended: false });
+    });
   };
 
-  onKeyPress = ev => {
+  handleChangeInput = ev => {
+    const value = ev.target.value;
+    this.props.getSearchParams('text', value);
+  };
+
+  handleFocusInput = () => {
+    return animateIn(this.node, () => {
+      this.setState({ isInputBoxExtended: true });
+    });
+  };
+
+  handleKeyPressInput = ev => {
     if (ev.which === KEY_NEW_LINE || ev.keyCode === KEY_NEW_LINE) {
       ev.preventDefault();
       this.input.blur();
@@ -62,34 +103,24 @@ class SearchBox extends Component {
     }
   };
 
-  onToggleSearchOptions = () => {
-    if (this.state.extended) {
+  handleSearchSuggestiontItem = hint => {
+    this.props.getSearchParams('text', hint);
+    this.props.onTriggerSearch();
+  };
+
+  onToggleMenuSearchOptions = () => {
+    if (this.state.isInputBoxExtended) {
       clearCurrentAnimation();
-      if (this.props.hold) {
+      if (!this.props.isHiddenMenuSearchOptions) {
         this.input.focus();
       }
-      return this.props.toggleSearchOptions();
+      return this.props.onToggleMenuSearchOptions();
     }
 
     return animateIn(this.node, () => {
-      this.setState({ extended: true }, () => {
-        this.props.toggleSearchOptions();
+      this.setState({ isInputBoxExtended: true }, () => {
+        this.props.onToggleMenuSearchOptions();
       });
-    });
-  };
-
-  onExpandBox = () => {
-    return animateIn(this.node, () => {
-      this.setState({ extended: true });
-    });
-  };
-
-  onShrinkBox = () => {
-    if (this.props.hold) {
-      return;
-    }
-    return animateOut(this.node, () => {
-      this.setState({ extended: false });
     });
   };
 }
@@ -98,7 +129,7 @@ const animateIn = (gridContainer, callback) => {
   clearCurrentAnimation();
   currentAnimation = anime.timeline().add({
     targets: gridContainer,
-    width: 400,
+    width: 395,
     duration: 500,
     elasticity: 0,
     complete: () => {
@@ -126,11 +157,18 @@ const clearCurrentAnimation = () => {
 };
 
 SearchBox.propTypes = {
-  hold: PropTypes.bool,
+  allLabels: PropTypes.array,
+  getSearchParams: PropTypes.func,
+  hints: PropTypes.object,
+  isHiddenMenuSearchHints: PropTypes.bool,
+  isHiddenMenuSearchOptions: PropTypes.bool,
+  onSearchThreads: PropTypes.func,
+  onSearchSelectThread: PropTypes.func,
+  onToggleMenuSearchHints: PropTypes.func,
+  onToggleMenuSearchOptions: PropTypes.func,
   onTriggerSearch: PropTypes.func,
-  searchText: PropTypes.string,
-  setSearchParam: PropTypes.func,
-  toggleSearchOptions: PropTypes.func
+  searchParams: PropTypes.object,
+  threads: PropTypes.object
 };
 
 export default SearchBox;

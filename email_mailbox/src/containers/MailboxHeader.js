@@ -16,11 +16,15 @@ const mapStateToProps = state => {
   );
   const markAsUnread = shouldMarkAsUnread(state.get('threads'), multiselect);
   const suggestions = state.get('suggestions');
+  const allLabels = state
+    .get('labels')
+    .toArray()
+    .map(label => label.toJS());
   return {
     multiselect,
     threadsSelected,
     labels,
-    allLabels: state.get('labels'),
+    allLabels,
     threadsSuggestions: suggestions.get('threads'),
     hints: suggestions.get('hints'),
     errorSuggestions: suggestions.get('error'),

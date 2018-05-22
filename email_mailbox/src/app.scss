@@ -11,7 +11,8 @@ TABLE OF CONTENTS
 2.- CONTENT
 3.- CONTROLS
  3.1.- Button
- 3.2.- Input Text
+ 3.2.- Select
+ 3.3.- Input Text
 
 ***/
 
@@ -382,6 +383,10 @@ TABLE OF CONTENTS
 
 /* 2.- CONTENT
    ----------------------------- */
+*{
+  font-family: NunitoSans;
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -408,7 +413,18 @@ html, body {
   flex-direction: row;
   height: 100%;
   position: relative;
-  
+}
+
+.sidebar-app-expand.navigation-feed-expand{
+  .wrapper-left{
+    min-width: 770px;
+  }
+}
+
+.sidebar-app-collapse.navigation-feed-expand{
+  .wrapper-left{
+    min-width: 639px;
+  }
 }
 
 .main-container{
@@ -439,6 +455,18 @@ html, body {
   width: calc(100% - 79px);
 }
 
+@media screen and (max-width: 800px) {
+  .sidebar-app-expand .main-container{
+    width: calc(100% - 79px);
+  }
+
+  .sidebar-app-expand.navigation-feed-expand{
+    .wrapper-left{
+      min-width: 639px;
+    }
+  }
+}
+
 /* 3.- CONTROLS
    ----------------------------- */
 .disabled{
@@ -451,7 +479,20 @@ input[type="text"]:focus {
   outline: 0;
 }
 
-/* 3.2.- CONTROLS: Input text
+/* 3.2.- CONTROLS: Select
+   ----------------------------- */
+select {
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 3px;
+  color: #6a707e;
+  cursor: pointer;
+  font-size: 12px;
+  height: 26px;
+  outline: none;
+}
+
+/* 3.3.- CONTROLS: Input text
    ----------------------------- */
 button{
   border: none;
@@ -474,7 +515,6 @@ button{
   }
 
   span{
-    font-family: NunitoSans;
     font-size: 13px;
     font-weight: 700;
     position: relative;
