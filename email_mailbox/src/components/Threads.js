@@ -6,6 +6,7 @@ import ButtonSync from './ButtonSync';
 import ItemTooltip from './ItemTooltip';
 import ReactTooltip from 'react-tooltip';
 import './threads.css';
+import EmptyMailbox from './EmptyMailbox';
 
 class Threads extends Component {
   constructor() {
@@ -50,6 +51,9 @@ class Threads extends Component {
         </div>
         <div className="threads-wrapper" onScroll={this.handleTableScrolled}>
           <div className="threads-container">
+            {this.props.threads.size < 1 ? (
+              <EmptyMailbox mailbox={this.props.mailbox} />
+            ) : null}
             {this.props.threads.map((thread, index) => {
               return (
                 <ThreadItem
@@ -149,9 +153,9 @@ class Threads extends Component {
     const scrollTop = e.target.scrollTop;
     const height = e.target.clientHeight;
     const scrollHeight = e.target.scrollHeight;
+    const lastThread = this.props.threads.last();
 
-    if (scrollTop + height > scrollHeight - 25) {
-      const lastThread = this.props.threads.last();
+    if (scrollTop + height > scrollHeight - 25 && lastThread) {
       const timestamp = lastThread.get('timestamp');
       this.props.onLoadThreads(this.props.mailbox, false, timestamp);
     }
