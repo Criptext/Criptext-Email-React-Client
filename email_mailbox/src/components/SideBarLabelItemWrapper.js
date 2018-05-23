@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SideBarLabelItem from './SideBarLabelItem';
-import { LabelType } from './../utils/electronInterface';
 
 class SideBarLabelItemWrapper extends Component {
   constructor() {
@@ -27,7 +26,7 @@ class SideBarLabelItemWrapper extends Component {
   }
 
   handleOnDoubleClick = () => {
-    if (this.props.label.id > Object.values(LabelType).length - 1) {
+    if (this.props.label.type === 'custom') {
       this.setState({
         isEditable: true,
         textEditable: this.props.label.text

@@ -5,8 +5,8 @@ import Threads from '../containers/Threads';
 import './mailbox.css';
 
 class MailBox extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       searchParams: {
         text: '',

@@ -117,19 +117,17 @@ class HeaderThreadOptions extends Component {
   );
 
   renderLabels = () => {
-    return this.props.labels
-      .filter(label => label.id > 7)
-      .map((label, index) => (
-        <li key={index}>
-          <CustomCheckbox
-            onCheck={checked => {
-              this.props.onClickLabelCheckbox(checked, label.id);
-            }}
-            label={label.text}
-            status={label.checked}
-          />
-        </li>
-      ));
+    return this.props.labels.map((label, index) => (
+      <li key={index}>
+        <CustomCheckbox
+          onCheck={checked => {
+            this.props.onClickLabelCheckbox(checked, label.id);
+          }}
+          label={label.text}
+          status={label.checked}
+        />
+      </li>
+    ));
   };
 }
 

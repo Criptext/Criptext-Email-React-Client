@@ -6,8 +6,8 @@ import ActivityPanelShortCut from './ActivityPanelShortCut';
 import './mailboxheader.css';
 
 class MailboxHeader extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isHiddenMenuSearchHints: true,
       isHiddenMenuSearchOptions: true,

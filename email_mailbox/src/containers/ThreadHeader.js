@@ -11,7 +11,7 @@ const formThreadParams = thread => {
 
 const mapStateToProps = (state, ownProps) => {
   const labels = getLabelIncluded(
-    state.get('labels'),
+    state.get('labels').filter(item => item.get('type') === 'custom'),
     ownProps.thread ? ownProps.thread.labels : null
   );
   const markAsUnread = shouldMarkAsUnread(state.get('threads'));
@@ -55,8 +55,8 @@ const getLabelIncluded = (labels, threadLabels) => {
   }, {});
 
   return labels.reduce((lbs, label) => {
-    const labelId = label.id;
-    const labelText = label.text;
+    const labelId = label.get('id');
+    const labelText = label.get('text');
     let checked = 'none';
     if (hasLabels[labelId]) {
       checked = 'all';
