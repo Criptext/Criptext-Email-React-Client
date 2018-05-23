@@ -8,8 +8,9 @@ import {
   getEvents,
   updateUnreadEmailByThreadId
 } from '../utils/electronInterface';
-import { storeValue } from '../utils/storage';
+import { storeValue } from './../utils/storage';
 import { handleNewMessageEvent } from './../utils/electronEventInterface';
+import { SocketCommand } from './../utils/const';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -139,9 +140,11 @@ export const loadEvents = params => {
     dispatch(startLoadSync());
     try {
       const receivedEvents = await getEvents();
-      const events = receivedEvents.filter(item => item.cmd === 1);
+      const events = receivedEvents.filter(
+        item => item.cmd === SocketCommand.NEW_EMAIL
+      );
       await Promise.all(
-        events.map(async item => await handleNewMessageEvent(item.params))
+        events.map(async emailEvent => await handleNewMessageEvent(emailEvent))
       );
       dispatch(loadThreads(params));
     } catch (e) {

@@ -43,6 +43,10 @@ export const getEvents = () => {
   return clientManager.getEvents();
 };
 
+export const acknowledgeEvents = eventIds => {
+  return clientManager.acknowledgeEvents(eventIds);
+};
+
 /* DataBase
    ----------------------------- */
 export const createAccount = params => {
@@ -175,4 +179,8 @@ export const updateLabel = params => {
 
 export const updateUnreadEmailByThreadId = (threadId, value) => {
   return dbManager.updateEmailByThreadId({ threadId, unread: value });
+};
+
+export const getEmailLabelsByEmailId = emailId => {
+  return dbManager.getEmailLabelsByEmailId(emailId);
 };

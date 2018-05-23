@@ -126,6 +126,7 @@ const createEmailLabelColumns = table => {
     .foreign('emailId')
     .references('id')
     .inTable(Table.EMAIL);
+  table.unique(['emailId', 'labelId']);
 };
 
 const createEmailContactColumns = table => {

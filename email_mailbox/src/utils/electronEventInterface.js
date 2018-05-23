@@ -1,4 +1,8 @@
-import { createEmail } from './electronInterface';
+import {
+  createEmail,
+  acknowledgeEvents,
+  getEmailLabelsByEmailId
+} from './electronInterface';
 import {
   formEmailLabel,
   formIncomingEmailFromData,
@@ -19,7 +23,8 @@ const emitter = new EventEmitter();
 ipcRenderer.on('socket-message', (event, message) => {
   switch (message.cmd) {
     case SocketCommand.NEW_EMAIL: {
-      handleNewMessageEvent(message.params);
+      const { rowid, params } = message;
+      handleNewMessageEvent({ rowid, params });
       return;
     }
     default: {
@@ -32,7 +37,8 @@ ipcRenderer.on('update-drafts', () => {
   emitter.emit(Event.UPDATE_SAVED_DRAFTS);
 });
 
-export const handleNewMessageEvent = async emailObj => {
+export const handleNewMessageEvent = async ({ rowid, params }) => {
+  const [emailObj, eventId] = [params, rowid];
   const InboxLabel = LabelType.inbox;
   const labels = [InboxLabel.id];
   const eventParams = {
@@ -51,9 +57,14 @@ export const handleNewMessageEvent = async emailObj => {
     await createEmail(params);
   } else {
     const prevEmailId = prevEmail[0].id;
-    const emailLabel = formEmailLabel({ emailId: prevEmailId, labels });
-    await createEmailLabel(emailLabel);
+    const prevEmailLabels = await getEmailLabelsByEmailId(prevEmailId);
+    const prevLabels = prevEmailLabels.map(item => item.labelId);
+    if (!prevLabels.includes(LabelType.inbox.id)) {
+      const emailLabel = formEmailLabel({ emailId: prevEmailId, labels });
+      await createEmailLabel(emailLabel);
+    }
   }
+  await acknowledgeEvents([eventId]);
   emitter.emit(Event.NEW_EMAIL, eventParams);
 };
 

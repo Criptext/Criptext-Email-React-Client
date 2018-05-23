@@ -24,6 +24,10 @@ class ClientManager {
     await checkClient();
   }
 
+  acknowledgeEvents(eventIds) {
+    return client.acknowledgeEvents(eventIds);
+  }
+
   checkAvailableUsername(username) {
     return client.checkAvailableUsername(username);
   }
@@ -43,8 +47,8 @@ class ClientManager {
 
   formEvents(events) {
     return events.map(event => {
-      const { params, cmd } = event;
-      return { cmd, params: JSON.parse(params) };
+      const { params, cmd, rowid } = event;
+      return { cmd, params: JSON.parse(params), rowid };
     });
   }
 
