@@ -1,0 +1,88 @@
+.profile-shortcut-container .menu-container.menu-arrow.arrow-top-right:before, .menu-container.menu-arrow.arrow-top-right:after {
+  right: 10px;
+}
+
+.profile-preview{
+  padding: 20px 20px 0;
+  width: 240px;
+
+  .profile-preview-content{
+    align-items: center;
+    display: flex;
+    margin-bottom: 15px;
+    width: 100%;
+
+    .icon{
+      align-items: center;
+      background-color: rgba(74, 108, 98, 0.96);
+      border-radius: 50%;
+      display: inline-flex;
+      height: 60px;
+      width: 60px;
+
+      span{
+        color: white;
+        font-size: 26px;
+        margin: 0 auto;
+
+      }
+    }
+
+    .profile-preview-detail{
+      display: inline-flex;
+      flex-direction: column;
+      margin-left: 10px;
+      vertical-align: top;
+      width: calc(100% - 70px);
+
+      .name{
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .email-address{
+        color: #a7a9ae;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+
+      .button-a{
+        background-color: #0091ff;
+        height: 25px;
+        margin-top: 5px;
+        width: 105px;
+
+        span{
+          font-size: 12px;
+          font-weight: 300;
+          text-transform: capitalize;
+          top: 0;
+        }
+      }
+    }
+  }
+
+  .profile-preview-controls{
+    border-top: 1px solid #d8d8d8;
+    display: flex;
+    justify-content: space-between;
+
+    .button-b{
+      align-items: center;
+      background-color: white;
+      display: flex;
+      height: 40px;
+      padding: 5px 10px;
+
+      i{
+        color: #0091ff;
+        font-size: 15px;
+      }
+
+      span{
+        color: #0091ff;
+        font-size: 13px;
+      }
+    }
+  }
+}
