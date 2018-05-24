@@ -35,6 +35,10 @@ export const openComposerWindow = () => {
 
 /* Criptext Client
    ----------------------------- */
+export const acknowledgeEvents = eventIds => {
+  return clientManager.acknowledgeEvents(eventIds);
+};
+
 export const getEmailBody = params => {
   return clientManager.getEmailBody(params);
 };
@@ -123,6 +127,10 @@ export const getEmailsByThreadId = threadId => {
 
 export const getEmailsGroupByThreadByParams = params => {
   return dbManager.getEmailsGroupByThreadByParams(params);
+};
+
+export const getEmailLabelsByEmailId = emailId => {
+  return dbManager.getEmailLabelsByEmailId(emailId);
 };
 
 export const getIdentityKeyRecord = params => {

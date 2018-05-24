@@ -156,6 +156,13 @@ const deleteEmailLabelsByEmailId = (emailId, trx) => {
     .del();
 };
 
+const getEmailLabelsByEmailId = emailId => {
+  return db
+    .select('labelId')
+    .table(Table.EMAIL_LABEL)
+    .where({ emailId });
+};
+
 /* Email
    ----------------------------- */
 const createEmail = async (params, trx) => {
@@ -664,6 +671,7 @@ module.exports = {
   getEmailByKey,
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
+  getEmailLabelsByEmailId,
   getIdentityKeyRecord,
   getLabelById,
   getPreKeyPair,

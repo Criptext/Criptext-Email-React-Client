@@ -20,6 +20,10 @@ class ClientManager {
     this.check();
   }
 
+  acknowledgeEvents(eventIds) {
+    return client.acknowledgeEvents(eventIds);
+  }
+
   async check() {
     await checkClient();
   }
@@ -43,8 +47,8 @@ class ClientManager {
 
   formEvents(events) {
     return events.map(event => {
-      const { params, cmd } = event;
-      return { cmd, params: JSON.parse(params) };
+      const { params, cmd, rowid } = event;
+      return { cmd, params: JSON.parse(params), rowid };
     });
   }
 
