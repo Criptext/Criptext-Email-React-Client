@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './emptyMailbox.css';
+import './emptymailbox.css';
 
 const EmptyMailbox = props => {
   const { header, subheader } = defineHeaderAndSubheaderByMailbox(

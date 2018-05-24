@@ -8,6 +8,8 @@ import ReactTooltip from 'react-tooltip';
 import './threads.css';
 import EmptyMailbox from './EmptyMailbox';
 
+const SCROLL_BOTTOM_LIMIT = 25;
+
 class Threads extends Component {
   constructor() {
     super();
@@ -155,7 +157,7 @@ class Threads extends Component {
     const scrollHeight = e.target.scrollHeight;
     const lastThread = this.props.threads.last();
 
-    if (scrollTop + height > scrollHeight - 25 && lastThread) {
+    if (scrollTop + height > scrollHeight - SCROLL_BOTTOM_LIMIT && lastThread) {
       const timestamp = lastThread.get('timestamp');
       this.props.onLoadThreads(this.props.mailbox, false, timestamp);
     }

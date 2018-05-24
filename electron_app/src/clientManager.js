@@ -20,12 +20,12 @@ class ClientManager {
     this.check();
   }
 
-  async check() {
-    await checkClient();
-  }
-
   acknowledgeEvents(eventIds) {
     return client.acknowledgeEvents(eventIds);
+  }
+
+  async check() {
+    await checkClient();
   }
 
   checkAvailableUsername(username) {
