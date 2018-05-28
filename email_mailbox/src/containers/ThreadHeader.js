@@ -15,6 +15,15 @@ const defineOneThreadSelected = (threads, threadId) => {
   ];
 };
 
+const defineThreadsSelected = (threads, itemsChecked) => {
+  return threads
+    .filter(thread => itemsChecked.has(thread.get('id')))
+    .map(thread => ({
+      threadIdStore: thread.get('id'),
+      threadIdDB: thread.get('threadId')
+    }));
+};
+
 const getLabelIncluded = (labels, threadLabels) => {
   if (!threadLabels) return [];
   const hasLabels = threadLabels.reduce((lbs, label) => {
@@ -42,40 +51,21 @@ const getLabelIncluded = (labels, threadLabels) => {
   }, []);
 };
 
-const defineThreadsSelected = (threads, itemsChecked) => {
-  return threads.reduce((ids, thread) => {
-    if (itemsChecked.has(thread.get('id'))) {
-      const selectedThread = {
-        threadIdStore: thread.get('id'),
-        threadIdDB: thread.get('threadId')
-      };
-      ids.push(selectedThread);
-    }
-    return ids;
-  }, []);
-};
-
-const shouldMarkAsUnread = threads => {
-  let markUnread = true;
-  threads.every(thread => {
-    if (!thread.selected) {
-      return true;
-    }
-    if (thread.unread) {
-      markUnread = false;
-      return false;
-    }
-    return true;
-  });
-
-  return markUnread;
-};
-
 const getThreadsIds = threads => {
   const threadIds = threads.map(thread => {
     return thread.get('id');
   });
   return Set(threadIds);
+};
+
+const shouldMarkAsUnread = (threads, itemsChecked) => {
+  const hasUnread = threads.find(thread => {
+    if (itemsChecked.has(thread.get('id'))) {
+      return !thread.get('unread');
+    }
+    return false;
+  });
+  return hasUnread;
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -85,7 +75,9 @@ const mapStateToProps = (state, ownProps) => {
     state.get('labels').filter(item => item.get('type') === 'custom'),
     ownProps.thread ? ownProps.thread.labels : null
   );
-  const markAsUnread = shouldMarkAsUnread(threads);
+  const markAsUnread = ownProps.itemsChecked
+    ? shouldMarkAsUnread(threads, ownProps.itemsChecked)
+    : !ownProps.threadIdSelected.unread;
   const threadsSelected = ownProps.itemsChecked
     ? defineThreadsSelected(threads, ownProps.itemsChecked)
     : defineOneThreadSelected(threads, ownProps.threadIdSelected);

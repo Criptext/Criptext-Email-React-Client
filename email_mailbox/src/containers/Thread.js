@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { loadEmails, removeThreadLabel } from '../actions';
+import { loadEmails, markThreadsRead, removeThreadLabel } from '../actions';
 import ThreadView from '../components/Thread';
 import { List, Map } from 'immutable';
 import { LabelType } from '../utils/electronInterface';
@@ -81,6 +81,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         threadIdDB
       };
       return dispatch(removeThreadLabel(threadParams, labelId));
+    },
+    onMarkRead: (thread, read) => {
+      const threadIds = [
+        {
+          threadIdStore: thread.id,
+          threadIdDB: thread.threadId
+        }
+      ];
+      dispatch(markThreadsRead(threadIds, read));
     }
   };
 };
