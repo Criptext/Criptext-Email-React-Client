@@ -40,16 +40,16 @@ class MailboxHeader extends Component {
           ) : (
             <HeaderMain
               {...this.props}
-              threads={threads}
               getSearchParams={this.handleGetSearchParams}
-              searchParams={this.state.searchParams}
               isHiddenMenuSearchHints={this.state.isHiddenMenuSearchHints}
               isHiddenMenuSearchOptions={this.state.isHiddenMenuSearchOptions}
               onToggleMenuSearchHints={this.handleToggleMenuSearchHints}
               onToggleMenuSearchOptions={this.handleToggleMenuSearchOptions}
               onTriggerSearch={this.handleTriggerSearch}
-              onSearchThreads={this.onSearchThreads}
+              onSearchThreads={this.handleSearchThreads}
               onSearchSelectThread={this.props.onSearchSelectThread}
+              searchParams={this.state.searchParams}
+              threads={threads}
             />
           )}
         </div>
@@ -58,7 +58,7 @@ class MailboxHeader extends Component {
     );
   }
 
-  onSearchThreads = () => {
+  handleSearchThreads = () => {
     this.setState(
       {
         isHiddenMenuSearchOptions: true

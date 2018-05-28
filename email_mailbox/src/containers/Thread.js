@@ -51,11 +51,14 @@ const createReadableThread = thread => {
 
 const mapStateToProps = (state, ownProps) => {
   const thread =
-    getThread(state.get('threads'), ownProps.threadId) ||
-    getThreadFromSuggestions(state.get('suggestions'), ownProps.threadId);
+    getThread(state.get('threads'), ownProps.threadIdSelected) ||
+    getThreadFromSuggestions(
+      state.get('suggestions'),
+      ownProps.threadIdSelected
+    );
   const emails = getEmails(state.get('emails'), thread);
   const labelIds =
-    LabelType[ownProps.mailbox].id === LabelType.inbox.id
+    LabelType[ownProps.mailboxSelected].id === LabelType.inbox.id
       ? thread.get('allLabels')
       : thread.get('labels');
   const labels = defineLabels(state.get('labels'), labelIds);
@@ -73,7 +76,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       return dispatch(loadEmails(threadId));
     },
     onRemoveThreadLabel: (threadIdDB, labelId) => {
-      const threadParams = { threadIdStore: ownProps.threadId, threadIdDB };
+      const threadParams = {
+        threadIdStore: ownProps.threadIdSelected,
+        threadIdDB
+      };
       return dispatch(removeThreadLabel(threadParams, labelId));
     }
   };

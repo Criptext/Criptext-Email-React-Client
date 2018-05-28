@@ -11,6 +11,7 @@ const HeaderMain = props => (
       isHiddenMenuSearchHints={props.isHiddenMenuSearchHints}
       isHiddenMenuSearchOptions={props.isHiddenMenuSearchOptions}
       getSearchParams={props.getSearchParams}
+      onClickSearch={props.onClickSearch}
       onSearchSelectThread={props.onSearchSelectThread}
       onToggleMenuSearchHints={props.onToggleMenuSearchHints}
       onToggleMenuSearchOptions={props.onToggleMenuSearchOptions}
@@ -19,7 +20,7 @@ const HeaderMain = props => (
       threads={props.threads}
       hints={props.hints}
     />
-    <ProfileShortCutWrapper />
+    <ProfileShortCutWrapper onClickSettings={props.onClickSection} />
   </div>
 );
 
@@ -29,6 +30,8 @@ HeaderMain.propTypes = {
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,
   isHiddenMenuSearchOptions: PropTypes.bool,
+  onClickSection: PropTypes.func,
+  onClickSearch: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onToggleMenuSearchHints: PropTypes.func,
   onToggleMenuSearchOptions: PropTypes.func,

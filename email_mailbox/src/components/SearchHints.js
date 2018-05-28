@@ -107,6 +107,11 @@ SearchSuggestion.propTypes = {
   searchText: PropTypes.string
 };
 
+SearchHints.defaultProps = {
+  hints: List([]),
+  threads: []
+};
+
 SearchHints.propTypes = {
   errorSuggestions: PropTypes.string,
   hints: PropTypes.object,

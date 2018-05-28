@@ -17,7 +17,7 @@ const ProfilePreview = props => (
       </div>
     </div>
     <div className="profile-preview-controls">
-      <button className="button-b">
+      <button className="button-b" onClick={() => props.onClickSettings()}>
         <i className="icon-settings" />
         <span>Settings</span>
       </button>
@@ -31,7 +31,8 @@ const ProfilePreview = props => (
 ProfilePreview.propTypes = {
   letters: PropTypes.string,
   emailAddress: PropTypes.string,
-  name: PropTypes.string
+  name: PropTypes.string,
+  onClickSettings: PropTypes.func
 };
 
 export default ProfilePreview;

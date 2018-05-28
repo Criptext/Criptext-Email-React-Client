@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ProfileShortCut from './ProfileShortCut';
 import { myAccount } from '../utils/electronInterface';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
@@ -20,10 +21,18 @@ class ProfileShortCutWrapper extends Component {
         name={myAccount.name}
         emailAddress={`${myAccount.recipientId}@${appDomain}`}
         isHiddenMenuProfilePreview={this.state.isHiddenMenuProfilePreview}
+        onClickSettings={this.handleClickSettings}
         onToggleMenuProfilePreview={this.handleToggleMenuProfilePreview}
       />
     );
   }
+
+  handleClickSettings = () => {
+    this.setState({
+      isHiddenMenuProfilePreview: true
+    });
+    this.props.onClickSettings();
+  };
 
   handleToggleMenuProfilePreview = () => {
     this.setState({
@@ -31,5 +40,9 @@ class ProfileShortCutWrapper extends Component {
     });
   };
 }
+
+ProfileShortCutWrapper.propTypes = {
+  onClickSettings: PropTypes.func
+};
 
 export default ProfileShortCutWrapper;

@@ -3,6 +3,62 @@ import * as actions from '../actions/index';
 import MailboxHeaderView from '../components/MailboxHeader';
 import { CustomCheckboxStatus } from '../components/CustomCheckbox';
 
+const getLabelIncluded = (labels, threads, selectThreads, multiselect) => {
+  if (!multiselect) {
+    return [];
+  }
+
+  const hasLabels = threads.reduce(function(lbs, thread) {
+    if (!thread.get('selected')) {
+      return lbs;
+    }
+
+    return thread.get('labels').reduce(function(lbs, label) {
+      if (!lbs[label]) {
+        lbs[label] = 1;
+      } else {
+        lbs[label]++;
+      }
+      return lbs;
+    }, lbs);
+  }, {});
+  return labels.reduce(function(lbs, label) {
+    const labelId = label.get('id');
+    const labelText = label.get('text');
+    let checked = CustomCheckboxStatus.NONE;
+    if (hasLabels[labelId] === selectThreads.length) {
+      checked = CustomCheckboxStatus.COMPLETE;
+    } else if (hasLabels[labelId]) {
+      checked = CustomCheckboxStatus.PARTIAL;
+    }
+    lbs.push({
+      id: labelId,
+      text: labelText,
+      checked
+    });
+    return lbs;
+  }, []);
+};
+
+const shouldMarkAsUnread = (threads, multiselect) => {
+  if (!multiselect) {
+    return null;
+  }
+  let markUnread = true;
+  threads.every(thread => {
+    if (!thread.get('selected')) {
+      return true;
+    }
+    if (thread.get('unread')) {
+      markUnread = false;
+      return false;
+    }
+    return true;
+  });
+
+  return markUnread;
+};
+
 const mapStateToProps = state => {
   const multiselect = state.get('activities').get('multiselect');
   const threadsSelected = getThreadsSelected(state.get('threads'), multiselect);
@@ -61,7 +117,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onSearchSelectThread: threadId => {
       dispatch(actions.selectThread(threadId));
-      ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
+      ownProps.onClickThreadIdSelected(threadId, ownProps.mailboxSelected);
     }
   };
 };
@@ -81,62 +137,6 @@ function getThreadsSelected(threads, multiselect) {
     return ids;
   }, []);
 }
-
-const shouldMarkAsUnread = (threads, multiselect) => {
-  if (!multiselect) {
-    return null;
-  }
-  let markUnread = true;
-  threads.every(thread => {
-    if (!thread.get('selected')) {
-      return true;
-    }
-    if (thread.get('unread')) {
-      markUnread = false;
-      return false;
-    }
-    return true;
-  });
-
-  return markUnread;
-};
-
-const getLabelIncluded = (labels, threads, selectThreads, multiselect) => {
-  if (!multiselect) {
-    return [];
-  }
-
-  const hasLabels = threads.reduce(function(lbs, thread) {
-    if (!thread.get('selected')) {
-      return lbs;
-    }
-
-    return thread.get('labels').reduce(function(lbs, label) {
-      if (!lbs[label]) {
-        lbs[label] = 1;
-      } else {
-        lbs[label]++;
-      }
-      return lbs;
-    }, lbs);
-  }, {});
-  return labels.reduce(function(lbs, label) {
-    const labelId = label.get('id');
-    const labelText = label.get('text');
-    let checked = CustomCheckboxStatus.NONE;
-    if (hasLabels[labelId] === selectThreads.length) {
-      checked = CustomCheckboxStatus.COMPLETE;
-    } else if (hasLabels[labelId]) {
-      checked = CustomCheckboxStatus.PARTIAL;
-    }
-    lbs.push({
-      id: labelId,
-      text: labelText,
-      checked
-    });
-    return lbs;
-  }, []);
-};
 
 const MailboxHeader = connect(mapStateToProps, mapDispatchToProps)(
   MailboxHeaderView

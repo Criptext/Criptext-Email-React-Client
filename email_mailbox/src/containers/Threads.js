@@ -8,8 +8,28 @@ import ThreadsView from '../components/Threads';
 import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';
 
+const defineStatus = isSyncing => {
+  return isSyncing ? ButtonSyncType.LOAD : ButtonSyncType.STOP;
+};
+
+const defineContactType = (labelId, from, to) => {
+  if ((from && from !== '') || (to && to !== '')) {
+    if (from !== '' && to !== '') return ['from', 'to'];
+    else if (from !== '') return ['from'];
+    return ['to'];
+  }
+
+  if (labelId === LabelType.sent.id || labelId === LabelType.draft.id) {
+    return ['to'];
+  }
+  if (labelId === LabelType.all.id) {
+    return ['from', 'to'];
+  }
+  return ['from'];
+};
+
 const mapStateToProps = (state, ownProps) => {
-  const mailboxTitle = LabelType[ownProps.mailbox].text;
+  const mailboxTitle = LabelType[ownProps.mailboxSelected].text;
   const unreadFilter = state.get('activities').get('unreadFilter');
   const buttonSyncStatus = defineStatus(
     state.get('activities').get('isSyncing')
@@ -27,25 +47,16 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const defineStatus = isSyncing => {
-  return isSyncing ? ButtonSyncType.LOAD : ButtonSyncType.STOP;
-};
-
-const defineContactType = labelId => {
-  if (labelId === LabelType.sent.id || labelId === LabelType.draft.id) {
-    return ['to'];
-  }
-  if (labelId === LabelType.all.id) {
-    return ['from', 'to'];
-  }
-  return ['from'];
-};
-
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onLoadThreads: (mailbox, clear, timestamp) => {
+    onLoadThreads: (mailbox, clear, searchParams, timestamp) => {
       const labelId = LabelType[mailbox].id;
-      const contactTypes = defineContactType(labelId);
+      const contactTypes = defineContactType(
+        labelId,
+        searchParams.from,
+        searchParams.to
+      );
+      const contactFilter = { from: searchParams.from, to: searchParams.to };
       const params =
         mailbox === 'search'
           ? {
@@ -53,7 +64,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               clear,
               timestamp,
               contactTypes,
-              ...ownProps.searchParams
+              contactFilter,
+              plain: true,
+              text: searchParams.text
             }
           : {
               labelId,
@@ -64,7 +77,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(loadThreads(params));
     },
     onLoadEvents: () => {
-      const labelId = LabelType[ownProps.mailbox].id;
+      const labelId = LabelType[ownProps.mailboxSelected].id;
       const clear = true;
       const params = {
         labelId,

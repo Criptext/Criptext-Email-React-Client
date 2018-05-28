@@ -40,6 +40,12 @@ export const SideBarItems = [
   }
 ];
 
+export const SectionType = {
+  MAILBOX: 1,
+  THREAD: 2,
+  SETTINGS: 3
+};
+
 export const FeedActionType = {
   SENT: {
     value: 'sent',

@@ -54,7 +54,7 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   isVisibleArchiveButton = () => {
-    const currentLabelId = LabelType[this.props.mailbox].id;
+    const currentLabelId = LabelType[this.props.mailboxSelected].id;
     return (
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
@@ -63,7 +63,7 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   isVisibleSpamButton = () => {
-    const currentLabelId = LabelType[this.props.mailbox].id;
+    const currentLabelId = LabelType[this.props.mailboxSelected].id;
     return (
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
@@ -73,7 +73,7 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   isVisibleTrashButton = () => {
-    const currentLabelId = LabelType[this.props.mailbox].id;
+    const currentLabelId = LabelType[this.props.mailboxSelected].id;
     return (
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
@@ -112,7 +112,7 @@ class HeaderThreadOptionsWrapper extends Component {
 }
 
 HeaderThreadOptionsWrapper.propTypes = {
-  mailbox: PropTypes.string,
+  mailboxSelected: PropTypes.string,
   markAsUnread: PropTypes.bool,
   onAddLabel: PropTypes.func,
   onMarkRead: PropTypes.func,

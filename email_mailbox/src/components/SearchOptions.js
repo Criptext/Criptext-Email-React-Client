@@ -64,7 +64,7 @@ const SearchOptions = props => (
                 );
               }}
             />
-            <button className="button-a" onClick={props.onSearchThreads}>
+            <button className="button-a" onClick={() => props.onClickSearch()}>
               <i className="icon-search" />
               <span>Search</span>
             </button>
@@ -105,8 +105,13 @@ SearchOptionRowInput.propTypes = {
   placeholder: PropTypes.string
 };
 
+SearchOptions.defaultProps = {
+  allLabels: []
+};
+
 SearchOptions.propTypes = {
   allLabels: PropTypes.array,
+  onClickSearch: PropTypes.func,
   onSearchThreads: PropTypes.func,
   getSearchParams: PropTypes.func,
   searchParams: PropTypes.object
