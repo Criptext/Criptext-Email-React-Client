@@ -125,7 +125,7 @@ const destroy = async () => {
     composerWindow.destroy();
   }
   const emailToEdit = globalManager.emailToEdit.get();
-  if (emailToEdit) {
+  if (emailToEdit && emailToEdit.type === composerEvents.EDIT_DRAFT) {
     const [prevEmail] = await dbManager.getEmailByKey(emailToEdit.key);
     await dbManager.deleteEmailLabelAndContactByEmailId(
       prevEmail.id,

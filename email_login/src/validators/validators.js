@@ -1,17 +1,26 @@
 import validator from 'validator';
 import { checkAvailableUsername } from './../utils/electronInterface';
 
-const requiredLength = {
-  username: 2,
-  fullname: 2,
-  password: 2
+const requiredMinLength = {
+  username: 3,
+  fullname: 1,
+  password: 8
+};
+
+const requiredMaxLength = {
+  username: 255,
+  fullname: 255,
+  password: 255
 };
 
 const checkRequired = field => {
   return field !== undefined;
 };
-const checkminLength = (field, length) => {
-  return field.length > length;
+const checkminLength = (field, minlength) => {
+  return field.length >= minlength;
+};
+const checkMaxLength = (field, maxLength) => {
+  return field.length < maxLength;
 };
 const checkMatch = (field1, field2) => {
   return field1 === field2;
@@ -19,7 +28,9 @@ const checkMatch = (field1, field2) => {
 
 export const validateUsername = username => {
   return (
-    checkRequired(username) && checkminLength(username, requiredLength.username)
+    checkRequired(username) &&
+    checkminLength(username, requiredMinLength.username) &&
+    checkMaxLength(username, requiredMaxLength.username)
   );
 };
 
@@ -33,19 +44,27 @@ export const checkUsernameAvailable = async username => {
 
 export const validateFullname = fullname => {
   return (
-    checkRequired(fullname) && checkminLength(fullname, requiredLength.fullname)
+    checkRequired(fullname) &&
+    checkminLength(fullname, requiredMinLength.fullname) &&
+    checkMaxLength(fullname, requiredMaxLength.fullname)
   );
 };
 
 export const validatePassword = field => {
-  return checkRequired(field) && checkminLength(field, requiredLength.password);
+  return (
+    checkRequired(field) &&
+    checkminLength(field, requiredMinLength.password) &&
+    checkMaxLength(field, requiredMaxLength.password)
+  );
 };
 
 export const validateConfirmPassword = (field1, field2) => {
   const required = checkRequired(field1) && checkRequired(field2);
   const length =
-    checkminLength(field1, requiredLength.password) &&
-    checkminLength(field2, requiredLength.password);
+    checkminLength(field1, requiredMinLength.password) &&
+    checkminLength(field2, requiredMinLength.password) &&
+    checkMaxLength(field1, requiredMaxLength.password) &&
+    checkMaxLength(field2, requiredMaxLength.password);
   const match = checkMatch(field1, field2);
   return required && length && match;
 };
