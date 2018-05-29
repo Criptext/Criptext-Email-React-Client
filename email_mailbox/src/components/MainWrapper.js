@@ -133,7 +133,7 @@ class MainWrapper extends Component {
             mailboxSelected={this.props.sectionSelected.params.mailboxSelected}
             onClickSection={this.props.onClickSection}
             onCheckThreadItem={this.handleCheckThreadItem}
-            searchParams={{ ...this.props.sectionSelected.params.searchParams }}
+            searchParams={this.props.sectionSelected.params.searchParams}
             threadItemsChecked={this.state.threadItemsChecked}
           />
         );

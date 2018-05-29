@@ -13,9 +13,9 @@ const defineStatus = isSyncing => {
 };
 
 const defineContactType = (labelId, from, to) => {
-  if ((from && from !== '') || (to && to !== '')) {
-    if (from !== '' && to !== '') return ['from', 'to'];
-    else if (from !== '') return ['from'];
+  if (from || to) {
+    if (from && to) return ['from', 'to'];
+    else if (from) return ['from'];
     return ['to'];
   }
 

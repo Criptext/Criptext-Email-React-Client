@@ -85,6 +85,7 @@ const SearchOptionRowInput = props => (
         type="text"
         onChange={props.onChange}
         placeholder={props.placeholder}
+        value={props.value}
       />
     </td>
   </tr>
@@ -102,7 +103,8 @@ const renderLabels = labels => {
 SearchOptionRowInput.propTypes = {
   label: PropTypes.string,
   onChange: PropTypes.func,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
+  value: PropTypes.bool
 };
 
 SearchOptions.defaultProps = {

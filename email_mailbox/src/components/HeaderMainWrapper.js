@@ -42,11 +42,8 @@ class HeaderMainWrapper extends Component {
 
   handleGetSearchParams = (key, value) => {
     const isHiddenMenuSearchHints =
-      key === 'text'
-        ? this.state.isHiddenMenuSearchOptions ? false : true
-        : true;
-    const searchParams = this.state.searchParams;
-    searchParams[key] = value;
+      key === 'text' ? !this.state.isHiddenMenuSearchOptions : true;
+    const searchParams = { ...this.state.searchParams, [key]: value };
     this.setState(
       {
         searchParams,
@@ -96,7 +93,8 @@ class HeaderMainWrapper extends Component {
 
 HeaderMainWrapper.propTypes = {
   onSearchChange: PropTypes.func,
-  onSearchThreads: PropTypes.func
+  onSearchThreads: PropTypes.func,
+  searchParams: PropTypes.object
 };
 
 export default HeaderMainWrapper;

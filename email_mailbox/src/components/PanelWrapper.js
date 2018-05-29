@@ -71,28 +71,35 @@ class PanelWrapper extends Component {
       case SectionType.MAILBOX:
         {
           const { mailboxSelected, searchParams } = params;
-          const sectionSelected = {
-            type,
-            params: {
-              mailboxSelected,
-              threadIdSelected: null,
-              searchParams
+          const searchParamsChecked =
+            searchParams || this.state.sectionSelected.params.searchParams;
+          this.setState(state => ({
+            ...state,
+            sectionSelected: {
+              type,
+              params: {
+                mailboxSelected,
+                threadIdSelected: null,
+                searchParams: searchParamsChecked
+              }
             }
-          };
-          this.setState({ sectionSelected });
+          }));
         }
         break;
       case SectionType.THREAD:
         {
           const { mailboxSelected, threadIdSelected } = params;
-          const sectionSelected = {
-            type,
-            params: {
-              mailboxSelected,
-              threadIdSelected
+          this.setState(state => ({
+            ...state,
+            sectionSelected: {
+              type,
+              params: {
+                mailboxSelected,
+                threadIdSelected,
+                searchParams: { ...state.sectionSelected.params.searchParams }
+              }
             }
-          };
-          this.setState({ sectionSelected });
+          }));
         }
         break;
       case SectionType.SETTINGS:
