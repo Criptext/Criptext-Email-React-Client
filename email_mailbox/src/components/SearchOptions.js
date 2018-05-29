@@ -64,7 +64,7 @@ const SearchOptions = props => (
                 );
               }}
             />
-            <button className="button-a" onClick={props.onSearchThreads}>
+            <button className="button-a" onClick={() => props.onClickSearch()}>
               <i className="icon-search" />
               <span>Search</span>
             </button>
@@ -85,6 +85,7 @@ const SearchOptionRowInput = props => (
         type="text"
         onChange={props.onChange}
         placeholder={props.placeholder}
+        value={props.value}
       />
     </td>
   </tr>
@@ -102,11 +103,17 @@ const renderLabels = labels => {
 SearchOptionRowInput.propTypes = {
   label: PropTypes.string,
   onChange: PropTypes.func,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
+  value: PropTypes.bool
+};
+
+SearchOptions.defaultProps = {
+  allLabels: []
 };
 
 SearchOptions.propTypes = {
   allLabels: PropTypes.array,
+  onClickSearch: PropTypes.func,
   onSearchThreads: PropTypes.func,
   getSearchParams: PropTypes.func,
   searchParams: PropTypes.object

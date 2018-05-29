@@ -20,8 +20,15 @@ class Threads extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.mailbox !== nextProps.mailbox) {
-      this.props.onLoadThreads(nextProps.mailbox, true);
+    if (
+      this.props.mailboxSelected !== nextProps.mailboxSelected ||
+      this.props.searchParams !== nextProps.searchParams
+    ) {
+      this.props.onLoadThreads(
+        nextProps.mailboxSelected,
+        true,
+        nextProps.searchParams
+      );
     }
   }
 
@@ -54,19 +61,25 @@ class Threads extends Component {
         <div className="threads-wrapper" onScroll={this.handleTableScrolled}>
           <div className="threads-container">
             {this.props.threads.size < 1 ? (
-              <EmptyMailbox mailbox={this.props.mailbox} />
+              <EmptyMailbox mailbox={this.props.mailboxSelected} />
             ) : null}
             {this.props.threads.map((thread, index) => {
+              const checked = this.props.threadItemsChecked.has(
+                thread.get('id')
+              );
               return (
                 <ThreadItem
                   key={index}
                   myIndex={index}
-                  mailbox={this.props.mailbox}
+                  checked={checked}
+                  mailbox={this.props.mailboxSelected} // ?
                   thread={thread}
-                  onClickThreadIdSelected={this.props.onClickThreadIdSelected}
-                  onMouseEnterItem={this.onMouseEnterItem}
-                  onMouserLeaveItem={this.onMouserLeaveItem}
+                  onClickSelectedItem={this.props.onClickSection}
+                  onMouseEnterItem={this.handleMouseEnterItem}
+                  onMouserLeaveItem={this.handleMouserLeaveItem}
                   searchParams={this.props.searchParams}
+                  onCheckItem={this.props.onCheckThreadItem}
+                  isHiddenCheckBox={!this.props.threadItemsChecked.size}
                 />
               );
             })}
@@ -79,7 +92,11 @@ class Threads extends Component {
   }
 
   componentDidMount() {
-    this.props.onLoadThreads(this.props.mailbox, true);
+    this.props.onLoadThreads(
+      this.props.mailboxSelected,
+      true,
+      this.props.searchParams
+    );
     this.props.onLoadEvents();
   }
 
@@ -121,7 +138,7 @@ class Threads extends Component {
     );
   };
 
-  onMouseEnterItem = (id, data) => {
+  handleMouseEnterItem = (id, data) => {
     if (typeof data === 'string') {
       return this.setState({
         hoverTarget: id,
@@ -135,7 +152,7 @@ class Threads extends Component {
     });
   };
 
-  onMouserLeaveItem = id => {
+  handleMouserLeaveItem = id => {
     if (id !== this.state.hoverTarget) {
       return;
     }
@@ -159,20 +176,27 @@ class Threads extends Component {
 
     if (scrollTop + height > scrollHeight - SCROLL_BOTTOM_LIMIT && lastThread) {
       const timestamp = lastThread.get('timestamp');
-      this.props.onLoadThreads(this.props.mailbox, false, timestamp);
+      this.props.onLoadThreads(
+        this.props.mailboxSelected,
+        false,
+        this.props.searchParams,
+        timestamp
+      );
     }
   };
 }
 
 Threads.propTypes = {
   buttonSyncStatus: PropTypes.number,
-  mailbox: PropTypes.string,
+  mailboxSelected: PropTypes.string,
   mailboxTitle: PropTypes.string,
-  onClickThreadIdSelected: PropTypes.func,
+  onCheckThreadItem: PropTypes.func,
+  onClickSection: PropTypes.func,
   onLoadEvents: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,
   searchParams: PropTypes.object,
+  threadItemsChecked: PropTypes.object,
   threads: PropTypes.object,
   unreadFilter: PropTypes.bool
 };

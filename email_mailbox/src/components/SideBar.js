@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SideBarItem from './../components/SideBarItem';
 import SideBarLabelItem from './../containers/SideBarLabelItem';
 import LabelEdit from './../containers/LabelEdit';
-import { SideBarItems } from './../utils/const';
+import { SectionType, SideBarItems } from './../utils/const';
 import { openComposerWindow } from '../utils/electronInterface';
 import './sidebar.css';
 
@@ -39,7 +39,7 @@ class SideBar extends Component {
                 return (
                   <SideBarItem
                     onClick={() => {
-                      this.props.onClickMailboxSelected(item.id);
+                      this.handleClickSection(item.id);
                     }}
                     key={key}
                     item={item}
@@ -101,13 +101,19 @@ class SideBar extends Component {
       </ul>
     );
   };
+
+  handleClickSection = mailboxSelected => {
+    const type = SectionType.MAILBOX;
+    const params = { mailboxSelected };
+    this.props.onClickSection(type, params);
+  };
 }
 
 SideBar.propTypes = {
   isOpenSideBar: PropTypes.bool,
   labels: PropTypes.object,
   mailboxSelected: PropTypes.string,
-  onClickMailboxSelected: PropTypes.func,
+  onClickSection: PropTypes.func,
   onToggleSideBar: PropTypes.func,
   onLoadLabels: PropTypes.func,
   optionSelected: PropTypes.string

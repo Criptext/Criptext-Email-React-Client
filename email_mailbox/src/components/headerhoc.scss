@@ -1,0 +1,12 @@
+@import "./../styles/index.scss";
+
+header.header-container{
+  background-color: #373a45;
+  display: flex;
+  justify-content: space-between;
+  height: $_HEIGHT_HEADER;
+
+  .header-content{
+    flex-grow: 1;
+  }
+}

@@ -1,46 +1,18 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
-import ThreadHeaderView from '../components/ThreadHeader';
+import HeaderThreadOptionsWrapper from '../components/HeaderThreadOptionsWrapper';
+import { Set } from 'immutable';
 
-const formThreadParams = thread => {
-  return {
-    threadIdStore: thread.id,
-    threadIdDB: thread.threadId
-  };
-};
-
-const mapStateToProps = (state, ownProps) => {
-  const labels = getLabelIncluded(
-    state.get('labels').filter(item => item.get('type') === 'custom'),
-    ownProps.thread ? ownProps.thread.labels : null
-  );
-  const markAsUnread = shouldMarkAsUnread(state.get('threads'));
-  return {
-    markAsUnread,
-    threadsSelected: [
-      ownProps.thread ? formThreadParams(ownProps.thread) : null
-    ],
-    labels,
-    allLabels: state.get('labels'),
-    history: ownProps.history
-  };
-};
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    onBackOption: () => {
-      ownProps.onClickThreadBack();
-    },
-    onAddLabel: (threadsIds, label) => {
-      return dispatch(actions.addThreadsLabel(threadsIds, label));
-    },
-    onRemoveLabel: (threadsIds, label) => {
-      return dispatch(actions.removeThreadsLabel(threadsIds, label));
-    },
-    onMarkRead: (threadsIds, read) => {
-      return dispatch(actions.markThreadsRead(threadsIds, read));
+const defineOneThreadSelected = (threads, threadId) => {
+  const thread = threads.find(thread => {
+    return thread.get('id') === threadId;
+  });
+  return [
+    {
+      threadIdStore: thread.get('id'),
+      threadIdDB: thread.get('threadId')
     }
-  };
+  ];
 };
 
 const getLabelIncluded = (labels, threadLabels) => {
@@ -70,6 +42,19 @@ const getLabelIncluded = (labels, threadLabels) => {
   }, []);
 };
 
+const defineThreadsSelected = (threads, itemsChecked) => {
+  return threads.reduce((ids, thread) => {
+    if (itemsChecked.has(thread.get('id'))) {
+      const selectedThread = {
+        threadIdStore: thread.get('id'),
+        threadIdDB: thread.get('threadId')
+      };
+      ids.push(selectedThread);
+    }
+    return ids;
+  }, []);
+};
+
 const shouldMarkAsUnread = threads => {
   let markUnread = true;
   threads.every(thread => {
@@ -86,8 +71,55 @@ const shouldMarkAsUnread = threads => {
   return markUnread;
 };
 
+const getThreadsIds = threads => {
+  const threadIds = threads.map(thread => {
+    return thread.get('id');
+  });
+  return Set(threadIds);
+};
+
+const mapStateToProps = (state, ownProps) => {
+  const threads = state.get('threads');
+  const threadIds = getThreadsIds(threads);
+  const labels = getLabelIncluded(
+    state.get('labels').filter(item => item.get('type') === 'custom'),
+    ownProps.thread ? ownProps.thread.labels : null
+  );
+  const markAsUnread = shouldMarkAsUnread(threads);
+  const threadsSelected = ownProps.itemsChecked
+    ? defineThreadsSelected(threads, ownProps.itemsChecked)
+    : defineOneThreadSelected(threads, ownProps.threadIdSelected);
+  const allSelected = ownProps.itemsChecked
+    ? threadIds.size === ownProps.itemsChecked.size
+    : false;
+  return {
+    allSelected,
+    markAsUnread,
+    threadsSelected,
+    threadIds,
+    labels,
+    allLabels: state.get('labels')
+  };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onAddLabel: (threadsIds, label) => {
+      ownProps.onBackOption();
+      dispatch(actions.addThreadsLabel(threadsIds, label));
+    },
+    onRemoveLabel: (threadsIds, label) => {
+      dispatch(actions.removeThreadsLabel(threadsIds, label));
+    },
+    onMarkRead: (threadsIds, read) => {
+      ownProps.onBackOption();
+      dispatch(actions.markThreadsRead(threadsIds, read));
+    }
+  };
+};
+
 const ThreadHeader = connect(mapStateToProps, mapDispatchToProps)(
-  ThreadHeaderView
+  HeaderThreadOptionsWrapper
 );
 
 export default ThreadHeader;

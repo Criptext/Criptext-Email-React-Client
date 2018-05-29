@@ -58,7 +58,7 @@ class SearchBox extends Component {
             arrowPosition={MenuType.TOP_RIGHT}
             getSearchParams={this.props.getSearchParams}
             isHidden={this.props.isHiddenMenuSearchOptions}
-            onSearchThreads={this.props.onSearchThreads}
+            onClickSearch={this.props.onClickSearch}
             onToggleMenu={this.props.onToggleMenuSearchOptions}
             menuPosition={{ right: '-32px', top: '32px' }}
             searchParams={this.props.searchParams}
@@ -156,13 +156,21 @@ const clearCurrentAnimation = () => {
   if (currentAnimation) currentAnimation.pause();
 };
 
+SearchBox.defaultProps = {
+  isHiddenMenuSearchHints: true,
+  isHiddenMenuSearchOptions: true,
+  searchParams: {
+    text: ''
+  }
+};
+
 SearchBox.propTypes = {
   allLabels: PropTypes.array,
   getSearchParams: PropTypes.func,
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,
   isHiddenMenuSearchOptions: PropTypes.bool,
-  onSearchThreads: PropTypes.func,
+  onClickSearch: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onToggleMenuSearchHints: PropTypes.func,
   onToggleMenuSearchOptions: PropTypes.func,

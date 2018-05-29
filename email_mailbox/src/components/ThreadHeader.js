@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import HeaderThreadOptionsWrapper from './HeaderThreadOptionsWrapper';
-import ActivityPanelShortCut from './ActivityPanelShortCut';
 import './threadheader.css';
 
 const ThreadHeader = props => (
@@ -9,7 +8,6 @@ const ThreadHeader = props => (
     <div className="header-container">
       <HeaderThreadOptionsWrapper {...props} />
     </div>
-    <ActivityPanelShortCut onClick={props.onToggleActivityPanel} />
   </header>
 );
 

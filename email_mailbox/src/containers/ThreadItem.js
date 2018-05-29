@@ -8,6 +8,7 @@ import {
 } from '../utils/electronInterface';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
+import { SectionType } from '../utils/const';
 import randomcolor from 'randomcolor';
 
 const getThreadClass = (thread, threadPos, selectedThread) => {
@@ -70,6 +71,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onSelectThread: thread => {
       const threadId = thread.id;
+      const type = SectionType.THREAD;
+      const params = {
+        mailboxSelected: ownProps.mailbox,
+        threadIdSelected: threadId
+      };
       if (LabelType[ownProps.mailbox].id === LabelType.draft.id) {
         openEmailInComposer({
           key: thread.key,
@@ -83,10 +89,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: composerEvents.EDIT_DRAFT
           });
         } else {
-          ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
+          ownProps.onClickSelectedItem(type, params);
         }
       } else {
-        ownProps.onClickThreadIdSelected(threadId, ownProps.mailbox);
+        ownProps.onClickSelectedItem(type, params);
       }
       dispatch(actions.selectThread(threadId));
     },

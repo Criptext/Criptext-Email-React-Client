@@ -3,6 +3,7 @@ import Panel from './Panel';
 import PropTypes from 'prop-types';
 import { addEvent, Event } from '../utils/electronEventInterface';
 import { LabelType } from '../utils/electronInterface';
+import { SectionType } from '../utils/const';
 
 class PanelWrapper extends Component {
   constructor(props) {
@@ -10,8 +11,20 @@ class PanelWrapper extends Component {
     this.state = {
       isOpenActivityPanel: false,
       isOpenSideBar: true,
-      mailboxSelected: 'inbox',
-      threadIdSelected: null
+      sectionSelected: {
+        type: SectionType.MAILBOX,
+        params: {
+          mailboxSelected: 'inbox',
+          threadIdSelected: null,
+          searchParams: {
+            text: '',
+            from: '',
+            to: '',
+            subject: '',
+            hasAttachments: false
+          }
+        }
+      }
     };
 
     addEvent(Event.NEW_EMAIL, emailParams => {
@@ -43,41 +56,83 @@ class PanelWrapper extends Component {
       <Panel
         isOpenActivityPanel={this.state.isOpenActivityPanel}
         isOpenSideBar={this.state.isOpenSideBar}
-        mailboxSelected={this.state.mailboxSelected}
-        threadIdSelected={this.state.threadIdSelected}
-        onClickMailboxSelected={this.handleOnClickMailboxSelected}
-        onClickThreadBack={this.handleOnClickThreadBack}
-        onClickThreadIdSelected={this.handleOnClickThreadIdSelected}
-        onToggleActivityPanel={this.handleOnClickToggleActivityPanel}
-        onToggleSideBar={this.handleOnClickToggleSideBar}
+        onClickSection={this.handleClickSection}
+        onClickThreadBack={this.handleClickThreadBack}
+        onToggleActivityPanel={this.handleToggleActivityPanel}
+        onToggleSideBar={this.handleToggleSideBar}
+        sectionSelected={this.state.sectionSelected}
         {...this.props}
       />
     );
   }
 
-  handleOnClickMailboxSelected = value => {
-    this.setState({ mailboxSelected: value, threadIdSelected: null });
+  handleClickSection = (type, params) => {
+    switch (type) {
+      case SectionType.MAILBOX:
+        {
+          const { mailboxSelected, searchParams } = params;
+          const searchParamsChecked =
+            searchParams || this.state.sectionSelected.params.searchParams;
+          this.setState(state => ({
+            ...state,
+            sectionSelected: {
+              type,
+              params: {
+                mailboxSelected,
+                threadIdSelected: null,
+                searchParams: searchParamsChecked
+              }
+            }
+          }));
+        }
+        break;
+      case SectionType.THREAD:
+        {
+          const { mailboxSelected, threadIdSelected } = params;
+          this.setState(state => ({
+            ...state,
+            sectionSelected: {
+              type,
+              params: {
+                mailboxSelected,
+                threadIdSelected,
+                searchParams: { ...state.sectionSelected.params.searchParams }
+              }
+            }
+          }));
+        }
+        break;
+      case SectionType.SETTINGS:
+        {
+          const sectionSelected = {
+            type,
+            params: {
+              mailboxSelected: null,
+              threadIdSelected: null
+            }
+          };
+          this.setState({ sectionSelected });
+        }
+        break;
+      default:
+        break;
+    }
   };
 
-  handleOnClickThreadBack = () => {
+  handleClickThreadBack = () => {
     this.setState({ threadIdSelected: null });
   };
 
-  handleOnClickThreadIdSelected = (threadId, mailbox) => {
-    this.setState({ mailboxSelected: mailbox, threadIdSelected: threadId });
-  };
-
-  handleOnClickToggleActivityPanel = () => {
+  handleToggleActivityPanel = () => {
     this.setState({ isOpenActivityPanel: !this.state.isOpenActivityPanel });
   };
 
-  handleOnClickToggleSideBar = () => {
+  handleToggleSideBar = () => {
     this.setState({ isOpenSideBar: !this.state.isOpenSideBar });
   };
 }
 
 PanelWrapper.propTypes = {
-  onLoadEmails: PropTypes.func,
   onLoadThreads: PropTypes.func,
   threadsCount: PropTypes.number
 };

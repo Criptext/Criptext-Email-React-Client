@@ -88,7 +88,7 @@ class ThreadItem extends Component {
   };
 
   onCheck = value => {
-    this.props.onMultiSelect(
+    this.props.onCheckItem(
       this.props.thread.id,
       CustomCheckboxStatus.toBoolean(value)
     );
@@ -101,10 +101,10 @@ class ThreadItem extends Component {
   };
 
   renderFirstColumn = () => {
-    if (this.props.multiselect || this.props.hovering) {
+    if (!this.props.isHiddenCheckBox || this.props.hovering) {
       return (
         <CustomCheckbox
-          status={CustomCheckboxStatus.fromBoolean(this.props.thread.selected)}
+          status={CustomCheckboxStatus.fromBoolean(this.props.checked)}
           onCheck={this.onCheck}
         />
       );
@@ -259,14 +259,17 @@ ThreadItem.defaultProps = {
 
 ThreadItem.propTypes = {
   color: PropTypes.string,
+  checked: PropTypes.bool,
   header: PropTypes.string,
   hovering: PropTypes.bool,
   important: PropTypes.bool,
+  isHiddenCheckBox: PropTypes.bool,
   labels: PropTypes.array,
   letters: PropTypes.string,
   mailbox: PropTypes.string,
   multiselect: PropTypes.bool,
   myClass: PropTypes.string,
+  onCheckItem: PropTypes.func,
   onImportantClick: PropTypes.func,
   onMouseEnterItem: PropTypes.func,
   onMouserLeaveItem: PropTypes.func,

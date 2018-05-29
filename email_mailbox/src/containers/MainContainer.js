@@ -3,9 +3,9 @@ import MainContainerView from '../components/MainContainer';
 
 const mapStateToProps = (state, ownProps) => {
   let stance = '';
-  if (ownProps.threadId) {
+  if (ownProps.threadIdSelected) {
     stance = 'emails';
-  } else if (ownProps.mailbox) {
+  } else if (ownProps.mailboxSelected) {
     stance = 'threads';
   }
 

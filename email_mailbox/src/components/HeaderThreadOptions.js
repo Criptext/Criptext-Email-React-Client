@@ -81,25 +81,26 @@ class HeaderThreadOptions extends Component {
   renderSelectionInteraction = () => (
     <div className="header-action">
       <ButtonCircle
-        onClick={this.props.onBackOption}
+        onClick={() => this.props.onBackOption()}
         tip="Dismiss"
         enableTip={true}
         icon="icon-back"
         targetName="actionDismiss"
       />
-      {this.props.showSelectAllOption ? (
+      {this.props.itemsChecked ? (
         <div className="button-string-container">
           <ButtonCircle
-            onClick={
-              this.props.allSelected
-                ? this.props.onDeselectThreads
-                : this.props.onSelectThreads
+            onClick={() =>
+              this.props.onCheckAllThreadItems(
+                this.props.allSelected,
+                this.props.threadIds
+              )
             }
             enableTip={false}
             myClass={this.props.allSelected ? 'menu-select-all' : ''}
             icon={this.props.allSelected ? 'icon-check' : 'icon-box'}
           />
-          <span>{this.props.threadsSelected.length} Selected</span>
+          <span>{this.props.itemsChecked.size} Selected</span>
         </div>
       ) : null}
     </div>
@@ -139,20 +140,19 @@ HeaderThreadOptions.propTypes = {
   isVisibleArchiveButton: PropTypes.bool,
   isVisibleSpamButton: PropTypes.bool,
   isVisibleTrashButton: PropTypes.bool,
+  itemsChecked: PropTypes.object,
   labels: PropTypes.array,
   markAsUnread: PropTypes.bool,
   onBackOption: PropTypes.func,
+  onCheckAllThreadItems: PropTypes.func,
   onClickLabelCheckbox: PropTypes.func,
   onClickMoveToSpam: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,
   onClickMarkAsRead: PropTypes.func,
-  onDeselectThreads: PropTypes.func,
-  onSelectThreads: PropTypes.func,
   onToggleDotsMenu: PropTypes.func,
   onToggleFolderMenu: PropTypes.func,
   onToggleTagsMenu: PropTypes.func,
-  showSelectAllOption: PropTypes.bool,
-  threadsSelected: PropTypes.array
+  threadIds: PropTypes.object
 };
 
 export default HeaderThreadOptions;
