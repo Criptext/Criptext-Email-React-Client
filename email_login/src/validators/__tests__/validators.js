@@ -16,7 +16,7 @@ describe('Validate username:', () => {
   const fn = validateUsername;
 
   it('Returns true if the username has enough characters.', () => {
-    const username = 'myusername';
+    const username = 'bob';
     expect(fn(username)).toBe(true);
   });
 
@@ -45,8 +45,8 @@ describe('Validate fullname:', () => {
     expect(fn(fullname)).toBe(true);
   });
 
-  it('Returns false if the username has very few characters.', () => {
-    const fullname = 'f';
+  it('Returns false if the fullname has very few characters.', () => {
+    const fullname = '';
     expect(fn(fullname)).toBe(false);
   });
 });
@@ -55,12 +55,12 @@ describe('Validate password:', () => {
   const fn = validatePassword;
 
   it('Returns true if the password has enough characters.', () => {
-    const password = '1234';
+    const password = '123456789';
     expect(fn(password)).toBe(true);
   });
 
   it('Returns false if the password has very few characters.', () => {
-    const password = '0';
+    const password = '123';
     expect(fn(password)).toBe(false);
   });
 });
@@ -69,19 +69,19 @@ describe('Validate password confirmation:', () => {
   const fn = validateConfirmPassword;
 
   it('Returns true if the password and its confirmation have enough characters and they are equals.', () => {
-    const password = '1234';
-    const confirmation = '1234';
+    const password = '123456789';
+    const confirmation = '123456789';
     expect(fn(password, confirmation)).toBe(true);
   });
 
   it('Returns false if the password or its confirmation have very few characters.', () => {
     const password = '1234';
-    const confirmation = '123';
+    const confirmation = '1234';
     expect(fn(password, confirmation)).toBe(false);
   });
   it('Returns false if the password or its confirmation are not equals.', () => {
-    const password = '1234';
-    const confirmation = '1235';
+    const password = '123456789';
+    const confirmation = '123456780';
     expect(fn(password, confirmation)).toBe(false);
   });
 });

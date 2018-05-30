@@ -131,7 +131,10 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   );
   const htmlBody = EditorState.createWithContent(contentState);
   const replySufix = 'RE: ';
-  const textSubject = replySufix + emailData.subject;
+  const forwardSufix = 'FW: ';
+  const sufix =
+    replyType === composerEvents.FORWARD ? forwardSufix : replySufix;
+  const textSubject = sufix + emailData.subject;
 
   const toEmails =
     replyType === composerEvents.REPLY || replyType === composerEvents.REPLY_ALL

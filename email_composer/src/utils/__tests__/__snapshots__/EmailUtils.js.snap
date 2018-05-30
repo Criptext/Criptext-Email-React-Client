@@ -75,7 +75,7 @@ Object {
   "bccEmails": Array [],
   "ccEmails": Array [],
   "htmlBody": "<p>Modified body content</p>",
-  "textSubject": "RE: Email subject 1",
+  "textSubject": "FW: Email subject 1",
   "threadId": undefined,
   "toEmails": Array [],
 }
