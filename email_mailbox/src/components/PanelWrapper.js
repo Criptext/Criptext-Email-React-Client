@@ -28,7 +28,8 @@ class PanelWrapper extends Component {
     };
 
     addEvent(Event.NEW_EMAIL, emailParams => {
-      const currentLabelId = LabelType[this.state.mailboxSelected].id;
+      const currentLabelId =
+        LabelType[this.state.sectionSelected.params.mailboxSelected].id;
       if (emailParams.labels.indexOf(currentLabelId) >= 0) {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
@@ -39,7 +40,8 @@ class PanelWrapper extends Component {
     });
 
     addEvent(Event.UPDATE_SAVED_DRAFTS, () => {
-      const currentLabelId = LabelType[this.state.mailboxSelected].id;
+      const currentLabelId =
+        LabelType[this.state.sectionSelected.params.mailboxSelected].id;
       if (currentLabelId === LabelType.draft.id) {
         props.onLoadThreads({
           labelId: Number(currentLabelId),

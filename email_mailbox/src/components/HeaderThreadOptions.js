@@ -66,7 +66,7 @@ class HeaderThreadOptions extends Component {
           display={displayDotsMenu}
         >
           <ul className="multiselect-list">
-            <li onClick={this.props.onClickMarkAsRead}>
+            <li onClick={() => this.props.onClickMarkAsRead()}>
               <span>{markAsUnread ? 'Mark as Unread' : 'Mark as Read'}</span>
             </li>
             <li>
