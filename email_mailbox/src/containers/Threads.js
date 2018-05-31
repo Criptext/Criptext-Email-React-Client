@@ -53,10 +53,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const labelId = LabelType[mailbox].id;
       const contactTypes = defineContactType(
         labelId,
-        searchParams.from,
-        searchParams.to
+        searchParams ? searchParams.from : null,
+        searchParams ? searchParams.to : null
       );
-      const contactFilter = { from: searchParams.from, to: searchParams.to };
+      const contactFilter = searchParams
+        ? { from: searchParams.from, to: searchParams.to }
+        : undefined;
       const params =
         mailbox === 'search'
           ? {

@@ -5,7 +5,7 @@ import HeaderMainBasic from './../containers/HeaderMain';
 import HeaderBasicThreadOptions from './../containers/ThreadHeader';
 import Threads from '../containers/Threads';
 import Thread from '../containers/Thread';
-import Settings from './Settings';
+import SettingsWrapper from './SettingsWrapper';
 import { SectionType } from '../utils/const';
 import { Set } from 'immutable';
 
@@ -149,7 +149,7 @@ class MainWrapper extends Component {
         );
       }
       case SectionType.SETTINGS: {
-        return <Settings />;
+        return <SettingsWrapper />;
       }
       default:
         break;

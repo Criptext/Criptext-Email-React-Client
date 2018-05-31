@@ -397,6 +397,11 @@ html, body {
   padding: 0;
 }
 
+h1{
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .wrapper-out{
   height: 100%;
   position: fixed;
@@ -493,6 +498,7 @@ select {
    ----------------------------- */
 button{
   border: none;
+  cursor: pointer;
 
   &:focus{
     outline: 0;
