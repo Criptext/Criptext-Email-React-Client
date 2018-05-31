@@ -24,6 +24,11 @@ export const SideBarItems = [
     text: LabelType.starred.text
   },
   {
+    id: 'important',
+    icon: 'icon-tag',
+    text: LabelType.important.text
+  },
+  {
     id: 'spam',
     icon: 'icon-not',
     text: LabelType.spam.text
