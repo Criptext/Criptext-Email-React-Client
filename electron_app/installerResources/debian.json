@@ -3,15 +3,13 @@
   "icon": "resources/desktop-icon.png",
   "maintainer": "Criptext <info@criptext.com>",
   "description": "Client for criptext email",
-  "productName": "Criptext Email",
+  "productName": "Criptext",
   "homepage": "https://criptext.com",
   "name": "criptext-email-electron-app",
   "bin": "electron-criptext-email",
-  "productDescription": "Client for criptext email",
+  "productDescription": "Client for Criptext Email",
   "desktopTemplate": "./resources/desktop.ejs",
-  "categories": [
-    "Utility"
-  ],
+  "categories": ["Network","Application"],
   "scripts": {
     "preinst": "./installerResources/removeOldAppData-linux.sh",
     "postrm": "./installerResources/removeOldAppData-linux.sh"

@@ -2,8 +2,6 @@
 
 const DBManager = require('../DBManager');
 
-jest.mock('./../versionManager');
-
 beforeAll(async () => {
   await DBManager.cleanDataBase();
   await DBManager.createTables();

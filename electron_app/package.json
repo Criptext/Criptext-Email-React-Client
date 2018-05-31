@@ -1,8 +1,9 @@
 {
   "name": "criptext-email-electron-app",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
-  "productName": "Criptext Email Client",
+  "productName": "Criptext",
+  "main": "./electron-starter.js",
   "scripts": {
     "electron": "electron .",
     "set-env": "NODE_ENV=development MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004 REACT_APP_KEYSERVER_URL=http://localhost:8000 REACT_APP_SOCKETSERVER_URL=ws://localhost:3001",
@@ -11,16 +12,39 @@
     "test": "criptext-js-tools test",
     "integration": "NODE_ENV=test criptext-js-tools integration",
     "lint": "criptext-js-tools lint",
-    "package-linux": "bash ./installerResources/converge_builds.sh && electron-packager . electron-criptext-email --overwrite --asar --platform=linux --arch=x64 --icon=resources/icon.png --out=release-builds --no-package-manager",
-    "package-mac": "sh ./installerResources/converge_builds.sh && electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
-    "installer-linux": "electron-installer-debian --src release-builds/electron-criptext-email-linux-x64/ --arch amd64 --config ./installerResources/debian.json",
-    "installer-mac": "electron-installer-dmg ./release-builds/Criptext\\ Email\\ Client-darwin-x64/Criptext\\ Email\\ Client.app electron-criptext-email --out=release-builds --overwrite"
+    "package-linux": "bash ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --asar --platform=linux --arch=x64 --icon=resources/launch-icons/icon.png --out=release-builds --no-package-manager",
+    "package-mac": "sh ./installerResources/converge_builds.sh && electron-packager . --overwrite --platform=darwin --arch=x64 --icon=./resources/launch-icons/icon.icns --prune=true --out=release-builds",
+    "installer-linux": "electron-installer-debian --src ./release-builds/electron-criptext-email-linux-x64/ --arch amd64 --config ./installerResources/debian.json",
+    "installer-mac": "electron-installer-dmg ./release-builds/Criptext-darwin-x64/Criptext.app electron-criptext-email --out=release-builds --overwrite",
+    "pack": "build --dir",
+    "dist": "build"
   },
-  "main": "./electron-starter.js",
   "build": {
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "build/icon.png"
+    },
     "win": {
       "target": "nsis",
-      "icon": "./resources/launch-icons/icon.ico"
+      "icon": "build/icon.ico"
     },
     "nsis": {
       "deleteAppDataOnUninstall": true
