@@ -7,6 +7,7 @@ const StandardOptions = props => (
   <div className="header-action">
     {props.isVisibleArchiveButton ? (
       <ButtonCircle
+        onClick={props.onClickMoveToArchive}
         tip="Archive"
         enableTip={true}
         icon="icon-archive"
@@ -58,6 +59,7 @@ StandardOptions.propTypes = {
   isVisibleFolderButton: PropTypes.bool,
   isVisibleSpamButton: PropTypes.bool,
   isVisibleTrashButton: PropTypes.bool,
+  onClickMoveToArchive: PropTypes.func,
   onClickMoveToSpam: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,
   onToggleFolderMenu: PropTypes.func,

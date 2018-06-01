@@ -27,6 +27,7 @@ class HeaderThreadOptionsWrapper extends Component {
         onToggleTagsMenu={this.handleToggleTagsMenu}
         onToggleDotsMenu={this.handleToggleDotsMenu}
         onClickMarkAsRead={this.handleClickMarkAsRead}
+        onClickMoveToArchive={this.handleClickMoveToArchive}
         onClickMoveToSpam={this.handleClickMoveToSpam}
         onClickMoveToTrash={this.handleClickMoveToTrash}
         onClickLabelCheckbox={this.handleOnClickLabelCheckbox}
@@ -84,6 +85,10 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.important.id ||
       currentLabelId === LabelType.all.id
     );
+  };
+
+  handleClickMoveToArchive = () => {
+    this.props.onRemoveLabel(this.props.threadsSelected, LabelType.inbox.id);
   };
 
   handleClickMoveToSpam = () => {

@@ -101,7 +101,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(actions.addThreadsLabel(threadsIds, label));
     },
     onRemoveLabel: (threadsIds, label) => {
-      dispatch(actions.removeThreadsLabel(threadsIds, label));
+      dispatch(actions.removeThreadsLabel(threadsIds, label)).then(() =>
+        ownProps.onBackOption()
+      );
     },
     onMarkRead: (threadsIds, read) => {
       ownProps.onBackOption();
