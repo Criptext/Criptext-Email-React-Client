@@ -83,7 +83,7 @@ export default class SignalProtocolStore {
 
     const identifierArray = identifier.split('.');
     const recipientId = identifierArray[0];
-    const [identityKeyRecord] = await getIdentityKeyRecord({ recipientId });
+    const [identityKeyRecord] = await getIdentityKeyRecord({ identityKey: util.toString(identityKey) });
     if (identityKeyRecord === undefined) {
       return Promise.resolve(true);
     }
@@ -111,10 +111,12 @@ export default class SignalProtocolStore {
 
     const identifierArray = identifier.split('.');
     const recipientId = identifierArray[0];
-    const [oldIdentityKeyRecord] = await getIdentityKeyRecord({ recipientId });
+    const deviceId = identifierArray[1];
+    const [oldIdentityKeyRecord] = await getIdentityKeyRecord({ recipientId, deviceId });
     if (!oldIdentityKeyRecord) {
       await createIdentityKeyRecord({
         recipientId,
+        deviceId,
         identityKey: util.toString(identityKey)
       });
       return false;
@@ -123,6 +125,7 @@ export default class SignalProtocolStore {
     ) {
       await updateIdentityKeyRecord({
         recipientId,
+        deviceId,
         identityKey: util.toString(identityKey)
       });
       return true;
