@@ -58,7 +58,8 @@ class HeaderThreadOptionsWrapper extends Component {
     return (
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
-      currentLabelId === LabelType.starred.id
+      currentLabelId === LabelType.starred.id ||
+      currentLabelId === LabelType.important.id
     );
   };
 
@@ -68,7 +69,9 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
       currentLabelId === LabelType.starred.id ||
-      currentLabelId === LabelType.trash.id
+      currentLabelId === LabelType.important.id ||
+      currentLabelId === LabelType.trash.id ||
+      currentLabelId === LabelType.all.id
     );
   };
 
@@ -77,7 +80,9 @@ class HeaderThreadOptionsWrapper extends Component {
     return (
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
-      currentLabelId === LabelType.starred.id
+      currentLabelId === LabelType.starred.id ||
+      currentLabelId === LabelType.important.id ||
+      currentLabelId === LabelType.all.id
     );
   };
 
