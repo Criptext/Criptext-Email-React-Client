@@ -81,9 +81,9 @@ export default class SignalProtocolStore {
       throw new Error('Expected identityKey to be an ArrayBuffer');
     }
 
-    const identifierArray = identifier.split('.');
-    const recipientId = identifierArray[0];
-    const [identityKeyRecord] = await getIdentityKeyRecord({ identityKey: util.toString(identityKey) });
+    const [identityKeyRecord] = await getIdentityKeyRecord({
+      identityKey: util.toString(identityKey)
+    });
     if (identityKeyRecord === undefined) {
       return Promise.resolve(true);
     }
@@ -112,7 +112,10 @@ export default class SignalProtocolStore {
     const identifierArray = identifier.split('.');
     const recipientId = identifierArray[0];
     const deviceId = identifierArray[1];
-    const [oldIdentityKeyRecord] = await getIdentityKeyRecord({ recipientId, deviceId });
+    const [oldIdentityKeyRecord] = await getIdentityKeyRecord({
+      recipientId,
+      deviceId
+    });
     if (!oldIdentityKeyRecord) {
       await createIdentityKeyRecord({
         recipientId,

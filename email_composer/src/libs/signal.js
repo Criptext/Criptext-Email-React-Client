@@ -79,7 +79,10 @@ const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
     throw new CustomError(errors.server.UNAUTHORIZED_ERROR);
   }
   const recipientDevicesAmount = sessions.length + keyBundles.length;
-  if (!(recipientIds.length <= recipientDevicesAmount) || (recipientDevicesAmount === 0)) {
+  if (
+    !(recipientIds.length <= recipientDevicesAmount) ||
+    recipientDevicesAmount === 0
+  ) {
     throw new CustomError(errors.message.NON_EXISTING_USERS);
   }
 

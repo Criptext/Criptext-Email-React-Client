@@ -11,8 +11,6 @@
   position: relative;
 
   &:hover{
-    -webkit-box-shadow: 1px 2px 4px 0 rgba(0, 5, 14, 0.14);
-    -moz-box-shadow: 1px 2px 4px 0 rgba(0, 5, 14, 0.14);
     box-shadow: 1px 2px 4px 0 rgba(0, 5, 14, 0.14);
     z-index: 1;
     width: calc(100% - 7px);
@@ -257,8 +255,6 @@
   right: 0;
   background-color: white;
   width: 150px;
-  -webkit-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
-  -moz-box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
   box-shadow: 0px 0px 15px 0px rgba(163,163,163,0.43);
 
   ul{
