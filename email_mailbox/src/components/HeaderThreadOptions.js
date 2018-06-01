@@ -16,6 +16,7 @@ class HeaderThreadOptions extends Component {
       isVisibleSpamButton,
       isVisibleTrashButton,
       markAsUnread,
+      onClickMoveToArchive,
       onClickMoveToSpam,
       onClickMoveToTrash,
       onToggleFolderMenu,
@@ -30,6 +31,7 @@ class HeaderThreadOptions extends Component {
           isVisibleArchiveButton={isVisibleArchiveButton}
           isVisibleSpamButton={isVisibleSpamButton}
           isVisibleTrashButton={isVisibleTrashButton}
+          onClickMoveToArchive={onClickMoveToArchive}
           onClickMoveToSpam={onClickMoveToSpam}
           onClickMoveToTrash={onClickMoveToTrash}
           onToggleFolderMenu={onToggleFolderMenu}
@@ -146,6 +148,7 @@ HeaderThreadOptions.propTypes = {
   onBackOption: PropTypes.func,
   onCheckAllThreadItems: PropTypes.func,
   onClickLabelCheckbox: PropTypes.func,
+  onClickMoveToArchive: PropTypes.func,
   onClickMoveToSpam: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,
   onClickMarkAsRead: PropTypes.func,
