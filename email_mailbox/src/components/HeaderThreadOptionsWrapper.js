@@ -21,6 +21,7 @@ class HeaderThreadOptionsWrapper extends Component {
         displayTagsMenu={this.state.displayTagsMenu}
         displayDotsMenu={this.state.displayDotsMenu}
         isVisibleArchiveButton={this.isVisibleArchiveButton()}
+        isVisibleRestoreButton={this.isVisibleRestoreButton()}
         isVisibleSpamButton={this.isVisibleSpamButton()}
         isVisibleTrashButton={this.isVisibleTrashButton()}
         onToggleFolderMenu={this.handleToggleFolderMenu}
@@ -31,6 +32,7 @@ class HeaderThreadOptionsWrapper extends Component {
         onClickMoveToSpam={this.handleClickMoveToSpam}
         onClickMoveToTrash={this.handleClickMoveToTrash}
         onClickLabelCheckbox={this.handleOnClickLabelCheckbox}
+        onClickRestore={this.handleClickRestore}
         {...this.props}
       />
     );
@@ -61,6 +63,14 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.sent.id ||
       currentLabelId === LabelType.starred.id ||
       currentLabelId === LabelType.important.id
+    );
+  };
+
+  isVisibleRestoreButton = () => {
+    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    return (
+      currentLabelId === LabelType.trash.id ||
+      currentLabelId === LabelType.spam.id
     );
   };
 
@@ -118,6 +128,14 @@ class HeaderThreadOptionsWrapper extends Component {
         );
       }
     );
+  };
+
+  handleClickRestore = () => {
+    const LabelIdToDelete =
+      LabelType[this.props.mailboxSelected].id === LabelType.trash.id
+        ? LabelType.trash.id
+        : LabelType.spam.id;
+    this.props.onRemoveLabel(this.props.threadsSelected, LabelIdToDelete);
   };
 }
 

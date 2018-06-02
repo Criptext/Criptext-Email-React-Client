@@ -13,12 +13,14 @@ class HeaderThreadOptions extends Component {
       displayTagsMenu,
       displayDotsMenu,
       isVisibleArchiveButton,
+      isVisibleRestoreButton,
       isVisibleSpamButton,
       isVisibleTrashButton,
       markAsUnread,
       onClickMoveToArchive,
       onClickMoveToSpam,
       onClickMoveToTrash,
+      onClickRestore,
       onToggleFolderMenu,
       onToggleTagsMenu
     } = this.props;
@@ -29,11 +31,13 @@ class HeaderThreadOptions extends Component {
           displayFolderMenu={displayFolderMenu}
           displayTagsMenu={displayTagsMenu}
           isVisibleArchiveButton={isVisibleArchiveButton}
+          isVisibleRestoreButton={isVisibleRestoreButton}
           isVisibleSpamButton={isVisibleSpamButton}
           isVisibleTrashButton={isVisibleTrashButton}
           onClickMoveToArchive={onClickMoveToArchive}
           onClickMoveToSpam={onClickMoveToSpam}
           onClickMoveToTrash={onClickMoveToTrash}
+          onClickRestore={onClickRestore}
           onToggleFolderMenu={onToggleFolderMenu}
           onToggleTagsMenu={onToggleTagsMenu}
         />
@@ -140,6 +144,7 @@ HeaderThreadOptions.propTypes = {
   displayTagsMenu: PropTypes.bool,
   displayDotsMenu: PropTypes.bool,
   isVisibleArchiveButton: PropTypes.bool,
+  isVisibleRestoreButton: PropTypes.bool,
   isVisibleSpamButton: PropTypes.bool,
   isVisibleTrashButton: PropTypes.bool,
   itemsChecked: PropTypes.object,
@@ -152,6 +157,7 @@ HeaderThreadOptions.propTypes = {
   onClickMoveToSpam: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,
   onClickMarkAsRead: PropTypes.func,
+  onClickRestore: PropTypes.func,
   onToggleDotsMenu: PropTypes.func,
   onToggleFolderMenu: PropTypes.func,
   onToggleTagsMenu: PropTypes.func,

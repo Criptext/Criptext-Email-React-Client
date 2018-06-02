@@ -14,6 +14,15 @@ const StandardOptions = props => (
         targetName="actionArchive"
       />
     ) : null}
+    {props.isVisibleRestoreButton ? (
+      <ButtonCircle
+        onClick={props.onClickRestore}
+        tip="Restore"
+        enableTip={true}
+        icon="icon-archive"
+        targetName="actionRestore"
+      />
+    ) : null}
     {props.isVisibleSpamButton ? (
       <ButtonCircle
         onClick={props.onClickMoveToSpam}
@@ -57,11 +66,13 @@ StandardOptions.propTypes = {
   displayTagsMenu: PropTypes.bool,
   isVisibleArchiveButton: PropTypes.bool,
   isVisibleFolderButton: PropTypes.bool,
+  isVisibleRestoreButton: PropTypes.bool,
   isVisibleSpamButton: PropTypes.bool,
   isVisibleTrashButton: PropTypes.bool,
   onClickMoveToArchive: PropTypes.func,
   onClickMoveToSpam: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,
+  onClickRestore: PropTypes.func,
   onToggleFolderMenu: PropTypes.func,
   onToggleTagsMenu: PropTypes.func
 };
