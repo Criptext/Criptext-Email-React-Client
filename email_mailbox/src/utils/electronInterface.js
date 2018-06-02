@@ -97,6 +97,10 @@ export const deleteSessionRecord = params => {
   return dbManager.deleteSessionRecord(params);
 };
 
+export const deleteEmailsByThreadId = threadIds => {
+  return dbManager.deleteEmailsByThreadId(threadIds);
+};
+
 export const getAccount = () => {
   return dbManager.getAccount();
 };

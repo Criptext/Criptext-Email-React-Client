@@ -92,6 +92,11 @@ const threads = (state = List([]), action) => {
         }
       );
     }
+    case Thread.REMOVE_THREADS: {
+      return state.filter(
+        thread => !action.threadsIds.includes(thread.get('id'))
+      );
+    }
     case Thread.REMOVE_THREADS_LABEL: {
       return state.map(thread => {
         if (!action.threadsIds.includes(thread.get('id'))) {
