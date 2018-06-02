@@ -22,7 +22,8 @@ class Threads extends Component {
   componentWillReceiveProps(nextProps) {
     if (
       this.props.mailboxSelected !== nextProps.mailboxSelected ||
-      this.props.searchParams !== nextProps.searchParams
+      this.props.searchParams !== nextProps.searchParams ||
+      nextProps.threadItemsChecked.size === 0
     ) {
       this.props.onLoadThreads(
         nextProps.mailboxSelected,
