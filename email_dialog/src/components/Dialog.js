@@ -3,13 +3,15 @@ import { remoteData, onResponseModal } from './../utils/electronInterface';
 import * as messages from './../utils/contents';
 import './dialog.css';
 
+const { title, contentType, options, sendTo } = remoteData;
+
 const Dialog = () => (
   <div className="dialog-body">
     <div className="header" />
     <div className="content">
-      <h2 className="title">{remoteData.title}</h2>
-      {renderContent(remoteData.contentType)}
-      {renderOptions(remoteData.options)}
+      <h2 className="title">{title}</h2>
+      {renderContent(contentType)}
+      {renderOptions(options, sendTo)}
     </div>
   </div>
 );
@@ -22,23 +24,25 @@ const renderContent = contentType => {
       return messages.ForgotPasswordSentLink();
     case 'FORGOT_PASSWORD_EMPTY_EMAIL':
       return messages.ForgotPasswordEmptyEmail();
+    case 'PERMANENT_DELETE_THREAD':
+      return messages.PermanentDeleteThread();
     default:
       return messages.LostAllDevices();
   }
 };
 
-const renderOptions = options => {
+const renderOptions = (options, sendTo) => {
   return (
     <div className="options">
       <button
         className={options.acceptLabel !== '' ? 'cancel' : 'hidden'}
-        onClick={e => onResponseModal(e, options.cancelLabel)}
+        onClick={e => onResponseModal(e, options.cancelLabel, sendTo)}
       >
         <span>{options.cancelLabel}</span>
       </button>
       <button
         className={options.acceptLabel !== '' ? 'confirm' : 'hidden'}
-        onClick={e => onResponseModal(e, options.acceptLabel)}
+        onClick={e => onResponseModal(e, options.acceptLabel, sendTo)}
       >
         <span>{options.acceptLabel}</span>
       </button>

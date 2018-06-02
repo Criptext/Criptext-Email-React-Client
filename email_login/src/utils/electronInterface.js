@@ -27,7 +27,8 @@ export const confirmEmptyEmail = callback => {
     options: {
       cancelLabel: 'Cancel',
       acceptLabel: 'Confirm'
-    }
+    },
+    sendTo: 'login'
   };
   ipcRenderer.send('open-modal', dataForModal);
   ipcRenderer.once('selectedOption', (event, data) => {
@@ -42,7 +43,8 @@ export const confirmLostDevices = callback => {
     options: {
       cancelLabel: 'Close',
       acceptLabel: 'Continue'
-    }
+    },
+    sendTo: 'login'
   };
   ipcRenderer.send('open-modal', dataForModal);
   ipcRenderer.once('selectedOption', (event, data) => {
@@ -57,7 +59,8 @@ export const confirmForgotPasswordEmptyEmail = callback => {
     options: {
       cancelLabel: 'Cancel',
       acceptLabel: 'Ok'
-    }
+    },
+    sendTo: 'login'
   };
   ipcRenderer.send('open-modal', dataForModal);
   ipcRenderer.once('selectedOption', (event, data) => {
@@ -72,7 +75,8 @@ export const confirmForgotPasswordSentLink = callback => {
     options: {
       cancelLabel: 'Cancel',
       acceptLabel: 'Ok'
-    }
+    },
+    sendTo: 'login'
   };
   ipcRenderer.send('open-modal', dataForModal);
   ipcRenderer.once('selectedOption', (event, data) => {

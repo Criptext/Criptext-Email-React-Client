@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderThreadOptions from './HeaderThreadOptions';
 import { CustomCheckboxStatus } from './CustomCheckbox';
-import { LabelType } from '../utils/electronInterface';
+import {
+  closeDialog,
+  confirmPermanentDeleteThread,
+  LabelType
+} from '../utils/electronInterface';
 
 class HeaderThreadOptionsWrapper extends Component {
   constructor() {
@@ -121,7 +125,12 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   handleClickDeleteThread = () => {
-    this.props.onRemoveThreads(this.props.threadsSelected);
+    confirmPermanentDeleteThread(response => {
+      closeDialog();
+      if (response === 'Confirm') {
+        this.props.onRemoveThreads(this.props.threadsSelected);
+      }
+    });
   };
 
   handleOnClickLabelCheckbox = (checked, labelId) => {

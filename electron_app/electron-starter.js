@@ -47,8 +47,11 @@ async function initApp() {
     dialogWindow.show();
   });
 
-  ipcMain.on('response-modal', (event, response) => {
-    loginWindow.responseFromModal(response);
+  ipcMain.on('response-modal', (event, response, sendTo) => {
+    if (sendTo === 'mailbox') {
+      return mailboxWindow.responseFromModal(response); 
+    }
+    return loginWindow.responseFromModal(response); 
   });
 
   ipcMain.on('close-modal', () => {

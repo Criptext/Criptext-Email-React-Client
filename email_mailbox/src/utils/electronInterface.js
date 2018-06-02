@@ -21,6 +21,26 @@ export const composerEvents = remote.require('./src/windows/composer')
 
 /* Window events
    ----------------------------- */
+export const closeDialog = () => {
+  ipcRenderer.send('close-modal');
+};
+
+export const confirmPermanentDeleteThread = callback => {
+  const dataForModal = {
+    title: 'Warning!',
+    contentType: 'PERMANENT_DELETE_THREAD',
+    options: {
+      cancelLabel: 'Cancel',
+      acceptLabel: 'Confirm'
+    },
+    sendTo: 'mailbox'
+  };
+  ipcRenderer.send('open-modal', dataForModal);
+  ipcRenderer.once('selectedOption', (event, data) => {
+    callback(data.selectedOption);
+  });
+};
+
 export const editDraftInComposer = data => {
   ipcRenderer.send('edit-draft', data);
 };
