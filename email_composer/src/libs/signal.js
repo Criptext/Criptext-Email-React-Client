@@ -78,8 +78,11 @@ const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
   if (keyBundles.includes(null)) {
     throw new CustomError(errors.server.UNAUTHORIZED_ERROR);
   }
-
-  if (!(recipientIds.length <= sessions.length + keyBundles.length)) {
+  const recipientDevicesAmount = sessions.length + keyBundles.length;
+  if (
+    !(recipientIds.length <= recipientDevicesAmount) ||
+    recipientDevicesAmount === 0
+  ) {
     throw new CustomError(errors.message.NON_EXISTING_USERS);
   }
 
@@ -87,7 +90,7 @@ const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
     (result, keyBundle) => {
       const recipientId = keyBundle.recipientId;
       const deviceId = keyBundle.deviceId;
-      const recipientKeys = result.recipientId || {};
+      const recipientKeys = result[recipientId] || {};
       const item = { ...recipientKeys, [deviceId]: keyBundle };
       return { ...result, [recipientId]: item };
     },

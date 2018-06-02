@@ -210,11 +210,10 @@ const createSessionRecordColumns = table => {
 };
 
 const createIdentityKeyRecordColumns = table => {
-  table
-    .string('recipientId', XSMALL_STRING_SIZE)
-    .notNullable()
-    .primary();
+  table.string('recipientId', XSMALL_STRING_SIZE).notNullable();
+  table.integer('deviceId').notNullable();
   table.string('identityKey', LARGE_STRING_SIZE).notNullable();
+  table.primary(['recipientId', 'deviceId']);
 };
 
 const createTables = async () => {
