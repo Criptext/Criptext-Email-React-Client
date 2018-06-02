@@ -8,6 +8,8 @@ import {
   LabelType
 } from '../utils/electronInterface';
 
+const CONFIRM_RESPONSE = 'Confirm';
+
 class HeaderThreadOptionsWrapper extends Component {
   constructor() {
     super();
@@ -19,7 +21,6 @@ class HeaderThreadOptionsWrapper extends Component {
   }
 
   render() {
-    //console.log(this.props.markAsUnread.toJS())
     return (
       <HeaderThreadOptions
         displayFolderMenu={this.state.displayFolderMenu}
@@ -127,7 +128,7 @@ class HeaderThreadOptionsWrapper extends Component {
   handleClickDeleteThread = () => {
     confirmPermanentDeleteThread(response => {
       closeDialog();
-      if (response === 'Confirm') {
+      if (response === CONFIRM_RESPONSE) {
         this.props.onRemoveThreads(this.props.threadsSelected);
       }
     });
