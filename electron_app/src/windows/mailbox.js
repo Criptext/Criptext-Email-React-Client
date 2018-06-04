@@ -53,6 +53,12 @@ const close = () => {
   mailboxWindow = undefined;
 };
 
+const responseFromModal = response => {
+  mailboxWindow.webContents.send('selectedOption', {
+    selectedOption: response
+  });
+};
+
 const send = (message, data) => {
   if (!mailboxWindow) {
     return;
@@ -64,5 +70,6 @@ module.exports = {
   show,
   close,
   send,
+  responseFromModal,
   mailboxWindow
 };

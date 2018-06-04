@@ -16,6 +16,9 @@
 
   .content{
     padding: 24px 35px 35px 35px;
+    font-weight: normal;
+    text-align: left;
+    color: #373a45;
 
     .title {
       font-size: 16px;
@@ -27,38 +30,31 @@
 
     .message-empty-recovery-email {
       font-size: 13px;
-      font-weight: normal;
-      text-align: left;
-      color: #373a45;
       position: relative;
       top: 10px;
     }
     .message-lost-all-devices {
       font-size: 13px;
-      font-weight: normal;
-      text-align: left;
-      color: #373a45;
       position: relative;
       top: 15px;
     }
     .message-forgot-sent-link {
       font-size: 14px;
-      font-weight: normal;
-      text-align: left;
-      color: #373a45;
       position: relative;
       top: 20px;
       p {
-        margin: 0px;
+        margin-bottom: 10px;
       }
     }
     .message-forgot-empty-email {
       font-size: 14px;
-      font-weight: normal;
-      text-align: left;
-      color: #373a45;
       position: relative;
       top: 20px;	
+    }
+    .message-permanent-delete-thread {
+      font-size: 14px;
+      position: relative;
+      top: 15px;
     }
 
     .options {

@@ -31,3 +31,13 @@ export const ForgotPasswordEmptyEmail = () => (
     <p>You need to set a Recovery Email to reset your password.</p>
   </div>
 );
+
+export const PermanentDeleteThread = () => (
+  <div className="message-permanent-delete-thread">
+    <p>
+      This elements will be permanently deleted and you will not be able to
+      recover them.
+    </p>
+    <p>Are you sure?</p>
+  </div>
+);

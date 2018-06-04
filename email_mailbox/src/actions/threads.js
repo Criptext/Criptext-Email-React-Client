@@ -3,6 +3,7 @@ import { startLoadSync, stopLoadSync } from './activity';
 import {
   createEmailLabel,
   deleteEmailLabel,
+  deleteEmailsByThreadId,
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
   getEvents,
@@ -63,9 +64,9 @@ export const removeThread = threadId => ({
   targetThread: threadId
 });
 
-export const removeThreads = threadsIds => ({
+export const removeThreadsOnSuccess = threadsIds => ({
   type: Thread.REMOVE_THREADS,
-  targetThreads: threadsIds
+  threadsIds
 });
 
 export const deselectThreads = spread => ({
@@ -151,6 +152,23 @@ export const loadEvents = params => {
       // TO DO
     }
     dispatch(stopLoadSync());
+  };
+};
+
+export const removeThreads = threadsParams => {
+  return async dispatch => {
+    try {
+      const storeIds = threadsParams.map(param => param.threadIdStore);
+      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const dbResponse = await deleteEmailsByThreadId(threadIds);
+      if (dbResponse) {
+        dispatch(removeThreadsOnSuccess(storeIds));
+      }
+    } catch (e) {
+      /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
+        the request should not fail because of a bad query built or a non existing column/relation. Its fix should be a restore of
+        the db using a backup previously made. If the backup is also corrupted for some reason, user should log out.*/
+    }
   };
 };
 

@@ -435,6 +435,13 @@ const deleteEmailByKey = key => {
     .del();
 };
 
+const deleteEmailsByThreadId = threadIds => {
+  return db
+    .table(Table.EMAIL)
+    .whereIn('threadId', threadIds)
+    .del();
+};
+
 const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
   return db.transaction(async trx => {
     await deleteEmailById(id, trx);
@@ -655,6 +662,7 @@ module.exports = {
   createTables,
   deleteEmailById,
   deleteEmailByKey,
+  deleteEmailsByThreadId,
   deleteEmailLabelAndContactByEmailId,
   deleteEmailContactByEmailId,
   deleteEmailLabel,

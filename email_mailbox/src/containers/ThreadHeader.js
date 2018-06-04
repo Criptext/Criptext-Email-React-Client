@@ -18,6 +18,7 @@ const defineOneThreadSelected = (threads, threadId) => {
 const defineThreadsSelected = (threads, itemsChecked) => {
   return threads
     .filter(thread => itemsChecked.has(thread.get('id')))
+    .toArray()
     .map(thread => ({
       threadIdStore: thread.get('id'),
       threadIdDB: thread.get('threadId')
@@ -65,7 +66,7 @@ const shouldMarkAsUnread = (threads, itemsChecked) => {
     }
     return false;
   });
-  return hasUnread;
+  return hasUnread !== undefined;
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -108,6 +109,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onMarkRead: (threadsIds, read) => {
       ownProps.onBackOption();
       dispatch(actions.markThreadsRead(threadsIds, read));
+    },
+    onRemoveThreads: threadsIds => {
+      ownProps.onBackOption();
+      dispatch(actions.removeThreads(threadsIds));
     }
   };
 };

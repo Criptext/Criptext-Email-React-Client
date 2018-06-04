@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderThreadOptions from './HeaderThreadOptions';
 import { CustomCheckboxStatus } from './CustomCheckbox';
-import { LabelType } from '../utils/electronInterface';
+import {
+  closeDialog,
+  confirmPermanentDeleteThread,
+  LabelType
+} from '../utils/electronInterface';
+
+const CONFIRM_RESPONSE = 'Confirm';
 
 class HeaderThreadOptionsWrapper extends Component {
   constructor() {
@@ -24,9 +30,11 @@ class HeaderThreadOptionsWrapper extends Component {
         isVisibleRestoreButton={this.isVisibleRestoreButton()}
         isVisibleSpamButton={this.isVisibleSpamButton()}
         isVisibleTrashButton={this.isVisibleTrashButton()}
+        isVisibleDeleteButton={this.isVisibleDeleteButton()}
         onToggleFolderMenu={this.handleToggleFolderMenu}
         onToggleTagsMenu={this.handleToggleTagsMenu}
         onToggleDotsMenu={this.handleToggleDotsMenu}
+        onClickDeleteThread={this.handleClickDeleteThread}
         onClickMarkAsRead={this.handleClickMarkAsRead}
         onClickMoveToArchive={this.handleClickMoveToArchive}
         onClickMoveToSpam={this.handleClickMoveToSpam}
@@ -97,6 +105,14 @@ class HeaderThreadOptionsWrapper extends Component {
     );
   };
 
+  isVisibleDeleteButton = () => {
+    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    return (
+      currentLabelId === LabelType.spam.id ||
+      currentLabelId === LabelType.trash.id
+    );
+  };
+
   handleClickMoveToArchive = () => {
     this.props.onRemoveLabel(this.props.threadsSelected, LabelType.inbox.id);
   };
@@ -107,6 +123,15 @@ class HeaderThreadOptionsWrapper extends Component {
 
   handleClickMoveToTrash = () => {
     this.props.onAddLabel(this.props.threadsSelected, LabelType.trash.id);
+  };
+
+  handleClickDeleteThread = () => {
+    confirmPermanentDeleteThread(response => {
+      closeDialog();
+      if (response === CONFIRM_RESPONSE) {
+        this.props.onRemoveThreads(this.props.threadsSelected);
+      }
+    });
   };
 
   handleOnClickLabelCheckbox = (checked, labelId) => {
@@ -145,6 +170,7 @@ HeaderThreadOptionsWrapper.propTypes = {
   onAddLabel: PropTypes.func,
   onMarkRead: PropTypes.func,
   onRemoveLabel: PropTypes.func,
+  onRemoveThreads: PropTypes.func,
   threadsSelected: PropTypes.array
 };
 

@@ -1,10 +1,11 @@
 const electron = window.require('electron');
-const { ipcRenderer } = electron;
+const { ipcRenderer, remote } = electron;
+const globalManager = remote.require('./src/globalManager');
 
-export const remoteData = electron.remote.getGlobal('modalData');
+export const remoteData = globalManager.modalData.get();
 
 /* Window events
    ----------------------------- */
-export const onResponseModal = (event, response) => {
-  ipcRenderer.send('response-modal', response);
+export const onResponseModal = (event, response, sendTo) => {
+  ipcRenderer.send('response-modal', response, sendTo);
 };

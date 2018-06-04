@@ -42,6 +42,16 @@ const StandardOptions = props => (
       />
     ) : null}
 
+    {props.isVisibleDeleteButton ? (
+      <ButtonCircle
+        onClick={props.onClickDeleteThread}
+        tip="Delete"
+        enableTip={true}
+        icon="icon-trash"
+        targetName="actionDelete"
+      />
+    ) : null}
+
     {props.isVisibleFolderButton ? (
       <ButtonCircle
         onClick={props.onToggleFolderMenu}
@@ -65,11 +75,13 @@ StandardOptions.propTypes = {
   displayFolderMenu: PropTypes.bool,
   displayTagsMenu: PropTypes.bool,
   isVisibleArchiveButton: PropTypes.bool,
+  isVisibleDeleteButton: PropTypes.bool,
   isVisibleFolderButton: PropTypes.bool,
   isVisibleRestoreButton: PropTypes.bool,
   isVisibleSpamButton: PropTypes.bool,
   isVisibleTrashButton: PropTypes.bool,
   onClickMoveToArchive: PropTypes.func,
+  onClickDeleteThread: PropTypes.func,
   onClickMoveToSpam: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,
   onClickRestore: PropTypes.func,
