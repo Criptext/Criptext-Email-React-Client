@@ -88,6 +88,7 @@ const createLabelColumns = table => {
     .notNullable();
   table.string('color', TINY_STRING_SIZE).notNullable();
   table.string('type', TINY_STRING_SIZE).defaultTo('custom');
+  table.boolean('visible').defaultTo(false);
 };
 
 const createEmailColumns = table => {
@@ -171,6 +172,10 @@ const createAccountColumns = table => {
   table.integer('registrationId').notNullable();
   table.string('privKey', LARGE_STRING_SIZE).notNullable();
   table.string('pubKey', LARGE_STRING_SIZE).notNullable();
+  table
+    .boolean('opened')
+    .notNullable()
+    .defaultTo(false);
 };
 
 const createFeedColumns = table => {

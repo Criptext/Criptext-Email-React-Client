@@ -137,13 +137,16 @@ class PanelWrapper extends Component {
   };
 
   handleCloseWelcome = () => {
-    this.setState({ isOpenWelcome: false });
+    this.setState({ isOpenWelcome: false }, () => {
+      this.props.onUpdateOpenedAccount();
+    });
   };
 }
 
 PanelWrapper.propTypes = {
   onLoadThreads: PropTypes.func,
-  threadsCount: PropTypes.number
+  threadsCount: PropTypes.number,
+  onUpdateOpenedAccount: PropTypes.func
 };
 
 export default PanelWrapper;

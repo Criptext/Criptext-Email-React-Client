@@ -9,9 +9,14 @@ const Welcome = props => (
     <div className="welcome-content">
       <section>{renderArticle(props.articleSelected)}</section>
       {renderDots(props.articleSelected)}
-      <button className="button-x" onClick={() => props.onClickCloseWelcome()}>
-        <i className="icon-exit" />
-      </button>
+      {props.articleSelected === ARTICLE_AMOUNT ? (
+        <button
+          className="button-x"
+          onClick={() => props.onClickCloseWelcome()}
+        >
+          <i className="icon-exit" />
+        </button>
+      ) : null}
       {props.articleSelected !== 1 ? (
         <button
           className="button-a-circle back"
@@ -25,14 +30,11 @@ const Welcome = props => (
           className="button-a-circle next"
           onClick={() => props.onClickNextArticle()}
         >
-          <i className="icon-back" />
+          <i className="icon-next" />
         </button>
       ) : null}
     </div>
-    <div
-      className="welcome-overlay"
-      onClick={() => props.onClickCloseWelcome()}
-    />
+    <div className="welcome-overlay" />
   </div>
 );
 

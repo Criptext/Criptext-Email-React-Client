@@ -50,4 +50,14 @@ describe('TABLE[Label]:', () => {
     const label = await DBManager.getLabelById(4);
     expect(label).toMatchSnapshot();
   });
+
+  it('should update label: visible', async () => {
+    await DBManager.createLabel({
+      color: '#ffffff',
+      text: 'Important'
+    });
+    await DBManager.updateLabel({ id: 5, visible: true });
+    const label = await DBManager.getLabelById(5);
+    expect(label).toMatchSnapshot();
+  });
 });

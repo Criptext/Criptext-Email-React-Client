@@ -203,20 +203,17 @@ TABLE OF CONTENTS
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-clock:before {
-  content: "\e93b";
-}
 .icon-mailbox:before {
   content: "\e900";
 }
 .icon-doc:before {
   content: "\e901";
 }
-.icon-mail:before {
-  content: "\e90f";
-}
 .icon-star:before {
   content: "\e903";
+}
+.icon-calendar:before {
+  content: "\e904";
 }
 .icon-trash:before {
   content: "\e905";
@@ -233,32 +230,35 @@ TABLE OF CONTENTS
 .icon-not:before {
   content: "\e909";
 }
-.icon-download:before {
+.icon-important:before {
+  content: "\e902";
+}
+.icon-important-fill:before {
   content: "\e90a";
+}
+.icon-download:before {
+  content: "\e90b";
 }
 .icon-file:before {
   content: "\e90c";
 }
-.icon-edit:before {
-  content: "\e911";
-}
-.icon-calendar:before {
-  content: "\e904";
-}
 .icon-forward:before {
   content: "\e90d";
 }
-.icon-attach:before {
-  content: "\e912";
+.icon-user:before {
+  content: "\e90e";
 }
-.icon-checked:before {
-  content: "\e913";
+.icon-mail:before {
+  content: "\e90f";
+}
+.icon-edit:before {
+  content: "\e911";
 }
 .icon-criptext:before {
   content: "\e914";
 }
-.icon-text-edit:before {
-  content: "\e93a";
+.icon-box:before {
+  content: "\e915";
 }
 .icon-unsend:before {
   content: "\e916";
@@ -281,11 +281,38 @@ TABLE OF CONTENTS
 .icon-replay:before {
   content: "\e91f";
 }
+.icon-dots:before {
+  content: "\e918";
+}
+.icon-check:before {
+  content: "\e919";
+}
+.icon-next2:before {
+  content: "\e938";
+}
+.icon-back:before {
+  content: "\e939";
+}
+.icon-attach:before {
+  content: "\e912";
+}
+.icon-checked:before {
+  content: "\e913";
+}
 .icon-correct:before {
   content: "\e920";
 }
 .icon-incorret:before {
   content: "\e921";
+}
+.icon-next:before {
+  content: "\e910";
+}
+.icon-time:before {
+  content: "\e93c";
+}
+.icon-search:before {
+  content: "\e93d";
 }
 .icon-show:before {
   content: "\e922";
@@ -299,26 +326,8 @@ TABLE OF CONTENTS
 .icon-desktop:before {
   content: "\e925";
 }
-.icon-time:before {
-  content: "\e93c";
-}
-.icon-search:before {
-  content: "\e93d";
-}
-.icon-important:before {
-  content: "\e926";
-}
-.icon-box:before {
-  content: "\e915";
-}
-.icon-dots:before {
-  content: "\e918";
-}
-.icon-user:before {
-  content: "\e90e";
-}
 .icon-settings:before {
-  content: "\e910";
+  content: "\e917";
 }
 .icon-video:before {
   content: "\e927";
@@ -337,9 +346,6 @@ TABLE OF CONTENTS
 }
 .icon-pdf:before {
   content: "\e92c";
-}
-.icon-zip:before {
-  content: "\e939";
 }
 .icon-file-default:before {
   content: "\e92d";
@@ -374,14 +380,14 @@ TABLE OF CONTENTS
 .icon-exit:before {
   content: "\e937";
 }
-.icon-back:before {
-  content: "\e938";
+.icon-zip:before {
+  content: "\e93a";
 }
-.icon-next:before {
-  content: "\e902";
+.icon-text-edit:before {
+  content: "\e93b";
 }
-.icon-check:before {
-  content: "\e919";
+.icon-clock:before {
+  content: "\e93e";
 }
 
 /* 2.- CONTENT
@@ -529,14 +535,14 @@ button{
   background-color: white;
   border: 2px solid #cdcdcd;
   border-radius: 50%;
-  height: 21.5px;
+  height: 20.4px;
   padding: 0;
   position: relative;
-  width: 21.5px;
+  width: 20.4px;
 
   i{
     color: #6e6e6e;
-    font-size: 19px;
+    font-size: 18px;
     font-weight: bold;
     left: -1px;
     position: absolute;

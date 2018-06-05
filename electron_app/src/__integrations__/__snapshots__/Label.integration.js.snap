@@ -7,6 +7,7 @@ Array [
     "id": 1,
     "text": "Inbox",
     "type": "custom",
+    "visible": 0,
   },
 ]
 `;
@@ -18,6 +19,7 @@ Array [
     "id": 3,
     "text": "Spam",
     "type": "custom",
+    "visible": 0,
   },
 ]
 `;
@@ -29,6 +31,7 @@ Array [
     "id": 2,
     "text": "labelmodified",
     "type": "custom",
+    "visible": 0,
   },
 ]
 `;
@@ -40,6 +43,19 @@ Array [
     "id": 4,
     "text": "labelmodified2",
     "type": "custom",
+    "visible": 0,
+  },
+]
+`;
+
+exports[`TABLE[Label]: should update label: visible 1`] = `
+Array [
+  Object {
+    "color": "#ffffff",
+    "id": 5,
+    "text": "Important",
+    "type": "custom",
+    "visible": 1,
   },
 ]
 `;

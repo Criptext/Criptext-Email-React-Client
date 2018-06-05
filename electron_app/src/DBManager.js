@@ -11,6 +11,15 @@ const getAccount = () => {
   return db.table(Table.ACCOUNT).select('*');
 };
 
+const updateAccount = ({ opened, recipientId }) => {
+  const params = {};
+  if (typeof opened === 'boolean') params.opened = opened;
+  return db
+    .table(Table.ACCOUNT)
+    .where({ recipientId })
+    .update(params);
+};
+
 /* Contact
    ----------------------------- */
 const createContact = params => {
@@ -506,10 +515,11 @@ const getLabelById = id => {
     .where({ id });
 };
 
-const updateLabel = ({ id, color, text }) => {
+const updateLabel = ({ id, color, text, visible }) => {
   const params = {};
   if (color) params.color = color;
   if (text) params.text = text;
+  if (typeof visible === 'boolean') params.visible = visible;
   return db
     .table(Table.LABEL)
     .where({
@@ -567,7 +577,6 @@ const deletePreKeyPair = params => {
 /* SignedPreKeyRecord
    ----------------------------- */
 const createSignedPreKeyRecord = params => {
-  console.log(params);
   return db.table(Table.SIGNEDPREKEYRECORD).insert(params);
 };
 
@@ -687,6 +696,7 @@ module.exports = {
   getSessionRecordByRecipientIds,
   getSignedPreKey,
   getUserByUsername,
+  updateAccount,
   updateEmail,
   updateEmailByThreadId,
   updateEmailLabel,
