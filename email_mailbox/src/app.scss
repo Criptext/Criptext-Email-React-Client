@@ -524,3 +524,38 @@ button{
     top: -1px;
   }
 }
+
+.button-x{
+  background-color: white;
+  border: 2px solid #cdcdcd;
+  border-radius: 50%;
+  height: 21.5px;
+  padding: 0;
+  position: relative;
+  width: 21.5px;
+
+  i{
+    color: #6e6e6e;
+    font-size: 19px;
+    font-weight: bold;
+    left: -1px;
+    position: absolute;
+    top: -1px;
+  }
+}
+
+.button-a-circle{
+  align-items: center;
+  background-color: #0091ff;
+  border-radius: 50%;
+  display: flex;
+  height: 38px;
+  padding: 0;
+  width: 38px;
+
+  i{
+    color: white;
+    font-size: 22px;
+    margin: 0 auto;
+  }
+}

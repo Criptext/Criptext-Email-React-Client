@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ActivityPanel from './../containers/ActivityPanel';
 import MainWrapper from './MainWrapper';
 import SideBar from './../containers/SideBar';
+import WelcomeWrapper from './WelcomeWrapper';
 
 const Panel = props => (
   <div
@@ -28,6 +29,9 @@ const Panel = props => (
       onClickSection={props.onClickSection}
       onToggleActivityPanel={props.onToggleActivityPanel}
     />
+    {props.isOpenWelcome ? (
+      <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
+    ) : null}
   </div>
 );
 
@@ -44,6 +48,8 @@ const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
 Panel.propTypes = {
   isOpenActivityPanel: PropTypes.bool,
   isOpenSideBar: PropTypes.bool,
+  isOpenWelcome: PropTypes.bool,
+  onClickCloseWelcome: PropTypes.func,
   onClickThreadBack: PropTypes.func,
   onClickSection: PropTypes.func,
   onToggleActivityPanel: PropTypes.func,

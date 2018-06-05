@@ -1,0 +1,96 @@
+$_HEIGHT_WELCOME_CONTENT: 300px;
+$_SIZE_BUTTON_CIRCLE: 38px;
+
+.welcome-container{
+  align-items: center;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 3;
+
+  .welcome-content{
+    height: $_HEIGHT_WELCOME_CONTENT;
+    margin: 0 auto;
+    position: relative;
+    width: 323px;
+    z-index: 1;
+
+    section{
+      align-items: center;
+      background-color: white;
+      border-radius: 12px;
+      display: flex;
+      height: 100%;
+      width: 100%;
+
+      article{
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        text-align: center;
+        width: 80%;
+
+        span{
+          font-size: 22px;
+          font-weight: 700;
+        }
+
+        p{
+          color: #9b9b9b;
+          font-size: 14px;
+          font-weight: 300;
+        }
+      }
+    }
+
+    .dots-container{
+      bottom: 15px;
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      width: 100%;
+
+      .dot{
+        border-radius: 50%;
+        height: 9px;
+        margin: 3px;
+        width: 9px;
+        background-color: #bbbbbb;
+
+        &.selected{
+          opacity: 0.6;
+        }
+      }
+    }
+
+    .button-x{
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+
+    .button-a-circle{
+      position: absolute;
+      transform: translateY((-$_SIZE_BUTTON_CIRCLE/2) -($_HEIGHT_WELCOME_CONTENT/2));
+
+      &.back{
+        left: -$_SIZE_BUTTON_CIRCLE/2;
+      }
+
+      &.next{
+        right: -$_SIZE_BUTTON_CIRCLE/2;
+      }
+    }
+  }
+
+  .welcome-overlay{
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+}

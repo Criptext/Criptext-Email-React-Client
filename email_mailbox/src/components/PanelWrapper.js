@@ -11,6 +11,7 @@ class PanelWrapper extends Component {
     this.state = {
       isOpenActivityPanel: false,
       isOpenSideBar: true,
+      isOpenWelcome: true,
       sectionSelected: {
         type: SectionType.MAILBOX,
         params: {
@@ -58,6 +59,8 @@ class PanelWrapper extends Component {
       <Panel
         isOpenActivityPanel={this.state.isOpenActivityPanel}
         isOpenSideBar={this.state.isOpenSideBar}
+        isOpenWelcome={this.state.isOpenWelcome}
+        onClickCloseWelcome={this.handleCloseWelcome}
         onClickSection={this.handleClickSection}
         onClickThreadBack={this.handleClickThreadBack}
         onToggleActivityPanel={this.handleToggleActivityPanel}
@@ -131,6 +134,10 @@ class PanelWrapper extends Component {
 
   handleToggleSideBar = () => {
     this.setState({ isOpenSideBar: !this.state.isOpenSideBar });
+  };
+
+  handleCloseWelcome = () => {
+    this.setState({ isOpenWelcome: false });
   };
 }
 
