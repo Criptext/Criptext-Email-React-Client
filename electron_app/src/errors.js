@@ -40,6 +40,10 @@ const MESSAGE_ERROR = {
   NON_EXISTING_USERS: {
     name: 'Non existing users',
     description: "One or more users doesn't exist. Check and try again"
+  },
+  UPLOAD_FAILED: {
+    name: 'Upload Failed',
+    description: 'An error occurred while uploading file.'
   }
 };
 

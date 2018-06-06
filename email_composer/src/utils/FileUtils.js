@@ -1,3 +1,26 @@
+import FileManager from 'criptext-files-sdk';
+import { FILE_SERVER_APP_ID, FILE_SERVER_KEY } from './electronInterface';
+
+const MAX_REQUESTS = 5;
+
+export const fileManager = new FileManager(
+  FILE_SERVER_APP_ID,
+  FILE_SERVER_KEY,
+  MAX_REQUESTS,
+  false
+);
+
+export const { FILE_PROGRESS, FILE_FINISH, FILE_ERROR } = fileManager.Event;
+
+export const CHUNK_SIZE = 524288;
+
+export const FILE_MODES = {
+  UPLOADING: 'uploading',
+  FAILED: 'failed',
+  PAUSED: 'paused',
+  UPLOADED: 'uploaded'
+};
+
 export const FILE_TYPES = {
   IMAGE: 'image',
   AUDIO: 'audio',
@@ -65,4 +88,21 @@ export const identifyFileType = mimetype => {
     default:
       return FILE_TYPES.DEFAULT;
   }
+};
+
+export const formFileParamsToDatabase = (files, emailId) => {
+  return files.map(item => {
+    return {
+      token: item.token,
+      name: item.fileData.name,
+      size: item.fileData.size,
+      status: 'sent',
+      date: Date.now(),
+      emailId
+    };
+  });
+};
+
+export const getFileTokens = files => {
+  return files.map(file => file.token);
 };

@@ -25,13 +25,8 @@
   .loading-file-bar {
     height: 2px;
     background-color: #0091ff;
-    animation: fadeInRight 3s linear;
     position: relative;
     top: 41px;
-  }
-  @keyframes fadeInRight {
-    0% { width: 0%; }
-    100% { width: 100%; }
   }
 }
 

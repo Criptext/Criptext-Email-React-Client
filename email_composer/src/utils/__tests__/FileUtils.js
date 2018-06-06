@@ -2,6 +2,9 @@
 
 import { FILE_TYPES, identifyFileType } from './../FileUtils';
 
+jest.mock('./../../utils/electronInterface');
+jest.mock('criptext-files-sdk');
+
 describe('Identify image files ', () => {
   it('Identify jpg files ', () => {
     const type = identifyFileType('image/jpeg');

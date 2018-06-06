@@ -649,6 +649,21 @@ const updateIdentityKeyRecord = ({ recipientId, identityKey }) => {
     .update({ identityKey });
 };
 
+/* Files
+  ----------------------------- */
+const createFile = fileParams => {
+  return db.table(Table.FILE).insert(fileParams);
+};
+
+const updateFileByToken = ({ token, status }) => {
+  const params = {};
+  if (status) params.status = status;
+  return db
+    .table(Table.FILE)
+    .where({ token })
+    .update(params);
+};
+
 const closeDB = () => {
   db.close();
   db.disconnect();
@@ -659,6 +674,7 @@ module.exports = {
   closeDB,
   createAccount,
   createContact,
+  createFile,
   getContactsByEmailId,
   createLabel,
   createEmail,
@@ -701,6 +717,7 @@ module.exports = {
   updateEmailByThreadId,
   updateEmailLabel,
   updateFeed,
+  updateFileByToken,
   updateIdentityKeyRecord,
   updateLabel
 };

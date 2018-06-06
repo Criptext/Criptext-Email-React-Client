@@ -1,4 +1,5 @@
 const { BrowserWindow, Menu, dialog } = require('electron');
+const path = require('path');
 const { composerUrl } = require('./../window_routing');
 const mailboxWindow = require('./mailbox');
 const dbManager = require('./../DBManager');
@@ -13,6 +14,11 @@ const composerSize = {
   minWidth: 785,
   minHeight: 340
 };
+
+const iconPath = path.join(
+  __dirname,
+  './../../resources/launch-icons/icon.png'
+);
 
 const template = [
   {
@@ -75,6 +81,7 @@ const create = () => {
   showConfirmation = true;
   globalManager.composerData.set({});
   composerWindow = new BrowserWindow({
+    icon: iconPath,
     width: composerSize.width,
     height: composerSize.height,
     show: false,
@@ -88,6 +95,7 @@ const create = () => {
   composerWindow.on('page-title-updated', event => {
     event.preventDefault();
   });
+  composerWindow.webContents.openDevTools();
 
   composerWindow.on('close', e => {
     if (showConfirmation && !isDraftEmpty()) {

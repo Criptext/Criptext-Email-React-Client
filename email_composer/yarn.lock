@@ -1729,6 +1729,12 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+criptext-files-sdk@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/criptext-files-sdk/-/criptext-files-sdk-0.2.1.tgz#1e52693bbff505ab3d50a2d8f498769ed6268a53"
+  dependencies:
+    es6-promise "^4.1.1"
+
 criptext-js-tools@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/criptext-js-tools/-/criptext-js-tools-0.5.0.tgz#2763e1d499088e283e1b3724fef56516cc348e87"
@@ -2291,7 +2297,7 @@ es6-map@^0.1.3:
     es6-symbol "~3.1.1"
     event-emitter "~0.3.5"
 
-es6-promise@^4.0.5:
+es6-promise@^4.0.5, es6-promise@^4.1.1:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.4.tgz#dc4221c2b16518760bd8c39a52d8f356fc00ed29"
 

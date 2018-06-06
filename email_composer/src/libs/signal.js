@@ -59,7 +59,13 @@ const keysToArrayBuffer = keys => {
   };
 };
 
-const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
+const encryptPostEmail = async ({
+  recipients,
+  body,
+  subject,
+  threadId,
+  files
+}) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const sessions = await getSessionRecordByRecipientIds(recipientIds);
   const knownAddresses = sessions.reduce((result, item) => {
@@ -129,7 +135,12 @@ const encryptPostEmail = async ({ recipients, body, subject, threadId }) => {
     );
     return [...result, ...criptextEmail];
   }, []);
-  const data = objectUtils.noNulls({ criptextEmails, subject, threadId });
+  const data = objectUtils.noNulls({
+    criptextEmails,
+    subject,
+    threadId,
+    files
+  });
   const res = await postEmail(data);
 
   if (res.status !== 200) {
