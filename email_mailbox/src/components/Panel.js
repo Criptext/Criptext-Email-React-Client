@@ -4,6 +4,7 @@ import ActivityPanel from './../containers/ActivityPanel';
 import MainWrapper from './MainWrapper';
 import SideBar from './../containers/SideBar';
 import WelcomeWrapper from './WelcomeWrapper';
+import { myAccount } from '../utils/electronInterface';
 
 const Panel = props => (
   <div
@@ -29,7 +30,7 @@ const Panel = props => (
       onClickSection={props.onClickSection}
       onToggleActivityPanel={props.onToggleActivityPanel}
     />
-    {props.isOpenWelcome ? (
+    {props.isOpenWelcome && !myAccount.opened ? (
       <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
     ) : null}
   </div>
