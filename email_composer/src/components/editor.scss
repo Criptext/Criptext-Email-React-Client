@@ -1,6 +1,7 @@
 .rdw-editor-wrapper {
   box-sizing: content-box;
-  height: 100%;
+  display: grid;
+  flex-grow: 1;
 
   &:focus{
     outline: none;
