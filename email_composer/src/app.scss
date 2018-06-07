@@ -412,6 +412,7 @@ input[type="text"]:focus {
    ----------------------------- */
 button{
   border: none;
+  cursor: pointer;
 
   &:focus{
     outline:0;

@@ -130,7 +130,12 @@ button.button-send{
 }
 
 .button-editor{
+  cursor: pointer;
   padding: 0 10px;
+
+  label{
+    cursor: inherit;
+  }
 
   i{
     color: #6e6e6e;
