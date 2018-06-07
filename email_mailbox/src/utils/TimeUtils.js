@@ -9,7 +9,7 @@ export const defineTimeByToday = time => {
 
   const diffTime = moment().diff(moment(timeLocal));
   if (diffTime <= oneDay) {
-    result = moment(timeLocal).format('hh:mm A');
+    result = moment(timeLocal).format('h:mm A');
   } else if (diffTime < oneDay * 2) {
     result = moment(timeLocal).format('[Yesterday]');
   } else if (diffTime < oneDay * 7) {
