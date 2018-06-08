@@ -106,7 +106,8 @@ const create = () => {
           composerWindow.close();
         }
         if (responseIndex === RESPONSES.SAVE.index) {
-          await saveDraftToDatabase(global.composerData);
+          const dataDraft = globalManager.composerData.get();
+          await saveDraftToDatabase(dataDraft);
           showConfirmation = false;
           globalManager.composerData.set({});
           composerWindow.close();
@@ -139,7 +140,7 @@ const destroy = async () => {
       undefined
     );
   }
-  if (mailboxWindow) {
+  if (mailboxWindow !== undefined) {
     mailboxWindow.send('update-drafts');
   }
   setEmptyVariables();
@@ -213,10 +214,10 @@ const show = async () => {
 
 module.exports = {
   close,
+  composerEvents,
   destroy,
-  show,
-  send,
-  saveDraftChanges,
   editDraft,
-  composerEvents
+  saveDraftChanges,
+  send,
+  show
 };

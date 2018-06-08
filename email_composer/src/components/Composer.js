@@ -25,6 +25,7 @@ const Composer = props => (
       htmlBody={props.htmlBody}
       isDragActive={props.isDragActive}
       onClearFile={props.onClearFile}
+      onClickDiscardDraft={props.onClickDiscardDraft}
       onClickSendMessage={props.onClickSendMessage}
       onDrop={props.onDrop}
       onPauseUploadFile={props.handlePauseUploadFile}
@@ -54,6 +55,7 @@ Composer.propTypes = {
   files: PropTypes.array,
   onDrop: PropTypes.func,
   onClearFile: PropTypes.func,
+  onClickDiscardDraft: PropTypes.func,
   handleDragLeave: PropTypes.func,
   handleDragOver: PropTypes.func,
   isDragActive: PropTypes.bool

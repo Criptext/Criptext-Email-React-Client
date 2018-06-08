@@ -89,6 +89,7 @@ class ComposerWrapper extends Component {
         handleDragOver={this.handleDragOver}
         onPauseUploadFile={this.handlePauseUploadFile}
         onResumeUploadFile={this.handleResumeUploadFile}
+        onClickDiscardDraft={this.handleClickDiscardDraft}
       />
     );
   }
@@ -111,6 +112,10 @@ class ComposerWrapper extends Component {
       return await formDataToEditDraft(key);
     }
     return await formDataToReply(key, type);
+  };
+
+  handleClickDiscardDraft = () => {
+    closeComposerWindow();
   };
 
   handleGetToEmail = emails => {
