@@ -14,13 +14,15 @@ const Attachment = props => {
         <span>{props.file.name}</span>
         <span>{convertToHumanSize(props.file.size, true)}</span>
       </div>
-      <div
-        className="file-delete"
-        onClick={() => props.onClearFile(props.file.name)}
-      >
+      <div className="file-delete" onClick={() => props.onRemoveAttachment()}>
         <i className="icon-exit" />
       </div>
-      {props.isLoading ? <div className="loading-file-bar" /> : null}
+      {props.isLoading ? (
+        <div
+          className="loading-file-bar"
+          style={{ width: props.percentage + '%' }}
+        />
+      ) : null}
     </div>
   );
 };
@@ -37,7 +39,8 @@ const renderFileIcon = type => {
 Attachment.propTypes = {
   isLoading: PropTypes.bool,
   file: PropTypes.object,
-  onClearFile: PropTypes.func
+  onRemoveAttachment: PropTypes.func,
+  percentage: PropTypes.number
 };
 
 export default Attachment;

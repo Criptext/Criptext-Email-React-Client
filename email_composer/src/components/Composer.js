@@ -17,22 +17,25 @@ const Composer = props => (
     />
     <Subject text={props.textSubject} getText={props.getTextSubject} />
     <Body
-      onClickSendMessage={props.onClickSendMessage}
-      htmlBody={props.htmlBody}
-      getHtmlBody={props.getHtmlBody}
-      status={props.status}
       blockRenderMap={props.blockRenderMap}
       files={props.files}
-      isDragActive={props.isDragActive}
-      onClearFile={props.onClearFile}
-      onDrop={props.onDrop}
+      getHtmlBody={props.getHtmlBody}
       handleDragLeave={props.handleDragLeave}
       handleDragOver={props.handleDragOver}
+      htmlBody={props.htmlBody}
+      isDragActive={props.isDragActive}
+      onClearFile={props.onClearFile}
+      onClickSendMessage={props.onClickSendMessage}
+      onDrop={props.onDrop}
+      onPauseUploadFile={props.handlePauseUploadFile}
+      onResumeUploadFile={props.handleResumeUploadFile}
+      status={props.status}
     />
   </div>
 );
 
 Composer.propTypes = {
+  addFiletoken: PropTypes.func,
   bccEmails: PropTypes.array,
   blockRenderMap: PropTypes.object,
   ccEmails: PropTypes.array,
@@ -41,6 +44,8 @@ Composer.propTypes = {
   getHtmlBody: PropTypes.func,
   getTextSubject: PropTypes.func,
   getToEmails: PropTypes.func,
+  handlePauseUploadFile: PropTypes.func,
+  handleResumeUploadFile: PropTypes.func,
   htmlBody: PropTypes.object,
   onClickSendMessage: PropTypes.func,
   status: PropTypes.number,

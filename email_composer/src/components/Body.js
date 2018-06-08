@@ -7,16 +7,18 @@ import './body.css';
 const Body = props => (
   <div className="body-container">
     <DropfileField
-      isToolbarHidden={props.isToolbarHidden}
       blockRenderMap={props.blockRenderMap}
+      files={props.files}
       getHtmlBody={props.getHtmlBody}
       htmlBody={props.htmlBody}
-      files={props.files}
       isDragActive={props.isDragActive}
+      isToolbarHidden={props.isToolbarHidden}
+      onClearFile={props.onClearFile}
       onDragLeave={props.handleDragLeave}
       onDragOver={props.handleDragOver}
-      onClearFile={props.onClearFile}
       onDrop={props.onDrop}
+      onPauseUploadFile={props.onPauseUploadFile}
+      onResumeUploadFile={props.onResumeUploadFile}
     />
     <Control
       onClickTextEditor={props.onClickTextEditor}
@@ -28,19 +30,22 @@ const Body = props => (
 );
 
 Body.propTypes = {
+  addFiletoken: PropTypes.func,
   blockRenderMap: PropTypes.object,
-  getHtmlBody: PropTypes.func,
-  htmlBody: PropTypes.object,
-  isToolbarHidden: PropTypes.bool,
-  onClickSendMessage: PropTypes.func,
-  onClickTextEditor: PropTypes.func,
-  status: PropTypes.number,
   files: PropTypes.array,
-  onDrop: PropTypes.func,
-  onClearFile: PropTypes.func,
+  getHtmlBody: PropTypes.func,
   handleDragLeave: PropTypes.func,
   handleDragOver: PropTypes.func,
-  isDragActive: PropTypes.bool
+  htmlBody: PropTypes.object,
+  isDragActive: PropTypes.bool,
+  isToolbarHidden: PropTypes.bool,
+  onClearFile: PropTypes.func,
+  onClickSendMessage: PropTypes.func,
+  onClickTextEditor: PropTypes.func,
+  onDrop: PropTypes.func,
+  onPauseUploadFile: PropTypes.func,
+  onResumeUploadFile: PropTypes.func,
+  status: PropTypes.number
 };
 
 export default Body;

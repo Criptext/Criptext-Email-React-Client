@@ -20,7 +20,12 @@ const DropfileField = props => (
       blockRenderMap={props.blockRenderMap}
     />
     <div className="files-container">
-      {renderPreview(props.files, props.onClearFile)}
+      {renderPreview(
+        props.files,
+        props.onClearFile,
+        props.onPauseUploadFile,
+        props.onResumeUploadFile
+      )}
     </div>
     <input
       type="file"
@@ -37,10 +42,21 @@ const DropfileField = props => (
   </div>
 );
 
-const renderPreview = (files, onClearFile) =>
+const renderPreview = (
+  files,
+  onClearFile,
+  onPauseUploadFile,
+  onResumeUploadFile
+) =>
   files.map((file, index) => {
     return (
-      <AttachmentWrapper key={index} file={file} onClearFile={onClearFile} />
+      <AttachmentWrapper
+        key={index}
+        file={file}
+        onClearFile={onClearFile}
+        onPauseUploadFile={onPauseUploadFile}
+        onResumeUploadFile={onResumeUploadFile}
+      />
     );
   });
 
@@ -51,6 +67,7 @@ DropfileField.defaultProps = {
 
 DropfileField.propTypes = {
   accept: PropTypes.string,
+  addFiletoken: PropTypes.func,
   blockRenderMap: PropTypes.object,
   files: PropTypes.array,
   getHtmlBody: PropTypes.func,
@@ -61,7 +78,9 @@ DropfileField.propTypes = {
   onClearFile: PropTypes.func,
   onDragLeave: PropTypes.func,
   onDragOver: PropTypes.func,
-  onDrop: PropTypes.func
+  onDrop: PropTypes.func,
+  onPauseUploadFile: PropTypes.func,
+  onResumeUploadFile: PropTypes.func
 };
 
 export default DropfileField;

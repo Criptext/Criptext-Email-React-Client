@@ -16,9 +16,13 @@ import {
   deleteEmailById,
   getEmailByKey,
   createEmailLabel,
-  getEmailToEdit
+  getEmailToEdit,
+  createFile
 } from './../utils/electronInterface';
-import { areEmptyAllArrays } from './../utils/ArrayUtils';
+import {
+  areEmptyAllArrays,
+  updateObjectFieldsInArray
+} from './../utils/ArrayUtils';
 import signal from './../libs/signal';
 import {
   formOutgoingEmailFromData,
@@ -26,6 +30,15 @@ import {
   formDataToReply
 } from './../utils/EmailUtils';
 import { Map } from 'immutable';
+import { formFileParamsToDatabase, getFileTokens } from './../utils/FileUtils';
+import {
+  fileManager,
+  CHUNK_SIZE,
+  FILE_ERROR,
+  FILE_FINISH,
+  FILE_MODES,
+  FILE_PROGRESS
+} from './../utils/FileUtils';
 
 const PrevMessage = props => (
   <div className="content-prev-message">{props.children}</div>
@@ -74,6 +87,8 @@ class ComposerWrapper extends Component {
         onDrop={this.handleDrop}
         handleDragLeave={this.handleDragLeave}
         handleDragOver={this.handleDragOver}
+        onPauseUploadFile={this.handlePauseUploadFile}
+        onResumeUploadFile={this.handleResumeUploadFile}
       />
     );
   }
@@ -86,6 +101,9 @@ class ComposerWrapper extends Component {
       const state = { ...emailData, status: Status.ENABLED };
       this.setState(state);
     }
+    fileManager.on(FILE_PROGRESS, this.handleUploadProgress);
+    fileManager.on(FILE_FINISH, this.handleUploadSuccess);
+    fileManager.on(FILE_ERROR, this.handleUploadError);
   }
 
   getComposerDataByType = async (key, type) => {
@@ -154,16 +172,77 @@ class ComposerWrapper extends Component {
   setFiles = newFiles => {
     if (newFiles && newFiles.length > 0) {
       const [firstNewFile, ...remainingNewFiles] = Array.from(newFiles);
-      const files = [...this.state.files, firstNewFile];
-      this.setState({ files }, () => {
-        this.setFiles(remainingNewFiles);
+      fileManager.uploadFile(firstNewFile, CHUNK_SIZE, (error, token) => {
+        if (error) {
+          return this.handleUploadError();
+        }
+        const uploadingFile = {
+          fileData: firstNewFile,
+          token,
+          percentage: 0,
+          mode: FILE_MODES.UPLOADING
+        };
+        const files = [...this.state.files, uploadingFile];
+        this.setState({ files }, () => {
+          this.setFiles(remainingNewFiles);
+        });
       });
     }
   };
 
-  handleClearFile = filename => {
+  handleUploadProgress = data => {
+    const { percentage, token } = data;
+    const files = updateObjectFieldsInArray(this.state.files, 'token', token, {
+      percentage
+    });
+    this.setState({ files });
+  };
+
+  handleUploadSuccess = ({ token }) => {
+    const files = updateObjectFieldsInArray(this.state.files, 'token', token, {
+      mode: FILE_MODES.UPLOADED
+    });
+    this.setState({ files });
+  };
+
+  handleUploadError = ({ token }) => {
+    const files = updateObjectFieldsInArray(this.state.files, 'token', token, {
+      mode: FILE_MODES.FAILED
+    });
+    this.setState({ files });
+  };
+
+  handlePauseUploadFile = token => {
+    fileManager.pauseUpload(token, error => {
+      if (!error) {
+        const files = updateObjectFieldsInArray(
+          this.state.files,
+          'token',
+          token,
+          { mode: FILE_MODES.PAUSED }
+        );
+        this.setState({ files });
+      }
+    });
+  };
+
+  handleResumeUploadFile = token => {
+    fileManager.resumeUpload(token, error => {
+      if (!error) {
+        const files = updateObjectFieldsInArray(
+          this.state.files,
+          'token',
+          token,
+          { mode: FILE_MODES.UPLOADING }
+        );
+        this.setState({ files });
+      }
+    });
+  };
+
+  handleClearFile = token => {
     const files = this.state.files.filter(file => {
-      return file.name !== filename;
+      return file.token !== token;
     });
     this.setState({ files });
   };
@@ -197,13 +276,19 @@ class ComposerWrapper extends Component {
     try {
       [emailId] = await createEmail(data);
 
+      const files = getFileTokens(this.state.files);
+
       const params = {
         subject,
         threadId: this.state.threadId,
         recipients: to,
-        body
+        body,
+        files
       };
       const res = await signal.encryptPostEmail(params);
+
+      const fileDbParams = formFileParamsToDatabase(this.state.files, emailId);
+      await createFile(fileDbParams);
 
       const { metadataKey, date } = res.body;
       const threadId = this.state.threadId || res.body.threadId;

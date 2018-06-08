@@ -5,6 +5,10 @@ const clientManager = remote.require('./src/clientManager');
 
 const globalManager = remote.require('./src/globalManager');
 
+export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
+  './src/utils/consts'
+);
+
 export const getEmailToEdit = () => {
   return globalManager.emailToEdit.get();
 };
@@ -60,6 +64,10 @@ export const createEmail = params => {
 
 export const createEmailLabel = params => {
   return dbManager.createEmailLabel(params);
+};
+
+export const createFile = params => {
+  return dbManager.createFile(params);
 };
 
 export const createIdentityKeyRecord = params => {
