@@ -56,6 +56,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         searchParams ? searchParams.from : null,
         searchParams ? searchParams.to : null
       );
+      const rejectedLabelIds =
+        labelId === LabelType.spam.id || labelId === LabelType.trash.id
+          ? []
+          : [LabelType.spam.id, LabelType.trash.id];
       const contactFilter = searchParams
         ? { from: searchParams.from, to: searchParams.to }
         : undefined;
@@ -74,7 +78,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               labelId,
               clear,
               timestamp,
-              contactTypes
+              contactTypes,
+              rejectedLabelIds
             };
       dispatch(loadThreads(params));
     },

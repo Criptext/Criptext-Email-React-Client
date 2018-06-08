@@ -74,7 +74,7 @@ const threads = (state = List([]), action) => {
     }
     case Thread.ADD_THREADS_LABEL: {
       return state.map(thread => {
-        if (!action.threadsIds.includes(thread.get('id'))) {
+        if (!action.threadIds.includes(thread.get('id'))) {
           return thread;
         }
         const allLabels = thread.get('allLabels').add(action.label);
@@ -130,9 +130,7 @@ const threads = (state = List([]), action) => {
       return state.map(thread => thread.set('selected', true));
     }
     case Thread.MOVE_THREADS: {
-      return state.filterNot(thread => {
-        return action.threadsIds.includes(thread.get('id'));
-      });
+      return state.filterNot(thread => thread.get('id') === action.labelId);
     }
     default:
       return state;

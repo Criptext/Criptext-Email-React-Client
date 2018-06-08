@@ -118,11 +118,11 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   handleClickMoveToSpam = () => {
-    this.props.onAddLabel(this.props.threadsSelected, LabelType.spam.id);
+    this.props.onAddMoveLabel(this.props.threadsSelected, LabelType.spam.id);
   };
 
   handleClickMoveToTrash = () => {
-    this.props.onAddLabel(this.props.threadsSelected, LabelType.trash.id);
+    this.props.onAddMoveLabel(this.props.threadsSelected, LabelType.trash.id);
   };
 
   handleClickDeleteThread = () => {
@@ -168,6 +168,7 @@ HeaderThreadOptionsWrapper.propTypes = {
   mailboxSelected: PropTypes.string,
   markAsUnread: PropTypes.bool,
   onAddLabel: PropTypes.func,
+  onAddMoveLabel: PropTypes.func,
   onMarkRead: PropTypes.func,
   onRemoveLabel: PropTypes.func,
   onRemoveThreads: PropTypes.func,

@@ -97,9 +97,15 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onAddLabel: (threadsIds, label) => {
-      ownProps.onBackOption();
-      dispatch(actions.addThreadsLabel(threadsIds, label));
+    onAddLabel: (threadIds, label) => {
+      dispatch(actions.addThreadsLabel(threadIds, label)).then(() =>
+        ownProps.onBackOption()
+      );
+    },
+    onAddMoveLabel: (threadIds, labelId) => {
+      dispatch(actions.addMoveThreadsLabel(threadIds, labelId)).then(() =>
+        ownProps.onBackOption()
+      );
     },
     onRemoveLabel: (threadsIds, label) => {
       dispatch(actions.removeThreadsLabel(threadsIds, label)).then(() =>

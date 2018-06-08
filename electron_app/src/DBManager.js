@@ -296,14 +296,16 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
     plain,
     limit,
     contactTypes = ['from'],
-    contactFilter
+    contactFilter,
+    rejectedLabelIds = []
   } = params;
   let queryDb = baseThreadQuery({
     timestamp,
     labelId,
     limit,
     contactTypes,
-    contactFilter
+    contactFilter,
+    rejectedLabelIds
   });
 
   if (plain) {
@@ -372,7 +374,8 @@ const baseThreadQuery = ({
   labelId,
   limit,
   contactTypes,
-  contactFilter
+  contactFilter,
+  rejectedLabelIds
 }) =>
   db
     .select(
@@ -416,6 +419,17 @@ const baseThreadQuery = ({
       Table.CONTACT,
       `${Table.EMAIL_CONTACT}.contactId`,
       `${Table.CONTACT}.id`
+    )
+    .whereNotExists(
+      db
+        .select('*')
+        .from(Table.EMAIL_LABEL)
+        .whereRaw(
+          `${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId and ${
+            Table.EMAIL_LABEL
+          }.labelId in (??)`,
+          [rejectedLabelIds]
+        )
     )
     .where('date', '<', timestamp || 'now')
     .groupBy('uniqueId')
