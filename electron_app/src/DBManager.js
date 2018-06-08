@@ -443,11 +443,12 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
-const deleteEmailById = (id, trx) => {
+const deleteEmailById = (ids, trx) => {
   const knex = trx || db;
+  const idsArray = typeof ids === 'object' ? ids : [ids];
   return knex
     .table(Table.EMAIL)
-    .where({ id })
+    .whereIn('id', idsArray)
     .del();
 };
 

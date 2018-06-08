@@ -102,7 +102,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onRemove: () => {
       const threadParams = {
         threadIdStore: ownProps.thread.get('id'),
-        threadIdDB: ownProps.thread.get('threadId')
+        uniqueIdDB: ownProps.thread.get('uniqueId')
       };
       dispatch(actions.addThreadLabel(threadParams, LabelType.trash.id));
     },
@@ -110,7 +110,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const thread = ownProps.thread;
       const threadParams = {
         threadIdStore: thread.get('id'),
-        threadIdDB: thread.get('threadId')
+        uniqueIdDB: thread.get('uniqueId')
       };
       if (thread.get('labels').contains(LabelType.starred.id)) {
         dispatch(actions.removeThreadLabel(threadParams, LabelType.starred.id));
@@ -122,7 +122,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const thread = ownProps.thread;
       const threadParams = {
         threadIdStore: thread.get('id'),
-        threadIdDB: thread.get('threadId')
+        uniqueIdDB: thread.get('uniqueId')
       };
       if (thread.get('labels').contains(LabelType.important.id)) {
         dispatch(

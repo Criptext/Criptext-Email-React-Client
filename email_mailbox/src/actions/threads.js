@@ -7,7 +7,8 @@ import {
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
   getEvents,
-  updateUnreadEmailByThreadId
+  updateUnreadEmailByThreadId,
+  deleteEmailById
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
 import { handleNewMessageEvent } from './../utils/electronEventInterface';
@@ -109,7 +110,7 @@ export const markThreadsRead = (threadsParams, read) => {
   return async dispatch => {
     try {
       const storeIds = threadsParams.map(param => param.threadIdStore);
-      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const threadIds = threadsParams.map(param => param.uniqueIdDB);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
           return await updateUnreadEmailByThreadId(threadId, !read);
@@ -176,12 +177,16 @@ export const loadEvents = params => {
   };
 };
 
-export const removeThreads = threadsParams => {
+export const removeThreads = (threadsParams, shouldRemoveByIds) => {
   return async dispatch => {
     try {
       const storeIds = threadsParams.map(param => param.threadIdStore);
-      const threadIds = threadsParams.map(param => param.threadIdDB);
-      const dbResponse = await deleteEmailsByThreadId(threadIds);
+      const uniqueIdsDb = threadsParams.map(param => param.uniqueIdDB);
+
+      const dbResponse = shouldRemoveByIds
+        ? await deleteEmailById(uniqueIdsDb)
+        : await deleteEmailsByThreadId(uniqueIdsDb);
+
       if (dbResponse) {
         dispatch(removeThreadsOnSuccess(storeIds));
       }
@@ -196,8 +201,8 @@ export const removeThreads = threadsParams => {
 export const addThreadLabel = (threadParams, labelId) => {
   return async dispatch => {
     try {
-      const { threadIdStore, threadIdDB } = threadParams;
-      const emails = await getEmailsByThreadId(threadIdDB);
+      const { threadIdStore, uniqueIdDB } = threadParams;
+      const emails = await getEmailsByThreadId(uniqueIdDB);
       const params = formAddThreadLabelParams(emails, labelId);
       const dbResponse = await createEmailLabel(params);
       if (dbResponse) {
@@ -212,8 +217,8 @@ export const addThreadLabel = (threadParams, labelId) => {
 export const removeThreadLabel = (threadParams, labelId) => {
   return async dispatch => {
     try {
-      const { threadIdStore, threadIdDB } = threadParams;
-      const emails = await getEmailsByThreadId(threadIdDB);
+      const { threadIdStore, uniqueIdDB } = threadParams;
+      const emails = await getEmailsByThreadId(uniqueIdDB);
       const params = formRemoveThreadLabelParams(emails, labelId);
       const dbResponse = await deleteEmailLabel(params);
       if (dbResponse) {
@@ -245,7 +250,7 @@ export const addThreadsLabel = (threadsParams, labelId) => {
   return async dispatch => {
     try {
       const storeIds = threadsParams.map(param => param.threadIdStore);
-      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const threadIds = threadsParams.map(param => param.uniqueIdDB);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
           const threadEmails = await getEmailsByThreadId(threadId);
@@ -266,7 +271,7 @@ export const removeThreadsLabel = (threadsParams, labelId) => {
   return async dispatch => {
     try {
       const storeIds = threadsParams.map(param => param.threadIdStore);
-      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const threadIds = threadsParams.map(param => param.uniqueIdDB);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
           const emails = await getEmailsByThreadId(threadId);

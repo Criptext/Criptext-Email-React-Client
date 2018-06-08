@@ -109,7 +109,8 @@ class HeaderThreadOptionsWrapper extends Component {
     const currentLabelId = LabelType[this.props.mailboxSelected].id;
     return (
       currentLabelId === LabelType.spam.id ||
-      currentLabelId === LabelType.trash.id
+      currentLabelId === LabelType.trash.id ||
+      currentLabelId === LabelType.draft.id
     );
   };
 
@@ -126,12 +127,18 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   handleClickDeleteThread = () => {
-    confirmPermanentDeleteThread(response => {
-      closeDialog();
-      if (response === CONFIRM_RESPONSE) {
-        this.props.onRemoveThreads(this.props.threadsSelected);
-      }
-    });
+    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    if (currentLabelId === LabelType.draft.id) {
+      const removeThreadsById = true;
+      this.props.onRemoveThreads(this.props.threadsSelected, removeThreadsById);
+    } else {
+      confirmPermanentDeleteThread(response => {
+        closeDialog();
+        if (response === CONFIRM_RESPONSE) {
+          this.props.onRemoveThreads(this.props.threadsSelected);
+        }
+      });
+    }
   };
 
   handleOnClickLabelCheckbox = (checked, labelId) => {
