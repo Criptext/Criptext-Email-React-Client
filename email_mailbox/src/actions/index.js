@@ -1,5 +1,6 @@
 import { addContacts, addContact } from './contacts';
 import {
+  addMoveThreadsLabel,
   addThreads,
   addThreadLabel,
   addThreadsLabel,
@@ -50,6 +51,7 @@ export {
   addFeeds,
   addLabel,
   addLabels,
+  addMoveThreadsLabel,
   addThreads,
   addThreadLabel,
   addThreadsLabel,

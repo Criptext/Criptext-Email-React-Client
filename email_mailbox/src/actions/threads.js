@@ -19,6 +19,27 @@ export const addThreads = (threads, clear) => ({
   clear: clear
 });
 
+export const addMoveThreadsLabel = (threadsParams, labelId) => {
+  return async dispatch => {
+    try {
+      const storeIds = threadsParams.map(param => param.threadIdStore);
+      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const dbReponse = await Promise.all(
+        threadIds.map(async threadId => {
+          const threadEmails = await getEmailsByThreadId(threadId);
+          const params = formAddThreadLabelParams(threadEmails, labelId);
+          return await createEmailLabel(params);
+        })
+      );
+      if (dbReponse) {
+        dispatch(moveThreads(storeIds, labelId));
+      }
+    } catch (e) {
+      // TO DO
+    }
+  };
+};
+
 export const selectThread = threadId => ({
   type: Thread.SELECT,
   threadId: threadId
@@ -41,10 +62,10 @@ export const addThreadLabelSuccess = (threadId, label) => ({
   label: label
 });
 
-export const addThreadsLabelSuccess = (threadId, label) => ({
+export const addThreadsLabelSuccess = (threadIds, label) => ({
   type: Thread.ADD_THREADS_LABEL,
-  threadsIds: threadId,
-  label: label
+  threadIds,
+  label
 });
 
 export const removeThreadLabelSuccess = (threadId, label) => ({
@@ -78,10 +99,10 @@ export const selectThreads = () => ({
   type: Thread.SELECT_THREADS
 });
 
-export const moveThreads = (threadsIds, label) => ({
-  label,
-  threadsIds,
-  type: Thread.MOVE_THREADS
+export const moveThreads = (threadIds, labelId) => ({
+  type: Thread.MOVE_THREADS,
+  threadIds,
+  labelId
 });
 
 export const markThreadsRead = (threadsParams, read) => {
