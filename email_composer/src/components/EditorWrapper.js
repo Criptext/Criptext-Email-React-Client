@@ -23,7 +23,10 @@ class EditorWrapper extends Component {
             options: ['bold', 'italic', 'underline']
           },
           textAlign: { inDropdown: true },
-          link: { inDropdown: false },
+          link: {
+            inDropdown: false,
+            defaultTargetOption: '_blank'
+          },
           history: { inDropdown: true }
         }}
         editorState={this.props.htmlBody}
