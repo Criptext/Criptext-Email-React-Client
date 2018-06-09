@@ -48,3 +48,7 @@ export const getTwoCapitalLetters = string => {
 export const replaceAllOccurrences = (text, search, replacement) => {
   return text.split(search).join(replacement);
 };
+
+export const toLowerCaseWithoutSpaces = string => {
+  return string.toLowerCase().replace(/\s/g, '');
+};

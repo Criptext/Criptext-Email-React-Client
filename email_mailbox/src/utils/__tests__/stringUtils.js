@@ -28,4 +28,10 @@ describe('string utils:', () => {
     const state = utils.getTwoCapitalLetters(string);
     expect(state).toEqual('');
   });
+
+  it('return string in lower case and without spaces', () => {
+    const string = 'All Mail';
+    const state = utils.toLowerCaseWithoutSpaces(string);
+    expect(state).toEqual('allmail');
+  });
 });

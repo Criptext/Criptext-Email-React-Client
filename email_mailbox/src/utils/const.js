@@ -2,48 +2,33 @@ import { LabelType } from './electronInterface';
 
 export const appDomain = 'jigl.com';
 
-export const SideBarItems = [
-  {
-    id: 'inbox',
-    icon: 'icon-mailbox',
-    text: LabelType.inbox.text
+export const IconLabels = {
+  [LabelType.inbox.id]: {
+    icon: 'icon-mailbox'
   },
-  {
-    id: 'sent',
-    icon: 'icon-sent',
-    text: LabelType.sent.text
+  [LabelType.sent.id]: {
+    icon: 'icon-sent'
   },
-  {
-    id: 'draft',
-    icon: 'icon-doc',
-    text: LabelType.draft.text
+  [LabelType.draft.id]: {
+    icon: 'icon-doc'
   },
-  {
-    id: 'starred',
-    icon: 'icon-star',
-    text: LabelType.starred.text
+  [LabelType.starred.id]: {
+    icon: 'icon-star'
   },
-  {
-    id: 'important',
-    icon: 'icon-tag',
-    text: LabelType.important.text
+  [LabelType.important.id]: {
+    icon: 'icon-tag'
   },
-  {
-    id: 'spam',
-    icon: 'icon-not',
-    text: LabelType.spam.text
+  [LabelType.spam.id]: {
+    icon: 'icon-not'
   },
-  {
-    id: 'trash',
-    icon: 'icon-trash',
-    text: LabelType.trash.text
+  [LabelType.trash.id]: {
+    icon: 'icon-doc'
   },
-  {
-    id: 'all',
+  allmail: {
     icon: 'icon-mail',
-    text: LabelType.all.text
+    text: LabelType.allmail.text
   }
-];
+};
 
 export const SectionType = {
   MAILBOX: 1,

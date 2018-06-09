@@ -39,6 +39,19 @@ export const loadLabels = () => {
   return async dispatch => {
     try {
       const response = await db.getAllLabels();
+      const rejectedLabelIds = [db.LabelType.spam.id, db.LabelType.trash.id];
+      const unreadInbox = await db.getEmailsUnredByLabelId({
+        labelId: db.LabelType.inbox.id,
+        rejectedLabelIds
+      });
+      const badgeInbox = unreadInbox.length;
+      const unreadSpam = await db.getEmailsUnredByLabelId({
+        labelId: db.LabelType.spam.id
+      });
+      const badgeSpam = unreadSpam.length;
+      const badgeDraft = await db.getEmailsCounterByLabelId(
+        db.LabelType.draft.id
+      );
       const labels = response.reduce(
         (result, element) => ({
           ...result,
@@ -46,6 +59,9 @@ export const loadLabels = () => {
         }),
         {}
       );
+      labels[db.LabelType.inbox.id].badge = badgeInbox;
+      labels[db.LabelType.spam.id].badge = badgeSpam;
+      labels[db.LabelType.draft.id].badge = badgeDraft[0].count;
       dispatch(addLabels(labels));
     } catch (e) {
       // TO DO
