@@ -11,9 +11,9 @@ const SideBarItem = props => (
       <i className={props.item.icon} />
     </div>
     <span>{props.item.text}</span>
-    {props.item.notification ? (
-      <div className="nav-item-notif">
-        <span>+99</span>
+    {props.item.badge ? (
+      <div className="nav-item-badge">
+        <span className="badge">{props.item.badge}</span>
       </div>
     ) : null}
   </li>

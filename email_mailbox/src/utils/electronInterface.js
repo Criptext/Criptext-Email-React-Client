@@ -8,7 +8,7 @@ const additionalLabels = {
     id: -1,
     text: 'Search'
   },
-  all: {
+  allmail: {
     id: -1,
     text: 'All Mail'
   }
@@ -153,8 +153,16 @@ export const getEmailsByThreadId = threadId => {
   return dbManager.getEmailsByThreadId(threadId);
 };
 
+export const getEmailsCounterByLabelId = labelId => {
+  return dbManager.getEmailsCounterByLabelId(labelId);
+};
+
 export const getEmailsGroupByThreadByParams = params => {
   return dbManager.getEmailsGroupByThreadByParams(params);
+};
+
+export const getEmailsUnredByLabelId = params => {
+  return dbManager.getEmailsUnredByLabelId(params);
 };
 
 export const getEmailLabelsByEmailId = emailId => {

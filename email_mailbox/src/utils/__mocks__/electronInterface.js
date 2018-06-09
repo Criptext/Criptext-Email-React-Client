@@ -60,7 +60,7 @@ export const LabelType = {
     text: 'Search',
     color: '#000000'
   },
-  all: {
+  allmail: {
     id: -1,
     text: 'All Mail',
     color: null

@@ -6,6 +6,13 @@
   position: relative;
   width: 100%;
 
+  .nav-item-icon{
+    color: #d8d8d8;
+    height: 18px;
+    margin: 0 10px 0 32px;
+    width: 15px;
+  }
+
   span{
     font-weight: 300;
   }
@@ -19,6 +26,25 @@
       background-color: transparent;
     }
   }
+
+  .nav-item-badge{
+    margin-left: 15px;
+    
+    .badge{
+      background-color: #65bdff;
+      border-radius: 13px;
+      color: white;
+      font-size: 11px;
+      font-weight: 500;
+      height: 17px;
+      line-height: 17px;
+      margin: 0;
+      min-width: 24px;
+      padding: 0 1px;
+      text-align: center;
+      width: auto;
+    }
+  }
 }
 
 .nav-item-selected{
@@ -30,30 +56,5 @@
 
   span{
     font-weight: 600;
-  }
-}
-
-.nav-item-icon{
-  color: #d8d8d8;
-  height: 18px;
-  margin: 0 10px 0 32px;
-  width: 15px;
-}
-
-.nav-item-notif{
-  align-items: center;
-  background-color: #65bdff;
-  border-radius: 13px;
-  display: flex;
-  height: 17px;
-  margin-left: 15px;
-  width: 26px;
-
-  span {
-    color: white;
-    display: block;
-    font-family: NunitoSans;
-    font-size: 11px;
-    margin: 0 auto;
   }
 }

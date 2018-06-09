@@ -22,7 +22,7 @@ const defineContactType = (labelId, from, to) => {
   if (labelId === LabelType.sent.id || labelId === LabelType.draft.id) {
     return ['to'];
   }
-  if (labelId === LabelType.all.id) {
+  if (labelId === LabelType.allmail.id) {
     return ['from', 'to'];
   }
   return ['from'];

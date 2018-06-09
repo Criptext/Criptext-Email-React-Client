@@ -256,6 +256,20 @@ const formEmailLabel = ({ emailId, labels }) => {
   });
 };
 
+const getEmailById = id => {
+  return db
+    .select('*')
+    .from(Table.EMAIL)
+    .where({ id });
+};
+
+const getEmailByKey = key => {
+  return db
+    .select('*')
+    .from(Table.EMAIL)
+    .where({ key });
+};
+
 const getEmailsByThreadId = threadId => {
   return db
     .select(
@@ -285,6 +299,17 @@ const getEmailsByThreadId = threadId => {
     )
     .where({ threadId })
     .groupBy(`${Table.EMAIL}.id`);
+};
+
+const getEmailsCounterByLabelId = labelId => {
+  return db(`${Table.EMAIL}`)
+    .countDistinct(`${Table.EMAIL}.id as count`)
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL}.id`,
+      `${Table.EMAIL_LABEL}.emailId`
+    )
+    .where(`${Table.EMAIL_LABEL}.labelId`, labelId);
 };
 
 const getEmailsGroupByThreadByParams = (params = {}) => {
@@ -451,6 +476,34 @@ const deleteEmailsByIds = (ids, trx) => {
     .del();
 };
 
+const getEmailsUnredByLabelId = params => {
+  const { labelId, rejectedLabelIds } = params;
+  return db(`${Table.EMAIL}`)
+    .select(
+      db.raw(`IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId`),
+      db.raw(`group_concat(${Table.EMAIL_LABEL}.labelId) as allLabels`)
+    )
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL}.id`,
+      `${Table.EMAIL_LABEL}.emailId`
+    )
+    .whereNotExists(
+      db
+        .select('*')
+        .from(Table.EMAIL_LABEL)
+        .whereRaw(
+          `${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId and ${
+            Table.EMAIL_LABEL
+          }.labelId in (??)`,
+          [rejectedLabelIds || []]
+        )
+    )
+    .where('unread', 1)
+    .groupBy('uniqueId')
+    .having('allLabels', 'like', `%${labelId}%`);
+};
+
 const deleteEmailByKey = key => {
   return db
     .table(Table.EMAIL)
@@ -474,20 +527,6 @@ const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
       await createEmail(optionalEmailToSave, trx);
     }
   });
-};
-
-const getEmailById = id => {
-  return db
-    .select('*')
-    .from(Table.EMAIL)
-    .where({ id });
-};
-
-const getEmailByKey = key => {
-  return db
-    .select('*')
-    .from(Table.EMAIL)
-    .where({ key });
 };
 
 const updateEmail = ({ id, key, threadId, date, isMuted, unread }) => {
@@ -689,7 +728,6 @@ module.exports = {
   createAccount,
   createContact,
   createFile,
-  getContactsByEmailId,
   createLabel,
   createEmail,
   createEmailLabel,
@@ -714,10 +752,13 @@ module.exports = {
   getAllFeeds,
   getAllLabels,
   getContactByIds,
+  getContactsByEmailId,
   getEmailById,
   getEmailByKey,
   getEmailsByThreadId,
+  getEmailsCounterByLabelId,
   getEmailsGroupByThreadByParams,
+  getEmailsUnredByLabelId,
   getEmailLabelsByEmailId,
   getIdentityKeyRecord,
   getLabelById,

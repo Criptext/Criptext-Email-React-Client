@@ -19,6 +19,7 @@ const getThreadClass = (thread, threadPos, selectedThread) => {
 };
 
 const defineLabels = (labelIds, labels) => {
+  if (!labels.size) return [];
   const result = labelIds.toArray().map(labelId => {
     return labels.get(labelId.toString()).toObject();
   });
@@ -31,7 +32,6 @@ const getMailHeader = ownProps => {
   if (ownMailbox === 'all' || ownMailbox === 'search') {
     const isSent = thread.get('allLabels').includes(LabelType.sent.id);
     const isDraft = thread.get('allLabels').includes(LabelType.draft.id);
-
     const from = thread.get('fromContactName').first();
     const to = thread.get('fromContactName').last();
     return isSent || isDraft ? to : from;
@@ -81,7 +81,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           key: thread.key,
           type: composerEvents.EDIT_DRAFT
         });
-      } else if (LabelType[ownProps.mailbox].id === LabelType.all.id) {
+      } else if (LabelType[ownProps.mailbox].id === LabelType.allmail.id) {
         const allLabels = thread.allLabels;
         if (allLabels.includes(LabelType.draft.id)) {
           openEmailInComposer({
