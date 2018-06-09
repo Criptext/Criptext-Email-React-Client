@@ -14,6 +14,8 @@ const animationTypes = {
   STOP: 'stop-animation'
 };
 
+const delay = 85;
+
 class LoadingWrapper extends Component {
   constructor(props) {
     super(props);
@@ -52,7 +54,7 @@ class LoadingWrapper extends Component {
       return;
     }
     this.setState({ percent });
-    this.tm = setTimeout(this.increasePercent, 150);
+    this.tm = setTimeout(this.increasePercent, delay);
   };
 
   createAccount = async () => {
@@ -91,7 +93,7 @@ class LoadingWrapper extends Component {
   };
 
   checkResult = () => {
-    if (this.state.timeout > 110 && this.state.accountResponse === undefined) {
+    if (this.state.timeout > 300 && this.state.accountResponse === undefined) {
       clearTimeout(this.state.timeout);
       throwError(errors.server.NO_RESPONSE);
       this.loadingThrowError();
@@ -103,8 +105,10 @@ class LoadingWrapper extends Component {
     }
     if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
-      openMailbox();
-      closeCreatingKeys();
+      this.setState({ percent: 100 }, () => {
+        openMailbox();
+        closeCreatingKeys();
+      });
     }
     this.setState({
       timeout: setTimeout(this.checkResult, 1000)
