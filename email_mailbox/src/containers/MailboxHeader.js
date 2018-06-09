@@ -130,7 +130,7 @@ function getThreadsSelected(threads, multiselect) {
     if (thread.get('selected')) {
       const selectedThread = {
         threadIdStore: thread.get('id'),
-        uniqueIdDB: thread.get('uniqueId')
+        threadIdDB: thread.get('threadId')
       };
       ids.push(selectedThread);
     }

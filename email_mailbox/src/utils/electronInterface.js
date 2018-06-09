@@ -101,8 +101,8 @@ export const createSignedPreKeyRecord = params => {
   return dbManager.createSignedPreKeyRecord(params);
 };
 
-export const deleteEmailById = params => {
-  return dbManager.deleteEmailById(params);
+export const deleteEmailsByIds = ids => {
+  return dbManager.deleteEmailsByIds(ids);
 };
 
 export const deleteEmailLabel = params => {

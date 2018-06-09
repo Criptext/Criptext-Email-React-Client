@@ -13,7 +13,7 @@ import {
   updateEmailLabel,
   saveDraftChanges,
   errors,
-  deleteEmailById,
+  deleteEmailsByIds,
   getEmailByKey,
   createEmailLabel,
   getEmailToEdit,
@@ -307,7 +307,7 @@ class ComposerWrapper extends Component {
     } catch (e) {
       if (e.message.includes('SQLITE_CONSTRAINT')) {
         // To remove
-        await deleteEmailById(emailId);
+        await deleteEmailsByIds([emailId]);
         const email = await getEmailByKey(key);
         const emailLabels = [
           { emailId: email[0].id, labelId: LabelType.sent.id }

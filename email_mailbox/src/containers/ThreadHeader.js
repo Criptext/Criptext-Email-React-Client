@@ -10,7 +10,7 @@ const defineOneThreadSelected = (threads, threadId) => {
   return [
     {
       threadIdStore: thread.get('id'),
-      uniqueIdDB: thread.get('uniqueId')
+      threadIdDB: thread.get('threadId')
     }
   ];
 };
@@ -21,7 +21,7 @@ const defineThreadsSelected = (threads, itemsChecked) => {
     .toArray()
     .map(thread => ({
       threadIdStore: thread.get('id'),
-      uniqueIdDB: thread.get('uniqueId')
+      threadIdDB: thread.get('threadId')
     }));
 };
 
@@ -116,8 +116,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ownProps.onBackOption();
       dispatch(actions.markThreadsRead(threadsIds, read));
     },
-    onRemoveThreads: (threadsIds, shouldRemoveByIds) => {
-      dispatch(actions.removeThreads(threadsIds, shouldRemoveByIds)).then(() =>
+    onRemoveThreads: threadsIds => {
+      dispatch(actions.removeThreads(threadsIds)).then(() =>
+        ownProps.onBackOption()
+      );
+    },
+    onRemoveDrafts: params => {
+      const isDraft = true;
+      dispatch(actions.removeThreads(params, isDraft)).then(() =>
         ownProps.onBackOption()
       );
     }

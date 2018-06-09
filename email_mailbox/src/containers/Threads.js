@@ -28,6 +28,18 @@ const defineContactType = (labelId, from, to) => {
   return ['from'];
 };
 
+const defineRejectedLabels = labelId => {
+  switch (labelId) {
+    case LabelType.all.id:
+      return [LabelType.spam.id, LabelType.trash.id, LabelType.draft.id];
+    case LabelType.spam.id:
+    case LabelType.trash.id:
+      return [];
+    default:
+      return [LabelType.spam.id, LabelType.trash.id];
+  }
+};
+
 const mapStateToProps = (state, ownProps) => {
   const mailboxTitle = LabelType[ownProps.mailboxSelected].text;
   const unreadFilter = state.get('activities').get('unreadFilter');
@@ -56,10 +68,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         searchParams ? searchParams.from : null,
         searchParams ? searchParams.to : null
       );
-      const rejectedLabelIds =
-        labelId === LabelType.spam.id || labelId === LabelType.trash.id
-          ? []
-          : [LabelType.spam.id, LabelType.trash.id];
+      const rejectedLabelIds = defineRejectedLabels(labelId);
       const contactFilter = searchParams
         ? { from: searchParams.from, to: searchParams.to }
         : undefined;

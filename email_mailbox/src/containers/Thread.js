@@ -75,10 +75,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onLoadEmails: threadId => {
       return dispatch(loadEmails(threadId));
     },
-    onRemoveThreadLabel: (uniqueIdDB, labelId) => {
+    onRemoveThreadLabel: (threadIdDB, labelId) => {
       const threadParams = {
         threadIdStore: ownProps.threadIdSelected,
-        uniqueIdDB
+        threadIdDB
       };
       return dispatch(removeThreadLabel(threadParams, labelId));
     },
@@ -86,7 +86,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const threadIds = [
         {
           threadIdStore: thread.id,
-          uniqueIdDB: thread.uniqueId
+          threadIdDB: thread.threadId
         }
       ];
       dispatch(markThreadsRead(threadIds, read));

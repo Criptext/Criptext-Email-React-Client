@@ -129,8 +129,7 @@ class HeaderThreadOptionsWrapper extends Component {
   handleClickDeleteThread = () => {
     const currentLabelId = LabelType[this.props.mailboxSelected].id;
     if (currentLabelId === LabelType.draft.id) {
-      const removeThreadsById = true;
-      this.props.onRemoveThreads(this.props.threadsSelected, removeThreadsById);
+      this.props.onRemoveDrafts(this.props.threadsSelected);
     } else {
       confirmPermanentDeleteThread(response => {
         closeDialog();
@@ -177,6 +176,7 @@ HeaderThreadOptionsWrapper.propTypes = {
   onAddLabel: PropTypes.func,
   onAddMoveLabel: PropTypes.func,
   onMarkRead: PropTypes.func,
+  onRemoveDrafts: PropTypes.func,
   onRemoveLabel: PropTypes.func,
   onRemoveThreads: PropTypes.func,
   threadsSelected: PropTypes.array
