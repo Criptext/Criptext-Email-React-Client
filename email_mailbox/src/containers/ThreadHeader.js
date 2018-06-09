@@ -117,8 +117,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(actions.markThreadsRead(threadsIds, read));
     },
     onRemoveThreads: threadsIds => {
-      ownProps.onBackOption();
-      dispatch(actions.removeThreads(threadsIds));
+      dispatch(actions.removeThreads(threadsIds)).then(() =>
+        ownProps.onBackOption()
+      );
+    },
+    onRemoveDrafts: params => {
+      const isDraft = true;
+      dispatch(actions.removeThreads(params, isDraft)).then(() =>
+        ownProps.onBackOption()
+      );
     }
   };
 };

@@ -443,11 +443,11 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
-const deleteEmailById = (id, trx) => {
+const deleteEmailsByIds = (ids, trx) => {
   const knex = trx || db;
   return knex
     .table(Table.EMAIL)
-    .where({ id })
+    .whereIn('id', ids)
     .del();
 };
 
@@ -467,7 +467,7 @@ const deleteEmailsByThreadId = threadIds => {
 
 const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
   return db.transaction(async trx => {
-    await deleteEmailById(id, trx);
+    await deleteEmailsByIds([id], trx);
     await deleteEmailContactByEmailId(id, trx);
     await deleteEmailLabelsByEmailId(id, trx);
     if (optionalEmailToSave) {
@@ -699,7 +699,7 @@ module.exports = {
   createSessionRecord,
   createSignedPreKeyRecord,
   createTables,
-  deleteEmailById,
+  deleteEmailsByIds,
   deleteEmailByKey,
   deleteEmailsByThreadId,
   deleteEmailLabelAndContactByEmailId,

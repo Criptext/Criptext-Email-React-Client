@@ -7,7 +7,8 @@ import {
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
   getEvents,
-  updateUnreadEmailByThreadId
+  updateUnreadEmailByThreadId,
+  deleteEmailsByIds
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
 import { handleNewMessageEvent } from './../utils/electronEventInterface';
@@ -176,12 +177,15 @@ export const loadEvents = params => {
   };
 };
 
-export const removeThreads = threadsParams => {
+export const removeThreads = (threadsParams, isDraft) => {
   return async dispatch => {
     try {
       const storeIds = threadsParams.map(param => param.threadIdStore);
       const threadIds = threadsParams.map(param => param.threadIdDB);
-      const dbResponse = await deleteEmailsByThreadId(threadIds);
+
+      const dbResponse = isDraft
+        ? await deleteEmailsByIds(storeIds)
+        : await deleteEmailsByThreadId(threadIds);
       if (dbResponse) {
         dispatch(removeThreadsOnSuccess(storeIds));
       }

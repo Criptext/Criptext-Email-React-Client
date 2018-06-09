@@ -13,7 +13,7 @@ import {
   updateEmailLabel,
   saveDraftChanges,
   errors,
-  deleteEmailById,
+  deleteEmailsByIds,
   getEmailByKey,
   createEmailLabel,
   getEmailToEdit,
@@ -277,7 +277,6 @@ class ComposerWrapper extends Component {
       [emailId] = await createEmail(data);
 
       const files = getFileTokens(this.state.files);
-
       const params = {
         subject,
         threadId: this.state.threadId,
@@ -286,9 +285,10 @@ class ComposerWrapper extends Component {
         files
       };
       const res = await signal.encryptPostEmail(params);
-
-      const fileDbParams = formFileParamsToDatabase(this.state.files, emailId);
-      await createFile(fileDbParams);
+      const filesDbParams = formFileParamsToDatabase(this.state.files, emailId);
+      if (filesDbParams.length) {
+        await createFile(filesDbParams);
+      }
 
       const { metadataKey, date } = res.body;
       const threadId = this.state.threadId || res.body.threadId;
@@ -307,7 +307,7 @@ class ComposerWrapper extends Component {
     } catch (e) {
       if (e.message.includes('SQLITE_CONSTRAINT')) {
         // To remove
-        await deleteEmailById(emailId);
+        await deleteEmailsByIds([emailId]);
         const email = await getEmailByKey(key);
         const emailLabels = [
           { emailId: email[0].id, labelId: LabelType.sent.id }

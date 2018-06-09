@@ -104,5 +104,6 @@ export const formFileParamsToDatabase = (files, emailId) => {
 };
 
 export const getFileTokens = files => {
-  return files.map(file => file.token);
+  if (!files.length) return undefined;
+  return files.map(file => ({ token: file.token }));
 };

@@ -95,7 +95,6 @@ const create = () => {
   composerWindow.on('page-title-updated', event => {
     event.preventDefault();
   });
-  composerWindow.webContents.openDevTools();
 
   composerWindow.on('close', e => {
     if (showConfirmation && !isDraftEmpty()) {

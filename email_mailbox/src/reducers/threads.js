@@ -23,6 +23,7 @@ const threads = (state = List([]), action) => {
     case Thread.ADD_BATCH: {
       const threads = action.threads.map(thread => {
         const subject = StringUtils.removeActionsFromSubject(thread.subject);
+        const fromContactName = thread.fromContactName || '';
         return Map(thread).merge({
           labels: Set(
             thread.labels ? thread.labels.split(',').map(Number) : []
@@ -42,7 +43,7 @@ const threads = (state = List([]), action) => {
           totalAttachments: 1,
           unread: thread.isUnread ? true : false,
           selected: false,
-          fromContactName: List(thread.fromContactName.split(','))
+          fromContactName: List(fromContactName.split(','))
         });
       });
       if (action.clear) {
