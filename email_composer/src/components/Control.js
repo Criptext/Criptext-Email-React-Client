@@ -38,7 +38,7 @@ const Control = props => (
         </div>
       </div>
       <div className="buttons-container">
-        <div className="button-editor">
+        <div className="button-editor" onClick={props.onClickDiscardDraft}>
           <i className="icon-trash" />
         </div>
       </div>
@@ -72,6 +72,7 @@ export const Status = {
 };
 
 Control.propTypes = {
+  onClickDiscardDraft: PropTypes.func,
   onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func,
   status: PropTypes.number,

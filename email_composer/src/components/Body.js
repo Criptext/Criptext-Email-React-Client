@@ -21,6 +21,7 @@ const Body = props => (
       onResumeUploadFile={props.onResumeUploadFile}
     />
     <Control
+      onClickDiscardDraft={props.onClickDiscardDraft}
       onClickTextEditor={props.onClickTextEditor}
       onClickSendMessage={props.onClickSendMessage}
       status={props.status}
@@ -40,6 +41,7 @@ Body.propTypes = {
   isDragActive: PropTypes.bool,
   isToolbarHidden: PropTypes.bool,
   onClearFile: PropTypes.func,
+  onClickDiscardDraft: PropTypes.func,
   onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func,
   onDrop: PropTypes.func,
