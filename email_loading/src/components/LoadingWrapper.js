@@ -15,6 +15,7 @@ const animationTypes = {
 };
 
 const delay = 85;
+const responseMaxDelay = 300;
 
 class LoadingWrapper extends Component {
   constructor(props) {
@@ -93,7 +94,10 @@ class LoadingWrapper extends Component {
   };
 
   checkResult = () => {
-    if (this.state.timeout > 300 && this.state.accountResponse === undefined) {
+    if (
+      this.state.timeout > responseMaxDelay &&
+      this.state.accountResponse === undefined
+    ) {
       clearTimeout(this.state.timeout);
       throwError(errors.server.NO_RESPONSE);
       this.loadingThrowError();
