@@ -1,5 +1,10 @@
 import { connect } from 'react-redux';
-import { loadEmails, markThreadsRead, removeThreadLabel } from '../actions';
+import {
+  loadEmails,
+  updateUnreadEmails,
+  updateUnreadThread,
+  removeThreadLabel
+} from '../actions';
 import ThreadView from '../components/Thread';
 import { List, Map } from 'immutable';
 import { LabelType } from '../utils/electronInterface';
@@ -82,14 +87,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       };
       return dispatch(removeThreadLabel(threadParams, labelId));
     },
-    onMarkRead: (thread, read) => {
-      const threadIds = [
-        {
-          threadIdStore: thread.id,
-          threadIdDB: thread.threadId
-        }
-      ];
-      dispatch(markThreadsRead(threadIds, read));
+    onUpdateUnreadEmails: (thread, unread) => {
+      const paramsThread = {
+        id: thread.threadId,
+        unread
+      };
+      const labelId = LabelType[ownProps.mailboxSelected].id;
+      const paramsLabel =
+        labelId === LabelType.inbox.id || labelId === LabelType.spam.id
+          ? {
+              id: labelId,
+              badgeOperation: -1
+            }
+          : null;
+
+      dispatch(updateUnreadEmails(paramsThread, paramsLabel));
+    },
+    onUpdateUnreadThread: (thread, unread) => {
+      const params = {
+        id: thread.id,
+        unread
+      };
+      dispatch(updateUnreadThread(params));
     }
   };
 };

@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import HeaderThreadOptionsWrapper from '../components/HeaderThreadOptionsWrapper';
+import { LabelType } from '../utils/electronInterface';
 import { Set } from 'immutable';
 
 const defineOneThreadSelected = (threads, threadId) => {
@@ -113,8 +114,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       );
     },
     onMarkRead: (threadsIds, read) => {
-      ownProps.onBackOption();
-      dispatch(actions.markThreadsRead(threadsIds, read));
+      const labelId = LabelType[ownProps.mailboxSelected].id;
+      const operation = read ? -1 : 1;
+      const paramsLabel =
+        labelId === LabelType.inbox.id || labelId === LabelType.spam.id
+          ? {
+              id: labelId,
+              badgeOperation: threadsIds.length * operation
+            }
+          : null;
+
+      dispatch(actions.updateUnreadThreads(threadsIds, read, paramsLabel)).then(
+        () => ownProps.onBackOption()
+      );
     },
     onRemoveThreads: threadsIds => {
       dispatch(actions.removeThreads(threadsIds)).then(() =>

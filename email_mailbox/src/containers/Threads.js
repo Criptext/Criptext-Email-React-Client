@@ -30,7 +30,7 @@ const defineContactType = (labelId, from, to) => {
 
 const defineRejectedLabels = labelId => {
   switch (labelId) {
-    case LabelType.all.id:
+    case LabelType.allmail.id:
       return [LabelType.spam.id, LabelType.trash.id, LabelType.draft.id];
     case LabelType.spam.id:
     case LabelType.trash.id:
@@ -46,11 +46,7 @@ const mapStateToProps = (state, ownProps) => {
   const buttonSyncStatus = defineStatus(
     state.get('activities').get('isSyncing')
   );
-  const threads = unreadFilter
-    ? state.get('threads').filter(thread => {
-        return thread.get('unread');
-      })
-    : state.get('threads');
+  const threads = state.get('threads');
   return {
     buttonSyncStatus,
     mailboxTitle,

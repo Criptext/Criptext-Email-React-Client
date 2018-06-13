@@ -425,7 +425,7 @@ const baseThreadQuery = ({
           Table.CONTACT
         }.email END)) as fromContactName`
       ),
-      db.raw(`max(${Table.EMAIL}.unread) as isUnread`)
+      db.raw(`max(${Table.EMAIL}.unread) as unread`)
     )
     .from(Table.EMAIL)
     .leftJoin(

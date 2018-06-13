@@ -10,8 +10,8 @@ class ThreadItem extends Component {
   render() {
     const visibleStyle = this.getStyleVisibilityByMultiselect();
     const {
+      checked,
       thread,
-      myClass,
       onRegionEnter,
       onRegionLeave,
       onSelectThread,
@@ -20,7 +20,11 @@ class ThreadItem extends Component {
     } = this.props;
     return (
       <div
-        className={'thread-item-container ' + myClass}
+        className={
+          'thread-item-container ' +
+          (thread.unread ? 'thread-unread' : 'thread-read') +
+          (checked ? ' thread-checked' : '')
+        }
         onClick={() => {
           onSelectThread(thread);
         }}
@@ -253,10 +257,6 @@ HoverMenuItem.propTypes = {
   tip: PropTypes.string
 };
 
-ThreadItem.defaultProps = {
-  myClass: ''
-};
-
 ThreadItem.propTypes = {
   color: PropTypes.string,
   checked: PropTypes.bool,
@@ -268,7 +268,6 @@ ThreadItem.propTypes = {
   letters: PropTypes.string,
   mailbox: PropTypes.string,
   multiselect: PropTypes.bool,
-  myClass: PropTypes.string,
   onCheckItem: PropTypes.func,
   onImportantClick: PropTypes.func,
   onMouseEnterItem: PropTypes.func,

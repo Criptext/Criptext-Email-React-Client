@@ -22,7 +22,10 @@ const label = (state, action) => {
     case Label.UPDATE_SUCCESS:
       return state.merge({
         color: action.label.color ? action.label.color : state.get('color'),
-        text: action.label.text ? action.label.text : state.get('text')
+        text: action.label.text ? action.label.text : state.get('text'),
+        badge: action.label.badgeOperation
+          ? state.get('badge') + action.label.badgeOperation
+          : state.get('badge')
       });
     default:
       return state;

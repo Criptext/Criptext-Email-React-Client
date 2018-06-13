@@ -3,7 +3,8 @@
     {
       "id": 1,
       "color": "#ffffff",
-      "text": "Inbox"
+      "text": "Inbox",
+      "badge": 1
     },
     {
       "id": 2,
@@ -13,7 +14,8 @@
     {
       "id": 3,
       "color": "#ffffff",
-      "text": "Spam"
+      "text": "Spam",
+      "badge": 1
     },
     {
       "id": 4,

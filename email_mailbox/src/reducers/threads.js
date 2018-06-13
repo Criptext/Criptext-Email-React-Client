@@ -4,6 +4,15 @@ import * as StringUtils from '../utils/StringUtils';
 
 const threads = (state = List([]), action) => {
   switch (action.type) {
+    case Thread.UPDATE_UNREAD_THREAD: {
+      const threadId = action.thread.id;
+      return state.update(
+        state.findIndex(item => item.get('id') === threadId),
+        item => {
+          return thread(item, action);
+        }
+      );
+    }
     case Thread.SELECT: {
       const newThreads = state
         .map(thread => thread.set('selected', false))
@@ -41,7 +50,7 @@ const threads = (state = List([]), action) => {
           timesOpened: 2,
           timer: 1,
           totalAttachments: 1,
-          unread: thread.isUnread ? true : false,
+          unread: thread.unread ? true : false,
           selected: false,
           fromContactName: List(fromContactName.split(','))
         });
@@ -108,7 +117,7 @@ const threads = (state = List([]), action) => {
         return thread.merge({ allLabels, labels });
       });
     }
-    case Thread.UPDATE_UNREAD: {
+    case Thread.UPDATE_UNREAD_THREADS: {
       return state.map(thread => {
         if (!action.threadsIds.includes(thread.get('id'))) {
           return thread;
@@ -132,6 +141,16 @@ const threads = (state = List([]), action) => {
     }
     case Thread.MOVE_THREADS: {
       return state.filterNot(thread => thread.get('id') === action.labelId);
+    }
+    default:
+      return state;
+  }
+};
+
+const thread = (state, action) => {
+  switch (action.type) {
+    case Thread.UPDATE_UNREAD_THREAD: {
+      return state.set('unread', action.thread.unread);
     }
     default:
       return state;

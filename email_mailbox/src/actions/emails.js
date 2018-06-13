@@ -1,10 +1,12 @@
 import { Email } from './types';
 import {
   getEmailsByThreadId,
+  updateUnreadEmailByThreadId,
   setMuteEmailById,
   setUnreadEmailById
 } from '../utils/electronInterface';
 import { loadContacts } from './contacts';
+import { updateLabelSuccess } from './labels';
 
 export const addEmails = emails => {
   return {
@@ -76,6 +78,19 @@ export const markEmailUnread = (emailId, valueToSet) => {
     try {
       await setUnreadEmailById(emailId, valueToSet ? true : false);
       dispatch(markEmailUnreadSuccess(emailId, valueToSet));
+    } catch (e) {
+      // To do
+    }
+  };
+};
+
+export const updateUnreadEmails = (thread, label) => {
+  return async dispatch => {
+    try {
+      await updateUnreadEmailByThreadId(thread.id, thread.unread);
+      if (label) {
+        dispatch(updateLabelSuccess(label));
+      }
     } catch (e) {
       // To do
     }

@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: row;
   border-bottom: 1px solid #ebebeb;
+  color: black;
   cursor: pointer;
   padding: 5px;
   align-items: center;
@@ -113,6 +114,33 @@
   .match-string{
     background-color: #fdfbea;
   }
+
+  &.thread-read{
+    background-color: #f4f4f4;;   
+    font-weight: 300;
+  
+    .thread-label-option{
+      > div{
+        background-color: white;
+      }
+    }
+  }
+
+  &.thread-unread{
+    background-color: white;
+    font-weight: 600;
+  
+    .thread-label-option{
+      > div{
+        background-color: rgb(247, 247, 248);
+      }
+    }
+  }
+
+  &.thread-checked{
+    background-color: #fdfbea; 
+  }
+
 }
 
 .thread-label-option{
@@ -179,40 +207,6 @@
       font-weight: 600;
     }
   }
-}
-
-.thread-read{
-  color: black;
-  background-color: #f4f4f4;;   
-  font-weight: 300;
-
-  .thread-label-option{
-    > div{
-      background-color: white;
-    }
-  }
-}
-
-.thread-read-selected{
-  @extend .thread-read;
-  background-color: #fdfbea; 
-}
-
-.thread-unread{
-  color: black;
-  background-color: white;
-  font-weight: 600;
-
-  .thread-label-option{
-    > div{
-      background-color: rgb(247, 247, 248);
-    }
-  }
-}
-
-.thread-unread-selected{
-  @extend .thread-unread;
-  background-color: #fdfbea; 
 }
 
 .thread-icons{

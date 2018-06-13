@@ -36,7 +36,15 @@ class Thread extends Component {
 
   componentDidMount() {
     this.props.onLoadEmails(this.props.thread.threadId);
-    this.props.onMarkRead(this.props.thread, true);
+    if (this.props.thread.unread) {
+      this.props.onUpdateUnreadEmails(this.props.thread, false);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.thread.unread) {
+      this.props.onUpdateUnreadThread(this.props.thread, false);
+    }
   }
 
   handleRemoveLabel = labelId => {
@@ -48,7 +56,8 @@ Thread.propTypes = {
   emails: PropTypes.object,
   labels: PropTypes.array,
   onLoadEmails: PropTypes.func,
-  onMarkRead: PropTypes.func,
+  onUpdateUnreadEmails: PropTypes.func,
+  onUpdateUnreadThread: PropTypes.func,
   onRemoveThreadLabel: PropTypes.func,
   thread: PropTypes.object
 };

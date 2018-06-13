@@ -1,5 +1,6 @@
 import { Thread } from './types';
 import { startLoadSync, stopLoadSync } from './activity';
+import { updateLabelSuccess } from './labels';
 import {
   createEmailLabel,
   deleteEmailLabel,
@@ -106,7 +107,20 @@ export const moveThreads = (threadIds, labelId) => ({
   labelId
 });
 
-export const markThreadsRead = (threadsParams, read) => {
+export const updateUnreadThread = thread => {
+  return {
+    type: Thread.UPDATE_UNREAD_THREAD,
+    thread
+  };
+};
+
+export const updateUnreadThreadsSuccess = (threadsIds, read) => ({
+  threadsIds,
+  read,
+  type: Thread.UPDATE_UNREAD_THREADS
+});
+
+export const updateUnreadThreads = (threadsParams, read, label) => {
   return async dispatch => {
     try {
       const storeIds = threadsParams.map(param => param.threadIdStore);
@@ -117,19 +131,14 @@ export const markThreadsRead = (threadsParams, read) => {
         })
       );
       if (dbReponse) {
-        dispatch(markThreadsReadSuccess(storeIds, read));
+        dispatch(updateUnreadThreadsSuccess(storeIds, read));
+        if (label) dispatch(updateLabelSuccess(label));
       }
     } catch (e) {
       // To do
     }
   };
 };
-
-export const markThreadsReadSuccess = (threadsIds, read) => ({
-  threadsIds,
-  read,
-  type: Thread.UPDATE_UNREAD
-});
 
 export const searchThreads = params => {
   return async dispatch => {

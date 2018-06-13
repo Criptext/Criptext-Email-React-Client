@@ -5,6 +5,7 @@ import * as actions from './../../actions/index';
 import { Map } from 'immutable';
 import file from './../../../public/labels.json';
 const labels = file.labels;
+const label = labels[0];
 
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
@@ -26,10 +27,11 @@ describe('Label actions:', () => {
 
   it('should update label: text and color', () => {
     const data = Map({
-      [labels[0].id]: Map({
-        id: labels[0].id,
-        color: labels[0].color,
-        text: labels[0].text
+      [label.id]: Map({
+        id: label.id,
+        color: label.color,
+        text: label.text,
+        badge: label.badge
       })
     });
     const action = actions.updateLabelSuccess({
@@ -43,10 +45,11 @@ describe('Label actions:', () => {
 
   it('should update label: color', () => {
     const data = Map({
-      [labels[0].id]: Map({
-        id: labels[0].id,
-        color: labels[0].color,
-        text: labels[0].text
+      [label.id]: Map({
+        id: label.id,
+        color: label.color,
+        text: label.text,
+        badge: label.badge
       })
     });
     const action = actions.updateLabelSuccess({ id: 1, color: '#000000' });
@@ -56,10 +59,11 @@ describe('Label actions:', () => {
 
   it('should update label: text', () => {
     const data = Map({
-      [labels[0].id]: Map({
-        id: labels[0].id,
-        color: labels[0].color,
-        text: labels[0].text
+      [label.id]: Map({
+        id: label.id,
+        color: label.color,
+        text: label.text,
+        badge: label.badge
       })
     });
     const action = actions.updateLabelSuccess({ id: 1, text: 'labelmodified' });
@@ -67,12 +71,43 @@ describe('Label actions:', () => {
     expect(state).toMatchSnapshot();
   });
 
+  it('should update label: add badge', () => {
+    const data = Map({
+      [label.id]: Map({
+        id: label.id,
+        color: label.color,
+        text: label.text,
+        badge: label.badge
+      })
+    });
+    const badgeOperation = +1;
+    const action = actions.updateLabelSuccess({ id: 1, badgeOperation });
+    const state = labelReducer(data, action);
+    expect(state.get('1').get('badge')).toEqual(2);
+  });
+
+  it('should update label: less badge', () => {
+    const data = Map({
+      [label.id]: Map({
+        id: label.id,
+        color: label.color,
+        text: label.text,
+        badge: label.badge
+      })
+    });
+    const badgeOperation = -1;
+    const action = actions.updateLabelSuccess({ id: 1, badgeOperation });
+    const state = labelReducer(data, action);
+    expect(state.get('1').get('badge')).toEqual(0);
+  });
+
   it('should not update label', () => {
     const data = Map({
-      [labels[0].id]: Map({
-        id: labels[0].id,
-        color: labels[0].color,
-        text: labels[0].text
+      [label.id]: Map({
+        id: label.id,
+        color: label.color,
+        text: label.text,
+        badge: label.badge
       })
     });
     const action = actions.updateLabelSuccess({

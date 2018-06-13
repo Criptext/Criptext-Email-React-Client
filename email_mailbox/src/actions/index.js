@@ -7,13 +7,14 @@ import {
   filterThreadsByUnread,
   loadEvents,
   loadThreads,
-  markThreadsRead,
   moveThreads,
   multiSelectThread,
   selectThread,
   removeThread,
   removeThreadLabel,
   deselectThreads,
+  updateUnreadThread,
+  updateUnreadThreads,
   searchThreads,
   selectThreads,
   removeThreads,
@@ -24,7 +25,8 @@ import {
   loadEmails,
   markEmailUnread,
   muteEmail,
-  muteNotifications
+  muteNotifications,
+  updateUnreadEmails
 } from './emails';
 import {
   addLabels,
@@ -65,7 +67,6 @@ export {
   loadThreads,
   markEmailUnread,
   markFeedAsSelected,
-  markThreadsRead,
   moveThreads,
   multiSelectThread,
   muteEmail,
@@ -83,5 +84,8 @@ export {
   setThreads,
   toggleMuteFeed,
   updateLabel,
-  updateLabelSuccess
+  updateLabelSuccess,
+  updateUnreadEmails,
+  updateUnreadThread,
+  updateUnreadThreads
 };

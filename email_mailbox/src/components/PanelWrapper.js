@@ -38,6 +38,7 @@ class PanelWrapper extends Component {
           limit: this.props.threadsCount + 1
         });
       }
+      this.props.onUpdateUnreadEmails();
     });
 
     addEvent(Event.UPDATE_SAVED_DRAFTS, () => {
@@ -145,8 +146,9 @@ class PanelWrapper extends Component {
 
 PanelWrapper.propTypes = {
   onLoadThreads: PropTypes.func,
-  threadsCount: PropTypes.number,
-  onUpdateOpenedAccount: PropTypes.func
+  onUpdateOpenedAccount: PropTypes.func,
+  onUpdateUnreadEmails: PropTypes.func,
+  threadsCount: PropTypes.number
 };
 
 export default PanelWrapper;

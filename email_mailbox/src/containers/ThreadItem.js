@@ -11,13 +11,6 @@ import { getTwoCapitalLetters } from '../utils/StringUtils';
 import { SectionType } from '../utils/const';
 import randomcolor from 'randomcolor';
 
-const getThreadClass = (thread, threadPos, selectedThread) => {
-  if (thread.get('unread') && threadPos !== selectedThread) {
-    return thread.get('selected') ? 'thread-unread-selected' : 'thread-unread';
-  }
-  return thread.get('selected') ? 'thread-read-selected' : 'thread-read';
-};
-
 const defineLabels = (labelIds, labels) => {
   if (!labels.size) return [];
   const result = labelIds.toArray().map(labelId => {
@@ -29,7 +22,7 @@ const defineLabels = (labelIds, labels) => {
 const getMailHeader = ownProps => {
   const thread = ownProps.thread;
   const ownMailbox = ownProps.mailbox;
-  if (ownMailbox === 'all' || ownMailbox === 'search') {
+  if (ownMailbox === 'allmail' || ownMailbox === 'search') {
     const isSent = thread.get('allLabels').includes(LabelType.sent.id);
     const isDraft = thread.get('allLabels').includes(LabelType.draft.id);
     const from = thread.get('fromContactName').first();
@@ -40,7 +33,6 @@ const getMailHeader = ownProps => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const selectedThread = ownProps.selectedThread;
   const header = getMailHeader(ownProps);
   const letters = getTwoCapitalLetters(header);
   const color = randomcolor({
@@ -55,7 +47,6 @@ const mapStateToProps = (state, ownProps) => {
   const labels = defineLabels(thread.get('labels'), state.get('labels'));
 
   return {
-    myClass: getThreadClass(thread, ownProps.myIndex, selectedThread),
     thread: thread.toJS(),
     color,
     multiselect: state.get('activities').get('multiselect'),
@@ -94,7 +85,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       } else {
         ownProps.onClickSelectedItem(type, params);
       }
-      dispatch(actions.selectThread(threadId));
     },
     onMultiSelect: (threadId, value) => {
       dispatch(actions.multiSelectThread(threadId, value));
