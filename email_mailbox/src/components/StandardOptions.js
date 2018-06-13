@@ -14,6 +14,15 @@ const StandardOptions = props => (
         targetName="actionArchive"
       />
     ) : null}
+    {props.isVisibleMoveToInboxButton ? (
+      <ButtonCircle
+        onClick={props.onClickMoveToInbox}
+        tip="Move to Inbox"
+        enableTip={true}
+        icon="icon-archive"
+        targetName="actionToInbox"
+      />
+    ) : null}
     {props.isVisibleRestoreButton ? (
       <ButtonCircle
         onClick={props.onClickRestore}
@@ -77,11 +86,13 @@ StandardOptions.propTypes = {
   isVisibleArchiveButton: PropTypes.bool,
   isVisibleDeleteButton: PropTypes.bool,
   isVisibleFolderButton: PropTypes.bool,
+  isVisibleMoveToInboxButton: PropTypes.bool,
   isVisibleRestoreButton: PropTypes.bool,
   isVisibleSpamButton: PropTypes.bool,
   isVisibleTrashButton: PropTypes.bool,
   onClickMoveToArchive: PropTypes.func,
   onClickDeleteThread: PropTypes.func,
+  onClickMoveToInbox: PropTypes.func,
   onClickMoveToSpam: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,
   onClickRestore: PropTypes.func,
