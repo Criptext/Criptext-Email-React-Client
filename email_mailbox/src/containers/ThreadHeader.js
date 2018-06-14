@@ -3,7 +3,6 @@ import * as actions from '../actions/index';
 import HeaderThreadOptionsWrapper from '../components/HeaderThreadOptionsWrapper';
 import { LabelType } from '../utils/electronInterface';
 import { Set } from 'immutable';
-import { LabelType } from '../utils/electronInterface';
 
 const defineOneThreadSelected = (threads, threadId) => {
   const thread = threads.find(thread => {
@@ -88,7 +87,6 @@ const mapStateToProps = (state, ownProps) => {
     ? threadIds.size === ownProps.itemsChecked.size
     : false;
   return {
-    allThreads: threads.toJS(),
     allSelected,
     markAsUnread,
     threadsSelected,
@@ -96,22 +94,6 @@ const mapStateToProps = (state, ownProps) => {
     labels,
     allLabels: state.get('labels')
   };
-};
-
-const getThreadsWithoutLabel = (selected, allThreads, labelId) => {
-  const ids = selected.map(item => item.threadIdStore);
-
-  return allThreads
-    .map(thread => {
-      const { id, threadId, labels } = thread;
-      return ids.includes(id) && !labels.includes(labelId)
-        ? {
-            threadIdDB: threadId,
-            threadIdStore: id
-          }
-        : null;
-    })
-    .filter(item => item !== null);
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -154,17 +136,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onRemoveDrafts: params => {
       const isDraft = true;
       dispatch(actions.removeThreads(params, isDraft)).then(() =>
-        ownProps.onBackOption()
-      );
-    },
-    onMoveToInbox: (selectedParams, allThreads) => {
-      const inboxLabelId = LabelType.inbox.id;
-      const threadsIds = getThreadsWithoutLabel(
-        selectedParams,
-        allThreads,
-        inboxLabelId
-      );
-      dispatch(actions.addThreadsLabel(threadsIds, inboxLabelId)).then(() =>
         ownProps.onBackOption()
       );
     }

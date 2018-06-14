@@ -148,8 +148,8 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   handleClickMoveToInbox = () => {
-    const { threadsSelected, allThreads } = this.props;
-    this.props.onMoveToInbox(threadsSelected, allThreads);
+    const labelId = LabelType.inbox.id;
+    return this.props.onAddLabel(this.props.threadsSelected, labelId);
   };
 
   handleOnClickLabelCheckbox = (checked, labelId) => {
@@ -188,12 +188,10 @@ HeaderThreadOptionsWrapper.propTypes = {
   onAddLabel: PropTypes.func,
   onAddMoveLabel: PropTypes.func,
   onMarkRead: PropTypes.func,
-  onMoveToInbox: PropTypes.func,
   onRemoveDrafts: PropTypes.func,
   onRemoveLabel: PropTypes.func,
   onRemoveThreads: PropTypes.func,
-  threadsSelected: PropTypes.array,
-  allThreads: PropTypes.array
+  threadsSelected: PropTypes.array
 };
 
 export default HeaderThreadOptionsWrapper;

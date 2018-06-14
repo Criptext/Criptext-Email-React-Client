@@ -137,9 +137,23 @@ const deleteEmailContactByEmailId = (emailId, trx) => {
 
 /* EmailLabel
    ----------------------------- */
-const createEmailLabel = (emailLabels, trx) => {
+const createEmailLabel = async (emailLabels, trx) => {
   const knex = trx || db;
-  return knex.insert(emailLabels).into(Table.EMAIL_LABEL);
+  const toInsert = await filterEmailLabelIfNotStore(emailLabels, trx);
+  return knex.insert(toInsert).into(Table.EMAIL_LABEL);
+};
+
+const filterEmailLabelIfNotStore = async (emailLabels, trx) => {
+  const knex = trx || db;
+  const emailIds = Array.from(new Set(emailLabels.map(item => item.emailId)));
+  const labelIds = Array.from(new Set(emailLabels.map(item => item.labelId)));
+  const stored = await knex
+    .select('*')
+    .table(Table.EMAIL_LABEL)
+    .whereIn('emailId', emailIds)
+    .whereIn('labelId', labelIds);
+  const storedEmailIds = stored.map(item => item.emailId);
+  return emailLabels.filter(item => !storedEmailIds.includes(item.emailId));
 };
 
 const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
