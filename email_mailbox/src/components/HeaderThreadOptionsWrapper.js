@@ -27,6 +27,7 @@ class HeaderThreadOptionsWrapper extends Component {
         displayTagsMenu={this.state.displayTagsMenu}
         displayDotsMenu={this.state.displayDotsMenu}
         isVisibleArchiveButton={this.isVisibleArchiveButton()}
+        isVisibleMoveToInboxButton={this.isVisibleMoveToInboxButton()}
         isVisibleRestoreButton={this.isVisibleRestoreButton()}
         isVisibleSpamButton={this.isVisibleSpamButton()}
         isVisibleTrashButton={this.isVisibleTrashButton()}
@@ -37,6 +38,7 @@ class HeaderThreadOptionsWrapper extends Component {
         onClickDeleteThread={this.handleClickDeleteThread}
         onClickMarkAsRead={this.handleClickMarkAsRead}
         onClickMoveToArchive={this.handleClickMoveToArchive}
+        onClickMoveToInbox={this.handleClickMoveToInbox}
         onClickMoveToSpam={this.handleClickMoveToSpam}
         onClickMoveToTrash={this.handleClickMoveToTrash}
         onClickLabelCheckbox={this.handleOnClickLabelCheckbox}
@@ -72,6 +74,11 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.starred.id ||
       currentLabelId === LabelType.important.id
     );
+  };
+
+  isVisibleMoveToInboxButton = () => {
+    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    return currentLabelId === LabelType.allmail.id;
   };
 
   isVisibleRestoreButton = () => {
@@ -138,6 +145,11 @@ class HeaderThreadOptionsWrapper extends Component {
         }
       });
     }
+  };
+
+  handleClickMoveToInbox = () => {
+    const labelId = LabelType.inbox.id;
+    return this.props.onAddLabel(this.props.threadsSelected, labelId);
   };
 
   handleOnClickLabelCheckbox = (checked, labelId) => {
