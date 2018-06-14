@@ -1,9 +1,10 @@
 {
-  "name": "criptext-email-electron-app",
-  "version": "0.3.0",
+  "name": "Criptext",
+  "version": "0.4.0",
   "private": true,
   "productName": "Criptext",
   "main": "./electron-starter.js",
+  "description": "Email service encrypted with signal",
   "scripts": {
     "electron": "electron .",
     "set-env": "NODE_ENV=development MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004 REACT_APP_KEYSERVER_URL=http://localhost:8000 REACT_APP_SOCKETSERVER_URL=ws://localhost:3001",
@@ -13,9 +14,9 @@
     "integration": "NODE_ENV=test criptext-js-tools integration",
     "lint": "criptext-js-tools lint",
     "package-linux": "bash ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --asar --platform=linux --arch=x64 --icon=resources/launch-icons/icon.png --out=release-builds --no-package-manager",
-    "package-mac": "sh ./installerResources/converge_builds.sh && electron-packager . --overwrite --platform=darwin --arch=x64 --icon=./resources/launch-icons/icon.icns --prune=true --out=release-builds",
-    "installer-linux": "electron-installer-debian --src ./release-builds/electron-criptext-email-linux-x64/ --arch amd64 --config ./installerResources/debian.json",
-    "installer-mac": "electron-installer-dmg ./release-builds/Criptext-darwin-x64/Criptext.app electron-criptext-email --out=release-builds --overwrite",
+    "package-mac": "sh ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --platform=darwin --arch=x64 --icon=./resources/launch-icons/icon.icns --prune=true --out=release-builds",
+    "installer-linux": "electron-installer-debian --src ./release-builds/Criptext-linux-x64/ --arch amd64 --config ./installerResources/debian.json",
+    "installer-mac": "electron-installer-dmg ./release-builds/Criptext-darwin-x64/Criptext.app Criptext --out=release-builds --overwrite",
     "pack": "build --dir",
     "dist": "build"
   },

@@ -1729,9 +1729,9 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-criptext-files-sdk@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/criptext-files-sdk/-/criptext-files-sdk-0.2.1.tgz#1e52693bbff505ab3d50a2d8f498769ed6268a53"
+criptext-files-sdk@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/criptext-files-sdk/-/criptext-files-sdk-0.3.0.tgz#4992a30cb69f8c6b7b62c23595cfa2a8c75aedc6"
   dependencies:
     es6-promise "^4.1.1"
 
