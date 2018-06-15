@@ -1,0 +1,11 @@
+{
+  "name": "Criptext",
+  "productName": "Criptext",
+  "description": "Email service encrypted with signal",
+  "productDescription": "Email service encrypted with signal",
+  "authors": ["Criptext (info@criptext.com)"],
+  "homepage": "https://criptext.com",
+  "icon": "build/icon.ico",
+  "tags": ["Network","Application"], 
+  "noMsi": true
+}
