@@ -1,7 +1,7 @@
 global.modalData = {};
 global.loadingData = {};
 global.composerData = {};
-global.emailToEdit = undefined;
+global.emailToEdit = {};
 
 // Dialog
 const setModalData = data => {
@@ -20,23 +20,27 @@ const getLoadingData = () => {
 };
 
 // Composer
-const setComposerData = data => {
-  global.composerData = data;
+const setComposerData = (composerId, data) => {
+  global.composerData[composerId] = data;
 };
-const getComposerData = () => {
-  return global.composerData;
+const getComposerData = composerId => {
+  return global.composerData[composerId];
 };
-const setEmailToEdit = data => {
-  global.emailToEdit = data;
+const deleteComposerData = composerId => {
+  delete global.composerData[composerId];
 };
-const getEmailToEdit = () => {
-  return global.emailToEdit;
+const setEmailToEdit = (composerId, data) => {
+  global.emailToEdit[composerId] = data;
+};
+const getEmailToEdit = composerId => {
+  return global.emailToEdit[composerId];
 };
 
 module.exports = {
   composerData: {
     get: getComposerData,
-    set: setComposerData
+    set: setComposerData,
+    delete: deleteComposerData
   },
   emailToEdit: {
     get: getEmailToEdit,

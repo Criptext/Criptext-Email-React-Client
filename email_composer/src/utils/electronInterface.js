@@ -1,5 +1,6 @@
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
+const composerId = remote.getCurrentWindow().id;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 
@@ -10,7 +11,7 @@ export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
 );
 
 export const getEmailToEdit = () => {
-  return globalManager.emailToEdit.get();
+  return globalManager.emailToEdit.get(composerId);
 };
 
 export const getContactsByEmailId = emailId => {
@@ -31,11 +32,11 @@ export const LabelType = remote.require('./src/systemLabels');
 /* Window events
    ----------------------------- */
 export const closeComposerWindow = () => {
-  ipcRenderer.send('close-composer');
+  ipcRenderer.send('close-composer', composerId);
 };
 
 export const saveDraftChanges = data => {
-  ipcRenderer.send('save-draft-changes', data);
+  ipcRenderer.send('save-draft-changes', { composerId, data });
 };
 
 export const throwError = error => {

@@ -5,9 +5,6 @@ const mailboxWindow = require('./mailbox');
 const dbManager = require('./../DBManager');
 const globalManager = require('./../globalManager');
 
-let composerWindow;
-let showConfirmation;
-
 const composerSize = {
   width: 785,
   height: 556,
@@ -77,10 +74,15 @@ const composerEvents = {
   FORWARD: 'forward'
 };
 
-const create = () => {
-  showConfirmation = true;
-  globalManager.composerData.set({});
-  composerWindow = new BrowserWindow({
+const openNewComposer = async () => {
+  const composer = await createComposerWindow();
+  composer.once('ready-to-show', () => {
+    composer.show();
+  });
+};
+
+const createComposerWindow = () => {
+  const window = new BrowserWindow({
     icon: iconPath,
     width: composerSize.width,
     height: composerSize.height,
@@ -89,78 +91,41 @@ const create = () => {
     minWidth: composerSize.minWidth,
     minHeight: composerSize.minHeight
   });
-  composerWindow.loadURL(composerUrl);
-  composerWindow.setMenu(menu);
-  composerWindow.setMenuBarVisibility(false);
-  composerWindow.on('page-title-updated', event => {
+  globalManager.composerData.set(window.id, {});
+  window.loadURL(composerUrl);
+  window.setMenu(menu);
+  window.setMenuBarVisibility(false);
+  window.on('page-title-updated', event => {
     event.preventDefault();
   });
+  window.showConfirmation = true;
 
-  composerWindow.on('close', e => {
-    if (showConfirmation && !isDraftEmpty()) {
+  window.on('close', e => {
+    if (window.showConfirmation && !isDraftEmpty(window.id)) {
       e.preventDefault();
       dialog.showMessageBox(dialogTemplate, async responseIndex => {
         if (responseIndex === RESPONSES.DISCARD.index) {
-          showConfirmation = false;
-          globalManager.composerData.set({});
-          composerWindow.close();
+          window.showConfirmation = false;
+          globalManager.composerData.delete(window.id);
+          window.close();
         }
         if (responseIndex === RESPONSES.SAVE.index) {
-          const dataDraft = globalManager.composerData.get();
-          await saveDraftToDatabase(dataDraft);
-          showConfirmation = false;
-          globalManager.composerData.set({});
-          composerWindow.close();
+          const dataDraft = globalManager.composerData.get(window.id);
+          await saveDraftToDatabase(window.id, dataDraft);
+          window.showConfirmation = false;
+          globalManager.composerData.delete(window.id);
+          window.close();
         }
       });
     } else {
-      composerWindow = undefined;
-      setEmptyVariables();
+      globalManager.composerData.delete(window.id);
     }
   });
+  return window;
 };
 
-const close = () => {
-  if (composerWindow !== undefined) {
-    composerWindow.close();
-  }
-  setEmptyVariables();
-  composerWindow = undefined;
-};
-
-const destroy = async () => {
-  if (composerWindow !== undefined) {
-    composerWindow.destroy();
-  }
-  const emailToEdit = globalManager.emailToEdit.get();
-  if (emailToEdit && emailToEdit.type === composerEvents.EDIT_DRAFT) {
-    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit.key);
-    await dbManager.deleteEmailLabelAndContactByEmailId(
-      prevEmail.id,
-      undefined
-    );
-  }
-  if (mailboxWindow !== undefined) {
-    mailboxWindow.send('update-drafts');
-  }
-  setEmptyVariables();
-  composerWindow = undefined;
-};
-
-const send = (message, data) => {
-  if (!composerWindow) {
-    return;
-  }
-  composerWindow.webContents.send(message, data);
-};
-
-const editDraft = async emailToEdit => {
-  globalManager.emailToEdit.set(emailToEdit);
-  await show();
-};
-
-const isDraftEmpty = () => {
-  const composerData = globalManager.composerData.get();
+const isDraftEmpty = composerId => {
+  const composerData = globalManager.composerData.get(composerId);
   if (composerData === {}) {
     return true;
   }
@@ -178,12 +143,37 @@ const isDraftEmpty = () => {
   return !hasRecipients && !subject.length && !preview.length;
 };
 
-const saveDraftChanges = incomingData => {
-  globalManager.composerData.set(incomingData);
+const saveDraftChanges = (composerId, incomingData) => {
+  globalManager.composerData.set(composerId, incomingData);
 };
 
-const saveDraftToDatabase = async dataDraft => {
-  const emailToEdit = globalManager.emailToEdit.get();
+const editDraft = async emailToEdit => {
+  const newComposer = await createComposerWindow();
+  globalManager.emailToEdit.set(newComposer.id, emailToEdit);
+  newComposer.once('ready-to-show', () => {
+    newComposer.show();
+  });
+};
+
+const destroy = async composerId => {
+  const composer = BrowserWindow.fromId(composerId);
+  const emailToEdit = globalManager.emailToEdit.get(composer.id);
+  if (emailToEdit && emailToEdit.type === composerEvents.EDIT_DRAFT) {
+    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit.key);
+    await dbManager.deleteEmailLabelAndContactByEmailId(
+      prevEmail.id,
+      undefined
+    );
+  }
+  globalManager.composerData.delete(composer.id);
+  composer.destroy();
+  if (mailboxWindow !== undefined) {
+    mailboxWindow.send('update-drafts');
+  }
+};
+
+const saveDraftToDatabase = async (composerId, dataDraft) => {
+  const emailToEdit = globalManager.emailToEdit.get(composerId);
   if (!emailToEdit) {
     await dbManager.createEmail(dataDraft);
   } else {
@@ -198,26 +188,10 @@ const saveDraftToDatabase = async dataDraft => {
   }
 };
 
-const setEmptyVariables = () => {
-  globalManager.composerData.set({});
-  globalManager.emailToEdit.set(undefined);
-};
-
-const show = async () => {
-  if (composerWindow === undefined) {
-    await create();
-  }
-  composerWindow.once('ready-to-show', () => {
-    composerWindow.show();
-  });
-};
-
 module.exports = {
-  close,
   composerEvents,
   destroy,
   editDraft,
   saveDraftChanges,
-  send,
-  show
+  openNewComposer
 };

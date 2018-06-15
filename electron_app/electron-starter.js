@@ -2,14 +2,13 @@ const { app, ipcMain, dialog } = require('electron');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient')
-const errors = require('./src/errors');
 const globalManager = require('./src/globalManager');
 
 const loginWindow = require('./src/windows/login');
 const dialogWindow = require('./src/windows/dialog');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
-const composerWindow = require('./src/windows/composer');
+const composerWindowManager = require('./src/windows/composer');
 
 async function initApp() {
   try {
@@ -77,27 +76,28 @@ async function initApp() {
 
   //   Composer
   ipcMain.on('create-composer', () => {
-    composerWindow.show();
+    composerWindowManager.openNewComposer();
   });
 
-  ipcMain.on('close-composer', () => {
-    composerWindow.destroy();
+  ipcMain.on('close-composer', (e, composerId) => {
+    composerWindowManager.destroy(composerId);
   });
 
-  ipcMain.on('save-draft-changes', (e, data) => {
-    composerWindow.saveDraftChanges(data);
+  ipcMain.on('save-draft-changes', (e, windowParams) => {
+    const { composerId, data } = windowParams;
+    composerWindowManager.saveDraftChanges(composerId, data);
   });
 
   ipcMain.on('edit-draft', async (e, toEdit) => {
-    await composerWindow.editDraft(toEdit);
+    await composerWindowManager.editDraft(toEdit);
   });
 
   // Socket
   wsClient.setMessageListener( data => {
     mailboxWindow.send('socket-message', data)
-    composerWindow.send('socket-message', data)
   })
 }
+
 
 //   App
 app.disableHardwareAcceleration();
