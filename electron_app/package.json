@@ -1,6 +1,12 @@
 {
   "name": "Criptext",
   "version": "0.4.0",
+  "author": {
+    "name": "Criptext",
+    "email": "info@criptext.com",
+    "url": "https://criptext.com" 
+  },
+  "homepage": "https://criptext.com",
   "private": true,
   "productName": "Criptext",
   "main": "./electron-starter.js",
@@ -14,9 +20,11 @@
     "integration": "NODE_ENV=test criptext-js-tools integration",
     "lint": "criptext-js-tools lint",
     "package-linux": "bash ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --asar --platform=linux --arch=x64 --icon=resources/launch-icons/icon.png --out=release-builds --no-package-manager",
-    "package-mac": "sh ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --platform=darwin --arch=x64 --icon=./resources/launch-icons/icon.icns --prune=true --out=release-builds",
+    "package-mac": "bash ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --platform=darwin --arch=x64 --icon=./resources/launch-icons/icon.icns --prune=true --out=release-builds",
+    "package-windows": "bash ./installerResources/converge_builds.sh && electron-packager . Criptext --platform=win32 --arch=x64 --out=release-builds",
     "installer-linux": "electron-installer-debian --src ./release-builds/Criptext-linux-x64/ --arch amd64 --config ./installerResources/debian.json",
     "installer-mac": "electron-installer-dmg ./release-builds/Criptext-darwin-x64/Criptext.app Criptext --out=release-builds --overwrite",
+    "installer-windows": "electron-installer-windows --src ./release-builds/Criptext-win32-x64/ --dest ./release-builds/ --config ./installerResources/windows.json",
     "pack": "build --dir",
     "dist": "build"
   },
@@ -41,13 +49,16 @@
         "AppImage",
         "deb"
       ],
-      "icon": "build/icon.png"
+      "icon": "build/icon.png",
+      "category": "Network"
     },
     "win": {
       "target": "nsis",
       "icon": "build/icon.ico"
     },
     "nsis": {
+      "oneClick": true,
+      "installerIcon": "build/icon.ico",
       "deleteAppDataOnUninstall": true
     }
   },
@@ -57,6 +68,7 @@
     "electron-builder": "^19.54.0",
     "electron-installer-debian": "^0.8.0",
     "electron-installer-dmg": "^0.2.1",
+    "electron-installer-windows": "^1.1.0",
     "electron-packager": "^10.1.2"
   },
   "dependencies": {
