@@ -12,9 +12,9 @@ class RecipientWrapper extends Component {
   }
 
   render() {
-    const toPlaceholder = this.props.toEmails.length > 0 ? '' : 'To';
-    const ccPlaceholder = this.props.ccEmails.length > 0 ? '' : 'Cc';
-    const bccPlaceholder = this.props.bccEmails.length > 0 ? '' : 'Bcc';
+    const toPlaceholder = '';
+    const ccPlaceholder = '';
+    const bccPlaceholder = '';
     return (
       <Recipient
         {...this.props}

@@ -27,6 +27,7 @@ const Recipient = props => (
 
 const renderRecipientTo = props => (
   <div className="recipient-content">
+    <span className="input-label">To:</span>
     <TagsInput
       renderInput={AutocompleteWrapper}
       onlyUnique={true}
@@ -54,6 +55,7 @@ const renderRecipientTo = props => (
 
 const renderRecipientCc = props => (
   <div className="recipient-content">
+    <span className="input-label">Cc:</span>
     <TagsInput
       renderInput={AutocompleteWrapper}
       onlyUnique={true}
@@ -81,6 +83,7 @@ const renderRecipientCc = props => (
 
 const renderRecipientBcc = props => (
   <div className="recipient-content">
+    <span className="input-label">Bcc:</span>
     <TagsInput
       renderInput={AutocompleteWrapper}
       onlyUnique={true}
