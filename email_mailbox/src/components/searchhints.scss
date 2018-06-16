@@ -1,8 +1,5 @@
 .header-search .menu-container.menu-arrow.arrow-top-left{
-  &:before {
-    left: 16px;
-  }
-  &:after{
+  &:before, &:after{
     left: 16px;
   }
 }

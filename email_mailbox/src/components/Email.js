@@ -2,8 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AttachItem, { AttachItemStatus } from './AttachItem';
 import ButtonExpand, { ButtonExpandType } from './ButtonExpandWrapper';
+import MenuHOC from './MenuHOC';
+import EmailMoreInfo from './EmailMoreInfo';
 import ButtonUnsend from './ButtonUnsendWrapper';
 import './email.css';
+
+const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
 
 const Email = props =>
   props.displayEmail || props.staticOpen
@@ -12,7 +16,10 @@ const Email = props =>
 
 const renderEmailCollapse = props => (
   <div
-    className={`email-container email-container-collapse ${props.classStatus}`}
+    className={
+      'email-container email-container-collapse ' +
+      (props.email.unsent ? 'email-unsent' : 'email-normal')
+    }
     onClick={props.onToggleEmail}
   >
     <span className="email-preview-from">{showContacts(props.email.from)}</span>
@@ -35,25 +42,29 @@ const renderEmailExpand = props => (
         >
           <span>{props.email.letters}</span>
         </div>
-        <div className="email-header-info">
-          <span className="email-header-info-from">
+        <div className="email-info-header">
+          <span className="email-info-header-from">
             {showContacts(props.email.from)}
           </span>
-          <div>
-            <span className="email-header-info-to">
+          <div className="email-info-header-to-container">
+            <span className="email-info-header-to">
               {`to: ${showContacts(props.email.to)}`}
             </span>
-            <i
-              className="icon-arrow-down"
-              onClick={props.onTooglePopOverEmailDetail}
-            >
-              {props.displayPopOverEmailDetail
-                ? renderPopOverEmailDetail(props.email)
-                : null}
-            </i>
+            <div className="email-info-header-to-more">
+              <span onClick={props.onTooglePopOverEmailMoreInfo}>more</span>
+              <PopOverEmailMoreInfo
+                from={props.email.from}
+                to={props.email.to}
+                date={props.email.dateLong}
+                isHidden={props.isHiddenPopOverEmailMoreInfo}
+                menuPosition={{ left: '-150px', top: '25px' }}
+                onToggleMenu={props.onTooglePopOverEmailMoreInfo}
+                subject={props.email.subject}
+              />
+            </div>
           </div>
         </div>
-        <div className="email-detail-info">
+        <div className="email-info-detail">
           <span>{props.email.date}</span>
           {props.isFromMe ? renderMuteIcon(props) : null}
           <i className="icon-replay" onClick={ev => props.onReplyEmail(ev)} />
@@ -144,51 +155,6 @@ const showContacts = contacts => {
     ''
   );
 };
-
-const renderPopOverEmailDetail = props => (
-  <div className="email-more-detail">
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <span className="title">From:</span>
-          </td>
-          <td>
-            {props.from.map((contact, index) => {
-              return <ContactTag key={index} contact={contact} />;
-            })}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span className="title">To:</span>
-          </td>
-          <td>
-            {props.to.map((contact, index) => {
-              return <ContactTag key={index} contact={contact} />;
-            })}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span className="title">Date:</span>
-          </td>
-          <td>
-            <span className="text">{props.date}</span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span className="title">Subject:</span>
-          </td>
-          <td>
-            <span className="text">{props.subject}</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-);
 
 const renderPopOverMenuAction = props => (
   <div className="email-more-menu">
@@ -285,15 +251,6 @@ const renderAttachLastOpenedList = () => (
   </ul>
 );
 
-const ContactTag = props => (
-  <span>
-    {props.contact.name ? (
-      <span className="text">{props.contact.name}</span>
-    ) : null}
-    <span className="tag-text">{`<${props.contact.email}>`}</span>
-  </span>
-);
-
 const renderMuteIcon = props => (
   <i
     className={props.email.isMuted ? 'icon-bell-mute' : 'icon-bell'}
@@ -302,35 +259,27 @@ const renderMuteIcon = props => (
 );
 
 renderEmailCollapse.propTypes = {
-  classStatus: PropTypes.string,
   email: PropTypes.object,
   onToggleEmail: PropTypes.func
 };
 
 renderEmailExpand.propTypes = {
   attachments: PropTypes.array,
-  displayPopOverEmailDetail: PropTypes.bool,
   displayPopOverMenuAction: PropTypes.bool,
   email: PropTypes.object,
   hideView: PropTypes.bool,
   isFromMe: PropTypes.bool,
+  isHiddenPopOverEmailMoreInfo: PropTypes.bool,
   isUnsend: PropTypes.bool,
   onForward: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyEmail: PropTypes.func,
   onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,
-  onTooglePopOverEmailDetail: PropTypes.func,
+  onTooglePopOverEmailMoreInfo: PropTypes.func,
   onTogglePopOverMenuAction: PropTypes.func,
   staticOpen: PropTypes.func,
   unsendButtonOnClicked: PropTypes.func
-};
-
-renderPopOverEmailDetail.propTypes = {
-  date: PropTypes.string,
-  from: PropTypes.array,
-  subject: PropTypes.string,
-  to: PropTypes.array
 };
 
 renderPopOverMenuAction.propTypes = {
@@ -338,10 +287,6 @@ renderPopOverMenuAction.propTypes = {
   onReplyAll: PropTypes.func,
   onReplyEmail: PropTypes.func,
   onTogglePopOverMenuAction: PropTypes.func
-};
-
-ContactTag.propTypes = {
-  contact: PropTypes.object
 };
 
 renderMuteIcon.propTypes = {

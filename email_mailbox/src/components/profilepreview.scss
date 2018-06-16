@@ -1,5 +1,7 @@
-.profile-shortcut-container .menu-container.menu-arrow.arrow-top-right:before, .menu-container.menu-arrow.arrow-top-right:after {
-  right: 10px;
+.profile-shortcut-container .menu-container.menu-arrow.arrow-top-right{
+  &:before, &:after {
+    right: 10px;
+  }
 }
 
 .profile-preview{

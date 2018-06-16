@@ -4,6 +4,10 @@ import './menuhoc.css';
 
 const MenuHOC = InComponent =>
   class Menu extends Component {
+    static defaultProps = {
+      menuPosition: { top: 0, left: 0 }
+    };
+
     static propTypes = {
       arrowPosition: PropTypes.string,
       menuPosition: PropTypes.object,
@@ -23,12 +27,18 @@ const MenuHOC = InComponent =>
             <InComponent {...this.props} />
           </div>
           <div
-            onClick={() => this.props.onToggleMenu()}
+            onClick={() => this.handleToggleMenu()}
             className="menu-overlay"
           />
         </div>
       );
     }
+
+    handleToggleMenu = () => {
+      if (this.props.onToggleMenu) {
+        this.props.onToggleMenu();
+      }
+    };
 
     defineStyle = () => {
       const { top, bottom, left, right } = this.props.menuPosition;
