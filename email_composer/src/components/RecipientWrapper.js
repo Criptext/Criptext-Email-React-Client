@@ -12,16 +12,11 @@ class RecipientWrapper extends Component {
   }
 
   render() {
-    const toPlaceholder = '';
-    const ccPlaceholder = '';
-    const bccPlaceholder = '';
     return (
       <Recipient
         {...this.props}
         isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
-        bccPlaceholder={bccPlaceholder}
         bccTags={this.props.bccEmails}
-        ccPlaceholder={ccPlaceholder}
         ccTags={this.props.ccEmails}
         emailRegex={emailRegex}
         onToggleRecipient={this.handleToggleRecipient}
@@ -31,7 +26,6 @@ class RecipientWrapper extends Component {
         onValidationRejectBccTag={this.handleOnValidationRejectBccTag}
         onValidationRejectCcTag={this.handleOnValidationRejectCcTag}
         onValidationRejectToTag={this.handleOnValidationRejectToTag}
-        toPlaceholder={toPlaceholder}
         toTags={this.props.toEmails}
       />
     );

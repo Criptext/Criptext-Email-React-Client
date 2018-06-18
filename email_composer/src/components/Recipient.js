@@ -27,7 +27,7 @@ const Recipient = props => (
 
 const renderRecipientTo = props => (
   <div className="recipient-content">
-    <span className="input-label">To:</span>
+    <span className="recipient-input-label">To:</span>
     <TagsInput
       renderInput={AutocompleteWrapper}
       onlyUnique={true}
@@ -41,7 +41,7 @@ const renderRecipientTo = props => (
       }}
       inputProps={{
         className: 'tags-input',
-        placeholder: props.toPlaceholder
+        placeholder: ''
       }}
       validationRegex={props.emailRegex}
       addKeys={[9, 13, 32, 186, 188]}
@@ -55,7 +55,7 @@ const renderRecipientTo = props => (
 
 const renderRecipientCc = props => (
   <div className="recipient-content">
-    <span className="input-label">Cc:</span>
+    <span className="recipient-input-label">Cc:</span>
     <TagsInput
       renderInput={AutocompleteWrapper}
       onlyUnique={true}
@@ -69,7 +69,7 @@ const renderRecipientCc = props => (
       }}
       inputProps={{
         className: 'tags-input',
-        placeholder: props.ccPlaceholder
+        placeholder: ''
       }}
       validationRegex={props.emailRegex}
       addKeys={[9, 13, 32, 186, 188]}
@@ -83,7 +83,7 @@ const renderRecipientCc = props => (
 
 const renderRecipientBcc = props => (
   <div className="recipient-content">
-    <span className="input-label">Bcc:</span>
+    <span className="recipient-input-label">Bcc:</span>
     <TagsInput
       renderInput={AutocompleteWrapper}
       onlyUnique={true}
@@ -97,7 +97,7 @@ const renderRecipientBcc = props => (
       }}
       inputProps={{
         className: 'tags-input',
-        placeholder: props.bccPlaceholder
+        placeholder: ''
       }}
       validationRegex={props.emailRegex}
       addKeys={[9, 13, 32, 186, 188]}
@@ -118,12 +118,10 @@ renderRecipientTo.propTypes = {
   emailRegex: PropTypes.string,
   handleOnValidationRejectToTag: PropTypes.func,
   onChangeToTag: PropTypes.func,
-  toPlaceholder: PropTypes.string,
   toTags: PropTypes.string
 };
 
 renderRecipientCc.propTypes = {
-  ccPlaceholder: PropTypes.string,
   ccTags: PropTypes.string,
   emailRegex: PropTypes.string,
   handleOnValidationRejectCcTag: PropTypes.func,
@@ -131,7 +129,6 @@ renderRecipientCc.propTypes = {
 };
 
 renderRecipientBcc.propTypes = {
-  bccPlaceholder: PropTypes.string,
   bccTags: PropTypes.string,
   emailRegex: PropTypes.string,
   handleOnValidationRejectBccTag: PropTypes.func,

@@ -307,20 +307,24 @@
   flex-direction: column;
   height: 180px;
   left: 5px;
-  padding: 30px 18px;
+  padding: 30px 20px 25px 20px;
   position: absolute;
   width: 228px;
   z-index: 100;
 
-  .rdw-link-modal-label[for="linkTitle"]::after{
+  .rdw-link-modal-label:nth-child(1)::after{
     color: #000;
     content: 'Text to display';
-    text-align: center;
+    position: relative;
+    left: -55px;
+    font-weight: 500;
   }
-  .rdw-link-modal-label[for="linkTarget"]::after{
+  .rdw-link-modal-label:nth-child(3)::after{
     color: #000;
     content: 'Enter a URL';
-    text-align: center;
+    position: relative;
+    left: -68px;
+    font-weight: 500;
   }
   .rdw-link-modal-input:focus{
     border-bottom: 1px solid #0091ff;
@@ -338,6 +342,8 @@
   margin-bottom: 15px;
   margin-top: 5px;
   padding: 5px;
+  color: #4a4a4a;
+  font-weight: 200;
 }
 
 .rdw-link-modal-input:focus {
@@ -346,7 +352,7 @@
 }
 
 .rdw-link-modal-buttonsection {
-  margin: 20px auto 0px auto;
+  margin: 20px 0px 0px auto;
 }
 
 .rdw-link-modal-target-option {
@@ -444,6 +450,7 @@
 
 .public-DraftEditorPlaceholder-root {
   color: #9197a3;
+  font-weight: 600;
   position: absolute;
   z-index: 0;
 }
