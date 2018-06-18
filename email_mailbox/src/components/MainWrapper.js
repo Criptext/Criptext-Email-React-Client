@@ -135,6 +135,7 @@ class MainWrapper extends Component {
             onCheckThreadItem={this.handleCheckThreadItem}
             searchParams={this.props.sectionSelected.params.searchParams}
             threadItemsChecked={this.state.threadItemsChecked}
+            onBackOption={this.handleClickBackHeaderMailbox}
           />
         );
       }
