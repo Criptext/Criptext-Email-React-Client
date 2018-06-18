@@ -3,7 +3,6 @@ const { remote, ipcRenderer } = electron;
 const composerId = remote.getCurrentWindow().id;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
-
 const globalManager = remote.require('./src/globalManager');
 
 export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(

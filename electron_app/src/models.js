@@ -142,9 +142,26 @@ const createEmailContactColumns = table => {
 const createFileColumns = table => {
   table.string('token', SMALL_STRING_SIZE).primary();
   table.string('name', SMALL_STRING_SIZE).notNullable();
+  table
+    .boolean('readOnly')
+    .notNullable()
+    .defaultTo(false);
   table.integer('size').notNullable();
   table.integer('status').notNullable();
   table.dateTime('date').notNullable();
+  table.string('type', TINY_STRING_SIZE);
+  table
+    .integer('ephemeral')
+    .notNullable()
+    .defaultTo(0);
+  table
+    .timestamp('ephemeralStart')
+    .notNullable()
+    .defaultTo(0);
+  table
+    .bigInteger('ephemeralTime')
+    .notNullable()
+    .defaultTo(0);
   table.string('emailId', SMALL_STRING_SIZE).notNullable();
   table
     .foreign('emailId')

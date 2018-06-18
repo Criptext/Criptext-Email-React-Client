@@ -26,7 +26,7 @@ const createContact = params => {
   return db.table(Table.CONTACT).insert(params);
 };
 
-const createContactsIfOrNotStore = async (contacts, trx) => {
+const createContactsIfOrNotStore = async contacts => {
   const emailAddresses = Array.from(
     new Set(
       contacts.map(contact => {
@@ -35,8 +35,7 @@ const createContactsIfOrNotStore = async (contacts, trx) => {
       })
     )
   );
-  const myDb = trx || db;
-  const contactsFound = await myDb
+  const contactsFound = await db
     .select('email')
     .from(Table.CONTACT)
     .whereIn('email', emailAddresses);
@@ -53,7 +52,7 @@ const createContactsIfOrNotStore = async (contacts, trx) => {
   );
   const contactsRowCkecked = filterUniqueContacts(formContactsRow(newContacts));
 
-  await myDb.insert(contactsRowCkecked).into(Table.CONTACT);
+  await db.insert(contactsRowCkecked).into(Table.CONTACT);
   return emailAddresses;
 };
 
@@ -189,57 +188,68 @@ const getEmailLabelsByEmailId = emailId => {
 /* Email
    ----------------------------- */
 const createEmail = async (params, trx) => {
-  if (!params.recipients) {
-    const knex = trx ? trx : db;
-    return knex.table(Table.EMAIL).insert(params.email);
+  const knex = trx || db;
+  const { recipients, email } = params;
+  if (!recipients) {
+    return knex.table(Table.EMAIL).insert(email);
   }
-  const emails = [
-    ...params.recipients.from,
-    ...params.recipients.to,
-    ...params.recipients.cc,
-    ...params.recipients.bcc
-  ];
-  const emailAddresses = await createContactsIfOrNotStore(emails, trx);
+  const recipientsFrom = recipients.from || [];
+  const recipientsTo = recipients.to || [];
+  const recipientsCc = recipients.cc || [];
+  const recipientsBcc = recipients.bcc || [];
 
-  const myDb = trx || db;
-  return myDb
-    .transaction(async trx2 => {
-      const contactStored = await getContactByEmails(emailAddresses, trx2);
-      const [emailId] = await createEmail({ email: params.email }, trx2);
+  const emails = [
+    ...recipientsFrom,
+    ...recipientsTo,
+    ...recipientsCc,
+    ...recipientsBcc
+  ];
+  const emailAddresses = await createContactsIfOrNotStore(emails);
+  return knex
+    .transaction(async trx => {
+      const contactStored = await getContactByEmails(emailAddresses, trx);
+      const [emailId] = await createEmail({ email: email }, trx);
 
       const from = formEmailContact({
         emailId,
         contactStored,
-        contacts: params.recipients.from,
+        contacts: recipientsFrom,
         type: 'from'
       });
       const to = formEmailContact({
         emailId,
         contactStored,
-        contacts: params.recipients.to,
+        contacts: recipientsTo,
         type: 'to'
       });
       const cc = formEmailContact({
         emailId,
         contactStored,
-        contacts: params.recipients.cc,
+        contacts: recipientsCc,
         type: 'cc'
       });
       const bcc = formEmailContact({
         emailId,
         contactStored,
-        contacts: params.recipients.bcc,
+        contacts: recipientsBcc,
         type: 'bcc'
       });
       const emailContactRow = [...from, ...to, ...cc, ...bcc];
-      await createEmailContact(emailContactRow, trx2);
+      await createEmailContact(emailContactRow, trx);
 
       const emailLabel = formEmailLabel({
         emailId,
         labels: params.labels
       });
       const emailLabelRow = [...emailLabel];
-      await createEmailLabel(emailLabelRow, trx2);
+      await createEmailLabel(emailLabelRow, trx);
+
+      if (params.files) {
+        const files = params.files.map(file =>
+          Object.assign({ emailId }, file)
+        );
+        await createFile(files, trx);
+      }
 
       return emailId;
     })
@@ -303,7 +313,8 @@ const getEmailsByThreadId = threadId => {
       db.raw(
         `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'bcc'
         THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'bcc'`
-      )
+      ),
+      db.raw(`GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens`)
     )
     .from(Table.EMAIL)
     .leftJoin(
@@ -311,6 +322,7 @@ const getEmailsByThreadId = threadId => {
       `${Table.EMAIL_CONTACT}.emailId`,
       `${Table.EMAIL}.id`
     )
+    .leftJoin(Table.FILE, `${Table.FILE}.emailId`, `${Table.EMAIL}.id`)
     .where({ threadId })
     .groupBy(`${Table.EMAIL}.id`);
 };
@@ -421,31 +433,37 @@ const baseThreadQuery = ({
       `${Table.EMAIL}.*`,
       db.raw(`IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId`),
       db.raw(
-        `group_concat(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> ${labelId ||
+        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> ${labelId ||
           -1} THEN ${Table.EMAIL_LABEL}.labelId ELSE NULL END) as labels`
       ),
-      db.raw(`group_concat(${Table.EMAIL_LABEL}.labelId) as allLabels`),
-      db.raw(`group_concat(distinct(${Table.EMAIL}.id)) as emailIds`),
+      db.raw(`GROUP_CONCAT(${Table.EMAIL_LABEL}.labelId) as allLabels`),
+      db.raw(`GROUP_CONCAT(DISTINCT(${Table.EMAIL}.id)) as emailIds`),
       db.raw(
-        `group_concat(distinct(CASE WHEN ${buildContactMatchQuery(
+        `GROUP_CONCAT(DISTINCT(CASE WHEN ${buildContactMatchQuery(
           contactTypes,
           contactFilter
         )} THEN ${Table.EMAIL_CONTACT}.type ELSE NULL END)) as matchedContacts`
       ),
       db.raw(
-        `group_concat(distinct( CASE WHEN ${
+        `GROUP_CONCAT(DISTINCT( CASE WHEN ${
           Table.CONTACT
         }.name IS NOT NULL THEN ${Table.CONTACT}.name ELSE ${
           Table.CONTACT
         }.email END)) as fromContactName`
       ),
-      db.raw(`max(${Table.EMAIL}.unread) as unread`)
+      db.raw(`GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens`),
+      db.raw(`MAX(${Table.EMAIL}.unread) as unread`)
     )
     .from(Table.EMAIL)
     .leftJoin(
       Table.EMAIL_LABEL,
       `${Table.EMAIL}.id`,
       `${Table.EMAIL_LABEL}.emailId`
+    )
+    .leftJoin(
+      `${Table.FILE} as file`,
+      `${Table.EMAIL}.id`,
+      `${Table.FILE}.emailId`
     )
     .leftJoin(Table.EMAIL_CONTACT, builder => {
       builder
@@ -470,9 +488,9 @@ const baseThreadQuery = ({
           [rejectedLabelIds]
         )
     )
-    .where('date', '<', timestamp || 'now')
+    .where(`${Table.EMAIL}.date`, '<', timestamp || 'now')
     .groupBy('uniqueId')
-    .orderBy('date', 'DESC')
+    .orderBy(`${Table.EMAIL}.date`, 'DESC')
     .limit(limit || 20);
 
 const partThreadQueryByMatchText = (query, text) =>
@@ -495,7 +513,7 @@ const getEmailsUnredByLabelId = params => {
   return db(`${Table.EMAIL}`)
     .select(
       db.raw(`IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId`),
-      db.raw(`group_concat(${Table.EMAIL_LABEL}.labelId) as allLabels`)
+      db.raw(`GROUP_CONCAT(${Table.EMAIL_LABEL}.labelId) as allLabels`)
     )
     .leftJoin(
       Table.EMAIL_LABEL,
@@ -595,6 +613,29 @@ const updateLabel = ({ id, color, text, visible }) => {
     .update(params);
 };
 
+/* File
+  ----------------------------- */
+const createFile = (files, trx) => {
+  const knex = trx || db;
+  return knex.insert(files).into(Table.FILE);
+};
+
+const getFilesByTokens = tokens => {
+  return db
+    .select('*')
+    .from(Table.FILE)
+    .whereIn('token', tokens);
+};
+
+const updateFileByToken = ({ token, status }) => {
+  const params = {};
+  if (status) params.status = status;
+  return db
+    .table(Table.FILE)
+    .where({ token })
+    .update(params);
+};
+
 /* Feed
    ----------------------------- */
 const getAllFeeds = () => {
@@ -688,7 +729,7 @@ const getSessionRecordByRecipientIds = recipientIds => {
     .select(
       'recipientId',
       db.raw(
-        `group_concat(distinct(${Table.SESSIONRECORD}.deviceId)) as deviceIds`
+        `GROUP_CONCAT(DISTINCT(${Table.SESSIONRECORD}.deviceId)) as deviceIds`
       )
     )
     .from(Table.SESSIONRECORD)
@@ -714,21 +755,6 @@ const updateIdentityKeyRecord = ({ recipientId, identityKey }) => {
     .table(Table.IDENTITYKEYRECORD)
     .where({ recipientId })
     .update({ identityKey });
-};
-
-/* Files
-  ----------------------------- */
-const createFile = fileParams => {
-  return db.table(Table.FILE).insert(fileParams);
-};
-
-const updateFileByToken = ({ token, status }) => {
-  const params = {};
-  if (status) params.status = status;
-  return db
-    .table(Table.FILE)
-    .where({ token })
-    .update(params);
 };
 
 const closeDB = () => {
@@ -780,6 +806,7 @@ module.exports = {
   getSessionRecord,
   getSessionRecordByRecipientIds,
   getSignedPreKey,
+  getFilesByTokens,
   getUserByUsername,
   updateAccount,
   updateEmail,

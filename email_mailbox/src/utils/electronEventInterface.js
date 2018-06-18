@@ -1,19 +1,18 @@
 import {
-  createEmail,
   acknowledgeEvents,
-  getEmailLabelsByEmailId
+  createEmail,
+  createEmailLabel,
+  getEmailByKey,
+  getEmailLabelsByEmailId,
+  LabelType
 } from './electronInterface';
 import {
   formEmailLabel,
+  formFilesFromData,
   formIncomingEmailFromData,
   getRecipientsFromData
-} from '../utils/EmailUtils';
-import { SocketCommand } from '../utils/const';
-import {
-  createEmailLabel,
-  getEmailByKey,
-  LabelType
-} from '../utils/electronInterface';
+} from './EmailUtils';
+import { SocketCommand } from './const';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -44,15 +43,16 @@ export const handleNewMessageEvent = async ({ rowid, params }) => {
   const eventParams = {
     labels
   };
-
   const prevEmail = await getEmailByKey(emailObj.metadataKey);
   if (!prevEmail.length) {
     const email = await formIncomingEmailFromData(emailObj);
     const recipients = getRecipientsFromData(emailObj);
+    const files = await formFilesFromData(emailObj.files);
     const params = {
       email,
       recipients,
-      labels
+      labels,
+      files
     };
     await createEmail(params);
   } else {

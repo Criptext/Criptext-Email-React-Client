@@ -1,46 +1,52 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TABLE[Email]: should create email to db 1`] = `
+exports[`Load data thread from Email Table: should retrieve threads from DB with the correct shape: inbox 1`] = `
 Array [
   Object {
-    "bcc": null,
-    "cc": null,
+    "allLabels": "1",
     "content": "<p>Hello there</p>",
-    "date": "2013-10-07 08:23:19.120",
+    "date": "2018-06-14 08:23:19.120",
     "delivered": 0,
-    "from": "1",
-    "id": 1,
+    "emailIds": "3",
+    "fileTokens": "tokenC",
+    "fromContactName": "usera@criptext.com",
+    "id": 3,
     "isMuted": 0,
-    "key": "hdnfgdgsd",
+    "key": "keyC",
+    "labels": null,
+    "matchedContacts": "from",
     "preview": "Hello there",
-    "s3Key": "hdnfgdgsd",
+    "s3Key": "s3KeyC",
     "secure": 1,
     "subject": "Greetings",
-    "threadId": "threadJ",
-    "to": null,
+    "threadId": "threadC",
+    "uniqueId": "threadC",
     "unread": 1,
   },
 ]
 `;
 
-exports[`TABLE[Email]: should update email: isMuted 1`] = `
+exports[`Load data thread from Email Table: should retrieve threads from DB with the correct shape: sent 1`] = `
 Array [
   Object {
-    "bcc": null,
-    "cc": null,
+    "allLabels": "3",
     "content": "<p>Hello there</p>",
     "date": "2013-10-07 08:23:19.120",
     "delivered": 0,
-    "from": "1",
-    "id": 1,
+    "emailIds": "2",
+    "fileTokens": null,
+    "fromContactName": "User me",
+    "id": 2,
     "isMuted": 1,
-    "key": "hdnfgdgsd",
+    "key": "keyB",
+    "labels": null,
+    "matchedContacts": "from",
     "preview": "Hello there",
-    "s3Key": "hdnfgdgsd",
+    "s3Key": "s3KeyB",
     "secure": 1,
     "subject": "Greetings",
-    "threadId": "threadJ",
-    "to": null,
+    "threadId": "threadB",
+    "uniqueId": "threadB",
     "unread": 1,
   },
 ]

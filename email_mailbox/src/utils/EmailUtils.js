@@ -74,3 +74,17 @@ export const formEmailLabel = ({ emailId, labels }) => {
     };
   });
 };
+
+export const formFilesFromData = files => {
+  return files.map(file => {
+    const { token, name, read_only, size, status, timestamp } = file;
+    return {
+      token,
+      name,
+      readOnly: read_only ? true : false,
+      size,
+      status,
+      date: timestamp
+    };
+  });
+};

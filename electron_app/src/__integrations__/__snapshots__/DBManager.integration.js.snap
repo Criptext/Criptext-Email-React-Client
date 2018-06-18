@@ -8,6 +8,7 @@ Array [
     "content": "Hello there",
     "date": "2013-10-07 08:23:19.120",
     "delivered": 0,
+    "fileTokens": null,
     "from": null,
     "id": 1,
     "isMuted": 0,
