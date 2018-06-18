@@ -1,13 +1,15 @@
 .recipient-container{
+  font-family: 'NunitoSans';
+  font-size: 15px;
   border-bottom: 1px solid #e8e8e8;
   min-height: 40px;
   position: relative;
 
   > .recipient-content{
-    padding-top: 8px;
+    padding-top: 6px;
 
     .recipient-tags{
-      width: calc(100% - 70px);
+      width: calc(100% - 100px);
     }
   }
 }
@@ -19,6 +21,15 @@
   padding: 3px 0;
   width: 100%;
 
+  .recipient-input-label {
+    width: 4%;
+    padding-left: 20px;
+    font-size: 13px;
+    font-weight: 200;
+  }
+  .recipient-tags{
+    width: calc(100% - 20px);
+  }
   &:nth-child(2){
     padding-bottom: 8px;
   }
@@ -26,7 +37,7 @@
 
 .recipient-tags{
   height: 100%;
-  margin-left: 20px;
+  margin-left: 0px;
   width: calc(100% - 40px);
 
   > span {

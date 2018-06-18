@@ -307,13 +307,31 @@
   flex-direction: column;
   height: 180px;
   left: 5px;
-  padding: 15px;
+  padding: 30px 20px 25px 20px;
   position: absolute;
-  width: 235px;
+  width: 228px;
   z-index: 100;
-}
 
+  .rdw-link-modal-label:nth-child(1)::after{
+    color: #000;
+    content: 'Text to display';
+    position: relative;
+    left: -55px;
+    font-weight: 500;
+  }
+  .rdw-link-modal-label:nth-child(3)::after{
+    color: #000;
+    content: 'Enter a URL';
+    position: relative;
+    left: -68px;
+    font-weight: 500;
+  }
+  .rdw-link-modal-input:focus{
+    border-bottom: 1px solid #0091ff;
+  }
+}
 .rdw-link-modal-label {
+  color: white;
   font-size: 15px;
 }
 
@@ -323,7 +341,9 @@
   border-bottom: 1px solid #F1F1F1;
   margin-bottom: 15px;
   margin-top: 5px;
-  padding: 0 5px;
+  padding: 5px;
+  color: #4a4a4a;
+  font-weight: 200;
 }
 
 .rdw-link-modal-input:focus {
@@ -332,7 +352,7 @@
 }
 
 .rdw-link-modal-buttonsection {
-  margin: 10px auto;
+  margin: 20px 0px 0px auto;
 }
 
 .rdw-link-modal-target-option {
@@ -350,10 +370,17 @@
   color: white;
   cursor: pointer;
   margin-left: 10px;
-  height: 30px;
+  height: 27px;
   background: #0091ff;
   text-transform: uppercase;
-  width: 75px;
+  width: 70px;
+  float: right;
+  text-transform: capitalize;
+}
+
+.rdw-link-modal-btn:nth-child(2) {
+  color: #4a4a4a;
+  background: #fff;
 }
 
 .rdw-link-modal-btn:active {
@@ -423,6 +450,7 @@
 
 .public-DraftEditorPlaceholder-root {
   color: #9197a3;
+  font-weight: 600;
   position: absolute;
   z-index: 0;
 }
