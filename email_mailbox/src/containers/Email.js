@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import EmailView from './../components/EmailWrapper';
-import { defineTimeByToday } from './../utils/TimeUtils';
+import { defineTimeByToday, defineLargeTime } from './../utils/TimeUtils';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/UserUtils';
 import randomcolor from 'randomcolor';
@@ -28,8 +28,10 @@ const mapStateToProps = (state, ownProps) => {
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
   const subject = email.get('subject');
+  const date = email.get('date');
   const myEmail = email.merge({
-    date: defineTimeByToday(email.get('date')),
+    date: defineTimeByToday(date),
+    dateLong: defineLargeTime(date),
     subject: subject || '(No Subject)',
     from,
     to,
@@ -40,7 +42,6 @@ const mapStateToProps = (state, ownProps) => {
   });
   return {
     email: myEmail.toJS(),
-    classStatus: myEmail.get('unsent') ? 'email-unsent' : 'email-normal',
     attachments: myEmail.get('attachments') ? myEmail.get('attachments') : [],
     isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail)
   };

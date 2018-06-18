@@ -1,8 +1,9 @@
 import moment from 'moment';
 
+moment.locale('es');
+
 export const defineTimeByToday = time => {
   let result;
-  moment.locale('es');
   const oneDay = 86400000;
   const timeUTC = moment.utc(time);
   const timeLocal = moment(timeUTC).local();
@@ -19,4 +20,8 @@ export const defineTimeByToday = time => {
   }
 
   return result;
+};
+
+export const defineLargeTime = time => {
+  return moment(time).format('ddd, MMM D, YYYY [at] h:mm A');
 };
