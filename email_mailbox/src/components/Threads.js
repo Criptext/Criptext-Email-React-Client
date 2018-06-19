@@ -26,12 +26,17 @@ class Threads extends Component {
       (nextProps.threadItemsChecked.size === 0 &&
         this.props.threadItemsChecked.size > 0)
     ) {
-      this.props.onBackOption();
       this.props.onLoadThreads(
         nextProps.mailboxSelected,
         true,
         nextProps.searchParams
       );
+    }
+    if (
+      this.props.threadItemsChecked.size > 0 &&
+      this.props.mailboxSelected !== nextProps.mailboxSelected
+    ) {
+      this.props.onBackOption();
     }
   }
 

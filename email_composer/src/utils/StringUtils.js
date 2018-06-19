@@ -58,7 +58,7 @@ export const convertToHumanSize = (bytes, si) => {
 };
 
 export const removeActionsFromSubject = subject => {
-  const actions = ['Re:', 'RE:'];
+  const actions = ['Re:', 'RE:', 'Fw:', 'FW:'];
   return deletePrefixingSubstrings(actions, subject);
 };
 
