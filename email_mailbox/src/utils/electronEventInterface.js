@@ -47,7 +47,10 @@ export const handleNewMessageEvent = async ({ rowid, params }) => {
   if (!prevEmail.length) {
     const email = await formIncomingEmailFromData(emailObj);
     const recipients = getRecipientsFromData(emailObj);
-    const files = await formFilesFromData(emailObj.files);
+    const files =
+      emailObj.files && emailObj.files.length
+        ? await formFilesFromData(emailObj.files)
+        : null;
     const params = {
       email,
       recipients,
