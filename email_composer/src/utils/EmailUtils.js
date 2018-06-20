@@ -4,7 +4,8 @@ import htmlToDraft from 'html-to-draftjs';
 import {
   removeAppDomain,
   removeHTMLTags,
-  replaceAllOccurrences
+  replaceAllOccurrences,
+  removeActionsFromSubject
 } from './StringUtils';
 import { getFormattedDate } from './DateUtils';
 import { appDomain } from './const';
@@ -134,7 +135,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const forwardSufix = 'FW: ';
   const sufix =
     replyType === composerEvents.FORWARD ? forwardSufix : replySufix;
-  const textSubject = sufix + emailData.subject;
+  const textSubject = sufix + removeActionsFromSubject(emailData.subject);
 
   const toEmails =
     replyType === composerEvents.REPLY || replyType === composerEvents.REPLY_ALL

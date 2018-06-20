@@ -32,6 +32,12 @@ class Threads extends Component {
         nextProps.searchParams
       );
     }
+    if (
+      this.props.threadItemsChecked.size > 0 &&
+      this.props.mailboxSelected !== nextProps.mailboxSelected
+    ) {
+      this.props.onBackOption();
+    }
   }
 
   render() {
@@ -192,6 +198,7 @@ Threads.propTypes = {
   buttonSyncStatus: PropTypes.number,
   mailboxSelected: PropTypes.string,
   mailboxTitle: PropTypes.string,
+  onBackOption: PropTypes.func,
   onCheckThreadItem: PropTypes.func,
   onClickSection: PropTypes.func,
   onLoadEvents: PropTypes.func,

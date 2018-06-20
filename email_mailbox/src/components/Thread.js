@@ -41,6 +41,12 @@ class Thread extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.thread.emailIds.length > this.props.thread.emailIds.length) {
+      this.props.onLoadEmails(nextProps.thread.threadId);
+    }
+  }
+
   componentWillUnmount() {
     if (this.props.thread.unread) {
       this.props.onUpdateUnreadThread(this.props.thread, false);

@@ -56,3 +56,27 @@ export const convertToHumanSize = (bytes, si) => {
   } while (Math.abs(bytes) >= thresh && u < units.length - 1);
   return bytes.toFixed(1) + ' ' + units[u];
 };
+
+export const removeActionsFromSubject = subject => {
+  const actions = ['Re:', 'RE:', 'Fw:', 'FW:'];
+  return deletePrefixingSubstrings(actions, subject);
+};
+
+const deletePrefixingSubstrings = (substrings, subject) => {
+  const substringToDelete = hasAnySubstring(substrings, subject);
+  if (substringToDelete) {
+    subject = deleteSubstring(substringToDelete, subject);
+    return deletePrefixingSubstrings(substrings, subject);
+  }
+  return subject;
+};
+
+const hasAnySubstring = (substrings, string) => {
+  return substrings.find(substring => {
+    return string.indexOf(substring) === 0;
+  });
+};
+
+const deleteSubstring = (substring, string) => {
+  return string.replace(substring, '').trim();
+};
