@@ -37,7 +37,7 @@ const create = () => {
 };
 
 const show = async () => {
-  if (mailboxWindow === undefined) {
+  if (!mailboxWindow) {
     await create();
   }
   mailboxWindow.once('ready-to-show', () => {
