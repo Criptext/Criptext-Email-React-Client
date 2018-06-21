@@ -32,7 +32,7 @@ const create = () => {
 };
 
 const show = async () => {
-  if (loginWindow === undefined) {
+  if (!loginWindow) {
     await create();
   }
   loginWindow.once('ready-to-show', () => {
