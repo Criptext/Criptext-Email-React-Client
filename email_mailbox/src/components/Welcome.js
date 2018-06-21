@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import data from './../data/welcome';
+import Lottie from './Lottie';
 import './welcome.css';
 const ARTICLE_AMOUNT = Object.keys(data).length;
 
@@ -38,15 +39,24 @@ const Welcome = props => (
   </div>
 );
 
-const renderArticle = articleId => <Article article={data[articleId]} />;
-
-const Article = props => (
-  <article>
-    <img src={props.article.imageUrl} alt={props.article.title} />
-    <span>{props.article.title}</span>
-    <p>{props.article.description}</p>
-  </article>
+const renderArticle = articleId => (
+  <Article key={articleId} article={data[articleId]} />
 );
+
+const Article = props => {
+  return (
+    <article>
+      <Lottie
+        options={props.article.defaultOptions}
+        height={'100px'}
+        width={'100%'}
+        speed={props.article.speed}
+      />
+      <span>{props.article.title}</span>
+      <p>{props.article.description}</p>
+    </article>
+  );
+};
 
 const renderDots = itemSelected => (
   <div className="dots-container">

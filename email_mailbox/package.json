@@ -5,6 +5,7 @@
   "dependencies": {
     "animejs": "^2.2.0",
     "immutable": "^3.8.2",
+    "lottie-web": "^5.1.17",
     "moment": "^2.20.1",
     "node-sass-chokidar": "^0.0.3",
     "npm-run-all": "^4.1.2",

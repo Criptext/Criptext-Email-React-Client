@@ -19,10 +19,10 @@ const mapDispatchToProps = dispatch => {
     onLoadThreads: params => {
       dispatch(loadThreads(params));
     },
-    onUpdateOpenedAccount: () => {
+    onUpdateOpenedAccount: async () => {
       const opened = true;
       const recipientId = myAccount.recipientId;
-      updateAccount({ opened, recipientId });
+      await updateAccount({ opened, recipientId });
     },
     onUpdateUnreadEmails: () => {
       const label = {
