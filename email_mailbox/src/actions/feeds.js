@@ -1,13 +1,11 @@
 import { Feed } from './types';
 import {
-  deleteFeedById,
-  getAllFeeds,
+  deleteFeedItemById,
+  getAllFeedItems,
   getEmailById,
-  getUserByUsername,
-  markFeedAsReadById
+  markFeedItemAsReadById,
+  getContactByIds
 } from './../utils/electronInterface';
-import { addEmails } from './emails';
-import { addContacts } from './contacts';
 
 export const addFeeds = feeds => {
   return {
@@ -33,20 +31,15 @@ export const selectFeed = feedId => {
 export const loadFeeds = () => {
   return async dispatch => {
     try {
-      const feeds = await getAllFeeds();
-      const emailsToState = {};
-      const usersToState = {};
-      for (const feed of feeds) {
-        const emailResponse = await getEmailById(feed.emailId);
-        const userResponse = await getUserByUsername(feed.username);
-        const email = emailResponse[0];
-        const user = userResponse[0];
-        emailsToState[email.id] = email;
-        usersToState[user.username] = user;
-      }
-      dispatch(addEmails(emailsToState));
-      dispatch(addContacts(usersToState));
-      dispatch(addFeeds(feeds));
+      const allFeeds = await getAllFeedItems();
+      const feedsToState = await Promise.all(
+        allFeeds.map(async feed => {
+          const [emailData] = await getEmailById(feed.emailId);
+          const [contactData] = await getContactByIds([feed.contactId]);
+          return { ...feed, emailData, contactData };
+        })
+      );
+      dispatch(addFeeds(feedsToState));
     } catch (e) {
       // TO DO
     }
@@ -56,7 +49,7 @@ export const loadFeeds = () => {
 export const markFeedAsSelected = feedId => {
   return async dispatch => {
     try {
-      await markFeedAsReadById(feedId);
+      await markFeedItemAsReadById(feedId);
       dispatch(selectFeed(feedId));
     } catch (e) {
       // TO DO
@@ -67,10 +60,8 @@ export const markFeedAsSelected = feedId => {
 export const removeFeedById = feedId => {
   return async dispatch => {
     try {
-      const terminated = await deleteFeedById(feedId);
-      if (terminated) {
-        dispatch(removeFeed(feedId));
-      }
+      await deleteFeedItemById(feedId);
+      dispatch(removeFeed(feedId));
     } catch (e) {
       // TO DO
     }

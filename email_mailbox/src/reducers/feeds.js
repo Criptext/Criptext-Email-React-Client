@@ -4,8 +4,7 @@ import { List, fromJS } from 'immutable';
 export default (state = List([]), action) => {
   switch (action.type) {
     case Feed.ADD_BATCH: {
-      const feeds = fromJS(action.feeds);
-      return state.concat(List(feeds));
+      return fromJS(action.feeds);
     }
     case Feed.SELECT: {
       const item = state.find(feed => feed.get('id') === action.selectedFeed);

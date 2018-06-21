@@ -36,18 +36,14 @@ export const SectionType = {
   SETTINGS: 3
 };
 
-export const FeedActionType = {
-  SENT: {
-    value: 'sent',
-    icon: 'icon-calendar'
+export const FeedItemType = {
+  OPENED: {
+    value: 1,
+    icon: 'icon-checked'
   },
   DOWNLOADED: {
-    value: 'downloaded',
+    value: 2,
     icon: 'icon-attach'
-  },
-  OPENED: {
-    value: 'opened',
-    icon: 'icon-checked'
   }
 };
 

@@ -71,15 +71,9 @@ const filterUniqueContacts = contacts => {
   return contactsUnique.contacts;
 };
 
-const getUserByUsername = username => {
-  return db
-    .table(Table.CONTACT)
-    .select('*')
-    .where({ username });
-};
-
 const getContactByEmails = (emails, trx) => {
-  return trx
+  const knex = trx || db;
+  return knex
     .select('id', 'email')
     .from(Table.CONTACT)
     .whereIn('email', emails);
@@ -537,6 +531,13 @@ const getEmailsUnredByLabelId = params => {
     .having('allLabels', 'like', `%${labelId}%`);
 };
 
+const getUnreadEmailsByThreadId = threadId => {
+  return db
+    .select('*')
+    .table(Table.EMAIL)
+    .where({ threadId, unread: 1 });
+};
+
 const deleteEmailByKey = key => {
   return db
     .table(Table.EMAIL)
@@ -639,26 +640,26 @@ const updateFileByToken = ({ token, status }) => {
 
 /* Feed
    ----------------------------- */
-const getAllFeeds = () => {
-  return db.select('*').from(Table.FEED);
+const getAllFeedItems = () => {
+  return db.select('*').from(Table.FEEDITEM);
 };
 
-const createFeed = params => {
-  return db.table(Table.FEED).insert(params);
+const createFeedItem = params => {
+  return db.table(Table.FEEDITEM).insert(params);
 };
 
-const updateFeed = ({ id, unread }) => {
+const updateFeedItem = ({ id, seen }) => {
   const params = {};
-  if (unread) params.unread = unread;
+  if (seen) params.seen = seen;
   return db
-    .table(Table.FEED)
+    .table(Table.FEEDITEM)
     .where({ id })
     .update(params);
 };
 
-const deleteFeedById = id => {
+const deleteFeedItemById = id => {
   return db
-    .table(Table.FEED)
+    .table(Table.FEEDITEM)
     .where({ id })
     .del();
 };
@@ -772,7 +773,7 @@ module.exports = {
   createLabel,
   createEmail,
   createEmailLabel,
-  createFeed,
+  createFeedItem,
   createIdentityKeyRecord,
   createPreKeyRecord,
   createSessionRecord,
@@ -785,13 +786,14 @@ module.exports = {
   deleteEmailContactByEmailId,
   deleteEmailLabel,
   deleteEmailLabelsByEmailId,
-  deleteFeedById,
+  deleteFeedItemById,
   deletePreKeyPair,
   deleteSessionRecord,
   getAccount,
   getAllContacts,
-  getAllFeeds,
+  getAllFeedItems,
   getAllLabels,
+  getContactByEmails,
   getContactByIds,
   getContactsByEmailId,
   getEmailById,
@@ -808,12 +810,12 @@ module.exports = {
   getSessionRecordByRecipientIds,
   getSignedPreKey,
   getFilesByTokens,
-  getUserByUsername,
+  getUnreadEmailsByThreadId,
   updateAccount,
   updateEmail,
   updateEmailByThreadId,
   updateEmailLabel,
-  updateFeed,
+  updateFeedItem,
   updateFileByToken,
   updateIdentityKeyRecord,
   updateLabel

@@ -18,7 +18,8 @@ import {
   searchThreads,
   selectThreads,
   removeThreads,
-  removeThreadsLabel
+  removeThreadsLabel,
+  sendOpenEvent
 } from './threads';
 import {
   addEmails,
@@ -82,6 +83,7 @@ export {
   selectThreads,
   selectFeed,
   searchThreads,
+  sendOpenEvent,
   setThreads,
   toggleMuteFeed,
   updateLabel,

@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Feed from './../containers/Feed';
+import { addEvent, Event } from '../utils/electronEventInterface';
 import './activitypanel.css';
 
 class ActivityPanel extends Component {
+  constructor() {
+    super();
+    addEvent(Event.EMAIL_TRACKING_UPDATE, () => {
+      this.props.onLoadFeeds();
+    });
+  }
+
   render() {
     return (
       <aside className="navigation-feed-container">
@@ -40,7 +48,7 @@ class ActivityPanel extends Component {
   };
 
   renderFeedSection = props => {
-    if (props.newFeeds.size < 1 && props.oldFeeds.size < 1) {
+    if (props.newFeeds.length < 1 && props.oldFeeds.length < 1) {
       return this.renderEmptyFeedSection();
     }
     return (
@@ -60,7 +68,7 @@ class ActivityPanel extends Component {
   };
 
   renderFeedList = (feedList, onClickThreadIdSelected, listName) => {
-    if (feedList && feedList.size > 0) {
+    if (feedList && feedList.length > 0) {
       return (
         <ul className="new-feeds">
           <li className="feed-section-title">
@@ -72,6 +80,7 @@ class ActivityPanel extends Component {
                 key={index}
                 feed={feed}
                 onClickThreadIdSelected={onClickThreadIdSelected}
+                onLoadFeeds={this.props.onLoadFeeds}
               />
             );
           })}
@@ -96,8 +105,6 @@ class ActivityPanel extends Component {
 }
 
 ActivityPanel.propTypes = {
-  newFeeds: PropTypes.object,
-  oldFeeds: PropTypes.object,
   onLoadFeeds: PropTypes.func,
   onToggleActivityPanel: PropTypes.func
 };

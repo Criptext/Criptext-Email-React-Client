@@ -64,6 +64,10 @@ class ClientManager {
     return client.postKeyBundle(params);
   }
 
+  postOpenEvent(params) {
+    return client.postOpenEvent(params);
+  }
+
   postUser(params) {
     return client.postUser(params);
   }

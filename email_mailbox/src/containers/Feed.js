@@ -8,28 +8,34 @@ import FeedWrapperView from '../components/FeedWrapper';
 
 const mapStateToProps = (state, ownProps) => {
   const feed = ownProps.feed;
-  const isMuted = feed.get('isMuted');
-  const title = feed.get('name') + ' ' + feed.get('action');
-  const subtitle = feed.get('emailFeed').get('subject');
-  const emailId = feed.get('emailFeed').get('id');
-  const findedThread = state
-    .get('threads')
-    .filter(thread => thread.get('emails').indexOf(emailId) > -1);
-  const threadId = findedThread.get(0).get('id');
-  return { isMuted, subtitle, title, threadId };
+  const { isMuted, action, emailData, contactData, seen, date } = feed;
+  const { subject, threadId } = emailData;
+  const { name, email } = contactData;
+  const title = `${name || email} ${action}`;
+  const subtitle = subject;
+  return {
+    isMuted,
+    title,
+    subtitle,
+    threadId,
+    seen,
+    date
+  };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const feed = ownProps.feed;
   return {
-    onSelectFeed: feedId => {
-      dispatch(markFeedAsSelected(feedId));
+    onSelectFeed: () => {
+      dispatch(markFeedAsSelected(feed.id));
     },
-    onRemoveFeed: feedId => {
-      dispatch(removeFeedById(feedId));
+    onRemoveFeed: () => {
+      dispatch(removeFeedById(feed.id));
     },
-    toggleMute: feed => {
-      const emailId = String(feed.get('emailId'));
-      const valueToSet = feed.get('isMuted') === 1 ? false : true;
+    toggleMute: () => {
+      const { isMuted, id } = feed.emailData;
+      const emailId = String(id);
+      const valueToSet = isMuted === 1 ? false : true;
       dispatch(muteEmail(emailId, valueToSet));
     }
   };
