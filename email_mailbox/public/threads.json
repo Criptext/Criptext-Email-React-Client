@@ -1,7 +1,7 @@
 {
   "threads": [
     {
-      "id":18,
+      "id":1,
       "key":"6Za2dcMlE0OSSc9",
       "threadId":"6Za2dcMlE0OSSc9",
       "s3Key":"6Za2dcMlE0OSSc9",
@@ -9,7 +9,7 @@
       "preview":"v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
       "subject":"v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
       "date":1516455734588,
-      "delivered":0,
+      "status":0,
       "unread":1,
       "secure":1,
       "isMuted":0,
@@ -18,7 +18,7 @@
       "fromContactName": "1"
     },
     {
-      "id":5,
+      "id":2,
       "key":"cuW6ElyoqsR7MMw",
       "threadId":"cuW6ElyoqsR7MMw",
       "s3Key":"cuW6ElyoqsR7MMw",
@@ -26,7 +26,7 @@
       "preview":"Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
       "subject":"Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
       "date":1516455734588,
-      "delivered":0,
+      "status":0,
       "unread":1,
       "secure":1,
       "isMuted":0,

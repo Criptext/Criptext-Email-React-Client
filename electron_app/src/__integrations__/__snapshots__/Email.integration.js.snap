@@ -6,7 +6,6 @@ Array [
     "allLabels": "1",
     "content": "<p>Hello there</p>",
     "date": "2018-06-14 08:23:19.120",
-    "delivered": 0,
     "emailIds": "3",
     "fileTokens": "tokenC",
     "fromContactName": "usera@criptext.com",
@@ -19,10 +18,11 @@ Array [
     "preview": "Hello there",
     "s3Key": "s3KeyC",
     "secure": 1,
+    "status": 0,
     "subject": "Greetings",
     "threadId": "threadC",
     "uniqueId": "threadC",
-    "unread": 1,
+    "unread": 0,
   },
 ]
 `;
@@ -33,7 +33,6 @@ Array [
     "allLabels": "3",
     "content": "<p>Hello there</p>",
     "date": "2013-10-07 08:23:19.120",
-    "delivered": 0,
     "emailIds": "2",
     "fileTokens": null,
     "fromContactName": "User me",
@@ -46,9 +45,29 @@ Array [
     "preview": "Hello there",
     "s3Key": "s3KeyB",
     "secure": 1,
+    "status": 1,
     "subject": "Greetings",
     "threadId": "threadB",
     "uniqueId": "threadB",
+    "unread": 1,
+  },
+]
+`;
+
+exports[`Store data email to Email Table: should insert email to database 1`] = `
+Array [
+  Object {
+    "content": "<p>Hello there</p>",
+    "date": "2018-06-14 08:23:19.120",
+    "id": 4,
+    "isMuted": 0,
+    "key": "keyId",
+    "preview": "Hello there",
+    "s3Key": "s3KeyId",
+    "secure": 1,
+    "status": 0,
+    "subject": "Greetings",
+    "threadId": "threadId",
     "unread": 1,
   },
 ]

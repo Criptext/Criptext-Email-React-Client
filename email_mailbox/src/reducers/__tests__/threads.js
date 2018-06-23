@@ -9,7 +9,7 @@ jest.mock('./../../utils/electronEventInterface');
 
 const myThreads = file.threads;
 
-describe('thread actions', () => {
+describe('Set thread state by actions', () => {
   const threads = [myThreads[0]];
   const manyThreads = [myThreads[0], myThreads[1]];
 
@@ -17,56 +17,20 @@ describe('thread actions', () => {
     return threadsReducer(undefined, actions.addThreads(threads));
   }
 
-  it('should add threads to state', () => {
+  it('should add threads to state, action[ADD_BATCH]', () => {
     expect(initState(manyThreads)).toMatchSnapshot();
   });
 
-  it('should set thread as read', () => {
+  it('should set thread param: unread, action[UPDATE_UNREAD_THREAD]', () => {
     const state = initState(threads);
-    const action = actions.selectThread(0);
+    const params = {
+      id: 1,
+      unread: false
+    };
+    const action = actions.updateUnreadThread(params);
     const newState = threadsReducer(state, action);
-    expect(newState).toMatchSnapshot();
-  });
-
-  it('should set thread as selected', () => {
-    const state = initState(threads);
-    const action = actions.multiSelectThread(5, true);
-    const newState = threadsReducer(state, action);
-    expect(newState).toMatchSnapshot();
-  });
-
-  it('should add label 9', () => {
-    const state = initState(threads);
-    const action = actions.addThreadLabel(18, 9);
-    const newState = threadsReducer(state, action);
-    expect(newState).toMatchSnapshot();
-  });
-
-  it('should remove label 7', () => {
-    const state = initState(threads);
-    const action = actions.removeThreadLabel(5, 7);
-    const newState = threadsReducer(state, action);
-    expect(newState).toMatchSnapshot();
-  });
-
-  it('should set all threads as selected', () => {
-    const state = initState(manyThreads);
-    const action = actions.selectThreads();
-    const newState = threadsReducer(state, action);
-    expect(newState).toMatchSnapshot();
-  });
-
-  it('should set all threads as not selected', () => {
-    const state = initState(manyThreads);
-    const action = actions.deselectThreads();
-    const newState = threadsReducer(state, action);
-    expect(newState).toMatchSnapshot();
-  });
-
-  it('should add label 6 to threads', () => {
-    const state = initState(manyThreads);
-    const action = actions.addThreadsLabel([5, 18], 6);
-    const newState = threadsReducer(state, action);
-    expect(newState).toMatchSnapshot();
+    const emailUpdated = newState.get('0');
+    const unread = emailUpdated.get('unread');
+    expect(unread).toBe(false);
   });
 });

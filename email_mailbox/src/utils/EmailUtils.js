@@ -49,7 +49,7 @@ export const formIncomingEmailFromData = async data => {
     preview,
     subject: data.subject,
     date: data.date,
-    delivered: false,
+    status: 1,
     unread: true,
     secure: true,
     isMuted: false

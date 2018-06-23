@@ -101,7 +101,7 @@ const createEmailColumns = table => {
   table.text('content').notNullable();
   table.string('preview', LARGE_STRING_SIZE).notNullable();
   table.dateTime('date').notNullable();
-  table.integer('delivered').notNullable();
+  table.integer('status').notNullable();
   table.boolean('unread').notNullable();
   table.boolean('secure').notNullable();
   table.boolean('isMuted').notNullable();

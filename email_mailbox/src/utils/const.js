@@ -22,7 +22,7 @@ export const IconLabels = {
     icon: 'icon-not'
   },
   [LabelType.trash.id]: {
-    icon: 'icon-doc'
+    icon: 'icon-trash'
   },
   allmail: {
     icon: 'icon-mail',
@@ -53,16 +53,16 @@ export const FeedActionType = {
 
 export const EmailStatus = {
   UNSENT: -1,
-  SENT: 0,
-  RECEIVED: 1,
-  OPENED: 2
+  NONE: 0,
+  SENT: 1,
+  DELIVERED: 2,
+  OPENED: 3
 };
 
 export const SocketCommand = {
   NEW_EMAIL: 1,
   EMAIL_TRACKING_UPDATE: 2,
   ATTACHMENT_TRACKING_UPDATE: 3,
-
   NEW_DRAFT: 4,
   EMAIL_READ_UPDATE: 5,
   EMAIL_DELETED: 6,

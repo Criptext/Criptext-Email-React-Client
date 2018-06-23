@@ -52,7 +52,7 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
     content: body,
     preview: removeHTMLTags(body).slice(0, 21),
     date: Date.now(),
-    delivered: false,
+    status: 1,
     unread: false,
     secure: true,
     isMuted: false

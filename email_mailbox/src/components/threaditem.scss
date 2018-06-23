@@ -17,14 +17,12 @@
     width: calc(100% - 7px);
 
     a {
-      > div{
-        &:nth-child(4){
-          visibility: hidden;
-        }
-  
-        &:nth-child(5){
-          visibility: hidden;
-        }
+      .thread-item-file{
+        visibility: hidden;
+      }
+
+      .thread-item-date{
+        visibility: hidden;
       }
     }
 
@@ -33,13 +31,30 @@
     }
   }
 
-  i{
-    font-size: 15px;
-    vertical-align: text-top;
+  &.thread-item-read{
+    background-color: #f4f4f4;;   
+    font-weight: 300;
+  
+    .thread-label-option{
+      > div{
+        background-color: white;
+      }
+    }
   }
 
-  span{
-    white-space: pre;
+  &.thread-item-unread{
+    background-color: white;
+    font-weight: 600;
+  
+    .thread-label-option{
+      > div{
+        background-color: rgb(247, 247, 248);
+      }
+    }
+  }
+
+  &.thread-item-checked{
+    background-color: #fdfbea; 
   }
 
   a {
@@ -53,94 +68,88 @@
     > div{
       display: flex;
       justify-content: space-between;
-  
-      &:nth-child(1){
-        align-items: center;
-        flex-shrink: 0;
-        justify-content: center;
-        height: 100%;
-        padding: 1px 13px 0 15px;
-        width: 21px;
-  
-        .checkmark-container{
-          margin-left: 3px;
-          margin-right: 4px;
+    }
 
-          .checkmark-checked:after{
-            top: 1px;
-          }
-        }
-      }
-  
-      &:nth-child(2){
-        flex-shrink: 0;
-        padding-right: 10px;
-        width: 150px;
+    .thread-item-contact-letters{
+      align-items: center;
+      flex-shrink: 0;
+      justify-content: center;
+      height: 100%;
+      padding: 1px 13px 0 15px;
+      width: 21px;
 
-        span{
-          overflow: hidden;
-          text-overflow: ellipsis;
+      .checkmark-container{
+        margin-left: 3px;
+        margin-right: 4px;
+
+        .checkmark-checked:after{
+          top: 1px;
         }
-      }
-  
-      &:nth-child(3){
-        align-items: center;
-        flex-direction: row;
-        justify-content: flex-start;
-        flex-wrap: nowrap;
-        width: calc(100% - 340px);
-      }
-  
-      &:nth-child(4){
-        width: 38px;
-        color: #d5d5d5;
-        flex-shrink: 0;
-        padding-right: 10px;
-  
-        div{
-          width: 18px;
-        }
-      }
-  
-      &:nth-child(5){
-        color: #6a707e;
-        width: 80px;
-        flex-shrink: 0;
-        justify-content: center;
       }
     }
+
+    .thread-item-recipients{
+      flex-shrink: 0;
+      padding-right: 10px;
+      width: 150px;
+
+      span{
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .thread-item-status{
+      padding-right: 10px;
+      width: 17px;
+
+      i{
+        font-size: 13px;
+
+        &.status-sent, &.status-delivered{
+          color: #d5d5d5;
+        }
+
+        &.status-opened{
+          color: #0091ff;
+        }
+      }
+    }
+
+    .thread-item-labels{
+      align-items: center;
+      flex-direction: row;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      width: calc(100% - 340px);
+    }
+
+    .thread-item-file{
+      width: 20px;
+      flex-shrink: 0;
+
+      i{
+        color: #d5d5d5;
+        font-size: 19px;
+        transform: rotate(-90deg);
+      }
+    }
+
+    .thread-item-date{
+      color: #6a707e;
+      width: 80px;
+      flex-shrink: 0;
+      justify-content: center;
+    }
+  }
+
+  span{
+    white-space: pre;
   }
 
   .match-string{
     background-color: #fdfbea;
   }
-
-  &.thread-read{
-    background-color: #f4f4f4;;   
-    font-weight: 300;
-  
-    .thread-label-option{
-      > div{
-        background-color: white;
-      }
-    }
-  }
-
-  &.thread-unread{
-    background-color: white;
-    font-weight: 600;
-  
-    .thread-label-option{
-      > div{
-        background-color: rgb(247, 247, 248);
-      }
-    }
-  }
-
-  &.thread-checked{
-    background-color: #fdfbea; 
-  }
-
 }
 
 .thread-label-option{
@@ -226,7 +235,7 @@
   font-weight: normal;
 }
 
-.thread-subject{
+.thread-item-subject{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -351,4 +360,3 @@
     }
   }
 }
-

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`thread actions should add label 6 to threads 1`] = `
+exports[`Set thread state by actions should add threads to state, action[ADD_BATCH] 1`] = `
 Immutable.List [
   Immutable.Map {
     allLabels: Immutable.Set [
@@ -10,22 +10,16 @@ Immutable.List [
     ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
-    delivered: 0,
     threadId: "6Za2dcMlE0OSSc9",
-    timer: 1,
     preview: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    hasOpenAttachments: false,
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    totalAttachments: 1,
     date: 1516455734588,
-    timesOpened: 2,
     unread: true,
-    status: 1,
+    status: 0,
     timestamp: 1516455734588,
     secure: 1,
     content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    id: 18,
-    selected: false,
+    id: 1,
     emailIds: Immutable.List [
       1,
     ],
@@ -45,412 +39,21 @@ Immutable.List [
     ],
     isMuted: 0,
     lastEmailId: "cuW6ElyoqsR7MMw",
-    delivered: 0,
     threadId: "cuW6ElyoqsR7MMw",
-    timer: 1,
     preview: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    hasOpenAttachments: false,
     subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    totalAttachments: 1,
     date: 1516455734588,
-    timesOpened: 2,
     unread: true,
-    status: 1,
+    status: 0,
     timestamp: 1516455734588,
     secure: 1,
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    id: 5,
-    selected: false,
+    id: 2,
     emailIds: Immutable.List [
       1,
     ],
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-]
-`;
-
-exports[`thread actions should add label 9 1`] = `
-Immutable.List [
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "6Za2dcMlE0OSSc9",
-    delivered: 0,
-    threadId: "6Za2dcMlE0OSSc9",
-    timer: 1,
-    preview: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    hasOpenAttachments: false,
-    subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: true,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    id: 18,
-    selected: false,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "6Za2dcMlE0OSSc9",
-    key: "6Za2dcMlE0OSSc9",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-]
-`;
-
-exports[`thread actions should add threads to state 1`] = `
-Immutable.List [
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "6Za2dcMlE0OSSc9",
-    delivered: 0,
-    threadId: "6Za2dcMlE0OSSc9",
-    timer: 1,
-    preview: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    hasOpenAttachments: false,
-    subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: true,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    id: 18,
-    selected: false,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "6Za2dcMlE0OSSc9",
-    key: "6Za2dcMlE0OSSc9",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "cuW6ElyoqsR7MMw",
-    delivered: 0,
-    threadId: "cuW6ElyoqsR7MMw",
-    timer: 1,
-    preview: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    hasOpenAttachments: false,
-    subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: true,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    id: 5,
-    selected: false,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "cuW6ElyoqsR7MMw",
-    key: "cuW6ElyoqsR7MMw",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-]
-`;
-
-exports[`thread actions should remove label 7 1`] = `
-Immutable.List [
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "6Za2dcMlE0OSSc9",
-    delivered: 0,
-    threadId: "6Za2dcMlE0OSSc9",
-    timer: 1,
-    preview: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    hasOpenAttachments: false,
-    subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: true,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    id: 18,
-    selected: false,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "6Za2dcMlE0OSSc9",
-    key: "6Za2dcMlE0OSSc9",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-]
-`;
-
-exports[`thread actions should set all threads as not selected 1`] = `
-Immutable.List [
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "6Za2dcMlE0OSSc9",
-    delivered: 0,
-    threadId: "6Za2dcMlE0OSSc9",
-    timer: 1,
-    preview: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    hasOpenAttachments: false,
-    subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: true,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    id: 18,
-    selected: false,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "6Za2dcMlE0OSSc9",
-    key: "6Za2dcMlE0OSSc9",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "cuW6ElyoqsR7MMw",
-    delivered: 0,
-    threadId: "cuW6ElyoqsR7MMw",
-    timer: 1,
-    preview: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    hasOpenAttachments: false,
-    subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: true,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    id: 5,
-    selected: false,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "cuW6ElyoqsR7MMw",
-    key: "cuW6ElyoqsR7MMw",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-]
-`;
-
-exports[`thread actions should set all threads as selected 1`] = `
-Immutable.List [
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "6Za2dcMlE0OSSc9",
-    delivered: 0,
-    threadId: "6Za2dcMlE0OSSc9",
-    timer: 1,
-    preview: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    hasOpenAttachments: false,
-    subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: true,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    id: 18,
-    selected: true,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "6Za2dcMlE0OSSc9",
-    key: "6Za2dcMlE0OSSc9",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "cuW6ElyoqsR7MMw",
-    delivered: 0,
-    threadId: "cuW6ElyoqsR7MMw",
-    timer: 1,
-    preview: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    hasOpenAttachments: false,
-    subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: true,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-    id: 5,
-    selected: true,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "cuW6ElyoqsR7MMw",
-    key: "cuW6ElyoqsR7MMw",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-]
-`;
-
-exports[`thread actions should set thread as read 1`] = `
-Immutable.List [
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "6Za2dcMlE0OSSc9",
-    delivered: 0,
-    threadId: "6Za2dcMlE0OSSc9",
-    timer: 1,
-    preview: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    hasOpenAttachments: false,
-    subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: false,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    id: 18,
-    selected: false,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "6Za2dcMlE0OSSc9",
-    key: "6Za2dcMlE0OSSc9",
-    labels: Immutable.Set [
-      7,
-      3,
-      10,
-    ],
-  },
-]
-`;
-
-exports[`thread actions should set thread as selected 1`] = `
-Immutable.List [
-  Immutable.Map {
-    allLabels: Immutable.Set [
-    ],
-    fromContactName: Immutable.List [
-      "1",
-    ],
-    isMuted: 0,
-    lastEmailId: "6Za2dcMlE0OSSc9",
-    delivered: 0,
-    threadId: "6Za2dcMlE0OSSc9",
-    timer: 1,
-    preview: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    hasOpenAttachments: false,
-    subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    totalAttachments: 1,
-    date: 1516455734588,
-    timesOpened: 2,
-    unread: true,
-    status: 1,
-    timestamp: 1516455734588,
-    secure: 1,
-    content: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-    id: 18,
-    selected: true,
-    emailIds: Immutable.List [
-      1,
-    ],
-    s3Key: "6Za2dcMlE0OSSc9",
-    key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
       7,
       3,

@@ -25,12 +25,12 @@ Object {
       "content": "<p></p>
 ",
       "date": 1524861748481,
-      "delivered": false,
       "isMuted": false,
       "key": 1524861748481,
       "preview": "
 ",
       "secure": true,
+      "status": 1,
       "subject": "Subject",
       "unread": false,
     },

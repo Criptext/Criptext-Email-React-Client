@@ -14,7 +14,7 @@ const emails = [
     preview: 'Email preview 1',
     subject: 'Email subject 1',
     date: 1514231264772,
-    delivered: 0,
+    status: 0,
     unread: 1,
     secure: 1,
     isMuted: 0
@@ -28,7 +28,7 @@ const emails = [
     preview: 'Email preview 2',
     subject: 'Email subject 2',
     date: 1515624279364,
-    delivered: 0,
+    status: 0,
     unread: 1,
     secure: 1,
     isMuted: 0
@@ -42,7 +42,7 @@ const emails = [
     preview: 'Email preview 3',
     subject: 'Email subject 3',
     date: 1512744868344,
-    delivered: 0,
+    status: 0,
     unread: 1,
     secure: 1,
     isMuted: 0

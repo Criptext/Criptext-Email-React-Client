@@ -42,16 +42,9 @@ const threads = (state = List([]), action) => {
           ),
           emailIds: List(thread.emailIds.split(',').map(Number)),
           subject,
-          date: thread.date,
           timestamp: thread.date,
-          hasOpenAttachments: false,
           lastEmailId: thread.key,
-          status: 1,
-          timesOpened: 2,
-          timer: 1,
-          totalAttachments: 1,
           unread: thread.unread ? true : false,
-          selected: false,
           fromContactName: List(fromContactName.split(','))
         });
       });
@@ -59,16 +52,6 @@ const threads = (state = List([]), action) => {
         return List(threads);
       }
       return state.concat(List(threads));
-    }
-    case Thread.MULTISELECT: {
-      return state.update(
-        state.findIndex(item => {
-          return item.get('id') === action.selectedThread;
-        }),
-        item => {
-          return item.set('selected', action.value);
-        }
-      );
     }
     case Thread.ADD_THREAD_LABEL: {
       return state.update(

@@ -11,7 +11,7 @@ const emailDraft = {
     content: '<p>Hello there</p>',
     preview: 'Hello there',
     date: '2013-10-07 08:23:19.120',
-    delivered: 0,
+    status: 0,
     unread: true,
     secure: true,
     isMuted: false
@@ -31,7 +31,7 @@ const emailSent = {
     content: '<p>Hello there</p>',
     preview: 'Hello there',
     date: '2013-10-07 08:23:19.120',
-    delivered: 0,
+    status: 1,
     unread: true,
     secure: true,
     isMuted: false
@@ -54,7 +54,7 @@ const emailInbox = {
     content: '<p>Hello there</p>',
     preview: 'Hello there',
     date: '2018-06-14 08:23:19.120',
-    delivered: 0,
+    status: 0,
     unread: true,
     secure: true,
     isMuted: false
@@ -90,6 +90,53 @@ beforeAll(async () => {
   await insertEmails();
 });
 
+describe('Store data email to Email Table:', () => {
+  it('should insert email to database', async () => {
+    await DBManager.createEmail({
+      email: {
+        threadId: 'threadId',
+        key: 'keyId',
+        s3Key: 's3KeyId',
+        subject: 'Greetings',
+        content: '<p>Hello there</p>',
+        preview: 'Hello there',
+        date: '2018-06-14 08:23:19.120',
+        status: 0,
+        unread: true,
+        secure: true,
+        isMuted: false
+      }
+    });
+    const key = 'keyId';
+    const email = await DBManager.getEmailByKey(key);
+    expect(email).toMatchSnapshot();
+  });
+});
+
+describe('Update data email to Email Table:', () => {
+  it('should update email: isMuted', async () => {
+    const id = 2;
+    await DBManager.updateEmail({
+      id,
+      isMuted: true
+    });
+    const [email] = await DBManager.getEmailById(id);
+    const isMuted = email.isMuted;
+    expect(isMuted).toBe(1);
+  });
+
+  it('should update email: unread', async () => {
+    const id = 3;
+    await DBManager.updateEmail({
+      id,
+      unread: false
+    });
+    const [email] = await DBManager.getEmailById(id);
+    const unread = email.unread;
+    expect(unread).toBe(0);
+  });
+});
+
 describe('Load data thread from Email Table:', () => {
   it('should insert drafts leaving recipient fields empty', async () => {
     const emails = await DBManager.getEmailsByThreadId('threadA');
@@ -119,17 +166,6 @@ describe('Load data thread from Email Table:', () => {
     const email = emails[0];
     const fileTokens = email.fileTokens;
     expect(fileTokens).toBe('tokenC');
-  });
-
-  it('should update email: isMuted', async () => {
-    await DBManager.updateEmail({
-      id: 2,
-      isMuted: true
-    });
-    const emails = await DBManager.getEmailsByThreadId('threadB');
-    const email = emails[0];
-    const isMuted = email.isMuted;
-    expect(isMuted).toBe(1);
   });
 
   it('should retrieve threads from DB with the correct shape: inbox', async () => {

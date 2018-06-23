@@ -8,8 +8,6 @@ const activity = (state = initActivity, action) => {
       return state.merge({
         multiselect: false
       });
-    case Thread.MULTISELECT:
-      return state.set('multiselect', true);
     case Thread.UNREAD_FILTER:
       return state.set('unreadFilter', action.enabled);
     case Thread.DESELECT_THREADS:

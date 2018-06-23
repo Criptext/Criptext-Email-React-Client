@@ -47,12 +47,6 @@ export const selectThread = threadId => ({
   threadId: threadId
 });
 
-export const multiSelectThread = (threadId, value) => ({
-  type: Thread.MULTISELECT,
-  selectedThread: threadId,
-  value: value
-});
-
 export const filterThreadsByUnread = enabled => ({
   type: Thread.UNREAD_FILTER,
   enabled: enabled

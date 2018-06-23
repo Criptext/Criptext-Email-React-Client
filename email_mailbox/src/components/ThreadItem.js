@@ -16,29 +16,36 @@ class ThreadItem extends Component {
       onRegionLeave,
       onSelectThread,
       labels,
-      header
+      recipients
     } = this.props;
     return (
       <div
         className={
           'thread-item-container ' +
-          (thread.unread ? 'thread-unread' : 'thread-read') +
-          (checked ? ' thread-checked' : '')
+          (thread.unread ? 'thread-item-unread' : 'thread-item-read') +
+          (checked ? ' thread-item-checked' : '')
         }
         onClick={() => {
           onSelectThread(thread);
         }}
       >
         <a>
-          <div onMouseEnter={onRegionEnter} onMouseLeave={onRegionLeave}>
+          <div
+            className="thread-item-contact-letters"
+            onMouseEnter={onRegionEnter}
+            onMouseLeave={onRegionLeave}
+          >
             {this.renderFirstColumn()}
           </div>
-          <div>
-            <span>{header}</span>
+          <div className="thread-item-recipients">
+            <span>{recipients}</span>
           </div>
-          <div>
+          <div className="thread-item-status">
+            {this.renderThreadStatus(thread.status)}
+          </div>
+          <div className="thread-item-labels">
             {this.renderLabels(labels, thread.id)}
-            <div className="thread-subject">
+            <div className="thread-item-subject">
               <span>{this.renderSubject()}</span>
             </div>
             <div className="thread-preview">
@@ -46,11 +53,10 @@ class ThreadItem extends Component {
               <span>{this.renderPreview()}</span>
             </div>
           </div>
-          <div style={visibleStyle}>
-            <div>{this.willDisplayAttachIcon(thread)}</div>
-            <div>{this.willDisplayAckIcon(thread)}</div>
+          <div className="thread-item-file" style={visibleStyle}>
+            {this.renderFileExist(thread.fileTokens)}
           </div>
-          <div style={visibleStyle}>
+          <div className="thread-item-date" style={visibleStyle}>
             <span>{thread.date}</span>
           </div>
         </a>
@@ -58,51 +64,6 @@ class ThreadItem extends Component {
       </div>
     );
   }
-
-  renderPreview = () => {
-    const preview = replaceAllOccurrences(this.props.thread.preview, '\n', ' ');
-    if (this.props.mailbox !== 'search') {
-      return preview;
-    }
-
-    return replaceMatches(this.props.searchParams.text, preview);
-  };
-
-  renderSubject = () => {
-    const subject = this.props.thread.subject;
-    if (this.props.mailbox !== 'search') {
-      return subject;
-    }
-
-    return replaceMatches(this.props.searchParams.subject, subject);
-  };
-
-  getStyleVisibilityByMultiselect = () => {
-    if (!this.props.multiselect) {
-      return null;
-    }
-
-    return {
-      visibility: 'visible'
-    };
-  };
-
-  stopPropagation = ev => {
-    ev.stopPropagation();
-  };
-
-  onCheck = value => {
-    this.props.onCheckItem(
-      this.props.thread.id,
-      CustomCheckboxStatus.toBoolean(value)
-    );
-  };
-
-  renderMultipleSpaces = times => {
-    return Array.from(Array(times).keys()).map(index => {
-      return <span key={index}> </span>;
-    });
-  };
 
   renderFirstColumn = () => {
     if (!this.props.isHiddenCheckBox || this.props.hovering) {
@@ -119,6 +80,63 @@ class ThreadItem extends Component {
         {this.props.letters}
       </div>
     );
+  };
+
+  renderThreadStatus = status => {
+    switch (status) {
+      case EmailStatus.SENT:
+        return <i className="icon-checked status-sent" />;
+      case EmailStatus.DELIVERED:
+        return <i className="icon-checked status-delivered" />;
+      case EmailStatus.OPENED:
+        return <i className="icon-checked status-opened" />;
+      default:
+        return null;
+    }
+  };
+
+  renderLabels = (labels, threadId) => {
+    if (!labels.length) {
+      return null;
+    }
+
+    return (
+      <div className="thread-label">
+        <div style={{ backgroundColor: labels[0].color }}>{labels[0].text}</div>
+        {labels.length > 1 ? this.renderMoreLabels(labels, threadId) : null}
+      </div>
+    );
+  };
+
+  renderSubject = () => {
+    const subject = this.props.thread.subject;
+    if (this.props.mailbox !== 'search') {
+      return subject;
+    }
+
+    return replaceMatches(this.props.searchParams.subject, subject);
+  };
+
+  renderMultipleSpaces = times => {
+    return Array.from(Array(times).keys()).map(index => {
+      return <span key={index}> </span>;
+    });
+  };
+
+  renderPreview = () => {
+    const preview = replaceAllOccurrences(this.props.thread.preview, '\n', ' ');
+    if (this.props.mailbox !== 'search') {
+      return preview;
+    }
+
+    return replaceMatches(this.props.searchParams.text, preview);
+  };
+
+  renderFileExist = fileTokens => {
+    if (fileTokens && fileTokens.length) {
+      return <i className="icon-attach" />;
+    }
+    return null;
   };
 
   renderMenu = () => {
@@ -160,6 +178,23 @@ class ThreadItem extends Component {
     );
   };
 
+  getStyleVisibilityByMultiselect = () => {
+    if (!this.props.multiselect) {
+      return null;
+    }
+
+    return {
+      visibility: 'visible'
+    };
+  };
+
+  onCheck = value => {
+    this.props.onCheckItem(
+      this.props.thread.id,
+      CustomCheckboxStatus.toBoolean(value)
+    );
+  };
+
   onStarClick = ev => {
     ev.stopPropagation();
     this.props.onStarClick();
@@ -173,43 +208,6 @@ class ThreadItem extends Component {
   onRemove = ev => {
     ev.stopPropagation();
     this.props.onRemove();
-  };
-
-  willDisplayAttachIcon = thread => {
-    if (thread.totalAttachments > 0) {
-      return <i className="icon-attach" />;
-    }
-
-    return null;
-  };
-
-  willDisplayAckIcon = thread => {
-    const status = thread.status;
-    switch (status) {
-      case EmailStatus.UNSENT:
-        return <i className="material-icons error-highlight">undo</i>;
-      case EmailStatus.SENT:
-        return <i className="material-icons">done</i>;
-      case EmailStatus.RECEIVED:
-        return <i className="icon-checked" />;
-      case EmailStatus.OPENED:
-        return <i className="icon-checked neutral-highlight" />;
-      default:
-        return null;
-    }
-  };
-
-  renderLabels = (labels, threadId) => {
-    if (!labels.length) {
-      return null;
-    }
-
-    return (
-      <div className="thread-label">
-        <div style={{ backgroundColor: labels[0].color }}>{labels[0].text}</div>
-        {labels.length > 1 ? this.renderMoreLabels(labels, threadId) : null}
-      </div>
-    );
   };
 
   renderMoreLabels = (labels, threadId) => {
@@ -260,7 +258,6 @@ HoverMenuItem.propTypes = {
 ThreadItem.propTypes = {
   color: PropTypes.string,
   checked: PropTypes.bool,
-  header: PropTypes.string,
   hovering: PropTypes.bool,
   important: PropTypes.bool,
   isHiddenCheckBox: PropTypes.bool,
@@ -272,12 +269,12 @@ ThreadItem.propTypes = {
   onImportantClick: PropTypes.func,
   onMouseEnterItem: PropTypes.func,
   onMouserLeaveItem: PropTypes.func,
-  onMultiSelect: PropTypes.func,
   onRegionEnter: PropTypes.func,
   onRegionLeave: PropTypes.func,
   onSelectThread: PropTypes.func,
   onStarClick: PropTypes.func,
   onRemove: PropTypes.func,
+  recipients: PropTypes.string,
   searchParams: PropTypes.object,
   starred: PropTypes.bool,
   thread: PropTypes.object

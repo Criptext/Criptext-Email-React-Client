@@ -19,7 +19,7 @@ const defineLabels = (labelIds, labels) => {
   return result ? result : [];
 };
 
-const getMailHeader = ownProps => {
+const getRecipients = ownProps => {
   const thread = ownProps.thread;
   const ownMailbox = ownProps.mailbox;
   if (ownMailbox === 'allmail' || ownMailbox === 'search') {
@@ -33,10 +33,10 @@ const getMailHeader = ownProps => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const header = getMailHeader(ownProps);
-  const letters = getTwoCapitalLetters(header);
+  const recipients = getRecipients(ownProps);
+  const letters = getTwoCapitalLetters(recipients);
   const color = randomcolor({
-    seed: header,
+    seed: recipients,
     luminosity: 'bright'
   });
   const subject = ownProps.thread.get('subject');
@@ -45,7 +45,6 @@ const mapStateToProps = (state, ownProps) => {
     subject: subject.length === 0 ? '(No Subject)' : subject
   });
   const labels = defineLabels(thread.get('labels'), state.get('labels'));
-
   return {
     thread: thread.toJS(),
     color,
@@ -54,7 +53,7 @@ const mapStateToProps = (state, ownProps) => {
     important: thread.get('labels').contains(LabelType.important.id),
     labels,
     letters,
-    header
+    recipients
   };
 };
 
@@ -85,9 +84,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       } else {
         ownProps.onClickSelectedItem(type, params);
       }
-    },
-    onMultiSelect: (threadId, value) => {
-      dispatch(actions.multiSelectThread(threadId, value));
     },
     onRemove: () => {
       const threadParams = {

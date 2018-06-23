@@ -189,10 +189,6 @@ export const getSignedPreKey = params => {
   return dbManager.getSignedPreKey(params);
 };
 
-export const getThreads = (timestamp, params) => {
-  return dbManager.getThreads(timestamp, params);
-};
-
 export const getUserByUsername = username => {
   return dbManager.getUserByUsername(username);
 };
