@@ -85,13 +85,14 @@ aside.navigation-feed-container{
       }
 
       .header-button {
-        margin: 0%;
-        width: 25%;
-        height: $_HEIGHT_HEADER;
         background-color: #0091ff;
+        cursor: pointer;
         float: right;
-        text-align: center;
         font-size: 24px;
+        height: $_HEIGHT_HEADER;
+        margin: 0%;
+        text-align: center;
+        width: 25%;
 
         i {
           position:relative;
