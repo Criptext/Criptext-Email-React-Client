@@ -61,28 +61,6 @@
       flex-wrap: wrap;
       height: 100%;
   
-      .tag-item{
-        align-items: center;
-        background-color: #f4f4f4;
-        border: solid 1px #d4d4d4;
-        border-radius: 14px;
-        color: #4a4a4a;
-        display: flex;
-        flex-grow: 0;
-        font-family: NunitoSans;
-        font-size: 13px;
-        font-weight: 200;
-        height: 18px;
-        margin: 2px 10px 2px 0;
-        padding: 3px 2px 3px 10px;
-  
-        a{
-          color: #9b9b9b;
-          font-size: 22px;
-          line-height: 10px;
-        }
-      }
-  
       > div {
         display: flex;
         flex-grow: 1;
