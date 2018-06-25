@@ -7,26 +7,10 @@ const EmailMoreInfo = props => (
   <div className="email-more-detail">
     <table>
       <tbody>
-        <tr>
-          <td>
-            <span className="title">From:</span>
-          </td>
-          <td>
-            {props.from.map((contact, index) => {
-              return <ContactTag key={index} contact={contact} />;
-            })}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span className="title">To:</span>
-          </td>
-          <td>
-            {props.to.map((contact, index) => {
-              return <ContactTag key={index} contact={contact} />;
-            })}
-          </td>
-        </tr>
+        {renderContacts('From:', props.from)}
+        {renderContacts('To:', props.to)}
+        {props.cc.length ? renderContacts('Cc:', props.cc) : null}
+        {props.bcc.length ? renderContacts('Bcc:', props.bcc) : null}
         <tr>
           <td>
             <span className="title">Date:</span>
@@ -72,7 +56,27 @@ const EmailMoreInfo = props => (
   </div>
 );
 
+const renderContacts = (text, contacts) => {
+  return (
+    <tr>
+      <td>
+        <span className="title">{text}</span>
+      </td>
+      <td>
+        <span>
+          {contacts.map((contact, index) => {
+            const isLast = contacts.length - 1 === index;
+            return <ContactTag key={index} contact={contact} isLast={isLast} />;
+          })}
+        </span>
+      </td>
+    </tr>
+  );
+};
+
 EmailMoreInfo.propTypes = {
+  bcc: PropTypes.array,
+  cc: PropTypes.array,
   date: PropTypes.string,
   from: PropTypes.array,
   subject: PropTypes.string,
