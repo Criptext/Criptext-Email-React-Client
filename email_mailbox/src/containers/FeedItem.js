@@ -1,17 +1,17 @@
 import { connect } from 'react-redux';
 import {
-  markFeedAsSelected,
+  loadFeedItems,
   muteEmail,
-  removeFeedById
+  removeFeedItem,
+  selectFeedItem
 } from '../actions/index';
-import FeedWrapperView from '../components/FeedWrapper';
+import FeedItemWrapperView from '../components/FeedItemWrapper';
+import { loadContacts } from '../actions/contacts';
 
 const mapStateToProps = (state, ownProps) => {
   const feed = ownProps.feed;
-  const { isMuted, action, emailData, contactData, seen, date } = feed;
+  const { isMuted, title, emailData, seen, date } = feed;
   const { subject, threadId } = emailData;
-  const { name, email } = contactData;
-  const title = `${name || email} ${action}`;
   const subtitle = subject;
   return {
     isMuted,
@@ -26,21 +26,28 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const feed = ownProps.feed;
   return {
+    onLoadContactData: () => {
+      dispatch(loadContacts([feed.contactId]));
+    },
     onSelectFeed: () => {
-      dispatch(markFeedAsSelected(feed.id));
+      dispatch(selectFeedItem(feed.id));
     },
     onRemoveFeed: () => {
-      dispatch(removeFeedById(feed.id));
+      dispatch(removeFeedItem(feed.id));
     },
     toggleMute: () => {
       const { isMuted, id } = feed.emailData;
       const emailId = String(id);
       const valueToSet = isMuted === 1 ? false : true;
-      dispatch(muteEmail(emailId, valueToSet));
+      dispatch(muteEmail(emailId, valueToSet)).then(() =>
+        dispatch(loadFeedItems())
+      );
     }
   };
 };
 
-const Feed = connect(mapStateToProps, mapDispatchToProps)(FeedWrapperView);
+const FeedItem = connect(mapStateToProps, mapDispatchToProps)(
+  FeedItemWrapperView
+);
 
-export default Feed;
+export default FeedItem;

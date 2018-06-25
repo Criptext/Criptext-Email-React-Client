@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Feed from './../containers/Feed';
+import FeedItem from './../containers/FeedItem';
 import { addEvent, Event } from '../utils/electronEventInterface';
 import './activitypanel.css';
 
@@ -76,7 +76,7 @@ class ActivityPanel extends Component {
           </li>
           {feedList.map((feed, index) => {
             return (
-              <Feed
+              <FeedItem
                 key={index}
                 feed={feed}
                 onClickThreadIdSelected={onClickThreadIdSelected}

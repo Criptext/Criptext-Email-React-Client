@@ -64,7 +64,7 @@ const renderFeedIcon = feed => {
 };
 
 const renderFeedActions = props =>
-  props.hovering ? renderHoveringActions(props) : renderTime(props);
+  props.isHovering ? renderHoveringActions(props) : renderTime(props);
 
 const renderHoveringActions = props => (
   <div className="feed-actions">
@@ -106,10 +106,9 @@ const removeFeedFromPanel = (ev, props) => {
   ev.preventDefault();
   ev.stopPropagation();
   props.onRemove();
-  setTimeout(async () => {
+  setInterval(async () => {
     await props.onRemoveFeed();
     props.onCleanRemove();
-    props.onLoadFeeds();
   }, 3000);
 };
 
@@ -132,7 +131,7 @@ onSelectFeed.propTypes = {
 };
 
 renderFeedActions.propTypes = {
-  hovering: PropTypes.bool
+  isHovering: PropTypes.bool
 };
 
 renderTime.propTypes = {

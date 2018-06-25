@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Feed actions:  Add FeedItems to state 1`] = `
+Immutable.Map {
+  1: Immutable.Map {
+    date: "2018-06-23T22:11:29.754Z",
+    location: "undefined",
+    isNew: true,
+    emailId: 1,
+    fileId: "undefined",
+    type: "1",
+    id: "1",
+    contactId: 2,
+    seen: false,
+  },
+  2: Immutable.Map {
+    date: "2018-06-23T22:11:29.754Z",
+    location: "undefined",
+    isNew: true,
+    emailId: 2,
+    fileId: "undefined",
+    type: "1",
+    id: "2",
+    contactId: 2,
+    seen: false,
+  },
+  3: Immutable.Map {
+    date: "2018-06-23T22:11:29.754Z",
+    location: "undefined",
+    isNew: true,
+    emailId: 3,
+    fileId: "undefined",
+    type: "1",
+    id: "3",
+    contactId: 2,
+    seen: false,
+  },
+}
+`;

@@ -7,7 +7,6 @@ import {
 } from '../utils/electronInterface';
 import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
-import { loadFeeds } from './feeds';
 
 export const addEmails = emails => {
   return {
@@ -73,7 +72,6 @@ export const muteEmail = (emailId, valueToSet) => {
     try {
       await setMuteEmailById(emailId, valueToSet);
       dispatch(muteNotifications(emailId));
-      dispatch(loadFeeds());
     } catch (e) {
       // To do
     }

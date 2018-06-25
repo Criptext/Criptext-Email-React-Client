@@ -213,8 +213,8 @@ export const getUnreadEmailsByThreadId = threadId => {
   return dbManager.getUnreadEmailsByThreadId(threadId);
 };
 
-export const markFeedItemAsReadById = feedId => {
-  return dbManager.updateFeedItem({ id: feedId, seen: true });
+export const updateFeedItem = ({ feedItemId, seen }) => {
+  return dbManager.updateFeedItem({ id: feedItemId, seen });
 };
 
 export const setMuteEmailById = (emailId, muteValue) => {

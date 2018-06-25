@@ -35,10 +35,11 @@ export const Label = {
   UPDATE_SUCCESS: 'UPDATE_LABEL_SUCCESS'
 };
 
-export const Feed = {
-  ADD_BATCH: 'ADD_FEEDS',
-  SELECT: 'SELECT_FEED',
-  REMOVE: 'REMOVE_FEED'
+export const FeedItem = {
+  ADD_BATCH: 'ADD_FEED_ITEMS',
+  REMOVE_SUCCESS: 'REMOVE_FEED_ITEM',
+  UPDATE_SUCCESS: 'UPDATE_FEED_ITEM',
+  UPDATE_ALL: 'UPDATE_ALL_FEED_ITEMS'
 };
 
 export const Suggestions = {

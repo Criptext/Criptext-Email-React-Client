@@ -638,7 +638,7 @@ const updateFileByToken = ({ token, status }) => {
     .update(params);
 };
 
-/* Feed
+/* Feed Item
    ----------------------------- */
 const getAllFeedItems = () => {
   return db.select('*').from(Table.FEEDITEM);

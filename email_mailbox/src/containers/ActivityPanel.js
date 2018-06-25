@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { loadFeeds } from './../actions/index';
+import { loadFeedItems } from './../actions/index';
 import ActivityPanelView from './../components/ActivityPanel';
 import * as TimeUtils from './../utils/TimeUtils';
 import { FeedItemType } from './../utils/const';
@@ -12,13 +12,9 @@ const setFeedTime = (feed, field) => {
   return feed.set(field, TimeUtils.defineTimeByToday(feed.get(field)));
 };
 
-const isNew = date => {
-  return date === 'Today' || date.indexOf(':') > -1;
-};
-
 const clasifyFeeds = feeds => {
-  const newFeeds = feeds.filter(item => isNew(item.get('date')));
-  const oldFeeds = feeds.filter(item => !isNew(item.get('date')));
+  const newFeeds = feeds.filter(feed => feed.get('isNew'));
+  const oldFeeds = feeds.filter(feed => !feed.get('isNew'));
   return { newFeeds, oldFeeds };
 };
 
@@ -31,18 +27,29 @@ const defineFeedAction = feed => {
   }
 };
 
-const populateFeeds = feeds => {
+const setFeedTitle = (state, feed) => {
+  const feedContact = state.get('contacts').get(`${feed.get('contactId')}`);
+  if (!feedContact) return feed.set('title', '');
+
+  const contactData = feedContact.toJS();
+  const { name, email } = contactData;
+  const title = `${name || email} ${feed.get('action')}`;
+  return feed.set('title', title);
+};
+
+const populateFeeds = (state, feeds) => {
   return feeds.map(feed => {
     feed = feed.set('isMuted', feed.get('emailData').get('isMuted'));
     feed = setFeedTime(feed, 'date');
-    return defineFeedAction(feed);
+    feed = defineFeedAction(feed);
+    return setFeedTitle(state, feed);
   });
 };
 
 const mapStateToProps = state => {
-  const feeds = state.get('feeds');
+  const feeds = state.get('feeditems').toList();
   const orderedFeeds = orderFeedsByDate(feeds);
-  const populated = populateFeeds(orderedFeeds);
+  const populated = populateFeeds(state, orderedFeeds);
   const { newFeeds, oldFeeds } = clasifyFeeds(populated);
   return {
     newFeeds: newFeeds.toJS(),
@@ -53,7 +60,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onLoadFeeds: () => {
-      dispatch(loadFeeds());
+      dispatch(loadFeedItems());
     }
   };
 };
