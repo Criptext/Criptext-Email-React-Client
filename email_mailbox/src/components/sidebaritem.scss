@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .nav-item{
   align-items: center;
   cursor: pointer;
@@ -56,5 +58,39 @@
 
   span{
     font-weight: 600;
+  }
+}
+
+@mixin collapse-nav-item-icon{
+  font-size: 18px;
+  margin: 0 auto;
+  width: auto;
+}
+
+@mixin collapse-nav-item-badge {
+  margin: 0;
+  position: absolute;
+  right: 8px;
+  top: 5px;
+}
+
+.sidebar-app-collapse .nav-item{
+  .nav-item-icon{
+    @include collapse-nav-item-icon;
+  }
+  .nav-item-badge{
+    @include collapse-nav-item-badge
+  }
+}
+
+@media screen and (max-width: $_MAX_WIDTH_SCREEN) {
+  .nav-item{
+    .nav-item-icon{
+      @include collapse-nav-item-icon;
+    }
+
+    .nav-item-badge{
+      @include collapse-nav-item-badge
+    }
   }
 }

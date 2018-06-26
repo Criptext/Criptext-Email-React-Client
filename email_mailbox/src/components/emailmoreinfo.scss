@@ -16,22 +16,22 @@
     td{
       padding: 2px 0;
 
-      span span:nth-child(2){
-        margin-left: 5px;
+      &:first-child{
+        min-width: 69px;
       }
-    }
 
-    .title{
-      color: black;
-      font-size: 12px;
-      font-weight: 700;
-      margin-right: 8px;
-    }
-
-    .text{
-      color: black;
-      font-size: 12px;
-      font-weight: 300;
+      .title{
+        color: black;
+        font-size: 12px;
+        font-weight: 700;
+        margin-right: 8px;
+      }
+  
+      .text{
+        color: black;
+        font-size: 12px;
+        font-weight: 300;
+      }
     }
   }
 }

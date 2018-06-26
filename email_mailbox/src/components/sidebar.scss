@@ -6,6 +6,7 @@
 
   header{
     align-items: center;
+    cursor: pointer;
     display: flex;
     height: $_HEIGHT_HEADER;
     position: relative;
@@ -189,15 +190,9 @@
       display: none;
     }
 
-    span{
+    > span{
       display: none
     }
-  }
-
-  .nav-item-icon{
-    font-size: 18px;
-    margin: 0 auto;
-    width: auto;
   }
 
   .label-container{
@@ -205,7 +200,7 @@
   }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: $_MAX_WIDTH_SCREEN) {
   .sidebar-app-expand .sidebar-app{
     width: 79px;
 
@@ -241,6 +236,7 @@
       margin: 0;
       top: 0px;
     }
+    
     span{
       display: none;
     }
@@ -252,15 +248,9 @@
       display: none;
     }
 
-    span{
+    > span{
       display: none
     }
-  }
-
-  .nav-item-icon{
-    font-size: 18px;
-    margin: 0 auto;
-    width: auto;
   }
 
   .label-container{

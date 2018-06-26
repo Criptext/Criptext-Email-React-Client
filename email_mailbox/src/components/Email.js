@@ -58,6 +58,8 @@ const renderEmailExpand = props => (
             <div className="email-info-header-to-more">
               <span onClick={props.onTooglePopOverEmailMoreInfo}>more</span>
               <PopOverEmailMoreInfo
+                bcc={props.email.bcc}
+                cc={props.email.cc}
                 from={props.email.from}
                 to={props.email.to}
                 date={props.email.dateLong}
