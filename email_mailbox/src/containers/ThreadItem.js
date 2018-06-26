@@ -60,29 +60,50 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onSelectThread: thread => {
-      const threadId = thread.id;
+      const threadIdStore = thread.id;
+      const threadIdDb = thread.threadId;
       const type = SectionType.THREAD;
+      const currentLabelId = LabelType[ownProps.mailbox].id;
       const params = {
         mailboxSelected: ownProps.mailbox,
-        threadIdSelected: threadId
+        threadIdSelected: threadIdStore
       };
-      if (LabelType[ownProps.mailbox].id === LabelType.draft.id) {
-        openEmailInComposer({
-          key: thread.key,
-          type: composerEvents.EDIT_DRAFT
-        });
-      } else if (LabelType[ownProps.mailbox].id === LabelType.allmail.id) {
-        const allLabels = thread.allLabels;
-        if (allLabels.includes(LabelType.draft.id)) {
+      switch (currentLabelId) {
+        case LabelType.inbox.id: {
+          ownProps.onClickSelectedItem(type, params);
+          dispatch(actions.sendOpenEvent(threadIdDb));
+          break;
+        }
+        case LabelType.draft.id: {
           openEmailInComposer({
             key: thread.key,
             type: composerEvents.EDIT_DRAFT
           });
-        } else {
-          ownProps.onClickSelectedItem(type, params);
+          break;
         }
-      } else {
-        ownProps.onClickSelectedItem(type, params);
+        case LabelType.allmail.id: {
+          const { allLabels } = thread;
+          const draftLabelId = LabelType.draft.id;
+          const inboxLabelId = LabelType.inbox.id;
+          if (allLabels.includes(draftLabelId)) {
+            openEmailInComposer({
+              key: thread.key,
+              type: composerEvents.EDIT_DRAFT
+            });
+            break;
+          }
+          if (allLabels.includes(inboxLabelId)) {
+            ownProps.onClickSelectedItem(type, params);
+            dispatch(actions.sendOpenEvent(threadIdDb));
+            break;
+          }
+          ownProps.onClickSelectedItem(type, params);
+          break;
+        }
+        default: {
+          ownProps.onClickSelectedItem(type, params);
+          break;
+        }
       }
     },
     onRemove: () => {

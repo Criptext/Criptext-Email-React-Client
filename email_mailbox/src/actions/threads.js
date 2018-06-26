@@ -9,10 +9,15 @@ import {
   getEmailsGroupByThreadByParams,
   getEvents,
   updateUnreadEmailByThreadId,
-  deleteEmailsByIds
+  deleteEmailsByIds,
+  postOpenEvent,
+  getUnreadEmailsByThreadId
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
-import { handleNewMessageEvent } from './../utils/electronEventInterface';
+import {
+  handleNewMessageEvent,
+  handleEmailTrackingUpdate
+} from './../utils/electronEventInterface';
 import { SocketCommand } from './../utils/const';
 
 export const addThreads = (threads, clear) => ({
@@ -166,12 +171,19 @@ export const loadEvents = params => {
     dispatch(startLoadSync());
     try {
       const receivedEvents = await getEvents();
-      const events = receivedEvents.filter(
-        item => item.cmd === SocketCommand.NEW_EMAIL
-      );
-      await Promise.all(
-        events.map(async emailEvent => await handleNewMessageEvent(emailEvent))
-      );
+      const managedEvents = receivedEvents.map(newEvent => {
+        switch (newEvent.cmd) {
+          case SocketCommand.NEW_EMAIL: {
+            return handleNewMessageEvent(newEvent);
+          }
+          case SocketCommand.EMAIL_TRACKING_UPDATE: {
+            return handleEmailTrackingUpdate(newEvent);
+          }
+          default:
+            return Promise.reject('Unhandled socket command');
+        }
+      });
+      await Promise.all(managedEvents);
       dispatch(loadThreads(params));
     } catch (e) {
       // TO DO
@@ -283,6 +295,21 @@ export const removeThreadsLabel = (threadsParams, labelId) => {
       );
       if (dbReponse) {
         dispatch(removeThreadsLabelSuccess(storeIds, labelId));
+      }
+    } catch (e) {
+      // TO DO
+    }
+  };
+};
+
+export const sendOpenEvent = threadId => {
+  return async () => {
+    try {
+      const unreadEmails = await getUnreadEmailsByThreadId(threadId);
+      if (unreadEmails.length > 0) {
+        const metadataKeys = unreadEmails.map(item => Number(item.key));
+        const params = { metadataKeys };
+        await postOpenEvent(params);
       }
     } catch (e) {
       // TO DO

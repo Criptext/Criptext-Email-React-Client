@@ -130,7 +130,14 @@ class PanelWrapper extends Component {
   };
 
   handleToggleActivityPanel = () => {
-    this.setState({ isOpenActivityPanel: !this.state.isOpenActivityPanel });
+    this.setState(
+      { isOpenActivityPanel: !this.state.isOpenActivityPanel },
+      () => {
+        if (this.state.isOpenActivityPanel === false) {
+          this.props.onUpdateTimestamp();
+        }
+      }
+    );
   };
 
   handleToggleSideBar = () => {
@@ -147,6 +154,7 @@ class PanelWrapper extends Component {
 PanelWrapper.propTypes = {
   onLoadThreads: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,
+  onUpdateTimestamp: PropTypes.func,
   onUpdateUnreadEmails: PropTypes.func,
   threadsCount: PropTypes.number
 };

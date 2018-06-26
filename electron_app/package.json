@@ -4,7 +4,7 @@
   "author": {
     "name": "Criptext Inc.",
     "email": "info@criptext.com",
-    "url": "https://criptext.com" 
+    "url": "https://criptext.com"
   },
   "homepage": "https://criptext.com",
   "private": true,
@@ -72,7 +72,7 @@
     "electron-packager": "^10.1.2"
   },
   "dependencies": {
-    "@criptext/email-http-client": "^0.7.0",
+    "@criptext/email-http-client": "^0.8.1",
     "knex": "^0.14.2",
     "sqlite3": "^3.1.13",
     "websocket": "^1.0.25"

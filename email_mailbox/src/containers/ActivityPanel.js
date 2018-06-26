@@ -1,58 +1,66 @@
 import { connect } from 'react-redux';
-import * as actions from '../actions/index';
-import ActivityPanelView from '../components/ActivityPanel';
-import * as TimeUtils from '../utils/TimeUtils';
+import { loadFeedItems } from './../actions/index';
+import ActivityPanelView from './../components/ActivityPanel';
+import * as TimeUtils from './../utils/TimeUtils';
+import { FeedItemType } from './../utils/const';
 
 const orderFeedsByDate = feeds => {
-  return feeds.sortBy(feed => feed.get('time'));
+  return feeds.sortBy(feed => feed.get('date')).reverse();
 };
 
 const setFeedTime = (feed, field) => {
   return feed.set(field, TimeUtils.defineTimeByToday(feed.get(field)));
 };
 
-const isNew = date => {
-  return date === 'Today' || date.indexOf(':') > -1;
+const clasifyFeeds = feeds => {
+  const newFeeds = feeds.filter(feed => feed.get('isNew'));
+  const oldFeeds = feeds.filter(feed => !feed.get('isNew'));
+  return { newFeeds, oldFeeds };
 };
 
-const clasifyFeeds = feeds => {
-  const newsFiltered = feeds.filter(item => isNew(item.get('date')) === true);
-  const oldsFiltered = feeds.filter(item => isNew(item.get('date')) === false);
-  return { newsFiltered, oldsFiltered };
+const defineFeedAction = feed => {
+  switch (feed.get('type')) {
+    case FeedItemType.DOWNLOADED.value:
+      return feed.set('action', 'downloaded');
+    default:
+      return feed.set('action', 'opened');
+  }
+};
+
+const setFeedTitle = (state, feed) => {
+  const feedContact = state.get('contacts').get(`${feed.get('contactId')}`);
+  if (!feedContact) return feed.set('title', '');
+
+  const contactData = feedContact.toJS();
+  const { name, email } = contactData;
+  const title = `${name || email} ${feed.get('action')}`;
+  return feed.set('title', title);
 };
 
 const populateFeeds = (state, feeds) => {
-  const emails = state.get('emails');
-  const users = state.get('users');
   return feeds.map(feed => {
-    const emailFeed = emails.get(feed.get('emailId'));
-    const userFeed = users[feed.get('username')];
-    if (emailFeed !== undefined) {
-      feed = feed.set('emailFeed', emailFeed);
-      feed = feed.set('isMuted', emailFeed.get('isMuted'));
-    }
-    if (userFeed !== undefined) {
-      feed = feed.set('name', userFeed.name);
-    }
-    return feed;
+    feed = feed.set('isMuted', feed.get('emailData').get('isMuted'));
+    feed = setFeedTime(feed, 'date');
+    feed = defineFeedAction(feed);
+    return setFeedTitle(state, feed);
   });
 };
 
 const mapStateToProps = state => {
-  const orderedFeeds = orderFeedsByDate(state.get('feeds'));
+  const feeds = state.get('feeditems').toList();
+  const orderedFeeds = orderFeedsByDate(feeds);
   const populated = populateFeeds(state, orderedFeeds);
-  const seeded = populated.map(feed => setFeedTime(feed, 'date'));
-  const { newsFiltered, oldsFiltered } = clasifyFeeds(seeded);
+  const { newFeeds, oldFeeds } = clasifyFeeds(populated);
   return {
-    newFeeds: newsFiltered,
-    oldFeeds: oldsFiltered
+    newFeeds: newFeeds.toJS(),
+    oldFeeds: oldFeeds.toJS()
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onLoadFeeds: () => {
-      dispatch(actions.loadFeeds());
+      dispatch(loadFeedItems());
     }
   };
 };

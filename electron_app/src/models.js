@@ -185,8 +185,11 @@ const createFeedItemColumns = table => {
   table.increments('id').primary();
   table.timestamp('date').notNullable();
   table.integer('type').notNullable();
-  table.string('location', MEDIUM_STRING_SIZE).notNullable();
-  table.boolean('isNew').notNullable();
+  table.string('location', MEDIUM_STRING_SIZE);
+  table
+    .boolean('seen')
+    .notNullable()
+    .defaultTo(false);
   table.string('emailId', MEDIUM_STRING_SIZE).notNullable();
   table.integer('contactId').notNullable();
   table.string('fileId', MEDIUM_STRING_SIZE);

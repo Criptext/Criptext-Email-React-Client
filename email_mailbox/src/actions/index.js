@@ -18,7 +18,8 @@ import {
   searchThreads,
   selectThreads,
   removeThreads,
-  removeThreadsLabel
+  removeThreadsLabel,
+  sendOpenEvent
 } from './threads';
 import {
   addEmails,
@@ -36,22 +37,22 @@ import {
   updateLabelSuccess
 } from './labels';
 import {
-  addFeeds,
-  loadFeeds,
-  markFeedAsSelected,
-  removeFeed,
-  removeFeedById,
-  selectFeed,
-  toggleMuteFeed
-} from './feeds';
+  addFeedItems,
+  loadFeedItems,
+  removeFeedItem,
+  removeFeedItemSuccess,
+  selectFeedItem,
+  updateAllFeedItemsAsOlder,
+  updateFeedItemSuccess
+} from './feeditems';
 import { setThreads, loadSuggestions } from './suggestions';
 
 export {
   addContact,
   addContacts,
   addEmails,
-  addFeeds,
   addFiles,
+  addFeedItems,
   addLabel,
   addLabels,
   addMoveThreadsLabel,
@@ -62,28 +63,29 @@ export {
   filterThreadsByUnread,
   loadEmails,
   loadEvents,
-  loadFeeds,
   loadFiles,
+  loadFeedItems,
   loadLabels,
   loadSuggestions,
   loadThreads,
   markEmailUnread,
-  markFeedAsSelected,
   moveThreads,
   muteEmail,
   muteNotifications,
   removeThread,
   removeThreadLabel,
-  removeFeed,
-  removeFeedById,
+  removeFeedItem,
+  removeFeedItemSuccess,
   removeThreads,
   removeThreadsLabel,
+  selectFeedItem,
   selectThread,
   selectThreads,
-  selectFeed,
   searchThreads,
+  sendOpenEvent,
   setThreads,
-  toggleMuteFeed,
+  updateAllFeedItemsAsOlder,
+  updateFeedItemSuccess,
   updateLabel,
   updateLabelSuccess,
   updateUnreadEmails,

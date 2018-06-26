@@ -67,6 +67,10 @@ export const getEvents = () => {
   return clientManager.getEvents();
 };
 
+export const postOpenEvent = params => {
+  return clientManager.postOpenEvent(params);
+};
+
 /* DataBase
    ----------------------------- */
 export const createAccount = params => {
@@ -79,6 +83,10 @@ export const createEmail = params => {
 
 export const createEmailLabel = params => {
   return dbManager.createEmailLabel(params);
+};
+
+export const createFeedItem = params => {
+  return dbManager.createFeedItem(params);
 };
 
 export const createIdentityKeyRecord = params => {
@@ -109,8 +117,8 @@ export const deleteEmailLabel = params => {
   return dbManager.deleteEmailLabel(params);
 };
 
-export const deleteFeedById = feedId => {
-  return dbManager.deleteFeedById(feedId);
+export const deleteFeedItemById = feedId => {
+  return dbManager.deleteFeedItemById(feedId);
 };
 
 export const deletePreKeyPair = params => {
@@ -129,12 +137,16 @@ export const getAccount = () => {
   return dbManager.getAccount();
 };
 
-export const getAllFeeds = () => {
-  return dbManager.getAllFeeds();
+export const getAllFeedItems = () => {
+  return dbManager.getAllFeedItems();
 };
 
 export const getAllLabels = () => {
   return dbManager.getAllLabels();
+};
+
+export const getContactByEmails = emails => {
+  return dbManager.getContactByEmails(emails);
 };
 
 export const getContactByIds = ids => {
@@ -193,12 +205,16 @@ export const getSignedPreKey = params => {
   return dbManager.getSignedPreKey(params);
 };
 
-export const getUserByUsername = username => {
-  return dbManager.getUserByUsername(username);
+export const getThreads = (timestamp, params) => {
+  return dbManager.getThreads(timestamp, params);
 };
 
-export const markFeedAsReadById = feedId => {
-  return dbManager.updateFeed({ id: feedId, unread: false });
+export const getUnreadEmailsByThreadId = threadId => {
+  return dbManager.getUnreadEmailsByThreadId(threadId);
+};
+
+export const updateFeedItem = ({ feedItemId, seen }) => {
+  return dbManager.updateFeedItem({ id: feedItemId, seen });
 };
 
 export const setMuteEmailById = (emailId, muteValue) => {

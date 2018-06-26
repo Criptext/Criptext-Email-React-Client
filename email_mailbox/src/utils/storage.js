@@ -1,4 +1,5 @@
 const indexedDB = window.indexedDB;
+const localStorage = window.localStorage;
 
 export const storeValue = async function(value) {
   const db = await openDB();
@@ -50,4 +51,12 @@ const openDB = function() {
       resolve(open.result);
     };
   });
+};
+
+export const storeSeenTimestamp = () => {
+  localStorage.setItem('seenTimestamp', Date.now());
+};
+
+export const getSeenTimestamp = () => {
+  return localStorage.getItem('seenTimestamp') || null;
 };
