@@ -1,3 +1,7 @@
+export const File = {
+  ADD_BATCH: 'ADD_FILES'
+};
+
 export const Thread = {
   ADD_BATCH: 'ADD_THREADS',
   ADD_THREAD_LABEL: 'ADD_THREAD_LABEL',

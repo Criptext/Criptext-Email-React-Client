@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`File actions: should add files 1`] = `
+Immutable.Map {
+  token1: Immutable.Map {
+    token: "token1",
+    name: "Criptext_Image_2018_06_14.png",
+    readOnly: false,
+    size: 183241,
+    status: 1,
+    date: "2018-06-14T23:45:57.466Z",
+    emailId: 1,
+  },
+}
+`;

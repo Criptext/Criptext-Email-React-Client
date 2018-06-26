@@ -30,6 +30,9 @@ class EmailWrapper extends Component {
   }
 
   componentDidMount() {
+    if (this.props.email.fileTokens.length && !this.props.files.length) {
+      this.props.onLoadFiles(this.props.email.fileTokens);
+    }
     if (this.props.email.unread) {
       this.setState({
         displayEmail: true
@@ -68,6 +71,8 @@ class EmailWrapper extends Component {
 EmailWrapper.propTypes = {
   displayEmail: PropTypes.func,
   email: PropTypes.object,
+  files: PropTypes.array,
+  onLoadFiles: PropTypes.func,
   staticOpen: PropTypes.bool
 };
 

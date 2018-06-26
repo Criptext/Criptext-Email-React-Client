@@ -6,22 +6,20 @@ import {
   removeThreadLabel
 } from '../actions';
 import ThreadView from '../components/Thread';
-import { List, Map } from 'immutable';
 import { LabelType } from '../utils/electronInterface';
-
-const emailsMapToList = (emailsMap, emailIds) => {
-  const result =
-    emailsMap.size === 0 || !emailIds
-      ? List()
-      : emailIds.map(emailId => {
-          return emailsMap.get(emailId.toString()) || Map();
-        });
-  return result;
-};
 
 const getEmails = (emails, thread) => {
   const emailIds = thread ? thread.get('emailIds') : null;
-  return emailsMapToList(emails, emailIds);
+  return emailIds
+    ? emails.size
+      ? emailIds
+          .toArray()
+          .filter(emailId => emails.get(String(emailId)))
+          .map(emailId => {
+            return emails.get(String(emailId)).toJS();
+          })
+      : []
+    : [];
 };
 
 const getThread = (threads, threadId) => {

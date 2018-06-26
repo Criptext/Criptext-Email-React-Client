@@ -71,3 +71,15 @@ export const SocketCommand = {
   EMAIL_UNSENT: 9,
   EMAIL_MUTED: 10
 };
+
+export const FileType = {
+  IMAGE: 'image',
+  AUDIO: 'audio',
+  VIDEO: 'video',
+  PDF: 'pdf',
+  OFFICE_DOC: 'word',
+  OFFICE_SHEET: 'excel',
+  OFFICE_PPT: 'ppt',
+  ZIP: 'zip',
+  DEFAULT: 'file-default'
+};

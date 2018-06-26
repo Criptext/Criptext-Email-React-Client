@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AttachItem, { AttachItemStatus } from './AttachItem';
+import File from './File';
 import ButtonExpand, { ButtonExpandType } from './ButtonExpandWrapper';
 import MenuHOC from './MenuHOC';
 import EmailMoreInfo from './EmailMoreInfo';
 import ButtonUnsend from './ButtonUnsendWrapper';
+import { EmailStatus } from './../utils/const';
 import './email.css';
 
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
@@ -22,12 +23,16 @@ const renderEmailCollapse = props => (
     }
     onClick={props.onToggleEmail}
   >
-    <span className="email-preview-from">{showContacts(props.email.from)}</span>
-    <span className="email-preview-content">{props.email.preview}</span>
-    <div className="email-preview-info">
-      <i className="icon-attach" />
-      <i className="icon-checked" />
+    <div
+      style={{ background: props.email.color }}
+      className="email-icon-letter"
+    >
+      <span>{props.email.letters}</span>
     </div>
+    <span className="email-preview-from">{showContacts(props.email.from)}</span>
+    {renderEmailStatus(props.email.status)}
+    <span className="email-preview-content">{props.email.preview}</span>
+    {renderFileExist(props.email.fileTokens)}
     <span className="email-preview-date">{props.email.date}</span>
   </div>
 );
@@ -81,7 +86,7 @@ const renderEmailExpand = props => (
       <hr />
       <div className="email-body">
         <div className="email-options">
-          {props.attachments.length ? (
+          {props.files.length ? (
             <ButtonExpand
               icon="icon-attach"
               info="Sheep Relevance.doc"
@@ -115,16 +120,10 @@ const renderEmailExpand = props => (
         <div disabled={props.hideView} className="email-text">
           <div dangerouslySetInnerHTML={{ __html: props.email.content }} />
         </div>
-        {props.attachments.length ? (
-          <div disabled={props.hideView} className="email-attachs">
-            {props.attachments.map((attachment, index) => {
-              return (
-                <AttachItem
-                  key={index}
-                  status={AttachItemStatus.UNSENT}
-                  attachment={attachment}
-                />
-              );
+        {props.files.length ? (
+          <div disabled={props.hideView} className="email-files">
+            {props.files.map((file, index) => {
+              return <File key={index} file={file} />;
             })}
           </div>
         ) : null}
@@ -154,6 +153,21 @@ const showContacts = contacts => {
     (result, contact) => `${result} ${contact.name || contact.email}`,
     ''
   );
+};
+
+const renderEmailStatus = status => {
+  return <div className="email-status">{defineEmailStatus(status)}</div>;
+};
+
+const renderFileExist = fileTokens => {
+  if (fileTokens.length) {
+    return (
+      <div className="email-file">
+        <i className="icon-attach" />
+      </div>
+    );
+  }
+  return null;
 };
 
 const renderPopOverMenuAction = props => (
@@ -258,15 +272,28 @@ const renderMuteIcon = props => (
   />
 );
 
+const defineEmailStatus = status => {
+  switch (status) {
+    case EmailStatus.SENT:
+      return <i className="icon-checked status-sent" />;
+    case EmailStatus.DELIVERED:
+      return <i className="icon-checked status-delivered" />;
+    case EmailStatus.OPENED:
+      return <i className="icon-checked status-opened" />;
+    default:
+      return null;
+  }
+};
+
 renderEmailCollapse.propTypes = {
   email: PropTypes.object,
   onToggleEmail: PropTypes.func
 };
 
 renderEmailExpand.propTypes = {
-  attachments: PropTypes.array,
   displayPopOverMenuAction: PropTypes.bool,
   email: PropTypes.object,
+  files: PropTypes.array,
   hideView: PropTypes.bool,
   isFromMe: PropTypes.bool,
   isHiddenPopOverEmailMoreInfo: PropTypes.bool,

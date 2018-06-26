@@ -169,6 +169,10 @@ export const getEmailLabelsByEmailId = emailId => {
   return dbManager.getEmailLabelsByEmailId(emailId);
 };
 
+export const getFilesByTokens = tokens => {
+  return dbManager.getFilesByTokens(tokens);
+};
+
 export const getIdentityKeyRecord = params => {
   return dbManager.getIdentityKeyRecord(params);
 };

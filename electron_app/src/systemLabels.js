@@ -33,7 +33,7 @@ const important = {
 const starred = {
   id: 5,
   text: 'Starred',
-  color: '#ffdf32',
+  color: '#ffce4b',
   type: 'system',
   visible: true
 };

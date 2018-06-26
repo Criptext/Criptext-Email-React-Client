@@ -5,6 +5,12 @@ import Label from './Label';
 import './thread.css';
 
 class Thread extends Component {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.thread.emailIds.length > this.props.thread.emailIds.length) {
+      this.props.onLoadEmails(nextProps.thread.threadId);
+    }
+  }
+
   render() {
     return (
       <div className="thread-container">
@@ -25,7 +31,7 @@ class Thread extends Component {
           </div>
           <div className="thread-emails">
             {this.props.emails.map((email, index) => {
-              const isLast = this.props.emails.size - 1 === index;
+              const isLast = this.props.emails.length - 1 === index;
               return <Email key={index} email={email} staticOpen={isLast} />;
             })}
           </div>
@@ -41,12 +47,6 @@ class Thread extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.thread.emailIds.length > this.props.thread.emailIds.length) {
-      this.props.onLoadEmails(nextProps.thread.threadId);
-    }
-  }
-
   componentWillUnmount() {
     if (this.props.thread.unread) {
       this.props.onUpdateUnreadThread(this.props.thread, false);
@@ -59,7 +59,7 @@ class Thread extends Component {
 }
 
 Thread.propTypes = {
-  emails: PropTypes.object,
+  emails: PropTypes.array,
   labels: PropTypes.array,
   onLoadEmails: PropTypes.func,
   onUpdateUnreadEmails: PropTypes.func,

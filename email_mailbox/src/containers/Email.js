@@ -9,15 +9,15 @@ import {
   myAccount,
   openEmailInComposer
 } from './../utils/electronInterface';
-import { muteEmail } from './../actions/index';
+import { loadFiles, muteEmail } from './../actions/index';
 
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
   const contacts = state.get('contacts');
-  const from = getContacts(contacts, email.get('from'));
-  const to = getContacts(contacts, email.get('to'));
-  const cc = getContacts(contacts, email.get('cc'));
-  const bcc = getContacts(contacts, email.get('bcc'));
+  const from = getContacts(contacts, email.from);
+  const to = getContacts(contacts, email.to);
+  const cc = getContacts(contacts, email.cc);
+  const bcc = getContacts(contacts, email.bcc);
   const senderName = from.length ? from[0].name : '';
   const senderEmail = from.length ? from[0].email : '';
   const color = senderEmail
@@ -27,34 +27,46 @@ const mapStateToProps = (state, ownProps) => {
       })
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
-  const subject = email.get('subject');
-  const date = email.get('date');
-  const myEmail = email.merge({
+  const date = email.date;
+  const files = getFiles(state.get('files'), email.fileTokens);
+  const myEmail = {
+    ...email,
     date: defineTimeByToday(date),
     dateLong: defineLargeTime(date),
-    subject: subject || '(No Subject)',
+    subject: email.subject || '(No Subject)',
     from,
     to,
     cc,
     bcc,
     color,
     letters
-  });
+  };
   return {
-    email: myEmail.toJS(),
-    attachments: myEmail.get('attachments') ? myEmail.get('attachments') : [],
+    email: myEmail,
+    files,
     isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail)
   };
 };
 
 const getContacts = (contacts, contactIds) => {
-  return !contactIds
-    ? []
-    : contactIds.toArray().map(contactId => {
-        return contacts.size && contacts.get(contactId)
-          ? contacts.get(contactId).toObject()
+  return contactIds
+    ? contactIds.map(contactId => {
+        const contact = contacts.get(String(contactId));
+        return contacts.size && contact
+          ? contact.toObject()
           : { id: contactId };
-      });
+      })
+    : [];
+};
+
+const getFiles = (files, fileTokens) => {
+  return fileTokens
+    ? files.size
+      ? fileTokens.map(token => {
+          return files.get(token).toJS();
+        })
+      : []
+    : [];
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -63,29 +75,32 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     toggleMute: ev => {
       ev.stopPropagation();
-      const emailId = String(email.get('id'));
-      const valueToSet = email.get('isMuted') === 1 ? false : true;
+      const emailId = String(email.id);
+      const valueToSet = email.isMuted === 1 ? false : true;
       dispatch(muteEmail(emailId, valueToSet));
+    },
+    onLoadFiles: tokens => {
+      dispatch(loadFiles(tokens));
     },
     onReplyEmail: ev => {
       ev.stopPropagation();
-      const key = email.get('key');
+      const key = email.key;
       openEmailInComposer({ key, type: composerEvents.REPLY });
     },
     onReplyLast: () => {
       if (isLast) {
-        const key = email.get('key');
+        const key = email.key;
         openEmailInComposer({ key, type: composerEvents.REPLY });
       }
     },
     onReplyAll: ev => {
       ev.stopPropagation();
-      const key = email.get('key');
+      const key = email.key;
       openEmailInComposer({ key, type: composerEvents.REPLY_ALL });
     },
     onForward: ev => {
       ev.stopPropagation();
-      const key = email.get('key');
+      const key = email.key;
       openEmailInComposer({ key, type: composerEvents.FORWARD });
     }
   };

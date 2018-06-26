@@ -1,0 +1,78 @@
+@import "./../styles/index.scss";
+
+.file-container{
+  align-items: center;
+  border: 1px solid #e7e5e5;
+  border-radius: 6px;
+  display: flex;
+  height: 38px;
+  margin-right: 20px;
+  position: relative;
+  width: 256px;
+
+  &:hover{
+    background-color: #f7f6f6;
+
+    .file-detail-size{
+      color: #f7f6f6;
+    }
+    button{
+      display: flex;
+    }
+  }
+
+  button{
+    background: transparent;
+    display: none;
+    position: absolute;
+    right: 20px;
+    
+    i{
+      color: #89909a;
+      font-size: 13px;
+    }
+  }
+}
+
+.file-content-icon{
+  margin-left: 12px;
+  position: relative;
+
+  >div{
+    align-items: center;
+    border-radius: 4px;
+    display: flex;
+    height: 22px;
+    width: 22px;
+
+    i{
+      color: white;
+      margin: 0 auto;
+    }
+  }
+
+  .icon-container-file-default{
+    background-color: #4a90e2;
+  }
+  
+}
+
+.file-content-detail{
+  display: flex;
+  flex-grow: 1;
+  margin-left: 10px;
+  padding-right: 14px;
+
+  .file-detail-name{
+    display: flex;
+    flex-grow: 1;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .file-detail-size{
+    color: #9b9b9b;
+    flex-grow: 0;
+    font-size: 13px;
+  }
+}
