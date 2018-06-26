@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TagsInput from 'react-tagsinput';
 import AutocompleteWrapper from './AutocompleteWrapper';
+import TagRecipient from './TagRecipient';
 import { pasteSplit } from './../utils/StringUtils';
 import 'react-tagsinput/react-tagsinput.css';
 import './recipient.css';
@@ -29,26 +30,26 @@ const renderRecipientTo = props => (
   <div className="recipient-content">
     <span className="recipient-input-label">To:</span>
     <TagsInput
-      renderInput={AutocompleteWrapper}
-      onlyUnique={true}
+      addKeys={[9, 13, 32, 186, 188]}
+      addOnBlur={true}
+      addOnPaste={true}
       className="recipient-tags"
       focusedClassName={'cstm-tags-border'}
-      addOnPaste={true}
-      addOnBlur={true}
-      tagProps={{
-        className: 'tag-item',
-        classNameRemove: 'icon-exit'
-      }}
       inputProps={{
         className: 'tags-input',
         placeholder: ''
       }}
-      validationRegex={props.emailRegex}
-      addKeys={[9, 13, 32, 186, 188]}
-      value={props.toTags}
+      onlyUnique={true}
       onChange={props.onChangeToTag}
       onValidationReject={props.handleOnValidationRejectToTag}
       pasteSplit={pasteSplit}
+      renderInput={AutocompleteWrapper}
+      renderTag={TagRecipient}
+      tagProps={{
+        classNameRemove: 'icon-exit'
+      }}
+      validationRegex={props.emailRegex}
+      value={props.toTags}
     />
   </div>
 );
@@ -57,26 +58,26 @@ const renderRecipientCc = props => (
   <div className="recipient-content">
     <span className="recipient-input-label">Cc:</span>
     <TagsInput
-      renderInput={AutocompleteWrapper}
-      onlyUnique={true}
+      addKeys={[9, 13, 32, 186, 188]}
+      addOnBlur={true}
+      addOnPaste={true}
       className="recipient-tags"
       focusedClassName={'cstm-tags-border'}
-      addOnPaste={true}
-      addOnBlur={true}
-      tagProps={{
-        className: 'tag-item',
-        classNameRemove: 'icon-exit'
-      }}
       inputProps={{
         className: 'tags-input',
         placeholder: ''
       }}
-      validationRegex={props.emailRegex}
-      addKeys={[9, 13, 32, 186, 188]}
-      value={props.ccTags}
       onChange={props.onChangeCcTag}
+      onlyUnique={true}
       onValidationReject={props.handleOnValidationRejectCcTag}
       pasteSplit={pasteSplit}
+      renderInput={AutocompleteWrapper}
+      renderTag={TagRecipient}
+      tagProps={{
+        classNameRemove: 'icon-exit'
+      }}
+      validationRegex={props.emailRegex}
+      value={props.ccTags}
     />
   </div>
 );
@@ -85,26 +86,26 @@ const renderRecipientBcc = props => (
   <div className="recipient-content">
     <span className="recipient-input-label">Bcc:</span>
     <TagsInput
-      renderInput={AutocompleteWrapper}
-      onlyUnique={true}
+      addKeys={[9, 13, 32, 186, 188]}
+      addOnBlur={true}
+      addOnPaste={true}
       className="recipient-tags"
       focusedClassName={'cstm-tags-border'}
-      addOnPaste={true}
-      addOnBlur={true}
-      tagProps={{
-        className: 'tag-item',
-        classNameRemove: 'icon-exit'
-      }}
       inputProps={{
         className: 'tags-input',
         placeholder: ''
       }}
-      validationRegex={props.emailRegex}
-      addKeys={[9, 13, 32, 186, 188]}
-      value={props.bccTags}
       onChange={props.onChangeBccTag}
+      onlyUnique={true}
       onValidationReject={props.handleOnValidationRejectBccTag}
       pasteSplit={pasteSplit}
+      renderInput={AutocompleteWrapper}
+      renderTag={TagRecipient}
+      tagProps={{
+        classNameRemove: 'icon-exit'
+      }}
+      validationRegex={props.emailRegex}
+      value={props.bccTags}
     />
   </div>
 );
