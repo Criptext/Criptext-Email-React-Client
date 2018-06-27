@@ -73,7 +73,8 @@ const emailInbox = {
       readOnly: false,
       size: 183241,
       status: 1,
-      date: '2018-06-14T23:45:57.466Z'
+      date: '2018-06-14T23:45:57.466Z',
+      mimeType: 'image/png'
     }
   ]
 };
