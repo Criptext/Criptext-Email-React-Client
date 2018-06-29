@@ -64,7 +64,8 @@ const encryptPostEmail = async ({
   body,
   subject,
   threadId,
-  files
+  files,
+  peer
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const sessions = await getSessionRecordByRecipientIds(recipientIds);
@@ -77,10 +78,12 @@ const encryptPostEmail = async ({
       [item.recipientId]: item.deviceIds.split(',').map(Number)
     };
   }, {});
-  const keyBundles = await getKeyBundlesOfRecipients(
-    recipientIds,
-    knownAddresses
-  );
+  const keyBundles = await getKeyBundlesOfRecipients(recipientIds, {
+    ...knownAddresses,
+    [peer.recipientId]: knownAddresses[peer.recipientId]
+      ? [...knownAddresses[peer.recipientId], peer.deviceId]
+      : [peer.deviceId]
+  });
   if (keyBundles.includes(null)) {
     throw new CustomError(errors.server.UNAUTHORIZED_ERROR);
   }
