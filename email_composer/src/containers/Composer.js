@@ -8,6 +8,7 @@ import {
   closeComposerWindow,
   createEmail,
   LabelType,
+  myAccount,
   throwError,
   updateEmail,
   updateEmailLabel,
@@ -282,12 +283,19 @@ class ComposerWrapper extends Component {
       [emailId] = await createEmail(data);
 
       const files = getFileTokens(this.state.files);
+      const peer = {
+        recipientId: myAccount.recipientId,
+        type: 'peer',
+        deviceId: myAccount.deviceId
+      };
+      const recipients = [...to, peer];
       const params = {
         subject,
         threadId: this.state.threadId,
-        recipients: to,
+        recipients,
         body,
-        files
+        files,
+        peer
       };
       const res = await signal.encryptPostEmail(params);
       const filesDbParams = formFileParamsToDatabase(this.state.files, emailId);
