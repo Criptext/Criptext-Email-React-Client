@@ -74,23 +74,61 @@
   top: 5px;
 }
 
-.sidebar-app-collapse .nav-item{
-  .nav-item-icon{
-    @include collapse-nav-item-icon;
-  }
-  .nav-item-badge{
-    @include collapse-nav-item-badge
-  }
+@mixin collapse-nav-item-badge-mini {
+  right: 28px;
+  top: 10px;
 }
 
-@media screen and (max-width: $_MAX_WIDTH_SCREEN) {
-  .nav-item{
+@mixin collapse-badge {
+  border: 1px solid white;
+  border-radius: 6px;
+  font-size: 0;
+  height: 7px;
+  min-width: 0px;
+  width: 5px;
+}
+
+.sidebar-app-collapse .nav-item{
+
+    &:nth-child(n+2){
+      .badge{
+        @include collapse-badge;
+      }
+
+      .nav-item-badge{
+        @include collapse-nav-item-badge-mini;
+      }
+    }
+
     .nav-item-icon{
       @include collapse-nav-item-icon;
     }
 
     .nav-item-badge{
-      @include collapse-nav-item-badge
+      @include collapse-nav-item-badge;
+      
+    }
+}
+
+@media screen and (max-width: $_MAX_WIDTH_SCREEN) {
+  .nav-item{
+
+    &:nth-child(n+2){
+      .badge{
+        @include collapse-badge;
+      }
+
+      .nav-item-badge{
+        @include collapse-nav-item-badge-mini;
+      }
+    }
+
+    .nav-item-icon{
+      @include collapse-nav-item-icon;
+    }
+
+    .nav-item-badge{
+      @include collapse-nav-item-badge;
     }
   }
 }

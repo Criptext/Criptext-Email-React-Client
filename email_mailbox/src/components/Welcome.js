@@ -61,7 +61,7 @@ const Article = props => {
 const renderDots = itemSelected => (
   <div className="dots-container">
     {Object.keys(data).map((item, index) => {
-      const dotSelected = itemSelected === item;
+      const dotSelected = itemSelected === Number(item);
       return (
         <div key={index} className={'dot' + (dotSelected ? ' selected' : '')} />
       );
