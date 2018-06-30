@@ -153,14 +153,14 @@
 }
 
 .thread-label-option{
-  display: none;
-  padding-right: 10px;
+  align-items: center;
   color: #d5d5d5;
-  position: absolute;
-  right: 0;
+  display: none;
   height: 100%;
   justify-content: space-around;
-  align-items: center;
+  padding-right: 10px;
+  position: absolute;
+  right: 0;
 
   > div{
     height: 31px;
@@ -168,13 +168,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
     border-radius: 50%;
     margin-right: 9px;
     border: solid 1px rgba(128, 128, 128, 0);
 
     i{
       color: rgba(60, 72, 88, 0.6);
+      font-size: 16px;
     }
 
     &.thread-label-mark{
