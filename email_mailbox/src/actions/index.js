@@ -1,6 +1,7 @@
 import { addContacts, addContact } from './contacts';
 import { addFiles, loadFiles } from './files';
 import {
+  addEmailToThread,
   addMoveThreadsLabel,
   addThreads,
   addThreadLabel,
@@ -51,6 +52,7 @@ export {
   addContact,
   addContacts,
   addEmails,
+  addEmailToThread,
   addFiles,
   addFeedItems,
   addLabel,

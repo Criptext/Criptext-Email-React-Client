@@ -26,7 +26,7 @@ const createContact = params => {
   return db.table(Table.CONTACT).insert(params);
 };
 
-const createContactsIfOrNotStore = async contacts => {
+const createContactsIfOrNotStore = async (contacts, trx) => {
   const emailAddresses = Array.from(
     new Set(
       contacts.map(contact => {
@@ -35,7 +35,8 @@ const createContactsIfOrNotStore = async contacts => {
       })
     )
   );
-  const contactsFound = await db
+  const knex = trx || db;
+  const contactsFound = await knex
     .select('email')
     .from(Table.CONTACT)
     .whereIn('email', emailAddresses);
@@ -52,7 +53,7 @@ const createContactsIfOrNotStore = async contacts => {
   );
   const contactsRowCkecked = filterUniqueContacts(formContactsRow(newContacts));
 
-  await db.insert(contactsRowCkecked).into(Table.CONTACT);
+  await knex.insert(contactsRowCkecked).into(Table.CONTACT);
   return emailAddresses;
 };
 
@@ -198,7 +199,7 @@ const createEmail = async (params, trx) => {
     ...recipientsCc,
     ...recipientsBcc
   ];
-  const emailAddresses = await createContactsIfOrNotStore(emails);
+  const emailAddresses = await createContactsIfOrNotStore(emails, trx);
   return knex
     .transaction(async trx => {
       const contactStored = await getContactByEmails(emailAddresses, trx);

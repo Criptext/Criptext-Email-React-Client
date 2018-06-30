@@ -1,8 +1,10 @@
 import { connect } from 'react-redux';
 import {
+  addEmailToThread,
   loadThreads,
   updateLabelSuccess,
-  updateAllFeedItemsAsOlder
+  updateAllFeedItemsAsOlder,
+  loadEmails
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import {
@@ -33,6 +35,12 @@ const defineRejectedLabels = labelId => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onAddEmailToThread: ({ threadId, emailId }) => {
+      dispatch(addEmailToThread({ threadId, emailId }));
+    },
+    onLoadEmails: threadId => {
+      dispatch(loadEmails(threadId));
+    },
     onLoadThreads: params => {
       const { labelId } = params;
       const rejectedLabelIds = defineRejectedLabels(labelId);

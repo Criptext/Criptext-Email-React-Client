@@ -316,3 +316,9 @@ export const sendOpenEvent = threadId => {
     }
   };
 };
+
+export const addEmailToThread = ({ threadId, emailId }) => ({
+  type: Thread.ADD_EMAIL,
+  threadId,
+  emailId
+});

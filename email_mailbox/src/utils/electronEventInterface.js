@@ -7,7 +7,7 @@ import {
   LabelType,
   getContactByEmails,
   createFeedItem,
-  getAccount
+  myAccount
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -42,6 +42,11 @@ ipcRenderer.on('update-drafts', () => {
   emitter.emit(Event.UPDATE_SAVED_DRAFTS);
 });
 
+ipcRenderer.on('update-thread-emails', (ev, data) => {
+  const { threadId, emailId } = data;
+  emitter.emit(Event.UPDATE_THREAD_EMAILS, { threadId, emailId });
+});
+
 export const handleNewMessageEvent = async ({ rowid, params }) => {
   const [emailObj, eventId] = [params, rowid];
   const InboxLabel = LabelType.inbox;
@@ -49,8 +54,8 @@ export const handleNewMessageEvent = async ({ rowid, params }) => {
   const eventParams = {
     labels
   };
-  const prevEmail = await getEmailByKey(emailObj.metadataKey);
-  if (!prevEmail.length) {
+  const [prevEmail] = await getEmailByKey(emailObj.metadataKey);
+  if (!prevEmail) {
     const email = await formIncomingEmailFromData(emailObj);
     const recipients = getRecipientsFromData(emailObj);
     const files =
@@ -63,9 +68,13 @@ export const handleNewMessageEvent = async ({ rowid, params }) => {
       labels,
       files
     };
-    await createEmail(params);
+    const [newEmail] = await createEmail(params);
+    eventParams['threadId'] = emailObj.threadId;
+    eventParams['emailId'] = newEmail.id;
   } else {
-    const prevEmailId = prevEmail[0].id;
+    const prevEmailId = prevEmail.id;
+    eventParams['threadId'] = prevEmail.threadId;
+    eventParams['emailId'] = prevEmailId;
     const prevEmailLabels = await getEmailLabelsByEmailId(prevEmailId);
     const prevLabels = prevEmailLabels.map(item => item.labelId);
     if (!prevLabels.includes(LabelType.inbox.id)) {
@@ -79,7 +88,6 @@ export const handleNewMessageEvent = async ({ rowid, params }) => {
 
 export const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   const [metadataKey, recipientId] = [params.metadataKey, params.from];
-  const [myAccount] = await getAccount();
   if (recipientId !== myAccount.recipientId) {
     const contactEmail = `${recipientId}@${appDomain}`;
     const [contact] = await getContactByEmails([contactEmail]);
@@ -108,5 +116,6 @@ export const removeEvent = eventName => {
 export const Event = {
   NEW_EMAIL: 'new-email',
   UPDATE_SAVED_DRAFTS: 'update-drafts',
-  EMAIL_TRACKING_UPDATE: 'email-tracking-update'
+  EMAIL_TRACKING_UPDATE: 'email-tracking-update',
+  UPDATE_EMAILS: 'update-emails'
 };

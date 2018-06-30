@@ -316,7 +316,7 @@ class ComposerWrapper extends Component {
       };
       await updateEmailLabel(emailLabelParams);
 
-      closeComposerWindow();
+      closeComposerWindow(emailId);
     } catch (e) {
       if (e.message.includes('SQLITE_CONSTRAINT')) {
         // To remove

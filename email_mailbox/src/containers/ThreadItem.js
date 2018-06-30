@@ -11,12 +11,20 @@ import { getTwoCapitalLetters } from '../utils/StringUtils';
 import { SectionType } from '../utils/const';
 import randomcolor from 'randomcolor';
 
-const defineLabels = (labelIds, labels) => {
+const defineLabels = (labelIds, labels, labelsToExclude) => {
   if (!labels.size) return [];
-  const result = labelIds.toArray().map(labelId => {
-    return labels.get(labelId.toString()).toObject();
-  });
+  const result = labelIds.toArray().reduce((result, labelId) => {
+    if (!labelsToExclude.includes(labelId)) {
+      result.push(labels.get(labelId.toString()).toObject());
+    }
+    return result;
+  }, []);
   return result ? result : [];
+};
+
+const defineLabelsToExcludeByMailbox = currentLabelId => {
+  const labelInboxId = LabelType.inbox.id;
+  return currentLabelId === labelInboxId ? [LabelType.sent.id] : [];
 };
 
 const getRecipients = ownProps => {
@@ -44,7 +52,13 @@ const mapStateToProps = (state, ownProps) => {
     date: defineTimeByToday(ownProps.thread.get('date')),
     subject: subject.length === 0 ? '(No Subject)' : subject
   });
-  const labels = defineLabels(thread.get('labels'), state.get('labels'));
+  const mailboxlId = LabelType[ownProps.mailbox].id;
+  const labelsToExclude = defineLabelsToExcludeByMailbox(mailboxlId);
+  const labels = defineLabels(
+    thread.get('labels'),
+    state.get('labels'),
+    labelsToExclude
+  );
   return {
     thread: thread.toJS(),
     color,

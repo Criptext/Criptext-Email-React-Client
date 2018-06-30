@@ -125,6 +125,18 @@ const threads = (state = List([]), action) => {
     case Thread.MOVE_THREADS: {
       return state.filterNot(thread => thread.get('id') === action.labelId);
     }
+    case Thread.ADD_EMAIL: {
+      const { threadId, emailId } = action;
+      if (!threadId || !emailId) {
+        return state;
+      }
+      return state.map(threadItem => {
+        if (threadItem.get('id') === threadId) {
+          return thread(threadItem, action);
+        }
+        return thread;
+      });
+    }
     default:
       return state;
   }
@@ -134,6 +146,9 @@ const thread = (state, action) => {
   switch (action.type) {
     case Thread.UPDATE_UNREAD_THREAD: {
       return state.set('unread', action.thread.unread);
+    }
+    case Thread.ADD_EMAIL: {
+      return state.set('emailIds', state.get('emailIds').push(action.emailId));
     }
     default:
       return state;

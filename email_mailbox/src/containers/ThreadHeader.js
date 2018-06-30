@@ -27,6 +27,12 @@ const defineThreadsSelected = (threads, itemsChecked) => {
 };
 
 const getLabelIncluded = (labels, threadLabels) => {
+  const filteredLabels = labels.filter(item => {
+    const isStarred = item.get('id') === LabelType.starred.id;
+    const isCustom = item.get('type') === 'custom';
+    return isStarred || isCustom;
+  });
+
   if (!threadLabels) return [];
   const hasLabels = threadLabels.reduce((lbs, label) => {
     if (!lbs[label]) {
@@ -37,7 +43,7 @@ const getLabelIncluded = (labels, threadLabels) => {
     return lbs;
   }, {});
 
-  return labels.reduce((lbs, label) => {
+  return filteredLabels.reduce((lbs, label) => {
     const labelId = label.get('id');
     const labelText = label.get('text');
     let checked = 'none';
@@ -54,10 +60,7 @@ const getLabelIncluded = (labels, threadLabels) => {
 };
 
 const getThreadsIds = threads => {
-  const threadIds = threads.map(thread => {
-    return thread.get('id');
-  });
-  return Set(threadIds);
+  return !threads.length ? [] : Set(threads.map(thread => thread.get('id')));
 };
 
 const shouldMarkAsUnread = (threads, itemsChecked) => {
@@ -70,19 +73,28 @@ const shouldMarkAsUnread = (threads, itemsChecked) => {
   return hasUnread !== undefined;
 };
 
+const getLabelIdsFromThreadIds = (state, threadIds) => {
+  return state
+    .get('threads')
+    .filter(thread => threadIds.includes(thread.get('id')))
+    .reduce((result, thread) => {
+      const labels = thread.get('labels').toArray();
+      return [...result, ...labels];
+    }, []);
+};
+
 const mapStateToProps = (state, ownProps) => {
   const threads = state.get('threads');
   const threadIds = getThreadsIds(threads);
-  const labels = getLabelIncluded(
-    state.get('labels').filter(item => item.get('type') === 'custom'),
-    ownProps.thread ? ownProps.thread.labels : null
-  );
-  const markAsUnread = ownProps.itemsChecked
-    ? shouldMarkAsUnread(threads, ownProps.itemsChecked)
-    : !ownProps.threadIdSelected.unread;
   const threadsSelected = ownProps.itemsChecked
     ? defineThreadsSelected(threads, ownProps.itemsChecked)
     : defineOneThreadSelected(threads, ownProps.threadIdSelected);
+  const threadIdsSelected = threadsSelected.map(thread => thread.threadIdStore);
+  const threadsLabelIds = getLabelIdsFromThreadIds(state, threadIdsSelected);
+  const labels = getLabelIncluded(state.get('labels'), threadsLabelIds);
+  const markAsUnread = ownProps.itemsChecked
+    ? shouldMarkAsUnread(threads, ownProps.itemsChecked)
+    : !ownProps.threadIdSelected.unread;
   const allSelected = ownProps.itemsChecked
     ? threadIds.size === ownProps.itemsChecked.size
     : false;
@@ -99,9 +111,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onAddLabel: (threadIds, label) => {
-      dispatch(actions.addThreadsLabel(threadIds, label)).then(() =>
-        ownProps.onBackOption()
-      );
+      dispatch(actions.addThreadsLabel(threadIds, label)).then(() => {
+        if (ownProps.itemsChecked) {
+          ownProps.onBackOption();
+        }
+      });
     },
     onAddMoveLabel: (threadIds, labelId) => {
       dispatch(actions.addMoveThreadsLabel(threadIds, labelId)).then(() =>

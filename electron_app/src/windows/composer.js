@@ -155,20 +155,37 @@ const editDraft = async emailToEdit => {
   });
 };
 
-const destroy = async composerId => {
+const destroy = async ({ composerId, emailId }) => {
   const composer = BrowserWindow.fromId(composerId);
   const emailToEdit = globalManager.emailToEdit.get(composer.id);
-  if (emailToEdit && emailToEdit.type === composerEvents.EDIT_DRAFT) {
-    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit.key);
-    await dbManager.deleteEmailLabelAndContactByEmailId(
-      prevEmail.id,
-      undefined
-    );
+  if (emailToEdit) {
+    const { type } = emailToEdit;
+    const isEditDraft = type === composerEvents.EDIT_DRAFT;
+    const isReplyOrReplyAll =
+      type === composerEvents.REPLY || type === composerEvents.REPLY_ALL;
+    const [storedEmail] = await dbManager.getEmailByKey(emailToEdit.key);
+    if (isEditDraft) {
+      await dbManager.deleteEmailLabelAndContactByEmailId(
+        storedEmail.id,
+        undefined
+      );
+      sendEventoToMailbox('update-drafts', undefined);
+    }
+    if (isReplyOrReplyAll) {
+      const dataToMailbox = {
+        threadId: storedEmail.threadId,
+        emailId
+      };
+      sendEventoToMailbox('update-thread-emails', dataToMailbox);
+    }
   }
   globalManager.composerData.delete(composer.id);
   composer.destroy();
-  if (mailboxWindow !== undefined) {
-    mailboxWindow.send('update-drafts');
+};
+
+const sendEventoToMailbox = (eventName, data) => {
+  if (mailboxWindow) {
+    mailboxWindow.send(eventName, data);
   }
 };
 
@@ -183,9 +200,7 @@ const saveDraftToDatabase = async (composerId, dataDraft) => {
       dataDraft
     );
   }
-  if (mailboxWindow) {
-    mailboxWindow.send('update-drafts');
-  }
+  sendEventoToMailbox('update-drafts', undefined);
 };
 
 module.exports = {
