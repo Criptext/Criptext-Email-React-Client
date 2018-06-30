@@ -6,6 +6,7 @@
 
   header{
     align-items: center;
+    background-color: #373a45;
     cursor: pointer;
     display: flex;
     height: $_HEIGHT_HEADER;
@@ -141,7 +142,7 @@
   width: 79px;
 
   header{
-    background-color: #0091ff;
+    background-color: #373a45;
 
     &:before{
       content: '';
@@ -150,13 +151,13 @@
       position: absolute;
       right: -8px;
       top: 24px;
-      border-left: 8px solid #0091ff;
+      border-left: 8px solid #373a45;
       border-top: 8px solid transparent;
       border-bottom: 8px solid transparent;
     }
 
     i{
-      color: white;
+      color: #0091ff;
       display: inline;
       font-size: 38px;
       margin: 0 auto;
