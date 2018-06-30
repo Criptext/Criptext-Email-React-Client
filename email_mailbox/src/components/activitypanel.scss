@@ -20,7 +20,7 @@ aside.navigation-feed-container{
   top: 0px;
 
   header{
-    background-color: #f7f7f8;
+    background-color: #373a45;
     height: $_HEIGHT_HEADER;
     width: 288px;
 
@@ -38,7 +38,7 @@ aside.navigation-feed-container{
         i {
           position: relative;
           top: calc(50% - 13px);
-          color: #000000;
+          color: white;
         }
 
         .badge {
@@ -79,13 +79,12 @@ aside.navigation-feed-container{
         height: 20px;
         margin: 0%;
         float: left;
-        font-weight: 900;
+        font-weight: 700;
         text-align: left;
-        color: #000000;
+        color: white;
       }
 
       .header-button {
-        background-color: #0091ff;
         cursor: pointer;
         float: right;
         font-size: 24px;

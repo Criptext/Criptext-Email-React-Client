@@ -11,17 +11,14 @@
     display: flex;
     height: $_HEIGHT_HEADER;
     position: relative;
-
-    i{
-      display: none;
-    }
   }
 }
 
 .header-icon{
   align-items: center;
-  background-image: url(../#{$_PATH_TO_IMAGES}/header-icon.png);
+  background-image: url(../#{$_PATH_TO_IMAGES}/header-icon.svg);
   background-position: center;
+  background-repeat: no-repeat;
   background-size: 100%;
   height: 36px;
   margin: 0 auto;
@@ -138,6 +135,12 @@
   width: 210px;
 }
 
+@mixin collapse-header-icon{
+  background-image: url(../#{$_PATH_TO_IMAGES}/header-icon-mini.svg);
+  background-size: auto 100%;
+  width: 100%;
+}
+
 .sidebar-app-collapse .sidebar-app{
   width: 79px;
 
@@ -155,17 +158,10 @@
       border-top: 8px solid transparent;
       border-bottom: 8px solid transparent;
     }
-
-    i{
-      color: #0091ff;
-      display: inline;
-      font-size: 38px;
-      margin: 0 auto;
-    }
   }
 
   .header-icon{
-    display: none;
+    @include collapse-header-icon;
   }
 
   button.button-compose{
@@ -206,23 +202,16 @@
     width: 79px;
 
     header{
-      background-color: #0091ff;
+      background-color: #373a45;
 
       &:before{
         display: none;
-      }
-
-      i{
-        color: white;
-        display: inline;
-        font-size: 38px;
-        margin: 0 auto;
       }
     }
   }
 
   .header-icon{
-    display: none;
+    @include collapse-header-icon;
   }
 
   button.button-compose{

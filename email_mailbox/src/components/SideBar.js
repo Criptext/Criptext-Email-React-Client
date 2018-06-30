@@ -10,7 +10,6 @@ const SideBar = props => (
   <aside className="sidebar-app">
     <header onClick={() => props.onToggleSideBar()}>
       <div className="header-icon" />
-      <i className="icon-criptext" />
     </header>
     <div className="navigation-partial-mail">
       <div className="nav-item-free">
