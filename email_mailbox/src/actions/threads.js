@@ -106,6 +106,12 @@ export const moveThreads = (threadIds, labelId) => ({
   labelId
 });
 
+export const updateStatusThread = (threadId, newStatus) => ({
+  type: Thread.UPDATE_STATUS,
+  status: newStatus,
+  threadId
+});
+
 export const updateUnreadThread = thread => {
   return {
     type: Thread.UPDATE_UNREAD_THREAD,
@@ -308,8 +314,7 @@ export const sendOpenEvent = threadId => {
       const unreadEmails = await getUnreadEmailsByThreadId(threadId);
       if (unreadEmails.length > 0) {
         const metadataKeys = unreadEmails.map(item => Number(item.key));
-        const params = { metadataKeys };
-        await postOpenEvent(params);
+        await postOpenEvent(metadataKeys);
       }
     } catch (e) {
       // TO DO

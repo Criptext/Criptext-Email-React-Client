@@ -137,6 +137,18 @@ const threads = (state = List([]), action) => {
         return thread;
       });
     }
+    case Thread.UPDATE_STATUS: {
+      const { status, threadId } = action;
+      if (!threadId || !status) {
+        return state;
+      }
+      return state.map(threadItem => {
+        if (threadItem.get('id') === threadId) {
+          return thread(threadItem, action);
+        }
+        return thread;
+      });
+    }
     default:
       return state;
   }
@@ -149,6 +161,9 @@ const thread = (state, action) => {
     }
     case Thread.ADD_EMAIL: {
       return state.set('emailIds', state.get('emailIds').push(action.emailId));
+    }
+    case Thread.UPDATE_STATUS: {
+      return state.update('status', action.status);
     }
     default:
       return state;

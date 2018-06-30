@@ -7,7 +7,8 @@ import {
   LabelType,
   getContactByEmails,
   createFeedItem,
-  myAccount
+  myAccount,
+  updateOpenedEmailByKey
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -15,7 +16,7 @@ import {
   formIncomingEmailFromData,
   getRecipientsFromData
 } from './EmailUtils';
-import { SocketCommand, appDomain, FeedItemType } from './const';
+import { SocketCommand, appDomain, FeedItemType, EmailStatus } from './const';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -92,18 +93,24 @@ export const handleNewMessageEvent = async ({ rowid, params }) => {
 export const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   const [metadataKey, recipientId] = [params.metadataKey, params.from];
   if (recipientId !== myAccount.recipientId) {
-    const contactEmail = `${recipientId}@${appDomain}`;
-    const [contact] = await getContactByEmails([contactEmail]);
     const [email] = await getEmailByKey(metadataKey);
-    const feedItemParams = {
-      date: params.date,
-      type: FeedItemType.OPENED.value,
-      emailId: email.id,
-      contactId: contact.id
-    };
-    await createFeedItem([feedItemParams]);
-    await acknowledgeEvents([rowid]);
-    emitter.emit(Event.EMAIL_TRACKING_UPDATE);
+    if (email) {
+      await updateOpenedEmailByKey({
+        key: metadataKey,
+        status: EmailStatus.READ
+      });
+      const contactEmail = `${recipientId}@${appDomain}`;
+      const [contact] = await getContactByEmails([contactEmail]);
+      const feedItemParams = {
+        date: params.date,
+        type: FeedItemType.OPENED.value,
+        emailId: email.id,
+        contactId: contact.id
+      };
+      await createFeedItem([feedItemParams]);
+      await acknowledgeEvents([rowid]);
+      emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id);
+    }
   }
   // To do: Sync this event with my other devices
 };

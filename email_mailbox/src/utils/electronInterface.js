@@ -237,6 +237,10 @@ export const updateLabel = params => {
   return dbManager.updateLabel(params);
 };
 
+export const updateOpenedEmailByKey = ({ key, status }) => {
+  return dbManager.updateLabel({ key, status });
+};
+
 export const updateUnreadEmailByThreadId = (threadId, value) => {
   return dbManager.updateEmailByThreadId({ threadId, unread: value });
 };

@@ -48,11 +48,13 @@ export const FeedItemType = {
 };
 
 export const EmailStatus = {
-  UNSENT: -1,
-  NONE: 0,
-  SENT: 1,
-  DELIVERED: 2,
-  OPENED: 3
+  FAIL: 1,
+  UNSENT: 2,
+  NONE: 3,
+  SENDING: 4,
+  SENT: 5,
+  DELIVERED: 6,
+  READ: 7
 };
 
 export const SocketCommand = {

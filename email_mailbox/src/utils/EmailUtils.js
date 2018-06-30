@@ -1,5 +1,6 @@
 import { removeAppDomain, removeHTMLTags } from './StringUtils';
 import signal from './../libs/signal';
+import { EmailStatus } from './const';
 
 const getContentMessage = async ({
   bodyKey,
@@ -49,7 +50,7 @@ export const formIncomingEmailFromData = async data => {
     preview,
     subject: data.subject,
     date: data.date,
-    status: 1,
+    status: EmailStatus.NONE,
     unread: true,
     secure: true,
     isMuted: false

@@ -11,7 +11,6 @@ import {
   myAccount,
   throwError,
   updateEmail,
-  updateEmailLabel,
   saveDraftChanges,
   errors,
   deleteEmailsByIds,
@@ -26,6 +25,7 @@ import {
 } from './../utils/ArrayUtils';
 import signal from './../libs/signal';
 import {
+  EmailStatus,
   formOutgoingEmailFromData,
   formDataToEditDraft,
   formDataToReply
@@ -280,7 +280,7 @@ class ComposerWrapper extends Component {
     this.setState({ status: Status.WAITING });
     const { data, to, subject, body } = formOutgoingEmailFromData(
       this.state,
-      LabelType.draft.id
+      LabelType.sent.id
     );
     let emailId, key;
     try {
@@ -310,15 +310,14 @@ class ComposerWrapper extends Component {
       const { metadataKey, date } = res.body;
       const threadId = this.state.threadId || res.body.threadId;
       key = metadataKey;
-      const emailParams = { id: emailId, key, threadId, date };
-      await updateEmail(emailParams);
-
-      const emailLabelParams = {
-        emailId,
-        oldLabelId: LabelType.draft.id,
-        newLabelId: LabelType.sent.id
+      const emailParams = {
+        id: emailId,
+        key,
+        threadId,
+        date,
+        status: EmailStatus.SENT
       };
-      await updateEmailLabel(emailLabelParams);
+      await updateEmail(emailParams);
 
       closeComposerWindow(emailId);
     } catch (e) {

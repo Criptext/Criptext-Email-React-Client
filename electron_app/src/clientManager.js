@@ -64,8 +64,8 @@ class ClientManager {
     return client.postKeyBundle(params);
   }
 
-  postOpenEvent(params) {
-    return client.postOpenEvent(params);
+  postOpenEvent(metadataKeys) {
+    return client.postOpenEvent({ metadataKeys });
   }
 
   postUser(params) {

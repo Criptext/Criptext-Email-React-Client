@@ -564,16 +564,19 @@ const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
   });
 };
 
-const updateEmail = ({ id, key, threadId, date, isMuted, unread }) => {
+const updateEmail = ({ id, key, threadId, date, isMuted, unread, status }) => {
   const params = {};
   if (key) params.key = key;
   if (threadId) params.threadId = threadId;
   if (date) params.date = date;
   if (typeof unread === 'boolean') params.unread = unread;
   if (typeof isMuted === 'boolean') params.isMuted = isMuted;
+  if (status) params.status = status;
+
+  const whereParam = id ? { id } : { key };
   return db
     .table(Table.EMAIL)
-    .where({ id })
+    .where(whereParam)
     .update(params);
 };
 
