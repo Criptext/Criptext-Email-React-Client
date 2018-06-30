@@ -96,14 +96,20 @@ export const formFileParamsToDatabase = (files, emailId) => {
       token: item.token,
       name: item.fileData.name,
       size: item.fileData.size,
-      status: 'sent',
+      status: 0,
       date: Date.now(),
+      mimeType: item.fileData.type,
       emailId
     };
   });
 };
 
-export const getFileTokens = files => {
+export const getFileParamsToSend = files => {
   if (!files.length) return undefined;
-  return files.map(file => ({ token: file.token }));
+  return files.map(file => ({
+    token: file.token,
+    name: file.fileData.name,
+    size: file.fileData.size,
+    mimeType: file.fileData.type
+  }));
 };

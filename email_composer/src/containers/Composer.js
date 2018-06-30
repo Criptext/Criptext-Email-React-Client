@@ -31,7 +31,10 @@ import {
   formDataToReply
 } from './../utils/EmailUtils';
 import { Map } from 'immutable';
-import { formFileParamsToDatabase, getFileTokens } from './../utils/FileUtils';
+import {
+  formFileParamsToDatabase,
+  getFileParamsToSend
+} from './../utils/FileUtils';
 import {
   fileManager,
   CHUNK_SIZE,
@@ -206,7 +209,8 @@ class ComposerWrapper extends Component {
 
   handleUploadSuccess = ({ token }) => {
     const files = updateObjectFieldsInArray(this.state.files, 'token', token, {
-      mode: FILE_MODES.UPLOADED
+      mode: FILE_MODES.UPLOADED,
+      percentage: 100
     });
     this.setState({ files });
   };
@@ -282,7 +286,7 @@ class ComposerWrapper extends Component {
     try {
       [emailId] = await createEmail(data);
 
-      const files = getFileTokens(this.state.files);
+      const files = getFileParamsToSend(this.state.files);
       const peer = {
         recipientId: myAccount.recipientId,
         type: 'peer',

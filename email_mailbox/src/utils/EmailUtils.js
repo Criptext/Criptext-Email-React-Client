@@ -75,16 +75,17 @@ export const formEmailLabel = ({ emailId, labels }) => {
   });
 };
 
-export const formFilesFromData = files => {
+export const formFilesFromData = ({ files, date }) => {
   return files.map(file => {
-    const { token, name, read_only, size, status, timestamp } = file;
+    const { token, name, read_only, size, status, mimeType } = file;
     return {
       token,
       name,
       readOnly: read_only ? true : false,
       size,
-      status,
-      date: timestamp
+      status: status || 0,
+      date,
+      mimeType
     };
   });
 };

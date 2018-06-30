@@ -147,7 +147,7 @@ const createFileColumns = table => {
   table.integer('size').notNullable();
   table.integer('status').notNullable();
   table.dateTime('date').notNullable();
-  table.string('type', TINY_STRING_SIZE);
+  table.string('mimeType', TINY_STRING_SIZE).notNullable();
   table
     .integer('ephemeral')
     .notNullable()
