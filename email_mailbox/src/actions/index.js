@@ -20,7 +20,8 @@ import {
   selectThreads,
   removeThreads,
   removeThreadsLabel,
-  sendOpenEvent
+  sendOpenEvent,
+  updateStatusThread
 } from './threads';
 import {
   addEmails,
@@ -90,6 +91,7 @@ export {
   updateFeedItemSuccess,
   updateLabel,
   updateLabelSuccess,
+  updateStatusThread,
   updateUnreadEmails,
   updateUnreadThread,
   updateUnreadThreads

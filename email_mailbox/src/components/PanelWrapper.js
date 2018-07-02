@@ -68,9 +68,13 @@ class PanelWrapper extends Component {
       }
     });
 
+    addEvent(Event.EMAIL_TRACKING_UPDATE, threadId => {
+      props.onMarkThreadAsOpen(threadId);
+    });
+
     addEvent(Event.UPDATE_THREAD_EMAILS, eventParams => {
-      const newThreadId = eventParams.threadId;
-      props.onLoadEmails(newThreadId);
+      const { threadId } = eventParams;
+      props.onLoadEmails(threadId);
       props.onAddEmailToThread({
         threadId: this.state.sectionSelected.params.threadIdSelected,
         emailId: eventParams.emailId
@@ -178,6 +182,7 @@ class PanelWrapper extends Component {
 PanelWrapper.propTypes = {
   onAddEmailToThread: PropTypes.func,
   onLoadEmails: PropTypes.func,
+  onMarkThreadAsOpen: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,
   onUpdateTimestamp: PropTypes.func,

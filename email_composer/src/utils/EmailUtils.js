@@ -33,6 +33,16 @@ const getCriptextRecipients = (recipients, type) => {
     }));
 };
 
+export const EmailStatus = {
+  FAIL: 1,
+  UNSENT: 2,
+  NONE: 3,
+  SENDING: 4,
+  SENT: 5,
+  DELIVERED: 6,
+  READ: 7
+};
+
 export const formOutgoingEmailFromData = (composerData, labelId) => {
   const recipients = {
     to: composerData.toEmails,
@@ -52,7 +62,7 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
     content: body,
     preview: removeHTMLTags(body).slice(0, 21),
     date: Date.now(),
-    status: 1,
+    status: EmailStatus.SENDING,
     unread: false,
     secure: true,
     isMuted: false

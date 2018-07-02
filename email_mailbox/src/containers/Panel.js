@@ -4,7 +4,8 @@ import {
   loadThreads,
   updateLabelSuccess,
   updateAllFeedItemsAsOlder,
-  loadEmails
+  loadEmails,
+  updateStatusThread
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import {
@@ -13,6 +14,7 @@ import {
   updateAccount
 } from '../utils/electronInterface';
 import { storeSeenTimestamp } from '../utils/storage';
+import { EmailStatus } from '../utils/const';
 
 const mapStateToProps = state => {
   const threadsCount = state.get('threads').size;
@@ -45,6 +47,10 @@ const mapDispatchToProps = dispatch => {
       const { labelId } = params;
       const rejectedLabelIds = defineRejectedLabels(labelId);
       dispatch(loadThreads({ ...params, ...rejectedLabelIds }));
+    },
+    onMarkThreadAsOpen: threadId => {
+      const readStatus = EmailStatus.READ;
+      dispatch(updateStatusThread(threadId, readStatus));
     },
     onUpdateOpenedAccount: async () => {
       const opened = true;

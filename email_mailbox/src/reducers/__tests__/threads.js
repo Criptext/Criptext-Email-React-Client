@@ -33,4 +33,26 @@ describe('Set thread state by actions', () => {
     const unread = emailUpdated.get('unread');
     expect(unread).toBe(false);
   });
+
+  it('should set thread param: status, action[UPDATE_STATUS]', () => {
+    const state = initState(threads);
+    const threadId = 1;
+    const newStatus = 2;
+    const action = actions.updateStatusThread(threadId, newStatus);
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const status = emailUpdated.get('status');
+    expect(status).toBe(newStatus);
+  });
+
+  it('should not set thread param status because is undefined, action[UPDATE_STATUS]', () => {
+    const state = initState(threads);
+    const threadId = 1;
+    const badStatus = undefined;
+    const action = actions.updateStatusThread(threadId, badStatus);
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const status = emailUpdated.get('status');
+    expect(status).not.toBe(badStatus);
+  });
 });
