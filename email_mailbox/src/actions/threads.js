@@ -106,10 +106,10 @@ export const moveThreads = (threadIds, labelId) => ({
   labelId
 });
 
-export const updateStatusThread = (threadId, newStatus) => ({
+export const updateStatusThread = (threadId, status) => ({
   type: Thread.UPDATE_STATUS,
-  status: newStatus,
-  threadId
+  threadId,
+  status
 });
 
 export const updateUnreadThread = thread => {

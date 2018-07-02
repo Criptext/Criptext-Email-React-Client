@@ -65,7 +65,7 @@ class ClientManager {
   }
 
   postOpenEvent(metadataKeys) {
-    return client.postOpenEvent({ metadataKeys });
+    return client.postOpenEvent(metadataKeys);
   }
 
   postUser(params) {

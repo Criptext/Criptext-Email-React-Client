@@ -16,7 +16,7 @@ import {
   formIncomingEmailFromData,
   getRecipientsFromData
 } from './EmailUtils';
-import { SocketCommand, appDomain, FeedItemType, EmailStatus } from './const';
+import { SocketCommand, appDomain, EmailStatus } from './const';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -103,7 +103,7 @@ export const handleEmailTrackingUpdate = async ({ rowid, params }) => {
       const [contact] = await getContactByEmails([contactEmail]);
       const feedItemParams = {
         date: params.date,
-        type: FeedItemType.OPENED.value,
+        type: params.type,
         emailId: email.id,
         contactId: contact.id
       };

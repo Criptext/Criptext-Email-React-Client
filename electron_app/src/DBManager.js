@@ -1,5 +1,6 @@
 const { db, cleanDataBase, createTables, Table } = require('./models.js');
 const { formContactsRow } = require('./utils/dataTableUtils.js');
+const { noNulls } = require('./utils/ObjectUtils');
 
 /* Account
    ----------------------------- */
@@ -565,14 +566,14 @@ const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
 };
 
 const updateEmail = ({ id, key, threadId, date, isMuted, unread, status }) => {
-  const params = {};
-  if (key) params.key = key;
-  if (threadId) params.threadId = threadId;
-  if (date) params.date = date;
-  if (typeof unread === 'boolean') params.unread = unread;
-  if (typeof isMuted === 'boolean') params.isMuted = isMuted;
-  if (status) params.status = status;
-
+  const params = noNulls({
+    key,
+    threadId,
+    date,
+    unread: typeof unread === 'boolean' ? unread : undefined,
+    isMuted: typeof isMuted === 'boolean' ? isMuted : undefined,
+    status
+  });
   const whereParam = id ? { id } : { key };
   return db
     .table(Table.EMAIL)

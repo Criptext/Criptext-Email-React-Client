@@ -238,7 +238,7 @@ export const updateLabel = params => {
 };
 
 export const updateOpenedEmailByKey = ({ key, status }) => {
-  return dbManager.updateLabel({ key, status });
+  return dbManager.updateEmail({ key, status });
 };
 
 export const updateUnreadEmailByThreadId = (threadId, value) => {
