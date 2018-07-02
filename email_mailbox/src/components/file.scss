@@ -5,10 +5,11 @@
   border: 1px solid #e7e5e5;
   border-radius: 6px;
   display: flex;
-  height: 38px;
+  height: 20px;
   margin-right: 20px;
+  padding: 10px;
   position: relative;
-  width: 256px;
+  width: 236px;
 
   &:hover{
     background-color: #f7f6f6;
@@ -32,10 +33,23 @@
       font-size: 13px;
     }
   }
+
+  .file-tooltip{
+    background-color: #e1e1e1 !important;
+    color: black !important;
+    font-weight: normal;
+    font-size: 10.5px !important;
+    border-radius: 3px !important;
+    padding: 4px 16px !important;
+   
+      &:after{
+        border-top-color: #e1e1e1 !important;
+        border-bottom-color: #e1e1e1 !important;
+      }
+  }
 }
 
 .file-content-icon{
-  margin-left: 12px;
   position: relative;
 
   >div{
@@ -54,25 +68,29 @@
   .icon-container-file-default{
     background-color: #4a90e2;
   }
-  
 }
 
 .file-content-detail{
   display: flex;
   flex-grow: 1;
+  height: 100%;
   margin-left: 10px;
-  padding-right: 14px;
+  width: calc(100% - 32px);
 
   .file-detail-name{
-    display: flex;
     flex-grow: 1;
     font-size: 14px;
     font-weight: 700;
+    overflow: hidden;
+    padding-right: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .file-detail-size{
     color: #9b9b9b;
     flex-grow: 0;
     font-size: 13px;
+    white-space: nowrap;
   }
 }

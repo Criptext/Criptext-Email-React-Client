@@ -25,6 +25,7 @@ aside.navigation-feed-container{
     width: 288px;
 
     .header-content {
+      cursor: pointer;
       margin: 0%;
 
       .feed-header-icon {
@@ -86,6 +87,7 @@ aside.navigation-feed-container{
 
       .header-button {
         cursor: pointer;
+        display: none;
         float: right;
         font-size: 24px;
         height: $_HEIGHT_HEADER;

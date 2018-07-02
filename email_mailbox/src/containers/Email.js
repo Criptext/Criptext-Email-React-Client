@@ -62,7 +62,7 @@ const getContacts = (contacts, contactIds) => {
 const getFiles = (files, fileTokens) => {
   return fileTokens
     ? files.size
-      ? fileTokens.map(token => {
+      ? fileTokens.filter(token => files.get(token)).map(token => {
           return files.get(token).toJS();
         })
       : []

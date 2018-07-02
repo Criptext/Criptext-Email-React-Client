@@ -16,13 +16,13 @@ class ActivityPanel extends Component {
     return (
       <aside className="navigation-feed-container">
         <header>
-          <div className="header-content">
+          <div
+            className="header-content"
+            onClick={() => this.props.onToggleActivityPanel()}
+          >
             {this.renderHeaderIcon()}
             <div className="header-title">ACTIVITY FEED</div>
-            <div
-              className="header-button"
-              onClick={() => this.props.onToggleActivityPanel()}
-            >
+            <div className="header-button">
               <i className="icon-next" />
             </div>
             <div className="header-clear" />

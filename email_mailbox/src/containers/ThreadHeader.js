@@ -60,7 +60,7 @@ const getLabelIncluded = (labels, threadLabels) => {
 };
 
 const getThreadsIds = threads => {
-  return !threads.length ? [] : Set(threads.map(thread => thread.get('id')));
+  return !threads.size ? Set() : Set(threads.map(thread => thread.get('id')));
 };
 
 const shouldMarkAsUnread = (threads, itemsChecked) => {
