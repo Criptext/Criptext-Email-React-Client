@@ -15,8 +15,6 @@ const activity = (state = initActivity, action) => {
         return state.set('multiselect', false);
       }
       return state;
-    case Thread.MOVE_THREADS:
-      return state.set('multiselect', false);
     case Activity.START_LOAD_SYNC:
       return state.set('isSyncing', true);
     case Activity.STOP_LOAD_SYNC:

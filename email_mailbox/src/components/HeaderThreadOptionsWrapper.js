@@ -126,11 +126,19 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   handleClickMoveToSpam = () => {
-    this.props.onAddMoveLabel(this.props.threadsSelected, LabelType.spam.id);
+    this.props.onAddMoveLabel(
+      this.props.threadsSelected,
+      LabelType.spam.id,
+      this.props.itemsChecked ? false : true
+    );
   };
 
   handleClickMoveToTrash = () => {
-    this.props.onAddMoveLabel(this.props.threadsSelected, LabelType.trash.id);
+    this.props.onAddMoveLabel(
+      this.props.threadsSelected,
+      LabelType.trash.id,
+      this.props.itemsChecked ? false : true
+    );
   };
 
   handleClickDeleteThread = () => {
@@ -183,6 +191,7 @@ class HeaderThreadOptionsWrapper extends Component {
 }
 
 HeaderThreadOptionsWrapper.propTypes = {
+  itemsChecked: PropTypes.object,
   mailboxSelected: PropTypes.string,
   markAsUnread: PropTypes.bool,
   onAddLabel: PropTypes.func,

@@ -123,7 +123,8 @@ const threads = (state = List([]), action) => {
       return state.map(thread => thread.set('selected', true));
     }
     case Thread.MOVE_THREADS: {
-      return state.filterNot(thread => thread.get('id') === action.labelId);
+      const threadIds = action.threadIds;
+      return state.filterNot(thread => threadIds.includes(thread.get('id')));
     }
     case Thread.ADD_EMAIL: {
       const { threadId, emailId } = action;

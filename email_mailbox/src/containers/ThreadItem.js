@@ -120,37 +120,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
       }
     },
-    onRemove: () => {
+    onAddMoveLabel: labelId => {
       const threadParams = {
         threadIdStore: ownProps.thread.get('id'),
         threadIdDB: ownProps.thread.get('threadId')
       };
-      dispatch(actions.addThreadLabel(threadParams, LabelType.trash.id));
+      dispatch(
+        actions.addMoveThreadsLabel({ threadsParams: [threadParams], labelId })
+      );
     },
-    onStarClick: () => {
+    onAddOrRemoveLabel: labelId => {
       const thread = ownProps.thread;
       const threadParams = {
         threadIdStore: thread.get('id'),
         threadIdDB: thread.get('threadId')
       };
-      if (thread.get('labels').contains(LabelType.starred.id)) {
-        dispatch(actions.removeThreadLabel(threadParams, LabelType.starred.id));
+      if (thread.get('labels').contains(labelId)) {
+        dispatch(actions.removeThreadLabel(threadParams, labelId));
       } else {
-        dispatch(actions.addThreadLabel(threadParams, LabelType.starred.id));
-      }
-    },
-    onImportantClick: () => {
-      const thread = ownProps.thread;
-      const threadParams = {
-        threadIdStore: thread.get('id'),
-        threadIdDB: thread.get('threadId')
-      };
-      if (thread.get('labels').contains(LabelType.important.id)) {
-        dispatch(
-          actions.removeThreadLabel(threadParams, LabelType.important.id)
-        );
-      } else {
-        dispatch(actions.addThreadLabel(threadParams, LabelType.important.id));
+        dispatch(actions.addThreadLabel(threadParams, labelId));
       }
     }
   };

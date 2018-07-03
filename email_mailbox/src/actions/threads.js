@@ -26,7 +26,7 @@ export const addThreads = (threads, clear) => ({
   clear: clear
 });
 
-export const addMoveThreadsLabel = (threadsParams, labelId) => {
+export const addMoveThreadsLabel = ({ threadsParams, labelId, notMove }) => {
   return async dispatch => {
     try {
       const storeIds = threadsParams.map(param => param.threadIdStore);
@@ -38,7 +38,7 @@ export const addMoveThreadsLabel = (threadsParams, labelId) => {
           return await createEmailLabel(params);
         })
       );
-      if (dbReponse) {
+      if (dbReponse && !notMove) {
         dispatch(moveThreads(storeIds, labelId));
       }
     } catch (e) {

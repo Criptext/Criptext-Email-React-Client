@@ -153,16 +153,7 @@ class ThreadItem extends Component {
           tip="Favorite"
           icon="icon-star"
           myClass={this.props.starred ? 'thread-label-mark' : ''}
-          onClick={this.onStarClick}
-          onMouseEnterItem={this.props.onMouseEnterItem}
-          onMouserLeaveItem={this.props.onMouserLeaveItem}
-        />
-        <HoverMenuItem
-          targetId={`important${threadId}`}
-          tip="Important"
-          icon="icon-tag"
-          myClass={this.props.important ? 'thread-label-mark' : ''}
-          onClick={this.onImportantClick}
+          onClick={this.onToggleFavorite}
           onMouseEnterItem={this.props.onMouseEnterItem}
           onMouserLeaveItem={this.props.onMouserLeaveItem}
         />
@@ -170,7 +161,7 @@ class ThreadItem extends Component {
           targetId={`remove${threadId}`}
           tip="Move to Trash"
           icon="icon-trash"
-          onClick={this.onRemove}
+          onClick={this.onClickMoveToTrash}
           onMouseEnterItem={this.props.onMouseEnterItem}
           onMouserLeaveItem={this.props.onMouserLeaveItem}
         />
@@ -195,19 +186,14 @@ class ThreadItem extends Component {
     );
   };
 
-  onStarClick = ev => {
+  onToggleFavorite = ev => {
     ev.stopPropagation();
-    this.props.onStarClick();
+    this.props.onToggleFavorite();
   };
 
-  onImportantClick = ev => {
+  onClickMoveToTrash = ev => {
     ev.stopPropagation();
-    this.props.onImportantClick();
-  };
-
-  onRemove = ev => {
-    ev.stopPropagation();
-    this.props.onRemove();
+    this.props.onClickMoveToTrash();
   };
 
   renderMoreLabels = (labels, threadId) => {
@@ -266,14 +252,13 @@ ThreadItem.propTypes = {
   mailbox: PropTypes.string,
   multiselect: PropTypes.bool,
   onCheckItem: PropTypes.func,
-  onImportantClick: PropTypes.func,
+  onClickMoveToTrash: PropTypes.func,
+  onToggleFavorite: PropTypes.func,
   onMouseEnterItem: PropTypes.func,
   onMouserLeaveItem: PropTypes.func,
   onRegionEnter: PropTypes.func,
   onRegionLeave: PropTypes.func,
   onSelectThread: PropTypes.func,
-  onStarClick: PropTypes.func,
-  onRemove: PropTypes.func,
   recipients: PropTypes.string,
   searchParams: PropTypes.object,
   starred: PropTypes.bool,

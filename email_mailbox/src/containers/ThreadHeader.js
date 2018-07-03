@@ -117,10 +117,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
       });
     },
-    onAddMoveLabel: (threadIds, labelId) => {
-      dispatch(actions.addMoveThreadsLabel(threadIds, labelId)).then(() =>
-        ownProps.onBackOption()
-      );
+    onAddMoveLabel: (threadIds, labelId, notMove) => {
+      dispatch(
+        actions.addMoveThreadsLabel({
+          threadsParams: threadIds,
+          labelId,
+          notMove
+        })
+      ).then(() => ownProps.onBackOption());
     },
     onRemoveLabel: (threadsIds, label) => {
       dispatch(actions.removeThreadsLabel(threadsIds, label)).then(() =>
