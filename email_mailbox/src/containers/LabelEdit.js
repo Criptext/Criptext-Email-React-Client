@@ -19,6 +19,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const LabelEdit = connect(null, mapDispatchToProps)(LabelEditView);
+const LabelEdit = connect(
+  null,
+  mapDispatchToProps
+)(LabelEditView);
 
 export default LabelEdit;

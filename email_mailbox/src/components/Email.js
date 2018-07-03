@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import File from './File';
+import FileWrapper from './FileWrapper';
 import ButtonExpand, { ButtonExpandType } from './ButtonExpandWrapper';
 import MenuHOC from './MenuHOC';
 import EmailMoreInfo from './EmailMoreInfo';
@@ -125,7 +125,7 @@ const renderEmailExpand = props => (
         {props.files.length ? (
           <div disabled={props.hideView} className="email-files">
             {props.files.map((file, index) => {
-              return <File key={index} file={file} />;
+              return <FileWrapper key={index} file={file} />;
             })}
           </div>
         ) : null}

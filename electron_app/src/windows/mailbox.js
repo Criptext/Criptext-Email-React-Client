@@ -1,4 +1,4 @@
-const { BrowserWindow, shell } = require('electron');
+const { BrowserWindow, shell, app, dialog } = require('electron');
 const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
 const path = require('path');
@@ -42,6 +42,27 @@ const create = () => {
   mailboxWindow.webContents.on('new-window', function(e, url) {
     e.preventDefault();
     shell.openExternal(url);
+  });
+  mailboxWindow.webContents.session.on('will-download', (e, item) => {
+    const downloadsPath = app.getPath('downloads');
+    const filename = item.getFilename();
+    const filePath = path.join(downloadsPath, filename);
+    item.setSavePath(filePath);
+    item.once('done', (e, state) => {
+      if (state === 'completed') {
+        dialog.showMessageBox({
+          type: 'info',
+          title: 'Success',
+          message: "Download successfully.\nCheck your 'Downloads' folder.",
+          buttons: ['Ok']
+        });
+      } else {
+        const title = 'Download failed';
+        const message =
+          "'An error occurred during the download.\nThe file was not saved'";
+        dialog.showErrorBox(title, message);
+      }
+    });
   });
   mailboxWindowState.manage(mailboxWindow);
 };

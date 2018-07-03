@@ -120,6 +120,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const Threads = connect(mapStateToProps, mapDispatchToProps)(ThreadsView);
+const Threads = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ThreadsView);
 
 export default Threads;

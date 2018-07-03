@@ -65,8 +65,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const ActivityPanel = connect(mapStateToProps, mapDispatchToProps)(
-  ActivityPanelView
-);
+const ActivityPanel = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ActivityPanelView);
 
 export default ActivityPanel;

@@ -1,6 +1,6 @@
 @import "./../styles/index.scss";
 
-.file-container{
+.file-content{
   align-items: center;
   border: 1px solid #e7e5e5;
   border-radius: 6px;
@@ -17,12 +17,26 @@
     .file-detail-size{
       color: #f7f6f6;
     }
-    button{
+    .file-button-download{
       display: flex;
     }
   }
 
-  button{
+  &.file-loading {
+    opacity: 0.5;
+
+    .file-button-download{
+      display: none;
+    }
+    .file-button-cancel {
+      display: flex;
+    }
+    .file-detail-size{
+      color: transparent;
+    }
+  }
+
+  .file-button-download{
     background: transparent;
     display: none;
     position: absolute;
@@ -31,6 +45,18 @@
     i{
       color: #89909a;
       font-size: 13px;
+    }
+  }
+
+  .file-button-cancel{
+    background: transparent;
+    position: absolute;
+    right: 12px;
+    top: 7px;
+
+    i{
+      color: #89909a;
+      font-size: 25px;
     }
   }
 
@@ -49,8 +75,18 @@
   }
 }
 
+.file-bar-loading {
+  height: 2px;
+  background-color: #0091ff;
+  position: relative;
+  top: -2px;
+  left: 3px;
+  max-width: 91%;
+}
+
 .file-content-icon{
   position: relative;
+  background-color:#4a90e2;
 
   >div{
     align-items: center;
@@ -92,5 +128,6 @@
     flex-grow: 0;
     font-size: 13px;
     white-space: nowrap;
+    line-height: 21px;
   }
 }

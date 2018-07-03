@@ -24,7 +24,9 @@ class Lottie extends Component {
   }
 
   componentDidMount() {
-    const { options: { loop, autoplay, animationData } } = this.props;
+    const {
+      options: { loop, autoplay, animationData }
+    } = this.props;
 
     this.options = {
       container: this.el,
