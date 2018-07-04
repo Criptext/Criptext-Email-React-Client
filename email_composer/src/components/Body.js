@@ -17,6 +17,7 @@ const Body = props => (
       onDragLeave={props.handleDragLeave}
       onDragOver={props.handleDragOver}
       onDrop={props.onDrop}
+      onFocusTextEditor={props.onFocusTextEditor}
       onPauseUploadFile={props.onPauseUploadFile}
       onResumeUploadFile={props.onResumeUploadFile}
     />
@@ -45,6 +46,7 @@ Body.propTypes = {
   onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func,
   onDrop: PropTypes.func,
+  onFocusTextEditor: PropTypes.func,
   onPauseUploadFile: PropTypes.func,
   onResumeUploadFile: PropTypes.func,
   status: PropTypes.number

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Editor from './EditorWrapper';
+import EditorWrapper from './EditorWrapper';
 import AttachmentWrapper from './AttachmentWrapper';
 import './dropfilefield.css';
 
@@ -13,11 +13,12 @@ const DropfileField = props => (
     onDragOver={props.onDragOver}
     onDrop={props.onDrop}
   >
-    <Editor
+    <EditorWrapper
       htmlBody={props.htmlBody}
       toolbarHidden={props.isToolbarHidden}
       getHtmlBody={props.getHtmlBody}
       blockRenderMap={props.blockRenderMap}
+      onFocusTextEditor={props.onFocusTextEditor}
     />
     <div className="files-container">
       {renderPreview(
@@ -79,6 +80,7 @@ DropfileField.propTypes = {
   onDragLeave: PropTypes.func,
   onDragOver: PropTypes.func,
   onDrop: PropTypes.func,
+  onFocusTextEditor: PropTypes.func,
   onPauseUploadFile: PropTypes.func,
   onResumeUploadFile: PropTypes.func
 };

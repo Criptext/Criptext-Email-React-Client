@@ -9,12 +9,14 @@ const Subject = props => (
       placeholder="Subject"
       value={props.text}
       onChange={props.onChangeInput}
+      onFocus={props.onFocusInput}
     />
   </div>
 );
 
 Subject.propTypes = {
   onChangeInput: PropTypes.func,
+  onFocusInput: PropTypes.func,
   text: PropTypes.string
 };
 

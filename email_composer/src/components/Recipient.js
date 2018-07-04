@@ -16,7 +16,7 @@ const Recipient = props => (
         {renderRecipientBcc(props)}
       </div>
     )}
-    <div className="recipient-toggle" onClick={props.onToggleRecipient}>
+    <div className="recipient-toggle" onClick={() => props.onToggleRecipient()}>
       <i
         className={
           props.isCollapsedMoreRecipient ? 'icon-arrow-down' : 'icon-arrow-up'

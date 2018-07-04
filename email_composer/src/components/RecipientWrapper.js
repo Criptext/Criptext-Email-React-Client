@@ -4,22 +4,15 @@ import Recipient from './Recipient';
 import { emailRegex } from './../utils/RegexUtils';
 
 class RecipientWrapper extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isCollapsedMoreRecipient: true
-    };
-  }
-
   render() {
     return (
       <Recipient
         {...this.props}
-        isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
         bccTags={this.props.bccEmails}
         ccTags={this.props.ccEmails}
         emailRegex={emailRegex}
-        onToggleRecipient={this.handleToggleRecipient}
+        isCollapsedMoreRecipient={this.props.isCollapsedMoreRecipient}
+        onToggleRecipient={this.props.onToggleRecipient}
         onChangeBccTag={this.handleOnChangeBccTag}
         onChangeCcTag={this.handleOnChangeCcTag}
         onChangeToTag={this.handleOnChangeToTag}
@@ -30,12 +23,6 @@ class RecipientWrapper extends Component {
       />
     );
   }
-
-  handleToggleRecipient = () => {
-    this.setState({
-      isCollapsedMoreRecipient: !this.state.isCollapsedMoreRecipient
-    });
-  };
 
   handleOnChangeBccTag = tags => {
     this.props.getBccEmails(tags);
@@ -68,6 +55,8 @@ RecipientWrapper.propTypes = {
   getBccEmails: PropTypes.func,
   getCcEmails: PropTypes.func,
   getToEmails: PropTypes.func,
+  isCollapsedMoreRecipient: PropTypes.bool,
+  onToggleRecipient: PropTypes.func,
   toEmails: PropTypes.array
 };
 

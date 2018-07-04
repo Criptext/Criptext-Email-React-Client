@@ -8,19 +8,25 @@ class SubjectWrapper extends Component {
       <Subject
         {...this.props}
         getSubject={this.handleGetText}
-        onChangeInput={this.handleOnChangeInput}
+        onChangeInput={this.handleChangeInput}
+        onFocusInput={this.handleFocusInput}
         text={this.props.text}
       />
     );
   }
 
-  handleOnChangeInput = e => {
+  handleChangeInput = e => {
     this.props.getText(e.target.value);
+  };
+
+  handleFocusInput = () => {
+    this.props.onFocusInput(true);
   };
 }
 
 SubjectWrapper.propTypes = {
   getText: PropTypes.func,
+  onFocusInput: PropTypes.func,
   text: PropTypes.string
 };
 

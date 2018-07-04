@@ -33,6 +33,7 @@ class EditorWrapper extends Component {
         onEditorStateChange={this.onChangeHtmlBody}
         placeholder={'Message'}
         blockRenderMap={this.props.blockRenderMap}
+        onFocus={() => this.handleFocus()}
       />
     );
   }
@@ -40,12 +41,17 @@ class EditorWrapper extends Component {
   onChangeHtmlBody = html => {
     this.props.getHtmlBody(html);
   };
+
+  handleFocus = () => {
+    this.props.onFocusTextEditor(true);
+  };
 }
 
 EditorWrapper.propTypes = {
   blockRenderMap: PropTypes.object,
   getHtmlBody: PropTypes.func,
-  htmlBody: PropTypes.object
+  htmlBody: PropTypes.object,
+  onFocusTextEditor: PropTypes.func
 };
 
 export default EditorWrapper;

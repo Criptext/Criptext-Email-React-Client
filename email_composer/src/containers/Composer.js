@@ -56,15 +56,16 @@ class ComposerWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      toEmails: [],
-      ccEmails: [],
       bccEmails: [],
+      ccEmails: [],
+      files: [],
       htmlBody: EditorState.createEmpty(),
-      textSubject: '',
-      status: undefined,
-      threadId: undefined,
+      isCollapsedMoreRecipient: true,
       isDragActive: false,
-      files: []
+      status: undefined,
+      textSubject: '',
+      threadId: undefined,
+      toEmails: []
     };
   }
 
@@ -72,28 +73,30 @@ class ComposerWrapper extends Component {
     return (
       <Composer
         {...this.props}
-        ccEmails={this.state.ccEmails}
         bccEmails={this.state.bccEmails}
-        htmlBody={this.state.htmlBody}
-        toEmails={this.state.toEmails}
+        blockRenderMap={blockRenderMap}
+        ccEmails={this.state.ccEmails}
+        files={this.state.files}
         getBccEmails={this.handleGetBccEmail}
         getCcEmails={this.handleGetCcEmail}
         getTextSubject={this.handleGetSubject}
         getToEmails={this.handleGetToEmail}
         getHtmlBody={this.handleGetHtmlBody}
-        onClickSendMessage={this.handleSendMessage}
-        textSubject={this.state.textSubject}
-        status={this.state.status}
-        blockRenderMap={blockRenderMap}
-        files={this.state.files}
-        isDragActive={this.state.isDragActive}
-        onClearFile={this.handleClearFile}
-        onDrop={this.handleDrop}
         handleDragLeave={this.handleDragLeave}
         handleDragOver={this.handleDragOver}
+        htmlBody={this.state.htmlBody}
+        isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
+        isDragActive={this.state.isDragActive}
+        onClearFile={this.handleClearFile}
+        onClickDiscardDraft={this.handleClickDiscardDraft}
+        onClickSendMessage={this.handleSendMessage}
+        onDrop={this.handleDrop}
         onPauseUploadFile={this.handlePauseUploadFile}
         onResumeUploadFile={this.handleResumeUploadFile}
-        onClickDiscardDraft={this.handleClickDiscardDraft}
+        onToggleRecipient={this.handleToggleRecipient}
+        status={this.state.status}
+        textSubject={this.state.textSubject}
+        toEmails={this.state.toEmails}
       />
     );
   }
@@ -341,6 +344,13 @@ class ComposerWrapper extends Component {
       }
       this.setState({ status: Status.ENABLED });
     }
+  };
+
+  handleToggleRecipient = value => {
+    this.setState({
+      isCollapsedMoreRecipient:
+        value !== undefined ? value : !this.state.isCollapsedMoreRecipient
+    });
   };
 
   saveTemporalDraft = () => {

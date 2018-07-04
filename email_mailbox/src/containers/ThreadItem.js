@@ -27,6 +27,12 @@ const defineLabelsToExcludeByMailbox = currentLabelId => {
   return currentLabelId === labelInboxId ? [LabelType.sent.id] : [];
 };
 
+const defineSubject = (subject, emailSize) => {
+  const text = subject.length === 0 ? '(No Subject)' : subject;
+  const emailCounter = emailSize > 1 ? ` (${emailSize})` : '';
+  return `${text}${emailCounter}`;
+};
+
 const getRecipients = ownProps => {
   const thread = ownProps.thread;
   const ownMailbox = ownProps.mailbox;
@@ -47,10 +53,12 @@ const mapStateToProps = (state, ownProps) => {
     seed: recipients,
     luminosity: 'bright'
   });
-  const subject = ownProps.thread.get('subject');
   const thread = ownProps.thread.merge({
     date: defineTimeByToday(ownProps.thread.get('date')),
-    subject: subject.length === 0 ? '(No Subject)' : subject
+    subject: defineSubject(
+      ownProps.thread.get('subject'),
+      ownProps.thread.get('emailIds').size
+    )
   });
   const mailboxlId = LabelType[ownProps.mailbox].id;
   const labelsToExclude = defineLabelsToExcludeByMailbox(mailboxlId);
