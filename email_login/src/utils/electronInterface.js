@@ -124,6 +124,10 @@ export const createAccount = params => {
   return dbManager.createAccount(params);
 };
 
+export const createContact = params => {
+  return dbManager.createContact(params);
+};
+
 export const createIdentityKeyRecord = params => {
   return dbManager.createIdentityKeyRecord(params);
 };
