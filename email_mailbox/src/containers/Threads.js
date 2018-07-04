@@ -42,16 +42,21 @@ const defineRejectedLabels = labelId => {
 
 const mapStateToProps = (state, ownProps) => {
   const mailboxTitle = LabelType[ownProps.mailboxSelected].text;
-  const unreadFilter = state.get('activities').get('unreadFilter');
+  const switchUnreadThreadsStatus = state
+    .get('activities')
+    .get('isFilteredByUnreadThreads');
   const buttonSyncStatus = defineStatus(
     state.get('activities').get('isSyncing')
   );
   const threads = state.get('threads');
+  const unreadThreads = state
+    .get('threads')
+    .filter(thread => thread.get('unread'));
   return {
     buttonSyncStatus,
     mailboxTitle,
-    threads,
-    unreadFilter
+    threads: switchUnreadThreadsStatus ? unreadThreads : threads,
+    switchUnreadThreadsStatus
   };
 };
 
