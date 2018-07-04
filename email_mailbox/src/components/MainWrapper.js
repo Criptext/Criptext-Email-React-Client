@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderHOC from './HeaderHOC';
 import HeaderMainBasic from './../containers/HeaderMain';
-import HeaderBasicThreadOptions from './../containers/ThreadHeader';
+import HeaderThreadOptionsBasic from './../containers/HeaderThreadOptions';
 import Threads from '../containers/Threads';
 import Thread from '../containers/Thread';
 import SettingsWrapper from './SettingsWrapper';
@@ -10,7 +10,7 @@ import { SectionType } from '../utils/const';
 import { Set } from 'immutable';
 
 const HeaderMain = HeaderHOC(HeaderMainBasic);
-const HeaderThreadOptions = HeaderHOC(HeaderBasicThreadOptions);
+const HeaderThreadOptions = HeaderHOC(HeaderThreadOptionsBasic);
 
 class MainWrapper extends Component {
   constructor(props) {

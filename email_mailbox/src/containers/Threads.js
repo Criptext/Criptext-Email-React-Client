@@ -4,7 +4,7 @@ import {
   loadThreads,
   filterThreadsByUnread
 } from '../actions/index';
-import ThreadsView from '../components/Threads';
+import ThreadsView from '../components/ThreadsWrapper';
 import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';
 

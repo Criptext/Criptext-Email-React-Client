@@ -155,7 +155,7 @@ class ThreadItem extends Component {
           myClass={this.props.starred ? 'thread-label-mark' : ''}
           onClick={this.onToggleFavorite}
           onMouseEnterItem={this.props.onMouseEnterItem}
-          onMouserLeaveItem={this.props.onMouserLeaveItem}
+          onMouseLeaveItem={this.props.onMouseLeaveItem}
         />
         <HoverMenuItem
           targetId={`remove${threadId}`}
@@ -163,7 +163,7 @@ class ThreadItem extends Component {
           icon="icon-trash"
           onClick={this.onClickMoveToTrash}
           onMouseEnterItem={this.props.onMouseEnterItem}
-          onMouserLeaveItem={this.props.onMouserLeaveItem}
+          onMouseLeaveItem={this.props.onMouseLeaveItem}
         />
       </div>
     );
@@ -205,7 +205,7 @@ class ThreadItem extends Component {
           this.props.onMouseEnterItem(`labelstip${threadId}`, labels);
         }}
         onMouseLeave={() => {
-          this.props.onMouserLeaveItem(`labelstip${threadId}`);
+          this.props.onMouseLeaveItem(`labelstip${threadId}`);
         }}
       >
         <span>{labels.length - 1}+</span>
@@ -224,7 +224,7 @@ const HoverMenuItem = props => (
       props.onMouseEnterItem(props.targetId, props.tip);
     }}
     onMouseLeave={() => {
-      props.onMouserLeaveItem(props.targetId);
+      props.onMouseLeaveItem(props.targetId);
     }}
   >
     <i className={props.icon} />
@@ -236,7 +236,7 @@ HoverMenuItem.propTypes = {
   myClass: PropTypes.string,
   onClick: PropTypes.func,
   onMouseEnterItem: PropTypes.func,
-  onMouserLeaveItem: PropTypes.func,
+  onMouseLeaveItem: PropTypes.func,
   targetId: PropTypes.string,
   tip: PropTypes.string
 };
@@ -255,7 +255,7 @@ ThreadItem.propTypes = {
   onClickMoveToTrash: PropTypes.func,
   onToggleFavorite: PropTypes.func,
   onMouseEnterItem: PropTypes.func,
-  onMouserLeaveItem: PropTypes.func,
+  onMouseLeaveItem: PropTypes.func,
   onRegionEnter: PropTypes.func,
   onRegionLeave: PropTypes.func,
   onSelectThread: PropTypes.func,

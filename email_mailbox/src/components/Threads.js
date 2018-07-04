@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ThreadItem from '../containers/ThreadItem';
 import { Switch } from 'react-switch-input';
@@ -8,205 +8,111 @@ import ReactTooltip from 'react-tooltip';
 import './threads.css';
 import EmptyMailbox from './EmptyMailbox';
 
-const SCROLL_BOTTOM_LIMIT = 25;
-
-class Threads extends Component {
-  constructor() {
-    super();
-    this.state = {
-      hoverTarget: null,
-      tip: ''
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      this.props.mailboxSelected !== nextProps.mailboxSelected ||
-      this.props.searchParams !== nextProps.searchParams ||
-      (nextProps.threadItemsChecked.size === 0 &&
-        this.props.threadItemsChecked.size > 0)
-    ) {
-      this.props.onLoadThreads(
-        nextProps.mailboxSelected,
-        true,
-        nextProps.searchParams
-      );
-    }
-    if (
-      this.props.threadItemsChecked.size > 0 &&
-      this.props.mailboxSelected !== nextProps.mailboxSelected
-    ) {
-      this.props.onBackOption();
-    }
-  }
-
-  render() {
-    return (
-      <div className="threads-header-wrapper">
-        <div className="threads-info-header">
-          <div className="threads-mailbox-title-container">
-            <h1 className="threads-mailbox-title">{this.props.mailboxTitle}</h1>
-            <ButtonSync
-              onClick={this.props.onLoadEvents}
-              status={this.props.buttonSyncStatus}
-            />
-          </div>
-          <div className="threads-toggle-container">
-            <span className={this.props.unreadFilter ? 'disabled' : ''}>
-              All
-            </span>
-            <Switch
-              theme="two"
-              name="unreadSwitch"
-              onChange={this.handleSwitchChange}
-              checked={this.props.unreadFilter}
-            />
-            <span className={this.props.unreadFilter ? '' : 'disabled'}>
-              Unread
-            </span>
-          </div>
-        </div>
-        <div className="threads-wrapper" onScroll={this.handleTableScrolled}>
-          <div className="threads-container">
-            {this.props.threads.size < 1 ? (
-              <EmptyMailbox mailbox={this.props.mailboxSelected} />
-            ) : null}
-            {this.props.threads.map((thread, index) => {
-              const checked = this.props.threadItemsChecked.has(
-                thread.get('id')
-              );
-              return (
-                <ThreadItem
-                  key={index}
-                  myIndex={index}
-                  checked={checked}
-                  mailbox={this.props.mailboxSelected} // ?
-                  thread={thread}
-                  onClickSelectedItem={this.props.onClickSection}
-                  onMouseEnterItem={this.handleMouseEnterItem}
-                  onMouserLeaveItem={this.handleMouserLeaveItem}
-                  searchParams={this.props.searchParams}
-                  onCheckItem={this.props.onCheckThreadItem}
-                  isHiddenCheckBox={!this.props.threadItemsChecked.size}
-                />
-              );
-            })}
-          </div>
-        </div>
-        {this.renderTooltipForThread()}
-        {this.renderLabelsForThread()}
+const Threads = props => (
+  <div className="threads-header-wrapper">
+    <div className="threads-info-header">
+      <div className="threads-mailbox-title-container">
+        <h1 className="threads-mailbox-title">{props.mailboxTitle}</h1>
+        <ButtonSync
+          onClick={props.onLoadEvents}
+          status={props.buttonSyncStatus}
+        />
       </div>
-    );
-  }
-
-  componentDidMount() {
-    this.props.onLoadThreads(
-      this.props.mailboxSelected,
-      true,
-      this.props.searchParams
-    );
-    this.props.onLoadEvents();
-  }
-
-  renderTooltipForThread = () => {
-    if (!this.state.hoverTarget || !this.state.tip) {
-      return null;
-    }
-
-    return <ItemTooltip target={this.state.hoverTarget} tip={this.state.tip} />;
-  };
-
-  renderLabelsForThread = () => {
-    const labels = this.state.labels;
-    if (!labels) {
-      return null;
-    }
-
-    return (
-      <ReactTooltip
-        place="top"
-        className="labels-tooltip"
-        id={this.state.hoverTarget}
-        type="dark"
-        effect="solid"
-      >
-        {labels.map(label => {
+      <div className="threads-toggle-container">
+        <span className={props.unreadFilter ? 'disabled' : ''}>All</span>
+        <Switch
+          theme="two"
+          name="unreadSwitch"
+          onChange={props.onChangeSwitch}
+          checked={props.unreadFilter}
+        />
+        <span className={props.unreadFilter ? '' : 'disabled'}>Unread</span>
+      </div>
+    </div>
+    <div className="threads-wrapper" onScroll={props.onScroll}>
+      <div className="threads-container">
+        {props.threads.size < 1 ? (
+          <EmptyMailbox mailbox={props.mailboxSelected} />
+        ) : null}
+        {props.threads.map((thread, index) => {
+          const checked = props.threadItemsChecked.has(thread.get('id'));
           return (
-            <div
-              key={label.id}
-              style={{ backgroundColor: label.color }}
-              className="innerLabel"
-            >
-              {label.text}
-            </div>
+            <ThreadItem
+              key={index}
+              myIndex={index}
+              checked={checked}
+              mailbox={props.mailboxSelected}
+              thread={thread}
+              onClickSelectedItem={props.onClickSection}
+              onMouseEnterItem={props.onMouseEnterItem}
+              onMouseLeaveItem={props.onMouseLeaveItem}
+              searchParams={props.searchParams}
+              onCheckItem={props.onCheckThreadItem}
+              isHiddenCheckBox={!props.threadItemsChecked.size}
+            />
           );
         })}
-        <div className="tooltip-tip"> </div>
-      </ReactTooltip>
-    );
-  };
+      </div>
+    </div>
+    {renderTooltipForThread(props.hoverTarget, props.tip)}
+    {renderLabelsForThread(props.hoverTarget, props.labels)}
+  </div>
+);
 
-  handleMouseEnterItem = (id, data) => {
-    if (typeof data === 'string') {
-      return this.setState({
-        hoverTarget: id,
-        tip: data
-      });
-    }
+const renderTooltipForThread = (hoverTarget, tip) => {
+  if (!hoverTarget || !tip) {
+    return null;
+  }
 
-    this.setState({
-      hoverTarget: id,
-      labels: data
-    });
-  };
+  return <ItemTooltip target={hoverTarget} tip={tip} />;
+};
 
-  handleMouserLeaveItem = id => {
-    if (id !== this.state.hoverTarget) {
-      return;
-    }
+const renderLabelsForThread = (hoverTarget, labels) => {
+  if (!labels) {
+    return null;
+  }
 
-    this.setState({
-      hoverTarget: null,
-      tip: '',
-      labels: null
-    });
-  };
-
-  handleSwitchChange = ev => {
-    this.props.onUnreadToggle(ev.target.checked);
-  };
-
-  handleTableScrolled = e => {
-    const scrollTop = e.target.scrollTop;
-    const height = e.target.clientHeight;
-    const scrollHeight = e.target.scrollHeight;
-    const lastThread = this.props.threads.last();
-
-    if (scrollTop + height > scrollHeight - SCROLL_BOTTOM_LIMIT && lastThread) {
-      const timestamp = lastThread.get('timestamp');
-      this.props.onLoadThreads(
-        this.props.mailboxSelected,
-        false,
-        this.props.searchParams,
-        timestamp
-      );
-    }
-  };
-}
+  return (
+    <ReactTooltip
+      place="top"
+      className="labels-tooltip"
+      id={hoverTarget}
+      type="dark"
+      effect="solid"
+    >
+      {labels.map(label => {
+        return (
+          <div
+            key={label.id}
+            style={{ backgroundColor: label.color }}
+            className="innerLabel"
+          >
+            {label.text}
+          </div>
+        );
+      })}
+      <div className="tooltip-tip"> </div>
+    </ReactTooltip>
+  );
+};
 
 Threads.propTypes = {
   buttonSyncStatus: PropTypes.number,
+  hoverTarget: PropTypes.string,
+  labels: PropTypes.array,
   mailboxSelected: PropTypes.string,
   mailboxTitle: PropTypes.string,
-  onBackOption: PropTypes.func,
+  onChangeSwitch: PropTypes.func,
   onCheckThreadItem: PropTypes.func,
   onClickSection: PropTypes.func,
   onLoadEvents: PropTypes.func,
-  onLoadThreads: PropTypes.func,
-  onUnreadToggle: PropTypes.func,
+  onMouseEnterItem: PropTypes.func,
+  onMouseLeaveItem: PropTypes.func,
+  onScroll: PropTypes.func,
   searchParams: PropTypes.object,
   threadItemsChecked: PropTypes.object,
   threads: PropTypes.object,
+  tip: PropTypes.string,
   unreadFilter: PropTypes.bool
 };
 

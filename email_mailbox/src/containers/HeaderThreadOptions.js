@@ -160,8 +160,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const ThreadHeader = connect(mapStateToProps, mapDispatchToProps)(
+const HeaderThreadOptions = connect(mapStateToProps, mapDispatchToProps)(
   HeaderThreadOptionsWrapper
 );
 
-export default ThreadHeader;
+export default HeaderThreadOptions;
