@@ -19,14 +19,18 @@ const Threads = props => (
         />
       </div>
       <div className="threads-toggle-container">
-        <span className={props.unreadFilter ? 'disabled' : ''}>All</span>
+        <span className={props.switchUnreadThreadsStatus ? 'disabled' : ''}>
+          All
+        </span>
         <Switch
           theme="two"
           name="unreadSwitch"
           onChange={props.onChangeSwitch}
-          checked={props.unreadFilter}
+          checked={props.switchUnreadThreadsStatus}
         />
-        <span className={props.unreadFilter ? '' : 'disabled'}>Unread</span>
+        <span className={props.switchUnreadThreadsStatus ? '' : 'disabled'}>
+          Unread
+        </span>
       </div>
     </div>
     <div className="threads-wrapper" onScroll={props.onScroll}>
@@ -110,10 +114,10 @@ Threads.propTypes = {
   onMouseLeaveItem: PropTypes.func,
   onScroll: PropTypes.func,
   searchParams: PropTypes.object,
+  switchUnreadThreadsStatus: PropTypes.bool,
   threadItemsChecked: PropTypes.object,
   threads: PropTypes.object,
-  tip: PropTypes.string,
-  unreadFilter: PropTypes.bool
+  tip: PropTypes.string
 };
 
 export default Threads;

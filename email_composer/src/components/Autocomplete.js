@@ -14,6 +14,7 @@ const Autocomplete = props => {
       onSuggestionSelected={props.onSuggestionSelected}
       onSuggestionsClearRequested={props.onSuggestionsClearRequested}
       onSuggestionsFetchRequested={props.onSuggestionsFetchRequested}
+      highlightFirstSuggestion={true}
     />
   );
 };

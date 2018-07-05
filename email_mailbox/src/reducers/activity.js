@@ -1,7 +1,10 @@
 import { Thread, Activity } from '../actions/types';
 import { Map } from 'immutable';
 
-const initActivity = Map({ isSyncing: false });
+const initActivity = Map({
+  isSyncing: false,
+  isFilteredByUnreadThreads: false
+});
 const activity = (state = initActivity, action) => {
   switch (action.type) {
     case Thread.SELECT:
@@ -9,7 +12,10 @@ const activity = (state = initActivity, action) => {
         multiselect: false
       });
     case Thread.UNREAD_FILTER:
-      return state.set('unreadFilter', action.enabled);
+      return state.update(
+        'isFilteredByUnreadThreads',
+        switchUnreadThreadsStatus => !switchUnreadThreadsStatus
+      );
     case Thread.DESELECT_THREADS:
       if (action.spread) {
         return state.set('multiselect', false);
