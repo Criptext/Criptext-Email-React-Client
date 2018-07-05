@@ -1,0 +1,99 @@
+.message-container{
+  display: flex;
+  margin: 0 110px;
+  position: absolute;
+  top: 10px;
+  width: calc(100% - 220px);
+  z-index: 3;
+}
+
+.message-content {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  display: flex;
+  height: 22px;
+  margin: 0 auto;
+  padding: 0 15px;
+  width: auto;
+
+  &.message-advice{
+    background-color: #eff6ff;
+    border-color: #c7e1ff;
+  }
+
+  &.message-suggestion{
+    background-color: #0091ff;
+    border-color: #0091ff;
+    color: white;
+    padding-right: 3px;
+
+    button{
+      color: white;
+    }
+  }
+
+  &.message-question{
+    background-color: #0091ff;
+    border-color: #0091ff;
+    color: white;
+
+    .message-buttons{
+      display: flex;
+
+      button{
+        margin: 0 10px;
+
+        span{
+          color: white;
+          font-style: normal;
+        }
+      }
+    }
+  }
+
+  &.message-success{
+    background-color: #f4eabe;
+    border-color: #f4eabe;
+  }
+
+  &.message-error{
+    background-color: #d26054;
+    border-color: #d26054;
+    color: white;
+
+    button{
+      color: white;
+    }
+  }
+
+  &.message-network{
+    background-color: #9abe4e;
+    border-color: #9abe4e;
+    color: white;
+  }
+
+  .message-description{
+    font-size: 13px;
+    font-weight: 200;
+  }
+
+  button {
+    align-items: center;
+    background-color: transparent;
+    color: #373a45;
+    display: flex;
+    margin-left: 10px;
+    padding: 0;
+
+    span{
+      font-size: 13px;
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    i{
+      font-size: 19px;
+    }
+  }
+}
