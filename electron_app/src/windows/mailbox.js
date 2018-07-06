@@ -5,8 +5,8 @@ const path = require('path');
 let mailboxWindow;
 
 const mailboxSize = {
-  width: 1094,
-  height: 604
+  width: 1400,
+  height: 800
 };
 
 const iconPath = path.join(
@@ -42,7 +42,6 @@ const show = async () => {
   }
   mailboxWindow.once('ready-to-show', () => {
     mailboxWindow.show();
-    mailboxWindow.maximize();
   });
 };
 
