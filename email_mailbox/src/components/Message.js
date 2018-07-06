@@ -47,7 +47,7 @@ const renderMessageType = props => {
     props.type === MessageType.SUGGESTION ||
     props.type === MessageType.SUCCESS ||
     props.type === MessageType.ERROR ||
-    props.type === MessageType.NETWORK
+    props.type === MessageType.ESTABLISH
   ) {
     return <MessageStandard {...props} />;
   } else if (props.type === MessageType.QUESTION) {
@@ -66,8 +66,8 @@ const defineMessageClass = type => {
       return 'message-success';
     case MessageType.ERROR:
       return 'message-error';
-    case MessageType.NETWORK:
-      return 'message-network';
+    case MessageType.ESTABLISH:
+      return 'message-establish';
     default:
       break;
   }
@@ -79,7 +79,7 @@ const MessageType = {
   QUESTION: 3,
   SUCCESS: 4,
   ERROR: 5,
-  NETWORK: 6
+  ESTABLISH: 6
 };
 
 renderMessageType.propTypes = {

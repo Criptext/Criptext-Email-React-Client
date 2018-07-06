@@ -1,24 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ThreadItem from '../containers/ThreadItem';
+import EmptyMailbox from './EmptyMailbox';
 import { Switch } from 'react-switch-input';
+import Message from './Message';
 import ButtonSync from './ButtonSync';
 import ItemTooltip from './ItemTooltip';
 import ReactTooltip from 'react-tooltip';
 import './threads.css';
-import EmptyMailbox from './EmptyMailbox';
 
 const Threads = props => (
-  <div className="threads-header-wrapper">
-    <div className="threads-info-header">
-      <div className="threads-mailbox-title-container">
+  <div className="threads-container">
+    {!!props.message && <Message message={props.message} />}
+    <div className="threads-header">
+      <div className="threads-header-title-container">
         <h1 className="threads-mailbox-title">{props.mailboxTitle}</h1>
         <ButtonSync
           onClick={props.onLoadEvents}
           status={props.buttonSyncStatus}
         />
       </div>
-      <div className="threads-toggle-container">
+      <div className="threads-header-switch-container">
         <span className={props.switchUnreadThreadsStatus ? 'disabled' : ''}>
           All
         </span>
@@ -33,8 +35,8 @@ const Threads = props => (
         </span>
       </div>
     </div>
-    <div className="threads-wrapper" onScroll={props.onScroll}>
-      <div className="threads-container">
+    <div className="threads-content" onScroll={props.onScroll}>
+      <div className="threads-items">
         {props.threads.size < 1 ? (
           <EmptyMailbox mailbox={props.mailboxSelected} />
         ) : null}
@@ -106,6 +108,7 @@ Threads.propTypes = {
   labels: PropTypes.array,
   mailboxSelected: PropTypes.string,
   mailboxTitle: PropTypes.string,
+  message: PropTypes.object,
   onChangeSwitch: PropTypes.func,
   onCheckThreadItem: PropTypes.func,
   onClickSection: PropTypes.func,
