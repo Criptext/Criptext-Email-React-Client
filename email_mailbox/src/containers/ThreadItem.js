@@ -4,7 +4,8 @@ import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import {
   composerEvents,
   LabelType,
-  openEmailInComposer
+  openEmailInComposer,
+  myAccount
 } from '../utils/electronInterface';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
@@ -33,24 +34,36 @@ const defineSubject = (subject, emailSize) => {
   return `${text}${emailCounter}`;
 };
 
-const getRecipients = ownProps => {
-  const thread = ownProps.thread;
-  const ownMailbox = ownProps.mailbox;
-  if (ownMailbox === 'allmail' || ownMailbox === 'search') {
-    const isSent = thread.get('allLabels').includes(LabelType.sent.id);
-    const isDraft = thread.get('allLabels').includes(LabelType.draft.id);
-    const from = thread.get('fromContactName').first();
-    const to = thread.get('fromContactName').last();
-    return isSent || isDraft ? to : from;
-  }
-  return thread.get('fromContactName').first();
+const formatRecipientsForThreadItem = (recipients, currentUserName) => {
+  const myFormattedRecipient = 'Me';
+  let listMyselftAtEnd = false;
+  const formattedRecipients = recipients.reduce((formatted, recipient) => {
+    if (recipient === currentUserName) {
+      listMyselftAtEnd = true;
+    } else {
+      formatted.push(recipient);
+    }
+    return formatted;
+  }, []);
+  if (listMyselftAtEnd) formattedRecipients.push(myFormattedRecipient);
+  return formattedRecipients.join(', ');
+};
+
+const getFirstRecipient = recipients => {
+  const [first] = recipients.split(', ');
+  return first;
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const recipients = getRecipients(ownProps);
-  const letters = getTwoCapitalLetters(recipients);
+  const recipients = ownProps.thread.get('fromContactName').toArray();
+  const formattedRecipients = formatRecipientsForThreadItem(
+    recipients,
+    myAccount.name
+  );
+  const firstRecipient = getFirstRecipient(formattedRecipients);
+  const letters = getTwoCapitalLetters(firstRecipient);
   const color = randomcolor({
-    seed: recipients,
+    seed: firstRecipient,
     luminosity: 'bright'
   });
   const thread = ownProps.thread.merge({
@@ -75,7 +88,7 @@ const mapStateToProps = (state, ownProps) => {
     important: thread.get('labels').contains(LabelType.important.id),
     labels,
     letters,
-    recipients
+    recipients: formattedRecipients
   };
 };
 

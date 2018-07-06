@@ -20,10 +20,7 @@ const defineContactType = (labelId, from, to) => {
   }
 
   if (labelId === LabelType.sent.id || labelId === LabelType.draft.id) {
-    return ['to'];
-  }
-  if (labelId === LabelType.allmail.id) {
-    return ['from', 'to'];
+    return ['to', 'cc'];
   }
   return ['from'];
 };
@@ -95,10 +92,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onLoadEvents: () => {
       const labelId = LabelType[ownProps.mailboxSelected].id;
-      const clear = true;
+      const contactTypes = defineContactType(labelId, null, null);
+      const rejectedLabelIds = defineRejectedLabels(labelId);
       const params = {
+        rejectedLabelIds,
+        contactTypes,
         labelId,
-        clear
+        clear: true
       };
       dispatch(loadEvents(params));
     },

@@ -23,6 +23,13 @@ const mapStateToProps = state => {
   };
 };
 
+const defineContactType = labelId => {
+  if (labelId === LabelType.sent.id || labelId === LabelType.draft.id) {
+    return ['to', 'cc'];
+  }
+  return ['from'];
+};
+
 const defineRejectedLabels = labelId => {
   switch (labelId) {
     case LabelType.allmail.id:
@@ -46,7 +53,10 @@ const mapDispatchToProps = dispatch => {
     onLoadThreads: params => {
       const { labelId } = params;
       const rejectedLabelIds = defineRejectedLabels(labelId);
-      dispatch(loadThreads({ ...params, ...rejectedLabelIds }));
+      const contactTypes = defineContactType(labelId);
+      dispatch(
+        loadThreads({ ...params, ...rejectedLabelIds, ...contactTypes })
+      );
     },
     onMarkThreadAsOpen: threadId => {
       const readStatus = EmailStatus.READ;
