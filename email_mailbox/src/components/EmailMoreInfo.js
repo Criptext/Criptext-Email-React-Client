@@ -4,7 +4,7 @@ import ContactTag from './ContactTag';
 import './emailmoreinfo.css';
 
 const EmailMoreInfo = props => (
-  <div className="email-more-detail">
+  <div className="email-more-detail" onClick={ev => ev.stopPropagation()}>
     <table>
       <tbody>
         {renderContacts('From:', props.from)}

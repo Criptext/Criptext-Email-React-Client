@@ -27,14 +27,15 @@ const MenuHOC = InComponent =>
             <InComponent {...this.props} />
           </div>
           <div
-            onClick={() => this.handleToggleMenu()}
+            onClick={ev => this.handleToggleMenu(ev)}
             className="menu-overlay"
           />
         </div>
       );
     }
 
-    handleToggleMenu = () => {
+    handleToggleMenu = ev => {
+      ev.stopPropagation();
       if (this.props.onToggleMenu) {
         this.props.onToggleMenu();
       }

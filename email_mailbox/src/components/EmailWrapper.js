@@ -48,7 +48,8 @@ class EmailWrapper extends Component {
     }
   };
 
-  onTooglePopOverEmailMoreInfo = () => {
+  onTooglePopOverEmailMoreInfo = ev => {
+    if (ev) ev.stopPropagation();
     this.setState({
       isHiddenPopOverEmailMoreInfo: !this.state.isHiddenPopOverEmailMoreInfo
     });
