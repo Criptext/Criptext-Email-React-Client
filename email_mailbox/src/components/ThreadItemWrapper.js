@@ -15,6 +15,7 @@ class ThreadItemWrapper extends Component {
     return (
       <ThreadItem
         {...this.props}
+        isVisibleMoveToTrash={this.handleIsVisibleMoveToTrash()}
         onToggleFavorite={this.handleToggleFavorite}
         onClickMoveToTrash={this.handleClickMoveToTrash}
         onRegionEnter={this.onRegionEnter}
@@ -23,6 +24,13 @@ class ThreadItemWrapper extends Component {
       />
     );
   }
+
+  handleIsVisibleMoveToTrash = () => {
+    const currentLabelId = LabelType[this.props.mailbox].id;
+    const isDraftMailbox = currentLabelId === LabelType.draft.id;
+    const isTrashMailbox = currentLabelId === LabelType.trash.id;
+    return !(isDraftMailbox || isTrashMailbox);
+  };
 
   handleToggleFavorite = () => {
     this.props.onAddOrRemoveLabel(LabelType.starred.id);
@@ -46,6 +54,7 @@ class ThreadItemWrapper extends Component {
 }
 
 ThreadItemWrapper.propTypes = {
+  mailbox: PropTypes.string,
   onAddMoveLabel: PropTypes.func,
   onAddOrRemoveLabel: PropTypes.func
 };

@@ -37,9 +37,9 @@ const Threads = props => (
     </div>
     <div className="threads-content" onScroll={props.onScroll}>
       <div className="threads-items">
-        {props.threads.size < 1 ? (
+        {props.threads.size < 1 && (
           <EmptyMailbox mailbox={props.mailboxSelected} />
-        ) : null}
+        )}
         {props.threads.map((thread, index) => {
           const checked = props.threadItemsChecked.has(thread.get('id'));
           return (

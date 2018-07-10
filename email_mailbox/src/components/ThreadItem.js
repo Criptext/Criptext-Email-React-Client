@@ -157,14 +157,16 @@ class ThreadItem extends Component {
           onMouseEnterItem={this.props.onMouseEnterItem}
           onMouseLeaveItem={this.props.onMouseLeaveItem}
         />
-        <HoverMenuItem
-          targetId={`remove${threadId}`}
-          tip="Move to Trash"
-          icon="icon-trash"
-          onClick={this.onClickMoveToTrash}
-          onMouseEnterItem={this.props.onMouseEnterItem}
-          onMouseLeaveItem={this.props.onMouseLeaveItem}
-        />
+        {this.props.isVisibleMoveToTrash && (
+          <HoverMenuItem
+            targetId={`remove${threadId}`}
+            tip="Move to Trash"
+            icon="icon-trash"
+            onClick={this.onClickMoveToTrash}
+            onMouseEnterItem={this.props.onMouseEnterItem}
+            onMouseLeaveItem={this.props.onMouseLeaveItem}
+          />
+        )}
       </div>
     );
   };
@@ -247,6 +249,7 @@ ThreadItem.propTypes = {
   hovering: PropTypes.bool,
   important: PropTypes.bool,
   isHiddenCheckBox: PropTypes.bool,
+  isVisibleMoveToTrash: PropTypes.bool,
   labels: PropTypes.array,
   letters: PropTypes.string,
   mailbox: PropTypes.string,

@@ -146,10 +146,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         () => ownProps.onBackOption()
       );
     },
-    onRemoveThreads: threadsIds => {
-      dispatch(actions.removeThreads(threadsIds)).then(() =>
-        ownProps.onBackOption()
-      );
+    onRemoveThreads: async (threadsIds, backFirst) => {
+      if (backFirst) {
+        await ownProps.onBackOption();
+        dispatch(actions.removeThreads(threadsIds));
+      } else {
+        dispatch(actions.removeThreads(threadsIds)).then(() =>
+          ownProps.onBackOption()
+        );
+      }
     },
     onRemoveDrafts: params => {
       const isDraft = true;
