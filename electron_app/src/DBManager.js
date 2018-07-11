@@ -28,33 +28,44 @@ const createContact = params => {
 };
 
 const createContactsIfOrNotStore = async (contacts, trx) => {
-  const emailAddresses = Array.from(
-    new Set(
-      contacts.map(contact => {
-        const emailMatched = contact.match(/<(.*)>/);
-        return emailMatched ? emailMatched[1] : contact;
-      })
-    )
-  );
+  const parsedContacts = filterUniqueContacts(formContactsRow(contacts));
+
+  const contactsMap = parsedContacts.reduce((contactsObj, contact) => {
+    contactsObj[contact.email] = contact;
+    return contactsObj;
+  }, {});
+  const emailAddresses = Object.keys(contactsMap);
+
   const knex = trx || db;
   const contactsFound = await knex
-    .select('email')
+    .select('*')
     .from(Table.CONTACT)
     .whereIn('email', emailAddresses);
-  if (contactsFound.length === emailAddresses.length) return emailAddresses;
-  const storedEmailAddresses = contactsFound.map(contact => {
-    return contact.email;
-  });
 
-  const newContacts = contacts.filter(
-    contact =>
-      !storedEmailAddresses.includes(
-        contact.match(/<(.*)>/) ? contact.match(/<(.*)>/)[1] : contact
-      )
+  const contactsToUpdate = contactsFound.reduce((toUpdateArray, contact) => {
+    const email = contact.email;
+    const newName = contactsMap[email].name;
+    if (!contact.name && newName) {
+      toUpdateArray.push({ email, name: newName });
+    }
+    return toUpdateArray;
+  }, []);
+
+  const storedEmailAddresses = contactsFound.map(
+    storedContact => storedContact.email
   );
-  const contactsRowCkecked = filterUniqueContacts(formContactsRow(newContacts));
+  const newContacts = parsedContacts.filter(
+    contact => !storedEmailAddresses.includes(contact.email)
+  );
 
-  await knex.insert(contactsRowCkecked).into(Table.CONTACT);
+  if (newContacts.length) {
+    await knex.insert(newContacts).into(Table.CONTACT);
+  }
+  if (contactsToUpdate.length) {
+    await Promise.all(
+      contactsToUpdate.map(contact => updateContactByEmail(contact, knex))
+    );
+  }
   return emailAddresses;
 };
 
@@ -114,6 +125,14 @@ const getContactsIdByType = (emailContacts, type) => {
   return emailContacts
     .filter(item => item.type === type)
     .map(item => item.contactId);
+};
+
+const updateContactByEmail = ({ email, name }, trx) => {
+  const knex = trx || db;
+  return knex
+    .table(Table.CONTACT)
+    .where({ email })
+    .update({ name });
 };
 
 /* EmailContact

@@ -84,8 +84,8 @@ const mapStateToProps = (state, ownProps) => {
     thread: thread.toJS(),
     color,
     multiselect: state.get('activities').get('multiselect'),
-    starred: thread.get('labels').contains(LabelType.starred.id),
-    important: thread.get('labels').contains(LabelType.important.id),
+    starred: thread.get('allLabels').contains(LabelType.starred.id),
+    important: thread.get('allLabels').contains(LabelType.important.id),
     labels,
     letters,
     recipients: formattedRecipients
@@ -156,7 +156,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         threadIdStore: thread.get('id'),
         threadIdDB: thread.get('threadId')
       };
-      if (thread.get('labels').contains(labelId)) {
+      if (thread.get('allLabels').contains(labelId)) {
         dispatch(actions.removeThreadLabel(threadParams, labelId));
       } else {
         dispatch(actions.addThreadLabel(threadParams, labelId));
