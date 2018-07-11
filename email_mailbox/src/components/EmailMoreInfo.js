@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ContactTag from './ContactTag';
 import './emailmoreinfo.css';
+import { orderContactsByNameOrEmail } from '../utils/UserUtils';
 
 const EmailMoreInfo = props => (
   <div className="email-more-detail" onClick={ev => ev.stopPropagation()}>
@@ -57,6 +58,7 @@ const EmailMoreInfo = props => (
 );
 
 const renderContacts = (text, contacts) => {
+  const orderedContacts = orderContactsByNameOrEmail(contacts);
   return (
     <tr>
       <td>
@@ -64,7 +66,7 @@ const renderContacts = (text, contacts) => {
       </td>
       <td>
         <span>
-          {contacts.map((contact, index) => {
+          {orderedContacts.map((contact, index) => {
             const isLast = contacts.length - 1 === index;
             return <ContactTag key={index} contact={contact} isLast={isLast} />;
           })}
