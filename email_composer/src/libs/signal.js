@@ -63,7 +63,8 @@ const createEmails = async (
   body,
   recipients,
   knownAddresses,
-  keyBundleJSONbyRecipientIdAndDeviceId
+  keyBundleJSONbyRecipientIdAndDeviceId,
+  peer
 ) => {
   let result = [];
   for (const recipient of recipients) {
@@ -78,24 +79,33 @@ const createEmails = async (
       : [];
     const deviceIds = [...knownDeviceIds, ...deviceIdWithKeys];
     const criptextEmail = await Promise.all(
-      deviceIds.map(async item => {
-        const deviceId = typeof item === 'number' ? item : item.deviceId;
-        const keyBundleArrayBuffer =
-          typeof item === 'object' ? keysToArrayBuffer(item) : undefined;
-        const textEncrypted = await encryptText(
-          recipientId,
-          deviceId,
-          body,
-          keyBundleArrayBuffer
-        );
-        return {
-          type,
-          recipientId,
-          deviceId,
-          body: textEncrypted.body,
-          messageType: textEncrypted.type
-        };
-      })
+      deviceIds
+        .filter(item => {
+          const deviceId = typeof item === 'number' ? item : item.deviceId;
+          return !(
+            peer.recipientId === recipientId &&
+            peer.deviceId === deviceId &&
+            type === 'peer'
+          );
+        })
+        .map(async item => {
+          const deviceId = typeof item === 'number' ? item : item.deviceId;
+          const keyBundleArrayBuffer =
+            typeof item === 'object' ? keysToArrayBuffer(item) : undefined;
+          const textEncrypted = await encryptText(
+            recipientId,
+            deviceId,
+            body,
+            keyBundleArrayBuffer
+          );
+          return {
+            type,
+            recipientId,
+            deviceId,
+            body: textEncrypted.body,
+            messageType: textEncrypted.type
+          };
+        })
     );
     result = [...result, ...criptextEmail];
   }
@@ -112,6 +122,12 @@ const encryptPostEmail = async ({
   peer
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
+  const isSendToMySelf =
+    recipients.findIndex(item => {
+      return item.recipientId === peer.recipientId && item.type !== peer.type;
+    }) === -1
+      ? false
+      : true;
   const sessions = await getSessionRecordByRecipientIds(recipientIds);
   const knownAddresses = sessions.reduce((result, item) => {
     if (!item.recipientId) {
@@ -122,18 +138,20 @@ const encryptPostEmail = async ({
       [item.recipientId]: item.deviceIds.split(',').map(Number)
     };
   }, {});
-  const keyBundles = await getKeyBundlesOfRecipients(recipientIds, {
-    ...knownAddresses,
-    [peer.recipientId]: knownAddresses[peer.recipientId]
-      ? [...knownAddresses[peer.recipientId], peer.deviceId]
-      : [peer.deviceId]
-  });
+  const keyBundles = await getKeyBundlesOfRecipients(
+    recipientIds,
+    knownAddresses
+  );
   if (keyBundles.includes(null)) {
     throw new CustomError(errors.server.UNAUTHORIZED_ERROR);
   }
+
+  const recipientsToSendAmount =
+    recipientIds.length + (isSendToMySelf ? -1 : 0);
   const recipientDevicesAmount = sessions.length + keyBundles.length;
+
   if (
-    !(recipientIds.length <= recipientDevicesAmount) ||
+    !(recipientsToSendAmount <= recipientDevicesAmount) ||
     recipientDevicesAmount === 0
   ) {
     throw new CustomError(errors.message.NON_EXISTING_USERS);
@@ -152,7 +170,8 @@ const encryptPostEmail = async ({
     body,
     recipients,
     knownAddresses,
-    keyBundleJSONbyRecipientIdAndDeviceId
+    keyBundleJSONbyRecipientIdAndDeviceId,
+    peer
   );
   const data = objectUtils.noNulls({
     criptextEmails,
