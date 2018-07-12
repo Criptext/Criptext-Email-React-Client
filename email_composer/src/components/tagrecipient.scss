@@ -13,7 +13,18 @@
   &.tag-default{
     background-color: #f4f4f4;
     border: solid 1px #d4d4d4;
-  }  
+  }
+
+  &.tag-error {
+    color: #fff;
+    font-weight: 500;
+    background-color: #e27c7c;
+    border: solid 1px #cc0000;
+
+    > .icon-exit {
+      color: #b40000;
+    }
+  }
 
   &.tag-app-domain{
     background-color: #ebf6ff;

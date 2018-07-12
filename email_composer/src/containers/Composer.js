@@ -62,7 +62,7 @@ class ComposerWrapper extends Component {
       htmlBody: EditorState.createEmpty(),
       isCollapsedMoreRecipient: true,
       isDragActive: false,
-      status: undefined,
+      status: Status.DISABLED,
       textSubject: '',
       threadId: undefined,
       toEmails: []
@@ -76,6 +76,9 @@ class ComposerWrapper extends Component {
         bccEmails={this.state.bccEmails}
         blockRenderMap={blockRenderMap}
         ccEmails={this.state.ccEmails}
+        disableSendButtonOnInvalidEmail={
+          this.handleDisableSendButtonOnInvalidEmail
+        }
         files={this.state.files}
         getBccEmails={this.handleGetBccEmail}
         getCcEmails={this.handleGetCcEmail}
@@ -125,13 +128,21 @@ class ComposerWrapper extends Component {
     closeComposerWindow();
   };
 
+  handleDisableSendButtonOnInvalidEmail = () => {
+    this.setState(prevState => {
+      if (prevState.status !== Status.DISABLED) {
+        return { status: Status.DISABLED };
+      }
+    });
+  };
+
   handleGetToEmail = emails => {
     const status = areEmptyAllArrays(
       emails,
       this.state.ccEmails,
       this.state.bccEmails
     )
-      ? undefined
+      ? Status.DISABLED
       : Status.ENABLED;
     this.setState({ toEmails: emails, status }, () => this.saveTemporalDraft());
   };
@@ -142,7 +153,7 @@ class ComposerWrapper extends Component {
       emails,
       this.state.bccEmails
     )
-      ? undefined
+      ? Status.DISABLED
       : Status.ENABLED;
     this.setState({ ccEmails: emails, status }, () => this.saveTemporalDraft());
   };
@@ -153,7 +164,7 @@ class ComposerWrapper extends Component {
       this.state.ccEmails,
       emails
     )
-      ? undefined
+      ? Status.DISABLED
       : Status.ENABLED;
     this.setState({ bccEmails: emails, status }, () =>
       this.saveTemporalDraft()

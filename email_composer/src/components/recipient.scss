@@ -13,6 +13,18 @@
     }
   }
 
+  > .recipient-more {
+    transition: height linear 130ms;
+
+    &.collapsed{
+      height: 0px;
+    }
+
+    &.expanded {
+      height: 77px;
+    }
+  }
+
   .recipient-toggle{
     align-items: center;
     display: flex;

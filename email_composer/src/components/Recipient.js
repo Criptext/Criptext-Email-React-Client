@@ -10,12 +10,18 @@ import './recipient.css';
 const Recipient = props => (
   <div className="recipient-container ">
     {renderRecipientTo(props)}
-    {props.isCollapsedMoreRecipient ? null : (
-      <div>
-        {renderRecipientCc(props)}
-        {renderRecipientBcc(props)}
-      </div>
-    )}
+    <div
+      className={`recipient-more ${
+        props.isCollapsedMoreRecipient ? 'collapsed' : 'expanded'
+      }`}
+    >
+      {props.isCollapsedMoreRecipient ? null : (
+        <div>
+          {renderRecipientCc(props)}
+          {renderRecipientBcc(props)}
+        </div>
+      )}
+    </div>
     <div className="recipient-toggle" onClick={() => props.onToggleRecipient()}>
       <i
         className={
@@ -46,9 +52,9 @@ const renderRecipientTo = props => (
       renderInput={AutocompleteWrapper}
       renderTag={TagRecipient}
       tagProps={{
-        classNameRemove: 'icon-exit'
+        classNameRemove: 'icon-exit',
+        checkDisableSendButton: props.checkDisableSendButton
       }}
-      validationRegex={props.emailRegex}
       value={props.toTags}
     />
   </div>
@@ -74,9 +80,9 @@ const renderRecipientCc = props => (
       renderInput={AutocompleteWrapper}
       renderTag={TagRecipient}
       tagProps={{
-        classNameRemove: 'icon-exit'
+        classNameRemove: 'icon-exit',
+        checkDisableSendButton: props.checkDisableSendButton
       }}
-      validationRegex={props.emailRegex}
       value={props.ccTags}
     />
   </div>
@@ -102,9 +108,9 @@ const renderRecipientBcc = props => (
       renderInput={AutocompleteWrapper}
       renderTag={TagRecipient}
       tagProps={{
-        classNameRemove: 'icon-exit'
+        classNameRemove: 'icon-exit',
+        checkDisableSendButton: props.checkDisableSendButton
       }}
-      validationRegex={props.emailRegex}
       value={props.bccTags}
     />
   </div>
@@ -116,7 +122,7 @@ Recipient.propTypes = {
 };
 
 renderRecipientTo.propTypes = {
-  emailRegex: PropTypes.string,
+  checkDisableSendButton: PropTypes.func,
   handleOnValidationRejectToTag: PropTypes.func,
   onChangeToTag: PropTypes.func,
   toTags: PropTypes.string
@@ -124,14 +130,14 @@ renderRecipientTo.propTypes = {
 
 renderRecipientCc.propTypes = {
   ccTags: PropTypes.string,
-  emailRegex: PropTypes.string,
+  checkDisableSendButton: PropTypes.func,
   handleOnValidationRejectCcTag: PropTypes.func,
   onChangeCcTag: PropTypes.func
 };
 
 renderRecipientBcc.propTypes = {
   bccTags: PropTypes.string,
-  emailRegex: PropTypes.string,
+  checkDisableSendButton: PropTypes.func,
   handleOnValidationRejectBccTag: PropTypes.func,
   onChangeBccTag: PropTypes.func
 };

@@ -8,6 +8,7 @@ import './composer.css';
 const Composer = props => (
   <div className="wrapper">
     <RecipientWrapper
+      disableSendButton={props.disableSendButtonOnInvalidEmail}
       toEmails={props.toEmails}
       ccEmails={props.ccEmails}
       bccEmails={props.bccEmails}
@@ -47,6 +48,7 @@ Composer.propTypes = {
   bccEmails: PropTypes.array,
   blockRenderMap: PropTypes.object,
   ccEmails: PropTypes.array,
+  disableSendButtonOnInvalidEmail: PropTypes.func,
   files: PropTypes.array,
   getBccEmails: PropTypes.func,
   getCcEmails: PropTypes.func,

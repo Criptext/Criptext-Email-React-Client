@@ -20,9 +20,16 @@ class RecipientWrapper extends Component {
         onValidationRejectCcTag={this.handleOnValidationRejectCcTag}
         onValidationRejectToTag={this.handleOnValidationRejectToTag}
         toTags={this.props.toEmails}
+        checkDisableSendButton={this.handleCheckDisableSendButton}
       />
     );
   }
+
+  handleCheckDisableSendButton = isValidEmailAddress => {
+    if (!isValidEmailAddress) {
+      this.props.disableSendButton();
+    }
+  };
 
   handleOnChangeBccTag = tags => {
     this.props.getBccEmails(tags);
@@ -52,6 +59,7 @@ class RecipientWrapper extends Component {
 RecipientWrapper.propTypes = {
   bccEmails: PropTypes.array,
   ccEmails: PropTypes.array,
+  disableSendButton: PropTypes.func,
   getBccEmails: PropTypes.func,
   getCcEmails: PropTypes.func,
   getToEmails: PropTypes.func,

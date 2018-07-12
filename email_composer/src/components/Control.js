@@ -10,7 +10,9 @@ const Control = props => (
         (props.status === Status.WAITING ? 'button-send-loading' : '')
       }
       onClick={props.onClickSendMessage}
-      disabled={props.status === Status.WAITING || !props.status}
+      disabled={
+        props.status === Status.WAITING || props.status === Status.DISABLED
+      }
     >
       {props.status === Status.WAITING
         ? renderSendLoadingButton()
@@ -67,8 +69,9 @@ const renderSendLoadingButton = () => (
 );
 
 export const Status = {
-  ENABLED: 1,
-  WAITING: 2
+  DISABLED: 1,
+  ENABLED: 2,
+  WAITING: 3
 };
 
 Control.propTypes = {
