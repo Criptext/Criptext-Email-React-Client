@@ -1,4 +1,5 @@
 const { BrowserWindow, shell } = require('electron');
+const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
 const path = require('path');
 
@@ -15,10 +16,18 @@ const iconPath = path.join(
 );
 
 const create = () => {
+  const mailboxWindowState = windowStateManager({
+    defaultWidth: mailboxSize.width,
+    defaultHeight: mailboxSize.height,
+    file: 'mailbox-state.json'
+  });
+
   mailboxWindow = new BrowserWindow({
+    x: mailboxWindowState.x,
+    y: mailboxWindowState.y,
+    width: mailboxWindowState.width,
+    height: mailboxWindowState.height,
     icon: iconPath,
-    width: mailboxSize.width,
-    height: mailboxSize.height,
     show: false,
     title: ''
   });
@@ -34,6 +43,7 @@ const create = () => {
     e.preventDefault();
     shell.openExternal(url);
   });
+  mailboxWindowState.manage(mailboxWindow);
 };
 
 const show = async () => {

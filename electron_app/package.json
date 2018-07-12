@@ -76,6 +76,7 @@
   },
   "dependencies": {
     "@criptext/email-http-client": "^0.8.2",
+    "electron-window-state": "^4.1.1",
     "knex": "^0.14.2",
     "sqlite3": "^3.1.13",
     "websocket": "^1.0.25"
