@@ -17,6 +17,7 @@
     "react-dom": "^16.2.0",
     "react-draft-wysiwyg": "^1.12.7",
     "react-scripts": "1.1.0",
+    "react-switch": "^3.0.4",
     "react-tagsinput": "^3.19.0"
   },
   "scripts": {

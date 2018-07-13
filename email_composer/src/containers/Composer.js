@@ -44,6 +44,7 @@ import {
   FILE_MODES,
   FILE_PROGRESS
 } from './../utils/FileUtils';
+import { appDomain } from '../utils/const';
 
 const PrevMessage = props => (
   <div className="content-prev-message">{props.children}</div>
@@ -66,7 +67,8 @@ class ComposerWrapper extends Component {
       status: Status.DISABLED,
       textSubject: '',
       threadId: undefined,
-      toEmails: []
+      toEmails: [],
+      displayNonCriptextPopup: false
     };
   }
 
@@ -80,6 +82,7 @@ class ComposerWrapper extends Component {
         disableSendButtonOnInvalidEmail={
           this.handleDisableSendButtonOnInvalidEmail
         }
+        displayNonCriptextPopup={this.state.displayNonCriptextPopup}
         files={this.state.files}
         getBccEmails={this.handleGetBccEmail}
         getCcEmails={this.handleGetCcEmail}
@@ -92,8 +95,9 @@ class ComposerWrapper extends Component {
         isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
         isDragActive={this.state.isDragActive}
         onClearFile={this.handleClearFile}
+        onClickCancelSendMessage={this.handleCancelSendMessage}
         onClickDiscardDraft={this.handleClickDiscardDraft}
-        onClickSendMessage={this.handleSendMessage}
+        onClickSendMessage={this.checkNonCriptextRecipients}
         onDrop={this.handleDrop}
         onPauseUploadFile={this.handlePauseUploadFile}
         onResumeUploadFile={this.handleResumeUploadFile}
@@ -289,6 +293,23 @@ class ComposerWrapper extends Component {
         isDragActive: true
       });
     }
+  };
+
+  checkNonCriptextRecipients = () => {
+    const { toEmails, ccEmails, bccEmails } = this.state;
+    const recipients = [...toEmails, ...ccEmails, ...bccEmails];
+    const hasNonCriptextRecipients = recipients.find(
+      recipient => recipient.indexOf(`@${appDomain}`) < 0
+    );
+    if (hasNonCriptextRecipients) {
+      this.setState({ displayNonCriptextPopup: true });
+    } else {
+      this.handleSendMessage();
+    }
+  };
+
+  handleCancelSendMessage = () => {
+    this.setState({ displayNonCriptextPopup: false });
   };
 
   handleSendMessage = async () => {
