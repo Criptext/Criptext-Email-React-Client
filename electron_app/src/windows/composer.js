@@ -62,6 +62,8 @@ const dialogTemplate = {
   type: 'warning',
   title: 'Warning',
   buttons: dialogResponses,
+  defaultId: RESPONSES.SAVE.index,
+  cancelId: RESPONSES.CONTINUE.index,
   message: 'You are closing a message that has not been sent',
   detail:
     "To save the message, click on 'Save as Draft'. The message will be saved on your Drafts folder"

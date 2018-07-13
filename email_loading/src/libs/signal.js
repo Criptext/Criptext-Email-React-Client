@@ -7,7 +7,8 @@ import {
   createAccount as createAccountDB,
   getAccount,
   myAccount,
-  errors
+  errors,
+  createContact
 } from './../utils/electronInterface';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
@@ -15,6 +16,7 @@ import SignalProtocolStore from './store';
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
+const appDomain = 'jigl.com';
 
 const createAccount = async ({
   recipientId,
@@ -74,6 +76,10 @@ const createAccount = async ({
   );
   const labels = Object.values(LabelType);
   await createLabel(labels);
+  await createContact({
+    name,
+    email: `${recipientId}@${appDomain}`
+  });
   return true;
 };
 

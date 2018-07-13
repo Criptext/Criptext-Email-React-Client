@@ -152,9 +152,14 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
       ? contacts.from.map(contact => contact.email)
       : [];
 
+  const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
+  const previousCcEmails = contacts.cc.map(contact => contact.email);
+  const othersToEmails = contacts.to
+    .map(contact => contact.email)
+    .filter(email => email !== myEmailAddress);
   const ccEmails =
     replyType === composerEvents.REPLY_ALL
-      ? contacts.cc.map(contact => contact.email)
+      ? [...previousCcEmails, ...othersToEmails]
       : [];
 
   const bccEmails = [];
