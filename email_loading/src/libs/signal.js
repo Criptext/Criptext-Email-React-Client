@@ -12,11 +12,11 @@ import {
 } from './../utils/electronInterface';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
+import { appDomain } from './../utils/consts';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
-const appDomain = 'jigl.com';
 
 const createAccount = async ({
   recipientId,
