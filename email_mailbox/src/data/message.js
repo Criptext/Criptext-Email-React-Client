@@ -1,15 +1,32 @@
-export default {
+const actionHandlerKeys = {
+  advice: {
+    trash: 'empty-trash'
+  },
+  suggestion: {
+    update: 'install-update'
+  },
+  success: {
+    emailSent: 'view-message'
+  },
+  error: {
+    network: 'try-reconnect'
+  }
+};
+
+const messagesContent = {
   advice: {
     trash: {
       description:
         'Messages that have been in Trash more than 30 days will be automatically deleted.',
-      action: 'Empty Trash'
+      action: 'Empty Trash',
+      actionHandlerKey: actionHandlerKeys.advice.trash
     }
   },
   suggestion: {
     update: {
       description: 'A new version of Criptext is available!',
-      action: 'Click here to Install Update'
+      action: 'Click here to Install Update',
+      actionHandlerKey: actionHandlerKeys.suggestion.update
     }
   },
   question: {
@@ -20,13 +37,21 @@ export default {
   success: {
     emailSent: {
       description: 'Your message has been sent.',
-      action: 'View message'
+      action: 'View message',
+      actionHandlerKey: actionHandlerKeys.success.emailSent
+    },
+    downloadFile: {
+      description: "Download successfully. Check your 'Downloads' folder."
     }
   },
   error: {
     network: {
       description: 'Not connected, conecting in 10s',
-      action: 'Try Now'
+      action: 'Try Now',
+      actionHandlerKey: actionHandlerKeys.error.network
+    },
+    downloadFile: {
+      description: 'An error occurred during download. The file was not saved.'
     }
   },
   establish: {
@@ -35,3 +60,5 @@ export default {
     }
   }
 };
+
+export { messagesContent as default, actionHandlerKeys };

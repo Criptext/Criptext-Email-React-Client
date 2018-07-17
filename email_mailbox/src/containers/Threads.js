@@ -5,8 +5,6 @@ import {
   filterThreadsByUnread
 } from '../actions/index';
 import ThreadsView from '../components/ThreadsWrapper';
-import { MessageType } from '../components/Message';
-import Message from './../data/message';
 import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';
 
@@ -39,17 +37,8 @@ const defineRejectedLabels = labelId => {
   }
 };
 
-const defineMessage = mailboxSelected => {
-  const targetLabelId = LabelType[mailboxSelected].id;
-  if (targetLabelId === LabelType.trash.id) {
-    return { ...Message.advice.trash, type: MessageType.ADVICE };
-  }
-  return null;
-};
-
 const mapStateToProps = (state, ownProps) => {
   const mailboxTitle = LabelType[ownProps.mailboxSelected].text;
-  const message = defineMessage(ownProps.mailboxSelected);
   const switchUnreadThreadsStatus = state
     .get('activities')
     .get('isFilteredByUnreadThreads');
@@ -63,7 +52,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     buttonSyncStatus,
     mailboxTitle,
-    message,
     switchUnreadThreadsStatus,
     threads: switchUnreadThreadsStatus ? unreadThreads : threads
   };

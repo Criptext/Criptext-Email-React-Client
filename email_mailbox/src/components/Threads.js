@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ThreadItem from '../containers/ThreadItem';
 import EmptyMailbox from './EmptyMailbox';
 import { Switch } from 'react-switch-input';
-import Message from './Message';
+import Message from './../containers/Message';
 import ButtonSync from './ButtonSync';
 import ItemTooltip from './ItemTooltip';
 import ReactTooltip from 'react-tooltip';
@@ -11,7 +11,10 @@ import './threads.css';
 
 const Threads = props => (
   <div className="threads-container">
-    {!!props.message && <Message message={props.message} />}
+    <Message
+      mailbox={props.mailboxSelected}
+      onClickSection={props.onClickSection}
+    />
     <div className="threads-header">
       <div className="threads-header-title-container">
         <h1 className="threads-mailbox-title">{props.mailboxTitle}</h1>

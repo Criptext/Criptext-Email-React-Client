@@ -181,6 +181,9 @@ const destroy = async ({ composerId, emailId }) => {
       sendEventoToMailbox('update-thread-emails', dataToMailbox);
     }
   }
+  if (emailId) {
+    sendEventoToMailbox('display-message-email-sent', { emailId });
+  }
   globalManager.composerData.delete(composer.id);
   composer.destroy();
 };

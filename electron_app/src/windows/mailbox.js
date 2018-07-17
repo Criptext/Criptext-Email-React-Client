@@ -1,4 +1,4 @@
-const { BrowserWindow, shell, app, dialog } = require('electron');
+const { BrowserWindow, shell, app } = require('electron');
 const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
 const path = require('path');
@@ -50,17 +50,9 @@ const create = () => {
     item.setSavePath(filePath);
     item.once('done', (e, state) => {
       if (state === 'completed') {
-        dialog.showMessageBox({
-          type: 'info',
-          title: 'Success',
-          message: "Download successfully.\nCheck your 'Downloads' folder.",
-          buttons: ['Ok']
-        });
+        mailboxWindow.send('display-message-success-download');
       } else {
-        const title = 'Download failed';
-        const message =
-          "'An error occurred during the download.\nThe file was not saved'";
-        dialog.showErrorBox(title, message);
+        mailboxWindow.send('display-message-error-download');
       }
     });
   });

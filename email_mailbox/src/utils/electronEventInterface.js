@@ -17,6 +17,8 @@ import {
   getRecipientsFromData
 } from './EmailUtils';
 import { SocketCommand, appDomain, EmailStatus } from './const';
+import Messages from './../data/message';
+import { MessageType } from './../components/Message';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -41,6 +43,31 @@ ipcRenderer.on('socket-message', (event, message) => {
 
 ipcRenderer.on('update-drafts', () => {
   emitter.emit(Event.UPDATE_SAVED_DRAFTS);
+});
+
+ipcRenderer.on('display-message-email-sent', (ev, { emailId }) => {
+  const messageData = {
+    ...Messages.success.emailSent,
+    type: MessageType.SUCCESS,
+    params: { emailId }
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+});
+
+ipcRenderer.on('display-message-success-download', () => {
+  const messageData = {
+    ...Messages.success.downloadFile,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+});
+
+ipcRenderer.on('display-message-error-download', () => {
+  const messageData = {
+    ...Messages.error.downloadFile,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 });
 
 ipcRenderer.on('update-thread-emails', (ev, data) => {
@@ -127,5 +154,6 @@ export const Event = {
   NEW_EMAIL: 'new-email',
   UPDATE_SAVED_DRAFTS: 'update-drafts',
   EMAIL_TRACKING_UPDATE: 'email-tracking-update',
-  UPDATE_EMAILS: 'update-emails'
+  UPDATE_EMAILS: 'update-emails',
+  DISPLAY_MESSAGE: 'display-message'
 };
