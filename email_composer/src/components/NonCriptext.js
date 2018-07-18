@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Switch from 'react-switch';
+import { inputTypes } from './NonCriptextWrapper';
 import './noncriptext.css';
 
 const NonCriptext = props => {
@@ -49,11 +51,72 @@ const renderSwitch = props => {
 };
 
 const renderForm = props => {
+  const { password, confirmPassword } = props.formItems;
   return (
     <div className="non-criptext-form">
-      <input className="password" placeholder="Enter password" />
-      <input className="password" placeholder="Repeat password" />
+      {renderInput({
+        placeholder: 'Enter password',
+        value: password.value,
+        type: password.type,
+        onChange: ev => props.onChangeInputValue(ev, 'password')
+      })}
+      {renderInputIcon({
+        type: password.type,
+        onClick: () => props.onClickChangeInputType('password')
+      })}
+      {renderErrorMessage({
+        value: password.value,
+        error: password.error,
+        message: `Must have ${props.minLength} characters`
+      })}
+
+      {renderInput({
+        placeholder: 'Repeat password',
+        value: confirmPassword.value,
+        type: confirmPassword.type,
+        onChange: ev => props.onChangeInputValue(ev, 'confirmPassword')
+      })}
+      {renderInputIcon({
+        type: confirmPassword.type,
+        onClick: () => props.onClickChangeInputType('confirmPassword')
+      })}
+      {renderErrorMessage({
+        value: confirmPassword.value,
+        error: confirmPassword.error,
+        message: 'Passwords do not match'
+      })}
     </div>
+  );
+};
+
+const renderInput = ({ placeholder, value, type, onChange }) => (
+  <input
+    className="password"
+    placeholder={placeholder}
+    onChange={onChange}
+    value={value}
+    type={type}
+  />
+);
+
+const renderInputIcon = ({ type, onClick }) => (
+  <i
+    className={type === inputTypes.PASSWORD ? 'icon-show' : 'icon-not-show'}
+    onClick={onClick}
+  />
+);
+
+const renderErrorMessage = ({ value, error, message }) => {
+  const isDirty = value.length > 0;
+  const hasError = error;
+  return (
+    <span
+      className={`error-password-message ${
+        isDirty && hasError ? '' : 'hidden'
+      }`}
+    >
+      {message}
+    </span>
   );
 };
 
@@ -69,30 +132,67 @@ const renderNote = () => {
   );
 };
 
-const renderButtons = props => {
-  return (
-    <div className="non-criptext-buttons">
-      <button
-        className="button-send"
-        onClick={() => props.onClickSendMessage()}
-      >
-        Send
-      </button>
-      <button
-        className="button-cancel"
-        onClick={() => props.onClickCancelSendMessage()}
-      >
-        Cancel
-      </button>
-    </div>
-  );
-};
+const renderButtons = props => (
+  <div className="non-criptext-buttons">
+    <button
+      className="button-send"
+      onClick={() => props.onSubmitForm()}
+      disabled={props.disabled}
+    >
+      Send
+    </button>
+    <button
+      className="button-cancel"
+      onClick={() => props.onClickCancelSendMessage()}
+    >
+      Cancel
+    </button>
+  </div>
+);
 
 const PopUpModes = {
   SET_PASSWORD: 'set-password',
   NO_PASSWORD: 'no-set-password'
 };
 
-NonCriptext.propTypes = {};
+renderPopUp.propTypes = {
+  mode: PropTypes.string
+};
+
+renderSwitch.propTypes = {
+  onChangeSwitch: PropTypes.func,
+  mode: PropTypes.string
+};
+
+renderForm.propTypes = {
+  minLength: PropTypes.number,
+  formItems: PropTypes.object,
+  onChangeInputValue: PropTypes.func,
+  onClickChangeInputType: PropTypes.func
+};
+
+renderInput.propTypes = {
+  placeholder: PropTypes.string,
+  value: PropTypes.string,
+  type: PropTypes.string,
+  onChange: PropTypes.func
+};
+
+renderInputIcon.propTypes = {
+  type: PropTypes.string,
+  onClick: PropTypes.func
+};
+
+renderErrorMessage.propTypes = {
+  value: PropTypes.string,
+  error: PropTypes.bool,
+  message: PropTypes.string
+};
+
+renderButtons.propTypes = {
+  onSubmitForm: PropTypes.func,
+  disabled: PropTypes.bool,
+  onClickCancelSendMessage: PropTypes.func
+};
 
 export { NonCriptext as default, PopUpModes };

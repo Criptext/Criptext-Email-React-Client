@@ -11,24 +11,24 @@
 
   .non-criptext-content {
     font-family: NunitoSans;
-    height: 250px;
+    height: 310px;
     margin: 0 auto;
     position: relative;
-    width: 172px;
+    width: 232px;
     z-index: 1;
 
     section{
-      padding: 28px 30px;
       align-items: center;
       background-color: white;
       border-radius: 5px;
       display: flex;
-      flex-direction: column;
       height: 100%;
       width: 100%;
 
       .content {
         width: 100%;
+        padding: 28px 30px;
+
         .non-criptext-title {
           flex-grow: 1;
           text-align: center;
@@ -59,39 +59,61 @@
         .non-criptext-description {
           font-size: 11px;
           color: #8d8d8d;
-          margin-bottom: 18px;
+          margin-bottom: 15px;
         }
 
         .non-criptext-form {
           flex-grow: 1;
+          height: 74px;
+          margin-bottom: 22px;
 
           input {
             padding-left: 5px;
             height: 18px;
             border: none;
             border-bottom: 1px solid #d4d4d4;
-
+            font-size: 13px;
             &:first-child {
-              margin-top: 5px;
+              margin-top: 2px;
             }
-
             &:last-child {
               margin-top: 17px;
-              margin-bottom: 28px;
             }
-
             &:focus {
               outline: none;
               border-bottom: 1px solid #0091ff;
+            }
+            &::placeholder {
+              color: #9b9999;
+            }
+          }
+
+          .icon-show, .icon-not-show {
+            position: relative;
+            left: 145px;
+            top: -20px;
+            float: left;
+            color: #cdcdcd;
+          }
+
+          .error-password-message{
+            font-size: 11px;
+            color: red;
+            position: relative;
+            top: -6px;
+            left: -10px;
+            &.hidden {
+              color: #fff;
             }
           }
         }
 
         .non-criptext-note {
           flex-grow: 1;
+          height: 74px;
           color: #000000;
           font-size: 12px;
-          margin-bottom: 28px;
+          margin-bottom: 22px;
 
           span:first-child {
             font-weight: bolder;
@@ -102,6 +124,7 @@
           display: flex;
           flex-grow: 1;
           flex-direction: row-reverse;
+          margin-bottom: auto;
 
           button {
             width: 70px;
@@ -109,11 +132,9 @@
             border-radius: 14px;
             margin-left: 10px;
             font-weight: 600;
-
-            &:disable {
+            &:disabled {
               opacity: 0.5;
             }
-
             &.button-send {
               background-color: #0091ff;
               color: #fff;

@@ -68,7 +68,8 @@ class ComposerWrapper extends Component {
       textSubject: '',
       threadId: undefined,
       toEmails: [],
-      displayNonCriptextPopup: false
+      displayNonCriptextPopup: true,
+      nonCriptextRecipientsPassword: ''
     };
   }
 
@@ -95,7 +96,7 @@ class ComposerWrapper extends Component {
         isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
         isDragActive={this.state.isDragActive}
         onClearFile={this.handleClearFile}
-        onClickCancelSendMessage={this.handleCancelSendMessage}
+        onClickCancelSendMessage={this.handleClickCancelSendMessage}
         onClickDiscardDraft={this.handleClickDiscardDraft}
         onClickSendMessage={this.checkNonCriptextRecipients}
         onDrop={this.handleDrop}
@@ -103,6 +104,9 @@ class ComposerWrapper extends Component {
         onResumeUploadFile={this.handleResumeUploadFile}
         onToggleRecipient={this.handleToggleRecipient}
         status={this.state.status}
+        onSetNonCriptextRecipientsPassword={
+          this.handleSetNonCriptextRecipientsPassword
+        }
         textSubject={this.state.textSubject}
         toEmails={this.state.toEmails}
       />
@@ -308,8 +312,18 @@ class ComposerWrapper extends Component {
     }
   };
 
-  handleCancelSendMessage = () => {
-    this.setState({ displayNonCriptextPopup: false });
+  handleClickCancelSendMessage = () => {
+    this.setState({
+      displayNonCriptextPopup: false,
+      nonCriptextRecipientsPassword: ''
+    });
+  };
+
+  handleSetNonCriptextRecipientsPassword = ({ password, displayPopup }) => {
+    this.setState({
+      nonCriptextRecipientsPassword: password,
+      displayNonCriptextPopup: displayPopup
+    });
   };
 
   handleSendMessage = async () => {

@@ -45,6 +45,9 @@ const Composer = props => (
       <NonCriptextWrapper
         onClickSendMessage={props.onClickSendMessage}
         onClickCancelSendMessage={props.onClickCancelSendMessage}
+        onSetNonCriptextRecipientsPassword={
+          props.onSetNonCriptextRecipientsPassword
+        }
       />
     )}
   </div>
@@ -56,6 +59,7 @@ Composer.propTypes = {
   blockRenderMap: PropTypes.object,
   ccEmails: PropTypes.array,
   disableSendButtonOnInvalidEmail: PropTypes.func,
+  displayNonCriptextPopup: PropTypes.bool,
   files: PropTypes.array,
   getBccEmails: PropTypes.func,
   getCcEmails: PropTypes.func,
@@ -69,10 +73,12 @@ Composer.propTypes = {
   htmlBody: PropTypes.object,
   isCollapsedMoreRecipient: PropTypes.bool,
   isDragActive: PropTypes.bool,
+  onClickCancelSendMessage: PropTypes.func,
   onDrop: PropTypes.func,
   onClearFile: PropTypes.func,
   onClickDiscardDraft: PropTypes.func,
   onClickSendMessage: PropTypes.func,
+  onSetNonCriptextRecipientsPassword: PropTypes.func,
   onToggleRecipient: PropTypes.func,
   status: PropTypes.number,
   textSubject: PropTypes.string,
