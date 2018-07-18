@@ -59,8 +59,8 @@ const mapDispatchToProps = dispatch => {
       );
     },
     onMarkThreadAsOpen: threadId => {
-      const readStatus = EmailStatus.READ;
-      dispatch(updateStatusThread(threadId, readStatus));
+      const openedStatus = EmailStatus.OPENED;
+      dispatch(updateStatusThread(threadId, openedStatus));
     },
     onUpdateOpenedAccount: async () => {
       const opened = true;

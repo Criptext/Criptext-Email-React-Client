@@ -33,6 +33,10 @@ const getCriptextRecipients = (recipients, type) => {
     }));
 };
 
+const getNonCriptextRecipients = recipients => {
+  return recipients.filter(email => email.indexOf(`@${appDomain}`) < 0);
+};
+
 export const EmailStatus = {
   FAIL: 1,
   UNSENT: 2,
@@ -49,7 +53,13 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
     cc: composerData.ccEmails,
     bcc: composerData.bccEmails
   };
-  const to = formRecipients(recipients);
+  const criptextRecipients = formRecipients(recipients);
+
+  const externalRecipients = {
+    to: getNonCriptextRecipients(composerData.toEmails),
+    cc: getNonCriptextRecipients(composerData.ccEmails),
+    bcc: getNonCriptextRecipients(composerData.bccEmails)
+  }
 
   const subject = composerData.textSubject;
   const body = draftToHtml(
@@ -77,7 +87,8 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
 
   return {
     data,
-    to,
+    criptextRecipients,
+    externalRecipients,
     subject,
     body
   };

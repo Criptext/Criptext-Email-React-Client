@@ -115,6 +115,7 @@ const createEmails = async (
 
 const encryptPostEmail = async ({
   recipients,
+  externalRecipients,
   body,
   subject,
   threadId,
@@ -173,7 +174,14 @@ const encryptPostEmail = async ({
     keyBundleJSONbyRecipientIdAndDeviceId,
     peer
   );
+  const guestEmail = {
+    to: externalRecipients.to,
+    cc: externalRecipients.cc,
+    bcc: externalRecipients.bcc,
+    body
+  }
   const data = objectUtils.noNulls({
+    guestEmail,
     criptextEmails,
     subject,
     threadId,

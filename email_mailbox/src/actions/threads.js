@@ -14,11 +14,7 @@ import {
   getUnreadEmailsByThreadId
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
-import {
-  handleNewMessageEvent,
-  handleEmailTrackingUpdate
-} from './../utils/electronEventInterface';
-import { SocketCommand } from './../utils/const';
+import { handleEvent } from './../utils/electronEventInterface';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -177,17 +173,8 @@ export const loadEvents = params => {
     dispatch(startLoadSync());
     try {
       const receivedEvents = await getEvents();
-      const managedEvents = receivedEvents.map(newEvent => {
-        switch (newEvent.cmd) {
-          case SocketCommand.NEW_EMAIL: {
-            return handleNewMessageEvent(newEvent);
-          }
-          case SocketCommand.EMAIL_TRACKING_UPDATE: {
-            return handleEmailTrackingUpdate(newEvent);
-          }
-          default:
-            return Promise.reject('Unhandled socket command');
-        }
+      const managedEvents = receivedEvents.map(async newEvent => {
+        return await handleEvent(newEvent);
       });
       await Promise.all(managedEvents);
       dispatch(loadThreads(params));

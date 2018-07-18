@@ -68,8 +68,9 @@ class ComposerWrapper extends Component {
       textSubject: '',
       threadId: undefined,
       toEmails: [],
-      displayNonCriptextPopup: true,
-      nonCriptextRecipientsPassword: ''
+      displayNonCriptextPopup: false,
+      nonCriptextRecipientsPassword: '',
+      nonCriptextRecipientsVerified: false
     };
   }
 
@@ -305,7 +306,8 @@ class ComposerWrapper extends Component {
     const hasNonCriptextRecipients = recipients.find(
       recipient => recipient.indexOf(`@${appDomain}`) < 0
     );
-    if (hasNonCriptextRecipients) {
+    const isVerified = this.state.nonCriptextRecipientsVerified;
+    if (hasNonCriptextRecipients && !isVerified) {
       this.setState({ displayNonCriptextPopup: true });
     } else {
       this.handleSendMessage();
@@ -322,13 +324,14 @@ class ComposerWrapper extends Component {
   handleSetNonCriptextRecipientsPassword = ({ password, displayPopup }) => {
     this.setState({
       nonCriptextRecipientsPassword: password,
-      displayNonCriptextPopup: displayPopup
+      displayNonCriptextPopup: displayPopup,
+      nonCriptextRecipientsVerified: true
     });
   };
 
   handleSendMessage = async () => {
     this.setState({ status: Status.WAITING });
-    const { data, to, subject, body } = formOutgoingEmailFromData(
+    const { data, criptextRecipients, externalRecipients, subject, body } = formOutgoingEmailFromData(
       this.state,
       LabelType.sent.id
     );
@@ -342,11 +345,12 @@ class ComposerWrapper extends Component {
         type: 'peer',
         deviceId: myAccount.deviceId
       };
-      const recipients = [...to, peer];
+      const recipients = [...criptextRecipients, peer];
       const params = {
         subject,
         threadId: this.state.threadId,
         recipients,
+        externalRecipients,
         body,
         files,
         peer
