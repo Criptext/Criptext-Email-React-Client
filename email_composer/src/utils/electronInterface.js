@@ -42,6 +42,10 @@ export const throwError = error => {
   ipcRenderer.send('throwError', error);
 };
 
+export const sendEventToMailbox = (name, params) => {
+  ipcRenderer.send(name, params);
+};
+
 /* Criptext Client
    ----------------------------- */
 export const findKeyBundles = params => {

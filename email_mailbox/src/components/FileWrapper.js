@@ -25,7 +25,7 @@ class FileWrapper extends Component {
       <File
         {...this.props}
         displayProgressBar={this.state.displayProgressBar}
-        onCancelDownloadFile={this.handleCancelDownload}
+        onClickCancelDownloadFile={this.handleClickCancelDownload}
         onDownloadFile={this.handleDownload}
         percentage={this.state.percentage}
         status={this.state.status}
@@ -47,7 +47,7 @@ class FileWrapper extends Component {
     });
   };
 
-  handleCancelDownload = async () => {
+  handleClickCancelDownload = async () => {
     await setCancelDownloadHandler(this.props.file.token);
     this.setState({
       percentage: 0,

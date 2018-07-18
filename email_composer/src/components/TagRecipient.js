@@ -27,6 +27,7 @@ const TagRecipient = props => {
     <span key={key} className={className} {...other}>
       {getTagDisplayValue(tag)}
       {!disabled && (
+        // eslint-disable-next-line jsx-a11y/anchor-has-content
         <a className={classNameRemove} onClick={() => onRemove(key)} />
       )}
     </span>

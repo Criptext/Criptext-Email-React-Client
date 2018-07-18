@@ -80,7 +80,7 @@ const renderDownloadButton = props => (
 const renderCancelButton = props => (
   <button
     className="file-button-cancel"
-    onClick={() => props.onCancelDownloadFile()}
+    onClick={() => props.onClickCancelDownloadFile()}
   >
     <i className="icon-exit" />
   </button>
@@ -110,7 +110,7 @@ renderDownloadButton.propTypes = {
 };
 
 renderCancelButton.propTypes = {
-  onCancelDownloadFile: PropTypes.func
+  onClickCancelDownloadFile: PropTypes.func
 };
 
 export { File as default, FileStatus };

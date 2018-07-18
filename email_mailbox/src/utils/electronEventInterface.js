@@ -70,6 +70,14 @@ ipcRenderer.on('display-message-error-download', () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 });
 
+ipcRenderer.on('failed-to-send', () => {
+  const messageData = {
+    ...Messages.error.failedToSend,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+});
+
 ipcRenderer.on('update-thread-emails', (ev, data) => {
   const { threadId, emailId } = data;
   emitter.emit(Event.UPDATE_THREAD_EMAILS, { threadId, emailId });

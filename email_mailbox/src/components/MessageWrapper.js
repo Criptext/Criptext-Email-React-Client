@@ -14,24 +14,24 @@ class MessageWrapper extends Component {
       actionHandlerKey: undefined,
       description: undefined,
       type: undefined,
+      priority: undefined,
       params: {},
       displayMessage: false
     };
 
     addEvent(
       Event.DISPLAY_MESSAGE,
-      ({ action, type, description, actionHandlerKey, params }) => {
-        if (!this.state.displayMessage) {
-          const newState = {
+      ({ action, type, description, actionHandlerKey, priority, params }) => {
+        const isDisplayingMessage = this.state.displayMessage;
+        const hasHigherPriority = priority >= this.state.priority;
+        if (!isDisplayingMessage || hasHigherPriority) {
+          this.setMessageState({
             action,
-            actionHandlerKey,
-            description,
-            params,
             type,
-            displayMessage: true
-          };
-          this.setState(newState, () => {
-            setTimeout(() => this.hideMessage(), MESSAGE_DURATION);
+            description,
+            actionHandlerKey,
+            priority,
+            params
           });
         }
       }
@@ -56,13 +56,35 @@ class MessageWrapper extends Component {
     );
   }
 
+  setMessageState = ({
+    action,
+    type,
+    description,
+    actionHandlerKey,
+    priority,
+    params
+  }) => {
+    const newState = {
+      action,
+      actionHandlerKey,
+      description,
+      params,
+      priority,
+      type,
+      displayMessage: true
+    };
+    this.setState(newState, () => {
+      setTimeout(() => this.hideMessage(), MESSAGE_DURATION);
+    });
+  };
+
   getDataByPropsOrEvent = () => {
     const displayByPropsOrEvent =
-      this.props.displayMessage || this.state.displayMessage;
-    const typeByPropsOrEvent = this.props.type || this.state.type;
+      this.state.displayMessage || this.props.displayMessage;
+    const typeByPropsOrEvent = this.state.type || this.props.type;
     const descriptionByPropsOrEvent =
-      this.props.description || this.state.description;
-    const actionByPropsOrEvent = this.props.action || this.state.action;
+      this.state.description || this.props.description;
+    const actionByPropsOrEvent = this.state.action || this.props.action;
     return {
       action: actionByPropsOrEvent,
       description: descriptionByPropsOrEvent,
@@ -89,8 +111,8 @@ class MessageWrapper extends Component {
 
   handleClickAction = () => {
     const actionHandlerKey =
-      this.props.actionHandlerKey || this.state.actionHandlerKey;
-    const params = this.props.params || this.state.params;
+      this.state.actionHandlerKey || this.props.actionHandlerKey;
+    const params = this.state.params || this.props.params;
     this.props.onExecuteMessageAction(actionHandlerKey, params);
   };
 }
@@ -102,7 +124,7 @@ MessageWrapper.propTypes = {
   displayMessage: PropTypes.bool,
   onExecuteMessageAction: PropTypes.func,
   params: PropTypes.object,
-  type: PropTypes.string
+  type: PropTypes.number
 };
 
 export default MessageWrapper;

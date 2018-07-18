@@ -114,6 +114,14 @@ describe('Store data email to Email Table:', () => {
   });
 });
 
+describe('Load data emails from Email Table:', () => {
+  it('should retrieve emails from DB with label id: Sent', async () => {
+    const labelIds = [3];
+    const [email] = await DBManager.getEmailsByLabelIds(labelIds);
+    expect(email.key).toBe(emailSent.email.key);
+  });
+});
+
 describe('Update data email to Email Table:', () => {
   it('should update email: isMuted', async () => {
     const id = 2;

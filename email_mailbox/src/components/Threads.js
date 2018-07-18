@@ -14,6 +14,7 @@ const Threads = props => (
     <Message
       mailbox={props.mailboxSelected}
       onClickSection={props.onClickSection}
+      threadsCount={props.threads.size}
     />
     <div className="threads-header">
       <div className="threads-header-title-container">

@@ -1,14 +1,15 @@
 import { connect } from 'react-redux';
 import { MessageType } from '../components/Message';
 import MessageContent, { actionHandlerKeys } from './../data/message';
-import { LabelType } from './../utils/electronInterface';
+import { LabelType, getEmailsByLabelIds } from './../utils/electronInterface';
 import MessageWrapper from './../components/MessageWrapper';
 import { SectionType } from '../utils/const';
-import { loadThreads } from '../actions';
+import { loadThreads, removeThreads } from '../actions';
 
-const defineMessageData = mailboxSelected => {
+const defineMessageData = (mailboxSelected, threadsCount) => {
   const targetLabelId = LabelType[mailboxSelected].id;
-  if (targetLabelId === LabelType.trash.id) {
+  const isEmpty = threadsCount < 1;
+  if (targetLabelId === LabelType.trash.id && !isEmpty) {
     return {
       ...MessageContent.advice.trash,
       type: MessageType.ADVICE,
@@ -26,8 +27,8 @@ const defineMessageData = mailboxSelected => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { mailbox } = ownProps;
-  const messageData = defineMessageData(mailbox);
+  const { threadsCount, mailbox } = ownProps;
+  const messageData = defineMessageData(mailbox, threadsCount);
   const {
     action,
     description,
@@ -65,7 +66,7 @@ const defineRejectedLabels = labelId => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onExecuteMessageAction: (actionHandlerKey, params) => {
+    onExecuteMessageAction: async (actionHandlerKey, params) => {
       switch (actionHandlerKey) {
         case actionHandlerKeys.success.emailSent: {
           const labelId = LabelType.sent.id;
@@ -83,6 +84,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             };
             ownProps.onClickSection(threadType, openThreadParams);
           });
+          break;
+        }
+        case actionHandlerKeys.advice.trash: {
+          const labelId = LabelType.trash.id;
+          const emails = await getEmailsByLabelIds([labelId]);
+          const threadsParams = emails.map(email => ({
+            threadIdStore: email.id,
+            threadIdDB: email.threadId
+          }));
+          dispatch(removeThreads(threadsParams));
           break;
         }
         default:

@@ -165,6 +165,10 @@ export const getEmailByKey = emailKey => {
   return dbManager.getEmailByKey(emailKey);
 };
 
+export const getEmailsByLabelIds = labelIds => {
+  return dbManager.getEmailsByLabelIds(labelIds);
+};
+
 export const getEmailsByThreadId = threadId => {
   return dbManager.getEmailsByThreadId(threadId);
 };
