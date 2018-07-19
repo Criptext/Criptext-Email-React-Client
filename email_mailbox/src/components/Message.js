@@ -3,20 +3,26 @@ import PropTypes from 'prop-types';
 import './message.css';
 
 const Message = props => (
-  <div className="message-container">{renderMessageType(props.message)}</div>
+  <div className={`message-container ${defineMessageStatus(props)}`}>
+    {renderMessageType(props)}
+  </div>
 );
+
+const defineMessageStatus = props =>
+  props.displayMessage ? 'displayed' : 'hidden';
 
 const MessageStandard = props => {
   const isTypeSuggestion = props.type === MessageType.SUGGESTION;
   return (
     <div className={`message-content ${defineMessageClass(props.type)}`}>
       <span className="message-description">{props.description}</span>
-      {!!props.action && (
-        <button>
-          <span>{props.action}</span>
-          <i className="icon-arrow-right" />
-        </button>
-      )}
+      {!!props.action &&
+        !!props.onClickAction && (
+          <button onClick={() => props.onClickAction()}>
+            <span>{props.action}</span>
+            <i className="icon-arrow-right" />
+          </button>
+        )}
       {isTypeSuggestion && (
         <button className="message-close">
           <i className="icon-exit" />
@@ -89,6 +95,7 @@ renderMessageType.propTypes = {
 MessageStandard.propTypes = {
   action: PropTypes.string,
   description: PropTypes.string,
+  onClickAction: PropTypes.func,
   type: PropTypes.number
 };
 

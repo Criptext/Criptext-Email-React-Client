@@ -21,7 +21,7 @@ const formatAMPM = date => {
 
 const getUtcTimeDiff = date => {
   var timezone = date.getTimezoneOffset();
-  timezone = timezone / 60 * -1;
+  timezone = (timezone / 60) * -1;
   var gmt = '';
   gmt += timezone > 0 ? `+${timezone}:00` : `${timezone}:00`;
   return gmt;

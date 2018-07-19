@@ -92,6 +92,10 @@ async function initApp() {
     await composerWindowManager.editDraft(toEdit);
   });
 
+  ipcMain.on('failed-to-send', () => {
+    composerWindowManager.sendEventToMailbox('failed-to-send', undefined);
+  });
+
   // Socket
   wsClient.setMessageListener( data => {
     mailboxWindow.send('socket-message', data)

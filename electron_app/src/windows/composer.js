@@ -171,21 +171,24 @@ const destroy = async ({ composerId, emailId }) => {
         storedEmail.id,
         undefined
       );
-      sendEventoToMailbox('update-drafts', undefined);
+      sendEventToMailbox('update-drafts', undefined);
     }
     if (isReplyOrReplyAll) {
       const dataToMailbox = {
         threadId: storedEmail.threadId,
         emailId
       };
-      sendEventoToMailbox('update-thread-emails', dataToMailbox);
+      sendEventToMailbox('update-thread-emails', dataToMailbox);
     }
+  }
+  if (emailId) {
+    sendEventToMailbox('display-message-email-sent', { emailId });
   }
   globalManager.composerData.delete(composer.id);
   composer.destroy();
 };
 
-const sendEventoToMailbox = (eventName, data) => {
+const sendEventToMailbox = (eventName, data) => {
   if (mailboxWindow) {
     mailboxWindow.send(eventName, data);
   }
@@ -202,7 +205,7 @@ const saveDraftToDatabase = async (composerId, dataDraft) => {
       dataDraft
     );
   }
-  sendEventoToMailbox('update-drafts', undefined);
+  sendEventToMailbox('update-drafts', undefined);
 };
 
 module.exports = {
@@ -210,5 +213,6 @@ module.exports = {
   destroy,
   editDraft,
   saveDraftChanges,
+  sendEventToMailbox,
   openNewComposer
 };

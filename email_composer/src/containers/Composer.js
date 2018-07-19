@@ -17,7 +17,8 @@ import {
   getEmailByKey,
   createEmailLabel,
   getEmailToEdit,
-  createFile
+  createFile,
+  sendEventToMailbox
 } from './../utils/electronInterface';
 import {
   areEmptyAllArrays,
@@ -353,6 +354,7 @@ class ComposerWrapper extends Component {
         };
         throwError(errorToShow);
       }
+      sendEventToMailbox('failed-to-send', undefined);
       this.setState({ status: Status.ENABLED });
     }
   };

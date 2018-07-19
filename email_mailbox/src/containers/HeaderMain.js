@@ -45,8 +45,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const HeaderMain = connect(mapStateToProps, mapDispatchToProps)(
-  HeaderMainWrapper
-);
+const HeaderMain = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HeaderMainWrapper);
 
 export default HeaderMain;

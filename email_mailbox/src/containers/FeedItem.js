@@ -46,8 +46,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const FeedItem = connect(mapStateToProps, mapDispatchToProps)(
-  FeedItemWrapperView
-);
+const FeedItem = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FeedItemWrapperView);
 
 export default FeedItem;

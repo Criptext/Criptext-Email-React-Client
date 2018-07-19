@@ -14,6 +14,10 @@ const additionalLabels = {
   }
 };
 
+export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
+  './src/utils/consts'
+);
+
 export const LabelType = Object.assign(labels, additionalLabels);
 export const myAccount = remote.require('./src/Account');
 export const composerEvents = remote.require('./src/windows/composer')
@@ -159,6 +163,10 @@ export const getEmailById = emailId => {
 
 export const getEmailByKey = emailKey => {
   return dbManager.getEmailByKey(emailKey);
+};
+
+export const getEmailsByLabelIds = labelIds => {
+  return dbManager.getEmailsByLabelIds(labelIds);
 };
 
 export const getEmailsByThreadId = threadId => {

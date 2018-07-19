@@ -165,8 +165,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const ThreadItem = connect(mapStateToProps, mapDispatchToProps)(
-  ThreadItemWrapper
-);
+const ThreadItem = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ThreadItemWrapper);
 
 export default ThreadItem;

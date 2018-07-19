@@ -33,15 +33,13 @@ const start = account => {
   });
 
   client.connect(
-    `${SOCKET_URL}?recipientId=${account.recipientId}&deviceId=${
-      account.deviceId
-    }`,
+    `${SOCKET_URL}?token=${account.jwt}`,
     'criptext-protocol'
   );
 
   reconnect = () => {
     setTimeout(() => {
-      log(`Websocket reconnecting using ${account.recipientId}...`);
+      log(`Websocket reconnecting...`);
       start(account);
     }, reconnectDelay);
     reconnectDelay *= 2;

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "animejs": "^2.2.0",
+    "criptext-files-sdk": "^0.4.0",
     "immutable": "^3.8.2",
     "lottie-web": "^5.1.17",
     "moment": "^2.20.1",

@@ -1,7 +1,9 @@
+/* eslint react/no-deprecated: 0 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Email from './../containers/Email';
 import Label from './Label';
+import Message from '../containers/Message';
 import './thread.css';
 
 class Thread extends Component {
@@ -17,6 +19,7 @@ class Thread extends Component {
         <div className="thread-content">
           <div className="thread-info">
             <h1>{this.props.thread.subject}</h1>
+            <Message mailbox={this.props.mailboxSelected} />
             <div className="thread-labels">
               {this.props.labels.map((label, index) => {
                 return (
@@ -61,6 +64,7 @@ class Thread extends Component {
 Thread.propTypes = {
   emails: PropTypes.array,
   labels: PropTypes.array,
+  mailboxSelected: PropTypes.string,
   onLoadEmails: PropTypes.func,
   onUpdateUnreadEmails: PropTypes.func,
   onUpdateUnreadThread: PropTypes.func,

@@ -12,11 +12,11 @@ import {
 } from './../utils/electronInterface';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
+import { appDomain, DEVICE_TYPE } from './../utils/consts';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
-const appDomain = 'jigl.com';
 
 const createAccount = async ({
   recipientId,
@@ -117,6 +117,9 @@ const generatePreKeyBundle = async ({
   );
 
   const keybundle = {
+    deviceName: window.navigator.platform,
+    deviceFriendlyName: window.navigator.platform,
+    deviceType: DEVICE_TYPE,
     signedPreKeySignature: util.toBase64(signedPreKey.signature),
     signedPreKeyPublic: util.toBase64(signedPreKey.keyPair.pubKey),
     signedPreKeyId: signedPreKeyId,

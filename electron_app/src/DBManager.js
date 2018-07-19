@@ -584,6 +584,18 @@ const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
   });
 };
 
+const getEmailsByLabelIds = async labelIds => {
+  const emails = await db
+    .select('emailId')
+    .from(Table.EMAIL_LABEL)
+    .whereIn('labelId', labelIds);
+  const emailIds = emails.map(email => email.emailId);
+  return db
+    .select('*')
+    .table(Table.EMAIL)
+    .whereIn('id', emailIds);
+};
+
 const updateEmail = ({ id, key, threadId, date, isMuted, unread, status }) => {
   const params = noNulls({
     key,
@@ -822,6 +834,7 @@ module.exports = {
   getContactsByEmailId,
   getEmailById,
   getEmailByKey,
+  getEmailsByLabelIds,
   getEmailsByThreadId,
   getEmailsCounterByLabelId,
   getEmailsGroupByThreadByParams,
