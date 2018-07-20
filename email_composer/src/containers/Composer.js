@@ -331,10 +331,13 @@ class ComposerWrapper extends Component {
 
   handleSendMessage = async () => {
     this.setState({ status: Status.WAITING });
-    const { data, criptextRecipients, externalRecipients, subject, body } = formOutgoingEmailFromData(
-      this.state,
-      LabelType.sent.id
-    );
+    const {
+      data,
+      criptextRecipients,
+      externalRecipients,
+      subject,
+      body
+    } = formOutgoingEmailFromData(this.state, LabelType.sent.id);
     let emailId, key;
     try {
       [emailId] = await createEmail(data);

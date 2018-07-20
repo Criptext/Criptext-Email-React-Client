@@ -59,7 +59,7 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
     to: getNonCriptextRecipients(composerData.toEmails),
     cc: getNonCriptextRecipients(composerData.ccEmails),
     bcc: getNonCriptextRecipients(composerData.bccEmails)
-  }
+  };
 
   const subject = composerData.textSubject;
   const body = draftToHtml(

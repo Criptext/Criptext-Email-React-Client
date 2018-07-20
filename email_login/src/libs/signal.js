@@ -17,12 +17,7 @@ const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
 
-const createAccountWithNewDevice = async ({
-  recipientId,
-  deviceId,
-  name,
-  token
-}) => {
+const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
   const signedPreKeyId = 1;
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
     (item, index) => index + 1
@@ -43,10 +38,11 @@ const createAccountWithNewDevice = async ({
   if (res.status !== 200) {
     throw errors.login.FAILED;
   }
+  const newToken = res.text;
 
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
-  const jwt = token;
+  const jwt = newToken;
   await createAccountDB({
     recipientId,
     deviceId,

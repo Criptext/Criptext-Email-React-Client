@@ -1,5 +1,5 @@
 export const requiredMinLength = {
-  password: 8
+  password: 4
 };
 
 const requiredMaxLength = {

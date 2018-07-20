@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
-import { inputTypes } from './NonCriptextWrapper';
+import { inputTypes } from './NonCriptextPopupWrapper';
 import './noncriptext.css';
 
-const NonCriptext = props => {
+const NonCriptextPopup = props => {
   return (
     <div className="non-criptext-container">
       <div className="non-criptext-content">
@@ -195,4 +195,4 @@ renderButtons.propTypes = {
   onClickCancelSendMessage: PropTypes.func
 };
 
-export { NonCriptext as default, PopUpModes };
+export { NonCriptextPopup as default, PopUpModes };

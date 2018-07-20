@@ -86,12 +86,11 @@ class LostDevicesWrapper extends Component {
       this.throwLoginError(errors.login.FAILED);
     } else {
       const recipientId = this.state.values.username;
-      const { deviceId, name, token } = loginResponse.body;
+      const { deviceId, name } = loginResponse.body;
       await this.createAccountWithNewDevice({
         recipientId,
         deviceId,
-        name,
-        token
+        name
       });
     }
   };
@@ -114,18 +113,12 @@ class LostDevicesWrapper extends Component {
     }
   };
 
-  createAccountWithNewDevice = async ({
-    recipientId,
-    deviceId,
-    name,
-    token
-  }) => {
+  createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
     try {
       await signal.createAccountWithNewDevice({
         recipientId,
         deviceId,
-        name,
-        token
+        name
       });
       openMailbox();
       closeLogin();

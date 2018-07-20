@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import NonCriptext, { PopUpModes } from './NonCriptext';
+import NonCriptextPopup, { PopUpModes } from './NonCriptextPopup';
 import {
   requiredMinLength,
   validatePassword,
@@ -35,7 +35,7 @@ class NonCriptextWrapper extends Component {
 
   render() {
     return (
-      <NonCriptext
+      <NonCriptextPopup
         {...this.props}
         disabled={this.state.disabled}
         formItems={this.state.formItems}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import RecipientWrapper from './RecipientWrapper';
 import SubjectWrapper from './SubjectWrapper';
 import BodyWrapper from './BodyWrapper';
-import NonCriptextWrapper from './NonCriptextWrapper';
+import NonCriptextPopupWrapper from './NonCriptextPopupWrapper';
 import './composer.css';
 
 const Composer = props => (
@@ -42,7 +42,7 @@ const Composer = props => (
       status={props.status}
     />
     {props.displayNonCriptextPopup && (
-      <NonCriptextWrapper
+      <NonCriptextPopupWrapper
         onClickSendMessage={props.onClickSendMessage}
         onClickCancelSendMessage={props.onClickCancelSendMessage}
         onSetNonCriptextRecipientsPassword={

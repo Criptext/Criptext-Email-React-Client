@@ -22,24 +22,24 @@ const defaultOptionsLock = {
 
 export default {
   1: {
-    defaultOptions: defaultOptionsArm,
-    title: 'The power is yours',
+    defaultOptions: defaultOptionsEmail,
+    title: 'Welcome',
     description:
-      'You create information, we believe you have a right to own it.',
+      'Your secure email experience starts today, be ready to E2E email encryption.',
     speed: 1
   },
   2: {
-    defaultOptions: defaultOptionsEmail,
+    defaultOptions: defaultOptionsLock,
     title: 'Strong Privacy',
     description:
       'Criptext doesn`t read your content, it`s always encrypted even for us.',
     speed: 2
   },
   3: {
-    defaultOptions: defaultOptionsLock,
-    title: 'Welcome',
+    defaultOptions: defaultOptionsArm,
+    title: 'The power is yours',
     description:
-      'Your secure email experience starts today, be ready to E2E email encryption.',
+      'You create information, we believe you have a right to own it.',
     speed: 1
   }
 };

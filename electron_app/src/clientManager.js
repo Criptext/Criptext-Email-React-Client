@@ -4,14 +4,16 @@ const { db, Table } = require('./models.js');
 let client = {};
 
 const checkClient = async () => {
-  if (!client.login) {
-    const account = await db.table(Table.ACCOUNT).select('*');
-    const token = !account.length ? undefined : account[0].jwt;
+  const account = await db.table(Table.ACCOUNT).select('*');
+  const token = !account.length ? undefined : account[0].jwt;
+  if (!client.login || client.token !== token) {
     const clientOptions = {
       url: process.env.REACT_APP_KEYSERVER_URL || PROD_SERVER_URL,
-      token
+      token,
+      timeout: 60000
     };
     client = new ClientAPI(clientOptions);
+    client.token = token;
   }
 };
 
@@ -41,6 +43,7 @@ class ClientManager {
   }
 
   async getEvents() {
+    this.check();
     const res = await client.getPendingEvents();
     return this.formEvents(res.body);
   }
