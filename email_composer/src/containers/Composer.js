@@ -99,7 +99,7 @@ class ComposerWrapper extends Component {
         onClearFile={this.handleClearFile}
         onClickCancelSendMessage={this.handleClickCancelSendMessage}
         onClickDiscardDraft={this.handleClickDiscardDraft}
-        onClickSendMessage={this.checkNonCriptextRecipients}
+        onClickSendMessage={this.handleSendMessage}
         onDrop={this.handleDrop}
         onPauseUploadFile={this.handlePauseUploadFile}
         onResumeUploadFile={this.handleResumeUploadFile}
@@ -303,15 +303,7 @@ class ComposerWrapper extends Component {
   checkNonCriptextRecipients = () => {
     const { toEmails, ccEmails, bccEmails } = this.state;
     const recipients = [...toEmails, ...ccEmails, ...bccEmails];
-    const hasNonCriptextRecipients = recipients.find(
-      recipient => recipient.indexOf(`@${appDomain}`) < 0
-    );
-    const isVerified = this.state.nonCriptextRecipientsVerified;
-    if (hasNonCriptextRecipients && !isVerified) {
-      this.setState({ displayNonCriptextPopup: true });
-    } else {
-      this.handleSendMessage();
-    }
+    return recipients.find(recipient => recipient.indexOf(`@${appDomain}`) < 0);
   };
 
   handleClickCancelSendMessage = () => {
@@ -329,7 +321,17 @@ class ComposerWrapper extends Component {
     });
   };
 
-  handleSendMessage = async () => {
+  handleSendMessage = () => {
+    const hasNonCriptextRecipients = this.checkNonCriptextRecipients();
+    const isVerified = this.state.nonCriptextRecipientsVerified;
+    if (hasNonCriptextRecipients && !isVerified) {
+      this.setState({ displayNonCriptextPopup: true });
+    } else {
+      this.sendMessage();
+    }
+  };
+
+  sendMessage = async () => {
     this.setState({ status: Status.WAITING });
     const {
       data,
