@@ -11,11 +11,12 @@
 
   .non-criptext-content {
     font-family: NunitoSans;
-    height: 310px;
+    height: 350px;
     margin: 0 auto;
     position: relative;
     width: 232px;
     z-index: 1;
+    display: flex;
 
     section{
       align-items: center;
@@ -24,10 +25,10 @@
       display: flex;
       height: 100%;
       width: 100%;
+      padding: 0px 34px 0px 35px;
 
       .content {
         width: 100%;
-        padding: 28px 30px;
 
         .non-criptext-title {
           flex-grow: 1;
@@ -68,6 +69,7 @@
           margin-bottom: 22px;
 
           input {
+            width: 97%;
             padding-left: 5px;
             height: 18px;
             border: none;
@@ -90,7 +92,7 @@
 
           .icon-show, .icon-not-show {
             position: relative;
-            left: 145px;
+            left: 148px;
             top: -20px;
             float: left;
             color: #cdcdcd;
@@ -113,7 +115,8 @@
           height: 74px;
           color: #000000;
           font-size: 12px;
-          margin-bottom: 22px;
+          margin-top: 20px;
+          margin-bottom: 17px;
 
           span:first-child {
             font-weight: bolder;
