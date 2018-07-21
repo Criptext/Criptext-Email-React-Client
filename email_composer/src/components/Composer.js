@@ -4,6 +4,7 @@ import RecipientWrapper from './RecipientWrapper';
 import SubjectWrapper from './SubjectWrapper';
 import BodyWrapper from './BodyWrapper';
 import NonCriptextPopupWrapper from './NonCriptextPopupWrapper';
+import { Status } from './Control';
 import './composer.css';
 
 const Composer = props => (
@@ -49,6 +50,9 @@ const Composer = props => (
           props.onSetNonCriptextRecipientsPassword
         }
       />
+    )}
+    {props.status === Status.WAITING && (
+      <div className="composer-sending-backdrop" />
     )}
   </div>
 );
