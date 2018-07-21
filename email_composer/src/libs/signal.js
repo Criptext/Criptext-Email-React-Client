@@ -115,6 +115,7 @@ const createEmails = async (
 
 const encryptPostEmail = async ({
   recipients,
+  externalRecipients,
   body,
   subject,
   threadId,
@@ -143,7 +144,7 @@ const encryptPostEmail = async ({
     knownAddresses
   );
   if (keyBundles.includes(null)) {
-    throw new CustomError(errors.server.UNAUTHORIZED_ERROR);
+    throw new CustomError(errors.server.UNAUTHORIZED);
   }
 
   const recipientsToSendAmount =
@@ -173,7 +174,22 @@ const encryptPostEmail = async ({
     keyBundleJSONbyRecipientIdAndDeviceId,
     peer
   );
+  const allExternalRecipients = [
+    ...externalRecipients.to,
+    ...externalRecipients.cc,
+    ...externalRecipients.bcc
+  ];
+  const hasExternalRecipients = allExternalRecipients.length > 0;
+  const guestEmail = hasExternalRecipients
+    ? {
+        to: externalRecipients.to,
+        cc: externalRecipients.cc,
+        bcc: externalRecipients.bcc,
+        body
+      }
+    : null;
   const data = objectUtils.noNulls({
+    guestEmail,
     criptextEmails,
     subject,
     threadId,

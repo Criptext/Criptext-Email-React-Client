@@ -20,6 +20,20 @@ exports[`[Form outgoing email]  Form outgoing email from data 1`] = `
 Object {
   "body": "<p></p>
 ",
+  "criptextRecipients": Array [
+    Object {
+      "recipientId": "toUser",
+      "type": "to",
+    },
+    Object {
+      "recipientId": "ccUser",
+      "type": "cc",
+    },
+    Object {
+      "recipientId": "bccUser",
+      "type": "bcc",
+    },
+  ],
   "data": Object {
     "email": Object {
       "content": "<p></p>
@@ -52,21 +66,12 @@ Object {
       ],
     },
   },
+  "externalRecipients": Object {
+    "bcc": Array [],
+    "cc": Array [],
+    "to": Array [],
+  },
   "subject": "Subject",
-  "to": Array [
-    Object {
-      "recipientId": "toUser",
-      "type": "to",
-    },
-    Object {
-      "recipientId": "ccUser",
-      "type": "cc",
-    },
-    Object {
-      "recipientId": "bccUser",
-      "type": "bcc",
-    },
-  ],
 }
 `;
 

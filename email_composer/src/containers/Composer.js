@@ -44,6 +44,7 @@ import {
   FILE_MODES,
   FILE_PROGRESS
 } from './../utils/FileUtils';
+import { appDomain } from '../utils/const';
 
 const PrevMessage = props => (
   <div className="content-prev-message">{props.children}</div>
@@ -66,7 +67,10 @@ class ComposerWrapper extends Component {
       status: Status.DISABLED,
       textSubject: '',
       threadId: undefined,
-      toEmails: []
+      toEmails: [],
+      displayNonCriptextPopup: false,
+      nonCriptextRecipientsPassword: '',
+      nonCriptextRecipientsVerified: false
     };
   }
 
@@ -80,6 +84,7 @@ class ComposerWrapper extends Component {
         disableSendButtonOnInvalidEmail={
           this.handleDisableSendButtonOnInvalidEmail
         }
+        displayNonCriptextPopup={this.state.displayNonCriptextPopup}
         files={this.state.files}
         getBccEmails={this.handleGetBccEmail}
         getCcEmails={this.handleGetCcEmail}
@@ -92,6 +97,7 @@ class ComposerWrapper extends Component {
         isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
         isDragActive={this.state.isDragActive}
         onClearFile={this.handleClearFile}
+        onClickCancelSendMessage={this.handleClickCancelSendMessage}
         onClickDiscardDraft={this.handleClickDiscardDraft}
         onClickSendMessage={this.handleSendMessage}
         onDrop={this.handleDrop}
@@ -99,6 +105,9 @@ class ComposerWrapper extends Component {
         onResumeUploadFile={this.handleResumeUploadFile}
         onToggleRecipient={this.handleToggleRecipient}
         status={this.state.status}
+        onSetNonCriptextRecipientsPassword={
+          this.handleSetNonCriptextRecipientsPassword
+        }
         textSubject={this.state.textSubject}
         toEmails={this.state.toEmails}
       />
@@ -291,12 +300,46 @@ class ComposerWrapper extends Component {
     }
   };
 
-  handleSendMessage = async () => {
+  checkNonCriptextRecipients = () => {
+    const { toEmails, ccEmails, bccEmails } = this.state;
+    const recipients = [...toEmails, ...ccEmails, ...bccEmails];
+    return recipients.find(recipient => recipient.indexOf(`@${appDomain}`) < 0);
+  };
+
+  handleClickCancelSendMessage = () => {
+    this.setState({
+      displayNonCriptextPopup: false,
+      nonCriptextRecipientsPassword: ''
+    });
+  };
+
+  handleSetNonCriptextRecipientsPassword = ({ password, displayPopup }) => {
+    this.setState({
+      nonCriptextRecipientsPassword: password,
+      displayNonCriptextPopup: displayPopup,
+      nonCriptextRecipientsVerified: true
+    });
+  };
+
+  handleSendMessage = () => {
+    const hasNonCriptextRecipients = this.checkNonCriptextRecipients();
+    const isVerified = this.state.nonCriptextRecipientsVerified;
+    if (hasNonCriptextRecipients && !isVerified) {
+      this.setState({ displayNonCriptextPopup: true });
+    } else {
+      this.sendMessage();
+    }
+  };
+
+  sendMessage = async () => {
     this.setState({ status: Status.WAITING });
-    const { data, to, subject, body } = formOutgoingEmailFromData(
-      this.state,
-      LabelType.sent.id
-    );
+    const {
+      data,
+      criptextRecipients,
+      externalRecipients,
+      subject,
+      body
+    } = formOutgoingEmailFromData(this.state, LabelType.sent.id);
     let emailId, key;
     try {
       [emailId] = await createEmail(data);
@@ -307,11 +350,12 @@ class ComposerWrapper extends Component {
         type: 'peer',
         deviceId: myAccount.deviceId
       };
-      const recipients = [...to, peer];
+      const recipients = [...criptextRecipients, peer];
       const params = {
         subject,
         threadId: this.state.threadId,
         recipients,
+        externalRecipients,
         body,
         files,
         peer

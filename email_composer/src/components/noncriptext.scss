@@ -1,0 +1,159 @@
+
+.non-criptext-container{
+  align-items: center;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 3;
+
+  .non-criptext-content {
+    font-family: NunitoSans;
+    height: 310px;
+    margin: 0 auto;
+    position: relative;
+    width: 232px;
+    z-index: 1;
+
+    section{
+      align-items: center;
+      background-color: white;
+      border-radius: 5px;
+      display: flex;
+      height: 100%;
+      width: 100%;
+
+      .content {
+        width: 100%;
+        padding: 28px 30px;
+
+        .non-criptext-title {
+          flex-grow: 1;
+          text-align: center;
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 31px;
+          margin-bottom: 22px;
+        }
+  
+        .non-criptext-label {
+          display: flex;
+          flex-grow: 1;
+          flex-direction: row;
+          font-size: 13px;
+          line-height: 18px;
+          margin-bottom: 8px;
+          .text {
+            flex-grow: 7;
+            color: #1a1a1a;
+            margin: 0px;
+          }
+          .switch {
+            flex-grow: 1;
+            margin: 0px;
+          }
+        }
+
+        .non-criptext-description {
+          font-size: 11px;
+          color: #8d8d8d;
+          margin-bottom: 15px;
+        }
+
+        .non-criptext-form {
+          flex-grow: 1;
+          height: 74px;
+          margin-bottom: 22px;
+
+          input {
+            padding-left: 5px;
+            height: 18px;
+            border: none;
+            border-bottom: 1px solid #d4d4d4;
+            font-size: 13px;
+            &:first-child {
+              margin-top: 2px;
+            }
+            &:last-child {
+              margin-top: 17px;
+            }
+            &:focus {
+              outline: none;
+              border-bottom: 1px solid #0091ff;
+            }
+            &::placeholder {
+              color: #9b9999;
+            }
+          }
+
+          .icon-show, .icon-not-show {
+            position: relative;
+            left: 145px;
+            top: -20px;
+            float: left;
+            color: #cdcdcd;
+          }
+
+          .error-password-message{
+            font-size: 11px;
+            color: red;
+            position: relative;
+            top: -6px;
+            left: -10px;
+            &.hidden {
+              color: #fff;
+            }
+          }
+        }
+
+        .non-criptext-note {
+          flex-grow: 1;
+          height: 74px;
+          color: #000000;
+          font-size: 12px;
+          margin-bottom: 22px;
+
+          span:first-child {
+            font-weight: bolder;
+          }
+        }
+
+        .non-criptext-buttons {
+          display: flex;
+          flex-grow: 1;
+          flex-direction: row-reverse;
+          margin-bottom: auto;
+
+          button {
+            width: 70px;
+            height: 27px;
+            border-radius: 14px;
+            margin-left: 10px;
+            font-weight: 600;
+            &:disabled {
+              opacity: 0.5;
+            }
+            &.button-send {
+              background-color: #0091ff;
+              color: #fff;
+            }
+            &.button-cancel {
+              background-color: #fff;
+              color: #000;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .non-criptext-overlay{
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+}

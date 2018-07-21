@@ -1,3 +1,4 @@
+/*global process*/
 import {
   acknowledgeEvents,
   createEmail,
@@ -8,7 +9,8 @@ import {
   getContactByEmails,
   createFeedItem,
   myAccount,
-  updateOpenedEmailByKey
+  updateOpenedEmailByKey,
+  setUnreadEmailById
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -25,21 +27,111 @@ const electron = window.require('electron');
 const { ipcRenderer } = electron;
 const emitter = new EventEmitter();
 
-ipcRenderer.on('socket-message', (event, message) => {
-  switch (message.cmd) {
+ipcRenderer.on('socket-message', (ev, message) => {
+  handleEvent(message);
+});
+
+export const handleEvent = incomingEvent => {
+  switch (incomingEvent.cmd) {
     case SocketCommand.NEW_EMAIL: {
-      handleNewMessageEvent(message);
-      return;
+      return handleNewMessageEvent(incomingEvent);
     }
     case SocketCommand.EMAIL_TRACKING_UPDATE: {
-      handleEmailTrackingUpdate(message);
-      return;
+      return handleEmailTrackingUpdate(incomingEvent);
+    }
+    case SocketCommand.PEER_EMAIL_TRACKING_UPDATE: {
+      return handlePeerEmailTrackingUpdate(incomingEvent);
     }
     default: {
-      alert('Unhandled socket command ', message);
+      return process.env.NODE_ENV === 'development'
+        ? alert('Unhandled socket command: ', incomingEvent.cmd)
+        : null;
     }
   }
-});
+};
+
+export const handleNewMessageEvent = async ({ rowid, params }) => {
+  const [emailObj, eventId] = [params, rowid];
+  const InboxLabel = LabelType.inbox;
+  const labels = [InboxLabel.id];
+  const eventParams = {
+    labels
+  };
+  const [prevEmail] = await getEmailByKey(emailObj.metadataKey);
+  if (!prevEmail) {
+    const email = await formIncomingEmailFromData(emailObj);
+    const recipients = getRecipientsFromData(emailObj);
+    const files =
+      emailObj.files && emailObj.files.length
+        ? await formFilesFromData({
+            files: emailObj.files,
+            date: emailObj.date
+          })
+        : null;
+    const params = {
+      email,
+      recipients,
+      labels,
+      files
+    };
+    const [newEmail] = await createEmail(params);
+    eventParams['threadId'] = emailObj.threadId;
+    eventParams['emailId'] = newEmail.id;
+  } else {
+    const prevEmailId = prevEmail.id;
+    eventParams['threadId'] = prevEmail.threadId;
+    eventParams['emailId'] = prevEmailId;
+    const prevEmailLabels = await getEmailLabelsByEmailId(prevEmailId);
+    const prevLabels = prevEmailLabels.map(item => item.labelId);
+    if (!prevLabels.includes(LabelType.inbox.id)) {
+      const emailLabel = formEmailLabel({ emailId: prevEmailId, labels });
+      await createEmailLabel(emailLabel);
+    }
+  }
+  await setEventAsHandled(eventId);
+  emitter.emit(Event.NEW_EMAIL, eventParams);
+};
+
+export const handleEmailTrackingUpdate = async ({ rowid, params }) => {
+  const [metadataKey, recipientId] = [params.metadataKey, params.from];
+  const [email] = await getEmailByKey(metadataKey);
+  if (email) {
+    await updateOpenedEmailByKey({
+      key: metadataKey,
+      status: params.type
+    });
+    const isFromMe = recipientId === myAccount.recipientId;
+    const isOpened = params.type === EmailStatus.OPENED;
+    if (!isFromMe && isOpened) {
+      const contactEmail = `${recipientId}@${appDomain}`;
+      const [contact] = await getContactByEmails([contactEmail]);
+      const feedItemParams = {
+        date: params.date,
+        type: params.type,
+        emailId: email.id,
+        contactId: contact.id
+      };
+      await createFeedItem([feedItemParams]);
+    }
+    await setEventAsHandled(rowid);
+    emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id);
+  }
+};
+
+export const handlePeerEmailTrackingUpdate = async ({ rowid, params }) => {
+  const [metadataKey, recipientId] = [params.metadataKey, params.from];
+  const isFromMe = recipientId === myAccount.recipientId;
+  const isOpened = params.type === EmailStatus.OPENED;
+  const [email] = await getEmailByKey(metadataKey);
+  if (isFromMe && isOpened && email) {
+    await setUnreadEmailById(email.id, false);
+  }
+  await setEventAsHandled(rowid);
+};
+
+const setEventAsHandled = async eventId => {
+  await acknowledgeEvents([eventId]);
+};
 
 ipcRenderer.on('update-drafts', () => {
   emitter.emit(Event.UPDATE_SAVED_DRAFTS);
@@ -82,73 +174,6 @@ ipcRenderer.on('update-thread-emails', (ev, data) => {
   const { threadId, emailId } = data;
   emitter.emit(Event.UPDATE_THREAD_EMAILS, { threadId, emailId });
 });
-
-export const handleNewMessageEvent = async ({ rowid, params }) => {
-  const [emailObj, eventId] = [params, rowid];
-  const InboxLabel = LabelType.inbox;
-  const labels = [InboxLabel.id];
-  const eventParams = {
-    labels
-  };
-  const [prevEmail] = await getEmailByKey(emailObj.metadataKey);
-  if (!prevEmail) {
-    const email = await formIncomingEmailFromData(emailObj);
-    const recipients = getRecipientsFromData(emailObj);
-    const files =
-      emailObj.files && emailObj.files.length
-        ? await formFilesFromData({
-            files: emailObj.files,
-            date: emailObj.date
-          })
-        : null;
-    const params = {
-      email,
-      recipients,
-      labels,
-      files
-    };
-    const [newEmail] = await createEmail(params);
-    eventParams['threadId'] = emailObj.threadId;
-    eventParams['emailId'] = newEmail.id;
-  } else {
-    const prevEmailId = prevEmail.id;
-    eventParams['threadId'] = prevEmail.threadId;
-    eventParams['emailId'] = prevEmailId;
-    const prevEmailLabels = await getEmailLabelsByEmailId(prevEmailId);
-    const prevLabels = prevEmailLabels.map(item => item.labelId);
-    if (!prevLabels.includes(LabelType.inbox.id)) {
-      const emailLabel = formEmailLabel({ emailId: prevEmailId, labels });
-      await createEmailLabel(emailLabel);
-    }
-  }
-  await acknowledgeEvents([eventId]);
-  emitter.emit(Event.NEW_EMAIL, eventParams);
-};
-
-export const handleEmailTrackingUpdate = async ({ rowid, params }) => {
-  const [metadataKey, recipientId] = [params.metadataKey, params.from];
-  if (recipientId !== myAccount.recipientId) {
-    const [email] = await getEmailByKey(metadataKey);
-    if (email) {
-      await updateOpenedEmailByKey({
-        key: metadataKey,
-        status: EmailStatus.READ
-      });
-      const contactEmail = `${recipientId}@${appDomain}`;
-      const [contact] = await getContactByEmails([contactEmail]);
-      const feedItemParams = {
-        date: params.date,
-        type: params.type,
-        emailId: email.id,
-        contactId: contact.id
-      };
-      await createFeedItem([feedItemParams]);
-      await acknowledgeEvents([rowid]);
-      emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id);
-    }
-  }
-  // To do: Sync this event with my other devices
-};
 
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
