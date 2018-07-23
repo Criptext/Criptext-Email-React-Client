@@ -3,10 +3,13 @@ import {
   getEmailsByThreadId,
   updateUnreadEmailByThreadId,
   setMuteEmailById,
-  setUnreadEmailById
+  setUnreadEmailById,
+  updateEmail,
+  unsendEmailEvent
 } from '../utils/electronInterface';
 import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
+import { EmailStatus, unsentText } from '../utils/const';
 
 export const addEmails = emails => {
   return {
@@ -101,3 +104,28 @@ export const updateUnreadEmails = (thread, label) => {
     }
   };
 };
+
+export const unsendEmail = params => {
+  return async dispatch => {
+    const { key, emailId } = params;
+    try {
+      const { status } = await unsendEmailEvent(key);
+      if (status === 200) {
+        await updateEmail({
+          key,
+          status: EmailStatus.UNSEND,
+          content: unsentText,
+          preview: unsentText
+        });
+        dispatch(unsendEmailOnSuccess(emailId));
+      }
+    } catch (e) {
+      // To do
+    }
+  };
+};
+
+export const unsendEmailOnSuccess = emailId => ({
+  type: Email.UNSEND,
+  emailId
+});

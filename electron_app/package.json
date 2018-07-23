@@ -75,7 +75,7 @@
     "electron-packager": "^10.1.2"
   },
   "dependencies": {
-    "@criptext/email-http-client": "^0.8.2",
+    "@criptext/email-http-client": "^0.10.1",
     "electron-window-state": "^4.1.1",
     "knex": "^0.14.2",
     "sqlite3": "^3.1.13",

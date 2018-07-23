@@ -74,6 +74,10 @@ class ClientManager {
   postUser(params) {
     return client.postUser(params);
   }
+
+  unsendEmail(metadataKey) {
+    return client.unsendEmail(metadataKey);
+  }
 }
 
 module.exports = new ClientManager();

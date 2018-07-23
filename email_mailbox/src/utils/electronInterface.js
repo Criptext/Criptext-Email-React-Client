@@ -75,6 +75,10 @@ export const postOpenEvent = params => {
   return clientManager.postOpenEvent(params);
 };
 
+export const unsendEmailEvent = metadataKey => {
+  return clientManager.unsendEmail(metadataKey);
+};
+
 /* DataBase
    ----------------------------- */
 export const createAccount = params => {
@@ -231,6 +235,10 @@ export const setMuteEmailById = (emailId, muteValue) => {
 
 export const setUnreadEmailById = (emailId, unreadValue) => {
   return dbManager.updateEmail({ id: emailId, unread: unreadValue });
+};
+
+export const updateEmail = params => {
+  return dbManager.updateEmail(params);
 };
 
 export const updateAccount = params => {

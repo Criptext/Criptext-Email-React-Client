@@ -19,7 +19,7 @@ const renderEmailCollapse = props => (
   <div
     className={
       'email-container email-container-collapse ' +
-      (props.email.unsent ? 'email-unsent' : 'email-normal')
+      (props.isUnsend ? 'email-unsent' : 'email-normal')
     }
     onClick={props.onToggleEmail}
   >
@@ -39,7 +39,11 @@ const renderEmailCollapse = props => (
 
 const renderEmailExpand = props => (
   <div>
-    <div className="email-container email-container-expand">
+    <div
+      className={`email-container email-container-expand ${
+        props.isUnsend ? 'email-unsend' : ''
+      }`}
+    >
       <div className="email-info" onClick={props.onToggleEmail}>
         <div
           style={{ background: props.email.color }}
@@ -289,6 +293,7 @@ const defineEmailStatus = status => {
 
 renderEmailCollapse.propTypes = {
   email: PropTypes.object,
+  isUnsend: PropTypes.bool,
   onToggleEmail: PropTypes.func
 };
 

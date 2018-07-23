@@ -10,6 +10,19 @@
   position: relative;
   width: 100%;
 
+  &.email-unsend {
+    i {
+      color: #d0021b;
+    }
+    .button-expand {
+      border-color: #ff99a5;
+    }
+    .email-text {
+      font-style: italic;
+      color: #acacac;
+    }
+  }
+
   hr{
     border: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);

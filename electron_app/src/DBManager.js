@@ -596,14 +596,26 @@ const getEmailsByLabelIds = async labelIds => {
     .whereIn('id', emailIds);
 };
 
-const updateEmail = ({ id, key, threadId, date, isMuted, unread, status }) => {
+const updateEmail = ({
+  id,
+  key,
+  threadId,
+  date,
+  isMuted,
+  unread,
+  status,
+  content,
+  preview
+}) => {
   const params = noNulls({
     key,
     threadId,
     date,
     unread: typeof unread === 'boolean' ? unread : undefined,
     isMuted: typeof isMuted === 'boolean' ? isMuted : undefined,
-    status
+    status,
+    content,
+    preview
   });
   const whereParam = id ? { id } : { key };
   return db

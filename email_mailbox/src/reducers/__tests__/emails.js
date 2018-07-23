@@ -3,6 +3,7 @@
 import emailReducer from './../emails';
 import * as actions from './../../actions/index';
 import file from './../../../public/emails.json';
+import { EmailStatus } from '../../utils/const';
 const emails = file.emails;
 
 jest.mock('./../../utils/electronInterface');
@@ -22,11 +23,21 @@ describe('email actions: ', () => {
     expect(initState(emails)).toMatchSnapshot();
   });
 
-  it('Mute email by index', () => {
-    const indexToMute = '1';
+  it('Mute email by id', () => {
+    const emailId = '1';
     const prevState = initState(emails);
-    const action = actions.muteNotifications(indexToMute);
+    const action = actions.muteNotifications(emailId);
     const nextState = emailReducer(prevState, action);
-    expect(nextState).toMatchSnapshot();
+    const mutedEmail = nextState.get(emailId);
+    expect(mutedEmail.get('isMuted')).toBe(1);
+  });
+
+  it('Unsend email by id', () => {
+    const emailId = '1';
+    const prevState = initState(emails);
+    const action = actions.unsendEmailOnSuccess(emailId);
+    const nextState = emailReducer(prevState, action);
+    const unsentEmail = nextState.get(emailId);
+    expect(unsentEmail.get('status')).toBe(EmailStatus.UNSEND);
   });
 });

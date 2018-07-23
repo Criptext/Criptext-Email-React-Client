@@ -29,7 +29,9 @@ import {
   markEmailUnread,
   muteEmail,
   muteNotifications,
-  updateUnreadEmails
+  updateUnreadEmails,
+  unsendEmail,
+  unsendEmailOnSuccess
 } from './emails';
 import {
   addLabels,
@@ -87,6 +89,8 @@ export {
   searchThreads,
   sendOpenEvent,
   setThreads,
+  unsendEmail,
+  unsendEmailOnSuccess,
   updateAllFeedItemsAsOlder,
   updateFeedItemSuccess,
   updateLabel,

@@ -9,7 +9,8 @@ import {
   myAccount,
   openEmailInComposer
 } from './../utils/electronInterface';
-import { loadFiles, muteEmail } from './../actions/index';
+import { loadFiles, muteEmail, unsendEmail } from './../actions/index';
+import { EmailStatus } from '../utils/const';
 
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
@@ -41,10 +42,12 @@ const mapStateToProps = (state, ownProps) => {
     color,
     letters
   };
+  const isUnsend = email.status === EmailStatus.UNSEND;
   return {
     email: myEmail,
     files,
-    isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail)
+    isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
+    isUnsend
   };
 };
 
@@ -102,6 +105,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ev.stopPropagation();
       const key = email.key;
       openEmailInComposer({ key, type: composerEvents.FORWARD });
+    },
+    unsendEmail: () => {
+      const params = {
+        key: email.key,
+        emailId: email.id
+      };
+      dispatch(unsendEmail(params));
     }
   };
 };

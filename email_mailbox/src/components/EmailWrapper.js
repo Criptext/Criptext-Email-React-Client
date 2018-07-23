@@ -63,9 +63,15 @@ class EmailWrapper extends Component {
   };
 
   setHideView = value => {
-    this.setState({
-      hideView: value
-    });
+    this.setState(
+      {
+        hideView: value
+      },
+      async () => {
+        await this.props.unsendEmail();
+        this.setState({ hideView: !value });
+      }
+    );
   };
 }
 
@@ -74,7 +80,8 @@ EmailWrapper.propTypes = {
   email: PropTypes.object,
   files: PropTypes.array,
   onLoadFiles: PropTypes.func,
-  staticOpen: PropTypes.bool
+  staticOpen: PropTypes.bool,
+  unsendEmail: PropTypes.func
 };
 
 export default EmailWrapper;

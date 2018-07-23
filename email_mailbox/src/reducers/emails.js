@@ -1,5 +1,6 @@
 import { Email } from '../actions/types';
 import { Map, fromJS } from 'immutable';
+import { EmailStatus, unsentText } from './../utils/const';
 
 const emails = (state = new Map(), action) => {
   switch (action.type) {
@@ -25,6 +26,14 @@ const emails = (state = new Map(), action) => {
       }
       return state.set(action.emailId.toString(), email(item, action));
     }
+    case Email.UNSEND: {
+      const emailId = String(action.emailId);
+      if (!emailId) {
+        return state;
+      }
+      const item = state.get(emailId);
+      return state.set(emailId, email(item, action));
+    }
     default:
       return state;
   }
@@ -34,6 +43,13 @@ const email = (state, action) => {
   switch (action.type) {
     case Email.MARK_UNREAD: {
       return state.set('unread', action.unread);
+    }
+    case Email.UNSEND: {
+      return state.merge({
+        content: unsentText,
+        preview: unsentText,
+        status: EmailStatus.UNSEND
+      });
     }
     default:
       return state;

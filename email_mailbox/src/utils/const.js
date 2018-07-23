@@ -2,6 +2,8 @@ import { LabelType } from './electronInterface';
 
 export const appDomain = 'jigl.com';
 
+export const unsentText = 'This content was unsent';
+
 export const IconLabels = {
   [LabelType.inbox.id]: {
     icon: 'icon-mailbox'
@@ -49,7 +51,7 @@ export const FeedItemType = {
 
 export const EmailStatus = {
   FAIL: 1,
-  UNSENT: 2,
+  UNSEND: 2,
   NONE: 3,
   SENDING: 4,
   SENT: 5,
