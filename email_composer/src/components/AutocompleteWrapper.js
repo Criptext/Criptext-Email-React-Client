@@ -58,7 +58,8 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
   };
 
   const onSuggestionSelected = (e, { suggestion }) => {
-    addTag(suggestion.email);
+    const { name, email } = suggestion;
+    addTag({ name, email });
   };
 
   return (

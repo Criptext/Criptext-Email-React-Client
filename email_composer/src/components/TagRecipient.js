@@ -15,9 +15,16 @@ const TagRecipient = props => {
     checkDisableSendButton,
     ...other
   } = props;
-  const isValidEmailAddress = emailRegex.test(tag);
+
+  const { name, email } = getTagDisplayValue(tag);
+  const formattedTag =
+    !name && !email ? { name: tag, email: tag } : { name, email };
+
+  const isValidEmailAddress = emailRegex.test(formattedTag.email);
   checkDisableSendButton(isValidEmailAddress);
-  const isEmailAddressFromAppDomain = tag.indexOf(`@${appDomain}`) > 0;
+
+  const isEmailAddressFromAppDomain =
+    formattedTag.email.indexOf(`@${appDomain}`) > 0;
   const className = isValidEmailAddress
     ? isEmailAddressFromAppDomain
       ? 'tag-item tag-app-domain'
@@ -25,7 +32,7 @@ const TagRecipient = props => {
     : 'tag-item tag-error';
   return (
     <span key={key} className={className} {...other}>
-      {getTagDisplayValue(tag)}
+      {formattedTag.name}
       {!disabled && (
         // eslint-disable-next-line jsx-a11y/anchor-has-content
         <a className={classNameRemove} onClick={() => onRemove(key)} />
