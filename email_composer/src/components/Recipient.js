@@ -43,7 +43,8 @@ const renderRecipientTo = props => (
       focusedClassName={'cstm-tags-border'}
       inputProps={{
         className: 'tags-input',
-        placeholder: ''
+        placeholder: '',
+        name: 'To'
       }}
       onlyUnique={true}
       onChange={props.onChangeToTag}
@@ -71,7 +72,8 @@ const renderRecipientCc = props => (
       focusedClassName={'cstm-tags-border'}
       inputProps={{
         className: 'tags-input',
-        placeholder: ''
+        placeholder: '',
+        name: 'Cc'
       }}
       onChange={props.onChangeCcTag}
       onlyUnique={true}
@@ -99,7 +101,8 @@ const renderRecipientBcc = props => (
       focusedClassName={'cstm-tags-border'}
       inputProps={{
         className: 'tags-input',
-        placeholder: ''
+        placeholder: '',
+        name: 'Bcc'
       }}
       onChange={props.onChangeBccTag}
       onlyUnique={true}

@@ -32,7 +32,7 @@ const TagRecipient = props => {
     : 'tag-item tag-error';
   return (
     <span key={key} className={className} {...other}>
-      {formattedTag.name}
+      {formattedTag.name || formattedTag.email}
       {!disabled && (
         // eslint-disable-next-line jsx-a11y/anchor-has-content
         <a className={classNameRemove} onClick={() => onRemove(key)} />
