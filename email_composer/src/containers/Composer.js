@@ -303,7 +303,10 @@ class ComposerWrapper extends Component {
   checkNonCriptextRecipients = () => {
     const { toEmails, ccEmails, bccEmails } = this.state;
     const recipients = [...toEmails, ...ccEmails, ...bccEmails];
-    return recipients.find(recipient => recipient.indexOf(`@${appDomain}`) < 0);
+    return recipients.find(recipient => {
+      const formattedRecipient = recipient.email || recipient;
+      return formattedRecipient.indexOf(`@${appDomain}`) < 0;
+    });
   };
 
   handleClickCancelSendMessage = () => {

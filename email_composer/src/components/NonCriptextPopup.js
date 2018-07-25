@@ -19,11 +19,17 @@ const renderPopUp = props => {
     <div className="content">
       <div className="non-criptext-title">Non-Criptext Recipient</div>
       <div className="non-criptext-label">
-        <span className="text">Set a password</span>
+        <span className="text">Send Encrypted</span>
         <span className="switch">{renderSwitch(props)}</span>
       </div>
       <div className="non-criptext-description">
-        <span>This is so non-Criptext users can read your encrypted email</span>
+        <span>
+          Passwords enable non-Criptext users to read your encrypted email.
+        </span>
+        <span>Encrypted emails to non-Criptext recipients </span>
+        <span>
+          <b>will expire in 10 days.</b>
+        </span>
       </div>
       {props.mode === PopUpModes.SET_PASSWORD
         ? renderForm(props)

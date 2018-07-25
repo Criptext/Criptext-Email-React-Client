@@ -47,18 +47,26 @@ export const EmailStatus = {
   READ: 7
 };
 
+const getEmailAddressesFromEmailObject = emails => {
+  return emails.map(item => item.email || item);
+};
+
 export const formOutgoingEmailFromData = (composerData, labelId) => {
+  const toEmails = getEmailAddressesFromEmailObject(composerData.toEmails);
+  const ccEmails = getEmailAddressesFromEmailObject(composerData.ccEmails);
+  const bccEmails = getEmailAddressesFromEmailObject(composerData.bccEmails);
   const recipients = {
-    to: composerData.toEmails,
-    cc: composerData.ccEmails,
-    bcc: composerData.bccEmails
+    to: toEmails,
+    cc: ccEmails,
+    bcc: bccEmails
   };
+
   const criptextRecipients = formRecipients(recipients);
 
   const externalRecipients = {
-    to: getNonCriptextRecipients(composerData.toEmails),
-    cc: getNonCriptextRecipients(composerData.ccEmails),
-    bcc: getNonCriptextRecipients(composerData.bccEmails)
+    to: getNonCriptextRecipients(toEmails),
+    cc: getNonCriptextRecipients(ccEmails),
+    bcc: getNonCriptextRecipients(bccEmails)
   };
 
   const subject = composerData.textSubject;
@@ -131,6 +139,10 @@ const insertEmptyLine = quantity => {
   return quantity > 0 ? '<p></p>'.repeat(quantity) : '';
 };
 
+const formRecipientObject = contact => {
+  return contact.name ? { name: contact.name, email: contact.email } : contact;
+};
+
 export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const [emailData] = await getEmailByKey(emailKeyToEdit);
   const threadId =
@@ -160,14 +172,16 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
 
   const toEmails =
     replyType === composerEvents.REPLY || replyType === composerEvents.REPLY_ALL
-      ? contacts.from.map(contact => contact.email)
+      ? contacts.from.map(contact => formRecipientObject(contact))
       : [];
 
   const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
-  const previousCcEmails = contacts.cc.map(contact => contact.email);
+  const previousCcEmails = contacts.cc.map(contact =>
+    formRecipientObject(contact)
+  );
   const othersToEmails = contacts.to
-    .map(contact => contact.email)
-    .filter(email => email !== myEmailAddress);
+    .map(contact => formRecipientObject(contact))
+    .filter(contact => contact.email !== myEmailAddress);
   const ccEmails =
     replyType === composerEvents.REPLY_ALL
       ? [...previousCcEmails, ...othersToEmails]

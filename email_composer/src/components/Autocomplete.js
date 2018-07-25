@@ -1,23 +1,35 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Autosuggest from 'react-autosuggest';
 import Suggestion from './Suggestion';
 
-const Autocomplete = props => {
-  return (
-    <Autosuggest
-      suggestions={props.suggestions}
-      shouldRenderSuggestions={props.shouldRenderSuggestions}
-      getSuggestionValue={props.getSuggestionValue}
-      renderSuggestion={Suggestion}
-      inputProps={props.inputProps}
-      onSuggestionSelected={props.onSuggestionSelected}
-      onSuggestionsClearRequested={props.onSuggestionsClearRequested}
-      onSuggestionsFetchRequested={props.onSuggestionsFetchRequested}
-      highlightFirstSuggestion={true}
-    />
-  );
-};
+class Autocomplete extends Component {
+  render() {
+    return (
+      <Autosuggest
+        ref={input => {
+          this.autosuggest = input;
+        }}
+        suggestions={this.props.suggestions}
+        shouldRenderSuggestions={this.props.shouldRenderSuggestions}
+        getSuggestionValue={this.props.getSuggestionValue}
+        renderSuggestion={Suggestion}
+        inputProps={this.props.inputProps}
+        onSuggestionSelected={this.props.onSuggestionSelected}
+        onSuggestionsClearRequested={this.props.onSuggestionsClearRequested}
+        onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
+        highlightFirstSuggestion={true}
+      />
+    );
+  }
+
+  componentDidMount() {
+    const inputName = this.props.inputProps.name;
+    if (inputName === 'To') {
+      this.autosuggest.input.focus();
+    }
+  }
+}
 
 Autocomplete.propTypes = {
   suggestions: PropTypes.array,
