@@ -1,6 +1,7 @@
 import { removeAppDomain, removeHTMLTags } from './StringUtils';
 import signal from './../libs/signal';
-import { EmailStatus } from './const';
+import { EmailStatus, appDomain } from './const';
+import { myAccount } from './electronInterface';
 
 const getContentMessage = async ({
   bodyKey,
@@ -33,25 +34,42 @@ const formRecipients = recipientString => {
   return recipientString === '' ? [] : recipientString.split(',');
 };
 
+export const checkEmailIsToMe = data => {
+  const recipients = getRecipientsFromData(data);
+  const recipientsArray = [
+    ...recipients.to,
+    ...recipients.cc,
+    ...recipients.bcc
+  ];
+  const [isToMe] = recipientsArray.filter(
+    email => email.indexOf(`${myAccount.recipientId}@${appDomain}`) >= 0
+  );
+  return isToMe;
+};
+
 export const formIncomingEmailFromData = async data => {
-  const { messageId, senderDeviceId, messageType } = data;
+  const { metadataKey, senderDeviceId, messageType } = data;
   const recipientId = getRecipientIdFromEmailAddressTag(data.from);
   const { content, preview } = await getContentMessage({
-    bodyKey: messageId,
+    bodyKey: metadataKey,
     recipientId,
     deviceId: senderDeviceId,
     messageType
   });
+
+  const isToMe = checkEmailIsToMe(data);
+  const unread = isToMe ? true : false;
+  const status = isToMe ? EmailStatus.NONE : EmailStatus.DELIVERED;
   const email = {
     key: data.metadataKey,
     threadId: data.threadId,
-    s3Key: messageId,
+    s3Key: metadataKey,
     content,
     preview,
     subject: data.subject,
     date: data.date,
-    status: EmailStatus.NONE,
-    unread: true,
+    status,
+    unread,
     secure: true,
     isMuted: false
   };
@@ -89,4 +107,14 @@ export const formFilesFromData = ({ files, date }) => {
       mimeType
     };
   });
+};
+
+export const getCriptextRecipients = recipients => {
+  return recipients.filter(email => email.indexOf(`@${appDomain}`) > 0);
+};
+
+export const validateEmailStatusToSet = (prevEmailStatus, nextEmailStatus) => {
+  const isAlreadyUnsent = prevEmailStatus === EmailStatus.UNSEND;
+  const isAlreadyOpened = prevEmailStatus === EmailStatus.OPENED;
+  return isAlreadyUnsent ? null : isAlreadyOpened ? null : nextEmailStatus;
 };

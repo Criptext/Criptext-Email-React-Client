@@ -4,6 +4,7 @@
   align-items: center;
   height: 26px;
   width: 100%;
+  overflow: hidden;
 
   div{
     border-radius: 50%;
@@ -17,6 +18,7 @@
     font-weight: 300;
     text-align: left;
     width: calc(100% - 100px);
+    text-overflow: ellipsis;
   }
 
   input{

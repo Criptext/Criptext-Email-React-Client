@@ -1,17 +1,9 @@
 import validator from 'validator';
-import { checkAvailableUsername } from './../utils/electronInterface';
-
-const requiredMinLength = {
-  username: 3,
-  fullname: 1,
-  password: 8
-};
-
-const requiredMaxLength = {
-  username: 255,
-  fullname: 255,
-  password: 255
-};
+import {
+  checkAvailableUsername,
+  requiredMinLength,
+  requiredMaxLength
+} from './../utils/electronInterface';
 
 const checkRequired = field => {
   return field !== undefined;

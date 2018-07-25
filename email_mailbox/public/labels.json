@@ -4,43 +4,51 @@
       "id": 1,
       "color": "#ffffff",
       "text": "Inbox",
-      "badge": 1
+      "badge": 1,
+      "visible": 1
     },
     {
       "id": 2,
       "color": "#ffffff",
-      "text": "Sent"
+      "text": "Sent",
+      "visible": 1
     },
     {
       "id": 3,
       "color": "#ffffff",
       "text": "Spam",
-      "badge": 1
+      "badge": 1,
+      "visible": 1
     },
     {
       "id": 4,
       "color": "#ffffff",
-      "text": "Trash"
+      "text": "Trash",
+      "visible": 1
     },
     {
       "id": 5,
       "color": "#ffffff",
-      "text": "Draft"
+      "text": "Draft",
+      "visible": 1
     },
     {
       "id": 6,
       "color": "#ffffff",
-      "text": "Important"
+      "text": "Important",
+      "visible": 1
     },
     {
       "id": 7,
       "color": "#ffffff",
-      "text": "Starred"
+      "text": "Starred",
+      "visible": 1
     },
     { 
       "id": 10,
       "color": "#ffffff",
-      "text": "Text 1"
+      "text": "Text 1",
+      "visible": 0
     }
   ]
 }

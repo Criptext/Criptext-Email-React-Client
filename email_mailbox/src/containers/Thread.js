@@ -38,9 +38,13 @@ const defineLabels = (labels, labelIds) => {
   const labelIdsFiltered = labelIds.filter(
     labelId => labelId !== LabelType.sent.id
   );
-  const result = labelIdsFiltered.toArray().map(labelId => {
-    return labels.get(labelId.toString()).toObject();
-  });
+  const result = labelIdsFiltered
+    .toArray()
+    .map(labelId => {
+      const label = labels.get(labelId.toString());
+      return label ? label.toObject() : null;
+    })
+    .filter(item => item !== null);
 
   return result ? result : [];
 };

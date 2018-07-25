@@ -86,7 +86,7 @@ const createLabelColumns = table => {
     .notNullable();
   table.string('color', TINY_STRING_SIZE).notNullable();
   table.string('type', TINY_STRING_SIZE).defaultTo('custom');
-  table.boolean('visible').defaultTo(false);
+  table.boolean('visible').defaultTo(true);
 };
 
 const createEmailColumns = table => {
@@ -179,6 +179,8 @@ const createAccountColumns = table => {
     .boolean('opened')
     .notNullable()
     .defaultTo(false);
+  table.string('signature', XLARGE_STRING_SIZE);
+  table.boolean('signatureEnabled').defaultTo(false);
 };
 
 const createFeedItemColumns = table => {

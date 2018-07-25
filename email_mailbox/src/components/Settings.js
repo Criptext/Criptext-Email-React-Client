@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SettingGeneral from './SettingGeneral';
-import SettingLabels from './SettingLabels';
+import SettingGeneralWrapper from './SettingGeneralWrapper';
+import SettingLabelsWrapper from './SettingLabelsWrapper';
+import SettingDevicesWrapper from './SettingDevicesWrapper';
 import './settings.css';
 
-const Sections = ['general', 'labels'];
+const Sections = ['general', 'labels', 'trusted devices'];
 
 const Settings = props => (
   <div className="settings-container">
@@ -22,7 +23,7 @@ const Settings = props => (
           />
         ))}
       </ul>
-      {renderSection(props.sectionSelected)}
+      {renderSection(props)}
     </div>
   </div>
 );
@@ -36,12 +37,15 @@ const Items = props => (
   </li>
 );
 
-const renderSection = section => {
+const renderSection = props => {
+  const section = props.sectionSelected;
   switch (section) {
     case 'general':
-      return <SettingGeneral />;
+      return <SettingGeneralWrapper {...props} />;
     case 'labels':
-      return <SettingLabels />;
+      return <SettingLabelsWrapper {...props} />;
+    case 'trusted devices':
+      return <SettingDevicesWrapper {...props} />;
     default:
       break;
   }

@@ -25,7 +25,8 @@ export const addLabel = label => {
           id: labelId,
           color: label.color,
           text: label.text,
-          type: 'custom'
+          type: 'custom',
+          visible: label.visible
         }
       };
       dispatch(addLabels(labels));
@@ -69,15 +70,35 @@ export const loadLabels = () => {
   };
 };
 
-export const updateLabel = ({ id, color, text }) => {
+export const updateLabel = ({ id, color, text, visible }) => {
   return async dispatch => {
     try {
-      const response = await db.updateLabel({ id, color, text });
+      const response = await db.updateLabel({ id, color, text, visible });
       if (response) {
-        dispatch(updateLabelSuccess({ id, color, text }));
+        dispatch(updateLabelSuccess({ id, color, text, visible }));
       }
     } catch (e) {
       // TO DO
     }
+  };
+};
+
+export const removeLabel = id => {
+  return async dispatch => {
+    try {
+      const response = await db.deleteLabelById(id);
+      if (response) {
+        dispatch(removeLabelOnSuccess(id));
+      }
+    } catch (e) {
+      // TO DO
+    }
+  };
+};
+
+export const removeLabelOnSuccess = labelId => {
+  return {
+    type: Label.REMOVE_SUCCESS,
+    labelId
   };
 };

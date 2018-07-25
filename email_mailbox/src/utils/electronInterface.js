@@ -14,6 +14,10 @@ const additionalLabels = {
   }
 };
 
+export const { requiredMinLength, requiredMaxLength } = remote.require(
+  './src/validationConsts'
+);
+
 export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
   './src/utils/consts'
 );
@@ -127,6 +131,10 @@ export const deleteEmailLabel = params => {
 
 export const deleteFeedItemById = feedId => {
   return dbManager.deleteFeedItemById(feedId);
+};
+
+export const deleteLabelById = labelId => {
+  return dbManager.deleteLabelById(labelId);
 };
 
 export const deletePreKeyPair = params => {
