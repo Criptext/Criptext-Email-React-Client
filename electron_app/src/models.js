@@ -37,6 +37,7 @@ const Table = {
   CONTACT: 'contact',
   EMAIL_CONTACT: 'emailContact',
   FILE: 'file',
+  FILE_KEY: 'fileKey',
   ACCOUNT: 'account',
   FEEDITEM: 'feeditem',
   PREKEYRECORD: 'prekeyrecord',
@@ -61,6 +62,7 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.CONTACT)
     .dropTableIfExists(Table.EMAIL_CONTACT)
     .dropTableIfExists(Table.FILE)
+    .dropTableIfExists(Table.FILE_KEY)
     .dropTableIfExists(Table.FEEDITEM)
     .dropTableIfExists(Table.ACCOUNT)
     .dropTableIfExists(Table.PREKEYRECORD)
@@ -100,11 +102,12 @@ const createEmailColumns = table => {
   table.string('subject').notNullable();
   table.text('content').notNullable();
   table.string('preview', LARGE_STRING_SIZE).notNullable();
-  table.dateTime('date').notNullable();
+  table.timestamp('date').notNullable();
   table.integer('status').notNullable();
   table.boolean('unread').notNullable();
   table.boolean('secure').notNullable();
   table.boolean('isMuted').notNullable();
+  table.timestamp('unsendDate');
 };
 
 const createEmailLabelColumns = table => {
@@ -138,7 +141,8 @@ const createEmailContactColumns = table => {
 };
 
 const createFileColumns = table => {
-  table.string('token', SMALL_STRING_SIZE).primary();
+  table.increments('id').primary();
+  table.string('token', SMALL_STRING_SIZE).notNullable();
   table.string('name', SMALL_STRING_SIZE).notNullable();
   table
     .boolean('readOnly')
@@ -160,6 +164,17 @@ const createFileColumns = table => {
     .bigInteger('ephemeralTime')
     .notNullable()
     .defaultTo(0);
+  table.string('emailId', SMALL_STRING_SIZE).notNullable();
+  table
+    .foreign('emailId')
+    .references('id')
+    .inTable(Table.EMAIL);
+};
+
+const createFileKeyColumns = table => {
+  table.increments('id').primary();
+  table.string('key', XLARGE_STRING_SIZE).notNullable();
+  table.string('iv', XLARGE_STRING_SIZE).notNullable();
   table.string('emailId', SMALL_STRING_SIZE).notNullable();
   table
     .foreign('emailId')
@@ -251,6 +266,7 @@ const createTables = async () => {
       .createTable(Table.CONTACT, createContactColumns)
       .createTable(Table.EMAIL_CONTACT, createEmailContactColumns)
       .createTable(Table.FILE, createFileColumns)
+      .createTable(Table.FILE_KEY, createFileKeyColumns)
       .createTable(Table.FEEDITEM, createFeedItemColumns)
       .createTable(Table.ACCOUNT, createAccountColumns)
       .createTable(Table.PREKEYRECORD, createPreKeyRecordColumns)

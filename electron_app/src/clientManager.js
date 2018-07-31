@@ -75,8 +75,8 @@ class ClientManager {
     return client.postUser(params);
   }
 
-  unsendEmail(metadataKey) {
-    return client.unsendEmail(metadataKey);
+  unsendEmail(params) {
+    return client.unsendEmail(params);
   }
 }
 

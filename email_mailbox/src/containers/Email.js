@@ -107,9 +107,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       openEmailInComposer({ key, type: composerEvents.FORWARD });
     },
     unsendEmail: () => {
+      const contactIds = [...email.to, ...email.cc, ...email.bcc];
       const params = {
         key: email.key,
-        emailId: email.id
+        emailId: email.id,
+        contactIds
       };
       dispatch(unsendEmail(params));
     }
