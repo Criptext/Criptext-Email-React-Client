@@ -1,15 +1,122 @@
-.general-letters{
-  align-items: center;
-  background-color: rgba(74, 108, 98, 0.96);
-  border-radius: 50%;
-  display: flex;
-  margin-right: 30px;
-  height: 60px;
-  width: 60px;
+.section-block-content {
+  .section-block-content-item {
+    width: 100%;
+    margin: auto 0px;
+    > p {
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a1b0;
+      text-transform: uppercase;
+      margin: 25px 0px 4px 0px;
+    }
+  }
+}
 
-  span{
-    color: white;
-    font-size: 22px;
-    margin: 0 auto;
+.content-email {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  .general-letters{
+    align-items: center;
+    background-color: rgba(74, 108, 98, 0.96);
+    border-radius: 50%;
+    display: flex;
+    margin-right: 30px;
+    height: 60px;
+    width: 60px;
+  
+    span{
+      color: white;
+      font-size: 22px;
+      margin: 0 auto;
+    }
+  }
+}
+
+.content-name {
+  input {
+    border: none;
+    border-bottom: 1px solid #c3c3c3;;
+    padding-left: 3px;
+    margin-bottom: 5px;
+    &:focus{
+      outline: none;
+      border-bottom: 1px solid #0091ff;
+    }
+  }
+}
+
+.content-signature {
+  .signature-radio-button {
+    margin: 0px;
+    div {
+      height: 18px !important;
+    }
+  }
+  label {
+    font-size: 14px;
+    color: #6c7280;
+    position: relative;
+    bottom: 1px;
+  }
+  .signature-textarea {
+    width: 53%;
+    margin-top: 15px;
+    margin-bottom: 4px;
+    &:disabled {
+      pointer-events: none;
+    }
+    &:focus{
+      outline: none;
+    }
+  }
+}
+
+.content-reset-password {
+  .button-reset-password {
+    background-color: #0091ff;
+    width: 121px;
+    height: 24px;
+    text-transform: capitalize;
+    span {
+      font-size: 13px;
+      position: relative;
+      top: 0px;
+    }
+  }
+}
+
+.content-logout-account {
+  i {
+    font-size: 24px;
+  }
+  span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #636363;
+    position: relative;
+    bottom: 6px;
+  }
+}
+
+
+.content-language {
+  span {
+    color: #6a707e;
+    font-size: 13px;
+  }
+}
+
+.content-useful-links {
+  padding-top: 9px;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  
+  .useful-link {
+    flex-grow: 1;
+    text-decoration: none;
+    color: #0091ff;
+    margin-bottom: 11px;
   }
 }

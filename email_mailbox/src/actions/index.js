@@ -37,6 +37,8 @@ import {
   addLabels,
   addLabel,
   loadLabels,
+  removeLabel,
+  removeLabelOnSuccess,
   updateLabel,
   updateLabelSuccess
 } from './labels';
@@ -77,6 +79,8 @@ export {
   moveThreads,
   muteEmail,
   muteNotifications,
+  removeLabel,
+  removeLabelOnSuccess,
   removeThread,
   removeThreadLabel,
   removeFeedItem,

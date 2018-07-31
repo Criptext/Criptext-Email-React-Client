@@ -52,6 +52,7 @@ Immutable.Map {
     color: "#000000",
     text: "Inbox",
     badge: 1,
+    visible: undefined,
   },
 }
 `;
@@ -63,6 +64,7 @@ Immutable.Map {
     color: "#ffffff",
     text: "labelmodified",
     badge: 1,
+    visible: undefined,
   },
 }
 `;
@@ -74,6 +76,7 @@ Immutable.Map {
     color: "#000000",
     text: "labelmodified",
     badge: 1,
+    visible: undefined,
   },
 }
 `;

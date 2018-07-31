@@ -5,13 +5,17 @@ import { IconLabels } from './../utils/const';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
 
 const defineLabels = labels => {
-  return labels.valueSeq().filter(element => element.get('type') === 'custom');
+  return labels
+    .valueSeq()
+    .filter(
+      element => element.get('type') === 'custom' && element.get('visible')
+    );
 };
 
 const defineSideBarItems = labels => {
   const sideBarItems = labels
     .valueSeq()
-    .filter(label => label.get('visible'))
+    .filter(label => label.get('visible') && label.get('type') === 'system')
     .map(label => ({
       idText: toLowerCaseWithoutSpaces(label.get('text')),
       icon: IconLabels[label.get('id')]

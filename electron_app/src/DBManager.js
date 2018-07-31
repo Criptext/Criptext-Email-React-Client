@@ -1,6 +1,7 @@
 const { db, cleanDataBase, createTables, Table } = require('./models.js');
 const { formContactsRow } = require('./utils/dataTableUtils.js');
 const { noNulls } = require('./utils/ObjectUtils');
+const myAccount = require('./Account');
 
 /* Account
    ----------------------------- */
@@ -12,13 +13,26 @@ const getAccount = () => {
   return db.table(Table.ACCOUNT).select('*');
 };
 
-const updateAccount = ({ opened, recipientId }) => {
-  const params = {};
-  if (typeof opened === 'boolean') params.opened = opened;
-  return db
+const updateAccount = async ({
+  name,
+  opened,
+  recipientId,
+  signature,
+  signatureEnabled
+}) => {
+  const params = noNulls({
+    name,
+    opened: typeof opened === 'boolean' ? opened : undefined,
+    signature,
+    signatureEnabled:
+      typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined
+  });
+  const response = await db
     .table(Table.ACCOUNT)
     .where({ recipientId })
     .update(params);
+  myAccount.update(params);
+  return response;
 };
 
 /* Contact
@@ -177,8 +191,9 @@ const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
     .update({ labelId: newLabelId });
 };
 
-const deleteEmailLabel = ({ emailsId, labelId }) => {
-  return db
+const deleteEmailLabel = ({ emailsId, labelId }, trx) => {
+  const knex = trx || db;
+  return knex
     .table(Table.EMAIL_LABEL)
     .where('labelId', labelId)
     .whereIn('emailId', emailsId)
@@ -663,6 +678,21 @@ const updateLabel = ({ id, color, text, visible }) => {
     .update(params);
 };
 
+const deleteLabelById = id => {
+  return db.transaction(async trx => {
+    const emailLabels = await trx
+      .select('*')
+      .from(Table.EMAIL_LABEL)
+      .where('labelId', id);
+    const emailsId = emailLabels.map(item => item.emailId);
+    await deleteEmailLabel({ emailsId, labelId: id }, trx);
+    return trx
+      .table(Table.LABEL)
+      .where({ id })
+      .del();
+  });
+};
+
 /* File
   ----------------------------- */
 const createFile = (files, trx) => {
@@ -860,6 +890,7 @@ module.exports = {
   getSignedPreKey,
   getFilesByTokens,
   getUnreadEmailsByThreadId,
+  deleteLabelById,
   updateAccount,
   updateEmail,
   updateEmailByThreadId,

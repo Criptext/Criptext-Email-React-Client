@@ -16,7 +16,10 @@ const defineLabels = (labelIds, labels, labelsToExclude) => {
   if (!labels.size) return [];
   const result = labelIds.toArray().reduce((result, labelId) => {
     if (!labelsToExclude.includes(labelId)) {
-      result.push(labels.get(labelId.toString()).toObject());
+      const label = labels.get(labelId.toString());
+      if (label) {
+        result.push(label.toObject());
+      }
     }
     return result;
   }, []);

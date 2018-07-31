@@ -40,8 +40,7 @@ class PanelWrapper extends Component {
       if (isNewEmailInMailbox && isRenderingMailbox) {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
-          clear: true,
-          limit: this.props.threadsCount + 1
+          limit: props.threadsCount + 1
         });
       }
       if (isRenderingThread) {
@@ -62,7 +61,7 @@ class PanelWrapper extends Component {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
           clear: true,
-          limit: this.props.threadsCount + 1
+          limit: props.threadsCount + 1
         });
       }
     });

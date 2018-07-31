@@ -11,13 +11,13 @@ class ProfileShortCutWrapper extends Component {
     this.state = {
       isHiddenMenuProfilePreview: true
     };
-    this.letters = getTwoCapitalLetters(myAccount.name);
   }
 
   render() {
+    const letters = getTwoCapitalLetters(myAccount.name);
     return (
       <ProfileShortCut
-        letters={this.letters}
+        letters={letters}
         name={myAccount.name}
         emailAddress={`${myAccount.recipientId}@${appDomain}`}
         isHiddenMenuProfilePreview={this.state.isHiddenMenuProfilePreview}

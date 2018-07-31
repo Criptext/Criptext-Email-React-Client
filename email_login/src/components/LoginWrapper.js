@@ -119,7 +119,7 @@ class LoginWrapper extends Component {
     event.preventDefault();
     event.stopPropagation();
     this.setState({
-      mode: mode.CONTINUE
+      mode: mode.LOST_DEVICES
     });
   };
 

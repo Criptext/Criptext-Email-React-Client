@@ -198,3 +198,25 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     threadId
   };
 };
+
+const formSignature = () => {
+  const signature = myAccount.signatureEnabled
+    ? `<br/><br/><p>${myAccount.signature}</p>`
+    : '<p></p>';
+  return signature;
+};
+
+export const formComposerDataWithSignature = () => {
+  const content = formSignature();
+  const blocksFromHtml = htmlToDraft(content);
+  const { contentBlocks, entityMap } = blocksFromHtml;
+  const contentState = ContentState.createFromBlockArray(
+    contentBlocks,
+    entityMap
+  );
+  const htmlBody = EditorState.createWithContent(contentState);
+
+  return {
+    htmlBody
+  };
+};

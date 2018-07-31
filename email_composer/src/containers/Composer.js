@@ -29,7 +29,8 @@ import {
   EmailStatus,
   formOutgoingEmailFromData,
   formDataToEditDraft,
-  formDataToReply
+  formDataToReply,
+  formComposerDataWithSignature
 } from './../utils/EmailUtils';
 import { Map } from 'immutable';
 import {
@@ -116,16 +117,27 @@ class ComposerWrapper extends Component {
 
   async componentDidMount() {
     const emailToEdit = getEmailToEdit();
+    let state;
     if (emailToEdit) {
       const { key, type } = emailToEdit;
-      const emailData = await this.getComposerDataByType(key, type);
-      const state = { ...emailData, status: Status.ENABLED };
-      this.setState(state);
+      const composerData = await this.getComposerDataByType(key, type);
+      state = { ...composerData, status: Status.ENABLED };
+    } else {
+      const composerData = await this.getDefaultComposerWithSignature();
+      const status = myAccount.signatureEnabled
+        ? Status.ENABLED
+        : Status.DISABLED;
+      state = { ...composerData, status };
     }
+    await this.setState(state);
     fileManager.on(FILE_PROGRESS, this.handleUploadProgress);
     fileManager.on(FILE_FINISH, this.handleUploadSuccess);
     fileManager.on(FILE_ERROR, this.handleUploadError);
   }
+
+  getDefaultComposerWithSignature = async () => {
+    return await formComposerDataWithSignature();
+  };
 
   getComposerDataByType = async (key, type) => {
     if (type === composerEvents.EDIT_DRAFT) {

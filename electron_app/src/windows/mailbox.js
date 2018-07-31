@@ -50,6 +50,7 @@ const create = () => {
     item.setSavePath(filePath);
     item.once('done', (e, state) => {
       if (state === 'completed') {
+        shell.showItemInFolder(filePath);
         mailboxWindow.send('display-message-success-download');
       } else {
         mailboxWindow.send('display-message-error-download');

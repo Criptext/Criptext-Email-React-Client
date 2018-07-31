@@ -5,7 +5,8 @@ import {
   updateLabelSuccess,
   updateAllFeedItemsAsOlder,
   loadEmails,
-  updateStatusThread
+  updateStatusThread,
+  unsendEmailOnSuccess
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import {
@@ -54,9 +55,7 @@ const mapDispatchToProps = dispatch => {
       const { labelId } = params;
       const rejectedLabelIds = defineRejectedLabels(labelId);
       const contactTypes = defineContactType(labelId);
-      dispatch(
-        loadThreads({ ...params, ...rejectedLabelIds, ...contactTypes })
-      );
+      dispatch(loadThreads({ ...params, rejectedLabelIds, contactTypes }));
     },
     onMarkThreadAsOpen: threadId => {
       const openedStatus = EmailStatus.OPENED;
@@ -77,6 +76,9 @@ const mapDispatchToProps = dispatch => {
     onUpdateTimestamp: () => {
       storeSeenTimestamp();
       dispatch(updateAllFeedItemsAsOlder());
+    },
+    onUnsendEmail: emailId => {
+      dispatch(unsendEmailOnSuccess(emailId));
     }
   };
 };

@@ -117,4 +117,21 @@ describe('Label actions:', () => {
     const state = labelReducer(data, action);
     expect(state).toEqual(data);
   });
+
+  it('should remove label', () => {
+    const labelId = '0';
+    const data = Map({
+      [labelId]: Map({
+        id: labelId,
+        color: '#000',
+        text: 'ToRemove',
+        badge: 0,
+        visible: false
+      })
+    });
+    const emptyState = new Map({});
+    const action = actions.removeLabelOnSuccess(labelId);
+    const state = labelReducer(data, action);
+    expect(state).toBe(emptyState);
+  });
 });

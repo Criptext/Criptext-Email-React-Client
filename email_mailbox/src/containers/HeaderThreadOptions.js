@@ -29,8 +29,9 @@ const defineThreadsSelected = (threads, itemsChecked) => {
 const getLabelIncluded = (labels, threadLabels) => {
   const filteredLabels = labels.filter(item => {
     const isStarred = item.get('id') === LabelType.starred.id;
-    const isCustom = item.get('type') === 'custom';
-    return isStarred || isCustom;
+    const isCustomAndVisible =
+      item.get('type') === 'custom' && item.get('visible');
+    return isStarred || isCustomAndVisible;
   });
 
   if (!threadLabels) return [];

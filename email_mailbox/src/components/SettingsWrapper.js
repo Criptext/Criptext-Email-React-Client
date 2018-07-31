@@ -12,8 +12,9 @@ class SettingsWrapper extends Component {
   render() {
     return (
       <Settings
-        sectionSelected={this.state.sectionSelected}
+        {...this.props}
         onClickSection={this.handleClickSection}
+        sectionSelected={this.state.sectionSelected}
       />
     );
   }
