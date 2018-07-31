@@ -16,11 +16,11 @@ class Thread extends Component {
   render() {
     return (
       <div className="thread-container">
+        <Message mailbox={this.props.mailboxSelected} />
         <div className="thread-content">
           <div className="thread-info">
-            <h1>{this.props.thread.subject}</h1>
-            <Message mailbox={this.props.mailboxSelected} />
-            <div className="thread-labels">
+            <div className="thread-info-title">
+              <h1>{this.props.thread.subject}</h1>
               {this.props.labels.map((label, index) => {
                 return (
                   <Label
@@ -30,6 +30,16 @@ class Thread extends Component {
                   />
                 );
               })}
+            </div>
+            <div
+              className={`thread-starred-status ${
+                this.props.starred ? 'starred-on' : 'starred-off'
+              }`}
+            >
+              <i
+                className={this.props.starred ? 'icon-star-fill' : 'icon-star'}
+                onClick={() => this.handleToggleStar()}
+              />
             </div>
           </div>
           <div className="thread-emails">
@@ -59,6 +69,10 @@ class Thread extends Component {
   handleRemoveLabel = labelId => {
     this.props.onRemoveThreadLabel(this.props.thread.threadId, labelId);
   };
+
+  handleToggleStar = () => {
+    this.props.onToggleStar(this.props.thread.threadId, this.props.starred);
+  };
 }
 
 Thread.propTypes = {
@@ -69,6 +83,8 @@ Thread.propTypes = {
   onUpdateUnreadEmails: PropTypes.func,
   onUpdateUnreadThread: PropTypes.func,
   onRemoveThreadLabel: PropTypes.func,
+  onToggleStar: PropTypes.func,
+  starred: PropTypes.bool,
   thread: PropTypes.object
 };
 

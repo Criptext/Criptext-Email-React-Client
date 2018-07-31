@@ -7,8 +7,8 @@ class EmailWrapper extends Component {
     super();
     this.state = {
       displayEmail: false,
+      isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
-      displayPopOverMenuAction: false,
       hideView: false
     };
   }
@@ -18,11 +18,11 @@ class EmailWrapper extends Component {
       <Email
         displayEmail={this.state.displayEmail}
         isHiddenPopOverEmailMoreInfo={this.state.isHiddenPopOverEmailMoreInfo}
-        displayPopOverMenuAction={this.state.displayPopOverMenuAction}
+        isHiddenPopOverEmailActions={this.state.isHiddenPopOverEmailActions}
         hideView={this.state.hideView}
         onToggleEmail={this.onToggleEmail}
-        onTooglePopOverEmailMoreInfo={this.onTooglePopOverEmailMoreInfo}
-        onTogglePopOverMenuAction={this.onTogglePopOverMenuAction}
+        onTooglePopOverEmailMoreInfo={this.handleTooglePopOverEmailMoreInfo}
+        onTogglePopOverEmailActions={this.handleTogglePopOverEmailActions}
         unsendButtonOnClicked={this.setHideView}
         {...this.props}
       />
@@ -48,17 +48,17 @@ class EmailWrapper extends Component {
     }
   };
 
-  onTooglePopOverEmailMoreInfo = ev => {
+  handleTooglePopOverEmailMoreInfo = ev => {
     if (ev) ev.stopPropagation();
     this.setState({
       isHiddenPopOverEmailMoreInfo: !this.state.isHiddenPopOverEmailMoreInfo
     });
   };
 
-  onTogglePopOverMenuAction = ev => {
-    ev.stopPropagation();
+  handleTogglePopOverEmailActions = ev => {
+    if (ev) ev.stopPropagation();
     this.setState({
-      displayPopOverMenuAction: !this.state.displayPopOverMenuAction
+      isHiddenPopOverEmailActions: !this.state.isHiddenPopOverEmailActions
     });
   };
 

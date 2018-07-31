@@ -15,7 +15,7 @@ export const IconLabels = {
     icon: 'icon-doc'
   },
   [LabelType.starred.id]: {
-    icon: 'icon-star'
+    icon: 'icon-star-fill'
   },
   [LabelType.important.id]: {
     icon: 'icon-tag'

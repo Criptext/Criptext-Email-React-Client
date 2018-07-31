@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import {
+  addThreadLabel,
   loadEmails,
   updateUnreadEmails,
   updateUnreadThread,
@@ -69,10 +70,12 @@ const mapStateToProps = (state, ownProps) => {
       ? thread.get('allLabels')
       : thread.get('labels');
   const labels = defineLabels(state.get('labels'), labelIds);
+  const starred = thread.get('allLabels').contains(LabelType.starred.id);
   const threadReadable = createReadableThread(thread);
   return {
     emails,
     labels,
+    starred,
     thread: threadReadable
   };
 };
@@ -88,6 +91,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         threadIdDB
       };
       return dispatch(removeThreadLabel(threadParams, labelId));
+    },
+    onToggleStar: (threadIdDB, isStarred) => {
+      const threadParams = {
+        threadIdStore: ownProps.threadIdSelected,
+        threadIdDB
+      };
+      const labelId = LabelType.starred.id;
+      if (isStarred) {
+        dispatch(removeThreadLabel(threadParams, labelId));
+      } else {
+        dispatch(addThreadLabel(threadParams, labelId));
+      }
     },
     onUpdateUnreadEmails: (thread, unread) => {
       const paramsThread = {

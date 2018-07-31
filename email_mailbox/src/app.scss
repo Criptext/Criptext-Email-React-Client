@@ -209,9 +209,6 @@ TABLE OF CONTENTS
 .icon-doc:before {
   content: "\e901";
 }
-.icon-star:before {
-  content: "\e903";
-}
 .icon-calendar:before {
   content: "\e904";
 }
@@ -229,6 +226,12 @@ TABLE OF CONTENTS
 }
 .icon-not:before {
   content: "\e909";
+}
+.icon-star-fill:before {
+  content: "\e903";
+}
+.icon-star:before {
+  content: "\e926";
 }
 .icon-important:before {
   content: "\e902";

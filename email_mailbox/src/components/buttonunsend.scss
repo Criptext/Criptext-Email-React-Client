@@ -1,24 +1,32 @@
 .button-unsend{
   background-color: #dd4040;
-  margin-left: 5px;
+  border-radius: 13px;
+  color: white;
+  height: 26px;
+  margin-right: 5px;
   padding: 0;
+  text-transform: uppercase;
   
-  i{
-    font-size: 17px;
-    left: -2px;
-    margin-right: 2px;
-  }
+  div{
+    i{
+      font-size: 15px;
+      left: -2px;
+      margin-right: 2px;
+      position: relative;
+    }
 
-  div span{
-    font-size: 12px;
-    font-weight: 400;
-    top: -2px;
+    span{
+      font-size: 11px;
+      font-weight: 400;
+      position: relative;
+      top: -1px;
+    }
   }
 
   .loading {
-    height: 31px;
+    height: 26px;
     position:relative;
-    width: 31px;
+    width: 26px;
 
     > div {
       background-color:#FFFFFF;
@@ -34,57 +42,57 @@
     }
 
     > div:nth-child(1) {
-      left: 7px;
-      top: 13px;
+      left: 5px;
+      top: 11px;
       -webkit-transform:rotate(-90deg);
       -webkit-animation-delay:0.39s;
     }
 
     > div:nth-child(2) {
-      left: 9px;
-      top: 7px;
+      left: 7px;
+      top: 6px;
       -webkit-transform:rotate(-45deg);
       -webkit-animation-delay:0.52s;
     }
 
     > div:nth-child(3) {
-      left: 15px;
-      top: 5px;
+      left: 12px;
+      top: 4px;
       -webkit-transform:rotate(0deg);
       -webkit-animation-delay:0.65s;
     }
 
     > div:nth-child(4) {
-      right: 8px;
-      top: 7px;
+      right: 7px;
+      top: 6px;
       -webkit-transform:rotate(45deg);
       -webkit-animation-delay:0.78s;
     }
 
     > div:nth-child(5) {
-      right: 7px;
-      top: 13px;
+      right: 5px;
+      top: 11px;
       -webkit-transform:rotate(90deg);
       -webkit-animation-delay:0.91s;
     }
 
     > div:nth-child(6) {
-      right: 8px;
-      bottom: 7px;
+      right: 7px;
+      bottom: 5px;
       -webkit-transform:rotate(135deg);
       -webkit-animation-delay:1.04s;
     }
 
     > div:nth-child(7) {
-      bottom: 5px;
-      left: 15px;
+      bottom: 3px;
+      left: 12px;
       -webkit-transform:rotate(180deg);
       -webkit-animation-delay:1.17s;
     }
 
     > div:nth-child(8) {
-      left: 9px;
-      bottom: 7px;
+      left: 7px;
+      bottom: 5px;
       -webkit-transform:rotate(-135deg);
       -webkit-animation-delay:1.3s;
     }
@@ -96,7 +104,7 @@
 }
 
 .button-unsend-loading{
-  width: 31px;
+  width: 26px;
 }
 
 @-webkit-keyframes loading {
