@@ -4,11 +4,13 @@ import {
   findKeyBundles,
   getSessionRecordByRecipientIds,
   objectUtils,
-  postEmail
+  postEmail,
+  AesCypher
 } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
 import { CustomError } from './../utils/CustomError';
 
+const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 
 const getKeyBundlesOfRecipients = async (recipients, knownAddresses) => {
@@ -120,7 +122,8 @@ const encryptPostEmail = async ({
   subject,
   threadId,
   files,
-  peer
+  peer,
+  externalEmailPassword
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const isSendToMySelf =
@@ -174,20 +177,27 @@ const encryptPostEmail = async ({
     keyBundleJSONbyRecipientIdAndDeviceId,
     peer
   );
+
   const allExternalRecipients = [
     ...externalRecipients.to,
     ...externalRecipients.cc,
     ...externalRecipients.bcc
   ];
   const hasExternalRecipients = allExternalRecipients.length > 0;
+  const { session, encryptedBody } = externalEmailPassword.length
+    ? await encryptExternalEmail(body, externalEmailPassword)
+    : { session: null, encryptedBody: null };
+
   const guestEmail = hasExternalRecipients
-    ? {
+    ? objectUtils.noNulls({
         to: externalRecipients.to,
         cc: externalRecipients.cc,
         bcc: externalRecipients.bcc,
-        body
-      }
+        body: session ? encryptedBody : body,
+        session
+      })
     : null;
+
   const data = objectUtils.noNulls({
     guestEmail,
     criptextEmails,
@@ -201,6 +211,102 @@ const encryptPostEmail = async ({
     throw new CustomError(errors.message.ENCRYPTING);
   }
   return res;
+};
+
+const createDummyKeyBundle = async () => {
+  const preKeyId = 1;
+  const signedPreKeyId = 1;
+  const { identityKey, registrationId } = await generateIdentity();
+  const { preKey, signedPreKey } = await generatePreKeyBundle({
+    identityKey,
+    signedPreKeyId,
+    preKeyId
+  });
+
+  const sessionParams = {
+    identityKey,
+    registrationId,
+    preKey,
+    signedPreKey
+  };
+  const dummySession = {
+    identityKey: {
+      publicKey: util.toBase64(identityKey.pubKey),
+      privateKey: util.toBase64(identityKey.privKey)
+    },
+    registrationId,
+    preKey: {
+      keyId: preKey.keyId,
+      publicKey: util.toBase64(preKey.keyPair.pubKey),
+      privateKey: util.toBase64(preKey.keyPair.privKey)
+    },
+    signedPreKey: {
+      keyId: signedPreKey.keyId,
+      publicKey: util.toBase64(signedPreKey.keyPair.pubKey),
+      privateKey: util.toBase64(signedPreKey.keyPair.privKey)
+    }
+  };
+  return { dummySession, sessionParams };
+};
+
+const generateIdentity = () => {
+  return Promise.all([
+    KeyHelper.generateIdentityKeyPair(),
+    KeyHelper.generateRegistrationId()
+  ]).then(result => {
+    const identityKey = result[0];
+    const registrationId = result[1];
+    return { identityKey, registrationId };
+  });
+};
+
+const generatePreKeyBundle = async ({
+  identityKey,
+  signedPreKeyId,
+  preKeyId
+}) => {
+  const preKey = await KeyHelper.generatePreKey(preKeyId);
+  const signedPreKey = await KeyHelper.generateSignedPreKey(
+    identityKey,
+    signedPreKeyId
+  );
+  return { preKey, signedPreKey };
+};
+
+const encryptExternalEmail = async (body, password) => {
+  const recipient = password;
+  const deviceId = 1;
+  const { dummySession, sessionParams } = await createDummyKeyBundle();
+  const keys = {
+    preKey: {
+      id: sessionParams.preKey.keyId,
+      publicKey: sessionParams.preKey.keyPair.pubKey
+    },
+    identityPublicKey: sessionParams.identityKey.pubKey,
+    registrationId: sessionParams.registrationId,
+    signedPreKeyId: sessionParams.signedPreKey.keyId,
+    signedPreKeyPublic: sessionParams.signedPreKey.keyPair.pubKey,
+    signedPreKeySignature: sessionParams.signedPreKey.signature
+  };
+  const keyBundleArrayBuffer = await keysToArrayBuffer(keys);
+  const encryptedBody = await encryptText(
+    recipient,
+    deviceId,
+    body,
+    keyBundleArrayBuffer
+  );
+
+  const saltLength = 8;
+  const aesSalt = AesCypher.generateRandomBytes(saltLength);
+  const key = AesCypher.generateKey(password, aesSalt);
+  const iv = AesCypher.generateRandomBytes(16);
+  const sessionString = JSON.stringify(dummySession);
+  const encryptedSession = AesCypher.encrypt(sessionString, key, iv);
+
+  return {
+    session: util.toBase64(encryptedSession.toString()),
+    encryptedBody: encryptedBody.body
+  };
 };
 
 export default {
