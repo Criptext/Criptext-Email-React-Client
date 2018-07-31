@@ -26,24 +26,49 @@
 
 .thread-info{
   display: flex;
-  height: 72px;
   justify-content: space-between;
   margin: 0 25px;
+  min-height: 72px;
   width: calc(100% - 50px);
 
-  h1{
-    font-size: 21px;
-    font-weight: 700;
-    margin: 26px 10px 0 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .thread-info-title{
+    display: flex;
+    margin: 26px 0 0 0;
+    width: calc(100% - 50px);
+
+    h1{
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 21px;
+      margin: 0 10px 0 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }
 
-.thread-labels{
+.thread-starred-status{
+  align-items: flex-start;
   display: flex;
-  margin: 0 25px 12px 0;
+  margin: 26px 0 0 0;
+
+  &.starred-on{
+    i{
+      color: #ffc832;
+    }
+  }
+
+  &.starred-off{
+    i{
+      color: #f6bc1f;
+    }
+  }
+
+  i{
+    cursor: pointer;
+    font-size: 19px;
+  }
 }
 
 .thread-emails{

@@ -174,11 +174,10 @@
 
     i{
       color: rgba(60, 72, 88, 0.6);
-      font-size: 16px;
+      font-size: 19px;
     }
 
     &.thread-label-mark{
-      border: solid 1px #ffdf32;
       i{
         color: #ffdf32;
       }
@@ -236,9 +235,9 @@
 }
 
 .thread-item-subject{
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .thread-preview{

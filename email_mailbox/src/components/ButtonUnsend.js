@@ -5,7 +5,7 @@ import './buttonunsend.css';
 const ButtonUnsend = props => (
   <button
     className={
-      'button-a button-unsend ' +
+      'button-unsend ' +
       (props.displayLoading ? 'button-unsend-loading' : 'button-unsend-normal')
     }
     onClick={props.onClick}

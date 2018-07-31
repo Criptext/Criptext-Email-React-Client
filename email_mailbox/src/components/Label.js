@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import './label.css';
 
 const Label = props => (
-  <div className="label-tag" style={{ backgroundColor: props.label.color }}>
-    <span>{props.label.text}</span>
+  <span className="label-tag" style={{ backgroundColor: props.label.color }}>
+    {props.label.text}
     <i
       className="icon-exit"
       onClick={() => props.onClickDelete(props.label.id)}
     />
-  </div>
+  </span>
 );
 
 Label.propTypes = {

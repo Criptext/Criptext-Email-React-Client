@@ -1,0 +1,51 @@
+.icon-dots .menu-container.menu-arrow.arrow-top-left{
+  &:before, &:after{
+    left: 176px;
+  }
+}
+
+.email-more-menu{
+  background-color: #fdfdfd;
+  border-radius: 6px;
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.14);
+  height: auto;
+  padding: 10px 0;
+  width: 204px;
+
+  &:before{
+    content: '';
+    height: 0;
+    width: 0;
+    position: absolute;
+    right: 15px;
+    top: -6px;
+    border-bottom: 6px solid white;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+  }
+
+  ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    li{
+      align-items: center;
+      background-color: #fdfdfd;
+      display: flex;
+      height: 30px;
+      padding-left: 16px;
+      cursor: pointer;
+
+      &:hover{
+        background-color: #edf5ff;
+      }
+
+      span{
+        font-family: NunitoSans;
+        font-size: 13px;
+        font-weight: 300;
+      }
+    }
+  }
+}
