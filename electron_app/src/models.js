@@ -194,7 +194,7 @@ const createAccountColumns = table => {
     .boolean('opened')
     .notNullable()
     .defaultTo(false);
-  table.string('signature', XLARGE_STRING_SIZE);
+  table.string('signature', XLARGE_STRING_SIZE).defaultTo('');
   table.boolean('signatureEnabled').defaultTo(false);
 };
 

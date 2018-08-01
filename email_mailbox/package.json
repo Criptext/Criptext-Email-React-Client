@@ -5,6 +5,9 @@
   "dependencies": {
     "animejs": "^2.2.0",
     "criptext-files-sdk": "^0.4.0",
+    "draft-js": "^0.10.5",
+    "draftjs-to-html": "^0.8.4",
+    "html-to-draftjs": "^1.4.0",
     "immutable": "^3.8.2",
     "lottie-web": "^5.1.17",
     "moment": "^2.20.1",
@@ -13,9 +16,10 @@
     "randomcolor": "^0.5.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-radio-lab": "^1.0.2",
+    "react-draft-wysiwyg": "^1.12.13",
     "react-redux": "^5.0.6",
     "react-scripts": "1.0.17",
+    "react-switch": "^3.0.4",
     "react-switch-input": "^0.1.10",
     "react-tooltip": "^3.4.0",
     "redux": "^3.7.2",
@@ -35,9 +39,7 @@
   },
   "proxy": "http://localhost:8000",
   "devDependencies": {
-    "criptext-js-tools": "^0.5.0",
-    "lodash": "^4.17.10",
-    "radium": "^0.24.1"
+    "criptext-js-tools": "^0.5.0"
   },
   "homepage": "./"
 }

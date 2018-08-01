@@ -2,6 +2,9 @@ import { removeAppDomain, removeHTMLTags } from './StringUtils';
 import signal from './../libs/signal';
 import { EmailStatus, appDomain } from './const';
 import { myAccount } from './electronInterface';
+import { EditorState, ContentState, convertToRaw } from 'draft-js';
+import htmlToDraft from 'html-to-draftjs';
+import draftToHtml from 'draftjs-to-html';
 
 const getContentMessage = async ({
   bodyKey,
@@ -117,4 +120,18 @@ export const validateEmailStatusToSet = (prevEmailStatus, nextEmailStatus) => {
   const isAlreadyUnsent = prevEmailStatus === EmailStatus.UNSEND;
   const isAlreadyOpened = prevEmailStatus === EmailStatus.OPENED;
   return isAlreadyUnsent ? null : isAlreadyOpened ? null : nextEmailStatus;
+};
+
+export const parseSignatureHtmlToEdit = signatureHtml => {
+  const blocksFromHtml = htmlToDraft(signatureHtml);
+  const { contentBlocks, entityMap } = blocksFromHtml;
+  const contentState = ContentState.createFromBlockArray(
+    contentBlocks,
+    entityMap
+  );
+  return EditorState.createWithContent(contentState);
+};
+
+export const parseSignatureContentToHtml = signatureContent => {
+  return draftToHtml(convertToRaw(signatureContent.getCurrentContent()));
 };

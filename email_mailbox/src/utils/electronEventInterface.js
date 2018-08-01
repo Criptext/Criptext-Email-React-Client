@@ -10,7 +10,8 @@ import {
   createFeedItem,
   myAccount,
   updateEmail,
-  getLabelByText
+  getLabelByText,
+  updateAccount
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -23,6 +24,7 @@ import {
 import { SocketCommand, appDomain, EmailStatus, unsentText } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
+import { removeHTMLTags } from './StringUtils';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -50,6 +52,9 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.PEER_LABEL_CREATED: {
       return handlePeerLabelCreated(incomingEvent);
     }
+    case SocketCommand.PEER_USER_NAME_CHANGED: {
+      return handlePeerUserNameChanged(incomingEvent);
+    }
     default: {
       return process.env.NODE_ENV === 'development'
         ? alert('Unhandled socket command: ', incomingEvent.cmd)
@@ -58,7 +63,7 @@ export const handleEvent = incomingEvent => {
   }
 };
 
-export const handleNewMessageEvent = async ({ rowid, params }) => {
+const handleNewMessageEvent = async ({ rowid, params }) => {
   const [emailObj, eventId] = [params, rowid];
   const InboxLabel = LabelType.inbox.id;
   const SentLabel = LabelType.sent.id;
@@ -133,12 +138,13 @@ export const handleNewMessageEvent = async ({ rowid, params }) => {
   emitter.emit(Event.NEW_EMAIL, eventParams);
 };
 
-export const handleEmailTrackingUpdate = async ({ rowid, params }) => {
+const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   const [metadataKey, recipientId] = [params.metadataKey, params.from];
   const [email] = await getEmailByKey(metadataKey);
   if (email) {
     const content = params.type === EmailStatus.UNSEND ? unsentText : null;
-    const preview = params.type === EmailStatus.UNSEND ? unsentText : null;
+    const preview =
+      params.type === EmailStatus.UNSEND ? removeHTMLTags(unsentText) : null;
     const status = validateEmailStatusToSet(email.status, params.type);
     await updateEmail({
       key: metadataKey,
@@ -164,7 +170,7 @@ export const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   }
 };
 
-export const handlePeerEmailUnsend = async ({ rowid, params }) => {
+const handlePeerEmailUnsend = async ({ rowid, params }) => {
   const { metadataKey } = params;
   const [email] = await getEmailByKey(metadataKey);
   if (email) {
@@ -172,7 +178,7 @@ export const handlePeerEmailUnsend = async ({ rowid, params }) => {
     await updateEmail({
       key: metadataKey,
       content: unsentText,
-      preview: unsentText,
+      preview: removeHTMLTags(unsentText),
       status,
       unsendDate: Date.now()
     });
@@ -181,7 +187,7 @@ export const handlePeerEmailUnsend = async ({ rowid, params }) => {
   }
 };
 
-export const handlePeerEmailRead = async ({ rowid, params }) => {
+const handlePeerEmailRead = async ({ rowid, params }) => {
   const { metadataKeys, unread } = params;
   for (const metadataKey of metadataKeys) {
     const [email] = await getEmailByKey(metadataKey);
@@ -195,12 +201,18 @@ export const handlePeerEmailRead = async ({ rowid, params }) => {
   }
 };
 
-export const handlePeerLabelCreated = async ({ rowid, params }) => {
+const handlePeerLabelCreated = async ({ rowid, params }) => {
   const { text, color } = params;
   const [label] = await getLabelByText(text);
   if (!label) {
     await emitter.emit(Event.LABEL_CREATED, { text, color, visible: true });
   }
+  await setEventAsHandled(rowid);
+};
+
+const handlePeerUserNameChanged = async ({ rowid, params }) => {
+  const { recipientId, name } = params;
+  await updateAccount({ recipientId, name });
   await setEventAsHandled(rowid);
 };
 

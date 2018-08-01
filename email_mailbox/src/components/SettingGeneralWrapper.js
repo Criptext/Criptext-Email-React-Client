@@ -2,55 +2,23 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { myAccount, requiredMinLength } from './../utils/electronInterface';
 import SettingGeneral from './SettingGeneral';
+import { EditorState } from 'draft-js';
+import {
+  parseSignatureHtmlToEdit,
+  parseSignatureContentToHtml
+} from '../utils/EmailUtils';
 
 const requiredNameMinLength = requiredMinLength.fullname;
 
-const styles = {
-  inline: {
-    margin: '0px',
-    padding: '0px',
-    width: '100px'
-  },
-  button: {
-    innerCircle: {
-      r: 4,
-      fill: '#0091ff'
-    },
-    outerCircle: {
-      r: 7,
-      stroke: '#0091ff',
-      strokeWidth: 1
-    },
-    label: {
-      color: '#6c7280',
-      fontSize: 14,
-      fontFamily: 'NunitoSans',
-      bottom: 4
-    }
-  },
-  container: {
-    paddingTop: 0,
-    cursor: 'pointer',
-    height: '50%'
-  }
-};
 /* eslint-disable-next-line react/no-deprecated */
 class SettingGeneralWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       signatureEnabled: undefined,
-      signature: '',
+      signature: EditorState.createEmpty(),
       name: ''
     };
-  }
-
-  componentWillMount() {
-    this.setState({
-      name: myAccount.name,
-      signature: myAccount.signature,
-      signatureEnabled: !!myAccount.signatureEnabled
-    });
   }
 
   render() {
@@ -59,12 +27,20 @@ class SettingGeneralWrapper extends Component {
         name={this.state.name}
         signatureEnabled={this.state.signatureEnabled}
         signature={this.state.signature}
-        styles={styles}
         onChangeInputName={this.handleChangeInputName}
         onChangeTextareaSignature={this.handleChangeTextareaSignature}
         onChangeRadioButtonSignature={this.handleChangeRadioButtonSignature}
       />
     );
+  }
+
+  componentDidMount() {
+    const signature = parseSignatureHtmlToEdit(myAccount.signature);
+    this.setState({
+      name: myAccount.name,
+      signature,
+      signatureEnabled: !!myAccount.signatureEnabled
+    });
   }
 
   handleChangeInputName = async ev => {
@@ -76,9 +52,11 @@ class SettingGeneralWrapper extends Component {
     }
   };
 
-  handleChangeTextareaSignature = async ev => {
-    this.setState({ signature: ev.target.value });
-    await this.props.onUpdateAccount({ signature: ev.target.value });
+  handleChangeTextareaSignature = signatureContent => {
+    this.setState({ signature: signatureContent }, async () => {
+      const htmlSignature = parseSignatureContentToHtml(signatureContent);
+      await this.props.onUpdateAccount({ signature: htmlSignature });
+    });
   };
 
   handleChangeRadioButtonSignature = async value => {
