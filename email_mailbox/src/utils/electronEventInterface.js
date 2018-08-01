@@ -44,7 +44,7 @@ export const handleEvent = incomingEvent => {
       return handlePeerEmailUnsend(incomingEvent);
     }
     case SocketCommand.PEER_EMAIL_READ_UPDATE: {
-      return;
+      return handlePeerEmailRead(incomingEvent);
     }
     default: {
       return process.env.NODE_ENV === 'development'
@@ -177,14 +177,16 @@ export const handlePeerEmailUnsend = async ({ rowid, params }) => {
 };
 
 export const handlePeerEmailRead = async ({ rowid, params }) => {
-  const { metadataKey, unread } = params;
-  const [email] = await getEmailByKey(metadataKey);
-  if (email) {
-    await updateEmail({
-      key: metadataKey,
-      unread: unread
-    });
-    await setEventAsHandled(rowid);
+  const { metadataKeys, unread } = params;
+  for (const metadataKey of metadataKeys) {
+    const [email] = await getEmailByKey(metadataKey);
+    if (email) {
+      await updateEmail({
+        key: metadataKey,
+        unread: unread
+      });
+      await setEventAsHandled(rowid);
+    }
   }
 };
 
