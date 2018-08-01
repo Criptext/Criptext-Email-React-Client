@@ -3,7 +3,7 @@ import Panel from './Panel';
 import PropTypes from 'prop-types';
 import { addEvent, Event } from '../utils/electronEventInterface';
 import { LabelType } from '../utils/electronInterface';
-import { SectionType } from '../utils/const';
+import { SectionType, EmailStatus } from '../utils/const';
 
 class PanelWrapper extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class PanelWrapper extends Component {
       const currentLabelId =
         LabelType[this.state.sectionSelected.params.mailboxSelected].id;
       const isNewEmailInMailbox =
-        emailParams.labels.indexOf(currentLabelId) >= 0;
+        emailParams.labels.indexOf(currentLabelId) > -1;
       if (isNewEmailInMailbox && isRenderingMailbox) {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
@@ -61,13 +61,32 @@ class PanelWrapper extends Component {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
           clear: true,
-          limit: props.threadsCount + 1
+          limit: props.threadsCount
         });
       }
     });
 
-    addEvent(Event.EMAIL_TRACKING_UPDATE, threadId => {
-      props.onMarkThreadAsOpen(threadId);
+    addEvent(Event.EMAIL_TRACKING_UPDATE, (threadId, status) => {
+      if (status === EmailStatus.OPENED) {
+        props.onMarkThreadAsOpen(threadId);
+      }
+      if (status === EmailStatus.UNSEND) {
+        const currentSectionType = this.state.sectionSelected.type;
+        const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
+        const isRenderingThread = currentSectionType === SectionType.THREAD;
+        if (isRenderingMailbox) {
+          const currentLabelId =
+            LabelType[this.state.sectionSelected.params.mailboxSelected].id;
+          props.onLoadThreads({
+            labelId: Number(currentLabelId),
+            clear: true,
+            limit: props.threadsCount
+          });
+        }
+        if (isRenderingThread) {
+          props.onUnsendEmail(threadId);
+        }
+      }
     });
 
     addEvent(Event.UPDATE_THREAD_EMAILS, eventParams => {
@@ -182,6 +201,7 @@ PanelWrapper.propTypes = {
   onLoadEmails: PropTypes.func,
   onMarkThreadAsOpen: PropTypes.func,
   onLoadThreads: PropTypes.func,
+  onUnsendEmail: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,
   onUpdateTimestamp: PropTypes.func,
   onUpdateUnreadEmails: PropTypes.func,
