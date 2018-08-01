@@ -5,17 +5,22 @@ import randomcolor from 'randomcolor';
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddLabel: text => {
-      const color = randomcolor({
-        seed: text,
-        luminosity: 'bright'
-      });
-      const label = {
-        text,
-        color,
-        visible: true
-      };
-      dispatch(addLabel(label));
+    onAddLabel: (text, eventParams) => {
+      if (eventParams) {
+        const isByEvent = true;
+        dispatch(addLabel(eventParams, isByEvent));
+      } else {
+        const color = randomcolor({
+          seed: text,
+          luminosity: 'bright'
+        });
+        const label = {
+          text,
+          color,
+          visible: true
+        };
+        dispatch(addLabel(label));
+      }
     }
   };
 };

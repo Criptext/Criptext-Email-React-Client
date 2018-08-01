@@ -665,6 +665,13 @@ const getLabelById = id => {
     .where({ id });
 };
 
+const getLabelByText = text => {
+  return db
+    .select('*')
+    .from(Table.LABEL)
+    .where({ text });
+};
+
 const updateLabel = ({ id, color, text, visible }) => {
   const params = {};
   if (color) params.color = color;
@@ -884,6 +891,7 @@ module.exports = {
   getEmailLabelsByEmailId,
   getIdentityKeyRecord,
   getLabelById,
+  getLabelByText,
   getPreKeyPair,
   getSessionRecord,
   getSessionRecordByRecipientIds,

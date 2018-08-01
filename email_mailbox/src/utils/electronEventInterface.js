@@ -9,7 +9,8 @@ import {
   getContactByEmails,
   createFeedItem,
   myAccount,
-  updateEmail
+  updateEmail,
+  getLabelByText
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -17,7 +18,7 @@ import {
   formIncomingEmailFromData,
   getRecipientsFromData,
   validateEmailStatusToSet,
-  checkEmailIsToMe
+  checkEmailIsTo
 } from './EmailUtils';
 import { SocketCommand, appDomain, EmailStatus, unsentText } from './const';
 import Messages from './../data/message';
@@ -44,7 +45,10 @@ export const handleEvent = incomingEvent => {
       return handlePeerEmailUnsend(incomingEvent);
     }
     case SocketCommand.PEER_EMAIL_READ_UPDATE: {
-      return;
+      return handlePeerEmailRead(incomingEvent);
+    }
+    case SocketCommand.PEER_LABEL_CREATED: {
+      return handlePeerLabelCreated(incomingEvent);
     }
     default: {
       return process.env.NODE_ENV === 'development'
@@ -62,7 +66,7 @@ export const handleNewMessageEvent = async ({ rowid, params }) => {
 
   const [prevEmail] = await getEmailByKey(emailObj.metadataKey);
   if (!prevEmail) {
-    const email = await formIncomingEmailFromData(emailObj);
+    let email = await formIncomingEmailFromData(emailObj);
     const recipients = getRecipientsFromData(emailObj);
     const files =
       emailObj.files && emailObj.files.length
@@ -72,39 +76,56 @@ export const handleNewMessageEvent = async ({ rowid, params }) => {
           })
         : null;
 
-    const isToMe = checkEmailIsToMe(emailObj);
-    const labels = isToMe ? [InboxLabel] : [SentLabel];
+    const labels = [];
+    const isToMe = checkEmailIsTo(emailObj, 'to');
+    if (isToMe) {
+      labels.push(InboxLabel);
+    }
+    const isFromMe = checkEmailIsTo(emailObj, 'from');
+    if (isFromMe) {
+      labels.push(SentLabel);
+    }
+    if (isFromMe && isToMe) {
+      email = { ...email, unread: false };
+    }
+
     const params = {
       email,
       recipients,
       labels,
       files
     };
-    const [newEmail] = await createEmail(params);
+    const [newEmailId] = await createEmail(params);
     eventParams = {
       ...eventParams,
       threadId: emailObj.threadId,
-      emailId: newEmail.id,
+      emailId: newEmailId,
       labels
     };
   } else {
-    const isToMe = checkEmailIsToMe(emailObj);
-    const labels = isToMe ? [InboxLabel, SentLabel] : [SentLabel];
-
-    const prevEmailId = prevEmail.id;
-    const prevEmailLabels = await getEmailLabelsByEmailId(prevEmailId);
+    const labels = [];
+    const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
     const prevLabels = prevEmailLabels.map(item => item.labelId);
 
-    const hasInboxOrSentLabel =
-      prevLabels.includes(labels[0]) || prevLabels.includes(labels[1]);
-    if (!hasInboxOrSentLabel) {
-      const emailLabel = formEmailLabel({ emailId: prevEmailId, labels });
+    const isToMe = checkEmailIsTo(emailObj, 'to');
+    const hasInboxLabel = prevLabels.includes(InboxLabel);
+    if (isToMe && !hasInboxLabel) {
+      labels.push(InboxLabel);
+    }
+    const isFromMe = checkEmailIsTo(emailObj, 'from');
+    const hasSentLabel = prevLabels.includes(SentLabel);
+    if (isFromMe && !hasSentLabel) {
+      labels.push(SentLabel);
+    }
+    if (labels.length) {
+      const emailLabel = formEmailLabel({ emailId: prevEmail.id, labels });
       await createEmailLabel(emailLabel);
     }
+
     eventParams = {
       ...eventParams,
       threadId: prevEmail.threadId,
-      emailId: prevEmailId,
+      emailId: prevEmail.id,
       labels
     };
   }
@@ -122,7 +143,6 @@ export const handleEmailTrackingUpdate = async ({ rowid, params }) => {
     await updateEmail({
       key: metadataKey,
       status,
-      date: params.date,
       content,
       preview
     });
@@ -153,8 +173,8 @@ export const handlePeerEmailUnsend = async ({ rowid, params }) => {
       key: metadataKey,
       content: unsentText,
       preview: unsentText,
-      date: params.date,
-      status
+      status,
+      unsendDate: Date.now()
     });
     await setEventAsHandled(rowid);
     emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, params.type);
@@ -162,20 +182,34 @@ export const handlePeerEmailUnsend = async ({ rowid, params }) => {
 };
 
 export const handlePeerEmailRead = async ({ rowid, params }) => {
-  const { metadataKey, unread } = params;
-  const [email] = await getEmailByKey(metadataKey);
-  if (email) {
-    await updateEmail({
-      key: metadataKey,
-      unread: unread
-    });
-    await setEventAsHandled(rowid);
+  const { metadataKeys, unread } = params;
+  for (const metadataKey of metadataKeys) {
+    const [email] = await getEmailByKey(metadataKey);
+    if (email) {
+      await updateEmail({
+        key: metadataKey,
+        unread: unread
+      });
+      await setEventAsHandled(rowid);
+    }
   }
+};
+
+export const handlePeerLabelCreated = async ({ rowid, params }) => {
+  const { text, color } = params;
+  const [label] = await getLabelByText(text);
+  if (!label) {
+    await emitter.emit(Event.LABEL_CREATED, { text, color, visible: true });
+  }
+  await setEventAsHandled(rowid);
 };
 
 const setEventAsHandled = async eventId => {
   return await acknowledgeEvents([eventId]);
 };
+
+/* Window events
+  ----------------------------- */
 
 ipcRenderer.on('update-drafts', () => {
   emitter.emit(Event.UPDATE_SAVED_DRAFTS);
@@ -232,5 +266,6 @@ export const Event = {
   UPDATE_SAVED_DRAFTS: 'update-drafts',
   EMAIL_TRACKING_UPDATE: 'email-tracking-update',
   UPDATE_EMAILS: 'update-emails',
-  DISPLAY_MESSAGE: 'display-message'
+  DISPLAY_MESSAGE: 'display-message',
+  LABEL_CREATED: 'label-created'
 };

@@ -5,6 +5,8 @@ const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const globalManager = remote.require('./src/globalManager');
 
+export const AesCypher = remote.require('./src/AesCypher');
+
 export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
   './src/utils/consts'
 );

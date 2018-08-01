@@ -96,9 +96,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@criptext/email-http-client@^0.10.1":
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/@criptext/email-http-client/-/email-http-client-0.10.1.tgz#2e9f9677667aeefe3ce53ef7d5c7b4f7c722e9ec"
+"@criptext/email-http-client@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@criptext/email-http-client/-/email-http-client-0.11.1.tgz#87d5acdf6d847c9521903855ecdb7c872a503934"
   dependencies:
     superagent "^3.8.2"
 
@@ -1111,6 +1111,10 @@ cryptiles@2.x.x:
   resolved "https://registry.yarnpkg.com/cryptiles/-/cryptiles-2.0.5.tgz#3bdfecdc608147c1c67202fa291e7dca59eaa3b8"
   dependencies:
     boom "2.x.x"
+
+crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
 
 crypto-random-string@^1.0.0:
   version "1.0.0"

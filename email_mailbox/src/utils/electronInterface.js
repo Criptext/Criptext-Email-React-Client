@@ -79,6 +79,10 @@ export const postOpenEvent = params => {
   return clientManager.postOpenEvent(params);
 };
 
+export const postPeerEvent = params => {
+  return clientManager.postPeerEvent(params);
+};
+
 export const unsendEmailEvent = metadataKey => {
   return clientManager.unsendEmail(metadataKey);
 };
@@ -211,6 +215,10 @@ export const getIdentityKeyRecord = params => {
 
 export const getLabelById = id => {
   return dbManager.getLabelById(id);
+};
+
+export const getLabelByText = text => {
+  return dbManager.getLabelByText(text);
 };
 
 export const getPreKeyPair = params => {

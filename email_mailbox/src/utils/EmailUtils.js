@@ -34,17 +34,17 @@ const formRecipients = recipientString => {
   return recipientString === '' ? [] : recipientString.split(',');
 };
 
-export const checkEmailIsToMe = data => {
+export const checkEmailIsTo = (data, to) => {
   const recipients = getRecipientsFromData(data);
-  const recipientsArray = [
-    ...recipients.to,
-    ...recipients.cc,
-    ...recipients.bcc
-  ];
-  const [isToMe] = recipientsArray.filter(
-    email => email.indexOf(`${myAccount.recipientId}@${appDomain}`) >= 0
+  const recipientsArray =
+    to === 'to'
+      ? [...recipients.to, ...recipients.cc, ...recipients.bcc]
+      : [...recipients.from];
+
+  const [isTo] = recipientsArray.filter(
+    email => email.indexOf(`${myAccount.recipientId}@${appDomain}`) > -1
   );
-  return isToMe;
+  return isTo;
 };
 
 export const formIncomingEmailFromData = async data => {
@@ -57,7 +57,7 @@ export const formIncomingEmailFromData = async data => {
     messageType
   });
 
-  const isToMe = checkEmailIsToMe(data);
+  const isToMe = checkEmailIsTo(data, 'to');
   const unread = isToMe ? true : false;
   const status = isToMe ? EmailStatus.NONE : EmailStatus.DELIVERED;
   const email = {

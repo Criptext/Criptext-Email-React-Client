@@ -366,6 +366,7 @@ class ComposerWrapper extends Component {
         deviceId: myAccount.deviceId
       };
       const recipients = [...criptextRecipients, peer];
+      const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
       const params = {
         subject,
         threadId: this.state.threadId,
@@ -373,7 +374,8 @@ class ComposerWrapper extends Component {
         externalRecipients,
         body,
         files,
-        peer
+        peer,
+        externalEmailPassword
       };
       const res = await signal.encryptPostEmail(params);
       const filesDbParams = formFileParamsToDatabase(this.state.files, emailId);

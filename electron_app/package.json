@@ -26,7 +26,8 @@
     "installer-mac": "electron-installer-dmg ./release-builds/Criptext-darwin-x64/Criptext.app Criptext --out=release-builds --overwrite",
     "installer-windows": "electron-installer-windows --src ./release-builds/Criptext-win32-x64/ --dest ./release-builds/ --config ./installerResources/windows.json",
     "pack": "build --dir",
-    "dist": "build"
+    "dist": "build",
+    "clear-build": "bash ./installerResources/clearBuild.sh"
   },
   "build": {
     "appId": "com.criptext.criptextmac",
@@ -75,7 +76,8 @@
     "electron-packager": "^10.1.2"
   },
   "dependencies": {
-    "@criptext/email-http-client": "^0.10.1",
+    "@criptext/email-http-client": "^0.11.1",
+    "crypto-js": "^3.1.9-1",
     "electron-window-state": "^4.1.1",
     "knex": "^0.14.2",
     "sqlite3": "^3.1.13",

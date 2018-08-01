@@ -14,7 +14,8 @@ const emailDraft = {
     status: 0,
     unread: true,
     secure: true,
-    isMuted: false
+    isMuted: false,
+    unsendDate: '2018-06-14 08:23:20.000'
   },
   recipients: {
     from: ['User me <user@criptext.com>']
@@ -34,7 +35,8 @@ const emailSent = {
     status: 1,
     unread: true,
     secure: true,
-    isMuted: false
+    isMuted: false,
+    unsendDate: '2018-06-14 08:23:20.000'
   },
   recipients: {
     from: ['User me <user@criptext.com>'],
@@ -57,7 +59,8 @@ const emailInbox = {
     status: 0,
     unread: true,
     secure: true,
-    isMuted: false
+    isMuted: false,
+    unsendDate: '2018-06-14 08:23:20.000'
   },
   recipients: {
     from: ['User A <usera@criptext.com>'],
@@ -105,7 +108,8 @@ describe('Store data email to Email Table:', () => {
         status: 0,
         unread: true,
         secure: true,
-        isMuted: false
+        isMuted: false,
+        unsendDate: '2018-06-14 08:23:20.000'
       }
     });
     const key = 'keyId';

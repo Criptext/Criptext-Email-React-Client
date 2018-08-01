@@ -3,6 +3,7 @@
 const DBManager = require('../DBManager');
 
 const file = {
+  id: 1,
   token: 'token1',
   name: 'Criptext_Image_2018_06_14.png',
   readOnly: false,

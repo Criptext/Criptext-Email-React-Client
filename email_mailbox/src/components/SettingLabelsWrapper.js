@@ -34,9 +34,9 @@ class SettingLabelsWrapper extends Component {
     this.setState({ labelToAdd: e.target.value });
   };
 
-  handleAddLabelInputKeyPressed = e => {
+  handleAddLabelInputKeyPressed = async e => {
     if (e.key === 'Enter' && e.target.value.trim() !== '') {
-      this.props.onAddLabel(e.target.value.trim());
+      await this.props.onAddLabel(e.target.value.trim());
       this.setState({
         labelToAdd: '',
         isAddinglabel: false

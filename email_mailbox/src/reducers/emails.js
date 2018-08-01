@@ -45,11 +45,14 @@ const email = (state, action) => {
       return state.set('unread', action.unread);
     }
     case Email.UNSEND: {
-      return state.merge({
-        content: unsentText,
-        preview: unsentText,
-        status: EmailStatus.UNSEND
-      });
+      return (
+        state &&
+        state.merge({
+          content: unsentText,
+          preview: unsentText,
+          status: EmailStatus.UNSEND
+        })
+      );
     }
     default:
       return state;

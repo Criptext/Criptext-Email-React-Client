@@ -5,11 +5,13 @@ import {
   setMuteEmailById,
   setUnreadEmailById,
   updateEmail,
-  unsendEmailEvent
+  unsendEmailEvent,
+  getContactByIds
 } from '../utils/electronInterface';
 import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
 import { EmailStatus, unsentText } from '../utils/const';
+import { getCriptextRecipients } from '../utils/EmailUtils';
 
 export const addEmails = emails => {
   return {
@@ -107,15 +109,23 @@ export const updateUnreadEmails = (thread, label) => {
 
 export const unsendEmail = params => {
   return async dispatch => {
-    const { key, emailId } = params;
+    const { key, emailId, contactIds } = params;
     try {
-      const { status } = await unsendEmailEvent(key);
+      const contacts = await getContactByIds(contactIds);
+      const emails = contacts.map(contact => contact.email);
+      const criptextRecipients = getCriptextRecipients(emails);
+      const params = {
+        metadataKey: Number(key),
+        recipients: criptextRecipients
+      };
+      const { status } = await unsendEmailEvent(params);
       if (status === 200) {
         await updateEmail({
           key,
           status: EmailStatus.UNSEND,
           content: unsentText,
-          preview: unsentText
+          preview: unsentText,
+          unsendDate: Date.now()
         });
         dispatch(unsendEmailOnSuccess(emailId));
       }
