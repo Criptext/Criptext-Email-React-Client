@@ -9,7 +9,8 @@ import {
   getContactByEmails,
   createFeedItem,
   myAccount,
-  updateEmail
+  updateEmail,
+  getLabelByText
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -45,6 +46,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.PEER_EMAIL_READ_UPDATE: {
       return handlePeerEmailRead(incomingEvent);
+    }
+    case SocketCommand.PEER_LABEL_CREATED: {
+      return handlePeerLabelCreated(incomingEvent);
     }
     default: {
       return process.env.NODE_ENV === 'development'
@@ -169,7 +173,8 @@ export const handlePeerEmailUnsend = async ({ rowid, params }) => {
       key: metadataKey,
       content: unsentText,
       preview: unsentText,
-      status
+      status,
+      unsendDate: Date.now()
     });
     await setEventAsHandled(rowid);
     emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, params.type);
@@ -190,9 +195,21 @@ export const handlePeerEmailRead = async ({ rowid, params }) => {
   }
 };
 
+export const handlePeerLabelCreated = async ({ rowid, params }) => {
+  const { text, color } = params;
+  const [label] = await getLabelByText(text);
+  if (!label) {
+    await emitter.emit(Event.LABEL_CREATED, { text, color, visible: true });
+  }
+  await setEventAsHandled(rowid);
+};
+
 const setEventAsHandled = async eventId => {
   return await acknowledgeEvents([eventId]);
 };
+
+/* Window events
+  ----------------------------- */
 
 ipcRenderer.on('update-drafts', () => {
   emitter.emit(Event.UPDATE_SAVED_DRAFTS);
@@ -249,5 +266,6 @@ export const Event = {
   UPDATE_SAVED_DRAFTS: 'update-drafts',
   EMAIL_TRACKING_UPDATE: 'email-tracking-update',
   UPDATE_EMAILS: 'update-emails',
-  DISPLAY_MESSAGE: 'display-message'
+  DISPLAY_MESSAGE: 'display-message',
+  LABEL_CREATED: 'label-created'
 };

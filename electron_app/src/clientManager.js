@@ -71,6 +71,10 @@ class ClientManager {
     return client.postOpenEvent(metadataKeys);
   }
 
+  postPeerEvent(params) {
+    return client.postPeerEvent(params);
+  }
+
   postUser(params) {
     return client.postUser(params);
   }

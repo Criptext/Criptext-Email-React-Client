@@ -1,5 +1,15 @@
 import { Label } from './types';
-import * as db from '../utils/electronInterface';
+import {
+  LabelType,
+  createLabel,
+  postPeerEvent,
+  getAllLabels,
+  getEmailsUnredByLabelId,
+  getEmailsCounterByLabelId,
+  updateLabel as updateLabelDB,
+  deleteLabelById
+} from '../utils/electronInterface';
+import { SocketCommand } from '../utils/const';
 
 export const addLabels = labels => {
   return {
@@ -15,21 +25,33 @@ export const updateLabelSuccess = label => {
   };
 };
 
-export const addLabel = label => {
+export const addLabel = (label, isByEvent) => {
   return async dispatch => {
     try {
-      const response = await db.createLabel(label);
-      const labelId = response[0];
-      const labels = {
-        [labelId]: {
-          id: labelId,
-          color: label.color,
-          text: label.text,
-          type: 'custom',
-          visible: label.visible
+      const [response] = await createLabel(label);
+      if (response) {
+        const labelId = response;
+        const { text, color, visible } = label;
+        const labels = {
+          [labelId]: {
+            id: labelId,
+            color,
+            text,
+            type: 'custom',
+            visible
+          }
+        };
+        if (isByEvent) {
+          dispatch(addLabels(labels));
+        } else {
+          const eventParams = {
+            cmd: SocketCommand.PEER_LABEL_CREATED,
+            params: { color, text }
+          };
+          await postPeerEvent(eventParams);
+          dispatch(addLabels(labels));
         }
-      };
-      dispatch(addLabels(labels));
+      }
     } catch (e) {
       //TO DO
     }
@@ -39,20 +61,18 @@ export const addLabel = label => {
 export const loadLabels = () => {
   return async dispatch => {
     try {
-      const response = await db.getAllLabels();
-      const rejectedLabelIds = [db.LabelType.spam.id, db.LabelType.trash.id];
-      const unreadInbox = await db.getEmailsUnredByLabelId({
-        labelId: db.LabelType.inbox.id,
+      const response = await getAllLabels();
+      const rejectedLabelIds = [LabelType.spam.id, LabelType.trash.id];
+      const unreadInbox = await getEmailsUnredByLabelId({
+        labelId: LabelType.inbox.id,
         rejectedLabelIds
       });
       const badgeInbox = unreadInbox.length;
-      const unreadSpam = await db.getEmailsUnredByLabelId({
-        labelId: db.LabelType.spam.id
+      const unreadSpam = await getEmailsUnredByLabelId({
+        labelId: LabelType.spam.id
       });
       const badgeSpam = unreadSpam.length;
-      const badgeDraft = await db.getEmailsCounterByLabelId(
-        db.LabelType.draft.id
-      );
+      const badgeDraft = await getEmailsCounterByLabelId(LabelType.draft.id);
       const labels = response.reduce(
         (result, element) => ({
           ...result,
@@ -60,9 +80,9 @@ export const loadLabels = () => {
         }),
         {}
       );
-      labels[db.LabelType.inbox.id].badge = badgeInbox;
-      labels[db.LabelType.spam.id].badge = badgeSpam;
-      labels[db.LabelType.draft.id].badge = badgeDraft[0].count;
+      labels[LabelType.inbox.id].badge = badgeInbox;
+      labels[LabelType.spam.id].badge = badgeSpam;
+      labels[LabelType.draft.id].badge = badgeDraft[0].count;
       dispatch(addLabels(labels));
     } catch (e) {
       // TO DO
@@ -73,7 +93,7 @@ export const loadLabels = () => {
 export const updateLabel = ({ id, color, text, visible }) => {
   return async dispatch => {
     try {
-      const response = await db.updateLabel({ id, color, text, visible });
+      const response = await updateLabelDB({ id, color, text, visible });
       if (response) {
         dispatch(updateLabelSuccess({ id, color, text, visible }));
       }
@@ -86,7 +106,7 @@ export const updateLabel = ({ id, color, text, visible }) => {
 export const removeLabel = id => {
   return async dispatch => {
     try {
-      const response = await db.deleteLabelById(id);
+      const response = await deleteLabelById(id);
       if (response) {
         dispatch(removeLabelOnSuccess(id));
       }
