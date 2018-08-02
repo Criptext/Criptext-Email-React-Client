@@ -43,15 +43,15 @@ const SideBar = props => (
             }
           >
             <div className="line-separator" />
-            <div className="nav-item-container">
+            <div
+              className="nav-item-container"
+              onClick={e => props.onToggleShowLabelView(e)}
+            >
               <div className="nav-item-icon">
                 <i className="icon-tag" />
               </div>
               <span>Labels</span>
-              <div
-                className="nav-item-option"
-                onClick={e => props.onToggleShowLabelView(e)}
-              >
+              <div className="nav-item-option">
                 <i
                   className={
                     props.showLabels ? 'icon-toogle-up' : 'icon-toogle-down'

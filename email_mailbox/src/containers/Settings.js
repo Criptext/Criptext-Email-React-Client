@@ -5,8 +5,10 @@ import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   myAccount,
   updateAccount,
-  LabelType
+  LabelType,
+  updateNameEvent
 } from '../utils/electronInterface';
+import { SocketCommand } from '../utils/const';
 
 const defineSystemLabels = labelsArray => {
   return labelsArray.filter(label => {
@@ -50,8 +52,19 @@ const mapDispatchToProps = dispatch => {
       }
     },
     onUpdateAccount: async params => {
-      const accountParams = { ...params, recipientId: myAccount.recipientId };
-      await updateAccount(accountParams);
+      const recipientId = myAccount.recipientId;
+      const { name } = params;
+      if (name) {
+        const { status } = await updateNameEvent({
+          cmd: SocketCommand.PEER_USER_NAME_CHANGED,
+          params: { name }
+        });
+        if (status === 200) {
+          await updateAccount({ ...params, recipientId });
+        }
+      } else {
+        await updateAccount({ ...params, recipientId });
+      }
     },
     onUpdateLabel: params => {
       dispatch(updateLabel(params));

@@ -211,8 +211,9 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
 };
 
 const handlePeerUserNameChanged = async ({ rowid, params }) => {
-  const { recipientId, name } = params;
-  await updateAccount({ recipientId, name });
+  const { name } = params;
+  const { recipientId } = myAccount;
+  await updateAccount({ name, recipientId });
   await setEventAsHandled(rowid);
 };
 

@@ -10,6 +10,11 @@ import {
 
 const requiredNameMinLength = requiredMinLength.fullname;
 
+const inputNameModes = {
+  EDITING: 'editing',
+  NONE: 'none'
+};
+
 /* eslint-disable-next-line react/no-deprecated */
 class SettingGeneralWrapper extends Component {
   constructor(props) {
@@ -17,7 +22,8 @@ class SettingGeneralWrapper extends Component {
     this.state = {
       signatureEnabled: undefined,
       signature: EditorState.createEmpty(),
-      name: ''
+      name: '',
+      mode: inputNameModes.NONE
     };
   }
 
@@ -27,9 +33,13 @@ class SettingGeneralWrapper extends Component {
         name={this.state.name}
         signatureEnabled={this.state.signatureEnabled}
         signature={this.state.signature}
+        onBlurInputName={this.handleBlurInputName}
         onChangeInputName={this.handleChangeInputName}
         onChangeTextareaSignature={this.handleChangeTextareaSignature}
         onChangeRadioButtonSignature={this.handleChangeRadioButtonSignature}
+        onClickEditName={this.handleClickEditName}
+        onAddNameInputKeyPressed={this.handleAddNameInputKeyPressed}
+        mode={this.state.mode}
       />
     );
   }
@@ -43,12 +53,32 @@ class SettingGeneralWrapper extends Component {
     });
   }
 
-  handleChangeInputName = async ev => {
-    if (ev.target.value <= requiredNameMinLength) {
-      ev.preventDefault();
-    } else {
-      this.setState({ name: ev.target.value });
-      await this.props.onUpdateAccount({ name: ev.target.value });
+  handleBlurInputName = e => {
+    const currentTarget = e.currentTarget;
+    if (!currentTarget.contains(document.activeElement)) {
+      this.setState({
+        mode: inputNameModes.NONE
+      });
+    }
+  };
+
+  handleClickEditName = () => {
+    this.setState({ mode: inputNameModes.EDITING });
+  };
+
+  handleChangeInputName = ev => {
+    this.setState({ name: ev.target.value });
+  };
+
+  handleAddNameInputKeyPressed = async e => {
+    const inputValue = e.target.value.trim();
+    const isValidName = inputValue.length >= requiredNameMinLength;
+    if (e.key === 'Enter' && inputValue !== '' && isValidName) {
+      await this.props.onUpdateAccount({ name: inputValue });
+      this.setState({
+        name: myAccount.name,
+        mode: inputNameModes.NONE
+      });
     }
   };
 
@@ -69,4 +99,4 @@ SettingGeneralWrapper.propTypes = {
   onUpdateAccount: PropTypes.func
 };
 
-export default SettingGeneralWrapper;
+export { SettingGeneralWrapper as default, inputNameModes };

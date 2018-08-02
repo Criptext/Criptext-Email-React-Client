@@ -38,10 +38,39 @@
     border: none;
     border-bottom: 1px solid #c3c3c3;;
     padding-left: 3px;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
+    position: relative;
+    top: 5px;
+
     &:focus{
       outline: none;
       border-bottom: 1px solid #0091ff;
+    }
+  }
+  .cancel-edit-inputname-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0091ff;
+    position: relative;
+    top: 5px;
+    left: 20px;
+    cursor: pointer;
+  }
+  .profile-name {
+    margin-top: 10px;
+    color: #6a707e;
+    font-size: 14px;
+
+    &:hover > i {
+      display: inline;
+    }
+
+    i {
+      margin-left: 15px;
+      font-size: 14px;
+      position: relative;
+      top: 2px;
+      display: none;
     }
   }
 }

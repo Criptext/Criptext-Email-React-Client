@@ -7,6 +7,7 @@ import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain } from '../utils/const';
 import { usefulLinks } from '../utils/const';
+import { inputNameModes } from './SettingGeneralWrapper';
 import './settinggeneral.css';
 import './signatureeditor.css';
 
@@ -43,13 +44,38 @@ const renderBlockEmail = () => (
 );
 
 const renderBlockName = props => (
-  <div className="section-block-content-item content-name">
+  <div
+    className="section-block-content-item content-name"
+    onBlur={props.onBlurInputName}
+  >
     <p>Name</p>
-    <input
-      className="profile-name"
-      value={props.name}
-      onChange={ev => props.onChangeInputName(ev)}
-    />
+    {props.mode === inputNameModes.EDITING ? (
+      <div>
+        <input
+          type="text"
+          placeholder="Enter new name"
+          value={props.name}
+          onChange={ev => props.onChangeInputName(ev)}
+          onKeyPress={props.onAddNameInputKeyPressed}
+          autoFocus={true}
+        />
+        <span
+          className="cancel-edit-inputname-label"
+          onClick={props.onBlurInputName}
+        >
+          Cancel
+        </span>
+      </div>
+    ) : (
+      <div className="profile-name">
+        <span onDoubleClick={props.onClickEditName}>{myAccount.name}</span>
+        <i
+          className="icon-edit"
+          title="Edit name"
+          onClick={props.onClickEditName}
+        />
+      </div>
+    )}
   </div>
 );
 
@@ -188,8 +214,12 @@ const renderUsefulLinksBlock = () => (
 );
 
 renderBlockName.propTypes = {
+  mode: PropTypes.string,
   name: PropTypes.string,
-  onChangeInputName: PropTypes.func
+  onAddNameInputKeyPressed: PropTypes.func,
+  onBlurInputName: PropTypes.func,
+  onChangeInputName: PropTypes.func,
+  onClickEditName: PropTypes.func
 };
 
 renderBlockSignature.propTypes = {
