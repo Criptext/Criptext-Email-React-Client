@@ -77,8 +77,8 @@ const mapDispatchToProps = dispatch => {
       storeSeenTimestamp();
       dispatch(updateAllFeedItemsAsOlder());
     },
-    onUnsendEmail: emailId => {
-      dispatch(unsendEmailOnSuccess(emailId));
+    onUnsendEmail: (emailId, date) => {
+      dispatch(unsendEmailOnSuccess(emailId, date));
     }
   };
 };

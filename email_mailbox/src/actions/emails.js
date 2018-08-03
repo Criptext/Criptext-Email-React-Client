@@ -10,9 +10,8 @@ import {
 } from '../utils/electronInterface';
 import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
-import { EmailStatus, unsentText } from '../utils/const';
+import { EmailStatus } from '../utils/const';
 import { getCriptextRecipients } from '../utils/EmailUtils';
-import { removeHTMLTags } from '../utils/StringUtils';
 
 export const addEmails = emails => {
   return {
@@ -124,11 +123,11 @@ export const unsendEmail = params => {
         await updateEmail({
           key,
           status: EmailStatus.UNSEND,
-          content: unsentText,
-          preview: removeHTMLTags(unsentText),
+          content: '',
+          preview: '',
           unsendDate: Date.now()
         });
-        dispatch(unsendEmailOnSuccess(emailId));
+        dispatch(unsendEmailOnSuccess(emailId, Date.now()));
       }
     } catch (e) {
       // To do
@@ -136,7 +135,8 @@ export const unsendEmail = params => {
   };
 };
 
-export const unsendEmailOnSuccess = emailId => ({
+export const unsendEmailOnSuccess = (emailId, unsendDate) => ({
   type: Email.UNSEND,
-  emailId
+  emailId,
+  unsendDate
 });

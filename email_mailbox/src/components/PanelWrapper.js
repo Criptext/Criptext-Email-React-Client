@@ -66,7 +66,7 @@ class PanelWrapper extends Component {
       }
     });
 
-    addEvent(Event.EMAIL_TRACKING_UPDATE, (threadId, status) => {
+    addEvent(Event.EMAIL_TRACKING_UPDATE, (threadId, status, date) => {
       if (status === EmailStatus.OPENED) {
         props.onMarkThreadAsOpen(threadId);
       }
@@ -84,7 +84,7 @@ class PanelWrapper extends Component {
           });
         }
         if (isRenderingThread) {
-          props.onUnsendEmail(threadId);
+          props.onUnsendEmail(threadId, date);
         }
       }
     });

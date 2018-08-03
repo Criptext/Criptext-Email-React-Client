@@ -20,7 +20,7 @@ const renderEmailCollapse = props => (
   <div
     className={
       'email-container email-container-collapse ' +
-      (props.isUnsend ? 'email-unsent' : 'email-normal')
+      (props.isUnsend ? 'email-unsend' : 'email-normal')
     }
     onClick={props.onToggleEmail}
   >
@@ -99,7 +99,7 @@ const renderEmailExpand = props => (
             </div>
             <div className="email-info-content-actions">
               {props.isFromMe && !props.isUnsend ? (
-                <ButtonUnsend onClicked={props.unsendButtonOnClicked} />
+                <ButtonUnsend onClick={props.onClickUnsendButton} />
               ) : null}
               <i
                 className="icon-replay"
@@ -219,7 +219,7 @@ renderEmailExpand.propTypes = {
   onTogglePopOverEmailActions: PropTypes.func,
   onTooglePopOverEmailMoreInfo: PropTypes.func,
   staticOpen: PropTypes.func,
-  unsendButtonOnClicked: PropTypes.func
+  onClickUnsendButton: PropTypes.func
 };
 
 renderMuteIcon.propTypes = {

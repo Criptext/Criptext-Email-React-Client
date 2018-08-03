@@ -102,12 +102,12 @@ const createEmailColumns = table => {
   table.string('subject').notNullable();
   table.text('content').notNullable();
   table.string('preview', LARGE_STRING_SIZE).notNullable();
-  table.timestamp('date').notNullable();
+  table.dateTime('date').notNullable();
   table.integer('status').notNullable();
   table.boolean('unread').notNullable();
   table.boolean('secure').notNullable();
   table.boolean('isMuted').notNullable();
-  table.timestamp('unsendDate');
+  table.dateTime('unsendDate');
 };
 
 const createEmailLabelColumns = table => {

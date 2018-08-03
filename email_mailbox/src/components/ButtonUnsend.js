@@ -8,9 +8,9 @@ const ButtonUnsend = props => (
       'button-unsend ' +
       (props.displayLoading ? 'button-unsend-loading' : 'button-unsend-normal')
     }
-    onClick={props.onClick}
+    onClick={ev => props.onClick(ev)}
   >
-    {props.displayLoading ? renderLoading() : renderButton(props.onClick)}
+    {props.displayLoading ? renderLoading() : renderButton()}
   </button>
 );
 
