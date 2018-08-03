@@ -14,23 +14,23 @@ class ButtonUnsendWrapper extends Component {
     return (
       <ButtonUnsend
         displayLoading={this.state.displayLoading}
-        onClick={this.onClick}
-        {...this.props}
+        onClick={this.handleClick}
       />
     );
   }
 
-  onClick = () => {
+  handleClick = ev => {
+    if (ev) ev.stopPropagation();
     this.setState({
       displayLoading: true
     });
-    this.props.onClicked(true);
+    this.props.onClick(true);
   };
 }
 
 ButtonUnsendWrapper.propTypes = {
   displayPopOver: PropTypes.bool,
-  onClicked: PropTypes.func,
+  onClick: PropTypes.func,
   onTogglePopOver: PropTypes.func
 };
 

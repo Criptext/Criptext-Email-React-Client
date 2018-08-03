@@ -3,24 +3,15 @@
 .email-container{
   align-items: center;
   background-color: white;
+  border: solid 1px #dcdde0;
   border-radius: 4px;
   display: flex;
-  font-family: NunitoSans;
   margin-bottom: 6px;
   position: relative;
-  width: 100%;
+  width: calc(100% - 2px);
 
   &.email-unsend {
-    i {
-      color: #d0021b;
-    }
-    .button-expand {
-      border-color: #ff99a5;
-    }
-    .email-text {
-      font-style: italic;
-      color: #acacac;
-    }
+    border: solid 1px #eeb6b7;
   }
 
   hr{
@@ -120,17 +111,9 @@
 }
 
 .email-container-collapse{
-  width: calc(100% - 2px);
-
-  &.email-normal{
-    border: solid 1px #dcdde0;
-  }
-
-  &.email-unsent{
-    border: solid 1px rgba(221, 64, 64, 0.48);
-  
+  &.email-unsend{
     .email-preview-content{
-      color: #eea3a3;
+      color: #eeb6b7;
       font-style: italic;
     }
   }
@@ -149,9 +132,14 @@
 }
 
 .email-container-expand{
-  box-shadow: 0 2px 4px 0 rgba(175, 175, 175, 0.35);
   height: auto;
   flex-direction: column;
+
+  &.email-unsend {
+    .email-text {
+      font-style: italic;
+    }
+  }
 
   > div{
     margin: 0 17px;
@@ -210,8 +198,12 @@
       font-weight: 200;
     
       &[disabled]{
-        opacity: 0.2;
+        opacity: 0.3;
         pointer-events: none;
+      }
+
+      >div{
+        margin: 10px 0;
       }
     }
 

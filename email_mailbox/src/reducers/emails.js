@@ -1,7 +1,6 @@
 import { Email } from '../actions/types';
 import { Map, fromJS } from 'immutable';
-import { EmailStatus, unsentText } from './../utils/const';
-import { removeHTMLTags } from './../utils/StringUtils';
+import { EmailStatus } from './../utils/const';
 
 const emails = (state = new Map(), action) => {
   switch (action.type) {
@@ -49,9 +48,10 @@ const email = (state, action) => {
       return (
         state &&
         state.merge({
-          content: unsentText,
-          preview: removeHTMLTags(unsentText),
-          status: EmailStatus.UNSEND
+          content: '',
+          preview: '',
+          status: EmailStatus.UNSEND,
+          unsendDate: action.unsendDate
         })
       );
     }

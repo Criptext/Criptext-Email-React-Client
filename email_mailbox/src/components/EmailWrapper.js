@@ -23,7 +23,7 @@ class EmailWrapper extends Component {
         onToggleEmail={this.onToggleEmail}
         onTooglePopOverEmailMoreInfo={this.handleTooglePopOverEmailMoreInfo}
         onTogglePopOverEmailActions={this.handleTogglePopOverEmailActions}
-        unsendButtonOnClicked={this.setHideView}
+        onClickUnsendButton={this.handleClickUnsendButton}
         {...this.props}
       />
     );
@@ -62,14 +62,14 @@ class EmailWrapper extends Component {
     });
   };
 
-  setHideView = value => {
+  handleClickUnsendButton = value => {
     this.setState(
       {
-        hideView: value
+        hideView: !value
       },
       async () => {
         await this.props.unsendEmail();
-        this.setState({ hideView: !value });
+        this.setState({ hideView: value });
       }
     );
   };

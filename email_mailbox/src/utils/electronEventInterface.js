@@ -1,4 +1,3 @@
-/*global process*/
 import {
   acknowledgeEvents,
   createEmail,
@@ -21,10 +20,9 @@ import {
   validateEmailStatusToSet,
   checkEmailIsTo
 } from './EmailUtils';
-import { SocketCommand, appDomain, EmailStatus, unsentText } from './const';
+import { SocketCommand, appDomain, EmailStatus } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
-import { removeHTMLTags } from './StringUtils';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -56,9 +54,7 @@ export const handleEvent = incomingEvent => {
       return handlePeerUserNameChanged(incomingEvent);
     }
     default: {
-      return process.env.NODE_ENV === 'development'
-        ? alert('Unhandled socket command: ', incomingEvent.cmd)
-        : null;
+      return;
     }
   }
 };
@@ -139,51 +135,53 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
 };
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
-  const [metadataKey, recipientId] = [params.metadataKey, params.from];
+  const { date, metadataKey, type } = params;
+  const recipientId = params.from;
   const [email] = await getEmailByKey(metadataKey);
   if (email) {
-    const content = params.type === EmailStatus.UNSEND ? unsentText : null;
-    const preview =
-      params.type === EmailStatus.UNSEND ? removeHTMLTags(unsentText) : null;
-    const status = validateEmailStatusToSet(email.status, params.type);
+    const content = type === EmailStatus.UNSEND ? '' : null;
+    const preview = type === EmailStatus.UNSEND ? '' : null;
+    const status = validateEmailStatusToSet(email.status, type);
+    const unsendDate = type === EmailStatus.UNSEND ? date : null;
     await updateEmail({
       key: metadataKey,
       status,
       content,
-      preview
+      preview,
+      unsendDate
     });
     const isFromMe = recipientId === myAccount.recipientId;
-    const isOpened = params.type === EmailStatus.OPENED;
+    const isOpened = type === EmailStatus.OPENED;
     if (!isFromMe && isOpened) {
       const contactEmail = `${recipientId}@${appDomain}`;
       const [contact] = await getContactByEmails([contactEmail]);
       const feedItemParams = {
-        date: params.date,
-        type: params.type,
+        date,
+        type,
         emailId: email.id,
         contactId: contact.id
       };
       await createFeedItem([feedItemParams]);
     }
     await setEventAsHandled(rowid);
-    emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, params.type);
+    emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, type, date);
   }
 };
 
 const handlePeerEmailUnsend = async ({ rowid, params }) => {
-  const { metadataKey } = params;
+  const { metadataKey, date } = params;
   const [email] = await getEmailByKey(metadataKey);
   if (email) {
     const status = validateEmailStatusToSet(email.status, params.type);
     await updateEmail({
       key: metadataKey,
-      content: unsentText,
-      preview: removeHTMLTags(unsentText),
+      content: '',
+      preview: '',
       status,
-      unsendDate: Date.now()
+      unsendDate: date
     });
     await setEventAsHandled(rowid);
-    emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, params.type);
+    emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, params.type, date);
   }
 };
 

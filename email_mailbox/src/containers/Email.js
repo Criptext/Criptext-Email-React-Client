@@ -10,7 +10,7 @@ import {
   openEmailInComposer
 } from './../utils/electronInterface';
 import { loadFiles, muteEmail, unsendEmail } from './../actions/index';
-import { EmailStatus } from '../utils/const';
+import { EmailStatus, unsentText } from '../utils/const';
 
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
@@ -30,6 +30,12 @@ const mapStateToProps = (state, ownProps) => {
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
   const date = email.date;
   const files = getFiles(state.get('files'), email.fileTokens);
+  const preview =
+    email.status === EmailStatus.UNSEND ? unsentText : email.preview;
+  const content =
+    email.status === EmailStatus.UNSEND
+      ? `Unsent: At ${defineTimeByToday(email.unsendDate)}`
+      : email.content;
   const myEmail = {
     ...email,
     date: defineTimeByToday(date),
@@ -40,7 +46,9 @@ const mapStateToProps = (state, ownProps) => {
     cc,
     bcc,
     color,
-    letters
+    letters,
+    preview,
+    content
   };
   const isUnsend = email.status === EmailStatus.UNSEND;
   return {
