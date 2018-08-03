@@ -65,6 +65,20 @@ const template = [
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
         role: 'close'
+      },
+      {
+        label: 'Developer',
+        type: 'submenu',
+        submenu: [
+          {
+            label: 'Toggle Developer Tools',
+            accelerator:
+              process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+            click(item, focusedWindow) {
+              if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+            }
+          }
+        ]
       }
     ]
   }
@@ -120,7 +134,7 @@ if (process.platform === 'darwin') {
     ]
   });
   // Window menu.
-  template[2].submenu.push(
+  template[3].submenu.push(
     {
       type: 'separator'
     },
