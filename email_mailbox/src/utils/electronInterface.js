@@ -83,6 +83,10 @@ export const postPeerEvent = params => {
   return clientManager.postPeerEvent(params);
 };
 
+export const updateNameEvent = params => {
+  return clientManager.updateName(params);
+};
+
 export const unsendEmailEvent = metadataKey => {
   return clientManager.unsendEmail(metadataKey);
 };

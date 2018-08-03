@@ -13,6 +13,7 @@ class Account {
   }
 
   update(accountObj) {
+    this.jwt = accountObj.jwt || this.jwt;
     this.name = accountObj.name || this.name;
     this.opened =
       accountObj.opened !== undefined ? accountObj.opened : this.opened;

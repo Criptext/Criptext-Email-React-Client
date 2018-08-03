@@ -2,7 +2,7 @@ import { LabelType } from './electronInterface';
 
 export const appDomain = 'jigl.com';
 
-export const unsentText = 'This content was unsent';
+export const unsentText = '<p>This content was unsent</p>';
 
 export const IconLabels = {
   [LabelType.inbox.id]: {

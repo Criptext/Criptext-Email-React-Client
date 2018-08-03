@@ -12,6 +12,7 @@ import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
 import { EmailStatus, unsentText } from '../utils/const';
 import { getCriptextRecipients } from '../utils/EmailUtils';
+import { removeHTMLTags } from '../utils/StringUtils';
 
 export const addEmails = emails => {
   return {
@@ -124,7 +125,7 @@ export const unsendEmail = params => {
           key,
           status: EmailStatus.UNSEND,
           content: unsentText,
-          preview: unsentText,
+          preview: removeHTMLTags(unsentText),
           unsendDate: Date.now()
         });
         dispatch(unsendEmailOnSuccess(emailId));

@@ -14,6 +14,7 @@ const getAccount = () => {
 };
 
 const updateAccount = async ({
+  jwt,
   name,
   opened,
   recipientId,
@@ -21,6 +22,7 @@ const updateAccount = async ({
   signatureEnabled
 }) => {
   const params = noNulls({
+    jwt,
     name,
     opened: typeof opened === 'boolean' ? opened : undefined,
     signature,
@@ -58,8 +60,8 @@ const createContactsIfOrNotStore = async (contacts, trx) => {
 
   const contactsToUpdate = contactsFound.reduce((toUpdateArray, contact) => {
     const email = contact.email;
-    const newName = contactsMap[email].name;
-    if (!contact.name && newName) {
+    const newName = contactsMap[email].name || contact.name;
+    if (newName !== contact.name) {
       toUpdateArray.push({ email, name: newName });
     }
     return toUpdateArray;

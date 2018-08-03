@@ -1,12 +1,15 @@
 /* eslint react/jsx-no-target-blank: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RadioLab, RadioButton } from 'react-radio-lab';
+import Switch from 'react-switch';
+import { Editor } from 'react-draft-wysiwyg';
 import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain } from '../utils/const';
 import { usefulLinks } from '../utils/const';
+import { inputNameModes } from './SettingGeneralWrapper';
 import './settinggeneral.css';
+import './signatureeditor.css';
 
 const SettingGeneral = props => (
   <div>
@@ -17,36 +20,6 @@ const SettingGeneral = props => (
     {renderUsefulLinksBlock()}
   </div>
 );
-
-const styles = {
-  inline: {
-    margin: '0px',
-    padding: '0px',
-    width: '100px'
-  },
-  button: {
-    innerCircle: {
-      r: 4,
-      fill: '#0091ff'
-    },
-    outerCircle: {
-      r: 7,
-      stroke: '#0091ff',
-      strokeWidth: 1
-    },
-    label: {
-      color: '#6c7280',
-      fontSize: 14,
-      fontFamily: 'NunitoSans',
-      bottom: 4
-    }
-  },
-  container: {
-    paddingTop: 0,
-    cursor: 'pointer',
-    height: '50%'
-  }
-};
 
 const renderProfileBlock = props => (
   <div className="section-block">
@@ -71,41 +44,94 @@ const renderBlockEmail = () => (
 );
 
 const renderBlockName = props => (
-  <div className="section-block-content-item content-name">
+  <div
+    className="section-block-content-item content-name"
+    onBlur={props.onBlurInputName}
+  >
     <p>Name</p>
-    <input
-      className="profile-name"
-      value={props.name}
-      onChange={ev => props.onChangeInputName(ev)}
-    />
+    {props.mode === inputNameModes.EDITING ? (
+      <div>
+        <input
+          type="text"
+          placeholder="Enter new name"
+          value={props.name}
+          onChange={ev => props.onChangeInputName(ev)}
+          onKeyPress={props.onAddNameInputKeyPressed}
+          autoFocus={true}
+        />
+        <span
+          className="cancel-edit-inputname-label"
+          onClick={props.onBlurInputName}
+        >
+          Cancel
+        </span>
+      </div>
+    ) : (
+      <div className="profile-name">
+        <span onDoubleClick={props.onClickEditName}>{myAccount.name}</span>
+        <i
+          className="icon-edit"
+          title="Edit name"
+          onClick={props.onClickEditName}
+        />
+      </div>
+    )}
   </div>
 );
 
 const renderBlockSignature = props => (
   <div className="section-block-content-item content-signature">
     <p>Signature</p>
-    <RadioLab
-      onChange={ev => props.onChangeRadioButtonSignature(ev)}
-      init={!!myAccount.signatureEnabled}
+    <div className="signature-switch">
+      <div className="signature-switch-item">
+        <Switch
+          id="setPasswordSwitch"
+          onChange={ev => props.onChangeRadioButtonSignature(ev)}
+          checked={!!myAccount.signatureEnabled}
+          width={28}
+          height={17}
+          handleDiameter={13}
+          offColor="#b4b4b4"
+          onColor="#0091ff"
+          uncheckedIcon={false}
+          checkedIcon={false}
+        />
+      </div>
+      <div className="signature-switch-label">
+        <span>
+          {`Signature ${myAccount.signatureEnabled ? 'enabled' : 'disabled'}`}
+        </span>
+      </div>
+    </div>
+    <div
+      className={`signature-editor ${
+        !myAccount.signatureEnabled ? 'signature-editor-disabled' : ''
+      }`}
     >
-      <div className="signature-radio-button" style={styles}>
-        <RadioButton value={false} style={styles.button}>
-          No signature
-        </RadioButton>
-      </div>
-      <div className="signature-radio-button" style={styles}>
-        <RadioButton value={true} style={styles.button}>
-          Enable signature
-        </RadioButton>
-      </div>
-    </RadioLab>
-    <textarea
-      className="signature-textarea"
-      value={props.signature || ''}
-      onChange={ev => props.onChangeTextareaSignature(ev)}
-      disabled={!myAccount.signatureEnabled}
-      rows={7}
-    />
+      <Editor
+        toolbar={{
+          options: [
+            'inline',
+            'fontSize',
+            'fontFamily',
+            'colorPicker',
+            'link',
+            'emoji'
+          ],
+          inline: {
+            options: ['bold', 'italic', 'underline']
+          },
+          textAlign: { inDropdown: true },
+          link: {
+            inDropdown: false,
+            defaultTargetOption: '_blank'
+          },
+          history: { inDropdown: true }
+        }}
+        editorState={props.signature}
+        onEditorStateChange={ev => props.onChangeTextareaSignature(ev)}
+      />
+    </div>
   </div>
 );
 
@@ -188,8 +214,12 @@ const renderUsefulLinksBlock = () => (
 );
 
 renderBlockName.propTypes = {
+  mode: PropTypes.string,
   name: PropTypes.string,
-  onChangeInputName: PropTypes.func
+  onAddNameInputKeyPressed: PropTypes.func,
+  onBlurInputName: PropTypes.func,
+  onChangeInputName: PropTypes.func,
+  onClickEditName: PropTypes.func
 };
 
 renderBlockSignature.propTypes = {
