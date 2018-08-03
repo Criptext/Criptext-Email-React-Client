@@ -11,9 +11,13 @@
   "productName": "Criptext",
   "main": "./electron-starter.js",
   "description": "Email service encrypted with signal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Criptext/Criptext-Email-React-Client.git"
+  },
   "scripts": {
     "electron": "electron .",
-    "set-env": "NODE_ENV=development MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004 REACT_APP_KEYSERVER_URL=http://localhost:8000 REACT_APP_SOCKETSERVER_URL=ws://localhost:3001",
+    "set-env": "NODE_ENV=development DEBUG=electron-builder MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004 REACT_APP_KEYSERVER_URL=http://localhost:8000 REACT_APP_SOCKETSERVER_URL=ws://localhost:3001",
     "start": "npm run set-env electron .",
     "postinstall": "install-app-deps",
     "test": "criptext-js-tools test",
@@ -26,11 +30,21 @@
     "installer-mac": "electron-installer-dmg ./release-builds/Criptext-darwin-x64/Criptext.app Criptext --out=release-builds --overwrite",
     "installer-windows": "electron-installer-windows --src ./release-builds/Criptext-win32-x64/ --dest ./release-builds/ --config ./installerResources/windows.json",
     "pack": "build --dir",
-    "dist": "build",
-    "clear-build": "bash ./installerResources/clearBuild.sh"
+    "dist": "electron-builder --publish onTag",
+    "clear-build": "bash ./installerResources/clearBuild.sh",
+    "release": "build",
+    "publish": "build --mac --win -p onTag"
   },
   "build": {
-    "appId": "com.criptext.criptextmac",
+    "appId": "com.criptext.criptextmail",
+    "mac": {
+      "target": [
+        "mas",
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.productivity"
+    },
     "dmg": {
       "background": "build/background.png",
       "icon": "build/volume.icns",
@@ -64,7 +78,13 @@
       "oneClick": true,
       "installerIcon": "build/icon.ico",
       "deleteAppDataOnUninstall": true
-    }
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://cdn.criptext.com/Criptext-Email-Desktop/mac"
+      }
+    ]
   },
   "devDependencies": {
     "criptext-js-tools": "0.5.0",
@@ -78,6 +98,7 @@
   "dependencies": {
     "@criptext/email-http-client": "^0.11.1",
     "crypto-js": "^3.1.9-1",
+    "electron-updater": "^3.0.3",
     "electron-window-state": "^4.1.1",
     "knex": "^0.14.2",
     "sqlite3": "^3.1.13",

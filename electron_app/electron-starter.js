@@ -1,7 +1,7 @@
-const { app, ipcMain, dialog } = require('electron');
+const { app, ipcMain, dialog, Menu } = require('electron');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
-const wsClient = require('./src/socketClient')
+const wsClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
 
 const loginWindow = require('./src/windows/login');
@@ -9,6 +9,7 @@ const dialogWindow = require('./src/windows/dialog');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
+const { template } = require('./src/windows/menu');
 
 async function initApp() {
   try {
@@ -102,11 +103,14 @@ async function initApp() {
   })
 }
 
-
 //   App
 app.disableHardwareAcceleration();
 
-app.on('ready', initApp);
+app.on('ready', () => {
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+  initApp();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -114,8 +118,4 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', () => {
-  if (loginWindow === undefined) {
-    initApp();
-  }
-});
+app.on('activate', initApp);

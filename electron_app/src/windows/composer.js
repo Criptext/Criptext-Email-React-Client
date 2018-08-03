@@ -1,4 +1,4 @@
-const { BrowserWindow, Menu, dialog } = require('electron');
+const { BrowserWindow, dialog } = require('electron');
 const path = require('path');
 const { composerUrl } = require('./../window_routing');
 const mailboxWindow = require('./mailbox');
@@ -16,28 +16,6 @@ const iconPath = path.join(
   __dirname,
   './../../resources/launch-icons/icon.png'
 );
-
-const template = [
-  {
-    submenu: [
-      { role: 'undo', accelerator: 'CmdOrCtrl+Z', visible: false },
-      {
-        role: 'redo',
-        accelerator: process.platform === 'darwin' ? 'Cmd+Shift+Z' : 'Ctrl+Y',
-        visible: false
-      },
-      { role: 'cut', accelerator: 'CmdOrCtrl+X', visible: false },
-      { role: 'copy', accelerator: 'CmdOrCtrl+C', visible: false },
-      { role: 'paste', accelerator: 'CmdOrCtrl+V', visible: false },
-      {
-        role: 'pasteandmatchstyle',
-        accelerator: 'CmdOrCtrl+Shift+V',
-        visible: false
-      }
-    ]
-  }
-];
-const menu = Menu.buildFromTemplate(template);
 
 const RESPONSES = {
   DISCARD: {
@@ -95,7 +73,6 @@ const createComposerWindow = () => {
   });
   globalManager.composerData.set(window.id, {});
   window.loadURL(composerUrl);
-  window.setMenu(menu);
   window.setMenuBarVisibility(false);
   window.on('page-title-updated', event => {
     event.preventDefault();

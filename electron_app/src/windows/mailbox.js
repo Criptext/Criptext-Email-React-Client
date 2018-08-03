@@ -1,6 +1,7 @@
-const { BrowserWindow, shell, app } = require('electron');
+const { app, BrowserWindow, shell } = require('electron');
 const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
+const { appUpdater } = require('./../updater');
 const path = require('path');
 
 let mailboxWindow;
@@ -32,7 +33,6 @@ const create = () => {
     title: ''
   });
   mailboxWindow.loadURL(mailboxUrl);
-  mailboxWindow.setMenu(null);
   mailboxWindow.on('page-title-updated', event => {
     event.preventDefault();
   });
@@ -56,6 +56,12 @@ const create = () => {
         mailboxWindow.send('display-message-error-download');
       }
     });
+  });
+  mailboxWindow.webContents.once('did-frame-finish-load', () => {
+    const checkOS = isWindowsOrmacOS();
+    if (checkOS) {
+      appUpdater();
+    }
   });
   mailboxWindowState.manage(mailboxWindow);
 };
@@ -87,6 +93,10 @@ const send = (message, data) => {
     return;
   }
   mailboxWindow.webContents.send(message, data);
+};
+
+const isWindowsOrmacOS = () => {
+  return process.platform === 'darwin' || process.platform === 'win32';
 };
 
 module.exports = {
