@@ -109,6 +109,10 @@ export const createFeedItem = params => {
   return dbManager.createFeedItem(params);
 };
 
+export const createFileKey = params => {
+  return dbManager.createFileKey(params);
+};
+
 export const createIdentityKeyRecord = params => {
   return dbManager.createIdentityKeyRecord(params);
 };
@@ -211,6 +215,10 @@ export const getEmailLabelsByEmailId = emailId => {
 
 export const getFilesByTokens = tokens => {
   return dbManager.getFilesByTokens(tokens);
+};
+
+export const getFileKeyByEmailId = emailId => {
+  return dbManager.getFileKeyByEmailId(emailId);
 };
 
 export const getIdentityKeyRecord = params => {

@@ -130,7 +130,9 @@ const renderEmailExpand = props => (
         {props.files.length ? (
           <div disabled={props.hideView} className="email-files">
             {props.files.map((file, index) => {
-              return <FileWrapper key={index} file={file} />;
+              return (
+                <FileWrapper key={index} file={file} email={props.email} />
+              );
             })}
           </div>
         ) : null}

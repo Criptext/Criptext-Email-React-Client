@@ -1,5 +1,11 @@
 import FileManager from 'criptext-files-sdk';
-import { FILE_SERVER_APP_ID, FILE_SERVER_KEY } from './electronInterface';
+import CryptoJS from 'crypto-js';
+import base64js from 'base64-js';
+import {
+  FILE_SERVER_APP_ID,
+  FILE_SERVER_KEY,
+  getFileKeyByEmailId
+} from './electronInterface';
 
 const MAX_REQUESTS = 5;
 
@@ -37,3 +43,29 @@ export const setDownloadHandler = token => {
 };
 
 export const CHUNK_SIZE = 524288;
+
+export const setCryptoInterfaces = async emailId => {
+  const [fileKey] = await getFileKeyByEmailId(emailId);
+  if (fileKey) {
+    const { key, iv } = fileKey;
+    fileManager.setCryptoInterfaces(null, (blob, callback) => {
+      if (!key || !iv) {
+        return callback(blob);
+      }
+      const keyArray = CryptoJS.enc.Base64.parse(key);
+      const ivArray = CryptoJS.enc.Base64.parse(iv);
+      const reader = new FileReader();
+      reader.addEventListener('loadend', () => {
+        const ciphertext = CryptoJS.lib.WordArray.create(reader.result);
+        const cipherParams = CryptoJS.lib.CipherParams.create({ ciphertext });
+        const dcWordArray = CryptoJS.AES.decrypt(cipherParams, keyArray, {
+          iv: ivArray
+        });
+        const dcBase64String = dcWordArray.toString(CryptoJS.enc.Base64);
+        const dcArrayBuffer = base64js.toByteArray(dcBase64String);
+        callback(new Blob([new Uint8Array(dcArrayBuffer)]));
+      });
+      reader.readAsArrayBuffer(blob);
+    });
+  }
+};

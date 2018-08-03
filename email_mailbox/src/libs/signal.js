@@ -48,6 +48,27 @@ const decryptMessage = async (sessionCipher, textEncrypted, messageType) => {
   }
 };
 
+const decryptFileKey = async ({
+  fileKey,
+  messageType,
+  recipientId,
+  deviceId
+}) => {
+  const fileKeyEncrypted = util.toArrayBufferFromBase64(fileKey);
+  const addressFrom = new libsignal.SignalProtocolAddress(
+    recipientId,
+    deviceId
+  );
+  const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
+  const binaryText = await decryptMessage(
+    sessionCipher,
+    fileKeyEncrypted,
+    messageType
+  );
+  return util.toString(binaryText);
+};
+
 export default {
-  decryptEmail
+  decryptEmail,
+  decryptFileKey
 };

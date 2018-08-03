@@ -25,6 +25,22 @@ const getContentMessage = async ({
   return { content, preview };
 };
 
+export const decryptFileKeyEmail = async ({
+  fileKey,
+  messageType,
+  recipientId,
+  deviceId
+}) => {
+  const decrypted = await signal.decryptFileKey({
+    fileKey,
+    messageType,
+    recipientId,
+    deviceId
+  });
+  const [key, iv] = decrypted.split(':');
+  return { key, iv };
+};
+
 const getRecipientIdFromEmailAddressTag = emailAddressTag => {
   const emailAddressMatched = emailAddressTag.match(/<(.*)>/);
   const emailAddress = emailAddressMatched
@@ -51,8 +67,18 @@ export const checkEmailIsTo = (data, to) => {
 };
 
 export const formIncomingEmailFromData = async data => {
-  const { metadataKey, senderDeviceId, messageType } = data;
+  const { metadataKey, senderDeviceId, messageType, fileKey } = data;
   const recipientId = getRecipientIdFromEmailAddressTag(data.from);
+  let fileKeyParams;
+  if (fileKey) {
+    fileKeyParams = await decryptFileKeyEmail({
+      fileKey,
+      messageType,
+      recipientId,
+      deviceId: senderDeviceId
+    });
+  }
+
   const { content, preview } = await getContentMessage({
     bodyKey: metadataKey,
     recipientId,
@@ -76,7 +102,7 @@ export const formIncomingEmailFromData = async data => {
     secure: true,
     isMuted: false
   };
-  return email;
+  return { email, fileKeyParams };
 };
 
 export const getRecipientsFromData = data => {

@@ -6,7 +6,8 @@ import {
   setFileProgressHandler,
   setFileSuccessHandler,
   setFileErrorHandler,
-  setDownloadHandler
+  setDownloadHandler,
+  setCryptoInterfaces
 } from './../utils/FileManager';
 import File, { FileStatus } from './File';
 
@@ -37,6 +38,7 @@ class FileWrapper extends Component {
     setFileProgressHandler(this.handleDownloadProgess);
     setFileSuccessHandler(this.handleDownloadSuccess);
     setFileErrorHandler(this.handleDownloadError);
+    setCryptoInterfaces(this.props.email.id);
   }
 
   handleDownload = async () => {
@@ -89,7 +91,8 @@ class FileWrapper extends Component {
 }
 
 FileWrapper.propTypes = {
-  file: PropTypes.object
+  file: PropTypes.object,
+  email: PropTypes.object
 };
 
 export default FileWrapper;

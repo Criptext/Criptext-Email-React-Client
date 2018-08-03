@@ -283,6 +283,11 @@ const createEmail = async (params, trx) => {
         await createFile(files, trx);
       }
 
+      if (params.fileKeyParams) {
+        const fileKey = Object.assign({ emailId }, params.fileKeyParams);
+        await createFileKey(fileKey, trx);
+      }
+
       return emailId;
     })
     .then(emailId => {
@@ -725,8 +730,22 @@ const updateFileByToken = ({ token, status }) => {
     .update(params);
 };
 
+/* FileKey
+  ----------------------------- */
+const createFileKey = (fileKeys, trx) => {
+  const knex = trx || db;
+  return knex.insert(fileKeys).into(Table.FILE_KEY);
+};
+
+const getFileKeyByEmailId = emailId => {
+  return db
+    .select('*')
+    .from(Table.FILE_KEY)
+    .where('emailId', emailId);
+};
+
 /* Feed Item
-   ----------------------------- */
+  ----------------------------- */
 const getAllFeedItems = () => {
   return db.select('*').from(Table.FEEDITEM);
 };
@@ -861,6 +880,7 @@ module.exports = {
   createEmail,
   createEmailLabel,
   createFeedItem,
+  createFileKey,
   createIdentityKeyRecord,
   createPreKeyRecord,
   createSessionRecord,
@@ -891,6 +911,7 @@ module.exports = {
   getEmailsGroupByThreadByParams,
   getEmailsUnredByLabelId,
   getEmailLabelsByEmailId,
+  getFileKeyByEmailId,
   getIdentityKeyRecord,
   getLabelById,
   getLabelByText,
