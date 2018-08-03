@@ -116,10 +116,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     unsendEmail: () => {
       const contactIds = [...email.to, ...email.cc, ...email.bcc];
+      const unsendDate = new Date();
       const params = {
         key: email.key,
         emailId: email.id,
-        contactIds
+        contactIds,
+        unsendDate
       };
       dispatch(unsendEmail(params));
     }

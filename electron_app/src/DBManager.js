@@ -627,7 +627,8 @@ const updateEmail = ({
   unread,
   status,
   content,
-  preview
+  preview,
+  unsendDate
 }) => {
   const params = noNulls({
     key,
@@ -637,7 +638,8 @@ const updateEmail = ({
     isMuted: typeof isMuted === 'boolean' ? isMuted : undefined,
     status,
     content,
-    preview
+    preview,
+    unsendDate
   });
   const whereParam = id ? { id } : { key };
   return db

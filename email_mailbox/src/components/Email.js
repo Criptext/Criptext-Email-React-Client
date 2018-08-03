@@ -124,11 +124,14 @@ const renderEmailExpand = props => (
       </div>
       <hr />
       <div className="email-body">
-        <div disabled={props.hideView} className="email-text">
+        <div disabled={props.hideView || props.isUnsend} className="email-text">
           <div dangerouslySetInnerHTML={{ __html: props.email.content }} />
         </div>
         {props.files.length ? (
-          <div disabled={props.hideView} className="email-files">
+          <div
+            disabled={props.hideView || props.isUnsend}
+            className="email-files"
+          >
             {props.files.map((file, index) => {
               return (
                 <FileWrapper key={index} file={file} email={props.email} />
