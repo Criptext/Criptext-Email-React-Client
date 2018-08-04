@@ -75,6 +75,12 @@ async function initApp() {
     mailboxWindow.show();
   });
 
+  ipcMain.on('logout-app', () => {
+    mailboxWindow.hide();
+    loginWindow.show();
+    mailboxWindow.close()
+  });
+
   //   Composer
   ipcMain.on('create-composer', () => {
     composerWindowManager.openNewComposer();

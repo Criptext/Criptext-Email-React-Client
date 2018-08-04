@@ -75,6 +75,12 @@ const show = async () => {
   });
 };
 
+const hide = () => {
+  if (mailboxWindow !== undefined) {
+    mailboxWindow.hide();
+  }
+};
+
 const close = () => {
   if (mailboxWindow !== undefined) {
     mailboxWindow.close();
@@ -101,6 +107,7 @@ const isWindowsOrmacOS = () => {
 
 module.exports = {
   show,
+  hide,
   close,
   send,
   responseFromModal,

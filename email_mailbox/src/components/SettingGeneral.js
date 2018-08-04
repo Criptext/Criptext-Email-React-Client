@@ -14,7 +14,7 @@ import './signatureeditor.css';
 const SettingGeneral = props => (
   <div>
     {renderProfileBlock(props)}
-    {renderPasswordBlock(props)}
+    {renderPasswordBlock(false)}
     {renderLogoutAccountBlock(props)}
     {renderLanguageBlock()}
     {renderUsefulLinksBlock()}
@@ -135,30 +135,35 @@ const renderBlockSignature = props => (
   </div>
 );
 
-const renderPasswordBlock = () => (
-  <div className="section-block">
-    <div className="section-block-title">
-      <h1>Password</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item content-reset-password">
-        <button className="button button-a button-reset-password">
-          <span>Reset password</span>
-        </button>
+const renderPasswordBlock = shouldRender => {
+  return shouldRender ? (
+    <div className="section-block">
+      <div className="section-block-title">
+        <h1>Password</h1>
+      </div>
+      <div className="section-block-content">
+        <div className="section-block-content-item content-reset-password">
+          <button className="button button-a button-reset-password">
+            <span>Reset password</span>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  ) : null;
+};
 
-const renderLogoutAccountBlock = () => (
+const renderLogoutAccountBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
       <h1>Logout Account</h1>
     </div>
     <div className="section-block-content">
-      <div className="section-block-content-item content-logout-account">
-        <i className="icon-exit" />
-        <span>Logout</span>
+      <div
+        className="section-block-content-item content-logout-account"
+        onClick={() => props.onClickLogout()}
+      >
+        <div className="logout-account-icon" />
+        <div className="logout-label">Logout</div>
       </div>
     </div>
   </div>
@@ -226,6 +231,10 @@ renderBlockSignature.propTypes = {
   onChangeRadioButtonSignature: PropTypes.func,
   onChangeTextareaSignature: PropTypes.func,
   signature: PropTypes.string
+};
+
+renderLogoutAccountBlock.propTypes = {
+  onClickLogout: PropTypes.func
 };
 
 export default SettingGeneral;

@@ -40,6 +40,7 @@ class SettingGeneralWrapper extends Component {
         onClickEditName={this.handleClickEditName}
         onAddNameInputKeyPressed={this.handleAddNameInputKeyPressed}
         mode={this.state.mode}
+        onClickLogout={this.handleClickLogout}
       />
     );
   }
@@ -93,9 +94,14 @@ class SettingGeneralWrapper extends Component {
     await this.props.onUpdateAccount({ signatureEnabled: value });
     this.setState({ signatureEnabled: value });
   };
+
+  handleClickLogout = () => {
+    this.props.onLogout();
+  };
 }
 
 SettingGeneralWrapper.propTypes = {
+  onLogout: PropTypes.func,
   onUpdateAccount: PropTypes.func
 };
 

@@ -1,57 +1,34 @@
+/* eslint react/no-deprecated: 0 */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import SettingDevices from './SettingDevices';
-import { deviceTypes } from './../utils/const';
-
-const currentDeviceName = 'Mac';
-
-const devices = [
-  {
-    name: 'Mac',
-    lastConnection: {
-      place: 'Guayaquil',
-      time: 'Now'
-    },
-    type: deviceTypes.PC,
-    deviceId: 1
-  },
-  {
-    name: 'Samsung Galaxy S8',
-    lastConnection: {
-      place: 'Guayaquil',
-      time: '12 hours ago'
-    },
-    type: deviceTypes.PHONE,
-    deviceId: 2
-  },
-  {
-    name: 'Windows',
-    lastConnection: {
-      place: 'Guayaquil',
-      time: 'Yesterday'
-    },
-    type: deviceTypes.PC,
-    deviceId: 3
-  }
-];
 
 class SettingDevicesWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      devices,
-      currentDeviceName
+      devices: []
     };
+  }
+
+  componentWillMount() {
+    this.setState({ devices: this.props.devices });
   }
 
   render() {
     return (
       <SettingDevices
         {...this.props}
-        devices={this.state.devices}
-        currentDeviceName={this.state.currentDeviceName}
+        devices={this.props.devices}
         onClickRemoveDevice={this.handleClickRemoveDevice}
       />
     );
+  }
+
+  componentDidMount() {
+    if (!this.state.devices.length) {
+      this.setState({ devices: this.props.devices });
+    }
   }
 
   handleClickRemoveDevice = deviceId => {
@@ -61,5 +38,9 @@ class SettingDevicesWrapper extends Component {
     this.setState({ devices });
   };
 }
+
+SettingDevicesWrapper.propTypes = {
+  devices: PropTypes.array
+};
 
 export default SettingDevicesWrapper;

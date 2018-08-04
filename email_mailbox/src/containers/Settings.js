@@ -6,7 +6,11 @@ import {
   myAccount,
   updateAccount,
   LabelType,
-  updateNameEvent
+  removeDevice,
+  updateNameEvent,
+  cleanDataBase,
+  logoutApp,
+  getDevices
 } from '../utils/electronInterface';
 import { SocketCommand } from '../utils/const';
 
@@ -51,6 +55,10 @@ const mapDispatchToProps = dispatch => {
         dispatch(addLabel(label));
       }
     },
+    onGetDevices: async () => {
+      const res = await getDevices();
+      return res.status === 200 ? res.body : [];
+    },
     onUpdateAccount: async params => {
       const recipientId = myAccount.recipientId;
       const { name } = params;
@@ -68,6 +76,14 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateLabel: params => {
       dispatch(updateLabel(params));
+    },
+    onLogout: async () => {
+      const { deviceId } = myAccount;
+      const { status } = await removeDevice(deviceId);
+      if (status === 200) {
+        await cleanDataBase();
+        await logoutApp();
+      }
     },
     onRemoveLabel: labelId => {
       dispatch(removeLabel(String(labelId)));

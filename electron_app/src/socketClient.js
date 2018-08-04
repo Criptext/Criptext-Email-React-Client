@@ -18,7 +18,7 @@ const start = account => {
   });
 
   client.on('connect', function(connection) {
-    reconnectDelay = 1000;
+    reconnectDelay = 2000;
     connection.on('error', function(error) {
       log('Connection Error: ' + error.toString());
       reconnect();
@@ -42,7 +42,6 @@ const start = account => {
       log(`Websocket reconnecting...`);
       start(account);
     }, reconnectDelay);
-    reconnectDelay *= 2;
   };
 };
 
