@@ -14,6 +14,12 @@
     border: solid 1px #eeb6b7;
   }
 
+  &.email-draft {
+    .email-info-content-from{
+      color: #dd4040;
+    }
+  }
+
   hr{
     border: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -174,19 +180,23 @@
       }
 
       .email-info-content-actions{
-        align-items: center;
-        display: flex;
-        position: relative;
-      
-        >i{
-          color: #9197a1;
-          cursor: pointer;
-          font-size: 21px;
-          margin: 0 5px;
+        margin-right: 10px;
+        
+        >div{
+          align-items: center;
+          display: flex;
           position: relative;
 
-          &:last-child{
-            margin-right: 0;
+          >i{
+            color: #9197a1;
+            cursor: pointer;
+            font-size: 21px;
+            margin: 0 5px;
+            position: relative;
+  
+            &:last-child{
+              margin-right: 0;
+            }
           }
         }
       }

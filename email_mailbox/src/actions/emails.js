@@ -50,6 +50,9 @@ export const loadEmails = threadId => {
           element.fileTokens = element.fileTokens
             ? element.fileTokens.split(',')
             : [];
+          element.labelIds = element.labelIds
+            ? element.labelIds.split(',').map(Number)
+            : [];
           const contactIds = [
             ...element.from,
             ...element.to,

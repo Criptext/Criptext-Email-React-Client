@@ -10,6 +10,7 @@ import './email.css';
 
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
 const PopOverEmailActions = MenuHOC(EmailActions);
+const draftText = 'Draft';
 
 const Email = props =>
   props.displayEmail || props.staticOpen
@@ -18,10 +19,10 @@ const Email = props =>
 
 const renderEmailCollapse = props => (
   <div
-    className={
-      'email-container email-container-collapse ' +
-      (props.isUnsend ? 'email-unsend' : 'email-normal')
-    }
+    className={`email-container email-container-collapse ${defineEmailType(
+      props.isUnsend,
+      props.isDraft
+    )}`}
     onClick={props.onToggleEmail}
   >
     <div className="email-info">
@@ -34,7 +35,11 @@ const renderEmailCollapse = props => (
       <div className="email-info-content">
         <div className="email-info-content-line">
           <div className="email-info-content-from">
-            <span>{showContacts(props.email.from)}</span>
+            {props.isDraft ? (
+              <span>{draftText}</span>
+            ) : (
+              <span>{showContacts(props.email.from)}</span>
+            )}
           </div>
           <div className="email-info-content-detail">
             {renderFileExist(props.email.fileTokens)}
@@ -55,9 +60,10 @@ const renderEmailCollapse = props => (
 const renderEmailExpand = props => (
   <div>
     <div
-      className={`email-container email-container-expand ${
-        props.isUnsend ? 'email-unsend' : ''
-      }`}
+      className={`email-container email-container-expand ${defineEmailType(
+        props.isUnsend,
+        props.isDraft
+      )}`}
     >
       <div className="email-info" onClick={props.onToggleEmail}>
         <div
@@ -69,7 +75,11 @@ const renderEmailExpand = props => (
         <div className="email-info-content">
           <div className="email-info-content-line">
             <div className="email-info-content-from">
-              <span>{showContacts(props.email.from)}</span>
+              {props.isDraft ? (
+                <span>{draftText}</span>
+              ) : (
+                <span>{showContacts(props.email.from)}</span>
+              )}
             </div>
             <div className="email-info-content-detail">
               {renderFileExist(props.email.fileTokens)}
@@ -98,26 +108,37 @@ const renderEmailExpand = props => (
               </div>
             </div>
             <div className="email-info-content-actions">
-              {props.isFromMe && !props.isUnsend ? (
-                <ButtonUnsend onClick={props.onClickUnsendButton} />
-              ) : null}
-              <i
-                className="icon-replay"
-                onClick={ev => props.onReplyEmail(ev)}
-              />
-              <i
-                className="icon-dots"
-                onClick={ev => props.onTogglePopOverEmailActions(ev)}
-              >
-                <PopOverEmailActions
-                  isHidden={props.isHiddenPopOverEmailActions}
-                  menuPosition={{ right: '-32px', top: '28px' }}
-                  onReplyEmail={props.onReplyEmail}
-                  onReplyAll={props.onReplyAll}
-                  onForward={props.onForward}
-                  onToggleMenu={props.onTogglePopOverEmailActions}
-                />
-              </i>
+              {props.isDraft ? (
+                <div>
+                  <i
+                    className="icon-pencil"
+                    onClick={ev => props.onClickEditDraft(ev)}
+                  />
+                </div>
+              ) : (
+                <div>
+                  {props.isFromMe && !props.isUnsend ? (
+                    <ButtonUnsend onClick={props.onClickUnsendButton} />
+                  ) : null}
+                  <i
+                    className="icon-replay"
+                    onClick={ev => props.onReplyEmail(ev)}
+                  />
+                  <i
+                    className="icon-dots"
+                    onClick={ev => props.onTogglePopOverEmailActions(ev)}
+                  >
+                    <PopOverEmailActions
+                      isHidden={props.isHiddenPopOverEmailActions}
+                      menuPosition={{ right: '-32px', top: '28px' }}
+                      onReplyEmail={props.onReplyEmail}
+                      onReplyAll={props.onReplyAll}
+                      onForward={props.onForward}
+                      onToggleMenu={props.onTogglePopOverEmailActions}
+                    />
+                  </i>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -202,8 +223,18 @@ const defineEmailStatus = status => {
   }
 };
 
+const defineEmailType = (isUnsend, isDraft) => {
+  if (isUnsend) {
+    return 'email-unsend';
+  } else if (isDraft) {
+    return 'email-draft';
+  }
+  return 'email-normal';
+};
+
 renderEmailCollapse.propTypes = {
   email: PropTypes.object,
+  isDraft: PropTypes.bool,
   isUnsend: PropTypes.bool,
   onToggleEmail: PropTypes.func
 };
@@ -212,10 +243,13 @@ renderEmailExpand.propTypes = {
   email: PropTypes.object,
   files: PropTypes.array,
   hideView: PropTypes.bool,
+  isDraft: PropTypes.bool,
   isFromMe: PropTypes.bool,
   isHiddenPopOverEmailActions: PropTypes.bool,
   isHiddenPopOverEmailMoreInfo: PropTypes.bool,
   isUnsend: PropTypes.bool,
+  onClickEditDraft: PropTypes.func,
+  onClickUnsendButton: PropTypes.func,
   onForward: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyEmail: PropTypes.func,
@@ -223,8 +257,7 @@ renderEmailExpand.propTypes = {
   onToggleEmail: PropTypes.func,
   onTogglePopOverEmailActions: PropTypes.func,
   onTooglePopOverEmailMoreInfo: PropTypes.func,
-  staticOpen: PropTypes.func,
-  onClickUnsendButton: PropTypes.func
+  staticOpen: PropTypes.func
 };
 
 renderMuteIcon.propTypes = {

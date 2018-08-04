@@ -93,7 +93,6 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
     recipients,
     labels: [labelId]
   };
-
   return {
     data,
     criptextRecipients,
@@ -115,7 +114,7 @@ export const formDataToEditDraft = async emailKeyToEdit => {
   );
   const htmlBody = EditorState.createWithContent(contentState);
   const textSubject = emailData.subject;
-
+  const threadId = emailData.threadId;
   const toEmails = contacts.to.map(contact => contact.email);
   const ccEmails = contacts.cc.map(contact => contact.email);
   const bccEmails = contacts.bcc.map(contact => contact.email);
@@ -125,7 +124,8 @@ export const formDataToEditDraft = async emailKeyToEdit => {
     ccEmails,
     bccEmails,
     htmlBody,
-    textSubject
+    textSubject,
+    threadId
   };
 };
 

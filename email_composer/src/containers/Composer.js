@@ -67,7 +67,7 @@ class ComposerWrapper extends Component {
       isDragActive: false,
       status: Status.DISABLED,
       textSubject: '',
-      threadId: undefined,
+      threadId: null,
       toEmails: [],
       displayNonCriptextPopup: false,
       nonCriptextRecipientsPassword: '',
@@ -398,7 +398,6 @@ class ComposerWrapper extends Component {
         status: EmailStatus.SENT
       };
       await updateEmail(emailParams);
-
       closeComposerWindow(emailId);
     } catch (e) {
       if (e.message.includes('SQLITE_CONSTRAINT')) {
