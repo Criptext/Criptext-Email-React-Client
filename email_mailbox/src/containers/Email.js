@@ -95,24 +95,27 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onReplyEmail: ev => {
       ev.stopPropagation();
-      const key = email.key;
-      openEmailInComposer({ key, type: composerEvents.REPLY });
+      const keyEmailToRespond = email.key;
+      openEmailInComposer({ keyEmailToRespond, type: composerEvents.REPLY });
     },
     onReplyLast: () => {
       if (isLast) {
-        const key = email.key;
-        openEmailInComposer({ key, type: composerEvents.REPLY });
+        const keyEmailToRespond = email.key;
+        openEmailInComposer({ keyEmailToRespond, type: composerEvents.REPLY });
       }
     },
     onReplyAll: ev => {
       ev.stopPropagation();
-      const key = email.key;
-      openEmailInComposer({ key, type: composerEvents.REPLY_ALL });
+      const keyEmailToRespond = email.key;
+      openEmailInComposer({
+        keyEmailToRespond,
+        type: composerEvents.REPLY_ALL
+      });
     },
     onForward: ev => {
       ev.stopPropagation();
-      const key = email.key;
-      openEmailInComposer({ key, type: composerEvents.FORWARD });
+      const keyEmailToRespond = email.key;
+      openEmailInComposer({ keyEmailToRespond, type: composerEvents.FORWARD });
     },
     unsendEmail: () => {
       const contactIds = [...email.to, ...email.cc, ...email.bcc];

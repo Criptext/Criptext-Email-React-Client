@@ -119,8 +119,12 @@ class ComposerWrapper extends Component {
     const emailToEdit = getEmailToEdit();
     let state;
     if (emailToEdit) {
-      const { key, type } = emailToEdit;
-      const composerData = await this.getComposerDataByType(key, type);
+      const { key, keyEmailToRespond, type } = emailToEdit;
+      const composerData = await this.getComposerDataByType(
+        key,
+        keyEmailToRespond,
+        type
+      );
       state = { ...composerData, status: Status.ENABLED };
     } else {
       const composerData = await this.getDefaultComposerWithSignature();
@@ -139,11 +143,11 @@ class ComposerWrapper extends Component {
     return await formComposerDataWithSignature();
   };
 
-  getComposerDataByType = async (key, type) => {
+  getComposerDataByType = async (key, keyEmailToRespond, type) => {
     if (type === composerEvents.EDIT_DRAFT) {
       return await formDataToEditDraft(key);
     }
-    return await formDataToReply(key, type);
+    return await formDataToReply(keyEmailToRespond, type);
   };
 
   handleClickDiscardDraft = () => {

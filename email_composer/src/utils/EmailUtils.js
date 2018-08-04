@@ -83,7 +83,8 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
     status: EmailStatus.SENDING,
     unread: false,
     secure: true,
-    isMuted: false
+    isMuted: false,
+    threadId: composerData.threadId
   };
   const from = myAccount.recipientId;
   recipients.from = [`${from}@${appDomain}`];

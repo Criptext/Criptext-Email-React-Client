@@ -173,14 +173,14 @@ const sendEventToMailbox = (eventName, data) => {
 
 const saveDraftToDatabase = async (composerId, dataDraft) => {
   const emailToEdit = globalManager.emailToEdit.get(composerId);
-  if (!emailToEdit) {
-    await dbManager.createEmail(dataDraft);
-  } else {
+  if (emailToEdit.type === composerEvents.EDIT_DRAFT) {
     const [prevEmail] = await dbManager.getEmailByKey(emailToEdit.key);
     await dbManager.deleteEmailLabelAndContactByEmailId(
       prevEmail.id,
       dataDraft
     );
+  } else {
+    await dbManager.createEmail(dataDraft);
   }
   sendEventToMailbox('update-drafts', undefined);
 };
