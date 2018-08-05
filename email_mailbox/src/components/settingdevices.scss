@@ -14,6 +14,10 @@
     height: 45px;
     font-size: 13px;
 
+    &:hover{
+      background-color: #f7fbff;
+    }
+
     .device-icon {
       display: flex;
       width: 7%;
