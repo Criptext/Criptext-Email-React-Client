@@ -23,6 +23,7 @@ class EmailWrapper extends Component {
         onToggleEmail={this.onToggleEmail}
         onTooglePopOverEmailMoreInfo={this.handleTooglePopOverEmailMoreInfo}
         onTogglePopOverEmailActions={this.handleTogglePopOverEmailActions}
+        onClickEditDraft={this.handleClickEditDraft}
         onClickUnsendButton={this.handleClickUnsendButton}
         {...this.props}
       />
@@ -48,6 +49,11 @@ class EmailWrapper extends Component {
     }
   };
 
+  handleClickEditDraft = ev => {
+    if (ev) ev.stopPropagation();
+    this.props.onEditDraft();
+  };
+
   handleTooglePopOverEmailMoreInfo = ev => {
     if (ev) ev.stopPropagation();
     this.setState({
@@ -68,7 +74,7 @@ class EmailWrapper extends Component {
         hideView: !value
       },
       async () => {
-        await this.props.unsendEmail();
+        await this.props.onUnsendEmail();
         this.setState({ hideView: value });
       }
     );
@@ -79,9 +85,10 @@ EmailWrapper.propTypes = {
   displayEmail: PropTypes.func,
   email: PropTypes.object,
   files: PropTypes.array,
+  onEditDraft: PropTypes.func,
   onLoadFiles: PropTypes.func,
-  staticOpen: PropTypes.bool,
-  unsendEmail: PropTypes.func
+  onUnsendEmail: PropTypes.func,
+  staticOpen: PropTypes.bool
 };
 
 export default EmailWrapper;

@@ -70,7 +70,7 @@ const renderBlockName = props => (
       <div className="profile-name">
         <span onDoubleClick={props.onClickEditName}>{myAccount.name}</span>
         <i
-          className="icon-edit"
+          className="icon-pencil"
           title="Edit name"
           onClick={props.onClickEditName}
         />

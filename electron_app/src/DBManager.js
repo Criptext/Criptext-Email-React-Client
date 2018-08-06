@@ -351,7 +351,8 @@ const getEmailsByThreadId = threadId => {
         `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'bcc'
         THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'bcc'`
       ),
-      db.raw(`GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens`)
+      db.raw(`GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens`),
+      db.raw(`GROUP_CONCAT(DISTINCT(${Table.EMAIL_LABEL}.labelId)) as labelIds`)
     )
     .from(Table.EMAIL)
     .leftJoin(
@@ -360,6 +361,11 @@ const getEmailsByThreadId = threadId => {
       `${Table.EMAIL}.id`
     )
     .leftJoin(Table.FILE, `${Table.FILE}.emailId`, `${Table.EMAIL}.id`)
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL_LABEL}.emailId`,
+      `${Table.EMAIL}.id`
+    )
     .where({ threadId })
     .groupBy(`${Table.EMAIL}.id`);
 };
@@ -627,7 +633,8 @@ const updateEmail = ({
   unread,
   status,
   content,
-  preview
+  preview,
+  unsendDate
 }) => {
   const params = noNulls({
     key,
@@ -637,7 +644,8 @@ const updateEmail = ({
     isMuted: typeof isMuted === 'boolean' ? isMuted : undefined,
     status,
     content,
-    preview
+    preview,
+    unsendDate
   });
   const whereParam = id ? { id } : { key };
   return db

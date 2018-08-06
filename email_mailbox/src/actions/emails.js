@@ -50,6 +50,9 @@ export const loadEmails = threadId => {
           element.fileTokens = element.fileTokens
             ? element.fileTokens.split(',')
             : [];
+          element.labelIds = element.labelIds
+            ? element.labelIds.split(',').map(Number)
+            : [];
           const contactIds = [
             ...element.from,
             ...element.to,
@@ -109,7 +112,7 @@ export const updateUnreadEmails = (thread, label) => {
 
 export const unsendEmail = params => {
   return async dispatch => {
-    const { key, emailId, contactIds } = params;
+    const { key, emailId, contactIds, unsendDate } = params;
     try {
       const contacts = await getContactByIds(contactIds);
       const emails = contacts.map(contact => contact.email);
@@ -125,9 +128,9 @@ export const unsendEmail = params => {
           status: EmailStatus.UNSEND,
           content: '',
           preview: '',
-          unsendDate: Date.now()
+          unsendDate
         });
-        dispatch(unsendEmailOnSuccess(emailId, Date.now()));
+        dispatch(unsendEmailOnSuccess(emailId, unsendDate));
       }
     } catch (e) {
       // To do

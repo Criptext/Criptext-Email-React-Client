@@ -67,7 +67,6 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   const InboxLabel = LabelType.inbox.id;
   const SentLabel = LabelType.sent.id;
   let eventParams = {};
-
   const [prevEmail] = await getEmailByKey(emailObj.metadataKey);
   if (!prevEmail) {
     const incomingEmail = await formIncomingEmailFromData(emailObj);

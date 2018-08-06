@@ -6,6 +6,7 @@ import { matchOwnEmail } from './../utils/UserUtils';
 import randomcolor from 'randomcolor';
 import {
   composerEvents,
+  LabelType,
   myAccount,
   openEmailInComposer
 } from './../utils/electronInterface';
@@ -51,9 +52,16 @@ const mapStateToProps = (state, ownProps) => {
     content
   };
   const isUnsend = email.status === EmailStatus.UNSEND;
+  const isDraft =
+    email.labelIds.findIndex(labelId => {
+      return labelId === LabelType.draft.id;
+    }) === -1
+      ? false
+      : true;
   return {
     email: myEmail,
     files,
+    isDraft,
     isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
     isUnsend
   };
@@ -84,6 +92,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const email = ownProps.email;
   const isLast = ownProps.staticOpen;
   return {
+    onEditDraft: () => {
+      const key = email.key;
+      openEmailInComposer({
+        key,
+        type: composerEvents.EDIT_DRAFT
+      });
+    },
     toggleMute: ev => {
       ev.stopPropagation();
       const emailId = String(email.id);
@@ -95,31 +110,36 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onReplyEmail: ev => {
       ev.stopPropagation();
-      const key = email.key;
-      openEmailInComposer({ key, type: composerEvents.REPLY });
+      const keyEmailToRespond = email.key;
+      openEmailInComposer({ keyEmailToRespond, type: composerEvents.REPLY });
     },
     onReplyLast: () => {
       if (isLast) {
-        const key = email.key;
-        openEmailInComposer({ key, type: composerEvents.REPLY });
+        const keyEmailToRespond = email.key;
+        openEmailInComposer({ keyEmailToRespond, type: composerEvents.REPLY });
       }
     },
     onReplyAll: ev => {
       ev.stopPropagation();
-      const key = email.key;
-      openEmailInComposer({ key, type: composerEvents.REPLY_ALL });
+      const keyEmailToRespond = email.key;
+      openEmailInComposer({
+        keyEmailToRespond,
+        type: composerEvents.REPLY_ALL
+      });
     },
     onForward: ev => {
       ev.stopPropagation();
-      const key = email.key;
-      openEmailInComposer({ key, type: composerEvents.FORWARD });
+      const keyEmailToRespond = email.key;
+      openEmailInComposer({ keyEmailToRespond, type: composerEvents.FORWARD });
     },
-    unsendEmail: () => {
+    onUnsendEmail: () => {
       const contactIds = [...email.to, ...email.cc, ...email.bcc];
+      const unsendDate = new Date();
       const params = {
         key: email.key,
         emailId: email.id,
-        contactIds
+        contactIds,
+        unsendDate
       };
       dispatch(unsendEmail(params));
     }

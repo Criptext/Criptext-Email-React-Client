@@ -142,17 +142,20 @@ const destroy = async ({ composerId, emailId }) => {
     const isEditDraft = type === composerEvents.EDIT_DRAFT;
     const isReplyOrReplyAll =
       type === composerEvents.REPLY || type === composerEvents.REPLY_ALL;
-    const [storedEmail] = await dbManager.getEmailByKey(emailToEdit.key);
     if (isEditDraft) {
+      const [oldDraftEmail] = await dbManager.getEmailByKey(emailToEdit.key);
       await dbManager.deleteEmailLabelAndContactByEmailId(
-        storedEmail.id,
+        oldDraftEmail.id,
         undefined
       );
       sendEventToMailbox('update-drafts', undefined);
     }
     if (isReplyOrReplyAll) {
+      const [emailResponded] = await dbManager.getEmailByKey(
+        emailToEdit.keyEmailToRespond
+      );
       const dataToMailbox = {
-        threadId: storedEmail.threadId,
+        threadId: emailResponded.threadId,
         emailId
       };
       sendEventToMailbox('update-thread-emails', dataToMailbox);
@@ -173,7 +176,7 @@ const sendEventToMailbox = (eventName, data) => {
 
 const saveDraftToDatabase = async (composerId, dataDraft) => {
   const emailToEdit = globalManager.emailToEdit.get(composerId);
-  if (!emailToEdit) {
+  if (!emailToEdit || emailToEdit.type !== composerEvents.EDIT_DRAFT) {
     await dbManager.createEmail(dataDraft);
   } else {
     const [prevEmail] = await dbManager.getEmailByKey(emailToEdit.key);

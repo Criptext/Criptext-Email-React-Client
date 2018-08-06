@@ -10,6 +10,7 @@ Object {
   ],
   "htmlBody": "<p>Modified body content</p>",
   "textSubject": "Email subject 1",
+  "threadId": "1",
   "toEmails": Array [
     "toUser@jigl.com",
   ],
@@ -46,6 +47,7 @@ Object {
       "secure": true,
       "status": 4,
       "subject": "Subject",
+      "threadId": undefined,
       "unread": false,
     },
     "labels": Array [

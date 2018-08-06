@@ -227,41 +227,35 @@ TABLE OF CONTENTS
 .icon-not:before {
   content: "\e909";
 }
+.icon-edit:before {
+  content: "\e911";
+}
+.icon-mail:before {
+  content: "\e90f";
+}
+.icon-file:before {
+  content: "\e90c";
+}
+.icon-download:before {
+  content: "\e90b";
+}
+.icon-forward:before {
+  content: "\e90d";
+}
+.icon-criptext:before {
+  content: "\e914";
+}
 .icon-star-fill:before {
   content: "\e903";
 }
 .icon-star:before {
   content: "\e926";
 }
-.icon-important:before {
-  content: "\e902";
-}
 .icon-important-fill:before {
   content: "\e90a";
 }
-.icon-download:before {
-  content: "\e90b";
-}
-.icon-file:before {
-  content: "\e90c";
-}
-.icon-forward:before {
-  content: "\e90d";
-}
-.icon-user:before {
-  content: "\e90e";
-}
-.icon-mail:before {
-  content: "\e90f";
-}
-.icon-edit:before {
-  content: "\e911";
-}
-.icon-criptext:before {
-  content: "\e914";
-}
-.icon-box:before {
-  content: "\e915";
+.icon-important:before {
+  content: "\e902";
 }
 .icon-unsend:before {
   content: "\e916";
@@ -284,8 +278,17 @@ TABLE OF CONTENTS
 .icon-replay:before {
   content: "\e91f";
 }
+.icon-pencil:before {
+  content: "\e940";
+}
 .icon-dots:before {
   content: "\e918";
+}
+.icon-user:before {
+  content: "\e90e";
+}
+.icon-box:before {
+  content: "\e915";
 }
 .icon-check:before {
   content: "\e919";
