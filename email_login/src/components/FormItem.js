@@ -1,3 +1,4 @@
+/* eslint react/jsx-no-target-blank: 0 */
 import React from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import PropTypes from 'prop-types';
@@ -36,7 +37,9 @@ const renderItem = props =>
       <CustomCheckbox status={props.isChecked} onCheck={() => onCheck(props)} />
       <span className="label-acceptterms">
         {props.formItem.label.text}
-        <span className="strong">{props.formItem.label.strong}</span>
+        <a href="https://www.criptext.com/terms" target="_blank">
+          <span className="strong">{props.formItem.label.strong}</span>
+        </a>
       </span>
     </div>
   );
