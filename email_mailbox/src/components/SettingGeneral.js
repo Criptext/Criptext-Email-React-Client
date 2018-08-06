@@ -136,20 +136,22 @@ const renderBlockSignature = props => (
 );
 
 const renderPasswordBlock = shouldRender => {
-  return shouldRender ? (
-    <div className="section-block">
-      <div className="section-block-title">
-        <h1>Password</h1>
-      </div>
-      <div className="section-block-content">
-        <div className="section-block-content-item content-reset-password">
-          <button className="button button-a button-reset-password">
-            <span>Reset password</span>
-          </button>
+  return (
+    shouldRender && (
+      <div className="section-block">
+        <div className="section-block-title">
+          <h1>Password</h1>
+        </div>
+        <div className="section-block-content">
+          <div className="section-block-content-item content-reset-password">
+            <button className="button button-a button-reset-password">
+              <span>Reset password</span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  ) : null;
+    )
+  );
 };
 
 const renderLogoutAccountBlock = props => (
@@ -194,10 +196,10 @@ const renderUsefulLinksBlock = () => (
         </a>
         <a
           className="useful-link"
-          href={usefulLinks.PRIVACY_POLICIES}
+          href={usefulLinks.PRIVACY_POLICY}
           target="_blank"
         >
-          Privacy Policies
+          Privacy Policy
         </a>
         <a
           className="useful-link"
