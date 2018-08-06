@@ -88,10 +88,16 @@ export const formOutgoingEmailFromData = (composerData, labelId) => {
   };
   const from = myAccount.recipientId;
   recipients.from = [`${from}@${appDomain}`];
+
+  const fileKeyParams = composerData.files.length
+    ? { key: composerData.key, iv: composerData.iv }
+    : null;
+
   const data = {
     email,
     recipients,
-    labels: [labelId]
+    labels: [labelId],
+    fileKeyParams
   };
   return {
     data,

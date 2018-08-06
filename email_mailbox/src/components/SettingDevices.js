@@ -38,12 +38,12 @@ const renderLinkedDevice = (index, deviceData) => (
 
 const defineDeviceIconByType = type => {
   switch (type) {
-    case deviceTypes.PC:
-      return 'icon-desktop';
-    case deviceTypes.PHONE:
+    case deviceTypes.IOS:
+      return 'icon-mobile';
+    case deviceTypes.ANDROID:
       return 'icon-mobile';
     default:
-      return '';
+      return 'icon-desktop';
   }
 };
 

@@ -5,8 +5,6 @@ const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const globalManager = remote.require('./src/globalManager');
 
-export const AesCypher = remote.require('./src/AesCypher');
-
 export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
   './src/utils/consts'
 );
@@ -74,6 +72,10 @@ export const createEmailLabel = params => {
 
 export const createFile = params => {
   return dbManager.createFile(params);
+};
+
+export const createFileKey = params => {
+  return dbManager.createFileKey(params);
 };
 
 export const createIdentityKeyRecord = params => {
