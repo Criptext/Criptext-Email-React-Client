@@ -14,6 +14,7 @@ const mapStateToProps = (state, ownProps) => {
   const { subject, threadId } = emailData;
   const subtitle = subject;
   return {
+    id: feed.id,
     isMuted,
     title,
     subtitle,
