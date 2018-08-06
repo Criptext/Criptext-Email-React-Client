@@ -41,6 +41,9 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.EMAIL_TRACKING_UPDATE: {
       return handleEmailTrackingUpdate(incomingEvent);
     }
+    case SocketCommand.SEND_EMAIL_ERROR: {
+      return handleSendEmailError(incomingEvent);
+    }
     case SocketCommand.PEER_EMAIL_UNSEND: {
       return handlePeerEmailUnsend(incomingEvent);
     }
@@ -67,7 +70,10 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
 
   const [prevEmail] = await getEmailByKey(emailObj.metadataKey);
   if (!prevEmail) {
-    let email = await formIncomingEmailFromData(emailObj);
+    const incomingEmail = await formIncomingEmailFromData(emailObj);
+    let email = incomingEmail.email;
+    const fileKeyParams = incomingEmail.fileKeyParams;
+
     const recipients = getRecipientsFromData(emailObj);
     const files =
       emailObj.files && emailObj.files.length
@@ -94,7 +100,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       email,
       recipients,
       labels,
-      files
+      files,
+      fileKeyParams
     };
     const [newEmailId] = await createEmail(params);
     eventParams = {
@@ -212,6 +219,10 @@ const handlePeerUserNameChanged = async ({ rowid, params }) => {
   const { name } = params;
   const { recipientId } = myAccount;
   await updateAccount({ name, recipientId });
+  await setEventAsHandled(rowid);
+};
+
+const handleSendEmailError = async ({ rowid }) => {
   await setEventAsHandled(rowid);
 };
 
