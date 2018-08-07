@@ -91,8 +91,8 @@ export const deviceTypes = {
 };
 
 export const usefulLinks = {
-  FAQ: 'https://www.criptext.com',
-  PRIVACY_POLICIES: 'https://www.criptext.com/privacy',
+  FAQ: 'https://criptext.com/faq/',
+  PRIVACY_POLICY: 'https://www.criptext.com/privacy',
   TERMS_OF_SERVICE: 'https://www.criptext.com/terms',
-  CRIPTEXT_LIBRARIES: 'https://www.criptext.com/open-source-libraries'
+  CRIPTEXT_LIBRARIES: 'https://www.criptext.com/open-source-desktop'
 };

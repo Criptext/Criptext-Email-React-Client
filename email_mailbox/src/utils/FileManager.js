@@ -58,12 +58,18 @@ export const setCryptoInterfaces = async emailId => {
       reader.addEventListener('loadend', () => {
         const ciphertext = CryptoJS.lib.WordArray.create(reader.result);
         const cipherParams = CryptoJS.lib.CipherParams.create({ ciphertext });
-        const dcWordArray = CryptoJS.AES.decrypt(cipherParams, keyArray, {
-          iv: ivArray
-        });
-        const dcBase64String = dcWordArray.toString(CryptoJS.enc.Base64);
-        const dcArrayBuffer = base64js.toByteArray(dcBase64String);
-        callback(new Blob([new Uint8Array(dcArrayBuffer)]));
+        const decryptedWordArray = CryptoJS.AES.decrypt(
+          cipherParams,
+          keyArray,
+          {
+            iv: ivArray
+          }
+        );
+        const decryptedBase64 = decryptedWordArray.toString(
+          CryptoJS.enc.Base64
+        );
+        const decryptedArrayBuffer = base64js.toByteArray(decryptedBase64);
+        callback(new Blob([new Uint8Array(decryptedArrayBuffer)]));
       });
       reader.readAsArrayBuffer(blob);
     });

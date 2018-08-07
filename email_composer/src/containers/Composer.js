@@ -35,7 +35,8 @@ import {
 import { Map } from 'immutable';
 import {
   formFileParamsToDatabase,
-  getFileParamsToSend
+  getFileParamsToSend,
+  setCryptoInterfaces
 } from './../utils/FileUtils';
 import {
   fileManager,
@@ -46,6 +47,7 @@ import {
   FILE_PROGRESS
 } from './../utils/FileUtils';
 import { appDomain } from '../utils/const';
+import { generateKeyAndIv } from '../utils/AESUtils';
 
 const PrevMessage = props => (
   <div className="content-prev-message">{props.children}</div>
@@ -71,7 +73,9 @@ class ComposerWrapper extends Component {
       toEmails: [],
       displayNonCriptextPopup: false,
       nonCriptextRecipientsPassword: '',
-      nonCriptextRecipientsVerified: false
+      nonCriptextRecipientsVerified: false,
+      key: null,
+      iv: null
     };
   }
 
@@ -133,10 +137,13 @@ class ComposerWrapper extends Component {
         : Status.DISABLED;
       state = { ...composerData, status };
     }
-    await this.setState(state);
+    const { key, iv } = generateKeyAndIv(null, 8, null);
+    state = { ...state, key, iv };
     fileManager.on(FILE_PROGRESS, this.handleUploadProgress);
     fileManager.on(FILE_FINISH, this.handleUploadSuccess);
     fileManager.on(FILE_ERROR, this.handleUploadError);
+    setCryptoInterfaces(key, iv);
+    await this.setState(state);
   }
 
   getDefaultComposerWithSignature = async () => {
@@ -362,7 +369,6 @@ class ComposerWrapper extends Component {
     let emailId, key;
     try {
       [emailId] = await createEmail(data);
-
       const files = getFileParamsToSend(this.state.files);
       const peer = {
         recipientId: myAccount.recipientId,
@@ -379,7 +385,9 @@ class ComposerWrapper extends Component {
         body,
         files,
         peer,
-        externalEmailPassword
+        externalEmailPassword,
+        key: this.state.key,
+        iv: this.state.iv
       };
       const res = await signal.encryptPostEmail(params);
       const filesDbParams = formFileParamsToDatabase(this.state.files, emailId);

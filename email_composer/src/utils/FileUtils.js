@@ -1,4 +1,6 @@
 import FileManager from 'criptext-files-sdk';
+import CryptoJS from 'crypto-js';
+import base64js from 'base64-js';
 import { FILE_SERVER_APP_ID, FILE_SERVER_KEY } from './electronInterface';
 
 const MAX_REQUESTS = 5;
@@ -112,4 +114,25 @@ export const getFileParamsToSend = files => {
     size: file.fileData.size,
     mimeType: file.fileData.type
   }));
+};
+
+export const setCryptoInterfaces = (keyBase64, ivBase64) => {
+  fileManager.setCryptoInterfaces((blob, callback) => {
+    if (!keyBase64 || !ivBase64) {
+      return callback(blob);
+    }
+    const reader = new FileReader();
+    reader.addEventListener('loadend', () => {
+      const keyWordArray = CryptoJS.enc.Base64.parse(keyBase64);
+      const ivWordArray = CryptoJS.enc.Base64.parse(ivBase64);
+      const content = CryptoJS.lib.WordArray.create(reader.result);
+      const encryptedWordArray = CryptoJS.AES.encrypt(content, keyWordArray, {
+        iv: ivWordArray
+      });
+      const encryptedBase64 = encryptedWordArray.toString();
+      const encryptedArrayBuffer = base64js.toByteArray(encryptedBase64);
+      callback(new Blob([new Uint8Array(encryptedArrayBuffer)]));
+    });
+    reader.readAsArrayBuffer(blob);
+  }, null);
 };

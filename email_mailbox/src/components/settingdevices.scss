@@ -7,13 +7,16 @@
 
 .content-linked-devices {
   position: relative;
-  top: -10px;
+  top: -5px;
   .linked-device {
     display: flex;
     width: 97%;
     height: 45px;
-    border-bottom: 1px solid #e1e1e2;
     font-size: 13px;
+
+    &:hover{
+      background-color: #f7fbff;
+    }
 
     .device-icon {
       display: flex;

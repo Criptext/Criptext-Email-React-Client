@@ -4,11 +4,15 @@ import {
   findKeyBundles,
   getSessionRecordByRecipientIds,
   objectUtils,
-  postEmail,
-  AesCypher
+  postEmail
 } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
 import { CustomError } from './../utils/CustomError';
+import {
+  AesEncryptToBase64,
+  generateKeyAndIv,
+  base64ToWordArray
+} from '../utils/AESUtils';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -66,7 +70,8 @@ const createEmails = async (
   recipients,
   knownAddresses,
   keyBundleJSONbyRecipientIdAndDeviceId,
-  peer
+  peer,
+  fileKeyParams
 ) => {
   let result = [];
   for (const recipient of recipients) {
@@ -100,13 +105,26 @@ const createEmails = async (
             body,
             keyBundleArrayBuffer
           );
-          return {
+
+          const fileKey = fileKeyParams
+            ? await encryptText(
+                recipientId,
+                deviceId,
+                `${fileKeyParams.key}:${fileKeyParams.iv}`,
+                keyBundleArrayBuffer
+              )
+            : null;
+          let criptextEmail = {
             type,
             recipientId,
             deviceId,
             body: textEncrypted.body,
             messageType: textEncrypted.type
           };
+          if (fileKey) {
+            criptextEmail = { ...criptextEmail, fileKey: fileKey.body };
+          }
+          return criptextEmail;
         })
     );
     result = [...result, ...criptextEmail];
@@ -123,7 +141,9 @@ const encryptPostEmail = async ({
   threadId,
   files,
   peer,
-  externalEmailPassword
+  externalEmailPassword,
+  key,
+  iv
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const isSendToMySelf =
@@ -170,12 +190,14 @@ const encryptPostEmail = async ({
     },
     {}
   );
+  const fileKeyParams = files ? { key, iv } : null;
   const criptextEmails = await createEmails(
     body,
     recipients,
     knownAddresses,
     keyBundleJSONbyRecipientIdAndDeviceId,
-    peer
+    peer,
+    fileKeyParams
   );
 
   const allExternalRecipients = [
@@ -297,14 +319,14 @@ const encryptExternalEmail = async (body, password) => {
   );
 
   const saltLength = 8;
-  const aesSalt = AesCypher.generateRandomBytes(saltLength);
-  const key = AesCypher.generateKey(password, aesSalt);
-  const iv = AesCypher.generateRandomBytes(16);
+  const keyLength = 128 / 32;
+  const { key, iv } = generateKeyAndIv(password, saltLength, keyLength);
+  const keyArray = base64ToWordArray(key);
+  const ivArray = base64ToWordArray(iv);
   const sessionString = JSON.stringify(dummySession);
-  const encryptedSession = AesCypher.encrypt(sessionString, key, iv);
-
+  const session = AesEncryptToBase64(sessionString, keyArray, ivArray);
   return {
-    session: util.toBase64(encryptedSession.toString()),
+    session,
     encryptedBody: encryptedBody.body
   };
 };

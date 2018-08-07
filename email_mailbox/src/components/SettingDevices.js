@@ -13,54 +13,52 @@ const renderDevicesBlock = props => (
     <div className="section-block-content">
       <div className="section-block-content-item content-linked-devices">
         {props.devices.map((device, index) =>
-          renderLinkedDevice(index, device, props)
+          renderLinkedDevice(index, device)
         )}
       </div>
     </div>
   </div>
 );
 
-const renderLinkedDevice = (index, deviceData, props) => (
+const renderLinkedDevice = (index, deviceData) => (
   <div key={index} className="linked-device">
     <div className="device-icon">
       <i className={defineDeviceIconByType(deviceData.type)} />
     </div>
     <div className="device-name">{deviceData.name}</div>
     <div className="device-status">
-      {renderLastConnection(deviceData, props)}
+      {deviceData.isCurrentDevice ? (
+        <span className="current-device">Current device</span>
+      ) : (
+        renderLastConnection(deviceData.lastConnection)
+      )}
     </div>
   </div>
 );
 
 const defineDeviceIconByType = type => {
   switch (type) {
-    case deviceTypes.PC:
-      return 'icon-desktop';
-    case deviceTypes.PHONE:
+    case deviceTypes.IOS:
+      return 'icon-mobile';
+    case deviceTypes.ANDROID:
       return 'icon-mobile';
     default:
-      return '';
+      return 'icon-desktop';
   }
 };
 
-const renderLastConnection = (deviceData, props) => {
-  const isCurrentDevice = deviceData.name === props.currentDeviceName;
-  return isCurrentDevice ? (
-    <span className="current-device">Current device</span>
-  ) : (
+const renderLastConnection = lastConnection => {
+  const { place, time } = lastConnection;
+  return place && time ? (
     <div className="device-connection-data">
-      <span>{deviceData.lastConnection.place}</span>
-      <span>{deviceData.lastConnection.time}</span>
+      <span>{lastConnection.place}</span>
+      <span>{lastConnection.time}</span>
     </div>
-  );
+  ) : null;
 };
 
 renderDevicesBlock.propTypes = {
   devices: PropTypes.array
-};
-
-renderLastConnection.propTypes = {
-  currentDeviceName: PropTypes.string
 };
 
 export default SettingDevices;

@@ -19,7 +19,8 @@ describe('[Form outgoing email] ', () => {
       ccEmails: [`ccUser@${appDomain}`],
       bccEmails: [`bccUser@${appDomain}`],
       textSubject: 'Subject',
-      htmlBody: EditorState.createEmpty()
+      htmlBody: EditorState.createEmpty(),
+      files: []
     };
 
     const outgoingData = formOutgoingEmailFromData(composerData, labelId);

@@ -29,7 +29,7 @@ const defineFeedAction = feed => {
 
 const setFeedTitle = (state, feed) => {
   const feedContact = state.get('contacts').get(`${feed.get('contactId')}`);
-  if (!feedContact) return feed.set('title', '');
+  if (!feedContact) return feed.set('title', `A user ${feed.get('action')}`);
 
   const contactData = feedContact.toJS();
   const { name, email } = contactData;
@@ -38,12 +38,18 @@ const setFeedTitle = (state, feed) => {
 };
 
 const populateFeeds = (state, feeds) => {
-  return feeds.map(feed => {
-    feed = feed.set('isMuted', feed.get('emailData').get('isMuted'));
-    feed = setFeedTime(feed, 'date');
-    feed = defineFeedAction(feed);
-    return setFeedTitle(state, feed);
-  });
+  return feeds
+    .map(feed => {
+      const emailData = feed.get('emailData');
+      if (emailData) {
+        feed = feed.set('isMuted', emailData.get('isMuted'));
+        feed = setFeedTime(feed, 'date');
+        feed = defineFeedAction(feed);
+        return setFeedTitle(state, feed);
+      }
+      return null;
+    })
+    .filter(item => item !== null);
 };
 
 const mapStateToProps = state => {

@@ -56,6 +56,10 @@ class ClientManager {
     });
   }
 
+  getDevices() {
+    return client.getDevices();
+  }
+
   login(data) {
     return client.login(data);
   }
@@ -78,6 +82,10 @@ class ClientManager {
 
   postUser(params) {
     return client.postUser(params);
+  }
+
+  removeDevice(deviceId) {
+    return client.removeDevice(deviceId);
   }
 
   async updateName(data) {

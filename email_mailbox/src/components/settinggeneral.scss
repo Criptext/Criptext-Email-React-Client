@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .section-block-content {
   .section-block-content-item {
     width: 100%;
@@ -141,15 +143,23 @@
 }
 
 .content-logout-account {
-  i {
-    font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  .logout-account-icon {
+    width: 14px;
+    height: 12px;
+    background-position: center;
+    background-size: 100%;
+    background-image: url(../#{$_PATH_TO_IMAGES}/logout.png);
+    background-repeat: no-repeat;
   }
-  span {
+  .logout-label {
     font-size: 13px;
     font-weight: 600;
     color: #636363;
     position: relative;
-    bottom: 6px;
+    bottom: 2px;
+    left: 6px;
   }
 }
 

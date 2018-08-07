@@ -53,6 +53,10 @@ export const editDraftInComposer = data => {
   ipcRenderer.send('edit-draft', data);
 };
 
+export const logoutApp = () => {
+  ipcRenderer.send('logout-app');
+};
+
 export const openEmailInComposer = data => {
   ipcRenderer.send('edit-draft', data);
 };
@@ -67,6 +71,10 @@ export const acknowledgeEvents = eventIds => {
   return clientManager.acknowledgeEvents(eventIds);
 };
 
+export const getDevices = () => {
+  return clientManager.getDevices();
+};
+
 export const getEmailBody = params => {
   return clientManager.getEmailBody(params);
 };
@@ -77,6 +85,10 @@ export const getEvents = () => {
 
 export const postOpenEvent = params => {
   return clientManager.postOpenEvent(params);
+};
+
+export const removeDevice = deviceId => {
+  return clientManager.removeDevice(deviceId);
 };
 
 export const postPeerEvent = params => {
@@ -92,7 +104,12 @@ export const unsendEmailEvent = metadataKey => {
 };
 
 /* DataBase
-   ----------------------------- */
+  ----------------------------- */
+export const cleanDataBase = async () => {
+  await dbManager.cleanDataBase();
+  return dbManager.createTables();
+};
+
 export const createAccount = params => {
   return dbManager.createAccount(params);
 };
