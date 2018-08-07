@@ -138,25 +138,22 @@ const destroy = async ({ composerId, emailId }) => {
   const composer = BrowserWindow.fromId(composerId);
   const emailToEdit = globalManager.emailToEdit.get(composer.id);
   if (emailToEdit) {
-    const { type } = emailToEdit;
-    const isEditDraft = type === composerEvents.EDIT_DRAFT;
-    const isReplyOrReplyAll =
-      type === composerEvents.REPLY || type === composerEvents.REPLY_ALL;
-    if (isEditDraft) {
-      const [oldDraftEmail] = await dbManager.getEmailByKey(emailToEdit.key);
+    const { type, key, keyEmailToRespond } = emailToEdit;
+    if (type === composerEvents.EDIT_DRAFT) {
+      const [oldDraftEmail] = await dbManager.getEmailByKey(key);
       await dbManager.deleteEmailLabelAndContactByEmailId(
         oldDraftEmail.id,
         undefined
       );
       sendEventToMailbox('update-drafts', undefined);
-    }
-    if (isReplyOrReplyAll) {
-      const [emailResponded] = await dbManager.getEmailByKey(
-        emailToEdit.keyEmailToRespond
-      );
+    } else if (
+      type === composerEvents.REPLY ||
+      type === composerEvents.REPLY_ALL
+    ) {
+      const [emailResponded] = await dbManager.getEmailByKey(keyEmailToRespond);
       const dataToMailbox = {
         threadId: emailResponded.threadId,
-        emailId
+        newEmailId: emailId
       };
       sendEventToMailbox('update-thread-emails', dataToMailbox);
     }
@@ -176,14 +173,24 @@ const sendEventToMailbox = (eventName, data) => {
 
 const saveDraftToDatabase = async (composerId, dataDraft) => {
   const emailToEdit = globalManager.emailToEdit.get(composerId);
-  if (!emailToEdit || emailToEdit.type !== composerEvents.EDIT_DRAFT) {
+  const { type, key } = emailToEdit;
+  if (!emailToEdit || type !== composerEvents.EDIT_DRAFT) {
     await dbManager.createEmail(dataDraft);
   } else {
-    const [prevEmail] = await dbManager.getEmailByKey(emailToEdit.key);
-    await dbManager.deleteEmailLabelAndContactByEmailId(
-      prevEmail.id,
+    const [oldEmail] = await dbManager.getEmailByKey(key);
+    const newEmailId = await dbManager.deleteEmailLabelAndContactByEmailId(
+      oldEmail.id,
       dataDraft
     );
+    if (type === composerEvents.EDIT_DRAFT && dataDraft.email.threadId) {
+      const dataToMailbox = {
+        threadId: oldEmail.threadId,
+        newEmailId,
+        oldEmailId: oldEmail.id
+      };
+      sendEventToMailbox('update-thread-emails', dataToMailbox);
+      return;
+    }
   }
   sendEventToMailbox('update-drafts', undefined);
 };

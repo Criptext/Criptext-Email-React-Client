@@ -4,6 +4,42 @@ import * as StringUtils from '../utils/StringUtils';
 
 const threads = (state = List([]), action) => {
   switch (action.type) {
+    case Thread.ADD_EMAILID_THREAD: {
+      const { threadId, emailId } = action;
+      if (!threadId || !emailId) {
+        return state;
+      }
+      return state.map(threadItem => {
+        if (threadItem.get('id') === threadId) {
+          return thread(threadItem, action);
+        }
+        return threadItem;
+      });
+    }
+    case Thread.REMOVE_EMAILID_THREAD: {
+      const { threadId, emailId } = action;
+      if (!threadId || !emailId) {
+        return state;
+      }
+      return state.map(threadItem => {
+        if (threadItem.get('id') === threadId) {
+          return thread(threadItem, action);
+        }
+        return threadItem;
+      });
+    }
+    case Thread.UPDATE_STATUS_THREAD: {
+      const { status, threadId } = action;
+      if (!threadId || !status) {
+        return state;
+      }
+      return state.map(threadItem => {
+        if (threadItem.get('id') === threadId) {
+          return thread(threadItem, action);
+        }
+        return threadItem;
+      });
+    }
     case Thread.UPDATE_UNREAD_THREAD: {
       const threadId = action.thread.id;
       return state.update(
@@ -53,7 +89,7 @@ const threads = (state = List([]), action) => {
       }
       return state.concat(List(threads));
     }
-    case Thread.ADD_THREAD_LABEL: {
+    case Thread.ADD_LABEL_THREAD: {
       return state.update(
         state.findIndex(thread => {
           return thread.get('id') === action.targetThread;
@@ -65,7 +101,7 @@ const threads = (state = List([]), action) => {
         }
       );
     }
-    case Thread.ADD_THREADS_LABEL: {
+    case Thread.ADD_LABEL_THREADS: {
       return state.map(thread => {
         if (!action.threadIds.includes(thread.get('id'))) {
           return thread;
@@ -75,7 +111,7 @@ const threads = (state = List([]), action) => {
         return thread.merge({ allLabels, labels });
       });
     }
-    case Thread.REMOVE_LABEL: {
+    case Thread.REMOVE_LABEL_THREAD: {
       return state.update(
         state.findIndex(thread => thread.get('id') === action.targetThread),
         thread => {
@@ -90,7 +126,7 @@ const threads = (state = List([]), action) => {
         thread => !action.threadsIds.includes(thread.get('id'))
       );
     }
-    case Thread.REMOVE_THREADS_LABEL: {
+    case Thread.REMOVE_LABEL_THREADS: {
       return state.map(thread => {
         if (!action.threadsIds.includes(thread.get('id'))) {
           return thread;
@@ -111,7 +147,7 @@ const threads = (state = List([]), action) => {
     case Thread.UNREAD_FILTER: {
       return state.map(thread => thread.set('selected', false));
     }
-    case Thread.REMOVE: {
+    case Thread.REMOVE_THREAD: {
       return state.filterNot(
         thread => thread.get('id') === action.targetThread
       );
@@ -126,30 +162,6 @@ const threads = (state = List([]), action) => {
       const threadIds = action.threadIds;
       return state.filterNot(thread => threadIds.includes(thread.get('id')));
     }
-    case Thread.ADD_EMAIL: {
-      const { threadId, emailId } = action;
-      if (!threadId || !emailId) {
-        return state;
-      }
-      return state.map(threadItem => {
-        if (threadItem.get('id') === threadId) {
-          return thread(threadItem, action);
-        }
-        return threadItem;
-      });
-    }
-    case Thread.UPDATE_STATUS: {
-      const { status, threadId } = action;
-      if (!threadId || !status) {
-        return state;
-      }
-      return state.map(threadItem => {
-        if (threadItem.get('id') === threadId) {
-          return thread(threadItem, action);
-        }
-        return threadItem;
-      });
-    }
     default:
       return state;
   }
@@ -157,14 +169,20 @@ const threads = (state = List([]), action) => {
 
 const thread = (state, action) => {
   switch (action.type) {
-    case Thread.UPDATE_UNREAD_THREAD: {
-      return state.set('unread', action.thread.unread);
-    }
-    case Thread.ADD_EMAIL: {
+    case Thread.ADD_EMAILID_THREAD: {
       return state.set('emailIds', state.get('emailIds').push(action.emailId));
     }
-    case Thread.UPDATE_STATUS: {
+    case Thread.REMOVE_EMAILID_THREAD: {
+      return state.set(
+        'emailIds',
+        state.get('emailIds').filter(emailId => emailId !== action.emailId)
+      );
+    }
+    case Thread.UPDATE_STATUS_THREAD: {
       return state.set('status', action.status);
+    }
+    case Thread.UPDATE_UNREAD_THREAD: {
+      return state.set('unread', action.thread.unread);
     }
     default:
       return state;

@@ -46,7 +46,7 @@ class PanelWrapper extends Component {
       if (isRenderingThread) {
         const newThreadId = emailParams.threadId;
         props.onLoadEmails(newThreadId);
-        props.onAddEmailToThread({
+        props.onAddEmailIdToThread({
           threadId: this.state.sectionSelected.params.threadIdSelected,
           emailId: emailParams.emailId
         });
@@ -90,13 +90,22 @@ class PanelWrapper extends Component {
     });
 
     addEvent(Event.UPDATE_THREAD_EMAILS, eventParams => {
-      const { threadId } = eventParams;
+      const { threadId, newEmailId, oldEmailId } = eventParams;
+      const currentThreadId = this.state.sectionSelected.params
+        .threadIdSelected;
       props.onLoadEmails(threadId);
-      props.onAddEmailToThread({
-        threadId: this.state.sectionSelected.params.threadIdSelected,
-        emailId: eventParams.emailId
+      props.onAddEmailIdToThread({
+        threadId: currentThreadId,
+        emailId: newEmailId
       });
-      props.onUpdateUnreadEmails();
+      if (oldEmailId) {
+        props.onRemoveEmailIdToThread({
+          threadId: currentThreadId,
+          emailId: oldEmailId
+        });
+      } else if (!newEmailId && !oldEmailId) {
+        props.onUpdateUnreadEmails();
+      }
     });
   }
 
@@ -197,10 +206,11 @@ class PanelWrapper extends Component {
 }
 
 PanelWrapper.propTypes = {
-  onAddEmailToThread: PropTypes.func,
+  onAddEmailIdToThread: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onMarkThreadAsOpen: PropTypes.func,
   onLoadThreads: PropTypes.func,
+  onRemoveEmailIdToThread: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,
   onUpdateTimestamp: PropTypes.func,

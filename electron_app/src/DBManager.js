@@ -607,7 +607,8 @@ const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
     await deleteEmailContactByEmailId(id, trx);
     await deleteEmailLabelsByEmailId(id, trx);
     if (optionalEmailToSave) {
-      await createEmail(optionalEmailToSave, trx);
+      const [emailId] = await createEmail(optionalEmailToSave, trx);
+      return emailId;
     }
   });
 };

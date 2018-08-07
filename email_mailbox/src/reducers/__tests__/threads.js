@@ -34,7 +34,7 @@ describe('Set thread state by actions', () => {
     expect(unread).toBe(false);
   });
 
-  it('should set thread param: status, action[UPDATE_STATUS]', () => {
+  it('should set thread param: status, action[UPDATE_STATUS_THREAD]', () => {
     const state = initState(threads);
     const threadId = 1;
     const newStatus = 2;
@@ -45,7 +45,7 @@ describe('Set thread state by actions', () => {
     expect(status).toBe(newStatus);
   });
 
-  it('should not set thread param status because is undefined, action[UPDATE_STATUS]', () => {
+  it('should not set thread param status because is undefined, action[UPDATE_STATUS_THREAD]', () => {
     const state = initState(threads);
     const threadId = 1;
     const badStatus = undefined;

@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import {
-  addEmailToThread,
+  addEmailIdToThread,
   loadThreads,
+  removeEmailIdToThread,
   updateLabelSuccess,
   updateAllFeedItemsAsOlder,
   loadEmails,
@@ -45,8 +46,8 @@ const defineRejectedLabels = labelId => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddEmailToThread: ({ threadId, emailId }) => {
-      dispatch(addEmailToThread({ threadId, emailId }));
+    onAddEmailIdToThread: ({ threadId, emailId }) => {
+      dispatch(addEmailIdToThread({ threadId, emailId }));
     },
     onLoadEmails: threadId => {
       dispatch(loadEmails(threadId));
@@ -60,6 +61,9 @@ const mapDispatchToProps = dispatch => {
     onMarkThreadAsOpen: threadId => {
       const openedStatus = EmailStatus.OPENED;
       dispatch(updateStatusThread(threadId, openedStatus));
+    },
+    onRemoveEmailIdToThread: ({ threadId, emailId }) => {
+      dispatch(removeEmailIdToThread({ threadId, emailId }));
     },
     onUpdateOpenedAccount: async () => {
       const opened = true;

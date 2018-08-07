@@ -270,8 +270,12 @@ ipcRenderer.on('failed-to-send', () => {
 });
 
 ipcRenderer.on('update-thread-emails', (ev, data) => {
-  const { threadId, emailId } = data;
-  emitter.emit(Event.UPDATE_THREAD_EMAILS, { threadId, emailId });
+  const { threadId, newEmailId, oldEmailId } = data;
+  emitter.emit(Event.UPDATE_THREAD_EMAILS, {
+    threadId,
+    newEmailId,
+    oldEmailId
+  });
 });
 
 export const addEvent = (eventName, callback) => {

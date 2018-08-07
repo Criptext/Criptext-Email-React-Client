@@ -16,10 +16,91 @@ import {
 import { storeValue } from './../utils/storage';
 import { handleEvent } from './../utils/electronEventInterface';
 
+export const addEmailIdToThread = ({ threadId, emailId }) => ({
+  type: Thread.ADD_EMAILID_THREAD,
+  threadId,
+  emailId
+});
+
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
   threads: threads,
   clear: clear
+});
+
+export const addThreadLabelSuccess = (threadId, label) => ({
+  type: Thread.ADD_LABEL_THREAD,
+  targetThread: threadId,
+  label: label
+});
+
+export const addThreadsLabelSuccess = (threadIds, label) => ({
+  type: Thread.ADD_LABEL_THREADS,
+  threadIds,
+  label
+});
+
+export const filterThreadsByUnread = enabled => ({
+  type: Thread.UNREAD_FILTER,
+  enabled: enabled
+});
+
+export const moveThreads = (threadIds, labelId) => ({
+  type: Thread.MOVE_THREADS,
+  threadIds,
+  labelId
+});
+
+export const removeEmailIdToThread = ({ threadId, emailId }) => ({
+  type: Thread.REMOVE_EMAILID_THREAD,
+  threadId,
+  emailId
+});
+
+export const removeThread = threadId => ({
+  type: Thread.REMOVE_THREAD,
+  targetThread: threadId
+});
+
+export const removeThreadsSuccess = threadsIds => ({
+  type: Thread.REMOVE_THREADS,
+  threadsIds
+});
+
+export const removeThreadLabelSuccess = (threadId, label) => ({
+  type: Thread.REMOVE_LABEL_THREAD,
+  targetThread: threadId,
+  label: label
+});
+
+export const removeThreadsLabelSuccess = (threadId, label) => ({
+  type: Thread.REMOVE_LABEL_THREADS,
+  threadsIds: threadId,
+  label: label
+});
+
+export const selectThread = threadId => ({
+  type: Thread.SELECT,
+  threadId: threadId
+});
+
+export const updateStatusThread = (threadId, status) => ({
+  type: Thread.UPDATE_STATUS_THREAD,
+  threadId,
+  status
+});
+
+export const updateUnreadThread = thread => {
+  return {
+    type: Thread.UPDATE_UNREAD_THREAD,
+    thread
+  };
+};
+
+export const updateUnreadThreadsSuccess = (threadsIds, read) => ({
+  threadsIds,
+  read,
+  type: Thread.UPDATE_UNREAD_THREADS
 });
 
 export const addMoveThreadsLabel = ({ threadsParams, labelId, notMove }) => {
@@ -42,84 +123,6 @@ export const addMoveThreadsLabel = ({ threadsParams, labelId, notMove }) => {
     }
   };
 };
-
-export const selectThread = threadId => ({
-  type: Thread.SELECT,
-  threadId: threadId
-});
-
-export const filterThreadsByUnread = enabled => ({
-  type: Thread.UNREAD_FILTER,
-  enabled: enabled
-});
-
-export const addThreadLabelSuccess = (threadId, label) => ({
-  type: Thread.ADD_THREAD_LABEL,
-  targetThread: threadId,
-  label: label
-});
-
-export const addThreadsLabelSuccess = (threadIds, label) => ({
-  type: Thread.ADD_THREADS_LABEL,
-  threadIds,
-  label
-});
-
-export const removeThreadLabelSuccess = (threadId, label) => ({
-  type: Thread.REMOVE_LABEL,
-  targetThread: threadId,
-  label: label
-});
-
-export const removeThreadsLabelSuccess = (threadId, label) => ({
-  type: Thread.REMOVE_THREADS_LABEL,
-  threadsIds: threadId,
-  label: label
-});
-
-export const removeThread = threadId => ({
-  type: Thread.REMOVE,
-  targetThread: threadId
-});
-
-export const removeThreadsOnSuccess = threadsIds => ({
-  type: Thread.REMOVE_THREADS,
-  threadsIds
-});
-
-export const deselectThreads = spread => ({
-  type: Thread.DESELECT_THREADS,
-  spread
-});
-
-export const selectThreads = () => ({
-  type: Thread.SELECT_THREADS
-});
-
-export const moveThreads = (threadIds, labelId) => ({
-  type: Thread.MOVE_THREADS,
-  threadIds,
-  labelId
-});
-
-export const updateStatusThread = (threadId, status) => ({
-  type: Thread.UPDATE_STATUS,
-  threadId,
-  status
-});
-
-export const updateUnreadThread = thread => {
-  return {
-    type: Thread.UPDATE_UNREAD_THREAD,
-    thread
-  };
-};
-
-export const updateUnreadThreadsSuccess = (threadsIds, read) => ({
-  threadsIds,
-  read,
-  type: Thread.UPDATE_UNREAD_THREADS
-});
 
 export const updateUnreadThreads = (threadsParams, read, label) => {
   return async dispatch => {
@@ -195,7 +198,7 @@ export const removeThreads = (threadsParams, isDraft) => {
         ? await deleteEmailsByIds(storeIds)
         : await deleteEmailsByThreadId(threadIds);
       if (dbResponse) {
-        dispatch(removeThreadsOnSuccess(storeIds));
+        dispatch(removeThreadsSuccess(storeIds));
       }
     } catch (e) {
       /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
@@ -234,22 +237,6 @@ export const removeThreadLabel = (threadParams, labelId) => {
     } catch (e) {
       // TO DO
     }
-  };
-};
-
-const formAddThreadLabelParams = (emails, labelId) => {
-  return emails.map(email => {
-    return {
-      emailId: email.id,
-      labelId
-    };
-  });
-};
-
-const formRemoveThreadLabelParams = (emails, labelId) => {
-  return {
-    emailsId: emails.map(email => email.id),
-    labelId
   };
 };
 
@@ -309,8 +296,18 @@ export const sendOpenEvent = threadId => {
   };
 };
 
-export const addEmailToThread = ({ threadId, emailId }) => ({
-  type: Thread.ADD_EMAIL,
-  threadId,
-  emailId
-});
+const formAddThreadLabelParams = (emails, labelId) => {
+  return emails.map(email => {
+    return {
+      emailId: email.id,
+      labelId
+    };
+  });
+};
+
+const formRemoveThreadLabelParams = (emails, labelId) => {
+  return {
+    emailsId: emails.map(email => email.id),
+    labelId
+  };
+};
