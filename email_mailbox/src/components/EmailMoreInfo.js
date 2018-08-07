@@ -28,30 +28,6 @@ const EmailMoreInfo = props => (
             <span className="text">{props.subject}</span>
           </td>
         </tr>
-        <tr>
-          <td>
-            <span className="title">Security:</span>
-          </td>
-          <td>
-            <span className="text">TLS - Standard Encryption</span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span className="title">Mailed-by:</span>
-          </td>
-          <td>
-            <span className="text">protonmail.com</span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span className="title">Signed-by:</span>
-          </td>
-          <td>
-            <span className="text">protonmail.com</span>
-          </td>
-        </tr>
       </tbody>
     </table>
   </div>

@@ -64,7 +64,7 @@ const mapStateToProps = (state, ownProps) => {
     myAccount.name
   );
   const firstRecipient = getFirstRecipient(formattedRecipients);
-  const letters = getTwoCapitalLetters(firstRecipient);
+  const letters = getTwoCapitalLetters(firstRecipient, 'D');
   const color = randomcolor({
     seed: firstRecipient,
     luminosity: 'bright'
@@ -87,8 +87,9 @@ const mapStateToProps = (state, ownProps) => {
     thread: thread.toJS(),
     color,
     multiselect: state.get('activities').get('multiselect'),
-    starred: thread.get('allLabels').contains(LabelType.starred.id),
+    isStarred: thread.get('allLabels').contains(LabelType.starred.id),
     important: thread.get('allLabels').contains(LabelType.important.id),
+    isDraft: thread.get('allLabels').contains(LabelType.draft.id),
     labels,
     letters,
     recipients: formattedRecipients
@@ -113,10 +114,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
         }
         case LabelType.draft.id: {
-          openEmailInComposer({
-            key: thread.key,
-            type: composerEvents.EDIT_DRAFT
-          });
+          if (threadIdDb) {
+            ownProps.onClickSelectedItem(type, params);
+          } else {
+            openEmailInComposer({
+              key: thread.key,
+              type: composerEvents.EDIT_DRAFT
+            });
+          }
           break;
         }
         case LabelType.allmail.id: {

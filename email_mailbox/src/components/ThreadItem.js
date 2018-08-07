@@ -11,6 +11,7 @@ class ThreadItem extends Component {
     const visibleStyle = this.getStyleVisibilityByMultiselect();
     const {
       checked,
+      isDraft,
       thread,
       onRegionEnter,
       onRegionLeave,
@@ -38,7 +39,17 @@ class ThreadItem extends Component {
             {this.renderFirstColumn()}
           </div>
           <div className="thread-item-recipients">
-            <span>{recipients}</span>
+            {thread.threadId && isDraft ? (
+              <span>
+                {recipients}
+                &nbsp;
+                {this.renderDraftText()}
+              </span>
+            ) : isDraft ? (
+              this.renderDraftText()
+            ) : (
+              <span>{recipients}</span>
+            )}
           </div>
           <div className="thread-item-status">
             {this.renderThreadStatus(thread.status)}
@@ -81,6 +92,8 @@ class ThreadItem extends Component {
       </div>
     );
   };
+
+  renderDraftText = () => <span className="draft-status">Draft</span>;
 
   renderThreadStatus = status => {
     switch (status) {
@@ -152,7 +165,7 @@ class ThreadItem extends Component {
           targetId={`starred${threadId}`}
           tip="Favorite"
           icon="icon-star-fill"
-          myClass={this.props.starred ? 'thread-label-mark' : ''}
+          myClass={this.props.isStarred ? 'thread-label-mark' : ''}
           onClick={this.onToggleFavorite}
           onMouseEnterItem={this.props.onMouseEnterItem}
           onMouseLeaveItem={this.props.onMouseLeaveItem}
@@ -248,7 +261,9 @@ ThreadItem.propTypes = {
   checked: PropTypes.bool,
   hovering: PropTypes.bool,
   important: PropTypes.bool,
+  isDraft: PropTypes.bool,
   isHiddenCheckBox: PropTypes.bool,
+  isStarred: PropTypes.bool,
   isVisibleMoveToTrash: PropTypes.bool,
   labels: PropTypes.array,
   letters: PropTypes.string,
@@ -264,7 +279,6 @@ ThreadItem.propTypes = {
   onSelectThread: PropTypes.func,
   recipients: PropTypes.string,
   searchParams: PropTypes.object,
-  starred: PropTypes.bool,
   thread: PropTypes.object
 };
 

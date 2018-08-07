@@ -173,8 +173,8 @@ const sendEventToMailbox = (eventName, data) => {
 
 const saveDraftToDatabase = async (composerId, dataDraft) => {
   const emailToEdit = globalManager.emailToEdit.get(composerId);
-  const { type, key } = emailToEdit;
-  if (!emailToEdit || type !== composerEvents.EDIT_DRAFT) {
+  const { type, key } = emailToEdit || {};
+  if ((!type && !key) || type !== composerEvents.EDIT_DRAFT) {
     await dbManager.createEmail(dataDraft);
   } else {
     const [oldEmail] = await dbManager.getEmailByKey(key);

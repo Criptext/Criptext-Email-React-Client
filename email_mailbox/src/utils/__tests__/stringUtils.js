@@ -34,4 +34,11 @@ describe('string utils:', () => {
     const state = utils.toLowerCaseWithoutSpaces(string);
     expect(state).toEqual('allmail');
   });
+
+  it('return default string from empty string', () => {
+    const string = '';
+    const stringDefault = 'A';
+    const state = utils.getTwoCapitalLetters(string, stringDefault);
+    expect(state).toEqual(stringDefault);
+  });
 });

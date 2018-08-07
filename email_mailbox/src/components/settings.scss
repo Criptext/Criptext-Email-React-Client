@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: auto;
+  position: relative;
 
   &::-webkit-scrollbar-track{
     background-color: rgba(233, 233, 233, 0.76);
@@ -30,10 +30,10 @@
   .settings-content{
     background-color: white;
     box-shadow: 0 2px 10px 0 rgba(0, 0, 1, 0.09);
+    height: calc(100% - 105px);
     margin: 4px 20px 0;
+    position: relative;
     width: calc(100% - 40px);
-    height: 100%;
-    margin-bottom: 80px;
 
     .settings-content-items{
       border-bottom: 1px solid #d8d8d8;
@@ -42,6 +42,11 @@
       list-style: none;
       margin: 0;
       padding: 0;
+    }
+
+    .settings-content-scroll{
+      height: calc(100% - 35px);
+      overflow-y: auto;
     }
   }
 }

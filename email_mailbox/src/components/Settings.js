@@ -23,7 +23,7 @@ const Settings = props => (
           />
         ))}
       </ul>
-      {renderSection(props)}
+      <div className="settings-content-scroll">{renderSection(props)}</div>
     </div>
   </div>
 );
