@@ -83,9 +83,6 @@ class HeaderThreadOptions extends Component {
             <li onClick={() => this.props.onClickMarkAsRead()}>
               <span>{markAsUnread ? 'Mark as Unread' : 'Mark as Read'}</span>
             </li>
-            <li>
-              <span>Mark as Important</span>
-            </li>
           </ul>
         </TooltipMenu>
       </div>

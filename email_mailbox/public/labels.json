@@ -35,12 +35,6 @@
     {
       "id": 6,
       "color": "#ffffff",
-      "text": "Important",
-      "visible": 1
-    },
-    {
-      "id": 7,
-      "color": "#ffffff",
       "text": "Starred",
       "visible": 1
     },

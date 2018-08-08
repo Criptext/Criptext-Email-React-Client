@@ -22,16 +22,8 @@ const sent = {
   visible: true
 };
 
-const important = {
-  id: 4,
-  text: 'Important',
-  color: '#ffdf32',
-  type: 'system',
-  visible: true
-};
-
 const starred = {
-  id: 5,
+  id: 4,
   text: 'Starred',
   color: '#ffce4b',
   type: 'system',
@@ -39,7 +31,7 @@ const starred = {
 };
 
 const draft = {
-  id: 6,
+  id: 5,
   text: 'Draft',
   color: '#666666',
   type: 'system',
@@ -47,7 +39,7 @@ const draft = {
 };
 
 const trash = {
-  id: 7,
+  id: 6,
   text: 'Trash',
   color: '#b00e0e',
   type: 'system',
@@ -58,7 +50,6 @@ module.exports = {
   inbox,
   spam,
   sent,
-  important,
   starred,
   draft,
   trash

@@ -260,7 +260,6 @@ ThreadItem.propTypes = {
   color: PropTypes.string,
   checked: PropTypes.bool,
   hovering: PropTypes.bool,
-  important: PropTypes.bool,
   isDraft: PropTypes.bool,
   isHiddenCheckBox: PropTypes.bool,
   isStarred: PropTypes.bool,

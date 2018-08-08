@@ -88,7 +88,6 @@ const mapStateToProps = (state, ownProps) => {
     color,
     multiselect: state.get('activities').get('multiselect'),
     isStarred: thread.get('allLabels').contains(LabelType.starred.id),
-    important: thread.get('allLabels').contains(LabelType.important.id),
     isDraft: thread.get('allLabels').contains(LabelType.draft.id),
     labels,
     letters,
