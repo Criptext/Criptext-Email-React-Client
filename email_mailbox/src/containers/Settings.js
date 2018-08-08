@@ -3,16 +3,18 @@ import randomcolor from 'randomcolor';
 import SettingsWrapper from './../components/SettingsWrapper';
 import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
-  myAccount,
-  updateAccount,
-  LabelType,
-  removeDevice,
-  updateNameEvent,
   cleanDataBase,
+  composerEvents,
+  getDevices,
+  LabelType,
   logoutApp,
-  getDevices
+  myAccount,
+  openEmailInComposer,
+  removeDevice,
+  updateAccount,
+  updateNameEvent
 } from '../utils/electronInterface';
-import { SocketCommand } from '../utils/const';
+import { appDomain, SocketCommand } from '../utils/const';
 
 const defineSystemLabels = labelsArray => {
   return labelsArray.filter(label => {
@@ -54,6 +56,17 @@ const mapDispatchToProps = dispatch => {
         };
         dispatch(addLabel(label));
       }
+    },
+    onComposeContactSupportEmail: () => {
+      openEmailInComposer({
+        type: composerEvents.NEW_WITH_DATA,
+        data: {
+          email: { subject: 'Customer Support - Desktop' },
+          recipients: {
+            to: { name: 'Contact Support', email: `support@${appDomain}` }
+          }
+        }
+      });
     },
     onGetDevices: async () => {
       const res = await getDevices();

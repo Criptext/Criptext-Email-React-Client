@@ -104,7 +104,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch(addThreadLabel(threadParams, labelId));
       }
     },
-    onUpdateUnreadEmails: (thread, unread) => {
+    onUpdateUnreadEmailsBadge: (thread, unread) => {
       const paramsThread = {
         id: thread.threadId,
         unread
@@ -114,7 +114,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         labelId === LabelType.inbox.id || labelId === LabelType.spam.id
           ? {
               id: labelId,
-              badgeOperation: -1
+              operation: 'less',
+              value: 1
             }
           : null;
 

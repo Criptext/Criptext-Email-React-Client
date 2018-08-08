@@ -49,9 +49,10 @@ const dialogTemplate = {
 
 const composerEvents = {
   EDIT_DRAFT: 'edit-draft',
+  FORWARD: 'forward',
   REPLY: 'reply',
   REPLY_ALL: 'reply-all',
-  FORWARD: 'forward'
+  NEW_WITH_DATA: 'new-with-data'
 };
 
 const openNewComposer = async () => {
@@ -145,7 +146,7 @@ const destroy = async ({ composerId, emailId }) => {
         oldDraftEmail.id,
         undefined
       );
-      sendEventToMailbox('update-drafts', undefined);
+      sendEventToMailbox('update-drafts', { operation: 'less', value: 1 });
     } else if (
       type === composerEvents.REPLY ||
       type === composerEvents.REPLY_ALL
@@ -174,8 +175,10 @@ const sendEventToMailbox = (eventName, data) => {
 const saveDraftToDatabase = async (composerId, dataDraft) => {
   const emailToEdit = globalManager.emailToEdit.get(composerId);
   const { type, key } = emailToEdit || {};
+  let badgeOperation = {};
   if ((!type && !key) || type !== composerEvents.EDIT_DRAFT) {
     await dbManager.createEmail(dataDraft);
+    badgeOperation = { operation: 'add', value: 1 };
   } else {
     const [oldEmail] = await dbManager.getEmailByKey(key);
     const newEmailId = await dbManager.deleteEmailLabelAndContactByEmailId(
@@ -192,7 +195,7 @@ const saveDraftToDatabase = async (composerId, dataDraft) => {
       return;
     }
   }
-  sendEventToMailbox('update-drafts', undefined);
+  sendEventToMailbox('update-drafts', badgeOperation);
 };
 
 module.exports = {

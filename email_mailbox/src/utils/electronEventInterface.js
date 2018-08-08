@@ -246,8 +246,8 @@ const setEventAsHandled = async eventId => {
 /* Window events
   ----------------------------- */
 
-ipcRenderer.on('update-drafts', () => {
-  emitter.emit(Event.UPDATE_SAVED_DRAFTS);
+ipcRenderer.on('update-drafts', (ev, data) => {
+  emitter.emit(Event.UPDATE_SAVED_DRAFTS, data);
 });
 
 ipcRenderer.on('display-message-email-sent', (ev, { emailId }) => {

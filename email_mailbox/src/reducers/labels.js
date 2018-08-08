@@ -26,7 +26,14 @@ const labels = (state = new Map({}), action) => {
 
 const label = (state, action) => {
   switch (action.type) {
-    case Label.UPDATE_SUCCESS:
+    case Label.UPDATE_SUCCESS: {
+      let badge = state.get('badge');
+      if (action.label.operation === 'add') {
+        badge = state.get('badge') + action.label.value;
+      } else if (action.label.operation === 'less') {
+        badge = state.get('badge') - action.label.value;
+      }
+
       return state.merge({
         color: action.label.color ? action.label.color : state.get('color'),
         text: action.label.text ? action.label.text : state.get('text'),
@@ -34,10 +41,9 @@ const label = (state, action) => {
           action.label.visible !== undefined
             ? action.label.visible
             : state.get('visible'),
-        badge: action.label.badgeOperation
-          ? state.get('badge') + action.label.badgeOperation
-          : state.get('badge')
+        badge
       });
+    }
     default:
       return state;
   }

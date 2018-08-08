@@ -74,7 +74,16 @@ const mapDispatchToProps = dispatch => {
     onUpdateUnreadEmails: () => {
       const label = {
         id: LabelType.inbox.id,
-        badgeOperation: +1
+        operation: 'add',
+        value: 1
+      };
+      dispatch(updateLabelSuccess(label));
+    },
+    onUpdateUnreadDraftBadge: ({ operation, value }) => {
+      const label = {
+        id: LabelType.draft.id,
+        operation,
+        value
       };
       dispatch(updateLabelSuccess(label));
     },
