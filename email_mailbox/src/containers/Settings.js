@@ -63,11 +63,11 @@ const mapDispatchToProps = dispatch => {
       const recipientId = myAccount.recipientId;
       const { name } = params;
       if (name) {
-        const { status } = await updateNameEvent({
+        const res = await updateNameEvent({
           cmd: SocketCommand.PEER_USER_NAME_CHANGED,
           params: { name }
         });
-        if (status === 200) {
+        if (res.status === 200) {
           await updateAccount({ ...params, recipientId });
         }
       } else {

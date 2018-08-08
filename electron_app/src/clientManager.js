@@ -1,7 +1,6 @@
 const ClientAPI = require('@criptext/email-http-client');
 const { PROD_SERVER_URL } = require('./utils/consts');
-const { getAccount, updateAccount } = require('./DBManager');
-const myAccount = require('./Account');
+const { getAccount } = require('./DBManager');
 let client = {};
 
 const checkClient = async () => {
@@ -90,9 +89,7 @@ class ClientManager {
 
   async updateName(data) {
     const { name } = data.params;
-    const { text } = await client.updateName(name);
-    const { recipientId } = myAccount;
-    await updateAccount({ recipientId, jwt: text });
+    await client.updateName(name);
     return client.postPeerEvent(data);
   }
 
