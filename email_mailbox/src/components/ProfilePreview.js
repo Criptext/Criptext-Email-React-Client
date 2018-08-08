@@ -21,9 +21,6 @@ const ProfilePreview = props => (
         <i className="icon-settings" />
         <span>Settings</span>
       </button>
-      <button className="button-b">
-        <span>Sign Out</span>
-      </button>
     </div>
   </div>
 );

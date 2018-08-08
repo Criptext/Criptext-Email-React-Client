@@ -1,4 +1,4 @@
-const { BrowserWindow } = require('electron');
+const { BrowserWindow, shell } = require('electron');
 const path = require('path');
 const { loginUrl } = require('./../window_routing');
 let loginWindow;
@@ -28,6 +28,10 @@ const create = () => {
   loginWindow.setResizable(false);
   loginWindow.on('closed', () => {
     loginWindow = undefined;
+  });
+  loginWindow.webContents.on('new-window', (e, url) => {
+    e.preventDefault();
+    shell.openExternal(url);
   });
 };
 

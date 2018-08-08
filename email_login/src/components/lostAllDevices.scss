@@ -39,14 +39,14 @@
       width: 80%;
       float: right;
       .icon {
-        height: 25px;
+        height: 33px;
         width: 96px;
         float: right;
         position: relative;
         top: calc(50% - 12px);
         right: 20px;
         color: #ffffff;
-        background-image: url(../#{$_PATH_TO_IMAGES}/logo-criptext@2x.png);
+        background-image: url(../#{$_PATH_TO_IMAGES}/icon-beta.svg);
         background-position: center;
         background-size: 100%;
       }
