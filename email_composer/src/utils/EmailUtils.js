@@ -234,3 +234,10 @@ export const formNewEmailFromData = data => {
     textSubject: data.email.subject
   };
 };
+
+export const parseEmailAddress = emailAddressObject => {
+  const email = emailAddressObject.email || emailAddressObject;
+  const isEmailAddressFromAppDomain = email.indexOf(`@${appDomain}`) > 0;
+  const parsedEmail = isEmailAddressFromAppDomain ? email.toLowerCase() : email;
+  return { name: emailAddressObject.name, email: parsedEmail };
+};

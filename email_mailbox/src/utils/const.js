@@ -1,6 +1,6 @@
 import { LabelType } from './electronInterface';
 
-export const appDomain = 'jigl.com';
+export const appDomain = 'criptext.com';
 
 export const unsentText = 'This content was unsent';
 

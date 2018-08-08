@@ -20,11 +20,12 @@ const TagRecipient = props => {
   const formattedTag =
     !name && !email ? { name: tag, email: tag } : { name, email };
 
+  const isEmailAddressFromAppDomain =
+    formattedTag.email.indexOf(`@${appDomain}`) > 0;
+
   const isValidEmailAddress = emailRegex.test(formattedTag.email);
   checkDisableSendButton(isValidEmailAddress);
 
-  const isEmailAddressFromAppDomain =
-    formattedTag.email.indexOf(`@${appDomain}`) > 0;
   const className = isValidEmailAddress
     ? isEmailAddressFromAppDomain
       ? 'tag-item tag-app-domain'

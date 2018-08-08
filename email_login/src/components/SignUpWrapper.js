@@ -16,6 +16,7 @@ import {
   closeLogin
 } from './../utils/electronInterface';
 import SignUp from './SignUp';
+import { hashPassword } from '../utils/HashUtils';
 
 const formItems = [
   {
@@ -198,9 +199,12 @@ class SignUpWrapper extends Component {
   };
 
   onSubmit = values => {
+    const username = values.username;
+    const password = values.password;
+    const hashedPassword = hashPassword(password);
     const submitValues = {
-      username: values.username,
-      password: values.password,
+      username: username,
+      password: hashedPassword,
       name: values.fullname,
       recoveryEmail: values.recoveryemail
     };

@@ -3,16 +3,16 @@
 exports[`[Edit draft]  Form data to edit draft 1`] = `
 Object {
   "bccEmails": Array [
-    "bccUser@jigl.com",
+    "bccUser@criptext.com",
   ],
   "ccEmails": Array [
-    "ccUser@jigl.com",
+    "ccUser@criptext.com",
   ],
   "htmlBody": "<p>Modified body content</p>",
   "textSubject": "Email subject 1",
   "threadId": "1",
   "toEmails": Array [
-    "toUser@jigl.com",
+    "toUser@criptext.com",
   ],
 }
 `;
@@ -56,16 +56,16 @@ Object {
     ],
     "recipients": Object {
       "bcc": Array [
-        "bccUser@jigl.com",
+        "bccUser@criptext.com",
       ],
       "cc": Array [
-        "ccUser@jigl.com",
+        "ccUser@criptext.com",
       ],
       "from": Array [
-        "julian@jigl.com",
+        "julian@criptext.com",
       ],
       "to": Array [
-        "toUser@jigl.com",
+        "toUser@criptext.com",
       ],
     },
   },
@@ -98,7 +98,7 @@ Object {
   "threadId": "1",
   "toEmails": Array [
     Object {
-      "email": "fromUser@jigl.com",
+      "email": "fromUser@criptext.com",
     },
   ],
 }
@@ -109,10 +109,10 @@ Object {
   "bccEmails": Array [],
   "ccEmails": Array [
     Object {
-      "email": "ccUser@jigl.com",
+      "email": "ccUser@criptext.com",
     },
     Object {
-      "email": "toUser@jigl.com",
+      "email": "toUser@criptext.com",
     },
   ],
   "htmlBody": "<p>Modified body content</p>",
@@ -120,7 +120,7 @@ Object {
   "threadId": "1",
   "toEmails": Array [
     Object {
-      "email": "fromUser@jigl.com",
+      "email": "fromUser@criptext.com",
     },
   ],
 }
