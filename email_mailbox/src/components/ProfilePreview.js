@@ -11,9 +11,6 @@ const ProfilePreview = props => (
       <div className="profile-preview-detail">
         <span className="name">{props.name}</span>
         <span className="email-address">{props.emailAddress}</span>
-        <button className="button-a">
-          <span>My Account</span>
-        </button>
       </div>
     </div>
     <div className="profile-preview-controls">
