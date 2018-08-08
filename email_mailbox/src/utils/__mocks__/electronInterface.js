@@ -29,23 +29,18 @@ export const LabelType = {
     text: 'Sent',
     color: '#1a9759'
   },
-  important: {
-    id: 4,
-    text: 'Important',
-    color: '#ffdf32'
-  },
   starred: {
-    id: 5,
+    id: 4,
     text: 'Starred',
     color: '#ffdf32'
   },
   draft: {
-    id: 6,
+    id: 5,
     text: 'Draft',
     color: '#666666'
   },
   trash: {
-    id: 7,
+    id: 6,
     text: 'Trash',
     color: '#b00e0e'
   },

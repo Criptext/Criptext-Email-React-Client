@@ -17,9 +17,6 @@ export const IconLabels = {
   [LabelType.starred.id]: {
     icon: 'icon-star-fill'
   },
-  [LabelType.important.id]: {
-    icon: 'icon-tag'
-  },
   [LabelType.spam.id]: {
     icon: 'icon-not'
   },

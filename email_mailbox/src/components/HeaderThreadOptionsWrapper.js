@@ -71,8 +71,7 @@ class HeaderThreadOptionsWrapper extends Component {
     return (
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
-      currentLabelId === LabelType.starred.id ||
-      currentLabelId === LabelType.important.id
+      currentLabelId === LabelType.starred.id
     );
   };
 
@@ -95,7 +94,6 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
       currentLabelId === LabelType.starred.id ||
-      currentLabelId === LabelType.important.id ||
       currentLabelId === LabelType.trash.id ||
       currentLabelId === LabelType.allmail.id
     );
@@ -107,7 +105,6 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
       currentLabelId === LabelType.starred.id ||
-      currentLabelId === LabelType.important.id ||
       currentLabelId === LabelType.allmail.id
     );
   };

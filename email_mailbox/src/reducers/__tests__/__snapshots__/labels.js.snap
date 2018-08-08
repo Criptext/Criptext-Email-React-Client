@@ -30,11 +30,6 @@ Immutable.Map {
   6: Immutable.Map {
     id: 6,
     color: "#ffffff",
-    text: "Important",
-  },
-  7: Immutable.Map {
-    id: 7,
-    color: "#ffffff",
     text: "Starred",
   },
   10: Immutable.Map {
