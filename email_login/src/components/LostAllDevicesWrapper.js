@@ -13,6 +13,7 @@ import {
   errors
 } from './../utils/electronInterface';
 import signal from './../libs/signal';
+import { hashPassword } from '../utils/HashUtils';
 
 class LostDevicesWrapper extends Component {
   constructor(props) {
@@ -74,9 +75,12 @@ class LostDevicesWrapper extends Component {
       isLoading: true,
       disabled: true
     });
+    const username = this.state.values.username;
+    const password = this.state.values.password;
+    const hashedPassword = hashPassword(password);
     const submittedData = {
-      username: this.state.values.username,
-      password: this.state.values.password
+      username,
+      password: hashedPassword
     };
     const loginResponse = await login(submittedData);
     const loginStatus = loginResponse.status;
@@ -85,7 +89,7 @@ class LostDevicesWrapper extends Component {
     } else if (loginStatus !== 200) {
       this.throwLoginError(errors.login.FAILED);
     } else {
-      const recipientId = this.state.values.username;
+      const recipientId = username;
       const { deviceId, name } = loginResponse.body;
       await this.createAccountWithNewDevice({
         recipientId,

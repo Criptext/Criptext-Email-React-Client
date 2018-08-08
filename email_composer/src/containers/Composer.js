@@ -31,7 +31,8 @@ import {
   formDataToEditDraft,
   formDataToReply,
   formComposerDataWithSignature,
-  formNewEmailFromData
+  formNewEmailFromData,
+  parseEmailAddress
 } from './../utils/EmailUtils';
 import { Map } from 'immutable';
 import {
@@ -168,9 +169,7 @@ class ComposerWrapper extends Component {
   };
 
   handleGetToEmail = emails => {
-    const parsedEmails = emails.map(item => {
-      return item.name ? item.email.toLowerCase() : item.toLowerCase();
-    });
+    const parsedEmails = emails.map(item => parseEmailAddress(item));
     const status = areEmptyAllArrays(
       parsedEmails,
       this.state.ccEmails,
@@ -184,9 +183,7 @@ class ComposerWrapper extends Component {
   };
 
   handleGetCcEmail = emails => {
-    const parsedEmails = emails.map(item => {
-      return item.name ? item.email.toLowerCase() : item.toLowerCase();
-    });
+    const parsedEmails = emails.map(item => parseEmailAddress(item));
     const status = areEmptyAllArrays(
       this.state.toEmails,
       parsedEmails,
@@ -200,9 +197,7 @@ class ComposerWrapper extends Component {
   };
 
   handleGetBccEmail = emails => {
-    const parsedEmails = emails.map(item => {
-      return item.name ? item.email.toLowerCase() : item.toLowerCase();
-    });
+    const parsedEmails = emails.map(item => parseEmailAddress(item));
     const status = areEmptyAllArrays(
       this.state.toEmails,
       this.state.ccEmails,
