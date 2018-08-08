@@ -1,5 +1,6 @@
 export const File = {
-  ADD_BATCH: 'ADD_FILES'
+  ADD_BATCH: 'ADD_FILES',
+  UNSEND_FILES: 'UNSEND_FILES'
 };
 
 export const Thread = {

@@ -6,6 +6,7 @@ import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
 import ButtonUnsend from './ButtonUnsendWrapper';
 import { EmailStatus } from './../utils/const';
+import AttachItem, { AttachItemStatus } from './AttachItem';
 import './email.css';
 
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
@@ -154,7 +155,9 @@ const renderEmailExpand = props => (
             className="email-files"
           >
             {props.files.map((file, index) => {
-              return (
+              return file.status === AttachItemStatus.UNSENT ? (
+                <AttachItem key={index} status={file.status} />
+              ) : (
                 <FileWrapper key={index} file={file} email={props.email} />
               );
             })}

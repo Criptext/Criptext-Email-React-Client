@@ -10,6 +10,7 @@
   padding: 10px;
   position: relative;
   width: 236px;
+  margin: 5px 15px;
 
   &:hover{
     background-color: #f7f6f6;
@@ -94,6 +95,7 @@
     display: flex;
     height: 22px;
     width: 22px;
+    font-size: 18px;
 
     i{
       color: white;

@@ -10,7 +10,8 @@ import {
   myAccount,
   updateEmail,
   getLabelByText,
-  updateAccount
+  updateAccount,
+  updateFilesByEmailId
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -23,6 +24,7 @@ import {
 import { SocketCommand, appDomain, EmailStatus } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
+import { AttachItemStatus } from '../components/AttachItem';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -145,10 +147,11 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   const recipientId = params.from;
   const [email] = await getEmailByKey(metadataKey);
   if (email) {
-    const content = type === EmailStatus.UNSEND ? '' : null;
-    const preview = type === EmailStatus.UNSEND ? '' : null;
+    const isUnsend = type === EmailStatus.UNSEND;
+    const content = isUnsend ? '' : null;
+    const preview = isUnsend ? '' : null;
     const status = validateEmailStatusToSet(email.status, type);
-    const unsendDate = type === EmailStatus.UNSEND ? date : null;
+    const unsendDate = isUnsend ? date : null;
     await updateEmail({
       key: metadataKey,
       status,
@@ -156,6 +159,12 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
       preview,
       unsendDate
     });
+    if (isUnsend) {
+      await updateFilesByEmailId({
+        emailId: email.id,
+        status: AttachItemStatus.UNSENT
+      });
+    }
     const isFromMe = recipientId === myAccount.recipientId;
     const isOpened = type === EmailStatus.OPENED;
     if (!isFromMe && isOpened) {
@@ -175,10 +184,11 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
 };
 
 const handlePeerEmailUnsend = async ({ rowid, params }) => {
+  const type = EmailStatus.UNSEND;
   const { metadataKey, date } = params;
   const [email] = await getEmailByKey(metadataKey);
   if (email) {
-    const status = validateEmailStatusToSet(email.status, params.type);
+    const status = validateEmailStatusToSet(email.status, type);
     await updateEmail({
       key: metadataKey,
       content: '',
@@ -186,8 +196,12 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
       status,
       unsendDate: date
     });
+    await updateFilesByEmailId({
+      emailId: email.id,
+      status: AttachItemStatus.UNSENT
+    });
     await setEventAsHandled(rowid);
-    emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, params.type, date);
+    emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, type, date);
   }
 };
 

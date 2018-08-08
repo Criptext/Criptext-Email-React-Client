@@ -739,6 +739,15 @@ const updateFileByToken = ({ token, status }) => {
     .update(params);
 };
 
+const updateFilesByEmailId = ({ emailId, status }) => {
+  const params = {};
+  if (status) params.status = status;
+  return db
+    .table(Table.FILE)
+    .where({ emailId })
+    .update(params);
+};
+
 /* FileKey
   ----------------------------- */
 const createFileKey = (fileKeys, trx) => {
@@ -936,6 +945,7 @@ module.exports = {
   updateEmailByThreadId,
   updateEmailLabel,
   updateFeedItem,
+  updateFilesByEmailId,
   updateFileByToken,
   updateIdentityKeyRecord,
   updateLabel

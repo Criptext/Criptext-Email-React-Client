@@ -230,6 +230,10 @@ export const getEmailLabelsByEmailId = emailId => {
   return dbManager.getEmailLabelsByEmailId(emailId);
 };
 
+export const getFilesByEmailId = emailId => {
+  return dbManager.getFilesByEmailId(emailId);
+};
+
 export const getFilesByTokens = tokens => {
   return dbManager.getFilesByTokens(tokens);
 };
@@ -272,6 +276,10 @@ export const getUnreadEmailsByThreadId = threadId => {
 
 export const updateFeedItem = ({ feedItemId, seen }) => {
   return dbManager.updateFeedItem({ id: feedItemId, seen });
+};
+
+export const updateFilesByEmailId = ({ emailId, status }) => {
+  return dbManager.updateFilesByEmailId({ emailId, status });
 };
 
 export const setMuteEmailById = (emailId, muteValue) => {
