@@ -1,16 +1,16 @@
 import FileManager from 'criptext-files-sdk';
 import CryptoJS from 'crypto-js';
 import base64js from 'base64-js';
-import { FILE_SERVER_APP_ID, FILE_SERVER_KEY } from './electronInterface';
+import { myAccount } from './electronInterface';
 
 const MAX_REQUESTS = 5;
 
-export const fileManager = new FileManager(
-  FILE_SERVER_APP_ID,
-  FILE_SERVER_KEY,
-  MAX_REQUESTS,
-  false
-);
+export const fileManager = new FileManager({
+  auth: 'Bearer',
+  auth_token: myAccount.jwt,
+  max_requests: MAX_REQUESTS,
+  sandbox: false
+});
 
 export const { FILE_PROGRESS, FILE_FINISH, FILE_ERROR } = fileManager.Event;
 

@@ -1914,11 +1914,12 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-criptext-files-sdk@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/criptext-files-sdk/-/criptext-files-sdk-0.3.0.tgz#4992a30cb69f8c6b7b62c23595cfa2a8c75aedc6"
+criptext-files-sdk@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/criptext-files-sdk/-/criptext-files-sdk-0.6.2.tgz#10ea14fc6c64dd330d8b16e0a93bc46eaf11865b"
   dependencies:
     es6-promise "^4.1.1"
+    mime-types "^2.1.19"
 
 criptext-js-tools@^0.5.0:
   version "0.5.0"
@@ -5281,7 +5282,7 @@ miller-rabin@^4.0.0:
   version "1.35.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.35.0.tgz#0569d657466491283709663ad379a99b90d9ab47"
 
-mime-types@^2.1.12, mime-types@~2.1.17, mime-types@~2.1.18, mime-types@~2.1.7:
+mime-types@^2.1.12, mime-types@^2.1.19, mime-types@~2.1.17, mime-types@~2.1.18, mime-types@~2.1.7:
   version "2.1.19"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.19.tgz#71e464537a7ef81c15f2db9d97e913fc0ff606f0"
   dependencies:
