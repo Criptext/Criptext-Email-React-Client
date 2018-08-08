@@ -7,7 +7,8 @@ import {
   updateAllFeedItemsAsOlder,
   loadEmails,
   updateStatusThread,
-  unsendEmailOnSuccess
+  unsendEmailOnSuccess,
+  unsendEmailFiles
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import {
@@ -83,6 +84,7 @@ const mapDispatchToProps = dispatch => {
     },
     onUnsendEmail: (emailId, date) => {
       dispatch(unsendEmailOnSuccess(emailId, date));
+      dispatch(unsendEmailFiles(emailId));
     }
   };
 };

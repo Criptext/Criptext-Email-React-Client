@@ -1,5 +1,5 @@
 import { addContacts, addContact } from './contacts';
-import { addFiles, loadFiles } from './files';
+import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
   addEmailIdToThread,
   addMoveThreadsLabel,
@@ -92,6 +92,7 @@ export {
   sendOpenEvent,
   setThreads,
   unsendEmail,
+  unsendEmailFiles,
   unsendEmailOnSuccess,
   updateAllFeedItemsAsOlder,
   updateFeedItemSuccess,

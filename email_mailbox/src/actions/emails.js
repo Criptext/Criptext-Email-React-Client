@@ -12,6 +12,7 @@ import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
 import { EmailStatus } from '../utils/const';
 import { getCriptextRecipients } from '../utils/EmailUtils';
+import { unsendEmailFiles } from './files';
 
 export const addEmails = emails => {
   return {
@@ -130,7 +131,9 @@ export const unsendEmail = params => {
           preview: '',
           unsendDate
         });
-        dispatch(unsendEmailOnSuccess(emailId, unsendDate));
+        dispatch(unsendEmailFiles(emailId)).then(() =>
+          dispatch(unsendEmailOnSuccess(emailId, unsendDate))
+        );
       }
     } catch (e) {
       // To do

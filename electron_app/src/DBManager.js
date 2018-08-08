@@ -336,20 +336,20 @@ const getEmailsByThreadId = threadId => {
     .select(
       `${Table.EMAIL}.*`,
       db.raw(
-        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'from'
-        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'from'`
+        `GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'from'
+        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END)) as 'from'`
       ),
       db.raw(
-        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'to'
-        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'to'`
+        `GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'to'
+        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END)) as 'to'`
       ),
       db.raw(
-        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'cc'
-        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'cc'`
+        `GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'cc'
+        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END)) as 'cc'`
       ),
       db.raw(
-        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'bcc'
-        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END) as 'bcc'`
+        `GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'bcc'
+        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END)) as 'bcc'`
       ),
       db.raw(`GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens`),
       db.raw(`GROUP_CONCAT(DISTINCT(${Table.EMAIL_LABEL}.labelId)) as labelIds`)
@@ -739,6 +739,15 @@ const updateFileByToken = ({ token, status }) => {
     .update(params);
 };
 
+const updateFilesByEmailId = ({ emailId, status }) => {
+  const params = {};
+  if (status) params.status = status;
+  return db
+    .table(Table.FILE)
+    .where({ emailId })
+    .update(params);
+};
+
 /* FileKey
   ----------------------------- */
 const createFileKey = (fileKeys, trx) => {
@@ -936,6 +945,7 @@ module.exports = {
   updateEmailByThreadId,
   updateEmailLabel,
   updateFeedItem,
+  updateFilesByEmailId,
   updateFileByToken,
   updateIdentityKeyRecord,
   updateLabel

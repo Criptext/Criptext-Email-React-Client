@@ -75,6 +75,7 @@
         }
 
         .email-info-content-detail{
+          display: flex;
           margin-right: 13px;
 
           .email-info-content-detail-date{
@@ -220,6 +221,7 @@
     .email-files{
       display: flex;
       flex-direction: row;
+      flex-wrap: wrap;
       margin-bottom: 20px;
       margin-top: 60px;
     

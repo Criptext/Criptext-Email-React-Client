@@ -1,5 +1,6 @@
 import { File } from './types';
 import * as db from '../utils/electronInterface';
+import { AttachItemStatus } from '../components/AttachItem';
 
 export const addFiles = files => {
   return {
@@ -23,5 +24,30 @@ export const loadFiles = tokens => {
     } catch (e) {
       // TO DO
     }
+  };
+};
+
+export const unsendEmailFiles = emailId => {
+  return async dispatch => {
+    try {
+      const status = AttachItemStatus.UNSENT;
+      const dbResponse = await db.updateFilesByEmailId({
+        emailId,
+        status
+      });
+      if (dbResponse) {
+        dispatch(unsendEmailFilesOnSuccess({ emailId, status }));
+      }
+    } catch (e) {
+      // To do
+    }
+  };
+};
+
+export const unsendEmailFilesOnSuccess = ({ emailId, status }) => {
+  return {
+    type: File.UNSEND_FILES,
+    emailId: String(emailId),
+    status
   };
 };
