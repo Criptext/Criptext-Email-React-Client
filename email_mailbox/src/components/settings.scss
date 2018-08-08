@@ -35,17 +35,74 @@
     .settings-content-scroll{
       height: calc(100% - 35px);
       overflow-y: auto;
-      
+
       &::-webkit-scrollbar-track{
         background-color: rgba(233, 233, 233, 0.76);
         box-shadow: inset 0 0 10px rgba(220,220,220,0.1);
       }
+
       &::-webkit-scrollbar{
         width: 6.5px;
       }
+      
       &::-webkit-scrollbar-thumb{
         border-radius: 10px;
         background-color: #b0b2b4;
+      }
+
+      >div{
+        padding-bottom: 50px;
+      }
+    }
+
+    .settings-footer{
+      align-items: center;
+      background-color: white;
+      bottom: 0;
+      display: flex;
+      height: 50px;
+      position: absolute;
+      width: 100%;
+
+      .settings-footer-version{
+        align-items: center;
+        background-color: #bbbcc0;
+        border-radius: 13px;
+        display: flex;
+        height: 26px;
+        margin: 0 20px;
+        padding: 0 25px;
+
+        span{
+          color: white;
+          font-size: 13px;
+          font-weight: 300;
+
+          b{
+            font-weight: 500;
+          }
+        }
+      }
+
+      hr{
+        border: 0;
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        margin: 0;
+        height: 25px;
+      }
+
+      .settings-footer-support{
+        align-items: center;
+        color: #0091ff;
+        cursor: pointer;
+        display: flex;
+        margin-left: 20px;
+
+        span{
+          font-size: 13px;
+          font-weight: 600;
+          margin-left: 5px;
+        }
       }
     }
   }

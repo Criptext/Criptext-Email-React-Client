@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import SettingGeneralWrapper from './SettingGeneralWrapper';
 import SettingLabelsWrapper from './SettingLabelsWrapper';
 import SettingDevicesWrapper from './SettingDevicesWrapper';
+import { version } from './../../package.json';
 import './settings.css';
 
 const Sections = ['general', 'labels', 'trusted devices'];
@@ -24,6 +25,7 @@ const Settings = props => (
         ))}
       </ul>
       <div className="settings-content-scroll">{renderSection(props)}</div>
+      {renderFooter(props.onClickContactSupport)}
     </div>
   </div>
 );
@@ -51,6 +53,21 @@ const renderSection = props => {
   }
 };
 
+const renderFooter = onClick => (
+  <div className="settings-footer">
+    <div className="settings-footer-version">
+      <span>
+        Criptext <b>Version: {version}</b>
+      </span>
+    </div>
+    <hr />
+    <div className="settings-footer-support" onClick={() => onClick()}>
+      <i className="icon-ask" />
+      <span>Contact Support</span>
+    </div>
+  </div>
+);
+
 Items.propTypes = {
   name: PropTypes.string,
   onClick: PropTypes.func,
@@ -58,6 +75,7 @@ Items.propTypes = {
 };
 
 Settings.propTypes = {
+  onClickContactSupport: PropTypes.func,
   onClickSection: PropTypes.func,
   sectionSelected: PropTypes.string
 };

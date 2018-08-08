@@ -17,6 +17,7 @@ class SettingsWrapper extends Component {
       <Settings
         {...this.props}
         onClickSection={this.handleClickSection}
+        onClickContactSupport={this.props.onComposeContactSupportEmail}
         sectionSelected={this.state.sectionSelected}
         devices={this.state.devices}
       />
@@ -51,6 +52,7 @@ class SettingsWrapper extends Component {
 }
 
 SettingsWrapper.propTypes = {
+  onComposeContactSupportEmail: PropTypes.func,
   onGetDevices: PropTypes.func
 };
 

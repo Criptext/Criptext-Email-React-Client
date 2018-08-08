@@ -80,8 +80,8 @@ describe('Label actions:', () => {
         badge: label.badge
       })
     });
-    const badgeOperation = +1;
-    const action = actions.updateLabelSuccess({ id: 1, badgeOperation });
+    const operation = 'add';
+    const action = actions.updateLabelSuccess({ id: 1, operation, value: 1 });
     const state = labelReducer(data, action);
     expect(state.get('1').get('badge')).toEqual(2);
   });
@@ -95,10 +95,40 @@ describe('Label actions:', () => {
         badge: label.badge
       })
     });
-    const badgeOperation = -1;
-    const action = actions.updateLabelSuccess({ id: 1, badgeOperation });
+    const operation = 'less';
+    const action = actions.updateLabelSuccess({ id: 1, operation, value: 1 });
     const state = labelReducer(data, action);
     expect(state.get('1').get('badge')).toEqual(0);
+  });
+
+  it('should not update label: error badge', () => {
+    const data = Map({
+      [label.id]: Map({
+        id: label.id,
+        color: label.color,
+        text: label.text,
+        badge: label.badge
+      })
+    });
+    const operation = 'add';
+    const action = actions.updateLabelSuccess({ id: 1, operation, value: 0 });
+    const state = labelReducer(data, action);
+    expect(state.get('1').get('badge')).toEqual(1);
+  });
+
+  it('should not update label: error badge', () => {
+    const data = Map({
+      [label.id]: Map({
+        id: label.id,
+        color: label.color,
+        text: label.text,
+        badge: label.badge
+      })
+    });
+    const operation = undefined;
+    const action = actions.updateLabelSuccess({ id: 1, operation, value: 1 });
+    const state = labelReducer(data, action);
+    expect(state.get('1').get('badge')).toEqual(1);
   });
 
   it('should not update label', () => {

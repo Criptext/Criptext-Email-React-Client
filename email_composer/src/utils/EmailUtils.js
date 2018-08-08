@@ -227,3 +227,10 @@ export const formComposerDataWithSignature = () => {
     htmlBody
   };
 };
+
+export const formNewEmailFromData = data => {
+  return {
+    toEmails: [formRecipientObject(data.recipients.to)],
+    textSubject: data.email.subject
+  };
+};

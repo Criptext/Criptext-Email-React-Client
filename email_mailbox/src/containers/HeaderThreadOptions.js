@@ -134,12 +134,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onMarkRead: (threadsIds, read) => {
       const labelId = LabelType[ownProps.mailboxSelected].id;
-      const operation = read ? -1 : 1;
+      const operation = read ? 'less' : 'add';
       const paramsLabel =
         labelId === LabelType.inbox.id || labelId === LabelType.spam.id
           ? {
               id: labelId,
-              badgeOperation: threadsIds.length * operation
+              operation: operation,
+              value: threadsIds.length
             }
           : null;
 

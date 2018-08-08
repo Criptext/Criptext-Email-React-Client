@@ -30,7 +30,8 @@ import {
   formOutgoingEmailFromData,
   formDataToEditDraft,
   formDataToReply,
-  formComposerDataWithSignature
+  formComposerDataWithSignature,
+  formNewEmailFromData
 } from './../utils/EmailUtils';
 import { Map } from 'immutable';
 import {
@@ -123,12 +124,7 @@ class ComposerWrapper extends Component {
     const emailToEdit = getEmailToEdit();
     let state;
     if (emailToEdit) {
-      const { key, keyEmailToRespond, type } = emailToEdit;
-      const composerData = await this.getComposerDataByType(
-        key,
-        keyEmailToRespond,
-        type
-      );
+      const composerData = await this.getComposerDataByType(emailToEdit);
       state = { ...composerData, status: Status.ENABLED };
     } else {
       const composerData = await this.getDefaultComposerWithSignature();
@@ -150,9 +146,11 @@ class ComposerWrapper extends Component {
     return await formComposerDataWithSignature();
   };
 
-  getComposerDataByType = async (key, keyEmailToRespond, type) => {
+  getComposerDataByType = async ({ key, keyEmailToRespond, data, type }) => {
     if (type === composerEvents.EDIT_DRAFT) {
       return await formDataToEditDraft(key);
+    } else if (type === composerEvents.NEW_WITH_DATA) {
+      return formNewEmailFromData(data);
     }
     return await formDataToReply(keyEmailToRespond, type);
   };
