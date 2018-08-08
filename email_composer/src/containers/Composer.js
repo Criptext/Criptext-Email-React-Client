@@ -168,36 +168,49 @@ class ComposerWrapper extends Component {
   };
 
   handleGetToEmail = emails => {
+    const parsedEmails = emails.map(item => {
+      return item.name ? item.email.toLowerCase() : item.toLowerCase();
+    });
     const status = areEmptyAllArrays(
-      emails,
+      parsedEmails,
       this.state.ccEmails,
       this.state.bccEmails
     )
       ? Status.DISABLED
       : Status.ENABLED;
-    this.setState({ toEmails: emails, status }, () => this.saveTemporalDraft());
+    this.setState({ toEmails: parsedEmails, status }, () =>
+      this.saveTemporalDraft()
+    );
   };
 
   handleGetCcEmail = emails => {
+    const parsedEmails = emails.map(item => {
+      return item.name ? item.email.toLowerCase() : item.toLowerCase();
+    });
     const status = areEmptyAllArrays(
       this.state.toEmails,
-      emails,
+      parsedEmails,
       this.state.bccEmails
     )
       ? Status.DISABLED
       : Status.ENABLED;
-    this.setState({ ccEmails: emails, status }, () => this.saveTemporalDraft());
+    this.setState({ ccEmails: parsedEmails, status }, () =>
+      this.saveTemporalDraft()
+    );
   };
 
   handleGetBccEmail = emails => {
+    const parsedEmails = emails.map(item => {
+      return item.name ? item.email.toLowerCase() : item.toLowerCase();
+    });
     const status = areEmptyAllArrays(
       this.state.toEmails,
       this.state.ccEmails,
-      emails
+      parsedEmails
     )
       ? Status.DISABLED
       : Status.ENABLED;
-    this.setState({ bccEmails: emails, status }, () =>
+    this.setState({ bccEmails: parsedEmails, status }, () =>
       this.saveTemporalDraft()
     );
   };
