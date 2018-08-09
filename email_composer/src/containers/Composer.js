@@ -134,7 +134,7 @@ class ComposerWrapper extends Component {
         : Status.DISABLED;
       state = { ...composerData, status };
     }
-    const { key, iv } = generateKeyAndIv(null, 8, null);
+    const { key, iv } = generateKeyAndIv(null, 8);
     state = { ...state, key, iv };
     fileManager.on(FILE_PROGRESS, this.handleUploadProgress);
     fileManager.on(FILE_FINISH, this.handleUploadSuccess);
