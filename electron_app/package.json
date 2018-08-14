@@ -17,7 +17,7 @@
   },
   "scripts": {
     "electron": "electron .",
-    "set-env": "NODE_ENV=development DEBUG=electron-builder MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004 REACT_APP_KEYSERVER_URL=http://localhost:8000 REACT_APP_SOCKETSERVER_URL=ws://localhost:3001",
+    "set-env": "NODE_ENV=development CSC_LINK=build/Certificates.p12 CSC_KEY_PASSWORD=xxxxxxxx CSC_IDENTITY_AUTO_DISCOVERY=true MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004 REACT_APP_KEYSERVER_URL=http://localhost:8000 REACT_APP_SOCKETSERVER_URL=ws://localhost:3001",
     "start": "npm run set-env electron .",
     "postinstall": "install-app-deps",
     "test": "criptext-js-tools test",
@@ -43,7 +43,20 @@
         "dmg",
         "zip"
       ],
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "identity": "Criptext Inc.",
+      "provisioningProfile": "build/Criptext_Mail_Distribution.provisionprofile",
+      "type": "distribution"
+    },
+    "mas": {
+      "category": "public.app-category.productivity",
+      "identity": "Criptext Inc.",
+      "provisioningProfile": "build/Criptext_Mail_Distribution.provisionprofile",
+      "type": "distribution"
+    },
+    "pkg": {
+      "identity": "Criptext Inc.",
+      "installLocation": "/Applications"
     },
     "dmg": {
       "background": "build/background.png",
