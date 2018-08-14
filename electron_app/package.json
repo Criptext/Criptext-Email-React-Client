@@ -94,9 +94,8 @@
     },
     "publish": [
       {
-        "provider": "s3",
-        "bucket": "s3-us-west-2",
-        "path": "web-res/Criptext-Email-Desktop/mac"
+        "provider": "generic",
+        "url": "https://cdn.criptext.com/Criptext-Email-Desktop/mac"
       }
     ]
   },
