@@ -63,7 +63,7 @@ const emailInbox = {
     unsendDate: '2018-06-14 08:23:20.000'
   },
   recipients: {
-    from: ['User A <usera@criptext.com>'],
+    from: ['"User A" <usera@criptext.com>'],
     to: ['user@criptext.com', 'userb@criptext.com'],
     cc: ['userc@criptext.com'],
     bcc: ['userd@criptext.com']
