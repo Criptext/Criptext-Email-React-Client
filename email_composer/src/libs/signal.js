@@ -9,9 +9,12 @@ import {
 import SignalProtocolStore from './store';
 import { CustomError } from './../utils/CustomError';
 import {
-  AesEncryptToBase64,
+  AesEncrypt,
   generateKeyAndIv,
-  base64ToWordArray
+  base64ToWordArray,
+  wordArrayToByteArray,
+  wordArrayToBase64,
+  byteArrayToWordArray
 } from '../utils/AESUtils';
 
 const KeyHelper = libsignal.KeyHelper;
@@ -199,6 +202,7 @@ const encryptPostEmail = async ({
     peer,
     fileKeyParams
   );
+  const fileKey = criptextEmails[0] ? criptextEmails[0].fileKey : null;
 
   const allExternalRecipients = [
     ...externalRecipients.to,
@@ -207,7 +211,7 @@ const encryptPostEmail = async ({
   ];
   const hasExternalRecipients = allExternalRecipients.length > 0;
   const { session, encryptedBody } = externalEmailPassword.length
-    ? await encryptExternalEmail(body, externalEmailPassword)
+    ? await encryptExternalEmail(body, externalEmailPassword, fileKey)
     : { session: null, encryptedBody: null };
 
   const guestEmail = hasExternalRecipients
@@ -235,7 +239,7 @@ const encryptPostEmail = async ({
   return res;
 };
 
-const createDummyKeyBundle = async () => {
+const createDummyKeyBundle = async fileKey => {
   const preKeyId = 1;
   const signedPreKeyId = 1;
   const { identityKey, registrationId } = await generateIdentity();
@@ -252,6 +256,7 @@ const createDummyKeyBundle = async () => {
     signedPreKey
   };
   const dummySession = {
+    fileKey,
     identityKey: {
       publicKey: util.toBase64(identityKey.pubKey),
       privateKey: util.toBase64(identityKey.privKey)
@@ -295,10 +300,10 @@ const generatePreKeyBundle = async ({
   return { preKey, signedPreKey };
 };
 
-const encryptExternalEmail = async (body, password) => {
+const encryptExternalEmail = async (body, password, fileKey) => {
   const recipient = password;
   const deviceId = 1;
-  const { dummySession, sessionParams } = await createDummyKeyBundle();
+  const { dummySession, sessionParams } = await createDummyKeyBundle(fileKey);
   const keys = {
     preKey: {
       id: sessionParams.preKey.keyId,
@@ -319,12 +324,26 @@ const encryptExternalEmail = async (body, password) => {
   );
 
   const saltLength = 8;
-  const keyLength = 128 / 32;
-  const { key, iv } = generateKeyAndIv(password, saltLength, keyLength);
-  const keyArray = base64ToWordArray(key);
-  const ivArray = base64ToWordArray(iv);
-  const sessionString = JSON.stringify(dummySession);
-  const session = AesEncryptToBase64(sessionString, keyArray, ivArray);
+  const { key, iv, salt } = generateKeyAndIv(password, saltLength);
+  const saltWArray = base64ToWordArray(salt);
+  const ivWArray = base64ToWordArray(iv);
+  const keyWArray = base64ToWordArray(key);
+
+  const dummySessionString = JSON.stringify(dummySession);
+  const encryptedSessionWArray = AesEncrypt(
+    dummySessionString,
+    keyWArray,
+    ivWArray
+  );
+  const saltBArray = wordArrayToByteArray(saltWArray);
+  const ivBArray = wordArrayToByteArray(ivWArray);
+  const encryptedSessionBArray = wordArrayToByteArray(encryptedSessionWArray);
+  const sessionByteArray = saltBArray.concat(
+    ivBArray.concat(encryptedSessionBArray)
+  );
+
+  const sessionWordArray = byteArrayToWordArray(sessionByteArray);
+  const session = wordArrayToBase64(sessionWordArray);
   return {
     session,
     encryptedBody: encryptedBody.body
