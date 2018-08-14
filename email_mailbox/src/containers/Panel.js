@@ -71,7 +71,7 @@ const mapDispatchToProps = dispatch => {
       const recipientId = myAccount.recipientId;
       await updateAccount({ opened, recipientId });
     },
-    onUpdateUnreadEmails: () => {
+    onUpdateUnreadEmailsBadge: () => {
       const label = {
         id: LabelType.inbox.id,
         operation: 'add',

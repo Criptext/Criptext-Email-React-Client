@@ -115,6 +115,7 @@
     "electron-updater": "^3.0.3",
     "electron-window-state": "^4.1.1",
     "knex": "^0.14.2",
+    "opn": "^5.3.0",
     "sqlite3": "^3.1.13",
     "websocket": "^1.0.25"
   }

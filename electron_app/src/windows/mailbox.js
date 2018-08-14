@@ -3,6 +3,7 @@ const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
 const { appUpdater } = require('./../updater');
 const path = require('path');
+const opn = require('opn');
 
 let mailboxWindow;
 
@@ -33,17 +34,18 @@ const create = () => {
     title: ''
   });
   mailboxWindow.loadURL(mailboxUrl);
-  mailboxWindow.on('page-title-updated', event => {
-    event.preventDefault();
+
+  mailboxWindow.on('page-title-updated', ev => {
+    ev.preventDefault();
   });
   mailboxWindow.on('closed', () => {
     mailboxWindow = undefined;
   });
-  mailboxWindow.webContents.on('new-window', function(e, url) {
-    e.preventDefault();
-    shell.openExternal(url);
-  });
-  mailboxWindow.webContents.session.on('will-download', (e, item) => {
+
+  mailboxWindow.webContents.on('new-window', openLinkInDefaultBrowser);
+  mailboxWindow.webContents.on('will-navigate', openLinkInDefaultBrowser);
+
+  mailboxWindow.webContents.session.on('will-download', (ev, item) => {
     const downloadsPath = app.getPath('downloads');
     const filename = item.getFilename();
     const filePath = path.join(downloadsPath, filename);
@@ -103,6 +105,11 @@ const send = (message, data) => {
 
 const isWindowsOrmacOS = () => {
   return process.platform === 'darwin' || process.platform === 'win32';
+};
+
+const openLinkInDefaultBrowser = (ev, url) => {
+  ev.preventDefault();
+  opn(url);
 };
 
 module.exports = {
