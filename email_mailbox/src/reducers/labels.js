@@ -31,7 +31,8 @@ const label = (state, action) => {
       if (action.label.operation === 'add') {
         badge = state.get('badge') + action.label.value;
       } else if (action.label.operation === 'less') {
-        badge = state.get('badge') - action.label.value;
+        const operationValue = state.get('badge') - action.label.value;
+        badge = operationValue >= 0 ? operationValue : 0;
       }
       return state.merge({
         color: action.label.color ? action.label.color : state.get('color'),
