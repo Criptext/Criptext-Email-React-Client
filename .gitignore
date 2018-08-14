@@ -13,7 +13,9 @@ email_*/build
 */src/**/*.css
 */release-builds/
 */src/app
-*/src/app/build
+*/src/app/build/
+electron_app/build/Certificates.p12
+electron_app/build/Criptext_Mail_Distribution.provisionprofile
 
 # misc
 */.env*
