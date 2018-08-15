@@ -6,6 +6,7 @@ const path = require('path');
 const opn = require('opn');
 
 let mailboxWindow;
+let force_quit = false;
 
 const mailboxSize = {
   width: 1400,
@@ -38,8 +39,16 @@ const create = () => {
   mailboxWindow.on('page-title-updated', ev => {
     ev.preventDefault();
   });
+  mailboxWindow.on('close', e => {
+    if (process.platform === 'darwin' && !force_quit) {
+      e.preventDefault();
+      mailboxWindow.hide();
+    }
+  });
   mailboxWindow.on('closed', () => {
-    mailboxWindow = undefined;
+    if (process.platform !== 'darwin') {
+      mailboxWindow = undefined;
+    }
   });
 
   mailboxWindow.webContents.on('new-window', openLinkInDefaultBrowser);
@@ -69,12 +78,14 @@ const create = () => {
 };
 
 const show = async () => {
-  if (!mailboxWindow) {
-    await create();
-  }
-  mailboxWindow.once('ready-to-show', () => {
+  if (mailboxWindow) {
     mailboxWindow.show();
-  });
+  } else {
+    await create();
+    mailboxWindow.on('ready-to-show', () => {
+      mailboxWindow.show();
+    });
+  }
 };
 
 const hide = () => {
@@ -112,11 +123,17 @@ const openLinkInDefaultBrowser = (ev, url) => {
   opn(url);
 };
 
+const quit = () => {
+  force_quit = true;
+  app.quit();
+};
+
 module.exports = {
-  show,
-  hide,
   close,
-  send,
+  hide,
+  mailboxWindow,
+  quit,
   responseFromModal,
-  mailboxWindow
+  send,
+  show
 };
