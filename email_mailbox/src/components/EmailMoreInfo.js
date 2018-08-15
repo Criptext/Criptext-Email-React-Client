@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ContactTag from './ContactTag';
 import './emailmoreinfo.css';
-import { orderContactsByNameOrEmail } from '../utils/UserUtils';
+import { orderContactsByNameOrEmail } from '../utils/ContactUtils';
 
 const EmailMoreInfo = props => (
   <div className="email-more-detail" onClick={ev => ev.stopPropagation()}>

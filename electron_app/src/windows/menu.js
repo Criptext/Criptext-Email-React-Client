@@ -1,5 +1,5 @@
-const { app } = require('electron');
 const { checkForUpdates } = require('./../updater');
+const { quit } = require('./mailbox');
 const composerWindowManager = require('./composer');
 
 const template = [
@@ -128,7 +128,7 @@ if (process.platform === 'darwin') {
         label: 'Quit',
         accelerator: 'Command+Q',
         click: function() {
-          app.quit();
+          quit();
         }
       }
     ]

@@ -124,4 +124,6 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', initApp);
+app.on("activate", () => {
+  mailboxWindow.show();
+})

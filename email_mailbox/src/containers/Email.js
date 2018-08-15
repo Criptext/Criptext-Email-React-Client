@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import EmailView from './../components/EmailWrapper';
 import { defineTimeByToday, defineLargeTime } from './../utils/TimeUtils';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
-import { matchOwnEmail } from './../utils/UserUtils';
+import { matchOwnEmail } from './../utils/ContactUtils';
 import randomcolor from 'randomcolor';
 import {
   composerEvents,

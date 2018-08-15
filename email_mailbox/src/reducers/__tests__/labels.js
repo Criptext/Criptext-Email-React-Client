@@ -101,7 +101,7 @@ describe('Label actions:', () => {
     expect(state.get('1').get('badge')).toEqual(0);
   });
 
-  it('should not update label: error badge', () => {
+  it('should not update label: error badge value 0', () => {
     const data = Map({
       [label.id]: Map({
         id: label.id,
@@ -116,7 +116,7 @@ describe('Label actions:', () => {
     expect(state.get('1').get('badge')).toEqual(1);
   });
 
-  it('should not update label: error badge', () => {
+  it('should not update label: error badge operation undefined', () => {
     const data = Map({
       [label.id]: Map({
         id: label.id,
@@ -129,6 +129,21 @@ describe('Label actions:', () => {
     const action = actions.updateLabelSuccess({ id: 1, operation, value: 1 });
     const state = labelReducer(data, action);
     expect(state.get('1').get('badge')).toEqual(1);
+  });
+
+  it('should not update label: error badge negative', () => {
+    const data = Map({
+      [label.id]: Map({
+        id: label.id,
+        color: label.color,
+        text: label.text,
+        badge: label.badge
+      })
+    });
+    const operation = 'less';
+    const action = actions.updateLabelSuccess({ id: 1, operation, value: 2 });
+    const state = labelReducer(data, action);
+    expect(state.get('1').get('badge')).toEqual(0);
   });
 
   it('should not update label', () => {
