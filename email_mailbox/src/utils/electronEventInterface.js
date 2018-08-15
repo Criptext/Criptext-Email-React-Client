@@ -178,9 +178,9 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
       };
       await createFeedItem([feedItemParams]);
     }
-    await setEventAsHandled(rowid);
     emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, type, date);
   }
+  await setEventAsHandled(rowid);
 };
 
 const handlePeerEmailUnsend = async ({ rowid, params }) => {
@@ -200,9 +200,9 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
       emailId: email.id,
       status: AttachItemStatus.UNSENT
     });
-    await setEventAsHandled(rowid);
     emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, type, date);
   }
+  await setEventAsHandled(rowid);
 };
 
 const handlePeerEmailRead = async ({ rowid, params }) => {
@@ -214,9 +214,9 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
         key: metadataKey,
         unread: unread
       });
-      await setEventAsHandled(rowid);
     }
   }
+  await setEventAsHandled(rowid);
 };
 
 const handlePeerLabelCreated = async ({ rowid, params }) => {

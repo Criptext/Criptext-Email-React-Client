@@ -136,3 +136,29 @@ export const setCryptoInterfaces = (keyBase64, ivBase64) => {
     reader.readAsArrayBuffer(blob);
   }, null);
 };
+
+export const defineTypeSource = mimetype => {
+  const [type, subtype] = mimetype.split('/');
+  switch (type) {
+    case 'image':
+      return 'fileimage';
+    case 'audio':
+      return 'fileaudio';
+    case 'video':
+      return 'filevideo';
+    case 'text': {
+      if (subtype === 'csv') return 'fileexcel';
+      return 'filedefault';
+    }
+    case 'application': {
+      if (subtype === 'pdf') return 'filepdf';
+      if (subtype === 'zip') return 'filezip';
+      if (officeDocTypes.indexOf(subtype) > -1) return 'fileword';
+      if (officeSheetTypes.indexOf(subtype) > -1) return 'fileexcel';
+      if (officePptTypes.indexOf(subtype) > -1) return 'fileppt';
+      return 'filedefault';
+    }
+    default:
+      return 'filedefault';
+  }
+};

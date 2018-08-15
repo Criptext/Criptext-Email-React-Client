@@ -14,8 +14,12 @@ import {
   base64ToWordArray,
   wordArrayToByteArray,
   wordArrayToBase64,
-  byteArrayToWordArray
+  byteArrayToWordArray,
+  textToBase64
 } from '../utils/AESUtils';
+import { defineTypeSource } from '../utils/FileUtils';
+import { convertToHumanSize } from '../utils/StringUtils';
+import { formExternalAttachmentTemplate } from '../utils/EmailUtils';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -202,7 +206,15 @@ const encryptPostEmail = async ({
     peer,
     fileKeyParams
   );
-  const fileKey = criptextEmails[0] ? criptextEmails[0].fileKey : null;
+
+  const externalFileKey = `${key}:${iv}`;
+  const { session, encryptedBody } = externalEmailPassword.length
+    ? await encryptExternalEmail({
+        body,
+        externalEmailPassword,
+        fileKey: externalFileKey
+      })
+    : { session: null, encryptedBody: null };
 
   const allExternalRecipients = [
     ...externalRecipients.to,
@@ -210,16 +222,17 @@ const encryptPostEmail = async ({
     ...externalRecipients.bcc
   ];
   const hasExternalRecipients = allExternalRecipients.length > 0;
-  const { session, encryptedBody } = externalEmailPassword.length
-    ? await encryptExternalEmail(body, externalEmailPassword, fileKey)
-    : { session: null, encryptedBody: null };
+
+  const formattedBody = files
+    ? addAttachemtsToBody(body, files, fileKeyParams)
+    : body;
 
   const guestEmail = hasExternalRecipients
     ? objectUtils.noNulls({
         to: externalRecipients.to,
         cc: externalRecipients.cc,
         bcc: externalRecipients.bcc,
-        body: session ? encryptedBody : body,
+        body: session ? encryptedBody : formattedBody,
         session
       })
     : null;
@@ -300,8 +313,12 @@ const generatePreKeyBundle = async ({
   return { preKey, signedPreKey };
 };
 
-const encryptExternalEmail = async (body, password, fileKey) => {
-  const recipient = password;
+const encryptExternalEmail = async ({
+  body,
+  externalEmailPassword,
+  fileKey
+}) => {
+  const recipient = externalEmailPassword;
   const deviceId = 1;
   const { dummySession, sessionParams } = await createDummyKeyBundle(fileKey);
   const keys = {
@@ -316,6 +333,7 @@ const encryptExternalEmail = async (body, password, fileKey) => {
     signedPreKeySignature: sessionParams.signedPreKey.signature
   };
   const keyBundleArrayBuffer = await keysToArrayBuffer(keys);
+
   const encryptedBody = await encryptText(
     recipient,
     deviceId,
@@ -324,7 +342,7 @@ const encryptExternalEmail = async (body, password, fileKey) => {
   );
 
   const saltLength = 8;
-  const { key, iv, salt } = generateKeyAndIv(password, saltLength);
+  const { key, iv, salt } = generateKeyAndIv(externalEmailPassword, saltLength);
   const saltWArray = base64ToWordArray(salt);
   const ivWArray = base64ToWordArray(iv);
   const keyWArray = base64ToWordArray(key);
@@ -348,6 +366,24 @@ const encryptExternalEmail = async (body, password, fileKey) => {
     session,
     encryptedBody: encryptedBody.body
   };
+};
+
+const addAttachemtsToBody = (body, files, fileKeyParams) => {
+  const attachmentsSection = files.map(file => {
+    const { token } = file;
+    const { key, iv } = fileKeyParams;
+    const encodedParams = textToBase64(`${token}:${key}:${iv}`);
+    const mimeTypeSource = defineTypeSource(file.mimeType);
+    const filename = file.name;
+    const formattedSize = convertToHumanSize(file.size, true);
+    return formExternalAttachmentTemplate(
+      encodedParams,
+      mimeTypeSource,
+      filename,
+      formattedSize
+    );
+  });
+  return `${body}<br/><div>${attachmentsSection.join('')}</div>`;
 };
 
 export default {
