@@ -14,9 +14,8 @@ export const defineTimeByToday = time => {
     return moment(timeLocal).format('[Yesterday]');
   } else if (diffTime < oneDay * 7) {
     return moment(timeLocal).format('dddd');
-  } else {
-    return moment(timeLocal).format('MMM DD');
   }
+  return moment(timeLocal).format('MMM DD');
 };
 
 export const defineLargeTime = time => {

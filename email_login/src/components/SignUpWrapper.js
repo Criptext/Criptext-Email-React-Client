@@ -77,7 +77,7 @@ const formItems = [
   },
   {
     name: 'recoveryemail',
-    placeholder: 'Recovery email (optional)',
+    placeholder: 'Recovery email address (optional)',
     type: 'text',
     label: {
       text: '',

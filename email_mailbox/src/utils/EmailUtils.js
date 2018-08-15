@@ -21,7 +21,9 @@ const getContentMessage = async ({
   if (content === undefined) {
     return { content: '', preview: '' };
   }
-  const preview = removeHTMLTags(content).slice(0, 21);
+  const preview = removeHTMLTags(content)
+    .slice(0, 21)
+    .trim();
   return { content, preview };
 };
 
