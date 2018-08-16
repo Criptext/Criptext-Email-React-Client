@@ -22,15 +22,15 @@ const renderPopUp = props => {
         <span className="text">Send Encrypted</span>
         <span className="switch">{renderSwitch(props)}</span>
       </div>
-      <div className="non-criptext-description">
-        <span>
-          Passwords enable non-Criptext users to read your encrypted email.
-        </span>
-        <span>Encrypted emails to non-Criptext recipients </span>
-        <span>
-          <b>will expire in 10 days.</b>
-        </span>
-      </div>
+      {props.mode === PopUpModes.SET_PASSWORD && (
+        <div className="non-criptext-description">
+          <span>
+            Set a passphrase and share it with non-Criptext recipients so they
+            can read your email.
+          </span>
+        </div>
+      )}
+
       {props.mode === PopUpModes.SET_PASSWORD
         ? renderForm(props)
         : renderNote()}
@@ -89,7 +89,7 @@ const renderForm = props => {
       {renderErrorMessage({
         value: confirmPassword.value,
         error: confirmPassword.error,
-        message: 'Passwords do not match'
+        message: 'Passphrases do not match'
       })}
     </div>
   );
@@ -129,10 +129,9 @@ const renderErrorMessage = ({ value, error, message }) => {
 const renderNote = () => {
   return (
     <div className="non-criptext-note">
-      <span>Note: </span>
       <span>
-        This email will be sent as a normal, unencrypted email only to
-        non-Criptext email addresses.
+        <b>Note:</b> non-Criptext email addresses will receive a normal,
+        un-encrypted email.
       </span>
     </div>
   );

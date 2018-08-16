@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Attachment from './Attachment';
+import Attachment, { FileStatus } from './Attachment';
 import { fileManager, FILE_MODES } from './../utils/FileUtils';
 
 class AttachmentWrapper extends Component {
@@ -10,10 +10,7 @@ class AttachmentWrapper extends Component {
       <Attachment
         {...this.props}
         file={this.props.file.fileData}
-        isLoading={mode === FILE_MODES.UPLOADING}
-        isFailed={mode === FILE_MODES.FAILED}
-        isPaused={mode === FILE_MODES.PAUSED}
-        isFinished={mode === FILE_MODES.UPLOADED}
+        status={this.defineStatus(mode)}
         percentage={percentage}
         onRemoveAttachment={this.onRemoveAttachment}
         onPauseUploadFile={this.onPauseUploadFile}
@@ -43,6 +40,21 @@ class AttachmentWrapper extends Component {
 
   onResumeUploadFile = () => {
     this.props.onResumeUploadFile(this.props.file.token);
+  };
+
+  defineStatus = mode => {
+    switch (mode) {
+      case FILE_MODES.UPLOADING:
+        return FileStatus.UPLOADING;
+      case FILE_MODES.PAUSED:
+        return FileStatus.PAUSED;
+      case FILE_MODES.UPLOADED:
+        return FileStatus.UPLOADED;
+      case FILE_MODES.FAILED:
+        return FileStatus.FAILED;
+      default:
+        return;
+    }
   };
 }
 

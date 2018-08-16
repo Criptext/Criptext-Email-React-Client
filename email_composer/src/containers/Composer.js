@@ -236,7 +236,13 @@ class ComposerWrapper extends Component {
       const [firstNewFile, ...remainingNewFiles] = Array.from(newFiles);
       fileManager.uploadFile(firstNewFile, CHUNK_SIZE, (error, token) => {
         if (error) {
-          return this.handleUploadError();
+          this.setState({
+            files: [
+              ...this.state.files,
+              { fileData: firstNewFile, mode: FILE_MODES.FAILED }
+            ]
+          });
+          return this.handleUploadError({ token });
         }
         const uploadingFile = {
           fileData: firstNewFile,

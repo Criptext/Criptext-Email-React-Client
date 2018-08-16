@@ -28,10 +28,13 @@
       padding: 0px 34px 0px 35px;
 
       .content {
+        display: flex;
+        flex-direction: column;
+        height: 266px;
+        justify-content: space-between;
         width: 100%;
 
         .non-criptext-title {
-          flex-grow: 1;
           text-align: center;
           font-weight: bold;
           font-size: 14px;
@@ -99,10 +102,10 @@
           }
 
           .error-password-message{
-            font-size: 11px;
             color: red;
+            font-size: 10px;
             position: relative;
-            top: -6px;
+            top: -4px;
             left: -10px;
             &.hidden {
               color: #fff;
@@ -117,15 +120,10 @@
           font-size: 12px;
           margin-top: 20px;
           margin-bottom: 17px;
-
-          span:first-child {
-            font-weight: bolder;
-          }
         }
 
         .non-criptext-buttons {
           display: flex;
-          flex-grow: 1;
           flex-direction: row-reverse;
           margin-bottom: auto;
 

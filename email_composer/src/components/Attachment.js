@@ -6,9 +6,7 @@ import './attachment.css';
 
 const Attachment = props => {
   return (
-    <div
-      className={`file-container ${props.isLoading ? 'container-loading' : ''}`}
-    >
+    <div className={`file-container ${defineClassFile(props.status)}`}>
       <div className="file-icon">{renderFileIcon(props.file.type)}</div>
       <div className="file-info">
         <span>{props.file.name}</span>
@@ -17,14 +15,29 @@ const Attachment = props => {
       <div className="file-delete" onClick={() => props.onRemoveAttachment()}>
         <i className="icon-exit" />
       </div>
-      {props.isLoading ? (
+      {props.status === FileStatus.UPLOADING && (
         <div
-          className="loading-file-bar"
+          className="file-loading-bar"
           style={{ width: props.percentage + '%' }}
         />
-      ) : null}
+      )}
     </div>
   );
+};
+
+const defineClassFile = status => {
+  switch (status) {
+    case FileStatus.UPLOADING:
+      return 'file-uploading';
+    case FileStatus.PAUSED:
+      return 'file-paused';
+    case FileStatus.UPLOADED:
+      return 'file-uploaded';
+    case FileStatus.FAILED:
+      return 'file-failed';
+    default:
+      return '';
+  }
 };
 
 const renderFileIcon = type => {
@@ -36,11 +49,18 @@ const renderFileIcon = type => {
   );
 };
 
-Attachment.propTypes = {
-  isLoading: PropTypes.bool,
-  file: PropTypes.object,
-  onRemoveAttachment: PropTypes.func,
-  percentage: PropTypes.number
+const FileStatus = {
+  UPLOADING: 'uploading',
+  PAUSED: 'paused',
+  UPLOADED: 'uploaded',
+  FAILED: 'failed'
 };
 
-export default Attachment;
+Attachment.propTypes = {
+  file: PropTypes.object,
+  onRemoveAttachment: PropTypes.func,
+  percentage: PropTypes.number,
+  status: PropTypes.string
+};
+
+export { Attachment as default, FileStatus };

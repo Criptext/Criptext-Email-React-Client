@@ -208,8 +208,8 @@ TABLE OF CONTENTS
 .icon-doc:before {
   content: "\e901";
 }
-.icon-star:before {
-  content: "\e903";
+.icon-calendar:before {
+  content: "\e904";
 }
 .icon-trash:before {
   content: "\e905";
@@ -226,35 +226,38 @@ TABLE OF CONTENTS
 .icon-not:before {
   content: "\e909";
 }
-.icon-download:before {
-  content: "\e90a";
+.icon-edit:before {
+  content: "\e911";
 }
-.icon-time:before {
-  content: "\e90b";
+.icon-mail:before {
+  content: "\e90f";
 }
 .icon-file:before {
   content: "\e90c";
 }
-.icon-edit:before {
-  content: "\e911";
-}
-.icon-calendar:before {
-  content: "\e904";
+.icon-download:before {
+  content: "\e90b";
 }
 .icon-forward:before {
   content: "\e90d";
 }
-.icon-attach:before {
-  content: "\e912";
-}
-.icon-checked:before {
-  content: "\e913";
-}
 .icon-criptext:before {
   content: "\e914";
 }
-.icon-text-edit:before {
-  content: "\e93a";
+.icon-ask:before {
+  content: "\e941";
+}
+.icon-star-fill:before {
+  content: "\e903";
+}
+.icon-star:before {
+  content: "\e926";
+}
+.icon-important-fill:before {
+  content: "\e90a";
+}
+.icon-important:before {
+  content: "\e902";
 }
 .icon-unsend:before {
   content: "\e916";
@@ -277,11 +280,47 @@ TABLE OF CONTENTS
 .icon-replay:before {
   content: "\e91f";
 }
+.icon-pencil:before {
+  content: "\e940";
+}
+.icon-dots:before {
+  content: "\e918";
+}
+.icon-user:before {
+  content: "\e90e";
+}
+.icon-box:before {
+  content: "\e915";
+}
+.icon-check:before {
+  content: "\e919";
+}
+.icon-next2:before {
+  content: "\e938";
+}
+.icon-back:before {
+  content: "\e939";
+}
+.icon-attach:before {
+  content: "\e912";
+}
+.icon-checked:before {
+  content: "\e913";
+}
 .icon-correct:before {
   content: "\e920";
 }
 .icon-incorret:before {
   content: "\e921";
+}
+.icon-next:before {
+  content: "\e910";
+}
+.icon-time:before {
+  content: "\e93c";
+}
+.icon-search:before {
+  content: "\e93d";
 }
 .icon-show:before {
   content: "\e922";
@@ -295,29 +334,14 @@ TABLE OF CONTENTS
 .icon-desktop:before {
   content: "\e925";
 }
-.icon-important:before {
-  content: "\e926";
-}
-.icon-box:before {
-  content: "\e915";
-}
-.icon-dots:before {
-  content: "\e918";
-}
-.icon-user:before {
-  content: "\e90e";
-}
-.icon-mail:before {
-  content: "\e90f";
-}
 .icon-settings:before {
-  content: "\e910";
+  content: "\e917";
 }
 .icon-video:before {
   content: "\e927";
 }
 .icon-audio:before {
-  content: "\e928";
+  content: "\e942";
 }
 .icon-word:before {
   content: "\e929";
@@ -330,9 +354,6 @@ TABLE OF CONTENTS
 }
 .icon-pdf:before {
   content: "\e92c";
-}
-.icon-zip:before {
-  content: "\e939";
 }
 .icon-file-default:before {
   content: "\e92d";
@@ -348,6 +369,9 @@ TABLE OF CONTENTS
 }
 .icon-arrow-up:before {
   content: "\e931";
+}
+.icon-arrow-right:before {
+  content: "\e93f";
 }
 .icon-plus:before {
   content: "\e932";
@@ -367,17 +391,14 @@ TABLE OF CONTENTS
 .icon-exit:before {
   content: "\e937";
 }
-.icon-search:before {
-  content: "\e917";
+.icon-zip:before {
+  content: "\e93a";
 }
-.icon-back:before {
-  content: "\e938";
+.icon-text-edit:before {
+  content: "\e93b";
 }
-.icon-next:before {
-  content: "\e902";
-}
-.icon-check:before {
-  content: "\e919";
+.icon-clock:before {
+  content: "\e93e";
 }
 
 /* 2.- CONTENT
@@ -404,6 +425,10 @@ html, body {
 
 /* 3.1.- CONTROLS: Button
    ----------------------------- */
+input{
+  font-family: 'NunitoSans';
+}
+
 input[type="text"]:focus {
   outline: 0;
 }

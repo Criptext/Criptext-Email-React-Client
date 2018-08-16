@@ -223,7 +223,8 @@ const createEmail = async (params, trx) => {
   const knex = trx || db;
   const { recipients, email } = params;
   if (!recipients) {
-    return knex.table(Table.EMAIL).insert(email);
+    const emailData = noNulls(email);
+    return knex.table(Table.EMAIL).insert(emailData);
   }
   const recipientsFrom = recipients.from || [];
   const recipientsTo = recipients.to || [];

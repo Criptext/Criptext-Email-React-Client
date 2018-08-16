@@ -1,28 +1,33 @@
 import validator from 'validator';
+import { usernameRegex } from './../utils/RegexUtils';
 import {
   checkAvailableUsername,
   requiredMinLength,
   requiredMaxLength
 } from './../utils/electronInterface';
 
-const checkRequired = field => {
-  return field !== undefined;
+const checkFormat = (string, regex) => {
+  return regex.test(string);
 };
-const checkminLength = (field, minlength) => {
-  return field.length >= minlength;
+const checkRequired = string => {
+  return string !== undefined;
 };
-const checkMaxLength = (field, maxLength) => {
-  return field.length < maxLength;
+const checkminLength = (string, minlength) => {
+  return string.length >= minlength;
 };
-const checkMatch = (field1, field2) => {
-  return field1 === field2;
+const checkMaxLength = (string, maxLength) => {
+  return string.length < maxLength;
+};
+const checkMatch = (string1, string2) => {
+  return string1 === string2;
 };
 
 export const validateUsername = username => {
   return (
     checkRequired(username) &&
     checkminLength(username, requiredMinLength.username) &&
-    checkMaxLength(username, requiredMaxLength.username)
+    checkMaxLength(username, requiredMaxLength.username) &&
+    checkFormat(username, usernameRegex)
   );
 };
 
