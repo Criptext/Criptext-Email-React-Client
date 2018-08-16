@@ -17,8 +17,8 @@ const threads = (state = List([]), action) => {
       });
     }
     case Thread.REMOVE_EMAILID_THREAD: {
-      const { threadId, emailId } = action;
-      if (!threadId || !emailId) {
+      const { threadId, emailIds } = action;
+      if (!threadId || !emailIds) {
         return state;
       }
       return state.map(threadItem => {
@@ -162,6 +162,15 @@ const threads = (state = List([]), action) => {
       const threadIds = action.threadIds;
       return state.filterNot(thread => threadIds.includes(thread.get('id')));
     }
+    case Thread.REMOVE_THREADS_BY_THREAD_ID: {
+      const { threadIds } = action;
+      if (!threadIds) {
+        return state;
+      }
+      return state.filterNot(threadItem =>
+        threadIds.includes(threadItem.get('threadId'))
+      );
+    }
     default:
       return state;
   }
@@ -173,9 +182,12 @@ const thread = (state, action) => {
       return state.set('emailIds', state.get('emailIds').push(action.emailId));
     }
     case Thread.REMOVE_EMAILID_THREAD: {
+      const emailIdsToRemove = action.emailIds;
       return state.set(
         'emailIds',
-        state.get('emailIds').filter(emailId => emailId !== action.emailId)
+        state
+          .get('emailIds')
+          .filter(emailId => !emailIdsToRemove.includes(emailId))
       );
     }
     case Thread.UPDATE_STATUS_THREAD: {

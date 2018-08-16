@@ -154,6 +154,10 @@ export const deleteEmailsByIds = ids => {
   return dbManager.deleteEmailsByIds(ids);
 };
 
+export const deleteEmailByKey = key => {
+  return dbManager.deleteEmailByKey(key);
+};
+
 export const deleteEmailLabel = params => {
   return dbManager.deleteEmailLabel(params);
 };

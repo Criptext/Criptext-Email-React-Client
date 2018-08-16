@@ -15,6 +15,7 @@ import {
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
 import { handleEvent } from './../utils/electronEventInterface';
+import { loadFeedItems } from './feeditems';
 
 export const addEmailIdToThread = ({ threadId, emailId }) => ({
   type: Thread.ADD_EMAILID_THREAD,
@@ -51,10 +52,10 @@ export const moveThreads = (threadIds, labelId) => ({
   labelId
 });
 
-export const removeEmailIdToThread = ({ threadId, emailId }) => ({
+export const removeEmailIdsToThread = ({ threadId, emailIds }) => ({
   type: Thread.REMOVE_EMAILID_THREAD,
   threadId,
-  emailId
+  emailIds
 });
 
 export const removeThread = threadId => ({
@@ -199,6 +200,7 @@ export const removeThreads = (threadsParams, isDraft) => {
         : await deleteEmailsByThreadId(threadIds);
       if (dbResponse) {
         dispatch(removeThreadsSuccess(storeIds));
+        dispatch(loadFeedItems(true));
       }
     } catch (e) {
       /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
@@ -311,3 +313,8 @@ const formRemoveThreadLabelParams = (emails, labelId) => {
     labelId
   };
 };
+
+export const removeThreadsByThreadIdsOnSuccess = threadIds => ({
+  type: Thread.REMOVE_THREADS_BY_THREAD_ID,
+  threadIds
+});

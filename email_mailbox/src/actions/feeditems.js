@@ -7,10 +7,11 @@ import {
 } from './../utils/electronInterface';
 import { getSeenTimestamp } from '../utils/storage';
 
-export const addFeedItems = feeds => {
+export const addFeedItems = (feeds, clear) => {
   return {
     type: FeedItem.ADD_BATCH,
-    feeds
+    feeds,
+    clear
   };
 };
 
@@ -36,7 +37,7 @@ export const updateAllFeedItemsAsOlder = () => {
   };
 };
 
-export const loadFeedItems = () => {
+export const loadFeedItems = clear => {
   return async dispatch => {
     try {
       const allFeeds = await getAllFeedItems();
@@ -53,7 +54,7 @@ export const loadFeedItems = () => {
         result[feedItem.id] = feedItem;
         return result;
       }, {});
-      dispatch(addFeedItems(feedsToState));
+      dispatch(addFeedItems(feedsToState, clear));
     } catch (e) {
       // TO DO
     }

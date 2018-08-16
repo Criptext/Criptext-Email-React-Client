@@ -11,7 +11,9 @@ import {
   updateEmail,
   getLabelByText,
   updateAccount,
-  updateFilesByEmailId
+  updateFilesByEmailId,
+  deleteEmailsByThreadId,
+  deleteEmailByKey
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -46,11 +48,18 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.SEND_EMAIL_ERROR: {
       return handleSendEmailError(incomingEvent);
     }
+
     case SocketCommand.PEER_EMAIL_UNSEND: {
       return handlePeerEmailUnsend(incomingEvent);
     }
     case SocketCommand.PEER_EMAIL_READ_UPDATE: {
       return handlePeerEmailRead(incomingEvent);
+    }
+    case SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY: {
+      return handlePeerEmailDeletedPermanently(incomingEvent);
+    }
+    case SocketCommand.PEER_THREAD_DELETED_PERMANENTLY: {
+      return handlePeerThreadDeletedPermanently(incomingEvent);
     }
     case SocketCommand.PEER_LABEL_CREATED: {
       return handlePeerLabelCreated(incomingEvent);
@@ -219,6 +228,27 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
   await setEventAsHandled(rowid);
 };
 
+const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
+  const { metadataKeys } = params;
+  const emailIds = [];
+  for (const metadataKey of metadataKeys) {
+    const [email] = await getEmailByKey(metadataKey);
+    if (email) {
+      emailIds.push(email.id);
+      await deleteEmailByKey(metadataKey);
+    }
+  }
+  await setEventAsHandled(rowid);
+  emitter.emit(Event.EMAIL_DELETED, emailIds);
+};
+
+const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
+  const { threadIds } = params;
+  await deleteEmailsByThreadId(threadIds);
+  await setEventAsHandled(rowid);
+  emitter.emit(Event.THREADS_DELETED, threadIds);
+};
+
 const handlePeerLabelCreated = async ({ rowid, params }) => {
   const { text, color } = params;
   const [label] = await getLabelByText(text);
@@ -306,5 +336,7 @@ export const Event = {
   EMAIL_TRACKING_UPDATE: 'email-tracking-update',
   UPDATE_EMAILS: 'update-emails',
   DISPLAY_MESSAGE: 'display-message',
-  LABEL_CREATED: 'label-created'
+  LABEL_CREATED: 'label-created',
+  THREADS_DELETED: 'thread-deleted-permanently',
+  EMAIL_DELETED: 'email-deleted-permanently'
 };
