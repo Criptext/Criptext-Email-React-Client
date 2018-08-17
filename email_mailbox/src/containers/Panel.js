@@ -9,7 +9,8 @@ import {
   updateStatusThread,
   unsendEmailOnSuccess,
   unsendEmailFiles,
-  removeThreadsByThreadIdsOnSuccess
+  removeThreadsByThreadIdsOnSuccess,
+  updateUnreadThreadsByThreadIds
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import {
@@ -98,6 +99,9 @@ const mapDispatchToProps = dispatch => {
     },
     onRemoveThreads: threadIds => {
       dispatch(removeThreadsByThreadIdsOnSuccess(threadIds));
+    },
+    onUpdateUnreadThreads: (threadIds, unread) => {
+      dispatch(updateUnreadThreadsByThreadIds(threadIds, unread));
     }
   };
 };

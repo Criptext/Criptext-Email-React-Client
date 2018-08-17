@@ -230,6 +230,10 @@ class PanelWrapper extends Component {
         props.onRemoveThreads(threadIds);
       }
     });
+
+    addEvent(Event.THREADS_UPDATE_READ, (threadIds, unread) => {
+      props.onUpdateUnreadThreads(threadIds, unread);
+    });
   };
 }
 
@@ -244,6 +248,7 @@ PanelWrapper.propTypes = {
   onUpdateTimestamp: PropTypes.func,
   onUpdateUnreadDraftBadge: PropTypes.func,
   onUpdateUnreadEmailsBadge: PropTypes.func,
+  onUpdateUnreadThreads: PropTypes.func,
   threadsCount: PropTypes.number
 };
 

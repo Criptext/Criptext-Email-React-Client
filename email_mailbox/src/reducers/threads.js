@@ -144,6 +144,20 @@ const threads = (state = List([]), action) => {
         return thread.set('unread', !action.read);
       });
     }
+    case Thread.UPDATE_UNREAD_THREADS_BY_THREAD_ID: {
+      const { threadIds, unread } = action;
+      if (!threadIds || unread === undefined) {
+        return state;
+      }
+      return state.map(threadItem => {
+        return threadIds.includes(threadItem.get('threadId'))
+          ? thread(threadItem, {
+              type: Thread.UPDATE_UNREAD_THREAD,
+              thread: { unread }
+            })
+          : threadItem;
+      });
+    }
     case Thread.UNREAD_FILTER: {
       return state.map(thread => thread.set('selected', false));
     }

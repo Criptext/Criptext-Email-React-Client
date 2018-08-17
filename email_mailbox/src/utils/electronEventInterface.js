@@ -13,7 +13,8 @@ import {
   updateAccount,
   updateFilesByEmailId,
   deleteEmailsByThreadId,
-  deleteEmailByKey
+  deleteEmailByKey,
+  updateUnreadEmailByThreadId
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -48,12 +49,14 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.SEND_EMAIL_ERROR: {
       return handleSendEmailError(incomingEvent);
     }
-
     case SocketCommand.PEER_EMAIL_UNSEND: {
       return handlePeerEmailUnsend(incomingEvent);
     }
     case SocketCommand.PEER_EMAIL_READ_UPDATE: {
       return handlePeerEmailRead(incomingEvent);
+    }
+    case SocketCommand.PEER_THREAD_READ_UPDATE: {
+      return handlePeerThreadRead(incomingEvent);
     }
     case SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY: {
       return handlePeerEmailDeletedPermanently(incomingEvent);
@@ -228,6 +231,15 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
   await setEventAsHandled(rowid);
 };
 
+const handlePeerThreadRead = async ({ rowid, params }) => {
+  const { threadIds, unread } = params;
+  for (const threadId of threadIds) {
+    await updateUnreadEmailByThreadId(threadId, !!unread);
+  }
+  await setEventAsHandled(rowid);
+  emitter.emit(Event.THREADS_UPDATE_READ, threadIds, !!unread);
+};
+
 const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
   const { metadataKeys } = params;
   const emailIds = [];
@@ -338,5 +350,6 @@ export const Event = {
   DISPLAY_MESSAGE: 'display-message',
   LABEL_CREATED: 'label-created',
   THREADS_DELETED: 'thread-deleted-permanently',
-  EMAIL_DELETED: 'email-deleted-permanently'
+  EMAIL_DELETED: 'email-deleted-permanently',
+  THREADS_UPDATE_READ: 'threads-update-read'
 };

@@ -117,13 +117,11 @@ const createEmailLabelColumns = table => {
   table
     .foreign('labelId')
     .references('id')
-    .inTable(Table.LABEL)
-    .onDelete('CASCADE');
+    .inTable(Table.LABEL);
   table
     .foreign('emailId')
     .references('id')
-    .inTable(Table.EMAIL)
-    .onDelete('CASCADE');
+    .inTable(Table.EMAIL);
   table.unique(['emailId', 'labelId']);
 };
 
@@ -139,8 +137,7 @@ const createEmailContactColumns = table => {
   table
     .foreign('emailId')
     .references('id')
-    .inTable(Table.EMAIL)
-    .onDelete('CASCADE');
+    .inTable(Table.EMAIL);
 };
 
 const createFileColumns = table => {
@@ -171,8 +168,7 @@ const createFileColumns = table => {
   table
     .foreign('emailId')
     .references('id')
-    .inTable(Table.EMAIL)
-    .onDelete('CASCADE');
+    .inTable(Table.EMAIL);
 };
 
 const createFileKeyColumns = table => {
@@ -183,8 +179,7 @@ const createFileKeyColumns = table => {
   table
     .foreign('emailId')
     .references('id')
-    .inTable(Table.EMAIL)
-    .onDelete('CASCADE');
+    .inTable(Table.EMAIL);
 };
 
 const createAccountColumns = table => {
@@ -218,8 +213,7 @@ const createFeedItemColumns = table => {
   table
     .foreign('emailId')
     .references('id')
-    .inTable(Table.EMAIL)
-    .onDelete('CASCADE');
+    .inTable(Table.EMAIL);
   table
     .foreign('contactId')
     .references('id')

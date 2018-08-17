@@ -11,11 +11,13 @@ import {
   updateUnreadEmailByThreadId,
   deleteEmailsByIds,
   postOpenEvent,
-  getUnreadEmailsByThreadId
+  getUnreadEmailsByThreadId,
+  postPeerEvent
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
 import { handleEvent } from './../utils/electronEventInterface';
 import { loadFeedItems } from './feeditems';
+import { SocketCommand } from '../utils/const';
 
 export const addEmailIdToThread = ({ threadId, emailId }) => ({
   type: Thread.ADD_EMAILID_THREAD,
@@ -136,8 +138,15 @@ export const updateUnreadThreads = (threadsParams, read, label) => {
         })
       );
       if (dbReponse) {
-        dispatch(updateUnreadThreadsSuccess(storeIds, read));
-        if (label) dispatch(updateLabelSuccess(label));
+        const eventParams = {
+          cmd: SocketCommand.PEER_THREAD_READ_UPDATE,
+          params: { threadIds, unread: read ? 0 : 1 }
+        };
+        const { status } = await postPeerEvent(eventParams);
+        if (status === 200) {
+          dispatch(updateUnreadThreadsSuccess(storeIds, read));
+          if (label) dispatch(updateLabelSuccess(label));
+        }
       }
     } catch (e) {
       // To do
@@ -317,4 +326,10 @@ const formRemoveThreadLabelParams = (emails, labelId) => {
 export const removeThreadsByThreadIdsOnSuccess = threadIds => ({
   type: Thread.REMOVE_THREADS_BY_THREAD_ID,
   threadIds
+});
+
+export const updateUnreadThreadsByThreadIds = (threadIds, unread) => ({
+  type: Thread.UPDATE_UNREAD_THREADS_BY_THREAD_ID,
+  threadIds,
+  unread
 });
