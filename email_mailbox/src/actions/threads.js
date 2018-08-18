@@ -55,7 +55,7 @@ export const moveThreads = (threadIds, labelId) => ({
 });
 
 export const removeEmailIdsToThread = ({ threadId, emailIds }) => ({
-  type: Thread.REMOVE_EMAILID_THREAD,
+  type: Thread.REMOVE_EMAILIDS_THREAD,
   threadId,
   emailIds
 });
@@ -202,14 +202,23 @@ export const removeThreads = (threadsParams, isDraft) => {
   return async dispatch => {
     try {
       const storeIds = threadsParams.map(param => param.threadIdStore);
-      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const threadIds = threadsParams
+        .map(param => param.threadIdDB)
+        .filter(item => item !== null);
 
       const dbResponse = isDraft
         ? await deleteEmailsByIds(storeIds)
         : await deleteEmailsByThreadId(threadIds);
       if (dbResponse) {
-        dispatch(removeThreadsSuccess(storeIds));
-        dispatch(loadFeedItems(true));
+        const eventParams = {
+          cmd: SocketCommand.PEER_THREAD_DELETED_PERMANENTLY,
+          params: { threadIds }
+        };
+        const res = await postPeerEvent(eventParams);
+        if (res.status === 200) {
+          dispatch(removeThreadsSuccess(storeIds));
+          dispatch(loadFeedItems(true));
+        }
       }
     } catch (e) {
       /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 

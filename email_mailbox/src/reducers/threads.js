@@ -16,7 +16,7 @@ const threads = (state = List([]), action) => {
         return threadItem;
       });
     }
-    case Thread.REMOVE_EMAILID_THREAD: {
+    case Thread.REMOVE_EMAILIDS_THREAD: {
       const { threadId, emailIds } = action;
       if (!threadId || !emailIds) {
         return state;
@@ -195,7 +195,7 @@ const thread = (state, action) => {
     case Thread.ADD_EMAILID_THREAD: {
       return state.set('emailIds', state.get('emailIds').push(action.emailId));
     }
-    case Thread.REMOVE_EMAILID_THREAD: {
+    case Thread.REMOVE_EMAILIDS_THREAD: {
       const emailIdsToRemove = action.emailIds;
       return state.set(
         'emailIds',

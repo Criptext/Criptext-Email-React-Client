@@ -19,6 +19,27 @@ describe('Feed actions: ', () => {
     expect(initState(feeds)).toMatchSnapshot();
   });
 
+  it('Add feedItems to state. clear: true', () => {
+    const prevState = initState(feeds);
+    const newFeedItems = {
+      0: {
+        id: 0,
+        date: '2018-08-17T22:11:29.754Z',
+        type: '1',
+        location: undefined,
+        seen: false,
+        emailId: 1,
+        contactId: 2,
+        fileId: undefined,
+        isNew: true
+      }
+    };
+    const clear = true;
+    const action = addFeedItems(newFeedItems, clear);
+    const nextState = feedItemsReducer(prevState, action);
+    expect(nextState).toMatchSnapshot();
+  });
+
   it('Update field by FeedItem id', () => {
     const idToUpdate = 1;
     const prevState = initState(feeds);
