@@ -9,12 +9,14 @@ import {
   createFeedItem,
   myAccount,
   updateEmail,
-  getLabelByText,
+  getLabelsByText,
   updateAccount,
   updateFilesByEmailId,
   deleteEmailsByThreadId,
   deleteEmailByKey,
-  updateUnreadEmailByThreadId
+  updateUnreadEmailByThreadId,
+  getEmailsByThreadId,
+  deleteEmailLabel
 } from './electronInterface';
 import {
   formEmailLabel,
@@ -57,6 +59,12 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.PEER_THREAD_READ_UPDATE: {
       return handlePeerThreadRead(incomingEvent);
+    }
+    case SocketCommand.PEER_EMAIL_LABELS_UPDATE: {
+      return handlePeerEmailLabelsUpdate(incomingEvent);
+    }
+    case SocketCommand.PEER_THREAD_LABELS_UPDATE: {
+      return handlePeerThreadLabelsUpdate(incomingEvent);
     }
     case SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY: {
       return handlePeerEmailDeletedPermanently(incomingEvent);
@@ -240,6 +248,70 @@ const handlePeerThreadRead = async ({ rowid, params }) => {
   emitter.emit(Event.THREADS_UPDATE_READ, threadIds, !!unread);
 };
 
+const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
+  const { metadataKeys, labelsRemoved, labelsAdded } = params;
+  const emailsId = [];
+  for (const metadataKey of metadataKeys) {
+    const [email] = await getEmailByKey(metadataKey);
+    if (email) {
+      emailsId.push(email.id);
+    }
+  }
+  const labelsToRemove = await getLabelsByText(labelsRemoved);
+  const labelIdsToRemove = labelsToRemove.map(label => label.id);
+
+  const labelsToAdd = await getLabelsByText(labelsAdded);
+  const labelIdsToAdd = labelsToAdd.map(label => label.id);
+
+  await formAndSaveEmailLabelsUpdate({
+    emailsId,
+    labelIdsToAdd,
+    labelIdsToRemove
+  });
+  await setEventAsHandled(rowid);
+};
+
+const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
+  const { threadIds, labelsRemoved, labelsAdded } = params;
+  let allEmailsIds = [];
+  for (const threadId of threadIds) {
+    const emails = await getEmailsByThreadId(threadId);
+    const emailIds = emails.map(email => email.id);
+    allEmailsIds = [...allEmailsIds, ...emailIds];
+  }
+  const labelsToRemove = await getLabelsByText(labelsRemoved);
+  const labelIdsToRemove = labelsToRemove.map(label => label.id);
+
+  const labelsToAdd = await getLabelsByText(labelsAdded);
+  const labelIdsToAdd = labelsToAdd.map(label => label.id);
+
+  await formAndSaveEmailLabelsUpdate({
+    emailsId: allEmailsIds,
+    labelIdsToAdd,
+    labelIdsToRemove
+  });
+  await setEventAsHandled(rowid);
+  emitter.emit(Event.REFRESH_THREADS, null);
+};
+
+const formAndSaveEmailLabelsUpdate = async ({
+  emailsId,
+  labelIdsToAdd,
+  labelIdsToRemove
+}) => {
+  const formattedEmailLabelsToAdd = emailsId.reduce((result, emailId) => {
+    const emailLabel = formEmailLabel({ emailId, labels: labelIdsToAdd });
+    return [...result, ...emailLabel];
+  }, []);
+
+  if (labelIdsToRemove.length) {
+    await deleteEmailLabel({ emailsId, labelIds: labelIdsToRemove });
+  }
+  if (formattedEmailLabelsToAdd.length) {
+    await createEmailLabel(formattedEmailLabelsToAdd);
+  }
+};
+
 const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
   const { metadataKeys } = params;
   const emailIds = [];
@@ -263,9 +335,13 @@ const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
 
 const handlePeerLabelCreated = async ({ rowid, params }) => {
   const { text, color } = params;
-  const [label] = await getLabelByText(text);
+  const [label] = await getLabelsByText([text]);
   if (!label) {
-    await emitter.emit(Event.LABEL_CREATED, { text, color, visible: true });
+    await emitter.emit(Event.LABEL_CREATED, {
+      text,
+      color: `#${color}`,
+      visible: true
+    });
   }
   await setEventAsHandled(rowid);
 };
@@ -289,7 +365,7 @@ const setEventAsHandled = async eventId => {
   ----------------------------- */
 
 ipcRenderer.on('update-drafts', (ev, data) => {
-  emitter.emit(Event.UPDATE_SAVED_DRAFTS, data);
+  emitter.emit(Event.REFRESH_THREADS, data);
 });
 
 ipcRenderer.on('display-message-email-sent', (ev, { emailId }) => {
@@ -334,6 +410,30 @@ ipcRenderer.on('update-thread-emails', (ev, data) => {
   });
 });
 
+export const sendUpdateThreadLabelsErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.updateThreadLabels,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendRemoveThreadsErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.removeThreads,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendFetchEmalsErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.fetchEmails,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
@@ -344,7 +444,7 @@ export const removeEvent = eventName => {
 
 export const Event = {
   NEW_EMAIL: 'new-email',
-  UPDATE_SAVED_DRAFTS: 'update-drafts',
+  REFRESH_THREADS: 'refresh-threads',
   EMAIL_TRACKING_UPDATE: 'email-tracking-update',
   UPDATE_EMAILS: 'update-emails',
   DISPLAY_MESSAGE: 'display-message',

@@ -3,57 +3,16 @@
 exports[`TABLE[Label]: should create label to db 1`] = `
 Array [
   Object {
-    "color": "#ffffff",
+    "color": "#111111",
     "id": 1,
     "text": "Inbox",
     "type": "custom",
     "visible": 1,
   },
-]
-`;
-
-exports[`TABLE[Label]: should update label: color 1`] = `
-Array [
   Object {
-    "color": "#111111",
-    "id": 3,
-    "text": "Spam",
-    "type": "custom",
-    "visible": 1,
-  },
-]
-`;
-
-exports[`TABLE[Label]: should update label: color and text 1`] = `
-Array [
-  Object {
-    "color": "#000000",
+    "color": "#222222",
     "id": 2,
-    "text": "labelmodified",
-    "type": "custom",
-    "visible": 1,
-  },
-]
-`;
-
-exports[`TABLE[Label]: should update label: text 1`] = `
-Array [
-  Object {
-    "color": "#ffffff",
-    "id": 4,
-    "text": "labelmodified2",
-    "type": "custom",
-    "visible": 1,
-  },
-]
-`;
-
-exports[`TABLE[Label]: should update label: visible 1`] = `
-Array [
-  Object {
-    "color": "#ffffff",
-    "id": 5,
-    "text": "Important",
+    "text": "Sent",
     "type": "custom",
     "visible": 1,
   },

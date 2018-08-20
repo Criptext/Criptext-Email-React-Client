@@ -254,8 +254,8 @@ export const getLabelById = id => {
   return dbManager.getLabelById(id);
 };
 
-export const getLabelByText = text => {
-  return dbManager.getLabelByText(text);
+export const getLabelsByText = names => {
+  return dbManager.getLabelsByText(names);
 };
 
 export const getPreKeyPair = params => {

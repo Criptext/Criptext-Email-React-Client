@@ -170,7 +170,9 @@ const deleteEmailContactByEmailId = (emailId, trx) => {
 const createEmailLabel = async (emailLabels, trx) => {
   const knex = trx || db;
   const toInsert = await filterEmailLabelIfNotStore(emailLabels, trx);
-  return knex.insert(toInsert).into(Table.EMAIL_LABEL);
+  if (toInsert.length) {
+    return knex.insert(toInsert).into(Table.EMAIL_LABEL);
+  }
 };
 
 const filterEmailLabelIfNotStore = async (emailLabels, trx) => {
@@ -182,8 +184,18 @@ const filterEmailLabelIfNotStore = async (emailLabels, trx) => {
     .table(Table.EMAIL_LABEL)
     .whereIn('emailId', emailIds)
     .whereIn('labelId', labelIds);
+
   const storedEmailIds = stored.map(item => item.emailId);
-  return emailLabels.filter(item => !storedEmailIds.includes(item.emailId));
+  const storedLabelIds = stored.map(item => String(item.labelId));
+  return emailLabels
+    .map(item => {
+      const isEmailIdStored = storedEmailIds.includes(String(item.emailId));
+      const isLabelIdStored = storedLabelIds.includes(String(item.labelId));
+      return isEmailIdStored && isLabelIdStored
+        ? null
+        : { emailId: String(item.emailId), labelId: Number(item.labelId) };
+    })
+    .filter(item => item !== null);
 };
 
 const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
@@ -193,11 +205,11 @@ const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
     .update({ labelId: newLabelId });
 };
 
-const deleteEmailLabel = ({ emailsId, labelId }, trx) => {
+const deleteEmailLabel = ({ emailsId, labelIds }, trx) => {
   const knex = trx || db;
   return knex
     .table(Table.EMAIL_LABEL)
-    .where('labelId', labelId)
+    .whereIn('labelId', labelIds)
     .whereIn('emailId', emailsId)
     .del();
 };
@@ -682,11 +694,16 @@ const getLabelById = id => {
     .where({ id });
 };
 
-const getLabelByText = text => {
-  return db
-    .select('*')
-    .from(Table.LABEL)
-    .where({ text });
+const getLabelsByText = async textArray => {
+  let labels = [];
+  for (const text of textArray) {
+    const labelsMatched = await db
+      .select('*')
+      .from(Table.LABEL)
+      .where('text', 'like', `${text}`);
+    labels = labels.concat(labelsMatched);
+  }
+  return labels;
 };
 
 const updateLabel = ({ id, color, text, visible }) => {
@@ -709,7 +726,9 @@ const deleteLabelById = id => {
       .from(Table.EMAIL_LABEL)
       .where('labelId', id);
     const emailsId = emailLabels.map(item => item.emailId);
-    await deleteEmailLabel({ emailsId, labelId: id }, trx);
+    if (emailsId.length) {
+      await deleteEmailLabel({ emailsId, labelId: id }, trx);
+    }
     return trx
       .table(Table.LABEL)
       .where({ id })
@@ -933,7 +952,7 @@ module.exports = {
   getFileKeyByEmailId,
   getIdentityKeyRecord,
   getLabelById,
-  getLabelByText,
+  getLabelsByText,
   getPreKeyPair,
   getSessionRecord,
   getSessionRecordByRecipientIds,

@@ -70,6 +70,19 @@ const messagesContent = {
     failedToSend: {
       priority: messagePriorities.MEDIUM,
       description: 'Failed to send your message'
+    },
+    updateThreadLabels: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Failed to update thread labels'
+    },
+    removeThreads: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Failed to remove threads'
+    },
+    fetchEmails: {
+      priority: messagePriorities.MEDIUM,
+      description:
+        'Failed to fetch the emails. Check your connection and try again.'
     }
   },
   establish: {

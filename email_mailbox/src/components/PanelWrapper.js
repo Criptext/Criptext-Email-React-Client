@@ -152,17 +152,17 @@ class PanelWrapper extends Component {
       props.onUpdateUnreadEmailsBadge();
     });
 
-    addEvent(Event.UPDATE_SAVED_DRAFTS, eventParams => {
+    addEvent(Event.REFRESH_THREADS, eventParams => {
       if (this.state.sectionSelected.params.mailboxSelected) {
         const currentLabelId =
           LabelType[this.state.sectionSelected.params.mailboxSelected].id;
-        if (currentLabelId === LabelType.draft.id) {
-          props.onLoadThreads({
-            labelId: Number(currentLabelId),
-            clear: true,
-            limit: props.threadsCount
-          });
-        }
+        props.onLoadThreads({
+          labelId: Number(currentLabelId),
+          clear: true
+        });
+      }
+      if (this.state.sectionSelected.params.threadIdSelected) {
+        props.onLoadEmails(this.state.sectionSelected.params.threadIdSelected);
       }
       if (eventParams) {
         const { operation, value } = eventParams;
