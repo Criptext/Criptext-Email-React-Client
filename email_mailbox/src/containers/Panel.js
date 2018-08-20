@@ -2,13 +2,15 @@ import { connect } from 'react-redux';
 import {
   addEmailIdToThread,
   loadThreads,
-  removeEmailIdToThread,
+  removeEmailIdsToThread,
   updateLabelSuccess,
   updateAllFeedItemsAsOlder,
   loadEmails,
   updateStatusThread,
   unsendEmailOnSuccess,
-  unsendEmailFiles
+  unsendEmailFiles,
+  removeThreadsByThreadIdsOnSuccess,
+  updateUnreadThreadsByThreadIds
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import {
@@ -63,8 +65,8 @@ const mapDispatchToProps = dispatch => {
       const openedStatus = EmailStatus.OPENED;
       dispatch(updateStatusThread(threadId, openedStatus));
     },
-    onRemoveEmailIdToThread: ({ threadId, emailId }) => {
-      dispatch(removeEmailIdToThread({ threadId, emailId }));
+    onRemoveEmailIdsToThread: ({ threadId, emailIds }) => {
+      dispatch(removeEmailIdsToThread({ threadId, emailIds }));
     },
     onUpdateOpenedAccount: async () => {
       const opened = true;
@@ -94,6 +96,12 @@ const mapDispatchToProps = dispatch => {
     onUnsendEmail: (emailId, date) => {
       dispatch(unsendEmailOnSuccess(emailId, date));
       dispatch(unsendEmailFiles(emailId));
+    },
+    onRemoveThreads: threadIds => {
+      dispatch(removeThreadsByThreadIdsOnSuccess(threadIds));
+    },
+    onUpdateUnreadThreads: (threadIds, unread) => {
+      dispatch(updateUnreadThreadsByThreadIds(threadIds, unread));
     }
   };
 };

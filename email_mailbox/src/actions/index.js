@@ -11,16 +11,18 @@ import {
   loadThreads,
   moveThreads,
   selectThread,
-  removeEmailIdToThread,
+  removeEmailIdsToThread,
   removeThread,
   removeThreadLabel,
+  removeThreadsByThreadIdsOnSuccess,
   updateUnreadThread,
   updateUnreadThreads,
   searchThreads,
   removeThreads,
   removeThreadsLabel,
   sendOpenEvent,
-  updateStatusThread
+  updateStatusThread,
+  updateUnreadThreadsByThreadIds
 } from './threads';
 import {
   addEmails,
@@ -83,9 +85,10 @@ export {
   removeThreadLabel,
   removeFeedItem,
   removeFeedItemSuccess,
-  removeEmailIdToThread,
+  removeEmailIdsToThread,
   removeThreads,
   removeThreadsLabel,
+  removeThreadsByThreadIdsOnSuccess,
   selectFeedItem,
   selectThread,
   searchThreads,
@@ -101,5 +104,6 @@ export {
   updateStatusThread,
   updateUnreadEmails,
   updateUnreadThread,
-  updateUnreadThreads
+  updateUnreadThreads,
+  updateUnreadThreadsByThreadIds
 };

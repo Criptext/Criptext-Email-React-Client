@@ -16,9 +16,9 @@ const threads = (state = List([]), action) => {
         return threadItem;
       });
     }
-    case Thread.REMOVE_EMAILID_THREAD: {
-      const { threadId, emailId } = action;
-      if (!threadId || !emailId) {
+    case Thread.REMOVE_EMAILIDS_THREAD: {
+      const { threadId, emailIds } = action;
+      if (!threadId || !emailIds) {
         return state;
       }
       return state.map(threadItem => {
@@ -144,6 +144,20 @@ const threads = (state = List([]), action) => {
         return thread.set('unread', !action.read);
       });
     }
+    case Thread.UPDATE_UNREAD_THREADS_BY_THREAD_ID: {
+      const { threadIds, unread } = action;
+      if (!threadIds || unread === undefined) {
+        return state;
+      }
+      return state.map(threadItem => {
+        return threadIds.includes(threadItem.get('threadId'))
+          ? thread(threadItem, {
+              type: Thread.UPDATE_UNREAD_THREAD,
+              thread: { unread }
+            })
+          : threadItem;
+      });
+    }
     case Thread.UNREAD_FILTER: {
       return state.map(thread => thread.set('selected', false));
     }
@@ -162,6 +176,15 @@ const threads = (state = List([]), action) => {
       const threadIds = action.threadIds;
       return state.filterNot(thread => threadIds.includes(thread.get('id')));
     }
+    case Thread.REMOVE_THREADS_BY_THREAD_ID: {
+      const { threadIds } = action;
+      if (!threadIds) {
+        return state;
+      }
+      return state.filterNot(threadItem =>
+        threadIds.includes(threadItem.get('threadId'))
+      );
+    }
     default:
       return state;
   }
@@ -172,10 +195,13 @@ const thread = (state, action) => {
     case Thread.ADD_EMAILID_THREAD: {
       return state.set('emailIds', state.get('emailIds').push(action.emailId));
     }
-    case Thread.REMOVE_EMAILID_THREAD: {
+    case Thread.REMOVE_EMAILIDS_THREAD: {
+      const emailIdsToRemove = action.emailIds;
       return state.set(
         'emailIds',
-        state.get('emailIds').filter(emailId => emailId !== action.emailId)
+        state
+          .get('emailIds')
+          .filter(emailId => !emailIdsToRemove.includes(emailId))
       );
     }
     case Thread.UPDATE_STATUS_THREAD: {

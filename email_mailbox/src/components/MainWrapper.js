@@ -8,6 +8,7 @@ import Thread from '../containers/Thread';
 import Settings from './../containers/Settings';
 import { SectionType } from '../utils/const';
 import { Set } from 'immutable';
+import { addEvent, Event } from '../utils/electronEventInterface';
 
 const HeaderMain = HeaderHOC(HeaderMainBasic);
 const HeaderThreadOptions = HeaderHOC(HeaderThreadOptionsBasic);
@@ -18,6 +19,13 @@ class MainWrapper extends Component {
     this.state = {
       threadItemsChecked: Set()
     };
+
+    addEvent(Event.THREADS_DELETED, () => {
+      this.handleClickBackHeaderThread(
+        this.props.sectionSelected.params.mailboxSelected,
+        this.props.onClickSection
+      );
+    });
   }
 
   render() {

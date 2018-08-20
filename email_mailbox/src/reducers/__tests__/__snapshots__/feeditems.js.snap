@@ -37,3 +37,19 @@ Immutable.Map {
   },
 }
 `;
+
+exports[`Feed actions:  Add feedItems to state. clear: true 1`] = `
+Immutable.Map {
+  0: Immutable.Map {
+    date: "2018-08-17T22:11:29.754Z",
+    location: undefined,
+    isNew: true,
+    emailId: 1,
+    fileId: undefined,
+    type: "1",
+    id: 0,
+    contactId: 2,
+    seen: false,
+  },
+}
+`;

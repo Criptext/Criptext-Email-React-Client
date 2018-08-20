@@ -27,92 +27,7 @@ class PanelWrapper extends Component {
         }
       }
     };
-
-    addEvent(Event.NEW_EMAIL, emailParams => {
-      const isRenderingMailbox =
-        this.state.sectionSelected.type === SectionType.MAILBOX;
-      const isRenderingThread =
-        this.state.sectionSelected.type === SectionType.THREAD;
-      const currentLabelId =
-        LabelType[this.state.sectionSelected.params.mailboxSelected].id;
-      const isNewEmailInMailbox =
-        emailParams.labels.indexOf(currentLabelId) > -1;
-      if (isNewEmailInMailbox && isRenderingMailbox) {
-        props.onLoadThreads({
-          labelId: Number(currentLabelId),
-          limit: props.threadsCount + 1
-        });
-      }
-      if (isRenderingThread) {
-        const newThreadId = emailParams.threadId;
-        props.onLoadEmails(newThreadId);
-        props.onAddEmailIdToThread({
-          threadId: this.state.sectionSelected.params.threadIdSelected,
-          emailId: emailParams.emailId
-        });
-      }
-      props.onUpdateUnreadEmailsBadge();
-    });
-
-    addEvent(Event.UPDATE_SAVED_DRAFTS, eventParams => {
-      if (this.state.sectionSelected.params.mailboxSelected) {
-        const currentLabelId =
-          LabelType[this.state.sectionSelected.params.mailboxSelected].id;
-        if (currentLabelId === LabelType.draft.id) {
-          props.onLoadThreads({
-            labelId: Number(currentLabelId),
-            clear: true,
-            limit: props.threadsCount
-          });
-        }
-      }
-      if (eventParams) {
-        const { operation, value } = eventParams;
-        props.onUpdateUnreadDraftBadge({ operation, value });
-      }
-    });
-
-    addEvent(Event.EMAIL_TRACKING_UPDATE, (threadId, status, date) => {
-      if (status === EmailStatus.OPENED) {
-        props.onMarkThreadAsOpen(threadId);
-      }
-      if (status === EmailStatus.UNSEND) {
-        const currentSectionType = this.state.sectionSelected.type;
-        const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
-        const isRenderingThread = currentSectionType === SectionType.THREAD;
-        if (isRenderingMailbox) {
-          const currentLabelId =
-            LabelType[this.state.sectionSelected.params.mailboxSelected].id;
-          props.onLoadThreads({
-            labelId: Number(currentLabelId),
-            clear: true,
-            limit: props.threadsCount
-          });
-        }
-        if (isRenderingThread) {
-          props.onUnsendEmail(threadId, date);
-        }
-      }
-    });
-
-    addEvent(Event.UPDATE_THREAD_EMAILS, eventParams => {
-      const { threadId, newEmailId, oldEmailId } = eventParams;
-      const currentThreadId = this.state.sectionSelected.params
-        .threadIdSelected;
-      props.onLoadEmails(threadId);
-      props.onAddEmailIdToThread({
-        threadId: currentThreadId,
-        emailId: newEmailId
-      });
-      if (oldEmailId) {
-        props.onRemoveEmailIdToThread({
-          threadId: currentThreadId,
-          emailId: oldEmailId
-        });
-      } else if (!newEmailId && !oldEmailId) {
-        props.onUpdateUnreadEmailsBadge();
-      }
-    });
+    this.initEventHandlers(props);
   }
 
   render() {
@@ -209,6 +124,117 @@ class PanelWrapper extends Component {
       this.props.onUpdateOpenedAccount();
     });
   };
+
+  initEventHandlers = props => {
+    addEvent(Event.NEW_EMAIL, emailParams => {
+      const isRenderingMailbox =
+        this.state.sectionSelected.type === SectionType.MAILBOX;
+      const isRenderingThread =
+        this.state.sectionSelected.type === SectionType.THREAD;
+      const currentLabelId =
+        LabelType[this.state.sectionSelected.params.mailboxSelected].id;
+      const isNewEmailInMailbox =
+        emailParams.labels.indexOf(currentLabelId) > -1;
+      if (isNewEmailInMailbox && isRenderingMailbox) {
+        props.onLoadThreads({
+          labelId: Number(currentLabelId),
+          limit: props.threadsCount + 1
+        });
+      }
+      if (isRenderingThread) {
+        const newThreadId = emailParams.threadId;
+        props.onLoadEmails(newThreadId);
+        props.onAddEmailIdToThread({
+          threadId: this.state.sectionSelected.params.threadIdSelected,
+          emailId: emailParams.emailId
+        });
+      }
+      props.onUpdateUnreadEmailsBadge();
+    });
+
+    addEvent(Event.UPDATE_SAVED_DRAFTS, eventParams => {
+      if (this.state.sectionSelected.params.mailboxSelected) {
+        const currentLabelId =
+          LabelType[this.state.sectionSelected.params.mailboxSelected].id;
+        if (currentLabelId === LabelType.draft.id) {
+          props.onLoadThreads({
+            labelId: Number(currentLabelId),
+            clear: true,
+            limit: props.threadsCount
+          });
+        }
+      }
+      if (eventParams) {
+        const { operation, value } = eventParams;
+        props.onUpdateUnreadDraftBadge({ operation, value });
+      }
+    });
+
+    addEvent(Event.EMAIL_TRACKING_UPDATE, (threadId, status, date) => {
+      if (status === EmailStatus.OPENED) {
+        props.onMarkThreadAsOpen(threadId);
+      }
+      if (status === EmailStatus.UNSEND) {
+        const currentSectionType = this.state.sectionSelected.type;
+        const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
+        const isRenderingThread = currentSectionType === SectionType.THREAD;
+        if (isRenderingMailbox) {
+          const currentLabelId =
+            LabelType[this.state.sectionSelected.params.mailboxSelected].id;
+          props.onLoadThreads({
+            labelId: Number(currentLabelId),
+            clear: true,
+            limit: props.threadsCount
+          });
+        }
+        if (isRenderingThread) {
+          props.onUnsendEmail(threadId, date);
+        }
+      }
+    });
+
+    addEvent(Event.UPDATE_THREAD_EMAILS, eventParams => {
+      const { threadId, newEmailId, oldEmailId } = eventParams;
+      const currentThreadId = this.state.sectionSelected.params
+        .threadIdSelected;
+      props.onLoadEmails(threadId);
+      props.onAddEmailIdToThread({
+        threadId: currentThreadId,
+        emailId: newEmailId
+      });
+      if (oldEmailId) {
+        props.onRemoveEmailIdsToThread({
+          threadId: currentThreadId,
+          emailIds: [oldEmailId]
+        });
+      } else if (!newEmailId && !oldEmailId) {
+        props.onUpdateUnreadEmailsBadge();
+      }
+    });
+
+    addEvent(Event.EMAIL_DELETED, emailIds => {
+      if (emailIds.length) {
+        const currentThreadId = this.state.sectionSelected.params
+          .threadIdSelected;
+        props.onRemoveEmailIdsToThread({
+          threadId: currentThreadId,
+          emailIds
+        });
+      }
+    });
+
+    addEvent(Event.THREADS_DELETED, threadIds => {
+      const isRenderingMailbox =
+        this.state.sectionSelected.type === SectionType.MAILBOX;
+      if (threadIds.length && isRenderingMailbox) {
+        props.onRemoveThreads(threadIds);
+      }
+    });
+
+    addEvent(Event.THREADS_UPDATE_READ, (threadIds, unread) => {
+      props.onUpdateUnreadThreads(threadIds, unread);
+    });
+  };
 }
 
 PanelWrapper.propTypes = {
@@ -222,6 +248,7 @@ PanelWrapper.propTypes = {
   onUpdateTimestamp: PropTypes.func,
   onUpdateUnreadDraftBadge: PropTypes.func,
   onUpdateUnreadEmailsBadge: PropTypes.func,
+  onUpdateUnreadThreads: PropTypes.func,
   threadsCount: PropTypes.number
 };
 

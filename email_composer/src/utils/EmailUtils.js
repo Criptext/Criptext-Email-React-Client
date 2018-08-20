@@ -142,6 +142,10 @@ const formReplyHeader = (date, from) => {
     ''} < ${from.email} > wrote: </p><br>`;
 };
 
+const formForwardHeader = () => {
+  return `<p>---------- Forwarded message ---------</p>`;
+};
+
 const insertEmptyLine = quantity => {
   return quantity > 0 ? '<p></p>'.repeat(quantity) : '';
 };
@@ -158,11 +162,15 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const [from] = contacts.from;
 
   const firstLine = formReplyHeader(emailData.date, from);
-  const newContent = `${firstLine}${emailData.content}`;
+  let newContent = `${firstLine}${emailData.content}`;
+  if (replyType === composerEvents.FORWARD) {
+    newContent = `${formForwardHeader()}${newContent}`;
+  }
 
   let content = replaceAllOccurrences(newContent, '<p>', '<blockquote>');
   content = replaceAllOccurrences(content, '</p>', '</blockquote>');
   content = `${insertEmptyLine(2)}${content}`;
+  content = `${content}${formSignature()}`;
 
   const blocksFromHtml = htmlToDraft(content);
   const { contentBlocks, entityMap } = blocksFromHtml;
@@ -208,7 +216,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
 
 const formSignature = () => {
   const signature = myAccount.signatureEnabled
-    ? `<br/><br/><p>${myAccount.signature}</p>`
+    ? `<br/><p>${myAccount.signature}</p>`
     : '<p></p>';
   return signature;
 };
