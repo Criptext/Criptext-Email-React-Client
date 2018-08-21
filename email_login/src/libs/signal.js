@@ -11,7 +11,7 @@ import {
   createContact
 } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
-import { appDomain, DEVICE_TYPE } from './../utils/consts';
+import { appDomain, DEVICE_TYPE } from './../utils/const';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();

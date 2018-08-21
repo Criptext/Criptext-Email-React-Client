@@ -1,5 +1,5 @@
 const { client: WebSocketClient } = require('websocket');
-const { PROD_SOCKET_URL } = require('./utils/consts');
+const { PROD_SOCKET_URL } = require('./utils/const');
 const SOCKET_URL = process.env.REACT_APP_SOCKETSERVER_URL || PROD_SOCKET_URL;
 var client, reconnect, messageListener;
 var reconnectDelay = 1000;

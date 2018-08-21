@@ -6,7 +6,7 @@ const clientManager = remote.require('./src/clientManager');
 const globalManager = remote.require('./src/globalManager');
 
 export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
-  './src/utils/consts'
+  './src/utils/const'
 );
 
 export const getEmailToEdit = () => {

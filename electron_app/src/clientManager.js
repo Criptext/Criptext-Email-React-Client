@@ -1,5 +1,5 @@
 const ClientAPI = require('@criptext/email-http-client');
-const { PROD_SERVER_URL } = require('./utils/consts');
+const { PROD_SERVER_URL } = require('./utils/const');
 const { getAccount } = require('./DBManager');
 let client = {};
 

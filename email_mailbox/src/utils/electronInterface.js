@@ -19,7 +19,7 @@ export const { requiredMinLength, requiredMaxLength } = remote.require(
 );
 
 export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
-  './src/utils/consts'
+  './src/utils/const'
 );
 
 export const LabelType = Object.assign(labels, additionalLabels);
