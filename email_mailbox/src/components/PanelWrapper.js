@@ -138,7 +138,7 @@ class PanelWrapper extends Component {
       if (isNewEmailInMailbox && isRenderingMailbox) {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
-          limit: props.threadsCount + 1
+          clear: true
         });
       }
       if (isRenderingThread) {
