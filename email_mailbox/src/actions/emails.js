@@ -8,10 +8,10 @@ import {
   unsendEmailEvent,
   getContactByIds
 } from '../utils/electronInterface';
+import { EmailUtils } from '../utils/electronUtilsInterface';
 import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
 import { EmailStatus } from '../utils/const';
-import { getCriptextRecipients } from '../utils/EmailUtils';
 import { unsendEmailFiles } from './files';
 
 export const addEmails = emails => {
@@ -117,7 +117,7 @@ export const unsendEmail = params => {
     try {
       const contacts = await getContactByIds(contactIds);
       const emails = contacts.map(contact => contact.email);
-      const criptextRecipients = getCriptextRecipients(emails);
+      const criptextRecipients = EmailUtils.filterCriptextRecipients(emails);
       const params = {
         metadataKey: Number(key),
         recipients: criptextRecipients

@@ -1,3 +1,4 @@
+import signal from './../libs/signal';
 import {
   acknowledgeEvents,
   createEmail,
@@ -18,13 +19,11 @@ import {
   getEmailsByThreadId,
   deleteEmailLabel
 } from './electronInterface';
+import { EmailUtils } from './electronUtilsInterface';
 import {
   formEmailLabel,
   formFilesFromData,
-  formIncomingEmailFromData,
-  getRecipientsFromData,
-  validateEmailStatusToSet,
-  checkEmailIsTo
+  validateEmailStatusToSet
 } from './EmailUtils';
 import { SocketCommand, appDomain, EmailStatus } from './const';
 import Messages from './../data/message';
@@ -85,63 +84,105 @@ export const handleEvent = incomingEvent => {
 };
 
 const handleNewMessageEvent = async ({ rowid, params }) => {
-  const [emailObj, eventId] = [params, rowid];
+  const {
+    bcc,
+    cc,
+    date,
+    fileKey,
+    files,
+    from,
+    messageType,
+    metadataKey,
+    subject,
+    senderDeviceId,
+    threadId,
+    to
+  } = params;
+  const recipientId = EmailUtils.getRecipientIdFromEmailAddressTag(from);
+  const [prevEmail] = await getEmailByKey(metadataKey);
   const InboxLabel = LabelType.inbox.id;
   const SentLabel = LabelType.sent.id;
-  let eventParams = {};
-  const [prevEmail] = await getEmailByKey(emailObj.metadataKey);
-  if (!prevEmail) {
-    const incomingEmail = await formIncomingEmailFromData(emailObj);
-    let email = incomingEmail.email;
-    const fileKeyParams = incomingEmail.fileKeyParams;
+  const isToMe = EmailUtils.checkEmailIsTo({ to, cc, bcc, type: 'to' });
+  const isFromMe = EmailUtils.checkEmailIsTo({ from, type: 'from' });
+  let eventParams = { isToMe };
 
-    const recipients = getRecipientsFromData(emailObj);
-    const files =
-      emailObj.files && emailObj.files.length
+  if (!prevEmail) {
+    const body = await signal.decryptEmail({
+      bodyKey: metadataKey,
+      recipientId,
+      deviceId: senderDeviceId,
+      messageType
+    });
+    let fileKeyParams;
+    if (fileKey) {
+      const decrypted = await signal.decryptFileKey({
+        fileKey,
+        messageType,
+        recipientId,
+        deviceId: senderDeviceId
+      });
+      const [key, iv] = decrypted.split(':');
+      fileKeyParams = { key, iv };
+    }
+    const unread = isFromMe && !isToMe ? false : true;
+    const data = {
+      bcc,
+      body,
+      cc,
+      date,
+      from,
+      isToMe,
+      metadataKey,
+      deviceId: senderDeviceId,
+      subject,
+      to,
+      threadId,
+      unread
+    };
+    const { email, recipients } = await EmailUtils.formIncomingEmailFromData(
+      data
+    );
+    const filesData =
+      files && files.length
         ? await formFilesFromData({
-            files: emailObj.files,
-            date: emailObj.date
+            files,
+            date
           })
         : null;
 
     const labels = [];
-    const isToMe = checkEmailIsTo(emailObj, 'to');
     if (isToMe) {
       labels.push(InboxLabel);
     }
-    const isFromMe = checkEmailIsTo(emailObj, 'from');
     if (isFromMe) {
       labels.push(SentLabel);
     }
-    if (isFromMe && isToMe) {
-      email = { ...email, unread: false };
-    }
 
-    const params = {
+    const emailData = {
       email,
-      recipients,
       labels,
-      files,
-      fileKeyParams
+      files: filesData,
+      fileKeyParams,
+      recipients
     };
-    const [newEmailId] = await createEmail(params);
+    const [newEmailId] = await createEmail(emailData);
     eventParams = {
       ...eventParams,
-      threadId: emailObj.threadId,
       emailId: newEmailId,
-      labels
+      labels,
+      threadId
     };
+    emitter.emit(Event.NEW_EMAIL, eventParams);
   } else {
     const labels = [];
     const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
     const prevLabels = prevEmailLabels.map(item => item.labelId);
 
-    const isToMe = checkEmailIsTo(emailObj, 'to');
     const hasInboxLabel = prevLabels.includes(InboxLabel);
     if (isToMe && !hasInboxLabel) {
       labels.push(InboxLabel);
     }
-    const isFromMe = checkEmailIsTo(emailObj, 'from');
+
     const hasSentLabel = prevLabels.includes(SentLabel);
     if (isFromMe && !hasSentLabel) {
       labels.push(SentLabel);
@@ -153,13 +194,12 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
 
     eventParams = {
       ...eventParams,
-      threadId: prevEmail.threadId,
       emailId: prevEmail.id,
-      labels
+      labels,
+      threadId: prevEmail.threadId
     };
   }
-  await setEventAsHandled(eventId);
-  emitter.emit(Event.NEW_EMAIL, eventParams);
+  await setEventAsHandled(rowid);
 };
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {

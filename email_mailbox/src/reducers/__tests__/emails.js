@@ -8,6 +8,7 @@ const emails = file.emails;
 
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
+jest.mock('./../../utils/electronUtilsInterface');
 
 describe('email actions: ', () => {
   function initState(emails) {
