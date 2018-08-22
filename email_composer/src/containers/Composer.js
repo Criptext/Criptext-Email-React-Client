@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
-import { EditorState, DefaultDraftBlockRenderMap } from 'draft-js';
+import {
+  convertToRaw,
+  DefaultDraftBlockRenderMap,
+  EditorState
+} from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
 import {
   composerEvents,
   closeComposerWindow,
@@ -20,6 +25,7 @@ import {
   createFile,
   sendEventToMailbox
 } from './../utils/electronInterface';
+import { EmailUtils } from './../utils/electronUtilsInterface';
 import {
   areEmptyAllArrays,
   updateObjectFieldsInArray
@@ -27,7 +33,6 @@ import {
 import signal from './../libs/signal';
 import {
   EmailStatus,
-  formOutgoingEmailFromData,
   formDataToEditDraft,
   formDataToReply,
   formComposerDataWithSignature,
@@ -65,19 +70,19 @@ class ComposerWrapper extends Component {
     this.state = {
       bccEmails: [],
       ccEmails: [],
+      displayNonCriptextPopup: false,
       files: [],
       htmlBody: EditorState.createEmpty(),
       isCollapsedMoreRecipient: true,
       isDragActive: false,
+      iv: null,
+      key: null,
+      nonCriptextRecipientsPassword: '',
+      nonCriptextRecipientsVerified: false,
       status: Status.DISABLED,
       textSubject: '',
       threadId: null,
-      toEmails: [],
-      displayNonCriptextPopup: false,
-      nonCriptextRecipientsPassword: '',
-      nonCriptextRecipientsVerified: false,
-      key: null,
-      iv: null
+      toEmails: []
     };
   }
 
@@ -371,16 +376,27 @@ class ComposerWrapper extends Component {
 
   sendMessage = async () => {
     this.setState({ status: Status.WAITING });
+    const data = {
+      bccEmails: this.state.bccEmails,
+      body: draftToHtml(convertToRaw(this.state.htmlBody.getCurrentContent())),
+      ccEmails: this.state.ccEmails,
+      files: this.state.files,
+      iv: this.state.iv,
+      key: this.state.key,
+      labelId: LabelType.sent.id,
+      textSubject: this.state.textSubject,
+      toEmails: this.state.toEmails,
+      threadId: this.state.threadId
+    };
     const {
-      data,
+      emailData,
       criptextRecipients,
       externalRecipients,
-      subject,
       body
-    } = formOutgoingEmailFromData(this.state, LabelType.sent.id);
+    } = EmailUtils.formOutgoingEmailFromData(data);
     let emailId, key;
     try {
-      [emailId] = await createEmail(data);
+      [emailId] = await createEmail(emailData);
       const files = getFileParamsToSend(this.state.files);
       const peer = {
         recipientId: myAccount.recipientId,
@@ -390,7 +406,7 @@ class ComposerWrapper extends Component {
       const recipients = [...criptextRecipients, peer];
       const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
       const params = {
-        subject,
+        subject: emailData.email.subject,
         threadId: this.state.threadId,
         recipients,
         externalRecipients,
@@ -452,8 +468,20 @@ class ComposerWrapper extends Component {
   };
 
   saveTemporalDraft = () => {
-    const { data } = formOutgoingEmailFromData(this.state, LabelType.draft.id);
-    saveDraftChanges(data);
+    const data = {
+      bccEmails: this.state.bccEmails,
+      body: draftToHtml(convertToRaw(this.state.htmlBody.getCurrentContent())),
+      ccEmails: this.state.ccEmails,
+      files: this.state.files,
+      iv: this.state.iv,
+      key: this.state.key,
+      labelId: LabelType.draft.id,
+      textSubject: this.state.textSubject,
+      toEmails: this.state.toEmails,
+      threadId: this.state.threadId
+    };
+    const { emailData } = EmailUtils.formOutgoingEmailFromData(data);
+    saveDraftChanges(emailData);
   };
 }
 

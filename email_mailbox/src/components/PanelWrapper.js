@@ -127,14 +127,14 @@ class PanelWrapper extends Component {
 
   initEventHandlers = props => {
     addEvent(Event.NEW_EMAIL, emailParams => {
+      const { emailId, isToMe, labels, threadId } = emailParams;
       const isRenderingMailbox =
         this.state.sectionSelected.type === SectionType.MAILBOX;
       const isRenderingThread =
         this.state.sectionSelected.type === SectionType.THREAD;
       const currentLabelId =
         LabelType[this.state.sectionSelected.params.mailboxSelected].id;
-      const isNewEmailInMailbox =
-        emailParams.labels.indexOf(currentLabelId) > -1;
+      const isNewEmailInMailbox = labels.indexOf(currentLabelId) > -1;
       if (isNewEmailInMailbox && isRenderingMailbox) {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
@@ -142,14 +142,15 @@ class PanelWrapper extends Component {
         });
       }
       if (isRenderingThread) {
-        const newThreadId = emailParams.threadId;
-        props.onLoadEmails(newThreadId);
+        props.onLoadEmails(threadId);
         props.onAddEmailIdToThread({
           threadId: this.state.sectionSelected.params.threadIdSelected,
-          emailId: emailParams.emailId
+          emailId
         });
       }
-      props.onUpdateUnreadEmailsBadge();
+      if (isToMe) {
+        props.onUpdateUnreadEmailsBadge();
+      }
     });
 
     addEvent(Event.REFRESH_THREADS, eventParams => {

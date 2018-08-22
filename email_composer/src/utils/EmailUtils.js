@@ -1,12 +1,6 @@
-import { EditorState, ContentState, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
+import { EditorState, ContentState } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
-import {
-  removeAppDomain,
-  removeHTMLTags,
-  replaceAllOccurrences,
-  removeActionsFromSubject
-} from './StringUtils';
+import { replaceAllOccurrences, removeActionsFromSubject } from './StringUtils';
 import { getFormattedDate } from './DateUtils';
 import { appDomain } from './const';
 import {
@@ -16,27 +10,6 @@ import {
   getContactsByEmailId
 } from './electronInterface';
 
-const formRecipients = recipients => {
-  return [
-    ...getCriptextRecipients(recipients.to, 'to'),
-    ...getCriptextRecipients(recipients.cc, 'cc'),
-    ...getCriptextRecipients(recipients.bcc, 'bcc')
-  ];
-};
-
-const getCriptextRecipients = (recipients, type) => {
-  return recipients
-    .filter(email => email.indexOf(`@${appDomain}`) > 0)
-    .map(email => ({
-      recipientId: removeAppDomain(email),
-      type
-    }));
-};
-
-const getNonCriptextRecipients = recipients => {
-  return recipients.filter(email => email.indexOf(`@${appDomain}`) < 0);
-};
-
 export const EmailStatus = {
   FAIL: 1,
   UNSENT: 2,
@@ -45,67 +18,6 @@ export const EmailStatus = {
   SENT: 5,
   DELIVERED: 6,
   READ: 7
-};
-
-const getEmailAddressesFromEmailObject = emails => {
-  return emails.map(item => item.email || item);
-};
-
-export const formOutgoingEmailFromData = (composerData, labelId) => {
-  const toEmails = getEmailAddressesFromEmailObject(composerData.toEmails);
-  const ccEmails = getEmailAddressesFromEmailObject(composerData.ccEmails);
-  const bccEmails = getEmailAddressesFromEmailObject(composerData.bccEmails);
-  const recipients = {
-    to: toEmails,
-    cc: ccEmails,
-    bcc: bccEmails
-  };
-
-  const criptextRecipients = formRecipients(recipients);
-
-  const externalRecipients = {
-    to: getNonCriptextRecipients(toEmails),
-    cc: getNonCriptextRecipients(ccEmails),
-    bcc: getNonCriptextRecipients(bccEmails)
-  };
-
-  const subject = composerData.textSubject;
-  const body = draftToHtml(
-    convertToRaw(composerData.htmlBody.getCurrentContent())
-  );
-
-  const email = {
-    key: Date.now(),
-    subject,
-    content: body,
-    preview: removeHTMLTags(body).slice(0, 21),
-    date: Date.now(),
-    status: EmailStatus.SENDING,
-    unread: false,
-    secure: true,
-    isMuted: false,
-    threadId: composerData.threadId
-  };
-  const from = myAccount.recipientId;
-  recipients.from = [`${from}@${appDomain}`];
-
-  const fileKeyParams = composerData.files.length
-    ? { key: composerData.key, iv: composerData.iv }
-    : null;
-
-  const data = {
-    email,
-    recipients,
-    labels: [labelId],
-    fileKeyParams
-  };
-  return {
-    data,
-    criptextRecipients,
-    externalRecipients,
-    subject,
-    body
-  };
 };
 
 export const formDataToEditDraft = async emailKeyToEdit => {

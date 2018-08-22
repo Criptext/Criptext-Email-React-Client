@@ -9,6 +9,7 @@ const label = labels[0];
 
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
+jest.mock('./../../utils/electronUtilsInterface');
 
 describe('Label actions:', () => {
   it('should add labels', () => {

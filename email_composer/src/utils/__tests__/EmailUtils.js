@@ -1,34 +1,9 @@
 /* eslint-env node, jest */
 
-import { EditorState } from 'draft-js';
-import {
-  formOutgoingEmailFromData,
-  formDataToEditDraft,
-  formDataToReply
-} from './../EmailUtils';
+import { formDataToEditDraft, formDataToReply } from './../EmailUtils';
 import { emailKey } from './../__mocks__/electronInterface';
-import { appDomain } from './../const';
 
 jest.mock('./../../utils/electronInterface');
-
-describe('[Form outgoing email] ', () => {
-  it('Form outgoing email from data', () => {
-    const labelId = 6;
-    const composerData = {
-      toEmails: [`toUser@${appDomain}`],
-      ccEmails: [`ccUser@${appDomain}`],
-      bccEmails: [`bccUser@${appDomain}`],
-      textSubject: 'Subject',
-      htmlBody: EditorState.createEmpty(),
-      files: []
-    };
-
-    const outgoingData = formOutgoingEmailFromData(composerData, labelId);
-    outgoingData.data.email.date = 1524861748481;
-    outgoingData.data.email.key = 1524861748481;
-    expect(outgoingData).toMatchSnapshot();
-  });
-});
 
 describe('[Edit draft] ', () => {
   it('Form data to edit draft', async () => {

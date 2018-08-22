@@ -17,67 +17,6 @@ Object {
 }
 `;
 
-exports[`[Form outgoing email]  Form outgoing email from data 1`] = `
-Object {
-  "body": "<p></p>
-",
-  "criptextRecipients": Array [
-    Object {
-      "recipientId": "toUser",
-      "type": "to",
-    },
-    Object {
-      "recipientId": "ccUser",
-      "type": "cc",
-    },
-    Object {
-      "recipientId": "bccUser",
-      "type": "bcc",
-    },
-  ],
-  "data": Object {
-    "email": Object {
-      "content": "<p></p>
-",
-      "date": 1524861748481,
-      "isMuted": false,
-      "key": 1524861748481,
-      "preview": "
-",
-      "secure": true,
-      "status": 4,
-      "subject": "Subject",
-      "threadId": undefined,
-      "unread": false,
-    },
-    "fileKeyParams": null,
-    "labels": Array [
-      6,
-    ],
-    "recipients": Object {
-      "bcc": Array [
-        "bccUser@criptext.com",
-      ],
-      "cc": Array [
-        "ccUser@criptext.com",
-      ],
-      "from": Array [
-        "julian@criptext.com",
-      ],
-      "to": Array [
-        "toUser@criptext.com",
-      ],
-    },
-  },
-  "externalRecipients": Object {
-    "bcc": Array [],
-    "cc": Array [],
-    "to": Array [],
-  },
-  "subject": "Subject",
-}
-`;
-
 exports[`[Reply, Reply-all, Forward]  Form data to forward 1`] = `
 Object {
   "bccEmails": Array [],

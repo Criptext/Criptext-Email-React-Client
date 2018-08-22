@@ -10,6 +10,7 @@ import json from './../../../public/feeds.json';
 
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
+jest.mock('./../../utils/electronUtilsInterface');
 
 describe('Feed actions: ', () => {
   const { feeds } = json;

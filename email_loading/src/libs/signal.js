@@ -12,7 +12,7 @@ import {
 } from './../utils/electronInterface';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
-import { appDomain, DEVICE_TYPE } from './../utils/consts';
+import { appDomain, DEVICE_TYPE } from './../utils/const';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
