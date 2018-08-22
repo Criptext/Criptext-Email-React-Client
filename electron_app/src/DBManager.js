@@ -100,6 +100,10 @@ const filterUniqueContacts = contacts => {
   return contactsUnique.contacts;
 };
 
+const getAllContacts = () => {
+  return db.select('name', 'email').from(Table.CONTACT);
+};
+
 const getContactByEmails = (emails, trx) => {
   const knex = trx || db;
   return knex
@@ -114,10 +118,6 @@ const getContactByIds = (ids, trx) => {
     .select('id', 'email', 'name')
     .from(Table.CONTACT)
     .whereIn('id', ids);
-};
-
-const getAllContacts = () => {
-  return db.select('name', 'email').from(Table.CONTACT);
 };
 
 const getContactsByEmailId = async emailId => {
@@ -175,6 +175,23 @@ const createEmailLabel = async (emailLabels, trx) => {
   }
 };
 
+const deleteEmailLabel = ({ emailsId, labelIds }, trx) => {
+  const knex = trx || db;
+  return knex
+    .table(Table.EMAIL_LABEL)
+    .whereIn('labelId', labelIds)
+    .whereIn('emailId', emailsId)
+    .del();
+};
+
+const deleteEmailLabelsByEmailId = (emailId, trx) => {
+  const knex = trx || db;
+  return knex
+    .table(Table.EMAIL_LABEL)
+    .where({ emailId })
+    .del();
+};
+
 const filterEmailLabelIfNotStore = async (emailLabels, trx) => {
   const knex = trx || db;
   const emailIds = Array.from(new Set(emailLabels.map(item => item.emailId)));
@@ -198,35 +215,18 @@ const filterEmailLabelIfNotStore = async (emailLabels, trx) => {
     .filter(item => item !== null);
 };
 
-const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
-  return db
-    .table(Table.EMAIL_LABEL)
-    .where({ emailId, labelId: oldLabelId })
-    .update({ labelId: newLabelId });
-};
-
-const deleteEmailLabel = ({ emailsId, labelIds }, trx) => {
-  const knex = trx || db;
-  return knex
-    .table(Table.EMAIL_LABEL)
-    .whereIn('labelId', labelIds)
-    .whereIn('emailId', emailsId)
-    .del();
-};
-
-const deleteEmailLabelsByEmailId = (emailId, trx) => {
-  const knex = trx || db;
-  return knex
-    .table(Table.EMAIL_LABEL)
-    .where({ emailId })
-    .del();
-};
-
 const getEmailLabelsByEmailId = emailId => {
   return db
     .select('labelId')
     .table(Table.EMAIL_LABEL)
     .where({ emailId });
+};
+
+const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
+  return db
+    .table(Table.EMAIL_LABEL)
+    .where({ emailId, labelId: oldLabelId })
+    .update({ labelId: newLabelId });
 };
 
 /* Email
@@ -308,6 +308,40 @@ const createEmail = async (params, trx) => {
     });
 };
 
+const deleteEmailByKey = key => {
+  return db
+    .table(Table.EMAIL)
+    .where({ key })
+    .del();
+};
+
+const deleteEmailsByIds = (ids, trx) => {
+  const knex = trx || db;
+  return knex
+    .table(Table.EMAIL)
+    .whereIn('id', ids)
+    .del();
+};
+
+const deleteEmailsByThreadId = threadIds => {
+  return db
+    .table(Table.EMAIL)
+    .whereIn('threadId', threadIds)
+    .del();
+};
+
+const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
+  return db.transaction(async trx => {
+    await deleteEmailsByIds([id], trx);
+    await deleteEmailContactByEmailId(id, trx);
+    await deleteEmailLabelsByEmailId(id, trx);
+    if (optionalEmailToSave) {
+      const [emailId] = await createEmail(optionalEmailToSave, trx);
+      return emailId;
+    }
+  });
+};
+
 const formEmailContact = ({ emailId, contactStored, contacts, type }) => {
   return contacts.map(contactToSearch => {
     const emailMatched = contactToSearch.match(/<(.*)>/);
@@ -342,6 +376,25 @@ const getEmailByKey = key => {
     .select('*')
     .from(Table.EMAIL)
     .where({ key });
+};
+
+const getEmailsByKeys = keys => {
+  return db
+    .select('*')
+    .from(Table.EMAIL)
+    .whereIn('key', keys);
+};
+
+const getEmailsByLabelIds = labelIds => {
+  return db
+    .select(`${Table.EMAIL}.*`)
+    .from(Table.EMAIL)
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL}.id`,
+      `${Table.EMAIL_LABEL}.emailId`
+    )
+    .whereIn(`${Table.EMAIL_LABEL}.labelId`, labelIds);
 };
 
 const getEmailsByThreadId = threadId => {
@@ -557,14 +610,6 @@ const partThreadQueryByMatchText = (query, text) =>
       .orWhere('subject', 'like', `%${text}%`);
   });
 
-const deleteEmailsByIds = (ids, trx) => {
-  const knex = trx || db;
-  return knex
-    .table(Table.EMAIL)
-    .whereIn('id', ids)
-    .del();
-};
-
 const getEmailsUnredByLabelId = params => {
   const { labelId, rejectedLabelIds } = params;
   return db(`${Table.EMAIL}`)
@@ -600,44 +645,6 @@ const getUnreadEmailsByThreadId = threadId => {
     .where({ threadId, unread: 1 });
 };
 
-const deleteEmailByKey = key => {
-  return db
-    .table(Table.EMAIL)
-    .where({ key })
-    .del();
-};
-
-const deleteEmailsByThreadId = threadIds => {
-  return db
-    .table(Table.EMAIL)
-    .whereIn('threadId', threadIds)
-    .del();
-};
-
-const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
-  return db.transaction(async trx => {
-    await deleteEmailsByIds([id], trx);
-    await deleteEmailContactByEmailId(id, trx);
-    await deleteEmailLabelsByEmailId(id, trx);
-    if (optionalEmailToSave) {
-      const [emailId] = await createEmail(optionalEmailToSave, trx);
-      return emailId;
-    }
-  });
-};
-
-const getEmailsByLabelIds = async labelIds => {
-  const emails = await db
-    .select('emailId')
-    .from(Table.EMAIL_LABEL)
-    .whereIn('labelId', labelIds);
-  const emailIds = emails.map(email => email.emailId);
-  return db
-    .select('*')
-    .table(Table.EMAIL)
-    .whereIn('id', emailIds);
-};
-
 const updateEmail = ({
   id,
   key,
@@ -668,6 +675,16 @@ const updateEmail = ({
     .update(params);
 };
 
+const updateEmails = ({ keys, unread }) => {
+  const params = noNulls({
+    unread: typeof unread === 'boolean' ? unread : undefined
+  });
+  return db
+    .table(Table.EMAIL)
+    .whereIn('key', keys)
+    .update(params);
+};
+
 const updateEmailByThreadId = ({ threadId, unread }) => {
   const params = {};
   if (typeof unread === 'boolean') params.unread = unread;
@@ -681,6 +698,23 @@ const updateEmailByThreadId = ({ threadId, unread }) => {
    ----------------------------- */
 const createLabel = params => {
   return db.table(Table.LABEL).insert(params);
+};
+
+const deleteLabelById = id => {
+  return db.transaction(async trx => {
+    const emailLabels = await trx
+      .select('*')
+      .from(Table.EMAIL_LABEL)
+      .where('labelId', id);
+    const emailsId = emailLabels.map(item => item.emailId);
+    if (emailsId.length) {
+      await deleteEmailLabel({ emailsId, labelId: id }, trx);
+    }
+    return trx
+      .table(Table.LABEL)
+      .where({ id })
+      .del();
+  });
 };
 
 const getAllLabels = () => {
@@ -717,23 +751,6 @@ const updateLabel = ({ id, color, text, visible }) => {
       id
     })
     .update(params);
-};
-
-const deleteLabelById = id => {
-  return db.transaction(async trx => {
-    const emailLabels = await trx
-      .select('*')
-      .from(Table.EMAIL_LABEL)
-      .where('labelId', id);
-    const emailsId = emailLabels.map(item => item.emailId);
-    if (emailsId.length) {
-      await deleteEmailLabel({ emailsId, labelId: id }, trx);
-    }
-    return trx
-      .table(Table.LABEL)
-      .where({ id })
-      .del();
-  });
 };
 
 /* File
@@ -784,12 +801,20 @@ const getFileKeyByEmailId = emailId => {
 
 /* Feed Item
   ----------------------------- */
-const getAllFeedItems = () => {
-  return db.select('*').from(Table.FEEDITEM);
-};
 
 const createFeedItem = params => {
   return db.table(Table.FEEDITEM).insert(params);
+};
+
+const deleteFeedItemById = id => {
+  return db
+    .table(Table.FEEDITEM)
+    .where({ id })
+    .del();
+};
+
+const getAllFeedItems = () => {
+  return db.select('*').from(Table.FEEDITEM);
 };
 
 const updateFeedItem = ({ id, seen }) => {
@@ -801,24 +826,10 @@ const updateFeedItem = ({ id, seen }) => {
     .update(params);
 };
 
-const deleteFeedItemById = id => {
-  return db
-    .table(Table.FEEDITEM)
-    .where({ id })
-    .del();
-};
-
 /* PreKeyRecord
    ----------------------------- */
 const createPreKeyRecord = params => {
   return db.table(Table.PREKEYRECORD).insert(params);
-};
-
-const getPreKeyPair = params => {
-  return db
-    .select('preKeyPrivKey', 'preKeyPubKey')
-    .from(Table.PREKEYRECORD)
-    .where(params);
 };
 
 const deletePreKeyPair = params => {
@@ -826,6 +837,13 @@ const deletePreKeyPair = params => {
     .table(Table.PREKEYRECORD)
     .where(params)
     .del();
+};
+
+const getPreKeyPair = params => {
+  return db
+    .select('preKeyPrivKey', 'preKeyPubKey')
+    .from(Table.PREKEYRECORD)
+    .where(params);
 };
 
 /* SignedPreKeyRecord
@@ -885,15 +903,15 @@ const getSessionRecordByRecipientIds = recipientIds => {
 
 /* IdentityKeyRecord
    ----------------------------- */
+const createIdentityKeyRecord = params => {
+  return db.table(Table.IDENTITYKEYRECORD).insert(params);
+};
+
 const getIdentityKeyRecord = params => {
   return db
     .select('identityKey')
     .from(Table.IDENTITYKEYRECORD)
     .where(params);
-};
-
-const createIdentityKeyRecord = params => {
-  return db.table(Table.IDENTITYKEYRECORD).insert(params);
 };
 
 const updateIdentityKeyRecord = ({ recipientId, identityKey }) => {
@@ -943,6 +961,7 @@ module.exports = {
   getContactsByEmailId,
   getEmailById,
   getEmailByKey,
+  getEmailsByKeys,
   getEmailsByLabelIds,
   getEmailsByThreadId,
   getEmailsCounterByLabelId,
@@ -962,6 +981,7 @@ module.exports = {
   deleteLabelById,
   updateAccount,
   updateEmail,
+  updateEmails,
   updateEmailByThreadId,
   updateEmailLabel,
   updateFeedItem,

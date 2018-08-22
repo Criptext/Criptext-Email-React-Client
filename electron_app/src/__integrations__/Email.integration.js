@@ -138,7 +138,7 @@ describe('Update data email to Email Table:', () => {
     expect(isMuted).toBe(1);
   });
 
-  it('should update email: unread', async () => {
+  it('should update email: unread by id', async () => {
     const id = 3;
     await DBManager.updateEmail({
       id,
@@ -147,6 +147,19 @@ describe('Update data email to Email Table:', () => {
     const [email] = await DBManager.getEmailById(id);
     const unread = email.unread;
     expect(unread).toBe(0);
+  });
+
+  it('should update emails: unread by keys', async () => {
+    const keys = ['keyC', 'keyId'];
+    await DBManager.updateEmails({
+      keys,
+      unread: false
+    });
+    const emails = await DBManager.getEmailsByKeys(keys);
+    const unreadEmailA = emails[0].unread;
+    const unreadEmailB = emails[1].unread;
+    expect(unreadEmailA).toBe(0);
+    expect(unreadEmailB).toBe(0);
   });
 });
 

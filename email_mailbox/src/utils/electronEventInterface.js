@@ -4,12 +4,14 @@ import {
   createEmail,
   createEmailLabel,
   getEmailByKey,
+  getEmailsByKeys,
   getEmailLabelsByEmailId,
   LabelType,
   getContactByEmails,
   createFeedItem,
   myAccount,
   updateEmail,
+  updateEmails,
   getLabelsByText,
   updateAccount,
   updateFilesByEmailId,
@@ -267,15 +269,18 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
 
 const handlePeerEmailRead = async ({ rowid, params }) => {
   const { metadataKeys, unread } = params;
-  for (const metadataKey of metadataKeys) {
-    const [email] = await getEmailByKey(metadataKey);
-    if (email) {
-      await updateEmail({
-        key: metadataKey,
-        unread: unread
-      });
-    }
-  }
+  const emails = await getEmailsByKeys(metadataKeys);
+  const emailKeys = emails.map(email => email.key);
+  await updateEmails({
+    keys: emailKeys,
+    unread: !!unread
+  });
+  const eventParams = {
+    labelId: LabelType.inbox.id,
+    operation: unread ? 'add' : 'less',
+    value: emailKeys.length
+  };
+  emitter.emit(Event.REFRESH_THREADS, emailKeys.length ? eventParams : null);
   await setEventAsHandled(rowid);
 };
 
@@ -405,6 +410,10 @@ const setEventAsHandled = async eventId => {
   ----------------------------- */
 
 ipcRenderer.on('update-drafts', (ev, data) => {
+  if (data) {
+    const labelId = LabelType.draft.id;
+    data = { ...data, labelId };
+  }
   emitter.emit(Event.REFRESH_THREADS, data);
 });
 
