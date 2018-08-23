@@ -149,7 +149,11 @@ class PanelWrapper extends Component {
         });
       }
       if (isToMe) {
-        props.onUpdateUnreadEmailsBadge();
+        props.onUpdateUnreadEmailsBadge({
+          labelId: LabelType.inbox.id,
+          operation: 'add',
+          value: 1
+        });
       }
     });
 
@@ -166,8 +170,8 @@ class PanelWrapper extends Component {
         props.onLoadEmails(this.state.sectionSelected.params.threadIdSelected);
       }
       if (eventParams) {
-        const { operation, value } = eventParams;
-        props.onUpdateUnreadDraftBadge({ operation, value });
+        const { labelId, operation, value } = eventParams;
+        props.onUpdateUnreadEmailsBadge({ labelId, operation, value });
       }
     });
 
@@ -209,7 +213,11 @@ class PanelWrapper extends Component {
           emailIds: [oldEmailId]
         });
       } else if (!newEmailId && !oldEmailId) {
-        props.onUpdateUnreadEmailsBadge();
+        props.onUpdateUnreadEmailsBadge({
+          labelId: LabelType.inbox.id,
+          operation: 'add',
+          value: 1
+        });
       }
     });
 
@@ -247,7 +255,6 @@ PanelWrapper.propTypes = {
   onUnsendEmail: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,
   onUpdateTimestamp: PropTypes.func,
-  onUpdateUnreadDraftBadge: PropTypes.func,
   onUpdateUnreadEmailsBadge: PropTypes.func,
   onUpdateUnreadThreads: PropTypes.func,
   threadsCount: PropTypes.number

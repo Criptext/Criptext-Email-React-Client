@@ -210,6 +210,10 @@ export const getEmailByKey = emailKey => {
   return dbManager.getEmailByKey(emailKey);
 };
 
+export const getEmailsByKeys = emailKeys => {
+  return dbManager.getEmailsByKeys(emailKeys);
+};
+
 export const getEmailsByLabelIds = labelIds => {
   return dbManager.getEmailsByLabelIds(labelIds);
 };
@@ -296,6 +300,10 @@ export const setUnreadEmailById = (emailId, unreadValue) => {
 
 export const updateEmail = params => {
   return dbManager.updateEmail(params);
+};
+
+export const updateEmails = params => {
+  return dbManager.updateEmails(params);
 };
 
 export const updateAccount = params => {
