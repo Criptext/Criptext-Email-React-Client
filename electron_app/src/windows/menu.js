@@ -143,6 +143,27 @@ if (process.platform === 'darwin') {
       role: 'front'
     }
   );
+} else {
+  // File menu.
+  template[0].submenu.push(
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Check for Updates...',
+      click: checkForUpdates
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Quit',
+      accelerator: 'Alt+F4',
+      click: function() {
+        quit();
+      }
+    }
+  );
 }
 
 module.exports = {

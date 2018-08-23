@@ -26,9 +26,6 @@
     "package-linux": "bash ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --asar --platform=linux --arch=x64 --icon=resources/launch-icons/icon.png --out=release-builds --no-package-manager",
     "package-mac": "sh ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --platform=darwin --arch=x64 --icon=./resources/launch-icons/icon.icns --prune=true --out=release-builds",
     "package-windows": "bash ./installerResources/converge_builds.sh && electron-packager . Criptext --platform=win32 --arch=x64 --out=release-builds",
-    "installer-linux": "electron-installer-debian --src ./release-builds/Criptext-linux-x64/ --arch amd64 --config ./installerResources/debian.json",
-    "installer-mac": "electron-installer-dmg ./release-builds/Criptext-darwin-x64/Criptext.app Criptext --out=release-builds --overwrite",
-    "installer-windows": "electron-installer-windows --src ./release-builds/Criptext-win32-x64/ --dest ./release-builds/ --config ./installerResources/windows.json",
     "pack": "build --dir",
     "dist": "electron-builder --publish onTag",
     "clear-build": "bash ./installerResources/clearBuild.sh",
@@ -46,13 +43,25 @@
       "category": "public.app-category.productivity",
       "identity": "Criptext Inc.",
       "provisioningProfile": "build/Criptext_Mail_Distribution.provisionprofile",
-      "type": "distribution"
+      "type": "distribution",
+      "publish": [
+        {
+          "provider": "generic",
+          "url": "https://cdn.criptext.com/Criptext-Email-Desktop/mac"
+        }
+      ]
     },
     "mas": {
       "category": "public.app-category.productivity",
       "identity": "Criptext Inc.",
       "provisioningProfile": "build/Criptext_Mail_Distribution.provisionprofile",
-      "type": "distribution"
+      "type": "distribution",
+      "publish": [
+        {
+          "provider": "generic",
+          "url": "https://cdn.criptext.com/Criptext-Email-Desktop/mac"
+        }
+      ]
     },
     "pkg": {
       "identity": "Criptext Inc.",
@@ -81,31 +90,36 @@
         "deb"
       ],
       "icon": "build/icon.png",
-      "category": "Network"
+      "category": "Network",
+      "artifactName": "${productName}-${version}.${ext}",
+      "publish": [
+        {
+          "provider": "generic",
+          "url": "https://cdn.criptext.com/Criptext-Email-Desktop/linux"
+        }
+      ]
     },
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "icon": "build/icon.ico",
+      "publish": [
+        {
+          "provider": "generic",
+          "url": "https://cdn.criptext.com/Criptext-Email-Desktop/windows"
+        }
+      ]
     },
     "nsis": {
       "oneClick": true,
-      "installerIcon": "build/icon.ico",
-      "deleteAppDataOnUninstall": true
-    },
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://cdn.criptext.com/Criptext-Email-Desktop/mac"
-      }
-    ]
+      "menuCategory": true,
+      "deleteAppDataOnUninstall": true,
+      "artifactName": "${productName}-${version}.${ext}"
+    }
   },
   "devDependencies": {
     "criptext-js-tools": "0.5.0",
     "electron": "^1.7.10",
     "electron-builder": "^20.18.0",
-    "electron-installer-debian": "^0.8.0",
-    "electron-installer-dmg": "^0.2.1",
-    "electron-installer-windows": "^1.1.0",
     "electron-packager": "^10.1.2"
   },
   "dependencies": {
@@ -114,8 +128,9 @@
     "electron-updater": "^3.0.3",
     "electron-window-state": "^4.1.1",
     "knex": "^0.14.2",
+    "node-notifier": "^5.2.1",
     "opn": "^5.3.0",
-    "sqlite3": "^3.1.13",
+    "sqlite3": "^4.0.2",
     "websocket": "^1.0.25"
   }
 }

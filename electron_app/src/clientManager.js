@@ -43,9 +43,9 @@ class ClientManager {
   }
 
   async getEvents() {
-    this.check();
-    const res = await client.getPendingEvents();
-    return this.formEvents(res.body);
+    await this.check();
+    const { status, body } = await client.getPendingEvents();
+    return status === 204 ? [] : this.formEvents(body);
   }
 
   formEvents(events) {
