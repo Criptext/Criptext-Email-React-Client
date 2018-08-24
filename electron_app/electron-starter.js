@@ -127,3 +127,7 @@ app.on('window-all-closed', () => {
 app.on("activate", () => {
   mailboxWindow.show();
 })
+
+app.on('before-quit', function() {
+  globalManager.forcequit.set(true);
+});
