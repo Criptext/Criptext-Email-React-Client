@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import SettingGeneralWrapper from './SettingGeneralWrapper';
 import SettingLabelsWrapper from './SettingLabelsWrapper';
 import SettingDevicesWrapper from './SettingDevicesWrapper';
+import Message from '../containers/Message';
 import { version } from './../../package.json';
 import './settings.css';
 
@@ -10,6 +11,7 @@ const Sections = ['general', 'labels', 'trusted devices'];
 
 const Settings = props => (
   <div className="settings-container">
+    <Message />
     <div className="settings-title">
       <h1>Settings</h1>
     </div>

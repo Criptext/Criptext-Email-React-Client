@@ -54,6 +54,10 @@ const messagesContent = {
     downloadFile: {
       priority: messagePriorities.MEDIUM,
       description: "Download successfully. Check your 'Downloads' folder."
+    },
+    removeDevice: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Device removed.'
     }
   },
   error: {
@@ -83,6 +87,10 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description:
         'Failed to fetch the emails. Check your connection and try again.'
+    },
+    removeDevice: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Failed to remove the device. Try again.'
     }
   },
   establish: {

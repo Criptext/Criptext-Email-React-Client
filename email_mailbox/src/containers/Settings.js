@@ -38,6 +38,23 @@ const mapStateToProps = state => {
   };
 };
 
+const formatDevicesData = devices => {
+  return devices
+    .map(device => {
+      return {
+        name: device.deviceFriendlyName,
+        type: device.deviceType,
+        deviceId: device.deviceId,
+        lastConnection: {
+          place: null,
+          time: null
+        },
+        isCurrentDevice: device.deviceId === myAccount.deviceId
+      };
+    })
+    .sort(device => !device.isCurrentDevice);
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     onAddLabel: (text, eventParams) => {
@@ -70,7 +87,7 @@ const mapDispatchToProps = dispatch => {
     },
     onGetDevices: async () => {
       const res = await getDevices();
-      return res.status === 200 ? res.body : [];
+      return res.status === 200 ? formatDevicesData(res.body) : [];
     },
     onUpdateAccount: async params => {
       const recipientId = myAccount.recipientId;
@@ -100,6 +117,10 @@ const mapDispatchToProps = dispatch => {
     },
     onRemoveLabel: labelId => {
       dispatch(removeLabel(String(labelId)));
+    },
+    onRemoveDevice: async deviceId => {
+      const { status } = await removeDevice(deviceId);
+      return status === 200;
     }
   };
 };

@@ -2,17 +2,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SettingDevices from './SettingDevices';
+import {
+  sendRemoveDeviceErrorMessage,
+  sendRemoveDeviceSuccessMessage
+} from '../utils/electronEventInterface';
 
 class SettingDevicesWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      devices: []
+      displayRemoveDevicePopup: false,
+      deviceId: undefined,
+      password: ''
     };
-  }
-
-  componentWillMount() {
-    this.setState({ devices: this.props.devices });
   }
 
   render() {
@@ -20,27 +22,54 @@ class SettingDevicesWrapper extends Component {
       <SettingDevices
         {...this.props}
         devices={this.props.devices}
+        displayRemoveDevicePopup={this.state.displayRemoveDevicePopup}
+        onChangeRemoveDeviceInputPassword={
+          this.handleChangeRemoveDeviceInputPassword
+        }
+        onClickCancelRemoveDevice={this.handleClickCancelRemoveDevice}
         onClickRemoveDevice={this.handleClickRemoveDevice}
+        onRemoveDevice={this.handleRemoveDevice}
+        password={this.state.password}
       />
     );
   }
 
-  componentDidMount() {
-    if (!this.state.devices.length) {
-      this.setState({ devices: this.props.devices });
-    }
-  }
-
   handleClickRemoveDevice = deviceId => {
-    const devices = this.state.devices.filter(
-      item => item.deviceId !== deviceId
-    );
-    this.setState({ devices });
+    this.setState({
+      displayRemoveDevicePopup: true,
+      deviceId
+    });
+  };
+
+  handleChangeRemoveDeviceInputPassword = ev => {
+    const password = ev.target.value;
+    this.setState({ password });
+  };
+
+  handleClickCancelRemoveDevice = () => {
+    this.setState({
+      displayRemoveDevicePopup: false,
+      deviceId: undefined,
+      password: ''
+    });
+  };
+
+  handleRemoveDevice = () => {
+    this.setState({ displayRemoveDevicePopup: false }, async () => {
+      const { deviceId } = this.state;
+      const isSuccess = await this.props.onRemoveDevice({ deviceId });
+      if (isSuccess) {
+        sendRemoveDeviceSuccessMessage();
+      } else {
+        sendRemoveDeviceErrorMessage();
+      }
+    });
   };
 }
 
 SettingDevicesWrapper.propTypes = {
-  devices: PropTypes.array
+  devices: PropTypes.array,
+  onRemoveDevice: PropTypes.func
 };
 
 export default SettingDevicesWrapper;

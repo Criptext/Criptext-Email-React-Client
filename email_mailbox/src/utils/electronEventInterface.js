@@ -483,6 +483,22 @@ export const sendFetchEmalsErrorMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendRemoveDeviceErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.removeDevice,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendRemoveDeviceSuccessMessage = () => {
+  const messageData = {
+    ...Messages.success.removeDevice,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
