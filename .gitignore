@@ -16,6 +16,7 @@ email_*/build
 */src/app/build/
 electron_app/build/Certificates.p12
 electron_app/build/Criptext_Mail_Distribution.provisionprofile
+electron_app/dev-app-update.yml
 
 # misc
 */.env*
