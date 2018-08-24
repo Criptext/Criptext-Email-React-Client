@@ -31,6 +31,7 @@ import { SocketCommand, appDomain, EmailStatus } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
+import { deleteDeviceData } from '../containers/Settings';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -54,6 +55,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.PEER_EMAIL_UNSEND: {
       return handlePeerEmailUnsend(incomingEvent);
+    }
+    case SocketCommand.DEVICE_REMOVED: {
+      return handlePeerRemoveDevice(incomingEvent);
     }
     case SocketCommand.PEER_EMAIL_READ_UPDATE: {
       return handlePeerEmailRead(incomingEvent);
@@ -267,6 +271,10 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
   await setEventAsHandled(rowid);
 };
 
+const handlePeerRemoveDevice = ({ rowid }) => {
+  sendDeviceRemovedEvent(rowid);
+};
+
 const handlePeerEmailRead = async ({ rowid, params }) => {
   const { metadataKeys, unread } = params;
   const emails = await getEmailsByKeys(metadataKeys);
@@ -459,6 +467,10 @@ ipcRenderer.on('update-thread-emails', (ev, data) => {
   });
 });
 
+ipcRenderer.on('logged-out-device', async () => {
+  await sendDeviceRemovedEvent();
+});
+
 export const sendUpdateThreadLabelsErrorMessage = () => {
   const messageData = {
     ...Messages.error.updateThreadLabels,
@@ -499,6 +511,20 @@ export const sendRemoveDeviceSuccessMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendDeviceRemovedEvent = async rowid => {
+  emitter.emit(Event.DEVICE_REMOVED, null);
+  await handleDeleteDeviceData(rowid);
+};
+
+const handleDeleteDeviceData = async rowid => {
+  return await setTimeout(async () => {
+    if (rowid) {
+      await setEventAsHandled(rowid);
+    }
+    await deleteDeviceData();
+  }, 3000);
+};
+
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
@@ -516,5 +542,6 @@ export const Event = {
   LABEL_CREATED: 'label-created',
   THREADS_DELETED: 'thread-deleted-permanently',
   EMAIL_DELETED: 'email-deleted-permanently',
-  THREADS_UPDATE_READ: 'threads-update-read'
+  THREADS_UPDATE_READ: 'threads-update-read',
+  DEVICE_REMOVED: 'device-removed'
 };

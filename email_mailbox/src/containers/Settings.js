@@ -55,6 +55,11 @@ const formatDevicesData = devices => {
     .sort(device => !device.isCurrentDevice);
 };
 
+const deleteDeviceData = async () => {
+  await cleanDataBase();
+  await logoutApp();
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     onAddLabel: (text, eventParams) => {
@@ -109,11 +114,11 @@ const mapDispatchToProps = dispatch => {
     },
     onLogout: async () => {
       const { deviceId } = myAccount;
-      const { status } = await removeDevice(deviceId);
-      if (status === 200) {
-        await cleanDataBase();
-        await logoutApp();
-      }
+      const res = await removeDevice(deviceId);
+      return res.status === 200;
+    },
+    onDeleteDeviceData: async () => {
+      await deleteDeviceData();
     },
     onRemoveLabel: labelId => {
       dispatch(removeLabel(String(labelId)));
@@ -130,4 +135,4 @@ const Settings = connect(
   mapDispatchToProps
 )(SettingsWrapper);
 
-export default Settings;
+export { Settings as default, deleteDeviceData };

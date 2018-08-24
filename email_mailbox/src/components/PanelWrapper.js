@@ -12,6 +12,7 @@ class PanelWrapper extends Component {
       isOpenActivityPanel: false,
       isOpenSideBar: true,
       isOpenWelcome: true,
+      displayMalboxPopup: false,
       sectionSelected: {
         type: SectionType.MAILBOX,
         params: {
@@ -33,12 +34,14 @@ class PanelWrapper extends Component {
   render() {
     return (
       <Panel
+        displayMalboxPopup={this.state.displayMalboxPopup}
         isOpenActivityPanel={this.state.isOpenActivityPanel}
         isOpenSideBar={this.state.isOpenSideBar}
         isOpenWelcome={this.state.isOpenWelcome}
         onClickCloseWelcome={this.handleCloseWelcome}
         onClickSection={this.handleClickSection}
         onClickThreadBack={this.handleClickThreadBack}
+        onCloseMailboxPopup={this.handleCloseMailboxPopup}
         onToggleActivityPanel={this.handleToggleActivityPanel}
         onToggleSideBar={this.handleToggleSideBar}
         sectionSelected={this.state.sectionSelected}
@@ -123,6 +126,10 @@ class PanelWrapper extends Component {
     this.setState({ isOpenWelcome: false }, () => {
       this.props.onUpdateOpenedAccount();
     });
+  };
+
+  handleCloseMailboxPopup = () => {
+    this.setState({ displayMalboxPopup: false });
   };
 
   initEventHandlers = props => {
@@ -233,6 +240,10 @@ class PanelWrapper extends Component {
 
     addEvent(Event.THREADS_UPDATE_READ, (threadIds, unread) => {
       props.onUpdateUnreadThreads(threadIds, unread);
+    });
+
+    addEvent(Event.DEVICE_REMOVED, () => {
+      this.setState({ displayMalboxPopup: true });
     });
   };
 }

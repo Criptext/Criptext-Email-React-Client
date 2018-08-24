@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { deviceTypes } from './../utils/const';
+import PopupHOC from './PopupHOC';
 import RemoveDevicePopup from './RemoveDevicePopup';
 import './settingdevices.css';
+
+const Removedevicepopup = PopupHOC(RemoveDevicePopup);
 
 const SettingDevices = props => <div>{renderDevicesBlock(props)}</div>;
 
@@ -22,7 +25,14 @@ const renderDevicesBlock = props => (
   </div>
 );
 
-const renderRemoveDevicePopup = props => <RemoveDevicePopup {...props} />;
+const renderRemoveDevicePopup = props => (
+  <Removedevicepopup
+    isHidden={!props.displayRemoveDevicePopup}
+    popupPosition={{ left: '45%', top: '45%' }}
+    onTogglePopup={props.onClickCancelRemoveDevice}
+    {...props}
+  />
+);
 
 const renderTrustedDevice = (index, deviceData, props) => (
   <div key={index} className="linked-device">
@@ -72,6 +82,11 @@ const renderLastConnection = lastConnection => {
 renderDevicesBlock.propTypes = {
   devices: PropTypes.array,
   displayRemoveDevicePopup: PropTypes.bool
+};
+
+renderRemoveDevicePopup.propTypes = {
+  displayRemoveDevicePopup: PropTypes.bool,
+  onClickCancelRemoveDevice: PropTypes.func
 };
 
 renderTrustedDevice.propTypes = {

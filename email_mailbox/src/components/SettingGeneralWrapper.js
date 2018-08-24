@@ -7,6 +7,7 @@ import {
   parseSignatureHtmlToEdit,
   parseSignatureContentToHtml
 } from '../utils/EmailUtils';
+import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
 
 const requiredNameMinLength = requiredMinLength.fullname;
 
@@ -95,12 +96,18 @@ class SettingGeneralWrapper extends Component {
     this.setState({ signatureEnabled: value });
   };
 
-  handleClickLogout = () => {
-    this.props.onLogout();
+  handleClickLogout = async () => {
+    const isSuccess = await this.props.onLogout();
+    if (isSuccess) {
+      await this.props.onDeleteDeviceData();
+    } else {
+      sendRemoveDeviceErrorMessage();
+    }
   };
 }
 
 SettingGeneralWrapper.propTypes = {
+  onDeleteDeviceData: PropTypes.func,
   onLogout: PropTypes.func,
   onUpdateAccount: PropTypes.func
 };

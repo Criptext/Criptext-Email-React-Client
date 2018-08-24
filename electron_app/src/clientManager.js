@@ -1,6 +1,7 @@
 const ClientAPI = require('@criptext/email-http-client');
 const { PROD_SERVER_URL } = require('./utils/const');
 const { getAccount } = require('./DBManager');
+const mailboxWindow = require('./windows/mailbox');
 let client = {};
 
 const checkClient = async () => {
@@ -17,13 +18,22 @@ const checkClient = async () => {
   }
 };
 
+const checkDeviceRemoved = res => {
+  const { status } = res;
+  if (status === 401) {
+    return mailboxWindow.send('logged-out-device', null);
+  }
+  return res;
+};
+
 class ClientManager {
   constructor() {
     this.check();
   }
 
-  acknowledgeEvents(eventIds) {
-    return client.acknowledgeEvents(eventIds);
+  async acknowledgeEvents(eventIds) {
+    const res = await client.acknowledgeEvents(eventIds);
+    return checkDeviceRemoved(res);
   }
 
   async check() {
@@ -34,17 +44,20 @@ class ClientManager {
     return client.checkAvailableUsername(username);
   }
 
-  findKeyBundles(params) {
-    return client.findKeyBundles(params);
+  async findKeyBundles(params) {
+    const res = await client.findKeyBundles(params);
+    return checkDeviceRemoved(res);
   }
 
-  getEmailBody(bodyKey) {
-    return client.getEmailBody(bodyKey);
+  async getEmailBody(bodyKey) {
+    const res = await client.getEmailBody(bodyKey);
+    return checkDeviceRemoved(res);
   }
 
   async getEvents() {
     await this.check();
-    const { status, body } = await client.getPendingEvents();
+    const res = await client.getPendingEvents();
+    const { status, body } = checkDeviceRemoved(res);
     return status === 204 ? [] : this.formEvents(body);
   }
 
@@ -55,46 +68,55 @@ class ClientManager {
     });
   }
 
-  getDevices() {
-    return client.getDevices();
+  async getDevices() {
+    const res = await client.getDevices();
+    return checkDeviceRemoved(res);
   }
 
   login(data) {
     return client.login(data);
   }
 
-  postEmail(params) {
-    return client.postEmail(params);
+  async postEmail(params) {
+    const res = await client.postEmail(params);
+    return checkDeviceRemoved(res);
   }
 
-  postKeyBundle(params) {
-    return client.postKeyBundle(params);
+  async postKeyBundle(params) {
+    const res = await client.postKeyBundle(params);
+    return checkDeviceRemoved(res);
   }
 
-  postOpenEvent(metadataKeys) {
-    return client.postOpenEvent(metadataKeys);
+  async postOpenEvent(metadataKeys) {
+    const res = await client.postOpenEvent(metadataKeys);
+    return checkDeviceRemoved(res);
   }
 
-  postPeerEvent(params) {
-    return client.postPeerEvent(params);
+  async postPeerEvent(params) {
+    const res = await client.postPeerEvent(params);
+    return checkDeviceRemoved(res);
   }
 
   postUser(params) {
     return client.postUser(params);
   }
 
-  removeDevice(deviceId) {
-    return client.removeDevice(deviceId);
+  async removeDevice(deviceId) {
+    const res = await client.removeDevice(deviceId);
+    return checkDeviceRemoved(res);
   }
 
   async updateName(data) {
     const { name } = data.params;
-    await client.updateName(name);
-    return client.postPeerEvent(data);
+    const updateNameResponse = await client.updateName(name);
+    checkDeviceRemoved(updateNameResponse);
+    const peerResponse = await client.postPeerEvent(data);
+    return checkDeviceRemoved(peerResponse);
   }
 
-  unsendEmail(params) {
-    return client.unsendEmail(params);
+  async unsendEmail(params) {
+    const res = await client.unsendEmail(params);
+    return checkDeviceRemoved(res);
   }
 }
 
