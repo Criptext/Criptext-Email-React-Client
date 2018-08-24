@@ -2,11 +2,12 @@ const { app, BrowserWindow, shell } = require('electron');
 const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
 const { appUpdater } = require('./../updater');
+const globalManager = require('./../globalManager');
 const path = require('path');
 const opn = require('opn');
 
 let mailboxWindow;
-let force_quit = false;
+globalManager.forcequit.set(false);
 
 const mailboxSize = {
   width: 1400,
@@ -40,7 +41,7 @@ const create = () => {
     ev.preventDefault();
   });
   mailboxWindow.on('close', e => {
-    if (process.platform === 'darwin' && !force_quit) {
+    if (!globalManager.forcequit.get()) {
       e.preventDefault();
       mailboxWindow.hide();
     }
@@ -124,7 +125,7 @@ const openLinkInDefaultBrowser = (ev, url) => {
 };
 
 const quit = () => {
-  force_quit = true;
+  globalManager.forcequit.set(true);
   app.quit();
 };
 

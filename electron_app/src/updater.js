@@ -2,6 +2,7 @@ const { dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const notifier = require('node-notifier');
 const path = require('path');
+const globalManager = require('./globalManager');
 const appId = 'com.criptext.criptextmail';
 
 let currentUpdaterType;
@@ -102,7 +103,10 @@ autoUpdater.on('update-downloaded', () => {
     () => {
       currentUpdaterType = updaterTypes.NONE;
       isDownloadingUpdate = false;
-      setImmediate(() => autoUpdater.quitAndInstall());
+      setImmediate(() => {
+        globalManager.forcequit.set(true);
+        autoUpdater.quitAndInstall();
+      });
     }
   );
 });

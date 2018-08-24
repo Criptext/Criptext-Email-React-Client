@@ -11,6 +11,14 @@ const getModalData = () => {
   return global.modalData;
 };
 
+// Force quit
+const setForceQuit = data => {
+  global.forcequit = data;
+};
+const getForceQuit = () => {
+  return global.forcequit;
+};
+
 // Loading
 const setLoadingData = data => {
   global.loadingData = data;
@@ -45,6 +53,10 @@ module.exports = {
   emailToEdit: {
     get: getEmailToEdit,
     set: setEmailToEdit
+  },
+  forcequit: {
+    get: getForceQuit,
+    set: setForceQuit
   },
   loadingData: {
     get: getLoadingData,
