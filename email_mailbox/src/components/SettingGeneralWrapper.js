@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { myAccount, requiredMinLength } from './../utils/electronInterface';
+import {
+  myAccount,
+  requiredMinLength,
+  changePassword
+} from './../utils/electronInterface';
 import SettingGeneral from './SettingGeneral';
 import { EditorState } from 'draft-js';
 import {
   parseSignatureHtmlToEdit,
   parseSignatureContentToHtml
 } from '../utils/EmailUtils';
-import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
+import {
+  sendRemoveDeviceErrorMessage,
+  sendChangePasswordErrorMessage,
+  sendChangePasswordSuccessMessage
+} from '../utils/electronEventInterface';
 import {
   validateFullname,
   validatePassword,
   validateConfirmPassword
 } from '../validators/validators';
+import { hashPassword } from '../utils/hashUtils';
 
 const inputNameModes = {
   EDITING: 'editing',
@@ -39,7 +48,7 @@ class SettingGeneralWrapper extends Component {
         icon: 'icon-not-show',
         value: '',
         errorMessage: '',
-        hasError: true
+        hasError: false
       },
       newPasswordInput: {
         name: 'newPasswordInput',
@@ -47,7 +56,7 @@ class SettingGeneralWrapper extends Component {
         icon: 'icon-not-show',
         value: '',
         errorMessage: '',
-        hasError: true
+        hasError: false
       },
       oldPasswordInput: {
         name: 'oldPasswordInput',
@@ -55,7 +64,7 @@ class SettingGeneralWrapper extends Component {
         icon: 'icon-not-show',
         value: '',
         errorMessage: '',
-        hasError: true
+        hasError: false
       },
       signatureEnabled: undefined,
       signature: EditorState.createEmpty()
@@ -113,7 +122,33 @@ class SettingGeneralWrapper extends Component {
   };
 
   handleClickCancelChangePassword = () => {
-    this.setState({ isHiddenChangePasswordPopup: true });
+    this.setState({
+      isHiddenChangePasswordPopup: true,
+      confirmNewPasswordInput: {
+        name: 'confirmNewPasswordInput',
+        type: 'password',
+        icon: 'icon-not-show',
+        value: '',
+        errorMessage: '',
+        hasError: false
+      },
+      newPasswordInput: {
+        name: 'newPasswordInput',
+        type: 'password',
+        icon: 'icon-not-show',
+        value: '',
+        errorMessage: '',
+        hasError: false
+      },
+      oldPasswordInput: {
+        name: 'oldPasswordInput',
+        type: 'password',
+        icon: 'icon-not-show',
+        value: '',
+        errorMessage: '',
+        hasError: false
+      }
+    });
   };
 
   handleClickChangePasswordButton = () => {
@@ -205,8 +240,29 @@ class SettingGeneralWrapper extends Component {
     }
   };
 
-  handleConfirmChangePassword = () => {
-    // Call API
+  handleConfirmChangePassword = async () => {
+    const params = {
+      oldPassword: hashPassword(this.state.oldPasswordInput.value),
+      newPassword: hashPassword(this.state.newPasswordInput.value)
+    };
+    const { status } = await changePassword(params);
+    if (status === 400) {
+      const oldPasswordInput = {
+        ...this.state.oldPasswordInput,
+        hasError: true,
+        errorMessage: 'Wrong password'
+      };
+      const newState = {
+        ...this.state,
+        oldPasswordInput
+      };
+      return this.setState(newState);
+    }
+    if (status === 200) {
+      sendChangePasswordSuccessMessage();
+      return this.handleClickCancelChangePassword();
+    }
+    sendChangePasswordErrorMessage();
   };
 
   handleChangeTextareaSignature = signatureContent => {

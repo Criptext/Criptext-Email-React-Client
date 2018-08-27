@@ -467,8 +467,12 @@ ipcRenderer.on('update-thread-emails', (ev, data) => {
   });
 });
 
-ipcRenderer.on('logged-out-device', async () => {
+ipcRenderer.on('device-removed', async () => {
   await sendDeviceRemovedEvent();
+});
+
+ipcRenderer.on('password-changed', async () => {
+  await sendPasswordChangedEvent();
 });
 
 export const sendUpdateThreadLabelsErrorMessage = () => {
@@ -516,13 +520,33 @@ export const sendDeviceRemovedEvent = async rowid => {
   await handleDeleteDeviceData(rowid);
 };
 
-const handleDeleteDeviceData = async rowid => {
+export const sendPasswordChangedEvent = () => {
+  emitter.emit(Event.PASSWORD_CHANGED, null);
+};
+
+export const handleDeleteDeviceData = async rowid => {
   return await setTimeout(async () => {
     if (rowid) {
       await setEventAsHandled(rowid);
     }
     await deleteDeviceData();
   }, 4000);
+};
+
+export const sendChangePasswordSuccessMessage = () => {
+  const messageData = {
+    ...Messages.success.changePassword,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendChangePasswordErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.changePassword,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
 export const addEvent = (eventName, callback) => {
@@ -543,5 +567,6 @@ export const Event = {
   THREADS_DELETED: 'thread-deleted-permanently',
   EMAIL_DELETED: 'email-deleted-permanently',
   THREADS_UPDATE_READ: 'threads-update-read',
-  DEVICE_REMOVED: 'device-removed'
+  DEVICE_REMOVED: 'device-removed',
+  PASSWORD_CHANGED: 'password-changed'
 };

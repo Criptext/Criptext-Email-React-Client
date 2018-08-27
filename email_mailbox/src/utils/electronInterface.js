@@ -71,6 +71,10 @@ export const acknowledgeEvents = eventIds => {
   return clientManager.acknowledgeEvents(eventIds);
 };
 
+export const changePassword = params => {
+  return clientManager.changePassword(params);
+};
+
 export const getDevices = () => {
   return clientManager.getDevices();
 };
@@ -93,6 +97,10 @@ export const removeDevice = deviceId => {
 
 export const postPeerEvent = params => {
   return clientManager.postPeerEvent(params);
+};
+
+export const unlockDevice = params => {
+  return clientManager.unlockDevice(params);
 };
 
 export const updateNameEvent = params => {

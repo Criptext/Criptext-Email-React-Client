@@ -9,7 +9,7 @@ const checkClient = async () => {
   const token = account ? account.jwt : undefined;
   if (!client.login || client.token !== token) {
     const clientOptions = {
-      url: PROD_SERVER_URL,
+      url: process.env.REACT_APP_KEYSERVER_URL || PROD_SERVER_URL,
       token,
       timeout: 60000
     };
@@ -25,12 +25,10 @@ const checkDeviceRemoved = res => {
 
   switch (status) {
     case REMOVED_DEVICE_STATUS: {
-      return mailboxWindow.send('logged-out-device', null);
+      return mailboxWindow.send('device-removed', null);
     }
     case CHANGED_PASSWORD_STATUS: {
-      // Show popup for new password
-      console.log("Se ha cambiado el password");
-      return res;
+      return mailboxWindow.send('password-changed', null);
     }
     default:
       return res;

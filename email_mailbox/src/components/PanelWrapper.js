@@ -5,6 +5,11 @@ import { addEvent, Event } from '../utils/electronEventInterface';
 import { LabelType } from '../utils/electronInterface';
 import { SectionType, EmailStatus } from '../utils/const';
 
+const MAILBOX_POPUP_TYPES = {
+  DEVICE_REMOVED: 'device-removed',
+  PASSWORD_CHANGED: 'password-changed'
+};
+
 class PanelWrapper extends Component {
   constructor(props) {
     super(props);
@@ -13,6 +18,7 @@ class PanelWrapper extends Component {
       isOpenSideBar: true,
       isOpenWelcome: true,
       isHiddenMailboxPopup: true,
+      mailboxPopupType: undefined,
       sectionSelected: {
         type: SectionType.MAILBOX,
         params: {
@@ -38,6 +44,7 @@ class PanelWrapper extends Component {
         isOpenActivityPanel={this.state.isOpenActivityPanel}
         isOpenSideBar={this.state.isOpenSideBar}
         isOpenWelcome={this.state.isOpenWelcome}
+        mailboxPopupType={this.state.mailboxPopupType}
         onClickCloseWelcome={this.handleCloseWelcome}
         onClickSection={this.handleClickSection}
         onClickThreadBack={this.handleClickThreadBack}
@@ -129,7 +136,10 @@ class PanelWrapper extends Component {
   };
 
   handleCloseMailboxPopup = () => {
-    this.setState({ isHiddenMailboxPopup: true });
+    this.setState({
+      isHiddenMailboxPopup: true,
+      mailboxPopupType: undefined
+    });
   };
 
   initEventHandlers = props => {
@@ -237,7 +247,17 @@ class PanelWrapper extends Component {
     });
 
     addEvent(Event.DEVICE_REMOVED, () => {
-      this.setState({ isHiddenMailboxPopup: false });
+      this.setState({
+        isHiddenMailboxPopup: false,
+        mailboxPopupType: MAILBOX_POPUP_TYPES.DEVICE_REMOVED
+      });
+    });
+
+    addEvent(Event.PASSWORD_CHANGED, () => {
+      this.setState({
+        isHiddenMailboxPopup: false,
+        mailboxPopupType: MAILBOX_POPUP_TYPES.PASSWORD_CHANGED
+      });
     });
   };
 }
@@ -256,4 +276,4 @@ PanelWrapper.propTypes = {
   threadsCount: PropTypes.number
 };
 
-export default PanelWrapper;
+export { PanelWrapper as default, MAILBOX_POPUP_TYPES };

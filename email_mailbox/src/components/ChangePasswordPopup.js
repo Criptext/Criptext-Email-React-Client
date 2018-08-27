@@ -77,9 +77,15 @@ const renderInput = ({
       placeholder={placeholder}
     />
     <i className={icon} onClick={() => onChangeType(name)} />
-    {hasError && errorMessage.length && <span>{errorMessage}</span>}
+    {renderErrorMessage(hasError, errorMessage, value)}
   </div>
 );
+
+const renderErrorMessage = (hasError, errorMessage, value) => {
+  const shouldRenderMessage =
+    hasError && errorMessage.length > 0 && value.length > 0;
+  return shouldRenderMessage && <span>{errorMessage}</span>;
+};
 
 const renderButtons = props => (
   <div className="change-password-popup-buttons">

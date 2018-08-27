@@ -7,8 +7,8 @@ import WelcomeWrapper from './WelcomeWrapper';
 import { myAccount } from '../utils/electronInterface';
 import PopupHOC from './PopupHOC';
 import DeviceRemovedPopup from './DeviceRemovedPopup';
-
-const Deviceremovedpopup = PopupHOC(DeviceRemovedPopup);
+import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
+import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
 
 const Panel = props => (
   <div
@@ -38,14 +38,43 @@ const Panel = props => (
       !myAccount.opened && (
         <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
       )}
-    {!props.isHiddenMailboxPopup && (
-      <Deviceremovedpopup
-        isHidden={props.isHiddenMailboxPopup}
-        popupPosition={{ left: '50%', top: '50%' }}
-      />
-    )}
+    {!props.isHiddenMailboxPopup &&
+      renderMailboxPopup({
+        type: props.mailboxPopupType,
+        isHidden: props.isHiddenMailboxPopup,
+        props
+      })}
   </div>
 );
+
+const renderMailboxPopup = ({ type, isHidden, props }) => {
+  switch (type) {
+    case MAILBOX_POPUP_TYPES.DEVICE_REMOVED: {
+      const DeviceRemovedpopup = PopupHOC(DeviceRemovedPopup);
+      return (
+        <DeviceRemovedpopup
+          isHidden={isHidden}
+          popupPosition={{ left: '50%', top: '50%' }}
+          {...props}
+        />
+      );
+    }
+    case MAILBOX_POPUP_TYPES.PASSWORD_CHANGED: {
+      const PasswordChangedpopup = PopupHOC(PasswordChangedPopupWrapper);
+      return (
+        <PasswordChangedpopup
+          isHidden={props.isHiddenMailboxPopup}
+          popupPosition={{ left: '50%', top: '50%' }}
+          isClosable={false}
+          theme={'dark'}
+          {...props}
+        />
+      );
+    }
+    default:
+      return null;
+  }
+};
 
 const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
   const sidebarClass = isOpenSideBar
@@ -62,6 +91,7 @@ Panel.propTypes = {
   isOpenActivityPanel: PropTypes.bool,
   isOpenSideBar: PropTypes.bool,
   isOpenWelcome: PropTypes.bool,
+  mailboxPopupType: PropTypes.string,
   onClickCloseWelcome: PropTypes.func,
   onClickThreadBack: PropTypes.func,
   onClickSection: PropTypes.func,

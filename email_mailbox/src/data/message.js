@@ -25,7 +25,7 @@ const messagesContent = {
     trash: {
       priority: messagePriorities.LOW,
       description:
-        'Messages that have been in Trash more than 30 days will be automatically deleted.',
+        'Messages that have been in Trash more than 30 days will be automatically deleted',
       action: 'Empty Trash',
       actionHandlerKey: actionHandlerKeys.advice.trash
     }
@@ -53,11 +53,15 @@ const messagesContent = {
     },
     downloadFile: {
       priority: messagePriorities.MEDIUM,
-      description: "Download successfully. Check your 'Downloads' folder."
+      description: "Download successfully. Check your 'Downloads' folder"
     },
     removeDevice: {
       priority: messagePriorities.MEDIUM,
-      description: 'Device removed.'
+      description: 'Device removed'
+    },
+    changePassword: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Password changed'
     }
   },
   error: {
@@ -69,7 +73,7 @@ const messagesContent = {
     },
     downloadFile: {
       priority: messagePriorities.MEDIUM,
-      description: 'An error occurred during download. The file was not saved.'
+      description: 'An error occurred during download. The file was not saved'
     },
     failedToSend: {
       priority: messagePriorities.MEDIUM,
@@ -86,11 +90,16 @@ const messagesContent = {
     fetchEmails: {
       priority: messagePriorities.MEDIUM,
       description:
-        'Failed to fetch the emails. Check your connection and try again.'
+        'Failed to fetch the emails. Check your connection and try again'
     },
     removeDevice: {
       priority: messagePriorities.MEDIUM,
-      description: 'Failed to remove the device. Try again.'
+      description: 'Failed to remove the device. Try again'
+    },
+    changePassword: {
+      priority: messagePriorities.MEDIUM,
+      description:
+        'Failed to change password. The password has not been modified'
     }
   },
   establish: {
