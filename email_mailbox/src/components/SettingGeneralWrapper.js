@@ -8,12 +8,20 @@ import {
   parseSignatureContentToHtml
 } from '../utils/EmailUtils';
 import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
-
-const requiredNameMinLength = requiredMinLength.fullname;
+import {
+  validateFullname,
+  validatePassword,
+  validateConfirmPassword
+} from '../validators/validators';
 
 const inputNameModes = {
   EDITING: 'editing',
   NONE: 'none'
+};
+
+const changePasswordErrors = {
+  LENGTH: `Must be at least ${requiredMinLength.password} characters`,
+  MATCH: 'Passwords do not match'
 };
 
 /* eslint-disable-next-line react/no-deprecated */
@@ -21,27 +29,67 @@ class SettingGeneralWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      signatureEnabled: undefined,
-      signature: EditorState.createEmpty(),
+      isDisabledChangePasswordButton: true,
+      isHiddenChangePasswordPopup: true,
+      mode: inputNameModes.NONE,
       name: '',
-      mode: inputNameModes.NONE
+      confirmNewPasswordInput: {
+        name: 'confirmNewPasswordInput',
+        type: 'password',
+        icon: 'icon-not-show',
+        value: '',
+        errorMessage: '',
+        hasError: true
+      },
+      newPasswordInput: {
+        name: 'newPasswordInput',
+        type: 'password',
+        icon: 'icon-not-show',
+        value: '',
+        errorMessage: '',
+        hasError: true
+      },
+      oldPasswordInput: {
+        name: 'oldPasswordInput',
+        type: 'password',
+        icon: 'icon-not-show',
+        value: '',
+        errorMessage: '',
+        hasError: true
+      },
+      signatureEnabled: undefined,
+      signature: EditorState.createEmpty()
     };
   }
 
   render() {
     return (
       <SettingGeneral
+        confirmNewPasswordInput={this.state.confirmNewPasswordInput}
+        isDisabledChangePasswordButton={
+          this.state.isDisabledChangePasswordButton
+        }
+        isHiddenChangePasswordPopup={this.state.isHiddenChangePasswordPopup}
+        mode={this.state.mode}
         name={this.state.name}
-        signatureEnabled={this.state.signatureEnabled}
-        signature={this.state.signature}
+        newPasswordInput={this.state.newPasswordInput}
+        oldPasswordInput={this.state.oldPasswordInput}
+        onAddNameInputKeyPressed={this.handleAddNameInputKeyPressed}
         onBlurInputName={this.handleBlurInputName}
         onChangeInputName={this.handleChangeInputName}
+        onChangeInputValueChangePassword={
+          this.handleChangeInputValueChangePassword
+        }
         onChangeTextareaSignature={this.handleChangeTextareaSignature}
         onChangeRadioButtonSignature={this.handleChangeRadioButtonSignature}
+        onClickCancelChangePassword={this.handleClickCancelChangePassword}
+        onClickChangePasswordButton={this.handleClickChangePasswordButton}
+        onClickChangePasswordInputType={this.handleClickChangePasswordInputType}
         onClickEditName={this.handleClickEditName}
-        onAddNameInputKeyPressed={this.handleAddNameInputKeyPressed}
-        mode={this.state.mode}
         onClickLogout={this.handleClickLogout}
+        onConfirmChangePassword={this.handleConfirmChangePassword}
+        signatureEnabled={this.state.signatureEnabled}
+        signature={this.state.signature}
       />
     );
   }
@@ -64,6 +112,14 @@ class SettingGeneralWrapper extends Component {
     }
   };
 
+  handleClickCancelChangePassword = () => {
+    this.setState({ isHiddenChangePasswordPopup: true });
+  };
+
+  handleClickChangePasswordButton = () => {
+    this.setState({ isHiddenChangePasswordPopup: false });
+  };
+
   handleClickEditName = () => {
     this.setState({ mode: inputNameModes.EDITING });
   };
@@ -72,9 +128,74 @@ class SettingGeneralWrapper extends Component {
     this.setState({ name: ev.target.value });
   };
 
+  handleChangeInputValueChangePassword = ev => {
+    const value = ev.target.value.trim();
+    const name = ev.target.getAttribute('name');
+    const { hasError, errorMessage } = this.checkInputError(name, value);
+    const newState = {
+      ...this.state,
+      [name]: { ...this.state[name], value, hasError, errorMessage }
+    };
+    this.setState(newState, () => {
+      this.checkDisabledChangePasswordButton();
+    });
+  };
+
+  checkInputError = (name, value) => {
+    switch (name) {
+      case 'oldPasswordInput': {
+        const isValid = validatePassword(value);
+        const errorMessage = changePasswordErrors.LENGTH;
+        return { hasError: !isValid, errorMessage };
+      }
+      case 'newPasswordInput': {
+        const isValid = validatePassword(value);
+        const errorMessage = changePasswordErrors.LENGTH;
+        return { hasError: !isValid, errorMessage };
+      }
+      case 'confirmNewPasswordInput': {
+        const isValid = validatePassword(value);
+        if (!isValid) {
+          return {
+            hasError: true,
+            errorMessage: changePasswordErrors.LENGTH
+          };
+        }
+        const isMatched = validateConfirmPassword(
+          this.state.newPasswordInput.value,
+          value
+        );
+        const errorMessage = changePasswordErrors.MATCH;
+        return { hasError: !isMatched, errorMessage };
+      }
+      default:
+        break;
+    }
+  };
+
+  checkDisabledChangePasswordButton = () => {
+    const isDisabled =
+      this.state.oldPasswordInput.hasError ||
+      this.state.newPasswordInput.hasError ||
+      this.state.confirmNewPasswordInput.hasError;
+    this.setState({ isDisabledChangePasswordButton: isDisabled });
+  };
+
+  handleClickChangePasswordInputType = name => {
+    const [type, icon] =
+      this.state[name].type === 'password'
+        ? ['text', 'icon-show']
+        : ['password', 'icon-not-show'];
+    const newState = {
+      ...this.state,
+      [name]: { ...this.state[name], type, icon }
+    };
+    this.setState(newState);
+  };
+
   handleAddNameInputKeyPressed = async e => {
     const inputValue = e.target.value.trim();
-    const isValidName = inputValue.length >= requiredNameMinLength;
+    const isValidName = validateFullname(inputValue);
     if (e.key === 'Enter' && inputValue !== '' && isValidName) {
       await this.props.onUpdateAccount({ name: inputValue });
       this.setState({
@@ -82,6 +203,10 @@ class SettingGeneralWrapper extends Component {
         mode: inputNameModes.NONE
       });
     }
+  };
+
+  handleConfirmChangePassword = () => {
+    // Call API
   };
 
   handleChangeTextareaSignature = signatureContent => {

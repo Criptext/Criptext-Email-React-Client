@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { Editor } from 'react-draft-wysiwyg';
+import PopupHOC from './PopupHOC';
 import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain } from '../utils/const';
@@ -10,11 +11,14 @@ import { usefulLinks } from '../utils/const';
 import { inputNameModes } from './SettingGeneralWrapper';
 import './settinggeneral.css';
 import './signatureeditor.css';
+import ChangePasswordPopup from './ChangePasswordPopup';
+
+const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 
 const SettingGeneral = props => (
   <div>
     {renderProfileBlock(props)}
-    {renderPasswordBlock(false)}
+    {renderPasswordBlock(props)}
     {renderLogoutAccountBlock(props)}
     {renderLanguageBlock()}
     {renderUsefulLinksBlock()}
@@ -135,21 +139,36 @@ const renderBlockSignature = props => (
   </div>
 );
 
-const renderPasswordBlock = shouldRender => {
+const renderPasswordBlock = props => {
   return (
-    shouldRender && (
-      <div className="section-block">
-        <div className="section-block-title">
-          <h1>Password</h1>
-        </div>
-        <div className="section-block-content">
-          <div className="section-block-content-item content-reset-password">
-            <button className="button button-a button-reset-password">
-              <span>Reset password</span>
-            </button>
-          </div>
+    <div className="section-block">
+      <div className="section-block-title">
+        <h1>Password</h1>
+      </div>
+      <div className="section-block-content">
+        <div className="section-block-content-item content-reset-password">
+          <button
+            className="button button-a button-reset-password"
+            onClick={props.onClickChangePasswordButton}
+          >
+            <span>Change password</span>
+          </button>
         </div>
       </div>
+      {renderChangePasswordPopup(props)}
+    </div>
+  );
+};
+
+const renderChangePasswordPopup = props => {
+  return (
+    !props.isHiddenChangePasswordPopup && (
+      <Changepasswordpopup
+        isHidden={props.isHiddenChangePasswordPopup}
+        onTogglePopup={props.onClickCancelChangePassword}
+        popupPosition={{ left: '45%', top: '45%' }}
+        {...props}
+      />
     )
   );
 };
@@ -233,6 +252,15 @@ renderBlockSignature.propTypes = {
   onChangeRadioButtonSignature: PropTypes.func,
   onChangeTextareaSignature: PropTypes.func,
   signature: PropTypes.string
+};
+
+renderPasswordBlock.propTypes = {
+  onClickChangePasswordButton: PropTypes.func
+};
+
+renderChangePasswordPopup.propTypes = {
+  isHiddenChangePasswordPopup: PropTypes.bool,
+  onClickCancelChangePassword: PropTypes.func
 };
 
 renderLogoutAccountBlock.propTypes = {

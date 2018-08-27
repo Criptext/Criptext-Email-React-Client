@@ -9,7 +9,7 @@ const checkClient = async () => {
   const token = account ? account.jwt : undefined;
   if (!client.login || client.token !== token) {
     const clientOptions = {
-      url: process.env.REACT_APP_KEYSERVER_URL || PROD_SERVER_URL,
+      url: PROD_SERVER_URL,
       token,
       timeout: 60000
     };
@@ -19,11 +19,22 @@ const checkClient = async () => {
 };
 
 const checkDeviceRemoved = res => {
+  const REMOVED_DEVICE_STATUS = 401;
+  const CHANGED_PASSWORD_STATUS = 403;
   const { status } = res;
-  if (status === 401) {
-    return mailboxWindow.send('logged-out-device', null);
+
+  switch (status) {
+    case REMOVED_DEVICE_STATUS: {
+      return mailboxWindow.send('logged-out-device', null);
+    }
+    case CHANGED_PASSWORD_STATUS: {
+      // Show popup for new password
+      console.log("Se ha cambiado el password");
+      return res;
+    }
+    default:
+      return res;
   }
-  return res;
 };
 
 class ClientManager {
@@ -33,6 +44,11 @@ class ClientManager {
 
   async acknowledgeEvents(eventIds) {
     const res = await client.acknowledgeEvents(eventIds);
+    return checkDeviceRemoved(res);
+  }
+
+  async changePassword(params) {
+    const res = await client.changePassword(params);
     return checkDeviceRemoved(res);
   }
 
@@ -103,6 +119,11 @@ class ClientManager {
 
   async removeDevice(deviceId) {
     const res = await client.removeDevice(deviceId);
+    return checkDeviceRemoved(res);
+  }
+
+  async unlockDevice(params) {
+    const res = await client.unlockDevice(params);
     return checkDeviceRemoved(res);
   }
 
