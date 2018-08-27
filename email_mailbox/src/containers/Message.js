@@ -7,7 +7,7 @@ import { SectionType } from '../utils/const';
 import { loadThreads, removeThreads } from '../actions';
 
 const defineMessageData = (mailboxSelected, threadsCount) => {
-  const targetLabelId = LabelType[mailboxSelected].id;
+  const targetLabelId = mailboxSelected && LabelType[mailboxSelected].id;
   const isEmpty = threadsCount < 1;
   if (targetLabelId === LabelType.trash.id && !isEmpty) {
     return {

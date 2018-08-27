@@ -5,6 +5,10 @@ import MainWrapper from './MainWrapper';
 import SideBar from './../containers/SideBar';
 import WelcomeWrapper from './WelcomeWrapper';
 import { myAccount } from '../utils/electronInterface';
+import PopupHOC from './PopupHOC';
+import DeviceRemovedPopup from './DeviceRemovedPopup';
+
+const Deviceremovedpopup = PopupHOC(DeviceRemovedPopup);
 
 const Panel = props => (
   <div
@@ -30,9 +34,16 @@ const Panel = props => (
       onClickSection={props.onClickSection}
       onToggleActivityPanel={props.onToggleActivityPanel}
     />
-    {props.isOpenWelcome && !myAccount.opened ? (
-      <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
-    ) : null}
+    {props.isOpenWelcome &&
+      !myAccount.opened && (
+        <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
+      )}
+    {!props.isHiddenMailboxPopup && (
+      <Deviceremovedpopup
+        isHidden={props.isHiddenMailboxPopup}
+        popupPosition={{ left: '50%', top: '50%' }}
+      />
+    )}
   </div>
 );
 
@@ -47,6 +58,7 @@ const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
 };
 
 Panel.propTypes = {
+  isHiddenMailboxPopup: PropTypes.bool,
   isOpenActivityPanel: PropTypes.bool,
   isOpenSideBar: PropTypes.bool,
   isOpenWelcome: PropTypes.bool,

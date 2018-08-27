@@ -11,7 +11,7 @@
   .linked-device {
     display: flex;
     width: 97%;
-    height: 45px;
+    height: 50px;
     font-size: 13px;
 
     &:hover{
@@ -39,7 +39,7 @@
     .device-status {
       display: flex;
       align-items: center;
-      width: 75%;
+      width: 30%;
       padding-left: 15px;
 
       .current-device {
@@ -61,6 +61,16 @@
           }
         }
       }
+    }
+    .device-action {
+      display: flex;
+      align-items: center;
+      width: 45%;
+      padding-left: 15px;
+      text-transform: uppercase;
+      color: #d94e47;
+      font-weight: 500;
+      cursor: pointer;
     }
   }
 }

@@ -1,26 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { deviceTypes } from './../utils/const';
+import PopupHOC from './PopupHOC';
+import RemoveDevicePopup from './RemoveDevicePopup';
 import './settingdevices.css';
+
+const Removedevicepopup = PopupHOC(RemoveDevicePopup);
 
 const SettingDevices = props => <div>{renderDevicesBlock(props)}</div>;
 
 const renderDevicesBlock = props => (
   <div className="section-block">
+    {!props.isHiddenRemoveDevicePopup && renderRemoveDevicePopup(props)}
     <div className="section-block-title">
       <h1>Linked Devices</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item content-linked-devices">
         {props.devices.map((device, index) =>
-          renderLinkedDevice(index, device)
+          renderTrustedDevice(index, device, props)
         )}
       </div>
     </div>
   </div>
 );
 
-const renderLinkedDevice = (index, deviceData) => (
+const renderRemoveDevicePopup = props => (
+  <Removedevicepopup
+    isHidden={props.isHiddenRemoveDevicePopup}
+    popupPosition={{ left: '45%', top: '45%' }}
+    onTogglePopup={props.onClickCancelRemoveDevice}
+    {...props}
+  />
+);
+
+const renderTrustedDevice = (index, deviceData, props) => (
   <div key={index} className="linked-device">
     <div className="device-icon">
       <i className={defineDeviceIconByType(deviceData.type)} />
@@ -33,6 +47,14 @@ const renderLinkedDevice = (index, deviceData) => (
         renderLastConnection(deviceData.lastConnection)
       )}
     </div>
+    {!deviceData.isCurrentDevice && (
+      <div
+        className="device-action"
+        onClick={() => props.onClickRemoveDevice(deviceData.deviceId)}
+      >
+        Remove
+      </div>
+    )}
   </div>
 );
 
@@ -58,7 +80,17 @@ const renderLastConnection = lastConnection => {
 };
 
 renderDevicesBlock.propTypes = {
-  devices: PropTypes.array
+  devices: PropTypes.array,
+  isHiddenRemoveDevicePopup: PropTypes.bool
+};
+
+renderRemoveDevicePopup.propTypes = {
+  isHiddenRemoveDevicePopup: PropTypes.bool,
+  onClickCancelRemoveDevice: PropTypes.func
+};
+
+renderTrustedDevice.propTypes = {
+  onClickRemoveDevice: PropTypes.func
 };
 
 export default SettingDevices;

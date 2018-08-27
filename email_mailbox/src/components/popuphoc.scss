@@ -1,0 +1,24 @@
+.popup-wrapper{
+  position: absolute;
+}
+
+.popup-container{
+  background-color: #fdfdfd;
+  box-shadow: 0 1px 16px 0 rgba(143, 143, 143, 0.56);
+  border: solid 1px #ececee;
+  border-radius: 6px;
+  position: absolute;
+  color: black;
+  width: auto;
+  z-index: 11;
+  transform: translate(-50%, -50%);
+}
+
+.popup-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+}

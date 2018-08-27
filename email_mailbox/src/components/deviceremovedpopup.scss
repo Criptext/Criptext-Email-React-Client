@@ -1,0 +1,25 @@
+.deviceremoved-container {
+  width: 200px;
+  height: 160px;
+  padding: 40px 20px;
+
+  .deviceremoved-title {
+    height: 25%;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .deviceremoved-text {
+    height: 75%;
+    font-size: 14px;
+    text-align: center;
+    padding: 5px;
+    
+    & > .text {
+      color: #373a45;
+      margin-bottom: 25px;
+    }
+  }
+}
