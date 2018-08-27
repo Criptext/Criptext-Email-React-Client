@@ -322,6 +322,6 @@ export const updateOpenedEmailByKey = ({ key, status }) => {
   return dbManager.updateEmail({ key, status });
 };
 
-export const updateUnreadEmailByThreadId = (threadId, value) => {
-  return dbManager.updateEmailByThreadId({ threadId, unread: value });
+export const updateUnreadEmailByThreadId = (threadId, unread) => {
+  return dbManager.updateEmailByThreadId({ threadId, unread });
 };

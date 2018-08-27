@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Set thread state by actions should add threads to state, action[ADD_BATCH] 1`] = `
+exports[`Thread actions - ADD_BATCH should add threads to state 1`] = `
 Immutable.List [
   Immutable.Map {
     allLabels: Immutable.Set [

@@ -99,23 +99,15 @@ export const updateStatusThread = (threadId, status) => ({
   status
 });
 
-export const updateUnreadThread = thread => {
-  return {
-    type: Thread.UPDATE_UNREAD_THREAD,
-    thread
-  };
-};
-
-export const updateUnreadThreadsSuccess = (threadsIds, read) => ({
-  threadsIds,
-  read,
+export const updateUnreadThreadsSuccess = (threadIds, unread) => ({
+  threadIds,
+  unread,
   type: Thread.UPDATE_UNREAD_THREADS
 });
 
 export const addMoveThreadsLabel = ({ threadsParams, labelId, notMove }) => {
   return async dispatch => {
     try {
-      const storeIds = threadsParams.map(param => param.threadIdStore);
       const threadIds = threadsParams.map(param => param.threadIdDB);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
@@ -125,7 +117,7 @@ export const addMoveThreadsLabel = ({ threadsParams, labelId, notMove }) => {
         })
       );
       if (dbReponse && !notMove) {
-        dispatch(moveThreads(storeIds, labelId));
+        dispatch(moveThreads(threadIds, labelId));
       }
     } catch (e) {
       // TO DO
@@ -136,7 +128,6 @@ export const addMoveThreadsLabel = ({ threadsParams, labelId, notMove }) => {
 export const updateUnreadThreads = (threadsParams, read, label) => {
   return async dispatch => {
     try {
-      const storeIds = threadsParams.map(param => param.threadIdStore);
       const threadIds = threadsParams.map(param => param.threadIdDB);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
@@ -150,7 +141,7 @@ export const updateUnreadThreads = (threadsParams, read, label) => {
         };
         const { status } = await postPeerEvent(eventParams);
         if (status === 200) {
-          dispatch(updateUnreadThreadsSuccess(storeIds, read));
+          dispatch(updateUnreadThreadsSuccess(threadIds, !read));
           if (label) dispatch(updateLabelSuccess(label));
         }
       }
@@ -395,10 +386,4 @@ const formRemoveThreadLabelParams = (emails, labelId) => {
 export const removeThreadsByThreadIdsOnSuccess = threadIds => ({
   type: Thread.REMOVE_THREADS_BY_THREAD_ID,
   threadIds
-});
-
-export const updateUnreadThreadsByThreadIds = (threadIds, unread) => ({
-  type: Thread.UPDATE_UNREAD_THREADS_BY_THREAD_ID,
-  threadIds,
-  unread
 });

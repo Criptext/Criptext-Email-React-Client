@@ -2,9 +2,8 @@ import { connect } from 'react-redux';
 import {
   addThreadLabel,
   loadEmails,
-  updateUnreadEmails,
-  updateUnreadThread,
-  removeThreadLabel
+  removeThreadLabel,
+  sendOpenEvent
 } from '../actions';
 import ThreadView from '../components/Thread';
 import { LabelType } from '../utils/electronInterface';
@@ -104,29 +103,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch(addThreadLabel(threadParams, labelId));
       }
     },
-    onUpdateUnreadEmailsBadge: (thread, unread) => {
-      const paramsThread = {
-        id: thread.threadId,
-        unread
-      };
-      const labelId = LabelType[ownProps.mailboxSelected].id;
-      const paramsLabel =
-        labelId === LabelType.inbox.id || labelId === LabelType.spam.id
-          ? {
-              id: labelId,
-              operation: 'less',
-              value: 1
-            }
-          : null;
-
-      dispatch(updateUnreadEmails(paramsThread, paramsLabel));
-    },
-    onUpdateUnreadThread: (thread, unread) => {
-      const params = {
-        id: thread.id,
-        unread
-      };
-      dispatch(updateUnreadThread(params));
+    onUpdateUnreadEmails: thread => {
+      const { allLabels, threadId } = thread;
+      if (allLabels.includes(LabelType.inbox.id)) {
+        dispatch(sendOpenEvent(threadId));
+      }
     }
   };
 };

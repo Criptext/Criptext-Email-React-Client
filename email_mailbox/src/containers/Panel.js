@@ -10,7 +10,7 @@ import {
   unsendEmailOnSuccess,
   unsendEmailFiles,
   removeThreadsByThreadIdsOnSuccess,
-  updateUnreadThreadsByThreadIds
+  updateUnreadThreadsSuccess
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import {
@@ -93,7 +93,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(removeThreadsByThreadIdsOnSuccess(threadIds));
     },
     onUpdateUnreadThreads: (threadIds, unread) => {
-      dispatch(updateUnreadThreadsByThreadIds(threadIds, unread));
+      dispatch(updateUnreadThreadsSuccess(threadIds, unread));
     }
   };
 };

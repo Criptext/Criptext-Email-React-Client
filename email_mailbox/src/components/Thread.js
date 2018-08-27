@@ -56,13 +56,7 @@ class Thread extends Component {
   componentDidMount() {
     this.props.onLoadEmails(this.props.thread.threadId);
     if (this.props.thread.unread) {
-      this.props.onUpdateUnreadEmailsBadge(this.props.thread, false);
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.props.thread.unread) {
-      this.props.onUpdateUnreadThread(this.props.thread, false);
+      this.props.onUpdateUnreadEmails(this.props.thread);
     }
   }
 
@@ -80,8 +74,7 @@ Thread.propTypes = {
   labels: PropTypes.array,
   mailboxSelected: PropTypes.string,
   onLoadEmails: PropTypes.func,
-  onUpdateUnreadEmailsBadge: PropTypes.func,
-  onUpdateUnreadThread: PropTypes.func,
+  onUpdateUnreadEmails: PropTypes.func,
   onRemoveThreadLabel: PropTypes.func,
   onToggleStar: PropTypes.func,
   starred: PropTypes.bool,
