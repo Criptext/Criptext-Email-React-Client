@@ -32,6 +32,7 @@ const RemoveDevicePopup = props => {
         <button
           className="button button-a logout-remove-button"
           onClick={props.onRemoveDevice}
+          disabled={!props.password.length || props.password.length < 1}
         >
           Remove
         </button>

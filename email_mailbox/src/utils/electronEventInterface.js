@@ -522,7 +522,7 @@ const handleDeleteDeviceData = async rowid => {
       await setEventAsHandled(rowid);
     }
     await deleteDeviceData();
-  }, 3000);
+  }, 4000);
 };
 
 export const addEvent = (eventName, callback) => {

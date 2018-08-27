@@ -54,6 +54,11 @@
     .logout-remove-button {
       background-color: #0091ff;
       color: #ffffff;
+
+      &:disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
     }
   }
 }

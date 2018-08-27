@@ -38,9 +38,9 @@ const Panel = props => (
       !myAccount.opened && (
         <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
       )}
-    {props.displayMalboxPopup && (
+    {!props.isHiddenMailboxPopup && (
       <Deviceremovedpopup
-        isHidden={!props.displayMalboxPopup}
+        isHidden={props.isHiddenMailboxPopup}
         popupPosition={{ left: '50%', top: '50%' }}
       />
     )}
@@ -58,7 +58,7 @@ const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
 };
 
 Panel.propTypes = {
-  displayMalboxPopup: PropTypes.bool,
+  isHiddenMailboxPopup: PropTypes.bool,
   isOpenActivityPanel: PropTypes.bool,
   isOpenSideBar: PropTypes.bool,
   isOpenWelcome: PropTypes.bool,

@@ -11,7 +11,7 @@ class SettingDevicesWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayRemoveDevicePopup: false,
+      isHiddenRemoveDevicePopup: true,
       deviceId: undefined,
       password: ''
     };
@@ -22,7 +22,7 @@ class SettingDevicesWrapper extends Component {
       <SettingDevices
         {...this.props}
         devices={this.props.devices}
-        displayRemoveDevicePopup={this.state.displayRemoveDevicePopup}
+        isHiddenRemoveDevicePopup={this.state.isHiddenRemoveDevicePopup}
         onChangeRemoveDeviceInputPassword={
           this.handleChangeRemoveDeviceInputPassword
         }
@@ -36,7 +36,7 @@ class SettingDevicesWrapper extends Component {
 
   handleClickRemoveDevice = deviceId => {
     this.setState({
-      displayRemoveDevicePopup: true,
+      isHiddenRemoveDevicePopup: false,
       deviceId
     });
   };
@@ -48,14 +48,14 @@ class SettingDevicesWrapper extends Component {
 
   handleClickCancelRemoveDevice = () => {
     this.setState({
-      displayRemoveDevicePopup: false,
+      isHiddenRemoveDevicePopup: true,
       deviceId: undefined,
       password: ''
     });
   };
 
   handleRemoveDevice = () => {
-    this.setState({ displayRemoveDevicePopup: false }, async () => {
+    this.setState({ isHiddenRemoveDevicePopup: true }, async () => {
       const { deviceId } = this.state;
       const isSuccess = await this.props.onRemoveDevice({ deviceId });
       if (isSuccess) {

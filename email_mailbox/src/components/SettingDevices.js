@@ -11,7 +11,7 @@ const SettingDevices = props => <div>{renderDevicesBlock(props)}</div>;
 
 const renderDevicesBlock = props => (
   <div className="section-block">
-    {props.displayRemoveDevicePopup && renderRemoveDevicePopup(props)}
+    {!props.isHiddenRemoveDevicePopup && renderRemoveDevicePopup(props)}
     <div className="section-block-title">
       <h1>Linked Devices</h1>
     </div>
@@ -27,7 +27,7 @@ const renderDevicesBlock = props => (
 
 const renderRemoveDevicePopup = props => (
   <Removedevicepopup
-    isHidden={!props.displayRemoveDevicePopup}
+    isHidden={props.isHiddenRemoveDevicePopup}
     popupPosition={{ left: '45%', top: '45%' }}
     onTogglePopup={props.onClickCancelRemoveDevice}
     {...props}
@@ -81,11 +81,11 @@ const renderLastConnection = lastConnection => {
 
 renderDevicesBlock.propTypes = {
   devices: PropTypes.array,
-  displayRemoveDevicePopup: PropTypes.bool
+  isHiddenRemoveDevicePopup: PropTypes.bool
 };
 
 renderRemoveDevicePopup.propTypes = {
-  displayRemoveDevicePopup: PropTypes.bool,
+  isHiddenRemoveDevicePopup: PropTypes.bool,
   onClickCancelRemoveDevice: PropTypes.func
 };
 
