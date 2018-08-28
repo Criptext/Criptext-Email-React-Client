@@ -15,14 +15,13 @@ import {
   removeThread,
   removeThreadLabel,
   removeThreadsByThreadIdsOnSuccess,
-  updateUnreadThread,
   updateUnreadThreads,
+  updateUnreadThreadsSuccess,
   searchThreads,
   removeThreads,
   removeThreadsLabel,
   sendOpenEvent,
-  updateStatusThread,
-  updateUnreadThreadsByThreadIds
+  updateStatusThread
 } from './threads';
 import {
   addEmails,
@@ -103,7 +102,6 @@ export {
   updateLabelSuccess,
   updateStatusThread,
   updateUnreadEmails,
-  updateUnreadThread,
   updateUnreadThreads,
-  updateUnreadThreadsByThreadIds
+  updateUnreadThreadsSuccess
 };

@@ -10,32 +10,66 @@ jest.mock('./../../utils/electronUtilsInterface');
 
 const myThreads = file.threads;
 
-describe('Set thread state by actions', () => {
-  const threads = [myThreads[0]];
+function initState(threads) {
+  return threadsReducer(undefined, actions.addThreads(threads));
+}
+
+describe('Thread actions - ADD_BATCH', () => {
   const manyThreads = [myThreads[0], myThreads[1]];
 
-  function initState(threads) {
-    return threadsReducer(undefined, actions.addThreads(threads));
-  }
-
-  it('should add threads to state, action[ADD_BATCH]', () => {
+  it('should add threads to state', () => {
     expect(initState(manyThreads)).toMatchSnapshot();
   });
+});
 
-  it('should set thread param: unread, action[UPDATE_UNREAD_THREAD]', () => {
+describe('Thread actions - UPDATE_UNREAD_THREADS', () => {
+  const threads = [myThreads[0]];
+
+  it('should update thread param: unread', () => {
     const state = initState(threads);
-    const params = {
-      id: 1,
-      unread: false
-    };
-    const action = actions.updateUnreadThread(params);
+    const threadIds = ['6Za2dcMlE0OSSc9'];
+    const action = actions.updateUnreadThreadsSuccess(threadIds, false);
     const newState = threadsReducer(state, action);
     const emailUpdated = newState.get('0');
     const unread = emailUpdated.get('unread');
     expect(unread).toBe(false);
   });
 
-  it('should set thread param: status, action[UPDATE_STATUS_THREAD]', () => {
+  it('should not update thread param: unread, when unread is not bool type', () => {
+    const state = initState(threads);
+    const threadIds = ['6Za2dcMlE0OSSc9'];
+    const action = actions.updateUnreadThreadsSuccess(threadIds, 'false');
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const unread = emailUpdated.get('unread');
+    expect(unread).toBe(true);
+  });
+
+  it('should not update thread param: unread, when threadIds is empty', () => {
+    const state = initState(threads);
+    const threadIds = [];
+    const action = actions.updateUnreadThreadsSuccess(threadIds, 'true');
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const unread = emailUpdated.get('unread');
+    expect(unread).toBe(true);
+  });
+
+  it('should not update thread param: unread, when threadIds is undefined', () => {
+    const state = initState(threads);
+    const threadIds = undefined;
+    const action = actions.updateUnreadThreadsSuccess(threadIds, 'true');
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const unread = emailUpdated.get('unread');
+    expect(unread).toBe(true);
+  });
+});
+
+describe('Thread actions - UPDATE_STATUS_THREAD', () => {
+  const threads = [myThreads[0]];
+
+  it('should update thread param: status', () => {
     const state = initState(threads);
     const threadId = 1;
     const newStatus = 2;
@@ -46,14 +80,15 @@ describe('Set thread state by actions', () => {
     expect(status).toBe(newStatus);
   });
 
-  it('should not set thread param status because is undefined, action[UPDATE_STATUS_THREAD]', () => {
+  it('should not update thread param: status when status is undefined', () => {
     const state = initState(threads);
     const threadId = 1;
-    const badStatus = undefined;
-    const action = actions.updateStatusThread(threadId, badStatus);
+    const newStatus = undefined;
+    const action = actions.updateStatusThread(threadId, newStatus);
     const newState = threadsReducer(state, action);
     const emailUpdated = newState.get('0');
     const status = emailUpdated.get('status');
-    expect(status).not.toBe(badStatus);
+    expect(status).not.toBe(newStatus);
+    expect(status).toBe(0);
   });
 });

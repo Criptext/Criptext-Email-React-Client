@@ -109,7 +109,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       switch (currentLabelId) {
         case LabelType.inbox.id: {
           ownProps.onClickSelectedItem(type, params);
-          dispatch(actions.sendOpenEvent(threadIdDb));
           break;
         }
         case LabelType.draft.id: {
@@ -136,7 +135,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           }
           if (allLabels.includes(inboxLabelId)) {
             ownProps.onClickSelectedItem(type, params);
-            dispatch(actions.sendOpenEvent(threadIdDb));
             break;
           }
           ownProps.onClickSelectedItem(type, params);
