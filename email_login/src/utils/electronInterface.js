@@ -87,6 +87,10 @@ export const confirmForgotPasswordSentLink = callback => {
   });
 };
 
+export const hideLogin = () => {
+  ipcRenderer.send('hide-login');
+};
+
 export const minimizeLogin = () => {
   ipcRenderer.send('minimize-login');
 };

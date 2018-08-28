@@ -79,9 +79,12 @@ const create = () => {
 };
 
 const show = async () => {
+  const existVisibleWindow = BrowserWindow.getAllWindows().filter(w => {
+    return w.isVisible();
+  });
   if (mailboxWindow) {
     mailboxWindow.show();
-  } else {
+  } else if (!existVisibleWindow.length) {
     await create();
     mailboxWindow.on('ready-to-show', () => {
       mailboxWindow.show();

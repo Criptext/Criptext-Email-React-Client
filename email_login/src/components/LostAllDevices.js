@@ -51,6 +51,7 @@ const renderForm = props => (
           onChange={props.onChangeField}
           onKeyUp={props.validator}
           disabled={props.isLoading}
+          autoFocus={true}
         />
         <span
           className="forgot-password"
