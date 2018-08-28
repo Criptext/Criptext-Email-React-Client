@@ -5,59 +5,67 @@ import './changepasswordpopup.css';
 const ChangePasswordPopup = props => {
   return (
     <div className="change-password-popup-content">
-      <div className="change-password-popup-title">
-        <h1>Change Password</h1>
-      </div>
-      <div className="change-password-popup-text">
-        Enter your password then your new password and confirm it
-      </div>
-      {renderInputs(props)}
-      {renderButtons(props)}
+      <ChangePasswordPopupTitle />
+      <ChangePasswordPopupText />
+      <ChangePasswordPopupInputs {...props} />
+      <ChangePasswordPopupButtons {...props} />
     </div>
   );
 };
 
-const renderInputs = props => {
+const ChangePasswordPopupTitle = () => (
+  <div className="change-password-popup-title">
+    <h1>Change Password</h1>
+  </div>
+);
+
+const ChangePasswordPopupText = () => (
+  <div className="change-password-popup-text">
+    <span>Enter your password then your new password and confirm it</span>
+  </div>
+);
+
+const ChangePasswordPopupInputs = props => {
   return (
     <div className="change-password-popup-inputs">
-      {renderInput({
-        name: props.oldPasswordInput.name,
-        type: props.oldPasswordInput.type,
-        value: props.oldPasswordInput.value,
-        icon: props.oldPasswordInput.icon,
-        placeholder: 'Enter old password',
-        onChangeValue: props.onChangeInputValueChangePassword,
-        onChangeType: props.onClickChangePasswordInputType,
-        hasError: props.oldPasswordInput.hasError,
-        errorMessage: props.oldPasswordInput.errorMessage
-      })}
-      {renderInput({
-        name: props.newPasswordInput.name,
-        type: props.newPasswordInput.type,
-        value: props.newPasswordInput.value,
-        icon: props.newPasswordInput.icon,
-        placeholder: 'Enter new password',
-        onChangeValue: props.onChangeInputValueChangePassword,
-        onChangeType: props.onClickChangePasswordInputType,
-        hasError: props.newPasswordInput.hasError,
-        errorMessage: props.newPasswordInput.errorMessage
-      })}
-      {renderInput({
-        name: props.confirmNewPasswordInput.name,
-        type: props.confirmNewPasswordInput.type,
-        value: props.confirmNewPasswordInput.value,
-        icon: props.confirmNewPasswordInput.icon,
-        placeholder: 'Repeat new password',
-        onChangeValue: props.onChangeInputValueChangePassword,
-        onChangeType: props.onClickChangePasswordInputType,
-        hasError: props.confirmNewPasswordInput.hasError,
-        errorMessage: props.confirmNewPasswordInput.errorMessage
-      })}
+      <ChangePasswordPopupInput
+        name={props.oldPasswordInput.name}
+        type={props.oldPasswordInput.type}
+        value={props.oldPasswordInput.value}
+        icon={props.oldPasswordInput.icon}
+        placeholder={'Enter old password'}
+        onChangeValue={props.onChangeInputValueChangePassword}
+        onChangeType={props.onClickChangePasswordInputType}
+        hasError={props.oldPasswordInput.hasError}
+        errorMessage={props.oldPasswordInput.errorMessage}
+      />
+      <ChangePasswordPopupInput
+        name={props.newPasswordInput.name}
+        type={props.newPasswordInput.type}
+        value={props.newPasswordInput.value}
+        icon={props.newPasswordInput.icon}
+        placeholder={'Enter new password'}
+        onChangeValue={props.onChangeInputValueChangePassword}
+        onChangeType={props.onClickChangePasswordInputType}
+        hasError={props.newPasswordInput.hasError}
+        errorMessage={props.newPasswordInput.errorMessage}
+      />
+      <ChangePasswordPopupInput
+        name={props.confirmNewPasswordInput.name}
+        type={props.confirmNewPasswordInput.type}
+        value={props.confirmNewPasswordInput.value}
+        icon={props.confirmNewPasswordInput.icon}
+        placeholder={'Repeat new password'}
+        onChangeValue={props.onChangeInputValueChangePassword}
+        onChangeType={props.onClickChangePasswordInputType}
+        hasError={props.confirmNewPasswordInput.hasError}
+        errorMessage={props.confirmNewPasswordInput.errorMessage}
+      />
     </div>
   );
 };
 
-const renderInput = ({
+const ChangePasswordPopupInput = ({
   name,
   type,
   value,
@@ -77,17 +85,21 @@ const renderInput = ({
       placeholder={placeholder}
     />
     <i className={icon} onClick={() => onChangeType(name)} />
-    {renderErrorMessage(hasError, errorMessage, value)}
+    <InputErrorMessage
+      hasError={hasError}
+      errorMessage={errorMessage}
+      value={value}
+    />
   </div>
 );
 
-const renderErrorMessage = (hasError, errorMessage, value) => {
+const InputErrorMessage = ({ hasError, errorMessage, value }) => {
   const shouldRenderMessage =
     hasError && errorMessage.length > 0 && value.length > 0;
   return shouldRenderMessage && <span>{errorMessage}</span>;
 };
 
-const renderButtons = props => (
+const ChangePasswordPopupButtons = props => (
   <div className="change-password-popup-buttons">
     <button
       className="button button-a change-password-cancel-button"
@@ -105,7 +117,7 @@ const renderButtons = props => (
   </div>
 );
 
-renderInputs.propTypes = {
+ChangePasswordPopupInputs.propTypes = {
   oldPasswordInput: PropTypes.object,
   newPasswordInput: PropTypes.object,
   confirmNewPasswordInput: PropTypes.object,
@@ -113,7 +125,7 @@ renderInputs.propTypes = {
   onClickChangePasswordInputType: PropTypes.func
 };
 
-renderInput.propTypes = {
+ChangePasswordPopupInput.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   value: PropTypes.string,
@@ -125,7 +137,7 @@ renderInput.propTypes = {
   errorMessage: PropTypes.string
 };
 
-renderButtons.propTypes = {
+ChangePasswordPopupButtons.propTypes = {
   isDisabledChangePasswordButton: PropTypes.bool,
   onConfirmChangePassword: PropTypes.func,
   onClickCancelChangePassword: PropTypes.func

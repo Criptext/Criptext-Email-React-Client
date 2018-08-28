@@ -5,29 +5,38 @@ import './passwordchangedpopup.css';
 const PasswordChangedPopup = props => {
   return (
     <div className="password-changed-popup-container">
-      <div className="password-changed-popup-title">
-        Enter your password to continue
-      </div>
-      {renderText()}
-      {renderInput(props)}
-      {renderButtons(props)}
+      <PasswordChangedPopupTitle />
+      <PasswordChangedPopupText />
+      <PasswordChangedPopupInput {...props} />
+      <PasswordChangedPopupButtons {...props} />
     </div>
   );
 };
 
-const renderText = () => (
+const PasswordChangedPopupTitle = () => (
+  <div className="password-changed-popup-title">
+    <span>Enter your password to continue</span>
+  </div>
+);
+
+const PasswordChangedPopupText = () => (
   <div className="password-changed-popup-text">
     <div className="text">
-      Your password has changed remotely and you must confirm your new password.
+      <span>
+        Your password has changed remotely and you must confirm your new
+        password.
+      </span>
     </div>
     <div className="text">
-      <strong>If you Cancel</strong> the device will log out and{' '}
-      <strong>all local data will be erased</strong>
+      <span>
+        <strong>If you Cancel</strong> the device will log out and
+        <strong> all local data will be erased</strong>
+      </span>
     </div>
   </div>
 );
 
-const renderInput = ({
+const PasswordChangedPopupInput = ({
   type,
   value,
   icon,
@@ -46,18 +55,28 @@ const renderInput = ({
       disabled={isDisabledInput}
     />
     <i className={icon} onClick={() => onClickChangeInputType()} />
-    {renderErrorMessage(hasError, errorMessage, value, isDisabledInput)}
+    <PasswordChangedPopupInputErrorMessage
+      hasError={hasError}
+      errorMessage={errorMessage}
+      value={value}
+      isDisabledInput={isDisabledInput}
+    />
   </div>
 );
 
-const renderErrorMessage = (hasError, errorMessage, value, isDisabledInput) => {
+const PasswordChangedPopupInputErrorMessage = ({
+  hasError,
+  errorMessage,
+  value,
+  isDisabledInput
+}) => {
   const shouldRenderMessage =
     (hasError && errorMessage.length > 0 && value.length > 0) ||
     isDisabledInput;
   return shouldRenderMessage && <span>{errorMessage}</span>;
 };
 
-const renderButtons = props => (
+const PasswordChangedPopupButtons = props => (
   <div className="password-changed-popup-buttons">
     <button
       className="button button-a password-changed-cancel-button"
@@ -75,7 +94,7 @@ const renderButtons = props => (
   </div>
 );
 
-renderInput.propTypes = {
+PasswordChangedPopupInput.propTypes = {
   type: PropTypes.string,
   value: PropTypes.string,
   icon: PropTypes.string,
@@ -86,7 +105,7 @@ renderInput.propTypes = {
   isDisabledInput: PropTypes.bool
 };
 
-renderButtons.propTypes = {
+PasswordChangedPopupButtons.propTypes = {
   onClickCancelPasswordChanged: PropTypes.func,
   onConfirmPasswordChanged: PropTypes.func,
   isDisabledConfirmButton: PropTypes.bool
