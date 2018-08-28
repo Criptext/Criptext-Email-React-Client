@@ -25,12 +25,6 @@ import {
 import { loadFeedItems } from './feeditems';
 import { SocketCommand } from '../utils/const';
 
-export const addEmailIdToThread = ({ threadId, emailId }) => ({
-  type: Thread.ADD_EMAILID_THREAD,
-  threadId,
-  emailId
-});
-
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
   threads: threads,
@@ -60,12 +54,6 @@ export const moveThreads = (threadIds, labelId) => ({
   labelId
 });
 
-export const removeEmailIdsToThread = ({ threadId, emailIds }) => ({
-  type: Thread.REMOVE_EMAILIDS_THREAD,
-  threadId,
-  emailIds
-});
-
 export const removeThread = threadId => ({
   type: Thread.REMOVE_THREAD,
   targetThread: threadId
@@ -91,6 +79,17 @@ export const removeThreadsLabelSuccess = (threadId, label) => ({
 export const selectThread = threadId => ({
   type: Thread.SELECT,
   threadId: threadId
+});
+
+export const updateEmailIdsThread = ({
+  threadId,
+  emailIdToAdd,
+  emailIdsToRemove
+}) => ({
+  type: Thread.UPDATE_EMAILIDS_THREAD,
+  threadId,
+  emailIdToAdd,
+  emailIdsToRemove
 });
 
 export const updateStatusThread = (threadId, status) => ({

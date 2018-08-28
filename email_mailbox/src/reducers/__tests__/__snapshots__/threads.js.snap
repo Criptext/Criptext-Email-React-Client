@@ -22,6 +22,7 @@ Immutable.List [
     id: 1,
     emailIds: Immutable.List [
       1,
+      2,
     ],
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
@@ -50,7 +51,7 @@ Immutable.List [
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 2,
     emailIds: Immutable.List [
-      1,
+      3,
     ],
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",

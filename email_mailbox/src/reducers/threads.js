@@ -28,31 +28,19 @@ const threads = (state = List([]), action) => {
       }
       return state.concat(List(threads));
     }
-    case Thread.ADD_EMAILID_THREAD: {
-      const { threadId, emailId } = action;
-      if (!threadId || !emailId) {
-        return state;
-      }
-      return state.map(threadItem => {
-        if (threadItem.get('id') === threadId) {
-          return thread(threadItem, action);
-        }
-        return threadItem;
-      });
-    }
     case Thread.MOVE_THREADS: {
       const threadIds = action.threadIds;
       return state.filterNot(thread =>
         threadIds.includes(thread.get('threadId'))
       );
     }
-    case Thread.REMOVE_EMAILIDS_THREAD: {
-      const { threadId, emailIds } = action;
-      if (!threadId || !emailIds) {
+    case Thread.UPDATE_EMAILIDS_THREAD: {
+      const { threadId, emailIdToAdd, emailIdsToRemove } = action;
+      if (!threadId || (!emailIdToAdd && !emailIdsToRemove)) {
         return state;
       }
       return state.map(threadItem => {
-        if (threadItem.get('id') === threadId) {
+        if (threadItem.get('threadId') === threadId) {
           return thread(threadItem, action);
         }
         return threadItem;
@@ -174,17 +162,18 @@ const threads = (state = List([]), action) => {
 
 const thread = (state, action) => {
   switch (action.type) {
-    case Thread.ADD_EMAILID_THREAD: {
-      return state.set('emailIds', state.get('emailIds').push(action.emailId));
-    }
-    case Thread.REMOVE_EMAILIDS_THREAD: {
-      const emailIdsToRemove = action.emailIds;
-      return state.set(
-        'emailIds',
-        state
-          .get('emailIds')
-          .filter(emailId => !emailIdsToRemove.includes(emailId))
-      );
+    case Thread.UPDATE_EMAILIDS_THREAD: {
+      const { emailIdToAdd, emailIdsToRemove } = action;
+      let emailIds = state.get('emailIds');
+      if (emailIdsToRemove) {
+        emailIds = emailIds.filter(
+          emailId => !emailIdsToRemove.includes(emailId)
+        );
+      }
+      if (emailIdToAdd) {
+        emailIds = emailIds.push(emailIdToAdd);
+      }
+      return state.set('emailIds', emailIds);
     }
     case Thread.UPDATE_STATUS_THREAD: {
       return state.set('status', action.status);

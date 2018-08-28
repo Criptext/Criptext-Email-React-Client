@@ -1,15 +1,14 @@
 import { connect } from 'react-redux';
 import {
-  addEmailIdToThread,
+  loadEmails,
   loadThreads,
-  removeEmailIdsToThread,
+  removeThreadsByThreadIdsOnSuccess,
+  updateEmailIdsThread,
   updateLabelSuccess,
   updateAllFeedItemsAsOlder,
-  loadEmails,
   updateStatusThread,
   unsendEmailOnSuccess,
   unsendEmailFiles,
-  removeThreadsByThreadIdsOnSuccess,
   updateUnreadThreadsSuccess
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
@@ -49,8 +48,10 @@ const defineRejectedLabels = labelId => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddEmailIdToThread: ({ threadId, emailId }) => {
-      dispatch(addEmailIdToThread({ threadId, emailId }));
+    onUpdateEmailIdsThread: ({ threadId, emailIdToAdd, emailIdsToRemove }) => {
+      dispatch(
+        updateEmailIdsThread({ threadId, emailIdToAdd, emailIdsToRemove })
+      );
     },
     onLoadEmails: threadId => {
       dispatch(loadEmails(threadId));
@@ -64,9 +65,6 @@ const mapDispatchToProps = dispatch => {
     onMarkThreadAsOpen: threadId => {
       const openedStatus = EmailStatus.OPENED;
       dispatch(updateStatusThread(threadId, openedStatus));
-    },
-    onRemoveEmailIdsToThread: ({ threadId, emailIds }) => {
-      dispatch(removeEmailIdsToThread({ threadId, emailIds }));
     },
     onUpdateOpenedAccount: async () => {
       const opened = true;

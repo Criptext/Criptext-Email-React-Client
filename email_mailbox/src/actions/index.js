@@ -1,7 +1,6 @@
 import { addContacts, addContact } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
-  addEmailIdToThread,
   addMoveThreadsLabel,
   addThreads,
   addThreadLabel,
@@ -11,10 +10,10 @@ import {
   loadThreads,
   moveThreads,
   selectThread,
-  removeEmailIdsToThread,
   removeThread,
   removeThreadLabel,
   removeThreadsByThreadIdsOnSuccess,
+  updateEmailIdsThread,
   updateUnreadThreads,
   updateUnreadThreadsSuccess,
   searchThreads,
@@ -57,7 +56,6 @@ export {
   addContact,
   addContacts,
   addEmails,
-  addEmailIdToThread,
   addFiles,
   addFeedItems,
   addLabel,
@@ -84,7 +82,6 @@ export {
   removeThreadLabel,
   removeFeedItem,
   removeFeedItemSuccess,
-  removeEmailIdsToThread,
   removeThreads,
   removeThreadsLabel,
   removeThreadsByThreadIdsOnSuccess,
@@ -98,6 +95,7 @@ export {
   unsendEmailOnSuccess,
   updateAllFeedItemsAsOlder,
   updateFeedItemSuccess,
+  updateEmailIdsThread,
   updateLabel,
   updateLabelSuccess,
   updateStatusThread,

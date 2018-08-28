@@ -22,6 +22,74 @@ describe('Thread actions - ADD_BATCH', () => {
   });
 });
 
+describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
+  const threads = [myThreads[0]];
+
+  it('should update thread param: emailIds, add and remove', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const emailIdToAdd = 4;
+    const emailIdsToRemove = [1];
+    const action = actions.updateEmailIdsThread({
+      threadId,
+      emailIdToAdd,
+      emailIdsToRemove
+    });
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const emailIds = emailUpdated.get('emailIds').toJS();
+    expect(emailIds).toEqual([2, 4]);
+  });
+
+  it('should update thread param: emailIds, just add', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const emailIdToAdd = 4;
+    const action = actions.updateEmailIdsThread({ threadId, emailIdToAdd });
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const emailIds = emailUpdated.get('emailIds').toJS();
+    expect(emailIds).toEqual([1, 2, 4]);
+  });
+
+  it('should update thread param: emailIds, just remove', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const emailIdsToRemove = [1];
+    const action = actions.updateEmailIdsThread({ threadId, emailIdsToRemove });
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const emailIds = emailUpdated.get('emailIds').toJS();
+    expect(emailIds).toEqual([2]);
+  });
+
+  it('should not update thread param: emailIds, when threadId is undefined', () => {
+    const state = initState(threads);
+    const threadId = undefined;
+    const emailIdToAdd = 4;
+    const emailIdsToRemove = 1;
+    const action = actions.updateEmailIdsThread({
+      threadId,
+      emailIdToAdd,
+      emailIdsToRemove
+    });
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const emailIds = emailUpdated.get('emailIds').toJS();
+    expect(emailIds).toEqual([1, 2]);
+  });
+
+  it('should not update thread param: emailIds, when emailIdToAdd and emailIdToRemove are undefined', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const action = actions.updateEmailIdsThread({ threadId });
+    const newState = threadsReducer(state, action);
+    const emailUpdated = newState.get('0');
+    const emailIds = emailUpdated.get('emailIds').toJS();
+    expect(emailIds).toEqual([1, 2]);
+  });
+});
+
 describe('Thread actions - UPDATE_UNREAD_THREADS', () => {
   const threads = [myThreads[0]];
 
