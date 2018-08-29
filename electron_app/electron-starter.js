@@ -37,6 +37,10 @@ async function initApp() {
     loginWindow.close();
   });
 
+  ipcMain.on('hide-login', () => {
+    loginWindow.hide();
+  });
+
   ipcMain.on('minimize-login', () => {
     loginWindow.minimize();
   });
@@ -76,9 +80,8 @@ async function initApp() {
   });
 
   ipcMain.on('logout-app', () => {
-    mailboxWindow.hide();
-    loginWindow.show();
-    mailboxWindow.close()
+    app.relaunch();
+    app.exit(0);
   });
 
   //   Composer

@@ -51,6 +51,12 @@ const close = () => {
   loginWindow = undefined;
 };
 
+const hide = () => {
+  if (loginWindow !== undefined) {
+    loginWindow.hide();
+  }
+};
+
 const minimize = () => {
   if (loginWindow !== undefined) {
     loginWindow.minimize();
@@ -66,6 +72,7 @@ const responseFromModal = response => {
 module.exports = {
   loginWindow,
   close,
+  hide,
   minimize,
   responseFromModal,
   show

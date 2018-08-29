@@ -7,6 +7,7 @@ import {
   closeLogin,
   confirmForgotPasswordSentLink,
   confirmForgotPasswordEmptyEmail,
+  hideLogin,
   login,
   openMailbox,
   throwError,
@@ -124,6 +125,7 @@ class LostDevicesWrapper extends Component {
         deviceId,
         name
       });
+      hideLogin();
       openMailbox();
       closeLogin();
     } catch (e) {
