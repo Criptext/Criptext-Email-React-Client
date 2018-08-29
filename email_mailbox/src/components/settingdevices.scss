@@ -8,11 +8,13 @@
 .content-linked-devices {
   position: relative;
   top: -5px;
+
   .linked-device {
+    border-bottom: 1px solid #e1e1e2;
     display: flex;
-    width: 97%;
     height: 50px;
     font-size: 13px;
+    width: 97%;
 
     &:hover{
       background-color: #f7fbff;
@@ -43,8 +45,10 @@
       padding-left: 15px;
 
       .current-device {
-        text-transform: uppercase;
         color: #61b900;
+        font-size: 12px;
+        font-weight: 300;
+        text-transform: uppercase;
       }
       .device-connection-data {
         span {
@@ -63,14 +67,15 @@
       }
     }
     .device-action {
-      display: flex;
       align-items: center;
-      width: 45%;
+      color: #d94e47;
+      cursor: pointer;
+      display: flex;
+      font-size: 11px;
+      font-weight: 300;
       padding-left: 15px;
       text-transform: uppercase;
-      color: #d94e47;
-      font-weight: 500;
-      cursor: pointer;
+      width: 45%;
     }
   }
 }

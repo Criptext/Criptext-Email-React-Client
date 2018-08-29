@@ -48,11 +48,11 @@ const threads = (state = List([]), action) => {
     }
     case Thread.UPDATE_STATUS_THREAD: {
       const { status, threadId } = action;
-      if (!threadId || !status) {
+      if (!threadId || !status || typeof status !== 'number') {
         return state;
       }
       return state.map(threadItem => {
-        if (threadItem.get('id') === threadId) {
+        if (threadItem.get('threadId') === threadId) {
           return thread(threadItem, action);
         }
         return threadItem;

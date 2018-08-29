@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`email actions:  Add emails to state 1`] = `
+exports[`Email actions - ADD_BATCH  shoul add emails to state 1`] = `
 Immutable.Map {
   1: Immutable.Map {
     isMuted: 0,

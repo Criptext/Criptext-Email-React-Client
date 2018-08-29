@@ -209,8 +209,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
 };
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
-  const { date, metadataKey, type } = params;
-  const recipientId = params.from;
+  const { date, metadataKey, type, from } = params;
   const [email] = await getEmailByKey(metadataKey);
   if (email) {
     const isUnsend = type === EmailStatus.UNSEND;
@@ -231,10 +230,10 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
         status: AttachItemStatus.UNSENT
       });
     }
-    const isFromMe = recipientId === myAccount.recipientId;
+    const isFromMe = from === myAccount.recipientId;
     const isOpened = type === EmailStatus.OPENED;
     if (!isFromMe && isOpened) {
-      const contactEmail = `${recipientId}@${appDomain}`;
+      const contactEmail = `${from}@${appDomain}`;
       const [contact] = await getContactByEmails([contactEmail]);
       const feedItemParams = {
         date,
@@ -244,7 +243,13 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
       };
       await createFeedItem([feedItemParams]);
     }
-    emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, type, date);
+    const eventParams = {
+      threadId: email.threadId,
+      emailId: email.id,
+      status: type,
+      date
+    };
+    emitter.emit(Event.EMAIL_TRACKING_UPDATE, eventParams);
   }
   await setEventAsHandled(rowid);
 };
@@ -266,7 +271,13 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
       emailId: email.id,
       status: AttachItemStatus.UNSENT
     });
-    emitter.emit(Event.EMAIL_TRACKING_UPDATE, email.id, type, date);
+    const eventParams = {
+      threadId: email.threadId,
+      emailId: email.id,
+      status: type,
+      date
+    };
+    emitter.emit(Event.EMAIL_TRACKING_UPDATE, eventParams);
   }
   await setEventAsHandled(rowid);
 };

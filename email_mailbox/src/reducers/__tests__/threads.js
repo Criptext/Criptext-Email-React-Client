@@ -139,7 +139,7 @@ describe('Thread actions - UPDATE_STATUS_THREAD', () => {
 
   it('should update thread param: status', () => {
     const state = initState(threads);
-    const threadId = 1;
+    const threadId = '6Za2dcMlE0OSSc9';
     const newStatus = 2;
     const action = actions.updateStatusThread(threadId, newStatus);
     const newState = threadsReducer(state, action);
@@ -148,10 +148,10 @@ describe('Thread actions - UPDATE_STATUS_THREAD', () => {
     expect(status).toBe(newStatus);
   });
 
-  it('should not update thread param: status when status is undefined', () => {
+  it('should not update thread param: status when status is not number type', () => {
     const state = initState(threads);
-    const threadId = 1;
-    const newStatus = undefined;
+    const threadId = '6Za2dcMlE0OSSc9';
+    const newStatus = '1';
     const action = actions.updateStatusThread(threadId, newStatus);
     const newState = threadsReducer(state, action);
     const emailUpdated = newState.get('0');

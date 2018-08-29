@@ -132,7 +132,13 @@ export const unsendEmail = params => {
           unsendDate
         });
         dispatch(unsendEmailFiles(emailId)).then(() =>
-          dispatch(unsendEmailOnSuccess(emailId, unsendDate))
+          dispatch(
+            unsendEmailOnSuccess(
+              String(emailId),
+              unsendDate,
+              EmailStatus.UNSEND
+            )
+          )
         );
       }
     } catch (e) {
@@ -141,8 +147,9 @@ export const unsendEmail = params => {
   };
 };
 
-export const unsendEmailOnSuccess = (emailId, unsendDate) => ({
+export const unsendEmailOnSuccess = (emailId, unsendDate, status) => ({
   type: Email.UNSEND,
   emailId,
-  unsendDate
+  unsendDate,
+  status
 });

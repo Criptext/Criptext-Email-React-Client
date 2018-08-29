@@ -18,7 +18,6 @@ import {
   updateAccount
 } from '../utils/electronInterface';
 import { storeSeenTimestamp } from '../utils/storage';
-import { EmailStatus } from '../utils/const';
 
 const mapStateToProps = state => {
   const threadsCount = state.get('threads').size;
@@ -62,9 +61,8 @@ const mapDispatchToProps = dispatch => {
       const contactTypes = defineContactType(labelId);
       dispatch(loadThreads({ ...params, rejectedLabelIds, contactTypes }));
     },
-    onMarkThreadAsOpen: threadId => {
-      const openedStatus = EmailStatus.OPENED;
-      dispatch(updateStatusThread(threadId, openedStatus));
+    onMarkThreadAsOpen: (threadId, status) => {
+      dispatch(updateStatusThread(threadId, Number(status)));
     },
     onUpdateOpenedAccount: async () => {
       const opened = true;
@@ -83,8 +81,8 @@ const mapDispatchToProps = dispatch => {
       storeSeenTimestamp();
       dispatch(updateAllFeedItemsAsOlder());
     },
-    onUnsendEmail: (emailId, date) => {
-      dispatch(unsendEmailOnSuccess(emailId, date));
+    onUnsendEmail: (emailId, date, status) => {
+      dispatch(unsendEmailOnSuccess(String(emailId), date, status));
       dispatch(unsendEmailFiles(emailId));
     },
     onRemoveThreads: threadIds => {
