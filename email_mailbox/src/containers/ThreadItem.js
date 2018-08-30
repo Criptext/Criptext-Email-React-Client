@@ -157,14 +157,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onAddOrRemoveLabel: labelId => {
       const thread = ownProps.thread;
+      const threadIdDB = thread.get('threadId');
       const threadParams = {
         threadIdStore: thread.get('id'),
-        threadIdDB: thread.get('threadId')
+        threadIdDB
       };
       if (thread.get('allLabels').contains(labelId)) {
         dispatch(actions.removeThreadLabel(threadParams, labelId));
       } else {
-        dispatch(actions.addThreadLabel(threadParams, labelId));
+        dispatch(actions.addLabelIdThread(threadIdDB, labelId));
       }
     }
   };

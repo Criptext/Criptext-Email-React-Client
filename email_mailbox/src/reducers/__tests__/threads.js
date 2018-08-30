@@ -22,6 +22,55 @@ describe('Thread actions - ADD_BATCH', () => {
   });
 });
 
+describe('Thread actions - ADD_LABELID_THREAD', () => {
+  const threads = [myThreads[0]];
+
+  it('should update thread params: allLabels and labels', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const labelId = 5;
+    const action = actions.addLabelIdThreadSuccess(threadId, labelId);
+    const newState = threadsReducer(state, action);
+    const threadUpdated = newState.get('0');
+    expect(threadUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        allLabels: [1, 2, 3, 4, 5],
+        labels: [1, 2, 3, 5]
+      })
+    );
+  });
+
+  it('should not update thread param: allLabels and labels, when threadId is undefined', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const labelId = undefined;
+    const action = actions.addLabelIdThreadSuccess(threadId, labelId);
+    const newState = threadsReducer(state, action);
+    const threadUpdated = newState.get('0');
+    expect(threadUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        allLabels: [1, 2, 3, 4],
+        labels: [1, 2, 3]
+      })
+    );
+  });
+
+  it('should not update thread param: allLabels and labels, when labelId is not number type', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const labelId = '4';
+    const action = actions.addLabelIdThreadSuccess(threadId, labelId);
+    const newState = threadsReducer(state, action);
+    const threadUpdated = newState.get('0');
+    expect(threadUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        allLabels: [1, 2, 3, 4],
+        labels: [1, 2, 3]
+      })
+    );
+  });
+});
+
 describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
   const threads = [myThreads[0]];
 
@@ -36,8 +85,8 @@ describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
       emailIdsToRemove
     });
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const emailIds = emailUpdated.get('emailIds').toJS();
+    const threadUpdated = newState.get('0');
+    const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([2, 4]);
   });
 
@@ -47,8 +96,8 @@ describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
     const emailIdToAdd = 4;
     const action = actions.updateEmailIdsThread({ threadId, emailIdToAdd });
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const emailIds = emailUpdated.get('emailIds').toJS();
+    const threadUpdated = newState.get('0');
+    const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([1, 2, 4]);
   });
 
@@ -58,8 +107,8 @@ describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
     const emailIdsToRemove = [1];
     const action = actions.updateEmailIdsThread({ threadId, emailIdsToRemove });
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const emailIds = emailUpdated.get('emailIds').toJS();
+    const threadUpdated = newState.get('0');
+    const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([2]);
   });
 
@@ -74,8 +123,8 @@ describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
       emailIdsToRemove
     });
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const emailIds = emailUpdated.get('emailIds').toJS();
+    const threadUpdated = newState.get('0');
+    const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([1, 2]);
   });
 
@@ -84,8 +133,8 @@ describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
     const threadId = '6Za2dcMlE0OSSc9';
     const action = actions.updateEmailIdsThread({ threadId });
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const emailIds = emailUpdated.get('emailIds').toJS();
+    const threadUpdated = newState.get('0');
+    const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([1, 2]);
   });
 });
@@ -98,8 +147,8 @@ describe('Thread actions - UPDATE_UNREAD_THREADS', () => {
     const threadIds = ['6Za2dcMlE0OSSc9'];
     const action = actions.updateUnreadThreadsSuccess(threadIds, false);
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const unread = emailUpdated.get('unread');
+    const threadUpdated = newState.get('0');
+    const unread = threadUpdated.get('unread');
     expect(unread).toBe(false);
   });
 
@@ -108,8 +157,8 @@ describe('Thread actions - UPDATE_UNREAD_THREADS', () => {
     const threadIds = ['6Za2dcMlE0OSSc9'];
     const action = actions.updateUnreadThreadsSuccess(threadIds, 'false');
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const unread = emailUpdated.get('unread');
+    const threadUpdated = newState.get('0');
+    const unread = threadUpdated.get('unread');
     expect(unread).toBe(true);
   });
 
@@ -118,8 +167,8 @@ describe('Thread actions - UPDATE_UNREAD_THREADS', () => {
     const threadIds = [];
     const action = actions.updateUnreadThreadsSuccess(threadIds, 'true');
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const unread = emailUpdated.get('unread');
+    const threadUpdated = newState.get('0');
+    const unread = threadUpdated.get('unread');
     expect(unread).toBe(true);
   });
 
@@ -128,8 +177,8 @@ describe('Thread actions - UPDATE_UNREAD_THREADS', () => {
     const threadIds = undefined;
     const action = actions.updateUnreadThreadsSuccess(threadIds, 'true');
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const unread = emailUpdated.get('unread');
+    const threadUpdated = newState.get('0');
+    const unread = threadUpdated.get('unread');
     expect(unread).toBe(true);
   });
 });
@@ -143,8 +192,8 @@ describe('Thread actions - UPDATE_STATUS_THREAD', () => {
     const newStatus = 2;
     const action = actions.updateStatusThread(threadId, newStatus);
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const status = emailUpdated.get('status');
+    const threadUpdated = newState.get('0');
+    const status = threadUpdated.get('status');
     expect(status).toBe(newStatus);
   });
 
@@ -154,8 +203,8 @@ describe('Thread actions - UPDATE_STATUS_THREAD', () => {
     const newStatus = '1';
     const action = actions.updateStatusThread(threadId, newStatus);
     const newState = threadsReducer(state, action);
-    const emailUpdated = newState.get('0');
-    const status = emailUpdated.get('status');
+    const threadUpdated = newState.get('0');
+    const status = threadUpdated.get('status');
     expect(status).not.toBe(newStatus);
     expect(status).toBe(0);
   });

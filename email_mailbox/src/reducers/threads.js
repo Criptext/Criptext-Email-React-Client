@@ -28,6 +28,19 @@ const threads = (state = List([]), action) => {
       }
       return state.concat(List(threads));
     }
+    case Thread.ADD_LABELID_THREAD: {
+      const { threadId, labelId } = action;
+      if (!threadId || typeof labelId !== 'number') {
+        return state;
+      }
+
+      return state.map(threadItem => {
+        if (threadItem.get('threadId') === threadId) {
+          return thread(threadItem, action);
+        }
+        return threadItem;
+      });
+    }
     case Thread.MOVE_THREADS: {
       const threadIds = action.threadIds;
       return state.filterNot(thread =>
@@ -47,8 +60,8 @@ const threads = (state = List([]), action) => {
       });
     }
     case Thread.UPDATE_STATUS_THREAD: {
-      const { status, threadId } = action;
-      if (!threadId || !status || typeof status !== 'number') {
+      const { threadId, status } = action;
+      if (!threadId || typeof status !== 'number') {
         return state;
       }
       return state.map(threadItem => {
@@ -84,18 +97,6 @@ const threads = (state = List([]), action) => {
           }
         );
       return newThreads;
-    }
-    case Thread.ADD_LABEL_THREAD: {
-      return state.update(
-        state.findIndex(thread => {
-          return thread.get('id') === action.targetThread;
-        }),
-        thread => {
-          const allLabels = thread.get('allLabels').add(action.label);
-          const labels = thread.get('labels').add(action.label);
-          return thread.merge({ allLabels, labels });
-        }
-      );
     }
     case Thread.ADD_LABEL_THREADS: {
       return state.map(thread => {
@@ -162,6 +163,12 @@ const threads = (state = List([]), action) => {
 
 const thread = (state, action) => {
   switch (action.type) {
+    case Thread.ADD_LABELID_THREAD: {
+      const { labelId } = action;
+      const allLabels = state.get('allLabels').add(labelId);
+      const labels = state.get('labels').add(labelId);
+      return state.merge({ allLabels, labels });
+    }
     case Thread.UPDATE_EMAILIDS_THREAD: {
       const { emailIdToAdd, emailIdsToRemove } = action;
       let emailIds = state.get('emailIds');

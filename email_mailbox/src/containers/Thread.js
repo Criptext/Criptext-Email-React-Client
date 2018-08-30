@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import {
-  addThreadLabel,
+  addLabelIdThread,
   loadEmails,
   removeThreadLabel,
   sendOpenEvent
@@ -100,7 +100,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (isStarred) {
         dispatch(removeThreadLabel(threadParams, labelId));
       } else {
-        dispatch(addThreadLabel(threadParams, labelId));
+        dispatch(addLabelIdThread(threadIdDB, labelId));
       }
     },
     onUpdateUnreadEmails: thread => {

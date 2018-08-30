@@ -480,6 +480,7 @@ class ComposerWrapper extends Component {
       iv: this.state.iv,
       key: this.state.key,
       labelId: LabelType.draft.id,
+      secure: false,
       textSubject: this.state.textSubject,
       toEmails: this.state.toEmails,
       threadId: this.state.threadId

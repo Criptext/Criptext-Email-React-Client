@@ -31,10 +31,39 @@ export const addThreads = (threads, clear) => ({
   clear: clear
 });
 
-export const addThreadLabelSuccess = (threadId, label) => ({
-  type: Thread.ADD_LABEL_THREAD,
-  targetThread: threadId,
-  label: label
+export const addLabelIdThread = (threadIdDB, labelId) => {
+  return async dispatch => {
+    try {
+      const [label] = await getLabelById(labelId);
+      const eventParams = {
+        cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
+        params: {
+          threadIds: [threadIdDB],
+          labelsRemoved: [],
+          labelsAdded: [label.text]
+        }
+      };
+      const { status } = await postPeerEvent(eventParams);
+      if (status === 200) {
+        const emails = await getEmailsByThreadId(threadIdDB);
+        const params = formAddThreadLabelParams(emails, labelId);
+        const dbResponse = await createEmailLabel(params);
+        if (dbResponse) {
+          dispatch(addLabelIdThreadSuccess(threadIdDB, labelId));
+        }
+      } else {
+        sendUpdateThreadLabelsErrorMessage();
+      }
+    } catch (e) {
+      sendUpdateThreadLabelsErrorMessage();
+    }
+  };
+};
+
+export const addLabelIdThreadSuccess = (threadId, labelId) => ({
+  type: Thread.ADD_LABELID_THREAD,
+  threadId,
+  labelId
 });
 
 export const addThreadsLabelSuccess = (threadIds, label) => ({
@@ -222,35 +251,7 @@ export const removeThreads = (threadsParams, isDraft) => {
   };
 };
 
-export const addThreadLabel = (threadParams, labelId) => {
-  return async dispatch => {
-    try {
-      const { threadIdStore, threadIdDB } = threadParams;
-      const [label] = await getLabelById(labelId);
-      const eventParams = {
-        cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
-        params: {
-          threadIds: [threadIdDB],
-          labelsRemoved: [],
-          labelsAdded: [label.text]
-        }
-      };
-      const { status } = await postPeerEvent(eventParams);
-      if (status === 200) {
-        const emails = await getEmailsByThreadId(threadIdDB);
-        const params = formAddThreadLabelParams(emails, labelId);
-        const dbResponse = await createEmailLabel(params);
-        if (dbResponse) {
-          dispatch(addThreadLabelSuccess(threadIdStore, labelId));
-        }
-      } else {
-        sendUpdateThreadLabelsErrorMessage();
-      }
-    } catch (e) {
-      sendUpdateThreadLabelsErrorMessage();
-    }
-  };
-};
+
 
 export const removeThreadLabel = (threadParams, labelId) => {
   return async dispatch => {

@@ -4,6 +4,10 @@ exports[`Thread actions - ADD_BATCH should add threads to state 1`] = `
 Immutable.List [
   Immutable.Map {
     allLabels: Immutable.Set [
+      1,
+      2,
+      3,
+      4,
     ],
     fromContactName: Immutable.List [
       "1",
@@ -27,21 +31,23 @@ Immutable.List [
     s3Key: "6Za2dcMlE0OSSc9",
     key: "6Za2dcMlE0OSSc9",
     labels: Immutable.Set [
-      7,
+      1,
+      2,
       3,
-      10,
     ],
   },
   Immutable.Map {
     allLabels: Immutable.Set [
+      5,
     ],
     fromContactName: Immutable.List [
       "1",
     ],
     isMuted: 0,
     lastEmailId: "cuW6ElyoqsR7MMw",
-    threadId: "cuW6ElyoqsR7MMw",
+    threadId: null,
     preview: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
+    uniqueId: 2,
     subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     date: 1516455734588,
     unread: true,
@@ -51,14 +57,11 @@ Immutable.List [
     content: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     id: 2,
     emailIds: Immutable.List [
-      3,
+      2,
     ],
     s3Key: "cuW6ElyoqsR7MMw",
     key: "cuW6ElyoqsR7MMw",
     labels: Immutable.Set [
-      7,
-      3,
-      10,
     ],
   },
 ]

@@ -1,9 +1,10 @@
 import { addContacts, addContact } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
+  addLabelIdThread,
+  addLabelIdThreadSuccess,
   addMoveThreadsLabel,
   addThreads,
-  addThreadLabel,
   addThreadsLabel,
   filterThreadsByUnread,
   loadEvents,
@@ -60,9 +61,10 @@ export {
   addFeedItems,
   addLabel,
   addLabels,
+  addLabelIdThread,
+  addLabelIdThreadSuccess,
   addMoveThreadsLabel,
   addThreads,
-  addThreadLabel,
   addThreadsLabel,
   filterThreadsByUnread,
   loadEmails,
