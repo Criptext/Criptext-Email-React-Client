@@ -24,13 +24,13 @@ const getEmails = (emails, thread) => {
 
 const getThread = (threads, threadId) => {
   return threads.find(thread => {
-    return thread.get('id') === threadId;
+    return thread.get('threadId') === threadId;
   });
 };
 
 const getThreadFromSuggestions = (suggestions, threadId) => {
   return suggestions.get('threads').find(thread => {
-    return thread.get('id') === threadId;
+    return thread.get('threadId') === threadId;
   });
 };
 

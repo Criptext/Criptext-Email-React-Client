@@ -104,7 +104,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const currentLabelId = LabelType[ownProps.mailbox].id;
       const params = {
         mailboxSelected: ownProps.mailbox,
-        threadIdSelected: threadIdStore
+        threadIdSelected: threadIdDb
       };
       switch (currentLabelId) {
         case LabelType.inbox.id: {
