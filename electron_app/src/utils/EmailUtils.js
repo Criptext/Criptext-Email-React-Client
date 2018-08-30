@@ -107,6 +107,7 @@ const formOutgoingEmailFromData = ({
   iv,
   key,
   labelId,
+  secure,
   textSubject,
   toEmails,
   threadId
@@ -135,7 +136,7 @@ const formOutgoingEmailFromData = ({
     date: Date.now(),
     status: EmailStatus.SENDING,
     unread: false,
-    secure: true,
+    secure,
     isMuted: false,
     threadId
   };

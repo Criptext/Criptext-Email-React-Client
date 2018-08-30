@@ -1,10 +1,22 @@
 import { Email } from '../actions/types';
-import { Map, fromJS } from 'immutable';
+import { fromJS, Map, Set } from 'immutable';
 
 const emails = (state = new Map(), action) => {
   switch (action.type) {
     case Email.ADD_BATCH: {
-      return state.merge(fromJS(action.emails));
+      const emails = fromJS(action.emails);
+      const batch = emails.map(email => {
+        const fileTokens = email.get('fileTokens');
+        const labelIds = email.get('labelIds');
+        const secure = !!email.get('secure');
+
+        return email.merge({
+          fileTokens: Set(fileTokens ? fileTokens.split(',') : []),
+          labelIds: Set(labelIds ? labelIds.split(',').map(Number) : []),
+          secure
+        });
+      });
+      return state.merge(batch);
     }
     case Email.MUTE: {
       const item = state.get(action.emailId);

@@ -118,9 +118,11 @@ const renderEmailExpand = props => (
                 </div>
               ) : (
                 <div>
-                  {props.isFromMe && !props.isUnsend ? (
-                    <ButtonUnsend onClick={props.onClickUnsendButton} />
-                  ) : null}
+                  {props.isFromMe &&
+                    !props.isUnsend &&
+                    props.email.secure && (
+                      <ButtonUnsend onClick={props.onClickUnsendButton} />
+                    )}
                   <i
                     className="icon-replay"
                     onClick={ev => props.onReplyEmail(ev)}

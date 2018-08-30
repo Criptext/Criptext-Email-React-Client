@@ -12,6 +12,7 @@ describe('[Form outgoing email] ', () => {
       toEmails: [`toUser@${appDomain}`],
       ccEmails: [`ccUser@${appDomain}`],
       bccEmails: [`bccUser@${appDomain}`],
+      secure: true,
       textSubject: 'Subject',
       body: '<p>Hello</p>',
       files: [],

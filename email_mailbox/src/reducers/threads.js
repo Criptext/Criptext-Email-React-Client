@@ -19,7 +19,7 @@ const threads = (state = List([]), action) => {
           subject,
           timestamp: thread.date,
           lastEmailId: thread.key,
-          unread: thread.unread ? true : false,
+          unread: !!thread.unread,
           fromContactName: List(fromContactName.split(','))
         });
       });

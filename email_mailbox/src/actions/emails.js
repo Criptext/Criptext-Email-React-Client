@@ -48,12 +48,6 @@ export const loadEmails = threadId => {
           element.to = element.to ? element.to.split(',').map(Number) : [];
           element.cc = element.cc ? element.cc.split(',').map(Number) : [];
           element.bcc = element.bcc ? element.bcc.split(',').map(Number) : [];
-          element.fileTokens = element.fileTokens
-            ? element.fileTokens.split(',')
-            : [];
-          element.labelIds = element.labelIds
-            ? element.labelIds.split(',').map(Number)
-            : [];
           const contactIds = [
             ...element.from,
             ...element.to,

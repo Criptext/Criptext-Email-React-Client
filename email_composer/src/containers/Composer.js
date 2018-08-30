@@ -365,16 +365,19 @@ class ComposerWrapper extends Component {
   };
 
   handleSendMessage = () => {
-    const hasNonCriptextRecipients = this.checkNonCriptextRecipients();
+    const hasNonCriptextRecipients = !!this.checkNonCriptextRecipients();
     const isVerified = this.state.nonCriptextRecipientsVerified;
     if (hasNonCriptextRecipients && !isVerified) {
       this.setState({ displayNonCriptextPopup: true });
     } else {
-      this.sendMessage();
+      const isEmailSecure = hasNonCriptextRecipients
+        ? !!this.state.nonCriptextRecipientsPassword
+        : !hasNonCriptextRecipients;
+      this.sendMessage(isEmailSecure);
     }
   };
 
-  sendMessage = async () => {
+  sendMessage = async secure => {
     this.setState({ status: Status.WAITING });
     const data = {
       bccEmails: this.state.bccEmails,
@@ -384,6 +387,7 @@ class ComposerWrapper extends Component {
       iv: this.state.iv,
       key: this.state.key,
       labelId: LabelType.sent.id,
+      secure,
       textSubject: this.state.textSubject,
       toEmails: this.state.toEmails,
       threadId: this.state.threadId
