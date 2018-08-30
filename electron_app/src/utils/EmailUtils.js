@@ -69,7 +69,6 @@ const formIncomingEmailFromData = ({
   from,
   isToMe,
   metadataKey,
-  secure,
   subject,
   to,
   threadId,
