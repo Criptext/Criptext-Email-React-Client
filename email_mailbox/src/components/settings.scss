@@ -30,6 +30,30 @@
       list-style: none;
       margin: 0;
       padding: 0;
+
+      .section-item{
+        cursor: pointer;
+        
+        &.selected{
+          color: #0091ff;
+          font-weight: 700;
+      
+          span{
+            border-bottom: 1px solid #0091ff;
+          }
+        }
+      
+        span{
+          align-items: center;
+          display: flex;
+          font-size: 13px;
+          font-weight: 400;
+          height: calc(100% - 5px);
+          margin: 5px 10px 0;
+          padding: 0 15px;
+          text-transform: capitalize;
+        }
+      }
     }
 
     .settings-content-scroll{
@@ -53,6 +77,44 @@
       >div{
         padding-bottom: 50px;
       }
+
+      .section-block{
+        border-bottom: 1px solid #c8c8ca;
+        display: flex;
+        padding: 15px 20px;
+        width: calc(100% - 40px);
+      
+        &:last-child{
+          border-bottom: none;
+        }
+
+        .section-block-title{
+          align-items: flex-start;
+          display: flex;
+          width: 200px;
+        }
+      
+        .section-block-content{
+          align-items: left;
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+        }
+      
+        .section-block-content-item {
+          margin: auto 0px;
+          display: flex;
+          width: 100%;
+
+          .section-block-content-item-title{
+            color: #94a1b0;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 22px;
+            text-transform: uppercase;
+          }
+        }
+      }
     }
 
     .settings-footer{
@@ -63,6 +125,7 @@
       height: 50px;
       position: absolute;
       width: 100%;
+      z-index: 1;
 
       .settings-footer-version{
         align-items: center;
@@ -105,53 +168,5 @@
         }
       }
     }
-  }
-}
-
-.section-item{
-  cursor: pointer;
-  
-  &.selected{
-    color: #0091ff;
-    font-weight: 700;
-
-    span{
-      border-bottom: 1px solid #0091ff;
-    }
-  }
-
-  span{
-    align-items: center;
-    display: flex;
-    font-size: 13px;
-    font-weight: 400;
-    height: calc(100% - 5px);
-    margin: 5px 10px 0;
-    padding: 0 15px;
-    text-transform: capitalize;
-  }
-}
-
-.section-block{
-  border-bottom: 1px solid #c8c8ca;
-  display: flex;
-  padding: 15px 20px;
-  width: calc(100% - 40px);
-
-  .section-block-title{
-    align-items: flex-start;
-    display: flex;
-    width: 200px;
-  }
-
-  .section-block-content{
-    align-items: left;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-  }
-
-  &:last-child{
-    border-bottom: none;
   }
 }

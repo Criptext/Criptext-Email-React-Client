@@ -7,7 +7,9 @@ import './settingdevices.css';
 
 const Removedevicepopup = PopupHOC(RemoveDevicePopup);
 
-const SettingDevices = props => <div>{renderDevicesBlock(props)}</div>;
+const SettingDevices = props => (
+  <div id="setting-devices">{renderDevicesBlock(props)}</div>
+);
 
 const renderDevicesBlock = props => (
   <div className="section-block">

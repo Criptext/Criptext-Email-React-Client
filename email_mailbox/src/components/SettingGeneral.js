@@ -16,7 +16,7 @@ import ChangePasswordPopup from './ChangePasswordPopup';
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 
 const SettingGeneral = props => (
-  <div>
+  <div id="setting-general">
     {renderProfileBlock(props)}
     {renderPasswordBlock(props)}
     {renderLogoutAccountBlock(props)}
@@ -39,7 +39,7 @@ const renderProfileBlock = props => (
 );
 
 const renderBlockEmail = () => (
-  <div className="section-block-content-item content-email">
+  <div className="section-block-content-item">
     <div className="general-letters">
       <span>{getTwoCapitalLetters(myAccount.name)}</span>
     </div>
@@ -48,11 +48,8 @@ const renderBlockEmail = () => (
 );
 
 const renderBlockName = props => (
-  <div
-    className="section-block-content-item content-name"
-    onBlur={props.onBlurInputName}
-  >
-    <p>Name</p>
+  <div className="section-block-content-item" onBlur={props.onBlurInputName}>
+    <span className="section-block-content-item-title">Name</span>
     {props.mode === inputNameModes.EDITING ? (
       <div>
         <input
@@ -84,8 +81,8 @@ const renderBlockName = props => (
 );
 
 const renderBlockSignature = props => (
-  <div className="section-block-content-item content-signature">
-    <p>Signature</p>
+  <div className="section-block-content-item">
+    <span className="section-block-content-item-title">Signature</span>
     <div className="signature-switch">
       <div className="signature-switch-item">
         <Switch
@@ -146,7 +143,7 @@ const renderPasswordBlock = props => {
         <h1>Password</h1>
       </div>
       <div className="section-block-content">
-        <div className="section-block-content-item content-reset-password">
+        <div className="section-block-content-item">
           <button
             className="button button-a button-reset-password"
             onClick={props.onClickChangePasswordButton}
@@ -179,12 +176,11 @@ const renderLogoutAccountBlock = props => (
       <h1>Logout Account</h1>
     </div>
     <div className="section-block-content">
-      <div
-        className="section-block-content-item content-logout-account"
-        onClick={() => props.onClickLogout()}
-      >
-        <div className="logout-account-icon" />
-        <div className="logout-label">Logout</div>
+      <div className="section-block-content-item">
+        <div className="logout-button" onClick={() => props.onClickLogout()}>
+          <i className="icon-log-out" />
+          <span>Logout</span>
+        </div>
       </div>
     </div>
   </div>
@@ -196,7 +192,7 @@ const renderLanguageBlock = () => (
       <h1>Language</h1>
     </div>
     <div className="section-block-content">
-      <div className="section-block-content-item content-language">
+      <div className="section-block-content-item">
         <span>English (US)</span>
       </div>
     </div>
@@ -209,7 +205,7 @@ const renderUsefulLinksBlock = () => (
       <h1>Useful Links</h1>
     </div>
     <div className="section-block-content">
-      <div className="section-block-content-item content-useful-links">
+      <div className="section-block-content-item">
         <a className="useful-link" href={usefulLinks.FAQ} target="_blank">
           FAQ
         </a>

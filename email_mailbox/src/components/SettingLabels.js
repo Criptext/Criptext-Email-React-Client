@@ -4,7 +4,7 @@ import './settinglabel.css';
 import CustomCheckbox from './CustomCheckbox';
 
 const SettingLabels = props => (
-  <div>
+  <div id="setting-labels">
     {renderSystemLabelsBlock(props)}
     {renderCustomLabelsBlock(props)}
   </div>

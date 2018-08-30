@@ -392,9 +392,11 @@ const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
 
 const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
   const { threadIds } = params;
-  await deleteEmailsByThreadId(threadIds);
+  const wereDeleted = await deleteEmailsByThreadId(threadIds);
   await setEventAsHandled(rowid);
-  emitter.emit(Event.THREADS_DELETED, threadIds);
+  if (wereDeleted) {
+    emitter.emit(Event.THREADS_DELETED, threadIds);
+  }
 };
 
 const handlePeerLabelCreated = async ({ rowid, params }) => {
