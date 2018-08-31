@@ -1,12 +1,12 @@
 import { Email } from './types';
 import {
+  getContactByIds,
   getEmailsByThreadId,
   updateUnreadEmailByThreadId,
   setMuteEmailById,
   setUnreadEmailById,
   updateEmail,
-  unsendEmailEvent,
-  getContactByIds
+  unsendEmailEvent
 } from '../utils/electronInterface';
 import { EmailUtils } from '../utils/electronUtilsInterface';
 import { loadContacts } from './contacts';

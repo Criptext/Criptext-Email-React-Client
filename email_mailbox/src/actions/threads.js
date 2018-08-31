@@ -66,6 +66,30 @@ export const addLabelIdThreadSuccess = (threadId, labelId) => ({
   labelId
 });
 
+export const addLabelIdThreadDraft = (uniqueId, labelId) => {
+  return async dispatch => {
+    try {
+      const emailId = uniqueId;
+      const response = await createEmailLabel([{ emailId, labelId }]);
+      if (response) {
+        dispatch(addLabelIdThreadDraftSuccess(uniqueId, labelId));
+      } else {
+        sendUpdateThreadLabelsErrorMessage();
+      }
+    } catch (e) {
+      sendUpdateThreadLabelsErrorMessage();
+    }
+  };
+};
+
+export const addLabelIdThreadDraftSuccess = (uniqueId, labelId) => {
+  return {
+    type: Thread.ADD_LABELID_THREAD_DRAFT,
+    uniqueId,
+    labelId
+  };
+};
+
 export const addThreadsLabelSuccess = (threadIds, label) => ({
   type: Thread.ADD_LABEL_THREADS,
   threadIds,
@@ -250,8 +274,6 @@ export const removeThreads = (threadsParams, isDraft) => {
     }
   };
 };
-
-
 
 export const removeThreadLabel = (threadParams, labelId) => {
   return async dispatch => {

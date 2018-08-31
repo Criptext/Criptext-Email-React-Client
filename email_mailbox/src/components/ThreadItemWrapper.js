@@ -16,7 +16,7 @@ class ThreadItemWrapper extends Component {
       <ThreadItem
         {...this.props}
         isVisibleMoveToTrash={this.handleIsVisibleMoveToTrash()}
-        onToggleFavorite={this.handleToggleFavorite}
+        onToggleFavorite={this.handleToggleStarred}
         onClickMoveToTrash={this.handleClickMoveToTrash}
         onRegionEnter={this.onRegionEnter}
         onRegionLeave={this.onRegionLeave}
@@ -32,8 +32,8 @@ class ThreadItemWrapper extends Component {
     return !(isDraftMailbox || isTrashMailbox);
   };
 
-  handleToggleFavorite = () => {
-    this.props.onAddOrRemoveLabel(LabelType.starred.id);
+  handleToggleStarred = isStarred => {
+    this.props.onAddOrRemoveLabel(LabelType.starred.id, isStarred);
   };
 
   handleClickMoveToTrash = () => {

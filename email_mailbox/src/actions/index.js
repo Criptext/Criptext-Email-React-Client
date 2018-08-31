@@ -3,6 +3,8 @@ import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
   addLabelIdThread,
   addLabelIdThreadSuccess,
+  addLabelIdThreadDraft,
+  addLabelIdThreadDraftSuccess,
   addMoveThreadsLabel,
   addThreads,
   addThreadsLabel,
@@ -63,6 +65,8 @@ export {
   addLabels,
   addLabelIdThread,
   addLabelIdThreadSuccess,
+  addLabelIdThreadDraft,
+  addLabelIdThreadDraftSuccess,
   addMoveThreadsLabel,
   addThreads,
   addThreadsLabel,

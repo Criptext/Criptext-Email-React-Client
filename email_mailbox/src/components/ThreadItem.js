@@ -203,7 +203,7 @@ class ThreadItem extends Component {
 
   onToggleFavorite = ev => {
     ev.stopPropagation();
-    this.props.onToggleFavorite();
+    this.props.onToggleFavorite(this.props.isStarred);
   };
 
   onClickMoveToTrash = ev => {
