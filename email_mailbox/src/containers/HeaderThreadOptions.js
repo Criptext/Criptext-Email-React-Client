@@ -6,7 +6,7 @@ import { Set } from 'immutable';
 
 const defineOneThreadSelected = (threads, threadId) => {
   const thread = threads.find(thread => {
-    return thread.get('id') === threadId;
+    return thread.get('threadId') === threadId;
   });
   return [
     {
