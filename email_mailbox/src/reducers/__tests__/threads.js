@@ -120,6 +120,55 @@ describe('Thread actions - ADD_LABELID_THREAD_DRAFT', () => {
   });
 });
 
+describe('Thread actions - REMOVE_LABELID_THREAD', () => {
+  const threads = [myThreads[0]];
+
+  it('should update thread params: allLabels and labels', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const labelId = 1;
+    const action = actions.removeLabelIdThreadSuccess(threadId, labelId);
+    const newState = threadsReducer(state, action);
+    const threadUpdated = newState.get('0');
+    expect(threadUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        allLabels: [4, 2, 3],
+        labels: [3, 2]
+      })
+    );
+  });
+
+  it('should not update thread param: allLabels and labels, when threadId is undefined', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const labelId = undefined;
+    const action = actions.removeLabelIdThreadSuccess(threadId, labelId);
+    const newState = threadsReducer(state, action);
+    const threadUpdated = newState.get('0');
+    expect(threadUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        allLabels: [1, 2, 3, 4],
+        labels: [1, 2, 3]
+      })
+    );
+  });
+
+  it('should not update thread param: allLabels and labels, when labelId is not number type', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const labelId = '1';
+    const action = actions.removeLabelIdThreadSuccess(threadId, labelId);
+    const newState = threadsReducer(state, action);
+    const threadUpdated = newState.get('0');
+    expect(threadUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        allLabels: [1, 2, 3, 4],
+        labels: [1, 2, 3]
+      })
+    );
+  });
+});
+
 describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
   const threads = [myThreads[0]];
 

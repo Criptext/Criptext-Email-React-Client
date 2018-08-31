@@ -60,6 +60,19 @@ const threads = (state = List([]), action) => {
         threadIds.includes(thread.get('threadId'))
       );
     }
+    case Thread.REMOVE_LABELID_THREAD: {
+      const { threadId, labelId } = action;
+      if (!threadId || typeof labelId !== 'number') {
+        return state;
+      }
+
+      return state.map(threadItem => {
+        if (threadItem.get('threadId') === threadId) {
+          return thread(threadItem, action);
+        }
+        return threadItem;
+      });
+    }
     case Thread.UPDATE_EMAILIDS_THREAD: {
       const { threadId, emailIdToAdd, emailIdsToRemove } = action;
       if (!threadId || (!emailIdToAdd && !emailIdsToRemove)) {
@@ -121,16 +134,6 @@ const threads = (state = List([]), action) => {
         return thread.merge({ allLabels, labels });
       });
     }
-    case Thread.REMOVE_LABEL_THREAD: {
-      return state.update(
-        state.findIndex(thread => thread.get('id') === action.targetThread),
-        thread => {
-          const allLabels = thread.get('allLabels').delete(action.label);
-          const labels = thread.get('labels').delete(action.label);
-          return thread.merge({ allLabels, labels });
-        }
-      );
-    }
     case Thread.REMOVE_THREADS: {
       return state.filter(
         thread => !action.threadsIds.includes(thread.get('id'))
@@ -186,6 +189,12 @@ const thread = (state, action) => {
       const { labelId } = action;
       const allLabels = state.get('allLabels').add(labelId);
       const labels = state.get('labels').add(labelId);
+      return state.merge({ allLabels, labels });
+    }
+    case Thread.REMOVE_LABELID_THREAD: {
+      const { labelId } = action;
+      const allLabels = state.get('allLabels').delete(labelId);
+      const labels = state.get('labels').delete(labelId);
       return state.merge({ allLabels, labels });
     }
     case Thread.UPDATE_EMAILIDS_THREAD: {

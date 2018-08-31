@@ -99,7 +99,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const currentLabelId = LabelType[ownProps.mailbox].id;
   return {
     onSelectThread: thread => {
-      const threadIdStore = thread.id;
       const threadIdDb = thread.threadId;
       const type = SectionType.THREAD;
       const params = {
@@ -157,12 +156,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onAddOrRemoveLabel: (labelId, isAdded) => {
       const thread = ownProps.thread;
-      const threadIdDB = thread.get('threadId');
-      const threadParams = {
-        threadIdStore: thread.get('id'),
-        threadIdDB
-      };
-      if (currentLabelId === LabelType.draft.id && !threadIdDB) {
+      const threadId = thread.get('threadId');
+      if (currentLabelId === LabelType.draft.id && !threadId) {
         if (isAdded) {
         } else {
           const uniqueId = thread.get('uniqueId');
@@ -170,9 +165,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
       } else {
         if (isAdded) {
-          dispatch(actions.removeThreadLabel(threadParams, labelId));
+          dispatch(actions.removeLabelIdThread(threadId, labelId));
         } else {
-          dispatch(actions.addLabelIdThread(threadIdDB, labelId));
+          dispatch(actions.addLabelIdThread(threadId, labelId));
         }
       }
     }
