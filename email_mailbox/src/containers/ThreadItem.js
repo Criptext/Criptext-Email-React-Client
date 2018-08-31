@@ -158,9 +158,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const thread = ownProps.thread;
       const threadId = thread.get('threadId');
       if (currentLabelId === LabelType.draft.id && !threadId) {
+        const uniqueId = thread.get('uniqueId');
         if (isAdded) {
+          dispatch(actions.removeLabelIdThreadDraft(uniqueId, labelId));
         } else {
-          const uniqueId = thread.get('uniqueId');
           dispatch(actions.addLabelIdThreadDraft(uniqueId, labelId));
         }
       } else {

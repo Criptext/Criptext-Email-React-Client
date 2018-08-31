@@ -142,6 +142,30 @@ export const removeLabelIdThreadSuccess = (threadId, labelId) => ({
   labelId
 });
 
+export const removeLabelIdThreadDraft = (uniqueId, labelId) => {
+  return async dispatch => {
+    try {
+      const emailId = uniqueId;
+      const response = await deleteEmailLabel([{ emailId, labelId }]);
+      if (response) {
+        dispatch(removeLabelIdThreadDraftSuccess(uniqueId, labelId));
+      } else {
+        sendUpdateThreadLabelsErrorMessage();
+      }
+    } catch (e) {
+      sendUpdateThreadLabelsErrorMessage();
+    }
+  };
+};
+
+export const removeLabelIdThreadDraftSuccess = (uniqueId, labelId) => {
+  return {
+    type: Thread.REMOVE_LABELID_THREAD_DRAFT,
+    uniqueId,
+    labelId
+  };
+};
+
 export const removeThread = threadId => ({
   type: Thread.REMOVE_THREAD,
   targetThread: threadId
