@@ -61,7 +61,7 @@ const renderForm = props => {
   return (
     <div className="non-criptext-form">
       {renderInput({
-        placeholder: 'Enter password',
+        placeholder: 'Enter passphrase',
         value: password.value,
         type: password.type,
         onChange: ev => props.onChangeInputValue(ev, 'password')
@@ -75,9 +75,8 @@ const renderForm = props => {
         error: password.error,
         message: `Must have ${props.minLength} characters`
       })}
-
       {renderInput({
-        placeholder: 'Repeat password',
+        placeholder: 'Repeat passphrase',
         value: confirmPassword.value,
         type: confirmPassword.type,
         onChange: ev => props.onChangeInputValue(ev, 'confirmPassword')

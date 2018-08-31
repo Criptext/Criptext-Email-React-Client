@@ -35864,6 +35864,9 @@
           session = record.getSessionByBaseKey(message.baseKey);
           if (session) {
             console.log("Duplicate PreKeyMessage for session");
+            const e = new Error('Duplicate PreKeyMessage for session');
+            e.name = "PreKeyMessage";
+            throw e;
             return;
           }
   

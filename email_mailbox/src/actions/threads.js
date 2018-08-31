@@ -20,7 +20,7 @@ import {
   handleEvent,
   sendUpdateThreadLabelsErrorMessage,
   sendRemoveThreadsErrorMessage,
-  sendFetchEmalsErrorMessage
+  sendFetchEmailsErrorMessage
 } from './../utils/electronEventInterface';
 import { loadFeedItems } from './feeditems';
 import { SocketCommand } from '../utils/const';
@@ -276,7 +276,7 @@ export const loadThreads = params => {
       const threads = await getEmailsGroupByThreadByParams(params);
       dispatch(addThreads(threads, params.clear));
     } catch (e) {
-      sendFetchEmalsErrorMessage();
+      sendFetchEmailsErrorMessage();
     }
   };
 };
@@ -292,7 +292,9 @@ export const loadEvents = params => {
       await Promise.all(managedEvents);
       dispatch(loadThreads(params));
     } catch (e) {
-      sendFetchEmalsErrorMessage();
+      if (e.name !== 'PreKeyMessage') {
+        sendFetchEmailsErrorMessage();
+      }
     }
     dispatch(stopLoadSync());
   };

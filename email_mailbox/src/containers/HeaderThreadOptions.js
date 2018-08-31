@@ -10,7 +10,7 @@ const defineOneThreadSelected = (threads, threadId) => {
   });
   return [
     {
-      threadIdStore: thread.get('id'),
+      threadIdStore: thread.get('threadId'),
       threadIdDB: thread.get('threadId')
     }
   ];

@@ -77,7 +77,7 @@ const formIncomingEmailFromData = ({
   const content = body || '';
   const preview = body
     ? removeHTMLTags(content)
-        .slice(0, 21)
+        .slice(0, 50)
         .trim()
     : '';
   const status = isToMe ? EmailStatus.NONE : EmailStatus.DELIVERED;
@@ -132,7 +132,7 @@ const formOutgoingEmailFromData = ({
     key: Date.now(),
     subject: textSubject,
     content: body,
-    preview: removeHTMLTags(body).slice(0, 21),
+    preview: removeHTMLTags(body).slice(0, 50),
     date: Date.now(),
     status: EmailStatus.SENDING,
     unread: false,

@@ -17,7 +17,7 @@ const decryptEmail = async ({
   if (status !== 200) {
     return;
   }
-  if (!deviceId && !messageType) {
+  if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return text;
   }
   const textEncrypted = util.toArrayBufferFromBase64(text);

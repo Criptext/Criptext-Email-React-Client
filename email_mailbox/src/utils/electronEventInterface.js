@@ -504,7 +504,7 @@ export const sendRemoveThreadsErrorMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
-export const sendFetchEmalsErrorMessage = () => {
+export const sendFetchEmailsErrorMessage = () => {
   const messageData = {
     ...Messages.error.fetchEmails,
     type: MessageType.ERROR
