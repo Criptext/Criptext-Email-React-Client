@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import {
-  addThreadLabel,
+  addLabelIdThread,
   loadEmails,
-  removeThreadLabel,
+  removeLabelIdThread,
   sendOpenEvent
 } from '../actions';
 import ThreadView from '../components/Thread';
@@ -24,13 +24,13 @@ const getEmails = (emails, thread) => {
 
 const getThread = (threads, threadId) => {
   return threads.find(thread => {
-    return thread.get('id') === threadId;
+    return thread.get('threadId') === threadId;
   });
 };
 
 const getThreadFromSuggestions = (suggestions, threadId) => {
   return suggestions.get('threads').find(thread => {
-    return thread.get('id') === threadId;
+    return thread.get('threadId') === threadId;
   });
 };
 
@@ -79,28 +79,20 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
   return {
     onLoadEmails: threadId => {
       return dispatch(loadEmails(threadId));
     },
-    onRemoveThreadLabel: (threadIdDB, labelId) => {
-      const threadParams = {
-        threadIdStore: ownProps.threadIdSelected,
-        threadIdDB
-      };
-      return dispatch(removeThreadLabel(threadParams, labelId));
+    onRemoveLabelIdThread: (threadId, labelId) => {
+      return dispatch(removeLabelIdThread(threadId, labelId));
     },
-    onToggleStar: (threadIdDB, isStarred) => {
-      const threadParams = {
-        threadIdStore: ownProps.threadIdSelected,
-        threadIdDB
-      };
+    onToggleStar: (threadId, isStarred) => {
       const labelId = LabelType.starred.id;
       if (isStarred) {
-        dispatch(removeThreadLabel(threadParams, labelId));
+        dispatch(removeLabelIdThread(threadId, labelId));
       } else {
-        dispatch(addThreadLabel(threadParams, labelId));
+        dispatch(addLabelIdThread(threadId, labelId));
       }
     },
     onUpdateUnreadEmails: thread => {

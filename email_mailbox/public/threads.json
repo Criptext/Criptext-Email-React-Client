@@ -13,14 +13,15 @@
       "unread":1,
       "secure":1,
       "isMuted":0,
-      "labels": "7,3,10",
+      "allLabels": "1,2,3,4",
+      "labels": "1,2,3",
       "emailIds": "1,2",
       "fromContactName": "1"
     },
     {
       "id":2,
       "key":"cuW6ElyoqsR7MMw",
-      "threadId":"cuW6ElyoqsR7MMw",
+      "threadId":null,
       "s3Key":"cuW6ElyoqsR7MMw",
       "content":"Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
       "preview":"Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
@@ -30,9 +31,11 @@
       "unread":1,
       "secure":1,
       "isMuted":0,
-      "labels": "7,3,10",
-      "emailIds": "3",
-      "fromContactName": "1"
+      "allLabels": "5",
+      "labels": "",
+      "emailIds": "2",
+      "fromContactName": "1",
+      "uniqueId":2
     }
   ]
 }

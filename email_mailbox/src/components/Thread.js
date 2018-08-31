@@ -61,7 +61,7 @@ class Thread extends Component {
   }
 
   handleRemoveLabel = labelId => {
-    this.props.onRemoveThreadLabel(this.props.thread.threadId, labelId);
+    this.props.onRemoveLabelIdThread(this.props.thread.threadId, labelId);
   };
 
   handleToggleStar = () => {
@@ -75,7 +75,7 @@ Thread.propTypes = {
   mailboxSelected: PropTypes.string,
   onLoadEmails: PropTypes.func,
   onUpdateUnreadEmails: PropTypes.func,
-  onRemoveThreadLabel: PropTypes.func,
+  onRemoveLabelIdThread: PropTypes.func,
   onToggleStar: PropTypes.func,
   starred: PropTypes.bool,
   thread: PropTypes.object
