@@ -196,7 +196,7 @@ class ThreadItem extends Component {
 
   onCheck = value => {
     this.props.onCheckItem(
-      this.props.thread.id,
+      this.props.thread.threadId || this.props.thread.uniqueId,
       CustomCheckboxStatus.toBoolean(value)
     );
   };
