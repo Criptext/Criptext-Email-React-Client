@@ -218,33 +218,30 @@ const RecoveryEmailBlock = props => (
 
 const ResendConfirmationRecoveryEmailLink = ({
   onClickResendConfirmationLink,
-  isDisabledResend,
-  onResendConfirmationCountdownEnd,
-  resendCountdown
+  onResendConfirmationCountdownEnd
 }) => {
-  const date = resendCountdown || getResendConfirmationTimestamp();
-  const disabled = isDisabledResend || date;
   return (
-    <button
-      className={`button-b ${disabled ? 'disabled' : ''}`}
-      onClick={onClickResendConfirmationLink}
+    <Countdown
+      date={getResendConfirmationTimestamp()}
+      renderer={renderer}
+      onComplete={onResendConfirmationCountdownEnd}
     >
-      <span>
-        <Countdown
-          date={date}
-          renderer={renderer}
-          onComplete={onResendConfirmationCountdownEnd}
-        />
-      </span>
-    </button>
+      <button className="button-b" onClick={onClickResendConfirmationLink}>
+        Resend Link
+      </button>
+    </Countdown>
   );
 };
 
-const renderer = ({ minutes, seconds, completed }) => {
+const renderer = ({ minutes, seconds, completed, children }) => {
   if (completed || minutes === 'NaN' || seconds === 'NaN') {
-    return 'Resend Link';
+    return children;
   }
-  return `Resend Link in (${minutes}:${seconds})`;
+  return (
+    <span className="button-b disabled">
+      {`Resend Link available in ${minutes}:${seconds}`}
+    </span>
+  );
 };
 
 const RecoveryEmailConfirmationMessage = ({ recoveryEmailConfirmed }) => {
@@ -397,6 +394,13 @@ ResendConfirmationRecoveryEmailLink.propTypes = {
   onClickResendConfirmationLink: PropTypes.func,
   onResendConfirmationCountdownEnd: PropTypes.func,
   resendCountdown: PropTypes.string
+};
+
+renderer.propTypes = {
+  completed: PropTypes.string,
+  children: PropTypes.object,
+  minutes: PropTypes.string,
+  seconds: PropTypes.string
 };
 
 RecoveryEmailConfirmationMessage.propTypes = {
