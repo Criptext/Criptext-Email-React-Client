@@ -83,6 +83,15 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.PEER_USER_NAME_CHANGED: {
       return handlePeerUserNameChanged(incomingEvent);
     }
+    case SocketCommand.PEER_PASSWORD_CHANGED: {
+      return handlePeerPasswordChanged();
+    }
+    case SocketCommand.PEER_RECOVERY_EMAIL_CHANGED: {
+      return handlePeerRecoveryEmailChanged(incomingEvent);
+    }
+    case SocketCommand.PEER_RECOVERY_EMAIL_CONFIRMED: {
+      return handlePeerRecoveryEmailConfirmed();
+    }
     default: {
       return;
     }
@@ -419,6 +428,34 @@ const handlePeerUserNameChanged = async ({ rowid, params }) => {
   await setEventAsHandled(rowid);
 };
 
+const handlePeerPasswordChanged = () => {
+  return sendPasswordChangedEvent();
+};
+
+const handlePeerRecoveryEmailChanged = async ({ params }) => {
+  const { recipientId } = myAccount;
+  const { address } = params;
+  const dbRes = await updateAccount({
+    recoveryEmail: address,
+    recoveryEmailConfirmed: false,
+    recipientId
+  });
+  if (dbRes) {
+    emitter.emit(Event.RECOVERY_EMAIL_CHANGED, address);
+  }
+};
+
+const handlePeerRecoveryEmailConfirmed = async () => {
+  const { recipientId } = myAccount;
+  const dbRes = await updateAccount({
+    recoveryEmailConfirmed: true,
+    recipientId
+  });
+  if (dbRes) {
+    emitter.emit(Event.RECOVERY_EMAIL_CONFIRMED);
+  }
+};
+
 const handleSendEmailError = async ({ rowid }) => {
   await setEventAsHandled(rowid);
 };
@@ -484,8 +521,8 @@ ipcRenderer.on('device-removed', async () => {
   await sendDeviceRemovedEvent();
 });
 
-ipcRenderer.on('password-changed', async () => {
-  await sendPasswordChangedEvent();
+ipcRenderer.on('password-changed', () => {
+  return sendPasswordChangedEvent();
 });
 
 export const sendUpdateThreadLabelsErrorMessage = () => {
@@ -523,6 +560,38 @@ export const sendRemoveDeviceErrorMessage = () => {
 export const sendRemoveDeviceSuccessMessage = () => {
   const messageData = {
     ...Messages.success.removeDevice,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendRecoveryEmailChangedErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.recoveryEmailChanged,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendRecoveryEmailChangedSuccessMessage = () => {
+  const messageData = {
+    ...Messages.success.recoveryEmailChanged,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendRecoveryEmailLinkConfirmationErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.recoveryEmailLinkConfirmation,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendRecoveryEmailLinkConfirmationSuccessMessage = () => {
+  const messageData = {
+    ...Messages.success.recoveryEmailLinkConfirmation,
     type: MessageType.SUCCESS
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
@@ -581,5 +650,7 @@ export const Event = {
   EMAIL_DELETED: 'email-deleted-permanently',
   THREADS_UPDATE_READ: 'threads-update-read',
   DEVICE_REMOVED: 'device-removed',
-  PASSWORD_CHANGED: 'password-changed'
+  PASSWORD_CHANGED: 'password-changed',
+  RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
+  RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed'
 };

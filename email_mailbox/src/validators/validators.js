@@ -1,7 +1,10 @@
 import {
+  myAccount,
   requiredMinLength,
   requiredMaxLength
 } from './../utils/electronInterface';
+import { matchOwnEmail } from '../utils/ContactUtils';
+import { emailRegex } from '../utils/RegexUtils';
 
 const checkRequired = string => {
   return string !== undefined;
@@ -41,4 +44,11 @@ export const validateConfirmPassword = (field1, field2) => {
     checkMaxLength(field2, requiredMaxLength.password);
   const match = checkMatch(field1, field2);
   return required && length && match;
+};
+
+export const validateRecoveryEmail = email => {
+  const required = checkRequired(email);
+  const isValidAddress = emailRegex.test(email);
+  const isOwnEmail = matchOwnEmail(myAccount.recipientId, email);
+  return required && isValidAddress && !isOwnEmail;
 };

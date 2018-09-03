@@ -75,8 +75,8 @@ export const changePassword = params => {
   return clientManager.changePassword(params);
 };
 
-export const getDevices = () => {
-  return clientManager.getDevices();
+export const changeRecoveryEmail = params => {
+  return clientManager.changeRecoveryEmail(params);
 };
 
 export const getEmailBody = params => {
@@ -87,12 +87,24 @@ export const getEvents = () => {
   return clientManager.getEvents();
 };
 
+export const getUserSettings = () => {
+  return clientManager.getUserSettings();
+};
+
+export const logout = () => {
+  return clientManager.logout();
+};
+
 export const postOpenEvent = params => {
   return clientManager.postOpenEvent(params);
 };
 
-export const removeDevice = deviceId => {
-  return clientManager.removeDevice(deviceId);
+export const removeDevice = params => {
+  return clientManager.removeDevice(params);
+};
+
+export const resendConfirmationEmail = () => {
+  return clientManager.resendConfirmationEmail();
 };
 
 export const postPeerEvent = params => {

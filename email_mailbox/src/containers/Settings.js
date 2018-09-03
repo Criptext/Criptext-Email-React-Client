@@ -5,14 +5,16 @@ import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataBase,
   composerEvents,
-  getDevices,
+  getUserSettings,
   LabelType,
+  logout,
   logoutApp,
   myAccount,
   openEmailInComposer,
   removeDevice,
   updateAccount,
-  updateNameEvent
+  updateNameEvent,
+  resendConfirmationEmail
 } from '../utils/electronInterface';
 import { appDomain, SocketCommand } from '../utils/const';
 
@@ -90,9 +92,17 @@ const mapDispatchToProps = dispatch => {
         }
       });
     },
-    onGetDevices: async () => {
-      const res = await getDevices();
-      return res.status === 200 ? formatDevicesData(res.body) : [];
+    onGetUserSettings: async () => {
+      const {
+        devices,
+        recoveryEmail,
+        recoveryEmailConfirmed
+      } = await getUserSettings();
+      return {
+        devices: formatDevicesData(devices),
+        recoveryEmail,
+        recoveryEmailConfirmed
+      };
     },
     onUpdateAccount: async params => {
       const recipientId = myAccount.recipientId;
@@ -113,8 +123,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(updateLabel(params));
     },
     onLogout: async () => {
-      const { deviceId } = myAccount;
-      const res = await removeDevice(deviceId);
+      const res = await logout();
       return res.status === 200;
     },
     onDeleteDeviceData: async () => {
@@ -123,9 +132,12 @@ const mapDispatchToProps = dispatch => {
     onRemoveLabel: labelId => {
       dispatch(removeLabel(String(labelId)));
     },
-    onRemoveDevice: async deviceId => {
-      const { status } = await removeDevice(deviceId);
+    onRemoveDevice: async params => {
+      const { status } = await removeDevice(params);
       return status === 200;
+    },
+    onResendConfirmationEmail: () => {
+      return resendConfirmationEmail();
     }
   };
 };

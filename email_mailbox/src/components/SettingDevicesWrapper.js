@@ -6,6 +6,7 @@ import {
   sendRemoveDeviceErrorMessage,
   sendRemoveDeviceSuccessMessage
 } from '../utils/electronEventInterface';
+import { hashPassword } from '../utils/hashUtils';
 
 class SettingDevicesWrapper extends Component {
   constructor(props) {
@@ -54,16 +55,22 @@ class SettingDevicesWrapper extends Component {
     });
   };
 
-  handleRemoveDevice = () => {
-    this.setState({ isHiddenRemoveDevicePopup: true }, async () => {
-      const { deviceId } = this.state;
-      const isSuccess = await this.props.onRemoveDevice({ deviceId });
-      if (isSuccess) {
-        sendRemoveDeviceSuccessMessage();
-      } else {
-        sendRemoveDeviceErrorMessage();
-      }
-    });
+  handleRemoveDevice = async () => {
+    const params = {
+      deviceId: this.state.deviceId,
+      password: hashPassword(this.state.password)
+    };
+    const isSuccess = await this.props.onRemoveDevice(params);
+    if (isSuccess) {
+      this.setState(
+        { isHiddenRemoveDevicePopup: true, deviceId: undefined, password: '' },
+        () => {
+          sendRemoveDeviceSuccessMessage();
+        }
+      );
+    } else {
+      sendRemoveDeviceErrorMessage();
+    }
   };
 }
 

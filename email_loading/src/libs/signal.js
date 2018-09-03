@@ -64,7 +64,9 @@ const createAccount = async ({
     jwt,
     privKey,
     pubKey,
-    registrationId
+    registrationId,
+    recoveryEmail,
+    recoveryEmailConfirmed: false
   });
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);

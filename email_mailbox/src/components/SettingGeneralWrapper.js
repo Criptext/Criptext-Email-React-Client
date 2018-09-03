@@ -3,8 +3,16 @@ import PropTypes from 'prop-types';
 import {
   myAccount,
   requiredMinLength,
-  changePassword
+  changePassword,
+  changeRecoveryEmail
 } from './../utils/electronInterface';
+import {
+  addEvent,
+  Event,
+  sendRecoveryEmailChangedSuccessMessage,
+  sendRecoveryEmailChangedErrorMessage,
+  sendRecoveryEmailLinkConfirmationSuccessMessage
+} from './../utils/electronEventInterface';
 import SettingGeneral from './SettingGeneral';
 import { EditorState } from 'draft-js';
 import {
@@ -17,14 +25,23 @@ import {
   sendChangePasswordSuccessMessage
 } from '../utils/electronEventInterface';
 import {
+  validateRecoveryEmail,
   validateFullname,
   validatePassword,
   validateConfirmPassword
 } from '../validators/validators';
 import { hashPassword } from '../utils/hashUtils';
+import { storeResendConfirmationTimestamp } from '../utils/storage';
 
-const inputNameModes = {
-  EDITING: 'editing',
+const EDITING_MODES = {
+  EDITING_NAME: 'editing-name',
+  NONE: 'none'
+};
+
+const SETTINGS_POPUP_TYPES = {
+  CHANGE_PASSWORD: 'change-password',
+  LOGOUT: 'logout',
+  CHANGE_RECOVERY_EMAIL: 'change-recovery-email',
   NONE: 'none'
 };
 
@@ -33,146 +50,340 @@ const changePasswordErrors = {
   MATCH: 'Passwords do not match'
 };
 
+const recoveryEmailErrors = {
+  INVALID_EMAIL_ADDRESS: 'Invalid email'
+};
+
 /* eslint-disable-next-line react/no-deprecated */
 class SettingGeneralWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDisabledChangePasswordButton: true,
-      isHiddenChangePasswordPopup: true,
-      mode: inputNameModes.NONE,
-      name: '',
-      confirmNewPasswordInput: {
-        name: 'confirmNewPasswordInput',
-        type: 'password',
-        icon: 'icon-not-show',
-        value: '',
-        errorMessage: '',
-        hasError: false
+      mode: EDITING_MODES.NONE,
+      isHiddenSettingsPopup: true,
+      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+      nameParams: {
+        name: myAccount.name
       },
-      newPasswordInput: {
-        name: 'newPasswordInput',
-        type: 'password',
-        icon: 'icon-not-show',
-        value: '',
-        errorMessage: '',
-        hasError: false
+      signatureParams: {
+        signature: EditorState.createEmpty(),
+        signatureEnabled: undefined
       },
-      oldPasswordInput: {
-        name: 'oldPasswordInput',
-        type: 'password',
-        icon: 'icon-not-show',
-        value: '',
-        errorMessage: '',
-        hasError: false
+      changePasswordPopupParams: {
+        isDisabledSubmitButton: true,
+        confirmNewPasswordInput: {
+          name: 'confirmNewPasswordInput',
+          type: 'password',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        },
+        newPasswordInput: {
+          name: 'newPasswordInput',
+          type: 'password',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        },
+        oldPasswordInput: {
+          name: 'oldPasswordInput',
+          type: 'password',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        }
       },
-      signatureEnabled: undefined,
-      signature: EditorState.createEmpty()
+      recoveryEmailParams: {
+        recoveryEmail: props.recoveryEmail,
+        recoveryEmailConfirmed: props.recoveryEmailConfirmed,
+        isDisabledResend: false,
+        resendLinkText: 'Resend Link',
+        resendCountdown: null
+      },
+      changeRecoveryEmailPopupParams: {
+        isDisabledSubmitButton: true,
+        recoveryEmailInput: {
+          name: 'recoveryEmailInput',
+          type: 'text',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        },
+        recoveryEmailPasswordInput: {
+          name: 'recoveryEmailPasswordInput',
+          type: 'password',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        }
+      }
     };
+    this.initEventHandlers();
   }
 
   render() {
     return (
       <SettingGeneral
-        confirmNewPasswordInput={this.state.confirmNewPasswordInput}
-        isDisabledChangePasswordButton={
-          this.state.isDisabledChangePasswordButton
+        isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
+        name={this.state.nameParams.name}
+        recoveryEmailPopupInputEmail={
+          this.state.changeRecoveryEmailPopupParams.recoveryEmailInput
         }
-        isHiddenChangePasswordPopup={this.state.isHiddenChangePasswordPopup}
+        recoveryEmailPopupInputPassword={
+          this.state.changeRecoveryEmailPopupParams.recoveryEmailPasswordInput
+        }
+        oldPasswordInput={this.state.changePasswordPopupParams.oldPasswordInput}
+        newPasswordInput={this.state.changePasswordPopupParams.newPasswordInput}
+        confirmNewPasswordInput={
+          this.state.changePasswordPopupParams.confirmNewPasswordInput
+        }
+        isDisabledChangePasswordSubmitButton={
+          this.state.changePasswordPopupParams.isDisabledSubmitButton
+        }
+        isDisabledChangeRecoveryEmailSubmitButton={
+          this.state.changeRecoveryEmailPopupParams.isDisabledSubmitButton
+        }
         mode={this.state.mode}
-        name={this.state.name}
-        newPasswordInput={this.state.newPasswordInput}
-        oldPasswordInput={this.state.oldPasswordInput}
         onAddNameInputKeyPressed={this.handleAddNameInputKeyPressed}
-        onBlurInputName={this.handleBlurInputName}
-        onChangeInputName={this.handleChangeInputName}
-        onChangeInputValueChangePassword={
-          this.handleChangeInputValueChangePassword
+        onAddRecoveryEmailInputKeyPressed={
+          this.handleAddRecoveryEmailInputKeyPressed
         }
-        onChangeTextareaSignature={this.handleChangeTextareaSignature}
+        onBlurInputName={this.handleBlurInputName}
+        onBlurInputRecoveryEmail={this.handleBlurInputRecoveryEmail}
+        onChangeInputName={this.handleChangeInputName}
+        onChangeInputRecoveryEmail={this.handleChangeInputRecoveryEmail}
+        onChangeInputValueChangePassword={
+          this.handleChangeInputValueOnChangePasswordPopup
+        }
         onChangeRadioButtonSignature={this.handleChangeRadioButtonSignature}
+        onChangeTextareaSignature={this.handleChangeTextareaSignature}
         onClickCancelChangePassword={this.handleClickCancelChangePassword}
         onClickChangePasswordButton={this.handleClickChangePasswordButton}
         onClickChangePasswordInputType={this.handleClickChangePasswordInputType}
         onClickEditName={this.handleClickEditName}
+        onClickChangeRecoveryEmail={this.handleClickChangeRecoveryEmail}
         onClickLogout={this.handleClickLogout}
         onConfirmChangePassword={this.handleConfirmChangePassword}
-        signatureEnabled={this.state.signatureEnabled}
-        signature={this.state.signature}
+        onConfirmChangeRecoveryEmail={this.handleConfirmChangeRecoveryEmail}
+        recoveryEmail={this.state.recoveryEmailParams.recoveryEmail}
+        recoveryEmailConfirmed={
+          this.state.recoveryEmailParams.recoveryEmailConfirmed
+        }
+        isDisabledResend={this.state.recoveryEmailParams.isDisabledResend}
+        resendLinkText={this.state.recoveryEmailParams.resendLinkText}
+        onClickResendConfirmationLink={this.handleClickResendConfirmationLink}
+        onResendConfirmationCountdownEnd={
+          this.handleResendConfirmationCountdownEnd
+        }
+        resendCountdown={this.state.recoveryEmailParams.resendCountdown}
+        settingsPupopType={this.state.settingsPupopType}
+        signatureEnabled={this.state.signatureParams.signatureEnabled}
+        signature={this.state.signatureParams.signature}
+        onChangeInputValueOnChangeRecoveryEmailPopup={
+          this.handleChangeInputValueOnChangeRecoveryEmailPopup
+        }
+        onClickCancelChangeRecoveryEmail={
+          this.handleClickCancelChangeRecoveryEmail
+        }
+        onClickChangeRecoveryEmailInputType={
+          this.handleClickChangeRecoveryEmailInputType
+        }
       />
     );
   }
 
-  componentDidMount() {
-    const signature = parseSignatureHtmlToEdit(myAccount.signature);
-    this.setState({
-      name: myAccount.name,
-      signature,
+  componentWillMount() {
+    const signatureParams = {
+      signature: parseSignatureHtmlToEdit(myAccount.signature),
       signatureEnabled: !!myAccount.signatureEnabled
+    };
+    this.setState({ signatureParams });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const newParams = {};
+    if (
+      nextProps.recoveryEmail &&
+      this.state.recoveryEmail !== nextProps.recoveryEmail
+    )
+      newParams.recoveryEmail = nextProps.recoveryEmail;
+    if (this.state.recoveryEmailConfirmed !== nextProps.recoveryEmailConfirmed)
+      newParams.recoveryEmailConfirmed = nextProps.recoveryEmailConfirmed;
+    this.setState({
+      recoveryEmailParams: {
+        ...this.state.recoveryEmailParams,
+        ...newParams
+      }
     });
   }
 
   handleBlurInputName = e => {
     const currentTarget = e.currentTarget;
     if (!currentTarget.contains(document.activeElement)) {
+      const nameParams = { name: myAccount.name };
       this.setState({
-        mode: inputNameModes.NONE
+        mode: EDITING_MODES.NONE,
+        nameParams
       });
     }
   };
 
   handleClickCancelChangePassword = () => {
     this.setState({
-      isHiddenChangePasswordPopup: true,
-      confirmNewPasswordInput: {
-        name: 'confirmNewPasswordInput',
-        type: 'password',
-        icon: 'icon-not-show',
-        value: '',
-        errorMessage: '',
-        hasError: false
-      },
-      newPasswordInput: {
-        name: 'newPasswordInput',
-        type: 'password',
-        icon: 'icon-not-show',
-        value: '',
-        errorMessage: '',
-        hasError: false
-      },
-      oldPasswordInput: {
-        name: 'oldPasswordInput',
-        type: 'password',
-        icon: 'icon-not-show',
-        value: '',
-        errorMessage: '',
-        hasError: false
+      isHiddenSettingsPopup: true,
+      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+      changePasswordPopupParams: {
+        isDisabledSubmitButton: true,
+        confirmNewPasswordInput: {
+          name: 'confirmNewPasswordInput',
+          type: 'password',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        },
+        newPasswordInput: {
+          name: 'newPasswordInput',
+          type: 'password',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        },
+        oldPasswordInput: {
+          name: 'oldPasswordInput',
+          type: 'password',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        }
+      }
+    });
+  };
+
+  handleClickCancelChangeRecoveryEmail = () => {
+    this.setState({
+      isHiddenSettingsPopup: true,
+      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+      changeRecoveryEmailPopupParams: {
+        isDisabledSubmitButton: true,
+        recoveryEmailInput: {
+          name: 'recoveryEmailInput',
+          type: 'text',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        },
+        recoveryEmailPasswordInput: {
+          name: 'recoveryEmailPasswordInput',
+          type: 'password',
+          icon: 'icon-not-show',
+          value: '',
+          errorMessage: '',
+          hasError: true
+        }
       }
     });
   };
 
   handleClickChangePasswordButton = () => {
-    this.setState({ isHiddenChangePasswordPopup: false });
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPupopType: SETTINGS_POPUP_TYPES.CHANGE_PASSWORD
+    });
   };
 
   handleClickEditName = () => {
-    this.setState({ mode: inputNameModes.EDITING });
+    this.setState({ mode: EDITING_MODES.EDITING_NAME });
+  };
+
+  handleClickChangeRecoveryEmail = () => {
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPupopType: SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL
+    });
+  };
+
+  handleClickResendConfirmationLink = () => {
+    this.props.onResendConfirmationEmail();
+    const countdown = Date.now() + 1 * 60 * 1000;
+    this.setState(
+      {
+        recoveryEmailParams: {
+          ...this.state.recoveryEmailParams,
+          isDisabledResend: true,
+          resendCountdown: countdown
+        }
+      },
+      () => {
+        storeResendConfirmationTimestamp(countdown);
+        sendRecoveryEmailLinkConfirmationSuccessMessage();
+      }
+    );
+  };
+
+  handleResendConfirmationCountdownEnd = () => {
+    this.setState(
+      {
+        recoveryEmailParams: {
+          ...this.state.recoveryEmailParams,
+          isDisabledResend: false
+        }
+      },
+      () => {
+        storeResendConfirmationTimestamp(null);
+      }
+    );
   };
 
   handleChangeInputName = ev => {
-    this.setState({ name: ev.target.value });
+    this.setState({
+      nameParams: {
+        name: ev.target.value.trim()
+      }
+    });
   };
 
-  handleChangeInputValueChangePassword = ev => {
+  handleChangeInputValueOnChangePasswordPopup = ev => {
     const value = ev.target.value.trim();
     const name = ev.target.getAttribute('name');
     const { hasError, errorMessage } = this.checkInputError(name, value);
-    const newState = {
-      ...this.state,
-      [name]: { ...this.state[name], value, hasError, errorMessage }
+    const changePasswordPopupParams = {
+      ...this.state.changePasswordPopupParams,
+      [name]: {
+        ...this.state.changePasswordPopupParams[name],
+        value,
+        hasError,
+        errorMessage
+      }
     };
-    this.setState(newState, () => {
+    this.setState({ changePasswordPopupParams }, () => {
       this.checkDisabledChangePasswordButton();
+    });
+  };
+
+  handleChangeInputValueOnChangeRecoveryEmailPopup = ev => {
+    const value = ev.target.value.trim();
+    const name = ev.target.getAttribute('name');
+    const { hasError, errorMessage } = this.checkInputError(name, value);
+    const changeRecoveryEmailPopupParams = {
+      ...this.state.changeRecoveryEmailPopupParams,
+      [name]: {
+        ...this.state.changeRecoveryEmailPopupParams[name],
+        value,
+        hasError,
+        errorMessage
+      }
+    };
+    this.setState({ changeRecoveryEmailPopupParams }, () => {
+      this.checkDisabledRecoveryEmailPopupButton();
     });
   };
 
@@ -197,11 +408,21 @@ class SettingGeneralWrapper extends Component {
           };
         }
         const isMatched = validateConfirmPassword(
-          this.state.newPasswordInput.value,
+          this.state.changePasswordPopupParams.newPasswordInput.value,
           value
         );
         const errorMessage = changePasswordErrors.MATCH;
         return { hasError: !isMatched, errorMessage };
+      }
+      case 'recoveryEmailInput': {
+        const isValid = validateRecoveryEmail(value);
+        const errorMessage = recoveryEmailErrors.INVALID_EMAIL_ADDRESS;
+        return { hasError: !isValid, errorMessage };
+      }
+      case 'recoveryEmailPasswordInput': {
+        const isValid = validatePassword(value);
+        const errorMessage = changePasswordErrors.LENGTH;
+        return { hasError: !isValid, errorMessage };
       }
       default:
         break;
@@ -210,22 +431,60 @@ class SettingGeneralWrapper extends Component {
 
   checkDisabledChangePasswordButton = () => {
     const isDisabled =
-      this.state.oldPasswordInput.hasError ||
-      this.state.newPasswordInput.hasError ||
-      this.state.confirmNewPasswordInput.hasError;
-    this.setState({ isDisabledChangePasswordButton: isDisabled });
+      this.state.changePasswordPopupParams.oldPasswordInput.hasError ||
+      this.state.changePasswordPopupParams.newPasswordInput.hasError ||
+      this.state.changePasswordPopupParams.confirmNewPasswordInput.hasError;
+    const changePasswordPopupParams = {
+      ...this.state.changePasswordPopupParams,
+      isDisabledSubmitButton: isDisabled
+    };
+    this.setState({ changePasswordPopupParams });
+  };
+
+  checkDisabledRecoveryEmailPopupButton = () => {
+    const isDisabled =
+      this.state.changeRecoveryEmailPopupParams.recoveryEmailInput.hasError ||
+      this.state.changeRecoveryEmailPopupParams.recoveryEmailPasswordInput
+        .hasError;
+    const changeRecoveryEmailPopupParams = {
+      ...this.state.changeRecoveryEmailPopupParams,
+      isDisabledSubmitButton: isDisabled
+    };
+    this.setState({ changeRecoveryEmailPopupParams });
   };
 
   handleClickChangePasswordInputType = name => {
     const [type, icon] =
-      this.state[name].type === 'password'
+      this.state.changePasswordPopupParams[name].type === 'password'
         ? ['text', 'icon-show']
         : ['password', 'icon-not-show'];
-    const newState = {
-      ...this.state,
-      [name]: { ...this.state[name], type, icon }
+
+    const changePasswordPopupParams = {
+      ...this.state.changePasswordPopupParams,
+      [name]: {
+        ...this.state.changePasswordPopupParams[name],
+        type,
+        icon
+      }
     };
-    this.setState(newState);
+    this.setState({ changePasswordPopupParams });
+  };
+
+  handleClickChangeRecoveryEmailInputType = name => {
+    const [type, icon] =
+      this.state.changeRecoveryEmailPopupParams[name].type === 'password'
+        ? ['text', 'icon-show']
+        : ['password', 'icon-not-show'];
+
+    const changeRecoveryEmailPopupParams = {
+      ...this.state.changeRecoveryEmailPopupParams,
+      [name]: {
+        ...this.state.changeRecoveryEmailPopupParams[name],
+        type,
+        icon
+      }
+    };
+    this.setState({ changeRecoveryEmailPopupParams });
   };
 
   handleAddNameInputKeyPressed = async e => {
@@ -233,30 +492,34 @@ class SettingGeneralWrapper extends Component {
     const isValidName = validateFullname(inputValue);
     if (e.key === 'Enter' && inputValue !== '' && isValidName) {
       await this.props.onUpdateAccount({ name: inputValue });
+      const nameParams = { name: inputValue };
       this.setState({
-        name: myAccount.name,
-        mode: inputNameModes.NONE
+        nameParams,
+        mode: EDITING_MODES.NONE
       });
     }
   };
 
   handleConfirmChangePassword = async () => {
     const params = {
-      oldPassword: hashPassword(this.state.oldPasswordInput.value),
-      newPassword: hashPassword(this.state.newPasswordInput.value)
+      oldPassword: hashPassword(
+        this.state.changePasswordPopupParams.oldPasswordInput.value
+      ),
+      newPassword: hashPassword(
+        this.state.changePasswordPopupParams.newPasswordInput.value
+      )
     };
     const { status } = await changePassword(params);
     if (status === 400) {
-      const oldPasswordInput = {
-        ...this.state.oldPasswordInput,
-        hasError: true,
-        errorMessage: 'Wrong password'
+      const changePasswordPopupParams = {
+        ...this.state.changePasswordPopupParams,
+        oldPasswordInput: {
+          ...this.state.changePasswordPopupParams.oldPasswordInput,
+          hasError: true,
+          errorMessage: 'Wrong password'
+        }
       };
-      const newState = {
-        ...this.state,
-        oldPasswordInput
-      };
-      return this.setState(newState);
+      return this.setState({ changePasswordPopupParams });
     }
     if (status === 200) {
       sendChangePasswordSuccessMessage();
@@ -265,8 +528,67 @@ class SettingGeneralWrapper extends Component {
     sendChangePasswordErrorMessage();
   };
 
+  handleConfirmChangeRecoveryEmail = async () => {
+    const email = this.state.changeRecoveryEmailPopupParams.recoveryEmailInput
+      .value;
+    const params = {
+      email,
+      password: hashPassword(
+        this.state.changeRecoveryEmailPopupParams.recoveryEmailPasswordInput
+          .value
+      )
+    };
+    const WRONG_PASSWORD_STATUS = 400;
+    const INVALID_EMAIL_STATUS = 422;
+    const SUCCESS_STATUS = 200;
+    let errorMessage = '';
+    let inputName = '';
+
+    const { status } = await changeRecoveryEmail(params);
+    if (status === SUCCESS_STATUS) {
+      await this.props.onUpdateAccount({
+        recoveryEmail: email,
+        recoveryEmailConfirmed: false
+      });
+      return this.setState(
+        {
+          recoveryEmailParams: {
+            recoveryEmail: email,
+            recoveryEmailConfirmed: false
+          }
+        },
+        () => {
+          this.handleClickCancelChangeRecoveryEmail();
+          sendRecoveryEmailChangedSuccessMessage();
+        }
+      );
+    }
+    if (status === WRONG_PASSWORD_STATUS) {
+      errorMessage = 'Wrong password';
+      inputName = 'recoveryEmailPasswordInput';
+    }
+    if (status === INVALID_EMAIL_STATUS) {
+      errorMessage = 'Invalid email';
+      inputName = 'recoveryEmailInput';
+    }
+    const changeRecoveryEmailPopupParams = {
+      ...this.state.changeRecoveryEmailPopupParams,
+      [inputName]: {
+        ...this.state.changeRecoveryEmailPopupParams[inputName],
+        hasError: true,
+        errorMessage
+      }
+    };
+    this.setState({ changeRecoveryEmailPopupParams });
+    sendRecoveryEmailChangedErrorMessage();
+  };
+
   handleChangeTextareaSignature = signatureContent => {
-    this.setState({ signature: signatureContent }, async () => {
+    const signatureParams = {
+      ...this.state.signatureParams,
+      signature: signatureContent
+    };
+    this.setState({ signatureParams }, async () => {
       const htmlSignature = parseSignatureContentToHtml(signatureContent);
       await this.props.onUpdateAccount({ signature: htmlSignature });
     });
@@ -274,7 +596,11 @@ class SettingGeneralWrapper extends Component {
 
   handleChangeRadioButtonSignature = async value => {
     await this.props.onUpdateAccount({ signatureEnabled: value });
-    this.setState({ signatureEnabled: value });
+    const signatureParams = {
+      ...this.state.signatureParams,
+      signatureEnabled: value
+    };
+    this.setState({ signatureParams });
   };
 
   handleClickLogout = async () => {
@@ -285,12 +611,39 @@ class SettingGeneralWrapper extends Component {
       sendRemoveDeviceErrorMessage();
     }
   };
+
+  initEventHandlers = () => {
+    addEvent(Event.RECOVERY_EMAIL_CHANGED, recoveryEmail => {
+      this.setState({
+        recoveryEmailParams: {
+          recoveryEmail: recoveryEmail,
+          recoveryEmailConfirmed: false
+        }
+      });
+    });
+
+    addEvent(Event.RECOVERY_EMAIL_CONFIRMED, () => {
+      this.setState({
+        recoveryEmailParams: {
+          ...this.state.recoveryEmailParams,
+          recoveryEmailConfirmed: true
+        }
+      });
+    });
+  };
 }
 
 SettingGeneralWrapper.propTypes = {
   onDeleteDeviceData: PropTypes.func,
   onLogout: PropTypes.func,
-  onUpdateAccount: PropTypes.func
+  onResendConfirmationEmail: PropTypes.func,
+  onUpdateAccount: PropTypes.func,
+  recoveryEmail: PropTypes.string,
+  recoveryEmailConfirmed: PropTypes.bool
 };
 
-export { SettingGeneralWrapper as default, inputNameModes };
+export {
+  SettingGeneralWrapper as default,
+  EDITING_MODES,
+  SETTINGS_POPUP_TYPES
+};

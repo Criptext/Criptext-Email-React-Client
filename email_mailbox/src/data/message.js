@@ -62,6 +62,14 @@ const messagesContent = {
     changePassword: {
       priority: messagePriorities.MEDIUM,
       description: 'Password changed'
+    },
+    recoveryEmailChanged: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Recovery email changed'
+    },
+    recoveryEmailLinkConfirmation: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Confirmation link sent. Check your inbox and confirm'
     }
   },
   error: {
@@ -100,6 +108,15 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description:
         'Failed to change password. The password has not been modified'
+    },
+    recoveryEmailChanged: {
+      priority: messagePriorities.MEDIUM,
+      description:
+        'Failed to change recovery email. Check your connection and try again'
+    },
+    recoveryEmailLinkConfirmation: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Failed to send confirmation link'
     }
   },
   establish: {

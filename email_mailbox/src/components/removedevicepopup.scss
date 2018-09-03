@@ -1,6 +1,6 @@
 .logout-popup-content {
   width: 270px;
-  height: 220px;
+  height: 260px;
   border-radius: 5px;
   background-color: #ffffff;
   box-shadow: 0 1px 16px 0 rgba(143, 143, 143, 0.2);
@@ -27,15 +27,9 @@
     font-weight: bolder;
     color: #000000;
     margin-bottom: 7px;
-    &.hidden {
-      display: none;
-    }
   }
   .logout-popup-password-input {
     margin-bottom: 25px;
-    &.hidden {
-      display: none;
-    }
 
     input {
       width: 70%;
@@ -50,7 +44,7 @@
   }
   .logout-popup-buttons {
     position: absolute;
-    bottom: 12%;
+    bottom: 7%;
     right: 18%;
 
     & > .button {

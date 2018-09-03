@@ -5,25 +5,17 @@ import './changepasswordpopup.css';
 const ChangePasswordPopup = props => {
   return (
     <div className="change-password-popup-content">
-      <ChangePasswordPopupTitle />
-      <ChangePasswordPopupText />
+      <div className="change-password-popup-title">
+        <h1>Change Password</h1>
+      </div>
+      <div className="change-password-popup-text">
+        <span>Enter your password then your new password and confirm it</span>
+      </div>
       <ChangePasswordPopupInputs {...props} />
       <ChangePasswordPopupButtons {...props} />
     </div>
   );
 };
-
-const ChangePasswordPopupTitle = () => (
-  <div className="change-password-popup-title">
-    <h1>Change Password</h1>
-  </div>
-);
-
-const ChangePasswordPopupText = () => (
-  <div className="change-password-popup-text">
-    <span>Enter your password then your new password and confirm it</span>
-  </div>
-);
 
 const ChangePasswordPopupInputs = props => {
   return (
@@ -110,7 +102,7 @@ const ChangePasswordPopupButtons = props => (
     <button
       className="button button-a change-password-confirm-button"
       onClick={props.onConfirmChangePassword}
-      disabled={props.isDisabledChangePasswordButton}
+      disabled={props.isDisabledChangePasswordSubmitButton}
     >
       Confim
     </button>
@@ -138,7 +130,7 @@ ChangePasswordPopupInput.propTypes = {
 };
 
 ChangePasswordPopupButtons.propTypes = {
-  isDisabledChangePasswordButton: PropTypes.bool,
+  isDisabledChangePasswordSubmitButton: PropTypes.bool,
   onConfirmChangePassword: PropTypes.func,
   onClickCancelChangePassword: PropTypes.func
 };

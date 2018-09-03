@@ -3,29 +3,35 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { Editor } from 'react-draft-wysiwyg';
+import Countdown from 'react-countdown-now';
 import PopupHOC from './PopupHOC';
 import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain } from '../utils/const';
 import { usefulLinks } from '../utils/const';
-import { inputNameModes } from './SettingGeneralWrapper';
+import { EDITING_MODES, SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
 import './settinggeneral.css';
 import './signatureeditor.css';
 import ChangePasswordPopup from './ChangePasswordPopup';
+import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
+import { getResendConfirmationTimestamp } from '../utils/storage';
 
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
+const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
 
 const SettingGeneral = props => (
   <div id="setting-general">
-    {renderProfileBlock(props)}
-    {renderPasswordBlock(props)}
-    {renderLogoutAccountBlock(props)}
-    {renderLanguageBlock()}
-    {renderUsefulLinksBlock()}
+    <ProfileBlock {...props} />
+    <PasswordBlock {...props} />
+    <RecoveryEmailBlock {...props} />
+    <LogoutAccountBlock {...props} />
+    <LanguageBlock />
+    <UsefulLinksBlock />
+    <SettingsPopup {...props} />
   </div>
 );
 
-const renderProfileBlock = props => (
+const ProfileBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
       <h1>Profile</h1>
@@ -50,7 +56,7 @@ const renderBlockEmail = () => (
 const renderBlockName = props => (
   <div className="section-block-content-item" onBlur={props.onBlurInputName}>
     <span className="section-block-content-item-title">Name</span>
-    {props.mode === inputNameModes.EDITING ? (
+    {props.mode === EDITING_MODES.EDITING_NAME ? (
       <div>
         <input
           type="text"
@@ -136,41 +142,25 @@ const renderBlockSignature = props => (
   </div>
 );
 
-const renderPasswordBlock = props => {
-  return (
-    <div className="section-block">
-      <div className="section-block-title">
-        <h1>Password</h1>
-      </div>
-      <div className="section-block-content">
-        <div className="section-block-content-item">
-          <button
-            className="button button-a button-reset-password"
-            onClick={props.onClickChangePasswordButton}
-          >
-            <span>Change password</span>
-          </button>
-        </div>
-      </div>
-      {renderChangePasswordPopup(props)}
+const PasswordBlock = props => (
+  <div className="section-block">
+    <div className="section-block-title">
+      <h1>Password</h1>
     </div>
-  );
-};
+    <div className="section-block-content">
+      <div className="section-block-content-item">
+        <button
+          className="button button-a button-reset-password"
+          onClick={props.onClickChangePasswordButton}
+        >
+          <span>Change password</span>
+        </button>
+      </div>
+    </div>
+  </div>
+);
 
-const renderChangePasswordPopup = props => {
-  return (
-    !props.isHiddenChangePasswordPopup && (
-      <Changepasswordpopup
-        isHidden={props.isHiddenChangePasswordPopup}
-        onTogglePopup={props.onClickCancelChangePassword}
-        popupPosition={{ left: '45%', top: '45%' }}
-        {...props}
-      />
-    )
-  );
-};
-
-const renderLogoutAccountBlock = props => (
+const LogoutAccountBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
       <h1>Logout Account</h1>
@@ -186,7 +176,93 @@ const renderLogoutAccountBlock = props => (
   </div>
 );
 
-const renderLanguageBlock = () => (
+const RecoveryEmailBlock = props => (
+  <div className="section-block">
+    <div className="section-block-title">
+      <h1>Recovery email</h1>
+    </div>
+    <div className="section-block-content">
+      <div className="section-block-content-item content-recovery-email">
+        <div className="recovery-email">
+          <span className="address">
+            {props.recoveryEmail || 'Recovery email not configured'}
+          </span>
+          {!props.recoveryEmail && <SetRecoveryEmailLink {...props} />}
+          {props.recoveryEmail && (
+            <div>
+              <RecoveryEmailConfirmationMessage
+                recoveryEmailConfirmed={props.recoveryEmailConfirmed}
+              />
+              <ChangeRecoveryEmailLink {...props} />
+              {!props.recoveryEmailConfirmed && (
+                <ResendConfirmationRecoveryEmailLink {...props} />
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const SetRecoveryEmailLink = ({ onClickChangeRecoveryEmail }) => (
+  <span className="recovery-email-link" onClick={onClickChangeRecoveryEmail}>
+    Set Email
+  </span>
+);
+
+const ChangeRecoveryEmailLink = ({ onClickChangeRecoveryEmail }) => (
+  <span className="recovery-email-link" onClick={onClickChangeRecoveryEmail}>
+    Change
+  </span>
+);
+
+const ResendConfirmationRecoveryEmailLink = ({
+  onClickResendConfirmationLink,
+  isDisabledResend,
+  onResendConfirmationCountdownEnd,
+  resendCountdown
+}) => {
+  const date = resendCountdown || getResendConfirmationTimestamp();
+  const disabled = isDisabledResend || date;
+  return (
+    <span
+      className={`recovery-email-link ${disabled ? 'disabled' : ''}`}
+      onClick={onClickResendConfirmationLink}
+    >
+      <Countdown
+        date={date}
+        renderer={renderer}
+        onComplete={onResendConfirmationCountdownEnd}
+      />
+    </span>
+  );
+};
+
+const renderer = ({ minutes, seconds, completed }) => {
+  if (completed || minutes === 'NaN' || seconds === 'NaN') {
+    return 'Resend Link';
+  }
+  return `Resend Link in (${minutes}:${seconds})`;
+};
+
+const RecoveryEmailConfirmationMessage = ({ recoveryEmailConfirmed }) => {
+  return recoveryEmailConfirmed ? (
+    <span className="recovery-email-confirmation-section recovery-email-confirmed">
+      <div className="icon-container" />
+      <i className="icon-check" />
+      <span className="text">Verified</span>
+    </span>
+  ) : (
+    <span className="recovery-email-confirmation-section recovery-email-not-confirmed">
+      <div className="icon-container" />
+      <i className="icon-exit" />
+      <span className="text">Not confirmed</span>
+    </span>
+  );
+};
+
+const LanguageBlock = () => (
   <div className="section-block">
     <div className="section-block-title">
       <h1>Language</h1>
@@ -199,7 +275,7 @@ const renderLanguageBlock = () => (
   </div>
 );
 
-const renderUsefulLinksBlock = () => (
+const UsefulLinksBlock = () => (
   <div className="section-block">
     <div className="section-block-title">
       <h1>Useful Links</h1>
@@ -235,6 +311,35 @@ const renderUsefulLinksBlock = () => (
   </div>
 );
 
+const SettingsPopup = props => {
+  const type = props.settingsPupopType;
+  const isHidden = props.isHiddenSettingsPopup;
+  switch (type) {
+    case SETTINGS_POPUP_TYPES.CHANGE_PASSWORD: {
+      return (
+        <Changepasswordpopup
+          isHidden={isHidden}
+          onTogglePopup={props.onClickCancelChangePassword}
+          popupPosition={{ left: '45%', top: '45%' }}
+          {...props}
+        />
+      );
+    }
+    case SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL: {
+      return (
+        <Changerecoveryemailpopup
+          isHidden={isHidden}
+          onTogglePopup={props.onClickCancelChangePassword}
+          popupPosition={{ left: '45%', top: '45%' }}
+          {...props}
+        />
+      );
+    }
+    default:
+      return null;
+  }
+};
+
 renderBlockName.propTypes = {
   mode: PropTypes.string,
   name: PropTypes.string,
@@ -250,17 +355,49 @@ renderBlockSignature.propTypes = {
   signature: PropTypes.string
 };
 
-renderPasswordBlock.propTypes = {
+PasswordBlock.propTypes = {
   onClickChangePasswordButton: PropTypes.func
 };
 
-renderChangePasswordPopup.propTypes = {
-  isHiddenChangePasswordPopup: PropTypes.bool,
+SettingsPopup.propTypes = {
+  isHiddenSettingsPopup: PropTypes.bool,
+  settingsPupopType: PropTypes.string,
   onClickCancelChangePassword: PropTypes.func
 };
 
-renderLogoutAccountBlock.propTypes = {
+LogoutAccountBlock.propTypes = {
   onClickLogout: PropTypes.func
+};
+
+RecoveryEmailBlock.propTypes = {
+  isDisabledResendConfirmationLink: PropTypes.bool,
+  mode: PropTypes.string,
+  onAddRecoveryEmailInputKeyPressed: PropTypes.func,
+  onBlurInputRecoveryEmail: PropTypes.func,
+  onChangeInputRecoveryEmail: PropTypes.func,
+  onClickEditRecoveryEmail: PropTypes.func,
+  recoveryEmail: PropTypes.string,
+  recoveryEmailConfirmed: PropTypes.bool,
+  resendLinkText: PropTypes.string
+};
+
+SetRecoveryEmailLink.propTypes = {
+  onClickChangeRecoveryEmail: PropTypes.func
+};
+
+ChangeRecoveryEmailLink.propTypes = {
+  onClickChangeRecoveryEmail: PropTypes.func
+};
+
+ResendConfirmationRecoveryEmailLink.propTypes = {
+  isDisabledResend: PropTypes.bool,
+  onClickResendConfirmationLink: PropTypes.func,
+  onResendConfirmationCountdownEnd: PropTypes.func,
+  resendCountdown: PropTypes.string
+};
+
+RecoveryEmailConfirmationMessage.propTypes = {
+  recoveryEmailConfirmed: PropTypes.bool
 };
 
 export default SettingGeneral;

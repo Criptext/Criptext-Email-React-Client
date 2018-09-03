@@ -12,10 +12,10 @@ const RemoveDevicePopup = props => {
         Removing access will automatically sign you out of your account on this
         device.
       </div>
-      <div className="logout-popup-password-text hidden">
+      <div className="logout-popup-password-text">
         To confirm enter your password
       </div>
-      <div className="logout-popup-password-input hidden">
+      <div className="logout-popup-password-input">
         <input
           type="password"
           value={props.password}
@@ -32,6 +32,7 @@ const RemoveDevicePopup = props => {
         <button
           className="button button-a logout-remove-button"
           onClick={props.onRemoveDevice}
+          disabled={!props.password.length || props.password.length < 1}
         >
           Remove
         </button>

@@ -60,3 +60,12 @@ export const storeSeenTimestamp = () => {
 export const getSeenTimestamp = () => {
   return localStorage.getItem('seenTimestamp') || null;
 };
+
+export const storeResendConfirmationTimestamp = miliseconds => {
+  localStorage.setItem('resendConfirmationTimestamp', miliseconds);
+};
+
+export const getResendConfirmationTimestamp = () => {
+  const timestamp = Number(localStorage.getItem('resendConfirmationTimestamp'));
+  return isNaN(timestamp) ? null : timestamp;
+};

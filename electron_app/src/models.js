@@ -1,3 +1,4 @@
+const knex = require('knex');
 const path = require('path');
 const { app } = require('electron');
 
@@ -30,6 +31,15 @@ const MEDIUM_STRING_SIZE = 64;
 const LARGE_STRING_SIZE = 100;
 const XLARGE_STRING_SIZE = 200;
 
+const fieldTypes = {
+  TINY_STRING_SIZE,
+  XSMALL_STRING_SIZE,
+  SMALL_STRING_SIZE,
+  MEDIUM_STRING_SIZE,
+  LARGE_STRING_SIZE,
+  XLARGE_STRING_SIZE
+};
+
 const Table = {
   EMAIL: 'email',
   LABEL: 'label',
@@ -46,13 +56,24 @@ const Table = {
   IDENTITYKEYRECORD: 'identitykeyrecord'
 };
 
-const db = require('knex')({
+const dbConfiguration = {
   client: 'sqlite3',
   connection: {
     filename: myDBPath
   },
   useNullAsDefault: false
-});
+};
+
+const migrationConfig = Object.assign(
+  {
+    directory: path.join(__dirname, '/migrations'),
+    tableName: 'migrations',
+    loadExtensions: ['.js']
+  },
+  dbConfiguration
+);
+
+const db = knex(dbConfiguration);
 
 const cleanDataBase = () => {
   return db.schema
@@ -196,6 +217,8 @@ const createAccountColumns = table => {
     .defaultTo(false);
   table.string('signature', XLARGE_STRING_SIZE).defaultTo('');
   table.boolean('signatureEnabled').defaultTo(false);
+  table.string('recoveryEmail', MEDIUM_STRING_SIZE).defaultTo('');
+  table.boolean('recoveryEmailConfirmed').defaultTo(false);
 };
 
 const createFeedItemColumns = table => {
@@ -274,11 +297,17 @@ const createTables = async () => {
       .createTable(Table.SESSIONRECORD, createSessionRecordColumns)
       .createTable(Table.IDENTITYKEYRECORD, createIdentityKeyRecordColumns);
   }
+  await migrateDatabase();
+};
+
+const migrateDatabase = async () => {
+  await db.migrate.latest(migrationConfig);
 };
 
 module.exports = {
   db,
   cleanDataBase,
   createTables,
-  Table
+  Table,
+  fieldTypes
 };

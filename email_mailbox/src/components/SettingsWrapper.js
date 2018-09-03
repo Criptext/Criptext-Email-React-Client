@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Settings from './Settings';
+import { myAccount } from '../utils/electronInterface';
 
 class SettingsWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       sectionSelected: 'general',
-      devices: []
+      devices: [],
+      recoveryEmail: myAccount.recoveryEmail,
+      recoveryEmailConfirmed: !!myAccount.recoveryEmailConfirmed
     };
   }
 
@@ -19,22 +22,41 @@ class SettingsWrapper extends Component {
         onClickContactSupport={this.props.onComposeContactSupportEmail}
         onClickSection={this.handleClickSection}
         onRemoveDevice={this.handleRemoveDevice}
+        recoveryEmail={this.state.recoveryEmail}
+        recoveryEmailConfirmed={this.state.recoveryEmailConfirmed}
         sectionSelected={this.state.sectionSelected}
       />
     );
   }
 
   async componentDidMount() {
-    const devices = await this.props.onGetDevices();
-    this.setState({ devices });
+    const {
+      devices,
+      recoveryEmail,
+      recoveryEmailConfirmed
+    } = await this.props.onGetUserSettings();
+    this.setState({ devices, recoveryEmail, recoveryEmailConfirmed }, () => {
+      this.checkParamsToUpdate({ recoveryEmail, recoveryEmailConfirmed });
+    });
+  }
+
+  checkParamsToUpdate({ recoveryEmail, recoveryEmailConfirmed }) {
+    const paramsToUpdate = {};
+    if (myAccount.recoveryEmail !== recoveryEmail)
+      paramsToUpdate.recoveryEmail = recoveryEmail;
+    if (myAccount.recoveryEmailConfirmed !== recoveryEmailConfirmed)
+      paramsToUpdate.recoveryEmailConfirmed = recoveryEmailConfirmed;
+    if (Object.keys(paramsToUpdate).length > 0) {
+      this.props.onUpdateAccount(paramsToUpdate);
+    }
   }
 
   handleClickSection = section => {
     this.setState({ sectionSelected: section });
   };
 
-  handleRemoveDevice = async ({ deviceId }) => {
-    const isSuccess = await this.props.onRemoveDevice(deviceId);
+  handleRemoveDevice = async ({ deviceId, password }) => {
+    const isSuccess = await this.props.onRemoveDevice({ deviceId, password });
     if (isSuccess) {
       const devices = this.state.devices.filter(
         item => item.deviceId !== deviceId
@@ -47,8 +69,9 @@ class SettingsWrapper extends Component {
 
 SettingsWrapper.propTypes = {
   onComposeContactSupportEmail: PropTypes.func,
-  onGetDevices: PropTypes.func,
-  onRemoveDevice: PropTypes.func
+  onGetUserSettings: PropTypes.func,
+  onRemoveDevice: PropTypes.func,
+  onUpdateAccount: PropTypes.func
 };
 
 export default SettingsWrapper;

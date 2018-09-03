@@ -18,6 +18,8 @@ const updateAccount = async ({
   name,
   opened,
   recipientId,
+  recoveryEmail,
+  recoveryEmailConfirmed,
   signature,
   signatureEnabled
 }) => {
@@ -25,6 +27,11 @@ const updateAccount = async ({
     jwt,
     name,
     opened: typeof opened === 'boolean' ? opened : undefined,
+    recoveryEmail,
+    recoveryEmailConfirmed:
+      typeof recoveryEmailConfirmed === 'boolean'
+        ? recoveryEmailConfirmed
+        : undefined,
     signature,
     signatureEnabled:
       typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined

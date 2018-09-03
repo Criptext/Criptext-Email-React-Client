@@ -45,6 +45,11 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
+  async changeRecoveryEmail(params) {
+    const res = await client.changeRecoveryEmail(params);
+    return checkDeviceRemoved(res);
+  }
+
   async changePassword(params) {
     const res = await client.changePassword(params);
     return checkDeviceRemoved(res);
@@ -87,8 +92,31 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
+  async getUserSettings() {
+    const res = await client.getUserSettings();
+    const checkedResponse = checkDeviceRemoved(res);
+    if (checkedResponse.status) {
+      return this.parseUserSettings(checkedResponse.body);
+    }
+  }
+
+  parseUserSettings(settings) {
+    const { devices, recoveryEmail } = settings;
+    const { address, status } = recoveryEmail;
+    return {
+      devices,
+      recoveryEmail: address,
+      recoveryEmailConfirmed: !!status
+    };
+  }
+
   login(data) {
     return client.login(data);
+  }
+
+  async logout() {
+    const res = await client.logout();
+    return checkDeviceRemoved(res);
   }
 
   async postEmail(params) {
@@ -115,8 +143,13 @@ class ClientManager {
     return client.postUser(params);
   }
 
-  async removeDevice(deviceId) {
-    const res = await client.removeDevice(deviceId);
+  async removeDevice(params) {
+    const res = await client.removeDevice(params);
+    return checkDeviceRemoved(res);
+  }
+
+  async resendConfirmationEmail() {
+    const res = await client.resendConfirmationEmail();
     return checkDeviceRemoved(res);
   }
 
