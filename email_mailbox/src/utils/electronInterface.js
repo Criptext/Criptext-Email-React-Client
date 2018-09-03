@@ -125,9 +125,9 @@ export const unsendEmailEvent = metadataKey => {
 
 /* DataBase
   ----------------------------- */
-export const cleanDataBase = async () => {
-  await dbManager.cleanDataBase();
-  return dbManager.createTables();
+export const cleanDataLogout = async recipientId => {
+  await dbManager.cleanDataLogout(recipientId);
+  return dbManager.createSignalTables();
 };
 
 export const createAccount = params => {

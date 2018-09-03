@@ -127,12 +127,20 @@ export const postUser = params => {
 
 /* DataBase
    ----------------------------- */
+export const cleanDataBase = params => {
+  return dbManager.cleanDataBase(params);
+};
+
 export const createAccount = params => {
   return dbManager.createAccount(params);
 };
 
 export const createContact = params => {
   return dbManager.createContact(params);
+};
+
+export const createLabel = params => {
+  return dbManager.createLabel(params);
 };
 
 export const createIdentityKeyRecord = params => {
@@ -151,8 +159,8 @@ export const createSignedPreKeyRecord = params => {
   return dbManager.createSignedPreKeyRecord(params);
 };
 
-export const createLabel = params => {
-  return dbManager.createLabel(params);
+export const createTables = () => {
+  return dbManager.createTables();
 };
 
 export const deletePreKeyPair = params => {
@@ -185,4 +193,8 @@ export const getSignedPreKey = params => {
 
 export const updateIdentityKeyRecord = params => {
   return dbManager.updateIdentityKeyRecord(params);
+};
+
+export const updateAccount = params => {
+  return dbManager.updateAccount(params);
 };

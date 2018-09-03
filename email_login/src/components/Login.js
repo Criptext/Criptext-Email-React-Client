@@ -35,6 +35,7 @@ const renderForm = props => (
             value={props.value}
             onChange={props.onChangeField}
             onKeyUp={props.validator}
+            autoFocus={true}
           />
           &nbsp;
           <span>@criptext.com</span>

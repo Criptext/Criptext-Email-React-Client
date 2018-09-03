@@ -3,7 +3,7 @@ import randomcolor from 'randomcolor';
 import SettingsWrapper from './../components/SettingsWrapper';
 import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
-  cleanDataBase,
+  cleanDataLogout,
   composerEvents,
   getUserSettings,
   LabelType,
@@ -58,7 +58,7 @@ const formatDevicesData = devices => {
 };
 
 const deleteDeviceData = async () => {
-  await cleanDataBase();
+  await cleanDataLogout(myAccount.recipientId);
   await logoutApp();
 };
 

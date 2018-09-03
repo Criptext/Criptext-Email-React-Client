@@ -34,49 +34,41 @@
           &:nth-child(2){
             flex-direction: column;
 
-            input {
-              border: none;
-              border-bottom: 1px solid #c3c3c3;
-              font-size: 12px;
-              padding-left: 3px;
-              margin-bottom: 2px;
-              position: relative;
-              top: 5px;
-          
-              &:focus{
-                outline: none;
-                border-bottom: 1px solid #0091ff;
-              }
-            }
+            > div{
+              &.profile-name {
+                margin-top: 8px;
+                color: #6a707e;
+                font-size: 12px;
+                font-weight: 300;
             
-            .profile-name {
-              margin-top: 8px;
-              color: #6a707e;
-              font-size: 12px;
-              font-weight: 300;
-          
-              &:hover > i {
-                display: inline;
+                &:hover > i {
+                  display: inline;
+                }
+            
+                i {
+                  margin-left: 15px;
+                  font-size: 14px;
+                  line-height: 13px;
+                  position: relative;
+                  top: 2px;
+                  display: none;
+                }
               }
-          
-              i {
-                margin-left: 15px;
-                font-size: 14px;
-                line-height: 13px;
-                position: relative;
-                top: 2px;
-                display: none;
-              }
-            }
 
-            .cancel-edit-inputname-label {
-              font-size: 13px;
-              font-weight: 500;
-              color: #0091ff;
-              position: relative;
-              top: 5px;
-              left: 20px;
-              cursor: pointer;
+              input {
+                border: none;
+                border-bottom: 1px solid #c3c3c3;
+                font-size: 12px;
+                padding-left: 3px;
+                margin-bottom: 2px;
+                position: relative;
+                top: 5px;
+            
+                &:focus{
+                  outline: none;
+                  border-bottom: 1px solid #0091ff;
+                }
+              }
             }
           }
 
@@ -169,10 +161,9 @@
       .section-block-content{
         .section-block-content-item{
           &:nth-child(1){
-            cursor: pointer;
-
             .logout-button{
               color: #636363;
+              cursor: pointer;
               display: flex;
               align-items: center;
 
@@ -242,62 +233,46 @@
 
   .recovery-email {
     display: flex;
+
     .address {
-      color: #6a707e;
+      color: #636363;
       font-size: 14px;
       margin-right: 15px;
     }
 
-    .recovery-email-link {
-      font-size: 14px;
-      font-weight: 700;
-      color: #0091ff;
-      cursor: pointer;
-      margin-right: 35px;
-    }
-
-    div {
+    > div {
       display: flex;
-      .recovery-email-link {
-        font-size: 14px;
-        font-weight: 700;
-        color: #0091ff;
-        cursor: pointer;
-        margin-right: 35px;
-      }
-    }
 
-    .recovery-email-confirmation-section {
-      display: flex;
-      width: 170px;
-      > .text {
-        font-size: 15px;
-        position: relative;
-        left: -14px;
-      }      
-      > .icon-container {
-        height: 12px;
-        width: 12px;
-        border: 2px solid;
-        border-color: inherit;
-        border-radius: 50%;
-        position: relative;
-        top: 2px;
-      }
-      > i {
-        font-size: 17px;
-        font-weight: bold;
-        position: relative;
-        left: -17.5px;
-        top: 1.8px;
-      }
-    }
+      .recovery-email-confirmation-section {
+        align-items: center;
+        display: flex;
+        margin-right: 10px;
+  
+        &.recovery-email-confirmed {
+          color: #8ac43f;
+        }
 
-    .recovery-email-confirmed {
-      color: #8ac43f;
-    }
-    .recovery-email-not-confirmed {
-      color: #d94e47;
+        &.recovery-email-not-confirmed {
+          color: #d94e47;
+        }
+
+        .text {
+          font-size: 13px;
+          font-weight: 300;
+          position: relative;
+        }  
+  
+        i {
+          font-size: 15px;
+          font-weight: bold;
+          line-height: 18px;
+          position: relative;
+        }
+      }
+
+      .button-b{
+        margin-right: 5px;
+      }
     }
   }
 }

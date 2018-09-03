@@ -1,14 +1,17 @@
 /*global libsignal util*/
 
 import {
-  LabelType,
-  createLabel,
+  cleanDataBase,
   createAccount as createAccountDB,
+  createContact,
+  createLabel,
+  createTables,
+  errors,
   getAccount,
+  LabelType,
   myAccount,
   postKeyBundle,
-  errors,
-  createContact
+  updateAccount
 } from './../utils/electronInterface';
 import SignalProtocolStore from './store';
 import { appDomain, DEVICE_TYPE } from './../utils/const';
@@ -39,19 +42,45 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
     throw errors.login.FAILED;
   }
   const newToken = res.text;
-
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
   const jwt = newToken;
-  await createAccountDB({
-    recipientId,
-    deviceId,
-    name,
-    jwt,
-    privKey,
-    pubKey,
-    registrationId
-  });
+  const [currentAccount] = await getAccount();
+  const currentAccountExists = currentAccount
+    ? currentAccount.recipientId === recipientId
+    : false;
+
+  if (currentAccountExists) {
+    await updateAccount({
+      jwt,
+      deviceId,
+      name,
+      privKey,
+      pubKey,
+      recipientId,
+      registrationId
+    });
+  } else {
+    if (currentAccount) {
+      await cleanDataBase();
+      await createTables();
+    }
+    await createAccountDB({
+      jwt,
+      deviceId,
+      name,
+      privKey,
+      pubKey,
+      recipientId,
+      registrationId
+    });
+    const labels = Object.values(LabelType);
+    await createLabel(labels);
+    await createContact({
+      name,
+      email: `${recipientId}@${appDomain}`
+    });
+  }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
   await Promise.all(
@@ -60,12 +89,6 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
     }),
     store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
   );
-  const labels = Object.values(LabelType);
-  await createLabel(labels);
-  await createContact({
-    name,
-    email: `${recipientId}@${appDomain}`
-  });
   return true;
 };
 

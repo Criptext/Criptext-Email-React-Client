@@ -15,6 +15,7 @@
       margin: 0px;
     }
   }
+
   .logout-popup-warning-text {
     font-size: 12px;
     color: #373a45;
@@ -22,6 +23,7 @@
     margin-bottom: 12px;
     margin-top: 12px;
   }
+
   .logout-popup-password-text {
     font-size: 12px;
     font-weight: bolder;
@@ -53,10 +55,12 @@
       text-transform: capitalize;
       font-weight: bold;
     }
+
     .logout-cancel-button {
       background-color: #ffffff;
       color: #5d5b5b;
     }
+
     .logout-remove-button {
       background-color: #0091ff;
       color: #ffffff;

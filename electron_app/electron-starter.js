@@ -20,9 +20,13 @@ async function initApp() {
 
   const [existingAccount] = await dbManager.getAccount()
   if (existingAccount) {
-    myAccount.initialize(existingAccount)
-    wsClient.start(myAccount)
-    mailboxWindow.show();
+    if(!!existingAccount.deviceId){
+      myAccount.initialize(existingAccount)
+      wsClient.start(myAccount)
+      mailboxWindow.show();
+    }else{
+      loginWindow.show();
+    }
   } else {
     loginWindow.show();
   }

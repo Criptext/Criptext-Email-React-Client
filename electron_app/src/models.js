@@ -92,6 +92,24 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.IDENTITYKEYRECORD);
 };
 
+const cleanDataLogout = async recipientId => {
+  const params = {
+    deviceId: '',
+    jwt: ''
+  };
+
+  await db
+    .table(Table.ACCOUNT)
+    .where({ recipientId })
+    .update(params);
+
+  return db.schema
+    .dropTableIfExists(Table.PREKEYRECORD)
+    .dropTableIfExists(Table.SIGNEDPREKEYRECORD)
+    .dropTableIfExists(Table.SESSIONRECORD)
+    .dropTableIfExists(Table.IDENTITYKEYRECORD);
+};
+
 const createContactColumns = table => {
   table.increments('id').primary();
   table
@@ -279,6 +297,17 @@ const createIdentityKeyRecordColumns = table => {
   table.primary(['recipientId', 'deviceId']);
 };
 
+const createSignalTables = async () => {
+  const preKeyExists = await db.schema.hasTable(Table.PREKEYRECORD);
+  if (!preKeyExists) {
+    await db.schema
+      .createTable(Table.PREKEYRECORD, createPreKeyRecordColumns)
+      .createTable(Table.SIGNEDPREKEYRECORD, createSignedPreKeyRecordColumns)
+      .createTable(Table.SESSIONRECORD, createSessionRecordColumns)
+      .createTable(Table.IDENTITYKEYRECORD, createIdentityKeyRecordColumns);
+  }
+};
+
 const createTables = async () => {
   const emailExists = await db.schema.hasTable(Table.EMAIL);
   if (!emailExists) {
@@ -307,6 +336,8 @@ const migrateDatabase = async () => {
 module.exports = {
   db,
   cleanDataBase,
+  cleanDataLogout,
+  createSignalTables,
   createTables,
   Table,
   fieldTypes

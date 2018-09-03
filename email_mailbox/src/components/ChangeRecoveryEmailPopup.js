@@ -114,7 +114,7 @@ ChangeRecoveryEmailPopupInputs.propTypes = {
   onChangeInputValueOnChangeRecoveryEmailPopup: PropTypes.func,
   onClickChangeRecoveryEmailInputType: PropTypes.func,
   recoveryEmailPopupInputEmail: PropTypes.object,
-  recoveryEmailPopupInputPassword: PropTypes.string
+  recoveryEmailPopupInputPassword: PropTypes.object
 };
 
 ChangePasswordPopupInput.propTypes = {

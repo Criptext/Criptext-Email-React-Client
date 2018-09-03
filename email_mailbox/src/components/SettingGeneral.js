@@ -14,10 +14,12 @@ import './settinggeneral.css';
 import './signatureeditor.css';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
+import LogoutPopup from './LogoutPopup';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
+const Logoutpopup = PopupHOC(LogoutPopup);
 
 const SettingGeneral = props => (
   <div id="setting-general">
@@ -66,12 +68,9 @@ const renderBlockName = props => (
           onKeyPress={props.onAddNameInputKeyPressed}
           autoFocus={true}
         />
-        <span
-          className="cancel-edit-inputname-label"
-          onClick={props.onBlurInputName}
-        >
-          Cancel
-        </span>
+        <button className="button-b" onClick={props.onBlurInputName}>
+          <span>Cancel</span>
+        </button>
       </div>
     ) : (
       <div className="profile-name">
@@ -187,13 +186,25 @@ const RecoveryEmailBlock = props => (
           <span className="address">
             {props.recoveryEmail || 'Recovery email not configured'}
           </span>
-          {!props.recoveryEmail && <SetRecoveryEmailLink {...props} />}
+          {!props.recoveryEmail && (
+            <button
+              className="button-b"
+              onClick={() => props.onClickChangeRecoveryEmail()}
+            >
+              <span>Set Email</span>
+            </button>
+          )}
           {props.recoveryEmail && (
             <div>
               <RecoveryEmailConfirmationMessage
                 recoveryEmailConfirmed={props.recoveryEmailConfirmed}
               />
-              <ChangeRecoveryEmailLink {...props} />
+              <button
+                className="button-b"
+                onClick={() => props.onClickChangeRecoveryEmail()}
+              >
+                <span>Change</span>
+              </button>
               {!props.recoveryEmailConfirmed && (
                 <ResendConfirmationRecoveryEmailLink {...props} />
               )}
@@ -205,18 +216,6 @@ const RecoveryEmailBlock = props => (
   </div>
 );
 
-const SetRecoveryEmailLink = ({ onClickChangeRecoveryEmail }) => (
-  <span className="recovery-email-link" onClick={onClickChangeRecoveryEmail}>
-    Set Email
-  </span>
-);
-
-const ChangeRecoveryEmailLink = ({ onClickChangeRecoveryEmail }) => (
-  <span className="recovery-email-link" onClick={onClickChangeRecoveryEmail}>
-    Change
-  </span>
-);
-
 const ResendConfirmationRecoveryEmailLink = ({
   onClickResendConfirmationLink,
   isDisabledResend,
@@ -226,16 +225,18 @@ const ResendConfirmationRecoveryEmailLink = ({
   const date = resendCountdown || getResendConfirmationTimestamp();
   const disabled = isDisabledResend || date;
   return (
-    <span
-      className={`recovery-email-link ${disabled ? 'disabled' : ''}`}
+    <button
+      className={`button-b ${disabled ? 'disabled' : ''}`}
       onClick={onClickResendConfirmationLink}
     >
-      <Countdown
-        date={date}
-        renderer={renderer}
-        onComplete={onResendConfirmationCountdownEnd}
-      />
-    </span>
+      <span>
+        <Countdown
+          date={date}
+          renderer={renderer}
+          onComplete={onResendConfirmationCountdownEnd}
+        />
+      </span>
+    </button>
   );
 };
 
@@ -248,17 +249,15 @@ const renderer = ({ minutes, seconds, completed }) => {
 
 const RecoveryEmailConfirmationMessage = ({ recoveryEmailConfirmed }) => {
   return recoveryEmailConfirmed ? (
-    <span className="recovery-email-confirmation-section recovery-email-confirmed">
-      <div className="icon-container" />
-      <i className="icon-check" />
+    <div className="recovery-email-confirmation-section recovery-email-confirmed">
+      <i className="icon-correct" />
       <span className="text">Verified</span>
-    </span>
+    </div>
   ) : (
-    <span className="recovery-email-confirmation-section recovery-email-not-confirmed">
-      <div className="icon-container" />
-      <i className="icon-exit" />
+    <div className="recovery-email-confirmation-section recovery-email-not-confirmed">
+      <i className="icon-incorret" />
       <span className="text">Not confirmed</span>
-    </span>
+    </div>
   );
 };
 
@@ -329,6 +328,16 @@ const SettingsPopup = props => {
       return (
         <Changerecoveryemailpopup
           isHidden={isHidden}
+          onTogglePopup={props.onClickCancelChangeRecoveryEmail}
+          popupPosition={{ left: '45%', top: '45%' }}
+          {...props}
+        />
+      );
+    }
+    case SETTINGS_POPUP_TYPES.LOGOUT: {
+      return (
+        <Logoutpopup
+          isHidden={isHidden}
           onTogglePopup={props.onClickCancelChangePassword}
           popupPosition={{ left: '45%', top: '45%' }}
           {...props}
@@ -362,7 +371,8 @@ PasswordBlock.propTypes = {
 SettingsPopup.propTypes = {
   isHiddenSettingsPopup: PropTypes.bool,
   settingsPupopType: PropTypes.string,
-  onClickCancelChangePassword: PropTypes.func
+  onClickCancelChangePassword: PropTypes.func,
+  onClickCancelChangeRecoveryEmail: PropTypes.func
 };
 
 LogoutAccountBlock.propTypes = {
@@ -375,18 +385,11 @@ RecoveryEmailBlock.propTypes = {
   onAddRecoveryEmailInputKeyPressed: PropTypes.func,
   onBlurInputRecoveryEmail: PropTypes.func,
   onChangeInputRecoveryEmail: PropTypes.func,
+  onClickChangeRecoveryEmail: PropTypes.func,
   onClickEditRecoveryEmail: PropTypes.func,
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   resendLinkText: PropTypes.string
-};
-
-SetRecoveryEmailLink.propTypes = {
-  onClickChangeRecoveryEmail: PropTypes.func
-};
-
-ChangeRecoveryEmailLink.propTypes = {
-  onClickChangeRecoveryEmail: PropTypes.func
 };
 
 ResendConfirmationRecoveryEmailLink.propTypes = {

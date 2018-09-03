@@ -5,10 +5,10 @@ import './changepasswordpopup.css';
 const ChangePasswordPopup = props => {
   return (
     <div className="change-password-popup-content">
-      <div className="change-password-popup-title">
+      <div className="popup-title">
         <h1>Change Password</h1>
       </div>
-      <div className="change-password-popup-text">
+      <div className="popup-text">
         <span>Enter your password then your new password and confirm it</span>
       </div>
       <ChangePasswordPopupInputs {...props} />
@@ -92,15 +92,15 @@ const InputErrorMessage = ({ hasError, errorMessage, value }) => {
 };
 
 const ChangePasswordPopupButtons = props => (
-  <div className="change-password-popup-buttons">
+  <div className="popup-buttons">
     <button
-      className="button button-a change-password-cancel-button"
+      className="button button-a popup-cancel-button"
       onClick={props.onClickCancelChangePassword}
     >
       Cancel
     </button>
     <button
-      className="button button-a change-password-confirm-button"
+      className="button button-a popup-confirm-button"
       onClick={props.onConfirmChangePassword}
       disabled={props.isDisabledChangePasswordSubmitButton}
     >

@@ -69,6 +69,7 @@
 
         .email-info-content-from{
           span{
+            color: black;
             font-size: 15px;
             font-weight: 600;
           }
@@ -79,6 +80,7 @@
           margin-right: 13px;
 
           .email-info-content-detail-date{
+            color: black;
             font-size: 13px;
             font-weight: 300;
             text-align: right;
@@ -162,6 +164,7 @@
         position: relative;
 
         >span{
+          color: #4a4a4a;
           font-size: 14px;
           font-weight: 100;
         }

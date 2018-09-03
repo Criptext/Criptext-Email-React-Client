@@ -26,7 +26,6 @@
         color: white;
         font-size: 26px;
         margin: 0 auto;
-
       }
     }
 
@@ -71,20 +70,9 @@
 
     .button-b{
       align-items: center;
-      background-color: white;
       display: flex;
       height: 40px;
       padding: 5px 10px;
-
-      i{
-        color: #0091ff;
-        font-size: 15px;
-      }
-
-      span{
-        color: #0091ff;
-        font-size: 13px;
-      }
     }
   }
 }

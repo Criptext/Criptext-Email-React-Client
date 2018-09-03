@@ -1,4 +1,11 @@
-const { db, cleanDataBase, createTables, Table } = require('./models.js');
+const {
+  db,
+  cleanDataBase,
+  cleanDataLogout,
+  createSignalTables,
+  createTables,
+  Table
+} = require('./models.js');
 const { formContactsRow } = require('./utils/dataTableUtils.js');
 const { noNulls } = require('./utils/ObjectUtils');
 const myAccount = require('./Account');
@@ -14,24 +21,32 @@ const getAccount = () => {
 };
 
 const updateAccount = async ({
+  deviceId,
   jwt,
   name,
   opened,
+  privKey,
+  pubKey,
   recipientId,
   recoveryEmail,
   recoveryEmailConfirmed,
+  registrationId,
   signature,
   signatureEnabled
 }) => {
   const params = noNulls({
+    deviceId,
     jwt,
     name,
     opened: typeof opened === 'boolean' ? opened : undefined,
+    privKey,
+    pubKey,
     recoveryEmail,
     recoveryEmailConfirmed:
       typeof recoveryEmailConfirmed === 'boolean'
         ? recoveryEmailConfirmed
         : undefined,
+    registrationId,
     signature,
     signatureEnabled:
       typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined
@@ -935,6 +950,7 @@ const closeDB = () => {
 
 module.exports = {
   cleanDataBase,
+  cleanDataLogout,
   closeDB,
   createAccount,
   createContact,
@@ -948,6 +964,7 @@ module.exports = {
   createPreKeyRecord,
   createSessionRecord,
   createSignedPreKeyRecord,
+  createSignalTables,
   createTables,
   deleteEmailsByIds,
   deleteEmailByKey,

@@ -163,6 +163,10 @@ class SettingGeneralWrapper extends Component {
         onChangeRadioButtonSignature={this.handleChangeRadioButtonSignature}
         onChangeTextareaSignature={this.handleChangeTextareaSignature}
         onClickCancelChangePassword={this.handleClickCancelChangePassword}
+        onClickCancelChangeRecoveryEmail={
+          this.handleClickCancelChangeRecoveryEmail
+        }
+        onClickCancelLogout={this.handleClickCancelLogout}
         onClickChangePasswordButton={this.handleClickChangePasswordButton}
         onClickChangePasswordInputType={this.handleClickChangePasswordInputType}
         onClickEditName={this.handleClickEditName}
@@ -170,6 +174,7 @@ class SettingGeneralWrapper extends Component {
         onClickLogout={this.handleClickLogout}
         onConfirmChangePassword={this.handleConfirmChangePassword}
         onConfirmChangeRecoveryEmail={this.handleConfirmChangeRecoveryEmail}
+        onConfirmLogout={this.handleConfirmLogout}
         recoveryEmail={this.state.recoveryEmailParams.recoveryEmail}
         recoveryEmailConfirmed={
           this.state.recoveryEmailParams.recoveryEmailConfirmed
@@ -186,9 +191,6 @@ class SettingGeneralWrapper extends Component {
         signature={this.state.signatureParams.signature}
         onChangeInputValueOnChangeRecoveryEmailPopup={
           this.handleChangeInputValueOnChangeRecoveryEmailPopup
-        }
-        onClickCancelChangeRecoveryEmail={
-          this.handleClickCancelChangeRecoveryEmail
         }
         onClickChangeRecoveryEmailInputType={
           this.handleClickChangeRecoveryEmailInputType
@@ -290,6 +292,13 @@ class SettingGeneralWrapper extends Component {
           hasError: true
         }
       }
+    });
+  };
+
+  handleClickCancelLogout = () => {
+    this.setState({
+      isHiddenSettingsPopup: true,
+      settingsPupopType: SETTINGS_POPUP_TYPES.NONE
     });
   };
 
@@ -583,6 +592,19 @@ class SettingGeneralWrapper extends Component {
     sendRecoveryEmailChangedErrorMessage();
   };
 
+  handleConfirmLogout = async () => {
+    const isSuccess = await this.props.onLogout();
+    if (isSuccess) {
+      this.setState({
+        isHiddenSettingsPopup: true,
+        settingsPupopType: SETTINGS_POPUP_TYPES.NONE
+      });
+      await this.props.onDeleteDeviceData();
+    } else {
+      sendRemoveDeviceErrorMessage();
+    }
+  };
+
   handleChangeTextareaSignature = signatureContent => {
     const signatureParams = {
       ...this.state.signatureParams,
@@ -603,13 +625,11 @@ class SettingGeneralWrapper extends Component {
     this.setState({ signatureParams });
   };
 
-  handleClickLogout = async () => {
-    const isSuccess = await this.props.onLogout();
-    if (isSuccess) {
-      await this.props.onDeleteDeviceData();
-    } else {
-      sendRemoveDeviceErrorMessage();
-    }
+  handleClickLogout = () => {
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPupopType: SETTINGS_POPUP_TYPES.LOGOUT
+    });
   };
 
   initEventHandlers = () => {
