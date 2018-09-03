@@ -11,7 +11,8 @@ import {
   Event,
   sendRecoveryEmailChangedSuccessMessage,
   sendRecoveryEmailChangedErrorMessage,
-  sendRecoveryEmailLinkConfirmationSuccessMessage
+  sendRecoveryEmailLinkConfirmationSuccessMessage,
+  sendRecoveryEmailLinkConfirmationErrorMessage
 } from './../utils/electronEventInterface';
 import SettingGeneral from './SettingGeneral';
 import { EditorState } from 'draft-js';
@@ -53,6 +54,8 @@ const changePasswordErrors = {
 const recoveryEmailErrors = {
   INVALID_EMAIL_ADDRESS: 'Invalid email'
 };
+
+const RESEND_CONFIRMATION_MINUTES_DELAY = 5;
 
 /* eslint-disable-next-line react/no-deprecated */
 class SettingGeneralWrapper extends Component {
@@ -98,10 +101,7 @@ class SettingGeneralWrapper extends Component {
       },
       recoveryEmailParams: {
         recoveryEmail: props.recoveryEmail,
-        recoveryEmailConfirmed: props.recoveryEmailConfirmed,
-        isDisabledResend: false,
-        resendLinkText: 'Resend Link',
-        resendCountdown: null
+        recoveryEmailConfirmed: props.recoveryEmailConfirmed
       },
       changeRecoveryEmailPopupParams: {
         isDisabledSubmitButton: true,
@@ -179,13 +179,10 @@ class SettingGeneralWrapper extends Component {
         recoveryEmailConfirmed={
           this.state.recoveryEmailParams.recoveryEmailConfirmed
         }
-        isDisabledResend={this.state.recoveryEmailParams.isDisabledResend}
-        resendLinkText={this.state.recoveryEmailParams.resendLinkText}
         onClickResendConfirmationLink={this.handleClickResendConfirmationLink}
         onResendConfirmationCountdownEnd={
           this.handleResendConfirmationCountdownEnd
         }
-        resendCountdown={this.state.recoveryEmailParams.resendCountdown}
         settingsPupopType={this.state.settingsPupopType}
         signatureEnabled={this.state.signatureParams.signatureEnabled}
         signature={this.state.signatureParams.signature}
@@ -320,36 +317,25 @@ class SettingGeneralWrapper extends Component {
     });
   };
 
-  handleClickResendConfirmationLink = () => {
-    this.props.onResendConfirmationEmail();
-    const countdown = Date.now() + 1 * 60 * 1000;
-    this.setState(
-      {
-        recoveryEmailParams: {
-          ...this.state.recoveryEmailParams,
-          isDisabledResend: true,
-          resendCountdown: countdown
-        }
-      },
-      () => {
-        storeResendConfirmationTimestamp(countdown);
+  handleClickResendConfirmationLink = async () => {
+    try {
+      const { status } = await this.props.onResendConfirmationEmail();
+      if (status === 200) {
+        const resendCountdown =
+          Date.now() + RESEND_CONFIRMATION_MINUTES_DELAY * 60 * 1000;
+        storeResendConfirmationTimestamp(resendCountdown);
+        this.forceUpdate();
         sendRecoveryEmailLinkConfirmationSuccessMessage();
+      } else {
+        sendRecoveryEmailLinkConfirmationErrorMessage();
       }
-    );
+    } catch (e) {
+      sendRecoveryEmailLinkConfirmationErrorMessage();
+    }
   };
 
   handleResendConfirmationCountdownEnd = () => {
-    this.setState(
-      {
-        recoveryEmailParams: {
-          ...this.state.recoveryEmailParams,
-          isDisabledResend: false
-        }
-      },
-      () => {
-        storeResendConfirmationTimestamp(null);
-      }
-    );
+    storeResendConfirmationTimestamp(null);
   };
 
   handleChangeInputName = ev => {

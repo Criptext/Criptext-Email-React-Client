@@ -19,7 +19,9 @@ import {
   deleteEmailByKey,
   updateUnreadEmailByThreadId,
   getEmailsByThreadId,
-  deleteEmailLabel
+  deleteEmailLabel,
+  cleanDatabase,
+  logoutApp
 } from './electronInterface';
 import { EmailUtils } from './electronUtilsInterface';
 import {
@@ -31,7 +33,6 @@ import { SocketCommand, appDomain, EmailStatus } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
-import { deleteDeviceData } from '../containers/Settings';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -611,8 +612,13 @@ export const handleDeleteDeviceData = async rowid => {
     if (rowid) {
       await setEventAsHandled(rowid);
     }
-    await deleteDeviceData();
+    await deleteAllDeviceData();
   }, 4000);
+};
+
+export const deleteAllDeviceData = async () => {
+  await cleanDatabase();
+  await logoutApp();
 };
 
 export const sendChangePasswordSuccessMessage = () => {
