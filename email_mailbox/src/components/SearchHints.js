@@ -33,7 +33,7 @@ const SearchHints = props => (
         {props.threads.map((thread, index) => (
           <SearchMail
             key={index}
-            id={thread.get('id')}
+            id={thread.get('threadId')}
             preview={thread.get('preview')}
             date={thread.get('date')}
             participants={thread.get('fromContactName')}

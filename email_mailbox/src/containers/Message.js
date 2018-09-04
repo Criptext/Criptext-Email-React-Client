@@ -90,7 +90,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           const labelId = LabelType.trash.id;
           const emails = await getEmailsByLabelIds([labelId]);
           const threadsParams = emails.map(email => ({
-            threadIdStore: email.id,
+            emailId: email.id,
             threadIdDB: email.threadId
           }));
           dispatch(removeThreads(threadsParams));

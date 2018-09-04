@@ -68,7 +68,7 @@ const threads = (state = List([]), action) => {
       });
     }
     case Thread.MOVE_THREADS: {
-      const threadIds = action.threadIds;
+      const { threadIds } = action;
       return state.filterNot(thread =>
         threadIds.includes(thread.get('threadId'))
       );
@@ -111,6 +111,15 @@ const threads = (state = List([]), action) => {
         }
         return threadItem;
       });
+    }
+    case Thread.REMOVE_THREADS: {
+      const { uniqueIds } = action;
+      if (!uniqueIds) {
+        return state;
+      }
+      return state.filterNot(thread =>
+        uniqueIds.includes(thread.get('uniqueId'))
+      );
     }
     case Thread.UPDATE_EMAILIDS_THREAD: {
       const { threadId, emailIdToAdd, emailIdsToRemove } = action;
@@ -163,18 +172,8 @@ const threads = (state = List([]), action) => {
         );
       return newThreads;
     }
-    case Thread.REMOVE_THREADS: {
-      return state.filter(
-        thread => !action.threadsIds.includes(thread.get('id'))
-      );
-    }
     case Thread.UNREAD_FILTER: {
       return state.map(thread => thread.set('selected', false));
-    }
-    case Thread.REMOVE_THREAD: {
-      return state.filterNot(
-        thread => thread.get('id') === action.targetThread
-      );
     }
     case Thread.DESELECT_THREADS: {
       return state.map(thread => thread.set('selected', false));

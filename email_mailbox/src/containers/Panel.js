@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   loadEmails,
   loadThreads,
-  removeThreadsByThreadIdsOnSuccess,
+  removeThreadsSuccess,
   updateEmailIdsThread,
   updateLabelSuccess,
   updateAllFeedItemsAsOlder,
@@ -86,7 +86,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(unsendEmailFiles(emailId));
     },
     onRemoveThreads: threadIds => {
-      dispatch(removeThreadsByThreadIdsOnSuccess(threadIds));
+      dispatch(removeThreadsSuccess(threadIds));
     },
     onUpdateUnreadThreads: (threadIds, unread) => {
       dispatch(updateUnreadThreadsSuccess(threadIds, unread));

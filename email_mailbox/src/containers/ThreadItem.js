@@ -147,7 +147,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onAddMoveLabel: labelId => {
       const threadParams = {
-        threadIdStore: ownProps.thread.get('id'),
         threadIdDB: ownProps.thread.get('threadId')
       };
       dispatch(

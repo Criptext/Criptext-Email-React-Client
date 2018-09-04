@@ -10,7 +10,6 @@ const defineOneThreadSelected = (threads, threadId) => {
   });
   return [
     {
-      threadIdStore: thread.get('threadId'),
       threadIdDB: thread.get('threadId')
     }
   ];
@@ -22,7 +21,7 @@ const defineThreadsSelected = (threads, itemsChecked) => {
     .toArray()
     .map(thread => ({
       threadIdDB: thread.get('threadId'),
-      uniqueId: thread.get('uniqueId')
+      emailId: !thread.get('threadId') ? thread.get('id') : null
     }));
 };
 
@@ -91,7 +90,9 @@ const mapStateToProps = (state, ownProps) => {
   const threadsSelected = ownProps.itemsChecked
     ? defineThreadsSelected(threads, ownProps.itemsChecked)
     : defineOneThreadSelected(threads, ownProps.threadIdSelected);
-  const uniqueIdsSelected = threadsSelected.map(thread => thread.uniqueId);
+  const uniqueIdsSelected = threadsSelected.map(
+    thread => thread.threadIdDB || thread.emailId
+  );
   const threadsLabelIds = getLabelIdsFromThreadIds(threads, uniqueIdsSelected);
   const labels = getLabelIncluded(state.get('labels'), threadsLabelIds);
   const markAsUnread = ownProps.itemsChecked
@@ -149,21 +150,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         () => ownProps.onBackOption()
       );
     },
-    onRemoveThreads: async (threadsIds, backFirst) => {
+    onRemoveThreads: async (threadIds, backFirst) => {
       if (backFirst) {
         await ownProps.onBackOption();
-        dispatch(actions.removeThreads(threadsIds));
+        dispatch(actions.removeThreads(threadIds));
       } else {
-        dispatch(actions.removeThreads(threadsIds)).then(() =>
+        dispatch(actions.removeThreads(threadIds)).then(() =>
           ownProps.onBackOption()
         );
       }
-    },
-    onRemoveDrafts: params => {
-      const isDraft = true;
-      dispatch(actions.removeThreads(params, isDraft)).then(() =>
-        ownProps.onBackOption()
-      );
     }
   };
 };

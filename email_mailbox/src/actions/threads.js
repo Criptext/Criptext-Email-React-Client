@@ -133,7 +133,9 @@ export const addLabelIdThreadsSuccess = (threadIds, labelId) => ({
 export const addMoveLabelIdThreads = ({ threadsParams, labelId, notMove }) => {
   return async dispatch => {
     try {
-      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const threadIds = threadsParams
+        .map(param => param.threadIdDB)
+        .filter(item => item !== null);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
           const threadEmails = await getEmailsByThreadId(threadId);
@@ -260,14 +262,42 @@ export const removeLabelIdThreadsSuccess = (threadIds, labelId) => ({
   labelId
 });
 
-export const removeThread = threadId => ({
-  type: Thread.REMOVE_THREAD,
-  targetThread: threadId
-});
+export const removeThreads = threadsParams => {
+  return async dispatch => {
+    try {
+      const emailIds = threadsParams
+        .map(param => param.emailId)
+        .filter(item => item !== null);
+      const threadIds = threadsParams
+        .map(param => param.threadIdDB)
+        .filter(item => item !== null);
+      if (threadIds.length) {
+        const eventParams = {
+          cmd: SocketCommand.PEER_THREAD_DELETED_PERMANENTLY,
+          params: { threadIds }
+        };
+        const { status } = await postPeerEvent(eventParams);
+        if (status === 200) {
+          await deleteEmailsByThreadId(threadIds);
+          dispatch(removeThreadsSuccess(threadIds));
+        } else {
+          sendRemoveThreadsErrorMessage();
+        }
+      }
+      if (emailIds.length) {
+        await deleteEmailsByIds(emailIds);
+        dispatch(removeThreadsSuccess(emailIds));
+      }
+      dispatch(loadFeedItems(true));
+    } catch (e) {
+      sendRemoveThreadsErrorMessage();
+    }
+  };
+};
 
-export const removeThreadsSuccess = threadsIds => ({
+export const removeThreadsSuccess = uniqueIds => ({
   type: Thread.REMOVE_THREADS,
-  threadsIds
+  uniqueIds
 });
 
 export const selectThread = threadId => ({
@@ -368,36 +398,6 @@ export const loadEvents = params => {
   };
 };
 
-export const removeThreads = (threadsParams, isDraft) => {
-  return async dispatch => {
-    try {
-      const storeIds = threadsParams.map(param => param.threadIdStore);
-      const threadIds = threadsParams
-        .map(param => param.threadIdDB)
-        .filter(item => item !== null);
-
-      const eventParams = {
-        cmd: SocketCommand.PEER_THREAD_DELETED_PERMANENTLY,
-        params: { threadIds }
-      };
-      const { status } = await postPeerEvent(eventParams);
-      if (status === 200) {
-        const dbResponse = isDraft
-          ? await deleteEmailsByIds(storeIds)
-          : await deleteEmailsByThreadId(threadIds);
-        if (dbResponse) {
-          dispatch(removeThreadsSuccess(storeIds));
-          dispatch(loadFeedItems(true));
-        }
-      } else {
-        sendRemoveThreadsErrorMessage();
-      }
-    } catch (e) {
-      sendRemoveThreadsErrorMessage();
-    }
-  };
-};
-
 export const sendOpenEvent = threadId => {
   return async () => {
     try {
@@ -427,8 +427,3 @@ const formRemoveThreadLabelParams = (emails, labelId) => {
     labelIds: [labelId]
   };
 };
-
-export const removeThreadsByThreadIdsOnSuccess = threadIds => ({
-  type: Thread.REMOVE_THREADS_BY_THREAD_ID,
-  threadIds
-});

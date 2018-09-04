@@ -105,6 +105,7 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
       currentLabelId === LabelType.starred.id ||
+      currentLabelId === LabelType.draft.id ||
       currentLabelId === LabelType.allmail.id
     );
   };
@@ -113,8 +114,7 @@ class HeaderThreadOptionsWrapper extends Component {
     const currentLabelId = LabelType[this.props.mailboxSelected].id;
     return (
       currentLabelId === LabelType.spam.id ||
-      currentLabelId === LabelType.trash.id ||
-      currentLabelId === LabelType.draft.id
+      currentLabelId === LabelType.trash.id
     );
   };
 
@@ -139,18 +139,13 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   handleClickDeleteThread = () => {
-    const currentLabelId = LabelType[this.props.mailboxSelected].id;
-    if (currentLabelId === LabelType.draft.id) {
-      this.props.onRemoveDrafts(this.props.threadsSelected);
-    } else {
-      confirmPermanentDeleteThread(response => {
-        closeDialog();
-        if (response === CONFIRM_RESPONSE) {
-          const backFirst = true;
-          this.props.onRemoveThreads(this.props.threadsSelected, backFirst);
-        }
-      });
-    }
+    confirmPermanentDeleteThread(response => {
+      closeDialog();
+      if (response === CONFIRM_RESPONSE) {
+        const backFirst = true;
+        this.props.onRemoveThreads(this.props.threadsSelected, backFirst);
+      }
+    });
   };
 
   handleClickMoveToInbox = () => {
@@ -195,7 +190,6 @@ HeaderThreadOptionsWrapper.propTypes = {
   onAddLabel: PropTypes.func,
   onAddMoveLabel: PropTypes.func,
   onMarkRead: PropTypes.func,
-  onRemoveDrafts: PropTypes.func,
   onRemoveLabel: PropTypes.func,
   onRemoveThreads: PropTypes.func,
   threadsSelected: PropTypes.array
