@@ -113,7 +113,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onAddLabel: (threadIds, label) => {
-      dispatch(actions.addThreadsLabel(threadIds, label)).then(() => {
+      dispatch(actions.addLabelIdThreads(threadIds, label)).then(() => {
         if (ownProps.itemsChecked) {
           ownProps.onBackOption();
         }
@@ -121,7 +121,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onAddMoveLabel: (threadIds, labelId, notMove) => {
       dispatch(
-        actions.addMoveThreadsLabel({
+        actions.addMoveLabelIdThreads({
           threadsParams: threadIds,
           labelId,
           notMove
@@ -133,7 +133,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         ownProps.onBackOption()
       );
     },
-    onMarkRead: (threadsIds, read) => {
+    onMarkRead: (threadIds, read) => {
       const labelId = LabelType[ownProps.mailboxSelected].id;
       const operation = read ? 'less' : 'add';
       const paramsLabel =
@@ -141,11 +141,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           ? {
               id: labelId,
               operation: operation,
-              value: threadsIds.length
+              value: threadIds.length
             }
           : null;
 
-      dispatch(actions.updateUnreadThreads(threadsIds, read, paramsLabel)).then(
+      dispatch(actions.updateUnreadThreads(threadIds, read, paramsLabel)).then(
         () => ownProps.onBackOption()
       );
     },
