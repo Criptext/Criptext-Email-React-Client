@@ -84,7 +84,7 @@ const createContactsIfOrNotStore = async (contacts, trx) => {
     const email = contact.email;
     const newName = contactsMap[email].name || contact.name;
     if (newName !== contact.name) {
-      toUpdateArray.push({ email, name: newName.replace(/"/g, '') });
+      toUpdateArray.push({ email, name: newName });
     }
     return toUpdateArray;
   }, []);

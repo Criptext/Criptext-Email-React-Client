@@ -1,9 +1,17 @@
 const { removeAppDomain, removeHTMLTags } = require('./StringUtils');
 const { appDomain } = require('./const');
 const myAccount = require('./../Account');
+const { HTMLTagsRegex, emailRegex } = require('./RegexUtils');
 
 const formRecipients = recipientString => {
-  return !recipientString ? [] : recipientString.split(',');
+  const recipients = !recipientString ? [] : recipientString.split(',');
+  return recipients
+    .filter(
+      recipient => !!recipient.match(/<(.*)>/) || !!recipient.match(emailRegex)
+    )
+    .map(recipient => {
+      return recipient.replace(/"/g, '').trim();
+    });
 };
 
 const getEmailAddressesFromEmailObject = emails => {
@@ -50,7 +58,6 @@ const checkEmailIsTo = ({ to, cc, bcc, from, type }) => {
     type === 'to'
       ? [...recipients.to, ...recipients.cc, ...recipients.bcc]
       : [...recipients.from];
-
   const [isTo] = recipientsArray.filter(
     email => email.indexOf(`${myAccount.recipientId}@${appDomain}`) > -1
   );
@@ -167,10 +174,9 @@ const formOutgoingEmailFromData = ({
 };
 
 const getRecipientIdFromEmailAddressTag = emailAddressTag => {
-  const emailAddressMatched = emailAddressTag.match(/<(.*)>/);
-  const emailAddress = emailAddressMatched
-    ? emailAddressMatched[1]
-    : emailAddressTag;
+  const emailAddressMatches = emailAddressTag.match(HTMLTagsRegex);
+  const lastPosition = emailAddressMatches.length - 1;
+  const emailAddress = emailAddressMatches[lastPosition].replace(/[<>]/g, '');
   return removeAppDomain(emailAddress);
 };
 

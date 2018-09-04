@@ -55,8 +55,8 @@ const formItems = [
       text: '',
       strong: ''
     },
-    icon: 'icon-show',
-    icon2: 'icon-not-show',
+    icon: 'icon-not-show',
+    icon2: 'icon-show',
     errorMessage: '',
     value: '',
     optional: false
@@ -69,8 +69,8 @@ const formItems = [
       text: '',
       strong: ''
     },
-    icon: 'icon-show',
-    icon2: 'icon-not-show',
+    icon: 'icon-not-show',
+    icon2: 'icon-show',
     errorMessage: 'Passwords do not match',
     value: '',
     optional: false

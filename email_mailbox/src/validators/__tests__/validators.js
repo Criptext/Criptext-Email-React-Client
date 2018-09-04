@@ -7,6 +7,7 @@ import {
 } from './../validators';
 
 jest.mock('./../../utils/electronInterface');
+jest.mock('./../../utils/electronUtilsInterface');
 
 describe('Validate fullname:', () => {
   const fn = validateFullname;

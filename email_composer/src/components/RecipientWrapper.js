@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Recipient from './Recipient';
-import { emailRegex } from './../utils/RegexUtils';
+import { RegexUtils } from './../utils/electronUtilsInterface';
 
 class RecipientWrapper extends Component {
   render() {
@@ -10,7 +10,7 @@ class RecipientWrapper extends Component {
         {...this.props}
         bccTags={this.props.bccEmails}
         ccTags={this.props.ccEmails}
-        emailRegex={emailRegex}
+        emailRegex={RegexUtils.emailRegex}
         isCollapsedMoreRecipient={this.props.isCollapsedMoreRecipient}
         onToggleRecipient={this.props.onToggleRecipient}
         onChangeBccTag={this.handleOnChangeBccTag}

@@ -48,7 +48,7 @@ const renderForm = props => (
           onClick={ev => props.onClickSignIn(ev)}
           disabled={props.disabled}
         >
-          <span>Log In</span>
+          <span>Sign In</span>
         </button>
       </div>
     </form>

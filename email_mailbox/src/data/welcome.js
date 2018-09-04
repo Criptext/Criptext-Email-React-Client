@@ -25,14 +25,14 @@ export default {
     defaultOptions: defaultOptionsEmail,
     title: 'Welcome',
     description:
-      'Your secure email experience starts today, be ready to E2E email encryption.',
+      'Your secure email experience starts now. Be ready for privacy without compromise.',
     speed: 1
   },
   2: {
     defaultOptions: defaultOptionsLock,
     title: 'Strong Privacy',
     description:
-      'Criptext doesn`t read your content, it`s always encrypted even for us.',
+      'Criptext doesn`t collect email data. Your emails are only stored on your device.',
     speed: 2
   },
   3: {

@@ -141,11 +141,13 @@
               -webkit-text-security: square;
             }
             span.input-icon{
-              font-size: 18px;
               color: #ffffff;
+              font-size: 18px;
+              opacity: 0.5;
               position: relative;
               right: 8%;
             }
+
             .input-username {
               color: #ffffff;
               font-size: 12px;
@@ -157,6 +159,7 @@
               border-bottom: solid 2px rgba(255,255,255,0.19);
               float: left;
             }
+
             .label-username {
               width: 40%;
               padding-left: 3%;
@@ -165,6 +168,7 @@
               font-weight: 500;
               color: #ffffff;
             }
+            
             .input-fullname, 
             .input-password,
             .input-confirmpassword,

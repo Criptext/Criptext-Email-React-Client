@@ -26,7 +26,7 @@ class SideBarLabelItemWrapper extends Component {
   }
 
   handleOnDoubleClick = () => {
-    if (this.props.label.type === 'custom') {
+    if (this.props.label.type === 'none') {
       this.setState({
         isEditable: true,
         textEditable: this.props.label.text

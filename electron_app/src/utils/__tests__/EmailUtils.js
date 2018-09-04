@@ -1,7 +1,8 @@
 /* eslint-env node, jest */
 const {
   filterCriptextRecipients,
-  formOutgoingEmailFromData
+  formOutgoingEmailFromData,
+  getRecipientIdFromEmailAddressTag
 } = require('./../EmailUtils');
 const { appDomain } = require('./../const');
 
@@ -36,5 +37,35 @@ describe('[Filter emails by domain] ', () => {
     const filtered = filterCriptextRecipients(recipients);
     const result = [`userA@${appDomain}`, `userB@${appDomain}`];
     expect(filtered).toEqual(result);
+  });
+});
+
+describe('[Get recipientId from EmailAddressTag] ', () => {
+  it('Get recipientId from criptext domain', () => {
+    const from = `"Alice$$" <alice@${appDomain}>`;
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const result = 'alice';
+    expect(recipientId).toEqual(result);
+  });
+
+  it('Get recipientId from external domain', () => {
+    const from = 'Bob 8989 <bob@domain.com>';
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const result = 'bob@domain.com';
+    expect(recipientId).toEqual(result);
+  });
+
+  it('Get recipientId from external domain, with name comma added', () => {
+    const from = `Lola, <lola@domain.com>`;
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const result = 'lola@domain.com';
+    expect(recipientId).toEqual(result);
+  });
+
+  it('Get recipientId from external domain, with name as emailadresstag', () => {
+    const from = `<alice@${appDomain}> <lola@domain.com>`;
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const result = 'lola@domain.com';
+    expect(recipientId).toEqual(result);
   });
 });
