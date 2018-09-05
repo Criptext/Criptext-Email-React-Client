@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './logoutpopup.css';
 
 class ChangePasswordPopup extends Component {
   constructor(props) {
@@ -13,15 +12,15 @@ class ChangePasswordPopup extends Component {
 
   render() {
     return (
-      <div className="logout-popup-content">
+      <div className="popup-content">
         <div className="popup-title">
           <h1>Logout</h1>
         </div>
-        <div className="popup-text">
-          <span>
+        <div className="popup-paragraph">
+          <p>
             Logging out will delete emails locally from this device. All emails
             will still be available in your other devices.
-          </span>
+          </p>
         </div>
         <ChangePasswordPopupButtons
           isTimerOn={this.state.isTimerOn}
@@ -58,17 +57,17 @@ class ChangePasswordPopup extends Component {
 const ChangePasswordPopupButtons = props => (
   <div className="popup-buttons">
     <button
-      className="button button-a popup-cancel-button"
+      className="button-a popup-cancel-button"
       onClick={props.onClickCancelLogout}
     >
-      Cancel
+      <span>Cancel</span>
     </button>
     <button
-      className="button button-a popup-confirm-button"
+      className="button-a popup-confirm-button"
       onClick={props.onConfirmLogout}
       disabled={props.isTimerOn}
     >
-      {props.isTimerOn ? `Yes (${props.time})` : `Yes`}
+      <span>{props.isTimerOn ? `Yes (${props.time})` : `Yes`}</span>
     </button>
   </div>
 );

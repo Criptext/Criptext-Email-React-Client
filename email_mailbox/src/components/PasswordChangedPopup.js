@@ -1,28 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './passwordchangedpopup.css';
 
 const PasswordChangedPopup = props => {
   return (
-    <div className="password-changed-popup-container">
-      <div className="password-changed-popup-title">
-        <span>Enter your password to continue</span>
+    <div className="popup-content">
+      <div className="popup-title">
+        <h1>Enter your password to continue</h1>
       </div>
-      <div className="password-changed-popup-text">
-        <div className="text">
-          <span>
-            Your password has changed remotely and you must confirm your new
-            password.
-          </span>
-        </div>
-        <div className="text">
-          <span>
-            <strong>If you Cancel</strong> the device will log out and
-            <strong> all local data will be erased</strong>
-          </span>
-        </div>
+      <div className="popup-paragraph">
+        <p>
+          Your password has changed remotely and you must confirm your new
+          password.
+        </p>
+        <p>
+          <strong>If you Cancel</strong> the device will log out and
+          <strong> all local data will be erased</strong>
+        </p>
       </div>
-      <PasswordChangedPopupInput {...props} />
+      <div className="popup-inputs">
+        <PasswordChangedPopupInput {...props} />
+      </div>
       <PasswordChangedPopupButtons {...props} />
     </div>
   );
@@ -38,7 +35,7 @@ const PasswordChangedPopupInput = ({
   errorMessage,
   isDisabledInput
 }) => (
-  <div className="password-changed-input">
+  <div className="popup-input">
     <input
       type={type}
       value={value}
@@ -46,7 +43,9 @@ const PasswordChangedPopupInput = ({
       placeholder={'Enter password'}
       disabled={isDisabledInput}
     />
-    <i className={icon} onClick={() => onClickChangeInputType()} />
+    {type === 'password' && (
+      <i className={icon} onClick={() => onClickChangeInputType()} />
+    )}
     <PasswordChangedPopupInputErrorMessage
       hasError={hasError}
       errorMessage={errorMessage}
@@ -69,19 +68,19 @@ const PasswordChangedPopupInputErrorMessage = ({
 };
 
 const PasswordChangedPopupButtons = props => (
-  <div className="password-changed-popup-buttons">
+  <div className="popup-buttons">
     <button
-      className="button button-a password-changed-cancel-button"
+      className="button-a popup-cancel-button"
       onClick={props.onClickCancelPasswordChanged}
     >
-      Cancel
+      <span>Cancel</span>
     </button>
     <button
-      className="button button-a password-changed-confirm-button"
+      className="button-a popup-confirm-button"
       onClick={props.onConfirmPasswordChanged}
       disabled={props.isDisabledConfirmButton}
     >
-      Confirm
+      <span>Confirm</span>
     </button>
   </div>
 );

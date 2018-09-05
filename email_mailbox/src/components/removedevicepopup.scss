@@ -1,74 +1,9 @@
-.logout-popup-content {
-  width: 270px;
-  height: 260px;
-  border-radius: 5px;
-  background-color: #ffffff;
-  box-shadow: 0 1px 16px 0 rgba(143, 143, 143, 0.2);
-  text-align: center;
+#popup-removedevice{
+  .popup-inputs{
+    margin-top: 0;
 
-  .logout-popup-title {
-    h1 {
-      padding-top: 28px;
-      padding-bottom: 7px;
-      font-size: 16px;
-      line-height: 30px;
-      margin: 0px;
-    }
-  }
-
-  .logout-popup-warning-text {
-    font-size: 12px;
-    color: #373a45;
-    padding: 10px 40px 0px 40px;
-    margin-bottom: 12px;
-    margin-top: 12px;
-  }
-
-  .logout-popup-password-text {
-    font-size: 12px;
-    font-weight: bolder;
-    color: #000000;
-    margin-bottom: 7px;
-  }
-  .logout-popup-password-input {
-    margin-bottom: 25px;
-
-    input {
-      width: 70%;
-      border: none;
-      border-bottom: solid 1.5px #e3e5e6;;
-
-      &:focus {
-        outline: none;
-        border-bottom: solid 1.5px #0091ff;
-      }
-    }
-  }
-  .logout-popup-buttons {
-    position: absolute;
-    bottom: 7%;
-    right: 18%;
-
-    & > .button {
-      width: 70px;
-      margin: 0px 5px;
-      text-transform: capitalize;
-      font-weight: bold;
-    }
-
-    .logout-cancel-button {
-      background-color: #ffffff;
-      color: #5d5b5b;
-    }
-
-    .logout-remove-button {
-      background-color: #0091ff;
-      color: #ffffff;
-
-      &:disabled {
-        opacity: 0.5;
-        pointer-events: none;
-      }
+    .popup-input{
+      margin-top: 0;
     }
   }
 }

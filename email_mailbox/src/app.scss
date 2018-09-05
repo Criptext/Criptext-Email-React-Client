@@ -9,10 +9,11 @@ TABLE OF CONTENTS
  1.1.- Text
  1.2.- Icon
 2.- CONTENT
-3.- CONTROLS
- 3.1.- Button
- 3.2.- Select
- 3.3.- Input Text
+3.- POPUP
+4.- CONTROLS
+ 4.1.- Button
+ 4.2.- Select
+ 4.3.- Input Text
 
 ***/
 
@@ -414,6 +415,11 @@ h1{
   font-weight: 800;
 }
 
+h2{
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .wrapper-out{
   height: 100%;
   position: fixed;
@@ -481,19 +487,136 @@ h1{
   }
 }
 
-/* 3.- CONTROLS
+/* 3.- POPUP
+   ----------------------------- */
+.popup-content{
+  border-radius: 5px;
+  background-color: #ffffff;
+  padding: 25px;
+  text-align: center;
+  width: 230px;
+
+  .popup-title {
+    h1 {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 22px;
+      margin: 0px;
+    }
+  }
+
+  .popup-paragraph {
+    padding: 0px 0px;
+    margin-top: 25px;
+    line-height: 16px;
+
+    p{
+      color: #373a45;
+      font-size: 13px;
+      font-weight: 300;
+    }
+  }
+
+  .popup-inputs{
+    margin: 20px auto 0;
+    width: calc(100% - 15px);
+
+    .popup-input{
+      margin-top: 18px;
+      position: relative;
+
+      input{
+        border: none;
+        border-bottom: solid 1px #e3e5e6;
+        font-size: 12px;
+        font-weight: 300;
+
+        &:focus {
+          border-bottom: solid 1px #0091ff;
+        }
+      }
+      
+      i {
+        color: #aeaeae;
+        font-size: 17px;
+        position: absolute;
+        bottom: 2px;
+        right: 1px;
+      }
+
+      span {
+        color: #de4646;
+        bottom: -15px;
+        font-size: 10px;
+        float: left;
+        left: -14px;
+        margin-left: 15px;
+        position: absolute;
+      }
+    }
+  }
+
+  .popup-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 40px;
+  
+    .button-a {
+      height: 28px;
+      text-transform: capitalize;
+      width: 75px;
+
+      &.popup-cancel-button {
+        background-color: #ffffff;
+        color: black;
+      }
+      
+      &.popup-confirm-button {
+        background-color: #0091ff;
+        color: #ffffff;
+    
+        &:disabled {
+          opacity: 0.5;
+          pointer-events: none;
+        }
+      }
+
+      span{
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        top: 1px;
+      }
+    }
+  }
+}
+
+/* 4.- CONTROLS
    ----------------------------- */
 .disabled{
   opacity: 0.3;
 }
 
-/* 3.1.- CONTROLS: Button
+/* 4.1.- CONTROLS: Button
    ----------------------------- */
+input{
+  width: 100%;
+}
+
 input[type="text"]:focus {
   outline: 0;
 }
 
-/* 3.2.- CONTROLS: Select
+input[type="password"]{
+  padding-right: 20px;
+  width: calc(100% - 20px);
+  
+  &:focus {
+    outline: 0;
+  }
+}
+
+/* 4.2.- CONTROLS: Select
    ----------------------------- */
 select {
   background-color: #f0f0f0;
@@ -506,7 +629,7 @@ select {
   outline: none;
 }
 
-/* 3.3.- CONTROLS: Input text
+/* 4.3.- CONTROLS: Input text
    ----------------------------- */
 button{
   border: none;

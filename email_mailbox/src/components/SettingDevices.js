@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { deviceTypes } from './../utils/const';
 import PopupHOC from './PopupHOC';
-import RemoveDevicePopup from './RemoveDevicePopup';
+import RemoveDevicePopupWrapper from './RemoveDevicePopupWrapper';
 import './settingdevices.css';
 
-const Removedevicepopup = PopupHOC(RemoveDevicePopup);
+const Removedevicepopup = PopupHOC(RemoveDevicePopupWrapper);
 
 const SettingDevices = props => (
   <div id="setting-devices">{renderDevicesBlock(props)}</div>

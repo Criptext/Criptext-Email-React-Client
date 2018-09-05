@@ -7,7 +7,7 @@ const passwordText = 'To confirm enter your password';
 
 const ChangeRecoveryEmailPopup = props => {
   return (
-    <div className="change-recovery-email-popup-content">
+    <div className="popup-content">
       <div className="popup-title">
         <h1>Change Recovery Email</h1>
       </div>
@@ -19,14 +19,14 @@ const ChangeRecoveryEmailPopup = props => {
 };
 
 const ChangeRecoveryEmailPopupText = ({ text }) => (
-  <div className="popup-text">
-    <span>{text}</span>
+  <div className="popup-paragraph">
+    <p>{text}</p>
   </div>
 );
 
 const ChangeRecoveryEmailPopupInputs = props => {
   return (
-    <div className="change-recovery-email-popup-inputs">
+    <div className="popup-inputs">
       <ChangePasswordPopupInput
         name={props.recoveryEmailPopupInputEmail.name}
         type={props.recoveryEmailPopupInputEmail.type}
@@ -65,7 +65,7 @@ const ChangePasswordPopupInput = ({
   hasError,
   errorMessage
 }) => (
-  <div className="change-recovery-email-input">
+  <div className="popup-input">
     <input
       name={name}
       type={type}
@@ -73,7 +73,9 @@ const ChangePasswordPopupInput = ({
       onChange={ev => onChangeValue(ev)}
       placeholder={placeholder}
     />
-    <i className={icon} onClick={() => onChangeType(name)} />
+    {type === 'password' && (
+      <i className={icon} onClick={() => onChangeType(name)} />
+    )}
     <InputErrorMessage
       hasError={hasError}
       errorMessage={errorMessage}
@@ -91,17 +93,17 @@ const InputErrorMessage = ({ hasError, errorMessage, value }) => {
 const ChangeRecoveryEmailPopupButtons = props => (
   <div className="popup-buttons">
     <button
-      className="button button-a popup-cancel-button"
+      className="button-a popup-cancel-button"
       onClick={props.onClickCancelChangePassword}
     >
-      Cancel
+      <span>Cancel</span>
     </button>
     <button
-      className="button button-a popup-confirm-button"
+      className="button-a popup-confirm-button"
       onClick={props.onConfirmChangeRecoveryEmail}
       disabled={props.isDisabledChangeRecoveryEmailSubmitButton}
     >
-      Confim
+      <span>Confirm</span>
     </button>
   </div>
 );
