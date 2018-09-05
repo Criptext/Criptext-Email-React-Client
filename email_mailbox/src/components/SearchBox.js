@@ -51,7 +51,7 @@ class SearchBox extends Component {
         />
         <div className="header-search-toggle">
           <i
-            className="icon-toogle-down"
+            className="icon-arrow-down"
             onClick={this.onToggleMenuSearchOptions}
           />
           <MenuSearchOptions

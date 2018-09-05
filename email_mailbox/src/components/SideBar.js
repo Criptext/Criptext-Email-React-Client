@@ -54,7 +54,7 @@ const SideBar = props => (
               <div className="nav-item-option">
                 <i
                   className={
-                    props.showLabels ? 'icon-toogle-up' : 'icon-toogle-down'
+                    props.showLabels ? 'icon-arrow-up' : 'icon-arrow-down'
                   }
                 />
               </div>

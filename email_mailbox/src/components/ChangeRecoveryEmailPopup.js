@@ -8,7 +8,7 @@ const passwordText = 'To confirm enter your password';
 const ChangeRecoveryEmailPopup = props => {
   return (
     <div className="change-recovery-email-popup-content">
-      <div className="change-recovery-email-popup-title">
+      <div className="popup-title">
         <h1>Change Recovery Email</h1>
       </div>
       <ChangeRecoveryEmailPopupText text={recoveryEmailText} />
@@ -19,7 +19,7 @@ const ChangeRecoveryEmailPopup = props => {
 };
 
 const ChangeRecoveryEmailPopupText = ({ text }) => (
-  <div className="change-recovery-email-popup-text">
+  <div className="popup-text">
     <span>{text}</span>
   </div>
 );
@@ -89,15 +89,15 @@ const InputErrorMessage = ({ hasError, errorMessage, value }) => {
 };
 
 const ChangeRecoveryEmailPopupButtons = props => (
-  <div className="change-recovery-email-popup-buttons">
+  <div className="popup-buttons">
     <button
-      className="button button-a change-recovery-email-cancel-button"
+      className="button button-a popup-cancel-button"
       onClick={props.onClickCancelChangePassword}
     >
       Cancel
     </button>
     <button
-      className="button button-a change-recovery-email-confirm-button"
+      className="button button-a popup-confirm-button"
       onClick={props.onConfirmChangeRecoveryEmail}
       disabled={props.isDisabledChangeRecoveryEmailSubmitButton}
     >

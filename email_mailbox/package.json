@@ -22,7 +22,6 @@
     "react-draft-wysiwyg": "^1.12.13",
     "react-redux": "^5.0.6",
     "react-scripts": "1.0.17",
-    "react-switch": "^3.0.4",
     "react-switch-input": "^0.1.10",
     "react-tooltip": "^3.4.0",
     "redux": "^3.7.2",

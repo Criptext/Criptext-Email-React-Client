@@ -5,36 +5,28 @@ import './passwordchangedpopup.css';
 const PasswordChangedPopup = props => {
   return (
     <div className="password-changed-popup-container">
-      <PasswordChangedPopupTitle />
-      <PasswordChangedPopupText />
+      <div className="password-changed-popup-title">
+        <span>Enter your password to continue</span>
+      </div>
+      <div className="password-changed-popup-text">
+        <div className="text">
+          <span>
+            Your password has changed remotely and you must confirm your new
+            password.
+          </span>
+        </div>
+        <div className="text">
+          <span>
+            <strong>If you Cancel</strong> the device will log out and
+            <strong> all local data will be erased</strong>
+          </span>
+        </div>
+      </div>
       <PasswordChangedPopupInput {...props} />
       <PasswordChangedPopupButtons {...props} />
     </div>
   );
 };
-
-const PasswordChangedPopupTitle = () => (
-  <div className="password-changed-popup-title">
-    <span>Enter your password to continue</span>
-  </div>
-);
-
-const PasswordChangedPopupText = () => (
-  <div className="password-changed-popup-text">
-    <div className="text">
-      <span>
-        Your password has changed remotely and you must confirm your new
-        password.
-      </span>
-    </div>
-    <div className="text">
-      <span>
-        <strong>If you Cancel</strong> the device will log out and
-        <strong> all local data will be erased</strong>
-      </span>
-    </div>
-  </div>
-);
 
 const PasswordChangedPopupInput = ({
   type,

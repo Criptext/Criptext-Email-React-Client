@@ -602,7 +602,8 @@ class SettingGeneralWrapper extends Component {
     });
   };
 
-  handleChangeRadioButtonSignature = async value => {
+  handleChangeRadioButtonSignature = async ev => {
+    const value = ev.target.checked;
     await this.props.onUpdateAccount({ signatureEnabled: value });
     const signatureParams = {
       ...this.state.signatureParams,

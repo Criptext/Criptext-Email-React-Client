@@ -24,7 +24,7 @@
     width: calc(100% - 40px);
 
     .settings-content-items{
-      border-bottom: 1px solid #d8d8d8;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
       display: flex;
       height: 33px;
       list-style: none;
@@ -79,7 +79,7 @@
       }
 
       .section-block{
-        border-bottom: 1px solid #c8c8ca;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
         display: flex;
         padding: 15px 20px;
         width: calc(100% - 40px);
@@ -92,6 +92,10 @@
           align-items: flex-start;
           display: flex;
           width: 200px;
+
+          h1{
+            font-weight: 700;
+          }
         }
       
         .section-block-content{

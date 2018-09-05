@@ -128,8 +128,14 @@
 }
 
 .nav-item-option{
-  color: #d8d8d8;
-  font-size: 20px;
+  height: 18px;
+  position: relative;
+
+  i{
+    color: #d8d8d8;
+    font-size: 22px;
+    line-height: 18px;
+  }
 }
 
 .sidebar-app-expand .sidebar-app{

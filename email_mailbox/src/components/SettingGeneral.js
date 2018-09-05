@@ -1,7 +1,7 @@
 /* eslint react/jsx-no-target-blank: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Switch from 'react-switch';
+import { Switch } from 'react-switch-input';
 import { Editor } from 'react-draft-wysiwyg';
 import Countdown from 'react-countdown-now';
 import PopupHOC from './PopupHOC';
@@ -26,9 +26,8 @@ const SettingGeneral = props => (
     <ProfileBlock {...props} />
     <PasswordBlock {...props} />
     <RecoveryEmailBlock {...props} />
-    <LogoutAccountBlock {...props} />
-    <LanguageBlock />
     <UsefulLinksBlock />
+    <LogoutAccountBlock {...props} />
     <SettingsPopup {...props} />
   </div>
 );
@@ -91,16 +90,10 @@ const renderBlockSignature = props => (
     <div className="signature-switch">
       <div className="signature-switch-item">
         <Switch
-          id="setPasswordSwitch"
-          onChange={ev => props.onChangeRadioButtonSignature(ev)}
+          theme="two"
+          name="setPasswordSwitch"
+          onChange={props.onChangeRadioButtonSignature}
           checked={!!myAccount.signatureEnabled}
-          width={28}
-          height={17}
-          handleDiameter={13}
-          offColor="#b4b4b4"
-          onColor="#0091ff"
-          uncheckedIcon={false}
-          checkedIcon={false}
         />
       </div>
       <div className="signature-switch-label">
@@ -257,19 +250,6 @@ const RecoveryEmailConfirmationMessage = ({ recoveryEmailConfirmed }) => {
     </div>
   );
 };
-
-const LanguageBlock = () => (
-  <div className="section-block">
-    <div className="section-block-title">
-      <h1>Language</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item">
-        <span>English (US)</span>
-      </div>
-    </div>
-  </div>
-);
 
 const UsefulLinksBlock = () => (
   <div className="section-block">

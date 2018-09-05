@@ -81,6 +81,12 @@
 
               .signature-switch-item {
                 margin-right: 10px;
+
+                .input-switch{
+                  label{
+                    margin-left: 0;
+                  }
+                }
               }
 
               .signature-switch-label {
@@ -157,7 +163,78 @@
       }
     }
 
+    &:nth-child(3){
+      .section-block-content{
+        .section-block-content-item{
+          &:nth-child(1){
+            .recovery-email {
+              display: flex;
+          
+              .address {
+                color: #636363;
+                font-size: 14px;
+                margin-right: 15px;
+              }
+          
+              > div {
+                display: flex;
+          
+                .recovery-email-confirmation-section {
+                  align-items: center;
+                  display: flex;
+                  margin-right: 10px;
+            
+                  &.recovery-email-confirmed {
+                    color: #8ac43f;
+                  }
+          
+                  &.recovery-email-not-confirmed {
+                    color: #d94e47;
+                  }
+          
+                  .text {
+                    font-size: 13px;
+                    font-weight: 300;
+                    position: relative;
+                  }  
+            
+                  i {
+                    font-size: 15px;
+                    font-weight: bold;
+                    line-height: 18px;
+                    position: relative;
+                  }
+                }
+          
+                .button-b{
+                  margin-right: 5px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     &:nth-child(4){
+      .section-block-content{
+        .section-block-content-item{
+          &:nth-child(1){
+            flex-direction: column;
+
+            .useful-link{
+              color: #0091ff;
+              font-size: 12px;
+              font-weight: 400;
+              margin-top: 7px;
+              text-decoration: none;
+            }
+          }
+        }
+      }
+    }
+
+    &:nth-child(5){
       .section-block-content{
         .section-block-content-item{
           &:nth-child(1){
@@ -192,86 +269,6 @@
             }
           }
         }
-      }
-    }
-
-    &:nth-child(5){
-      .section-block-content{
-        .section-block-content-item{
-          &:nth-child(1){
-            span{
-              color: #6a707e;
-              font-size: 12px;
-              font-weight: 300;
-            }
-          }
-        }
-      }
-    }
-    &:nth-child(6){
-      .section-block-content{
-        .section-block-content-item{
-          &:nth-child(1){
-            flex-direction: column;
-
-            .useful-link{
-              color: #0091ff;
-              font-size: 12px;
-              font-weight: 400;
-              margin-top: 7px;
-              text-decoration: none;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-.content-recovery-email {
-  display: flex;
-
-  .recovery-email {
-    display: flex;
-
-    .address {
-      color: #636363;
-      font-size: 14px;
-      margin-right: 15px;
-    }
-
-    > div {
-      display: flex;
-
-      .recovery-email-confirmation-section {
-        align-items: center;
-        display: flex;
-        margin-right: 10px;
-  
-        &.recovery-email-confirmed {
-          color: #8ac43f;
-        }
-
-        &.recovery-email-not-confirmed {
-          color: #d94e47;
-        }
-
-        .text {
-          font-size: 13px;
-          font-weight: 300;
-          position: relative;
-        }  
-  
-        i {
-          font-size: 15px;
-          font-weight: bold;
-          line-height: 18px;
-          position: relative;
-        }
-      }
-
-      .button-b{
-        margin-right: 5px;
       }
     }
   }
