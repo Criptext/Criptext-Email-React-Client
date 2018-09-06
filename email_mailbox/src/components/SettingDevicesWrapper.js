@@ -6,15 +6,13 @@ import {
   sendRemoveDeviceErrorMessage,
   sendRemoveDeviceSuccessMessage
 } from '../utils/electronEventInterface';
-import { hashPassword } from '../utils/hashUtils';
 
 class SettingDevicesWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isHiddenRemoveDevicePopup: true,
-      deviceId: undefined,
-      password: ''
+      deviceId: undefined
     };
   }
 
@@ -23,14 +21,11 @@ class SettingDevicesWrapper extends Component {
       <SettingDevices
         {...this.props}
         devices={this.props.devices}
+        deviceId={this.state.deviceId}
         isHiddenRemoveDevicePopup={this.state.isHiddenRemoveDevicePopup}
-        onChangeRemoveDeviceInputPassword={
-          this.handleChangeRemoveDeviceInputPassword
-        }
         onClickCancelRemoveDevice={this.handleClickCancelRemoveDevice}
         onClickRemoveDevice={this.handleClickRemoveDevice}
-        onRemoveDevice={this.handleRemoveDevice}
-        password={this.state.password}
+        onDeviceToRemove={this.handleDeviceToRemove}
       />
     );
   }
@@ -42,28 +37,18 @@ class SettingDevicesWrapper extends Component {
     });
   };
 
-  handleChangeRemoveDeviceInputPassword = ev => {
-    const password = ev.target.value;
-    this.setState({ password });
-  };
-
   handleClickCancelRemoveDevice = () => {
     this.setState({
       isHiddenRemoveDevicePopup: true,
-      deviceId: undefined,
-      password: ''
+      deviceId: undefined
     });
   };
 
-  handleRemoveDevice = async () => {
-    const params = {
-      deviceId: this.state.deviceId,
-      password: hashPassword(this.state.password)
-    };
+  handleDeviceToRemove = async params => {
     const isSuccess = await this.props.onRemoveDevice(params);
     if (isSuccess) {
       this.setState(
-        { isHiddenRemoveDevicePopup: true, deviceId: undefined, password: '' },
+        { isHiddenRemoveDevicePopup: true, deviceId: undefined },
         () => {
           sendRemoveDeviceSuccessMessage();
         }

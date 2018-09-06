@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './changepasswordpopup.css';
 
 const ChangePasswordPopup = props => {
   return (
-    <div className="change-password-popup-content">
+    <div className="popup-content">
       <div className="popup-title">
         <h1>Change Password</h1>
       </div>
-      <div className="popup-text">
-        <span>Enter your password then your new password and confirm it</span>
+      <div className="popup-paragraph">
+        <p>Enter your password then your new password and confirm it</p>
       </div>
       <ChangePasswordPopupInputs {...props} />
       <ChangePasswordPopupButtons {...props} />
@@ -19,7 +18,7 @@ const ChangePasswordPopup = props => {
 
 const ChangePasswordPopupInputs = props => {
   return (
-    <div className="change-password-popup-inputs">
+    <div className="popup-inputs">
       <ChangePasswordPopupInput
         name={props.oldPasswordInput.name}
         type={props.oldPasswordInput.type}
@@ -68,7 +67,7 @@ const ChangePasswordPopupInput = ({
   hasError,
   errorMessage
 }) => (
-  <div className="change-password-input">
+  <div className="popup-input">
     <input
       name={name}
       type={type}
@@ -94,17 +93,17 @@ const InputErrorMessage = ({ hasError, errorMessage, value }) => {
 const ChangePasswordPopupButtons = props => (
   <div className="popup-buttons">
     <button
-      className="button button-a popup-cancel-button"
+      className="button-a popup-cancel-button"
       onClick={props.onClickCancelChangePassword}
     >
-      Cancel
+      <span>Cancel</span>
     </button>
     <button
-      className="button button-a popup-confirm-button"
+      className="button-a popup-confirm-button"
       onClick={props.onConfirmChangePassword}
       disabled={props.isDisabledChangePasswordSubmitButton}
     >
-      Confim
+      <span>Confirm</span>
     </button>
   </div>
 );

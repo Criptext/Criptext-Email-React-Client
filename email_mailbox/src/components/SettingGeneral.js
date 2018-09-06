@@ -142,7 +142,7 @@ const PasswordBlock = props => (
     <div className="section-block-content">
       <div className="section-block-content-item">
         <button
-          className="button button-a button-reset-password"
+          className="button-a button-reset-password"
           onClick={props.onClickChangePasswordButton}
         >
           <span>Change password</span>

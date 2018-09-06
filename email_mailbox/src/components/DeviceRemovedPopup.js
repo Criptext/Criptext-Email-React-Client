@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './deviceremovedpopup.css';
 
 const DeviceRemovedPopup = () => {
   return (
-    <div className="deviceremoved-container">
-      <div className="deviceremoved-title">Device Removed</div>
-      <div className="deviceremoved-text">
-        <div className="text">
-          This device was removed from another of your devices
-        </div>
-        <div className="text">The app will be closed in few seconds...</div>
+    <div className="popup-content">
+      <div className="popup-title">
+        <h1>Device Removed</h1>
+      </div>
+      <div className="popup-paragraph">
+        <p>This device was removed from another of your devices</p>
+        <p>The app will be closed in few seconds...</p>
       </div>
     </div>
   );
