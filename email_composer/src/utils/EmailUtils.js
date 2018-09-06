@@ -96,26 +96,21 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const sufix =
     replyType === composerEvents.FORWARD ? forwardSufix : replySufix;
   const textSubject = sufix + removeActionsFromSubject(emailData.subject);
-
-  const toEmails =
-    replyType === composerEvents.REPLY || replyType === composerEvents.REPLY_ALL
-      ? contacts.from.map(contact => formRecipientObject(contact))
-      : [];
-
   const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
-  const previousCcEmails = contacts.cc.map(contact =>
-    formRecipientObject(contact)
+  const toEmails = formToEmails(
+    contacts.from,
+    contacts.to,
+    replyType,
+    myEmailAddress
   );
-  const othersToEmails = contacts.to
-    .map(contact => formRecipientObject(contact))
-    .filter(contact => contact.email !== myEmailAddress);
+  const previousCcEmails = filterRecipientObject(contacts.cc, myEmailAddress);
+  const othersToEmails = filterRecipientObject(contacts.to, myEmailAddress);
   const ccEmails =
     replyType === composerEvents.REPLY_ALL
       ? [...previousCcEmails, ...othersToEmails]
       : [];
 
   const bccEmails = [];
-
   return {
     toEmails,
     ccEmails,
@@ -124,6 +119,33 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     textSubject,
     threadId
   };
+};
+
+const formToEmails = (from, to, replyType, myEmailAddress) => {
+  const [isFromMe] = from.map(
+    contact =>
+      contact.email
+        ? contact.email === myEmailAddress
+        : contact === myEmailAddress
+  );
+  if (
+    replyType === composerEvents.REPLY ||
+    replyType === composerEvents.REPLY_ALL
+  ) {
+    if (isFromMe) {
+      return to.map(contact => formRecipientObject(contact));
+    }
+    return from.map(contact => formRecipientObject(contact));
+  }
+  return [];
+};
+
+const filterRecipientObject = (contacts, rejectEmailAddress) => {
+  return contacts
+    .map(contact => formRecipientObject(contact))
+    .filter(contact => {
+      return contact.email !== rejectEmailAddress;
+    });
 };
 
 const formSignature = () => {
