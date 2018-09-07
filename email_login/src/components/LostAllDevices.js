@@ -49,7 +49,6 @@ const renderForm = props => (
           placeholder="Password"
           value={props.values.password}
           onChange={props.onChangeField}
-          onKeyUp={props.validator}
           disabled={props.isLoading}
           autoFocus={true}
         />

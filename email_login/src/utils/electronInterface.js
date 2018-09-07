@@ -1,5 +1,5 @@
 const electron = window.require('electron');
-const { ipcRenderer, remote } = electron;
+const { ipcRenderer, remote, webFrame } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 export const { requiredMinLength, requiredMaxLength } = remote.require(
@@ -9,8 +9,11 @@ export const errors = remote.require('./src/errors');
 export const myAccount = remote.require('./src/Account');
 export const LabelType = remote.require('./src/systemLabels');
 
+webFrame.setVisualZoomLevelLimits(1, 1);
+webFrame.setLayoutZoomLevelLimits(0, 0);
+
 /* Window events
-   ----------------------------- */
+  ----------------------------- */
 export const closeDialog = () => {
   ipcRenderer.send('close-modal');
 };
@@ -55,10 +58,11 @@ export const confirmLostDevices = callback => {
   });
 };
 
-export const confirmForgotPasswordEmptyEmail = callback => {
+export const confirmForgotPasswordEmptyEmail = (customText, callback) => {
   const dataForModal = {
     title: 'Alert!',
     contentType: 'FORGOT_PASSWORD_EMPTY_EMAIL',
+    customTextToReplace: customText,
     options: {
       cancelLabel: 'Cancel',
       acceptLabel: 'Ok'
@@ -71,12 +75,12 @@ export const confirmForgotPasswordEmptyEmail = callback => {
   });
 };
 
-export const confirmForgotPasswordSentLink = callback => {
+export const confirmForgotPasswordSentLink = (customText, callback) => {
   const dataForModal = {
-    title: 'Forgot Password?',
-    contentType: 'FORGOT_PASSWORD_SENT_LINK',
+    title: 'Forgot Password',
+    contentType: 'FORGOT_PASSWORD_SEND_LINK',
+    customTextToReplace: customText,
     options: {
-      cancelLabel: 'Cancel',
       acceptLabel: 'Ok'
     },
     sendTo: 'login'
@@ -108,7 +112,7 @@ export const throwError = error => {
 };
 
 /* Criptext Client
-   ----------------------------- */
+  ----------------------------- */
 export const checkAvailableUsername = username => {
   return clientManager.checkAvailableUsername(username);
 };
@@ -125,8 +129,12 @@ export const postUser = params => {
   return clientManager.postUser(params);
 };
 
+export const resetPassword = recipientId => {
+  return clientManager.resetPassword(recipientId);
+};
+
 /* DataBase
-   ----------------------------- */
+  ----------------------------- */
 export const cleanDataBase = params => {
   return dbManager.cleanDataBase(params);
 };

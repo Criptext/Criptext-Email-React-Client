@@ -27,21 +27,18 @@ const renderForm = props => (
   <div className="form">
     <form autoComplete="off">
       <div className="label">
-        <label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={props.value}
-            onChange={props.onChangeField}
-            onKeyUp={props.validator}
-            autoFocus={true}
-          />
-          &nbsp;
-          <span>@criptext.com</span>
-          <div className="clear" />
-        </label>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={props.value}
+          onChange={props.onChangeField}
+          autoFocus={true}
+        />
+        &nbsp;
+        <span>@criptext.com</span>
       </div>
+      <span className="error-message">{props.errorMessage}</span>
       <div className="button">
         <button
           className="button-login"
@@ -67,10 +64,10 @@ const renderFooter = props => (
 );
 
 renderForm.propTypes = {
-  onChangeField: PropTypes.func,
-  validator: PropTypes.func,
-  onClickSignIn: PropTypes.func,
   disabled: PropTypes.bool,
+  errorMessage: PropTypes.string,
+  onChangeField: PropTypes.func,
+  onClickSignIn: PropTypes.func,
   value: PropTypes.string
 };
 

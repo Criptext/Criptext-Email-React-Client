@@ -153,6 +153,11 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
+  async resetPassword(recipientId) {
+    const res = await client.resetPassword(recipientId);
+    return checkDeviceRemoved(res);
+  }
+
   async unlockDevice(params) {
     const res = await client.unlockDevice(params);
     return checkDeviceRemoved(res);

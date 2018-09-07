@@ -9,26 +9,33 @@ export const LostAllDevices = () => (
   </div>
 );
 
-export const EmptyRecoveryEmail = () => (
-  <div className="message-empty-recovery-email">
-    <p>
-      You did not set a <strong>Recovery Email</strong> so account recovery is
-      impossible if you forget your password.
-    </p>
-    <p>Proceed without recovery email?</p>
-  </div>
-);
+export const EmptyRecoveryEmail = () => {
+  return (
+    <div className="message-empty-recovery-email">
+      <p>
+        You did not set a <strong>Recovery Email</strong> so account recovery is
+        impossible if you forget your password.
+      </p>
+    </div>
+  );
+};
 
-export const ForgotPasswordSentLink = () => (
-  <div className="message-forgot-sent-link">
-    <p>A reset link will be sent to d******@o****l.com</p>
-    <p>The link will be valid for 1 hour</p>
-  </div>
-);
+export const ForgotPasswordSentLink = customText => {
+  const content =
+    customText ||
+    `A reset link was sent to your Recovery email\nThe link will be valid for 30 min`;
+  return (
+    <div className="message-forgot-sent-link">
+      <p>{content}</p>
+    </div>
+  );
+};
 
-export const ForgotPasswordEmptyEmail = () => (
+export const ForgotPasswordEmptyEmail = customText => (
   <div className="message-forgot-empty-email">
-    <p>You need to set a Recovery Email to reset your password.</p>
+    <p>
+      {customText || `You need to set a Recovery Email to reset your password`}
+    </p>
   </div>
 );
 

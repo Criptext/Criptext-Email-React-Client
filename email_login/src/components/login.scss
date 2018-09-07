@@ -43,50 +43,51 @@
         width: 100%;
         margin: 0px;
         padding: 0px;
+        display: flex;
 
-        label {
-          input {
-            background: transparent;
-            width: 55%;
-            border: 0px;
-            border-bottom: solid 1px rgba(255,255,255,0.19);
-            color: #ffffff;
-            font-size: 13px;
-            font-weight: 300;
-            text-indent: 7px;
-            float: left;
-          }
-          input::placeholder {
+        input {
+          background: transparent;
+          width: 55%;
+          border: 0px;
+          border-bottom: solid 1px rgba(255,255,255,0.19);
+          color: #ffffff;
+          font-size: 13px;
+          font-weight: 300;
+          text-indent: 7px;
+
+          &::placeholder {
             color: rgba(255,255,255,0.6);
             opacity: 1;
           }
-          input:-ms-input-placeholder {
-            color: rgba(255,255,255,0.6);
-          }
-          input::-ms-input-placeholder {
-            color: rgba(255,255,255,0.6);
-          }
-          input:focus{
+
+          &:focus {
             outline: none;
             border-bottom: solid 1px #fff;
           }
-          span {
-            width: 40%;
-            float: right;
-            font-size: 14px;
-            font-weight: 300;
-            color: #ffffff;
-          }
-          .clear {
-            clear: both;
-          }
+        }
+        span {
+          width: 40%;
+          font-size: 14px;
+          font-weight: 400;
+          color: #ffffff;
         }
       }
 
+      .error-message {
+        font-size: 12px;
+        color: #000;
+        position: relative;
+        left: 7px;
+      }
+
       .button {
-        width: 100%;
+        width: 60%;
         margin: 5% 0% 0% 0%;
         padding: 0px;
+        position: absolute;
+        bottom: 22%;
+
+
         .button-login {
           border: none;
           border-radius: 100px;
@@ -97,6 +98,7 @@
           width: 100%;
           transition: opacity 0.1s;
           outline: none;
+          
           span {
             color: #fff;
             font-weight: 600;
@@ -123,16 +125,17 @@
     height: 20%;
     color: #ffffff;
     font-size: 13px;
+
     .signup-message {
       position: relative;
-      top: -8%;
+      top: 8%;
       text-align: center;
+
       span{
         font-weight: 300;
         strong{
           cursor: pointer;
         }
-        
       }
     }
   }

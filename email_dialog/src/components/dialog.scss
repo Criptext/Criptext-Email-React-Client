@@ -30,7 +30,7 @@
     }
 
     .message-empty-recovery-email {
-      font-size: 13px;
+      font-size: 13.5px;
       position: relative;
       top: 10px;
     }
@@ -40,7 +40,7 @@
       top: 15px;
     }
     .message-forgot-sent-link {
-      font-size: 14px;
+      font-size: 15px;
       position: relative;
       top: 20px;
       p {
@@ -62,6 +62,9 @@
       position: absolute;
       bottom: 30px;
       .cancel {
+        position: absolute;
+        left: 5px;
+        bottom: 0px;
         border: none;
         outline: none;
         border-radius: 100px;
@@ -77,6 +80,9 @@
         }
       }
       .confirm {
+        position: absolute;
+        left: 190px;
+        bottom: 0px;
         border: none;
         outline: none;
         border-radius: 100px;

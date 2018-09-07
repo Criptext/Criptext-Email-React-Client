@@ -11,10 +11,12 @@ import {
   login,
   openMailbox,
   throwError,
-  errors
+  errors,
+  resetPassword
 } from './../utils/electronInterface';
 import signal from './../libs/signal';
 import { hashPassword } from '../utils/HashUtils';
+import { censureEmailAddress } from '../utils/StringUtils';
 
 class LostDevicesWrapper extends Component {
   constructor(props) {
@@ -25,7 +27,6 @@ class LostDevicesWrapper extends Component {
         password: ''
       },
       disabled: true,
-      hasRecoveryEmail: true,
       isLoading: false
     };
   }
@@ -100,22 +101,35 @@ class LostDevicesWrapper extends Component {
     }
   };
 
-  handleForgot = event => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (this.state.hasRecoveryEmail === true) {
-      confirmForgotPasswordSentLink(response => {
+  handleForgot = async ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const recipientId = this.state.values.username;
+    const { status, text } = await resetPassword(recipientId);
+    const customText = this.getForgotPasswordMessage(status, text);
+    if (status === 200) {
+      confirmForgotPasswordSentLink(customText, response => {
         if (response) {
           closeDialog();
         }
       });
     } else {
-      confirmForgotPasswordEmptyEmail(response => {
+      confirmForgotPasswordEmptyEmail(customText, response => {
         if (response) {
           closeDialog();
         }
       });
     }
+  };
+
+  getForgotPasswordMessage = (status, text) => {
+    if (status === 200) {
+      const { address } = JSON.parse(text);
+      return `A reset link was sent to ${censureEmailAddress(
+        address
+      )}\nThe link will be valid for 30 minutes`;
+    }
+    return text;
   };
 
   createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {

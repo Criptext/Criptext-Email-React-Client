@@ -4,13 +4,20 @@ import SignUpWrapper from './SignUpWrapper';
 import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import { closeDialog, confirmLostDevices } from './../utils/electronInterface';
-import { validateUsername } from './../validators/validators';
+import {
+  validateUsername,
+  checkUsernameAvailable
+} from './../validators/validators';
 
 const mode = {
   SIGNUP: 'SIGNUP',
   LOGIN: 'LOGIN',
   CONTINUE: 'CONTINUE',
   LOST_DEVICES: 'LOST_DEVICES'
+};
+
+const errorMessages = {
+  USERNAME_NOT_EXISTS: "Username doesn't exists"
 };
 
 class LoginWrapper extends Component {
@@ -21,13 +28,14 @@ class LoginWrapper extends Component {
       values: {
         username: ''
       },
-      disabled: true
+      disabled: true,
+      errorMessage: ''
     };
     this.timeCountdown = 0;
   }
 
-  componentDidMount() {
-    this.checkDisable();
+  async componentDidMount() {
+    await this.checkDisable();
   }
 
   render() {
@@ -55,9 +63,9 @@ class LoginWrapper extends Component {
             onClickSignIn={this.handleClickSignIn}
             onChangeField={this.handleChange}
             disabled={this.state.disabled}
-            validator={this.validateUsername}
             value={this.state.values.username}
             handleLostDevices={this.handleLostDevices}
+            errorMessage={this.state.errorMessage}
           />
         );
     }
@@ -66,42 +74,47 @@ class LoginWrapper extends Component {
   toggleSignUp = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState({
-      mode: this.state.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN
+    const nextMode = this.state.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN;
+    this.setState({ mode: nextMode }, async () => {
+      await this.checkDisable();
     });
-    this.checkDisable();
   };
 
   toggleContinue = ev => {
     ev.preventDefault();
     ev.stopPropagation();
     this.stopCountdown();
-    this.setState({
-      mode: this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN
+    const nextMode =
+      this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN;
+    this.setState({ mode: nextMode }, async () => {
+      await this.checkDisable();
     });
-    this.checkDisable();
   };
 
   toggleLostAllDevices = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState({
-      mode: mode.LOGIN
-    });
-    this.checkDisable();
+    this.setState(
+      {
+        mode: mode.LOGIN
+      },
+      async () => {
+        await this.checkDisable();
+      }
+    );
   };
 
   stopCountdown = () => {
     clearTimeout(this.timeCountdown);
   };
 
-  validateUsername = () => {
+  validateUsername = async () => {
     const username = this.state.values['username'];
-    return validateUsername(username);
+    return await validateUsername(username);
   };
 
-  checkDisable = () => {
-    const isValid = this.validateUsername();
+  checkDisable = async () => {
+    const isValid = await this.validateUsername();
     this.setState({
       disabled: !isValid
     });
@@ -110,17 +123,26 @@ class LoginWrapper extends Component {
   handleChange = event => {
     const values = { ...this.state.values };
     values[event.target.name] = event.target.value;
-    this.setState({ values }, () => {
-      this.checkDisable();
+    this.setState({ values, errorMessage: '' }, async () => {
+      await this.checkDisable();
     });
   };
 
-  handleClickSignIn = event => {
-    event.preventDefault();
-    event.stopPropagation();
-    this.setState({
-      mode: mode.LOST_DEVICES
-    });
+  handleClickSignIn = async ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const isAvailable = await checkUsernameAvailable(
+      this.state.values.username
+    );
+    if (isAvailable) {
+      this.setState({
+        errorMessage: errorMessages.USERNAME_NOT_EXISTS
+      });
+    } else {
+      this.setState({
+        mode: mode.LOST_DEVICES
+      });
+    }
   };
 
   handleLostDevices = event => {
