@@ -25,13 +25,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onSearchChange: filter => {
       dispatch(actions.loadSuggestions(filter));
     },
-    onSearchSelectThread: threadId => {
+    onSearchSelectThread: (threadId, searchParams) => {
       const type = SectionType.THREAD;
       const params = {
         mailboxSelected: 'search',
-        threadIdSelected: threadId
+        threadIdSelected: threadId,
+        searchParams
       };
-      dispatch(actions.selectThread(threadId));
       ownProps.onClickSection(type, params);
     },
     onSearchThreads: searchParams => {

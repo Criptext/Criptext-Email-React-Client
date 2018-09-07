@@ -1,35 +1,60 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Load data thread from Email Table: should retrieve threads from DB with the correct shape: inbox 1`] = `
+exports[`Load data thread from Email Table: should load threads from DB with the correct shape: inbox 1`] = `
 Array [
   Object {
-    "allLabels": "1",
-    "content": "<p>Hello there</p>",
-    "date": "2018-06-14 08:23:19.120",
-    "emailIds": "3",
+    "allLabels": "1,3",
+    "content": "<p>RE: Hello there</p>",
+    "date": "2018-06-15 08:23:19.120",
+    "emailIds": "3,4",
     "fileTokens": "tokenC",
-    "fromContactName": "User A",
-    "id": 3,
+    "fromContactName": "User A,User me",
+    "id": 4,
     "isMuted": 0,
-    "key": "keyC",
-    "labels": null,
+    "key": "keyD",
+    "labels": "3",
     "matchedContacts": "from",
-    "max_date": "2018-06-14 08:23:19.120",
-    "preview": "Hello there",
-    "s3Key": "s3KeyC",
+    "max_date": "2018-06-15 08:23:19.120",
+    "preview": "RE: Hello there",
+    "recipientContactIds": "2,1",
+    "s3Key": "s3KeyD",
     "secure": 1,
     "status": 0,
     "subject": "Greetings",
     "threadId": "threadC",
     "uniqueId": "threadC",
-    "unread": 0,
+    "unread": 1,
     "unsendDate": "2018-06-14 08:23:20.000",
   },
 ]
 `;
 
-exports[`Load data thread from Email Table: should retrieve threads from DB with the correct shape: sent 1`] = `
+exports[`Load data thread from Email Table: should load threads from DB with the correct shape: sent 1`] = `
 Array [
+  Object {
+    "allLabels": "1,3",
+    "content": "<p>RE: Hello there</p>",
+    "date": "2018-06-15 08:23:19.120",
+    "emailIds": "3,4",
+    "fileTokens": "tokenC",
+    "fromContactName": "User A,User me",
+    "id": 4,
+    "isMuted": 0,
+    "key": "keyD",
+    "labels": "1",
+    "matchedContacts": "from",
+    "max_date": "2018-06-15 08:23:19.120",
+    "preview": "RE: Hello there",
+    "recipientContactIds": "2,1",
+    "s3Key": "s3KeyD",
+    "secure": 1,
+    "status": 0,
+    "subject": "Greetings",
+    "threadId": "threadC",
+    "uniqueId": "threadC",
+    "unread": 1,
+    "unsendDate": "2018-06-14 08:23:20.000",
+  },
   Object {
     "allLabels": "3",
     "content": "<p>Hello there</p>",
@@ -44,6 +69,7 @@ Array [
     "matchedContacts": "from",
     "max_date": "2013-10-07 08:23:19.120",
     "preview": "Hello there",
+    "recipientContactIds": "1",
     "s3Key": "s3KeyB",
     "secure": 1,
     "status": 1,
@@ -61,7 +87,7 @@ Array [
   Object {
     "content": "<p>Hello there</p>",
     "date": "2018-06-14 08:23:19.120",
-    "id": 4,
+    "id": 5,
     "isMuted": 0,
     "key": "keyId",
     "preview": "Hello there",

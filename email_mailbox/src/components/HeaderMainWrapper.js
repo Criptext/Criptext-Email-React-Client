@@ -24,6 +24,7 @@ class HeaderMainWrapper extends Component {
         {...this.props}
         isHiddenMenuSearchHints={this.state.isHiddenMenuSearchHints}
         isHiddenMenuSearchOptions={this.state.isHiddenMenuSearchOptions}
+        onSearchSelectThread={this.handleSearchSelectThread}
         onToggleMenuSearchHints={this.handleToggleMenuSearchHints}
         onToggleMenuSearchOptions={this.handleToggleMenuSearchOptions}
         onTriggerSearch={this.handleTriggerSearch}
@@ -55,6 +56,10 @@ class HeaderMainWrapper extends Component {
         }
       }
     );
+  };
+
+  handleSearchSelectThread = threadId => {
+    this.props.onSearchSelectThread(threadId, this.state.searchParams);
   };
 
   handleToggleMenuSearchHints = () => {
@@ -93,6 +98,7 @@ class HeaderMainWrapper extends Component {
 
 HeaderMainWrapper.propTypes = {
   onSearchChange: PropTypes.func,
+  onSearchSelectThread: PropTypes.func,
   onSearchThreads: PropTypes.func,
   searchParams: PropTypes.object
 };

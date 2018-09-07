@@ -79,7 +79,7 @@ class PanelWrapper extends Component {
         break;
       case SectionType.THREAD:
         {
-          const { mailboxSelected, threadIdSelected } = params;
+          const { mailboxSelected, threadIdSelected, searchParams } = params;
           this.setState(state => ({
             ...state,
             sectionSelected: {
@@ -87,7 +87,7 @@ class PanelWrapper extends Component {
               params: {
                 mailboxSelected,
                 threadIdSelected,
-                searchParams: { ...state.sectionSelected.params.searchParams }
+                searchParams
               }
             }
           }));

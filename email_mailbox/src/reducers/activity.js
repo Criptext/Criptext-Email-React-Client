@@ -7,10 +7,6 @@ const initActivity = Map({
 });
 const activity = (state = initActivity, action) => {
   switch (action.type) {
-    case Thread.SELECT:
-      return state.merge({
-        multiselect: false
-      });
     case Thread.UNREAD_FILTER:
       return state.update(
         'isFilteredByUnreadThreads',

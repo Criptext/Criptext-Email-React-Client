@@ -136,18 +136,32 @@ export const addMoveLabelIdThreads = ({ threadsParams, labelId, notMove }) => {
       const threadIds = threadsParams
         .map(param => param.threadIdDB)
         .filter(item => item !== null);
-      const dbReponse = await Promise.all(
-        threadIds.map(async threadId => {
-          const threadEmails = await getEmailsByThreadId(threadId);
-          const params = formAddThreadLabelParams(threadEmails, labelId);
-          return await createEmailLabel(params);
-        })
-      );
-      if (dbReponse && !notMove) {
-        dispatch(moveThreads(threadIds, labelId));
+      const [label] = await getLabelById(labelId);
+      const eventParams = {
+        cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
+        params: {
+          threadIds,
+          labelsRemoved: [],
+          labelsAdded: [label.text]
+        }
+      };
+      const { status } = await postPeerEvent(eventParams);
+      if (status === 200) {
+        const dbReponse = await Promise.all(
+          threadIds.map(async threadId => {
+            const threadEmails = await getEmailsByThreadId(threadId);
+            const params = formAddThreadLabelParams(threadEmails, labelId);
+            return await createEmailLabel(params);
+          })
+        );
+        if (dbReponse && !notMove) {
+          dispatch(moveThreads(threadIds, labelId));
+        }
+      } else {
+        sendUpdateThreadLabelsErrorMessage();
       }
     } catch (e) {
-      // TO DO
+      sendUpdateThreadLabelsErrorMessage();
     }
   };
 };
@@ -298,11 +312,6 @@ export const removeThreads = threadsParams => {
 export const removeThreadsSuccess = uniqueIds => ({
   type: Thread.REMOVE_THREADS,
   uniqueIds
-});
-
-export const selectThread = threadId => ({
-  type: Thread.SELECT,
-  threadId: threadId
 });
 
 export const updateEmailIdsThread = ({

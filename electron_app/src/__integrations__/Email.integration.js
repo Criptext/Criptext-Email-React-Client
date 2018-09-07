@@ -82,10 +82,33 @@ const emailInbox = {
   ]
 };
 
+const emailReply = {
+  email: {
+    threadId: 'threadC',
+    key: 'keyD',
+    s3Key: 's3KeyD',
+    subject: 'Greetings',
+    content: '<p>RE: Hello there</p>',
+    preview: 'RE: Hello there',
+    date: '2018-06-15 08:23:19.120',
+    status: 0,
+    unread: true,
+    secure: true,
+    isMuted: false,
+    unsendDate: '2018-06-14 08:23:20.000'
+  },
+  recipients: {
+    from: ['user@criptext.com'],
+    to: ['usera@criptext.com']
+  },
+  labels: [3]
+};
+
 const insertEmails = async () => {
   await DBManager.createEmail(emailDraft);
   await DBManager.createEmail(emailSent);
   await DBManager.createEmail(emailInbox);
+  await DBManager.createEmail(emailReply);
 };
 
 beforeAll(async () => {
@@ -164,37 +187,33 @@ describe('Update data email to Email Table:', () => {
 });
 
 describe('Load data thread from Email Table:', () => {
-  it('should insert drafts leaving recipient fields empty', async () => {
+  it('should load drafts leaving recipient fields empty', async () => {
     const emails = await DBManager.getEmailsByThreadId('threadA');
     const email = emails[0];
-    const to = email.to;
-    const cc = email.cc;
-    const bcc = email.bcc;
+    const { bcc, cc, to } = email;
     expect(to).toBeNull();
     expect(cc).toBeNull();
     expect(bcc).toBeNull();
   });
 
-  it('should insert sent email with recipients', async () => {
+  it('should load sent email with recipients', async () => {
     const emails = await DBManager.getEmailsByThreadId('threadB');
     const email = emails[0];
-    const to = email.to;
-    const cc = email.cc;
-    const bcc = email.bcc;
+    const { bcc, cc, to } = email;
     const numbersSeparatedByCommasRegex = /[0-9]+((,){1}[0-9]+)*/;
     expect(to).toMatch(numbersSeparatedByCommasRegex);
     expect(cc).toMatch(numbersSeparatedByCommasRegex);
     expect(bcc).toMatch(numbersSeparatedByCommasRegex);
   });
 
-  it('should insert inboxs with files', async () => {
+  it('should load inboxs with files', async () => {
     const emails = await DBManager.getEmailsByThreadId('threadC');
     const email = emails[0];
     const fileTokens = email.fileTokens;
     expect(fileTokens).toBe('tokenC');
   });
 
-  it('should retrieve threads from DB with the correct shape: inbox', async () => {
+  it('should load threads from DB with the correct shape: inbox', async () => {
     const params = {
       labelId: 1
     };
@@ -202,7 +221,7 @@ describe('Load data thread from Email Table:', () => {
     expect(threads).toMatchSnapshot();
   });
 
-  it('should retrieve threads from DB with the correct shape: sent', async () => {
+  it('should load threads from DB with the correct shape: sent', async () => {
     const params = {
       labelId: 3
     };

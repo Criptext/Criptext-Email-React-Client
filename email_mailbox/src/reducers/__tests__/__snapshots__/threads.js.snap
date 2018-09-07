@@ -10,7 +10,7 @@ Immutable.List [
       4,
     ],
     fromContactName: Immutable.List [
-      "1",
+      "User a",
     ],
     isMuted: 0,
     lastEmailId: "6Za2dcMlE0OSSc9",
@@ -19,6 +19,9 @@ Immutable.List [
     subject: "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
     date: 1516455734588,
     unread: true,
+    recipientContactIds: Immutable.Set [
+      1,
+    ],
     status: 0,
     timestamp: 1516455734588,
     secure: 1,
@@ -41,7 +44,7 @@ Immutable.List [
       5,
     ],
     fromContactName: Immutable.List [
-      "1",
+      "User a",
     ],
     isMuted: 0,
     lastEmailId: "cuW6ElyoqsR7MMw",
@@ -51,6 +54,9 @@ Immutable.List [
     subject: "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
     date: 1516455734588,
     unread: true,
+    recipientContactIds: Immutable.Set [
+      1,
+    ],
     status: 0,
     timestamp: 1516455734588,
     secure: 1,

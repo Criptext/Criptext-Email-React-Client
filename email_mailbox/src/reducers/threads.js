@@ -20,6 +20,11 @@ const threads = (state = List([]), action) => {
           timestamp: thread.date,
           lastEmailId: thread.key,
           unread: !!thread.unread,
+          recipientContactIds: Set(
+            thread.recipientContactIds
+              ? thread.recipientContactIds.split(',').map(Number)
+              : []
+          ),
           fromContactName: List(fromContactName.split(','))
         });
       });
@@ -155,22 +160,6 @@ const threads = (state = List([]), action) => {
           ? thread(threadItem, action)
           : threadItem;
       });
-    }
-    case Thread.SELECT: {
-      const newThreads = state
-        .map(thread => thread.set('selected', false))
-        .update(
-          state.findIndex(function(item) {
-            return item.get('id') === action.threadId;
-          }),
-          function(item) {
-            if (!item) {
-              return;
-            }
-            return item.set('unread', false);
-          }
-        );
-      return newThreads;
     }
     case Thread.UNREAD_FILTER: {
       return state.map(thread => thread.set('selected', false));

@@ -582,6 +582,9 @@ const baseThreadQuery = ({
           Table.CONTACT
         }.email END)) as fromContactName`
       ),
+      db.raw(
+        `GROUP_CONCAT(DISTINCT(${Table.CONTACT}.id)) as recipientContactIds`
+      ),
       db.raw(`GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens`),
       db.raw(`MAX(${Table.EMAIL}.unread) as unread`),
       db.raw(`MAX(email.date) as max_date`)

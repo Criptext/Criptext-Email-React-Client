@@ -104,7 +104,7 @@ SearchOptionRowInput.propTypes = {
   label: PropTypes.string,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
-  value: PropTypes.bool
+  value: PropTypes.string
 };
 
 SearchOptions.defaultProps = {
@@ -114,7 +114,6 @@ SearchOptions.defaultProps = {
 SearchOptions.propTypes = {
   allLabels: PropTypes.array,
   onClickSearch: PropTypes.func,
-  onSearchThreads: PropTypes.func,
   getSearchParams: PropTypes.func,
   searchParams: PropTypes.object
 };

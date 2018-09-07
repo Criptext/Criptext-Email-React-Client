@@ -10,7 +10,7 @@ const defineOneThreadSelected = (threads, threadId) => {
   });
   return [
     {
-      threadIdDB: thread.get('threadId')
+      threadIdDB: thread ? thread.get('threadId') : null
     }
   ];
 };
@@ -113,8 +113,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onAddLabel: (threadIds, label) => {
-      dispatch(actions.addLabelIdThreads(threadIds, label)).then(() => {
+    onAddLabel: (threadIds, labelId) => {
+      dispatch(actions.addLabelIdThreads(threadIds, labelId)).then(() => {
         if (ownProps.itemsChecked) {
           ownProps.onBackOption();
         }
@@ -129,8 +129,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         })
       ).then(() => ownProps.onBackOption());
     },
-    onRemoveLabel: (threadIds, label) => {
-      dispatch(actions.removeLabelIdThreads(threadIds, label)).then(() =>
+    onRemoveLabel: (threadIds, labelId) => {
+      dispatch(actions.removeLabelIdThreads(threadIds, labelId)).then(() =>
         ownProps.onBackOption()
       );
     },

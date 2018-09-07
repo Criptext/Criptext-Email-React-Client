@@ -16,7 +16,8 @@
       "allLabels": "1,2,3,4",
       "labels": "1,2,3",
       "emailIds": "1,2",
-      "fromContactName": "1"
+      "fromContactName": "User a",
+      "recipientContactIds": "1"
     },
     {
       "id":2,
@@ -34,7 +35,8 @@
       "allLabels": "5",
       "labels": "",
       "emailIds": "2",
-      "fromContactName": "1",
+      "fromContactName": "User a",
+      "recipientContactIds": "1",
       "uniqueId":2
     },
     {
@@ -53,7 +55,8 @@
       "allLabels": "1,2,3",
       "labels": "1,2",
       "emailIds": "2",
-      "fromContactName": "1"
+      "fromContactName": "User a",
+      "recipientContactIds": "1"
     }
   ]
 }

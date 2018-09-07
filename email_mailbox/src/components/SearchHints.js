@@ -33,7 +33,7 @@ const SearchHints = props => (
         {props.threads.map((thread, index) => (
           <SearchMail
             key={index}
-            id={thread.get('threadId')}
+            threadId={thread.get('threadId')}
             preview={thread.get('preview')}
             date={thread.get('date')}
             participants={thread.get('fromContactName')}
@@ -75,7 +75,7 @@ const SearchMail = props => {
     <div
       className="search-mail"
       onClick={() => {
-        props.onSearchSelectThread(props.id);
+        props.onSearchSelectThread(props.threadId);
       }}
     >
       <i className="icon-mail" />
@@ -94,7 +94,7 @@ const SearchMail = props => {
 
 SearchMail.propTypes = {
   date: PropTypes.string,
-  id: PropTypes.number,
+  threadId: PropTypes.string,
   participants: PropTypes.string,
   preview: PropTypes.string,
   searchText: PropTypes.string,
