@@ -107,6 +107,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     fileKey,
     files,
     from,
+    labels,
     messageType,
     metadataKey,
     subject,
@@ -116,6 +117,9 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   } = params;
   const recipientId = EmailUtils.getRecipientIdFromEmailAddressTag(from);
   const [prevEmail] = await getEmailByKey(metadataKey);
+  const isSpam = labels
+    ? labels.find(label => label === LabelType.spam.text)
+    : undefined;
   const InboxLabel = LabelType.inbox.id;
   const SentLabel = LabelType.sent.id;
   const isToMe = EmailUtils.checkEmailIsTo({ to, cc, bcc, type: 'to' });
@@ -166,14 +170,13 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
           })
         : null;
 
-    const labels = [];
+    const labels = isSpam ? [LabelType.spam.id] : [];
     if (isToMe) {
       labels.push(InboxLabel);
     }
     if (isFromMe) {
       labels.push(SentLabel);
     }
-
     const emailData = {
       email,
       labels,

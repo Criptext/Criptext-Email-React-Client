@@ -220,7 +220,7 @@ const ResendConfirmationRecoveryEmailLink = ({
       onComplete={onResendConfirmationCountdownEnd}
     >
       <button className="button-b" onClick={onClickResendConfirmationLink}>
-        Resend Link
+        <span>Resend Link</span>
       </button>
     </Countdown>
   );
@@ -231,9 +231,9 @@ const renderer = ({ minutes, seconds, completed, children }) => {
     return children;
   }
   return (
-    <span className="button-b disabled">
-      {`Resend Link available in ${minutes}:${seconds}`}
-    </span>
+    <button className="button-b" disabled={true}>
+      <span>{`Resend Link available in ${minutes}:${seconds}`}</span>
+    </button>
   );
 };
 

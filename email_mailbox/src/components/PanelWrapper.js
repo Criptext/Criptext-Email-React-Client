@@ -144,16 +144,25 @@ class PanelWrapper extends Component {
 
   initEventHandlers = props => {
     addEvent(Event.NEW_EMAIL, emailParams => {
-      const { isToMe, labels } = emailParams;
-      const isRenderingMailbox =
-        this.state.sectionSelected.type === SectionType.MAILBOX;
+      const { emailId, isToMe, labels, threadId } = emailParams;
+      const currentSectionType = this.state.sectionSelected.type;
+      const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
+      const isRenderingThread = currentSectionType === SectionType.THREAD;
       const currentLabelId =
         LabelType[this.state.sectionSelected.params.mailboxSelected].id;
       const isNewEmailInMailbox = labels.indexOf(currentLabelId) > -1;
-      if (isNewEmailInMailbox && isRenderingMailbox) {
+      const currentThreadId = this.state.sectionSelected.params
+        .threadIdSelected;
+      if (isRenderingMailbox && isNewEmailInMailbox) {
         props.onLoadThreads({
           labelId: Number(currentLabelId),
           clear: true
+        });
+      } else if (isRenderingThread && threadId === currentThreadId) {
+        props.onLoadEmails(threadId);
+        props.onUpdateEmailIdsThread({
+          threadId,
+          emailIdToAdd: emailId
         });
       }
       if (isToMe) {
