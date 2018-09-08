@@ -13,7 +13,8 @@ import {
   postOpenEvent,
   getUnreadEmailsByThreadId,
   postPeerEvent,
-  getLabelById
+  getLabelById,
+  getTrashExpiredEmails
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
 import {
@@ -24,6 +25,7 @@ import {
 } from './../utils/electronEventInterface';
 import { loadFeedItems } from './feeditems';
 import { SocketCommand } from '../utils/const';
+import { removeEmails } from './emails';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -380,6 +382,11 @@ export const searchThreads = params => {
 export const loadThreads = params => {
   return async dispatch => {
     try {
+      const expiredDeletedEmails = await getTrashExpiredEmails();
+      if (expiredDeletedEmails.length) {
+        dispatch(removeEmails(expiredDeletedEmails));
+      }
+
       const threads = await getEmailsGroupByThreadByParams(params);
       dispatch(addThreads(threads, params.clear));
     } catch (e) {

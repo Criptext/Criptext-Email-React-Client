@@ -9,6 +9,12 @@ const formContactsRow = contacts => {
   });
 };
 
+const dateDiffInDays = (firstDate, secondDate) => {
+  const millisecondsInADay = 1000 * 60 * 60 * 24;
+  return Math.round((secondDate - firstDate) / millisecondsInADay);
+};
+
 module.exports = {
-  formContactsRow
+  formContactsRow,
+  dateDiffInDays
 };

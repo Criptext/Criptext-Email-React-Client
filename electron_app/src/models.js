@@ -147,6 +147,7 @@ const createEmailColumns = table => {
   table.boolean('secure').notNullable();
   table.boolean('isMuted').notNullable();
   table.dateTime('unsendDate');
+  table.dateTime('thrashDate');
 };
 
 const createEmailLabelColumns = table => {

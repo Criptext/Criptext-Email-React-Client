@@ -45,7 +45,7 @@ const show = async () => {
 };
 
 const close = () => {
-  if (loginWindow !== undefined) {
+  if (loginWindow) {
     loginWindow.close();
   }
   loginWindow = undefined;

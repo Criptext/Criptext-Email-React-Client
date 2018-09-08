@@ -6,12 +6,14 @@ import {
   setMuteEmailById,
   setUnreadEmailById,
   updateEmail,
-  unsendEmailEvent
+  unsendEmailEvent,
+  deleteEmailByKeys,
+  postPeerEvent
 } from '../utils/electronInterface';
 import { EmailUtils } from '../utils/electronUtilsInterface';
 import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
-import { EmailStatus } from '../utils/const';
+import { EmailStatus, SocketCommand } from '../utils/const';
 import { unsendEmailFiles } from './files';
 
 export const addEmails = emails => {
@@ -86,6 +88,26 @@ export const markEmailUnread = (emailId, valueToSet) => {
     try {
       await setUnreadEmailById(emailId, valueToSet ? true : false);
       dispatch(markEmailUnreadSuccess(emailId, valueToSet));
+    } catch (e) {
+      // To do
+    }
+  };
+};
+
+export const removeEmails = emailsParams => {
+  return async () => {
+    try {
+      const metadataKeys = emailsParams.map(param => param.key);
+      if (metadataKeys.length) {
+        const eventParams = {
+          cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
+          params: { metadataKeys }
+        };
+        const { status } = await postPeerEvent(eventParams);
+        if (status === 200) {
+          await deleteEmailByKeys(metadataKeys);
+        }
+      }
     } catch (e) {
       // To do
     }

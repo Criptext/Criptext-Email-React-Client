@@ -178,8 +178,8 @@ export const deleteEmailsByIds = ids => {
   return dbManager.deleteEmailsByIds(ids);
 };
 
-export const deleteEmailByKey = key => {
-  return dbManager.deleteEmailByKey(key);
+export const deleteEmailByKeys = key => {
+  return dbManager.deleteEmailByKeys(key);
 };
 
 export const deleteEmailLabel = params => {
@@ -296,6 +296,10 @@ export const getSessionRecord = params => {
 
 export const getSignedPreKey = params => {
   return dbManager.getSignedPreKey(params);
+};
+
+export const getTrashExpiredEmails = () => {
+  return dbManager.getTrashExpiredEmails();
 };
 
 export const getThreads = (timestamp, params) => {

@@ -6,9 +6,13 @@ const {
   createTables,
   Table
 } = require('./models.js');
-const { formContactsRow } = require('./utils/dataTableUtils.js');
+const {
+  formContactsRow,
+  dateDiffInDays
+} = require('./utils/dataTableUtils.js');
 const { noNulls } = require('./utils/ObjectUtils');
 const myAccount = require('./Account');
+const systemLabels = require('./systemLabels');
 
 /* Account
    ----------------------------- */
@@ -330,10 +334,10 @@ const createEmail = async (params, trx) => {
     });
 };
 
-const deleteEmailByKey = key => {
+const deleteEmailByKeys = keys => {
   return db
     .table(Table.EMAIL)
-    .where({ key })
+    .whereIn('key', keys)
     .del();
 };
 
@@ -350,6 +354,16 @@ const deleteEmailsByThreadId = threadIds => {
     .table(Table.EMAIL)
     .whereIn('threadId', threadIds)
     .del();
+};
+
+const getTrashExpiredEmails = async () => {
+  const labelId = systemLabels.trash.id;
+  const emails = await getEmailsByLabelIds([labelId]);
+  return emails.filter(
+    email =>
+      email.thrashDate &&
+      dateDiffInDays(new Date(email.thrashDate), Date.now()) > 30
+  );
 };
 
 const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
@@ -970,7 +984,7 @@ module.exports = {
   createSignalTables,
   createTables,
   deleteEmailsByIds,
-  deleteEmailByKey,
+  deleteEmailByKeys,
   deleteEmailsByThreadId,
   deleteEmailLabelAndContactByEmailId,
   deleteEmailContactByEmailId,
@@ -1003,6 +1017,7 @@ module.exports = {
   getSessionRecord,
   getSessionRecordByRecipientIds,
   getSignedPreKey,
+  getTrashExpiredEmails,
   getFilesByTokens,
   getUnreadEmailsByThreadId,
   deleteLabelById,
