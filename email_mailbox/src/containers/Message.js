@@ -1,7 +1,12 @@
 import { connect } from 'react-redux';
 import { MessageType } from '../components/Message';
 import MessageContent, { actionHandlerKeys } from './../data/message';
-import { LabelType, getEmailsByLabelIds } from './../utils/electronInterface';
+import {
+  LabelType,
+  getEmailsByLabelIds,
+  confirmPermanentDeleteThread,
+  closeDialog
+} from './../utils/electronInterface';
 import MessageWrapper from './../components/MessageWrapper';
 import { SectionType } from '../utils/const';
 import { loadThreads, removeThreads } from '../actions';
@@ -66,7 +71,7 @@ const defineRejectedLabels = labelId => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onExecuteMessageAction: async (actionHandlerKey, params) => {
+    onExecuteMessageAction: (actionHandlerKey, params) => {
       switch (actionHandlerKey) {
         case actionHandlerKeys.success.emailSent: {
           const labelId = LabelType.sent.id;
@@ -87,13 +92,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
         }
         case actionHandlerKeys.advice.trash: {
-          const labelId = LabelType.trash.id;
-          const emails = await getEmailsByLabelIds([labelId]);
-          const threadsParams = emails.map(email => ({
-            emailId: email.id,
-            threadIdDB: email.threadId
-          }));
-          dispatch(removeThreads(threadsParams));
+          const CONFIRM_RESPONSE = 'Confirm';
+          confirmPermanentDeleteThread(async response => {
+            closeDialog();
+            if (response === CONFIRM_RESPONSE) {
+              const labelId = LabelType.trash.id;
+              const emails = await getEmailsByLabelIds([labelId]);
+              const threadsParams = emails.map(email => ({
+                emailId: email.id,
+                threadIdDB: email.threadId
+              }));
+              dispatch(removeThreads(threadsParams));
+            }
+          });
           break;
         }
         default:

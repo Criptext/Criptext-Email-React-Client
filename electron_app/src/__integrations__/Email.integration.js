@@ -1,6 +1,6 @@
 /* eslint-env node, jest */
-
 const DBManager = require('../DBManager');
+const systemLabels = require('./../systemLabels');
 
 const emailDraft = {
   email: {
@@ -104,11 +104,59 @@ const emailReply = {
   labels: [3]
 };
 
+const emailSpam = {
+  email: {
+    threadId: 'threadIdE',
+    key: 'keyIdE',
+    s3Key: 's3KeyIdE',
+    subject: 'Greetings',
+    content: '<p>Hello there</p>',
+    preview: 'Hello there',
+    date: '2018-09-11 14:38:19.120',
+    status: 5,
+    unread: true,
+    secure: true,
+    isMuted: false,
+    unsendDate: '2018-06-14 08:23:20.000',
+    trashDate: null
+  },
+  recipients: {
+    from: ['user@criptext.com'],
+    to: ['usera@criptext.com']
+  },
+  labels: [2]
+};
+
+const emailStarred = {
+  email: {
+    threadId: 'threadF',
+    key: 'keyF',
+    s3Key: 's3KeyF',
+    subject: 'Greetings there',
+    content: '<p>Hello there</p>',
+    preview: 'Hello there',
+    date: '2013-09-11 08:23:19.120',
+    status: 5,
+    unread: false,
+    secure: false,
+    isMuted: false,
+    unsendDate: '2018-06-14 08:23:20.000',
+    trashDate: null
+  },
+  recipients: {
+    from: ['User me <user@criptext.com>'],
+    to: ['usera@criptext.com', 'userb@criptext.com']
+  },
+  labels: [4]
+};
+
 const insertEmails = async () => {
   await DBManager.createEmail(emailDraft);
   await DBManager.createEmail(emailSent);
   await DBManager.createEmail(emailInbox);
   await DBManager.createEmail(emailReply);
+  await DBManager.createEmail(emailSpam);
+  await DBManager.createEmail(emailStarred);
 };
 
 beforeAll(async () => {
@@ -183,6 +231,43 @@ describe('Update data email to Email Table:', () => {
     const unreadEmailB = emails[1].unread;
     expect(unreadEmailA).toBe(0);
     expect(unreadEmailB).toBe(0);
+  });
+
+  it('should update emails: trashDate after insert emailLabel trash', async () => {
+    const [email] = await DBManager.getEmailByKey(emailStarred.email.key);
+    const emailLabelTrash = [
+      { emailId: email.id, labelId: systemLabels.trash.id }
+    ];
+    await DBManager.createEmailLabel(emailLabelTrash);
+    const [updatedEmail] = await DBManager.getEmailsByThreadId(
+      emailStarred.email.threadId
+    );
+    const labelIds = updatedEmail.labelIds.split(',').map(Number);
+    expect(labelIds).toContain(systemLabels.trash.id);
+    expect(new Date(updatedEmail.trashDate)).toEqual(expect.any(Date));
+  });
+
+  it('should not update emails: trashDate after insert emailLabel trash', async () => {
+    const [email] = await DBManager.getEmailByKey(emailSpam.email.key);
+    const emailLabelStarred = [
+      { emailId: email.id, labelId: systemLabels.starred.id }
+    ];
+    await DBManager.createEmailLabel(emailLabelStarred);
+    const [updatedEmail] = await DBManager.getEmailsByThreadId(
+      emailSpam.email.threadId
+    );
+    const labelIds = updatedEmail.labelIds.split(',').map(Number);
+    expect(labelIds).toContain(systemLabels.starred.id);
+    expect(updatedEmail.trashDate).toBeNull();
+  });
+});
+
+describe('Delete emails from Email Table:', () => {
+  it('Should delete email from DB by key', async () => {
+    const keysToDelete = [emailSpam.email.key];
+    await DBManager.deleteEmailByKeys(keysToDelete);
+    const [email] = await DBManager.getEmailByKey(emailSpam.email.key);
+    expect(email).toBeUndefined();
   });
 });
 

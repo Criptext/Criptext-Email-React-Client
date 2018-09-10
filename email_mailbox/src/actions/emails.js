@@ -15,6 +15,7 @@ import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
 import { EmailStatus, SocketCommand } from '../utils/const';
 import { unsendEmailFiles } from './files';
+import { sendFetchEmailsErrorMessage } from './../utils/electronEventInterface';
 
 export const addEmails = emails => {
   return {
@@ -109,7 +110,7 @@ export const removeEmails = emailsParams => {
         }
       }
     } catch (e) {
-      // To do
+      sendFetchEmailsErrorMessage();
     }
   };
 };

@@ -439,7 +439,7 @@ class ComposerWrapper extends Component {
       };
       await updateEmail(emailParams);
 
-      closeComposerWindow(emailId);
+      closeComposerWindow(threadId);
     } catch (e) {
       if (e.message.includes('SQLITE_CONSTRAINT')) {
         // To remove

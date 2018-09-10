@@ -12,7 +12,8 @@
       "status": 3,
       "unread": 1,
       "secure": 1,
-      "isMuted": 0
+      "isMuted": 0,
+      "trashDate": null
     },
     {
       "id": 2,
@@ -26,7 +27,8 @@
       "status": 3,
       "unread": 1,
       "secure": 1,
-      "isMuted": 0
+      "isMuted": 0,
+      "trashDate": null
     },
     {
       "id": 3,
@@ -40,7 +42,8 @@
       "status": 3,
       "unread": 1,
       "secure": 0,
-      "isMuted": 0
+      "isMuted": 0,
+      "trashDate": null
     }
   ]
 }
