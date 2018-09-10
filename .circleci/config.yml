@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:7.10
+      - image: circleci/node:10.10
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -70,6 +70,7 @@ jobs:
           name: Composer Lint
           command: cd email_composer/ && yarn lint
 
+      - run: cd email_dialog/ && npm rebuild node-sass
       - run: 
           name: Dialog Build
           command: cd email_dialog/ &&  yarn build
@@ -78,6 +79,7 @@ jobs:
           name: Dialog Lint
           command: cd email_dialog/ && yarn lint
 
+      - run: cd email_loading/ && npm rebuild node-sass
       - run: 
           name: Loading Build
           command: cd email_loading/ &&  yarn build
@@ -86,6 +88,7 @@ jobs:
           name: Loading Lint
           command: cd email_loading/ && yarn lint
 
+      - run: cd email_login/ && npm rebuild node-sass
       - run: 
           name: Login Build
           command: cd email_login/ &&  yarn build
@@ -98,6 +101,7 @@ jobs:
           name: Login Lint
           command: cd email_login/ && yarn lint
 
+      - run: cd email_mailbox/ && npm rebuild node-sass
       - run: 
           name: Mailbox Build
           command: cd email_mailbox/ &&  yarn build

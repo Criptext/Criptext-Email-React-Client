@@ -171,9 +171,17 @@ export const formComposerDataWithSignature = () => {
 };
 
 export const formNewEmailFromData = data => {
+  const blocksFromHtml = htmlToDraft(data.email.content);
+  const { contentBlocks, entityMap } = blocksFromHtml;
+  const contentState = ContentState.createFromBlockArray(
+    contentBlocks,
+    entityMap
+  );
+  const htmlBody = EditorState.createWithContent(contentState);
   return {
     toEmails: [formRecipientObject(data.recipients.to)],
-    textSubject: data.email.subject
+    textSubject: data.email.subject,
+    htmlBody
   };
 };
 

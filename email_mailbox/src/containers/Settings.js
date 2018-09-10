@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import randomcolor from 'randomcolor';
 import SettingsWrapper from './../components/SettingsWrapper';
+import { version } from './../../package.json';
 import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataLogout,
@@ -82,10 +83,11 @@ const mapDispatchToProps = dispatch => {
       }
     },
     onComposeContactSupportEmail: () => {
+      const content = `<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>Do not write below this line.<br/>****************************<br/>Version: ${version}`;
       openEmailInComposer({
         type: composerEvents.NEW_WITH_DATA,
         data: {
-          email: { subject: 'Customer Support - Desktop' },
+          email: { subject: 'Customer Support - Desktop', content },
           recipients: {
             to: { name: 'Contact Support', email: `support@${appDomain}` }
           }
