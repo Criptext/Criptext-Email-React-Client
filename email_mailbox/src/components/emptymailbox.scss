@@ -8,14 +8,21 @@
   flex-direction: column;
 
   .empty-mailbox-content {
-    margin: auto 0;
+    margin: auto;
+    align-items: center;
 
     .empty-icon {
-      width: 100%;
-      height: 60px;
-      position: relative;
-      background: url(../#{$_PATH_TO_IMAGES}/empty-mailbox.png) no-repeat center center;
+      width: 70px;
+      height: 70px;
+      margin: 0 auto;
       background-size: auto 100%;
+
+      &.empty-mailbox {
+        background-image: url(../#{$_PATH_TO_IMAGES}/empty-mailbox.png);
+      }
+      &.empty-search {
+        background-image: url(../#{$_PATH_TO_IMAGES}/empty-search.png);
+      }
     }
 
     .header-text {
