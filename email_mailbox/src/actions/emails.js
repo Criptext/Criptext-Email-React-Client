@@ -2,7 +2,7 @@ import { Email } from './types';
 import {
   getContactByIds,
   getEmailsByThreadId,
-  updateUnreadEmailByThreadId,
+  updateUnreadEmailByThreadIds,
   setMuteEmailById,
   setUnreadEmailById,
   updateEmail,
@@ -118,7 +118,7 @@ export const removeEmails = emailsParams => {
 export const updateUnreadEmails = (thread, label) => {
   return async dispatch => {
     try {
-      await updateUnreadEmailByThreadId(thread.id, thread.unread);
+      await updateUnreadEmailByThreadIds([thread.id], thread.unread);
       if (label) {
         dispatch(updateLabelSuccess(label));
       }

@@ -758,12 +758,12 @@ const updateEmails = ({ ids, keys, unread, trashDate }, trx) => {
     .update(params);
 };
 
-const updateEmailByThreadId = ({ threadId, unread }) => {
+const updateEmailByThreadIds = ({ threadIds, unread }) => {
   const params = {};
   if (typeof unread === 'boolean') params.unread = unread;
   return db
     .table(Table.EMAIL)
-    .where({ threadId })
+    .whereIn('threadId', threadIds)
     .update(params);
 };
 
@@ -1058,7 +1058,7 @@ module.exports = {
   updateAccount,
   updateEmail,
   updateEmails,
-  updateEmailByThreadId,
+  updateEmailByThreadIds,
   updateEmailLabel,
   updateFeedItem,
   updateFilesByEmailId,
