@@ -32,8 +32,8 @@ const defineEmptyParamsByMailbox = mailbox => {
       };
     default:
       return {
-        header: "There's no messages",
-        subheader: 'Enjoy your day'
+        header: 'You have no emails yet',
+        subheader: 'Send an email to get started'
       };
   }
 };
