@@ -68,4 +68,11 @@ describe('[Get recipientId from EmailAddressTag] ', () => {
     const result = 'lola@domain.com';
     expect(recipientId).toEqual(result);
   });
+
+  it('Get recipientId from external domain, with emailadresstag without tag', () => {
+    const from = `alice@domain.com`;
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const result = 'alice@domain.com';
+    expect(recipientId).toEqual(result);
+  });
 });
