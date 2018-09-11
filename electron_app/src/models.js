@@ -50,6 +50,7 @@ const Table = {
   FILE_KEY: 'fileKey',
   ACCOUNT: 'account',
   FEEDITEM: 'feeditem',
+  MIGRATIONS: 'migrations',
   PREKEYRECORD: 'prekeyrecord',
   SIGNEDPREKEYRECORD: 'signedprekeyrecord',
   SESSIONRECORD: 'sessionrecord',
@@ -67,7 +68,7 @@ const dbConfiguration = {
 const migrationConfig = Object.assign(
   {
     directory: path.join(__dirname, '/migrations'),
-    tableName: 'migrations',
+    tableName: Table.MIGRATIONS,
     loadExtensions: ['.js']
   },
   dbConfiguration
@@ -89,7 +90,8 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.PREKEYRECORD)
     .dropTableIfExists(Table.SIGNEDPREKEYRECORD)
     .dropTableIfExists(Table.SESSIONRECORD)
-    .dropTableIfExists(Table.IDENTITYKEYRECORD);
+    .dropTableIfExists(Table.IDENTITYKEYRECORD)
+    .dropTableIfExists(Table.MIGRATIONS);
 };
 
 const cleanDataLogout = async recipientId => {
@@ -147,6 +149,7 @@ const createEmailColumns = table => {
   table.boolean('secure').notNullable();
   table.boolean('isMuted').notNullable();
   table.dateTime('unsendDate');
+  table.dateTime('trashDate');
 };
 
 const createEmailLabelColumns = table => {

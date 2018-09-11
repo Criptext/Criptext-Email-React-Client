@@ -16,7 +16,7 @@ import {
   updateAccount,
   updateFilesByEmailId,
   deleteEmailsByThreadId,
-  deleteEmailByKey,
+  deleteEmailByKeys,
   updateUnreadEmailByThreadId,
   getEmailsByThreadId,
   deleteEmailLabel,
@@ -392,13 +392,15 @@ const formAndSaveEmailLabelsUpdate = async ({
 const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
   const { metadataKeys } = params;
   const emailIds = [];
+  const keys = [];
   for (const metadataKey of metadataKeys) {
     const [email] = await getEmailByKey(metadataKey);
     if (email) {
       emailIds.push(email.id);
-      await deleteEmailByKey(metadataKey);
+      keys.push(email.key);
     }
   }
+  await deleteEmailByKeys(keys);
   await setEventAsHandled(rowid);
   emitter.emit(Event.EMAIL_DELETED, emailIds);
 };

@@ -9,6 +9,7 @@ const {
 const { formContactsRow } = require('./utils/dataTableUtils.js');
 const { noNulls } = require('./utils/ObjectUtils');
 const myAccount = require('./Account');
+const systemLabels = require('./systemLabels');
 
 /* Account
    ----------------------------- */
@@ -189,21 +190,33 @@ const deleteEmailContactByEmailId = (emailId, trx) => {
 
 /* EmailLabel
    ----------------------------- */
-const createEmailLabel = async (emailLabels, trx) => {
-  const knex = trx || db;
-  const toInsert = await filterEmailLabelIfNotStore(emailLabels, trx);
-  if (toInsert.length) {
-    return knex.insert(toInsert).into(Table.EMAIL_LABEL);
-  }
+const createEmailLabel = (emailLabels, prevTrx) => {
+  const transaction = prevTrx ? fn => fn(prevTrx) : db.transaction;
+  return transaction(async trx => {
+    const toInsert = await filterEmailLabelIfNotStore(emailLabels, trx);
+    if (toInsert.length) {
+      await trx.insert(toInsert).into(Table.EMAIL_LABEL);
+      return await filterEmailLabelTrashToUpdateEmail(toInsert, 'create', trx);
+    }
+  });
 };
 
-const deleteEmailLabel = ({ emailsId, labelIds }, trx) => {
-  const knex = trx || db;
-  return knex
-    .table(Table.EMAIL_LABEL)
-    .whereIn('labelId', labelIds)
-    .whereIn('emailId', emailsId)
-    .del();
+const deleteEmailLabel = ({ emailsId, labelIds }, prevTrx) => {
+  const emailLabels = emailsId.map(item => {
+    return {
+      emailId: item,
+      labelId: labelIds[0]
+    };
+  });
+  const transaction = prevTrx ? fn => fn(prevTrx) : db.transaction;
+  return transaction(async trx => {
+    await trx
+      .table(Table.EMAIL_LABEL)
+      .whereIn('labelId', labelIds)
+      .whereIn('emailId', emailsId)
+      .del();
+    return await filterEmailLabelTrashToUpdateEmail(emailLabels, 'delete', trx);
+  });
 };
 
 const deleteEmailLabelsByEmailId = (emailId, trx) => {
@@ -235,6 +248,14 @@ const filterEmailLabelIfNotStore = async (emailLabels, trx) => {
         : { emailId: String(item.emailId), labelId: Number(item.labelId) };
     })
     .filter(item => item !== null);
+};
+
+const filterEmailLabelTrashToUpdateEmail = async (emailLabels, action, trx) => {
+  const trashDate = action === 'create' ? trx.fn.now() : '';
+  const ids = emailLabels
+    .filter(emailLabel => emailLabel.labelId === systemLabels.trash.id)
+    .map(item => item.emailId);
+  return await updateEmails({ ids, trashDate }, trx);
 };
 
 const getEmailLabelsByEmailId = emailId => {
@@ -330,10 +351,10 @@ const createEmail = async (params, trx) => {
     });
 };
 
-const deleteEmailByKey = key => {
+const deleteEmailByKeys = keys => {
   return db
     .table(Table.EMAIL)
-    .where({ key })
+    .whereIn('key', keys)
     .del();
 };
 
@@ -350,6 +371,28 @@ const deleteEmailsByThreadId = threadIds => {
     .table(Table.EMAIL)
     .whereIn('threadId', threadIds)
     .del();
+};
+
+const getTrashExpiredEmails = () => {
+  const labelId = systemLabels.trash.id;
+  const daysAgo = 30;
+  return db
+    .select(`${Table.EMAIL}.*`)
+    .from(Table.EMAIL)
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL}.id`,
+      `${Table.EMAIL_LABEL}.emailId`
+    )
+    .where(`${Table.EMAIL_LABEL}.labelId`, labelId)
+    .whereNotNull(`${Table.EMAIL}.trashDate`)
+    .andWhere(
+      db.raw(
+        `DATETIME(${
+          Table.EMAIL
+        }.trashDate) < DATETIME('now','-${daysAgo} days')`
+      )
+    );
 };
 
 const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
@@ -700,13 +743,18 @@ const updateEmail = ({
     .update(params);
 };
 
-const updateEmails = ({ keys, unread }) => {
+const updateEmails = ({ ids, keys, unread, trashDate }, trx) => {
+  const knex = trx || db;
   const params = noNulls({
-    unread: typeof unread === 'boolean' ? unread : undefined
+    unread: typeof unread === 'boolean' ? unread : undefined,
+    trashDate
   });
-  return db
+  const { whereParamName, whereParamValue } = ids
+    ? { whereParamName: 'id', whereParamValue: ids }
+    : { whereParamName: 'key', whereParamValue: keys };
+  return knex
     .table(Table.EMAIL)
-    .whereIn('key', keys)
+    .whereIn(whereParamName, whereParamValue)
     .update(params);
 };
 
@@ -970,7 +1018,7 @@ module.exports = {
   createSignalTables,
   createTables,
   deleteEmailsByIds,
-  deleteEmailByKey,
+  deleteEmailByKeys,
   deleteEmailsByThreadId,
   deleteEmailLabelAndContactByEmailId,
   deleteEmailContactByEmailId,
@@ -1003,6 +1051,7 @@ module.exports = {
   getSessionRecord,
   getSessionRecordByRecipientIds,
   getSignedPreKey,
+  getTrashExpiredEmails,
   getFilesByTokens,
   getUnreadEmailsByThreadId,
   deleteLabelById,

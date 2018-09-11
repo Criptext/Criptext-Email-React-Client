@@ -7,6 +7,7 @@ Immutable.Map {
     labelIds: Immutable.Set [
     ],
     threadId: "fSaznwApj6ilX8U",
+    trashDate: null,
     preview: "Email content 1",
     subject: "Email subject 1",
     date: 1514231264772,
@@ -25,6 +26,7 @@ Immutable.Map {
     labelIds: Immutable.Set [
     ],
     threadId: "k7ZtKjAXYFSwD",
+    trashDate: null,
     preview: "Email content 2",
     subject: "Email subject 2",
     date: 1515624279364,
@@ -43,6 +45,7 @@ Immutable.Map {
     labelIds: Immutable.Set [
     ],
     threadId: "HuviK7TKUVK",
+    trashDate: null,
     preview: "Email content 3",
     subject: "Email subject 3",
     date: 1512744868344,
