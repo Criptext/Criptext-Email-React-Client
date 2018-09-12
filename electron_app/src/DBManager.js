@@ -11,6 +11,7 @@ const { noNulls } = require('./utils/ObjectUtils');
 const { HTMLTagsRegex } = require('./utils/RegexUtils');
 const myAccount = require('./Account');
 const systemLabels = require('./systemLabels');
+const REJECTED_LABEL_IDS = [systemLabels.spam.id, systemLabels.trash.id];
 
 /* Account
    ----------------------------- */
@@ -531,6 +532,7 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
     contactFilter,
     rejectedLabelIds = []
   } = params;
+
   let queryDb = baseThreadQuery({
     timestamp,
     labelId,
@@ -608,8 +610,8 @@ const baseThreadQuery = ({
   contactTypes,
   contactFilter,
   rejectedLabelIds
-}) =>
-  db
+}) => {
+  let baseQuery = db
     .select(
       `${Table.EMAIL}.*`,
       db.raw(`IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId`),
@@ -661,22 +663,34 @@ const baseThreadQuery = ({
       Table.CONTACT,
       `${Table.EMAIL_CONTACT}.contactId`,
       `${Table.CONTACT}.id`
-    )
-    .whereNotExists(
-      db
-        .select('*')
-        .from(Table.EMAIL_LABEL)
-        .whereRaw(
-          `${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId and ${
-            Table.EMAIL_LABEL
-          }.labelId in (??)`,
-          [rejectedLabelIds]
-        )
-    )
+    );
+
+  const isRejectedLabel = REJECTED_LABEL_IDS.includes(labelId);
+  baseQuery = isRejectedLabel
+    ? baseQuery.whereRaw(
+        `${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId and ${
+          Table.EMAIL_LABEL
+        }.labelId = ?`,
+        [labelId]
+      )
+    : baseQuery.whereNotExists(
+        db
+          .select('*')
+          .from(Table.EMAIL_LABEL)
+          .whereRaw(
+            `${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId and ${
+              Table.EMAIL_LABEL
+            }.labelId in (??)`,
+            [rejectedLabelIds]
+          )
+      );
+
+  return baseQuery
     .where(`${Table.EMAIL}.date`, '<', timestamp || 'now')
     .groupBy('uniqueId')
     .orderBy(`${Table.EMAIL}.date`, 'DESC')
     .limit(limit || 20);
+};
 
 const partThreadQueryByMatchText = (query, text) =>
   query.andWhere(function() {
