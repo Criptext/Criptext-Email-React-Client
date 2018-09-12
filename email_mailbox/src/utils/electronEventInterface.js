@@ -6,6 +6,7 @@ import {
   getEmailByKey,
   getEmailsByKeys,
   getEmailLabelsByEmailId,
+  getEvents,
   LabelType,
   getContactByEmails,
   createFeedItem,
@@ -17,7 +18,7 @@ import {
   updateFilesByEmailId,
   deleteEmailsByThreadId,
   deleteEmailByKeys,
-  updateUnreadEmailByThreadId,
+  updateUnreadEmailByThreadIds,
   getEmailsByThreadId,
   deleteEmailLabel,
   cleanDatabase,
@@ -34,14 +35,134 @@ import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 
+const eventPriority = {
+  NEW_EMAIL: 0,
+  EMAIL_STATUS: 1,
+  THREAD_STATUS: 2,
+  EMAIL_LABELS: 3,
+  THREAD_LABELS: 4,
+  EMAIL_DELETE: 5,
+  THREAD_DELETE: 6,
+  OTHERS: 7
+};
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
 const { ipcRenderer } = electron;
 const emitter = new EventEmitter();
 
-ipcRenderer.on('socket-message', (ev, message) => {
-  handleEvent(message);
+ipcRenderer.on('socket-message', async (ev, message) => {
+  const eventId = message.cmd;
+  if (
+    eventId === SocketCommand.DEVICE_REMOVED ||
+    eventId === SocketCommand.PEER_PASSWORD_CHANGED
+  ) {
+    handleEvent(message);
+  } else {
+    await getGroupEvents();
+  }
 });
+
+export const getGroupEvents = async () => {
+  const receivedEvents = await getEvents();
+  const eventsGroups = receivedEvents.reduce(
+    (result, event) => {
+      const eventId = event.cmd;
+      if (eventId === SocketCommand.NEW_EMAIL) {
+        return {
+          ...result,
+          [eventPriority.NEW_EMAIL]: [...result[eventPriority.NEW_EMAIL], event]
+        };
+      } else if (
+        eventId === SocketCommand.EMAIL_TRACKING_UPDATE ||
+        eventId === SocketCommand.PEER_EMAIL_READ_UPDATE ||
+        eventId === SocketCommand.PEER_EMAIL_UNSEND
+      ) {
+        return {
+          ...result,
+          [eventPriority.EMAIL_STATUS]: [
+            ...result[eventPriority.EMAIL_STATUS],
+            event
+          ]
+        };
+      } else if (eventId === SocketCommand.PEER_THREAD_READ_UPDATE) {
+        return {
+          ...result,
+          [eventPriority.THREAD_STATUS]: [
+            ...result[eventPriority.THREAD_STATUS],
+            event
+          ]
+        };
+      } else if (eventId === SocketCommand.PEER_EMAIL_LABELS_UPDATE) {
+        return {
+          ...result,
+          [eventPriority.EMAIL_LABELS]: [
+            ...result[eventPriority.EMAIL_LABELS],
+            event
+          ]
+        };
+      } else if (eventId === SocketCommand.PEER_THREAD_LABELS_UPDATE) {
+        return {
+          ...result,
+          [eventPriority.THREAD_LABELS]: [
+            ...result[eventPriority.THREAD_LABELS],
+            event
+          ]
+        };
+      } else if (eventId === SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY) {
+        return {
+          ...result,
+          [eventPriority.EMAIL_DELETE]: [
+            ...result[eventPriority.EMAIL_DELETE],
+            event
+          ]
+        };
+      } else if (eventId === SocketCommand.PEER_THREAD_DELETED_PERMANENTLY) {
+        return {
+          ...result,
+          [eventPriority.THREAD_DELETE]: [
+            ...result[eventPriority.THREAD_DELETE],
+            event
+          ]
+        };
+      }
+      return {
+        ...result,
+        [eventPriority.OTHERS]: [...result[eventPriority.OTHERS], event]
+      };
+    },
+    {
+      [eventPriority.NEW_EMAIL]: [],
+      [eventPriority.EMAIL_STATUS]: [],
+      [eventPriority.THREAD_STATUS]: [],
+      [eventPriority.EMAIL_LABELS]: [],
+      [eventPriority.THREAD_LABELS]: [],
+      [eventPriority.EMAIL_DELETE]: [],
+      [eventPriority.THREAD_DELETE]: [],
+      [eventPriority.OTHERS]: []
+    }
+  );
+  await processEvent(eventsGroups);
+};
+
+const processEvent = async eventsGroups => {
+  for (const key in eventsGroups) {
+    if (eventsGroups.hasOwnProperty(key)) {
+      const events = eventsGroups[key];
+      if (events.length) {
+        const managedEvents = events.map(async newEvent => {
+          return await handleEvent(newEvent);
+        });
+        try {
+          await Promise.all(managedEvents);
+        } catch (e) {
+          if (e.name !== 'PreKeyMessage') {
+            sendFetchEmailsErrorMessage();
+          }
+        }
+      }
+    }
+  }
+};
 
 export const handleEvent = incomingEvent => {
   switch (incomingEvent.cmd) {
@@ -303,7 +424,7 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
   const { metadataKeys, unread } = params;
   const emails = await getEmailsByKeys(metadataKeys);
   const emailKeys = emails.map(email => email.key);
-  await updateEmails({
+  const res = await updateEmails({
     keys: emailKeys,
     unread: !!unread
   });
@@ -313,15 +434,17 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
     value: emailKeys.length
   };
   emitter.emit(Event.REFRESH_THREADS, emailKeys.length ? eventParams : null);
-  await setEventAsHandled(rowid);
+  if (res) {
+    await setEventAsHandled(rowid);
+  }
 };
 
 const handlePeerThreadRead = async ({ rowid, params }) => {
   const { threadIds, unread } = params;
-  for (const threadId of threadIds) {
-    await updateUnreadEmailByThreadId(threadId, !!unread);
+  const res = await updateUnreadEmailByThreadIds(threadIds, !!unread);
+  if (res) {
+    await setEventAsHandled(rowid);
   }
-  await setEventAsHandled(rowid);
   emitter.emit(Event.THREADS_UPDATE_READ, threadIds, !!unread);
 };
 
