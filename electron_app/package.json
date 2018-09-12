@@ -23,9 +23,9 @@
     "test": "criptext-js-tools test",
     "integration": "NODE_ENV=test criptext-js-tools integration",
     "lint": "criptext-js-tools lint",
-    "package-linux": "bash ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --asar --platform=linux --arch=x64 --icon=resources/launch-icons/icon.png --out=release-builds --no-package-manager",
-    "package-mac": "sh ./installerResources/converge_builds.sh && electron-packager . Criptext --overwrite --platform=darwin --arch=x64 --icon=./resources/launch-icons/icon.icns --prune=true --out=release-builds",
-    "package-windows": "bash ./installerResources/converge_builds.sh && electron-packager . Criptext --platform=win32 --arch=x64 --out=release-builds",
+    "package-linux": "bash ./installerResources/converge_builds.sh",
+    "package-mac": "sh ./installerResources/converge_builds.sh",
+    "package-windows": "bash ./installerResources/converge_builds.sh",
     "pack": "build --dir",
     "dist": "electron-builder --publish onTag",
     "clear-build": "bash ./installerResources/clearBuild.sh",
@@ -119,8 +119,7 @@
   "devDependencies": {
     "criptext-js-tools": "0.5.0",
     "electron": "^1.7.10",
-    "electron-builder": "^20.18.0",
-    "electron-packager": "^10.1.2"
+    "electron-builder": "^20.18.0"
   },
   "dependencies": {
     "@criptext/email-http-client": "^0.14.2",
