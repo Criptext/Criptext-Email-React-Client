@@ -29,7 +29,8 @@ class ThreadItemWrapper extends Component {
     const currentLabelId = LabelType[this.props.mailbox].id;
     const isDraftMailbox = currentLabelId === LabelType.draft.id;
     const isTrashMailbox = currentLabelId === LabelType.trash.id;
-    return !(isDraftMailbox || isTrashMailbox);
+    const isSpamMailbox = currentLabelId === LabelType.spam.id;
+    return !(isDraftMailbox || isTrashMailbox || isSpamMailbox);
   };
 
   handleToggleStarred = isStarred => {

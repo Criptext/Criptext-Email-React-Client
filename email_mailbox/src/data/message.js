@@ -89,11 +89,11 @@ const messagesContent = {
     },
     updateThreadLabels: {
       priority: messagePriorities.MEDIUM,
-      description: 'Failed to update thread labels'
+      description: 'Error updating email labels. PLease try again'
     },
     removeThreads: {
       priority: messagePriorities.MEDIUM,
-      description: 'Failed to remove threads'
+      description: 'Error moving emails. Please try again'
     },
     fetchEmails: {
       priority: messagePriorities.MEDIUM,

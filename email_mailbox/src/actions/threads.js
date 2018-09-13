@@ -13,7 +13,8 @@ import {
   getUnreadEmailsByThreadId,
   postPeerEvent,
   getLabelById,
-  getTrashExpiredEmails
+  getTrashExpiredEmails,
+  LabelType
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
 import {
@@ -138,12 +139,15 @@ export const addMoveLabelIdThreads = ({ threadsParams, labelId, notMove }) => {
         .map(param => param.threadIdDB)
         .filter(item => item !== null);
       const [label] = await getLabelById(labelId);
+      const labelsAdded = [label.text];
+      const isSpamLabel = labelId === LabelType.spam.id;
+      const labelsRemoved = isSpamLabel ? [LabelType.trash.text] : [];
       const eventParams = {
         cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
         params: {
           threadIds,
-          labelsRemoved: [],
-          labelsAdded: [label.text]
+          labelsRemoved,
+          labelsAdded
         }
       };
       const { status } = await postPeerEvent(eventParams);
@@ -151,8 +155,15 @@ export const addMoveLabelIdThreads = ({ threadsParams, labelId, notMove }) => {
         const dbReponse = await Promise.all(
           threadIds.map(async threadId => {
             const threadEmails = await getEmailsByThreadId(threadId);
-            const params = formAddThreadLabelParams(threadEmails, labelId);
-            return await createEmailLabel(params);
+            if (isSpamLabel) {
+              const paramsToRemove = formRemoveThreadLabelParams(
+                threadEmails,
+                labelId
+              );
+              await deleteEmailLabel(paramsToRemove);
+            }
+            const paramsToAdd = formAddThreadLabelParams(threadEmails, labelId);
+            return await createEmailLabel(paramsToAdd);
           })
         );
         if (dbReponse && !notMove) {
