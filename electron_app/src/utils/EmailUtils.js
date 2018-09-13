@@ -1,3 +1,4 @@
+const sanitizeHtml = require('sanitize-html');
 const { removeAppDomain, removeHTMLTags } = require('./StringUtils');
 const { appDomain } = require('./const');
 const myAccount = require('./../Account');
@@ -38,6 +39,81 @@ const getCriptextRecipients = (recipients, type) => {
       recipientId: removeAppDomain(email),
       type
     }));
+};
+
+const sanitize = body => {
+  return sanitizeHtml(body, {
+    allowedTags: [
+      'a',
+      'b',
+      'blockquote',
+      'br',
+      'caption',
+      'cite',
+      'code',
+      'col',
+      'colgroup',
+      'dd',
+      'div',
+      'dl',
+      'dt',
+      'em',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'hr',
+      'i',
+      'img',
+      'li',
+      'ol',
+      'p',
+      'pre',
+      'q',
+      'small',
+      'span',
+      'strike',
+      'strong',
+      'sub',
+      'sup',
+      'table',
+      'tbody',
+      'td',
+      'tfoot',
+      'th',
+      'thead',
+      'tr',
+      'u',
+      'ul',
+      'style',
+      'title',
+      'head'
+    ],
+    allowedAttributes: {
+      a: ['href', 'name', 'target'],
+      img: ['alt', 'src'],
+      '*': [
+        'align',
+        'bgcolor',
+        'border',
+        'cellspacing',
+        'cellpadding',
+        'class',
+        'colspan',
+        'height',
+        'style',
+        'tabindex',
+        'valign',
+        'width'
+      ]
+    }
+  });
+};
+
+const cleantToPreview = body => {
+  return removeHTMLTags(sanitizeHtml(body));
 };
 
 /* To export
@@ -81,9 +157,9 @@ const formIncomingEmailFromData = ({
   threadId,
   unread
 }) => {
-  const content = body || '';
+  const content = body ? sanitize(body) : '';
   const preview = body
-    ? removeHTMLTags(content)
+    ? cleantToPreview(body)
         .slice(0, 100)
         .trim()
     : '';
@@ -139,7 +215,7 @@ const formOutgoingEmailFromData = ({
     key: Date.now(),
     subject: textSubject,
     content: body,
-    preview: removeHTMLTags(body).slice(0, 100),
+    preview: cleantToPreview(body).slice(0, 100),
     date: Date.now(),
     status: EmailStatus.SENDING,
     unread: false,

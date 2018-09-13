@@ -21,8 +21,8 @@ describe('String Utils - HTML Tags :', () => {
     const text =
       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.';
     const numbers = '1, 2, 4';
-    const test = `<p><span>${text}</span><a>${numbers}</a></p>`;
+    const test = `<br/><p>${text}</p><br/><br/><p><span>${text}</span><a>${numbers}</a></p>`;
     const state = removeHTMLTags(test);
-    expect(state).toEqual(text + numbers);
+    expect(state).toEqual(`${text} ${text} ${numbers}`);
   });
 });

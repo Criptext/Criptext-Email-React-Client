@@ -155,7 +155,7 @@ const processEvent = async eventsGroups => {
         try {
           await Promise.all(managedEvents);
         } catch (e) {
-          if (e.name !== 'PreKeyMessage') {
+          if (e.name !== 'PreKeyMessage' || e.name !== 'MessageCounterError') {
             sendFetchEmailsErrorMessage();
           }
         }
@@ -236,7 +236,10 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     threadId,
     to
   } = params;
-  const recipientId = EmailUtils.getRecipientIdFromEmailAddressTag(from);
+  const {
+    recipientId,
+    isExternal
+  } = EmailUtils.getRecipientIdFromEmailAddressTag(from);
   const [prevEmail] = await getEmailByKey(metadataKey);
   const isSpam = labels
     ? labels.find(label => label === LabelType.spam.text)
@@ -281,7 +284,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       unread
     };
     const { email, recipients } = await EmailUtils.formIncomingEmailFromData(
-      data
+      data,
+      isExternal
     );
     const filesData =
       files && files.length

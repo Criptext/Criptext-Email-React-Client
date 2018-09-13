@@ -12,7 +12,8 @@ const removeAppDomain = email => {
 };
 
 const removeHTMLTags = string => {
-  return string.replace(HTMLTagsRegex, '');
+  const stringHTMLTagRemoved = string.replace(HTMLTagsRegex, ' ');
+  return stringHTMLTagRemoved.replace(/\s\s+/g, ' ').trim();
 };
 
 module.exports = {
