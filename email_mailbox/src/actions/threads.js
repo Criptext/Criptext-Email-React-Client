@@ -293,10 +293,10 @@ export const removeThreads = threadsParams => {
     try {
       const emailIds = threadsParams
         .map(param => param.emailId)
-        .filter(item => item !== null);
+        .filter(item => !(item === null || item === undefined));
       const threadIds = threadsParams
         .map(param => param.threadIdDB)
-        .filter(item => item !== null);
+        .filter(item => !(item === null || item === undefined));
       if (threadIds.length) {
         const eventParams = {
           cmd: SocketCommand.PEER_THREAD_DELETED_PERMANENTLY,

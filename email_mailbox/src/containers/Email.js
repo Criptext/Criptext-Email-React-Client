@@ -8,7 +8,9 @@ import {
   composerEvents,
   LabelType,
   myAccount,
-  openEmailInComposer
+  openEmailInComposer,
+  confirmPermanentDeleteThread,
+  closeDialog
 } from './../utils/electronInterface';
 import {
   loadFiles,
@@ -152,7 +154,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           labelsAdded,
           labelsRemoved
         })
-      );
+      ).then(() => {
+        if (ownProps.count === 1) {
+          ownProps.onBackOption();
+        }
+      });
     },
     onDelete: ev => {
       ev.stopPropagation();
@@ -164,12 +170,26 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           labelsAdded,
           labelsRemoved
         })
-      );
+      ).then(() => {
+        if (ownProps.count === 1) {
+          ownProps.onBackOption();
+        }
+      });
     },
     onDeletePermanently: ev => {
       ev.stopPropagation();
-      const emailsToDelete = [email];
-      dispatch(removeEmails(emailsToDelete));
+      const CONFIRM_RESPONSE = 'Confirm';
+      confirmPermanentDeleteThread(response => {
+        closeDialog();
+        if (response === CONFIRM_RESPONSE) {
+          const emailsToDelete = [email];
+          dispatch(removeEmails(emailsToDelete)).then(() => {
+            if (ownProps.count === 1) {
+              ownProps.onBackOption();
+            }
+          });
+        }
+      });
     },
     onUnsendEmail: () => {
       const contactIds = [...email.to, ...email.cc, ...email.bcc];
