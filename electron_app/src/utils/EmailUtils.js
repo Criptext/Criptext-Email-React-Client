@@ -174,10 +174,17 @@ const formOutgoingEmailFromData = ({
 };
 
 const getRecipientIdFromEmailAddressTag = emailAddressTag => {
-  const emailAddressMatches = emailAddressTag.match(HTMLTagsRegex);
-  const lastPosition = emailAddressMatches.length - 1;
-  const emailAddress = emailAddressMatches[lastPosition].replace(/[<>]/g, '');
-  return removeAppDomain(emailAddress);
+  const emailAddressTagMatches = emailAddressTag.match(HTMLTagsRegex);
+  if (emailAddressTagMatches) {
+    const lastPosition = emailAddressTagMatches.length - 1;
+    const emailAddress = emailAddressTagMatches[lastPosition].replace(
+      /[<>]/g,
+      ''
+    );
+    return removeAppDomain(emailAddress);
+  }
+  const emailAddressMatches = emailAddressTag.match(emailRegex);
+  return emailAddressMatches ? emailAddressMatches[0] : emailAddressTag;
 };
 
 module.exports = {

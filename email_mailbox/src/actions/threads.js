@@ -7,8 +7,7 @@ import {
   deleteEmailsByThreadId,
   getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
-  getEvents,
-  updateUnreadEmailByThreadId,
+  updateUnreadEmailByThreadIds,
   deleteEmailsByIds,
   postOpenEvent,
   getUnreadEmailsByThreadId,
@@ -18,7 +17,7 @@ import {
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
 import {
-  handleEvent,
+  getGroupEvents,
   sendUpdateThreadLabelsErrorMessage,
   sendRemoveThreadsErrorMessage,
   sendFetchEmailsErrorMessage
@@ -343,11 +342,7 @@ export const updateUnreadThreads = (threadsParams, read, label) => {
   return async dispatch => {
     try {
       const threadIds = threadsParams.map(param => param.threadIdDB);
-      const dbReponse = await Promise.all(
-        threadIds.map(async threadId => {
-          return await updateUnreadEmailByThreadId(threadId, !read);
-        })
-      );
+      const dbReponse = await updateUnreadEmailByThreadIds(threadIds, !read);
       if (dbReponse) {
         const eventParams = {
           cmd: SocketCommand.PEER_THREAD_READ_UPDATE,
@@ -395,21 +390,10 @@ export const loadThreads = params => {
   };
 };
 
-export const loadEvents = params => {
+export const loadEvents = () => {
   return async dispatch => {
     dispatch(startLoadSync());
-    try {
-      const receivedEvents = await getEvents();
-      const managedEvents = receivedEvents.map(async newEvent => {
-        return await handleEvent(newEvent);
-      });
-      await Promise.all(managedEvents);
-      dispatch(loadThreads(params));
-    } catch (e) {
-      if (e.name !== 'PreKeyMessage') {
-        sendFetchEmailsErrorMessage();
-      }
-    }
+    await getGroupEvents();
     dispatch(stopLoadSync());
   };
 };

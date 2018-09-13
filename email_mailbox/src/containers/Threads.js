@@ -57,7 +57,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
   return {
     onLoadThreads: (mailbox, clear, searchParams, timestamp) => {
       const labelId = LabelType[mailbox].id;
@@ -91,16 +91,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(loadThreads(params));
     },
     onLoadEvents: () => {
-      const labelId = LabelType[ownProps.mailboxSelected].id;
-      const contactTypes = defineContactType(labelId, null, null);
-      const rejectedLabelIds = defineRejectedLabels(labelId);
-      const params = {
-        rejectedLabelIds,
-        contactTypes,
-        labelId,
-        clear: true
-      };
-      dispatch(loadEvents(params));
+      dispatch(loadEvents());
     },
     onUnreadToggle: enabled => {
       dispatch(filterThreadsByUnread(enabled));

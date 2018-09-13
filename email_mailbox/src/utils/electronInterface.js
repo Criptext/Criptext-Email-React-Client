@@ -350,6 +350,6 @@ export const updateOpenedEmailByKey = ({ key, status }) => {
   return dbManager.updateEmail({ key, status });
 };
 
-export const updateUnreadEmailByThreadId = (threadId, unread) => {
-  return dbManager.updateEmailByThreadId({ threadId, unread });
+export const updateUnreadEmailByThreadIds = (threadIds, unread) => {
+  return dbManager.updateEmailByThreadIds({ threadIds, unread });
 };

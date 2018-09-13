@@ -35289,7 +35289,9 @@
                   result = result | (a[i] ^ b[i]);
               }
               if (result !== 0) {
-                  throw new Error("Bad MAC");
+                const e = new Error("Bad MAC");
+                e.name = "PreKeyMessage";
+                throw e;
               }
           });
       };
@@ -35864,7 +35866,7 @@
           session = record.getSessionByBaseKey(message.baseKey);
           if (session) {
             console.log("Duplicate PreKeyMessage for session");
-            const e = new Error('Duplicate PreKeyMessage for session');
+            const e = new Error("Duplicate PreKeyMessage for session");
             e.name = "PreKeyMessage";
             throw e;
             return;
@@ -36293,7 +36295,9 @@
         }
   
         if (counter - chain.chainKey.counter > 2000) {
-            throw new Error('Over 2000 messages into the future!');
+            const e = new Error('Over 2000 messages into the future!');
+            e.name = "PreKeyMessage";
+            throw e;
         }
   
         if (chain.chainKey.key === undefined) {
