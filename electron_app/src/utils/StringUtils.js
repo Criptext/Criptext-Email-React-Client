@@ -7,6 +7,14 @@ const removeDomainFromEmail = (email, domain) => {
 
 /* To export
    ----------------------------- */
+const cleanHTML = string => {
+  const stringHTMLcontentRemoved = string
+    .replace(/<style>[^>]*<\/style>/, '')
+    .replace(/<script>[^>]*<\/script>/, '')
+    .replace(/&nbsp;/, ' ');
+  return removeHTMLTags(stringHTMLcontentRemoved);
+};
+
 const removeAppDomain = email => {
   return removeDomainFromEmail(email, appDomain);
 };
@@ -17,6 +25,7 @@ const removeHTMLTags = string => {
 };
 
 module.exports = {
+  cleanHTML,
   removeAppDomain,
   removeHTMLTags
 };

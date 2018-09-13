@@ -1,5 +1,6 @@
 const sanitizeHtml = require('sanitize-html');
-const { removeAppDomain, removeHTMLTags } = require('./StringUtils');
+const { cleanHTML, removeAppDomain } = require('./StringUtils');
+const { Utf8Decode } = require('./EncodingUtils');
 const { appDomain } = require('./const');
 const myAccount = require('./../Account');
 const { HTMLTagsRegex, emailRegex } = require('./RegexUtils');
@@ -8,7 +9,8 @@ const formRecipients = recipientString => {
   const recipients = !recipientString ? [] : recipientString.split(',');
   return recipients
     .filter(
-      recipient => !!recipient.match(/<(.*)>/) || !!recipient.match(emailRegex)
+      recipient =>
+        !!recipient.match(HTMLTagsRegex) || !!recipient.match(emailRegex)
     )
     .map(recipient => {
       return recipient.replace(/"/g, '').trim();
@@ -112,10 +114,6 @@ const sanitize = body => {
   });
 };
 
-const cleantToPreview = body => {
-  return removeHTMLTags(sanitizeHtml(body));
-};
-
 /* To export
    ----------------------------- */
 const EmailStatus = {
@@ -144,22 +142,29 @@ const filterCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) > 0);
 };
 
-const formIncomingEmailFromData = ({
-  bcc,
-  body,
-  cc,
-  date,
-  from,
-  isToMe,
-  metadataKey,
-  subject,
-  to,
-  threadId,
-  unread
-}) => {
-  const content = body ? sanitize(body) : '';
+const formIncomingEmailFromData = (
+  {
+    bcc,
+    body,
+    cc,
+    date,
+    from,
+    isToMe,
+    metadataKey,
+    subject,
+    to,
+    threadId,
+    unread
+  },
+  isExternal
+) => {
+  const content = isExternal
+    ? body
+      ? Utf8Decode(sanitize(body))
+      : ''
+    : Utf8Decode(body);
   const preview = body
-    ? cleantToPreview(body)
+    ? cleanHTML(content)
         .slice(0, 100)
         .trim()
     : '';
@@ -215,7 +220,7 @@ const formOutgoingEmailFromData = ({
     key: Date.now(),
     subject: textSubject,
     content: body,
-    preview: cleantToPreview(body).slice(0, 100),
+    preview: cleanHTML(body).slice(0, 100),
     date: Date.now(),
     status: EmailStatus.SENDING,
     unread: false,
@@ -251,16 +256,22 @@ const formOutgoingEmailFromData = ({
 
 const getRecipientIdFromEmailAddressTag = emailAddressTag => {
   const emailAddressTagMatches = emailAddressTag.match(HTMLTagsRegex);
+  let recipientId;
   if (emailAddressTagMatches) {
     const lastPosition = emailAddressTagMatches.length - 1;
     const emailAddress = emailAddressTagMatches[lastPosition].replace(
       /[<>]/g,
       ''
     );
-    return removeAppDomain(emailAddress);
+    recipientId = removeAppDomain(emailAddress);
+  } else {
+    const emailAddressMatches = emailAddressTag.match(emailRegex);
+    recipientId = emailAddressMatches
+      ? emailAddressMatches[0]
+      : emailAddressTag;
   }
-  const emailAddressMatches = emailAddressTag.match(emailRegex);
-  return emailAddressMatches ? emailAddressMatches[0] : emailAddressTag;
+  const isExternal = !!recipientId.match(emailRegex);
+  return { recipientId, isExternal };
 };
 
 module.exports = {
