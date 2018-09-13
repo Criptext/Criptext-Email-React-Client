@@ -31,7 +31,8 @@ export const Email = {
   ADD_BATCH: 'ADD_EMAILS',
   MUTE: 'MUTE_EMAIL',
   MARK_UNREAD: 'MARK_UNREAD_EMAIL',
-  UNSEND: 'UNSEND_EMAIL'
+  UNSEND: 'UNSEND_EMAIL',
+  REMOVE_EMAILS: 'REMOVE_EMAILS'
 };
 
 export const Label = {

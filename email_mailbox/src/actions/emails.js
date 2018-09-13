@@ -104,6 +104,7 @@ export const removeEmails = emailsParams => {
   return async dispatch => {
     try {
       const metadataKeys = emailsParams.map(param => param.key);
+      const emailIds = emailsParams.map(param => param.id);
       if (metadataKeys.length) {
         const eventParams = {
           cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
@@ -122,6 +123,7 @@ export const removeEmails = emailsParams => {
               })
             );
           }
+          dispatch(removeEmailsOnSuccess(emailIds));
         } else {
           sendRemoveThreadsErrorMessage();
         }
@@ -131,6 +133,11 @@ export const removeEmails = emailsParams => {
     }
   };
 };
+
+export const removeEmailsOnSuccess = emailIds => ({
+  type: Email.REMOVE_EMAILS,
+  emailIds
+});
 
 export const updateUnreadEmails = (thread, label) => {
   return async dispatch => {

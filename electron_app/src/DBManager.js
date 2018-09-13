@@ -11,7 +11,6 @@ const { noNulls } = require('./utils/ObjectUtils');
 const { HTMLTagsRegex } = require('./utils/RegexUtils');
 const myAccount = require('./Account');
 const systemLabels = require('./systemLabels');
-const REJECTED_LABEL_IDS = [systemLabels.spam.id, systemLabels.trash.id];
 
 /* Account
    ----------------------------- */
@@ -665,8 +664,7 @@ const baseThreadQuery = ({
       `${Table.CONTACT}.id`
     );
 
-  const isRejectedLabel = REJECTED_LABEL_IDS.includes(labelId);
-  baseQuery = isRejectedLabel
+  baseQuery = !rejectedLabelIds.length
     ? baseQuery.whereRaw(
         `${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId and ${
           Table.EMAIL_LABEL
