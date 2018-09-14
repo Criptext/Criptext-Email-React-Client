@@ -1,13 +1,26 @@
-
 .react-autosuggest__container {
   position: relative;
 }
 
+.react-autosuggest__container--open .react-autosuggest__suggestions-container {
+  display: block;
+  position: absolute;
+  top: 31px;
+  width: 370px;
+  border: 1px solid #ececee;
+  background-color: #fdfdfd;
+  font-weight: 200;
+  font-size: 12px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  z-index: 2;
+  box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.11);
+}
+
 .react-autosuggest__input {
-  width: 341px;
+  width: 100%;
   height: 30px;
   padding: 10px 20px;
-  font-family: NunitoSans;
   font-weight: 300;
   font-size: 12px;
   border: 1px solid transparent;
@@ -25,22 +38,6 @@
 
 .react-autosuggest__suggestions-container {
   display: none;
-}
-
-.react-autosuggest__container--open .react-autosuggest__suggestions-container {
-  display: block;
-  position: absolute;
-  top: 31px;
-  width: 341px;
-  border: 1px solid #ececee;
-  background-color: #fdfdfd;
-  font-family: NunitoSans;
-  font-weight: 300;
-  font-size: 12px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  z-index: 2;
-  box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.11);
 }
 
 .react-autosuggest__suggestions-list {
@@ -63,42 +60,59 @@
   background-color: #f6f6f6;
 }
 
-
 .recipient-suggestion {
-  .badge {
-    color: #fff;
-    height: 27px;
-    width: 27px;
-    border-radius: 50%;
-    display: inline-block;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+
+  .recipient-icon {
     align-items: center;
-    text-align: center;
-    .badge-text {
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    height: 27px;
+    justify-content: center;
+    position: relative;
+    width: 27px;
+
+    .recipient-icon-letters{
       font-size: 11px;
-      position: relative;
-      top: 23%;
     }
   }
 
-  .highlighted-text {
-    width: 55%;
-    position: absolute;
-    left: 55px;
-    padding-top: 5px;
+  .recipient-text {
+    align-items: center;
     color: #6a707e;
+    display: flex;
+    margin-left: 10px;
+    position: relative;
+    width: 143px;
 
-    .highlight {
-      font-weight: bold;
+    > span{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .highlight {
+        font-weight: bold;
+      }
     }
   }
 
   .sugestion-email-right {
-    width: 45%;
-    padding-top: 5px;
-    float: right;
+    align-items: center;
+    display: flex;
+    margin-left: 10px;
+    width: 170px;
     
-    .highlight {
-      font-weight: bold;
+    > span{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &.highlight {
+        font-weight: bold;
+      }
     }
   }
 }
