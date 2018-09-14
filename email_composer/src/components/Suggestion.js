@@ -51,19 +51,21 @@ const getMatchesOnEmail = (email, query) => {
 };
 
 const renderCapitalLetters = (color, letters) => (
-  <span style={{ background: color }} className="badge">
-    <span className="badge-text">{letters}</span>
-  </span>
+  <div style={{ background: color }} className="recipient-icon">
+    <span className="recipient-icon-letters">{letters}</span>
+  </div>
 );
 
 const renderHighlightedText = (parts, isName) => (
-  <span className="highlighted-text">
-    {isName ? null : '<'}
-    {isName
-      ? renderHighlightedLeftName(parts.name)
-      : renderHighlightedLeftEmail(parts.email)}
-    {isName ? null : '>'}
-  </span>
+  <div className="recipient-text">
+    <span>
+      {isName ? null : '<'}
+      {isName
+        ? renderHighlightedLeftName(parts.name)
+        : renderHighlightedLeftEmail(parts.email)}
+      {isName ? null : '>'}
+    </span>
+  </div>
 );
 
 const renderHighlightedLeftName = name => {
@@ -89,7 +91,7 @@ const renderHighlightedLeftEmail = email => {
 };
 
 const renderHighlightedRightEmail = email => (
-  <span className="sugestion-email-right">
+  <div className="sugestion-email-right">
     {email.map((part, index) => {
       const className = part.highlight ? 'highlight' : null;
       return (
@@ -98,7 +100,7 @@ const renderHighlightedRightEmail = email => (
         </span>
       );
     })}
-  </span>
+  </div>
 );
 
 export default Suggestion;

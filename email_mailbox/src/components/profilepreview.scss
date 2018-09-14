@@ -45,6 +45,9 @@
         color: #a7a9ae;
         font-size: 13px;
         margin-top: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .button-a{
