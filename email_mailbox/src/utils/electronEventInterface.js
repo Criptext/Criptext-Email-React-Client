@@ -155,7 +155,9 @@ const processEvent = async eventsGroups => {
         try {
           await Promise.all(managedEvents);
         } catch (e) {
-          if (e.name !== 'PreKeyMessage' || e.name !== 'MessageCounterError') {
+          if (
+            !(e.name === 'PreKeyMessage' || e.name === 'MessageCounterError')
+          ) {
             sendFetchEmailsErrorMessage();
           }
         }

@@ -246,7 +246,7 @@ const RecoveryEmailConfirmationMessage = ({ recoveryEmailConfirmed }) => {
   ) : (
     <div className="recovery-email-confirmation-section recovery-email-not-confirmed">
       <i className="icon-incorret" />
-      <span className="text">Not confirmed</span>
+      <span className="text">Not verified</span>
     </div>
   );
 };
