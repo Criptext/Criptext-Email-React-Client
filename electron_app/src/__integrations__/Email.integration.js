@@ -18,7 +18,7 @@ const emailDraft = {
     unsendDate: '2018-06-14 08:23:20.000'
   },
   recipients: {
-    from: ['User me <user@criptext.com>']
+    from: ['<User me> <user@criptext.com>']
   },
   labels: [6]
 };
