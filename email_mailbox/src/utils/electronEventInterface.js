@@ -223,7 +223,9 @@ export const handleEvent = incomingEvent => {
 const handleNewMessageEvent = async ({ rowid, params }) => {
   const {
     bcc,
+    bccArray,
     cc,
+    ccArray,
     date,
     fileKey,
     files,
@@ -234,7 +236,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     subject,
     senderDeviceId,
     threadId,
-    to
+    to,
+    toArray
   } = params;
   const {
     recipientId,
@@ -271,8 +274,10 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     const unread = isFromMe && !isToMe ? false : true;
     const data = {
       bcc,
+      bccArray,
       body,
       cc,
+      ccArray,
       date,
       from,
       isToMe,
@@ -280,6 +285,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       deviceId: senderDeviceId,
       subject,
       to,
+      toArray,
       threadId,
       unread
     };

@@ -25,11 +25,19 @@ const filterNonCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) < 0);
 };
 
-const getRecipientsFromData = ({ to, cc, bcc, from }) => {
+const getRecipientsFromData = ({
+  to,
+  toArray,
+  cc,
+  ccArray,
+  bcc,
+  bccArray,
+  from
+}) => {
   return {
-    to: formRecipients(to),
-    cc: formRecipients(cc),
-    bcc: formRecipients(bcc),
+    to: toArray || formRecipients(to),
+    cc: ccArray || formRecipients(cc),
+    bcc: bccArray || formRecipients(bcc),
     from: formRecipients(from)
   };
 };
@@ -145,14 +153,17 @@ const filterCriptextRecipients = recipients => {
 const formIncomingEmailFromData = (
   {
     bcc,
+    bccArray,
     body,
     cc,
+    ccArray,
     date,
     from,
     isToMe,
     metadataKey,
     subject,
     to,
+    toArray,
     threadId,
     unread
   },
@@ -169,7 +180,15 @@ const formIncomingEmailFromData = (
         .trim()
     : '';
   const status = isToMe ? EmailStatus.NONE : EmailStatus.DELIVERED;
-  const recipients = getRecipientsFromData({ to, cc, bcc, from });
+  const recipients = getRecipientsFromData({
+    to,
+    toArray,
+    cc,
+    ccArray,
+    bcc,
+    bccArray,
+    from
+  });
   const email = {
     key: metadataKey,
     threadId: threadId,
