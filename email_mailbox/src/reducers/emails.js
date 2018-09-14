@@ -37,6 +37,13 @@ const emails = (state = new Map(), action) => {
       }
       return state.set(action.emailId.toString(), email(item, action));
     }
+    case Email.REMOVE_EMAILS: {
+      const { emailIds } = action;
+      if (!emailIds) {
+        return state;
+      }
+      return state.deleteAll(emailIds);
+    }
     case Email.UNSEND: {
       const { emailId, unsendDate, status } = action;
       if (

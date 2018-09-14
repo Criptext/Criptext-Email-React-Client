@@ -8,9 +8,17 @@ import {
   composerEvents,
   LabelType,
   myAccount,
-  openEmailInComposer
+  openEmailInComposer,
+  confirmPermanentDeleteThread,
+  closeDialog
 } from './../utils/electronInterface';
-import { loadFiles, muteEmail, unsendEmail } from './../actions/index';
+import {
+  loadFiles,
+  muteEmail,
+  unsendEmail,
+  updateEmailLabels,
+  removeEmails
+} from './../actions/index';
 import { EmailStatus, unsentText } from '../utils/const';
 
 const mapStateToProps = (state, ownProps) => {
@@ -52,6 +60,8 @@ const mapStateToProps = (state, ownProps) => {
     content
   };
   const isUnsend = email.status === EmailStatus.UNSEND;
+  const isSpam = email.labelIds.includes(LabelType.spam.id);
+  const isTrash = email.labelIds.includes(LabelType.trash.id);
   const isDraft =
     email.labelIds.findIndex(labelId => {
       return labelId === LabelType.draft.id;
@@ -61,6 +71,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     email: myEmail,
     files,
+    isSpam,
+    isTrash,
     isDraft,
     isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
     isUnsend
@@ -131,6 +143,53 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ev.stopPropagation();
       const keyEmailToRespond = email.key;
       openEmailInComposer({ keyEmailToRespond, type: composerEvents.FORWARD });
+    },
+    onMarkAsSpam: ev => {
+      ev.stopPropagation();
+      const labelsAdded = [LabelType.spam.text];
+      const labelsRemoved = [];
+      dispatch(
+        updateEmailLabels({
+          email,
+          labelsAdded,
+          labelsRemoved
+        })
+      ).then(() => {
+        if (ownProps.count === 1) {
+          ownProps.onBackOption();
+        }
+      });
+    },
+    onDelete: ev => {
+      ev.stopPropagation();
+      const labelsAdded = [LabelType.trash.text];
+      const labelsRemoved = [];
+      dispatch(
+        updateEmailLabels({
+          email,
+          labelsAdded,
+          labelsRemoved
+        })
+      ).then(() => {
+        if (ownProps.count === 1) {
+          ownProps.onBackOption();
+        }
+      });
+    },
+    onDeletePermanently: ev => {
+      ev.stopPropagation();
+      const CONFIRM_RESPONSE = 'Confirm';
+      confirmPermanentDeleteThread(response => {
+        closeDialog();
+        if (response === CONFIRM_RESPONSE) {
+          const emailsToDelete = [email];
+          dispatch(removeEmails(emailsToDelete)).then(() => {
+            if (ownProps.count === 1) {
+              ownProps.onBackOption();
+            }
+          });
+        }
+      });
     },
     onUnsendEmail: () => {
       const contactIds = [...email.to, ...email.cc, ...email.bcc];

@@ -133,10 +133,15 @@ const renderEmailExpand = props => (
                   >
                     <PopOverEmailActions
                       isHidden={props.isHiddenPopOverEmailActions}
+                      isSpam={props.isSpam}
+                      isTrash={props.isTrash}
                       menuPosition={{ right: '-32px', top: '28px' }}
                       onReplyEmail={props.onReplyEmail}
                       onReplyAll={props.onReplyAll}
                       onForward={props.onForward}
+                      onMarkAsSpam={props.onMarkAsSpam}
+                      onDelete={props.onDelete}
+                      onDeletePermanently={props.onDeletePermanently}
                       onToggleMenu={props.onTogglePopOverEmailActions}
                     />
                   </i>
@@ -249,13 +254,18 @@ renderEmailExpand.propTypes = {
   files: PropTypes.array,
   hideView: PropTypes.bool,
   isDraft: PropTypes.bool,
+  isSpam: PropTypes.bool,
+  isTrash: PropTypes.bool,
   isFromMe: PropTypes.bool,
   isHiddenPopOverEmailActions: PropTypes.bool,
   isHiddenPopOverEmailMoreInfo: PropTypes.bool,
   isUnsend: PropTypes.bool,
   onClickEditDraft: PropTypes.func,
   onClickUnsendButton: PropTypes.func,
+  onDelete: PropTypes.func,
+  onDeletePermanently: PropTypes.func,
   onForward: PropTypes.func,
+  onMarkAsSpam: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyEmail: PropTypes.func,
   onReplyLast: PropTypes.func,

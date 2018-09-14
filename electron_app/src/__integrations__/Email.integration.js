@@ -300,7 +300,8 @@ describe('Load data thread from Email Table:', () => {
 
   it('should load threads from DB with the correct shape: inbox', async () => {
     const params = {
-      labelId: 1
+      labelId: 1,
+      rejectedLabelIds: [2, 6]
     };
     const threads = await DBManager.getEmailsGroupByThreadByParams(params);
     expect(threads).toMatchSnapshot();
@@ -308,7 +309,8 @@ describe('Load data thread from Email Table:', () => {
 
   it('should load threads from DB with the correct shape: sent', async () => {
     const params = {
-      labelId: 3
+      labelId: 3,
+      rejectedLabelIds: [2, 6]
     };
     const threads = await DBManager.getEmailsGroupByThreadByParams(params);
     expect(threads).toMatchSnapshot();

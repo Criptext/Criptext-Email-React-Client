@@ -151,6 +151,12 @@ class MainWrapper extends Component {
         return (
           <Thread
             mailboxSelected={this.props.sectionSelected.params.mailboxSelected}
+            onBackOption={() =>
+              this.handleClickBackHeaderThread(
+                this.props.sectionSelected.params.mailboxSelected,
+                this.props.onClickSection
+              )
+            }
             threadIdSelected={
               this.props.sectionSelected.params.threadIdSelected
             }

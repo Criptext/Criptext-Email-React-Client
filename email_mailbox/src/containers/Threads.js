@@ -79,7 +79,8 @@ const mapDispatchToProps = dispatch => {
               contactTypes,
               contactFilter,
               plain: true,
-              text: searchParams.text
+              text: searchParams.text,
+              rejectedLabelIds
             }
           : {
               labelId,

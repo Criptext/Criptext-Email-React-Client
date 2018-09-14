@@ -45,7 +45,15 @@ class Thread extends Component {
           <div className="thread-emails">
             {this.props.emails.map((email, index) => {
               const isLast = this.props.emails.length - 1 === index;
-              return <Email key={index} email={email} staticOpen={isLast} />;
+              return (
+                <Email
+                  key={index}
+                  email={email}
+                  staticOpen={isLast}
+                  count={this.props.emails.length}
+                  onBackOption={this.props.onBackOption}
+                />
+              );
             })}
           </div>
         </div>
@@ -73,6 +81,7 @@ Thread.propTypes = {
   emails: PropTypes.array,
   labels: PropTypes.array,
   mailboxSelected: PropTypes.string,
+  onBackOption: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onUpdateUnreadEmails: PropTypes.func,
   onRemoveLabelIdThread: PropTypes.func,

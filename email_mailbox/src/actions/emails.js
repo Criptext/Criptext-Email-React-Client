@@ -15,7 +15,12 @@ import { loadContacts } from './contacts';
 import { updateLabelSuccess } from './labels';
 import { EmailStatus, SocketCommand } from '../utils/const';
 import { unsendEmailFiles } from './files';
-import { sendFetchEmailsErrorMessage } from './../utils/electronEventInterface';
+import {
+  sendFetchEmailsErrorMessage,
+  sendUpdateThreadLabelsErrorMessage,
+  sendRemoveThreadsErrorMessage
+} from './../utils/electronEventInterface';
+import { updateEmailIdsThread } from './threads';
 
 export const addEmails = emails => {
   return {
@@ -96,9 +101,10 @@ export const markEmailUnread = (emailId, valueToSet) => {
 };
 
 export const removeEmails = emailsParams => {
-  return async () => {
+  return async dispatch => {
     try {
       const metadataKeys = emailsParams.map(param => param.key);
+      const emailIds = emailsParams.map(param => param.id);
       if (metadataKeys.length) {
         const eventParams = {
           cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
@@ -107,6 +113,19 @@ export const removeEmails = emailsParams => {
         const { status } = await postPeerEvent(eventParams);
         if (status === 200) {
           await deleteEmailByKeys(metadataKeys);
+          if (metadataKeys.length === 1) {
+            const [email] = emailsParams;
+            dispatch(
+              updateEmailIdsThread({
+                threadId: email.threadId,
+                emailIdToAdd: [],
+                emailIdsToRemove: [email.id]
+              })
+            );
+          }
+          dispatch(removeEmailsOnSuccess(emailIds));
+        } else {
+          sendRemoveThreadsErrorMessage();
         }
       }
     } catch (e) {
@@ -114,6 +133,11 @@ export const removeEmails = emailsParams => {
     }
   };
 };
+
+export const removeEmailsOnSuccess = emailIds => ({
+  type: Email.REMOVE_EMAILS,
+  emailIds
+});
 
 export const updateUnreadEmails = (thread, label) => {
   return async dispatch => {
@@ -170,3 +194,34 @@ export const unsendEmailOnSuccess = (emailId, unsendDate, status) => ({
   unsendDate,
   status
 });
+
+export const updateEmailLabels = ({ email, labelsAdded, labelsRemoved }) => {
+  return async dispatch => {
+    try {
+      if (email) {
+        const eventParams = {
+          cmd: SocketCommand.PEER_EMAIL_LABELS_UPDATE,
+          params: {
+            metadataKeys: [Number(email.key)],
+            labelsAdded,
+            labelsRemoved
+          }
+        };
+        const { status } = await postPeerEvent(eventParams);
+        if (status === 200) {
+          dispatch(
+            updateEmailIdsThread({
+              threadId: email.threadId,
+              emailIdToAdd: [],
+              emailIdsToRemove: [email.id]
+            })
+          );
+        } else {
+          sendUpdateThreadLabelsErrorMessage();
+        }
+      }
+    } catch (e) {
+      sendUpdateThreadLabelsErrorMessage();
+    }
+  };
+};
