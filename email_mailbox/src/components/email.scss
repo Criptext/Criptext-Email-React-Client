@@ -20,7 +20,7 @@
     }
   }
 
-  hr{
+  > hr{
     border: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     margin: 0;
@@ -38,7 +38,6 @@
       background-color: blueviolet;
       border-radius: 50%;
       display: flex;
-      flex-grow: 0;
       height: 36px;
       margin-right: 10px;
       width: 36px;
@@ -54,8 +53,8 @@
     .email-info-content{
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
       position: relative;
+      width: calc(100% - 46px);
 
       .email-info-content-line{
         align-items: center;
@@ -137,6 +136,9 @@
     flex-grow: 1;
     font-size: 14px;
     font-weight: 100;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

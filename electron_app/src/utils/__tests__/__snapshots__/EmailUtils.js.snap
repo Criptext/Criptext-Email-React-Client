@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`[Form outgoing email]  Form outgoing email from data 1`] = `
+exports[`[Form outgoing email]  Should form outgoing email from data 1`] = `
 Object {
   "body": "<p>Hello</p>",
   "criptextRecipients": Array [

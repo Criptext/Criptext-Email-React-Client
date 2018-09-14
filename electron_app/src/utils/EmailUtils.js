@@ -1,4 +1,6 @@
-const { removeAppDomain, removeHTMLTags } = require('./StringUtils');
+const sanitizeHtml = require('sanitize-html');
+const { cleanHTML, removeAppDomain } = require('./StringUtils');
+const { Utf8Decode } = require('./EncodingUtils');
 const { appDomain } = require('./const');
 const myAccount = require('./../Account');
 const { HTMLTagsRegex, emailRegex } = require('./RegexUtils');
@@ -7,7 +9,8 @@ const formRecipients = recipientString => {
   const recipients = !recipientString ? [] : recipientString.split(',');
   return recipients
     .filter(
-      recipient => !!recipient.match(/<(.*)>/) || !!recipient.match(emailRegex)
+      recipient =>
+        !!recipient.match(HTMLTagsRegex) || !!recipient.match(emailRegex)
     )
     .map(recipient => {
       return recipient.replace(/"/g, '').trim();
@@ -40,6 +43,77 @@ const getCriptextRecipients = (recipients, type) => {
     }));
 };
 
+const sanitize = body => {
+  return sanitizeHtml(body, {
+    allowedTags: [
+      'a',
+      'b',
+      'blockquote',
+      'br',
+      'caption',
+      'cite',
+      'code',
+      'col',
+      'colgroup',
+      'dd',
+      'div',
+      'dl',
+      'dt',
+      'em',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'hr',
+      'i',
+      'img',
+      'li',
+      'ol',
+      'p',
+      'pre',
+      'q',
+      'small',
+      'span',
+      'strike',
+      'strong',
+      'sub',
+      'sup',
+      'table',
+      'tbody',
+      'td',
+      'tfoot',
+      'th',
+      'thead',
+      'tr',
+      'u',
+      'ul',
+      'style',
+      'title',
+      'head'
+    ],
+    allowedAttributes: {
+      a: ['href', 'name', 'target'],
+      img: ['alt', 'src'],
+      '*': [
+        'align',
+        'bgcolor',
+        'border',
+        'cellspacing',
+        'cellpadding',
+        'class',
+        'colspan',
+        'height',
+        'style',
+        'tabindex',
+        'valign',
+        'width'
+      ]
+    }
+  });
+};
+
 /* To export
    ----------------------------- */
 const EmailStatus = {
@@ -68,22 +142,29 @@ const filterCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) > 0);
 };
 
-const formIncomingEmailFromData = ({
-  bcc,
-  body,
-  cc,
-  date,
-  from,
-  isToMe,
-  metadataKey,
-  subject,
-  to,
-  threadId,
-  unread
-}) => {
-  const content = body || '';
+const formIncomingEmailFromData = (
+  {
+    bcc,
+    body,
+    cc,
+    date,
+    from,
+    isToMe,
+    metadataKey,
+    subject,
+    to,
+    threadId,
+    unread
+  },
+  isExternal
+) => {
+  const content = isExternal
+    ? body
+      ? Utf8Decode(sanitize(body))
+      : ''
+    : Utf8Decode(body);
   const preview = body
-    ? removeHTMLTags(content)
+    ? cleanHTML(content)
         .slice(0, 100)
         .trim()
     : '';
@@ -139,7 +220,7 @@ const formOutgoingEmailFromData = ({
     key: Date.now(),
     subject: textSubject,
     content: body,
-    preview: removeHTMLTags(body).slice(0, 100),
+    preview: cleanHTML(body).slice(0, 100),
     date: Date.now(),
     status: EmailStatus.SENDING,
     unread: false,
@@ -175,16 +256,22 @@ const formOutgoingEmailFromData = ({
 
 const getRecipientIdFromEmailAddressTag = emailAddressTag => {
   const emailAddressTagMatches = emailAddressTag.match(HTMLTagsRegex);
+  let recipientId;
   if (emailAddressTagMatches) {
     const lastPosition = emailAddressTagMatches.length - 1;
     const emailAddress = emailAddressTagMatches[lastPosition].replace(
       /[<>]/g,
       ''
     );
-    return removeAppDomain(emailAddress);
+    recipientId = removeAppDomain(emailAddress);
+  } else {
+    const emailAddressMatches = emailAddressTag.match(emailRegex);
+    recipientId = emailAddressMatches
+      ? emailAddressMatches[0]
+      : emailAddressTag;
   }
-  const emailAddressMatches = emailAddressTag.match(emailRegex);
-  return emailAddressMatches ? emailAddressMatches[0] : emailAddressTag;
+  const isExternal = !!recipientId.match(emailRegex);
+  return { recipientId, isExternal };
 };
 
 module.exports = {

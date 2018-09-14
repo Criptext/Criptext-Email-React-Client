@@ -7,7 +7,7 @@ const {
 const { appDomain } = require('./../const');
 
 describe('[Form outgoing email] ', () => {
-  it('Form outgoing email from data', () => {
+  it('Should form outgoing email from data', () => {
     const labelId = 6;
     const composerData = {
       toEmails: [`toUser@${appDomain}`],
@@ -28,7 +28,7 @@ describe('[Form outgoing email] ', () => {
 });
 
 describe('[Filter emails by domain] ', () => {
-  it('Filter emails by a different domain defined', () => {
+  it('Should filter emails by a different domain defined', () => {
     const recipients = [
       `userA@${appDomain}`,
       `userB@${appDomain}`,
@@ -41,38 +41,43 @@ describe('[Filter emails by domain] ', () => {
 });
 
 describe('[Get recipientId from EmailAddressTag] ', () => {
-  it('Get recipientId from criptext domain', () => {
+  it('Should get recipientId from criptext domain', () => {
     const from = `"Alice$$" <alice@${appDomain}>`;
-    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
     const result = 'alice';
     expect(recipientId).toEqual(result);
+    expect(isExternal).toBeFalsy();
   });
 
-  it('Get recipientId from external domain', () => {
+  it('Should get recipientId from external domain', () => {
     const from = 'Bob 8989 <bob@domain.com>';
-    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
     const result = 'bob@domain.com';
     expect(recipientId).toEqual(result);
+    expect(isExternal).toBeTruthy();
   });
 
-  it('Get recipientId from external domain, with name comma added', () => {
+  it('Should get recipientId from external domain, with name comma added', () => {
     const from = `Lola, <lola@domain.com>`;
-    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
     const result = 'lola@domain.com';
     expect(recipientId).toEqual(result);
+    expect(isExternal).toBeTruthy();
   });
 
-  it('Get recipientId from external domain, with name as emailadresstag', () => {
+  it('Should get recipientId from external domain, with name as emailadresstag', () => {
     const from = `<alice@${appDomain}> <lola@domain.com>`;
-    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
     const result = 'lola@domain.com';
     expect(recipientId).toEqual(result);
+    expect(isExternal).toBeTruthy();
   });
 
-  it('Get recipientId from external domain, with emailadresstag without tag', () => {
+  it('Should get recipientId from external domain, with emailadresstag without tag', () => {
     const from = `alice@domain.com`;
-    const recipientId = getRecipientIdFromEmailAddressTag(from);
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
     const result = 'alice@domain.com';
     expect(recipientId).toEqual(result);
+    expect(isExternal).toBeTruthy();
   });
 });

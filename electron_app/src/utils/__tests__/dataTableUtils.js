@@ -5,7 +5,7 @@ describe('data table utils:', () => {
   it('form contacts row', () => {
     const contacts = [
       'Gianni <gianni@criptext.com>',
-      'erika@criptext.com',
+      '<erikaaa@criptext.com> <erika@criptext.com>',
       'pedro@criptext.com'
     ];
     const state = formContactsRow(contacts);

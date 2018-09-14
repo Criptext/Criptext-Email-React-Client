@@ -8,6 +8,7 @@ const {
 } = require('./models.js');
 const { formContactsRow } = require('./utils/dataTableUtils.js');
 const { noNulls } = require('./utils/ObjectUtils');
+const { HTMLTagsRegex } = require('./utils/RegexUtils');
 const myAccount = require('./Account');
 const systemLabels = require('./systemLabels');
 
@@ -409,8 +410,14 @@ const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
 
 const formEmailContact = ({ emailId, contactStored, contacts, type }) => {
   return contacts.map(contactToSearch => {
-    const emailMatched = contactToSearch.match(/<(.*)>/);
-    const email = emailMatched ? emailMatched[1] : contactToSearch;
+    const emailMatched = contactToSearch.match(HTMLTagsRegex);
+    let email;
+    if (emailMatched) {
+      const lastPosition = emailMatched.length - 1;
+      email = emailMatched[lastPosition].replace(/[<>]/g, '');
+    } else {
+      email = contactToSearch;
+    }
     const { id } = contactStored.find(contact => contact.email === email);
     return {
       emailId,
