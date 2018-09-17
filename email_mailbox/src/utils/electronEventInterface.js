@@ -781,8 +781,8 @@ export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
 
-export const removeEvent = eventName => {
-  emitter.removeEvent(eventName);
+export const removeEvent = (eventName, callback) => {
+  emitter.removeListener(eventName, callback);
 };
 
 export const Event = {
