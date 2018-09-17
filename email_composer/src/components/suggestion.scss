@@ -86,7 +86,7 @@
     display: flex;
     margin-left: 10px;
     position: relative;
-    width: 143px;
+    width: 130px;
 
     > span{
       overflow: hidden;
@@ -103,14 +103,14 @@
     align-items: center;
     display: flex;
     margin-left: 10px;
-    width: 170px;
+    width: 160px;
     
     > span{
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
 
-      &.highlight {
+      .highlight {
         font-weight: bold;
       }
     }

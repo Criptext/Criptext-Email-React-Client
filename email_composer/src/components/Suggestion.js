@@ -59,11 +59,11 @@ const renderCapitalLetters = (color, letters) => (
 const renderHighlightedText = (parts, isName) => (
   <div className="recipient-text">
     <span>
-      {isName ? null : '<'}
+      {!isName && '<'}
       {isName
         ? renderHighlightedLeftName(parts.name)
         : renderHighlightedLeftEmail(parts.email)}
-      {isName ? null : '>'}
+      {!isName && '>'}
     </span>
   </div>
 );
@@ -92,14 +92,16 @@ const renderHighlightedLeftEmail = email => {
 
 const renderHighlightedRightEmail = email => (
   <div className="sugestion-email-right">
-    {email.map((part, index) => {
-      const className = part.highlight ? 'highlight' : null;
-      return (
-        <span className={className} key={index}>
-          {part.text}
-        </span>
-      );
-    })}
+    <span>
+      {email.map((part, index) => {
+        const className = part.highlight ? 'highlight' : null;
+        return (
+          <span className={className} key={index}>
+            {part.text}
+          </span>
+        );
+      })}
+    </span>
   </div>
 );
 

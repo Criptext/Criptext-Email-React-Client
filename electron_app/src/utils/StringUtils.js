@@ -9,8 +9,8 @@ const removeDomainFromEmail = (email, domain) => {
    ----------------------------- */
 const cleanHTML = string => {
   const stringHTMLcontentRemoved = string
-    .replace(/<style>[^>]*<\/style>/, '')
-    .replace(/<script>[^>]*<\/script>/, '')
+    .replace(/<style[^>]*>[^>]*<\/style>/, '')
+    .replace(/<script[^>]*>[^>]*<\/script>/, '')
     .replace(/&nbsp;/, ' ');
   return removeHTMLTags(stringHTMLcontentRemoved);
 };
