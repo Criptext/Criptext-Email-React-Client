@@ -10,13 +10,13 @@ jest.mock('./../../utils/electronUtilsInterface');
 
 const myEmails = file.emails;
 
-function initState(emails) {
+const initState = emails => {
   const data = {};
   emails.forEach(element => {
     data[element.id] = element;
   });
   return emailReducer(undefined, actions.addEmails(data));
-}
+};
 
 describe('Email actions - ADD_BATCH ', () => {
   it('shoul add emails to state', () => {
@@ -59,7 +59,7 @@ describe('Email actions - UNSEND: ', () => {
   });
 });
 
-describe('email actions: ', () => {
+describe('Email actions - MUTE ', () => {
   it('Mute email by id', () => {
     const emailId = '1';
     const prevState = initState(myEmails);
@@ -67,5 +67,43 @@ describe('email actions: ', () => {
     const nextState = emailReducer(prevState, action);
     const mutedEmail = nextState.get(emailId);
     expect(mutedEmail.get('isMuted')).toBe(1);
+  });
+});
+
+describe('Email actions - REMOVE_EMAILS ', () => {
+  it('should not remove emails from state if param is undefined', () => {
+    const state = initState(myEmails);
+    const emailIds = undefined;
+    const action = actions.removeEmailsOnSuccess(emailIds);
+    const nextState = emailReducer(state, action);
+    expect(nextState.toJS()).toMatchObject(
+      expect.objectContaining({
+        '1': expect.any(Object),
+        '2': expect.any(Object)
+      })
+    );
+  });
+
+  it('should remove email from state only if param is string', () => {
+    const state = initState(myEmails);
+    const emailIds = ['1', null, 3];
+    const action = actions.removeEmailsOnSuccess(emailIds);
+    const nextState = emailReducer(state, action);
+    expect(nextState.get('1')).toBeUndefined();
+    expect(nextState.toJS()).toMatchObject(
+      expect.objectContaining({
+        '2': expect.any(Object),
+        '3': expect.any(Object)
+      })
+    );
+  });
+
+  it('should remove emails from state', () => {
+    const state = initState(myEmails);
+    const emailIds = ['1', '3'];
+    const action = actions.removeEmailsOnSuccess(emailIds);
+    const nextState = emailReducer(state, action);
+    expect(nextState.get('1')).toBeUndefined();
+    expect(nextState.get('3')).toBeUndefined();
   });
 });

@@ -63,6 +63,20 @@ const deleteDeviceData = async () => {
   await logoutApp();
 };
 
+const getOS = () => {
+  const osName = window.navigator.platform;
+  return osName.split(' ')[0];
+};
+
+const formContactSupportEmailContent = () => {
+  const lines = '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>';
+  const header = '<strong>Do not write below this line.</strong>';
+  const separator = '<br/>*****************************<br/>';
+  const appVersion = `<strong>Version:</strong>  ${version}<br/>`;
+  const OS = `<strong>OS:</strong>  ${getOS()}<br/>`;
+  return lines + header + separator + appVersion + OS;
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     onAddLabel: (text, eventParams) => {
@@ -83,7 +97,7 @@ const mapDispatchToProps = dispatch => {
       }
     },
     onComposeContactSupportEmail: () => {
-      const content = `<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>Do not write below this line.<br/>****************************<br/>Version: ${version}`;
+      const content = formContactSupportEmailContent();
       openEmailInComposer({
         type: composerEvents.NEW_WITH_DATA,
         data: {

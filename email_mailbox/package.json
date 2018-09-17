@@ -10,7 +10,7 @@
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "html-to-draftjs": "^1.4.0",
-    "immutable": "^3.8.2",
+    "immutable": "^4.0.0-rc.2",
     "lottie-web": "^5.1.17",
     "moment": "^2.20.1",
     "node-sass-chokidar": "^0.0.3",
