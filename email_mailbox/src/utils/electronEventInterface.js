@@ -54,10 +54,12 @@ ipcRenderer.on('socket-message', async (ev, message) => {
   const eventId = message.cmd;
   if (
     eventId === SocketCommand.DEVICE_REMOVED ||
-    eventId === SocketCommand.PEER_PASSWORD_CHANGED
+    eventId === SocketCommand.PEER_PASSWORD_CHANGED ||
+    eventId === SocketCommand.PEER_RECOVERY_EMAIL_CHANGED ||
+    eventId === SocketCommand.PEER_RECOVERY_EMAIL_CONFIRMED
   ) {
     handleEvent(message);
-  } else {
+  } else if (eventId === 400) {
     await getGroupEvents();
   }
 });
@@ -781,8 +783,8 @@ export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
 
-export const removeEvent = eventName => {
-  emitter.removeEvent(eventName);
+export const removeEvent = (eventName, callback) => {
+  emitter.removeListener(eventName, callback);
 };
 
 export const Event = {

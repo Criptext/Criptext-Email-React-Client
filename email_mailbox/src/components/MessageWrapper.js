@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Message from './Message';
-import { Event, addEvent } from '../utils/electronEventInterface';
+import { Event, addEvent, removeEvent } from '../utils/electronEventInterface';
 
 const MESSAGE_DURATION = 5000;
 const DELAY_TO_CLEAR_MESSAGE = 500;
@@ -19,23 +19,8 @@ class MessageWrapper extends Component {
       displayMessage: false
     };
 
-    addEvent(
-      Event.DISPLAY_MESSAGE,
-      ({ action, type, description, actionHandlerKey, priority, params }) => {
-        const isDisplayingMessage = this.state.displayMessage;
-        const hasHigherPriority = priority >= this.state.priority;
-        if (!isDisplayingMessage || hasHigherPriority) {
-          this.setMessageState({
-            action,
-            type,
-            description,
-            actionHandlerKey,
-            priority,
-            params
-          });
-        }
-      }
-    );
+    this.clearTimeouts();
+    addEvent(Event.DISPLAY_MESSAGE, this.handleDisplayMessageEvent);
   }
 
   render() {
@@ -56,6 +41,33 @@ class MessageWrapper extends Component {
     );
   }
 
+  componentWillUnmount() {
+    this.clearTimeouts();
+    removeEvent(Event.DISPLAY_MESSAGE, this.handleDisplayMessageEvent);
+  }
+
+  handleDisplayMessageEvent = ({
+    action,
+    type,
+    description,
+    actionHandlerKey,
+    priority,
+    params
+  }) => {
+    const isDisplayingMessage = this.state.displayMessage;
+    const hasHigherPriority = priority >= this.state.priority;
+    if (!isDisplayingMessage || hasHigherPriority) {
+      this.setMessageState({
+        action,
+        type,
+        description,
+        actionHandlerKey,
+        priority,
+        params
+      });
+    }
+  };
+
   setMessageState = ({
     action,
     type,
@@ -74,7 +86,9 @@ class MessageWrapper extends Component {
       displayMessage: true
     };
     this.setState(newState, () => {
-      setTimeout(() => this.hideMessage(), MESSAGE_DURATION);
+      this.hideMessageTimeout = setTimeout(() => {
+        this.hideMessage();
+      }, MESSAGE_DURATION);
     });
   };
 
@@ -95,18 +109,22 @@ class MessageWrapper extends Component {
 
   hideMessage = () => {
     this.setState({ displayMessage: false }, () => {
-      setTimeout(() => this.clearMessageState(), DELAY_TO_CLEAR_MESSAGE);
+      this.clearMessageTimeout = setTimeout(() => {
+        this.clearMessageState();
+      }, DELAY_TO_CLEAR_MESSAGE);
     });
   };
 
   clearMessageState = () => {
-    this.setState({
-      action: undefined,
-      actionHandlerKey: undefined,
-      description: undefined,
-      params: {},
-      type: undefined
-    });
+    if (this.clearMessageTimeout) {
+      this.setState({
+        action: undefined,
+        actionHandlerKey: undefined,
+        description: undefined,
+        params: {},
+        type: undefined
+      });
+    }
   };
 
   handleClickAction = () => {
@@ -114,6 +132,11 @@ class MessageWrapper extends Component {
       this.state.actionHandlerKey || this.props.actionHandlerKey;
     const params = this.state.params || this.props.params;
     this.props.onExecuteMessageAction(actionHandlerKey, params);
+  };
+
+  clearTimeouts = () => {
+    clearTimeout(this.hideMessageTimeout);
+    clearTimeout(this.clearMessageTimeout);
   };
 }
 
