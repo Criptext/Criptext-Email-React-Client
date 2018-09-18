@@ -1,4 +1,4 @@
-const PROD_SOCKET_URL = 'wss://socket.criptext.com';
+const PROD_SOCKET_URL = 'wss://socket.criptext.com:3002';
 const PROD_SERVER_URL = 'https://api.criptext.com';
 const FILE_SERVER_APP_ID = 'qynhtyzjrshazxqarkpy';
 const FILE_SERVER_KEY = 'lofjksedbxuucdjjpnby';
