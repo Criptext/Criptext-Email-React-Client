@@ -5,6 +5,12 @@ const actionHandlerKeys = {
   suggestion: {
     update: 'install-update'
   },
+  question: {
+    newDevice: {
+      acceptKey: 'accept-device',
+      denyKey: 'deny-device'
+    }
+  },
   success: {
     emailSent: 'view-message'
   },
@@ -41,7 +47,9 @@ const messagesContent = {
   question: {
     newDevice: {
       priority: messagePriorities.HIGH,
-      ask: 'Are you trying to access from the DavidMac device?'
+      ask: 'Are you trying to access from ',
+      acceptHandlerKey: actionHandlerKeys.question.newDevice.acceptKey,
+      denyHandlerKey: actionHandlerKeys.question.newDevice.denyKey
     }
   },
   success: {

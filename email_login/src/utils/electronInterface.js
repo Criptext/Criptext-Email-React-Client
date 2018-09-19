@@ -8,9 +8,23 @@ export const { requiredMinLength, requiredMaxLength } = remote.require(
 export const errors = remote.require('./src/errors');
 export const myAccount = remote.require('./src/Account');
 export const LabelType = remote.require('./src/systemLabels');
+export const socketClient = remote.require('./src/socketClient');
+const globalManager = remote.require('./src/globalManager');
 
 webFrame.setVisualZoomLevelLimits(1, 1);
 webFrame.setLayoutZoomLevelLimits(0, 0);
+
+export const createTemporalAccount = accountData => {
+  return globalManager.temporalAccount.set(accountData);
+};
+
+export const getTemporalAccount = () => {
+  return globalManager.temporalAccount.get();
+};
+
+export const deleteTemporalAccount = () => {
+  return globalManager.temporalAccount.delete();
+};
 
 /* Window events
   ----------------------------- */
@@ -115,6 +129,14 @@ export const throwError = error => {
   ----------------------------- */
 export const checkAvailableUsername = username => {
   return clientManager.checkAvailableUsername(username);
+};
+
+export const linkBegin = username => {
+  return clientManager.linkBegin(username);
+};
+
+export const linkAuth = newDeviceData => {
+  return clientManager.linkAuth(newDeviceData);
 };
 
 export const login = params => {

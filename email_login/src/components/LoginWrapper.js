@@ -3,11 +3,21 @@ import Login from './Login';
 import SignUpWrapper from './SignUpWrapper';
 import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
-import { closeDialog, confirmLostDevices } from './../utils/electronInterface';
+import {
+  closeDialog,
+  confirmLostDevices,
+  linkBegin,
+  linkAuth,
+  socketClient,
+  deleteTemporalAccount
+} from './../utils/electronInterface';
 import {
   validateUsername,
   checkUsernameAvailable
 } from './../validators/validators';
+import { DEVICE_TYPE } from '../utils/const';
+import signal from './../libs/signal';
+import { addEvent, Event } from '../utils/electronEventInterface';
 
 const mode = {
   SIGNUP: 'SIGNUP',
@@ -32,6 +42,7 @@ class LoginWrapper extends Component {
       errorMessage: ''
     };
     this.timeCountdown = 0;
+    this.initEventListeners();
   }
 
   async componentDidMount() {
@@ -83,6 +94,7 @@ class LoginWrapper extends Component {
   toggleContinue = ev => {
     ev.preventDefault();
     ev.stopPropagation();
+    socketClient.disconnect();
     this.stopCountdown();
     const nextMode =
       this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN;
@@ -131,26 +143,41 @@ class LoginWrapper extends Component {
   handleClickSignIn = async ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    const isAvailable = await checkUsernameAvailable(
-      this.state.values.username
-    );
+    const username = this.state.values.username;
+    const isAvailable = await checkUsernameAvailable(username);
     if (isAvailable) {
       this.setState({
         errorMessage: errorMessages.USERNAME_NOT_EXISTS
       });
     } else {
-      this.setState({
-        mode: mode.LOST_DEVICES
-      });
+      const ephemeralToken = await linkBegin(username);
+      if (ephemeralToken) {
+        const newDeviceData = {
+          recipientId: username,
+          deviceName: window.navigator.platform,
+          deviceFriendlyName: window.navigator.platform,
+          deviceType: DEVICE_TYPE
+        };
+        const { status } = await linkAuth({
+          newDeviceData,
+          jwt: ephemeralToken
+        });
+        if (status === 200) {
+          this.setState({ mode: mode.CONTINUE }, () => {
+            socketClient.start({ jwt: ephemeralToken });
+          });
+        }
+      }
     }
   };
 
-  handleLostDevices = event => {
-    event.preventDefault();
-    event.stopPropagation();
+  handleLostDevices = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
     confirmLostDevices(response => {
       closeDialog();
       if (response === 'Continue') {
+        socketClient.disconnect();
         this.onLostDevices();
       }
     });
@@ -160,6 +187,14 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     this.setState({
       mode: mode.LOST_DEVICES
+    });
+  };
+
+  initEventListeners = () => {
+    addEvent(Event.LINK_DEVICE_CONFIRMED, async params => {
+      const { recipientId, name, deviceId } = params;
+      deleteTemporalAccount();
+      await signal.createAccountWithNewDevice({ recipientId, deviceId, name });
     });
   };
 }

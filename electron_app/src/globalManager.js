@@ -2,8 +2,10 @@ global.modalData = {};
 global.loadingData = {};
 global.composerData = {};
 global.emailToEdit = {};
+global.temporalAccount = {};
 
-// Dialog
+/*  Dialog
+----------------------------- */
 const setModalData = data => {
   global.modalData = data;
 };
@@ -11,7 +13,8 @@ const getModalData = () => {
   return global.modalData;
 };
 
-// Force quit
+/*  Force quit
+----------------------------- */
 const setForceQuit = data => {
   global.forcequit = data;
 };
@@ -19,7 +22,8 @@ const getForceQuit = () => {
   return global.forcequit;
 };
 
-// Loading
+/*  Loading
+----------------------------- */
 const setLoadingData = data => {
   global.loadingData = data;
 };
@@ -27,7 +31,8 @@ const getLoadingData = () => {
   return global.loadingData;
 };
 
-// Composer
+/*  Composer
+----------------------------- */
 const setComposerData = (composerId, data) => {
   global.composerData[composerId] = data;
 };
@@ -42,6 +47,18 @@ const setEmailToEdit = (composerId, data) => {
 };
 const getEmailToEdit = composerId => {
   return global.emailToEdit[composerId];
+};
+
+/*  Temporal Account
+----------------------------- */
+const setTemporalAccountData = data => {
+  global.temporalAccount = data;
+};
+const getTemporalAccountData = () => {
+  return global.temporalAccount;
+};
+const deleteTemporalAccountData = () => {
+  delete global.temporalAccount;
 };
 
 module.exports = {
@@ -65,5 +82,10 @@ module.exports = {
   modalData: {
     get: getModalData,
     set: setModalData
+  },
+  temporalAccount: {
+    get: getTemporalAccountData,
+    set: setTemporalAccountData,
+    delete: deleteTemporalAccountData
   }
 };

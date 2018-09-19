@@ -5,7 +5,8 @@ import {
   LabelType,
   getEmailsByLabelIds,
   confirmPermanentDeleteThread,
-  closeDialog
+  closeDialog,
+  linkAccept
 } from './../utils/electronInterface';
 import MessageWrapper from './../components/MessageWrapper';
 import { SectionType } from '../utils/const';
@@ -93,6 +94,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               dispatch(removeThreads(threadsParams, labelId));
             }
           });
+          break;
+        }
+        case actionHandlerKeys.question.newDevice.acceptKey: {
+          const { randomId } = params.session;
+          return linkAccept(randomId);
+        }
+        case actionHandlerKeys.question.newDevice.denyKey: {
           break;
         }
         default:

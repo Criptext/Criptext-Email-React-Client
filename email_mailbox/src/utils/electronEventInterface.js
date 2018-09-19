@@ -31,7 +31,7 @@ import {
   formFilesFromData,
   validateEmailStatusToSet
 } from './EmailUtils';
-import { SocketCommand, appDomain, EmailStatus } from './const';
+import { SocketCommand, appDomain, EmailStatus, deviceTypes } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
@@ -172,6 +172,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.PEER_EMAIL_UNSEND: {
       return handlePeerEmailUnsend(incomingEvent);
+    }
+    case SocketCommand.DEVICE_AUTHORIZATION_REQUEST: {
+      return handleLinkDeviceRequest(incomingEvent);
     }
     case SocketCommand.DEVICE_REMOVED: {
       return handlePeerRemoveDevice(incomingEvent);
@@ -418,6 +421,23 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
     };
     emitter.emit(Event.EMAIL_TRACKING_UPDATE, eventParams);
   }
+  await setEventAsHandled(rowid);
+};
+
+const handleLinkDeviceRequest = async ({ rowid, params }) => {
+  const deviceName = params.newDeviceInfo.deviceFriendlyName;
+  const deviceType =
+    params.newDeviceInfo.deviceType === deviceTypes.PC ? 'pc' : 'mobile';
+  const messageContent = {
+    ...Messages.question.newDevice,
+    ask: `${Messages.question.newDevice.ask} ${deviceName} (${deviceType})?`
+  };
+  const eventData = {
+    ...messageContent,
+    type: MessageType.QUESTION,
+    params: params.newDeviceInfo
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, eventData);
   await setEventAsHandled(rowid);
 };
 

@@ -91,6 +91,10 @@ export const getUserSettings = () => {
   return clientManager.getUserSettings();
 };
 
+export const linkAccept = randomId => {
+  return clientManager.linkAccept(randomId);
+};
+
 export const logout = () => {
   return clientManager.logout();
 };
