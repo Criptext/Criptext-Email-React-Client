@@ -89,7 +89,11 @@ const messagesContent = {
     },
     updateThreadLabels: {
       priority: messagePriorities.MEDIUM,
-      description: 'Error updating email labels. PLease try again'
+      description: 'Error updating email labels. Please try again'
+    },
+    updateUnreadThreads: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Error updating email status. Please try again'
     },
     removeThreads: {
       priority: messagePriorities.MEDIUM,
@@ -117,6 +121,10 @@ const messagesContent = {
     recoveryEmailLinkConfirmation: {
       priority: messagePriorities.MEDIUM,
       description: 'Failed to send confirmation link'
+    },
+    sendOpenEvent: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Failed to send open email. Try again'
     }
   },
   establish: {

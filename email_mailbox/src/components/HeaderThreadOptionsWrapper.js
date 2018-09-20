@@ -168,7 +168,7 @@ class HeaderThreadOptionsWrapper extends Component {
       () => {
         this.props.onMarkRead(
           this.props.threadsSelected,
-          !this.props.markAsUnread
+          this.props.markAsUnread
         );
       }
     );

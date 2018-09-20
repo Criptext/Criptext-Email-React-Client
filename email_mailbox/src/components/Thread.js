@@ -8,8 +8,24 @@ import './thread.css';
 
 class Thread extends Component {
   componentWillReceiveProps(nextProps) {
-    if (nextProps.thread.emailIds.length > this.props.thread.emailIds.length) {
-      this.props.onLoadEmails(nextProps.thread.threadId);
+    if (
+      this.props.thread.emailIds > nextProps.emailIds &&
+      !nextProps.emailIds.length
+    ) {
+      this.props.onBackOption();
+    } else if (this.props.thread.unread) {
+      if (
+        nextProps.emailKeysUnread.length !==
+          this.props.emailKeysUnread.length ||
+        nextProps.myEmailKeysUnread.length !==
+          this.props.myEmailKeysUnread.length
+      ) {
+        this.props.onUpdateUnreadEmails(
+          nextProps.emailKeysUnread,
+          nextProps.myEmailKeysUnread,
+          nextProps.thread.threadId
+        );
+      }
     }
   }
 
@@ -62,9 +78,8 @@ class Thread extends Component {
   }
 
   componentDidMount() {
-    this.props.onLoadEmails(this.props.thread.threadId);
-    if (this.props.thread.unread) {
-      this.props.onUpdateUnreadEmails(this.props.thread);
+    if (this.props.emails.length !== this.props.thread.emailIds.length) {
+      this.props.onLoadEmails(this.props.thread.threadId);
     }
   }
 
@@ -78,9 +93,12 @@ class Thread extends Component {
 }
 
 Thread.propTypes = {
+  emailIds: PropTypes.array,
   emails: PropTypes.array,
+  emailKeysUnread: PropTypes.array,
   labels: PropTypes.array,
   mailboxSelected: PropTypes.string,
+  myEmailKeysUnread: PropTypes.array,
   onBackOption: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onUpdateUnreadEmails: PropTypes.func,

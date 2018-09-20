@@ -676,6 +676,22 @@ export const sendUpdateThreadLabelsErrorMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendUpdateUnreadThreadsErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.updateUnreadThreads,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendOpenEventErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.sendOpenEvent,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendRemoveThreadsErrorMessage = () => {
   const messageData = {
     ...Messages.error.removeThreads,

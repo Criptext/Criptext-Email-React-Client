@@ -777,7 +777,7 @@ const updateEmails = ({ ids, keys, unread, trashDate }, trx) => {
     .update(params);
 };
 
-const updateEmailByThreadIds = ({ threadIds, unread }) => {
+const updateUnreadEmailByThreadIds = ({ threadIds, unread }) => {
   const params = {};
   if (typeof unread === 'boolean') params.unread = unread;
   return db
@@ -1077,11 +1077,11 @@ module.exports = {
   updateAccount,
   updateEmail,
   updateEmails,
-  updateEmailByThreadIds,
   updateEmailLabel,
   updateFeedItem,
   updateFilesByEmailId,
   updateFileByToken,
   updateIdentityKeyRecord,
-  updateLabel
+  updateLabel,
+  updateUnreadEmailByThreadIds
 };
