@@ -87,6 +87,10 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: 'Failed to send your message'
     },
+    updateLabels: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Error updating labels. Please try again'
+    },
     updateThreadLabels: {
       priority: messagePriorities.MEDIUM,
       description: 'Error updating email labels. Please try again'

@@ -8,10 +8,7 @@ import './thread.css';
 
 class Thread extends Component {
   componentWillReceiveProps(nextProps) {
-    if (
-      this.props.thread.emailIds > nextProps.emailIds &&
-      !nextProps.emailIds.length
-    ) {
+    if (this.props.thread && !nextProps.thread) {
       this.props.onBackOption();
     } else if (this.props.thread.unread) {
       if (
@@ -36,7 +33,7 @@ class Thread extends Component {
         <div className="thread-content">
           <div className="thread-info">
             <div className="thread-info-title">
-              <h1>{this.props.thread.subject}</h1>
+              <h1>{this.props.thread ? this.props.thread.subject : ''}</h1>
               {this.props.labels.map((label, index) => {
                 return (
                   <Label
@@ -80,6 +77,12 @@ class Thread extends Component {
   componentDidMount() {
     if (this.props.emails.length !== this.props.thread.emailIds.length) {
       this.props.onLoadEmails(this.props.thread.threadId);
+    } else {
+      this.props.onUpdateUnreadEmails(
+        this.props.emailKeysUnread,
+        this.props.myEmailKeysUnread,
+        this.props.thread.threadId
+      );
     }
   }
 

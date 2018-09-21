@@ -2,7 +2,6 @@ import { Email } from './types';
 import {
   getContactByIds,
   getEmailsByThreadId,
-  updateUnreadEmailByThreadIds,
   setMuteEmailById,
   setUnreadEmailById,
   updateEmail,
@@ -12,7 +11,6 @@ import {
 } from '../utils/electronInterface';
 import { EmailUtils } from '../utils/electronUtilsInterface';
 import { loadContacts } from './contacts';
-import { updateLabelSuccess } from './labels';
 import { EmailStatus, SocketCommand } from '../utils/const';
 import { unsendEmailFiles } from './files';
 import {
@@ -138,19 +136,6 @@ export const removeEmailsOnSuccess = emailIds => ({
   type: Email.REMOVE_EMAILS,
   emailIds
 });
-
-export const updateUnreadEmails = (thread, label) => {
-  return async dispatch => {
-    try {
-      await updateUnreadEmailByThreadIds([thread.id], thread.unread);
-      if (label) {
-        dispatch(updateLabelSuccess(label));
-      }
-    } catch (e) {
-      // To do
-    }
-  };
-};
 
 export const unsendEmail = params => {
   return async dispatch => {

@@ -144,13 +144,13 @@ class PanelWrapper extends Component {
 
   initEventHandlers = props => {
     addEvent(Event.NEW_EMAIL, emailParams => {
-      const { emailId, isToMe, labels, threadId } = emailParams;
+      const { emailId, labels, threadId } = emailParams;
       const currentSectionType = this.state.sectionSelected.type;
       const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
       const isRenderingThread = currentSectionType === SectionType.THREAD;
       const currentLabelId =
         LabelType[this.state.sectionSelected.params.mailboxSelected].id;
-      const isNewEmailInMailbox = labels.indexOf(currentLabelId) > -1;
+      const isNewEmailInMailbox = labels.includes(currentLabelId);
       const currentThreadId = this.state.sectionSelected.params
         .threadIdSelected;
       if (isRenderingMailbox && isNewEmailInMailbox) {
@@ -165,13 +165,7 @@ class PanelWrapper extends Component {
           emailIdToAdd: emailId
         });
       }
-      if (isToMe) {
-        props.onUpdateUnreadEmailsBadge({
-          labelId: LabelType.inbox.id,
-          operation: 'add',
-          value: 1
-        });
-      }
+      props.onUpdateUnreadEmailsBadge(labels);
     });
 
     addEvent(Event.REFRESH_THREADS, eventParams => {
@@ -187,8 +181,8 @@ class PanelWrapper extends Component {
         props.onLoadEmails(this.state.sectionSelected.params.threadIdSelected);
       }
       if (eventParams) {
-        const { labelId, operation, value } = eventParams;
-        props.onUpdateUnreadEmailsBadge({ labelId, operation, value });
+        const { labelIds } = eventParams;
+        props.onUpdateUnreadEmailsBadge(labelIds);
       }
     });
 
@@ -227,11 +221,7 @@ class PanelWrapper extends Component {
         emailIdsToRemove: [oldEmailId]
       });
       if (!newEmailId && !oldEmailId) {
-        props.onUpdateUnreadEmailsBadge({
-          labelId: LabelType.inbox.id,
-          operation: 'add',
-          value: 1
-        });
+        props.onUpdateUnreadEmailsBadge([LabelType.inbox.id]);
       }
     });
 
@@ -271,10 +261,15 @@ class PanelWrapper extends Component {
         mailboxPopupType: MAILBOX_POPUP_TYPES.PASSWORD_CHANGED
       });
     });
+
+    addEvent(Event.LABEL_CREATED, labels => {
+      this.props.onAddLabels(labels);
+    });
   };
 }
 
 PanelWrapper.propTypes = {
+  onAddLabels: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onMarkThreadAsOpen: PropTypes.func,
   onLoadThreads: PropTypes.func,

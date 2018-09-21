@@ -4,180 +4,117 @@ import labelReducer from './../labels';
 import * as actions from './../../actions/index';
 import { Map } from 'immutable';
 import file from './../../../public/labels.json';
-const labels = file.labels;
-const label = labels[0];
 
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
 jest.mock('./../../utils/electronUtilsInterface');
 
-describe('Label actions:', () => {
-  it('should add labels', () => {
-    const data = {};
-    labels.forEach(element => {
-      data[element.id] = {
-        id: element.id,
-        color: element.color,
-        text: element.text
-      };
-    });
-    const action = actions.addLabels(data);
-    const state = labelReducer(undefined, action);
-    expect(state).toMatchSnapshot();
-  });
+const myLabels = file.labels;
 
-  it('should update label: text and color', () => {
-    const data = Map({
-      [label.id]: Map({
-        id: label.id,
-        color: label.color,
-        text: label.text,
-        badge: label.badge
-      })
-    });
+function initState(labels) {
+  const data = labels.reduce(
+    (result, element) => ({
+      ...result,
+      [element.id]: element
+    }),
+    {}
+  );
+  return labelReducer(undefined, actions.addLabels(data));
+}
+
+describe('Label actions - ADD_BATCH', () => {
+  const labels = [myLabels[0]];
+
+  it('should add labels to state', () => {
+    expect(initState(labels)).toMatchSnapshot();
+  });
+});
+
+describe('Label actions - UPDATE', () => {
+  const labels = [myLabels[0]];
+
+  it('should update label: text, color, visible, badge', () => {
+    const state = initState(labels);
+    const badge = 10;
+    const color = '#000000';
+    const text = 'labelmodified';
+    const visible = false;
     const action = actions.updateLabelSuccess({
       id: 1,
-      color: '#000000',
-      text: 'labelmodified'
+      badge,
+      color,
+      text,
+      visible
     });
-    const state = labelReducer(data, action);
-    expect(state).toMatchSnapshot();
+    const newState = labelReducer(state, action);
+    const labelUpdated = newState.get('1');
+    expect(labelUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        color,
+        text,
+        visible
+      })
+    );
   });
 
-  it('should update label: color', () => {
-    const data = Map({
-      [label.id]: Map({
-        id: label.id,
-        color: label.color,
-        text: label.text,
-        badge: label.badge
-      })
-    });
-    const action = actions.updateLabelSuccess({ id: 1, color: '#000000' });
-    const state = labelReducer(data, action);
-    expect(state).toMatchSnapshot();
-  });
-
-  it('should update label: text', () => {
-    const data = Map({
-      [label.id]: Map({
-        id: label.id,
-        color: label.color,
-        text: label.text,
-        badge: label.badge
-      })
-    });
-    const action = actions.updateLabelSuccess({ id: 1, text: 'labelmodified' });
-    const state = labelReducer(data, action);
-    expect(state).toMatchSnapshot();
-  });
-
-  it('should update label: add badge', () => {
-    const data = Map({
-      [label.id]: Map({
-        id: label.id,
-        color: label.color,
-        text: label.text,
-        badge: label.badge
-      })
-    });
-    const operation = 'add';
-    const action = actions.updateLabelSuccess({ id: 1, operation, value: 1 });
-    const state = labelReducer(data, action);
-    expect(state.get('1').get('badge')).toEqual(2);
-  });
-
-  it('should update label: less badge', () => {
-    const data = Map({
-      [label.id]: Map({
-        id: label.id,
-        color: label.color,
-        text: label.text,
-        badge: label.badge
-      })
-    });
-    const operation = 'less';
-    const action = actions.updateLabelSuccess({ id: 1, operation, value: 1 });
-    const state = labelReducer(data, action);
-    expect(state.get('1').get('badge')).toEqual(0);
-  });
-
-  it('should not update label: error badge value 0', () => {
-    const data = Map({
-      [label.id]: Map({
-        id: label.id,
-        color: label.color,
-        text: label.text,
-        badge: label.badge
-      })
-    });
-    const operation = 'add';
-    const action = actions.updateLabelSuccess({ id: 1, operation, value: 0 });
-    const state = labelReducer(data, action);
-    expect(state.get('1').get('badge')).toEqual(1);
-  });
-
-  it('should not update label: error badge operation undefined', () => {
-    const data = Map({
-      [label.id]: Map({
-        id: label.id,
-        color: label.color,
-        text: label.text,
-        badge: label.badge
-      })
-    });
-    const operation = undefined;
-    const action = actions.updateLabelSuccess({ id: 1, operation, value: 1 });
-    const state = labelReducer(data, action);
-    expect(state.get('1').get('badge')).toEqual(1);
-  });
-
-  it('should not update label: error badge negative', () => {
-    const data = Map({
-      [label.id]: Map({
-        id: label.id,
-        color: label.color,
-        text: label.text,
-        badge: label.badge
-      })
-    });
-    const operation = 'less';
-    const action = actions.updateLabelSuccess({ id: 1, operation, value: 2 });
-    const state = labelReducer(data, action);
-    expect(state.get('1').get('badge')).toEqual(0);
-  });
-
-  it('should not update label', () => {
-    const data = Map({
-      [label.id]: Map({
-        id: label.id,
-        color: label.color,
-        text: label.text,
-        badge: label.badge
-      })
-    });
+  it('should update label: badge', () => {
+    const state = initState(labels);
+    const badge = 0;
     const action = actions.updateLabelSuccess({
-      color: '#000000',
-      text: 'labelmodified'
+      id: 1,
+      badge
     });
-    const state = labelReducer(data, action);
-    expect(state).toEqual(data);
+    const newState = labelReducer(state, action);
+    const labelUpdated = newState.get('1');
+    expect(labelUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        badge
+      })
+    );
+  });
+
+  it('should not update label: id not exist', () => {
+    const state = initState(labels);
+    const color = '#000000';
+    const text = 'labelmodified';
+    const action = actions.updateLabelSuccess({
+      color,
+      text
+    });
+    const newState = labelReducer(state, action);
+    const labelUpdated = newState.get('1');
+    expect(labelUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        color: labels[0].color,
+        text: labels[0].text
+      })
+    );
+  });
+
+  it('should not update label: badge is not type of number and visible is not typeof true', () => {
+    const state = initState(labels);
+    const badge = '1';
+    const visible = 'true';
+    const action = actions.updateLabelSuccess({
+      id: 1,
+      badge,
+      visible
+    });
+    const newState = labelReducer(state, action);
+    const labelUpdated = newState.get('1');
+    expect(labelUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        badge: labels[0].badge,
+        visible: !!labels[0].visible
+      })
+    );
   });
 
   it('should remove label', () => {
-    const labelId = '0';
-    const data = Map({
-      [labelId]: Map({
-        id: labelId,
-        color: '#000',
-        text: 'ToRemove',
-        badge: 0,
-        visible: false
-      })
-    });
-    const emptyState = new Map({});
+    const state = initState(labels);
+    const labelId = '1';
     const action = actions.removeLabelOnSuccess(labelId);
-    const state = labelReducer(data, action);
-    expect(state).toBe(emptyState);
+    const newState = labelReducer(state, action);
+    expect(newState).toBe(new Map({}));
   });
 });

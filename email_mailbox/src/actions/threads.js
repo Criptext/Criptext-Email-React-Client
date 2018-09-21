@@ -1,6 +1,6 @@
 import { Thread } from './types';
 import { startLoadSync, stopLoadSync } from './activity';
-import { updateLabelSuccess } from './labels';
+import { updateBadgeLabels } from './labels';
 import {
   createEmailLabel,
   deleteEmailLabel,
@@ -10,6 +10,7 @@ import {
   getEmailsGroupByThreadByParams,
   getLabelById,
   getTrashExpiredEmails,
+  LabelType,
   postOpenEvent,
   postPeerEvent,
   updateEmails,
@@ -137,6 +138,7 @@ export const addMoveLabelIdThreads = ({
   threadsParams,
   labelIdToAdd,
   labelIdToRemove,
+  currentLabelId,
   notMove
 }) => {
   return async dispatch => {
@@ -144,9 +146,12 @@ export const addMoveLabelIdThreads = ({
       const threadIds = threadsParams
         .map(param => param.threadIdDB)
         .filter(item => item !== null);
-      const [label] = await getLabelById(labelIdToAdd);
-      const labelsAdded = [label.text];
-      const labelsRemoved = labelIdToRemove ? [labelIdToRemove] : [];
+      const [labeltoAdd] = await getLabelById(labelIdToAdd);
+      const labelsAdded = [labeltoAdd.text];
+      const [labeltoRemove] = labelIdToRemove
+        ? await getLabelById(labelIdToRemove)
+        : [undefined];
+      const labelsRemoved = labeltoRemove ? [labeltoRemove.text] : [];
       const eventParams = {
         cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
         params: {
@@ -174,8 +179,20 @@ export const addMoveLabelIdThreads = ({
             return await createEmailLabel(paramsToAdd);
           })
         );
-        if (dbReponse && !notMove) {
-          dispatch(moveThreads(threadIds, labelIdToAdd));
+        if (dbReponse) {
+          let labelIds = [];
+          if (
+            currentLabelId === LabelType.inbox.id &&
+            (labelIdToAdd === LabelType.trash.id ||
+              labelIdToAdd === LabelType.spam.id)
+          )
+            labelIds = [...labelIds, currentLabelId];
+          if (labelIdToAdd === LabelType.spam.id)
+            labelIds = [...labelIds, labelIdToAdd];
+          if (labelIds.length) dispatch(updateBadgeLabels(labelIds));
+          if (!notMove) {
+            dispatch(moveThreads(threadIds, labelIdToAdd));
+          }
         }
       } else {
         sendUpdateThreadLabelsErrorMessage();
@@ -280,6 +297,9 @@ export const removeLabelIdThreads = (threadsParams, labelId) => {
         );
         if (dbReponse) {
           dispatch(removeLabelIdThreadsSuccess(threadIds, labelId));
+          let labelIds = [LabelType.inbox.id];
+          if (labelId === LabelType.spam.id) labelIds = [...labelIds, labelId];
+          dispatch(updateBadgeLabels(labelIds));
         }
       } else {
         sendUpdateThreadLabelsErrorMessage();
@@ -296,7 +316,7 @@ export const removeLabelIdThreadsSuccess = (threadIds, labelId) => ({
   labelId
 });
 
-export const removeThreads = threadsParams => {
+export const removeThreads = (threadsParams, labelId) => {
   return async dispatch => {
     try {
       const emailIds = threadsParams
@@ -321,6 +341,9 @@ export const removeThreads = threadsParams => {
       if (emailIds.length) {
         await deleteEmailsByIds(emailIds);
         dispatch(removeThreadsSuccess(emailIds));
+      }
+      if (labelId === LabelType.spam.id) {
+        dispatch(updateBadgeLabels([labelId]));
       }
       dispatch(loadFeedItems(true));
     } catch (e) {
@@ -357,7 +380,7 @@ export const updateUnreadThreadsSuccess = (threadIds, unread) => ({
   type: Thread.UPDATE_UNREAD_THREADS
 });
 
-export const updateUnreadThreads = (threadsParams, unread, label) => {
+export const updateUnreadThreads = (threadsParams, unread, labelId) => {
   return async dispatch => {
     try {
       const threadIds = threadsParams.map(param => param.threadIdDB);
@@ -370,7 +393,8 @@ export const updateUnreadThreads = (threadsParams, unread, label) => {
         const response = await updateUnreadEmailByThreadIds(threadIds, unread);
         if (response) {
           dispatch(updateUnreadThreadsSuccess(threadIds, unread));
-          if (label) dispatch(updateLabelSuccess(label));
+          if (labelId === LabelType.inbox.id || labelId === LabelType.spam.id)
+            dispatch(updateBadgeLabels([labelId]));
         }
       }
     } catch (e) {
@@ -417,7 +441,12 @@ export const loadEvents = () => {
   };
 };
 
-export const sendOpenEvent = (emailKeysUnread, myEmailKeysUnread, threadId) => {
+export const sendOpenEvent = (
+  emailKeysUnread,
+  myEmailKeysUnread,
+  threadId,
+  labelId
+) => {
   return async dispatch => {
     try {
       let postSuccess = true;
@@ -449,6 +478,7 @@ export const sendOpenEvent = (emailKeysUnread, myEmailKeysUnread, threadId) => {
           }
         }
       }
+      dispatch(updateBadgeLabels([labelId]));
     } catch (e) {
       sendOpenEventErrorMessage();
     }

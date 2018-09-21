@@ -132,6 +132,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             isSpamLabelIdToAdd && isTrashCurrentLabelId
               ? isTrashCurrentLabelId
               : undefined,
+          currentLabelId,
           notMove
         })
       ).then(() => ownProps.onBackOption());
@@ -143,26 +144,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onMarkRead: (threadIds, unread) => {
       const labelId = LabelType[ownProps.mailboxSelected].id;
-      const operation = !unread ? 'less' : 'add';
-      const paramsLabel =
-        labelId === LabelType.inbox.id || labelId === LabelType.spam.id
-          ? {
-              id: labelId,
-              operation: operation,
-              value: threadIds.length
-            }
-          : null;
-
-      dispatch(
-        actions.updateUnreadThreads(threadIds, unread, paramsLabel)
-      ).then(() => ownProps.onBackOption());
+      dispatch(actions.updateUnreadThreads(threadIds, unread, labelId)).then(
+        () => ownProps.onBackOption()
+      );
     },
     onRemoveThreads: async (threadIds, backFirst) => {
+      const labelId = LabelType[ownProps.mailboxSelected].id;
       if (backFirst) {
         await ownProps.onBackOption();
-        dispatch(actions.removeThreads(threadIds));
+        dispatch(actions.removeThreads(threadIds, labelId));
       } else {
-        dispatch(actions.removeThreads(threadIds)).then(() =>
+        dispatch(actions.removeThreads(threadIds, labelId)).then(() =>
           ownProps.onBackOption()
         );
       }

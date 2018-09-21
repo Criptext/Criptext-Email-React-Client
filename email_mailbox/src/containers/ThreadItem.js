@@ -152,7 +152,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(
         actions.addMoveLabelIdThreads({
           threadsParams: [threadParams],
-          labelIdToAdd: labelId
+          labelIdToAdd: labelId,
+          currentLabelId
         })
       );
     },

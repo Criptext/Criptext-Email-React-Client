@@ -36,7 +36,6 @@ import {
   muteNotifications,
   removeEmails,
   removeEmailsOnSuccess,
-  updateUnreadEmails,
   unsendEmail,
   unsendEmailOnSuccess,
   updateEmailLabels
@@ -47,6 +46,7 @@ import {
   loadLabels,
   removeLabel,
   removeLabelOnSuccess,
+  updateBadgeLabels,
   updateLabel,
   updateLabelSuccess
 } from './labels';
@@ -111,13 +111,13 @@ export {
   unsendEmailFiles,
   unsendEmailOnSuccess,
   updateAllFeedItemsAsOlder,
+  updateBadgeLabels,
   updateFeedItemSuccess,
   updateEmailIdsThread,
   updateEmailLabels,
   updateLabel,
   updateLabelSuccess,
   updateStatusThread,
-  updateUnreadEmails,
   updateUnreadThreads,
   updateUnreadThreadsSuccess
 };

@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import {
+  addLabels,
   loadEmails,
   loadThreads,
   removeThreadsSuccess,
+  updateBadgeLabels,
   updateEmailIdsThread,
-  updateLabelSuccess,
   updateAllFeedItemsAsOlder,
   updateStatusThread,
   unsendEmailOnSuccess,
@@ -47,10 +48,8 @@ const defineRejectedLabels = labelId => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onUpdateEmailIdsThread: ({ threadId, emailIdToAdd, emailIdsToRemove }) => {
-      dispatch(
-        updateEmailIdsThread({ threadId, emailIdToAdd, emailIdsToRemove })
-      );
+    onAddLabels: labels => {
+      dispatch(addLabels(labels));
     },
     onLoadEmails: threadId => {
       dispatch(loadEmails(threadId));
@@ -64,29 +63,29 @@ const mapDispatchToProps = dispatch => {
     onMarkThreadAsOpen: (threadId, status) => {
       dispatch(updateStatusThread(threadId, Number(status)));
     },
-    onUpdateOpenedAccount: async () => {
-      const opened = true;
-      const recipientId = myAccount.recipientId;
-      await updateAccount({ opened, recipientId });
-    },
-    onUpdateUnreadEmailsBadge: ({ labelId, operation, value }) => {
-      const label = {
-        id: labelId,
-        operation,
-        value
-      };
-      dispatch(updateLabelSuccess(label));
-    },
-    onUpdateTimestamp: () => {
-      storeSeenTimestamp();
-      dispatch(updateAllFeedItemsAsOlder());
+    onRemoveThreads: threadIds => {
+      dispatch(removeThreadsSuccess(threadIds));
     },
     onUnsendEmail: (emailId, date, status) => {
       dispatch(unsendEmailOnSuccess(String(emailId), date, status));
       dispatch(unsendEmailFiles(emailId));
     },
-    onRemoveThreads: threadIds => {
-      dispatch(removeThreadsSuccess(threadIds));
+    onUpdateEmailIdsThread: ({ threadId, emailIdToAdd, emailIdsToRemove }) => {
+      dispatch(
+        updateEmailIdsThread({ threadId, emailIdToAdd, emailIdsToRemove })
+      );
+    },
+    onUpdateOpenedAccount: async () => {
+      const opened = true;
+      const recipientId = myAccount.recipientId;
+      await updateAccount({ opened, recipientId });
+    },
+    onUpdateTimestamp: () => {
+      storeSeenTimestamp();
+      dispatch(updateAllFeedItemsAsOlder());
+    },
+    onUpdateUnreadEmailsBadge: labelIds => {
+      dispatch(updateBadgeLabels(labelIds));
     },
     onUpdateUnreadThreads: (threadIds, unread) => {
       dispatch(updateUnreadThreadsSuccess(threadIds, unread));

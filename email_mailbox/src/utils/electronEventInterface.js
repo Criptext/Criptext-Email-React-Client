@@ -3,6 +3,7 @@ import {
   acknowledgeEvents,
   createEmail,
   createEmailLabel,
+  createLabel,
   getEmailByKey,
   getEmailsByKeys,
   getEmailLabelsByEmailId,
@@ -251,11 +252,11 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   const isSpam = labels
     ? labels.find(label => label === LabelType.spam.text)
     : undefined;
-  const InboxLabel = LabelType.inbox.id;
-  const SentLabel = LabelType.sent.id;
+  const InboxLabelId = LabelType.inbox.id;
+  const SentLabelId = LabelType.sent.id;
   const isToMe = EmailUtils.checkEmailIsTo({ to, cc, bcc, type: 'to' });
   const isFromMe = EmailUtils.checkEmailIsTo({ from, type: 'from' });
-  let eventParams = { isToMe };
+  let eventParams = {};
 
   if (!prevEmail) {
     const body = await signal.decryptEmail({
@@ -307,10 +308,10 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
 
     const labels = isSpam ? [LabelType.spam.id] : [];
     if (isToMe) {
-      labels.push(InboxLabel);
+      labels.push(InboxLabelId);
     }
     if (isFromMe) {
-      labels.push(SentLabel);
+      labels.push(SentLabelId);
     }
     const emailData = {
       email,
@@ -332,14 +333,14 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
     const prevLabels = prevEmailLabels.map(item => item.labelId);
 
-    const hasInboxLabel = prevLabels.includes(InboxLabel);
-    if (isToMe && !hasInboxLabel) {
-      labels.push(InboxLabel);
+    const hasInboxLabelId = prevLabels.includes(InboxLabelId);
+    if (isToMe && !hasInboxLabelId) {
+      labels.push(InboxLabelId);
     }
 
-    const hasSentLabel = prevLabels.includes(SentLabel);
-    if (isFromMe && !hasSentLabel) {
-      labels.push(SentLabel);
+    const hasSentLabelId = prevLabels.includes(SentLabelId);
+    if (isFromMe && !hasSentLabelId) {
+      labels.push(SentLabelId);
     }
     if (labels.length) {
       const emailLabel = formEmailLabel({ emailId: prevEmail.id, labels });
@@ -442,12 +443,7 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
     keys: emailKeys,
     unread: !!unread
   });
-  const eventParams = {
-    labelId: LabelType.inbox.id,
-    operation: unread ? 'add' : 'less',
-    value: emailKeys.length
-  };
-  emitter.emit(Event.REFRESH_THREADS, emailKeys.length ? eventParams : null);
+  emitter.emit(Event.REFRESH_THREADS, { labelIds: [LabelType.inbox.id] });
   if (res) {
     await setEventAsHandled(rowid);
   }
@@ -505,7 +501,16 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
     labelIdsToRemove
   });
   await setEventAsHandled(rowid);
-  emitter.emit(Event.REFRESH_THREADS, null);
+  const hasInbox =
+    labelIdsToAdd.includes(LabelType.inbox.id) ||
+    labelIdsToRemove.includes(LabelType.inbox.id);
+  const hasSpam =
+    labelIdsToAdd.includes(LabelType.spam.id) ||
+    labelIdsToRemove.includes(LabelType.spam.id);
+  let labelIds = [];
+  if (hasInbox) labelIds = [...labelIds, LabelType.inbox.id];
+  if (hasSpam) labelIds = [...labelIds, LabelType.spam.id];
+  emitter.emit(Event.REFRESH_THREADS, { labelIds });
 };
 
 const formAndSaveEmailLabelsUpdate = async ({
@@ -555,11 +560,17 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
   const { text, color } = params;
   const [label] = await getLabelsByText([text]);
   if (!label) {
-    await emitter.emit(Event.LABEL_CREATED, {
-      text,
-      color: `#${color}`,
-      visible: true
-    });
+    const [labelId] = await createLabel({ text, color: `#${color}` });
+    const labels = {
+      [labelId]: {
+        id: labelId,
+        color: `#${color}`,
+        text,
+        type: 'custom',
+        visible: true
+      }
+    };
+    await emitter.emit(Event.LABEL_CREATED, labels);
   }
   await setEventAsHandled(rowid);
 };
@@ -610,12 +621,9 @@ const setEventAsHandled = async eventId => {
 /* Window events
   ----------------------------- */
 
-ipcRenderer.on('update-drafts', (ev, data) => {
-  if (data) {
-    const labelId = LabelType.draft.id;
-    data = { ...data, labelId };
-  }
-  emitter.emit(Event.REFRESH_THREADS, data);
+ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
+  const labelId = shouldUpdateBadge ? LabelType.draft.id : undefined;
+  emitter.emit(Event.REFRESH_THREADS, { labelIds: [labelId] });
 });
 
 ipcRenderer.on('display-message-email-sent', (ev, { emailId }) => {
@@ -667,6 +675,14 @@ ipcRenderer.on('device-removed', async () => {
 ipcRenderer.on('password-changed', () => {
   return sendPasswordChangedEvent();
 });
+
+export const sendUpdateLabelsErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.updateLabels,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
 
 export const sendUpdateThreadLabelsErrorMessage = () => {
   const messageData = {

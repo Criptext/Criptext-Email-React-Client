@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { addEvent, Event } from '../utils/electronEventInterface';
 import './labeledit.css';
 
 class LabelEdit extends Component {
@@ -10,10 +9,6 @@ class LabelEdit extends Component {
       addLabel: false,
       labelToAdd: ''
     };
-
-    addEvent(Event.LABEL_CREATED, params => {
-      this.props.onAddLabel(null, params);
-    });
   }
 
   render() {
