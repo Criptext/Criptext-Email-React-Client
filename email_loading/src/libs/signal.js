@@ -1,6 +1,5 @@
 /*global libsignal util*/
 
-import { LabelType } from './../utils/electronInterface';
 import {
   createLabel,
   postUser,
@@ -8,8 +7,14 @@ import {
   getAccount,
   myAccount,
   errors,
-  createContact
+  createContact,
+  LabelType,
+  cleanDataBase,
+  createTables,
+  postKeyBundle,
+  updateAccount
 } from './../utils/electronInterface';
+
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
 import { appDomain, DEVICE_TYPE } from './../utils/const';
@@ -85,6 +90,78 @@ const createAccount = async ({
   return true;
 };
 
+const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
+  const signedPreKeyId = 1;
+  const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
+    (item, index) => index + 1
+  );
+  const { identityKey, registrationId } = await generateIdentity();
+  const {
+    keybundle,
+    preKeyPairArray,
+    signedPreKeyPair
+  } = await generatePreKeyBundle({
+    identityKey,
+    registrationId,
+    signedPreKeyId,
+    preKeyIds
+  });
+
+  const res = await postKeyBundle(keybundle);
+  if (res.status !== 200) {
+    throw errors.login.FAILED;
+  }
+  const newToken = res.text;
+  const privKey = util.toBase64(identityKey.privKey);
+  const pubKey = util.toBase64(identityKey.pubKey);
+  const jwt = newToken;
+  const [currentAccount] = await getAccount();
+  const currentAccountExists = currentAccount
+    ? currentAccount.recipientId === recipientId
+    : false;
+
+  if (currentAccountExists) {
+    await updateAccount({
+      jwt,
+      deviceId,
+      name,
+      privKey,
+      pubKey,
+      recipientId,
+      registrationId
+    });
+  } else {
+    if (currentAccount) {
+      await cleanDataBase();
+      await createTables();
+    }
+    await createAccountDB({
+      jwt,
+      deviceId,
+      name,
+      privKey,
+      pubKey,
+      recipientId,
+      registrationId
+    });
+    const labels = Object.values(LabelType);
+    await createLabel(labels);
+    await createContact({
+      name,
+      email: `${recipientId}@${appDomain}`
+    });
+  }
+  const [newAccount] = await getAccount();
+  myAccount.initialize(newAccount);
+  await Promise.all(
+    Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
+      await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
+    }),
+    store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
+  );
+  return true;
+};
+
 const generateIdentity = () => {
   return Promise.all([
     KeyHelper.generateIdentityKeyPair(),
@@ -139,5 +216,6 @@ const generatePreKeyBundle = async ({
 
 export default {
   createAccount,
+  createAccountWithNewDevice,
   generatePreKeyBundle
 };

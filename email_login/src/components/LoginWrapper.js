@@ -9,14 +9,15 @@ import {
   linkBegin,
   linkAuth,
   socketClient,
-  deleteTemporalAccount
+  deleteTemporalAccount,
+  openCreateKeys,
+  closeLogin
 } from './../utils/electronInterface';
 import {
   validateUsername,
   checkUsernameAvailable
 } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
-import signal from './../libs/signal';
 import { addEvent, Event } from '../utils/electronEventInterface';
 
 const mode = {
@@ -191,10 +192,14 @@ class LoginWrapper extends Component {
   };
 
   initEventListeners = () => {
-    addEvent(Event.LINK_DEVICE_CONFIRMED, async params => {
-      const { recipientId, name, deviceId } = params;
+    addEvent(Event.LINK_DEVICE_CONFIRMED, params => {
       deleteTemporalAccount();
-      await signal.createAccountWithNewDevice({ recipientId, deviceId, name });
+      const remoteData = {
+        ...params,
+        recipientId: this.state.values.username
+      };
+      openCreateKeys({ loadingType: 'login', remoteData });
+      closeLogin();
     });
   };
 }

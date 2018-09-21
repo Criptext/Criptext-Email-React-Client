@@ -4,6 +4,7 @@ import {
   closeCreatingKeys,
   openMailbox,
   remoteData,
+  loadingType,
   throwError,
   errors
 } from './../utils/electronInterface';
@@ -12,6 +13,11 @@ import Loading from './Loading';
 const animationTypes = {
   RUNNING: 'running-animation',
   STOP: 'stop-animation'
+};
+
+const loadingTypes = {
+  SIGNUP: 'signup',
+  LOGIN: 'login'
 };
 
 const delay = 85;
@@ -47,7 +53,12 @@ class LoadingWrapper extends Component {
   increasePercent = () => {
     const percent = this.state.percent + 1;
     if (percent === 2) {
-      this.createAccount();
+      if (loadingType === loadingTypes.SIGNUP) {
+        this.createNewAccount();
+      } else if (loadingType === loadingTypes.LOGIN) {
+        const { recipientId, deviceId, name } = remoteData;
+        this.createAccountWithNewDevice({ recipientId, deviceId, name });
+      }
     }
     if (percent > 99) {
       clearTimeout(this.tm);
@@ -58,7 +69,7 @@ class LoadingWrapper extends Component {
     this.tm = setTimeout(this.increasePercent, delay);
   };
 
-  createAccount = async () => {
+  createNewAccount = async () => {
     const userCredentials = {
       recipientId: remoteData.username,
       password: remoteData.password,
@@ -90,6 +101,27 @@ class LoadingWrapper extends Component {
       }
       this.loadingThrowError();
       return;
+    }
+  };
+
+  createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
+    try {
+      const loginResponse = await signal.createAccountWithNewDevice({
+        recipientId,
+        deviceId,
+        name
+      });
+      if (loginResponse === false) {
+        this.loadingThrowError();
+      }
+      if (loginResponse === true) {
+        this.setState({
+          accountResponse: loginResponse,
+          failed: false
+        });
+      }
+    } catch (e) {
+      this.loadingThrowError();
     }
   };
 

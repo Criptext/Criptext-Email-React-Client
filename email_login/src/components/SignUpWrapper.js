@@ -208,7 +208,10 @@ class SignUpWrapper extends Component {
       name: values.fullname,
       recoveryEmail: values.recoveryemail
     };
-    openCreateKeys(submitValues);
+    openCreateKeys({
+      loadingType: 'signup',
+      remoteData: submitValues
+    });
     closeLogin();
   };
 

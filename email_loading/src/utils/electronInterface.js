@@ -9,7 +9,7 @@ export const myAccount = remote.require('./src/Account');
 
 export const LabelType = remote.require('./src/systemLabels');
 
-export const remoteData = remote.getGlobal('loadingData');
+export const { loadingType, remoteData } = remote.getGlobal('loadingData');
 
 /* Window events
    ----------------------------- */
@@ -26,13 +26,17 @@ export const throwError = error => {
 };
 
 /* Criptext Client
-   ----------------------------- */
+  ----------------------------- */
 export const postUser = params => {
   return clientManager.postUser(params);
 };
 
 /* DataBase
-   ----------------------------- */
+  ----------------------------- */
+export const cleanDataBase = params => {
+  return dbManager.cleanDataBase(params);
+};
+
 export const createAccount = params => {
   return dbManager.createAccount(params);
 };
@@ -61,6 +65,10 @@ export const createSignedPreKeyRecord = params => {
   return dbManager.createSignedPreKeyRecord(params);
 };
 
+export const createTables = () => {
+  return dbManager.createTables();
+};
+
 export const deletePreKeyPair = params => {
   return dbManager.deletePreKeyPair(params);
 };
@@ -87,6 +95,14 @@ export const getSessionRecord = params => {
 
 export const getSignedPreKey = params => {
   return dbManager.getSignedPreKey(params);
+};
+
+export const postKeyBundle = params => {
+  return clientManager.postKeyBundle(params);
+};
+
+export const updateAccount = params => {
+  return dbManager.updateAccount(params);
 };
 
 export const updateIdentityKeyRecord = params => {

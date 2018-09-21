@@ -143,10 +143,6 @@ export const login = params => {
   return clientManager.login(params);
 };
 
-export const postKeyBundle = params => {
-  return clientManager.postKeyBundle(params);
-};
-
 export const postUser = params => {
   return clientManager.postUser(params);
 };
@@ -157,10 +153,6 @@ export const resetPassword = recipientId => {
 
 /* DataBase
   ----------------------------- */
-export const cleanDataBase = params => {
-  return dbManager.cleanDataBase(params);
-};
-
 export const createAccount = params => {
   return dbManager.createAccount(params);
 };
@@ -187,10 +179,6 @@ export const createSessionRecord = params => {
 
 export const createSignedPreKeyRecord = params => {
   return dbManager.createSignedPreKeyRecord(params);
-};
-
-export const createTables = () => {
-  return dbManager.createTables();
 };
 
 export const deletePreKeyPair = params => {
@@ -223,8 +211,4 @@ export const getSignedPreKey = params => {
 
 export const updateIdentityKeyRecord = params => {
   return dbManager.updateIdentityKeyRecord(params);
-};
-
-export const updateAccount = params => {
-  return dbManager.updateAccount(params);
 };
