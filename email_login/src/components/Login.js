@@ -43,7 +43,7 @@ const renderForm = props => (
         <button
           className="button-login"
           onClick={ev => props.onClickSignIn(ev)}
-          disabled={props.disabled}
+          disabled={props.disabledLoginButton}
         >
           <span>Sign In</span>
         </button>
@@ -64,7 +64,7 @@ const renderFooter = props => (
 );
 
 renderForm.propTypes = {
-  disabled: PropTypes.bool,
+  disabledLoginButton: PropTypes.bool,
   errorMessage: PropTypes.string,
   onChangeField: PropTypes.func,
   onClickSignIn: PropTypes.func,

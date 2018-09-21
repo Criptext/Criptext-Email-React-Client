@@ -12,7 +12,8 @@ import {
   cleanDataBase,
   createTables,
   postKeyBundle,
-  updateAccount
+  updateAccount,
+  getComputerName
 } from './../utils/electronInterface';
 
 import { CustomError } from './../utils/CustomError';
@@ -195,9 +196,10 @@ const generatePreKeyBundle = async ({
     signedPreKeyId
   );
 
+  const pcName = getComputerName();
   const keybundle = {
-    deviceName: window.navigator.platform,
-    deviceFriendlyName: window.navigator.platform,
+    deviceName: pcName || window.navigator.platform,
+    deviceFriendlyName: pcName || window.navigator.platform,
     deviceType: DEVICE_TYPE,
     signedPreKeySignature: util.toBase64(signedPreKey.signature),
     signedPreKeyPublic: util.toBase64(signedPreKey.keyPair.pubKey),

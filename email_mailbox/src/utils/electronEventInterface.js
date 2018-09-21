@@ -173,7 +173,7 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.PEER_EMAIL_UNSEND: {
       return handlePeerEmailUnsend(incomingEvent);
     }
-    case SocketCommand.DEVICE_AUTHORIZATION_REQUEST: {
+    case SocketCommand.DEVICE_LINK_AUTHORIZATION_REQUEST: {
       return handleLinkDeviceRequest(incomingEvent);
     }
     case SocketCommand.DEVICE_REMOVED: {

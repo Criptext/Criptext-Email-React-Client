@@ -1,7 +1,7 @@
 import { getTemporalAccount } from './electronInterface';
+import { SocketCommand } from './const';
 
-const { ipcRenderer, remote } = window.require('electron');
-const { SocketCommand } = remote.require('./src/utils/const');
+const { ipcRenderer } = window.require('electron');
 const EventEmitter = window.require('events');
 const emitter = new EventEmitter();
 
@@ -10,6 +10,9 @@ ipcRenderer.on('socket-message', (ev, message) => {
   switch (eventType) {
     case SocketCommand.DEVICE_LINK_AUTHORIZATION_CONFIRMATION: {
       return handleDeviceLinkAuthorizationConfirmation(message);
+    }
+    case SocketCommand.DEVICE_LINK_AUTHORIZATION_DENY: {
+      return handleDeviceLinkAuthorizationDeny();
     }
     default:
       return;
@@ -27,6 +30,10 @@ const handleDeviceLinkAuthorizationConfirmation = ({ params }) => {
   emitter.emit(Event.LINK_DEVICE_CONFIRMED, eventParams);
 };
 
+const handleDeviceLinkAuthorizationDeny = () => {
+  emitter.emit(Event.LINK_DEVICE_DENIED);
+};
+
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
@@ -36,5 +43,6 @@ export const removeEvent = (eventName, callback) => {
 };
 
 export const Event = {
-  LINK_DEVICE_CONFIRMED: 'link-device-confirmed'
+  LINK_DEVICE_CONFIRMED: 'link-device-confirmed',
+  LINK_DEVICE_DENIED: 'link-device-denied'
 };

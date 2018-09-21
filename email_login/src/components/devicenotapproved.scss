@@ -1,0 +1,115 @@
+@import "./../styles/index.scss";
+
+.device-not-approved-container {
+  font-family: 'NunitoSans';
+  width: 328px;
+  height: 513px;
+  border-radius: 0px 0px 7px 7px;
+  background: linear-gradient(to bottom, #00c4ff, #0091ff);
+
+  .device-not-approved-header {
+    height: 60px;
+    width: 100%;
+
+    .back-button {
+      position: absolute;
+      top: 42px;
+      left: 15px;
+      border: none;
+      outline: none;
+      border-radius: 100px;
+      width: 36px;
+      height: 36px;
+      background-color: rgba(255, 255, 255, 0.26);
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.11);
+      font-size: 22px;
+      color: #ffffff;
+      padding: 5px 0px 0px 2px;
+
+      &:hover {
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+      }
+    }
+    
+    .criptext-logo {
+      height: 100%;
+      width: 80%;
+      float: right;
+      .icon {
+        height: 33px;
+        width: 96px;
+        float: right;
+        position: relative;
+        top: calc(50% - 12px);
+        right: 20px;
+        color: #ffffff;
+        background-image: url(../#{$_PATH_TO_IMAGES}/icon-beta.svg);
+        background-position: center;
+        background-size: 100%;
+      }
+    }
+  }
+
+  .device-not-approved-content {
+    height: calc(100% - 70px);
+    width: 100%;
+
+    .content-header {
+      height: 22%;
+      color: #ffffff;
+      text-align: center;
+      p { 
+        font-size: 17px;
+        font-weight: 800;
+        margin: 0px;
+        position: relative;
+        top: 30%;
+      }
+    }
+
+    .content-icon {
+      position: relative;
+      top: 4%;
+      width: 19%;
+      margin: 0 auto;
+      font-size: 60px;
+      color: #ffffff;
+      border: 1px solid #fff;
+      border-radius: 50%;
+    }
+
+    .content-message {
+      height: 15%;
+      color: #ffffff;
+      text-align: center;
+      padding: 0 35px;
+      position: absolute;
+      bottom: 25%;
+
+      p {
+        font-size: 15px;
+        font-weight: 400;
+        margin: 0px;
+      }
+    }
+
+    .cant-access{
+      position: absolute;
+      bottom: 15px;
+      left: 27%;
+      width: 45%;
+      font-size: 14px;
+      text-align: center;
+      color: #ffffff;
+      border-bottom: solid 1px #fff;
+      margin: 0 auto;
+      cursor: pointer;
+      span {
+        position: relative;
+        top: 2px;
+      }
+    }
+
+  }
+  
+}

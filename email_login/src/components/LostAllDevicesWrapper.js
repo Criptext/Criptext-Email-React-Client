@@ -7,11 +7,11 @@ import {
   closeLogin,
   confirmForgotPasswordSentLink,
   confirmForgotPasswordEmptyEmail,
-  login,
-  throwError,
   errors,
+  login,
+  openCreateKeys,
   resetPassword,
-  openCreateKeys
+  throwError
 } from './../utils/electronInterface';
 import { hashPassword } from '../utils/HashUtils';
 import { censureEmailAddress } from '../utils/StringUtils';

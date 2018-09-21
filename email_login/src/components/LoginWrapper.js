@@ -5,13 +5,15 @@ import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
   closeDialog,
+  closeLogin,
   confirmLostDevices,
+  createTemporalAccount,
+  deleteTemporalAccount,
+  getComputerName,
   linkBegin,
   linkAuth,
-  socketClient,
-  deleteTemporalAccount,
   openCreateKeys,
-  closeLogin
+  socketClient
 } from './../utils/electronInterface';
 import {
   validateUsername,
@@ -19,17 +21,21 @@ import {
 } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
 import { addEvent, Event } from '../utils/electronEventInterface';
+import DeviceNotApproved from './DeviceNotApproved';
 
 const mode = {
   SIGNUP: 'SIGNUP',
   LOGIN: 'LOGIN',
   CONTINUE: 'CONTINUE',
+  DEVICE_NOT_APPROVED: 'DEVICE_NOT_APPROVED',
   LOST_DEVICES: 'LOST_DEVICES'
 };
 
 const errorMessages = {
   USERNAME_NOT_EXISTS: "Username doesn't exists"
 };
+
+let ephemeralToken;
 
 class LoginWrapper extends Component {
   constructor() {
@@ -39,7 +45,8 @@ class LoginWrapper extends Component {
       values: {
         username: ''
       },
-      disabled: true,
+      disabledLoginButton: true,
+      disabledResendLoginRequest: false,
       errorMessage: ''
     };
     this.timeCountdown = 0;
@@ -57,8 +64,17 @@ class LoginWrapper extends Component {
       case mode.CONTINUE:
         return (
           <ContinueLogin
-            toggleContinue={ev => this.toggleContinue(ev)}
-            handleLostDevices={ev => this.handleLostDevices(ev)}
+            disabledResendLoginRequest={this.state.disabledResendLoginRequest}
+            toggleContinue={this.toggleContinue}
+            onClickSignInWithPassword={this.handleClickSignInWithPassword}
+            onClickResendLoginRequest={this.handleClickResendLoginRequest}
+          />
+        );
+      case mode.DEVICE_NOT_APPROVED:
+        return (
+          <DeviceNotApproved
+            toggleDeviceNotApproved={this.toggleDeviceNotApproved}
+            onClickSignInWithPassword={this.handleClickSignInWithPassword}
           />
         );
       case mode.LOST_DEVICES:
@@ -74,9 +90,8 @@ class LoginWrapper extends Component {
             toggleSignUp={ev => this.toggleSignUp(ev)}
             onClickSignIn={this.handleClickSignIn}
             onChangeField={this.handleChange}
-            disabled={this.state.disabled}
+            disabledLoginButton={this.state.disabledLoginButton}
             value={this.state.values.username}
-            handleLostDevices={this.handleLostDevices}
             errorMessage={this.state.errorMessage}
           />
         );
@@ -117,6 +132,19 @@ class LoginWrapper extends Component {
     );
   };
 
+  toggleDeviceNotApproved = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.setState(
+      {
+        mode: mode.LOGIN
+      },
+      async () => {
+        await this.checkDisable();
+      }
+    );
+  };
+
   stopCountdown = () => {
     clearTimeout(this.timeCountdown);
   };
@@ -129,7 +157,7 @@ class LoginWrapper extends Component {
   checkDisable = async () => {
     const isValid = await this.validateUsername();
     this.setState({
-      disabled: !isValid
+      disabledLoginButton: !isValid
     });
   };
 
@@ -146,60 +174,97 @@ class LoginWrapper extends Component {
     ev.stopPropagation();
     const username = this.state.values.username;
     const isAvailable = await checkUsernameAvailable(username);
+    const isAvailableLinkDevice = false;
     if (isAvailable) {
       this.setState({
         errorMessage: errorMessages.USERNAME_NOT_EXISTS
       });
+    } else if (isAvailableLinkDevice) {
+      await this.initLinkDevice(username);
     } else {
-      const ephemeralToken = await linkBegin(username);
-      if (ephemeralToken) {
-        const newDeviceData = {
-          recipientId: username,
-          deviceName: window.navigator.platform,
-          deviceFriendlyName: window.navigator.platform,
-          deviceType: DEVICE_TYPE
-        };
-        const { status } = await linkAuth({
-          newDeviceData,
-          jwt: ephemeralToken
+      this.goToPasswordLogin();
+    }
+  };
+
+  goToPasswordLogin = () => {
+    this.setState({
+      mode: mode.LOST_DEVICES
+    });
+  };
+
+  initLinkDevice = async username => {
+    ephemeralToken = await linkBegin(username);
+    if (ephemeralToken) {
+      const response = await this.sendLoginConfirmationRequest(ephemeralToken);
+      if (response) {
+        this.setState({ mode: mode.CONTINUE }, () => {
+          createTemporalAccount({ recipientId: username });
+          socketClient.start({ jwt: ephemeralToken });
         });
-        if (status === 200) {
-          this.setState({ mode: mode.CONTINUE }, () => {
-            socketClient.start({ jwt: ephemeralToken });
-          });
-        }
+      } else {
+        this.goToPasswordLogin();
       }
     }
   };
 
-  handleLostDevices = ev => {
+  sendLoginConfirmationRequest = async ephemeralToken => {
+    const recipientId = this.state.values.username;
+    const pcName = getComputerName();
+    const newDeviceData = {
+      recipientId,
+      deviceName: pcName || window.navigator.platform,
+      deviceFriendlyName: pcName || window.navigator.platform,
+      deviceType: DEVICE_TYPE
+    };
+    try {
+      const { status } = await linkAuth({
+        newDeviceData,
+        jwt: ephemeralToken
+      });
+      return status === 200;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  handleClickSignInWithPassword = ev => {
     ev.preventDefault();
     ev.stopPropagation();
     confirmLostDevices(response => {
       closeDialog();
       if (response === 'Continue') {
         socketClient.disconnect();
-        this.onLostDevices();
+        this.stopCountdown();
+        this.goToPasswordLogin();
       }
     });
   };
 
-  onLostDevices = () => {
-    this.stopCountdown();
-    this.setState({
-      mode: mode.LOST_DEVICES
+  handleClickResendLoginRequest = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.setState({ disabledResendLoginRequest: true }, async () => {
+      const response = await this.sendLoginConfirmationRequest(ephemeralToken);
+      if (response) {
+        setTimeout(() => {
+          this.setState({ disabledResendLoginRequest: false });
+        }, 2000);
+      }
     });
   };
 
   initEventListeners = () => {
     addEvent(Event.LINK_DEVICE_CONFIRMED, params => {
+      openCreateKeys({ loadingType: 'login', remoteData: params });
       deleteTemporalAccount();
-      const remoteData = {
-        ...params,
-        recipientId: this.state.values.username
-      };
-      openCreateKeys({ loadingType: 'login', remoteData });
       closeLogin();
+    });
+
+    addEvent(Event.LINK_DEVICE_DENIED, () => {
+      socketClient.disconnect();
+      this.setState({
+        mode: mode.DEVICE_NOT_APPROVED
+      });
     });
   };
 }

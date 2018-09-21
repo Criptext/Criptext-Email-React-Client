@@ -11,6 +11,8 @@ export const LabelType = remote.require('./src/systemLabels');
 
 export const { loadingType, remoteData } = remote.getGlobal('loadingData');
 
+export const { getComputerName } = remote.require('./src/utils/StringUtils');
+
 /* Window events
    ----------------------------- */
 export const closeCreatingKeys = () => {

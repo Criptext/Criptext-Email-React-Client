@@ -18,9 +18,7 @@ const checkClient = async optionalNewToken => {
 const initializeClient = token => {
   const clientOptions = {
     url:
-      process.env.NODE_ENV === 'development'
-        ? DEV_SERVER_URL
-        : PROD_SERVER_URL,
+      process.env.NODE_ENV === 'development' ? DEV_SERVER_URL : PROD_SERVER_URL,
     token,
     timeout: 60000
   };
@@ -135,6 +133,10 @@ class ClientManager {
 
   linkDataAddress(params) {
     return client.linkDataAddress(params);
+  }
+
+  linkDeny(randomId) {
+    return client.linkDeny(randomId);
   }
 
   login(data) {
