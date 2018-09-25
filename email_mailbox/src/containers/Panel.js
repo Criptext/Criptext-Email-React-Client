@@ -40,8 +40,9 @@ const defineRejectedLabels = labelId => {
     case LabelType.allmail.id:
       return [LabelType.spam.id, LabelType.trash.id, LabelType.draft.id];
     case LabelType.spam.id:
+      return [LabelType.trash.id];
     case LabelType.trash.id:
-      return [];
+      return [LabelType.spam.id];
     default:
       return [LabelType.spam.id, LabelType.trash.id];
   }

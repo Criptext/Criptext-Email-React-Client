@@ -130,7 +130,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           labelIdToAdd: labelId,
           labelIdToRemove:
             isSpamLabelIdToAdd && isTrashCurrentLabelId
-              ? isTrashCurrentLabelId
+              ? currentLabelId
               : undefined,
           currentLabelId,
           notMove
@@ -158,6 +158,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           ownProps.onBackOption()
         );
       }
+    },
+    onDiscardDrafts: draftsParams => {
+      dispatch(actions.removeThreadsDrafts(draftsParams)).then(() =>
+        ownProps.onBackOption()
+      );
     }
   };
 };

@@ -2,7 +2,7 @@ import { FeedItem } from './types';
 import {
   deleteFeedItemById,
   getAllFeedItems,
-  getEmailById,
+  getEmailsByIds,
   updateFeedItem
 } from './../utils/electronInterface';
 import { getSeenTimestamp } from '../utils/storage';
@@ -43,7 +43,7 @@ export const loadFeedItems = clear => {
       const allFeeds = await getAllFeedItems();
       const feeds = await Promise.all(
         allFeeds.map(async feed => {
-          const [emailData] = await getEmailById(feed.emailId);
+          const [emailData] = await getEmailsByIds([feed.emailId]);
           const lastTimestamp = new Date(getSeenTimestamp());
           const feedDate = new Date(feed.date);
           const isNew = feedDate.getTime() > lastTimestamp.getTime();

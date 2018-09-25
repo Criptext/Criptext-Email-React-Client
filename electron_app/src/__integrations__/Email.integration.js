@@ -204,7 +204,7 @@ describe('Update data email to Email Table:', () => {
       id,
       isMuted: true
     });
-    const [email] = await DBManager.getEmailById(id);
+    const [email] = await DBManager.getEmailsByIds([id]);
     const isMuted = email.isMuted;
     expect(isMuted).toBe(1);
   });
@@ -215,7 +215,7 @@ describe('Update data email to Email Table:', () => {
       id,
       unread: false
     });
-    const [email] = await DBManager.getEmailById(id);
+    const [email] = await DBManager.getEmailsByIds([id]);
     const unread = email.unread;
     expect(unread).toBe(0);
   });

@@ -57,18 +57,6 @@ const defineContactType = labelId => {
   return ['from'];
 };
 
-const defineRejectedLabels = labelId => {
-  switch (labelId) {
-    case LabelType.allmail.id:
-      return [LabelType.spam.id, LabelType.trash.id, LabelType.draft.id];
-    case LabelType.spam.id:
-    case LabelType.trash.id:
-      return [];
-    default:
-      return [LabelType.spam.id, LabelType.trash.id];
-  }
-};
-
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onExecuteMessageAction: (actionHandlerKey, params) => {
@@ -77,7 +65,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           const labelId = LabelType.sent.id;
           const loadThreadsParams = {
             labelId,
-            rejectedLabelIds: defineRejectedLabels(labelId),
+            rejectedLabelIds: [LabelType.spam.id, LabelType.trash.id],
             contactTypes: defineContactType(labelId)
           };
           dispatch(loadThreads(loadThreadsParams)).then(() => {
@@ -99,10 +87,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               const labelId = LabelType.trash.id;
               const emails = await getEmailsByLabelIds([labelId]);
               const threadsParams = emails.map(email => ({
-                emailId: email.id,
                 threadIdDB: email.threadId
               }));
-              dispatch(removeThreads(threadsParams));
+              dispatch(removeThreads(threadsParams, labelId));
             }
           });
           break;

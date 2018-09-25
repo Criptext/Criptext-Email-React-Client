@@ -1,5 +1,5 @@
-const ClientAPI = require('@criptext/email-http-client');
-const { PROD_SERVER_URL } = require('./utils/const');
+const ClientAPI = require('@criptext/api');
+const { DEV_SERVER_URL, PROD_SERVER_URL } = require('./utils/const');
 const { getAccount } = require('./DBManager');
 const mailboxWindow = require('./windows/mailbox');
 let client = {};
@@ -9,7 +9,7 @@ const checkClient = async () => {
   const token = account ? account.jwt : undefined;
   if (!client.login || client.token !== token) {
     const clientOptions = {
-      url: process.env.REACT_APP_KEYSERVER_URL || PROD_SERVER_URL,
+      url: process.env.DEBUG ? DEV_SERVER_URL : PROD_SERVER_URL,
       token,
       timeout: 60000
     };
