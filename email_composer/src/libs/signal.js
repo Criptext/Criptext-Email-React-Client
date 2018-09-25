@@ -117,8 +117,7 @@ const createEmails = async (
             ? await encryptText(
                 recipientId,
                 deviceId,
-                `${fileKeyParams.key}:${fileKeyParams.iv}`,
-                keyBundleArrayBuffer
+                `${fileKeyParams.key}:${fileKeyParams.iv}`
               )
             : null;
           let criptextEmail = {
