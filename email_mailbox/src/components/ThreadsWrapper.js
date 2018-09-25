@@ -11,7 +11,8 @@ class ThreadsWrapper extends Component {
     this.state = {
       hoverTarget: null,
       labels: [],
-      tip: ''
+      tip: '',
+      lastMinDate: undefined
     };
   }
 
@@ -93,13 +94,17 @@ class ThreadsWrapper extends Component {
     const lastThread = this.props.threads.last();
 
     if (scrollTop + height > scrollHeight - SCROLL_BOTTOM_LIMIT && lastThread) {
-      const timestamp = lastThread.get('timestamp');
-      this.props.onLoadThreads(
-        this.props.mailboxSelected,
-        false,
-        this.props.searchParams,
-        timestamp
-      );
+      const date = lastThread.get('minDate');
+      if (this.state.lastMinDate !== date) {
+        this.setState({ lastMinDate: date }, () => {
+          this.props.onLoadThreads(
+            this.props.mailboxSelected,
+            false,
+            this.props.searchParams,
+            date
+          );
+        });
+      }
     }
   };
 

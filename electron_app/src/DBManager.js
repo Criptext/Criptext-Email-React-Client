@@ -13,7 +13,7 @@ const myAccount = require('./Account');
 const systemLabels = require('./systemLabels');
 
 /* Account
-   ----------------------------- */
+----------------------------- */
 const createAccount = params => {
   return db.table(Table.ACCOUNT).insert(params);
 };
@@ -521,7 +521,7 @@ const getEmailsCounterByLabelId = labelId => {
 
 const getEmailsGroupByThreadByParams = (params = {}) => {
   const {
-    timestamp,
+    date,
     subject,
     text,
     labelId,
@@ -533,7 +533,7 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
   } = params;
 
   let queryDb = baseThreadQuery({
-    timestamp,
+    date,
     labelId,
     limit,
     contactTypes,
@@ -603,7 +603,7 @@ const buildContactMatchQuery = (contactTypes, contactFilter) => {
 };
 
 const baseThreadQuery = ({
-  timestamp,
+  date,
   labelId,
   limit,
   contactTypes,
@@ -638,7 +638,8 @@ const baseThreadQuery = ({
       ),
       db.raw(`GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens`),
       db.raw(`MAX(${Table.EMAIL}.unread) as unread`),
-      db.raw(`MAX(email.date) as max_date`)
+      db.raw(`MIN(email.date) as minDate`),
+      db.raw(`MAX(email.date) as maxDate`)
     )
     .from(Table.EMAIL)
     .leftJoin(
@@ -684,7 +685,7 @@ const baseThreadQuery = ({
       );
 
   return baseQuery
-    .where(`${Table.EMAIL}.date`, '<', timestamp || 'now')
+    .where(`${Table.EMAIL}.date`, '<', date || 'now')
     .groupBy('uniqueId')
     .orderBy(`${Table.EMAIL}.date`, 'DESC')
     .limit(limit || 20);

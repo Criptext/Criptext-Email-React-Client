@@ -302,10 +302,6 @@ export const getTrashExpiredEmails = () => {
   return dbManager.getTrashExpiredEmails();
 };
 
-export const getThreads = (timestamp, params) => {
-  return dbManager.getThreads(timestamp, params);
-};
-
 export const getUnreadEmailsByThreadId = threadId => {
   return dbManager.getUnreadEmailsByThreadId(threadId);
 };

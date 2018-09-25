@@ -59,7 +59,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoadThreads: (mailbox, clear, searchParams, timestamp) => {
+    onLoadThreads: (mailbox, clear, searchParams, date) => {
       const labelId = LabelType[mailbox].id;
       const contactTypes = defineContactType(
         labelId,
@@ -75,7 +75,7 @@ const mapDispatchToProps = dispatch => {
           ? {
               labelId,
               clear,
-              timestamp,
+              date,
               contactTypes,
               contactFilter,
               plain: true,
@@ -85,7 +85,7 @@ const mapDispatchToProps = dispatch => {
           : {
               labelId,
               clear,
-              timestamp,
+              date,
               contactTypes,
               rejectedLabelIds
             };

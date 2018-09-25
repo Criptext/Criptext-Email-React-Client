@@ -17,7 +17,6 @@ const threads = (state = List([]), action) => {
           ),
           emailIds: List(thread.emailIds.split(',').map(Number)),
           subject,
-          timestamp: thread.date,
           lastEmailId: thread.key,
           unread: !!thread.unread,
           recipientContactIds: Set(
