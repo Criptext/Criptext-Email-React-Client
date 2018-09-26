@@ -196,8 +196,8 @@ const createEmailLabel = (emailLabels, prevTrx) => {
   return transaction(async trx => {
     const toInsert = await filterEmailLabelIfNotStore(emailLabels, trx);
     if (toInsert.length) {
-      await trx.insert(toInsert).into(Table.EMAIL_LABEL);
-      return await filterEmailLabelTrashToUpdateEmail(toInsert, 'create', trx);
+      await filterEmailLabelTrashToUpdateEmail(toInsert, 'create', trx);
+      return await trx.insert(toInsert).into(Table.EMAIL_LABEL);
     }
   });
 };
@@ -211,12 +211,12 @@ const deleteEmailLabel = ({ emailsId, labelIds }, prevTrx) => {
   });
   const transaction = prevTrx ? fn => fn(prevTrx) : db.transaction;
   return transaction(async trx => {
-    await trx
+    await filterEmailLabelTrashToUpdateEmail(emailLabels, 'delete', trx);
+    return await trx
       .table(Table.EMAIL_LABEL)
       .whereIn('labelId', labelIds)
       .whereIn('emailId', emailsId)
       .del();
-    return await filterEmailLabelTrashToUpdateEmail(emailLabels, 'delete', trx);
   });
 };
 
@@ -256,7 +256,9 @@ const filterEmailLabelTrashToUpdateEmail = async (emailLabels, action, trx) => {
   const ids = emailLabels
     .filter(emailLabel => emailLabel.labelId === systemLabels.trash.id)
     .map(item => item.emailId);
-  return await updateEmails({ ids, trashDate }, trx);
+  if (ids.length) {
+    return await updateEmails({ ids, trashDate }, trx);
+  }
 };
 
 const getEmailLabelsByEmailId = emailId => {
