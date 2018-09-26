@@ -29,7 +29,10 @@ class Thread extends Component {
   render() {
     return (
       <div className="thread-container">
-        <Message mailbox={this.props.mailboxSelected} />
+        <Message
+          mailbox={this.props.mailboxSelected}
+          onClickSection={this.props.onClickSection}
+        />
         <div className="thread-content">
           <div className="thread-info">
             <div className="thread-info-title">
@@ -103,6 +106,7 @@ Thread.propTypes = {
   mailboxSelected: PropTypes.string,
   myEmailKeysUnread: PropTypes.array,
   onBackOption: PropTypes.func,
+  onClickSection: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onUpdateUnreadEmails: PropTypes.func,
   onRemoveLabelIdThread: PropTypes.func,
