@@ -34,7 +34,7 @@ describe('String Utils - HTML Tags :', () => {
 describe('String Utils - HTML style and script tags', () => {
   it('Should remove HTML tags: style and script with your content', () => {
     const text = 'Hello';
-    const string = `<style type="text/css">...</style><p>${text}&nbsp;<span>${text}</span>!</p><script src="">xxx</script>`;
+    const string = `<style type="text/css">...</style><script src="">xxx</script><style type="text/css">...</style><p>${text}&nbsp;<span>${text}</span>!</p><script src="">xxx</script>`;
     const stringCleaned = cleanHTML(string);
     const result = `${text} ${text} !`;
     expect(stringCleaned).toEqual(result);

@@ -3,16 +3,22 @@ import PropTypes from 'prop-types';
 import { getAllContacts } from './../utils/electronInterface';
 import Autocomplete from './Autocomplete';
 
-let people = [];
+let people = undefined;
+let isConsulting = false;
 
 const AutocompleteWrapper = ({ addTag, ...props }) => {
   let inputProps = props;
-  const state = {
-    filteredSuggestions: []
+  let state = {
+    filteredSuggestions: [],
+    suggestionHighlight: true
   };
 
   const loadSuggestions = async () => {
-    people = await getAllContacts();
+    if (!people && !isConsulting) {
+      isConsulting = true;
+      people = await getAllContacts();
+      isConsulting = !people;
+    }
   };
   loadSuggestions();
 
@@ -20,11 +26,15 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
     if (method === 'enter') {
       e.preventDefault();
     } else {
+      if (method === 'type') {
+        state = { ...state, suggestionHighlight: true };
+      } else {
+        state = { ...state, suggestionHighlight: false };
+      }
       props.onChange(e);
     }
   };
   inputProps = { ...inputProps, onChange: handleOnChange };
-
   const inputValue = (props.value && props.value.trim().toLowerCase()) || '';
   const inputLength = inputValue.length;
   const getSuggestions = () => {
@@ -42,7 +52,6 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
         });
   };
   state.filteredSuggestions = getSuggestions();
-
   const getSuggestionValue = suggestion => suggestion.email;
 
   const onSuggestionsFetchRequested = () => {
@@ -72,6 +81,7 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
       onSuggestionSelected={onSuggestionSelected}
       onSuggestionsClearRequested={onSuggestionsClearRequested}
       onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+      suggestionHighlight={state.suggestionHighlight}
     />
   );
 };

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Load data contact from Contact Table: should load all contacts 1`] = `
+Array [
+  Object {
+    "email": "user@domain.com",
+    "name": "User",
+  },
+  Object {
+    "email": "userhello@domain.com",
+    "name": "User Hello",
+  },
+]
+`;

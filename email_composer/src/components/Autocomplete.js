@@ -18,7 +18,7 @@ class Autocomplete extends Component {
         onSuggestionSelected={this.props.onSuggestionSelected}
         onSuggestionsClearRequested={this.props.onSuggestionsClearRequested}
         onSuggestionsFetchRequested={this.props.onSuggestionsFetchRequested}
-        highlightFirstSuggestion={true}
+        highlightFirstSuggestion={this.props.suggestionHighlight}
       />
     );
   }
@@ -32,13 +32,14 @@ class Autocomplete extends Component {
 }
 
 Autocomplete.propTypes = {
-  suggestions: PropTypes.array,
-  shouldRenderSuggestions: PropTypes.func,
   getSuggestionValue: PropTypes.func,
   inputProps: PropTypes.object,
   onSuggestionSelected: PropTypes.func,
   onSuggestionsClearRequested: PropTypes.func,
-  onSuggestionsFetchRequested: PropTypes.func
+  onSuggestionsFetchRequested: PropTypes.func,
+  shouldRenderSuggestions: PropTypes.func,
+  suggestions: PropTypes.array,
+  suggestionHighlight: PropTypes.bool
 };
 
 export default Autocomplete;
