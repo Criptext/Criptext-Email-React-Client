@@ -50,22 +50,11 @@ const EventEmitter = window.require('events');
 const electron = window.require('electron');
 const { ipcRenderer } = electron;
 const emitter = new EventEmitter();
-
-ipcRenderer.on('socket-message', async (ev, message) => {
-  const eventId = message.cmd;
-  if (
-    eventId === SocketCommand.DEVICE_REMOVED ||
-    eventId === SocketCommand.PEER_PASSWORD_CHANGED ||
-    eventId === SocketCommand.PEER_RECOVERY_EMAIL_CHANGED ||
-    eventId === SocketCommand.PEER_RECOVERY_EMAIL_CONFIRMED
-  ) {
-    handleEvent(message);
-  } else if (eventId === 400) {
-    await getGroupEvents();
-  }
-});
+let isGettingEvents = false;
 
 export const getGroupEvents = async () => {
+  if (isGettingEvents) return;
+  isGettingEvents = true;
   const receivedEvents = await getEvents();
   const eventsGroups = receivedEvents.reduce(
     (result, event) => {
@@ -144,7 +133,7 @@ export const getGroupEvents = async () => {
       [eventPriority.OTHERS]: []
     }
   );
-  await processEvent(eventsGroups);
+  isGettingEvents = !(await processEvent(eventsGroups));
 };
 
 const processEvent = async eventsGroups => {
@@ -167,6 +156,7 @@ const processEvent = async eventsGroups => {
       }
     }
   }
+  return true;
 };
 
 export const handleEvent = incomingEvent => {
@@ -620,6 +610,23 @@ const setEventAsHandled = async eventId => {
 
 /* Window events
   ----------------------------- */
+ipcRenderer.on('socket-message', async (ev, message) => {
+  const eventId = message.cmd;
+  if (
+    eventId === SocketCommand.DEVICE_REMOVED ||
+    eventId === SocketCommand.PEER_PASSWORD_CHANGED ||
+    eventId === SocketCommand.PEER_RECOVERY_EMAIL_CHANGED ||
+    eventId === SocketCommand.PEER_RECOVERY_EMAIL_CONFIRMED
+  ) {
+    handleEvent(message);
+  } else if (eventId === 400) {
+    await getGroupEvents();
+  }
+});
+
+ipcRenderer.on('get-events', () => {
+  emitter.emit(Event.LOAD_EVENTS, {});
+});
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
   const labelId = shouldUpdateBadge ? LabelType.draft.id : undefined;

@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import {
   addLabels,
   loadEmails,
+  loadEvents,
   loadThreads,
   removeThreadsSuccess,
   updateBadgeLabels,
@@ -53,6 +54,9 @@ const mapDispatchToProps = dispatch => {
     },
     onLoadEmails: threadId => {
       dispatch(loadEmails(threadId));
+    },
+    onLoadEvents: () => {
+      dispatch(loadEvents());
     },
     onLoadThreads: params => {
       const { labelId } = params;

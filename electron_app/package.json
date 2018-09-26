@@ -86,8 +86,7 @@
     },
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
+        "AppImage"
       ],
       "icon": "build/icon.png",
       "category": "Network",
@@ -122,8 +121,7 @@
     "electron-builder": "^20.18.0"
   },
   "dependencies": {
-    "@criptext/email-http-client": "^0.14.2",
-    "crypto-js": "^3.1.9-1",
+    "@criptext/api": "^0.14.3",
     "electron-updater": "^3.0.3",
     "electron-window-state": "^4.1.1",
     "knex": "^0.14.2",

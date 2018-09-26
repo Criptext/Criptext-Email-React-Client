@@ -168,6 +168,10 @@ class PanelWrapper extends Component {
       props.onUpdateUnreadEmailsBadge(labels);
     });
 
+    addEvent(Event.LOAD_EVENTS, () => {
+      this.props.onLoadEvents();
+    });
+
     addEvent(Event.REFRESH_THREADS, eventParams => {
       if (this.state.sectionSelected.params.mailboxSelected) {
         const currentLabelId =
@@ -271,6 +275,7 @@ class PanelWrapper extends Component {
 PanelWrapper.propTypes = {
   onAddLabels: PropTypes.func,
   onLoadEmails: PropTypes.func,
+  onLoadEvents: PropTypes.func,
   onMarkThreadAsOpen: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,

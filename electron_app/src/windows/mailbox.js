@@ -89,6 +89,9 @@ const show = async () => {
     mailboxWindow.on('ready-to-show', () => {
       mailboxWindow.show();
     });
+    mailboxWindow.on('focus', () => {
+      send('get-events');
+    });
   }
 };
 
