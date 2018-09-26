@@ -84,7 +84,7 @@ const show = async () => {
   });
   if (mailboxWindow) {
     mailboxWindow.show();
-  } else if (!existVisibleWindow.length) {
+  } else if (!existVisibleWindow.length || !mailboxWindow) {
     await create();
     mailboxWindow.on('ready-to-show', () => {
       mailboxWindow.show();

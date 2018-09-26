@@ -1,6 +1,7 @@
 const { client: WebSocketClient } = require('websocket');
 const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
-const SOCKET_URL = process.env.DEBUG ? DEV_SOCKET_URL : PROD_SOCKET_URL;
+const SOCKET_URL =
+  process.env.NODE_ENV === 'development' ? DEV_SOCKET_URL : PROD_SOCKET_URL;
 var client, reconnect, messageListener;
 var reconnectDelay = 1000;
 

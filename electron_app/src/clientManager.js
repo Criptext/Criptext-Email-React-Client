@@ -9,7 +9,10 @@ const checkClient = async () => {
   const token = account ? account.jwt : undefined;
   if (!client.login || client.token !== token) {
     const clientOptions = {
-      url: process.env.DEBUG ? DEV_SERVER_URL : PROD_SERVER_URL,
+      url:
+        process.env.NODE_ENV === 'development'
+          ? DEV_SERVER_URL
+          : PROD_SERVER_URL,
       token,
       timeout: 60000
     };
