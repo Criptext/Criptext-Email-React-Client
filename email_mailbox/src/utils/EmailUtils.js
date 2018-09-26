@@ -2,6 +2,7 @@ import { EmailStatus } from './const';
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
+import { LabelType } from './electronInterface';
 
 export const formEmailLabel = ({ emailId, labels }) => {
   return labels.map(labelId => {
@@ -45,4 +46,17 @@ export const parseSignatureHtmlToEdit = signatureHtml => {
 
 export const parseSignatureContentToHtml = signatureContent => {
   return draftToHtml(convertToRaw(signatureContent.getCurrentContent()));
+};
+
+export const defineRejectedLabels = labelId => {
+  switch (labelId) {
+    case LabelType.allmail.id:
+      return [LabelType.spam.id, LabelType.trash.id, LabelType.draft.id];
+    case LabelType.spam.id:
+      return [LabelType.trash.id];
+    case LabelType.trash.id:
+      return [LabelType.spam.id];
+    default:
+      return [LabelType.spam.id, LabelType.trash.id];
+  }
 };

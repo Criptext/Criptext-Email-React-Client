@@ -4,8 +4,10 @@ import { updateBadgeLabels } from './labels';
 import {
   createEmailLabel,
   deleteEmailLabel,
+  deleteEmailsByIds,
   deleteEmailsByThreadIdAndLabelId,
   getEmailsByThreadId,
+  getEmailsByThreadIdAndLabelId,
   getEmailsGroupByThreadByParams,
   getLabelById,
   getTrashExpiredEmails,
@@ -13,9 +15,7 @@ import {
   postOpenEvent,
   postPeerEvent,
   updateEmails,
-  updateUnreadEmailByThreadIds,
-  getEmailsByThreadIdAndLabelId,
-  deleteEmailsByIds
+  updateUnreadEmailByThreadIds
 } from '../utils/electronInterface';
 import { storeValue } from './../utils/storage';
 import {

@@ -10,6 +10,7 @@ import {
 import MessageWrapper from './../components/MessageWrapper';
 import { SectionType } from '../utils/const';
 import { loadThreads, removeThreads } from '../actions';
+import { defineRejectedLabels } from '../utils/EmailUtils';
 
 const defineMessageData = (mailboxSelected, threadsCount) => {
   const targetLabelId = mailboxSelected && LabelType[mailboxSelected].id;
@@ -65,7 +66,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           const labelId = LabelType.sent.id;
           const loadThreadsParams = {
             labelId,
-            rejectedLabelIds: [LabelType.spam.id, LabelType.trash.id],
+            rejectedLabelIds: defineRejectedLabels(labelId),
             contactTypes: defineContactType(labelId)
           };
           dispatch(loadThreads(loadThreadsParams)).then(() => {
