@@ -218,6 +218,7 @@ class PanelWrapper extends Component {
 
     addEvent(Event.UPDATE_THREAD_EMAILS, eventParams => {
       const { threadId, newEmailId, oldEmailId } = eventParams;
+      if (!threadId && !newEmailId && !oldEmailId) return;
       props.onLoadEmails(threadId);
       props.onUpdateEmailIdsThread({
         threadId,

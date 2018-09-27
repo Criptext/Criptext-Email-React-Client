@@ -71,10 +71,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           };
           dispatch(loadThreads(loadThreadsParams)).then(() => {
             const threadType = SectionType.THREAD;
-            const { emailId } = params;
+            const { threadId } = params;
             const openThreadParams = {
               mailboxSelected: 'sent',
-              threadIdSelected: emailId
+              threadIdSelected: threadId
             };
             ownProps.onClickSection(threadType, openThreadParams);
           });

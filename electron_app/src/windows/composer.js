@@ -135,11 +135,11 @@ const editDraft = async emailToEdit => {
   });
 };
 
-const destroy = async ({ composerId, emailId }) => {
+const destroy = async ({ composerId, emailId, threadId }) => {
   const composer = BrowserWindow.fromId(composerId);
   const emailToEdit = globalManager.emailToEdit.get(composer.id);
   if (emailToEdit) {
-    const { type, key, keyEmailToRespond } = emailToEdit;
+    const { type, key } = emailToEdit;
     if (type === composerEvents.EDIT_DRAFT) {
       const [oldDraftEmail] = await dbManager.getEmailByKey(key);
       await dbManager.deleteEmailLabelAndContactByEmailId(
@@ -151,16 +151,15 @@ const destroy = async ({ composerId, emailId }) => {
       type === composerEvents.REPLY ||
       type === composerEvents.REPLY_ALL
     ) {
-      const [emailResponded] = await dbManager.getEmailByKey(keyEmailToRespond);
       const dataToMailbox = {
-        threadId: emailResponded.threadId,
+        threadId,
         newEmailId: emailId
       };
       sendEventToMailbox('update-thread-emails', dataToMailbox);
     }
   }
-  if (emailId) {
-    sendEventToMailbox('display-message-email-sent', { emailId });
+  if (threadId) {
+    sendEventToMailbox('display-message-email-sent', { threadId });
   }
   globalManager.composerData.delete(composer.id);
   composer.destroy();

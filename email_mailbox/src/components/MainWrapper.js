@@ -157,6 +157,7 @@ class MainWrapper extends Component {
                 this.props.onClickSection
               )
             }
+            onClickSection={this.props.onClickSection}
             threadIdSelected={
               this.props.sectionSelected.params.threadIdSelected
             }

@@ -57,7 +57,7 @@ const labels = (state = new Map({}), action) => {
   }
 };
 
-const label = (state, action) => {
+const label = (state = new Map({}), action) => {
   switch (action.type) {
     case Label.UPDATE:
     case Label.UPDATE_BADGE_LABELS: {

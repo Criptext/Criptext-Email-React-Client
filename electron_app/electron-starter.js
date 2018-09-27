@@ -93,8 +93,8 @@ async function initApp() {
     composerWindowManager.openNewComposer();
   });
 
-  ipcMain.on('close-composer', (e, { composerId, emailId }) => {
-    composerWindowManager.destroy({ composerId, emailId });
+  ipcMain.on('close-composer', (e, { composerId, emailId, threadId }) => {
+    composerWindowManager.destroy({ composerId, emailId, threadId });
   });
 
   ipcMain.on('save-draft-changes', (e, windowParams) => {

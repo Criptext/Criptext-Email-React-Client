@@ -113,8 +113,8 @@ export const updateLabel = ({ id, color, text, visible }) => {
 };
 
 export const updateBadgeLabels = labelIds => {
+  if (!labelIds.length) return;
   return async dispatch => {
-    if (!labelIds.length) return;
     try {
       const labelsFiltered = labelIds.filter(labelId => {
         return (

@@ -30,8 +30,8 @@ export const LabelType = remote.require('./src/systemLabels');
 
 /* Window events
    ----------------------------- */
-export const closeComposerWindow = optionalEmailId => {
-  ipcRenderer.send('close-composer', { composerId, emailId: optionalEmailId });
+export const closeComposerWindow = ({ threadId, emailId }) => {
+  ipcRenderer.send('close-composer', { composerId, threadId, emailId });
 };
 
 export const saveDraftChanges = data => {

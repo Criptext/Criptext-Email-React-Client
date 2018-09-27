@@ -633,11 +633,11 @@ ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
   emitter.emit(Event.REFRESH_THREADS, { labelIds: [labelId] });
 });
 
-ipcRenderer.on('display-message-email-sent', (ev, { emailId }) => {
+ipcRenderer.on('display-message-email-sent', (ev, { threadId }) => {
   const messageData = {
     ...Messages.success.emailSent,
     type: MessageType.SUCCESS,
-    params: { emailId }
+    params: { threadId }
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 });
