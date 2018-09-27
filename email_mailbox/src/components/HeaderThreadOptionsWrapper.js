@@ -32,10 +32,12 @@ class HeaderThreadOptionsWrapper extends Component {
         isVisibleSpamButton={this.isVisibleSpamButton()}
         isVisibleTrashButton={this.isVisibleTrashButton()}
         isVisibleDeleteButton={this.isVisibleDeleteButton()}
+        isVisibleDiscardDraftsButton={this.isVisibleDiscardDraftsButton()}
         onToggleFolderMenu={this.handleToggleFolderMenu}
         onToggleTagsMenu={this.handleToggleTagsMenu}
         onToggleDotsMenu={this.handleToggleDotsMenu}
         onClickDeleteThread={this.handleClickDeleteThread}
+        onClickDiscardDrafts={this.handleClickDiscardDrafts}
         onClickMarkAsRead={this.handleClickMarkAsRead}
         onClickMoveToArchive={this.handleClickMoveToArchive}
         onClickMoveToInbox={this.handleClickMoveToInbox}
@@ -105,7 +107,6 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
       currentLabelId === LabelType.starred.id ||
-      currentLabelId === LabelType.draft.id ||
       currentLabelId === LabelType.allmail.id
     );
   };
@@ -116,6 +117,11 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.spam.id ||
       currentLabelId === LabelType.trash.id
     );
+  };
+
+  isVisibleDiscardDraftsButton = () => {
+    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    return currentLabelId === LabelType.draft.id;
   };
 
   handleClickMoveToArchive = () => {
@@ -146,6 +152,10 @@ class HeaderThreadOptionsWrapper extends Component {
         this.props.onRemoveThreads(this.props.threadsSelected, backFirst);
       }
     });
+  };
+
+  handleClickDiscardDrafts = () => {
+    this.props.onDiscardDrafts(this.props.threadsSelected);
   };
 
   handleClickMoveToInbox = () => {
@@ -189,6 +199,7 @@ HeaderThreadOptionsWrapper.propTypes = {
   markAsUnread: PropTypes.bool,
   onAddLabel: PropTypes.func,
   onAddMoveLabel: PropTypes.func,
+  onDiscardDrafts: PropTypes.func,
   onMarkRead: PropTypes.func,
   onRemoveLabel: PropTypes.func,
   onRemoveThreads: PropTypes.func,

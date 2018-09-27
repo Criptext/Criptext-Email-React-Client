@@ -20,7 +20,7 @@ const emailDraft = {
   recipients: {
     from: ['<User me> <user@criptext.com>']
   },
-  labels: [6]
+  labels: [5, 6]
 };
 
 const emailSent = {
@@ -204,7 +204,7 @@ describe('Update data email to Email Table:', () => {
       id,
       isMuted: true
     });
-    const [email] = await DBManager.getEmailById(id);
+    const [email] = await DBManager.getEmailsByIds([id]);
     const isMuted = email.isMuted;
     expect(isMuted).toBe(1);
   });
@@ -215,7 +215,7 @@ describe('Update data email to Email Table:', () => {
       id,
       unread: false
     });
-    const [email] = await DBManager.getEmailById(id);
+    const [email] = await DBManager.getEmailsByIds([id]);
     const unread = email.unread;
     expect(unread).toBe(0);
   });
@@ -314,5 +314,26 @@ describe('Load data thread from Email Table:', () => {
     };
     const threads = await DBManager.getEmailsGroupByThreadByParams(params);
     expect(threads).toMatchSnapshot();
+  });
+});
+
+describe('Store relation data to EmailLabel Table: ', () => {
+  it('Should insert emailLabel relation to database', async () => {
+    const [email] = await DBManager.getEmailByKey(emailSent.email.key);
+    const emailLabelToInsert = [
+      { emailId: email.id, labelId: systemLabels.starred.id },
+      { emailId: email.id, labelId: systemLabels.trash.id }
+    ];
+    const response = await DBManager.createEmailLabel(emailLabelToInsert);
+    expect(response[0]).toEqual(expect.any(Number));
+  });
+
+  it('Should not insert emailLabel relation to database', async () => {
+    const [email] = await DBManager.getEmailByKey(emailDraft.email.key);
+    const emailLabelDraft = [
+      { emailId: email.id, labelId: systemLabels.draft.id }
+    ];
+    const response = await DBManager.createEmailLabel(emailLabelDraft);
+    expect(response).toBeUndefined();
   });
 });

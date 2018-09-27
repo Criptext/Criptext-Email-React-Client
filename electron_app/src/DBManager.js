@@ -196,8 +196,8 @@ const createEmailLabel = (emailLabels, prevTrx) => {
   return transaction(async trx => {
     const toInsert = await filterEmailLabelIfNotStore(emailLabels, trx);
     if (toInsert.length) {
-      await trx.insert(toInsert).into(Table.EMAIL_LABEL);
-      return await filterEmailLabelTrashToUpdateEmail(toInsert, 'create', trx);
+      await filterEmailLabelTrashToUpdateEmail(toInsert, 'create', trx);
+      return await trx.insert(toInsert).into(Table.EMAIL_LABEL);
     }
   });
 };
@@ -211,12 +211,12 @@ const deleteEmailLabel = ({ emailsId, labelIds }, prevTrx) => {
   });
   const transaction = prevTrx ? fn => fn(prevTrx) : db.transaction;
   return transaction(async trx => {
-    await trx
+    await filterEmailLabelTrashToUpdateEmail(emailLabels, 'delete', trx);
+    return await trx
       .table(Table.EMAIL_LABEL)
       .whereIn('labelId', labelIds)
       .whereIn('emailId', emailsId)
       .del();
-    return await filterEmailLabelTrashToUpdateEmail(emailLabels, 'delete', trx);
   });
 };
 
@@ -256,7 +256,9 @@ const filterEmailLabelTrashToUpdateEmail = async (emailLabels, action, trx) => {
   const ids = emailLabels
     .filter(emailLabel => emailLabel.labelId === systemLabels.trash.id)
     .map(item => item.emailId);
-  return await updateEmails({ ids, trashDate }, trx);
+  if (ids.length) {
+    return await updateEmails({ ids, trashDate }, trx);
+  }
 };
 
 const getEmailLabelsByEmailId = emailId => {
@@ -367,10 +369,24 @@ const deleteEmailsByIds = (ids, trx) => {
     .del();
 };
 
-const deleteEmailsByThreadId = threadIds => {
+const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
+  const labelIdsToDelete = labelId
+    ? [labelId]
+    : [systemLabels.spam.id, systemLabels.trash.id];
   return db
     .table(Table.EMAIL)
     .whereIn('threadId', threadIds)
+    .whereExists(
+      db
+        .select('*')
+        .from(Table.EMAIL_LABEL)
+        .whereRaw(
+          `${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId and ${
+            Table.EMAIL_LABEL
+          }.labelId in (??)`,
+          [labelIdsToDelete]
+        )
+    )
     .del();
 };
 
@@ -436,11 +452,11 @@ const formEmailLabel = ({ emailId, labels }) => {
   });
 };
 
-const getEmailById = id => {
+const getEmailsByIds = ids => {
   return db
     .select('*')
     .from(Table.EMAIL)
-    .where({ id });
+    .whereIn('id', ids);
 };
 
 const getEmailByKey = key => {
@@ -529,7 +545,7 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
     limit,
     contactTypes = ['from'],
     contactFilter,
-    rejectedLabelIds = []
+    rejectedLabelIds
   } = params;
 
   let queryDb = baseThreadQuery({
@@ -610,15 +626,19 @@ const baseThreadQuery = ({
   contactFilter,
   rejectedLabelIds
 }) => {
-  let baseQuery = db
+  const {
+    labelsQuery,
+    allLabelsQuery,
+    whereRawQuery,
+    whereRawParams
+  } = getQueryParamsIfOrNotRejectedLabel({ labelId, rejectedLabelIds });
+
+  return db
     .select(
       `${Table.EMAIL}.*`,
       db.raw(`IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId`),
-      db.raw(
-        `GROUP_CONCAT(CASE WHEN ${Table.EMAIL_LABEL}.labelId <> ${labelId ||
-          -1} THEN ${Table.EMAIL_LABEL}.labelId ELSE NULL END) as labels`
-      ),
-      db.raw(`GROUP_CONCAT(${Table.EMAIL_LABEL}.labelId) as allLabels`),
+      db.raw(labelsQuery),
+      db.raw(allLabelsQuery),
       db.raw(`GROUP_CONCAT(DISTINCT(${Table.EMAIL}.id)) as emailIds`),
       db.raw(
         `GROUP_CONCAT(DISTINCT(CASE WHEN ${buildContactMatchQuery(
@@ -663,32 +683,78 @@ const baseThreadQuery = ({
       Table.CONTACT,
       `${Table.EMAIL_CONTACT}.contactId`,
       `${Table.CONTACT}.id`
-    );
-
-  baseQuery = !rejectedLabelIds.length
-    ? baseQuery.whereRaw(
-        `${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId and ${
-          Table.EMAIL_LABEL
-        }.labelId = ?`,
-        [labelId]
-      )
-    : baseQuery.whereNotExists(
-        db
-          .select('*')
-          .from(Table.EMAIL_LABEL)
-          .whereRaw(
-            `${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId and ${
-              Table.EMAIL_LABEL
-            }.labelId in (??)`,
-            [rejectedLabelIds]
-          )
-      );
-
-  return baseQuery
+    )
+    .whereRaw(whereRawQuery, whereRawParams)
     .where(`${Table.EMAIL}.date`, '<', date || 'now')
     .groupBy('uniqueId')
     .orderBy(`${Table.EMAIL}.date`, 'DESC')
     .limit(limit || 20);
+};
+
+const getQueryParamsIfOrNotRejectedLabel = ({ labelId, rejectedLabelIds }) => {
+  const excludedLabels = [systemLabels.trash.id, systemLabels.spam.id];
+  const isRejectedLabel = excludedLabels.includes(labelId);
+  return isRejectedLabel
+    ? {
+        labelsQuery: `GROUP_CONCAT((SELECT GROUP_CONCAT(${
+          Table.EMAIL_LABEL
+        }.labelId) FROM ${Table.EMAIL_LABEL} WHERE ${
+          Table.EMAIL_LABEL
+        }.emailId = ${Table.EMAIL}.id AND ${
+          Table.EMAIL_LABEL
+        }.labelId <> ${labelId} and ${Table.EMAIL_LABEL}.labelId not in (${[
+          rejectedLabelIds
+        ].join(',')}))) as labels`,
+        allLabelsQuery: `GROUP_CONCAT((SELECT GROUP_CONCAT(${
+          Table.EMAIL_LABEL
+        }.labelId) FROM ${Table.EMAIL_LABEL} WHERE ${
+          Table.EMAIL_LABEL
+        }.emailId = ${Table.EMAIL}.id and ${
+          Table.EMAIL_LABEL
+        }.labelId not in (${[rejectedLabelIds].join(',')}))) as allLabels`,
+        whereRawQuery: `${Table.EMAIL_LABEL}.labelId = ?`,
+        whereRawParams: [labelId]
+      }
+    : {
+        labelsQuery: `GROUP_CONCAT(CASE WHEN ${
+          Table.EMAIL_LABEL
+        }.labelId <> ${labelId || -1} THEN ${
+          Table.EMAIL_LABEL
+        }.labelId ELSE NULL END) as labels`,
+        allLabelsQuery: `GROUP_CONCAT(${
+          Table.EMAIL_LABEL
+        }.labelId) as allLabels`,
+        whereRawQuery: `NOT EXISTS (SELECT * FROM ${Table.EMAIL_LABEL} WHERE ${
+          Table.EMAIL
+        }.id = ${Table.EMAIL_LABEL}.emailId AND ${
+          Table.EMAIL_LABEL
+        }.labelId in (??))`,
+        whereRawParams: [rejectedLabelIds]
+      };
+};
+
+const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
+  return db
+    .select(
+      `${Table.EMAIL}.*`,
+      db.raw(`GROUP_CONCAT(${Table.EMAIL}.key) as keys`)
+    )
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL}.id`,
+      `${Table.EMAIL_LABEL}.emailId`
+    )
+    .from(Table.EMAIL)
+    .where(`${Table.EMAIL_LABEL}.labelId`, labelId)
+    .whereIn(`${Table.EMAIL}.threadId`, threadIds)
+    .groupBy(`${Table.EMAIL}.threadId`)
+    .then(rows => {
+      return rows.map(row => ({
+        id: row.id,
+        threadId: row.threadId,
+        keys: row.keys ? row.keys.split(',').map(Number) : []
+      }));
+    });
 };
 
 const partThreadQueryByMatchText = (query, text) =>
@@ -1039,7 +1105,7 @@ module.exports = {
   createTables,
   deleteEmailsByIds,
   deleteEmailByKeys,
-  deleteEmailsByThreadId,
+  deleteEmailsByThreadIdAndLabelId,
   deleteEmailLabelAndContactByEmailId,
   deleteEmailContactByEmailId,
   deleteEmailLabel,
@@ -1054,13 +1120,14 @@ module.exports = {
   getContactByEmails,
   getContactByIds,
   getContactsByEmailId,
-  getEmailById,
+  getEmailsByIds,
   getEmailByKey,
   getEmailsByKeys,
   getEmailsByLabelIds,
   getEmailsByThreadId,
   getEmailsCounterByLabelId,
   getEmailsGroupByThreadByParams,
+  getEmailsByThreadIdAndLabelId,
   getEmailsUnredByLabelId,
   getEmailLabelsByEmailId,
   getFileKeyByEmailId,

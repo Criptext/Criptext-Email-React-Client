@@ -5,7 +5,7 @@ import './standardoptions.css';
 
 const StandardOptions = props => (
   <div className="header-action">
-    {props.isVisibleArchiveButton ? (
+    {props.isVisibleArchiveButton && (
       <ButtonCircle
         onClick={props.onClickMoveToArchive}
         tip="Archive"
@@ -13,8 +13,8 @@ const StandardOptions = props => (
         icon="icon-archive"
         targetName="actionArchive"
       />
-    ) : null}
-    {props.isVisibleMoveToInboxButton ? (
+    )}
+    {props.isVisibleMoveToInboxButton && (
       <ButtonCircle
         onClick={props.onClickMoveToInbox}
         tip="Move to Inbox"
@@ -22,8 +22,8 @@ const StandardOptions = props => (
         icon="icon-archive"
         targetName="actionToInbox"
       />
-    ) : null}
-    {props.isVisibleRestoreButton ? (
+    )}
+    {props.isVisibleRestoreButton && (
       <ButtonCircle
         onClick={props.onClickRestore}
         tip="Restore"
@@ -31,8 +31,8 @@ const StandardOptions = props => (
         icon="icon-archive"
         targetName="actionRestore"
       />
-    ) : null}
-    {props.isVisibleSpamButton ? (
+    )}
+    {props.isVisibleSpamButton && (
       <ButtonCircle
         onClick={props.onClickMoveToSpam}
         tip="Spam"
@@ -40,8 +40,8 @@ const StandardOptions = props => (
         icon="icon-not"
         targetName="actionSpam"
       />
-    ) : null}
-    {props.isVisibleTrashButton ? (
+    )}
+    {props.isVisibleTrashButton && (
       <ButtonCircle
         onClick={props.onClickMoveToTrash}
         tip="Trash"
@@ -49,9 +49,8 @@ const StandardOptions = props => (
         icon="icon-trash"
         targetName="actionTrash"
       />
-    ) : null}
-
-    {props.isVisibleDeleteButton ? (
+    )}
+    {props.isVisibleDeleteButton && (
       <ButtonCircle
         onClick={props.onClickDeleteThread}
         tip="Delete"
@@ -59,9 +58,17 @@ const StandardOptions = props => (
         icon="icon-trash"
         targetName="actionDelete"
       />
-    ) : null}
-
-    {props.isVisibleFolderButton ? (
+    )}
+    {props.isVisibleDiscardDraftsButton && (
+      <ButtonCircle
+        onClick={props.onClickDiscardDrafts}
+        tip="Discard drafts"
+        enableTip={true}
+        icon="icon-trash"
+        targetName="actionDiscardDrafts"
+      />
+    )}
+    {props.isVisibleFolderButton && (
       <ButtonCircle
         onClick={props.onToggleFolderMenu}
         tip="Move to"
@@ -69,7 +76,7 @@ const StandardOptions = props => (
         icon="icon-file"
         targetName="actionMove"
       />
-    ) : null}
+    )}
     <ButtonCircle
       onClick={props.onToggleTagsMenu}
       tip="Add Labels"
@@ -85,6 +92,7 @@ StandardOptions.propTypes = {
   displayTagsMenu: PropTypes.bool,
   isVisibleArchiveButton: PropTypes.bool,
   isVisibleDeleteButton: PropTypes.bool,
+  isVisibleDiscardDraftsButton: PropTypes.bool,
   isVisibleFolderButton: PropTypes.bool,
   isVisibleMoveToInboxButton: PropTypes.bool,
   isVisibleRestoreButton: PropTypes.bool,
@@ -92,6 +100,7 @@ StandardOptions.propTypes = {
   isVisibleTrashButton: PropTypes.bool,
   onClickMoveToArchive: PropTypes.func,
   onClickDeleteThread: PropTypes.func,
+  onClickDiscardDrafts: PropTypes.func,
   onClickMoveToInbox: PropTypes.func,
   onClickMoveToSpam: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,

@@ -202,8 +202,8 @@ export const deleteSessionRecord = params => {
   return dbManager.deleteSessionRecord(params);
 };
 
-export const deleteEmailsByThreadId = threadIds => {
-  return dbManager.deleteEmailsByThreadId(threadIds);
+export const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
+  return dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId);
 };
 
 export const getAccount = () => {
@@ -226,12 +226,16 @@ export const getContactByIds = ids => {
   return dbManager.getContactByIds(ids);
 };
 
-export const getEmailById = emailId => {
-  return dbManager.getEmailById(emailId);
+export const getEmailsByIds = emailIds => {
+  return dbManager.getEmailsByIds(emailIds);
 };
 
 export const getEmailByKey = emailKey => {
   return dbManager.getEmailByKey(emailKey);
+};
+
+export const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
+  return dbManager.getEmailsByThreadIdAndLabelId(threadIds, labelId);
 };
 
 export const getEmailsByKeys = emailKeys => {

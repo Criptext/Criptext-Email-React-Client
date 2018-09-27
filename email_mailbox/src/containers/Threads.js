@@ -7,6 +7,7 @@ import {
 import ThreadsView from '../components/ThreadsWrapper';
 import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';
+import { defineRejectedLabels } from '../utils/EmailUtils';
 
 const defineStatus = isSyncing => {
   return isSyncing ? ButtonSyncType.LOAD : ButtonSyncType.STOP;
@@ -23,18 +24,6 @@ const defineContactType = (labelId, from, to) => {
     return ['to', 'cc'];
   }
   return ['from'];
-};
-
-const defineRejectedLabels = labelId => {
-  switch (labelId) {
-    case LabelType.allmail.id:
-      return [LabelType.spam.id, LabelType.trash.id, LabelType.draft.id];
-    case LabelType.spam.id:
-    case LabelType.trash.id:
-      return [];
-    default:
-      return [LabelType.spam.id, LabelType.trash.id];
-  }
 };
 
 const mapStateToProps = (state, ownProps) => {

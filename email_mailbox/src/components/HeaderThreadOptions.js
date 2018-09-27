@@ -18,9 +18,11 @@ class HeaderThreadOptions extends Component {
       isVisibleSpamButton,
       isVisibleTrashButton,
       isVisibleDeleteButton,
+      isVisibleDiscardDraftsButton,
       markAsUnread,
       onClickMoveToArchive,
       onClickDeleteThread,
+      onClickDiscardDrafts,
       onClickMoveToInbox,
       onClickMoveToSpam,
       onClickMoveToTrash,
@@ -36,12 +38,14 @@ class HeaderThreadOptions extends Component {
           displayTagsMenu={displayTagsMenu}
           isVisibleArchiveButton={isVisibleArchiveButton}
           isVisibleDeleteButton={isVisibleDeleteButton}
+          isVisibleDiscardDraftsButton={isVisibleDiscardDraftsButton}
           isVisibleMoveToInboxButton={isVisibleMoveToInboxButton}
           isVisibleRestoreButton={isVisibleRestoreButton}
           isVisibleSpamButton={isVisibleSpamButton}
           isVisibleTrashButton={isVisibleTrashButton}
           onClickMoveToArchive={onClickMoveToArchive}
           onClickDeleteThread={onClickDeleteThread}
+          onClickDiscardDrafts={onClickDiscardDrafts}
           onClickMoveToInbox={onClickMoveToInbox}
           onClickMoveToSpam={onClickMoveToSpam}
           onClickMoveToTrash={onClickMoveToTrash}
@@ -150,6 +154,7 @@ HeaderThreadOptions.propTypes = {
   displayDotsMenu: PropTypes.bool,
   isVisibleArchiveButton: PropTypes.bool,
   isVisibleDeleteButton: PropTypes.bool,
+  isVisibleDiscardDraftsButton: PropTypes.bool,
   isVisibleMoveToInboxButton: PropTypes.bool,
   isVisibleRestoreButton: PropTypes.bool,
   isVisibleSpamButton: PropTypes.bool,
@@ -160,6 +165,7 @@ HeaderThreadOptions.propTypes = {
   onBackOption: PropTypes.func,
   onCheckAllThreadItems: PropTypes.func,
   onClickDeleteThread: PropTypes.func,
+  onClickDiscardDrafts: PropTypes.func,
   onClickLabelCheckbox: PropTypes.func,
   onClickMoveToArchive: PropTypes.func,
   onClickMoveToInbox: PropTypes.func,
