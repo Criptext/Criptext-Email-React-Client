@@ -17,7 +17,7 @@ import {
   getLabelsByText,
   updateAccount,
   updateFilesByEmailId,
-  deleteEmailsByThreadId,
+  deleteEmailsByThreadIdAndLabelId,
   deleteEmailByKeys,
   updateUnreadEmailByThreadIds,
   getEmailsByThreadId,
@@ -539,7 +539,7 @@ const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
 
 const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
   const { threadIds } = params;
-  const wereDeleted = await deleteEmailsByThreadId(threadIds);
+  const wereDeleted = await deleteEmailsByThreadIdAndLabelId(threadIds);
   await setEventAsHandled(rowid);
   if (wereDeleted) {
     emitter.emit(Event.THREADS_DELETED, threadIds);

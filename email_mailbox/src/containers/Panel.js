@@ -20,6 +20,7 @@ import {
   updateAccount
 } from '../utils/electronInterface';
 import { storeSeenTimestamp } from '../utils/storage';
+import { defineRejectedLabels } from '../utils/EmailUtils';
 
 const mapStateToProps = state => {
   const threadsCount = state.get('threads').size;
@@ -33,18 +34,6 @@ const defineContactType = labelId => {
     return ['to', 'cc'];
   }
   return ['from'];
-};
-
-const defineRejectedLabels = labelId => {
-  switch (labelId) {
-    case LabelType.allmail.id:
-      return [LabelType.spam.id, LabelType.trash.id, LabelType.draft.id];
-    case LabelType.spam.id:
-    case LabelType.trash.id:
-      return [];
-    default:
-      return [LabelType.spam.id, LabelType.trash.id];
-  }
 };
 
 const mapDispatchToProps = dispatch => {

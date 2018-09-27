@@ -65,7 +65,7 @@ const createAccount = async ({
     privKey,
     pubKey,
     registrationId,
-    recoveryEmail,
+    recoveryEmail: recoveryEmail || '',
     recoveryEmailConfirmed: false
   });
   const [newAccount] = await getAccount();

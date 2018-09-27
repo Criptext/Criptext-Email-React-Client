@@ -5,8 +5,9 @@ import {
   createEmailLabel,
   deleteEmailLabel,
   deleteEmailsByIds,
-  deleteEmailsByThreadId,
+  deleteEmailsByThreadIdAndLabelId,
   getEmailsByThreadId,
+  getEmailsByThreadIdAndLabelId,
   getEmailsGroupByThreadByParams,
   getLabelById,
   getTrashExpiredEmails,
@@ -319,28 +320,26 @@ export const removeLabelIdThreadsSuccess = (threadIds, labelId) => ({
 export const removeThreads = (threadsParams, labelId) => {
   return async dispatch => {
     try {
-      const emailIds = threadsParams
-        .map(param => param.emailId)
-        .filter(item => !(item === null || item === undefined));
       const threadIds = threadsParams
         .map(param => param.threadIdDB)
         .filter(item => !(item === null || item === undefined));
-      if (threadIds.length) {
+      const emails = await getEmailsByThreadIdAndLabelId(threadIds, labelId);
+      if (emails.length) {
+        const metadataKeys = emails.reduce((result, email) => {
+          return [...result, ...email.keys];
+        }, []);
         const eventParams = {
-          cmd: SocketCommand.PEER_THREAD_DELETED_PERMANENTLY,
-          params: { threadIds }
+          cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
+          params: { metadataKeys }
         };
         const { status } = await postPeerEvent(eventParams);
         if (status === 200) {
-          await deleteEmailsByThreadId(threadIds);
-          dispatch(removeThreadsSuccess(threadIds));
+          const uniqueIds = emails.map(email => email.threadId);
+          await deleteEmailsByThreadIdAndLabelId(threadIds, labelId);
+          dispatch(removeThreadsSuccess(uniqueIds));
         } else {
           sendRemoveThreadsErrorMessage();
         }
-      }
-      if (emailIds.length) {
-        await deleteEmailsByIds(emailIds);
-        dispatch(removeThreadsSuccess(emailIds));
       }
       if (labelId === LabelType.spam.id) {
         dispatch(updateBadgeLabels([labelId]));
@@ -356,6 +355,31 @@ export const removeThreadsSuccess = uniqueIds => ({
   type: Thread.REMOVE_THREADS,
   uniqueIds
 });
+
+export const removeThreadsDrafts = draftsParams => {
+  return async dispatch => {
+    try {
+      const threadIdsDB = draftsParams
+        .map(draft => draft.threadIdDB)
+        .filter(item => !!item);
+      const emailIds = draftsParams
+        .map(draft => draft.emailId)
+        .filter(item => !!item);
+      const draftLabelId = LabelType.draft.id;
+      if (threadIdsDB.length) {
+        await deleteEmailsByThreadIdAndLabelId(threadIdsDB, draftLabelId);
+      }
+      if (emailIds.length) {
+        await deleteEmailsByIds(emailIds);
+      }
+      const uniqueIds = [...threadIdsDB, ...emailIds];
+      dispatch(removeThreadsSuccess(uniqueIds));
+      dispatch(updateBadgeLabels([draftLabelId]));
+    } catch (e) {
+      sendRemoveThreadsErrorMessage();
+    }
+  };
+};
 
 export const updateEmailIdsThread = ({
   threadId,
