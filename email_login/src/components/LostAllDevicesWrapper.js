@@ -7,14 +7,12 @@ import {
   closeLogin,
   confirmForgotPasswordSentLink,
   confirmForgotPasswordEmptyEmail,
-  hideLogin,
-  login,
-  openMailbox,
-  throwError,
   errors,
-  resetPassword
+  login,
+  openCreateKeys,
+  resetPassword,
+  throwError
 } from './../utils/electronInterface';
-import signal from './../libs/signal';
 import { hashPassword } from '../utils/HashUtils';
 import { censureEmailAddress } from '../utils/StringUtils';
 
@@ -93,11 +91,13 @@ class LostDevicesWrapper extends Component {
     } else {
       const recipientId = username;
       const { deviceId, name } = loginResponse.body;
-      await this.createAccountWithNewDevice({
+      const remoteData = {
         recipientId,
         deviceId,
         name
-      });
+      };
+      openCreateKeys({ loadingType: 'login', remoteData });
+      closeLogin();
     }
   };
 
@@ -130,21 +130,6 @@ class LostDevicesWrapper extends Component {
       )}\nThe link will be valid for 30 minutes`;
     }
     return text;
-  };
-
-  createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
-    try {
-      await signal.createAccountWithNewDevice({
-        recipientId,
-        deviceId,
-        name
-      });
-      hideLogin();
-      openMailbox();
-      closeLogin();
-    } catch (e) {
-      this.throwLoginError(e);
-    }
   };
 
   throwLoginError = error => {

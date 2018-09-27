@@ -4,28 +4,32 @@ const { getAccount } = require('./DBManager');
 const mailboxWindow = require('./windows/mailbox');
 let client = {};
 
-const checkClient = async () => {
+const checkClient = async optionalNewToken => {
+  if (optionalNewToken) {
+    return initializeClient(optionalNewToken);
+  }
   const [account] = await getAccount();
   const token = account ? account.jwt : undefined;
   if (!client.login || client.token !== token) {
-    const clientOptions = {
-      url:
-        process.env.NODE_ENV === 'development'
-          ? DEV_SERVER_URL
-          : PROD_SERVER_URL,
-      token,
-      timeout: 60000
-    };
-    client = new ClientAPI(clientOptions);
-    client.token = token;
+    initializeClient(token);
   }
+};
+
+const initializeClient = token => {
+  const clientOptions = {
+    url:
+      process.env.NODE_ENV === 'development' ? DEV_SERVER_URL : PROD_SERVER_URL,
+    token,
+    timeout: 60000
+  };
+  client = new ClientAPI(clientOptions);
+  client.token = token;
 };
 
 const checkDeviceRemoved = res => {
   const REMOVED_DEVICE_STATUS = 401;
   const CHANGED_PASSWORD_STATUS = 403;
   const { status } = res;
-
   switch (status) {
     case REMOVED_DEVICE_STATUS: {
       return mailboxWindow.send('device-removed', null);
@@ -58,8 +62,8 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
-  async check() {
-    await checkClient();
+  async check(optionalNewToken) {
+    await checkClient(optionalNewToken);
   }
 
   checkAvailableUsername(username) {
@@ -111,6 +115,28 @@ class ClientManager {
       recoveryEmail: address,
       recoveryEmailConfirmed: !!status
     };
+  }
+
+  linkAccept(randomId) {
+    return client.linkAccept(randomId);
+  }
+
+  async linkAuth({ newDeviceData, jwt }) {
+    await this.check(jwt);
+    return client.linkAuth(newDeviceData);
+  }
+
+  async linkBegin(username) {
+    const { text } = await client.linkBegin(username);
+    return text;
+  }
+
+  linkDataAddress(params) {
+    return client.linkDataAddress(params);
+  }
+
+  linkDeny(randomId) {
+    return client.linkDeny(randomId);
   }
 
   login(data) {

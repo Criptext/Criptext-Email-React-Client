@@ -69,11 +69,19 @@ const responseFromModal = response => {
   });
 };
 
+const send = (message, data) => {
+  if (!loginWindow) {
+    return;
+  }
+  loginWindow.webContents.send(message, data);
+};
+
 module.exports = {
   loginWindow,
   close,
   hide,
   minimize,
   responseFromModal,
-  show
+  show,
+  send
 };

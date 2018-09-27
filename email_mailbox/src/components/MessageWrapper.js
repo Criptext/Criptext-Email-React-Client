@@ -4,6 +4,7 @@ import Message from './Message';
 import { Event, addEvent, removeEvent } from '../utils/electronEventInterface';
 
 const MESSAGE_DURATION = 5000;
+const QUESTION_DURATION = 5 * 60 * 1000;
 const DELAY_TO_CLEAR_MESSAGE = 500;
 
 class MessageWrapper extends Component {
@@ -12,6 +13,8 @@ class MessageWrapper extends Component {
     this.state = {
       action: undefined,
       actionHandlerKey: undefined,
+      acceptHandlerKey: undefined,
+      denyHandlerKey: undefined,
       description: undefined,
       type: undefined,
       priority: undefined,
@@ -26,6 +29,7 @@ class MessageWrapper extends Component {
   render() {
     const {
       action,
+      ask,
       description,
       displayMessage,
       type
@@ -33,9 +37,12 @@ class MessageWrapper extends Component {
     return (
       <Message
         action={action}
+        ask={ask}
         description={description}
         displayMessage={displayMessage}
         onClickAction={this.handleClickAction}
+        onClickAcceptOption={this.handleClickAcceptOption}
+        onClickDenyOption={this.handleClickDenyOption}
         type={type}
       />
     );
@@ -48,9 +55,12 @@ class MessageWrapper extends Component {
 
   handleDisplayMessageEvent = ({
     action,
+    ask,
     type,
     description,
     actionHandlerKey,
+    acceptHandlerKey,
+    denyHandlerKey,
     priority,
     params
   }) => {
@@ -59,9 +69,12 @@ class MessageWrapper extends Component {
     if (!isDisplayingMessage || hasHigherPriority) {
       this.setMessageState({
         action,
+        ask,
         type,
         description,
         actionHandlerKey,
+        acceptHandlerKey,
+        denyHandlerKey,
         priority,
         params
       });
@@ -70,15 +83,21 @@ class MessageWrapper extends Component {
 
   setMessageState = ({
     action,
+    ask,
     type,
     description,
     actionHandlerKey,
+    acceptHandlerKey,
+    denyHandlerKey,
     priority,
     params
   }) => {
     const newState = {
       action,
+      ask,
       actionHandlerKey,
+      acceptHandlerKey,
+      denyHandlerKey,
       description,
       params,
       priority,
@@ -86,9 +105,10 @@ class MessageWrapper extends Component {
       displayMessage: true
     };
     this.setState(newState, () => {
+      const duration = ask ? QUESTION_DURATION : MESSAGE_DURATION;
       this.hideMessageTimeout = setTimeout(() => {
         this.hideMessage();
-      }, MESSAGE_DURATION);
+      }, duration);
     });
   };
 
@@ -101,6 +121,7 @@ class MessageWrapper extends Component {
     const actionByPropsOrEvent = this.state.action || this.props.action;
     return {
       action: actionByPropsOrEvent,
+      ask: this.state.ask,
       description: descriptionByPropsOrEvent,
       displayMessage: displayByPropsOrEvent,
       type: typeByPropsOrEvent
@@ -132,6 +153,22 @@ class MessageWrapper extends Component {
       this.state.actionHandlerKey || this.props.actionHandlerKey;
     const params = this.state.params || this.props.params;
     this.props.onExecuteMessageAction(actionHandlerKey, params);
+  };
+
+  handleClickAcceptOption = async () => {
+    const acceptKey = this.state.acceptHandlerKey;
+    const params = this.state.params;
+    await this.props.onExecuteMessageAction(acceptKey, params);
+    this.clearTimeouts();
+    this.hideMessage();
+  };
+
+  handleClickDenyOption = async () => {
+    const denyKey = this.state.denyHandlerKey;
+    const params = this.state.params;
+    await this.props.onExecuteMessageAction(denyKey, params);
+    this.clearTimeouts();
+    this.hideMessage();
   };
 
   clearTimeouts = () => {

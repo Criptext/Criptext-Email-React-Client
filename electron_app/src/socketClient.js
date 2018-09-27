@@ -7,27 +7,31 @@ var reconnectDelay = 1000;
 
 const setMessageListener = mListener => (messageListener = mListener);
 
-const start = account => {
+const disconnect = () => {
   if (client) {
     client.abort();
   }
+};
+
+const start = account => {
+  disconnect();
   client = new WebSocketClient();
 
-  client.on('connectFailed', function(error) {
+  client.on('connectFailed', error => {
     log('Connect Error: ' + error.toString());
     reconnect();
   });
 
-  client.on('connect', function(connection) {
+  client.on('connect', connection => {
     reconnectDelay = 2000;
-    connection.on('error', function(error) {
+    connection.on('error', error => {
       log('Connection Error: ' + error.toString());
       reconnect();
     });
-    connection.on('close', function() {
+    connection.on('close', () => {
       reconnect();
     });
-    connection.on('message', function(data) {
+    connection.on('message', data => {
       const message = JSON.parse(data.utf8Data);
       messageListener(message);
     });
@@ -54,5 +58,6 @@ const log = message => {
 
 module.exports = {
   start,
-  setMessageListener
+  setMessageListener,
+  disconnect
 };

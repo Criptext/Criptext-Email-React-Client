@@ -36,11 +36,11 @@ const MessageQuestion = props => (
   <div className="message-content message-question">
     <span className="message-description">{props.ask}</span>
     <div className="message-buttons">
-      <button>
+      <button onClick={() => props.onClickAcceptOption()}>
         <span>Yes</span>
       </button>
       <span>-</span>
-      <button>
+      <button onClick={() => props.onClickDenyOption()}>
         <span>No</span>
       </button>
     </div>
@@ -100,7 +100,9 @@ MessageStandard.propTypes = {
 };
 
 MessageQuestion.propTypes = {
-  ask: PropTypes.string
+  ask: PropTypes.string,
+  onClickAcceptOption: PropTypes.func,
+  onClickDenyOption: PropTypes.func
 };
 
 Message.propTypes = {

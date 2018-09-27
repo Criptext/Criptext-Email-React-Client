@@ -8,9 +8,25 @@ export const { requiredMinLength, requiredMaxLength } = remote.require(
 export const errors = remote.require('./src/errors');
 export const myAccount = remote.require('./src/Account');
 export const LabelType = remote.require('./src/systemLabels');
+export const socketClient = remote.require('./src/socketClient');
+export const { getComputerName } = remote.require('./src/utils/StringUtils');
+
+const globalManager = remote.require('./src/globalManager');
 
 webFrame.setVisualZoomLevelLimits(1, 1);
 webFrame.setLayoutZoomLevelLimits(0, 0);
+
+export const createTemporalAccount = accountData => {
+  return globalManager.temporalAccount.set(accountData);
+};
+
+export const getTemporalAccount = () => {
+  return globalManager.temporalAccount.get();
+};
+
+export const deleteTemporalAccount = () => {
+  return globalManager.temporalAccount.delete();
+};
 
 /* Window events
   ----------------------------- */
@@ -117,12 +133,16 @@ export const checkAvailableUsername = username => {
   return clientManager.checkAvailableUsername(username);
 };
 
-export const login = params => {
-  return clientManager.login(params);
+export const linkBegin = username => {
+  return clientManager.linkBegin(username);
 };
 
-export const postKeyBundle = params => {
-  return clientManager.postKeyBundle(params);
+export const linkAuth = newDeviceData => {
+  return clientManager.linkAuth(newDeviceData);
+};
+
+export const login = params => {
+  return clientManager.login(params);
 };
 
 export const postUser = params => {
@@ -135,10 +155,6 @@ export const resetPassword = recipientId => {
 
 /* DataBase
   ----------------------------- */
-export const cleanDataBase = params => {
-  return dbManager.cleanDataBase(params);
-};
-
 export const createAccount = params => {
   return dbManager.createAccount(params);
 };
@@ -165,10 +181,6 @@ export const createSessionRecord = params => {
 
 export const createSignedPreKeyRecord = params => {
   return dbManager.createSignedPreKeyRecord(params);
-};
-
-export const createTables = () => {
-  return dbManager.createTables();
 };
 
 export const deletePreKeyPair = params => {
@@ -201,8 +213,4 @@ export const getSignedPreKey = params => {
 
 export const updateIdentityKeyRecord = params => {
   return dbManager.updateIdentityKeyRecord(params);
-};
-
-export const updateAccount = params => {
-  return dbManager.updateAccount(params);
 };

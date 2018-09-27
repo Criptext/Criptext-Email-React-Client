@@ -27,7 +27,7 @@ const renderHeader = props => (
 const renderContent = props => (
   <div className="content">
     <div className="content-header">
-      <p>Log In</p>
+      <p>Sign In</p>
     </div>
     <div className="message">
       <p>Check and approve on your existing</p>
@@ -50,13 +50,19 @@ const renderContent = props => (
     </div>
     <div className="button">
       <p>Didn&#39;t get the prompt?</p>
-      <button className="resend-button">
-        <span>Resend it</span>
+      <button
+        className="resend-button"
+        disabled={props.disabledResendLoginRequest}
+        onClick={props.onClickResendLoginRequest}
+      >
+        <span>
+          {props.disabledResendLoginRequest ? 'Sending...' : 'Resend it '}
+        </span>
       </button>
     </div>
     <div className="cant-access">
-      <span onClick={ev => props.handleLostDevices(ev)}>
-        Can&#39;t access to your device?
+      <span onClick={ev => props.onClickSignInWithPassword(ev)}>
+        Sign In with password
       </span>
     </div>
   </div>
@@ -67,7 +73,9 @@ renderHeader.propTypes = {
 };
 
 renderContent.propTypes = {
-  handleLostDevices: PropTypes.func
+  disabledResendLoginRequest: PropTypes.bool,
+  onClickSignInWithPassword: PropTypes.func,
+  onClickResendLoginRequest: PropTypes.func
 };
 
 export default ContinueLogin;

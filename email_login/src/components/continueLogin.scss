@@ -101,21 +101,33 @@
         margin: 0px 57px 45px 57px;
         width: 66%;
         opacity: 0.9;
+        cursor: pointer;
+
         span {
           color: #fff;
           font-weight: 600;
           opacity: 0.9;
         }
-      }
-      .resend-button:hover{
-        opacity: 1;
-        span {
+
+        &:focus {
+          outline: none;
+        }
+
+        &:hover {
           opacity: 1;
+          span {
+            opacity: 1;
+          }
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          pointer-events: none;
         }
       }
     }
     .cant-access{
-      width: 50%;
+      width: 40%;
       font-size: 13px;
       text-align: center;
       color: #ffffff;
