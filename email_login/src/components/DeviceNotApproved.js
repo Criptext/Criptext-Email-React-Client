@@ -23,7 +23,7 @@ const renderHeader = props => (
 const renderContent = props => (
   <div className="device-not-approved-content">
     <div className="content-header">
-      <p>Sign In</p>
+      <h4>Sign In</h4>
     </div>
     <div className="content-icon">
       <div className="icon-exit" />
