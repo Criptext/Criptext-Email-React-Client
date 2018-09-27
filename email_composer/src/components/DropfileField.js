@@ -15,6 +15,7 @@ const DropfileField = props => (
   >
     <EditorWrapper
       htmlBody={props.htmlBody}
+      isFocusEditorInput={props.isFocusEditorInput}
       toolbarHidden={props.isToolbarHidden}
       getHtmlBody={props.getHtmlBody}
       blockRenderMap={props.blockRenderMap}
@@ -74,6 +75,7 @@ DropfileField.propTypes = {
   getHtmlBody: PropTypes.func,
   htmlBody: PropTypes.object,
   isDragActive: PropTypes.bool,
+  isFocusEditorInput: PropTypes.bool,
   isToolbarHidden: PropTypes.bool,
   multiple: PropTypes.bool,
   onClearFile: PropTypes.func,

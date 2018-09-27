@@ -43,6 +43,7 @@ const renderRecipientTo = props => (
       focusedClassName={'cstm-tags-border'}
       inputProps={{
         className: 'tags-input',
+        isfocuseditorinput: props.isFocusEditorInput ? 'true' : 'false',
         placeholder: '',
         name: 'To'
       }}
@@ -121,12 +122,14 @@ const renderRecipientBcc = props => (
 
 Recipient.propTypes = {
   isCollapsedMoreRecipient: PropTypes.bool,
+  isFocusEditorInput: PropTypes.bool,
   onToggleRecipient: PropTypes.func
 };
 
 renderRecipientTo.propTypes = {
   checkDisableSendButton: PropTypes.func,
   handleOnValidationRejectToTag: PropTypes.func,
+  isFocusEditorInput: PropTypes.bool,
   onChangeToTag: PropTypes.func,
   toTags: PropTypes.string
 };

@@ -16,6 +16,7 @@ class BodyWrapper extends Component {
         {...this.props}
         getHtmlBody={this.props.getHtmlBody}
         htmlBody={this.props.htmlBody}
+        isFocusEditorInput={this.props.isFocusEditorInput}
         isToolbarHidden={this.state.isToolbarHidden}
         onClickTextEditor={this.handleTextEditor}
         onDrop={this.props.onDrop}
@@ -32,6 +33,7 @@ class BodyWrapper extends Component {
 BodyWrapper.propTypes = {
   getHtmlBody: PropTypes.func,
   htmlBody: PropTypes.object,
+  isFocusEditorInput: PropTypes.bool,
   onDrop: PropTypes.func,
   onFocusTextEditor: PropTypes.func
 };

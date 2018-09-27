@@ -8,6 +8,9 @@ class EditorWrapper extends Component {
     return (
       <Editor
         {...this.props}
+        ref={editor => {
+          this.editor = editor;
+        }}
         toolbar={{
           options: [
             'inline',
@@ -38,6 +41,12 @@ class EditorWrapper extends Component {
     );
   }
 
+  componentDidMount() {
+    if (this.props.isFocusEditorInput) {
+      this.editor.focusEditor();
+    }
+  }
+
   onChangeHtmlBody = html => {
     this.props.getHtmlBody(html);
   };
@@ -51,6 +60,7 @@ EditorWrapper.propTypes = {
   blockRenderMap: PropTypes.object,
   getHtmlBody: PropTypes.func,
   htmlBody: PropTypes.object,
+  isFocusEditorInput: PropTypes.bool,
   onFocusTextEditor: PropTypes.func
 };
 

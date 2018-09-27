@@ -88,6 +88,7 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
 
 AutocompleteWrapper.propTypes = {
   addTag: PropTypes.func,
+  isfocuseditorinput: PropTypes.bool,
   onChange: PropTypes.func,
   value: PropTypes.object
 };
