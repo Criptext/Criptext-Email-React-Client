@@ -25,7 +25,10 @@ class Autocomplete extends Component {
 
   componentDidMount() {
     const inputName = this.props.inputProps.name;
-    if (inputName === 'To') {
+    if (
+      inputName === 'To' &&
+      this.props.inputProps.isfocuseditorinput === 'false'
+    ) {
       this.autosuggest.input.focus();
     }
   }

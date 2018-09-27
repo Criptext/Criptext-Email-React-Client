@@ -12,6 +12,7 @@ const Body = props => (
       getHtmlBody={props.getHtmlBody}
       htmlBody={props.htmlBody}
       isDragActive={props.isDragActive}
+      isFocusEditorInput={props.isFocusEditorInput}
       isToolbarHidden={props.isToolbarHidden}
       onClearFile={props.onClearFile}
       onDragLeave={props.handleDragLeave}
@@ -40,6 +41,7 @@ Body.propTypes = {
   handleDragOver: PropTypes.func,
   htmlBody: PropTypes.object,
   isDragActive: PropTypes.bool,
+  isFocusEditorInput: PropTypes.bool,
   isToolbarHidden: PropTypes.bool,
   onClearFile: PropTypes.func,
   onClickDiscardDraft: PropTypes.func,

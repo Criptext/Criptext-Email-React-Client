@@ -18,6 +18,7 @@ const Composer = props => (
       getCcEmails={props.getCcEmails}
       getBccEmails={props.getBccEmails}
       isCollapsedMoreRecipient={props.isCollapsedMoreRecipient}
+      isFocusEditorInput={props.isFocusEditorInput}
       onToggleRecipient={props.onToggleRecipient}
     />
     <SubjectWrapper
@@ -33,6 +34,7 @@ const Composer = props => (
       handleDragOver={props.handleDragOver}
       htmlBody={props.htmlBody}
       isDragActive={props.isDragActive}
+      isFocusEditorInput={props.isFocusEditorInput}
       onClearFile={props.onClearFile}
       onClickDiscardDraft={props.onClickDiscardDraft}
       onClickSendMessage={props.onClickSendMessage}
@@ -77,6 +79,7 @@ Composer.propTypes = {
   htmlBody: PropTypes.object,
   isCollapsedMoreRecipient: PropTypes.bool,
   isDragActive: PropTypes.bool,
+  isFocusEditorInput: PropTypes.bool,
   onClickCancelSendMessage: PropTypes.func,
   onDrop: PropTypes.func,
   onClearFile: PropTypes.func,

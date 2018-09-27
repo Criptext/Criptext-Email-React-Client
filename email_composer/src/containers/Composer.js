@@ -67,6 +67,12 @@ const blockRenderMap = DefaultDraftBlockRenderMap.merge(
 class ComposerWrapper extends Component {
   constructor(props) {
     super(props);
+    this.emailToEdit = getEmailToEdit();
+    this.isFocusEditorInput = this.emailToEdit
+      ? this.emailToEdit.type === 'reply'
+        ? true
+        : false
+      : false;
     this.state = {
       bccEmails: [],
       ccEmails: [],
@@ -108,6 +114,7 @@ class ComposerWrapper extends Component {
         htmlBody={this.state.htmlBody}
         isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
         isDragActive={this.state.isDragActive}
+        isFocusEditorInput={this.isFocusEditorInput}
         onClearFile={this.handleClearFile}
         onClickCancelSendMessage={this.handleClickCancelSendMessage}
         onClickDiscardDraft={this.handleClickDiscardDraft}
@@ -127,11 +134,13 @@ class ComposerWrapper extends Component {
   }
 
   async componentDidMount() {
-    const emailToEdit = getEmailToEdit();
     let state;
-    if (emailToEdit) {
-      const composerData = await this.getComposerDataByType(emailToEdit);
-      state = { ...composerData, status: Status.ENABLED };
+    if (this.emailToEdit) {
+      const composerData = await this.getComposerDataByType(this.emailToEdit);
+      state = {
+        ...composerData,
+        status: Status.ENABLED
+      };
     } else {
       const composerData = await this.getDefaultComposerWithSignature();
       const status = myAccount.signatureEnabled
