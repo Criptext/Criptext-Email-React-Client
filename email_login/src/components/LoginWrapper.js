@@ -174,15 +174,12 @@ class LoginWrapper extends Component {
     ev.stopPropagation();
     const username = this.state.values.username;
     const isAvailable = await checkUsernameAvailable(username);
-    const isAvailableLinkDevice = false;
     if (isAvailable) {
       this.setState({
         errorMessage: errorMessages.USERNAME_NOT_EXISTS
       });
-    } else if (isAvailableLinkDevice) {
-      await this.initLinkDevice(username);
     } else {
-      this.goToPasswordLogin();
+      await this.initLinkDevice(username);
     }
   };
 

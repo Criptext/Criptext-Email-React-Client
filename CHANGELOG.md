@@ -1,10 +1,44 @@
 # Change Log
 
+## [0.11.4](https://github.com/criptext/Criptext-Email-React-Client/tree/0.11.4) (2018-09-27)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.11.3...0.11.4)
+
+**Implemented enhancements:**
+
+- Add CHANGELOG [\#448](https://github.com/Criptext/Criptext-Email-React-Client/issues/448)
+- Mailbox: Discard drafts [\#441](https://github.com/Criptext/Criptext-Email-React-Client/issues/441)
+
+**Fixed bugs:**
+
+- Mailbox: Fix labels on Spam and Trash [\#442](https://github.com/Criptext/Criptext-Email-React-Client/issues/442)
+- Mailbox: Discard drafts [\#441](https://github.com/Criptext/Criptext-Email-React-Client/issues/441)
+- Fix scroll [\#436](https://github.com/Criptext/Criptext-Email-React-Client/issues/436)
+- Fix decryption error [\#434](https://github.com/Criptext/Criptext-Email-React-Client/issues/434)
+- Fix search contact, shoul be fast [\#425](https://github.com/Criptext/Criptext-Email-React-Client/issues/425)
+
+**Closed issues:**
+
+- Automatic sync, when mailbox windows is focus [\#438](https://github.com/Criptext/Criptext-Email-React-Client/issues/438)
+- Composer: focus respective input with the differents action \[reply, fordward, new email\] [\#426](https://github.com/Criptext/Criptext-Email-React-Client/issues/426)
+
+**Merged pull requests:**
+
+- Composer and project structure [\#447](https://github.com/Criptext/Criptext-Email-React-Client/pull/447) ([erikaperugachi](https://github.com/erikaperugachi))
+- Remote Login [\#446](https://github.com/Criptext/Criptext-Email-React-Client/pull/446) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix reply email [\#445](https://github.com/Criptext/Criptext-Email-React-Client/pull/445) ([erikaperugachi](https://github.com/erikaperugachi))
+- Discard drafts, Spam & Trash Labels [\#444](https://github.com/Criptext/Criptext-Email-React-Client/pull/444) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix contact search & cleanHTML [\#443](https://github.com/Criptext/Criptext-Email-React-Client/pull/443) ([erikaperugachi](https://github.com/erikaperugachi))
+- Update issue templates [\#440](https://github.com/Criptext/Criptext-Email-React-Client/pull/440) ([danieltigse](https://github.com/danieltigse))
+- Automatic sync, when mailbox windows is focus. Close \#438 [\#439](https://github.com/Criptext/Criptext-Email-React-Client/pull/439) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix scroll. Fix \#436 [\#437](https://github.com/Criptext/Criptext-Email-React-Client/pull/437) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix decryption error. Fix \#434 [\#435](https://github.com/Criptext/Criptext-Email-React-Client/pull/435) ([erikaperugachi](https://github.com/erikaperugachi))
+
 ## [0.11.3](https://github.com/criptext/Criptext-Email-React-Client/tree/0.11.3) (2018-09-21)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.11.2...0.11.3)
 
 **Implemented enhancements:**
 
+- Login/Loading:  Refactoring creating account new device [\#433](https://github.com/Criptext/Criptext-Email-React-Client/issues/433)
 - Settings: Add OS information on Contact Support [\#420](https://github.com/Criptext/Criptext-Email-React-Client/issues/420)
 - App: Remove all email data on delete [\#417](https://github.com/Criptext/Criptext-Email-React-Client/issues/417)
 - Mailbox: Empty Search Icon [\#409](https://github.com/Criptext/Criptext-Email-React-Client/issues/409)
@@ -22,6 +56,7 @@
 
 **Closed issues:**
 
+- Login & Mailbox: Login without password [\#431](https://github.com/Criptext/Criptext-Email-React-Client/issues/431)
 - EmailDetail: Move single email in thread to Spam or Trash [\#414](https://github.com/Criptext/Criptext-Email-React-Client/issues/414)
 - Mailbox: Delete emails in Trash over 30 days ago [\#406](https://github.com/Criptext/Criptext-Email-React-Client/issues/406)
 - Validate that any js run in the email viewer [\#349](https://github.com/Criptext/Criptext-Email-React-Client/issues/349)
