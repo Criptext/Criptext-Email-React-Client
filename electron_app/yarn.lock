@@ -3016,6 +3016,10 @@ liftoff@2.5.0:
     rechoir "^0.6.2"
     resolve "^1.1.7"
 
+line-by-line@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/line-by-line/-/line-by-line-0.1.6.tgz#6236edd1db2d1695addf11f0268e74a181561c30"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
