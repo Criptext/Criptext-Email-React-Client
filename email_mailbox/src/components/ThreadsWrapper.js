@@ -94,7 +94,7 @@ class ThreadsWrapper extends Component {
     const lastThread = this.props.threads.last();
 
     if (scrollTop + height > scrollHeight - SCROLL_BOTTOM_LIMIT && lastThread) {
-      const date = lastThread.get('minDate');
+      const date = lastThread.get('maxDate');
       if (this.state.lastMinDate !== date) {
         this.setState({ lastMinDate: date }, () => {
           this.props.onLoadThreads(
