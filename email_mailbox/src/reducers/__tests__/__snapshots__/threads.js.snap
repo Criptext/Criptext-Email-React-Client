@@ -9,7 +9,6 @@ Immutable.List [
       3,
       4,
     ],
-    minDate: "2018-09-10 16:13:30",
     fromContactName: Immutable.List [
       "User a",
     ],
@@ -44,7 +43,6 @@ Immutable.List [
     allLabels: Immutable.Set [
       5,
     ],
-    minDate: "2018-09-10 16:23:30",
     fromContactName: Immutable.List [
       "User a",
     ],

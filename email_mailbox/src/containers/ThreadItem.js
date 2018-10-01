@@ -124,19 +124,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         case LabelType.allmail.id: {
           const { allLabels } = thread;
           const draftLabelId = LabelType.draft.id;
-          const inboxLabelId = LabelType.inbox.id;
-          if (allLabels.includes(draftLabelId)) {
+          if (ownProps.mailbox === 'search') {
+            ownProps.onClickSelectedItem(type, {
+              ...params,
+              searchParams: ownProps.searchParams
+            });
+          } else if (allLabels.includes(draftLabelId)) {
             openEmailInComposer({
               key: thread.key,
               type: composerEvents.EDIT_DRAFT
             });
-            break;
-          }
-          if (allLabels.includes(inboxLabelId)) {
+          } else {
             ownProps.onClickSelectedItem(type, params);
-            break;
           }
-          ownProps.onClickSelectedItem(type, params);
           break;
         }
         default: {

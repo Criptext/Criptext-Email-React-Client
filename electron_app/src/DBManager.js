@@ -658,7 +658,6 @@ const baseThreadQuery = ({
       ),
       db.raw(`GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens`),
       db.raw(`MAX(${Table.EMAIL}.unread) as unread`),
-      db.raw(`MIN(email.date) as minDate`),
       db.raw(`MAX(email.date) as maxDate`)
     )
     .from(Table.EMAIL)
