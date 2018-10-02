@@ -545,7 +545,8 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
     limit,
     contactTypes = ['from'],
     contactFilter,
-    rejectedLabelIds
+    rejectedLabelIds,
+    threadIdRejected
   } = params;
 
   let queryDb = baseThreadQuery({
@@ -554,13 +555,13 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
     limit,
     contactTypes,
     contactFilter,
-    rejectedLabelIds
+    rejectedLabelIds,
+    threadIdRejected
   });
 
   if (plain) {
     return partThreadQueryByMatchText(queryDb, text);
   }
-
   if (text) {
     queryDb = queryDb
       .andWhere('preview', 'like', `%${text}%`)
@@ -624,7 +625,8 @@ const baseThreadQuery = ({
   limit,
   contactTypes,
   contactFilter,
-  rejectedLabelIds
+  rejectedLabelIds,
+  threadIdRejected
 }) => {
   const {
     labelsQuery,
@@ -633,7 +635,7 @@ const baseThreadQuery = ({
     whereRawParams
   } = getQueryParamsIfOrNotRejectedLabel({ labelId, rejectedLabelIds });
 
-  return db
+  let query = db
     .select(
       `${Table.EMAIL}.*`,
       db.raw(`IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId`),
@@ -683,8 +685,12 @@ const baseThreadQuery = ({
       `${Table.EMAIL_CONTACT}.contactId`,
       `${Table.CONTACT}.id`
     )
-    .whereRaw(whereRawQuery, whereRawParams)
-    .where(`${Table.EMAIL}.date`, '<', date || 'now')
+    .whereRaw(whereRawQuery, whereRawParams);
+  if (threadIdRejected !== undefined) {
+    query = query.whereNot('uniqueId', threadIdRejected);
+  }
+  return query
+    .andWhere(`${Table.EMAIL}.date`, '<', date || 'now')
     .groupBy('uniqueId')
     .orderBy(`${Table.EMAIL}.date`, 'DESC')
     .limit(limit || 20);

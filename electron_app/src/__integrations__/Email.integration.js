@@ -315,6 +315,34 @@ describe('Load data thread from Email Table:', () => {
     const threads = await DBManager.getEmailsGroupByThreadByParams(params);
     expect(threads).toMatchSnapshot();
   });
+
+  it('should load threads from DB with the correct shape: inbox. Scroll action', async () => {
+    const params = {
+      labelId: 1,
+      rejectedLabelIds: [2, 6],
+      limit: 1
+    };
+    const [lastThread] = await DBManager.getEmailsGroupByThreadByParams(params);
+    const maxDate = lastThread.maxDate;
+    const threadIdRejected = lastThread.threadId;
+    expect(lastThread).toMatchObject(
+      expect.objectContaining({
+        threadId: 'threadC',
+        emailIds: '3,4'
+      })
+    );
+    const moreParams = {
+      labelId: 1,
+      rejectedLabelIds: [2, 6],
+      limit: 1,
+      date: maxDate,
+      threadIdRejected
+    };
+    const moreLastThreads = await DBManager.getEmailsGroupByThreadByParams(
+      moreParams
+    );
+    expect(moreLastThreads).toEqual([]);
+  });
 });
 
 describe('Store relation data to EmailLabel Table: ', () => {
