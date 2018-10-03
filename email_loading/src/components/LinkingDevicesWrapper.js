@@ -42,7 +42,7 @@ class LoadingWrapper extends Component {
           await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
           this.setMessage('Importing your data', async () => {
             await importDatabase();
-            this.setMessage('Opening your mailbox');
+            this.setMessage('Device Ready');
             openMailbox();
             closeCreatingKeys();
           });
@@ -91,18 +91,6 @@ class LoadingWrapper extends Component {
     this.setState({
       failed: true
     });
-  };
-
-  restart = () => {
-    clearTimeout(this.tm);
-    this.setState(
-      {
-        failed: false
-      },
-      () => {
-        // this.increasePercent();
-      }
-    );
   };
 }
 

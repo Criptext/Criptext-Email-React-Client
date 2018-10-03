@@ -8,25 +8,13 @@ const LinkingDevices = props => (
       <div className="logo">
         <span className="icon-criptext" />
       </div>
-      {renderBar()}
-      <div className="percent">
-        <div className="content">
-          <span className="number">{props.percent}%</span>
-        </div>
-      </div>
       <div className="message">{renderMessage(props)}</div>
     </div>
   </div>
 );
 
-const renderBar = () => (
-  <div className="bar">
-    <div className={`content`} style={{ width: '50%' }} />
-  </div>
-);
-
 const renderMessage = props => {
-  if (props.failed === true) {
+  if (props.failed) {
     return (
       <div className="retry">
         <span>Error generating the keys. </span>

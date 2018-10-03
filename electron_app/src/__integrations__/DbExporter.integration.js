@@ -1,6 +1,6 @@
 /* eslint-env node, jest */
 
-jest.setTimeout(15000);
+jest.setTimeout(10000);
 
 const DBManager = require('../DBManager');
 const {
@@ -164,15 +164,15 @@ describe('Parse database: ', () => {
   it('Should parse Labels to string', async () => {
     await insertLabels(labels);
     const expectedString =
-      `{"table":"label","object":{"id":1,"text":"Sent","color":"#000000","type":"custom","visible":1}}\n` +
-      `{"table":"label","object":{"id":2,"text":"Starred","color":"#111111","type":"custom","visible":1}}`;
+      `{"table":"label","object":{"id":1,"text":"Sent","color":"#000000","type":"custom","visible":true}}\n` +
+      `{"table":"label","object":{"id":2,"text":"Starred","color":"#111111","type":"custom","visible":true}}`;
     const labelsString = await exportLabelTable(dbConnection);
     expect(labelsString).toBe(expectedString);
   });
 
   it('Should parse Emails to string', async () => {
     await insertEmail(email);
-    const expectedString = `{"table":"email","object":{"id":1,"key":"keyA","threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19.120","status":2,"unread":0,"secure":1,"isMuted":0,"unsendDate":"2018-06-14 08:23:20.000","trashDate":null}}`;
+    const expectedString = `{"table":"email","object":{"id":1,"key":"keyA","threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19.120","status":2,"unread":false,"secure":true,"isMuted":false,"unsendDate":"2018-06-14 08:23:20.000","trashDate":null}}`;
     const emailsString = await exportEmailTable(dbConnection);
     expect(emailsString).toBe(expectedString);
   });
@@ -198,7 +198,7 @@ describe('Parse database: ', () => {
 
   it('Should parse Files to string', async () => {
     await insertFile(file);
-    const expectedString = `{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","readOnly":0,"size":183241,"status":1,"date":"2018-09-03T23:45:57.466Z","mimeType":"image/png","ephemeral":0,"ephemeralStart":0,"ephemeralTime":0,"emailId":"1"}}`;
+    const expectedString = `{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","readOnly":false,"size":183241,"status":1,"date":"2018-09-03T23:45:57.466Z","mimeType":"image/png","ephemeral":0,"ephemeralStart":0,"ephemeralTime":0,"emailId":"1"}}`;
     const filesString = await exportFileTable(dbConnection);
     expect(filesString).toBe(expectedString);
   });

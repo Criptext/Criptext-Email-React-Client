@@ -1,3 +1,5 @@
+/* eslint no-undef: 0 */
+
 export const ArrayBufferToBuffer = ab => {
   const buffer = new Buffer(ab.byteLength);
   const view = new Uint8Array(ab);

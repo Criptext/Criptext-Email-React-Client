@@ -2,7 +2,7 @@ const knex = require('knex');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const zlib = require('zlib');
+// const zlib = require('zlib');
 const LineByLineReader = require('line-by-line');
 const { Table } = require('./models.js');
 
@@ -49,12 +49,25 @@ const exportContactTable = async db => {
 };
 
 const exportLabelTable = async db => {
-  const labelRows = await db.table(Table.LABEL).select('*');
+  const labelRows = await db
+    .table(Table.LABEL)
+    .select('*')
+    .then(rows => rows.map(row => ({ ...row, visible: !!row.visible })));
   return formatTableRowsToString(Table.LABEL, labelRows);
 };
 
 const exportEmailTable = async db => {
-  const emailRows = await db.table(Table.EMAIL).select('*');
+  const emailRows = await db
+    .table(Table.EMAIL)
+    .select('*')
+    .then(rows =>
+      rows.map(row => ({
+        ...row,
+        unread: !!row.unread,
+        secure: !!row.secure,
+        isMuted: !!row.isMuted
+      }))
+    );
   return formatTableRowsToString(Table.EMAIL, emailRows);
 };
 
@@ -69,7 +82,10 @@ const exportEmailLabelTable = async db => {
 };
 
 const exportFileTable = async db => {
-  const fileRows = await db.table(Table.FILE).select('*');
+  const fileRows = await db
+    .table(Table.FILE)
+    .select('*')
+    .then(rows => rows.map(row => ({ ...row, readOnly: !!row.readOnly })));
   return formatTableRowsToString(Table.FILE, fileRows);
 };
 

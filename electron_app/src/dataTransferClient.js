@@ -69,7 +69,7 @@ class DataTransferClientManager {
   }
 
   async importDatabase() {
-    await dbExporter.importDatabaseFromFile({
+    return await dbExporter.importDatabaseFromFile({
       filepath: decryptedFileName,
       databasePath
     });
