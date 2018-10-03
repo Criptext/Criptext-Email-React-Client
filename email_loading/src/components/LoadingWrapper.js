@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import signal from './../libs/signal';
 import {
   closeCreatingKeys,
   openMailbox,
   remoteData,
-  loadingType,
   throwError,
   errors
 } from './../utils/electronInterface';
@@ -53,9 +53,9 @@ class LoadingWrapper extends Component {
   increasePercent = () => {
     const percent = this.state.percent + 1;
     if (percent === 2) {
-      if (loadingType === loadingTypes.SIGNUP) {
+      if (this.props.loadingType === loadingTypes.SIGNUP) {
         this.createNewAccount();
-      } else if (loadingType === loadingTypes.LOGIN) {
+      } else if (this.props.loadingType === loadingTypes.LOGIN) {
         const { recipientId, deviceId, name } = remoteData;
         this.createAccountWithNewDevice({ recipientId, deviceId, name });
       }
@@ -178,5 +178,9 @@ class LoadingWrapper extends Component {
     );
   };
 }
+
+LoadingWrapper.propTypes = {
+  loadingType: PropTypes.string
+};
 
 export default LoadingWrapper;

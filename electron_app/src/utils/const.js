@@ -4,6 +4,7 @@ const DEV_SOCKET_URL = 'https://stage.socket.criptext.com:3002';
 const DEV_SERVER_URL = 'https://stage.mail.criptext.com';
 const FILE_SERVER_APP_ID = 'qynhtyzjrshazxqarkpy';
 const FILE_SERVER_KEY = 'lofjksedbxuucdjjpnby';
+const PROD_DATA_TRANSFER_URL = 'https://transfer.criptext.com';
 
 const appDomain = 'criptext.com';
 
@@ -14,5 +15,6 @@ module.exports = {
   DEV_SERVER_URL,
   PROD_SOCKET_URL,
   DEV_SOCKET_URL,
+  PROD_DATA_TRANSFER_URL,
   appDomain
 };

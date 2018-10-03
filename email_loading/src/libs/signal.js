@@ -23,6 +23,10 @@ import { appDomain, DEVICE_TYPE } from './../utils/const';
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
+const ciphertextType = {
+  CIPHERTEXT: 1,
+  PREKEY_BUNDLE: 3
+};
 
 const createAccount = async ({
   recipientId,
@@ -163,6 +167,128 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
   return true;
 };
 
+const uploadKeys = async () => {
+  const signedPreKeyId = 1;
+  const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
+    (item, index) => index + 1
+  );
+  const { identityKey, registrationId } = await generateIdentity();
+  const {
+    keybundle,
+    preKeyPairArray,
+    signedPreKeyPair
+  } = await generatePreKeyBundle({
+    identityKey,
+    registrationId,
+    signedPreKeyId,
+    preKeyIds
+  });
+  const res = await postKeyBundle(keybundle);
+  if (res.status !== 200) {
+    return null;
+  }
+  const newToken = res.text;
+  const privKey = util.toBase64(identityKey.privKey);
+  const pubKey = util.toBase64(identityKey.pubKey);
+  return {
+    privKey,
+    pubKey,
+    jwt: newToken,
+    preKeyIds,
+    preKeyPairArray,
+    registrationId,
+    signedPreKeyId,
+    signedPreKeyPair
+  };
+};
+
+const createAccountToDB = async ({
+  recipientId,
+  deviceId,
+  name,
+  jwt,
+  preKeyIds,
+  privKey,
+  pubKey,
+  registrationId,
+  preKeyPairArray,
+  signedPreKeyId,
+  signedPreKeyPair
+}) => {
+  const [currentAccount] = await getAccount();
+  const currentAccountExists = currentAccount
+    ? currentAccount.recipientId === recipientId
+    : false;
+
+  if (currentAccountExists) {
+    await updateAccount({
+      jwt,
+      deviceId,
+      name,
+      privKey,
+      pubKey,
+      recipientId,
+      registrationId
+    });
+  } else {
+    if (currentAccount) {
+      await cleanDataBase();
+      await createTables();
+    }
+    await createAccountDB({
+      jwt,
+      deviceId,
+      name,
+      privKey,
+      pubKey,
+      recipientId,
+      registrationId
+    });
+    const labels = Object.values(LabelType);
+    await createLabel(labels);
+  }
+  const [newAccount] = await getAccount();
+  myAccount.initialize(newAccount);
+  return await Promise.all(
+    Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
+      await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
+    }),
+    store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
+  );
+};
+
+const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
+  if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
+    return text;
+  }
+  const textEncrypted = util.toArrayBufferFromBase64(text);
+  const addressFrom = new libsignal.SignalProtocolAddress(
+    recipientId,
+    deviceId
+  );
+  const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
+  const binaryText = await decryptText(
+    sessionCipher,
+    textEncrypted,
+    messageType
+  );
+  return binaryText;
+};
+
+const decryptText = async (sessionCipher, textEncrypted, messageType) => {
+  switch (messageType) {
+    case ciphertextType.CIPHERTEXT:
+      return await sessionCipher.decryptWhisperMessage(textEncrypted, 'binary');
+    case ciphertextType.PREKEY_BUNDLE:
+      return await sessionCipher.decryptPreKeyWhisperMessage(
+        textEncrypted,
+        'binary'
+      );
+    default:
+      break;
+  }
+};
+
 const generateIdentity = () => {
   return Promise.all([
     KeyHelper.generateIdentityKeyPair(),
@@ -195,7 +321,6 @@ const generatePreKeyBundle = async ({
     identityKey,
     signedPreKeyId
   );
-
   const pcName = getComputerName();
   const keybundle = {
     deviceName: pcName || window.navigator.platform,
@@ -218,6 +343,9 @@ const generatePreKeyBundle = async ({
 
 export default {
   createAccount,
+  createAccountToDB,
   createAccountWithNewDevice,
-  generatePreKeyBundle
+  decryptKey,
+  generatePreKeyBundle,
+  uploadKeys
 };

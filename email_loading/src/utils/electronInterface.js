@@ -2,6 +2,8 @@ const electron = window.require('electron');
 const { ipcRenderer, remote } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
+const dataTransferManager = remote.require('./src/dataTransferClient');
+const socketManager = remote.require('./src/socketClient');
 
 export const errors = remote.require('./src/errors');
 
@@ -12,6 +14,22 @@ export const LabelType = remote.require('./src/systemLabels');
 export const { loadingType, remoteData } = remote.getGlobal('loadingData');
 
 export const { getComputerName } = remote.require('./src/utils/StringUtils');
+
+export const downloadBackupFile = address => {
+  return dataTransferManager.download(address);
+};
+
+export const decryptBackupFile = key => {
+  return dataTransferManager.decrypt(key);
+};
+
+export const importDatabase = () => {
+  return dataTransferManager.importDatabase();
+};
+
+export const startSocket = jwt => {
+  socketManager.start({ jwt });
+};
 
 /* Window events
    ----------------------------- */

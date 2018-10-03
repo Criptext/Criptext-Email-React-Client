@@ -27,6 +27,8 @@ export const myAccount = remote.require('./src/Account');
 export const composerEvents = remote.require('./src/windows/composer')
   .composerEvents;
 
+export const dataTransferManager = remote.require('./src/dataTransferClient');
+
 /* Window events
    ----------------------------- */
 export const closeDialog = () => {

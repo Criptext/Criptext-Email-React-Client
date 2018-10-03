@@ -1,21 +1,27 @@
 const { client: WebSocketClient } = require('websocket');
 const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
-const SOCKET_URL =
-  process.env.NODE_ENV === 'development' ? DEV_SOCKET_URL : PROD_SOCKET_URL;
-var client, reconnect, messageListener;
+const SOCKET_URL = PROD_SOCKET_URL;
+var client, reconnect, messageListener, socketConnection;
 var reconnectDelay = 1000;
 
 const setMessageListener = mListener => (messageListener = mListener);
 
 const disconnect = () => {
-  if (client) {
-    client.abort();
+  console.log('[Socket] Se llama a Disconnect');
+  if (socketConnection) {
+    console.log('[Socket] Ya habia client. Se llamo a client.close()');
+    socketConnection.close();
   }
 };
 
-const start = account => {
-  disconnect();
+const start = ({ jwt }) => {
+  console.log('[Socket] Se llamo a Start');
+
   client = new WebSocketClient();
+  client.connect(
+    `${SOCKET_URL}?token=${jwt}`,
+    'criptext-protocol'
+  );
 
   client.on('connectFailed', error => {
     log('Connect Error: ' + error.toString());
@@ -23,13 +29,18 @@ const start = account => {
   });
 
   client.on('connect', connection => {
+    console.log('[Socket] Evento connect');
+
     reconnectDelay = 2000;
+    socketConnection = connection;
     connection.on('error', error => {
       log('Connection Error: ' + error.toString());
       reconnect();
     });
     connection.on('close', () => {
-      reconnect();
+      console.log('[Socket] Close de connection');
+      // reconnect();
+      log('Socket connection closed');
     });
     connection.on('message', data => {
       const message = JSON.parse(data.utf8Data);
@@ -37,15 +48,10 @@ const start = account => {
     });
   });
 
-  client.connect(
-    `${SOCKET_URL}?token=${account.jwt}`,
-    'criptext-protocol'
-  );
-
   reconnect = () => {
     setTimeout(() => {
-      log(`Websocket reconnecting...`);
-      start(account);
+      log('Websocket reconnecting...');
+      start({ jwt });
     }, reconnectDelay);
   };
 };

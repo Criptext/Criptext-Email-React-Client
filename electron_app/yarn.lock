@@ -96,9 +96,15 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@criptext/api@^0.14.3":
-  version "0.14.3"
-  resolved "https://registry.yarnpkg.com/@criptext/api/-/api-0.14.3.tgz#90fc66e8cef436758723a3d46eb1b47cd8c0a05e"
+"@criptext/api@^0.14.4":
+  version "0.14.4"
+  resolved "https://registry.yarnpkg.com/@criptext/api/-/api-0.14.4.tgz#28d805dced7c2812771cccc5b4d6becfc54897cc"
+  dependencies:
+    superagent "^3.8.2"
+
+"@criptext/data-transfer-client@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@criptext/data-transfer-client/-/data-transfer-client-0.1.0.tgz#5d08aac8d6bbf4b0e4f17b25c26a81780c149342"
   dependencies:
     superagent "^3.8.2"
 

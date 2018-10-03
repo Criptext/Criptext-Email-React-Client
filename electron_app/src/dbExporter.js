@@ -26,7 +26,7 @@ const createDatabaseConnection = dbPath => {
   const dbConfiguration = {
     client: 'sqlite3',
     connection: { filename: dbPath },
-    useNullAsDefault: false
+    useNullAsDefault: true
   };
   return knex(dbConfiguration);
 };
@@ -156,7 +156,20 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               break;
             }
             case Table.EMAIL: {
-              emails.push(object);
+              const { delivered, metadataKey, unsentDate } = object;
+              delete object.delivered;
+              delete object.messageId;
+              delete object.metadataKey;
+              delete object.unsentDate;
+              const parsedEmail = Object.assign(
+                {
+                  key: metadataKey,
+                  unsendDate: unsentDate,
+                  status: object.status || delivered
+                },
+                object
+              );
+              emails.push(parsedEmail);
               if (emails.length === EMAILS_BATCH) {
                 lineReader.pause();
                 await trx.insert(emails).into(Table.EMAIL);
@@ -165,6 +178,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               }
               break;
             }
+            case 'email_contact':
             case Table.EMAIL_CONTACT: {
               emailContacts.push(object);
               if (emailContacts.length === EMAIL_CONTACTS_BATCH) {
@@ -175,6 +189,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               }
               break;
             }
+            case 'email_label':
             case Table.EMAIL_LABEL: {
               emailLabels.push(object);
               if (emailLabels.length === EMAIL_LABELS_BATCH) {
@@ -195,6 +210,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               }
               break;
             }
+            case 'file_key':
             case Table.FILE_KEY: {
               fileKeys.push(object);
               if (fileKeys.length === FILE_KEYS_BATCH) {
@@ -269,7 +285,7 @@ const encryptStreamFile = ({ inputFile, outputFile, key, iv }) => {
     writer.write(iv);
 
     reader
-      .pipe(zlib.createGzip())
+      // .pipe(zlib.createGzip())
       .pipe(crypto.createCipheriv(CIPHER_ALGORITHM, key, iv))
       .pipe(writer)
       .on('error', reject)
@@ -290,7 +306,7 @@ const decryptStreamFile = ({ inputFile, outputFile, key }) => {
     const writer = fs.createWriteStream(outputFile);
     reader
       .pipe(crypto.createDecipheriv(CIPHER_ALGORITHM, key, iv))
-      .pipe(zlib.createGunzip())
+      // .pipe(zlib.createGunzip())
       .pipe(writer)
       .on('error', reject)
       .on('finish', resolve);

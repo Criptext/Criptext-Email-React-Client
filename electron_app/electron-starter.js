@@ -114,6 +114,7 @@ async function initApp() {
   wsClient.setMessageListener( data => {
     mailboxWindow.send('socket-message', data);
     loginWindow.send('socket-message', data);
+    loadingWindow.send('socket-message', data);
   });
 }
 
