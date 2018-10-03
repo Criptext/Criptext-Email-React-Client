@@ -17,6 +17,10 @@ const formRecipients = recipientString => {
     });
 };
 
+const formAppSign = () => {
+  return '<br/><span style="font-size: 12px;">Sent with <a style="color: #0091ff; text-decoration: none;" href="https://www.criptext.com/dl">Criptext</a></span>';
+};
+
 const getEmailAddressesFromEmailObject = emails => {
   return emails.map(item => item.email || item);
 };
@@ -238,7 +242,7 @@ const formOutgoingEmailFromData = ({
   const email = {
     key: Date.now(),
     subject: textSubject,
-    content: body,
+    content: `${body}${formAppSign()}`,
     preview: cleanHTML(body).slice(0, 100),
     date: Date.now(),
     status: EmailStatus.SENDING,
@@ -269,7 +273,7 @@ const formOutgoingEmailFromData = ({
     emailData,
     criptextRecipients,
     externalRecipients,
-    body
+    body: email.content
   };
 };
 
