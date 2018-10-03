@@ -179,7 +179,7 @@ export const formNewEmailFromData = data => {
   );
   const htmlBody = EditorState.createWithContent(contentState);
   return {
-    toEmails: [formRecipientObject(data.recipients.to)],
+    toEmails: data.recipients ? [formRecipientObject(data.recipients.to)] : [],
     textSubject: data.email.subject,
     htmlBody
   };

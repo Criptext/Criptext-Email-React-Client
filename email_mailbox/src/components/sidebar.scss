@@ -54,6 +54,28 @@
       }
     }
   }
+
+  .option-item{
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+    flex-direction: row;
+    flex-grow: 0;
+    height: 40px;
+
+    div i{
+      color: #c1c1c2;
+      font-size: 14px;
+      margin: 0 10px 0 32px;
+    }
+
+    span{
+      color: black;
+      font-size: 13px;
+      font-weight: 300;
+      margin-left: 15px;
+    }
+  }
 }
 
 .navigation-partial-mail::-webkit-scrollbar-track{
@@ -202,6 +224,12 @@
   .label-container{
     display: none;
   }
+
+  .option-item{
+    span{
+      display: none;
+    }
+  }
 }
 
 @media screen and (max-width: $_MAX_WIDTH_SCREEN) {
@@ -252,5 +280,11 @@
 
   .label-container{
     display: none;
+  }
+
+  .option-item{
+    span{
+      display: none;
+    }
   }
 }

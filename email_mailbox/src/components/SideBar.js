@@ -64,6 +64,12 @@ const SideBar = props => (
         </ul>
       </nav>
       <LabelEdit />
+      <div className="option-item" onClick={() => props.onClickInviteFriend()}>
+        <div>
+          <i className="icon-mood-happy" />
+        </div>
+        <span>Invite a Friend</span>
+      </div>
     </div>
   </aside>
 );
@@ -82,6 +88,7 @@ SideBar.propTypes = {
   items: PropTypes.array,
   labels: PropTypes.object,
   mailboxSelected: PropTypes.string,
+  onClickInviteFriend: PropTypes.func,
   onToggleShowLabelView: PropTypes.func,
   onToggleSideBar: PropTypes.func,
   showLabels: PropTypes.bool
