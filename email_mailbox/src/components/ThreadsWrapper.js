@@ -95,13 +95,15 @@ class ThreadsWrapper extends Component {
 
     if (scrollTop + height > scrollHeight - SCROLL_BOTTOM_LIMIT && lastThread) {
       const date = lastThread.get('maxDate');
+      const threadIdRejected = lastThread.get('threadId');
       if (this.state.lastMinDate !== date) {
         this.setState({ lastMinDate: date }, () => {
           this.props.onLoadThreads(
             this.props.mailboxSelected,
             false,
             this.props.searchParams,
-            date
+            date,
+            threadIdRejected
           );
         });
       }

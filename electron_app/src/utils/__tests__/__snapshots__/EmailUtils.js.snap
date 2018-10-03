@@ -2,7 +2,7 @@
 
 exports[`[Form outgoing email]  Should form outgoing email from data 1`] = `
 Object {
-  "body": "<p>Hello</p>",
+  "body": "<p>Hello</p><br/><span style=\\"font-size: 12px;\\">Sent with <a style=\\"color: #0091ff; text-decoration: none;\\" href=\\"https://www.criptext.com/dl\\">Criptext</a></span>",
   "criptextRecipients": Array [
     Object {
       "recipientId": "toUser",
@@ -19,7 +19,7 @@ Object {
   ],
   "emailData": Object {
     "email": Object {
-      "content": "<p>Hello</p>",
+      "content": "<p>Hello</p><br/><span style=\\"font-size: 12px;\\">Sent with <a style=\\"color: #0091ff; text-decoration: none;\\" href=\\"https://www.criptext.com/dl\\">Criptext</a></span>",
       "date": 1524861748481,
       "isMuted": false,
       "key": 1524861748481,
