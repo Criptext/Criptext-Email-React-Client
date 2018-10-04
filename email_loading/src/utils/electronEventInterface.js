@@ -15,8 +15,8 @@ ipcRenderer.on('socket-message', (ev, message) => {
   }
 });
 
-const handleDataUploadedEvent = ({ dataAddress, key }) => {
-  emitter.emit(Event.DATA_UPLOADED, dataAddress, key);
+const handleDataUploadedEvent = ({ authorizerId, dataAddress, key }) => {
+  emitter.emit(Event.DATA_UPLOADED, authorizerId, dataAddress, key);
 };
 
 export const addEvent = (eventName, callback) => {

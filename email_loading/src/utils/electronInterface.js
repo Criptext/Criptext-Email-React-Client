@@ -1,9 +1,9 @@
-const electron = window.require('electron');
-const { ipcRenderer, remote } = electron;
+const { ipcRenderer, remote } = window.require('electron');
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const dataTransferManager = remote.require('./src/dataTransferClient');
 const socketManager = remote.require('./src/socketClient');
+const globalManager = remote.require('./src/globalManager');
 
 export const errors = remote.require('./src/errors');
 
@@ -14,6 +14,14 @@ export const LabelType = remote.require('./src/systemLabels');
 export const { loadingType, remoteData } = remote.getGlobal('loadingData');
 
 export const { getComputerName } = remote.require('./src/utils/StringUtils');
+
+export const setRemoteData = data => {
+  globalManager.loadingData.set(data);
+};
+
+export const sendEndLinkDevicesEvent = () => {
+  ipcRenderer.send('end-link-devices-event');
+};
 
 export const downloadBackupFile = address => {
   return dataTransferManager.download(address);
@@ -27,8 +35,29 @@ export const importDatabase = () => {
   return dataTransferManager.importDatabase();
 };
 
+export const clearSyncData = () => {
+  return dataTransferManager.clearSyncData();
+};
+
 export const startSocket = jwt => {
-  socketManager.start({ jwt });
+  const data = jwt ? { jwt } : myAccount;
+  socketManager.start(data);
+};
+
+export const stopSocket = () => {
+  return socketManager.disconnect();
+};
+
+export const exportDatabase = () => {
+  return dataTransferManager.exportDatabase();
+};
+
+export const encryptDatabaseFile = () => {
+  return dataTransferManager.encrypt();
+};
+
+export const uploadDatabaseFile = randomId => {
+  return dataTransferManager.upload(randomId);
 };
 
 /* Window events
@@ -46,9 +75,25 @@ export const throwError = error => {
 };
 
 /* Criptext Client
-  ----------------------------- */
+----------------------------- */
+export const getKeyBundle = deviceId => {
+  return clientManager.getKeyBundle(deviceId);
+};
+
+export const linkAccept = randomId => {
+  return clientManager.linkAccept(randomId);
+};
+
+export const linkDeny = randomId => {
+  return clientManager.linkDeny(randomId);
+};
+
 export const postUser = params => {
   return clientManager.postUser(params);
+};
+
+export const postDataReady = params => {
+  return clientManager.postDataReady(params);
 };
 
 /* DataBase

@@ -1,12 +1,9 @@
 const { BrowserWindow } = require('electron');
 const path = require('path');
 const { loadingUrl } = require('./../window_routing');
+const globalManager = require('./../globalManager');
+const dataTransferClient = require('./../dataTransferClient');
 let loadingWindow;
-
-const loadingSize = {
-  width: 327 + 350,
-  height: 141 + 350
-};
 
 const iconPath = path.join(
   __dirname,
@@ -14,21 +11,32 @@ const iconPath = path.join(
 );
 
 const create = () => {
+  const { width, height } = globalManager.screenSize.get();
   loadingWindow = new BrowserWindow({
     icon: iconPath,
-    width: loadingSize.width,
-    height: loadingSize.height,
-    show: false
-    // frame: false,
-    // transparent: true
+    width,
+    height,
+    show: false,
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true
   });
   loadingWindow.loadURL(loadingUrl);
-  // loadingWindow.setMenu(null);
-  // loadingWindow.setResizable(false);
+  loadingWindow.setMenu(null);
+  loadingWindow.setResizable(false);
+
+  loadingWindow.on('closed', () => {
+    globalManager.windowsEvents.enable();
+    globalManager.loadingData.set({});
+    BrowserWindow.getAllWindows().forEach(openWindow => {
+      openWindow.webContents.send('enable-window-link-devices');
+    });
+    dataTransferClient.clearSyncData();
+  });
 };
 
 const close = () => {
-  if (loadingWindow !== undefined) {
+  if (loadingWindow) {
     loadingWindow.close();
   }
   loadingWindow = undefined;
@@ -42,7 +50,7 @@ const send = (message, data) => {
 };
 
 const show = async () => {
-  if (loadingWindow === undefined) {
+  if (!loadingWindow) {
     await create();
   }
   loadingWindow.once('ready-to-show', () => {

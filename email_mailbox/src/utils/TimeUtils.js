@@ -1,4 +1,6 @@
-import moment from 'moment';
+const electron = window.require('electron');
+const { remote } = electron;
+const moment = remote.require('moment');
 
 moment.locale('es');
 

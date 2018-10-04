@@ -47,6 +47,7 @@ import {
 } from './../utils/FileUtils';
 import { appDomain } from '../utils/const';
 import { generateKeyAndIv } from '../utils/AESUtils';
+import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -73,8 +74,21 @@ class ComposerWrapper extends Component {
       status: Status.DISABLED,
       textSubject: '',
       threadId: null,
-      toEmails: []
+      toEmails: [],
+      isLinkingDevices: false
     };
+
+    addEvent(Event.DISABLE_WINDOW, () => {
+      this.setState({
+        isLinkingDevices: true
+      });
+    });
+
+    addEvent(Event.ENABLE_WINDOW, () => {
+      this.setState({
+        isLinkingDevices: false
+      });
+    });
   }
 
   render() {
@@ -113,6 +127,7 @@ class ComposerWrapper extends Component {
         }
         textSubject={this.state.textSubject}
         toEmails={this.state.toEmails}
+        isLinkingDevices={this.state.isLinkingDevices}
       />
     );
   }
@@ -139,6 +154,20 @@ class ComposerWrapper extends Component {
     fileManager.on(FILE_ERROR, this.handleUploadError);
     setCryptoInterfaces(key, iv);
     await this.setState(state);
+  }
+
+  componentWillUnmount() {
+    removeEvent(Event.DISABLE_WINDOW, () => {
+      this.setState({
+        isLinkingDevices: true
+      });
+    });
+
+    removeEvent(Event.ENABLE_WINDOW, () => {
+      this.setState({
+        isLinkingDevices: false
+      });
+    });
   }
 
   getDefaultComposerWithSignature = async () => {

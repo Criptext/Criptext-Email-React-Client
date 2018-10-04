@@ -1,4 +1,4 @@
-const { app, ipcMain, dialog, Menu } = require('electron');
+const { app, ipcMain, dialog, Menu, BrowserWindow } = require('electron');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient');
@@ -18,19 +18,19 @@ async function initApp() {
     console.log(ex);
   }
 
-  const [existingAccount] = await dbManager.getAccount()
+  const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
-    if(!!existingAccount.deviceId){
+    if (!!existingAccount.deviceId) {
       myAccount.initialize(existingAccount);
       wsClient.start(myAccount);
       mailboxWindow.show();
-    }else{
+    } else {
       loginWindow.show();
     }
   } else {
     loginWindow.show();
   }
-  
+
   // Errors
   ipcMain.on('throwError', (event, errorToShow) => {
     dialog.showErrorBox(errorToShow.name, errorToShow.description);
@@ -57,9 +57,9 @@ async function initApp() {
 
   ipcMain.on('response-modal', (event, response, sendTo) => {
     if (sendTo === 'mailbox') {
-      return mailboxWindow.responseFromModal(response); 
+      return mailboxWindow.responseFromModal(response);
     }
-    return loginWindow.responseFromModal(response); 
+    return loginWindow.responseFromModal(response);
   });
 
   ipcMain.on('close-modal', () => {
@@ -79,7 +79,7 @@ async function initApp() {
 
   //   Mailbox
   ipcMain.on('open-mailbox', () => {
-    wsClient.start(myAccount)
+    wsClient.start(myAccount);
     mailboxWindow.show();
   });
 
@@ -111,12 +111,50 @@ async function initApp() {
   });
 
   // Socket
-  wsClient.setMessageListener( data => {
-    mailboxWindow.send('socket-message', data);
-    loginWindow.send('socket-message', data);
-    loadingWindow.send('socket-message', data);
+  wsClient.setMessageListener(async data => {
+    const SIGNIN_VERIFICATION_REQUEST_COMMAND = 201;
+    if (data.cmd === SIGNIN_VERIFICATION_REQUEST_COMMAND) {
+      await sendLinkDeviceStartEventToAllWindows(data);
+    } else {
+      mailboxWindow.send('socket-message', data);
+      loginWindow.send('socket-message', data);
+      loadingWindow.send('socket-message', data);
+    }
+  });
+
+  // Link devices
+  ipcMain.on('start-link-devices-event', async (ev, data) => {
+    await sendLinkDeviceStartEventToAllWindows(data);
+  });
+
+  ipcMain.on('end-link-devices-event', async (ev, data) => {
+    await sendLinkDeviceEndEventToAllWindows(data);
   });
 }
+
+const sendLinkDeviceStartEventToAllWindows = async data => {
+  const clientManager = require('./src/clientManager');
+  globalManager.windowsEvents.disable();
+  sendEventToAllwWindows('disable-window-link-devices');
+  globalManager.loadingData.set({
+    loadingType: 'link-device-request',
+    remoteData: data.params.newDeviceInfo
+  });
+  loadingWindow.show();
+  return await clientManager.acknowledgeEvents([data.rowid]);
+};
+
+const sendLinkDeviceEndEventToAllWindows = () => {
+  globalManager.windowsEvents.enable();
+  sendEventToAllwWindows('enable-window-link-devices');
+};
+
+const sendEventToAllwWindows = eventName => {
+  const openedWindows = BrowserWindow.getAllWindows();
+  return openedWindows.forEach(openWindow => {
+    openWindow.webContents.send(eventName);
+  });
+};
 
 //   App
 app.disableHardwareAcceleration();
@@ -125,6 +163,8 @@ app.on('ready', () => {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
   initApp();
+  const screenSize = require('electron').screen.getPrimaryDisplay().workAreaSize;
+  globalManager.screenSize.save(screenSize);
 });
 
 app.on('window-all-closed', () => {
@@ -133,9 +173,9 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on("activate", () => {
+app.on('activate', () => {
   mailboxWindow.show();
-})
+});
 
 app.on('before-quit', function() {
   globalManager.forcequit.set(true);

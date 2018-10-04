@@ -31,7 +31,7 @@ import {
   formFilesFromData,
   validateEmailStatusToSet
 } from './EmailUtils';
-import { SocketCommand, appDomain, EmailStatus, deviceTypes } from './const';
+import { SocketCommand, appDomain, EmailStatus } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
@@ -442,21 +442,8 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
   await setEventAsHandled(rowid);
 };
 
-const handleLinkDeviceRequest = async ({ rowid, params }) => {
-  const deviceName = params.newDeviceInfo.deviceFriendlyName;
-  const deviceType =
-    params.newDeviceInfo.deviceType === deviceTypes.PC ? 'pc' : 'mobile';
-  const messageContent = {
-    ...Messages.question.newDevice,
-    ask: `${Messages.question.newDevice.ask} ${deviceName} (${deviceType})?`
-  };
-  const eventData = {
-    ...messageContent,
-    type: MessageType.QUESTION,
-    params: params.newDeviceInfo
-  };
-  emitter.emit(Event.DISPLAY_MESSAGE, eventData);
-  await setEventAsHandled(rowid);
+const handleLinkDeviceRequest = ({ rowid, params }) => {
+  ipcRenderer.send('start-link-devices-event', { rowid, params });
 };
 
 const handlePeerRemoveDevice = ({ rowid }) => {
@@ -642,7 +629,7 @@ const handleSendEmailError = async ({ rowid }) => {
   await setEventAsHandled(rowid);
 };
 
-const setEventAsHandled = async eventId => {
+export const setEventAsHandled = async eventId => {
   return await acknowledgeEvents([eventId]);
 };
 
@@ -714,6 +701,14 @@ ipcRenderer.on('device-removed', async () => {
 
 ipcRenderer.on('password-changed', () => {
   return sendPasswordChangedEvent();
+});
+
+ipcRenderer.on('disable-window-link-devices', () => {
+  emitter.emit(Event.DISABLE_WINDOW);
+});
+
+ipcRenderer.on('enable-window-link-devices', () => {
+  emitter.emit(Event.ENABLE_WINDOW);
 });
 
 export const sendUpdateLabelsErrorMessage = () => {
@@ -859,6 +854,10 @@ export const removeEvent = (eventName, callback) => {
   emitter.removeListener(eventName, callback);
 };
 
+export const sendMailboxEvent = (eventName, eventData) => {
+  emitter.emit(eventName, eventData);
+};
+
 export const Event = {
   NEW_EMAIL: 'new-email',
   REFRESH_THREADS: 'refresh-threads',
@@ -872,5 +871,12 @@ export const Event = {
   DEVICE_REMOVED: 'device-removed',
   PASSWORD_CHANGED: 'password-changed',
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
-  RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed'
+  RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
+  LINK_DEVICE_PREPARING_MAILBOX: 'preparing-mailbox',
+  LINK_DEVICE_GETTING_KEYS: 'getting-keys',
+  LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
+  LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
+  LINK_DEVICE_END: 'link-devices-finished',
+  DISABLE_WINDOW: 'add-window-overlay',
+  ENABLE_WINDOW: 'remove-window-overlay'
 };

@@ -17,7 +17,8 @@ const checkClient = async optionalNewToken => {
 
 const initializeClient = token => {
   const clientOptions = {
-    url: PROD_SERVER_URL,
+    url:
+      process.env.NODE_ENV === 'development' ? DEV_SERVER_URL : PROD_SERVER_URL,
     token,
     timeout: 60000
   };
@@ -98,6 +99,10 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
+  getKeyBundle(deviceId) {
+    return client.getKeyBundle(deviceId);
+  }
+
   async getUserSettings() {
     const res = await client.getUserSettings();
     const checkedResponse = checkDeviceRemoved(res);
@@ -130,10 +135,6 @@ class ClientManager {
     return text;
   }
 
-  linkDataAddress(params) {
-    return client.linkDataAddress(params);
-  }
-
   linkDeny(randomId) {
     return client.linkDeny(randomId);
   }
@@ -145,6 +146,10 @@ class ClientManager {
   async logout() {
     const res = await client.logout();
     return checkDeviceRemoved(res);
+  }
+
+  postDataReady(params) {
+    return client.postDataReady(params);
   }
 
   async postEmail(params) {

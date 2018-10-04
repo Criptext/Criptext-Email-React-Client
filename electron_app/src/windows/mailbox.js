@@ -90,7 +90,9 @@ const show = async () => {
       mailboxWindow.show();
     });
     mailboxWindow.on('focus', () => {
-      send('get-events');
+      if (!globalManager.windowsEvents.checkDisabled()) {
+        send('get-events');
+      }
     });
   }
 };

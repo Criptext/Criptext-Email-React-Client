@@ -1,22 +1,19 @@
 const { client: WebSocketClient } = require('websocket');
 const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
-const SOCKET_URL = PROD_SOCKET_URL;
+const SOCKET_URL =
+  process.env.NODE_ENV === 'development' ? DEV_SOCKET_URL : PROD_SOCKET_URL;
 var client, reconnect, messageListener, socketConnection;
 var reconnectDelay = 1000;
 
 const setMessageListener = mListener => (messageListener = mListener);
 
 const disconnect = () => {
-  console.log('[Socket] Se llama a Disconnect');
   if (socketConnection) {
-    console.log('[Socket] Ya habia client. Se llamo a client.close()');
     socketConnection.close();
   }
 };
 
 const start = ({ jwt }) => {
-  console.log('[Socket] Se llamo a Start');
-
   client = new WebSocketClient();
   client.connect(
     `${SOCKET_URL}?token=${jwt}`,
@@ -29,17 +26,15 @@ const start = ({ jwt }) => {
   });
 
   client.on('connect', connection => {
-    console.log('[Socket] Evento connect');
-
     reconnectDelay = 2000;
     socketConnection = connection;
+    log('Socket connection opened');
+
     connection.on('error', error => {
       log('Connection Error: ' + error.toString());
       reconnect();
     });
     connection.on('close', () => {
-      console.log('[Socket] Close de connection');
-      // reconnect();
       log('Socket connection closed');
     });
     connection.on('message', data => {
@@ -57,7 +52,7 @@ const start = ({ jwt }) => {
 };
 
 const log = message => {
-  if (process.env.DEBUG) {
+  if (process.env.NODE_ENV === 'development') {
     console.log(message);
   }
 };

@@ -7,7 +7,8 @@ import { SectionType, EmailStatus } from '../utils/const';
 
 const MAILBOX_POPUP_TYPES = {
   DEVICE_REMOVED: 'device-removed',
-  PASSWORD_CHANGED: 'password-changed'
+  PASSWORD_CHANGED: 'password-changed',
+  ONLY_BACKDROP: 'only-backdrop'
 };
 
 class PanelWrapper extends Component {
@@ -269,6 +270,20 @@ class PanelWrapper extends Component {
 
     addEvent(Event.LABEL_CREATED, labels => {
       this.props.onAddLabels(labels);
+    });
+
+    addEvent(Event.DISABLE_WINDOW, () => {
+      this.setState({
+        isHiddenMailboxPopup: false,
+        mailboxPopupType: MAILBOX_POPUP_TYPES.ONLY_BACKDROP
+      });
+    });
+
+    addEvent(Event.ENABLE_WINDOW, () => {
+      this.setState({
+        isHiddenMailboxPopup: true,
+        mailboxPopupType: undefined
+      });
     });
   };
 }

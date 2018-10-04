@@ -3,6 +3,8 @@ global.loadingData = {};
 global.composerData = {};
 global.emailToEdit = {};
 global.temporalAccount = {};
+global.screenSize = {};
+global.windowsEventsDisabled = false;
 
 /*  Dialog
 ----------------------------- */
@@ -61,6 +63,28 @@ const deleteTemporalAccountData = () => {
   delete global.temporalAccount;
 };
 
+const saveScreenSize = size => {
+  global.screenSize = size;
+};
+
+const getScreenSize = () => {
+  return global.screenSize;
+};
+
+/*  Windows Events
+----------------------------- */
+const disableWindowsEvents = () => {
+  global.windowsEventsDisabled = true;
+};
+
+const enableWindowsEvents = () => {
+  global.windowsEventsDisabled = true;
+};
+
+const checkWindowsEvents = () => {
+  return global.windowsEventsDisabled;
+};
+
 module.exports = {
   composerData: {
     get: getComposerData,
@@ -87,5 +111,14 @@ module.exports = {
     get: getTemporalAccountData,
     set: setTemporalAccountData,
     delete: deleteTemporalAccountData
+  },
+  screenSize: {
+    get: getScreenSize,
+    save: saveScreenSize
+  },
+  windowsEvents: {
+    disable: disableWindowsEvents,
+    enable: enableWindowsEvents,
+    checkDisabled: checkWindowsEvents
   }
 };

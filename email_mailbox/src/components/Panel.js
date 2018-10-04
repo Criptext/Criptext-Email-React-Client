@@ -9,6 +9,7 @@ import PopupHOC from './PopupHOC';
 import DeviceRemovedPopup from './DeviceRemovedPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
+import './panel.css';
 
 const Panel = props => (
   <div
@@ -70,6 +71,9 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
           {...props}
         />
       );
+    }
+    case MAILBOX_POPUP_TYPES.ONLY_BACKDROP: {
+      return <div className="mailbox-linking-devices-backdrop" />;
     }
     default:
       return null;
