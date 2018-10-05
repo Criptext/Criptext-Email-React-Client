@@ -4,6 +4,15 @@ import Recipient from './Recipient';
 import { RegexUtils } from './../utils/electronUtilsInterface';
 
 class RecipientWrapper extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputBccValue: '',
+      inputCcValue: '',
+      inputToValue: ''
+    }
+  }
+
   render() {
     return (
       <Recipient
@@ -11,11 +20,17 @@ class RecipientWrapper extends Component {
         bccTags={this.props.bccEmails}
         ccTags={this.props.ccEmails}
         emailRegex={RegexUtils.emailRegex}
+        inputBccValue={this.state.inputBccValue}
+        inputCcValue={this.state.inputCcValue}
+        inputToValue={this.state.inputToValue}
         isCollapsedMoreRecipient={this.props.isCollapsedMoreRecipient}
         onToggleRecipient={this.props.onToggleRecipient}
-        onChangeBccTag={this.handleOnChangeBccTag}
-        onChangeCcTag={this.handleOnChangeCcTag}
-        onChangeToTag={this.handleOnChangeToTag}
+        onChangeBccTag={this.handleChangeBccTag}
+        onChangeCcTag={this.handleChangeCcTag}
+        onChangeToTag={this.handleChangeToTag}
+        onChangeBccInput={this.handleChangeBccInput}
+        onChangeCcInput={this.handleChangeCcInput}
+        onChangeToInput={this.handleChangeToInput}
         onValidationRejectBccTag={this.handleOnValidationRejectBccTag}
         onValidationRejectCcTag={this.handleOnValidationRejectCcTag}
         onValidationRejectToTag={this.handleOnValidationRejectToTag}
@@ -31,15 +46,27 @@ class RecipientWrapper extends Component {
     }
   };
 
-  handleOnChangeBccTag = tags => {
+  handleChangeBccInput = text => {
+    this.setState({inputBccValue: text.replace(';', '')});
+  }
+
+  handleChangeCcInput = text => {
+    this.setState({inputCcValue: text.replace(';', '')});
+  }
+
+  handleChangeToInput = text => {
+    this.setState({inputToValue: text.replace(';', '')});
+  }
+
+  handleChangeBccTag = tags => {
     this.props.getBccEmails(tags);
   };
 
-  handleOnChangeCcTag = tags => {
+  handleChangeCcTag = tags => {
     this.props.getCcEmails(tags);
   };
 
-  handleOnChangeToTag = tags => {
+  handleChangeToTag = tags => {
     this.props.getToEmails(tags);
   };
 

@@ -36,7 +36,7 @@ const renderRecipientTo = props => (
   <div className="recipient-content">
     <span className="recipient-input-label">To:</span>
     <TagsInput
-      addKeys={[9, 13, 32, 186, 188]}
+      addKeys={[9, 13, 32, 188]}
       addOnBlur={true}
       addOnPaste={true}
       className="recipient-tags"
@@ -47,8 +47,10 @@ const renderRecipientTo = props => (
         placeholder: '',
         name: 'To'
       }}
+      inputValue={props.inputToValue}
       onlyUnique={true}
       onChange={props.onChangeToTag}
+      onChangeInput={props.onChangeToInput}
       onValidationReject={props.handleOnValidationRejectToTag}
       pasteSplit={pasteSplit}
       renderInput={AutocompleteWrapper}
@@ -66,7 +68,7 @@ const renderRecipientCc = props => (
   <div className="recipient-content">
     <span className="recipient-input-label">Cc:</span>
     <TagsInput
-      addKeys={[9, 13, 32, 186, 188]}
+      addKeys={[9, 13, 32, 188]}
       addOnBlur={true}
       addOnPaste={true}
       className="recipient-tags"
@@ -76,7 +78,9 @@ const renderRecipientCc = props => (
         placeholder: '',
         name: 'Cc'
       }}
+      inputValue={props.inputCcValue}
       onChange={props.onChangeCcTag}
+      onChangeInput={props.onChangeCcInput}
       onlyUnique={true}
       onValidationReject={props.handleOnValidationRejectCcTag}
       pasteSplit={pasteSplit}
@@ -95,7 +99,7 @@ const renderRecipientBcc = props => (
   <div className="recipient-content">
     <span className="recipient-input-label">Bcc:</span>
     <TagsInput
-      addKeys={[9, 13, 32, 186, 188]}
+      addKeys={[9, 13, 32, 188]}
       addOnBlur={true}
       addOnPaste={true}
       className="recipient-tags"
@@ -105,7 +109,9 @@ const renderRecipientBcc = props => (
         placeholder: '',
         name: 'Bcc'
       }}
+      inputValue={props.inputBccValue}
       onChange={props.onChangeBccTag}
+      onChangeInput={props.onChangeBccInput}
       onlyUnique={true}
       onValidationReject={props.handleOnValidationRejectBccTag}
       pasteSplit={pasteSplit}

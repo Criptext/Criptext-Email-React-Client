@@ -87,6 +87,7 @@
       display: block;
       font-family: NunitoSans;
       font-size: 13px;
+      white-space: nowrap;
   
       &:first-child{
         flex-grow: 2;
@@ -94,14 +95,13 @@
         margin-right: 5px;
         text-overflow: ellipsis;
         overflow: hidden;
-        white-space: nowrap;
       }
     
       &:last-child{
         color: #9b9b9b;
         flex-grow: 1;
         font-weight: 500;
-        padding-right: 30px;
+        padding-right: 10px;
         text-align: right;
       }
     }
