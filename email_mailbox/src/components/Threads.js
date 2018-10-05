@@ -94,7 +94,7 @@ const renderLabelsForThread = (hoverTarget, labels) => {
         return (
           <div
             key={label.id}
-            style={{ backgroundColor: label.color }}
+            style={{ backgroundColor: `#${label.color}` }}
             className="innerLabel"
           >
             {label.text}

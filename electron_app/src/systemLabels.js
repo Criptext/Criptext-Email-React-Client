@@ -23,7 +23,7 @@ const sent = {
 };
 
 const starred = {
-  id: 4,
+  id: 5,
   text: 'Starred',
   color: '#ffce4b',
   type: 'system',
@@ -31,7 +31,7 @@ const starred = {
 };
 
 const draft = {
-  id: 5,
+  id: 6,
   text: 'Draft',
   color: '#666666',
   type: 'system',
@@ -39,7 +39,7 @@ const draft = {
 };
 
 const trash = {
-  id: 6,
+  id: 7,
   text: 'Trash',
   color: '#b00e0e',
   type: 'system',
