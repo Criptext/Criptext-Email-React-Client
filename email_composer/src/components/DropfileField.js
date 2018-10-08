@@ -7,7 +7,9 @@ import './dropfilefield.css';
 const DropfileField = props => (
   <div
     className={
-      'dropfilefiled-container ' + (props.isDragActive ? 'dragActive' : '')
+      'dropfilefiled-container' +
+      (props.isDragActive ? ' dragActive' : '') +
+      (props.isToolbarHidden ? ' toolbarHidden' : '')
     }
     onDragLeave={props.onDragLeave}
     onDragOver={props.onDragOver}
@@ -18,7 +20,6 @@ const DropfileField = props => (
       isFocusEditorInput={props.isFocusEditorInput}
       toolbarHidden={props.isToolbarHidden}
       getHtmlBody={props.getHtmlBody}
-      blockRenderMap={props.blockRenderMap}
       onFocusTextEditor={props.onFocusTextEditor}
     />
     <div className="files-container">
@@ -70,10 +71,9 @@ DropfileField.defaultProps = {
 DropfileField.propTypes = {
   accept: PropTypes.string,
   addFiletoken: PropTypes.func,
-  blockRenderMap: PropTypes.object,
   files: PropTypes.array,
   getHtmlBody: PropTypes.func,
-  htmlBody: PropTypes.object,
+  htmlBody: PropTypes.string,
   isDragActive: PropTypes.bool,
   isFocusEditorInput: PropTypes.bool,
   isToolbarHidden: PropTypes.bool,

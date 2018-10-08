@@ -135,7 +135,9 @@ Recipient.propTypes = {
 renderRecipientTo.propTypes = {
   checkDisableSendButton: PropTypes.func,
   handleOnValidationRejectToTag: PropTypes.func,
+  inputToValue: PropTypes.string,
   isFocusEditorInput: PropTypes.bool,
+  onChangeToInput: PropTypes.func,
   onChangeToTag: PropTypes.func,
   toTags: PropTypes.string
 };
@@ -144,6 +146,8 @@ renderRecipientCc.propTypes = {
   ccTags: PropTypes.string,
   checkDisableSendButton: PropTypes.func,
   handleOnValidationRejectCcTag: PropTypes.func,
+  inputCcValue: PropTypes.string,
+  onChangeCcInput: PropTypes.func,
   onChangeCcTag: PropTypes.func
 };
 
@@ -151,6 +155,8 @@ renderRecipientBcc.propTypes = {
   bccTags: PropTypes.string,
   checkDisableSendButton: PropTypes.func,
   handleOnValidationRejectBccTag: PropTypes.func,
+  inputBccValue: PropTypes.string,
+  onChangeBccInput: PropTypes.func,
   onChangeBccTag: PropTypes.func
 };
 

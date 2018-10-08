@@ -66,7 +66,7 @@ const SideBar = props => (
       <LabelEdit />
       <div className="option-item" onClick={() => props.onClickInviteFriend()}>
         <div>
-          <i className="icon-mood-happy" />
+          <i className="icon-add-friend" />
         </div>
         <span>Invite a Friend</span>
       </div>

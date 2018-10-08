@@ -32,7 +32,7 @@ class BodyWrapper extends Component {
 
 BodyWrapper.propTypes = {
   getHtmlBody: PropTypes.func,
-  htmlBody: PropTypes.object,
+  htmlBody: PropTypes.string,
   isFocusEditorInput: PropTypes.bool,
   onDrop: PropTypes.func,
   onFocusTextEditor: PropTypes.func

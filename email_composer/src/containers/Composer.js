@@ -1,13 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
-import {
-  convertToRaw,
-  DefaultDraftBlockRenderMap,
-  EditorState
-} from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
 import {
   composerEvents,
   closeComposerWindow,
@@ -39,7 +32,6 @@ import {
   formNewEmailFromData,
   parseEmailAddress
 } from './../utils/EmailUtils';
-import { Map } from 'immutable';
 import {
   formFileParamsToDatabase,
   getFileParamsToSend,
@@ -56,14 +48,6 @@ import {
 import { appDomain } from '../utils/const';
 import { generateKeyAndIv } from '../utils/AESUtils';
 
-const PrevMessage = props => (
-  <div className="content-prev-message">{props.children}</div>
-);
-
-const blockRenderMap = DefaultDraftBlockRenderMap.merge(
-  Map({ blockquote: { wrapper: <PrevMessage /> } })
-);
-
 class ComposerWrapper extends Component {
   constructor(props) {
     super(props);
@@ -78,11 +62,12 @@ class ComposerWrapper extends Component {
       ccEmails: [],
       displayNonCriptextPopup: false,
       files: [],
-      htmlBody: EditorState.createEmpty(),
+      htmlBody: '',
       isCollapsedMoreRecipient: true,
       isDragActive: false,
       iv: null,
       key: null,
+      newHtmlBody: '',
       nonCriptextRecipientsPassword: '',
       nonCriptextRecipientsVerified: false,
       status: Status.DISABLED,
@@ -97,7 +82,6 @@ class ComposerWrapper extends Component {
       <Composer
         {...this.props}
         bccEmails={this.state.bccEmails}
-        blockRenderMap={blockRenderMap}
         ccEmails={this.state.ccEmails}
         disableSendButtonOnInvalidEmail={
           this.handleDisableSendButtonOnInvalidEmail
@@ -228,8 +212,8 @@ class ComposerWrapper extends Component {
     this.setState({ textSubject: text }, () => this.saveTemporalDraft());
   };
 
-  handleGetHtmlBody = htmlBody => {
-    this.setState({ htmlBody }, () => this.saveTemporalDraft());
+  handleGetHtmlBody = newHtmlBody => {
+    this.setState({ newHtmlBody }, () => this.saveTemporalDraft());
   };
 
   getFilesFromEvent = ev => {
@@ -390,7 +374,7 @@ class ComposerWrapper extends Component {
     this.setState({ status: Status.WAITING });
     const data = {
       bccEmails: this.state.bccEmails,
-      body: draftToHtml(convertToRaw(this.state.htmlBody.getCurrentContent())),
+      body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
       files: this.state.files,
       iv: this.state.iv,
@@ -482,7 +466,7 @@ class ComposerWrapper extends Component {
   saveTemporalDraft = () => {
     const data = {
       bccEmails: this.state.bccEmails,
-      body: draftToHtml(convertToRaw(this.state.htmlBody.getCurrentContent())),
+      body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
       files: this.state.files,
       iv: this.state.iv,
@@ -497,9 +481,5 @@ class ComposerWrapper extends Component {
     saveDraftChanges(emailData);
   };
 }
-
-PrevMessage.propTypes = {
-  children: PropTypes.array
-};
 
 export default ComposerWrapper;

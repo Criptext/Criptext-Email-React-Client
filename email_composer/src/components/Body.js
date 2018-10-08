@@ -7,7 +7,6 @@ import './body.css';
 const Body = props => (
   <div className="body-container">
     <DropfileField
-      blockRenderMap={props.blockRenderMap}
       files={props.files}
       getHtmlBody={props.getHtmlBody}
       htmlBody={props.htmlBody}
@@ -34,12 +33,11 @@ const Body = props => (
 
 Body.propTypes = {
   addFiletoken: PropTypes.func,
-  blockRenderMap: PropTypes.object,
   files: PropTypes.array,
   getHtmlBody: PropTypes.func,
   handleDragLeave: PropTypes.func,
   handleDragOver: PropTypes.func,
-  htmlBody: PropTypes.object,
+  htmlBody: PropTypes.string,
   isDragActive: PropTypes.bool,
   isFocusEditorInput: PropTypes.bool,
   isToolbarHidden: PropTypes.bool,

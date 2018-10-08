@@ -27,7 +27,6 @@ const Composer = props => (
       text={props.textSubject}
     />
     <BodyWrapper
-      blockRenderMap={props.blockRenderMap}
       files={props.files}
       getHtmlBody={props.getHtmlBody}
       handleDragLeave={props.handleDragLeave}
@@ -62,7 +61,6 @@ const Composer = props => (
 Composer.propTypes = {
   addFiletoken: PropTypes.func,
   bccEmails: PropTypes.array,
-  blockRenderMap: PropTypes.object,
   ccEmails: PropTypes.array,
   disableSendButtonOnInvalidEmail: PropTypes.func,
   displayNonCriptextPopup: PropTypes.bool,
@@ -76,7 +74,7 @@ Composer.propTypes = {
   handleDragOver: PropTypes.func,
   handlePauseUploadFile: PropTypes.func,
   handleResumeUploadFile: PropTypes.func,
-  htmlBody: PropTypes.object,
+  htmlBody: PropTypes.string,
   isCollapsedMoreRecipient: PropTypes.bool,
   isDragActive: PropTypes.bool,
   isFocusEditorInput: PropTypes.bool,

@@ -10,7 +10,7 @@ class RecipientWrapper extends Component {
       inputBccValue: '',
       inputCcValue: '',
       inputToValue: ''
-    }
+    };
   }
 
   render() {
@@ -47,16 +47,16 @@ class RecipientWrapper extends Component {
   };
 
   handleChangeBccInput = text => {
-    this.setState({inputBccValue: text.replace(';', '')});
-  }
+    this.setState({ inputBccValue: text ? text.replace(';', '') : text });
+  };
 
   handleChangeCcInput = text => {
-    this.setState({inputCcValue: text.replace(';', '')});
-  }
+    this.setState({ inputCcValue: text ? text.replace(';', '') : text });
+  };
 
   handleChangeToInput = text => {
-    this.setState({inputToValue: text.replace(';', '')});
-  }
+    this.setState({ inputToValue: text ? text.replace(';', '') : text });
+  };
 
   handleChangeBccTag = tags => {
     this.props.getBccEmails(tags);

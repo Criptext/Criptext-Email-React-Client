@@ -1,6 +1,4 @@
-import { EditorState, ContentState } from 'draft-js';
-import htmlToDraft from 'html-to-draftjs';
-import { replaceAllOccurrences, removeActionsFromSubject } from './StringUtils';
+import { removeActionsFromSubject } from './StringUtils';
 import { getFormattedDate } from './DateUtils';
 import { appDomain } from './const';
 import {
@@ -23,14 +21,7 @@ export const EmailStatus = {
 export const formDataToEditDraft = async emailKeyToEdit => {
   const [emailData] = await getEmailByKey(emailKeyToEdit);
   const contacts = await getContactsByEmailId(emailData.id);
-
-  const blocksFromHtml = htmlToDraft(emailData.content);
-  const { contentBlocks, entityMap } = blocksFromHtml;
-  const contentState = ContentState.createFromBlockArray(
-    contentBlocks,
-    entityMap
-  );
-  const htmlBody = EditorState.createWithContent(contentState);
+  const htmlBody = emailData.content;
   const textSubject = emailData.subject;
   const threadId = emailData.threadId;
   const toEmails = contacts.to.map(contact => contact.email);
@@ -51,7 +42,7 @@ const formReplyHeader = (date, from) => {
   const emailDate = new Date(date);
   const { monthName, day, year, strTime, diff } = getFormattedDate(emailDate);
   return `<p>On ${monthName} ${day}, ${year}, ${strTime} ${diff}, ${from.name ||
-    ''} < ${from.email} > wrote: </p><br>`;
+    ''} < ${from.email} > wrote: </p>`;
 };
 
 const formForwardHeader = () => {
@@ -59,7 +50,7 @@ const formForwardHeader = () => {
 };
 
 const insertEmptyLine = quantity => {
-  return quantity > 0 ? '<p></p>'.repeat(quantity) : '';
+  return quantity > 0 ? '<br/>'.repeat(quantity) : '';
 };
 
 const formRecipientObject = contact => {
@@ -74,23 +65,14 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const [from] = contacts.from;
 
   const firstLine = formReplyHeader(emailData.date, from);
-  let newContent = `${firstLine}${emailData.content}`;
+  let newContent = `${firstLine}<blockquote>${emailData.content}</blockquote>`;
   if (replyType === composerEvents.FORWARD) {
     newContent = `${formForwardHeader()}${newContent}`;
   }
-
-  let content = replaceAllOccurrences(newContent, '<p>', '<blockquote>');
-  content = replaceAllOccurrences(content, '</p>', '</blockquote>');
-  content = `${insertEmptyLine(2)}${content}`;
+  let content = `${insertEmptyLine(2)}${newContent}`;
   content = `${content}${formSignature()}`;
 
-  const blocksFromHtml = htmlToDraft(content);
-  const { contentBlocks, entityMap } = blocksFromHtml;
-  const contentState = ContentState.createFromBlockArray(
-    contentBlocks,
-    entityMap
-  );
-  const htmlBody = EditorState.createWithContent(contentState);
+  const htmlBody = content;
   const replySufix = 'RE: ';
   const forwardSufix = 'FW: ';
   const sufix =
@@ -157,13 +139,7 @@ const formSignature = () => {
 
 export const formComposerDataWithSignature = () => {
   const content = formSignature();
-  const blocksFromHtml = htmlToDraft(content);
-  const { contentBlocks, entityMap } = blocksFromHtml;
-  const contentState = ContentState.createFromBlockArray(
-    contentBlocks,
-    entityMap
-  );
-  const htmlBody = EditorState.createWithContent(contentState);
+  const htmlBody = content;
 
   return {
     htmlBody
@@ -171,13 +147,7 @@ export const formComposerDataWithSignature = () => {
 };
 
 export const formNewEmailFromData = data => {
-  const blocksFromHtml = htmlToDraft(data.email.content);
-  const { contentBlocks, entityMap } = blocksFromHtml;
-  const contentState = ContentState.createFromBlockArray(
-    contentBlocks,
-    entityMap
-  );
-  const htmlBody = EditorState.createWithContent(contentState);
+  const htmlBody = data.email.content;
   return {
     toEmails: data.recipients ? [formRecipientObject(data.recipients.to)] : [],
     textSubject: data.email.subject,
