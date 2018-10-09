@@ -17,8 +17,8 @@ import {
 import SettingGeneral from './SettingGeneral';
 import { EditorState } from 'draft-js';
 import {
-  parseSignatureHtmlToEdit,
-  parseSignatureContentToHtml
+  parseSignatureContentToHtml,
+  parseSignatureHtmlToEdit
 } from '../utils/EmailUtils';
 import {
   sendRemoveDeviceErrorMessage,

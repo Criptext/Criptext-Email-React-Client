@@ -7,9 +7,9 @@
   height: calc(100% - 62px);
   justify-content: space-between;
   margin: 0 20px;
-  overflow: auto;
+  overflow-y: auto;
   position: relative;
-  width: calc(100% - 44px);
+  width: calc(100% - 38px);
 
   &::-webkit-scrollbar-track{
     background-color: rgba(233, 233, 233, 0.76);

@@ -1,6 +1,6 @@
 {
   "name": "email_mailbox",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "private": true,
   "dependencies": {
     "animejs": "^2.2.0",

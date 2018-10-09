@@ -1,65 +1,51 @@
+import './global';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Editor } from 'react-draft-wysiwyg';
+import Trumbowyg from 'react-trumbowyg';
+import '../../node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js';
+import '../../node_modules/trumbowyg/dist/plugins/colors/ui/trumbowyg.colors.css';
+import '../../node_modules/trumbowyg/dist/plugins/fontfamily/trumbowyg.fontfamily.js';
+import '../../node_modules/trumbowyg/dist/plugins/fontsize/trumbowyg.fontsize.js';
+import 'react-trumbowyg/dist/trumbowyg.css';
 import './editor.css';
 
 class EditorWrapper extends Component {
   render() {
     return (
-      <Editor
-        {...this.props}
-        ref={editor => {
-          this.editor = editor;
-        }}
-        toolbar={{
-          options: [
-            'inline',
-            'fontSize',
-            'fontFamily',
-            'list',
-            'textAlign',
-            'colorPicker',
-            'link',
-            'emoji'
-          ],
-          inline: {
-            options: ['bold', 'italic', 'underline']
-          },
-          textAlign: { inDropdown: true },
-          link: {
-            inDropdown: false,
-            defaultTargetOption: '_blank'
-          },
-          history: { inDropdown: true }
-        }}
-        editorState={this.props.htmlBody}
-        onEditorStateChange={this.onChangeHtmlBody}
-        placeholder={'Message'}
-        blockRenderMap={this.props.blockRenderMap}
-        onFocus={() => this.handleFocus()}
+      <Trumbowyg
+        id="react-trumbowyg"
+        buttons={[
+          ['fontfamily'],
+          ['fontsize'],
+          ['bold', 'italic', 'underline'],
+          ['link'],
+          ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+          ['unorderedList', 'orderedList'],
+          ['foreColor', 'backColor'],
+          ['removeformat']
+        ]}
+        data={this.props.htmlBody}
+        onChange={this.onChangeHtmlBody}
+        placeholder="Message"
       />
     );
   }
 
-  componentDidMount() {
-    if (this.props.isFocusEditorInput) {
-      this.editor.focusEditor();
+  componentDidUpdate(prevProps) {
+    if (prevProps.htmlBody !== this.props.htmlBody) {
+      this.props.getHtmlBody(this.props.htmlBody);
     }
   }
 
-  onChangeHtmlBody = html => {
+  onChangeHtmlBody = e => {
+    const html = e.target.innerHTML;
     this.props.getHtmlBody(html);
-  };
-
-  handleFocus = () => {
-    this.props.onFocusTextEditor(true);
   };
 }
 
 EditorWrapper.propTypes = {
-  blockRenderMap: PropTypes.object,
   getHtmlBody: PropTypes.func,
-  htmlBody: PropTypes.object,
+  htmlBody: PropTypes.string,
   isFocusEditorInput: PropTypes.bool,
   onFocusTextEditor: PropTypes.func
 };
