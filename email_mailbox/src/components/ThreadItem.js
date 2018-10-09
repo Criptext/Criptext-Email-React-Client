@@ -115,9 +115,7 @@ class ThreadItem extends Component {
 
     return (
       <div className="thread-label">
-        <div style={{ backgroundColor: `#${labels[0].color}` }}>
-          {labels[0].text}
-        </div>
+        <div style={{ backgroundColor: labels[0].color }}>{labels[0].text}</div>
         {labels.length > 1 ? this.renderMoreLabels(labels, threadId) : null}
       </div>
     );

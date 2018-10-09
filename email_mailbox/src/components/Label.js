@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import './label.css';
 
 const Label = props => (
-  <span
-    className="label-tag"
-    style={{ backgroundColor: `#${props.label.color}` }}
-  >
+  <span className="label-tag" style={{ backgroundColor: props.label.color }}>
     {props.label.text}
     <i
       className="icon-exit"

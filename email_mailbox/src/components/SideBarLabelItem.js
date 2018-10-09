@@ -4,7 +4,7 @@ import './sidebarlabelitem.css';
 
 const SideBarLabelItem = props => (
   <li className="nav-item-label">
-    <div style={{ backgroundColor: `#${props.label.color}` }} />
+    <div style={{ backgroundColor: props.label.color }} />
     {props.isEditable ? (
       <input
         autoFocus={true}
