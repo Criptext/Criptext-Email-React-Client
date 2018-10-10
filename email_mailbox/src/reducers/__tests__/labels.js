@@ -85,7 +85,7 @@ describe('Label actions - UPDATE', () => {
     const labelUpdated = newState.get('1');
     expect(labelUpdated.toJS()).toMatchObject(
       expect.objectContaining({
-        color: labels[0].color,
+        color: `#${labels[0].color}`,
         text: labels[0].text
       })
     );

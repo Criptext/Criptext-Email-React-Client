@@ -1,7 +1,7 @@
 const inbox = {
   id: 1,
   text: 'Inbox',
-  color: '#0091ff',
+  color: '0091ff',
   type: 'system',
   visible: true
 };
@@ -9,7 +9,7 @@ const inbox = {
 const spam = {
   id: 2,
   text: 'Spam',
-  color: '#ff0000',
+  color: 'ff0000',
   type: 'system',
   visible: true
 };
@@ -17,31 +17,31 @@ const spam = {
 const sent = {
   id: 3,
   text: 'Sent',
-  color: '#1a9759',
+  color: '1a9759',
   type: 'system',
   visible: true
 };
 
 const starred = {
-  id: 4,
+  id: 5,
   text: 'Starred',
-  color: '#ffce4b',
+  color: 'ffce4b',
   type: 'system',
   visible: true
 };
 
 const draft = {
-  id: 5,
+  id: 6,
   text: 'Draft',
-  color: '#666666',
+  color: '666666',
   type: 'system',
   visible: true
 };
 
 const trash = {
-  id: 6,
+  id: 7,
   text: 'Trash',
-  color: '#b00e0e',
+  color: 'b00e0e',
   type: 'system',
   visible: true
 };

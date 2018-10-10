@@ -2,45 +2,45 @@
   "labels" : [
     {
       "id": 1,
-      "color": "#ffffff",
+      "color": "ffffff",
       "text": "Inbox",
       "badge": 1,
       "visible": 1
     },
     {
       "id": 2,
-      "color": "#ffffff",
+      "color": "ffffff",
       "text": "Sent",
       "visible": 1
     },
     {
       "id": 3,
-      "color": "#ffffff",
+      "color": "ffffff",
       "text": "Spam",
       "badge": 1,
       "visible": 1
     },
     {
       "id": 4,
-      "color": "#ffffff",
+      "color": "ffffff",
       "text": "Trash",
       "visible": 1
     },
     {
       "id": 5,
-      "color": "#ffffff",
+      "color": "ffffff",
       "text": "Draft",
       "visible": 1
     },
     {
       "id": 6,
-      "color": "#ffffff",
+      "color": "ffffff",
       "text": "Starred",
       "visible": 1
     },
     { 
       "id": 10,
-      "color": "#ffffff",
+      "color": "ffffff",
       "text": "Text 1",
       "visible": 0
     }

@@ -7,8 +7,10 @@ const labels = (state = new Map({}), action) => {
       const labels = fromJS(action.labels);
       const batch = labels.map(label => {
         const visible = !!label.get('visible');
+        const color = `#${label.get('color')}`;
         return label.merge({
-          visible
+          visible,
+          color
         });
       });
       return state.merge(batch);

@@ -1,5 +1,35 @@
 # Change Log
 
+## [0.12.1](https://github.com/criptext/Criptext-Email-React-Client/tree/0.12.1) (2018-10-09)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.12.0...0.12.1)
+
+**Implemented enhancements:**
+
+- New rich text editor [\#246](https://github.com/Criptext/Criptext-Email-React-Client/issues/246)
+
+**Fixed bugs:**
+
+- Composer: Fix add @ in italian keyboard [\#455](https://github.com/Criptext/Criptext-Email-React-Client/issues/455)
+- Fix search mailbox [\#450](https://github.com/Criptext/Criptext-Email-React-Client/issues/450)
+
+**Closed issues:**
+
+- Add Invite Friend button [\#453](https://github.com/Criptext/Criptext-Email-React-Client/issues/453)
+- Add Criptext footer [\#452](https://github.com/Criptext/Criptext-Email-React-Client/issues/452)
+
+**Merged pull requests:**
+
+- Composer [\#458](https://github.com/Criptext/Criptext-Email-React-Client/pull/458) ([erikaperugachi](https://github.com/erikaperugachi))
+- Editor [\#454](https://github.com/Criptext/Criptext-Email-React-Client/pull/454) ([erikaperugachi](https://github.com/erikaperugachi))
+
+## [0.12.0](https://github.com/criptext/Criptext-Email-React-Client/tree/0.12.0) (2018-10-01)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.11.4...0.12.0)
+
+**Merged pull requests:**
+
+- Fixes [\#451](https://github.com/Criptext/Criptext-Email-React-Client/pull/451) ([erikaperugachi](https://github.com/erikaperugachi))
+- Remote login socket event [\#449](https://github.com/Criptext/Criptext-Email-React-Client/pull/449) ([JulianAdams4](https://github.com/JulianAdams4))
+
 ## [0.11.4](https://github.com/criptext/Criptext-Email-React-Client/tree/0.11.4) (2018-09-27)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.11.3...0.11.4)
 

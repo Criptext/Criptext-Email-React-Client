@@ -12,7 +12,7 @@ const mapDispatchToProps = dispatch => {
       });
       const label = {
         text,
-        color,
+        color: color.replace('#', ''),
         visible: true
       };
       dispatch(addLabel(label));
