@@ -18,7 +18,7 @@ const formRecipients = recipientString => {
 };
 
 const formAppSign = () => {
-  return '<br/><span style="font-size: 12px;">Sent with <a style="color: #0091ff; text-decoration: none;" href="https://www.criptext.com/dl">Criptext</a></span>';
+  return '<br/><span style="font-size: 12px;">Sent with <a style="color: #0091ff; text-decoration: none;" href="https://www.criptext.com/dl">Criptext</a> secure email</span>';
 };
 
 const getEmailAddressesFromEmailObject = emails => {
@@ -138,8 +138,25 @@ const EmailStatus = {
   READ: 7
 };
 
-const checkEmailIsTo = ({ to, cc, bcc, from, type }) => {
-  const recipients = getRecipientsFromData({ to, cc, bcc, from });
+const checkEmailIsTo = ({
+  to,
+  toArray,
+  cc,
+  ccArray,
+  bcc,
+  bccArray,
+  from,
+  type
+}) => {
+  const recipients = getRecipientsFromData({
+    to,
+    toArray,
+    cc,
+    ccArray,
+    bcc,
+    bccArray,
+    from
+  });
   const recipientsArray =
     type === 'to'
       ? [...recipients.to, ...recipients.cc, ...recipients.bcc]

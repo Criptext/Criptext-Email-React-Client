@@ -247,27 +247,45 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     : undefined;
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
-  const isToMe = EmailUtils.checkEmailIsTo({ to, cc, bcc, type: 'to' });
+  const isToMe = EmailUtils.checkEmailIsTo({
+    to,
+    toArray,
+    cc,
+    ccArray,
+    bcc,
+    bccArray,
+    type: 'to'
+  });
   const isFromMe = EmailUtils.checkEmailIsTo({ from, type: 'from' });
   let eventParams = {};
 
   if (!prevEmail) {
-    const body = await signal.decryptEmail({
-      bodyKey: metadataKey,
-      recipientId,
-      deviceId: senderDeviceId,
-      messageType
-    });
+    let body = '';
+    try {
+      body = await signal.decryptEmail({
+        bodyKey: metadataKey,
+        recipientId,
+        deviceId: senderDeviceId,
+        messageType
+      });
+    } catch (e) {
+      body = 'Content unencrypted';
+    }
+
     let fileKeyParams;
     if (fileKey) {
-      const decrypted = await signal.decryptFileKey({
-        fileKey,
-        messageType,
-        recipientId,
-        deviceId: senderDeviceId
-      });
-      const [key, iv] = decrypted.split(':');
-      fileKeyParams = { key, iv };
+      try {
+        const decrypted = await signal.decryptFileKey({
+          fileKey,
+          messageType,
+          recipientId,
+          deviceId: senderDeviceId
+        });
+        const [key, iv] = decrypted.split(':');
+        fileKeyParams = { key, iv };
+      } catch (e) {
+        fileKeyParams = undefined;
+      }
     }
     const unread = isFromMe && !isToMe ? false : true;
     const data = {
@@ -292,7 +310,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       isExternal
     );
     const filesData =
-      files && files.length
+      files && files.length && fileKeyParams
         ? await formFilesFromData({
             files,
             date

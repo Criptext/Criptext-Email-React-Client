@@ -41,6 +41,8 @@
 
     li {
       display: flex;
+      margin: 0;
+      padding: 0;
       text-align: center;
 
       span {
@@ -63,11 +65,15 @@
     flex-grow: 0;
     height: 40px;
 
-    div i{
+    div{ 
+      font-family: none;
+      font-size: 16px;
+    i{
       color: #c1c1c2;
+      
       margin: 0 10px 0 32px;
     }
-
+  }
     span{
       color: black;
       font-size: 13px;

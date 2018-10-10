@@ -35289,9 +35289,7 @@
                   result = result | (a[i] ^ b[i]);
               }
               if (result !== 0) {
-                const e = new Error("Bad MAC");
-                e.name = "PreKeyMessage";
-                throw e;
+                throw new Error("Bad MAC");
               }
           });
       };
