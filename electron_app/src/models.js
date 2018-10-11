@@ -1,6 +1,7 @@
 const knex = require('knex');
 const path = require('path');
 const { app } = require('electron');
+const knexfile = require('./knexfile');
 
 const getDbPath = node_env => {
   switch (node_env) {
@@ -24,6 +25,15 @@ const getDbPath = node_env => {
 };
 
 const myDBPath = getDbPath(process.env.NODE_ENV);
+const dbConfiguration = {
+  client: 'sqlite3',
+  connection: {
+    filename: myDBPath
+  },
+  useNullAsDefault: false
+};
+const migrationConfig = Object.assign(knexfile, dbConfiguration);
+
 const TINY_STRING_SIZE = 8;
 const XSMALL_STRING_SIZE = 16;
 const SMALL_STRING_SIZE = 32;
@@ -56,23 +66,6 @@ const Table = {
   SESSIONRECORD: 'sessionrecord',
   IDENTITYKEYRECORD: 'identitykeyrecord'
 };
-
-const dbConfiguration = {
-  client: 'sqlite3',
-  connection: {
-    filename: myDBPath
-  },
-  useNullAsDefault: false
-};
-
-const migrationConfig = Object.assign(
-  {
-    directory: path.join(__dirname, '/migrations'),
-    tableName: Table.MIGRATIONS,
-    loadExtensions: ['.js']
-  },
-  dbConfiguration
-);
 
 const db = knex(dbConfiguration);
 
