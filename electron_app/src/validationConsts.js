@@ -5,7 +5,7 @@ const requiredMinLength = {
 };
 
 const requiredMaxLength = {
-  username: 255,
+  username: 16,
   fullname: 255,
   password: 255
 };
