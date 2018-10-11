@@ -29,7 +29,7 @@ export const validateUsername = username =>
   checkFormat(username, usernameRegex);
 
 export const validateFullname = fullname =>
-  fullname &&
+  !!fullname &&
   hasLengthBetween(
     fullname,
     requiredMinLength.fullname,
@@ -51,4 +51,5 @@ export const validateAcceptTerms = field => {
   return field === true;
 };
 
-export const validateEmail = email => isemail.validate(email);
+export const validateEmail = email =>
+  isemail.validate(email, { minDomainAtoms: 2 });

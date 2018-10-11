@@ -5,12 +5,10 @@ import {
   validateFullname,
   validatePassword,
   validateConfirmPassword,
-  validateEmail,
-  checkUsernameAvailable
+  validateEmail
 } from './../validators';
 
 jest.mock('./../../utils/electronInterface');
-import { prevUsername } from './../../utils/__mocks__/electronInterface';
 
 describe('Validate username:', () => {
   const fn = validateUsername;
@@ -23,17 +21,6 @@ describe('Validate username:', () => {
   it('Returns false if the username has very few characters.', () => {
     const username = 'un';
     expect(fn(username)).toBe(false);
-  });
-
-  it('Returns false if the username is already used.', async () => {
-    const isAvailable = await checkUsernameAvailable(prevUsername);
-    expect(isAvailable).toBe(false);
-  });
-
-  it('Returns true if the username is available.', async () => {
-    const username = 'new' + prevUsername;
-    const isAvailable = await checkUsernameAvailable(username);
-    expect(isAvailable).toBe(true);
   });
 });
 

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Login from './Login';
-import SignUpWrapper from './SignUpWrapper';
+import SignUpWrapper from './SignUpElectronWrapper';
 import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
+  checkAvailableUsername,
   closeDialog,
   closeLogin,
   confirmLostDevices,
@@ -17,10 +18,7 @@ import {
   throwError,
   errors
 } from './../utils/electronInterface';
-import {
-  validateUsername,
-  checkUsernameAvailable
-} from './../validators/validators';
+import { validateUsername } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
 import { addEvent, Event } from '../utils/electronEventInterface';
 import DeviceNotApproved from './DeviceNotApproved';
@@ -34,7 +32,8 @@ const mode = {
 };
 
 const errorMessages = {
-  USERNAME_NOT_EXISTS: "Username doesn't exists"
+  USERNAME_NOT_EXISTS: "Username doesn't exist",
+  USERNAME_INVALID: 'Invalid username'
 };
 
 let ephemeralToken;
@@ -153,14 +152,36 @@ class LoginWrapper extends Component {
 
   validateUsername = async () => {
     const username = this.state.values['username'];
-    return await validateUsername(username);
+    if (!validateUsername(username)) return 422;
+    try {
+      const { status } = await checkAvailableUsername(username);
+      return status;
+    } catch (err) {
+      return 0;
+    }
   };
 
   checkDisable = async () => {
-    const isValid = await this.validateUsername();
-    this.setState({
-      disabledLoginButton: !isValid
-    });
+    const status = await this.validateUsername();
+    switch (status) {
+      case 200:
+        return this.setState({
+          disabledLoginButton: true,
+          errorMessage: errorMessages.USERNAME_NOT_EXISTS
+        });
+      case 422:
+        return this.setState({
+          disabledLoginButton: true,
+          errorMessage: errorMessages.USERNAME_INVALID
+        });
+      case 400:
+        return this.setState({ disabledLoginButton: false, errorMessage: '' });
+      default:
+        return this.setState({
+          disabledLoginButton: true,
+          errorMessage: errorMessages.STATUS_UNKNOWN + status
+        });
+    }
   };
 
   handleChange = event => {
@@ -175,14 +196,7 @@ class LoginWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     const username = this.state.values.username;
-    const isAvailable = await checkUsernameAvailable(username);
-    if (isAvailable) {
-      this.setState({
-        errorMessage: errorMessages.USERNAME_NOT_EXISTS
-      });
-    } else {
-      await this.initLinkDevice(username);
-    }
+    await this.initLinkDevice(username);
   };
 
   goToPasswordLogin = () => {

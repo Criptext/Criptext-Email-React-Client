@@ -6,15 +6,8 @@ import {
   validatePassword,
   validateConfirmPassword,
   validateAcceptTerms,
-  validateEmail,
-  checkUsernameAvailable
+  validateEmail
 } from './../validators/validators';
-import {
-  closeDialog,
-  confirmEmptyEmail,
-  openCreateKeys,
-  closeLogin
-} from './../utils/electronInterface';
 import SignUp from './SignUp';
 import { hashPassword } from '../utils/HashUtils';
 
@@ -189,8 +182,7 @@ class SignUpWrapper extends Component {
     if (values.recoveryemail !== '') {
       this.onSubmit(values);
     } else {
-      confirmEmptyEmail(response => {
-        closeDialog();
+      this.props.onSubmitWithoutRecoveryEmail(response => {
         if (response === 'Confirm') {
           this.onSubmit(values);
         }
@@ -208,16 +200,13 @@ class SignUpWrapper extends Component {
       name: values.fullname,
       recoveryEmail: values.recoveryemail
     };
-    openCreateKeys({
-      loadingType: 'signup',
-      remoteData: submitValues
-    });
-    closeLogin();
+    this.props.onFormReady(submitValues);
   };
 
   checkUsername = async user => {
     const errorState = this.state.errors;
-    const isUsernameAvailable = await checkUsernameAvailable(user);
+    const isUsernameAvailable =
+      validateUsername(user) && (await this.props.isUsernameAvailable(user));
     if (!isUsernameAvailable) {
       errorState['username'] = true;
       this.setState({
@@ -228,39 +217,34 @@ class SignUpWrapper extends Component {
   };
 
   universalValidator = (formItemName, formItemValue) => {
-    let result;
     switch (formItemName) {
       case 'username': {
         this.checkUsername(formItemValue);
-        result = validateUsername(formItemValue);
-        break;
+        return validateUsername(formItemValue);
       }
       case 'fullname': {
-        result = validateFullname(formItemValue);
-        break;
+        return validateFullname(formItemValue);
       }
       case 'password': {
-        result = validatePassword(formItemValue);
-        break;
+        return validatePassword(formItemValue);
       }
       case 'confirmpassword': {
         const password = this.state.values['password'];
-        result = validateConfirmPassword(password, formItemValue);
-        break;
+        return validateConfirmPassword(password, formItemValue);
       }
       case 'recoveryemail': {
-        result = validateEmail(formItemValue);
-        break;
+        return validateEmail(formItemValue);
       }
       default:
-        result = validateAcceptTerms(formItemValue);
+        return validateAcceptTerms(formItemValue);
     }
-    return result;
   };
 }
 
 SignUpWrapper.propTypes = {
-  onAddUser: PropTypes.func
+  isUsernameAvailable: PropTypes.func,
+  onFormReady: PropTypes.func,
+  onSubmitWithoutRecoveryEmail: PropTypes.func
 };
 
 export default SignUpWrapper;
