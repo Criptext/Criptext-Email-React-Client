@@ -2,7 +2,7 @@
 import React from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import PropTypes from 'prop-types';
-import './signup.css';
+import './signup.scss';
 
 const FormItem = props => renderFormItem(props);
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './devicenotapproved.css';
+import './devicenotapproved.scss';
 
 const DeviceNotApproved = props => (
   <div className="device-not-approved-container">

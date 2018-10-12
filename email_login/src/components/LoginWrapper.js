@@ -33,7 +33,8 @@ const mode = {
 
 const errorMessages = {
   USERNAME_NOT_EXISTS: "Username doesn't exist",
-  USERNAME_INVALID: 'Invalid username'
+  USERNAME_INVALID: 'Invalid username',
+  STATUS_UNKNOWN: 'Unknown status code: '
 };
 
 let ephemeralToken;

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './lostAllDevices.css';
+import './lostAllDevices.scss';
 
 const LostAllDevices = props => (
   <div className="lost">

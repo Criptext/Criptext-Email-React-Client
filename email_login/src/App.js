@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TitleBar from './components/titleBar';
 import LoginWrapper from './components/LoginWrapper';
-import './app.css';
+import './app.scss';
 
 class App extends Component {
   render() {

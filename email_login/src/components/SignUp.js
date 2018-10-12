@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import FormItemWrapper from './FormItemWrapper';
-import './signup.css';
+import './signup.scss';
 
 const SignUp = props => renderSignUp(props);
 

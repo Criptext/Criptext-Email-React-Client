@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './continueLogin.css';
-import './clockLoading.css';
+import './continueLogin.scss';
+import './clockLoading.scss';
 
 const ContinueLogin = props => (
   <div className="continue">
