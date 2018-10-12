@@ -1,0 +1,28 @@
+li{
+  &.nav-item-label-add{
+    color: #0091ff;
+
+    div{
+      align-items: center;
+      display: flex;
+      height: auto;
+      margin: 0 0 0 49px;
+      width: auto;
+
+      i{
+        font-size: 17px;
+        font-weight: bold;
+      }
+    }
+
+    span{
+      color: #0091ff;
+      font-weight: 300;
+      margin-left: 5px;
+    }
+
+    input{
+      margin-left: 5px;
+    }
+  }
+}

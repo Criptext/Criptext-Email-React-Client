@@ -7,6 +7,7 @@
         .section-block-content-item{
           &:nth-child(1){
             align-items: center;
+
             .general-letters{
               align-items: center;
               background-color: rgba(74, 108, 98, 0.96);
@@ -35,6 +36,8 @@
             flex-direction: column;
 
             > div{
+              margin-top: 5px;
+
               &.profile-name {
                 margin-top: 8px;
                 color: #6a707e;
@@ -43,6 +46,10 @@
             
                 &:hover > i {
                   display: inline;
+                }
+
+                span{
+                  line-height: 21px;
                 }
             
                 i {
@@ -62,7 +69,7 @@
                 padding-left: 3px;
                 margin-bottom: 2px;
                 position: relative;
-                top: 5px;
+                width: 200px;
             
                 &:focus{
                   outline: none;

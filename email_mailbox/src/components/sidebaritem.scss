@@ -18,17 +18,13 @@
   }
 
   span{
+    color: black;
     font-weight: 300;
+    margin-left: 15px;
   }
 
   &:hover{
     background-color: #f7fbff;
-  }
-
-  &:last-child {
-    &:hover{
-      background-color: transparent;
-    }
   }
 
   .nav-item-badge{

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SideBarItem from './../components/SideBarItem';
 import SideBarLabelItem from './../containers/SideBarLabelItem';
-import LabelEdit from './../containers/LabelEdit';
+import LabelAdd from './../containers/LabelAdd';
 import { openComposerWindow } from '../utils/electronInterface';
 import './sidebar.css';
 
@@ -21,7 +21,7 @@ const SideBar = props => (
           <span>Compose</span>
         </button>
       </div>
-      <nav>
+      <nav className="nav-main">
         <ul>
           {props.items.map((item, key) => {
             const selected = item.idText === props.mailboxSelected;
@@ -42,7 +42,7 @@ const SideBar = props => (
               (props.showLabels ? 'nav-item-more-selected' : '')
             }
           >
-            <div className="line-separator" />
+            <hr />
             <div
               className="nav-item-container"
               onClick={e => props.onToggleShowLabelView(e)}
@@ -63,24 +63,34 @@ const SideBar = props => (
           </li>
         </ul>
       </nav>
-      <LabelEdit />
-      <div className="option-item" onClick={() => props.onClickInviteFriend()}>
-        <div>
-          <i className="icon-add-friend" />
-        </div>
-        <span>Invite a Friend</span>
-      </div>
+      <nav className="nav-footer">
+        <hr />
+        <ul>
+          <li className="nav-item" onClick={() => props.onClickInviteFriend()}>
+            <div className="nav-item-icon">
+              <i className="icon-add-friend" />
+            </div>
+            <span>Invite a Friend</span>
+          </li>
+          <li className="nav-item" onClick={() => props.onClickSettings()}>
+            <div className="nav-item-icon">
+              <i className="icon-settings" />
+            </div>
+            <span>Settings</span>
+          </li>
+        </ul>
+      </nav>
     </div>
   </aside>
 );
 
 const renderLabels = (showLabels, labels) => (
   <ul>
-    {showLabels
-      ? labels.map((label, key) => {
-          return <SideBarLabelItem key={key} label={label} />;
-        })
-      : null}
+    {showLabels &&
+      labels.map((label, key) => {
+        return <SideBarLabelItem key={key} label={label} />;
+      })}
+    {showLabels && <LabelAdd />}
   </ul>
 );
 
@@ -89,6 +99,7 @@ SideBar.propTypes = {
   labels: PropTypes.object,
   mailboxSelected: PropTypes.string,
   onClickInviteFriend: PropTypes.func,
+  onClickSettings: PropTypes.func,
   onToggleShowLabelView: PropTypes.func,
   onToggleSideBar: PropTypes.func,
   showLabels: PropTypes.bool

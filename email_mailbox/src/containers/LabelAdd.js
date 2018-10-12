@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { addLabel } from '../actions';
-import LabelEditView from '../components/LabelEdit';
+import LabelAddWrapper from '../components/LabelAddWrapper';
 import randomcolor from 'randomcolor';
 
 const mapDispatchToProps = dispatch => {
@@ -20,9 +20,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const LabelEdit = connect(
+const LabelAdd = connect(
   null,
   mapDispatchToProps
-)(LabelEditView);
+)(LabelAddWrapper);
 
-export default LabelEdit;
+export default LabelAdd;

@@ -246,8 +246,14 @@ TABLE OF CONTENTS
 .icon-criptext:before {
   content: "\e914";
 }
+.icon-settings:before {
+  content: "\e917";
+}
 .icon-ask:before {
   content: "\e941";
+}
+.icon-warning:before {
+  content: "\e936";
 }
 .icon-log-out:before {
   content: "\e928";
@@ -338,9 +344,6 @@ TABLE OF CONTENTS
 }
 .icon-desktop:before {
   content: "\e925";
-}
-.icon-settings:before {
-  content: "\e917";
 }
 .icon-video:before {
   content: "\e927";
@@ -609,6 +612,16 @@ h2{
    ----------------------------- */
 input{
   width: 100%;
+
+  &.input-a{
+    border: none;
+    border-bottom: solid 1px #e3e5e6;
+    padding: 1px;
+
+    &:focus{
+      border-bottom: solid 1px #0091ff;
+    }
+  }
 }
 
 input[type="text"]:focus {
@@ -651,38 +664,39 @@ button{
     opacity: 0.5;
     pointer-events: none;
   }
-}
 
-.button-a{
-  border-radius: 100px;
-  color: white;
-  height: 31px;
-  text-transform: uppercase;
-
-  i{
-    font-size: 18px;
-    position: relative;
-    top: 2px;
+  &.button-a{
+    border-radius: 100px;
+    color: white;
+    height: 31px;
+    padding: inherit;
+    text-transform: uppercase;
+  
+    i{
+      font-size: 18px;
+      position: relative;
+      top: 2px;
+    }
+  
+    span{
+      font-size: 13px;
+      font-weight: 700;
+      position: relative;
+      top: -1px;
+    }
   }
 
-  span{
-    font-size: 13px;
-    font-weight: 700;
-    position: relative;
-    top: -1px;
-  }
-}
-
-.button-b{
-  background-color: white;
-  color: #0091ff;
-
-  i{
-    font-size: 15px;
-  }
-
-  span{
-    font-size: 13px;
+  &.button-b{
+    background-color: white;
+    color: #0091ff;
+  
+    i{
+      font-size: 16px;
+    }
+  
+    span{
+      font-size: 13px;
+    }
   }
 }
 

@@ -155,7 +155,7 @@ class ComposerWrapper extends Component {
   };
 
   handleClickDiscardDraft = () => {
-    closeComposerWindow();
+    closeComposerWindow({});
   };
 
   handleDisableSendButtonOnInvalidEmail = () => {
@@ -441,7 +441,7 @@ class ComposerWrapper extends Component {
           { emailId: email[0].id, labelId: LabelType.sent.id }
         ];
         await createEmailLabel(emailLabels);
-        closeComposerWindow();
+        closeComposerWindow({});
       } else if (e.code === 'ECONNREFUSED') {
         throwError(errors.server.UNABLE_TO_CONNECT);
       } else {

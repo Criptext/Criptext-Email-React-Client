@@ -1,6 +1,6 @@
 /* eslint-env node, jest */
 
-import { defineRejectedLabels } from '../EmailUtils';
+import { defineRejectedLabels, compareEmailDate } from '../EmailUtils';
 import { LabelType } from '../electronInterface';
 
 jest.mock('./../../utils/electronInterface');
@@ -50,5 +50,22 @@ describe('Email utils: Define rejected labels ', () => {
     expect(sentRejectedlabels).toEqual(expectedRejectedlabels);
     expect(draftRejectedlabels).toEqual(expectedRejectedlabels);
     expect(starredRejectedlabels).toEqual(expectedRejectedlabels);
+  });
+});
+
+describe('Email utils: Sort emails ', () => {
+  it('Should sort emails by date', () => {
+    const emails = [
+      { date: '2018-10-04 21:46:55' },
+      { date: '2018-10-04 21:36:55' },
+      { date: '2018-10-04 21:26:55' }
+    ];
+
+    const result = emails.sort(compareEmailDate);
+    expect(result).toEqual([
+      { date: '2018-10-04 21:26:55' },
+      { date: '2018-10-04 21:36:55' },
+      { date: '2018-10-04 21:46:55' }
+    ]);
   });
 });

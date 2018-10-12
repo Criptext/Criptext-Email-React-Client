@@ -7,6 +7,7 @@ import {
 } from '../actions';
 import ThreadView from '../components/Thread';
 import { LabelType } from '../utils/electronInterface';
+import { compareEmailDate } from '../utils/EmailUtils';
 
 const getEmails = (emails, thread) => {
   const emailIds = thread ? thread.get('emailIds') : null;
@@ -18,6 +19,7 @@ const getEmails = (emails, thread) => {
           .map(emailId => {
             return emails.get(String(emailId)).toJS();
           })
+          .sort(compareEmailDate)
       : []
     : [];
 };

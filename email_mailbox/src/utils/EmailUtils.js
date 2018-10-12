@@ -4,6 +4,19 @@ import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
 import { LabelType } from './electronInterface';
 
+export const compareEmailDate = (emailA, emailB) => {
+  const dateA = new Date(emailA.date);
+  const dateB = new Date(emailB.date);
+
+  if (dateA.getTime() > dateB.getTime()) {
+    return 1;
+  }
+  if (dateA.getTime() < dateB.getTime()) {
+    return -1;
+  }
+  return 0;
+};
+
 export const formEmailLabel = ({ emailId, labels }) => {
   return labels.map(labelId => {
     return {

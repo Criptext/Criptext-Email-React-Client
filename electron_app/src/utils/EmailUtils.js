@@ -259,7 +259,7 @@ const formOutgoingEmailFromData = ({
   const email = {
     key: Date.now(),
     subject: textSubject,
-    content: `${body}${formAppSign()}`,
+    content: secure ? body : `${body}${formAppSign()}`,
     preview: cleanHTML(body).slice(0, 100),
     date: Date.now(),
     status: EmailStatus.SENDING,

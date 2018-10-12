@@ -34,51 +34,88 @@
   overflow-y: auto;
   width: 100%;
 
-  nav ul{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    li {
-      display: flex;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-
-      span {
-        color: black;
-        display: block;
-        font-size: 13px;
-        margin-left: 15px;
-        text-align: left;
-        text-decoration: none;
-        width: calc(100% - 131px);
+  nav {
+    &.nav-main{
+      li{
+        &:last-child {
+          &:hover{
+            background-color: transparent;
+          }
+        }
       }
     }
-  }
 
-  .option-item{
-    align-items: center;
-    display: flex;
-    cursor: pointer;
-    flex-direction: row;
-    flex-grow: 0;
-    height: 40px;
+    &.nav-footer{
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: flex-end;
+      margin-top: 25px;
+      min-height: 80px;
 
-    div{ 
-      font-family: none;
-      font-size: 16px;
-    i{
-      color: #c1c1c2;
-      
-      margin: 0 10px 0 32px;
+      li.nav-item{
+        span{
+          width: auto;
+        }
+      }
     }
-  }
-    span{
-      color: black;
-      font-size: 13px;
-      font-weight: 300;
-      margin-left: 15px;
+
+    hr{
+      border: 0;
+      border-top: solid 1px #f3f3f3;
+      display: block;
+      margin: 0 30px 10px;
+      width: calc(100% - 60px);
+    }
+
+    ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+
+        &.nav-item-more{
+          height: auto;
+          flex-direction: column;
+        
+          hr{
+            margin: 10px 0;
+          }
+        
+          .nav-item-container{
+            align-items: center;
+            display: flex;
+            height: 40px;
+            width: 100%;
+          }
+        
+          ul{
+            overflow: auto;
+            width: 100%;
+          }
+        
+          &.nav-item-more-selected{
+            .nav-item-container{
+              span{
+                font-weight: 600;
+              }
+            }
+          }
+        }
+
+        span {
+          display: block;
+          font-size: 13px;
+          text-align: left;
+          text-decoration: none;
+          width: calc(100% - 131px);
+        }
+      }
     }
   }
 }
@@ -105,53 +142,21 @@
   width: 100%;
 }
 
-.button-compose{
-  background-color: #0091ff;
-  margin: 15px 0;
-  width: 141px;
-
-  i{
-    left: -8px;
-    margin-right: 10px;
-  }
-}
-
-.nav-item-more{
-  height: auto;
-  flex-direction: column;
-
-  .nav-item-container{
-    align-items: center;
-    display: flex;
-    height: 40px;
-    margin-top: 20px;
-    width: 100%;
-  }
-
-  ul{
-    overflow: auto;
-    width: 100%;
-  }
-}
-
-.nav-item-more-selected{
-  span{
-    font-weight: 600;
+button{
+  &.button-compose{
+    background-color: #0091ff;
+    margin: 15px 0;
+    width: 141px;
+  
+    i{
+      left: -8px;
+      margin-right: 10px;
+    }
   }
 }
 
 .nav-item-collapse{
   height: 75px;
-}
-
-.line-separator{
-  border-top: solid 1px #f3f3f3;
-  left: 30px;
-  height: 1px;
-  margin: 10px 0;
-  position: absolute;
-  top: 0;
-  width: 144px;
 }
 
 .nav-item-option{
@@ -169,127 +174,80 @@
   width: 210px;
 }
 
-@mixin collapse-header-icon{
-  background-image: url(../#{$_PATH_TO_IMAGES}/header-icon-mini.svg);
-  background-size: 100% auto;
-  width: 42px;
+@mixin collapse-sidebar-app{
+  width: 79px;
 }
 
-.sidebar-app-collapse .sidebar-app{
-  width: 79px;
-
-  header{
-    background-color: #373a45;
-
-    &:before{
-      content: '';
-      height: 0;
-      width: 0;
-      position: absolute;
-      right: -8px;
-      top: 24px;
-      border-left: 8px solid #373a45;
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
-    }
-  }
+@mixin collapse-header{
+  background-color: #373a45;
 
   .header-icon{
-    @include collapse-header-icon;
+    background-image: url(../#{$_PATH_TO_IMAGES}/header-icon-mini.svg);
+    background-size: 100% auto;
+    width: 42px;
+  }
+}
+
+@mixin collapse-button-compose{
+  border-radius: 50%;
+  height: 39px;
+  width: 39px;
+  padding: 0;
+
+  i{
+    font-size: 19px;
+    left: 1px;
+    margin: 0;
+    top: 0px;
   }
 
-  button.button-compose{
-    border-radius: 50%;
-    height: 39px;
-    width: 39px;
-    padding: 0;
-
-    i{
-      font-size: 19px;
-      left: 1px;
-      margin: 0;
-      top: 0px;
-    }
-    span{
-      display: none;
-    }
+  span{
+    display: none;
   }
+}
 
-  .navigation-partial-mail nav ul li{
-    
+@mixin collapse-nav{
+  &.nav-main ul li{
     &:last-child{
       display: none;
     }
-
-    > span{
-      display: none
-    }
   }
 
-  .label-container{
-    display: none;
+  ul li > span{
+    display: none
+  }
+}
+
+.sidebar-app-collapse .sidebar-app{
+  @include collapse-sidebar-app;
+
+  header{
+    @include collapse-header;
   }
 
-  .option-item{
-    span{
-      display: none;
-    }
+  button.button-a.button-compose{
+    @include collapse-button-compose;
+  }
+
+  nav{
+    @include collapse-nav;
   }
 }
 
 @media screen and (max-width: $_MAX_WIDTH_SCREEN) {
   .sidebar-app-expand .sidebar-app{
-    width: 79px;
+    @include collapse-sidebar-app;
 
     header{
-      background-color: #373a45;
-
-      &:before{
-        display: none;
-      }
-    }
-  }
-
-  .header-icon{
-    @include collapse-header-icon;
-  }
-
-  button.button-compose{
-    border-radius: 50%;
-    height: 39px;
-    width: 39px;
-    padding: 0;
-
-    i{
-      font-size: 19px;
-      left: 1px;
-      margin: 0;
-      top: 0px;
-    }
-    
-    span{
-      display: none;
-    }
-  }
-
-  .navigation-partial-mail nav ul li{
-    
-    &:last-child{
-      display: none;
+      @include collapse-header;
     }
 
-    > span{
-      display: none
+    button.button-a.button-compose{
+      @include collapse-button-compose;
     }
-  }
 
-  .label-container{
-    display: none;
-  }
-
-  .option-item{
-    span{
-      display: none;
+    nav{
+      @include collapse-nav;
     }
   }
 }
