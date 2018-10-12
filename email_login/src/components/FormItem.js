@@ -81,26 +81,31 @@ const renderErrorMessage = props =>
     </span>
   ) : null;
 
+// eslint-disable-next-line fp/no-mutation
 renderFormItem.propTypes = {
   hasError: PropTypes.bool
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderValidateIcon.propTypes = {
   validated: PropTypes.bool,
   formItem: PropTypes.object,
   hasError: PropTypes.bool
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderItem.propTypes = {
   formItem: PropTypes.object,
   isChecked: PropTypes.bool
 };
 
+// eslint-disable-next-line fp/no-mutation
 onCheck.propTypes = {
   onCheck: PropTypes.func,
   isChecked: PropTypes.bool
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderInput.propTypes = {
   formItem: PropTypes.object,
   type: PropTypes.string,
@@ -109,12 +114,14 @@ renderInput.propTypes = {
   onValidate: PropTypes.func
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderIcon.propTypes = {
   formItem: PropTypes.object,
   icon: PropTypes.string,
   onShowHide: PropTypes.func
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderErrorMessage.propTypes = {
   hasError: PropTypes.bool,
   formItem: PropTypes.object

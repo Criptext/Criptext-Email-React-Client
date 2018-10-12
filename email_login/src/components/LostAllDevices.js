@@ -89,14 +89,17 @@ const renderLoadingContent = () => (
   </div>
 );
 
+// eslint-disable-next-line fp/no-mutation
 renderHeader.propTypes = {
   toggleLostAllDevices: PropTypes.func
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderSubHeader.propTypes = {
   values: PropTypes.object
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderForm.propTypes = {
   onChangeField: PropTypes.func,
   validator: PropTypes.func,

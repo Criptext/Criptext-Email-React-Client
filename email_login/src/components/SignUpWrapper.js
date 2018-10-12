@@ -100,12 +100,14 @@ const formItems = [
 
 const onInitState = (array, field) =>
   array.reduce((obj, item) => {
+    // eslint-disable-next-line fp/no-mutation
     obj[item[field]] = item.value;
     return obj;
   }, {});
 
 const onInitErrors = (array, field) =>
   array.reduce((obj, item) => {
+    // eslint-disable-next-line fp/no-mutation
     obj[item[field]] = false;
     return obj;
   }, {});
@@ -150,7 +152,9 @@ class SignUpWrapper extends Component {
           formItem.name,
           this.state.values[formItem.name]
         );
+        // eslint-disable-next-line fp/no-mutation
         errors[formItem.name] = !result;
+        // eslint-disable-next-line fp/no-mutation
         disabled = disabled || !result;
       }
     });
@@ -162,13 +166,11 @@ class SignUpWrapper extends Component {
 
   onSetError = (formItemName, errorValue) => {
     const errors = this.state.errors;
-    errors[formItemName] = errorValue;
-    this.setState({ errors: errors });
+    this.setState({ errors: { ...errors, [formItemName]: errorValue } });
   };
 
   handleChange = (event, field) => {
-    const values = { ...this.state.values };
-    values[field] = event.target.value;
+    const values = { ...this.state.values, [field]: event.target.value };
     this.setState({ values }, () => {
       this.checkDisable();
     });
@@ -204,11 +206,10 @@ class SignUpWrapper extends Component {
   };
 
   checkUsername = async user => {
-    const errorState = this.state.errors;
     const isUsernameAvailable =
       validateUsername(user) && (await this.props.isUsernameAvailable(user));
     if (!isUsernameAvailable) {
-      errorState['username'] = true;
+      const errorState = { ...this.state.errors, username: true };
       this.setState({
         disabled: true,
         errors: errorState
@@ -241,6 +242,7 @@ class SignUpWrapper extends Component {
   };
 }
 
+// eslint-disable-next-line fp/no-mutation
 SignUpWrapper.propTypes = {
   isUsernameAvailable: PropTypes.func,
   onFormReady: PropTypes.func,

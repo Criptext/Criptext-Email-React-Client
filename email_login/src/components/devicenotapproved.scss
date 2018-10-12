@@ -1,4 +1,4 @@
-@import "./../styles/index.scss";
+@import './../styles/index.scss';
 
 .device-not-approved-container {
   font-family: 'NunitoSans';
@@ -30,7 +30,7 @@
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
       }
     }
-    
+
     .criptext-logo {
       height: 100%;
       width: 80%;
@@ -58,7 +58,7 @@
       height: 22%;
       color: #ffffff;
       text-align: center;
-      h4 { 
+      h4 {
         font-size: 17px;
         font-weight: 800;
         margin: 0px;
@@ -90,7 +90,7 @@
       }
     }
 
-    .cant-access{
+    .cant-access {
       position: absolute;
       bottom: 15px;
       left: 27%;

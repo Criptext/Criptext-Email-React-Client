@@ -68,10 +68,12 @@ const renderContent = props => (
   </div>
 );
 
+// eslint-disable-next-line fp/no-mutation
 renderHeader.propTypes = {
   toggleContinue: PropTypes.func
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {
   disabledResendLoginRequest: PropTypes.bool,
   onClickSignInWithPassword: PropTypes.func,

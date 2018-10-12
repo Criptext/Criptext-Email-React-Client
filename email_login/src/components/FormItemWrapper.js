@@ -77,6 +77,7 @@ class FormItemWrapper extends Component {
   }
 }
 
+// eslint-disable-next-line fp/no-mutation
 FormItemWrapper.propTypes = {
   formItem: PropTypes.object,
   hasError: PropTypes.bool,

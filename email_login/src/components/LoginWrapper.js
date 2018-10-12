@@ -37,6 +37,7 @@ const errorMessages = {
   STATUS_UNKNOWN: 'Unknown status code: '
 };
 
+// eslint-disable-next-line fp/no-let
 let ephemeralToken;
 
 class LoginWrapper extends Component {
@@ -186,8 +187,10 @@ class LoginWrapper extends Component {
   };
 
   handleChange = event => {
-    const values = { ...this.state.values };
-    values[event.target.name] = event.target.value;
+    const values = {
+      ...this.state.values,
+      [event.target.name]: event.target.value
+    };
     this.setState({ values, errorMessage: '' }, async () => {
       await this.checkDisable();
     });
@@ -206,14 +209,20 @@ class LoginWrapper extends Component {
     });
   };
 
-  initLinkDevice = async username => {
+  obtainEphemeralToken = (username) => {
     const { status, text } = await linkBegin(username);
     if (status === 439) {
       throwError(errors.login.TOO_MANY_DEVICES);
     } else if (status === 400) {
-      this.goToPasswordLogin();
+      return this.goToPasswordLogin();
     } else if (status === 200) {
+      // eslint-disable-next-line fp/no-mutation
       ephemeralToken = text;
+  }}
+
+  initLinkDevice = async username => {
+    await obtainEphemeralToken(username);
+    if (ephemeralToken) {
       const response = await this.sendLoginConfirmationRequest(ephemeralToken);
       if (response) {
         this.setState({ mode: mode.CONTINUE }, () => {

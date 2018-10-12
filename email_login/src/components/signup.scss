@@ -1,4 +1,4 @@
-@import "./../styles/index.scss";
+@import './../styles/index.scss';
 
 .signup {
   font-family: 'NunitoSans';
@@ -29,7 +29,7 @@
         color: #ffffff;
         padding: 5px 0px 0px 2px;
       }
-      .back-button:hover{
+      .back-button:hover {
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
       }
     }
@@ -64,12 +64,12 @@
       color: #ffffff;
       text-align: center;
       padding-top: 5%;
-      p:nth-child(1) { 
+      p:nth-child(1) {
         font-size: 17px;
         font-weight: 800;
         margin: 0px;
       }
-      p:nth-child(2) { 
+      p:nth-child(2) {
         font-size: 14px;
         margin-top: 3px;
       }
@@ -83,7 +83,8 @@
         margin: 0 auto;
         .form-item.hasError {
           .input-data {
-            input, input:focus {
+            input,
+            input:focus {
               border-bottom: solid 2px #191a1f;
             }
           }
@@ -93,11 +94,11 @@
           width: 100%;
           height: 38px;
           .checkmark-container {
-            .checkmark-checked::after{
+            .checkmark-checked::after {
               top: 8px;
               left: 4px;
             }
-            span:nth-child(2){
+            span:nth-child(2) {
               width: calc(100% - 59px - 12px);
               font-size: 10px;
               font-weight: 500;
@@ -112,19 +113,19 @@
             float: left;
             height: 100%;
             width: 59px;
-            .valid-icon{
+            .valid-icon {
               color: #ffffff;
               position: relative;
               top: 0%;
               left: calc(50% - 6px);
             }
-            .invalid-icon{
+            .invalid-icon {
               color: #000000;
               position: relative;
               top: 0%;
               left: calc(50% - 6px);
             }
-            .no-icon{
+            .no-icon {
               width: 10%;
             }
           }
@@ -134,13 +135,13 @@
             height: 100%;
             width: calc(100% - 59px);
 
-            input[type='password']{
+            input[type='password'] {
               font-size: 12px;
               padding-right: 25px;
               width: calc(100% - 84px);
               -webkit-text-security: square;
             }
-            span.input-icon{
+            span.input-icon {
               color: #ffffff;
               font-size: 18px;
               opacity: 0.5;
@@ -156,7 +157,7 @@
               background: transparent;
               width: 39%;
               border: 0px;
-              border-bottom: solid 2px rgba(255,255,255,0.19);
+              border-bottom: solid 2px rgba(255, 255, 255, 0.19);
               float: left;
             }
 
@@ -168,8 +169,8 @@
               font-weight: 500;
               color: #ffffff;
             }
-            
-            .input-fullname, 
+
+            .input-fullname,
             .input-password,
             .input-confirmpassword,
             .input-recoveryemail {
@@ -181,13 +182,13 @@
               padding-bottom: 3px;
               background: transparent;
               border: 0px;
-              border-bottom: solid 2px rgba(255,255,255,0.19);
+              border-bottom: solid 2px rgba(255, 255, 255, 0.19);
             }
             input::placeholder {
               color: #ffffff;
               opacity: 0.6;
             }
-            input:focus{
+            input:focus {
               outline: none;
               border-bottom: solid 2px #ffffff;
             }
@@ -199,7 +200,7 @@
                 left: 2px;
               }
             }
-            .label-acceptterms{
+            .label-acceptterms {
               width: 76%;
               float: left;
               font-size: 10px;
@@ -210,7 +211,7 @@
                 text-decoration: none;
                 color: inherit;
               }
-              .strong{
+              .strong {
                 cursor: pointer;
                 font-weight: 600;
               }
@@ -222,7 +223,7 @@
               color: #000;
               position: relative;
               bottom: -15%;
-              right: 39%
+              right: 39%;
             }
             .error-message.error-password,
             .error-message.error-confirmpassword {
@@ -277,14 +278,17 @@
           }
           .create-button:enabled {
             opacity: 0.9;
-            span{ opacity: 0.9; }
+            span {
+              opacity: 0.9;
+            }
           }
           .create-button:hover:enabled {
-            opacity: 1.0;
-            span{ opacity: 1.0; }
+            opacity: 1;
+            span {
+              opacity: 1;
+            }
           }
         }
-
       }
     }
   }

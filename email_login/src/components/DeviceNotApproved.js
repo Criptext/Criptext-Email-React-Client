@@ -45,10 +45,12 @@ const renderContent = props => (
   </div>
 );
 
+// eslint-disable-next-line fp/no-mutation
 renderHeader.propTypes = {
   toggleDeviceNotApproved: PropTypes.func
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {
   onClickSignInWithPassword: PropTypes.func
 };

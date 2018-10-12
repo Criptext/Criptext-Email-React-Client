@@ -13,8 +13,8 @@
   opacity: 0.2;
   margin-left: 0px;
 
-  &:after{
-    content: "";
+  &:after {
+    content: '';
     position: absolute;
     display: none;
   }
@@ -25,7 +25,7 @@
   border-color: transparent !important;
   opacity: 1;
 
-  &:after{
+  &:after {
     display: block;
     left: 5px;
     top: 3px;

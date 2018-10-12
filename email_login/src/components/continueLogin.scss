@@ -1,5 +1,4 @@
-@import "./../styles/index.scss";
-
+@import './../styles/index.scss';
 
 .continue {
   font-family: 'NunitoSans';
@@ -30,7 +29,7 @@
         color: #ffffff;
         padding: 5px 0px 0px 2px;
       }
-      .back-button:hover{
+      .back-button:hover {
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
       }
     }
@@ -64,7 +63,7 @@
       height: 22%;
       color: #ffffff;
       text-align: center;
-      p { 
+      p {
         font-size: 17px;
         font-weight: 800;
         margin: 0px;
@@ -84,7 +83,7 @@
       }
     }
 
-    .button{
+    .button {
       height: 30%;
       p {
         margin: 0px;
@@ -126,7 +125,7 @@
         }
       }
     }
-    .cant-access{
+    .cant-access {
       width: 40%;
       font-size: 13px;
       text-align: center;
@@ -139,7 +138,5 @@
         top: 2px;
       }
     }
-
   }
-  
 }
