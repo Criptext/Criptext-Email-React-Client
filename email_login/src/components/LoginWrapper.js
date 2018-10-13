@@ -56,10 +56,6 @@ class LoginWrapper extends Component {
     this.initEventListeners();
   }
 
-  async componentDidMount() {
-    await this.checkDisable();
-  }
-
   render() {
     switch (this.state.mode) {
       case mode.SIGNUP:
@@ -105,9 +101,7 @@ class LoginWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     const nextMode = this.state.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN;
-    this.setState({ mode: nextMode }, async () => {
-      await this.checkDisable();
-    });
+    this.setState({ mode: nextMode });
   };
 
   toggleContinue = ev => {
@@ -117,82 +111,83 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     const nextMode =
       this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN;
-    this.setState({ mode: nextMode }, async () => {
-      await this.checkDisable();
-    });
+    this.setState({ mode: nextMode });
   };
 
   toggleLostAllDevices = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState(
-      {
-        mode: mode.LOGIN
-      },
-      async () => {
-        await this.checkDisable();
-      }
-    );
+    this.setState({
+      mode: mode.LOGIN
+    });
   };
 
   toggleDeviceNotApproved = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState(
-      {
-        mode: mode.LOGIN
-      },
-      async () => {
-        await this.checkDisable();
-      }
-    );
+    this.setState({
+      mode: mode.LOGIN
+    });
   };
 
   stopCountdown = () => {
     clearTimeout(this.timeCountdown);
   };
 
-  validateUsername = async () => {
-    const username = this.state.values['username'];
-    if (!validateUsername(username)) return 422;
-    try {
-      const { status } = await checkAvailableUsername(username);
-      return status;
-    } catch (err) {
-      return 0;
-    }
-  };
+  handleCheckUsernameResponse = newUsername => ({ status }) => {
+    this.setState(curState => {
+      if (curState.values.username !== newUsername) return curState;
 
-  checkDisable = async () => {
-    const status = await this.validateUsername();
-    switch (status) {
-      case 200:
-        return this.setState({
-          disabledLoginButton: true,
-          errorMessage: errorMessages.USERNAME_NOT_EXISTS
-        });
-      case 422:
-        return this.setState({
-          disabledLoginButton: true,
-          errorMessage: errorMessages.USERNAME_INVALID
-        });
-      case 400:
-        return this.setState({ disabledLoginButton: false, errorMessage: '' });
-      default:
-        return this.setState({
-          disabledLoginButton: true,
-          errorMessage: errorMessages.STATUS_UNKNOWN + status
-        });
-    }
+      switch (status) {
+        case 200:
+          return {
+            disabledLoginButton: true,
+            errorMessage: errorMessages.USERNAME_NOT_EXISTS
+          };
+        case 422:
+          return {
+            disabledLoginButton: true,
+            errorMessage: errorMessages.USERNAME_INVALID
+          };
+        case 400:
+          return { disabledLoginButton: false, errorMessage: '' };
+        default:
+          return {
+            disabledLoginButton: true,
+            errorMessage: errorMessages.STATUS_UNKNOWN + status
+          };
+      }
+    });
   };
 
   handleChange = event => {
-    const values = {
-      ...this.state.values,
-      [event.target.name]: event.target.value
-    };
-    this.setState({ values, errorMessage: '' }, async () => {
-      await this.checkDisable();
+    const newUsername = event.target.value;
+
+    if (!newUsername)
+      return this.setState({
+        values: { ...this.state.values, username: newUsername },
+        errorMessage: ''
+      });
+
+    if (!validateUsername(newUsername))
+      return this.setState({
+        values: { ...this.state.values, username: newUsername },
+        errorMessage: errorMessages.USERNAME_INVALID
+      });
+
+    if (this.lastCheck) clearTimeout(this.lastCheck);
+
+    this.lastCheck = setTimeout(() => {
+      if (this.state.values.username !== newUsername) return;
+
+      checkAvailableUsername(newUsername).then(
+        this.handleCheckUsernameResponse(newUsername)
+      );
+    }, 300);
+
+    this.setState({
+      values: { ...this.state.values, username: newUsername },
+      errorMessage: ''
     });
   };
 
