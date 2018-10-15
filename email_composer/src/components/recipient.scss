@@ -46,6 +46,7 @@
 
 .recipient-content{
   align-items: center;
+  box-sizing: initial;
   display: flex;
   min-height: 30px;
   padding: 3px 0;
@@ -56,10 +57,11 @@
   }
 
   .recipient-input-label {
-    width: 4%;
-    padding-left: 20px;
+    box-sizing: initial;
     font-size: 13px;
     font-weight: 200;
+    padding-left: 20px;
+    width: 4%;
   }
 
   .recipient-tags{
