@@ -39,7 +39,7 @@ export const SectionType = {
 export const FeedItemType = {
   OPENED: {
     value: 1,
-    icon: 'icon-checked'
+    icon: 'icon-double-checked'
   },
   DOWNLOADED: {
     value: 2,

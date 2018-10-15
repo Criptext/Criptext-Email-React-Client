@@ -100,9 +100,11 @@ class ThreadItem extends Component {
       case EmailStatus.SENT:
         return <i className="icon-checked status-sent" />;
       case EmailStatus.DELIVERED:
-        return <i className="icon-checked status-delivered" />;
+        return <i className="icon-double-checked status-delivered" />;
       case EmailStatus.OPENED:
-        return <i className="icon-checked status-opened" />;
+        return <i className="icon-double-checked status-opened" />;
+      case EmailStatus.SENDING:
+        return <i className="icon-time status-sending" />;
       default:
         return null;
     }

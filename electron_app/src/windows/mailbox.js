@@ -74,7 +74,7 @@ const create = () => {
     const checkWindowsOS = isWindowsOS();
     if (checkWindowsOS) {
       appUpdaterWin();
-    }else if(checkMacOS){
+    } else if (checkMacOS) {
       appUpdaterMac();
     }
   });
