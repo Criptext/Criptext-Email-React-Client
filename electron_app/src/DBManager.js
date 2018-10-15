@@ -281,7 +281,9 @@ const createEmail = async (params, trx) => {
   const knex = trx || db;
   const { recipients, email } = params;
   if (!recipients) {
-    const emailData = noNulls(email);
+    const emailData = Array.isArray(email)
+      ? email.map(noNulls)
+      : noNulls(email);
     return knex.table(Table.EMAIL).insert(emailData);
   }
   const recipientsFrom = recipients.from || [];

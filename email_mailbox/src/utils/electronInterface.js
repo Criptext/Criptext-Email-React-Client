@@ -65,6 +65,14 @@ export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
 };
 
+export const throwError = error => {
+  ipcRenderer.send('throwError', error);
+};
+
+export const openCreateKeys = params => {
+  ipcRenderer.send('open-create-keys', params);
+};
+
 /* Criptext Client
    ----------------------------- */
 export const acknowledgeEvents = eventIds => {
@@ -89,14 +97,6 @@ export const getEvents = () => {
 
 export const getUserSettings = () => {
   return clientManager.getUserSettings();
-};
-
-export const linkAccept = randomId => {
-  return clientManager.linkAccept(randomId);
-};
-
-export const linkDeny = randomId => {
-  return clientManager.linkDeny(randomId);
 };
 
 export const logout = () => {

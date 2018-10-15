@@ -158,17 +158,17 @@ class MessageWrapper extends Component {
   handleClickAcceptOption = async () => {
     const acceptKey = this.state.acceptHandlerKey;
     const params = this.state.params;
-    await this.props.onExecuteMessageAction(acceptKey, params);
-    this.clearTimeouts();
     this.hideMessage();
+    this.clearTimeouts();
+    return await this.props.onExecuteMessageAction(acceptKey, params);
   };
 
   handleClickDenyOption = async () => {
     const denyKey = this.state.denyHandlerKey;
     const params = this.state.params;
-    await this.props.onExecuteMessageAction(denyKey, params);
-    this.clearTimeouts();
     this.hideMessage();
+    this.clearTimeouts();
+    await this.props.onExecuteMessageAction(denyKey, params);
   };
 
   clearTimeouts = () => {
@@ -183,6 +183,8 @@ MessageWrapper.propTypes = {
   description: PropTypes.string,
   displayMessage: PropTypes.bool,
   onExecuteMessageAction: PropTypes.func,
+  onExportDatabase: PropTypes.func,
+  onUploadDatabase: PropTypes.func,
   params: PropTypes.object,
   type: PropTypes.number
 };

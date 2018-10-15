@@ -336,5 +336,6 @@ module.exports = {
   createSignalTables,
   createTables,
   Table,
-  fieldTypes
+  fieldTypes,
+  databasePath: myDBPath
 };

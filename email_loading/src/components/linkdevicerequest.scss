@@ -1,0 +1,91 @@
+.request-container {
+  font-family: 'NunitoSans';
+  width: 402px;
+  height: 266px;
+  border-radius: 8px;
+  background-color: #fff;
+  margin: calc(28% - 133px) calc(50% - 201px);
+  user-select: none;
+
+  .content {
+    height: 90%;
+    padding: 3%;
+
+    .header {
+      width: 100%;
+      height: 20px;
+      text-align: center;
+      h3 {
+        margin: 30px 0px;
+      }
+    }
+
+    .question {
+      position: relative;
+      top: 20%;
+      width: 100%;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      color: #373a45;
+    }
+
+    .device-info {
+      position: relative;
+      top: 24%;
+      width: 97%;
+      text-align: center;
+      color: #afb0b5;
+      > i {
+        font-size: 25px;
+        margin-right: 10px;
+      }
+      > span {
+        position: relative;
+        top: -6px;
+        font-size: 15px;
+        font-weight: bold;
+      }
+    }
+
+    .buttons {
+      position: relative;
+      top: 38%;
+      width: 97%;
+      text-align: center;
+
+      .button-a {
+        height: 30px;
+        text-transform: capitalize;
+        border: none;
+        border-radius: 100px;
+        width: 97px;
+        margin: 5px;
+        outline: none;
+        cursor: pointer;
+  
+        &.reject-button {
+          background-color: #ffffff;
+          color: black;
+        }
+        
+        &.aprove-button {
+          background-color: #0091ff;
+          color: #ffffff;
+      
+          &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+          }
+        }
+  
+        span{
+          font-weight: 600;
+          letter-spacing: 0.2px;
+          top: 1px;
+        }
+      }
+    }
+
+  }
+}

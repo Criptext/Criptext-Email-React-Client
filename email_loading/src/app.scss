@@ -13,7 +13,7 @@ TABLE OF CONTENTS
 @import "./styles/index.scss";
 
 /* 1.1.- FONTS: Text
-   ----------------------------- */
+----------------------------- */
 
 @font-face {
   font-family: "NunitoSans";
@@ -60,39 +60,234 @@ TABLE OF CONTENTS
 }
 
 /* 1.2.- FONTS: Icon
-   ----------------------------- */
-   @font-face {
-    font-family: 'icomoon';
-    src:  url(#{$_PATH_TO_FONTS}/icon.eot?iptng1);
-    src:  url(#{$_PATH_TO_FONTS}/icon.eot?iptng1#iefix) format('embedded-opentype'),
-      url(#{$_PATH_TO_FONTS}/icon.ttf?iptng1) format('truetype'),
-      url(#{$_PATH_TO_FONTS}/icon.woff?iptng1) format('woff'),
-      url(#{$_PATH_TO_FONTS}/icon.svg?iptng1#icomoon) format('svg');
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  [class^="icon-"], [class*=" icon-"] {
-    /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'icomoon' !important;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-  
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  .icon-criptext:before {
-    content: "\e914";
-  }
+----------------------------- */
+@font-face {
+  font-family: 'icomoon';
+  src:  url(#{$_PATH_TO_FONTS}/icon.eot?y4ei23);
+  src:  url(#{$_PATH_TO_FONTS}/icon.eot?y4ei23#iefix) format('embedded-opentype'),
+    url(#{$_PATH_TO_FONTS}/icon.ttf?y4ei23) format('truetype'),
+    url(#{$_PATH_TO_FONTS}/icon.woff?y4ei23) format('woff'),
+    url(#{$_PATH_TO_FONTS}/icon.svg?y4ei23#icomoon) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-mailbox:before {
+  content: "\e900";
+}
+.icon-doc:before {
+  content: "\e901";
+}
+.icon-calendar:before {
+  content: "\e904";
+}
+.icon-trash:before {
+  content: "\e905";
+}
+.icon-lock:before {
+  content: "\e906";
+}
+.icon-archive:before {
+  content: "\e907";
+}
+.icon-tag:before {
+  content: "\e908";
+}
+.icon-not:before {
+  content: "\e909";
+}
+.icon-edit:before {
+  content: "\e911";
+}
+.icon-mail:before {
+  content: "\e90f";
+}
+.icon-file:before {
+  content: "\e90c";
+}
+.icon-download:before {
+  content: "\e90b";
+}
+.icon-forward:before {
+  content: "\e90d";
+}
+.icon-criptext:before {
+  content: "\e914";
+}
+.icon-ask:before {
+  content: "\e941";
+}
+.icon-log-out:before {
+  content: "\e928";
+}
+.icon-star-fill:before {
+  content: "\e903";
+}
+.icon-star:before {
+  content: "\e926";
+}
+.icon-important-fill:before {
+  content: "\e90a";
+}
+.icon-important:before {
+  content: "\e902";
+}
+.icon-unsend:before {
+  content: "\e916";
+}
+.icon-sent:before {
+  content: "\e91a";
+}
+.icon-bell-inclined:before {
+  content: "\e91b";
+}
+.icon-bell:before {
+  content: "\e91c";
+}
+.icon-bell-mute:before {
+  content: "\e91d";
+}
+.icon-replay-all:before {
+  content: "\e91e";
+}
+.icon-replay:before {
+  content: "\e91f";
+}
+.icon-pencil:before {
+  content: "\e940";
+}
+.icon-dots:before {
+  content: "\e918";
+}
+.icon-user:before {
+  content: "\e90e";
+}
+.icon-box:before {
+  content: "\e915";
+}
+.icon-check:before {
+  content: "\e919";
+}
+.icon-next2:before {
+  content: "\e938";
+}
+.icon-back:before {
+  content: "\e939";
+}
+.icon-attach:before {
+  content: "\e912";
+}
+.icon-checked:before {
+  content: "\e913";
+}
+.icon-correct:before {
+  content: "\e920";
+}
+.icon-incorret:before {
+  content: "\e921";
+}
+.icon-next:before {
+  content: "\e910";
+}
+.icon-time:before {
+  content: "\e93c";
+}
+.icon-search:before {
+  content: "\e93d";
+}
+.icon-show:before {
+  content: "\e922";
+}
+.icon-not-show:before {
+  content: "\e923";
+}
+.icon-mobile:before {
+  content: "\e924";
+}
+.icon-desktop:before {
+  content: "\e925";
+}
+.icon-settings:before {
+  content: "\e917";
+}
+.icon-video:before {
+  content: "\e927";
+}
+.icon-audio:before {
+  content: "\e942";
+}
+.icon-word:before {
+  content: "\e929";
+}
+.icon-ppt:before {
+  content: "\e92a";
+}
+.icon-excel:before {
+  content: "\e92b";
+}
+.icon-pdf:before {
+  content: "\e92c";
+}
+.icon-file-default:before {
+  content: "\e92d";
+}
+.icon-image:before {
+  content: "\e92e";
+}
+.icon-lock-file:before {
+  content: "\e92f";
+}
+.icon-arrow-down:before {
+  content: "\e930";
+}
+.icon-arrow-up:before {
+  content: "\e931";
+}
+.icon-arrow-right:before {
+  content: "\e93f";
+}
+.icon-plus:before {
+  content: "\e932";
+}
+.icon-minus:before {
+  content: "\e933";
+}
+.icon-exit:before {
+  content: "\e937";
+}
+.icon-zip:before {
+  content: "\e93a";
+}
+.icon-text-edit:before {
+  content: "\e93b";
+}
+.icon-font-size:before {
+  content: "\e935";
+}
+.icon-clock:before {
+  content: "\e93e";
+}
+.icon-add-friend:before {
+  content: "\e934";
+}
 
 /* 2.- CONTENT
-   ----------------------------- */
+----------------------------- */
 
 html, body {
   height: 100%;

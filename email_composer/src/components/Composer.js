@@ -52,11 +52,19 @@ const Composer = props => (
         }
       />
     )}
-    {props.status === Status.WAITING && (
-      <div className="composer-sending-backdrop" />
-    )}
+    <div className={defineBackdropClass(props)} />
   </div>
 );
+
+const defineBackdropClass = props => {
+  if (props.status === Status.WAITING) {
+    return 'compposer-sending-backdrop';
+  }
+  if (props.isLinkingDevices) {
+    return 'composer-linking-backdrop';
+  }
+  return '';
+};
 
 Composer.propTypes = {
   addFiletoken: PropTypes.func,

@@ -67,29 +67,26 @@
       }
     }
 
-    .content-icon {
-      position: relative;
-      top: 4%;
-      width: 19%;
-      margin: 0 auto;
-      font-size: 60px;
-      color: #ffffff;
-      border: 1px solid #fff;
-      border-radius: 50%;
-    }
-
     .content-message {
-      height: 15%;
+      height: 50%;
       color: #ffffff;
       text-align: center;
-      padding: 0 35px;
-      position: absolute;
-      bottom: 25%;
+      padding: 0 37px;
 
       p {
         font-size: 15px;
         font-weight: 400;
-        margin: 0px;
+        margin: 0px 0px 25px 0px;
+      }
+
+      .content-icon {
+        width: 19%;
+        height: 21%;
+        margin: 20px auto;
+        font-size: 40px;
+        color: #ffffff;
+        border-radius: 50%;
+        background-color: rgba($color: #373a45, $alpha: 0.1);
       }
     }
 
@@ -109,7 +106,5 @@
         top: 2px;
       }
     }
-
   }
-  
 }

@@ -96,11 +96,17 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@criptext/api@^0.14.3":
-  version "0.14.3"
-  resolved "https://registry.yarnpkg.com/@criptext/api/-/api-0.14.3.tgz#90fc66e8cef436758723a3d46eb1b47cd8c0a05e"
+"@criptext/api@^0.14.5":
+  version "0.14.5"
+  resolved "https://registry.yarnpkg.com/@criptext/api/-/api-0.14.5.tgz#d358526c6943a3bf1e293d26e87c4efdf74a3e67"
   dependencies:
     superagent "^3.8.2"
+
+"@criptext/data-transfer-client@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@criptext/data-transfer-client/-/data-transfer-client-0.1.1.tgz#a7f1b446106a71aa0a381fe0042868c18ae8b746"
+  dependencies:
+    request "^2.88.0"
 
 "@types/node@^8.0.24":
   version "8.10.21"
@@ -3016,6 +3022,10 @@ liftoff@2.5.0:
     rechoir "^0.6.2"
     resolve "^1.1.7"
 
+line-by-line@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/line-by-line/-/line-by-line-0.1.6.tgz#6236edd1db2d1695addf11f0268e74a181561c30"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
@@ -3272,6 +3282,10 @@ mkdirp@0.5.1, mkdirp@^0.5.0, mkdirp@^0.5.1:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+moment@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
 ms@2.0.0:
   version "2.0.0"
@@ -3993,7 +4007,7 @@ request@^2.45.0, request@^2.83.0:
     tunnel-agent "^0.6.0"
     uuid "^3.1.0"
 
-request@^2.87.0:
+request@^2.87.0, request@^2.88.0:
   version "2.88.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
   dependencies:

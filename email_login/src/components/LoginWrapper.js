@@ -252,7 +252,8 @@ class LoginWrapper extends Component {
 
   initEventListeners = () => {
     addEvent(Event.LINK_DEVICE_CONFIRMED, params => {
-      openCreateKeys({ loadingType: 'login', remoteData: params });
+      socketClient.disconnect();
+      openCreateKeys({ loadingType: 'link-new-device', remoteData: params });
       deleteTemporalAccount();
       closeLogin();
     });
