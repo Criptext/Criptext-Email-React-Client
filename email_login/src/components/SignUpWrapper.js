@@ -5,11 +5,12 @@ import {
   validateFullname,
   validatePassword,
   validateConfirmPassword,
-  validateAcceptTerms,
   validateEmail
 } from './../validators/validators';
 import SignUp from './SignUp';
 import { hashPassword } from '../utils/HashUtils';
+
+const toBeConfirmed = Symbol('toBeConfirmed');
 
 const formItems = [
   {
@@ -98,6 +99,16 @@ const formItems = [
   }
 ];
 
+const errorMessages = {
+  USERNAME_INVALID: 'Invalid username',
+  USERNAME_EXISTS: 'username already exists',
+  STATUS_UNKNOWN: 'Unknown status code: ',
+  FULLNAME_INVALID: 'Invalid name',
+  PASSWORD_INVALID: 'Invalid password',
+  PASSWORD_NOMATCH: 'Passwords do not match',
+  EMAIL_INVALID: 'Invalid email address'
+};
+
 const onInitState = (array, field) =>
   array.reduce((obj, item) => {
     // eslint-disable-next-line fp/no-mutation
@@ -108,9 +119,13 @@ const onInitState = (array, field) =>
 const onInitErrors = (array, field) =>
   array.reduce((obj, item) => {
     // eslint-disable-next-line fp/no-mutation
-    obj[item[field]] = false;
+    obj[item[field]] = item.optional ? undefined : toBeConfirmed;
     return obj;
   }, {});
+
+const isSignUpButtonDisabled = errors => {
+  return Object.values(errors).some(errMsg => errMsg);
+};
 
 class SignUpWrapper extends Component {
   constructor(props) {
@@ -118,7 +133,7 @@ class SignUpWrapper extends Component {
     this.state = {
       values: onInitState(formItems, 'name'),
       errors: onInitErrors(formItems, 'name'),
-      disabled: true
+      isShowingPassword: false
     };
   }
 
@@ -127,54 +142,27 @@ class SignUpWrapper extends Component {
       <div>
         <SignUp
           {...this.props}
-          states={this.state}
+          values={this.state.values}
           items={formItems}
           onChangeField={this.handleChange}
-          disabled={this.state.disabled}
           onClickSignUp={this.handleClickSignUp}
-          validator={this.universalValidator}
           errors={this.state.errors}
-          onSetError={this.onSetError}
+          disabled={isSignUpButtonDisabled(this.state.errors)}
+          isShowingPassword={this.state.isShowingPassword}
+          onToggleShowPassword={this.onToggleShowPassword}
         />
       </div>
     );
   }
 
-  checkDisable = () => {
-    var disabled = false;
-    const errors = {};
-    formItems.forEach(formItem => {
-      if (
-        !formItem.optional ||
-        (formItem.optional && this.state.values[formItem.name] !== '')
-      ) {
-        const result = this.universalValidator(
-          formItem.name,
-          this.state.values[formItem.name]
-        );
-        // eslint-disable-next-line fp/no-mutation
-        errors[formItem.name] = !result;
-        // eslint-disable-next-line fp/no-mutation
-        disabled = disabled || !result;
-      }
-    });
-    this.setState({
-      disabled: disabled,
-      errors: errors
-    });
-  };
+  onToggleShowPassword = () =>
+    this.setState(prevState => ({
+      ...prevState,
+      isShowingPassword: !prevState.isShowingPassword
+    }));
 
-  onSetError = (formItemName, errorValue) => {
-    const errors = this.state.errors;
-    this.setState({ errors: { ...errors, [formItemName]: errorValue } });
-  };
-
-  handleChange = (event, field) => {
-    const values = { ...this.state.values, [field]: event.target.value };
-    this.setState({ values }, () => {
-      this.checkDisable();
-    });
-  };
+  handleChange = (event, field) =>
+    this.updateFormWithValidatedData(field, event.target.value);
 
   handleClickSignUp = event => {
     event.preventDefault();
@@ -205,46 +193,155 @@ class SignUpWrapper extends Component {
     this.props.onFormReady(submitValues);
   };
 
-  checkUsername = async user => {
-    const isUsernameAvailable =
-      validateUsername(user) && (await this.props.isUsernameAvailable(user));
-    if (!isUsernameAvailable) {
-      const errorState = { ...this.state.errors, username: true };
-      this.setState({
-        disabled: true,
-        errors: errorState
-      });
-    }
+  handleCheckUsernameResponse = newUsername => ({ status }) => {
+    this.setState(curState => {
+      if (curState.values.username !== newUsername) return curState;
+      console.log('status:', status);
+
+      const { errors } = curState;
+
+      switch (status) {
+        case 200:
+          return {
+            errors: { ...errors, username: undefined }
+          };
+        case 422:
+          return {
+            errors: { ...errors, username: errorMessages.USERNAME_INVALID }
+          };
+        case 400:
+          console.log('username:', errorMessages.USERNAME_EXISTS);
+          return {
+            errors: { ...errors, username: errorMessages.USERNAME_EXISTS }
+          };
+        default:
+          return {
+            errors: { ...errors, username: errorMessages.STATUS_UNKNOWN }
+          };
+      }
+    });
   };
 
-  universalValidator = (formItemName, formItemValue) => {
-    switch (formItemName) {
-      case 'username': {
-        this.checkUsername(formItemValue);
-        return validateUsername(formItemValue);
-      }
-      case 'fullname': {
-        return validateFullname(formItemValue);
-      }
-      case 'password': {
-        return validatePassword(formItemValue);
-      }
-      case 'confirmpassword': {
-        const password = this.state.values['password'];
-        return validateConfirmPassword(password, formItemValue);
-      }
-      case 'recoveryemail': {
-        return validateEmail(formItemValue);
-      }
-      default:
-        return validateAcceptTerms(formItemValue);
-    }
+  withThrottling = fn => {
+    if (this.lastUserCheck) clearTimeout(this.lastUserCheck);
+
+    this.lastUserCheck = setTimeout(fn, 300);
   };
+
+  checkUsername = username =>
+    this.props
+      .checkAvailableUsername(username)
+      .then(this.handleCheckUsernameResponse(username))
+      .catch(() => {
+        this.setState(
+          prevState =>
+            prevState.values.username === username
+              ? {
+                  ...prevState,
+                  errors: {
+                    ...prevState.errors,
+                    username: 'Unable to validate username'
+                  }
+                }
+              : prevState
+        );
+      });
+
+  updateFormWithValidatedData = (formItemName, formItemValue) =>
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        values: { ...prevState.values, [formItemName]: formItemValue },
+        errors: { ...prevState.errors, [formItemName]: undefined }
+      };
+      switch (formItemName) {
+        case 'username': {
+          if (!validateUsername(formItemValue))
+            return {
+              ...newState,
+              errors: { ...newState.errors, username: 'Invalid username' }
+            };
+
+          this.withThrottling(() => this.checkUsername(formItemValue));
+          return {
+            ...newState,
+            errors: { ...newState.errors, username: toBeConfirmed }
+          };
+        }
+        case 'fullname': {
+          return validateFullname(formItemValue)
+            ? newState
+            : {
+                ...newState,
+                errors: {
+                  ...newState.errors,
+                  fullname: errorMessages.FULLNAME_INVALID
+                }
+              };
+        }
+        case 'password': {
+          if (validatePassword(formItemValue)) {
+            const { confirmpassword } = newState.values;
+            if (confirmpassword === '')
+              return {
+                ...newState,
+                errors: {
+                  ...newState.errors,
+                  confirmpassword: toBeConfirmed
+                }
+              };
+
+            if (validateConfirmPassword(formItemValue, confirmpassword))
+              return {
+                ...newState,
+                errors: {
+                  ...newState.errors,
+                  confirmpassword: undefined
+                }
+              };
+
+            return newState;
+          }
+          return {
+            ...newState,
+            errors: {
+              ...newState.errors,
+              password: errorMessages.PASSWORD_INVALID
+            }
+          };
+        }
+        case 'confirmpassword': {
+          const password = this.state.values['password'];
+          return validateConfirmPassword(password, formItemValue)
+            ? newState
+            : {
+                ...newState,
+                errors: {
+                  ...newState.errors,
+                  confirmpassword: errorMessages.PASSWORD_NOMATCH
+                }
+              };
+        }
+        case 'recoveryemail': {
+          return formItemValue === '' || validateEmail(formItemValue)
+            ? newState
+            : {
+                ...newState,
+                errors: {
+                  ...newState.errors,
+                  recoveryemail: errorMessages.EMAIL_INVALID
+                }
+              };
+        }
+        default:
+          return newState;
+      }
+    });
 }
 
 // eslint-disable-next-line fp/no-mutation
 SignUpWrapper.propTypes = {
-  isUsernameAvailable: PropTypes.func,
+  checkAvailableUsername: PropTypes.func.isRequired,
   onFormReady: PropTypes.func,
   onSubmitWithoutRecoveryEmail: PropTypes.func
 };

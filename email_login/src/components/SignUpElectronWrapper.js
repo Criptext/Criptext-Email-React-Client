@@ -13,7 +13,7 @@ class SignUpElectronWrapper extends Component {
     return (
       <SignUpWrapper
         {...this.props}
-        isUsernameAvailable={this.isUsernameAvailable}
+        checkAvailableUsername={checkAvailableUsername}
         onFormReady={this.onFormReady}
         onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
       />
@@ -35,11 +35,6 @@ class SignUpElectronWrapper extends Component {
       });
       closeLogin();
     }
-  };
-
-  isUsernameAvailable = async username => {
-    const res = await checkAvailableUsername(username);
-    return res.status === 200;
   };
 }
 
