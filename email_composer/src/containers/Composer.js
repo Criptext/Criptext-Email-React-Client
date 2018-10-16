@@ -410,6 +410,7 @@ class ComposerWrapper extends Component {
       key: this.state.key,
       labelId: LabelType.sent.id,
       secure,
+      status: EmailStatus.SENDING,
       textSubject: this.state.textSubject,
       toEmails: this.state.toEmails,
       threadId: this.state.threadId
@@ -504,7 +505,8 @@ class ComposerWrapper extends Component {
       secure: false,
       textSubject: this.state.textSubject,
       toEmails: this.state.toEmails,
-      threadId: this.state.threadId
+      threadId: this.state.threadId,
+      status: EmailStatus.NONE
     };
     const { emailData } = EmailUtils.formOutgoingEmailFromData(data);
     saveDraftChanges(emailData);

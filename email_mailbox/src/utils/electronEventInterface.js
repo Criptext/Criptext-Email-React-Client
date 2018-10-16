@@ -38,8 +38,8 @@ import { AttachItemStatus } from '../components/AttachItem';
 
 const eventPriority = {
   NEW_EMAIL: 0,
-  EMAIL_STATUS: 1,
-  THREAD_STATUS: 2,
+  THREAD_STATUS: 1,
+  EMAIL_STATUS: 2,
   EMAIL_LABELS: 3,
   THREAD_LABELS: 4,
   EMAIL_DELETE: 5,
@@ -64,6 +64,14 @@ export const getGroupEvents = async () => {
           ...result,
           [eventPriority.NEW_EMAIL]: [...result[eventPriority.NEW_EMAIL], event]
         };
+      } else if (eventId === SocketCommand.PEER_THREAD_READ_UPDATE) {
+        return {
+          ...result,
+          [eventPriority.THREAD_STATUS]: [
+            ...result[eventPriority.THREAD_STATUS],
+            event
+          ]
+        };
       } else if (
         eventId === SocketCommand.EMAIL_TRACKING_UPDATE ||
         eventId === SocketCommand.PEER_EMAIL_READ_UPDATE ||
@@ -73,14 +81,6 @@ export const getGroupEvents = async () => {
           ...result,
           [eventPriority.EMAIL_STATUS]: [
             ...result[eventPriority.EMAIL_STATUS],
-            event
-          ]
-        };
-      } else if (eventId === SocketCommand.PEER_THREAD_READ_UPDATE) {
-        return {
-          ...result,
-          [eventPriority.THREAD_STATUS]: [
-            ...result[eventPriority.THREAD_STATUS],
             event
           ]
         };
@@ -137,6 +137,7 @@ export const getGroupEvents = async () => {
 };
 
 const processEvent = async eventsGroups => {
+  let rowIds = [];
   for (const key in eventsGroups) {
     if (eventsGroups.hasOwnProperty(key)) {
       const events = eventsGroups[key];
@@ -145,7 +146,8 @@ const processEvent = async eventsGroups => {
           return await handleEvent(newEvent);
         });
         try {
-          await Promise.all(managedEvents);
+          const res = await Promise.all(managedEvents);
+          rowIds = rowIds.concat(res);
         } catch (e) {
           if (
             !(e.name === 'PreKeyMessage' || e.name === 'MessageCounterError')
@@ -155,6 +157,10 @@ const processEvent = async eventsGroups => {
         }
       }
     }
+  }
+  if(rowIds.length){
+    const rowIdsFiltered = rowIds.filter(rowId => rowId !== null);
+    await setEventAsHandled(rowIdsFiltered);
   }
   return true;
 };
@@ -310,7 +316,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       isExternal
     );
     const filesData =
-      files && files.length && fileKeyParams
+      files && files.length
         ? await formFilesFromData({
             files,
             date
@@ -365,7 +371,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       threadId: prevEmail.threadId
     };
   }
-  await setEventAsHandled(rowid);
+  return rowid;
 };
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
@@ -411,7 +417,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
     };
     emitter.emit(Event.EMAIL_TRACKING_UPDATE, eventParams);
   }
-  await setEventAsHandled(rowid);
+  return rowid;
 };
 
 const handlePeerEmailUnsend = async ({ rowid, params }) => {
@@ -439,15 +445,15 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
     };
     emitter.emit(Event.EMAIL_TRACKING_UPDATE, eventParams);
   }
-  await setEventAsHandled(rowid);
+  return rowid;
 };
 
 const handleLinkDeviceRequest = ({ rowid, params }) => {
   ipcRenderer.send('start-link-devices-event', { rowid, params });
 };
 
-const handlePeerRemoveDevice = ({ rowid }) => {
-  sendDeviceRemovedEvent(rowid);
+const handlePeerRemoveDevice = async ({ rowid }) => {
+  return await sendDeviceRemovedEvent(rowid);
 };
 
 const handlePeerEmailRead = async ({ rowid, params }) => {
@@ -460,17 +466,19 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
   });
   emitter.emit(Event.REFRESH_THREADS, { labelIds: [LabelType.inbox.id] });
   if (res) {
-    await setEventAsHandled(rowid);
+    return rowid;
   }
+  return null;
 };
 
 const handlePeerThreadRead = async ({ rowid, params }) => {
   const { threadIds, unread } = params;
   const res = await updateUnreadEmailByThreadIds(threadIds, !!unread);
-  if (res) {
-    await setEventAsHandled(rowid);
-  }
   emitter.emit(Event.THREADS_UPDATE_READ, threadIds, !!unread);
+  if (res) {
+    return rowid;
+  }
+  return null;
 };
 
 const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
@@ -493,7 +501,7 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
     labelIdsToAdd,
     labelIdsToRemove
   });
-  await setEventAsHandled(rowid);
+  return rowid;
 };
 
 const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
@@ -515,7 +523,7 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
     labelIdsToAdd,
     labelIdsToRemove
   });
-  await setEventAsHandled(rowid);
+
   const hasInbox =
     labelIdsToAdd.includes(LabelType.inbox.id) ||
     labelIdsToRemove.includes(LabelType.inbox.id);
@@ -525,7 +533,8 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
   let labelIds = [];
   if (hasInbox) labelIds = [...labelIds, LabelType.inbox.id];
   if (hasSpam) labelIds = [...labelIds, LabelType.spam.id];
-  emitter.emit(Event.REFRESH_THREADS, { labelIds });
+  if (labelIds.length) emitter.emit(Event.REFRESH_THREADS, { labelIds });
+  return rowid;
 };
 
 const formAndSaveEmailLabelsUpdate = async ({
@@ -557,18 +566,18 @@ const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
       keys.push(email.key);
     }
   }
-  await deleteEmailByKeys(keys);
-  await setEventAsHandled(rowid);
+  const res = await deleteEmailByKeys(keys);
   emitter.emit(Event.EMAIL_DELETED, emailIds);
+  return rowid;
 };
 
 const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
   const { threadIds } = params;
   const wereDeleted = await deleteEmailsByThreadIdAndLabelId(threadIds);
-  await setEventAsHandled(rowid);
   if (wereDeleted) {
     emitter.emit(Event.THREADS_DELETED, threadIds);
   }
+  return rowid;
 };
 
 const handlePeerLabelCreated = async ({ rowid, params }) => {
@@ -587,14 +596,14 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
     };
     await emitter.emit(Event.LABEL_CREATED, labels);
   }
-  await setEventAsHandled(rowid);
+  return rowid;
 };
 
 const handlePeerUserNameChanged = async ({ rowid, params }) => {
   const { name } = params;
   const { recipientId } = myAccount;
   await updateAccount({ name, recipientId });
-  await setEventAsHandled(rowid);
+  return rowid;
 };
 
 const handlePeerPasswordChanged = () => {
@@ -626,11 +635,11 @@ const handlePeerRecoveryEmailConfirmed = async () => {
 };
 
 const handleSendEmailError = async ({ rowid }) => {
-  await setEventAsHandled(rowid);
+  return rowid;
 };
 
-export const setEventAsHandled = async eventId => {
-  return await acknowledgeEvents([eventId]);
+const setEventAsHandled = async eventIds => {
+  return await acknowledgeEvents(eventIds);
 };
 
 /* Window events
@@ -809,7 +818,7 @@ export const sendRecoveryEmailLinkConfirmationSuccessMessage = () => {
 
 export const sendDeviceRemovedEvent = async rowid => {
   emitter.emit(Event.DEVICE_REMOVED, null);
-  await handleDeleteDeviceData(rowid);
+  return await handleDeleteDeviceData(rowid);
 };
 
 export const sendPasswordChangedEvent = () => {
@@ -818,10 +827,11 @@ export const sendPasswordChangedEvent = () => {
 
 export const handleDeleteDeviceData = async rowid => {
   return await setTimeout(async () => {
-    if (rowid) {
-      await setEventAsHandled(rowid);
-    }
     await deleteAllDeviceData();
+    if (rowid) {
+      return rowid;
+    }
+    return null;
   }, 4000);
 };
 

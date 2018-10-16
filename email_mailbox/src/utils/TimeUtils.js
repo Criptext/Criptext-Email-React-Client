@@ -5,7 +5,7 @@ const moment = remote.require('moment');
 const oneHour = 3600000;
 const oneDay = 86400000;
 
-moment.locale('es');
+moment.locale('en');
 
 const getTimeLocal = time => {
   const timeUTC = moment.utc(time);
