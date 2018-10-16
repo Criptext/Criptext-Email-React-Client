@@ -2,6 +2,7 @@
 
 import * as utils from './../StringUtils.js';
 
+jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 
 describe('string utils:', () => {

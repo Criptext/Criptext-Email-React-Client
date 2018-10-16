@@ -86,6 +86,8 @@ class LostDevicesWrapper extends Component {
     const loginStatus = loginResponse.status;
     if (loginStatus === 400) {
       this.throwLoginError(errors.login.WRONG_CREDENTIALS);
+    } else if (loginStatus === 439) {
+      this.throwLoginError(errors.login.TOO_MANY_DEVICES);
     } else if (loginStatus !== 200) {
       this.throwLoginError(errors.login.FAILED);
     } else {

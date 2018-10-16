@@ -14,6 +14,13 @@ const LOGIN_ERROR = {
   FAILED: {
     name: 'Login error',
     description: 'An error occurred while login. Please try again'
+  },
+  TOO_MANY_DEVICES: {
+    name: 'Too many devices',
+    description:
+      'You already have too many active devices. \n' +
+      'From one of your trusted devices remove some inactive device and try again. ' +
+      "If you can't access any of your trusted devices, contact support"
   }
 };
 

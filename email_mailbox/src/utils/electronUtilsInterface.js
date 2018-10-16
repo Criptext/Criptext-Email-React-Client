@@ -1,5 +1,4 @@
-const electron = window.require('electron');
-const { remote } = electron;
+const { remote } = window.require('electron');
 
 export const EmailUtils = remote.require('./src/utils/EmailUtils');
 export const RegexUtils = remote.require('./src/utils/RegexUtils');

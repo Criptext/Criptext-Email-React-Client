@@ -13,7 +13,9 @@ import {
   linkBegin,
   linkAuth,
   openCreateKeys,
-  socketClient
+  socketClient,
+  throwError,
+  errors
 } from './../utils/electronInterface';
 import {
   validateUsername,
@@ -190,8 +192,13 @@ class LoginWrapper extends Component {
   };
 
   initLinkDevice = async username => {
-    ephemeralToken = await linkBegin(username);
-    if (ephemeralToken) {
+    const { status, text } = await linkBegin(username);
+    if (status === 439) {
+      throwError(errors.login.TOO_MANY_DEVICES);
+    } else if (status === 400) {
+      this.goToPasswordLogin();
+    } else if (status === 200) {
+      ephemeralToken = text;
       const response = await this.sendLoginConfirmationRequest(ephemeralToken);
       if (response) {
         this.setState({ mode: mode.CONTINUE }, () => {

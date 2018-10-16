@@ -2,7 +2,7 @@ const { BrowserWindow } = require('electron');
 const path = require('path');
 const { loadingUrl } = require('./../window_routing');
 const globalManager = require('./../globalManager');
-const dataTransferClient = require('./../dataTransferClient');
+let dataTransferClient;
 let loadingWindow;
 
 const iconPath = path.join(
@@ -26,6 +26,8 @@ const create = () => {
   loadingWindow.setResizable(false);
 
   loadingWindow.on('closed', () => {
+    dataTransferClient = require('./../dataTransferClient');
+
     globalManager.windowsEvents.enable();
     globalManager.loadingData.set({});
     BrowserWindow.getAllWindows().forEach(openWindow => {

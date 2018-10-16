@@ -6,6 +6,7 @@ import {
   validateConfirmPassword
 } from './../validators';
 
+jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronUtilsInterface');
 

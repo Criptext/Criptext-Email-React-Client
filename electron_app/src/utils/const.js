@@ -6,8 +6,7 @@ const FILE_SERVER_APP_ID = 'qynhtyzjrshazxqarkpy';
 const FILE_SERVER_KEY = 'lofjksedbxuucdjjpnby';
 const PROD_DATA_TRANSFER_URL = 'https://transfer.criptext.com';
 
-const appDomain =
-  process.env.NODE_ENV === 'development' ? 'jigl.com' : 'criptext.com';
+const appDomain = 'criptext.com';
 
 module.exports = {
   FILE_SERVER_APP_ID,

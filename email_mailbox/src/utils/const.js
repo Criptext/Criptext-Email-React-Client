@@ -1,7 +1,7 @@
-/*global process */
 import { LabelType } from './electronInterface';
-export const appDomain =
-  process.env.NODE_ENV === 'development' ? 'jigl.com' : 'criptext.com';
+
+const { remote } = window.require('electron');
+export const { appDomain } = remote.require('./src/utils/const');
 
 export const unsentText = 'This content was unsent';
 

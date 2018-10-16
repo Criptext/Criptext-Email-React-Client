@@ -3,6 +3,7 @@
 import { defineRejectedLabels, compareEmailDate } from '../EmailUtils';
 import { LabelType } from '../electronInterface';
 
+jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 
 describe('Email utils: Define rejected labels ', () => {

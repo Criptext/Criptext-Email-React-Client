@@ -131,8 +131,8 @@ class ClientManager {
   }
 
   async linkBegin(username) {
-    const { text } = await client.linkBegin(username);
-    return text;
+    const { status, text } = await client.linkBegin(username);
+    return { status, text };
   }
 
   linkDeny(randomId) {

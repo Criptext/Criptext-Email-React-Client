@@ -1,0 +1,13 @@
+{"table":"contact","object":{"id":1,"email":"alice@criptext.com","name":"Alice"}}
+{"table":"contact","object":{"id":2,"email":"bob@criptext.com","name":"Bob"}}
+{"table":"contact","object":{"id":3,"email":"charlie@criptext.com","name":"Charlie"}}
+{"table":"label","object":{"id":1,"text":"Sent","color":"000000","type":"custom","visible":true}}
+{"table":"label","object":{"id":2,"text":"Starred","color":"111111","type":"custom","visible":true}}
+{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"isMuted":false,"unsentDate":"2018-06-14 08:23:20","messageId":1}}
+{"table":"email_contact","object":{"id":1,"contactId":1,"emailId":1,"type":"from"}}
+{"table":"email_contact","object":{"id":2,"contactId":2,"emailId":1,"type":"to"}}
+{"table":"email_contact","object":{"id":3,"contactId":3,"emailId":1,"type":"to"}}
+{"table":"email_label","object":{"id":1,"labelId":1,"emailId":1}}
+{"table":"email_label","object":{"id":2,"labelId":2,"emailId":1}}
+{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","readOnly":false,"size":183241,"status":1,"date":"2018-09-03 18:45:57","mimeType":"image/png","ephemeral":0,"ephemeralStart":0,"ephemeralTime":0,"emailId":1}}
+{"table":"filekey","object":{"id":1,"key":"fileKeyA","iv":"fileIvA","emailId":1}}

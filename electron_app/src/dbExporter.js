@@ -101,17 +101,21 @@ const exportEmailTable = async db => {
           row['unsentDate'] = parseDate(row.unsendDate);
           delete row.unsendDate;
         }
+
         if (!row.trashDate) {
           delete row.trashDate;
+        } else {
+          row['trashDate'] = parseDate(row.unsendDate);
         }
+
+        const key = parseInt(row.key);
         return Object.assign(row, {
           unread: !!row.unread,
           secure: !!row.secure,
           isMuted: !!row.isMuted,
-          key: parseInt(row.key),
-          messageId: row.key,
-          date: parseDate(row.date),
-          trashDate: parseDate(row.trashDate)
+          key,
+          messageId: key,
+          date: parseDate(row.date)
         });
       })
     );

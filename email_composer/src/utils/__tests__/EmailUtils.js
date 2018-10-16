@@ -3,6 +3,7 @@
 import { formDataToEditDraft, formDataToReply } from './../EmailUtils';
 import { emailKey } from './../__mocks__/electronInterface';
 
+jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 
 describe('[Edit draft] ', () => {

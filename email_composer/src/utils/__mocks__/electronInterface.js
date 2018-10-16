@@ -1,4 +1,4 @@
-import { appDomain } from './../const';
+import { appDomain } from './const';
 
 export const myAccount = {
   recipientId: 'julian'

@@ -8,6 +8,7 @@ import {
 } from './../../actions/index';
 import json from './../../../public/feeds.json';
 
+jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
 jest.mock('./../../utils/electronUtilsInterface');

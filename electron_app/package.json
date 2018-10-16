@@ -88,9 +88,14 @@
       "target": [
         "AppImage"
       ],
-      "icon": "build/icon.png",
+      "icon": "build/icon.icns",
       "category": "Network",
       "artifactName": "${productName}-${version}.${ext}",
+      "desktop": {
+        "Name": "Criptext",
+        "Comment": "Encrypted email built on privacy",
+        "Categories": "Network"
+      },
       "publish": [
         {
           "provider": "generic",
