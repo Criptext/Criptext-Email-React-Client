@@ -204,7 +204,7 @@ class LoginWrapper extends Component {
     });
   };
 
-  obtainEphemeralToken = (username) => {
+  obtainEphemeralToken = async username => {
     const { status, text } = await linkBegin(username);
     if (status === 439) {
       throwError(errors.login.TOO_MANY_DEVICES);
@@ -213,10 +213,11 @@ class LoginWrapper extends Component {
     } else if (status === 200) {
       // eslint-disable-next-line fp/no-mutation
       ephemeralToken = text;
-  }}
+    }
+  };
 
   initLinkDevice = async username => {
-    await obtainEphemeralToken(username);
+    await this.obtainEphemeralToken(username);
     if (ephemeralToken) {
       const response = await this.sendLoginConfirmationRequest(ephemeralToken);
       if (response) {
