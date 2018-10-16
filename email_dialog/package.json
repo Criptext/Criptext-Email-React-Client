@@ -10,6 +10,7 @@
     "react-scripts": "1.1.0"
   },
   "scripts": {
+    "postinstall": "node-sass-chokidar src -o src",
     "build-css": "node-sass-chokidar src -o src",
     "watch-css": "npm run build-css && node-sass-chokidar src -o src --watch --recursive",
     "start-js": "react-scripts start",
