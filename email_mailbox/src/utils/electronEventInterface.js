@@ -158,7 +158,7 @@ const processEvent = async eventsGroups => {
       }
     }
   }
-  if(rowIds.length){
+  if (rowIds.length) {
     const rowIdsFiltered = rowIds.filter(rowId => rowId !== null);
     await setEventAsHandled(rowIdsFiltered);
   }
@@ -566,7 +566,7 @@ const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
       keys.push(email.key);
     }
   }
-  const res = await deleteEmailByKeys(keys);
+  await deleteEmailByKeys(keys);
   emitter.emit(Event.EMAIL_DELETED, emailIds);
   return rowid;
 };
@@ -634,7 +634,7 @@ const handlePeerRecoveryEmailConfirmed = async () => {
   }
 };
 
-const handleSendEmailError = async ({ rowid }) => {
+const handleSendEmailError = ({ rowid }) => {
   return rowid;
 };
 
