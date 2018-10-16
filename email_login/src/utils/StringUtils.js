@@ -24,11 +24,14 @@ export const replaceCharacters = (string, positionsToExclude, character) => {
     const sanitizedPositions = positionsToExclude.map(position => {
       return position < 0 ? string.length + position : position;
     });
+    // eslint-disable-next-line fp/no-let
     let replacedString = '';
+    // eslint-disable-next-line fp/no-let, fp/no-loops, fp/no-mutation
     for (let i = 0; i < string.length; i++) {
       const newCharacter = sanitizedPositions.includes(i)
         ? string.charAt(i)
         : character;
+      // eslint-disable-next-line fp/no-mutation
       replacedString += newCharacter;
     }
     return replacedString;

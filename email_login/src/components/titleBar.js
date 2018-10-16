@@ -1,6 +1,6 @@
 import React from 'react';
 import { closeLogin, minimizeLogin } from './../utils/electronInterface';
-import './titleBar.css';
+import './titleBar.scss';
 
 const titleBar = () => (
   <div className="title-bar">

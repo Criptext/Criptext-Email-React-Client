@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './continueLogin.css';
-import './clockLoading.css';
+import './continueLogin.scss';
+import './clockLoading.scss';
 
 const ContinueLogin = props => (
   <div className="continue">
@@ -68,10 +68,12 @@ const renderContent = props => (
   </div>
 );
 
+// eslint-disable-next-line fp/no-mutation
 renderHeader.propTypes = {
   toggleContinue: PropTypes.func
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {
   disabledResendLoginRequest: PropTypes.bool,
   onClickSignInWithPassword: PropTypes.func,

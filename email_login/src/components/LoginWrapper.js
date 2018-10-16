@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Login from './Login';
-import SignUpWrapper from './SignUpWrapper';
+import SignUpWrapper from './SignUpElectronWrapper';
 import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
+  checkAvailableUsername,
   closeDialog,
   closeLogin,
   confirmLostDevices,
@@ -17,10 +18,7 @@ import {
   throwError,
   errors
 } from './../utils/electronInterface';
-import {
-  validateUsername,
-  checkUsernameAvailable
-} from './../validators/validators';
+import { validateUsername } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
 import { addEvent, Event } from '../utils/electronEventInterface';
 import DeviceNotApproved from './DeviceNotApproved';
@@ -34,9 +32,12 @@ const mode = {
 };
 
 const errorMessages = {
-  USERNAME_NOT_EXISTS: "Username doesn't exists"
+  USERNAME_NOT_EXISTS: "Username doesn't exist",
+  USERNAME_INVALID: 'Invalid username',
+  STATUS_UNKNOWN: 'Unknown status code: '
 };
 
+// eslint-disable-next-line fp/no-let
 let ephemeralToken;
 
 class LoginWrapper extends Component {
@@ -53,10 +54,6 @@ class LoginWrapper extends Component {
     };
     this.timeCountdown = 0;
     this.initEventListeners();
-  }
-
-  async componentDidMount() {
-    await this.checkDisable();
   }
 
   render() {
@@ -104,9 +101,7 @@ class LoginWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     const nextMode = this.state.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN;
-    this.setState({ mode: nextMode }, async () => {
-      await this.checkDisable();
-    });
+    this.setState({ mode: nextMode });
   };
 
   toggleContinue = ev => {
@@ -116,58 +111,83 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     const nextMode =
       this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN;
-    this.setState({ mode: nextMode }, async () => {
-      await this.checkDisable();
-    });
+    this.setState({ mode: nextMode });
   };
 
   toggleLostAllDevices = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState(
-      {
-        mode: mode.LOGIN
-      },
-      async () => {
-        await this.checkDisable();
-      }
-    );
+    this.setState({
+      mode: mode.LOGIN
+    });
   };
 
   toggleDeviceNotApproved = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState(
-      {
-        mode: mode.LOGIN
-      },
-      async () => {
-        await this.checkDisable();
-      }
-    );
+    this.setState({
+      mode: mode.LOGIN
+    });
   };
 
   stopCountdown = () => {
     clearTimeout(this.timeCountdown);
   };
 
-  validateUsername = async () => {
-    const username = this.state.values['username'];
-    return await validateUsername(username);
-  };
+  handleCheckUsernameResponse = newUsername => ({ status }) => {
+    this.setState(curState => {
+      if (curState.values.username !== newUsername) return curState;
 
-  checkDisable = async () => {
-    const isValid = await this.validateUsername();
-    this.setState({
-      disabledLoginButton: !isValid
+      switch (status) {
+        case 200:
+          return {
+            disabledLoginButton: true,
+            errorMessage: errorMessages.USERNAME_NOT_EXISTS
+          };
+        case 422:
+          return {
+            disabledLoginButton: true,
+            errorMessage: errorMessages.USERNAME_INVALID
+          };
+        case 400:
+          return { disabledLoginButton: false, errorMessage: '' };
+        default:
+          return {
+            disabledLoginButton: true,
+            errorMessage: errorMessages.STATUS_UNKNOWN + status
+          };
+      }
     });
   };
 
   handleChange = event => {
-    const values = { ...this.state.values };
-    values[event.target.name] = event.target.value;
-    this.setState({ values, errorMessage: '' }, async () => {
-      await this.checkDisable();
+    const newUsername = event.target.value;
+
+    if (!newUsername)
+      return this.setState({
+        values: { ...this.state.values, username: newUsername },
+        errorMessage: ''
+      });
+
+    if (!validateUsername(newUsername))
+      return this.setState({
+        values: { ...this.state.values, username: newUsername },
+        errorMessage: errorMessages.USERNAME_INVALID
+      });
+
+    if (this.lastCheck) clearTimeout(this.lastCheck);
+
+    this.lastCheck = setTimeout(() => {
+      if (this.state.values.username !== newUsername) return;
+
+      checkAvailableUsername(newUsername).then(
+        this.handleCheckUsernameResponse(newUsername)
+      );
+    }, 300);
+
+    this.setState({
+      values: { ...this.state.values, username: newUsername },
+      errorMessage: ''
     });
   };
 
@@ -175,14 +195,7 @@ class LoginWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     const username = this.state.values.username;
-    const isAvailable = await checkUsernameAvailable(username);
-    if (isAvailable) {
-      this.setState({
-        errorMessage: errorMessages.USERNAME_NOT_EXISTS
-      });
-    } else {
-      await this.initLinkDevice(username);
-    }
+    await this.initLinkDevice(username);
   };
 
   goToPasswordLogin = () => {
@@ -191,14 +204,21 @@ class LoginWrapper extends Component {
     });
   };
 
-  initLinkDevice = async username => {
+  obtainEphemeralToken = async username => {
     const { status, text } = await linkBegin(username);
     if (status === 439) {
       throwError(errors.login.TOO_MANY_DEVICES);
     } else if (status === 400) {
-      this.goToPasswordLogin();
+      return this.goToPasswordLogin();
     } else if (status === 200) {
+      // eslint-disable-next-line fp/no-mutation
       ephemeralToken = text;
+    }
+  };
+
+  initLinkDevice = async username => {
+    await this.obtainEphemeralToken(username);
+    if (ephemeralToken) {
       const response = await this.sendLoginConfirmationRequest(ephemeralToken);
       if (response) {
         this.setState({ mode: mode.CONTINUE }, () => {

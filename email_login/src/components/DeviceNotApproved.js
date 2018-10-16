@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './devicenotapproved.css';
+import './devicenotapproved.scss';
 
 const DeviceNotApproved = props => (
   <div className="device-not-approved-container">
@@ -45,10 +45,12 @@ const renderContent = props => (
   </div>
 );
 
+// eslint-disable-next-line fp/no-mutation
 renderHeader.propTypes = {
   toggleDeviceNotApproved: PropTypes.func
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {
   onClickSignInWithPassword: PropTypes.func
 };

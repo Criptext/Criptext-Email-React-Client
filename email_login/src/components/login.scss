@@ -1,5 +1,4 @@
-@import "./../styles/index.scss";
-
+@import './../styles/index.scss';
 
 .login {
   font-family: 'NunitoSans';
@@ -20,7 +19,8 @@
         margin: 0 auto;
         position: relative;
         top: 65%;
-        background: url('./../images/logo-2-copy@2x.png') no-repeat center center;
+        background: url('./../images/logo-2-copy@2x.png') no-repeat center
+          center;
         background-size: 100%;
       }
     }
@@ -49,14 +49,14 @@
           background: transparent;
           width: 55%;
           border: 0px;
-          border-bottom: solid 1px rgba(255,255,255,0.19);
+          border-bottom: solid 1px rgba(255, 255, 255, 0.19);
           color: #ffffff;
           font-size: 13px;
           font-weight: 300;
           text-indent: 7px;
 
           &::placeholder {
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 255, 255, 0.6);
             opacity: 1;
           }
 
@@ -87,7 +87,6 @@
         position: absolute;
         bottom: 22%;
 
-
         .button-login {
           border: none;
           border-radius: 100px;
@@ -98,7 +97,7 @@
           width: 100%;
           transition: opacity 0.1s;
           outline: none;
-          
+
           span {
             color: #fff;
             font-weight: 600;
@@ -108,16 +107,17 @@
         }
         .button-login:enabled {
           opacity: 0.9;
-          span{
+          span {
             opacity: 0.9;
           }
         }
         .button-login:hover:enabled {
-          opacity: 1.0;
-          span{ opacity: 1.0; }
+          opacity: 1;
+          span {
+            opacity: 1;
+          }
         }
       }
-
     }
   }
 
@@ -131,13 +131,12 @@
       top: 8%;
       text-align: center;
 
-      span{
+      span {
         font-weight: 300;
-        strong{
+        strong {
           cursor: pointer;
         }
       }
     }
   }
-
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './login.css';
+import './login.scss';
 
 const Login = props => renderLogin(props);
 
@@ -63,6 +63,7 @@ const renderFooter = props => (
   </div>
 );
 
+// eslint-disable-next-line fp/no-mutation
 renderForm.propTypes = {
   disabledLoginButton: PropTypes.bool,
   errorMessage: PropTypes.string,
@@ -71,6 +72,7 @@ renderForm.propTypes = {
   value: PropTypes.string
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderFooter.propTypes = {
   toggleSignUp: PropTypes.func
 };

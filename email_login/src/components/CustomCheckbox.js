@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './customCheckbox.css';
+import './customCheckbox.scss';
 
 const CustomCheckbox = props => (
   <div className="checkmark-container" onClick={ev => onClick(ev, props)}>
@@ -24,6 +24,7 @@ function onClick(ev, props) {
   return props.onCheck(true);
 }
 
+// eslint-disable-next-line fp/no-mutation
 CustomCheckbox.propTypes = {
   status: PropTypes.bool
 };

@@ -6,15 +6,8 @@ import {
   validatePassword,
   validateConfirmPassword,
   validateAcceptTerms,
-  validateEmail,
-  checkUsernameAvailable
+  validateEmail
 } from './../validators/validators';
-import {
-  closeDialog,
-  confirmEmptyEmail,
-  openCreateKeys,
-  closeLogin
-} from './../utils/electronInterface';
 import SignUp from './SignUp';
 import { hashPassword } from '../utils/HashUtils';
 
@@ -107,12 +100,14 @@ const formItems = [
 
 const onInitState = (array, field) =>
   array.reduce((obj, item) => {
+    // eslint-disable-next-line fp/no-mutation
     obj[item[field]] = item.value;
     return obj;
   }, {});
 
 const onInitErrors = (array, field) =>
   array.reduce((obj, item) => {
+    // eslint-disable-next-line fp/no-mutation
     obj[item[field]] = false;
     return obj;
   }, {});
@@ -157,7 +152,9 @@ class SignUpWrapper extends Component {
           formItem.name,
           this.state.values[formItem.name]
         );
+        // eslint-disable-next-line fp/no-mutation
         errors[formItem.name] = !result;
+        // eslint-disable-next-line fp/no-mutation
         disabled = disabled || !result;
       }
     });
@@ -169,13 +166,11 @@ class SignUpWrapper extends Component {
 
   onSetError = (formItemName, errorValue) => {
     const errors = this.state.errors;
-    errors[formItemName] = errorValue;
-    this.setState({ errors: errors });
+    this.setState({ errors: { ...errors, [formItemName]: errorValue } });
   };
 
   handleChange = (event, field) => {
-    const values = { ...this.state.values };
-    values[field] = event.target.value;
+    const values = { ...this.state.values, [field]: event.target.value };
     this.setState({ values }, () => {
       this.checkDisable();
     });
@@ -189,8 +184,7 @@ class SignUpWrapper extends Component {
     if (values.recoveryemail !== '') {
       this.onSubmit(values);
     } else {
-      confirmEmptyEmail(response => {
-        closeDialog();
+      this.props.onSubmitWithoutRecoveryEmail(response => {
         if (response === 'Confirm') {
           this.onSubmit(values);
         }
@@ -208,18 +202,14 @@ class SignUpWrapper extends Component {
       name: values.fullname,
       recoveryEmail: values.recoveryemail
     };
-    openCreateKeys({
-      loadingType: 'signup',
-      remoteData: submitValues
-    });
-    closeLogin();
+    this.props.onFormReady(submitValues);
   };
 
   checkUsername = async user => {
-    const errorState = this.state.errors;
-    const isUsernameAvailable = await checkUsernameAvailable(user);
+    const isUsernameAvailable =
+      validateUsername(user) && (await this.props.isUsernameAvailable(user));
     if (!isUsernameAvailable) {
-      errorState['username'] = true;
+      const errorState = { ...this.state.errors, username: true };
       this.setState({
         disabled: true,
         errors: errorState
@@ -228,39 +218,35 @@ class SignUpWrapper extends Component {
   };
 
   universalValidator = (formItemName, formItemValue) => {
-    let result;
     switch (formItemName) {
       case 'username': {
         this.checkUsername(formItemValue);
-        result = validateUsername(formItemValue);
-        break;
+        return validateUsername(formItemValue);
       }
       case 'fullname': {
-        result = validateFullname(formItemValue);
-        break;
+        return validateFullname(formItemValue);
       }
       case 'password': {
-        result = validatePassword(formItemValue);
-        break;
+        return validatePassword(formItemValue);
       }
       case 'confirmpassword': {
         const password = this.state.values['password'];
-        result = validateConfirmPassword(password, formItemValue);
-        break;
+        return validateConfirmPassword(password, formItemValue);
       }
       case 'recoveryemail': {
-        result = validateEmail(formItemValue);
-        break;
+        return validateEmail(formItemValue);
       }
       default:
-        result = validateAcceptTerms(formItemValue);
+        return validateAcceptTerms(formItemValue);
     }
-    return result;
   };
 }
 
+// eslint-disable-next-line fp/no-mutation
 SignUpWrapper.propTypes = {
-  onAddUser: PropTypes.func
+  isUsernameAvailable: PropTypes.func,
+  onFormReady: PropTypes.func,
+  onSubmitWithoutRecoveryEmail: PropTypes.func
 };
 
 export default SignUpWrapper;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import FormItemWrapper from './FormItemWrapper';
-import './signup.css';
+import './signup.scss';
 
 const SignUp = props => renderSignUp(props);
 
@@ -60,10 +60,12 @@ const renderForm = props => (
   </div>
 );
 
+// eslint-disable-next-line fp/no-mutation
 renderHeader.propTypes = {
   toggleSignUp: PropTypes.func
 };
 
+// eslint-disable-next-line fp/no-mutation
 renderForm.propTypes = {
   disabled: PropTypes.bool,
   onClickSignUp: PropTypes.func,

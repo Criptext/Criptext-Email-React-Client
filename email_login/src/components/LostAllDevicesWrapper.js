@@ -61,8 +61,10 @@ class LostDevicesWrapper extends Component {
   };
 
   handleChangeField = event => {
-    const values = { ...this.state.values };
-    values[event.target.name] = event.target.value;
+    const values = {
+      ...this.state.values,
+      [event.target.name]: event.target.value
+    };
     this.setState({ values }, () => {
       this.checkDisable();
     });
@@ -146,6 +148,7 @@ class LostDevicesWrapper extends Component {
   };
 }
 
+// eslint-disable-next-line fp/no-mutation
 LostDevicesWrapper.propTypes = {
   usernameValue: PropTypes.string
 };
