@@ -1,7 +1,7 @@
 const { app, BrowserWindow, shell } = require('electron');
 const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
-const { appUpdaterMac, appUpdaterWin } = require('./../updater');
+const { appUpdaterMac, appUpdaterWin, appUpdaterLinux } = require('./../updater');
 const globalManager = require('./../globalManager');
 const path = require('path');
 const opn = require('opn');
@@ -76,6 +76,8 @@ const create = () => {
       appUpdaterWin();
     } else if (checkMacOS) {
       appUpdaterMac();
+    } else {
+      appUpdaterLinux();
     }
   });
   mailboxWindowState.manage(mailboxWindow);
