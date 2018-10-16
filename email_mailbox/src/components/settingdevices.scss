@@ -49,10 +49,7 @@
           &:nth-child(1) {
             font-weight: 600;
             color: #000;
-            &::after {
-              color: #6c7280;
-              content: ' - '
-            }
+            margin-right: 6px;
           }
           &:nth-child(2) {
             color: #6c7280;

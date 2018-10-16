@@ -47,11 +47,12 @@ const renderTrustedDevice = (index, deviceData, props) => (
         <span className="current-device">Current device</span>
       </div>
     )}
-    {deviceData.lastConnection.place && (
-      <div className="device-status">
-        {renderLastConnection(deviceData.lastConnection)}
-      </div>
-    )}
+    {deviceData.lastConnection.time &&
+      !deviceData.isCurrentDevice && (
+        <div className="device-status">
+          {renderLastConnection(deviceData.lastConnection)}
+        </div>
+      )}
     {!deviceData.isCurrentDevice && (
       <div
         className="device-action"
@@ -75,10 +76,10 @@ const defineDeviceIconByType = type => {
 };
 
 const renderLastConnection = lastConnection => {
-  const { place, time } = lastConnection;
-  return place && time ? (
+  const { time } = lastConnection;
+  return time ? (
     <div className="device-connection-data">
-      <span>{lastConnection.place}</span>
+      <span>Last activity:</span>
       <span>{lastConnection.time}</span>
     </div>
   ) : null;
