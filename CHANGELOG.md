@@ -1,5 +1,32 @@
 # Change Log
 
+## [0.13.0](https://github.com/criptext/Criptext-Email-React-Client/tree/0.13.0) (2018-10-16)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.12.1...0.13.0)
+
+**Implemented enhancements:**
+
+- Add settings button to sidebar [\#465](https://github.com/Criptext/Criptext-Email-React-Client/issues/465)
+
+**Fixed bugs:**
+
+- Thread detail: Fix email order [\#464](https://github.com/Criptext/Criptext-Email-React-Client/issues/464)
+- Fix trash button [\#463](https://github.com/Criptext/Criptext-Email-React-Client/issues/463)
+
+**Closed issues:**
+
+- Fix uncrypted emails [\#459](https://github.com/Criptext/Criptext-Email-React-Client/issues/459)
+
+**Merged pull requests:**
+
+- Link device fixes [\#470](https://github.com/Criptext/Criptext-Email-React-Client/pull/470) ([JulianAdams4](https://github.com/JulianAdams4))
+- Link devices [\#469](https://github.com/Criptext/Criptext-Email-React-Client/pull/469) ([JulianAdams4](https://github.com/JulianAdams4))
+- Email detail [\#468](https://github.com/Criptext/Criptext-Email-React-Client/pull/468) ([erikaperugachi](https://github.com/erikaperugachi))
+- Sidebar set view [\#467](https://github.com/Criptext/Criptext-Email-React-Client/pull/467) ([erikaperugachi](https://github.com/erikaperugachi))
+- Decouple email\_login validators from electron [\#466](https://github.com/Criptext/Criptext-Email-React-Client/pull/466) ([not-gabriel](https://github.com/not-gabriel))
+- Clear missing relations [\#461](https://github.com/Criptext/Criptext-Email-React-Client/pull/461) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix unencrypted emails. Fix \#459 [\#460](https://github.com/Criptext/Criptext-Email-React-Client/pull/460) ([erikaperugachi](https://github.com/erikaperugachi))
+- Labels migration [\#457](https://github.com/Criptext/Criptext-Email-React-Client/pull/457) ([JulianAdams4](https://github.com/JulianAdams4))
+
 ## [0.12.1](https://github.com/criptext/Criptext-Email-React-Client/tree/0.12.1) (2018-10-09)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.12.0...0.12.1)
 
@@ -9,6 +36,7 @@
 
 **Fixed bugs:**
 
+- App/Mailbox: Fix system label ids [\#456](https://github.com/Criptext/Criptext-Email-React-Client/issues/456)
 - Composer: Fix add @ in italian keyboard [\#455](https://github.com/Criptext/Criptext-Email-React-Client/issues/455)
 - Fix search mailbox [\#450](https://github.com/Criptext/Criptext-Email-React-Client/issues/450)
 
