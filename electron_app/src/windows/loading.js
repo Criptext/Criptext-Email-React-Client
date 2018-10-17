@@ -2,8 +2,12 @@ const { BrowserWindow } = require('electron');
 const path = require('path');
 const { loadingUrl } = require('./../window_routing');
 const globalManager = require('./../globalManager');
-let dataTransferClient;
 let loadingWindow;
+
+const LINK_DEVICE_LOADING_TYPES = {
+  LINK_NEW_DEVICE: 'link-new-device',
+  LINK_OLD_DEVICE: 'link-old-device'
+};
 
 const iconPath = path.join(
   __dirname,
@@ -26,14 +30,19 @@ const create = () => {
   loadingWindow.setResizable(false);
 
   loadingWindow.on('closed', () => {
-    dataTransferClient = require('./../dataTransferClient');
-
-    globalManager.windowsEvents.enable();
-    globalManager.loadingData.set({});
-    BrowserWindow.getAllWindows().forEach(openWindow => {
-      openWindow.webContents.send('enable-window-link-devices');
-    });
-    dataTransferClient.clearSyncData();
+    const { loadingType } = globalManager.loadingData.get();
+    if (Object.values(LINK_DEVICE_LOADING_TYPES).includes(loadingType)) {
+      try {
+        globalManager.windowsEvents.enable();
+        globalManager.loadingData.set({});
+        BrowserWindow.getAllWindows().forEach(openWindow => {
+          openWindow.webContents.send('enable-window-link-devices');
+        });
+        require('./../dataTransferClient').clearSyncData();
+      } catch (e) {
+        console.log('\x1b[33m%s\x1b[0m', ' ', e.name, '\n  ', e.description);
+      }
+    }
   });
 };
 
