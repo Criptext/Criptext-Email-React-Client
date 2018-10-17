@@ -121,6 +121,11 @@ const appUpdaterMac = () => {
   autoUpdater.checkForUpdatesAndNotify();
 };
 
+const appUpdaterLinux = () => {
+  currentUpdaterType = updaterTypes.AUTO;
+  autoUpdater.checkForUpdatesAndNotify();
+};
+
 const checkForUpdates = () => {
   if (!isDownloadingUpdate) {
     currentUpdaterType = updaterTypes.MANUAL;
@@ -137,5 +142,6 @@ const checkForUpdates = () => {
 module.exports = {
   checkForUpdates,
   appUpdaterMac,
-  appUpdaterWin
+  appUpdaterWin,
+  appUpdaterLinux
 };

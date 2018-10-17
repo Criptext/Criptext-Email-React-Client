@@ -18,6 +18,7 @@ import {
   resendConfirmationEmail
 } from '../utils/electronInterface';
 import { appDomain, SocketCommand } from '../utils/const';
+import { defineLastDeviceActivity } from '../utils/TimeUtils';
 
 const defineSystemLabels = labelsArray => {
   return labelsArray.filter(label => {
@@ -50,7 +51,9 @@ const formatDevicesData = devices => {
         deviceId: device.deviceId,
         lastConnection: {
           place: null,
-          time: null
+          time: device.lastActivity
+            ? defineLastDeviceActivity(device.lastActivity.date)
+            : null
         },
         isCurrentDevice: device.deviceId === myAccount.deviceId
       };
