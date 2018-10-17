@@ -43,7 +43,8 @@ Contributions are welcome. This project contains subdirectories according to eac
 * email_mailbox: contains the main view of the app which is made-up of the mailbox itself, settings, contacts, etc.
 * email_composer: contains the view and code that handles the window that edits new emails.
 * email_login: contains the views and code that handles user sign in and sign up.
-* email_loader: contains the views and code that handles spinners and progress bars between window transitions.
+* email_dialog: contains various dialogs that pop up in the app.
+* email_loading: contains the views and code that handles spinners and progress bars between window transitions.
 
 
 The main application logic is the `electron_app` dir. 
