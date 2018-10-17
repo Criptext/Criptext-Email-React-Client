@@ -236,6 +236,7 @@ const formOutgoingEmailFromData = ({
   key,
   labelId,
   secure,
+  status,
   textSubject,
   toEmails,
   threadId
@@ -262,7 +263,7 @@ const formOutgoingEmailFromData = ({
     content: secure ? body : `${body}${formAppSign()}`,
     preview: cleanHTML(body).slice(0, 100),
     date: Date.now(),
-    status: EmailStatus.SENDING,
+    status,
     unread: false,
     secure,
     isMuted: false,
