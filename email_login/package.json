@@ -18,9 +18,9 @@
   },
   "proxy": "http://localhost:8000",
   "devDependencies": {
+    "@criptext/react-scripts": "^2.0.6-rc1",
     "criptext-js-tools": "0.7.2",
-    "node-sass": "^4.9.4",
-    "react-scripts": "2.0.3"
+    "node-sass": "^4.9.4"
   },
   "homepage": "./",
   "browserslist": [
