@@ -68,7 +68,7 @@ const createAccount = async ({
   } else if (status !== 200) {
     throw CustomError({
       name: 'Error creating user',
-      description: `Failed to creaate user. Code: ${status || 'Unknown'}`
+      description: `Failed to create user. Code: ${status || 'Unknown'}`
     });
   }
 
