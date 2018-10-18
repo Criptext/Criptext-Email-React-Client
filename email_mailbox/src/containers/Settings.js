@@ -110,11 +110,13 @@ const mapDispatchToProps = dispatch => {
       const {
         devices,
         recoveryEmail,
+        twoFactorAuth,
         recoveryEmailConfirmed
       } = await getUserSettings();
       return {
         devices: formatDevicesData(devices),
         recoveryEmail,
+        twoFactorAuth,
         recoveryEmailConfirmed
       };
     },

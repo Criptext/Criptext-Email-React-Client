@@ -80,19 +80,23 @@ class LostDevicesWrapper extends Component {
   handleClickSignInWithPassword = async event => {
     event.preventDefault();
     event.stopPropagation();
-    this.setState({
-      isLoading: true,
-      disabled: true
-    });
-    const username = this.state.values.username;
-    const password = this.state.values.password;
-    const hashedPassword = hashPassword(password);
-    const submittedData = {
-      username,
-      password: hashedPassword
-    };
-    const { status, body } = await login(submittedData);
-    this.handleLoginStatus(status, body, username);
+    if (this.props.hasTwoFactorAuth) {
+      this.props.goToWaitingApproval(this.state.values.password);
+    } else {
+      this.setState({
+        isLoading: true,
+        disabled: true
+      });
+      const username = this.state.values.username;
+      const password = this.state.values.password;
+      const hashedPassword = hashPassword(password);
+      const submittedData = {
+        username,
+        password: hashedPassword
+      };
+      const { status, body } = await login(submittedData);
+      this.handleLoginStatus(status, body, username);
+    }
   };
 
   handleLoginStatus = (status, body, username) => {

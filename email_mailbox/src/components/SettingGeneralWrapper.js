@@ -4,7 +4,8 @@ import {
   myAccount,
   requiredMinLength,
   changePassword,
-  changeRecoveryEmail
+  changeRecoveryEmail,
+  setTwoFactorAuth
 } from './../utils/electronInterface';
 import {
   addEvent,
@@ -32,7 +33,11 @@ import {
   validateConfirmPassword
 } from '../validators/validators';
 import { hashPassword } from '../utils/hashUtils';
-import { storeResendConfirmationTimestamp } from '../utils/storage';
+import {
+  storeResendConfirmationTimestamp,
+  getTwoFactorAuthStatus,
+  setTwoFactorAuthStatus
+} from '../utils/storage';
 
 const EDITING_MODES = {
   EDITING_NAME: 'editing-name',
@@ -71,6 +76,10 @@ class SettingGeneralWrapper extends Component {
       signatureParams: {
         signature: EditorState.createEmpty(),
         signatureEnabled: undefined
+      },
+      twoFactorParams: {
+        twoFactorEnabled: props.twoFactorAuth,
+        isLoading: true
       },
       changePasswordPopupParams: {
         isDisabledSubmitButton: true,
@@ -186,6 +195,9 @@ class SettingGeneralWrapper extends Component {
         settingsPupopType={this.state.settingsPupopType}
         signatureEnabled={this.state.signatureParams.signatureEnabled}
         signature={this.state.signatureParams.signature}
+        twoFactorEnabled={this.state.twoFactorParams.twoFactorEnabled}
+        twoFactorLabelIsLoading={this.state.twoFactorParams.isLoading}
+        onChangeSwitchTwoFactor={this.handleChangeSwitchTwoFactor}
         onChangeInputValueOnChangeRecoveryEmailPopup={
           this.handleChangeInputValueOnChangeRecoveryEmailPopup
         }
@@ -204,19 +216,50 @@ class SettingGeneralWrapper extends Component {
     this.setState({ signatureParams });
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.state.twoFactorParams.isLoading) {
+        this.setState({
+          twoFactorParams: {
+            ...this.state.twoFactorParams,
+            twoFactorEnabled: getTwoFactorAuthStatus() === 'true',
+            isLoading: false
+          }
+        });
+      }
+    }, 5000);
+  }
+
   componentWillReceiveProps(nextProps) {
-    const newParams = {};
+    const newRecoveryEmailParams = {};
+    const newTwoFactorParams = {};
     if (
       nextProps.recoveryEmail &&
       this.state.recoveryEmail !== nextProps.recoveryEmail
-    )
-      newParams.recoveryEmail = nextProps.recoveryEmail;
-    if (this.state.recoveryEmailConfirmed !== nextProps.recoveryEmailConfirmed)
-      newParams.recoveryEmailConfirmed = nextProps.recoveryEmailConfirmed;
+    ) {
+      newRecoveryEmailParams.recoveryEmail = nextProps.recoveryEmail;
+    }
+    if (
+      this.state.recoveryEmailConfirmed !== nextProps.recoveryEmailConfirmed
+    ) {
+      newRecoveryEmailParams.recoveryEmailConfirmed =
+        nextProps.recoveryEmailConfirmed;
+    }
+    if (
+      this.state.twoFactorParams.twoFactorEnabled !== nextProps.twoFactorAuth
+    ) {
+      newTwoFactorParams.twoFactorEnabled = nextProps.twoFactorAuth;
+      newTwoFactorParams.isLoading = false;
+      setTwoFactorAuthStatus(nextProps.twoFactorAuth);
+    }
     this.setState({
       recoveryEmailParams: {
         ...this.state.recoveryEmailParams,
-        ...newParams
+        ...newRecoveryEmailParams
+      },
+      twoFactorParams: {
+        ...this.state.twoFactorParams,
+        ...newTwoFactorParams
       }
     });
   }
@@ -362,6 +405,33 @@ class SettingGeneralWrapper extends Component {
     this.setState({ changePasswordPopupParams }, () => {
       this.checkDisabledChangePasswordButton();
     });
+  };
+
+  handleChangeSwitchTwoFactor = ev => {
+    const nextValue = ev.target.checked;
+    this.setState(
+      {
+        twoFactorParams: {
+          ...this.state.twoFactorParams,
+          isLoading: true
+        }
+      },
+      async () => {
+        const { status } = await setTwoFactorAuth(nextValue);
+        const twoFactorParams = {
+          ...this.state.twoFactorParams
+        };
+        if (status === 200) {
+          twoFactorParams['twoFactorEnabled'] = nextValue;
+          twoFactorParams['isLoading'] = false;
+          this.setState({ twoFactorParams });
+          setTwoFactorAuthStatus(nextValue);
+        } else {
+          twoFactorParams['isLoading'] = false;
+          this.setState({ twoFactorParams });
+        }
+      }
+    );
   };
 
   handleChangeInputValueOnChangeRecoveryEmailPopup = ev => {
@@ -646,7 +716,8 @@ SettingGeneralWrapper.propTypes = {
   onResendConfirmationEmail: PropTypes.func,
   onUpdateAccount: PropTypes.func,
   recoveryEmail: PropTypes.string,
-  recoveryEmailConfirmed: PropTypes.bool
+  recoveryEmailConfirmed: PropTypes.bool,
+  twoFactorAuth: PropTypes.bool
 };
 
 export {

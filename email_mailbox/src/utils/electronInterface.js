@@ -27,8 +27,8 @@ export const myAccount = remote.require('./src/Account');
 export const composerEvents = remote.require('./src/windows/composer')
   .composerEvents;
 
-/* Window events
-   ----------------------------- */
+/*  Window events
+----------------------------- */
 export const closeDialog = () => {
   ipcRenderer.send('close-modal');
 };
@@ -73,8 +73,8 @@ export const openCreateKeys = params => {
   ipcRenderer.send('open-create-keys', params);
 };
 
-/* Criptext Client
-   ----------------------------- */
+/*  Criptext Client
+----------------------------- */
 export const acknowledgeEvents = eventIds => {
   return clientManager.acknowledgeEvents(eventIds);
 };
@@ -119,6 +119,10 @@ export const postPeerEvent = params => {
   return clientManager.postPeerEvent(params);
 };
 
+export const setTwoFactorAuth = enable => {
+  return clientManager.setTwoFactorAuth(enable);
+};
+
 export const unlockDevice = params => {
   return clientManager.unlockDevice(params);
 };
@@ -131,8 +135,8 @@ export const unsendEmailEvent = metadataKey => {
   return clientManager.unsendEmail(metadataKey);
 };
 
-/* DataBase
-  ----------------------------- */
+/*  DataBase
+----------------------------- */
 export const cleanDatabase = async () => {
   await dbManager.cleanDataBase();
 };
