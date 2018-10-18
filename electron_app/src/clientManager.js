@@ -6,7 +6,10 @@ let client = {};
 
 const checkClient = async ({ optionalNewToken, optionalVersion }) => {
   if (optionalNewToken || optionalVersion) {
-    return initializeClient({ token: optionalNewToken, version: optionalVersion });
+    return initializeClient({
+      token: optionalNewToken,
+      version: optionalVersion
+    });
   }
   const [account] = await getAccount();
   const token = account ? account.jwt : undefined;

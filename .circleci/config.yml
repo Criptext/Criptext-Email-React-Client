@@ -115,5 +115,9 @@ jobs:
           command: cd electron_app/ && yarn lint
 
       - run:
+          name: Electron Test
+          command: cd electron_app/ && yarn test
+
+      - run:
           name: Electron Integration
           command: cd electron_app/ && yarn integration 
