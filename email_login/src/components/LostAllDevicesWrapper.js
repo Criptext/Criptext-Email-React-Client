@@ -16,6 +16,13 @@ import {
 import { hashPassword } from '../utils/HashUtils';
 import { censureEmailAddress } from '../utils/StringUtils';
 
+const LOGIN_STATUS = {
+  SUCCESS: 200,
+  WRONG_CREDENTIALS: 400,
+  TOO_MANY_REQUESTS: 429,
+  TOO_MANY_DEVICES: 439
+};
+
 class LostDevicesWrapper extends Component {
   constructor(props) {
     super(props);
@@ -84,24 +91,46 @@ class LostDevicesWrapper extends Component {
       username,
       password: hashedPassword
     };
-    const loginResponse = await login(submittedData);
-    const loginStatus = loginResponse.status;
-    if (loginStatus === 400) {
-      this.throwLoginError(errors.login.WRONG_CREDENTIALS);
-    } else if (loginStatus === 439) {
-      this.throwLoginError(errors.login.TOO_MANY_DEVICES);
-    } else if (loginStatus !== 200) {
-      this.throwLoginError(errors.login.FAILED);
-    } else {
-      const recipientId = username;
-      const { deviceId, name } = loginResponse.body;
-      const remoteData = {
-        recipientId,
-        deviceId,
-        name
-      };
-      openCreateKeys({ loadingType: 'login', remoteData });
-      closeLogin();
+    const { status, body } = await login(submittedData);
+    this.handleLoginStatus(status, body, username);
+  };
+
+  handleLoginStatus = (status, body, username) => {
+    switch (status) {
+      case LOGIN_STATUS.SUCCESS: {
+        const recipientId = username;
+        const { deviceId, name } = body;
+        openCreateKeys({
+          loadingType: 'login',
+          remoteData: {
+            recipientId,
+            deviceId,
+            name
+          }
+        });
+        closeLogin();
+        break;
+      }
+      case LOGIN_STATUS.WRONG_CREDENTIALS: {
+        this.throwLoginError(errors.login.WRONG_CREDENTIALS);
+        break;
+      }
+      case LOGIN_STATUS.TOO_MANY_REQUESTS: {
+        this.throwLoginError(errors.login.TOO_MANY_REQUESTS);
+        break;
+      }
+      case LOGIN_STATUS.TOO_MANY_DEVICES: {
+        this.throwLoginError(errors.login.TOO_MANY_DEVICES);
+        break;
+      }
+      default: {
+        const { name, description } = errors.login.FAILED;
+        this.throwLoginError({
+          name,
+          description: `${description}\nCode: ${status || 'Unknown'}`
+        });
+        break;
+      }
     }
   };
 
@@ -141,10 +170,7 @@ class LostDevicesWrapper extends Component {
       isLoading: false,
       disabled: false
     });
-    throwError({
-      name: error.name,
-      description: error.description
-    });
+    throwError(error);
   };
 }
 

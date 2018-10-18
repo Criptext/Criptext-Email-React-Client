@@ -49,6 +49,9 @@ import { appDomain } from '../utils/const';
 import { generateKeyAndIv } from '../utils/AESUtils';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 
+const MAX_RECIPIENTS_AMOUNT = 300;
+const MAX_ATTACMENTS_AMOUNT = 5;
+
 class ComposerWrapper extends Component {
   constructor(props) {
     super(props);
@@ -259,7 +262,9 @@ class ComposerWrapper extends Component {
   };
 
   setFiles = newFiles => {
-    if (newFiles && newFiles.length > 0) {
+    if (this.state.files.length + newFiles.length > MAX_ATTACMENTS_AMOUNT) {
+      return throwError(errors.message.TOO_MANY_FILES);
+    } else if (newFiles && newFiles.length > 0) {
       const [firstNewFile, ...remainingNewFiles] = Array.from(newFiles);
       fileManager.uploadFile(firstNewFile, CHUNK_SIZE, (error, token) => {
         if (error) {
@@ -389,8 +394,16 @@ class ComposerWrapper extends Component {
   handleSendMessage = () => {
     const hasNonCriptextRecipients = !!this.checkNonCriptextRecipients();
     const isVerified = this.state.nonCriptextRecipientsVerified;
+    const recipientsAmount =
+      this.state.toEmails.length +
+      this.state.ccEmails.length +
+      this.state.bccEmails.length;
     if (hasNonCriptextRecipients && !isVerified) {
       this.setState({ displayNonCriptextPopup: true });
+    } else if (recipientsAmount >= MAX_RECIPIENTS_AMOUNT) {
+      this.setState({ status: Status.DISABLED }, () => {
+        throwError(errors.message.TOO_MANY_RECIPIENTS);
+      });
     } else {
       const isEmailSecure = hasNonCriptextRecipients
         ? !!this.state.nonCriptextRecipientsPassword

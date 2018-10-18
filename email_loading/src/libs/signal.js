@@ -54,23 +54,27 @@ const createAccount = async ({
     signedPreKeyId,
     preKeyIds
   });
-  const res = await postUser({
+  const { status, text } = await postUser({
     recipientId,
     password,
     name,
     recoveryEmail,
     keybundle
   });
-  if (res.status === 400) {
+  if (status === 400) {
     throw CustomError(errors.user.ALREADY_EXISTS);
-  }
-  if (res.status !== 200) {
-    return false;
+  } else if (status === 429) {
+    throw CustomError(errors.user.TOO_MANY_REQUESTS);
+  } else if (status !== 200) {
+    throw CustomError({
+      name: 'Error creating user',
+      description: `Failed to creaate user. Code: ${status || 'Unknown'}`
+    });
   }
 
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
-  const jwt = res.text;
+  const jwt = text;
   await createAccountDB({
     recipientId,
     deviceId: 1,
@@ -96,7 +100,10 @@ const createAccount = async ({
     name,
     email: `${recipientId}@${appDomain}`
   });
-  return true;
+  return {
+    accountResponse: true,
+    code: status
+  };
 };
 
 const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
