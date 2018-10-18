@@ -245,8 +245,14 @@ const encryptPostEmail = async ({
   });
   const res = await postEmail(data);
 
-  if (res.status !== 200) {
-    throw new CustomError(errors.message.ENCRYPTING);
+  if (res.status === 429) {
+    throw new CustomError(errors.message.TOO_MANY_RECIPIENTS);
+  } else if (res.status !== 200) {
+    const { name, description } = errors.message.ENCRYPTING;
+    throw new CustomError({
+      name,
+      description: `${description}.\nCode: ${res.status || 'Unknown'}`
+    });
   }
   return res;
 };

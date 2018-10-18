@@ -21,6 +21,12 @@ const LOGIN_ERROR = {
       'You already have too many active devices. \n' +
       'From one of your trusted devices remove some inactive device and try again. ' +
       "If you can't access any of your trusted devices, contact support"
+  },
+  TOO_MANY_REQUESTS: {
+    name: 'Too many requests',
+    description:
+      "It seems that you're sending too many requests in a row.\n" +
+      'Keep calm and try in a few moments again.'
   }
 };
 
@@ -46,11 +52,23 @@ const MESSAGE_ERROR = {
   },
   NON_EXISTING_USERS: {
     name: 'Non existing users',
-    description: "One or more users doesn't exist. Check and try again"
+    description:
+      "One or more users doesn't exists.\n" +
+      'Check the recipients and try again'
   },
   UPLOAD_FAILED: {
     name: 'Upload Failed',
     description: 'An error occurred while uploading file.'
+  },
+  TOO_MANY_FILES: {
+    name: 'Too many attachments',
+    description: 'You can only attach 5 files to an email'
+  },
+  TOO_MANY_RECIPIENTS: {
+    name: 'Too many recipients',
+    description:
+      'Oops! You can only send an email to 300 person.\n' +
+      'Please verify your recipients and try again.'
   }
 };
 
