@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 import FormItem from './FormItem';
 import './signup.scss';
 
-const SignUp = props => (
-  <div className="signup">
-    <Header {...props} />
-    <Form {...props} />
-  </div>
-);
+const SignUp = props =>
+  props.web ? (
+    <div className="signup web">
+      <Form {...props} />
+    </div>
+  ) : (
+    <div className="signup">
+      <Header {...props} />
+      <Form {...props} />
+    </div>
+  );
 
 const Header = props => (
   <div className="header">
@@ -74,7 +79,8 @@ Form.propTypes = {
   onToggleShowPassword: PropTypes.func,
   onChangeField: PropTypes.func,
   toggleSignUp: PropTypes.func,
-  disabled: PropTypes.bool.isRequired
+  disabled: PropTypes.bool.isRequired,
+  web: PropTypes.bool
 };
 
 export default SignUp;

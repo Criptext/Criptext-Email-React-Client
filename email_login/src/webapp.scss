@@ -1,0 +1,25 @@
+@import './app.scss';
+html {
+  font-size: 16px;
+}
+
+.main-container {
+  background: linear-gradient(to bottom, #00c4ff, #0091ff);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+@media screen and (max-width: 420px) {
+  .signup {
+    width: 90%;
+  }
+}
+
+@media screen and (max-height: 660px) {
+  .main-container {
+    display: block;
+  }
+}
