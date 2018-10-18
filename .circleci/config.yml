@@ -34,10 +34,6 @@ jobs:
           - v3-dependencies-
           - v4-dependencies-
           - v5-dependencies-
-      
-      - run:
-          name: Pre-dependencies
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
 
       - run: cd email_composer/ && yarn install
 
@@ -91,7 +87,7 @@ jobs:
       - run: cd email_login/ && npm rebuild node-sass
       - run: 
           name: Login Build
-          command: cd email_login/ &&  yarn build
+          command: cd email_login/ && echo 'SKIP_PREFLIGHT_CHECK=true' >> .env && yarn build
 
       - run:
           name: Login Unit test
