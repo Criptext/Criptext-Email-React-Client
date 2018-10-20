@@ -20,7 +20,8 @@
   "devDependencies": {
     "@criptext/react-scripts": "^2.0.6-rc1",
     "criptext-js-tools": "0.7.2",
-    "node-sass": "^4.9.4"
+    "node-sass": "^4.9.4",
+    "testcheck": "^1.0.0-rc.2"
   },
   "homepage": "./",
   "browserslist": [

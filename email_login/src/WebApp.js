@@ -5,15 +5,16 @@ import './webapp.scss';
 
 const checkAvailableUsername = () => Promise.resolve({ status: 200 });
 
+const submitWithoutRecoveryEmailQ =
+  'Are you sure you want to create an account without a recovery email address? If you lose your password you will never get back your account.';
+
 const onFormReady = data => {
-  console.log('form is ready');
+  if (data.recoveryEmail === '' && !window.confirm(submitWithoutRecoveryEmailQ))
+    return;
+
   runReCaptcha().then(recaptchaToken => {
     console.log('validated: ', { ...data, recaptchaToken });
   });
-};
-
-const onSubmitWithoutRecoveryEmail = () => {
-  console.log('are you insane?');
 };
 
 class WebApp extends Component {
@@ -23,7 +24,6 @@ class WebApp extends Component {
         <SignUpWrapper
           web={true}
           checkAvailableUsername={checkAvailableUsername}
-          onSubmitWithoutRecoveryEmail={onSubmitWithoutRecoveryEmail}
           onFormReady={onFormReady}
         />
       </div>

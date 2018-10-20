@@ -8,6 +8,14 @@ import {
   closeLogin
 } from './../utils/electronInterface';
 
+const commitNewUser = validInputData => {
+  openCreateKeys({
+    loadingType: 'signup',
+    remoteData: validInputData
+  });
+  closeLogin();
+};
+
 class SignUpElectronWrapper extends Component {
   render() {
     return (
@@ -20,21 +28,17 @@ class SignUpElectronWrapper extends Component {
     );
   }
 
-  onSubmitWithoutRecoveryEmail = responseCallback => {
+  onSubmitWithoutRecoveryEmail = validInputData => {
     confirmEmptyEmail(response => {
       closeDialog();
-      responseCallback(response);
+      if (response === 'Confirm') commitNewUser(validInputData);
     });
   };
 
   onFormReady = validInputData => {
-    if (validInputData) {
-      openCreateKeys({
-        loadingType: 'signup',
-        remoteData: validInputData
-      });
-      closeLogin();
-    }
+    if (validInputData.recoveryEmail === '')
+      return this.onSubmitWithoutRecoveryEmail(validInputData);
+    commitNewUser(validInputData);
   };
 }
 
