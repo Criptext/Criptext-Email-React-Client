@@ -113,10 +113,7 @@ const createAccount = async ({
     name,
     email: `${recipientId}@${appDomain}`
   });
-  return {
-    accountResponse: true,
-    code: status
-  };
+  return true;
 };
 
 const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
