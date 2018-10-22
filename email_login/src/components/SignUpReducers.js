@@ -33,6 +33,22 @@ export const checkUsername = (state, { newUsername, status }) => {
   }
 };
 
+export const handleCheckUsernameIOError = (state, { newUsername }) => {
+  return state.values.username === newUsername
+    ? {
+        ...state,
+        values: {
+          ...state.values,
+          username: ''
+        },
+        errors: {
+          ...state.errors,
+          username: ErrorMsgs.USERNAME_UNCERTAIN
+        }
+      }
+    : state;
+};
+
 export const updateForm = (state, { itemName, itemValue }) => {
   const newState = {
     ...state,
@@ -66,25 +82,11 @@ export const updateForm = (state, { itemName, itemValue }) => {
     case 'password': {
       if (validatePassword(itemValue)) {
         const { confirmpassword } = newState.values;
-        if (confirmpassword === '')
-          return {
-            ...newState,
-            errors: {
-              ...newState.errors,
-              confirmpassword: toBeConfirmed
-            }
-          };
-
-        if (validateConfirmPassword(itemValue, confirmpassword))
-          return {
-            ...newState,
-            errors: {
-              ...newState.errors,
-              confirmpassword: undefined
-            }
-          };
-
-        return newState;
+        // password is ok, but we must check if it matches the 2nd field
+        return updateForm(newState, {
+          itemName: 'confirmpassword',
+          itemValue: confirmpassword
+        });
       }
       return {
         ...newState,
@@ -95,6 +97,15 @@ export const updateForm = (state, { itemName, itemValue }) => {
       };
     }
     case 'confirmpassword': {
+      if (itemValue === '')
+        return {
+          ...newState,
+          errors: {
+            ...newState.errors,
+            confirmpassword: toBeConfirmed
+          }
+        };
+
       const { password } = state.values;
       return validateConfirmPassword(password, itemValue)
         ? newState

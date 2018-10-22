@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SignUp from './SignUp';
-import ErrorMsgs from './SignUpErrorMsgs';
 import { hashPassword } from '../utils/HashUtils';
 import { toBeConfirmed } from './SignUpSymbols';
 import { formItems, createStore } from './SignUpStore';
-import reducers from './SignUpReducers';
+import * as reducers from './SignUpReducers';
 
 const isSignUpButtonDisabled = errors => {
   return Object.values(errors).some(errMsg => errMsg);
@@ -64,30 +63,9 @@ class SignUpWrapper extends Component {
   };
 
   handleCheckUsernameResponse = newUsername => ({ status }) => {
-    this.setState(curState => {
-      if (curState.values.username !== newUsername) return curState;
-
-      const { errors } = curState;
-
-      switch (status) {
-        case 200:
-          return {
-            errors: { ...errors, username: undefined }
-          };
-        case 422:
-          return {
-            errors: { ...errors, username: ErrorMsgs.USERNAME_INVALID }
-          };
-        case 400:
-          return {
-            errors: { ...errors, username: ErrorMsgs.USERNAME_EXISTS }
-          };
-        default:
-          return {
-            errors: { ...errors, username: ErrorMsgs.STATUS_UNKNOWN }
-          };
-      }
-    });
+    this.setState(curState =>
+      reducers.checkUsername(curState, { newUsername, status })
+    );
   };
 
   withThrottling = fn => {
@@ -96,22 +74,13 @@ class SignUpWrapper extends Component {
     this.lastUserCheck = setTimeout(fn, 300);
   };
 
-  checkUsername = username =>
+  checkUsername = newUsername =>
     this.props
-      .checkAvailableUsername(username)
-      .then(this.handleCheckUsernameResponse(username))
+      .checkAvailableUsername(newUsername)
+      .then(this.handleCheckUsernameResponse(newUsername))
       .catch(() => {
-        this.setState(
-          prevState =>
-            prevState.values.username === username
-              ? {
-                  ...prevState,
-                  errors: {
-                    ...prevState.errors,
-                    username: 'Unable to validate username'
-                  }
-                }
-              : prevState
+        this.setState(prevState =>
+          reducers.handleCheckUsernameIOError(prevState, { newUsername })
         );
       });
 
@@ -122,6 +91,8 @@ class SignUpWrapper extends Component {
       if (itemName === 'username' && newState.errors.username === toBeConfirmed)
         // side effect check username over network
         this.withThrottling(() => this.checkUsername(itemValue));
+
+      return newState;
     });
 }
 
