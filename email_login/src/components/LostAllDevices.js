@@ -24,7 +24,6 @@ const renderHeader = props => (
     <div className="criptext-logo">
       <div className="icon" />
     </div>
-    <div className="header-clear" />
   </div>
 );
 

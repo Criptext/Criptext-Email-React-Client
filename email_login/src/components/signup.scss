@@ -8,12 +8,15 @@
   background: linear-gradient(to bottom, #00c4ff, #0091ff);
 
   .header {
+    display: flex;
+    justify-content: space-between;
     height: 50px;
     width: 100%;
+
     .button-section {
       height: 100%;
       width: 20%;
-      float: left;
+
       .back-button {
         position: relative;
         top: calc(50% - 18px);
@@ -29,29 +32,25 @@
         color: #ffffff;
         padding: 5px 0px 0px 2px;
       }
+
       .back-button:hover {
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
       }
     }
     .criptext-logo {
       height: 100%;
-      width: 80%;
-      float: left;
+      width: 34%;
+      
       .icon {
         height: 33px;
         width: 96px;
-        float: right;
         position: relative;
         top: calc(50% - 15px);
-        right: 20px;
         color: #ffffff;
         background-image: url(../#{$_PATH_TO_IMAGES}/icon-beta.svg);
         background-position: center;
         background-size: 100%;
       }
-    }
-    .header-clear {
-      clear: both;
     }
   }
 
@@ -59,16 +58,19 @@
     height: calc(100% - 60px);
     width: 100%;
     padding-top: 3%;
+
     .form-header {
       height: 20%;
       color: #ffffff;
       text-align: center;
       padding-top: 5%;
+
       p:nth-child(1) {
         font-size: 1.42rem;
         font-weight: 800;
         margin: 0px;
       }
+
       p:nth-child(2) {
         font-size: 1.17rem;
         margin-top: 3px;
@@ -77,10 +79,14 @@
 
     .signup-form {
       height: 80%;
+
       form {
-        width: 100%;
+        display: flex;
+        flex-direction: column;
         height: 100%;
         margin: 0 auto;
+        width: 100%;
+
         .form-item.hasError {
           .input-data {
             input,
@@ -91,13 +97,33 @@
         }
 
         .form-item {
-          width: 100%;
+          display: flex;
+          flex-direction: row;
           height: 3.17rem;
+          width: 100%;
+
+          &:nth-child(5){
+            margin-bottom: 9.5%;
+          }
+
+          &:nth-child(6){
+            margin-bottom: 1.5%;
+
+            .input-data{
+              flex-direction: row;
+
+              .checkmark-container{
+                align-self: flex-start;
+              }
+            }
+          }
+
           .checkmark-container {
             .checkmark-checked::after {
               top: 8px;
               left: 4px;
             }
+
             span:nth-child(2) {
               width: calc(100% - 59px - 12px);
               font-weight: 500;
@@ -109,29 +135,33 @@
 
           .validate-icon-section {
             font-size: 1.67rem;
-            float: left;
             height: 100%;
             width: 59px;
+
             .valid-icon {
               color: #ffffff;
               position: relative;
               top: 0%;
               left: calc(50% - 6px);
             }
+
             .invalid-icon {
               color: #000000;
               position: relative;
               top: 0%;
               left: calc(50% - 6px);
             }
+
             .no-icon {
               width: 10%;
             }
           }
 
           .input-data {
-            float: right;
+            display: flex;
+            flex-direction: column;
             height: 100%;
+            position: relative;
             width: calc(100% - 59px);
 
             input[type='password'] {
@@ -140,12 +170,15 @@
               width: calc(100% - 84px);
               -webkit-text-security: square;
             }
+
             span.input-icon {
               color: #ffffff;
+              top: -3px;
               font-size: 1.5rem;
+              margin-bottom: 5px;
               opacity: 0.5;
-              position: relative;
-              right: 8%;
+              position: absolute;
+              right: 22%;
             }
 
             .input-username {
@@ -157,13 +190,13 @@
               width: 39%;
               border: 0px;
               border-bottom: solid 2px rgba(255, 255, 255, 0.19);
-              float: left;
             }
 
             .label-username {
+              position: absolute;
               width: 40%;
+              left: 42%;
               padding-left: 3%;
-              float: left;
               font-size: 0.9rem;
               font-weight: 500;
               color: #ffffff;
@@ -175,7 +208,6 @@
             .input-recoveryemail {
               width: calc(100% - 59px);
               color: #ffffff;
-              float: left;
               font-size: 0.9rem;
               text-indent: 7px;
               padding-bottom: 3px;
@@ -183,25 +215,27 @@
               border: 0px;
               border-bottom: solid 2px rgba(255, 255, 255, 0.19);
             }
+
             input::placeholder {
               color: #ffffff;
               opacity: 0.6;
             }
+
             input:focus {
               outline: none;
               border-bottom: solid 2px #ffffff;
             }
+
             .checkmark-container {
-              float: left;
               .checkmark-checked:after {
                 position: relative;
                 top: -2px;
                 left: 2px;
               }
             }
+
             .label-acceptterms {
               width: 76%;
-              float: left;
               font-size: 0.83rem;
               font-weight: 300;
               margin-left: 10px;
@@ -216,42 +250,12 @@
               }
             }
 
-            .error-message.error-username {
-              float: left;
+            .error-message{
               font-size: 0.75rem;
               color: #000;
-              position: relative;
-              bottom: -15%;
-              right: 39%;
-            }
-            .error-message.error-password,
-            .error-message.error-confirmpassword {
-              float: left;
-              font-size: 0.75rem;
-              color: #000;
-              position: relative;
-              bottom: 3%;
-              left: 2.5%;
-            }
-            .error-message.error-recoveryemail {
-              float: left;
-              font-size: 0.75rem;
-              color: #000;
-              position: relative;
-              bottom: -60%;
-              left: -76%;
+              margin-top:2px;
             }
           }
-          .clear-item {
-            clear: both;
-          }
-        }
-
-        .form-item:nth-child(5) {
-          margin-bottom: 9.5%;
-        }
-        .form-item:nth-child(6) {
-          margin-bottom: 1.5%;
         }
 
         .button {
