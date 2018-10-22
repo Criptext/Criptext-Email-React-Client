@@ -8,6 +8,11 @@ const startDevServer = {
   args: ['node_modules/react-scripts/scripts/start.js']
 }
 
+const startCustomDevServer = {
+  cmd: 'node',
+  args: ['node_modules/@criptext/react-scripts/scripts/start.js']
+}
+
 const runSass = {
   cmd: 'node_modules/.bin/node-sass-chokidar',
   args: ['src', '-o', 'src', '--watch', '--recursive']
@@ -50,7 +55,7 @@ const tasks = [
     cwd: abs('./email_loading')
   },
   {
-    ...startDevServer,
+    ...startCustomDevServer,
     cwd: abs('./email_login'),
     env: {
       PORT: '3005',

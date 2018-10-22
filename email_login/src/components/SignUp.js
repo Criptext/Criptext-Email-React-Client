@@ -1,18 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FormItemWrapper from './FormItemWrapper';
+import FormItem from './FormItem';
 import './signup.scss';
 
-const SignUp = props => renderSignUp(props);
+const SignUp = props =>
+  props.web ? (
+    <div className="signup web">
+      <Form {...props} />
+    </div>
+  ) : (
+    <div className="signup">
+      <Header {...props} />
+      <Form {...props} />
+    </div>
+  );
 
-const renderSignUp = props => (
-  <div className="signup">
-    {renderHeader(props)}
-    {renderForm(props)}
-  </div>
-);
-
-const renderHeader = props => (
+const Header = props => (
   <div className="header">
     <div className="button-section">
       <button className="back-button" onClick={ev => props.toggleSignUp(ev)}>
@@ -26,7 +29,7 @@ const renderHeader = props => (
   </div>
 );
 
-const renderForm = props => (
+const Form = props => (
   <div className="form">
     <div className="form-header">
       <p>Sign Up</p>
@@ -36,13 +39,14 @@ const renderForm = props => (
       <form autoComplete="off">
         {props.items.map((formItem, index) => {
           return (
-            <FormItemWrapper
+            <FormItem
               key={index}
               formItem={formItem}
               onChange={props.onChangeField}
-              validator={props.validator}
-              hasError={props.errors[formItem.name]}
-              onSetError={props.onSetError}
+              isShowingPassword={props.isShowingPassword}
+              onToggleShowPassword={props.onToggleShowPassword}
+              value={props.values[formItem.name]}
+              error={props.errors[formItem.name]}
             />
           );
         })}
@@ -61,20 +65,22 @@ const renderForm = props => (
 );
 
 // eslint-disable-next-line fp/no-mutation
-renderHeader.propTypes = {
+Header.propTypes = {
   toggleSignUp: PropTypes.func
 };
 
 // eslint-disable-next-line fp/no-mutation
-renderForm.propTypes = {
-  disabled: PropTypes.bool,
+Form.propTypes = {
   onClickSignUp: PropTypes.func,
-  errors: PropTypes.object,
-  items: PropTypes.array,
+  errors: PropTypes.object.isRequired,
+  values: PropTypes.object.isRequired,
+  items: PropTypes.array.isRequired,
+  isShowingPassword: PropTypes.bool.isRequired,
+  onToggleShowPassword: PropTypes.func,
   onChangeField: PropTypes.func,
-  onSetError: PropTypes.func,
   toggleSignUp: PropTypes.func,
-  validator: PropTypes.func
+  disabled: PropTypes.bool.isRequired,
+  web: PropTypes.bool
 };
 
 export default SignUp;

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import TitleBar from './components/titleBar';
 import LoginWrapper from './components/LoginWrapper';
-import './app.scss';
+import './electronapp.scss';
 
-class App extends Component {
+class ElectronApp extends Component {
   render() {
     return (
       <div className="main-container">
@@ -14,4 +14,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default ElectronApp;

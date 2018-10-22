@@ -4,7 +4,7 @@ import './customCheckbox.scss';
 
 const CustomCheckbox = props => (
   <div className="checkmark-container" onClick={ev => onClick(ev, props)}>
-    <span className={'checkmark ' + getClass(props.status)} />
+    <span className={'checkmark ' + getClass(props.value)} />
   </div>
 );
 
@@ -18,15 +18,13 @@ function getClass(status) {
 function onClick(ev, props) {
   ev.stopPropagation();
   ev.preventDefault();
-  if (props.status) {
-    return props.onCheck(false);
-  }
-  return props.onCheck(true);
+  return props.onChange({ target: { value: !props.value } });
 }
 
 // eslint-disable-next-line fp/no-mutation
 CustomCheckbox.propTypes = {
-  status: PropTypes.bool
+  value: PropTypes.bool.isRequired,
+  onChange: PropTypes.func
 };
 
 export default CustomCheckbox;

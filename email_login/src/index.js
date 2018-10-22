@@ -1,5 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import ElectronApp from './ElectronApp';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<ElectronApp />, document.getElementById('root'));

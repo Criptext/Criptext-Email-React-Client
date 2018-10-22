@@ -2,9 +2,9 @@
 
 .signup {
   font-family: 'NunitoSans';
-  width: 328px;
-  height: 513px;
-  border-radius: 0px 0px 7px 7px;
+  width: 27.33rem;
+  height: 42.75rem;
+  border-radius: 0 0 0.58rem 0.58rem;
   background: linear-gradient(to bottom, #00c4ff, #0091ff);
 
   .header {
@@ -65,12 +65,12 @@
       text-align: center;
       padding-top: 5%;
       p:nth-child(1) {
-        font-size: 17px;
+        font-size: 1.42rem;
         font-weight: 800;
         margin: 0px;
       }
       p:nth-child(2) {
-        font-size: 14px;
+        font-size: 1.17rem;
         margin-top: 3px;
       }
     }
@@ -92,7 +92,7 @@
 
         .form-item {
           width: 100%;
-          height: 38px;
+          height: 3.17rem;
           .checkmark-container {
             .checkmark-checked::after {
               top: 8px;
@@ -100,7 +100,6 @@
             }
             span:nth-child(2) {
               width: calc(100% - 59px - 12px);
-              font-size: 10px;
               font-weight: 500;
               color: #ffffff;
               position: relative;
@@ -109,7 +108,7 @@
           }
 
           .validate-icon-section {
-            font-size: 20px;
+            font-size: 1.67rem;
             float: left;
             height: 100%;
             width: 59px;
@@ -136,14 +135,14 @@
             width: calc(100% - 59px);
 
             input[type='password'] {
-              font-size: 12px;
+              font-size: 0.85rem;
               padding-right: 25px;
               width: calc(100% - 84px);
               -webkit-text-security: square;
             }
             span.input-icon {
               color: #ffffff;
-              font-size: 18px;
+              font-size: 1.5rem;
               opacity: 0.5;
               position: relative;
               right: 8%;
@@ -151,10 +150,10 @@
 
             .input-username {
               color: #ffffff;
-              font-size: 12px;
               padding-left: 7px;
               padding-bottom: 3px;
               background: transparent;
+              font-size: 0.9rem;
               width: 39%;
               border: 0px;
               border-bottom: solid 2px rgba(255, 255, 255, 0.19);
@@ -165,7 +164,7 @@
               width: 40%;
               padding-left: 3%;
               float: left;
-              font-size: 12px;
+              font-size: 0.9rem;
               font-weight: 500;
               color: #ffffff;
             }
@@ -177,7 +176,7 @@
               width: calc(100% - 59px);
               color: #ffffff;
               float: left;
-              font-size: 12px;
+              font-size: 0.9rem;
               text-indent: 7px;
               padding-bottom: 3px;
               background: transparent;
@@ -203,7 +202,7 @@
             .label-acceptterms {
               width: 76%;
               float: left;
-              font-size: 10px;
+              font-size: 0.83rem;
               font-weight: 300;
               margin-left: 10px;
               color: #ffffff;
@@ -219,7 +218,7 @@
 
             .error-message.error-username {
               float: left;
-              font-size: 9px;
+              font-size: 0.75rem;
               color: #000;
               position: relative;
               bottom: -15%;
@@ -228,7 +227,7 @@
             .error-message.error-password,
             .error-message.error-confirmpassword {
               float: left;
-              font-size: 9px;
+              font-size: 0.75rem;
               color: #000;
               position: relative;
               bottom: 3%;
@@ -236,7 +235,7 @@
             }
             .error-message.error-recoveryemail {
               float: left;
-              font-size: 9px;
+              font-size: 0.75rem;
               color: #000;
               position: relative;
               bottom: -60%;
@@ -292,4 +291,9 @@
       }
     }
   }
+}
+
+.signup.web {
+  background: none;
+  margin: 0 auto;
 }

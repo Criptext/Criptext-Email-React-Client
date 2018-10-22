@@ -14,13 +14,13 @@ const packageDirs = [
   abs('email_mailbox')
 ]
 
-const installModules = dir => 
+const installModules = cwd => 
   new Promise((resolve, reject) =>  {
-    const cp = spawn('yarn', [], { dir });
+    const cp = spawn('yarn', [], { cwd });
     cp.on('exit', code => {
       code == 0
         ? resolve() 
-        : reject(`failed to install modules at ${dir}. Yarn exited with code: ${code}`)
+        : reject(`failed to install modules at ${cwd}. Yarn exited with code: ${code}`)
     });
   })
 

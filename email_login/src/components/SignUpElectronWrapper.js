@@ -8,38 +8,37 @@ import {
   closeLogin
 } from './../utils/electronInterface';
 
+const commitNewUser = validInputData => {
+  openCreateKeys({
+    loadingType: 'signup',
+    remoteData: validInputData
+  });
+  closeLogin();
+};
+
 class SignUpElectronWrapper extends Component {
   render() {
     return (
       <SignUpWrapper
         {...this.props}
-        isUsernameAvailable={this.isUsernameAvailable}
+        checkAvailableUsername={checkAvailableUsername}
         onFormReady={this.onFormReady}
         onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
       />
     );
   }
 
-  onSubmitWithoutRecoveryEmail = responseCallback => {
+  onSubmitWithoutRecoveryEmail = validInputData => {
     confirmEmptyEmail(response => {
       closeDialog();
-      responseCallback(response);
+      if (response === 'Confirm') commitNewUser(validInputData);
     });
   };
 
   onFormReady = validInputData => {
-    if (validInputData) {
-      openCreateKeys({
-        loadingType: 'signup',
-        remoteData: validInputData
-      });
-      closeLogin();
-    }
-  };
-
-  isUsernameAvailable = async username => {
-    const res = await checkAvailableUsername(username);
-    return res.status === 200;
+    if (validInputData.recoveryEmail === '')
+      return this.onSubmitWithoutRecoveryEmail(validInputData);
+    commitNewUser(validInputData);
   };
 }
 
