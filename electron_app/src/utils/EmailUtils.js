@@ -29,21 +29,17 @@ const filterNonCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) < 0);
 };
 
-const getRecipientsFromData = ({
-  to,
-  toArray,
-  cc,
-  ccArray,
-  bcc,
-  bccArray,
-  from
-}) => {
+const getRecipientsFromData = ({ to, cc, bcc, from }) => {
   return {
-    to: toArray || formRecipients(to),
-    cc: ccArray || formRecipients(cc),
-    bcc: bccArray || formRecipients(bcc),
+    to: Array.isArray(to) ? cleanEmails(to) : formRecipients(to),
+    cc: Array.isArray(cc) ? cleanEmails(cc) : formRecipients(cc),
+    bcc: Array.isArray(bcc) ? cleanEmails(bcc) : formRecipients(bcc),
     from: formRecipients(from)
   };
+};
+
+const cleanEmails = emails => {
+  return emails.map(email => email.replace(/<|>/g, ''));
 };
 
 const getCriptextRecipients = (recipients, type) => {
@@ -138,23 +134,11 @@ const EmailStatus = {
   READ: 7
 };
 
-const checkEmailIsTo = ({
-  to,
-  toArray,
-  cc,
-  ccArray,
-  bcc,
-  bccArray,
-  from,
-  type
-}) => {
+const checkEmailIsTo = ({ to, cc, bcc, from, type }) => {
   const recipients = getRecipientsFromData({
     to,
-    toArray,
     cc,
-    ccArray,
     bcc,
-    bccArray,
     from
   });
   const recipientsArray =
@@ -174,17 +158,14 @@ const filterCriptextRecipients = recipients => {
 const formIncomingEmailFromData = (
   {
     bcc,
-    bccArray,
     body,
     cc,
-    ccArray,
     date,
     from,
     isToMe,
     metadataKey,
     subject,
     to,
-    toArray,
     threadId,
     unread
   },
@@ -203,16 +184,13 @@ const formIncomingEmailFromData = (
   const status = isToMe ? EmailStatus.NONE : EmailStatus.DELIVERED;
   const recipients = getRecipientsFromData({
     to,
-    toArray,
     cc,
-    ccArray,
     bcc,
-    bccArray,
     from
   });
   const email = {
     key: metadataKey,
-    threadId: threadId,
+    threadId,
     s3Key: metadataKey,
     content,
     preview,

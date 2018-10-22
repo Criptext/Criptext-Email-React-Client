@@ -11,9 +11,9 @@ TABLE OF CONTENTS
 2.- CONTENT
 3.- POPUP
 4.- CONTROLS
- 4.1.- Button
+ 4.1.- Input Text
  4.2.- Select
- 4.3.- Input Text
+ 4.3.- Button
 
 ***/
 
@@ -611,7 +611,7 @@ h2{
   opacity: 0.3;
 }
 
-/* 4.1.- CONTROLS: Button
+/* 4.1.- CONTROLS: Input text
    ----------------------------- */
 input{
   width: 100%;
@@ -653,7 +653,7 @@ select {
   outline: none;
 }
 
-/* 4.3.- CONTROLS: Input text
+/* 4.3.- CONTROLS: Button
    ----------------------------- */
 button{
   border: none;

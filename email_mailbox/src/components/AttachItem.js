@@ -13,7 +13,7 @@ const AttachItem = props => (
 
 const defineView = (status, data) => {
   switch (status) {
-    case AttachItemStatus.DOWNLOADED:
+    case AttachItemStatus.AVAILABLE:
       return attachPreview(data);
     case AttachItemStatus.UNSENT:
       return attachUnavailable();
@@ -62,8 +62,8 @@ const renderAttachWithoutInfo = () => (
 );
 
 export const AttachItemStatus = {
-  DOWNLOADED: 0,
-  UNSENT: 1
+  UNSENT: 0,
+  AVAILABLE: 1
 };
 
 attachPreview.propTypes = {

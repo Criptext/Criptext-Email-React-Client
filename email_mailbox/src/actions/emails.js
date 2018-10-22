@@ -15,6 +15,8 @@ import { EmailStatus, SocketCommand } from '../utils/const';
 import { unsendEmailFiles } from './files';
 import {
   sendFetchEmailsErrorMessage,
+  sendUnsendEmailErrorMessage,
+  sendUnsendEmailExpiredErrorMessage,
   sendUpdateThreadLabelsErrorMessage,
   sendRemoveThreadsErrorMessage
 } from './../utils/electronEventInterface';
@@ -166,9 +168,13 @@ export const unsendEmail = params => {
             )
           )
         );
+      } else if (status === 405) {
+        sendUnsendEmailExpiredErrorMessage();
+      } else {
+        sendUnsendEmailErrorMessage(status);
       }
     } catch (e) {
-      // To do
+      sendUnsendEmailErrorMessage();
     }
   };
 };

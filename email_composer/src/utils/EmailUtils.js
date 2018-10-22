@@ -57,21 +57,30 @@ const formRecipientObject = contact => {
   return contact.name ? { name: contact.name, email: contact.email } : contact;
 };
 
+const formReplyForwardContent = (replyType, date, body, from) => {
+  const dateLine = formReplyHeader(date, from);
+  let content = '';
+  if (replyType === composerEvents.FORWARD) {
+    content = `<div class="criptext_quote">${formForwardHeader()}${dateLine}${body}</div>`;
+  } else {
+    content = `<div class="criptext_quote">${dateLine}<blockquote>${body}</blockquote></div>`;
+  }
+
+  return `${insertEmptyLine(2)}${content}${formSignature()}`;
+};
+
 export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const [emailData] = await getEmailByKey(emailKeyToEdit);
   const threadId =
     replyType === composerEvents.FORWARD ? undefined : emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
   const [from] = contacts.from;
-
-  const firstLine = formReplyHeader(emailData.date, from);
-  let newContent = `${firstLine}<blockquote>${emailData.content}</blockquote>`;
-  if (replyType === composerEvents.FORWARD) {
-    newContent = `${formForwardHeader()}${newContent}`;
-  }
-  let content = `${insertEmptyLine(2)}${newContent}`;
-  content = `${content}${formSignature()}`;
-
+  const content = formReplyForwardContent(
+    replyType,
+    emailData.date,
+    emailData.content,
+    from
+  );
   const htmlBody = content;
   const replySufix = 'RE: ';
   const forwardSufix = 'FW: ';
@@ -133,7 +142,7 @@ const filterRecipientObject = (contacts, rejectEmailAddress) => {
 const formSignature = () => {
   const signature = myAccount.signatureEnabled
     ? `<br/><p>${myAccount.signature}</p>`
-    : '<p></p>';
+    : '';
   return signature;
 };
 

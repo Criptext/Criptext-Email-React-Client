@@ -502,7 +502,7 @@ export const sendOpenEvent = (
           }
         }
       }
-      dispatch(updateBadgeLabels([labelId]));
+      if (labelId > 0) dispatch(updateBadgeLabels([labelId]));
     } catch (e) {
       sendOpenEventErrorMessage();
     }

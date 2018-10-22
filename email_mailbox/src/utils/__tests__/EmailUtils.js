@@ -1,6 +1,10 @@
 /* eslint-env node, jest */
 
-import { defineRejectedLabels, compareEmailDate } from '../EmailUtils';
+import {
+  addCollapseDiv,
+  compareEmailDate,
+  defineRejectedLabels
+} from '../EmailUtils';
 import { LabelType } from '../electronInterface';
 
 jest.mock('./../../utils/const');
@@ -68,5 +72,21 @@ describe('Email utils: Sort emails ', () => {
       { date: '2018-10-04 21:36:55' },
       { date: '2018-10-04 21:46:55' }
     ]);
+  });
+});
+
+describe('Email utils: Add collapse div ', () => {
+  it('Should add div collpase to html with: <blockquote>', () => {
+    const html =
+      '<div><blockquote><p></p><br/><blockquote></blockquote></blockquote></div>';
+    const result = addCollapseDiv(html, 1);
+    expect(result).toMatchSnapshot();
+  });
+
+  it('Should add div collpase to html with: <div class="criptext_quote">', () => {
+    const html =
+      '<div class="criptext_quote"><blockquote><p></p><br/><blockquote></blockquote></blockquote></div>';
+    const result = addCollapseDiv(html, 1);
+    expect(result).toMatchSnapshot();
   });
 });

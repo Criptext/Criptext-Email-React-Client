@@ -3,6 +3,7 @@ import EmailView from './../components/EmailWrapper';
 import { defineTimeByToday, defineLargeTime } from './../utils/TimeUtils';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
+import { addCollapseDiv } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
 import {
   composerEvents,
@@ -44,7 +45,7 @@ const mapStateToProps = (state, ownProps) => {
   const content =
     email.status === EmailStatus.UNSEND
       ? `Unsent: At ${defineTimeByToday(email.unsendDate)}`
-      : email.content;
+      : addCollapseDiv(email.content, email.key);
   const myEmail = {
     ...email,
     date: defineTimeByToday(date),

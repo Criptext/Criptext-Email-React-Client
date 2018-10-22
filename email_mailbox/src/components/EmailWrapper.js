@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Email from './Email';
+import { ButtonUnsendStatus } from './ButtonUnsend';
 
 class EmailWrapper extends Component {
   constructor() {
     super();
     this.state = {
+      buttonUnsendStatus: ButtonUnsendStatus.NORMAL,
       displayEmail: false,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
@@ -16,11 +18,12 @@ class EmailWrapper extends Component {
   render() {
     return (
       <Email
+        buttonUnsendStatus={this.state.buttonUnsendStatus}
         displayEmail={this.state.displayEmail}
         isHiddenPopOverEmailMoreInfo={this.state.isHiddenPopOverEmailMoreInfo}
         isHiddenPopOverEmailActions={this.state.isHiddenPopOverEmailActions}
         hideView={this.state.hideView}
-        onToggleEmail={this.onToggleEmail}
+        onToggleEmail={this.handleToggleEmail}
         onTooglePopOverEmailMoreInfo={this.handleTooglePopOverEmailMoreInfo}
         onTogglePopOverEmailActions={this.handleTogglePopOverEmailActions}
         onClickEditDraft={this.handleClickEditDraft}
@@ -39,9 +42,24 @@ class EmailWrapper extends Component {
         displayEmail: true
       });
     }
+    const divCollapse = document.getElementById(
+      `div-collapse-${this.props.email.key}`
+    );
+    const blockquote = document.getElementById(
+      `blockquote-${this.props.email.key}`
+    );
+    if (divCollapse && blockquote) {
+      divCollapse.addEventListener('click', function() {
+        if (blockquote.style.display === 'block') {
+          blockquote.style.display = 'none';
+        } else {
+          blockquote.style.display = 'block';
+        }
+      });
+    }
   }
 
-  onToggleEmail = () => {
+  handleToggleEmail = () => {
     if (!this.props.staticOpen) {
       this.setState({
         displayEmail: !this.state.displayEmail
@@ -71,11 +89,15 @@ class EmailWrapper extends Component {
   handleClickUnsendButton = value => {
     this.setState(
       {
+        buttonUnsendStatus: ButtonUnsendStatus.LOAD,
         hideView: !value
       },
       async () => {
         await this.props.onUnsendEmail();
-        this.setState({ hideView: value });
+        this.setState({
+          buttonUnsendStatus: ButtonUnsendStatus.NORMAL,
+          hideView: value
+        });
       }
     );
   };

@@ -35,8 +35,9 @@
 
   .form {
     height: 20%;
-    width: 60%;
+    width: 65%;
     margin: 0 auto;
+    position: relative;
 
     form {
       .label {
@@ -76,16 +77,15 @@
       .error-message {
         font-size: 12px;
         color: #000;
-        position: relative;
         left: 7px;
       }
 
       .button {
-        width: 60%;
+        bottom: 0;
         margin: 5% 0% 0% 0%;
         padding: 0px;
         position: absolute;
-        bottom: 22%;
+        width: 100%;
 
         .button-login {
           border: none;
@@ -105,12 +105,14 @@
             transition: opacity 0.1s;
           }
         }
+
         .button-login:enabled {
           opacity: 0.9;
           span {
             opacity: 0.9;
           }
         }
+
         .button-login:hover:enabled {
           opacity: 1;
           span {

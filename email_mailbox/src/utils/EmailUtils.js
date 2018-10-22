@@ -4,18 +4,31 @@ import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
 import { LabelType } from './electronInterface';
 
-export const compareEmailDate = (emailA, emailB) => {
-  const dateA = new Date(emailA.date);
-  const dateB = new Date(emailB.date);
-
-  if (dateA.getTime() > dateB.getTime()) {
-    return 1;
+export const addCollapseDiv = (htmlString, key) => {
+  const regexTag = /<blockquote|criptext_quote/;
+  const matches = htmlString.match(regexTag);
+  if (matches) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    const blockquote =
+      doc.getElementsByClassName('criptext_quote')[0] ||
+      doc.getElementsByTagName('blockquote')[0];
+    const i = document.createElement('i');
+    i.className = 'icon-dots';
+    const div = document.createElement('div');
+    div.className = 'div-collapse';
+    div.appendChild(i);
+    div.setAttribute('id', `div-collapse-${key}`);
+    blockquote.parentElement.insertBefore(div, blockquote);
+    blockquote.style.display = 'none';
+    blockquote.setAttribute('id', `blockquote-${key}`);
+    return doc.documentElement.innerHTML;
   }
-  if (dateA.getTime() < dateB.getTime()) {
-    return -1;
-  }
-  return 0;
+  return htmlString;
 };
+
+export const compareEmailDate = (emailA, emailB) =>
+  emailA.date < emailB.date ? -1 : emailA.date > emailB.date ? 1 : 0;
 
 export const formEmailLabel = ({ emailId, labels }) => {
   return labels.map(labelId => {

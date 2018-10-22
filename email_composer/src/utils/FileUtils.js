@@ -98,7 +98,7 @@ export const formFileParamsToDatabase = (files, emailId) => {
       token: item.token,
       name: item.fileData.name,
       size: item.fileData.size,
-      status: 0,
+      status: 1,
       date: Date.now(),
       mimeType: item.fileData.type,
       emailId

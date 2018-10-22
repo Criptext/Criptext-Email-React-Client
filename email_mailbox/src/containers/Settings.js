@@ -14,6 +14,7 @@ import {
   openEmailInComposer,
   removeDevice,
   updateAccount,
+  updateContactByEmail,
   updateNameEvent,
   resendConfirmationEmail
 } from '../utils/electronInterface';
@@ -106,6 +107,9 @@ const mapDispatchToProps = dispatch => {
         }
       });
     },
+    onDeleteDeviceData: async () => {
+      await deleteDeviceData();
+    },
     onGetUserSettings: async () => {
       const {
         devices,
@@ -119,6 +123,20 @@ const mapDispatchToProps = dispatch => {
         twoFactorAuth,
         recoveryEmailConfirmed
       };
+    },
+    onLogout: async () => {
+      const res = await logout();
+      return res.status === 200;
+    },
+    onRemoveLabel: labelId => {
+      dispatch(removeLabel(String(labelId)));
+    },
+    onRemoveDevice: async params => {
+      const { status } = await removeDevice(params);
+      return status === 200;
+    },
+    onResendConfirmationEmail: () => {
+      return resendConfirmationEmail();
     },
     onUpdateAccount: async params => {
       const recipientId = myAccount.recipientId;
@@ -135,25 +153,12 @@ const mapDispatchToProps = dispatch => {
         await updateAccount({ ...params, recipientId });
       }
     },
+    onUpdateContact: async name => {
+      const email = `${myAccount.recipientId}@${appDomain}`;
+      await updateContactByEmail({ email, name });
+    },
     onUpdateLabel: params => {
       dispatch(updateLabel(params));
-    },
-    onLogout: async () => {
-      const res = await logout();
-      return res.status === 200;
-    },
-    onDeleteDeviceData: async () => {
-      await deleteDeviceData();
-    },
-    onRemoveLabel: labelId => {
-      dispatch(removeLabel(String(labelId)));
-    },
-    onRemoveDevice: async params => {
-      const { status } = await removeDevice(params);
-      return status === 200;
-    },
-    onResendConfirmationEmail: () => {
-      return resendConfirmationEmail();
     }
   };
 };

@@ -72,7 +72,7 @@ const renderBlockName = props => (
           placeholder="Enter new name"
           value={props.name}
           onChange={ev => props.onChangeInputName(ev)}
-          onKeyPress={props.onAddNameInputKeyPressed}
+          onKeyPress={e => props.onAddNameInputKeyPressed(e)}
           autoFocus={true}
         />
         <button className="button-b" onClick={props.onBlurInputName}>

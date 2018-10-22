@@ -158,8 +158,8 @@ const processEvent = async eventsGroups => {
       }
     }
   }
-  if (rowIds.length) {
-    const rowIdsFiltered = rowIds.filter(rowId => rowId !== null);
+  const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
+  if (rowIdsFiltered.length) {
     await setEventAsHandled(rowIdsFiltered);
   }
   return true;
@@ -254,12 +254,9 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
   const isToMe = EmailUtils.checkEmailIsTo({
-    to,
-    toArray,
-    cc,
-    ccArray,
-    bcc,
-    bccArray,
+    to: to || toArray,
+    cc: cc || ccArray,
+    bcc: bcc || bccArray,
     type: 'to'
   });
   const isFromMe = EmailUtils.checkEmailIsTo({ from, type: 'from' });
@@ -295,19 +292,16 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     }
     const unread = isFromMe && !isToMe ? false : true;
     const data = {
-      bcc,
-      bccArray,
+      bcc: bcc || bccArray,
       body,
-      cc,
-      ccArray,
+      cc: cc || ccArray,
       date,
       from,
       isToMe,
       metadataKey,
       deviceId: senderDeviceId,
       subject,
-      to,
-      toArray,
+      to: to || toArray,
       threadId,
       unread
     };
@@ -720,6 +714,16 @@ ipcRenderer.on('enable-window-link-devices', () => {
   emitter.emit(Event.ENABLE_WINDOW);
 });
 
+/* Window events
+  ----------------------------- */
+export const sendOpenEventErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.sendOpenEvent,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendUpdateLabelsErrorMessage = () => {
   const messageData = {
     ...Messages.error.updateLabels,
@@ -744,9 +748,18 @@ export const sendUpdateUnreadThreadsErrorMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
-export const sendOpenEventErrorMessage = () => {
+export const sendUnsendEmailErrorMessage = numberError => {
   const messageData = {
-    ...Messages.error.sendOpenEvent,
+    ...Messages.error.unsendEmail,
+    description: `${Messages.error.unsendEmail.description} ${numberError}`,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendUnsendEmailExpiredErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.unsendEmailExpired,
     type: MessageType.ERROR
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);

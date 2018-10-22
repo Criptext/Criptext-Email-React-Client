@@ -4,13 +4,12 @@ import './buttonunsend.css';
 
 const ButtonUnsend = props => (
   <button
-    className={
-      'button-unsend ' +
-      (props.displayLoading ? 'button-unsend-loading' : 'button-unsend-normal')
-    }
+    className={`button-unsend ${defineClassButton(props.status)}`}
     onClick={ev => props.onClick(ev)}
   >
-    {props.displayLoading ? renderLoading() : renderButton()}
+    {props.status === ButtonUnsendStatus.LOAD
+      ? renderLoading()
+      : renderButton()}
   </button>
 );
 
@@ -34,9 +33,25 @@ const renderLoading = () => (
   </div>
 );
 
+const defineClassButton = status => {
+  switch (status) {
+    case ButtonUnsendStatus.NORMAL:
+      return 'button-unsend-normal';
+    case ButtonUnsendStatus.LOAD:
+      return 'button-unsend-loading';
+    default:
+      return '';
+  }
+};
+
 ButtonUnsend.propTypes = {
-  displayLoading: PropTypes.bool,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  status: PropTypes.number
+};
+
+export const ButtonUnsendStatus = {
+  NORMAL: 0,
+  LOAD: 1
 };
 
 export default ButtonUnsend;

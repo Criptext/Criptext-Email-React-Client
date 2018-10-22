@@ -141,6 +141,15 @@ const messagesContent = {
     sendOpenEvent: {
       priority: messagePriorities.MEDIUM,
       description: 'Failed to send open email. Try again'
+    },
+    unsendEmail: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Failed to unsend the email. Unknow status code:'
+    },
+    unsendEmailExpired: {
+      priority: messagePriorities.MEDIUM,
+      description:
+        'Failed to unsend the email. Time (1h) for unsending has already expired.'
     }
   },
   establish: {

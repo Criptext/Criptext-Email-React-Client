@@ -25,7 +25,7 @@ const Loading = props => (
 );
 
 const renderMessage = props => {
-  if (props.failed === true) {
+  if (props.failed) {
     return (
       <div className="retry">
         <span>Error generating the keys. </span>

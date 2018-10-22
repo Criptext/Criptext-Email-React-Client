@@ -389,7 +389,7 @@ class SettingGeneralWrapper extends Component {
   handleChangeInputName = ev => {
     this.setState({
       nameParams: {
-        name: ev.target.value.trim()
+        name: ev.target.value
       }
     });
   };
@@ -583,6 +583,7 @@ class SettingGeneralWrapper extends Component {
     const isValidName = validateFullname(inputValue);
     if (e.key === 'Enter' && inputValue !== '' && isValidName) {
       await this.props.onUpdateAccount({ name: inputValue });
+      await this.props.onUpdateContact(inputValue);
       const nameParams = { name: inputValue };
       this.setState({
         nameParams,
@@ -741,6 +742,7 @@ SettingGeneralWrapper.propTypes = {
   onLogout: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
   onUpdateAccount: PropTypes.func,
+  onUpdateContact: PropTypes.func,
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   twoFactorAuth: PropTypes.bool

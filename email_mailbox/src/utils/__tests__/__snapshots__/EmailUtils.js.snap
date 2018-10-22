@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Email utils: Add collapse div  Should add div collpase to html with: <blockquote> 1`] = `"<head></head><body><div><div class=\\"div-collapse\\" id=\\"div-collapse-1\\"><i class=\\"icon-dots\\"></i></div><blockquote style=\\"display: none;\\" id=\\"blockquote-1\\"><p></p><br><blockquote></blockquote></blockquote></div></body>"`;
+
+exports[`Email utils: Add collapse div  Should add div collpase to html with: <div class="criptext_quote"> 1`] = `"<head></head><body><div class=\\"div-collapse\\" id=\\"div-collapse-1\\"><i class=\\"icon-dots\\"></i></div><div class=\\"criptext_quote\\" style=\\"display: none;\\" id=\\"blockquote-1\\"><blockquote><p></p><br><blockquote></blockquote></blockquote></div></body>"`;

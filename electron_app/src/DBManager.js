@@ -1150,6 +1150,7 @@ module.exports = {
   getUnreadEmailsByThreadId,
   deleteLabelById,
   updateAccount,
+  updateContactByEmail,
   updateEmail,
   updateEmails,
   updateEmailLabel,

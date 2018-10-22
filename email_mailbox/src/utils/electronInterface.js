@@ -322,6 +322,10 @@ export const getUnreadEmailsByThreadId = threadId => {
   return dbManager.getUnreadEmailsByThreadId(threadId);
 };
 
+export const updateContactByEmail = ({ email, name }) => {
+  return dbManager.updateContactByEmail({ email, name });
+};
+
 export const updateFeedItem = ({ feedItemId, seen }) => {
   return dbManager.updateFeedItem({ id: feedItemId, seen });
 };

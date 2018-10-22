@@ -54,6 +54,13 @@ const createAccount = async ({
     signedPreKeyId,
     preKeyIds
   });
+  if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
+    throw CustomError({
+      name: 'Error creating account',
+      description: `Failed to generate prekeybundle`
+    });
+  }
+
   const { status, text } = await postUser({
     recipientId,
     password,
@@ -87,6 +94,12 @@ const createAccount = async ({
     recoveryEmailConfirmed: false
   });
   const [newAccount] = await getAccount();
+  if (!newAccount) {
+    throw CustomError({
+      name: 'Error creating account',
+      description: `Failed to create user in local database`
+    });
+  }
   myAccount.initialize(newAccount);
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
