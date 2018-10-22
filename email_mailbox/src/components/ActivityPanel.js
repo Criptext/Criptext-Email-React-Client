@@ -25,7 +25,6 @@ class ActivityPanel extends Component {
             <div className="header-button">
               <i className="icon-next" />
             </div>
-            <div className="header-clear" />
           </div>
         </header>
         <div className="navigation-feed-content">

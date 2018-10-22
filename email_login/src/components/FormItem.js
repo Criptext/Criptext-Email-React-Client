@@ -17,7 +17,6 @@ const FormItem = props => (
   <div className={'form-item ' + (hasError(props) ? 'hasError' : '')}>
     <div className="validate-icon-section">{renderValidateIcon(props)}</div>
     {renderItem(props)}
-    <div className="clear-item" />
   </div>
 );
 
