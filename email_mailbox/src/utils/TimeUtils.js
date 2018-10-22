@@ -40,6 +40,8 @@ export const defineLastDeviceActivity = time => {
     return moment(timeLocal).format('[Yesterday]');
   } else if (diffTime < oneDay * 7) {
     return moment(timeLocal).format('dddd');
+  } else if (diffTime < oneDay * 60) {
+    return moment(timeLocal).format('MMM DD');
   }
-  return moment(timeLocal).format('MMM DD');
+  return moment(timeLocal).format('[More than 2 months ago]');
 };

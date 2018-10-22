@@ -22,6 +22,7 @@ import { validateUsername } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
 import { addEvent, Event } from '../utils/electronEventInterface';
 import DeviceNotApproved from './DeviceNotApproved';
+import { hashPassword } from '../utils/HashUtils';
 
 const mode = {
   SIGNUP: 'SIGNUP',
@@ -37,20 +38,20 @@ const errorMessages = {
   STATUS_UNKNOWN: 'Unknown status code: '
 };
 
-// eslint-disable-next-line fp/no-let
-let ephemeralToken;
-
 class LoginWrapper extends Component {
   constructor() {
     super();
     this.state = {
       mode: mode.LOGIN,
       values: {
-        username: ''
+        username: '',
+        password: ''
       },
       disabledLoginButton: true,
       disabledResendLoginRequest: false,
-      errorMessage: ''
+      errorMessage: '',
+      ephemeralToken: undefined,
+      hasTwoFactorAuth: undefined
     };
     this.timeCountdown = 0;
     this.initEventListeners();
@@ -67,6 +68,7 @@ class LoginWrapper extends Component {
             toggleContinue={this.toggleContinue}
             onClickSignInWithPassword={this.handleClickSignInWithPassword}
             onClickResendLoginRequest={this.handleClickResendLoginRequest}
+            hasTwoFactorAuth={this.state.hasTwoFactorAuth}
           />
         );
       case mode.DEVICE_NOT_APPROVED:
@@ -74,6 +76,7 @@ class LoginWrapper extends Component {
           <DeviceNotApproved
             toggleDeviceNotApproved={this.toggleDeviceNotApproved}
             onClickSignInWithPassword={this.handleClickSignInWithPassword}
+            hasTwoFactorAuth={this.state.hasTwoFactorAuth}
           />
         );
       case mode.LOST_DEVICES:
@@ -81,6 +84,8 @@ class LoginWrapper extends Component {
           <LostAllDevicesWrapper
             usernameValue={this.state.values.username}
             toggleLostAllDevices={ev => this.toggleLostAllDevices(ev)}
+            hasTwoFactorAuth={this.state.hasTwoFactorAuth}
+            goToWaitingApproval={this.goToWaitingApproval}
           />
         );
       default:
@@ -117,17 +122,23 @@ class LoginWrapper extends Component {
   toggleLostAllDevices = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState({
-      mode: mode.LOGIN
-    });
+    this.setState(
+      {
+        mode: mode.LOGIN
+      },
+      () => this.cleanState()
+    );
   };
 
   toggleDeviceNotApproved = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState({
-      mode: mode.LOGIN
-    });
+    this.setState(
+      {
+        mode: mode.LOGIN
+      },
+      () => this.cleanState()
+    );
   };
 
   stopCountdown = () => {
@@ -204,6 +215,21 @@ class LoginWrapper extends Component {
     });
   };
 
+  goToWaitingApproval = password => {
+    this.setState(
+      {
+        mode: mode.CONTINUE,
+        values: {
+          ...this.state.values,
+          password
+        }
+      },
+      () => {
+        this.initLinkDevice(this.state.values.username);
+      }
+    );
+  };
+
   obtainEphemeralToken = async username => {
     const { status, text } = await linkBegin(username);
     if (status === 439) {
@@ -211,19 +237,28 @@ class LoginWrapper extends Component {
     } else if (status === 400) {
       return this.goToPasswordLogin();
     } else if (status === 200) {
-      // eslint-disable-next-line fp/no-mutation
-      ephemeralToken = text;
+      const { twoFactorAuth, token } = JSON.parse(text);
+      this.setState({
+        ephemeralToken: token,
+        hasTwoFactorAuth: !!twoFactorAuth
+      });
     }
   };
 
   initLinkDevice = async username => {
-    await this.obtainEphemeralToken(username);
-    if (ephemeralToken) {
-      const response = await this.sendLoginConfirmationRequest(ephemeralToken);
+    if (!this.state.ephemeralToken) {
+      await this.obtainEphemeralToken(username);
+    }
+    if (this.state.hasTwoFactorAuth && !this.state.values.password) {
+      this.goToPasswordLogin();
+    } else if (this.state.ephemeralToken) {
+      const response = await this.sendLoginConfirmationRequest(
+        this.state.ephemeralToken
+      );
       if (response) {
         this.setState({ mode: mode.CONTINUE }, () => {
           createTemporalAccount({ recipientId: username });
-          socketClient.start({ jwt: ephemeralToken });
+          socketClient.start({ jwt: this.state.ephemeralToken });
         });
       } else {
         this.goToPasswordLogin();
@@ -240,6 +275,10 @@ class LoginWrapper extends Component {
       deviceFriendlyName: pcName || window.navigator.platform,
       deviceType: DEVICE_TYPE
     };
+    if (this.state.hasTwoFactorAuth) {
+      // eslint-disable-next-line fp/no-mutation
+      newDeviceData.password = hashPassword(this.state.values.password);
+    }
     try {
       const { status } = await linkAuth({
         newDeviceData,
@@ -268,7 +307,9 @@ class LoginWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     this.setState({ disabledResendLoginRequest: true }, async () => {
-      const response = await this.sendLoginConfirmationRequest(ephemeralToken);
+      const response = await this.sendLoginConfirmationRequest(
+        this.state.ephemeralToken
+      );
       if (response) {
         setTimeout(() => {
           this.setState({ disabledResendLoginRequest: false });
@@ -290,6 +331,20 @@ class LoginWrapper extends Component {
       this.setState({
         mode: mode.DEVICE_NOT_APPROVED
       });
+    });
+  };
+
+  cleanState = () => {
+    this.setState({
+      values: {
+        username: '',
+        password: ''
+      },
+      disabledLoginButton: true,
+      disabledResendLoginRequest: false,
+      errorMessage: '',
+      ephemeralToken: undefined,
+      hasTwoFactorAuth: undefined
     });
   };
 }

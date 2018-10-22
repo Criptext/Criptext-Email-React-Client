@@ -69,3 +69,11 @@ export const getResendConfirmationTimestamp = () => {
   const timestamp = Number(localStorage.getItem('resendConfirmationTimestamp'));
   return isNaN(timestamp) ? null : timestamp;
 };
+
+export const setTwoFactorAuthStatus = enable => {
+  localStorage.setItem('twoFactorAuthStatus', enable);
+};
+
+export const getTwoFactorAuthStatus = () => {
+  return localStorage.getItem('twoFactorAuthStatus') || undefined;
+};

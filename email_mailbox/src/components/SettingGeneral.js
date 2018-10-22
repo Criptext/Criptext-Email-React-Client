@@ -21,11 +21,17 @@ const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
 const Logoutpopup = PopupHOC(LogoutPopup);
 
+const TWO_FACTOR_ENABLED_TEXT =
+  'Your password will be required when you log in to a new device';
+const TWO_FACTOR_DISABLED_TEXT =
+  'Your password will not be requested when you log in to a new device';
+
 const SettingGeneral = props => (
   <div id="setting-general">
     <ProfileBlock {...props} />
     <PasswordBlock {...props} />
     <RecoveryEmailBlock {...props} />
+    <TwoFactorAuthenticationBlock {...props} />
     <UsefulLinksBlock />
     <LogoutAccountBlock {...props} />
     <SettingsPopup {...props} />
@@ -209,6 +215,50 @@ const RecoveryEmailBlock = props => (
   </div>
 );
 
+const TwoFactorAuthenticationBlock = props => (
+  <div className="section-block">
+    <div className="section-block-title">
+      <h1>Two-factor authentication</h1>
+    </div>
+    <div className="section-block-content">
+      <div className="section-block-content-item">
+        <div className="two-factor-switch">
+          <div className="two-factor-switch-item">
+            <Switch
+              theme="two"
+              name="setTwoFactorSwitch"
+              onChange={props.onChangeSwitchTwoFactor}
+              checked={!!props.twoFactorEnabled}
+            />
+          </div>
+          <div className="two-factor-switch-label">
+            {props.twoFactorLabelIsLoading ? (
+              <TwoFactorLoadingLabel />
+            ) : (
+              renderTwoFactorTextLabel(props.twoFactorEnabled)
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const TwoFactorLoadingLabel = () => (
+  <div className="two-factor-loading-label">
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
+
+const renderTwoFactorTextLabel = isEnabled => (
+  <span>
+    {`${isEnabled ? TWO_FACTOR_ENABLED_TEXT : TWO_FACTOR_DISABLED_TEXT}`}
+  </span>
+);
+
 const ResendConfirmationRecoveryEmailLink = ({
   onClickResendConfirmationLink,
   onResendConfirmationCountdownEnd
@@ -367,6 +417,12 @@ RecoveryEmailBlock.propTypes = {
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   resendLinkText: PropTypes.string
+};
+
+TwoFactorAuthenticationBlock.propTypes = {
+  onChangeSwitchTwoFactor: PropTypes.func,
+  twoFactorEnabled: PropTypes.bool,
+  twoFactorLabelIsLoading: PropTypes.bool
 };
 
 ResendConfirmationRecoveryEmailLink.propTypes = {

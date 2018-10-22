@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './lostAllDevices.scss';
+import { appDomain } from '../utils/const';
 
 const LostAllDevices = props => (
   <div className="lost">
@@ -33,8 +34,12 @@ const renderSubHeader = props => (
       <div className="sub-icon" />
     </div>
     <div className="sub-text">
-      <p>Log In</p>
-      <p>{`${props.values.username}@criptext.com`}</p>
+      {props.hasTwoFactorAuth ? (
+        <p>Two-Factor Authentication</p>
+      ) : (
+        <p>Log In</p>
+      )}
+      <p>{`${props.values.username}@${appDomain}`}</p>
     </div>
   </div>
 );
@@ -67,14 +72,20 @@ const renderForm = props => (
           onClick={ev => props.onCLickSignInWithPassword(ev)}
           disabled={props.disabled}
         >
-          {props.isLoading ? renderLoadingContent() : renderBaseContent()}
+          {props.isLoading ? renderLoadingContent() : renderBaseContent(props)}
         </button>
       </div>
     </form>
   </div>
 );
 
-const renderBaseContent = () => <span className="button-text">Confirm</span>;
+const renderBaseContent = props => {
+  return props.hasTwoFactorAuth ? (
+    <span className="button-text">Next</span>
+  ) : (
+    <span className="button-text">Confirm</span>
+  );
+};
 
 const renderLoadingContent = () => (
   <div className="loading">
@@ -96,6 +107,7 @@ renderHeader.propTypes = {
 
 // eslint-disable-next-line fp/no-mutation
 renderSubHeader.propTypes = {
+  hasTwoFactorAuth: PropTypes.bool,
   values: PropTypes.object
 };
 
@@ -108,6 +120,11 @@ renderForm.propTypes = {
   disabled: PropTypes.bool,
   values: PropTypes.object,
   isLoading: PropTypes.bool
+};
+
+// eslint-disable-next-line fp/no-mutation
+renderBaseContent.propTypes = {
+  hasTwoFactorAuth: PropTypes.bool
 };
 
 export default LostAllDevices;

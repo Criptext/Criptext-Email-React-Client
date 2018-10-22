@@ -10,7 +10,8 @@ class SettingsWrapper extends Component {
       sectionSelected: 'general',
       devices: [],
       recoveryEmail: myAccount.recoveryEmail,
-      recoveryEmailConfirmed: !!myAccount.recoveryEmailConfirmed
+      recoveryEmailConfirmed: !!myAccount.recoveryEmailConfirmed,
+      twoFactorAuth: undefined
     };
   }
 
@@ -25,6 +26,7 @@ class SettingsWrapper extends Component {
         recoveryEmail={this.state.recoveryEmail}
         recoveryEmailConfirmed={this.state.recoveryEmailConfirmed}
         sectionSelected={this.state.sectionSelected}
+        twoFactorAuth={this.state.twoFactorAuth}
       />
     );
   }
@@ -33,11 +35,15 @@ class SettingsWrapper extends Component {
     const {
       devices,
       recoveryEmail,
+      twoFactorAuth,
       recoveryEmailConfirmed
     } = await this.props.onGetUserSettings();
-    this.setState({ devices, recoveryEmail, recoveryEmailConfirmed }, () => {
-      this.checkParamsToUpdate({ recoveryEmail, recoveryEmailConfirmed });
-    });
+    this.setState(
+      { devices, recoveryEmail, recoveryEmailConfirmed, twoFactorAuth },
+      () => {
+        this.checkParamsToUpdate({ recoveryEmail, recoveryEmailConfirmed });
+      }
+    );
   }
 
   checkParamsToUpdate({ recoveryEmail, recoveryEmailConfirmed }) {

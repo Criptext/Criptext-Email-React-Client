@@ -229,6 +229,84 @@
           &:nth-child(1){
             flex-direction: column;
 
+            .two-factor-switch {
+              display: flex;
+              margin: 10px 0px 7px 0px;
+
+              .two-factor-switch-item {
+                margin-right: 10px;
+
+                .input-switch{
+                  label{
+                    margin-left: 0;
+                  }
+                  input[type=checkbox] + label {
+                    background-color: #c3c3c3;
+                    &::before {
+                      background-color: #c3c3c3;
+                    }
+                  }
+                  input[type=checkbox]:checked + label {
+                    background-color: #0091ff;
+                    &::before {
+                      background-color: #0091ff;
+                    }
+                  }
+                }
+              }
+
+              .two-factor-switch-label {
+                color: #6c7280;
+                font-size: 13px;
+                font-weight: 300;
+
+                .two-factor-loading-label {
+                  display: inline-block;
+                  position: relative;
+                  top: -17px;
+                  left: 10px;
+                  height: inherit;
+
+                  > div {
+                    box-sizing: border-box;
+                    display: block;
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    margin: 3px;
+                    border: 3px solid rgb(211,211,211);
+                    border-radius: 50%;
+                    animation: loading-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+                    border-color: rgb(211,211,211) transparent transparent transparent;
+
+                    &:nth-child(1) {
+                      animation-delay: -0.45s;
+                    }
+                    &:nth-child(2) {
+                      animation-delay: -0.3s;
+                    }
+                    &:nth-child(3) {
+                      animation-delay: -0.15s;
+                    }
+                    @keyframes loading-ring {
+                      0% { transform: rotate(0deg); }
+                      100% { transform: rotate(360deg); }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &:nth-child(5){
+      .section-block-content{
+        .section-block-content-item{
+          &:nth-child(1){
+            flex-direction: column;
+
             .useful-link{
               color: #0091ff;
               font-size: 12px;
@@ -241,7 +319,7 @@
       }
     }
 
-    &:nth-child(5){
+    &:nth-child(6){
       .section-block-content{
         .section-block-content-item{
           &:nth-child(1){

@@ -37,11 +37,13 @@ const renderContent = props => (
         be blacklisted from Criptext.
       </p>
     </div>
-    <div className="cant-access">
-      <span onClick={ev => props.onClickSignInWithPassword(ev)}>
-        Sign In with password
-      </span>
-    </div>
+    {!props.hasTwoFactorAuth && (
+      <div className="cant-access">
+        <span onClick={ev => props.onClickSignInWithPassword(ev)}>
+          Sign In with password
+        </span>
+      </div>
+    )}
   </div>
 );
 
@@ -52,6 +54,7 @@ renderHeader.propTypes = {
 
 // eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {
+  hasTwoFactorAuth: PropTypes.bool,
   onClickSignInWithPassword: PropTypes.func
 };
 

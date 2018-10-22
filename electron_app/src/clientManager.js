@@ -4,23 +4,27 @@ const { getAccount } = require('./DBManager');
 const mailboxWindow = require('./windows/mailbox');
 let client = {};
 
-const checkClient = async optionalNewToken => {
-  if (optionalNewToken) {
-    return initializeClient(optionalNewToken);
+const checkClient = async ({ optionalNewToken, optionalVersion }) => {
+  if (optionalNewToken || optionalVersion) {
+    return initializeClient({
+      token: optionalNewToken,
+      version: optionalVersion
+    });
   }
   const [account] = await getAccount();
   const token = account ? account.jwt : undefined;
   if (!client.login || client.token !== token) {
-    initializeClient(token);
+    initializeClient({ token });
   }
 };
 
-const initializeClient = token => {
+const initializeClient = ({ token, version }) => {
   const clientOptions = {
     url:
       process.env.NODE_ENV === 'development' ? DEV_SERVER_URL : PROD_SERVER_URL,
     token,
-    timeout: 60000
+    timeout: 60000,
+    version
   };
   client = new ClientAPI(clientOptions);
   client.token = token;
@@ -44,7 +48,7 @@ const checkDeviceRemoved = res => {
 
 class ClientManager {
   constructor() {
-    this.check();
+    this.check({});
   }
 
   async acknowledgeEvents(eventIds) {
@@ -62,8 +66,11 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
-  async check(optionalNewToken) {
-    await checkClient(optionalNewToken);
+  async check({ token, version }) {
+    await checkClient({
+      optionalNewToken: token,
+      optionalVersion: version
+    });
   }
 
   checkAvailableUsername(username) {
@@ -81,7 +88,7 @@ class ClientManager {
   }
 
   async getEvents() {
-    await this.check();
+    await this.check({});
     const res = await client.getPendingEvents();
     const { status, body } = checkDeviceRemoved(res);
     return status === 204 ? [] : this.formEvents(body);
@@ -94,13 +101,9 @@ class ClientManager {
     });
   }
 
-  async getDevices() {
-    const res = await client.getDevices();
+  async getKeyBundle(deviceId) {
+    const res = await client.getKeyBundle(deviceId);
     return checkDeviceRemoved(res);
-  }
-
-  getKeyBundle(deviceId) {
-    return client.getKeyBundle(deviceId);
   }
 
   async getUserSettings() {
@@ -112,31 +115,35 @@ class ClientManager {
   }
 
   parseUserSettings(settings) {
-    const { devices, recoveryEmail } = settings;
-    const { address, status } = recoveryEmail;
+    const { devices, general } = settings;
+    const { recoveryEmail, recoveryEmailConfirmed, twoFactorAuth } = general;
     return {
       devices,
-      recoveryEmail: address,
-      recoveryEmailConfirmed: !!status
+      twoFactorAuth: !!twoFactorAuth,
+      recoveryEmail,
+      recoveryEmailConfirmed: !!recoveryEmailConfirmed
     };
   }
 
-  linkAccept(randomId) {
-    return client.linkAccept(randomId);
+  async linkAccept(randomId) {
+    const res = await client.linkAccept(randomId);
+    return checkDeviceRemoved(res);
   }
 
   async linkAuth({ newDeviceData, jwt }) {
-    await this.check(jwt);
+    await this.check({ token: jwt, version: '1.0.0' });
     return client.linkAuth(newDeviceData);
   }
 
   async linkBegin(username) {
+    await this.check({ version: '2.0.0' });
     const { status, text } = await client.linkBegin(username);
     return { status, text };
   }
 
-  linkDeny(randomId) {
-    return client.linkDeny(randomId);
+  async linkDeny(randomId) {
+    const res = await client.linkDeny(randomId);
+    return checkDeviceRemoved(res);
   }
 
   login(data) {
@@ -148,8 +155,9 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
-  postDataReady(params) {
-    return client.postDataReady(params);
+  async postDataReady(params) {
+    const res = await client.postDataReady(params);
+    return checkDeviceRemoved(res);
   }
 
   async postEmail(params) {
@@ -188,6 +196,11 @@ class ClientManager {
 
   async resetPassword(recipientId) {
     const res = await client.resetPassword(recipientId);
+    return checkDeviceRemoved(res);
+  }
+
+  async setTwoFactorAuth(enable) {
+    const res = await client.setTwoFactorAuth(enable);
     return checkDeviceRemoved(res);
   }
 

@@ -17,7 +17,8 @@ describe('[Form outgoing email] ', () => {
       textSubject: 'Subject',
       body: '<p>Hello</p>',
       files: [],
-      labelId
+      labelId,
+      status: 4
     };
 
     const outgoingData = formOutgoingEmailFromData(composerData);
