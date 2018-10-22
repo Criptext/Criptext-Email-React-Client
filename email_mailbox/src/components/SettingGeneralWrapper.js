@@ -24,7 +24,8 @@ import {
 import {
   sendRemoveDeviceErrorMessage,
   sendChangePasswordErrorMessage,
-  sendChangePasswordSuccessMessage
+  sendChangePasswordSuccessMessage,
+  sendTwoFactorAuthenticationTurnedOffMessage
 } from '../utils/electronEventInterface';
 import {
   validateRecoveryEmail,
@@ -48,6 +49,7 @@ const SETTINGS_POPUP_TYPES = {
   CHANGE_PASSWORD: 'change-password',
   LOGOUT: 'logout',
   CHANGE_RECOVERY_EMAIL: 'change-recovery-email',
+  TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled',
   NONE: 'none'
 };
 
@@ -203,6 +205,9 @@ class SettingGeneralWrapper extends Component {
         }
         onClickChangeRecoveryEmailInputType={
           this.handleClickChangeRecoveryEmailInputType
+        }
+        onClickCloseTwoFactorEnabledPopup={
+          this.handleClickCloseTwoFactorEnabledPopup
         }
       />
     );
@@ -422,9 +427,23 @@ class SettingGeneralWrapper extends Component {
           ...this.state.twoFactorParams
         };
         if (status === 200) {
+          let newState;
           twoFactorParams['twoFactorEnabled'] = nextValue;
           twoFactorParams['isLoading'] = false;
-          this.setState({ twoFactorParams });
+          if (nextValue === true) {
+            newState = {
+              ...newState,
+              isHiddenSettingsPopup: false,
+              settingsPupopType: SETTINGS_POPUP_TYPES.TWO_FACTOR_AUTH_ENABLED
+            };
+          } else {
+            sendTwoFactorAuthenticationTurnedOffMessage();
+          }
+          newState = {
+            ...newState,
+            twoFactorParams
+          };
+          this.setState(newState);
           setTwoFactorAuthStatus(nextValue);
         } else {
           twoFactorParams['isLoading'] = false;
@@ -432,6 +451,13 @@ class SettingGeneralWrapper extends Component {
         }
       }
     );
+  };
+
+  handleClickCloseTwoFactorEnabledPopup = () => {
+    this.setState({
+      isHiddenSettingsPopup: true,
+      settingsPupopType: SETTINGS_POPUP_TYPES.NONE
+    });
   };
 
   handleChangeInputValueOnChangeRecoveryEmailPopup = ev => {

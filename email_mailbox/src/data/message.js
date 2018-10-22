@@ -78,6 +78,10 @@ const messagesContent = {
     recoveryEmailLinkConfirmation: {
       priority: messagePriorities.MEDIUM,
       description: 'Confirmation link sent. Check your inbox and confirm'
+    },
+    twoFactorAuthTurnOff: {
+      priority: messagePriorities.MEDIUM,
+      description: 'Two-Factor Authentication was turned off'
     }
   },
   error: {

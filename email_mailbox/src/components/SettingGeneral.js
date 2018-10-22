@@ -15,23 +15,25 @@ import './signatureeditor.css';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
 import LogoutPopup from './LogoutPopup';
+import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
 const Logoutpopup = PopupHOC(LogoutPopup);
+const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 
-const TWO_FACTOR_ENABLED_TEXT =
-  'Your password will be required when you log in to a new device';
-const TWO_FACTOR_DISABLED_TEXT =
-  'Your password will not be requested when you log in to a new device';
+const TWO_FACTOR_NOT_AVAILABLE_TEXT =
+  'To enable Two-Factor Authentication you must set and verify a recovery email';
+const TWO_FACTOR_ENABLED_TEXT = 'On';
+const TWO_FACTOR_DISABLED_TEXT = 'Off';
 
 const SettingGeneral = props => (
   <div id="setting-general">
     <ProfileBlock {...props} />
     <PasswordBlock {...props} />
-    <RecoveryEmailBlock {...props} />
     <TwoFactorAuthenticationBlock {...props} />
+    <RecoveryEmailBlock {...props} />
     <UsefulLinksBlock />
     <LogoutAccountBlock {...props} />
     <SettingsPopup {...props} />
@@ -229,13 +231,14 @@ const TwoFactorAuthenticationBlock = props => (
               name="setTwoFactorSwitch"
               onChange={props.onChangeSwitchTwoFactor}
               checked={!!props.twoFactorEnabled}
+              disabled={!props.recoveryEmail || !props.recoveryEmailConfirmed}
             />
           </div>
           <div className="two-factor-switch-label">
             {props.twoFactorLabelIsLoading ? (
               <TwoFactorLoadingLabel />
             ) : (
-              renderTwoFactorTextLabel(props.twoFactorEnabled)
+              renderTwoFactorTextLabel(props)
             )}
           </div>
         </div>
@@ -253,11 +256,20 @@ const TwoFactorLoadingLabel = () => (
   </div>
 );
 
-const renderTwoFactorTextLabel = isEnabled => (
-  <span>
-    {`${isEnabled ? TWO_FACTOR_ENABLED_TEXT : TWO_FACTOR_DISABLED_TEXT}`}
-  </span>
-);
+const renderTwoFactorTextLabel = props => {
+  const hasRecoveryEmailConnfirmed =
+    props.recoveryEmail && props.recoveryEmailConfirmed;
+  const isEnabled = props.twoFactorEnabled;
+  const textLabel = !hasRecoveryEmailConnfirmed
+    ? TWO_FACTOR_NOT_AVAILABLE_TEXT
+    : isEnabled
+      ? TWO_FACTOR_ENABLED_TEXT
+      : TWO_FACTOR_DISABLED_TEXT;
+  const labelClass = !hasRecoveryEmailConnfirmed
+    ? 'two-factor-warning-label'
+    : 'two-factor-normal-label';
+  return <span className={labelClass}>{textLabel}</span>;
+};
 
 const ResendConfirmationRecoveryEmailLink = ({
   onClickResendConfirmationLink,
@@ -371,6 +383,17 @@ const SettingsPopup = props => {
         />
       );
     }
+    case SETTINGS_POPUP_TYPES.TWO_FACTOR_AUTH_ENABLED: {
+      return (
+        <Twofactorauthenabledpopup
+          isHidden={isHidden}
+          onTogglePopup={props.onClickCloseTwoFactorEnabledPopup}
+          popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+          {...props}
+        />
+      );
+    }
     default:
       return null;
   }
@@ -421,8 +444,16 @@ RecoveryEmailBlock.propTypes = {
 
 TwoFactorAuthenticationBlock.propTypes = {
   onChangeSwitchTwoFactor: PropTypes.func,
+  recoveryEmail: PropTypes.string,
+  recoveryEmailConfirmed: PropTypes.bool,
   twoFactorEnabled: PropTypes.bool,
   twoFactorLabelIsLoading: PropTypes.bool
+};
+
+renderTwoFactorTextLabel.propTypes = {
+  recoveryEmail: PropTypes.string,
+  recoveryEmailConfirmed: PropTypes.bool,
+  twoFactorEnabled: PropTypes.bool
 };
 
 ResendConfirmationRecoveryEmailLink.propTypes = {

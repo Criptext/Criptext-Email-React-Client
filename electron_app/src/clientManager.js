@@ -4,12 +4,9 @@ const { getAccount } = require('./DBManager');
 const mailboxWindow = require('./windows/mailbox');
 let client = {};
 
-const checkClient = async ({ optionalNewToken, optionalVersion }) => {
-  if (optionalNewToken || optionalVersion) {
-    return initializeClient({
-      token: optionalNewToken,
-      version: optionalVersion
-    });
+const checkClient = async ({ optionalNewToken }) => {
+  if (optionalNewToken) {
+    return initializeClient({ token: optionalNewToken });
   }
   const [account] = await getAccount();
   const token = account ? account.jwt : undefined;
@@ -18,13 +15,13 @@ const checkClient = async ({ optionalNewToken, optionalVersion }) => {
   }
 };
 
-const initializeClient = ({ token, version }) => {
+const initializeClient = ({ token }) => {
   const clientOptions = {
     url:
       process.env.NODE_ENV === 'development' ? DEV_SERVER_URL : PROD_SERVER_URL,
     token,
     timeout: 60000,
-    version
+    version: '2.0.0'
   };
   client = new ClientAPI(clientOptions);
   client.token = token;
@@ -66,11 +63,8 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
-  async check({ token, version }) {
-    await checkClient({
-      optionalNewToken: token,
-      optionalVersion: version
-    });
+  async check({ token }) {
+    await checkClient({ optionalNewToken: token });
   }
 
   checkAvailableUsername(username) {
@@ -131,12 +125,11 @@ class ClientManager {
   }
 
   async linkAuth({ newDeviceData, jwt }) {
-    await this.check({ token: jwt, version: '1.0.0' });
+    await this.check({ token: jwt });
     return client.linkAuth(newDeviceData);
   }
 
   async linkBegin(username) {
-    await this.check({ version: '2.0.0' });
     const { status, text } = await client.linkBegin(username);
     return { status, text };
   }

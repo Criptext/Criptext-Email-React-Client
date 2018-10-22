@@ -856,6 +856,14 @@ export const sendChangePasswordErrorMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendTwoFactorAuthenticationTurnedOffMessage = () => {
+  const messageData = {
+    ...Messages.success.twoFactorAuthTurnOff,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
