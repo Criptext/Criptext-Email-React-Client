@@ -4,52 +4,51 @@ import './changerecoveryemailpopup.css';
 
 const recoveryEmailText = 'Enter your new Recovery email';
 const passwordText = 'To confirm enter your password';
+const noteText =
+  'Changing your recovery email will disable two-factor authentication';
 
 const ChangeRecoveryEmailPopup = props => {
   return (
-    <div className="popup-content">
+    <div className="popup-content change-recovery-email-popup-content">
       <div className="popup-title">
         <h1>Change Recovery Email</h1>
       </div>
-      <ChangeRecoveryEmailPopupText text={recoveryEmailText} />
-      <ChangeRecoveryEmailPopupInputs {...props} />
+      <div className="popup-paragraph">
+        <p>{recoveryEmailText}</p>
+      </div>
+      <div className="popup-inputs">
+        <ChangePasswordPopupInput
+          name={props.recoveryEmailPopupInputEmail.name}
+          type={props.recoveryEmailPopupInputEmail.type}
+          value={props.recoveryEmailPopupInputEmail.value}
+          icon={props.recoveryEmailPopupInputEmail.icon}
+          placeholder={'Enter new recovery email'}
+          onChangeValue={props.onChangeInputValueOnChangeRecoveryEmailPopup}
+          onChangeType={() => {}}
+          hasError={props.recoveryEmailPopupInputEmail.hasError}
+          errorMessage={props.recoveryEmailPopupInputEmail.errorMessage}
+        />
+        <div className="popup-paragraph">
+          <p>{passwordText}</p>
+        </div>
+        <ChangePasswordPopupInput
+          name={props.recoveryEmailPopupInputPassword.name}
+          type={props.recoveryEmailPopupInputPassword.type}
+          value={props.recoveryEmailPopupInputPassword.value}
+          icon={props.recoveryEmailPopupInputPassword.icon}
+          placeholder={'Enter password'}
+          onChangeValue={props.onChangeInputValueOnChangeRecoveryEmailPopup}
+          onChangeType={props.onClickChangeRecoveryEmailInputType}
+          hasError={props.recoveryEmailPopupInputPassword.hasError}
+          errorMessage={props.recoveryEmailPopupInputPassword.errorMessage}
+        />
+      </div>
+      <div className="popup-paragraph change-recovery-email-note">
+        <p>
+          <strong>Note:</strong> {noteText}
+        </p>
+      </div>
       <ChangeRecoveryEmailPopupButtons {...props} />
-    </div>
-  );
-};
-
-const ChangeRecoveryEmailPopupText = ({ text }) => (
-  <div className="popup-paragraph">
-    <p>{text}</p>
-  </div>
-);
-
-const ChangeRecoveryEmailPopupInputs = props => {
-  return (
-    <div className="popup-inputs">
-      <ChangePasswordPopupInput
-        name={props.recoveryEmailPopupInputEmail.name}
-        type={props.recoveryEmailPopupInputEmail.type}
-        value={props.recoveryEmailPopupInputEmail.value}
-        icon={props.recoveryEmailPopupInputEmail.icon}
-        placeholder={'Enter new recovery email'}
-        onChangeValue={props.onChangeInputValueOnChangeRecoveryEmailPopup}
-        onChangeType={() => {}}
-        hasError={props.recoveryEmailPopupInputEmail.hasError}
-        errorMessage={props.recoveryEmailPopupInputEmail.errorMessage}
-      />
-      <ChangeRecoveryEmailPopupText text={passwordText} />
-      <ChangePasswordPopupInput
-        name={props.recoveryEmailPopupInputPassword.name}
-        type={props.recoveryEmailPopupInputPassword.type}
-        value={props.recoveryEmailPopupInputPassword.value}
-        icon={props.recoveryEmailPopupInputPassword.icon}
-        placeholder={'Enter password'}
-        onChangeValue={props.onChangeInputValueOnChangeRecoveryEmailPopup}
-        onChangeType={props.onClickChangeRecoveryEmailInputType}
-        hasError={props.recoveryEmailPopupInputPassword.hasError}
-        errorMessage={props.recoveryEmailPopupInputPassword.errorMessage}
-      />
     </div>
   );
 };
@@ -73,9 +72,7 @@ const ChangePasswordPopupInput = ({
       onChange={ev => onChangeValue(ev)}
       placeholder={placeholder}
     />
-    {type === 'password' && (
-      <i className={icon} onClick={() => onChangeType(name)} />
-    )}
+    <i className={icon} onClick={() => onChangeType(name)} />
     <InputErrorMessage
       hasError={hasError}
       errorMessage={errorMessage}
@@ -108,11 +105,7 @@ const ChangeRecoveryEmailPopupButtons = props => (
   </div>
 );
 
-ChangeRecoveryEmailPopupText.propTypes = {
-  text: PropTypes.string
-};
-
-ChangeRecoveryEmailPopupInputs.propTypes = {
+ChangeRecoveryEmailPopup.propTypes = {
   onChangeInputValueOnChangeRecoveryEmailPopup: PropTypes.func,
   onClickChangeRecoveryEmailInputType: PropTypes.func,
   recoveryEmailPopupInputEmail: PropTypes.object,

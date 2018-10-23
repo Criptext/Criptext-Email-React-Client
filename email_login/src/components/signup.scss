@@ -40,7 +40,7 @@
     .criptext-logo {
       height: 100%;
       width: 34%;
-      
+
       .icon {
         height: 33px;
         width: 96px;
@@ -102,17 +102,17 @@
           height: 3.17rem;
           width: 100%;
 
-          &:nth-child(5){
+          &:nth-child(5) {
             margin-bottom: 9.5%;
           }
 
-          &:nth-child(6){
+          &:nth-child(6) {
             margin-bottom: 1.5%;
 
-            .input-data{
+            .input-data {
               flex-direction: row;
 
-              .checkmark-container{
+              .checkmark-container {
                 align-self: flex-start;
               }
             }
@@ -250,10 +250,10 @@
               }
             }
 
-            .error-message{
+            .error-message {
               font-size: 0.75rem;
               color: #000;
-              margin-top:2px;
+              margin-top: 2px;
             }
           }
         }

@@ -161,9 +161,6 @@ class SettingGeneralWrapper extends Component {
         }
         mode={this.state.mode}
         onAddNameInputKeyPressed={this.handleAddNameInputKeyPressed}
-        onAddRecoveryEmailInputKeyPressed={
-          this.handleAddRecoveryEmailInputKeyPressed
-        }
         onBlurInputName={this.handleBlurInputName}
         onBlurInputRecoveryEmail={this.handleBlurInputRecoveryEmail}
         onChangeInputName={this.handleChangeInputName}
@@ -630,6 +627,7 @@ class SettingGeneralWrapper extends Component {
           .value
       )
     };
+    const REPEATED_RECOVERY_EMAIL = 405;
     const WRONG_PASSWORD_STATUS = 400;
     const INVALID_EMAIL_STATUS = 422;
     const SUCCESS_STATUS = 200;
@@ -661,6 +659,10 @@ class SettingGeneralWrapper extends Component {
     }
     if (status === INVALID_EMAIL_STATUS) {
       errorMessage = 'Invalid email';
+      inputName = 'recoveryEmailInput';
+    }
+    if (status === REPEATED_RECOVERY_EMAIL) {
+      errorMessage = 'This is the current recovery email';
       inputName = 'recoveryEmailInput';
     }
     const changeRecoveryEmailPopupParams = {

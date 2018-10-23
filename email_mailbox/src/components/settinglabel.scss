@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  user-select: none;
 
   .system-labels-list-header {
     display: flex;
@@ -71,6 +72,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  user-select: none;
 
   .custom-labels-list-header {
     display: flex;
@@ -149,6 +151,10 @@
       flex-direction: column;
       width: 100%;
       align-items: initial;
+
+      .custom-label-input {
+        width: 27%;
+      }
 
       .custom-label-button {
         margin-top: 15px;

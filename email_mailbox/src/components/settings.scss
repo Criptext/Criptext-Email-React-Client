@@ -92,6 +92,7 @@
           align-items: flex-start;
           display: flex;
           width: 200px;
+          user-select: none;
 
           h1{
             font-weight: 700;
@@ -109,6 +110,7 @@
           margin: auto 0px;
           display: flex;
           width: 100%;
+          user-select: none;
 
           .section-block-content-item-title{
             color: #94a1b0;
@@ -116,6 +118,7 @@
             font-weight: 600;
             margin-top: 22px;
             text-transform: uppercase;
+            user-select: none;
           }
         }
       }

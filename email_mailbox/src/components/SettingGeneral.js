@@ -68,6 +68,7 @@ const renderBlockName = props => (
     {props.mode === EDITING_MODES.EDITING_NAME ? (
       <div>
         <input
+          className="input-a"
           type="text"
           placeholder="Enter new name"
           value={props.name}

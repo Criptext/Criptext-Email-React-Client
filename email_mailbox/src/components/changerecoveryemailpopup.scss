@@ -1,16 +1,39 @@
 .change-recovery-email-popup-content {
-    .change-recovery-email-input {
-      padding-left: 20px;
-      margin-bottom: 35px;
-      input {
-        padding-left: 7px;
-      }
-      > 
-      &:first-child {
-        > i {
-          color: #ffffff;
-          pointer-events: none;
-        }
+  margin-top: 15px;
+  margin-bottom: 10px;
+  
+  .popup-paragraph > p {
+    margin: 0px;
+  }
+  
+  .popup-inputs {
+    padding-right: 5px;
+    > :first-child {
+      > i {
+        color: #ffffff !important;
+        pointer-events: none;
       }
     }
+
+    > .popup-input {
+      margin-bottom: 30px;
+      > input {
+        padding-left: 7px;
+      }
+      > i {
+        cursor: pointer;
+      }
+      > span {
+        margin-left: 20px !important;
+      }
+    }
+  }
+
+  .change-recovery-email-note {
+    margin: 0px 8px;
+  }
+
+  .popup-buttons {
+    margin-top: 30px !important;
+  }
 }
