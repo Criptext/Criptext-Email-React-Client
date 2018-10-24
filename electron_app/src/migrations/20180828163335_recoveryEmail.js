@@ -1,7 +1,7 @@
 const { Table } = require('./../models');
 
 exports.up = (knex, Promise) => {
-  return Promise.resolve(knex);
+  return Promise.resolve(true);
 };
 
 // On rollback

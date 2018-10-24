@@ -27,6 +27,11 @@ export const myAccount = remote.require('./src/Account');
 export const composerEvents = remote.require('./src/windows/composer')
   .composerEvents;
 
+const globalManager = remote.require('./src/globalManager');
+export const setInternetConnectionStatus = status => {
+  globalManager.internetConnection.setStatus(status);
+};
+
 /*  Window events
 ----------------------------- */
 export const closeDialog = () => {

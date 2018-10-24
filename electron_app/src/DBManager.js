@@ -1052,7 +1052,7 @@ const getSessionRecordByRecipientIds = recipientIds => {
 };
 
 /* IdentityKeyRecord
-   ----------------------------- */
+----------------------------- */
 const createIdentityKeyRecord = params => {
   return db.table(Table.IDENTITYKEYRECORD).insert(params);
 };
@@ -1071,6 +1071,23 @@ const updateIdentityKeyRecord = ({ recipientId, identityKey }) => {
     .update({ identityKey });
 };
 
+/* Pending Event
+----------------------------- */
+const createPendingEvent = params => {
+  return db.table(Table.PENDINGEVENT).insert(params);
+};
+
+const getPendingEvents = () => {
+  return db.select('*').from(Table.PENDINGEVENT);
+};
+
+const deletePendingEventsByIds = ids => {
+  return db
+    .table(Table.PENDINGEVENT)
+    .whereIn('id', ids)
+    .del();
+};
+
 const closeDB = () => {
   db.close();
   db.disconnect();
@@ -1086,6 +1103,7 @@ module.exports = {
   createLabel,
   createEmail,
   createEmailLabel,
+  createPendingEvent,
   createFeedItem,
   createFileKey,
   createIdentityKeyRecord,
@@ -1101,6 +1119,7 @@ module.exports = {
   deleteEmailContactByEmailId,
   deleteEmailLabel,
   deleteEmailLabelsByEmailId,
+  deletePendingEventsByIds,
   deleteFeedItemById,
   deletePreKeyPair,
   deleteSessionRecord,
@@ -1121,6 +1140,7 @@ module.exports = {
   getEmailsByThreadIdAndLabelId,
   getEmailsUnredByLabelId,
   getEmailLabelsByEmailId,
+  getPendingEvents,
   getFileKeyByEmailId,
   getIdentityKeyRecord,
   getLabelById,

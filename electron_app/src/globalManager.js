@@ -6,6 +6,7 @@ global.modalData = {};
 global.screenSize = {};
 global.temporalAccount = {};
 global.windowsEventsDisabled = false;
+global.internetConnection;
 
 /*  Composer
 ----------------------------- */
@@ -92,6 +93,16 @@ const checkWindowsEvents = () => {
   return global.windowsEventsDisabled;
 };
 
+/*  Windows Events
+----------------------------- */
+const setInternetConnectionStatus = status => {
+  global.internetConnection = status;
+};
+
+const getInternetConnectionStatus = () => {
+  return global.internetConnection;
+};
+
 module.exports = {
   composerData: {
     get: getComposerData,
@@ -130,5 +141,9 @@ module.exports = {
     disable: disableWindowsEvents,
     enable: enableWindowsEvents,
     checkDisabled: checkWindowsEvents
+  },
+  internetConnection: {
+    setStatus: setInternetConnectionStatus,
+    getStatus: getInternetConnectionStatus
   }
 };

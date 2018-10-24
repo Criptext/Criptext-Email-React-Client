@@ -1,6 +1,8 @@
 const ClientAPI = require('@criptext/api');
 const { DEV_SERVER_URL, PROD_SERVER_URL } = require('./utils/const');
-const { getAccount } = require('./DBManager');
+const { getAccount, createPendingEvent } = require('./DBManager');
+const { processEventsQueue } = require('./eventQueueManager');
+const globalManager = require('./globalManager');
 const mailboxWindow = require('./windows/mailbox');
 let client = {};
 
@@ -21,7 +23,7 @@ const initializeClient = ({ token }) => {
       process.env.NODE_ENV === 'development' ? DEV_SERVER_URL : PROD_SERVER_URL,
     token,
     timeout: 60000,
-    version: '2.0.0'
+    version: '3.0.0'
   };
   client = new ClientAPI(clientOptions);
   client.token = token;
@@ -164,13 +166,49 @@ class ClientManager {
   }
 
   async postOpenEvent(metadataKeys) {
-    const res = await client.postOpenEvent(metadataKeys);
-    return checkDeviceRemoved(res);
+    const OPEN_EVENT_CMD = 500;
+    try {
+      const data = {
+        cmd: OPEN_EVENT_CMD,
+        params: {
+          metadataKeys: [...metadataKeys]
+        }
+      };
+      await createPendingEvent({
+        data: JSON.stringify(data)
+      });
+      processEventsQueue();
+      return Promise.resolve({ status: 200 });
+    } catch (e) {
+      return Promise.reject({ status: 422 });
+    }
   }
 
   async postPeerEvent(params) {
-    const res = await client.postPeerEvent(params);
-    return checkDeviceRemoved(res);
+    try {
+      await createPendingEvent({
+        data: JSON.stringify(params)
+      });
+      processEventsQueue();
+      return Promise.resolve({ status: 200 });
+    } catch (e) {
+      return Promise.reject({ status: 422 });
+    }
+  }
+
+  async pushPeerEvents(events) {
+    try {
+      const res = await client.postPeerEvent({
+        peerEvents: [...events]
+      });
+      return checkDeviceRemoved(res);
+    } catch (e) {
+      if (e.code === 'ENOTFOUND') {
+        globalManager.internetConnection.setStatus(false);
+        return Promise.resolve({ status: 200 });
+      }
+      return Promise.reject({ status: 422 });
+    }
   }
 
   postUser(params) {

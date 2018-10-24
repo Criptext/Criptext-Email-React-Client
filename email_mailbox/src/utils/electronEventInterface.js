@@ -23,7 +23,8 @@ import {
   getEmailsByThreadId,
   deleteEmailLabel,
   cleanDatabase,
-  logoutApp
+  logoutApp,
+  setInternetConnectionStatus
 } from './electronInterface';
 import {
   checkEmailIsTo,
@@ -708,7 +709,22 @@ ipcRenderer.on('update-available', () => {
   emitter.emit(Event.UPDATE_AVAILABLE, { value: true });
 });
 
-/* Window events: handle
+/* Window events: handle */
+ipcRenderer.on('check-network-status', () => {
+  const isOnline = window.navigator.onLine;
+  setInternetConnectionStatus(isOnline);
+  if (isOnline) {
+    processPendingEvents();
+  }
+});
+
+export const processPendingEvents = () => {
+  setTimeout(() => {
+    ipcRenderer.send('process-pending-events');
+  }, 1000);
+};
+
+/* Window events
   ----------------------------- */
 export const sendOpenEventErrorMessage = () => {
   const messageData = {

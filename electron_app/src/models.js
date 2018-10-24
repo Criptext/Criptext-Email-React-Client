@@ -64,7 +64,8 @@ const Table = {
   PREKEYRECORD: 'prekeyrecord',
   SIGNEDPREKEYRECORD: 'signedprekeyrecord',
   SESSIONRECORD: 'sessionrecord',
-  IDENTITYKEYRECORD: 'identitykeyrecord'
+  IDENTITYKEYRECORD: 'identitykeyrecord',
+  PENDINGEVENT: 'pendingEvent'
 };
 
 const db = knex(dbConfiguration);

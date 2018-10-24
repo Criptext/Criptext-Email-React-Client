@@ -96,9 +96,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@criptext/api@^0.14.7":
-  version "0.14.7"
-  resolved "https://registry.yarnpkg.com/@criptext/api/-/api-0.14.7.tgz#2de560225addcda597b48f78b58150df9ed45741"
+"@criptext/api@^0.14.8":
+  version "0.14.8"
+  resolved "https://registry.yarnpkg.com/@criptext/api/-/api-0.14.8.tgz#6734afac1019e3b29a3d72edd4fe59b610669839"
   dependencies:
     superagent "^3.8.2"
 
