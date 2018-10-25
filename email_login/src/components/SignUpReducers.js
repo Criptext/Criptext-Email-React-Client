@@ -1,4 +1,4 @@
-import { toBeConfirmed } from './SignUpSymbols';
+import { toBeConfirmed, optionallyEmpty } from './SignUpSymbols';
 import * as ErrorMsgs from './SignUpErrorMsgs';
 import {
   validateUsername,
@@ -118,7 +118,16 @@ export const updateForm = (state, { itemName, itemValue }) => {
           };
     }
     case 'recoveryemail': {
-      return itemValue === '' || validateEmail(itemValue)
+      if (itemValue === '')
+        return {
+          ...newState,
+          errors: {
+            ...newState.errors,
+            recoveryemail: optionallyEmpty
+          }
+        };
+
+      return validateEmail(itemValue)
         ? newState
         : {
             ...newState,
