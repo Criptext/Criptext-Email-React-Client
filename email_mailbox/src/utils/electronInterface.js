@@ -49,6 +49,10 @@ export const confirmPermanentDeleteThread = callback => {
   });
 };
 
+export const downloadUpdate = () => {
+  ipcRenderer.send('download-update');
+};
+
 export const editDraftInComposer = data => {
   ipcRenderer.send('edit-draft', data);
 };
@@ -73,8 +77,8 @@ export const throwError = error => {
   ipcRenderer.send('throwError', error);
 };
 
-export const downloadUpdate = () => {
-  ipcRenderer.send('download-update');
+export const updateDockBadge = value => {
+  ipcRenderer.send('update-dock-badge', value);
 };
 
 /*  Criptext Client

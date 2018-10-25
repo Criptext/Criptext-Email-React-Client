@@ -1,13 +1,14 @@
 import { Label } from './types';
 import {
-  LabelType,
   createLabel,
-  postPeerEvent,
+  deleteLabelById,
   getAllLabels,
   getEmailsUnredByLabelId,
   getEmailsCounterByLabelId,
-  updateLabel as updateLabelDB,
-  deleteLabelById
+  LabelType,
+  postPeerEvent,
+  updateDockBadge,
+  updateLabel as updateLabelDB
 } from '../utils/electronInterface';
 import { sendUpdateLabelsErrorMessage } from './../utils/electronEventInterface';
 import { SocketCommand } from '../utils/const';
@@ -57,6 +58,7 @@ export const loadLabels = () => {
         rejectedLabelIds
       });
       const badgeInbox = unreadInbox.length;
+      updateDockBadge(badgeInbox);
       const unreadSpam = await getEmailsUnredByLabelId({
         labelId: LabelType.spam.id
       });
@@ -132,6 +134,7 @@ export const updateBadgeLabels = labelIds => {
               rejectedLabelIds
             });
             const badgeInbox = unreadInbox.length;
+            updateDockBadge(badgeInbox);
             return {
               id: String(labelId),
               badge: badgeInbox
