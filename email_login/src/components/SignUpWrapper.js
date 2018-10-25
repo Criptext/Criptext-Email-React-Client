@@ -5,10 +5,7 @@ import { hashPassword } from '../utils/HashUtils';
 import { toBeConfirmed } from './SignUpSymbols';
 import { formItems, createStore } from './SignUpStore';
 import * as reducers from './SignUpReducers';
-
-const isSignUpButtonDisabled = errors => {
-  return Object.values(errors).some(errMsg => errMsg);
-};
+import * as model from './SignUpModel';
 
 class SignUpWrapper extends Component {
   constructor(props) {
@@ -26,7 +23,7 @@ class SignUpWrapper extends Component {
           onChangeField={this.handleChange}
           onClickSignUp={this.handleClickSignUp}
           errors={this.state.errors}
-          disabled={isSignUpButtonDisabled(this.state.errors)}
+          disabled={model.shouldDisableSubmitButton(this.state)}
           isShowingPassword={this.state.isShowingPassword}
           onToggleShowPassword={this.onToggleShowPassword}
         />

@@ -1,4 +1,4 @@
-import { toBeConfirmed } from './SignUpSymbols';
+import { toBeConfirmed, optionallyEmpty } from './SignUpSymbols';
 export const formItems = [
   {
     name: 'username',
@@ -96,7 +96,7 @@ const onInitState = (array, field) =>
 const onInitErrors = (array, field) =>
   array.reduce((obj, item) => {
     // eslint-disable-next-line fp/no-mutation
-    obj[item[field]] = item.optional ? undefined : toBeConfirmed;
+    obj[item[field]] = item.optional ? optionallyEmpty : toBeConfirmed;
     return obj;
   }, {});
 

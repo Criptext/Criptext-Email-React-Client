@@ -1,6 +1,6 @@
 import { check, gen, property } from 'testcheck';
 
-import { toBeConfirmed } from './SignUpSymbols';
+import { toBeConfirmed, optionallyEmpty } from './SignUpSymbols';
 import { createStore } from './SignUpStore';
 import {
   checkUsername,
@@ -227,6 +227,7 @@ describe('updateForm', () => {
     input                      | error
     ${'gabriel'}               | ${ErrorMsgs.EMAIL_INVALID}
     ${'gabriel@io'}            | ${ErrorMsgs.EMAIL_INVALID}
+    ${''}                      | ${optionallyEmpty}
     ${'gabriel@gmail.com'}     | ${undefined}
     ${'vv22-_ga.Eom@live.com'} | ${undefined}
   `('With email: $input sets error: $error', ({ input, error }) => {
