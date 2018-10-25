@@ -17,15 +17,11 @@ class MainWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isUpdateAvailable: false,
       threadItemsChecked: Set()
     };
 
-    addEvent(Event.THREADS_DELETED, () => {
-      this.handleClickBackHeaderThread(
-        this.props.sectionSelected.params.mailboxSelected,
-        this.props.onClickSection
-      );
-    });
+    this.initEventHandlers(props);
   }
 
   render() {
@@ -36,36 +32,6 @@ class MainWrapper extends Component {
       </div>
     );
   }
-
-  handleCheckAllThreadItems = (value, threadIds) => {
-    if (!value) this.setState({ threadItemsChecked: threadIds });
-    else this.setState({ threadItemsChecked: Set() });
-  };
-
-  handleCheckThreadItem = (threadId, value) => {
-    if (value)
-      this.setState({
-        threadItemsChecked: this.state.threadItemsChecked.add(threadId)
-      });
-    else
-      this.setState({
-        threadItemsChecked: this.state.threadItemsChecked.delete(threadId)
-      });
-  };
-
-  handleClickBackHeaderMailbox = () => {
-    this.setState({
-      threadItemsChecked: this.state.threadItemsChecked.clear()
-    });
-  };
-
-  handleClickBackHeaderThread = (mailboxSelected, onClickSection) => {
-    const type = SectionType.MAILBOX;
-    const params = {
-      mailboxSelected
-    };
-    onClickSection(type, params);
-  };
 
   renderHeader = () => {
     switch (this.props.sectionSelected.type) {
@@ -138,12 +104,14 @@ class MainWrapper extends Component {
       case SectionType.MAILBOX: {
         return (
           <Threads
+            isUpdateAvailable={this.state.isUpdateAvailable}
             mailboxSelected={this.props.sectionSelected.params.mailboxSelected}
+            onBackOption={this.handleClickBackHeaderMailbox}
             onClickSection={this.props.onClickSection}
             onCheckThreadItem={this.handleCheckThreadItem}
+            onCloseUpdateMessage={this.handleCloseUpdateMessage}
             searchParams={this.props.sectionSelected.params.searchParams}
             threadItemsChecked={this.state.threadItemsChecked}
-            onBackOption={this.handleClickBackHeaderMailbox}
           />
         );
       }
@@ -170,6 +138,55 @@ class MainWrapper extends Component {
       default:
         break;
     }
+  };
+
+  handleCheckAllThreadItems = (value, threadIds) => {
+    if (!value) this.setState({ threadItemsChecked: threadIds });
+    else this.setState({ threadItemsChecked: Set() });
+  };
+
+  handleCheckThreadItem = (threadId, value) => {
+    if (value)
+      this.setState({
+        threadItemsChecked: this.state.threadItemsChecked.add(threadId)
+      });
+    else
+      this.setState({
+        threadItemsChecked: this.state.threadItemsChecked.delete(threadId)
+      });
+  };
+
+  handleClickBackHeaderMailbox = () => {
+    this.setState({
+      threadItemsChecked: this.state.threadItemsChecked.clear()
+    });
+  };
+
+  handleClickBackHeaderThread = (mailboxSelected, onClickSection) => {
+    const type = SectionType.MAILBOX;
+    const params = {
+      mailboxSelected
+    };
+    onClickSection(type, params);
+  };
+
+  handleCloseUpdateMessage = () => {
+    this.setState({ isUpdateAvailable: false });
+  };
+
+  initEventHandlers = props => {
+    addEvent(Event.THREADS_DELETED, () => {
+      this.handleClickBackHeaderThread(
+        props.sectionSelected.params.mailboxSelected,
+        props.onClickSection
+      );
+    });
+
+    addEvent(Event.UPDATE_AVAILABLE, ({ value }) => {
+      if (value) {
+        this.setState({ isUpdateAvailable: value });
+      }
+    });
   };
 }
 

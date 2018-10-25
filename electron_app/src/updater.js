@@ -50,13 +50,15 @@ autoUpdater.on('update-available', () => {
       },
       buttonIndex => {
         if (buttonIndex === 0) {
-          autoUpdater.downloadUpdate();
-          isDownloadingUpdate = true;
+          downloadUpdate();
         }
       }
     );
   }
   if (currentUpdaterType === updaterTypes.AUTO) {
+    const mailboxWindow = require('./windows/mailbox');
+    mailboxWindow.send('update-available');
+
     const title = 'A new version of Criptext is available!';
     const message = 'Click here to download or dismiss to update later';
     const notifyOptions = {
@@ -77,8 +79,7 @@ autoUpdater.on('update-available', () => {
         icon: iconPath
       };
       notifier.notify(downloadingNotifyOptions);
-      autoUpdater.downloadUpdate();
-      isDownloadingUpdate = true;
+      downloadUpdate();
     });
   }
 });
@@ -111,19 +112,9 @@ autoUpdater.on('update-downloaded', () => {
   );
 });
 
-const appUpdaterWin = () => {
+const appUpdater = () => {
   currentUpdaterType = updaterTypes.AUTO;
   autoUpdater.checkForUpdates();
-};
-
-const appUpdaterMac = () => {
-  currentUpdaterType = updaterTypes.AUTO;
-  autoUpdater.checkForUpdatesAndNotify();
-};
-
-const appUpdaterLinux = () => {
-  currentUpdaterType = updaterTypes.AUTO;
-  autoUpdater.checkForUpdatesAndNotify();
 };
 
 const checkForUpdates = () => {
@@ -139,9 +130,13 @@ const checkForUpdates = () => {
   }
 };
 
+const downloadUpdate = () => {
+  autoUpdater.downloadUpdate();
+  isDownloadingUpdate = true;
+};
+
 module.exports = {
+  appUpdater,
   checkForUpdates,
-  appUpdaterMac,
-  appUpdaterWin,
-  appUpdaterLinux
+  downloadUpdate
 };

@@ -43,6 +43,7 @@ class ThreadsWrapper extends Component {
         {...this.props}
         hoverTarget={this.state.hoverTarget}
         labels={this.state.labels}
+        onCloseMessage={this.handleCloseMessage}
         onMouseEnterItem={this.handleMouseEnterItem}
         onMouseLeaveItem={this.handleMouseLeaveItem}
         onScroll={this.handleScroll}
@@ -60,6 +61,12 @@ class ThreadsWrapper extends Component {
     );
     this.props.onLoadEvents();
   }
+
+  handleCloseMessage = () => {
+    if (this.props.isUpdateAvailable) {
+      this.props.onCloseUpdateMessage();
+    }
+  };
 
   handleMouseEnterItem = (id, data) => {
     if (typeof data === 'string') {
@@ -116,8 +123,10 @@ class ThreadsWrapper extends Component {
 }
 
 ThreadsWrapper.propTypes = {
+  isUpdateAvailable: PropTypes.bool,
   mailboxSelected: PropTypes.string,
   onBackOption: PropTypes.func,
+  onCloseUpdateMessage: PropTypes.func,
   onLoadEvents: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,

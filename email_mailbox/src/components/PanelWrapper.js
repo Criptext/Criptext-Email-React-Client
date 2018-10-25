@@ -15,10 +15,10 @@ class PanelWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isHiddenMailboxPopup: true,
       isOpenActivityPanel: false,
       isOpenSideBar: true,
       isOpenWelcome: true,
-      isHiddenMailboxPopup: true,
       mailboxPopupType: undefined,
       sectionSelected: {
         type: SectionType.MAILBOX,
@@ -144,6 +144,13 @@ class PanelWrapper extends Component {
   };
 
   initEventHandlers = props => {
+    addEvent(Event.ENABLE_WINDOW, () => {
+      this.setState({
+        isHiddenMailboxPopup: true,
+        mailboxPopupType: undefined
+      });
+    });
+
     addEvent(Event.NEW_EMAIL, emailParams => {
       const { emailId, labels, threadId } = emailParams;
       const currentSectionType = this.state.sectionSelected.type;
@@ -218,6 +225,7 @@ class PanelWrapper extends Component {
     );
 
     addEvent(Event.UPDATE_THREAD_EMAILS, eventParams => {
+      if (!eventParams) return;
       const { threadId, newEmailId, oldEmailId } = eventParams;
       if (!threadId && !newEmailId && !oldEmailId) return;
       props.onLoadEmails(threadId);
@@ -276,13 +284,6 @@ class PanelWrapper extends Component {
       this.setState({
         isHiddenMailboxPopup: false,
         mailboxPopupType: MAILBOX_POPUP_TYPES.ONLY_BACKDROP
-      });
-    });
-
-    addEvent(Event.ENABLE_WINDOW, () => {
-      this.setState({
-        isHiddenMailboxPopup: true,
-        mailboxPopupType: undefined
       });
     });
   };

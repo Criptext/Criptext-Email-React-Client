@@ -933,18 +933,9 @@ const getFilesByTokens = tokens => {
     .whereIn('token', tokens);
 };
 
-const updateFileByToken = ({ token, status }) => {
-  const params = {};
-  if (status) params.status = status;
-  return db
-    .table(Table.FILE)
-    .where({ token })
-    .update(params);
-};
-
 const updateFilesByEmailId = ({ emailId, status }) => {
   const params = {};
-  if (status) params.status = status;
+  if (typeof status === 'number') params.status = status;
   return db
     .table(Table.FILE)
     .where({ emailId })
@@ -1156,7 +1147,6 @@ module.exports = {
   updateEmailLabel,
   updateFeedItem,
   updateFilesByEmailId,
-  updateFileByToken,
   updateIdentityKeyRecord,
   updateLabel,
   updateUnreadEmailByThreadIds

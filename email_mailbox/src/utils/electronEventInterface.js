@@ -297,6 +297,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       cc: cc || ccArray,
       date,
       from,
+      isEmailApp: !!messageType,
       isToMe,
       metadataKey,
       deviceId: senderDeviceId,
@@ -377,39 +378,41 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
     const preview = isUnsend ? '' : null;
     const status = validateEmailStatusToSet(email.status, type);
     const unsendDate = isUnsend ? date : null;
-    await updateEmail({
-      key: metadataKey,
-      status,
-      content,
-      preview,
-      unsendDate
-    });
-    if (isUnsend) {
-      await updateFilesByEmailId({
-        emailId: email.id,
-        status: AttachItemStatus.UNSENT
+    if (status || content || preview || unsendDate) {
+      await updateEmail({
+        key: String(metadataKey),
+        status,
+        content,
+        preview,
+        unsendDate
       });
-    }
-    const isFromMe = from === myAccount.recipientId;
-    const isOpened = type === EmailStatus.OPENED;
-    if (!isFromMe && isOpened) {
-      const contactEmail = `${from}@${appDomain}`;
-      const [contact] = await getContactByEmails([contactEmail]);
-      const feedItemParams = {
-        date,
-        type,
+      if (isUnsend) {
+        await updateFilesByEmailId({
+          emailId: email.id,
+          status: AttachItemStatus.UNSENT
+        });
+      }
+      const isFromMe = from === myAccount.recipientId;
+      const isOpened = type === EmailStatus.OPENED;
+      if (!isFromMe && isOpened) {
+        const contactEmail = `${from}@${appDomain}`;
+        const [contact] = await getContactByEmails([contactEmail]);
+        const feedItemParams = {
+          date,
+          type,
+          emailId: email.id,
+          contactId: contact.id
+        };
+        await createFeedItem([feedItemParams]);
+      }
+      const eventParams = {
+        threadId: email.threadId,
         emailId: email.id,
-        contactId: contact.id
+        status: type,
+        date
       };
-      await createFeedItem([feedItemParams]);
+      emitter.emit(Event.EMAIL_TRACKING_UPDATE, eventParams);
     }
-    const eventParams = {
-      threadId: email.threadId,
-      emailId: email.id,
-      status: type,
-      date
-    };
-    emitter.emit(Event.EMAIL_TRACKING_UPDATE, eventParams);
   }
   return rowid;
 };
@@ -421,7 +424,7 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
   if (email) {
     const status = validateEmailStatusToSet(email.status, type);
     await updateEmail({
-      key: metadataKey,
+      key: String(metadataKey),
       content: '',
       preview: '',
       status,
@@ -453,14 +456,17 @@ const handlePeerRemoveDevice = async ({ rowid }) => {
 const handlePeerEmailRead = async ({ rowid, params }) => {
   const { metadataKeys, unread } = params;
   const emails = await getEmailsByKeys(metadataKeys);
-  const emailKeys = emails.map(email => email.key);
-  const res = await updateEmails({
-    keys: emailKeys,
-    unread: !!unread
-  });
-  emitter.emit(Event.REFRESH_THREADS, { labelIds: [LabelType.inbox.id] });
-  if (res) {
-    return rowid;
+  if (emails.length) {
+    const emailKeys = emails.map(email => email.key);
+    const res = await updateEmails({
+      keys: emailKeys,
+      unread: !!unread
+    });
+    emitter.emit(Event.REFRESH_THREADS, { labelIds: [LabelType.inbox.id] });
+    if (res) {
+      return rowid;
+    }
+    return null;
   }
   return null;
 };
@@ -636,7 +642,7 @@ const setEventAsHandled = async eventIds => {
   return await acknowledgeEvents(eventIds);
 };
 
-/* Window events
+/* Window events: listener
   ----------------------------- */
 ipcRenderer.on('socket-message', async (ev, message) => {
   const eventId = message.cmd;
@@ -714,7 +720,11 @@ ipcRenderer.on('enable-window-link-devices', () => {
   emitter.emit(Event.ENABLE_WINDOW);
 });
 
-/* Window events
+ipcRenderer.on('update-available', () => {
+  emitter.emit(Event.UPDATE_AVAILABLE, { value: true });
+});
+
+/* Window events: handle
   ----------------------------- */
 export const sendOpenEventErrorMessage = () => {
   const messageData = {

@@ -1,3 +1,4 @@
+import { labels } from './systemLabels';
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const composerId = remote.getCurrentWindow().id;
@@ -26,7 +27,7 @@ export const errors = remote.require('./src/errors');
 
 export const myAccount = remote.require('./src/Account');
 
-export const LabelType = remote.require('./src/systemLabels');
+export const LabelType = labels;
 
 /* Window events
    ----------------------------- */

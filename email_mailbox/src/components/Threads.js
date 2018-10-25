@@ -12,8 +12,10 @@ import './threads.css';
 const Threads = props => (
   <div className="threads-container">
     <Message
+      isUpdateAvailable={props.isUpdateAvailable}
       mailbox={props.mailboxSelected}
       onClickSection={props.onClickSection}
+      onClickClose={props.onCloseMessage}
       threadsCount={props.threads.size}
     />
     <div className="threads-header">
@@ -109,6 +111,7 @@ const renderLabelsForThread = (hoverTarget, labels) => {
 Threads.propTypes = {
   buttonSyncStatus: PropTypes.number,
   hoverTarget: PropTypes.string,
+  isUpdateAvailable: PropTypes.bool,
   labels: PropTypes.array,
   mailboxSelected: PropTypes.string,
   mailboxTitle: PropTypes.string,
@@ -116,6 +119,7 @@ Threads.propTypes = {
   onChangeSwitch: PropTypes.func,
   onCheckThreadItem: PropTypes.func,
   onClickSection: PropTypes.func,
+  onCloseMessage: PropTypes.func,
   onLoadEvents: PropTypes.func,
   onMouseEnterItem: PropTypes.func,
   onMouseLeaveItem: PropTypes.func,

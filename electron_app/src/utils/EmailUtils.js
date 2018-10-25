@@ -162,6 +162,7 @@ const formIncomingEmailFromData = (
     cc,
     date,
     from,
+    isEmailApp,
     isToMe,
     metadataKey,
     subject,
@@ -173,7 +174,9 @@ const formIncomingEmailFromData = (
 ) => {
   const content = isExternal
     ? body
-      ? Utf8Decode(sanitize(body))
+      ? isEmailApp
+        ? Utf8Decode(sanitize(body))
+        : Utf8Decode(body)
       : ''
     : Utf8Decode(body);
   const preview = body

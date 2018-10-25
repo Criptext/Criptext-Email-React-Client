@@ -1,3 +1,4 @@
+import { labels } from './systemLabels';
 const { ipcRenderer, remote } = window.require('electron');
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
@@ -9,7 +10,7 @@ export const errors = remote.require('./src/errors');
 
 export const myAccount = remote.require('./src/Account');
 
-export const LabelType = remote.require('./src/systemLabels');
+export const LabelType = labels;
 
 export const { loadingType, remoteData } = remote.getGlobal('loadingData');
 
@@ -76,6 +77,10 @@ export const throwError = error => {
 
 /* Criptext Client
 ----------------------------- */
+export const acknowledgeEvents = eventIds => {
+  return clientManager.acknowledgeEvents(eventIds);
+};
+
 export const getKeyBundle = deviceId => {
   return clientManager.getKeyBundle(deviceId);
 };

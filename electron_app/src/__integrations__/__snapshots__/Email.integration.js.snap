@@ -74,7 +74,7 @@ Array [
     "recipientContactIds": "1",
     "s3Key": "s3KeyB",
     "secure": 1,
-    "status": 1,
+    "status": 6,
     "subject": "Greetings",
     "threadId": "threadB",
     "trashDate": null,

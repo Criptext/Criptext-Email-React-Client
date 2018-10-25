@@ -1,11 +1,7 @@
 const { app, BrowserWindow, shell } = require('electron');
 const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
-const {
-  appUpdaterMac,
-  appUpdaterWin,
-  appUpdaterLinux
-} = require('./../updater');
+const { appUpdater, downloadUpdate } = require('./../updater');
 const globalManager = require('./../globalManager');
 const path = require('path');
 const opn = require('opn');
@@ -74,14 +70,8 @@ const create = () => {
     });
   });
   mailboxWindow.webContents.once('did-frame-finish-load', () => {
-    const checkMacOS = isMacOS();
-    const checkWindowsOS = isWindowsOS();
-    if (checkWindowsOS) {
-      appUpdaterWin();
-    } else if (checkMacOS) {
-      appUpdaterMac();
-    } else {
-      appUpdaterLinux();
+    if (!globalManager.isMAS.get()) {
+      appUpdater();
     }
   });
   mailboxWindowState.manage(mailboxWindow);
@@ -132,14 +122,6 @@ const send = (message, data) => {
   mailboxWindow.webContents.send(message, data);
 };
 
-const isMacOS = () => {
-  return process.platform === 'darwin';
-};
-
-const isWindowsOS = () => {
-  return process.platform === 'win32';
-};
-
 const openLinkInDefaultBrowser = (ev, url) => {
   ev.preventDefault();
   opn(url);
@@ -152,6 +134,7 @@ const quit = () => {
 
 module.exports = {
   close,
+  downloadUpdate,
   hide,
   mailboxWindow,
   quit,

@@ -1,8 +1,17 @@
+import { labels } from './systemLabels';
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
-const labels = remote.require('./src/systemLabels');
+
+export const { requiredMinLength, requiredMaxLength } = remote.require(
+  './src/validationConsts'
+);
+
+export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
+  './src/utils/const'
+);
+
 const additionalLabels = {
   search: {
     id: -1,
@@ -13,15 +22,6 @@ const additionalLabels = {
     text: 'All Mail'
   }
 };
-
-export const { requiredMinLength, requiredMaxLength } = remote.require(
-  './src/validationConsts'
-);
-
-export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
-  './src/utils/const'
-);
-
 export const LabelType = Object.assign(labels, additionalLabels);
 export const myAccount = remote.require('./src/Account');
 export const composerEvents = remote.require('./src/windows/composer')
@@ -65,12 +65,16 @@ export const openComposerWindow = () => {
   ipcRenderer.send('create-composer');
 };
 
+export const openCreateKeys = params => {
+  ipcRenderer.send('open-create-keys', params);
+};
+
 export const throwError = error => {
   ipcRenderer.send('throwError', error);
 };
 
-export const openCreateKeys = params => {
-  ipcRenderer.send('open-create-keys', params);
+export const downloadUpdate = () => {
+  ipcRenderer.send('download-update');
 };
 
 /*  Criptext Client

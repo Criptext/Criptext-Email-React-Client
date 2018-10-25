@@ -233,6 +233,17 @@ describe('Update data email to Email Table:', () => {
     expect(unreadEmailB).toBe(0);
   });
 
+  it('should update email: status by key', async () => {
+    const key = 'keyB';
+    await DBManager.updateEmail({
+      key,
+      status: 6
+    });
+    const [email] = await DBManager.getEmailByKey(key);
+    const status = email.status;
+    expect(status).toBe(6);
+  });
+
   it('should update emails: trashDate after insert emailLabel trash', async () => {
     const [email] = await DBManager.getEmailByKey(emailStarred.email.key);
     const emailLabelTrash = [

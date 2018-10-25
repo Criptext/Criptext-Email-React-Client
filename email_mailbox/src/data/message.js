@@ -38,9 +38,9 @@ const messagesContent = {
   },
   suggestion: {
     update: {
-      priority: messagePriorities.MEDIUM,
+      priority: messagePriorities.TOP,
       description: 'A new version of Criptext is available!',
-      action: 'Click here to Install Update',
+      action: 'Click here to Download Update',
       actionHandlerKey: actionHandlerKeys.suggestion.update
     }
   },

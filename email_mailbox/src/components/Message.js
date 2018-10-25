@@ -24,7 +24,7 @@ const MessageStandard = props => {
           </button>
         )}
       {isTypeSuggestion && (
-        <button className="message-close">
+        <button className="message-close" onClick={() => props.onClickClose()}>
           <i className="icon-exit" />
         </button>
       )}
@@ -96,6 +96,7 @@ MessageStandard.propTypes = {
   action: PropTypes.string,
   description: PropTypes.string,
   onClickAction: PropTypes.func,
+  onClickClose: PropTypes.func,
   type: PropTypes.number
 };
 

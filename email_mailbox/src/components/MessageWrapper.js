@@ -36,6 +36,7 @@ class MessageWrapper extends Component {
     } = this.getDataByPropsOrEvent();
     return (
       <Message
+        {...this.props}
         action={action}
         ask={ask}
         description={description}

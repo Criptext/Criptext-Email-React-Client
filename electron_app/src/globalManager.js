@@ -1,10 +1,29 @@
-global.modalData = {};
-global.loadingData = {};
 global.composerData = {};
 global.emailToEdit = {};
-global.temporalAccount = {};
+global.isMAS = false;
+global.loadingData = {};
+global.modalData = {};
 global.screenSize = {};
+global.temporalAccount = {};
 global.windowsEventsDisabled = false;
+
+/*  Composer
+----------------------------- */
+const setComposerData = (composerId, data) => {
+  global.composerData[composerId] = data;
+};
+const getComposerData = composerId => {
+  return global.composerData[composerId];
+};
+const deleteComposerData = composerId => {
+  delete global.composerData[composerId];
+};
+const setEmailToEdit = (composerId, data) => {
+  global.emailToEdit[composerId] = data;
+};
+const getEmailToEdit = composerId => {
+  return global.emailToEdit[composerId];
+};
 
 /*  Dialog
 ----------------------------- */
@@ -33,22 +52,10 @@ const getLoadingData = () => {
   return global.loadingData;
 };
 
-/*  Composer
+/*  Mac App Store
 ----------------------------- */
-const setComposerData = (composerId, data) => {
-  global.composerData[composerId] = data;
-};
-const getComposerData = composerId => {
-  return global.composerData[composerId];
-};
-const deleteComposerData = composerId => {
-  delete global.composerData[composerId];
-};
-const setEmailToEdit = (composerId, data) => {
-  global.emailToEdit[composerId] = data;
-};
-const getEmailToEdit = composerId => {
-  return global.emailToEdit[composerId];
+const getMAS = () => {
+  return global.isMAS;
 };
 
 /*  Temporal Account
@@ -98,6 +105,9 @@ module.exports = {
   forcequit: {
     get: getForceQuit,
     set: setForceQuit
+  },
+  isMAS: {
+    get: getMAS
   },
   loadingData: {
     get: getLoadingData,

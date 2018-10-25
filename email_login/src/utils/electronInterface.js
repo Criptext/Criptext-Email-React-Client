@@ -1,13 +1,15 @@
+import { labels } from './systemLabels';
 const electron = window.require('electron');
 const { ipcRenderer, remote, webFrame } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
+
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
 );
 export const errors = remote.require('./src/errors');
 export const myAccount = remote.require('./src/Account');
-export const LabelType = remote.require('./src/systemLabels');
+export const LabelType = labels;
 export const socketClient = remote.require('./src/socketClient');
 export const { getComputerName } = remote.require('./src/utils/StringUtils');
 

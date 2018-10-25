@@ -1,6 +1,7 @@
 const { checkForUpdates } = require('./../updater');
 const { quit } = require('./mailbox');
 const composerWindowManager = require('./composer');
+const globalManager = require('./../globalManager');
 
 const template = [
   {
@@ -93,10 +94,6 @@ if (process.platform === 'darwin') {
         role: 'about'
       },
       {
-        label: 'Check for Updates...',
-        click: checkForUpdates
-      },
-      {
         type: 'separator'
       },
       {
@@ -133,6 +130,14 @@ if (process.platform === 'darwin') {
       }
     ]
   });
+  // Criptext menu - updater
+  if (!globalManager.isMAS.get()) {
+    template[0].submenu.splice(1, 0, {
+      label: 'Check for Updates...',
+      click: checkForUpdates
+    });
+  }
+
   // Window menu.
   template[3].submenu.push(
     {

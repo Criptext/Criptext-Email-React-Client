@@ -5,14 +5,19 @@ import {
   LabelType,
   getEmailsByLabelIds,
   confirmPermanentDeleteThread,
-  closeDialog
+  closeDialog,
+  downloadUpdate
 } from './../utils/electronInterface';
 import MessageWrapper from './../components/MessageWrapper';
 import { SectionType } from '../utils/const';
 import { loadThreads, removeThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 
-const defineMessageData = (mailboxSelected, threadsCount) => {
+const defineMessageData = (
+  mailboxSelected,
+  threadsCount,
+  isUpdateAvailable
+) => {
   const targetLabelId = mailboxSelected && LabelType[mailboxSelected].id;
   const isEmpty = threadsCount < 1;
   if (targetLabelId === LabelType.trash.id && !isEmpty) {
@@ -20,6 +25,13 @@ const defineMessageData = (mailboxSelected, threadsCount) => {
       ...MessageContent.advice.trash,
       type: MessageType.ADVICE,
       actionHandlerKey: actionHandlerKeys.advice.trash,
+      displayMessage: true
+    };
+  } else if (isUpdateAvailable) {
+    return {
+      ...MessageContent.suggestion.update,
+      type: MessageType.SUGGESTION,
+      actionHandlerKey: actionHandlerKeys.suggestion.update,
       displayMessage: true
     };
   }
@@ -33,8 +45,12 @@ const defineMessageData = (mailboxSelected, threadsCount) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { threadsCount, mailbox } = ownProps;
-  const messageData = defineMessageData(mailbox, threadsCount);
+  const { threadsCount, mailbox, isUpdateAvailable } = ownProps;
+  const messageData = defineMessageData(
+    mailbox,
+    threadsCount,
+    isUpdateAvailable
+  );
   const {
     action,
     description,
@@ -93,6 +109,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               dispatch(removeThreads(threadsParams, labelId));
             }
           });
+          break;
+        }
+        case actionHandlerKeys.suggestion.update: {
+          downloadUpdate();
+          ownProps.onClickClose();
           break;
         }
         default:

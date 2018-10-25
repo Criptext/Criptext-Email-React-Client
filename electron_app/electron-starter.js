@@ -78,6 +78,10 @@ async function initApp() {
   });
 
   //   Mailbox
+  ipcMain.on('download-update', () => {
+    mailboxWindow.downloadUpdate();
+  });
+
   ipcMain.on('open-mailbox', () => {
     wsClient.start(myAccount);
     mailboxWindow.show();
