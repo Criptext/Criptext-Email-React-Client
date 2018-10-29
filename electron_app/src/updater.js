@@ -29,8 +29,8 @@ autoUpdater.on('error', error => {
 autoUpdater.on('update-not-available', () => {
   if (currentUpdaterType === updaterTypes.MANUAL) {
     dialog.showMessageBox({
-      title: 'No Updates',
-      message: 'Current version is up-to-date.',
+      title: 'No Update Available',
+      message: "You're on the latest version of Criptext",
       buttons: ['Ok']
     });
   }
@@ -42,9 +42,9 @@ autoUpdater.on('update-available', () => {
     dialog.showMessageBox(
       {
         type: 'info',
-        title: 'Update found',
+        title: 'Update Available',
         message:
-          'A new version of Criptext is available. Do you want download it now?',
+          'A new version of Criptext is available. Would you like to download it now?',
         buttons: ['Sure', 'No'],
         noLink: true
       },
@@ -98,7 +98,7 @@ autoUpdater.on('update-downloaded', () => {
     {
       title: 'Install Update',
       message:
-        'Update downloaded, application will be quit for install update...',
+        'Update download complete. Criptext will restart and update immediately.',
       buttons: ['Ok']
     },
     () => {
