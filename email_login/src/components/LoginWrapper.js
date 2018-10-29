@@ -38,6 +38,9 @@ const errorMessages = {
   STATUS_UNKNOWN: 'Unknown status code: '
 };
 
+const shouldDisableLogin = state =>
+  !!state.errorMessage || state.values.username === '';
+
 class LoginWrapper extends Component {
   constructor() {
     super();
@@ -47,7 +50,6 @@ class LoginWrapper extends Component {
         username: '',
         password: ''
       },
-      disabledLoginButton: true,
       disabledResendLoginRequest: false,
       errorMessage: '',
       ephemeralToken: undefined,
@@ -94,7 +96,7 @@ class LoginWrapper extends Component {
             toggleSignUp={ev => this.toggleSignUp(ev)}
             onClickSignIn={this.handleClickSignIn}
             onChangeField={this.handleChange}
-            disabledLoginButton={this.state.disabledLoginButton}
+            disabledLoginButton={shouldDisableLogin(this.state)}
             value={this.state.values.username}
             errorMessage={this.state.errorMessage}
           />
@@ -152,19 +154,16 @@ class LoginWrapper extends Component {
       switch (status) {
         case 200:
           return {
-            disabledLoginButton: true,
             errorMessage: errorMessages.USERNAME_NOT_EXISTS
           };
         case 422:
           return {
-            disabledLoginButton: true,
             errorMessage: errorMessages.USERNAME_INVALID
           };
         case 400:
-          return { disabledLoginButton: false, errorMessage: '' };
+          return { errorMessage: '' };
         default:
           return {
-            disabledLoginButton: true,
             errorMessage: errorMessages.STATUS_UNKNOWN + status
           };
       }
@@ -340,7 +339,6 @@ class LoginWrapper extends Component {
         username: '',
         password: ''
       },
-      disabledLoginButton: true,
       disabledResendLoginRequest: false,
       errorMessage: '',
       ephemeralToken: undefined,
