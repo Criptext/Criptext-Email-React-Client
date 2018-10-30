@@ -8,7 +8,6 @@ import {
 
 jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
-jest.mock('./../../utils/electronUtilsInterface');
 
 describe('Validate fullname:', () => {
   const fn = validateFullname;

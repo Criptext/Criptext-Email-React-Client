@@ -18,7 +18,6 @@ import {
   createFile,
   sendEventToMailbox
 } from './../utils/electronInterface';
-import { EmailUtils } from './../utils/electronUtilsInterface';
 import {
   areEmptyAllArrays,
   updateObjectFieldsInArray
@@ -30,6 +29,7 @@ import {
   formDataToReply,
   formComposerDataWithSignature,
   formNewEmailFromData,
+  formOutgoingEmailFromData,
   parseEmailAddress
 } from './../utils/EmailUtils';
 import {
@@ -433,7 +433,7 @@ class ComposerWrapper extends Component {
       criptextRecipients,
       externalRecipients,
       body
-    } = EmailUtils.formOutgoingEmailFromData(data);
+    } = formOutgoingEmailFromData(data);
     let emailId, key;
     try {
       [emailId] = await createEmail(emailData);
@@ -521,7 +521,7 @@ class ComposerWrapper extends Component {
       threadId: this.state.threadId,
       status: EmailStatus.NONE
     };
-    const { emailData } = EmailUtils.formOutgoingEmailFromData(data);
+    const { emailData } = formOutgoingEmailFromData(data);
     saveDraftChanges(emailData);
   };
 }

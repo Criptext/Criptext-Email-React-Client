@@ -9,7 +9,6 @@ import {
   deleteEmailByKeys,
   postPeerEvent
 } from '../utils/electronInterface';
-import { EmailUtils } from '../utils/electronUtilsInterface';
 import { loadContacts } from './contacts';
 import { EmailStatus, SocketCommand } from '../utils/const';
 import { unsendEmailFiles } from './files';
@@ -20,6 +19,7 @@ import {
   sendUpdateThreadLabelsErrorMessage,
   sendRemoveThreadsErrorMessage
 } from './../utils/electronEventInterface';
+import { filterCriptextRecipients } from './../utils/EmailUtils';
 import { updateEmailIdsThread } from './threads';
 
 export const addEmails = emails => {
@@ -145,7 +145,7 @@ export const unsendEmail = params => {
     try {
       const contacts = await getContactByIds(contactIds);
       const emails = contacts.map(contact => contact.email);
-      const criptextRecipients = EmailUtils.filterCriptextRecipients(emails);
+      const criptextRecipients = filterCriptextRecipients(emails);
       const params = {
         metadataKey: Number(key),
         recipients: criptextRecipients

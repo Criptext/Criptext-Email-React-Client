@@ -2,7 +2,7 @@ import {
   requiredMinLength,
   requiredMaxLength
 } from './../utils/electronInterface';
-import { RegexUtils } from './../utils/electronUtilsInterface';
+import { emailRegex } from './../utils/RegexUtils';
 
 const checkRequired = string => {
   return string !== undefined;
@@ -46,6 +46,6 @@ export const validateConfirmPassword = (field1, field2) => {
 
 export const validateRecoveryEmail = email => {
   const required = checkRequired(email);
-  const isValidAddress = RegexUtils.emailRegex.test(email);
+  const isValidAddress = emailRegex.test(email);
   return required && isValidAddress;
 };

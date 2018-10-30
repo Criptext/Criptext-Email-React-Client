@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { appDomain } from './../utils/const';
-import { RegexUtils } from './../utils/electronUtilsInterface';
+import { emailRegex } from './../utils/RegexUtils';
 import './tagrecipient.css';
 
 const TagRecipient = props => {
@@ -23,7 +23,7 @@ const TagRecipient = props => {
   const isEmailAddressFromAppDomain =
     formattedTag.email.indexOf(`@${appDomain}`) > 0;
 
-  const isValidEmailAddress = RegexUtils.emailRegex.test(formattedTag.email);
+  const isValidEmailAddress = emailRegex.test(formattedTag.email);
   checkDisableSendButton(isValidEmailAddress);
 
   const className = isValidEmailAddress

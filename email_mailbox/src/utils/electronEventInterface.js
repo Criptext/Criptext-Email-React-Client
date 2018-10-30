@@ -25,10 +25,12 @@ import {
   cleanDatabase,
   logoutApp
 } from './electronInterface';
-import { EmailUtils } from './electronUtilsInterface';
 import {
+  checkEmailIsTo,
   formEmailLabel,
   formFilesFromData,
+  formIncomingEmailFromData,
+  getRecipientIdFromEmailAddressTag,
   validateEmailStatusToSet
 } from './EmailUtils';
 import { SocketCommand, appDomain, EmailStatus } from './const';
@@ -243,23 +245,20 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     to,
     toArray
   } = params;
-  const {
-    recipientId,
-    isExternal
-  } = EmailUtils.getRecipientIdFromEmailAddressTag(from);
+  const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
   const [prevEmail] = await getEmailByKey(metadataKey);
   const isSpam = labels
     ? labels.find(label => label === LabelType.spam.text)
     : undefined;
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
-  const isToMe = EmailUtils.checkEmailIsTo({
+  const isToMe = checkEmailIsTo({
     to: to || toArray,
     cc: cc || ccArray,
     bcc: bcc || bccArray,
     type: 'to'
   });
-  const isFromMe = EmailUtils.checkEmailIsTo({ from, type: 'from' });
+  const isFromMe = checkEmailIsTo({ from, type: 'from' });
   let eventParams = {};
 
   if (!prevEmail) {
@@ -306,7 +305,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       threadId,
       unread
     };
-    const { email, recipients } = await EmailUtils.formIncomingEmailFromData(
+    const { email, recipients } = await formIncomingEmailFromData(
       data,
       isExternal
     );

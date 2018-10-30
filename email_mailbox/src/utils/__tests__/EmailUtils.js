@@ -3,14 +3,17 @@
 import {
   addCollapseDiv,
   compareEmailDate,
-  defineRejectedLabels
+  defineRejectedLabels,
+  filterCriptextRecipients,
+  getRecipientIdFromEmailAddressTag
 } from '../EmailUtils';
 import { LabelType } from '../electronInterface';
+import { appDomain } from './../const';
 
 jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 
-describe('Email utils: Define rejected labels ', () => {
+describe('Define rejected labels ', () => {
   it('Define rejected labels for Spam label', () => {
     const labelId = LabelType.spam.id;
     const expectedResult = [LabelType.trash.id];
@@ -58,7 +61,7 @@ describe('Email utils: Define rejected labels ', () => {
   });
 });
 
-describe('Email utils: Sort emails ', () => {
+describe('Sort emails ', () => {
   it('Should sort emails by date', () => {
     const emails = [
       { date: '2018-10-04 21:46:55' },
@@ -75,7 +78,7 @@ describe('Email utils: Sort emails ', () => {
   });
 });
 
-describe('Email utils: Add collapse div ', () => {
+describe('Add collapse div ', () => {
   it('Should add div collpase to html with: <blockquote>', () => {
     const html =
       '<div><blockquote><p></p><br/><blockquote></blockquote></blockquote></div>';
@@ -88,5 +91,60 @@ describe('Email utils: Add collapse div ', () => {
       '<div class="criptext_quote"><blockquote><p></p><br/><blockquote></blockquote></blockquote></div>';
     const result = addCollapseDiv(html, 1);
     expect(result).toMatchSnapshot();
+  });
+});
+
+describe('Get recipientId from EmailAddressTag ', () => {
+  it('Should get recipientId from criptext domain', () => {
+    const from = `"Alice$$" <alice@${appDomain}>`;
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const result = 'alice';
+    expect(recipientId).toEqual(result);
+    expect(isExternal).toBeFalsy();
+  });
+
+  it('Should get recipientId from external domain', () => {
+    const from = 'Bob 8989 <bob@domain.com>';
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const result = 'bob@domain.com';
+    expect(recipientId).toEqual(result);
+    expect(isExternal).toBeTruthy();
+  });
+
+  it('Should get recipientId from external domain, with name comma added', () => {
+    const from = `Lola, <lola@domain.com>`;
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const result = 'lola@domain.com';
+    expect(recipientId).toEqual(result);
+    expect(isExternal).toBeTruthy();
+  });
+
+  it('Should get recipientId from external domain, with name as emailadresstag', () => {
+    const from = `<alice@${appDomain}> <lola@domain.com>`;
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const result = 'lola@domain.com';
+    expect(recipientId).toEqual(result);
+    expect(isExternal).toBeTruthy();
+  });
+
+  it('Should get recipientId from external domain, with emailadresstag without tag', () => {
+    const from = `alice@domain.com`;
+    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const result = 'alice@domain.com';
+    expect(recipientId).toEqual(result);
+    expect(isExternal).toBeTruthy();
+  });
+});
+
+describe('[Filter emails by domain] ', () => {
+  it('Should filter emails by a different domain defined', () => {
+    const recipients = [
+      `userA@${appDomain}`,
+      `userB@${appDomain}`,
+      'userC@xxx.com'
+    ];
+    const filtered = filterCriptextRecipients(recipients);
+    const result = [`userA@${appDomain}`, `userB@${appDomain}`];
+    expect(filtered).toEqual(result);
   });
 });

@@ -7,7 +7,6 @@ import file from './../../../public/emails.json';
 jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
-jest.mock('./../../utils/electronUtilsInterface');
 
 const myEmails = file.emails;
 

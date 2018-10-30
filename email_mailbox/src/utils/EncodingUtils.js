@@ -1,4 +1,4 @@
-const Utf8Decode = strUtf => {
+export const Utf8Decode = strUtf => {
   if (!strUtf) {
     return '';
   }
@@ -29,8 +29,4 @@ const Utf8Decode = strUtf => {
       var cc = ((c.charCodeAt(0) & 0x1f) << 6) | (c.charCodeAt(1) & 0x3f);
       return String.fromCharCode(cc);
     });
-};
-
-module.exports = {
-  Utf8Decode
 };

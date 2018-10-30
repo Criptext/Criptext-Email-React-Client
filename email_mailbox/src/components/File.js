@@ -35,7 +35,7 @@ const File = props => {
           {props.file.name}
         </ReactTooltip>
       </div>
-      {props.displayProgressBar ? renderProgressBar(props.percentage) : null}
+      {props.displayProgressBar && renderProgressBar(props.percentage)}
     </div>
   );
 };

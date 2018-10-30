@@ -1,6 +1,7 @@
 /* eslint-env node, jest */
 
 import * as utils from './../StringUtils.js';
+import { appDomain } from './../const';
 
 jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
@@ -41,5 +42,19 @@ describe('string utils:', () => {
     const stringDefault = 'A';
     const state = utils.getTwoCapitalLetters(string, stringDefault);
     expect(state).toEqual(stringDefault);
+  });
+});
+
+describe('Criptext Domain :', () => {
+  it('Should remove Criptext Domain to Criptext email', () => {
+    const email = `erika@${appDomain}`;
+    const state = utils.removeAppDomain(email);
+    expect(state).toEqual('erika');
+  });
+
+  it('Should remove criptext domain to any email', () => {
+    const email = 'erika@signal.com';
+    const state = utils.removeAppDomain(email);
+    expect(state).toEqual(email);
   });
 });

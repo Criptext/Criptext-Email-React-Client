@@ -25,7 +25,8 @@
     "react-tooltip": "^3.4.0",
     "redux": "^3.7.2",
     "redux-immutable": "^4.0.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "sanitize-html": "^1.19.1"
   },
   "scripts": {
     "postinstall": "node-sass-chokidar src -o src",

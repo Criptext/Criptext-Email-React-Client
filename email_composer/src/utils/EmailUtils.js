@@ -1,4 +1,8 @@
-import { removeActionsFromSubject } from './StringUtils';
+import {
+  cleanHTML,
+  removeActionsFromSubject,
+  removeAppDomain
+} from './StringUtils';
 import { getFormattedDate } from './DateUtils';
 import { appDomain } from './const';
 import {
@@ -7,6 +11,27 @@ import {
   getEmailByKey,
   getContactsByEmailId
 } from './electronInterface';
+
+const filterNonCriptextRecipients = recipients => {
+  return recipients.filter(email => email.indexOf(`@${appDomain}`) < 0);
+};
+
+const formAppSign = () => {
+  return '<br/><span style="font-size: 12px;">Sent with <a style="color: #0091ff; text-decoration: none;" href="https://goo.gl/qW4Aks">Criptext</a> secure email</span>';
+};
+
+const getCriptextRecipients = (recipients, type) => {
+  return recipients
+    .filter(email => email.indexOf(`@${appDomain}`) > 0)
+    .map(email => ({
+      recipientId: removeAppDomain(email),
+      type
+    }));
+};
+
+const getEmailAddressesFromEmailObject = emails => {
+  return emails.map(item => item.email || item);
+};
 
 export const EmailStatus = {
   FAIL: 1,
@@ -38,11 +63,79 @@ export const formDataToEditDraft = async emailKeyToEdit => {
   };
 };
 
+export const formOutgoingEmailFromData = ({
+  bccEmails,
+  body,
+  ccEmails,
+  files,
+  iv,
+  key,
+  labelId,
+  secure,
+  status,
+  textSubject,
+  toEmails,
+  threadId
+}) => {
+  const to = getEmailAddressesFromEmailObject(toEmails);
+  const cc = getEmailAddressesFromEmailObject(ccEmails);
+  const bcc = getEmailAddressesFromEmailObject(bccEmails);
+
+  const criptextRecipients = [
+    ...getCriptextRecipients(to, 'to'),
+    ...getCriptextRecipients(cc, 'cc'),
+    ...getCriptextRecipients(bcc, 'bcc')
+  ];
+
+  const externalRecipients = {
+    to: filterNonCriptextRecipients(to),
+    cc: filterNonCriptextRecipients(cc),
+    bcc: filterNonCriptextRecipients(bcc)
+  };
+
+  const email = {
+    key: Date.now(),
+    subject: textSubject,
+    content: secure ? body : `${body}${formAppSign()}`,
+    preview: cleanHTML(body).slice(0, 100),
+    date: Date.now(),
+    status,
+    unread: false,
+    secure,
+    isMuted: false,
+    threadId
+  };
+
+  const from = myAccount.recipientId;
+  const recipients = {
+    to,
+    cc,
+    bcc,
+    from: [`${from}@${appDomain}`]
+  };
+
+  const fileKeyParams = files.length ? { key, iv } : null;
+
+  const emailData = {
+    email,
+    recipients,
+    labels: [labelId],
+    fileKeyParams
+  };
+
+  return {
+    emailData,
+    criptextRecipients,
+    externalRecipients,
+    body: email.content
+  };
+};
+
 const formReplyHeader = (date, from) => {
   const emailDate = new Date(date);
   const { monthName, day, year, strTime, diff } = getFormattedDate(emailDate);
-  return `<p>On ${monthName} ${day}, ${year}, ${strTime} ${diff}, ${from.name ||
-    ''} < ${from.email} > wrote: </p>`;
+  return `<span>On ${monthName} ${day}, ${year}, ${strTime} ${diff}, ${from.name ||
+    ''} < ${from.email} > wrote: </span>`;
 };
 
 const formForwardHeader = () => {
@@ -61,9 +154,9 @@ const formReplyForwardContent = (replyType, date, body, from) => {
   const dateLine = formReplyHeader(date, from);
   let content = '';
   if (replyType === composerEvents.FORWARD) {
-    content = `<div class="criptext_quote">${formForwardHeader()}${dateLine}${body}</div>`;
+    content = `<section class="criptext_quote">${formForwardHeader()}${dateLine}${body}</section>`;
   } else {
-    content = `<div class="criptext_quote">${dateLine}<blockquote>${body}</blockquote></div>`;
+    content = `<section class="criptext_quote">${dateLine}<blockquote>${body}</blockquote></section>`;
   }
 
   return `${insertEmptyLine(2)}${content}${formSignature()}`;
