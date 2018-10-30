@@ -14,7 +14,7 @@ export const LabelType = labels;
 
 export const { loadingType, remoteData } = remote.getGlobal('loadingData');
 
-export const { getComputerName } = remote.require('./src/utils/StringUtils');
+export const { getComputerName } = remote.require('./src/utils/osUtils');
 
 export const setRemoteData = data => {
   globalManager.loadingData.set(data);

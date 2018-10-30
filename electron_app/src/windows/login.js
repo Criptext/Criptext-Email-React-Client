@@ -26,6 +26,10 @@ const create = () => {
   loginWindow.loadURL(loginUrl);
   loginWindow.setMenu(null);
   loginWindow.setResizable(false);
+  if (process.env.NODE_ENV === 'development') {
+    loginWindow.setResizable(true);
+    loginWindow.openDevTools();
+  }
   loginWindow.on('closed', () => {
     loginWindow = undefined;
   });

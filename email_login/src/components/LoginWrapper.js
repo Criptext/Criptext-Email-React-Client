@@ -10,7 +10,6 @@ import {
   confirmLostDevices,
   createTemporalAccount,
   deleteTemporalAccount,
-  getComputerName,
   linkBegin,
   linkAuth,
   openCreateKeys,
@@ -18,6 +17,7 @@ import {
   throwError,
   errors
 } from './../utils/electronInterface';
+import { getComputerName } from '../ipc.js';
 import { validateUsername } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
 import { addEvent, Event } from '../utils/electronEventInterface';
@@ -267,7 +267,7 @@ class LoginWrapper extends Component {
 
   sendLoginConfirmationRequest = async ephemeralToken => {
     const recipientId = this.state.values.username;
-    const pcName = getComputerName();
+    const pcName = await getComputerName();
     const newDeviceData = {
       recipientId,
       deviceName: pcName || window.navigator.platform,

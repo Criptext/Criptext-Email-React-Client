@@ -100,6 +100,7 @@ const electronApp = spawn('node_modules/.bin/electron', ['.'], {
       COMPOSER_URL:'http://localhost:3004'
     },
   })
+electronApp.stderr.on('data', data => console.log(data.toString()))
 
 electronApp.on('close', (code) => {
   console.log(`electron app exited with status code: ${code}`);

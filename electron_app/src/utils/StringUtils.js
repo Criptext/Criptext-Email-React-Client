@@ -1,6 +1,5 @@
 const { appDomain } = require('./const');
 const { HTMLTagsRegex } = require('./RegexUtils');
-const os = require('os');
 
 const removeDomainFromEmail = (email, domain) => {
   return email.replace(`@${domain}`, '');
@@ -25,15 +24,8 @@ const removeHTMLTags = string => {
   return stringHTMLTagRemoved.replace(/\s\s+/g, ' ').trim();
 };
 
-const getComputerName = () => {
-  const hostname = os.hostname();
-  const deviceName = hostname.split('.')[0];
-  return deviceName.split('-').join(' ');
-};
-
 module.exports = {
   cleanHTML,
   removeAppDomain,
-  removeHTMLTags,
-  getComputerName
+  removeHTMLTags
 };
