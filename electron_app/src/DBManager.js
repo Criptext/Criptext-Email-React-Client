@@ -30,8 +30,6 @@ const updateAccount = async ({
   privKey,
   pubKey,
   recipientId,
-  recoveryEmail,
-  recoveryEmailConfirmed,
   registrationId,
   signature,
   signatureEnabled
@@ -43,11 +41,6 @@ const updateAccount = async ({
     opened: typeof opened === 'boolean' ? opened : undefined,
     privKey,
     pubKey,
-    recoveryEmail,
-    recoveryEmailConfirmed:
-      typeof recoveryEmailConfirmed === 'boolean'
-        ? recoveryEmailConfirmed
-        : undefined,
     registrationId,
     signature,
     signatureEnabled:

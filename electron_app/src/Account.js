@@ -10,8 +10,6 @@ class Account {
     this.opened = accountObj.opened;
     this.signature = accountObj.signature;
     this.signatureEnabled = accountObj.signatureEnabled;
-    this.recoveryEmail = accountObj.recoveryEmail;
-    this.recoveryEmailConfirmed = accountObj.recoveryEmailConfirmed;
   }
 
   update(accountObj) {
@@ -24,11 +22,6 @@ class Account {
       accountObj.signatureEnabled !== undefined
         ? accountObj.signatureEnabled
         : this.signatureEnabled;
-    this.recoveryEmail = accountObj.recoveryEmail || this.recoveryEmail;
-    this.recoveryEmailConfirmed =
-      accountObj.recoveryEmailConfirmed !== undefined
-        ? accountObj.recoveryEmailConfirmed
-        : this.recoveryEmailConfirmed;
   }
 
   getIdentityKeyPair() {

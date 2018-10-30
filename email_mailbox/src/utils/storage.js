@@ -77,3 +77,19 @@ export const setTwoFactorAuthStatus = enable => {
 export const getTwoFactorAuthStatus = () => {
   return localStorage.getItem('twoFactorAuthStatus') || undefined;
 };
+
+export const setLastRecoveryEmail = recoveryEmail => {
+  localStorage.setItem('lastRecoveryEmail', recoveryEmail);
+};
+
+export const getLastRecoveryEmail = () => {
+  return localStorage.getItem('lastRecoveryEmail') || undefined;
+};
+
+export const setLastRecoveryEmailConfirmed = recoveryEmailConfirmed => {
+  localStorage.setItem('lastRecoveryEmailConfirmed', recoveryEmailConfirmed);
+};
+
+export const getLastRecoveryEmailConfirmed = () => {
+  return localStorage.getItem('lastRecoveryEmailConfirmed') || undefined;
+};

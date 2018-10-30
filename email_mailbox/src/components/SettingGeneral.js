@@ -185,36 +185,51 @@ const RecoveryEmailBlock = props => (
     <div className="section-block-content">
       <div className="section-block-content-item content-recovery-email">
         <div className="recovery-email">
-          <span className="address">
-            {props.recoveryEmail || 'Recovery email not configured'}
-          </span>
-          {!props.recoveryEmail && (
-            <button
-              className="button-b"
-              onClick={() => props.onClickChangeRecoveryEmail()}
-            >
-              <span>Set Email</span>
-            </button>
-          )}
-          {props.recoveryEmail && (
+          {props.recoveryEmailIsLoading ? (
+            <RecoveryEmailLoading />
+          ) : (
             <div>
-              <RecoveryEmailConfirmationMessage
-                recoveryEmailConfirmed={props.recoveryEmailConfirmed}
-              />
-              <button
-                className="button-b"
-                onClick={() => props.onClickChangeRecoveryEmail()}
-              >
-                <span>Change</span>
-              </button>
-              {!props.recoveryEmailConfirmed && (
-                <ResendConfirmationRecoveryEmailLink {...props} />
+              <span className="address">
+                {props.recoveryEmail || 'Recovery email not configured'}
+              </span>
+              {!props.recoveryEmail && (
+                <button
+                  className="button-b"
+                  onClick={() => props.onClickChangeRecoveryEmail()}
+                >
+                  <span>Set Email</span>
+                </button>
+              )}
+              {props.recoveryEmail && (
+                <div>
+                  <RecoveryEmailConfirmationMessage
+                    recoveryEmailConfirmed={props.recoveryEmailConfirmed}
+                  />
+                  <button
+                    className="button-b"
+                    onClick={() => props.onClickChangeRecoveryEmail()}
+                  >
+                    <span>Change</span>
+                  </button>
+                  {!props.recoveryEmailConfirmed && (
+                    <ResendConfirmationRecoveryEmailLink {...props} />
+                  )}
+                </div>
               )}
             </div>
           )}
         </div>
       </div>
     </div>
+  </div>
+);
+
+const RecoveryEmailLoading = () => (
+  <div className="loading-ring">
+    <div />
+    <div />
+    <div />
+    <div />
   </div>
 );
 
@@ -249,7 +264,7 @@ const TwoFactorAuthenticationBlock = props => (
 );
 
 const TwoFactorLoadingLabel = () => (
-  <div className="two-factor-loading-label">
+  <div className="loading-ring">
     <div />
     <div />
     <div />
@@ -295,7 +310,7 @@ const renderer = ({ minutes, seconds, completed, children }) => {
   }
   return (
     <button className="button-b" disabled={true}>
-      <span>{`Resend Link available in ${minutes}:${seconds}`}</span>
+      <span>{`Resend Link available within ${minutes}:${seconds}`}</span>
     </button>
   );
 };
@@ -440,6 +455,7 @@ RecoveryEmailBlock.propTypes = {
   onClickEditRecoveryEmail: PropTypes.func,
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
+  recoveryEmailIsLoading: PropTypes.bool,
   resendLinkText: PropTypes.string
 };
 

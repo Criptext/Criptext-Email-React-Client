@@ -202,12 +202,9 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
-  async updateName(data) {
-    const { name } = data.params;
-    const updateNameResponse = await client.updateName(name);
-    checkDeviceRemoved(updateNameResponse);
-    const peerResponse = await client.postPeerEvent(data);
-    return checkDeviceRemoved(peerResponse);
+  async updateName({ name }) {
+    const res = await client.updateName(name);
+    return checkDeviceRemoved(res);
   }
 
   async unsendEmail(params) {

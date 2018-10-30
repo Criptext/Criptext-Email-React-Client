@@ -38,23 +38,12 @@ class SettingsWrapper extends Component {
       twoFactorAuth,
       recoveryEmailConfirmed
     } = await this.props.onGetUserSettings();
-    this.setState(
-      { devices, recoveryEmail, recoveryEmailConfirmed, twoFactorAuth },
-      () => {
-        this.checkParamsToUpdate({ recoveryEmail, recoveryEmailConfirmed });
-      }
-    );
-  }
-
-  checkParamsToUpdate({ recoveryEmail, recoveryEmailConfirmed }) {
-    const paramsToUpdate = {};
-    if (myAccount.recoveryEmail !== recoveryEmail)
-      paramsToUpdate.recoveryEmail = recoveryEmail;
-    if (myAccount.recoveryEmailConfirmed !== recoveryEmailConfirmed)
-      paramsToUpdate.recoveryEmailConfirmed = recoveryEmailConfirmed;
-    if (Object.keys(paramsToUpdate).length > 0) {
-      this.props.onUpdateAccount(paramsToUpdate);
-    }
+    this.setState({
+      devices,
+      recoveryEmail,
+      recoveryEmailConfirmed,
+      twoFactorAuth
+    });
   }
 
   handleClickSection = section => {
@@ -76,8 +65,7 @@ class SettingsWrapper extends Component {
 SettingsWrapper.propTypes = {
   onComposeContactSupportEmail: PropTypes.func,
   onGetUserSettings: PropTypes.func,
-  onRemoveDevice: PropTypes.func,
-  onUpdateAccount: PropTypes.func
+  onRemoveDevice: PropTypes.func
 };
 
 export default SettingsWrapper;

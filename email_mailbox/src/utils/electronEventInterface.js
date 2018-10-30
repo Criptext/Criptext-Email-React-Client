@@ -610,28 +610,13 @@ const handlePeerPasswordChanged = () => {
   return sendPasswordChangedEvent();
 };
 
-const handlePeerRecoveryEmailChanged = async ({ params }) => {
-  const { recipientId } = myAccount;
+const handlePeerRecoveryEmailChanged = ({ params }) => {
   const { address } = params;
-  const dbRes = await updateAccount({
-    recoveryEmail: address,
-    recoveryEmailConfirmed: false,
-    recipientId
-  });
-  if (dbRes) {
-    emitter.emit(Event.RECOVERY_EMAIL_CHANGED, address);
-  }
+  emitter.emit(Event.RECOVERY_EMAIL_CHANGED, address);
 };
 
-const handlePeerRecoveryEmailConfirmed = async () => {
-  const { recipientId } = myAccount;
-  const dbRes = await updateAccount({
-    recoveryEmailConfirmed: true,
-    recipientId
-  });
-  if (dbRes) {
-    emitter.emit(Event.RECOVERY_EMAIL_CONFIRMED);
-  }
+const handlePeerRecoveryEmailConfirmed = () => {
+  emitter.emit(Event.RECOVERY_EMAIL_CONFIRMED);
 };
 
 const handleSendEmailError = ({ rowid }) => {

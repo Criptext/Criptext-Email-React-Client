@@ -18,7 +18,7 @@ import {
   updateNameEvent,
   resendConfirmationEmail
 } from '../utils/electronInterface';
-import { appDomain, SocketCommand } from '../utils/const';
+import { appDomain } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
 
 const defineSystemLabels = labelsArray => {
@@ -142,10 +142,7 @@ const mapDispatchToProps = dispatch => {
       const recipientId = myAccount.recipientId;
       const { name } = params;
       if (name) {
-        const res = await updateNameEvent({
-          cmd: SocketCommand.PEER_USER_NAME_CHANGED,
-          params: { name }
-        });
+        const res = await updateNameEvent(params);
         if (res.status === 200) {
           await updateAccount({ ...params, recipientId });
         }

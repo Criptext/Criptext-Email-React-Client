@@ -231,8 +231,6 @@ const createAccountColumns = table => {
     .defaultTo(false);
   table.string('signature', XLARGE_STRING_SIZE).defaultTo('');
   table.boolean('signatureEnabled').defaultTo(false);
-  table.string('recoveryEmail', MEDIUM_STRING_SIZE).defaultTo('');
-  table.boolean('recoveryEmailConfirmed').defaultTo(false);
 };
 
 const createFeedItemColumns = table => {
@@ -325,7 +323,23 @@ const createTables = async () => {
   await migrateDatabase();
 };
 
+const rollbackAllMigrations = async () => {
+  let version;
+  while (version !== 'none') {
+    version = await db.migrate.currentVersion(migrationConfig);
+    await db.migrate.forceFreeMigrationsLock();
+    await db.migrate.rollback(migrationConfig);
+  }
+};
+
 const migrateDatabase = async () => {
+  const shouldResetMigrations = await db.schema.hasColumn(
+    Table.ACCOUNT,
+    'recoveryEmail'
+  );
+  if (shouldResetMigrations) {
+    await rollbackAllMigrations();
+  }
   await db.migrate.latest(migrationConfig);
 };
 

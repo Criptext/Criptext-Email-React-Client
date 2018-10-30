@@ -37,7 +37,11 @@ import { hashPassword } from '../utils/hashUtils';
 import {
   storeResendConfirmationTimestamp,
   getTwoFactorAuthStatus,
-  setTwoFactorAuthStatus
+  setTwoFactorAuthStatus,
+  getLastRecoveryEmail,
+  getLastRecoveryEmailConfirmed,
+  setLastRecoveryEmail,
+  setLastRecoveryEmailConfirmed
 } from '../utils/storage';
 
 const EDITING_MODES = {
@@ -112,7 +116,8 @@ class SettingGeneralWrapper extends Component {
       },
       recoveryEmailParams: {
         recoveryEmail: props.recoveryEmail,
-        recoveryEmailConfirmed: props.recoveryEmailConfirmed
+        recoveryEmailConfirmed: props.recoveryEmailConfirmed,
+        isLoading: true
       },
       changeRecoveryEmailPopupParams: {
         isDisabledSubmitButton: true,
@@ -187,6 +192,7 @@ class SettingGeneralWrapper extends Component {
         recoveryEmailConfirmed={
           this.state.recoveryEmailParams.recoveryEmailConfirmed
         }
+        recoveryEmailIsLoading={this.state.recoveryEmailParams.isLoading}
         onClickResendConfirmationLink={this.handleClickResendConfirmationLink}
         onResendConfirmationCountdownEnd={
           this.handleResendConfirmationCountdownEnd
@@ -220,11 +226,20 @@ class SettingGeneralWrapper extends Component {
 
   componentDidMount() {
     setTimeout(() => {
-      if (this.state.twoFactorParams.isLoading) {
+      const stillTwoFactorAuthLoading = this.state.twoFactorParams.isLoading;
+      const stillRecoveryEmailLoading = this.state.recoveryEmailParams
+        .isLoading;
+      if (stillTwoFactorAuthLoading || stillRecoveryEmailLoading) {
         this.setState({
           twoFactorParams: {
             ...this.state.twoFactorParams,
             twoFactorEnabled: getTwoFactorAuthStatus() === 'true',
+            isLoading: false
+          },
+          recoveryEmailParams: {
+            ...this.state.recoveryEmailParams,
+            recoveryEmail: getLastRecoveryEmail(),
+            recoveryEmailConfirmed: getLastRecoveryEmailConfirmed() === 'true',
             isLoading: false
           }
         });
@@ -240,12 +255,14 @@ class SettingGeneralWrapper extends Component {
       this.state.recoveryEmail !== nextProps.recoveryEmail
     ) {
       newRecoveryEmailParams.recoveryEmail = nextProps.recoveryEmail;
+      setLastRecoveryEmail(nextProps.recoveryEmail);
     }
     if (
       this.state.recoveryEmailConfirmed !== nextProps.recoveryEmailConfirmed
     ) {
       newRecoveryEmailParams.recoveryEmailConfirmed =
         nextProps.recoveryEmailConfirmed;
+      setLastRecoveryEmailConfirmed(nextProps.recoveryEmailConfirmed);
     }
     if (
       this.state.twoFactorParams.twoFactorEnabled !== nextProps.twoFactorAuth
@@ -636,10 +653,6 @@ class SettingGeneralWrapper extends Component {
 
     const { status } = await changeRecoveryEmail(params);
     if (status === SUCCESS_STATUS) {
-      await this.props.onUpdateAccount({
-        recoveryEmail: email,
-        recoveryEmailConfirmed: false
-      });
       return this.setState(
         {
           recoveryEmailParams: {
