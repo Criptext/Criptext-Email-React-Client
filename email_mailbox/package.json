@@ -12,6 +12,7 @@
     "html-to-draftjs": "^1.4.0",
     "immutable": "^4.0.0-rc.2",
     "lottie-web": "^5.1.17",
+    "moment": "^2.22.2",
     "node-sass-chokidar": "^0.0.3",
     "npm-run-all": "^4.1.2",
     "randomcolor": "^0.5.3",

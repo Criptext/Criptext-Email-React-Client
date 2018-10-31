@@ -132,14 +132,31 @@ export const formOutgoingEmailFromData = ({
 };
 
 const formReplyHeader = (date, from) => {
-  const emailDate = new Date(date);
-  const { monthName, day, year, strTime, diff } = getFormattedDate(emailDate);
-  return `<span>On ${monthName} ${day}, ${year}, ${strTime} ${diff}, ${from.name ||
-    ''} < ${from.email} > wrote: </span>`;
+  const dateFormatted = getFormattedDate(date);
+  return `<span>On ${dateFormatted}, ${from.name || ''} < ${
+    from.email
+  } > wrote: </span>`;
 };
 
-const formForwardHeader = () => {
-  return `<p>---------- Forwarded message ---------</p>`;
+const formForwardHeader = (subject, date, from, to) => {
+  const dateFormatted = getFormattedDate(date);
+  const toFormatted = to.reduce((result, contact, index) => {
+    if (index === 0) {
+      return `${contact.name || ''} &lt;${contact.email}&gt;`;
+    }
+    return `${result}, ${contact.name || ''} &lt;${contact.email}&gt;`;
+  }, '');
+  return `<span>---------- Forwarded message ----------</span>
+  <br/>
+  <span>From: <b>${from.name || ''}</b> &lt;${from.email}&gt;</span>
+  <br/>
+  <span>Date: ${dateFormatted}</span>
+  <br/>
+  <span>Subject: ${subject}</span>
+  <br/>
+  <span>To: ${toFormatted}</span>
+  <br/>
+  `;
 };
 
 const insertEmptyLine = quantity => {
@@ -150,13 +167,20 @@ const formRecipientObject = contact => {
   return contact.name ? { name: contact.name, email: contact.email } : contact;
 };
 
-const formReplyForwardContent = (replyType, date, body, from) => {
-  const dateLine = formReplyHeader(date, from);
+const formReplyForwardContent = (replyType, subject, date, from, to, body) => {
   let content = '';
   if (replyType === composerEvents.FORWARD) {
-    content = `<section class="criptext_quote">${formForwardHeader()}${dateLine}${body}</section>`;
+    content = `<section class="criptext_quote">${formForwardHeader(
+      subject,
+      date,
+      from,
+      to
+    )}${body}</section>`;
   } else {
-    content = `<section class="criptext_quote">${dateLine}<blockquote>${body}</blockquote></section>`;
+    content = `<section class="criptext_quote">${formReplyHeader(
+      date,
+      from
+    )}<blockquote style="margin:10px 0 0 10px;padding-left: 10px;border-left:1px #0091ff solid;">${body}</blockquote></section>`;
   }
 
   return `${insertEmptyLine(2)}${content}${formSignature()}`;
@@ -170,9 +194,11 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const [from] = contacts.from;
   const content = formReplyForwardContent(
     replyType,
+    emailData.subject,
     emailData.date,
-    emailData.content,
-    from
+    from,
+    contacts.to,
+    emailData.content
   );
   const htmlBody = content;
   const replySufix = 'RE: ';
