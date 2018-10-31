@@ -125,6 +125,7 @@ export const updateBadgeLabels = labelIds => {
           labelId === LabelType.draft.id
         );
       });
+      if (!labelsFiltered.length) return;
       const labels = await Promise.all(
         labelsFiltered.map(async labelId => {
           if (labelId === LabelType.inbox.id) {

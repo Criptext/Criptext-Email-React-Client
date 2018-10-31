@@ -1,9 +1,6 @@
-const electron = window.require('electron');
-const { remote } = electron;
-const moment = remote.require('moment');
+import moment from 'moment';
 
 const oneDay = 86400000;
-
 moment.locale('en');
 moment.updateLocale('en', {
   relativeTime: {

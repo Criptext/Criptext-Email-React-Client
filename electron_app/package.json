@@ -136,7 +136,6 @@
     "moment": "^2.22.2",
     "node-notifier": "^5.2.1",
     "opn": "^5.3.0",
-    "sanitize-html": "^1.19.0",
     "sqlite3": "^4.0.2",
     "websocket": "^1.0.25"
   }

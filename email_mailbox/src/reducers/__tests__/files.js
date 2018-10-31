@@ -7,7 +7,6 @@ import data from './../../../public/files.json';
 jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
-jest.mock('./../../utils/electronUtilsInterface');
 
 describe('File actions:', () => {
   it('should add files', () => {

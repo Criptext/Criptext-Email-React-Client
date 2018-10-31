@@ -8,7 +8,6 @@ import file from './../../../public/labels.json';
 jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
-jest.mock('./../../utils/electronUtilsInterface');
 
 const myLabels = file.labels;
 

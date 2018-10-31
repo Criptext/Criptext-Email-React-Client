@@ -1,8 +1,6 @@
 import { LabelType } from './electronInterface';
 
-const { remote } = window.require('electron');
-export const { appDomain } = remote.require('./src/utils/const');
-
+export const appDomain = 'criptext.com';
 export const unsentText = 'This content was unsent';
 
 export const IconLabels = {

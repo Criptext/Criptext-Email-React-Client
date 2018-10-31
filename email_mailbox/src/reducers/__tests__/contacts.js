@@ -8,7 +8,6 @@ const contacts = file.contacts;
 jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
-jest.mock('./../../utils/electronUtilsInterface');
 
 describe('contacts actions', () => {
   it('should add contacts', () => {

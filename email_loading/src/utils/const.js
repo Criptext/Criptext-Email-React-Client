@@ -1,5 +1,4 @@
-const { remote } = window.require('electron');
-export const { appDomain } = remote.require('./src/utils/const');
+export const appDomain = 'criptext.com';
 
 export const DEVICE_TYPE = 1;
 
