@@ -4096,10 +4096,6 @@ is-obj@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-obj/-/is-obj-1.0.1.tgz#3e4729ac1f5fde025cd7d83a896dab9f4f67db0f"
 
-is-offline@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/is-offline/-/is-offline-2.1.0.tgz#92b99a41ad361641d9f4b3f982b4d37ad665239a"
-
 is-path-cwd@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-path-cwd/-/is-path-cwd-1.0.0.tgz#d225ec23132e89edd38fda767472e62e65f1106d"

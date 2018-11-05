@@ -11,7 +11,6 @@
     "draftjs-to-html": "^0.8.4",
     "html-to-draftjs": "^1.4.0",
     "immutable": "^4.0.0-rc.2",
-    "is-offline": "^2.1.0",
     "lottie-web": "^5.1.17",
     "moment": "^2.22.2",
     "node-sass-chokidar": "^0.0.3",
