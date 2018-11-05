@@ -12,6 +12,8 @@ const composerWindowManager = require('./src/windows/composer');
 const { template } = require('./src/windows/menu');
 require('./src/ipc/utils.js')
 
+globalManager.forcequit.set(false);
+
 async function initApp() {
   try {
     await dbManager.createTables();
@@ -186,7 +188,10 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  mailboxWindow.show();
+  const visibleWindows = BrowserWindow.getAllWindows();
+  visibleWindows.reverse().forEach(w => {
+    w.show();
+  });
 });
 
 app.on('before-quit', function() {

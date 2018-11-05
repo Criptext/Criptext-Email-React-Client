@@ -475,7 +475,7 @@ export const sendOpenEvent = (
     try {
       let postSuccess = true;
       if (emailKeysUnread.length) {
-        const { status } = await postOpenEvent(emailKeysUnread);
+        const { status } = await postOpenEvent(emailKeysUnread.map(Number));
         if (status === 200) {
           await updateEmails({
             keys: emailKeysUnread,
@@ -489,7 +489,7 @@ export const sendOpenEvent = (
       if (myEmailKeysUnread.length && postSuccess) {
         const eventParams = {
           cmd: SocketCommand.PEER_EMAIL_READ_UPDATE,
-          params: { metadataKeys: myEmailKeysUnread, unread: 0 }
+          params: { metadataKeys: myEmailKeysUnread.map(Number), unread: 0 }
         };
         const { status } = await postPeerEvent(eventParams);
         if (status === 200) {

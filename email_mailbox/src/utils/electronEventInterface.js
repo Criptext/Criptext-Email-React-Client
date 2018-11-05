@@ -297,7 +297,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       date,
       from,
       isEmailApp: !!messageType,
-      isToMe,
+      isFromMe,
       metadataKey,
       deviceId: senderDeviceId,
       subject,

@@ -1,6 +1,6 @@
 {
   "name": "criptext",
-  "version": "0.13.3",
+  "version": "0.13.6",
   "author": {
     "name": "Criptext Inc.",
     "email": "info@criptext.com",
@@ -54,6 +54,7 @@
     "mas": {
       "category": "public.app-category.productivity",
       "identity": "Criptext Inc.",
+      "entitlements": "build/entitlements.mac.plist",
       "provisioningProfile": "build/Criptext_Mail_Distribution.provisionprofile",
       "type": "distribution",
       "publish": [

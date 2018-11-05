@@ -1,6 +1,7 @@
 const { BrowserWindow, shell } = require('electron');
-const path = require('path');
 const { loginUrl } = require('./../window_routing');
+const globalManager = require('./../globalManager');
+const path = require('path');
 let loginWindow;
 
 const loginSize = {
@@ -24,14 +25,22 @@ const create = () => {
     transparent: true
   });
   loginWindow.loadURL(loginUrl);
-  loginWindow.setMenu(null);
   loginWindow.setResizable(false);
   if (process.env.NODE_ENV === 'development') {
     loginWindow.setResizable(true);
     loginWindow.openDevTools();
   }
+
+  loginWindow.on('close', e => {
+    if (!globalManager.forcequit.get()) {
+      e.preventDefault();
+      loginWindow.hide();
+    }
+  });
   loginWindow.on('closed', () => {
-    loginWindow = undefined;
+    if (process.platform !== 'darwin') {
+      loginWindow = undefined;
+    }
   });
   loginWindow.webContents.on('new-window', (e, url) => {
     e.preventDefault();
@@ -40,19 +49,20 @@ const create = () => {
 };
 
 const show = async () => {
-  if (!loginWindow) {
-    await create();
-  }
-  loginWindow.once('ready-to-show', () => {
+  if (loginWindow) {
     loginWindow.show();
-  });
+  } else {
+    await create();
+    loginWindow.once('ready-to-show', () => {
+      loginWindow.show();
+    });
+  }
 };
 
 const close = () => {
-  if (loginWindow) {
+  if (loginWindow !== undefined) {
     loginWindow.close();
   }
-  loginWindow = undefined;
 };
 
 const hide = () => {

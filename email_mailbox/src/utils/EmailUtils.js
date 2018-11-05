@@ -210,7 +210,7 @@ export const formIncomingEmailFromData = (
     date,
     from,
     isEmailApp,
-    isToMe,
+    isFromMe,
     metadataKey,
     subject,
     to,
@@ -231,7 +231,7 @@ export const formIncomingEmailFromData = (
         .slice(0, 100)
         .trim()
     : '';
-  const status = isToMe ? EmailStatus.NONE : EmailStatus.DELIVERED;
+  const status = isFromMe ? EmailStatus.DELIVERED : EmailStatus.NONE;
   const recipients = getRecipientsFromData({
     to,
     cc,
