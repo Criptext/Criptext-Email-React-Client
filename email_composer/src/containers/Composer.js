@@ -475,7 +475,11 @@ class ComposerWrapper extends Component {
         status: EmailStatus.SENT
       };
       await updateEmail(emailParams);
-      closeComposerWindow({ threadId, emailId });
+      closeComposerWindow({
+        threadId,
+        emailId,
+        hasExternalPassphrase: !!externalEmailPassword
+      });
     } catch (e) {
       if (e.message.includes('SQLITE_CONSTRAINT')) {
         // To remove

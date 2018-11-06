@@ -74,16 +74,11 @@
           input {
             width: 97%;
             padding-left: 5px;
-            height: 18px;
+            height: 21px;
             border: none;
             border-bottom: 1px solid #d4d4d4;
             font-size: 13px;
-            &:first-child {
-              margin-top: 2px;
-            }
-            &:last-child {
-              margin-top: 17px;
-            }
+            margin-top: 17%;
             &:focus {
               outline: none;
               border-bottom: 1px solid #0091ff;

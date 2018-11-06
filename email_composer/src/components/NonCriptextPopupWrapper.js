@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import NonCriptextPopup, { PopUpModes } from './NonCriptextPopup';
 import {
   requiredMinLength,
-  validatePassword,
-  validateConfirmPassword
+  validatePassword
 } from './../validators/validators';
 
 const inputTypes = {
@@ -19,11 +18,6 @@ class NonCriptextWrapper extends Component {
       mode: PopUpModes.SET_PASSWORD,
       formItems: {
         password: {
-          value: '',
-          error: null,
-          type: inputTypes.PASSWORD
-        },
-        confirmPassword: {
           value: '',
           error: null,
           type: inputTypes.PASSWORD
@@ -67,26 +61,17 @@ class NonCriptextWrapper extends Component {
   };
 
   checkDisableSubmit = () => {
-    const { password, confirmPassword } = this.state.formItems;
+    const { password } = this.state.formItems;
     const passwordHasError = !validatePassword(password.value);
-    const confirmPasswordHasError = !validateConfirmPassword(
-      password.value,
-      confirmPassword.value
-    );
     const newFormItemsState = {
       password: {
         ...this.state.formItems.password,
         error: passwordHasError
-      },
-      confirmPassword: {
-        ...this.state.formItems.confirmPassword,
-        error: confirmPasswordHasError
       }
     };
-    const disabled = passwordHasError || confirmPasswordHasError;
     this.setState({
       formItems: newFormItemsState,
-      disabled
+      disabled: passwordHasError
     });
   };
 
@@ -102,11 +87,6 @@ class NonCriptextWrapper extends Component {
         mode: PopUpModes.NO_PASSWORD,
         formItems: {
           password: {
-            value: '',
-            error: null,
-            type: inputTypes.PASSWORD
-          },
-          confirmPassword: {
             value: '',
             error: null,
             type: inputTypes.PASSWORD

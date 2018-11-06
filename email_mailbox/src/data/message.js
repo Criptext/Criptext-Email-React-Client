@@ -59,6 +59,11 @@ const messagesContent = {
       action: 'View message',
       actionHandlerKey: actionHandlerKeys.success.emailSent
     },
+    rememberSharePassphrase: {
+      priority: messagePriorities.MEDIUM,
+      description:
+        'Remember to send the passphrase to your non-Criptext recipients'
+    },
     downloadFile: {
       priority: messagePriorities.MEDIUM,
       description: "Download successfully. Check your 'Downloads' folder"

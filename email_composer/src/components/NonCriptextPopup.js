@@ -30,7 +30,6 @@ const renderPopUp = props => {
           </span>
         </div>
       )}
-
       {props.mode === PopUpModes.SET_PASSWORD
         ? renderForm(props)
         : renderNote()}
@@ -57,7 +56,7 @@ const renderSwitch = props => {
 };
 
 const renderForm = props => {
-  const { password, confirmPassword } = props.formItems;
+  const { password } = props.formItems;
   return (
     <div className="non-criptext-form">
       {renderInput({
@@ -74,21 +73,6 @@ const renderForm = props => {
         value: password.value,
         error: password.error,
         message: `Must have ${props.minLength} characters`
-      })}
-      {renderInput({
-        placeholder: 'Repeat passphrase',
-        value: confirmPassword.value,
-        type: confirmPassword.type,
-        onChange: ev => props.onChangeInputValue(ev, 'confirmPassword')
-      })}
-      {renderInputIcon({
-        type: confirmPassword.type,
-        onClick: () => props.onClickChangeInputType('confirmPassword')
-      })}
-      {renderErrorMessage({
-        value: confirmPassword.value,
-        error: confirmPassword.error,
-        message: 'Passphrases do not match'
       })}
     </div>
   );
@@ -125,16 +109,14 @@ const renderErrorMessage = ({ value, error, message }) => {
   );
 };
 
-const renderNote = () => {
-  return (
-    <div className="non-criptext-note">
-      <span>
-        <b>Note:</b> non-Criptext email addresses will receive a normal,
-        un-encrypted email.
-      </span>
-    </div>
-  );
-};
+const renderNote = () => (
+  <div className="non-criptext-note">
+    <span>
+      <b>Note:</b> non-Criptext email addresses will receive a normal,
+      un-encrypted email.
+    </span>
+  </div>
+);
 
 const renderButtons = props => (
   <div className="non-criptext-buttons">
