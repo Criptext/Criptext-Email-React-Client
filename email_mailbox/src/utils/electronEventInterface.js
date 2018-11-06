@@ -244,7 +244,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     senderDeviceId,
     threadId,
     to,
-    toArray
+    toArray,
+    messageId
   } = params;
   const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
   const [prevEmail] = await getEmailByKey(metadataKey);
@@ -304,7 +305,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       subject,
       to: to || toArray,
       threadId,
-      unread
+      unread,
+      messageId
     };
     const { email, recipients } = await formIncomingEmailFromData(
       data,

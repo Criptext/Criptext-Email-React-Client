@@ -809,7 +809,8 @@ const updateEmail = ({
   status,
   content,
   preview,
-  unsendDate
+  unsendDate,
+  messageId
 }) => {
   const params = noNulls({
     key,
@@ -820,7 +821,8 @@ const updateEmail = ({
     status,
     content,
     preview,
-    unsendDate
+    unsendDate,
+    messageId
   });
   const whereParam = id ? { id } : { key };
   return db
