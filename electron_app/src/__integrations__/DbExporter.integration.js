@@ -64,7 +64,9 @@ const email = {
     unread: false,
     secure: true,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20'
+    unsendDate: '2018-06-14 08:23:20',
+    trashDate: null,
+    messageId: 'messageId1'
   },
   recipients: {
     from: ['Alice <alice@criptext.com>'],
@@ -179,7 +181,7 @@ describe('Parse database: ', () => {
 
   it('Should parse Emails to string', async () => {
     await insertEmail(email);
-    const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"isMuted":false,"unsentDate":"2018-06-14 08:23:20","messageId":1}}`;
+    const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"isMuted":false,"messageId":"messageId1","unsentDate":"2018-06-14 08:23:20"}}`;
     const emailsString = await exportEmailTable(dbConnection);
     expect(emailsString).toBe(expectedString);
   });
@@ -294,7 +296,7 @@ describe('Import Database: ', () => {
       ...fileImported,
       readOnly: !!fileImported.readOnly
     };
-    expect(emailResult).toMatchObject(email.email);
+    expect(emailResult).toMatchObject(expect.objectContaining(email.email));
     expect(fileResult).toMatchObject(file);
     expect(fileKeyImported).toMatchObject(fileKey);
     expect(firstLabel).toMatchObject(labels[0]);
