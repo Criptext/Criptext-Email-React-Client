@@ -4,39 +4,53 @@
   top: -5px;
 
   .linked-device {
-    border-bottom: 1px solid #e1e1e2;
     display: flex;
-    height: 50px;
+    flex-direction: row;
+    align-items: stretch;
+    border-bottom: 1px solid #e1e1e2;
+    height: 55px;
     font-size: 13px;
     width: 97%;
+    min-width: 490px;
 
     &:hover{
       background-color: #f7fbff;
     }
 
+    > :nth-child(1) {
+      width: 5%;
+    }
+    > :nth-child(2) {
+      width: 20%;
+    }
+    > :nth-child(3) {
+      width: 20%;
+    }
+
     .device-icon {
       display: flex;
-      width: 7%;
-      margin: auto 0;
+      align-items: center;
+      font-size: 22px;
+      align-content: center;
       i {
         color: #9b9b9b;
         margin: 0 auto;
-        font-size: 22px;
       }
     }
     .device-name {
       display: flex;
       align-items: center;
-      width: 25%;
-      padding-left: 20px;
       color: #000;
+      padding-left: 2%;
       font-weight: bold;
+      white-space: nowrap; 
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .device-status {
       display: flex;
       align-items: center;
-      width: 30%;
-      padding-left: 15px;
+      padding-left: 5%;
 
       .current-device {
         color: #61b900;
@@ -58,15 +72,14 @@
       }
     }
     .device-action {
-      align-items: center;
-      color: #d94e47;
-      cursor: pointer;
       display: flex;
+      align-items: center;
+      padding-left: 5%;
+      color: #d94e47;
       font-size: 11px;
       font-weight: 300;
-      padding-left: 15px;
       text-transform: uppercase;
-      width: 45%;
+      cursor: pointer;
     }
   }
 }

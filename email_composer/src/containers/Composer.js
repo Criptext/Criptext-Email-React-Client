@@ -414,6 +414,7 @@ class ComposerWrapper extends Component {
 
   sendMessage = async secure => {
     this.setState({ status: Status.WAITING });
+    const temporalThreadId = `<criptext-temp-${Date.now()}>`;
     const data = {
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,
@@ -426,7 +427,7 @@ class ComposerWrapper extends Component {
       status: EmailStatus.SENDING,
       textSubject: this.state.textSubject,
       toEmails: this.state.toEmails,
-      threadId: this.state.threadId
+      threadId: this.state.threadId || temporalThreadId
     };
     const {
       emailData,

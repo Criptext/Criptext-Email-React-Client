@@ -294,3 +294,8 @@ export const validateEmailStatusToSet = (prevEmailStatus, nextEmailStatus) => {
   const isAlreadyOpened = prevEmailStatus === EmailStatus.OPENED;
   return isAlreadyUnsent ? null : isAlreadyOpened ? null : nextEmailStatus;
 };
+
+export const filterTemporalThreadIds = threadIds => {
+  const temporalThreadIdRegex = /<criptext-temp[^>]*>?/;
+  return threadIds.filter(threadId => !temporalThreadIdRegex.test(threadId));
+};

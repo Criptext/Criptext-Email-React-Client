@@ -3,7 +3,12 @@ const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
 const SOCKET_URL =
   process.env.NODE_ENV === 'development' ? DEV_SOCKET_URL : PROD_SOCKET_URL;
 var client, reconnect, messageListener, socketConnection;
-var reconnectDelay = 1000;
+var reconnectDelay = 2000;
+const globalManager = require('./globalManager');
+const NETWORK_STATUS = {
+  ONLINE: 'online',
+  OFFLINE: 'offline'
+};
 
 const setMessageListener = mListener => (messageListener = mListener);
 
@@ -21,17 +26,17 @@ const start = ({ jwt }) => {
   );
 
   client.on('connectFailed', error => {
-    log('Connect Error: ' + error.toString());
+    handleError(error, 'Failed to connect');
     reconnect();
   });
 
   client.on('connect', connection => {
-    reconnectDelay = 2000;
     socketConnection = connection;
+    setConnectionStatus(NETWORK_STATUS.ONLINE);
     log('Socket connection opened');
 
     connection.on('error', error => {
-      log('Connection Error: ' + error.toString());
+      handleError(error, 'Connection Error');
       reconnect();
     });
     connection.on('close', () => {
@@ -54,6 +59,28 @@ const start = ({ jwt }) => {
 const log = message => {
   if (process.env.NODE_ENV === 'development') {
     console.log(message);
+  }
+};
+
+const handleError = (error, errorMessage) => {
+  if (error.code === 'ENOTFOUND') {
+    setConnectionStatus(NETWORK_STATUS.OFFLINE);
+  }
+  log(`${errorMessage || 'Error'}: ${error.toString()}`);
+};
+
+const setConnectionStatus = networkStatus => {
+  switch (networkStatus) {
+    case NETWORK_STATUS.ONLINE: {
+      globalManager.internetConnection.setStatus(true);
+      break;
+    }
+    case NETWORK_STATUS.OFFLINE: {
+      globalManager.internetConnection.setStatus(false);
+      break;
+    }
+    default:
+      break;
   }
 };
 

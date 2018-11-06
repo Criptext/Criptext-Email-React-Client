@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import Panel from './Panel';
 import PropTypes from 'prop-types';
-import { addEvent, Event } from '../utils/electronEventInterface';
+import {
+  addEvent,
+  Event,
+  processPendingEvents
+} from '../utils/electronEventInterface';
 import { LabelType } from '../utils/electronInterface';
 import { SectionType, EmailStatus } from '../utils/const';
 
@@ -36,6 +40,7 @@ class PanelWrapper extends Component {
       }
     };
     this.initEventHandlers(props);
+    processPendingEvents();
   }
 
   render() {

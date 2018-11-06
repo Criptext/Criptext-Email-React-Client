@@ -29,6 +29,7 @@ import {
 import { loadFeedItems } from './feeditems';
 import { SocketCommand } from '../utils/const';
 import { removeEmails } from './emails';
+import { filterTemporalThreadIds } from '../utils/EmailUtils';
 
 export const addThreads = (threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -40,24 +41,23 @@ export const addLabelIdThread = (threadId, labelId) => {
   return async dispatch => {
     try {
       const [label] = await getLabelById(labelId);
-      const eventParams = {
-        cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
-        params: {
-          threadIds: [threadId],
-          labelsRemoved: [],
-          labelsAdded: [label.text]
-        }
-      };
-      const { status } = await postPeerEvent(eventParams);
-      if (status === 200) {
+      const threadIds = filterTemporalThreadIds(threadId);
+      if (threadIds.length) {
+        const eventParams = {
+          cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
+          params: {
+            threadIds: [threadId],
+            labelsRemoved: [],
+            labelsAdded: [label.text]
+          }
+        };
+        await postPeerEvent(eventParams);
         const emails = await getEmailsByThreadId(threadId);
         const params = formAddThreadLabelParams(emails, labelId);
         const dbResponse = await createEmailLabel(params);
         if (dbResponse) {
           dispatch(addLabelIdThreadSuccess(threadId, labelId));
         }
-      } else {
-        sendUpdateThreadLabelsErrorMessage();
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -103,25 +103,23 @@ export const addLabelIdThreads = (threadsParams, labelId) => {
       const eventParams = {
         cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
         params: {
-          threadIds,
+          threadIds: filterTemporalThreadIds(threadIds),
           labelsRemoved: [],
           labelsAdded: [label.text]
         }
       };
-      const { status } = await postPeerEvent(eventParams);
-      if (status === 200) {
-        const dbReponse = await Promise.all(
-          threadIds.map(async threadId => {
-            const threadEmails = await getEmailsByThreadId(threadId);
-            const params = formAddThreadLabelParams(threadEmails, labelId);
-            return await createEmailLabel(params);
-          })
-        );
-        if (dbReponse) {
-          dispatch(addLabelIdThreadsSuccess(threadIds, labelId));
-        }
-      } else {
-        sendUpdateThreadLabelsErrorMessage();
+      if (eventParams.params.threadIds.length) {
+        await postPeerEvent(eventParams);
+      }
+      const dbReponse = await Promise.all(
+        threadIds.map(async threadId => {
+          const threadEmails = await getEmailsByThreadId(threadId);
+          const params = formAddThreadLabelParams(threadEmails, labelId);
+          return await createEmailLabel(params);
+        })
+      );
+      if (dbReponse) {
+        dispatch(addLabelIdThreadsSuccess(threadIds, labelId));
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -156,47 +154,46 @@ export const addMoveLabelIdThreads = ({
       const eventParams = {
         cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
         params: {
-          threadIds,
+          threadIds: filterTemporalThreadIds(threadIds),
           labelsRemoved,
           labelsAdded
         }
       };
-      const { status } = await postPeerEvent(eventParams);
-      if (status === 200) {
-        const dbReponse = await Promise.all(
-          threadIds.map(async threadId => {
-            const threadEmails = await getEmailsByThreadId(threadId);
-            if (labelIdToRemove) {
-              const paramsToRemove = formRemoveThreadLabelParams(
-                threadEmails,
-                labelIdToRemove
-              );
-              await deleteEmailLabel(paramsToRemove);
-            }
-            const paramsToAdd = formAddThreadLabelParams(
+      if (eventParams.params.threadIds.length) {
+        await postPeerEvent(eventParams);
+      }
+
+      const dbReponse = await Promise.all(
+        threadIds.map(async threadId => {
+          const threadEmails = await getEmailsByThreadId(threadId);
+          if (labelIdToRemove) {
+            const paramsToRemove = formRemoveThreadLabelParams(
               threadEmails,
-              labelIdToAdd
+              labelIdToRemove
             );
-            return await createEmailLabel(paramsToAdd);
-          })
-        );
-        if (dbReponse) {
-          let labelIds = [];
-          if (
-            currentLabelId === LabelType.inbox.id &&
-            (labelIdToAdd === LabelType.trash.id ||
-              labelIdToAdd === LabelType.spam.id)
-          )
-            labelIds = [...labelIds, currentLabelId];
-          if (labelIdToAdd === LabelType.spam.id)
-            labelIds = [...labelIds, labelIdToAdd];
-          if (labelIds.length) dispatch(updateBadgeLabels(labelIds));
-          if (!notMove) {
-            dispatch(moveThreads(threadIds, labelIdToAdd));
+            await deleteEmailLabel(paramsToRemove);
           }
+          const paramsToAdd = formAddThreadLabelParams(
+            threadEmails,
+            labelIdToAdd
+          );
+          return await createEmailLabel(paramsToAdd);
+        })
+      );
+      if (dbReponse) {
+        let labelIds = [];
+        if (
+          currentLabelId === LabelType.inbox.id &&
+          (labelIdToAdd === LabelType.trash.id ||
+            labelIdToAdd === LabelType.spam.id)
+        )
+          labelIds = [...labelIds, currentLabelId];
+        if (labelIdToAdd === LabelType.spam.id)
+          labelIds = [...labelIds, labelIdToAdd];
+        if (labelIds.length) dispatch(updateBadgeLabels(labelIds));
+        if (!notMove) {
+          dispatch(moveThreads(threadIds, labelIdToAdd));
         }
-      } else {
-        sendUpdateThreadLabelsErrorMessage();
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -219,24 +216,23 @@ export const removeLabelIdThread = (threadId, labelId) => {
   return async dispatch => {
     try {
       const [label] = await getLabelById(labelId);
-      const eventParams = {
-        cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
-        params: {
-          threadIds: [threadId],
-          labelsRemoved: [label.text],
-          labelsAdded: []
-        }
-      };
-      const { status } = await postPeerEvent(eventParams);
-      if (status === 200) {
+      const threadIds = filterTemporalThreadIds(threadId);
+      if (threadIds.length) {
+        const eventParams = {
+          cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
+          params: {
+            threadIds: [threadId],
+            labelsRemoved: [label.text],
+            labelsAdded: []
+          }
+        };
+        await postPeerEvent(eventParams);
         const emails = await getEmailsByThreadId(threadId);
         const params = formRemoveThreadLabelParams(emails, labelId);
         const dbResponse = await deleteEmailLabel(params);
         if (dbResponse) {
           dispatch(removeLabelIdThreadSuccess(threadId, labelId));
         }
-      } else {
-        sendUpdateThreadLabelsErrorMessage();
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -282,28 +278,27 @@ export const removeLabelIdThreads = (threadsParams, labelId) => {
       const eventParams = {
         cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
         params: {
-          threadIds,
+          threadIds: filterTemporalThreadIds(threadIds),
           labelsRemoved: [label.text],
           labelsAdded: []
         }
       };
-      const { status } = await postPeerEvent(eventParams);
-      if (status === 200) {
-        const dbReponse = await Promise.all(
-          threadIds.map(async threadId => {
-            const emails = await getEmailsByThreadId(threadId);
-            const params = formRemoveThreadLabelParams(emails, labelId);
-            return await deleteEmailLabel(params);
-          })
-        );
-        if (dbReponse) {
-          dispatch(removeLabelIdThreadsSuccess(threadIds, labelId));
-          let labelIds = [LabelType.inbox.id];
-          if (labelId === LabelType.spam.id) labelIds = [...labelIds, labelId];
-          dispatch(updateBadgeLabels(labelIds));
-        }
-      } else {
-        sendUpdateThreadLabelsErrorMessage();
+      if (eventParams.params.threadIds.length) {
+        await postPeerEvent(eventParams);
+      }
+
+      const dbReponse = await Promise.all(
+        threadIds.map(async threadId => {
+          const emails = await getEmailsByThreadId(threadId);
+          const params = formRemoveThreadLabelParams(emails, labelId);
+          return await deleteEmailLabel(params);
+        })
+      );
+      if (dbReponse) {
+        dispatch(removeLabelIdThreadsSuccess(threadIds, labelId));
+        let labelIds = [LabelType.inbox.id];
+        if (labelId === LabelType.spam.id) labelIds = [...labelIds, labelId];
+        dispatch(updateBadgeLabels(labelIds));
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();

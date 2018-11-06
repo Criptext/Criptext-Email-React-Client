@@ -30,7 +30,7 @@ export const addLabel = label => {
         };
         const eventParams = {
           cmd: SocketCommand.PEER_LABEL_CREATED,
-          params: { color }
+          params: { text, color }
         };
         await postPeerEvent(eventParams);
         dispatch(addLabels(labels));

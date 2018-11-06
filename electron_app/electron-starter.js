@@ -11,6 +11,7 @@ const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { template } = require('./src/windows/menu');
 require('./src/ipc/utils.js')
+const { processEventsQueue } = require('./src/eventQueueManager');
 
 globalManager.forcequit.set(false);
 
@@ -100,6 +101,10 @@ async function initApp() {
     if(currentBadge !== value){
       app.setBadgeCount(value);
     }
+  });
+
+  ipcMain.on('process-pending-events', () => {
+    processEventsQueue();
   });
 
   //   Composer

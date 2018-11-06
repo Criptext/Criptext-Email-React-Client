@@ -127,7 +127,7 @@
     "electron-builder": "^20.18.0"
   },
   "dependencies": {
-    "@criptext/api": "^0.14.7",
+    "@criptext/api": "^0.14.8",
     "@criptext/data-transfer-client": "^0.1.1",
     "@criptext/electron-better-ipc": "^0.1.2-rc4",
     "electron-updater": "^3.0.3",

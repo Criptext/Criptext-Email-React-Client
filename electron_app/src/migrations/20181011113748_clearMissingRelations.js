@@ -70,4 +70,6 @@ exports.up = async (knex, Promise) => {
   ]);
 };
 
-exports.down = () => {};
+exports.down = (knex, Promise) => {
+  return Promise.resolve(true);
+};
