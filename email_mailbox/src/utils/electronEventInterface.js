@@ -647,14 +647,22 @@ ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
   emitter.emit(Event.REFRESH_THREADS, { labelIds: [labelId] });
 });
 
-ipcRenderer.on('display-message-email-sent', (ev, { threadId }) => {
-  const messageData = {
-    ...Messages.success.emailSent,
-    type: MessageType.SUCCESS,
-    params: { threadId }
-  };
-  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
-});
+ipcRenderer.on(
+  'display-message-email-sent',
+  (ev, { threadId, hasExternalPassphrase }) => {
+    const messageData = hasExternalPassphrase
+      ? {
+          ...Messages.success.rememberSharePassphrase,
+          type: MessageType.SUCCESS
+        }
+      : {
+          ...Messages.success.emailSent,
+          type: MessageType.SUCCESS,
+          params: { threadId }
+        };
+    emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+  }
+);
 
 ipcRenderer.on('display-message-success-download', () => {
   const messageData = {

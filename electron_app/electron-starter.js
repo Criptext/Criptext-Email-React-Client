@@ -112,8 +112,8 @@ async function initApp() {
     composerWindowManager.openNewComposer();
   });
 
-  ipcMain.on('close-composer', (e, { composerId, emailId, threadId }) => {
-    composerWindowManager.destroy({ composerId, emailId, threadId });
+  ipcMain.on('close-composer', (e, { composerId, emailId, threadId, hasExternalPassphrase }) => {
+    composerWindowManager.destroy({ composerId, emailId, threadId, hasExternalPassphrase });
   });
 
   ipcMain.on('save-draft-changes', (e, windowParams) => {

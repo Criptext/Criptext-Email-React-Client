@@ -135,7 +135,12 @@ const editDraft = async emailToEdit => {
   });
 };
 
-const destroy = async ({ composerId, emailId, threadId }) => {
+const destroy = async ({
+  composerId,
+  emailId,
+  threadId,
+  hasExternalPassphrase
+}) => {
   const composer = BrowserWindow.fromId(composerId);
   const emailToEdit = globalManager.emailToEdit.get(composer.id);
   if (emailToEdit) {
@@ -159,7 +164,10 @@ const destroy = async ({ composerId, emailId, threadId }) => {
     }
   }
   if (threadId) {
-    sendEventToMailbox('display-message-email-sent', { threadId });
+    sendEventToMailbox('display-message-email-sent', {
+      threadId,
+      hasExternalPassphrase
+    });
   }
   globalManager.composerData.delete(composer.id);
   composer.destroy();
