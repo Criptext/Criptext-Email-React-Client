@@ -1,3 +1,4 @@
+const { BrowserWindow } = require('electron');
 const { checkForUpdates } = require('./../updater');
 const { quit } = require('./mailbox');
 const composerWindowManager = require('./composer');
@@ -146,6 +147,15 @@ if (process.platform === 'darwin') {
     {
       label: 'Bring All to Front',
       role: 'front'
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Criptext',
+      click: function() {
+        showWindows();
+      }
     }
   );
 } else {
@@ -171,6 +181,14 @@ if (process.platform === 'darwin') {
   );
 }
 
+const showWindows = () => {
+  const visibleWindows = BrowserWindow.getAllWindows();
+  visibleWindows.reverse().forEach(w => {
+    w.show();
+  });
+};
+
 module.exports = {
-  template
+  template,
+  showWindows
 };

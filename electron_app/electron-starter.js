@@ -9,7 +9,7 @@ const dialogWindow = require('./src/windows/dialog');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
-const { template } = require('./src/windows/menu');
+const { template, showWindows } = require('./src/windows/menu');
 require('./src/ipc/utils.js')
 const { processEventsQueue } = require('./src/eventQueueManager');
 
@@ -193,10 +193,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  const visibleWindows = BrowserWindow.getAllWindows();
-  visibleWindows.reverse().forEach(w => {
-    w.show();
-  });
+  showWindows();
 });
 
 app.on('before-quit', function() {
