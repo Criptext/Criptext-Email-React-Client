@@ -24,7 +24,9 @@ import {
   deleteEmailLabel,
   cleanDatabase,
   logoutApp,
-  setInternetConnectionStatus
+  setInternetConnectionStatus,
+  composerEvents,
+  openEmailInComposer
 } from './electronInterface';
 import {
   checkEmailIsTo,
@@ -733,6 +735,25 @@ export const processPendingEvents = () => {
     ipcRenderer.send('process-pending-events');
   }, 1000);
 };
+
+ipcRenderer.on(
+  'open-mailto-in-composer',
+  (ev, { subject, content, emailAddress }) => {
+    const disabledSendButtonStatus = 1;
+    const enabledSendButtonStatus = 2;
+    openEmailInComposer({
+      type: composerEvents.NEW_WITH_DATA,
+      data: {
+        email: { subject, content },
+        recipients: { to: emailAddress },
+        status:
+          subject && content
+            ? enabledSendButtonStatus
+            : disabledSendButtonStatus
+      }
+    });
+  }
+);
 
 /* Window events
   ----------------------------- */

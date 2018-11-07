@@ -279,7 +279,8 @@ export const formNewEmailFromData = data => {
   return {
     toEmails: data.recipients ? [formRecipientObject(data.recipients.to)] : [],
     textSubject: data.email.subject,
-    htmlBody
+    htmlBody,
+    status: data.status
   };
 };
 

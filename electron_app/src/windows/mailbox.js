@@ -3,6 +3,8 @@ const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
 const { appUpdater, downloadUpdate } = require('./../updater');
 const globalManager = require('./../globalManager');
+const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
+const { removeProtocolFromUrl } = require('./../utils/stringUtils');
 const path = require('path');
 const opn = require('opn');
 
@@ -124,6 +126,16 @@ const send = (message, data) => {
 
 const openLinkInDefaultBrowser = (ev, url) => {
   ev.preventDefault();
+  const isMailto = mailtoProtocolRegex.test(url);
+  if (isMailto) {
+    const emailAddress = removeProtocolFromUrl('mailto:', url);
+    mailboxWindow.webContents.send('open-mailto-in-composer', {
+      subject: '',
+      content: '',
+      emailAddress
+    });
+    return;
+  }
   opn(url);
 };
 

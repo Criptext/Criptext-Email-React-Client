@@ -141,7 +141,7 @@ class ComposerWrapper extends Component {
       const composerData = await this.getComposerDataByType(this.emailToEdit);
       state = {
         ...composerData,
-        status: Status.ENABLED
+        status: composerData.status || Status.ENABLED
       };
     } else {
       const composerData = await this.getDefaultComposerWithSignature();
