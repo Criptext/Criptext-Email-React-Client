@@ -1,5 +1,6 @@
 const { BrowserWindow, dialog } = require('electron');
 const path = require('path');
+const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
 const { composerUrl } = require('./../window_routing');
 const mailboxWindow = require('./mailbox');
 const dbManager = require('./../DBManager');
@@ -179,7 +180,14 @@ const sendEventToMailbox = (eventName, data) => {
   }
 };
 
-const saveDraftToDatabase = async (composerId, dataDraft) => {
+const saveDraftToDatabase = async (composerId, data) => {
+  const filteredRecipients = {
+    from: data.recipients.from,
+    to: filterInvalidEmailAddresses(data.recipients.to),
+    cc: filterInvalidEmailAddresses(data.recipients.cc),
+    bcc: filterInvalidEmailAddresses(data.recipients.bcc)
+  };
+  const dataDraft = Object.assign(data, { recipients: filteredRecipients });
   const emailToEdit = globalManager.emailToEdit.get(composerId);
   const { type, key } = emailToEdit || {};
   let shouldUpdateBadge = false;
