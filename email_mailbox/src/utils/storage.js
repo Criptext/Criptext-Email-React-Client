@@ -93,3 +93,7 @@ export const setLastRecoveryEmailConfirmed = recoveryEmailConfirmed => {
 export const getLastRecoveryEmailConfirmed = () => {
   return localStorage.getItem('lastRecoveryEmailConfirmed') || undefined;
 };
+
+export const clearStorage = () => {
+  localStorage.clear();
+};

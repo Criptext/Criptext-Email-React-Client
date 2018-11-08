@@ -20,6 +20,7 @@ import {
 } from '../utils/electronInterface';
 import { appDomain } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
+import { clearStorage } from '../utils/storage';
 
 const defineSystemLabels = labelsArray => {
   return labelsArray.filter(label => {
@@ -63,6 +64,7 @@ const formatDevicesData = devices => {
 };
 
 const deleteDeviceData = async () => {
+  clearStorage();
   await cleanDataLogout(myAccount.recipientId);
   await logoutApp();
 };
