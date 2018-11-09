@@ -1,5 +1,55 @@
 # Change Log
 
+## [0.13.6](https://github.com/criptext/Criptext-Email-React-Client/tree/0.13.6) (2018-11-06)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.13.0...0.13.6)
+
+**Implemented enhancements:**
+
+- Add banner update [\#423](https://github.com/Criptext/Criptext-Email-React-Client/issues/423)
+- Handle error 405 to unsend action [\#211](https://github.com/Criptext/Criptext-Email-React-Client/issues/211)
+
+**Fixed bugs:**
+
+- Fix windows handle [\#502](https://github.com/Criptext/Criptext-Email-React-Client/issues/502)
+- Fix new email external not pass by sanitizer [\#490](https://github.com/Criptext/Criptext-Email-React-Client/issues/490)
+- Empty sign up form shows a checkmark on empty recovery email [\#487](https://github.com/Criptext/Criptext-Email-React-Client/issues/487)
+- Login & Composer:  Handle error codes [\#478](https://github.com/Criptext/Criptext-Email-React-Client/issues/478)
+- Fix trash/delete permanent sync [\#462](https://github.com/Criptext/Criptext-Email-React-Client/issues/462)
+
+**Closed issues:**
+
+- Add date format to reply and forwar email [\#499](https://github.com/Criptext/Criptext-Email-React-Client/issues/499)
+- Add icon dock badge [\#492](https://github.com/Criptext/Criptext-Email-React-Client/issues/492)
+- App: Pending events queue [\#488](https://github.com/Criptext/Criptext-Email-React-Client/issues/488)
+- Mailbox: Set Two-Factor Authentication [\#480](https://github.com/Criptext/Criptext-Email-React-Client/issues/480)
+- Fails to start in Ubuntu 18.04 and 18.10 [\#476](https://github.com/Criptext/Criptext-Email-React-Client/issues/476)
+- Mailbox: Show last device activity [\#474](https://github.com/Criptext/Criptext-Email-React-Client/issues/474)
+- Composer: Add button show more \(...\) [\#185](https://github.com/Criptext/Criptext-Email-React-Client/issues/185)
+
+**Merged pull requests:**
+
+- Plist [\#503](https://github.com/Criptext/Criptext-Email-React-Client/pull/503) ([erikaperugachi](https://github.com/erikaperugachi))
+- Change files/functions folder [\#498](https://github.com/Criptext/Criptext-Email-React-Client/pull/498) ([erikaperugachi](https://github.com/erikaperugachi))
+- Rewrite getComputerName as an async ipc call [\#497](https://github.com/Criptext/Criptext-Email-React-Client/pull/497) ([GAumala](https://github.com/GAumala))
+- Recovery email migration [\#496](https://github.com/Criptext/Criptext-Email-React-Client/pull/496) ([JulianAdams4](https://github.com/JulianAdams4))
+- Dont wait for server to validate username \(SignIn\) [\#495](https://github.com/Criptext/Criptext-Email-React-Client/pull/495) ([GAumala](https://github.com/GAumala))
+- Update text [\#494](https://github.com/Criptext/Criptext-Email-React-Client/pull/494) ([erikaperugachi](https://github.com/erikaperugachi))
+- Badge [\#493](https://github.com/Criptext/Criptext-Email-React-Client/pull/493) ([erikaperugachi](https://github.com/erikaperugachi))
+- Update [\#491](https://github.com/Criptext/Criptext-Email-React-Client/pull/491) ([erikaperugachi](https://github.com/erikaperugachi))
+- Don't display checkmark on empty recovery email [\#489](https://github.com/Criptext/Criptext-Email-React-Client/pull/489) ([GAumala](https://github.com/GAumala))
+- Recovery email repeated & Text selection [\#486](https://github.com/Criptext/Criptext-Email-React-Client/pull/486) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update css [\#485](https://github.com/Criptext/Criptext-Email-React-Client/pull/485) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix SignUp [\#484](https://github.com/Criptext/Criptext-Email-React-Client/pull/484) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update Two-Factor Authentication design [\#483](https://github.com/Criptext/Criptext-Email-React-Client/pull/483) ([JulianAdams4](https://github.com/JulianAdams4))
+- Composer [\#482](https://github.com/Criptext/Criptext-Email-React-Client/pull/482) ([erikaperugachi](https://github.com/erikaperugachi))
+- Two-Factor Authentication [\#481](https://github.com/Criptext/Criptext-Email-React-Client/pull/481) ([JulianAdams4](https://github.com/JulianAdams4))
+- Error codes [\#479](https://github.com/Criptext/Criptext-Email-React-Client/pull/479) ([JulianAdams4](https://github.com/JulianAdams4))
+- Delete FormItemWrapper class [\#477](https://github.com/Criptext/Criptext-Email-React-Client/pull/477) ([GAumala](https://github.com/GAumala))
+- Last activity and Linux updater [\#475](https://github.com/Criptext/Criptext-Email-React-Client/pull/475) ([JulianAdams4](https://github.com/JulianAdams4))
+- Sync [\#473](https://github.com/Criptext/Criptext-Email-React-Client/pull/473) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix typos  in README [\#472](https://github.com/Criptext/Criptext-Email-React-Client/pull/472) ([GAumala](https://github.com/GAumala))
+- Update CHANGELOG.md [\#471](https://github.com/Criptext/Criptext-Email-React-Client/pull/471) ([JulianAdams4](https://github.com/JulianAdams4))
+
 ## [0.13.0](https://github.com/criptext/Criptext-Email-React-Client/tree/0.13.0) (2018-10-16)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.12.1...0.13.0)
 
