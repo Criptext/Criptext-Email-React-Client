@@ -215,7 +215,8 @@ export const formIncomingEmailFromData = (
     subject,
     to,
     threadId,
-    unread
+    unread,
+    messageId
   },
   isExternal
 ) => {
@@ -249,7 +250,8 @@ export const formIncomingEmailFromData = (
     status,
     unread,
     secure: true,
-    isMuted: false
+    isMuted: false,
+    messageId
   };
 
   return { email, recipients };

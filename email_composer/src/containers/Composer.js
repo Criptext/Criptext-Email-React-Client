@@ -464,7 +464,7 @@ class ComposerWrapper extends Component {
         await createFile(filesDbParams);
       }
 
-      const { metadataKey, date } = res.body;
+      const { metadataKey, date, messageId } = res.body;
       const threadId = this.state.threadId || res.body.threadId;
       key = metadataKey;
       const emailParams = {
@@ -472,7 +472,8 @@ class ComposerWrapper extends Component {
         key,
         threadId,
         date,
-        status: EmailStatus.SENT
+        status: EmailStatus.SENT,
+        messageId
       };
       await updateEmail(emailParams);
       closeComposerWindow({

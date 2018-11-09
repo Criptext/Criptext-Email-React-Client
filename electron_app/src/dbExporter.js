@@ -114,7 +114,6 @@ const exportEmailTable = async db => {
           secure: !!row.secure,
           isMuted: !!row.isMuted,
           key,
-          messageId: key,
           date: parseDate(row.date)
         });
       })
@@ -295,7 +294,6 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
             case Table.EMAIL: {
               const { delivered, metadataKey, unsentDate } = object;
               delete object.delivered;
-              delete object.messageId;
               delete object.metadataKey;
               delete object.unsentDate;
               const parsedEmail = Object.assign(
