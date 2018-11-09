@@ -96,7 +96,7 @@ describe('Add collapse div ', () => {
 
 describe('Get recipientId from EmailAddressTag ', () => {
   it('Should get recipientId from criptext domain', () => {
-    const from = `"Alice$$" <alice@${appDomain}>`;
+    const from = `"Alice$$" <Alice@${appDomain}>`;
     const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
     const result = 'alice';
     expect(recipientId).toEqual(result);
@@ -104,7 +104,7 @@ describe('Get recipientId from EmailAddressTag ', () => {
   });
 
   it('Should get recipientId from external domain', () => {
-    const from = 'Bob 8989 <bob@domain.com>';
+    const from = 'Bob 8989 <Bob@domain.com>';
     const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
     const result = 'bob@domain.com';
     expect(recipientId).toEqual(result);

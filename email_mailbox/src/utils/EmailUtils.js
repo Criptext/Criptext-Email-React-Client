@@ -10,7 +10,15 @@ import { removeAppDomain } from './StringUtils';
 import { appDomain } from './const';
 
 const cleanEmails = emails => {
-  return emails.map(email => email.replace(/<|>/g, ''));
+  return emails.map(email => {
+    const emailTag = email.match(HTMLTagsRegex);
+    if (emailTag) {
+      if (emailTag[0].length === email.length) {
+        return email.replace(/<|>/g, '');
+      }
+    }
+    return email;
+  });
 };
 
 const cleanHTML = string => {
@@ -156,7 +164,8 @@ export const checkEmailIsTo = ({ to, cc, bcc, from, type }) => {
       ? [...recipients.to, ...recipients.cc, ...recipients.bcc]
       : [...recipients.from];
   const [isTo] = recipientsArray.filter(
-    email => email.indexOf(`${myAccount.recipientId}@${appDomain}`) > -1
+    email =>
+      email.toLowerCase().indexOf(`${myAccount.recipientId}@${appDomain}`) > -1
   );
   return isTo ? true : false;
 };
@@ -274,7 +283,7 @@ export const getRecipientIdFromEmailAddressTag = emailAddressTag => {
       : emailAddressTag;
   }
   const isExternal = !!recipientId.match(emailRegex);
-  return { recipientId, isExternal };
+  return { recipientId: recipientId.toLowerCase(), isExternal };
 };
 
 export const parseSignatureHtmlToEdit = signatureHtml => {

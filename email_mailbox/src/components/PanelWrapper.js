@@ -178,7 +178,9 @@ class PanelWrapper extends Component {
           emailIdToAdd: emailId
         });
       }
-      props.onUpdateUnreadEmailsBadge(labels);
+      if (labels.length) {
+        props.onUpdateUnreadEmailsBadge(labels);
+      }
     });
 
     addEvent(Event.LOAD_EVENTS, () => {

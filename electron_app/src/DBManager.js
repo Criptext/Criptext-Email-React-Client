@@ -429,7 +429,9 @@ const formEmailContact = ({ emailId, contactStored, contacts, type }) => {
     } else {
       email = contactToSearch;
     }
-    const { id } = contactStored.find(contact => contact.email === email);
+    const { id } = contactStored.find(
+      contact => contact.email === email.toLowerCase()
+    );
     return {
       emailId,
       contactId: id,
