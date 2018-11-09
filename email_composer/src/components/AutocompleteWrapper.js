@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getAllContacts } from './../utils/electronInterface';
 import Autocomplete from './Autocomplete';
+import { appDomain } from '../utils/const';
 
 let people = undefined;
 let isConsulting = false;
+const autocompleteCharacters = [',', ' '];
 
 const AutocompleteWrapper = ({ addTag, ...props }) => {
   let inputProps = props;
@@ -22,11 +24,25 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
   };
   loadSuggestions();
 
-  const handleOnChange = (e, { method }) => {
+  const handleOnChange = (e, { newValue, method }) => {
     if (method === 'enter') {
       e.preventDefault();
     } else {
       if (method === 'type') {
+        const lastChar = newValue.slice(-1);
+        const index = autocompleteCharacters.indexOf(lastChar);
+        if (index > -1) {
+          const [userValue] = newValue.split(lastChar);
+          if (userValue !== '') {
+            e.preventDefault();
+            const autocompletedAddress =
+              userValue.indexOf(appDomain) > -1
+                ? userValue
+                : `${userValue}@${appDomain}`;
+            addTag(autocompletedAddress);
+            e.target.value = '';
+          }
+        }
         state = { ...state, suggestionHighlight: true };
       } else {
         state = { ...state, suggestionHighlight: false };
@@ -34,6 +50,7 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
       props.onChange(e);
     }
   };
+
   inputProps = { ...inputProps, onChange: handleOnChange };
   const inputValue = (props.value && props.value.trim().toLowerCase()) || '';
   const inputLength = inputValue.length;

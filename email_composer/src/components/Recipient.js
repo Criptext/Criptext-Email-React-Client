@@ -36,7 +36,7 @@ const renderRecipientTo = props => (
   <div className="recipient-content">
     <span className="recipient-input-label">To:</span>
     <TagsInput
-      addKeys={[9, 13, 32, 188]}
+      addKeys={[9, 13]}
       addOnBlur={true}
       addOnPaste={true}
       className="recipient-tags"

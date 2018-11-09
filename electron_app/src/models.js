@@ -85,7 +85,8 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.SIGNEDPREKEYRECORD)
     .dropTableIfExists(Table.SESSIONRECORD)
     .dropTableIfExists(Table.IDENTITYKEYRECORD)
-    .dropTableIfExists(Table.MIGRATIONS);
+    .dropTableIfExists(Table.MIGRATIONS)
+    .dropTableIfExists(Table.PENDINGEVENT);
 };
 
 const cleanDataLogout = async recipientId => {
