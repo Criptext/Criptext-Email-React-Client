@@ -204,7 +204,7 @@ export const formFilesFromData = ({ files, date }) => {
       name,
       readOnly: read_only ? true : false,
       size,
-      status: status || 0,
+      status: status || 1,
       date,
       mimeType
     };
