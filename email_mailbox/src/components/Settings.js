@@ -59,7 +59,7 @@ const renderFooter = onClick => (
   <div className="settings-footer">
     <div className="settings-footer-version">
       <span>
-        Criptext Beta&nbsp;
+        Criptext&nbsp;
         <b>
           v.
           {version}
