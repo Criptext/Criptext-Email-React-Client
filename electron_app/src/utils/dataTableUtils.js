@@ -6,11 +6,11 @@ const formContactsRow = contacts => {
     if (emailMatched) {
       const lastPosition = emailMatched.length - 1;
       const emailTag = emailMatched[lastPosition];
-      const email = emailTag.replace(/[<>]/g, '');
+      const email = emailTag.replace(/[<>]/g, '').toLowerCase();
       const name = contact.slice(0, contact.indexOf(emailTag) - 1);
       return { email, name };
     }
-    return { email: contact, name: null };
+    return { email: contact.toLowerCase(), name: null };
   });
 };
 
