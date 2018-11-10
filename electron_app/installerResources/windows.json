@@ -1,9 +1,9 @@
 {
   "name": "Criptext",
   "productName": "Criptext",
-  "description": "Email service encrypted with signal",
-  "productDescription": "Email service encrypted with signal",
-  "authors": ["Criptext (info@criptext.com)"],
+  "description": "Encrypted email built on privacy",
+  "productDescription": "Encrypted email built on privacy",
+  "authors": ["Criptext (support@criptext.com)"],
   "homepage": "https://criptext.com",
   "icon": "build/icon.ico",
   "tags": ["Network","Application"], 
