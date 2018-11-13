@@ -102,6 +102,13 @@ const createComposerWindow = () => {
       globalManager.composerData.delete(window.id);
     }
   });
+
+  require('electron-context-menu')({
+    window,
+    showSaveImageAs: false,
+    showInspectElement: false,
+    showCopyImageAddress: false
+  });
   return window;
 };
 
