@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { appDomain } from './../utils/const';
 import './login.scss';
 
 const Login = props => renderLogin(props);
@@ -36,7 +37,7 @@ const renderForm = props => (
           autoFocus={true}
         />
         &nbsp;
-        <span>@criptext.com</span>
+        <span>{`@${appDomain}`}</span>
       </div>
       <span className="error-message">{props.errorMessage}</span>
       <div className="button">
