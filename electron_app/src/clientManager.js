@@ -78,6 +78,11 @@ class ClientManager {
     return checkDeviceRemoved(res);
   }
 
+  async getDataReady() {
+    const res = await client.getDataReady();
+    return checkDeviceRemoved(res);
+  }
+
   async getEmailBody(bodyKey) {
     const res = await client.getEmailBody(bodyKey);
     return checkDeviceRemoved(res);
@@ -138,6 +143,11 @@ class ClientManager {
 
   async linkDeny(randomId) {
     const res = await client.linkDeny(randomId);
+    return checkDeviceRemoved(res);
+  }
+
+  async linkStatus() {
+    const res = await client.linkStatus();
     return checkDeviceRemoved(res);
   }
 

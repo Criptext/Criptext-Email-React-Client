@@ -58,6 +58,14 @@ const renderCancelSync = props => {
   return availableCancelSyncSteps.includes(props.lastStep) ? (
     <div className="cancel-sync-link" onClick={props.onClickCancelSync}>
       <span>Cancel sync</span>
+      {props.showContinueWaitingButton && (
+        <button
+          className="keep-waiting-button"
+          onClick={props.onClickKeepWaiting}
+        >
+          Continue
+        </button>
+      )}
     </div>
   ) : props.lastStep === STEPS.WAIT_MAILBOX ? (
     <div className="cancel-sync-link" onClick={props.onClickCancelSync}>
@@ -79,7 +87,9 @@ renderMessage.propTypes = {
 
 renderCancelSync.propTypes = {
   lastStep: PropTypes.string,
-  onClickCancelSync: PropTypes.func
+  onClickCancelSync: PropTypes.func,
+  showContinueWaitingButton: PropTypes.bool,
+  onClickKeepWaiting: PropTypes.func
 };
 
 export default LinkNewDevice;

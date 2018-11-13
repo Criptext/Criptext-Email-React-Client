@@ -145,7 +145,7 @@
       width: 100%;
       text-align: center;
       position: relative;
-      top: 37%;
+      top: 35%;
       span {
         font-size: 13px;
         font-weight: bold;
@@ -154,6 +154,19 @@
         &:hover {
           cursor: pointer;
         }
+      }
+      .keep-waiting-button {
+        width: 90px;
+        background-color: #0091ff;
+        border-radius: 12px;
+        height: 20px;
+        padding: 10;
+        color: #fff;
+        font-weight: 600;
+        outline: none;
+        border: none;
+        margin-left: 8px;
+        cursor: pointer;
       }
     }
   }

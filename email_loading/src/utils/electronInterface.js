@@ -81,6 +81,10 @@ export const acknowledgeEvents = eventIds => {
   return clientManager.acknowledgeEvents(eventIds);
 };
 
+export const getDataReady = () => {
+  return clientManager.getDataReady();
+};
+
 export const getKeyBundle = deviceId => {
   return clientManager.getKeyBundle(deviceId);
 };

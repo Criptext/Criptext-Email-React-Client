@@ -12,6 +12,7 @@ import {
   deleteTemporalAccount,
   linkBegin,
   linkAuth,
+  linkStatus,
   openCreateKeys,
   socketClient,
   throwError,
@@ -20,7 +21,6 @@ import {
 import { getComputerName } from '../ipc.js';
 import { validateUsername } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
-import { addEvent, Event } from '../utils/electronEventInterface';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
 
@@ -37,6 +37,13 @@ const errorMessages = {
   USERNAME_INVALID: 'Invalid username',
   STATUS_UNKNOWN: 'Unknown status code: '
 };
+
+const LINK_STATUS_RETRIES = 12;
+// eslint-disable-next-line fp/no-let
+let LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
+const LINK_STATUS_DELAY = 5000;
+const rejectedDeviceStatus = 493;
+const approvedDeviceStastus = 200;
 
 const shouldDisableLogin = state =>
   !!state.errorMessage || state.values.username === '';
@@ -56,7 +63,6 @@ class LoginWrapper extends Component {
       hasTwoFactorAuth: undefined
     };
     this.timeCountdown = 0;
-    this.initEventListeners();
   }
 
   render() {
@@ -118,7 +124,12 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     const nextMode =
       this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN;
-    this.setState({ mode: nextMode });
+    this.setState(
+      {
+        mode: nextMode
+      },
+      () => this.cleanState()
+    );
   };
 
   toggleLostAllDevices = ev => {
@@ -258,6 +269,7 @@ class LoginWrapper extends Component {
         this.setState({ mode: mode.CONTINUE }, () => {
           createTemporalAccount({ recipientId: username });
           socketClient.start({ jwt: this.state.ephemeralToken });
+          this.checkLinkStatus();
         });
       } else {
         this.goToPasswordLogin();
@@ -317,20 +329,52 @@ class LoginWrapper extends Component {
     });
   };
 
-  initEventListeners = () => {
-    addEvent(Event.LINK_DEVICE_CONFIRMED, params => {
-      socketClient.disconnect();
-      openCreateKeys({ loadingType: 'link-new-device', remoteData: params });
-      deleteTemporalAccount();
-      closeLogin();
-    });
-
-    addEvent(Event.LINK_DEVICE_DENIED, () => {
-      socketClient.disconnect();
-      this.setState({
-        mode: mode.DEVICE_NOT_APPROVED
-      });
-    });
+  checkLinkStatus = async () => {
+    if (LINK_STATUS_ATTEMPS === 0) {
+      throwError({ name: 'Error', description: 'No response. Try again.' });
+      this.setState(
+        {
+          mode: mode.LOGIN
+        },
+        () => {
+          this.cleanState();
+          // eslint-disable-next-line fp/no-mutation
+          LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
+        }
+      );
+    } else {
+      const { status, body } = await linkStatus();
+      switch (status) {
+        case rejectedDeviceStatus: {
+          clearTimeout(this.linkStatusTimeout);
+          socketClient.disconnect();
+          this.setState({
+            mode: mode.DEVICE_NOT_APPROVED
+          });
+          return;
+        }
+        case approvedDeviceStastus: {
+          clearTimeout(this.linkStatusTimeout);
+          socketClient.disconnect();
+          const remoteData = {
+            ...body,
+            recipientId: this.state.values.username
+          };
+          openCreateKeys({ loadingType: 'link-new-device', remoteData });
+          deleteTemporalAccount();
+          closeLogin();
+          return;
+        }
+        default: {
+          this.linkStatusTimeout = await setTimeout(
+            this.checkLinkStatus,
+            LINK_STATUS_DELAY
+          );
+          // eslint-disable-next-line fp/no-mutation
+          LINK_STATUS_ATTEMPS--;
+        }
+      }
+    }
   };
 
   cleanState = () => {

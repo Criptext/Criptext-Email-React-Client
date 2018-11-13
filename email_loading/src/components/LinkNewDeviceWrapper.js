@@ -8,7 +8,9 @@ import {
   startSocket,
   decryptBackupFile,
   importDatabase,
-  clearSyncData
+  clearSyncData,
+  getDataReady,
+  acknowledgeEvents
 } from '../utils/electronInterface';
 import LinkNewDevice from './LinkNewDevice';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
@@ -16,6 +18,10 @@ import { ArrayBufferToBuffer } from '../utils/BytesUtils';
 import { appDomain } from '../utils/const';
 
 const ANIMATION_DURATION = 1500;
+const DATA_STATUS_DELAY = 5000;
+const DATA_READY_STATUS = 200;
+const DATA_STATUS_RETRIES = 12;
+let DATA_STATUS_ATTEMPS = DATA_STATUS_RETRIES;
 
 const STEPS = {
   NOT_STARTED: 'not-started',
@@ -25,6 +31,8 @@ const STEPS = {
   PROCESS_MAILBOX: 'processing-mailbox',
   SYNC_COMPLETE: 'sync-complete'
 };
+
+const LINK_DEVICE_EMAIL_ADDRESS = `${remoteData.recipientId}@${appDomain}`;
 
 class LoadingWrapper extends Component {
   constructor(props) {
@@ -37,7 +45,8 @@ class LoadingWrapper extends Component {
       delay: 0,
       failed: false,
       lastStep: STEPS.NOT_STARTED,
-      oldDeviceName: `${remoteData.recipientId}@${appDomain}`
+      oldDeviceName: LINK_DEVICE_EMAIL_ADDRESS,
+      showContinueWaitingButton: false
     };
 
     addEvent(Event.DATA_UPLOADED, this.downloadAndProcessMailbox);
@@ -62,6 +71,8 @@ class LoadingWrapper extends Component {
         onClickRetry={this.handleClickRetry}
         onClickCancelSync={this.handleClickCancelSync}
         oldDeviceName={this.state.oldDeviceName}
+        showContinueWaitingButton={this.state.showContinueWaitingButton}
+        onClickKeepWaiting={this.handleClickKeepWaiting}
       />
     );
   }
@@ -97,6 +108,7 @@ class LoadingWrapper extends Component {
           },
           () => {
             this.incrementPercentage();
+            this.checkDataStatus();
           }
         );
       }
@@ -105,7 +117,63 @@ class LoadingWrapper extends Component {
     }
   };
 
+  checkDataStatus = async () => {
+    if (DATA_STATUS_ATTEMPS === 0) {
+      this.setState({
+        message: 'Sync taking longer than usual',
+        oldDeviceName: 'Would you like to continue waiting?',
+        showContinueWaitingButton: true
+      });
+    } else {
+      const { status, body } = await getDataReady();
+      switch (status) {
+        case DATA_READY_STATUS: {
+          const { rowid } = body;
+          await acknowledgeEvents([rowid]);
+          const {
+            dataAddress,
+            key,
+            authorizerId,
+            authorizerType,
+            authorizerName
+          } = JSON.parse(body.params);
+          this.downloadAndProcessMailbox(
+            authorizerId,
+            dataAddress,
+            key,
+            authorizerType,
+            authorizerName
+          );
+          return;
+        }
+        default: {
+          this.dataStatusTimeout = await setTimeout(
+            this.checkDataStatus,
+            DATA_STATUS_DELAY
+          );
+          DATA_STATUS_ATTEMPS--;
+        }
+      }
+    }
+  };
+
+  handleClickKeepWaiting = () => {
+    clearTimeout(this.dataStatusTimeout);
+    this.setState(
+      {
+        message: 'Waiting for mailbox',
+        oldDeviceName: LINK_DEVICE_EMAIL_ADDRESS,
+        showContinueWaitingButton: false
+      },
+      () => {
+        DATA_STATUS_ATTEMPS = DATA_STATUS_RETRIES;
+        this.checkDataStatus();
+      }
+    );
+  };
+
   downloadAndProcessMailbox = (authorizerId, address, key) => {
+    clearTimeout(this.dataStatusTimeout);
     this.setState(
       {
         message: 'Downloading mailbox',
