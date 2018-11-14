@@ -27,7 +27,12 @@ const create = () => {
   });
   loadingWindow.loadURL(loadingUrl);
   loadingWindow.setMenu(null);
-  loadingWindow.setResizable(false);
+  if (process.env.NODE_ENV === 'development') {
+    loadingWindow.setResizable(true);
+    loadingWindow.webContents.openDevTools();
+  } else {
+    loadingWindow.setResizable(false);
+  }
 
   loadingWindow.on('closed', () => {
     const { loadingType } = globalManager.loadingData.get();

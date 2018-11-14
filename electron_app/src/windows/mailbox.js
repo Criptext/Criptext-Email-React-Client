@@ -6,7 +6,6 @@ const globalManager = require('./../globalManager');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
 const path = require('path');
-const opn = require('opn');
 
 let mailboxWindow;
 
@@ -37,6 +36,13 @@ const create = () => {
     title: ''
   });
   mailboxWindow.loadURL(mailboxUrl);
+
+  require('electron-context-menu')({
+    window: mailboxWindow,
+    showSaveImageAs: false,
+    showInspectElement: false,
+    showCopyImageAddress: false
+  });
 
   mailboxWindow.on('page-title-updated', ev => {
     ev.preventDefault();
@@ -136,8 +142,10 @@ const openLinkInDefaultBrowser = (ev, url) => {
     });
     return;
   }
-  opn(url);
+  shell.openExternal(url);
 };
+
+const isVisible = () => mailboxWindow.isVisible();
 
 const quit = () => {
   globalManager.forcequit.set(true);
@@ -152,5 +160,6 @@ module.exports = {
   quit,
   responseFromModal,
   send,
-  show
+  show,
+  isVisible
 };

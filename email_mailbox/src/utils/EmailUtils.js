@@ -310,3 +310,14 @@ export const filterTemporalThreadIds = threadIds => {
   const temporalThreadIdRegex = /<criptext-temp[^>]*>?/;
   return threadIds.filter(threadId => !temporalThreadIdRegex.test(threadId));
 };
+
+export const parseContactRow = contact => {
+  const matches = contact.match(HTMLTagsRegex);
+  if (matches.length) {
+    const emailTag = matches.pop();
+    const email = emailTag.replace(/[<>]/g, '').toLowerCase();
+    const name = contact.slice(0, contact.indexOf(emailTag) - 1);
+    return { email, name };
+  }
+  return { email: contact.toLowerCase(), name: null };
+};

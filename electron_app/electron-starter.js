@@ -12,6 +12,7 @@ const composerWindowManager = require('./src/windows/composer');
 const { template, showWindows } = require('./src/windows/menu');
 require('./src/ipc/utils.js')
 const { processEventsQueue } = require('./src/eventQueueManager');
+const { showNotification } = require('./src/updater');
 
 globalManager.forcequit.set(false);
 
@@ -105,6 +106,10 @@ async function initApp() {
 
   ipcMain.on('process-pending-events', () => {
     processEventsQueue();
+  });
+
+  ipcMain.on('show-notification', (ev, { title, message }) => {
+    showNotification({ title, message });
   });
 
   //   Composer

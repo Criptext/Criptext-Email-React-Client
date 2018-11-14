@@ -1,6 +1,11 @@
+/*global process */
 import { LabelType } from './electronInterface';
 
-export const appDomain = 'criptext.com';
+export const appDomain =
+  process.env.NODE_ENV === 'development'
+    ? process.env.REACT_APP_APPDOMAIN
+    : 'criptext.com';
+
 export const unsentText = 'This content was unsent';
 
 export const IconLabels = {

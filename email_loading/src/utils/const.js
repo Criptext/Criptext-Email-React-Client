@@ -1,4 +1,8 @@
-export const appDomain = 'criptext.com';
+/*global process */
+export const appDomain =
+  process.env.NODE_ENV === 'development'
+    ? process.env.REACT_APP_APPDOMAIN
+    : 'criptext.com';
 
 export const DEVICE_TYPE = 1;
 

@@ -34,7 +34,8 @@ import {
   formFilesFromData,
   formIncomingEmailFromData,
   getRecipientIdFromEmailAddressTag,
-  validateEmailStatusToSet
+  validateEmailStatusToSet,
+  parseContactRow
 } from './EmailUtils';
 import { SocketCommand, appDomain, EmailStatus } from './const';
 import Messages from './../data/message';
@@ -265,6 +266,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   const isFromMe = checkEmailIsTo({ from, type: 'from' });
   let eventParams = {};
 
+  let notificationPreview = '';
   if (!prevEmail) {
     let body = '';
     try {
@@ -314,6 +316,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       data,
       isExternal
     );
+    notificationPreview = email.preview;
     const filesData =
       files && files.length
         ? await formFilesFromData({
@@ -369,6 +372,14 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       labels,
       threadId: prevEmail.threadId
     };
+    notificationPreview = prevEmail.preview;
+  }
+  if (isToMe) {
+    const parsedContact = parseContactRow(from);
+    ipcRenderer.send('show-notification', {
+      title: parsedContact.name || parsedContact.email,
+      message: `${subject}\n${notificationPreview}`
+    });
   }
   return rowid;
 };

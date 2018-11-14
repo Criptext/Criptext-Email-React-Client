@@ -55,39 +55,32 @@ autoUpdater.on('update-available', () => {
       }
     );
   }
+
   if (currentUpdaterType === updaterTypes.AUTO) {
     const mailboxWindow = require('./windows/mailbox');
-    mailboxWindow.send('update-available');
-
-    const title = 'A new version of Criptext is available!';
-    const message = 'Click here to download or dismiss to update later';
-    const notifyOptions = {
-      appName: appId,
-      title,
-      message,
-      icon: iconPath,
-      timeout: 15,
-      wait: true
-    };
-    notifier.notify(notifyOptions);
-
-    notifier.on('click', () => {
-      const downloadingNotifyOptions = {
-        appName: appId,
-        title: 'Downloading update',
-        message: "When it's ready we will notify you",
-        icon: iconPath
-      };
-      notifier.notify(downloadingNotifyOptions);
-      downloadUpdate();
-    });
+    const isVisibleMailbox = mailboxWindow.isVisible();
+    if (isVisibleMailbox) {
+      mailboxWindow.send('update-available');
+    } else {
+      showNotification({
+        title: 'A new version of Criptext is available!',
+        message: 'Click here to download or dismiss to update later'
+      });
+      notifier.on('click', () => {
+        showNotification({
+          title: 'Downloading update',
+          message: "When it's ready we will notify you"
+        });
+        downloadUpdate();
+      });
+    }
   }
 });
 
 autoUpdater.on('download-progress', data => {
   const { bytesPerSecond, percent, transferred, total } = data;
   const downloadStatus = `Downloading: ${percent}% - [${transferred}/${total}] - (${bytesPerSecond} b/s)`;
-  if (process.env.DEBUG) {
+  if (process.env.NODE_ENV === 'development') {
     // To do
     console.log(downloadStatus);
   }
@@ -135,8 +128,21 @@ const downloadUpdate = () => {
   isDownloadingUpdate = true;
 };
 
+const showNotification = ({ title, message }) => {
+  const notifyOptions = {
+    appName: appId,
+    title,
+    message,
+    icon: iconPath,
+    timeout: 15,
+    wait: true
+  };
+  notifier.notify(notifyOptions);
+};
+
 module.exports = {
   appUpdater,
   checkForUpdates,
-  downloadUpdate
+  downloadUpdate,
+  showNotification
 };

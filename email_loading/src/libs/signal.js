@@ -69,7 +69,7 @@ const createAccount = async ({
   if (status === 400) {
     throw CustomError(errors.user.ALREADY_EXISTS);
   } else if (status === 429) {
-    throw CustomError(errors.user.TOO_MANY_REQUESTS);
+    throw CustomError(errors.login.TOO_MANY_REQUESTS);
   } else if (status !== 200) {
     throw CustomError({
       name: 'Error creating user',
