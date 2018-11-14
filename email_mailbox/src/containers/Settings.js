@@ -74,6 +74,10 @@ const getOS = () => {
   return osName.split(' ')[0];
 };
 
+const isWindows = () => {
+  return getOS().toLowerCase() === 'win32';
+};
+
 const formContactSupportEmailContent = () => {
   const lines = '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>';
   const header = '<strong>Do not write below this line.</strong>';
@@ -167,4 +171,4 @@ const Settings = connect(
   mapDispatchToProps
 )(SettingsWrapper);
 
-export { Settings as default, deleteDeviceData };
+export { Settings as default, deleteDeviceData, isWindows };

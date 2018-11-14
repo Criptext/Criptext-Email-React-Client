@@ -6,7 +6,7 @@ const FILE_SERVER_APP_ID = 'qynhtyzjrshazxqarkpy';
 const FILE_SERVER_KEY = 'lofjksedbxuucdjjpnby';
 const PROD_DATA_TRANSFER_URL = 'https://transfer.criptext.com';
 
-export const appDomain =
+const appDomain =
   process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_APPDOMAIN
     : 'criptext.com';

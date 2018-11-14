@@ -112,6 +112,18 @@ async function initApp() {
     showNotification({ title, message });
   });
 
+  ipcMain.on('minimize-mailbox', () => {
+    mailboxWindow.minimize();
+  });
+
+  ipcMain.on('toggle-maximize-mailbox', () => {
+    mailboxWindow.toggleMaximize();
+  });
+
+  ipcMain.on('close-mailbox', () => {
+    mailboxWindow.close();
+  });
+
   //   Composer
   ipcMain.on('create-composer', () => {
     composerWindowManager.openNewComposer();

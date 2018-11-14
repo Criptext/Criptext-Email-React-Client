@@ -6,6 +6,7 @@ const globalManager = require('./../globalManager');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
 const path = require('path');
+const { isWindows } = require('./../utils/osUtils');
 
 let mailboxWindow;
 
@@ -33,9 +34,13 @@ const create = () => {
     height: mailboxWindowState.height,
     icon: iconPath,
     show: false,
-    title: ''
+    title: 'Criptext',
+    frame: !isWindows()
   });
   mailboxWindow.loadURL(mailboxUrl);
+  if (isWindows()) {
+    mailboxWindow.setMenuBarVisibility(false);
+  }
 
   require('electron-context-menu')({
     window: mailboxWindow,
@@ -117,6 +122,22 @@ const close = () => {
   mailboxWindow = undefined;
 };
 
+const toggleMaximize = () => {
+  if (mailboxWindow !== undefined) {
+    if (mailboxWindow.isMaximized()) {
+      mailboxWindow.unmaximize();
+    } else {
+      mailboxWindow.maximize();
+    }
+  }
+};
+
+const minimize = () => {
+  if (mailboxWindow !== undefined) {
+    mailboxWindow.minimize();
+  }
+};
+
 const responseFromModal = response => {
   mailboxWindow.webContents.send('selectedOption', {
     selectedOption: response
@@ -161,5 +182,7 @@ module.exports = {
   responseFromModal,
   send,
   show,
-  isVisible
+  isVisible,
+  toggleMaximize,
+  minimize
 };

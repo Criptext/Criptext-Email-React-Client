@@ -18,6 +18,7 @@
     "randomcolor": "^0.5.3",
     "react": "^16.2.0",
     "react-countdown-now": "^1.3.0",
+    "react-desktop": "^0.3.7",
     "react-dom": "^16.2.0",
     "react-draft-wysiwyg": "^1.12.13",
     "react-redux": "^5.0.6",

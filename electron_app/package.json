@@ -113,8 +113,7 @@
           "provider": "generic",
           "url": "https://cdn.criptext.com/Criptext-Email-Desktop/windows"
         }
-      ],
-      "certificateSubjectName": "Criptext Inc"
+      ]
     },
     "nsis": {
       "oneClick": true,

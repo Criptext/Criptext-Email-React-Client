@@ -1,13 +1,20 @@
 import React from 'react';
-import { closeLogin, minimizeLogin } from './../utils/electronInterface';
+import {
+  closeLogin,
+  minimizeLogin,
+  isWindows
+} from './../utils/electronInterface';
 import './titleBar.scss';
 
 const titleBar = () => (
-  <div className="title-bar">
+  <div className={`title-bar ${isWindows() ? 'align-right' : 'align-left'}`}>
     <span className="buttons">
-      <span className="close" onClick={ev => closeLogin(ev)} />
-      <span className="minimize" onClick={ev => minimizeLogin(ev)} />
-      <span className="bar-clear" />
+      <span className="minimize" onClick={minimizeLogin}>
+        <i className="icon-minimize" />
+      </span>
+      <span className="close" onClick={closeLogin}>
+        <i className="icon-exit" />
+      </span>
     </span>
   </div>
 );
