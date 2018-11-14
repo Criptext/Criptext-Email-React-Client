@@ -210,7 +210,7 @@ class PanelWrapper extends Component {
       ({ threadId, emailId, status, date }) => {
         const currentSectionType = this.state.sectionSelected.type;
         const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
-        if (status === EmailStatus.OPENED && isRenderingMailbox) {
+        if (status === EmailStatus.READ && isRenderingMailbox) {
           props.onMarkThreadAsOpen(threadId, status);
         }
         if (status === EmailStatus.UNSEND) {

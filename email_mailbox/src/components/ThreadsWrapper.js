@@ -11,8 +11,8 @@ class ThreadsWrapper extends Component {
     this.state = {
       hoverTarget: null,
       labels: [],
-      tip: '',
-      lastMinDate: undefined
+      lastMinDate: undefined,
+      tip: ''
     };
   }
 

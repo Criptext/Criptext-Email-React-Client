@@ -1,5 +1,5 @@
 import { Thread } from './types';
-import { startLoadSync, stopLoadSync } from './activity';
+import { startLoadSync, stopLoadSync, stopLoadThread } from './activity';
 import { updateBadgeLabels } from './labels';
 import {
   createEmailLabel,
@@ -445,7 +445,10 @@ export const loadThreads = params => {
       }
 
       const threads = await getEmailsGroupByThreadByParams(params);
-      dispatch(addThreads(threads, params.clear));
+      if (threads.length) {
+        dispatch(addThreads(threads, params.clear));
+      }
+      dispatch(stopLoadThread());
     } catch (e) {
       sendFetchEmailsErrorMessage();
     }

@@ -67,6 +67,8 @@
         }
 
         .email-info-content-from{
+          line-height: initial;
+
           span{
             color: black;
             font-size: 15px;
@@ -168,11 +170,16 @@
         display: flex;
         flex-direction: row;
         position: relative;
+        width: calc(100% - 69px);
 
         >span{
           color: #4a4a4a;
           font-size: 14px;
           font-weight: 100;
+          line-height: 14px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .email-info-content-to-more{

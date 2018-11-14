@@ -2,8 +2,9 @@ import { Thread, Activity } from '../actions/types';
 import { Map } from 'immutable';
 
 const initActivity = Map({
-  isSyncing: false,
-  isFilteredByUnreadThreads: false
+  isFilteredByUnreadThreads: false,
+  isLoadingThreads: false,
+  isSyncing: false
 });
 const activity = (state = initActivity, action) => {
   switch (action.type) {
@@ -21,6 +22,10 @@ const activity = (state = initActivity, action) => {
       return state.set('isSyncing', true);
     case Activity.STOP_LOAD_SYNC:
       return state.set('isSyncing', false);
+    case Activity.START_LOAD_THREAD:
+      return state.set('isLoadingThreads', true);
+    case Activity.STOP_LOAD_THREAD:
+      return state.set('isLoadingThreads', false);
     default:
       return state;
   }

@@ -64,6 +64,14 @@ const Threads = props => (
             />
           );
         })}
+        {props.isLoadingThreads && (
+          <div className="threads-loading">
+            <div />
+            <div />
+            <div />
+            <div />
+          </div>
+        )}
       </div>
     </div>
     {renderTooltipForThread(props.hoverTarget, props.tip)}
@@ -111,6 +119,7 @@ const renderLabelsForThread = (hoverTarget, labels) => {
 Threads.propTypes = {
   buttonSyncStatus: PropTypes.number,
   hoverTarget: PropTypes.string,
+  isLoadingThreads: PropTypes.bool,
   isUpdateAvailable: PropTypes.bool,
   labels: PropTypes.array,
   mailboxSelected: PropTypes.string,

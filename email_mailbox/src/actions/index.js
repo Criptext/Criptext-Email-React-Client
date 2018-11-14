@@ -1,3 +1,4 @@
+import { startLoadThread } from './activity';
 import { addContacts, addContact } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
@@ -109,6 +110,7 @@ export {
   searchThreads,
   sendOpenEvent,
   setThreads,
+  startLoadThread,
   unsendEmail,
   unsendEmailFiles,
   unsendEmailOnSuccess,

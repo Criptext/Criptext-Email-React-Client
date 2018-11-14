@@ -302,8 +302,8 @@ export const parseSignatureContentToHtml = signatureContent => {
 
 export const validateEmailStatusToSet = (prevEmailStatus, nextEmailStatus) => {
   const isAlreadyUnsent = prevEmailStatus === EmailStatus.UNSEND;
-  const isAlreadyOpened = prevEmailStatus === EmailStatus.OPENED;
-  return isAlreadyUnsent ? null : isAlreadyOpened ? null : nextEmailStatus;
+  const isAlreadyRead = prevEmailStatus === EmailStatus.READ;
+  return isAlreadyUnsent ? null : isAlreadyRead ? null : nextEmailStatus;
 };
 
 export const filterTemporalThreadIds = threadIds => {
