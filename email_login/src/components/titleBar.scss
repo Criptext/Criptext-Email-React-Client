@@ -8,11 +8,11 @@
   padding: 0px 4px;
   -webkit-app-region: drag;
 
-  &.align-right {
+  &.placement-right {
     display: flex;
     flex-direction: row-reverse;
   }
-  &.align-left {
+  &.placement-left {
     display: flex;
     flex-direction: row;
     > .buttons {

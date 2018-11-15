@@ -7,7 +7,11 @@ import {
 import './titleBar.scss';
 
 const titleBar = () => (
-  <div className={`title-bar ${isWindows() ? 'align-right' : 'align-left'}`}>
+  <div
+    className={`title-bar ${
+      isWindows() ? 'placement-right' : 'placement-left'
+    }`}
+  >
     <span className="buttons">
       <span className="minimize" onClick={minimizeLogin}>
         <i className="icon-minimize" />
