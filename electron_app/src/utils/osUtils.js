@@ -6,4 +6,10 @@ const getComputerName = () => {
   return deviceName.split('-').join(' ');
 };
 
-module.exports = { getComputerName };
+const isWindows = () => process.platform === 'win32';
+
+const isLinux = () => process.platform === 'linux';
+
+const isMacOs = () => process.platform === 'darwin';
+
+module.exports = { getComputerName, isWindows, isLinux, isMacOs };

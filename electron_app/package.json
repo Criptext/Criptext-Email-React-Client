@@ -10,7 +10,7 @@
   "private": true,
   "productName": "Criptext",
   "main": "./electron-starter.js",
-  "description": "Email service encrypted with signal",
+  "description": "Encrypted email built on privacy",
   "repository": {
     "type": "git",
     "url": "https://github.com/Criptext/Criptext-Email-React-Client.git"

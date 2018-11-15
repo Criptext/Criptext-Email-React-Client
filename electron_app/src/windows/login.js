@@ -28,7 +28,7 @@ const create = () => {
   loginWindow.setResizable(false);
   if (process.env.NODE_ENV === 'development') {
     loginWindow.setResizable(true);
-    loginWindow.openDevTools();
+    loginWindow.webContents.openDevTools({ mode: 'undocked' });
   }
 
   loginWindow.on('close', e => {

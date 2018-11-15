@@ -435,6 +435,8 @@ h2{
 }
 
 .wrapper-out{
+  display: flex;
+  flex-direction: column;
   height: 100%;
   position: fixed;
   width: 100%;
@@ -443,7 +445,9 @@ h2{
 .wrapper-in{
   display: flex;
   flex-direction: row;
-  height: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 100%;
   position: relative;
   width: 100%;
 }
