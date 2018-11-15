@@ -3,10 +3,8 @@ import { loadLabels } from '../actions';
 import SideBarView from '../components/SideBarWrapper';
 import { IconLabels, SectionType } from './../utils/const';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
-import {
-  composerEvents,
-  openEmailInComposer
-} from '../utils/electronInterface';
+import { openFilledComposerWindow } from './../utils/ipc';
+import { composerEvents } from '../utils/electronInterface';
 
 const defineLabels = labels => {
   return labels
@@ -52,7 +50,7 @@ const formInviteFriendEmailContent = () => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onClickInviteFriend: () => {
-      openEmailInComposer({
+      openFilledComposerWindow({
         type: composerEvents.NEW_WITH_DATA,
         data: {
           email: {

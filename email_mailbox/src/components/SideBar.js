@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SideBarItem from './../components/SideBarItem';
 import SideBarLabelItem from './../containers/SideBarLabelItem';
 import LabelAdd from './../containers/LabelAdd';
-import { openComposerWindow } from '../utils/electronInterface';
+import { openEmptyComposerWindow } from './../utils/ipc';
 import './sidebar.css';
 
 const SideBar = props => (
@@ -15,7 +15,7 @@ const SideBar = props => (
       <div className="nav-item-free">
         <button
           className="button button-a button-compose"
-          onClick={openComposerWindow}
+          onClick={openEmptyComposerWindow}
         >
           <i className="icon-edit" />
           <span>Compose</span>

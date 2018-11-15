@@ -11,13 +11,13 @@ import {
   logout,
   logoutApp,
   myAccount,
-  openEmailInComposer,
   removeDevice,
   updateAccount,
   updateContactByEmail,
   updateNameEvent,
   resendConfirmationEmail
 } from '../utils/electronInterface';
+import { openFilledComposerWindow } from './../utils/ipc';
 import { appDomain } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
 import { clearStorage } from '../utils/storage';
@@ -103,7 +103,7 @@ const mapDispatchToProps = dispatch => {
     },
     onComposeContactSupportEmail: () => {
       const content = formContactSupportEmailContent();
-      openEmailInComposer({
+      openFilledComposerWindow({
         type: composerEvents.NEW_WITH_DATA,
         data: {
           email: { subject: 'Customer Support - Desktop', content },

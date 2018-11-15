@@ -92,6 +92,10 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@criptext/electron-better-ipc@^0.1.2-rc4":
+  version "0.1.2-rc4"
+  resolved "https://registry.yarnpkg.com/@criptext/electron-better-ipc/-/electron-better-ipc-0.1.2-rc4.tgz#566654ce5a99cc7c1cd789674bf1db0794381d0f"
+
 abab@^1.0.3, abab@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"

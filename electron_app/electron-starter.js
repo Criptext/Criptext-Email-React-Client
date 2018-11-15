@@ -10,9 +10,10 @@ const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { template, showWindows } = require('./src/windows/menu');
-require('./src/ipc/utils.js')
 const { processEventsQueue } = require('./src/eventQueueManager');
 const { showNotification } = require('./src/updater');
+require('./src/ipc/utils.js')
+require('./src/ipc/mailbox.js')
 
 globalManager.forcequit.set(false);
 
@@ -125,10 +126,6 @@ async function initApp() {
   });
 
   //   Composer
-  ipcMain.on('create-composer', () => {
-    composerWindowManager.openNewComposer();
-  });
-
   ipcMain.on('close-composer', (e, { composerId, emailId, threadId, hasExternalPassphrase }) => {
     composerWindowManager.destroy({ composerId, emailId, threadId, hasExternalPassphrase });
   });
@@ -136,10 +133,6 @@ async function initApp() {
   ipcMain.on('save-draft-changes', (e, windowParams) => {
     const { composerId, data } = windowParams;
     composerWindowManager.saveDraftChanges(composerId, data);
-  });
-
-  ipcMain.on('edit-draft', async (e, toEdit) => {
-    await composerWindowManager.editDraft(toEdit);
   });
 
   ipcMain.on('failed-to-send', () => {

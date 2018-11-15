@@ -4,9 +4,9 @@ import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import {
   composerEvents,
   LabelType,
-  openEmailInComposer,
   myAccount
 } from '../utils/electronInterface';
+import { openFilledComposerWindow } from './../utils/ipc';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
 import { SectionType } from '../utils/const';
@@ -114,7 +114,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           if (threadIdDb) {
             ownProps.onClickSelectedItem(type, params);
           } else {
-            openEmailInComposer({
+            openFilledComposerWindow({
               key: thread.key,
               type: composerEvents.EDIT_DRAFT
             });
@@ -130,7 +130,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               searchParams: ownProps.searchParams
             });
           } else if (allLabels.includes(draftLabelId)) {
-            openEmailInComposer({
+            openFilledComposerWindow({
               key: thread.key,
               type: composerEvents.EDIT_DRAFT
             });

@@ -20,7 +20,6 @@ import {
   LabelType,
   logoutApp,
   myAccount,
-  openEmailInComposer,
   setInternetConnectionStatus,
   updateEmail,
   updateEmails,
@@ -41,6 +40,7 @@ import { SocketCommand, appDomain, EmailStatus } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
+import { openFilledComposerWindow } from './../utils/ipc';
 
 const eventPriority = {
   NEW_EMAIL: 0,
@@ -753,7 +753,7 @@ ipcRenderer.on(
   (ev, { subject, content, emailAddress }) => {
     const disabledSendButtonStatus = 1;
     const enabledSendButtonStatus = 2;
-    openEmailInComposer({
+    openFilledComposerWindow({
       type: composerEvents.NEW_WITH_DATA,
       data: {
         email: { subject, content },
