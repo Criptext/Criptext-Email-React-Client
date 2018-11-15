@@ -1,10 +1,15 @@
 import React from 'react';
 
+const escapeRegExp = str => {
+  return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
+
 export const replaceMatches = (phrase, content) => {
   if (!phrase || !content) {
     return <span>{content}</span>;
   }
-  const reg = new RegExp(phrase, 'gi');
+  const escapedRegExp = escapeRegExp(phrase);
+  const reg = new RegExp(escapedRegExp, 'gi');
   const matches = content.match(reg);
   const splitPhrase = content.split(reg);
   return splitPhrase.reduce((prev, current, i) => {

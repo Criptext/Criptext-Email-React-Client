@@ -1,7 +1,7 @@
 const indexedDB = window.indexedDB;
 const localStorage = window.localStorage;
 
-export const storeValue = async function(value) {
+export const storeValue = async value => {
   const db = await openDB();
   const tx = db.transaction('searchs', 'readwrite');
   const store = tx.objectStore('searchs');
@@ -13,7 +13,7 @@ export const storeValue = async function(value) {
   return Promise.resolve();
 };
 
-export const getMatches = async function(substring) {
+export const getMatches = async substring => {
   const db = await openDB();
   const tx = db.transaction('searchs', 'readwrite');
   const store = tx.objectStore('searchs');
@@ -37,7 +37,7 @@ export const getMatches = async function(substring) {
   });
 };
 
-const openDB = function() {
+const openDB = () => {
   return new Promise(resolve => {
     const open = indexedDB.open('email_client');
 
