@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './buttonunsend.css';
+import './buttonunsend.scss';
 
 const ButtonUnsend = props => (
   <button

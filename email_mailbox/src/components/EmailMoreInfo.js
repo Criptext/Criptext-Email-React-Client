@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ContactTag from './ContactTag';
-import './emailmoreinfo.css';
+import './emailmoreinfo.scss';
 import { orderContactsByNameOrEmail } from '../utils/ContactUtils';
 
 const EmailMoreInfo = props => (

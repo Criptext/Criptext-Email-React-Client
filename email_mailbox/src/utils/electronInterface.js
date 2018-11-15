@@ -58,20 +58,8 @@ export const downloadUpdate = () => {
   ipcRenderer.send('download-update');
 };
 
-export const editDraftInComposer = data => {
-  ipcRenderer.send('edit-draft', data);
-};
-
 export const logoutApp = () => {
   ipcRenderer.send('logout-app');
-};
-
-export const openEmailInComposer = data => {
-  ipcRenderer.send('edit-draft', data);
-};
-
-export const openComposerWindow = () => {
-  ipcRenderer.send('create-composer');
 };
 
 export const openCreateKeys = params => {

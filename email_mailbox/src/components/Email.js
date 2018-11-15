@@ -6,7 +6,7 @@ import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
 import ButtonUnsend from './ButtonUnsendWrapper';
 import { EmailStatus } from './../utils/const';
-import './email.css';
+import './email.scss';
 
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
 const PopOverEmailActions = MenuHOC(EmailActions);
@@ -192,7 +192,7 @@ const defineEmailStatus = status => {
       return <i className="icon-checked status-sent" />;
     case EmailStatus.DELIVERED:
       return <i className="icon-double-checked status-delivered" />;
-    case EmailStatus.OPENED:
+    case EmailStatus.READ:
       return <i className="icon-double-checked status-opened" />;
     case EmailStatus.SENDING:
       return <i className="icon-time status-sending" />;

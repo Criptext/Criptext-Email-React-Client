@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FeedItem from './../containers/FeedItem';
 import { addEvent, Event } from '../utils/electronEventInterface';
-import './activitypanel.css';
+import './activitypanel.scss';
 
 class ActivityPanel extends Component {
   constructor() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './contacttag.css';
+import './contacttag.scss';
 
 const ContactTag = props => (
   <span className="contact-tag">

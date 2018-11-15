@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { List } from 'immutable';
 import { replaceMatches } from '../utils/ReactUtils';
-import './searchhints.css';
+import './searchhints.scss';
 
 const SearchHints = props => (
   <div className="search-hints">

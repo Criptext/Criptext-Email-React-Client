@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './message.css';
+import './message.scss';
 
 const Message = props => (
   <div className={`message-container ${defineMessageStatus(props)}`}>

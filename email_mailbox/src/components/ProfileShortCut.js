@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ProfilePreview from './ProfilePreview';
 import MenuHOC, { MenuType } from './MenuHOC';
-import './profileshortcut.css';
+import './profileshortcut.scss';
 
 const MenuProfilePreview = MenuHOC(ProfilePreview);
 

@@ -1,11 +1,77 @@
-.container-height{
-  height: 100%;
-}
-
 .threads-container{
   height: 100%;
   width: 100%;
   position: relative;
+
+  .threads-header{
+    align-items: center;
+    display: flex;
+    height: 40px;
+    justify-content: space-between;
+    margin: 0 10px;
+    position: absolute;
+    z-index: 2;
+    width: calc(100% - 40px);
+    padding: 0 10px;
+    background-color: #f7f7f8;
+
+    .threads-header-title-container{
+      align-items: center;
+      display: flex;
+      margin-left: 20px;
+
+      .threads-mailbox-title{
+        margin: 6px 0 0 0;
+        text-transform: uppercase;
+      }
+    }
+
+    .threads-header-switch-container{
+      display: flex;
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 6px;
+    
+      >span{
+        margin: 0 5px;
+      }
+    
+      .input-switch{
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .threads-content{
+    overflow-y: auto;
+    height: calc(100% - 125px);
+    padding: 44px 20px 20px 20px;
+    background-color: #f7f7f8;
+    position: relative;
+    width: calc(100% - 40px);
+
+    .threads-items{
+      background-color: white;
+      box-shadow: 0 2px 10px 0 rgba(0, 0, 1, 0.09);
+      height: 100%;
+    }
+
+    
+  }
+
+  .threads-content::-webkit-scrollbar-track{
+    background-color: rgba(233, 233, 233, 0.76);
+    box-shadow: inset 0 0 10px rgba(220,220,220,0.1);
+  }
+  
+  .threads-content::-webkit-scrollbar{
+    width: 6.5px;
+  }
+  
+  .threads-content::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: #b0b2b4;
+  }
 
   .labels-tooltip{
     background-color: white !important;
@@ -21,70 +87,65 @@
   }
 }
 
-.threads-content{
-  overflow-y: auto;
-  height: calc(100% - 125px);
-  padding: 44px 20px 20px 20px;
-  background-color: #f7f7f8;
+.threads-loading {
+  display: flex;
+  margin: 0 auto;
   position: relative;
-  width: calc(100% - 40px);
-}
+  width: 64px;
+  height: 44px;
 
-.threads-content::-webkit-scrollbar-track{
-  background-color: rgba(233, 233, 233, 0.76);
-  box-shadow: inset 0 0 10px rgba(220,220,220,0.1);
-}
+  div {
+    position: absolute;
+    top: 17px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #dadada;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
 
-.threads-content::-webkit-scrollbar{
-  width: 6.5px;
-}
+    &:nth-child(1) {
+      left: 6px;
+      animation: loading-dots1 0.6s infinite;
+    }
 
-.threads-content::-webkit-scrollbar-thumb{
-  border-radius: 10px;
-  background-color: #b0b2b4;
-}
+    &:nth-child(2) {
+      left: 6px;
+      animation: loading-dots2 0.6s infinite;
+    }
 
-.threads-header{
-  align-items: center;
-  display: flex;
-  height: 40px;
-  justify-content: space-between;
-  margin: 0 10px;
-  position: absolute;
-  z-index: 2;
-  width: calc(100% - 40px);
-  padding: 0 10px;
-  background-color: #f7f7f8;
-}
+    &:nth-child(3) {
+      left: 26px;
+      animation: loading-dots2 0.6s infinite;
+    }
 
-.threads-header-title-container{
-  align-items: center;
-  display: flex;
-  margin-left: 20px;
-}
-
-.threads-mailbox-title{
-  margin: 6px 0 0 0;
-  text-transform: uppercase;
-}
-
-.threads-header-switch-container{
-  display: flex;
-  font-size: 11px;
-  font-weight: 500;
-  margin-top: 6px;
-
-  >span{
-    margin: 0 5px;
-  }
-
-  .input-switch{
-    margin-right: 5px;
+    &:nth-child(4) {
+      left: 45px;
+      animation: loading-dots3 0.6s infinite;
+    }
   }
 }
 
-.threads-items{
-  background-color: white;
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 1, 0.09);
-  height: 100%;
+@keyframes loading-dots1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes loading-dots3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes loading-dots2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(19px, 0);
+  }
 }

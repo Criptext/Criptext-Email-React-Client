@@ -11,3 +11,15 @@ export const stopLoadSync = () => {
     type: Activity.STOP_LOAD_SYNC
   };
 };
+
+export const startLoadThread = () => {
+  return {
+    type: Activity.START_LOAD_THREAD
+  };
+};
+
+export const stopLoadThread = () => {
+  return {
+    type: Activity.STOP_LOAD_THREAD
+  };
+};

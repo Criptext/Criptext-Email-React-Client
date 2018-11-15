@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './sidebaritem.css';
+import './sidebaritem.scss';
 
 const SideBarItem = props => (
   <li

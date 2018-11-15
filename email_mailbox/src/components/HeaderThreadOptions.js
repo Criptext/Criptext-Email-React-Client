@@ -4,7 +4,7 @@ import StandardOptions from './StandardOptions';
 import ButtonCircle from './ButtonCircle';
 import TooltipMenu from './TooltipMenu';
 import CustomCheckbox from './CustomCheckbox';
-import './headerthreadoptions.css';
+import './headerthreadoptions.scss';
 
 class HeaderThreadOptions extends Component {
   render() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './twofactorauthenabledpopup.css';
+import './twofactorauthenabledpopup.scss';
 
 const TwoFactorAuthEnabledPopup = props => (
   <div id="popup-twofactorenabled" className="popup-content">

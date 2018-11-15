@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './attachitem.css';
+import './attachitem.scss';
 
 const AttachItem = props => (
   <div className="attach-container">

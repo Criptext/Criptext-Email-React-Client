@@ -9,10 +9,10 @@ import {
   composerEvents,
   LabelType,
   myAccount,
-  openEmailInComposer,
   confirmPermanentDeleteThread,
   closeDialog
 } from './../utils/electronInterface';
+import { openFilledComposerWindow } from './../utils/ipc';
 import {
   loadFiles,
   muteEmail,
@@ -107,7 +107,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onEditDraft: () => {
       const key = email.key;
-      openEmailInComposer({
+      openFilledComposerWindow({
         key,
         type: composerEvents.EDIT_DRAFT
       });
@@ -124,18 +124,24 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onReplyEmail: ev => {
       ev.stopPropagation();
       const keyEmailToRespond = email.key;
-      openEmailInComposer({ keyEmailToRespond, type: composerEvents.REPLY });
+      openFilledComposerWindow({
+        keyEmailToRespond,
+        type: composerEvents.REPLY
+      });
     },
     onReplyLast: () => {
       if (isLast) {
         const keyEmailToRespond = email.key;
-        openEmailInComposer({ keyEmailToRespond, type: composerEvents.REPLY });
+        openFilledComposerWindow({
+          keyEmailToRespond,
+          type: composerEvents.REPLY
+        });
       }
     },
     onReplyAll: ev => {
       ev.stopPropagation();
       const keyEmailToRespond = email.key;
-      openEmailInComposer({
+      openFilledComposerWindow({
         keyEmailToRespond,
         type: composerEvents.REPLY_ALL
       });
@@ -143,7 +149,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onForward: ev => {
       ev.stopPropagation();
       const keyEmailToRespond = email.key;
-      openEmailInComposer({ keyEmailToRespond, type: composerEvents.FORWARD });
+      openFilledComposerWindow({
+        keyEmailToRespond,
+        type: composerEvents.FORWARD
+      });
     },
     onMarkAsSpam: ev => {
       ev.stopPropagation();

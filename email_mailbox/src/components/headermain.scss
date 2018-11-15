@@ -7,7 +7,7 @@ $_HEADER_MAIN_PADDING_RIGHT: 25px;
   height: 100%;
   justify-content: space-between;
   padding: 0 $_HEADER_MAIN_PADDING_RIGHT 0 $_HEADER_MAIN_PADDING_LEFT;
-  width: calc(100% - ($_HEADER_MAIN_PADDING_RIGHT + $_HEADER_MAIN_PADDING_LEFT));
+  width: calc(100% - (#{$_HEADER_MAIN_PADDING_RIGHT} + #{$_HEADER_MAIN_PADDING_LEFT}));
 
   > div{
     display: flex;

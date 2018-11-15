@@ -4,7 +4,7 @@ import { EmailStatus } from './../utils/const';
 import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import { replaceMatches } from './../utils/ReactUtils';
 import { replaceAllOccurrences } from './../utils/StringUtils';
-import './threaditem.css';
+import './threaditem.scss';
 
 class ThreadItem extends Component {
   render() {
@@ -30,7 +30,7 @@ class ThreadItem extends Component {
           onSelectThread(thread);
         }}
       >
-        <a>
+        <div className="thread-item-content">
           <div
             className="thread-item-contact-letters"
             onMouseEnter={onRegionEnter}
@@ -70,7 +70,7 @@ class ThreadItem extends Component {
           <div className="thread-item-date" style={visibleStyle}>
             <span>{thread.date}</span>
           </div>
-        </a>
+        </div>
         {this.renderMenu()}
       </div>
     );
@@ -101,7 +101,7 @@ class ThreadItem extends Component {
         return <i className="icon-checked status-sent" />;
       case EmailStatus.DELIVERED:
         return <i className="icon-double-checked status-delivered" />;
-      case EmailStatus.OPENED:
+      case EmailStatus.READ:
         return <i className="icon-double-checked status-opened" />;
       case EmailStatus.SENDING:
         return <i className="icon-time status-sending" />;

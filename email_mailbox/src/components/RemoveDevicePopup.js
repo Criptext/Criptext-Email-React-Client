@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './removedevicepopup.css';
+import './removedevicepopup.scss';
 
 const RemoveDevicePopup = props => {
   return (

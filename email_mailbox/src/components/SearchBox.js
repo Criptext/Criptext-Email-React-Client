@@ -5,7 +5,7 @@ import SearchHints from './SearchHints';
 import SearchOptions from './SearchOptions';
 import MenuHOC, { MenuType } from './MenuHOC';
 import anime from 'animejs';
-import './searchbox.css';
+import './searchbox.scss';
 
 const KEY_NEW_LINE = 13;
 let currentAnimation = null;

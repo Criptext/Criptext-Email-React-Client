@@ -2,7 +2,8 @@ import { connect } from 'react-redux';
 import {
   loadEvents,
   loadThreads,
-  filterThreadsByUnread
+  filterThreadsByUnread,
+  startLoadThread
 } from '../actions/index';
 import ThreadsView from '../components/ThreadsWrapper';
 import { ButtonSyncType } from '../components/ButtonSync';
@@ -34,12 +35,14 @@ const mapStateToProps = (state, ownProps) => {
   const buttonSyncStatus = defineStatus(
     state.get('activities').get('isSyncing')
   );
+  const isLoadingThreads = state.get('activities').get('isLoadingThreads');
   const threads = state.get('threads');
   const unreadThreads = state
     .get('threads')
     .filter(thread => thread.get('unread'));
   return {
     buttonSyncStatus,
+    isLoadingThreads,
     mailboxTitle,
     switchUnreadThreadsStatus,
     threads: switchUnreadThreadsStatus ? unreadThreads : threads
@@ -49,6 +52,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     onLoadThreads: (mailbox, clear, searchParams, date, threadIdRejected) => {
+      dispatch(startLoadThread());
       const labelId = LabelType[mailbox].id;
       const contactTypes = defineContactType(
         labelId,

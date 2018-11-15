@@ -1,32 +1,31 @@
 import signal from './../libs/signal';
 import {
   acknowledgeEvents,
+  cleanDatabase,
+  composerEvents,
   createEmail,
   createEmailLabel,
+  createFeedItem,
   createLabel,
+  deleteEmailByKeys,
+  deleteEmailLabel,
+  deleteEmailsByThreadIdAndLabelId,
   getEmailByKey,
   getEmailsByKeys,
+  getEmailsByThreadId,
   getEmailLabelsByEmailId,
   getEvents,
-  LabelType,
   getContactByEmails,
-  createFeedItem,
+  getLabelsByText,
+  LabelType,
+  logoutApp,
   myAccount,
+  setInternetConnectionStatus,
   updateEmail,
   updateEmails,
-  getLabelsByText,
   updateAccount,
   updateFilesByEmailId,
-  deleteEmailsByThreadIdAndLabelId,
-  deleteEmailByKeys,
-  updateUnreadEmailByThreadIds,
-  getEmailsByThreadId,
-  deleteEmailLabel,
-  cleanDatabase,
-  logoutApp,
-  setInternetConnectionStatus,
-  composerEvents,
-  openEmailInComposer
+  updateUnreadEmailByThreadIds
 } from './electronInterface';
 import {
   checkEmailIsTo,
@@ -41,6 +40,7 @@ import { SocketCommand, appDomain, EmailStatus } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
+import { openFilledComposerWindow } from './../utils/ipc';
 
 const eventPriority = {
   NEW_EMAIL: 0,
@@ -408,7 +408,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
         });
       }
       const isFromMe = from === myAccount.recipientId;
-      const isOpened = type === EmailStatus.OPENED;
+      const isOpened = type === EmailStatus.READ;
       if (!isFromMe && isOpened) {
         const contactEmail = `${from}@${appDomain}`;
         const [contact] = await getContactByEmails([contactEmail]);
@@ -541,7 +541,8 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
 
   const hasInbox =
     labelIdsToAdd.includes(LabelType.inbox.id) ||
-    labelIdsToRemove.includes(LabelType.inbox.id);
+    labelIdsToRemove.includes(LabelType.inbox.id) ||
+    labelIdsToAdd.includes(LabelType.trash.id);
   const hasSpam =
     labelIdsToAdd.includes(LabelType.spam.id) ||
     labelIdsToRemove.includes(LabelType.spam.id);
@@ -752,7 +753,7 @@ ipcRenderer.on(
   (ev, { subject, content, emailAddress }) => {
     const disabledSendButtonStatus = 1;
     const enabledSendButtonStatus = 2;
-    openEmailInComposer({
+    openFilledComposerWindow({
       type: composerEvents.NEW_WITH_DATA,
       data: {
         email: { subject, content },

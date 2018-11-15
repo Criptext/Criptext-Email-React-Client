@@ -57,7 +57,7 @@ export const EmailStatus = {
   SENDING: 4,
   SENT: 5,
   DELIVERED: 6,
-  OPENED: 7
+  READ: 7
 };
 
 export const SocketCommand = {

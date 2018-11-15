@@ -2,12 +2,12 @@
 
 exports[`Label actions - ADD_BATCH should add labels to state 1`] = `
 Immutable.Map {
-  1: Immutable.Map {
-    id: 1,
-    color: "#ffffff",
-    text: "Inbox",
-    badge: 1,
-    visible: true,
+  "1": Immutable.Map {
+    "id": 1,
+    "color": "#ffffff",
+    "text": "Inbox",
+    "badge": 1,
+    "visible": true,
   },
 }
 `;

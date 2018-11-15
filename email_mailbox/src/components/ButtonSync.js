@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './buttonsync.css';
+import './buttonsync.scss';
 
 const ButtonSync = props => (
   <button

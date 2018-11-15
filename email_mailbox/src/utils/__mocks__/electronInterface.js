@@ -1,4 +1,4 @@
-export const openComposerWindow = () => {};
+export const openEmptyComposerWindow = () => {};
 
 export const getAllLabels = async () => {
   const response = await fetch('/labels.json');

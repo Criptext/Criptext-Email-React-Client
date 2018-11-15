@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import HeaderActionTooltip from './HeaderActionTooltip';
-import './buttoncircle.css';
+import './buttoncircle.scss';
 
 const ButtonCircle = props => (
   <div

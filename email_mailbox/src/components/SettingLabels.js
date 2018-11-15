@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './settinglabel.css';
+import './settinglabel.scss';
 import CustomCheckbox from './CustomCheckbox';
 
 const SettingLabels = props => (

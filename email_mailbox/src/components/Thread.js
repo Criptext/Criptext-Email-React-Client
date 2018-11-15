@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Email from './../containers/Email';
 import Label from './Label';
 import Message from '../containers/Message';
-import './thread.css';
+import './thread.scss';
 
 class Thread extends Component {
   componentWillReceiveProps(nextProps) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './emailactions.css';
+import './emailactions.scss';
 
 const EmailActions = props => {
   return (

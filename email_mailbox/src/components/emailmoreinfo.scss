@@ -14,11 +14,16 @@
     margin: 10px auto;
 
     td{
+      line-height: initial;
       padding: 2px 0;
 
       &:first-child{
         min-width: 69px;
         vertical-align: top;
+      }
+
+      span{
+        font-size: 12px;
       }
 
       .title{

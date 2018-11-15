@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './label.css';
+import './label.scss';
 
 const Label = props => (
   <span className="label-tag" style={{ backgroundColor: props.label.color }}>
