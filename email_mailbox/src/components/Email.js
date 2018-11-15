@@ -6,7 +6,7 @@ import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
 import ButtonUnsend from './ButtonUnsendWrapper';
 import { EmailStatus } from './../utils/const';
-import './email.css';
+import './email.scss';
 
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
 const PopOverEmailActions = MenuHOC(EmailActions);

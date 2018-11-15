@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './profilepreview.css';
+import './profilepreview.scss';
 
 const ProfilePreview = props => (
   <div className="profile-preview">

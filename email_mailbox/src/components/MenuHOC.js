@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './menuhoc.css';
+import './menuhoc.scss';
 
 const MenuHOC = InComponent =>
   class Menu extends Component {

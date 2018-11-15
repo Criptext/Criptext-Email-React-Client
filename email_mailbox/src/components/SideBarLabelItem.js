@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './sidebarlabelitem.css';
+import './sidebarlabelitem.scss';
 
 const SideBarLabelItem = props => (
   <li className="nav-item-label">

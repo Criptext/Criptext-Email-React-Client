@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './popuphoc.css';
+import './popuphoc.scss';
 
 const PopupHOC = InComponent =>
   class Popup extends Component {

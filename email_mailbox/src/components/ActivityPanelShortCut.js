@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './activitypanelshortcut.css';
+import './activitypanelshortcut.scss';
 
 const ActivityPanelShortCut = props => (
   <div

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
-import './searchoptions.css';
+import './searchoptions.scss';
 
 const SearchOptions = props => (
   <div className="search-options">

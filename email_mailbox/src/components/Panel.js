@@ -9,7 +9,7 @@ import PopupHOC from './PopupHOC';
 import DeviceRemovedPopup from './DeviceRemovedPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
-import './panel.css';
+import './panel.scss';
 
 const Panel = props => (
   <div

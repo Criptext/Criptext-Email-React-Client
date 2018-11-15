@@ -5,7 +5,7 @@ import SettingLabelsWrapper from './SettingLabelsWrapper';
 import SettingDevicesWrapper from './SettingDevicesWrapper';
 import Message from '../containers/Message';
 import { version } from './../../package.json';
-import './settings.css';
+import './settings.scss';
 
 const Sections = ['general', 'labels', 'trusted devices'];
 

@@ -4,7 +4,7 @@ import SideBarItem from './../components/SideBarItem';
 import SideBarLabelItem from './../containers/SideBarLabelItem';
 import LabelAdd from './../containers/LabelAdd';
 import { openEmptyComposerWindow } from './../utils/ipc';
-import './sidebar.css';
+import './sidebar.scss';
 
 const SideBar = props => (
   <aside className="sidebar-app">

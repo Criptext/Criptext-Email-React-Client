@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './changerecoveryemailpopup.css';
+import './changerecoveryemailpopup.scss';
 
 const recoveryEmailText = 'Enter your new Recovery email';
 const passwordText = 'To confirm enter your password';

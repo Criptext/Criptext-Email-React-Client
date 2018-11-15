@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SearchBox from './SearchBox';
 import ProfileShortCutWrapper from './ProfileShortCutWrapper';
-import './headermain.css';
+import './headermain.scss';
 
 const HeaderMain = props => (
   <div className="header-main">

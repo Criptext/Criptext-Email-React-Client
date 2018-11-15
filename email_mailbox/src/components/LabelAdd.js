@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './labeladd.css';
+import './labeladd.scss';
 
 const LabelAdd = props => (
   <li className="nav-item-label nav-item-label-add">

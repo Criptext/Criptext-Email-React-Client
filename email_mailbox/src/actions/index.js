@@ -1,5 +1,5 @@
 import { startLoadThread } from './activity';
-import { addContacts, addContact } from './contacts';
+import { addContacts } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
   addLabelIdThread,
@@ -61,10 +61,9 @@ import {
   updateAllFeedItemsAsOlder,
   updateFeedItemSuccess
 } from './feeditems';
-import { setThreads, loadSuggestions } from './suggestions';
+import { loadSuggestions } from './suggestions';
 
 export {
-  addContact,
   addContacts,
   addEmails,
   addFiles,
@@ -109,7 +108,6 @@ export {
   selectFeedItem,
   searchThreads,
   sendOpenEvent,
-  setThreads,
   startLoadThread,
   unsendEmail,
   unsendEmailFiles,

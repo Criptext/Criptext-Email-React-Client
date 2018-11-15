@@ -7,7 +7,7 @@ import Message from './../containers/Message';
 import ButtonSync from './ButtonSync';
 import ItemTooltip from './ItemTooltip';
 import ReactTooltip from 'react-tooltip';
-import './threads.css';
+import './threads.scss';
 
 const Threads = props => (
   <div className="threads-container">

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import LabelAdd from '../components/LabelAdd';
-import './labeladd.css';
+import './labeladd.scss';
 
 class LabelAddWrapper extends Component {
   constructor() {

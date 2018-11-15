@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import data from './../data/welcome';
 import Lottie from './Lottie';
-import './welcome.css';
+import './welcome.scss';
 const ARTICLE_AMOUNT = Object.keys(data).length;
 
 const Welcome = props => (

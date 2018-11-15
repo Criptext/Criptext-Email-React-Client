@@ -21,27 +21,25 @@ const renderFeed = props => (
     className={'feed-item ' + (props.seen === 0 ? 'unread-feed' : '')}
     onClick={() => onSelectFeed(props)}
   >
-    <a>
-      <div
-        className="feed-content"
-        onMouseEnter={props.onRegionEnter}
-        onMouseLeave={props.onRegionLeave}
-      >
-        <div className="feed-icon">{renderFeedIcon(props.feed)}</div>
-        <div className="feed-data">
-          <div className="feed-preview">
-            <div className="feed-title">
-              <span>{props.title}</span>
-            </div>
-            <div className="feed-subject">
-              <span>{props.subtitle}</span>
-            </div>
+    <div
+      className="feed-content"
+      onMouseEnter={props.onRegionEnter}
+      onMouseLeave={props.onRegionLeave}
+    >
+      <div className="feed-icon">{renderFeedIcon(props.feed)}</div>
+      <div className="feed-data">
+        <div className="feed-preview">
+          <div className="feed-title">
+            <span>{props.title}</span>
           </div>
-          <div className="feed-actions-time">{renderFeedActions(props)}</div>
+          <div className="feed-subject">
+            <span>{props.subtitle}</span>
+          </div>
         </div>
-        <div className="feed-clear" />
+        <div className="feed-actions-time">{renderFeedActions(props)}</div>
       </div>
-    </a>
+      <div className="feed-clear" />
+    </div>
   </li>
 );
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { deviceTypes } from './../utils/const';
 import PopupHOC from './PopupHOC';
 import RemoveDevicePopupWrapper from './RemoveDevicePopupWrapper';
-import './settingdevices.css';
+import './settingdevices.scss';
 
 const Removedevicepopup = PopupHOC(RemoveDevicePopupWrapper);
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonCircle from './ButtonCircle';
-import './standardoptions.css';
+import './standardoptions.scss';
 
 const StandardOptions = props => (
   <div className="header-action">

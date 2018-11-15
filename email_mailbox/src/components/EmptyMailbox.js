@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './emptymailbox.css';
+import './emptymailbox.scss';
 
 const EmptyMailbox = props => {
   const { header, subheader, iconClass } = defineEmptyParamsByMailbox(

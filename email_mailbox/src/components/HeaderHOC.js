@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ActivityPanelShortCut from './ActivityPanelShortCut';
-import './headerhoc.css';
+import './headerhoc.scss';
 
 const HeaderHOC = InComponent =>
   class Menu extends Component {

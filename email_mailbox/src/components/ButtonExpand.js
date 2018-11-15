@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './buttonexpand.css';
+import './buttonexpand.scss';
 
 const ButtonExpand = props => (
   <div className={'button-expand ' + defineClassButton(props.status)}>

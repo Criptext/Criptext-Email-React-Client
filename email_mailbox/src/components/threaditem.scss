@@ -16,7 +16,7 @@
     z-index: 1;
     width: calc(100% - 7px);
 
-    a {
+    .thread-item-content {
       .thread-item-file{
         visibility: hidden;
       }
@@ -57,7 +57,7 @@
     background-color: #fdfbea; 
   }
 
-  a {
+  .thread-item-content {
     align-items: center;
     color: inherit;
     display: flex;

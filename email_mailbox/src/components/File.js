@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 import { convertToHumanSize } from './../utils/StringUtils';
 import { identifyFileType } from './../utils/FileUtils';
-import './file.css';
+import './file.scss';
 
 const File = props => {
   return (
