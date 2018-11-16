@@ -10,11 +10,14 @@ import {
   importDatabase,
   clearSyncData,
   getDataReady,
-  acknowledgeEvents
+  acknowledgeEvents,
+  throwError,
+  errors
 } from '../utils/electronInterface';
 import LinkNewDevice from './LinkNewDevice';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';
+import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 import { appDomain } from '../utils/const';
 
 const ANIMATION_DURATION = 1500;
@@ -73,6 +76,8 @@ class LoadingWrapper extends Component {
         oldDeviceName={this.state.oldDeviceName}
         showContinueWaitingButton={this.state.showContinueWaitingButton}
         onClickKeepWaiting={this.handleClickKeepWaiting}
+        oldDeviceIcon={this.defineRemoteDeviceIcon()}
+        newDeviceIcon={'icon-desktop'}
       />
     );
   }
@@ -113,6 +118,14 @@ class LoadingWrapper extends Component {
         );
       }
     } catch (e) {
+      if (e.code === 'ECONNREFUSED') {
+        throwError(errors.server.UNABLE_TO_CONNECT);
+      } else {
+        throwError({
+          name: e.name,
+          description: e.description || e.message
+        });
+      }
       this.linkingDevicesThrowError();
     }
   };
@@ -237,6 +250,8 @@ class LoadingWrapper extends Component {
       closeCreatingKeys();
     }
   };
+
+  defineRemoteDeviceIcon = () => defineDeviceIcon(remoteData.authorizerType);
 
   linkingDevicesThrowError = () => {
     clearTimeout(this.tm);
