@@ -22,9 +22,6 @@ class ActivityPanel extends Component {
           >
             {this.renderHeaderIcon()}
             <div className="header-title">ACTIVITY FEED</div>
-            <div className="header-button">
-              <i className="icon-next" />
-            </div>
           </div>
         </header>
         <div className="navigation-feed-content">

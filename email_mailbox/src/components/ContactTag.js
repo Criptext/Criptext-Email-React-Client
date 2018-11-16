@@ -7,7 +7,7 @@ const ContactTag = props => (
     {props.contact.name ? (
       <span className="name">{`${props.contact.name} `}</span>
     ) : null}
-    <span className="tag">{`<${props.contact.email}>`}</span>
+    <span className="tag">{props.contact.email}</span>
     {!props.isLast ? <br /> : null}
   </span>
 );
