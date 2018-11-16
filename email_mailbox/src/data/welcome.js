@@ -23,7 +23,7 @@ const defaultOptionsLock = {
 export default {
   1: {
     defaultOptions: defaultOptionsEmail,
-    title: 'Welcome',
+    title: 'Welcome!',
     description:
       'Your secure email experience starts now. Be ready for privacy without compromise.',
     speed: 1

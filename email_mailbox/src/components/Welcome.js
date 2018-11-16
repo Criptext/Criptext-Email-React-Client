@@ -8,24 +8,18 @@ const ARTICLE_AMOUNT = Object.keys(data).length;
 const Welcome = props => (
   <div className="welcome-container">
     <div className="welcome-content">
-      <section>{renderArticle(props.articleSelected)}</section>
+      <section>
+        {renderArticle(props.articleSelected, props.onClickCloseWelcome)}
+      </section>
       {renderDots(props.articleSelected)}
-      {props.articleSelected === ARTICLE_AMOUNT ? (
-        <button
-          className="button-x"
-          onClick={() => props.onClickCloseWelcome()}
-        >
-          <i className="icon-exit" />
-        </button>
-      ) : null}
-      {props.articleSelected !== 1 ? (
+      {props.articleSelected !== 1 && (
         <button
           className="button-a-circle back"
           onClick={() => props.onClickBackArticle()}
         >
           <i className="icon-back" />
         </button>
-      ) : null}
+      )}
       {props.articleSelected !== ARTICLE_AMOUNT ? (
         <button
           className="button-a-circle next"
@@ -33,14 +27,25 @@ const Welcome = props => (
         >
           <i className="icon-next" />
         </button>
-      ) : null}
+      ) : (
+        <button
+          className="button-a-circle next"
+          onClick={() => props.onClickCloseWelcome()}
+        >
+          <i className="icon-check" />
+        </button>
+      )}
     </div>
     <div className="welcome-overlay" />
   </div>
 );
 
-const renderArticle = articleId => (
-  <Article key={articleId} article={data[articleId]} />
+const renderArticle = (articleId, onClickClose) => (
+  <Article
+    key={articleId}
+    article={data[articleId]}
+    onClickClose={onClickClose}
+  />
 );
 
 const Article = props => {
@@ -54,6 +59,9 @@ const Article = props => {
       />
       <span>{props.article.title}</span>
       <p>{props.article.description}</p>
+      <button className="button-b" onClick={() => props.onClickClose()}>
+        skip tour
+      </button>
     </article>
   );
 };
@@ -70,7 +78,8 @@ const renderDots = itemSelected => (
 );
 
 Article.propTypes = {
-  article: PropTypes.object
+  article: PropTypes.object,
+  onClickClose: PropTypes.func
 };
 
 Welcome.propTypes = {

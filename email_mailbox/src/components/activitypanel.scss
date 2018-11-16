@@ -84,23 +84,6 @@ aside.navigation-feed-container{
         text-align: left;
         color: white;
       }
-
-      .header-button {
-        cursor: pointer;
-        display: none;
-        float: right;
-        font-size: 24px;
-        height: $_HEIGHT_HEADER;
-        margin: 0%;
-        text-align: center;
-        width: 25%;
-
-        i {
-          position:relative;
-          top: calc(50% - 13px);
-          color: white;
-        }
-      }
     }
   }
 }

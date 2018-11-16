@@ -1,4 +1,4 @@
-$_HEIGHT_WELCOME_CONTENT: 300px;
+$_HEIGHT_WELCOME_CONTENT: 310px;
 $_SIZE_BUTTON_CIRCLE: 38px;
 
 .welcome-container{
@@ -36,12 +36,22 @@ $_SIZE_BUTTON_CIRCLE: 38px;
         span{
           font-size: 22px;
           font-weight: 700;
+          margin-top: 15px;
         }
 
         p{
           color: #9b9b9b;
           font-size: 14px;
           font-weight: 300;
+          margin-top: 10px;
+        }
+
+        button{
+          font-size: 14px;
+          font-weight: 300;
+          margin: 10px auto;
+          text-transform: uppercase;
+          width: 85px;
         }
       }
     }
@@ -65,12 +75,6 @@ $_SIZE_BUTTON_CIRCLE: 38px;
           opacity: 1;
         }
       }
-    }
-
-    .button-x{
-      position: absolute;
-      top: 15px;
-      right: 15px;
     }
 
     .button-a-circle{

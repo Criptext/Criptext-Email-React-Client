@@ -306,7 +306,7 @@ TABLE OF CONTENTS
 .icon-check:before {
   content: "\e919";
 }
-.icon-next2:before {
+.icon-next:before {
   content: "\e938";
 }
 .icon-back:before {
@@ -326,9 +326,6 @@ TABLE OF CONTENTS
 }
 .icon-incorret:before {
   content: "\e921";
-}
-.icon-next:before {
-  content: "\e910";
 }
 .icon-time:before {
   content: "\e93c";
@@ -387,7 +384,7 @@ TABLE OF CONTENTS
 .icon-plus:before {
   content: "\e932";
 }
-.icon-minus:before {
+.icon-minimize:before {
   content: "\e933";
 }
 .icon-exit:before {
@@ -704,25 +701,6 @@ button{
     span{
       font-size: 13px;
     }
-  }
-}
-
-.button-x{
-  background-color: white;
-  border: 2px solid #cdcdcd;
-  border-radius: 50%;
-  height: 20.4px;
-  padding: 0;
-  position: relative;
-  width: 20.4px;
-
-  i{
-    color: #6e6e6e;
-    font-size: 18px;
-    font-weight: bold;
-    left: -1px;
-    position: absolute;
-    top: -1px;
   }
 }
 
