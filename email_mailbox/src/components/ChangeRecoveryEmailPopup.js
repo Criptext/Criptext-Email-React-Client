@@ -42,6 +42,14 @@ const ChangeRecoveryEmailPopup = props => {
           hasError={props.recoveryEmailPopupInputPassword.hasError}
           errorMessage={props.recoveryEmailPopupInputPassword.errorMessage}
         />
+        <div className="forgot-password-link">
+          <button
+            className="button button-b"
+            onClick={props.onClickForgotPasswordLink}
+          >
+            Forgot password?
+          </button>
+        </div>
       </div>
       <div className="popup-paragraph change-recovery-email-note">
         <p>
@@ -108,6 +116,7 @@ const ChangeRecoveryEmailPopupButtons = props => (
 ChangeRecoveryEmailPopup.propTypes = {
   onChangeInputValueOnChangeRecoveryEmailPopup: PropTypes.func,
   onClickChangeRecoveryEmailInputType: PropTypes.func,
+  onClickForgotPasswordLink: PropTypes.func,
   recoveryEmailPopupInputEmail: PropTypes.object,
   recoveryEmailPopupInputPassword: PropTypes.object
 };

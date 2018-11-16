@@ -15,12 +15,17 @@ import {
   updateAccount,
   updateContactByEmail,
   updateNameEvent,
-  resendConfirmationEmail
+  resendConfirmationEmail,
+  resetPassword
 } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
 import { appDomain } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
 import { clearStorage } from '../utils/storage';
+import {
+  sendResetPasswordSendLinkSuccessMessage,
+  sendResetPasswordSendLinkErrorMessage
+} from '../utils/electronEventInterface';
 
 const defineSystemLabels = labelsArray => {
   return labelsArray.filter(label => {
@@ -162,6 +167,15 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateLabel: params => {
       dispatch(updateLabel(params));
+    },
+    onResetPassword: async () => {
+      const { recipientId } = myAccount;
+      const { status } = await resetPassword(recipientId);
+      if (status === 200) {
+        sendResetPasswordSendLinkSuccessMessage();
+        return;
+      }
+      sendResetPasswordSendLinkErrorMessage();
     }
   };
 };

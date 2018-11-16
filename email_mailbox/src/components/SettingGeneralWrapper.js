@@ -212,6 +212,7 @@ class SettingGeneralWrapper extends Component {
         onClickCloseTwoFactorEnabledPopup={
           this.handleClickCloseTwoFactorEnabledPopup
         }
+        onClickForgotPasswordLink={this.handleClickForgotPasswordLink}
       />
     );
   }
@@ -731,6 +732,18 @@ class SettingGeneralWrapper extends Component {
     });
   };
 
+  handleClickForgotPasswordLink = () => {
+    this.setState(
+      {
+        isHiddenSettingsPopup: false,
+        settingsPupopType: SETTINGS_POPUP_TYPES.NONE
+      },
+      () => {
+        this.props.onResetPassword();
+      }
+    );
+  };
+
   initEventHandlers = () => {
     addEvent(Event.RECOVERY_EMAIL_CHANGED, recoveryEmail => {
       this.setState({
@@ -756,6 +769,7 @@ SettingGeneralWrapper.propTypes = {
   onDeleteDeviceData: PropTypes.func,
   onLogout: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
+  onResetPassword: PropTypes.func,
   onUpdateAccount: PropTypes.func,
   onUpdateContact: PropTypes.func,
   recoveryEmail: PropTypes.string,

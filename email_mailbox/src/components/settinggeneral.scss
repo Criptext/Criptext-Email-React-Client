@@ -1,6 +1,10 @@
 @import "./../styles/index.scss";
 
 #setting-general{
+  .forgot-password-link {
+    display: flex;
+    flex-direction: row-reverse;
+  }
   .section-block{
     &:nth-child(1){
       .section-block-content{
