@@ -132,6 +132,10 @@ export const postPeerEvent = params => {
   return clientManager.postPeerEvent(params);
 };
 
+export const resetPassword = recipientId => {
+  return clientManager.resetPassword(recipientId);
+};
+
 export const setTwoFactorAuth = enable => {
   return clientManager.setTwoFactorAuth(enable);
 };

@@ -87,6 +87,11 @@ const messagesContent = {
     twoFactorAuthTurnOff: {
       priority: messagePriorities.MEDIUM,
       description: 'Two-Factor Authentication was turned off'
+    },
+    resetPasswordSendLink: {
+      priority: messagePriorities.MEDIUM,
+      description:
+        'A reset link was sent to your recovery email. The link will be valid for 30 minutes'
     }
   },
   error: {
@@ -149,12 +154,17 @@ const messagesContent = {
     },
     unsendEmail: {
       priority: messagePriorities.MEDIUM,
-      description: 'Failed to unsend the email. Unknow status code:'
+      description: 'Failed to unsend the email. Unknown status code:'
     },
     unsendEmailExpired: {
       priority: messagePriorities.MEDIUM,
       description:
         'Failed to unsend the email. Time (1h) for unsending has already expired.'
+    },
+    resetPasswordSendLink: {
+      priority: messagePriorities.MEDIUM,
+      description:
+        'You need to set and confirm a Recovery Email to reset your password'
     }
   },
   establish: {

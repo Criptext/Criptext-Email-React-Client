@@ -30,6 +30,14 @@ const ChangePasswordPopupInputs = props => {
         hasError={props.oldPasswordInput.hasError}
         errorMessage={props.oldPasswordInput.errorMessage}
       />
+      <div className="forgot-password-link">
+        <button
+          className="button button-b"
+          onClick={props.onClickForgotPasswordLink}
+        >
+          Forgot password?
+        </button>
+      </div>
       <ChangePasswordPopupInput
         name={props.newPasswordInput.name}
         type={props.newPasswordInput.type}
@@ -113,7 +121,8 @@ ChangePasswordPopupInputs.propTypes = {
   newPasswordInput: PropTypes.object,
   confirmNewPasswordInput: PropTypes.object,
   onChangeInputValueChangePassword: PropTypes.func,
-  onClickChangePasswordInputType: PropTypes.func
+  onClickChangePasswordInputType: PropTypes.func,
+  onClickForgotPasswordLink: PropTypes.func
 };
 
 ChangePasswordPopupInput.propTypes = {

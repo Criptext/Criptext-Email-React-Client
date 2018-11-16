@@ -882,6 +882,22 @@ export const sendRecoveryEmailLinkConfirmationSuccessMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendResetPasswordSendLinkSuccessMessage = () => {
+  const messageData = {
+    ...Messages.success.resetPasswordSendLink,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendResetPasswordSendLinkErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.resetPasswordSendLink,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendDeviceRemovedEvent = async rowid => {
   emitter.emit(Event.DEVICE_REMOVED, null);
   return await handleDeleteDeviceData(rowid);
