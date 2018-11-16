@@ -40,7 +40,7 @@ export const defineTimeByToday = time => {
 };
 
 export const defineLargeTime = time => {
-  return moment(time).format('ddd, MMM D, YYYY [at] h:mm A');
+  return moment(time).format('ddd, D MMM YYYY [at] h:mm A');
 };
 
 export const defineLastDeviceActivity = time => {
