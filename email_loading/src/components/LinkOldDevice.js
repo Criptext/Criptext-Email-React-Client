@@ -10,14 +10,14 @@ const LinkOldDevice = props => (
         <h3>Mailbox Sync</h3>
       </div>
       <div className="linking-devices-icons">
-        <i className="icon-desktop icon-old-device" />
+        <i className={`${props.oldDeviceIcon} icon-old-device`} />
         <div className="linking-dots">
           <span className="dot" />
           <span className="dot" />
           <span className="dot" />
           <span className="dot" />
         </div>
-        <i className="icon-desktop icon-new-device" />
+        <i className={`${props.newDeviceIcon} icon-new-device`} />
       </div>
       <div className="bar">
         <div
@@ -67,6 +67,8 @@ const renderCancelSync = props => {
 };
 
 LinkOldDevice.propTypes = {
+  newDeviceIcon: PropTypes.string,
+  oldDeviceIcon: PropTypes.string,
   oldDeviceName: PropTypes.string,
   percent: PropTypes.number
 };

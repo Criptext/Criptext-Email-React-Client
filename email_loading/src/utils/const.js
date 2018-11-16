@@ -5,6 +5,8 @@ export const appDomain =
     : 'criptext.com';
 
 export const DEVICE_TYPE = 1;
+export const IOS_TYPE = 2;
+export const ANDROID_TYPE = 3;
 
 export const SocketCommand = {
   DATA_UPLOADED: 204

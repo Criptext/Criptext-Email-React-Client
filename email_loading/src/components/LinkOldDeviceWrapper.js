@@ -22,6 +22,7 @@ import {
 import LinkOldDevice from './LinkOldDevice';
 import { loadingTypes } from './Panel';
 import LinkDeviceRequest from './LinkDeviceRequest';
+import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 
 const ANIMATION_DURATION = 1500;
 
@@ -69,6 +70,8 @@ class LoadingWrapper extends Component {
         onClickRetry={this.handleClickRetry}
         onClickCancelSync={this.handleClickCancelSync}
         oldDeviceName={this.state.oldDeviceName}
+        oldDeviceIcon={'icon-desktop'}
+        newDeviceIcon={this.defineRemoteDeviceIcon()}
       />
     );
   }
@@ -212,6 +215,9 @@ class LoadingWrapper extends Component {
     closeCreatingKeys();
     sendEndLinkDevicesEvent();
   };
+
+  defineRemoteDeviceIcon = () =>
+    defineDeviceIcon(remoteData.deviceType || this.state.remoteData.deviceType);
 
   linkingDevicesThrowError = () => {
     clearTimeout(this.tm);
