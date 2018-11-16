@@ -93,11 +93,10 @@ class LoadingWrapper extends Component {
       if (e.code === 'ECONNREFUSED') {
         throwError(errors.server.UNABLE_TO_CONNECT);
       } else {
-        const errorToShow = {
+        throwError({
           name: e.name,
-          description: e.message
-        };
-        throwError(errorToShow);
+          description: e.description || e.message
+        });
       }
       this.loadingThrowError();
       return;
@@ -121,6 +120,14 @@ class LoadingWrapper extends Component {
         });
       }
     } catch (e) {
+      if (e.code === 'ECONNREFUSED') {
+        throwError(errors.server.UNABLE_TO_CONNECT);
+      } else {
+        throwError({
+          name: e.name,
+          description: e.description || e.message
+        });
+      }
       this.loadingThrowError();
     }
   };

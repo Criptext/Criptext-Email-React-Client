@@ -10,7 +10,9 @@ import {
   importDatabase,
   clearSyncData,
   getDataReady,
-  acknowledgeEvents
+  acknowledgeEvents,
+  throwError,
+  errors
 } from '../utils/electronInterface';
 import LinkNewDevice from './LinkNewDevice';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
@@ -113,6 +115,14 @@ class LoadingWrapper extends Component {
         );
       }
     } catch (e) {
+      if (e.code === 'ECONNREFUSED') {
+        throwError(errors.server.UNABLE_TO_CONNECT);
+      } else {
+        throwError({
+          name: e.name,
+          description: e.description || e.message
+        });
+      }
       this.linkingDevicesThrowError();
     }
   };

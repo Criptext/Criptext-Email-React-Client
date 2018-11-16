@@ -38,8 +38,8 @@ async function initApp() {
   }
 
   // Errors
-  ipcMain.on('throwError', (event, errorToShow) => {
-    dialog.showErrorBox(errorToShow.name, errorToShow.description);
+  ipcMain.on('throwError', (ev, { name, description }) => {
+    dialog.showErrorBox(name, description);
   });
 
   //   Login
@@ -206,6 +206,6 @@ app.on('activate', () => {
   showWindows();
 });
 
-app.on('before-quit', function() {
+app.on('before-quit', () => {
   globalManager.forcequit.set(true);
 });

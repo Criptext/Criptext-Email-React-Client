@@ -16,7 +16,8 @@ import {
   setRemoteData,
   linkAccept,
   linkDeny,
-  sendEndLinkDevicesEvent
+  sendEndLinkDevicesEvent,
+  errors
 } from '../utils/electronInterface';
 import LinkOldDevice from './LinkOldDevice';
 import { loadingTypes } from './Panel';
@@ -146,6 +147,14 @@ class LoadingWrapper extends Component {
         }
       );
     } catch (e) {
+      if (e.code === 'ECONNREFUSED') {
+        throwError(errors.server.UNABLE_TO_CONNECT);
+      } else {
+        throwError({
+          name: e.name,
+          description: e.description || e.message
+        });
+      }
       this.linkingDevicesThrowError();
     }
   };
