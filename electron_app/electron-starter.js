@@ -1,4 +1,4 @@
-const { app, ipcMain, dialog, Menu, BrowserWindow } = require('electron');
+const { app, ipcMain, dialog, Menu, BrowserWindow, Tray } = require('electron');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient');
@@ -10,7 +10,7 @@ const dialogWindow = require('./src/windows/dialog');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
-const { template, showWindows } = require('./src/windows/menu');
+const { template, showWindows, trayIconTemplate, trayIcon } = require('./src/windows/menu');
 const { processEventsQueue } = require('./src/eventQueueManager');
 const { showNotification } = require('./src/updater');
 require('./src/ipc/mailbox.js')
@@ -18,6 +18,7 @@ require('./src/ipc/composer.js')
 require('./src/ipc/utils.js')
 
 globalManager.forcequit.set(false);
+let tray = null;
 
 async function initApp() {
   try {
@@ -34,6 +35,7 @@ async function initApp() {
       mySettings.initialize(appSettings);
       wsClient.start(myAccount);
       mailboxWindow.show();
+      setTrayIcon();
     } else {
       loginWindow.show();
     }
@@ -189,6 +191,18 @@ const sendEventToAllwWindows = eventName => {
   });
 };
 
+const saveScreenSize = () => {
+  const screenSize = require('electron').screen.getPrimaryDisplay().workAreaSize;
+  globalManager.screenSize.save(screenSize);
+};
+
+const setTrayIcon = () => {
+  tray = new Tray(trayIcon);
+  const contextMenu = Menu.buildFromTemplate(trayIconTemplate);
+  tray.setToolTip('Criptext');
+  tray.setContextMenu(contextMenu);
+};
+
 //   App
 app.disableHardwareAcceleration();
 
@@ -196,8 +210,7 @@ app.on('ready', () => {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
   initApp();
-  const screenSize = require('electron').screen.getPrimaryDisplay().workAreaSize;
-  globalManager.screenSize.save(screenSize);
+  saveScreenSize();
 });
 
 app.on('window-all-closed', () => {
