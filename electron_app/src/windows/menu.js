@@ -198,16 +198,20 @@ const trayIconTemplate = [
     click: () => composerWindowManager.openNewComposer()
   },
   {
-    label: 'Check for updates...',
-    type: 'normal',
-    click: checkForUpdates
-  },
-  {
     label: 'Quit',
     type: 'normal',
     click: () => quit()
   }
 ];
+
+// Criptext menu - updater (Windows Store)
+if (!globalManager.isWindowsStore.get()) {
+  trayIconTemplate.splice(2, 0, {
+    label: 'Check for updates...',
+    type: 'normal',
+    click: checkForUpdates
+  });
+}
 
 const showWindows = () => {
   const visibleWindows = BrowserWindow.getAllWindows();

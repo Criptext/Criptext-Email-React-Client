@@ -197,10 +197,20 @@ const saveScreenSize = () => {
 };
 
 const setTrayIcon = () => {
-  tray = new Tray(trayIcon);
-  const contextMenu = Menu.buildFromTemplate(trayIconTemplate);
-  tray.setToolTip('Criptext');
-  tray.setContextMenu(contextMenu);
+  if (!globalManager.isWindowsStore.get() && !tray) {
+    tray = new Tray(trayIcon);
+    const contextMenu = Menu.buildFromTemplate(trayIconTemplate);
+    tray.setToolTip('Criptext');
+    tray.setContextMenu(contextMenu);
+    tray.on('click', initApp);
+  }
+};
+
+const destroyTrayIcon = () => {
+  if (tray) {
+    tray.destroy();
+    tray = null;
+  }
 };
 
 //   App
@@ -217,6 +227,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+  destroyTrayIcon();
 });
 
 app.on('activate', () => {

@@ -7,6 +7,7 @@ global.screenSize = {};
 global.temporalAccount = {};
 global.windowsEventsDisabled = false;
 global.internetConnection;
+global.isWindowsStore = false;
 
 /*  Composer
 ----------------------------- */
@@ -53,10 +54,14 @@ const getLoadingData = () => {
   return global.loadingData;
 };
 
-/*  Mac App Store
+/*  App Store (Mac & Windows)
 ----------------------------- */
 const getMAS = () => {
   return global.isMAS;
+};
+
+const getWinStore = () => {
+  return global.isWindowsStore;
 };
 
 /*  Temporal Account
@@ -145,5 +150,8 @@ module.exports = {
   internetConnection: {
     setStatus: setInternetConnectionStatus,
     getStatus: getInternetConnectionStatus
+  },
+  isWindowsStore: {
+    get: getWinStore
   }
 };

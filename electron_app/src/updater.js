@@ -3,7 +3,7 @@ const { autoUpdater } = require('electron-updater');
 const notifier = require('node-notifier');
 const path = require('path');
 const globalManager = require('./globalManager');
-const appId = 'com.criptext.criptextmail';
+const appId = 'com.criptext.emailclient';
 
 let currentUpdaterType;
 let isDownloadingUpdate = false;

@@ -82,7 +82,9 @@ const create = () => {
     });
   });
   mailboxWindow.webContents.once('did-frame-finish-load', () => {
-    if (!globalManager.isMAS.get()) {
+    const isStore =
+      globalManager.isWindowsStore.get() || globalManager.isMAS.get();
+    if (!isStore) {
       appUpdater();
     }
   });
