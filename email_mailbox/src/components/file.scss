@@ -9,66 +9,84 @@
     border: 1px solid #e7e5e5;
     border-radius: 6px;
     display: flex;
-    height: 20px;
-    padding: 10px;
+    height: 44px;
+    padding: 7px 9px;
     position: relative;
-    width: 236px;
+    width: 278px;
   
     &:hover{
-      background-color: #f7f6f6;
-  
-      .file-content-detail .file-detail-size{
-        color: #f7f6f6;
-      }
+      background-color: #f8f7f7;
 
-      .file-button-download{
+      .file-button-container{
         display: flex;
       }
     }
   
     &.file-loading {
-      opacity: 0.5;
-  
-      .file-button-download{
-        display: none;
+
+      .file-content-icon, .file-content-detail{
+        opacity: 0.5;
       }
 
       .file-button-cancel {
         display: flex;
       }
-
-      .file-detail-size{
-        color: transparent;
-      }
     }
   
     .file-content-icon{
+      align-items: center;
+      border-radius: 3px;
+      display: flex;
+      height: 30px;
       position: relative;
-      background-color:#4a90e2;
-    
-      >div{
-        align-items: center;
-        border-radius: 4px;
-        display: flex;
-        height: 22px;
-        width: 22px;
-        font-size: 18px;
-    
-        i{
-          color: white;
-          margin: 0 auto;
-        }
+      width: 30px;
+
+      &.file-content-icon-image { 
+        background-color: #99ccff; 
       }
-    
-      .icon-container-file-default{
-        background-color: #4a90e2;
+
+      &.file-content-icon-pdf { 
+        background-color: #ff4539; 
+      }
+
+      &.file-content-icon-zip{ 
+        background-color: #ffe196; 
+      }
+
+      &.file-content-icon-audio{ 
+        background-color: #f0ba02;
+      }
+
+      &.file-content-icon-video{ 
+        background-color: #00a49e;
+      }
+
+      &.file-content-icon-ppt{ 
+        background-color: #d64123;
+      }
+
+      &.file-content-icon-word{ 
+        background-color: #2b5697;
+      }
+
+      &.file-content-icon-excel{ 
+        background-color: #4d9c45;
+      }
+
+      &.file-content-icon-file-default { 
+        background-color: #4a90e2; 
+      }
+
+      i{
+        color: white;
+        font-size: 26px;
+        margin: 0 auto;
       }
     }
 
     .file-content-detail{
       display: flex;
-      flex-grow: 1;
-      height: 100%;
+      flex-direction: column;
       margin-left: 10px;
       width: calc(100% - 32px);
     
@@ -76,64 +94,58 @@
         flex-grow: 1;
         font-size: 14px;
         font-weight: 700;
+        max-height: 38px;
         overflow: hidden;
         padding-right: 5px;
         text-overflow: ellipsis;
-        white-space: nowrap;
+        white-space: pre-wrap;
       }
     
       .file-detail-size{
         color: #9b9b9b;
         flex-grow: 0;
-        font-size: 13px;
+        font-size: 11px;
         white-space: nowrap;
-        line-height: 21px;
       }
     }
 
-    .file-button-download{
-      background: transparent;
+    .file-button-container{
+      align-items: center;
+      background-image: linear-gradient(left, rgba(255, 255, 255, 0.2) 0%, #f8f7f7 50%);
+      border-radius: 6px;
       display: none;
+      height: 58px;
+      justify-content: flex-end;
       position: absolute;
-      right: 20px;
-      
-      i{
-        color: #89909a;
-        font-size: 13px;
-      }
-    }
-  
-    .file-button-cancel{
-      background: transparent;
-      position: absolute;
-      right: 12px;
-      top: 7px;
-  
-      i{
-        color: #89909a;
-        font-size: 25px;
-      }
-    }
-  
-    .file-tooltip{
-      background-color: #e1e1e1 !important;
-      color: black !important;
-      font-weight: normal;
-      font-size: 10.5px !important;
-      border-radius: 3px !important;
-      padding: 4px 16px !important;
-     
-        &:after{
-          border-top-color: #e1e1e1 !important;
-          border-bottom-color: #e1e1e1 !important;
+      right: 0;
+      top: 0;
+      width: 70px;
+
+      >button{
+        background: transparent;
+        margin-right: 10px;
+
+        &.file-button-cancel{
+          i{
+            font-weight: bold;
+          }
         }
+
+        i{
+          color: #89909a;
+          font-size: 25px;
+        }
+      }
     }
   }
 
-  .file-bar-loading {
-    height: 2px;
+  .file-bar-loading{
     background-color: #0091ff;
-    position: relative;
-    top: -2px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    bottom: 1px;
+    left: 2px;
+    height: 2px;
+    position: absolute;
   }
 }

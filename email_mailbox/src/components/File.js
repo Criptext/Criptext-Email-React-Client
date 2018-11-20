@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactTooltip from 'react-tooltip';
 import { convertToHumanSize } from './../utils/StringUtils';
 import { identifyFileType } from './../utils/FileUtils';
 import './file.scss';
@@ -21,19 +20,11 @@ const File = props => {
             {convertToHumanSize(props.file.size, true)}
           </span>
         </div>
-        {props.displayProgressBar
-          ? renderCancelButton(props)
-          : renderDownloadButton(props)}
-        <ReactTooltip
-          place="bottom"
-          className="file-tooltip"
-          id={props.file.token}
-          type="dark"
-          effect="solid"
-          target={props.file.token}
-        >
-          {props.file.name}
-        </ReactTooltip>
+        <div className="file-button-container">
+          {props.displayProgressBar
+            ? renderCancelButton(props)
+            : renderDownloadButton(props)}
+        </div>
       </div>
       {props.displayProgressBar && renderProgressBar(props.percentage)}
     </div>
@@ -60,10 +51,8 @@ const defineClassFile = status => {
 const renderFileIcon = mimeType => {
   const filetype = identifyFileType(mimeType);
   return (
-    <div className="file-content-icon">
-      <div className={`icon-container-${filetype}`}>
-        <i className={`icon-${filetype}`} />
-      </div>
+    <div className={`file-content-icon file-content-icon-${filetype}`}>
+      <i className={`icon-${filetype}`} />
     </div>
   );
 };
@@ -87,7 +76,10 @@ const renderCancelButton = props => (
 );
 
 const renderProgressBar = percentage => (
-  <div className="file-bar-loading" style={{ width: percentage + '%' }} />
+  <div
+    className="file-bar-loading"
+    style={{ width: `calc(${percentage}% - 4px)` }}
+  />
 );
 
 const FileStatus = {
