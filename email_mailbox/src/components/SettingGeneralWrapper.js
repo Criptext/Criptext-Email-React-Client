@@ -43,7 +43,9 @@ import {
   setLastRecoveryEmail,
   setLastRecoveryEmailConfirmed,
   getShowEmailPreviewStatus,
-  setShowEmailPreviewStatus
+  setShowEmailPreviewStatus,
+  setReadReceiptsStatus,
+  getReadReceiptsStatus
 } from '../utils/storage';
 
 const EDITING_MODES = {
@@ -140,7 +142,11 @@ class SettingGeneralWrapper extends Component {
           hasError: true
         }
       },
-      emailPreviewEnabled: getShowEmailPreviewStatus()
+      emailPreviewEnabled: getShowEmailPreviewStatus(),
+      readReceipts: {
+        enabled: props.readReceiptsEnabled,
+        isLoading: true
+      }
     };
     this.initEventHandlers();
   }
@@ -218,6 +224,9 @@ class SettingGeneralWrapper extends Component {
         onClickForgotPasswordLink={this.handleClickForgotPasswordLink}
         onChangeSwitchEmailPreview={this.handleChangeSwitchEmailPreview}
         emailPreviewEnabled={this.state.emailPreviewEnabled}
+        onChangeSwitchReadReceipts={this.handleChangeSwitchReadReceipts}
+        readReceiptsEnabled={this.state.readReceipts.enabled}
+        readReceiptsLabelisLoading={this.state.readReceipts.isLoading}
       />
     );
   }
@@ -235,7 +244,12 @@ class SettingGeneralWrapper extends Component {
       const stillTwoFactorAuthLoading = this.state.twoFactorParams.isLoading;
       const stillRecoveryEmailLoading = this.state.recoveryEmailParams
         .isLoading;
-      if (stillTwoFactorAuthLoading || stillRecoveryEmailLoading) {
+      const stillReadReceiptsLoading = this.state.readReceipts.isLoading;
+      if (
+        stillTwoFactorAuthLoading ||
+        stillRecoveryEmailLoading ||
+        stillReadReceiptsLoading
+      ) {
         this.setState({
           twoFactorParams: {
             ...this.state.twoFactorParams,
@@ -247,6 +261,11 @@ class SettingGeneralWrapper extends Component {
             recoveryEmail: getLastRecoveryEmail(),
             recoveryEmailConfirmed: getLastRecoveryEmailConfirmed() === 'true',
             isLoading: false
+          },
+          readReceipts: {
+            ...this.state.readReceipts,
+            enabled: getReadReceiptsStatus() === 'true',
+            isLoading: false
           }
         });
       }
@@ -256,6 +275,7 @@ class SettingGeneralWrapper extends Component {
   componentWillReceiveProps(nextProps) {
     const newRecoveryEmailParams = {};
     const newTwoFactorParams = {};
+    const newReadReceipts = {};
     if (
       nextProps.recoveryEmail &&
       this.state.recoveryEmail !== nextProps.recoveryEmail
@@ -277,6 +297,13 @@ class SettingGeneralWrapper extends Component {
       newTwoFactorParams.isLoading = false;
       setTwoFactorAuthStatus(nextProps.twoFactorAuth);
     }
+    if (
+      nextProps.readReceiptsEnabled &&
+      this.state.readReceipts.enabled !== nextProps.readReceiptsEnabled
+    ) {
+      newReadReceipts.enabled = nextProps.readReceiptsEnabled;
+      setReadReceiptsStatus(nextProps.readReceiptsEnabled);
+    }
     this.setState({
       recoveryEmailParams: {
         ...this.state.recoveryEmailParams,
@@ -285,6 +312,10 @@ class SettingGeneralWrapper extends Component {
       twoFactorParams: {
         ...this.state.twoFactorParams,
         ...newTwoFactorParams
+      },
+      readReceipts: {
+        ...this.state.readReceipts,
+        ...newReadReceipts
       }
     });
   }
@@ -761,6 +792,35 @@ class SettingGeneralWrapper extends Component {
     );
   };
 
+  handleChangeSwitchReadReceipts = ev => {
+    const prevValue = this.state.readReceipts.enabled;
+    const nextValue = ev.target.checked;
+    this.setState(
+      {
+        readReceipts: {
+          ...this.state.readReceipts,
+          isLoading: true
+        }
+      },
+      async () => {
+        const status = await this.props.onSetReadReceiptsTracking(nextValue);
+        let enabled;
+        if (status === 200) {
+          enabled = nextValue;
+          setReadReceiptsStatus(nextValue);
+        } else {
+          enabled = prevValue;
+        }
+        this.setState({
+          readReceipts: {
+            enabled,
+            isLoading: false
+          }
+        });
+      }
+    );
+  };
+
   initEventHandlers = () => {
     addEvent(Event.RECOVERY_EMAIL_CHANGED, recoveryEmail => {
       this.setState({
@@ -787,8 +847,10 @@ SettingGeneralWrapper.propTypes = {
   onLogout: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,
+  onSetReadReceiptsTracking: PropTypes.func,
   onUpdateAccount: PropTypes.func,
   onUpdateContact: PropTypes.func,
+  readReceiptsEnabled: PropTypes.bool,
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   twoFactorAuth: PropTypes.bool

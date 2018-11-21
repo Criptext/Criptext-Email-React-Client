@@ -6,11 +6,6 @@ const FILE_SERVER_APP_ID = 'qynhtyzjrshazxqarkpy';
 const FILE_SERVER_KEY = 'lofjksedbxuucdjjpnby';
 const PROD_DATA_TRANSFER_URL = 'https://transfer.criptext.com';
 
-const appDomain =
-  process.env.NODE_ENV === 'development'
-    ? process.env.REACT_APP_APPDOMAIN
-    : 'criptext.com';
-
 module.exports = {
   FILE_SERVER_APP_ID,
   FILE_SERVER_KEY,
@@ -18,6 +13,5 @@ module.exports = {
   DEV_SERVER_URL,
   PROD_SOCKET_URL,
   DEV_SOCKET_URL,
-  PROD_DATA_TRANSFER_URL,
-  appDomain
+  PROD_DATA_TRANSFER_URL
 };
