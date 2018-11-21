@@ -2,13 +2,16 @@ const { client: WebSocketClient } = require('websocket');
 const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
 const SOCKET_URL =
   process.env.NODE_ENV === 'development' ? DEV_SOCKET_URL : PROD_SOCKET_URL;
-var client, reconnect, messageListener, socketConnection;
-var reconnectDelay = 2000;
+let client, reconnect, messageListener, socketConnection;
+const reconnectDelay = 2000;
 const globalManager = require('./globalManager');
 const NETWORK_STATUS = {
   ONLINE: 'online',
   OFFLINE: 'offline'
 };
+const pingDelay = 15000;
+let shouldSendPing;
+let timeout;
 
 const setMessageListener = mListener => (messageListener = mListener);
 
@@ -34,6 +37,8 @@ const start = ({ jwt }) => {
     socketConnection = connection;
     setConnectionStatus(NETWORK_STATUS.ONLINE);
     log('Socket connection opened');
+    initPingParams();
+    checkAlive();
 
     connection.on('error', error => {
       handleError(error, 'Connection Error');
@@ -45,6 +50,9 @@ const start = ({ jwt }) => {
     connection.on('message', data => {
       const message = JSON.parse(data.utf8Data);
       messageListener(message);
+    });
+    connection.on('pong', data => {
+      shouldSendPing = data.toString();
     });
   });
 
@@ -82,6 +90,22 @@ const setConnectionStatus = networkStatus => {
     default:
       break;
   }
+};
+
+const initPingParams = () => {
+  shouldSendPing = undefined;
+  clearTimeout(timeout);
+};
+
+const checkAlive = () => {
+  if (shouldSendPing === undefined || shouldSendPing === '1') {
+    shouldSendPing = 0;
+  } else {
+    setConnectionStatus(NETWORK_STATUS.OFFLINE);
+    log('Error: Lost Connection. Check internet');
+  }
+  socketConnection.ping(1);
+  timeout = setTimeout(checkAlive, pingDelay);
 };
 
 module.exports = {
