@@ -28,7 +28,7 @@ const TWO_FACTOR_NOT_AVAILABLE_TEXT =
 const TWO_FACTOR_ENABLED_TEXT = 'On';
 const TWO_FACTOR_DISABLED_TEXT = 'Off';
 const READ_RECEIPTS_LABEL_TEXT =
-  "If you turn off read receipts, you won't able to see " +
+  "If you turn off read receipts, you won't be able to see " +
   'read receipts from other people';
 
 const SettingGeneral = props => (

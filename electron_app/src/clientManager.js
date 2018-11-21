@@ -245,6 +245,7 @@ class ClientManager {
     const res = await client.resetPassword(recipientId);
     return checkDeviceRemoved(res);
   }
+
   async setReadTracking(enabled) {
     const res = await client.setReadTracking(enabled);
     return checkDeviceRemoved(res);
