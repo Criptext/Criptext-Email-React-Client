@@ -33,6 +33,7 @@ const SettingGeneral = props => (
     <ProfileBlock {...props} />
     <PasswordBlock {...props} />
     <TwoFactorAuthenticationBlock {...props} />
+    <ShowEmailPreviewBlock {...props} />
     <RecoveryEmailBlock {...props} />
     <UsefulLinksBlock />
     <LogoutAccountBlock {...props} />
@@ -287,6 +288,31 @@ const renderTwoFactorTextLabel = props => {
   return <span className={labelClass}>{textLabel}</span>;
 };
 
+const ShowEmailPreviewBlock = props => (
+  <div className="section-block">
+    <div className="section-block-title">
+      <h1>Show Email Preview</h1>
+    </div>
+    <div className="section-block-content">
+      <div className="section-block-content-item">
+        <div className="email-preview-switch">
+          <div className="email-preview-switch-item">
+            <Switch
+              theme="two"
+              name="setEmailPreviewSwitch"
+              onChange={props.onChangeSwitchEmailPreview}
+              checked={!!props.emailPreviewEnabled}
+            />
+          </div>
+          <div className="email-preview-switch-label">
+            <span>{props.emailPreviewEnabled ? 'On' : 'Off'}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const ResendConfirmationRecoveryEmailLink = ({
   onClickResendConfirmationLink,
   onResendConfirmationCountdownEnd
@@ -471,6 +497,11 @@ renderTwoFactorTextLabel.propTypes = {
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   twoFactorEnabled: PropTypes.bool
+};
+
+ShowEmailPreviewBlock.propTypes = {
+  emailPreviewEnabled: PropTypes.bool,
+  onChangeSwitchEmailPreview: PropTypes.func
 };
 
 ResendConfirmationRecoveryEmailLink.propTypes = {

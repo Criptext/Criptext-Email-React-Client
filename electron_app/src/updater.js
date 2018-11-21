@@ -58,8 +58,8 @@ autoUpdater.on('update-available', () => {
 
   if (currentUpdaterType === updaterTypes.AUTO) {
     const mailboxWindow = require('./windows/mailbox');
-    const isVisibleMailbox = mailboxWindow.isVisible();
-    if (isVisibleMailbox) {
+    const isVisibleAndFocused = mailboxWindow.isVisibleAndFocused();
+    if (isVisibleAndFocused) {
       mailboxWindow.send('update-available');
     } else {
       showNotification({
@@ -129,15 +129,19 @@ const downloadUpdate = () => {
 };
 
 const showNotification = ({ title, message }) => {
-  const notifyOptions = {
-    appName: appId,
-    title,
-    message,
-    icon: iconPath,
-    timeout: 15,
-    wait: true
-  };
-  notifier.notify(notifyOptions);
+  const mailboxWindow = require('./windows/mailbox');
+  const isVisibleAndFocused = mailboxWindow.isVisibleAndFocused();
+  if (!isVisibleAndFocused) {
+    const notifyOptions = {
+      appName: appId,
+      title,
+      message,
+      icon: iconPath,
+      timeout: 15,
+      wait: true
+    };
+    notifier.notify(notifyOptions);
+  }
 };
 
 module.exports = {

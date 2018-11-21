@@ -41,7 +41,9 @@ import {
   getLastRecoveryEmail,
   getLastRecoveryEmailConfirmed,
   setLastRecoveryEmail,
-  setLastRecoveryEmailConfirmed
+  setLastRecoveryEmailConfirmed,
+  getShowEmailPreviewStatus,
+  setShowEmailPreviewStatus
 } from '../utils/storage';
 
 const EDITING_MODES = {
@@ -137,7 +139,8 @@ class SettingGeneralWrapper extends Component {
           errorMessage: '',
           hasError: true
         }
-      }
+      },
+      emailPreviewEnabled: getShowEmailPreviewStatus()
     };
     this.initEventHandlers();
   }
@@ -213,6 +216,8 @@ class SettingGeneralWrapper extends Component {
           this.handleClickCloseTwoFactorEnabledPopup
         }
         onClickForgotPasswordLink={this.handleClickForgotPasswordLink}
+        onChangeSwitchEmailPreview={this.handleChangeSwitchEmailPreview}
+        emailPreviewEnabled={this.state.emailPreviewEnabled}
       />
     );
   }
@@ -740,6 +745,18 @@ class SettingGeneralWrapper extends Component {
       },
       () => {
         this.props.onResetPassword();
+      }
+    );
+  };
+
+  handleChangeSwitchEmailPreview = ev => {
+    const status = ev.target.checked;
+    this.setState(
+      {
+        emailPreviewEnabled: status
+      },
+      () => {
+        setShowEmailPreviewStatus(status);
       }
     );
   };

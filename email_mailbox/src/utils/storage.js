@@ -97,3 +97,18 @@ export const getLastRecoveryEmailConfirmed = () => {
 export const clearStorage = () => {
   localStorage.clear();
 };
+
+export const setShowEmailPreviewStatus = status => {
+  localStorage.setItem('showEmailPreviewStatus', status);
+};
+
+export const getShowEmailPreviewStatus = () => {
+  return localStorage.getItem('showEmailPreviewStatus') === 'true';
+};
+
+const initShowEmailPreviewStatus = () => {
+  if (localStorage.getItem('showEmailPreviewStatus') === null) {
+    setShowEmailPreviewStatus(true);
+  }
+};
+initShowEmailPreviewStatus();
