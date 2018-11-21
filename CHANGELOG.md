@@ -1,5 +1,51 @@
 # Change Log
 
+## [0.13.9](https://github.com/criptext/Criptext-Email-React-Client/tree/0.13.9) (2018-11-19)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.13.6...0.13.9)
+
+**Implemented enhancements:**
+
+- Composer/Mailbox: Contextual menu [\#520](https://github.com/Criptext/Criptext-Email-React-Client/issues/520)
+- Mailbox: Catch mailto [\#510](https://github.com/Criptext/Criptext-Email-React-Client/issues/510)
+- App: Add 'messageId' column [\#505](https://github.com/Criptext/Criptext-Email-React-Client/issues/505)
+- Composer: autocomplete with @criptext.com if you enter a username and tap space or coma [\#358](https://github.com/Criptext/Criptext-Email-React-Client/issues/358)
+
+**Fixed bugs:**
+
+- Loading: Fix error 'name of undefined' [\#521](https://github.com/Criptext/Criptext-Email-React-Client/issues/521)
+- UI goes blank when searching "\(" or "\)" [\#513](https://github.com/Criptext/Criptext-Email-React-Client/issues/513)
+- Do not save incorrect recipient in email draft [\#508](https://github.com/Criptext/Criptext-Email-React-Client/issues/508)
+
+**Closed issues:**
+
+- Settings: Change password & Change recovery email: Add forgot password [\#530](https://github.com/Criptext/Criptext-Email-React-Client/issues/530)
+- Update views [\#528](https://github.com/Criptext/Criptext-Email-React-Client/issues/528)
+- \[Refactor\] Call composer windows with ipc [\#525](https://github.com/Criptext/Criptext-Email-React-Client/issues/525)
+- Login/Mailbox: Windows look and feel [\#523](https://github.com/Criptext/Criptext-Email-React-Client/issues/523)
+- Mailbox: Email notifications [\#519](https://github.com/Criptext/Criptext-Email-React-Client/issues/519)
+- Add loding view to thread scroll [\#516](https://github.com/Criptext/Criptext-Email-React-Client/issues/516)
+- Add Menu to open window [\#507](https://github.com/Criptext/Criptext-Email-React-Client/issues/507)
+
+**Merged pull requests:**
+
+- Update version 0.13.9 [\#534](https://github.com/Criptext/Criptext-Email-React-Client/pull/534) ([erikaperugachi](https://github.com/erikaperugachi))
+- Forgot password on Settings [\#533](https://github.com/Criptext/Criptext-Email-React-Client/pull/533) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update views [\#532](https://github.com/Criptext/Criptext-Email-React-Client/pull/532) ([erikaperugachi](https://github.com/erikaperugachi))
+- Handle errors & Link devices: Update device icons [\#529](https://github.com/Criptext/Criptext-Email-React-Client/pull/529) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix searchbox [\#527](https://github.com/Criptext/Criptext-Email-React-Client/pull/527) ([JulianAdams4](https://github.com/JulianAdams4))
+- Call by ipc and loading view to threads [\#526](https://github.com/Criptext/Criptext-Email-React-Client/pull/526) ([erikaperugachi](https://github.com/erikaperugachi))
+- Windows: Installer and Appearance settings [\#524](https://github.com/Criptext/Criptext-Email-React-Client/pull/524) ([JulianAdams4](https://github.com/JulianAdams4))
+- Email notifications && Contextual menu && Fixes [\#522](https://github.com/Criptext/Criptext-Email-React-Client/pull/522) ([JulianAdams4](https://github.com/JulianAdams4))
+- Link device fixes [\#518](https://github.com/Criptext/Criptext-Email-React-Client/pull/518) ([JulianAdams4](https://github.com/JulianAdams4))
+- Lowet case to email address [\#515](https://github.com/Criptext/Criptext-Email-React-Client/pull/515) ([erikaperugachi](https://github.com/erikaperugachi))
+- Beta [\#514](https://github.com/Criptext/Criptext-Email-React-Client/pull/514) ([erikaperugachi](https://github.com/erikaperugachi))
+- Add permission [\#512](https://github.com/Criptext/Criptext-Email-React-Client/pull/512) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix recipients & Catch mailto & Autocomplete comma/space & Fixes [\#511](https://github.com/Criptext/Criptext-Email-React-Client/pull/511) ([JulianAdams4](https://github.com/JulianAdams4))
+- Add open window option from menu. Close \#507 [\#509](https://github.com/Criptext/Criptext-Email-React-Client/pull/509) ([erikaperugachi](https://github.com/erikaperugachi))
+- Message Id [\#506](https://github.com/Criptext/Criptext-Email-React-Client/pull/506) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update Non-Criptext passphrase form [\#504](https://github.com/Criptext/Criptext-Email-React-Client/pull/504) ([JulianAdams4](https://github.com/JulianAdams4))
+- Pending events queue [\#501](https://github.com/Criptext/Criptext-Email-React-Client/pull/501) ([JulianAdams4](https://github.com/JulianAdams4))
+
 ## [0.13.6](https://github.com/criptext/Criptext-Email-React-Client/tree/0.13.6) (2018-11-06)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.13.0...0.13.6)
 
