@@ -8,53 +8,54 @@ const getAndFixContacts = async knex => {
     for (const contact of namelessContacts) {
       const contactEmailIsValid = contact.email.match(emailRegex);
 
-      if (!contactEmailIsValid) {
-        let fixedEmail = '';
-        let fixedName = '';
-        const contactEmailParts = contact.email.split(' ');
+      if (contactEmailIsValid) {
+        continue;
+      }
 
-        const lastPart = contactEmailParts[contactEmailParts.length - 1];
-        if (lastPart.match(emailRegex)) {
-          fixedEmail = lastPart;
-          fixedName = contactEmailParts
-            .slice(0, contactEmailParts.length - 1)
-            .join(' ');
-        }
+      let fixedEmail = '';
+      let fixedName = '';
+      const contactEmailParts = contact.email.split(' ');
+      const lastPart = contactEmailParts[contactEmailParts.length - 1];
+      if (lastPart.match(emailRegex)) {
+        fixedEmail = lastPart;
+        fixedName = contactEmailParts
+          .slice(0, contactEmailParts.length - 1)
+          .join(' ');
+      }
 
-        if (fixedName && fixedEmail) {
+      if (!fixedName || !fixedEmail) {
+        continue;
+      }
+
+      await trx(Table.CONTACT)
+        .where({ id: contact.id })
+        .update({
+          name: fixedName,
+          email: fixedEmail
+        })
+        .catch(async updateErr => {
+          if (!updateErr.code === 'SQLITE_CONSTRAINT') {
+            return;
+          }
+
+          const [previousDuplicatedContact] = await trx(Table.CONTACT).where({
+            email: fixedEmail
+          });
+          await trx(Table.EMAIL_CONTACT)
+            .where({ contactId: contact.id })
+            .update({
+              contactId: previousDuplicatedContact.id
+            });
           await trx(Table.CONTACT)
             .where({ id: contact.id })
+            .del();
+
+          await trx(Table.CONTACT)
+            .where({ email: fixedEmail })
             .update({
-              name: fixedName,
-              email: fixedEmail
-            })
-            .catch(async updateErr => {
-              if (updateErr.code === 'SQLITE_CONSTRAINT') {
-                const [previousDuplicatedContact] = await trx(
-                  Table.CONTACT
-                ).where({
-                  email: fixedEmail
-                });
-
-                await trx(Table.EMAIL_CONTACT)
-                  .where({ contactId: contact.id })
-                  .update({
-                    contactId: previousDuplicatedContact.id
-                  });
-
-                await trx(Table.CONTACT)
-                  .where({ id: contact.id })
-                  .del();
-
-                await trx(Table.CONTACT)
-                  .where({ email: fixedEmail })
-                  .update({
-                    email: fixedEmail.toLowerCase()
-                  });
-              }
+              email: fixedEmail.toLowerCase()
             });
-        }
-      }
+        });
     }
   });
 };
