@@ -136,6 +136,10 @@ export const resetPassword = recipientId => {
   return clientManager.resetPassword(recipientId);
 };
 
+export const setReadTracking = enabled => {
+  return clientManager.setReadTracking(enabled);
+};
+
 export const setTwoFactorAuth = enable => {
   return clientManager.setTwoFactorAuth(enable);
 };

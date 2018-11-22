@@ -53,6 +53,8 @@ const openDB = () => {
   });
 };
 
+/*  Activity Feed Open
+------------------------------------*/
 export const storeSeenTimestamp = () => {
   localStorage.setItem('seenTimestamp', Date.now());
 };
@@ -61,6 +63,8 @@ export const getSeenTimestamp = () => {
   return localStorage.getItem('seenTimestamp') || null;
 };
 
+/*  Resend Confirmation Link
+------------------------------------*/
 export const storeResendConfirmationTimestamp = miliseconds => {
   localStorage.setItem('resendConfirmationTimestamp', miliseconds);
 };
@@ -70,6 +74,8 @@ export const getResendConfirmationTimestamp = () => {
   return isNaN(timestamp) ? null : timestamp;
 };
 
+/*  Two-Factor Switch Last Status
+------------------------------------*/
 export const setTwoFactorAuthStatus = enable => {
   localStorage.setItem('twoFactorAuthStatus', enable);
 };
@@ -78,6 +84,8 @@ export const getTwoFactorAuthStatus = () => {
   return localStorage.getItem('twoFactorAuthStatus') || undefined;
 };
 
+/*  Recovery Email Last Value
+------------------------------------*/
 export const setLastRecoveryEmail = recoveryEmail => {
   localStorage.setItem('lastRecoveryEmail', recoveryEmail);
 };
@@ -94,6 +102,35 @@ export const getLastRecoveryEmailConfirmed = () => {
   return localStorage.getItem('lastRecoveryEmailConfirmed') || undefined;
 };
 
+/*  Show Email Preview Last Status
+-------------------------------------*/
+export const setShowEmailPreviewStatus = status => {
+  localStorage.setItem('showEmailPreviewStatus', status);
+};
+
+export const getShowEmailPreviewStatus = () => {
+  return localStorage.getItem('showEmailPreviewStatus') === 'true';
+};
+
+const initShowEmailPreviewStatus = () => {
+  if (localStorage.getItem('showEmailPreviewStatus') === null) {
+    setShowEmailPreviewStatus(true);
+  }
+};
+initShowEmailPreviewStatus();
+
+/*  Read Receipts Last Status
+-------------------------------------*/
+export const setReadReceiptsStatus = enable => {
+  localStorage.setItem('readReceiptsStatus', enable);
+};
+
+export const getReadReceiptsStatus = () => {
+  return localStorage.getItem('readReceiptsStatus') || undefined;
+};
+
+/*  Clear All Storage
+-------------------------------------*/
 export const clearStorage = () => {
   localStorage.clear();
 };

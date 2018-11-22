@@ -117,12 +117,18 @@ class ClientManager {
 
   parseUserSettings(settings) {
     const { devices, general } = settings;
-    const { recoveryEmail, recoveryEmailConfirmed, twoFactorAuth } = general;
+    const {
+      recoveryEmail,
+      recoveryEmailConfirmed,
+      twoFactorAuth,
+      trackEmailRead
+    } = general;
     return {
       devices,
       twoFactorAuth: !!twoFactorAuth,
       recoveryEmail,
-      recoveryEmailConfirmed: !!recoveryEmailConfirmed
+      recoveryEmailConfirmed: !!recoveryEmailConfirmed,
+      readReceiptsEnabled: !!trackEmailRead
     };
   }
 
@@ -237,6 +243,11 @@ class ClientManager {
 
   async resetPassword(recipientId) {
     const res = await client.resetPassword(recipientId);
+    return checkDeviceRemoved(res);
+  }
+
+  async setReadTracking(enabled) {
+    const res = await client.setReadTracking(enabled);
     return checkDeviceRemoved(res);
   }
 

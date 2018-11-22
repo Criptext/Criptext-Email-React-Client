@@ -6,6 +6,27 @@
     flex-direction: row-reverse;
   }
   .section-block{
+    .custom-switch {
+      margin-right: 10px;
+      .input-switch{
+        label{
+          margin-left: 0;
+        }
+        input[type=checkbox] + label {
+          background-color: #b3b3b3;
+          &::before {
+            background-color: #b3b3b3;
+          }
+        }
+        input[type=checkbox]:checked + label {
+          background-color: #0091ff;
+          &::before {
+            background-color: #0091ff;
+          }
+        }
+      }
+    }
+
     &:nth-child(1){
       .section-block-content{
         .section-block-content-item{
@@ -83,28 +104,6 @@
             .signature-switch {
               display: flex;
               margin: 10px 0px 7px 0px;
-
-              .signature-switch-item {
-                margin-right: 10px;
-
-                .input-switch{
-                  label{
-                    margin-left: 0;
-                  }
-                  input[type=checkbox] + label {
-                    background-color: #b3b3b3;
-                    &::before {
-                      background-color: #b3b3b3;
-                    }
-                  }
-                  input[type=checkbox]:checked + label {
-                    background-color: #0091ff;
-                    &::before {
-                      background-color: #0091ff;
-                    }
-                  }
-                }
-              }
 
               .signature-switch-label {
                 color: #6c7280;
@@ -191,28 +190,6 @@
               display: flex;
               margin: 10px 0px 7px 0px;
 
-              .two-factor-switch-item {
-                margin-right: 10px;
-
-                .input-switch{
-                  label{
-                    margin-left: 0;
-                  }
-                  input[type=checkbox] + label {
-                    background-color: #b3b3b3;
-                    &::before {
-                      background-color: #b3b3b3;
-                    }
-                  }
-                  input[type=checkbox]:checked + label {
-                    background-color: #0091ff;
-                    &::before {
-                      background-color: #0091ff;
-                    }
-                  }
-                }
-              }
-
               .two-factor-switch-label {
                 font-size: 13px;
                 font-weight: 300;
@@ -232,6 +209,49 @@
     }
 
     &:nth-child(4){
+      .section-block-content{
+        .section-block-content-item{
+          &:nth-child(1){
+            flex-direction: column;
+
+            .email-preview-switch {
+              display: flex;
+              margin: 10px 0px 7px 0px;
+
+              .email-preview-switch-label {
+                font-size: 13px;
+                font-weight: 300;
+                color: #6c7280;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &:nth-child(5){
+      .section-block-content{
+        .section-block-content-item{
+          &:nth-child(1){
+            flex-direction: column;
+
+            .read-receipts-switch {
+              display: flex;
+              margin: 10px 0px 7px 0px;
+
+              .read-receipts-switch-label {
+                font-size: 13px;
+                font-weight: 300;
+                color: #6c7280;
+                word-wrap: break-word;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &:nth-child(6){
       .section-block-content{
         .section-block-content-item{
           &:nth-child(1){
@@ -284,7 +304,7 @@
       }
     }
 
-    &:nth-child(5){
+    &:nth-child(7){
       .section-block-content{
         .section-block-content-item{
           &:nth-child(1){
@@ -302,7 +322,7 @@
       }
     }
 
-    &:nth-child(6){
+    &:nth-child(8){
       .section-block-content{
         .section-block-content-item{
           &:nth-child(1){

@@ -41,6 +41,7 @@ import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 import { openFilledComposerWindow } from './../utils/ipc';
+import { getShowEmailPreviewStatus } from './storage';
 
 const eventPriority = {
   NEW_EMAIL: 0,
@@ -376,9 +377,12 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   }
   if (isToMe) {
     const parsedContact = parseContactRow(from);
+    const message = getShowEmailPreviewStatus()
+      ? `${subject}\n${notificationPreview}`
+      : `${subject}`;
     ipcRenderer.send('show-notification', {
       title: parsedContact.name || parsedContact.email,
-      message: `${subject}\n${notificationPreview}`
+      message
     });
   }
   return rowid;

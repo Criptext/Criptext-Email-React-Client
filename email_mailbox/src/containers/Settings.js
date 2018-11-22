@@ -16,7 +16,8 @@ import {
   updateContactByEmail,
   updateNameEvent,
   resendConfirmationEmail,
-  resetPassword
+  resetPassword,
+  setReadTracking
 } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
 import { appDomain } from '../utils/const';
@@ -126,13 +127,15 @@ const mapDispatchToProps = dispatch => {
         devices,
         recoveryEmail,
         twoFactorAuth,
-        recoveryEmailConfirmed
+        recoveryEmailConfirmed,
+        readReceiptsEnabled
       } = await getUserSettings();
       return {
         devices: formatDevicesData(devices),
         recoveryEmail,
         twoFactorAuth,
-        recoveryEmailConfirmed
+        recoveryEmailConfirmed,
+        readReceiptsEnabled
       };
     },
     onLogout: async () => {
@@ -176,6 +179,10 @@ const mapDispatchToProps = dispatch => {
         return;
       }
       sendResetPasswordSendLinkErrorMessage();
+    },
+    onSetReadReceiptsTracking: async enabled => {
+      const { status } = await setReadTracking(enabled);
+      return status;
     }
   };
 };

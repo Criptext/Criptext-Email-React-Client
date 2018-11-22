@@ -27,12 +27,17 @@ const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   'To enable Two-Factor Authentication you must set and verify a recovery email';
 const TWO_FACTOR_ENABLED_TEXT = 'On';
 const TWO_FACTOR_DISABLED_TEXT = 'Off';
+const READ_RECEIPTS_LABEL_TEXT =
+  "If you turn off read receipts, you won't be able to see " +
+  'read receipts from other people';
 
 const SettingGeneral = props => (
   <div id="setting-general">
     <ProfileBlock {...props} />
     <PasswordBlock {...props} />
     <TwoFactorAuthenticationBlock {...props} />
+    <ShowEmailPreviewBlock {...props} />
+    <ReadReceiptsBlock {...props} />
     <RecoveryEmailBlock {...props} />
     <UsefulLinksBlock />
     <LogoutAccountBlock {...props} />
@@ -97,7 +102,7 @@ const renderBlockSignature = props => (
   <div className="section-block-content-item">
     <span className="section-block-content-item-title">Signature</span>
     <div className="signature-switch">
-      <div className="signature-switch-item">
+      <div className="signature-switch-item custom-switch">
         <Switch
           theme="two"
           name="setPasswordSwitch"
@@ -180,7 +185,7 @@ const LogoutAccountBlock = props => (
 const RecoveryEmailBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Recovery email</h1>
+      <h1>Recovery Email</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item content-recovery-email">
@@ -236,18 +241,22 @@ const RecoveryEmailLoading = () => (
 const TwoFactorAuthenticationBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Two-factor authentication</h1>
+      <h1>Two-factor Authentication</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
         <div className="two-factor-switch">
-          <div className="two-factor-switch-item">
+          <div className="two-factor-switch-item custom-switch">
             <Switch
               theme="two"
               name="setTwoFactorSwitch"
               onChange={props.onChangeSwitchTwoFactor}
               checked={!!props.twoFactorEnabled}
-              disabled={!props.recoveryEmail || !props.recoveryEmailConfirmed}
+              disabled={
+                !props.recoveryEmail ||
+                !props.recoveryEmailConfirmed ||
+                props.twoFactorLabelIsLoading
+              }
             />
           </div>
           <div className="two-factor-switch-label">
@@ -286,6 +295,70 @@ const renderTwoFactorTextLabel = props => {
     : 'two-factor-normal-label';
   return <span className={labelClass}>{textLabel}</span>;
 };
+
+const ShowEmailPreviewBlock = props => (
+  <div className="section-block">
+    <div className="section-block-title">
+      <h1>Show Email Preview</h1>
+    </div>
+    <div className="section-block-content">
+      <div className="section-block-content-item">
+        <div className="email-preview-switch">
+          <div className="email-preview-switch-item custom-switch">
+            <Switch
+              theme="two"
+              name="setEmailPreviewSwitch"
+              onChange={props.onChangeSwitchEmailPreview}
+              checked={!!props.emailPreviewEnabled}
+            />
+          </div>
+          <div className="email-preview-switch-label">
+            <span>{props.emailPreviewEnabled ? 'On' : 'Off'}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const ReadReceiptsBlock = props => (
+  <div className="section-block">
+    <div className="section-block-title">
+      <h1>Read Receipts</h1>
+    </div>
+    <div className="section-block-content">
+      <div className="section-block-content-item">
+        <div className="read-receipts-switch">
+          <div className="read-receipts-switch-item custom-switch">
+            <Switch
+              theme="two"
+              name="setReadReceiptsSwitch"
+              onChange={props.onChangeSwitchReadReceipts}
+              checked={!!props.readReceiptsEnabled}
+              disabled={props.readReceiptsLabelisLoading}
+            />
+          </div>
+          <div className="read-receipts-switch-label">
+            {props.readReceiptsLabelisLoading ? (
+              <ReadReceiptsLoadingLabel />
+            ) : (
+              <span>{READ_RECEIPTS_LABEL_TEXT}</span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const ReadReceiptsLoadingLabel = () => (
+  <div className="loading-ring">
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
 
 const ResendConfirmationRecoveryEmailLink = ({
   onClickResendConfirmationLink,
@@ -471,6 +544,17 @@ renderTwoFactorTextLabel.propTypes = {
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   twoFactorEnabled: PropTypes.bool
+};
+
+ShowEmailPreviewBlock.propTypes = {
+  emailPreviewEnabled: PropTypes.bool,
+  onChangeSwitchEmailPreview: PropTypes.func
+};
+
+ReadReceiptsBlock.propTypes = {
+  onChangeSwitchReadReceipts: PropTypes.func,
+  readReceiptsEnabled: PropTypes.bool,
+  readReceiptsLabelisLoading: PropTypes.bool
 };
 
 ResendConfirmationRecoveryEmailLink.propTypes = {

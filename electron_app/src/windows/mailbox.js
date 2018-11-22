@@ -166,7 +166,9 @@ const openLinkInDefaultBrowser = (ev, url) => {
   shell.openExternal(url);
 };
 
-const isVisible = () => mailboxWindow.isVisible();
+const isVisibleAndFocused = () => {
+  return mailboxWindow.isVisible() && mailboxWindow.isFocused();
+};
 
 const quit = () => {
   globalManager.forcequit.set(true);
@@ -182,7 +184,7 @@ module.exports = {
   responseFromModal,
   send,
   show,
-  isVisible,
+  isVisibleAndFocused,
   toggleMaximize,
   minimize
 };
