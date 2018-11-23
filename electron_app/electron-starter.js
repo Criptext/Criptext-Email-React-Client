@@ -3,6 +3,7 @@ const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
+const mySettings = require('./src/Settings');
 
 const loginWindow = require('./src/windows/login');
 const dialogWindow = require('./src/windows/dialog');
@@ -27,7 +28,9 @@ async function initApp() {
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
     if (!!existingAccount.deviceId) {
+      const appSettings = await dbManager.getAppSettings();
       myAccount.initialize(existingAccount);
+      mySettings.initialize(appSettings);
       wsClient.start(myAccount);
       mailboxWindow.show();
     } else {

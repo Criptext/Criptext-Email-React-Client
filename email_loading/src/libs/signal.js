@@ -14,7 +14,9 @@ import {
   postKeyBundle,
   updateAccount,
   getComputerName,
-  getKeyBundle
+  getKeyBundle,
+  mySettings,
+  getAppSettings
 } from './../utils/electronInterface';
 
 import { CustomError } from './../utils/CustomError';
@@ -102,7 +104,10 @@ const createAccount = async ({
       description: `Failed to create user in local database`
     });
   }
+  const appSettings = await getAppSettings();
   myAccount.initialize(newAccount);
+  mySettings.initialize(appSettings);
+
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
       await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
@@ -208,6 +213,7 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
         description: `Failed to create user in local database`
       });
     }
+
     const labels = Object.values(LabelType);
     try {
       await createLabel(labels);
@@ -231,6 +237,9 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
+  const appSettings = await getAppSettings();
+  mySettings.initialize(appSettings);
+
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
       await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
@@ -344,6 +353,9 @@ const createAccountToDB = async ({
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
+  const appSettings = await getAppSettings();
+  mySettings.initialize(appSettings);
+
   return await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
       await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);

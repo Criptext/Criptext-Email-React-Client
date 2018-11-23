@@ -65,7 +65,8 @@ const Table = {
   SIGNEDPREKEYRECORD: 'signedprekeyrecord',
   SESSIONRECORD: 'sessionrecord',
   IDENTITYKEYRECORD: 'identitykeyrecord',
-  PENDINGEVENT: 'pendingEvent'
+  PENDINGEVENT: 'pendingEvent',
+  SETTINGS: 'settings'
 };
 
 const db = knex(dbConfiguration);
@@ -86,7 +87,8 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.SESSIONRECORD)
     .dropTableIfExists(Table.IDENTITYKEYRECORD)
     .dropTableIfExists(Table.MIGRATIONS)
-    .dropTableIfExists(Table.PENDINGEVENT);
+    .dropTableIfExists(Table.PENDINGEVENT)
+    .dropTableIfExists(Table.SETTINGS);
 };
 
 const cleanDataLogout = async recipientId => {
@@ -227,10 +229,6 @@ const createAccountColumns = table => {
   table.integer('registrationId').notNullable();
   table.string('privKey', LARGE_STRING_SIZE).notNullable();
   table.string('pubKey', LARGE_STRING_SIZE).notNullable();
-  table
-    .boolean('opened')
-    .notNullable()
-    .defaultTo(false);
   table.string('signature', XLARGE_STRING_SIZE).defaultTo('');
   table.boolean('signatureEnabled').defaultTo(false);
 };

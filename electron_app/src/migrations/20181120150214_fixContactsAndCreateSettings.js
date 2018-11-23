@@ -1,10 +1,9 @@
-const { Table } = require('./../models');
-const { emailRegex } = require('./../utils/RegexUtils');
+const { Table } = require('../models');
+const { emailRegex } = require('../utils/RegexUtils');
 
 const getAndFixContacts = async knex => {
   return await knex.transaction(async trx => {
     const namelessContacts = await trx(Table.CONTACT).whereNull('name');
-
     for (const contact of namelessContacts) {
       const contactEmailIsValid = contact.email.match(emailRegex);
 
@@ -50,14 +49,56 @@ const getAndFixContacts = async knex => {
             .where({ id: contact.id })
             .del();
 
-          await trx(Table.CONTACT)
+          return await trx(Table.CONTACT)
             .where({ email: fixedEmail })
             .update({
               email: fixedEmail.toLowerCase()
             });
         });
     }
+    return await createSettngsTable(trx);
   });
+};
+
+const createSettngsTable = async trx => {
+  const tableExists = await trx.schema.hasTable(Table.SETTINGS);
+  if (!tableExists) {
+    await trx.schema.createTable(Table.SETTINGS, table => {
+      table.increments('id').primary();
+      table
+        .string('language')
+        .notNullable()
+        .defaultTo('en');
+      table
+        .boolean('opened')
+        .notNullable()
+        .defaultTo(false);
+      table
+        .string('theme')
+        .notNullable()
+        .defaultTo('light');
+    });
+  }
+
+  let prevOpenedValue = false;
+  const hasOpenedColumnInAccount = await trx.schema.hasColumn(
+    Table.ACCOUNT,
+    'opened'
+  );
+
+  if (hasOpenedColumnInAccount) {
+    const [{ opened }] = await trx.select('opened').from(Table.ACCOUNT);
+    prevOpenedValue = opened;
+    await trx.schema.table(Table.ACCOUNT, table => {
+      table.dropColumn('opened');
+    });
+  }
+
+  const [prevSettingsValue] = await trx(Table.SETTINGS).where({ id: 1 });
+  if (prevSettingsValue) {
+    return;
+  }
+  return await trx.table(Table.SETTINGS).insert({ opened: prevOpenedValue });
 };
 
 exports.up = async (knex, Promise) => {

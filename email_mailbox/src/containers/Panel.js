@@ -14,11 +14,7 @@ import {
   updateUnreadThreadsSuccess
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
-import {
-  LabelType,
-  myAccount,
-  updateAccount
-} from '../utils/electronInterface';
+import { LabelType, updateAppSettings } from '../utils/electronInterface';
 import { storeSeenTimestamp } from '../utils/storage';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 
@@ -69,9 +65,7 @@ const mapDispatchToProps = dispatch => {
       );
     },
     onUpdateOpenedAccount: async () => {
-      const opened = true;
-      const recipientId = myAccount.recipientId;
-      await updateAccount({ opened, recipientId });
+      return await updateAppSettings({ opened: true });
     },
     onUpdateTimestamp: () => {
       storeSeenTimestamp();

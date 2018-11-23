@@ -11,6 +11,7 @@ const { noNulls } = require('./utils/ObjectUtils');
 const { HTMLTagsRegex } = require('./utils/RegexUtils');
 const myAccount = require('./Account');
 const systemLabels = require('./systemLabels');
+const mySettings = require('./Settings');
 
 /* Account
 ----------------------------- */
@@ -26,7 +27,6 @@ const updateAccount = async ({
   deviceId,
   jwt,
   name,
-  opened,
   privKey,
   pubKey,
   recipientId,
@@ -38,7 +38,6 @@ const updateAccount = async ({
     deviceId,
     jwt,
     name,
-    opened: typeof opened === 'boolean' ? opened : undefined,
     privKey,
     pubKey,
     registrationId,
@@ -55,7 +54,7 @@ const updateAccount = async ({
 };
 
 /* Contact
-   ----------------------------- */
+----------------------------- */
 const createContact = params => {
   return db.table(Table.CONTACT).insert(params);
 };
@@ -169,7 +168,7 @@ const updateContactByEmail = ({ email, name }, trx) => {
 };
 
 /* EmailContact
-   ----------------------------- */
+----------------------------- */
 const createEmailContact = (emailContacts, trx) => {
   return trx.insert(emailContacts).into(Table.EMAIL_CONTACT);
 };
@@ -183,7 +182,7 @@ const deleteEmailContactByEmailId = (emailId, trx) => {
 };
 
 /* EmailLabel
-   ----------------------------- */
+----------------------------- */
 const createEmailLabel = (emailLabels, prevTrx) => {
   const transaction = prevTrx ? fn => fn(prevTrx) : db.transaction;
   return transaction(async trx => {
@@ -269,7 +268,7 @@ const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
 };
 
 /* Email
-   ----------------------------- */
+----------------------------- */
 const createEmail = async (params, trx) => {
   const knex = trx || db;
   const { recipients, email } = params;
@@ -858,7 +857,7 @@ const updateUnreadEmailByThreadIds = ({ threadIds, unread }) => {
 };
 
 /* Label
-   ----------------------------- */
+----------------------------- */
 const createLabel = params => {
   return db.table(Table.LABEL).insert(params);
 };
@@ -917,7 +916,7 @@ const updateLabel = ({ id, color, text, visible }) => {
 };
 
 /* File
-  ----------------------------- */
+----------------------------- */
 const createFile = (files, trx) => {
   const knex = trx || db;
   return knex.insert(files).into(Table.FILE);
@@ -940,7 +939,7 @@ const updateFilesByEmailId = ({ emailId, status }) => {
 };
 
 /* FileKey
-  ----------------------------- */
+----------------------------- */
 const createFileKey = (fileKeys, trx) => {
   const knex = trx || db;
   return knex.insert(fileKeys).into(Table.FILE_KEY);
@@ -954,8 +953,7 @@ const getFileKeyByEmailId = emailId => {
 };
 
 /* Feed Item
-  ----------------------------- */
-
+----------------------------- */
 const createFeedItem = params => {
   return db.table(Table.FEEDITEM).insert(params);
 };
@@ -981,7 +979,7 @@ const updateFeedItem = ({ id, seen }) => {
 };
 
 /* PreKeyRecord
-   ----------------------------- */
+----------------------------- */
 const createPreKeyRecord = params => {
   return db.table(Table.PREKEYRECORD).insert(params);
 };
@@ -1001,7 +999,7 @@ const getPreKeyPair = params => {
 };
 
 /* SignedPreKeyRecord
-   ----------------------------- */
+----------------------------- */
 const createSignedPreKeyRecord = params => {
   return db.table(Table.SIGNEDPREKEYRECORD).insert(params);
 };
@@ -1014,7 +1012,7 @@ const getSignedPreKey = params => {
 };
 
 /* SessionRecord
-   ----------------------------- */
+----------------------------- */
 const createSessionRecord = params => {
   const { recipientId, deviceId } = params;
   return db
@@ -1092,6 +1090,26 @@ const deletePendingEventsByIds = ids => {
     .del();
 };
 
+/* Settings
+----------------------------- */
+const getAppSettings = async () => {
+  const [appSettings] = await db.table(Table.SETTINGS).where({ id: 1 });
+  return appSettings;
+};
+
+const updateAppSettings = async ({ language, opened, theme }) => {
+  const params = noNulls({ language, opened, theme });
+  if (Object.keys(params).length < 1) {
+    return Promise.resolve(true);
+  }
+  const dbResponse = await db
+    .table(Table.SETTINGS)
+    .where({ id: 1 })
+    .update(params);
+  mySettings.update(params);
+  return dbResponse;
+};
+
 const closeDB = () => {
   db.close();
   db.disconnect();
@@ -1155,6 +1173,7 @@ module.exports = {
   getSignedPreKey,
   getTrashExpiredEmails,
   getFilesByTokens,
+  getAppSettings,
   getUnreadEmailsByThreadId,
   deleteLabelById,
   updateAccount,
@@ -1166,5 +1185,6 @@ module.exports = {
   updateFilesByEmailId,
   updateIdentityKeyRecord,
   updateLabel,
+  updateAppSettings,
   updateUnreadEmailByThreadIds
 };

@@ -10,6 +10,8 @@ export const errors = remote.require('./src/errors');
 
 export const myAccount = remote.require('./src/Account');
 
+export const mySettings = remote.require('./src/Settings');
+
 export const LabelType = labels;
 
 export const { loadingType, remoteData } = remote.getGlobal('loadingData');
@@ -153,6 +155,10 @@ export const deleteSessionRecord = params => {
 
 export const getAccount = () => {
   return dbManager.getAccount();
+};
+
+export const getAppSettings = () => {
+  return dbManager.getAppSettings();
 };
 
 export const getIdentityKeyRecord = params => {
