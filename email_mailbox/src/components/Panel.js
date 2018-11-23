@@ -4,7 +4,7 @@ import ActivityPanel from './../containers/ActivityPanel';
 import MainWrapper from './MainWrapper';
 import SideBar from './../containers/SideBar';
 import WelcomeWrapper from './WelcomeWrapper';
-import { myAccount } from '../utils/electronInterface';
+import { mySettings } from '../utils/electronInterface';
 import PopupHOC from './PopupHOC';
 import DeviceRemovedPopup from './DeviceRemovedPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
@@ -36,7 +36,7 @@ const Panel = props => (
       onToggleActivityPanel={props.onToggleActivityPanel}
     />
     {props.isOpenWelcome &&
-      !myAccount.opened && (
+      !mySettings.opened && (
         <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
       )}
     {!props.isHiddenMailboxPopup &&
