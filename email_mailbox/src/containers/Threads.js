@@ -9,6 +9,8 @@ import ThreadsView from '../components/ThreadsWrapper';
 import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';
 import { defineRejectedLabels } from '../utils/EmailUtils';
+import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
+import string from './../lang';
 
 const defineStatus = isSyncing => {
   return isSyncing ? ButtonSyncType.LOAD : ButtonSyncType.STOP;
@@ -28,7 +30,10 @@ const defineContactType = (labelId, from, to) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const mailboxTitle = LabelType[ownProps.mailboxSelected].text;
+  const mailboxIdText = toLowerCaseWithoutSpaces(
+    LabelType[ownProps.mailboxSelected].text
+  );
+  const mailboxTitle = string.labelsItems[mailboxIdText];
   const switchUnreadThreadsStatus = state
     .get('activities')
     .get('isFilteredByUnreadThreads');

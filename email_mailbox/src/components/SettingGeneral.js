@@ -5,18 +5,18 @@ import { Switch } from 'react-switch-input';
 import { Editor } from 'react-draft-wysiwyg';
 import Countdown from 'react-countdown-now';
 import PopupHOC from './PopupHOC';
-import { myAccount } from './../utils/electronInterface';
-import { getTwoCapitalLetters } from './../utils/StringUtils';
-import { appDomain } from '../utils/const';
-import { usefulLinks } from '../utils/const';
 import { EDITING_MODES, SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
-import './settinggeneral.scss';
-import './signatureeditor.scss';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
 import LogoutPopup from './LogoutPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
+import { myAccount } from './../utils/electronInterface';
+import { getTwoCapitalLetters } from './../utils/StringUtils';
+import { appDomain, usefulLinks } from '../utils/const';
 import { getResendConfirmationTimestamp } from '../utils/storage';
+import string, { languages } from './../lang';
+import './settinggeneral.scss';
+import './signatureeditor.scss';
 
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
@@ -25,8 +25,8 @@ const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   'To enable Two-Factor Authentication you must set and verify a recovery email';
-const TWO_FACTOR_ENABLED_TEXT = 'On';
-const TWO_FACTOR_DISABLED_TEXT = 'Off';
+const TWO_FACTOR_ENABLED_TEXT = string.settings.on;
+const TWO_FACTOR_DISABLED_TEXT = string.settings.off;
 const READ_RECEIPTS_LABEL_TEXT =
   "If you turn off read receipts, you won't be able to see " +
   'read receipts from other people';
@@ -48,7 +48,7 @@ const SettingGeneral = props => (
 const ProfileBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Profile</h1>
+      <h1>{string.settings.profile}</h1>
     </div>
     <div className="section-block-content">
       {renderBlockEmail()}
@@ -69,7 +69,9 @@ const renderBlockEmail = () => (
 
 const renderBlockName = props => (
   <div className="section-block-content-item" onBlur={props.onBlurInputName}>
-    <span className="section-block-content-item-title">Name</span>
+    <span className="section-block-content-item-title">
+      {string.settings.name}
+    </span>
     {props.mode === EDITING_MODES.EDITING_NAME ? (
       <div>
         <input
@@ -100,7 +102,9 @@ const renderBlockName = props => (
 
 const renderBlockSignature = props => (
   <div className="section-block-content-item">
-    <span className="section-block-content-item-title">Signature</span>
+    <span className="section-block-content-item-title">
+      {string.settings.signature}
+    </span>
     <div className="signature-switch">
       <div className="signature-switch-item custom-switch">
         <Switch
@@ -112,7 +116,11 @@ const renderBlockSignature = props => (
       </div>
       <div className="signature-switch-label">
         <span>
-          {`Signature ${myAccount.signatureEnabled ? 'enabled' : 'disabled'}`}
+          {`${string.settings.signature} ${
+            myAccount.signatureEnabled
+              ? string.settings.enabled
+              : string.settings.disabled
+          }`}
         </span>
       </div>
     </div>
@@ -151,7 +159,7 @@ const renderBlockSignature = props => (
 const PasswordBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Password</h1>
+      <h1>{string.settings.password}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
@@ -159,7 +167,7 @@ const PasswordBlock = props => (
           className="button-a button-reset-password"
           onClick={props.onClickChangePasswordButton}
         >
-          <span>Change password</span>
+          <span>{string.settings.change_password}</span>
         </button>
       </div>
     </div>
@@ -241,7 +249,7 @@ const RecoveryEmailLoading = () => (
 const TwoFactorAuthenticationBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Two-factor Authentication</h1>
+      <h1>{string.settings.two_factor_authentication}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
@@ -299,7 +307,7 @@ const renderTwoFactorTextLabel = props => {
 const ShowEmailPreviewBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Show Email Preview</h1>
+      <h1>{string.settings.notification_preview}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
@@ -324,7 +332,7 @@ const ShowEmailPreviewBlock = props => (
 const ReadReceiptsBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Read Receipts</h1>
+      <h1>{string.settings.read_receipts}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
@@ -371,7 +379,7 @@ const ResendConfirmationRecoveryEmailLink = ({
       onComplete={onResendConfirmationCountdownEnd}
     >
       <button className="button-b" onClick={onClickResendConfirmationLink}>
-        <span>Resend Link</span>
+        <span>{string.settings.resend_link}</span>
       </button>
     </Countdown>
   );
@@ -438,6 +446,31 @@ const UsefulLinksBlock = () => (
   </div>
 );
 
+// eslint-disable-next-line no-unused-vars
+const LanguageBlock = props => (
+  <div className="section-block">
+    <div className="section-block-title">
+      <h1>{string.settings.language}</h1>
+    </div>
+    <div className="section-block-content">
+      <div className="section-block-content-item">
+        <select
+          onChange={e => props.onChangeSelectLanguage(e)}
+          value={props.language}
+        >
+          {languages.map((lang, index) => {
+            return (
+              <option key={index} value={lang.value}>
+                {lang.text}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    </div>
+  </div>
+);
+
 const SettingsPopup = props => {
   const type = props.settingsPupopType;
   const isHidden = props.isHiddenSettingsPopup;
@@ -486,6 +519,11 @@ const SettingsPopup = props => {
     default:
       return null;
   }
+};
+
+LanguageBlock.propTypes = {
+  language: PropTypes.string,
+  onChangeSelectLanguage: PropTypes.func
 };
 
 renderBlockName.propTypes = {

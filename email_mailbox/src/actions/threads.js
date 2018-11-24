@@ -41,7 +41,7 @@ export const addLabelIdThread = (threadId, labelId) => {
   return async dispatch => {
     try {
       const [label] = await getLabelById(labelId);
-      const threadIds = filterTemporalThreadIds(threadId);
+      const threadIds = filterTemporalThreadIds([threadId]);
       if (threadIds.length) {
         const eventParams = {
           cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
@@ -216,7 +216,7 @@ export const removeLabelIdThread = (threadId, labelId) => {
   return async dispatch => {
     try {
       const [label] = await getLabelById(labelId);
-      const threadIds = filterTemporalThreadIds(threadId);
+      const threadIds = filterTemporalThreadIds([threadId]);
       if (threadIds.length) {
         const eventParams = {
           cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
@@ -445,7 +445,7 @@ export const loadThreads = params => {
       }
 
       const threads = await getEmailsGroupByThreadByParams(params);
-      if (threads.length) {
+      if (threads.length || !params.date) {
         dispatch(addThreads(threads, params.clear));
       }
       dispatch(stopLoadThread());

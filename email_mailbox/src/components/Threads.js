@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ThreadItem from '../containers/ThreadItem';
 import EmptyMailbox from './EmptyMailbox';
-import { Switch } from 'react-switch-input';
-import Message from './../containers/Message';
 import ButtonSync from './ButtonSync';
 import ItemTooltip from './ItemTooltip';
+import ThreadItem from '../containers/ThreadItem';
+import Message from './../containers/Message';
 import ReactTooltip from 'react-tooltip';
+import { Switch } from 'react-switch-input';
+import string from './../lang';
 import './threads.scss';
 
 const Threads = props => (
@@ -28,7 +29,7 @@ const Threads = props => (
       </div>
       <div className="threads-header-switch-container">
         <span className={props.switchUnreadThreadsStatus ? 'disabled' : ''}>
-          All
+          {string.mailbox.all}
         </span>
         <Switch
           theme="two"
@@ -37,7 +38,7 @@ const Threads = props => (
           checked={props.switchUnreadThreadsStatus}
         />
         <span className={props.switchUnreadThreadsStatus ? '' : 'disabled'}>
-          Unread
+          {string.mailbox.unread}
         </span>
       </div>
     </div>

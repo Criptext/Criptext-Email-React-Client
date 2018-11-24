@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './emptymailbox.scss';
 
 const EmptyMailbox = props => {
@@ -21,19 +22,19 @@ const defineEmptyParamsByMailbox = mailbox => {
   switch (mailbox) {
     case 'search':
       return {
-        header: 'No search results',
-        subheader: 'Trash & Spam emails are not displayed',
+        header: string.mailbox.empty.search.header,
+        subheader: string.mailbox.empty.search.subheader,
         iconClass: 'empty-search'
       };
     case 'spam':
       return {
-        header: "There's no spam",
-        subheader: 'Cool!'
+        header: string.mailbox.empty.spam.header,
+        subheader: string.mailbox.empty.spam.subheader
       };
     default:
       return {
-        header: 'You have no emails yet',
-        subheader: 'Send an email to get started'
+        header: string.mailbox.empty.default.header,
+        subheader: string.mailbox.empty.default.subheader
       };
   }
 };

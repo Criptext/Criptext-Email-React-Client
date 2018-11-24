@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonCircle from './ButtonCircle';
+import string from '../lang';
 import './standardoptions.scss';
 
 const StandardOptions = props => (
@@ -8,7 +9,7 @@ const StandardOptions = props => (
     {props.isVisibleArchiveButton && (
       <ButtonCircle
         onClick={props.onClickMoveToArchive}
-        tip="Archive"
+        tip={string.header.archive}
         enableTip={true}
         icon="icon-archive"
         targetName="actionArchive"
@@ -17,7 +18,7 @@ const StandardOptions = props => (
     {props.isVisibleMoveToInboxButton && (
       <ButtonCircle
         onClick={props.onClickMoveToInbox}
-        tip="Move to Inbox"
+        tip={string.header.move_to_inbox}
         enableTip={true}
         icon="icon-archive"
         targetName="actionToInbox"
@@ -26,7 +27,7 @@ const StandardOptions = props => (
     {props.isVisibleRestoreButton && (
       <ButtonCircle
         onClick={props.onClickRestore}
-        tip="Restore"
+        tip={string.header.restore}
         enableTip={true}
         icon="icon-archive"
         targetName="actionRestore"
@@ -35,7 +36,7 @@ const StandardOptions = props => (
     {props.isVisibleSpamButton && (
       <ButtonCircle
         onClick={props.onClickMoveToSpam}
-        tip="Spam"
+        tip={string.labelsItems.spam}
         enableTip={true}
         icon="icon-not"
         targetName="actionSpam"
@@ -44,7 +45,7 @@ const StandardOptions = props => (
     {props.isVisibleTrashButton && (
       <ButtonCircle
         onClick={props.onClickMoveToTrash}
-        tip="Trash"
+        tip={string.labelsItems.trash}
         enableTip={true}
         icon="icon-trash"
         targetName="actionTrash"
@@ -53,7 +54,7 @@ const StandardOptions = props => (
     {props.isVisibleDeleteButton && (
       <ButtonCircle
         onClick={props.onClickDeleteThread}
-        tip="Delete"
+        tip={string.header.delete}
         enableTip={true}
         icon="icon-trash"
         targetName="actionDelete"
@@ -62,7 +63,7 @@ const StandardOptions = props => (
     {props.isVisibleDiscardDraftsButton && (
       <ButtonCircle
         onClick={props.onClickDiscardDrafts}
-        tip="Discard drafts"
+        tip={string.header.discard_drafts}
         enableTip={true}
         icon="icon-trash"
         targetName="actionDiscardDrafts"
@@ -71,7 +72,7 @@ const StandardOptions = props => (
     {props.isVisibleFolderButton && (
       <ButtonCircle
         onClick={props.onToggleFolderMenu}
-        tip="Move to"
+        tip={string.header.move_to}
         enableTip={!props.displayFolderMenu}
         icon="icon-file"
         targetName="actionMove"
@@ -79,7 +80,7 @@ const StandardOptions = props => (
     )}
     <ButtonCircle
       onClick={props.onToggleTagsMenu}
-      tip="Add Labels"
+      tip={string.header.add_labels}
       enableTip={!props.displayTagsMenu}
       icon="icon-tag"
       targetName="actionTag"

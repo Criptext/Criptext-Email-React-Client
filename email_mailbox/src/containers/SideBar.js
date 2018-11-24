@@ -5,6 +5,7 @@ import { IconLabels, SectionType } from './../utils/const';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
 import { openFilledComposerWindow } from './../utils/ipc';
 import { composerEvents } from '../utils/electronInterface';
+import string from './../lang';
 
 const defineLabels = labels => {
   return labels
@@ -18,19 +19,23 @@ const defineSideBarItems = labels => {
   const sideBarItems = labels
     .valueSeq()
     .filter(label => label.get('visible') && label.get('type') === 'system')
-    .map(label => ({
-      idText: toLowerCaseWithoutSpaces(label.get('text')),
-      icon: IconLabels[label.get('id')]
-        ? IconLabels[label.get('id')].icon
-        : 'icon-tag',
-      text: label.get('text'),
-      badge: label.get('badge') || null
-    }))
+    .map(label => {
+      const idText = toLowerCaseWithoutSpaces(label.get('text'));
+      return {
+        idText,
+        icon: IconLabels[label.get('id')]
+          ? IconLabels[label.get('id')].icon
+          : 'icon-tag',
+        text: string.labelsItems[idText],
+        badge: label.get('badge') || null
+      };
+    })
     .toJS();
+  const allMailIdText = toLowerCaseWithoutSpaces(IconLabels.allmail.text);
   const allMailItem = {
-    idText: toLowerCaseWithoutSpaces(IconLabels.allmail.text),
+    idText: allMailIdText,
     icon: IconLabels.allmail.icon,
-    text: IconLabels.allmail.text
+    text: string.labelsItems[allMailIdText]
   };
   return [...sideBarItems, allMailItem];
 };
