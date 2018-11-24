@@ -922,6 +922,13 @@ const createFile = (files, trx) => {
   return knex.insert(files).into(Table.FILE);
 };
 
+const getFilesByEmailId = emailId => {
+  return db
+    .select('*')
+    .from(Table.FILE)
+    .where({ emailId });
+};
+
 const getFilesByTokens = tokens => {
   return db
     .select('*')
@@ -1162,6 +1169,7 @@ module.exports = {
   getEmailsByThreadIdAndLabelId,
   getEmailsUnredByLabelId,
   getEmailLabelsByEmailId,
+  getFilesByEmailId,
   getPendingEvents,
   getFileKeyByEmailId,
   getIdentityKeyRecord,
