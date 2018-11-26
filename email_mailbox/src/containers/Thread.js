@@ -8,6 +8,8 @@ import {
 import ThreadView from '../components/Thread';
 import { LabelType } from '../utils/electronInterface';
 import { compareEmailDate } from '../utils/EmailUtils';
+import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
+import string from '../lang';
 
 const getEmails = (emails, thread) => {
   const emailIds = thread ? thread.get('emailIds') : null;
@@ -43,11 +45,19 @@ const defineLabels = (labels, labelIds) => {
   const result = labelIdsFiltered
     .toArray()
     .map(labelId => {
-      const label = labels.get(labelId.toString());
-      return label ? label.toObject() : null;
+      const label = labels.get(`${labelId}`);
+      if (!label) return null;
+      const text = label.get('text');
+      return {
+        id: label.get('id'),
+        color: label.get('color'),
+        text:
+          label.get('type') === 'system'
+            ? string.labelsItems[toLowerCaseWithoutSpaces(text)]
+            : text
+      };
     })
     .filter(item => item !== null);
-
   return result ? result : [];
 };
 

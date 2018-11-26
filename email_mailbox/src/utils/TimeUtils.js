@@ -1,30 +1,27 @@
 import moment from 'moment';
 
 const oneDay = 86400000;
-moment.locale('en');
-moment.updateLocale('en', {
-  relativeTime: {
-    future: 'In %s',
-    past: '%s ago',
-    s: 'Few seconds',
-    ss: '%s seconds',
-    m: '1 minute',
-    mm: '%d minutes',
-    h: 'An hour',
-    hh: '%d hours',
-    d: 'A day',
-    dd: '%d days',
-    M: 'A month',
-    MM: 'More than 2 months',
-    y: 'More than 2 months',
-    yy: 'More than 2 months'
-  }
-});
+const language = 'en';
+
+moment.locale(language);
 
 const getTimeLocal = time => {
   const timeUTC = moment.utc(time);
-  return moment(timeUTC).local();
+  return moment(timeUTC);
 };
+
+const defineYesterdayText = language => {
+  switch (language) {
+    case 'en':
+      return 'Yesterday';
+    case 'es':
+      return 'Ayer';
+    default:
+      return 'Yesterday';
+  }
+};
+
+const yesterdayText = defineYesterdayText(language);
 
 export const defineTimeByToday = time => {
   const timeLocal = getTimeLocal(time);
@@ -32,7 +29,7 @@ export const defineTimeByToday = time => {
   if (diffTime <= oneDay) {
     return moment(timeLocal).format('h:mm A');
   } else if (diffTime < oneDay * 2) {
-    return moment(timeLocal).format('[Yesterday]');
+    return moment(timeLocal).format(`[${yesterdayText}]`);
   } else if (diffTime < oneDay * 7) {
     return moment(timeLocal).format('dddd');
   }

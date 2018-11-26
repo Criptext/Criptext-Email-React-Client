@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import './message.scss';
 
 const Message = props => (
-  <div className={`message-container ${defineMessageStatus(props)}`}>
-    {renderMessageType(props)}
+  <div className={`message-wrapper ${defineMessageStatus(props)}`}>
+    <div className="message-container">{renderMessageType(props)}</div>
   </div>
 );
 

@@ -20,6 +20,7 @@
     "react-desktop": "^0.3.7",
     "react-dom": "^16.2.0",
     "react-draft-wysiwyg": "^1.12.13",
+    "react-localization": "^1.0.13",
     "react-redux": "^5.0.6",
     "react-switch-input": "^0.1.10",
     "react-tooltip": "^3.4.0",

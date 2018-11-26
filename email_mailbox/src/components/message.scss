@@ -1,9 +1,8 @@
-.message-container{
+.message-wrapper{
   display: flex;
-  margin: 0 110px;
   position: absolute;
   top: 10px;
-  width: calc(100% - 220px);
+  width: 100%;
   z-index: 3;
 
   &.displayed {
@@ -13,93 +12,106 @@
     animation: fadeout 1000ms;
   }
 
-  .message-content {
-    align-items: center;
-    border: 1px solid transparent;
-    border-radius: 13px;
-    display: flex;
-    height: 22px;
-    margin: 0 auto;
-    padding: 0 15px;
-    width: auto;
-  
-    &.message-advice{
-      background-color: #eff6ff;
-      border-color: #c7e1ff;
-    }
-  
-    &.message-suggestion{
-      background-color: #0091ff;
-      border-color: #0091ff;
-      color: white;
-      padding-right: 3px;
-  
-      button{
-        color: white;
+  .message-container{
+    display: -webkit-box;
+    margin: 0 160px;
+    position: relative;
+    width: calc(100% - 320px);
+
+    .message-content {
+      align-items: center;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      display: flex;
+      height: 22px;
+      margin: 0 auto;
+      max-width: calc(100% - 30px);
+      padding: 0 15px;
+      position: relative;
+      width: auto;
+    
+      &.message-advice{
+        background-color: #eff6ff;
+        border-color: #c7e1ff;
       }
-    }
-  
-    &.message-question{
-      background-color: #0091ff;
-      border-color: #0091ff;
-      color: white;
-  
-      .message-buttons{
-        display: flex;
-  
+    
+      &.message-suggestion{
+        background-color: #0091ff;
+        border-color: #0091ff;
+        color: white;
+        padding-right: 3px;
+    
         button{
-          margin: 0 10px;
-  
-          span{
-            color: white;
-            font-style: normal;
+          color: white;
+        }
+      }
+    
+      &.message-question{
+        background-color: #0091ff;
+        border-color: #0091ff;
+        color: white;
+    
+        .message-buttons{
+          display: flex;
+    
+          button{
+            margin: 0 10px;
+    
+            span{
+              color: white;
+              font-style: normal;
+            }
           }
         }
       }
-    }
-  
-    &.message-success{
-      background-color: #f4eabe;
-      border-color: #f4eabe;
-    }
-  
-    &.message-error{
-      background-color: #d26054;
-      border-color: #d26054;
-      color: white;
-  
-      button{
+    
+      &.message-success{
+        background-color: #f4eabe;
+        border-color: #f4eabe;
+      }
+    
+      &.message-error{
+        background-color: #d26054;
+        border-color: #d26054;
+        color: white;
+    
+        button{
+          color: white;
+        }
+      }
+    
+      &.message-establish{
+        background-color: #9abe4e;
+        border-color: #9abe4e;
         color: white;
       }
-    }
-  
-    &.message-establish{
-      background-color: #9abe4e;
-      border-color: #9abe4e;
-      color: white;
-    }
-  
-    .message-description{
-      font-size: 13px;
-      font-weight: 200;
-    }
-  
-    button {
-      align-items: center;
-      background-color: transparent;
-      color: #373a45;
-      display: flex;
-      margin-left: 10px;
-      padding: 0;
-  
-      span{
+    
+      .message-description{
         font-size: 13px;
-        font-style: italic;
-        font-weight: 700;
+        font-weight: 200;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
-  
-      i{
-        font-size: 19px;
+    
+      button {
+        align-items: center;
+        background-color: transparent;
+        color: #373a45;
+        display: flex;
+        margin-left: 10px;
+        padding: 0;
+        white-space: nowrap;
+    
+        span{
+          font-size: 13px;
+          font-style: italic;
+          font-weight: 700;
+        }
+    
+        i{
+          font-size: 19px;
+        }
       }
     }
   }

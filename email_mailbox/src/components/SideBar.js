@@ -4,6 +4,7 @@ import SideBarItem from './../components/SideBarItem';
 import SideBarLabelItem from './../containers/SideBarLabelItem';
 import LabelAdd from './../containers/LabelAdd';
 import { openEmptyComposerWindow } from './../utils/ipc';
+import string from './../lang';
 import './sidebar.scss';
 
 const SideBar = props => (
@@ -18,7 +19,7 @@ const SideBar = props => (
           onClick={openEmptyComposerWindow}
         >
           <i className="icon-edit" />
-          <span>Compose</span>
+          <span>{string.sidebar.compose}</span>
         </button>
       </div>
       <nav className="nav-main">
@@ -50,7 +51,7 @@ const SideBar = props => (
               <div className="nav-item-icon">
                 <i className="icon-tag" />
               </div>
-              <span>Labels</span>
+              <span>{string.sidebar.labels}</span>
               <div className="nav-item-option">
                 <i
                   className={
@@ -70,13 +71,13 @@ const SideBar = props => (
             <div className="nav-item-icon">
               <i className="icon-add-friend" />
             </div>
-            <span>Invite a Friend</span>
+            <span>{string.sidebar.invite_a_friend}</span>
           </li>
           <li className="nav-item" onClick={() => props.onClickSettings()}>
             <div className="nav-item-icon">
               <i className="icon-settings" />
             </div>
-            <span>Settings</span>
+            <span>{string.sidebar.settings}</span>
           </li>
         </ul>
       </nav>

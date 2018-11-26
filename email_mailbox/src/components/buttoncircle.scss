@@ -13,12 +13,12 @@
   border: 1px solid rgba(148, 148, 148, 0);
   cursor: pointer;
 
+  &:hover{
+    border: solid 1px rgba(176, 178, 180, 0.5);
+  }
+
   i{
     font-size: 18px;
     opacity: 0.4;
   }
-
-  &:hover{
-    border: solid 1px rgba(176, 178, 180, 0.5);
-  }  
 }

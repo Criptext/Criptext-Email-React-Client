@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import randomcolor from 'randomcolor';
 import * as actions from './../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import {
@@ -8,17 +9,28 @@ import {
 } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
 import { defineTimeByToday } from '../utils/TimeUtils';
-import { getTwoCapitalLetters } from '../utils/StringUtils';
+import {
+  getTwoCapitalLetters,
+  toLowerCaseWithoutSpaces
+} from '../utils/StringUtils';
 import { SectionType } from '../utils/const';
-import randomcolor from 'randomcolor';
+import string from './../lang';
 
 const defineLabels = (labelIds, labels, labelsToExclude) => {
   if (!labels.size) return [];
   const result = labelIds.toArray().reduce((result, labelId) => {
     if (!labelsToExclude.includes(labelId)) {
-      const label = labels.get(labelId.toString());
+      const label = labels.get(`${labelId}`);
       if (label) {
-        result.push(label.toObject());
+        const text = label.get('text');
+        result.push({
+          id: label.get('id'),
+          color: label.get('color'),
+          text:
+            label.get('type') === 'system'
+              ? string.labelsItems[toLowerCaseWithoutSpaces(text)]
+              : text
+        });
       }
     }
     return result;

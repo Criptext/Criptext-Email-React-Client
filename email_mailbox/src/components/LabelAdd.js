@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './labeladd.scss';
 
 const LabelAdd = props => (
@@ -8,12 +9,12 @@ const LabelAdd = props => (
       <i className="icon-plus" />
     </div>
     {props.isHiddenAddLabel ? (
-      <span onClick={e => props.onClick(e)}>New Label</span>
+      <span onClick={e => props.onClick(e)}>{string.sidebar.new_label}</span>
     ) : (
       <input
         className="input-a"
         type="text"
-        placeholder="Enter new label"
+        placeholder={string.sidebar.enter_new_label}
         autoFocus={true}
         value={props.labelToAdd}
         onBlur={e => props.onBlur(e)}

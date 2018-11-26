@@ -4,6 +4,7 @@ import { EmailStatus } from './../utils/const';
 import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import { replaceMatches } from './../utils/ReactUtils';
 import { replaceAllOccurrences } from './../utils/StringUtils';
+import string from '../lang';
 import './threaditem.scss';
 
 class ThreadItem extends Component {
@@ -93,7 +94,9 @@ class ThreadItem extends Component {
     );
   };
 
-  renderDraftText = () => <span className="draft-status">Draft</span>;
+  renderDraftText = () => (
+    <span className="draft-status">{string.labelsItems.draft}</span>
+  );
 
   renderThreadStatus = status => {
     switch (status) {
@@ -118,7 +121,7 @@ class ThreadItem extends Component {
     return (
       <div className="thread-label">
         <div style={{ backgroundColor: labels[0].color }}>{labels[0].text}</div>
-        {labels.length > 1 ? this.renderMoreLabels(labels, threadId) : null}
+        {labels.length > 1 && this.renderMoreLabels(labels, threadId)}
       </div>
     );
   };
@@ -165,7 +168,11 @@ class ThreadItem extends Component {
       <div className="thread-label-option">
         <HoverMenuItem
           targetId={`starred${threadId}`}
-          tip="Favorite"
+          tip={
+            this.props.isStarred
+              ? string.mailbox.starred
+              : string.mailbox.not_starred
+          }
           icon="icon-star-fill"
           myClass={this.props.isStarred ? 'thread-label-mark' : ''}
           onClick={this.onToggleFavorite}
@@ -175,7 +182,7 @@ class ThreadItem extends Component {
         {this.props.isVisibleMoveToTrash && (
           <HoverMenuItem
             targetId={`remove${threadId}`}
-            tip="Move to Trash"
+            tip={string.mailbox.move_to_trash}
             icon="icon-trash"
             onClick={this.onClickMoveToTrash}
             onMouseEnterItem={this.props.onMouseEnterItem}

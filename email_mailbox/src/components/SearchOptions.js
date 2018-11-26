@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
+import string from '../lang';
 import './searchoptions.scss';
 
 const SearchOptions = props => (
@@ -9,7 +10,7 @@ const SearchOptions = props => (
       <tbody>
         <tr>
           <td>
-            <span className="search-options-label">Search</span>
+            <span className="search-options-label">{string.header.search}</span>
           </td>
           <td>
             <select
@@ -18,14 +19,14 @@ const SearchOptions = props => (
                 props.getSearchParams('labelId', Number(value));
               }}
             >
-              <option value={-1}>All Mail</option>
+              <option value={-1}>{string.labelsItems.allmail}</option>
               {renderLabels(props.allLabels)}
             </select>
           </td>
         </tr>
         <SearchOptionRowInput
-          label="From"
-          placeholder="People by name or email address"
+          label={string.header.search_options.from}
+          placeholder={string.header.search_options.from_placeholder}
           value={props.searchParams.from}
           onChange={ev => {
             const value = ev.target.value;
@@ -33,8 +34,8 @@ const SearchOptions = props => (
           }}
         />
         <SearchOptionRowInput
-          label="To"
-          placeholder="People by name or email address"
+          label={string.header.search_options.to}
+          placeholder={string.header.search_options.to_placeholder}
           value={props.searchParams.to}
           onChange={ev => {
             const value = ev.target.value;
@@ -42,8 +43,8 @@ const SearchOptions = props => (
           }}
         />
         <SearchOptionRowInput
-          label="Subject"
-          placeholder="Enter a text"
+          label={string.header.search_options.subject}
+          placeholder={string.header.search_options.subject_placeholder}
           value={props.searchParams.subject}
           onChange={ev => {
             const value = ev.target.value;
@@ -53,7 +54,7 @@ const SearchOptions = props => (
         <tr>
           <td colSpan={2}>
             <CustomCheckbox
-              label="Has attachment"
+              label={string.header.search_options.has_attachment}
               status={CustomCheckboxStatus.fromBoolean(
                 props.searchParams.hasAttachments
               )}
@@ -66,7 +67,7 @@ const SearchOptions = props => (
             />
             <button className="button-a" onClick={() => props.onClickSearch()}>
               <i className="icon-search" />
-              <span>Search</span>
+              <span>{string.header.search}</span>
             </button>
           </td>
         </tr>

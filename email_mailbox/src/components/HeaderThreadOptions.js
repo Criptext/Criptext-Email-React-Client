@@ -4,6 +4,7 @@ import StandardOptions from './StandardOptions';
 import ButtonCircle from './ButtonCircle';
 import TooltipMenu from './TooltipMenu';
 import CustomCheckbox from './CustomCheckbox';
+import string from '../lang';
 import './headerthreadoptions.scss';
 
 class HeaderThreadOptions extends Component {
@@ -97,7 +98,7 @@ class HeaderThreadOptions extends Component {
     <div className="header-action">
       <ButtonCircle
         onClick={() => this.props.onBackOption()}
-        tip="Dismiss"
+        tip={string.header.dismiss}
         enableTip={true}
         icon="icon-back"
         targetName="actionDismiss"
@@ -115,7 +116,9 @@ class HeaderThreadOptions extends Component {
             myClass={this.props.allSelected ? 'menu-select-all' : ''}
             icon={this.props.allSelected ? 'icon-check' : 'icon-box'}
           />
-          <span>{this.props.itemsChecked.size} Selected</span>
+          <span>{`${this.props.itemsChecked.size} ${this.defineSelectedText(
+            this.props.itemsChecked.size
+          )}`}</span>
         </div>
       ) : null}
     </div>
@@ -144,6 +147,10 @@ class HeaderThreadOptions extends Component {
         />
       </li>
     ));
+  };
+
+  defineSelectedText = value => {
+    return value > 1 ? string.header.selected_plural : string.header.selected;
   };
 }
 

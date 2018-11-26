@@ -5,15 +5,20 @@ import SettingLabelsWrapper from './SettingLabelsWrapper';
 import SettingDevicesWrapper from './SettingDevicesWrapper';
 import Message from '../containers/Message';
 import { version } from './../../package.json';
+import string from '../lang';
 import './settings.scss';
 
-const Sections = ['general', 'labels', 'trusted devices'];
+const Sections = [
+  string.settings.general,
+  string.sidebar.labels,
+  string.settings.trusted_devices
+];
 
 const Settings = props => (
   <div className="settings-container">
     <Message />
     <div className="settings-title">
-      <h1>Settings</h1>
+      <h1>{string.sidebar.settings}</h1>
     </div>
     <div className="settings-content">
       <ul className="settings-content-items">
@@ -44,11 +49,11 @@ const Items = props => (
 const renderSection = props => {
   const section = props.sectionSelected;
   switch (section) {
-    case 'general':
+    case Sections[0]:
       return <SettingGeneralWrapper {...props} />;
-    case 'labels':
+    case Sections[1]:
       return <SettingLabelsWrapper {...props} />;
-    case 'trusted devices':
+    case Sections[2]:
       return <SettingDevicesWrapper {...props} />;
     default:
       break;
@@ -69,7 +74,7 @@ const renderFooter = onClick => (
     <hr />
     <div className="settings-footer-support" onClick={() => onClick()}>
       <i className="icon-ask" />
-      <span>Contact Support</span>
+      <span>{string.settings.contact_support}</span>
     </div>
   </div>
 );

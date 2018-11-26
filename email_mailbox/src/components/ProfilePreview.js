@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './profilepreview.scss';
 
 const ProfilePreview = props => (
@@ -16,7 +17,7 @@ const ProfilePreview = props => (
     <div className="profile-preview-controls">
       <button className="button-b" onClick={() => props.onClickSettings()}>
         <i className="icon-settings" />
-        <span>Settings</span>
+        <span>{string.sidebar.settings}</span>
       </button>
     </div>
   </div>

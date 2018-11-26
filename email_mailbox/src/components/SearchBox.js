@@ -5,6 +5,7 @@ import SearchHints from './SearchHints';
 import SearchOptions from './SearchOptions';
 import MenuHOC, { MenuType } from './MenuHOC';
 import anime from 'animejs';
+import string from './../lang';
 import './searchbox.scss';
 
 const KEY_NEW_LINE = 13;
@@ -46,7 +47,7 @@ class SearchBox extends Component {
           onChange={this.handleChangeInput}
           onFocus={this.handleFocusInput}
           onKeyPress={this.handleKeyPressInput}
-          placeholder="Search"
+          placeholder={string.header.search}
           value={this.props.searchParams.text}
         />
         <div className="header-search-toggle">

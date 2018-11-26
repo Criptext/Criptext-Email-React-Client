@@ -1,3 +1,5 @@
+import string from '../lang';
+
 const actionHandlerKeys = {
   advice: {
     trash: 'empty-trash'
@@ -30,147 +32,141 @@ const messagesContent = {
   advice: {
     trash: {
       priority: messagePriorities.LOW,
-      description:
-        'Messages that have been in Trash more than 30 days will be automatically deleted',
-      action: 'Empty Trash',
+      description: string.messages.trash.description,
+      action: string.messages.trash.action,
       actionHandlerKey: actionHandlerKeys.advice.trash
     }
   },
   suggestion: {
     update: {
       priority: messagePriorities.TOP,
-      description: 'A new version of Criptext is available!',
-      action: 'Click here to Download Update',
+      description: string.messages.update.description,
+      action: string.messages.update.action,
       actionHandlerKey: actionHandlerKeys.suggestion.update
     }
   },
   question: {
     newDevice: {
       priority: messagePriorities.HIGH,
-      ask: 'Are you trying to access from',
+      ask: string.messages.new_device,
       acceptHandlerKey: actionHandlerKeys.question.newDevice.acceptKey,
       denyHandlerKey: actionHandlerKeys.question.newDevice.denyKey
     }
   },
   success: {
+    changePassword: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.change_password.success.description
+    },
+    downloadFile: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.download_file.success.description
+    },
     emailSent: {
       priority: messagePriorities.MEDIUM,
-      description: 'Your message has been sent.',
-      action: 'View message',
+      description: string.messages.emailSent.success.description,
+      action: string.messages.emailSent.success.action,
       actionHandlerKey: actionHandlerKeys.success.emailSent
+    },
+    recoveryEmailChanged: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.recovery_email_change.success.description
+    },
+    recoveryEmailLinkConfirmation: {
+      priority: messagePriorities.MEDIUM,
+      description:
+        string.messages.recovery_email_link_confirmation.success.description
     },
     rememberSharePassphrase: {
       priority: messagePriorities.MEDIUM,
-      description:
-        'Remember to send the passphrase to your non-Criptext recipients'
-    },
-    downloadFile: {
-      priority: messagePriorities.MEDIUM,
-      description: "Download successfully. Check your 'Downloads' folder"
+      description: string.messages.remember_share_passphrase.description
     },
     removeDevice: {
       priority: messagePriorities.MEDIUM,
-      description: 'Device removed'
+      description: string.messages.remove_device.success.description
     },
-    changePassword: {
+    resetPasswordSendLink: {
       priority: messagePriorities.MEDIUM,
-      description: 'Password changed'
-    },
-    recoveryEmailChanged: {
-      priority: messagePriorities.MEDIUM,
-      description: 'Recovery email changed'
-    },
-    recoveryEmailLinkConfirmation: {
-      priority: messagePriorities.MEDIUM,
-      description: 'Confirmation link sent. Check your inbox and confirm'
+      description: string.messages.reset_password_send_link.success.description
     },
     twoFactorAuthTurnOff: {
       priority: messagePriorities.MEDIUM,
-      description: 'Two-Factor Authentication was turned off'
-    },
-    resetPasswordSendLink: {
-      priority: messagePriorities.MEDIUM,
-      description:
-        'A reset link was sent to your recovery email. The link will be valid for 30 minutes'
+      description: string.messages.two_factor_auth_turn_off.description
     }
   },
   error: {
-    network: {
-      priority: messagePriorities.TOP,
-      description: 'Not connected, conecting in 10s',
-      action: 'Try Now',
-      actionHandlerKey: actionHandlerKeys.error.network
+    changePassword: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.change_password.error.description
     },
     downloadFile: {
       priority: messagePriorities.MEDIUM,
-      description: 'An error occurred during download. The file was not saved'
+      description: string.messages.download_file.error.description
     },
-    failedToSend: {
+    emailSent: {
       priority: messagePriorities.MEDIUM,
-      description: 'Failed to send your message'
-    },
-    updateLabels: {
-      priority: messagePriorities.MEDIUM,
-      description: 'Error updating labels. Please try again'
-    },
-    updateThreadLabels: {
-      priority: messagePriorities.MEDIUM,
-      description: 'Error updating email labels. Please try again'
-    },
-    updateUnreadThreads: {
-      priority: messagePriorities.MEDIUM,
-      description: 'Error updating email status. Please try again'
-    },
-    removeThreads: {
-      priority: messagePriorities.MEDIUM,
-      description: 'Error moving emails. Please try again'
+      description: string.messages.emailSent.error.description
     },
     fetchEmails: {
       priority: messagePriorities.MEDIUM,
-      description:
-        'Failed to fetch the emails. Check your connection and try again'
+      description: string.messages.fetchEmails.description
     },
-    removeDevice: {
-      priority: messagePriorities.MEDIUM,
-      description: 'Failed to remove the device. Try again'
-    },
-    changePassword: {
-      priority: messagePriorities.MEDIUM,
-      description:
-        'Failed to change password. The password has not been modified'
+    network: {
+      priority: messagePriorities.TOP,
+      description: string.messages.network.description,
+      action: string.messages.network.action,
+      actionHandlerKey: actionHandlerKeys.error.network
     },
     recoveryEmailChanged: {
       priority: messagePriorities.MEDIUM,
-      description:
-        'Failed to change recovery email. Check your connection and try again'
+      description: string.messages.recovery_email_change.error.description
     },
     recoveryEmailLinkConfirmation: {
       priority: messagePriorities.MEDIUM,
-      description: 'Failed to send confirmation link'
-    },
-    sendOpenEvent: {
-      priority: messagePriorities.MEDIUM,
-      description: 'Failed to send open email. Try again'
-    },
-    unsendEmail: {
-      priority: messagePriorities.MEDIUM,
-      description: 'Failed to unsend the email. Unknown status code:'
-    },
-    unsendEmailExpired: {
-      priority: messagePriorities.MEDIUM,
       description:
-        'Failed to unsend the email. Time (1h) for unsending has already expired.'
+        string.messages.recovery_email_link_confirmation.error.description
+    },
+    removeDevice: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.remove_device.error.description
+    },
+    removeThreads: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.remove_threads.description
     },
     resetPasswordSendLink: {
       priority: messagePriorities.MEDIUM,
-      description:
-        'You need to set and confirm a Recovery Email to reset your password'
+      description: string.messages.reset_password_send_link.error.description
+    },
+    sendOpenEvent: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.send_open_event.description
+    },
+    unsendEmail: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.unsend_email.description
+    },
+    unsendEmailExpired: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.unsend_email_expired.description
+    },
+    updateLabels: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.update_labels.description
+    },
+    updateThreadLabels: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.update_thread_labels.description
+    },
+    updateUnreadThreads: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.update_unread_threads.description
     }
   },
   establish: {
     internet: {
       priority: messagePriorities.TOP,
-      description: 'Connection reestablished'
+      description: string.messages.internet.description
     }
   }
 };

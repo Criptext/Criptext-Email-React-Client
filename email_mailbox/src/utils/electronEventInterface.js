@@ -702,7 +702,7 @@ ipcRenderer.on('display-message-error-download', () => {
 
 ipcRenderer.on('failed-to-send', () => {
   const messageData = {
-    ...Messages.error.failedToSend,
+    ...Messages.error.emailSent,
     type: MessageType.ERROR
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
