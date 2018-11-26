@@ -136,21 +136,25 @@ class ComposerWrapper extends Component {
   }
 
   async componentDidMount() {
-    let state;
+    let state, key, iv;
     if (this.emailToEdit) {
       const composerData = await this.getComposerDataByType(this.emailToEdit);
       state = {
         ...composerData,
         status: composerData.status || Status.ENABLED
       };
+      key = composerData.key;
+      iv = composerData.iv;
     } else {
       const composerData = await this.getDefaultComposerWithSignature();
       const status = myAccount.signatureEnabled
         ? Status.ENABLED
         : Status.DISABLED;
       state = { ...composerData, status };
+      const keyAndIv = generateKeyAndIv(null, 8);
+      key = keyAndIv.key;
+      iv = keyAndIv.iv;
     }
-    const { key, iv } = generateKeyAndIv(null, 8);
     state = { ...state, key, iv };
     fileManager.on(FILE_PROGRESS, this.handleUploadProgress);
     fileManager.on(FILE_FINISH, this.handleUploadSuccess);
@@ -438,7 +442,7 @@ class ComposerWrapper extends Component {
     let emailId, key;
     try {
       [emailId] = await createEmail(emailData);
-      const files = getFileParamsToSend(this.state.files);
+      const files = await getFileParamsToSend(this.state.files);
       const peer = {
         recipientId: myAccount.recipientId,
         type: 'peer',

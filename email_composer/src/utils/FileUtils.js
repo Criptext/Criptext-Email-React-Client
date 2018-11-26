@@ -108,12 +108,35 @@ export const formFileParamsToDatabase = (files, emailId) => {
 
 export const getFileParamsToSend = files => {
   if (!files.length) return undefined;
-  return files.map(file => ({
-    token: file.token,
-    name: file.fileData.name,
-    size: file.fileData.size,
-    mimeType: file.fileData.type
-  }));
+
+  return new Promise((resolve, reject) => {
+    const tokensToDuplicate = files
+      .filter(file => file.shouldDuplicate === true)
+      .map(file => file.token);
+    if (tokensToDuplicate.length === 0) {
+      const data = files.map(file => ({
+        token: file.token,
+        name: file.fileData.name,
+        size: file.fileData.size,
+        mimeType: file.fileData.type
+      }));
+      return resolve(data);
+    } else if (tokensToDuplicate.length > 0) {
+      fileManager.duplicateFiles(tokensToDuplicate, (err, res) => {
+        if (err) {
+          return reject(undefined);
+        }
+        const { duplicates } = JSON.parse(res);
+        const data = files.map(file => ({
+          token: duplicates[file.token],
+          name: file.fileData.name,
+          size: file.fileData.size,
+          mimeType: file.fileData.type
+        }));
+        return resolve(data);
+      });
+    }
+  });
 };
 
 export const setCryptoInterfaces = (keyBase64, ivBase64) => {

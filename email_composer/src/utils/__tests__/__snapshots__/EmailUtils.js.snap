@@ -78,8 +78,47 @@ exports[`[Reply, Reply-all, Forward]  Form data to forward 1`] = `
 Object {
   "bccEmails": Array [],
   "ccEmails": Array [],
+  "files": Array [],
   "htmlBody": "<p>Modified body content</p>",
+  "iv": null,
+  "key": null,
   "textSubject": "FW: Email subject 1",
+  "threadId": undefined,
+  "toEmails": Array [],
+}
+`;
+
+exports[`[Reply, Reply-all, Forward]  Form data to forward: Forward attachments 1`] = `
+Object {
+  "bccEmails": Array [],
+  "ccEmails": Array [],
+  "files": Array [
+    Object {
+      "fileData": Object {
+        "date": "2018-11-23 17:24:36",
+        "emailId": 2,
+        "ephemeral": 0,
+        "ephemeralStart": 0,
+        "ephemeralTime": 0,
+        "id": 1,
+        "mimeType": "image/png",
+        "name": "Criptext_file_1.png",
+        "readOnly": 0,
+        "size": 149836,
+        "status": 1,
+        "token": "tokenFile1",
+        "type": "image/png",
+      },
+      "mode": "uploaded",
+      "percentage": 100,
+      "shouldDuplicate": true,
+      "token": "tokenFile1",
+    },
+  ],
+  "htmlBody": "<p>Modified body content</p>",
+  "iv": "iv_file1",
+  "key": "key_file1",
+  "textSubject": "FW: Email subject 2",
   "threadId": undefined,
   "toEmails": Array [],
 }
@@ -89,7 +128,10 @@ exports[`[Reply, Reply-all, Forward]  Form data to reply email 1`] = `
 Object {
   "bccEmails": Array [],
   "ccEmails": Array [],
+  "files": Array [],
   "htmlBody": "<p>Modified body content</p>",
+  "iv": null,
+  "key": null,
   "textSubject": "RE: Email subject 1",
   "threadId": "1",
   "toEmails": Array [
@@ -111,7 +153,10 @@ Object {
       "email": "toUser@criptext.com",
     },
   ],
+  "files": Array [],
   "htmlBody": "<p>Modified body content</p>",
+  "iv": null,
+  "key": null,
   "textSubject": "RE: Email subject 1",
   "threadId": "1",
   "toEmails": Array [

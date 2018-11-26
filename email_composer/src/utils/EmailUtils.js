@@ -9,8 +9,11 @@ import {
   composerEvents,
   myAccount,
   getEmailByKey,
-  getContactsByEmailId
+  getContactsByEmailId,
+  getFilesByEmailId,
+  getFileKeyByEmailId
 } from './electronInterface';
+import { FILE_MODES } from './FileUtils';
 
 const filterNonCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) < 0);
@@ -188,6 +191,27 @@ const formReplyForwardContent = (replyType, subject, date, from, to, body) => {
 
 export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const [emailData] = await getEmailByKey(emailKeyToEdit);
+  let files = [];
+  let key = null,
+    iv = null;
+  if (replyType === composerEvents.FORWARD) {
+    const prevFiles = await getFilesByEmailId(emailData.id);
+    files = prevFiles.map(file => {
+      return {
+        fileData: { ...file, type: file.mimeType },
+        mode: FILE_MODES.UPLOADED,
+        percentage: 100,
+        token: file.token,
+        shouldDuplicate: true
+      };
+    });
+    const [fileKeyParams] = await getFileKeyByEmailId(emailData.id);
+    if (fileKeyParams) {
+      key = fileKeyParams.key;
+      iv = fileKeyParams.iv;
+    }
+  }
+
   const threadId =
     replyType === composerEvents.FORWARD ? undefined : emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
@@ -227,7 +251,10 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     bccEmails,
     htmlBody,
     textSubject,
-    threadId
+    threadId,
+    files,
+    key,
+    iv
   };
 };
 

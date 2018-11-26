@@ -5,7 +5,7 @@ import {
   formDataToReply,
   formOutgoingEmailFromData
 } from './../EmailUtils';
-import { emailKey } from './../__mocks__/electronInterface';
+import { emailKey, emailKeyWithFile } from './../__mocks__/electronInterface';
 import { appDomain } from './../const';
 
 jest.mock('./../../utils/const');
@@ -34,6 +34,12 @@ describe('[Reply, Reply-all, Forward] ', () => {
 
   it('Form data to forward', async () => {
     const dataToEdit = await formDataToReply(emailKey, 'forward');
+    dataToEdit.htmlBody = '<p>Modified body content</p>';
+    expect(dataToEdit).toMatchSnapshot();
+  });
+
+  it('Form data to forward: Forward attachments', async () => {
+    const dataToEdit = await formDataToReply(emailKeyWithFile, 'forward');
     dataToEdit.htmlBody = '<p>Modified body content</p>';
     expect(dataToEdit).toMatchSnapshot();
   });
