@@ -37,21 +37,31 @@ const getAndFixContacts = async knex => {
             return;
           }
 
-          const [previousDuplicatedContact] = await trx(Table.CONTACT).where({
-            email: fixedEmail
-          });
-          await trx(Table.EMAIL_CONTACT)
-            .where({ contactId: contact.id })
-            .update({
-              contactId: previousDuplicatedContact.id
-            });
-          await trx(Table.CONTACT)
-            .where({ id: contact.id })
-            .del();
+          const previousDuplicatedContact = await trx
+            .select('*')
+            .from(Table.CONTACT)
+            .where('email', 'like', `${fixedEmail}`);
+          const duplicatedContactIds = previousDuplicatedContact.map(contact =>
+            Number(contact.id)
+          );
+          duplicatedContactIds.push(contact.id);
+          duplicatedContactIds.sort((a, b) => a - b);
 
+          if (duplicatedContactIds.length) {
+            const [firstId, ...anotherContactIds] = duplicatedContactIds;
+            await trx(Table.EMAIL_CONTACT)
+              .whereIn('contactId', duplicatedContactIds)
+              .update({
+                contactId: firstId
+              });
+            await trx(Table.CONTACT)
+              .whereIn('id', anotherContactIds)
+              .del();
+          }
           return await trx(Table.CONTACT)
             .where({ email: fixedEmail })
             .update({
+              name: fixedName,
               email: fixedEmail.toLowerCase()
             });
         });
