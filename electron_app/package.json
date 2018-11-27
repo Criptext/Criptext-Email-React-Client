@@ -2,8 +2,8 @@
   "name": "criptext",
   "version": "0.14.0",
   "author": {
-    "name": "Criptext Inc.",
-    "email": "info@criptext.com",
+    "name": "Criptext Inc",
+    "email": "support@criptext.com",
     "url": "https://criptext.com"
   },
   "homepage": "https://criptext.com",
@@ -33,7 +33,7 @@
     "publish": "build --mac --win -p onTag"
   },
   "build": {
-    "appId": "com.criptext.criptextmail",
+    "appId": "com.criptext.emailclient",
     "buildVersion": "1",
     "mac": {
       "target": [
@@ -106,20 +106,33 @@
       ]
     },
     "win": {
-      "target": "nsis",
+      "target": [
+        "nsis",
+        "appx"
+      ],
       "icon": "build/icon.ico",
       "publish": [
         {
           "provider": "generic",
           "url": "https://cdn.criptext.com/Criptext-Email-Desktop/windows"
         }
-      ]
+      ],
+      "certificateSubjectName": "Criptext Inc"
     },
     "nsis": {
       "oneClick": true,
       "menuCategory": true,
       "deleteAppDataOnUninstall": true,
       "artifactName": "${productName}-${version}.${ext}"
+    },
+    "appx": {
+      "applicationId": "com.criptext.emailclient",
+      "backgroundColor": "#373a45",
+      "displayName": "Criptext",
+      "identityName": "CriptextInc.Criptext",
+      "publisher": "Criptext Inc",
+      "publisherDisplayName": "Criptext Inc",
+      "languages": ["en-US"]
     }
   },
   "devDependencies": {

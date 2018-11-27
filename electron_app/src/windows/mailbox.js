@@ -53,7 +53,8 @@ const create = () => {
     ev.preventDefault();
   });
   mailboxWindow.on('close', e => {
-    if (!globalManager.forcequit.get()) {
+    const isMacOs = process.platform === 'darwin';
+    if (isMacOs && !globalManager.forcequit.get()) {
       e.preventDefault();
       mailboxWindow.hide();
     }
@@ -82,7 +83,9 @@ const create = () => {
     });
   });
   mailboxWindow.webContents.once('did-frame-finish-load', () => {
-    if (!globalManager.isMAS.get()) {
+    const isStore =
+      globalManager.isWindowsStore.get() || globalManager.isMAS.get();
+    if (!isStore) {
       appUpdater();
     }
   });

@@ -3,7 +3,7 @@ const { autoUpdater } = require('electron-updater');
 const notifier = require('node-notifier');
 const path = require('path');
 const globalManager = require('./globalManager');
-const appId = 'com.criptext.criptextmail';
+const appId = 'com.criptext.emailclient';
 
 let currentUpdaterType;
 let isDownloadingUpdate = false;
@@ -13,6 +13,7 @@ const updaterTypes = {
   NONE: 'none'
 };
 const iconPath = path.join(__dirname, './../resources/launch-icons/icon.png');
+
 autoUpdater.autoDownload = false;
 
 autoUpdater.on('error', error => {
@@ -148,5 +149,6 @@ module.exports = {
   appUpdater,
   checkForUpdates,
   downloadUpdate,
-  showNotification
+  showNotification,
+  iconPath
 };

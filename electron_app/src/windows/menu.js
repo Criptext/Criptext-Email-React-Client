@@ -1,8 +1,11 @@
 const { BrowserWindow } = require('electron');
+const path = require('path');
 const { checkForUpdates } = require('./../updater');
 const { quit } = require('./mailbox');
 const composerWindowManager = require('./composer');
 const globalManager = require('./../globalManager');
+const mainIcon = path.join(__dirname, './../../resources/icons/png/16x16.png');
+const trayIcon = path.join(__dirname, './../../resources/icons/png/32x32.png');
 
 const template = [
   {
@@ -181,6 +184,35 @@ if (process.platform === 'darwin') {
   );
 }
 
+const trayIconTemplate = [
+  {
+    label: 'Criptext',
+    icon: mainIcon,
+    type: 'normal',
+    enabled: false
+  },
+  { type: 'separator' },
+  {
+    label: 'New email',
+    type: 'normal',
+    click: () => composerWindowManager.openNewComposer()
+  },
+  {
+    label: 'Quit',
+    type: 'normal',
+    click: () => quit()
+  }
+];
+
+// Criptext menu - updater (Windows Store)
+if (!globalManager.isWindowsStore.get()) {
+  trayIconTemplate.splice(3, 0, {
+    label: 'Check for updates',
+    type: 'normal',
+    click: checkForUpdates
+  });
+}
+
 const showWindows = () => {
   const visibleWindows = BrowserWindow.getAllWindows();
   visibleWindows.reverse().forEach(w => {
@@ -190,5 +222,7 @@ const showWindows = () => {
 
 module.exports = {
   template,
-  showWindows
+  showWindows,
+  trayIconTemplate,
+  trayIcon
 };

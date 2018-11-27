@@ -69,7 +69,7 @@ const createComposerWindow = () => {
     width: composerSize.width,
     height: composerSize.height,
     show: false,
-    title: 'New Secure Message',
+    title: '  New Secure Message',
     minWidth: composerSize.minWidth,
     minHeight: composerSize.minHeight
   });
