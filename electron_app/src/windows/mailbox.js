@@ -89,6 +89,13 @@ const create = () => {
   mailboxWindowState.manage(mailboxWindow);
 };
 
+const showFileExplorer = filename => {
+  const downloadsPath = app.getPath('downloads');
+  const filePath = path.join(downloadsPath, filename);
+  shell.showItemInFolder(filePath);
+  mailboxWindow.send('display-message-success-download');
+};
+
 const show = async () => {
   const existVisibleWindow = BrowserWindow.getAllWindows().filter(w => {
     return w.isVisible();
@@ -186,5 +193,6 @@ module.exports = {
   show,
   isVisibleAndFocused,
   toggleMaximize,
-  minimize
+  minimize,
+  showFileExplorer
 };

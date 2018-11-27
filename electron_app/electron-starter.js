@@ -13,8 +13,9 @@ const composerWindowManager = require('./src/windows/composer');
 const { template, showWindows } = require('./src/windows/menu');
 const { processEventsQueue } = require('./src/eventQueueManager');
 const { showNotification } = require('./src/updater');
-require('./src/ipc/utils.js')
 require('./src/ipc/mailbox.js')
+require('./src/ipc/composer.js')
+require('./src/ipc/utils.js')
 
 globalManager.forcequit.set(false);
 
