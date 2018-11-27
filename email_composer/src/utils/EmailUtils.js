@@ -159,6 +159,7 @@ const formForwardHeader = (subject, date, from, to) => {
   <br/>
   <span>To: ${toFormatted}</span>
   <br/>
+  <br/>
   `;
 };
 

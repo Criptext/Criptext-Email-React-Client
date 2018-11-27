@@ -211,31 +211,21 @@ export const formFilesFromData = ({ files, date }) => {
   });
 };
 
-export const formIncomingEmailFromData = (
-  {
-    bcc,
-    body,
-    cc,
-    date,
-    from,
-    isEmailApp,
-    isFromMe,
-    metadataKey,
-    subject,
-    to,
-    threadId,
-    unread,
-    messageId
-  },
-  isExternal
-) => {
-  const content = isExternal
-    ? body
-      ? isEmailApp
-        ? Utf8Decode(sanitize(body))
-        : Utf8Decode(body)
-      : ''
-    : Utf8Decode(body);
+export const formIncomingEmailFromData = ({
+  bcc,
+  body,
+  cc,
+  date,
+  from,
+  isFromMe,
+  metadataKey,
+  subject,
+  to,
+  threadId,
+  unread,
+  messageId
+}) => {
+  const content = body ? Utf8Decode(sanitize(body)) : '';
   const preview = body
     ? cleanHTML(content)
         .slice(0, 100)
@@ -282,8 +272,7 @@ export const getRecipientIdFromEmailAddressTag = emailAddressTag => {
       ? emailAddressMatches[0]
       : emailAddressTag;
   }
-  const isExternal = !!recipientId.match(emailRegex);
-  return { recipientId: recipientId.toLowerCase(), isExternal };
+  return recipientId.toLowerCase();
 };
 
 export const parseSignatureHtmlToEdit = signatureHtml => {

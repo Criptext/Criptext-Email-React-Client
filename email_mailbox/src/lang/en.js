@@ -74,10 +74,10 @@ export default {
   sidebar: {
     compose: 'compose',
     enter_new_label: 'enter new label',
-    invite_a_friend: 'invite a friend',
-    labels: 'labels',
-    new_label: 'new label',
-    settings: 'settings'
+    invite_a_friend: 'Invite a friend',
+    labels: 'Labels',
+    new_label: 'New label',
+    settings: 'Settings'
   },
   messages: {
     change_password: {
