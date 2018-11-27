@@ -2,6 +2,7 @@ import FileManager from 'criptext-files-sdk';
 import CryptoJS from 'crypto-js';
 import base64js from 'base64-js';
 import { getFileKeyByEmailId, myAccount } from './electronInterface';
+import { openFileExplorer } from './ipc';
 
 const MAX_REQUESTS = 5;
 
@@ -32,7 +33,11 @@ export const setFileErrorHandler = errorHandler => {
   fileManager.on(FILE_ERROR, errorHandler);
 };
 
-export const setDownloadHandler = token => {
+export const setDownloadHandler = (token, filename) => {
+  if (filename) {
+    openFileExplorer(filename);
+    return;
+  }
   fileManager.downloadFile(token, err => {
     return err;
   });

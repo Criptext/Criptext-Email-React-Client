@@ -16,6 +16,7 @@
   
     &:hover{
       background-color: #f8f7f7;
+      cursor: pointer;
 
       .file-button-container{
         display: flex;
@@ -23,13 +24,20 @@
     }
   
     &.file-loading {
-
       .file-content-icon, .file-content-detail{
         opacity: 0.5;
       }
 
       .file-button-cancel {
         display: flex;
+      }
+    }
+
+    &.file-done {
+      .file-content-icon{
+        div{
+          display: flex;
+        }
       }
     }
   
@@ -77,10 +85,31 @@
         background-color: #4a90e2; 
       }
 
-      i{
+      >i{
         color: white;
         font-size: 26px;
         margin: 0 auto;
+      }
+
+      div{
+        align-items: center;
+        background: rgb(0, 145, 255);
+        border-radius: 50%;
+        bottom: -5px;
+        display: none;
+        height: 11px;
+        position: absolute;
+        right: -5px;
+        width: 11px;
+
+        i{
+          color: white;
+          font-size: 15px;
+          left: -2px;
+          line-height: 15px;
+          position: relative;
+          top: 0px;
+        }
       }
     }
 

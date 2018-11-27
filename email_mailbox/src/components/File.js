@@ -10,8 +10,7 @@ const File = props => {
       <div
         id={props.file.token}
         className={'file-content ' + defineClassFile(props.status)}
-        data-tip=""
-        data-for={props.file.token}
+        onClick={() => props.onDownloadFile()}
       >
         {renderFileIcon(props.file.mimeType)}
         <div className="file-content-detail">
@@ -53,15 +52,15 @@ const renderFileIcon = mimeType => {
   return (
     <div className={`file-content-icon file-content-icon-${filetype}`}>
       <i className={`icon-${filetype}`} />
+      <div>
+        <i className="icon-correct" />
+      </div>
     </div>
   );
 };
 
-const renderDownloadButton = props => (
-  <button
-    className="file-button-download"
-    onClick={() => props.onDownloadFile()}
-  >
+const renderDownloadButton = () => (
+  <button className="file-button-download">
     <i className="icon-download" />
   </button>
 );
@@ -93,12 +92,9 @@ const FileStatus = {
 File.propTypes = {
   displayProgressBar: PropTypes.bool,
   file: PropTypes.object,
+  onDownloadFile: PropTypes.func,
   percentage: PropTypes.number,
   status: PropTypes.string
-};
-
-renderDownloadButton.propTypes = {
-  onDownloadFile: PropTypes.func
 };
 
 renderCancelButton.propTypes = {

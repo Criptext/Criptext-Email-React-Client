@@ -1,10 +1,6 @@
 const ipc = require('@criptext/electron-better-ipc');
-const composerWindowManager = require('../windows/composer');
+const mailboxWindow = require('../windows/mailbox');
 
-ipc.answerRenderer('open-filled-composer', async data => {
-  await composerWindowManager.editDraft(data);
-});
-
-ipc.answerRenderer('open-empty-composer', () => {
-  composerWindowManager.openNewComposer();
+ipc.answerRenderer('open-file-explorer', filename => {
+  mailboxWindow.showFileExplorer(filename);
 });
