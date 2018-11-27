@@ -24,9 +24,7 @@ const LOGIN_ERROR = {
   },
   TOO_MANY_REQUESTS: {
     name: 'Too many requests',
-    description:
-      "It seems that you're sending too many requests in a row.\n" +
-      'Keep calm and try in a few moments again.'
+    description: 'Too many consecutive attempts.\nPlease try again in '
   }
 };
 

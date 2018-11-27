@@ -15,6 +15,7 @@ import {
 } from './../utils/electronInterface';
 import { hashPassword } from '../utils/HashUtils';
 import { censureEmailAddress } from '../utils/StringUtils';
+import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 
 const LOGIN_STATUS = {
   SUCCESS: 200,
@@ -94,12 +95,13 @@ class LostDevicesWrapper extends Component {
         username,
         password: hashedPassword
       };
-      const { status, body } = await login(submittedData);
-      this.handleLoginStatus(status, body, username);
+      const res = await login(submittedData);
+      const { status, body, headers } = res;
+      this.handleLoginStatus(status, body, headers, username);
     }
   };
 
-  handleLoginStatus = (status, body, username) => {
+  handleLoginStatus = (status, body, headers, username) => {
     switch (status) {
       case LOGIN_STATUS.SUCCESS: {
         const recipientId = username;
@@ -120,7 +122,15 @@ class LostDevicesWrapper extends Component {
         break;
       }
       case LOGIN_STATUS.TOO_MANY_REQUESTS: {
-        this.throwLoginError(errors.login.TOO_MANY_REQUESTS);
+        const seconds = headers['retry-after'];
+        const tooManyRequestErrorMessage = {
+          ...errors.login.TOO_MANY_REQUESTS
+        };
+        // eslint-disable-next-line fp/no-mutation
+        tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
+          seconds
+        );
+        this.throwLoginError(tooManyRequestErrorMessage);
         break;
       }
       case LOGIN_STATUS.TOO_MANY_DEVICES: {

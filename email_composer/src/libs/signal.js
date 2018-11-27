@@ -20,6 +20,7 @@ import {
 import { defineTypeSource } from '../utils/FileUtils';
 import { convertToHumanSize } from '../utils/StringUtils';
 import { formExternalAttachmentTemplate } from '../utils/EmailUtils';
+import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -244,9 +245,13 @@ const encryptPostEmail = async ({
     files
   });
   const res = await postEmail(data);
-
   if (res.status === 429) {
-    throw new CustomError(errors.message.TOO_MANY_RECIPIENTS);
+    const seconds = res.headers['retry-after'];
+    const tooManyRequestErrorMessage = { ...errors.login.TOO_MANY_REQUESTS };
+    tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
+      seconds
+    );
+    throw new CustomError(tooManyRequestErrorMessage);
   } else if (res.status !== 200) {
     const { name, description } = errors.message.ENCRYPTING;
     throw new CustomError({

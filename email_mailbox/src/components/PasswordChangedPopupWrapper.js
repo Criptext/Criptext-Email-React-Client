@@ -2,9 +2,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
-import { requiredMinLength, unlockDevice } from './../utils/electronInterface';
+import {
+  requiredMinLength,
+  unlockDevice,
+  throwError,
+  errors
+} from './../utils/electronInterface';
 import PasswordChangedPopup from './PasswordChangedPopup';
 import { handleDeleteDeviceData } from '../utils/electronEventInterface';
+import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
+
+const UNLOCK_DEVICE_STATUS = {
+  SUCCESS: 200,
+  WRONG_PASSWORD: 400,
+  TOO_MANY_REQUESTS: 429
+};
 
 class PasswordChangedPopupWrapper extends Component {
   constructor(props) {
@@ -85,15 +97,37 @@ class PasswordChangedPopupWrapper extends Component {
     const params = {
       password: hashPassword(this.state.value)
     };
-    const { status } = await unlockDevice(params);
-    if (status === 400) {
-      return this.setState({
-        hasError: true,
-        errorMessage: 'Wrong password'
-      });
-    }
-    if (status === 200) {
-      return this.props.onCloseMailboxPopup();
+    const { status, headers } = await unlockDevice(params);
+    switch (status) {
+      case UNLOCK_DEVICE_STATUS.SUCCESS: {
+        this.props.onCloseMailboxPopup();
+        return;
+      }
+      case UNLOCK_DEVICE_STATUS.TOO_MANY_REQUESTS: {
+        const seconds = headers['retry-after'];
+        const tooManyRequestErrorMessage = {
+          ...errors.login.TOO_MANY_REQUESTS
+        };
+        tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
+          seconds
+        );
+        throwError(tooManyRequestErrorMessage);
+        return;
+      }
+      case UNLOCK_DEVICE_STATUS.WRONG_PASSWORD: {
+        this.setState({
+          hasError: true,
+          errorMessage: 'Wrong password'
+        });
+        return;
+      }
+      default: {
+        throwError({
+          name: 'Failed to confirm password',
+          description: `Code: ${status || 'Unknown'}`
+        });
+        return;
+      }
     }
   };
 }
