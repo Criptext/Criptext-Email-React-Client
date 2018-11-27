@@ -4,6 +4,7 @@ const SOCKET_URL =
   process.env.NODE_ENV === 'development' ? DEV_SOCKET_URL : PROD_SOCKET_URL;
 let client, reconnect, messageListener, socketConnection;
 const reconnectDelay = 2000;
+const mailboxWindow = require('./windows/mailbox');
 const globalManager = require('./globalManager');
 const NETWORK_STATUS = {
   ONLINE: 'online',
@@ -78,13 +79,20 @@ const handleError = (error, errorMessage) => {
 };
 
 const setConnectionStatus = networkStatus => {
+  const prevNetworkStatus = globalManager.internetConnection.getStatus();
   switch (networkStatus) {
     case NETWORK_STATUS.ONLINE: {
-      globalManager.internetConnection.setStatus(true);
+      if (prevNetworkStatus !== true) {
+        globalManager.internetConnection.setStatus(true);
+        mailboxWindow.send('network-connection-established', null);
+      }
       break;
     }
     case NETWORK_STATUS.OFFLINE: {
-      globalManager.internetConnection.setStatus(false);
+      if (prevNetworkStatus !== false) {
+        globalManager.internetConnection.setStatus(false);
+        mailboxWindow.send('lost-network-connection', null);
+      }
       break;
     }
     default:
@@ -100,6 +108,7 @@ const initPingParams = () => {
 const checkAlive = () => {
   if (shouldSendPing === undefined || shouldSendPing === '1') {
     shouldSendPing = 0;
+    setConnectionStatus(NETWORK_STATUS.ONLINE);
   } else {
     setConnectionStatus(NETWORK_STATUS.OFFLINE);
     log('Error: Lost Connection. Check internet');

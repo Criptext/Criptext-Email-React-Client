@@ -112,11 +112,10 @@ export default {
         'Falló al pedir emails. Revisa tu conexión e intenta de nuevo'
     },
     internet: {
-      description: 'Conexión restalecida'
+      description: 'Conexión restablecida'
     },
     network: {
-      description: 'Sin conexión, conectando en 10s',
-      action: 'Intentar ahora'
+      description: 'Sin conexión. Intentando reconectar'
     },
     new_device: {
       ask: 'Estás tratando de acceder desde'

@@ -771,6 +771,22 @@ ipcRenderer.on(
   }
 );
 
+ipcRenderer.on('network-connection-established', () => {
+  const messageData = {
+    ...Messages.establish.internet,
+    type: MessageType.ESTABLISH
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+});
+
+ipcRenderer.on('lost-network-connection', () => {
+  const messageData = {
+    ...Messages.error.network,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+});
+
 /* Window events
   ----------------------------- */
 export const sendOpenEventErrorMessage = () => {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Message from './Message';
 import { Event, addEvent, removeEvent } from '../utils/electronEventInterface';
+import { messagePriorities } from '../data/message';
 
 const MESSAGE_DURATION = 5000;
 const QUESTION_DURATION = 5 * 60 * 1000;
@@ -106,7 +107,10 @@ class MessageWrapper extends Component {
       displayMessage: true
     };
     this.setState(newState, () => {
-      const duration = ask ? QUESTION_DURATION : MESSAGE_DURATION;
+      const isAskOrNetworkError = ask || priority === messagePriorities.HIGH;
+      const duration = isAskOrNetworkError
+        ? QUESTION_DURATION
+        : MESSAGE_DURATION;
       this.hideMessageTimeout = setTimeout(() => {
         this.hideMessage();
       }, duration);
