@@ -251,7 +251,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     toArray,
     messageId
   } = params;
-  const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+  const recipientId = getRecipientIdFromEmailAddressTag(from);
   const [prevEmail] = await getEmailByKey(metadataKey);
   const isSpam = labels
     ? labels.find(label => label === LabelType.spam.text)
@@ -303,7 +303,6 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       cc: cc || ccArray,
       date,
       from,
-      isEmailApp: !!messageType,
       isFromMe,
       metadataKey,
       deviceId: senderDeviceId,
@@ -313,10 +312,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       unread,
       messageId
     };
-    const { email, recipients } = await formIncomingEmailFromData(
-      data,
-      isExternal
-    );
+    const { email, recipients } = await formIncomingEmailFromData(data);
     notificationPreview = email.preview;
     const filesData =
       files && files.length

@@ -97,42 +97,37 @@ describe('Add collapse div ', () => {
 describe('Get recipientId from EmailAddressTag ', () => {
   it('Should get recipientId from criptext domain', () => {
     const from = `"Alice$$" <Alice@${appDomain}>`;
-    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
     const result = 'alice';
     expect(recipientId).toEqual(result);
-    expect(isExternal).toBeFalsy();
   });
 
   it('Should get recipientId from external domain', () => {
     const from = 'Bob 8989 <Bob@domain.com>';
-    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
     const result = 'bob@domain.com';
     expect(recipientId).toEqual(result);
-    expect(isExternal).toBeTruthy();
   });
 
   it('Should get recipientId from external domain, with name comma added', () => {
     const from = `Lola, <lola@domain.com>`;
-    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
     const result = 'lola@domain.com';
     expect(recipientId).toEqual(result);
-    expect(isExternal).toBeTruthy();
   });
 
   it('Should get recipientId from external domain, with name as emailadresstag', () => {
     const from = `<alice@${appDomain}> <lola@domain.com>`;
-    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
     const result = 'lola@domain.com';
     expect(recipientId).toEqual(result);
-    expect(isExternal).toBeTruthy();
   });
 
   it('Should get recipientId from external domain, with emailadresstag without tag', () => {
     const from = `alice@domain.com`;
-    const { recipientId, isExternal } = getRecipientIdFromEmailAddressTag(from);
+    const recipientId = getRecipientIdFromEmailAddressTag(from);
     const result = 'alice@domain.com';
     expect(recipientId).toEqual(result);
-    expect(isExternal).toBeTruthy();
   });
 });
 
