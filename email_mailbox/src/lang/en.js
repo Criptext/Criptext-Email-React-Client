@@ -114,8 +114,7 @@ export default {
       description: 'Connection reestablished'
     },
     network: {
-      description: 'Not connected, conecting in 10s',
-      action: 'Try Now'
+      description: 'Not connected. Trying to reconnect'
     },
     new_device: {
       ask: 'Are you trying to access from'
