@@ -33,7 +33,7 @@
     "publish": "build --mac --win -p onTag"
   },
   "build": {
-    "appId": "com.criptext.emailclient",
+    "appId": "com.criptext.criptextmail",
     "buildVersion": "1",
     "mac": {
       "target": [
@@ -57,13 +57,7 @@
       "identity": "Criptext Inc.",
       "entitlements": "build/entitlements.mac.plist",
       "provisioningProfile": "build/Criptext_Mail_Distribution.provisionprofile",
-      "type": "distribution",
-      "publish": [
-        {
-          "provider": "generic",
-          "url": "https://cdn.criptext.com/Criptext-Email-Desktop/mac"
-        }
-      ]
+      "type": "distribution"
     },
     "pkg": {
       "identity": "Criptext Inc.",
