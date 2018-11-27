@@ -206,8 +206,8 @@ const trayIconTemplate = [
 
 // Criptext menu - updater (Windows Store)
 if (!globalManager.isWindowsStore.get()) {
-  trayIconTemplate.splice(2, 0, {
-    label: 'Check for updates...',
+  trayIconTemplate.splice(3, 0, {
+    label: 'Check for updates',
     type: 'normal',
     click: checkForUpdates
   });

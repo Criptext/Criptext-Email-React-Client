@@ -13,10 +13,6 @@ const updaterTypes = {
   NONE: 'none'
 };
 const iconPath = path.join(__dirname, './../resources/launch-icons/icon.png');
-const notificationIconPath = path.join(
-  __dirname,
-  './../resources/notificationIcon.png'
-);
 
 autoUpdater.autoDownload = false;
 

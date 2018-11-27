@@ -216,6 +216,15 @@ const destroyTrayIcon = () => {
 //   App
 app.disableHardwareAcceleration();
 
+const shouldQuitInstance = app.makeSingleInstance((cmdL, wdir) => {
+  initApp();
+});
+
+if (shouldQuitInstance) {
+  app.quit();
+  return;
+}
+
 app.on('ready', () => {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
@@ -224,10 +233,10 @@ app.on('ready', () => {
 });
 
 app.on('window-all-closed', () => {
+  destroyTrayIcon();
   if (process.platform !== 'darwin') {
     app.quit();
   }
-  destroyTrayIcon();
 });
 
 app.on('activate', () => {

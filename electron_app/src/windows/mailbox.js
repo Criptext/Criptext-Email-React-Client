@@ -53,7 +53,8 @@ const create = () => {
     ev.preventDefault();
   });
   mailboxWindow.on('close', e => {
-    if (!globalManager.forcequit.get()) {
+    const isMacOs = process.platform === 'darwin';
+    if (isMacOs && !globalManager.forcequit.get()) {
       e.preventDefault();
       mailboxWindow.hide();
     }
