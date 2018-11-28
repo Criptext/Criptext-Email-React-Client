@@ -247,7 +247,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     threadId,
     to,
     toArray,
-    messageId
+    messageId,
+    external
   } = params;
   const recipientId = getRecipientIdFromEmailAddressTag(from);
   const [prevEmail] = await getEmailByKey(metadataKey);
@@ -273,7 +274,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         bodyKey: metadataKey,
         recipientId,
         deviceId: senderDeviceId,
-        messageType
+        messageType,
+        external
       });
     } catch (e) {
       body = 'Content unencrypted';
