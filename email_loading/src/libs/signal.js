@@ -57,10 +57,7 @@ const createAccount = async ({
     preKeyIds
   });
   if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
-    throw CustomError({
-      name: 'Error creating account',
-      description: `Failed to generate prekeybundle`
-    });
+    throw CustomError(errors.user.PREKEYBUNDLE_FAILED);
   }
   const res = await postUser({
     recipientId,
@@ -81,8 +78,8 @@ const createAccount = async ({
     throw CustomError(tooManyRequestErrorMessage);
   } else if (status !== 200) {
     throw CustomError({
-      name: 'Error creating user',
-      description: `Failed to create user. Code: ${status || 'Unknown'}`
+      name: errors.user.CREATE_USER_FAILED.name,
+      description: errors.user.CREATE_USER_FAILED.description + status
     });
   }
   const privKey = util.toBase64(identityKey.privKey);
@@ -99,17 +96,11 @@ const createAccount = async ({
       registrationId
     });
   } catch (createAccountDbError) {
-    throw CustomError({
-      name: 'Error creating account',
-      description: `Failed to create user in local database`
-    });
+    throw CustomError(errors.user.SAVE_LOCAL);
   }
   const [newAccount] = await getAccount();
   if (!newAccount) {
-    throw CustomError({
-      name: 'Error creating account',
-      description: `Failed to create user in local database`
-    });
+    throw CustomError(errors.user.SAVE_LOCAL);
   }
   const appSettings = await getAppSettings();
   myAccount.initialize(newAccount);
@@ -125,10 +116,7 @@ const createAccount = async ({
   try {
     await createLabel(labels);
   } catch (createLabelsDbError) {
-    throw CustomError({
-      name: 'Error creating account',
-      description: `Failed to create labels in local database`
-    });
+    throw CustomError(errors.user.SAVE_LABELS);
   }
   try {
     await createContact({
@@ -136,10 +124,7 @@ const createAccount = async ({
       email: `${recipientId}@${appDomain}`
     });
   } catch (createContactDbError) {
-    throw CustomError({
-      name: 'Error creating account',
-      description: `Failed to save own contact in local database`
-    });
+    throw CustomError(errors.user.SAVE_OWN_CONTACT);
   }
   return true;
 };
@@ -161,16 +146,13 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
     preKeyIds
   });
   if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
-    throw CustomError({
-      name: 'Error creating account',
-      description: `Failed to generate prekeybundle`
-    });
+    throw CustomError(errors.user.PREKEYBUNDLE_FAILED);
   }
   const { status, text } = await postKeyBundle(keybundle);
   if (status !== 200) {
     throw CustomError({
-      name: 'Error creating account',
-      description: `Failed to post keybundle. Code: ${status || 'Unknown'}`
+      name: errors.user.POST_KEYBUNDLE.name,
+      description: errors.user.POST_KEYBUNDLE.description + status
     });
   }
   const newToken = text;
@@ -194,10 +176,7 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
         registrationId
       });
     } catch (updateAccountDbError) {
-      throw CustomError({
-        name: 'Error creating account',
-        description: `Failed to update account data`
-      });
+      throw CustomError(errors.user.UPDATE_ACCOUNT_DATA);
     }
   } else {
     if (currentAccount) {
@@ -215,20 +194,14 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
         registrationId
       });
     } catch (createAccountDbError) {
-      throw CustomError({
-        name: 'Error creating account',
-        description: `Failed to create user in local database`
-      });
+      throw CustomError(errors.user.SAVE_LOCAL);
     }
 
     const labels = Object.values(LabelType);
     try {
       await createLabel(labels);
     } catch (createLabelsDbError) {
-      throw CustomError({
-        name: 'Error creating account',
-        description: `Failed to create labels in local database`
-      });
+      throw CustomError(errors.user.SAVE_LABELS);
     }
     try {
       await createContact({
@@ -236,10 +209,7 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
         email: `${recipientId}@${appDomain}`
       });
     } catch (createContactDbError) {
-      throw CustomError({
-        name: 'Error creating account',
-        description: `Failed to save own contact in local database`
-      });
+      throw CustomError(errors.user.SAVE_OWN_CONTACT);
     }
   }
   const [newAccount] = await getAccount();
@@ -274,7 +244,10 @@ const uploadKeys = async () => {
   });
   const res = await postKeyBundle(keybundle);
   if (res.status !== 200) {
-    return null;
+    throw CustomError({
+      name: errors.user.POST_KEYBUNDLE.name,
+      description: errors.user.POST_KEYBUNDLE.description + res.status
+    });
   }
   const newToken = res.text;
   const privKey = util.toBase64(identityKey.privKey);
@@ -321,10 +294,7 @@ const createAccountToDB = async ({
         registrationId
       });
     } catch (updateAccountDbError) {
-      throw CustomError({
-        name: 'Error creating account',
-        description: `Failed to update account data`
-      });
+      throw CustomError(errors.user.UPDATE_ACCOUNT_DATA);
     }
   } else {
     if (currentAccount) {
@@ -342,20 +312,14 @@ const createAccountToDB = async ({
         registrationId
       });
     } catch (createAccountDbError) {
-      throw CustomError({
-        name: 'Error creating account',
-        description: `Failed to create user in local database`
-      });
+      throw CustomError(errors.user.SAVE_LOCAL);
     }
 
     const labels = Object.values(LabelType);
     try {
       await createLabel(labels);
     } catch (createLabelsDbError) {
-      throw CustomError({
-        name: 'Error creating account',
-        description: `Failed to create labels in local database`
-      });
+      throw CustomError(errors.user.SAVE_LABELS);
     }
   }
   const [newAccount] = await getAccount();

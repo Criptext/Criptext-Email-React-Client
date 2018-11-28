@@ -203,9 +203,10 @@ class LoadingWrapper extends Component {
       );
     } else {
       clearSyncData();
+      const { name, description } = errors.linkDevices.UPLOAD_DATA;
       throwError({
-        name: 'Link device error',
-        description: `Failed to upload data. Code: ${statusCode}`
+        name,
+        description: description + statusCode
       });
     }
   };
