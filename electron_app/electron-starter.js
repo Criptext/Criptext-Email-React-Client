@@ -10,12 +10,17 @@ const dialogWindow = require('./src/windows/dialog');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
-const { template, showWindows, trayIconTemplate, trayIcon } = require('./src/windows/menu');
+const {
+  template,
+  showWindows,
+  trayIconTemplate,
+  trayIcon
+} = require('./src/windows/menu');
 const { processEventsQueue } = require('./src/eventQueueManager');
 const { showNotification } = require('./src/updater');
-require('./src/ipc/mailbox.js')
-require('./src/ipc/composer.js')
-require('./src/ipc/utils.js')
+require('./src/ipc/mailbox.js');
+require('./src/ipc/composer.js');
+require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
 let tray = null;
@@ -106,7 +111,7 @@ async function initApp() {
 
   ipcMain.on('update-dock-badge', (event, value) => {
     const currentBadge = app.getBadgeCount();
-    if(currentBadge !== value){
+    if (currentBadge !== value) {
       app.setBadgeCount(value);
     }
   });
@@ -132,9 +137,17 @@ async function initApp() {
   });
 
   //   Composer
-  ipcMain.on('close-composer', (e, { composerId, emailId, threadId, hasExternalPassphrase }) => {
-    composerWindowManager.destroy({ composerId, emailId, threadId, hasExternalPassphrase });
-  });
+  ipcMain.on(
+    'close-composer',
+    (e, { composerId, emailId, threadId, hasExternalPassphrase }) => {
+      composerWindowManager.destroy({
+        composerId,
+        emailId,
+        threadId,
+        hasExternalPassphrase
+      });
+    }
+  );
 
   ipcMain.on('save-draft-changes', (e, windowParams) => {
     const { composerId, data } = windowParams;
@@ -192,12 +205,21 @@ const sendEventToAllwWindows = eventName => {
 };
 
 const saveScreenSize = () => {
-  const screenSize = require('electron').screen.getPrimaryDisplay().workAreaSize;
+  const screenSize = require('electron').screen.getPrimaryDisplay()
+    .workAreaSize;
   globalManager.screenSize.save(screenSize);
 };
 
+//   App
+app.disableHardwareAcceleration();
+
+const isWindows = process.platform === 'win32';
+const isLinux = process.platform === 'linux';
+const isDev = process.env.NODE_ENV === 'development';
+
 const setTrayIcon = () => {
-  if (!globalManager.isWindowsStore.get() && !tray) {
+  const isWindowsInstaller = isWindows && !globalManager.isWindowsStore.get();
+  if (isWindowsInstaller && !tray) {
     tray = new Tray(trayIcon);
     const contextMenu = Menu.buildFromTemplate(trayIconTemplate);
     tray.setToolTip('Criptext');
@@ -207,22 +229,20 @@ const setTrayIcon = () => {
 };
 
 const destroyTrayIcon = () => {
-  if (tray) {
+  if (isWindows && tray) {
     tray.destroy();
     tray = null;
   }
 };
 
-//   App
-app.disableHardwareAcceleration();
-
-const shouldQuitInstance = app.makeSingleInstance((cmdL, wdir) => {
-  initApp();
-});
-
-if (shouldQuitInstance) {
-  app.quit();
-  return;
+if ((isWindows || isLinux) && !isDev) {
+  const shouldQuitInstance = app.makeSingleInstance((cmdL, wdir) => {
+    initApp();
+  });
+  if (shouldQuitInstance) {
+    app.quit();
+    return;
+  }
 }
 
 app.on('ready', () => {
