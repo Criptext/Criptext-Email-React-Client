@@ -34,7 +34,14 @@ import {
   validateEmailStatusToSet,
   parseContactRow
 } from './EmailUtils';
-import { SocketCommand, appDomain, EmailStatus, composerEvents } from './const';
+import {
+  SocketCommand,
+  appDomain,
+  EmailStatus,
+  composerEvents,
+  EXTERNAL_RECIPIENT_ID_SERVER,
+  EXTERNAL_DEVICE_ID_SERVER
+} from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
@@ -247,9 +254,17 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     threadId,
     to,
     toArray,
-    messageId
+    messageId,
+    external
   } = params;
-  const recipientId = getRecipientIdFromEmailAddressTag(from);
+
+  const recipientId =
+    external === true
+      ? EXTERNAL_RECIPIENT_ID_SERVER
+      : getRecipientIdFromEmailAddressTag(from);
+  const deviceId =
+    external === true ? EXTERNAL_DEVICE_ID_SERVER : senderDeviceId;
+
   const [prevEmail] = await getEmailByKey(metadataKey);
   const isSpam = labels
     ? labels.find(label => label === LabelType.spam.text)
@@ -272,7 +287,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       body = await signal.decryptEmail({
         bodyKey: metadataKey,
         recipientId,
-        deviceId: senderDeviceId,
+        deviceId,
         messageType
       });
     } catch (e) {
@@ -286,7 +301,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
           fileKey,
           messageType,
           recipientId,
-          deviceId: senderDeviceId
+          deviceId
         });
         const [key, iv] = decrypted.split(':');
         fileKeyParams = { key, iv };
@@ -303,7 +318,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       from,
       isFromMe,
       metadataKey,
-      deviceId: senderDeviceId,
+      deviceId,
       subject,
       to: to || toArray,
       threadId,

@@ -2,7 +2,8 @@ const ipc = require('@criptext/electron-better-ipc');
 const { app } = require('electron');
 const mailboxWindow = require('../windows/mailbox');
 const { downloadUpdate } = require('./../updater');
-const { initAccount } = require('./../../electron-starter');
+const myAccount = require('./../Account');
+const wsClient = require('./../socketClient');
 
 ipc.answerRenderer('download-update', () => {
   downloadUpdate();
@@ -18,6 +19,6 @@ ipc.answerRenderer('open-file-explorer', filename => {
 });
 
 ipc.answerRenderer('open-mailbox', () => {
-  initAccount();
+  wsClient.start(myAccount);
   mailboxWindow.show();
 });

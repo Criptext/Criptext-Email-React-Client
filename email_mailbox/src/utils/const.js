@@ -110,3 +110,7 @@ export const composerEvents = {
   REPLY_ALL: 'reply-all',
   NEW_WITH_DATA: 'new-with-data'
 };
+
+export const EXTERNAL_RECIPIENT_ID_SERVER = 'b';
+
+export const EXTERNAL_DEVICE_ID_SERVER = 1;
