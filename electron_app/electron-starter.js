@@ -163,10 +163,6 @@ async function initApp() {
   });
 }
 
-const initAccount = () => {
-  wsClient.start(myAccount);
-}
-
 const sendLinkDeviceStartEventToAllWindows = async data => {
   const clientManager = require('./src/clientManager');
   globalManager.windowsEvents.disable();
@@ -253,7 +249,3 @@ app.on('activate', () => {
 app.on('before-quit', () => {
   globalManager.forcequit.set(true);
 });
-
-module.exports = {
-  initAccount
-};

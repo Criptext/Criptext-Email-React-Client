@@ -6,15 +6,12 @@ const ciphertextType = {
   CIPHERTEXT: 1,
   PREKEY_BUNDLE: 3
 };
-const EXTERNAL_RECIPIENT_ID_SERVER = 'b';
-const EXTERNAL_DEVICE_ID_SERVER = 1;
 
 const decryptEmail = async ({
   bodyKey,
   recipientId,
   deviceId,
-  messageType,
-  external
+  messageType
 }) => {
   const { status, text } = await getEmailBody(bodyKey);
   if (status !== 200) {
@@ -24,13 +21,9 @@ const decryptEmail = async ({
     return text;
   }
   const textEncrypted = util.toArrayBufferFromBase64(text);
-  const [recipientIdFrom, deviceIdFrom] =
-    external === true
-      ? [EXTERNAL_RECIPIENT_ID_SERVER, EXTERNAL_DEVICE_ID_SERVER]
-      : [recipientId, deviceId];
   const addressFrom = new libsignal.SignalProtocolAddress(
-    recipientIdFrom,
-    deviceIdFrom
+    recipientId,
+    deviceId
   );
   const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
   const binaryText = await decryptMessage(
