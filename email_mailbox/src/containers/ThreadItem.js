@@ -2,18 +2,14 @@ import { connect } from 'react-redux';
 import randomcolor from 'randomcolor';
 import * as actions from './../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
-import {
-  composerEvents,
-  LabelType,
-  myAccount
-} from '../utils/electronInterface';
+import { LabelType, myAccount } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import {
   getTwoCapitalLetters,
   toLowerCaseWithoutSpaces
 } from '../utils/StringUtils';
-import { SectionType } from '../utils/const';
+import { SectionType, composerEvents } from '../utils/const';
 import string from './../lang';
 
 const defineLabels = (labelIds, labels, labelsToExclude) => {

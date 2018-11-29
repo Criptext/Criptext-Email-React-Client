@@ -102,3 +102,11 @@ export const usefulLinks = {
   TERMS_OF_SERVICE: 'https://www.criptext.com/terms',
   CRIPTEXT_LIBRARIES: 'https://www.criptext.com/open-source-desktop'
 };
+
+export const composerEvents = {
+  EDIT_DRAFT: 'edit-draft',
+  FORWARD: 'forward',
+  REPLY: 'reply',
+  REPLY_ALL: 'reply-all',
+  NEW_WITH_DATA: 'new-with-data'
+};

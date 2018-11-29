@@ -2,18 +2,6 @@ import { callMain } from '@criptext/electron-better-ipc/renderer';
 
 /*  Windows call
 ----------------------------- */
-export const downloadUpdate = () => {
-  callMain('download-update');
-};
-
-export const logoutApp = () => {
-  callMain('logout-app');
-};
-
-export const openEmptyComposerWindow = () => {
-  callMain('open-empty-composer');
-};
-
 export const openFilledComposerWindow = data => {
   callMain('open-filled-composer', data);
 };

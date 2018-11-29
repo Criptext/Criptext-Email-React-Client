@@ -24,8 +24,6 @@ const additionalLabels = {
 };
 export const LabelType = Object.assign(labels, additionalLabels);
 export const myAccount = remote.require('./src/Account');
-export const composerEvents = remote.require('./src/windows/composer')
-  .composerEvents;
 
 const globalManager = remote.require('./src/globalManager');
 export const setInternetConnectionStatus = status => {
@@ -56,14 +54,6 @@ export const confirmPermanentDeleteThread = callback => {
   ipcRenderer.once('selectedOption', (event, data) => {
     callback(data.selectedOption);
   });
-};
-
-export const downloadUpdate = () => {
-  ipcRenderer.send('download-update');
-};
-
-export const logoutApp = () => {
-  ipcRenderer.send('logout-app');
 };
 
 export const openCreateKeys = params => {

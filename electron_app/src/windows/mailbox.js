@@ -1,7 +1,7 @@
 const { app, BrowserWindow, shell } = require('electron');
 const windowStateManager = require('electron-window-state');
 const { mailboxUrl } = require('./../window_routing');
-const { appUpdater, downloadUpdate } = require('./../updater');
+const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
@@ -187,7 +187,6 @@ const quit = () => {
 
 module.exports = {
   close,
-  downloadUpdate,
   hide,
   mailboxWindow,
   quit,

@@ -75,10 +75,9 @@ jobs:
           name: Dialog Lint
           command: cd email_dialog/ && yarn lint
 
-      - run: cd email_loading/ && npm rebuild node-sass
       - run: 
           name: Loading Build
-          command: cd email_loading/ &&  yarn build
+          command: cd email_loading/ && echo 'SKIP_PREFLIGHT_CHECK=true' >> .env && yarn build
 
       - run:
           name: Loading Lint
@@ -98,7 +97,7 @@ jobs:
 
       - run: 
           name: Mailbox Build
-          command: cd email_mailbox/ &&  echo 'SKIP_PREFLIGHT_CHECK=true' >> .env && yarn build
+          command: cd email_mailbox/ && echo 'SKIP_PREFLIGHT_CHECK=true' >> .env && yarn build
 
       - run:
           name: Mailbox Unit test

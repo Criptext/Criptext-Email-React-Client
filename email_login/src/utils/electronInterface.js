@@ -11,9 +11,6 @@ export const errors = remote.require('./src/errors');
 export const myAccount = remote.require('./src/Account');
 export const LabelType = labels;
 export const socketClient = remote.require('./src/socketClient');
-export const { getComputerName, isWindows } = remote.require(
-  './src/utils/osUtils'
-);
 
 const globalManager = remote.require('./src/globalManager');
 
@@ -121,10 +118,6 @@ export const minimizeLogin = () => {
 
 export const openCreateKeys = params => {
   ipcRenderer.send('open-create-keys', params);
-};
-
-export const openMailbox = () => {
-  ipcRenderer.send('open-mailbox');
 };
 
 export const throwError = error => {

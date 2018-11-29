@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  closeLogin,
-  minimizeLogin,
-  isWindows
-} from './../utils/electronInterface';
+import { closeLogin, minimizeLogin } from './../utils/electronInterface';
+import { isWindows } from './../utils/ipc';
 import './titleBar.scss';
 
 const titleBar = () => (

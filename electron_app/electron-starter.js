@@ -95,20 +95,6 @@ async function initApp() {
   });
 
   //   Mailbox
-  ipcMain.on('download-update', () => {
-    mailboxWindow.downloadUpdate();
-  });
-
-  ipcMain.on('logout-app', () => {
-    app.relaunch();
-    app.exit(0);
-  });
-
-  ipcMain.on('open-mailbox', () => {
-    wsClient.start(myAccount);
-    mailboxWindow.show();
-  });
-
   ipcMain.on('update-dock-badge', (event, value) => {
     const currentBadge = app.getBadgeCount();
     if (currentBadge !== value) {
@@ -178,6 +164,10 @@ async function initApp() {
   ipcMain.on('end-link-devices-event', async (ev, data) => {
     await sendLinkDeviceEndEventToAllWindows(data);
   });
+}
+
+const initAccount = () => {
+  wsClient.start(myAccount);
 }
 
 const sendLinkDeviceStartEventToAllWindows = async data => {
@@ -266,3 +256,7 @@ app.on('activate', () => {
 app.on('before-quit', () => {
   globalManager.forcequit.set(true);
 });
+
+module.exports = {
+  initAccount
+};

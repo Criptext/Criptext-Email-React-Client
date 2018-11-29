@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './loading.css';
+import './loading.scss';
 
 const Loading = props => (
   <div className="loading-body">

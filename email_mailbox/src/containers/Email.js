@@ -6,7 +6,6 @@ import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
 import {
-  composerEvents,
   LabelType,
   myAccount,
   confirmPermanentDeleteThread,
@@ -20,7 +19,7 @@ import {
   updateEmailLabels,
   removeEmails
 } from './../actions/index';
-import { EmailStatus, unsentText } from '../utils/const';
+import { EmailStatus, unsentText, composerEvents } from '../utils/const';
 
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;

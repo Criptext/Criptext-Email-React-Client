@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './linkdevicerequest.css';
+import './linkdevicerequest.scss';
 import { DEVICE_TYPE } from '../utils/const';
 
 const LinkingDevices = props => (
