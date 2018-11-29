@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { appDomain } from './../utils/const';
 import { emailRegex } from './../utils/RegexUtils';
-import './tagrecipient.css';
+import './tagrecipient.scss';
 
 const TagRecipient = props => {
   const {

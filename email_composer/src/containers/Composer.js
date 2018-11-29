@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
 import {
-  composerEvents,
   closeComposerWindow,
   createEmail,
   LabelType,
@@ -45,7 +44,7 @@ import {
   FILE_MODES,
   FILE_PROGRESS
 } from './../utils/FileUtils';
-import { appDomain } from '../utils/const';
+import { appDomain, composerEvents } from '../utils/const';
 import { generateKeyAndIv } from '../utils/AESUtils';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 

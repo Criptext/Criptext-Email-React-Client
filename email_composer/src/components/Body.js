@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DropfileField from './DropfileField';
 import Control from './Control';
-import './body.css';
+import './body.scss';
 
 const Body = props => (
   <div className="body-container">

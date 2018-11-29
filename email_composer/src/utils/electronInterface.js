@@ -18,9 +18,6 @@ export const getContactsByEmailId = emailId => {
   return dbManager.getContactsByEmailId(emailId);
 };
 
-export const composerEvents = remote.require('./src/windows/composer')
-  .composerEvents;
-
 export const objectUtils = remote.require('./src/utils/ObjectUtils');
 
 export const errors = remote.require('./src/errors');

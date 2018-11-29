@@ -3,7 +3,7 @@ import randomcolor from 'randomcolor';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
-import './suggestion.css';
+import './suggestion.scss';
 
 const Suggestion = (suggestion, { query }) => {
   const { name, email } = suggestion;

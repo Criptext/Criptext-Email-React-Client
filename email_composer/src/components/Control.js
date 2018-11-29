@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './control.css';
+import './control.scss';
 
 const Control = props => (
   <div className="control-container">

@@ -4,8 +4,7 @@ import TagsInput from 'react-tagsinput';
 import AutocompleteWrapper from './AutocompleteWrapper';
 import TagRecipient from './TagRecipient';
 import { pasteSplit } from './../utils/StringUtils';
-import 'react-tagsinput/react-tagsinput.css';
-import './recipient.css';
+import './recipient.scss';
 
 const Recipient = props => (
   <div className="recipient-container ">

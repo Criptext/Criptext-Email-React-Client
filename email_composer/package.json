@@ -11,31 +11,31 @@
     "immutable": "^3.8.2",
     "jquery": "^3.3.1",
     "moment": "^2.22.2",
-    "node-sass-chokidar": "^0.0.3",
-    "npm-run-all": "^4.1.2",
     "randomcolor": "^0.5.3",
     "react": "^16.2.0",
     "react-autosuggest": "^9.3.4",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.0",
     "react-switch": "^3.0.4",
     "react-tagsinput": "^3.19.0",
     "react-trumbowyg": "^1.1.0"
   },
   "scripts": {
-    "postinstall": "node-sass-chokidar src -o src",
-    "build-css": "node-sass-chokidar src -o src",
-    "watch-css": "npm run build-css && node-sass-chokidar src -o src --watch --recursive",
-    "start-js": "react-scripts start",
-    "start": "PORT=3004 npm-run-all -p watch-css start-js",
-    "build-js": "react-scripts build",
-    "build": "npm-run-all build-css build-js",
+    "start": "PORT=3004 react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "criptext-js-tools lint"
   },
   "devDependencies": {
-    "criptext-js-tools": "^0.5.0"
+    "@criptext/react-scripts": "^2.0.6-rc1",
+    "criptext-js-tools": "^0.5.0",
+    "node-sass": "^4.10.0"
   },
-  "homepage": "./"
+  "homepage": "./",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
