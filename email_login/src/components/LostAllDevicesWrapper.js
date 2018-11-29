@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
 import {
-  closeDialog,
   closeLogin,
   confirmForgotPasswordSentLink,
   confirmForgotPasswordEmptyEmail,
@@ -13,6 +12,7 @@ import {
   resetPassword,
   throwError
 } from './../utils/electronInterface';
+import { closeDialog } from './../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
 import { censureEmailAddress } from '../utils/StringUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';

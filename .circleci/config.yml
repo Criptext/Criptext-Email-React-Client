@@ -66,10 +66,9 @@ jobs:
           name: Composer Lint
           command: cd email_composer/ && yarn lint
 
-      - run: cd email_dialog/ && npm rebuild node-sass
       - run: 
           name: Dialog Build
-          command: cd email_dialog/ &&  yarn build
+          command: cd email_dialog/ && echo 'SKIP_PREFLIGHT_CHECK=true' >> .env && yarn build
 
       - run:
           name: Dialog Lint

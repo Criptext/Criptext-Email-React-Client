@@ -36,10 +36,6 @@ export const errors = remote.require('./src/errors');
 
 /*  Window events
 ----------------------------- */
-export const closeDialog = () => {
-  ipcRenderer.send('close-modal');
-};
-
 export const confirmPermanentDeleteThread = callback => {
   const dataForModal = {
     title: 'Warning!',

@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import SignUpWrapper from './SignUpWrapper';
 import {
   checkAvailableUsername,
-  closeDialog,
   confirmEmptyEmail,
   openCreateKeys,
   closeLogin
 } from './../utils/electronInterface';
+import { closeDialog } from './../utils/ipc';
 
 const commitNewUser = validInputData => {
   openCreateKeys({

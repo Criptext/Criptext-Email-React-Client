@@ -31,10 +31,6 @@ export const deleteTemporalAccount = () => {
 
 /* Window events
   ----------------------------- */
-export const closeDialog = () => {
-  ipcRenderer.send('close-modal');
-};
-
 export const closeLoading = () => {
   ipcRenderer.send('close-loading');
 };

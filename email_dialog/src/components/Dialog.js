@@ -1,7 +1,7 @@
 import React from 'react';
 import { remoteData, onResponseModal } from './../utils/electronInterface';
 import * as messages from './../utils/contents';
-import './dialog.css';
+import './dialog.scss';
 
 const { title, contentType, options, sendTo, customTextToReplace } = remoteData;
 

@@ -8,10 +8,9 @@ import randomcolor from 'randomcolor';
 import {
   LabelType,
   myAccount,
-  confirmPermanentDeleteThread,
-  closeDialog
+  confirmPermanentDeleteThread
 } from './../utils/electronInterface';
-import { openFilledComposerWindow } from './../utils/ipc';
+import { closeDialog, openFilledComposerWindow } from './../utils/ipc';
 import {
   loadFiles,
   muteEmail,

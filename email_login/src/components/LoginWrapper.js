@@ -5,7 +5,6 @@ import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
   checkAvailableUsername,
-  closeDialog,
   closeLogin,
   confirmLostDevices,
   createTemporalAccount,
@@ -18,7 +17,7 @@ import {
   throwError,
   errors
 } from './../utils/electronInterface';
-import { getComputerName } from '../utils/ipc.js';
+import { closeDialog, getComputerName } from '../utils/ipc.js';
 import { validateUsername } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';

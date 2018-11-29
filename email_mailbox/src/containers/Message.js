@@ -5,10 +5,9 @@ import MessageContent, { actionHandlerKeys } from './../data/message';
 import {
   LabelType,
   getEmailsByLabelIds,
-  confirmPermanentDeleteThread,
-  closeDialog
+  confirmPermanentDeleteThread
 } from './../utils/electronInterface';
-import { downloadUpdate } from './../utils/ipc';
+import { closeDialog, downloadUpdate } from './../utils/ipc';
 import { SectionType } from '../utils/const';
 import { loadThreads, removeThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
