@@ -22,6 +22,7 @@ import {
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
 import { appDomain, DEVICE_TYPE } from './../utils/const';
+import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -61,17 +62,23 @@ const createAccount = async ({
       description: `Failed to generate prekeybundle`
     });
   }
-  const { status, text } = await postUser({
+  const res = await postUser({
     recipientId,
     password,
     name,
     recoveryEmail,
     keybundle
   });
+  const { status, text } = res;
   if (status === 400) {
     throw CustomError(errors.user.ALREADY_EXISTS);
   } else if (status === 429) {
-    throw CustomError(errors.login.TOO_MANY_REQUESTS);
+    const seconds = res.headers['retry-after'];
+    const tooManyRequestErrorMessage = { ...errors.login.TOO_MANY_REQUESTS };
+    tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
+      seconds
+    );
+    throw CustomError(tooManyRequestErrorMessage);
   } else if (status !== 200) {
     throw CustomError({
       name: 'Error creating user',

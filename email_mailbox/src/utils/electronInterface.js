@@ -34,6 +34,8 @@ export const setInternetConnectionStatus = status => {
 
 export const mySettings = remote.require('./src/Settings');
 
+export const errors = remote.require('./src/errors');
+
 /*  Window events
 ----------------------------- */
 export const closeDialog = () => {
