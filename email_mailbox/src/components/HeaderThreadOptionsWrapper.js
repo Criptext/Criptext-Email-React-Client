@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import HeaderThreadOptions from './HeaderThreadOptions';
 import { CustomCheckboxStatus } from './CustomCheckbox';
 import {
-  closeDialog,
   confirmPermanentDeleteThread,
   LabelType
 } from '../utils/electronInterface';
+import { closeDialog } from './../utils/ipc';
 
 const CONFIRM_RESPONSE = 'Confirm';
 

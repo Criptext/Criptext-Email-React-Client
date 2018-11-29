@@ -2,6 +2,10 @@ import { callMain } from '@criptext/electron-better-ipc/renderer';
 
 /*  Windows call
 ----------------------------- */
+export const closeDialog = () => {
+  callMain('close-dialog');
+};
+
 export const downloadUpdate = () => {
   callMain('download-update');
 };
