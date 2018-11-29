@@ -2,7 +2,6 @@ import signal from './../libs/signal';
 import {
   acknowledgeEvents,
   cleanDatabase,
-  composerEvents,
   createEmail,
   createEmailLabel,
   createFeedItem,
@@ -18,7 +17,6 @@ import {
   getContactByEmails,
   getLabelsByText,
   LabelType,
-  logoutApp,
   myAccount,
   setInternetConnectionStatus,
   updateEmail,
@@ -36,11 +34,11 @@ import {
   validateEmailStatusToSet,
   parseContactRow
 } from './EmailUtils';
-import { SocketCommand, appDomain, EmailStatus } from './const';
+import { SocketCommand, appDomain, EmailStatus, composerEvents } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
-import { openFilledComposerWindow } from './../utils/ipc';
+import { logoutApp, openFilledComposerWindow } from './../utils/ipc';
 import { getShowEmailPreviewStatus } from './storage';
 
 const eventPriority = {

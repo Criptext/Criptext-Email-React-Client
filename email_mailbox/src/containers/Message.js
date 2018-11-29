@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
 import { MessageType } from '../components/Message';
+import MessageWrapper from './../components/MessageWrapper';
 import MessageContent, { actionHandlerKeys } from './../data/message';
 import {
   LabelType,
   getEmailsByLabelIds,
   confirmPermanentDeleteThread,
-  closeDialog,
-  downloadUpdate
+  closeDialog
 } from './../utils/electronInterface';
-import MessageWrapper from './../components/MessageWrapper';
+import { downloadUpdate } from './../utils/ipc';
 import { SectionType } from '../utils/const';
 import { loadThreads, removeThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';

@@ -1,10 +1,9 @@
 import { connect } from 'react-redux';
 import { loadLabels } from '../actions';
 import SideBarView from '../components/SideBarWrapper';
-import { IconLabels, SectionType } from './../utils/const';
+import { IconLabels, SectionType, composerEvents } from './../utils/const';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
 import { openFilledComposerWindow } from './../utils/ipc';
-import { composerEvents } from '../utils/electronInterface';
 import string from './../lang';
 
 const defineLabels = labels => {

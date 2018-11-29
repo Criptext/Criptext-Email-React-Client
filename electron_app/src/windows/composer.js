@@ -221,7 +221,6 @@ const saveDraftToDatabase = async (composerId, data) => {
 };
 
 module.exports = {
-  composerEvents,
   destroy,
   editDraft,
   saveDraftChanges,

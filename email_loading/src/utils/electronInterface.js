@@ -69,10 +69,6 @@ export const closeCreatingKeys = () => {
   ipcRenderer.send('close-create-keys');
 };
 
-export const openMailbox = () => {
-  ipcRenderer.send('open-mailbox');
-};
-
 export const throwError = error => {
   ipcRenderer.send('throwError', error);
 };

@@ -30,7 +30,6 @@
     "sanitize-html": "^1.19.1"
   },
   "scripts": {
-    "start-js": "react-scripts start",
     "start": "PORT=3000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

@@ -5,11 +5,9 @@ import { version } from './../../package.json';
 import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataLogout,
-  composerEvents,
   getUserSettings,
   LabelType,
   logout,
-  logoutApp,
   myAccount,
   removeDevice,
   updateAccount,
@@ -19,8 +17,8 @@ import {
   resetPassword,
   setReadTracking
 } from '../utils/electronInterface';
-import { openFilledComposerWindow } from './../utils/ipc';
-import { appDomain } from '../utils/const';
+import { logoutApp, openFilledComposerWindow } from './../utils/ipc';
+import { appDomain, composerEvents } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
 import { clearStorage } from '../utils/storage';
 import {

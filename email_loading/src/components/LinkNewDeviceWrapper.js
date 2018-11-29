@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import signal from '../libs/signal';
 import {
   closeCreatingKeys,
-  openMailbox,
   remoteData,
   downloadBackupFile,
   startSocket,
@@ -14,6 +13,7 @@ import {
   throwError,
   errors
 } from '../utils/electronInterface';
+import { openMailbox } from './../utils/ipc';
 import LinkNewDevice from './LinkNewDevice';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';

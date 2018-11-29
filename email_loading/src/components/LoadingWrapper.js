@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import signal from './../libs/signal';
 import {
   closeCreatingKeys,
-  openMailbox,
   remoteData,
   throwError,
   errors
 } from './../utils/electronInterface';
+import { openMailbox } from './../utils/ipc';
 import Loading from './Loading';
 
 const animationTypes = {
