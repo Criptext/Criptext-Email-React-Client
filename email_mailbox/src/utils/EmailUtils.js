@@ -302,7 +302,7 @@ export const filterTemporalThreadIds = threadIds => {
 
 export const parseContactRow = contact => {
   const matches = contact.match(HTMLTagsRegex);
-  if (matches.length) {
+  if (matches) {
     const emailTag = matches.pop();
     const email = emailTag.replace(/[<>]/g, '').toLowerCase();
     const name = contact.slice(0, contact.indexOf(emailTag) - 1);
