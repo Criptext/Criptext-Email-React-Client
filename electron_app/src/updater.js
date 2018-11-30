@@ -132,7 +132,8 @@ const downloadUpdate = () => {
 const showNotification = ({ title, message }) => {
   const mailboxWindow = require('./windows/mailbox');
   const isVisibleAndFocused = mailboxWindow.isVisibleAndFocused();
-  if (!isVisibleAndFocused) {
+  const isMAS = globalManager.isMAS.get();
+  if (!isMAS && !isVisibleAndFocused) {
     const notifyOptions = {
       appName: appId,
       title,

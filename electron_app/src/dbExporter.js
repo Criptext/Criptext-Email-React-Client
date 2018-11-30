@@ -14,6 +14,8 @@ const DEFAULT_KEY_LENGTH = 16;
 
 /* Batches
 ----------------------------- */
+const SELECT_ALL_BATCH = 500;
+
 const CONTACTS_BATCH = 50;
 const LABELS_BATCH = 50;
 const EMAILS_BATCH = 50;
@@ -63,143 +65,234 @@ const formatTableRowsToString = (tableName, rowsObject) => {
 };
 
 const exportContactTable = async db => {
-  const contactRows = await db
-    .select('*')
-    .from(Table.CONTACT)
-    .then(rows =>
-      rows.map(row => {
-        if (!row.name) {
-          delete row.name;
-        }
-        return row;
-      })
-    );
+  let contactRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await db
+      .select('*')
+      .from(Table.CONTACT)
+      .limit(SELECT_ALL_BATCH)
+      .offset(offset)
+      .then(rows =>
+        rows.map(row => {
+          if (!row.name) {
+            delete row.name;
+          }
+          return row;
+        })
+      );
+    contactRows = [...contactRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
   return formatTableRowsToString(Table.CONTACT, contactRows);
 };
 
 const exportLabelTable = async db => {
-  const labelRows = await db
-    .table(Table.LABEL)
-    .select('*')
-    .where(`${Table.LABEL}.type`, 'custom')
-    .then(rows =>
-      rows.map(row => Object.assign(row, { visible: !!row.visible }))
-    );
+  let labelRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await db
+      .table(Table.LABEL)
+      .select('*')
+      .where(`${Table.LABEL}.type`, 'custom')
+      .limit(SELECT_ALL_BATCH)
+      .offset(offset)
+      .then(rows =>
+        rows.map(row => Object.assign(row, { visible: !!row.visible }))
+      );
+    labelRows = [...labelRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
   return formatTableRowsToString(Table.LABEL, labelRows);
 };
 
 const exportEmailTable = async db => {
-  const emailRows = await db
-    .table(Table.EMAIL)
-    .select('*')
-    .whereRaw(whereRawEmailQuery)
-    .then(rows =>
-      rows.map(row => {
-        if (!row.unsendDate) {
-          delete row.unsendDate;
-        } else {
-          row['unsentDate'] = parseDate(row.unsendDate);
-          delete row.unsendDate;
-        }
+  let emailRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await db
+      .table(Table.EMAIL)
+      .select('*')
+      .whereRaw(whereRawEmailQuery)
+      .limit(SELECT_ALL_BATCH)
+      .offset(offset)
+      .then(rows =>
+        rows.map(row => {
+          if (!row.unsendDate) {
+            delete row.unsendDate;
+          } else {
+            row['unsentDate'] = parseDate(row.unsendDate);
+            delete row.unsendDate;
+          }
 
-        if (!row.trashDate) {
-          delete row.trashDate;
-        } else {
-          row['trashDate'] = parseDate(row.unsendDate);
-        }
+          if (!row.trashDate) {
+            delete row.trashDate;
+          } else {
+            row['trashDate'] = parseDate(row.unsendDate);
+          }
 
-        const key = parseInt(row.key);
-        return Object.assign(row, {
-          unread: !!row.unread,
-          secure: !!row.secure,
-          isMuted: !!row.isMuted,
-          key,
-          date: parseDate(row.date)
-        });
-      })
-    );
+          const key = parseInt(row.key);
+          return Object.assign(row, {
+            unread: !!row.unread,
+            secure: !!row.secure,
+            isMuted: !!row.isMuted,
+            key,
+            date: parseDate(row.date)
+          });
+        })
+      );
+    emailRows = [...emailRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
   return formatTableRowsToString(Table.EMAIL, emailRows);
 };
 
 const exportEmailContactTable = async db => {
-  const emailContactRows = await db
-    .table(Table.EMAIL_CONTACT)
-    .select('*')
-    .whereExists(
-      db
-        .select('*')
-        .from(Table.EMAIL)
-        .whereRaw(`${Table.EMAIL}.id = ${Table.EMAIL_CONTACT}.emailId`)
-        .whereRaw(whereRawEmailQuery)
-    )
-    .then(rows =>
-      rows.map(row => {
-        return Object.assign(row, {
-          emailId: parseInt(row.emailId)
-        });
-      })
-    );
+  let emailContactRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await db
+      .table(Table.EMAIL_CONTACT)
+      .select('*')
+      .whereExists(
+        db
+          .select('*')
+          .from(Table.EMAIL)
+          .whereRaw(`${Table.EMAIL}.id = ${Table.EMAIL_CONTACT}.emailId`)
+          .whereRaw(whereRawEmailQuery)
+      )
+      .limit(SELECT_ALL_BATCH)
+      .offset(offset)
+      .then(rows =>
+        rows.map(row => {
+          return Object.assign(row, {
+            emailId: parseInt(row.emailId)
+          });
+        })
+      );
+    emailContactRows = [...emailContactRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
   return formatTableRowsToString('email_contact', emailContactRows);
 };
 
 const exportEmailLabelTable = async db => {
-  const emailLabelRows = await db
-    .table(Table.EMAIL_LABEL)
-    .select('*')
-    .whereExists(
-      db
-        .select('*')
-        .from(Table.EMAIL)
-        .whereRaw(`${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId`)
-        .whereRaw(whereRawEmailQuery)
-    )
-    .then(rows =>
-      rows.map(row =>
-        Object.assign(row, {
-          emailId: parseInt(row.emailId)
-        })
+  let emailLabelRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await db
+      .table(Table.EMAIL_LABEL)
+      .select('*')
+      .whereExists(
+        db
+          .select('*')
+          .from(Table.EMAIL)
+          .whereRaw(`${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId`)
+          .whereRaw(whereRawEmailQuery)
       )
-    );
+      .limit(SELECT_ALL_BATCH)
+      .offset(offset)
+      .then(rows =>
+        rows.map(row =>
+          Object.assign(row, {
+            emailId: parseInt(row.emailId)
+          })
+        )
+      );
+    emailLabelRows = [...emailLabelRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
   return formatTableRowsToString('email_label', emailLabelRows);
 };
 
 const exportFileTable = async db => {
-  const fileRows = await db
-    .table(Table.FILE)
-    .select('*')
-    .whereExists(
-      db
-        .select('*')
-        .from(Table.EMAIL)
-        .whereRaw(`${Table.EMAIL}.id = ${Table.FILE}.emailId`)
-        .whereRaw(whereRawEmailQuery)
-    )
-    .then(rows =>
-      rows.map(row =>
-        Object.assign(row, {
-          readOnly: !!row.readOnly,
-          emailId: parseInt(row.emailId),
-          date: parseDate(row.date)
-        })
+  let fileRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await db
+      .table(Table.FILE)
+      .select('*')
+      .whereExists(
+        db
+          .select('*')
+          .from(Table.EMAIL)
+          .whereRaw(`${Table.EMAIL}.id = ${Table.FILE}.emailId`)
+          .whereRaw(whereRawEmailQuery)
       )
-    );
+      .limit(SELECT_ALL_BATCH)
+      .offset(offset)
+      .then(rows =>
+        rows.map(row =>
+          Object.assign(row, {
+            readOnly: !!row.readOnly,
+            emailId: parseInt(row.emailId),
+            date: parseDate(row.date)
+          })
+        )
+      );
+    fileRows = [...fileRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
   return formatTableRowsToString(Table.FILE, fileRows);
 };
 
 const exportFileKeyTable = async db => {
-  const fileKeyRows = await db
-    .table(Table.FILE_KEY)
-    .select('*')
-    .whereExists(
-      db
-        .select('*')
-        .from(Table.EMAIL)
-        .whereRaw(`${Table.EMAIL}.id = ${Table.FILE_KEY}.emailId`)
-        .whereRaw(whereRawEmailQuery)
-    )
-    .then(rows =>
-      rows.map(row => Object.assign(row, { emailId: parseInt(row.emailId) }))
-    );
+  let fileKeyRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await db
+      .table(Table.FILE_KEY)
+      .select('*')
+      .whereExists(
+        db
+          .select('*')
+          .from(Table.EMAIL)
+          .whereRaw(`${Table.EMAIL}.id = ${Table.FILE_KEY}.emailId`)
+          .whereRaw(whereRawEmailQuery)
+      )
+      .limit(SELECT_ALL_BATCH)
+      .offset(offset)
+      .then(rows =>
+        rows.map(row => Object.assign(row, { emailId: parseInt(row.emailId) }))
+      );
+    fileKeyRows = [...fileKeyRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
   return formatTableRowsToString('filekey', fileKeyRows);
 };
 
