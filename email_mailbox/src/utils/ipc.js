@@ -25,3 +25,7 @@ export const openFilledComposerWindow = data => {
 export const openFileExplorer = filename => {
   callMain('open-file-explorer', filename);
 };
+
+export const throwError = error => {
+  callMain('throwError', error);
+};

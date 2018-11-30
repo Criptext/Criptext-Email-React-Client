@@ -9,10 +9,9 @@ import {
   errors,
   login,
   openCreateKeys,
-  resetPassword,
-  throwError
+  resetPassword
 } from './../utils/electronInterface';
-import { closeDialog } from './../utils/ipc';
+import { closeDialog, throwError } from './../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
 import { censureEmailAddress } from '../utils/StringUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';

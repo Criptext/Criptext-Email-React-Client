@@ -6,7 +6,6 @@ import {
   createEmail,
   LabelType,
   myAccount,
-  throwError,
   updateEmail,
   saveDraftChanges,
   errors,
@@ -17,6 +16,7 @@ import {
   createFile,
   sendEventToMailbox
 } from './../utils/electronInterface';
+import { throwError } from './../utils/ipc';
 import {
   areEmptyAllArrays,
   updateObjectFieldsInArray

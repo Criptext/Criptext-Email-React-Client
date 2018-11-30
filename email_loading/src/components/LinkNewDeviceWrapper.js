@@ -10,10 +10,9 @@ import {
   clearSyncData,
   getDataReady,
   acknowledgeEvents,
-  throwError,
   errors
 } from '../utils/electronInterface';
-import { openMailbox } from './../utils/ipc';
+import { openMailbox, throwError } from './../utils/ipc';
 import LinkNewDevice from './LinkNewDevice';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';

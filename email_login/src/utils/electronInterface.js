@@ -116,10 +116,6 @@ export const openCreateKeys = params => {
   ipcRenderer.send('open-create-keys', params);
 };
 
-export const throwError = error => {
-  ipcRenderer.send('throwError', error);
-};
-
 /* Criptext Client
   ----------------------------- */
 export const checkAvailableUsername = username => {
