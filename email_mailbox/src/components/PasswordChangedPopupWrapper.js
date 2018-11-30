@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import PasswordChangedPopup from './PasswordChangedPopup';
 import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
 import {
   requiredMinLength,
   unlockDevice,
-  throwError,
   errors
 } from './../utils/electronInterface';
-import PasswordChangedPopup from './PasswordChangedPopup';
+import { throwError } from './../utils/ipc';
 import { handleDeleteDeviceData } from '../utils/electronEventInterface';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 

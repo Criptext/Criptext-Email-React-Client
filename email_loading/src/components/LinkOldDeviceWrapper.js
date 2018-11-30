@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import LinkOldDevice from './LinkOldDevice';
+import LinkDeviceRequest from './LinkDeviceRequest';
 import signal from '../libs/signal';
 import {
   closeCreatingKeys,
@@ -12,16 +14,14 @@ import {
   encryptDatabaseFile,
   postDataReady,
   uploadDatabaseFile,
-  throwError,
   setRemoteData,
   linkAccept,
   linkDeny,
   sendEndLinkDevicesEvent,
   errors
 } from '../utils/electronInterface';
-import LinkOldDevice from './LinkOldDevice';
+import { throwError } from '../utils/ipc';
 import { loadingTypes } from './Panel';
-import LinkDeviceRequest from './LinkDeviceRequest';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 
 const ANIMATION_DURATION = 1500;

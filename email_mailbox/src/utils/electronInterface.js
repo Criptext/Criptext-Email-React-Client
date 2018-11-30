@@ -52,14 +52,6 @@ export const confirmPermanentDeleteThread = callback => {
   });
 };
 
-export const openCreateKeys = params => {
-  ipcRenderer.send('open-create-keys', params);
-};
-
-export const throwError = error => {
-  ipcRenderer.send('throwError', error);
-};
-
 export const updateDockBadge = value => {
   ipcRenderer.send('update-dock-badge', value);
 };
