@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import EditorWrapper from './EditorWrapper';
 import AttachmentWrapper from './AttachmentWrapper';
-import './dropfilefield.css';
+import './dropfilefield.scss';
 
 const DropfileField = props => (
   <div

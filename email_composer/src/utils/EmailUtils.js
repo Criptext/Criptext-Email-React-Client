@@ -4,9 +4,8 @@ import {
   removeAppDomain
 } from './StringUtils';
 import { getFormattedDate } from './DateUtils';
-import { appDomain } from './const';
+import { appDomain, composerEvents } from './const';
 import {
-  composerEvents,
   myAccount,
   getEmailByKey,
   getContactsByEmailId,

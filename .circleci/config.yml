@@ -60,7 +60,7 @@ jobs:
       - checkout
       - run:
           name: Composer Unit test
-          command: cd email_composer/ && yarn test
+          command: cd email_composer/ && echo 'SKIP_PREFLIGHT_CHECK=true' >> .env && yarn test
 
       - run:
           name: Composer Lint

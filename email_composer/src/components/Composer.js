@@ -5,7 +5,7 @@ import SubjectWrapper from './SubjectWrapper';
 import BodyWrapper from './BodyWrapper';
 import NonCriptextPopupWrapper from './NonCriptextPopupWrapper';
 import { Status } from './Control';
-import './composer.css';
+import './composer.scss';
 
 const Composer = props => (
   <div className="wrapper">

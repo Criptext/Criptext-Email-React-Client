@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { inputTypes } from './NonCriptextPopupWrapper';
-import './noncriptext.css';
+import './noncriptext.scss';
 
 const NonCriptextPopup = props => {
   return (

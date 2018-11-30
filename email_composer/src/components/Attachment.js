@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { convertToHumanSize } from './../utils/StringUtils';
 import { identifyFileType } from './../utils/FileUtils';
-import './attachment.css';
+import './attachment.scss';
 
 const Attachment = props => {
   return (
