@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './linkingdevices.scss';
-import { STEPS } from './LinkNewDeviceWrapper';
+import { STEPS } from './LinkOldDeviceWrapper';
 
 const LinkOldDevice = props => (
   <div className="linking-container">
