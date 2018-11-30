@@ -7,10 +7,10 @@
 }
 
 .trumbowyg-box{
-  border: none;
+  border: none!important;
   flex-grow: 1;
   line-height: initial;
-  margin: 0;
+  margin: 0 !important;
   min-height: 50px;
   width: 100%;
 
