@@ -138,10 +138,10 @@ class LostDevicesWrapper extends Component {
         break;
       }
       default: {
-        const { name, description } = errors.login.FAILED;
         this.throwLoginError({
-          name,
-          description: `${description}\nCode: ${status || 'Unknown'}`
+          name: errors.login.FAILED.name,
+          description:
+            errors.login.FAILED.description + `${status || 'Unknown'}`
         });
         break;
       }
