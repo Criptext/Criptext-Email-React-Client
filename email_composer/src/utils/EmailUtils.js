@@ -13,6 +13,7 @@ import {
   getFileKeyByEmailId
 } from './electronInterface';
 import { FILE_MODES } from './FileUtils';
+import { Status } from '../components/Control';
 
 const filterNonCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) < 0);
@@ -190,11 +191,12 @@ const formReplyForwardContent = (replyType, subject, date, from, to, body) => {
 };
 
 export const formDataToReply = async (emailKeyToEdit, replyType) => {
+  const emailIsForward = replyType === composerEvents.FORWARD;
   const [emailData] = await getEmailByKey(emailKeyToEdit);
   let files = [];
   let key = null,
     iv = null;
-  if (replyType === composerEvents.FORWARD) {
+  if (emailIsForward) {
     const prevFiles = await getFilesByEmailId(emailData.id);
     files = prevFiles.map(file => {
       return {
@@ -212,8 +214,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     }
   }
 
-  const threadId =
-    replyType === composerEvents.FORWARD ? undefined : emailData.threadId;
+  const threadId = emailIsForward ? undefined : emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
   const [from] = contacts.from;
   const content = formReplyForwardContent(
@@ -227,8 +228,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const htmlBody = content;
   const replySufix = 'RE: ';
   const forwardSufix = 'FW: ';
-  const sufix =
-    replyType === composerEvents.FORWARD ? forwardSufix : replySufix;
+  const sufix = emailIsForward ? forwardSufix : replySufix;
   const textSubject = sufix + removeActionsFromSubject(emailData.subject);
   const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
   const toEmails = formToEmails(
@@ -254,7 +254,8 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     threadId,
     files,
     key,
-    iv
+    iv,
+    status: emailIsForward ? Status.DISABLED : Status.ENABLED
   };
 };
 
