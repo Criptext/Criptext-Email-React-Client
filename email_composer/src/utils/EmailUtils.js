@@ -117,7 +117,7 @@ export const formOutgoingEmailFromData = ({
     from: [`${from}@${appDomain}`]
   };
 
-  const fileKeyParams = files.length ? { key, iv } : null;
+  const fileKeyParams = files.length && key && iv ? { key, iv } : null;
 
   const emailData = {
     email,
@@ -150,16 +150,15 @@ const formForwardHeader = (subject, date, from, to) => {
     return `${result}, ${contact.name || ''} &lt;${contact.email}&gt;`;
   }, '');
   return `<span>---------- Forwarded message ----------</span>
-  <br/>
+  ${insertEmptyLine(1)}
   <span>From: <b>${from.name || ''}</b> &lt;${from.email}&gt;</span>
-  <br/>
+  ${insertEmptyLine(1)}
   <span>Date: ${dateFormatted}</span>
-  <br/>
+  ${insertEmptyLine(1)}
   <span>Subject: ${subject}</span>
-  <br/>
+  ${insertEmptyLine(1)}
   <span>To: ${toFormatted}</span>
-  <br/>
-  <br/>
+  ${insertEmptyLine(2)}
   `;
 };
 
@@ -327,7 +326,7 @@ export const formExternalAttachmentTemplate = (
 ) => {
   return `
     <div style="margin-top: 6px; float: left;">
-      <a style="cursor: pointer; text-decoration: none;" href="https://services.criptext.com/downloader/${encodedParams}?e=1">
+      <a style="cursor: pointer; text-decoration: none;" href="https://services.criptext.com/downloader/${encodedParams}">
         <div style="align-items: center; border: 1px solid #e7e5e5; border-radius: 6px; display: flex; height: 20px; margin-right: 20px; padding: 10px; position: relative; width: 236px;">
           <div style="position: relative;">
             <div style="align-items: center; border-radius: 4px; display: flex; height: 22px; width: 22px;">

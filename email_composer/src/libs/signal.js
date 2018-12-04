@@ -197,7 +197,8 @@ const encryptPostEmail = async ({
     },
     {}
   );
-  const fileKeyParams = files ? { key, iv } : null;
+  const fileKeyParams = files && key && iv ? { key, iv } : null;
+
   const criptextEmails = await createEmails(
     body,
     recipients,
@@ -381,8 +382,10 @@ const encryptExternalEmail = async ({
 const addAttachemtsToBody = (body, files, fileKeyParams) => {
   const attachmentsSection = files.map(file => {
     const { token } = file;
-    const { key, iv } = fileKeyParams;
-    const encodedParams = textToBase64(`${token}:${key}:${iv}`);
+    const encodedParams = fileKeyParams
+      ? textToBase64(`${token}:${fileKeyParams.key}:${fileKeyParams.iv}`) +
+        '?e=1'
+      : token;
     const mimeTypeSource = defineTypeSource(file.mimeType);
     const filename = file.name;
     const formattedSize = convertToHumanSize(file.size, true);
