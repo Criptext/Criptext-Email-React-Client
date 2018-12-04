@@ -1,3 +1,7 @@
+/*
+  eslint jsx-a11y/anchor-is-valid: 0
+  jsx-a11y/anchor-has-content: 0
+*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import { appDomain } from './../utils/const';
@@ -35,7 +39,6 @@ const TagRecipient = props => {
     <span key={key} className={className} {...other}>
       {formattedTag.name || formattedTag.email}
       {!disabled && (
-        // eslint-disable-next-line jsx-a11y/anchor-has-content
         <a className={classNameRemove} onClick={() => onRemove(key)} />
       )}
     </span>

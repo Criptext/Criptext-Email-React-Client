@@ -13,6 +13,7 @@ import {
   getFileKeyByEmailId
 } from './electronInterface';
 import { FILE_MODES } from './FileUtils';
+import { Status } from '../components/Control';
 
 const filterNonCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) < 0);
@@ -116,7 +117,7 @@ export const formOutgoingEmailFromData = ({
     from: [`${from}@${appDomain}`]
   };
 
-  const fileKeyParams = files.length ? { key, iv } : null;
+  const fileKeyParams = files.length && key && iv ? { key, iv } : null;
 
   const emailData = {
     email,
@@ -149,16 +150,15 @@ const formForwardHeader = (subject, date, from, to) => {
     return `${result}, ${contact.name || ''} &lt;${contact.email}&gt;`;
   }, '');
   return `<span>---------- Forwarded message ----------</span>
-  <br/>
+  ${insertEmptyLine(1)}
   <span>From: <b>${from.name || ''}</b> &lt;${from.email}&gt;</span>
-  <br/>
+  ${insertEmptyLine(1)}
   <span>Date: ${dateFormatted}</span>
-  <br/>
+  ${insertEmptyLine(1)}
   <span>Subject: ${subject}</span>
-  <br/>
+  ${insertEmptyLine(1)}
   <span>To: ${toFormatted}</span>
-  <br/>
-  <br/>
+  ${insertEmptyLine(2)}
   `;
 };
 
@@ -190,11 +190,12 @@ const formReplyForwardContent = (replyType, subject, date, from, to, body) => {
 };
 
 export const formDataToReply = async (emailKeyToEdit, replyType) => {
+  const emailIsForward = replyType === composerEvents.FORWARD;
   const [emailData] = await getEmailByKey(emailKeyToEdit);
   let files = [];
   let key = null,
     iv = null;
-  if (replyType === composerEvents.FORWARD) {
+  if (emailIsForward) {
     const prevFiles = await getFilesByEmailId(emailData.id);
     files = prevFiles.map(file => {
       return {
@@ -212,8 +213,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     }
   }
 
-  const threadId =
-    replyType === composerEvents.FORWARD ? undefined : emailData.threadId;
+  const threadId = emailIsForward ? undefined : emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
   const [from] = contacts.from;
   const content = formReplyForwardContent(
@@ -227,8 +227,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const htmlBody = content;
   const replySufix = 'RE: ';
   const forwardSufix = 'FW: ';
-  const sufix =
-    replyType === composerEvents.FORWARD ? forwardSufix : replySufix;
+  const sufix = emailIsForward ? forwardSufix : replySufix;
   const textSubject = sufix + removeActionsFromSubject(emailData.subject);
   const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
   const toEmails = formToEmails(
@@ -254,7 +253,8 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     threadId,
     files,
     key,
-    iv
+    iv,
+    status: emailIsForward ? Status.DISABLED : Status.ENABLED
   };
 };
 
@@ -326,7 +326,7 @@ export const formExternalAttachmentTemplate = (
 ) => {
   return `
     <div style="margin-top: 6px; float: left;">
-      <a style="cursor: pointer; text-decoration: none;" href="https://services.criptext.com/downloader/${encodedParams}?e=1">
+      <a style="cursor: pointer; text-decoration: none;" href="https://services.criptext.com/downloader/${encodedParams}">
         <div style="align-items: center; border: 1px solid #e7e5e5; border-radius: 6px; display: flex; height: 20px; margin-right: 20px; padding: 10px; position: relative; width: 236px;">
           <div style="position: relative;">
             <div style="align-items: center; border-radius: 4px; display: flex; height: 22px; width: 22px;">

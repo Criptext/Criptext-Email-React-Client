@@ -196,5 +196,11 @@ export default {
     update_unread_threads: {
       description: 'Falló modificar el estado del correo. Intente de nuevo'
     }
+  },
+  notification: {
+    newEmailGroup: {
+      prefix: 'Tienes ',
+      sufix: ' correos nuevos'
+    }
   }
 };

@@ -128,7 +128,7 @@ export const getFileParamsToSend = files => {
         }
         const { duplicates } = JSON.parse(res);
         const data = files.map(file => ({
-          token: duplicates[file.token],
+          token: file.shouldDuplicate ? duplicates[file.token] : file.token,
           name: file.fileData.name,
           size: file.fileData.size,
           mimeType: file.fileData.type

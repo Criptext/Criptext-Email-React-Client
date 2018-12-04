@@ -47,6 +47,7 @@ import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 import { logoutApp, openFilledComposerWindow } from './../utils/ipc';
 import { getShowEmailPreviewStatus } from './storage';
+import string from './../lang';
 
 const eventPriority = {
   NEW_EMAIL: 0,
@@ -63,6 +64,7 @@ const electron = window.require('electron');
 const { ipcRenderer } = electron;
 const emitter = new EventEmitter();
 let isGettingEvents = false;
+let newEmailNotificationList = [];
 
 export const getGroupEvents = async () => {
   if (isGettingEvents) return;
@@ -174,6 +176,7 @@ const processEvent = async eventsGroups => {
   if (rowIdsFiltered.length) {
     await setEventAsHandled(rowIdsFiltered);
   }
+  sendNewEmailNotification();
   return true;
 };
 
@@ -386,15 +389,41 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   }
   if (isToMe) {
     const parsedContact = parseContactRow(from);
-    const message = getShowEmailPreviewStatus()
-      ? `${subject}\n${notificationPreview}`
-      : `${subject}`;
-    ipcRenderer.send('show-notification', {
-      title: parsedContact.name || parsedContact.email,
-      message
+    addEmailToNotificationList({
+      senderInfo: parsedContact.name || parsedContact.email,
+      emailSubject: subject,
+      emailPreview: notificationPreview
     });
   }
   return rowid;
+};
+
+const addEmailToNotificationList = ({
+  senderInfo,
+  emailSubject,
+  emailPreview
+}) => {
+  newEmailNotificationList.push({ senderInfo, emailSubject, emailPreview });
+};
+
+const sendNewEmailNotification = () => {
+  if (newEmailNotificationList.length <= 3) {
+    newEmailNotificationList.forEach(notificationData => {
+      const { emailSubject, emailPreview, senderInfo } = notificationData;
+      const message = getShowEmailPreviewStatus()
+        ? `${emailSubject}\n${emailPreview}`
+        : `${emailSubject}`;
+      ipcRenderer.send('show-notification', { title: senderInfo, message });
+    });
+  } else if (newEmailNotificationList.length > 3) {
+    const title = 'Criptext';
+    const message =
+      string.notification.newEmailGroup.prefix +
+      newEmailNotificationList.length +
+      string.notification.newEmailGroup.sufix;
+    ipcRenderer.send('show-notification', { title, message });
+  }
+  newEmailNotificationList = [];
 };
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
