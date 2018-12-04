@@ -82,13 +82,21 @@ const MESSAGE_ERROR = {
     name: errorMessages.UPLOAD_FAILED.name,
     description: errorMessages.UPLOAD_FAILED.description
   },
+  TOO_BIG_FILE: {
+    name: errorMessages.TOO_BIG_FILE.name,
+    description: {
+      prefix: errorMessages.TOO_BIG_FILE.description.prefix,
+      suffix: errorMessages.TOO_BIG_FILE.description.suffix,
+      defaultEnd: errorMessages.TOO_BIG_FILE.description.defaultEnd
+    }
+  },
+  PENDING_FILES: {
+    name: errorMessages.PENDING_FILES.name,
+    description: errorMessages.PENDING_FILES.description
+  },
   TOO_MANY_FILES: {
     name: errorMessages.TOO_MANY_FILES.name,
     description: errorMessages.TOO_MANY_FILES.description
-  },
-  TOO_BIG_FILE: {
-    name: errorMessages.TOO_BIG_FILE.name,
-    description: errorMessages.TOO_BIG_FILE.description
   },
   TOO_MANY_RECIPIENTS: {
     name: errorMessages.TOO_MANY_RECIPIENTS.name,

@@ -2474,9 +2474,9 @@ create-react-class@^15.6.0:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-criptext-files-sdk@^0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/criptext-files-sdk/-/criptext-files-sdk-0.6.6.tgz#1217e7319e5c39404dbc0536077452c2ba0cd758"
+criptext-files-sdk@^0.6.7:
+  version "0.6.7"
+  resolved "https://registry.yarnpkg.com/criptext-files-sdk/-/criptext-files-sdk-0.6.7.tgz#b4143743859c5e7403fad12e5685c16c21a3e989"
   dependencies:
     es6-promise "^4.1.1"
     mime-types "^2.1.19"

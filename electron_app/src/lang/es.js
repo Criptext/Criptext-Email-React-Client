@@ -96,7 +96,17 @@ module.exports = {
     },
     TOO_BIG_FILE: {
       name: 'Archivo demasiado grande',
-      description: 'Cada archivo no puede exceder los 10Mb'
+      description: {
+        prefix: 'El tamaño del archivo',
+        suffix: 'es mayor a',
+        defaultEnd: 'l tamaño permitido'
+      }
+    },
+    PENDING_FILES: {
+      name: 'Archivos pendientes',
+      description:
+        'Tienes archivos pendientes o que fallaron al subirse.\n' +
+        'Por favor, verifica tus archivos e intenta de nuevo'
     },
     TOO_MANY_RECIPIENTS: {
       name: 'Muchos destinatarios',

@@ -47,9 +47,12 @@ import {
 import { appDomain, composerEvents } from '../utils/const';
 import { generateKeyAndIv } from '../utils/AESUtils';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
+import { convertToHumanSize } from './../utils/StringUtils';
 
 const MAX_RECIPIENTS_AMOUNT = 300;
 const MAX_ATTACMENTS_AMOUNT = 5;
+const TOO_BIG_FILE_STATUS = 413;
+const PENDING_ATTACHMENTS_MODES = [FILE_MODES.UPLOADING, FILE_MODES.FAILED];
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -203,13 +206,11 @@ class ComposerWrapper extends Component {
 
   handleGetToEmail = emails => {
     const parsedEmails = emails.map(item => parseEmailAddress(item));
-    const status = areEmptyAllArrays(
+    const status = this.checkAndGetSendButtonStatus(
       parsedEmails,
       this.state.ccEmails,
       this.state.bccEmails
-    )
-      ? Status.DISABLED
-      : Status.ENABLED;
+    );
     this.setState({ toEmails: parsedEmails, status }, () =>
       this.saveTemporalDraft()
     );
@@ -217,13 +218,11 @@ class ComposerWrapper extends Component {
 
   handleGetCcEmail = emails => {
     const parsedEmails = emails.map(item => parseEmailAddress(item));
-    const status = areEmptyAllArrays(
+    const status = this.checkAndGetSendButtonStatus(
       this.state.toEmails,
       parsedEmails,
       this.state.bccEmails
-    )
-      ? Status.DISABLED
-      : Status.ENABLED;
+    );
     this.setState({ ccEmails: parsedEmails, status }, () =>
       this.saveTemporalDraft()
     );
@@ -231,16 +230,20 @@ class ComposerWrapper extends Component {
 
   handleGetBccEmail = emails => {
     const parsedEmails = emails.map(item => parseEmailAddress(item));
-    const status = areEmptyAllArrays(
+    const status = this.checkAndGetSendButtonStatus(
       this.state.toEmails,
       this.state.ccEmails,
       parsedEmails
-    )
-      ? Status.DISABLED
-      : Status.ENABLED;
+    );
     this.setState({ bccEmails: parsedEmails, status }, () =>
       this.saveTemporalDraft()
     );
+  };
+
+  checkAndGetSendButtonStatus = (toEmails, ccEmails, bccEmails) => {
+    return areEmptyAllArrays(toEmails, ccEmails, bccEmails)
+      ? Status.DISABLED
+      : Status.ENABLED;
   };
 
   handleGetSubject = text => {
@@ -265,31 +268,51 @@ class ComposerWrapper extends Component {
   };
 
   setFiles = newFiles => {
+    const files = [...this.state.files];
     if (this.state.files.length + newFiles.length > MAX_ATTACMENTS_AMOUNT) {
       return throwError(errors.message.TOO_MANY_FILES);
     } else if (newFiles && newFiles.length > 0) {
       const [firstNewFile, ...remainingNewFiles] = Array.from(newFiles);
       fileManager.uploadFile(firstNewFile, CHUNK_SIZE, (error, token) => {
         if (error) {
-          this.setState({
-            files: [
-              ...this.state.files,
-              { fileData: firstNewFile, mode: FILE_MODES.FAILED }
-            ]
-          });
-          return this.handleUploadError({ token });
+          this.handleUploadFileErrorStatus(error, firstNewFile);
+        } else {
+          const uploadingFile = {
+            token,
+            percentage: 0,
+            fileData: firstNewFile,
+            mode: FILE_MODES.UPLOADING
+          };
+          files.push(uploadingFile);
         }
-        const uploadingFile = {
-          fileData: firstNewFile,
-          token,
-          percentage: 0,
-          mode: FILE_MODES.UPLOADING
-        };
-        const files = [...this.state.files, uploadingFile];
         this.setState({ files }, () => {
           this.setFiles(remainingNewFiles);
         });
       });
+    }
+  };
+
+  handleUploadFileErrorStatus = (error, file) => {
+    const { status } = error;
+    switch (status) {
+      case TOO_BIG_FILE_STATUS: {
+        const {
+          prefix,
+          suffix,
+          defaultEnd
+        } = errors.message.TOO_BIG_FILE.description;
+        throwError({
+          name: errors.message.TOO_BIG_FILE.name,
+          description: `${prefix} ${file.name} ${suffix}${
+            error.maxSize
+              ? ` ${convertToHumanSize(Number(error.maxSize), true)}`
+              : `${defaultEnd}`
+          }`
+        });
+        return;
+      }
+      default:
+        return throwError(errors.message.UPLOAD_FAILED);
     }
   };
 
@@ -345,9 +368,7 @@ class ComposerWrapper extends Component {
   };
 
   handleClearFile = token => {
-    const files = this.state.files.filter(file => {
-      return file.token !== token;
-    });
+    const files = this.state.files.filter(file => file.token !== token);
     this.setState({ files });
   };
 
@@ -395,6 +416,13 @@ class ComposerWrapper extends Component {
   };
 
   handleSendMessage = () => {
+    const hasPendingAttachments = this.state.files.filter(file =>
+      PENDING_ATTACHMENTS_MODES.includes(file.mode)
+    );
+    if (hasPendingAttachments.length) {
+      throwError(errors.message.PENDING_FILES);
+      return;
+    }
     const hasNonCriptextRecipients = !!this.checkNonCriptextRecipients();
     const isVerified = this.state.nonCriptextRecipientsVerified;
     const recipientsAmount =
