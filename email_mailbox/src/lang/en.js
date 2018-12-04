@@ -192,5 +192,11 @@ export default {
     update_unread_threads: {
       description: 'Failed updating email status. Please try again'
     }
+  },
+  notification: {
+    newEmailGroup: {
+      prefix: 'You have ',
+      sufix: ' new emails'
+    }
   }
 };
