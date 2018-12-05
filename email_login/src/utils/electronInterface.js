@@ -29,6 +29,37 @@ export const deleteTemporalAccount = () => {
   return globalManager.temporalAccount.delete();
 };
 
+export const confirmWaitingApprovalLogin = callback => {
+  const dialog = remote.dialog;
+  const RESPONSES = {
+    CANCEL: {
+      index: 0,
+      label: 'Cancel'
+    },
+    KEEP: {
+      index: 1,
+      label: 'Keep waiting'
+    }
+  };
+  const dialogResponses = Object.values(RESPONSES).map(
+    response => response.label
+  );
+  const dialogTemplate = {
+    type: 'warning',
+    title: "Well, that's odd...",
+    buttons: dialogResponses,
+    defaultId: RESPONSES.KEEP.index,
+    cancelId: RESPONSES.CANCEL.index,
+    message: 'Something has happened that is delaying this process.',
+    detail: 'Do you want to continue waiting?',
+    noLink: true
+  };
+  dialog.showMessageBox(dialogTemplate, responseIndex => {
+    const response = responseIndex === RESPONSES.KEEP.index;
+    callback(response);
+  });
+};
+
 /* Window events
   ----------------------------- */
 export const closeLoading = () => {

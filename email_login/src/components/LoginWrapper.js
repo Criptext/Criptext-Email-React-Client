@@ -14,7 +14,8 @@ import {
   linkStatus,
   openCreateKeys,
   socketClient,
-  errors
+  errors,
+  confirmWaitingApprovalLogin
 } from './../utils/electronInterface';
 import { closeDialog, getComputerName, throwError } from '../utils/ipc.js';
 import { validateUsername } from './../validators/validators';
@@ -60,7 +61,6 @@ class LoginWrapper extends Component {
       ephemeralToken: undefined,
       hasTwoFactorAuth: undefined
     };
-    this.timeCountdown = 0;
   }
 
   render() {
@@ -122,38 +122,23 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     const nextMode =
       this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN;
-    this.setState(
-      {
-        mode: nextMode
-      },
-      () => this.cleanState()
-    );
+    this.setState({ mode: nextMode }, this.cleanState);
   };
 
   toggleLostAllDevices = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState(
-      {
-        mode: mode.LOGIN
-      },
-      () => this.cleanState()
-    );
+    this.setState({ mode: mode.LOGIN }, this.cleanState);
   };
 
   toggleDeviceNotApproved = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.setState(
-      {
-        mode: mode.LOGIN
-      },
-      () => this.cleanState()
-    );
+    this.setState({ mode: mode.LOGIN }, this.cleanState);
   };
 
   stopCountdown = () => {
-    clearTimeout(this.timeCountdown);
+    clearTimeout(this.linkStatusTimeout);
   };
 
   handleCheckUsernameResponse = newUsername => ({ status }) => {
@@ -302,13 +287,14 @@ class LoginWrapper extends Component {
   handleClickSignInWithPassword = ev => {
     ev.preventDefault();
     ev.stopPropagation();
+    this.stopCountdown();
     confirmLostDevices(response => {
       closeDialog();
       if (response === 'Continue') {
-        clearTimeout(this.linkStatusTimeout);
         socketClient.disconnect();
-        this.stopCountdown();
         this.goToPasswordLogin();
+      } else {
+        this.checkLinkStatus();
       }
     });
   };
@@ -317,10 +303,12 @@ class LoginWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     this.setState({ disabledResendLoginRequest: true }, async () => {
+      this.stopCountdown();
       const response = await this.sendLoginConfirmationRequest(
         this.state.ephemeralToken
       );
       if (response) {
+        this.checkLinkStatus();
         setTimeout(() => {
           this.setState({ disabledResendLoginRequest: false });
         }, 2000);
@@ -330,22 +318,25 @@ class LoginWrapper extends Component {
 
   checkLinkStatus = async () => {
     if (LINK_STATUS_ATTEMPS === 0) {
-      throwError({ name: 'Error', description: 'No response. Try again.' });
-      this.setState(
-        {
-          mode: mode.LOGIN
-        },
-        () => {
-          this.cleanState();
+      this.stopCountdown();
+      confirmWaitingApprovalLogin(shouldKeepWaiting => {
+        if (shouldKeepWaiting) {
           // eslint-disable-next-line fp/no-mutation
           LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
+          this.checkLinkStatus();
+        } else {
+          this.setState({ mode: mode.LOGIN }, () => {
+            this.cleanState();
+            // eslint-disable-next-line fp/no-mutation
+            LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
+          });
         }
-      );
+      });
     } else {
       const { status, body } = await linkStatus();
       switch (status) {
         case rejectedDeviceStatus: {
-          clearTimeout(this.linkStatusTimeout);
+          this.stopCountdown();
           socketClient.disconnect();
           this.setState({
             mode: mode.DEVICE_NOT_APPROVED
@@ -353,7 +344,7 @@ class LoginWrapper extends Component {
           return;
         }
         case approvedDeviceStastus: {
-          clearTimeout(this.linkStatusTimeout);
+          this.stopCountdown();
           socketClient.disconnect();
           const remoteData = {
             ...body,
