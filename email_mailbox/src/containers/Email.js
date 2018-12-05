@@ -10,7 +10,7 @@ import {
   myAccount,
   confirmPermanentDeleteThread
 } from './../utils/electronInterface';
-import { closeDialog, openFilledComposerWindow } from './../utils/ipc';
+import { closeDialogWindow, openFilledComposerWindow } from './../utils/ipc';
 import {
   loadFiles,
   muteEmail,
@@ -188,7 +188,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ev.stopPropagation();
       const CONFIRM_RESPONSE = 'Confirm';
       confirmPermanentDeleteThread(response => {
-        closeDialog();
+        closeDialogWindow();
         if (response === CONFIRM_RESPONSE) {
           const emailsToDelete = [email];
           dispatch(removeEmails(emailsToDelete)).then(() => {

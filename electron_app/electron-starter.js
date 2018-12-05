@@ -6,7 +6,6 @@ const globalManager = require('./src/globalManager');
 const mySettings = require('./src/Settings');
 
 const loginWindow = require('./src/windows/login');
-const dialogWindow = require('./src/windows/dialog');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
@@ -20,6 +19,7 @@ const { processEventsQueue } = require('./src/eventQueueManager');
 const { showNotification } = require('./src/updater');
 require('./src/ipc/composer.js');
 require('./src/ipc/dialog.js');
+require('./src/ipc/login.js');
 require('./src/ipc/mailbox.js');
 require('./src/ipc/utils.js');
 
@@ -49,30 +49,11 @@ async function initApp() {
     loginWindow.show();
   }
 
-  //   Login
-  ipcMain.on('close-login', () => {
-    loginWindow.close();
-  });
-
-  ipcMain.on('hide-login', () => {
-    loginWindow.hide();
-  });
-
-  ipcMain.on('minimize-login', () => {
-    loginWindow.minimize();
-  });
-
-  //   Dialog
-  ipcMain.on('open-modal', (event, modalData) => {
-    globalManager.modalData.set(modalData);
-    dialogWindow.show();
-  });
-
-  ipcMain.on('response-modal', (event, response, sendTo) => {
+  ipcMain.on('response-dialog', (event, response, sendTo) => {
     if (sendTo === 'mailbox') {
-      return mailboxWindow.responseFromModal(response);
+      return mailboxWindow.responseFromDialogWindow(response);
     }
-    return loginWindow.responseFromModal(response);
+    return loginWindow.responseFromDialogWindow(response);
   });
 
   //   Loading

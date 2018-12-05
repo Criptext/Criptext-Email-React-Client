@@ -6,6 +6,6 @@ export const remoteData = globalManager.modalData.get();
 
 /* Window events
    ----------------------------- */
-export const onResponseModal = (event, response, sendTo) => {
-  ipcRenderer.send('response-modal', response, sendTo);
+export const onResponseDialog = (event, response, sendTo) => {
+  ipcRenderer.send('response-dialog', response, sendTo);
 };

@@ -3,17 +3,16 @@ import SignUpWrapper from './SignUpWrapper';
 import {
   checkAvailableUsername,
   confirmEmptyEmail,
-  openCreateKeys,
-  closeLogin
+  openCreateKeys
 } from './../utils/electronInterface';
-import { closeDialog } from './../utils/ipc';
+import { closeDialogWindow, closeLoginWindow } from './../utils/ipc';
 
 const commitNewUser = validInputData => {
   openCreateKeys({
     loadingType: 'signup',
     remoteData: validInputData
   });
-  closeLogin();
+  closeLoginWindow();
 };
 
 class SignUpElectronWrapper extends Component {
@@ -30,7 +29,7 @@ class SignUpElectronWrapper extends Component {
 
   onSubmitWithoutRecoveryEmail = validInputData => {
     confirmEmptyEmail(response => {
-      closeDialog();
+      closeDialogWindow();
       if (response === 'Confirm') commitNewUser(validInputData);
     });
   };

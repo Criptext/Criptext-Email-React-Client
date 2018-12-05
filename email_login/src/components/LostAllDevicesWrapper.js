@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
 import {
-  closeLogin,
   confirmForgotPasswordSentLink,
   confirmForgotPasswordEmptyEmail,
   errors,
@@ -11,7 +10,11 @@ import {
   openCreateKeys,
   resetPassword
 } from './../utils/electronInterface';
-import { closeDialog, throwError } from './../utils/ipc';
+import {
+  closeDialogWindow,
+  closeLoginWindow,
+  throwError
+} from './../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
 import { censureEmailAddress } from '../utils/StringUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
@@ -113,7 +116,7 @@ class LostDevicesWrapper extends Component {
             name
           }
         });
-        closeLogin();
+        closeLoginWindow();
         break;
       }
       case LOGIN_STATUS.WRONG_CREDENTIALS: {
@@ -156,13 +159,13 @@ class LostDevicesWrapper extends Component {
     if (status === 200) {
       confirmForgotPasswordSentLink(customText, response => {
         if (response) {
-          closeDialog();
+          closeDialogWindow();
         }
       });
     } else {
       confirmForgotPasswordEmptyEmail(customText, response => {
         if (response) {
-          closeDialog();
+          closeDialogWindow();
         }
       });
     }

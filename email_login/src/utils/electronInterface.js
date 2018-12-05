@@ -1,4 +1,5 @@
 import { labels } from './systemLabels';
+import { openDialogWindow } from './ipc';
 const electron = window.require('electron');
 const { ipcRenderer, remote, webFrame } = electron;
 const dbManager = remote.require('./src/DBManager');
@@ -66,12 +67,8 @@ export const closeLoading = () => {
   ipcRenderer.send('close-loading');
 };
 
-export const closeLogin = () => {
-  ipcRenderer.send('close-login');
-};
-
 export const confirmEmptyEmail = callback => {
-  const dataForModal = {
+  const dialogData = {
     title: 'Warning!',
     contentType: 'EMPTY_RECOVERY_EMAIL',
     options: {
@@ -80,14 +77,14 @@ export const confirmEmptyEmail = callback => {
     },
     sendTo: 'login'
   };
-  ipcRenderer.send('open-modal', dataForModal);
+  openDialogWindow(dialogData);
   ipcRenderer.once('selectedOption', (event, data) => {
     callback(data.selectedOption);
   });
 };
 
 export const confirmLostDevices = callback => {
-  const dataForModal = {
+  const dialogData = {
     title: 'Password Login',
     contentType: 'LOST_ALL_DEVICES',
     options: {
@@ -96,14 +93,14 @@ export const confirmLostDevices = callback => {
     },
     sendTo: 'login'
   };
-  ipcRenderer.send('open-modal', dataForModal);
+  openDialogWindow(dialogData);
   ipcRenderer.once('selectedOption', (event, data) => {
     callback(data.selectedOption);
   });
 };
 
 export const confirmForgotPasswordEmptyEmail = (customText, callback) => {
-  const dataForModal = {
+  const dialogData = {
     title: 'Alert!',
     contentType: 'FORGOT_PASSWORD_EMPTY_EMAIL',
     customTextToReplace: customText,
@@ -113,14 +110,14 @@ export const confirmForgotPasswordEmptyEmail = (customText, callback) => {
     },
     sendTo: 'login'
   };
-  ipcRenderer.send('open-modal', dataForModal);
+  openDialogWindow(dialogData);
   ipcRenderer.once('selectedOption', (event, data) => {
     callback(data.selectedOption);
   });
 };
 
 export const confirmForgotPasswordSentLink = (customText, callback) => {
-  const dataForModal = {
+  const dialogData = {
     title: 'Forgot Password',
     contentType: 'FORGOT_PASSWORD_SEND_LINK',
     customTextToReplace: customText,
@@ -129,18 +126,10 @@ export const confirmForgotPasswordSentLink = (customText, callback) => {
     },
     sendTo: 'login'
   };
-  ipcRenderer.send('open-modal', dataForModal);
+  openDialogWindow(dialogData);
   ipcRenderer.once('selectedOption', (event, data) => {
     callback(data.selectedOption);
   });
-};
-
-export const hideLogin = () => {
-  ipcRenderer.send('hide-login');
-};
-
-export const minimizeLogin = () => {
-  ipcRenderer.send('minimize-login');
 };
 
 export const openCreateKeys = params => {
