@@ -148,7 +148,7 @@ const minimize = () => {
   }
 };
 
-const responseFromModal = response => {
+const responseFromDialogWindow = response => {
   mailboxWindow.webContents.send('selectedOption', {
     selectedOption: response
   });
@@ -190,7 +190,7 @@ module.exports = {
   hide,
   mailboxWindow,
   quit,
-  responseFromModal,
+  responseFromDialogWindow,
   send,
   show,
   isVisibleAndFocused,

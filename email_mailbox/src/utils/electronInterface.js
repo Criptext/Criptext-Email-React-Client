@@ -1,4 +1,5 @@
 import { labels } from './systemLabels';
+import { openDialogWindow } from './ipc';
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
@@ -37,7 +38,7 @@ export const errors = remote.require('./src/errors');
 /*  Window events
 ----------------------------- */
 export const confirmPermanentDeleteThread = callback => {
-  const dataForModal = {
+  const dialogData = {
     title: 'Warning!',
     contentType: 'PERMANENT_DELETE_THREAD',
     options: {
@@ -46,7 +47,7 @@ export const confirmPermanentDeleteThread = callback => {
     },
     sendTo: 'mailbox'
   };
-  ipcRenderer.send('open-modal', dataForModal);
+  openDialogWindow(dialogData);
   ipcRenderer.once('selectedOption', (event, data) => {
     callback(data.selectedOption);
   });

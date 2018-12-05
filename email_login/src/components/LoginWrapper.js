@@ -5,7 +5,6 @@ import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
   checkAvailableUsername,
-  closeLogin,
   confirmLostDevices,
   createTemporalAccount,
   deleteTemporalAccount,
@@ -17,7 +16,12 @@ import {
   errors,
   confirmWaitingApprovalLogin
 } from './../utils/electronInterface';
-import { closeDialog, getComputerName, throwError } from '../utils/ipc.js';
+import {
+  closeDialogWindow,
+  closeLoginWindow,
+  getComputerName,
+  throwError
+} from '../utils/ipc.js';
 import { validateUsername } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
@@ -289,7 +293,7 @@ class LoginWrapper extends Component {
     ev.stopPropagation();
     this.stopCountdown();
     confirmLostDevices(response => {
-      closeDialog();
+      closeDialogWindow();
       if (response === 'Continue') {
         socketClient.disconnect();
         this.goToPasswordLogin();
@@ -352,7 +356,7 @@ class LoginWrapper extends Component {
           };
           openCreateKeys({ loadingType: 'link-new-device', remoteData });
           deleteTemporalAccount();
-          closeLogin();
+          closeLoginWindow();
           return;
         }
         default: {

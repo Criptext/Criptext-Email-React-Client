@@ -6,7 +6,7 @@ import {
   confirmPermanentDeleteThread,
   LabelType
 } from '../utils/electronInterface';
-import { closeDialog } from './../utils/ipc';
+import { closeDialogWindow } from './../utils/ipc';
 
 const CONFIRM_RESPONSE = 'Confirm';
 
@@ -146,7 +146,7 @@ class HeaderThreadOptionsWrapper extends Component {
 
   handleClickDeleteThread = () => {
     confirmPermanentDeleteThread(response => {
-      closeDialog();
+      closeDialogWindow();
       if (response === CONFIRM_RESPONSE) {
         const backFirst = true;
         this.props.onRemoveThreads(this.props.threadsSelected, backFirst);

@@ -1,6 +1,9 @@
 import React from 'react';
-import { closeLogin, minimizeLogin } from './../utils/electronInterface';
-import { isWindows } from './../utils/ipc';
+import {
+  closeLoginWindow,
+  isWindows,
+  minimizeLoginWindow
+} from './../utils/ipc';
 import './titleBar.scss';
 
 const titleBar = () => (
@@ -10,10 +13,10 @@ const titleBar = () => (
     }`}
   >
     <span className="buttons">
-      <span className="minimize" onClick={minimizeLogin}>
+      <span className="minimize" onClick={minimizeLoginWindow}>
         <i className="icon-minimize" />
       </span>
-      <span className="close" onClick={closeLogin}>
+      <span className="close" onClick={closeLoginWindow}>
         <i className="icon-exit" />
       </span>
     </span>

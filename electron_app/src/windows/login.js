@@ -77,7 +77,7 @@ const minimize = () => {
   }
 };
 
-const responseFromModal = response => {
+const responseFromDialogWindow = response => {
   loginWindow.webContents.send('selectedOption', {
     selectedOption: response
   });
@@ -95,7 +95,7 @@ module.exports = {
   close,
   hide,
   minimize,
-  responseFromModal,
+  responseFromDialogWindow,
   show,
   send
 };

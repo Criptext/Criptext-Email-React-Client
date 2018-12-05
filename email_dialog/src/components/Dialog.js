@@ -1,5 +1,5 @@
 import React from 'react';
-import { remoteData, onResponseModal } from './../utils/electronInterface';
+import { remoteData, onResponseDialog } from './../utils/electronInterface';
 import * as messages from './../utils/contents';
 import './dialog.scss';
 
@@ -37,7 +37,7 @@ const renderOptions = (options, sendTo) => {
       {options.cancelLabel && (
         <button
           className="cancel"
-          onClick={e => onResponseModal(e, options.cancelLabel, sendTo)}
+          onClick={e => onResponseDialog(e, options.cancelLabel, sendTo)}
         >
           <span>{options.cancelLabel}</span>
         </button>
@@ -45,7 +45,7 @@ const renderOptions = (options, sendTo) => {
       {options.acceptLabel && (
         <button
           className="confirm"
-          onClick={e => onResponseModal(e, options.acceptLabel, sendTo)}
+          onClick={e => onResponseDialog(e, options.acceptLabel, sendTo)}
         >
           <span>{options.acceptLabel}</span>
         </button>

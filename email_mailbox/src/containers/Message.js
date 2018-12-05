@@ -7,7 +7,7 @@ import {
   getEmailsByLabelIds,
   confirmPermanentDeleteThread
 } from './../utils/electronInterface';
-import { closeDialog, downloadUpdate } from './../utils/ipc';
+import { closeDialogWindow, downloadUpdate } from './../utils/ipc';
 import { SectionType } from '../utils/const';
 import { loadThreads, removeThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
@@ -98,7 +98,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         case actionHandlerKeys.advice.trash: {
           const CONFIRM_RESPONSE = 'Confirm';
           confirmPermanentDeleteThread(async response => {
-            closeDialog();
+            closeDialogWindow();
             if (response === CONFIRM_RESPONSE) {
               const labelId = LabelType.trash.id;
               const emails = await getEmailsByLabelIds([labelId]);

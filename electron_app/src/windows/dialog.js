@@ -21,6 +21,10 @@ const create = () => {
   dialogWindow.loadURL(modalUrl);
   dialogWindow.setMenu(null);
   dialogWindow.setResizable(false);
+  if (process.env.NODE_ENV === 'development') {
+    dialogWindow.setResizable(true);
+    dialogWindow.webContents.openDevTools({ mode: 'undocked' });
+  }
 };
 
 const show = async () => {

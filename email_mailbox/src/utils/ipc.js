@@ -2,7 +2,7 @@ import { callMain } from '@criptext/electron-better-ipc/renderer';
 
 /*  Windows call
 ----------------------------- */
-export const closeDialog = () => {
+export const closeDialogWindow = () => {
   callMain('close-dialog');
 };
 
@@ -12,6 +12,10 @@ export const downloadUpdate = () => {
 
 export const logoutApp = () => {
   callMain('logout-app');
+};
+
+export const openDialogWindow = data => {
+  callMain('open-dialog', data);
 };
 
 export const openEmptyComposerWindow = () => {
