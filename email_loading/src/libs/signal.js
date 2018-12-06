@@ -13,12 +13,11 @@ import {
   createTables,
   postKeyBundle,
   updateAccount,
-  getComputerName,
   getKeyBundle,
   mySettings,
   getAppSettings
 } from './../utils/electronInterface';
-
+import { getComputerName } from './../utils/ipc';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
 import { appDomain, DEVICE_TYPE } from './../utils/const';

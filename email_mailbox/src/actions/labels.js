@@ -7,9 +7,9 @@ import {
   getEmailsCounterByLabelId,
   LabelType,
   postPeerEvent,
-  updateDockBadge,
   updateLabel as updateLabelDB
 } from '../utils/electronInterface';
+import { updateDockBadgeApp } from '../utils/ipc';
 import { sendUpdateLabelsErrorMessage } from './../utils/electronEventInterface';
 import { SocketCommand } from '../utils/const';
 
@@ -58,7 +58,7 @@ export const loadLabels = () => {
         rejectedLabelIds
       });
       const badgeInbox = unreadInbox.length;
-      updateDockBadge(badgeInbox);
+      updateDockBadgeApp(badgeInbox);
       const unreadSpam = await getEmailsUnredByLabelId({
         labelId: LabelType.spam.id
       });
@@ -135,7 +135,7 @@ export const updateBadgeLabels = labelIds => {
               rejectedLabelIds
             });
             const badgeInbox = unreadInbox.length;
-            updateDockBadge(badgeInbox);
+            updateDockBadgeApp(badgeInbox);
             return {
               id: String(labelId),
               badge: badgeInbox

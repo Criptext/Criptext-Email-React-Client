@@ -16,6 +16,10 @@ export const minimizeLoginWindow = () => {
   callMain('minimize-login');
 };
 
+export const openCreateKeysLoadingWindow = params => {
+  callMain('open-create-keys-loading', params);
+};
+
 export const openDialogWindow = data => {
   callMain('open-dialog', data);
 };

@@ -16,8 +16,6 @@ export const LabelType = labels;
 
 export const { loadingType, remoteData } = remote.getGlobal('loadingData');
 
-export const { getComputerName } = remote.require('./src/utils/osUtils');
-
 export const setRemoteData = data => {
   globalManager.loadingData.set(data);
 };
@@ -61,16 +59,6 @@ export const encryptDatabaseFile = () => {
 
 export const uploadDatabaseFile = randomId => {
   return dataTransferManager.upload(randomId);
-};
-
-/* Window events
-   ----------------------------- */
-export const closeCreatingKeys = () => {
-  ipcRenderer.send('close-create-keys');
-};
-
-export const throwError = error => {
-  ipcRenderer.send('throwError', error);
 };
 
 /* Criptext Client

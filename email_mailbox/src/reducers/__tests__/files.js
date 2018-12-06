@@ -5,6 +5,7 @@ import * as actions from './../../actions/index';
 import data from './../../../public/files.json';
 
 jest.mock('./../../utils/const');
+jest.mock('./../../utils/ipc');
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
 

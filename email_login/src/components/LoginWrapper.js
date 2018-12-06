@@ -11,7 +11,6 @@ import {
   linkBegin,
   linkAuth,
   linkStatus,
-  openCreateKeys,
   socketClient,
   errors,
   confirmWaitingApprovalLogin
@@ -20,6 +19,7 @@ import {
   closeDialogWindow,
   closeLoginWindow,
   getComputerName,
+  openCreateKeysLoadingWindow,
   throwError
 } from '../utils/ipc.js';
 import { validateUsername } from './../validators/validators';
@@ -354,7 +354,10 @@ class LoginWrapper extends Component {
             ...body,
             recipientId: this.state.values.username
           };
-          openCreateKeys({ loadingType: 'link-new-device', remoteData });
+          openCreateKeysLoadingWindow({
+            loadingType: 'link-new-device',
+            remoteData
+          });
           deleteTemporalAccount();
           closeLoginWindow();
           return;
