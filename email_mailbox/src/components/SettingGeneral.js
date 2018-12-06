@@ -10,11 +10,13 @@ import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
 import LogoutPopup from './LogoutPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
+import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
 import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain, usefulLinks } from '../utils/const';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import string, { languages } from './../lang';
+import SettingsGeneralDeleteAccount from './SettingsGeneralDeleteAccount';
 import './settinggeneral.scss';
 import './signatureeditor.scss';
 
@@ -22,6 +24,7 @@ const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
 const Logoutpopup = PopupHOC(LogoutPopup);
 const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
+const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   'To enable Two-Factor Authentication you must set and verify a recovery email';
@@ -41,6 +44,9 @@ const SettingGeneral = props => (
     <RecoveryEmailBlock {...props} />
     <UsefulLinksBlock />
     <LogoutAccountBlock {...props} />
+    <SettingsGeneralDeleteAccount
+      onShowSettingsPopup={props.onShowSettingsPopup}
+    />
     <SettingsPopup {...props} />
   </div>
 );
@@ -516,6 +522,16 @@ const SettingsPopup = props => {
         />
       );
     }
+    case SETTINGS_POPUP_TYPES.DELETE_ACCOUNT: {
+      return (
+        <Deleteaccountpopup
+          isHidden={isHidden}
+          onTogglePopup={props.onHideSettingsPopup}
+          popupPosition={{ left: '45%', top: '45%' }}
+          {...props}
+        />
+      );
+    }
     default:
       return null;
   }
@@ -611,6 +627,10 @@ renderer.propTypes = {
 
 RecoveryEmailConfirmationMessage.propTypes = {
   recoveryEmailConfirmed: PropTypes.bool
+};
+
+SettingGeneral.propTypes = {
+  onShowSettingsPopup: PropTypes.func
 };
 
 export default SettingGeneral;

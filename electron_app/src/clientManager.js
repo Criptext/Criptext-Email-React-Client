@@ -73,6 +73,11 @@ class ClientManager {
     return client.checkAvailableUsername(username);
   }
 
+  async deleteMyAccount(password) {
+    const res = await client.deleteMyAccount(password);
+    return checkDeviceRemoved(res);
+  }
+
   async findKeyBundles(params) {
     const res = await client.findKeyBundles(params);
     return checkDeviceRemoved(res);

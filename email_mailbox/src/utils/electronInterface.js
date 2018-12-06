@@ -79,6 +79,10 @@ export const changeRecoveryEmail = params => {
   return clientManager.changeRecoveryEmail(params);
 };
 
+export const deleteMyAccount = password => {
+  return clientManager.deleteMyAccount(password);
+};
+
 export const getEmailBody = params => {
   return clientManager.getEmailBody(params);
 };

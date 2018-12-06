@@ -58,6 +58,7 @@ const SETTINGS_POPUP_TYPES = {
   LOGOUT: 'logout',
   CHANGE_RECOVERY_EMAIL: 'change-recovery-email',
   TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled',
+  DELETE_ACCOUNT: 'delete-account',
   NONE: 'none'
 };
 
@@ -227,6 +228,8 @@ class SettingGeneralWrapper extends Component {
         onChangeSwitchReadReceipts={this.handleChangeSwitchReadReceipts}
         readReceiptsEnabled={this.state.readReceipts.enabled}
         readReceiptsLabelisLoading={this.state.readReceipts.isLoading}
+        onShowSettingsPopup={this.handleShowSettingsPopup}
+        onHideSettingsPopup={this.handleHideSettingsPopup}
       />
     );
   }
@@ -819,6 +822,20 @@ class SettingGeneralWrapper extends Component {
         });
       }
     );
+  };
+
+  handleShowSettingsPopup = popupType => {
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPupopType: popupType
+    });
+  };
+
+  handleHideSettingsPopup = () => {
+    this.setState({
+      isHiddenSettingsPopup: true,
+      settingsPupopType: SETTINGS_POPUP_TYPES.NONE
+    });
   };
 
   initEventHandlers = () => {
