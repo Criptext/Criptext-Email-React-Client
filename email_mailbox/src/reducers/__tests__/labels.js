@@ -6,6 +6,7 @@ import { Map } from 'immutable';
 import file from './../../../public/labels.json';
 
 jest.mock('./../../utils/const');
+jest.mock('./../../utils/ipc');
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
 

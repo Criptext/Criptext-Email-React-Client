@@ -3,7 +3,6 @@ import LinkOldDevice from './LinkOldDevice';
 import LinkDeviceRequest from './LinkDeviceRequest';
 import signal from '../libs/signal';
 import {
-  closeCreatingKeys,
   remoteData,
   loadingType,
   startSocket,
@@ -20,7 +19,7 @@ import {
   sendEndLinkDevicesEvent,
   errors
 } from '../utils/electronInterface';
-import { throwError } from '../utils/ipc';
+import { closeCreatingKeysLoadingWindow, throwError } from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 
@@ -99,7 +98,7 @@ class LoadingWrapper extends Component {
   handleDenyLinkDeviceRequest = async () => {
     const { randomId } = remoteData.session;
     await linkDeny(randomId);
-    closeCreatingKeys();
+    closeCreatingKeysLoadingWindow();
     sendEndLinkDevicesEvent();
   };
 
@@ -194,7 +193,7 @@ class LoadingWrapper extends Component {
               this.incrementPercentage();
               await setTimeout(() => {
                 clearSyncData();
-                closeCreatingKeys();
+                closeCreatingKeysLoadingWindow();
                 sendEndLinkDevicesEvent();
               }, 4000);
             }
@@ -213,7 +212,7 @@ class LoadingWrapper extends Component {
 
   handleClickCancelSync = () => {
     clearSyncData();
-    closeCreatingKeys();
+    closeCreatingKeysLoadingWindow();
     sendEndLinkDevicesEvent();
   };
 

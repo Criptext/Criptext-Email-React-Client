@@ -6,6 +6,7 @@ import file from './../../../public/contacts.json';
 const contacts = file.contacts;
 
 jest.mock('./../../utils/const');
+jest.mock('./../../utils/ipc');
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
 

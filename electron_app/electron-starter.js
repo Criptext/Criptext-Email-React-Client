@@ -19,6 +19,7 @@ const { processEventsQueue } = require('./src/eventQueueManager');
 const { showNotification } = require('./src/updater');
 require('./src/ipc/composer.js');
 require('./src/ipc/dialog.js');
+require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
 require('./src/ipc/mailbox.js');
 require('./src/ipc/utils.js');
@@ -56,25 +57,7 @@ async function initApp() {
     return loginWindow.responseFromDialogWindow(response);
   });
 
-  //   Loading
-  ipcMain.on('open-create-keys', (event, arg) => {
-    globalManager.loadingData.set(arg);
-    loadingWindow.show();
-  });
-
-  ipcMain.on('close-create-keys', () => {
-    loadingWindow.close();
-    globalManager.loadingData.set({});
-  });
-
   //   Mailbox
-  ipcMain.on('update-dock-badge', (event, value) => {
-    const currentBadge = app.getBadgeCount();
-    if (currentBadge !== value) {
-      app.setBadgeCount(value);
-    }
-  });
-
   ipcMain.on('process-pending-events', () => {
     processEventsQueue();
   });

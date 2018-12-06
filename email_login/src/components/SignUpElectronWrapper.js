@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import SignUpWrapper from './SignUpWrapper';
 import {
   checkAvailableUsername,
-  confirmEmptyEmail,
-  openCreateKeys
+  confirmEmptyEmail
 } from './../utils/electronInterface';
-import { closeDialogWindow, closeLoginWindow } from './../utils/ipc';
+import {
+  closeDialogWindow,
+  closeLoginWindow,
+  openCreateKeysLoadingWindow
+} from './../utils/ipc';
 
 const commitNewUser = validInputData => {
-  openCreateKeys({
+  openCreateKeysLoadingWindow({
     loadingType: 'signup',
     remoteData: validInputData
   });

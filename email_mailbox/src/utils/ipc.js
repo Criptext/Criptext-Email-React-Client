@@ -33,3 +33,7 @@ export const openFileExplorer = filename => {
 export const throwError = error => {
   callMain('throwError', error);
 };
+
+export const updateDockBadgeApp = value => {
+  callMain('update-dock-badge', value);
+};

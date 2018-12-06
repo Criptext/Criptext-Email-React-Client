@@ -7,12 +7,12 @@ import {
   confirmForgotPasswordEmptyEmail,
   errors,
   login,
-  openCreateKeys,
   resetPassword
 } from './../utils/electronInterface';
 import {
   closeDialogWindow,
   closeLoginWindow,
+  openCreateKeysLoadingWindow,
   throwError
 } from './../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
@@ -108,7 +108,7 @@ class LostDevicesWrapper extends Component {
       case LOGIN_STATUS.SUCCESS: {
         const recipientId = username;
         const { deviceId, name } = body;
-        openCreateKeys({
+        openCreateKeysLoadingWindow({
           loadingType: 'login',
           remoteData: {
             recipientId,

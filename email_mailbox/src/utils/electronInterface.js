@@ -53,10 +53,6 @@ export const confirmPermanentDeleteThread = callback => {
   });
 };
 
-export const updateDockBadge = value => {
-  ipcRenderer.send('update-dock-badge', value);
-};
-
 export const minimizeMailbox = () => {
   ipcRenderer.send('minimize-mailbox');
 };

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import signal from './../libs/signal';
+import { remoteData, errors } from './../utils/electronInterface';
 import {
-  closeCreatingKeys,
-  remoteData,
-  throwError,
-  errors
-} from './../utils/electronInterface';
-import { openMailbox } from './../utils/ipc';
+  closeCreatingKeysLoadingWindow,
+  openMailboxWindow,
+  throwError
+} from './../utils/ipc';
 import Loading from './Loading';
 
 const animationTypes = {
@@ -149,8 +148,8 @@ class LoadingWrapper extends Component {
     if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
       this.setState({ percent: 100 }, () => {
-        openMailbox();
-        closeCreatingKeys();
+        openMailboxWindow();
+        closeCreatingKeysLoadingWindow();
       });
     }
     this.setState({

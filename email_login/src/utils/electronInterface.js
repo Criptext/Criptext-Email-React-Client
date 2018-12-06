@@ -132,10 +132,6 @@ export const confirmForgotPasswordSentLink = (customText, callback) => {
   });
 };
 
-export const openCreateKeys = params => {
-  ipcRenderer.send('open-create-keys', params);
-};
-
 /* Criptext Client
   ----------------------------- */
 export const checkAvailableUsername = username => {

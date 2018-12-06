@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import signal from '../libs/signal';
 import {
-  closeCreatingKeys,
   remoteData,
   downloadBackupFile,
   startSocket,
@@ -12,7 +11,11 @@ import {
   acknowledgeEvents,
   errors
 } from '../utils/electronInterface';
-import { openMailbox, throwError } from './../utils/ipc';
+import {
+  closeCreatingKeysLoadingWindow,
+  openMailboxWindow,
+  throwError
+} from './../utils/ipc';
 import LinkNewDevice from './LinkNewDevice';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';
@@ -232,8 +235,8 @@ class LoadingWrapper extends Component {
                 this.incrementPercentage();
                 clearSyncData();
                 await setTimeout(() => {
-                  openMailbox();
-                  closeCreatingKeys();
+                  openMailboxWindow();
+                  closeCreatingKeysLoadingWindow();
                 }, 4000);
               }
             );
@@ -245,8 +248,8 @@ class LoadingWrapper extends Component {
 
   handleClickCancelSync = () => {
     if (this.state.lastStep === STEPS.WAIT_MAILBOX) {
-      openMailbox();
-      closeCreatingKeys();
+      openMailboxWindow();
+      closeCreatingKeysLoadingWindow();
     }
   };
 
