@@ -4,7 +4,6 @@ const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
 const mySettings = require('./src/Settings');
-
 const loginWindow = require('./src/windows/login');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
@@ -15,8 +14,6 @@ const {
   trayIconTemplate,
   trayIcon
 } = require('./src/windows/menu');
-const { processEventsQueue } = require('./src/eventQueueManager');
-const { showNotification } = require('./src/updater');
 require('./src/ipc/composer.js');
 require('./src/ipc/dialog.js');
 require('./src/ipc/loading.js');
@@ -55,27 +52,6 @@ async function initApp() {
       return mailboxWindow.responseFromDialogWindow(response);
     }
     return loginWindow.responseFromDialogWindow(response);
-  });
-
-  //   Mailbox
-  ipcMain.on('process-pending-events', () => {
-    processEventsQueue();
-  });
-
-  ipcMain.on('show-notification', (ev, { title, message }) => {
-    showNotification({ title, message });
-  });
-
-  ipcMain.on('minimize-mailbox', () => {
-    mailboxWindow.minimize();
-  });
-
-  ipcMain.on('toggle-maximize-mailbox', () => {
-    mailboxWindow.toggleMaximize();
-  });
-
-  ipcMain.on('close-mailbox', () => {
-    mailboxWindow.close();
   });
 
   //   Composer

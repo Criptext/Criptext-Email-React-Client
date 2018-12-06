@@ -45,7 +45,12 @@ import {
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
-import { logoutApp, openFilledComposerWindow } from './../utils/ipc';
+import {
+  logoutApp,
+  openFilledComposerWindow,
+  processPendingEvents,
+  showNotificationApp
+} from './../utils/ipc';
 import { getShowEmailPreviewStatus } from './storage';
 import string from './../lang';
 
@@ -413,7 +418,7 @@ const sendNewEmailNotification = () => {
       const message = getShowEmailPreviewStatus()
         ? `${emailSubject}\n${emailPreview}`
         : `${emailSubject}`;
-      ipcRenderer.send('show-notification', { title: senderInfo, message });
+      showNotificationApp({ title: senderInfo, message });
     });
   } else if (newEmailNotificationList.length > 3) {
     const title = 'Criptext';
@@ -421,7 +426,7 @@ const sendNewEmailNotification = () => {
       string.notification.newEmailGroup.prefix +
       newEmailNotificationList.length +
       string.notification.newEmailGroup.sufix;
-    ipcRenderer.send('show-notification', { title, message });
+    showNotificationApp({ title, message });
   }
   newEmailNotificationList = [];
 };
@@ -783,12 +788,6 @@ ipcRenderer.on('check-network-status', () => {
     processPendingEvents();
   }
 });
-
-export const processPendingEvents = () => {
-  setTimeout(() => {
-    ipcRenderer.send('process-pending-events');
-  }, 1000);
-};
 
 ipcRenderer.on(
   'open-mailto-in-composer',
