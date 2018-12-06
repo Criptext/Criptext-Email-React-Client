@@ -10,6 +10,10 @@ import {
 import DeleteAccountPopup from './DeleteAccountPopup';
 import { clearStorage } from '../utils/storage';
 import { logoutApp } from '../utils/ipc';
+import string from '../lang';
+import { sendAccountDeletedEvent } from './../utils/electronEventInterface';
+
+const { inputs } = string.popups.delete_account;
 
 class DeleteAccountPopupWrapper extends Component {
   constructor(props) {
@@ -54,9 +58,8 @@ class DeleteAccountPopupWrapper extends Component {
 
   checkInputError = value => {
     const isValid = validatePassword(value);
-    const errorMessage = `Must be at least ${
-      requiredMinLength.password
-    } characters`;
+    const { prefix, suffix } = inputs.password.errorMessages.length;
+    const errorMessage = `${prefix} ${requiredMinLength.password} ${suffix}`;
     return { hasError: !isValid, errorMessage };
   };
 
@@ -82,13 +85,16 @@ class DeleteAccountPopupWrapper extends Component {
     const { status } = await deleteMyAccount(params);
     if (status === 200) {
       this.props.onHideSettingsPopup();
+      sendAccountDeletedEvent();
       clearStorage();
       await cleanDatabase();
-      logoutApp();
+      setTimeout(() => {
+        logoutApp();
+      }, 1500);
     } else {
       this.setState({
         hasError: true,
-        errorMessage: 'Wrong password'
+        errorMessage: inputs.password.errorMessages.wrong
       });
     }
   };

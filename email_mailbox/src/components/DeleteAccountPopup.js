@@ -1,21 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from '../lang';
+import './deleteaccountpopup.scss';
+
+const {
+  title,
+  paragraphs,
+  subtitle,
+  inputs,
+  cancelButtonLabel,
+  confirmButtonLabel
+} = string.popups.delete_account;
 
 const DeleteAccountPopup = props => {
   return (
     <div id="popup-deleteaccount" className="popup-content">
       <div className="popup-title">
-        <h1>Delete My Account</h1>
+        <h1>{title}</h1>
       </div>
       <div className="popup-paragraph">
-        <p>
-          Deleting your account will also delete all your emails in this and any
-          other device in which your account is logged into. It will also enable
-          anyone to register an account with your current email address.
-        </p>
+        <p>{paragraphs.header}</p>
       </div>
       <div className="popup-subtitle">
-        <h2>To confirm enter your password</h2>
+        <h2>{subtitle}</h2>
       </div>
       <div className="popup-inputs">
         <DeleteAccountPopupInput {...props} />
@@ -25,14 +32,14 @@ const DeleteAccountPopup = props => {
           className="button-a popup-cancel-button"
           onClick={props.onClickCancelDeleteAccount}
         >
-          <span>Cancel</span>
+          <span>{cancelButtonLabel}</span>
         </button>
         <button
           className="button-a popup-confirm-button"
           onClick={props.onClickConfirmDeleteAccount}
           disabled={props.isDisabledConfirmButton}
         >
-          <span>Send</span>
+          <span>{confirmButtonLabel}</span>
         </button>
       </div>
     </div>
@@ -54,7 +61,7 @@ const DeleteAccountPopupInput = ({
       type={type}
       value={value}
       onChange={ev => onChangeInputValue(ev)}
-      placeholder={'Enter password'}
+      placeholder={inputs.password.placeholder}
       disabled={isDisabledInput}
     />
     <i className={icon} onClick={() => onClickChangeInputType()} />

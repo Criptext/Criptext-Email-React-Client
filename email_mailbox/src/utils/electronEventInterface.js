@@ -1004,6 +1004,10 @@ export const sendTwoFactorAuthenticationTurnedOffMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendAccountDeletedEvent = () => {
+  emitter.emit(Event.ACCOUNT_DELETED);
+};
+
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
@@ -1036,5 +1040,6 @@ export const Event = {
   LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
   LINK_DEVICE_END: 'link-devices-finished',
   DISABLE_WINDOW: 'add-window-overlay',
-  ENABLE_WINDOW: 'remove-window-overlay'
+  ENABLE_WINDOW: 'remove-window-overlay',
+  ACCOUNT_DELETED: 'account-deleted'
 };

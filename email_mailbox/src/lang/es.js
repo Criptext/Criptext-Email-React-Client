@@ -69,7 +69,11 @@ export default {
     resend_link: '###',
     signature: 'Firma',
     trusted_devices: 'dispositivos verificados',
-    two_factor_authentication: 'autenticación en dos pasos'
+    two_factor_authentication: 'autenticación en dos pasos',
+    delete_account: {
+      label: 'Eliminar cuenta',
+      button: 'Eliminar permanentemente'
+    }
   },
   sidebar: {
     compose: 'redactar',
@@ -201,6 +205,35 @@ export default {
     newEmailGroup: {
       prefix: 'Tienes ',
       sufix: ' correos nuevos'
+    }
+  },
+  popups: {
+    account_deleted: {
+      title: 'Cuenta eliminada',
+      paragraphs: {
+        header: 'Eliminando toda la información...'
+      }
+    },
+    delete_account: {
+      title: 'Eliminar mi cuenta',
+      paragraphs: {
+        header: `Eliminar su cuenta también eliminará todos los correos electrónicos en este y cualquier otro dispositivo en el que haya iniciado sesión. También inhabilitará a cualquier persona para registrar una cuenta con su dirección de correo electrónico actual`
+      },
+      subtitle: 'Para confirmar, ingresa tu contraseña',
+      inputs: {
+        password: {
+          placeholder: 'Ingresa tu contraseña',
+          errorMessages: {
+            length: {
+              prefix: 'Debe tener al menos',
+              suffix: 'caracteres'
+            },
+            wrong: 'Contraseña incorrecta'
+          }
+        }
+      },
+      cancelButtonLabel: 'Cancelar',
+      confirmButtonLabel: 'Enviar'
     }
   }
 };
