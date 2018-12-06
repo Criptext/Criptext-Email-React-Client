@@ -110,5 +110,41 @@ module.exports = {
       name: 'Link device error',
       description: 'Failed to upload data.\nCode: '
     }
+  },
+  updaterMessages: {
+    error: {
+      name: 'Updater Error',
+      description:
+        'An error occurred while downloading the update.\n' + 'Try again later'
+    },
+    unknownError: 'Unknown',
+    notAvailable: {
+      name: 'No Update Available',
+      description: "You're on the latest version of Criptext"
+    },
+    availableManual: {
+      name: 'Update Available',
+      description:
+        'A new version of Criptext is available. Would you like to download it now?',
+      confirmButton: 'Yes',
+      cancelButton: 'No'
+    },
+    availableAuto: {
+      title: 'A new version of Criptext is available!',
+      subtitle: 'Click here to download or dismiss to update later'
+    },
+    downloading: {
+      title: 'Downloading update',
+      subtitle: "When it's ready we will notify you"
+    },
+    alreadyDownloading: {
+      title: 'Downloading update',
+      subtitle: 'An update is currently being downloaded'
+    },
+    downloaded: {
+      title: 'Install Update',
+      subtitle:
+        'Update download complete. Criptext will restart and update immediately'
+    }
   }
 };
