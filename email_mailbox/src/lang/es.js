@@ -234,6 +234,14 @@ export default {
       },
       cancelButtonLabel: 'Cancelar',
       confirmButtonLabel: 'Enviar'
+    },
+    logout: {
+      title: 'Cerrar sesión',
+      paragraphs: {
+        header: '¿Estás seguro que quieres cerrar sesión?'
+      },
+      cancelButtonLabel: 'Cancelar',
+      confirmButtonLabel: 'Continuar'
     }
   }
 };

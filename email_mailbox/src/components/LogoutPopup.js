@@ -1,82 +1,42 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 
-class ChangePasswordPopup extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isTimerOn: true,
-      time: 10
-    };
-  }
+const {
+  title,
+  paragraphs,
+  cancelButtonLabel,
+  confirmButtonLabel
+} = string.popups.logout;
 
-  render() {
-    return (
-      <div className="popup-content">
-        <div className="popup-title">
-          <h1>Logout</h1>
-        </div>
-        <div className="popup-paragraph">
-          <p>
-            Logging out will delete emails locally from this device. All emails
-            will still be available in your other devices.
-          </p>
-        </div>
-        <ChangePasswordPopupButtons
-          isTimerOn={this.state.isTimerOn}
-          time={this.state.time}
-          {...this.props}
-        />
-      </div>
-    );
-  }
-
-  componentDidMount() {
-    this.startTimer();
-  }
-
-  startTimer = () => {
-    this.timer = setInterval(() => {
-      this.setState({
-        time: this.state.time - 1
-      });
-      if (this.state.time <= 0) {
-        this.stopTimer();
-      }
-    }, 1000);
-  };
-
-  stopTimer = () => {
-    clearInterval(this.timer);
-    this.setState({
-      isTimerOn: false
-    });
-  };
-}
-
-const ChangePasswordPopupButtons = props => (
-  <div className="popup-buttons">
-    <button
-      className="button-a popup-cancel-button"
-      onClick={props.onClickCancelLogout}
-    >
-      <span>Cancel</span>
-    </button>
-    <button
-      className="button-a popup-confirm-button"
-      onClick={props.onConfirmLogout}
-      disabled={props.isTimerOn}
-    >
-      <span>{props.isTimerOn ? `Yes (${props.time})` : `Yes`}</span>
-    </button>
+const LogoutPopup = props => (
+  <div className="popup-content">
+    <div className="popup-title">
+      <h1>{title}</h1>
+    </div>
+    <div className="popup-paragraph">
+      <p>{paragraphs.header}</p>
+    </div>
+    <div className="popup-buttons">
+      <button
+        className="button-a popup-cancel-button"
+        onClick={props.onClickCancelLogout}
+      >
+        <span>{cancelButtonLabel}</span>
+      </button>
+      <button
+        className="button-a popup-confirm-button"
+        onClick={props.onConfirmLogout}
+      >
+        {confirmButtonLabel}
+      </button>
+    </div>
   </div>
 );
 
-ChangePasswordPopupButtons.propTypes = {
-  isTimerOn: PropTypes.bool,
+LogoutPopup.propTypes = {
   onConfirmLogout: PropTypes.func,
-  onClickCancelLogout: PropTypes.func,
-  time: PropTypes.number
+  onClickCancelLogout: PropTypes.func
 };
 
-export default ChangePasswordPopup;
+export default LogoutPopup;

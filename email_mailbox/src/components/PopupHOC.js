@@ -61,7 +61,7 @@ const PopupHOC = InComponent =>
     };
 
     defineOverlayColor = theme => {
-      const backgroundColor = theme === 'dark' ? 'rgba(0, 0, 0, 0.5)' : 'none';
+      const backgroundColor = theme === 'dark' ? 'rgba(0, 0, 0, 0.7)' : 'none';
       return { backgroundColor };
     };
 

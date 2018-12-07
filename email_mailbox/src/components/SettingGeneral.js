@@ -487,6 +487,7 @@ const SettingsPopup = props => {
           isHidden={isHidden}
           onTogglePopup={props.onClickCancelChangePassword}
           popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
           {...props}
         />
       );
@@ -497,6 +498,7 @@ const SettingsPopup = props => {
           isHidden={isHidden}
           onTogglePopup={props.onClickCancelChangeRecoveryEmail}
           popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
           {...props}
         />
       );
@@ -507,6 +509,7 @@ const SettingsPopup = props => {
           isHidden={isHidden}
           onTogglePopup={props.onClickCancelChangePassword}
           popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
           {...props}
         />
       );
@@ -528,6 +531,7 @@ const SettingsPopup = props => {
           isHidden={isHidden}
           onTogglePopup={props.onHideSettingsPopup}
           popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
           {...props}
         />
       );

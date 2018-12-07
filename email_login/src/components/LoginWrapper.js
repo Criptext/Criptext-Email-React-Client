@@ -38,7 +38,8 @@ const mode = {
 const errorMessages = {
   USERNAME_NOT_EXISTS: "Username doesn't exist",
   USERNAME_INVALID: 'Invalid username',
-  STATUS_UNKNOWN: 'Unknown status code: '
+  STATUS_UNKNOWN: 'Unknown status code: ',
+  USERNAME_NOT_AVAILABLE: 'Username not available'
 };
 
 const LINK_STATUS_RETRIES = 12;
@@ -159,7 +160,7 @@ class LoginWrapper extends Component {
             errorMessage: errorMessages.USERNAME_INVALID
           };
         case 400:
-          return { errorMessage: '' };
+          return { errorMessage: errorMessages.USERNAME_NOT_AVAILABLE };
         default:
           return {
             errorMessage: errorMessages.STATUS_UNKNOWN + status
