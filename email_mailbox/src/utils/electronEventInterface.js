@@ -23,7 +23,8 @@ import {
   updateEmails,
   updateAccount,
   updateFilesByEmailId,
-  updateUnreadEmailByThreadIds
+  updateUnreadEmailByThreadIds,
+  updateContactByEmail
 } from './electronInterface';
 import {
   checkEmailIsTo,
@@ -182,6 +183,7 @@ const processEvent = async eventsGroups => {
     await setEventAsHandled(rowIdsFiltered);
   }
   sendNewEmailNotification();
+  await updateOwnContact();
   return true;
 };
 
@@ -429,6 +431,14 @@ const sendNewEmailNotification = () => {
     showNotificationApp({ title, message });
   }
   newEmailNotificationList = [];
+};
+
+const updateOwnContact = async () => {
+  const ownEmail = `${myAccount.recipientId}@${appDomain}`;
+  const accountName = myAccount.name;
+  if (accountName) {
+    await updateContactByEmail({ email: ownEmail, name: accountName });
+  }
 };
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {

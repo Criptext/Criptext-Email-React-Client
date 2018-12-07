@@ -3,7 +3,8 @@ const { autoUpdater } = require('electron-updater');
 const notifier = require('node-notifier');
 const path = require('path');
 const globalManager = require('./globalManager');
-const appId = 'com.criptext.emailclient';
+const appId = 'com.criptext.criptextmail';
+const { updaterMessages } = require('./lang');
 
 let currentUpdaterType;
 let isDownloadingUpdate = false;
@@ -16,22 +17,31 @@ const iconPath = path.join(__dirname, './../resources/launch-icons/icon.png');
 
 autoUpdater.autoDownload = false;
 
-autoUpdater.on('error', error => {
-  const errorMessage = process.env.DEBUG
-    ? error == null
-      ? 'unknown'
-      : (error.stack || error).toString()
-    : 'An error occurred while downloading the update. Try again later.';
-  dialog.showErrorBox('Error: ', errorMessage);
-  currentUpdaterType = updaterTypes.NONE;
-  isDownloadingUpdate = false;
+autoUpdater.on('error', updaterError => {
+  try {
+    const isNetworkError = updaterError.stack
+      .toString()
+      .includes('ERR_INTERNET_DISCONNECTED');
+    if (!isNetworkError) {
+      throw updaterError;
+    }
+  } catch (error) {
+    const errorMessage = process.env.DEBUG
+      ? error == null
+        ? updaterMessages.unknownError
+        : (error.stack || error).toString()
+      : updaterMessages.error.description;
+    dialog.showErrorBox(updaterMessages.error.name, errorMessage);
+    currentUpdaterType = updaterTypes.NONE;
+    isDownloadingUpdate = false;
+  }
 });
 
 autoUpdater.on('update-not-available', () => {
   if (currentUpdaterType === updaterTypes.MANUAL) {
     dialog.showMessageBox({
-      title: 'No Update Available',
-      message: "You're on the latest version of Criptext",
+      title: updaterMessages.notAvailable.name,
+      message: updaterMessages.notAvailable.description,
       buttons: ['Ok']
     });
   }
@@ -43,10 +53,12 @@ autoUpdater.on('update-available', () => {
     dialog.showMessageBox(
       {
         type: 'info',
-        title: 'Update Available',
-        message:
-          'A new version of Criptext is available. Would you like to download it now?',
-        buttons: ['Sure', 'No'],
+        title: updaterMessages.availableManual.name,
+        message: updaterMessages.availableManual.description,
+        buttons: [
+          updaterMessages.availableManual.confirmButton,
+          updaterMessages.availableManual.cancelButton
+        ],
         noLink: true
       },
       buttonIndex => {
@@ -64,13 +76,13 @@ autoUpdater.on('update-available', () => {
       mailboxWindow.send('update-available');
     } else {
       showNotification({
-        title: 'A new version of Criptext is available!',
-        message: 'Click here to download or dismiss to update later'
+        title: updaterMessages.availableAuto.title,
+        message: updaterMessages.availableAuto.subtitle
       });
       notifier.on('click', () => {
         showNotification({
-          title: 'Downloading update',
-          message: "When it's ready we will notify you"
+          title: updaterMessages.downloading.title,
+          message: updaterMessages.downloading.subtitle
         });
         downloadUpdate();
       });
@@ -90,9 +102,8 @@ autoUpdater.on('download-progress', data => {
 autoUpdater.on('update-downloaded', () => {
   dialog.showMessageBox(
     {
-      title: 'Install Update',
-      message:
-        'Update download complete. Criptext will restart and update immediately.',
+      title: updaterMessages.downloaded.title,
+      message: updaterMessages.downloaded.subtitle,
       buttons: ['Ok']
     },
     () => {
@@ -117,8 +128,8 @@ const checkForUpdates = () => {
     autoUpdater.checkForUpdates();
   } else {
     dialog.showMessageBox({
-      title: 'Downloading update',
-      message: 'An update is currently being downloaded',
+      title: updaterMessages.alreadyDownloading.title,
+      message: updaterMessages.alreadyDownloading.subtitle,
       buttons: ['Ok']
     });
   }

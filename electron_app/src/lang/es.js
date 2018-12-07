@@ -123,5 +123,44 @@ module.exports = {
       description:
         'Ha ocurrido un error al sincronizar los dispositivos.\nCódigo: '
     }
+  },
+  updaterMessages: {
+    error: {
+      name: 'Error al actualizar',
+      description:
+        'Ha ocurrido un error al intentar descargar la actualización.\n' +
+        'Por favor, intenta más tarde'
+    },
+    unknownError: 'Desconocido',
+    notAvailable: {
+      name: 'Actualización no dispobible',
+      description: 'Ya estás en la última versión de Criptext'
+    },
+    availableManual: {
+      name: 'Actualización disponible',
+      description:
+        'Una nueva versión de Criptext está disponible.\n' +
+        '¿Te gustaría descargarla ahora?',
+      confirmButton: 'Sí',
+      cancelButton: 'No'
+    },
+    availableAuto: {
+      title: '¡Una nueva versión de Criptext está disponible!',
+      subtitle:
+        'Da clic aquí o descarta esta notificación para actualizar después'
+    },
+    downloading: {
+      title: 'Descargando actualización',
+      subtitle: 'Cuando la descarga haya finalizado, te notificaremos'
+    },
+    alreadyDownloading: {
+      title: 'Descargando actualización',
+      subtitle: 'Ya se está descargando una actualización'
+    },
+    downloaded: {
+      title: 'Instalar actualización',
+      subtitle:
+        'Descarga terminada. A continuación, Criptext se reiniciará para actualizarse'
+    }
   }
 };
