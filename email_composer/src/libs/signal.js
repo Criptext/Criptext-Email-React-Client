@@ -14,12 +14,8 @@ import {
   base64ToWordArray,
   wordArrayToByteArray,
   wordArrayToBase64,
-  byteArrayToWordArray,
-  textToBase64
+  byteArrayToWordArray
 } from '../utils/AESUtils';
-import { defineTypeSource } from '../utils/FileUtils';
-import { convertToHumanSize } from '../utils/StringUtils';
-import { formExternalAttachmentTemplate } from '../utils/EmailUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 
 const KeyHelper = libsignal.KeyHelper;
@@ -224,17 +220,14 @@ const encryptPostEmail = async ({
   ];
   const hasExternalRecipients = allExternalRecipients.length > 0;
 
-  const formattedBody = files
-    ? addAttachemtsToBody(body, files, fileKeyParams)
-    : body;
-
   const guestEmail = hasExternalRecipients
     ? objectUtils.noNulls({
         to: externalRecipients.to,
         cc: externalRecipients.cc,
         bcc: externalRecipients.bcc,
-        body: session ? encryptedBody : formattedBody,
-        session
+        body: session ? encryptedBody : body,
+        session,
+        fileKey: session ? null : externalFileKey
       })
     : null;
 
@@ -377,26 +370,6 @@ const encryptExternalEmail = async ({
     session,
     encryptedBody: encryptedBody.body
   };
-};
-
-const addAttachemtsToBody = (body, files, fileKeyParams) => {
-  const attachmentsSection = files.map(file => {
-    const { token } = file;
-    const encodedParams = fileKeyParams
-      ? textToBase64(`${token}:${fileKeyParams.key}:${fileKeyParams.iv}`) +
-        '?e=1'
-      : token;
-    const mimeTypeSource = defineTypeSource(file.mimeType);
-    const filename = file.name;
-    const formattedSize = convertToHumanSize(file.size, true);
-    return formExternalAttachmentTemplate(
-      encodedParams,
-      mimeTypeSource,
-      filename,
-      formattedSize
-    );
-  });
-  return `${body}<br/><div>${attachmentsSection.join('')}</div>`;
 };
 
 export default {
