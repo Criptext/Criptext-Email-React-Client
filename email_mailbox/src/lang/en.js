@@ -230,6 +230,14 @@ export default {
       },
       cancelButtonLabel: 'Cancel',
       confirmButtonLabel: 'Send'
+    },
+    logout: {
+      title: 'Logout',
+      paragraphs: {
+        header: 'Are you sure you want to logout?'
+      },
+      cancelButtonLabel: 'Cancel',
+      confirmButtonLabel: 'Continue'
     }
   }
 };

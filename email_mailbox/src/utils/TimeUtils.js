@@ -7,7 +7,7 @@ moment.locale(language);
 
 const getTimeLocal = time => {
   const timeUTC = moment.utc(time);
-  return moment(timeUTC);
+  return moment(timeUTC).local();
 };
 
 const defineYesterdayText = language => {

@@ -32,6 +32,7 @@ const renderRemoveDevicePopup = props => (
     isHidden={props.isHiddenRemoveDevicePopup}
     popupPosition={{ left: '45%', top: '45%' }}
     onTogglePopup={props.onClickCancelRemoveDevice}
+    theme={'dark'}
     {...props}
   />
 );

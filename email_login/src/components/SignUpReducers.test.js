@@ -39,6 +39,10 @@ describe('checkUsername', () => {
             expect(newState.errors.username).toEqual(ErrorMsgs.USERNAME_EXISTS);
             break;
           }
+          case 410: {
+            expect(newState.errors.username).toEqual(ErrorMsgs.USERNAME_EXISTS);
+            break;
+          }
           case 422: {
             expect(newState.errors.username).toEqual(
               ErrorMsgs.USERNAME_INVALID

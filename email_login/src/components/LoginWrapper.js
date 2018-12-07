@@ -38,7 +38,8 @@ const mode = {
 const errorMessages = {
   USERNAME_NOT_EXISTS: "Username doesn't exist",
   USERNAME_INVALID: 'Invalid username',
-  STATUS_UNKNOWN: 'Unknown status code: '
+  STATUS_UNKNOWN: 'Unknown status code: ',
+  USERNAME_NOT_AVAILABLE: 'Username not available'
 };
 
 const LINK_STATUS_RETRIES = 12;
@@ -160,6 +161,11 @@ class LoginWrapper extends Component {
           };
         case 400:
           return { errorMessage: '' };
+        case 410: {
+          return {
+            errorMessage: errorMessages.USERNAME_NOT_AVAILABLE
+          };
+        }
         default:
           return {
             errorMessage: errorMessages.STATUS_UNKNOWN + status
@@ -233,6 +239,17 @@ class LoginWrapper extends Component {
       throwError(errors.login.TOO_MANY_DEVICES);
     } else if (status === 400) {
       return this.goToPasswordLogin();
+    } else if (status === 404) {
+      this.setState(prevState => ({
+        values: {
+          username: prevState.values.username,
+          password: ''
+        },
+        disabledResendLoginRequest: false,
+        errorMessage: errorMessages.USERNAME_NOT_AVAILABLE,
+        ephemeralToken: undefined,
+        hasTwoFactorAuth: undefined
+      }));
     } else if (status === 200) {
       const { twoFactorAuth, token } = JSON.parse(text);
       this.setState({
