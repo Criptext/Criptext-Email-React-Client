@@ -53,18 +53,6 @@ export const confirmPermanentDeleteThread = callback => {
   });
 };
 
-export const minimizeMailbox = () => {
-  ipcRenderer.send('minimize-mailbox');
-};
-
-export const maximizeMailbox = () => {
-  ipcRenderer.send('toggle-maximize-mailbox');
-};
-
-export const closeMailbox = () => {
-  ipcRenderer.send('close-mailbox');
-};
-
 /*  Criptext Client
 ----------------------------- */
 export const acknowledgeEvents = eventIds => {

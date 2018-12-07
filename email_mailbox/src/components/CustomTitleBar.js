@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { TitleBar } from 'react-desktop/windows';
 import { isWindows } from '../containers/Settings';
 import {
-  closeMailbox,
-  minimizeMailbox,
-  maximizeMailbox
-} from '../utils/electronInterface';
+  closeMailboxWindow,
+  maximizeMailboxWindow,
+  minimizeMailboxWindow
+} from '../utils/ipc';
 
 class CustomTitleBar extends Component {
   static defaultProps = {
@@ -25,7 +25,7 @@ class CustomTitleBar extends Component {
         isMaximized: !this.state.isMaximized
       },
       () => {
-        maximizeMailbox();
+        maximizeMailboxWindow();
       }
     );
 
@@ -39,8 +39,8 @@ class CustomTitleBar extends Component {
           isMaximized={this.state.isMaximized}
           theme={this.props.theme}
           background={this.props.color}
-          onCloseClick={closeMailbox}
-          onMinimizeClick={minimizeMailbox}
+          onCloseClick={closeMailboxWindow}
+          onMinimizeClick={minimizeMailboxWindow}
           onMaximizeClick={this.toggleMaximize}
           onRestoreDownClick={this.toggleMaximize}
         />
