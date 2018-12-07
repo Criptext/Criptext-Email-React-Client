@@ -23,6 +23,7 @@ export const checkUsername = (state, { newUsername, status }) => {
         errors: { ...errors, username: ErrorMsgs.USERNAME_INVALID }
       };
     case 400:
+    case 410:
       return {
         errors: { ...errors, username: ErrorMsgs.USERNAME_EXISTS }
       };
