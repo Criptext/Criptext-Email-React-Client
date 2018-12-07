@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import randomcolor from 'randomcolor';
 import SettingsWrapper from './../components/SettingsWrapper';
-import { version } from './../../package.json';
 import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataLogout,
@@ -20,6 +19,7 @@ import {
 import { logoutApp, openFilledComposerWindow } from './../utils/ipc';
 import { appDomain, composerEvents } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
+import { formContactSupportEmailContent } from '../utils/EmailUtils';
 import { clearStorage } from '../utils/storage';
 import {
   sendResetPasswordSendLinkSuccessMessage,
@@ -73,24 +73,6 @@ const deleteDeviceData = async () => {
   await logoutApp();
 };
 
-const getOS = () => {
-  const osName = window.navigator.platform;
-  return osName.split(' ')[0];
-};
-
-const isWindows = () => {
-  return getOS().toLowerCase() === 'win32';
-};
-
-const formContactSupportEmailContent = () => {
-  const lines = '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>';
-  const header = '<strong>Do not write below this line.</strong>';
-  const separator = '<br/>*****************************<br/>';
-  const appVersion = `<strong>Version:</strong>  ${version}<br/>`;
-  const OS = `<strong>OS:</strong>  ${getOS()}<br/>`;
-  return lines + header + separator + appVersion + OS;
-};
-
 const mapDispatchToProps = dispatch => {
   return {
     onAddLabel: text => {
@@ -106,15 +88,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(addLabel(label));
     },
     onComposeContactSupportEmail: () => {
-      const content = formContactSupportEmailContent();
+      const data = formContactSupportEmailContent();
       openFilledComposerWindow({
         type: composerEvents.NEW_WITH_DATA,
-        data: {
-          email: { subject: 'Customer Support - Desktop', content },
-          recipients: {
-            to: { name: 'Contact Support', email: `support@${appDomain}` }
-          }
-        }
+        data
       });
     },
     onDeleteDeviceData: async () => {
@@ -190,4 +167,4 @@ const Settings = connect(
   mapDispatchToProps
 )(SettingsWrapper);
 
-export { Settings as default, deleteDeviceData, isWindows };
+export { Settings as default, deleteDeviceData };

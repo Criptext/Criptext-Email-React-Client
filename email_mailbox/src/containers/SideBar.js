@@ -3,6 +3,7 @@ import { loadLabels } from '../actions';
 import SideBarView from '../components/SideBarWrapper';
 import { IconLabels, SectionType, composerEvents } from './../utils/const';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
+import { formContactSupportEmailContent } from '../utils/EmailUtils';
 import { openFilledComposerWindow } from './../utils/ipc';
 import string from './../lang';
 
@@ -53,6 +54,13 @@ const formInviteFriendEmailContent = () => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    onClickComposeContactSupportEmail: () => {
+      const data = formContactSupportEmailContent();
+      openFilledComposerWindow({
+        type: composerEvents.NEW_WITH_DATA,
+        data
+      });
+    },
     onClickInviteFriend: () => {
       openFilledComposerWindow({
         type: composerEvents.NEW_WITH_DATA,
