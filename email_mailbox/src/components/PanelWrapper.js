@@ -10,6 +10,7 @@ import { LabelType } from '../utils/electronInterface';
 import { SectionType, EmailStatus } from '../utils/const';
 
 const MAILBOX_POPUP_TYPES = {
+  ACCOUNT_DELETED: 'account-deleted',
   DEVICE_REMOVED: 'device-removed',
   PASSWORD_CHANGED: 'password-changed',
   ONLY_BACKDROP: 'only-backdrop'
@@ -291,6 +292,13 @@ class PanelWrapper extends Component {
       this.setState({
         isHiddenMailboxPopup: false,
         mailboxPopupType: MAILBOX_POPUP_TYPES.ONLY_BACKDROP
+      });
+    });
+
+    addEvent(Event.ACCOUNT_DELETED, () => {
+      this.setState({
+        isHiddenMailboxPopup: false,
+        mailboxPopupType: MAILBOX_POPUP_TYPES.ACCOUNT_DELETED
       });
     });
   };

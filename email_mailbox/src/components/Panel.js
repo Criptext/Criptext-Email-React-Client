@@ -7,6 +7,7 @@ import WelcomeWrapper from './WelcomeWrapper';
 import { mySettings } from '../utils/electronInterface';
 import PopupHOC from './PopupHOC';
 import DeviceRemovedPopup from './DeviceRemovedPopup';
+import AccountDeletedPopup from './AccountDeletedPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
 import './panel.scss';
@@ -50,6 +51,16 @@ const Panel = props => (
 
 const renderMailboxPopup = ({ type, isHidden, props }) => {
   switch (type) {
+    case MAILBOX_POPUP_TYPES.ACCOUNT_DELETED: {
+      const Accountdeletedpopup = PopupHOC(AccountDeletedPopup);
+      return (
+        <Accountdeletedpopup
+          isHidden={isHidden}
+          popupPosition={{ left: '50%', top: '50%' }}
+          {...props}
+        />
+      );
+    }
     case MAILBOX_POPUP_TYPES.DEVICE_REMOVED: {
       const DeviceRemovedpopup = PopupHOC(DeviceRemovedPopup);
       return (

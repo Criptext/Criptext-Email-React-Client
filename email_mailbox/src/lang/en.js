@@ -69,7 +69,11 @@ export default {
     resend_link: 'resend link',
     signature: 'Signature',
     trusted_devices: 'trusted devices',
-    two_factor_authentication: 'two-factor authentication'
+    two_factor_authentication: 'two-factor authentication',
+    delete_account: {
+      label: 'Delete Account',
+      button: 'Delete permanently'
+    }
   },
   sidebar: {
     compose: 'compose',
@@ -197,6 +201,35 @@ export default {
     newEmailGroup: {
       prefix: 'You have ',
       sufix: ' new emails'
+    }
+  },
+  popups: {
+    account_deleted: {
+      title: 'Account deleted',
+      paragraphs: {
+        header: 'Removing all data...'
+      }
+    },
+    delete_account: {
+      title: 'Delete My Account',
+      paragraphs: {
+        header: `Deleting your account will also delete all your emails in this and any other device in which your account is logged into. It will also enable anyone to register an account with your current email address.`
+      },
+      subtitle: 'To confirm enter your password',
+      inputs: {
+        password: {
+          placeholder: 'Enter password',
+          errorMessages: {
+            length: {
+              prefix: 'Must be at least',
+              suffix: 'characters'
+            },
+            wrong: 'Wrong password'
+          }
+        }
+      },
+      cancelButtonLabel: 'Cancel',
+      confirmButtonLabel: 'Send'
     }
   }
 };

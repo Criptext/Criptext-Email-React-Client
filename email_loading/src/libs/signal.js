@@ -398,7 +398,7 @@ const generatePreKeyBundle = async ({
     identityKey,
     signedPreKeyId
   );
-  const pcName = getComputerName();
+  const pcName = await getComputerName();
   const keybundle = {
     deviceName: pcName || window.navigator.platform,
     deviceFriendlyName: pcName || window.navigator.platform,
