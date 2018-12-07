@@ -73,6 +73,15 @@ const SideBar = props => (
             </div>
             <span>{string.sidebar.invite_a_friend}</span>
           </li>
+          <li
+            className="nav-item"
+            onClick={() => props.onClickComposeContactSupportEmail()}
+          >
+            <div className="nav-item-icon">
+              <i className="icon-ask" />
+            </div>
+            <span>{string.settings.contact_support}</span>
+          </li>
           <li className="nav-item" onClick={() => props.onClickSettings()}>
             <div className="nav-item-icon">
               <i className="icon-settings" />
@@ -99,6 +108,7 @@ SideBar.propTypes = {
   items: PropTypes.array,
   labels: PropTypes.object,
   mailboxSelected: PropTypes.string,
+  onClickComposeContactSupportEmail: PropTypes.func,
   onClickInviteFriend: PropTypes.func,
   onClickSettings: PropTypes.func,
   onToggleShowLabelView: PropTypes.func,

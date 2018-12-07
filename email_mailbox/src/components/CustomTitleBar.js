@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TitleBar } from 'react-desktop/windows';
-import { isWindows } from '../containers/Settings';
+import { isWindows } from '../utils/OSUtils';
 import {
   closeMailboxWindow,
   maximizeMailboxWindow,

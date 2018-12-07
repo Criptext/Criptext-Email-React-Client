@@ -3,10 +3,12 @@ import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
 import sanitizeHtml from 'sanitize-html';
+import { version } from './../../package.json';
 import { LabelType, myAccount } from './electronInterface';
 import { HTMLTagsRegex, emailRegex } from './RegexUtils';
 import { Utf8Decode } from './EncodingUtils';
 import { removeAppDomain } from './StringUtils';
+import { getOS } from './OSUtils';
 import { appDomain } from './const';
 
 const cleanEmails = emails => {
@@ -185,6 +187,23 @@ export const defineRejectedLabels = labelId => {
 
 export const filterCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) > 0);
+};
+
+export const formContactSupportEmailContent = () => {
+  const OSType = getOS();
+  const lines = '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>';
+  const header = '<strong>Do not write below this line.</strong>';
+  const separator = '<br/>*****************************<br/>';
+  const appVersion = `<strong>Version:</strong>  ${version}<br/>`;
+  const OS = `<strong>OS:</strong>  ${OSType}<br/>`;
+  const content = lines + header + separator + appVersion + OS;
+
+  return {
+    email: { subject: `Customer Support - Desktop ${OSType}`, content },
+    recipients: {
+      to: { name: 'Contact Support', email: `support@${appDomain}` }
+    }
+  };
 };
 
 export const formEmailLabel = ({ emailId, labels }) => {
