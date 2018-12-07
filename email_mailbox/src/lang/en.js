@@ -239,5 +239,19 @@ export default {
       cancelButtonLabel: 'Cancel',
       confirmButtonLabel: 'Continue'
     }
+  },
+  userGuide: {
+    buttonCompose: {
+      text: 'Start by sending a new email',
+      buttonLabel: 'Okay'
+    },
+    emailRead: {
+      text: 'Looks like this email was read!',
+      buttonLabel: 'Got it'
+    },
+    activityFeed: {
+      text: 'See which emails have been read and by whom',
+      buttonLabel: 'Okay'
+    }
   }
 };

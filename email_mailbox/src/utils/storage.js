@@ -129,6 +129,17 @@ export const getReadReceiptsStatus = () => {
   return localStorage.getItem('readReceiptsStatus') || undefined;
 };
 
+/*  User Guide
+-------------------------------------*/
+export const getUserGuideStepStatus = stepName => {
+  const stepValue = localStorage.getItem(stepName);
+  return stepValue === 'true';
+};
+
+export const setUserGuideStepStatus = stepName => {
+  localStorage.setItem(stepName, true);
+};
+
 /*  Clear All Storage
 -------------------------------------*/
 export const clearStorage = () => {

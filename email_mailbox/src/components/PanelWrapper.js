@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import Panel from './Panel';
 import PropTypes from 'prop-types';
-import { addEvent, Event } from '../utils/electronEventInterface';
+import {
+  addEvent,
+  Event,
+  checkUserGuideSteps
+} from '../utils/electronEventInterface';
 import { processPendingEvents } from '../utils/ipc';
 import { LabelType } from '../utils/electronInterface';
 import { SectionType, EmailStatus } from '../utils/const';
+import { USER_GUIDE_STEPS } from './UserGuide';
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
@@ -59,6 +64,14 @@ class PanelWrapper extends Component {
         {...this.props}
       />
     );
+  }
+
+  componentDidMount() {
+    const steps = [
+      USER_GUIDE_STEPS.BUTTON_COMPOSE,
+      USER_GUIDE_STEPS.EMAIL_READ
+    ];
+    checkUserGuideSteps(steps);
   }
 
   handleClickSection = (type, params) => {

@@ -24,7 +24,8 @@ import {
   updateAccount,
   updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
-  updateContactByEmail
+  updateContactByEmail,
+  mySettings
 } from './electronInterface';
 import {
   checkEmailIsTo,
@@ -52,7 +53,7 @@ import {
   processPendingEvents,
   showNotificationApp
 } from './../utils/ipc';
-import { getShowEmailPreviewStatus } from './storage';
+import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
 import string from './../lang';
 
 const eventPriority = {
@@ -1017,6 +1018,18 @@ export const sendAccountDeletedEvent = () => {
   emitter.emit(Event.ACCOUNT_DELETED);
 };
 
+export const checkUserGuideSteps = stepsNames => {
+  // eslint-disable-next-line no-extra-boolean-cast
+  if (!!mySettings.opened) {
+    const pendingSteps = stepsNames.filter(
+      stepName => !getUserGuideStepStatus(stepName)
+    );
+    if (pendingSteps.length) {
+      emitter.emit(Event.SHOW_USER_GUIDE_STEP, pendingSteps);
+    }
+  }
+};
+
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
@@ -1050,5 +1063,6 @@ export const Event = {
   LINK_DEVICE_END: 'link-devices-finished',
   DISABLE_WINDOW: 'add-window-overlay',
   ENABLE_WINDOW: 'remove-window-overlay',
-  ACCOUNT_DELETED: 'account-deleted'
+  ACCOUNT_DELETED: 'account-deleted',
+  SHOW_USER_GUIDE_STEP: 'show-user-guide-step'
 };

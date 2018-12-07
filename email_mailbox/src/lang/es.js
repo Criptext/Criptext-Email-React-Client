@@ -243,5 +243,19 @@ export default {
       cancelButtonLabel: 'Cancelar',
       confirmButtonLabel: 'Continuar'
     }
+  },
+  userGuide: {
+    buttonCompose: {
+      text: 'Empieza enviando un correo nuevo',
+      buttonLabel: 'Ok'
+    },
+    emailRead: {
+      text: '¡Mira como este correo fue leído!',
+      buttonLabel: 'Entendido'
+    },
+    activityFeed: {
+      text: 'Mira cuáles correos fueron leídos y por quienes',
+      buttonLabel: 'Ok'
+    }
   }
 };
