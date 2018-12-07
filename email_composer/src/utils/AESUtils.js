@@ -69,8 +69,3 @@ export const wordArrayToByteArray = (wordarray, length) => {
   }
   return [].concat.apply([], result);
 };
-
-export const textToBase64 = rawText => {
-  const wordArray = CryptoJS.enc.Utf8.parse(rawText);
-  return CryptoJS.enc.Base64.stringify(wordArray);
-};
