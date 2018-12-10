@@ -55,11 +55,6 @@ async function initApp() {
   });
 
   //   Composer
-  ipcMain.on('save-draft-changes', (e, windowParams) => {
-    const { composerId, data } = windowParams;
-    composerWindowManager.saveDraftChanges(composerId, data);
-  });
-
   ipcMain.on('failed-to-send', () => {
     composerWindowManager.sendEventToMailbox('failed-to-send', undefined);
   });

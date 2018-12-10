@@ -28,10 +28,6 @@ export const LabelType = labels;
 
 /* Window events
    ----------------------------- */
-export const saveDraftChanges = data => {
-  ipcRenderer.send('save-draft-changes', { composerId, data });
-};
-
 export const sendEventToMailbox = (name, params) => {
   ipcRenderer.send(name, params);
 };

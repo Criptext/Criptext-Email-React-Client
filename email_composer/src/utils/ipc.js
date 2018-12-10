@@ -26,6 +26,10 @@ export const openFileExplorer = filename => {
   callMain('open-file-explorer', filename);
 };
 
+export const saveDraftChangesComposerWindow = data => {
+  callMain('save-draft-changes', { composerId, data });
+};
+
 export const throwError = error => {
   callMain('throwError', error);
 };

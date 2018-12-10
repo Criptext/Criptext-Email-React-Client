@@ -6,7 +6,6 @@ import {
   LabelType,
   myAccount,
   updateEmail,
-  saveDraftChanges,
   errors,
   deleteEmailsByIds,
   getEmailByKey,
@@ -15,7 +14,11 @@ import {
   createFile,
   sendEventToMailbox
 } from './../utils/electronInterface';
-import { closeComposerWindow, throwError } from './../utils/ipc';
+import {
+  closeComposerWindow,
+  saveDraftChangesComposerWindow,
+  throwError
+} from './../utils/ipc';
 import {
   areEmptyAllArrays,
   updateObjectFieldsInArray
@@ -558,7 +561,7 @@ class ComposerWrapper extends Component {
       status: EmailStatus.NONE
     };
     const { emailData } = formOutgoingEmailFromData(data);
-    saveDraftChanges(emailData);
+    saveDraftChangesComposerWindow(emailData);
   };
 }
 

@@ -20,3 +20,8 @@ ipc.answerRenderer('open-empty-composer', () => {
 ipc.answerRenderer('open-filled-composer', async data => {
   await composerWindowManager.editDraft(data);
 });
+
+ipc.answerRenderer('save-draft-changes', windowParams => {
+  const { composerId, data } = windowParams;
+  composerWindowManager.saveDraftChanges(composerId, data);
+});
