@@ -28,19 +28,6 @@ export const LabelType = labels;
 
 /* Window events
    ----------------------------- */
-export const closeComposerWindow = ({
-  threadId,
-  emailId,
-  hasExternalPassphrase
-}) => {
-  ipcRenderer.send('close-composer', {
-    composerId,
-    threadId,
-    emailId,
-    hasExternalPassphrase
-  });
-};
-
 export const saveDraftChanges = data => {
   ipcRenderer.send('save-draft-changes', { composerId, data });
 };

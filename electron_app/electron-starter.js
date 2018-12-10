@@ -55,18 +55,6 @@ async function initApp() {
   });
 
   //   Composer
-  ipcMain.on(
-    'close-composer',
-    (e, { composerId, emailId, threadId, hasExternalPassphrase }) => {
-      composerWindowManager.destroy({
-        composerId,
-        emailId,
-        threadId,
-        hasExternalPassphrase
-      });
-    }
-  );
-
   ipcMain.on('save-draft-changes', (e, windowParams) => {
     const { composerId, data } = windowParams;
     composerWindowManager.saveDraftChanges(composerId, data);

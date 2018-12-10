@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
 import {
-  closeComposerWindow,
   createEmail,
   LabelType,
   myAccount,
@@ -16,7 +15,7 @@ import {
   createFile,
   sendEventToMailbox
 } from './../utils/electronInterface';
-import { throwError } from './../utils/ipc';
+import { closeComposerWindow, throwError } from './../utils/ipc';
 import {
   areEmptyAllArrays,
   updateObjectFieldsInArray
