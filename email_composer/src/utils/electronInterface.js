@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const createAccount = params => {
-  return dbManager.createAccount(params);
-};
-
 export const createEmail = params => {
   return dbManager.createEmail(params);
 };
@@ -94,10 +90,6 @@ export const deleteSessionRecord = params => {
 
 export const getAccount = () => {
   return dbManager.getAccount();
-};
-
-export const getAllContacts = () => {
-  return dbManager.getAllContacts();
 };
 
 export const getEmailByKey = key => {

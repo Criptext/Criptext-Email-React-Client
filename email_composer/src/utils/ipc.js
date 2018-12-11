@@ -33,3 +33,9 @@ export const saveDraftChangesComposerWindow = data => {
 export const throwError = error => {
   callMain('throwError', error);
 };
+
+/* DataBase
+   ----------------------------- */
+export const getAllContacts = async () => {
+  return await callMain('db-get-all-contacts');
+};
