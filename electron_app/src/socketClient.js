@@ -82,8 +82,10 @@ const setConnectionStatus = networkStatus => {
   const prevNetworkStatus = globalManager.internetConnection.getStatus();
   switch (networkStatus) {
     case NETWORK_STATUS.ONLINE: {
-      if (prevNetworkStatus !== true) {
-        globalManager.internetConnection.setStatus(true);
+      if (prevNetworkStatus === true) return;
+
+      globalManager.internetConnection.setStatus(true);
+      if (prevNetworkStatus === false) {
         mailboxWindow.send('network-connection-established', null);
       }
       break;

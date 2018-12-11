@@ -4,6 +4,7 @@ const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
+const newsClient = remote.require('./src/newsClient');
 
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
@@ -51,6 +52,12 @@ export const confirmPermanentDeleteThread = callback => {
   ipcRenderer.once('selectedOption', (event, data) => {
     callback(data.selectedOption);
   });
+};
+
+/*  News Client
+----------------------------- */
+export const getNews = ({ code }) => {
+  return newsClient.getNews({ code });
 };
 
 /*  Criptext Client

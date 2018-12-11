@@ -11,20 +11,38 @@ const Message = props => (
 const defineMessageStatus = props =>
   props.displayMessage ? 'displayed' : 'hidden';
 
+const renderMessageType = props => {
+  if (
+    props.type === MessageType.ADVICE ||
+    props.type === MessageType.SUGGESTION ||
+    props.type === MessageType.SUCCESS ||
+    props.type === MessageType.ERROR ||
+    props.type === MessageType.ESTABLISH ||
+    props.type === MessageType.ANNOUNCEMENT
+  ) {
+    return <MessageStandard {...props} />;
+  } else if (props.type === MessageType.QUESTION) {
+    return <MessageQuestion {...props} />;
+  }
+  return null;
+};
+
 const MessageStandard = props => {
-  const isTypeSuggestion = props.type === MessageType.SUGGESTION;
+  const isSuggestionOrAnnouncement =
+    props.type === MessageType.SUGGESTION ||
+    props.type === MessageType.ANNOUNCEMENT;
   return (
     <div className={`message-content ${defineMessageClass(props.type)}`}>
       <span className="message-description">{props.description}</span>
       {!!props.action &&
         !!props.onClickAction && (
-          <button onClick={() => props.onClickAction()}>
+          <button onClick={props.onClickAction}>
             <span>{props.action}</span>
             <i className="icon-arrow-right" />
           </button>
         )}
-      {isTypeSuggestion && (
-        <button className="message-close" onClick={() => props.onClickClose()}>
+      {isSuggestionOrAnnouncement && (
+        <button className="message-close" onClick={props.onClickClose}>
           <i className="icon-exit" />
         </button>
       )}
@@ -47,21 +65,6 @@ const MessageQuestion = props => (
   </div>
 );
 
-const renderMessageType = props => {
-  if (
-    props.type === MessageType.ADVICE ||
-    props.type === MessageType.SUGGESTION ||
-    props.type === MessageType.SUCCESS ||
-    props.type === MessageType.ERROR ||
-    props.type === MessageType.ESTABLISH
-  ) {
-    return <MessageStandard {...props} />;
-  } else if (props.type === MessageType.QUESTION) {
-    return <MessageQuestion {...props} />;
-  }
-  return null;
-};
-
 const defineMessageClass = type => {
   switch (type) {
     case MessageType.ADVICE:
@@ -74,6 +77,8 @@ const defineMessageClass = type => {
       return 'message-error';
     case MessageType.ESTABLISH:
       return 'message-establish';
+    case MessageType.ANNOUNCEMENT:
+      return 'message-announcement';
     default:
       break;
   }
@@ -85,7 +90,8 @@ const MessageType = {
   QUESTION: 3,
   SUCCESS: 4,
   ERROR: 5,
-  ESTABLISH: 6
+  ESTABLISH: 6,
+  ANNOUNCEMENT: 7
 };
 
 renderMessageType.propTypes = {
