@@ -10,6 +10,7 @@ import DeviceRemovedPopup from './DeviceRemovedPopup';
 import AccountDeletedPopup from './AccountDeletedPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
+import UserGuide from './UserGuide';
 import './panel.scss';
 
 const Panel = props => (
@@ -46,6 +47,7 @@ const Panel = props => (
         isHidden: props.isHiddenMailboxPopup,
         props
       })}
+    <UserGuide />
   </div>
 );
 

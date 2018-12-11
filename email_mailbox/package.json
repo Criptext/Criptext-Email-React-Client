@@ -20,6 +20,7 @@
     "react-desktop": "^0.3.7",
     "react-dom": "^16.2.0",
     "react-draft-wysiwyg": "^1.12.13",
+    "react-joyride": "^2.0.0-15",
     "react-localization": "^1.0.13",
     "react-redux": "^5.0.6",
     "react-switch-input": "^0.1.10",
@@ -27,7 +28,8 @@
     "redux": "^3.7.2",
     "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.2.0",
-    "sanitize-html": "^1.19.1"
+    "sanitize-html": "^1.19.1",
+    "styled-components": "^4.1.2"
   },
   "scripts": {
     "start": "PORT=3000 react-scripts start",

@@ -720,3 +720,10 @@ button{
     margin: 0 auto;
   }
 }
+
+.__floater__open {
+  padding: 0px 12px !important;
+}
+.__floater__arrow > span {
+  transform: scale(0.5);
+}
