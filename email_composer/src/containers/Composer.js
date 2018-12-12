@@ -8,14 +8,14 @@ import {
   errors,
   deleteEmailsByIds,
   getEmailByKey,
-  createEmailLabel,
   getEmailToEdit,
-  createFile,
   sendEventToMailbox
 } from './../utils/electronInterface';
 import {
   closeComposerWindow,
   createEmail,
+  createEmailLabel,
+  createFile,
   saveDraftChangesComposerWindow,
   throwError
 } from './../utils/ipc';

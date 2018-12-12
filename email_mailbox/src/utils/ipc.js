@@ -65,3 +65,19 @@ export const updateDockBadgeApp = value => {
 export const createEmail = async params => {
   return await callMain('db-create-email', params);
 };
+
+export const createEmailLabel = async params => {
+  return await callMain('db-create-email-label', params);
+};
+
+export const createIdentityKeyRecord = async params => {
+  return await callMain('db-create-identity-key-record', params);
+};
+
+export const createPreKeyRecord = async params => {
+  return await callMain('db-create-pre-key-record', params);
+};
+
+export const createSessionRecord = async params => {
+  return await callMain('db-create-session-record', params);
+};

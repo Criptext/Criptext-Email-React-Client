@@ -149,32 +149,12 @@ export const createAccount = params => {
   return dbManager.createAccount(params);
 };
 
-export const createEmailLabel = params => {
-  return dbManager.createEmailLabel(params);
-};
-
 export const createFeedItem = params => {
   return dbManager.createFeedItem(params);
 };
 
-export const createFileKey = params => {
-  return dbManager.createFileKey(params);
-};
-
-export const createIdentityKeyRecord = params => {
-  return dbManager.createIdentityKeyRecord(params);
-};
-
 export const createLabel = params => {
   return dbManager.createLabel(params);
-};
-
-export const createPreKeyRecord = params => {
-  return dbManager.createPreKeyRecord(params);
-};
-
-export const createSessionRecord = params => {
-  return dbManager.createSessionRecord(params);
 };
 
 export const createSignedPreKeyRecord = params => {

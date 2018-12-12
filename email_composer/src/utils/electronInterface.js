@@ -44,30 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const createEmailLabel = params => {
-  return dbManager.createEmailLabel(params);
-};
-
-export const createFile = params => {
-  return dbManager.createFile(params);
-};
-
-export const createFileKey = params => {
-  return dbManager.createFileKey(params);
-};
-
-export const createIdentityKeyRecord = params => {
-  return dbManager.createIdentityKeyRecord(params);
-};
-
-export const createPreKeyRecord = params => {
-  return dbManager.createPreKeyRecord(params);
-};
-
-export const createSessionRecord = params => {
-  return dbManager.createSessionRecord(params);
-};
-
 export const createSignedPreKeyRecord = params => {
   return dbManager.createSignedPreKeyRecord(params);
 };

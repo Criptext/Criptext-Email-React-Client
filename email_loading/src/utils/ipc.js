@@ -13,3 +13,17 @@ export const openMailboxWindow = () => {
 export const throwError = error => {
   callMain('throwError', error);
 };
+
+/* DataBase
+   ----------------------------- */
+export const createIdentityKeyRecord = async params => {
+  return await callMain('db-create-identity-key-record', params);
+};
+
+export const createPreKeyRecord = async params => {
+  return await callMain('db-create-pre-key-record', params);
+};
+
+export const createSessionRecord = async params => {
+  return await callMain('db-create-session-record', params);
+};

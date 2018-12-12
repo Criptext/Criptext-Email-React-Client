@@ -8,10 +8,10 @@ import {
   unsendEmailEvent,
   deleteEmailByKeys,
   postPeerEvent,
-  createEmailLabel,
   deleteEmailLabel,
   getLabelsByText
 } from '../utils/electronInterface';
+import { createEmailLabel } from '../utils/ipc';
 import { loadContacts } from './contacts';
 import { EmailStatus, SocketCommand } from '../utils/const';
 import { unsendEmailFiles } from './files';

@@ -2,7 +2,6 @@ import signal from './../libs/signal';
 import {
   acknowledgeEvents,
   cleanDatabase,
-  createEmailLabel,
   createFeedItem,
   createLabel,
   deleteEmailByKeys,
@@ -27,7 +26,14 @@ import {
   mySettings,
   getNews
 } from './electronInterface';
-import { createEmail } from './ipc';
+import {
+  createEmail,
+  createEmailLabel,
+  logoutApp,
+  openFilledComposerWindow,
+  processPendingEvents,
+  showNotificationApp
+} from './ipc';
 import {
   checkEmailIsTo,
   formEmailLabel,
@@ -48,12 +54,6 @@ import {
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
-import {
-  logoutApp,
-  openFilledComposerWindow,
-  processPendingEvents,
-  showNotificationApp
-} from './../utils/ipc';
 import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
 import string from './../lang';
 
