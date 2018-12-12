@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const createFile = params => {
-  return dbManager.createFile(params);
-};
-
 export const createFileKey = params => {
   return dbManager.createFileKey(params);
 };

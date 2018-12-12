@@ -9,13 +9,13 @@ import {
   deleteEmailsByIds,
   getEmailByKey,
   getEmailToEdit,
-  createFile,
   sendEventToMailbox
 } from './../utils/electronInterface';
 import {
   closeComposerWindow,
   createEmail,
   createEmailLabel,
+  createFile,
   saveDraftChangesComposerWindow,
   throwError
 } from './../utils/ipc';
