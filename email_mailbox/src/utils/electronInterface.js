@@ -157,10 +157,6 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const deleteEmailsByIds = ids => {
-  return dbManager.deleteEmailsByIds(ids);
-};
-
 export const deleteEmailByKeys = key => {
   return dbManager.deleteEmailByKeys(key);
 };

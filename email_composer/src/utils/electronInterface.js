@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const deleteEmailsByIds = ids => {
-  return dbManager.deleteEmailsByIds(ids);
-};
-
 export const deletePreKeyPair = params => {
   return dbManager.deletePreKeyPair(params);
 };
