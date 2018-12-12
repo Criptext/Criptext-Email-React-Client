@@ -1,280 +1,413 @@
 const ClientAPI = require('@criptext/api');
 const { DEV_SERVER_URL, PROD_SERVER_URL } = require('./utils/const');
-const { getAccount, createPendingEvent } = require('./DBManager');
+const {
+  getAccount,
+  createPendingEvent,
+  updateAccount
+} = require('./DBManager');
 const { processEventsQueue } = require('./eventQueueManager');
 const globalManager = require('./globalManager');
 const mailboxWindow = require('./windows/mailbox');
+const socketClient = require('./socketClient');
 let client = {};
 
-const checkClient = async ({ optionalNewToken }) => {
-  if (optionalNewToken) {
-    return initializeClient({ token: optionalNewToken });
-  }
-  const [account] = await getAccount();
-  const token = account ? account.jwt : undefined;
-  if (!client.login || client.token !== token) {
-    initializeClient({ token });
-  }
-};
-
-const initializeClient = ({ token }) => {
+const initializeClient = ({ token, refreshToken }) => {
+  const isDev = process.env.NODE_ENV === 'development';
   const clientOptions = {
-    url:
-      process.env.NODE_ENV === 'development' ? DEV_SERVER_URL : PROD_SERVER_URL,
+    url: isDev ? DEV_SERVER_URL : PROD_SERVER_URL,
     token,
-    timeout: 60000,
-    version: '3.0.0'
+    refreshToken,
+    timeout: 60 * 1000,
+    version: '4.0.0'
   };
   client = new ClientAPI(clientOptions);
   client.token = token;
+  client.refreshToken = refreshToken;
 };
 
-const checkDeviceRemoved = res => {
-  const REMOVED_DEVICE_STATUS = 401;
+const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
+  if (optionalSessionToken || optionalRefreshToken) {
+    return initializeClient({
+      token: optionalSessionToken,
+      refreshToken: optionalRefreshToken
+    });
+  }
+  const [account] = await getAccount();
+  const [token, refreshToken] = account
+    ? [account.jwt, account.refreshToken]
+    : [undefined, undefined];
+
+  if (
+    !client.login ||
+    client.token !== token ||
+    client.refreshToken !== refreshToken
+  ) {
+    return initializeClient({ token, refreshToken });
+  }
+};
+
+const checkExpiredSession = async (
+  requirementResponse,
+  initialRequest,
+  requestparams
+) => {
+  const NEW_SESSION_SUCCESS_STATUS = 200;
+  const EXPIRED_SESSION_STATUS = 401;
   const CHANGED_PASSWORD_STATUS = 403;
-  const { status } = res;
+
+  const status = requirementResponse.status;
   switch (status) {
-    case REMOVED_DEVICE_STATUS: {
-      return mailboxWindow.send('device-removed', null);
-    }
     case CHANGED_PASSWORD_STATUS: {
       return mailboxWindow.send('password-changed', null);
     }
-    default:
-      return res;
+    case EXPIRED_SESSION_STATUS: {
+      let newSessionToken, newRefreshToken, newSessionStatus;
+      const [{ recipientId, refreshToken }] = await getAccount();
+      if (!refreshToken) {
+        const getRefreshTokenResponse = await upgradeToRefreshToken();
+        newSessionStatus = getRefreshTokenResponse.status;
+        newSessionToken = getRefreshTokenResponse.body.token;
+        newRefreshToken = getRefreshTokenResponse.body.refreshToken;
+      } else {
+        const newSessionResponse = await client.refreshSession();
+        newSessionStatus = newSessionResponse.status;
+        newSessionToken = newSessionResponse.text;
+      }
+
+      if (newSessionStatus === EXPIRED_SESSION_STATUS) {
+        return mailboxWindow.send('device-removed', null);
+      } else if (newSessionStatus === NEW_SESSION_SUCCESS_STATUS) {
+        await updateAccount({
+          jwt: newSessionToken,
+          refreshToken: newRefreshToken,
+          recipientId
+        });
+        socketClient.restartSocket({ jwt: newSessionToken });
+        return await initialRequest(requestparams);
+      }
+      break;
+    }
+    default: {
+      return requirementResponse;
+    }
   }
 };
 
-class ClientManager {
-  constructor() {
-    this.check({});
-  }
+// Auto-init client
+checkClient({});
 
-  async acknowledgeEvents(eventIds) {
-    const res = await client.acknowledgeEvents(eventIds);
-    return checkDeviceRemoved(res);
-  }
+const acknowledgeEvents = async eventIds => {
+  const res = await client.acknowledgeEvents(eventIds);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, acknowledgeEvents, eventIds);
+};
 
-  async changeRecoveryEmail(params) {
-    const res = await client.changeRecoveryEmail(params);
-    return checkDeviceRemoved(res);
-  }
+const changeRecoveryEmail = async params => {
+  const res = await client.changeRecoveryEmail(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, changeRecoveryEmail, params);
+};
 
-  async changePassword(params) {
-    const res = await client.changePassword(params);
-    return checkDeviceRemoved(res);
-  }
+const changePassword = async params => {
+  const res = await client.changePassword(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, changePassword, params);
+};
 
-  async check({ token }) {
-    await checkClient({ optionalNewToken: token });
-  }
+const checkAvailableUsername = async username => {
+  return await client.checkAvailableUsername(username);
+};
 
-  checkAvailableUsername(username) {
-    return client.checkAvailableUsername(username);
-  }
+const deleteMyAccount = async password => {
+  const res = await client.deleteMyAccount(password);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, deleteMyAccount, password);
+};
 
-  async deleteMyAccount(password) {
-    const res = await client.deleteMyAccount(password);
-    return checkDeviceRemoved(res);
-  }
+const findKeyBundles = async params => {
+  const res = await client.findKeyBundles(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, findKeyBundles, params);
+};
 
-  async findKeyBundles(params) {
-    const res = await client.findKeyBundles(params);
-    return checkDeviceRemoved(res);
-  }
+const getDataReady = async () => {
+  const res = await client.getDataReady();
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, getDataReady, null);
+};
 
-  async getDataReady() {
-    const res = await client.getDataReady();
-    return checkDeviceRemoved(res);
-  }
+const getEmailBody = async bodyKey => {
+  const res = await client.getEmailBody(bodyKey);
+  return res.status === 200
+    ? res
+    : checkExpiredSession(res, getEmailBody, bodyKey);
+};
 
-  async getEmailBody(bodyKey) {
-    const res = await client.getEmailBody(bodyKey);
-    return checkDeviceRemoved(res);
+const getEvents = async () => {
+  const PENDING_EVENTS_STATUS = 200;
+  const NO_EVENTS_STATUS = 204;
+  await checkClient({});
+  const res = await client.getPendingEvents();
+  switch (res.status) {
+    case PENDING_EVENTS_STATUS:
+      return formEvents(res.body);
+    case NO_EVENTS_STATUS:
+      return [];
+    default:
+      return await checkExpiredSession(res, getEvents, null);
   }
+};
 
-  async getEvents() {
-    await this.check({});
-    const res = await client.getPendingEvents();
-    const { status, body } = checkDeviceRemoved(res);
-    return status === 204 ? [] : this.formEvents(body);
-  }
+const formEvents = events =>
+  events.map(event => ({
+    cmd: event.cmd,
+    params: JSON.parse(event.params),
+    rowid: event.roowid
+  }));
 
-  formEvents(events) {
-    return events.map(event => {
-      const { params, cmd, rowid } = event;
-      return { cmd, params: JSON.parse(params), rowid };
-    });
-  }
+const getKeyBundle = async deviceId => {
+  const res = await client.getKeyBundle(deviceId);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, getKeyBundle, deviceId);
+};
 
-  async getKeyBundle(deviceId) {
-    const res = await client.getKeyBundle(deviceId);
-    return checkDeviceRemoved(res);
-  }
+const getUserSettings = async () => {
+  const res = await client.getUserSettings();
+  return res.status === 200
+    ? parseUserSettings(res.body)
+    : await checkExpiredSession(res, getUserSettings, null);
+};
 
-  async getUserSettings() {
-    const res = await client.getUserSettings();
-    const checkedResponse = checkDeviceRemoved(res);
-    if (checkedResponse.status) {
-      return this.parseUserSettings(checkedResponse.body);
-    }
-  }
+const parseUserSettings = settings => {
+  const { devices, general } = settings;
+  const {
+    recoveryEmail,
+    recoveryEmailConfirmed,
+    twoFactorAuth,
+    trackEmailRead
+  } = general;
+  return {
+    devices,
+    twoFactorAuth: !!twoFactorAuth,
+    recoveryEmail,
+    recoveryEmailConfirmed: !!recoveryEmailConfirmed,
+    readReceiptsEnabled: !!trackEmailRead
+  };
+};
 
-  parseUserSettings(settings) {
-    const { devices, general } = settings;
-    const {
-      recoveryEmail,
-      recoveryEmailConfirmed,
-      twoFactorAuth,
-      trackEmailRead
-    } = general;
-    return {
-      devices,
-      twoFactorAuth: !!twoFactorAuth,
-      recoveryEmail,
-      recoveryEmailConfirmed: !!recoveryEmailConfirmed,
-      readReceiptsEnabled: !!trackEmailRead
-    };
-  }
+const linkAccept = async randomId => {
+  const res = await client.linkAccept({ randomId });
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, linkAccept, randomId);
+};
 
-  async linkAccept(randomId) {
-    const res = await client.linkAccept(randomId);
-    return checkDeviceRemoved(res);
-  }
+const linkAuth = async ({ newDeviceData, jwt }) => {
+  await checkClient({ optionalSessionToken: jwt });
+  return await client.linkAuth(newDeviceData);
+};
 
-  async linkAuth({ newDeviceData, jwt }) {
-    await this.check({ token: jwt });
-    return client.linkAuth(newDeviceData);
-  }
+const linkBegin = async username => {
+  return await client.linkBegin(username);
+};
 
-  async linkBegin(username) {
-    const { status, text } = await client.linkBegin(username);
-    return { status, text };
-  }
+const linkDeny = async randomId => {
+  const res = await client.linkDeny(randomId);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, linkDeny, randomId);
+};
 
-  async linkDeny(randomId) {
-    const res = await client.linkDeny(randomId);
-    return checkDeviceRemoved(res);
-  }
+const linkStatus = async () => {
+  const res = await client.linkStatus();
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, linkStatus, null);
+};
 
-  async linkStatus() {
-    const res = await client.linkStatus();
-    return checkDeviceRemoved(res);
-  }
+const login = async data => {
+  return await client.login(data);
+};
 
-  login(data) {
-    return client.login(data);
-  }
+const logout = async () => {
+  const res = await client.logout();
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, logout, null);
+};
 
-  async logout() {
-    const res = await client.logout();
-    return checkDeviceRemoved(res);
-  }
+const postDataReady = async params => {
+  const res = await client.postDataReady(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, postDataReady, params);
+};
 
-  async postDataReady(params) {
-    const res = await client.postDataReady(params);
-    return checkDeviceRemoved(res);
-  }
+const postEmail = async params => {
+  const res = await client.postEmail(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, postEmail, params);
+};
 
-  async postEmail(params) {
-    const res = await client.postEmail(params);
-    return checkDeviceRemoved(res);
-  }
+const postKeyBundle = async params => {
+  const res = await client.postKeyBundle(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, postKeyBundle, params);
+};
 
-  async postKeyBundle(params) {
-    const res = await client.postKeyBundle(params);
-    return checkDeviceRemoved(res);
-  }
-
-  async postOpenEvent(metadataKeys) {
-    const OPEN_EVENT_CMD = 500;
-    try {
-      const data = {
-        cmd: OPEN_EVENT_CMD,
-        params: {
-          metadataKeys: [...metadataKeys]
-        }
-      };
-      await createPendingEvent({
-        data: JSON.stringify(data)
-      });
-      processEventsQueue();
-      return Promise.resolve({ status: 200 });
-    } catch (e) {
-      return Promise.reject({ status: 422 });
-    }
-  }
-
-  async postPeerEvent(params) {
-    try {
-      await createPendingEvent({
-        data: JSON.stringify(params)
-      });
-      processEventsQueue();
-      return Promise.resolve({ status: 200 });
-    } catch (e) {
-      return Promise.reject({ status: 422 });
-    }
-  }
-
-  async pushPeerEvents(events) {
-    try {
-      const res = await client.postPeerEvent({
-        peerEvents: [...events]
-      });
-      return checkDeviceRemoved(res);
-    } catch (e) {
-      if (e.code === 'ENOTFOUND') {
-        globalManager.internetConnection.setStatus(false);
-        return Promise.resolve({ status: 200 });
+const postOpenEvent = async metadataKeys => {
+  const OPEN_EVENT_CMD = 500;
+  try {
+    const data = {
+      cmd: OPEN_EVENT_CMD,
+      params: {
+        metadataKeys: [...metadataKeys]
       }
-      return Promise.reject({ status: 422 });
+    };
+    await createPendingEvent({
+      data: JSON.stringify(data)
+    });
+    processEventsQueue();
+    return Promise.resolve({ status: 200 });
+  } catch (e) {
+    return Promise.reject({ status: 422 });
+  }
+};
+
+const postPeerEvent = async params => {
+  try {
+    await createPendingEvent({
+      data: JSON.stringify(params)
+    });
+    processEventsQueue();
+    return Promise.resolve({ status: 200 });
+  } catch (e) {
+    return Promise.reject({ status: 422 });
+  }
+};
+
+const pushPeerEvents = async events => {
+  try {
+    const res = await client.postPeerEvent({
+      peerEvents: [...events]
+    });
+    return res.status === 200
+      ? res
+      : await checkExpiredSession(res, pushPeerEvents, events);
+  } catch (e) {
+    if (e.code === 'ENOTFOUND') {
+      globalManager.internetConnection.setStatus(false);
+      return Promise.resolve({ status: 200 });
     }
+    return Promise.reject({ status: 422 });
   }
+};
 
-  postUser(params) {
-    return client.postUser(params);
-  }
+const postUser = async params => {
+  return await client.postUser(params);
+};
 
-  async removeDevice(params) {
-    const res = await client.removeDevice(params);
-    return checkDeviceRemoved(res);
-  }
+const removeDevice = async params => {
+  const res = await client.removeDevice(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, removeDevice, params);
+};
 
-  async resendConfirmationEmail() {
-    const res = await client.resendConfirmationEmail();
-    return checkDeviceRemoved(res);
-  }
+const resendConfirmationEmail = async () => {
+  const res = await client.resendConfirmationEmail();
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, resendConfirmationEmail, null);
+};
 
-  async resetPassword(recipientId) {
-    const res = await client.resetPassword(recipientId);
-    return checkDeviceRemoved(res);
-  }
+const resetPassword = async recipientId => {
+  const res = await client.resetPassword(recipientId);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, resetPassword, recipientId);
+};
 
-  async setReadTracking(enabled) {
-    const res = await client.setReadTracking(enabled);
-    return checkDeviceRemoved(res);
-  }
+const setReadTracking = async enabled => {
+  const res = await client.setReadTracking(enabled);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, setReadTracking, enabled);
+};
 
-  async setTwoFactorAuth(enable) {
-    const res = await client.setTwoFactorAuth(enable);
-    return checkDeviceRemoved(res);
-  }
+const setTwoFactorAuth = async enable => {
+  const res = await client.setTwoFactorAuth(enable);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, setTwoFactorAuth, enable);
+};
 
-  async unlockDevice(params) {
-    const res = await client.unlockDevice(params);
-    return checkDeviceRemoved(res);
-  }
+const unlockDevice = async params => {
+  const res = await client.unlockDevice(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, unlockDevice, params);
+};
 
-  async updateName({ name }) {
-    const res = await client.updateName(name);
-    return checkDeviceRemoved(res);
-  }
+const updateName = async ({ name }) => {
+  const res = await client.updateName(name);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, updateName, { name });
+};
 
-  async unsendEmail(params) {
-    const res = await client.unsendEmail(params);
-    return checkDeviceRemoved(res);
-  }
-}
+const upgradeToRefreshToken = async () => {
+  return await client.upgradeToRefreshToken();
+};
 
-module.exports = new ClientManager();
+const unsendEmail = async params => {
+  const res = await client.unsendEmail(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, unsendEmail, params);
+};
+
+module.exports = {
+  acknowledgeEvents,
+  changeRecoveryEmail,
+  changePassword,
+  checkAvailableUsername,
+  deleteMyAccount,
+  findKeyBundles,
+  getDataReady,
+  getEmailBody,
+  getEvents,
+  getKeyBundle,
+  getUserSettings,
+  linkAccept,
+  linkAuth,
+  linkBegin,
+  linkDeny,
+  linkStatus,
+  login,
+  logout,
+  postDataReady,
+  postEmail,
+  postKeyBundle,
+  postOpenEvent,
+  postPeerEvent,
+  pushPeerEvents,
+  postUser,
+  removeDevice,
+  resendConfirmationEmail,
+  resetPassword,
+  setReadTracking,
+  setTwoFactorAuth,
+  unlockDevice,
+  updateName,
+  unsendEmail
+};

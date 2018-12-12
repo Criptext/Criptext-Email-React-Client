@@ -26,6 +26,7 @@ const getAccount = () => {
 const updateAccount = async ({
   deviceId,
   jwt,
+  refreshToken,
   name,
   privKey,
   pubKey,
@@ -37,6 +38,7 @@ const updateAccount = async ({
   const params = noNulls({
     deviceId,
     jwt,
+    refreshToken,
     name,
     privKey,
     pubKey,

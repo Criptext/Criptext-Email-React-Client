@@ -55,83 +55,97 @@ const initializeClient = token => {
   const options = {
     url: PROD_DATA_TRANSFER_URL,
     token,
-    timeout: 60000
+    timeout: 60 * 1000
   };
   transferClient = new DataTransferClient(options);
   transferClient.token = token;
 };
 
-class DataTransferClientManager {
-  constructor() {
-    this.check();
-  }
-
-  async check() {
+const checkExpiredSession = async (
+  requirementResponse,
+  initialRequest,
+  requestParams
+) => {
+  if (requirementResponse.statusCode === 401) {
     await checkClient();
+    return initialRequest(requestParams);
   }
+  return requirementResponse;
+};
 
-  async download(addr) {
-    await this.check();
-    checkDataTransferDirectory();
-    const downloadStream = fs.createWriteStream(downloadedFileName);
-    const downloadResponse = await transferClient.download({
-      addr,
-      downloadStream
-    });
-    return downloadResponse;
-  }
+const download = async addr => {
+  await checkClient();
+  checkDataTransferDirectory();
+  const downloadStream = fs.createWriteStream(downloadedFileName);
+  const downloadResponse = await transferClient.download({
+    addr,
+    downloadStream
+  });
+  return downloadResponse.statusCode === 200
+    ? downloadResponse
+    : await checkExpiredSession(downloadResponse, download, addr);
+};
 
-  async upload(uuid) {
-    await this.check();
-    const uploadStream = fs.createReadStream(encryptedFileName);
-    const stat = fs.statSync(encryptedFileName);
-    const fileSize = stat.size;
-    const uploadResponse = await transferClient.upload({
-      uploadStream,
-      fileSize,
-      uuid
-    });
-    return uploadResponse;
-  }
+const upload = async uuid => {
+  await checkClient();
+  const uploadStream = fs.createReadStream(encryptedFileName);
+  const stat = fs.statSync(encryptedFileName);
+  const fileSize = stat.size;
+  const uploadResponse = await transferClient.upload({
+    uploadStream,
+    fileSize,
+    uuid
+  });
+  return uploadResponse.statusCode === 200
+    ? uploadResponse
+    : await checkExpiredSession(uploadResponse, upload, uuid);
+};
 
-  async encrypt() {
-    const { key, iv } = dbExporter.generateKeyAndIv();
-    await dbExporter.encryptStreamFile({
-      inputFile: exportedFileName,
-      outputFile: encryptedFileName,
-      key,
-      iv
-    });
-    return { key, iv };
-  }
+const encrypt = async () => {
+  const { key, iv } = dbExporter.generateKeyAndIv();
+  await dbExporter.encryptStreamFile({
+    inputFile: exportedFileName,
+    outputFile: encryptedFileName,
+    key,
+    iv
+  });
+  return { key, iv };
+};
 
-  async decrypt(key) {
-    return await dbExporter.decryptStreamFile({
-      inputFile: downloadedFileName,
-      outputFile: decryptedFileName,
-      key
-    });
-  }
+const decrypt = async key => {
+  return await dbExporter.decryptStreamFile({
+    inputFile: downloadedFileName,
+    outputFile: decryptedFileName,
+    key
+  });
+};
 
-  async importDatabase() {
-    return await dbExporter.importDatabaseFromFile({
-      filepath: decryptedFileName,
-      databasePath
-    });
-  }
+const importDatabase = async () => {
+  return await dbExporter.importDatabaseFromFile({
+    filepath: decryptedFileName,
+    databasePath
+  });
+};
 
-  async exportDatabase() {
-    await this.check();
-    checkDataTransferDirectory();
-    return await dbExporter.exportDatabaseToFile({
-      databasePath,
-      outputPath: exportedFileName
-    });
-  }
+const exportDatabase = async () => {
+  await checkClient();
+  checkDataTransferDirectory();
+  return await dbExporter.exportDatabaseToFile({
+    databasePath,
+    outputPath: exportedFileName
+  });
+};
 
-  clearSyncData() {
-    return removeDataTransferDirectoryRecursive();
-  }
-}
+const clearSyncData = () => {
+  return removeDataTransferDirectoryRecursive();
+};
 
-module.exports = new DataTransferClientManager();
+module.exports = {
+  download,
+  upload,
+  encrypt,
+  decrypt,
+  importDatabase,
+  exportDatabase,
+  clearSyncData
+};
