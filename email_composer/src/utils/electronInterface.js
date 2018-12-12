@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const createPreKeyRecord = params => {
-  return dbManager.createPreKeyRecord(params);
-};
-
 export const createSessionRecord = params => {
   return dbManager.createSessionRecord(params);
 };

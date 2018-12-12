@@ -1,7 +1,6 @@
 /*global util*/
 import {
   myAccount,
-  createPreKeyRecord,
   createSessionRecord,
   createSignedPreKeyRecord,
   deletePreKeyPair,
@@ -13,7 +12,7 @@ import {
   updateIdentityKeyRecord
 } from './../utils/electronInterface';
 
-import { createIdentityKeyRecord } from './../utils/ipc';
+import { createIdentityKeyRecord, createPreKeyRecord } from './../utils/ipc';
 
 export default class SignalProtocolStore {
   constructor() {

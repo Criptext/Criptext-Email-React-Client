@@ -11,4 +11,8 @@ ipc.answerRenderer('db-create-identity-key-record', params =>
   dbManager.createIdentityKeyRecord(params)
 );
 
+ipc.answerRenderer('db-create-pre-key-record', params =>
+  dbManager.createPreKeyRecord(params)
+);
+
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());

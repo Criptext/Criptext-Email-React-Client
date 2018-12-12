@@ -19,3 +19,7 @@ export const throwError = error => {
 export const createIdentityKeyRecord = async params => {
   return await callMain('db-create-identity-key-record', params);
 };
+
+export const createPreKeyRecord = async params => {
+  return await callMain('db-create-pre-key-record', params);
+};

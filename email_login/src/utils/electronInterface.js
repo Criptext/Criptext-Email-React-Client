@@ -176,10 +176,6 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const createPreKeyRecord = params => {
-  return dbManager.createPreKeyRecord(params);
-};
-
 export const createSessionRecord = params => {
   return dbManager.createSessionRecord(params);
 };
