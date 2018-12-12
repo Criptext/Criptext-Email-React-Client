@@ -7,4 +7,8 @@ ipc.answerRenderer('db-create-email-label', params =>
   dbManager.createEmailLabel(params)
 );
 
+ipc.answerRenderer('db-create-identity-key-record', params =>
+  dbManager.createIdentityKeyRecord(params)
+);
+
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());

@@ -176,10 +176,6 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const createIdentityKeyRecord = params => {
-  return dbManager.createIdentityKeyRecord(params);
-};
-
 export const createPreKeyRecord = params => {
   return dbManager.createPreKeyRecord(params);
 };

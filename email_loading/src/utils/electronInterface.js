@@ -105,10 +105,6 @@ export const createContact = params => {
   return dbManager.createContact(params);
 };
 
-export const createIdentityKeyRecord = params => {
-  return dbManager.createIdentityKeyRecord(params);
-};
-
 export const createLabel = params => {
   return dbManager.createLabel(params);
 };

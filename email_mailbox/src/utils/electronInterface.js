@@ -153,14 +153,6 @@ export const createFeedItem = params => {
   return dbManager.createFeedItem(params);
 };
 
-export const createFileKey = params => {
-  return dbManager.createFileKey(params);
-};
-
-export const createIdentityKeyRecord = params => {
-  return dbManager.createIdentityKeyRecord(params);
-};
-
 export const createLabel = params => {
   return dbManager.createLabel(params);
 };

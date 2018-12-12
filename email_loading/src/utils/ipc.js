@@ -13,3 +13,9 @@ export const openMailboxWindow = () => {
 export const throwError = error => {
   callMain('throwError', error);
 };
+
+/* DataBase
+   ----------------------------- */
+export const createIdentityKeyRecord = async params => {
+  return await callMain('db-create-identity-key-record', params);
+};
