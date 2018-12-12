@@ -176,10 +176,6 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const deleteSessionRecord = params => {
-  return dbManager.deleteSessionRecord(params);
-};
-
 export const getAccount = () => {
   return dbManager.getAccount();
 };

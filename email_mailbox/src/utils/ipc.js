@@ -93,3 +93,7 @@ export const deleteEmailsByIds = ids => {
 export const deletePreKeyPair = async params => {
   return await callMain('db-delete-prekey-pair', params);
 };
+
+export const deleteSessionRecord = async params => {
+  return await callMain('db-delete-session-record', params);
+};

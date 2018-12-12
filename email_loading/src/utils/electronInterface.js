@@ -113,10 +113,6 @@ export const createTables = () => {
   return dbManager.createTables();
 };
 
-export const deleteSessionRecord = params => {
-  return dbManager.deleteSessionRecord(params);
-};
-
 export const getAccount = () => {
   return dbManager.getAccount();
 };

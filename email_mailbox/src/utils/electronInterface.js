@@ -173,10 +173,6 @@ export const deleteLabelById = labelId => {
   return dbManager.deleteLabelById(labelId);
 };
 
-export const deleteSessionRecord = params => {
-  return dbManager.deleteSessionRecord(params);
-};
-
 export const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
   return dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId);
 };

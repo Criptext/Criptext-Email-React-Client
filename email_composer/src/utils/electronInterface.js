@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const deleteSessionRecord = params => {
-  return dbManager.deleteSessionRecord(params);
-};
-
 export const getAccount = () => {
   return dbManager.getAccount();
 };

@@ -31,4 +31,8 @@ ipc.answerRenderer('db-delete-prekey-pair', params =>
   dbManager.deletePreKeyPair(params)
 );
 
+ipc.answerRenderer('db-delete-session-record', params =>
+  dbManager.deleteSessionRecord(params)
+);
+
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
