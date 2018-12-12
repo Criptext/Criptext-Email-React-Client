@@ -15,4 +15,8 @@ ipc.answerRenderer('db-create-pre-key-record', params =>
   dbManager.createPreKeyRecord(params)
 );
 
+ipc.answerRenderer('db-create-session-record', params =>
+  dbManager.createSessionRecord(params)
+);
+
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
