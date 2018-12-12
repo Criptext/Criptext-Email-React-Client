@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getAllContacts } from './../utils/electronInterface';
+import { getAllContacts } from './../utils/ipc';
 import Autocomplete from './Autocomplete';
 import { appDomain } from '../utils/const';
 
 let people = undefined;
+let filtered = [];
 let isConsulting = false;
+let lastTextValue = '';
 const autocompleteCharacters = [',', ' '];
 
 const AutocompleteWrapper = ({ addTag, ...props }) => {
@@ -55,18 +57,27 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
   const inputValue = (props.value && props.value.trim().toLowerCase()) || '';
   const inputLength = inputValue.length;
   const getSuggestions = () => {
-    return inputLength === 0
-      ? []
-      : people.filter(person => {
-          const emailHasMatches =
-            person.email.toLowerCase().slice(0, inputLength) === inputValue;
-          if (person.name) {
-            const nameHasMatches =
-              person.name.toLowerCase().slice(0, inputLength) === inputValue;
-            return nameHasMatches || emailHasMatches;
-          }
-          return emailHasMatches;
-        });
+    if (inputLength === 0) return [];
+    if (
+      lastTextValue.length > inputLength ||
+      inputLength === 0 ||
+      !filtered.length
+    ) {
+      filtered = people;
+    }
+    lastTextValue = inputValue;
+
+    filtered = filtered.filter(person => {
+      const emailHasMatches =
+        person.email.toLowerCase().slice(0, inputLength) === inputValue;
+      if (person.name) {
+        const nameHasMatches =
+          person.name.toLowerCase().slice(0, inputLength) === inputValue;
+        return nameHasMatches || emailHasMatches;
+      }
+      return emailHasMatches;
+    });
+    return filtered;
   };
   state.filteredSuggestions = getSuggestions();
   const getSuggestionValue = suggestion => suggestion.email;
@@ -76,6 +87,7 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
   };
 
   const onSuggestionsClearRequested = () => {
+    filtered = [];
     state.filteredSuggestions = [];
   };
 

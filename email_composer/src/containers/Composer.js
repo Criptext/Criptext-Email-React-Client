@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
 import {
-  closeComposerWindow,
-  createEmail,
   LabelType,
   myAccount,
   updateEmail,
-  saveDraftChanges,
   errors,
   deleteEmailsByIds,
   getEmailByKey,
@@ -16,7 +13,12 @@ import {
   createFile,
   sendEventToMailbox
 } from './../utils/electronInterface';
-import { throwError } from './../utils/ipc';
+import {
+  closeComposerWindow,
+  createEmail,
+  saveDraftChangesComposerWindow,
+  throwError
+} from './../utils/ipc';
 import {
   areEmptyAllArrays,
   updateObjectFieldsInArray
@@ -559,7 +561,7 @@ class ComposerWrapper extends Component {
       status: EmailStatus.NONE
     };
     const { emailData } = formOutgoingEmailFromData(data);
-    saveDraftChanges(emailData);
+    saveDraftChangesComposerWindow(emailData);
   };
 }
 

@@ -19,6 +19,7 @@ require('./src/ipc/dialog.js');
 require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
 require('./src/ipc/mailbox.js');
+require('./src/ipc/database.js');
 require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
@@ -55,23 +56,6 @@ async function initApp() {
   });
 
   //   Composer
-  ipcMain.on(
-    'close-composer',
-    (e, { composerId, emailId, threadId, hasExternalPassphrase }) => {
-      composerWindowManager.destroy({
-        composerId,
-        emailId,
-        threadId,
-        hasExternalPassphrase
-      });
-    }
-  );
-
-  ipcMain.on('save-draft-changes', (e, windowParams) => {
-    const { composerId, data } = windowParams;
-    composerWindowManager.saveDraftChanges(composerId, data);
-  });
-
   ipcMain.on('failed-to-send', () => {
     composerWindowManager.sendEventToMailbox('failed-to-send', undefined);
   });

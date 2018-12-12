@@ -2,7 +2,6 @@ import signal from './../libs/signal';
 import {
   acknowledgeEvents,
   cleanDatabase,
-  createEmail,
   createEmailLabel,
   createFeedItem,
   createLabel,
@@ -28,6 +27,7 @@ import {
   mySettings,
   getNews
 } from './electronInterface';
+import { createEmail } from './ipc';
 import {
   checkEmailIsTo,
   formEmailLabel,

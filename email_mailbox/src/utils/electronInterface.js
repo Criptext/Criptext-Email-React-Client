@@ -149,10 +149,6 @@ export const createAccount = params => {
   return dbManager.createAccount(params);
 };
 
-export const createEmail = params => {
-  return dbManager.createEmail(params);
-};
-
 export const createEmailLabel = params => {
   return dbManager.createEmailLabel(params);
 };

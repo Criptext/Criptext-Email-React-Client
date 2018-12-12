@@ -28,23 +28,6 @@ export const LabelType = labels;
 
 /* Window events
    ----------------------------- */
-export const closeComposerWindow = ({
-  threadId,
-  emailId,
-  hasExternalPassphrase
-}) => {
-  ipcRenderer.send('close-composer', {
-    composerId,
-    threadId,
-    emailId,
-    hasExternalPassphrase
-  });
-};
-
-export const saveDraftChanges = data => {
-  ipcRenderer.send('save-draft-changes', { composerId, data });
-};
-
 export const sendEventToMailbox = (name, params) => {
   ipcRenderer.send(name, params);
 };
@@ -61,14 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const createAccount = params => {
-  return dbManager.createAccount(params);
-};
-
-export const createEmail = params => {
-  return dbManager.createEmail(params);
-};
-
 export const createEmailLabel = params => {
   return dbManager.createEmailLabel(params);
 };
@@ -111,10 +86,6 @@ export const deleteSessionRecord = params => {
 
 export const getAccount = () => {
   return dbManager.getAccount();
-};
-
-export const getAllContacts = () => {
-  return dbManager.getAllContacts();
 };
 
 export const getEmailByKey = key => {
