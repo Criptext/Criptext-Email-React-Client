@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
 import {
-  createEmail,
   LabelType,
   myAccount,
   updateEmail,
@@ -16,6 +15,7 @@ import {
 } from './../utils/electronInterface';
 import {
   closeComposerWindow,
+  createEmail,
   saveDraftChangesComposerWindow,
   throwError
 } from './../utils/ipc';

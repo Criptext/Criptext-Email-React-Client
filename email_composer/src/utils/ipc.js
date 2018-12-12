@@ -36,6 +36,10 @@ export const throwError = error => {
 
 /* DataBase
    ----------------------------- */
+export const createEmail = async params => {
+  return await callMain('db-create-email', params);
+};
+
 export const getAllContacts = async () => {
   return await callMain('db-get-all-contacts');
 };

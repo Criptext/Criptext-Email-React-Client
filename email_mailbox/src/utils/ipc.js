@@ -59,3 +59,9 @@ export const throwError = error => {
 export const updateDockBadgeApp = value => {
   callMain('update-dock-badge', value);
 };
+
+/* DataBase
+   ----------------------------- */
+export const createEmail = async params => {
+  return await callMain('db-create-email', params);
+};
