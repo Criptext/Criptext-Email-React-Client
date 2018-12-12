@@ -109,10 +109,6 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const createSignedPreKeyRecord = params => {
-  return dbManager.createSignedPreKeyRecord(params);
-};
-
 export const createTables = () => {
   return dbManager.createTables();
 };

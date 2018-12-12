@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const createSignedPreKeyRecord = params => {
-  return dbManager.createSignedPreKeyRecord(params);
-};
-
 export const deleteEmailsByIds = ids => {
   return dbManager.deleteEmailsByIds(ids);
 };
