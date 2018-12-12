@@ -39,3 +39,7 @@ export const deletePreKeyPair = async params => {
 export const deleteSessionRecord = async params => {
   return await callMain('db-delete-session-record', params);
 };
+
+export const getAccount = async () => {
+  return await callMain('db-get-account');
+};

@@ -113,10 +113,6 @@ export const createTables = () => {
   return dbManager.createTables();
 };
 
-export const getAccount = () => {
-  return dbManager.getAccount();
-};
-
 export const getAppSettings = () => {
   return dbManager.getAppSettings();
 };

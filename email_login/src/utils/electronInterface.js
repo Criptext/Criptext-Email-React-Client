@@ -176,10 +176,6 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const getAccount = () => {
-  return dbManager.getAccount();
-};
-
 export const getIdentityKeyRecord = params => {
   return dbManager.getIdentityKeyRecord(params);
 };

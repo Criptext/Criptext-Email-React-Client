@@ -35,4 +35,6 @@ ipc.answerRenderer('db-delete-session-record', params =>
   dbManager.deleteSessionRecord(params)
 );
 
+ipc.answerRenderer('db-get-account', () => dbManager.getAccount());
+
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());

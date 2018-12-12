@@ -177,10 +177,6 @@ export const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
   return dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId);
 };
 
-export const getAccount = () => {
-  return dbManager.getAccount();
-};
-
 export const getAllFeedItems = () => {
   return dbManager.getAllFeedItems();
 };
