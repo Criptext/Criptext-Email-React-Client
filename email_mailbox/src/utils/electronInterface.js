@@ -149,10 +149,6 @@ export const createAccount = params => {
   return dbManager.createAccount(params);
 };
 
-export const createEmailLabel = params => {
-  return dbManager.createEmailLabel(params);
-};
-
 export const createFeedItem = params => {
   return dbManager.createFeedItem(params);
 };

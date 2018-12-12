@@ -40,6 +40,10 @@ export const createEmail = async params => {
   return await callMain('db-create-email', params);
 };
 
+export const createEmailLabel = async params => {
+  return await callMain('db-create-email-label', params);
+};
+
 export const getAllContacts = async () => {
   return await callMain('db-get-all-contacts');
 };

@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const createEmailLabel = params => {
-  return dbManager.createEmailLabel(params);
-};
-
 export const createFile = params => {
   return dbManager.createFile(params);
 };

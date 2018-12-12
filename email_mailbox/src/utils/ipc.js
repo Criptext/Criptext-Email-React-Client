@@ -65,3 +65,7 @@ export const updateDockBadgeApp = value => {
 export const createEmail = async params => {
   return await callMain('db-create-email', params);
 };
+
+export const createEmailLabel = async params => {
+  return await callMain('db-create-email-label', params);
+};
