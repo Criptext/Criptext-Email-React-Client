@@ -31,3 +31,7 @@ export const createSessionRecord = async params => {
 export const createSignedPreKeyRecord = async params => {
   return await callMain('db-create-signed-prekey-record', params);
 };
+
+export const deletePreKeyPair = async params => {
+  return await callMain('db-delete-prekey-pair', params);
+};

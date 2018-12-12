@@ -113,10 +113,6 @@ export const createTables = () => {
   return dbManager.createTables();
 };
 
-export const deletePreKeyPair = params => {
-  return dbManager.deletePreKeyPair(params);
-};
-
 export const deleteSessionRecord = params => {
   return dbManager.deleteSessionRecord(params);
 };

@@ -173,10 +173,6 @@ export const deleteLabelById = labelId => {
   return dbManager.deleteLabelById(labelId);
 };
 
-export const deletePreKeyPair = params => {
-  return dbManager.deletePreKeyPair(params);
-};
-
 export const deleteSessionRecord = params => {
   return dbManager.deleteSessionRecord(params);
 };

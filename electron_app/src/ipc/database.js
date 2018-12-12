@@ -27,4 +27,8 @@ ipc.answerRenderer('db-delete-emails-by-ids', params =>
   dbManager.deleteEmailsByIds(params)
 );
 
+ipc.answerRenderer('db-delete-prekey-pair', params =>
+  dbManager.deletePreKeyPair(params)
+);
+
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
