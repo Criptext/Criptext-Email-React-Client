@@ -112,6 +112,12 @@
   version "0.1.2-rc4"
   resolved "https://registry.yarnpkg.com/@criptext/electron-better-ipc/-/electron-better-ipc-0.1.2-rc4.tgz#566654ce5a99cc7c1cd789674bf1db0794381d0f"
 
+"@criptext/news-api-client@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@criptext/news-api-client/-/news-api-client-1.0.1.tgz#c9a616c2e1256e6bbb9f8b930b2b3536b8ee4b5a"
+  dependencies:
+    superagent "^3.8.2"
+
 "@types/node@^8.0.24":
   version "8.10.21"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.21.tgz#12b3f2359b27aa05a45d886c8ba1eb8d1a77e285"

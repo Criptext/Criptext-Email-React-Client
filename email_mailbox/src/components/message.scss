@@ -35,7 +35,8 @@
         border-color: #c7e1ff;
       }
     
-      &.message-suggestion{
+      &.message-suggestion,
+      &.message-announcement {
         background-color: #0091ff;
         border-color: #0091ff;
         color: white;
@@ -92,6 +93,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        margin-right: 10px;
       }
     
       button {
@@ -99,7 +101,6 @@
         background-color: transparent;
         color: #373a45;
         display: flex;
-        margin-left: 10px;
         padding: 0;
         white-space: nowrap;
     

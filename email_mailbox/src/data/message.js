@@ -163,6 +163,12 @@ const messagesContent = {
       priority: messagePriorities.TOP,
       description: string.messages.internet.description
     }
+  },
+  news: {
+    announcement: {
+      priority: messagePriorities.MEDIUM,
+      description: ''
+    }
   }
 };
 

@@ -25,7 +25,8 @@ import {
   updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
   updateContactByEmail,
-  mySettings
+  mySettings,
+  getNews
 } from './electronInterface';
 import {
   checkEmailIsTo,
@@ -240,6 +241,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.PEER_RECOVERY_EMAIL_CONFIRMED: {
       return handlePeerRecoveryEmailConfirmed();
+    }
+    case SocketCommand.NEW_ANNOUNCEMENT: {
+      return handleNewAnnouncementEvent(incomingEvent);
     }
     default: {
       return;
@@ -691,6 +695,18 @@ const handlePeerRecoveryEmailChanged = ({ params }) => {
 
 const handlePeerRecoveryEmailConfirmed = () => {
   emitter.emit(Event.RECOVERY_EMAIL_CONFIRMED);
+};
+
+const handleNewAnnouncementEvent = async ({ rowid, params }) => {
+  const { code } = params;
+  const { title } = await getNews({ code });
+  const messageData = {
+    ...Messages.news.announcement,
+    type: MessageType.ANNOUNCEMENT,
+    description: title
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+  return rowid;
 };
 
 const handleSendEmailError = ({ rowid }) => {

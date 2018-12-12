@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Message from './Message';
+import Message, { MessageType } from './Message';
 import { Event, addEvent, removeEvent } from '../utils/electronEventInterface';
 import { messagePriorities } from '../data/message';
 
@@ -45,6 +45,7 @@ class MessageWrapper extends Component {
         onClickAction={this.handleClickAction}
         onClickAcceptOption={this.handleClickAcceptOption}
         onClickDenyOption={this.handleClickDenyOption}
+        onClickClose={this.handleClickClose}
         type={type}
       />
     );
@@ -68,7 +69,8 @@ class MessageWrapper extends Component {
   }) => {
     const isDisplayingMessage = this.state.displayMessage;
     const hasHigherPriority = priority >= this.state.priority;
-    if (!isDisplayingMessage || hasHigherPriority) {
+    const { isUpdateAvailable } = this.props;
+    if (!isUpdateAvailable && (!isDisplayingMessage || hasHigherPriority)) {
       this.setMessageState({
         action,
         ask,
@@ -107,8 +109,11 @@ class MessageWrapper extends Component {
       displayMessage: true
     };
     this.setState(newState, () => {
-      const isAskOrNetworkError = ask || priority === messagePriorities.HIGH;
-      const duration = isAskOrNetworkError
+      const isImportantMessage =
+        ask ||
+        priority === messagePriorities.HIGH ||
+        type === MessageType.ANNOUNCEMENT;
+      const duration = isImportantMessage
         ? QUESTION_DURATION
         : MESSAGE_DURATION;
       this.hideMessageTimeout = setTimeout(() => {
@@ -139,6 +144,14 @@ class MessageWrapper extends Component {
         this.clearMessageState();
       }, DELAY_TO_CLEAR_MESSAGE);
     });
+  };
+
+  handleClickClose = () => {
+    if (this.props.isUpdateAvailable) {
+      this.props.onClickClose();
+    } else {
+      this.hideMessage();
+    }
   };
 
   clearMessageState = () => {
@@ -187,6 +200,8 @@ MessageWrapper.propTypes = {
   actionHandlerKey: PropTypes.string,
   description: PropTypes.string,
   displayMessage: PropTypes.bool,
+  isUpdateAvailable: PropTypes.bool,
+  onClickClose: PropTypes.func,
   onExecuteMessageAction: PropTypes.func,
   onExportDatabase: PropTypes.func,
   onUploadDatabase: PropTypes.func,
