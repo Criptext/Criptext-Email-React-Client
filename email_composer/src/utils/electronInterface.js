@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const getSessionRecord = params => {
-  return dbManager.getSessionRecord(params);
-};
-
 export const getSessionRecordByRecipientIds = recipientIds => {
   return dbManager.getSessionRecordByRecipientIds(recipientIds);
 };

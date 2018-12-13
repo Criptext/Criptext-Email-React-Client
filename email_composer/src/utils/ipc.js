@@ -93,5 +93,9 @@ export const getFileKeyByEmailId = async emailId => {
 };
 
 export const getIdentityKeyRecord = async params => {
-  return await callMain('db-identity-key-record', params);
+  return await callMain('db-get-identity-key-record', params);
+};
+
+export const getSessionRecord = async params => {
+  return await callMain('db-get-session-record', params);
 };

@@ -245,10 +245,6 @@ export const getPreKeyPair = params => {
   return dbManager.getPreKeyPair(params);
 };
 
-export const getSessionRecord = params => {
-  return dbManager.getSessionRecord(params);
-};
-
 export const getSignedPreKey = params => {
   return dbManager.getSignedPreKey(params);
 };
