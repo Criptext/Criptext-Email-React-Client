@@ -233,10 +233,6 @@ export const getFilesByTokens = tokens => {
   return dbManager.getFilesByTokens(tokens);
 };
 
-export const getIdentityKeyRecord = params => {
-  return dbManager.getIdentityKeyRecord(params);
-};
-
 export const getLabelById = id => {
   return dbManager.getLabelById(id);
 };

@@ -48,3 +48,7 @@ ipc.answerRenderer('db-get-files-by-emailid', emailId =>
 ipc.answerRenderer('db-get-filekey-by-emailid', emailId =>
   dbManager.getFileKeyByEmailId(emailId)
 );
+
+ipc.answerRenderer('db-identity-key-record', params =>
+  dbManager.getIdentityKeyRecord(params)
+);

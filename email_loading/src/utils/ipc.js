@@ -43,3 +43,7 @@ export const deleteSessionRecord = async params => {
 export const getAccount = async () => {
   return await callMain('db-get-account');
 };
+
+export const getIdentityKeyRecord = async params => {
+  return await callMain('db-identity-key-record', params);
+};

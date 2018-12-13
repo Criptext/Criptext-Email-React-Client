@@ -1,7 +1,6 @@
 /*global util*/
 import {
   myAccount,
-  getIdentityKeyRecord,
   getPreKeyPair,
   getSessionRecord,
   getSignedPreKey,
@@ -14,7 +13,8 @@ import {
   createSessionRecord,
   createSignedPreKeyRecord,
   deletePreKeyPair,
-  deleteSessionRecord
+  deleteSessionRecord,
+  getIdentityKeyRecord
 } from './../utils/ipc';
 
 export default class SignalProtocolStore {
