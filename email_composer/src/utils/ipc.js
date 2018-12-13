@@ -40,6 +40,10 @@ export const findKeyBundles = async params => {
   return await callMain('client-find-key-bundles', params);
 };
 
+export const postEmail = async params => {
+  return await callMain('client-post-email', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const createEmail = async params => {
