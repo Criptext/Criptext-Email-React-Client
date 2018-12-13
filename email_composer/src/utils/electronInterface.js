@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const getFilesByEmailId = emailId => {
-  return dbManager.getFilesByEmailId(emailId);
-};
-
 export const getFileKeyByEmailId = emailId => {
   return dbManager.getFileKeyByEmailId(emailId);
 };

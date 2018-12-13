@@ -1,10 +1,9 @@
 import {
   myAccount,
   getContactsByEmailId,
-  getFilesByEmailId,
   getFileKeyByEmailId
 } from './electronInterface';
-import { getEmailByKey } from './ipc';
+import { getEmailByKey, getFilesByEmailId } from './ipc';
 import {
   cleanHTML,
   removeActionsFromSubject,

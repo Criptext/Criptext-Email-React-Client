@@ -229,10 +229,6 @@ export const getEmailLabelsByEmailId = emailId => {
   return dbManager.getEmailLabelsByEmailId(emailId);
 };
 
-export const getFilesByEmailId = emailId => {
-  return dbManager.getFilesByEmailId(emailId);
-};
-
 export const getFilesByTokens = tokens => {
   return dbManager.getFilesByTokens(tokens);
 };
