@@ -1,7 +1,6 @@
 /*global util*/
 import {
   myAccount,
-  getPreKeyPair,
   getSignedPreKey,
   updateIdentityKeyRecord
 } from './../utils/electronInterface';
@@ -14,6 +13,7 @@ import {
   deletePreKeyPair,
   deleteSessionRecord,
   getIdentityKeyRecord,
+  getPreKeyPair,
   getSessionRecord
 } from './../utils/ipc';
 

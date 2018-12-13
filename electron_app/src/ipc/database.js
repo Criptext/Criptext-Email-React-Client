@@ -53,6 +53,10 @@ ipc.answerRenderer('db-get-identity-key-record', params =>
   dbManager.getIdentityKeyRecord(params)
 );
 
+ipc.answerRenderer('db-get-prekey-pair', params =>
+  dbManager.getPreKeyPair(params)
+);
+
 ipc.answerRenderer('db-get-session-record', params =>
   dbManager.getSessionRecord(params)
 );

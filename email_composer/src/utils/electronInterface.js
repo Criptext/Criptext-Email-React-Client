@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const getPreKeyPair = params => {
-  return dbManager.getPreKeyPair(params);
-};
-
 export const getSignedPreKey = params => {
   return dbManager.getSignedPreKey(params);
 };

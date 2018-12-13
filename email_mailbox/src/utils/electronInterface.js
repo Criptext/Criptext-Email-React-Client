@@ -241,10 +241,6 @@ export const getLabelsByText = names => {
   return dbManager.getLabelsByText(names);
 };
 
-export const getPreKeyPair = params => {
-  return dbManager.getPreKeyPair(params);
-};
-
 export const getSignedPreKey = params => {
   return dbManager.getSignedPreKey(params);
 };
