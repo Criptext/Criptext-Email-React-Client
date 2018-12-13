@@ -11,12 +11,30 @@ ipc.answerRenderer('db-create-identity-key-record', params =>
   dbManager.createIdentityKeyRecord(params)
 );
 
-ipc.answerRenderer('db-create-pre-key-record', params =>
+ipc.answerRenderer('db-create-prekey-record', params =>
   dbManager.createPreKeyRecord(params)
 );
 
 ipc.answerRenderer('db-create-session-record', params =>
   dbManager.createSessionRecord(params)
 );
+
+ipc.answerRenderer('db-create-signed-prekey-record', params =>
+  dbManager.createSignedPreKeyRecord(params)
+);
+
+ipc.answerRenderer('db-delete-emails-by-ids', params =>
+  dbManager.deleteEmailsByIds(params)
+);
+
+ipc.answerRenderer('db-delete-prekey-pair', params =>
+  dbManager.deletePreKeyPair(params)
+);
+
+ipc.answerRenderer('db-delete-session-record', params =>
+  dbManager.deleteSessionRecord(params)
+);
+
+ipc.answerRenderer('db-get-account', () => dbManager.getAccount());
 
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());

@@ -157,14 +157,6 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const createSignedPreKeyRecord = params => {
-  return dbManager.createSignedPreKeyRecord(params);
-};
-
-export const deleteEmailsByIds = ids => {
-  return dbManager.deleteEmailsByIds(ids);
-};
-
 export const deleteEmailByKeys = key => {
   return dbManager.deleteEmailByKeys(key);
 };
@@ -181,20 +173,8 @@ export const deleteLabelById = labelId => {
   return dbManager.deleteLabelById(labelId);
 };
 
-export const deletePreKeyPair = params => {
-  return dbManager.deletePreKeyPair(params);
-};
-
-export const deleteSessionRecord = params => {
-  return dbManager.deleteSessionRecord(params);
-};
-
 export const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
   return dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId);
-};
-
-export const getAccount = () => {
-  return dbManager.getAccount();
 };
 
 export const getAllFeedItems = () => {

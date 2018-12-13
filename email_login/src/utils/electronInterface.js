@@ -176,22 +176,6 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const createSignedPreKeyRecord = params => {
-  return dbManager.createSignedPreKeyRecord(params);
-};
-
-export const deletePreKeyPair = params => {
-  return dbManager.deletePreKeyPair(params);
-};
-
-export const deleteSessionRecord = params => {
-  return dbManager.deleteSessionRecord(params);
-};
-
-export const getAccount = () => {
-  return dbManager.getAccount();
-};
-
 export const getIdentityKeyRecord = params => {
   return dbManager.getIdentityKeyRecord(params);
 };

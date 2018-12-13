@@ -6,7 +6,6 @@ import {
   myAccount,
   updateEmail,
   errors,
-  deleteEmailsByIds,
   getEmailByKey,
   getEmailToEdit,
   sendEventToMailbox
@@ -16,6 +15,7 @@ import {
   createEmail,
   createEmailLabel,
   createFile,
+  deleteEmailsByIds,
   saveDraftChangesComposerWindow,
   throwError
 } from './../utils/ipc';

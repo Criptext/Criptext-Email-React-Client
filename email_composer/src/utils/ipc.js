@@ -53,11 +53,27 @@ export const createIdentityKeyRecord = async params => {
 };
 
 export const createPreKeyRecord = async params => {
-  return await callMain('db-create-pre-key-record', params);
+  return await callMain('db-create-prekey-record', params);
 };
 
 export const createSessionRecord = async params => {
   return await callMain('db-create-session-record', params);
+};
+
+export const createSignedPreKeyRecord = async params => {
+  return await callMain('db-create-signed-prekey-record', params);
+};
+
+export const deleteEmailsByIds = async ids => {
+  return await callMain('db-delete-emails-by-ids', ids);
+};
+
+export const deletePreKeyPair = async params => {
+  return await callMain('db-delete-prekey-pair', params);
+};
+
+export const deleteSessionRecord = async params => {
+  return await callMain('db-delete-session-record', params);
 };
 
 export const getAllContacts = async () => {
