@@ -68,3 +68,5 @@ ipc.answerRenderer('db-get-session-record-by-recipientids', recipientIds =>
 ipc.answerRenderer('db-get-signed-prekey', params =>
   dbManager.getSignedPreKey(params)
 );
+
+ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));

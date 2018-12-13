@@ -44,10 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const updateEmail = params => {
-  return dbManager.updateEmail(params);
-};
-
 export const updateEmailLabel = params => {
   return dbManager.updateEmailLabel(params);
 };

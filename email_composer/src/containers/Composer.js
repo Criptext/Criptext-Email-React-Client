@@ -4,7 +4,6 @@ import { Status } from './../components/Control';
 import {
   LabelType,
   myAccount,
-  updateEmail,
   errors,
   getEmailToEdit,
   sendEventToMailbox
@@ -17,7 +16,8 @@ import {
   deleteEmailsByIds,
   getEmailByKey,
   saveDraftChangesComposerWindow,
-  throwError
+  throwError,
+  updateEmail
 } from './../utils/ipc';
 import {
   areEmptyAllArrays,

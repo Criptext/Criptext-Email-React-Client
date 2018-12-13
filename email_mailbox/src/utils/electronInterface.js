@@ -269,10 +269,6 @@ export const setUnreadEmailById = (emailId, unreadValue) => {
   return dbManager.updateEmail({ id: emailId, unread: unreadValue });
 };
 
-export const updateEmail = params => {
-  return dbManager.updateEmail(params);
-};
-
 export const updateEmails = params => {
   return dbManager.updateEmails(params);
 };
