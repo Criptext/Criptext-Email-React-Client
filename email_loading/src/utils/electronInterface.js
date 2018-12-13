@@ -117,10 +117,6 @@ export const getAppSettings = () => {
   return dbManager.getAppSettings();
 };
 
-export const getSignedPreKey = params => {
-  return dbManager.getSignedPreKey(params);
-};
-
 export const postKeyBundle = params => {
   return clientManager.postKeyBundle(params);
 };

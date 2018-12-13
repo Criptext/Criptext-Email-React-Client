@@ -107,3 +107,7 @@ export const getSessionRecord = async params => {
 export const getSessionRecordByRecipientIds = async recipientIds => {
   return await callMain('db-get-session-record-by-recipientids', recipientIds);
 };
+
+export const getSignedPreKey = async params => {
+  return await callMain('db-get-signed-prekey', params);
+};

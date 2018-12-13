@@ -241,10 +241,6 @@ export const getLabelsByText = names => {
   return dbManager.getLabelsByText(names);
 };
 
-export const getSignedPreKey = params => {
-  return dbManager.getSignedPreKey(params);
-};
-
 export const getTrashExpiredEmails = () => {
   return dbManager.getTrashExpiredEmails();
 };

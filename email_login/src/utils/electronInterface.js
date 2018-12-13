@@ -176,10 +176,6 @@ export const createLabel = params => {
   return dbManager.createLabel(params);
 };
 
-export const getSignedPreKey = params => {
-  return dbManager.getSignedPreKey(params);
-};
-
 export const updateIdentityKeyRecord = params => {
   return dbManager.updateIdentityKeyRecord(params);
 };
