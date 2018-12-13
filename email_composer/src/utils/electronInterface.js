@@ -35,10 +35,6 @@ export const sendEventToMailbox = (name, params) => {
 
 /* Criptext Client
    ----------------------------- */
-export const findKeyBundles = params => {
-  return clientManager.findKeyBundles(params);
-};
-
 export const postEmail = params => {
   return clientManager.postEmail(params);
 };

@@ -34,6 +34,12 @@ export const throwError = error => {
   callMain('throwError', error);
 };
 
+/* Criptext Client
+   ----------------------------- */
+export const findKeyBundles = async params => {
+  return await callMain('client-find-key-bundles', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const createEmail = async params => {
