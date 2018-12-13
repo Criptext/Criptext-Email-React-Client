@@ -56,3 +56,7 @@ ipc.answerRenderer('db-get-identity-key-record', params =>
 ipc.answerRenderer('db-get-session-record', params =>
   dbManager.getSessionRecord(params)
 );
+
+ipc.answerRenderer('db-get-session-record-by-recipientids', recipientIds =>
+  dbManager.getSessionRecordByRecipientIds(recipientIds)
+);
