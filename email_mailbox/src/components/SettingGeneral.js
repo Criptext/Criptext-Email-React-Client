@@ -19,6 +19,8 @@ import string from './../lang';
 import SettingsGeneralDeleteAccount from './SettingsGeneralDeleteAccount';
 import SettingsGeneralLanguageWrapper from './SettingsGeneralLanguageWrapper';
 import SettingsGeneralThemeWrapper from './SettingsGeneralThemeWrapper';
+import SettingsGeneralManualSync from './SettingsGeneralManualSync';
+import ManualSyncPopupWrapper from './ManualSyncPopupWrapper';
 import './settinggeneral.scss';
 import './signatureeditor.scss';
 
@@ -27,6 +29,7 @@ const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
 const Logoutpopup = PopupHOC(LogoutPopup);
 const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
+const Manualsyncpopup = PopupHOC(ManualSyncPopupWrapper);
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   string.settings.two_factor_not_available_text;
@@ -38,6 +41,10 @@ const SettingGeneral = props => (
     <ProfileBlock {...props} />
     <PasswordBlock {...props} />
     <TwoFactorAuthenticationBlock {...props} />
+    <SettingsGeneralManualSync
+      onShowSettingsPopup={props.onShowSettingsPopup}
+      devicesQuantity={props.devicesQuantity}
+    />
     <ShowEmailPreviewBlock {...props} />
     <ReadReceiptsBlock {...props} />
     <RecoveryEmailBlock {...props} />
@@ -513,6 +520,17 @@ const SettingsPopup = props => {
         />
       );
     }
+    case SETTINGS_POPUP_TYPES.MANUAL_SYNC: {
+      return (
+        <Manualsyncpopup
+          isHidden={isHidden}
+          onTogglePopup={props.onHideSettingsPopup}
+          popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+          {...props}
+        />
+      );
+    }
     default:
       return null;
   }
@@ -606,6 +624,7 @@ RecoveryEmailConfirmationMessage.propTypes = {
 };
 
 SettingGeneral.propTypes = {
+  devicesQuantity: PropTypes.number,
   onShowSettingsPopup: PropTypes.func
 };
 

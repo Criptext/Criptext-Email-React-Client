@@ -60,7 +60,8 @@ const SETTINGS_POPUP_TYPES = {
   CHANGE_RECOVERY_EMAIL: 'change-recovery-email',
   TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled',
   DELETE_ACCOUNT: 'delete-account',
-  NONE: 'none'
+  NONE: 'none',
+  MANUAL_SYNC: 'manual-sync'
 };
 
 const changePasswordErrors = {
@@ -156,6 +157,7 @@ class SettingGeneralWrapper extends Component {
   }
 
   render() {
+    const devicesQuantity = this.props.devices ? this.props.devices.length : 0;
     return (
       <SettingGeneral
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
@@ -233,6 +235,7 @@ class SettingGeneralWrapper extends Component {
         readReceiptsLabelisLoading={this.state.readReceipts.isLoading}
         onShowSettingsPopup={this.handleShowSettingsPopup}
         onHideSettingsPopup={this.handleHideSettingsPopup}
+        devicesQuantity={devicesQuantity}
       />
     );
   }
@@ -863,6 +866,7 @@ class SettingGeneralWrapper extends Component {
 }
 
 SettingGeneralWrapper.propTypes = {
+  devices: PropTypes.array,
   onDeleteDeviceData: PropTypes.func,
   onLogout: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
