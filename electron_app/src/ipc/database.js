@@ -38,3 +38,5 @@ ipc.answerRenderer('db-delete-session-record', params =>
 ipc.answerRenderer('db-get-account', () => dbManager.getAccount());
 
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
+
+ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));

@@ -6,7 +6,6 @@ import {
   myAccount,
   updateEmail,
   errors,
-  getEmailByKey,
   getEmailToEdit,
   sendEventToMailbox
 } from './../utils/electronInterface';
@@ -16,6 +15,7 @@ import {
   createEmailLabel,
   createFile,
   deleteEmailsByIds,
+  getEmailByKey,
   saveDraftChangesComposerWindow,
   throwError
 } from './../utils/ipc';

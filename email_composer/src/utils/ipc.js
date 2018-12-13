@@ -79,3 +79,7 @@ export const deleteSessionRecord = async params => {
 export const getAllContacts = async () => {
   return await callMain('db-get-all-contacts');
 };
+
+export const getEmailByKey = async key => {
+  return await callMain('db-get-email-by-key', key);
+};
