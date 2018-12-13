@@ -7,7 +7,6 @@ import {
   deleteEmailByKeys,
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
-  getEmailByKey,
   getEmailsByKeys,
   getEmailsByThreadId,
   getEmailLabelsByEmailId,
@@ -29,6 +28,7 @@ import {
 import {
   createEmail,
   createEmailLabel,
+  getEmailByKey,
   logoutApp,
   openFilledComposerWindow,
   processPendingEvents,

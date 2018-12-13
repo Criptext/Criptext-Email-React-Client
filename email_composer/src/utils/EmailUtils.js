@@ -1,3 +1,5 @@
+import { myAccount, getContactsByEmailId } from './electronInterface';
+import { getEmailByKey, getFilesByEmailId, getFileKeyByEmailId } from './ipc';
 import {
   cleanHTML,
   removeActionsFromSubject,
@@ -5,13 +7,6 @@ import {
 } from './StringUtils';
 import { getFormattedDate } from './DateUtils';
 import { appDomain, composerEvents } from './const';
-import {
-  myAccount,
-  getEmailByKey,
-  getContactsByEmailId,
-  getFilesByEmailId,
-  getFileKeyByEmailId
-} from './electronInterface';
 import { FILE_MODES } from './FileUtils';
 import { Status } from '../components/Control';
 

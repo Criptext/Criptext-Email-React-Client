@@ -44,30 +44,6 @@ export const postEmail = params => {
 
 /* DataBase
    ----------------------------- */
-export const getEmailByKey = key => {
-  return dbManager.getEmailByKey(key);
-};
-
-export const getFilesByEmailId = emailId => {
-  return dbManager.getFilesByEmailId(emailId);
-};
-
-export const getFileKeyByEmailId = emailId => {
-  return dbManager.getFileKeyByEmailId(emailId);
-};
-
-export const getIdentityKeyRecord = params => {
-  return dbManager.getIdentityKeyRecord(params);
-};
-
-export const getSessionRecord = params => {
-  return dbManager.getSessionRecord(params);
-};
-
-export const getSessionRecordByRecipientIds = recipientIds => {
-  return dbManager.getSessionRecordByRecipientIds(recipientIds);
-};
-
 export const getPreKeyPair = params => {
   return dbManager.getPreKeyPair(params);
 };

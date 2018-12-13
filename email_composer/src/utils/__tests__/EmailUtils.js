@@ -9,6 +9,7 @@ import { emailKey, emailKeyWithFile } from './../__mocks__/electronInterface';
 import { appDomain } from './../const';
 
 jest.mock('./../../utils/const');
+jest.mock('./../../utils/ipc');
 jest.mock('./../../utils/electronInterface');
 
 describe('[Edit draft] ', () => {

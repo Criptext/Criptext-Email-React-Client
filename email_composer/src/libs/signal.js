@@ -2,10 +2,10 @@
 import {
   errors,
   findKeyBundles,
-  getSessionRecordByRecipientIds,
   objectUtils,
   postEmail
 } from './../utils/electronInterface';
+import { getSessionRecordByRecipientIds } from './../utils/ipc';
 import SignalProtocolStore from './store';
 import { CustomError } from './../utils/CustomError';
 import {

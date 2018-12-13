@@ -1,8 +1,8 @@
 import FileManager from 'criptext-files-sdk';
 import CryptoJS from 'crypto-js';
 import base64js from 'base64-js';
-import { getFileKeyByEmailId, myAccount } from './electronInterface';
-import { openFileExplorer } from './ipc';
+import { myAccount } from './electronInterface';
+import { openFileExplorer, getFileKeyByEmailId } from './ipc';
 
 const MAX_REQUESTS = 5;
 

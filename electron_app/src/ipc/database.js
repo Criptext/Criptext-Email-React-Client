@@ -38,3 +38,25 @@ ipc.answerRenderer('db-delete-session-record', params =>
 ipc.answerRenderer('db-get-account', () => dbManager.getAccount());
 
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
+
+ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));
+
+ipc.answerRenderer('db-get-files-by-emailid', emailId =>
+  dbManager.getFilesByEmailId(emailId)
+);
+
+ipc.answerRenderer('db-get-filekey-by-emailid', emailId =>
+  dbManager.getFileKeyByEmailId(emailId)
+);
+
+ipc.answerRenderer('db-get-identity-key-record', params =>
+  dbManager.getIdentityKeyRecord(params)
+);
+
+ipc.answerRenderer('db-get-session-record', params =>
+  dbManager.getSessionRecord(params)
+);
+
+ipc.answerRenderer('db-get-session-record-by-recipientids', recipientIds =>
+  dbManager.getSessionRecordByRecipientIds(recipientIds)
+);

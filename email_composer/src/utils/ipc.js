@@ -79,3 +79,27 @@ export const deleteSessionRecord = async params => {
 export const getAllContacts = async () => {
   return await callMain('db-get-all-contacts');
 };
+
+export const getEmailByKey = async key => {
+  return await callMain('db-get-email-by-key', key);
+};
+
+export const getFilesByEmailId = async emailId => {
+  return await callMain('db-get-files-by-emailid', emailId);
+};
+
+export const getFileKeyByEmailId = async emailId => {
+  return await callMain('db-get-filekey-by-emailid', emailId);
+};
+
+export const getIdentityKeyRecord = async params => {
+  return await callMain('db-get-identity-key-record', params);
+};
+
+export const getSessionRecord = async params => {
+  return await callMain('db-get-session-record', params);
+};
+
+export const getSessionRecordByRecipientIds = async recipientIds => {
+  return await callMain('db-get-session-record-by-recipientids', recipientIds);
+};

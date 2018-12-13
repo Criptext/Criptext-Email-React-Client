@@ -197,10 +197,6 @@ export const getEmailsByIds = emailIds => {
   return dbManager.getEmailsByIds(emailIds);
 };
 
-export const getEmailByKey = emailKey => {
-  return dbManager.getEmailByKey(emailKey);
-};
-
 export const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
   return dbManager.getEmailsByThreadIdAndLabelId(threadIds, labelId);
 };
@@ -233,20 +229,8 @@ export const getEmailLabelsByEmailId = emailId => {
   return dbManager.getEmailLabelsByEmailId(emailId);
 };
 
-export const getFilesByEmailId = emailId => {
-  return dbManager.getFilesByEmailId(emailId);
-};
-
 export const getFilesByTokens = tokens => {
   return dbManager.getFilesByTokens(tokens);
-};
-
-export const getFileKeyByEmailId = emailId => {
-  return dbManager.getFileKeyByEmailId(emailId);
-};
-
-export const getIdentityKeyRecord = params => {
-  return dbManager.getIdentityKeyRecord(params);
 };
 
 export const getLabelById = id => {
@@ -259,10 +243,6 @@ export const getLabelsByText = names => {
 
 export const getPreKeyPair = params => {
   return dbManager.getPreKeyPair(params);
-};
-
-export const getSessionRecord = params => {
-  return dbManager.getSessionRecord(params);
 };
 
 export const getSignedPreKey = params => {

@@ -97,3 +97,19 @@ export const deletePreKeyPair = async params => {
 export const deleteSessionRecord = async params => {
   return await callMain('db-delete-session-record', params);
 };
+
+export const getEmailByKey = async key => {
+  return await callMain('db-get-email-by-key', key);
+};
+
+export const getFileKeyByEmailId = async emailId => {
+  return await callMain('db-get-filekey-by-emailid', emailId);
+};
+
+export const getIdentityKeyRecord = async params => {
+  return await callMain('db-get-identity-key-record`', params);
+};
+
+export const getSessionRecord = async params => {
+  return await callMain('db-get-session-record', params);
+};
