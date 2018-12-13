@@ -117,22 +117,10 @@ export const getAppSettings = () => {
   return dbManager.getAppSettings();
 };
 
-export const getPreKeyPair = params => {
-  return dbManager.getPreKeyPair(params);
-};
-
-export const getSignedPreKey = params => {
-  return dbManager.getSignedPreKey(params);
-};
-
 export const postKeyBundle = params => {
   return clientManager.postKeyBundle(params);
 };
 
 export const updateAccount = params => {
   return dbManager.updateAccount(params);
-};
-
-export const updateIdentityKeyRecord = params => {
-  return dbManager.updateIdentityKeyRecord(params);
 };

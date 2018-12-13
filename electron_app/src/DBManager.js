@@ -260,13 +260,6 @@ const getEmailLabelsByEmailId = emailId => {
     .where({ emailId });
 };
 
-const updateEmailLabel = ({ emailId, oldLabelId, newLabelId }) => {
-  return db
-    .table(Table.EMAIL_LABEL)
-    .where({ emailId, labelId: oldLabelId })
-    .update({ labelId: newLabelId });
-};
-
 /* Email
 ----------------------------- */
 const createEmail = async (params, trx) => {
@@ -1188,7 +1181,6 @@ module.exports = {
   updateContactByEmail,
   updateEmail,
   updateEmails,
-  updateEmailLabel,
   updateFeedItem,
   updateFilesByEmailId,
   updateIdentityKeyRecord,

@@ -16,7 +16,6 @@ import {
   LabelType,
   myAccount,
   setInternetConnectionStatus,
-  updateEmail,
   updateEmails,
   updateAccount,
   updateFilesByEmailId,
@@ -32,7 +31,8 @@ import {
   logoutApp,
   openFilledComposerWindow,
   processPendingEvents,
-  showNotificationApp
+  showNotificationApp,
+  updateEmail
 } from './ipc';
 import {
   checkEmailIsTo,

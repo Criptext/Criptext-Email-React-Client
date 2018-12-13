@@ -53,10 +53,24 @@ ipc.answerRenderer('db-get-identity-key-record', params =>
   dbManager.getIdentityKeyRecord(params)
 );
 
+ipc.answerRenderer('db-get-prekey-pair', params =>
+  dbManager.getPreKeyPair(params)
+);
+
 ipc.answerRenderer('db-get-session-record', params =>
   dbManager.getSessionRecord(params)
 );
 
 ipc.answerRenderer('db-get-session-record-by-recipientids', recipientIds =>
   dbManager.getSessionRecordByRecipientIds(recipientIds)
+);
+
+ipc.answerRenderer('db-get-signed-prekey', params =>
+  dbManager.getSignedPreKey(params)
+);
+
+ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
+
+ipc.answerRenderer('db-update-identity-key-record', params =>
+  dbManager.updateIdentityKeyRecord(params)
 );

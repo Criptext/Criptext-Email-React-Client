@@ -96,10 +96,26 @@ export const getIdentityKeyRecord = async params => {
   return await callMain('db-get-identity-key-record', params);
 };
 
+export const getPreKeyPair = async params => {
+  return await callMain('db-get-prekey-pair', params);
+};
+
 export const getSessionRecord = async params => {
   return await callMain('db-get-session-record', params);
 };
 
 export const getSessionRecordByRecipientIds = async recipientIds => {
   return await callMain('db-get-session-record-by-recipientids', recipientIds);
+};
+
+export const getSignedPreKey = async params => {
+  return await callMain('db-get-signed-prekey', params);
+};
+
+export const updateEmail = async params => {
+  return await callMain('db-update-email', params);
+};
+
+export const updateIdentityKeyRecord = async params => {
+  return await callMain('db-update-identity-key-record', params);
 };

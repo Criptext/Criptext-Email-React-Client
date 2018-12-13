@@ -241,14 +241,6 @@ export const getLabelsByText = names => {
   return dbManager.getLabelsByText(names);
 };
 
-export const getPreKeyPair = params => {
-  return dbManager.getPreKeyPair(params);
-};
-
-export const getSignedPreKey = params => {
-  return dbManager.getSignedPreKey(params);
-};
-
 export const getTrashExpiredEmails = () => {
   return dbManager.getTrashExpiredEmails();
 };
@@ -277,20 +269,12 @@ export const setUnreadEmailById = (emailId, unreadValue) => {
   return dbManager.updateEmail({ id: emailId, unread: unreadValue });
 };
 
-export const updateEmail = params => {
-  return dbManager.updateEmail(params);
-};
-
 export const updateEmails = params => {
   return dbManager.updateEmails(params);
 };
 
 export const updateAccount = params => {
   return dbManager.updateAccount(params);
-};
-
-export const updateIdentityKeyRecord = params => {
-  return dbManager.updateIdentityKeyRecord(params);
 };
 
 export const updateLabel = params => {

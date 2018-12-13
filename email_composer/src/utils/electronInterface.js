@@ -41,25 +41,3 @@ export const findKeyBundles = params => {
 export const postEmail = params => {
   return clientManager.postEmail(params);
 };
-
-/* DataBase
-   ----------------------------- */
-export const getPreKeyPair = params => {
-  return dbManager.getPreKeyPair(params);
-};
-
-export const getSignedPreKey = params => {
-  return dbManager.getSignedPreKey(params);
-};
-
-export const updateEmail = params => {
-  return dbManager.updateEmail(params);
-};
-
-export const updateEmailLabel = params => {
-  return dbManager.updateEmailLabel(params);
-};
-
-export const updateIdentityKeyRecord = params => {
-  return dbManager.updateIdentityKeyRecord(params);
-};

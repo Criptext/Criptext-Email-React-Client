@@ -175,15 +175,3 @@ export const createContact = params => {
 export const createLabel = params => {
   return dbManager.createLabel(params);
 };
-
-export const getPreKeyPair = params => {
-  return dbManager.getPreKeyPair(params);
-};
-
-export const getSignedPreKey = params => {
-  return dbManager.getSignedPreKey(params);
-};
-
-export const updateIdentityKeyRecord = params => {
-  return dbManager.updateIdentityKeyRecord(params);
-};
