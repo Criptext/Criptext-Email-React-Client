@@ -101,3 +101,7 @@ export const deleteSessionRecord = async params => {
 export const getEmailByKey = async key => {
   return await callMain('db-get-email-by-key', key);
 };
+
+export const getFileKeyByEmailId = async emailId => {
+  return await callMain('db-get-filekey-by-emailid', emailId);
+};

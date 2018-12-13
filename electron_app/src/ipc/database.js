@@ -44,3 +44,7 @@ ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));
 ipc.answerRenderer('db-get-files-by-emailid', emailId =>
   dbManager.getFilesByEmailId(emailId)
 );
+
+ipc.answerRenderer('db-get-filekey-by-emailid', emailId =>
+  dbManager.getFileKeyByEmailId(emailId)
+);

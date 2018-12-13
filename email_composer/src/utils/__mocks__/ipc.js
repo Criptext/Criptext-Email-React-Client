@@ -18,10 +18,23 @@ const files = [
   }
 ];
 
+const fileKeys = [
+  {
+    id: 1,
+    key: 'key_file1',
+    iv: 'iv_file1',
+    emailId: emails[1].id
+  }
+];
+
 export const getEmailByKey = key => {
   return emails.filter(email => email.key === key);
 };
 
 export const getFilesByEmailId = emailId => {
   return files.filter(file => file.emailId === emailId);
+};
+
+export const getFileKeyByEmailId = emailId => {
+  return fileKeys.filter(fileKey => fileKey.emailId === emailId);
 };

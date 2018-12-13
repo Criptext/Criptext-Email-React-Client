@@ -233,10 +233,6 @@ export const getFilesByTokens = tokens => {
   return dbManager.getFilesByTokens(tokens);
 };
 
-export const getFileKeyByEmailId = emailId => {
-  return dbManager.getFileKeyByEmailId(emailId);
-};
-
 export const getIdentityKeyRecord = params => {
   return dbManager.getIdentityKeyRecord(params);
 };

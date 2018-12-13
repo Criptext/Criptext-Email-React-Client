@@ -1,6 +1,4 @@
 import { appDomain } from './const';
-import file from './../../../public/emails.json';
-const emails = file.emails;
 
 export const myAccount = {
   recipientId: 'julian'
@@ -29,15 +27,6 @@ const contacts = [
   }
 ];
 
-const fileKeys = [
-  {
-    id: 1,
-    key: 'key_file1',
-    iv: 'iv_file1',
-    emailId: emails[1].id
-  }
-];
-
 export const emailId = 1;
 export const emailKey = '1';
 export const emailKeyWithFile = '2';
@@ -63,8 +52,4 @@ export const composerEvents = {
   REPLY: 'reply',
   REPLY_ALL: 'reply-all',
   FORWARD: 'forward'
-};
-
-export const getFileKeyByEmailId = emailId => {
-  return fileKeys.filter(fileKey => fileKey.emailId === emailId);
 };
