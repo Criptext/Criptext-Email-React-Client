@@ -277,10 +277,6 @@ export const updateAccount = params => {
   return dbManager.updateAccount(params);
 };
 
-export const updateIdentityKeyRecord = params => {
-  return dbManager.updateIdentityKeyRecord(params);
-};
-
 export const updateLabel = params => {
   return dbManager.updateLabel(params);
 };

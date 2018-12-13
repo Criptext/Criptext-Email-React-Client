@@ -124,7 +124,3 @@ export const postKeyBundle = params => {
 export const updateAccount = params => {
   return dbManager.updateAccount(params);
 };
-
-export const updateIdentityKeyRecord = params => {
-  return dbManager.updateIdentityKeyRecord(params);
-};

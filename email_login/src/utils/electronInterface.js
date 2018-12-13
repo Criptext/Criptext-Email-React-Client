@@ -175,7 +175,3 @@ export const createContact = params => {
 export const createLabel = params => {
   return dbManager.createLabel(params);
 };
-
-export const updateIdentityKeyRecord = params => {
-  return dbManager.updateIdentityKeyRecord(params);
-};

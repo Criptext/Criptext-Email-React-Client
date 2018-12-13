@@ -41,13 +41,3 @@ export const findKeyBundles = params => {
 export const postEmail = params => {
   return clientManager.postEmail(params);
 };
-
-/* DataBase
-   ----------------------------- */
-export const updateEmailLabel = params => {
-  return dbManager.updateEmailLabel(params);
-};
-
-export const updateIdentityKeyRecord = params => {
-  return dbManager.updateIdentityKeyRecord(params);
-};

@@ -59,3 +59,7 @@ export const getSessionRecord = async params => {
 export const getSignedPreKey = async params => {
   return await callMain('db-get-signed-prekey', params);
 };
+
+export const updateIdentityKeyRecord = async params => {
+  return await callMain('db-update-identity-key-record', params);
+};

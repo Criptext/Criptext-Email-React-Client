@@ -70,3 +70,7 @@ ipc.answerRenderer('db-get-signed-prekey', params =>
 );
 
 ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
+
+ipc.answerRenderer('db-update-identity-key-record', params =>
+  dbManager.updateIdentityKeyRecord(params)
+);

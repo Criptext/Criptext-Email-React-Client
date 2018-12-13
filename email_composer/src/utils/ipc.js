@@ -115,3 +115,7 @@ export const getSignedPreKey = async params => {
 export const updateEmail = async params => {
   return await callMain('db-update-email', params);
 };
+
+export const updateIdentityKeyRecord = async params => {
+  return await callMain('db-update-identity-key-record', params);
+};
