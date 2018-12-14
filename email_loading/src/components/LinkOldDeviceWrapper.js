@@ -24,7 +24,7 @@ import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 import string from './../lang';
 
-const messages = string.linkOldDevice.messages
+const messages = string.linkOldDevice.messages;
 
 const ANIMATION_DURATION = 1500;
 

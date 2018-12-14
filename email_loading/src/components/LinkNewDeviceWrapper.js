@@ -23,7 +23,7 @@ import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 import { appDomain } from '../utils/const';
 import string from './../lang';
 
-const messages = string.linkNewDevice.messages
+const messages = string.linkNewDevice.messages;
 
 const ANIMATION_DURATION = 1500;
 const DATA_STATUS_DELAY = 5000;
