@@ -1,7 +1,5 @@
 const { client: WebSocketClient } = require('websocket');
 const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
-const SOCKET_URL =
-  process.env.NODE_ENV === 'development' ? DEV_SOCKET_URL : PROD_SOCKET_URL;
 let client, reconnect, messageListener, socketConnection;
 const reconnectDelay = 2000;
 const mailboxWindow = require('./windows/mailbox');
@@ -10,9 +8,13 @@ const NETWORK_STATUS = {
   ONLINE: 'online',
   OFFLINE: 'offline'
 };
+const isDev = process.env.NODE_ENV === 'development';
+const SOCKET_URL = isDev ? DEV_SOCKET_URL : PROD_SOCKET_URL;
+
 const pingDelay = 15000;
 let shouldSendPing;
 let timeout;
+let shouldReconnect = true;
 
 const setMessageListener = mListener => (messageListener = mListener);
 
@@ -58,16 +60,18 @@ const start = ({ jwt }) => {
   });
 
   reconnect = () => {
-    setTimeout(() => {
-      log('Websocket reconnecting...');
-      start({ jwt });
-    }, reconnectDelay);
+    if (shouldReconnect) {
+      setTimeout(() => {
+        log('Websocket reconnecting...');
+        start({ jwt });
+      }, reconnectDelay);
+    }
   };
 };
 
 const log = message => {
   if (process.env.NODE_ENV === 'development') {
-    console.log(message);
+    console.log(`[WebSocket]: ${message}`);
   }
 };
 
@@ -119,8 +123,17 @@ const checkAlive = () => {
   timeout = setTimeout(checkAlive, pingDelay);
 };
 
+const restartSocket = ({ jwt }) => {
+  shouldReconnect = false;
+  disconnect();
+  client = null;
+  shouldReconnect = true;
+  start({ jwt });
+};
+
 module.exports = {
   start,
   setMessageListener,
-  disconnect
+  disconnect,
+  restartSocket
 };

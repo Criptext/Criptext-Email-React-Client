@@ -57,18 +57,17 @@ const createAccount = async ({
   if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
     throw CustomError(errors.user.PREKEYBUNDLE_FAILED);
   }
-  const res = await postUser({
+  const { status, body, headers } = await postUser({
     recipientId,
     password,
     name,
     recoveryEmail,
     keybundle
   });
-  const { status, text } = res;
   if (status === 400) {
     throw CustomError(errors.user.ALREADY_EXISTS);
   } else if (status === 429) {
-    const seconds = res.headers['retry-after'];
+    const seconds = headers['retry-after'];
     const tooManyRequestErrorMessage = { ...errors.login.TOO_MANY_REQUESTS };
     tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
       seconds
@@ -80,15 +79,16 @@ const createAccount = async ({
       description: errors.user.CREATE_USER_FAILED.description + status
     });
   }
+  const { token, refreshToken } = body;
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
-  const jwt = text;
   try {
     await createAccountDB({
       recipientId,
       deviceId: 1,
       name,
-      jwt,
+      jwt: token,
+      refreshToken,
       privKey,
       pubKey,
       registrationId
@@ -146,17 +146,16 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
   if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
     throw CustomError(errors.user.PREKEYBUNDLE_FAILED);
   }
-  const { status, text } = await postKeyBundle(keybundle);
+  const { status, body } = await postKeyBundle(keybundle);
   if (status !== 200) {
     throw CustomError({
       name: errors.user.POST_KEYBUNDLE.name,
       description: errors.user.POST_KEYBUNDLE.description + status
     });
   }
-  const newToken = text;
+  const { token, refreshToken } = body;
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
-  const jwt = newToken;
   const [currentAccount] = await getAccount();
   const currentAccountExists = currentAccount
     ? currentAccount.recipientId === recipientId
@@ -165,7 +164,8 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
   if (currentAccountExists) {
     try {
       await updateAccount({
-        jwt,
+        jwt: token,
+        refreshToken,
         deviceId,
         name,
         privKey,
@@ -183,7 +183,8 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
     }
     try {
       await createAccountDB({
-        jwt,
+        jwt: token,
+        refreshToken,
         deviceId,
         name,
         privKey,
@@ -240,20 +241,21 @@ const uploadKeys = async () => {
     signedPreKeyId,
     preKeyIds
   });
-  const res = await postKeyBundle(keybundle);
-  if (res.status !== 200) {
+  const { status, body } = await postKeyBundle(keybundle);
+  if (status !== 200) {
     throw CustomError({
       name: errors.user.POST_KEYBUNDLE.name,
-      description: errors.user.POST_KEYBUNDLE.description + res.status
+      description: errors.user.POST_KEYBUNDLE.description + status
     });
   }
-  const newToken = res.text;
+  const { token, refreshToken } = body;
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
   return {
     privKey,
     pubKey,
-    jwt: newToken,
+    jwt: token,
+    refreshToken,
     preKeyIds,
     preKeyPairArray,
     registrationId,
@@ -267,6 +269,7 @@ const createAccountToDB = async ({
   deviceId,
   name,
   jwt,
+  refreshToken,
   preKeyIds,
   privKey,
   pubKey,
@@ -284,6 +287,7 @@ const createAccountToDB = async ({
     try {
       await updateAccount({
         jwt,
+        refreshToken,
         deviceId,
         name,
         privKey,
@@ -302,6 +306,7 @@ const createAccountToDB = async ({
     try {
       await createAccountDB({
         jwt,
+        refreshToken,
         deviceId,
         name,
         privKey,

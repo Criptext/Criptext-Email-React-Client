@@ -94,7 +94,8 @@ const cleanDataBase = () => {
 const cleanDataLogout = async recipientId => {
   const params = {
     deviceId: '',
-    jwt: ''
+    jwt: '',
+    refreshToken: ''
   };
 
   await db
@@ -226,6 +227,7 @@ const createAccountColumns = table => {
   table.integer('deviceId').notNullable();
   table.string('name', MEDIUM_STRING_SIZE).notNullable();
   table.string('jwt', XLARGE_STRING_SIZE).notNullable();
+  table.string('refreshToken', XLARGE_STRING_SIZE);
   table.integer('registrationId').notNullable();
   table.string('privKey', LARGE_STRING_SIZE).notNullable();
   table.string('pubKey', LARGE_STRING_SIZE).notNullable();
@@ -291,6 +293,22 @@ const createIdentityKeyRecordColumns = table => {
   table.primary(['recipientId', 'deviceId']);
 };
 
+const createSettingsColumns = table => {
+  table.increments('id').primary();
+  table
+    .string('language')
+    .notNullable()
+    .defaultTo('en');
+  table
+    .boolean('opened')
+    .notNullable()
+    .defaultTo(false);
+  table
+    .string('theme')
+    .notNullable()
+    .defaultTo('light');
+};
+
 const createSignalTables = async () => {
   const preKeyExists = await db.schema.hasTable(Table.PREKEYRECORD);
   if (!preKeyExists) {
@@ -318,7 +336,8 @@ const createTables = async () => {
       .createTable(Table.PREKEYRECORD, createPreKeyRecordColumns)
       .createTable(Table.SIGNEDPREKEYRECORD, createSignedPreKeyRecordColumns)
       .createTable(Table.SESSIONRECORD, createSessionRecordColumns)
-      .createTable(Table.IDENTITYKEYRECORD, createIdentityKeyRecordColumns);
+      .createTable(Table.IDENTITYKEYRECORD, createIdentityKeyRecordColumns)
+      .createTable(Table.SETTINGS, createSettingsColumns);
   }
   await migrateDatabase();
 };
