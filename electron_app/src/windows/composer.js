@@ -6,6 +6,9 @@ const mailboxWindow = require('./mailbox');
 const dbManager = require('./../DBManager');
 const globalManager = require('./../globalManager');
 
+const lang = require('./../lang');
+const { closeWarning, windowTitle } = lang.windows.composer;
+
 const composerSize = {
   width: 785,
   height: 556,
@@ -21,15 +24,15 @@ const iconPath = path.join(
 const RESPONSES = {
   DISCARD: {
     index: 0,
-    label: 'Discard changes'
+    label: closeWarning.responses.discard
   },
   CONTINUE: {
     index: 1,
-    label: 'Continue writing'
+    label: closeWarning.responses.continue
   },
   SAVE: {
     index: 2,
-    label: 'Save as Draft'
+    label: closeWarning.responses.save
   }
 };
 
@@ -39,13 +42,12 @@ const dialogResponses = Object.values(RESPONSES).map(
 
 const dialogTemplate = {
   type: 'warning',
-  title: 'Warning',
+  title: closeWarning.title,
   buttons: dialogResponses,
   defaultId: RESPONSES.SAVE.index,
   cancelId: RESPONSES.CONTINUE.index,
-  message: 'You are closing a message that has not been sent',
-  detail:
-    "To save the message, click on 'Save as Draft'. The message will be saved on your Drafts folder"
+  message: closeWarning.message,
+  detail: closeWarning.detail
 };
 
 const composerEvents = {
@@ -69,7 +71,7 @@ const createComposerWindow = () => {
     width: composerSize.width,
     height: composerSize.height,
     show: false,
-    title: '  New Secure Message',
+    title: `  ${windowTitle}`,
     minWidth: composerSize.minWidth,
     minHeight: composerSize.minHeight
   });
