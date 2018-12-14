@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './subject.scss';
 
 const Subject = props => (
   <div className="subject-container">
     <input
       type="text"
-      placeholder="Subject"
+      placeholder={string.subject.placeholder}
       value={props.text}
       onChange={props.onChangeInput}
       onFocus={props.onFocusInput}

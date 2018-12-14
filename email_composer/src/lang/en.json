@@ -1,0 +1,41 @@
+{
+  "inputLabels": {
+    "to": "To:",
+    "cc": "Cc:",
+    "bcc": "Bcc:"
+  },
+  "subject": {
+    "placeholder": "Subject"
+  },
+  "editor": {
+    "placeholder": "Message"
+  },
+  "dropFilesArea": {
+    "text": "Drop files here"
+  },
+  "sendButtonLabel": "Send",
+  "popups": {
+    "nonCriptextRecipients": {
+      "title": "Non-Criptext Recipient",
+      "switchLabel": "Send Encrypted",
+      "description": "Set a passphrase and share it with non-Criptext recipients so they can read your email",
+      "inputPassphrase": {
+        "placeholder": "Enter passphrase",
+        "errorMessages": {
+          "len": {
+            "prefix": "Must have",
+            "suffix": "characters"
+          }
+        }
+      },
+      "note": {
+        "header": "Note:",
+        "content": "non-Criptext email addresses will receive a normal, un-encrypted email."
+      },
+      "buttons": {
+        "send": "Send",
+        "cancel": "Cancel"
+      }
+    }
+  }
+}

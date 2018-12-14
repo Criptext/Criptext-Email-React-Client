@@ -22,6 +22,9 @@ import {
 import { closeCreatingKeysLoadingWindow, throwError } from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
+import string from './../lang';
+
+const messages = string.linkOldDevice.messages;
 
 const ANIMATION_DURATION = 1500;
 
@@ -105,7 +108,7 @@ class LoadingWrapper extends Component {
   initLinkOldDevice = () => {
     this.setState(
       {
-        message: 'Encrypting Mailbox',
+        message: messages.encryptingMailbox,
         pauseAt: 25,
         lastStep: STEPS.NOT_STARTED
       },
@@ -136,7 +139,7 @@ class LoadingWrapper extends Component {
       await startSocket();
       this.setState(
         {
-          message: 'Getting keys',
+          message: messages.gettingKeys,
           pauseAt: 50,
           delay: (50 - this.state.percent) / ANIMATION_DURATION,
           lastStep: STEPS.ENCRYPT_MAILBOX
@@ -171,7 +174,7 @@ class LoadingWrapper extends Component {
       });
       this.setState(
         {
-          message: 'Uploading Mailbox',
+          message: messages.uploadingMailbox,
           pauseAt: 75,
           delay: (75 - this.state.percent) / ANIMATION_DURATION,
           lastStep: STEPS.GETTING_KEYS
@@ -184,7 +187,7 @@ class LoadingWrapper extends Component {
           });
           this.setState(
             {
-              message: 'Mailbox uploaded successfully!',
+              message: messages.uploadSuccess,
               pauseAt: 100,
               delay: (100 - this.state.percent) / ANIMATION_DURATION,
               lastStep: STEPS.UPLOAD_MAILBOX

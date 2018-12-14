@@ -4,7 +4,10 @@ import TagsInput from 'react-tagsinput';
 import AutocompleteWrapper from './AutocompleteWrapper';
 import TagRecipient from './TagRecipient';
 import { pasteSplit } from './../utils/StringUtils';
+import string from './../lang';
 import './recipient.scss';
+
+const { inputLabels } = string;
 
 const Recipient = props => (
   <div className="recipient-container ">
@@ -33,7 +36,7 @@ const Recipient = props => (
 
 const renderRecipientTo = props => (
   <div className="recipient-content">
-    <span className="recipient-input-label">To:</span>
+    <span className="recipient-input-label">{inputLabels.to}</span>
     <TagsInput
       addKeys={[9, 13]}
       addOnBlur={true}
@@ -65,7 +68,7 @@ const renderRecipientTo = props => (
 
 const renderRecipientCc = props => (
   <div className="recipient-content">
-    <span className="recipient-input-label">Cc:</span>
+    <span className="recipient-input-label">{inputLabels.cc}</span>
     <TagsInput
       addKeys={[9, 13, 32, 188]}
       addOnBlur={true}
@@ -96,7 +99,7 @@ const renderRecipientCc = props => (
 
 const renderRecipientBcc = props => (
   <div className="recipient-content">
-    <span className="recipient-input-label">Bcc:</span>
+    <span className="recipient-input-label">{inputLabels.bcc}</span>
     <TagsInput
       addKeys={[9, 13, 32, 188]}
       addOnBlur={true}

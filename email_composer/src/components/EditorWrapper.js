@@ -2,6 +2,7 @@ import './global';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Trumbowyg from 'react-trumbowyg';
+import string from './../lang';
 import '../../node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js';
 import '../../node_modules/trumbowyg/dist/plugins/fontfamily/trumbowyg.fontfamily.js';
 import '../../node_modules/trumbowyg/dist/plugins/fontsize/trumbowyg.fontsize.js';
@@ -24,7 +25,7 @@ class EditorWrapper extends Component {
         ]}
         data={this.props.htmlBody}
         onChange={this.onChangeHtmlBody}
-        placeholder="Message"
+        placeholder={string.editor.placeholder}
       />
     );
   }

@@ -2,7 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { inputTypes } from './NonCriptextPopupWrapper';
+import string from './../lang';
 import './noncriptext.scss';
+
+const {
+  title,
+  switchLabel,
+  description,
+  inputPassphrase,
+  note,
+  buttons
+} = string.popups.nonCriptextRecipients;
 
 const NonCriptextPopup = props => {
   return (
@@ -17,17 +27,14 @@ const NonCriptextPopup = props => {
 const renderPopUp = props => {
   return (
     <div className="content">
-      <div className="non-criptext-title">Non-Criptext Recipient</div>
+      <div className="non-criptext-title">{title}</div>
       <div className="non-criptext-label">
-        <span className="text">Send Encrypted</span>
+        <span className="text">{switchLabel}</span>
         <span className="switch">{renderSwitch(props)}</span>
       </div>
       {props.mode === PopUpModes.SET_PASSWORD && (
         <div className="non-criptext-description">
-          <span>
-            Set a passphrase and share it with non-Criptext recipients so they
-            can read your email.
-          </span>
+          <span>{description}</span>
         </div>
       )}
       {props.mode === PopUpModes.SET_PASSWORD
@@ -57,10 +64,11 @@ const renderSwitch = props => {
 
 const renderForm = props => {
   const { password } = props.formItems;
+  const { prefix, suffix } = inputPassphrase.errorMessages.len;
   return (
     <div className="non-criptext-form">
       {renderInput({
-        placeholder: 'Enter passphrase',
+        placeholder: inputPassphrase.placeholder,
         value: password.value,
         type: password.type,
         onChange: ev => props.onChangeInputValue(ev, 'password')
@@ -72,7 +80,7 @@ const renderForm = props => {
       {renderErrorMessage({
         value: password.value,
         error: password.error,
-        message: `Must have ${props.minLength} characters`
+        message: `${prefix} ${props.minLength} ${suffix}`
       })}
     </div>
   );
@@ -112,8 +120,7 @@ const renderErrorMessage = ({ value, error, message }) => {
 const renderNote = () => (
   <div className="non-criptext-note">
     <span>
-      <b>Note:</b> non-Criptext email addresses will receive a normal,
-      un-encrypted email.
+      <b>{note.header}</b> {note.content}
     </span>
   </div>
 );
@@ -125,13 +132,13 @@ const renderButtons = props => (
       onClick={() => props.onSubmitForm()}
       disabled={props.disabled}
     >
-      Send
+      {buttons.send}
     </button>
     <button
       className="button-cancel"
       onClick={() => props.onClickCancelSendMessage()}
     >
-      Cancel
+      {buttons.cancel}
     </button>
   </div>
 );

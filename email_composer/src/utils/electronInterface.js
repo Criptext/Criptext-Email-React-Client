@@ -23,6 +23,7 @@ export const objectUtils = remote.require('./src/utils/ObjectUtils');
 export const errors = remote.require('./src/errors');
 
 export const myAccount = remote.require('./src/Account');
+export const mySettings = remote.require('./src/Settings');
 
 export const LabelType = labels;
 

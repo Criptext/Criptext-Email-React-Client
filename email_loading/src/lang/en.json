@@ -1,0 +1,51 @@
+{
+  "linkDeviceRequest": {
+    "header": "Sign In Verification",
+    "text": "Do you want to approve?",
+    "buttonLabels": {
+      "reject": "Reject",
+      "approve": "Approve"
+    }
+  },
+  "linkNewDevice": {
+    "header": "Mailbox Sync",
+    "messages": {
+      "error": "Error syncing your mailbox",
+      "retry": "Retry?",
+      "sendingKeys": "Sending keys",
+      "waitingForMailbox": "Waiting for mailbox",
+      "keepWaiting": {
+        "title": "Sync taking longer than usual",
+        "message": "Would you like to continue waiting?"
+      },
+      "downloadingMailbox": "Downloading mailbox",
+      "decryptingMailbox": "Decrypting mailbox",
+      "syncComplete": "Sync complete"
+    },
+    "cancelSyncLabel": "Cancel sync",
+    "continueLabel": "Continue",
+    "skipStepLabel": "Skip step"
+  },
+
+  "linkOldDevice": {
+    "header": "Mailbox Sync",
+    "messages": {
+      "error": "Error syncing your mailbox",
+      "retry": "Retry?",
+      "encryptingMailbox": "Encrypting Mailbox",
+      "gettingKeys": "Getting keys",
+      "uploadingMailbox": "Uploading Mailbox",
+      "uploadSuccess": "Mailbox uploaded successfully!"
+    },
+    "cancelSyncLabel": "Cancel sync",
+    "continueLabel": "Continue",
+    "skipStepLabel": "Skip step"
+  },
+  "loading": {
+    "messages": {
+      "error": "Error generating the keys.",
+      "retry": "Retry",
+      "creatingKeys": "Creating Keys"
+    }
+  }
+}

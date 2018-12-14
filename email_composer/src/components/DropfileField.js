@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import EditorWrapper from './EditorWrapper';
 import AttachmentWrapper from './AttachmentWrapper';
+import string from './../lang';
 import './dropfilefield.scss';
 
 const DropfileField = props => (
@@ -39,7 +40,7 @@ const DropfileField = props => (
     {props.isDragActive ? (
       <div className="dropfilefiled-content">
         <div />
-        <span>Drop files here</span>
+        <span>{string.dropFilesArea.text}</span>
       </div>
     ) : null}
   </div>

@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './linkingdevices.scss';
 import { STEPS } from './LinkOldDeviceWrapper';
+import string from './../lang';
+import './linkingdevices.scss';
+
+const { linkOldDevice } = string;
 
 const LinkOldDevice = props => (
   <div className="linking-container">
     <div className="content">
       <div className="header">
-        <h3>Mailbox Sync</h3>
+        <h3>{linkOldDevice.header}</h3>
       </div>
       <div className="linking-devices-icons">
         <i className={`${props.oldDeviceIcon} icon-old-device`} />
@@ -43,9 +46,9 @@ const renderMessage = props => {
   if (props.failed) {
     return (
       <div className="retry">
-        <span>Error syncing your mailbox. </span>
+        <span>{linkOldDevice.messages.error} </span>
         <span className="retry-link" onClick={props.onClickRetry}>
-          Retry
+          {linkOldDevice.messages.retry}
         </span>
       </div>
     );
@@ -61,7 +64,7 @@ const renderCancelSync = props => {
   ];
   return availableCancelSyncSteps.includes(props.lastStep) ? (
     <div className="cancel-sync-link" onClick={props.onClickCancelSync}>
-      <span>Cancel sync</span>
+      <span>{linkOldDevice.cancelSyncLabel}</span>
     </div>
   ) : null;
 };

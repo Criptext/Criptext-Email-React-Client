@@ -1,5 +1,5 @@
-const en = require('./en');
-const es = require('./es');
+const en = require('./en.json');
+const es = require('./es.json');
 const { language } = require('./../Settings');
 const settingsLanguage = language || 'en';
 
