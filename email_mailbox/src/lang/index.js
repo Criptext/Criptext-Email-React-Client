@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization';
 import { mySettings } from '../utils/electronInterface';
-import en from './en';
-import es from './es';
+import en from './en.json';
+import es from './es.json';
 
 const string = new LocalizedStrings({
   en,
