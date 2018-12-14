@@ -2,6 +2,7 @@ import { labels } from './systemLabels';
 import { openDialogWindow } from './ipc';
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
+const { getCurrentWindow } = remote;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const newsClient = remote.require('./src/newsClient');
@@ -52,6 +53,10 @@ export const confirmPermanentDeleteThread = callback => {
   ipcRenderer.once('selectedOption', (event, data) => {
     callback(data.selectedOption);
   });
+};
+
+export const reloadWindow = () => {
+  getCurrentWindow().reload();
 };
 
 /*  News Client

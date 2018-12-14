@@ -15,8 +15,9 @@ import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain, usefulLinks } from '../utils/const';
 import { getResendConfirmationTimestamp } from '../utils/storage';
-import string, { languages } from './../lang';
+import string from './../lang';
 import SettingsGeneralDeleteAccount from './SettingsGeneralDeleteAccount';
+import SettingsGeneralLanguageWrapper from './SettingsGeneralLanguageWrapper';
 import './settinggeneral.scss';
 import './signatureeditor.scss';
 
@@ -42,6 +43,7 @@ const SettingGeneral = props => (
     <ShowEmailPreviewBlock {...props} />
     <ReadReceiptsBlock {...props} />
     <RecoveryEmailBlock {...props} />
+    <SettingsGeneralLanguageWrapper />
     <UsefulLinksBlock />
     <LogoutAccountBlock {...props} />
     <SettingsGeneralDeleteAccount
@@ -452,31 +454,6 @@ const UsefulLinksBlock = () => (
   </div>
 );
 
-// eslint-disable-next-line no-unused-vars
-const LanguageBlock = props => (
-  <div className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.language}</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item">
-        <select
-          onChange={e => props.onChangeSelectLanguage(e)}
-          value={props.language}
-        >
-          {languages.map((lang, index) => {
-            return (
-              <option key={index} value={lang.value}>
-                {lang.text}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-    </div>
-  </div>
-);
-
 const SettingsPopup = props => {
   const type = props.settingsPupopType;
   const isHidden = props.isHiddenSettingsPopup;
@@ -539,11 +516,6 @@ const SettingsPopup = props => {
     default:
       return null;
   }
-};
-
-LanguageBlock.propTypes = {
-  language: PropTypes.string,
-  onChangeSelectLanguage: PropTypes.func
 };
 
 renderBlockName.propTypes = {

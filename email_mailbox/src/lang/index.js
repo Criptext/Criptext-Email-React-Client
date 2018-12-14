@@ -8,7 +8,8 @@ const string = new LocalizedStrings({
   es
 });
 
-string.setLanguage(mySettings.lang || 'en');
+export const currentLanguage = mySettings.language;
+string.setLanguage(currentLanguage || 'en');
 
 export const languages = [
   { text: 'English', value: 'en' },
@@ -17,6 +18,7 @@ export const languages = [
 
 export const setLang = lang => {
   string.setLanguage(lang);
+  mySettings.update({ language: lang });
 };
 
 export default string;
