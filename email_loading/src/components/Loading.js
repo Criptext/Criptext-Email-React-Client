@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './loading.scss';
+
+const messages = string.loading.messages;
 
 const Loading = props => (
   <div className="loading-body">
@@ -28,14 +31,14 @@ const renderMessage = props => {
   if (props.failed) {
     return (
       <div className="retry">
-        <span>Error generating the keys. </span>
+        <span>{messages.error} </span>
         <span className="retry-link" onClick={() => props.restart()}>
-          Retry
+          {messages.retry}
         </span>
       </div>
     );
   }
-  return <span className="creating"> Creating Keys </span>;
+  return <span className="creating"> {messages.creatingKeys} </span>;
 };
 
 Loading.propTypes = {

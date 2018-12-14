@@ -21,6 +21,9 @@ import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 import { appDomain } from '../utils/const';
+import string from './../lang';
+
+const messages = string.linkNewDevice.messages
 
 const ANIMATION_DURATION = 1500;
 const DATA_STATUS_DELAY = 5000;
@@ -58,7 +61,7 @@ class LoadingWrapper extends Component {
   }
 
   componentDidMount() {
-    this.setState({ message: 'Sending keys', pauseAt: 10 }, async () => {
+    this.setState({ message: messages.sendingKeys, pauseAt: 10 }, async () => {
       this.incrementPercentage();
       await setTimeout(async () => {
         await this.uploadKeys();
@@ -108,7 +111,7 @@ class LoadingWrapper extends Component {
         this.setState(
           {
             accountData,
-            message: 'Waiting for mailbox',
+            message: messages.waitingForMailbox,
             pauseAt: 40,
             delay: (40 - this.state.percent) / ANIMATION_DURATION,
             lastStep: STEPS.SEND_KEYS
@@ -135,8 +138,8 @@ class LoadingWrapper extends Component {
   checkDataStatus = async () => {
     if (DATA_STATUS_ATTEMPS === 0) {
       this.setState({
-        message: 'Sync taking longer than usual',
-        oldDeviceName: 'Would you like to continue waiting?',
+        message: messages.keepWaiting.title,
+        oldDeviceName: messages.keepWaiting.message,
         showContinueWaitingButton: true
       });
     } else {
@@ -176,7 +179,7 @@ class LoadingWrapper extends Component {
     clearTimeout(this.dataStatusTimeout);
     this.setState(
       {
-        message: 'Waiting for mailbox',
+        message: messages.waitingForMailbox,
         oldDeviceName: LINK_DEVICE_EMAIL_ADDRESS,
         showContinueWaitingButton: false
       },
@@ -191,7 +194,7 @@ class LoadingWrapper extends Component {
     clearTimeout(this.dataStatusTimeout);
     this.setState(
       {
-        message: 'Downloading mailbox',
+        message: messages.downloadingMailbox,
         pauseAt: 70,
         delay: (70 - this.state.percent) / ANIMATION_DURATION,
         lastStep: STEPS.WAIT_MAILBOX
@@ -207,7 +210,7 @@ class LoadingWrapper extends Component {
 
         this.setState(
           {
-            message: 'Decrypting mailbox',
+            message: messages.decryptingMailbox,
             pauseAt: 90,
             delay: (90 - this.state.percent) / ANIMATION_DURATION,
             lastStep: STEPS.DOWNLOAD_MAILBOX
@@ -226,7 +229,7 @@ class LoadingWrapper extends Component {
 
             this.setState(
               {
-                message: 'Sync complete',
+                message: messages.syncComplete,
                 pauseAt: 100,
                 delay: (100 - this.state.percent) / ANIMATION_DURATION,
                 lastStep: STEPS.PROCESS_MAILBOX
