@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { deviceTypes } from './../utils/const';
 import PopupHOC from './PopupHOC';
 import RemoveDevicePopupWrapper from './RemoveDevicePopupWrapper';
+import string from './../lang';
 import './settingdevices.scss';
 
 const Removedevicepopup = PopupHOC(RemoveDevicePopupWrapper);
@@ -15,7 +16,7 @@ const renderDevicesBlock = props => (
   <div className="section-block">
     {!props.isHiddenRemoveDevicePopup && renderRemoveDevicePopup(props)}
     <div className="section-block-title">
-      <h1>Linked Devices</h1>
+      <h1>{string.settings.linked_devices}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item content-linked-devices">
@@ -45,7 +46,7 @@ const renderTrustedDevice = (index, deviceData, props) => (
     <div className="device-name">{deviceData.name}</div>
     {deviceData.isCurrentDevice && (
       <div className="device-status">
-        <span className="current-device">Current device</span>
+        <span className="current-device">{string.settings.current_device}</span>
       </div>
     )}
     {deviceData.lastConnection.time &&
@@ -59,7 +60,7 @@ const renderTrustedDevice = (index, deviceData, props) => (
         className="device-action"
         onClick={() => props.onClickRemoveDevice(deviceData.deviceId)}
       >
-        Remove
+        {string.settings.remove}
       </div>
     )}
   </div>
@@ -80,7 +81,7 @@ const renderLastConnection = lastConnection => {
   const { time } = lastConnection;
   return time ? (
     <div className="device-connection-data">
-      <span>Last activity:</span>
+      <span>{`${string.settings.last_activity}:`}</span>
       <span>{lastConnection.time}</span>
     </div>
   ) : null;

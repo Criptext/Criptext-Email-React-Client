@@ -31,9 +31,6 @@ const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   'To enable Two-Factor Authentication you must set and verify a recovery email';
 const TWO_FACTOR_ENABLED_TEXT = string.settings.on;
 const TWO_FACTOR_DISABLED_TEXT = string.settings.off;
-const READ_RECEIPTS_LABEL_TEXT =
-  "If you turn off read receipts, you won't be able to see " +
-  'read receipts from other people';
 
 const SettingGeneral = props => (
   <div id="setting-general">
@@ -185,13 +182,13 @@ const PasswordBlock = props => (
 const LogoutAccountBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Logout Account</h1>
+      <h1>{string.settings.logout_account}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
         <div className="logout-button" onClick={() => props.onClickLogout()}>
           <i className="icon-log-out" />
-          <span>Logout</span>
+          <span>{string.settings.logout}</span>
         </div>
       </div>
     </div>
@@ -329,7 +326,11 @@ const ShowEmailPreviewBlock = props => (
             />
           </div>
           <div className="email-preview-switch-label">
-            <span>{props.emailPreviewEnabled ? 'On' : 'Off'}</span>
+            <span>
+              {props.emailPreviewEnabled
+                ? string.settings.on
+                : string.settings.off}
+            </span>
           </div>
         </div>
       </div>
@@ -358,7 +359,7 @@ const ReadReceiptsBlock = props => (
             {props.readReceiptsLabelisLoading ? (
               <ReadReceiptsLoadingLabel />
             ) : (
-              <span>{READ_RECEIPTS_LABEL_TEXT}</span>
+              <span>{string.settings.read_receipts_description}</span>
             )}
           </div>
         </div>
@@ -408,12 +409,12 @@ const RecoveryEmailConfirmationMessage = ({ recoveryEmailConfirmed }) => {
   return recoveryEmailConfirmed ? (
     <div className="recovery-email-confirmation-section recovery-email-confirmed">
       <i className="icon-correct" />
-      <span className="text">Verified</span>
+      <span className="text">{string.settings.verified}</span>
     </div>
   ) : (
     <div className="recovery-email-confirmation-section recovery-email-not-confirmed">
       <i className="icon-incorret" />
-      <span className="text">Not verified</span>
+      <span className="text">{string.settings.not_verified}</span>
     </div>
   );
 };
@@ -421,33 +422,33 @@ const RecoveryEmailConfirmationMessage = ({ recoveryEmailConfirmed }) => {
 const UsefulLinksBlock = () => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Useful Links</h1>
+      <h1>{string.settings.üseful_links}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
         <a className="useful-link" href={usefulLinks.FAQ} target="_blank">
-          FAQ
+          {string.settings.faq}
         </a>
         <a
           className="useful-link"
           href={usefulLinks.PRIVACY_POLICY}
           target="_blank"
         >
-          Privacy Policy
+          {string.settings.privacy_policy}
         </a>
         <a
           className="useful-link"
           href={usefulLinks.TERMS_OF_SERVICE}
           target="_blank"
         >
-          Terms of service
+          {string.settings.terms_of_service}
         </a>
         <a
           className="useful-link"
           href={usefulLinks.CRIPTEXT_LIBRARIES}
           target="_blank"
         >
-          Criptext Libraries
+          {string.settings.criptext_libraries}
         </a>
       </div>
     </div>

@@ -20,17 +20,27 @@ import { logoutApp, openFilledComposerWindow } from './../utils/ipc';
 import { appDomain, composerEvents } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
 import { formContactSupportEmailContent } from '../utils/EmailUtils';
+import { toLowerCaseWithoutSpaces } from '../utils/StringUtils';
 import { clearStorage } from '../utils/storage';
 import {
   sendResetPasswordSendLinkSuccessMessage,
   sendResetPasswordSendLinkErrorMessage
 } from '../utils/electronEventInterface';
+import string from './../lang';
 
 const defineSystemLabels = labelsArray => {
-  return labelsArray.filter(label => {
-    const isStarred = label.id === LabelType.starred.id;
-    return isStarred;
-  });
+  return labelsArray
+    .filter(label => {
+      const isStarred = label.id === LabelType.starred.id;
+      return isStarred;
+    })
+    .map(label => {
+      const text =
+        label.type === 'system'
+          ? string.labelsItems[toLowerCaseWithoutSpaces(label.text)]
+          : label.text;
+      return { id: label.id, text, visible: label.visible };
+    });
 };
 
 const defineCustomLabels = labelsArray => {
