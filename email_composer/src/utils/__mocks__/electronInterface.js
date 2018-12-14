@@ -53,3 +53,9 @@ export const composerEvents = {
   REPLY_ALL: 'reply-all',
   FORWARD: 'forward'
 };
+
+export const mySettings = {
+  language: 'en',
+  opened: 1,
+  theme: 'light'
+};

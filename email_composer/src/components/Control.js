@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './control.scss';
 
 const Control = props => (
@@ -51,7 +52,7 @@ const Control = props => (
 const renderSendNormalButton = () => (
   <div>
     <i className="icon-sent" />
-    <span>send</span>
+    <span>{string.sendButtonLabel}</span>
   </div>
 );
 

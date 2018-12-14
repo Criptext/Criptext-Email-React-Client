@@ -25,7 +25,7 @@
       display: flex;
       height: 100%;
       width: 100%;
-      padding: 0px 34px 0px 35px;
+      padding: 0px 34px 0px 40px;
 
       .content {
         display: flex;
@@ -63,7 +63,7 @@
         .non-criptext-description {
           font-size: 11px;
           color: #8d8d8d;
-          margin-bottom: 15px;
+          margin-top: 5px;
         }
 
         .non-criptext-form {
@@ -78,7 +78,7 @@
             border: none;
             border-bottom: 1px solid #d4d4d4;
             font-size: 13px;
-            margin-top: 17%;
+            margin-top: 16%;
             &:focus {
               outline: none;
               border-bottom: 1px solid #0091ff;
@@ -114,13 +114,15 @@
           color: #000000;
           font-size: 12px;
           margin-top: 20px;
-          margin-bottom: 17px;
+          margin-bottom: 25px;
         }
 
         .non-criptext-buttons {
           display: flex;
           flex-direction: row-reverse;
           margin-bottom: auto;
+          position: relative;
+          bottom: 0%;
 
           button {
             width: 70px;

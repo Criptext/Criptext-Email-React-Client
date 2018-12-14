@@ -16,6 +16,7 @@
     "react": "^16.2.0",
     "react-autosuggest": "^9.3.4",
     "react-dom": "^16.2.0",
+    "react-localization": "^1.0.13",
     "react-switch": "^3.0.4",
     "react-tagsinput": "^3.19.0",
     "react-trumbowyg": "^1.1.0"
