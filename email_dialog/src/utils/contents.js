@@ -1,29 +1,34 @@
 import React from 'react';
+import string from './../lang';
+
+const {
+  messagelostAllDevices,
+  messageEmptyRecoveryEmail,
+  messageForgotSentLink,
+  messageForgotEmptyEmail,
+  messagePermanentDeleteThread
+} = string;
 
 export const LostAllDevices = () => (
   <div className="message-lost-all-devices">
-    <p>
-      You can also login using your password, however you won&#39;t have access
-      to any email history that&#39;s stored on your verified devices.
-    </p>
+    <p>{messagelostAllDevices}</p>
   </div>
 );
 
 export const EmptyRecoveryEmail = () => {
+  const { preffix, strong, suffix } = messageEmptyRecoveryEmail;
   return (
     <div className="message-empty-recovery-email">
       <p>
-        You did not set a <strong>Recovery Email</strong> so account recovery is
-        impossible if you forget your password.
+        {preffix} <strong>{strong}</strong> {suffix}
       </p>
     </div>
   );
 };
 
 export const ForgotPasswordSentLink = customText => {
-  const content =
-    customText ||
-    `A reset link was sent to your Recovery email\nThe link will be valid for 30 min`;
+  const { defaultText } = messageForgotSentLink;
+  const content = customText || defaultText;
   return (
     <div className="message-forgot-sent-link">
       <p>{content}</p>
@@ -33,18 +38,13 @@ export const ForgotPasswordSentLink = customText => {
 
 export const ForgotPasswordEmptyEmail = customText => (
   <div className="message-forgot-empty-email">
-    <p>
-      {customText || `You need to set a Recovery Email to reset your password`}
-    </p>
+    <p>{customText || messageForgotEmptyEmail.defaultText}</p>
   </div>
 );
 
 export const PermanentDeleteThread = () => (
   <div className="message-permanent-delete-thread">
-    <p>
-      This elements will be permanently deleted and you will not be able to
-      recover them.
-    </p>
-    <p>Are you sure?</p>
+    <p>{messagePermanentDeleteThread.text}</p>
+    <p>{messagePermanentDeleteThread.question}</p>
   </div>
 );

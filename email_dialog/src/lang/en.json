@@ -1,0 +1,18 @@
+{
+  "messagelostAllDevices": "You can also login using your password, however you won't have access \nto any email history that's stored on your verified devices",
+  "messageEmptyRecoveryEmail": {
+    "preffix": "You did not set a",
+    "strong": "Recovery Email",
+    "suffix": "so account recovery is\nimpossible if you forget your password"
+  },
+  "messageForgotSentLink": {
+    "defaultText": "A reset link was sent to your Recovery email. \nThe link will be valid for 30 min"
+  },
+  "messageForgotEmptyEmail": {
+    "defaultText": "You need to set a Recovery Email to reset your password"
+  },
+  "messagePermanentDeleteThread": {
+    "text": "This elements will be permanently deleted and you will not be able to recover them.",
+    "question": "Are you sure?"
+  }
+}
