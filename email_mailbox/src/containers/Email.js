@@ -186,7 +186,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onDeletePermanently: ev => {
       ev.stopPropagation();
-      const CONFIRM_RESPONSE = 'Confirm';
+      const CONFIRM_RESPONSE =
+        window.navigator.language.indexOf('es') > -1 ? 'Confirmar' : 'Confirm';
       confirmPermanentDeleteThread(response => {
         closeDialogWindow();
         if (response === CONFIRM_RESPONSE) {

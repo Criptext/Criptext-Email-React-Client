@@ -26,6 +26,9 @@ import { validateUsername } from './../validators/validators';
 import { DEVICE_TYPE } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
+import string from './../lang';
+
+const { login } = string;
 
 const mode = {
   SIGNUP: 'SIGNUP',
@@ -36,10 +39,10 @@ const mode = {
 };
 
 const errorMessages = {
-  USERNAME_NOT_EXISTS: "Username doesn't exist",
-  USERNAME_INVALID: 'Invalid username',
-  STATUS_UNKNOWN: 'Unknown status code: ',
-  USERNAME_NOT_AVAILABLE: 'Username not available'
+  USERNAME_NOT_EXISTS: login.errorMessages.usernameNotExits,
+  USERNAME_INVALID: login.errorMessages.usernameInvalid,
+  STATUS_UNKNOWN: login.errorMessages.statusUnknown,
+  USERNAME_NOT_AVAILABLE: login.errorMessages.usernameNotAvailable
 };
 
 const LINK_STATUS_RETRIES = 12;
@@ -311,7 +314,7 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     confirmLostDevices(response => {
       closeDialogWindow();
-      if (response === 'Continue') {
+      if (response === 'Continue' || response === 'Continuar') {
         socketClient.disconnect();
         this.goToPasswordLogin();
       } else {

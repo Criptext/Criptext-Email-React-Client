@@ -1,8 +1,13 @@
 import { toBeConfirmed, optionallyEmpty } from './SignUpSymbols';
+import string from './../lang';
+
+const { form, errorMessages } = string.signUp;
+const { placeholders } = form;
+
 export const formItems = [
   {
     name: 'username',
-    placeholder: 'Username',
+    placeholder: placeholders.username,
     type: 'text',
     label: {
       text: '@criptext.com',
@@ -10,13 +15,13 @@ export const formItems = [
     },
     icon: '',
     icon2: '',
-    errorMessage: 'Username not available',
+    errorMessage: errorMessages.USERNAME_EXISTS,
     value: '',
     optional: false
   },
   {
     name: 'fullname',
-    placeholder: 'Full name',
+    placeholder: placeholders.fullName,
     type: 'text',
     label: {
       text: '',
@@ -24,13 +29,13 @@ export const formItems = [
     },
     icon: '',
     icon2: '',
-    errorMessage: '',
+    errorMessage: errorMessages.FULLNAME_INVALID,
     value: '',
     optional: false
   },
   {
     name: 'password',
-    placeholder: 'Password',
+    placeholder: placeholders.password,
     type: 'password',
     label: {
       text: '',
@@ -38,13 +43,13 @@ export const formItems = [
     },
     icon: 'icon-not-show',
     icon2: 'icon-show',
-    errorMessage: '',
+    errorMessage: errorMessages.PASSWORD_INVALID,
     value: '',
     optional: false
   },
   {
     name: 'confirmpassword',
-    placeholder: 'Confirm password',
+    placeholder: placeholders.confirmPassword,
     type: 'password',
     label: {
       text: '',
@@ -52,13 +57,13 @@ export const formItems = [
     },
     icon: 'icon-not-show',
     icon2: 'icon-show',
-    errorMessage: 'Passwords do not match',
+    errorMessage: errorMessages.PASSWORD_NOMATCH,
     value: '',
     optional: false
   },
   {
     name: 'recoveryemail',
-    placeholder: 'Recovery email address (optional)',
+    placeholder: placeholders.recoveryEmail,
     type: 'text',
     label: {
       text: '',
@@ -66,7 +71,7 @@ export const formItems = [
     },
     icon: '',
     icon2: '',
-    errorMessage: 'Email invalid',
+    errorMessage: errorMessages.EMAIL_INVALID,
     value: '',
     optional: true
   },
@@ -75,8 +80,8 @@ export const formItems = [
     placeholder: '',
     type: 'checkbox',
     label: {
-      text: 'I have read and agree with the ',
-      strong: 'Terms and Conditions'
+      text: placeholders.checkbox.prefix,
+      strong: placeholders.checkbox.suffix
     },
     icon: '',
     icon2: '',

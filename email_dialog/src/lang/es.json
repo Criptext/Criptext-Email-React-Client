@@ -1,18 +1,18 @@
 {
-  "messagelostAllDevices": "You can also login using your password, however you won't have access \nto any email history that's stored on your verified devices",
+  "messagelostAllDevices": "También puedes ingresar usando tu contraseña, de ser así no tendrás acceso \nal historial de tus correos que estan almancenados en tus dispositivos verificados",
   "messageEmptyRecoveryEmail": {
-    "preffix": "You did not set a",
-    "strong": "Recovery Email",
-    "suffix": "so account recovery is\nimpossible if you forget your password"
+    "preffix": "No has configurado un",
+    "strong": "Correo de Recuperación",
+    "suffix": "por lo cual es\nimposible recuperar tu cuenta si olvidas tu contraseña"
   },
   "messageForgotSentLink": {
-    "defaultText": "A reset link was sent to your Recovery email. \nThe link will be valid for 30 min"
+    "defaultText": "Un enlace para restablecer tu contraseña fue enviado a tu Correo de verificación. \nEl enlace será válido por 30 minutos"
   },
   "messageForgotEmptyEmail": {
-    "defaultText": "You need to set a Recovery Email to reset your password"
+    "defaultText": "Necesitas configurar un Correo de recuperación para restablecer tu contraseña"
   },
   "messagePermanentDeleteThread": {
-    "text": "This elements will be permanently deleted and you will not be able to recover them.",
-    "question": "Are you sure?"
+    "text": "Estos elementos serán eliminados permanentemente y no será posible recuperarlos.",
+    "question": "¿Estás seguro?"
   }
 }

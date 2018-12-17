@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './devicenotapproved.scss';
+
+const { deviceNotApproved } = string;
 
 const DeviceNotApproved = props => (
   <div className="device-not-approved-container">
@@ -23,24 +26,22 @@ const renderHeader = props => (
 const renderContent = props => (
   <div className="device-not-approved-content">
     <div className="content-header">
-      <h4>Sign In Rejected</h4>
+      <h4>{deviceNotApproved.title}</h4>
     </div>
     <div className="content-message">
-      <p>
-        Your request to access this account was rejected by a verified device.
-      </p>
+      <p>{deviceNotApproved.message}</p>
       <div className="content-icon">
         <div className="icon-warning" />
       </div>
       <p>
-        <strong>Warning: </strong> Multiple rejections could lead your device to
-        be blacklisted from Criptext.
+        <strong>{deviceNotApproved.warning.strong} </strong>{' '}
+        {deviceNotApproved.warning.text}
       </p>
     </div>
     {!props.hasTwoFactorAuth && (
       <div className="cant-access">
-        <span onClick={ev => props.onClickSignInWithPassword(ev)}>
-          Sign In with password
+        <span onClick={props.onClickSignInWithPassword}>
+          {deviceNotApproved.passwordLoginLabel}
         </span>
       </div>
     )}

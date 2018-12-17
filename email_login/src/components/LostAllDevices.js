@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './lostAllDevices.scss';
 import { appDomain } from '../utils/const';
+import string from './../lang';
+import './lostAllDevices.scss';
+
+const { passwordLogin } = string;
 
 const LostAllDevices = props => (
   <div className="lost">
@@ -14,10 +17,7 @@ const LostAllDevices = props => (
 const renderHeader = props => (
   <div className="header">
     <div className="button-section">
-      <button
-        className="back-button"
-        onClick={ev => props.toggleLostAllDevices(ev)}
-      >
+      <button className="back-button" onClick={props.toggleLostAllDevices}>
         <i className="icon-back" />
       </button>
     </div>
@@ -34,9 +34,9 @@ const renderSubHeader = props => (
     </div>
     <div className="sub-text">
       {props.hasTwoFactorAuth ? (
-        <p>Two-Factor Authentication</p>
+        <p>{passwordLogin.sectionTitleTwoFactorAuth}</p>
       ) : (
-        <p>Log In</p>
+        <p>{passwordLogin.sectionTitleSignIn}</p>
       )}
       <p>{`${props.values.username}@${appDomain}`}</p>
     </div>
@@ -50,17 +50,14 @@ const renderForm = props => (
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder={passwordLogin.form.passwordInputPlaceholder}
           value={props.values.password}
           onChange={props.onChangeField}
           disabled={props.isLoading}
           autoFocus={true}
         />
-        <span
-          className="forgot-password"
-          onClick={ev => props.handleForgot(ev)}
-        >
-          Forgot?
+        <span className="forgot-password" onClick={props.handleForgot}>
+          {passwordLogin.form.forgotLabel}
         </span>
       </div>
       <div className="button">
@@ -68,7 +65,7 @@ const renderForm = props => (
           className={`button-lost ${
             props.isLoading ? 'button-is-loading' : ''
           }`}
-          onClick={ev => props.onCLickSignInWithPassword(ev)}
+          onClick={props.onCLickSignInWithPassword}
           disabled={props.disabled}
         >
           {props.isLoading ? renderLoadingContent() : renderBaseContent(props)}
@@ -80,9 +77,9 @@ const renderForm = props => (
 
 const renderBaseContent = props => {
   return props.hasTwoFactorAuth ? (
-    <span className="button-text">Next</span>
+    <span className="button-text">{passwordLogin.buttons.nextLabel}</span>
   ) : (
-    <span className="button-text">Confirm</span>
+    <span className="button-text">{passwordLogin.buttons.confirmLabel}</span>
   );
 };
 

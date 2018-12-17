@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import FormItem from './FormItem';
+import string from './../lang';
 import './signup.scss';
 
 const SignUp = props =>
@@ -18,7 +19,7 @@ const SignUp = props =>
 const Header = props => (
   <div className="header">
     <div className="button-section">
-      <button className="back-button" onClick={ev => props.toggleSignUp(ev)}>
+      <button className="back-button" onClick={props.toggleSignUp}>
         <i className="icon-back" />
       </button>
     </div>
@@ -31,8 +32,8 @@ const Header = props => (
 const Form = props => (
   <div className="form">
     <div className="form-header">
-      <p>Sign Up</p>
-      <p>Create your Criptext account</p>
+      <p>{string.signUp.header}</p>
+      <p>{string.signUp.subheader}</p>
     </div>
     <div className="signup-form">
       <form autoComplete="off">
@@ -52,10 +53,10 @@ const Form = props => (
         <div className="button">
           <button
             className="create-button"
-            onClick={ev => props.onClickSignUp(ev)}
+            onClick={props.onClickSignUp}
             disabled={props.disabled}
           >
-            <span>Create account</span>
+            <span>{string.signUp.buttons.createAccount}</span>
           </button>
         </div>
       </form>

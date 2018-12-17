@@ -18,6 +18,8 @@ const globalManager = remote.require('./src/globalManager');
 webFrame.setVisualZoomLevelLimits(1, 1);
 webFrame.setLayoutZoomLevelLimits(0, 0);
 
+const isSpanish = window.navigator.language.indexOf('es') > -1;
+
 export const createTemporalAccount = accountData => {
   return globalManager.temporalAccount.set(accountData);
 };
@@ -35,11 +37,11 @@ export const confirmWaitingApprovalLogin = callback => {
   const RESPONSES = {
     CANCEL: {
       index: 0,
-      label: 'Cancel'
+      label: isSpanish ? 'Cancelar' : 'Cancel'
     },
     KEEP: {
       index: 1,
-      label: 'Keep waiting'
+      label: isSpanish ? 'Seguir esperando' : 'Keep waiting'
     }
   };
   const dialogResponses = Object.values(RESPONSES).map(
@@ -47,12 +49,16 @@ export const confirmWaitingApprovalLogin = callback => {
   );
   const dialogTemplate = {
     type: 'warning',
-    title: "Well, that's odd...",
+    title: isSpanish ? 'Esto es extraño' : "Well, that's odd...",
     buttons: dialogResponses,
     defaultId: RESPONSES.KEEP.index,
     cancelId: RESPONSES.CANCEL.index,
-    message: 'Something has happened that is delaying this process.',
-    detail: 'Do you want to continue waiting?',
+    message: isSpanish
+      ? 'Sucedió algo que está demorando este proceso'
+      : 'Something has happened that is delaying this process.',
+    detail: isSpanish
+      ? '¿Deseas seguir esperando?'
+      : 'Do you want to continue waiting?',
     noLink: true
   };
   dialog.showMessageBox(dialogTemplate, responseIndex => {
@@ -69,11 +75,11 @@ export const closeLoading = () => {
 
 export const confirmEmptyEmail = callback => {
   const dialogData = {
-    title: 'Warning!',
+    title: isSpanish ? 'Advertencia' : 'Warning!',
     contentType: 'EMPTY_RECOVERY_EMAIL',
     options: {
-      cancelLabel: 'Cancel',
-      acceptLabel: 'Confirm'
+      cancelLabel: isSpanish ? 'Cancelar' : 'Cancel',
+      acceptLabel: isSpanish ? 'Confirmar' : 'Confirm'
     },
     sendTo: 'login'
   };
@@ -85,11 +91,11 @@ export const confirmEmptyEmail = callback => {
 
 export const confirmLostDevices = callback => {
   const dialogData = {
-    title: 'Password Login',
+    title: isSpanish ? 'Ingreso con contraseña' : 'Password Login',
     contentType: 'LOST_ALL_DEVICES',
     options: {
-      cancelLabel: 'Close',
-      acceptLabel: 'Continue'
+      cancelLabel: isSpanish ? 'Cerrar' : 'Close',
+      acceptLabel: isSpanish ? 'Continuar' : 'Continue'
     },
     sendTo: 'login'
   };
@@ -101,12 +107,12 @@ export const confirmLostDevices = callback => {
 
 export const confirmForgotPasswordEmptyEmail = (customText, callback) => {
   const dialogData = {
-    title: 'Alert!',
+    title: isSpanish ? 'Avertencia' : 'Alert!',
     contentType: 'FORGOT_PASSWORD_EMPTY_EMAIL',
     customTextToReplace: customText,
     options: {
-      cancelLabel: 'Cancel',
-      acceptLabel: 'Ok'
+      cancelLabel: isSpanish ? 'Cancelar' : 'Cancel',
+      acceptLabel: isSpanish ? 'Entendido' : 'Ok'
     },
     sendTo: 'login'
   };
@@ -118,11 +124,11 @@ export const confirmForgotPasswordEmptyEmail = (customText, callback) => {
 
 export const confirmForgotPasswordSentLink = (customText, callback) => {
   const dialogData = {
-    title: 'Forgot Password',
+    title: isSpanish ? 'Olvido de contraeña' : 'Forgot Password',
     contentType: 'FORGOT_PASSWORD_SEND_LINK',
     customTextToReplace: customText,
     options: {
-      acceptLabel: 'Ok'
+      acceptLabel: isSpanish ? 'Entendido' : 'Ok'
     },
     sendTo: 'login'
   };

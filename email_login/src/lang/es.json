@@ -1,0 +1,83 @@
+{
+  "continueLogin": {
+    "title": "Ingresar",
+    "message": "Verifica y aprueba el ingreso en alguno de tus dispositivos para continuar",
+    "getPromptLabel": "¿No obtienes la confirmación?",
+    "passwordLoginLabel": "Ingreso con contraseña",
+    "buttons": {
+      "sending": "Enviando...",
+      "resend": "Reenviar"
+    }
+  },
+  "deviceNotApproved": {
+    "title": "Ingreso rechazado",
+    "message": "Tu solicitud para acceder a esta cuenta fue rechazada por un dispositivo verificado.",
+    "warning": {
+      "strong": "Advertencia:",
+      "text": "Multiples rechazos podría provocar que el dispositivo sea baneado de Criptext."
+    },
+    "passwordLoginLabel": "Ingresar con contraseña"
+  },
+  "login": {
+    "header": "Bienvenido a Criptext!",
+    "usernameInputPlaceholder": "Usuario",
+    "signInButtonLabel": "Ingresar",
+    "signUpMessage": {
+      "text": "¿No estás registrado?",
+      "strong": "Crear cuenta"
+    },
+    "errorMessages": {
+      "usernameNotExits": "Usuario no existe",
+      "usernameInvalid": "Usuario no valido",
+      "statusUnknown": "Error desconocido. Código: ",
+      "usernameNotAvailable": "Usuario no disponible"
+    }
+  },
+  "passwordLogin": {
+    "sectionTitleSignIn": "Ingresar",
+    "sectionTitleTwoFactorAuth": "Verificación en dos pasos",
+    "form": {
+      "passwordInputPlaceholder": "Contraseña",
+      "forgotLabel": "¿Olvido?"
+    },
+    "buttons": {
+      "nextLabel": "Siguiente",
+      "confirmLabel": "Confirmar"
+    },
+    "forgotPasswordMessage": {
+      "prefix": "Un enlace para reiniciar la contraseña fue enviado a",
+      "suffix": "El enlace será válido durante 30 minutos",
+      "error": "Falló al enviar el enlace para reiniciar. Intente de nuevo"
+    }
+  },
+  "signUp": {
+    "header": "Crear cuenta",
+    "subheader": "Crea tu cuenta de Criptext",
+    "buttons": {
+      "createAccount": "Crear cuenta"
+    },
+    "errorMessages": {
+      "USERNAME_INVALID": "Usuario no válido",
+      "USERNAME_EXISTS": "Usuario no disponible",
+      "USERNAME_UNCERTAIN": "Falló al comprobar el usuario",
+      "STATUS_UNKNOWN": "Error desconocido. Código: ",
+      "FULLNAME_INVALID": "Nombre no válido",
+      "PASSWORD_INVALID": "Contraseña no válida",
+      "PASSWORD_NOMATCH": "las contraseñas no coinciden",
+      "EMAIL_INVALID": "Dirección de correo no válida"
+    },
+    "form": {
+      "placeholders": {
+        "username": "Usuario",
+        "fullName": "Nombre completo",
+        "password": "Contraseña",
+        "confirmPassword": "Confirma la contraseña",
+        "recoveryEmail": "Correo de recuperación (opcional)",
+        "checkbox": {
+          "prefix": "He leído y estoy de acuerdo con los ",
+          "suffix": "Términos y Condiciones"
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './continueLogin.scss';
 import './clockLoading.scss';
+
+const { continueLogin } = string;
 
 const ContinueLogin = props => (
   <div className="continue">
@@ -26,11 +29,10 @@ const renderHeader = props => (
 const renderContent = props => (
   <div className="content">
     <div className="content-header">
-      <p>Sign In</p>
+      <p>{continueLogin.title}</p>
     </div>
     <div className="message">
-      <p>Check and approve on your existing</p>
-      <p>Criptext device to continue.</p>
+      <p>{continueLogin.message}</p>
     </div>
     <div className="loading">
       <div className="icon-clock" />
@@ -48,21 +50,23 @@ const renderContent = props => (
       </div>
     </div>
     <div className="button">
-      <p>Didn&#39;t get the prompt?</p>
+      <p>{continueLogin.getPromptLabel}</p>
       <button
         className="resend-button"
         disabled={props.disabledResendLoginRequest}
         onClick={props.onClickResendLoginRequest}
       >
         <span>
-          {props.disabledResendLoginRequest ? 'Sending...' : 'Resend it '}
+          {props.disabledResendLoginRequest
+            ? continueLogin.buttons.sending
+            : continueLogin.buttons.resend}
         </span>
       </button>
     </div>
     {!props.hasTwoFactorAuth && (
       <div className="cant-access">
-        <span onClick={ev => props.onClickSignInWithPassword(ev)}>
-          Sign In with password
+        <span onClick={props.onClickSignInWithPassword}>
+          {continueLogin.passwordLoginLabel}
         </span>
       </div>
     )}
