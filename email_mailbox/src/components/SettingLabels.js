@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './settinglabel.scss';
 import CustomCheckbox from './CustomCheckbox';
+import string from './../lang';
 
 const SettingLabels = props => (
   <div id="setting-labels">
@@ -14,8 +15,8 @@ const renderSystemLabelsBlock = props => (
   <div className="section-block">
     <div className="section-system-labels">
       <div className="system-labels-list-header">
-        <div className="header-left">System Labels</div>
-        <div className="header-rigth">Show in label list</div>
+        <div className="header-left">{string.settings.system_labels}</div>
+        <div className="header-rigth">{string.settings.show_in_label_list}</div>
       </div>
       <div className="system-labels-list-content">
         {props.systemLabels.map((systemLabel, index) =>
@@ -49,9 +50,11 @@ const renderCustomLabelsBlock = props => (
   <div className="section-block">
     <div className="section-custom-labels">
       <div className="custom-labels-list-header">
-        <div className="header-left">Labels</div>
-        <div className="header-center">Show in label list</div>
-        <div className="header-rigth">Action</div>
+        <div className="header-left">{string.sidebar.labels}</div>
+        <div className="header-center">
+          {string.settings.show_in_label_list}
+        </div>
+        <div className="header-rigth">{string.settings.action}</div>
       </div>
       <div className="custom-labels-list-content">
         {props.customLabels.map((customLabel, index) =>
@@ -79,7 +82,7 @@ const renderCustomLabelItem = (index, customLabelItem, props) => (
       className="custom-label-action"
       onClick={() => props.onClickRemoveLabel(customLabelItem.id)}
     >
-      Remove
+      {string.settings.remove}
     </div>
   </div>
 );
@@ -104,9 +107,9 @@ const renderInputAddNewLabel = props => (
       onClick={e => props.onToggleAddLabelButtonClicked(e)}
     >
       {props.isAddinglabel ? (
-        <span>Cancel</span>
+        <span>{string.settings.cancel}</span>
       ) : (
-        <span>Create new label</span>
+        <span>{string.settings.create_new_label}</span>
       )}
     </div>
   </div>
