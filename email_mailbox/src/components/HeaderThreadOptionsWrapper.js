@@ -8,7 +8,8 @@ import {
 } from '../utils/electronInterface';
 import { closeDialogWindow } from './../utils/ipc';
 
-const CONFIRM_RESPONSE = 'Confirm';
+const CONFIRM_RESPONSE =
+  window.navigator.language.indexOf('es') > -1 ? 'Confirmar' : 'Confirm';
 
 class HeaderThreadOptionsWrapper extends Component {
   constructor() {

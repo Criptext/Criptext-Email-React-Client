@@ -1,0 +1,83 @@
+{
+  "continueLogin": {
+    "title": "Sign In",
+    "message": "Check and approve on your existing Criptext device to continue",
+    "getPromptLabel": "Didn't get the prompt?",
+    "passwordLoginLabel": "Sign In with password",
+    "buttons": {
+      "sending": "Sending...",
+      "resend": "Resend it"
+    }
+  },
+  "deviceNotApproved": {
+    "title": "Sign In Rejected",
+    "message": "Your request to access this account was rejected by a verified device.",
+    "warning": {
+      "strong": "Warning:",
+      "text": "Multiple rejections could lead your device to be blacklisted from Criptext."
+    },
+    "passwordLoginLabel": "Sign In with password"
+  },
+  "login": {
+    "header": "Welcome to Criptext!",
+    "usernameInputPlaceholder": "Username",
+    "signInButtonLabel": "Sign In",
+    "signUpMessage": {
+      "text": "Not registered?",
+      "strong": "Sign up"
+    },
+    "errorMessages": {
+      "usernameNotExits": "Username doesn't exist",
+      "usernameInvalid": "Invalid username",
+      "statusUnknown": "Unknown status code: ",
+      "usernameNotAvailable": "Username not available"
+    }
+  },
+  "passwordLogin": {
+    "sectionTitleSignIn": "Sign In",
+    "sectionTitleTwoFactorAuth": "Two-Factor Authentication",
+    "form": {
+      "passwordInputPlaceholder": "Password",
+      "forgotLabel": "Forgot?"
+    },
+    "buttons": {
+      "nextLabel": "Next",
+      "confirmLabel": "Confirm"
+    },
+    "forgotPasswordMessage": {
+      "prefix": "A reset link was sent to",
+      "suffix": "The link will be valid for 30 minutes",
+      "error": "Failed to send the Reset password link. Try again"
+    }
+  },
+  "signUp": {
+    "header": "Sign Up",
+    "subheader": "Create your Criptext account",
+    "buttons": {
+      "createAccount": "Create account"
+    },
+    "errorMessages": {
+      "USERNAME_INVALID": "Invalid username",
+      "USERNAME_EXISTS": "Username not available",
+      "USERNAME_UNCERTAIN": "Failed to check username",
+      "STATUS_UNKNOWN": "Unknown status code: ",
+      "FULLNAME_INVALID": "Invalid name",
+      "PASSWORD_INVALID": "Invalid password",
+      "PASSWORD_NOMATCH": "Passwords do not match",
+      "EMAIL_INVALID": "Invalid email address"
+    },
+    "form": {
+      "placeholders": {
+        "username": "Username",
+        "fullName": "Full name",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "recoveryEmail": "Recovery email address (optional)",
+        "checkbox": {
+          "prefix": "I have read and agree with the ",
+          "suffix": "Terms and Conditions"
+        }
+      }
+    }
+  }
+}

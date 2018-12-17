@@ -1,10 +1,11 @@
 import React from 'react';
-import {
-  closeLoginWindow,
-  isWindows,
-  minimizeLoginWindow
-} from './../utils/ipc';
+import { closeLoginWindow, minimizeLoginWindow } from './../utils/ipc';
 import './titleBar.scss';
+
+const isWindows = () => {
+  const platform = window.navigator.platform;
+  return platform.indexOf('Win') > -1;
+};
 
 const titleBar = () => (
   <div

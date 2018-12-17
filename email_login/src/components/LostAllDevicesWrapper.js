@@ -18,6 +18,9 @@ import {
 import { hashPassword } from '../utils/HashUtils';
 import { censureEmailAddress } from '../utils/StringUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
+import string from './../lang';
+
+const { passwordLogin } = string;
 
 const LOGIN_STATUS = {
   SUCCESS: 200,
@@ -142,8 +145,7 @@ class LostDevicesWrapper extends Component {
       default: {
         this.throwLoginError({
           name: errors.login.FAILED.name,
-          description:
-            errors.login.FAILED.description + `${status || 'Unknown'}`
+          description: errors.login.FAILED.description + status
         });
         break;
       }
@@ -173,12 +175,11 @@ class LostDevicesWrapper extends Component {
 
   getForgotPasswordMessage = (status, text) => {
     if (status === 200) {
+      const { prefix, suffix } = passwordLogin.forgotPasswordMessage;
       const { address } = JSON.parse(text);
-      return `A reset link was sent to ${censureEmailAddress(
-        address
-      )}\nThe link will be valid for 30 minutes`;
+      return `${prefix} ${censureEmailAddress(address)}\n${suffix}`;
     }
-    return text;
+    return passwordLogin.forgotPasswordMessage.error;
   };
 
   throwLoginError = error => {

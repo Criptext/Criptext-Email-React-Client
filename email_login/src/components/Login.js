@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { appDomain } from './../utils/const';
+import string from './../lang';
 import './login.scss';
+
+const { login } = string;
 
 const Login = props => renderLogin(props);
 
@@ -19,7 +22,7 @@ const renderHeader = () => (
       <div className="icon" />
     </div>
     <div className="text">
-      <span>Welcome to Criptext!</span>
+      <span>{login.header}</span>
     </div>
   </div>
 );
@@ -31,7 +34,7 @@ const renderForm = props => (
         <input
           type="text"
           name="username"
-          placeholder="Username"
+          placeholder={login.usernameInputPlaceholder}
           value={props.value}
           onChange={props.onChangeField}
           autoFocus={true}
@@ -43,10 +46,10 @@ const renderForm = props => (
       <div className="button">
         <button
           className="button-login"
-          onClick={ev => props.onClickSignIn(ev)}
+          onClick={props.onClickSignIn}
           disabled={props.disabledLoginButton}
         >
-          <span>Sign In</span>
+          <span>{login.signInButtonLabel}</span>
         </button>
       </div>
     </form>
@@ -57,8 +60,10 @@ const renderFooter = props => (
   <div className="footer">
     <div className="signup-message">
       <span>
-        Not registered? &nbsp;
-        <strong onClick={ev => props.toggleSignUp(ev)}>Sign up</strong>
+        {login.signUpMessage.text} &nbsp;
+        <strong onClick={props.toggleSignUp}>
+          {login.signUpMessage.strong}
+        </strong>
       </span>
     </div>
   </div>

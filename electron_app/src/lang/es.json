@@ -155,53 +155,53 @@
   },
   "windows": {
     "composer": {
-      "windowTitle": "New Secure Message",
+      "windowTitle": "Nuevo mensaje seguro",
       "closeWarning" : {
-        "title": "Warning",
-        "message": "You are closing a message that has not been sent",
-        "detail": "To save the message, click on 'Save as Draft'. The message will be saved on your Drafts folder",
+        "title": "Advertencia",
+        "message": "Estás cerrando un mensaje que no ha sido enviado",
+        "detail": "Para guardar el mensaje, selecciona 'Guardar como borrador'. El mensaje será guardado en tu carpeta de Borradores",
         "responses": {
-          "discard": "Discard changes",
-          "continue": "Continue writing",
-          "save": "Save as Draft"
+          "discard": "Descartar cambios",
+          "continue": "Continuar escribiendo",
+          "save": "Guardar como borrador"
         }
       }
     },
     "menu": {
       "template": {
-        "file": "File",
-        "newEmail": "New email",
+        "file": "Archivo",
+        "newEmail": "Nuevo correo",
         
-        "edit": "Edit",
-        "undo": "Undo",
-        "redo": "Redo",
-        "cut": "Cut",
-        "copy": "Copy",
-        "paste": "Paste",
-        "selectAll": "Select All",
+        "edit": "Editar",
+        "undo": "Deshacer",
+        "redo": "Rehacer",
+        "cut": "Cortar",
+        "copy": "Copiar",
+        "paste": "Pegar",
+        "selectAll": "Seleccionar todo",
         
-        "window": "Window",
-        "minimize": "Minimize",
-        "close": "Close",
-        "developer": "Developer",
-        "toggleDeveloperTools": "Toggle Developer Tools",
+        "window": "Ventana",
+        "minimize": "Minimizar",
+        "close": "Cerrar",
+        "developer": "Desarrollador",
+        "toggleDeveloperTools": "Mostrar/Ocultar herramientas de desarrollador",
 
-        "aboutCriptext": "About Criptext",
-        "services": "Services",
-        "hideCriptext": "Hide Criptext",
-        "hideOthers": "Hide Others",
-        "showAll": "Show All",
-        "quit": "Quit",
+        "aboutCriptext": "Acerca de Criptext",
+        "services": "Servicios",
+        "hideCriptext": "Ocultar Criptext",
+        "hideOthers": "Ocultar los demás",
+        "showAll": "Mostrar todos",
+        "quit": "Salir",
 
-        "checkForUpdates": "Check for updates",
-        "bringAllToFront": "Bring All to Front",
+        "checkForUpdates": "Comprobar actualizaciones",
+        "bringAllToFront": "Traer todo al frente",
         "criptext": "Criptext"
       },
       "trayIcon": {
         "criptext": "Criptext",
-        "newEmail": "New email",
-        "quit": "Quit",
-        "checkForUpdates": "Check for updates"
+        "newEmail": "Nuevo correo",
+        "quit": "Salir",
+        "checkForUpdates": "Comprobar actualizaciones"
       }
     }
   }

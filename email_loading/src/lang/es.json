@@ -1,51 +1,50 @@
 {
   "linkDeviceRequest": {
-    "header": "Sign In Verification",
-    "text": "Do you want to approve?",
+    "header": "Verificación de Ingreso",
+    "text": "¿Deseas aprobarla?",
     "buttonLabels": {
-      "reject": "Reject",
-      "approve": "Approve"
+      "reject": "Rechazar",
+      "approve": "Aprobar"
     }
   },
   "linkNewDevice": {
-    "header": "Mailbox Sync",
+    "header": "Sincronizando buzón",
     "messages": {
-      "error": "Error syncing your mailbox",
-      "retry": "Retry?",
-      "sendingKeys": "Sending keys",
-      "waitingForMailbox": "Waiting for mailbox",
+      "error": "Falló al sincronizar tu buzón",
+      "retry": "¿Reintentar?",
+      "sendingKeys": "Enviando llaves",
+      "waitingForMailbox": "Esperando buzón",
       "keepWaiting": {
-        "title": "Sync taking longer than usual",
-        "message": "Would you like to continue waiting?"
+        "title": "La sincronización está demorando más de lo usual",
+        "message": "¿Te gustaría seguir esperando?"
       },
-      "downloadingMailbox": "Downloading mailbox",
-      "decryptingMailbox": "Decrypting mailbox",
-      "syncComplete": "Sync complete"
+      "downloadingMailbox": "Descargando buzón",
+      "decryptingMailbox": "Descrifrando buzón",
+      "syncComplete": "Sincronización completa"
     },
-    "cancelSyncLabel": "Cancel sync",
-    "continueLabel": "Continue",
-    "skipStepLabel": "Skip step"
+    "cancelSyncLabel": "Cancelar sincronización",
+    "continueLabel": "Continuar",
+    "skipStepLabel": "Saltar este paso"
   },
-
   "linkOldDevice": {
-    "header": "Mailbox Sync",
+    "header": "Sincronizando buzón",
     "messages": {
-      "error": "Error syncing your mailbox",
-      "retry": "Retry?",
-      "encryptingMailbox": "Encrypting Mailbox",
-      "gettingKeys": "Getting keys",
-      "uploadingMailbox": "Uploading Mailbox",
-      "uploadSuccess": "Mailbox uploaded successfully!"
+      "error": "Falló al sincronizar tu buzón",
+      "retry": "¿Reintentar?",
+      "encryptingMailbox": "Cifrando buzón",
+      "gettingKeys": "Obteniendo llaves",
+      "uploadingMailbox": "Subiendo buzón",
+      "uploadSuccess": "Buzón subido exitosamente"
     },
-    "cancelSyncLabel": "Cancel sync",
-    "continueLabel": "Continue",
-    "skipStepLabel": "Skip step"
+    "cancelSyncLabel": "Cancelar sincronización",
+    "continueLabel": "Continuar",
+    "skipStepLabel": "Saltar este paso"
   },
   "loading": {
     "messages": {
-      "error": "Error generating the keys.",
-      "retry": "Retry",
-      "creatingKeys": "Creating Keys"
+      "error": "Falló al generar las llaves.",
+      "retry": "¿Reintentar?",
+      "creatingKeys": "Creando llaves"
     }
   }
 }
