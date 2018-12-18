@@ -168,7 +168,7 @@ const formEvents = events =>
   events.map(event => ({
     cmd: event.cmd,
     params: JSON.parse(event.params),
-    rowid: event.roowid
+    rowid: event.rowid
   }));
 
 const getKeyBundle = async deviceId => {

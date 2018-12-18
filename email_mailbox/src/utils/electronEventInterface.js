@@ -48,8 +48,7 @@ import {
   appDomain,
   EmailStatus,
   composerEvents,
-  EXTERNAL_RECIPIENT_ID_SERVER,
-  EXTERNAL_DEVICE_ID_SERVER
+  EXTERNAL_RECIPIENT_ID_SERVER
 } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
@@ -266,6 +265,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     metadataKey,
     subject,
     senderDeviceId,
+    deviceId = senderDeviceId,
     threadId,
     to,
     toArray,
@@ -277,9 +277,6 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     external === true
       ? EXTERNAL_RECIPIENT_ID_SERVER
       : getRecipientIdFromEmailAddressTag(from);
-  const deviceId =
-    external === true ? EXTERNAL_DEVICE_ID_SERVER : senderDeviceId;
-
   const [prevEmail] = await getEmailByKey(metadataKey);
   const isSpam = labels
     ? labels.find(label => label === LabelType.spam.text)
