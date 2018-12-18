@@ -1,12 +1,12 @@
 {
   "continueLogin": {
-    "title": "Ingresar",
-    "message": "Verifica y aprueba el ingreso en alguno de tus dispositivos para continuar",
-    "getPromptLabel": "¿No obtienes la confirmación?",
-    "passwordLoginLabel": "Ingreso con contraseña",
+    "title": "Iniciar sesión",
+    "message": "Revisa y aprueba desde un dispositivo\nexistente de Criptext para continuar",
+    "getPromptLabel": "¿No recibiste el aviso?",
+    "passwordLoginLabel": "Acceder con contraseña",
     "buttons": {
       "sending": "Enviando...",
-      "resend": "Reenviar"
+      "resend": "Reenviarlo"
     }
   },
   "deviceNotApproved": {
@@ -16,7 +16,7 @@
       "strong": "Advertencia:",
       "text": "Multiples rechazos podría provocar que el dispositivo sea baneado de Criptext."
     },
-    "passwordLoginLabel": "Ingresar con contraseña"
+    "passwordLoginLabel": "Acceder con contraseña"
   },
   "login": {
     "header": "Bienvenido a Criptext!",
@@ -34,25 +34,25 @@
     }
   },
   "passwordLogin": {
-    "sectionTitleSignIn": "Ingresar",
-    "sectionTitleTwoFactorAuth": "Verificación en dos pasos",
+    "sectionTitleSignIn": "Iniciar sesión",
+    "sectionTitleTwoFactorAuth": "Autenticación en dos pasos",
     "form": {
       "passwordInputPlaceholder": "Contraseña",
-      "forgotLabel": "¿Olvido?"
+      "forgotLabel": "¿Olvidó su contraseña?"
     },
     "buttons": {
       "nextLabel": "Siguiente",
       "confirmLabel": "Confirmar"
     },
     "forgotPasswordMessage": {
-      "prefix": "Un enlace para reiniciar la contraseña fue enviado a",
+      "prefix": "Un enlace para restablecer la contraseña fue enviado a",
       "suffix": "El enlace será válido durante 30 minutos",
-      "error": "Falló al enviar el enlace para reiniciar. Intente de nuevo"
+      "error": "Falló al enviar el enlace para restablecer la contraseña. Intente de nuevo"
     }
   },
   "signUp": {
     "header": "Crear cuenta",
-    "subheader": "Crea tu cuenta de Criptext",
+    "subheader": "Registrate en Criptext",
     "buttons": {
       "createAccount": "Crear cuenta"
     },
@@ -63,7 +63,7 @@
       "STATUS_UNKNOWN": "Error desconocido. Código: ",
       "FULLNAME_INVALID": "Nombre no válido",
       "PASSWORD_INVALID": "Contraseña no válida",
-      "PASSWORD_NOMATCH": "las contraseñas no coinciden",
+      "PASSWORD_NOMATCH": "Las contraseñas no coinciden",
       "EMAIL_INVALID": "Dirección de correo no válida"
     },
     "form": {
@@ -78,6 +78,34 @@
           "suffix": "Términos y Condiciones"
         }
       }
+    }
+  },
+  "dialogContent": {
+    "confirmWaitingApprovalLogin": {
+      "cancelResponse": "Cancelar",
+      "keepResponse": "Seguir esperando",
+      "title": "Bueno, esto es extraño...",
+      "message": "Algo ha sucedido que está retrasando este proceso.",
+      "detail": "¿Quieres seguir esperando?"
+    },
+    "confirmEmptyEmail": {
+      "title": "Advertencia",
+      "cancelLabel": "Cancelar",
+      "acceptLabel": "Confirmar"
+    },
+    "confirmLostDevices": {
+      "title": "Acceder con contraseña",
+      "cancelLabel": "Cancelar",
+      "acceptLabel": "Continuar"
+    },
+    "confirmForgotPasswordEmptyEmail": {
+      "title": "Cuidado!",
+      "cancelLabel": "Cancelar",
+      "acceptLabel": "Entendido"
+    },
+    "confirmForgotPasswordSentLink": {
+      "title": "Restablecer contraseña",
+      "acceptLabel": "Ok"
     }
   }
 }
