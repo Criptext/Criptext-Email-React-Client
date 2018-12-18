@@ -21,10 +21,10 @@ class SettingsGeneralLanguageWrapper extends Component {
     );
   }
 
-  handleChangeSelectLanguage = e => {
+  handleChangeSelectLanguage = async e => {
     const language = e.target.value;
     this.setState({ language });
-    setLang(language);
+    await setLang(language);
     reloadWindow();
   };
 }

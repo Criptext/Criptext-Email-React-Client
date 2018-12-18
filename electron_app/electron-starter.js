@@ -1,4 +1,5 @@
 const { app, ipcMain, Menu, BrowserWindow, Tray } = require('electron');
+const osLocale = require('os-locale');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient');
@@ -42,9 +43,11 @@ async function initApp() {
       mailboxWindow.show();
       setTrayIcon();
     } else {
+      await getUserLanguage();
       loginWindow.show();
     }
   } else {
+    await getUserLanguage();
     loginWindow.show();
   }
 
@@ -146,6 +149,14 @@ if ((isWindows || isLinux) && !isDev) {
     return;
   }
 }
+
+const getUserLanguage = async () => {
+  const localeLanguage = await osLocale();
+  const isEnglish = localeLanguage.indexOf('en') > -1;
+  const isSpanish = localeLanguage.indexOf('es') > -1;
+  const osLanguage = isEnglish ? 'en' : isSpanish ? 'es' : 'en';
+  await dbManager.updateAppSettings({ language: osLanguage });
+};
 
 app.on('ready', () => {
   const menu = Menu.buildFromTemplate(template);

@@ -12,9 +12,7 @@ import {
   createTables,
   postKeyBundle,
   updateAccount,
-  getKeyBundle,
-  mySettings,
-  updateAppSettings
+  getKeyBundle
 } from './../utils/electronInterface';
 import { getAccount, getComputerName } from './../utils/ipc';
 import { CustomError } from './../utils/CustomError';
@@ -28,16 +26,6 @@ const PREKEY_INITIAL_QUANTITY = 100;
 const ciphertextType = {
   CIPHERTEXT: 1,
   PREKEY_BUNDLE: 3
-};
-
-const getLanguage = () => {
-  const isEnglish = window.navigator.language.indexOf('en') > -1;
-  const isSpanish = window.navigator.language.indexOf('es') > -1;
-  return isEnglish ? 'en' : isSpanish ? 'es' : 'en';
-};
-const defaultSettings = {
-  language: getLanguage(),
-  opened: false
 };
 
 const createAccount = async ({
@@ -103,7 +91,6 @@ const createAccount = async ({
       pubKey,
       registrationId
     });
-    await updateAppSettings(defaultSettings);
   } catch (createAccountDbError) {
     throw CustomError(errors.user.SAVE_LOCAL);
   }
@@ -112,7 +99,6 @@ const createAccount = async ({
     throw CustomError(errors.user.SAVE_LOCAL);
   }
   myAccount.initialize(newAccount);
-  mySettings.initialize(defaultSettings);
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -202,7 +188,6 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
         recipientId,
         registrationId
       });
-      await updateAppSettings(defaultSettings);
     } catch (createAccountDbError) {
       throw CustomError(errors.user.SAVE_LOCAL);
     }
@@ -224,7 +209,6 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  mySettings.initialize(defaultSettings);
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -324,7 +308,6 @@ const createAccountToDB = async ({
         recipientId,
         registrationId
       });
-      await updateAppSettings(defaultSettings);
     } catch (createAccountDbError) {
       throw CustomError(errors.user.SAVE_LOCAL);
     }
@@ -338,7 +321,6 @@ const createAccountToDB = async ({
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  mySettings.initialize(defaultSettings);
 
   return await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
