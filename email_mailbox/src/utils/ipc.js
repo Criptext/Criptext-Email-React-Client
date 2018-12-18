@@ -107,7 +107,7 @@ export const getFileKeyByEmailId = async emailId => {
 };
 
 export const getIdentityKeyRecord = async params => {
-  return await callMain('db-get-identity-key-record`', params);
+  return await callMain('db-get-identity-key-record', params);
 };
 
 export const getPreKeyPair = async params => {
