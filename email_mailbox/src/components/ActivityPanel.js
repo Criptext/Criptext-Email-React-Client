@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FeedItem from './../containers/FeedItem';
 import { addEvent, Event } from '../utils/electronEventInterface';
+import string from '../lang';
 import './activitypanel.scss';
 
 class ActivityPanel extends Component {
@@ -21,7 +22,7 @@ class ActivityPanel extends Component {
             onClick={() => this.props.onToggleActivityPanel()}
           >
             {this.renderHeaderIcon()}
-            <div className="header-title">ACTIVITY FEED</div>
+            <div className="header-title">{string.activity.activity_feed}</div>
           </div>
         </header>
         <div className="navigation-feed-content">
