@@ -4,7 +4,11 @@
   },
   "emails": {
     "contact_support": {
-      "subject": "Customer Support - Desktop"
+      "subject": "Customer Support - Desktop",
+      "recipient": {
+        "name": " Contact Support" 
+      },
+      "content": "Do not write below this line."
     }
   },
   "errors": {

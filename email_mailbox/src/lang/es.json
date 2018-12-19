@@ -4,7 +4,11 @@
   },
   "emails": {
     "contact_support": {
-      "subject": "Soporte - Escritorio"
+      "subject": "Soporte - Escritorio",
+      "recipient": {
+        "name": " Soporte" 
+      },
+      "content": "No escriba debajo de esta línea."
     }
   },
   "errors": {
