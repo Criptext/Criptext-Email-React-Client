@@ -75,14 +75,15 @@ aside.navigation-feed-container{
       }
 
       .header-title {
+        color: white;
+        float: left;
         font-size: 13px;
-        padding-top: 23px;
+        font-weight: 700;
         height: 20px;
         margin: 0%;
-        float: left;
-        font-weight: 700;
+        padding-top: 23px;
         text-align: left;
-        color: white;
+        text-transform: uppercase;
       }
     }
   }

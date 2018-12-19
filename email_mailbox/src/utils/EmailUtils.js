@@ -10,6 +10,7 @@ import { Utf8Decode } from './EncodingUtils';
 import { removeAppDomain } from './StringUtils';
 import { getOS } from './OSUtils';
 import { appDomain } from './const';
+import string from './../lang';
 
 const cleanEmails = emails => {
   return emails.map(email => {
@@ -199,7 +200,10 @@ export const formContactSupportEmailContent = () => {
   const content = lines + header + separator + appVersion + OS;
 
   return {
-    email: { subject: `Customer Support - Desktop ${OSType}`, content },
+    email: {
+      subject: `${string.emails.contact_support.subject} ${OSType}`,
+      content
+    },
     recipients: {
       to: { name: 'Contact Support', email: `support@${appDomain}` }
     }

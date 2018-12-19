@@ -1,4 +1,12 @@
 {
+  "activity": {
+    "activity_feed": "Actividad Reciente"
+  },
+  "emails": {
+    "contact_support": {
+      "subject": "Soporte - Escritorio"
+    }
+  },
   "errors": {
     "password": {
       "length": {
@@ -65,14 +73,15 @@
       }
     },
     "forward": "Reenviar",
-    "from": "From",
+    "from": "Para",
+    "mark_as_read": "Marcar como leído",
     "mark_as_spam": "Marcar como Spam",
     "mark_as_unread": "Marcar como no leído",
     "more": "más",
     "move_to_trash": "Mover a papelera",
     "not_starred": "No favorito",
     "reply": "Responder",
-    "reply_all": "Responder a todos",
+    "reply_all": "A todos",
     "starred": "Favorito",
     "subject": "Asunto",
     "to": "Para",

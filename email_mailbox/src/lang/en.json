@@ -1,4 +1,12 @@
 {
+  "activity": {
+    "activity_feed": "Activity Feed"
+  },
+  "emails": {
+    "contact_support": {
+      "subject": "Customer Support - Desktop"
+    }
+  },
   "errors": {
     "password": {
       "length": {
@@ -66,6 +74,7 @@
     },
     "forward": "Forward",
     "from": "From",
+    "mark_as_read": "Mark as Read",
     "mark_as_spam": "Mark as Spam",
     "mark_as_unread": "Mark as Unread",
     "move_to_trash": "Move to trash",
