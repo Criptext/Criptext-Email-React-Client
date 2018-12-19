@@ -393,5 +393,12 @@
     },
     "yesterdayText": "Ayer",
     "atText": "a las"
+  },
+  "dialogContents": {
+    "confirmPermanentDeleteThread": {
+      "title": "Advertencia!",
+      "cancelLabel": "Cancelar",
+      "acceptLabel": "Confirmar"
+    }
   }
 }

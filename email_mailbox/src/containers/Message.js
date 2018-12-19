@@ -98,7 +98,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         case actionHandlerKeys.advice.trash: {
           confirmPermanentDeleteThread(async response => {
             closeDialogWindow();
-            if (response === 'Confirm' || response === 'Confirmar') {
+            if (response) {
               const labelId = LabelType.trash.id;
               const emails = await getEmailsByLabelIds([labelId]);
               const threadsParams = emails.map(email => ({

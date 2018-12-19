@@ -188,7 +188,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ev.stopPropagation();
       confirmPermanentDeleteThread(response => {
         closeDialogWindow();
-        if (response === 'Confirm' || response === 'Confirmar') {
+        if (response) {
           const emailsToDelete = [email];
           dispatch(removeEmails(emailsToDelete)).then(() => {
             if (ownProps.count === 1) {

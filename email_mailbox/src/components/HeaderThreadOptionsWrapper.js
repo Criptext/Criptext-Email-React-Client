@@ -145,7 +145,7 @@ class HeaderThreadOptionsWrapper extends Component {
   handleClickDeleteThread = () => {
     confirmPermanentDeleteThread(response => {
       closeDialogWindow();
-      if (response === 'Confirm' || response === 'Confirmar') {
+      if (response) {
         const backFirst = true;
         this.props.onRemoveThreads(this.props.threadsSelected, backFirst);
       }

@@ -1,5 +1,6 @@
 import { labels } from './systemLabels';
 import { openDialogWindow } from './ipc';
+
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const { getCurrentWindow } = remote;
@@ -40,18 +41,21 @@ export const errors = remote.require('./src/errors');
 /*  Window events
 ----------------------------- */
 export const confirmPermanentDeleteThread = callback => {
+  // eslint-disable-next-line no-undef
+  const string = require('./../lang');
+  const texts = string.default.dialogContents.confirmPermanentDeleteThread;
   const dialogData = {
-    title: 'Warning!',
+    title: texts.title,
     contentType: 'PERMANENT_DELETE_THREAD',
     options: {
-      cancelLabel: 'Cancel',
-      acceptLabel: 'Confirm'
+      cancelLabel: texts.cancelLabel,
+      acceptLabel: texts.acceptLabel
     },
     sendTo: 'mailbox'
   };
   openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (event, data) => {
-    callback(data.selectedOption);
+  ipcRenderer.once('selectedOption', (e, data) => {
+    callback(data.selectedOption === texts.acceptLabel);
   });
 };
 
