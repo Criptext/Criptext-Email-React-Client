@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import data from './../data/welcome';
 import Lottie from './Lottie';
+import string from './../lang';
 import './welcome.scss';
 const ARTICLE_AMOUNT = Object.keys(data).length;
 
@@ -60,7 +61,7 @@ const Article = props => {
       <span>{props.article.title}</span>
       <p>{props.article.description}</p>
       <button className="button-b" onClick={() => props.onClickClose()}>
-        skip tour
+        {string.welcome.skip_tour}
       </button>
     </article>
   );

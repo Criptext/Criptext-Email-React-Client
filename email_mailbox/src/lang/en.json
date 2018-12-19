@@ -376,7 +376,8 @@
     "step_3": {
       "title": "The power is yours",
       "description": "You create information, we believe you have a right to own it."
-    }
+    },
+    "skip_tour": "Skip tour"
   },
   "momentLocales": {
     "months": "January_February_March_April_May_June_July_August_September_October_November_December",
