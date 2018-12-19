@@ -1,6 +1,9 @@
+/* eslint-env node, jest */
 import { optionallyEmpty } from './SignUpSymbols';
 import { createStore } from './SignUpStore';
 import { shouldDisableSubmitButton } from './SignUpModel';
+
+jest.mock('./../utils/electronInterface');
 
 const defaultState = createStore();
 const withErrors = errors => ({

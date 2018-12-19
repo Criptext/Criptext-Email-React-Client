@@ -2,7 +2,6 @@ const { client: WebSocketClient } = require('websocket');
 const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
 let client, reconnect, messageListener, socketConnection;
 const reconnectDelay = 2000;
-const mailboxWindow = require('./windows/mailbox');
 const globalManager = require('./globalManager');
 const NETWORK_STATUS = {
   ONLINE: 'online',
@@ -87,17 +86,12 @@ const setConnectionStatus = networkStatus => {
   switch (networkStatus) {
     case NETWORK_STATUS.ONLINE: {
       if (prevNetworkStatus === true) return;
-
       globalManager.internetConnection.setStatus(true);
-      if (prevNetworkStatus === false) {
-        mailboxWindow.send('network-connection-established', null);
-      }
       break;
     }
     case NETWORK_STATUS.OFFLINE: {
       if (prevNetworkStatus !== false) {
         globalManager.internetConnection.setStatus(false);
-        mailboxWindow.send('lost-network-connection', null);
       }
       break;
     }

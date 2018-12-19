@@ -8,11 +8,7 @@ const string = new LocalizedStrings({
   es
 });
 
-const isEnglish = window.navigator.language.indexOf('en') > -1;
-const isSpanish = window.navigator.language.indexOf('es') > -1;
-const currentLanguage = isEnglish ? 'en' : isSpanish ? 'es' : 'en';
-
-string.setLanguage(mySettings.language || currentLanguage);
+string.setLanguage(mySettings.language);
 
 export const setLang = lang => {
   string.setLanguage(lang);

@@ -1,5 +1,5 @@
+/* eslint-env node, jest */
 import { check, gen, property } from 'testcheck';
-
 import { toBeConfirmed, optionallyEmpty } from './SignUpSymbols';
 import { createStore } from './SignUpStore';
 import {
@@ -8,6 +8,8 @@ import {
   updateForm
 } from './SignUpReducers';
 import * as ErrorMsgs from './SignUpErrorMsgs';
+
+jest.mock('./../utils/electronInterface');
 
 const defaultState = createStore();
 const stateFrom = ({ values, errors }) => ({

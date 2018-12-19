@@ -8,9 +8,6 @@ import {
 } from '../utils/electronInterface';
 import { closeDialogWindow } from './../utils/ipc';
 
-const CONFIRM_RESPONSE =
-  window.navigator.language.indexOf('es') > -1 ? 'Confirmar' : 'Confirm';
-
 class HeaderThreadOptionsWrapper extends Component {
   constructor() {
     super();
@@ -148,7 +145,7 @@ class HeaderThreadOptionsWrapper extends Component {
   handleClickDeleteThread = () => {
     confirmPermanentDeleteThread(response => {
       closeDialogWindow();
-      if (response === CONFIRM_RESPONSE) {
+      if (response) {
         const backFirst = true;
         this.props.onRemoveThreads(this.props.threadsSelected, backFirst);
       }

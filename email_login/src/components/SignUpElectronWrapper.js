@@ -33,8 +33,9 @@ class SignUpElectronWrapper extends Component {
   onSubmitWithoutRecoveryEmail = validInputData => {
     confirmEmptyEmail(response => {
       closeDialogWindow();
-      if (response === 'Confirm' || response === 'Confirmar')
+      if (response) {
         commitNewUser(validInputData);
+      }
     });
   };
 

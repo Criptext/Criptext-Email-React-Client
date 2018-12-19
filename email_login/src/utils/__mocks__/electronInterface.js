@@ -18,3 +18,9 @@ export const checkAvailableUsername = username => {
   }
   return { status: 200 };
 };
+
+export const mySettings = {
+  language: 'en',
+  opened: 1,
+  theme: 'light'
+};

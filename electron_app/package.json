@@ -148,6 +148,7 @@
     "line-by-line": "^0.1.6",
     "moment": "^2.22.2",
     "node-notifier": "^5.2.1",
+    "os-locale": "^3.0.1",
     "sqlite3": "^4.0.2",
     "websocket": "^1.0.25"
   }

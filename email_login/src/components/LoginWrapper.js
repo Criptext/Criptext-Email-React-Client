@@ -314,7 +314,7 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     confirmLostDevices(response => {
       closeDialogWindow();
-      if (response === 'Continue' || response === 'Continuar') {
+      if (response) {
         socketClient.disconnect();
         this.goToPasswordLogin();
       } else {

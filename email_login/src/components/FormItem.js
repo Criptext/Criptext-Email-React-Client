@@ -2,6 +2,7 @@
 import React from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import PropTypes from 'prop-types';
+import { mySettings } from '../utils/electronInterface';
 import './signup.scss';
 
 const hasError = props => typeof props.error == 'string';
@@ -38,7 +39,10 @@ const renderToSCheckInput = props => (
     />
     <span className="label-acceptterms">
       {props.formItem.label.text}
-      <a href="https://www.criptext.com/terms" target="_blank">
+      <a
+        href={`https://www.criptext.com/${mySettings.language}/terms`}
+        target="_blank"
+      >
         <span className="strong">{props.formItem.label.strong}</span>
       </a>
     </span>

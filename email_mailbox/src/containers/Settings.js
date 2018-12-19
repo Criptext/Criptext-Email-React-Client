@@ -36,7 +36,7 @@ const defineSystemLabels = labelsArray => {
     })
     .map(label => {
       const text =
-        label.type === 'system'
+        label.type === 'system'
           ? string.labelsItems[toLowerCaseWithoutSpaces(label.text)]
           : label.text;
       return { id: label.id, text, visible: label.visible };

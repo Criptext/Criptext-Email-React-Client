@@ -1,5 +1,6 @@
 import { labels } from './systemLabels';
 import { openDialogWindow } from './ipc';
+import lang from './../lang';
 const electron = window.require('electron');
 const { ipcRenderer, remote, webFrame } = electron;
 const dbManager = remote.require('./src/DBManager');
@@ -10,6 +11,7 @@ export const { requiredMinLength, requiredMaxLength } = remote.require(
 );
 export const errors = remote.require('./src/errors');
 export const myAccount = remote.require('./src/Account');
+export const mySettings = remote.require('./src/Settings');
 export const LabelType = labels;
 export const socketClient = remote.require('./src/socketClient');
 
@@ -17,8 +19,6 @@ const globalManager = remote.require('./src/globalManager');
 
 webFrame.setVisualZoomLevelLimits(1, 1);
 webFrame.setLayoutZoomLevelLimits(0, 0);
-
-const isSpanish = window.navigator.language.indexOf('es') > -1;
 
 export const createTemporalAccount = accountData => {
   return globalManager.temporalAccount.set(accountData);
@@ -33,15 +33,16 @@ export const deleteTemporalAccount = () => {
 };
 
 export const confirmWaitingApprovalLogin = callback => {
+  const texts = lang.dialogContent.confirmWaitingApprovalLogin;
   const dialog = remote.dialog;
   const RESPONSES = {
     CANCEL: {
       index: 0,
-      label: isSpanish ? 'Cancelar' : 'Cancel'
+      label: texts.cancelResponse
     },
     KEEP: {
       index: 1,
-      label: isSpanish ? 'Seguir esperando' : 'Keep waiting'
+      label: texts.keepResponse
     }
   };
   const dialogResponses = Object.values(RESPONSES).map(
@@ -49,16 +50,12 @@ export const confirmWaitingApprovalLogin = callback => {
   );
   const dialogTemplate = {
     type: 'warning',
-    title: isSpanish ? 'Esto es extraño' : "Well, that's odd...",
+    title: texts.title,
     buttons: dialogResponses,
     defaultId: RESPONSES.KEEP.index,
     cancelId: RESPONSES.CANCEL.index,
-    message: isSpanish
-      ? 'Sucedió algo que está demorando este proceso'
-      : 'Something has happened that is delaying this process.',
-    detail: isSpanish
-      ? '¿Deseas seguir esperando?'
-      : 'Do you want to continue waiting?',
+    message: texts.message,
+    detail: texts.detail,
     noLink: true
   };
   dialog.showMessageBox(dialogTemplate, responseIndex => {
@@ -74,67 +71,71 @@ export const closeLoading = () => {
 };
 
 export const confirmEmptyEmail = callback => {
+  const texts = lang.dialogContent.confirmEmptyEmail;
   const dialogData = {
-    title: isSpanish ? 'Advertencia' : 'Warning!',
+    title: texts.title,
     contentType: 'EMPTY_RECOVERY_EMAIL',
     options: {
-      cancelLabel: isSpanish ? 'Cancelar' : 'Cancel',
-      acceptLabel: isSpanish ? 'Confirmar' : 'Confirm'
+      cancelLabel: texts.cancelLabel,
+      acceptLabel: texts.acceptLabel
     },
     sendTo: 'login'
   };
   openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (event, data) => {
-    callback(data.selectedOption);
+  ipcRenderer.once('selectedOption', (e, data) => {
+    callback(data.selectedOption === texts.acceptLabel);
   });
 };
 
 export const confirmLostDevices = callback => {
+  const texts = lang.dialogContent.confirmLostDevices;
   const dialogData = {
-    title: isSpanish ? 'Ingreso con contraseña' : 'Password Login',
+    title: texts.title,
     contentType: 'LOST_ALL_DEVICES',
     options: {
-      cancelLabel: isSpanish ? 'Cerrar' : 'Close',
-      acceptLabel: isSpanish ? 'Continuar' : 'Continue'
+      cancelLabel: texts.cancelLabel,
+      acceptLabel: texts.acceptLabel
     },
     sendTo: 'login'
   };
   openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (event, data) => {
-    callback(data.selectedOption);
+  ipcRenderer.once('selectedOption', (e, data) => {
+    callback(data.selectedOption === texts.acceptLabel);
   });
 };
 
 export const confirmForgotPasswordEmptyEmail = (customText, callback) => {
+  const texts = lang.dialogContent.confirmForgotPasswordEmptyEmail;
   const dialogData = {
-    title: isSpanish ? 'Avertencia' : 'Alert!',
+    title: texts.title,
     contentType: 'FORGOT_PASSWORD_EMPTY_EMAIL',
     customTextToReplace: customText,
     options: {
-      cancelLabel: isSpanish ? 'Cancelar' : 'Cancel',
-      acceptLabel: isSpanish ? 'Entendido' : 'Ok'
+      cancelLabel: texts.cancelLabel,
+      acceptLabel: texts.acceptLabel
     },
     sendTo: 'login'
   };
   openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (event, data) => {
-    callback(data.selectedOption);
+  ipcRenderer.once('selectedOption', (e, data) => {
+    callback(data.selectedOption === texts.acceptLabel);
   });
 };
 
 export const confirmForgotPasswordSentLink = (customText, callback) => {
+  const texts = lang.dialogContent.confirmForgotPasswordSentLink;
   const dialogData = {
-    title: isSpanish ? 'Olvido de contraeña' : 'Forgot Password',
+    title: texts.title,
     contentType: 'FORGOT_PASSWORD_SEND_LINK',
     customTextToReplace: customText,
     options: {
-      acceptLabel: isSpanish ? 'Entendido' : 'Ok'
+      acceptLabel: texts.acceptLabel
     },
     sendTo: 'login'
   };
   openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (event, data) => {
-    callback(data.selectedOption);
+  ipcRenderer.once('selectedOption', (e, data) => {
+    callback(data.selectedOption === texts.acceptLabel);
   });
 };
 

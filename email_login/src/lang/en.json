@@ -79,5 +79,33 @@
         }
       }
     }
+  },
+  "dialogContent": {
+    "confirmWaitingApprovalLogin": {
+      "cancelResponse": "Cancel",
+      "keepResponse": "Keep waiting",
+      "title": "Well, that's odd...",
+      "message": "Something has happened that is delaying this process.",
+      "detail": "Do you want to continue waiting?"
+    },
+    "confirmEmptyEmail": {
+      "title": "Warning",
+      "cancelLabel": "Cancel",
+      "acceptLabel": "Confirm"
+    },
+    "confirmLostDevices": {
+      "title": "Password login",
+      "cancelLabel": "Cancel",
+      "acceptLabel": "Continue"
+    },
+    "confirmForgotPasswordEmptyEmail": {
+      "title": "Alert!",
+      "cancelLabel": "Cancel",
+      "acceptLabel": "Ok"
+    },
+    "confirmForgotPasswordSentLink": {
+      "title": "Forgot password",
+      "acceptLabel": "Ok"
+    }
   }
 }
