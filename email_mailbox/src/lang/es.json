@@ -73,7 +73,7 @@
       }
     },
     "forward": "Reenviar",
-    "from": "Para",
+    "from": "De",
     "mark_as_read": "Marcar como leído",
     "mark_as_spam": "Marcar como Spam",
     "mark_as_unread": "Marcar como no leído",
@@ -290,7 +290,7 @@
       "confirmButtonLabel": "Remover"
     },
     "two_fa": {
-      "title": "¡2FA Habilitada!",
+      "title": "¡A2F Habilitada!",
       "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
       "button": "¡Listo!"
     }
@@ -376,7 +376,8 @@
     "step_3": {
       "title": "El poder es tuyo",
       "description": "Tú creas la información, nosotros creemos que tienes derecho a que sólo sea tuya."
-    }
+    },
+    "skip_tour": "Omitir"
   },
   "momentLocales": {
     "months": "Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre",
