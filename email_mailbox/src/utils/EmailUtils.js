@@ -193,7 +193,7 @@ export const filterCriptextRecipients = recipients => {
 export const formContactSupportEmailContent = () => {
   const OSType = getOS();
   const lines = '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>';
-  const header = '<strong>Do not write below this line.</strong>';
+  const header = `<strong>${string.emails.contact_support.content}</strong>`;
   const separator = '<br/>*****************************<br/>';
   const appVersion = `<strong>Version:</strong>  ${version}<br/>`;
   const OS = `<strong>OS:</strong>  ${OSType}<br/>`;
@@ -205,7 +205,10 @@ export const formContactSupportEmailContent = () => {
       content
     },
     recipients: {
-      to: { name: 'Contact Support', email: `support@${appDomain}` }
+      to: {
+        name: string.emails.contact_support.recipient.name,
+        email: `support@${appDomain}`
+      }
     }
   };
 };
