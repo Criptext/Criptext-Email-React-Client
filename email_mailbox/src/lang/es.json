@@ -1,4 +1,16 @@
 {
+  "errors": {
+    "password": {
+      "length": {
+        "a": "Debe ser al menos",
+        "b": "caracteres"
+      },
+      "match": "La contraseña no coincide"
+    },
+    "email": {
+      "invalid": "Correo inválido"
+    }
+  },
   "header": {
     "add_labels": "Agregar etiquetas",
     "archive": "Archivar",
@@ -6,13 +18,13 @@
     "discard_drafts": "Descartar borradores",
     "dismiss": "Atrás",
     "move_to": "Mover a",
-    "move_to_inbox": "Mover a entrada",
+    "move_to_inbox": "Mover a Recibidos",
     "restore": "Restaurar",
     "search": "buscar",
     "search_options": {
       "from": "de",
       "from_placeholder": "Usuarios por nombre o correo electrónico",
-      "has_attachment": "Con archivos",
+      "has_attachment": "Tiene adjunto",
       "subject": "asunto",
       "subject_placeholder": "Ingresar texto",
       "to": "para",
@@ -22,85 +34,49 @@
     "selected_plural": "Seleccionados"
   },
   "labelsItems": {
-    "inbox": "Entrada",
-    "spam": "No deseado",
+    "inbox": "Recibidos",
+    "spam": "Spam",
     "sent": "Enviados",
     "starred": "Favoritos",
-    "draft": "Borradores",
+    "draft": "Borrador",
     "trash": "Papelera",
     "allmail": "Todos",
-    "search": "Búsqueda"
+    "search": "Buscar"
   },
   "mailbox": {
     "all": "todos",
+    "bcc": "Bcc",
+    "cc": "Cc",
+    "date": "Fecha",
+    "delete": "Borrar",
+    "delete_permanently": "Borrar permanentemente",
     "empty": {
       "search": {
-        "header": "Sin resultados al buscar",
-        "subheader": "No se muestran ni Papelera & ni Mensajes no deseados"
+        "header": "No hay resultados de búsqueda",
+        "subheader": "Correos en Papelera & Spam no son mostrados"
       },
       "spam": {
         "header": "No tienes spam",
-        "subheader": "Enhorabuena!"
+        "subheader": "Bien!"
       },
       "default": {
-        "header": "No se encontraron mensajes",
-        "subheader": "Envía un email para empezar"
+        "header": "No tienes correos todavía",
+        "subheader": "Envía un correo para comenzar"
       }
     },
-    "move_to_trash": "Mover a la papelera",
+    "forward": "Reenviar",
+    "from": "From",
+    "mark_as_spam": "Marcar como Spam",
+    "mark_as_unread": "Marcar como no leído",
+    "more": "más",
+    "move_to_trash": "Mover a papelera",
     "not_starred": "No favorito",
+    "reply": "Responder",
+    "reply_all": "Responder a todos",
     "starred": "Favorito",
+    "subject": "Asunto",
+    "to": "Para",
     "unread": "no leídos"
-  },
-  "settings": {
-    "action": "Acción",
-    "cancel": "Cancelar",
-    "change_password": "cambiar contraseña",
-    "contact_support": "Soporte de Contacto",
-    "create_new_label": "Crear nueava etiqueta",
-    "criptext_libraries": "Libraries de Criptext",
-    "current_device": "dispositivo actual",
-    "disabled": "desactivada",
-    "enabled": "activada",
-    "faq": "Preguntas frecuentes",
-    "general": "general",
-    "language": "lenguaje",
-    "last_activity": "Última actividad",
-    "linked_devices": "Dispositivos enlazados",
-    "logout_account": "Cerrar Sesión",
-    "logout": "Cerrar",
-    "name": "nombre",
-    "not_verified": "No verificado",
-    "notification_preview": "Vista previa de notificaciones",
-    "off": "desactivado",
-    "on": "activado",
-    "password": "contraseña",
-    "profile": "perfil",
-    "privacy_policy": "Políticas de Privacidad",
-    "read_receipts": "confirmación de lectura",
-    "read_receipts_description": "Si desactivas confirmación de lectura, no tendrás habilitado las confirmaciones de lectura de otros usuarios",
-    "remove": "Remover",
-    "resend_link": "Reenviar enlace",
-    "show_in_label_list": "Mostrar en la lista de etiquetas",
-    "signature": "Firma",
-    "system_labels": "Etiquetas del Sistema",
-    "terms_of_service": "Terminos de servicio",
-    "trusted_devices": "dispositivos verificados",
-    "two_factor_authentication": "autenticación en dos pasos",
-    "üseful_links": "Enlaces útiles",
-    "verified": "Verificado",
-    "delete_account": {
-      "label": "Eliminar cuenta",
-      "button": "Eliminar permanentemente"
-    }
-  },
-  "sidebar": {
-    "compose": "redactar",
-    "enter_new_label": "Agregar etiqueta",
-    "invite_a_friend": "Invita a un amigo",
-    "labels": "Etiquetas",
-    "new_label": "Nueva etiqueta",
-    "settings": "Configuración"
   },
   "messages": {
     "change_password": {
@@ -108,8 +84,7 @@
         "description": "Se ha modificado su contraseña"
       },
       "error": {
-        "description":
-          "Falló al modificar la contraseña. La contraseña no ha sido modificada"
+        "description": "Error al cambiar la contraseña. La contraseña no ha sido modificada"
       }
     },
     "download_file": {
@@ -117,22 +92,20 @@
         "description": "Descarga exitosa. Revisa tu carpeta de 'Descargas'"
       },
       "error": {
-        "description":
-          "Un error ha ocurrido durante la descarga. El archivo no fue guardado"
+        "description": "Un error ha ocurrido durante la descarga. El archivo no fue guardado"
       }
     },
     "emailSent": {
       "success": {
-        "description": "Tu mensaje ha sido enviado.",
-        "action": "Ver mensaje"
+        "description": "Tu correo ha sido enviado.",
+        "action": "Ver Correo"
       },
       "error": {
-        "description": "Falló al enviar tu mensaje"
+        "description": "Error al enviar tu correo"
       }
     },
     "fetchEmails": {
-      "description":
-        "Falló al pedir emails. Revisa tu conexión e intenta de nuevo"
+      "description": "Error al obtener correos. Comprueba tu conexión y vuelve a intentarlo"
     },
     "internet": {
       "description": "Conexión restablecida"
@@ -148,31 +121,26 @@
         "description": "Correo de recuperación ha sido modificado"
       },
       "error": {
-        "description":
-          "Falló al modificar el correo de recuperación. Revisa tu conexión e intenta de nuevo"
+        "description": "Error al cambiar el correo de recuperación. Comprueba tu conexión y vuelve a intentarlo"
       }
     },
     "recovery_email_link_confirmation": {
       "success": {
-        "description":
-          "Se ha enviado enlace de confirmación a tu correo de recuperación."
+        "description": "Enlace de confirmación enviado. Revisa tu buzón y confírmalo."
       },
       "error": {
-        "description": "Falló al enviar el enlace de confirmación"
+        "description": "Error al enviar el enlace de confirmación."
       }
     },
     "remember_share_passphrase": {
-      "description":
-        "Recuerda enviar tu frase secreta a tus recipientes que no son de Criptext"
+      "description": "Recuerda enviar tu clave a los destinatarios que no son de Criptext"
     },
     "reset_password_send_link": {
       "success": {
-        "description":
-          "El enlace para restableser la contraseña ha sido enviado a tu correo de recuperación. El enlace será valido por 30 minutos"
+        "description": "Se ha enviado un enlace para restablecer la contraseña a tu correo de recuperación. El enlace será valido por 30 minutos"
       },
       "error": {
-        "description":
-          "Usted necesita establecer y confirmar un Correo de Recuperación para restablecer su contraseña"
+        "description": "Necesitas establecer y confirmar un Correo de Recuperación para restablecer tu contraseña"
       }
     },
     "remove_device": {
@@ -180,44 +148,40 @@
         "description": "Dispositivo eliminado"
       },
       "error": {
-        "description": "Falló al eliminar el dispositivo. Intentar de nuevo"
+        "description": "Error al eliminar el dispositivo. Inténtalo de nuevo"
       }
     },
     "remove_threads": {
-      "description": "Falló mover correos. Intente de nuevo"
+      "description": "Error al mover correos. Inténtalo de nuevo"
     },
     "send_open_event": {
-      "description":
-        "Falló enviar notificación de apertura de mensaje. Intente de nuevo"
+      "description": "Error al enviar notificación de leído. Inténtalo de nuevo"
     },
     "trash": {
-      "description":
-        "Los mensajes que estén en la papelera más de 30 días serán eliminados automáticamente",
-        "action": "Vaciar Papelera"
+      "description": "Correos que estén en la papelera más de 30 días serán eliminados automáticamente",
+      "action": "Vaciar Papelera"
     },
     "two_factor_auth_turn_off": {
-      "description": "Autenticación en dos pasos fue desactivada"
+      "description": "Autenticación dos factores fue desactivada"
     },
     "unsend_email": {
-      "description": "Falló retractar el correo. Código de error desconocido:"
+      "description": "Error al retractar el correo. Código de error desconocido:"
     },
     "unsend_email_expired": {
-      "description":
-        "Falló retractar el correo. Tiempo (1h) para retractar un correo enviado."
+      "description": "Error al retractar el correo. Tiempo (1h) para retractar ya expiró."
     },
     "update": {
-      "description": "Una nueva versión de Criptext está disponible!",
-      "action": "Click aquí para descargar"
+      "description": "¡Una nueva versión de Criptext está disponible!",
+      "action": "Clic aquí para descargar actualización"
     },
     "update_labels": {
-      "description": "Falló mofificar las etiquetas. Intente de nuevo"
+      "description": "Error al actualizar las etiquetas. Inténtalo de nuevo"
     },
     "update_thread_labels": {
-      "description":
-        "Falló mofificar las etiquetas de los correos. Intente de nuevo"
+      "description": "Error al actualizar las etiquetas de correo. Inténtalo de nuevo"
     },
     "update_unread_threads": {
-      "description": "Falló modificar el estado del correo. Intente de nuevo"
+      "description": "Error al actualizar el estado del correo. Inténtalo de nuevo"
     }
   },
   "notification": {
@@ -233,10 +197,50 @@
         "header": "Eliminando toda la información..."
       }
     },
-    "delete_account": {
-      "title": "Eliminar mi cuenta",
+    "change_password": {
+      "title": "Cambiar Contraseña",
       "paragraphs": {
-        "header": "Eliminar su cuenta también eliminará todos los correos electrónicos en este y cualquier otro dispositivo en el que haya iniciado sesión. También inhabilitará a cualquier persona para registrar una cuenta con su dirección de correo electrónico actual"
+        "header": "Introduce tu contraseña, luego tu nueva contraseña y confírmala"
+      },
+      "input": {
+        "old_password": {
+          "placeholder": "Introduce la contraseña vieja",
+          "button": "¿Olvidaste tu contraseña?"
+        },
+        "new_password": {
+          "placeholder": "Introduce la contraseña nueva"
+        },
+        "repeat_password": {
+          "placeholder": "Repite la contraseña nueva"
+        }
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Guardar"
+    },
+    "change_recovery_email": {
+      "title": "Correo de Recuperación",
+      "paragraph": {
+        "password": "Para confirmar introduce to contraseña",
+        "recovery_email": "Introduce tu nuevo correo de recuperación",
+        "note": "Nota",
+        "note_text": "Cambiar tu correo de recuperación deshabilitará la autenticación de dos factores"
+      },
+      "input": {
+        "recovery_email": {
+          "placeholder": "Introduce el nuevo correo"
+        },
+        "password": {
+          "placeholder": "Introduce la contraseña",
+          "button": "¿Olvidaste tu contraseña?"
+        }
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Cambiar"
+    },
+    "delete_account": {
+      "title": "Eliminar Mi Cuenta",
+      "paragraphs": {
+        "header": "Al eliminar tu cuenta se borrarán todos los datos de todos tus dispositivos y se deshabilitará este nombre de usuario permanentemente. ¿Estás seguro de que quieres eliminar tu cuenta?"
       },
       "subtitle": "Para confirmar, ingresa tu contraseña",
       "inputs": {
@@ -261,7 +265,81 @@
       },
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Continuar"
+    },
+    "remove_device": {
+      "title": "Remover Dispositivo",
+      "paragraphs": {
+        "header":"Eliminar este dispositivo hará que se cierre la sesión de forma remota.",
+        "password": "Para confirmar introduzca su contraseña"
+      },
+      "input": {
+        "password": {
+          "placeholder": "Contraseña"
+        }
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Remover"
+    },
+    "two_fa": {
+      "title": "¡2FA Habilitada!",
+      "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
+      "button": "¡Listo!"
     }
+  },
+  "settings": {
+    "action": "Acción",
+    "cancel": "Cancelar",
+    "change": "Cambiar",
+    "change_password": "cambiar contraseña",
+    "contact_support": "Soporte",
+    "create_new_label": "Crear nueva etiqueta",
+    "criptext_libraries": "Librerías de Criptext",
+    "current_device": "dispositivo actual",
+    "disabled": "desactivada",
+    "enabled": "activada",
+    "enter_new_label_name": "Introducir nueva etiqueta",
+    "faq": "Preguntas Frecuentes",
+    "general": "general",
+    "language": "lenguaje",
+    "last_activity": "Última actividad",
+    "linked_devices": "Dispositivos enlazados",
+    "logout": "Cerrar",
+    "logout_account": "Cerrar Sesión",
+    "name": "nombre",
+    "not_verified": "No verificado",
+    "notification_preview": "Vista previa de notificaciones",
+    "off": "desactivado",
+    "on": "activado",
+    "password": "contraseña",
+    "privacy_policy": "Políticas de Privacidad",
+    "profile": "perfil",
+    "read_receipts": "confirmación de leído",
+    "read_receipts_description": "Si desactivas confirmación de leído, no podrás saber cuando otros leen tus correos tampoco.",
+    "remove": "Remover",
+    "resend_link": "Reenviar enlace",
+    "recovery_email": "Correo de Recuperación",
+    "set_email": "Establecer correo",
+    "show_in_label_list": "Mostrar en lista de etiquetas",
+    "signature": "Firma",
+    "system_labels": "Etiquetas del Sistema",
+    "terms_of_service": "Términos de servicio",
+    "trusted_devices": "dispositivos verificados",
+    "two_factor_authentication": "autenticación de dos factores",
+    "two_factor_not_available_text" : "Para deshabilitar Autenticación de dos factores deberás introducir tu correo de recuperación",
+    "üseful_links": "Enlaces útiles",
+    "verified": "Verificado",
+    "delete_account": {
+      "label": "Eliminar cuenta",
+      "button": "Eliminar permanentemente"
+    }
+  },
+  "sidebar": {
+    "compose": "redactar",
+    "enter_new_label": "Agregar etiqueta",
+    "invite_a_friend": "Invita a un amigo",
+    "labels": "Etiquetas",
+    "new_label": "Nueva etiqueta",
+    "settings": "Configuración"
   },
   "userGuide": {
     "buttonCompose": {
@@ -269,12 +347,26 @@
       "buttonLabel": "Ok"
     },
     "emailRead": {
-      "text": "¡Mira como este correo fue leído!",
+      "text": "¡Parece que este correo fue leído!",
       "buttonLabel": "Entendido"
     },
     "activityFeed": {
-      "text": "Mira cuáles correos fueron leídos y por quienes",
+      "text": "Mira cuáles correos fueron leídos",
       "buttonLabel": "Ok"
+    }
+  },
+  "welcome": {
+    "step_1": {
+      "title": "¡Bienvenido!",
+      "description": "Tu experiencia con el correo seguro comienza aquí. Prepárate para privacidad total."
+    },
+    "step_2": {
+      "title": "Privacidad Fuerte",
+      "description": "Criptext no guarda tus correos en sus servidores. Tus correos únicamente se guardan en tu dispositivo."
+    },
+    "step_3": {
+      "title": "El poder es tuyo",
+      "description": "Tú creas la información, nosotros creemos que tienes derecho a que sólo sea tuya."
     }
   }
 }

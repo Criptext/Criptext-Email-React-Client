@@ -28,7 +28,7 @@ const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
-  'To enable Two-Factor Authentication you must set and verify a recovery email';
+  string.settings.two_factor_not_available_text;
 const TWO_FACTOR_ENABLED_TEXT = string.settings.on;
 const TWO_FACTOR_DISABLED_TEXT = string.settings.off;
 
@@ -198,7 +198,7 @@ const LogoutAccountBlock = props => (
 const RecoveryEmailBlock = props => (
   <div className="section-block">
     <div className="section-block-title">
-      <h1>Recovery Email</h1>
+      <h1>{string.settings.recovery_email}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item content-recovery-email">
@@ -215,7 +215,7 @@ const RecoveryEmailBlock = props => (
                   className="button-b"
                   onClick={() => props.onClickChangeRecoveryEmail()}
                 >
-                  <span>Set Email</span>
+                  <span>{string.settings.set_email}</span>
                 </button>
               )}
               {props.recoveryEmail && (
@@ -227,7 +227,7 @@ const RecoveryEmailBlock = props => (
                     className="button-b"
                     onClick={() => props.onClickChangeRecoveryEmail()}
                   >
-                    <span>Change</span>
+                    <span>{string.settings.change}</span>
                   </button>
                   {!props.recoveryEmailConfirmed && (
                     <ResendConfirmationRecoveryEmailLink {...props} />

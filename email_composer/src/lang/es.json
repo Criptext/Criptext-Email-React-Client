@@ -16,11 +16,11 @@
   "sendButtonLabel": "Enviar",
   "popups": {
     "nonCriptextRecipients": {
-      "title": "Destinatarios externos",
-      "switchLabel": "Envío cifrado",
-      "description": "Provee una contraseña y compartela con tus destinatarios No-Criptext para que ellos puedan leer tu correo",
+      "title": "Destinatario No-Criptext",
+      "switchLabel": "Enviar Encriptado",
+      "description": "Establece una clave y compártela con destinatarios no-Criptext para que puedan leer tu correo.",
       "inputPassphrase": {
-        "placeholder": "Ingresa una contraseña",
+        "placeholder": "Ingresa una clave",
         "errorMessages": {
           "len": {
             "prefix": "Debe tener",
@@ -30,7 +30,7 @@
       },
       "note": {
         "header": "Nota:",
-        "content": "Las direcciones de correo que no son de Criptext recibirán un correo normal y sin cifrar"
+        "content": "los destinatarios que no sean Criptext recibirán un correo normal, no encriptado."
       },
       "buttons": {
         "send": "Enviar",

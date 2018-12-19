@@ -4,6 +4,7 @@ import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
 import { requiredMinLength } from './../utils/electronInterface';
 import RemoveDevicePopup from './RemoveDevicePopup';
+import string from './../lang';
 
 class RemoveDevicePopupWrapper extends Component {
   constructor(props) {
@@ -48,9 +49,9 @@ class RemoveDevicePopupWrapper extends Component {
 
   checkInputError = value => {
     const isValid = validatePassword(value);
-    const errorMessage = `Must be at least ${
+    const errorMessage = `${string.errors.password.length.a} ${
       requiredMinLength.password
-    } characters`;
+    } ${string.errors.password.length.b}`;
     return { hasError: !isValid, errorMessage };
   };
 

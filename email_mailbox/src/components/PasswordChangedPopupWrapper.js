@@ -11,6 +11,7 @@ import {
 import { throwError } from './../utils/ipc';
 import { handleDeleteDeviceData } from '../utils/electronEventInterface';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
+import string from './../lang';
 
 const UNLOCK_DEVICE_STATUS = {
   SUCCESS: 200,
@@ -74,9 +75,9 @@ class PasswordChangedPopupWrapper extends Component {
 
   checkInputError = value => {
     const isValid = validatePassword(value);
-    const errorMessage = `Must be at least ${
+    const errorMessage = `${string.errors.password.length.a} ${
       requiredMinLength.password
-    } characters`;
+    } ${string.errors.password.length.b}`;
     return { hasError: !isValid, errorMessage };
   };
 

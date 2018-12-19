@@ -47,6 +47,7 @@ import {
   setReadReceiptsStatus,
   getReadReceiptsStatus
 } from '../utils/storage';
+import string from './../lang';
 
 const EDITING_MODES = {
   EDITING_NAME: 'editing-name',
@@ -63,12 +64,14 @@ const SETTINGS_POPUP_TYPES = {
 };
 
 const changePasswordErrors = {
-  LENGTH: `Must be at least ${requiredMinLength.password} characters`,
-  MATCH: 'Passwords do not match'
+  LENGTH: `${string.errors.password.length.a} ${requiredMinLength.password} ${
+    string.errors.password.length.b
+  }`,
+  MATCH: string.errors.password.match
 };
 
 const recoveryEmailErrors = {
-  INVALID_EMAIL_ADDRESS: 'Invalid email'
+  INVALID_EMAIL_ADDRESS: string.errors.email.invalid
 };
 
 const RESEND_CONFIRMATION_MINUTES_DELAY = 5;

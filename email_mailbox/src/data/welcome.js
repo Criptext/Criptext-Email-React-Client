@@ -1,6 +1,7 @@
 import animationArmData from '../animations/arm.json';
 import animationEmailData from '../animations/email.json';
 import animationLockData from '../animations/lock.json';
+import string from '../lang';
 
 const defaultOptionsArm = {
   loop: false,
@@ -23,23 +24,20 @@ const defaultOptionsLock = {
 export default {
   1: {
     defaultOptions: defaultOptionsEmail,
-    title: 'Welcome!',
-    description:
-      'Your secure email experience starts now. Be ready for privacy without compromise.',
+    title: string.welcome.step_1.title,
+    description: string.welcome.step_1.description,
     speed: 1
   },
   2: {
     defaultOptions: defaultOptionsLock,
-    title: 'Strong Privacy',
-    description:
-      'Criptext doesn`t collect email data. Your emails are only stored on your device.',
+    title: string.welcome.step_2.title,
+    description: string.welcome.step_2.description,
     speed: 2
   },
   3: {
     defaultOptions: defaultOptionsArm,
-    title: 'The power is yours',
-    description:
-      'You create information, we believe you have a right to own it.',
+    title: string.welcome.step_3.title,
+    description: string.welcome.step_3.description,
     speed: 1
   }
 };

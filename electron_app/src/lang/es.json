@@ -1,12 +1,12 @@
 {
   "errorMessages": {
     "ALREADY_EXISTS": {
-      "name": "Usuario ya existente",
-      "description": "Este usuario ya existe. Por favor, intente con otro usuario"
+      "name": "El usuario ya existe",
+      "description": "El usuario ya existe. Prueba con otro nombre de usuario"
     },
     "PREKEYBUNDLE_FAILED": {
-      "name": "Error al crear el usuario",
-      "description": "Ha ocurrido un error al generar el keybunle"
+      "name": "Error al crear cuenta",
+      "description": "Ha ocurrido un error al generar el paquete de llaves"
     },
     "CREATE_USER_FAILED": {
       "name": "Error al crear el usuario",
@@ -14,51 +14,43 @@
     },
     "SAVE_LOCAL": {
       "name": "Error al crear la cuenta",
-      "description":
-        "Ha ocurrido un error al guardar el usuario en la base de datos"
+      "description": "Error al guardar el usuario en la base de datos local"
     },
     "SAVE_LABELS": {
       "name": "Error al crear la cuenta",
-      "description": "Ha ocurrido un error al guardar las etiquetas"
+      "description": "Error al crear etiquetas en la base de datos local"
     },
     "SAVE_OWN_CONTACT": {
       "name": "Error al crear la cuenta",
-      "description":
-        "Ha ocurrido un error al guardar la información de contacto en la base de datos"
+      "description": "Fallo al guardar tu información de contacto en la base de datos"
     },
     "POST_KEYBUNDLE": {
       "name": "Error al crear la cuenta",
-      "description": "Ha ocurrido un error al subir el keybundle. Código: "
+      "description": "Ha ocurrido un error al subir el paquete de llaves. Código: "
     },
     "UPDATE_ACCOUNT_DATA": {
       "name": "Error al crear la cuenta",
-      "description":
-        "Ha ocurrido un error al actualizar la información de la cuenta"
+      "description": "Ha ocurrido un error al actualizar la información de la cuenta"
     },
     "WRONG_CREDENTIALS": {
       "name": "Credenciales incorrectas",
-      "description":
-        "Usuario o contraseña incorrectos. Verifique sus credenciales e intente de nuevo"
+      "description": "Usuario o contraseña incorrectos. Verifica tus credenciales e intenta de nuevo"
     },
     "LOGIN_FAILED": {
-      "name": "Falló el inicio de sesión",
-      "description":
-        "Ha ocurrido un error durante el inicio de sesión. Por favor, intente de nuevo.\nCódigo: "
+      "name": "Error de inicio de sesión",
+      "description": "Ha ocurrido un error durante el inicio de sesión. Por favor, intenta de nuevo.\nCódigo: "
     },
     "TOO_MANY_DEVICES": {
-      "name": "Muchos dispositivos autorizados",
-      "description":
-        "Tienes muchos dispositivos autorizados. \nDesde uno de tus dispositivos, remueve algún dispositivo que ya no uses e intenta de nuevo. Si no puedes acceder a ninguno de tus dispositivos, por favor contacta a soporte"
+      "name": "Demasiados dispositivos autorizados",
+      "description": "Tienes demasiados dispositivos autorizados. \nDesde uno de tus dispositivos, remueve algún dispositivo que ya no uses e intenta de nuevo. Si no puedes acceder a ninguno de tus dispositivos, por favor contacta a soporte"
     },
     "TOO_MANY_REQUESTS": {
       "name": "Limite de peticiones excedido",
-      "description":
-        "Has realizado muchas peticiones consecutivas.\nPor favor, intenta nuevamente dentro de "
+      "description": "Has realizado muchas peticiones consecutivas.\nPor favor, intenta nuevamente dentro de "
     },
     "UNABLE_TO_CONNECT": {
       "name": "No se puede conectar",
-      "description":
-        "No se ha podido establecer una conexión con el servidor.\nPor favor, revisa el acceso a internet"
+      "description": "No se ha podido establecer una conexión con el servidor."
     },
     "NO_RESPONSE": {
       "name": "No hay respuesta",
@@ -66,23 +58,19 @@
     },
     "UNAUTHORIZED": {
       "name": "Error de encriptación",
-      "description":
-        "Ha ocurrido un error en tu solicitud.\nPor favor intenta de nuevo"
+      "description": "Ha ocurrido un error en tu solicitud.\nPor favor intenta de nuevo"
     },
     "ENCRYPTING": {
       "name": "Error de encriptación",
-      "description":
-        "Ha ocurrido un error durante el proceso de encriptación del mensaje.\nCódigo: "
+      "description": "Ha ocurrido un error durante el proceso de encriptación del mensaje.\nCódigo: "
     },
     "NON_EXISTING_USERS": {
-      "name": "Usuario no existente",
-      "description":
-        "Uno o más usuarios que especificaste no existen.\nPor favor, verifica los destinatarios e intenta de nuevo"
+      "name": "Usuarios no existentes",
+      "description": "Uno o más usuarios que especificaste no existen.\nPor favor, verifica los destinatarios e intenta de nuevo"
     },
     "UPLOAD_FAILED": {
-      "name": "Falló al subir el archivo",
-      "description":
-        "Ha ocurrido un error mientras se subía el archivo.\nPor favor, intenta de nuevo"
+      "name": "Error al subir el archivo",
+      "description": "Ha ocurrido un error mientras se subía el archivo.\nPor favor, intenta de nuevo"
     },
     "TOO_MANY_FILES": {
       "name": "Demasiados archivos adjuntos",
@@ -93,18 +81,16 @@
       "description": {
         "prefix": "El tamaño del archivo",
         "suffix": "es mayor a",
-        "defaultEnd": "l tamaño permitido"
+        "defaultEnd": "tamaño permitido"
       }
     },
     "PENDING_FILES": {
       "name": "Archivos pendientes",
-      "description":
-        "Tienes archivos pendientes o que fallaron al subirse.\nPor favor, verifica tus archivos e intenta de nuevo"
+      "description": "Tienes archivos pendientes o que fallaron al subirse.\nPor favor, verifica tus archivos e intenta de nuevo"
     },
     "TOO_MANY_RECIPIENTS": {
-      "name": "Muchos destinatarios",
-      "description":
-        "Tus correos solo pueden contener hasta 300 destinatarios.\nPor favor, verifica e intenta de nuevo"
+      "name": "Demasiados destinatarios",
+      "description": "Tus correos solo pueden contener hasta 300 destinatarios.\nPor favor, verifica e intenta de nuevo"
     },
     "UNKNOWN": {
       "name": "Error",
@@ -112,58 +98,53 @@
     },
     "LINK_DEVICES_UPLOAD_DATA": {
       "name": "Error al sincronizar",
-      "description":
-        "Ha ocurrido un error al sincronizar los dispositivos.\nCódigo: "
+      "description": "Ha ocurrido un error al sincronizar los dispositivos.\nCódigo: "
     }
   },
   "updaterMessages": {
     "error": {
-      "name": "Error al actualizar",
-      "description":
-        "Ha ocurrido un error al intentar descargar la actualización.\nPor favor, intenta más tarde"
+      "name": "Error al Actualizar",
+      "description": "Ha ocurrido un error al intentar descargar la actualización.\nPor favor, intenta más tarde"
     },
     "unknownError": "Desconocido",
     "notAvailable": {
-      "name": "Actualización no dispobible",
+      "name": "Actualización no disponible",
       "description": "Ya estás en la última versión de Criptext"
     },
     "availableManual": {
-      "name": "Actualización disponible",
-      "description":
-        "Una nueva versión de Criptext está disponible.\n¿Te gustaría descargarla ahora?",
+      "name": "Actualización Disponible",
+      "description": "Una nueva versión de Criptext está disponible.\n¿Te gustaría descargarla ahora?",
       "confirmButton": "Sí",
       "cancelButton": "No"
     },
     "availableAuto": {
       "title": "¡Una nueva versión de Criptext está disponible!",
-      "subtitle":
-        "Da clic aquí o descarta esta notificación para actualizar después"
+      "subtitle": "Da clic aquí para descargar o actualiza después"
     },
     "downloading": {
       "title": "Descargando actualización",
-      "subtitle": "Cuando la descarga haya finalizado, te notificaremos"
+      "subtitle": "Te notificaremos cuando este lista"
     },
     "alreadyDownloading": {
       "title": "Descargando actualización",
       "subtitle": "Ya se está descargando una actualización"
     },
     "downloaded": {
-      "title": "Instalar actualización",
-      "subtitle":
-        "Descarga terminada. A continuación, Criptext se reiniciará para actualizarse"
+      "title": "Instalar Actualización",
+      "subtitle": "Descarga terminada. A continuación, Criptext se reiniciará para actualizarse"
     }
   },
   "windows": {
     "composer": {
-      "windowTitle": "Nuevo mensaje seguro",
-      "closeWarning" : {
+      "windowTitle": "Nuevo Correo Seguro",
+      "closeWarning": {
         "title": "Advertencia",
-        "message": "Estás cerrando un mensaje que no ha sido enviado",
-        "detail": "Para guardar el mensaje, selecciona 'Guardar como borrador'. El mensaje será guardado en tu carpeta de Borradores",
+        "message": "Estás cerrando un mensaje que no ha sido enviado.",
+        "detail": "Para guardar el mensaje, haz clic en 'Guardar como Borrador'. El mensaje se guardará en su carpeta de Borradores.",
         "responses": {
           "discard": "Descartar cambios",
           "continue": "Continuar escribiendo",
-          "save": "Guardar como borrador"
+          "save": "Guardar como Borrador"
         }
       }
     },
@@ -171,37 +152,33 @@
       "template": {
         "file": "Archivo",
         "newEmail": "Nuevo correo",
-        
         "edit": "Editar",
         "undo": "Deshacer",
         "redo": "Rehacer",
         "cut": "Cortar",
         "copy": "Copiar",
         "paste": "Pegar",
-        "selectAll": "Seleccionar todo",
-        
+        "selectAll": "Seleccionar todos",
         "window": "Ventana",
         "minimize": "Minimizar",
         "close": "Cerrar",
         "developer": "Desarrollador",
-        "toggleDeveloperTools": "Mostrar/Ocultar herramientas de desarrollador",
-
+        "toggleDeveloperTools": "Mostrar\/Ocultar herramientas de desarrollo",
         "aboutCriptext": "Acerca de Criptext",
         "services": "Servicios",
         "hideCriptext": "Ocultar Criptext",
-        "hideOthers": "Ocultar los demás",
-        "showAll": "Mostrar todos",
+        "hideOthers": "Ocultar Otros",
+        "showAll": "Mostrar Todo",
         "quit": "Salir",
-
-        "checkForUpdates": "Comprobar actualizaciones",
+        "checkForUpdates": "Buscar actualizaciones",
         "bringAllToFront": "Traer todo al frente",
         "criptext": "Criptext"
       },
       "trayIcon": {
         "criptext": "Criptext",
-        "newEmail": "Nuevo correo",
+        "newEmail": "Nuevo Correo",
         "quit": "Salir",
-        "checkForUpdates": "Comprobar actualizaciones"
+        "checkForUpdates": "Buscar actualizaciones"
       }
     }
   }
