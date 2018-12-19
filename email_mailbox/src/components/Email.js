@@ -6,6 +6,7 @@ import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
 import ButtonUnsend from './ButtonUnsendWrapper';
 import { EmailStatus } from './../utils/const';
+import string from '../lang';
 import './email.scss';
 
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
@@ -72,15 +73,15 @@ const Email = props => (
       <div className="email-segment-controls">
         <div className="replay-button" onClick={() => props.onReplyLast()}>
           <i className="icon-replay" />
-          <span>Reply</span>
+          <span>{string.mailbox.reply}</span>
         </div>
         <div className="replay-all-button" onClick={ev => props.onReplyAll(ev)}>
           <i className="icon-replay-all" />
-          <span>Reply All</span>
+          <span>{string.mailbox.reply_all}</span>
         </div>
         <div className="forward-button" onClick={ev => props.onForward(ev)}>
           <i className="icon-forward" />
-          <span>Forward</span>
+          <span>{string.mailbox.forward}</span>
         </div>
       </div>
     )}
@@ -100,7 +101,9 @@ const renderEmailInfoExpand = props => (
       {renderEmailStatus(props.email.status)}
       <span>{`To ${showContacts(props.email.to)}`}</span>
       <div className="email-info-content-to-more">
-        <span onClick={props.onTooglePopOverEmailMoreInfo}>more</span>
+        <span onClick={props.onTooglePopOverEmailMoreInfo}>
+          {string.mailbox.more}
+        </span>
         <PopOverEmailMoreInfo
           bcc={props.email.bcc}
           cc={props.email.cc}

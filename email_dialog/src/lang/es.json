@@ -1,18 +1,18 @@
 {
-  "messagelostAllDevices": "También puedes ingresar usando tu contraseña, de ser así no tendrás acceso \nal historial de tus correos que estan almancenados en tus dispositivos verificados",
-  "messageEmptyRecoveryEmail": {
-    "preffix": "No has configurado un",
-    "strong": "Correo de Recuperación",
-    "suffix": "por lo cual es\nimposible recuperar tu cuenta si olvidas tu contraseña"
-  },
-  "messageForgotSentLink": {
-    "defaultText": "Un enlace para restablecer tu contraseña fue enviado a tu Correo de verificación. \nEl enlace será válido por 30 minutos"
-  },
-  "messageForgotEmptyEmail": {
-    "defaultText": "Necesitas configurar un Correo de recuperación para restablecer tu contraseña"
-  },
-  "messagePermanentDeleteThread": {
-    "text": "Estos elementos serán eliminados permanentemente y no será posible recuperarlos.",
-    "question": "¿Estás seguro?"
-  }
+  "messagelostAllDevices": "Si inicias sesión con tu contraseña tu Historial de Buzones de otros dispositivos no estara presente en este dispositivo. ¿Quieres continuar?",
+    "messageEmptyRecoveryEmail": {
+      "preffix": "No has establecido un",
+      "strong": "Correo de Recuperación",
+      "suffix": "así que la recuperación de la cuenta \nes imposible si olvidaste tu contraseña"
+    },
+    "messageForgotSentLink": {
+      "defaultText": "Se ha enviado un enlace para restableser la contraseña a tu correo de recuperación. \nEl enlace será valido por 30 minutos"
+    },
+    "messageForgotEmptyEmail": {
+      "defaultText": "Necesitas configurar un Correo de Recuperación para restablecer tu contraseña"
+    },
+    "messagePermanentDeleteThread": {
+      "text": "Estos elementos se eliminarán permanentemente y no podrás recuperarlos.",
+      "question": "¿Estás seguro?"
+    }
 }

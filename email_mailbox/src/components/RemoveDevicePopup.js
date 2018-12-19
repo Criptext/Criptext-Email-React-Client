@@ -1,21 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './removedevicepopup.scss';
 
 const RemoveDevicePopup = props => {
   return (
     <div id="popup-removedevice" className="popup-content">
       <div className="popup-title">
-        <h1>Remove Device</h1>
+        <h1>{string.popups.remove_device.title}</h1>
       </div>
       <div className="popup-paragraph">
-        <p>
-          Removing access will automatically sign you out of your account on
-          this device.
-        </p>
+        <p>{string.popups.remove_device.paragraphs.header}</p>
       </div>
       <div className="popup-subtitle">
-        <h2>To confirm enter your password</h2>
+        <h2>{string.popups.remove_device.paragraphs.password}</h2>
       </div>
       <div className="popup-inputs">
         <PasswordChangedPopupInput {...props} />
@@ -25,14 +23,14 @@ const RemoveDevicePopup = props => {
           className="button-a popup-cancel-button"
           onClick={props.onClickCancelRemoveDevice}
         >
-          <span>Cancel</span>
+          <span>{string.popups.remove_device.cancelButtonLabel}</span>
         </button>
         <button
           className="button-a popup-confirm-button"
           onClick={props.onClickConfirmRemoveDevice}
           disabled={props.isDisabledConfirmButton}
         >
-          <span>Remove</span>
+          <span>{string.popups.remove_device.confirmButtonLabel}</span>
         </button>
       </div>
     </div>
@@ -54,7 +52,7 @@ const PasswordChangedPopupInput = ({
       type={type}
       value={value}
       onChange={ev => onChangeInputValue(ev)}
-      placeholder={'Enter password'}
+      placeholder={string.popups.remove_device.input.password.placeholder}
       disabled={isDisabledInput}
     />
     {type === 'password' && (

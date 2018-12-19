@@ -1,5 +1,6 @@
 /*global process */
 import { LabelType } from './electronInterface';
+import { currentLanguage } from './../lang';
 
 export const appDomain =
   process.env.NODE_ENV === 'development'
@@ -99,10 +100,10 @@ export const deviceTypes = {
 };
 
 export const usefulLinks = {
-  FAQ: 'https://criptext.com/faq/',
-  PRIVACY_POLICY: 'https://www.criptext.com/privacy',
-  TERMS_OF_SERVICE: 'https://www.criptext.com/terms',
-  CRIPTEXT_LIBRARIES: 'https://www.criptext.com/open-source-desktop'
+  FAQ: `https://criptext.com/${currentLanguage}/faq/`,
+  PRIVACY_POLICY: `https://www.criptext.com/${currentLanguage}/privacy`,
+  TERMS_OF_SERVICE: `https://www.criptext.com/${currentLanguage}/terms`,
+  CRIPTEXT_LIBRARIES: `https://www.criptext.com/${currentLanguage}/open-source-desktop`
 };
 
 export const composerEvents = {

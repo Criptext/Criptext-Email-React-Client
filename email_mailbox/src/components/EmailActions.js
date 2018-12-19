@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from '../lang';
 import './emailactions.scss';
 
 const EmailActions = props => {
@@ -12,7 +13,7 @@ const EmailActions = props => {
             props.onToggleMenu(ev);
           }}
         >
-          <span>Reply</span>
+          <span>{string.mailbox.reply}</span>
         </li>
         <li
           onClick={ev => {
@@ -20,7 +21,7 @@ const EmailActions = props => {
             props.onToggleMenu(ev);
           }}
         >
-          <span>Reply All</span>
+          <span>{string.mailbox.reply_all}</span>
         </li>
         <li
           onClick={ev => {
@@ -28,7 +29,7 @@ const EmailActions = props => {
             props.onToggleMenu(ev);
           }}
         >
-          <span>Forward</span>
+          <span>{string.mailbox.forward}</span>
         </li>
         {props.isSpam || props.isTrash ? (
           <li
@@ -37,7 +38,7 @@ const EmailActions = props => {
               props.onToggleMenu(ev);
             }}
           >
-            <span>Delete permanently</span>
+            <span>{string.mailbox.delete_permanently}</span>
           </li>
         ) : (
           <li
@@ -46,12 +47,12 @@ const EmailActions = props => {
               props.onToggleMenu(ev);
             }}
           >
-            <span>Delete</span>
+            <span>{string.mailbox.delete}</span>
           </li>
         )}
 
         <li>
-          <span>Mark as Unread</span>
+          <span>{string.mailbox.mark_as_unread}</span>
         </li>
         {!props.isSpam && (
           <li
@@ -60,7 +61,7 @@ const EmailActions = props => {
               props.onToggleMenu(ev);
             }}
           >
-            <span>Mark as Spam</span>
+            <span>{string.mailbox.mark_as_spam}</span>
           </li>
         )}
       </ul>

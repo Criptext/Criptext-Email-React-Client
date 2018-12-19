@@ -1,4 +1,16 @@
 {
+  "errors": {
+    "password": {
+      "length": {
+        "a": "Must be at least",
+        "b": "characters"
+      },
+      "match": "Passwords do not match"
+    },
+    "email": {
+      "invalid": "Invalid email"
+    }
+  },
   "header": {
     "add_labels": "Add labels",
     "archive": "Archive",
@@ -33,6 +45,11 @@
   },
   "mailbox": {
     "all": "all",
+    "bcc": "Bcc",
+    "cc": "Cc",
+    "date": "Date",
+    "delete": "Delete",
+    "delete_permanently": "Delete permanently",
     "empty": {
       "search": {
         "header": "No search results",
@@ -47,60 +64,19 @@
         "subheader": "Send an email to get started"
       }
     },
+    "forward": "Forward",
+    "from": "From",
+    "mark_as_spam": "Mark as Spam",
+    "mark_as_unread": "Mark as Unread",
     "move_to_trash": "Move to trash",
+    "more": "more",
     "not_starred": "Not starred",
+    "reply": "Reply",
+    "reply_all": "Reply All",
     "starred": "Starred",
+    "subject": "Subject",
+    "to": "To",
     "unread": "unread"
-  },
-  "settings": {
-    "action": "Action",
-    "cancel": "Cancel",
-    "change_password": "change password",
-    "contact_support": "Contact Support",
-    "create_new_label": "Create new label",
-    "criptext_libraries": "Criptext Libraries",
-    "current_device": "current device",
-    "disabled": "disabled",
-    "enabled": "enabled",
-    "faq": "FAQ",
-    "general": "general",
-    "language": "language",
-    "last_activity": "Last activity",
-    "linked_devices": "Linked devices",
-    "logout_account": "Logout Account",
-    "logout": "Logout",
-    "name": "name",
-    "not_verified": "Not verified",
-    "notification_preview": "notification preview",
-    "off": "off",
-    "on": "on",
-    "password": "password",
-    "profile": "profile",
-    "privacy_policy": "Privacy Policy",
-    "read_receipts": "read receipts",
-    "read_receipts_description": "If you turn off read receipts, you won't be able to see read receipts from other people",
-    "remove": "Remove",
-    "resend_link": "resend link",
-    "show_in_label_list": "Show in label list",
-    "signature": "Signature",
-    "system_labels": "System Labels",
-    "terms_of_service": "Terms of service",
-    "trusted_devices": "trusted devices",
-    "two_factor_authentication": "two-factor authentication",
-    "üseful_links": "Useful links",
-    "verified": "Verified",
-    "delete_account": {
-      "label": "Delete Account",
-      "button": "Delete permanently"
-    }
-  },
-  "sidebar": {
-    "compose": "compose",
-    "enter_new_label": "enter new label",
-    "invite_a_friend": "Invite a friend",
-    "labels": "Labels",
-    "new_label": "New label",
-    "settings": "Settings"
   },
   "messages": {
     "change_password": {
@@ -108,8 +84,7 @@
         "description": "Password changed"
       },
       "error": {
-        "description":
-          "Failed to change password. The password has not been modified"
+        "description": "Failed to change password. The password has not been modified"
       }
     },
     "download_file": {
@@ -130,8 +105,7 @@
       }
     },
     "fetchEmails": {
-      "description":
-        "Failed to fetch the emails. Check your connection and try again"
+      "description": "Failed to fetch the emails. Check your connection and try again"
     },
     "internet": {
       "description": "Connection reestablished"
@@ -147,8 +121,7 @@
         "description": "Recovery email changed"
       },
       "error": {
-        "description":
-          "Failed to change recovery email. Check your connection and try again"
+        "description": "Failed to change recovery email. Check your connection and try again"
       }
     },
     "recovery_email_link_confirmation": {
@@ -160,17 +133,14 @@
       }
     },
     "remember_share_passphrase": {
-      "description":
-        "Remember to send the passphrase to your non-Criptext recipients"
+      "description": "Remember to send the passphrase to your non-Criptext recipients"
     },
     "reset_password_send_link": {
       "success": {
-        "description":
-          "A reset link was sent to your recovery email. The link will be valid for 30 minutes"
+        "description": "A reset link was sent to your recovery email. The link will be valid for 30 minutes"
       },
       "error": {
-        "description":
-          "You need to set and confirm a Recovery Email to reset your password"
+        "description": "You need to set and confirm a Recovery Email to reset your password"
       }
     },
     "remove_device": {
@@ -188,8 +158,7 @@
       "description": "Failed to send open email. Try again"
     },
     "trash": {
-      "description":
-        "Messages that have been in Trash more than 30 days will be automatically deleted",
+      "description": "Messages that have been in Trash more than 30 days will be automatically deleted",
         "action": "Empty Trash"
     },
     "two_factor_auth_turn_off": {
@@ -199,8 +168,7 @@
       "description": "Failed to unsend the email. Unknown status code:"
     },
     "unsend_email_expired": {
-      "description":
-        "Failed to unsend the email. Time (1h) for unsending has already expired."
+      "description": "Failed to unsend the email. Time (1h) for unsending has already expired."
     },
     "update": {
       "description": "A new version of Criptext is available!",
@@ -228,6 +196,46 @@
       "paragraphs": {
         "header": "Removing all data..."
       }
+    },
+    "change_password": {
+      "title": "Change Password",
+      "paragraphs": {
+        "header": "Enter your password then your new password and confirm it"
+      },
+      "input": {
+        "old_password": {
+          "placeholder": "Enter old password",
+          "button": "Forgot password?"
+        },
+        "new_password": {
+          "placeholder": "Enter new password"
+        },
+        "repeat_password": {
+          "placeholder": "Repeat new password"
+        }
+      },
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Confirm"
+    },
+    "change_recovery_email": {
+      "title": "Change Recovery Email",
+      "paragraph": {
+        "password": "To confirm enter your password",
+        "recovery_email": "Enter your new Recovery email",
+        "note": "Note",
+        "note_text": "Changing your recovery email will disable two-factor authentication"
+      },
+      "input": {
+        "recovery_email": {
+          "placeholder": "Enter new recovery email"
+        },
+        "password": {
+          "placeholder": "Enter password",
+          "button": "Forgot password?"
+        }
+      },
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Send"
     },
     "delete_account": {
       "title": "Delete My Account",
@@ -257,7 +265,81 @@
       },
       "cancelButtonLabel": "Cancel",
       "confirmButtonLabel": "Continue"
+    },
+    "remove_device": {
+      "title": "Remove Device",
+      "paragraphs": {
+        "header":"Removing access will automatically sign you out of your account on this device.",
+        "password": "To confirm enter your password"
+      },
+      "input": {
+        "password": {
+          "placeholder": "Enter password"
+        }
+      },
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Remove"
+    },
+    "two_fa": {
+      "title": "2FA Enabled!",
+      "paragraph": "Next time you sign into your account on another device you'll have to enter your password and then validate the sign in from an existing device.",
+      "button": "Got it"
     }
+  },
+  "settings": {
+    "action": "Action",
+    "cancel": "Cancel",
+    "change": "Change",
+    "change_password": "change password",
+    "contact_support": "Contact Support",
+    "create_new_label": "Create new label",
+    "criptext_libraries": "Criptext Libraries",
+    "current_device": "current device",
+    "disabled": "disabled",
+    "enabled": "enabled",
+    "enter_new_label_name": "Enter new label name",
+    "faq": "FAQ",
+    "general": "general",
+    "language": "language",
+    "last_activity": "Last activity",
+    "linked_devices": "Linked devices",
+    "logout_account": "Logout Account",
+    "logout": "Logout",
+    "name": "name",
+    "not_verified": "Not verified",
+    "notification_preview": "notification preview",
+    "off": "off",
+    "on": "on",
+    "password": "password",
+    "profile": "profile",
+    "privacy_policy": "Privacy Policy",
+    "read_receipts": "read receipts",
+    "read_receipts_description": "If you turn off read receipts, you won't be able to see read receipts from other people",
+    "recovery_email": "Recovery Email",
+    "remove": "Remove",
+    "resend_link": "resend link",
+    "set_email": "Set Email",
+    "show_in_label_list": "Show in label list",
+    "signature": "Signature",
+    "system_labels": "System Labels",
+    "terms_of_service": "Terms of service",
+    "trusted_devices": "trusted devices",
+    "two_factor_authentication": "two-factor authentication",
+    "two_factor_not_available_text" : "To enable Two-Factor Authentication you must set and verify a recovery email",
+    "üseful_links": "Useful links",
+    "verified": "Verified",
+    "delete_account": {
+      "label": "Delete Account",
+      "button": "Delete permanently"
+    }
+  },
+  "sidebar": {
+    "compose": "compose",
+    "enter_new_label": "enter new label",
+    "invite_a_friend": "Invite a friend",
+    "labels": "Labels",
+    "new_label": "New label",
+    "settings": "Settings"
   },
   "userGuide": {
     "buttonCompose": {
@@ -271,6 +353,20 @@
     "activityFeed": {
       "text": "See which emails have been read and by whom",
       "buttonLabel": "Okay"
+    }
+  },
+  "welcome": {
+    "step_1": {
+      "title": "Welcome!",
+      "description": "Your secure email experience starts now. Be ready for privacy without compromise."
+    },
+    "step_2": {
+      "title": "Strong Privacy",
+      "description": "Criptext doesn`t collect email data. Your emails are only stored on your device."
+    },
+    "step_3": {
+      "title": "The power is yours",
+      "description": "You create information, we believe you have a right to own it."
     }
   }
 }

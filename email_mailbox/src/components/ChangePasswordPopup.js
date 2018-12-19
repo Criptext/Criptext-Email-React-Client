@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from '../lang';
 
 const ChangePasswordPopup = props => {
   return (
     <div className="popup-content">
       <div className="popup-title">
-        <h1>Change Password</h1>
+        <h1>{string.popups.change_password.title}</h1>
       </div>
       <div className="popup-paragraph">
-        <p>Enter your password then your new password and confirm it</p>
+        <p>{string.popups.change_password.paragraphs.header}</p>
       </div>
       <ChangePasswordPopupInputs {...props} />
       <ChangePasswordPopupButtons {...props} />
@@ -24,7 +25,9 @@ const ChangePasswordPopupInputs = props => {
         type={props.oldPasswordInput.type}
         value={props.oldPasswordInput.value}
         icon={props.oldPasswordInput.icon}
-        placeholder={'Enter old password'}
+        placeholder={
+          string.popups.change_password.input.old_password.placeholder
+        }
         onChangeValue={props.onChangeInputValueChangePassword}
         onChangeType={props.onClickChangePasswordInputType}
         hasError={props.oldPasswordInput.hasError}
@@ -35,7 +38,7 @@ const ChangePasswordPopupInputs = props => {
           className="button button-b"
           onClick={props.onClickForgotPasswordLink}
         >
-          Forgot password?
+          {string.popups.change_password.input.old_password.button}
         </button>
       </div>
       <ChangePasswordPopupInput
@@ -43,7 +46,9 @@ const ChangePasswordPopupInputs = props => {
         type={props.newPasswordInput.type}
         value={props.newPasswordInput.value}
         icon={props.newPasswordInput.icon}
-        placeholder={'Enter new password'}
+        placeholder={
+          string.popups.change_password.input.old_password.placeholder
+        }
         onChangeValue={props.onChangeInputValueChangePassword}
         onChangeType={props.onClickChangePasswordInputType}
         hasError={props.newPasswordInput.hasError}
@@ -54,7 +59,9 @@ const ChangePasswordPopupInputs = props => {
         type={props.confirmNewPasswordInput.type}
         value={props.confirmNewPasswordInput.value}
         icon={props.confirmNewPasswordInput.icon}
-        placeholder={'Repeat new password'}
+        placeholder={
+          string.popups.change_password.input.repeat_password.placeholder
+        }
         onChangeValue={props.onChangeInputValueChangePassword}
         onChangeType={props.onClickChangePasswordInputType}
         hasError={props.confirmNewPasswordInput.hasError}
@@ -104,14 +111,14 @@ const ChangePasswordPopupButtons = props => (
       className="button-a popup-cancel-button"
       onClick={props.onClickCancelChangePassword}
     >
-      <span>Cancel</span>
+      <span>{string.popups.change_password.cancelButtonLabel}</span>
     </button>
     <button
       className="button-a popup-confirm-button"
       onClick={props.onConfirmChangePassword}
       disabled={props.isDisabledChangePasswordSubmitButton}
     >
-      <span>Confirm</span>
+      <span>{string.popups.change_password.confirmButtonLabel}</span>
     </button>
   </div>
 );

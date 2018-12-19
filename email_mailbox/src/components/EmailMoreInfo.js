@@ -1,20 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ContactTag from './ContactTag';
-import './emailmoreinfo.scss';
 import { orderContactsByNameOrEmail } from '../utils/ContactUtils';
+import string from '../lang';
+import './emailmoreinfo.scss';
 
 const EmailMoreInfo = props => (
   <div className="email-more-detail" onClick={ev => ev.stopPropagation()}>
     <table>
       <tbody>
-        {renderContacts('From:', props.from)}
-        {renderContacts('To:', props.to)}
-        {props.cc.length ? renderContacts('Cc:', props.cc) : null}
-        {props.bcc.length ? renderContacts('Bcc:', props.bcc) : null}
+        {renderContacts(`${string.mailbox.from}:`, props.from)}
+        {renderContacts(`${string.mailbox.to}:`, props.to)}
+        {props.cc.length
+          ? renderContacts(`${string.mailbox.cc}:`, props.cc)
+          : null}
+        {props.bcc.length
+          ? renderContacts(`${string.mailbox.bcc}:`, props.bcc)
+          : null}
         <tr>
           <td>
-            <span className="title">Date:</span>
+            <span className="title">{`${string.mailbox.date}:`}</span>
           </td>
           <td>
             <span className="text">{props.date}</span>
@@ -22,7 +27,7 @@ const EmailMoreInfo = props => (
         </tr>
         <tr>
           <td>
-            <span className="title">Subject:</span>
+            <span className="title">{`${string.mailbox.subject}:`}</span>
           </td>
           <td>
             <span className="text">{props.subject}</span>

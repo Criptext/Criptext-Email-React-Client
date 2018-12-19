@@ -94,7 +94,7 @@ const renderInputAddNewLabel = props => (
         <input
           className="input-a"
           type="text"
-          placeholder="Enter new label name"
+          placeholder={string.settings.enter_new_label_name}
           value={props.labelToAdd}
           onChange={e => props.onAddLabelInputChanged(e)}
           onKeyPress={e => props.onAddLabelInputKeyPressed(e)}

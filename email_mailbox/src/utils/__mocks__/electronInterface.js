@@ -13,6 +13,8 @@ export const getAllLabels = async () => {
   return labels;
 };
 
+export const mySettings = { language: 'en' };
+
 export const LabelType = {
   inbox: {
     id: 1,

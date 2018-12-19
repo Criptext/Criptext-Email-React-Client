@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from './../lang';
 import './changerecoveryemailpopup.scss';
 
-const recoveryEmailText = 'Enter your new Recovery email';
-const passwordText = 'To confirm enter your password';
-const noteText =
-  'Changing your recovery email will disable two-factor authentication';
+const recoveryEmailText =
+  string.popups.change_recovery_email.paragraph.recovery_email;
+const passwordText = string.popups.change_recovery_email.paragraph.password;
+const noteText = string.popups.change_recovery_email.paragraph.note_text;
 
 const ChangeRecoveryEmailPopup = props => {
   return (
     <div className="popup-content change-recovery-email-popup-content">
       <div className="popup-title">
-        <h1>Change Recovery Email</h1>
+        <h1>{string.popups.change_recovery_email.title}</h1>
       </div>
       <div className="popup-paragraph">
         <p>{recoveryEmailText}</p>
@@ -22,7 +23,9 @@ const ChangeRecoveryEmailPopup = props => {
           type={props.recoveryEmailPopupInputEmail.type}
           value={props.recoveryEmailPopupInputEmail.value}
           icon={props.recoveryEmailPopupInputEmail.icon}
-          placeholder={'Enter new recovery email'}
+          placeholder={
+            string.popups.change_recovery_email.input.recovery_email.placeholder
+          }
           onChangeValue={props.onChangeInputValueOnChangeRecoveryEmailPopup}
           onChangeType={() => {}}
           hasError={props.recoveryEmailPopupInputEmail.hasError}
@@ -36,7 +39,9 @@ const ChangeRecoveryEmailPopup = props => {
           type={props.recoveryEmailPopupInputPassword.type}
           value={props.recoveryEmailPopupInputPassword.value}
           icon={props.recoveryEmailPopupInputPassword.icon}
-          placeholder={'Enter password'}
+          placeholder={
+            string.popups.change_recovery_email.input.password.placeholder
+          }
           onChangeValue={props.onChangeInputValueOnChangeRecoveryEmailPopup}
           onChangeType={props.onClickChangeRecoveryEmailInputType}
           hasError={props.recoveryEmailPopupInputPassword.hasError}
@@ -47,13 +52,16 @@ const ChangeRecoveryEmailPopup = props => {
             className="button button-b"
             onClick={props.onClickForgotPasswordLink}
           >
-            Forgot password?
+            {string.popups.change_recovery_email.input.password.button}
           </button>
         </div>
       </div>
       <div className="popup-paragraph change-recovery-email-note">
         <p>
-          <strong>Note:</strong> {noteText}
+          <strong>{`${
+            string.popups.change_recovery_email.paragraph.note
+          }:`}</strong>{' '}
+          {noteText}
         </p>
       </div>
       <ChangeRecoveryEmailPopupButtons {...props} />
@@ -101,14 +109,14 @@ const ChangeRecoveryEmailPopupButtons = props => (
       className="button-a popup-cancel-button"
       onClick={props.onClickCancelChangePassword}
     >
-      <span>Cancel</span>
+      <span>{string.popups.change_recovery_email.cancelButtonLabel}</span>
     </button>
     <button
       className="button-a popup-confirm-button"
       onClick={props.onConfirmChangeRecoveryEmail}
       disabled={props.isDisabledChangeRecoveryEmailSubmitButton}
     >
-      <span>Confirm</span>
+      <span>{string.popups.change_recovery_email.confirmButtonLabel}</span>
     </button>
   </div>
 );
