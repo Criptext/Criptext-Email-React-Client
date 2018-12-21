@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Email from './Email';
 import { ButtonUnsendStatus } from './ButtonUnsend';
+import { checkUserGuideSteps } from '../utils/electronEventInterface';
+import { USER_GUIDE_STEPS } from './UserGuide';
 
 class EmailWrapper extends Component {
   constructor() {
@@ -57,6 +59,8 @@ class EmailWrapper extends Component {
         }
       });
     }
+    const steps = [USER_GUIDE_STEPS.EMAIL_READ];
+    checkUserGuideSteps(steps);
   }
 
   handleToggleEmail = () => {
