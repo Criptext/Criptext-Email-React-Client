@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ThreadItem from './ThreadItem';
 import { LabelType } from '../utils/electronInterface';
-import { checkUserGuideSteps } from '../utils/electronEventInterface';
-import { USER_GUIDE_STEPS } from './UserGuide';
 
 class ThreadItemWrapper extends Component {
   constructor() {
@@ -25,11 +23,6 @@ class ThreadItemWrapper extends Component {
         hovering={this.state.hovering}
       />
     );
-  }
-
-  componentDidMount() {
-    const steps = [USER_GUIDE_STEPS.EMAIL_READ];
-    checkUserGuideSteps(steps);
   }
 
   handleIsVisibleMoveToTrash = () => {

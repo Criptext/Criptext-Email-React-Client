@@ -7,6 +7,8 @@ ipc.answerRenderer('db-create-email-label', params =>
   dbManager.createEmailLabel(params)
 );
 
+ipc.answerRenderer('db-create-file', params => dbManager.createFile(params));
+
 ipc.answerRenderer('db-create-identity-key-record', params =>
   dbManager.createIdentityKeyRecord(params)
 );
