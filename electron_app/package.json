@@ -17,7 +17,7 @@
   },
   "scripts": {
     "electron": "electron .",
-    "set-env": "DEBUG=knex:* NODE_ENV=development CSC_LINK=build/Certificates.p12 CSC_KEY_PASSWORD=xxxxxxxx CSC_IDENTITY_AUTO_DISCOVERY=true MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004",
+    "set-env": "NODE_ENV=development CSC_LINK=build/Certificates.p12 CSC_KEY_PASSWORD=xxxxxxxx CSC_IDENTITY_AUTO_DISCOVERY=true MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004",
     "start": "npm run set-env electron .",
     "postinstall": "install-app-deps",
     "test": "criptext-js-tools test",
