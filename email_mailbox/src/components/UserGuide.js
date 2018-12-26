@@ -55,7 +55,7 @@ const USER_GUIDE_STEPS_INFO = {
   },
   [USER_GUIDE_STEPS.EMAIL_READ]: {
     name: USER_GUIDE_STEPS.EMAIL_READ,
-    target: '.icon-double-checked.status-opened ',
+    target: '.email-status.icon-double-checked.status-opened ',
     content: userGuide.emailRead.text,
     placement: 'right',
     disableBeacon: true,
@@ -92,7 +92,7 @@ class UserGuide extends Component {
         steps={steps}
         stepIndex={stepIndex}
         disableCloseOnEsc={true}
-        disableOverlayClose={true}
+        disableOverlayClose={false}
         hideBackButton={true}
         showProgress={false}
         showSkipButton={false}
