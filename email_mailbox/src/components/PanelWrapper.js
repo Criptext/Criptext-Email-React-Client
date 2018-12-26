@@ -67,10 +67,7 @@ class PanelWrapper extends Component {
   }
 
   componentDidMount() {
-    const steps = [
-      USER_GUIDE_STEPS.BUTTON_COMPOSE,
-      USER_GUIDE_STEPS.EMAIL_READ
-    ];
+    const steps = [USER_GUIDE_STEPS.BUTTON_COMPOSE];
     checkUserGuideSteps(steps);
   }
 
