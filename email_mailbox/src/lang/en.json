@@ -1,6 +1,9 @@
 {
   "activity": {
-    "activity_feed": "Activity Feed"
+    "activity_feed": "Activity Feed",
+    "new": "new",
+    "older": "older",
+    "someone": "Someone"
   },
   "emails": {
     "contact_support": {

@@ -3,6 +3,7 @@ import { loadFeedItems } from './../actions/index';
 import ActivityPanelView from './../components/ActivityPanel';
 import * as TimeUtils from './../utils/TimeUtils';
 import { FeedItemType } from './../utils/const';
+import string from '../lang';
 
 const orderFeedsByDate = feeds => {
   return feeds.sortBy(feed => feed.get('date')).reverse();
@@ -29,7 +30,11 @@ const defineFeedAction = feed => {
 
 const setFeedTitle = (state, feed) => {
   const feedContact = state.get('contacts').get(`${feed.get('contactId')}`);
-  if (!feedContact) return feed.set('title', `A user ${feed.get('action')}`);
+  if (!feedContact)
+    return feed.set(
+      'title',
+      `${string.activity.someone} ${feed.get('action')}`
+    );
 
   const contactData = feedContact.toJS();
   const { name, email } = contactData;
