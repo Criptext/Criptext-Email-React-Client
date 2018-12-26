@@ -53,12 +53,12 @@ class ActivityPanel extends Component {
         {this.renderFeedList(
           props.newFeeds,
           props.onClickThreadIdSelected,
-          'NEW'
+          string.activity.new
         )}
         {this.renderFeedList(
           props.oldFeeds,
           props.onClickThreadIdSelected,
-          'OLDER'
+          string.activity.older
         )}
       </div>
     );
