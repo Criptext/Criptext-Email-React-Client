@@ -18,13 +18,8 @@
   }
 
   span{
-    color: black;
     font-weight: 300;
     margin-left: 15px;
-  }
-
-  &:hover{
-    background-color: #f7fbff;
   }
 
   .nav-item-badge{
@@ -50,15 +45,13 @@
 .nav-item-selected{
   background-color: #f2f8ff;
 
-  .nav-item-icon{
-    color: black;
-  }
-
   span{
     font-weight: 600;
   }
 }
 
+/* COLLAPSE
+   ----------------------------- */
 @mixin collapse-nav-item-icon{
   font-size: 18px;
   margin: 0 auto;
@@ -130,3 +123,35 @@
     }
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_NAVITEM_SELECTED, $_BACKGROUND_COLOR_NAVITEM_HOVER, $_COLOR_TEXT_SELECTED, $_COLOR_TEXT){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .nav-item{
+      &.nav-item-selected{
+        background-color: $_BACKGROUND_COLOR_NAVITEM_SELECTED;
+  
+        .nav-item-icon{
+          color: $_COLOR_TEXT_SELECTED;
+        }
+  
+        >span{
+          color: $_COLOR_TEXT_SELECTED;
+        }
+      }
+      
+      &:hover{
+        background-color: $_BACKGROUND_COLOR_NAVITEM_HOVER;
+      }
+
+      >span{
+        color: $_COLOR_TEXT;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_NAVITEM_SELECTED_LIGHT, $_BACKGROUND_COLOR_NAVITEM_HOVER_LIGHT, $_COLOR_TEXT_PRIMARY_LIGHT, $_COLOR_TEXT_PRIMARY_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_NAVITEM_SELECTED_DARK, $_BACKGROUND_COLOR_NAVITEM_HOVER_DARK, $_COLOR_TEXT_PRIMARY_DARK, $_COLOR_TEXT_SECONDARY_DARK);

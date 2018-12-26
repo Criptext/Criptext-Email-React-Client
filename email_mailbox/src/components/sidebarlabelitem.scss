@@ -29,3 +29,19 @@
     width: calc(100% - 100px);
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_SECONDARY){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .nav-item-label{
+      label{
+        color: $_COLOR_TEXT_SECONDARY;
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_SECONDARY_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_SECONDARY_DARK);
