@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .threads-container{
   height: 100%;
   width: 100%;
@@ -13,7 +15,6 @@
     z-index: 2;
     width: calc(100% - 40px);
     padding: 0 10px;
-    background-color: #f7f7f8;
 
     .threads-header-title-container{
       align-items: center;
@@ -35,6 +36,10 @@
       >span{
         margin: 0 5px;
         text-transform: capitalize;
+
+        &.disabled{
+          opacity: 0.5;
+        }
       }
     
       .input-switch{
@@ -47,7 +52,6 @@
     overflow-y: auto;
     height: calc(100% - 125px);
     padding: 44px 20px 20px 20px;
-    background-color: #f7f7f8;
     position: relative;
     width: calc(100% - 40px);
 
@@ -56,8 +60,6 @@
       box-shadow: 0 2px 10px 0 rgba(0, 0, 1, 0.09);
       height: 100%;
     }
-
-    
   }
 
   .threads-content::-webkit-scrollbar-track{
@@ -150,3 +152,31 @@
     transform: translate(19px, 0);
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_COLOR_TEXT_MAIN_SWITCH_UNREAD){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .threads-header{
+      background-color: $_BACKGROUND_COLOR_MAIN;
+
+      .threads-mailbox-title{
+        color: $_COLOR_TEXT_MAIN_TITLE
+      }
+
+      .threads-header-switch-container{
+        >span{
+          color: $_COLOR_TEXT_MAIN_SWITCH_UNREAD;
+        }
+      }
+    }
+
+    .threads-content{
+      background-color: $_BACKGROUND_COLOR_MAIN;
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT, $_COLOR_TEXT_MAIN_SWITCH_UNREAD_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK, $_COLOR_TEXT_MAIN_SWITCH_UNREAD_DARK);
