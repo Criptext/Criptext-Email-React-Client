@@ -17,19 +17,17 @@
   },
   "scripts": {
     "electron": "electron .",
-    "set-env": "NODE_ENV=development CSC_LINK=build/Certificates.p12 CSC_KEY_PASSWORD=xxxxxxxx CSC_IDENTITY_AUTO_DISCOVERY=true MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004",
+    "set-env": "NODE_ENV=development MAILBOX_URL=http://localhost:3000 DIALOG_URL=http://localhost:3006 LOGIN_URL=http://localhost:3005 LOADING_URL=http://localhost:3003 COMPOSER_URL=http://localhost:3004",
     "start": "npm run set-env electron .",
     "postinstall": "install-app-deps",
     "test": "criptext-js-tools test",
     "integration": "NODE_ENV=test criptext-js-tools integration",
     "lint": "criptext-js-tools lint",
+    "clear-build": "sh ./installerResources/clearBuild.sh",
     "package": "sh ./installerResources/converge_builds.sh",
-    "pack": "build --dir",
-    "dist": "electron-builder --publish onTag",
-    "clear-build": "bash ./installerResources/clearBuild.sh",
-    "release": "build",
-    "publish": "build --mac --win -p onTag"
+    "release": "sh ./installerResources/make_installer.sh"
   },
+  "criptextInstallerType": "<LINUX|MACOS|WINDOWS>-<STORE|INSTALLER>",
   "build": {
     "appId": "com.criptext.criptextmail",
     "buildVersion": "1",
@@ -122,7 +120,7 @@
       "backgroundColor": "#373a45",
       "displayName": "Criptext",
       "identityName": "CriptextInc.Criptext",
-      "publisher": "Criptext Inc",
+      "publisher": "MyDevID",
       "publisherDisplayName": "Criptext Inc",
       "languages": [
         "en-US"
