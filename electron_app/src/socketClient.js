@@ -1,25 +1,29 @@
 const { client: WebSocketClient } = require('websocket');
-const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
 let client, reconnect, messageListener, socketConnection;
-const reconnectDelay = 2000;
-const globalManager = require('./globalManager');
+const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
+const isDev = process.env.NODE_ENV === 'development';
+const SOCKET_URL = isDev ? DEV_SOCKET_URL : PROD_SOCKET_URL;
+
 const NETWORK_STATUS = {
   ONLINE: 'online',
   OFFLINE: 'offline'
 };
-const isDev = process.env.NODE_ENV === 'development';
-const SOCKET_URL = isDev ? DEV_SOCKET_URL : PROD_SOCKET_URL;
-
-const pingDelay = 15000;
-let shouldSendPing;
-let timeout;
 let shouldReconnect = true;
+const reconnectDelay = 2000;
+
+const globalManager = require('./globalManager');
+const mailboxWindow = require('./windows/mailbox');
+
+//  Ping
+const spawn = require('child_process').spawn;
+let pingProcess;
 
 const setMessageListener = mListener => (messageListener = mListener);
 
 const disconnect = () => {
   if (socketConnection) {
     socketConnection.close();
+    pingProcess.kill();
   }
 };
 
@@ -39,7 +43,6 @@ const start = ({ jwt }) => {
     socketConnection = connection;
     setConnectionStatus(NETWORK_STATUS.ONLINE);
     log('Socket connection opened');
-    initPingParams();
     checkAlive();
 
     connection.on('error', error => {
@@ -52,9 +55,6 @@ const start = ({ jwt }) => {
     connection.on('message', data => {
       const message = JSON.parse(data.utf8Data);
       messageListener(message);
-    });
-    connection.on('pong', data => {
-      shouldSendPing = data.toString();
     });
   });
 
@@ -86,13 +86,18 @@ const setConnectionStatus = networkStatus => {
   switch (networkStatus) {
     case NETWORK_STATUS.ONLINE: {
       if (prevNetworkStatus === true) return;
+      if (prevNetworkStatus === false) {
+        mailboxWindow.send('network-connection-established');
+      }
       globalManager.internetConnection.setStatus(true);
       break;
     }
     case NETWORK_STATUS.OFFLINE: {
-      if (prevNetworkStatus !== false) {
-        globalManager.internetConnection.setStatus(false);
-      }
+      if (prevNetworkStatus === false) return;
+      setTimeout(() => {
+        mailboxWindow.send('lost-network-connection');
+      }, reconnectDelay);
+      globalManager.internetConnection.setStatus(false);
       break;
     }
     default:
@@ -100,21 +105,14 @@ const setConnectionStatus = networkStatus => {
   }
 };
 
-const initPingParams = () => {
-  shouldSendPing = undefined;
-  clearTimeout(timeout);
-};
-
 const checkAlive = () => {
-  if (shouldSendPing === undefined || shouldSendPing === '1') {
-    shouldSendPing = 0;
-    setConnectionStatus(NETWORK_STATUS.ONLINE);
-  } else {
+  pingProcess = spawn('ping', ['www.google.com', '-i', '15']);
+  pingProcess.stderr.on('data', () => {
     setConnectionStatus(NETWORK_STATUS.OFFLINE);
-    log('Error: Lost Connection. Check internet');
-  }
-  socketConnection.ping(1);
-  timeout = setTimeout(checkAlive, pingDelay);
+  });
+  pingProcess.stdout.on('data', () => {
+    setConnectionStatus(NETWORK_STATUS.ONLINE);
+  });
 };
 
 const restartSocket = ({ jwt }) => {
