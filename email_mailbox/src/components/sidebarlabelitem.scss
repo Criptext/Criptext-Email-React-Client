@@ -32,16 +32,16 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_COLOR_TEXT_SECONDARY){
+@mixin themable($_THEME, $_COLOR_TEXT_NAVITEM){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .nav-item-label{
       label{
-        color: $_COLOR_TEXT_SECONDARY;
+        color: $_COLOR_TEXT_NAVITEM;
       }
     }
   }
 }
   
-@include themable($_THEME_LIGHT, $_COLOR_TEXT_SECONDARY_LIGHT);
-@include themable($_THEME_DARK, $_COLOR_TEXT_SECONDARY_DARK);
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_NAVITEM_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_NAVITEM_DARK);

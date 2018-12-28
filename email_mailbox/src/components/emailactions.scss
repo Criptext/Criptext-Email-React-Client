@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .icon-dots .menu-container.menu-arrow.arrow-top-left{
   &:before, &:after{
     left: 176px;
@@ -5,7 +7,7 @@
 }
 
 .email-more-menu{
-  background-color: #fdfdfd;
+  background-color: transparent;
   border-radius: 6px;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.14);
   height: auto;
@@ -31,15 +33,11 @@
 
     li{
       align-items: center;
-      background-color: #fdfdfd;
+      background-color: transparent;
       display: flex;
       height: 30px;
       padding-left: 16px;
       cursor: pointer;
-
-      &:hover{
-        background-color: #edf5ff;
-      }
 
       span{
         font-family: NunitoSans;
@@ -49,3 +47,23 @@
     }
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_CONTACT_TAG_NAME, $_COLOR_TEXT_CONTACT_TAG_EMAIL, $_BACKGROUND_COLOR_POPOVER_EMAIL_ACTION_ITEM_HOVER){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .email-more-menu{
+      ul{
+        li{
+          &:hover{
+            background-color: $_BACKGROUND_COLOR_POPOVER_EMAIL_ACTION_ITEM_HOVER;
+          }
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_CONTACT_TAG_NAME_LIGHT, $_COLOR_TEXT_CONTACT_TAG_EMAIL_LIGHT, $_BACKGROUND_COLOR_POPOVER_EMAIL_ACTION_ITEM_HOVER_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_CONTACT_TAG_NAME_DARK, $_COLOR_TEXT_CONTACT_TAG_EMAIL_DARK, $_BACKGROUND_COLOR_POPOVER_EMAIL_ACTION_ITEM_HOVER_DARK);

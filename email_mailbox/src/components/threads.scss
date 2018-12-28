@@ -77,16 +77,9 @@
   }
 
   .labels-tooltip{
-    background-color: white !important;
     color: black !important;
     font-weight: normal;
     font-size: 12px;
-  
-    .tooltip-tip{
-      &:after{
-        background-color: white;
-      }
-    }
   }
 }
 
@@ -155,7 +148,7 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_COLOR_TEXT_MAIN_SWITCH_UNREAD){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_COLOR_TEXT_MAIN_SWITCH_UNREAD, $_BACKGROUND_COLOR_TOOLTIP){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .threads-header{
@@ -175,8 +168,18 @@
     .threads-content{
       background-color: $_BACKGROUND_COLOR_MAIN;
     }
+
+    .labels-tooltip{
+      background-color: $_BACKGROUND_COLOR_TOOLTIP;
+
+      .tooltip-tip{
+        &:after{
+          background-color: $_BACKGROUND_COLOR_TOOLTIP;
+        }
+      }
+    }
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT, $_COLOR_TEXT_MAIN_SWITCH_UNREAD_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK, $_COLOR_TEXT_MAIN_SWITCH_UNREAD_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT, $_COLOR_TEXT_MAIN_SWITCH_UNREAD_LIGHT, $_BACKGROUND_COLOR_TOOLTIP_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK, $_COLOR_TEXT_MAIN_SWITCH_UNREAD_DARK, $_BACKGROUND_COLOR_TOOLTIP_DARK);

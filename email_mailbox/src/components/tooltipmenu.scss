@@ -1,14 +1,14 @@
+@import "./../styles/index.scss";
+
 .tooltip-menu-container{
   position: absolute;
 }
 
 .tooltip-menu-wrapper{
   min-width: 204px;
-  background-color: #fdfdfd;
   box-shadow: 1px 7px 19px 0 rgba(0, 0, 0, 0.14);
-  border: solid 1px #ececee;
+  border: solid 1px transparent;
   border-radius: 6px;
-  color: black;
   left: 601px;
   padding: 10px 0px;
   position: fixed;
@@ -21,7 +21,6 @@
     font-size: 13px;
     margin: 5px 0px;
     padding-left: 16px;
-    
   }
   
   .tooltip-menu-tip{
@@ -37,7 +36,6 @@
       height: 14px;
       width: 15px;
       left: 50%;
-      background-color: white;
       transform: translateX(-50%) translateY(60%) rotate(45deg);
       box-shadow: 0 0 5px 0 rgba(0, 0, 3, 0.13);
       position: absolute;
@@ -62,3 +60,25 @@
   width: 100%;
   z-index: 10;
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_POPOVER, $_BORDER_COLOR_POPOVER, $_COLOR_TEXT_POPOVER){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .tooltip-menu-wrapper{
+      background-color: $_BACKGROUND_COLOR_POPOVER;
+      border-color: $_BORDER_COLOR_POPOVER;
+      color: $_COLOR_TEXT_POPOVER;
+
+      .tooltip-menu-tip{
+        &:after{
+          background-color: $_BACKGROUND_COLOR_POPOVER;
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_POPOVER_LIGHT, $_BORDER_COLOR_POPOVER_LIGHT, $_COLOR_TEXT_POPOVER_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_POPOVER_DARK, $_BORDER_COLOR_POPOVER_DARK, $_COLOR_TEXT_POPOVER_DARK);

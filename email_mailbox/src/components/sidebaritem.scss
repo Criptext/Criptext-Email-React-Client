@@ -11,7 +11,6 @@
   .nav-item-icon{
     font-family: none;
     font-size: 16px;
-    color: #c1c1c1;
     height: 18px;
     margin: 0 10px 0 32px;
     width: 15px;
@@ -80,7 +79,6 @@
 }
 
 .sidebar-app-collapse .nav-item{
-
     &:nth-child(n+2){
       .badge{
         @include collapse-badge;
@@ -126,7 +124,7 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_NAVITEM_SELECTED, $_BACKGROUND_COLOR_NAVITEM_HOVER, $_COLOR_TEXT_SELECTED, $_COLOR_TEXT){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_NAVITEM_SELECTED, $_BACKGROUND_COLOR_NAVITEM_HOVER, $_COLOR_TEXT_NAVITEM_SELECTED, $_COLOR_TEXT_NAVITEM){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .nav-item{
@@ -134,11 +132,11 @@
         background-color: $_BACKGROUND_COLOR_NAVITEM_SELECTED;
   
         .nav-item-icon{
-          color: $_COLOR_TEXT_SELECTED;
+          color: $_COLOR_TEXT_NAVITEM_SELECTED;
         }
   
         >span{
-          color: $_COLOR_TEXT_SELECTED;
+          color: $_COLOR_TEXT_NAVITEM_SELECTED;
         }
       }
       
@@ -146,12 +144,16 @@
         background-color: $_BACKGROUND_COLOR_NAVITEM_HOVER;
       }
 
+      .nav-item-icon{
+        color: $_COLOR_TEXT_NAVITEM;
+      }
+
       >span{
-        color: $_COLOR_TEXT;
+        color: $_COLOR_TEXT_NAVITEM;
       }
     }
   }
 }
 
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_NAVITEM_SELECTED_LIGHT, $_BACKGROUND_COLOR_NAVITEM_HOVER_LIGHT, $_COLOR_TEXT_PRIMARY_LIGHT, $_COLOR_TEXT_PRIMARY_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_NAVITEM_SELECTED_DARK, $_BACKGROUND_COLOR_NAVITEM_HOVER_DARK, $_COLOR_TEXT_PRIMARY_DARK, $_COLOR_TEXT_SECONDARY_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_NAVITEM_SELECTED_LIGHT, $_BACKGROUND_COLOR_NAVITEM_HOVER_LIGHT, $_COLOR_TEXT_NAVITEM_SELECTED_LIGHT, $_COLOR_TEXT_NAVITEM_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_NAVITEM_SELECTED_DARK, $_BACKGROUND_COLOR_NAVITEM_HOVER_DARK, $_COLOR_TEXT_NAVITEM_SELECTED_DARK, $_COLOR_TEXT_NAVITEM_DARK);

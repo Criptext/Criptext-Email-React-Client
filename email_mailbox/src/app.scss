@@ -649,7 +649,6 @@ select {
   background-color: #f0f0f0;
   border: none;
   border-radius: 3px;
-  color: #6a707e;
   cursor: pointer;
   font-size: 12px;
   height: 26px;
@@ -728,3 +727,18 @@ button{
 .__floater__arrow > span {
   transform: scale(0.5);
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_SELECT){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    select {
+      background-color: $_BACKGROUND_COLOR_SELECT;
+      color: $_COLOR_TEXT_SELECT;
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_SELECT_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_SELECT_DARK);

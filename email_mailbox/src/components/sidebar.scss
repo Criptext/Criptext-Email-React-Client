@@ -163,7 +163,6 @@ button{
   position: relative;
 
   i{
-    color: #d8d8d8;
     font-size: 22px;
     line-height: 18px;
   }
@@ -255,7 +254,7 @@ button{
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_SIDEBAR, $_COLOR_TEXT_PRIMARY, $_COLOR_TEXT_SECONDARY, $_BORDER_COLOR_NAV){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_SIDEBAR, $_COLOR_TEXT_NAVITEM_SELECTED, $_BORDER_COLOR_NAV, $_COLOR_TEXT_NAVITEM){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .navigation-partial-mail{
@@ -271,20 +270,26 @@ button{
         &.nav-item-more-selected{
           .nav-item-container{
             >span{
-              color: $_COLOR_TEXT_PRIMARY;
+              color: $_COLOR_TEXT_NAVITEM_SELECTED;
             }
           }
         }
 
         .nav-item-container{
           >span{
-            color: $_COLOR_TEXT_SECONDARY;
+            color: $_COLOR_TEXT_NAVITEM;
           }
         }
+      }
+    }
+
+    .nav-item-option{
+      i{
+        color: $_COLOR_TEXT_NAVITEM;
       }
     }
   }
 }
 
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SIDEBAR_LIGHT, $_COLOR_TEXT_PRIMARY_LIGHT, $_COLOR_TEXT_SECONDARY_LIGHT, $_BORDER_COLOR_NAV_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SIDEBAR_DARK, $_COLOR_TEXT_PRIMARY_DARK, $_COLOR_TEXT_SECONDARY_DARK, $_BORDER_COLOR_NAV_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SIDEBAR_LIGHT, $_COLOR_TEXT_NAVITEM_SELECTED_LIGHT, $_BORDER_COLOR_NAV_LIGHT, $_COLOR_TEXT_NAVITEM_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SIDEBAR_DARK, $_COLOR_TEXT_NAVITEM_SELECTED_DARK, $_BORDER_COLOR_NAV_DARK, $_COLOR_TEXT_NAVITEM_DARK);

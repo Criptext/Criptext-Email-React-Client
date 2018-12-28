@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .menu-wrapper{
   position: absolute;
   top: 0;
@@ -5,51 +7,18 @@
 }
 
 .menu-container{
-  background-color: #fdfdfd;
   box-shadow: 1px 7px 19px 0 rgba(0, 0, 0, 0.14);
-  border: solid 1px #ececee;
+  border: solid 1px transparent;
   border-radius: 6px;
-  color: black;
   position: absolute;
   width: auto;
   z-index: 11;
-
-  .menu-arrow{
-    background-color: white;
-    border: solid 1px #e9e9eb;
-    border-radius: 2px;
-    height: 10px;
-    position: absolute;
-    transform: rotate(45deg);
-    width: 10px;
-    
-    &:after{
-      content: "";
-      border-bottom: 5px solid red;
-    }
-    
-    &.arrow-top-left{
-      top: 0;
-    }
-
-    &.arrow-top-right{
-      top: -5px;
-    }
-  }
   
   &.menu-arrow{
     &:before, &:after{
       border-style:solid; 
       content:'';
       position:absolute; 
-    }
-
-    &:before{
-      border-color:#e9e9eb transparent;
-    }
-
-    &:after{
-      border-color:white transparent;
     }
 
     &.arrow-top-left{
@@ -95,3 +64,29 @@
   width: 100%;
   z-index: 10;
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_POPOVER, $_BORDER_COLOR_POPOVER, $_COLOR_TEXT_POPOVER){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .menu-container{
+      background-color: $_BACKGROUND_COLOR_POPOVER;
+      border-color: $_BORDER_COLOR_POPOVER;
+      color: $_COLOR_TEXT_POPOVER;
+
+      &.menu-arrow{
+        &:before{
+          border-color:$_BORDER_COLOR_POPOVER transparent;
+        }
+    
+        &:after{
+          border-color:$_BACKGROUND_COLOR_POPOVER transparent;
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_POPOVER_LIGHT, $_BORDER_COLOR_POPOVER_LIGHT, $_COLOR_TEXT_POPOVER_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_POPOVER_DARK, $_BORDER_COLOR_POPOVER_DARK, $_COLOR_TEXT_POPOVER_DARK);

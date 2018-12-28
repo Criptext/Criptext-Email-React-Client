@@ -1,51 +1,51 @@
+@import "./../styles/index.scss";
+
 .thread-container{
   height: 100%;
   width: 100%;
   position: relative;
-}
 
-.thread-content{
-  background-color: #f7f7f8;
-  height: calc(100% - 61px);
-  overflow: auto;
-}
+  .thread-content{
+    height: calc(100% - 61px);
+    overflow: auto;
 
-.thread-content::-webkit-scrollbar-track{
-  background-color: rgba(233, 233, 233, 0.76);
-  box-shadow: inset 0 0 10px rgba(220,220,220,0.1);
-}
-
-.thread-content::-webkit-scrollbar{
-  width: 6.5px;
-}
-
-.thread-content::-webkit-scrollbar-thumb{
-  border-radius: 10px;
-  background-color: #b0b2b4;
-}
-
-.thread-info{
-  display: flex;
-  justify-content: space-between;
-  margin: 0 25px;
-  min-height: 72px;
-  width: calc(100% - 50px);
-
-  .thread-info-title{
-    display: flex;
-    margin: 26px 0 0 0;
-    width: calc(100% - 50px);
-
-    h1{
-      color: black;
-      font-size: 21px;
-      font-weight: 700;
-      line-height: 21px;
-      margin: 0 10px 0 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .thread-info{
+      display: flex;
+      justify-content: space-between;
+      margin: 0 25px;
+      min-height: 72px;
+      width: calc(100% - 50px);
+    
+      .thread-info-title{
+        display: flex;
+        margin: 26px 0 0 0;
+        width: calc(100% - 50px);
+    
+        h1{
+          font-size: 21px;
+          font-weight: 700;
+          line-height: 21px;
+          margin: 0 10px 0 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
     }
+  }
+
+  .thread-content::-webkit-scrollbar-track{
+    background-color: rgba(233, 233, 233, 0.76);
+    box-shadow: inset 0 0 10px rgba(220,220,220,0.1);
+  }
+  
+  .thread-content::-webkit-scrollbar{
+    width: 6.5px;
+  }
+  
+  .thread-content::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: #b0b2b4;
   }
 }
 
@@ -76,3 +76,25 @@
   width: calc(100% - 50px);
   margin: 0 25px 25px;
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .thread-content{
+      background-color: $_BACKGROUND_COLOR_MAIN;
+
+      .thread-info{
+        .thread-info-title{
+          h1{
+            color: $_COLOR_TEXT_MAIN_TITLE;
+          }
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK);
