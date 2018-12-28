@@ -1,35 +1,47 @@
 const ClientAPI = require('@criptext/api');
 const { DEV_SERVER_URL, PROD_SERVER_URL } = require('./utils/const');
 const {
-  getAccount,
   createPendingEvent,
+  getAccount,
+  getAppSettings,
   updateAccount
 } = require('./DBManager');
 const { processEventsQueue } = require('./eventQueueManager');
 const globalManager = require('./globalManager');
 const mailboxWindow = require('./windows/mailbox');
 const socketClient = require('./socketClient');
+const packageInfo = require('./../package.json');
+const appVersion = packageInfo.version;
+const { getOsAndArch } = require('./utils/osUtils');
 let client = {};
 
-const initializeClient = ({ token, refreshToken }) => {
+const initializeClient = ({ token, refreshToken, language, os }) => {
   const isDev = process.env.NODE_ENV === 'development';
   const clientOptions = {
     url: isDev ? DEV_SERVER_URL : PROD_SERVER_URL,
     token,
     refreshToken,
     timeout: 60 * 1000,
-    version: '4.0.0'
+    version: '4.0.0',
+    language,
+    appVersion,
+    os
   };
   client = new ClientAPI(clientOptions);
   client.token = token;
   client.refreshToken = refreshToken;
+  client.language = language;
 };
 
 const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
+  const { language } = await getAppSettings();
+  const os = await getOsAndArch();
   if (optionalSessionToken || optionalRefreshToken) {
     return initializeClient({
       token: optionalSessionToken,
-      refreshToken: optionalRefreshToken
+      refreshToken: optionalRefreshToken,
+      language,
+      os
     });
   }
   const [account] = await getAccount();
@@ -40,9 +52,10 @@ const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
   if (
     !client.login ||
     client.token !== token ||
-    client.refreshToken !== refreshToken
+    client.refreshToken !== refreshToken ||
+    client.language !== language
   ) {
-    return initializeClient({ token, refreshToken });
+    return initializeClient({ token, refreshToken, language, os });
   }
 };
 

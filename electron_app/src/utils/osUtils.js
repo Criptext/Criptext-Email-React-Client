@@ -1,4 +1,5 @@
 const os = require('os');
+const getos = require('getos');
 
 const getComputerName = () => {
   const hostname = os.hostname();
@@ -12,4 +13,15 @@ const isLinux = () => process.platform === 'linux';
 
 const isMacOs = () => process.platform === 'darwin';
 
-module.exports = { getComputerName, isWindows, isLinux, isMacOs };
+const getOsAndArch = () => {
+  return new Promise(resolve => {
+    getos((err, res) => {
+      if (err) {
+        resolve('');
+      }
+      resolve(`${res.os} ${res.dist} ${res.release} ${process.arch}`);
+    });
+  });
+};
+
+module.exports = { getComputerName, isWindows, isLinux, isMacOs, getOsAndArch };

@@ -135,13 +135,14 @@
     "electron-builder": "^20.18.0"
   },
   "dependencies": {
-    "@criptext/api": "^0.14.11",
+    "@criptext/api": "^0.14.14",
     "@criptext/data-transfer-client": "^0.1.1",
     "@criptext/electron-better-ipc": "^0.1.2-rc5",
     "@criptext/news-api-client": "^1.0.1",
     "electron-context-menu": "^0.10.1",
     "electron-updater": "^3.0.3",
     "electron-window-state": "^4.1.1",
+    "getos": "^3.1.1",
     "knex": "^0.14.2",
     "line-by-line": "^0.1.6",
     "moment": "^2.22.2",
