@@ -18,6 +18,7 @@ import { getResendConfirmationTimestamp } from '../utils/storage';
 import string from './../lang';
 import SettingsGeneralDeleteAccount from './SettingsGeneralDeleteAccount';
 import SettingsGeneralLanguageWrapper from './SettingsGeneralLanguageWrapper';
+import SettingsGeneralThemeWrapper from './SettingsGeneralThemeWrapper';
 import './settinggeneral.scss';
 import './signatureeditor.scss';
 
@@ -41,6 +42,7 @@ const SettingGeneral = props => (
     <ReadReceiptsBlock {...props} />
     <RecoveryEmailBlock {...props} />
     <SettingsGeneralLanguageWrapper />
+    <SettingsGeneralThemeWrapper />
     <UsefulLinksBlock />
     <LogoutAccountBlock {...props} />
     <SettingsGeneralDeleteAccount

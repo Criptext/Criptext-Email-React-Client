@@ -338,6 +338,11 @@
     "show_in_label_list": "Mostrar en lista de etiquetas",
     "signature": "Firma",
     "system_labels": "Etiquetas del Sistema",
+    "theme": "Tema",
+    "themeLabels": {
+      "light": "Claro",
+      "dark": "Oscuro"
+    },
     "terms_of_service": "Términos de servicio",
     "trusted_devices": "dispositivos verificados",
     "two_factor_authentication": "autenticación de dos factores",

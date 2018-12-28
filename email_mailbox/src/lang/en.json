@@ -338,6 +338,11 @@
     "show_in_label_list": "Show in label list",
     "signature": "Signature",
     "system_labels": "System Labels",
+    "theme": "Theme",
+    "themeLabels": {
+      "light": "Light",
+      "dark": "Dark"
+    },
     "terms_of_service": "Terms of service",
     "trusted_devices": "trusted devices",
     "two_factor_authentication": "two-factor authentication",
