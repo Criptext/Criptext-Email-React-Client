@@ -25,7 +25,7 @@
     width: calc(100% - 40px);
 
     .settings-content-items{
-      border-bottom: 1px solid rgba(0,0,0,0.1);
+      border-bottom: 1px solid transparent;
       display: flex;
       height: 33px;
       list-style: none;
@@ -116,7 +116,6 @@
           user-select: none;
 
           .section-block-content-item-title{
-            color: #94a1b0;
             font-size: 11px;
             font-weight: 600;
             margin-top: 22px;
@@ -129,7 +128,6 @@
 
     .settings-footer{
       align-items: center;
-      background-color: white;
       bottom: 0;
       display: flex;
       height: 50px;
@@ -183,14 +181,54 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_BACKGROUND_COLOR_SETTINGS, $_COLOR_TEXT_SETTINGS_TITLE, $_BORDER_COLOR_SETTINGS_HEADER, $_COLOR_TEXT_SETTINGS_SUBTITLE){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .settings-container{
       background-color: $_BACKGROUND_COLOR_MAIN;
+
+      .settings-title{
+        h1{
+          color: $_COLOR_TEXT_MAIN_TITLE;
+        }
+      }
+
+      .settings-content{
+        background-color: $_BACKGROUND_COLOR_SETTINGS;
+
+        .settings-content-items{
+          border-bottom-color: $_BORDER_COLOR_SETTINGS_HEADER;
+
+          .section-item{
+            span{
+              color: $_COLOR_TEXT_SETTINGS_TITLE;
+            }
+          }
+        }
+
+        .settings-content-scroll{
+          .section-block{
+            .section-block-title{
+              h1{
+                color: $_COLOR_TEXT_MAIN_TITLE;
+              }
+            }
+          }
+
+          .section-block-content-item {
+            .section-block-content-item-title{
+              color: $_COLOR_TEXT_SETTINGS_SUBTITLE;
+            }
+          }
+        }
+
+        .settings-footer{
+          background-color: $_BACKGROUND_COLOR_SETTINGS;
+        }
+      }
     }
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT, $_BACKGROUND_COLOR_SETTINGS_LIGHT, $_COLOR_TEXT_SETTINGS_TITLE_LIGHT, $_BORDER_COLOR_SETTINGS_HEADER_LIGHT, $_COLOR_TEXT_SETTINGS_SUBTITLE_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK, $_BACKGROUND_COLOR_SETTINGS_DARK, $_COLOR_TEXT_SETTINGS_TITLE_DARK, $_BORDER_COLOR_SETTINGS_HEADER_DARK, $_COLOR_TEXT_SETTINGS_SUBTITLE_DARK);

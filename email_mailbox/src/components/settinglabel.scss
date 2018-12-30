@@ -1,173 +1,123 @@
+@import "./../styles/index.scss";
 
-.section-system-labels {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  user-select: none;
-
-  .system-labels-list-header {
-    display: flex;
-    width: 100%;
-    margin-bottom: 15px;
-  
-    > div {
-      width: 100%;
-      color: #000;
-      font-size: 14px;
-      font-weight: bold;
-      margin-top: 8px;
-  
-      &.header-left {
-        width: 20%;
-      }
-
-      &.header-rigth {
-        width: 25%;
-        margin-left: 5%;
-        text-align: center;
-      }
-    }
-  }
-
-  .system-labels-list-content {
+#setting-labels{
+  .section-block-table{
     display: flex;
     flex-direction: column;
     width: 100%;
-    flex-grow: 1;
+    user-select: none;
 
-    .system-label-list-item {
+    .table-header{
       display: flex;
       width: 100%;
-      margin-bottom: 7px;
+      margin-bottom: 15px;
 
-      .system-label-name {
-        width: 20%;
-        color: #6c7280;
-        font-size: 13px;
-      }
-
-      .system-label-visibility {
-        margin-left: 5%;
-        width: 25%;
-        pointer-events: none;
-
-        .checkmark {
-          margin: 0 auto;
-          background-color: rgba($color: #0091ff, $alpha: 0.5);
-          border-color: rgba($color: #0091ff, $alpha: 0.05);
-
-          &::after {
-            position: relative;
-            top: -1px;
-            left: 3px;
-          }
-        }
-      }
-    }
-  }
-}
-
-
-.section-custom-labels {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  user-select: none;
-
-  .custom-labels-list-header {
-    display: flex;
-    width: 100%;
-    margin-bottom: 15px;
-  
-    > div {
-      width: 100%;
-      color: #000;
-      font-size: 14px;
-      font-weight: bold;
-      margin-top: 8px;
-  
-      &.header-left {
-        width: 20%;
-      }
-
-      &.header-center {
-        width: 25%;
-        margin-left: 5%;
-        text-align: center;
-      }
-      
-      &.header-rigth {
-        width: 15%;
-        margin-left: 5%;
-        text-align: center;
-      }
-    }
-  }
-
-  .custom-labels-list-content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    flex-grow: 1;
-
-    .custom-label-list-item {
-      display: flex;
-      width: 100%;
-      margin-bottom: 7px;
-
-      .custom-label-name {
-        width: 20%;
-        color: #6c7280;
-        font-size: 13px;
-      }
-
-      .custom-label-visibility {
-        width: 25%;
-        margin-left: 5%;
-
-        .checkmark {
-          margin: 0 auto;
-          &::after {
-            position: relative;
-            top: -1px;
-            left: 3px;
-          }
-        }
-      }
-
-      .custom-label-action {
-        width: 15%;
-        margin-left: 5%;
-        text-align: center;
-        font-size: 13px;
-        font-weight: 700;
-        color: #0091ff;
-        cursor: pointer;
+      h1{
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 8px;
       }
     }
 
-    .custom-labels-add {
+    .table-column-a{
+      width: 20%;
+    }
+
+    .table-column-b{
+      width: 25%;
+      margin-left: 5%;
+      text-align: center;
+    }
+
+    .table-column-c{
+      width: 15%;
+      margin-left: 5%;
+      text-align: center;
+    }
+
+    .table-body{
       display: flex;
       flex-direction: column;
       width: 100%;
-      align-items: initial;
+      flex-grow: 1;
 
-      .custom-label-input {
-        width: 27%;
-      }
-
-      .custom-label-button {
-        margin-top: 15px;
+      .table-row{
         display: flex;
-        cursor: pointer;
+        width: 100%;
+        margin-bottom: 7px;
 
-        span {
+        &.table-system-label{
+          .table-column-b{
+            pointer-events: none;
+          }
+        }
+        
+        .table-column-a{
+          color: #6c7280;
+          font-size: 13px;
+        }
+
+        .checkmark {
+          margin: 0 auto;
+
+          &::after {
+            position: relative;
+            top: -1px;
+            left: 3px;
+          }
+        }
+
+        .table-column-c{
           font-size: 13px;
           font-weight: 700;
-          text-align: left;
           color: #0091ff;
+          cursor: pointer;
         }
       }
     }
   }
 }
+
+.custom-labels-add {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: initial;
+
+  .custom-label-input {
+    width: 27%;
+  }
+
+  .custom-label-button {
+    margin-top: 15px;
+    display: flex;
+    cursor: pointer;
+
+    span {
+      font-size: 13px;
+      font-weight: 700;
+      text-align: left;
+      color: #0091ff;
+    }
+  }
+}
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_SETTINGS_TITLE){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    #setting-labels{
+      .section-block-table{
+        .table-header{
+          h1{
+            color: $_COLOR_TEXT_SETTINGS_TITLE;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_SETTINGS_TITLE_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_SETTINGS_TITLE_DARK);

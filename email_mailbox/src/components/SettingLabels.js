@@ -13,12 +13,12 @@ const SettingLabels = props => (
 
 const renderSystemLabelsBlock = props => (
   <div className="section-block">
-    <div className="section-system-labels">
-      <div className="system-labels-list-header">
-        <div className="header-left">{string.settings.system_labels}</div>
-        <div className="header-rigth">{string.settings.show_in_label_list}</div>
+    <div className="section-block-table">
+      <div className="table-header">
+        <div className="table-column-a"><h1>{string.settings.system_labels}</h1></div>
+        <div className="table-column-b"><h1>{string.settings.show_in_label_list}</h1></div>
       </div>
-      <div className="system-labels-list-content">
+      <div className="table-body">
         {props.systemLabels.map((systemLabel, index) =>
           renderSystemLabelItem(
             index,
@@ -32,9 +32,9 @@ const renderSystemLabelsBlock = props => (
 );
 
 const renderSystemLabelItem = (index, systemLabelItem, onChange) => (
-  <div className="system-label-list-item" key={index}>
-    <div className="system-label-name">{systemLabelItem.text}</div>
-    <div className="system-label-visibility">
+  <div className="table-row table-system-label" key={index}>
+    <div className="table-column-a"><span>{systemLabelItem.text}</span></div>
+    <div className="table-column-b">
       <CustomCheckbox
         onCheck={checked => {
           onChange(checked, systemLabelItem.id);
@@ -48,15 +48,15 @@ const renderSystemLabelItem = (index, systemLabelItem, onChange) => (
 
 const renderCustomLabelsBlock = props => (
   <div className="section-block">
-    <div className="section-custom-labels">
-      <div className="custom-labels-list-header">
-        <div className="header-left">{string.sidebar.labels}</div>
-        <div className="header-center">
-          {string.settings.show_in_label_list}
+    <div className="section-block-table">
+      <div className="table-header">
+        <div className="table-column-a"><h1>{string.sidebar.labels}</h1></div>
+        <div className="table-column-b">
+        <h1>{string.settings.show_in_label_list}</h1>
         </div>
-        <div className="header-rigth">{string.settings.action}</div>
+        <div className="table-column-c"><h1>{string.settings.action}</h1></div>
       </div>
-      <div className="custom-labels-list-content">
+      <div className="table-body">
         {props.customLabels.map((customLabel, index) =>
           renderCustomLabelItem(index, customLabel, props)
         )}
@@ -67,9 +67,9 @@ const renderCustomLabelsBlock = props => (
 );
 
 const renderCustomLabelItem = (index, customLabelItem, props) => (
-  <div className="custom-label-list-item" key={index}>
-    <div className="custom-label-name">{customLabelItem.text}</div>
-    <div className="custom-label-visibility">
+  <div className="table-row" key={index}>
+    <div className="table-column-a"><span>{customLabelItem.text}</span></div>
+    <div className="table-column-b">
       <CustomCheckbox
         onCheck={checked => {
           props.onClickChangeLabelVisibility(checked, customLabelItem.id);
@@ -79,7 +79,7 @@ const renderCustomLabelItem = (index, customLabelItem, props) => (
       />
     </div>
     <div
-      className="custom-label-action"
+      className="table-column-c"
       onClick={() => props.onClickRemoveLabel(customLabelItem.id)}
     >
       {string.settings.remove}

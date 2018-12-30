@@ -1,9 +1,10 @@
+@import "./../styles/index.scss";
+
 .popup-wrapper{
   position: absolute;
 }
 
 .popup-container{
-  background-color: #fdfdfd;
   box-shadow: 0 1px 16px 0 rgba(143, 143, 143, 0.56);
   border: solid 1px #ececee;
   border-radius: 15px;
@@ -22,3 +23,17 @@
   width: 100%;
   z-index: 10;
 }
+
+/* THEME
+   ----------------------------- */
+   @mixin themable($_THEME){
+    [data-theme^=#{$_THEME}],
+    [data-theme] [data-theme^=#{$_THEME}] {
+      .popup-container{
+        background-color: #fdfdfd;
+      }
+    }
+  }
+    
+  @include themable($_THEME_LIGHT);
+  @include themable($_THEME_DARK);

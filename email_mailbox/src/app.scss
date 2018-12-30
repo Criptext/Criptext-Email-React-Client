@@ -506,7 +506,6 @@ h2{
    ----------------------------- */
 .popup-content{
   border-radius: 15px;
-  background-color: #ffffff;
   padding: 25px;
   text-align: center;
   width: 230px;
@@ -692,7 +691,6 @@ button{
   }
 
   &.button-b{
-    background-color: white;
     color: #0091ff;
   
     i{
@@ -730,9 +728,15 @@ button{
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_SELECT){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_BUTTON-B, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_SELECT){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
+    button{
+      &.button-b{
+        background-color: $_BACKGROUND_COLOR_BUTTON-B;
+      }
+    }
+
     select {
       background-color: $_BACKGROUND_COLOR_SELECT;
       color: $_COLOR_TEXT_SELECT;
@@ -740,5 +744,5 @@ button{
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_SELECT_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_SELECT_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_BUTTON-B_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_SELECT_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_BUTTON-B_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_SELECT_DARK);
