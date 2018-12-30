@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 $_HEADER_MAIN_PADDING_LEFT: 35px;
 $_HEADER_MAIN_PADDING_RIGHT: 25px;
 
@@ -57,18 +59,15 @@ $_HEADER_MAIN_PADDING_RIGHT: 25px;
     padding-left: 16px;
     
     &:hover{
-      background-color: #edf5ff;
       cursor: pointer;
     }
 
     > span{
-      color: black;
       font-size: 13px;
       font-weight: 200;
     }
 
     .checkmark-container{
-  
       &:hover{
         background-color: transparent;
       }
@@ -79,3 +78,25 @@ $_HEADER_MAIN_PADDING_RIGHT: 25px;
       display: none; 
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_POPOVER_EMAIL_ACTION_ITEM_HOVER, $_COLOR_TEXT_POPOVER){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .multiselect-list{
+      li{
+        &:hover{
+          background-color: $_BACKGROUND_COLOR_POPOVER_EMAIL_ACTION_ITEM_HOVER;
+        }
+
+        > span{
+          color: $_COLOR_TEXT_POPOVER;
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_POPOVER_EMAIL_ACTION_ITEM_HOVER_LIGHT, $_COLOR_TEXT_POPOVER_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_POPOVER_EMAIL_ACTION_ITEM_HOVER_DARK, $_COLOR_TEXT_POPOVER_DARK);
