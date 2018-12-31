@@ -8,8 +8,8 @@ const EmptyMailbox = props => {
     props.mailbox
   );
   return (
-    <div className="empty-mailbox-container">
-      <div className="empty-mailbox-content">
+    <div className="empty-container empty-mailbox-container">
+      <div className="empty-content">
         <div className={`empty-icon ${iconClass || 'empty-mailbox'}`} />
         <div className="header-text">{header}</div>
         <div className="subheader-text">{subheader}</div>
