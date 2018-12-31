@@ -321,10 +321,6 @@
 
     &:hover{
       background-color: #0091ff;
-
-      i, span{
-        color: white;
-      }
     }
   }
 }
@@ -409,7 +405,13 @@
           }
       
           span{
-            color: $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT_DARK;
+            color: $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT;
+          }
+
+          &:hover{
+            i, span{
+              color: white;
+            }
           }
         }
       }

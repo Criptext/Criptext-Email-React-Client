@@ -482,6 +482,40 @@ h2{
   width: calc(100% - 288px);
 }
 
+.empty-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .empty-content {
+    margin: auto;
+    align-items: center;
+
+    .empty-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: auto 100%;
+    }
+
+    .header-text {
+      font-size: 14px;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .subheader-text {
+      font-size: 14px;
+      font-style: italic;
+      text-align: center;
+      color: #9b9b9b;
+    }
+  }
+}
+
 .sidebar-app-expand .main-container{
   width: calc(100% - 210px);
 }
@@ -525,7 +559,6 @@ h2{
     line-height: 16px;
 
     p{
-      color: #373a45;
       font-size: 13px;
       font-weight: 300;
     }
@@ -540,6 +573,7 @@ h2{
       position: relative;
 
       input{
+        background-color: transparent;
         border: none;
         border-bottom: solid 1px #e3e5e6;
         font-size: 12px;
@@ -583,8 +617,7 @@ h2{
       width: 75px;
 
       &.popup-cancel-button {
-        background-color: #ffffff;
-        color: black;
+        background-color: transparent;
       }
       
       &.popup-confirm-button {
@@ -616,6 +649,7 @@ h2{
    ----------------------------- */
 input{
   width: 100%;
+  color: black;
 
   &.input-a{
     background-color: transparent;
@@ -728,9 +762,45 @@ button{
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_BUTTON-B, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_SELECT){
+@mixin themable($_THEME, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE, $_COLOR_TEXT_POPUP_TITLE, $_COLOR_TEXT_POPUP_SUBTITLE, $_COLOR_TEXT_POPUP_PARAGRAPH, $_COLOR_TEXT_POPUP_BUTTON_CANCEL, $_BACKGROUND_COLOR_BUTTON-B, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_SELECT, $_COLOR_TEXT_INPUT){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
+    .empty-container {
+      .empty-content {
+        .header-text {
+          color: $_COLOR_TEXT_CONTAINER_EMPTY_TITLE;
+        }
+      }
+    }
+
+    .popup-content{
+      .popup-title {
+        h1 {
+          color: $_COLOR_TEXT_POPUP_TITLE;
+        }
+      }
+
+      .popup-subtitle {
+        h2 {
+          color: $_COLOR_TEXT_POPUP_SUBTITLE;
+        }
+      }
+
+      .popup-paragraph {
+        p{
+          color: $_COLOR_TEXT_POPUP_PARAGRAPH;
+        }
+      }
+
+      .popup-buttons {
+        .button-a {
+          &.popup-cancel-button {
+            color: $_COLOR_TEXT_POPUP_BUTTON_CANCEL;
+          }
+        }
+      }
+    }
+
     button{
       &.button-b{
         background-color: $_BACKGROUND_COLOR_BUTTON-B;
@@ -741,8 +811,12 @@ button{
       background-color: $_BACKGROUND_COLOR_SELECT;
       color: $_COLOR_TEXT_SELECT;
     }
+
+    input{
+      color: $_COLOR_TEXT_INPUT;
+    }
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_BUTTON-B_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_SELECT_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_BUTTON-B_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_SELECT_DARK);
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_LIGHT, $_COLOR_TEXT_POPUP_TITLE_LIGHT, $_COLOR_TEXT_POPUP_SUBTITLE_LIGHT, $_COLOR_TEXT_POPUP_PARAGRAPH_LIGHT, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_LIGHT, $_BACKGROUND_COLOR_BUTTON-B_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_SELECT_LIGHT, $_COLOR_TEXT_INPUT_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_DARK, $_COLOR_TEXT_POPUP_TITLE_DARK, $_COLOR_TEXT_POPUP_SUBTITLE_DARK, $_COLOR_TEXT_POPUP_PARAGRAPH_DARK, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_DARK, $_BACKGROUND_COLOR_BUTTON-B_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_SELECT_DARK, $_COLOR_TEXT_INPUT_DARK);

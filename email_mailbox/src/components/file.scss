@@ -6,7 +6,7 @@
 
   .file-content{
     align-items: center;
-    border: 1px solid #e7e5e5;
+    border: 1px solid transparent;
     border-radius: 6px;
     display: flex;
     height: 44px;
@@ -15,7 +15,6 @@
     width: 278px;
   
     &:hover{
-      background-color: #f8f7f7;
       cursor: pointer;
 
       .file-button-container{
@@ -140,7 +139,6 @@
 
     .file-button-container{
       align-items: center;
-      background-image: linear-gradient(to left, rgba(255, 255, 255, 0.2) 0%, #f8f7f7 50%);
       border-radius: 6px;
       display: none;
       height: 58px;
@@ -178,3 +176,34 @@
     position: absolute;
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_FILE, $_BORDER_COLOR_FILE, $_BACKGROUND_FILE_HOVER, $_COLOR_TEXT_FILE_TITLE, $_BACKGROUND_FILE_BUTTON){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .file-container{
+      .file-content{
+        background-color: $_BACKGROUND_FILE;
+        border-color: $_BORDER_COLOR_FILE;
+
+        &:hover{
+          background-color: $_BACKGROUND_FILE_HOVER;
+        }
+
+        .file-content-detail{
+          .file-detail-name{
+            color: $_COLOR_TEXT_FILE_TITLE;
+          }
+        }
+
+        .file-button-container{
+          background-image: $_BACKGROUND_FILE_BUTTON;
+        }
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_BACKGROUND_FILE_LIGHT, $_BORDER_COLOR_FILE_LIGHT, $_BACKGROUND_FILE_HOVER_LIGHT, $_COLOR_TEXT_FILE_TITLE_LIGHT, $_BACKGROUND_FILE_BUTTON_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_FILE_DARK, $_BORDER_COLOR_FILE_DARK, $_BACKGROUND_FILE_HOVER_DARK, $_COLOR_TEXT_FILE_TITLE_DARK, $_BACKGROUND_FILE_BUTTON_DARK);
