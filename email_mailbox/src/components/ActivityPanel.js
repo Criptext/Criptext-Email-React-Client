@@ -91,7 +91,7 @@ class ActivityPanel extends Component {
     return (
       <div className="empty-container empty-activity-container">
         <div className="empty-content">
-          <div className="empty-icon"/>
+          <div className="empty-icon" />
           <div className="header-text">There&#39;s nothing new yet</div>
           <div className="subheader-text">Enjoy your day</div>
         </div>

@@ -1,7 +1,9 @@
+@import "./../styles/index.scss";
+
 .recipient-container{
   font-family: 'NunitoSans';
   font-size: 15px;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid transparent;
   min-height: 40px;
   position: relative;
 
@@ -81,6 +83,7 @@
         flex-grow: 1;
   
         input{
+          background-color: transparent;
           border: none;
           color: #6a707e;
           flex-grow: 1;
@@ -147,3 +150,23 @@
   padding: 5px;
   width: 80px;
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_RECIPIENT_LABEL, $_BORDER_COLOR_SEPARATE){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .recipient-container{
+      border-bottom-color: $_BORDER_COLOR_SEPARATE;
+    }
+
+    .recipient-content{
+      .recipient-input-label {
+        color: $_COLOR_TEXT_RECIPIENT_LABEL;
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_RECIPIENT_LABEL_LIGHT, $_BORDER_COLOR_SEPARATE_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_RECIPIENT_LABEL_DARK, $_BORDER_COLOR_SEPARATE_DARK);

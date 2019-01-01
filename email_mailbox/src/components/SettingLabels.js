@@ -15,8 +15,12 @@ const renderSystemLabelsBlock = props => (
   <div className="section-block">
     <div className="section-block-table">
       <div className="table-header">
-        <div className="table-column-a"><h1>{string.settings.system_labels}</h1></div>
-        <div className="table-column-b"><h1>{string.settings.show_in_label_list}</h1></div>
+        <div className="table-column-a">
+          <h1>{string.settings.system_labels}</h1>
+        </div>
+        <div className="table-column-b">
+          <h1>{string.settings.show_in_label_list}</h1>
+        </div>
       </div>
       <div className="table-body">
         {props.systemLabels.map((systemLabel, index) =>
@@ -33,7 +37,9 @@ const renderSystemLabelsBlock = props => (
 
 const renderSystemLabelItem = (index, systemLabelItem, onChange) => (
   <div className="table-row table-system-label" key={index}>
-    <div className="table-column-a"><span>{systemLabelItem.text}</span></div>
+    <div className="table-column-a">
+      <span>{systemLabelItem.text}</span>
+    </div>
     <div className="table-column-b">
       <CustomCheckbox
         onCheck={checked => {
@@ -50,11 +56,15 @@ const renderCustomLabelsBlock = props => (
   <div className="section-block">
     <div className="section-block-table">
       <div className="table-header">
-        <div className="table-column-a"><h1>{string.sidebar.labels}</h1></div>
-        <div className="table-column-b">
-        <h1>{string.settings.show_in_label_list}</h1>
+        <div className="table-column-a">
+          <h1>{string.sidebar.labels}</h1>
         </div>
-        <div className="table-column-c"><h1>{string.settings.action}</h1></div>
+        <div className="table-column-b">
+          <h1>{string.settings.show_in_label_list}</h1>
+        </div>
+        <div className="table-column-c">
+          <h1>{string.settings.action}</h1>
+        </div>
       </div>
       <div className="table-body">
         {props.customLabels.map((customLabel, index) =>
@@ -68,7 +78,9 @@ const renderCustomLabelsBlock = props => (
 
 const renderCustomLabelItem = (index, customLabelItem, props) => (
   <div className="table-row" key={index}>
-    <div className="table-column-a"><span>{customLabelItem.text}</span></div>
+    <div className="table-column-a">
+      <span>{customLabelItem.text}</span>
+    </div>
     <div className="table-column-b">
       <CustomCheckbox
         onCheck={checked => {

@@ -1,6 +1,7 @@
+@import "./../styles/index.scss";
+
 .control-container{
   align-items: center;
-  background-color: white;
   display: flex;
   height: 60px;
   margin: 0 20px;
@@ -142,19 +143,47 @@ button.button-send{
   }
 
   i{
-    color: #6e6e6e;
     font-size: 18px;
   }
 }
 
 .button-editor-border-left{
-  border-left: 1px solid #e5e2e2;
+  border-left: 1px solid transparent;
 }
 
 .button-editor-border-right{
-  border-right: 1px solid #e5e2e2;
+  border-right: 1px solid transparent;
 }
 
 .hide-file-input {
   display: none;
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_BORDER_COLOR_SEPARATE, $_COLOR_ICON_BUTTON){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .control-container{
+      background-color: $_BACKGROUND_COLOR_MAIN;
+    }
+
+    .button-editor{
+      i{
+        color: $_COLOR_ICON_BUTTON;
+      }
+    }
+
+    .button-editor-border-left{
+      border-left-color: $_BORDER_COLOR_SEPARATE;
+    }
+    
+    .button-editor-border-right{
+      border-right-color: $_BORDER_COLOR_SEPARATE;
+    }
+
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_BORDER_COLOR_SEPARATE_LIGHT, $_COLOR_ICON_BUTTON_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_BORDER_COLOR_SEPARATE_DARK, $_COLOR_ICON_BUTTON_DARK);

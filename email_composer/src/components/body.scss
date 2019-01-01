@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .body-container{
   display: flex;
   flex-direction: column;
@@ -6,3 +8,17 @@
   position: relative;
   width: 100%;
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_BODY){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .body-container{
+      color: $_COLOR_TEXT_BODY;
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_BODY_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_BODY_DARK);

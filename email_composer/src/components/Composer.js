@@ -5,10 +5,11 @@ import SubjectWrapper from './SubjectWrapper';
 import BodyWrapper from './BodyWrapper';
 import NonCriptextPopupWrapper from './NonCriptextPopupWrapper';
 import { Status } from './Control';
+import { mySettings } from '../utils/electronInterface';
 import './composer.scss';
 
 const Composer = props => (
-  <div className="wrapper">
+  <div className="wrapper" data-theme={mySettings.theme}>
     <RecipientWrapper
       disableSendButton={props.disableSendButtonOnInvalidEmail}
       toEmails={props.toEmails}
