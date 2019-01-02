@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .subject-container{
   align-items: center;
   display: flex;
@@ -6,6 +8,7 @@
   width: 100%;
 
   input{
+    background-color: transparent;
     border: none;
     color: black;
     font-family: NunitoSans;
@@ -18,3 +21,19 @@
     color: #6a707e;
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_SUBJECT){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .subject-container{
+      input{
+        color: $_COLOR_TEXT_SUBJECT;
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_SUBJECT_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_SUBJECT_DARK);

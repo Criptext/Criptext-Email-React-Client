@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .rdw-editor-wrapper {
   box-sizing: content-box;
   display: grid;
@@ -29,16 +31,8 @@
   }
 }
 
-.rdw-inline-wrapper{
-  border-right: 1px solid #d8d8d8;
-}
-
-.rdw-fontsize-wrapper{
-  border-right: 1px solid #d8d8d8;
-}
-
-.rdw-fontfamily-wrapper{
-  border-right: 1px solid #d8d8d8;
+.rdw-inline-wrapper, .rdw-fontsize-wrapper, .rdw-fontfamily-wrapper{
+  border-right: 1px solid transparent;
 }
 
 .rdw-block-dropdown {
@@ -89,10 +83,6 @@
   opacity: 0.6;
   padding: 2px 0;
   text-transform: capitalize;
-  
-  &:hover{
-    background-color: #f0f0f0;
-  }
 
   img {
     border-style: none;
@@ -106,22 +96,14 @@
 
 .rdw-dropdown-wrapper {
   height: 24px;
-  background: white;
   cursor: pointer;
   border-radius: 2px;
   margin: 0 2px;
+  opacity: 0.6;
   text-transform: capitalize;
     
   &:focus{
     outline: none;
-  }
-
-  &:hover{
-    background-color: #f0f0f0;
-  }
-
-  a{
-    opacity: 0.6;
   }
 
   .rdw-dropdown-selectedtext {
@@ -212,7 +194,7 @@
 
   .DraftEditor-root {
     padding: 10px 5px;
-    border-top: 1px solid #d3d3d3;
+    border-top: 1px solid transparent;
   }
 }
 
@@ -323,6 +305,7 @@
     border-bottom: 1px solid #0091ff;
   }
 }
+
 .rdw-link-modal-label {
   color: white;
   font-size: 15px;
@@ -477,3 +460,39 @@
 .rdw-option-active {
   background-color: rgba($color: #BFBDBD, $alpha: 0.6);
 }
+
+/* THEME
+   ----------------------------- */
+   @mixin themable($_THEME, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON, $_BORDER_COLOR_SETTINGS_SIGNATURE_BUTTON, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON_HOVER){
+    [data-theme^=#{$_THEME}],
+    [data-theme] [data-theme^=#{$_THEME}] {
+      .rdw-inline-wrapper, .rdw-fontsize-wrapper, .rdw-fontfamily-wrapper{
+        border-right-color: $_BORDER_COLOR_SETTINGS_SIGNATURE_BUTTON;
+      }
+
+      .rdw-option-wrapper {
+        background: $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON;
+
+        &:hover{
+          background-color: $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON_HOVER;
+        }
+      }
+
+      .rdw-dropdown-wrapper {
+        background: $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON;
+
+        &:hover{
+          background-color: $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON_HOVER;
+        }
+      }
+
+      .rdw-editor-main {
+        .DraftEditor-root {
+          border-top-color: $_BORDER_COLOR_SETTINGS_SIGNATURE_BUTTON;
+        }
+      }
+    }
+  }
+    
+  @include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON_LIGHT, $_BORDER_COLOR_SETTINGS_SIGNATURE_BUTTON_LIGHT, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON_HOVER_LIGHT);
+  @include themable($_THEME_DARK, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON_DARK, $_BORDER_COLOR_SETTINGS_SIGNATURE_BUTTON_DARK, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_BUTTON_HOVER_DARK);

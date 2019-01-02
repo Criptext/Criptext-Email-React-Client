@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .search-options{
   width: 390px;
 
@@ -14,7 +16,6 @@
     }
 
     .search-options-label{
-      color: #6a707e;
       font-size: 12px;
       font-weight: 500;
       margin-left: 18px;
@@ -36,7 +37,7 @@
     }
   
     input[type="text"]::-webkit-input-placeholder {
-      color: #d7d7d7;
+      color: #c0bfbf;
       text-transform: initial;
     }
 
@@ -46,7 +47,6 @@
       width: 120px;
 
       .checkmark-text{
-        color: #6a707e;
         font-size: 12px;
         font-weight: 500;
       }
@@ -75,3 +75,25 @@
     }
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BORDER_COLOR_SEARCH_OPTION, $_COLOR_TEXT_SEARCH_OPTION){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .search-options{
+      table{
+        tr{
+          border-bottom-color: $_BORDER_COLOR_SEARCH_OPTION;
+        }
+
+        .search-options-label{
+          color: $_COLOR_TEXT_SEARCH_OPTION;
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BORDER_COLOR_SEARCH_OPTION_LIGHT, $_COLOR_TEXT_SEARCH_OPTION_LIGHT);
+@include themable($_THEME_DARK, $_BORDER_COLOR_SEARCH_OPTION_DARK, $_COLOR_TEXT_SEARCH_OPTION_DARK);

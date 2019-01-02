@@ -15,7 +15,6 @@
   width: 100%;
 
   .trumbowyg-button-pane{
-    background: #fff;
     border-bottom: none;
     border-radius: 3px;
     bottom: 55px;
@@ -31,7 +30,7 @@
       position: absolute;
       left: 136px;
       bottom: -6px;
-      border-top: 6px solid #fff;
+      border-top: 6px solid transparent;
       border-right: 6px solid transparent;
       border-left: 6px solid transparent;
     }
@@ -53,10 +52,6 @@
         height: 25px;
         width: 28px;
 
-        &:hover{
-          background-color: #f0f0f0;
-        }
-
         &.trumbowyg-open-dropdown{
           width: 35px;
 
@@ -76,16 +71,11 @@
 
         &.trumbowyg-fontsize-button{
           svg{
-            background-image: url(../#{$_PATH_TO_IMAGES}/font-size.svg);
             background-repeat: no-repeat;
             background-position: center;
             background-size: auto 100%;
             height: 12px;
           }
-        }
-
-        svg{
-          fill: #6e6e6e;
         }
       }
     }
@@ -263,6 +253,78 @@
   }
 }
 
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_PANEL, $_COLOR_TEXT_PANEL, $_BORDER_COLOR_PANEL_SEPARATE, $_BACKGROUND_COLOR_PANEL_BUTTON_HOVER){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .trumbowyg-box{
+      .trumbowyg-button-pane{
+        background-color: $_BACKGROUND_COLOR_PANEL;
+
+        &::before{
+          border-top-color: $_BACKGROUND_COLOR_PANEL;
+        }
+        
+        .trumbowyg-button-group{
+          button{
+            color: $_COLOR_TEXT_PANEL;
+
+            &:hover{
+              background-color: $_BACKGROUND_COLOR_PANEL_BUTTON_HOVER;
+            }
+
+            &.trumbowyg-active {
+              background-color: $_BACKGROUND_COLOR_PANEL_BUTTON_HOVER;
+            }
+
+            &.trumbowyg-open-dropdown{
+              &:after{
+                border-top-color: $_COLOR_TEXT_PANEL;
+              }
+            }
+
+            &.trumbowyg-fontsize-button{
+              svg{
+                background-image: url(../#{$_PATH_TO_IMAGES}/font-size-#{$_THEME}.svg);
+              }
+            }
+
+            svg{
+              fill: $_COLOR_TEXT_PANEL;
+            }
+          }
+        }
+
+        .trumbowyg-button-group:not(:empty) + .trumbowyg-button-group::before {
+          background: $_BORDER_COLOR_PANEL_SEPARATE;
+        }
+      }
+
+      .trumbowyg-dropdown{
+        background-color: $_BACKGROUND_COLOR_PANEL;
+
+        button{
+          background-color: $_BACKGROUND_COLOR_PANEL;
+          color:  $_COLOR_TEXT_PANEL;
+
+          &:hover{
+            background-color: $_BACKGROUND_COLOR_PANEL_BUTTON_HOVER;
+          }
+        }
+
+        svg{
+          fill: $_COLOR_TEXT_PANEL;
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_PANEL_LIGHT, $_COLOR_TEXT_PANEL_LIGHT, $_BORDER_COLOR_PANEL_SEPARATE_LIGHT, $_BACKGROUND_COLOR_PANEL_BUTTON_HOVER_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_PANEL_DARK, $_COLOR_TEXT_PANEL_DARK, $_BORDER_COLOR_PANEL_SEPARATE_DARK, $_BACKGROUND_COLOR_PANEL_BUTTON_HOVER_DARK);
+
+
 .trumbowyg-dropdown-foreColor,
 .trumbowyg-dropdown-backColor {
   width: 276px;
@@ -296,11 +358,6 @@
       box-shadow: #000 0 0 2px;
       z-index: 10; }
 
-
-
-
-
-
 #trumbowyg-icons {
   overflow: hidden;
   visibility: hidden;
@@ -318,7 +375,7 @@
 .trumbowyg-box svg {
   width: 17px;
   height: 100%;
-  fill: #222; }
+}
 
 .trumbowyg-box,
 .trumbowyg-editor {
@@ -433,7 +490,6 @@
       content: " ";
       display: block;
       width: 1px;
-      background: #d7e0e2;
       margin: 0 5px;
       height: 35px; }
   .trumbowyg-button-pane button {
@@ -462,7 +518,6 @@
   .trumbowyg-button-pane button:not(.trumbowyg-disable):hover,
   .trumbowyg-button-pane button:not(.trumbowyg-disable):focus,
   .trumbowyg-button-pane button.trumbowyg-active {
-    background-color: #FFF;
     outline: none; }
   .trumbowyg-button-pane .trumbowyg-open-dropdown::after {
     display: block;
@@ -490,7 +545,6 @@
   border: 1px solid #ecf0f1;
   padding: 5px 0;
   border-top: none;
-  background: #FFF;
   margin-left: -1px;
   box-shadow: rgba(0, 0, 0, 0.1) 0 2px 3px; }
   .trumbowyg-dropdown button {
@@ -499,9 +553,7 @@
     height: 35px;
     line-height: 35px;
     text-decoration: none;
-    background: #FFF;
     padding: 0 10px;
-    color: #333 !important;
     border: none;
     cursor: pointer;
     text-align: left;

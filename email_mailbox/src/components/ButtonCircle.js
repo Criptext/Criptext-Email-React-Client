@@ -12,9 +12,9 @@ const ButtonCircle = props => (
     data-for={props.targetName}
   >
     <i className={props.icon} />
-    {props.enableTip ? (
+    {props.enableTip && (
       <HeaderActionTooltip target={props.targetName} tip={props.tip} />
-    ) : null}
+    )}
   </div>
 );
 

@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .email-info-content-to-more .menu-container.menu-arrow.arrow-top-left{
   &:before, &:after{
     left: 155px;
@@ -5,7 +7,7 @@
 }
 
 .email-more-detail{
-  background-color: white;
+  background-color: transparent;
   height: auto;
   padding: 0 10px;
   width: 300px;
@@ -28,17 +30,54 @@
       }
 
       .title{
-        color: black;
         font-size: 12px;
         font-weight: 700;
         margin-right: 8px;
       }
   
       .text{
-        color: black;
         font-size: 12px;
         font-weight: 300;
       }
     }
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_POPOVER, $_BORDER_COLOR_POPOVER, $_COLOR_TEXT_POPOVER){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .menu-container{
+      background-color: $_BACKGROUND_COLOR_POPOVER;
+      border-color: $_BORDER_COLOR_POPOVER;
+
+      &.menu-arrow{
+        &:before{
+          border-color:$_BORDER_COLOR_POPOVER transparent;
+        }
+    
+        &:after{
+          border-color:$_BACKGROUND_COLOR_POPOVER transparent;
+        }
+      }
+    }
+
+    .email-more-detail{
+      table{
+        td{
+          .title{
+            color: $_COLOR_TEXT_POPOVER;
+          }
+      
+          .text{
+            color: $_COLOR_TEXT_POPOVER;
+          }
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_POPOVER_LIGHT, $_BORDER_COLOR_POPOVER_LIGHT, $_COLOR_TEXT_POPOVER_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_POPOVER_DARK, $_BORDER_COLOR_POPOVER_DARK, $_COLOR_TEXT_POPOVER_DARK);

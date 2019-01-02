@@ -102,38 +102,15 @@ aside.navigation-feed-container{
 }
 
 .navigation-feed-content {
-  border-top: solid 1px #f3f3f3;
   overflow: auto;
-  height: calc(100% - 61px);
+  height: calc(100% - 60px);
   position: relative;
   width: 288px;
 
-  .feed-content-empty {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: center;
-    text-align: center;
-    margin: 0 auto;
-    position: relative;
-    width: 180px;
-
-    .icon {
-      height: 50px;
-      margin-bottom: 10%;
-      width: 100%;
-      position: relative;
-      background: url(../#{$_PATH_TO_IMAGES}/icon-notification.png) no-repeat center center;
-      background-size: auto 100%;
-    }
-    .text {
-      width: 100%;
-      
-      .title {
-        color: #000000;
-      }
-      .subtitle {
-        color: #9b9b9b;
+  .empty-activity-container {
+    .empty-content {
+      .empty-icon {
+        background-image: url(../#{$_PATH_TO_IMAGES}/icon-notification.svg);
       }
     }
   }
@@ -146,13 +123,14 @@ aside.navigation-feed-container{
 
     .feed-section-title {
       .text{
-        width: 30px;
+        color: #8a9dad;
         height: 16px;
         font-size: 12px;
-        color: #8a9dad;
+        margin: 0% 0% 2% 0%;
         padding-left: 33px;
         padding-top: 12px;
-        margin: 0% 0% 2% 0%;
+        text-transform: uppercase;
+        width: 30px;
       }
     }
 
@@ -328,7 +306,6 @@ aside.navigation-feed-container{
     }
 
     .unread-feed {
-      background-color: #f2f8ff;
       .feed-content {
         .feed-icon {
           i {
@@ -345,7 +322,6 @@ aside.navigation-feed-container{
             .feed-time {
               font-weight: bold;
               font-style: normal;
-              color: #000000;
             }
           }
         }
@@ -353,3 +329,34 @@ aside.navigation-feed-container{
     }
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_ACTIVITY, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .navigation-feed-content{
+      background-color: $_BACKGROUND_COLOR_ACTIVITY;
+
+      .feed-item {
+        .feed-content {
+          .feed-data {
+            .feed-preview {
+              .feed-title {
+                color: $_COLOR_TEXT_ACTIVITY_ITEM_TITLE;
+              }
+            }
+          }
+        }
+      }
+      .new-feeds{
+        .unread-feed {
+          background-color: $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD;
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_LIGHT, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_ACTIVITY_DARK, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_DARK, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_DARK);

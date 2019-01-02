@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .checkmark-container {
   align-items: center;
   cursor: pointer;
@@ -54,8 +56,21 @@
 }
 
 .checkmark-text{
-  color: black;
   font-size: 13px;
   font-weight: 200;
   margin-left: 12px;
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_CHECKBOX){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .checkmark-text{
+      color: $_COLOR_TEXT_CHECKBOX;
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_CHECKBOX_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_CHECKBOX_DARK);

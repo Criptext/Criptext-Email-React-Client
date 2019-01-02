@@ -53,7 +53,7 @@ const SettingGeneral = props => (
 );
 
 const ProfileBlock = props => (
-  <div className="section-block">
+  <div id="settings-general-profile" className="section-block">
     <div className="section-block-title">
       <h1>{string.settings.profile}</h1>
     </div>
@@ -113,7 +113,7 @@ const renderBlockSignature = props => (
       {string.settings.signature}
     </span>
     <div className="signature-switch">
-      <div className="signature-switch-item custom-switch">
+      <div className="settings-switch">
         <Switch
           theme="two"
           name="setPasswordSwitch"
@@ -121,7 +121,7 @@ const renderBlockSignature = props => (
           checked={!!myAccount.signatureEnabled}
         />
       </div>
-      <div className="signature-switch-label">
+      <div className="settings-switch-label">
         <span>
           {`${string.settings.signature} ${
             myAccount.signatureEnabled
@@ -182,7 +182,7 @@ const PasswordBlock = props => (
 );
 
 const LogoutAccountBlock = props => (
-  <div className="section-block">
+  <div id="settings-general-logout" className="section-block">
     <div className="section-block-title">
       <h1>{string.settings.logout_account}</h1>
     </div>
@@ -198,7 +198,7 @@ const LogoutAccountBlock = props => (
 );
 
 const RecoveryEmailBlock = props => (
-  <div className="section-block">
+  <div id="settings-general-recovery-email" className="section-block">
     <div className="section-block-title">
       <h1>{string.settings.recovery_email}</h1>
     </div>
@@ -254,14 +254,14 @@ const RecoveryEmailLoading = () => (
 );
 
 const TwoFactorAuthenticationBlock = props => (
-  <div className="section-block">
+  <div id="settings-general-two-factor" className="section-block">
     <div className="section-block-title">
       <h1>{string.settings.two_factor_authentication}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
         <div className="two-factor-switch">
-          <div className="two-factor-switch-item custom-switch">
+          <div className="settings-switch">
             <Switch
               theme="two"
               name="setTwoFactorSwitch"
@@ -274,7 +274,7 @@ const TwoFactorAuthenticationBlock = props => (
               }
             />
           </div>
-          <div className="two-factor-switch-label">
+          <div className="settings-switch-label">
             {props.twoFactorLabelIsLoading ? (
               <TwoFactorLoadingLabel />
             ) : (
@@ -305,21 +305,18 @@ const renderTwoFactorTextLabel = props => {
     : isEnabled
       ? TWO_FACTOR_ENABLED_TEXT
       : TWO_FACTOR_DISABLED_TEXT;
-  const labelClass = !hasRecoveryEmailConnfirmed
-    ? 'two-factor-warning-label'
-    : 'two-factor-normal-label';
-  return <span className={labelClass}>{textLabel}</span>;
+  return <span>{textLabel}</span>;
 };
 
 const ShowEmailPreviewBlock = props => (
-  <div className="section-block">
+  <div id="settings-general-email-preview" className="section-block">
     <div className="section-block-title">
       <h1>{string.settings.notification_preview}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
         <div className="email-preview-switch">
-          <div className="email-preview-switch-item custom-switch">
+          <div className="settings-switch">
             <Switch
               theme="two"
               name="setEmailPreviewSwitch"
@@ -327,7 +324,7 @@ const ShowEmailPreviewBlock = props => (
               checked={!!props.emailPreviewEnabled}
             />
           </div>
-          <div className="email-preview-switch-label">
+          <div className="settings-switch-label">
             <span>
               {props.emailPreviewEnabled
                 ? string.settings.on
@@ -341,14 +338,14 @@ const ShowEmailPreviewBlock = props => (
 );
 
 const ReadReceiptsBlock = props => (
-  <div className="section-block">
+  <div id="settings-general-read-receipts" className="section-block">
     <div className="section-block-title">
       <h1>{string.settings.read_receipts}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item">
         <div className="read-receipts-switch">
-          <div className="read-receipts-switch-item custom-switch">
+          <div className="settings-switch">
             <Switch
               theme="two"
               name="setReadReceiptsSwitch"
@@ -357,7 +354,7 @@ const ReadReceiptsBlock = props => (
               disabled={props.readReceiptsLabelisLoading}
             />
           </div>
-          <div className="read-receipts-switch-label">
+          <div className="settings-switch-label">
             {props.readReceiptsLabelisLoading ? (
               <ReadReceiptsLoadingLabel />
             ) : (

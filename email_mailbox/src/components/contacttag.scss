@@ -1,12 +1,32 @@
+@import "./../styles/index.scss";
+
 .contact-tag{
   .name{
-    color: black;
     font-size: 12px;
     font-weight: 300;
   }
   
   .tag{
-    color: #0091ff;
     font-size: 12px;
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_CONTACT_TAG_NAME, $_COLOR_TEXT_CONTACT_TAG_EMAIL){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .contact-tag{
+      .name{
+        color: $_COLOR_TEXT_CONTACT_TAG_NAME;
+      }
+      
+      .tag{
+        color: $_COLOR_TEXT_CONTACT_TAG_EMAIL;
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_CONTACT_TAG_NAME_LIGHT, $_COLOR_TEXT_CONTACT_TAG_EMAIL_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_CONTACT_TAG_NAME_DARK, $_COLOR_TEXT_CONTACT_TAG_EMAIL_DARK);

@@ -1,8 +1,9 @@
+@import "./../styles/index.scss";
+
 .tag-item{
   align-items: center;
   border-radius: 14px;
   box-sizing: initial;
-  color: #4a4a4a;
   display: flex;
   flex-grow: 0;
   font-size: 13px;
@@ -12,15 +13,13 @@
   padding: 3px 2px 3px 10px;
 
   &.tag-default{
-    background-color: #f4f4f4;
-    border: solid 1px #d4d4d4;
+    border: solid 1px transparent;
   }
 
   &.tag-error {
     color: #fff;
     font-weight: 500;
-    background-color: #e27c7c;
-    border: solid 1px #cc0000;
+    border: solid 1px transparent;
 
     > .icon-exit {
       color: #b40000;
@@ -28,14 +27,54 @@
   }
 
   &.tag-app-domain{
-    background-color: #ebf6ff;
-    border: solid 1px #acd8fc;
+    border: solid 1px transparent;
   }
 
   a{
-    color: #9b9b9b;
     font-size: 22px;
     line-height: 10px;
     text-decoration: none;
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_TAG_APP_DOMAIN, $_BORDER_COLOR_TAG_APP_DOMAIN, $_COLOR_TEXT_TAG, $_COLOR_TEXT_TAG_APP_DOMAIN, $_COLOR_ICON_TAG_APP_DOMAIN, $_BACKGROUND_COLOR_TAG_DEFAULT, $_BORDER_COLOR_TAG_DEFAULT, $_COLOR_ICON_TAG_DEFAULT, $_BACKGROUND_COLOR_TAG_ERROR, $_BORDER_COLOR_TAG_ERROR, $_COLOR_ICON_TAG_ERROR){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .tag-item{
+      color: $_COLOR_TEXT_TAG;
+
+      &.tag-app-domain{
+        background-color: $_BACKGROUND_COLOR_TAG_APP_DOMAIN;
+        border-color: $_BORDER_COLOR_TAG_APP_DOMAIN;
+        color: $_COLOR_TEXT_TAG_APP_DOMAIN;
+
+        a{
+          color: $_COLOR_ICON_TAG_APP_DOMAIN;
+        }
+      }
+
+      &.tag-default{
+        background-color: $_BACKGROUND_COLOR_TAG_DEFAULT;
+        border-color: $_BORDER_COLOR_TAG_DEFAULT;
+
+        a{
+          color: $_COLOR_ICON_TAG_DEFAULT;
+        }
+      }
+
+      &.tag-error {
+        background-color: $_BACKGROUND_COLOR_TAG_ERROR;
+        border-color: $_BORDER_COLOR_TAG_ERROR;
+
+        a{
+          color: $_COLOR_ICON_TAG_ERROR;
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_TAG_APP_DOMAIN_LIGHT, $_BORDER_COLOR_TAG_APP_DOMAIN_LIGHT, $_COLOR_TEXT_TAG_LIGHT, $_COLOR_TEXT_TAG_APP_DOMAIN_LIGHT, $_COLOR_ICON_TAG_APP_DOMAIN_LIGHT, $_BACKGROUND_COLOR_TAG_DEFAULT_LIGHT,$_BORDER_COLOR_TAG_DEFAULT_LIGHT, $_COLOR_ICON_TAG_DEFAULT_LIGHT, $_BACKGROUND_COLOR_TAG_ERROR_LIGHT, $_BORDER_COLOR_TAG_ERROR_LIGHT, $_COLOR_ICON_TAG_ERROR_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_TAG_APP_DOMAIN_DARK, $_BORDER_COLOR_TAG_APP_DOMAIN_DARK, $_COLOR_TEXT_TAG_DARK, $_COLOR_TEXT_TAG_APP_DOMAIN_DARK, $_COLOR_ICON_TAG_APP_DOMAIN_DARK, $_BACKGROUND_COLOR_TAG_DEFAULT_DARK, $_BORDER_COLOR_TAG_DEFAULT_DARK, $_COLOR_ICON_TAG_DEFAULT_DARK, $_BACKGROUND_COLOR_TAG_ERROR_DARK, $_BORDER_COLOR_TAG_ERROR_DARK, $_COLOR_ICON_TAG_ERROR_DARK);

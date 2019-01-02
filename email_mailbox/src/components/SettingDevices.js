@@ -43,7 +43,9 @@ const renderTrustedDevice = (index, deviceData, props) => (
     <div className="device-icon">
       <i className={defineDeviceIconByType(deviceData.type)} />
     </div>
-    <div className="device-name">{deviceData.name}</div>
+    <div className="device-name">
+      <span>{deviceData.name}</span>
+    </div>
     {deviceData.isCurrentDevice && (
       <div className="device-status">
         <span className="current-device">{string.settings.current_device}</span>

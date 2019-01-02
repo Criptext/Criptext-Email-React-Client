@@ -411,7 +411,6 @@ html, html body {
 }
 
 #root, .wrapper{
-  background-color: white;
   height: 100%;
   width: 100%;
 }
@@ -465,3 +464,17 @@ button{
     top: -1px;
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    &.wrapper{
+      background-color: $_BACKGROUND_COLOR_MAIN;
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK);
