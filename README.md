@@ -12,6 +12,12 @@ Finally, an email service that's built around your privacy. Get your @criptext.c
 
 We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked!
 
+## Contributing Translations
+
+<a href="https://lokalise.co/" target="_blank"><img src="https://lokalise.co/img/lokalise_logo_black.png" width="120px"/></a>
+
+We use Lokalise for translations. If you are interested in helping please write us at <a href="mailto:support@criptext.com">support@criptext.com</a>
+
 ## Dependencies
 
 To build Criptext on your machine you'll need:
