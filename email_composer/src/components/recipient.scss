@@ -85,17 +85,12 @@
         input{
           background-color: transparent;
           border: none;
-          color: #6a707e;
           flex-grow: 1;
           font-family: NunitoSans;
           font-size: 12px;
           font-weight: 100;
           height: 20px;
           margin: 2px 0;
-        }
-  
-        input::-webkit-input-placeholder{
-          color: #6a707e;
         }
       }
     }
@@ -153,7 +148,7 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_COLOR_TEXT_RECIPIENT_LABEL, $_BORDER_COLOR_SEPARATE){
+@mixin themable($_THEME, $_COLOR_TEXT_RECIPIENT_LABEL, $_BORDER_COLOR_SEPARATE, $_COLOR_TEXT_RECIPIENT_INPUT){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .recipient-container{
@@ -164,9 +159,19 @@
       .recipient-input-label {
         color: $_COLOR_TEXT_RECIPIENT_LABEL;
       }
+
+      .recipient-tags{
+        > span {
+          > div {
+            input{
+              color: $_COLOR_TEXT_RECIPIENT_INPUT;
+            }
+          }
+        }
+      }
     }
   }
 }
   
-@include themable($_THEME_LIGHT, $_COLOR_TEXT_RECIPIENT_LABEL_LIGHT, $_BORDER_COLOR_SEPARATE_LIGHT);
-@include themable($_THEME_DARK, $_COLOR_TEXT_RECIPIENT_LABEL_DARK, $_BORDER_COLOR_SEPARATE_DARK);
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_RECIPIENT_LABEL_LIGHT, $_BORDER_COLOR_SEPARATE_LIGHT, $_COLOR_TEXT_RECIPIENT_INPUT_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_RECIPIENT_LABEL_DARK, $_BORDER_COLOR_SEPARATE_DARK, $_COLOR_TEXT_RECIPIENT_INPUT_DARK);

@@ -36,27 +36,52 @@
 .dropfilefiled-content{
   align-items: center;
   display: flex;
-  flex-direction: column;
-  height: 80px;
+  height: 100%;
   position: absolute;
-  right: calc(50% - 65px);
-  top: calc(50% - 40px);
-  width: 130px;
+  width: 100%;
 
   >div{
-    background-image: url(../#{$_PATH_TO_IMAGES}/upload.png);
-    background-position: center;
-    background-size: auto 100%;
-    background-repeat: no-repeat;
-    height: 45px;
-    width: 37px;
-  }
-
-  span{
-    color: #4a4a4a;
-    font-family: NunitoSans;
-    font-size: 18px;
-    font-weight: 600;
-    margin: 10px auto 0;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    margin: 0 auto;
+    width: 130px;
+    
+    >div{
+      background-image: url(../#{$_PATH_TO_IMAGES}/upload.png);
+      background-position: center;
+      background-size: auto 100%;
+      background-repeat: no-repeat;
+      height: 45px;
+      width: 37px;
+    }
+  
+    span{
+      color: #4a4a4a;
+      font-family: NunitoSans;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 10px auto 0;
+      text-align: center;
+    }
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_DROPFILE, $_BACKGROUND_COLOR_DROPFILE){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .dropfilefiled-content{
+      background-color: $_BACKGROUND_COLOR_DROPFILE;
+
+      span{
+        color: $_COLOR_TEXT_DROPFILE;
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_DROPFILE_LIGHT, $_BACKGROUND_COLOR_DROPFILE_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_DROPFILE_DARK, $_BACKGROUND_COLOR_DROPFILE_DARK);
