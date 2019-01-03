@@ -14,6 +14,7 @@ TABLE OF CONTENTS
  4.1.- Input Text
  4.2.- Select
  4.3.- Button
+ 4.4.- Tooltip
 
 ***/
 
@@ -575,7 +576,7 @@ h2{
       input{
         background-color: transparent;
         border: none;
-        border-bottom: solid 1px #e3e5e6;
+        border-bottom: solid 1px transparent;
         font-size: 12px;
         font-weight: 300;
 
@@ -753,6 +754,14 @@ button{
   }
 }
 
+/* 4.4.- CONTROLS: Tooltip
+   ----------------------------- */
+.labels-tooltip{
+  border-radius: 3px;
+  font-weight: normal;
+  font-size: 12px;
+}
+
 .__floater__open {
   padding: 0px 12px !important;
 }
@@ -762,7 +771,7 @@ button{
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE, $_COLOR_TEXT_POPUP_TITLE, $_COLOR_TEXT_POPUP_SUBTITLE, $_COLOR_TEXT_POPUP_PARAGRAPH, $_COLOR_TEXT_POPUP_BUTTON_CANCEL, $_BACKGROUND_COLOR_BUTTON-B, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_SELECT, $_COLOR_TEXT_INPUT){
+@mixin themable($_THEME, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE, $_COLOR_TEXT_POPUP_TITLE, $_COLOR_TEXT_POPUP_SUBTITLE, $_COLOR_TEXT_POPUP_PARAGRAPH, $_BORDER_COLOR_POPUP_INPUT, $_COLOR_TEXT_POPUP_BUTTON_CANCEL, $_BACKGROUND_COLOR_BUTTON-B, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_SELECT, $_COLOR_TEXT_INPUT, $_BACKGROUND_COLOR_TOOLTIP, $_COLOR_TEXT_TOOLTIP){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .empty-container {
@@ -792,6 +801,14 @@ button{
         }
       }
 
+      .popup-inputs{
+        .popup-input{
+          input{
+            border-bottom-color: $_BORDER_COLOR_POPUP_INPUT;
+          }
+        }
+      }
+
       .popup-buttons {
         .button-a {
           &.popup-cancel-button {
@@ -815,8 +832,20 @@ button{
     input{
       color: $_COLOR_TEXT_INPUT;
     }
+
+    .labels-tooltip{
+      background-color: $_BACKGROUND_COLOR_TOOLTIP !important;;
+
+      .tooltip-tip{
+        color: $_COLOR_TEXT_TOOLTIP;
+
+        &:after{
+          background-color: $_BACKGROUND_COLOR_TOOLTIP;
+        }
+      }
+    }
   }
 }
   
-@include themable($_THEME_LIGHT, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_LIGHT, $_COLOR_TEXT_POPUP_TITLE_LIGHT, $_COLOR_TEXT_POPUP_SUBTITLE_LIGHT, $_COLOR_TEXT_POPUP_PARAGRAPH_LIGHT, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_LIGHT, $_BACKGROUND_COLOR_BUTTON-B_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_SELECT_LIGHT, $_COLOR_TEXT_INPUT_LIGHT);
-@include themable($_THEME_DARK, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_DARK, $_COLOR_TEXT_POPUP_TITLE_DARK, $_COLOR_TEXT_POPUP_SUBTITLE_DARK, $_COLOR_TEXT_POPUP_PARAGRAPH_DARK, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_DARK, $_BACKGROUND_COLOR_BUTTON-B_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_SELECT_DARK, $_COLOR_TEXT_INPUT_DARK);
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_LIGHT, $_COLOR_TEXT_POPUP_TITLE_LIGHT, $_COLOR_TEXT_POPUP_SUBTITLE_LIGHT, $_COLOR_TEXT_POPUP_PARAGRAPH_LIGHT, $_BORDER_COLOR_POPUP_INPUT_LIGHT, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_LIGHT, $_BACKGROUND_COLOR_BUTTON-B_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_SELECT_LIGHT, $_COLOR_TEXT_INPUT_LIGHT, $_BACKGROUND_COLOR_TOOLTIP_LIGHT, $_COLOR_TEXT_TOOLTIP_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_DARK, $_COLOR_TEXT_POPUP_TITLE_DARK, $_COLOR_TEXT_POPUP_SUBTITLE_DARK, $_COLOR_TEXT_POPUP_PARAGRAPH_DARK, $_BORDER_COLOR_POPUP_INPUT_DARK, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_DARK, $_BACKGROUND_COLOR_BUTTON-B_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_SELECT_DARK, $_COLOR_TEXT_INPUT_DARK, $_BACKGROUND_COLOR_TOOLTIP_DARK, $_COLOR_TEXT_TOOLTIP_DARK);

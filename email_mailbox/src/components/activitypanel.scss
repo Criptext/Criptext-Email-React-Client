@@ -108,9 +108,36 @@ aside.navigation-feed-container{
   width: 288px;
 
   .empty-activity-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    
     .empty-content {
+      margin: auto;
+      align-items: center;
+
       .empty-icon {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
         background-image: url(../#{$_PATH_TO_IMAGES}/icon-notification.svg);
+      }
+
+      .header-text {
+        font-size: 14px;
+        text-align: center;
+        margin-top: 15px;
+      }
+  
+      .subheader-text {
+        font-size: 14px;
+        font-style: italic;
+        text-align: center;
+        color: #9b9b9b;
       }
     }
   }
@@ -332,11 +359,19 @@ aside.navigation-feed-container{
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_ACTIVITY, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_ACTIVITY, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .navigation-feed-content{
       background-color: $_BACKGROUND_COLOR_ACTIVITY;
+
+      .empty-activity-container {
+        .empty-content {
+          .header-text {
+            color: $_COLOR_TEXT_CONTAINER_EMPTY_TITLE;
+          }
+        }
+      }
 
       .feed-item {
         .feed-content {
@@ -349,6 +384,7 @@ aside.navigation-feed-container{
           }
         }
       }
+
       .new-feeds{
         .unread-feed {
           background-color: $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD;
@@ -358,5 +394,5 @@ aside.navigation-feed-container{
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_LIGHT, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_ACTIVITY_DARK, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_DARK, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_LIGHT, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_LIGHT, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_ACTIVITY_DARK, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_DARK, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_DARK, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_DARK);

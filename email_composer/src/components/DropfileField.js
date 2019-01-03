@@ -37,12 +37,14 @@ const DropfileField = props => (
       multiple={props.multiple}
       onChange={props.onDrop}
     />
-    {props.isDragActive ? (
+    {props.isDragActive && (
       <div className="dropfilefiled-content">
-        <div />
-        <span>{string.dropFilesArea.text}</span>
+        <div>
+          <div />
+          <span>{string.dropFilesArea.text}</span>
+        </div>
       </div>
-    ) : null}
+    )}
   </div>
 );
 
