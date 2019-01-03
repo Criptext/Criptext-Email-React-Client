@@ -15,7 +15,7 @@ const filterNonCriptextRecipients = recipients => {
 };
 
 const formAppSign = () => {
-  return '<br/><span style="color:#000; font-size: 12px;">Sent with <a style="color: #0091ff; text-decoration: none;" href="https://goo.gl/qW4Aks">Criptext</a> secure email</span>';
+  return '<br/><span style="font-size: 12px;">Sent with <a style="color: #0091ff; text-decoration: none;" href="https://goo.gl/qW4Aks">Criptext</a> secure email</span>';
 };
 
 const getCriptextRecipients = (recipients, type) => {
