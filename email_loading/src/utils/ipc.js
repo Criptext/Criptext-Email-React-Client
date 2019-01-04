@@ -32,6 +32,10 @@ export const linkAccept = async randomId => {
   return await callMain('client-link-accept', randomId);
 };
 
+export const linkDeny = async randomId => {
+  return await callMain('client-link-deny', randomId);
+};
+
 /* DataBase
    ----------------------------- */
 export const createIdentityKeyRecord = async params => {

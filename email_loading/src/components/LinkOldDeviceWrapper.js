@@ -14,13 +14,13 @@ import {
   postDataReady,
   uploadDatabaseFile,
   setRemoteData,
-  linkDeny,
   sendEndLinkDevicesEvent,
   errors
 } from '../utils/electronInterface';
 import {
   closeCreatingKeysLoadingWindow,
   linkAccept,
+  linkDeny,
   throwError
 } from '../utils/ipc';
 import { loadingTypes } from './Panel';
