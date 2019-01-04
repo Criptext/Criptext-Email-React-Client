@@ -1,0 +1,79 @@
+.content-header {
+  height: 22%;
+  color: #ffffff;
+  text-align: center;
+  p {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0px;
+    position: relative;
+    top: 30%;
+  }
+}
+
+.message {
+  height: 15%;
+  color: #ffffff;
+  text-align: center;
+  p {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0px;
+  }
+}
+
+.button {
+  height: 30%;
+  p {
+    margin: 0px;
+    margin-bottom: 3%;
+    font-size: 13px;
+    text-align: center;
+    color: #ffffff;
+  }
+  .resend-button {
+    border: none;
+    border-radius: 100px;
+    padding: 8.5px;
+    background-color: #373a45;
+    margin: 0px 57px 45px 57px;
+    width: 66%;
+    opacity: 0.9;
+    cursor: pointer;
+
+    span {
+      color: #fff;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      opacity: 1;
+      span {
+        opacity: 1;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+.cant-access {
+  width: 40%;
+  font-size: 13px;
+  text-align: center;
+  color: #ffffff;
+  border-bottom: solid 1px #fff;
+  margin: 0 auto;
+  cursor: pointer;
+  span {
+    position: relative;
+    top: 2px;
+  }
+}

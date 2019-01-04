@@ -20,7 +20,9 @@ import SettingsGeneralDeleteAccount from './SettingsGeneralDeleteAccount';
 import SettingsGeneralLanguageWrapper from './SettingsGeneralLanguageWrapper';
 import SettingsGeneralThemeWrapper from './SettingsGeneralThemeWrapper';
 import SettingsGeneralManualSync from './SettingsGeneralManualSync';
-import ManualSyncPopupWrapper from './ManualSyncPopupWrapper';
+import ManualSyncPopup from './ManualSyncPopup';
+import ManualSyncDeviceAuthenticationPopup from './ManualSyncDeviceAuthenticationPopup';
+
 import './settinggeneral.scss';
 import './signatureeditor.scss';
 
@@ -29,7 +31,10 @@ const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
 const Logoutpopup = PopupHOC(LogoutPopup);
 const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
-const Manualsyncpopup = PopupHOC(ManualSyncPopupWrapper);
+const Manualsyncpopup = PopupHOC(ManualSyncPopup);
+const Manualsyncdeviceauthenticationpopup = PopupHOC(
+  ManualSyncDeviceAuthenticationPopup
+);
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   string.settings.two_factor_not_available_text;
@@ -39,12 +44,12 @@ const TWO_FACTOR_DISABLED_TEXT = string.settings.off;
 const SettingGeneral = props => (
   <div id="setting-general">
     <ProfileBlock {...props} />
-    <PasswordBlock {...props} />
-    <TwoFactorAuthenticationBlock {...props} />
     <SettingsGeneralManualSync
       onShowSettingsPopup={props.onShowSettingsPopup}
       devicesQuantity={props.devicesQuantity}
     />
+    <PasswordBlock {...props} />
+    <TwoFactorAuthenticationBlock {...props} />
     <ShowEmailPreviewBlock {...props} />
     <ReadReceiptsBlock {...props} />
     <RecoveryEmailBlock {...props} />
@@ -526,6 +531,18 @@ const SettingsPopup = props => {
           isHidden={isHidden}
           onTogglePopup={props.onHideSettingsPopup}
           popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+          {...props}
+        />
+      );
+    }
+    case SETTINGS_POPUP_TYPES.MANUAL_SYNC_DEVICE_AUTHENTICATION: {
+      return (
+        <Manualsyncdeviceauthenticationpopup
+          isHidden={isHidden}
+          onTogglePopup={props.onHideSettingsPopup}
+          popupPosition={{ left: '45%', top: '45%' }}
+          isClosable={false}
           theme={'dark'}
           {...props}
         />

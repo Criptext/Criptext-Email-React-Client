@@ -61,7 +61,8 @@ const SETTINGS_POPUP_TYPES = {
   TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled',
   DELETE_ACCOUNT: 'delete-account',
   NONE: 'none',
-  MANUAL_SYNC: 'manual-sync'
+  MANUAL_SYNC: 'manual-sync',
+  MANUAL_SYNC_DEVICE_AUTHENTICATION: 'manual-sync-device-authentication'
 };
 
 const changePasswordErrors = {
@@ -83,8 +84,10 @@ class SettingGeneralWrapper extends Component {
     super(props);
     this.state = {
       mode: EDITING_MODES.NONE,
-      isHiddenSettingsPopup: true,
-      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+
+      isHiddenSettingsPopup: false,
+      settingsPupopType: SETTINGS_POPUP_TYPES.MANUAL_SYNC_DEVICE_AUTHENTICATION,
+
       nameParams: {
         name: myAccount.name
       },

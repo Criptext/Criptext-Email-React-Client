@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import string from '../lang';
+import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
+import './manualsyncpopup.scss';
 
 const {
   title,
   paragraphs,
   cancelButtonLabel,
   confirmButtonLabel
-} = string.popups.manual_sync;
+} = string.popups.mailbox_sync;
 
 const ManualSyncPopup = props => {
   return (
@@ -19,18 +21,26 @@ const ManualSyncPopup = props => {
         <p>{paragraphs.header}</p>
       </div>
       <div className="popup-paragraph">
-        <p>{paragraphs.question}</p>
+        <p>
+          <strong>{paragraphs.question}</strong>
+        </p>
       </div>
       <div className="popup-buttons">
         <button
           className="button-a popup-cancel-button"
-          onClick={props.onClickCancelManualSync}
+          onClick={() => {
+            props.onHideSettingsPopup();
+          }}
         >
           <span>{cancelButtonLabel}</span>
         </button>
         <button
           className="button-a popup-confirm-button"
-          onClick={props.onClickConfirmManualSync}
+          onClick={() => {
+            const popupType =
+              SETTINGS_POPUP_TYPES.MANUAL_SYNC_DEVICE_AUTHENTICATION;
+            props.onShowSettingsPopup(popupType);
+          }}
         >
           <span>{confirmButtonLabel}</span>
         </button>
@@ -40,8 +50,8 @@ const ManualSyncPopup = props => {
 };
 
 ManualSyncPopup.propTypes = {
-  onClickCancelManualSync: PropTypes.func,
-  onClickConfirmManualSync: PropTypes.func
+  onHideSettingsPopup: PropTypes.func,
+  onShowSettingsPopup: PropTypes.func
 };
 
 export default ManualSyncPopup;

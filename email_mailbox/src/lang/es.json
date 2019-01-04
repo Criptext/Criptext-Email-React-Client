@@ -300,6 +300,25 @@
       "title": "¡A2F Habilitada!",
       "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
       "button": "¡Listo!"
+    },
+    "mailbox_sync": {
+      "title": "Advertencia de Sincronización",
+      "paragraphs": {
+        "header": "Todos los datos de su buzón se borrarán y se reemplazarán con los datos del buzón de su otro dispositivo.",
+        "question": "¿Estás seguro que deseas continuar?"
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Confirmar"
+    },
+    "manual_sync_device_authentication": {
+      "title": "Device Authentication",
+      "message": "Check and approve this sign in from your existing Criptext devices",
+      "getPromptLabel": "Didn't get the prompt?",
+      "buttons": {
+        "sending": "Sending...",
+        "resend": "Resend it"
+      },
+      "cancelSyncLabel": "Cancel Sync"
     }
   },
   "settings": {
@@ -352,6 +371,11 @@
     "delete_account": {
       "label": "Eliminar cuenta",
       "button": "Eliminar permanentemente"
+    },
+    "mailbox_sync": {
+      "label": "Buzón",
+      "button": "Sincronizar buzón",
+      "tooltip": "Debes tener al menos un dispositivo adicional para sincronizar"
     }
   },
   "sidebar": {
