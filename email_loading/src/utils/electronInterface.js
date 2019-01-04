@@ -61,36 +61,6 @@ export const uploadDatabaseFile = randomId => {
   return dataTransferManager.upload(randomId);
 };
 
-/* Criptext Client
------------------------------ */
-export const acknowledgeEvents = eventIds => {
-  return clientManager.acknowledgeEvents(eventIds);
-};
-
-export const getDataReady = () => {
-  return clientManager.getDataReady();
-};
-
-export const getKeyBundle = deviceId => {
-  return clientManager.getKeyBundle(deviceId);
-};
-
-export const linkAccept = randomId => {
-  return clientManager.linkAccept(randomId);
-};
-
-export const linkDeny = randomId => {
-  return clientManager.linkDeny(randomId);
-};
-
-export const postUser = params => {
-  return clientManager.postUser(params);
-};
-
-export const postDataReady = params => {
-  return clientManager.postDataReady(params);
-};
-
 /* DataBase
   ----------------------------- */
 export const cleanDataBase = params => {

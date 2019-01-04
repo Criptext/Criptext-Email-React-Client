@@ -3,7 +3,6 @@ const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const composerId = remote.getCurrentWindow().id;
 const dbManager = remote.require('./src/DBManager');
-const clientManager = remote.require('./src/clientManager');
 const globalManager = remote.require('./src/globalManager');
 
 export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
@@ -31,14 +30,4 @@ export const LabelType = labels;
    ----------------------------- */
 export const sendEventToMailbox = (name, params) => {
   ipcRenderer.send(name, params);
-};
-
-/* Criptext Client
-   ----------------------------- */
-export const findKeyBundles = params => {
-  return clientManager.findKeyBundles(params);
-};
-
-export const postEmail = params => {
-  return clientManager.postEmail(params);
 };

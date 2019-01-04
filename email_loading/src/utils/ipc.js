@@ -14,6 +14,36 @@ export const throwError = error => {
   callMain('throwError', error);
 };
 
+/* Criptext Client
+   ----------------------------- */
+export const acknowledgeEvents = async eventIds => {
+  return await callMain('client-acknowledge-events', eventIds);
+};
+
+export const getDataReady = async () => {
+  return await callMain('client-get-data-ready');
+};
+
+export const getKeyBundle = async deviceId => {
+  return await callMain('client-get-key-bundle', deviceId);
+};
+
+export const linkAccept = async randomId => {
+  return await callMain('client-link-accept', randomId);
+};
+
+export const linkDeny = async randomId => {
+  return await callMain('client-link-deny', randomId);
+};
+
+export const postDataReady = async params => {
+  return await callMain('client-post-data-ready', params);
+};
+
+export const postUser = async params => {
+  return await callMain('client-post-user', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const createIdentityKeyRecord = async params => {

@@ -1,5 +1,5 @@
 import { SocketCommand } from './const';
-import { acknowledgeEvents } from './electronInterface';
+import { acknowledgeEvents } from './ipc';
 
 const { ipcRenderer } = window.require('electron');
 const EventEmitter = window.require('events');

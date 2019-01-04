@@ -11,15 +11,18 @@ import {
   exportDatabase,
   stopSocket,
   encryptDatabaseFile,
-  postDataReady,
   uploadDatabaseFile,
   setRemoteData,
-  linkAccept,
-  linkDeny,
   sendEndLinkDevicesEvent,
   errors
 } from '../utils/electronInterface';
-import { closeCreatingKeysLoadingWindow, throwError } from '../utils/ipc';
+import {
+  closeCreatingKeysLoadingWindow,
+  linkAccept,
+  linkDeny,
+  postDataReady,
+  throwError
+} from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 import string from './../lang';
