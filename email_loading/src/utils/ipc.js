@@ -36,6 +36,10 @@ export const linkDeny = async randomId => {
   return await callMain('client-link-deny', randomId);
 };
 
+export const postDataReady = async params => {
+  return await callMain('client-post-data-ready', params);
+};
+
 export const postUser = async params => {
   return await callMain('client-post-user', params);
 };

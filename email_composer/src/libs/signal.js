@@ -1,6 +1,10 @@
 /*global libsignal util*/
 import { errors, objectUtils } from './../utils/electronInterface';
-import { findKeyBundles, getSessionRecordByRecipientIds, postEmail } from './../utils/ipc';
+import {
+  findKeyBundles,
+  getSessionRecordByRecipientIds,
+  postEmail
+} from './../utils/ipc';
 import SignalProtocolStore from './store';
 import { CustomError } from './../utils/CustomError';
 import {

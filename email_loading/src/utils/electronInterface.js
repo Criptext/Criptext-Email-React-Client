@@ -61,12 +61,6 @@ export const uploadDatabaseFile = randomId => {
   return dataTransferManager.upload(randomId);
 };
 
-/* Criptext Client
-  ----------------------------- */
-export const postDataReady = params => {
-  return clientManager.postDataReady(params);
-};
-
 /* DataBase
   ----------------------------- */
 export const cleanDataBase = params => {

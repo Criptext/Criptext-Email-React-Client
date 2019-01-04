@@ -11,7 +11,6 @@ import {
   exportDatabase,
   stopSocket,
   encryptDatabaseFile,
-  postDataReady,
   uploadDatabaseFile,
   setRemoteData,
   sendEndLinkDevicesEvent,
@@ -21,6 +20,7 @@ import {
   closeCreatingKeysLoadingWindow,
   linkAccept,
   linkDeny,
+  postDataReady,
   throwError
 } from '../utils/ipc';
 import { loadingTypes } from './Panel';

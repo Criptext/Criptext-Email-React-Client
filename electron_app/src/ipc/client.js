@@ -25,6 +25,10 @@ ipc.answerRenderer('client-link-deny', randomId => {
   clientManager.linkDeny(randomId);
 });
 
+ipc.answerRenderer('client-post-data-ready', params => {
+  clientManager.postDataReady(params);
+});
+
 ipc.answerRenderer('client-post-email', params => {
   clientManager.postEmail(params);
 });
