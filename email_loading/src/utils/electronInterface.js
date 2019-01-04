@@ -63,10 +63,6 @@ export const uploadDatabaseFile = randomId => {
 
 /* Criptext Client
   ----------------------------- */
-export const postUser = params => {
-  return clientManager.postUser(params);
-};
-
 export const postDataReady = params => {
   return clientManager.postDataReady(params);
 };

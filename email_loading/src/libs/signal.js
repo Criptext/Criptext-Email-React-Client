@@ -2,7 +2,6 @@
 
 import {
   createLabel,
-  postUser,
   createAccount as createAccountDB,
   myAccount,
   errors,
@@ -13,7 +12,12 @@ import {
   postKeyBundle,
   updateAccount
 } from './../utils/electronInterface';
-import { getAccount, getComputerName, getKeyBundle } from './../utils/ipc';
+import {
+  getAccount,
+  getComputerName,
+  getKeyBundle,
+  postUser
+} from './../utils/ipc';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
 import { appDomain, DEVICE_TYPE } from './../utils/const';
