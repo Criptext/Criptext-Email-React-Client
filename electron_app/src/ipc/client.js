@@ -13,6 +13,10 @@ ipc.answerRenderer('client-get-data-ready', () => {
   clientManager.getDataReady();
 });
 
+ipc.answerRenderer('client-get-key-bundle', deviceId => {
+  clientManager.getKeyBundle(deviceId);
+});
+
 ipc.answerRenderer('client-post-email', params => {
   clientManager.postEmail(params);
 });

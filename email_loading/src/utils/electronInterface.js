@@ -63,11 +63,6 @@ export const uploadDatabaseFile = randomId => {
 
 /* Criptext Client
 ----------------------------- */
-
-export const getKeyBundle = deviceId => {
-  return clientManager.getKeyBundle(deviceId);
-};
-
 export const linkAccept = randomId => {
   return clientManager.linkAccept(randomId);
 };

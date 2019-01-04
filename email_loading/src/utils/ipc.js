@@ -24,6 +24,10 @@ export const getDataReady = async () => {
   return await callMain('client-get-data-ready');
 };
 
+export const getKeyBundle = async deviceId => {
+  return await callMain('client-get-key-bundle', deviceId);
+};
+
 /* DataBase
    ----------------------------- */
 export const createIdentityKeyRecord = async params => {
