@@ -71,10 +71,6 @@ export const getNews = ({ code }) => {
 
 /*  Criptext Client
 ----------------------------- */
-export const acknowledgeEvents = eventIds => {
-  return clientManager.acknowledgeEvents(eventIds);
-};
-
 export const changePassword = params => {
   return clientManager.changePassword(params);
 };

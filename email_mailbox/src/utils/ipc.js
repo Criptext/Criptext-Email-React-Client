@@ -60,6 +60,12 @@ export const updateDockBadgeApp = value => {
   callMain('update-dock-badge', value);
 };
 
+/* Criptext Client
+   ----------------------------- */
+export const acknowledgeEvents = async eventIds => {
+  return await callMain('client-acknowledge-events', eventIds);
+};
+
 /* DataBase
    ----------------------------- */
 export const createEmail = async params => {

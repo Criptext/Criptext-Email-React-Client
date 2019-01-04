@@ -63,9 +63,6 @@ export const uploadDatabaseFile = randomId => {
 
 /* Criptext Client
 ----------------------------- */
-export const acknowledgeEvents = eventIds => {
-  return clientManager.acknowledgeEvents(eventIds);
-};
 
 export const getDataReady = () => {
   return clientManager.getDataReady();

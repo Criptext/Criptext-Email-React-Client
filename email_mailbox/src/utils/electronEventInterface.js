@@ -1,6 +1,5 @@
 import signal from './../libs/signal';
 import {
-  acknowledgeEvents,
   cleanDatabase,
   createFeedItem,
   createLabel,
@@ -25,6 +24,7 @@ import {
   getNews
 } from './electronInterface';
 import {
+  acknowledgeEvents,
   createEmail,
   createEmailLabel,
   getEmailByKey,

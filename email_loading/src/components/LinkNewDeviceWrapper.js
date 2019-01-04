@@ -8,10 +8,10 @@ import {
   importDatabase,
   clearSyncData,
   getDataReady,
-  acknowledgeEvents,
   errors
 } from '../utils/electronInterface';
 import {
+  acknowledgeEvents,
   closeCreatingKeysLoadingWindow,
   openMailboxWindow,
   throwError

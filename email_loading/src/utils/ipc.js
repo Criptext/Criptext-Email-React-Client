@@ -14,6 +14,12 @@ export const throwError = error => {
   callMain('throwError', error);
 };
 
+/* Criptext Client
+   ----------------------------- */
+export const acknowledgeEvents = async eventIds => {
+  return await callMain('client-acknowledge-events', eventIds);
+};
+
 /* DataBase
    ----------------------------- */
 export const createIdentityKeyRecord = async params => {
