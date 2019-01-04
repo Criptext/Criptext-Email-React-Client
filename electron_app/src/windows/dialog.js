@@ -4,8 +4,8 @@ const loginWindow = require('./login');
 let dialogWindow;
 
 const dialogSize = {
-  width: 393,
-  height: 267
+  width: 400,
+  height: 280
 };
 
 const create = () => {

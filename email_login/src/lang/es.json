@@ -94,12 +94,12 @@
       "acceptLabel": "Confirmar"
     },
     "confirmLostDevices": {
-      "title": "Acceder con contraseña",
+      "title": "Advertencia",
       "cancelLabel": "Cancelar",
       "acceptLabel": "Continuar"
     },
     "confirmForgotPasswordEmptyEmail": {
-      "title": "Cuidado!",
+      "title": "Advertencia",
       "cancelLabel": "Cancelar",
       "acceptLabel": "Entendido"
     },
