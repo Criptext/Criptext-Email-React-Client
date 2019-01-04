@@ -64,10 +64,6 @@ export const uploadDatabaseFile = randomId => {
 /* Criptext Client
 ----------------------------- */
 
-export const getDataReady = () => {
-  return clientManager.getDataReady();
-};
-
 export const getKeyBundle = deviceId => {
   return clientManager.getKeyBundle(deviceId);
 };

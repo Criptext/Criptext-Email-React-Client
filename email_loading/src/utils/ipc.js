@@ -20,6 +20,10 @@ export const acknowledgeEvents = async eventIds => {
   return await callMain('client-acknowledge-events', eventIds);
 };
 
+export const getDataReady = async () => {
+  return await callMain('client-get-data-ready');
+};
+
 /* DataBase
    ----------------------------- */
 export const createIdentityKeyRecord = async params => {

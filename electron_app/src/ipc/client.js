@@ -9,6 +9,10 @@ ipc.answerRenderer('client-find-key-bundles', params => {
   clientManager.findKeyBundles(params);
 });
 
+ipc.answerRenderer('client-get-data-ready', () => {
+  clientManager.getDataReady();
+});
+
 ipc.answerRenderer('client-post-email', params => {
   clientManager.postEmail(params);
 });

@@ -7,12 +7,12 @@ import {
   decryptBackupFile,
   importDatabase,
   clearSyncData,
-  getDataReady,
   errors
 } from '../utils/electronInterface';
 import {
   acknowledgeEvents,
   closeCreatingKeysLoadingWindow,
+  getDataReady,
   openMailboxWindow,
   throwError
 } from './../utils/ipc';
