@@ -28,6 +28,10 @@ export const getKeyBundle = async deviceId => {
   return await callMain('client-get-key-bundle', deviceId);
 };
 
+export const linkAccept = async randomId => {
+  return await callMain('client-link-accept', randomId);
+};
+
 /* DataBase
    ----------------------------- */
 export const createIdentityKeyRecord = async params => {
