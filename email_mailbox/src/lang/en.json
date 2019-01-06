@@ -319,6 +319,15 @@
         "resend": "Resend it"
       },
       "cancelSyncLabel": "Cancel Sync"
+    },
+    "manual_sync_device_rejected": {
+      "title": "Authentication Rejected",
+      "message": "Your request to access this account was rejected by a verified device",
+      "warning": {
+        "strong": "Warning",
+        "text": "Multiple rejections could lead your device to be blacklisted from Criptext"
+      },
+      "closeButtonLabel": "Okay"
     }
   },
   "settings": {

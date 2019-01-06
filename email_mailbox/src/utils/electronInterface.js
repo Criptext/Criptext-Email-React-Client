@@ -127,6 +127,22 @@ export const setTwoFactorAuth = enable => {
   return clientManager.setTwoFactorAuth(enable);
 };
 
+export const syncAccept = randomId => {
+  return clientManager.syncAccept(randomId);
+};
+
+export const syncBegin = () => {
+  return clientManager.syncBegin();
+};
+
+export const syncDeny = randomId => {
+  return clientManager.syncDeny(randomId);
+};
+
+export const syncStatus = () => {
+  return clientManager.syncStatus();
+};
+
 export const unlockDevice = params => {
   return clientManager.unlockDevice(params);
 };

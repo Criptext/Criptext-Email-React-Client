@@ -205,6 +205,9 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.DEVICE_LINK_AUTHORIZATION_REQUEST: {
       return handleLinkDeviceRequest(incomingEvent);
     }
+    case SocketCommand.SYNC_DEVICE_REQUEST: {
+      return handleSyncDeviceRequest(incomingEvent);
+    }
     case SocketCommand.DEVICE_REMOVED: {
       return handlePeerRemoveDevice(incomingEvent);
     }
@@ -521,6 +524,10 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
 
 const handleLinkDeviceRequest = ({ rowid, params }) => {
   ipcRenderer.send('start-link-devices-event', { rowid, params });
+};
+
+const handleSyncDeviceRequest = ({ rowid, params }) => {
+  ipcRenderer.send('start-sync-mailbox-event', { rowid, params });
 };
 
 const handlePeerRemoveDevice = async ({ rowid }) => {

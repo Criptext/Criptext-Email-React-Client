@@ -311,14 +311,23 @@
       "confirmButtonLabel": "Confirmar"
     },
     "manual_sync_device_authentication": {
-      "title": "Device Authentication",
-      "message": "Check and approve this sign in from your existing Criptext devices",
-      "getPromptLabel": "Didn't get the prompt?",
+      "title": "Autenticación de dispositivo",
+      "message": "Revisa y aprueba este inicio de sesión desde uno de tus dispositivos Criptext",
+      "getPromptLabel": "¿No recibiste el aviso?",
       "buttons": {
-        "sending": "Sending...",
-        "resend": "Resend it"
+        "sending": "Enviando...",
+        "resend": "Reenviarlo"
       },
-      "cancelSyncLabel": "Cancel Sync"
+      "cancelSyncLabel": "Cancelar sincronización"
+    },
+    "manual_sync_device_rejected": {
+      "title": "Autenticación rechazada",
+      "message": "Tu solicitud para acceder a esta cuenta fue rechazada por un dispositivo verificado.",
+      "warning": {
+        "strong": "Advertencia",
+        "text": "Múltiples rechazos podría provocar que el dispositivo sea baneado de Criptext."
+      },
+      "closeButtonLabel": "Okay"
     }
   },
   "settings": {

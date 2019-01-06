@@ -39,7 +39,7 @@ const STEPS = {
   SYNC_COMPLETE: 'sync-complete'
 };
 
-class LoadingWrapper extends Component {
+class LinkOldDeviceWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -233,4 +233,4 @@ class LoadingWrapper extends Component {
   };
 }
 
-export { LoadingWrapper as default, STEPS };
+export { LinkOldDeviceWrapper as default, STEPS };

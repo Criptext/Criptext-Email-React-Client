@@ -84,10 +84,8 @@ class SettingGeneralWrapper extends Component {
     super(props);
     this.state = {
       mode: EDITING_MODES.NONE,
-
-      isHiddenSettingsPopup: false,
-      settingsPupopType: SETTINGS_POPUP_TYPES.MANUAL_SYNC_DEVICE_AUTHENTICATION,
-
+      isHiddenSettingsPopup: true,
+      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
       nameParams: {
         name: myAccount.name
       },

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import string from '../lang';
 import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
+import { syncBegin } from '../utils/electronInterface';
 import './manualsyncpopup.scss';
 
 const {
@@ -28,18 +29,19 @@ const ManualSyncPopup = props => {
       <div className="popup-buttons">
         <button
           className="button-a popup-cancel-button"
-          onClick={() => {
-            props.onHideSettingsPopup();
-          }}
+          onClick={props.onHideSettingsPopup}
         >
           <span>{cancelButtonLabel}</span>
         </button>
         <button
           className="button-a popup-confirm-button"
-          onClick={() => {
-            const popupType =
-              SETTINGS_POPUP_TYPES.MANUAL_SYNC_DEVICE_AUTHENTICATION;
-            props.onShowSettingsPopup(popupType);
+          onClick={async () => {
+            const { status } = await syncBegin();
+            if (status === 200) {
+              const popupType =
+                SETTINGS_POPUP_TYPES.MANUAL_SYNC_DEVICE_AUTHENTICATION;
+              props.onShowSettingsPopup(popupType);
+            }
           }}
         >
           <span>{confirmButtonLabel}</span>

@@ -9,7 +9,8 @@ const loadingTypes = {
   LOGIN: 'login',
   LINK_NEW_DEVICE: 'link-new-device',
   LINK_OLD_DEVICE: 'link-old-device',
-  LINK_DEVICE_REQUEST: 'link-device-request'
+  LINK_DEVICE_REQUEST: 'link-device-request',
+  SYNC_MAILBOX_REQUEST: 'sync-mailbox-request'
 };
 
 const Panel = () => {
@@ -19,6 +20,8 @@ const Panel = () => {
       return <LoadingWrapper loadingType={loadingType} />;
     case loadingTypes.LINK_NEW_DEVICE:
       return <LinkNewDeviceWrapper />;
+    
+    case loadingTypes.SYNC_MAILBOX_REQUEST:
     case loadingTypes.LINK_DEVICE_REQUEST:
     case loadingTypes.LINK_OLD_DEVICE:
       return <LinkOldDeviceWrapper />;

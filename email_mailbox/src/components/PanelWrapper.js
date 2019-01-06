@@ -28,7 +28,7 @@ class PanelWrapper extends Component {
       isOpenWelcome: true,
       mailboxPopupType: undefined,
       sectionSelected: {
-        type: SectionType.SETTINGS,
+        type: SectionType.MAILBOX,
         params: {
           mailboxSelected: 'inbox',
           threadIdSelected: null,

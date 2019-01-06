@@ -7,20 +7,14 @@
     width: 100%;
 
     > .content-header {
-      color: #000;
       text-align: center;
       position: relative;
       top: 12%;
-      p {
-        font-size: 20px;
-        margin: 0px;
-      }
     }
 
     > .message {
       width: 90%;
       margin: 0 auto;
-      color: #000;
       text-align: center;
       position: relative;
       top: 25%;
@@ -35,10 +29,9 @@
       top: 18%;
       p {
         margin: 0px;
-        margin-bottom: 3%;
+        margin-bottom: 5%;
         font-size: 13px;
         text-align: center;
-        color: #000;
       }
       .resend-button {
         border: none;
@@ -74,18 +67,18 @@
     }
 
     > .cancel-sync {
-      width: 30%;
       font-size: 13px;
       text-align: center;
       color: #0091ff;
-      border-bottom: solid 1px #0091ff;
       margin: 0 auto;
       cursor: pointer;
       position: relative;
       top: 27%;
       span {
         position: relative;
-        top: 3px;
+        top: 15px;
+        text-decoration: underline;
+        text-decoration-color: #0091ff;
       }
     }
   }

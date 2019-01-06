@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import string from './../lang';
 import './manualsyncdeviceauthenticationpopup.scss';
-import './clockLoading.scss';
+import './manualsyncdeviceauthenticationloading.scss';
 
 const {
   title,
@@ -12,16 +12,14 @@ const {
   cancelSyncLabel
 } = string.popups.manual_sync_device_authentication;
 
-const ContinueLogin = props => renderContent(props);
-
-const renderContent = props => (
+const ManualSyncDeviceAuthenticationPopup = props => (
   <div id="popup-manual-sync-device-authentication" className="popup-content">
     <div className="content">
-      <div className="content-header">
-        <p>{title}</p>
+      <div className="content-header popup-title">
+        <h1>{title}</h1>
       </div>
 
-      <div className="message">
+      <div className="message popup-paragraph">
         <p>{message}</p>
       </div>
 
@@ -40,7 +38,7 @@ const renderContent = props => (
         </div>
       </div>
 
-      <div className="prompt">
+      <div className="prompt popup-paragraph">
         <p>{getPromptLabel}</p>
         <button
           className="resend-button"
@@ -58,7 +56,7 @@ const renderContent = props => (
 );
 
 // eslint-disable-next-line fp/no-mutation
-renderContent.propTypes = {
+ManualSyncDeviceAuthenticationPopup.propTypes = {
   disabledResendLoginRequest: PropTypes.bool,
   hasTwoFactorAuth: PropTypes.bool,
   onClickSignInWithPassword: PropTypes.func,
@@ -66,4 +64,4 @@ renderContent.propTypes = {
   onHideSettingsPopup: PropTypes.func
 };
 
-export default ContinueLogin;
+export default ManualSyncDeviceAuthenticationPopup;

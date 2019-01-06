@@ -84,8 +84,27 @@ async function initApp() {
   ipcMain.on('end-link-devices-event', async (ev, data) => {
     await sendLinkDeviceEndEventToAllWindows(data);
   });
+
+  // Sync Mailbox
+  ipcMain.on('start-sync-mailbox-event', async (ev, data) => {
+    await sendSyncMailboxStartEventToAllWindows(data);
+  });
+
+  ipcMain.on('end-sync-mailbox-event', async (ev, data) => {
+    await sendSyncMailboxEndEventToAllWindows(data);
+  });
 }
 
+
+
+const sendEventToAllwWindows = eventName => {
+  const openedWindows = BrowserWindow.getAllWindows();
+  return openedWindows.forEach(openWindow => {
+    openWindow.webContents.send(eventName);
+  });
+};
+
+// Link devices
 const sendLinkDeviceStartEventToAllWindows = async data => {
   const clientManager = require('./src/clientManager');
   globalManager.windowsEvents.disable();
@@ -103,11 +122,20 @@ const sendLinkDeviceEndEventToAllWindows = () => {
   sendEventToAllwWindows('enable-window-link-devices');
 };
 
-const sendEventToAllwWindows = eventName => {
-  const openedWindows = BrowserWindow.getAllWindows();
-  return openedWindows.forEach(openWindow => {
-    openWindow.webContents.send(eventName);
+// Sync Mailbox
+const sendSyncMailboxStartEventToAllWindows = async data => {
+  const clientManager = require('./src/clientManager');
+  globalManager.windowsEvents.disable();
+  sendEventToAllwWindows('disable-window-link-devices');
+  
+  console.log( JSON.stringify(data) );
+
+  globalManager.loadingData.set({
+    loadingType: 'sync-mailbox-request',
+    remoteData: data.params.requestingDeviceInfo
   });
+  loadingWindow.show();
+  return await clientManager.acknowledgeEvents([data.rowid]);
 };
 
 const saveScreenSize = () => {

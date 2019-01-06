@@ -1,0 +1,41 @@
+#popup-manual-sync-device-rejected {
+  width: 240px;
+  height: 336px;
+
+  .content {
+    height: calc(100% - 70px);
+    width: 100%;
+
+    > .content-header {
+      text-align: center;
+      position: relative;
+      top: 12%;
+    }
+
+    > .message {
+      width: 90%;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      top: 25%;
+      p {
+        font-size: 13px;
+        margin: 0px;
+      }
+    }
+
+    > .content-icon {
+      width: 19%;
+      margin: 25px auto;
+      font-size: 40px;
+      color: #d13415;
+      position: relative;
+      top: 25%;
+    }
+
+    > .popup-buttons {
+      position: relative;
+      top: 21%;
+    }
+  }
+}

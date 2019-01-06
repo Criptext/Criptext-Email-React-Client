@@ -21,7 +21,7 @@ import SettingsGeneralLanguageWrapper from './SettingsGeneralLanguageWrapper';
 import SettingsGeneralThemeWrapper from './SettingsGeneralThemeWrapper';
 import SettingsGeneralManualSync from './SettingsGeneralManualSync';
 import ManualSyncPopup from './ManualSyncPopup';
-import ManualSyncDeviceAuthenticationPopup from './ManualSyncDeviceAuthenticationPopup';
+import ManualSyncProcessPopup from './ManualSyncProcessPopup';
 
 import './settinggeneral.scss';
 import './signatureeditor.scss';
@@ -32,9 +32,7 @@ const Logoutpopup = PopupHOC(LogoutPopup);
 const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
 const Manualsyncpopup = PopupHOC(ManualSyncPopup);
-const Manualsyncdeviceauthenticationpopup = PopupHOC(
-  ManualSyncDeviceAuthenticationPopup
-);
+const Manualsyncprocesspopup = PopupHOC(ManualSyncProcessPopup);
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   string.settings.two_factor_not_available_text;
@@ -538,7 +536,7 @@ const SettingsPopup = props => {
     }
     case SETTINGS_POPUP_TYPES.MANUAL_SYNC_DEVICE_AUTHENTICATION: {
       return (
-        <Manualsyncdeviceauthenticationpopup
+        <Manualsyncprocesspopup
           isHidden={isHidden}
           onTogglePopup={props.onHideSettingsPopup}
           popupPosition={{ left: '45%', top: '45%' }}
