@@ -17,6 +17,8 @@ ipc.answerRenderer('db-create-identity-key-record', params =>
   dbManager.createIdentityKeyRecord(params)
 );
 
+ipc.answerRenderer('db-create-label', params => dbManager.createLabel(params));
+
 ipc.answerRenderer('db-create-prekey-record', params =>
   dbManager.createPreKeyRecord(params)
 );

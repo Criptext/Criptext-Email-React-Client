@@ -1,6 +1,5 @@
 import signal from './../libs/signal';
 import {
-  createLabel,
   deleteEmailByKeys,
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
@@ -27,6 +26,7 @@ import {
   createEmail,
   createEmailLabel,
   createFeedItem,
+  createLabel,
   getEmailByKey,
   logoutApp,
   openFilledComposerWindow,

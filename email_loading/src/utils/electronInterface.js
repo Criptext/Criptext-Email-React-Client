@@ -71,10 +71,6 @@ export const createContact = params => {
   return dbManager.createContact(params);
 };
 
-export const createLabel = params => {
-  return dbManager.createLabel(params);
-};
-
 export const createTables = () => {
   return dbManager.createTables();
 };

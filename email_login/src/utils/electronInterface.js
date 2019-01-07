@@ -174,7 +174,3 @@ export const createAccount = params => {
 export const createContact = params => {
   return dbManager.createContact(params);
 };
-
-export const createLabel = params => {
-  return dbManager.createLabel(params);
-};

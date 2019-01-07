@@ -88,6 +88,10 @@ export const createIdentityKeyRecord = async params => {
   return await callMain('db-create-identity-key-record', params);
 };
 
+export const createLabel = async params => {
+  return await callMain('db-create-label', params);
+};
+
 export const createPreKeyRecord = async params => {
   return await callMain('db-create-prekey-record', params);
 };
