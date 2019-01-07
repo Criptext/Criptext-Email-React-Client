@@ -104,6 +104,10 @@ export const createSignedPreKeyRecord = async params => {
   return await callMain('db-create-signed-prekey-record', params);
 };
 
+export const deleteEmailByKeys = async keys => {
+  return await callMain('db-delete-email-by-keys', keys);
+};
+
 export const deleteEmailsByIds = async ids => {
   return await callMain('db-delete-emails-by-ids', ids);
 };

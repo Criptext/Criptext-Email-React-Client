@@ -31,6 +31,10 @@ ipc.answerRenderer('db-create-signed-prekey-record', params =>
   dbManager.createSignedPreKeyRecord(params)
 );
 
+ipc.answerRenderer('db-delete-email-by-keys', keys =>
+  dbManager.deleteEmailByKeys(keys)
+);
+
 ipc.answerRenderer('db-delete-emails-by-ids', params =>
   dbManager.deleteEmailsByIds(params)
 );

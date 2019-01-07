@@ -146,10 +146,6 @@ export const cleanDataLogout = async recipientId => {
   return dbManager.createSignalTables();
 };
 
-export const deleteEmailByKeys = key => {
-  return dbManager.deleteEmailByKeys(key);
-};
-
 export const deleteEmailLabel = params => {
   return dbManager.deleteEmailLabel(params);
 };
