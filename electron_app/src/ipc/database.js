@@ -35,6 +35,10 @@ ipc.answerRenderer('db-delete-email-by-keys', keys =>
   dbManager.deleteEmailByKeys(keys)
 );
 
+ipc.answerRenderer('db-delete-email-label', params =>
+  dbManager.deleteEmailLabel(params)
+);
+
 ipc.answerRenderer('db-delete-emails-by-ids', params =>
   dbManager.deleteEmailsByIds(params)
 );

@@ -2,7 +2,6 @@ import { Thread } from './types';
 import { startLoadSync, stopLoadSync, stopLoadThread } from './activity';
 import { updateBadgeLabels } from './labels';
 import {
-  deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   getEmailsByThreadId,
   getEmailsByThreadIdAndLabelId,
@@ -15,7 +14,11 @@ import {
   updateEmails,
   updateUnreadEmailByThreadIds
 } from '../utils/electronInterface';
-import { createEmailLabel, deleteEmailsByIds } from '../utils/ipc';
+import {
+  createEmailLabel,
+  deleteEmailLabel,
+  deleteEmailsByIds
+} from '../utils/ipc';
 import { storeValue } from './../utils/storage';
 import {
   getGroupEvents,

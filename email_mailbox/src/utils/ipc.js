@@ -108,6 +108,10 @@ export const deleteEmailByKeys = async keys => {
   return await callMain('db-delete-email-by-keys', keys);
 };
 
+export const deleteEmailLabel = async params => {
+  return await callMain('db-delete-email-label', params);
+};
+
 export const deleteEmailsByIds = async ids => {
   return await callMain('db-delete-emails-by-ids', ids);
 };
