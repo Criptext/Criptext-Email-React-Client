@@ -72,7 +72,7 @@ elif [ "$CURRENT_OS" = "Darwin" ]; then
     tput setaf 2;tput bold; echo "    Store done"; tput sgr0;
 
     # Update package.json
-    macInstallerType=$( cat ./installerResources/installerTypes.json | json "mac.store" )
+    macInstallerType=$( cat ./installerResources/installerTypes.json | json "mac.installer" )
     json -I -f ./package.json -e "this.criptextInstallerType=\"${macInstallerType}\"" -q
     json -I -f ./package.json -e 'this.build.mac.target=["dmg", "zip"]' -q
     printf "\n    Updated package.json \n";
@@ -126,7 +126,7 @@ elif [ "$CURRENT_OS" = "CYGWIN" ] || [ "$CURRENT_OS" = "CYGWIN" ]; then
     tput setaf 2;tput bold; echo "    Installer done"; tput sgr0;
 
     # Update package.json
-    windowsStoreType=$( cat ./installerResources/installerTypes.json | json "windows.installer" )
+    windowsStoreType=$( cat ./installerResources/installerTypes.json | json "windows.store" )
     json -I -f ./package.json -e "this.criptextInstallerType=\"${windowsStoreType}\"" -q
     json -I -f ./package.json -e 'this.build.win.target=["appx"]' -q
     json -I -f ./package.json -e 'delete this.build.win.certificateSubjectName' -q;

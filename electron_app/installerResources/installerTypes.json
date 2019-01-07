@@ -7,7 +7,7 @@
     "installer": "LINUX-INSTALLER"
   },
   "mac": {
-    "installer": "MACOS-NSTALLER",
+    "installer": "MACOS-INSTALLER",
     "store": "MACOS-STORE"
   }
 }
