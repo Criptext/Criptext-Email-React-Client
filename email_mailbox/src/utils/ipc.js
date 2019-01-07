@@ -80,6 +80,10 @@ export const createEmailLabel = async params => {
   return await callMain('db-create-email-label', params);
 };
 
+export const createFeedItem = async params => {
+  return await callMain('db-create-feed-item', params);
+};
+
 export const createIdentityKeyRecord = async params => {
   return await callMain('db-create-identity-key-record', params);
 };

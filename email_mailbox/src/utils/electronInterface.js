@@ -146,14 +146,6 @@ export const cleanDataLogout = async recipientId => {
   return dbManager.createSignalTables();
 };
 
-export const createAccount = params => {
-  return dbManager.createAccount(params);
-};
-
-export const createFeedItem = params => {
-  return dbManager.createFeedItem(params);
-};
-
 export const createLabel = params => {
   return dbManager.createLabel(params);
 };
