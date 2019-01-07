@@ -1,0 +1,13 @@
+{
+  "windows": {
+    "installer": "WINDOWS-INSTALLER",
+    "store": "WINDOWS-STORE"
+  },
+  "linux": {
+    "installer": "LINUX-INSTALLER"
+  },
+  "mac": {
+    "installer": "MACOS-INSTALLER",
+    "store": "MACOS-STORE"
+  }
+}

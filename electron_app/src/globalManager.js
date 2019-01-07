@@ -1,13 +1,18 @@
+const packageData = require('./../package.json');
+const allInstallerTypes = require('./../installerResources/installerTypes.json');
+const currrentInstallerType = packageData.criptextInstallerType;
+
 global.composerData = {};
 global.emailToEdit = {};
-global.isMAS = false;
+global.isMAS = currrentInstallerType === allInstallerTypes.mac.store;
 global.loadingData = {};
 global.modalData = {};
 global.screenSize = {};
 global.temporalAccount = {};
 global.windowsEventsDisabled = false;
 global.internetConnection;
-global.isWindowsStore = false;
+global.isWindowsStore =
+  currrentInstallerType === allInstallerTypes.windows.store;
 
 /*  Composer
 ----------------------------- */

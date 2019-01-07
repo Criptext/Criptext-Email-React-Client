@@ -8,6 +8,7 @@ echo "             Packaging App";
 tput sgr0;
 echo "--------------------------------------------"
 
+rm -rf ./src/app
 mkdir -p ./src/app
 
 for project in ${projects}; do
