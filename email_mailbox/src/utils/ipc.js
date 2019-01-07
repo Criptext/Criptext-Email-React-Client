@@ -68,6 +68,10 @@ export const acknowledgeEvents = async eventIds => {
 
 /* DataBase
    ----------------------------- */
+export const cleanDatabase = async () => {
+  return await callMain('db-clean-database');
+};
+
 export const createEmail = async params => {
   return await callMain('db-create-email', params);
 };

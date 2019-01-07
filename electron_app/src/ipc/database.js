@@ -1,6 +1,8 @@
 const ipc = require('@criptext/electron-better-ipc');
 const dbManager = require('./../DBManager');
 
+ipc.answerRenderer('db-clean-database', params => dbManager.cleanDataBase());
+
 ipc.answerRenderer('db-create-email', params => dbManager.createEmail(params));
 
 ipc.answerRenderer('db-create-email-label', params =>

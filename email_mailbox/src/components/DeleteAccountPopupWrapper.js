@@ -4,12 +4,11 @@ import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
 import {
   requiredMinLength,
-  deleteMyAccount,
-  cleanDatabase
+  deleteMyAccount
 } from './../utils/electronInterface';
 import DeleteAccountPopup from './DeleteAccountPopup';
 import { clearStorage } from '../utils/storage';
-import { logoutApp } from '../utils/ipc';
+import { cleanDatabase, logoutApp } from '../utils/ipc';
 import string from '../lang';
 import { sendAccountDeletedEvent } from './../utils/electronEventInterface';
 

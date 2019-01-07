@@ -63,10 +63,6 @@ export const uploadDatabaseFile = randomId => {
 
 /* DataBase
   ----------------------------- */
-export const cleanDataBase = params => {
-  return dbManager.cleanDataBase(params);
-};
-
 export const createAccount = params => {
   return dbManager.createAccount(params);
 };

@@ -7,12 +7,12 @@ import {
   errors,
   createContact,
   LabelType,
-  cleanDataBase,
   createTables,
   postKeyBundle,
   updateAccount
 } from './../utils/electronInterface';
 import {
+  cleanDataBase,
   getAccount,
   getComputerName,
   getKeyBundle,
