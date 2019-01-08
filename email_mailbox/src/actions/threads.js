@@ -2,7 +2,6 @@ import { Thread } from './types';
 import { startLoadSync, stopLoadSync, stopLoadThread } from './activity';
 import { updateBadgeLabels } from './labels';
 import {
-  getEmailsByThreadId,
   getEmailsGroupByThreadByParams,
   getLabelById,
   getTrashExpiredEmails,
@@ -17,6 +16,7 @@ import {
   deleteEmailLabel,
   deleteEmailsByIds,
   deleteEmailsByThreadIdAndLabelId,
+  getEmailsByThreadId,
   getEmailsByThreadIdAndLabelId
 } from '../utils/ipc';
 import { storeValue } from './../utils/storage';

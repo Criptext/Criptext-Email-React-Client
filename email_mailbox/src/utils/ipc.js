@@ -174,6 +174,10 @@ export const getEmailsByLabelIds = async labelIds => {
   return await callMain('db-get-emails-by-labelids', labelIds);
 };
 
+export const getEmailsByThreadId = async threadId => {
+  return await callMain('db-get-emails-by-threadid', threadId);
+};
+
 export const getEmailsByThreadIdAndLabelId = async ({ threadIds, labelId }) => {
   return await callMain('db-get-emails-by-threadid-and-labelid', {
     threadIds,

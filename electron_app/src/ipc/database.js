@@ -89,6 +89,10 @@ ipc.answerRenderer('db-get-emails-by-labelids', labelIds =>
   dbManager.getEmailsByLabelIds(labelIds)
 );
 
+ipc.answerRenderer('db-get-emails-by-threadid', threadId =>
+  dbManager.getEmailsByThreadId(threadId)
+);
+
 ipc.answerRenderer(
   'db-get-emails-by-threadid-and-labelid',
   ({ threadIds, labelId }) =>
