@@ -2,7 +2,6 @@ import { Thread } from './types';
 import { startLoadSync, stopLoadSync, stopLoadThread } from './activity';
 import { updateBadgeLabels } from './labels';
 import {
-  deleteEmailsByThreadIdAndLabelId,
   getEmailsByThreadId,
   getEmailsByThreadIdAndLabelId,
   getEmailsGroupByThreadByParams,
@@ -17,7 +16,8 @@ import {
 import {
   createEmailLabel,
   deleteEmailLabel,
-  deleteEmailsByIds
+  deleteEmailsByIds,
+  deleteEmailsByThreadIdAndLabelId
 } from '../utils/ipc';
 import { storeValue } from './../utils/storage';
 import {
@@ -332,7 +332,7 @@ export const removeThreads = (threadsParams, labelId) => {
         const { status } = await postPeerEvent(eventParams);
         if (status === 200) {
           const uniqueIds = emails.map(email => email.threadId);
-          await deleteEmailsByThreadIdAndLabelId(threadIds, labelId);
+          await deleteEmailsByThreadIdAndLabelId({ threadIds, labelId });
           dispatch(removeThreadsSuccess(uniqueIds));
         } else {
           sendRemoveThreadsErrorMessage();
@@ -364,7 +364,10 @@ export const removeThreadsDrafts = draftsParams => {
         .filter(item => !!item);
       const draftLabelId = LabelType.draft.id;
       if (threadIdsDB.length) {
-        await deleteEmailsByThreadIdAndLabelId(threadIdsDB, draftLabelId);
+        await deleteEmailsByThreadIdAndLabelId({
+          threadIds: threadIdsDB,
+          labelId: draftLabelId
+        });
       }
       if (emailIds.length) {
         await deleteEmailsByIds(emailIds);

@@ -1,6 +1,5 @@
 import signal from './../libs/signal';
 import {
-  deleteEmailsByThreadIdAndLabelId,
   getEmailsByKeys,
   getEmailsByThreadId,
   getEmailLabelsByEmailId,
@@ -27,6 +26,7 @@ import {
   createLabel,
   deleteEmailByKeys,
   deleteEmailLabel,
+  deleteEmailsByThreadIdAndLabelId,
   getEmailByKey,
   logoutApp,
   openFilledComposerWindow,
@@ -648,7 +648,7 @@ const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
 
 const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
   const { threadIds } = params;
-  const wereDeleted = await deleteEmailsByThreadIdAndLabelId(threadIds);
+  const wereDeleted = await deleteEmailsByThreadIdAndLabelId({ threadIds });
   if (wereDeleted) {
     emitter.emit(Event.THREADS_DELETED, threadIds);
   }

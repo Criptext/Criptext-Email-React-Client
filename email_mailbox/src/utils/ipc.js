@@ -116,8 +116,22 @@ export const deleteEmailsByIds = async ids => {
   return await callMain('db-delete-emails-by-ids', ids);
 };
 
+export const deleteEmailsByThreadIdAndLabelId = async ({
+  threadIds,
+  labelId
+}) => {
+  return await callMain('db-delete-emails-by-threadid-and-labelid', {
+    threadIds,
+    labelId
+  });
+};
+
 export const deleteFeedItemById = async feedItemId => {
   return await callMain('db-delete-feed-item-by-id', feedItemId);
+};
+
+export const deleteLabelById = async labelId => {
+  return await callMain('db-delete-label-by-id', labelId);
 };
 
 export const deletePreKeyPair = async params => {
@@ -126,6 +140,10 @@ export const deletePreKeyPair = async params => {
 
 export const deleteSessionRecord = async params => {
   return await callMain('db-delete-session-record', params);
+};
+
+export const getAllFeedItems = async () => {
+  return await callMain('db-get-all-feed-items');
 };
 
 export const getEmailByKey = async key => {

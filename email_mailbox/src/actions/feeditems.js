@@ -1,10 +1,6 @@
 import { FeedItem } from './types';
-import {
-  getAllFeedItems,
-  getEmailsByIds,
-  updateFeedItem
-} from './../utils/electronInterface';
-import { deleteFeedItemById } from './../utils/ipc';
+import { getEmailsByIds, updateFeedItem } from './../utils/electronInterface';
+import { deleteFeedItemById, getAllFeedItems } from './../utils/ipc';
 import { getSeenTimestamp } from '../utils/storage';
 
 export const addFeedItems = (feeds, clear) => {
