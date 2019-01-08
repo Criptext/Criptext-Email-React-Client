@@ -189,6 +189,10 @@ export const getEmailsCounterByLabelId = async labelId => {
   return await callMain('db-get-emails-counter-by-labelid', labelId);
 };
 
+export const getEmailsGroupByThreadByParams = async params => {
+  return await callMain('db-get-emails-group-by-thread-by-params', params);
+};
+
 export const getFileKeyByEmailId = async emailId => {
   return await callMain('db-get-filekey-by-emailid', emailId);
 };

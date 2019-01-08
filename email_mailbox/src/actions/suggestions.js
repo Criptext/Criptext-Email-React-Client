@@ -1,5 +1,5 @@
 import { Suggestions } from './types';
-import { getEmailsGroupByThreadByParams } from '../utils/electronInterface';
+import { getEmailsGroupByThreadByParams } from '../utils/ipc';
 import { getMatches } from '../utils/storage';
 
 export const setSuggestions = (threads, hints) => ({
