@@ -166,6 +166,13 @@ export const getEmailsByIds = async emailIds => {
   return await callMain('db-get-emails-by-ids', emailIds);
 };
 
+export const getEmailsByThreadIdAndLabelId = async ({ threadIds, labelId }) => {
+  return await callMain('db-get-emails-by-threadid-and-labelid', {
+    threadIds,
+    labelId
+  });
+};
+
 export const getFileKeyByEmailId = async emailId => {
   return await callMain('db-get-filekey-by-emailid', emailId);
 };

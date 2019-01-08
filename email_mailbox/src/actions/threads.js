@@ -3,7 +3,6 @@ import { startLoadSync, stopLoadSync, stopLoadThread } from './activity';
 import { updateBadgeLabels } from './labels';
 import {
   getEmailsByThreadId,
-  getEmailsByThreadIdAndLabelId,
   getEmailsGroupByThreadByParams,
   getLabelById,
   getTrashExpiredEmails,
@@ -17,7 +16,8 @@ import {
   createEmailLabel,
   deleteEmailLabel,
   deleteEmailsByIds,
-  deleteEmailsByThreadIdAndLabelId
+  deleteEmailsByThreadIdAndLabelId,
+  getEmailsByThreadIdAndLabelId
 } from '../utils/ipc';
 import { storeValue } from './../utils/storage';
 import {
