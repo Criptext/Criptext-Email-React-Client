@@ -116,6 +116,10 @@ export const deleteEmailsByIds = async ids => {
   return await callMain('db-delete-emails-by-ids', ids);
 };
 
+export const deleteFeedItemById = async feedItemId => {
+  return await callMain('db-delete-feed-item-by-id', feedItemId);
+};
+
 export const deletePreKeyPair = async params => {
   return await callMain('db-delete-prekey-pair', params);
 };

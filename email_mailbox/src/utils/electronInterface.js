@@ -146,10 +146,6 @@ export const cleanDataLogout = async recipientId => {
   return dbManager.createSignalTables();
 };
 
-export const deleteFeedItemById = feedId => {
-  return dbManager.deleteFeedItemById(feedId);
-};
-
 export const deleteLabelById = labelId => {
   return dbManager.deleteLabelById(labelId);
 };

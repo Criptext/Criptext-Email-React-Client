@@ -20,10 +20,6 @@ export const acknowledgeEvents = async eventIds => {
   return await callMain('client-acknowledge-events', eventIds);
 };
 
-export const cleanDatabase = async () => {
-  return await callMain('db-clean-database');
-};
-
 export const getDataReady = async () => {
   return await callMain('client-get-data-ready');
 };
@@ -50,6 +46,10 @@ export const postUser = async params => {
 
 /* DataBase
    ----------------------------- */
+export const cleanDatabase = async () => {
+  return await callMain('db-clean-database');
+};
+
 export const createIdentityKeyRecord = async params => {
   return await callMain('db-create-identity-key-record', params);
 };
