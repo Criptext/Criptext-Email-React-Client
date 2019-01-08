@@ -173,6 +173,10 @@ export const getEmailsByThreadIdAndLabelId = async ({ threadIds, labelId }) => {
   });
 };
 
+export const getEmailsByKeys = async emailKeys => {
+  return await callMain('db-get-emails-by-keys', emailKeys);
+};
+
 export const getFileKeyByEmailId = async emailId => {
   return await callMain('db-get-filekey-by-emailid', emailId);
 };
