@@ -146,10 +146,6 @@ export const cleanDataLogout = async recipientId => {
   return dbManager.createSignalTables();
 };
 
-export const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
-  return dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId);
-};
-
 export const getAllFeedItems = () => {
   return dbManager.getAllFeedItems();
 };

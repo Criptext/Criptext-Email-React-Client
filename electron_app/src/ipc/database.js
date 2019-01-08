@@ -45,6 +45,10 @@ ipc.answerRenderer('db-delete-emails-by-ids', params =>
   dbManager.deleteEmailsByIds(params)
 );
 
+ipc.answerRenderer('db-delete-emails-by-threadid-and-labelid', ({threadIds, labelId}) =>
+  dbManager.deleteEmailsByThreadIdAndLabelId({threadIds, labelId})
+);
+
 ipc.answerRenderer('db-delete-feed-item-by-id', feedItemId =>
   dbManager.deleteFeedItemById(feedItemId)
 );
