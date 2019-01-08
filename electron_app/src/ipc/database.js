@@ -49,6 +49,10 @@ ipc.answerRenderer('db-delete-feed-item-by-id', feedItemId =>
   dbManager.deleteFeedItemById(feedItemId)
 );
 
+ipc.answerRenderer('db-delete-label-by-id', labelId =>
+  dbManager.deleteLabelById(labelId)
+);
+
 ipc.answerRenderer('db-delete-prekey-pair', params =>
   dbManager.deletePreKeyPair(params)
 );

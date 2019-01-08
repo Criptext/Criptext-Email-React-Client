@@ -120,6 +120,10 @@ export const deleteFeedItemById = async feedItemId => {
   return await callMain('db-delete-feed-item-by-id', feedItemId);
 };
 
+export const deleteLabelById = async labelId => {
+  return await callMain('db-delete-label-by-id', labelId);
+};
+
 export const deletePreKeyPair = async params => {
   return await callMain('db-delete-prekey-pair', params);
 };
