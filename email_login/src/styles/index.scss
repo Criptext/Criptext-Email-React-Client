@@ -5,6 +5,7 @@ FILE: index.css
 TABLE OF CONTENTS
 
 1.- PATHS
+2.- THEME LIGHT
 
 ***/
 
@@ -12,3 +13,8 @@ TABLE OF CONTENTS
    ----------------------------- */
 $_PATH_TO_IMAGES: './images';
 $_PATH_TO_FONTS: './fonts';
+
+/* 2.- THEME LIGHT
+   ----------------------------- */
+$_BACKGROUND_COLOR_POPUP_LIGHT: white;
+$_BORDER_COLOR_POPUP_LIGHT: #ececee;

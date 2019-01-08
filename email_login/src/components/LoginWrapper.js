@@ -67,7 +67,8 @@ class LoginWrapper extends Component {
       disabledResendLoginRequest: false,
       errorMessage: '',
       ephemeralToken: undefined,
-      hasTwoFactorAuth: undefined
+      hasTwoFactorAuth: undefined,
+      popupContent: null
     };
   }
 
@@ -78,6 +79,9 @@ class LoginWrapper extends Component {
       case mode.CONTINUE:
         return (
           <ContinueLogin
+            onLeftButtonClick={this.handlePopupLeftButton}
+            onRightButtonClick={this.handlePopupRightButton}
+            popupContent={this.state.popupContent}
             disabledResendLoginRequest={this.state.disabledResendLoginRequest}
             toggleContinue={this.toggleContinue}
             onClickSignInWithPassword={this.handleClickSignInWithPassword}
@@ -312,16 +316,27 @@ class LoginWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     this.stopCountdown();
-    confirmLostDevices(response => {
-      closeDialogWindow();
-      if (response) {
-        socketClient.disconnect();
-        this.goToPasswordLogin();
-      } else {
-        this.checkLinkStatus();
+    this.setState({
+      popupContent: {
+        title: "Warning",
+        message: "If you sign in using your password your mailbox history from other devices won't be available on this device. Would you like to continue?",
+        leftButtonLabel: "Cancel",
+        rightButtonLabel: "Continue"
       }
-    });
+    })
   };
+
+  handlePopupLeftButton = _ => {
+    this.setState({ popupContent: null }, () => {
+      this.checkLinkStatus();
+    })
+  }
+
+  handlePopupRightButton = _ => {
+    this.setState({ popupContent: null }, () => {
+      this.checkLinkStatus();
+    })
+  }
 
   handleClickResendLoginRequest = ev => {
     ev.preventDefault();

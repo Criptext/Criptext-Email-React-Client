@@ -3,11 +3,16 @@ import PropTypes from 'prop-types';
 import string from './../lang';
 import './continueLogin.scss';
 import './clockLoading.scss';
+import PopupHOC from './PopupHOC';
+import DialogPopup from './DialogPopup';
 
 const { continueLogin } = string;
 
+const LoginWithPasswordPopup = PopupHOC(DialogPopup)
+
 const ContinueLogin = props => (
   <div className="continue">
+    {props.popupContent && <LoginWithPasswordPopup {...props.popupContent} onLeftButtonClick={props.onLeftButtonClick} onRightButtonClick={props.onRightButtonClick} />}
     {renderHeader(props)}
     {renderContent(props)}
   </div>

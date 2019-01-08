@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
 import {
-  confirmForgotPasswordSentLink,
   confirmForgotPasswordEmptyEmail,
   errors,
   login,
@@ -16,7 +15,7 @@ import {
   throwError
 } from './../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
-import { censureEmailAddress } from '../utils/StringUtils';
+import { localize } from '../utils/StringUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 import string from './../lang';
 
@@ -38,7 +37,8 @@ class LostDevicesWrapper extends Component {
         password: ''
       },
       disabled: true,
-      isLoading: false
+      isLoading: false,
+      popupContent: null
     };
   }
 
@@ -57,6 +57,8 @@ class LostDevicesWrapper extends Component {
         validator={this.validatePassword}
         values={this.state.values}
         isLoading={this.state.isLoading}
+        popupContent={this.state.popupContent}
+        onDismissPopup={this.onDismissPopup}
       />
     );
   }
@@ -158,26 +160,53 @@ class LostDevicesWrapper extends Component {
     const recipientId = this.state.values.username;
     const { status, text } = await resetPassword(recipientId);
     const customText = this.getForgotPasswordMessage(status, text);
-    if (status === 200) {
-      confirmForgotPasswordSentLink(customText, response => {
-        if (response) {
-          closeDialogWindow();
-        }
-      });
-    } else {
-      confirmForgotPasswordEmptyEmail(customText, response => {
-        if (response) {
-          closeDialogWindow();
-        }
-      });
+    const messages = passwordLogin.forgotPasswordMessage
+    switch(status){
+      case 200: {
+        return this.setState({
+          popupContent: {
+            title: messages.title,
+            prefix: messages.prefix,
+            suffix: messages.suffix,
+            dismissButtonLabel: messages.dismissButtonLabel,
+            email: customText,
+            type: 'ForgotLink'
+          }
+        })
+      }
+      case 400: {
+        return this.setState({
+          popupContent: {
+            title: messages.notSetError.title,
+            dismissButtonLabel: messages.notSetError.dismissButtonLabel,
+            message: messages.notSetError.message,
+            email: 'support@criptext.com',
+            type: 'EmailNotSet'
+          }
+        })
+      }
+      default: {
+        return this.setState({
+          popupContent: {
+            title: messages.fallbackError.title,
+            dismissButtonLabel: messages.fallbackError.dismissButtonLabel,
+            message: messages.fallbackError.message
+          }
+        })
+      }
     }
   };
 
+  onDismissPopup = () => {
+    this.setState({
+      popupContent: null
+    })
+  }
+
   getForgotPasswordMessage = (status, text) => {
     if (status === 200) {
-      const { prefix, suffix } = passwordLogin.forgotPasswordMessage;
       const { address } = JSON.parse(text);
-      return `${prefix} ${censureEmailAddress(address)}\n${suffix}`;
+      return address;
     }
     return passwordLogin.forgotPasswordMessage.error;
   };

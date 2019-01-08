@@ -45,9 +45,20 @@
       "confirmLabel": "Confirm"
     },
     "forgotPasswordMessage": {
+      "title": "Reset Password",
       "prefix": "A reset link was sent to",
       "suffix": "The link will be valid for 30 minutes",
-      "error": "Failed to send the Reset password link. Try again"
+      "dismissButtonLabel": "Okay",
+      "notSetError": {
+        "title": "No Recovery Email",
+        "message": "Password recovery is impossible as no recovery email was set on your account. For further assistance contact us:",
+        "dismissButtonLabel": "Okay"
+      },
+      "fallbackError": {
+        "title": "Reset Password",
+        "message": "Failed to send the Reset password link. Try again",
+        "dismissButtonLabel": "Okay"
+      }
     }
   },
   "signUp": {

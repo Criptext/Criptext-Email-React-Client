@@ -473,6 +473,153 @@ body {
 
 /* 3.1.- CONTROLS: Button
    ----------------------------- */
-button {
-  cursor: pointer;
-}
+   button{
+    border: none;
+    cursor: pointer;
+  
+    &:focus{
+      outline: 0;
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  
+    &.button-a{
+      border-radius: 100px;
+      color: white;
+      height: 31px;
+      padding: inherit;
+      text-transform: uppercase;
+    
+      i{
+        font-size: 18px;
+        position: relative;
+        top: 2px;
+      }
+    
+      span{
+        font-size: 13px;
+        font-weight: 700;
+        position: relative;
+        top: -1px;
+      }
+    }
+  
+    &.button-b{
+      color: #0091ff;
+    
+      i{
+        font-size: 14px;
+      }
+    
+      span{
+        font-size: 13px;
+      }
+    }
+  }
+
+/* 4.- POPUP
+   ----------------------------- */
+  .popup-content{
+    border-radius: 15px;
+    padding: 30px 25px;
+    text-align: center;
+    width: 230px;
+  
+    .popup-title {
+      h1 {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 22px;
+        margin: 0px;
+      }
+    }
+  
+    .popup-paragraph {
+      padding: 0px 0px;
+      margin-top: 25px;
+      line-height: 16px;
+  
+      p{
+        font-size: 13px;
+        font-weight: 300;
+      }
+    }
+  
+    .popup-inputs{
+      margin: 20px auto 0;
+      width: calc(100% - 15px);
+  
+      .popup-input{
+        margin-top: 18px;
+        position: relative;
+  
+        input{
+          background-color: transparent;
+          border: none;
+          border-bottom: solid 1px transparent;
+          font-size: 12px;
+          font-weight: 300;
+  
+          &:focus {
+            border-bottom: solid 1px #0091ff;
+          }
+        }
+        
+        i {
+          color: #aeaeae;
+          font-size: 17px;
+          position: absolute;
+          bottom: 2px;
+          right: 1px;
+          cursor: pointer;
+        }
+  
+        span {
+          color: #de4646;
+          bottom: -15px;
+          font-size: 10px;
+          float: left;
+          left: -14px;
+          margin-left: 15px;
+          position: absolute;
+        }
+      }
+    }
+  
+    .popup-buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 30px;
+    
+      .button-a {
+        height: 30px;
+        text-transform: capitalize;
+        width: 75px;
+  
+        &.popup-cancel-button {
+          background-color: transparent;
+          color: #5d5b5b;
+        }
+        
+        &.popup-confirm-button {
+          background-color: #0091ff;
+          color: #ffffff;
+      
+          &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+          }
+        }
+  
+        span{
+          font-weight: 500;
+          letter-spacing: 0.2px;
+          top: 1px;
+        }
+      }
+    }
+  }
