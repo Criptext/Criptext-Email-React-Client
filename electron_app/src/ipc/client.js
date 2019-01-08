@@ -34,3 +34,11 @@ ipc.answerRenderer('client-post-email', params =>
 ipc.answerRenderer('client-post-user', params =>
   clientManager.postUser(params)
 );
+
+ipc.answerRenderer('client-sync-accept', randomId =>
+  clientManager.syncAccept(randomId)
+);
+
+ipc.answerRenderer('client-sync-deny', randomId =>
+  clientManager.syncDeny(randomId)
+);

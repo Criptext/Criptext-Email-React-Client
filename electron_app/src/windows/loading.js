@@ -15,15 +15,15 @@ const iconPath = path.join(
 );
 
 const create = () => {
-  const { width, height } = globalManager.screenSize.get();
   loadingWindow = new BrowserWindow({
     icon: iconPath,
-    width,
-    height,
+    width: 402,
+    height: 266,
     show: false,
     frame: false,
     transparent: true,
-    alwaysOnTop: true
+    alwaysOnTop: true,
+    center: true
   });
   loadingWindow.loadURL(loadingUrl);
   loadingWindow.setMenu(null);

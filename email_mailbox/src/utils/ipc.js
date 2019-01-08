@@ -144,7 +144,7 @@ export const deleteSessionRecord = async params => {
 
 export const getAllFeedItems = async () => {
   return await callMain('db-get-all-feed-items');
-}
+};
 
 export const getDataReady = async () => {
   return await callMain('client-get-data-ready');

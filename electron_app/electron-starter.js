@@ -127,21 +127,17 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
   const clientManager = require('./src/clientManager');
   globalManager.windowsEvents.disable();
   sendEventToAllwWindows('disable-window-link-devices');
-  
-  console.log( JSON.stringify(data) );
-
   globalManager.loadingData.set({
     loadingType: 'sync-mailbox-request',
-    remoteData: data.params.requestingDeviceInfo
+    remoteData: Object.assign(
+      data.params.requestingDeviceInfo, {
+        randomId: data.params.randomId,
+        version: data.params.version,
+      }
+    )
   });
   loadingWindow.show();
   return await clientManager.acknowledgeEvents([data.rowid]);
-};
-
-const saveScreenSize = () => {
-  const screenSize = require('electron').screen.getPrimaryDisplay()
-    .workAreaSize;
-  globalManager.screenSize.save(screenSize);
 };
 
 //   App
@@ -191,7 +187,6 @@ app.on('ready', () => {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
   initApp();
-  saveScreenSize();
 });
 
 app.on('window-all-closed', () => {
