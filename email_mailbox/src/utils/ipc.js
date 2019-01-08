@@ -150,6 +150,10 @@ export const getAllLabels = async () => {
   return await callMain('db-get-all-labels');
 };
 
+export const getContactByEmails = async emails => {
+  return await callMain('db-get-contact-by-emails', emails);
+};
+
 export const getEmailByKey = async key => {
   return await callMain('db-get-email-by-key', key);
 };
