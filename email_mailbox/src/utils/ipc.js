@@ -154,6 +154,10 @@ export const getContactByEmails = async emails => {
   return await callMain('db-get-contact-by-emails', emails);
 };
 
+export const getContactByIds = async ids => {
+  return await callMain('db-get-contact-by-ids', ids);
+};
+
 export const getEmailByKey = async key => {
   return await callMain('db-get-email-by-key', key);
 };
