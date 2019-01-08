@@ -146,6 +146,10 @@ export const getAllFeedItems = async () => {
   return await callMain('db-get-all-feed-items');
 };
 
+export const getAllLabels = async () => {
+  return await callMain('db-get-all-labels');
+};
+
 export const getEmailByKey = async key => {
   return await callMain('db-get-email-by-key', key);
 };
