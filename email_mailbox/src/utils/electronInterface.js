@@ -146,10 +146,6 @@ export const cleanDataLogout = async recipientId => {
   return dbManager.createSignalTables();
 };
 
-export const getEmailsByLabelIds = labelIds => {
-  return dbManager.getEmailsByLabelIds(labelIds);
-};
-
 export const getEmailsByThreadId = threadId => {
   return dbManager.getEmailsByThreadId(threadId);
 };

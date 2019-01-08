@@ -77,19 +77,31 @@ ipc.answerRenderer('db-get-all-labels', () => dbManager.getAllLabels());
 
 ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));
 
+ipc.answerRenderer('db-get-emails-by-ids', emailIds =>
+  dbManager.getEmailsByIds(emailIds)
+);
+
+ipc.answerRenderer('db-get-emails-by-keys', emailKeys =>
+  dbManager.getEmailsByKeys(emailKeys)
+);
+
+ipc.answerRenderer('db-get-emails-by-labelids', labelIds =>
+  dbManager.getEmailsByLabelIds(labelIds)
+);
+
 ipc.answerRenderer(
   'db-get-emails-by-threadid-and-labelid',
   ({ threadIds, labelId }) =>
     dbManager.getEmailsByThreadIdAndLabelId({ threadIds, labelId })
 );
 
-ipc.answerRenderer('db-get-emails-by-ids', emailIds => dbManager.getEmailsByIds(emailIds));
+ipc.answerRenderer('db-get-contact-by-emails', emails =>
+  dbManager.getContactByEmails(emails)
+);
 
-ipc.answerRenderer('db-get-emails-by-keys', emailKeys => dbManager.getEmailsByKeys(emailKeys));
-
-ipc.answerRenderer('db-get-contact-by-emails', emails => dbManager.getContactByEmails(emails));
-
-ipc.answerRenderer('db-get-contact-by-ids', ids => dbManager.getContactByIds(ids));
+ipc.answerRenderer('db-get-contact-by-ids', ids =>
+  dbManager.getContactByIds(ids)
+);
 
 ipc.answerRenderer('db-get-files-by-emailid', emailId =>
   dbManager.getFilesByEmailId(emailId)
