@@ -193,6 +193,10 @@ export const getEmailsGroupByThreadByParams = async params => {
   return await callMain('db-get-emails-group-by-thread-by-params', params);
 };
 
+export const getEmailsUnredByLabelId = async params => {
+  return await callMain('db-get-emails-unread-by-labelid', params);
+};
+
 export const getFileKeyByEmailId = async emailId => {
   return await callMain('db-get-filekey-by-emailid', emailId);
 };

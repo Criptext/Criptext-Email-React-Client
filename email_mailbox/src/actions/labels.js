@@ -1,6 +1,5 @@
 import { Label } from './types';
 import {
-  getEmailsUnredByLabelId,
   LabelType,
   postPeerEvent,
   updateLabel as updateLabelDB
@@ -10,6 +9,7 @@ import {
   deleteLabelById,
   getAllLabels,
   getEmailsCounterByLabelId,
+  getEmailsUnredByLabelId,
   updateDockBadgeApp
 } from '../utils/ipc';
 import { sendUpdateLabelsErrorMessage } from './../utils/electronEventInterface';
