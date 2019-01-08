@@ -99,6 +99,10 @@ ipc.answerRenderer(
     dbManager.getEmailsByThreadIdAndLabelId({ threadIds, labelId })
 );
 
+ipc.answerRenderer('db-get-emails-counter-by-labelid', labelId =>
+  dbManager.getEmailsCounterByLabelId(labelId)
+);
+
 ipc.answerRenderer('db-get-contact-by-emails', emails =>
   dbManager.getContactByEmails(emails)
 );
