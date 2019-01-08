@@ -89,6 +89,10 @@ const messagesContent = {
     twoFactorAuthTurnOff: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.two_factor_auth_turn_off.description
+    },
+    manualSync: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.manual_sync.description
     }
   },
   error: {

@@ -198,6 +198,9 @@
     },
     "update_unread_threads": {
       "description": "Error al actualizar el estado del correo. Inténtalo de nuevo"
+    },
+    "manual_sync": {
+      "description": "Sincronización de Buzón Completa"
     }
   },
   "notification": {
@@ -328,6 +331,23 @@
         "text": "Múltiples rechazos podría provocar que el dispositivo sea baneado de Criptext."
       },
       "closeButtonLabel": "Okay"
+    },
+    "manual_sync_device_approved": {
+      "header": "Sincronización de Buzón",
+      "messages": {
+        "error": "Error al sincronizar tu buzón",
+        "retry": "¿Reintentar?",
+        "waitingForMailbox": "Esperando Buzón",
+        "keepWaiting": {
+          "title": "La sincronización esta tardando más de lo habitual",
+          "message": "¿Te gustaría seguir esperando?"
+        },
+        "downloadingMailbox": "Descargando Buzón",
+        "decryptingMailbox": "Desencriptando Buzón",
+        "syncComplete": "¡Sincronización Completa!"
+      },
+      "cancelSyncLabel": "Cancelar Sincronización",
+      "continueLabel": "Continuar"
     }
   },
   "settings": {

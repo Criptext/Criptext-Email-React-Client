@@ -198,6 +198,9 @@
     },
     "update_unread_threads": {
       "description": "Failed updating email status. Please try again"
+    },
+    "manual_sync": {
+      "description": "Mailbox Sync Complete"
     }
   },
   "notification": {
@@ -328,6 +331,23 @@
         "text": "Multiple rejections could lead your device to be blacklisted from Criptext"
       },
       "closeButtonLabel": "Okay"
+    },
+    "manual_sync_device_approved": {
+      "header": "Mailbox Sync",
+      "messages": {
+        "error": "Error syncing your mailbox",
+        "retry": "Retry?",
+        "waitingForMailbox": "Waiting for mailbox",
+        "keepWaiting": {
+          "title": "Sync taking longer than usual",
+          "message": "Would you like to continue waiting?"
+        },
+        "downloadingMailbox": "Downloading mailbox",
+        "decryptingMailbox": "Decrypting mailbox",
+        "syncComplete": "Sync complete"
+      },
+      "cancelSyncLabel": "Cancel sync",
+      "continueLabel": "Continue"
     }
   },
   "settings": {

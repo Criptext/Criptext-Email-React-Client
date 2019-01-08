@@ -308,6 +308,10 @@ class PanelWrapper extends Component {
         mailboxPopupType: MAILBOX_POPUP_TYPES.ACCOUNT_DELETED
       });
     });
+
+    addEvent(Event.SET_SECTION_TYPE, (type, mailboxSelected) => {
+      this.handleClickSection(type, { mailboxSelected });
+    });
   };
 }
 
