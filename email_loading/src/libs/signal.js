@@ -1,18 +1,18 @@
 /*global libsignal util*/
 
 import {
-  createLabel,
   createAccount as createAccountDB,
   myAccount,
   errors,
   createContact,
   LabelType,
-  cleanDataBase,
   createTables,
   postKeyBundle,
   updateAccount
 } from './../utils/electronInterface';
 import {
+  cleanDatabase,
+  createLabel,
   getAccount,
   getComputerName,
   getKeyBundle,
@@ -37,7 +37,7 @@ const createAccount = async ({
   name,
   recoveryEmail
 }) => {
-  await cleanDataBase();
+  await cleanDatabase();
   await createTables();
 
   const signedPreKeyId = 1;
@@ -177,7 +177,7 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
     }
   } else {
     if (currentAccount) {
-      await cleanDataBase();
+      await cleanDatabase();
       await createTables();
     }
     try {
@@ -297,7 +297,7 @@ const createAccountToDB = async ({
     }
   } else {
     if (currentAccount) {
-      await cleanDataBase();
+      await cleanDatabase();
       await createTables();
     }
     try {

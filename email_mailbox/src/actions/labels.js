@@ -1,6 +1,5 @@
 import { Label } from './types';
 import {
-  createLabel,
   deleteLabelById,
   getAllLabels,
   getEmailsUnredByLabelId,
@@ -9,7 +8,7 @@ import {
   postPeerEvent,
   updateLabel as updateLabelDB
 } from '../utils/electronInterface';
-import { updateDockBadgeApp } from '../utils/ipc';
+import { createLabel, updateDockBadgeApp } from '../utils/ipc';
 import { sendUpdateLabelsErrorMessage } from './../utils/electronEventInterface';
 import { SocketCommand } from '../utils/const';
 

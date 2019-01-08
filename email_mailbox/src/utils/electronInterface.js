@@ -141,37 +141,9 @@ export const unsendEmailEvent = metadataKey => {
 
 /*  DataBase
 ----------------------------- */
-export const cleanDatabase = async () => {
-  await dbManager.cleanDataBase();
-};
-
 export const cleanDataLogout = async recipientId => {
   await dbManager.cleanDataLogout(recipientId);
   return dbManager.createSignalTables();
-};
-
-export const createAccount = params => {
-  return dbManager.createAccount(params);
-};
-
-export const createFeedItem = params => {
-  return dbManager.createFeedItem(params);
-};
-
-export const createLabel = params => {
-  return dbManager.createLabel(params);
-};
-
-export const deleteEmailByKeys = key => {
-  return dbManager.deleteEmailByKeys(key);
-};
-
-export const deleteEmailLabel = params => {
-  return dbManager.deleteEmailLabel(params);
-};
-
-export const deleteFeedItemById = feedId => {
-  return dbManager.deleteFeedItemById(feedId);
 };
 
 export const deleteLabelById = labelId => {

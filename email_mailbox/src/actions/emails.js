@@ -5,12 +5,15 @@ import {
   setMuteEmailById,
   setUnreadEmailById,
   unsendEmailEvent,
-  deleteEmailByKeys,
   postPeerEvent,
-  deleteEmailLabel,
   getLabelsByText
 } from '../utils/electronInterface';
-import { createEmailLabel, updateEmail } from '../utils/ipc';
+import {
+  createEmailLabel,
+  deleteEmailByKeys,
+  deleteEmailLabel,
+  updateEmail
+} from '../utils/ipc';
 import { loadContacts } from './contacts';
 import { EmailStatus, SocketCommand } from '../utils/const';
 import { unsendEmailFiles } from './files';

@@ -1,10 +1,16 @@
 const ipc = require('@criptext/electron-better-ipc');
 const dbManager = require('./../DBManager');
 
+ipc.answerRenderer('db-clean-database', () => dbManager.cleanDataBase());
+
 ipc.answerRenderer('db-create-email', params => dbManager.createEmail(params));
 
 ipc.answerRenderer('db-create-email-label', params =>
   dbManager.createEmailLabel(params)
+);
+
+ipc.answerRenderer('db-create-feed-item', params =>
+  dbManager.createFeedItem(params)
 );
 
 ipc.answerRenderer('db-create-file', params => dbManager.createFile(params));
@@ -12,6 +18,8 @@ ipc.answerRenderer('db-create-file', params => dbManager.createFile(params));
 ipc.answerRenderer('db-create-identity-key-record', params =>
   dbManager.createIdentityKeyRecord(params)
 );
+
+ipc.answerRenderer('db-create-label', params => dbManager.createLabel(params));
 
 ipc.answerRenderer('db-create-prekey-record', params =>
   dbManager.createPreKeyRecord(params)
@@ -25,8 +33,20 @@ ipc.answerRenderer('db-create-signed-prekey-record', params =>
   dbManager.createSignedPreKeyRecord(params)
 );
 
+ipc.answerRenderer('db-delete-email-by-keys', keys =>
+  dbManager.deleteEmailByKeys(keys)
+);
+
+ipc.answerRenderer('db-delete-email-label', params =>
+  dbManager.deleteEmailLabel(params)
+);
+
 ipc.answerRenderer('db-delete-emails-by-ids', params =>
   dbManager.deleteEmailsByIds(params)
+);
+
+ipc.answerRenderer('db-delete-feed-item-by-id', feedItemId =>
+  dbManager.deleteFeedItemById(feedItemId)
 );
 
 ipc.answerRenderer('db-delete-prekey-pair', params =>

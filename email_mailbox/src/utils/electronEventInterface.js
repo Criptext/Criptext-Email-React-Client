@@ -1,10 +1,5 @@
 import signal from './../libs/signal';
 import {
-  cleanDatabase,
-  createFeedItem,
-  createLabel,
-  deleteEmailByKeys,
-  deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   getEmailsByKeys,
   getEmailsByThreadId,
@@ -25,8 +20,13 @@ import {
 } from './electronInterface';
 import {
   acknowledgeEvents,
+  cleanDatabase,
   createEmail,
   createEmailLabel,
+  createFeedItem,
+  createLabel,
+  deleteEmailByKeys,
+  deleteEmailLabel,
   getEmailByKey,
   logoutApp,
   openFilledComposerWindow,

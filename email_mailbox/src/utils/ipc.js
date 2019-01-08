@@ -68,6 +68,10 @@ export const acknowledgeEvents = async eventIds => {
 
 /* DataBase
    ----------------------------- */
+export const cleanDatabase = async () => {
+  return await callMain('db-clean-database');
+};
+
 export const createEmail = async params => {
   return await callMain('db-create-email', params);
 };
@@ -76,8 +80,16 @@ export const createEmailLabel = async params => {
   return await callMain('db-create-email-label', params);
 };
 
+export const createFeedItem = async params => {
+  return await callMain('db-create-feed-item', params);
+};
+
 export const createIdentityKeyRecord = async params => {
   return await callMain('db-create-identity-key-record', params);
+};
+
+export const createLabel = async params => {
+  return await callMain('db-create-label', params);
 };
 
 export const createPreKeyRecord = async params => {
@@ -92,8 +104,20 @@ export const createSignedPreKeyRecord = async params => {
   return await callMain('db-create-signed-prekey-record', params);
 };
 
+export const deleteEmailByKeys = async keys => {
+  return await callMain('db-delete-email-by-keys', keys);
+};
+
+export const deleteEmailLabel = async params => {
+  return await callMain('db-delete-email-label', params);
+};
+
 export const deleteEmailsByIds = async ids => {
   return await callMain('db-delete-emails-by-ids', ids);
+};
+
+export const deleteFeedItemById = async feedItemId => {
+  return await callMain('db-delete-feed-item-by-id', feedItemId);
 };
 
 export const deletePreKeyPair = async params => {
