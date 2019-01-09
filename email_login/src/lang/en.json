@@ -31,6 +31,12 @@
       "usernameInvalid": "Invalid username",
       "statusUnknown": "Unknown status code: ",
       "usernameNotAvailable": "Username not available"
+    },
+    "usePassword": {
+      "title": "Warning",
+      "message": "If you sign in using your password your mailbox history from other devices won't be available on this device. Would you like to continue?",
+      "leftButtonLabel": "Cancel",
+      "rightButtonLabel": "Continue"
     }
   },
   "passwordLogin": {

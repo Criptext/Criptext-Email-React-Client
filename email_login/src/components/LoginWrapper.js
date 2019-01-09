@@ -360,11 +360,10 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     this.setState({
       popupContent: {
-        title: 'Warning',
-        message:
-          "If you sign in using your password your mailbox history from other devices won't be available on this device. Would you like to continue?",
-        leftButtonLabel: 'Cancel',
-        rightButtonLabel: 'Continue'
+        title: login.usePassword.title,
+        message: login.usePassword.message,
+        leftButtonLabel: login.usePassword.leftButtonLabel,
+        rightButtonLabel: login.usePassword.rightButtonLabel
       }
     });
   };
