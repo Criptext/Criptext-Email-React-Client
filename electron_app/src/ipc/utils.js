@@ -84,3 +84,8 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
   loadingWindow.show();
   return await clientManager.acknowledgeEvents([data.rowid]);
 };
+
+module.exports = {
+  sendLinkDeviceStartEventToAllWindows,
+  sendSyncMailboxStartEventToAllWindows
+};

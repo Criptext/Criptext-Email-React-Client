@@ -221,10 +221,11 @@ const parseUserSettings = settings => {
 };
 
 const linkAccept = async randomId => {
-  const res = await client.linkAccept({ randomId });
+  const data = { randomId, version: LINK_DEVICES_FILE_VERSION };
+  const res = await client.linkAccept(data);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, linkAccept, randomId);
+    : await checkExpiredSession(res, linkAccept, data);
 };
 
 const linkAuth = async ({ newDeviceData, jwt }) => {
@@ -233,7 +234,8 @@ const linkAuth = async ({ newDeviceData, jwt }) => {
 };
 
 const linkBegin = async username => {
-  return await client.linkBegin(username);
+  const data = { targetUsername: username, version: LINK_DEVICES_FILE_VERSION };
+  return await client.linkBegin(data);
 };
 
 const linkDeny = async randomId => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SyncMailbox from './SyncMailbox';
 import LinkDeviceRequest from './LinkDeviceRequest';
+import IncompatibleSyncVersions from './IncompatibleSyncVersions';
 import signal from '../libs/signal';
 import {
   remoteData,
@@ -29,6 +30,7 @@ import string from './../lang';
 
 const { messages } = string.linkOldDevice;
 const ANIMATION_DURATION = 1500;
+const INCOMPATIBLE_VERSIONS_STATUS = 405;
 
 const STEPS = {
   NOT_STARTED: 'not-started',
@@ -53,26 +55,35 @@ class SyncMailboxWrapper extends Component {
   }
 
   render() {
-    if (this.state.type === loadingTypes.SYNC_MAILBOX_REQUEST) {
-      return (
-        <LinkDeviceRequest
-          {...remoteData}
-          onAcceptLinkDeviceRequest={this.handleAcceptSyncDeviceRequest}
-          onDenyLinkDeviceRequest={this.handleDenySyncDeviceRequest}
-        />
-      );
+    switch (this.state.type) {
+      case loadingTypes.SYNC_MAILBOX_REQUEST: {
+        return (
+          <LinkDeviceRequest
+            {...remoteData}
+            onAcceptLinkDeviceRequest={this.handleAcceptSyncDeviceRequest}
+            onDenyLinkDeviceRequest={this.handleDenySyncDeviceRequest}
+          />
+        );
+      }
+      case loadingTypes.SYNC_MAILBOX_OLD_DEVICE: {
+        return (
+          <SyncMailbox
+            message={this.state.message}
+            percent={this.state.percent}
+            onClickCancelSync={this.handleClickCancelSync}
+            oldDeviceName={this.state.oldDeviceName}
+            oldDeviceIcon={'icon-desktop'}
+            newDeviceIcon={this.defineRemoteDeviceIcon()}
+            isCancelable={this.state.isCancelable}
+          />
+        );
+      }
+      case loadingTypes.INCOMPATIBLE_VERSIONS: {
+        return <IncompatibleSyncVersions />;
+      }
+      default:
+        return null;
     }
-    return (
-      <SyncMailbox
-        message={this.state.message}
-        percent={this.state.percent}
-        onClickCancelSync={this.handleClickCancelSync}
-        oldDeviceName={this.state.oldDeviceName}
-        oldDeviceIcon={'icon-desktop'}
-        newDeviceIcon={this.defineRemoteDeviceIcon()}
-        isCancelable={this.state.isCancelable}
-      />
-    );
   }
 
   handleAcceptSyncDeviceRequest = async () => {
@@ -90,6 +101,10 @@ class SyncMailboxWrapper extends Component {
           this.initSyncMailbox();
         }
       );
+    } else if (status === INCOMPATIBLE_VERSIONS_STATUS) {
+      this.setState({
+        type: loadingTypes.INCOMPATIBLE_VERSIONS
+      });
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import LinkOldDevice from './LinkOldDevice';
 import LinkDeviceRequest from './LinkDeviceRequest';
+import IncompatibleSyncVersions from './IncompatibleSyncVersions';
 import signal from '../libs/signal';
 import {
   remoteData,
@@ -30,6 +31,7 @@ import string from './../lang';
 const messages = string.linkOldDevice.messages;
 
 const ANIMATION_DURATION = 1500;
+const INCOMPATIBLE_VERSIONS_STATUS = 405;
 
 const STEPS = {
   NOT_STARTED: 'not-started',
@@ -57,28 +59,37 @@ class LinkOldDeviceWrapper extends Component {
   }
 
   render() {
-    if (this.state.type === loadingTypes.LINK_DEVICE_REQUEST) {
-      return (
-        <LinkDeviceRequest
-          {...remoteData}
-          onAcceptLinkDeviceRequest={this.handleAcceptLinkDeviceRequest}
-          onDenyLinkDeviceRequest={this.handleDenyLinkDeviceRequest}
-        />
-      );
+    switch (this.state.type) {
+      case loadingTypes.LINK_DEVICE_REQUEST: {
+        return (
+          <LinkDeviceRequest
+            {...remoteData}
+            onAcceptLinkDeviceRequest={this.handleAcceptLinkDeviceRequest}
+            onDenyLinkDeviceRequest={this.handleDenyLinkDeviceRequest}
+          />
+        );
+      }
+      case loadingTypes.LINK_OLD_DEVICE: {
+        return (
+          <LinkOldDevice
+            failed={this.state.failed}
+            message={this.state.message}
+            percent={this.state.percent}
+            lastStep={this.state.lastStep}
+            onClickRetry={this.handleClickRetry}
+            onClickCancelSync={this.handleClickCancelSync}
+            oldDeviceName={this.state.oldDeviceName}
+            oldDeviceIcon={'icon-desktop'}
+            newDeviceIcon={this.defineRemoteDeviceIcon()}
+          />
+        );
+      }
+      case loadingTypes.INCOMPATIBLE_VERSIONS: {
+        return <IncompatibleSyncVersions />;
+      }
+      default:
+        return null;
     }
-    return (
-      <LinkOldDevice
-        failed={this.state.failed}
-        message={this.state.message}
-        percent={this.state.percent}
-        lastStep={this.state.lastStep}
-        onClickRetry={this.handleClickRetry}
-        onClickCancelSync={this.handleClickCancelSync}
-        oldDeviceName={this.state.oldDeviceName}
-        oldDeviceIcon={'icon-desktop'}
-        newDeviceIcon={this.defineRemoteDeviceIcon()}
-      />
-    );
   }
 
   handleAcceptLinkDeviceRequest = async () => {
@@ -98,6 +109,10 @@ class LinkOldDeviceWrapper extends Component {
           this.initLinkOldDevice();
         }
       );
+    } else if (status === INCOMPATIBLE_VERSIONS_STATUS) {
+      this.setState({
+        type: loadingTypes.INCOMPATIBLE_VERSIONS
+      });
     }
   };
 

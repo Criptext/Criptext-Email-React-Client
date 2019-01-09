@@ -1,3 +1,4 @@
+.incompatible-versions-container,
 .request-container {
   font-family: 'NunitoSans';
   width: 402px;
@@ -19,9 +20,20 @@
       }
     }
 
+    .text {
+      position: relative;
+      top: 18%;
+      width: 70%;
+      margin: 0px auto;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      color: #373a45;      
+    }
+
     .question {
       position: relative;
-      top: 20%;
+      top: 18%;
       width: 100%;
       font-size: 14px;
       font-weight: bold;
@@ -31,7 +43,7 @@
 
     .device-info {
       position: relative;
-      top: 24%;
+      top: 21%;
       width: 97%;
       text-align: center;
       color: #afb0b5;
@@ -49,7 +61,7 @@
 
     .buttons {
       position: relative;
-      top: 38%;
+      top: 30%;
       width: 97%;
       text-align: center;
 
@@ -85,6 +97,5 @@
         }
       }
     }
-
   }
 }

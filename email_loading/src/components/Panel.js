@@ -12,7 +12,8 @@ const loadingTypes = {
   LINK_OLD_DEVICE: 'link-old-device',
   LINK_DEVICE_REQUEST: 'link-device-request',
   SYNC_MAILBOX_REQUEST: 'sync-mailbox-request',
-  SYNC_MAILBOX_OLD_DEVICE: 'sync-mailbox-old-device'
+  SYNC_MAILBOX_OLD_DEVICE: 'sync-mailbox-old-device',
+  INCOMPATIBLE_VERSIONS: 'incompatible-versions'
 };
 
 const Panel = () => {

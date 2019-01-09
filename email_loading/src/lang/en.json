@@ -47,5 +47,12 @@
       "retry": "Retry",
       "creatingKeys": "Creating Keys"
     }
+  },
+  "incompatibleSyncVersions": {
+    "header": "Incompatible versions",
+    "text": "You can't sync your mailbox from this device, make sure that both devices are up to date",
+    "buttonLabels": {
+      "close": "Got it"
+    }
   }
 }

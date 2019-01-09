@@ -22,7 +22,7 @@ require('./src/ipc/login.js');
 require('./src/ipc/mailbox.js');
 require('./src/ipc/database.js');
 require('./src/ipc/client.js');
-require('./src/ipc/utils.js');
+const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
 let tray = null;
@@ -66,9 +66,19 @@ async function initApp() {
 
   // Socket
   wsClient.setMessageListener(async data => {
-    mailboxWindow.send('socket-message', data);
-    loginWindow.send('socket-message', data);
-    loadingWindow.send('socket-message', data);
+    const SIGNIN_VERIFICATION_REQUEST_COMMAND = 201;
+    const MANUAL_SYNC_REQUEST_COMMAND = 211;
+    // This validation is for closed-mailbox case
+    if (data.cmd === SIGNIN_VERIFICATION_REQUEST_COMMAND) {
+      await ipcUtils.sendLinkDeviceStartEventToAllWindows(data);
+    }
+    else if (data.cmd === MANUAL_SYNC_REQUEST_COMMAND) {
+      await ipcUtils.sendSyncMailboxStartEventToAllWindows(data);
+    } else {
+      mailboxWindow.send('socket-message', data);
+      loginWindow.send('socket-message', data);
+      loadingWindow.send('socket-message', data);
+    }
   });
 }
 
@@ -123,6 +133,7 @@ app.on('ready', () => {
 
 app.on('window-all-closed', () => {
   destroyTrayIcon();
+  require('./src/socketClient').disconnect();
   if (process.platform !== 'darwin') {
     app.quit();
   }

@@ -58,7 +58,6 @@ const create = () => {
       e.preventDefault();
       mailboxWindow.hide();
     }
-    require('./../socketClient').disconnect();
   });
   mailboxWindow.on('closed', () => {
     if (process.platform !== 'darwin') {
