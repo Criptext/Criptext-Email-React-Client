@@ -27,11 +27,10 @@ import { hashPassword } from '../utils/HashUtils';
 import string from './../lang';
 
 import PopupHOC from './PopupHOC';
-import DialogPopup from './DialogPopup';
 import LoginPopup from './LoginPopup';
-import SignUpPopup from './SignUpPopup'
+import DialogPopup from './DialogPopup';
 
-const { login } = string;
+const { login, signin } = string;
 
 const mode = {
   SIGNUP: 'SIGNUP',
@@ -60,7 +59,7 @@ const shouldDisableLogin = state =>
 
 const LoginWithPasswordPopup = PopupHOC(DialogPopup);
 const ResetPasswordPopup = PopupHOC(LoginPopup);
-const NoRecoverySignUpPopup = PopupHOC(SignUpPopup);
+const NoRecoverySignUpPopup = PopupHOC(DialogPopup);
 
 const commitNewUser = validInputData => {
   openCreateKeysLoadingWindow({
@@ -106,8 +105,8 @@ class LoginWrapper extends Component {
         return (
           <LoginWithPasswordPopup
             {...this.state.popupContent}
-            onLeftButtonClick={this.handlePopupLeftButton}
-            onRightButtonClick={this.handlePopupRightButton}
+            onLeftButtonClick={this.handleStayLinking}
+            onRightButtonClick={this.handleCancelLink}
           />
         );
       case mode.LOST_DEVICES:
@@ -133,12 +132,14 @@ class LoginWrapper extends Component {
   renderSection = () => {
     switch (this.state.mode) {
       case mode.SIGNUP:
-        return <SignUpWrapper
-          toggleSignUp={ev => this.toggleSignUp(ev)}
-          checkAvailableUsername={checkAvailableUsername}
-          onFormReady={this.onFormReady}
-          onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
-        />
+        return (
+          <SignUpWrapper
+            toggleSignUp={ev => this.toggleSignUp(ev)}
+            checkAvailableUsername={checkAvailableUsername}
+            onFormReady={this.onFormReady}
+            onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
+          />
+        );
       case mode.CONTINUE:
         return (
           <ContinueLogin
@@ -195,15 +196,15 @@ class LoginWrapper extends Component {
   onSubmitWithoutRecoveryEmail = validInputData => {
     this.setState({
       popupContent: {
-        title: "Warning!",
-        prefix: "You did not set a Recovery Email, so",
-        strong: "account recovery is impossible",
-        suffix: "if you forget your password",
-        leftButtonLabel: "Cancel",
-        rightButtonLabel: "Continue",
+        title: signin.title,
+        prefix: signin.prefix,
+        strong: signin.strong,
+        suffix: signin.suffix,
+        leftButtonLabel: signin.leftButtonLabel,
+        rightButtonLabel: signin.rightButtonLabel,
         data: validInputData
       }
-    })
+    });
   };
 
   onFormReady = validInputData => {
@@ -213,17 +214,20 @@ class LoginWrapper extends Component {
   };
 
   handleSignUpContinue = () => {
-    const inputData = this.state.popupContent.data
+    const inputData = this.state.popupContent.data;
     console.log(inputData);
     if (!inputData) {
-      return
+      return;
     }
-    this.setState({
-      popupContent: undefined
-    }, () => {
-      commitNewUser(inputData);
-    })
-  }
+    this.setState(
+      {
+        popupContent: undefined
+      },
+      () => {
+        commitNewUser(inputData);
+      }
+    );
+  };
 
   toggleContinue = ev => {
     ev.preventDefault();
@@ -417,7 +421,9 @@ class LoginWrapper extends Component {
     this.setState({
       popupContent: {
         title: login.usePassword.title,
-        message: login.usePassword.message,
+        prefix: login.usePassword.prefix,
+        strong: login.usePassword.strong,
+        suffix: login.usePassword.suffix,
         leftButtonLabel: login.usePassword.leftButtonLabel,
         rightButtonLabel: login.usePassword.rightButtonLabel
       }
@@ -432,16 +438,16 @@ class LoginWrapper extends Component {
     this.setState({ popupContent: undefined });
   };
 
-  handlePopupLeftButton = () => {
-    socketClient.disconnect();
+  handleStayLinking = () => {
     this.setState({ popupContent: undefined }, () => {
-      this.goToPasswordLogin();
+      this.checkLinkStatus();
     });
   };
 
-  handlePopupRightButton = () => {
+  handleCancelLink = () => {
+    socketClient.disconnect();
     this.setState({ popupContent: undefined }, () => {
-      this.checkLinkStatus();
+      this.goToPasswordLogin();
     });
   };
 

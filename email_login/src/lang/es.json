@@ -34,10 +34,20 @@
     },
     "usePassword": {
       "title": "Advertencia",
-      "message": "Si inicias sesión con tu contraseña los correos de otros dispositivos no estará disponible en este dispositivo. ¿Te gustaria continuar?",
+      "prefix": "Si inicias sesión con tu contraseña",
+      "strong": " los correos de otros dispositivos no estarán disponibles ",
+      "suffix": "en este dispositivo. ¿Te gustaria continuar?",
       "leftButtonLabel": "Cancelar",
       "rightButtonLabel": "Continuar"
     }
+  },
+  "signin": {
+    "title": "Advertencia!",
+    "prefix": "NO estableciste un Correo de Recuperación por lo que la",
+    "strong": " recuperación de la cuenta es imposible ",
+    "suffix": "si olvidas tu contraseña.",
+    "leftButtonLabel": "Cancelar",
+    "rightButtonLabel": "Continuar"
   },
   "passwordLogin": {
     "sectionTitleSignIn": "Iniciar sesión",

@@ -1,22 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const LoginPopup = props => (
+const SignUpPopup = props => (
   <div className="popup-content">
     <div className="popup-title">
       <h1>{props.title}</h1>
     </div>
-    <PopupContent {...props} />
+    <div className="popup-paragraph">
+      <p>
+        {props.prefix}
+        <strong>{props.strong}</strong>
+        {props.suffix}
+      </p>
+    </div>
     <div className="popup-buttons">
       <button
         className="button-a popup-cancel-button"
-        onClick={props.onRightButtonClick}
+        onClick={props.onLeftButtonClick}
       >
         <span>{props.leftButtonLabel}</span>
       </button>
       <button
         className="button-a popup-confirm-button"
-        onClick={props.onLeftButtonClick}
+        onClick={props.onRightButtonClick}
       >
         <span>{props.rightButtonLabel}</span>
       </button>
@@ -24,24 +30,16 @@ const LoginPopup = props => (
   </div>
 );
 
-const PopupContent = props => {
-  switch (props.type) {
-    default:
-      return (
-        <div className="popup-paragraph">
-          <p>{props.message}</p>
-        </div>
-      );
-  }
-};
-
 // eslint-disable-next-line fp/no-mutation
-LoginPopup.propTypes = {
-  onDismiss: PropTypes.func,
+SignUpPopup.propTypes = {
+  onLeftButtonClick: PropTypes.func,
+  onRightButtonClick: PropTypes.func,
   suffix: PropTypes.string,
   prefix: PropTypes.string,
-  message: PropTypes.string,
-  dismissButtonLabel: PropTypes.string
+  strong: PropTypes.string,
+  title: PropTypes.string,
+  leftButtonLabel: PropTypes.string,
+  rightButtonLabel: PropTypes.string
 };
 
-export default LoginPopup;
+export default SignUpPopup;
