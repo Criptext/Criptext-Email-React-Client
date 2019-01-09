@@ -72,10 +72,6 @@
       "name": "Error al subir el archivo",
       "description": "Ha ocurrido un error mientras se subía el archivo.\nPor favor, intenta de nuevo"
     },
-    "TOO_MANY_FILES": {
-      "name": "Demasiados archivos adjuntos",
-      "description": "Solo puedes adjuntar 5 archivos a un correo"
-    },
     "TOO_BIG_FILE": {
       "name": "Archivo demasiado grande",
       "description": {
@@ -99,6 +95,13 @@
     "LINK_DEVICES_UPLOAD_DATA": {
       "name": "Error al sincronizar",
       "description": "Ha ocurrido un error al sincronizar los dispositivos.\nCódigo: "
+    },
+    "ATTACHMENTS_TOTAL_SIZE": {
+      "name": "Error",
+      "description": {
+        "prefix": "El correo ha excedido el limite de ",
+        "suffix": " por archivos."
+      }
     }
   },
   "updaterMessages": {
