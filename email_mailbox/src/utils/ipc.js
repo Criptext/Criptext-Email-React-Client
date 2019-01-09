@@ -225,6 +225,10 @@ export const getIdentityKeyRecord = async params => {
   return await callMain('db-get-identity-key-record', params);
 };
 
+export const getLabelById = async id => {
+  return await callMain('db-get-labelid', id);
+};
+
 export const getPreKeyPair = async params => {
   return await callMain('db-get-prekey-pair', params);
 };
