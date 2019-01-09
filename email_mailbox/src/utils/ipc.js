@@ -60,6 +60,14 @@ export const updateDockBadgeApp = value => {
   callMain('update-dock-badge', value);
 };
 
+export const sendStartSyncDeviceEvent = data => {
+  callMain('start-sync-mailbox-event', data);
+};
+
+export const sendStartLinkDevicesEvent = data => {
+  callMain('start-link-devices-event', data);
+};
+
 /* Criptext Client
    ----------------------------- */
 export const acknowledgeEvents = async eventIds => {
@@ -144,6 +152,10 @@ export const deleteSessionRecord = async params => {
 
 export const getAllFeedItems = async () => {
   return await callMain('db-get-all-feed-items');
+};
+
+export const getDataReady = async () => {
+  return await callMain('client-get-data-ready');
 };
 
 export const getAllLabels = async () => {

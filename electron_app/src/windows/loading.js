@@ -6,7 +6,8 @@ let loadingWindow;
 
 const LINK_DEVICE_LOADING_TYPES = {
   LINK_NEW_DEVICE: 'link-new-device',
-  LINK_OLD_DEVICE: 'link-old-device'
+  LINK_OLD_DEVICE: 'link-old-device',
+  MANUAL_SYNC: 'sync-mailbox-request'
 };
 
 const iconPath = path.join(
@@ -15,15 +16,15 @@ const iconPath = path.join(
 );
 
 const create = () => {
-  const { width, height } = globalManager.screenSize.get();
   loadingWindow = new BrowserWindow({
     icon: iconPath,
-    width,
-    height,
+    width: 402,
+    height: 266,
     show: false,
     frame: false,
     transparent: true,
-    alwaysOnTop: true
+    alwaysOnTop: true,
+    center: true
   });
   loadingWindow.loadURL(loadingUrl);
   loadingWindow.setMenu(null);

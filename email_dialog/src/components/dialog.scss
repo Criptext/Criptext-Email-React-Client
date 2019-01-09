@@ -3,8 +3,8 @@
 
 .dialog-body {
   font-family: 'NunitoSans';
-  width: 393px;
-  height: 267px;
+  width: 400px;
+  height: 280px;
   border-radius: 5px;
   background-color: #ffffff;
   box-shadow: inset 0 0 1px #000000;
@@ -26,18 +26,19 @@
       font-weight: 600;
       text-align: left;
       color: #0091ff;
-      margin: 0px 0px 16px 0px;
+      margin: 0px 0px 13px 0px;
     }
 
     .message-empty-recovery-email {
-      font-size: 13.5px;
+      font-size: 14px;
       position: relative;
-      top: 10px;
+      top: 17px;
+      margin: 3px;
     }
     .message-lost-all-devices {
       font-size: 13px;
       position: relative;
-      top: 15px;
+      top: -5px;
     }
     .message-forgot-sent-link {
       font-size: 15px;
@@ -48,9 +49,10 @@
       }
     }
     .message-forgot-empty-email {
-      font-size: 14px;
+      font-size: 15px;
       position: relative;
-      top: 20px;	
+      top: 23px;
+      margin: 3px;
     }
     .message-permanent-delete-thread {
       font-size: 14px;

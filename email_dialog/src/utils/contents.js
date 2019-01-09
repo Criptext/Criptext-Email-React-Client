@@ -9,11 +9,17 @@ const {
   messagePermanentDeleteThread
 } = string;
 
-export const LostAllDevices = () => (
-  <div className="message-lost-all-devices">
-    <p>{messagelostAllDevices}</p>
-  </div>
-);
+export const LostAllDevices = () => {
+  const { text, strong } = messagelostAllDevices;
+  return (
+    <div className="message-lost-all-devices">
+      <p>{text}</p>
+      <p>
+        <strong>{strong}</strong>
+      </p>
+    </div>
+  );
+};
 
 export const EmptyRecoveryEmail = () => {
   const { preffix, strong, suffix } = messageEmptyRecoveryEmail;

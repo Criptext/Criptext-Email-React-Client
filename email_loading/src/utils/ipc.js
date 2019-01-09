@@ -14,8 +14,12 @@ export const throwError = error => {
   callMain('throwError', error);
 };
 
+export const sendEndLinkDevicesEvent = () => {
+  callMain('end-link-devices-event');
+};
+
 /* Criptext Client
-   ----------------------------- */
+----------------------------- */
 export const acknowledgeEvents = async eventIds => {
   return await callMain('client-acknowledge-events', eventIds);
 };
@@ -44,8 +48,16 @@ export const postUser = async params => {
   return await callMain('client-post-user', params);
 };
 
+export const syncAccept = async randomId => {
+  return await callMain('client-sync-accept', randomId);
+};
+
+export const syncDeny = async randomId => {
+  return await callMain('client-sync-deny', randomId);
+};
+
 /* DataBase
-   ----------------------------- */
+----------------------------- */
 export const cleanDatabase = async () => {
   return await callMain('db-clean-database');
 };

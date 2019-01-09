@@ -198,6 +198,9 @@
     },
     "update_unread_threads": {
       "description": "Error al actualizar el estado del correo. Inténtalo de nuevo"
+    },
+    "manual_sync": {
+      "description": "Sincronización de Buzón Completa"
     }
   },
   "notification": {
@@ -300,6 +303,51 @@
       "title": "¡A2F Habilitada!",
       "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
       "button": "¡Listo!"
+    },
+    "mailbox_sync": {
+      "title": "Advertencia de Sincronización",
+      "paragraphs": {
+        "header": "Todos los datos de su buzón se borrarán y se reemplazarán con los datos del buzón de su otro dispositivo.",
+        "question": "¿Estás seguro que deseas continuar?"
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Confirmar"
+    },
+    "manual_sync_device_authentication": {
+      "title": "Autenticación de dispositivo",
+      "message": "Revisa y aprueba este inicio de sesión desde uno de tus dispositivos Criptext",
+      "getPromptLabel": "¿No recibiste el aviso?",
+      "buttons": {
+        "sending": "Enviando...",
+        "resend": "Reenviarlo"
+      },
+      "cancelSyncLabel": "Cancelar sincronización"
+    },
+    "manual_sync_device_rejected": {
+      "title": "Autenticación rechazada",
+      "message": "Tu solicitud para acceder a esta cuenta fue rechazada por un dispositivo verificado.",
+      "warning": {
+        "strong": "Advertencia",
+        "text": "Múltiples rechazos podría provocar que el dispositivo sea baneado de Criptext."
+      },
+      "closeButtonLabel": "Okay"
+    },
+    "manual_sync_device_approved": {
+      "header": "Sincronización de Buzón",
+      "messages": {
+        "error": "Error al sincronizar tu buzón",
+        "retry": "¿Reintentar?",
+        "waitingForMailbox": "Esperando Buzón",
+        "keepWaiting": {
+          "title": "La sincronización esta tardando más de lo habitual",
+          "message": "¿Te gustaría seguir esperando?"
+        },
+        "downloadingMailbox": "Descargando Buzón",
+        "decryptingMailbox": "Desencriptando Buzón",
+        "syncComplete": "¡Sincronización Completa!"
+      },
+      "cancelSyncLabel": "Cancelar Sincronización",
+      "continueLabel": "Continuar"
     }
   },
   "settings": {
@@ -352,6 +400,11 @@
     "delete_account": {
       "label": "Eliminar cuenta",
       "button": "Eliminar permanentemente"
+    },
+    "mailbox_sync": {
+      "label": "Buzón",
+      "button": "Sincronizar buzón",
+      "tooltip": "Debes tener al menos un dispositivo adicional para sincronizar"
     }
   },
   "sidebar": {

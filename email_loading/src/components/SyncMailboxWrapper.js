@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LinkOldDevice from './LinkOldDevice';
+import SyncMailbox from './SyncMailbox';
 import LinkDeviceRequest from './LinkDeviceRequest';
 import IncompatibleSyncVersions from './IncompatibleSyncVersions';
 import signal from '../libs/signal';
@@ -17,70 +17,64 @@ import {
   errors
 } from '../utils/electronInterface';
 import {
-  closeCreatingKeysLoadingWindow,
-  linkAccept,
-  linkDeny,
-  postDataReady,
+  syncDeny,
   throwError,
+  syncAccept,
+  postDataReady,
+  closeCreatingKeysLoadingWindow,
   sendEndLinkDevicesEvent
 } from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 import string from './../lang';
 
-const messages = string.linkOldDevice.messages;
-
+const { messages } = string.linkOldDevice;
 const ANIMATION_DURATION = 1500;
 const INCOMPATIBLE_VERSIONS_STATUS = 405;
 
 const STEPS = {
   NOT_STARTED: 'not-started',
   ENCRYPT_MAILBOX: 'encrypting-mailbox',
-  GETTING_KEYS: 'getting-keys',
   UPLOAD_MAILBOX: 'uploading-mailbox',
   SYNC_COMPLETE: 'sync-complete'
 };
 
-class LinkOldDeviceWrapper extends Component {
+class SyncMailboxWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       message: '',
-      percent: 0,
-      newAccountData: undefined,
+      percent: 5,
       pauseAt: 0,
       delay: 0,
-      failed: false,
-      lastStep: STEPS.NOT_STARTED,
       oldDeviceName: '',
       type: loadingType,
-      remoteData
+      remoteData,
+      isCancelable: true
     };
   }
 
   render() {
     switch (this.state.type) {
-      case loadingTypes.LINK_DEVICE_REQUEST: {
+      case loadingTypes.SYNC_MAILBOX_REQUEST: {
         return (
           <LinkDeviceRequest
             {...remoteData}
-            onAcceptLinkDeviceRequest={this.handleAcceptLinkDeviceRequest}
-            onDenyLinkDeviceRequest={this.handleDenyLinkDeviceRequest}
+            onAcceptLinkDeviceRequest={this.handleAcceptSyncDeviceRequest}
+            onDenyLinkDeviceRequest={this.handleDenySyncDeviceRequest}
           />
         );
       }
-      case loadingTypes.LINK_OLD_DEVICE: {
+      case loadingTypes.SYNC_MAILBOX_OLD_DEVICE: {
         return (
-          <LinkOldDevice
-            failed={this.state.failed}
+          <SyncMailbox
             message={this.state.message}
             percent={this.state.percent}
-            lastStep={this.state.lastStep}
-            onClickRetry={this.handleClickRetry}
             onClickCancelSync={this.handleClickCancelSync}
             oldDeviceName={this.state.oldDeviceName}
             oldDeviceIcon={'icon-desktop'}
             newDeviceIcon={this.defineRemoteDeviceIcon()}
+            isCancelable={this.state.isCancelable}
           />
         );
       }
@@ -92,21 +86,19 @@ class LinkOldDeviceWrapper extends Component {
     }
   }
 
-  handleAcceptLinkDeviceRequest = async () => {
-    const { randomId } = remoteData.session;
-    const { status, body } = await linkAccept(randomId);
+  handleAcceptSyncDeviceRequest = async () => {
+    const { randomId } = remoteData;
+    const { status } = await syncAccept(randomId);
     if (status === 200) {
-      const { deviceId } = body;
-      const newRemoteData = { ...remoteData, deviceId };
       setRemoteData({});
       this.setState(
         {
-          type: loadingTypes.LINK_OLD_DEVICE,
-          remoteData: newRemoteData,
+          type: loadingTypes.SYNC_MAILBOX_OLD_DEVICE,
+          remoteData,
           oldDeviceName: remoteData.deviceFriendlyName
         },
         () => {
-          this.initLinkOldDevice();
+          this.initSyncMailbox();
         }
       );
     } else if (status === INCOMPATIBLE_VERSIONS_STATUS) {
@@ -116,23 +108,22 @@ class LinkOldDeviceWrapper extends Component {
     }
   };
 
-  handleDenyLinkDeviceRequest = async () => {
-    const { randomId } = remoteData.session;
-    await linkDeny(randomId);
+  handleDenySyncDeviceRequest = async () => {
+    const { randomId } = remoteData;
+    await syncDeny(randomId);
     closeCreatingKeysLoadingWindow();
     sendEndLinkDevicesEvent();
   };
 
-  initLinkOldDevice = () => {
+  initSyncMailbox = () => {
     this.setState(
       {
         message: messages.encryptingMailbox,
-        pauseAt: 25,
-        lastStep: STEPS.NOT_STARTED
+        pauseAt: 30
       },
-      async () => {
+      () => {
         this.incrementPercentage();
-        await setTimeout(async () => {
+        setTimeout(async () => {
           await this.exportDatabase();
         }, ANIMATION_DURATION);
       }
@@ -157,15 +148,14 @@ class LinkOldDeviceWrapper extends Component {
       await startSocket();
       this.setState(
         {
-          message: messages.gettingKeys,
-          pauseAt: 50,
-          delay: (50 - this.state.percent) / ANIMATION_DURATION,
-          lastStep: STEPS.ENCRYPT_MAILBOX
+          message: messages.uploadingMailbox,
+          pauseAt: 70,
+          delay: (70 - this.state.percent) / ANIMATION_DURATION,
+          isCancelable: false
         },
         async () => {
           this.incrementPercentage();
-          const { session, deviceId } = this.state.remoteData;
-          const { randomId } = session;
+          const { randomId, deviceId } = this.state.remoteData;
           await this.uploadFile(randomId, deviceId, key);
         }
       );
@@ -193,9 +183,8 @@ class LinkOldDeviceWrapper extends Component {
       this.setState(
         {
           message: messages.uploadingMailbox,
-          pauseAt: 75,
-          delay: (75 - this.state.percent) / ANIMATION_DURATION,
-          lastStep: STEPS.GETTING_KEYS
+          pauseAt: 90,
+          delay: (90 - this.state.percent) / ANIMATION_DURATION
         },
         async () => {
           this.incrementPercentage();
@@ -207,8 +196,7 @@ class LinkOldDeviceWrapper extends Component {
             {
               message: messages.uploadSuccess,
               pauseAt: 100,
-              delay: (100 - this.state.percent) / ANIMATION_DURATION,
-              lastStep: STEPS.UPLOAD_MAILBOX
+              delay: (100 - this.state.percent) / ANIMATION_DURATION
             },
             async () => {
               this.incrementPercentage();
@@ -248,4 +236,4 @@ class LinkOldDeviceWrapper extends Component {
   };
 }
 
-export { LinkOldDeviceWrapper as default, STEPS };
+export { SyncMailboxWrapper as default, STEPS };

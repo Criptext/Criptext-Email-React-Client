@@ -1,5 +1,8 @@
 {
-  "messagelostAllDevices": "You can also login using your password, however you won't have access \nto any email history that's stored on your verified devices",
+  "messagelostAllDevices": {
+    "text": "Mailbox data from existing devices won't be synced and your mailbox will be empty. However, Mailbox Sync is also available in Settings menu.",
+    "strong": "Would you like to sign in with password anyway?"
+  },
   "messageEmptyRecoveryEmail": {
     "preffix": "You did not set a",
     "strong": "Recovery Email",

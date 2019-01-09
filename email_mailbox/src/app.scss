@@ -615,7 +615,8 @@ h2{
     .button-a {
       height: 28px;
       text-transform: capitalize;
-      width: 75px;
+      width: auto;
+      padding: 0px 13px;
 
       &.popup-cancel-button {
         background-color: transparent;
@@ -734,6 +735,17 @@ button{
   
     span{
       font-size: 13px;
+    }
+  }
+
+  &.button-c {
+    color: #0091ff;
+    background-color: transparent;
+
+    span {
+      font-size: 13px;
+      text-decoration: underline;
+      text-decoration-color: #0091ff;
     }
   }
 }

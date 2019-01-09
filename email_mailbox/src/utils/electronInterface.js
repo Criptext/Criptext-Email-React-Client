@@ -7,6 +7,7 @@ const { getCurrentWindow } = remote;
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const newsClient = remote.require('./src/newsClient');
+const dataTransferManager = remote.require('./src/dataTransferClient');
 
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
@@ -69,6 +70,22 @@ export const getNews = ({ code }) => {
   return newsClient.getNews({ code });
 };
 
+export const clearSyncData = () => {
+  return dataTransferManager.clearSyncData();
+};
+
+export const decryptBackupFile = key => {
+  return dataTransferManager.decrypt(key);
+};
+
+export const downloadBackupFile = address => {
+  return dataTransferManager.download(address);
+};
+
+export const importDatabase = () => {
+  return dataTransferManager.importDatabase();
+};
+
 /*  Criptext Client
 ----------------------------- */
 export const changePassword = params => {
@@ -125,6 +142,22 @@ export const setReadTracking = enabled => {
 
 export const setTwoFactorAuth = enable => {
   return clientManager.setTwoFactorAuth(enable);
+};
+
+export const syncAccept = randomId => {
+  return clientManager.syncAccept(randomId);
+};
+
+export const syncBegin = () => {
+  return clientManager.syncBegin();
+};
+
+export const syncDeny = randomId => {
+  return clientManager.syncDeny(randomId);
+};
+
+export const syncStatus = () => {
+  return clientManager.syncStatus();
 };
 
 export const unlockDevice = params => {

@@ -1,4 +1,4 @@
-const { app, ipcMain, Menu, BrowserWindow, Tray } = require('electron');
+const { app, ipcMain, Menu, Tray } = require('electron');
 const osLocale = require('os-locale');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
@@ -22,7 +22,7 @@ require('./src/ipc/login.js');
 require('./src/ipc/mailbox.js');
 require('./src/ipc/database.js');
 require('./src/ipc/client.js');
-require('./src/ipc/utils.js');
+const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
 let tray = null;
@@ -67,54 +67,20 @@ async function initApp() {
   // Socket
   wsClient.setMessageListener(async data => {
     const SIGNIN_VERIFICATION_REQUEST_COMMAND = 201;
+    const MANUAL_SYNC_REQUEST_COMMAND = 211;
+    // This validation is for closed-mailbox case
     if (data.cmd === SIGNIN_VERIFICATION_REQUEST_COMMAND) {
-      await sendLinkDeviceStartEventToAllWindows(data);
+      await ipcUtils.sendLinkDeviceStartEventToAllWindows(data);
+    }
+    else if (data.cmd === MANUAL_SYNC_REQUEST_COMMAND) {
+      await ipcUtils.sendSyncMailboxStartEventToAllWindows(data);
     } else {
       mailboxWindow.send('socket-message', data);
       loginWindow.send('socket-message', data);
       loadingWindow.send('socket-message', data);
     }
   });
-
-  // Link devices
-  ipcMain.on('start-link-devices-event', async (ev, data) => {
-    await sendLinkDeviceStartEventToAllWindows(data);
-  });
-
-  ipcMain.on('end-link-devices-event', async (ev, data) => {
-    await sendLinkDeviceEndEventToAllWindows(data);
-  });
 }
-
-const sendLinkDeviceStartEventToAllWindows = async data => {
-  const clientManager = require('./src/clientManager');
-  globalManager.windowsEvents.disable();
-  sendEventToAllwWindows('disable-window-link-devices');
-  globalManager.loadingData.set({
-    loadingType: 'link-device-request',
-    remoteData: data.params.newDeviceInfo
-  });
-  loadingWindow.show();
-  return await clientManager.acknowledgeEvents([data.rowid]);
-};
-
-const sendLinkDeviceEndEventToAllWindows = () => {
-  globalManager.windowsEvents.enable();
-  sendEventToAllwWindows('enable-window-link-devices');
-};
-
-const sendEventToAllwWindows = eventName => {
-  const openedWindows = BrowserWindow.getAllWindows();
-  return openedWindows.forEach(openWindow => {
-    openWindow.webContents.send(eventName);
-  });
-};
-
-const saveScreenSize = () => {
-  const screenSize = require('electron').screen.getPrimaryDisplay()
-    .workAreaSize;
-  globalManager.screenSize.save(screenSize);
-};
 
 //   App
 app.disableHardwareAcceleration();
@@ -163,11 +129,11 @@ app.on('ready', () => {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
   initApp();
-  saveScreenSize();
 });
 
 app.on('window-all-closed', () => {
   destroyTrayIcon();
+  require('./src/socketClient').disconnect();
   if (process.platform !== 'darwin') {
     app.quit();
   }

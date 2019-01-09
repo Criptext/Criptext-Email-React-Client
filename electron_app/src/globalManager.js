@@ -7,7 +7,6 @@ global.emailToEdit = {};
 global.isMAS = currrentInstallerType === allInstallerTypes.mac.store;
 global.loadingData = {};
 global.modalData = {};
-global.screenSize = {};
 global.temporalAccount = {};
 global.windowsEventsDisabled = false;
 global.internetConnection;
@@ -81,14 +80,6 @@ const deleteTemporalAccountData = () => {
   delete global.temporalAccount;
 };
 
-const saveScreenSize = size => {
-  global.screenSize = size;
-};
-
-const getScreenSize = () => {
-  return global.screenSize;
-};
-
 /*  Windows Events
 ----------------------------- */
 const disableWindowsEvents = () => {
@@ -142,10 +133,6 @@ module.exports = {
     get: getTemporalAccountData,
     set: setTemporalAccountData,
     delete: deleteTemporalAccountData
-  },
-  screenSize: {
-    get: getScreenSize,
-    save: saveScreenSize
   },
   windowsEvents: {
     disable: disableWindowsEvents,

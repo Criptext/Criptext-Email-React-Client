@@ -1,5 +1,10 @@
 const ClientAPI = require('@criptext/api');
-const { DEV_SERVER_URL, PROD_SERVER_URL } = require('./utils/const');
+const {
+  DEV_SERVER_URL,
+  PROD_SERVER_URL,
+  API_CLIENT_VERSION,
+  LINK_DEVICES_FILE_VERSION
+} = require('./utils/const');
 const {
   createPendingEvent,
   getAccount,
@@ -22,7 +27,7 @@ const initializeClient = ({ token, refreshToken, language, os }) => {
     token,
     refreshToken,
     timeout: 60 * 1000,
-    version: '4.0.0',
+    version: API_CLIENT_VERSION,
     language,
     appVersion,
     os
@@ -216,10 +221,11 @@ const parseUserSettings = settings => {
 };
 
 const linkAccept = async randomId => {
-  const res = await client.linkAccept({ randomId });
+  const data = { randomId, version: LINK_DEVICES_FILE_VERSION };
+  const res = await client.linkAccept(data);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, linkAccept, randomId);
+    : await checkExpiredSession(res, linkAccept, data);
 };
 
 const linkAuth = async ({ newDeviceData, jwt }) => {
@@ -228,7 +234,8 @@ const linkAuth = async ({ newDeviceData, jwt }) => {
 };
 
 const linkBegin = async username => {
-  return await client.linkBegin(username);
+  const data = { targetUsername: username, version: LINK_DEVICES_FILE_VERSION };
+  return await client.linkBegin(data);
 };
 
 const linkDeny = async randomId => {
@@ -364,6 +371,36 @@ const setTwoFactorAuth = async enable => {
     : await checkExpiredSession(res, setTwoFactorAuth, enable);
 };
 
+const syncAccept = async randomId => {
+  const version = LINK_DEVICES_FILE_VERSION;
+  const res = await client.syncAccept({ version, randomId });
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, syncAccept, randomId);
+};
+
+const syncBegin = async () => {
+  const version = LINK_DEVICES_FILE_VERSION;
+  const res = await client.syncBegin({ version });
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, syncBegin, null);
+};
+
+const syncDeny = async randomId => {
+  const res = await client.syncDeny(randomId);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, syncDeny, randomId);
+};
+
+const syncStatus = async () => {
+  const res = await client.syncStatus();
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, syncStatus, null);
+};
+
 const unlockDevice = async params => {
   const res = await client.unlockDevice(params);
   return res.status === 200
@@ -420,6 +457,10 @@ module.exports = {
   resetPassword,
   setReadTracking,
   setTwoFactorAuth,
+  syncAccept,
+  syncBegin,
+  syncDeny,
+  syncStatus,
   unlockDevice,
   updateName,
   unsendEmail

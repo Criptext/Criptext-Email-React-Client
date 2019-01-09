@@ -32,7 +32,9 @@ import {
   openFilledComposerWindow,
   processPendingEvents,
   showNotificationApp,
-  updateEmail
+  updateEmail,
+  sendStartSyncDeviceEvent,
+  sendStartLinkDevicesEvent
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -204,6 +206,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.DEVICE_LINK_AUTHORIZATION_REQUEST: {
       return handleLinkDeviceRequest(incomingEvent);
+    }
+    case SocketCommand.SYNC_DEVICE_REQUEST: {
+      return handleSyncDeviceRequest(incomingEvent);
     }
     case SocketCommand.DEVICE_REMOVED: {
       return handlePeerRemoveDevice(incomingEvent);
@@ -520,7 +525,11 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
 };
 
 const handleLinkDeviceRequest = ({ rowid, params }) => {
-  ipcRenderer.send('start-link-devices-event', { rowid, params });
+  sendStartLinkDevicesEvent({ rowid, params });
+};
+
+const handleSyncDeviceRequest = ({ rowid, params }) => {
+  sendStartSyncDeviceEvent({ rowid, params });
 };
 
 const handlePeerRemoveDevice = async ({ rowid }) => {
@@ -1043,6 +1052,18 @@ export const checkUserGuideSteps = stepsNames => {
   }
 };
 
+export const sendSetSectionTypeEvent = (type, mailboxSelected) => {
+  emitter.emit(Event.SET_SECTION_TYPE, type, mailboxSelected);
+};
+
+export const sendManualSyncSuccessMessage = () => {
+  const messageData = {
+    ...Messages.success.manualSync,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
@@ -1077,5 +1098,6 @@ export const Event = {
   DISABLE_WINDOW: 'add-window-overlay',
   ENABLE_WINDOW: 'remove-window-overlay',
   ACCOUNT_DELETED: 'account-deleted',
-  SHOW_USER_GUIDE_STEP: 'show-user-guide-step'
+  SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
+  SET_SECTION_TYPE: 'set-section-type'
 };

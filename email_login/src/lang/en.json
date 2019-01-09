@@ -94,7 +94,7 @@
       "acceptLabel": "Confirm"
     },
     "confirmLostDevices": {
-      "title": "Password login",
+      "title": "Warning",
       "cancelLabel": "Cancel",
       "acceptLabel": "Continue"
     },

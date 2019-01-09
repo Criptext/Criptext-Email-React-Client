@@ -1,0 +1,122 @@
+.loading {
+  width: 43px;
+  height: 43px;
+  padding: 3px;
+  margin: 0px auto 60px auto;
+  font-size: 28px;
+  color: rgba(0, 145, 255, 0.44);
+
+  .icon-clock {
+    position: relative;
+    top: 35px;
+    left: -1px;
+    transform: rotate(20deg);
+  }
+
+  .loader {
+    width: 32px;
+    height: 32px;
+    border-left: 4px solid rgba(0, 145, 255, 0.44);;
+    border-bottom: 4px solid rgba(0, 145, 255, 0.44);;
+    border-top: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-radius: 50%;
+    animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  }
+
+  .loader-arrow {
+    width: 0;
+    height: 0;
+    position: relative;
+    top: -3px;
+    left: 0px;
+    margin: 0px;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid rgba(0, 145, 255, 0.44);;
+    transform: rotate(-60deg);
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+.roller {
+  position: relative;
+  top: -40px;
+  width: 40px;
+  height: 40px;
+}
+.roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 20px 20px;
+}
+.roller div:after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 4px;
+  height: 4px;
+  background-color: rgba(0, 145, 255, 0.44);;
+  border-radius: 100%;
+}
+.roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.roller div:nth-child(1):after {
+  top: 29px;
+  left: 33px;
+}
+.roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.roller div:nth-child(2):after {
+  top: 22px;
+  left: 36px;
+}
+.roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.roller div:nth-child(3):after {
+  top: 13px;
+  left: 35px;
+}
+.roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.roller div:nth-child(4):after {
+  background-color: rgba(0, 145, 255, 0.352);
+  top: 6px;
+  left: 31px;
+}
+.roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.roller div:nth-child(5):after {
+  background-color: rgba(0, 145, 255, 0.264);
+  top: 1px;
+  left: 24px;
+}
+.roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.roller div:nth-child(6):after {
+  background-color: rgba(0, 145, 255, 0.220);
+  top: 0px;
+  left: 15px;
+}
+
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

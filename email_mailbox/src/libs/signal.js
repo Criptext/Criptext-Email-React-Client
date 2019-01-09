@@ -68,7 +68,26 @@ const decryptFileKey = async ({
   return util.toString(binaryText);
 };
 
+const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
+  if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
+    return text;
+  }
+  const textEncrypted = util.toArrayBufferFromBase64(text);
+  const addressFrom = new libsignal.SignalProtocolAddress(
+    recipientId,
+    deviceId
+  );
+  const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
+  const binaryText = await decryptMessage(
+    sessionCipher,
+    textEncrypted,
+    messageType
+  );
+  return binaryText;
+};
+
 export default {
   decryptEmail,
-  decryptFileKey
+  decryptFileKey,
+  decryptKey
 };
