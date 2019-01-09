@@ -1,5 +1,6 @@
 import { File } from './types';
 import * as db from '../utils/electronInterface';
+import { getFilesByTokens } from '../utils/ipc';
 import { AttachItemStatus } from '../components/AttachItem';
 
 export const addFiles = files => {
@@ -12,7 +13,7 @@ export const addFiles = files => {
 export const loadFiles = tokens => {
   return async dispatch => {
     try {
-      const response = await db.getFilesByTokens(tokens);
+      const response = await getFilesByTokens(tokens);
       const files = response.reduce(
         (result, file) => ({
           ...result,

@@ -75,6 +75,14 @@ ipc.answerRenderer('db-get-all-feed-items', () => dbManager.getAllFeedItems());
 
 ipc.answerRenderer('db-get-all-labels', () => dbManager.getAllLabels());
 
+ipc.answerRenderer('db-get-contact-by-emails', emails =>
+  dbManager.getContactByEmails(emails)
+);
+
+ipc.answerRenderer('db-get-contact-by-ids', ids =>
+  dbManager.getContactByIds(ids)
+);
+
 ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));
 
 ipc.answerRenderer('db-get-emails-by-ids', emailIds =>
@@ -115,16 +123,12 @@ ipc.answerRenderer('db-get-emails-unread-by-labelid', params =>
   dbManager.getEmailsUnredByLabelId(params)
 );
 
-ipc.answerRenderer('db-get-contact-by-emails', emails =>
-  dbManager.getContactByEmails(emails)
-);
-
-ipc.answerRenderer('db-get-contact-by-ids', ids =>
-  dbManager.getContactByIds(ids)
-);
-
 ipc.answerRenderer('db-get-files-by-emailid', emailId =>
   dbManager.getFilesByEmailId(emailId)
+);
+
+ipc.answerRenderer('db-get-files-by-tokens', tokens =>
+  dbManager.getFilesByTokens(tokens)
 );
 
 ipc.answerRenderer('db-get-filekey-by-emailid', emailId =>

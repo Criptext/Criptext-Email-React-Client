@@ -179,10 +179,6 @@ export const cleanDataLogout = async recipientId => {
   return dbManager.createSignalTables();
 };
 
-export const getFilesByTokens = tokens => {
-  return dbManager.getFilesByTokens(tokens);
-};
-
 export const getLabelById = id => {
   return dbManager.getLabelById(id);
 };
