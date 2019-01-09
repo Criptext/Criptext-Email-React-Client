@@ -6,7 +6,8 @@ let loadingWindow;
 
 const LINK_DEVICE_LOADING_TYPES = {
   LINK_NEW_DEVICE: 'link-new-device',
-  LINK_OLD_DEVICE: 'link-old-device'
+  LINK_OLD_DEVICE: 'link-old-device',
+  MANUAL_SYNC: 'sync-mailbox-request'
 };
 
 const iconPath = path.join(

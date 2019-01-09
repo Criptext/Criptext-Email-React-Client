@@ -60,6 +60,14 @@ export const updateDockBadgeApp = value => {
   callMain('update-dock-badge', value);
 };
 
+export const sendStartSyncDeviceEvent = data => {
+  callMain('start-sync-mailbox-event', data);
+};
+
+export const sendStartLinkDevicesEvent = data => {
+  callMain('start-link-devices-event', data);
+};
+
 /* Criptext Client
    ----------------------------- */
 export const acknowledgeEvents = async eventIds => {

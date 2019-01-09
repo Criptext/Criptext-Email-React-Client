@@ -1,5 +1,5 @@
 import { labels } from './systemLabels';
-const { ipcRenderer, remote } = window.require('electron');
+const { remote } = window.require('electron');
 const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const dataTransferManager = remote.require('./src/dataTransferClient');
@@ -18,10 +18,6 @@ export const { loadingType, remoteData } = remote.getGlobal('loadingData');
 
 export const setRemoteData = data => {
   globalManager.loadingData.set(data);
-};
-
-export const sendEndLinkDevicesEvent = () => {
-  ipcRenderer.send('end-link-devices-event');
 };
 
 export const downloadBackupFile = address => {

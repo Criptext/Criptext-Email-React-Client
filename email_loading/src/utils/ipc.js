@@ -14,6 +14,10 @@ export const throwError = error => {
   callMain('throwError', error);
 };
 
+export const sendEndLinkDevicesEvent = () => {
+  callMain('end-link-devices-event');
+};
+
 /* Criptext Client
 ----------------------------- */
 export const acknowledgeEvents = async eventIds => {

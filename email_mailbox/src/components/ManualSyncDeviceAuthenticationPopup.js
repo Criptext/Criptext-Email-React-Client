@@ -14,44 +14,45 @@ const {
 
 const ManualSyncDeviceAuthenticationPopup = props => (
   <div id="popup-manual-sync-device-authentication" className="popup-content">
-    <div className="content">
-      <div className="content-header popup-title">
-        <h1>{title}</h1>
-      </div>
+    <div className="popup-title">
+      <h1>{title}</h1>
+    </div>
 
-      <div className="message popup-paragraph">
-        <p>{message}</p>
-      </div>
+    <div className="popup-paragraph">
+      <p>{message}</p>
+    </div>
 
-      <div className="loading">
-        <div className="icon-clock" />
-        <div className="loader">
-          <div className="loader-arrow" />
-        </div>
-        <div className="roller">
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-        </div>
+    <div className="loading">
+      <div className="icon-clock" />
+      <div className="loader">
+        <div className="loader-arrow" />
       </div>
-
-      <div className="prompt popup-paragraph">
-        <p>{getPromptLabel}</p>
-        <button
-          className="resend-button"
-          onClick={props.onClickResendLoginRequest}
-        >
-          <span>{buttons.resend}</span>
-        </button>
-      </div>
-
-      <div className="cancel-sync">
-        <span onClick={props.onHideSettingsPopup}>{cancelSyncLabel}</span>
+      <div className="roller">
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
       </div>
     </div>
+
+    <div className="popup-paragraph">
+      <p>{getPromptLabel}</p>
+    </div>
+
+    <div className="popup-buttons">
+      <button
+        className="button-a popup-confirm-button"
+        onClick={props.onClickResendLoginRequest}
+      >
+        <span>{buttons.resend}</span>
+      </button>
+    </div>
+
+    <button className="button button-c">
+      <span onClick={props.onHideSettingsPopup}>{cancelSyncLabel}</span>
+    </button>
   </div>
 );
 

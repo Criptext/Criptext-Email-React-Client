@@ -1,4 +1,4 @@
-const { app, ipcMain, Menu, BrowserWindow, Tray } = require('electron');
+const { app, ipcMain, Menu, Tray } = require('electron');
 const osLocale = require('os-locale');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
@@ -66,79 +66,11 @@ async function initApp() {
 
   // Socket
   wsClient.setMessageListener(async data => {
-    const SIGNIN_VERIFICATION_REQUEST_COMMAND = 201;
-    if (data.cmd === SIGNIN_VERIFICATION_REQUEST_COMMAND) {
-      await sendLinkDeviceStartEventToAllWindows(data);
-    } else {
-      mailboxWindow.send('socket-message', data);
-      loginWindow.send('socket-message', data);
-      loadingWindow.send('socket-message', data);
-    }
-  });
-
-  // Link devices
-  ipcMain.on('start-link-devices-event', async (ev, data) => {
-    await sendLinkDeviceStartEventToAllWindows(data);
-  });
-
-  ipcMain.on('end-link-devices-event', async (ev, data) => {
-    await sendLinkDeviceEndEventToAllWindows(data);
-  });
-
-  // Sync Mailbox
-  ipcMain.on('start-sync-mailbox-event', async (ev, data) => {
-    await sendSyncMailboxStartEventToAllWindows(data);
-  });
-
-  ipcMain.on('end-sync-mailbox-event', async (ev, data) => {
-    await sendSyncMailboxEndEventToAllWindows(data);
+    mailboxWindow.send('socket-message', data);
+    loginWindow.send('socket-message', data);
+    loadingWindow.send('socket-message', data);
   });
 }
-
-
-
-const sendEventToAllwWindows = eventName => {
-  const openedWindows = BrowserWindow.getAllWindows();
-  return openedWindows.forEach(openWindow => {
-    openWindow.webContents.send(eventName);
-  });
-};
-
-// Link devices
-const sendLinkDeviceStartEventToAllWindows = async data => {
-  const clientManager = require('./src/clientManager');
-  globalManager.windowsEvents.disable();
-  sendEventToAllwWindows('disable-window-link-devices');
-  globalManager.loadingData.set({
-    loadingType: 'link-device-request',
-    remoteData: data.params.newDeviceInfo
-  });
-  loadingWindow.show();
-  return await clientManager.acknowledgeEvents([data.rowid]);
-};
-
-const sendLinkDeviceEndEventToAllWindows = () => {
-  globalManager.windowsEvents.enable();
-  sendEventToAllwWindows('enable-window-link-devices');
-};
-
-// Sync Mailbox
-const sendSyncMailboxStartEventToAllWindows = async data => {
-  const clientManager = require('./src/clientManager');
-  globalManager.windowsEvents.disable();
-  sendEventToAllwWindows('disable-window-link-devices');
-  globalManager.loadingData.set({
-    loadingType: 'sync-mailbox-request',
-    remoteData: Object.assign(
-      data.params.requestingDeviceInfo, {
-        randomId: data.params.randomId,
-        version: data.params.version,
-      }
-    )
-  });
-  loadingWindow.show();
-  return await clientManager.acknowledgeEvents([data.rowid]);
-};
 
 //   App
 app.disableHardwareAcceleration();

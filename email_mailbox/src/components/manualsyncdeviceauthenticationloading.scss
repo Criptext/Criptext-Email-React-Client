@@ -2,15 +2,14 @@
   width: 43px;
   height: 43px;
   padding: 3px;
-  margin: 0px auto 70px auto;
+  margin: 0px auto 60px auto;
   font-size: 28px;
   color: rgba(0, 145, 255, 0.44);
-  position: relative;
-  top: 25%;
 
   .icon-clock {
     position: relative;
     top: 35px;
+    left: -1px;
     transform: rotate(20deg);
   }
 

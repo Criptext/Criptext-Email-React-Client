@@ -13,7 +13,6 @@ import {
   encryptDatabaseFile,
   uploadDatabaseFile,
   setRemoteData,
-  sendEndLinkDevicesEvent,
   errors
 } from '../utils/electronInterface';
 import {
@@ -21,7 +20,8 @@ import {
   linkAccept,
   linkDeny,
   postDataReady,
-  throwError
+  throwError,
+  sendEndLinkDevicesEvent
 } from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';

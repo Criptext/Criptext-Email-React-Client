@@ -32,7 +32,9 @@ import {
   openFilledComposerWindow,
   processPendingEvents,
   showNotificationApp,
-  updateEmail
+  updateEmail,
+  sendStartSyncDeviceEvent,
+  sendStartLinkDevicesEvent
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -523,11 +525,11 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
 };
 
 const handleLinkDeviceRequest = ({ rowid, params }) => {
-  ipcRenderer.send('start-link-devices-event', { rowid, params });
+  sendStartLinkDevicesEvent({ rowid, params });
 };
 
 const handleSyncDeviceRequest = ({ rowid, params }) => {
-  ipcRenderer.send('start-sync-mailbox-event', { rowid, params });
+  sendStartSyncDeviceEvent({ rowid, params });
 };
 
 const handlePeerRemoveDevice = async ({ rowid }) => {

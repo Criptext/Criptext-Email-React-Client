@@ -1,85 +1,14 @@
 #popup-manual-sync-device-authentication {
   width: 240px;
-  height: 336px;
+  padding-top: 40px;
+  padding-bottom: 30px;
 
-  .content {
-    height: calc(100% - 70px);
-    width: 100%;
+  .popup-buttons {
+    margin-top: 0px;
+    margin-bottom: 10px;
+  }
 
-    > .content-header {
-      text-align: center;
-      position: relative;
-      top: 12%;
-    }
-
-    > .message {
-      width: 95%;
-      margin: 0 auto;
-      text-align: center;
-      position: relative;
-      top: 25%;
-      p {
-        font-size: 13px;
-        margin: 0px;
-      }
-    }
-
-    > .prompt {
-      position: relative;
-      top: 18%;
-      p {
-        margin: 0px;
-        margin-bottom: 5%;
-        font-size: 13px;
-        text-align: center;
-      }
-      .resend-button {
-        border: none;
-        border-radius: 100px;
-        padding: 8.5px;
-        background-color: #0091ff;
-        margin: 0 auto;
-        width: 40%;
-        opacity: 0.9;
-        cursor: pointer;
-
-        > span {
-          color: #fff;
-          font-weight: 800;
-          opacity: 0.9;
-        }
-
-        &:focus {
-          outline: none;
-        }
-        &:hover {
-          opacity: 1;
-          span {
-            opacity: 1;
-          }
-        }
-
-        &:disabled {
-          opacity: 0.5;
-          pointer-events: none;
-        }
-      }
-    }
-
-    > .cancel-sync {
-      font-size: 13px;
-      text-align: center;
-      color: #0091ff;
-      margin: 0 auto;
-      cursor: pointer;
-      position: relative;
-      top: 27%;
-      span {
-        position: relative;
-        top: 15px;
-        text-decoration: underline;
-        text-decoration-color: #0091ff;
-      }
-    }
+  .button-c {
+    margin-top: 20px;
   }
 }
