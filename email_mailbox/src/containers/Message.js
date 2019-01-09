@@ -4,10 +4,13 @@ import MessageWrapper from './../components/MessageWrapper';
 import MessageContent, { actionHandlerKeys } from './../data/message';
 import {
   LabelType,
-  getEmailsByLabelIds,
   confirmPermanentDeleteThread
 } from './../utils/electronInterface';
-import { closeDialogWindow, downloadUpdate } from './../utils/ipc';
+import {
+  closeDialogWindow,
+  downloadUpdate,
+  getEmailsByLabelIds
+} from './../utils/ipc';
 import { SectionType } from '../utils/const';
 import { loadThreads, removeThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';

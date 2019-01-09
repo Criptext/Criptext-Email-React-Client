@@ -146,50 +146,6 @@ export const cleanDataLogout = async recipientId => {
   return dbManager.createSignalTables();
 };
 
-export const getAllLabels = () => {
-  return dbManager.getAllLabels();
-};
-
-export const getContactByEmails = emails => {
-  return dbManager.getContactByEmails(emails);
-};
-
-export const getContactByIds = ids => {
-  return dbManager.getContactByIds(ids);
-};
-
-export const getEmailsByIds = emailIds => {
-  return dbManager.getEmailsByIds(emailIds);
-};
-
-export const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
-  return dbManager.getEmailsByThreadIdAndLabelId(threadIds, labelId);
-};
-
-export const getEmailsByKeys = emailKeys => {
-  return dbManager.getEmailsByKeys(emailKeys);
-};
-
-export const getEmailsByLabelIds = labelIds => {
-  return dbManager.getEmailsByLabelIds(labelIds);
-};
-
-export const getEmailsByThreadId = threadId => {
-  return dbManager.getEmailsByThreadId(threadId);
-};
-
-export const getEmailsCounterByLabelId = labelId => {
-  return dbManager.getEmailsCounterByLabelId(labelId);
-};
-
-export const getEmailsGroupByThreadByParams = params => {
-  return dbManager.getEmailsGroupByThreadByParams(params);
-};
-
-export const getEmailsUnredByLabelId = params => {
-  return dbManager.getEmailsUnredByLabelId(params);
-};
-
 export const getEmailLabelsByEmailId = emailId => {
   return dbManager.getEmailLabelsByEmailId(emailId);
 };

@@ -146,8 +146,55 @@ export const getAllFeedItems = async () => {
   return await callMain('db-get-all-feed-items');
 };
 
+export const getAllLabels = async () => {
+  return await callMain('db-get-all-labels');
+};
+
+export const getContactByEmails = async emails => {
+  return await callMain('db-get-contact-by-emails', emails);
+};
+
+export const getContactByIds = async ids => {
+  return await callMain('db-get-contact-by-ids', ids);
+};
+
 export const getEmailByKey = async key => {
   return await callMain('db-get-email-by-key', key);
+};
+
+export const getEmailsByIds = async emailIds => {
+  return await callMain('db-get-emails-by-ids', emailIds);
+};
+
+export const getEmailsByKeys = async emailKeys => {
+  return await callMain('db-get-emails-by-keys', emailKeys);
+};
+
+export const getEmailsByLabelIds = async labelIds => {
+  return await callMain('db-get-emails-by-labelids', labelIds);
+};
+
+export const getEmailsByThreadId = async threadId => {
+  return await callMain('db-get-emails-by-threadid', threadId);
+};
+
+export const getEmailsByThreadIdAndLabelId = async ({ threadIds, labelId }) => {
+  return await callMain('db-get-emails-by-threadid-and-labelid', {
+    threadIds,
+    labelId
+  });
+};
+
+export const getEmailsCounterByLabelId = async labelId => {
+  return await callMain('db-get-emails-counter-by-labelid', labelId);
+};
+
+export const getEmailsGroupByThreadByParams = async params => {
+  return await callMain('db-get-emails-group-by-thread-by-params', params);
+};
+
+export const getEmailsUnredByLabelId = async params => {
+  return await callMain('db-get-emails-unread-by-labelid', params);
 };
 
 export const getFileKeyByEmailId = async emailId => {

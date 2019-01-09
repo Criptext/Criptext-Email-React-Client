@@ -1,5 +1,5 @@
 import { Contact } from './types';
-import * as db from '../utils/electronInterface';
+import { getContactByIds } from '../utils/ipc';
 
 export const addContacts = contacts => {
   return {
@@ -11,7 +11,7 @@ export const addContacts = contacts => {
 export const loadContacts = ids => {
   return async dispatch => {
     try {
-      const response = await db.getContactByIds(ids);
+      const response = await getContactByIds(ids);
       const contacts = response.reduce(
         (result, element) => ({
           ...result,

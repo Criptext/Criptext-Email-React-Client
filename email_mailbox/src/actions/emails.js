@@ -1,7 +1,5 @@
 import { Email } from './types';
 import {
-  getContactByIds,
-  getEmailsByThreadId,
   setMuteEmailById,
   setUnreadEmailById,
   unsendEmailEvent,
@@ -12,6 +10,8 @@ import {
   createEmailLabel,
   deleteEmailByKeys,
   deleteEmailLabel,
+  getContactByIds,
+  getEmailsByThreadId,
   updateEmail
 } from '../utils/ipc';
 import { loadContacts } from './contacts';
