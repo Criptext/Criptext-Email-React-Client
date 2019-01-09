@@ -73,7 +73,7 @@ class LoginWrapper extends Component {
       errorMessage: '',
       ephemeralToken: undefined,
       hasTwoFactorAuth: undefined,
-      popupContent: null
+      popupContent: undefined
     };
   }
 
@@ -373,18 +373,18 @@ class LoginWrapper extends Component {
   };
 
   dismissPopup = () => {
-    this.setState({ popupContent: null });
+    this.setState({ popupContent: undefined });
   };
 
   handlePopupLeftButton = () => {
     socketClient.disconnect();
-    this.setState({ popupContent: null }, () => {
+    this.setState({ popupContent: undefined }, () => {
       this.goToPasswordLogin();
     });
   };
 
   handlePopupRightButton = () => {
-    this.setState({ popupContent: null }, () => {
+    this.setState({ popupContent: undefined }, () => {
       this.checkLinkStatus();
     });
   };

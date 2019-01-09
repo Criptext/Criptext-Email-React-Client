@@ -31,8 +31,7 @@ class LostDevicesWrapper extends Component {
         password: ''
       },
       disabled: true,
-      isLoading: false,
-      popupContent: null
+      isLoading: false
     };
   }
 
