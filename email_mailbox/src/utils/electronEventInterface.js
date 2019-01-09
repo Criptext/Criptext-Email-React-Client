@@ -8,7 +8,6 @@ import {
   updateAccount,
   updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
-  updateContactByEmail,
   mySettings,
   getNews
 } from './electronInterface';
@@ -32,9 +31,10 @@ import {
   openFilledComposerWindow,
   processPendingEvents,
   showNotificationApp,
-  updateEmail,
   sendStartSyncDeviceEvent,
-  sendStartLinkDevicesEvent
+  sendStartLinkDevicesEvent,
+  updateContactByEmail,
+  updateEmail
 } from './ipc';
 import {
   checkEmailIsTo,

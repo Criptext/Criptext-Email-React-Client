@@ -165,6 +165,10 @@ ipc.answerRenderer('db-get-trash-expired-emails', () =>
   dbManager.getTrashExpiredEmails()
 );
 
+ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>
+  dbManager.updateContactByEmail({ email, name })
+);
+
 ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
 
 ipc.answerRenderer('db-update-identity-key-record', params =>

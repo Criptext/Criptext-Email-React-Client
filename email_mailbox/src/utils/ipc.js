@@ -249,6 +249,10 @@ export const getTrashExpiredEmails = async () => {
   return await callMain('db-get-trash-expired-emails');
 };
 
+export const updateContactByEmail = async ({ email, name }) => {
+  return await callMain('db-update-contact-by-email', { email, name });
+};
+
 export const updateEmail = async params => {
   return await callMain('db-update-email', params);
 };

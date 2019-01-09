@@ -788,13 +788,6 @@ const getEmailsUnredByLabelId = params => {
     .having('allLabels', 'like', `%${labelId}%`);
 };
 
-const getUnreadEmailsByThreadId = threadId => {
-  return db
-    .select('*')
-    .table(Table.EMAIL)
-    .where({ threadId, unread: 1 });
-};
-
 const updateEmail = ({
   id,
   key,
@@ -1177,7 +1170,6 @@ module.exports = {
   getTrashExpiredEmails,
   getFilesByTokens,
   getAppSettings,
-  getUnreadEmailsByThreadId,
   deleteLabelById,
   updateAccount,
   updateContactByEmail,

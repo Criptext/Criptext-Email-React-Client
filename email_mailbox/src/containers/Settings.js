@@ -10,13 +10,16 @@ import {
   myAccount,
   removeDevice,
   updateAccount,
-  updateContactByEmail,
   updateNameEvent,
   resendConfirmationEmail,
   resetPassword,
   setReadTracking
 } from '../utils/electronInterface';
-import { logoutApp, openFilledComposerWindow } from './../utils/ipc';
+import {
+  logoutApp,
+  openFilledComposerWindow,
+  updateContactByEmail
+} from './../utils/ipc';
 import { appDomain, composerEvents } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
 import { formContactSupportEmailContent } from '../utils/EmailUtils';
