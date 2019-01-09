@@ -57,7 +57,7 @@ const approvedDeviceStastus = 200;
 const shouldDisableLogin = state =>
   !!state.errorMessage || state.values.username === '';
 
-const LoginWithPasswordPopup = PopupHOC(DialogPopup)
+const LoginWithPasswordPopup = PopupHOC(DialogPopup);
 const ResetPasswordPopup = PopupHOC(LoginPopup);
 
 class LoginWrapper extends Component {
@@ -78,36 +78,41 @@ class LoginWrapper extends Component {
   }
 
   render() {
-    return <div>
-      {this.renderPopup()}
-      {this.renderSection()}
-    </div>
+    return (
+      <div>
+        {this.renderPopup()}
+        {this.renderSection()}
+      </div>
+    );
   }
 
-  renderPopup = _ => {
+  renderPopup = () => {
     if (!this.state.popupContent) {
-      return null
+      return null;
     }
 
-    switch(this.state.mode) {
+    switch (this.state.mode) {
       case mode.CONTINUE:
-        return <LoginWithPasswordPopup 
-          {...this.state.popupContent} 
-          onLeftButtonClick={this.handlePopupLeftButton} 
-          onRightButtonClick={this.handlePopupRightButton} 
-        />
+        return (
+          <LoginWithPasswordPopup
+            {...this.state.popupContent}
+            onLeftButtonClick={this.handlePopupLeftButton}
+            onRightButtonClick={this.handlePopupRightButton}
+          />
+        );
       case mode.LOST_DEVICES:
-        return <ResetPasswordPopup 
-          {...this.state.popupContent}
-          onDismiss={this.dismissPopup} 
-        />
+        return (
+          <ResetPasswordPopup
+            {...this.state.popupContent}
+            onDismiss={this.dismissPopup}
+          />
+        );
       default:
-        return null
+        return null;
     }
+  };
 
-  }
-
-  renderSection = _ => {
+  renderSection = () => {
     switch (this.state.mode) {
       case mode.SIGNUP:
         return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
@@ -155,7 +160,7 @@ class LoginWrapper extends Component {
           />
         );
     }
-  }
+  };
 
   toggleSignUp = ev => {
     ev.preventDefault();
@@ -355,34 +360,35 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     this.setState({
       popupContent: {
-        title: "Warning",
-        message: "If you sign in using your password your mailbox history from other devices won't be available on this device. Would you like to continue?",
-        leftButtonLabel: "Cancel",
-        rightButtonLabel: "Continue"
+        title: 'Warning',
+        message:
+          "If you sign in using your password your mailbox history from other devices won't be available on this device. Would you like to continue?",
+        leftButtonLabel: 'Cancel',
+        rightButtonLabel: 'Continue'
       }
-    })
+    });
   };
 
   setPopupContent = popupContent => {
-    this.setState({ popupContent })
-  }
+    this.setState({ popupContent });
+  };
 
-  dismissPopup = _ => {
-    this.setState({ popupContent: null })
-  }
+  dismissPopup = () => {
+    this.setState({ popupContent: null });
+  };
 
-  handlePopupLeftButton = _ => {
+  handlePopupLeftButton = () => {
+    socketClient.disconnect();
     this.setState({ popupContent: null }, () => {
-      socketClient.disconnect();
       this.goToPasswordLogin();
-    })
-  }
+    });
+  };
 
-  handlePopupRightButton = _ => {
+  handlePopupRightButton = () => {
     this.setState({ popupContent: null }, () => {
       this.checkLinkStatus();
-    })
-  }
+    });
+  };
 
   handleClickResendLoginRequest = ev => {
     ev.preventDefault();

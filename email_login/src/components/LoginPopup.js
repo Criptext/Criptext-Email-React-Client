@@ -19,32 +19,47 @@ const LoginPopup = props => (
 );
 
 const PopupContent = props => {
-  switch(props.type) {
+  switch (props.type) {
     case Type.FORGOT_LINK: {
-      return <div className="popup-paragraph">
-        <p>{props.prefix}</p>
-        <p><b>{props.email}</b></p>
-        <p>{props.suffix}</p>
-      </div>
+      return (
+        <div className="popup-paragraph">
+          <p>{props.prefix}</p>
+          <p>
+            <b>{props.email}</b>
+          </p>
+          <p>{props.suffix}</p>
+        </div>
+      );
     }
     case Type.EMAIL_NOT_SET: {
-      return <div className="popup-paragraph">
-        <p>{props.message}</p>
-        <p><b>{props.email}</b></p>
-      </div>
+      return (
+        <div className="popup-paragraph">
+          <p>{props.message}</p>
+          <p>
+            <b>{props.email}</b>
+          </p>
+        </div>
+      );
     }
-    default: 
-      return <div className="popup-paragraph">
-        <p><b>{props.message}</b></p>
-      </div>
+    default:
+      return (
+        <div className="popup-paragraph">
+          <p>
+            <b>{props.message}</b>
+          </p>
+        </div>
+      );
   }
-}
+};
 
+// eslint-disable-next-line fp/no-mutation
 LoginPopup.propTypes = {
   onDismiss: PropTypes.func,
   suffix: PropTypes.string,
   prefix: PropTypes.string,
   message: PropTypes.string,
+  email: PropTypes.string,
+  title: PropTypes.string,
   dismissButtonLabel: PropTypes.string
 };
 
@@ -52,6 +67,6 @@ export const Type = {
   DEFAULT: 'DEFAULT',
   FORGOT_LINK: 'FORGOT_LINK',
   EMAIL_NOT_SET: 'EMAIL_NOT_SET'
-}
+};
 
 export default LoginPopup;

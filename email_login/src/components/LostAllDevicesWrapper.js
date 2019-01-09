@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
-import {
-  errors,
-  login,
-  resetPassword
-} from './../utils/electronInterface';
+import { errors, login, resetPassword } from './../utils/electronInterface';
 import {
   closeLoginWindow,
   openCreateKeysLoadingWindow,
@@ -158,9 +154,9 @@ class LostDevicesWrapper extends Component {
     const recipientId = this.state.values.username;
     const { status, text } = await resetPassword(recipientId);
     const customText = this.getForgotPasswordMessage(status, text);
-    const messages = passwordLogin.forgotPasswordMessage
-    switch(status){
-      case 200: 
+    const messages = passwordLogin.forgotPasswordMessage;
+    switch (status) {
+      case 200:
         return this.props.setPopupContent({
           title: messages.title,
           prefix: messages.prefix,
@@ -168,29 +164,29 @@ class LostDevicesWrapper extends Component {
           dismissButtonLabel: messages.dismissButtonLabel,
           email: customText,
           type: Type.FORGOT_LINK
-        })
-      case 400: 
+        });
+      case 400:
         return this.props.setPopupContent({
           title: messages.notSetError.title,
           dismissButtonLabel: messages.notSetError.dismissButtonLabel,
           message: messages.notSetError.message,
           email: 'support@criptext.com',
           type: Type.EMAIL_NOT_SET
-        })
-      default: 
+        });
+      default:
         return this.props.setPopupContent({
           title: messages.fallbackError.title,
           dismissButtonLabel: messages.fallbackError.dismissButtonLabel,
           message: messages.fallbackError.message
-        })
+        });
     }
   };
 
   onDismissPopup = () => {
     this.setState({
       popupContent: null
-    })
-  }
+    });
+  };
 
   getForgotPasswordMessage = (status, text) => {
     if (status === 200) {

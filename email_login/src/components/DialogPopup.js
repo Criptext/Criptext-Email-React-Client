@@ -25,14 +25,17 @@ const LoginPopup = props => (
 );
 
 const PopupContent = props => {
-  switch(props.type) {
-    default: 
-      return <div className="popup-paragraph">
-        <p>{props.message}</p>
-      </div>
+  switch (props.type) {
+    default:
+      return (
+        <div className="popup-paragraph">
+          <p>{props.message}</p>
+        </div>
+      );
   }
-}
+};
 
+// eslint-disable-next-line fp/no-mutation
 LoginPopup.propTypes = {
   onDismiss: PropTypes.func,
   suffix: PropTypes.string,
