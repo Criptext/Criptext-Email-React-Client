@@ -20,14 +20,14 @@ const LoginPopup = props => (
 
 const PopupContent = props => {
   switch(props.type) {
-    case 'ForgotLink': {
+    case Type.FORGOT_LINK: {
       return <div className="popup-paragraph">
         <p>{props.prefix}</p>
         <p><b>{props.email}</b></p>
         <p>{props.suffix}</p>
       </div>
     }
-    case 'EmailNotSet': {
+    case Type.EMAIL_NOT_SET: {
       return <div className="popup-paragraph">
         <p>{props.message}</p>
         <p><b>{props.email}</b></p>
@@ -47,5 +47,11 @@ LoginPopup.propTypes = {
   message: PropTypes.string,
   dismissButtonLabel: PropTypes.string
 };
+
+export const Type = {
+  DEFAULT: 'DEFAULT',
+  FORGOT_LINK: 'FORGOT_LINK',
+  EMAIL_NOT_SET: 'EMAIL_NOT_SET'
+}
 
 export default LoginPopup;

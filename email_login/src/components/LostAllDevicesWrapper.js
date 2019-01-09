@@ -3,21 +3,19 @@ import PropTypes from 'prop-types';
 import { validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
 import {
-  confirmForgotPasswordEmptyEmail,
   errors,
   login,
   resetPassword
 } from './../utils/electronInterface';
 import {
-  closeDialogWindow,
   closeLoginWindow,
   openCreateKeysLoadingWindow,
   throwError
 } from './../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
-import { localize } from '../utils/StringUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 import string from './../lang';
+import { Type } from './LoginPopup';
 
 const { passwordLogin } = string;
 
@@ -162,38 +160,29 @@ class LostDevicesWrapper extends Component {
     const customText = this.getForgotPasswordMessage(status, text);
     const messages = passwordLogin.forgotPasswordMessage
     switch(status){
-      case 200: {
-        return this.setState({
-          popupContent: {
-            title: messages.title,
-            prefix: messages.prefix,
-            suffix: messages.suffix,
-            dismissButtonLabel: messages.dismissButtonLabel,
-            email: customText,
-            type: 'ForgotLink'
-          }
+      case 200: 
+        return this.props.setPopupContent({
+          title: messages.title,
+          prefix: messages.prefix,
+          suffix: messages.suffix,
+          dismissButtonLabel: messages.dismissButtonLabel,
+          email: customText,
+          type: Type.FORGOT_LINK
         })
-      }
-      case 400: {
-        return this.setState({
-          popupContent: {
-            title: messages.notSetError.title,
-            dismissButtonLabel: messages.notSetError.dismissButtonLabel,
-            message: messages.notSetError.message,
-            email: 'support@criptext.com',
-            type: 'EmailNotSet'
-          }
+      case 400: 
+        return this.props.setPopupContent({
+          title: messages.notSetError.title,
+          dismissButtonLabel: messages.notSetError.dismissButtonLabel,
+          message: messages.notSetError.message,
+          email: 'support@criptext.com',
+          type: Type.EMAIL_NOT_SET
         })
-      }
-      default: {
-        return this.setState({
-          popupContent: {
-            title: messages.fallbackError.title,
-            dismissButtonLabel: messages.fallbackError.dismissButtonLabel,
-            message: messages.fallbackError.message
-          }
+      default: 
+        return this.props.setPopupContent({
+          title: messages.fallbackError.title,
+          dismissButtonLabel: messages.fallbackError.dismissButtonLabel,
+          message: messages.fallbackError.message
         })
-      }
     }
   };
 

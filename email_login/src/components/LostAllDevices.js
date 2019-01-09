@@ -3,16 +3,11 @@ import PropTypes from 'prop-types';
 import { appDomain } from '../utils/const';
 import string from './../lang';
 import './lostAllDevices.scss';
-import PopupHOC from './PopupHOC';
-import LoginPopup from './LoginPopup';
 
 const { passwordLogin } = string;
 
-const ResetPasswordPopup = PopupHOC(LoginPopup);
-
 const LostAllDevices = props => (
   <div className="lost">
-    {props.popupContent && <ResetPasswordPopup onDismiss={props.onDismissPopup} {...props.popupContent}/>}
     {renderHeader(props)}
     {renderSubHeader(props)}
     {renderForm(props)}

@@ -5,7 +5,6 @@ import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
   checkAvailableUsername,
-  confirmLostDevices,
   createTemporalAccount,
   deleteTemporalAccount,
   linkBegin,
@@ -16,7 +15,6 @@ import {
   confirmWaitingApprovalLogin
 } from './../utils/electronInterface';
 import {
-  closeDialogWindow,
   closeLoginWindow,
   getComputerName,
   openCreateKeysLoadingWindow,
@@ -27,6 +25,10 @@ import { DEVICE_TYPE } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
 import string from './../lang';
+
+import PopupHOC from './PopupHOC';
+import DialogPopup from './DialogPopup';
+import LoginPopup from './LoginPopup';
 
 const { login } = string;
 
@@ -55,6 +57,9 @@ const approvedDeviceStastus = 200;
 const shouldDisableLogin = state =>
   !!state.errorMessage || state.values.username === '';
 
+const LoginWithPasswordPopup = PopupHOC(DialogPopup)
+const ResetPasswordPopup = PopupHOC(LoginPopup);
+
 class LoginWrapper extends Component {
   constructor() {
     super();
@@ -73,6 +78,36 @@ class LoginWrapper extends Component {
   }
 
   render() {
+    return <div>
+      {this.renderPopup()}
+      {this.renderSection()}
+    </div>
+  }
+
+  renderPopup = _ => {
+    if (!this.state.popupContent) {
+      return null
+    }
+
+    switch(this.state.mode) {
+      case mode.CONTINUE:
+        return <LoginWithPasswordPopup 
+          {...this.state.popupContent} 
+          onLeftButtonClick={this.handlePopupLeftButton} 
+          onRightButtonClick={this.handlePopupRightButton} 
+        />
+      case mode.LOST_DEVICES:
+        return <ResetPasswordPopup 
+          {...this.state.popupContent}
+          onDismiss={this.dismissPopup} 
+        />
+      default:
+        return null
+    }
+
+  }
+
+  renderSection = _ => {
     switch (this.state.mode) {
       case mode.SIGNUP:
         return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
@@ -100,6 +135,8 @@ class LoginWrapper extends Component {
       case mode.LOST_DEVICES:
         return (
           <LostAllDevicesWrapper
+            setPopupContent={this.setPopupContent}
+            dismissPopup={this.dismissPopup}
             usernameValue={this.state.values.username}
             toggleLostAllDevices={ev => this.toggleLostAllDevices(ev)}
             hasTwoFactorAuth={this.state.hasTwoFactorAuth}
@@ -326,9 +363,18 @@ class LoginWrapper extends Component {
     })
   };
 
+  setPopupContent = popupContent => {
+    this.setState({ popupContent })
+  }
+
+  dismissPopup = _ => {
+    this.setState({ popupContent: null })
+  }
+
   handlePopupLeftButton = _ => {
     this.setState({ popupContent: null }, () => {
-      this.checkLinkStatus();
+      socketClient.disconnect();
+      this.goToPasswordLogin();
     })
   }
 

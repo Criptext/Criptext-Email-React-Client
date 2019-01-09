@@ -37,12 +37,3 @@ export const replaceCharacters = (string, positionsToExclude, character) => {
     return replacedString;
   }
 };
-
-export const localize = (string, ...args) => {
-  if (args.length <= 0) {
-    return string
-  }
-  return args.reduce((previousValue, argument, index) => {
-    return previousValue.replace(`%${index}`, argument)
-  }, string) 
-}
