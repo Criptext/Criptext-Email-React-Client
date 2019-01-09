@@ -139,8 +139,10 @@ ipc.answerRenderer('db-get-identity-key-record', params =>
   dbManager.getIdentityKeyRecord(params)
 );
 
-ipc.answerRenderer('db-get-labelid', id =>
-  dbManager.getLabelById(id)
+ipc.answerRenderer('db-get-labelid', id => dbManager.getLabelById(id));
+
+ipc.answerRenderer('db-get-labesls-by-text', text =>
+  dbManager.getLabelsByText(text)
 );
 
 ipc.answerRenderer('db-get-prekey-pair', params =>

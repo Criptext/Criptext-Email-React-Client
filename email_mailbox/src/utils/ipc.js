@@ -229,6 +229,10 @@ export const getLabelById = async id => {
   return await callMain('db-get-labelid', id);
 };
 
+export const getLabelsByText = async text => {
+  return await callMain('db-get-labesls-by-text', text);
+};
+
 export const getPreKeyPair = async params => {
   return await callMain('db-get-prekey-pair', params);
 };

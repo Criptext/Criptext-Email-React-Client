@@ -3,8 +3,7 @@ import {
   setMuteEmailById,
   setUnreadEmailById,
   unsendEmailEvent,
-  postPeerEvent,
-  getLabelsByText
+  postPeerEvent
 } from '../utils/electronInterface';
 import {
   createEmailLabel,
@@ -12,6 +11,7 @@ import {
   deleteEmailLabel,
   getContactByIds,
   getEmailsByThreadId,
+  getLabelsByText,
   updateEmail
 } from '../utils/ipc';
 import { loadContacts } from './contacts';
