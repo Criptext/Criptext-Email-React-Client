@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Login from './Login';
-import SignUpWrapper from './SignUpElectronWrapper';
+import SignUpWrapper from './SignUpWrapper';
 import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
@@ -29,6 +29,7 @@ import string from './../lang';
 import PopupHOC from './PopupHOC';
 import DialogPopup from './DialogPopup';
 import LoginPopup from './LoginPopup';
+import SignUpPopup from './SignUpPopup'
 
 const { login } = string;
 
@@ -59,6 +60,15 @@ const shouldDisableLogin = state =>
 
 const LoginWithPasswordPopup = PopupHOC(DialogPopup);
 const ResetPasswordPopup = PopupHOC(LoginPopup);
+const NoRecoverySignUpPopup = PopupHOC(SignUpPopup);
+
+const commitNewUser = validInputData => {
+  openCreateKeysLoadingWindow({
+    loadingType: 'signup',
+    remoteData: validInputData
+  });
+  closeLoginWindow();
+};
 
 class LoginWrapper extends Component {
   constructor() {
@@ -107,6 +117,14 @@ class LoginWrapper extends Component {
             onDismiss={this.dismissPopup}
           />
         );
+      case mode.SIGNUP:
+        return (
+          <NoRecoverySignUpPopup
+            {...this.state.popupContent}
+            onLeftButtonClick={this.dismissPopup}
+            onRightButtonClick={this.handleSignUpContinue}
+          />
+        );
       default:
         return null;
     }
@@ -115,7 +133,12 @@ class LoginWrapper extends Component {
   renderSection = () => {
     switch (this.state.mode) {
       case mode.SIGNUP:
-        return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
+        return <SignUpWrapper
+          toggleSignUp={ev => this.toggleSignUp(ev)}
+          checkAvailableUsername={checkAvailableUsername}
+          onFormReady={this.onFormReady}
+          onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
+        />
       case mode.CONTINUE:
         return (
           <ContinueLogin
@@ -168,6 +191,39 @@ class LoginWrapper extends Component {
     const nextMode = this.state.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN;
     this.setState({ mode: nextMode });
   };
+
+  onSubmitWithoutRecoveryEmail = validInputData => {
+    this.setState({
+      popupContent: {
+        title: "Warning!",
+        prefix: "You did not set a Recovery Email, so",
+        strong: "account recovery is impossible",
+        suffix: "if you forget your password",
+        leftButtonLabel: "Cancel",
+        rightButtonLabel: "Continue",
+        data: validInputData
+      }
+    })
+  };
+
+  onFormReady = validInputData => {
+    if (validInputData.recoveryEmail === '')
+      return this.onSubmitWithoutRecoveryEmail(validInputData);
+    commitNewUser(validInputData);
+  };
+
+  handleSignUpContinue = () => {
+    const inputData = this.state.popupContent.data
+    console.log(inputData);
+    if (!inputData) {
+      return
+    }
+    this.setState({
+      popupContent: undefined
+    }, () => {
+      commitNewUser(inputData);
+    })
+  }
 
   toggleContinue = ev => {
     ev.preventDefault();
