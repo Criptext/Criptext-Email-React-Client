@@ -5,7 +5,6 @@ import {
   myAccount,
   setInternetConnectionStatus,
   updateEmails,
-  updateAccount,
   updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
   mySettings,
@@ -33,6 +32,7 @@ import {
   showNotificationApp,
   sendStartSyncDeviceEvent,
   sendStartLinkDevicesEvent,
+  updateAccount,
   updateContactByEmail,
   updateEmail
 } from './ipc';

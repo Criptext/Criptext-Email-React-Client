@@ -48,7 +48,7 @@ ipc.answerRenderer('db-delete-emails-by-ids', params =>
 ipc.answerRenderer(
   'db-delete-emails-by-threadid-and-labelid',
   ({ threadIds, labelId }) =>
-    dbManager.deleteEmailsByThreadIdAndLabelId({ threadIds, labelId })
+    dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId)
 );
 
 ipc.answerRenderer('db-delete-feed-item-by-id', feedItemId =>
@@ -163,6 +163,10 @@ ipc.answerRenderer('db-get-signed-prekey', params =>
 
 ipc.answerRenderer('db-get-trash-expired-emails', () =>
   dbManager.getTrashExpiredEmails()
+);
+
+ipc.answerRenderer('db-update-account', params =>
+  dbManager.updateAccount(params)
 );
 
 ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>

@@ -9,7 +9,6 @@ import {
   logout,
   myAccount,
   removeDevice,
-  updateAccount,
   updateNameEvent,
   resendConfirmationEmail,
   resetPassword,
@@ -18,6 +17,7 @@ import {
 import {
   logoutApp,
   openFilledComposerWindow,
+  updateAccount,
   updateContactByEmail
 } from './../utils/ipc';
 import { appDomain, composerEvents } from '../utils/const';

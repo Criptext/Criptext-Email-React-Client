@@ -199,10 +199,6 @@ export const updateEmails = params => {
   return dbManager.updateEmails(params);
 };
 
-export const updateAccount = params => {
-  return dbManager.updateAccount(params);
-};
-
 export const updateLabel = params => {
   return dbManager.updateLabel(params);
 };
