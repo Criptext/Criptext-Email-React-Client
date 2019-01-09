@@ -161,6 +161,10 @@ ipc.answerRenderer('db-get-signed-prekey', params =>
   dbManager.getSignedPreKey(params)
 );
 
+ipc.answerRenderer('db-get-trash-expired-emails', () =>
+  dbManager.getTrashExpiredEmails()
+);
+
 ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
 
 ipc.answerRenderer('db-update-identity-key-record', params =>

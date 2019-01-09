@@ -179,10 +179,6 @@ export const cleanDataLogout = async recipientId => {
   return dbManager.createSignalTables();
 };
 
-export const getTrashExpiredEmails = () => {
-  return dbManager.getTrashExpiredEmails();
-};
-
 export const getUnreadEmailsByThreadId = threadId => {
   return dbManager.getUnreadEmailsByThreadId(threadId);
 };

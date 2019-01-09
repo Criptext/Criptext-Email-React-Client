@@ -245,6 +245,10 @@ export const getSignedPreKey = async params => {
   return await callMain('db-get-signed-prekey', params);
 };
 
+export const getTrashExpiredEmails = async () => {
+  return await callMain('db-get-trash-expired-emails');
+};
+
 export const updateEmail = async params => {
   return await callMain('db-update-email', params);
 };
