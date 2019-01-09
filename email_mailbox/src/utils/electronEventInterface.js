@@ -1,6 +1,5 @@
 import signal from './../libs/signal';
 import {
-  getEmailLabelsByEmailId,
   getEvents,
   getLabelsByText,
   LabelType,
@@ -25,6 +24,7 @@ import {
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   getEmailByKey,
+  getEmailLabelsByEmailId,
   getEmailsByKeys,
   getEmailsByThreadId,
   getContactByEmails,

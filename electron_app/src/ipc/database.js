@@ -107,6 +107,10 @@ ipc.answerRenderer('db-get-emails-group-by-thread-by-params', params =>
   dbManager.getEmailsGroupByThreadByParams(params)
 );
 
+ipc.answerRenderer('db-get-email-labels-by-emailid', emailId =>
+  dbManager.getEmailLabelsByEmailId(emailId)
+);
+
 ipc.answerRenderer('db-get-emails-unread-by-labelid', params =>
   dbManager.getEmailsUnredByLabelId(params)
 );

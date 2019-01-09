@@ -174,6 +174,10 @@ export const getEmailByKey = async key => {
   return await callMain('db-get-email-by-key', key);
 };
 
+export const getEmailLabelsByEmailId = async emailId => {
+  return await callMain('db-get-email-labels-by-emailid', emailId);
+};
+
 export const getEmailsByIds = async emailIds => {
   return await callMain('db-get-emails-by-ids', emailIds);
 };
