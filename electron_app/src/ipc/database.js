@@ -196,3 +196,9 @@ ipc.answerRenderer('db-update-label', params => dbManager.updateLabel(params));
 ipc.answerRenderer('db-update-settings', ({ opened, language, theme }) =>
   dbManager.updateSettings({ opened, language, theme })
 );
+
+ipc.answerRenderer(
+  'db-update-unread-email-by-threadids',
+  ({ threadIds, unread }) =>
+    dbManager.updateUnreadEmailByThreadIds({ threadIds, unread })
+);
