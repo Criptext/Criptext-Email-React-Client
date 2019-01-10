@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import SettingsGeneralTheme from './SettingsGeneralTheme';
-import {
-  reloadWindow,
-  mySettings
-} from '../utils/electronInterface';
-import {
-  updateSettings
-} from '../utils/ipc';
+import { reloadWindow, mySettings } from '../utils/electronInterface';
+import { updateSettings } from '../utils/ipc';
 import string from './../lang';
 
 const { themeLabels } = string.settings;

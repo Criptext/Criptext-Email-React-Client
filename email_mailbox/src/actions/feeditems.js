@@ -1,9 +1,9 @@
 import { FeedItem } from './types';
-import { updateFeedItem } from './../utils/electronInterface';
 import {
   deleteFeedItemById,
   getAllFeedItems,
-  getEmailsByIds
+  getEmailsByIds,
+  updateFeedItem
 } from './../utils/ipc';
 import { getSeenTimestamp } from '../utils/storage';
 
