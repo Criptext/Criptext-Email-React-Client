@@ -175,6 +175,10 @@ ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>
 
 ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
 
+ipc.answerRenderer('db-update-emails', params =>
+  dbManager.updateEmails(params)
+);
+
 ipc.answerRenderer('db-update-identity-key-record', params =>
   dbManager.updateIdentityKeyRecord(params)
 );

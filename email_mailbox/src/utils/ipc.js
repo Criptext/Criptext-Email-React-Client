@@ -261,6 +261,10 @@ export const updateEmail = async params => {
   return await callMain('db-update-email', params);
 };
 
+export const updateEmails = async params => {
+  return await callMain('db-update-emails', params);
+};
+
 export const updateIdentityKeyRecord = async params => {
   return await callMain('db-update-identity-key-record', params);
 };

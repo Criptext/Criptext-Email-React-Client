@@ -5,7 +5,6 @@ import {
   LabelType,
   postOpenEvent,
   postPeerEvent,
-  updateEmails,
   updateUnreadEmailByThreadIds
 } from '../utils/electronInterface';
 import {
@@ -17,7 +16,8 @@ import {
   getEmailsByThreadIdAndLabelId,
   getEmailsGroupByThreadByParams,
   getLabelById,
-  getTrashExpiredEmails
+  getTrashExpiredEmails,
+  updateEmails
 } from '../utils/ipc';
 import { storeValue } from './../utils/storage';
 import {
@@ -496,7 +496,7 @@ export const sendOpenEvent = (
         };
         const { status } = await postPeerEvent(eventParams);
         if (status === 200) {
-          const response = await await updateEmails({
+          const response = await updateEmails({
             keys: myEmailKeysUnread,
             unread: false
           });
