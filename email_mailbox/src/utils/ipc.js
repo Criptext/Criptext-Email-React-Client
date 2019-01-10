@@ -80,6 +80,10 @@ export const cleanDatabase = async () => {
   return await callMain('db-clean-database');
 };
 
+export const cleanDataLogout = async recipientId => {
+  return await callMain('db-clean-data-logout', recipientId);
+};
+
 export const createEmail = async params => {
   return await callMain('db-create-email', params);
 };

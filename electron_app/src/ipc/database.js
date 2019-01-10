@@ -3,6 +3,10 @@ const dbManager = require('./../DBManager');
 
 ipc.answerRenderer('db-clean-database', () => dbManager.cleanDataBase());
 
+ipc.answerRenderer('db-clean-data-logout', recipientId =>
+  dbManager.cleanDataLogout(recipientId)
+);
+
 ipc.answerRenderer('db-create-email', params => dbManager.createEmail(params));
 
 ipc.answerRenderer('db-create-email-label', params =>

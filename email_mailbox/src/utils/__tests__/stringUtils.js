@@ -3,6 +3,7 @@
 import * as utils from './../StringUtils.js';
 import { appDomain } from './../const';
 
+jest.mock('./../../utils/ipc');
 jest.mock('./../../utils/const');
 jest.mock('./../../utils/electronInterface');
 

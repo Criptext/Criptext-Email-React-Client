@@ -1,10 +1,13 @@
 import { labels } from './systemLabels';
-import { createSignalTables, openDialogWindow } from './ipc';
+import {
+  cleanDataLogout as cleanData,
+  createSignalTables,
+  openDialogWindow
+} from './ipc';
 
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const { getCurrentWindow } = remote;
-const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const newsClient = remote.require('./src/newsClient');
 const dataTransferManager = remote.require('./src/dataTransferClient');
@@ -175,6 +178,6 @@ export const unsendEmailEvent = metadataKey => {
 /*  DataBase
 ----------------------------- */
 export const cleanDataLogout = async recipientId => {
-  await dbManager.cleanDataLogout(recipientId);
+  await cleanData(recipientId);
   return createSignalTables();
 };
