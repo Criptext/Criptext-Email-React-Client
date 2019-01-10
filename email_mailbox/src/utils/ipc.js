@@ -108,6 +108,10 @@ export const createSessionRecord = async params => {
   return await callMain('db-create-session-record', params);
 };
 
+export const createSignalTables = async () => {
+  return await callMain('db-create-signal-tables');
+};
+
 export const createSignedPreKeyRecord = async params => {
   return await callMain('db-create-signed-prekey-record', params);
 };
@@ -286,5 +290,8 @@ export const updateSettings = async ({ opened, language, theme }) => {
 };
 
 export const updateUnreadEmailByThreadIds = async ({ threadIds, unread }) => {
-  return await callMain('db-update-unread-email-by-threadids', { threadIds, unread });
+  return await callMain('db-update-unread-email-by-threadids', {
+    threadIds,
+    unread
+  });
 };

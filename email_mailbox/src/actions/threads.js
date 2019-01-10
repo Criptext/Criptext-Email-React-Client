@@ -414,7 +414,10 @@ export const updateUnreadThreads = (threadsParams, unread, labelId) => {
       };
       const { status } = await postPeerEvent(eventParams);
       if (status === 200) {
-        const response = await updateUnreadEmailByThreadIds({threadIds, unread});
+        const response = await updateUnreadEmailByThreadIds({
+          threadIds,
+          unread
+        });
         if (response) {
           dispatch(updateUnreadThreadsSuccess(threadIds, unread));
           if (labelId === LabelType.inbox.id || labelId === LabelType.spam.id)

@@ -29,6 +29,10 @@ ipc.answerRenderer('db-create-session-record', params =>
   dbManager.createSessionRecord(params)
 );
 
+ipc.answerRenderer('db-create-signal-tables', () =>
+  dbManager.createSignalTables()
+);
+
 ipc.answerRenderer('db-create-signed-prekey-record', params =>
   dbManager.createSignedPreKeyRecord(params)
 );

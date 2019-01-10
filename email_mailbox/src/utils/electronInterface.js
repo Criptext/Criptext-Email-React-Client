@@ -1,5 +1,5 @@
 import { labels } from './systemLabels';
-import { openDialogWindow } from './ipc';
+import { createSignalTables, openDialogWindow } from './ipc';
 
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
@@ -176,17 +176,5 @@ export const unsendEmailEvent = metadataKey => {
 ----------------------------- */
 export const cleanDataLogout = async recipientId => {
   await dbManager.cleanDataLogout(recipientId);
-  return dbManager.createSignalTables();
-};
-
-export const setMuteEmailById = (emailId, muteValue) => {
-  return dbManager.updateEmail({ id: emailId, isMuted: muteValue });
-};
-
-export const setUnreadEmailById = (emailId, unreadValue) => {
-  return dbManager.updateEmail({ id: emailId, unread: unreadValue });
-};
-
-export const updateOpenedEmailByKey = ({ key, status }) => {
-  return dbManager.updateEmail({ key, status });
+  return createSignalTables();
 };

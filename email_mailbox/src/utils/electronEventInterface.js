@@ -556,7 +556,10 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
 
 const handlePeerThreadRead = async ({ rowid, params }) => {
   const { threadIds, unread } = params;
-  const res = await updateUnreadEmailByThreadIds({threadIds, unread: !!unread});
+  const res = await updateUnreadEmailByThreadIds({
+    threadIds,
+    unread: !!unread
+  });
   emitter.emit(Event.THREADS_UPDATE_READ, threadIds, !!unread);
   if (res) {
     return rowid;
