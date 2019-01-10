@@ -277,6 +277,10 @@ export const updateIdentityKeyRecord = async params => {
   return await callMain('db-update-identity-key-record', params);
 };
 
+export const updateLabel = async params => {
+  return await callMain('db-update-label', params);
+};
+
 export const updateSettings = async ({ opened, language, theme }) => {
   return await callMain('db-update-settings', { opened, language, theme });
 };
