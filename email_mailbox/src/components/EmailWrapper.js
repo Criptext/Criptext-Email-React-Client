@@ -13,13 +13,15 @@ class EmailWrapper extends Component {
       displayEmail: false,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
-      hideView: false
+      hideView: false,
+      popupContent: undefined
     };
   }
 
   render() {
     return (
       <Email
+        {...this.props}
         buttonUnsendStatus={this.state.buttonUnsendStatus}
         displayEmail={this.state.displayEmail}
         isHiddenPopOverEmailMoreInfo={this.state.isHiddenPopOverEmailMoreInfo}
@@ -30,7 +32,10 @@ class EmailWrapper extends Component {
         onTogglePopOverEmailActions={this.handleTogglePopOverEmailActions}
         onClickEditDraft={this.handleClickEditDraft}
         onClickUnsendButton={this.handleClickUnsendButton}
-        {...this.props}
+        popupContent={this.state.popupContent}
+        handlePopupConfirm={this.handlePopupConfirm}
+        dismissPopup={this.dismissPopup}
+        handleClickPermanentlyDeleteEmail={this.handleClickPermanentlyDeleteEmail}
       />
     );
   }
@@ -105,6 +110,29 @@ class EmailWrapper extends Component {
       }
     );
   };
+
+  handleClickPermanentlyDeleteEmail = () => {
+    this.setState({
+      popupContent: {
+        title: "Warning!",
+        message: "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",
+        leftButtonLabel: "Cancel",
+        rightButtonLabel: "Confirm"
+      }
+    })
+  }
+
+  handlePopupConfirm = ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    this.setState({popupContent: undefined}, this.props.onDeletePermanently)
+  }
+
+  dismissPopup = () => {
+    this.setState({
+      popupContent: undefined
+    })
+  }
 }
 
 EmailWrapper.propTypes = {

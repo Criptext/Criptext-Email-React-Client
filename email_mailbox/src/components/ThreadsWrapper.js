@@ -12,7 +12,8 @@ class ThreadsWrapper extends Component {
       hoverTarget: null,
       labels: [],
       lastMinDate: undefined,
-      tip: ''
+      tip: '',
+      popupContent: undefined
     };
   }
 
@@ -49,6 +50,10 @@ class ThreadsWrapper extends Component {
         onScroll={this.handleScroll}
         onChangeSwitch={this.handleChangeSwitch}
         tip={this.state.tip}
+        popupContent={this.state.popupContent}
+        setPopupContent={this.setPopupContent}
+        dismissPopup={this.dismissPopup}
+        handlePopupConfirm={this.handlePopupConfirm}
       />
     );
   }
@@ -120,6 +125,18 @@ class ThreadsWrapper extends Component {
   handleChangeSwitch = ev => {
     this.props.onUnreadToggle(ev.target.checked);
   };
+
+  handlePopupConfirm = () => {
+    this.setState({popupContent: undefined}, this.props.onEmptyTrash)
+  }
+
+  setPopupContent = popupContent => {
+    this.setState({popupContent})
+  }
+
+  dismissPopup = () => {
+    this.setState({popupContent: undefined})
+  }
 }
 
 ThreadsWrapper.propTypes = {

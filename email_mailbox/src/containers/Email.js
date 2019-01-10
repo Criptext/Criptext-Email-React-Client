@@ -184,17 +184,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
       });
     },
-    onDeletePermanently: ev => {
-      ev.stopPropagation();
-      confirmPermanentDeleteThread(response => {
-        closeDialogWindow();
-        if (response) {
-          const emailsToDelete = [email];
-          dispatch(removeEmails(emailsToDelete)).then(() => {
-            if (ownProps.count === 1) {
-              ownProps.onBackOption();
-            }
-          });
+    onDeletePermanently: () => {
+      const emailsToDelete = [email];
+      dispatch(removeEmails(emailsToDelete)).then(() => {
+        if (ownProps.count === 1) {
+          ownProps.onBackOption();
         }
       });
     },

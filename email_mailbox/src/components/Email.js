@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FileWrapper from './FileWrapper';
 import MenuHOC from './MenuHOC';
+import PopupHOC from './PopupHOC';
+import DialogPopup from './DialogPopup';
 import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
 import ButtonUnsend from './ButtonUnsendWrapper';
@@ -9,12 +11,14 @@ import { EmailStatus } from './../utils/const';
 import string from '../lang';
 import './email.scss';
 
+const DeletePermanenltyPopup = PopupHOC(DialogPopup)
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
 const PopOverEmailActions = MenuHOC(EmailActions);
 const draftText = 'Draft';
 
 const Email = props => (
   <div>
+    {props.popupContent && <DeletePermanenltyPopup popupPosition={{left: '45%', top: '45%'}} {...props.popupContent} onRightButtonClick={props.handlePopupConfirm} onLeftButtonClick={props.dismissPopup} />}
     <div
       className={`email-container ${defineEmailState(
         props.displayEmail,
@@ -150,7 +154,7 @@ const renderEmailInfoExpand = props => (
               onForward={props.onForward}
               onMarkAsSpam={props.onMarkAsSpam}
               onDelete={props.onDelete}
-              onDeletePermanently={props.onDeletePermanently}
+              onDeletePermanently={props.handleClickPermanentlyDeleteEmail}
               onToggleMenu={props.onTogglePopOverEmailActions}
             />
           </i>

@@ -3,8 +3,12 @@ import {
   loadEvents,
   loadThreads,
   filterThreadsByUnread,
-  startLoadThread
+  startLoadThread,
+  removeThreads
 } from '../actions/index';
+import {
+  getEmailsByLabelIds
+} from './../utils/ipc';
 import ThreadsView from '../components/ThreadsWrapper';
 import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';
@@ -96,6 +100,14 @@ const mapDispatchToProps = dispatch => {
     },
     onUnreadToggle: enabled => {
       dispatch(filterThreadsByUnread(enabled));
+    },
+    onEmptyTrash: async () => {
+      const labelId = LabelType.trash.id;
+      const emails = await getEmailsByLabelIds([labelId]);
+      const threadsParams = emails.map(email => ({
+        threadIdDB: email.threadId
+      }));
+      dispatch(removeThreads(threadsParams, labelId));
     }
   };
 };

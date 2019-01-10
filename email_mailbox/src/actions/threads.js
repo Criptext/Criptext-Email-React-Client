@@ -320,7 +320,7 @@ export const removeThreads = (threadsParams, labelId) => {
       const threadIds = threadsParams
         .map(param => param.threadIdDB)
         .filter(item => !(item === null || item === undefined));
-      const emails = await getEmailsByThreadIdAndLabelId(threadIds, labelId);
+      const emails = await getEmailsByThreadIdAndLabelId({threadIds, labelId});
       if (emails.length) {
         const metadataKeys = emails.reduce((result, email) => {
           return [...result, ...email.keys];
