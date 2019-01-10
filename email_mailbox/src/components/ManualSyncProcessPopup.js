@@ -11,7 +11,8 @@ import {
   decryptBackupFile,
   importDatabase,
   clearSyncData,
-  myAccount
+  myAccount,
+  syncBegin
 } from '../utils/electronInterface';
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';
 import { getDataReady, acknowledgeEvents } from '../utils/ipc';
@@ -40,6 +41,7 @@ const CHECK_STATUS_DELAY = 5000;
 const DATA_STATUS_DELAY = 5000;
 const ANIMATION_DURATION = 1500;
 const SHOW_SUCCESS_MESSAGE_DELAY = 1000;
+const AFTER_CLICK_ACTIVATE_BUTTON_DELAY = 2000;
 
 const SYNC_PENDING_STATUS = 491;
 const SYNC_DENIED_STATUS = 493;
@@ -59,7 +61,8 @@ class ManualSyncProcessPopup extends Component {
       delay: 0,
       oldDeviceName: defaultOldDeviceName,
       oldDeviceIcon: 'icon-desktop',
-      isCancelable: true
+      isCancelable: true,
+      disabledSubmitButtons: false
     };
   }
 
@@ -68,8 +71,9 @@ class ManualSyncProcessPopup extends Component {
       case manualSyncModes.WAITING:
         return (
           <ManualSyncDeviceAuthenticationPopup
-            onClickResendLoginRequest={this.props.onClickResendLoginRequest}
+            onClickResendSync={this.handleClickResendSync}
             onHideSettingsPopup={this.props.onHideSettingsPopup}
+            disabledSubmitButtons={this.state.disabledSubmitButtons}
           />
         );
       case manualSyncModes.REJECTED:
@@ -99,23 +103,31 @@ class ManualSyncProcessPopup extends Component {
     this.checkManualSyncStatus();
   }
 
+  handleClickResendSync = () => {
+    this.setState(
+      {
+        disabledSubmitButtons: true
+      },
+      async () => {
+        await syncBegin();
+        setTimeout(() => {
+          this.setState({ disabledSubmitButtons: false });
+        }, AFTER_CLICK_ACTIVATE_BUTTON_DELAY);
+      }
+    );
+  };
+
   checkManualSyncStatus = async () => {
     const { status } = await syncStatus();
     if (status === SYNC_APPROVED_STATUS) {
       clearTimeout(this.checkManualSyncStatusTimeout);
-      this.setState(
-        {
-          mode: manualSyncModes.APPROVED
-        },
-        () => {
-          this.checkDataStatus();
-        }
-      );
+      this.checkDataStatus();
+      this.setState({ mode: manualSyncModes.APPROVED });
+      return;
     } else if (status === SYNC_DENIED_STATUS) {
       clearTimeout(this.checkManualSyncStatusTimeout);
-      this.setState({
-        mode: manualSyncModes.REJECTED
-      });
+      this.setState({ mode: manualSyncModes.REJECTED });
+      return;
     } else if (status === SYNC_PENDING_STATUS) {
       this.checkManualSyncStatusTimeout = setTimeout(() => {
         this.checkManualSyncStatus();

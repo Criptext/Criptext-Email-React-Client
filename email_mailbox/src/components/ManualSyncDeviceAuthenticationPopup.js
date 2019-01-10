@@ -44,9 +44,12 @@ const ManualSyncDeviceAuthenticationPopup = props => (
     <div className="popup-buttons">
       <button
         className="button-a popup-confirm-button"
-        onClick={props.onClickResendLoginRequest}
+        onClick={props.onClickResendSync}
+        disabled={props.disabledSubmitButtons}
       >
-        <span>{buttons.resend}</span>
+        <span>
+          {props.disabledSubmitButtons ? buttons.sending : buttons.resend}
+        </span>
       </button>
     </div>
 
@@ -58,10 +61,8 @@ const ManualSyncDeviceAuthenticationPopup = props => (
 
 // eslint-disable-next-line fp/no-mutation
 ManualSyncDeviceAuthenticationPopup.propTypes = {
-  disabledResendLoginRequest: PropTypes.bool,
-  hasTwoFactorAuth: PropTypes.bool,
-  onClickSignInWithPassword: PropTypes.func,
-  onClickResendLoginRequest: PropTypes.func,
+  disabledSubmitButtons: PropTypes.bool,
+  onClickResendSync: PropTypes.func,
   onHideSettingsPopup: PropTypes.func
 };
 
