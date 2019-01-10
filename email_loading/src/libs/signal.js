@@ -7,8 +7,7 @@ import {
   createContact,
   LabelType,
   createTables,
-  postKeyBundle,
-  updateAccount
+  postKeyBundle
 } from './../utils/electronInterface';
 import {
   cleanDatabase,
@@ -16,7 +15,8 @@ import {
   getAccount,
   getComputerName,
   getKeyBundle,
-  postUser
+  postUser,
+  updateAccount
 } from './../utils/ipc';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';

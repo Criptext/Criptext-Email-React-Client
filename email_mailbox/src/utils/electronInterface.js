@@ -1,10 +1,13 @@
 import { labels } from './systemLabels';
-import { openDialogWindow } from './ipc';
+import {
+  cleanDataLogout as cleanData,
+  createSignalTables,
+  openDialogWindow
+} from './ipc';
 
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const { getCurrentWindow } = remote;
-const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 const newsClient = remote.require('./src/newsClient');
 const dataTransferManager = remote.require('./src/dataTransferClient');
@@ -175,74 +178,6 @@ export const unsendEmailEvent = metadataKey => {
 /*  DataBase
 ----------------------------- */
 export const cleanDataLogout = async recipientId => {
-  await dbManager.cleanDataLogout(recipientId);
-  return dbManager.createSignalTables();
-};
-
-export const getEmailLabelsByEmailId = emailId => {
-  return dbManager.getEmailLabelsByEmailId(emailId);
-};
-
-export const getFilesByTokens = tokens => {
-  return dbManager.getFilesByTokens(tokens);
-};
-
-export const getLabelById = id => {
-  return dbManager.getLabelById(id);
-};
-
-export const getLabelsByText = names => {
-  return dbManager.getLabelsByText(names);
-};
-
-export const getTrashExpiredEmails = () => {
-  return dbManager.getTrashExpiredEmails();
-};
-
-export const getUnreadEmailsByThreadId = threadId => {
-  return dbManager.getUnreadEmailsByThreadId(threadId);
-};
-
-export const updateContactByEmail = ({ email, name }) => {
-  return dbManager.updateContactByEmail({ email, name });
-};
-
-export const updateFeedItem = ({ feedItemId, seen }) => {
-  return dbManager.updateFeedItem({ id: feedItemId, seen });
-};
-
-export const updateFilesByEmailId = ({ emailId, status }) => {
-  return dbManager.updateFilesByEmailId({ emailId, status });
-};
-
-export const setMuteEmailById = (emailId, muteValue) => {
-  return dbManager.updateEmail({ id: emailId, isMuted: muteValue });
-};
-
-export const setUnreadEmailById = (emailId, unreadValue) => {
-  return dbManager.updateEmail({ id: emailId, unread: unreadValue });
-};
-
-export const updateEmails = params => {
-  return dbManager.updateEmails(params);
-};
-
-export const updateAccount = params => {
-  return dbManager.updateAccount(params);
-};
-
-export const updateLabel = params => {
-  return dbManager.updateLabel(params);
-};
-
-export const updateOpenedEmailByKey = ({ key, status }) => {
-  return dbManager.updateEmail({ key, status });
-};
-
-export const updateAppSettings = ({ opened, language, theme }) => {
-  return dbManager.updateAppSettings({ opened, language, theme });
-};
-
-export const updateUnreadEmailByThreadIds = (threadIds, unread) => {
-  return dbManager.updateUnreadEmailByThreadIds({ threadIds, unread });
+  await cleanData(recipientId);
+  return createSignalTables();
 };

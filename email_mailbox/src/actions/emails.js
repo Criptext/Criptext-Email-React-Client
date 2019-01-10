@@ -1,17 +1,12 @@
 import { Email } from './types';
-import {
-  setMuteEmailById,
-  setUnreadEmailById,
-  unsendEmailEvent,
-  postPeerEvent,
-  getLabelsByText
-} from '../utils/electronInterface';
+import { unsendEmailEvent, postPeerEvent } from '../utils/electronInterface';
 import {
   createEmailLabel,
   deleteEmailByKeys,
   deleteEmailLabel,
   getContactByIds,
   getEmailsByThreadId,
+  getLabelsByText,
   updateEmail
 } from '../utils/ipc';
 import { loadContacts } from './contacts';
@@ -88,7 +83,7 @@ export const loadEmails = threadId => {
 export const muteEmail = (emailId, valueToSet) => {
   return async dispatch => {
     try {
-      await setMuteEmailById(emailId, valueToSet);
+      await updateEmail({ id: emailId, isMuted: valueToSet });
       dispatch(muteNotifications(emailId));
     } catch (e) {
       // To do
@@ -99,7 +94,7 @@ export const muteEmail = (emailId, valueToSet) => {
 export const markEmailUnread = (emailId, valueToSet) => {
   return async dispatch => {
     try {
-      await setUnreadEmailById(emailId, valueToSet ? true : false);
+      await updateEmail({ id: emailId, unread: !!valueToSet });
       dispatch(markEmailUnreadSuccess(emailId, valueToSet));
     } catch (e) {
       // To do

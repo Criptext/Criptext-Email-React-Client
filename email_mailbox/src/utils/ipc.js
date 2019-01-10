@@ -80,6 +80,10 @@ export const cleanDatabase = async () => {
   return await callMain('db-clean-database');
 };
 
+export const cleanDataLogout = async recipientId => {
+  return await callMain('db-clean-data-logout', recipientId);
+};
+
 export const createEmail = async params => {
   return await callMain('db-create-email', params);
 };
@@ -106,6 +110,10 @@ export const createPreKeyRecord = async params => {
 
 export const createSessionRecord = async params => {
   return await callMain('db-create-session-record', params);
+};
+
+export const createSignalTables = async () => {
+  return await callMain('db-create-signal-tables');
 };
 
 export const createSignedPreKeyRecord = async params => {
@@ -174,6 +182,10 @@ export const getEmailByKey = async key => {
   return await callMain('db-get-email-by-key', key);
 };
 
+export const getEmailLabelsByEmailId = async emailId => {
+  return await callMain('db-get-email-labels-by-emailid', emailId);
+};
+
 export const getEmailsByIds = async emailIds => {
   return await callMain('db-get-emails-by-ids', emailIds);
 };
@@ -209,12 +221,24 @@ export const getEmailsUnredByLabelId = async params => {
   return await callMain('db-get-emails-unread-by-labelid', params);
 };
 
+export const getFilesByTokens = async tokens => {
+  return await callMain('db-get-files-by-tokens', tokens);
+};
+
 export const getFileKeyByEmailId = async emailId => {
   return await callMain('db-get-filekey-by-emailid', emailId);
 };
 
 export const getIdentityKeyRecord = async params => {
   return await callMain('db-get-identity-key-record', params);
+};
+
+export const getLabelById = async id => {
+  return await callMain('db-get-labelid', id);
+};
+
+export const getLabelsByText = async text => {
+  return await callMain('db-get-labesls-by-text', text);
 };
 
 export const getPreKeyPair = async params => {
@@ -229,10 +253,49 @@ export const getSignedPreKey = async params => {
   return await callMain('db-get-signed-prekey', params);
 };
 
+export const getTrashExpiredEmails = async () => {
+  return await callMain('db-get-trash-expired-emails');
+};
+
+export const updateAccount = async params => {
+  return await callMain('db-update-account', params);
+};
+
+export const updateContactByEmail = async ({ email, name }) => {
+  return await callMain('db-update-contact-by-email', { email, name });
+};
+
 export const updateEmail = async params => {
   return await callMain('db-update-email', params);
 };
 
+export const updateEmails = async params => {
+  return await callMain('db-update-emails', params);
+};
+
+export const updateFeedItem = async ({ feedItemId, seen }) => {
+  return await callMain('db-update-feed-item', { feedItemId, seen });
+};
+
+export const updateFilesByEmailId = async ({ emailId, status }) => {
+  return await callMain('db-update-files-by-emailid', { emailId, status });
+};
+
 export const updateIdentityKeyRecord = async params => {
   return await callMain('db-update-identity-key-record', params);
+};
+
+export const updateLabel = async params => {
+  return await callMain('db-update-label', params);
+};
+
+export const updateSettings = async ({ opened, language, theme }) => {
+  return await callMain('db-update-settings', { opened, language, theme });
+};
+
+export const updateUnreadEmailByThreadIds = async ({ threadIds, unread }) => {
+  return await callMain('db-update-unread-email-by-threadids', {
+    threadIds,
+    unread
+  });
 };

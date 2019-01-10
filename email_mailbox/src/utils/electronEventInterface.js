@@ -1,16 +1,9 @@
 import signal from './../libs/signal';
 import {
-  getEmailLabelsByEmailId,
   getEvents,
-  getLabelsByText,
   LabelType,
   myAccount,
   setInternetConnectionStatus,
-  updateEmails,
-  updateAccount,
-  updateFilesByEmailId,
-  updateUnreadEmailByThreadIds,
-  updateContactByEmail,
   mySettings,
   getNews
 } from './electronInterface';
@@ -25,16 +18,23 @@ import {
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   getEmailByKey,
+  getEmailLabelsByEmailId,
   getEmailsByKeys,
   getEmailsByThreadId,
   getContactByEmails,
+  getLabelsByText,
   logoutApp,
   openFilledComposerWindow,
   processPendingEvents,
   showNotificationApp,
-  updateEmail,
   sendStartSyncDeviceEvent,
-  sendStartLinkDevicesEvent
+  sendStartLinkDevicesEvent,
+  updateAccount,
+  updateContactByEmail,
+  updateEmail,
+  updateEmails,
+  updateFilesByEmailId,
+  updateUnreadEmailByThreadIds
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -556,7 +556,10 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
 
 const handlePeerThreadRead = async ({ rowid, params }) => {
   const { threadIds, unread } = params;
-  const res = await updateUnreadEmailByThreadIds(threadIds, !!unread);
+  const res = await updateUnreadEmailByThreadIds({
+    threadIds,
+    unread: !!unread
+  });
   emitter.emit(Event.THREADS_UPDATE_READ, threadIds, !!unread);
   if (res) {
     return rowid;

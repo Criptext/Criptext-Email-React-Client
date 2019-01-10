@@ -14,7 +14,8 @@ import {
   updateUnreadThreadsSuccess
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
-import { LabelType, updateAppSettings } from '../utils/electronInterface';
+import { LabelType } from '../utils/electronInterface';
+import { updateSettings } from '../utils/ipc';
 import { storeSeenTimestamp } from '../utils/storage';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 
@@ -65,7 +66,7 @@ const mapDispatchToProps = dispatch => {
       );
     },
     onUpdateOpenedAccount: async () => {
-      return await updateAppSettings({ opened: true });
+      return await updateSettings({ opened: true });
     },
     onUpdateTimestamp: () => {
       storeSeenTimestamp();

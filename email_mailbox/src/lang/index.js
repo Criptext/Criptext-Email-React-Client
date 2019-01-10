@@ -1,5 +1,6 @@
 import LocalizedStrings from 'react-localization';
-import { mySettings, updateAppSettings } from '../utils/electronInterface';
+import { mySettings } from '../utils/electronInterface';
+import { updateSettings } from '../utils/ipc';
 import en from './en.json';
 import es from './es.json';
 
@@ -18,7 +19,7 @@ export const languages = [
 
 export const setLang = async lang => {
   string.setLanguage(lang);
-  await updateAppSettings({ language: lang });
+  await updateSettings({ language: lang });
 };
 
 export default string;

@@ -1,5 +1,5 @@
 import { File } from './types';
-import * as db from '../utils/electronInterface';
+import { getFilesByTokens, updateFilesByEmailId } from '../utils/ipc';
 import { AttachItemStatus } from '../components/AttachItem';
 
 export const addFiles = files => {
@@ -12,7 +12,7 @@ export const addFiles = files => {
 export const loadFiles = tokens => {
   return async dispatch => {
     try {
-      const response = await db.getFilesByTokens(tokens);
+      const response = await getFilesByTokens(tokens);
       const files = response.reduce(
         (result, file) => ({
           ...result,
@@ -31,7 +31,7 @@ export const unsendEmailFiles = emailId => {
   return async dispatch => {
     try {
       const status = AttachItemStatus.UNSENT;
-      const dbResponse = await db.updateFilesByEmailId({
+      const dbResponse = await updateFilesByEmailId({
         emailId,
         status
       });

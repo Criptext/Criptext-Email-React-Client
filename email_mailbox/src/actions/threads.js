@@ -2,13 +2,9 @@ import { Thread } from './types';
 import { startLoadSync, stopLoadSync, stopLoadThread } from './activity';
 import { updateBadgeLabels } from './labels';
 import {
-  getLabelById,
-  getTrashExpiredEmails,
   LabelType,
   postOpenEvent,
-  postPeerEvent,
-  updateEmails,
-  updateUnreadEmailByThreadIds
+  postPeerEvent
 } from '../utils/electronInterface';
 import {
   createEmailLabel,
@@ -17,7 +13,11 @@ import {
   deleteEmailsByThreadIdAndLabelId,
   getEmailsByThreadId,
   getEmailsByThreadIdAndLabelId,
-  getEmailsGroupByThreadByParams
+  getEmailsGroupByThreadByParams,
+  getLabelById,
+  getTrashExpiredEmails,
+  updateEmails,
+  updateUnreadEmailByThreadIds
 } from '../utils/ipc';
 import { storeValue } from './../utils/storage';
 import {
@@ -414,7 +414,10 @@ export const updateUnreadThreads = (threadsParams, unread, labelId) => {
       };
       const { status } = await postPeerEvent(eventParams);
       if (status === 200) {
-        const response = await updateUnreadEmailByThreadIds(threadIds, unread);
+        const response = await updateUnreadEmailByThreadIds({
+          threadIds,
+          unread
+        });
         if (response) {
           dispatch(updateUnreadThreadsSuccess(threadIds, unread));
           if (labelId === LabelType.inbox.id || labelId === LabelType.spam.id)
@@ -496,7 +499,7 @@ export const sendOpenEvent = (
         };
         const { status } = await postPeerEvent(eventParams);
         if (status === 200) {
-          const response = await await updateEmails({
+          const response = await updateEmails({
             keys: myEmailKeysUnread,
             unread: false
           });

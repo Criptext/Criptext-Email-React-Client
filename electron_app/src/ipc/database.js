@@ -3,6 +3,10 @@ const dbManager = require('./../DBManager');
 
 ipc.answerRenderer('db-clean-database', () => dbManager.cleanDataBase());
 
+ipc.answerRenderer('db-clean-data-logout', recipientId =>
+  dbManager.cleanDataLogout(recipientId)
+);
+
 ipc.answerRenderer('db-create-email', params => dbManager.createEmail(params));
 
 ipc.answerRenderer('db-create-email-label', params =>
@@ -29,6 +33,10 @@ ipc.answerRenderer('db-create-session-record', params =>
   dbManager.createSessionRecord(params)
 );
 
+ipc.answerRenderer('db-create-signal-tables', () =>
+  dbManager.createSignalTables()
+);
+
 ipc.answerRenderer('db-create-signed-prekey-record', params =>
   dbManager.createSignedPreKeyRecord(params)
 );
@@ -48,7 +56,7 @@ ipc.answerRenderer('db-delete-emails-by-ids', params =>
 ipc.answerRenderer(
   'db-delete-emails-by-threadid-and-labelid',
   ({ threadIds, labelId }) =>
-    dbManager.deleteEmailsByThreadIdAndLabelId({ threadIds, labelId })
+    dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId)
 );
 
 ipc.answerRenderer('db-delete-feed-item-by-id', feedItemId =>
@@ -74,6 +82,14 @@ ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
 ipc.answerRenderer('db-get-all-feed-items', () => dbManager.getAllFeedItems());
 
 ipc.answerRenderer('db-get-all-labels', () => dbManager.getAllLabels());
+
+ipc.answerRenderer('db-get-contact-by-emails', emails =>
+  dbManager.getContactByEmails(emails)
+);
+
+ipc.answerRenderer('db-get-contact-by-ids', ids =>
+  dbManager.getContactByIds(ids)
+);
 
 ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));
 
@@ -107,20 +123,20 @@ ipc.answerRenderer('db-get-emails-group-by-thread-by-params', params =>
   dbManager.getEmailsGroupByThreadByParams(params)
 );
 
+ipc.answerRenderer('db-get-email-labels-by-emailid', emailId =>
+  dbManager.getEmailLabelsByEmailId(emailId)
+);
+
 ipc.answerRenderer('db-get-emails-unread-by-labelid', params =>
   dbManager.getEmailsUnredByLabelId(params)
 );
 
-ipc.answerRenderer('db-get-contact-by-emails', emails =>
-  dbManager.getContactByEmails(emails)
-);
-
-ipc.answerRenderer('db-get-contact-by-ids', ids =>
-  dbManager.getContactByIds(ids)
-);
-
 ipc.answerRenderer('db-get-files-by-emailid', emailId =>
   dbManager.getFilesByEmailId(emailId)
+);
+
+ipc.answerRenderer('db-get-files-by-tokens', tokens =>
+  dbManager.getFilesByTokens(tokens)
 );
 
 ipc.answerRenderer('db-get-filekey-by-emailid', emailId =>
@@ -129,6 +145,12 @@ ipc.answerRenderer('db-get-filekey-by-emailid', emailId =>
 
 ipc.answerRenderer('db-get-identity-key-record', params =>
   dbManager.getIdentityKeyRecord(params)
+);
+
+ipc.answerRenderer('db-get-labelid', id => dbManager.getLabelById(id));
+
+ipc.answerRenderer('db-get-labesls-by-text', text =>
+  dbManager.getLabelsByText(text)
 );
 
 ipc.answerRenderer('db-get-prekey-pair', params =>
@@ -147,8 +169,44 @@ ipc.answerRenderer('db-get-signed-prekey', params =>
   dbManager.getSignedPreKey(params)
 );
 
+ipc.answerRenderer('db-get-trash-expired-emails', () =>
+  dbManager.getTrashExpiredEmails()
+);
+
+ipc.answerRenderer('db-update-account', params =>
+  dbManager.updateAccount(params)
+);
+
+ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>
+  dbManager.updateContactByEmail({ email, name })
+);
+
 ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
+
+ipc.answerRenderer('db-update-emails', params =>
+  dbManager.updateEmails(params)
+);
+
+ipc.answerRenderer('db-update-feed-item', ({ feedItemId, seen }) =>
+  dbManager.updateFeedItem({ feedItemId, seen })
+);
+
+ipc.answerRenderer('db-update-files-by-emailid', ({ emailId, status }) =>
+  dbManager.updateFilesByEmailId({ emailId, status })
+);
 
 ipc.answerRenderer('db-update-identity-key-record', params =>
   dbManager.updateIdentityKeyRecord(params)
+);
+
+ipc.answerRenderer('db-update-label', params => dbManager.updateLabel(params));
+
+ipc.answerRenderer('db-update-settings', ({ opened, language, theme }) =>
+  dbManager.updateSettings({ opened, language, theme })
+);
+
+ipc.answerRenderer(
+  'db-update-unread-email-by-threadids',
+  ({ threadIds, unread }) =>
+    dbManager.updateUnreadEmailByThreadIds({ threadIds, unread })
 );
