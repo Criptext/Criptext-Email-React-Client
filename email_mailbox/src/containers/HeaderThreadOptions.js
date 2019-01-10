@@ -3,6 +3,7 @@ import * as actions from '../actions/index';
 import HeaderThreadOptionsWrapper from '../components/HeaderThreadOptionsWrapper';
 import { LabelType } from '../utils/electronInterface';
 import { Set } from 'immutable';
+import { sendPrintThreadEvent } from '../utils/ipc';
 
 const defineOneThreadSelected = (threads, threadId) => {
   const thread = threads.find(thread => {
@@ -163,6 +164,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(actions.removeThreadsDrafts(draftsParams)).then(() =>
         ownProps.onBackOption()
       );
+    },
+    onPrintAllThread: () => {
+      const threadId = ownProps.threadIdSelected;
+      sendPrintThreadEvent(threadId);
     }
   };
 };

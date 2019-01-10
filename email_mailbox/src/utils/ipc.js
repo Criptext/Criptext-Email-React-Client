@@ -68,6 +68,14 @@ export const sendStartLinkDevicesEvent = data => {
   callMain('start-link-devices-event', data);
 };
 
+export const sendPrintEmailEvent = emailId => {
+  callMain('print-to-pdf', { emailId });
+};
+
+export const sendPrintThreadEvent = threadId => {
+  callMain('print-to-pdf', { threadId });
+};
+
 /* Criptext Client
    ----------------------------- */
 export const acknowledgeEvents = async eventIds => {

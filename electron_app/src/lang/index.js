@@ -2,29 +2,28 @@ const en = require('./en.json');
 const es = require('./es.json');
 const mySettings = require('./../Settings');
 
-let currentLanguage = mySettings.language;
-let strings = {};
+const languageSettings = {
+  currentLanguage: this.currentLanguage,
+  strings: this.strings,
 
-const setLanguage = language => {
-  switch (language) {
-    case 'en': {
-      currentLanguage = 'en';
-      strings = en;
-      return;
-    }
-    case 'es': {
-      currentLanguage = 'es';
-      strings = es;
-      return;
-    }
-    default: {
-      currentLanguage = 'en';
-      strings = en;
+  setLanguage(language) {
+    switch (language) {
+      case 'en':
+        this.currentLanguage = 'en';
+        this.strings = en;
+        return;
+      case 'es':
+        this.currentLanguage = 'es';
+        this.strings = es;
+        return;
+      default:
+        this.currentLanguage = 'en';
+        this.strings = en;
     }
   }
 };
 
-// Auto-init
-setLanguage(currentLanguage);
+// Auto init
+languageSettings.setLanguage(mySettings.language);
 
-module.exports = Object.assign(strings, { setLanguage });
+module.exports = languageSettings;

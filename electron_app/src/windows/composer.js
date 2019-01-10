@@ -7,7 +7,7 @@ const dbManager = require('./../DBManager');
 const globalManager = require('./../globalManager');
 
 const lang = require('./../lang');
-const { closeWarning, windowTitle } = lang.windows.composer;
+const { closeWarning, windowTitle } = lang.strings.windows.composer;
 
 const composerSize = {
   width: 785,

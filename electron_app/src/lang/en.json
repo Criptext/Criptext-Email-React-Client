@@ -103,6 +103,10 @@
         "prefix": "The email has surpassed the attachment limit of ",
         "suffix": "."
       }
+    },
+    "PRINTING_ERROR": {
+      "name": "Printing Error",
+      "description": "Failed to print the document. Please try again"
     }
   },
   "updaterMessages": {
@@ -189,5 +193,10 @@
         "checkForUpdates": "Check for updates"
       }
     }
+  },
+  "printStrings": {
+    "toTag": "To",
+    "message": "Message",
+    "at": "at"
   }
 }

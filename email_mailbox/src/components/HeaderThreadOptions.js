@@ -99,6 +99,11 @@ class HeaderThreadOptions extends Component {
                   : string.mailbox.mark_as_read}
               </span>
             </li>
+            {!this.props.itemsChecked && (
+              <li onClick={this.props.onClickPrintAllThread}>
+                <span>{string.header.print_all}</span>
+              </li>
+            )}
           </ul>
         </TooltipMenu>
         {popupContent && (
@@ -199,6 +204,7 @@ HeaderThreadOptions.propTypes = {
   onClickMoveToSpam: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,
   onClickMarkAsRead: PropTypes.func,
+  onClickPrintAllThread: PropTypes.func,
   onClickRestore: PropTypes.func,
   onToggleDotsMenu: PropTypes.func,
   onToggleFolderMenu: PropTypes.func,

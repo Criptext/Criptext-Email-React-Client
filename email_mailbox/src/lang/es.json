@@ -46,7 +46,8 @@
       "to_placeholder": "Usuarios por nombre o correo electrónico"
     },
     "selected": "Seleccionado",
-    "selected_plural": "Seleccionados"
+    "selected_plural": "Seleccionados",
+    "print_all": "Imprimir todo"
   },
   "labelsItems": {
     "inbox": "Recibidos",
@@ -116,7 +117,9 @@
     "starred": "Favorito",
     "subject": "Asunto",
     "to": "Para",
-    "unread": "no leídos"
+    "unread": "no leídos",
+    "print_email": "Imprimir",
+    "print_thread": "Imprimir todo"
   },
   "messages": {
     "change_password": {

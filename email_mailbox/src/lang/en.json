@@ -46,7 +46,8 @@
       "to_placeholder": "People by name or email address"
     },
     "selected": "Selected",
-    "selected_plural": "Selected"
+    "selected_plural": "Selected",
+    "print_all": "Imprimir Todo"
   },
   "labelsItems": {
     "inbox": "Inbox",
@@ -116,7 +117,9 @@
     "starred": "Starred",
     "subject": "Subject",
     "to": "To",
-    "unread": "unread"
+    "unread": "unread",
+    "print_email": "Print",
+    "print_thread": "Print All"
   },
   "messages": {
     "change_password": {

@@ -8,7 +8,7 @@ const mainIcon = path.join(__dirname, './../../resources/icons/png/16x16.png');
 const trayIcon = path.join(__dirname, './../../resources/icons/png/32x32.png');
 
 const lang = require('./../lang');
-const string = lang.windows.menu;
+const string = lang.strings.windows.menu;
 
 const template = [
   {

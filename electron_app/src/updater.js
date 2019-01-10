@@ -4,7 +4,7 @@ const notifier = require('node-notifier');
 const path = require('path');
 const globalManager = require('./globalManager');
 const appId = 'com.criptext.criptextmail';
-const { updaterMessages } = require('./lang');
+const { updaterMessages } = require('./lang').strings;
 
 let currentUpdaterType;
 let isDownloadingUpdate = false;

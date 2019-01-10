@@ -46,6 +46,7 @@ class HeaderThreadOptionsWrapper extends Component {
         onClickMoveToTrash={this.handleClickMoveToTrash}
         onClickLabelCheckbox={this.handleOnClickLabelCheckbox}
         onClickRestore={this.handleClickRestore}
+        onClickPrintAllThread={this.handleClickPrintAllThread}
         {...this.props}
       />
     );
@@ -199,6 +200,17 @@ class HeaderThreadOptionsWrapper extends Component {
         : LabelType.spam.id;
     this.props.onRemoveLabel(this.props.threadsSelected, LabelIdToDelete);
   };
+
+  handleClickPrintAllThread = () => {
+    this.setState(
+      {
+        displayDotsMenu: false
+      },
+      () => {
+        this.props.onPrintAllThread();
+      }
+    );
+  };
 }
 
 HeaderThreadOptionsWrapper.propTypes = {
@@ -209,6 +221,7 @@ HeaderThreadOptionsWrapper.propTypes = {
   onAddMoveLabel: PropTypes.func,
   onDiscardDrafts: PropTypes.func,
   onMarkRead: PropTypes.func,
+  onPrintAllThread: PropTypes.func,
   onRemoveLabel: PropTypes.func,
   onRemoveThreads: PropTypes.func,
   threadsSelected: PropTypes.array

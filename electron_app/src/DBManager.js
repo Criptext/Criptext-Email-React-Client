@@ -12,6 +12,7 @@ const { HTMLTagsRegex } = require('./utils/RegexUtils');
 const myAccount = require('./Account');
 const systemLabels = require('./systemLabels');
 const mySettings = require('./Settings');
+const { setLanguage } = require('./lang');
 
 /* Account
 ----------------------------- */
@@ -1102,6 +1103,9 @@ const updateSettings = async ({ language, opened, theme }) => {
     .where({ id: 1 })
     .update(params);
   mySettings.update(params);
+  if (params.language) {
+    setLanguage(params.language);
+  }
   return dbResponse;
 };
 
