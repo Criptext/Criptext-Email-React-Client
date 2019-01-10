@@ -179,10 +179,6 @@ export const cleanDataLogout = async recipientId => {
   return dbManager.createSignalTables();
 };
 
-export const updateFilesByEmailId = ({ emailId, status }) => {
-  return dbManager.updateFilesByEmailId({ emailId, status });
-};
-
 export const setMuteEmailById = (emailId, muteValue) => {
   return dbManager.updateEmail({ id: emailId, isMuted: muteValue });
 };

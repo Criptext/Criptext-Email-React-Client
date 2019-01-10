@@ -4,7 +4,6 @@ import {
   LabelType,
   myAccount,
   setInternetConnectionStatus,
-  updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
   mySettings,
   getNews
@@ -34,7 +33,8 @@ import {
   updateAccount,
   updateContactByEmail,
   updateEmail,
-  updateEmails
+  updateEmails,
+  updateFilesByEmailId
 } from './ipc';
 import {
   checkEmailIsTo,
