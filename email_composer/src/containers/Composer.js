@@ -52,7 +52,7 @@ import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import { convertToHumanSize } from './../utils/StringUtils';
 
 const MAX_RECIPIENTS_AMOUNT = 300;
-const MAX_ATTACMENTS_AMOUNT = 5;
+const MAX_ATTACMENTS_TOAL_SIZE = 25 * 1000 * 1000;
 const TOO_BIG_FILE_STATUS = 413;
 const PENDING_ATTACHMENTS_MODES = [FILE_MODES.UPLOADING, FILE_MODES.FAILED];
 
@@ -82,7 +82,8 @@ class ComposerWrapper extends Component {
       textSubject: '',
       threadId: null,
       toEmails: [],
-      isLinkingDevices: false
+      isLinkingDevices: false,
+      totalFilesSize: 0
     };
 
     addEvent(Event.DISABLE_WINDOW, () => {
@@ -271,10 +272,26 @@ class ComposerWrapper extends Component {
 
   setFiles = newFiles => {
     const files = [...this.state.files];
-    if (this.state.files.length + newFiles.length > MAX_ATTACMENTS_AMOUNT) {
-      return throwError(errors.message.TOO_MANY_FILES);
-    } else if (newFiles && newFiles.length > 0) {
+    if (newFiles && newFiles.length > 0) {
       const [firstNewFile, ...remainingNewFiles] = Array.from(newFiles);
+
+      if (
+        this.state.totalFilesSize + firstNewFile.size >
+        MAX_ATTACMENTS_TOAL_SIZE
+      ) {
+        setTimeout(() => {
+          const { name, description } = errors.message.ATTACHMENTS_TOTAL_SIZE;
+          throwError({
+            name,
+            description:
+              description.prefix +
+              convertToHumanSize(MAX_ATTACMENTS_TOAL_SIZE, true, 0) +
+              description.suffix
+          });
+        }, 1500);
+        return;
+      }
+
       fileManager.uploadFile(firstNewFile, CHUNK_SIZE, (error, token) => {
         if (error) {
           this.handleUploadFileErrorStatus(error, firstNewFile);
@@ -287,9 +304,15 @@ class ComposerWrapper extends Component {
           };
           files.push(uploadingFile);
         }
-        this.setState({ files }, () => {
-          this.setFiles(remainingNewFiles);
-        });
+        this.setState(
+          prevState => ({
+            files,
+            totalFilesSize: prevState.totalFilesSize + firstNewFile.size
+          }),
+          () => {
+            this.setFiles(remainingNewFiles);
+          }
+        );
       });
     }
   };

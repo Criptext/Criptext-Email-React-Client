@@ -73,10 +73,6 @@
       "name": "Upload failed",
       "description": "An error occurred while uploading file.\nPlease try again"
     },
-    "TOO_MANY_FILES": {
-      "name": "Too many attachments",
-      "description": "You can only attach 5 files to an email"
-    },
     "TOO_BIG_FILE": {
       "name": "Too big file",
       "description": {
@@ -100,6 +96,13 @@
     "LINK_DEVICES_UPLOAD_DATA": {
       "name": "Link device error",
       "description": "Failed to upload data.\nCode: "
+    },
+    "ATTACHMENTS_TOTAL_SIZE": {
+      "name": "Error",
+      "description": {
+        "prefix": "The email has surpassed the attachment limit of ",
+        "suffix": "."
+      }
     }
   },
   "updaterMessages": {

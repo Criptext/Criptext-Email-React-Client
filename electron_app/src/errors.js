@@ -94,9 +94,12 @@ const MESSAGE_ERROR = {
     name: errorMessages.PENDING_FILES.name,
     description: errorMessages.PENDING_FILES.description
   },
-  TOO_MANY_FILES: {
-    name: errorMessages.TOO_MANY_FILES.name,
-    description: errorMessages.TOO_MANY_FILES.description
+  ATTACHMENTS_TOTAL_SIZE: {
+    name: errorMessages.ATTACHMENTS_TOTAL_SIZE.name,
+    description: {
+      prefix: errorMessages.ATTACHMENTS_TOTAL_SIZE.description.prefix,
+      suffix: errorMessages.ATTACHMENTS_TOTAL_SIZE.description.suffix
+    }
   },
   TOO_MANY_RECIPIENTS: {
     name: errorMessages.TOO_MANY_RECIPIENTS.name,
