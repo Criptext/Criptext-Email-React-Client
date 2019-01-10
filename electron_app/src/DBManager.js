@@ -1092,7 +1092,7 @@ const getAppSettings = async () => {
   return appSettings;
 };
 
-const updateAppSettings = async ({ language, opened, theme }) => {
+const updateSettings = async ({ language, opened, theme }) => {
   const params = noNulls({ language, opened, theme });
   if (Object.keys(params).length < 1) {
     return Promise.resolve(true);
@@ -1179,6 +1179,6 @@ module.exports = {
   updateFilesByEmailId,
   updateIdentityKeyRecord,
   updateLabel,
-  updateAppSettings,
+  updateSettings,
   updateUnreadEmailByThreadIds
 };

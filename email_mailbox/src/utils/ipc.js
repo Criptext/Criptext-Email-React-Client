@@ -264,3 +264,7 @@ export const updateEmail = async params => {
 export const updateIdentityKeyRecord = async params => {
   return await callMain('db-update-identity-key-record', params);
 };
+
+export const updateSettings = async ({ opened, language, theme }) => {
+  return await callMain('db-update-settings', { opened, language, theme });
+};

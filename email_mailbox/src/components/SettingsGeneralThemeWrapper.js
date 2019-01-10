@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import SettingsGeneralTheme from './SettingsGeneralTheme';
 import {
   reloadWindow,
-  mySettings,
-  updateAppSettings
+  mySettings
 } from '../utils/electronInterface';
+import {
+  updateSettings
+} from '../utils/ipc';
 import string from './../lang';
 
 const { themeLabels } = string.settings;
@@ -35,7 +37,7 @@ class SettingsGeneralThemeWrapper extends Component {
   handleChangeSelectTheme = async e => {
     const theme = e.target.value;
     this.setState({ theme });
-    await updateAppSettings({ theme });
+    await updateSettings({ theme });
     reloadWindow();
   };
 }

@@ -178,3 +178,7 @@ ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
 ipc.answerRenderer('db-update-identity-key-record', params =>
   dbManager.updateIdentityKeyRecord(params)
 );
+
+ipc.answerRenderer('db-update-settings', ({ opened, language, theme }) =>
+  dbManager.updateSettings({ opened, language, theme })
+);

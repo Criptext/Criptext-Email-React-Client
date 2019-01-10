@@ -207,10 +207,6 @@ export const updateOpenedEmailByKey = ({ key, status }) => {
   return dbManager.updateEmail({ key, status });
 };
 
-export const updateAppSettings = ({ opened, language, theme }) => {
-  return dbManager.updateAppSettings({ opened, language, theme });
-};
-
 export const updateUnreadEmailByThreadIds = (threadIds, unread) => {
   return dbManager.updateUnreadEmailByThreadIds({ threadIds, unread });
 };

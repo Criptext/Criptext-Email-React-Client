@@ -122,7 +122,7 @@ const getUserLanguage = async () => {
   const isEnglish = localeLanguage.indexOf('en') > -1;
   const isSpanish = localeLanguage.indexOf('es') > -1;
   const osLanguage = isEnglish ? 'en' : isSpanish ? 'es' : 'en';
-  await dbManager.updateAppSettings({ language: osLanguage });
+  await dbManager.updateSettings({ language: osLanguage });
 };
 
 app.on('ready', () => {
