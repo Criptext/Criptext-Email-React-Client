@@ -71,6 +71,10 @@ ipc.answerRenderer('client-remove-device', params =>
   clientManager.removeDevice(params)
 );
 
+ipc.answerRenderer('client-resend-confirmation-email', () =>
+  clientManager.resendConfirmationEmail()
+);
+
 ipc.answerRenderer('client-sync-accept', randomId =>
   clientManager.syncAccept(randomId)
 );

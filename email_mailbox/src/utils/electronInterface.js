@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const resendConfirmationEmail = () => {
-  return clientManager.resendConfirmationEmail();
-};
-
 export const resetPassword = recipientId => {
   return clientManager.resetPassword(recipientId);
 };

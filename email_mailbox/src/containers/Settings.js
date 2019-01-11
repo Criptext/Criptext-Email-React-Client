@@ -7,7 +7,6 @@ import {
   LabelType,
   myAccount,
   updateNameEvent,
-  resendConfirmationEmail,
   resetPassword,
   setReadTracking
 } from '../utils/electronInterface';
@@ -17,6 +16,7 @@ import {
   logoutApp,
   openFilledComposerWindow,
   removeDevice,
+  resendConfirmationEmail,
   updateAccount,
   updateContactByEmail
 } from './../utils/ipc';
@@ -137,8 +137,8 @@ const mapDispatchToProps = dispatch => {
       const { status } = await removeDevice(params);
       return status === 200;
     },
-    onResendConfirmationEmail: () => {
-      return resendConfirmationEmail();
+    onResendConfirmationEmail: async () => {
+      return await resendConfirmationEmail();
     },
     onUpdateAccount: async params => {
       const recipientId = myAccount.recipientId;

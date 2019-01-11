@@ -114,6 +114,10 @@ export const removeDevice = async params => {
   return await callMain('client-remove-device', params);
 };
 
+export const resendConfirmationEmail = async () => {
+  return await callMain('client-resend-confirmation-email');
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {
