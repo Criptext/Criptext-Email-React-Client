@@ -549,47 +549,6 @@ button {
     }
   }
 
-  .popup-inputs {
-    margin: 20px auto 0;
-    width: calc(100% - 15px);
-
-    .popup-input {
-      margin-top: 18px;
-      position: relative;
-
-      input {
-        background-color: transparent;
-        border: none;
-        border-bottom: solid 1px transparent;
-        font-size: 12px;
-        font-weight: 300;
-
-        &:focus {
-          border-bottom: solid 1px #0091ff;
-        }
-      }
-
-      i {
-        color: #aeaeae;
-        font-size: 17px;
-        position: absolute;
-        bottom: 2px;
-        right: 1px;
-        cursor: pointer;
-      }
-
-      span {
-        color: #de4646;
-        bottom: -15px;
-        font-size: 10px;
-        float: left;
-        left: -14px;
-        margin-left: 15px;
-        position: absolute;
-      }
-    }
-  }
-
   .popup-buttons {
     display: flex;
     flex-direction: row;
