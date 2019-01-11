@@ -1,5 +1,5 @@
 /*global libsignal util*/
-import { getEmailBody } from './../utils/electronInterface';
+import { getEmailBody } from './../utils/ipc';
 import SignalProtocolStore from './store';
 const store = new SignalProtocolStore();
 const ciphertextType = {

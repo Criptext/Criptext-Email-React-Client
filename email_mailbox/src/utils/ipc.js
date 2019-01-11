@@ -86,6 +86,10 @@ export const deleteMyAccount = async password => {
   return await callMain('client-delete-my-account', password);
 };
 
+export const getEmailBody = async params => {
+  return await callMain('client-get-email-body', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {
