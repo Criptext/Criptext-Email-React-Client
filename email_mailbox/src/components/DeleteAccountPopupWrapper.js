@@ -2,13 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
-import {
-  requiredMinLength,
-  deleteMyAccount
-} from './../utils/electronInterface';
+import { requiredMinLength } from './../utils/electronInterface';
 import DeleteAccountPopup from './DeleteAccountPopup';
 import { clearStorage } from '../utils/storage';
-import { cleanDatabase, logoutApp } from '../utils/ipc';
+import { cleanDatabase, deleteMyAccount, logoutApp } from '../utils/ipc';
 import string from '../lang';
 import { sendAccountDeletedEvent } from './../utils/electronEventInterface';
 

@@ -13,6 +13,10 @@ ipc.answerRenderer('client-change-recovery-email', params =>
   clientManager.changeRecoveryEmail(params)
 );
 
+ipc.answerRenderer('client-delete-my-account', password =>
+  clientManager.deleteMyAccount(password)
+);
+
 ipc.answerRenderer('client-find-key-bundles', params =>
   clientManager.findKeyBundles(params)
 );

@@ -82,6 +82,10 @@ export const changeRecoveryEmail = async params => {
   return await callMain('client-change-recovery-email', params);
 };
 
+export const deleteMyAccount = async password => {
+  return await callMain('client-delete-my-account', password);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {
