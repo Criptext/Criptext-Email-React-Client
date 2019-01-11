@@ -5,7 +5,6 @@ import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataLogout,
   LabelType,
-  logout,
   myAccount,
   removeDevice,
   updateNameEvent,
@@ -15,6 +14,7 @@ import {
 } from '../utils/electronInterface';
 import {
   getUserSettings,
+  logout,
   logoutApp,
   openFilledComposerWindow,
   updateAccount,

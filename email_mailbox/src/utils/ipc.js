@@ -98,6 +98,10 @@ export const getUserSettings = async () => {
   return await callMain('client-get-user-settings');
 };
 
+export const logout = () => {
+  return await callMain('client-logout');
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {
