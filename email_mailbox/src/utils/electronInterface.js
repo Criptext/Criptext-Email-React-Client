@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const resetPassword = recipientId => {
-  return clientManager.resetPassword(recipientId);
-};
-
 export const setReadTracking = enabled => {
   return clientManager.setReadTracking(enabled);
 };

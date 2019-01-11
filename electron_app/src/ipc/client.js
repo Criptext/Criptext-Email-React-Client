@@ -75,6 +75,10 @@ ipc.answerRenderer('client-resend-confirmation-email', () =>
   clientManager.resendConfirmationEmail()
 );
 
+ipc.answerRenderer('client-reset-password', recipientId =>
+  clientManager.resetPassword(recipientId)
+);
+
 ipc.answerRenderer('client-sync-accept', randomId =>
   clientManager.syncAccept(randomId)
 );

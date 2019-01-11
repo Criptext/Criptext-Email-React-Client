@@ -7,7 +7,6 @@ import {
   LabelType,
   myAccount,
   updateNameEvent,
-  resetPassword,
   setReadTracking
 } from '../utils/electronInterface';
 import {
@@ -17,6 +16,7 @@ import {
   openFilledComposerWindow,
   removeDevice,
   resendConfirmationEmail,
+  resetPassword,
   updateAccount,
   updateContactByEmail
 } from './../utils/ipc';

@@ -118,6 +118,10 @@ export const resendConfirmationEmail = async () => {
   return await callMain('client-resend-confirmation-email');
 };
 
+export const resetPassword = async recipientId => {
+  return await callMain('client-reset-password', recipientId);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {
