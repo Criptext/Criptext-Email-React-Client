@@ -1,11 +1,12 @@
 import { Label } from './types';
-import { LabelType, postPeerEvent } from '../utils/electronInterface';
+import { LabelType } from '../utils/electronInterface';
 import {
   createLabel,
   deleteLabelById,
   getAllLabels,
   getEmailsCounterByLabelId,
   getEmailsUnredByLabelId,
+  postPeerEvent,
   updateDockBadgeApp,
   updateLabel as updateLabelDB
 } from '../utils/ipc';

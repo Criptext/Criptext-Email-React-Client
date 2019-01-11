@@ -1,5 +1,4 @@
 import { Email } from './types';
-import { unsendEmailEvent, postPeerEvent } from '../utils/electronInterface';
 import {
   createEmailLabel,
   deleteEmailByKeys,
@@ -7,6 +6,8 @@ import {
   getContactByIds,
   getEmailsByThreadId,
   getLabelsByText,
+  postPeerEvent,
+  unsendEmailEvent,
   updateEmail
 } from '../utils/ipc';
 import { loadContacts } from './contacts';

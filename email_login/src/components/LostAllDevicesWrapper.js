@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
-import { errors, login, resetPassword } from './../utils/electronInterface';
+import { errors, login } from './../utils/electronInterface';
 import {
   closeLoginWindow,
   openCreateKeysLoadingWindow,
+  resetPassword,
   throwError
 } from './../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';

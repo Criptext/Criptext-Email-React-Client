@@ -1,6 +1,5 @@
 import signal from './../libs/signal';
 import {
-  getEvents,
   LabelType,
   myAccount,
   setInternetConnectionStatus,
@@ -21,6 +20,7 @@ import {
   getEmailLabelsByEmailId,
   getEmailsByKeys,
   getEmailsByThreadId,
+  getEvents,
   getContactByEmails,
   getLabelsByText,
   logoutApp,

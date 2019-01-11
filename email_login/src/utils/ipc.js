@@ -27,3 +27,9 @@ export const openDialogWindow = data => {
 export const throwError = error => {
   callMain('throwError', error);
 };
+
+/* Criptext Client
+   ----------------------------- */
+export const resetPassword = async recipientId => {
+  return await callMain('client-reset-password', recipientId);
+};

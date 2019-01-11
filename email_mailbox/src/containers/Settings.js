@@ -4,21 +4,21 @@ import SettingsWrapper from './../components/SettingsWrapper';
 import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataLogout,
-  getUserSettings,
   LabelType,
-  logout,
-  myAccount,
-  removeDevice,
-  updateNameEvent,
-  resendConfirmationEmail,
-  resetPassword,
-  setReadTracking
+  myAccount
 } from '../utils/electronInterface';
 import {
+  getUserSettings,
+  logout,
   logoutApp,
   openFilledComposerWindow,
+  removeDevice,
+  resendConfirmationEmail,
+  resetPassword,
   updateAccount,
-  updateContactByEmail
+  updateContactByEmail,
+  updateNameEvent,
+  setReadTracking
 } from './../utils/ipc';
 import { appDomain, composerEvents } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
@@ -137,8 +137,8 @@ const mapDispatchToProps = dispatch => {
       const { status } = await removeDevice(params);
       return status === 200;
     },
-    onResendConfirmationEmail: () => {
-      return resendConfirmationEmail();
+    onResendConfirmationEmail: async () => {
+      return await resendConfirmationEmail();
     },
     onUpdateAccount: async params => {
       const recipientId = myAccount.recipientId;

@@ -74,6 +74,82 @@ export const acknowledgeEvents = async eventIds => {
   return await callMain('client-acknowledge-events', eventIds);
 };
 
+export const changePassword = async params => {
+  return await callMain('client-change-password', params);
+};
+
+export const changeRecoveryEmail = async params => {
+  return await callMain('client-change-recovery-email', params);
+};
+
+export const deleteMyAccount = async password => {
+  return await callMain('client-delete-my-account', password);
+};
+
+export const getEmailBody = async params => {
+  return await callMain('client-get-email-body', params);
+};
+
+export const getEvents = async () => {
+  return await callMain('client-get-events');
+};
+
+export const getUserSettings = async () => {
+  return await callMain('client-get-user-settings');
+};
+
+export const logout = async () => {
+  return await callMain('client-logout');
+};
+
+export const postOpenEvent = async params => {
+  return await callMain('client-post-open-event', params);
+};
+
+export const postPeerEvent = async params => {
+  return await callMain('client-post-peer-event', params);
+};
+
+export const removeDevice = async params => {
+  return await callMain('client-remove-device', params);
+};
+
+export const resendConfirmationEmail = async () => {
+  return await callMain('client-resend-confirmation-email');
+};
+
+export const resetPassword = async recipientId => {
+  return await callMain('client-reset-password', recipientId);
+};
+
+export const setReadTracking = async enabled => {
+  return await callMain('client-set-read-tracking', enabled);
+};
+
+export const setTwoFactorAuth = async enable => {
+  return await callMain('client-set-two-factor-auth', enable);
+};
+
+export const syncBegin = async () => {
+  return await callMain('client-sync-begin');
+};
+
+export const syncStatus = async () => {
+  return await callMain('client-sync-status');
+};
+
+export const unlockDevice = async params => {
+  return await callMain('client-unlock-device', params);
+};
+
+export const unsendEmailEvent = async metadataKey => {
+  return await callMain('client-unsend-email', metadataKey);
+};
+
+export const updateNameEvent = async params => {
+  return await callMain('client-update-name-event', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {

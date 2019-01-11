@@ -161,10 +161,6 @@ export const login = params => {
   return clientManager.login(params);
 };
 
-export const resetPassword = recipientId => {
-  return clientManager.resetPassword(recipientId);
-};
-
 /* DataBase
   ----------------------------- */
 export const createAccount = params => {
