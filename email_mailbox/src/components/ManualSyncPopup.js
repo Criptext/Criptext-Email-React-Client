@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import string from '../lang';
 import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
-import { syncBegin } from '../utils/electronInterface';
+import { syncBegin } from '../utils/ipc';
 import './manualsyncpopup.scss';
 
 const {

@@ -130,6 +130,10 @@ export const setTwoFactorAuth = async enable => {
   return await callMain('client-set-two-factor-auth', enable);
 };
 
+export const syncBegin = async () => {
+  return await callMain('client-sync-begin');
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {
