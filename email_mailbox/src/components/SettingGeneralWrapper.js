@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import {
   myAccount,
   requiredMinLength,
-  changeRecoveryEmail,
   setTwoFactorAuth
 } from './../utils/electronInterface';
-import { changePassword } from './../utils/ipc';
+import { changePassword, changeRecoveryEmail } from './../utils/ipc';
 import {
   addEvent,
   Event,

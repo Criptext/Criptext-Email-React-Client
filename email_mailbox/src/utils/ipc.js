@@ -78,6 +78,10 @@ export const changePassword = async params => {
   return await callMain('client-change-password', params);
 };
 
+export const changeRecoveryEmail = async params => {
+  return await callMain('client-change-recovery-email', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {

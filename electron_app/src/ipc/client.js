@@ -9,6 +9,10 @@ ipc.answerRenderer('client-change-password', params =>
   clientManager.changePassword(params)
 );
 
+ipc.answerRenderer('client-change-recovery-email', params =>
+  clientManager.changeRecoveryEmail(params)
+);
+
 ipc.answerRenderer('client-find-key-bundles', params =>
   clientManager.findKeyBundles(params)
 );
