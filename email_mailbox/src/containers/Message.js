@@ -3,17 +3,17 @@ import { MessageType } from '../components/Message';
 import MessageWrapper from './../components/MessageWrapper';
 import MessageContent, { actionHandlerKeys } from './../data/message';
 import {
-  LabelType,
-  confirmPermanentDeleteThread
+  LabelType
 } from './../utils/electronInterface';
 import {
-  closeDialogWindow,
-  downloadUpdate,
-  getEmailsByLabelIds
+  downloadUpdate
 } from './../utils/ipc';
 import { SectionType } from '../utils/const';
-import { loadThreads, removeThreads } from '../actions';
+import { loadThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
+import string from '../lang';
+
+const { popups } = string;
 
 const defineMessageData = (
   mailboxSelected,
@@ -99,13 +99,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
         }
         case actionHandlerKeys.advice.trash: {
-          console.log("HABLA")
-          ownProps.setPopupContent({
-            title: "Warning!",
-            message: "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",
-            leftButtonLabel: "Cancel",
-            rightButtonLabel: "Confirm"
-          })
+          ownProps.setPopupContent(popups.permanently_delete)
           break;
         }
         case actionHandlerKeys.suggestion.update: {

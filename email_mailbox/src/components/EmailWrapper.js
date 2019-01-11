@@ -4,7 +4,10 @@ import Email from './Email';
 import { ButtonUnsendStatus } from './ButtonUnsend';
 import { checkUserGuideSteps } from '../utils/electronEventInterface';
 import { USER_GUIDE_STEPS } from './UserGuide';
+import string from '../lang';
 
+const { popups } = string;
+console.log(popups)
 class EmailWrapper extends Component {
   constructor() {
     super();
@@ -113,12 +116,7 @@ class EmailWrapper extends Component {
 
   handleClickPermanentlyDeleteEmail = () => {
     this.setState({
-      popupContent: {
-        title: "Warning!",
-        message: "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",
-        leftButtonLabel: "Cancel",
-        rightButtonLabel: "Confirm"
-      }
+      popupContent: popups.permanently_delete
     })
   }
 

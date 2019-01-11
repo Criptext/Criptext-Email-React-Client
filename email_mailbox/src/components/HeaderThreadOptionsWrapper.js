@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import HeaderThreadOptions from './HeaderThreadOptions';
 import { CustomCheckboxStatus } from './CustomCheckbox';
 import {
-  confirmPermanentDeleteThread,
   LabelType
 } from '../utils/electronInterface';
-import { closeDialogWindow } from './../utils/ipc';
+import string from '../lang';
 
+const { popups } = string;
+console.log(popups.permanently_delete)
 class HeaderThreadOptionsWrapper extends Component {
   constructor() {
     super();
@@ -148,12 +149,7 @@ class HeaderThreadOptionsWrapper extends Component {
 
   handleClickDeleteThread = () => {
     this.setState({
-      popupContent: {
-        title: "Warning!",
-        message: "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",
-        leftButtonLabel: "Cancel",
-        rightButtonLabel: "Confirm"
-      }
+      popupContent: popups.permanently_delete
     })
   };
   
