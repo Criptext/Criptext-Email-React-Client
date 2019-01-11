@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const removeDevice = params => {
-  return clientManager.removeDevice(params);
-};
-
 export const resendConfirmationEmail = () => {
   return clientManager.resendConfirmationEmail();
 };

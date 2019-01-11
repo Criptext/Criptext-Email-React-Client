@@ -106,6 +106,10 @@ export const postOpenEvent = params => {
   return await callMain('client-post-open-event', params);
 };
 
+export const removeDevice = params => {
+  return await callMain('client-remove-device', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {

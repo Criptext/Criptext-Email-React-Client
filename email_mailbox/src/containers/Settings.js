@@ -6,7 +6,6 @@ import {
   cleanDataLogout,
   LabelType,
   myAccount,
-  removeDevice,
   updateNameEvent,
   resendConfirmationEmail,
   resetPassword,
@@ -17,6 +16,7 @@ import {
   logout,
   logoutApp,
   openFilledComposerWindow,
+  removeDevice,
   updateAccount,
   updateContactByEmail
 } from './../utils/ipc';

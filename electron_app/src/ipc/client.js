@@ -65,6 +65,10 @@ ipc.answerRenderer('client-post-user', params =>
   clientManager.postUser(params)
 );
 
+ipc.answerRenderer('client-remove-device', params =>
+  clientManager.removeDevice(params)
+);
+
 ipc.answerRenderer('client-sync-accept', randomId =>
   clientManager.syncAccept(randomId)
 );
