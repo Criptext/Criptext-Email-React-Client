@@ -95,12 +95,12 @@
         "subheader": "¡En lo absoluto!"
       },
       "search": {
-        "header": "No search results",
-        "subheader": "Trash & Spam emails are not displayed"
+        "header": "No hay resultados de búsqueda",
+        "subheader": "Correos en Papelera & Spam no son mostrados"
       },
       "default": {
-        "header": "You have no emails yet",
-        "subheader": "Send an email to get started"
+        "header": "No tienes correos todavía",
+        "subheader": "Envía un correo para comenzar"
       }
     },
     "forward": "Reenviar",
