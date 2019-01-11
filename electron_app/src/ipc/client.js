@@ -96,3 +96,5 @@ ipc.answerRenderer('client-sync-begin', () => clientManager.syncBegin());
 ipc.answerRenderer('client-sync-deny', randomId =>
   clientManager.syncDeny(randomId)
 );
+
+ipc.answerRenderer('client-sync-status', () => clientManager.syncStatus());

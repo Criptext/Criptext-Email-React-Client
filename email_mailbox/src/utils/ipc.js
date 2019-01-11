@@ -134,6 +134,10 @@ export const syncBegin = async () => {
   return await callMain('client-sync-begin');
 };
 
+export const syncStatus = async () => {
+  return await callMain('client-sync-status');
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {

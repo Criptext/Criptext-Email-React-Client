@@ -91,14 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const syncDeny = randomId => {
-  return clientManager.syncDeny(randomId);
-};
-
-export const syncStatus = () => {
-  return clientManager.syncStatus();
-};
-
 export const unlockDevice = params => {
   return clientManager.unlockDevice(params);
 };
