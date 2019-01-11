@@ -5,8 +5,7 @@ import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataLogout,
   LabelType,
-  myAccount,
-  updateNameEvent
+  myAccount
 } from '../utils/electronInterface';
 import {
   getUserSettings,
@@ -18,6 +17,7 @@ import {
   resetPassword,
   updateAccount,
   updateContactByEmail,
+  updateNameEvent,
   setReadTracking
 } from './../utils/ipc';
 import { appDomain, composerEvents } from '../utils/const';

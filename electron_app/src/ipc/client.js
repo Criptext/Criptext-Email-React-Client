@@ -102,3 +102,7 @@ ipc.answerRenderer('client-sync-status', () => clientManager.syncStatus());
 ipc.answerRenderer('client-unlock-device', params =>
   clientManager.unlockDevice(params)
 );
+
+ipc.answerRenderer('client-update-name-event', params =>
+  clientManager.updateName(params)
+);

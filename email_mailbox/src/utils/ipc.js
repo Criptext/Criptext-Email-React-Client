@@ -142,6 +142,10 @@ export const unlockDevice = async params => {
   return await callMain('client-unlock-device', params);
 };
 
+export const updateNameEvent = async params => {
+  return await callMain('client-update-name-event', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {

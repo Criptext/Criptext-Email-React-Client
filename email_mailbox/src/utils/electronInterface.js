@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const updateNameEvent = params => {
-  return clientManager.updateName(params);
-};
-
 export const unsendEmailEvent = metadataKey => {
   return clientManager.unsendEmail(metadataKey);
 };
