@@ -4,7 +4,6 @@ import SettingsWrapper from './../components/SettingsWrapper';
 import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataLogout,
-  getUserSettings,
   LabelType,
   logout,
   myAccount,
@@ -15,6 +14,7 @@ import {
   setReadTracking
 } from '../utils/electronInterface';
 import {
+  getUserSettings,
   logoutApp,
   openFilledComposerWindow,
   updateAccount,

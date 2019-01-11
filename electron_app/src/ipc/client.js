@@ -33,6 +33,10 @@ ipc.answerRenderer('client-get-key-bundle', deviceId =>
   clientManager.getKeyBundle(deviceId)
 );
 
+ipc.answerRenderer('client-get-user-settings', () =>
+  clientManager.getUserSettings()
+);
+
 ipc.answerRenderer('client-link-accept', randomId =>
   clientManager.linkAccept(randomId)
 );

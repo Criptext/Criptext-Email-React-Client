@@ -94,6 +94,10 @@ export const getEvents = async () => {
   return await callMain('client-get-events');
 };
 
+export const getUserSettings = async () => {
+  return await callMain('client-get-user-settings');
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {
