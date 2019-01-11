@@ -4,8 +4,12 @@ import StandardOptions from './StandardOptions';
 import ButtonCircle from './ButtonCircle';
 import TooltipMenu from './TooltipMenu';
 import CustomCheckbox from './CustomCheckbox';
+import DialogPopup from './DialogPopup';
+import PopupHOC from './PopupHOC';
 import string from '../lang';
 import './headerthreadoptions.scss';
+
+const DeleteThreadsPopup = PopupHOC(DialogPopup);
 
 class HeaderThreadOptions extends Component {
   render() {
@@ -29,7 +33,10 @@ class HeaderThreadOptions extends Component {
       onClickMoveToTrash,
       onClickRestore,
       onToggleFolderMenu,
-      onToggleTagsMenu
+      onToggleTagsMenu,
+      popupContent,
+      dismissPopup,
+      handlePopupConfirm
     } = this.props;
     return (
       <div className="header-threadoptions">
@@ -94,6 +101,13 @@ class HeaderThreadOptions extends Component {
             </li>
           </ul>
         </TooltipMenu>
+        {popupContent && (
+          <DeleteThreadsPopup
+            {...popupContent}
+            onLeftButtonClick={dismissPopup}
+            onRightButtonClick={handlePopupConfirm}
+          />
+        )}
       </div>
     );
   }
@@ -160,9 +174,11 @@ class HeaderThreadOptions extends Component {
 
 HeaderThreadOptions.propTypes = {
   allSelected: PropTypes.bool,
+  dismissPopup: PropTypes.func,
   displayFolderMenu: PropTypes.bool,
   displayTagsMenu: PropTypes.bool,
   displayDotsMenu: PropTypes.bool,
+  handlePopupConfirm: PropTypes.func,
   isVisibleArchiveButton: PropTypes.bool,
   isVisibleDeleteButton: PropTypes.bool,
   isVisibleDiscardDraftsButton: PropTypes.bool,
@@ -187,6 +203,7 @@ HeaderThreadOptions.propTypes = {
   onToggleDotsMenu: PropTypes.func,
   onToggleFolderMenu: PropTypes.func,
   onToggleTagsMenu: PropTypes.func,
+  popupContent: PropTypes.object,
   threadIds: PropTypes.object
 };
 

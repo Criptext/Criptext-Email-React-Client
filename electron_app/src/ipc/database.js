@@ -112,7 +112,7 @@ ipc.answerRenderer('db-get-emails-by-threadid', threadId =>
 ipc.answerRenderer(
   'db-get-emails-by-threadid-and-labelid',
   ({ threadIds, labelId }) =>
-    dbManager.getEmailsByThreadIdAndLabelId({ threadIds, labelId })
+    dbManager.getEmailsByThreadIdAndLabelId(threadIds, labelId)
 );
 
 ipc.answerRenderer('db-get-emails-counter-by-labelid', labelId =>

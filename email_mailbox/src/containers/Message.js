@@ -2,18 +2,14 @@ import { connect } from 'react-redux';
 import { MessageType } from '../components/Message';
 import MessageWrapper from './../components/MessageWrapper';
 import MessageContent, { actionHandlerKeys } from './../data/message';
-import {
-  LabelType,
-  confirmPermanentDeleteThread
-} from './../utils/electronInterface';
-import {
-  closeDialogWindow,
-  downloadUpdate,
-  getEmailsByLabelIds
-} from './../utils/ipc';
+import { LabelType } from './../utils/electronInterface';
+import { downloadUpdate } from './../utils/ipc';
 import { SectionType } from '../utils/const';
-import { loadThreads, removeThreads } from '../actions';
+import { loadThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
+import string from '../lang';
+
+const { popups } = string;
 
 const defineMessageData = (
   mailboxSelected,
@@ -99,17 +95,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
         }
         case actionHandlerKeys.advice.trash: {
-          confirmPermanentDeleteThread(async response => {
-            closeDialogWindow();
-            if (response) {
-              const labelId = LabelType.trash.id;
-              const emails = await getEmailsByLabelIds([labelId]);
-              const threadsParams = emails.map(email => ({
-                threadIdDB: email.threadId
-              }));
-              dispatch(removeThreads(threadsParams, labelId));
-            }
-          });
+          ownProps.setPopupContent(popups.permanently_delete);
           break;
         }
         case actionHandlerKeys.suggestion.update: {

@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderThreadOptions from './HeaderThreadOptions';
 import { CustomCheckboxStatus } from './CustomCheckbox';
-import {
-  confirmPermanentDeleteThread,
-  LabelType
-} from '../utils/electronInterface';
-import { closeDialogWindow } from './../utils/ipc';
+import { LabelType } from '../utils/electronInterface';
+import string from '../lang';
+
+const { popups } = string;
 
 class HeaderThreadOptionsWrapper extends Component {
   constructor() {
@@ -14,13 +13,17 @@ class HeaderThreadOptionsWrapper extends Component {
     this.state = {
       displayFolderMenu: false,
       displayTagsMenu: false,
-      displayDotsMenu: false
+      displayDotsMenu: false,
+      popupContent: undefined
     };
   }
 
   render() {
     return (
       <HeaderThreadOptions
+        popupContent={this.state.popupContent}
+        handlePopupConfirm={this.handlePopupConfirm}
+        dismissPopup={this.dismissPopup}
         displayFolderMenu={this.state.displayFolderMenu}
         displayTagsMenu={this.state.displayTagsMenu}
         displayDotsMenu={this.state.displayDotsMenu}
@@ -143,13 +146,20 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   handleClickDeleteThread = () => {
-    confirmPermanentDeleteThread(response => {
-      closeDialogWindow();
-      if (response) {
-        const backFirst = true;
-        this.props.onRemoveThreads(this.props.threadsSelected, backFirst);
-      }
+    this.setState({
+      popupContent: popups.permanently_delete
     });
+  };
+
+  handlePopupConfirm = () => {
+    const backFirst = true;
+    this.setState({ popupContent: undefined }, () => {
+      this.props.onRemoveThreads(this.props.threadsSelected, backFirst);
+    });
+  };
+
+  dismissPopup = () => {
+    this.setState({ popupContent: undefined });
   };
 
   handleClickDiscardDrafts = () => {

@@ -5,10 +5,14 @@ import ButtonSync from './ButtonSync';
 import ItemTooltip from './ItemTooltip';
 import ThreadItem from '../containers/ThreadItem';
 import Message from './../containers/Message';
+import PopupHOC from './PopupHOC';
+import DialogPopup from './DialogPopup';
 import ReactTooltip from 'react-tooltip';
 import { Switch } from 'react-switch-input';
 import string from './../lang';
 import './threads.scss';
+
+const EmptyTrashPopover = PopupHOC(DialogPopup);
 
 const Threads = props => (
   <div className="threads-container">
@@ -18,7 +22,16 @@ const Threads = props => (
       onClickSection={props.onClickSection}
       onClickClose={props.onCloseMessage}
       threadsCount={props.threads.size}
+      setPopupContent={props.setPopupContent}
     />
+    {props.popupContent && (
+      <EmptyTrashPopover
+        {...props.popupContent}
+        popupPosition={{ left: '45%', top: '45%' }}
+        onLeftButtonClick={props.dismissPopup}
+        onRightButtonClick={props.handlePopupConfirm}
+      />
+    )}
     <div className="threads-header">
       <div className="threads-header-title-container">
         <h1 className="threads-mailbox-title">{props.mailboxTitle}</h1>
@@ -119,6 +132,8 @@ const renderLabelsForThread = (hoverTarget, labels) => {
 
 Threads.propTypes = {
   buttonSyncStatus: PropTypes.number,
+  dismissPopup: PropTypes.func,
+  handlePopupConfirm: PropTypes.func,
   hoverTarget: PropTypes.string,
   isLoadingThreads: PropTypes.bool,
   isUpdateAvailable: PropTypes.bool,
@@ -134,7 +149,9 @@ Threads.propTypes = {
   onMouseEnterItem: PropTypes.func,
   onMouseLeaveItem: PropTypes.func,
   onScroll: PropTypes.func,
+  popupContent: PropTypes.object,
   searchParams: PropTypes.object,
+  setPopupContent: PropTypes.func,
   switchUnreadThreadsStatus: PropTypes.bool,
   threadItemsChecked: PropTypes.object,
   threads: PropTypes.object,

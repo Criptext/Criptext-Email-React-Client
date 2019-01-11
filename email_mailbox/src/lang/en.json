@@ -348,6 +348,12 @@
       },
       "cancelSyncLabel": "Cancel sync",
       "continueLabel": "Continue"
+    },
+    "permanently_delete": {
+      "title": "Warning!",
+      "message": "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",
+      "leftButtonLabel": "Cancel",
+      "rightButtonLabel": "Confirm"
     }
   },
   "settings": {

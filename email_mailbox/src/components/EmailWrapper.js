@@ -4,6 +4,9 @@ import Email from './Email';
 import { ButtonUnsendStatus } from './ButtonUnsend';
 import { checkUserGuideSteps } from '../utils/electronEventInterface';
 import { USER_GUIDE_STEPS } from './UserGuide';
+import string from '../lang';
+
+const { popups } = string;
 
 class EmailWrapper extends Component {
   constructor() {
@@ -13,13 +16,15 @@ class EmailWrapper extends Component {
       displayEmail: false,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
-      hideView: false
+      hideView: false,
+      popupContent: undefined
     };
   }
 
   render() {
     return (
       <Email
+        {...this.props}
         buttonUnsendStatus={this.state.buttonUnsendStatus}
         displayEmail={this.state.displayEmail}
         isHiddenPopOverEmailMoreInfo={this.state.isHiddenPopOverEmailMoreInfo}
@@ -30,7 +35,12 @@ class EmailWrapper extends Component {
         onTogglePopOverEmailActions={this.handleTogglePopOverEmailActions}
         onClickEditDraft={this.handleClickEditDraft}
         onClickUnsendButton={this.handleClickUnsendButton}
-        {...this.props}
+        popupContent={this.state.popupContent}
+        handlePopupConfirm={this.handlePopupConfirm}
+        dismissPopup={this.dismissPopup}
+        handleClickPermanentlyDeleteEmail={
+          this.handleClickPermanentlyDeleteEmail
+        }
       />
     );
   }
@@ -105,6 +115,24 @@ class EmailWrapper extends Component {
       }
     );
   };
+
+  handleClickPermanentlyDeleteEmail = () => {
+    this.setState({
+      popupContent: popups.permanently_delete
+    });
+  };
+
+  handlePopupConfirm = ev => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    this.setState({ popupContent: undefined }, this.props.onDeletePermanently);
+  };
+
+  dismissPopup = () => {
+    this.setState({
+      popupContent: undefined
+    });
+  };
 }
 
 EmailWrapper.propTypes = {
@@ -112,6 +140,7 @@ EmailWrapper.propTypes = {
   email: PropTypes.object,
   files: PropTypes.array,
   onEditDraft: PropTypes.func,
+  onDeletePermanently: PropTypes.func,
   onLoadFiles: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   staticOpen: PropTypes.bool

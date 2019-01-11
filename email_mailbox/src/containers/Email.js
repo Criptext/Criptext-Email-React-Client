@@ -5,12 +5,8 @@ import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
-import {
-  LabelType,
-  myAccount,
-  confirmPermanentDeleteThread
-} from './../utils/electronInterface';
-import { closeDialogWindow, openFilledComposerWindow } from './../utils/ipc';
+import { LabelType, myAccount } from './../utils/electronInterface';
+import { openFilledComposerWindow } from './../utils/ipc';
 import {
   loadFiles,
   muteEmail,
@@ -184,17 +180,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
       });
     },
-    onDeletePermanently: ev => {
-      ev.stopPropagation();
-      confirmPermanentDeleteThread(response => {
-        closeDialogWindow();
-        if (response) {
-          const emailsToDelete = [email];
-          dispatch(removeEmails(emailsToDelete)).then(() => {
-            if (ownProps.count === 1) {
-              ownProps.onBackOption();
-            }
-          });
+    onDeletePermanently: () => {
+      const emailsToDelete = [email];
+      dispatch(removeEmails(emailsToDelete)).then(() => {
+        if (ownProps.count === 1) {
+          ownProps.onBackOption();
         }
       });
     },
