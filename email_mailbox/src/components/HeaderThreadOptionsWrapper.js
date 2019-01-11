@@ -8,7 +8,7 @@ import {
 import string from '../lang';
 
 const { popups } = string;
-console.log(popups.permanently_delete)
+
 class HeaderThreadOptionsWrapper extends Component {
   constructor() {
     super();

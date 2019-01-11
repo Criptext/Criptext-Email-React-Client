@@ -7,7 +7,7 @@ import { USER_GUIDE_STEPS } from './UserGuide';
 import string from '../lang';
 
 const { popups } = string;
-console.log(popups)
+
 class EmailWrapper extends Component {
   constructor() {
     super();

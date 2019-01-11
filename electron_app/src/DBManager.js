@@ -358,7 +358,7 @@ const deleteEmailsByIds = (ids, trx) => {
     .del();
 };
 
-const deleteEmailsByThreadIdAndLabelId = ({threadIds, labelId}) => {
+const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
   const labelIdsToDelete = labelId
     ? [labelId]
     : [systemLabels.spam.id, systemLabels.trash.id];
@@ -729,7 +729,7 @@ const getQueryParamsIfOrNotRejectedLabel = ({ labelId, rejectedLabelIds }) => {
       };
 };
 
-const getEmailsByThreadIdAndLabelId = ({threadIds, labelId}) => {
+const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
   return db
     .select(
       `${Table.EMAIL}.*`,
