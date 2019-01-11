@@ -274,19 +274,18 @@ const exportFileKeyTable = async db => {
   let offset = 0;
   while (!shouldEnd) {
     const result = await db
-      .table(Table.FILE_KEY)
+      .table(Table.FILE)
+      .distinct("emailId")
       .select('*')
-      .whereExists(
-        db
-          .select('*')
-          .from(Table.EMAIL)
-          .whereRaw(`${Table.EMAIL}.id = ${Table.FILE_KEY}.emailId`)
-          .whereRaw(whereRawEmailQuery)
-      )
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
       .then(rows =>
-        rows.map(row => Object.assign(row, { emailId: parseInt(row.emailId) }))
+        rows.map((row, index) => ({
+          id: index,
+          key: row.key,
+          iv: row.iv,
+          emailId: row.emailId
+        }))
       );
     fileKeyRows = [...fileKeyRows, ...result];
     if (result.length < SELECT_ALL_BATCH) {
