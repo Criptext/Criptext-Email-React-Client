@@ -66,13 +66,37 @@
     "delete": "Delete",
     "delete_permanently": "Delete permanently",
     "empty": {
+      "inbox": {
+        "header": "Inbox is empty",
+        "subheader": "Relax and enjoy"
+      },
+      "starred": {
+        "header": "No starred emails",
+        "subheader": "Nothing's highlighted yet"
+      },
+      "trash": {
+        "header": "Trash is empty",
+        "subheader": "Trash is empty"
+      },
+      "draft": {
+        "header": "No Drafts",
+        "subheader": "Nothing to do here"
+      },
+      "sent": {
+        "header": "No Sent Emails",
+        "subheader": "Send something ;)"
+      },
+      "spam": {
+        "header": "No Spam Email",
+        "subheader": "Let's try and keep it that way ;)"
+      },
+      "allmail": {
+        "header": "No Emails",
+        "subheader": "At all!"
+      },
       "search": {
         "header": "No search results",
         "subheader": "Trash & Spam emails are not displayed"
-      },
-      "spam": {
-        "header": "There's no spam",
-        "subheader": "Cool!"
       },
       "default": {
         "header": "You have no emails yet",
