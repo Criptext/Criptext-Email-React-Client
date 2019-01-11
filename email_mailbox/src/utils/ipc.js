@@ -138,6 +138,10 @@ export const syncStatus = async () => {
   return await callMain('client-sync-status');
 };
 
+export const unlockDevice = async params => {
+  return await callMain('client-unlock-device', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {

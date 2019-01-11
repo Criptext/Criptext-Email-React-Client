@@ -3,12 +3,8 @@ import PropTypes from 'prop-types';
 import PasswordChangedPopup from './PasswordChangedPopup';
 import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
-import {
-  requiredMinLength,
-  unlockDevice,
-  errors
-} from './../utils/electronInterface';
-import { throwError } from './../utils/ipc';
+import { requiredMinLength, errors } from './../utils/electronInterface';
+import { throwError, unlockDevice } from './../utils/ipc';
 import { handleDeleteDeviceData } from '../utils/electronEventInterface';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 import string from './../lang';

@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const unlockDevice = params => {
-  return clientManager.unlockDevice(params);
-};
-
 export const updateNameEvent = params => {
   return clientManager.updateName(params);
 };
