@@ -10,7 +10,7 @@ const EmptyMailbox = props => {
   return (
     <div className="empty-container empty-mailbox-container">
       <div className="empty-content">
-        <div className={`empty-icon ${iconClass || 'empty-mailbox'}`} />
+        <div className={`empty-icon ${iconClass}`} />
         <div className="header-text">{header}</div>
         <div className="subheader-text">{subheader}</div>
       </div>
@@ -20,21 +20,59 @@ const EmptyMailbox = props => {
 
 const defineEmptyParamsByMailbox = mailbox => {
   switch (mailbox) {
+    case 'inbox':
+      return {
+        header: string.mailbox.empty.inbox.header,
+        subheader: string.mailbox.empty.inbox.subheader,
+        iconClass: 'empty-inbox'
+      };
+    case 'starred':
+      return {
+        header: string.mailbox.empty.starred.header,
+        subheader: string.mailbox.empty.starred.subheader,
+        iconClass: 'empty-starred'
+      };
+    case 'trash':
+      return {
+        header: string.mailbox.empty.trash.header,
+        subheader: string.mailbox.empty.trash.subheader,
+        iconClass: 'empty-trash'
+      };
+    case 'draft':
+      return {
+        header: string.mailbox.empty.draft.header,
+        subheader: string.mailbox.empty.draft.subheader,
+        iconClass: 'empty-draft'
+      };
+    case 'sent':
+      return {
+        header: string.mailbox.empty.sent.header,
+        subheader: string.mailbox.empty.sent.subheader,
+        iconClass: 'empty-sent'
+      };
+    case 'spam':
+      return {
+        header: string.mailbox.empty.spam.header,
+        subheader: string.mailbox.empty.spam.subheader,
+        iconClass: 'empty-spam'
+      };
+    case 'allmail':
+      return {
+        header: string.mailbox.empty.allmail.header,
+        subheader: string.mailbox.empty.allmail.subheader,
+        iconClass: 'empty-allmail'
+      };
     case 'search':
       return {
         header: string.mailbox.empty.search.header,
         subheader: string.mailbox.empty.search.subheader,
         iconClass: 'empty-search'
       };
-    case 'spam':
-      return {
-        header: string.mailbox.empty.spam.header,
-        subheader: string.mailbox.empty.spam.subheader
-      };
     default:
       return {
         header: string.mailbox.empty.default.header,
-        subheader: string.mailbox.empty.default.subheader
+        subheader: string.mailbox.empty.default.subheader,
+        iconClass: 'default-empty-mailbox'
       };
   }
 };

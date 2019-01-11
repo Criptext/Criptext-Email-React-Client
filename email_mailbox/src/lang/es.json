@@ -66,17 +66,41 @@
     "delete": "Borrar",
     "delete_permanently": "Borrar permanentemente",
     "empty": {
-      "search": {
-        "header": "No hay resultados de búsqueda",
-        "subheader": "Correos en Papelera & Spam no son mostrados"
+      "inbox": {
+        "header": "Bandeja de Recibidos vacía",
+        "subheader": "Todo tranquilo y sereno"
+      },
+      "starred": {
+        "header": "No hay correos Favoritos",
+        "subheader": "Resalta tus correos importantes"
+      },
+      "trash": {
+        "header": "Papelera vacía",
+        "subheader": "Que limpio se ve todo ;)"
+      },
+      "draft": {
+        "header": "No hay Borradores",
+        "subheader": "Todo bien aquí ;)"
+      },
+      "sent": {
+        "header": "No hay correos Enviados",
+        "subheader": "Empieza enviando uno ;)"
       },
       "spam": {
-        "header": "No tienes spam",
-        "subheader": "Bien!"
+        "header": "No tienes Spam",
+        "subheader": "¡Qué bien! Mantengamoslo así"
+      },
+      "allmail": {
+        "header": "No hay Correos",
+        "subheader": "¡En lo absoluto!"
+      },
+      "search": {
+        "header": "No search results",
+        "subheader": "Trash & Spam emails are not displayed"
       },
       "default": {
-        "header": "No tienes correos todavía",
-        "subheader": "Envía un correo para comenzar"
+        "header": "You have no emails yet",
+        "subheader": "Send an email to get started"
       }
     },
     "forward": "Reenviar",

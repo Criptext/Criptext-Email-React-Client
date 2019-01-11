@@ -3,8 +3,11 @@
 .empty-mailbox-container {
   .empty-content {
     .empty-icon {
-      &.empty-mailbox {
-        background-image: url(../#{$_PATH_TO_IMAGES}/empty-mailbox.svg);
+      width: 192px !important;
+      height: 162px !important;
+
+      &.default-empty-mailbox {
+        background-image: url(../#{$_PATH_TO_IMAGES}/default-empty-mailbox.svg);
       }
       &.empty-search {
         background-image: url(../#{$_PATH_TO_IMAGES}/empty-search.svg);
@@ -20,6 +23,31 @@
   [data-theme] [data-theme^=#{$_THEME}] {
     .empty-mailbox-container {
       background-color: $_BACKGROUND_COLOR_MAIN_EMPTY;
+      .empty-content {
+        .empty-icon {
+          &.empty-inbox {
+            background-image: url(../#{$_PATH_TO_IMAGES}/empty-inbox-#{$_THEME}.svg);
+          }
+          &.empty-starred {
+            background-image: url(../#{$_PATH_TO_IMAGES}/empty-starred-#{$_THEME}.svg);
+          }
+          &.empty-trash {
+            background-image: url(../#{$_PATH_TO_IMAGES}/empty-trash-#{$_THEME}.svg);
+          }
+          &.empty-draft {
+            background-image: url(../#{$_PATH_TO_IMAGES}/empty-draft-#{$_THEME}.svg);
+          }
+          &.empty-sent {
+            background-image: url(../#{$_PATH_TO_IMAGES}/empty-sent-#{$_THEME}.svg);
+          }
+          &.empty-spam {
+            background-image: url(../#{$_PATH_TO_IMAGES}/empty-spam-#{$_THEME}.svg);
+          }
+          &.empty-allmail {
+            background-image: url(../#{$_PATH_TO_IMAGES}/empty-allmail-#{$_THEME}.svg);
+          }
+        }
+      }
     }
   }
 }
