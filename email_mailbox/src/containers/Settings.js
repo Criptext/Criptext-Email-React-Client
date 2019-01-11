@@ -6,8 +6,7 @@ import {
   cleanDataLogout,
   LabelType,
   myAccount,
-  updateNameEvent,
-  setReadTracking
+  updateNameEvent
 } from '../utils/electronInterface';
 import {
   getUserSettings,
@@ -18,7 +17,8 @@ import {
   resendConfirmationEmail,
   resetPassword,
   updateAccount,
-  updateContactByEmail
+  updateContactByEmail,
+  setReadTracking
 } from './../utils/ipc';
 import { appDomain, composerEvents } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';

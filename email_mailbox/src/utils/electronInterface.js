@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const setReadTracking = enabled => {
-  return clientManager.setReadTracking(enabled);
-};
-
 export const setTwoFactorAuth = enable => {
   return clientManager.setTwoFactorAuth(enable);
 };

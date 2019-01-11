@@ -122,6 +122,10 @@ export const resetPassword = async recipientId => {
   return await callMain('client-reset-password', recipientId);
 };
 
+export const setReadTracking = async enabled => {
+  return await callMain('client-set-read-tracking', enabled);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {

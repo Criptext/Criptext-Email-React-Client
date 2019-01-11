@@ -79,6 +79,10 @@ ipc.answerRenderer('client-reset-password', recipientId =>
   clientManager.resetPassword(recipientId)
 );
 
+ipc.answerRenderer('client-set-read-tracking', enabled =>
+  clientManager.setReadTracking(enabled)
+);
+
 ipc.answerRenderer('client-sync-accept', randomId =>
   clientManager.syncAccept(randomId)
 );
