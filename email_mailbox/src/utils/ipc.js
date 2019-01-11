@@ -74,6 +74,10 @@ export const acknowledgeEvents = async eventIds => {
   return await callMain('client-acknowledge-events', eventIds);
 };
 
+export const changePassword = async params => {
+  return await callMain('client-change-password', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {

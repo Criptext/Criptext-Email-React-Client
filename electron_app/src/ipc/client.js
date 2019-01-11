@@ -5,6 +5,10 @@ ipc.answerRenderer('client-acknowledge-events', params =>
   clientManager.acknowledgeEvents(params)
 );
 
+ipc.answerRenderer('client-change-password', params =>
+  clientManager.changePassword(params)
+);
+
 ipc.answerRenderer('client-find-key-bundles', params =>
   clientManager.findKeyBundles(params)
 );

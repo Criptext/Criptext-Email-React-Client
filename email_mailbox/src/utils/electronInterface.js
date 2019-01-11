@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const changePassword = params => {
-  return clientManager.changePassword(params);
-};
-
 export const changeRecoveryEmail = params => {
   return clientManager.changeRecoveryEmail(params);
 };
