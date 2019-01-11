@@ -98,15 +98,19 @@ export const getUserSettings = async () => {
   return await callMain('client-get-user-settings');
 };
 
-export const logout = () => {
+export const logout = async () => {
   return await callMain('client-logout');
 };
 
-export const postOpenEvent = params => {
+export const postOpenEvent = async params => {
   return await callMain('client-post-open-event', params);
 };
 
-export const removeDevice = params => {
+export const postPeerEvent = async params => {
+  return await callMain('client-post-peer-event', params);
+};
+
+export const removeDevice = async params => {
   return await callMain('client-remove-device', params);
 };
 

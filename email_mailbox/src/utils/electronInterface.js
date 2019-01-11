@@ -95,10 +95,6 @@ export const resendConfirmationEmail = () => {
   return clientManager.resendConfirmationEmail();
 };
 
-export const postPeerEvent = params => {
-  return clientManager.postPeerEvent(params);
-};
-
 export const resetPassword = recipientId => {
   return clientManager.resetPassword(recipientId);
 };

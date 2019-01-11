@@ -1,7 +1,7 @@
 import { Thread } from './types';
 import { startLoadSync, stopLoadSync, stopLoadThread } from './activity';
 import { updateBadgeLabels } from './labels';
-import { LabelType, postPeerEvent } from '../utils/electronInterface';
+import { LabelType } from '../utils/electronInterface';
 import {
   createEmailLabel,
   deleteEmailLabel,
@@ -13,6 +13,7 @@ import {
   getLabelById,
   getTrashExpiredEmails,
   postOpenEvent,
+  postPeerEvent,
   updateEmails,
   updateUnreadEmailByThreadIds
 } from '../utils/ipc';

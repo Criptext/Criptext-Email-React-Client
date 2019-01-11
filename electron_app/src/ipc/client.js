@@ -45,9 +45,7 @@ ipc.answerRenderer('client-link-deny', randomId =>
   clientManager.linkDeny(randomId)
 );
 
-ipc.answerRenderer('client-logout', () =>
-  clientManager.logout()
-);
+ipc.answerRenderer('client-logout', () => clientManager.logout());
 
 ipc.answerRenderer('client-post-data-ready', params =>
   clientManager.postDataReady(params)
@@ -59,6 +57,10 @@ ipc.answerRenderer('client-post-email', params =>
 
 ipc.answerRenderer('client-post-open-event', params =>
   clientManager.postOpenEvent(params)
+);
+
+ipc.answerRenderer('client-post-peer-event', params =>
+  clientManager.postPeerEvent(params)
 );
 
 ipc.answerRenderer('client-post-user', params =>
