@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const setTwoFactorAuth = enable => {
-  return clientManager.setTwoFactorAuth(enable);
-};
-
 export const syncAccept = randomId => {
   return clientManager.syncAccept(randomId);
 };

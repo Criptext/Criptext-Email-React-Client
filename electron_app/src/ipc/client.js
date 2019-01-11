@@ -83,6 +83,10 @@ ipc.answerRenderer('client-set-read-tracking', enabled =>
   clientManager.setReadTracking(enabled)
 );
 
+ipc.answerRenderer('client-set-two-factor-auth', enable =>
+  clientManager.setTwoFactorAuth(enable)
+);
+
 ipc.answerRenderer('client-sync-accept', randomId =>
   clientManager.syncAccept(randomId)
 );

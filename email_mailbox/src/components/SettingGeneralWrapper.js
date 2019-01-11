@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   myAccount,
-  requiredMinLength,
-  setTwoFactorAuth
+  requiredMinLength
 } from './../utils/electronInterface';
-import { changePassword, changeRecoveryEmail } from './../utils/ipc';
+import { changePassword, changeRecoveryEmail, setTwoFactorAuth } from './../utils/ipc';
 import {
   addEvent,
   Event,
