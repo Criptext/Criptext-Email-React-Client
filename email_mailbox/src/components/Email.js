@@ -11,14 +11,21 @@ import { EmailStatus } from './../utils/const';
 import string from '../lang';
 import './email.scss';
 
-const DeletePermanenltyPopup = PopupHOC(DialogPopup)
+const DeletePermanenltyPopup = PopupHOC(DialogPopup);
 const PopOverEmailMoreInfo = MenuHOC(EmailMoreInfo);
 const PopOverEmailActions = MenuHOC(EmailActions);
 const draftText = 'Draft';
 
 const Email = props => (
   <div>
-    {props.popupContent && <DeletePermanenltyPopup popupPosition={{left: '45%', top: '45%'}} {...props.popupContent} onRightButtonClick={props.handlePopupConfirm} onLeftButtonClick={props.dismissPopup} />}
+    {props.popupContent && (
+      <DeletePermanenltyPopup
+        popupPosition={{ left: '45%', top: '45%' }}
+        {...props.popupContent}
+        onRightButtonClick={props.handlePopupConfirm}
+        onLeftButtonClick={props.dismissPopup}
+      />
+    )}
     <div
       className={`email-container ${defineEmailState(
         props.displayEmail,
@@ -231,6 +238,7 @@ const isExpand = (displayEmail, staticOpen) => {
 renderEmailInfoExpand.propTypes = {
   buttonUnsendStatus: PropTypes.number,
   email: PropTypes.object,
+  handleClickPermanentlyDeleteEmail: PropTypes.func,
   isDraft: PropTypes.bool,
   isSpam: PropTypes.bool,
   isTrash: PropTypes.bool,
@@ -256,9 +264,12 @@ renderMuteIcon.propTypes = {
 };
 
 Email.propTypes = {
+  dismissPopup: PropTypes.func,
   displayEmail: PropTypes.bool,
   email: PropTypes.object,
   files: PropTypes.array,
+  handleClickPermanentlyDeleteEmail: PropTypes.func,
+  handlePopupConfirm: PropTypes.func,
   hideView: PropTypes.bool,
   isDraft: PropTypes.bool,
   isUnsend: PropTypes.bool,
@@ -266,6 +277,7 @@ Email.propTypes = {
   onReplyAll: PropTypes.func,
   onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,
+  popupContent: PropTypes.object,
   staticOpen: PropTypes.bool
 };
 

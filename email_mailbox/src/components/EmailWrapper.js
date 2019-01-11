@@ -38,7 +38,9 @@ class EmailWrapper extends Component {
         popupContent={this.state.popupContent}
         handlePopupConfirm={this.handlePopupConfirm}
         dismissPopup={this.dismissPopup}
-        handleClickPermanentlyDeleteEmail={this.handleClickPermanentlyDeleteEmail}
+        handleClickPermanentlyDeleteEmail={
+          this.handleClickPermanentlyDeleteEmail
+        }
       />
     );
   }
@@ -117,20 +119,20 @@ class EmailWrapper extends Component {
   handleClickPermanentlyDeleteEmail = () => {
     this.setState({
       popupContent: popups.permanently_delete
-    })
-  }
+    });
+  };
 
   handlePopupConfirm = ev => {
     ev.stopPropagation();
     ev.preventDefault();
-    this.setState({popupContent: undefined}, this.props.onDeletePermanently)
-  }
+    this.setState({ popupContent: undefined }, this.props.onDeletePermanently);
+  };
 
   dismissPopup = () => {
     this.setState({
       popupContent: undefined
-    })
-  }
+    });
+  };
 }
 
 EmailWrapper.propTypes = {
@@ -138,6 +140,7 @@ EmailWrapper.propTypes = {
   email: PropTypes.object,
   files: PropTypes.array,
   onEditDraft: PropTypes.func,
+  onDeletePermanently: PropTypes.func,
   onLoadFiles: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   staticOpen: PropTypes.bool

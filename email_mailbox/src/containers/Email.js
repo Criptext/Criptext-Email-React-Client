@@ -5,12 +5,8 @@ import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
-import {
-  LabelType,
-  myAccount,
-  confirmPermanentDeleteThread
-} from './../utils/electronInterface';
-import { closeDialogWindow, openFilledComposerWindow } from './../utils/ipc';
+import { LabelType, myAccount } from './../utils/electronInterface';
+import { openFilledComposerWindow } from './../utils/ipc';
 import {
   loadFiles,
   muteEmail,

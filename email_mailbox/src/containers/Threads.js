@@ -6,9 +6,7 @@ import {
   startLoadThread,
   removeThreads
 } from '../actions/index';
-import {
-  getEmailsByLabelIds
-} from './../utils/ipc';
+import { getEmailsByLabelIds } from './../utils/ipc';
 import ThreadsView from '../components/ThreadsWrapper';
 import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';

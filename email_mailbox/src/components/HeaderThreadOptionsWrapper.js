@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderThreadOptions from './HeaderThreadOptions';
 import { CustomCheckboxStatus } from './CustomCheckbox';
-import {
-  LabelType
-} from '../utils/electronInterface';
+import { LabelType } from '../utils/electronInterface';
 import string from '../lang';
 
 const { popups } = string;
@@ -150,19 +148,19 @@ class HeaderThreadOptionsWrapper extends Component {
   handleClickDeleteThread = () => {
     this.setState({
       popupContent: popups.permanently_delete
-    })
+    });
   };
-  
+
   handlePopupConfirm = () => {
     const backFirst = true;
     this.setState({ popupContent: undefined }, () => {
       this.props.onRemoveThreads(this.props.threadsSelected, backFirst);
-    })
-  }
+    });
+  };
 
   dismissPopup = () => {
-    this.setState({ popupContent: undefined })
-  }
+    this.setState({ popupContent: undefined });
+  };
 
   handleClickDiscardDrafts = () => {
     this.props.onDiscardDrafts(this.props.threadsSelected);

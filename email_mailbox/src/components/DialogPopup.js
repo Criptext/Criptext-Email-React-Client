@@ -7,9 +7,7 @@ const DialogPopup = props => (
       <h1>{props.title}</h1>
     </div>
     <div className="popup-paragraph">
-      <p>
-        {props.message}
-      </p>
+      <p>{props.message}</p>
     </div>
     <div className="popup-buttons">
       <button

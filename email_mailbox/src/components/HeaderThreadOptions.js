@@ -101,7 +101,13 @@ class HeaderThreadOptions extends Component {
             </li>
           </ul>
         </TooltipMenu>
-        {popupContent && <DeleteThreadsPopup {...popupContent} onLeftButtonClick={dismissPopup} onRightButtonClick={handlePopupConfirm} />}
+        {popupContent && (
+          <DeleteThreadsPopup
+            {...popupContent}
+            onLeftButtonClick={dismissPopup}
+            onRightButtonClick={handlePopupConfirm}
+          />
+        )}
       </div>
     );
   }
@@ -168,9 +174,11 @@ class HeaderThreadOptions extends Component {
 
 HeaderThreadOptions.propTypes = {
   allSelected: PropTypes.bool,
+  dismissPopup: PropTypes.func,
   displayFolderMenu: PropTypes.bool,
   displayTagsMenu: PropTypes.bool,
   displayDotsMenu: PropTypes.bool,
+  handlePopupConfirm: PropTypes.func,
   isVisibleArchiveButton: PropTypes.bool,
   isVisibleDeleteButton: PropTypes.bool,
   isVisibleDiscardDraftsButton: PropTypes.bool,
@@ -195,6 +203,7 @@ HeaderThreadOptions.propTypes = {
   onToggleDotsMenu: PropTypes.func,
   onToggleFolderMenu: PropTypes.func,
   onToggleTagsMenu: PropTypes.func,
+  popupContent: PropTypes.object,
   threadIds: PropTypes.object
 };
 
