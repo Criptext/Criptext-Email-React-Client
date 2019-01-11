@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const postOpenEvent = params => {
-  return clientManager.postOpenEvent(params);
-};
-
 export const removeDevice = params => {
   return clientManager.removeDevice(params);
 };

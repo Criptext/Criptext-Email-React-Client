@@ -102,6 +102,10 @@ export const logout = () => {
   return await callMain('client-logout');
 };
 
+export const postOpenEvent = params => {
+  return await callMain('client-post-open-event', params);
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {
