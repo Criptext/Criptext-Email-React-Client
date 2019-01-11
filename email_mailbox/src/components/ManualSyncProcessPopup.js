@@ -10,11 +10,15 @@ import {
   decryptBackupFile,
   importDatabase,
   clearSyncData,
-  myAccount,
-  syncBegin
+  myAccount
 } from '../utils/electronInterface';
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';
-import { getDataReady, acknowledgeEvents, syncStatus } from '../utils/ipc';
+import {
+  getDataReady,
+  acknowledgeEvents,
+  syncBegin,
+  syncStatus
+} from '../utils/ipc';
 import { appDomain, SectionType } from './../utils/const';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 import {

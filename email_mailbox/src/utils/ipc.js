@@ -142,6 +142,10 @@ export const unlockDevice = async params => {
   return await callMain('client-unlock-device', params);
 };
 
+export const unsendEmailEvent = async metadataKey => {
+  return await callMain('client-unsend-email', metadataKey);
+};
+
 export const updateNameEvent = async params => {
   return await callMain('client-update-name-event', params);
 };

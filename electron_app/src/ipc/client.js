@@ -103,6 +103,10 @@ ipc.answerRenderer('client-unlock-device', params =>
   clientManager.unlockDevice(params)
 );
 
+ipc.answerRenderer('client-unsend-email', metadataKey =>
+  clientManager.unsendEmail(metadataKey)
+);
+
 ipc.answerRenderer('client-update-name-event', params =>
   clientManager.updateName(params)
 );

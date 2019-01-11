@@ -8,7 +8,6 @@ import {
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const { getCurrentWindow } = remote;
-const clientManager = remote.require('./src/clientManager');
 const newsClient = remote.require('./src/newsClient');
 const dataTransferManager = remote.require('./src/dataTransferClient');
 
@@ -87,12 +86,6 @@ export const downloadBackupFile = address => {
 
 export const importDatabase = () => {
   return dataTransferManager.importDatabase();
-};
-
-/*  Criptext Client
------------------------------ */
-export const unsendEmailEvent = metadataKey => {
-  return clientManager.unsendEmail(metadataKey);
 };
 
 /*  DataBase
