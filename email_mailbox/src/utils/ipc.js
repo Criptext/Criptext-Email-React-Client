@@ -90,6 +90,10 @@ export const getEmailBody = async params => {
   return await callMain('client-get-email-body', params);
 };
 
+export const getEvents = async () => {
+  return await callMain('client-get-events');
+};
+
 /* DataBase
    ----------------------------- */
 export const cleanDatabase = async () => {

@@ -91,10 +91,6 @@ export const importDatabase = () => {
 
 /*  Criptext Client
 ----------------------------- */
-export const getEvents = () => {
-  return clientManager.getEvents();
-};
-
 export const getUserSettings = () => {
   return clientManager.getUserSettings();
 };
