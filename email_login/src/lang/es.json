@@ -31,7 +31,23 @@
       "usernameInvalid": "Usuario no valido",
       "statusUnknown": "Error desconocido. Código: ",
       "usernameNotAvailable": "Usuario no disponible"
+    },
+    "usePassword": {
+      "title": "Advertencia",
+      "prefix": "Si inicias sesión con tu contraseña",
+      "strong": " los correos de otros dispositivos no estarán disponibles ",
+      "suffix": "en este dispositivo. ¿Te gustaria continuar?",
+      "leftButtonLabel": "Cancelar",
+      "rightButtonLabel": "Continuar"
     }
+  },
+  "signin": {
+    "title": "Advertencia!",
+    "prefix": "NO estableciste un Correo de Recuperación por lo que la",
+    "strong": " recuperación de la cuenta es imposible ",
+    "suffix": "si olvidas tu contraseña.",
+    "leftButtonLabel": "Cancelar",
+    "rightButtonLabel": "Continuar"
   },
   "passwordLogin": {
     "sectionTitleSignIn": "Iniciar sesión",
@@ -45,9 +61,20 @@
       "confirmLabel": "Confirmar"
     },
     "forgotPasswordMessage": {
+      "title": "Restablecer Contraseña",
       "prefix": "Un enlace para restablecer la contraseña fue enviado a",
       "suffix": "El enlace será válido durante 30 minutos",
-      "error": "Falló al enviar el enlace para restablecer la contraseña. Intente de nuevo"
+      "dismissButtonLabel": "Ok",
+      "notSetError": {
+        "title": "Sin correo de recuperación",
+        "message": "La recuperación de la contraseña es imposible ya que no se configuró un correo de recuperación en su cuenta. Para asistencia adicional contáctenos:",
+        "dismissButtonLabel": "Ok"
+      },
+      "fallbackError": {
+        "title": "Restablecer Contraseña",
+        "message": "Falló al enviar el enlace para restablecer la contraseña. Intente de nuevo",
+        "dismissButtonLabel": "Ok"
+      }
     }
   },
   "signUp": {

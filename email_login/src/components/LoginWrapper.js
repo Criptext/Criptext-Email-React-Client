@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import Login from './Login';
-import SignUpWrapper from './SignUpElectronWrapper';
+import SignUpWrapper from './SignUpWrapper';
 import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
   checkAvailableUsername,
-  confirmLostDevices,
   createTemporalAccount,
   deleteTemporalAccount,
   linkBegin,
@@ -16,7 +15,6 @@ import {
   confirmWaitingApprovalLogin
 } from './../utils/electronInterface';
 import {
-  closeDialogWindow,
   closeLoginWindow,
   getComputerName,
   openCreateKeysLoadingWindow,
@@ -28,7 +26,11 @@ import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
 import string from './../lang';
 
-const { login } = string;
+import PopupHOC from './PopupHOC';
+import LoginPopup from './LoginPopup';
+import DialogPopup from './DialogPopup';
+
+const { login, signin } = string;
 
 const mode = {
   SIGNUP: 'SIGNUP',
@@ -55,6 +57,18 @@ const approvedDeviceStastus = 200;
 const shouldDisableLogin = state =>
   !!state.errorMessage || state.values.username === '';
 
+const LoginWithPasswordPopup = PopupHOC(DialogPopup);
+const ResetPasswordPopup = PopupHOC(LoginPopup);
+const NoRecoverySignUpPopup = PopupHOC(DialogPopup);
+
+const commitNewUser = validInputData => {
+  openCreateKeysLoadingWindow({
+    loadingType: 'signup',
+    remoteData: validInputData
+  });
+  closeLoginWindow();
+};
+
 class LoginWrapper extends Component {
   constructor() {
     super();
@@ -67,17 +81,71 @@ class LoginWrapper extends Component {
       disabledResendLoginRequest: false,
       errorMessage: '',
       ephemeralToken: undefined,
-      hasTwoFactorAuth: undefined
+      hasTwoFactorAuth: undefined,
+      popupContent: undefined
     };
   }
 
   render() {
+    return (
+      <div>
+        {this.renderPopup()}
+        {this.renderSection()}
+      </div>
+    );
+  }
+
+  renderPopup = () => {
+    if (!this.state.popupContent) {
+      return null;
+    }
+
+    switch (this.state.mode) {
+      case mode.CONTINUE:
+        return (
+          <LoginWithPasswordPopup
+            {...this.state.popupContent}
+            onLeftButtonClick={this.handleStayLinking}
+            onRightButtonClick={this.handleCancelLink}
+          />
+        );
+      case mode.LOST_DEVICES:
+        return (
+          <ResetPasswordPopup
+            {...this.state.popupContent}
+            onDismiss={this.dismissPopup}
+          />
+        );
+      case mode.SIGNUP:
+        return (
+          <NoRecoverySignUpPopup
+            {...this.state.popupContent}
+            onLeftButtonClick={this.dismissPopup}
+            onRightButtonClick={this.handleSignUpContinue}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  renderSection = () => {
     switch (this.state.mode) {
       case mode.SIGNUP:
-        return <SignUpWrapper toggleSignUp={ev => this.toggleSignUp(ev)} />;
+        return (
+          <SignUpWrapper
+            toggleSignUp={ev => this.toggleSignUp(ev)}
+            checkAvailableUsername={checkAvailableUsername}
+            onFormReady={this.onFormReady}
+            onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
+          />
+        );
       case mode.CONTINUE:
         return (
           <ContinueLogin
+            onLeftButtonClick={this.handlePopupLeftButton}
+            onRightButtonClick={this.handlePopupRightButton}
+            popupContent={this.state.popupContent}
             disabledResendLoginRequest={this.state.disabledResendLoginRequest}
             toggleContinue={this.toggleContinue}
             onClickSignInWithPassword={this.handleClickSignInWithPassword}
@@ -96,6 +164,8 @@ class LoginWrapper extends Component {
       case mode.LOST_DEVICES:
         return (
           <LostAllDevicesWrapper
+            setPopupContent={this.setPopupContent}
+            dismissPopup={this.dismissPopup}
             usernameValue={this.state.values.username}
             toggleLostAllDevices={ev => this.toggleLostAllDevices(ev)}
             hasTwoFactorAuth={this.state.hasTwoFactorAuth}
@@ -114,13 +184,49 @@ class LoginWrapper extends Component {
           />
         );
     }
-  }
+  };
 
   toggleSignUp = ev => {
     ev.preventDefault();
     ev.stopPropagation();
     const nextMode = this.state.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN;
     this.setState({ mode: nextMode });
+  };
+
+  onSubmitWithoutRecoveryEmail = validInputData => {
+    this.setState({
+      popupContent: {
+        title: signin.title,
+        prefix: signin.prefix,
+        strong: signin.strong,
+        suffix: signin.suffix,
+        leftButtonLabel: signin.leftButtonLabel,
+        rightButtonLabel: signin.rightButtonLabel,
+        data: validInputData
+      }
+    });
+  };
+
+  onFormReady = validInputData => {
+    if (validInputData.recoveryEmail === '')
+      return this.onSubmitWithoutRecoveryEmail(validInputData);
+    commitNewUser(validInputData);
+  };
+
+  handleSignUpContinue = () => {
+    const inputData = this.state.popupContent.data;
+    console.log(inputData);
+    if (!inputData) {
+      return;
+    }
+    this.setState(
+      {
+        popupContent: undefined
+      },
+      () => {
+        commitNewUser(inputData);
+      }
+    );
   };
 
   toggleContinue = ev => {
@@ -312,14 +418,36 @@ class LoginWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     this.stopCountdown();
-    confirmLostDevices(response => {
-      closeDialogWindow();
-      if (response) {
-        socketClient.disconnect();
-        this.goToPasswordLogin();
-      } else {
-        this.checkLinkStatus();
+    this.setState({
+      popupContent: {
+        title: login.usePassword.title,
+        prefix: login.usePassword.prefix,
+        strong: login.usePassword.strong,
+        suffix: login.usePassword.suffix,
+        leftButtonLabel: login.usePassword.leftButtonLabel,
+        rightButtonLabel: login.usePassword.rightButtonLabel
       }
+    });
+  };
+
+  setPopupContent = popupContent => {
+    this.setState({ popupContent });
+  };
+
+  dismissPopup = () => {
+    this.setState({ popupContent: undefined });
+  };
+
+  handleStayLinking = () => {
+    this.setState({ popupContent: undefined }, () => {
+      this.checkLinkStatus();
+    });
+  };
+
+  handleCancelLink = () => {
+    socketClient.disconnect();
+    this.setState({ popupContent: undefined }, () => {
+      this.goToPasswordLogin();
     });
   };
 
