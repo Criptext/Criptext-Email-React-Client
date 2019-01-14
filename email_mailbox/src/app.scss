@@ -846,11 +846,10 @@ button{
     }
 
     .labels-tooltip{
-      background-color: $_BACKGROUND_COLOR_TOOLTIP !important;;
+      background-color: $_BACKGROUND_COLOR_TOOLTIP;
+      color: $_COLOR_TEXT_TOOLTIP;
 
       .tooltip-tip{
-        color: $_COLOR_TEXT_TOOLTIP;
-
         &:after{
           background-color: $_BACKGROUND_COLOR_TOOLTIP;
         }

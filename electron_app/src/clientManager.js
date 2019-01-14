@@ -168,15 +168,18 @@ const getEmailBody = async bodyKey => {
 };
 
 const getEvents = async () => {
-  const PENDING_EVENTS_STATUS = 200;
+  const PENDING_EVENTS_STATUS_OK = 200;
+  const PENDING_EVENTS_STATUS_MORE = 201;
   const NO_EVENTS_STATUS = 204;
   await checkClient({});
   const res = await client.getPendingEvents();
   switch (res.status) {
-    case PENDING_EVENTS_STATUS:
-      return formEvents(res.body);
+    case PENDING_EVENTS_STATUS_OK:
+      return { events: formEvents(res.body) };
+    case PENDING_EVENTS_STATUS_MORE:
+      return { events: formEvents(res.body), hasMoreEvents: true };
     case NO_EVENTS_STATUS:
-      return [];
+      return { events: [] };
     default:
       return await checkExpiredSession(res, getEvents, null);
   }
