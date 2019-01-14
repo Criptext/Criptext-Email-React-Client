@@ -78,8 +78,8 @@ let newEmailNotificationList = [];
 export const getGroupEvents = async () => {
   if (isGettingEvents) return;
   isGettingEvents = true;
-  const receivedEvents = await getEvents();
-  const eventsGroups = receivedEvents.reduce(
+  const { events, hasMoreEvents } = await getEvents();
+  const eventsGroups = events.reduce(
     (result, event) => {
       const eventId = event.cmd;
       if (eventId === SocketCommand.NEW_EMAIL) {
@@ -157,6 +157,7 @@ export const getGroupEvents = async () => {
     }
   );
   isGettingEvents = !(await processEvent(eventsGroups));
+  if (hasMoreEvents) await getGroupEvents();
 };
 
 const processEvent = async eventsGroups => {
