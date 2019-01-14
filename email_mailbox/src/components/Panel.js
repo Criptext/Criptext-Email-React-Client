@@ -19,7 +19,7 @@ const Panel = props => (
       'wrapper-in ' +
       defineWrapperClass(props.isOpenSideBar, props.isOpenActivityPanel)
     }
-    data-theme={mySettings.theme}
+    data-theme={mySettings.theme || 'light'}
   >
     <div className="wrapper-left">
       <SideBar

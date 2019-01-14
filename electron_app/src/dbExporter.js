@@ -357,6 +357,10 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
     await trx.table(Table.EMAIL_LABEL).del();
     await trx.table(Table.FILE).del();
     await trx.table(Table.FILE_KEY).del();
+    await trx
+      .table(Table.LABEL)
+      .where({ type: 'custom' })
+      .del();
 
     const lineReader = new LineByLineReader(filepath);
     return new Promise(resolve => {
