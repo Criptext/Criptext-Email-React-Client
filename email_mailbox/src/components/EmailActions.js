@@ -64,6 +64,14 @@ const EmailActions = props => {
             <span>{string.mailbox.mark_as_spam}</span>
           </li>
         )}
+        <li
+          onClick={ev => {
+            props.onPrintEmail(ev);
+            props.onToggleMenu(ev);
+          }}
+        >
+          <span>{string.mailbox.print_email}</span>
+        </li>
       </ul>
     </div>
   );
@@ -76,6 +84,7 @@ EmailActions.propTypes = {
   onDeletePermanently: PropTypes.func,
   onForward: PropTypes.func,
   onMarkAsSpam: PropTypes.func,
+  onPrintEmail: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyEmail: PropTypes.func,
   onToggleMenu: PropTypes.func

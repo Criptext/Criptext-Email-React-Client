@@ -6,7 +6,7 @@ import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
 import { LabelType, myAccount } from './../utils/electronInterface';
-import { openFilledComposerWindow } from './../utils/ipc';
+import { openFilledComposerWindow, sendPrintEmailEvent } from './../utils/ipc';
 import {
   loadFiles,
   muteEmail,
@@ -198,6 +198,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         unsendDate
       };
       dispatch(unsendEmail(params));
+    },
+    onPrintEmail: ev => {
+      ev.stopPropagation();
+      sendPrintEmailEvent(email.id);
     }
   };
 };

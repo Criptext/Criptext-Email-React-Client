@@ -1,4 +1,4 @@
-const { errorMessages } = require('./lang');
+const { errorMessages } = require('./lang').strings;
 
 const USER_ERROR = {
   ALREADY_EXISTS: {
@@ -104,6 +104,10 @@ const MESSAGE_ERROR = {
   TOO_MANY_RECIPIENTS: {
     name: errorMessages.TOO_MANY_RECIPIENTS.name,
     description: errorMessages.TOO_MANY_RECIPIENTS.description
+  },
+  PRINTING_ERROR: {
+    name: errorMessages.PRINTING_ERROR.name,
+    description: errorMessages.PRINTING_ERROR.description
   },
   UNKNOWN: {
     name: errorMessages.UNKNOWN.name,

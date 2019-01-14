@@ -1,0 +1,13 @@
+<html>
+    <head></head>
+    <body>
+      <script>
+        // Html string to window for print command
+        const ipcRenderer = window.require("electron").ipcRenderer;
+        ipcRenderer.on("setPdfContent", (ev, content, windowTitle) => {
+          document.body.innerHTML = content;
+          document.title = windowTitle;
+        });
+      </script>
+    </body>
+</html>

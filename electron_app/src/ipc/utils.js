@@ -7,6 +7,7 @@ const globalManager = require('./../globalManager');
 const loadingWindow = require('./../windows/loading');
 
 ipc.answerRenderer('get-computer-name', () => getComputerName());
+
 ipc.answerRenderer('get-isWindows', () => isWindows());
 
 ipc.answerRenderer('process-pending-events', () => {

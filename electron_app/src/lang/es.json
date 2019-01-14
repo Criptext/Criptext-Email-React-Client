@@ -102,6 +102,10 @@
         "prefix": "El correo ha excedido el limite de ",
         "suffix": " por archivos."
       }
+    },
+    "PRINTING_ERROR": {
+      "name": "Error de impresión",
+      "description": "Falló al imprimir el documento. Intente de nuevo."
     }
   },
   "updaterMessages": {
@@ -184,5 +188,10 @@
         "checkForUpdates": "Buscar actualizaciones"
       }
     }
+  },
+  "printStrings": {
+    "toTag": "Para",
+    "message": "Mensaje",
+    "at": "a las"
   }
 }
