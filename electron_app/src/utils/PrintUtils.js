@@ -21,14 +21,8 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
   const localizedMessageTag = lang.strings.printStrings.message;
 
   const formDocumentHeader = (subject, numEmails) => {
-    const logoPath = path.join(
-      'file://',
-      __dirname,
-      '..',
-      '..',
-      'build',
-      'criptext-logo-complete.png'
-    );
+    const logoPath =
+      'https://cdn.criptext.com/Criptext-Email-Website/images/criptext-logo-complete.png';
     const logo = `
       <img src="${logoPath}" alt="Criptext Logo" style="width: 100px !important;">
       <hr>`;
