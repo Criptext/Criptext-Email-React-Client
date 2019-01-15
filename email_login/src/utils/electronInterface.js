@@ -2,7 +2,6 @@ import { labels } from './systemLabels';
 import lang from './../lang';
 const electron = window.require('electron');
 const { ipcRenderer, remote, webFrame } = electron;
-const dbManager = remote.require('./src/DBManager');
 const clientManager = remote.require('./src/clientManager');
 
 export const { requiredMinLength, requiredMaxLength } = remote.require(
@@ -89,10 +88,4 @@ export const linkStatus = () => {
 
 export const login = params => {
   return clientManager.login(params);
-};
-
-/* DataBase
-  ----------------------------- */
-export const createContact = params => {
-  return dbManager.createContact(params);
 };

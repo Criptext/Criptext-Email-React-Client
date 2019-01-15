@@ -97,6 +97,10 @@ ipc.answerRenderer('db-get-contact-by-emails', emails =>
   dbManager.getContactByEmails(emails)
 );
 
+ipc.answerRenderer('db-get-contact-by-emailid', emailId =>
+  dbManager.getContactsByEmailId(emailId)
+);
+
 ipc.answerRenderer('db-get-contact-by-ids', ids =>
   dbManager.getContactByIds(ids)
 );
