@@ -37,7 +37,7 @@ async function initApp() {
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
     if (!!existingAccount.deviceId) {
-      const appSettings = await dbManager.getAppSettings();
+      const appSettings = await dbManager.getSettings();
       myAccount.initialize(existingAccount);
       mySettings.initialize(appSettings);
       wsClient.start(myAccount);

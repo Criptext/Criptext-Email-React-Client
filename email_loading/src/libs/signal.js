@@ -3,8 +3,7 @@
 import {
   myAccount,
   errors,
-  LabelType,
-  postKeyBundle
+  LabelType  
 } from './../utils/electronInterface';
 import {
   cleanDatabase,
@@ -15,6 +14,7 @@ import {
   getAccount,
   getComputerName,
   getKeyBundle,
+  postKeyBundle,
   postUser,
   updateAccount
 } from './../utils/ipc';

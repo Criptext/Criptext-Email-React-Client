@@ -1088,7 +1088,7 @@ const deletePendingEventsByIds = ids => {
 
 /* Settings
 ----------------------------- */
-const getAppSettings = async () => {
+const getSettings = async () => {
   const [appSettings] = await db.table(Table.SETTINGS).where({ id: 1 });
   return appSettings;
 };
@@ -1170,10 +1170,10 @@ module.exports = {
   getPreKeyPair,
   getSessionRecord,
   getSessionRecordByRecipientIds,
+  getSettings,
   getSignedPreKey,
   getTrashExpiredEmails,
   getFilesByTokens,
-  getAppSettings,
   deleteLabelById,
   updateAccount,
   updateContactByEmail,

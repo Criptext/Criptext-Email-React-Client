@@ -8,7 +8,7 @@ const {
 const {
   createPendingEvent,
   getAccount,
-  getAppSettings,
+  getSettings,
   updateAccount
 } = require('./DBManager');
 const { processEventsQueue } = require('./eventQueueManager');
@@ -39,7 +39,7 @@ const initializeClient = ({ token, refreshToken, language, os }) => {
 };
 
 const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
-  const { language } = await getAppSettings();
+  const { language } = await getSettings();
   const os = await getOsAndArch();
   if (optionalSessionToken || optionalRefreshToken) {
     return initializeClient({

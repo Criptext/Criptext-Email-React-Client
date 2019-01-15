@@ -44,6 +44,10 @@ export const postDataReady = async params => {
   return await callMain('client-post-data-ready', params);
 };
 
+export const postKeyBundle = async params => {
+  return await callMain('client-post-key-bundle', params);
+};
+
 export const postUser = async params => {
   return await callMain('client-post-user', params);
 };
