@@ -12,11 +12,13 @@ describe('TABLE[Label]:', () => {
     const labelsToInsert = [
       {
         color: '111111',
-        text: 'Inbox'
+        text: 'Inbox',
+        uuid: '00000000-0000-0000-0000-000000000001'
       },
       {
         color: '222222',
-        text: 'Sent'
+        text: 'Sent',
+        uuid: '00000000-0000-0000-0000-000000000002'
       }
     ];
     await DBManager.createLabel(labelsToInsert);
@@ -27,7 +29,8 @@ describe('TABLE[Label]:', () => {
   it('should update label: color and text', async () => {
     const labelParams = {
       color: '333333',
-      text: 'Draft'
+      text: 'Draft',
+      uuid: '00000000-0000-0000-0000-000000000003'
     };
     const [labelId] = await DBManager.createLabel(labelParams);
     const newColor = '333334';
@@ -47,7 +50,8 @@ describe('TABLE[Label]:', () => {
   it('should update label: color', async () => {
     const [id] = await DBManager.createLabel({
       color: '444444',
-      text: 'Starred'
+      text: 'Starred',
+      uuid: '00000000-0000-0000-0000-000000000004'
     });
     const newColor = '444555';
     await DBManager.updateLabel({ id, color: newColor });
@@ -58,7 +62,8 @@ describe('TABLE[Label]:', () => {
   it('should update label: text', async () => {
     const [id] = await DBManager.createLabel({
       color: '555555',
-      text: 'Trash'
+      text: 'Trash',
+      uuid: '00000000-0000-0000-0000-000000000005'
     });
     const newText = 'LabelModified2';
     await DBManager.updateLabel({ id, text: newText });
@@ -69,7 +74,8 @@ describe('TABLE[Label]:', () => {
   it('should update label: visible', async () => {
     const [id] = await DBManager.createLabel({
       color: '666666',
-      text: 'Important'
+      text: 'Important',
+      uuid: '00000000-0000-0000-0000-000000000006'
     });
     const newVisibleValue = false;
     await DBManager.updateLabel({ id, visible: newVisibleValue });
@@ -80,19 +86,23 @@ describe('TABLE[Label]:', () => {
   it('get labels by: text', async () => {
     const label1 = {
       color: '777777',
-      text: 'label'
+      text: 'label',
+      uuid: '00000000-0000-0000-0000-000000000007'
     };
     const label2 = {
       color: '888888',
-      text: 'LABEL'
+      text: 'LABEL',
+      uuid: '00000000-0000-0000-0000-000000000008'
     };
     const label3 = {
       color: '999999',
-      text: 'AnotherLabel'
+      text: 'AnotherLabel',
+      uuid: '00000000-0000-0000-0000-000000000009'
     };
     const label4 = {
       color: '101010',
-      text: 'Test'
+      text: 'Test',
+      uuid: '00000000-0000-0000-0000-000000000010'
     };
     const labelsToInsert = [label1, label2, label3, label4];
     await DBManager.createLabel(labelsToInsert);
@@ -107,7 +117,8 @@ describe('TABLE[Label]:', () => {
         const formattedReceived = received
           .map(labelReceived => ({
             text: labelReceived.text,
-            color: labelReceived.color
+            color: labelReceived.color,
+            uuid: labelReceived.uuid
           }))
           .sort();
         const sortedArgument = argument.sort();

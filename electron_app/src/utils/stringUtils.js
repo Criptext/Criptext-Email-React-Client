@@ -71,6 +71,27 @@ const defineLargeTime = (time, optionalLanguage) => {
   return moment(time).format(`ddd, D MMM YYYY [${localizedAt}] h:mm A`);
 };
 
+const genUUID = () => {
+  const s4 = () =>
+    Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  return (
+    s4() +
+    s4() +
+    '-' +
+    s4() +
+    '-' +
+    s4() +
+    '-' +
+    s4() +
+    '-' +
+    s4() +
+    s4() +
+    s4()
+  );
+};
+
 module.exports = {
   removeProtocolFromUrl,
   printDocumentTemplateHeader,
@@ -78,5 +99,6 @@ module.exports = {
   cleanHTMLTagsFromEmailContentToPrint,
   cleanEmojisFromString,
   formatRecipientsToPrint,
-  defineLargeTime
+  defineLargeTime,
+  genUUID
 };

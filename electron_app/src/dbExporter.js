@@ -79,7 +79,9 @@ const exportContactTable = async db => {
           if (!row.name) {
             delete row.name;
           }
-          return row;
+          return Object.assign(row, {
+            isTrusted: !!row.isTrusted
+          });
         })
       );
     contactRows = [...contactRows, ...result];

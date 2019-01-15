@@ -3,7 +3,8 @@ const inbox = {
   text: 'Inbox',
   color: '0091ff',
   type: 'system',
-  visible: true
+  visible: true,
+  uuid: '00000000-0000-0000-0000-000000000001'
 };
 
 const spam = {
@@ -11,7 +12,8 @@ const spam = {
   text: 'Spam',
   color: 'ff0000',
   type: 'system',
-  visible: true
+  visible: true,
+  uuid: '00000000-0000-0000-0000-000000000002'
 };
 
 const sent = {
@@ -19,7 +21,8 @@ const sent = {
   text: 'Sent',
   color: '1a9759',
   type: 'system',
-  visible: true
+  visible: true,
+  uuid: '00000000-0000-0000-0000-000000000003'
 };
 
 const starred = {
@@ -27,7 +30,8 @@ const starred = {
   text: 'Starred',
   color: 'ffce4b',
   type: 'system',
-  visible: true
+  visible: true,
+  uuid: '00000000-0000-0000-0000-000000000005'
 };
 
 const draft = {
@@ -35,7 +39,8 @@ const draft = {
   text: 'Draft',
   color: '666666',
   type: 'system',
-  visible: true
+  visible: true,
+  uuid: '00000000-0000-0000-0000-000000000006'
 };
 
 const trash = {
@@ -43,7 +48,8 @@ const trash = {
   text: 'Trash',
   color: 'b00e0e',
   type: 'system',
-  visible: true
+  visible: true,
+  uuid: '00000000-0000-0000-0000-000000000007'
 };
 
 module.exports = {
