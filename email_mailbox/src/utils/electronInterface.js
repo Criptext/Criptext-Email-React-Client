@@ -1,8 +1,5 @@
 import { labels } from './systemLabels';
-import {
-  cleanDataLogout as cleanData,
-  createSignalTables
-} from './ipc';
+import { cleanDataLogout as cleanData, createSignalTables } from './ipc';
 
 const electron = window.require('electron');
 const { remote } = electron;

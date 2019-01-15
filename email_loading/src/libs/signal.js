@@ -1,10 +1,6 @@
 /*global libsignal util*/
 
-import {
-  myAccount,
-  errors,
-  LabelType  
-} from './../utils/electronInterface';
+import { myAccount, errors, LabelType } from './../utils/electronInterface';
 import {
   cleanDatabase,
   createAccount as createAccountDB,

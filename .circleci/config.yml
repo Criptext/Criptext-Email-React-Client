@@ -35,8 +35,8 @@ jobs:
 
       - run: cd email_composer/ && yarn install
 
-      - run: cd email_dialog/ && yarn install
-
+      - run: cd email_loading/ && yarn install
+      
       - run: cd email_login/ && yarn install
 
       - run: cd email_mailbox/ && yarn install
@@ -49,7 +49,7 @@ jobs:
             - email_loading/node_modules
             - email_login/node_modules
             - email_mailbox/node_modules
-          key: v5-dependencies-{{ checksum "email_mailbox/package.json" }}
+          key: v4-dependencies-{{ checksum "email_mailbox/package.json" }}
         
       # run tests!
       - checkout
