@@ -1,7 +1,6 @@
 /*global libsignal util*/
 
 import {
-  createAccount as createAccountDB,
   myAccount,
   errors,
   createContact,
@@ -11,6 +10,7 @@ import {
 } from './../utils/electronInterface';
 import {
   cleanDatabase,
+  createAccount as createAccountDB,
   createLabel,
   getAccount,
   getComputerName,

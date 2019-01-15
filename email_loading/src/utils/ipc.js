@@ -62,6 +62,10 @@ export const cleanDatabase = async () => {
   return await callMain('db-clean-database');
 };
 
+export const createAccount = async params => {
+  return await callMain('db-create-account', params);
+};
+
 export const createIdentityKeyRecord = async params => {
   return await callMain('db-create-identity-key-record', params);
 };

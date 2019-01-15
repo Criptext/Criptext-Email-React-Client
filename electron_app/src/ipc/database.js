@@ -7,6 +7,10 @@ ipc.answerRenderer('db-clean-data-logout', recipientId =>
   dbManager.cleanDataLogout(recipientId)
 );
 
+ipc.answerRenderer('db-create-account', params =>
+  dbManager.createAccount(params)
+);
+
 ipc.answerRenderer('db-create-email', params => dbManager.createEmail(params));
 
 ipc.answerRenderer('db-create-email-label', params =>
