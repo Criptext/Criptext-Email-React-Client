@@ -59,10 +59,6 @@ export const uploadDatabaseFile = randomId => {
 
 /* DataBase
   ----------------------------- */
-export const createTables = () => {
-  return dbManager.createTables();
-};
-
 export const getAppSettings = () => {
   return dbManager.getAppSettings();
 };

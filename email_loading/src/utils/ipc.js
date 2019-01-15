@@ -90,6 +90,10 @@ export const createSignedPreKeyRecord = async params => {
   return await callMain('db-create-signed-prekey-record', params);
 };
 
+export const createTables = async () => {
+  return await callMain('db-create-tables');
+};
+
 export const deletePreKeyPair = async params => {
   return await callMain('db-delete-prekey-pair', params);
 };

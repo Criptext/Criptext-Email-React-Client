@@ -4,7 +4,6 @@ import {
   myAccount,
   errors,
   LabelType,
-  createTables,
   postKeyBundle
 } from './../utils/electronInterface';
 import {
@@ -12,6 +11,7 @@ import {
   createAccount as createAccountDB,
   createContact,
   createLabel,
+  createTables,
   getAccount,
   getComputerName,
   getKeyBundle,
