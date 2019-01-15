@@ -59,10 +59,6 @@ export const uploadDatabaseFile = randomId => {
 
 /* DataBase
   ----------------------------- */
-export const createContact = params => {
-  return dbManager.createContact(params);
-};
-
 export const createTables = () => {
   return dbManager.createTables();
 };

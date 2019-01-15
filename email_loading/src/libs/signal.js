@@ -3,7 +3,6 @@
 import {
   myAccount,
   errors,
-  createContact,
   LabelType,
   createTables,
   postKeyBundle
@@ -11,6 +10,7 @@ import {
 import {
   cleanDatabase,
   createAccount as createAccountDB,
+  createContact,
   createLabel,
   getAccount,
   getComputerName,

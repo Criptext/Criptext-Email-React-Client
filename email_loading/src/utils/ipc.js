@@ -66,6 +66,10 @@ export const createAccount = async params => {
   return await callMain('db-create-account', params);
 };
 
+export const createContact = async params => {
+  return await callMain('db-create-contact', params);
+};
+
 export const createIdentityKeyRecord = async params => {
   return await callMain('db-create-identity-key-record', params);
 };

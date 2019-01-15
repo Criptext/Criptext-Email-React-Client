@@ -11,6 +11,10 @@ ipc.answerRenderer('db-create-account', params =>
   dbManager.createAccount(params)
 );
 
+ipc.answerRenderer('db-create-contact', params =>
+  dbManager.createContact(params)
+);
+
 ipc.answerRenderer('db-create-email', params => dbManager.createEmail(params));
 
 ipc.answerRenderer('db-create-email-label', params =>
