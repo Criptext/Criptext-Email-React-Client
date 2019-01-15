@@ -1,5 +1,4 @@
 import { labels } from './systemLabels';
-import { openDialogWindow } from './ipc';
 import lang from './../lang';
 const electron = window.require('electron');
 const { ipcRenderer, remote, webFrame } = electron;
@@ -68,75 +67,6 @@ export const confirmWaitingApprovalLogin = callback => {
   ----------------------------- */
 export const closeLoading = () => {
   ipcRenderer.send('close-loading');
-};
-
-export const confirmEmptyEmail = callback => {
-  const texts = lang.dialogContent.confirmEmptyEmail;
-  const dialogData = {
-    title: texts.title,
-    contentType: 'EMPTY_RECOVERY_EMAIL',
-    options: {
-      cancelLabel: texts.cancelLabel,
-      acceptLabel: texts.acceptLabel
-    },
-    sendTo: 'login'
-  };
-  openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (e, data) => {
-    callback(data.selectedOption === texts.acceptLabel);
-  });
-};
-
-export const confirmLostDevices = callback => {
-  const texts = lang.dialogContent.confirmLostDevices;
-  const dialogData = {
-    title: texts.title,
-    contentType: 'LOST_ALL_DEVICES',
-    options: {
-      cancelLabel: texts.cancelLabel,
-      acceptLabel: texts.acceptLabel
-    },
-    sendTo: 'login'
-  };
-  openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (e, data) => {
-    callback(data.selectedOption === texts.acceptLabel);
-  });
-};
-
-export const confirmForgotPasswordEmptyEmail = (customText, callback) => {
-  const texts = lang.dialogContent.confirmForgotPasswordEmptyEmail;
-  const dialogData = {
-    title: texts.title,
-    contentType: 'FORGOT_PASSWORD_EMPTY_EMAIL',
-    customTextToReplace: customText,
-    options: {
-      cancelLabel: texts.cancelLabel,
-      acceptLabel: texts.acceptLabel
-    },
-    sendTo: 'login'
-  };
-  openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (e, data) => {
-    callback(data.selectedOption === texts.acceptLabel);
-  });
-};
-
-export const confirmForgotPasswordSentLink = (customText, callback) => {
-  const texts = lang.dialogContent.confirmForgotPasswordSentLink;
-  const dialogData = {
-    title: texts.title,
-    contentType: 'FORGOT_PASSWORD_SEND_LINK',
-    customTextToReplace: customText,
-    options: {
-      acceptLabel: texts.acceptLabel
-    },
-    sendTo: 'login'
-  };
-  openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (e, data) => {
-    callback(data.selectedOption === texts.acceptLabel);
-  });
 };
 
 /* Criptext Client

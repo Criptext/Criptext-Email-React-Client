@@ -501,12 +501,5 @@
     },
     "yesterdayText": "Yesterday",
     "atText": "at"
-  },
-  "dialogContents": {
-    "confirmPermanentDeleteThread": {
-      "title": "Warning!",
-      "cancelLabel": "Cancel",
-      "acceptLabel": "Confirm"
-    }
   }
 }

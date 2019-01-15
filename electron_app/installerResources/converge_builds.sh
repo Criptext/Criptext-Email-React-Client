@@ -1,6 +1,6 @@
 #!/bin/sh
 has_error=0
-projects="email_composer email_dialog email_loading email_login email_mailbox"
+projects="email_composer email_loading email_login email_mailbox"
 
 echo "--------------------------------------------"
 tput setaf 2;tput bold;

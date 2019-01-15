@@ -1,12 +1,11 @@
 import { labels } from './systemLabels';
 import {
   cleanDataLogout as cleanData,
-  createSignalTables,
-  openDialogWindow
+  createSignalTables
 } from './ipc';
 
 const electron = window.require('electron');
-const { remote, ipcRenderer } = electron;
+const { remote } = electron;
 const { getCurrentWindow } = remote;
 const newsClient = remote.require('./src/newsClient');
 const dataTransferManager = remote.require('./src/dataTransferClient');
@@ -43,25 +42,6 @@ export const errors = remote.require('./src/errors');
 
 /*  Window events
 ----------------------------- */
-export const confirmPermanentDeleteThread = callback => {
-  // eslint-disable-next-line no-undef
-  const string = require('./../lang');
-  const texts = string.default.dialogContents.confirmPermanentDeleteThread;
-  const dialogData = {
-    title: texts.title,
-    contentType: 'PERMANENT_DELETE_THREAD',
-    options: {
-      cancelLabel: texts.cancelLabel,
-      acceptLabel: texts.acceptLabel
-    },
-    sendTo: 'mailbox'
-  };
-  openDialogWindow(dialogData);
-  ipcRenderer.once('selectedOption', (e, data) => {
-    callback(data.selectedOption === texts.acceptLabel);
-  });
-};
-
 export const reloadWindow = () => {
   getCurrentWindow().reload();
 };

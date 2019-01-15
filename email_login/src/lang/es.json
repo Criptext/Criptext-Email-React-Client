@@ -114,25 +114,6 @@
       "title": "Bueno, esto es extraño...",
       "message": "Algo ha sucedido que está retrasando este proceso.",
       "detail": "¿Quieres seguir esperando?"
-    },
-    "confirmEmptyEmail": {
-      "title": "Advertencia",
-      "cancelLabel": "Cancelar",
-      "acceptLabel": "Confirmar"
-    },
-    "confirmLostDevices": {
-      "title": "Advertencia",
-      "cancelLabel": "Cancelar",
-      "acceptLabel": "Continuar"
-    },
-    "confirmForgotPasswordEmptyEmail": {
-      "title": "Advertencia",
-      "cancelLabel": "Cancelar",
-      "acceptLabel": "Entendido"
-    },
-    "confirmForgotPasswordSentLink": {
-      "title": "Restablecer contraseña",
-      "acceptLabel": "Ok"
     }
   }
 }
