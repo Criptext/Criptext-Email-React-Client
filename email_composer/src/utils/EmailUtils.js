@@ -1,10 +1,5 @@
-import { myAccount } from './electronInterface';
-import {
-  getContactsByEmailId,
-  getEmailByKey,
-  getFilesByEmailId,
-  getFileKeyByEmailId
-} from './ipc';
+import { myAccount, getContactsByEmailId } from './electronInterface';
+import { getContactsByEmailId, getEmailByKey, getFilesByEmailId } from './ipc';
 import {
   cleanHTML,
   removeActionsFromSubject,
@@ -70,9 +65,6 @@ export const formOutgoingEmailFromData = ({
   bccEmails,
   body,
   ccEmails,
-  files,
-  iv,
-  key,
   labelId,
   secure,
   status,
@@ -117,13 +109,10 @@ export const formOutgoingEmailFromData = ({
     from: [`${from}@${appDomain}`]
   };
 
-  const fileKeyParams = files.length && key && iv ? { key, iv } : null;
-
   const emailData = {
     email,
     recipients,
     labels: [labelId],
-    fileKeyParams
   };
 
   return {
@@ -193,8 +182,6 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const emailIsForward = replyType === composerEvents.FORWARD;
   const [emailData] = await getEmailByKey(emailKeyToEdit);
   let files = [];
-  let key = null,
-    iv = null;
   if (emailIsForward) {
     const prevFiles = await getFilesByEmailId(emailData.id);
     files = prevFiles.map(file => {
@@ -203,14 +190,11 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
         mode: FILE_MODES.UPLOADED,
         percentage: 100,
         token: file.token,
-        shouldDuplicate: true
+        shouldDuplicate: true,
+        key: file.key,
+        iv: file.iv
       };
     });
-    const [fileKeyParams] = await getFileKeyByEmailId(emailData.id);
-    if (fileKeyParams) {
-      key = fileKeyParams.key;
-      iv = fileKeyParams.iv;
-    }
   }
 
   const threadId = emailIsForward ? undefined : emailData.threadId;
@@ -252,8 +236,6 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     textSubject,
     threadId,
     files,
-    key,
-    iv,
     status: emailIsForward ? Status.DISABLED : Status.ENABLED
   };
 };

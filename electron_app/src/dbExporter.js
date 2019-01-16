@@ -284,7 +284,7 @@ const exportFileKeyTable = async db => {
           id: index,
           key: row.key,
           iv: row.iv,
-          emailId: row.emailId
+          emailId: Number(row.emailId)
         }))
       );
     fileKeyRows = [...fileKeyRows, ...result];
@@ -432,6 +432,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               break;
             }
             case Table.FILE: {
+              delete object.fileKey;
               files.push(object);
               if (files.length === FILES_BATCH) {
                 lineReader.pause();
@@ -445,7 +446,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               fileKeys.push(object);
               if (fileKeys.length === FILE_KEYS_BATCH) {
                 lineReader.pause();
-                await trx.insert(fileKeys).into(Table.FILE_KEY);
+                await trx(Table.FILE).where({emailId: fileKey.emailId}).update({key: key, iv: iv});
                 fileKeys = [];
                 lineReader.resume();
               }
@@ -462,7 +463,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
           await insertRemainingRows(emailContacts, Table.EMAIL_CONTACT, trx);
           await insertRemainingRows(emailLabels, Table.EMAIL_LABEL, trx);
           await insertRemainingRows(files, Table.FILE, trx);
-          await insertRemainingRows(fileKeys, Table.FILE_KEY, trx);
+          await updateRemainingFiles(fileKeys, trx);
           resolve();
         });
     });
@@ -474,6 +475,15 @@ const insertRemainingRows = async (rows, tablename, trx) => {
     return await trx.insert(rows).into(tablename);
   }
 };
+
+const updateRemainingFiles = async (rows, trx) => {
+  if (rows.length == 0) {
+    return 
+  }
+  for (const fileKey of rows) {
+    await trx(Table.FILE).where({emailId: fileKey.emailId}).update({key: key, iv: iv})
+  }
+}
 
 /* Encrypt and Decrypt
 ------------------------------- */

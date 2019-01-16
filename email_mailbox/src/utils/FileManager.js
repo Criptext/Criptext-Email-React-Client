@@ -45,34 +45,24 @@ export const setDownloadHandler = (token, filename) => {
 
 export const CHUNK_SIZE = 524288;
 
-export const setCryptoInterfaces = async emailId => {
-  const [fileKey] = await getFileKeyByEmailId(emailId);
-  if (fileKey) {
-    const { key, iv } = fileKey;
-    fileManager.setCryptoInterfaces(null, (blob, callback) => {
-      if (!key || !iv) {
-        return callback(blob);
-      }
-      const keyArray = CryptoJS.enc.Base64.parse(key);
-      const ivArray = CryptoJS.enc.Base64.parse(iv);
-      const reader = new FileReader();
-      reader.addEventListener('loadend', () => {
-        const ciphertext = CryptoJS.lib.WordArray.create(reader.result);
-        const cipherParams = CryptoJS.lib.CipherParams.create({ ciphertext });
-        const decryptedWordArray = CryptoJS.AES.decrypt(
-          cipherParams,
-          keyArray,
-          {
-            iv: ivArray
-          }
-        );
-        const decryptedBase64 = decryptedWordArray.toString(
-          CryptoJS.enc.Base64
-        );
-        const decryptedArrayBuffer = base64js.toByteArray(decryptedBase64);
-        callback(new Blob([new Uint8Array(decryptedArrayBuffer)]));
+export const setCryptoInterfaces = async (key, iv) => {
+  fileManager.setCryptoInterfaces(null, (filetoken, blob, callback) => {
+    if (!key || !iv) {
+      return callback(blob);
+    }
+    const keyArray = CryptoJS.enc.Base64.parse(key);
+    const ivArray = CryptoJS.enc.Base64.parse(iv);
+    const reader = new FileReader();
+    reader.addEventListener('loadend', () => {
+      const ciphertext = CryptoJS.lib.WordArray.create(reader.result);
+      const cipherParams = CryptoJS.lib.CipherParams.create({ ciphertext });
+      const decryptedWordArray = CryptoJS.AES.decrypt(cipherParams, keyArray, {
+        iv: ivArray
       });
-      reader.readAsArrayBuffer(blob);
+      const decryptedBase64 = decryptedWordArray.toString(CryptoJS.enc.Base64);
+      const decryptedArrayBuffer = base64js.toByteArray(decryptedBase64);
+      callback(new Blob([new Uint8Array(decryptedArrayBuffer)]));
     });
-  }
+    reader.readAsArrayBuffer(blob);
+  });
 };

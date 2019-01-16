@@ -222,9 +222,11 @@ export const formEmailLabel = ({ emailId, labels }) => {
   });
 };
 
-export const formFilesFromData = ({ files, date }) => {
-  return files.map(file => {
+export const formFilesFromData = ({ files, date, fileKeys }) => {
+  return files.map((file, index) => {
     const { token, name, read_only, size, status, mimeType } = file;
+    const key = fileKeys ? fileKeys[index].key : null;
+    const iv = fileKeys ? fileKeys[index].iv : null;
     return {
       token,
       name,
@@ -232,7 +234,9 @@ export const formFilesFromData = ({ files, date }) => {
       size,
       status: status || 1,
       date,
-      mimeType
+      mimeType,
+      key,
+      iv
     };
   });
 };

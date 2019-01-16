@@ -96,11 +96,13 @@ export const formFileParamsToDatabase = (files, emailId) => {
   return files.map(item => {
     return {
       token: item.token,
-      name: item.fileData.name,
-      size: item.fileData.size,
+      name: item.name,
+      size: item.size,
+      key: item.key,
+      iv: item.iv,
       status: 1,
       date: Date.now(),
-      mimeType: item.fileData.type,
+      mimeType: item.mimeType,
       emailId
     };
   });
@@ -118,7 +120,9 @@ export const getFileParamsToSend = files => {
         token: file.token,
         name: file.fileData.name,
         size: file.fileData.size,
-        mimeType: file.fileData.type
+        mimeType: file.fileData.type,
+        key: file.key,
+        iv: file.iv
       }));
       return resolve(data);
     } else if (tokensToDuplicate.length > 0) {
@@ -131,7 +135,9 @@ export const getFileParamsToSend = files => {
           token: file.shouldDuplicate ? duplicates[file.token] : file.token,
           name: file.fileData.name,
           size: file.fileData.size,
-          mimeType: file.fileData.type
+          mimeType: file.fileData.type,
+          key: file.key,
+          iv: file.iv
         }));
         return resolve(data);
       });
@@ -139,15 +145,16 @@ export const getFileParamsToSend = files => {
   });
 };
 
-export const setCryptoInterfaces = (keyBase64, ivBase64) => {
-  fileManager.setCryptoInterfaces((blob, callback) => {
-    if (!keyBase64 || !ivBase64) {
+export const setCryptoInterfaces = (getFile) => {
+  fileManager.setCryptoInterfaces((filetoken, blob, callback) => {
+    const file = getFile(filetoken)
+    if (!file || !file.key || !file.iv) {
       return callback(blob);
     }
     const reader = new FileReader();
     reader.addEventListener('loadend', () => {
-      const keyWordArray = CryptoJS.enc.Base64.parse(keyBase64);
-      const ivWordArray = CryptoJS.enc.Base64.parse(ivBase64);
+      const keyWordArray = CryptoJS.enc.Base64.parse(file.key);
+      const ivWordArray = CryptoJS.enc.Base64.parse(file.iv);
       const content = CryptoJS.lib.WordArray.create(reader.result);
       const encryptedWordArray = CryptoJS.AES.encrypt(content, keyWordArray, {
         iv: ivWordArray
