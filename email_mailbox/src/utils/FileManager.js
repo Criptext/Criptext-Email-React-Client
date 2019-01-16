@@ -2,7 +2,7 @@ import FileManager from 'criptext-files-sdk';
 import CryptoJS from 'crypto-js';
 import base64js from 'base64-js';
 import { myAccount } from './electronInterface';
-import { openFileExplorer, getFileKeyByEmailId } from './ipc';
+import { openFileExplorer } from './ipc';
 
 const MAX_REQUESTS = 5;
 
@@ -45,7 +45,7 @@ export const setDownloadHandler = (token, filename) => {
 
 export const CHUNK_SIZE = 524288;
 
-export const setCryptoInterfaces = async (key, iv) => {
+export const setCryptoInterfaces = (key, iv) => {
   fileManager.setCryptoInterfaces(null, (filetoken, blob, callback) => {
     if (!key || !iv) {
       return callback(blob);

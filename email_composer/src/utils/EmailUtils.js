@@ -1,4 +1,4 @@
-import { myAccount, getContactsByEmailId } from './electronInterface';
+import { myAccount } from './electronInterface';
 import { getContactsByEmailId, getEmailByKey, getFilesByEmailId } from './ipc';
 import {
   cleanHTML,
@@ -112,7 +112,7 @@ export const formOutgoingEmailFromData = ({
   const emailData = {
     email,
     recipients,
-    labels: [labelId],
+    labels: [labelId]
   };
 
   return {

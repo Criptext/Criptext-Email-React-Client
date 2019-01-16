@@ -156,8 +156,8 @@ class ComposerWrapper extends Component {
     fileManager.on(FILE_PROGRESS, this.handleUploadProgress);
     fileManager.on(FILE_FINISH, this.handleUploadSuccess);
     fileManager.on(FILE_ERROR, this.handleUploadError);
-    setCryptoInterfaces((filetoken) => {
-      return this.state.files.filter((file) => file.token === filetoken)[0]
+    setCryptoInterfaces(filetoken => {
+      return this.state.files.filter(file => file.token === filetoken)[0];
     });
     await this.setState(state);
   }
@@ -266,19 +266,17 @@ class ComposerWrapper extends Component {
 
   setFiles = newFiles => {
     const files = [...this.state.files];
-    const fileWithKey = files.filter((file) => file.key && file.iv)[0]
+    const fileWithKey = files.filter(file => file.key && file.iv)[0];
     let iv, key;
     if (fileWithKey) {
-      key = fileWithKey.key
-      iv = fileWithKey.iv
+      key = fileWithKey.key;
+      iv = fileWithKey.iv;
     } else {
       const keyAndIv = generateKeyAndIv(null, 8);
       key = keyAndIv.key;
       iv = keyAndIv.iv;
     }
-    if (this.state.files.length + newFiles.length > MAX_ATTACMENTS_AMOUNT) {
-      return throwError(errors.message.TOO_MANY_FILES);
-    } else if (newFiles && newFiles.length > 0) {
+    if (newFiles && newFiles.length > 0) {
       const [firstNewFile, ...remainingNewFiles] = Array.from(newFiles);
 
       if (

@@ -145,9 +145,9 @@ export const getFileParamsToSend = files => {
   });
 };
 
-export const setCryptoInterfaces = (getFile) => {
+export const setCryptoInterfaces = getFile => {
   fileManager.setCryptoInterfaces((filetoken, blob, callback) => {
-    const file = getFile(filetoken)
+    const file = getFile(filetoken);
     if (!file || !file.key || !file.iv) {
       return callback(blob);
     }

@@ -74,7 +74,7 @@ const createEmails = async (
   knownAddresses,
   keyBundleJSONbyRecipientIdAndDeviceId,
   peer,
-  files,
+  files
 ) => {
   let result = [];
   for (const recipient of recipients) {
@@ -108,20 +108,27 @@ const createEmails = async (
             body,
             keyBundleArrayBuffer
           );
-          
-          const fileKeys = files ? await Promise.all(files.map( async file => {
-            if (!file.key || !file.iv) {
-              return null
-            }
-            let fileKey = await encryptText(
-              recipientId,
-              deviceId,
-              `${file.key}:${file.iv}`
-            );
-            return fileKey.body
-          })) : null
-          const existingFileKeys = fileKeys ? fileKeys.filter( fileKey => fileKey != null) : []
-          const fileKey = existingFileKeys.length > 0 ? existingFileKeys[0] : null
+
+          const fileKeys = files
+            ? await Promise.all(
+                files.map(async file => {
+                  if (!file.key || !file.iv) {
+                    return null;
+                  }
+                  const fileKey = await encryptText(
+                    recipientId,
+                    deviceId,
+                    `${file.key}:${file.iv}`
+                  );
+                  return fileKey.body;
+                })
+              )
+            : null;
+          const existingFileKeys = fileKeys
+            ? fileKeys.filter(fileKey => fileKey !== null)
+            : [];
+          const fileKey =
+            existingFileKeys.length > 0 ? existingFileKeys[0] : null;
 
           let criptextEmail = {
             type,
@@ -258,7 +265,10 @@ const encryptPostEmail = async ({
 };
 
 const createDummyKeyBundle = async files => {
-  const fileKey = files && files[0].key && files[0].iv ? { key: files[0].key, iv: files[0].iv } : null;
+  const fileKey =
+    files && files[0].key && files[0].iv
+      ? { key: files[0].key, iv: files[0].iv }
+      : null;
   const preKeyId = 1;
   const signedPreKeyId = 1;
   const { identityKey, registrationId } = await generateIdentity();
@@ -267,7 +277,7 @@ const createDummyKeyBundle = async files => {
     signedPreKeyId,
     preKeyId
   });
-  const fileKeys = files.map( () => fileKey )
+  const fileKeys = files.map(() => fileKey);
 
   const sessionParams = {
     identityKey,
@@ -321,11 +331,7 @@ const generatePreKeyBundle = async ({
   return { preKey, signedPreKey };
 };
 
-const encryptExternalEmail = async ({
-  body,
-  externalEmailPassword,
-  files
-}) => {
+const encryptExternalEmail = async ({ body, externalEmailPassword, files }) => {
   const recipient = externalEmailPassword;
   const deviceId = 1;
   const { dummySession, sessionParams } = await createDummyKeyBundle(files);
