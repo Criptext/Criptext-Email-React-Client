@@ -91,13 +91,9 @@ const file = {
   status: 1,
   date: '2018-09-03 18:45:57',
   emailId: '1',
-  mimeType: 'image/png'
-};
-
-const fileKey = {
+  mimeType: 'image/png',
   key: 'fileKeyA',
-  iv: 'fileIvA',
-  emailId: '1'
+  iv: 'fileIvA'
 };
 
 let dbConnection;
@@ -116,10 +112,6 @@ const insertEmail = async params => {
 
 const insertFile = async params => {
   await DBManager.createFile(params);
-};
-
-const insertFileKey = async params => {
-  await DBManager.createFileKey(params);
 };
 
 const createTempDirectory = () => {
@@ -159,7 +151,6 @@ const insertValuesToDatabase = async () => {
   await insertLabels(labels);
   await insertEmail(email);
   await insertFile(file);
-  await insertFileKey(fileKey);
 };
 
 describe('Parse database: ', () => {
@@ -219,8 +210,7 @@ describe('Parse database: ', () => {
   });
 
   it('Should parse File keys to string', async () => {
-    await insertEmail(email);
-    await insertFileKey(fileKey);
+    await insertFile(file);
     const expectedString = `{"table":"filekey","object":{"id":1,"key":"fileKeyA","iv":"fileIvA","emailId":1}}`;
     const fileKeysString = await exportFileKeyTable(dbConnection);
     expect(fileKeysString).toBe(expectedString);
@@ -281,9 +271,6 @@ describe('Import Database: ', () => {
       ...emailImported.to.split(',').map(Number)
     ];
     const [fileImported] = await DBManager.getFilesByTokens([fileTokens]);
-    const [fileKeyImported] = await DBManager.getFileKeyByEmailId(
-      emailImported.id
-    );
     const [firstLabel] = await DBManager.getLabelById(labelIds[0]);
     const [secondLabel] = await DBManager.getLabelById(labelIds[1]);
     let [
@@ -307,7 +294,6 @@ describe('Import Database: ', () => {
     };
     expect(emailResult).toMatchObject(expect.objectContaining(email.email));
     expect(fileResult).toMatchObject(file);
-    expect(fileKeyImported).toMatchObject(fileKey);
     expect(firstLabel).toMatchObject(labels[0]);
     expect(secondLabel).toMatchObject(labels[1]);
     expect(firstContact).toMatchObject(contacts[0]);

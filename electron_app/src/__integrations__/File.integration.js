@@ -11,7 +11,9 @@ const file = {
   status: 1,
   date: '2018-06-14T23:45:57.466Z',
   emailId: 2,
-  mimeType: 'image/png'
+  mimeType: 'image/png',
+  key: 'fileKeyA',
+  iv: 'fileIvA'
 };
 
 const insertFile = async () => {
@@ -34,7 +36,9 @@ describe('Store data file to File Table:', () => {
       status: 1,
       date: '2018-06-14T23:45:57.466Z',
       emailId: 1,
-      mimeType: 'image/png'
+      mimeType: 'image/png',
+      key: 'fileKeyA',
+      iv: 'fileIvA'
     });
     const tokens = ['token2'];
     const files = await DBManager.getFilesByTokens(tokens);

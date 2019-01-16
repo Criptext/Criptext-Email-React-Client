@@ -39,7 +39,9 @@ const files = [
     ephemeral: 0,
     ephemeralStart: 0,
     ephemeralTime: 0,
-    emailId: emails[1].id
+    emailId: emails[1].id,
+    key: 'jocmpqwrwgonedbsfsq==',
+    iv: 'cmwgnoveirgkddfg=='
   }
 ];
 

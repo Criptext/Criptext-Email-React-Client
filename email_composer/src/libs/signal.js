@@ -265,10 +265,10 @@ const encryptPostEmail = async ({
 };
 
 const createDummyKeyBundle = async files => {
-  const fileKey =
-    files && files[0].key && files[0].iv
-      ? { key: files[0].key, iv: files[0].iv }
-      : null;
+  const fileWithKeys = files.filter(file => file.key && file.iv)[0];
+  const fileKey = fileWithKeys
+    ? { key: fileWithKeys.key, iv: fileWithKeys.iv }
+    : null;
   const preKeyId = 1;
   const signedPreKeyId = 1;
   const { identityKey, registrationId } = await generateIdentity();

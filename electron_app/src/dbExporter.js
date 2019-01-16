@@ -250,13 +250,15 @@ const exportFileTable = async db => {
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
       .then(rows =>
-        rows.map(row =>
-          Object.assign(row, {
+        rows.map(row => {
+          delete row.key;
+          delete row.iv;
+          return Object.assign(row, {
             readOnly: !!row.readOnly,
             emailId: parseInt(row.emailId),
             date: parseDate(row.date)
-          })
-        )
+          });
+        })
       );
     fileRows = [...fileRows, ...result];
     if (result.length < SELECT_ALL_BATCH) {
@@ -275,13 +277,13 @@ const exportFileKeyTable = async db => {
   while (!shouldEnd) {
     const result = await db
       .table(Table.FILE)
-      .distinct("emailId")
+      .distinct('emailId')
       .select('*')
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
       .then(rows =>
         rows.map((row, index) => ({
-          id: index,
+          id: offset + index + 1,
           key: row.key,
           iv: row.iv,
           emailId: Number(row.emailId)
@@ -357,7 +359,6 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
     await trx.table(Table.EMAIL_CONTACT).del();
     await trx.table(Table.EMAIL_LABEL).del();
     await trx.table(Table.FILE).del();
-    await trx.table(Table.FILE_KEY).del();
     await trx
       .table(Table.LABEL)
       .where({ type: 'custom' })
@@ -446,7 +447,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               fileKeys.push(object);
               if (fileKeys.length === FILE_KEYS_BATCH) {
                 lineReader.pause();
-                await trx(Table.FILE).where({emailId: fileKey.emailId}).update({key: key, iv: iv});
+                updateFiles(fileKeys, trx);
                 fileKeys = [];
                 lineReader.resume();
               }
@@ -463,7 +464,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
           await insertRemainingRows(emailContacts, Table.EMAIL_CONTACT, trx);
           await insertRemainingRows(emailLabels, Table.EMAIL_LABEL, trx);
           await insertRemainingRows(files, Table.FILE, trx);
-          await updateRemainingFiles(fileKeys, trx);
+          await updateFiles(fileKeys, trx);
           resolve();
         });
     });
@@ -476,14 +477,16 @@ const insertRemainingRows = async (rows, tablename, trx) => {
   }
 };
 
-const updateRemainingFiles = async (rows, trx) => {
-  if (rows.length == 0) {
-    return 
+const updateFiles = async (rows, trx) => {
+  if (rows.length === 0) {
+    return;
   }
   for (const fileKey of rows) {
-    await trx(Table.FILE).where({emailId: fileKey.emailId}).update({key: key, iv: iv})
+    await trx(Table.FILE)
+      .where({ emailId: fileKey.emailId })
+      .update({ key: fileKey.key, iv: fileKey.iv });
   }
-}
+};
 
 /* Encrypt and Decrypt
 ------------------------------- */
