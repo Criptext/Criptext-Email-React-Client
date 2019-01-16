@@ -74,19 +74,6 @@ class MainWrapper extends Component {
         );
       }
       case SectionType.SETTINGS: {
-        if (this.state.threadItemsChecked.size) {
-          return (
-            <HeaderThreadOptions
-              mailboxSelected={
-                this.props.sectionSelected.params.mailboxSelected
-              }
-              onToggleActivityPanel={this.props.onToggleActivityPanel}
-              onBackOption={this.handleClickBackHeaderMailbox}
-              onCheckAllThreadItems={this.handleCheckAllThreadItems}
-              itemsChecked={this.state.threadItemsChecked}
-            />
-          );
-        }
         return (
           <HeaderMain
             onClickSection={this.props.onClickSection}

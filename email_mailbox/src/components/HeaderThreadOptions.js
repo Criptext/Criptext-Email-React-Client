@@ -111,6 +111,8 @@ class HeaderThreadOptions extends Component {
             {...popupContent}
             onLeftButtonClick={dismissPopup}
             onRightButtonClick={handlePopupConfirm}
+            onTogglePopup={dismissPopup}
+            theme={'dark'}
           />
         )}
       </div>

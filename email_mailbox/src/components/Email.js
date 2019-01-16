@@ -24,6 +24,8 @@ const Email = props => (
         {...props.popupContent}
         onRightButtonClick={props.handlePopupConfirm}
         onLeftButtonClick={props.dismissPopup}
+        onTogglePopup={props.dismissPopup}
+        theme={'dark'}
       />
     )}
     <div

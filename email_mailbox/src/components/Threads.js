@@ -27,9 +27,11 @@ const Threads = props => (
     {props.popupContent && (
       <EmptyTrashPopover
         {...props.popupContent}
-        popupPosition={{ left: '45%', top: '45%' }}
         onLeftButtonClick={props.dismissPopup}
         onRightButtonClick={props.handlePopupConfirm}
+        onTogglePopup={props.dismissPopup}
+        popupPosition={{ left: '45%', top: '45%' }}
+        theme={'dark'}
       />
     )}
     <div className="threads-header">
