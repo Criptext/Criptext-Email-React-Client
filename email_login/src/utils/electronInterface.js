@@ -77,7 +77,3 @@ export const checkAvailableUsername = username => {
 export const linkBegin = username => {
   return clientManager.linkBegin(username);
 };
-
-export const linkAuth = newDeviceData => {
-  return clientManager.linkAuth(newDeviceData);
-};

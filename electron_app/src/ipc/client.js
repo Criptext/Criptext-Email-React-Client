@@ -47,6 +47,10 @@ ipc.answerRenderer('client-link-deny', randomId =>
 
 ipc.answerRenderer('client-link-status', () => clientManager.linkStatus());
 
+ipc.answerRenderer('client-link-auth', newDeviceData =>
+  clientManager.linkAuth(newDeviceData)
+);
+
 ipc.answerRenderer('client-login', params => clientManager.login(params));
 
 ipc.answerRenderer('client-logout', () => clientManager.logout());

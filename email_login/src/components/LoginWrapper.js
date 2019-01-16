@@ -8,7 +8,6 @@ import {
   createTemporalAccount,
   deleteTemporalAccount,
   linkBegin,
-  linkAuth,
   socketClient,
   errors,
   confirmWaitingApprovalLogin
@@ -16,6 +15,7 @@ import {
 import {
   closeLoginWindow,
   getComputerName,
+  linkAuth,
   linkStatus,
   openCreateKeysLoadingWindow,
   throwError
