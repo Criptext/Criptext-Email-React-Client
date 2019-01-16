@@ -16,10 +16,11 @@ const emailDraft = {
     secure: true,
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdA'
+    messageId: 'messageIdA',
+    from: '<User me> <user@criptext.com>'
   },
   recipients: {
-    from: ['<User me> <user@criptext.com>']
+    to: ['To user <touser@criptext.com>']
   },
   labels: [5, 6]
 };
@@ -38,10 +39,10 @@ const emailSent = {
     secure: true,
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdB'
+    messageId: 'messageIdB',
+    from: 'User me <user@criptext.com>'
   },
   recipients: {
-    from: ['User me <user@criptext.com>'],
     to: ['usera@criptext.com', 'userb@criptext.com'],
     cc: ['userc@criptext.com'],
     bcc: ['userd@criptext.com']
@@ -63,10 +64,10 @@ const emailInbox = {
     secure: true,
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdC'
+    messageId: 'messageIdC',
+    from: 'User A <usera@criptext.com>'
   },
   recipients: {
-    from: ['User A <usera@criptext.com>'],
     to: ['user@criptext.com', 'userb@criptext.com'],
     cc: ['userc@criptext.com'],
     bcc: ['userd@criptext.com']
@@ -99,10 +100,10 @@ const emailReply = {
     secure: true,
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdD'
+    messageId: 'messageIdD',
+    from: 'user@criptext.com'
   },
   recipients: {
-    from: ['user@criptext.com'],
     to: ['usera@criptext.com']
   },
   labels: [3]
@@ -123,10 +124,10 @@ const emailSpam = {
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
     trashDate: null,
-    messageId: 'messageIdE'
+    messageId: 'messageIdE',
+    from: 'user@criptext.com'
   },
   recipients: {
-    from: ['user@criptext.com'],
     to: ['usera@criptext.com']
   },
   labels: [2]
@@ -147,10 +148,10 @@ const emailStarred = {
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
     trashDate: null,
-    messageId: 'messageIdF'
+    messageId: 'messageIdF',
+    from: 'User me <user@criptext.com>'
   },
   recipients: {
-    from: ['User me <user@criptext.com>'],
     to: ['usera@criptext.com', 'userb@criptext.com']
   },
   labels: [4]
@@ -187,7 +188,8 @@ describe('Store data email to Email Table:', () => {
         secure: true,
         isMuted: false,
         unsendDate: '2018-06-14 08:23:20.000',
-        messageId: 'messageId'
+        messageId: 'messageId',
+        from: 'From Contact <from@criptext.com>'
       }
     });
     const key = 'keyId';
