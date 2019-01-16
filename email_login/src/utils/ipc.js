@@ -26,6 +26,10 @@ export const linkAuth = async newDeviceData => {
   return await callMain('client-link-auth', newDeviceData);
 };
 
+export const linkBegin = async username => {
+  return await callMain('client-link-begin', username);
+};
+
 export const linkStatus = async () => {
   return await callMain('client-link-status');
 };

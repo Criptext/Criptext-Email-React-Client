@@ -51,6 +51,10 @@ ipc.answerRenderer('client-link-auth', newDeviceData =>
   clientManager.linkAuth(newDeviceData)
 );
 
+ipc.answerRenderer('client-link-begin', username =>
+  clientManager.linkBegin(username)
+);
+
 ipc.answerRenderer('client-login', params => clientManager.login(params));
 
 ipc.answerRenderer('client-logout', () => clientManager.logout());

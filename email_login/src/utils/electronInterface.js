@@ -74,6 +74,3 @@ export const checkAvailableUsername = username => {
   return clientManager.checkAvailableUsername(username);
 };
 
-export const linkBegin = username => {
-  return clientManager.linkBegin(username);
-};

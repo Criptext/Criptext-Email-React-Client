@@ -7,7 +7,6 @@ import {
   checkAvailableUsername,
   createTemporalAccount,
   deleteTemporalAccount,
-  linkBegin,
   socketClient,
   errors,
   confirmWaitingApprovalLogin
@@ -16,6 +15,7 @@ import {
   closeLoginWindow,
   getComputerName,
   linkAuth,
+  linkBegin,
   linkStatus,
   openCreateKeysLoadingWindow,
   throwError
