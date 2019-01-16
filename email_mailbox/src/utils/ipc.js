@@ -301,10 +301,6 @@ export const getFilesByTokens = async tokens => {
   return await callMain('db-get-files-by-tokens', tokens);
 };
 
-export const getFileKeyByEmailId = async emailId => {
-  return await callMain('db-get-filekey-by-emailid', emailId);
-};
-
 export const getIdentityKeyRecord = async params => {
   return await callMain('db-get-identity-key-record', params);
 };

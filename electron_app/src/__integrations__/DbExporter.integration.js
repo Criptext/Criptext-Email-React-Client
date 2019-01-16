@@ -14,7 +14,6 @@ const {
   exportEmailContactTable,
   exportEmailLabelTable,
   exportFileTable,
-  exportFileKeyTable,
   exportDatabaseToFile,
   generateKeyAndIv,
   importDatabaseFromFile
@@ -204,16 +203,9 @@ describe('Parse database: ', () => {
   it('Should parse Files to string', async () => {
     await insertEmail(email);
     await insertFile(file);
-    const expectedString = `{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","readOnly":false,"size":183241,"status":1,"date":"2018-09-03 18:45:57","mimeType":"image/png","ephemeral":0,"ephemeralStart":0,"ephemeralTime":0,"emailId":1}}`;
+    const expectedString = `{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","readOnly":false,"size":183241,"status":1,"date":"2018-09-03 18:45:57","mimeType":"image/png","ephemeral":0,"ephemeralStart":0,"ephemeralTime":0,"emailId":1,"key":"fileKeyA","iv":"fileIvA"}}`;
     const filesString = await exportFileTable(dbConnection);
     expect(filesString).toBe(expectedString);
-  });
-
-  it('Should parse File keys to string', async () => {
-    await insertFile(file);
-    const expectedString = `{"table":"filekey","object":{"id":1,"key":"fileKeyA","iv":"fileIvA","emailId":1}}`;
-    const fileKeysString = await exportFileKeyTable(dbConnection);
-    expect(fileKeysString).toBe(expectedString);
   });
 });
 

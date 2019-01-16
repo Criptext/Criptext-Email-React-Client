@@ -9,5 +9,4 @@
 {"table":"email_contact","object":{"id":3,"contactId":3,"emailId":1,"type":"to"}}
 {"table":"email_label","object":{"id":1,"labelId":1,"emailId":1}}
 {"table":"email_label","object":{"id":2,"labelId":2,"emailId":1}}
-{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","readOnly":false,"size":183241,"status":1,"date":"2018-09-03 18:45:57","mimeType":"image/png","ephemeral":0,"ephemeralStart":0,"ephemeralTime":0,"emailId":1}}
-{"table":"filekey","object":{"id":1,"key":"fileKeyA","iv":"fileIvA","emailId":1}}
+{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","readOnly":false,"size":183241,"status":1,"date":"2018-09-03 18:45:57","mimeType":"image/png","ephemeral":0,"ephemeralStart":0,"ephemeralTime":0,"emailId":1,"key":"fileKeyA","iv":"fileIvA"}}
