@@ -31,11 +31,22 @@ const createColumn = knex => {
 
 const setKeyIvToFile = async knex => {
   return await knex.transaction(async trx => {
-    const fileKeys = await trx(Table.FILE_KEY).select();
-    for (const fileKey of fileKeys) {
-      await trx(Table.FILE)
-        .where({ emailId: fileKey.emailId })
-        .update({ key: fileKey.key, iv: fileKey.iv });
+    let shouldEnd = false;
+    let offset = 0;
+    while (!shouldEnd) {
+      const fileKeys = await trx(Table.FILE_KEY)
+        .select()
+        .offset(offset);
+      for (const fileKey of fileKeys) {
+        await trx(Table.FILE)
+          .where({ emailId: fileKey.emailId })
+          .update({ key: fileKey.key, iv: fileKey.iv });
+      }
+      if (fileKeys.length === 0) {
+        shouldEnd = true;
+      } else {
+        offset = fileKeys.length;
+      }
     }
     await dropTriggerAfterDeleteEmail(trx, FILE_KEY_AFTER_DELETE_EMAIL);
     await trx.schema.dropTableIfExists(Table.FILE_KEY);
@@ -53,19 +64,29 @@ const recreateFileKey = async knex => {
 
 const reFillFileKey = async knex => {
   return await knex.transaction(async trx => {
-    const files = await trx(Table.FILE)
-      .distinc('emailId')
-      .select();
-    for (const file of files) {
-      await trx
-        .insert([
-          {
-            key: file.key,
-            iv: file.iv,
-            emailId: file.emailId
-          }
-        ])
-        .into(Table.FILE_KEY);
+    let shouldEnd = false;
+    let offset = 0;
+    while (!shouldEnd) {
+      const files = await trx(Table.FILE)
+        .distinc('emailId')
+        .select()
+        .offset(offset);
+      for (const file of files) {
+        await trx
+          .insert([
+            {
+              key: file.key,
+              iv: file.iv,
+              emailId: file.emailId
+            }
+          ])
+          .into(Table.FILE_KEY);
+      }
+      if (files.length === 0) {
+        shouldEnd = true;
+      } else {
+        offset = files.length;
+      }
     }
     const columnExists = await trx.schema.hasColumn(Table.EMAIL, 'messageId');
     if (columnExists)
