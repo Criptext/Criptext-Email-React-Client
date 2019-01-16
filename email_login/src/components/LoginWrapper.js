@@ -4,7 +4,6 @@ import SignUpWrapper from './SignUpWrapper';
 import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
-  checkAvailableUsername,
   createTemporalAccount,
   deleteTemporalAccount,
   socketClient,
@@ -12,6 +11,7 @@ import {
   confirmWaitingApprovalLogin
 } from './../utils/electronInterface';
 import {
+  checkAvailableUsername,
   closeLoginWindow,
   getComputerName,
   linkAuth,

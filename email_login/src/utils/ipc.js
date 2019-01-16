@@ -22,6 +22,10 @@ export const throwError = error => {
 
 /* Criptext Client
    ----------------------------- */
+export const checkAvailableUsername = async username => {
+  return await callMain('client-check-available-username', username);
+};
+
 export const linkAuth = async newDeviceData => {
   return await callMain('client-link-auth', newDeviceData);
 };
