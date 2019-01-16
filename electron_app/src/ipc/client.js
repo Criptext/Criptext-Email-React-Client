@@ -45,6 +45,8 @@ ipc.answerRenderer('client-link-deny', randomId =>
   clientManager.linkDeny(randomId)
 );
 
+ipc.answerRenderer('client-login', params => clientManager.login(params));
+
 ipc.answerRenderer('client-logout', () => clientManager.logout());
 
 ipc.answerRenderer('client-post-data-ready', params =>

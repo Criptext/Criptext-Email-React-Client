@@ -85,7 +85,3 @@ export const linkAuth = newDeviceData => {
 export const linkStatus = () => {
   return clientManager.linkStatus();
 };
-
-export const login = params => {
-  return clientManager.login(params);
-};
