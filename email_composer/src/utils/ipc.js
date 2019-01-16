@@ -90,6 +90,10 @@ export const getAllContacts = async () => {
   return await callMain('db-get-all-contacts');
 };
 
+export const getContactsByEmailId = async emailId => {
+  return await callMain('db-get-contact-by-emailid', emailId);
+};
+
 export const getEmailByKey = async key => {
   return await callMain('db-get-email-by-key', key);
 };

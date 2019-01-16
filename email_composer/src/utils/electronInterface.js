@@ -2,7 +2,6 @@ import { labels } from './systemLabels';
 const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const composerId = remote.getCurrentWindow().id;
-const dbManager = remote.require('./src/DBManager');
 const globalManager = remote.require('./src/globalManager');
 
 export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
@@ -11,10 +10,6 @@ export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
 
 export const getEmailToEdit = () => {
   return globalManager.emailToEdit.get(composerId);
-};
-
-export const getContactsByEmailId = emailId => {
-  return dbManager.getContactsByEmailId(emailId);
 };
 
 export const objectUtils = remote.require('./src/utils/ObjectUtils');

@@ -44,6 +44,10 @@ export const postDataReady = async params => {
   return await callMain('client-post-data-ready', params);
 };
 
+export const postKeyBundle = async params => {
+  return await callMain('client-post-key-bundle', params);
+};
+
 export const postUser = async params => {
   return await callMain('client-post-user', params);
 };
@@ -60,6 +64,14 @@ export const syncDeny = async randomId => {
 ----------------------------- */
 export const cleanDatabase = async () => {
   return await callMain('db-clean-database');
+};
+
+export const createAccount = async params => {
+  return await callMain('db-create-account', params);
+};
+
+export const createContact = async params => {
+  return await callMain('db-create-contact', params);
 };
 
 export const createIdentityKeyRecord = async params => {
@@ -80,6 +92,10 @@ export const createSessionRecord = async params => {
 
 export const createSignedPreKeyRecord = async params => {
   return await callMain('db-create-signed-prekey-record', params);
+};
+
+export const createTables = async () => {
+  return await callMain('db-create-tables');
 };
 
 export const deletePreKeyPair = async params => {

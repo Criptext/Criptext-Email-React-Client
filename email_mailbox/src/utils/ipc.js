@@ -2,10 +2,6 @@ import { callMain } from '@criptext/electron-better-ipc/renderer';
 
 /*  Windows call
 ----------------------------- */
-export const closeDialogWindow = () => {
-  callMain('close-dialog');
-};
-
 export const closeMailboxWindow = () => {
   callMain('close-mailbox');
 };
@@ -24,10 +20,6 @@ export const maximizeMailboxWindow = () => {
 
 export const minimizeMailboxWindow = () => {
   callMain('minimize-mailbox');
-};
-
-export const openDialogWindow = data => {
-  callMain('open-dialog', data);
 };
 
 export const openEmptyComposerWindow = () => {

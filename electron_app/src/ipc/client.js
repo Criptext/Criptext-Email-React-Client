@@ -55,6 +55,10 @@ ipc.answerRenderer('client-post-email', params =>
   clientManager.postEmail(params)
 );
 
+ipc.answerRenderer('client-post-key-bundle', params =>
+  clientManager.postKeyBundle(params)
+);
+
 ipc.answerRenderer('client-post-open-event', params =>
   clientManager.postOpenEvent(params)
 );

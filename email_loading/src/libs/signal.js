@@ -1,20 +1,16 @@
 /*global libsignal util*/
 
-import {
-  createAccount as createAccountDB,
-  myAccount,
-  errors,
-  createContact,
-  LabelType,
-  createTables,
-  postKeyBundle
-} from './../utils/electronInterface';
+import { myAccount, errors, LabelType } from './../utils/electronInterface';
 import {
   cleanDatabase,
+  createAccount as createAccountDB,
+  createContact,
   createLabel,
+  createTables,
   getAccount,
   getComputerName,
   getKeyBundle,
+  postKeyBundle,
   postUser,
   updateAccount
 } from './../utils/ipc';

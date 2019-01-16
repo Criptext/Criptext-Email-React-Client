@@ -729,10 +729,10 @@ const setEventAsHandled = async eventIds => {
 
 /* Window events: listener
   ----------------------------- */
-ipcRenderer.on('socket-message', async (ev, message) => {
+ipcRenderer.on('socket-message', (ev, message) => {
   const eventId = message.cmd;
   if (eventId === 400) {
-    await getGroupEvents();
+    emitter.emit(Event.LOAD_EVENTS, {});
   } else {
     handleEvent(message);
   }

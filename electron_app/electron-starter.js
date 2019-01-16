@@ -16,7 +16,6 @@ const {
   trayIcon
 } = require('./src/windows/menu');
 require('./src/ipc/composer.js');
-require('./src/ipc/dialog.js');
 require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
 require('./src/ipc/mailbox.js');
@@ -37,7 +36,7 @@ async function initApp() {
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
     if (!!existingAccount.deviceId) {
-      const appSettings = await dbManager.getAppSettings();
+      const appSettings = await dbManager.getSettings();
       myAccount.initialize(existingAccount);
       mySettings.initialize(appSettings);
       wsClient.start(myAccount);
@@ -51,13 +50,6 @@ async function initApp() {
     await getUserLanguage();
     loginWindow.show();
   }
-
-  ipcMain.on('response-dialog', (event, response, sendTo) => {
-    if (sendTo === 'mailbox') {
-      return mailboxWindow.responseFromDialogWindow(response);
-    }
-    return loginWindow.responseFromDialogWindow(response);
-  });
 
   //   Composer
   ipcMain.on('failed-to-send', () => {

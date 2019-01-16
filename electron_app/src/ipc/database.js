@@ -7,6 +7,14 @@ ipc.answerRenderer('db-clean-data-logout', recipientId =>
   dbManager.cleanDataLogout(recipientId)
 );
 
+ipc.answerRenderer('db-create-account', params =>
+  dbManager.createAccount(params)
+);
+
+ipc.answerRenderer('db-create-contact', params =>
+  dbManager.createContact(params)
+);
+
 ipc.answerRenderer('db-create-email', params => dbManager.createEmail(params));
 
 ipc.answerRenderer('db-create-email-label', params =>
@@ -40,6 +48,8 @@ ipc.answerRenderer('db-create-signal-tables', () =>
 ipc.answerRenderer('db-create-signed-prekey-record', params =>
   dbManager.createSignedPreKeyRecord(params)
 );
+
+ipc.answerRenderer('db-create-tables', () => dbManager.createTables());
 
 ipc.answerRenderer('db-delete-email-by-keys', keys =>
   dbManager.deleteEmailByKeys(keys)
@@ -85,6 +95,10 @@ ipc.answerRenderer('db-get-all-labels', () => dbManager.getAllLabels());
 
 ipc.answerRenderer('db-get-contact-by-emails', emails =>
   dbManager.getContactByEmails(emails)
+);
+
+ipc.answerRenderer('db-get-contact-by-emailid', emailId =>
+  dbManager.getContactsByEmailId(emailId)
 );
 
 ipc.answerRenderer('db-get-contact-by-ids', ids =>
