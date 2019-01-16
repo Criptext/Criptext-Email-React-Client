@@ -9,7 +9,6 @@ import {
   deleteTemporalAccount,
   linkBegin,
   linkAuth,
-  linkStatus,
   socketClient,
   errors,
   confirmWaitingApprovalLogin
@@ -17,6 +16,7 @@ import {
 import {
   closeLoginWindow,
   getComputerName,
+  linkStatus,
   openCreateKeysLoadingWindow,
   throwError
 } from '../utils/ipc.js';
