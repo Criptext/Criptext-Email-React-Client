@@ -7,6 +7,7 @@ Array [
     "id": 1,
     "text": "Inbox",
     "type": "custom",
+    "uuid": "00000000-0000-0000-0000-000000000001",
     "visible": 1,
   },
   Object {
@@ -14,6 +15,7 @@ Array [
     "id": 2,
     "text": "Sent",
     "type": "custom",
+    "uuid": "00000000-0000-0000-0000-000000000002",
     "visible": 1,
   },
 ]

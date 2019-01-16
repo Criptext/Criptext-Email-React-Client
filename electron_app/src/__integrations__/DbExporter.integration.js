@@ -28,26 +28,31 @@ const TEMP_DIRECTORY = '/tmp/criptext-tests';
 const contacts = [
   {
     name: 'Alice',
-    email: 'alice@criptext.com'
+    email: 'alice@criptext.com',
+    isTrusted: false
   },
   {
     name: 'Bob',
-    email: 'bob@criptext.com'
+    email: 'bob@criptext.com',
+    isTrusted: false
   },
   {
     name: 'Charlie',
-    email: 'charlie@criptext.com'
+    email: 'charlie@criptext.com',
+    isTrusted: false
   }
 ];
 
 const labels = [
   {
     text: 'Sent',
-    color: '000000'
+    color: '000000',
+    uuid: '00000000-0000-0000-0000-000000000001'
   },
   {
     text: 'Starred',
-    color: '111111'
+    color: '111111',
+    uuid: '00000000-0000-0000-0000-000000000002'
   }
 ];
 
@@ -163,9 +168,9 @@ describe('Parse database: ', () => {
   it('Should parse Contacts to string', async () => {
     await insertContacts(contacts);
     const expectedString =
-      `{"table":"contact","object":{"id":1,"email":"alice@criptext.com","name":"Alice"}}\n` +
-      `{"table":"contact","object":{"id":2,"email":"bob@criptext.com","name":"Bob"}}\n` +
-      `{"table":"contact","object":{"id":3,"email":"charlie@criptext.com","name":"Charlie"}}`;
+      `{"table":"contact","object":{"id":1,"email":"alice@criptext.com","name":"Alice","isTrusted":false}}\n` +
+      `{"table":"contact","object":{"id":2,"email":"bob@criptext.com","name":"Bob","isTrusted":false}}\n` +
+      `{"table":"contact","object":{"id":3,"email":"charlie@criptext.com","name":"Charlie","isTrusted":false}}`;
     const contactsString = await exportContactTable(dbConnection);
     expect(contactsString).toBe(expectedString);
   });
@@ -173,8 +178,8 @@ describe('Parse database: ', () => {
   it('Should parse Labels to string', async () => {
     await insertLabels(labels);
     const expectedString =
-      `{"table":"label","object":{"id":1,"text":"Sent","color":"000000","type":"custom","visible":true}}\n` +
-      `{"table":"label","object":{"id":2,"text":"Starred","color":"111111","type":"custom","visible":true}}`;
+      `{"table":"label","object":{"id":1,"text":"Sent","color":"000000","type":"custom","visible":true,"uuid":"00000000-0000-0000-0000-000000000001"}}\n` +
+      `{"table":"label","object":{"id":2,"text":"Starred","color":"111111","type":"custom","visible":true,"uuid":"00000000-0000-0000-0000-000000000002"}}`;
     const labelsString = await exportLabelTable(dbConnection);
     expect(labelsString).toBe(expectedString);
   });
@@ -281,11 +286,15 @@ describe('Import Database: ', () => {
     );
     const [firstLabel] = await DBManager.getLabelById(labelIds[0]);
     const [secondLabel] = await DBManager.getLabelById(labelIds[1]);
-    const [
+    let [
       firstContact,
       secondContact,
       thirdContact
     ] = await DBManager.getContactByIds(contactIds);
+    firstContact = { ...firstContact, isTrusted: !!firstContact.isTrusted };
+    secondContact = { ...secondContact, isTrusted: !!secondContact.isTrusted };
+    thirdContact = { ...thirdContact, isTrusted: !!thirdContact.isTrusted };
+
     const emailResult = {
       ...emailImported,
       isMuted: !!emailImported.isMuted,

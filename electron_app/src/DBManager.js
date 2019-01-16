@@ -13,6 +13,7 @@ const myAccount = require('./Account');
 const systemLabels = require('./systemLabels');
 const mySettings = require('./Settings');
 const { setLanguage } = require('./lang');
+const { genUUID } = require('./utils/stringUtils');
 
 /* Account
 ----------------------------- */
@@ -848,7 +849,22 @@ const updateUnreadEmailByThreadIds = ({ threadIds, unread }) => {
 /* Label
 ----------------------------- */
 const createLabel = params => {
-  return db.table(Table.LABEL).insert(params);
+  let labelsToInsert;
+  const isLabelArray = Array.isArray(params);
+  if (isLabelArray) {
+    labelsToInsert = params.map(labelParams => {
+      if (!labelParams.uuid) {
+        return Object.assign(labelParams, { uuid: genUUID() });
+      }
+      return labelParams;
+    });
+  } else {
+    if (!params.uuid) {
+      labelsToInsert = Object.assign(params, { uuid: genUUID() });
+    }
+    labelsToInsert = params;
+  }
+  return db.table(Table.LABEL).insert(labelsToInsert);
 };
 
 const deleteLabelById = id => {

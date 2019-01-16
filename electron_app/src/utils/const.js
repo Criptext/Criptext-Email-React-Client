@@ -9,7 +9,7 @@ const DEV_DATA_TRANSFER_URL = 'https://stagetransfer.criptext.com';
 const NEWS_SERVER_URL = 'https://news.criptext.com';
 
 const API_CLIENT_VERSION = '4.0.0';
-const LINK_DEVICES_FILE_VERSION = '1';
+const LINK_DEVICES_FILE_VERSION = '2';
 
 module.exports = {
   FILE_SERVER_APP_ID,
