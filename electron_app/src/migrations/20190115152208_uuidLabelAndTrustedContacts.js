@@ -1,10 +1,23 @@
+const crypto = require('crypto');
 const { Table } = require('./../models');
-const { genUUID } = require('./../utils/stringUtils');
 
+// Migration hash functions
 const genSystemLabelUUID = id => {
   return `00000000-0000-0000-0000-00000000000${id}`;
 };
+const genUUIDForExistingCustomLabels = text => {
+  const hashedText = crypto
+    .createHash('sha256')
+    .update(text)
+    .digest('hex');
+  const segment = num => `${'0'.repeat(num)}`;
+  const lastPart = hashedText.slice(0, 4);
+  return `${segment(8)}-${segment(4)}-${segment(4)}-${segment(4)}-${segment(
+    8
+  )}${lastPart}`;
+};
 
+// Up & Down
 const createUUIDColumn = async knex => {
   await knex.schema.table(Table.LABEL, table => {
     table.uuid('uuid').unique();
@@ -30,7 +43,9 @@ const updateUUIDForExistingCustomLabel = async knex => {
     for (const label of labels) {
       if (!label.uuid) {
         const uuid =
-          label.type === 'system' ? genSystemLabelUUID(label.id) : genUUID();
+          label.type === 'system'
+            ? genSystemLabelUUID(label.id)
+            : genUUIDForExistingCustomLabels(label.text);
         await knex
           .table(Table.LABEL)
           .where({
