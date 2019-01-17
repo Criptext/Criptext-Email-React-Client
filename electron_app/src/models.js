@@ -366,6 +366,7 @@ module.exports = {
   db,
   cleanDataBase,
   cleanDataLogout,
+  createFileKeyColumns,
   createSignalTables,
   createTables,
   Table,

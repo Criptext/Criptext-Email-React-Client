@@ -73,8 +73,6 @@ class ComposerWrapper extends Component {
       htmlBody: '',
       isCollapsedMoreRecipient: true,
       isDragActive: false,
-      iv: null,
-      key: null,
       newHtmlBody: '',
       nonCriptextRecipientsPassword: '',
       nonCriptextRecipientsVerified: false,
@@ -141,30 +139,26 @@ class ComposerWrapper extends Component {
   }
 
   async componentDidMount() {
-    let state, key, iv;
+    let state;
     if (this.emailToEdit) {
       const composerData = await this.getComposerDataByType(this.emailToEdit);
       state = {
         ...composerData,
         status: composerData.status || Status.ENABLED
       };
-      key = composerData.key;
-      iv = composerData.iv;
     } else {
       const composerData = await this.getDefaultComposerWithSignature();
       const status = myAccount.signatureEnabled
         ? Status.ENABLED
         : Status.DISABLED;
       state = { ...composerData, status };
-      const keyAndIv = generateKeyAndIv(null, 8);
-      key = keyAndIv.key;
-      iv = keyAndIv.iv;
     }
-    state = { ...state, key, iv };
     fileManager.on(FILE_PROGRESS, this.handleUploadProgress);
     fileManager.on(FILE_FINISH, this.handleUploadSuccess);
     fileManager.on(FILE_ERROR, this.handleUploadError);
-    setCryptoInterfaces(key, iv);
+    setCryptoInterfaces(filetoken => {
+      return this.state.files.filter(file => file.token === filetoken)[0];
+    });
     await this.setState(state);
   }
 
@@ -272,6 +266,16 @@ class ComposerWrapper extends Component {
 
   setFiles = newFiles => {
     const files = [...this.state.files];
+    const fileWithKey = files.filter(file => file.key && file.iv)[0];
+    let iv, key;
+    if (fileWithKey) {
+      key = fileWithKey.key;
+      iv = fileWithKey.iv;
+    } else {
+      const keyAndIv = generateKeyAndIv(null, 8);
+      key = keyAndIv.key;
+      iv = keyAndIv.iv;
+    }
     if (newFiles && newFiles.length > 0) {
       const [firstNewFile, ...remainingNewFiles] = Array.from(newFiles);
 
@@ -298,6 +302,8 @@ class ComposerWrapper extends Component {
         } else {
           const uploadingFile = {
             token,
+            key,
+            iv,
             percentage: 0,
             fileData: firstNewFile,
             mode: FILE_MODES.UPLOADING
@@ -476,8 +482,6 @@ class ComposerWrapper extends Component {
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
       files: this.state.files,
-      iv: this.state.iv,
-      key: this.state.key,
       labelId: LabelType.sent.id,
       secure,
       status: EmailStatus.SENDING,
@@ -510,12 +514,10 @@ class ComposerWrapper extends Component {
         body,
         files,
         peer,
-        externalEmailPassword,
-        key: this.state.key,
-        iv: this.state.iv
+        externalEmailPassword
       };
       const res = await signal.encryptPostEmail(params);
-      const filesDbParams = formFileParamsToDatabase(this.state.files, emailId);
+      const filesDbParams = formFileParamsToDatabase(files, emailId);
       if (filesDbParams.length) {
         await createFile(filesDbParams);
       }
@@ -574,8 +576,6 @@ class ComposerWrapper extends Component {
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
       files: this.state.files,
-      iv: this.state.iv,
-      key: this.state.key,
       labelId: LabelType.draft.id,
       secure: false,
       textSubject: this.state.textSubject,

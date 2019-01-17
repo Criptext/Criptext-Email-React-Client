@@ -22,7 +22,6 @@ const EMAILS_BATCH = 50;
 const EMAIL_CONTACTS_BATCH = 100;
 const EMAIL_LABELS_BATCH = 100;
 const FILES_BATCH = 50;
-const FILE_KEYS_BATCH = 50;
 
 const excludedEmailStatus = [1, 4];
 const excludedLabels = [systemLabels.draft.id];
@@ -268,36 +267,6 @@ const exportFileTable = async db => {
   return formatTableRowsToString(Table.FILE, fileRows);
 };
 
-const exportFileKeyTable = async db => {
-  let fileKeyRows = [];
-  let shouldEnd = false;
-  let offset = 0;
-  while (!shouldEnd) {
-    const result = await db
-      .table(Table.FILE_KEY)
-      .select('*')
-      .whereExists(
-        db
-          .select('*')
-          .from(Table.EMAIL)
-          .whereRaw(`${Table.EMAIL}.id = ${Table.FILE_KEY}.emailId`)
-          .whereRaw(whereRawEmailQuery)
-      )
-      .limit(SELECT_ALL_BATCH)
-      .offset(offset)
-      .then(rows =>
-        rows.map(row => Object.assign(row, { emailId: parseInt(row.emailId) }))
-      );
-    fileKeyRows = [...fileKeyRows, ...result];
-    if (result.length < SELECT_ALL_BATCH) {
-      shouldEnd = true;
-    } else {
-      offset += SELECT_ALL_BATCH;
-    }
-  }
-  return formatTableRowsToString('filekey', fileKeyRows);
-};
-
 const saveToFile = ({ data, filepath, mode }, isFirstRecord) => {
   const flag = mode || 'w';
   try {
@@ -334,9 +303,6 @@ const exportDatabaseToFile = async ({ databasePath, outputPath }) => {
   const files = await exportFileTable(dbConn);
   saveToFile({ data: files, filepath, mode: 'a' });
 
-  const fileKeys = await exportFileKeyTable(dbConn);
-  saveToFile({ data: fileKeys, filepath, mode: 'a' });
-
   closeDatabaseConnection(dbConn);
 };
 
@@ -349,7 +315,6 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
   let emailContacts = [];
   let emailLabels = [];
   let files = [];
-  let fileKeys = [];
   const dbConn = await createDatabaseConnection(databasePath);
 
   return dbConn.transaction(async trx => {
@@ -358,7 +323,6 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
     await trx.table(Table.EMAIL_CONTACT).del();
     await trx.table(Table.EMAIL_LABEL).del();
     await trx.table(Table.FILE).del();
-    await trx.table(Table.FILE_KEY).del();
     await trx
       .table(Table.LABEL)
       .where({ type: 'custom' })
@@ -442,16 +406,6 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               }
               break;
             }
-            case 'filekey': {
-              fileKeys.push(object);
-              if (fileKeys.length === FILE_KEYS_BATCH) {
-                lineReader.pause();
-                await trx.insert(fileKeys).into(Table.FILE_KEY);
-                fileKeys = [];
-                lineReader.resume();
-              }
-              break;
-            }
             default:
               break;
           }
@@ -463,7 +417,6 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
           await insertRemainingRows(emailContacts, Table.EMAIL_CONTACT, trx);
           await insertRemainingRows(emailLabels, Table.EMAIL_LABEL, trx);
           await insertRemainingRows(files, Table.FILE, trx);
-          await insertRemainingRows(fileKeys, Table.FILE_KEY, trx);
           resolve();
         });
     });
@@ -554,7 +507,6 @@ module.exports = {
   exportEmailContactTable,
   exportEmailLabelTable,
   exportFileTable,
-  exportFileKeyTable,
   exportDatabaseToFile,
   decryptStreamFile,
   generateKeyAndIv,

@@ -9,6 +9,8 @@ Array [
     "ephemeralStart": 0,
     "ephemeralTime": 0,
     "id": 2,
+    "iv": "fileIvA",
+    "key": "fileKeyA",
     "mimeType": "image/png",
     "name": "Criptext_Image_2018_06_14.png",
     "readOnly": 0,

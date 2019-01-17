@@ -38,7 +38,7 @@ class FileWrapper extends Component {
     setFileProgressHandler(this.handleDownloadProgess);
     setFileSuccessHandler(this.handleDownloadSuccess);
     setFileErrorHandler(this.handleDownloadError);
-    setCryptoInterfaces(this.props.email.id);
+    setCryptoInterfaces(this.props.file.key, this.props.file.iv);
   }
 
   handleDownload = async () => {
