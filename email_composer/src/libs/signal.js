@@ -108,7 +108,6 @@ const createEmails = async (
             body,
             keyBundleArrayBuffer
           );
-
           const fileKeys = files
             ? await Promise.all(
                 files.map(async file => {
@@ -277,7 +276,7 @@ const createDummyKeyBundle = async files => {
     signedPreKeyId,
     preKeyId
   });
-  const fileKeys = files.map(() => fileKey);
+  const fileKeys = files ? files.map(() => fileKey) : null;
 
   const sessionParams = {
     identityKey,

@@ -93,6 +93,7 @@ export const identifyFileType = mimetype => {
 };
 
 export const formFileParamsToDatabase = (files, emailId) => {
+  if (!files) return undefined;
   return files.map(item => {
     return {
       token: item.token,
