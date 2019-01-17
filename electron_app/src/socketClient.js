@@ -1,8 +1,6 @@
 const { client: WebSocketClient } = require('websocket');
 let client, reconnect, messageListener, socketConnection;
-const { DEV_SOCKET_URL, PROD_SOCKET_URL } = require('./utils/const');
-const isDev = process.env.NODE_ENV === 'development';
-const SOCKET_URL = isDev ? DEV_SOCKET_URL : PROD_SOCKET_URL;
+const { SOCKET_URL } = require('./utils/const');
 
 const NETWORK_STATUS = {
   ONLINE: 'online',

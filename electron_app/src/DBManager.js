@@ -290,7 +290,7 @@ const createEmail = async (params, trx) => {
   return knex
     .transaction(async trx => {
       const contactStored = await getContactByEmails(emailAddresses, trx);
-      const [emailId] = await createEmail({ email: email }, trx);
+      const [emailId] = await createEmail({ email }, trx);
 
       const from = formEmailContact({
         emailId,

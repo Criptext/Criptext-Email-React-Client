@@ -1,3 +1,6 @@
+/* process */
+require('dotenv').config();
+
 const knex = require('knex');
 const path = require('path');
 const { app } = require('electron');

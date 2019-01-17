@@ -4,10 +4,7 @@ const fs = require('fs');
 const dbExporter = require('./dbExporter');
 const { getAccount } = require('./DBManager');
 const { databasePath } = require('./models');
-const {
-  DEV_DATA_TRANSFER_URL,
-  PROD_DATA_TRANSFER_URL
-} = require('./utils/const');
+const { DATA_TRANSFER_URL } = require('./utils/const');
 
 /*  Paths
 ----------------------------- */
@@ -55,9 +52,8 @@ const checkClient = async () => {
 };
 
 const initializeClient = token => {
-  const isDev = process.env.NODE_ENV === 'development';
   const options = {
-    url: isDev ? DEV_DATA_TRANSFER_URL : PROD_DATA_TRANSFER_URL,
+    url: DATA_TRANSFER_URL,
     token,
     timeout: 60 * 1000
   };
