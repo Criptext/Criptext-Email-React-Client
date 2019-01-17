@@ -1,7 +1,7 @@
 import { labels } from './systemLabels';
 import lang from './../lang';
 const electron = window.require('electron');
-const { ipcRenderer, remote, webFrame } = electron;
+const { remote, webFrame } = electron;
 
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
