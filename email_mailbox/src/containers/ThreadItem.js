@@ -46,13 +46,17 @@ const defineSubject = (subject, emailSize) => {
 };
 
 const formatRecipientsForThreadItem = (recipients, currentUserName) => {
-  const myFormattedRecipient = 'Me';
+  const shouldShowOnlyFirstName = recipients.length > 1;
+  const myFormattedRecipient = string.mailbox.me;
   let listMyselftAtEnd = false;
   const formattedRecipients = recipients.reduce((formatted, recipient) => {
     if (recipient === currentUserName) {
       listMyselftAtEnd = true;
     } else {
-      formatted.push(recipient);
+      const recipientFirstName = shouldShowOnlyFirstName
+        ? recipient.split(' ')[0]
+        : recipient;
+      formatted.push(recipientFirstName);
     }
     return formatted;
   }, []);

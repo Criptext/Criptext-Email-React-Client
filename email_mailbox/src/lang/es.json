@@ -119,7 +119,8 @@
     "to": "Para",
     "unread": "no leídos",
     "print_email": "Imprimir",
-    "print_thread": "Imprimir todo"
+    "print_thread": "Imprimir todo",
+    "me": "Yo"
   },
   "messages": {
     "change_password": {
