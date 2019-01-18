@@ -130,12 +130,15 @@ const threads = (state = List([]), action) => {
       if (!threadId || (!emailIdToAdd && !emailIdsToRemove)) {
         return state;
       }
-      return state.map(threadItem => {
-        if (threadItem.get('threadId') === threadId) {
-          return thread(threadItem, action);
-        }
-        return threadItem;
-      });
+      return state
+        .map(threadItem => {
+          if (threadItem.get('threadId') === threadId) {
+            const threadItemSet = thread(threadItem, action);
+            return threadItemSet;
+          }
+          return threadItem;
+        })
+        .filter(threadItem => threadItem.get('emailIds').size);
     }
     case Thread.UPDATE_STATUS_THREAD: {
       const { threadId, status } = action;
