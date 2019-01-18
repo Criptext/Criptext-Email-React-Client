@@ -2,13 +2,14 @@ import { connect } from 'react-redux';
 import { addLabel } from '../actions';
 import LabelAddWrapper from '../components/LabelAddWrapper';
 import randomcolor from 'randomcolor';
+import { mySettings } from '../utils/electronInterface';
 
 const mapDispatchToProps = dispatch => {
   return {
     onAddLabel: text => {
       const color = randomcolor({
         seed: text,
-        luminosity: 'bright'
+        luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
       });
       const label = {
         text,

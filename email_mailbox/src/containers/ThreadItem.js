@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import randomcolor from 'randomcolor';
 import * as actions from './../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
-import { LabelType, myAccount } from '../utils/electronInterface';
+import { LabelType, myAccount, mySettings } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import {
@@ -79,7 +79,7 @@ const mapStateToProps = (state, ownProps) => {
   const letters = getTwoCapitalLetters(firstRecipient, 'D');
   const color = randomcolor({
     seed: firstRecipient,
-    luminosity: 'bright'
+    luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
   });
   const thread = ownProps.thread.merge({
     date: defineTimeByToday(ownProps.thread.get('date')),

@@ -5,7 +5,7 @@ import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
-import { LabelType, myAccount } from './../utils/electronInterface';
+import { LabelType, myAccount, mySettings } from './../utils/electronInterface';
 import { openFilledComposerWindow, sendPrintEmailEvent } from './../utils/ipc';
 import {
   loadFiles,
@@ -28,7 +28,7 @@ const mapStateToProps = (state, ownProps) => {
   const color = senderEmail
     ? randomcolor({
         seed: senderName || senderEmail,
-        luminosity: 'bright'
+        luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
       })
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
