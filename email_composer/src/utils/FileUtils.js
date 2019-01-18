@@ -109,7 +109,7 @@ export const formFileParamsToDatabase = (files, emailId) => {
 };
 
 export const getFileParamsToSend = files => {
-  if (!files.length) return undefined;
+  if (!files.length) return [];
 
   return new Promise((resolve, reject) => {
     const tokensToDuplicate = files
