@@ -82,7 +82,7 @@ SetReplyToPopupInput.propTypes = {
 SetReplyToEmailPopupButtons.propTypes = {
   onClickCancelSetReplyTo: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
-  isDisabledSetReplyToSubmitButton: PropTypes.func
+  isDisabledSetReplyToSubmitButton: PropTypes.bool
 };
 
 SetReplyToEmailPopup.propTypes = {

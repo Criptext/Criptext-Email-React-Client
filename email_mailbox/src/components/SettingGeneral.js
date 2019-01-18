@@ -12,6 +12,7 @@ import SetReplyToEmailPopup from './SetReplyToEmailPopup';
 import LogoutPopup from './LogoutPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
+import ReplyTo from './ReplyTo';
 import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain, usefulLinks } from '../utils/const';
@@ -53,7 +54,7 @@ const SettingGeneral = props => (
     <ShowEmailPreviewBlock {...props} />
     <ReadReceiptsBlock {...props} />
     <RecoveryEmailBlock {...props} />
-    <ReplyToBlock {...props} />
+    <ReplyTo {...props} />
     <SettingsGeneralLanguageWrapper />
     <SettingsGeneralThemeWrapper />
     <UsefulLinksBlock />
@@ -223,7 +224,7 @@ const RecoveryEmailBlock = props => (
           ) : (
             <div>
               <span className="address">
-                {props.recoveryEmail || 'Recovery email not configured'}
+                {props.recoveryEmail || string.settings.recovery_not_set}
               </span>
               {!props.recoveryEmail && (
                 <button
@@ -247,53 +248,6 @@ const RecoveryEmailBlock = props => (
                   {!props.recoveryEmailConfirmed && (
                     <ResendConfirmationRecoveryEmailLink {...props} />
                   )}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-const ReplyToBlock = props => (
-  <div id="settings-general-reply-to" className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.reply_to_email}</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item content-recovery-email">
-        <div className="reply-to-email">
-          {props.replyToIsLoading ? (
-            <RecoveryEmailLoading />
-          ) : (
-            <div>
-              <span className="address">
-                {props.replyToEmail || "'Reply To' email not configured"}
-              </span>
-              {!props.replyToEmail && (
-                <button
-                  className="button-b"
-                  onClick={() => props.onClickSetReplyTo()}
-                >
-                  <span>{string.settings.set_email}</span>
-                </button>
-              )}
-              {props.replyToEmail && (
-                <div>
-                  <button
-                    className="button-b"
-                    onClick={() => props.onClickSetReplyTo()}
-                  >
-                    <span>{string.settings.change}</span>
-                  </button>
-                  <button
-                    className="button-b"
-                    onClick={() => props.onRemoveReplyTo()}
-                  >
-                    <span>{string.settings.remove}</span>
-                  </button>
                 </div>
               )}
             </div>
@@ -654,13 +608,6 @@ RecoveryEmailBlock.propTypes = {
   recoveryEmailConfirmed: PropTypes.bool,
   recoveryEmailIsLoading: PropTypes.bool,
   resendLinkText: PropTypes.string
-};
-
-ReplyToBlock.propTypes = {
-  replyToIsLoading: PropTypes.bool,
-  replyToEmail: PropTypes.string,
-  onClickSetReplyTo: PropTypes.func,
-  onRemoveReplyTo: PropTypes.func
 };
 
 TwoFactorAuthenticationBlock.propTypes = {
