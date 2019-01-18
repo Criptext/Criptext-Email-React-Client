@@ -479,7 +479,9 @@ const getEmailsByThreadId = threadId => {
       `${Table.EMAIL}.*`,
       db.raw(
         `GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'from'
-        THEN ${Table.EMAIL_CONTACT}.contactId ELSE NULL END)) as 'from'`
+        THEN ${
+          Table.EMAIL_CONTACT
+        }.contactId ELSE NULL END)) as 'fromContactIds'`
       ),
       db.raw(
         `GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'to'

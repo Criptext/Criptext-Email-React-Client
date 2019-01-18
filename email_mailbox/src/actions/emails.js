@@ -53,14 +53,14 @@ export const loadEmails = threadId => {
       const response = await getEmailsByThreadId(threadId);
       const data = response.reduce(
         (result, element) => {
-          element.from = element.from
-            ? element.from.split(',').map(Number)
+          element.fromContactIds = element.fromContactIds
+            ? element.fromContactIds.split(',').map(Number)
             : [];
           element.to = element.to ? element.to.split(',').map(Number) : [];
           element.cc = element.cc ? element.cc.split(',').map(Number) : [];
           element.bcc = element.bcc ? element.bcc.split(',').map(Number) : [];
           const contactIds = [
-            ...element.from,
+            ...element.fromContactIds,
             ...element.to,
             ...element.cc,
             ...element.bcc

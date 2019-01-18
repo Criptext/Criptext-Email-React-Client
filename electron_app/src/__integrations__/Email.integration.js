@@ -20,7 +20,7 @@ const emailDraft = {
     from: '<User me> <user@criptext.com>'
   },
   recipients: {
-    to: ['To user <touser@criptext.com>']
+    from: ['<User me> <user@criptext.com>']
   },
   labels: [5, 6]
 };
@@ -43,6 +43,7 @@ const emailSent = {
     from: 'User me <user@criptext.com>'
   },
   recipients: {
+    from: ['User me <user@criptext.com>'],
     to: ['usera@criptext.com', 'userb@criptext.com'],
     cc: ['userc@criptext.com'],
     bcc: ['userd@criptext.com']
@@ -68,6 +69,7 @@ const emailInbox = {
     from: 'User A <usera@criptext.com>'
   },
   recipients: {
+    from: ['User A <usera@criptext.com>'],
     to: ['user@criptext.com', 'userb@criptext.com'],
     cc: ['userc@criptext.com'],
     bcc: ['userd@criptext.com']
@@ -104,6 +106,7 @@ const emailReply = {
     from: 'user@criptext.com'
   },
   recipients: {
+    from: ['user@criptext.com'],
     to: ['usera@criptext.com']
   },
   labels: [3]
@@ -128,6 +131,7 @@ const emailSpam = {
     from: 'user@criptext.com'
   },
   recipients: {
+    from: ['user@criptext.com'],
     to: ['usera@criptext.com']
   },
   labels: [2]
@@ -152,6 +156,7 @@ const emailStarred = {
     from: 'User me <user@criptext.com>'
   },
   recipients: {
+    from: ['User me <user@criptext.com>'],
     to: ['usera@criptext.com', 'userb@criptext.com']
   },
   labels: [4]

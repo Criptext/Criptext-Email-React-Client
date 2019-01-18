@@ -75,7 +75,7 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
       clearSubject = cleanEmojisFromString(emails[0].subject);
       const emailsContents = await Promise.all(
         emails.map(async email => {
-          const [from] = await dbManager.getContactByIds([email.from]);
+          const [from] = await dbManager.getContactByIds([email.fromContactIds]);
           const [fromName, fromMail] = [from.name, from.email];
           const to = await dbManager.getContactByIds(email.to.split(','));
           let cc = [];
