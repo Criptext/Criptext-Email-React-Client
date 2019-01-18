@@ -4,6 +4,7 @@ import { myAccount, requiredMinLength } from './../utils/electronInterface';
 import {
   changePassword,
   changeRecoveryEmail,
+  setReplyTo,
   setTwoFactorAuth
 } from './../utils/ipc';
 import {
@@ -24,7 +25,9 @@ import {
   sendRemoveDeviceErrorMessage,
   sendChangePasswordErrorMessage,
   sendChangePasswordSuccessMessage,
-  sendTwoFactorAuthenticationTurnedOffMessage
+  sendTwoFactorAuthenticationTurnedOffMessage,
+  sendSetReplyToSuccessMessage,
+  sendSetReplyToErrorMessage
 } from '../utils/electronEventInterface';
 import {
   validateRecoveryEmail,
@@ -46,6 +49,7 @@ import {
   setReadReceiptsStatus,
   getReadReceiptsStatus
 } from '../utils/storage';
+import { emailRegex } from '../utils/RegexUtils';
 import string from './../lang';
 
 const EDITING_MODES = {
@@ -61,7 +65,8 @@ const SETTINGS_POPUP_TYPES = {
   DELETE_ACCOUNT: 'delete-account',
   NONE: 'none',
   MANUAL_SYNC: 'manual-sync',
-  MANUAL_SYNC_DEVICE_AUTHENTICATION: 'manual-sync-device-authentication'
+  MANUAL_SYNC_DEVICE_AUTHENTICATION: 'manual-sync-device-authentication',
+  SET_REPLY_TO: 'reply-to'
 };
 
 const changePasswordErrors = {
@@ -128,6 +133,10 @@ class SettingGeneralWrapper extends Component {
         recoveryEmailConfirmed: props.recoveryEmailConfirmed,
         isLoading: true
       },
+      replyToParams: {
+        replyToEmail: props.replyToEmail,
+        isLoading: true
+      },
       changeRecoveryEmailPopupParams: {
         isDisabledSubmitButton: true,
         recoveryEmailInput: {
@@ -147,6 +156,14 @@ class SettingGeneralWrapper extends Component {
           hasError: true
         }
       },
+      setReplyToPopupParams: {
+        isDisabledSubmitButton: true,
+        replyToInput: {
+          email: '',
+          hasError: false,
+          errorMessage: ''
+        }
+      },
       emailPreviewEnabled: getShowEmailPreviewStatus(),
       readReceipts: {
         enabled: props.readReceiptsEnabled,
@@ -162,6 +179,19 @@ class SettingGeneralWrapper extends Component {
       <SettingGeneral
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
         name={this.state.nameParams.name}
+        setReplyToInput={this.state.setReplyToPopupParams.replyToInput}
+        onChangeInputValueOnSetReplyTo={
+          this.handleChangeInputValueOnSetReplyPopup
+        }
+        onClickSetReplyTo={this.handleClickSetReplyTo}
+        onClickCancelSetReplyTo={this.handleClickCancelSetReplyTo}
+        onConfirmSetReplyTo={this.handleConfirmSetReplyTo}
+        onRemoveReplyTo={this.handleRemoveReplyTo}
+        replyToEmail={this.state.replyToParams.replyToEmail}
+        replyToIsLoading={this.state.replyToParams.isLoading}
+        isDisabledSetReplyToSubmitButton={
+          this.state.setReplyToPopupParams.isDisabledSubmitButton
+        }
         recoveryEmailPopupInputEmail={
           this.state.changeRecoveryEmailPopupParams.recoveryEmailInput
         }
@@ -254,10 +284,12 @@ class SettingGeneralWrapper extends Component {
       const stillRecoveryEmailLoading = this.state.recoveryEmailParams
         .isLoading;
       const stillReadReceiptsLoading = this.state.readReceipts.isLoading;
+      const stillReplyToLoading = this.state.replyToParams.isLoading;
       if (
         stillTwoFactorAuthLoading ||
         stillRecoveryEmailLoading ||
-        stillReadReceiptsLoading
+        stillReadReceiptsLoading ||
+        stillReplyToLoading
       ) {
         this.setState({
           twoFactorParams: {
@@ -275,6 +307,10 @@ class SettingGeneralWrapper extends Component {
             ...this.state.readReceipts,
             enabled: getReadReceiptsStatus() === 'true',
             isLoading: false
+          },
+          replyToParams: {
+            ...this.state.replyToParams,
+            isLoading: false
           }
         });
       }
@@ -285,6 +321,8 @@ class SettingGeneralWrapper extends Component {
     const newRecoveryEmailParams = {};
     const newTwoFactorParams = {};
     const newReadReceipts = {};
+    const newReplyToParams = {};
+    const popupParams = {};
     if (
       nextProps.recoveryEmail &&
       this.state.recoveryEmail !== nextProps.recoveryEmail
@@ -313,6 +351,11 @@ class SettingGeneralWrapper extends Component {
       newReadReceipts.enabled = nextProps.readReceiptsEnabled;
       setReadReceiptsStatus(nextProps.readReceiptsEnabled);
     }
+    if (this.state.replyToParams.replyToEmail !== nextProps.replyToEmail) {
+      newReplyToParams.replyToEmail = nextProps.replyToEmail;
+      newReplyToParams.isLoading = false;
+      popupParams.email = nextProps.replyToEmail;
+    }
     this.setState({
       recoveryEmailParams: {
         ...this.state.recoveryEmailParams,
@@ -325,6 +368,17 @@ class SettingGeneralWrapper extends Component {
       readReceipts: {
         ...this.state.readReceipts,
         ...newReadReceipts
+      },
+      replyToParams: {
+        ...this.state.replyToParams,
+        ...newReplyToParams
+      },
+      setReplyToPopupParams: {
+        isDisabledSubmitButton: this.state.setReplyToPopupParams.isDisabledSubmitButton,
+        replyToInput: {
+          ...this.state.setReplyToPopupParams.replyToInput,
+          ...popupParams
+        }
       }
     });
   }
@@ -369,6 +423,21 @@ class SettingGeneralWrapper extends Component {
           value: '',
           errorMessage: '',
           hasError: true
+        }
+      }
+    });
+  };
+
+  handleClickCancelSetReplyTo = () => {
+    this.setState({
+      isHiddenSettingsPopup: true,
+      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+      setReplyToPopupParams: {
+        isDisabledSubmitButton: true,
+        replyToInput: {
+          email: this.state.replyToParams.replyToEmail,
+          hasError: false,
+          errorMessage: ''
         }
       }
     });
@@ -422,6 +491,13 @@ class SettingGeneralWrapper extends Component {
     this.setState({
       isHiddenSettingsPopup: false,
       settingsPupopType: SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL
+    });
+  };
+
+  handleClickSetReplyTo = () => {
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPupopType: SETTINGS_POPUP_TYPES.SET_REPLY_TO
     });
   };
 
@@ -517,6 +593,25 @@ class SettingGeneralWrapper extends Component {
     this.setState({
       isHiddenSettingsPopup: true,
       settingsPupopType: SETTINGS_POPUP_TYPES.NONE
+    });
+  };
+
+  handleChangeInputValueOnSetReplyPopup = ev => {
+    const value = ev.target.value.trim();
+    const isValidEmailAddress = emailRegex.test(value);
+    const newParams = {
+      ...this.state.setReplyToPopupParams,
+      isDisabledSubmitButton: !isValidEmailAddress,
+      replyToInput: {
+        email: value,
+        hasError: !isValidEmailAddress,
+        errorMessage: isValidEmailAddress
+          ? ''
+          : string.popups.set_reply_to.errors.email
+      }
+    };
+    this.setState({
+      setReplyToPopupParams: newParams
     });
   };
 
@@ -678,6 +773,108 @@ class SettingGeneralWrapper extends Component {
       return this.handleClickCancelChangePassword();
     }
     sendChangePasswordErrorMessage();
+  };
+
+  handleConfirmSetReplyTo = async () => {
+    const email = this.state.setReplyToPopupParams.replyToInput.email;
+    const SUCCESS_STATUS = 200;
+
+    const { status } = await setReplyTo({
+      enable: true,
+      address: email
+    });
+
+    if (status === SUCCESS_STATUS) {
+      this.setState(
+        {
+          isHiddenSettingsPopup: true,
+          settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+          replyToParams: {
+            isLoading: false,
+            replyToEmail: email
+          },
+          setReplyToPopupParams: {
+            isDisabledSubmitButton: true,
+            replyToInput: {
+              email: email,
+              hasError: false,
+              errorMessage: ''
+            }
+          }
+        },
+        () => {
+          sendSetReplyToSuccessMessage();
+        }
+      );
+    } else {
+      this.setState(
+        {
+          isHiddenSettingsPopup: true,
+          settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+          setReplyToPopupParams: {
+            isDisabledSubmitButton: true,
+            replyToInput: {
+              email: this.state.replyToParams.replyToEmail,
+              hasError: false,
+              errorMessage: ''
+            }
+          }
+        },
+        () => {
+          sendSetReplyToErrorMessage();
+        }
+      );
+    }
+  };
+
+  handleRemoveReplyTo = async () => {
+    const SUCCESS_STATUS = 200;
+
+    const { status } = await setReplyTo({
+      enable: false,
+      address: this.state.replyToParams.replyToEmail
+    });
+    if (status === SUCCESS_STATUS) {
+      this.setState(
+        {
+          isHiddenSettingsPopup: true,
+          settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+          replyToParams: {
+            isLoading: false,
+            replyToEmail: ''
+          },
+          setReplyToPopupParams: {
+            isDisabledSubmitButton: true,
+            replyToInput: {
+              email: '',
+              hasError: false,
+              errorMessage: ''
+            }
+          }
+        },
+        () => {
+          sendSetReplyToSuccessMessage();
+        }
+      );
+    } else {
+      this.setState(
+        {
+          isHiddenSettingsPopup: true,
+          settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+          setReplyToPopupParams: {
+            isDisabledSubmitButton: true,
+            replyToInput: {
+              email: this.state.replyToParams.replyToEmail,
+              hasError: false,
+              errorMessage: ''
+            }
+          }
+        },
+        () => {
+          sendSetReplyToErrorMessage();
+        }
+      );
+    }
   };
 
   handleConfirmChangeRecoveryEmail = async () => {
@@ -877,6 +1074,7 @@ SettingGeneralWrapper.propTypes = {
   readReceiptsEnabled: PropTypes.bool,
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
+  replyToEmail: PropTypes.string,
   twoFactorAuth: PropTypes.bool
 };
 

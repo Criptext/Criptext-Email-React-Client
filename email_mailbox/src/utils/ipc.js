@@ -126,6 +126,10 @@ export const setReadTracking = async enabled => {
   return await callMain('client-set-read-tracking', enabled);
 };
 
+export const setReplyTo = async params => {
+  return await callMain('client-set-reply-to', params);
+};
+
 export const setTwoFactorAuth = async enable => {
   return await callMain('client-set-two-factor-auth', enable);
 };

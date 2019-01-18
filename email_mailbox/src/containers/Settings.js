@@ -111,19 +111,22 @@ const mapDispatchToProps = dispatch => {
       await deleteDeviceData();
     },
     onGetUserSettings: async () => {
+      const settings = await getUserSettings();
       const {
         devices,
         recoveryEmail,
         twoFactorAuth,
         recoveryEmailConfirmed,
-        readReceiptsEnabled
-      } = await getUserSettings();
+        readReceiptsEnabled,
+        replyTo
+      } = settings;
       return {
         devices: formatDevicesData(devices),
         recoveryEmail,
         twoFactorAuth,
         recoveryEmailConfirmed,
-        readReceiptsEnabled
+        readReceiptsEnabled,
+        replyToEmail: replyTo
       };
     },
     onLogout: async () => {

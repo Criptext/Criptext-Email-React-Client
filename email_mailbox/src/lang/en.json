@@ -200,6 +200,14 @@
     "send_open_event": {
       "description": "Failed to send open email. Try again"
     },
+    "set_reply_to": {
+      "success": {
+        "description": "'Reply To' email successfully set!"
+      },
+      "error": {
+        "description": "Failed to set 'Reply To' email. It has not been modified"
+      }
+    },
     "trash": {
       "description": "Messages that have been in Trash more than 30 days will be automatically deleted",
         "action": "Empty Trash"
@@ -331,6 +339,20 @@
       "paragraph": "Next time you sign into your account on another device you'll have to enter your password and then validate the sign in from an existing device.",
       "button": "Got it"
     },
+    "set_reply_to": {
+      "title": "Set Reply To Email",
+      "paragraph": "When someone replies to one of your emails, they will reply to the address set here.",
+      "input": {
+        "email": {
+          "placeholder": "Enter an email"
+        }
+      },
+      "errors": {
+        "email": "Wrong email! Format: example@criptext.com"
+      },
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Set"
+    },
     "mailbox_sync": {
       "title": "Sync Warning",
       "paragraphs": {
@@ -414,6 +436,7 @@
     "read_receipts_description": "If you turn off read receipts, you won't be able to see read receipts from other people",
     "recovery_email": "Recovery Email",
     "remove": "Remove",
+    "reply_to": "Reply To",
     "resend_link": "resend link",
     "set_email": "Set Email",
     "show_in_label_list": "Show in label list",

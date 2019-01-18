@@ -8,6 +8,7 @@ import PopupHOC from './PopupHOC';
 import { EDITING_MODES, SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
+import SetReplyToEmailPopup from './SetReplyToEmailPopup';
 import LogoutPopup from './LogoutPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
@@ -33,6 +34,7 @@ const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
 const Manualsyncpopup = PopupHOC(ManualSyncPopup);
 const Manualsyncprocesspopup = PopupHOC(ManualSyncProcessPopup);
+const SetReplyTo = PopupHOC(SetReplyToEmailPopup);
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   string.settings.two_factor_not_available_text;
@@ -51,6 +53,7 @@ const SettingGeneral = props => (
     <ShowEmailPreviewBlock {...props} />
     <ReadReceiptsBlock {...props} />
     <RecoveryEmailBlock {...props} />
+    <ReplyToBlock {...props} />
     <SettingsGeneralLanguageWrapper />
     <SettingsGeneralThemeWrapper />
     <UsefulLinksBlock />
@@ -244,6 +247,53 @@ const RecoveryEmailBlock = props => (
                   {!props.recoveryEmailConfirmed && (
                     <ResendConfirmationRecoveryEmailLink {...props} />
                   )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const ReplyToBlock = props => (
+  <div id="settings-general-reply-to" className="section-block">
+    <div className="section-block-title">
+      <h1>{string.settings.reply_to}</h1>
+    </div>
+    <div className="section-block-content">
+      <div className="section-block-content-item content-recovery-email">
+        <div className="reply-to-email">
+          {props.replyToIsLoading ? (
+            <RecoveryEmailLoading />
+          ) : (
+            <div>
+              <span className="address">
+                {props.replyToEmail || "'Reply To' email not configured"}
+              </span>
+              {!props.replyToEmail && (
+                <button
+                  className="button-b"
+                  onClick={() => props.onClickSetReplyTo()}
+                >
+                  <span>{string.settings.set_email}</span>
+                </button>
+              )}
+              {props.replyToEmail && (
+                <div>
+                  <button
+                    className="button-b"
+                    onClick={() => props.onClickSetReplyTo()}
+                  >
+                    <span>{string.settings.change}</span>
+                  </button>
+                  <button
+                    className="button-b"
+                    onClick={() => props.onRemoveReplyTo()}
+                  >
+                    <span>{string.settings.remove}</span>
+                  </button>
                 </div>
               )}
             </div>
@@ -483,7 +533,7 @@ const SettingsPopup = props => {
       return (
         <Changerecoveryemailpopup
           isHidden={isHidden}
-          onTogglePopup={props.onClickCancelChangeRecoveryEmail}
+          onTogglePopup={props.onClickCancelSetReplyTo}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
@@ -546,6 +596,17 @@ const SettingsPopup = props => {
         />
       );
     }
+    case SETTINGS_POPUP_TYPES.SET_REPLY_TO: {
+      return (
+        <SetReplyTo
+          isHidden={isHidden}
+          onTogglePopup={props.onClickCancelSetReplyTo}
+          popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+          {...props}
+        />
+      );
+    }
     default:
       return null;
   }
@@ -593,6 +654,13 @@ RecoveryEmailBlock.propTypes = {
   recoveryEmailConfirmed: PropTypes.bool,
   recoveryEmailIsLoading: PropTypes.bool,
   resendLinkText: PropTypes.string
+};
+
+ReplyToBlock.propTypes = {
+  replyToIsLoading: PropTypes.bool,
+  replyToEmail: PropTypes.string,
+  onClickSetReplyTo: PropTypes.func,
+  onRemoveReplyTo: PropTypes.func
 };
 
 TwoFactorAuthenticationBlock.propTypes = {

@@ -128,6 +128,13 @@ const changeRecoveryEmail = async params => {
     : await checkExpiredSession(res, changeRecoveryEmail, params);
 };
 
+const setReplyTo = async params => {
+  const res = await client.setReplyTo(params);
+  return res.status === 200
+    ? { status: res.status }
+    : await checkExpiredSession(res, setReplyTo, params);
+};
+
 const changePassword = async params => {
   const res = await client.changePassword(params);
   return res.status === 200
@@ -211,6 +218,7 @@ const parseUserSettings = settings => {
   const {
     recoveryEmail,
     recoveryEmailConfirmed,
+    replyTo,
     twoFactorAuth,
     trackEmailRead
   } = general;
@@ -219,7 +227,8 @@ const parseUserSettings = settings => {
     twoFactorAuth: !!twoFactorAuth,
     recoveryEmail,
     recoveryEmailConfirmed: !!recoveryEmailConfirmed,
-    readReceiptsEnabled: !!trackEmailRead
+    readReceiptsEnabled: !!trackEmailRead,
+    replyTo: replyTo
   };
 };
 
@@ -431,8 +440,8 @@ const unsendEmail = async params => {
 
 module.exports = {
   acknowledgeEvents,
-  changeRecoveryEmail,
   changePassword,
+  changeRecoveryEmail,
   checkAvailableUsername,
   deleteMyAccount,
   findKeyBundles,
@@ -459,6 +468,7 @@ module.exports = {
   resendConfirmationEmail,
   resetPassword,
   setReadTracking,
+  setReplyTo,
   setTwoFactorAuth,
   syncAccept,
   syncBegin,
