@@ -1057,6 +1057,22 @@ export const sendChangePasswordSuccessMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const sendSetReplyToSuccessMessage = () => {
+  const messageData = {
+    ...Messages.success.setReplyTo,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const sendSetReplyToErrorMessage = () => {
+  const messageData = {
+    ...Messages.error.setReplyTo,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 export const sendChangePasswordErrorMessage = () => {
   const messageData = {
     ...Messages.error.changePassword,

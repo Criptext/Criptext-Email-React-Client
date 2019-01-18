@@ -12,7 +12,8 @@ class SettingsWrapper extends Component {
       recoveryEmail: myAccount.recoveryEmail,
       recoveryEmailConfirmed: !!myAccount.recoveryEmailConfirmed,
       twoFactorAuth: undefined,
-      readReceiptsEnabled: undefined
+      readReceiptsEnabled: undefined,
+      replyToEmail: undefined
     };
   }
 
@@ -29,6 +30,7 @@ class SettingsWrapper extends Component {
         sectionSelected={this.state.sectionSelected}
         twoFactorAuth={this.state.twoFactorAuth}
         readReceiptsEnabled={this.state.readReceiptsEnabled}
+        replyToEmail={this.state.replyToEmail}
       />
     );
   }
@@ -39,14 +41,16 @@ class SettingsWrapper extends Component {
       recoveryEmail,
       twoFactorAuth,
       recoveryEmailConfirmed,
-      readReceiptsEnabled
+      readReceiptsEnabled,
+      replyToEmail
     } = await this.props.onGetUserSettings();
     this.setState({
       devices,
       recoveryEmail,
       recoveryEmailConfirmed,
       twoFactorAuth,
-      readReceiptsEnabled
+      readReceiptsEnabled,
+      replyToEmail
     });
   }
 

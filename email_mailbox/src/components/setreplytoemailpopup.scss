@@ -1,0 +1,43 @@
+.set-reply-to-popup-content {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  
+  .popup-paragraph > p {
+    margin: 0px;
+  }
+  
+  .popup-inputs {
+    padding-right: 5px;
+    > :first-child {
+      > i {
+        color: #ffffff !important;
+        pointer-events: none;
+      }
+    }
+
+    > .popup-input {
+      margin-bottom: 10px;
+      > input {
+        outline: none;
+        padding-left: 7px;
+      }
+      > i {
+        cursor: pointer;
+      }
+      > span {
+        bottom: 0px;
+        left: 0px;
+        margin-left: 15px;
+        width: 100%;
+      }
+    }
+  }
+
+  .change-recovery-email-note {
+    margin: 0px 8px;
+  }
+
+  .popup-buttons {
+    margin-top: 30px !important;
+  }
+}

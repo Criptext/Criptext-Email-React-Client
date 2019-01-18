@@ -90,6 +90,10 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: string.messages.two_factor_auth_turn_off.description
     },
+    setReplyTo: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.set_reply_to.success.description
+    },
     manualSync: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.manual_sync.description
@@ -140,6 +144,10 @@ const messagesContent = {
     sendOpenEvent: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.send_open_event.description
+    },
+    setReplyTo: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.set_reply_to.error.description
     },
     unsendEmail: {
       priority: messagePriorities.MEDIUM,

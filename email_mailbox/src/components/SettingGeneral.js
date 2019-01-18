@@ -8,9 +8,11 @@ import PopupHOC from './PopupHOC';
 import { EDITING_MODES, SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
+import SetReplyToEmailPopup from './SetReplyToEmailPopup';
 import LogoutPopup from './LogoutPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
+import ReplyTo from './ReplyTo';
 import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain, usefulLinks } from '../utils/const';
@@ -33,6 +35,7 @@ const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
 const Manualsyncpopup = PopupHOC(ManualSyncPopup);
 const Manualsyncprocesspopup = PopupHOC(ManualSyncProcessPopup);
+const SetReplyTo = PopupHOC(SetReplyToEmailPopup);
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   string.settings.two_factor_not_available_text;
@@ -51,6 +54,7 @@ const SettingGeneral = props => (
     <ShowEmailPreviewBlock {...props} />
     <ReadReceiptsBlock {...props} />
     <RecoveryEmailBlock {...props} />
+    <ReplyTo {...props} />
     <SettingsGeneralLanguageWrapper />
     <SettingsGeneralThemeWrapper />
     <UsefulLinksBlock />
@@ -220,7 +224,7 @@ const RecoveryEmailBlock = props => (
           ) : (
             <div>
               <span className="address">
-                {props.recoveryEmail || 'Recovery email not configured'}
+                {props.recoveryEmail || string.settings.recovery_not_set}
               </span>
               {!props.recoveryEmail && (
                 <button
@@ -483,7 +487,7 @@ const SettingsPopup = props => {
       return (
         <Changerecoveryemailpopup
           isHidden={isHidden}
-          onTogglePopup={props.onClickCancelChangeRecoveryEmail}
+          onTogglePopup={props.onClickCancelSetReplyTo}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
@@ -541,6 +545,17 @@ const SettingsPopup = props => {
           onTogglePopup={props.onHideSettingsPopup}
           popupPosition={{ left: '45%', top: '45%' }}
           isClosable={false}
+          theme={'dark'}
+          {...props}
+        />
+      );
+    }
+    case SETTINGS_POPUP_TYPES.SET_REPLY_TO: {
+      return (
+        <SetReplyTo
+          isHidden={isHidden}
+          onTogglePopup={props.onClickCancelSetReplyTo}
+          popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
         />

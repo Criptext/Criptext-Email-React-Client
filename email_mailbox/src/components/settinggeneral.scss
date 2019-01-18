@@ -54,7 +54,7 @@
       }
     }
 
-    &:nth-child(10){
+    &:nth-child(11){
       .section-block-content{
         .section-block-content-item{
           &:nth-child(1){
@@ -304,6 +304,31 @@
   }
 }
 
+#settings-general-reply-to{
+  .section-block-content{
+    .section-block-content-item{
+      &:nth-child(1){
+        .reply-to-email > div {
+          display: flex;
+      
+          .address {
+            font-size: 14px;
+            margin-right: 15px;
+          }
+      
+          > div {
+            display: flex;
+
+            .button-b{
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 #settings-general-logout{
   .section-block-content{
     .section-block-content-item{
@@ -425,6 +450,20 @@
         .section-block-content-item{
           &:nth-child(1){
             .recovery-email > div {
+              .address {
+                color: $_COLOR_TEXT_SETTINGS_CONTENT;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #settings-general-reply-to{
+      .section-block-content{
+        .section-block-content-item{
+          &:nth-child(1){
+            .reply-to-email > div {
               .address {
                 color: $_COLOR_TEXT_SETTINGS_CONTENT;
               }
