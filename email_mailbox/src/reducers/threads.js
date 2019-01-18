@@ -133,8 +133,7 @@ const threads = (state = List([]), action) => {
       return state
         .map(threadItem => {
           if (threadItem.get('threadId') === threadId) {
-            const threadItemSet = thread(threadItem, action);
-            return threadItemSet;
+            return thread(threadItem, action);
           }
           return threadItem;
         })

@@ -56,9 +56,6 @@ const mapDispatchToProps = dispatch => {
     onRemoveThreads: threadIds => {
       dispatch(removeThreadsSuccess(threadIds));
     },
-    onRemovedEmails: (threadId, emailIdsToRemove) => {
-      dispatch(updateEmailIdsThread({ threadId, emailIdsToRemove }));
-    },
     onUnsendEmail: (emailId, date, status) => {
       dispatch(unsendEmailOnSuccess(String(emailId), date, status));
       dispatch(unsendEmailFiles(emailId));
