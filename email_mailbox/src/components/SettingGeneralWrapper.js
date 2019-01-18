@@ -374,7 +374,8 @@ class SettingGeneralWrapper extends Component {
         ...newReplyToParams
       },
       setReplyToPopupParams: {
-        isDisabledSubmitButton: this.state.setReplyToPopupParams.isDisabledSubmitButton,
+        isDisabledSubmitButton: this.state.setReplyToPopupParams
+          .isDisabledSubmitButton,
         replyToInput: {
           ...this.state.setReplyToPopupParams.replyToInput,
           ...popupParams
