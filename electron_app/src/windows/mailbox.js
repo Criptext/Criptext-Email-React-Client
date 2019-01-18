@@ -1,5 +1,6 @@
 const { app, BrowserWindow, shell } = require('electron');
 const windowStateManager = require('electron-window-state');
+const ipc = require('@criptext/electron-better-ipc');
 const { mailboxUrl } = require('./../window_routing');
 const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
@@ -113,7 +114,7 @@ const show = async () => {
     mailboxWindow.on('focus', () => {
       send('check-network-status');
       if (!globalManager.windowsEvents.checkDisabled()) {
-        send('get-events');
+        ipc.callRenderer(mailboxWindow, 'get-events');
       }
     });
   }

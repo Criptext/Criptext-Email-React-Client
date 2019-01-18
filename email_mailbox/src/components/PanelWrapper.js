@@ -164,6 +164,10 @@ class PanelWrapper extends Component {
       });
     });
 
+    addEvent(Event.LOAD_EVENTS, () => {
+      this.props.onLoadEvents();
+    });
+
     addEvent(Event.NEW_EMAIL, emailParams => {
       const { emailId, labels, threadId } = emailParams;
       const currentSectionType = this.state.sectionSelected.type;
@@ -191,8 +195,18 @@ class PanelWrapper extends Component {
       }
     });
 
-    addEvent(Event.LOAD_EVENTS, () => {
-      this.props.onLoadEvents();
+    addEvent(Event.EMAIL_MOVE_TO, ({ threadId, emailIdsToRemove }) => {
+      const currentSectionType = this.state.sectionSelected.type;
+      const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
+      if (isRenderingMailbox) {
+        const currentLabelId =
+          LabelType[this.state.sectionSelected.params.mailboxSelected].id;
+        const isTrashOrSpam =
+          currentLabelId === LabelType.trash.id ||
+          currentLabelId === LabelType.spam.id;
+        if (isTrashOrSpam)
+          this.props.onUpdateEmailIdsThread(threadId, emailIdsToRemove);
+      }
     });
 
     addEvent(Event.REFRESH_THREADS, eventParams => {

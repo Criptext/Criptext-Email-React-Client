@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
-import { errors, login } from './../utils/electronInterface';
+import { errors } from './../utils/electronInterface';
 import {
   closeLoginWindow,
+  login,
   openCreateKeysLoadingWindow,
   resetPassword,
   throwError

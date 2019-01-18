@@ -1,8 +1,7 @@
 import { labels } from './systemLabels';
 import lang from './../lang';
 const electron = window.require('electron');
-const { ipcRenderer, remote, webFrame } = electron;
-const clientManager = remote.require('./src/clientManager');
+const { remote, webFrame } = electron;
 
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
@@ -60,32 +59,4 @@ export const confirmWaitingApprovalLogin = callback => {
     const response = responseIndex === RESPONSES.KEEP.index;
     callback(response);
   });
-};
-
-/* Window events
-  ----------------------------- */
-export const closeLoading = () => {
-  ipcRenderer.send('close-loading');
-};
-
-/* Criptext Client
-  ----------------------------- */
-export const checkAvailableUsername = username => {
-  return clientManager.checkAvailableUsername(username);
-};
-
-export const linkBegin = username => {
-  return clientManager.linkBegin(username);
-};
-
-export const linkAuth = newDeviceData => {
-  return clientManager.linkAuth(newDeviceData);
-};
-
-export const linkStatus = () => {
-  return clientManager.linkStatus();
-};
-
-export const login = params => {
-  return clientManager.login(params);
 };

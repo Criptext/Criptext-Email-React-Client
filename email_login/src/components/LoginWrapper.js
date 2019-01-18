@@ -4,19 +4,19 @@ import SignUpWrapper from './SignUpWrapper';
 import LostAllDevicesWrapper from './LostAllDevicesWrapper';
 import ContinueLogin from './ContinueLogin';
 import {
-  checkAvailableUsername,
   createTemporalAccount,
   deleteTemporalAccount,
-  linkBegin,
-  linkAuth,
-  linkStatus,
   socketClient,
   errors,
   confirmWaitingApprovalLogin
 } from './../utils/electronInterface';
 import {
+  checkAvailableUsername,
   closeLoginWindow,
   getComputerName,
+  linkAuth,
+  linkBegin,
+  linkStatus,
   openCreateKeysLoadingWindow,
   throwError
 } from '../utils/ipc.js';

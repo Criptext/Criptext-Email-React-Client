@@ -1,3 +1,4 @@
+import ipc from '@criptext/electron-better-ipc/renderer';
 import signal from './../libs/signal';
 import {
   LabelType,
@@ -587,10 +588,12 @@ const handlePeerThreadRead = async ({ rowid, params }) => {
 const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
   const { metadataKeys, labelsRemoved, labelsAdded } = params;
   const emailsId = [];
+  const threads = [];
   for (const metadataKey of metadataKeys) {
     const [email] = await getEmailByKey(metadataKey);
     if (email) {
       emailsId.push(email.id);
+      threads.push({ id: email.threadId, emailId: email.id });
     }
   }
   const labelsToRemove = await getLabelsByText(labelsRemoved);
@@ -604,6 +607,20 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
     labelIdsToAdd,
     labelIdsToRemove
   });
+
+  if (
+    labelsAdded.length === 1 &&
+    labelsAdded[0] === LabelType.trash.text &&
+    !labelsRemoved.length
+  ) {
+    for (const thread of threads) {
+      emitter.emit(Event.EMAIL_MOVE_TO, {
+        threadId: thread.id,
+        emailIdsToRemove: [thread.emailId]
+      });
+    }
+  }
+
   return rowid;
 };
 
@@ -754,7 +771,7 @@ ipcRenderer.on('socket-message', (ev, message) => {
   }
 });
 
-ipcRenderer.on('get-events', () => {
+ipc.answerMain('get-events', () => {
   emitter.emit(Event.LOAD_EVENTS, {});
 });
 
@@ -1097,27 +1114,28 @@ export const sendMailboxEvent = (eventName, eventData) => {
 };
 
 export const Event = {
-  NEW_EMAIL: 'new-email',
-  REFRESH_THREADS: 'refresh-threads',
-  EMAIL_TRACKING_UPDATE: 'email-tracking-update',
-  UPDATE_EMAILS: 'update-emails',
-  DISPLAY_MESSAGE: 'display-message',
-  LABEL_CREATED: 'label-created',
-  THREADS_DELETED: 'thread-deleted-permanently',
-  EMAIL_DELETED: 'email-deleted-permanently',
-  THREADS_UPDATE_READ: 'threads-update-read',
+  ACCOUNT_DELETED: 'account-deleted',
   DEVICE_REMOVED: 'device-removed',
+  DISABLE_WINDOW: 'add-window-overlay',
+  DISPLAY_MESSAGE: 'display-message',
+  EMAIL_DELETED: 'email-deleted-permanently',
+  EMAIL_MOVE_TO: 'email-move-to',
+  ENABLE_WINDOW: 'remove-window-overlay',
+  EMAIL_TRACKING_UPDATE: 'email-tracking-update',
+  LABEL_CREATED: 'label-created',
+  LINK_DEVICE_END: 'link-devices-finished',
+  LINK_DEVICE_GETTING_KEYS: 'getting-keys',
+  LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
+  LINK_DEVICE_PREPARING_MAILBOX: 'preparing-mailbox',
+  LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
+  NEW_EMAIL: 'new-email',
   PASSWORD_CHANGED: 'password-changed',
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
-  LINK_DEVICE_PREPARING_MAILBOX: 'preparing-mailbox',
-  LINK_DEVICE_GETTING_KEYS: 'getting-keys',
-  LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
-  LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
-  LINK_DEVICE_END: 'link-devices-finished',
-  DISABLE_WINDOW: 'add-window-overlay',
-  ENABLE_WINDOW: 'remove-window-overlay',
-  ACCOUNT_DELETED: 'account-deleted',
+  REFRESH_THREADS: 'refresh-threads',
   SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
-  SET_SECTION_TYPE: 'set-section-type'
+  SET_SECTION_TYPE: 'set-section-type',
+  THREADS_DELETED: 'thread-deleted-permanently',
+  THREADS_UPDATE_READ: 'threads-update-read',
+  UPDATE_EMAILS: 'update-emails'
 };

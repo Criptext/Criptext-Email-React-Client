@@ -1,5 +1,5 @@
 /*global libsignal util*/
-import { errors, objectUtils } from './../utils/electronInterface';
+import { errors } from './../utils/electronInterface';
 import {
   findKeyBundles,
   getSessionRecordByRecipientIds,
@@ -16,6 +16,7 @@ import {
   byteArrayToWordArray
 } from '../utils/AESUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
+import { noNulls } from './../utils/ObjectUtils';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -229,7 +230,7 @@ const encryptPostEmail = async ({
   const hasExternalRecipients = allExternalRecipients.length > 0;
 
   const guestEmail = hasExternalRecipients
-    ? objectUtils.noNulls({
+    ? noNulls({
         to: externalRecipients.to,
         cc: externalRecipients.cc,
         bcc: externalRecipients.bcc,
@@ -238,7 +239,7 @@ const encryptPostEmail = async ({
       })
     : null;
 
-  const data = objectUtils.noNulls({
+  const data = noNulls({
     guestEmail,
     criptextEmails,
     subject,
