@@ -518,7 +518,7 @@ class ComposerWrapper extends Component {
       };
       const res = await signal.encryptPostEmail(params);
       const filesDbParams = formFileParamsToDatabase(files, emailId);
-      if (filesDbParams && filesDbParams.length) {
+      if (filesDbParams.length) {
         await createFile(filesDbParams);
       }
 
