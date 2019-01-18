@@ -9,6 +9,9 @@ import { getFormattedDate } from './DateUtils';
 import { appDomain, composerEvents } from './const';
 import { FILE_MODES } from './FileUtils';
 import { Status } from '../components/Control';
+import { HTMLTagsRegex } from './RegexUtils';
+
+const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
 
 const filterNonCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) < 0);
@@ -98,15 +101,15 @@ export const formOutgoingEmailFromData = ({
     unread: false,
     secure,
     isMuted: false,
-    threadId
+    threadId,
+    from: `${myAccount.name} <${myEmailAddress}>`
   };
 
-  const from = myAccount.recipientId;
   const recipients = {
     to,
     cc,
     bcc,
-    from: [`${from}@${appDomain}`]
+    from: [`${myEmailAddress}`]
   };
 
   const emailData = {
@@ -199,12 +202,19 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
 
   const threadId = emailIsForward ? undefined : emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
-  const [from] = contacts.from;
+
+  const emailFrom = parseContactRow(emailData.from);
+  const from = emailData.replyTo
+    ? parseContactRow(emailData.replyTo)
+    : emailFrom.name
+      ? emailFrom
+      : contacts.from[0];
+
   const content = formReplyForwardContent(
     replyType,
     emailData.subject,
     emailData.date,
-    from,
+    emailFrom,
     contacts.to,
     emailData.content
   );
@@ -213,13 +223,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const forwardSufix = 'FW: ';
   const sufix = emailIsForward ? forwardSufix : replySufix;
   const textSubject = sufix + removeActionsFromSubject(emailData.subject);
-  const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
-  const toEmails = formToEmails(
-    contacts.from,
-    contacts.to,
-    replyType,
-    myEmailAddress
-  );
+  const toEmails = formToEmails([from], contacts.to, replyType, myEmailAddress);
   const previousCcEmails = filterRecipientObject(contacts.cc, myEmailAddress);
   const othersToEmails = filterRecipientObject(contacts.to, myEmailAddress);
   const ccEmails =
@@ -298,4 +302,15 @@ export const parseEmailAddress = emailAddressObject => {
   const isEmailAddressFromAppDomain = email.indexOf(`@${appDomain}`) > 0;
   const parsedEmail = isEmailAddressFromAppDomain ? email.toLowerCase() : email;
   return { name: emailAddressObject.name, email: parsedEmail };
+};
+
+export const parseContactRow = contact => {
+  const emailMatched = contact.match(HTMLTagsRegex);
+  if (emailMatched) {
+    const emailTag = emailMatched.pop();
+    const email = emailTag.replace(/[<>]/g, '').toLowerCase();
+    const name = contact.slice(0, contact.indexOf(emailTag) - 1);
+    return { email, name };
+  }
+  return { email: contact.toLowerCase(), name: null };
 };

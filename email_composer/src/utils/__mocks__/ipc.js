@@ -5,22 +5,22 @@ const contacts = [
   {
     id: 1,
     name: 'Usuario 1',
-    email: `toUser@${appDomain}`
+    email: `usuario1@${appDomain}`
   },
   {
     id: 2,
     name: 'Usuario 2',
-    email: `ccUser@${appDomain}`
+    email: `usuario2@${appDomain}`
   },
   {
     id: 3,
     name: 'Usuario 3',
-    email: `bccUser@${appDomain}`
+    email: `usuario3@${appDomain}`
   },
   {
     id: 4,
     name: 'Usuario 4',
-    email: `fromUser@${appDomain}`
+    email: `usuario4@${appDomain}`
   }
 ];
 

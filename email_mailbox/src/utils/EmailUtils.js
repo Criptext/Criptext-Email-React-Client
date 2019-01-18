@@ -253,7 +253,8 @@ export const formIncomingEmailFromData = ({
   to,
   threadId,
   unread,
-  messageId
+  messageId,
+  replyTo
 }) => {
   const content = body ? Utf8Decode(sanitize(body)) : '';
   const preview = body
@@ -280,9 +281,10 @@ export const formIncomingEmailFromData = ({
     unread,
     secure: true,
     isMuted: false,
-    messageId
+    messageId,
+    replyTo,
+    from
   };
-
   return { email, recipients };
 };
 
