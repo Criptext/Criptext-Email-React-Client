@@ -204,8 +204,8 @@ class PanelWrapper extends Component {
         const isTrashOrSpam =
           currentLabelId === LabelType.trash.id ||
           currentLabelId === LabelType.spam.id;
-        if (isTrashOrSpam)
-          this.props.onUpdateEmailIdsThread(threadId, emailIdsToRemove);
+        if (!isTrashOrSpam)
+          this.props.onUpdateEmailIdsThread({ threadId, emailIdsToRemove });
       }
     });
 

@@ -174,6 +174,8 @@ const processEvent = async eventsGroups => {
           const res = await Promise.all(managedEvents);
           rowIds = rowIds.concat(res);
         } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
           if (
             !(e.name === 'PreKeyMessage' || e.name === 'MessageCounterError')
           ) {
@@ -594,6 +596,8 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
     if (email) {
       emailsId.push(email.id);
       threads.push({ id: email.threadId, emailId: email.id });
+    } else {
+      return null;
     }
   }
   const labelsToRemove = await getLabelsByText(labelsRemoved);
@@ -610,7 +614,8 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
 
   if (
     labelsAdded.length === 1 &&
-    labelsAdded[0] === LabelType.trash.text &&
+    (labelsAdded[0] === LabelType.trash.text ||
+      labelsAdded[0] === LabelType.spam.text) &&
     !labelsRemoved.length
   ) {
     for (const thread of threads) {
