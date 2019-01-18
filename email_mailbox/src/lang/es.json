@@ -200,6 +200,14 @@
     "send_open_event": {
       "description": "Error al enviar notificación de leído. Inténtalo de nuevo"
     },
+    "set_reply_to": {
+      "success": {
+        "description": "Correo de respuesta establecido satisfactoriamente!"
+      },
+      "error": {
+        "description": "Error al establecer correo de respuesta. No fue modificado."
+      }
+    },
     "trash": {
       "description": "Correos que estén en la papelera más de 30 días serán eliminados automáticamente",
       "action": "Vaciar Papelera"
@@ -331,6 +339,20 @@
       "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
       "button": "¡Listo!"
     },
+    "set_reply_to": {
+      "title": "Correo de Respuesta",
+      "paragraph": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
+      "input": {
+        "email": {
+          "placeholder": "Ingresa un correo"
+        }
+      },
+      "errors": {
+        "email": "Correo Inválido! Ejemplo: example@criptext.com"
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Establecer"
+    },
     "mailbox_sync": {
       "title": "Advertencia de Sincronización",
       "paragraphs": {
@@ -413,6 +435,7 @@
     "read_receipts": "confirmación de leído",
     "read_receipts_description": "Si desactivas confirmación de leído, no podrás saber cuando otros leen tus correos tampoco.",
     "remove": "Remover",
+    "reply_to_email": "Correo de Respuesta",
     "resend_link": "Reenviar enlace",
     "recovery_email": "Correo de Recuperación",
     "reply_to": "Responder A",

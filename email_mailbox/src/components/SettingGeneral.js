@@ -260,7 +260,7 @@ const RecoveryEmailBlock = props => (
 const ReplyToBlock = props => (
   <div id="settings-general-reply-to" className="section-block">
     <div className="section-block-title">
-      <h1>{string.settings.reply_to}</h1>
+      <h1>{string.settings.reply_to_email}</h1>
     </div>
     <div className="section-block-content">
       <div className="section-block-content-item content-recovery-email">
