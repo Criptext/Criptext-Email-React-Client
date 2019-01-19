@@ -17,7 +17,7 @@ const emailDraft = {
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
     messageId: 'messageIdA',
-    from: '<User me> <user@criptext.com>'
+    fromAddress: '<User me> <user@criptext.com>'
   },
   recipients: {
     from: ['<User me> <user@criptext.com>']
@@ -40,7 +40,7 @@ const emailSent = {
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
     messageId: 'messageIdB',
-    from: 'User me <user@criptext.com>'
+    fromAddress: 'User me <user@criptext.com>'
   },
   recipients: {
     from: ['User me <user@criptext.com>'],
@@ -66,7 +66,7 @@ const emailInbox = {
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
     messageId: 'messageIdC',
-    from: 'User A <usera@criptext.com>'
+    fromAddress: 'User A <usera@criptext.com>'
   },
   recipients: {
     from: ['User A <usera@criptext.com>'],
@@ -103,7 +103,7 @@ const emailReply = {
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
     messageId: 'messageIdD',
-    from: 'user@criptext.com'
+    fromAddress: 'user@criptext.com'
   },
   recipients: {
     from: ['user@criptext.com'],
@@ -128,7 +128,7 @@ const emailSpam = {
     unsendDate: '2018-06-14 08:23:20.000',
     trashDate: null,
     messageId: 'messageIdE',
-    from: 'user@criptext.com'
+    fromAddress: 'user@criptext.com'
   },
   recipients: {
     from: ['user@criptext.com'],
@@ -153,7 +153,7 @@ const emailStarred = {
     unsendDate: '2018-06-14 08:23:20.000',
     trashDate: null,
     messageId: 'messageIdF',
-    from: 'User me <user@criptext.com>'
+    fromAddress: 'User me <user@criptext.com>'
   },
   recipients: {
     from: ['User me <user@criptext.com>'],
@@ -194,7 +194,7 @@ describe('Store data email to Email Table:', () => {
         isMuted: false,
         unsendDate: '2018-06-14 08:23:20.000',
         messageId: 'messageId',
-        from: 'From Contact <from@criptext.com>'
+        fromAddress: 'From Contact <from@criptext.com>'
       }
     });
     const key = 'keyId';

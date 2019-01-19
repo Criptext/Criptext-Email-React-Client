@@ -283,7 +283,7 @@ export const formIncomingEmailFromData = ({
     isMuted: false,
     messageId,
     replyTo,
-    from
+    fromAddress: from
   };
   return { email, recipients };
 };
@@ -337,7 +337,7 @@ export const parseContactRow = contact => {
   if (matches) {
     const emailTag = matches.pop();
     const email = emailTag.replace(/[<>]/g, '').toLowerCase();
-    const name = contact.slice(0, contact.indexOf(emailTag) - 1);
+    const name = contact.slice(0, contact.lastIndexOf('<')).trim();
     return { email, name };
   }
   return { email: contact.toLowerCase(), name: null };

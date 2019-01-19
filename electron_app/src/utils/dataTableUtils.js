@@ -6,7 +6,7 @@ const formContactsRow = contacts => {
     if (emailMatched) {
       const emailTag = emailMatched.pop();
       const email = emailTag.replace(/[<>]/g, '').toLowerCase();
-      const name = contact.slice(0, contact.indexOf(emailTag) - 1);
+      const name = contact.slice(0, contact.lastIndexOf('<')).trim();
       return { email, name };
     }
     return { email: contact.toLowerCase(), name: null };

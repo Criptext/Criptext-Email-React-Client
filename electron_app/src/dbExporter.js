@@ -144,7 +144,7 @@ const exportEmailTable = async db => {
           }
 
           if (row.replyTo === null) {
-            row.replyTo = ''
+            row.replyTo = '';
           }
 
           const key = parseInt(row.key);

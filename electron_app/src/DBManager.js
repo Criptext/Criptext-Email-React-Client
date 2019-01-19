@@ -609,6 +609,19 @@ const buildContactMatchQuery = (contactTypes, contactFilter) => {
   }, '');
 };
 
+const defineFromContactName = contactTypes => {
+  if (contactTypes.includes('from')) {
+    return `GROUP_CONCAT(DISTINCT(${
+      Table.EMAIL
+    }.fromAddress)) as fromContactName`;
+  }
+  return `GROUP_CONCAT( DISTINCT( CASE WHEN ${
+    Table.CONTACT
+  }.name IS NOT NULL THEN ${Table.CONTACT}.name ELSE ${
+    Table.CONTACT
+  }.email END ) ) as fromContactName`;
+};
+
 const baseThreadQuery = ({
   date,
   labelId,
@@ -624,6 +637,7 @@ const baseThreadQuery = ({
     whereRawQuery,
     whereRawParams
   } = getQueryParamsIfOrNotRejectedLabel({ labelId, rejectedLabelIds });
+  const fromContactNameQuery = defineFromContactName(contactTypes);
 
   let query = db
     .select(
@@ -638,13 +652,7 @@ const baseThreadQuery = ({
           contactFilter
         )} THEN ${Table.EMAIL_CONTACT}.type ELSE NULL END)) as matchedContacts`
       ),
-      db.raw(
-        `GROUP_CONCAT(DISTINCT( CASE WHEN ${
-          Table.CONTACT
-        }.name IS NOT NULL THEN ${Table.CONTACT}.name ELSE ${
-          Table.CONTACT
-        }.email END)) as fromContactName`
-      ),
+      db.raw(fromContactNameQuery),
       db.raw(
         `GROUP_CONCAT(DISTINCT(${Table.CONTACT}.id)) as recipientContactIds`
       ),

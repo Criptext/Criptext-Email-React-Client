@@ -38,7 +38,7 @@ Object {
     "email": Object {
       "content": "<p>Hello</p>",
       "date": 1524861748481,
-      "from": "myAccountName <myAccountRecipientId@criptext.com>",
+      "fromAddress": "myAccountName <myAccountRecipientId@criptext.com>",
       "isMuted": false,
       "key": 1524861748481,
       "preview": "Hello",

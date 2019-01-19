@@ -102,7 +102,7 @@ export const formOutgoingEmailFromData = ({
     secure,
     isMuted: false,
     threadId,
-    from: `${myAccount.name} <${myEmailAddress}>`
+    fromAddress: `${myAccount.name} <${myEmailAddress}>`
   };
 
   const recipients = {
@@ -203,7 +203,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const threadId = emailIsForward ? undefined : emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
 
-  const emailFrom = parseContactRow(emailData.from);
+  const emailFrom = parseContactRow(emailData.fromAddress);
   const from = emailData.replyTo
     ? parseContactRow(emailData.replyTo)
     : emailFrom.name
@@ -309,7 +309,7 @@ export const parseContactRow = contact => {
   if (emailMatched) {
     const emailTag = emailMatched.pop();
     const email = emailTag.replace(/[<>]/g, '').toLowerCase();
-    const name = contact.slice(0, contact.indexOf(emailTag) - 1);
+    const name = contact.slice(0, contact.lastIndexOf('<')).trim();
     return { email, name };
   }
   return { email: contact.toLowerCase(), name: null };

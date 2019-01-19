@@ -7,6 +7,7 @@ const {
   printDocumentTemplateHeader,
   cleanHTMLTagsFromEmailContentToPrint
 } = require('./stringUtils');
+const { formContactsRow } = require('./dataTableUtils');
 const lang = require('./../lang');
 const dbManager = require('./../DBManager');
 const path = require('path');
@@ -75,8 +76,14 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
       clearSubject = cleanEmojisFromString(emails[0].subject);
       const emailsContents = await Promise.all(
         emails.map(async email => {
-          const [from] = await dbManager.getContactByIds([email.fromContactIds]);
-          const [fromName, fromMail] = [from.name, from.email];
+          const [fromContact] = await dbManager.getContactByIds([
+            email.fromContactIds
+          ]);
+          const [fromAddress] = formContactsRow([email.from]);
+          const [fromName, fromMail] = fromAddress.name
+            ? [fromAddress.name, fromAddress.email]
+            : [fromContact.name, fromContact.email];
+
           const to = await dbManager.getContactByIds(email.to.split(','));
           let cc = [];
           if (email.cc) {
@@ -85,8 +92,9 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
           const emailContent = cleanHTMLTagsFromEmailContentToPrint(
             email.content
           );
+          const cleanName = fromName.replace(/[<>]/g, '');
           return formatEmailContent(
-            fromName,
+            cleanName,
             fromMail,
             email.date,
             [...to, ...cc],

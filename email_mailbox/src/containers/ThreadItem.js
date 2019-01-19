@@ -11,6 +11,7 @@ import {
 } from '../utils/StringUtils';
 import { SectionType, composerEvents } from '../utils/const';
 import string from './../lang';
+import { parseContactRow } from '../utils/EmailUtils';
 
 const defineLabels = (labelIds, labels, labelsToExclude) => {
   if (!labels.size) return [];
@@ -50,12 +51,14 @@ const formatRecipientsForThreadItem = (recipients, currentUserName) => {
   const myFormattedRecipient = string.mailbox.me;
   let listMyselftAtEnd = false;
   const formattedRecipients = recipients.reduce((formatted, recipient) => {
-    if (recipient === currentUserName) {
+    const cleanRecipientName = parseContactRow(recipient);
+    const recipientName = cleanRecipientName.name || cleanRecipientName.email;
+    if (recipientName === currentUserName) {
       listMyselftAtEnd = true;
     } else {
       const recipientFirstName = shouldShowOnlyFirstName
-        ? recipient.split(' ')[0]
-        : recipient;
+        ? recipientName.replace(/[<>]/g, '').split(' ')[0]
+        : recipientName;
       formatted.push(recipientFirstName);
     }
     return formatted;

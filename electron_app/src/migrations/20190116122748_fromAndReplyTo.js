@@ -7,7 +7,7 @@ const batch = 1;
 const createFromColumn = async knex => {
   await knex.schema.table(Table.EMAIL, table => {
     table
-      .string('from', MEDIUM_STRING_SIZE)
+      .string('fromAddress', MEDIUM_STRING_SIZE)
       .notNullable()
       .defaultTo('');
   });
@@ -83,14 +83,14 @@ const recreateRelation = async knex => {
 };
 const deleteFromAndReplyToColumns = knex => {
   return knex.schema.table(Table.EMAIL, table => {
-    table.dropColumn('from');
+    table.dropColumn('fromAddress');
     table.dropColumn('replyTo');
   });
 };
 
 exports.up = async (knex, Promise) => {
   const checkAndCreateFromColumn = knex.schema
-    .hasColumn(Table.EMAIL, 'from')
+    .hasColumn(Table.EMAIL, 'fromAddress')
     .then(columnExists => {
       return !columnExists && createFromColumn(knex);
     });

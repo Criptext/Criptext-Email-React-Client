@@ -17,7 +17,7 @@ import {
 import { EmailStatus, unsentText, composerEvents } from '../utils/const';
 
 const defineFrom = (email, contacts) => {
-  const emailFrom = parseContactRow(email.from || '');
+  const emailFrom = parseContactRow(email.fromAddress || '');
   return emailFrom.name
     ? [emailFrom]
     : getContacts(contacts, email.fromContactIds);
