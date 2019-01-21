@@ -167,7 +167,7 @@ const encryptPostEmail = async ({
       ? false
       : true;
   const sessions = await getSessionRecordByRecipientIds(recipientIds);
-  const knownAddresses = sessions.reduce((result, item) => {
+  let knownAddresses = sessions.reduce((result, item) => {
     if (!item.recipientId) {
       return result;
     }
@@ -176,12 +176,50 @@ const encryptPostEmail = async ({
       [item.recipientId]: item.deviceIds.split(',').map(Number)
     };
   }, {});
-  const keyBundles = await getKeyBundlesOfRecipients(
-    recipientIds,
-    knownAddresses
-  );
+
+  const {
+    keyBundles,
+    blacklistedKnownDevices
+  } = await getKeyBundlesOfRecipients(recipientIds, knownAddresses);
   if (keyBundles.includes(null)) {
     throw new CustomError(errors.server.UNAUTHORIZED);
+  }
+
+  const blacklistedKnownDevicesObject = {};
+  if (blacklistedKnownDevices.length) {
+    for (const blacklistedKnownDevice of blacklistedKnownDevices) {
+      const blacklistedRecipient = blacklistedKnownDevice.name;
+      const blacklistedDevicesOfRecipient = blacklistedKnownDevice.devices;
+      blacklistedKnownDevicesObject[
+        blacklistedRecipient
+      ] = blacklistedDevicesOfRecipient;
+
+      for (const blacklistedDevice of blacklistedDevicesOfRecipient) {
+        const sessionIdentifier = `${blacklistedRecipient}.${blacklistedDevice}`;
+        await store.removeSession(sessionIdentifier);
+      }
+    }
+
+    knownAddresses = Object.keys(knownAddresses).reduce(
+      (result, knownAddressRecipientId) => {
+        const filteredKnownAddressDevicesIds = knownAddresses[
+          knownAddressRecipientId
+        ].filter(
+          deviceId =>
+            !blacklistedKnownDevicesObject[knownAddressRecipientId].includes(
+              deviceId
+            )
+        );
+        if (!filteredKnownAddressDevicesIds.length) {
+          return result;
+        }
+        return {
+          ...result,
+          [knownAddressRecipientId]: filteredKnownAddressDevicesIds
+        };
+      },
+      {}
+    );
   }
 
   const recipientsToSendAmount =
