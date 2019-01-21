@@ -38,11 +38,11 @@ const updateFromColumn = async knex => {
       const [contact] = await knex
         .select('*')
         .from(Table.CONTACT)
-        .where({ id: emailContact.emailId });
+        .where({ id: emailContact.contactId });
       await knex
         .table(Table.EMAIL)
         .update({
-          from: `${
+          fromAddress: `${
             contact.name ? `${contact.name} <${contact.email}>` : contact.email
           }`
         })
@@ -60,7 +60,7 @@ const recreateRelation = async knex => {
 
   while (shouldGetMoreEmails) {
     const emails = await knex
-      .select('id, from')
+      .select('id, fromAddress')
       .from(Table.EMAIL)
       .limit(limit)
       .offset(offset);

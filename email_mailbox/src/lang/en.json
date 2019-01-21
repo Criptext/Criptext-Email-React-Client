@@ -440,7 +440,7 @@
     "reply_to": "Reply To",
     "remove": "Remove",
     "reply_to_email": "Reply To",
-    "reply_to_not_set": "'Reply To' email not configured",
+    "reply_to_not_set": "When someone replies to one of your emails, they will reply to the address set here.",
     "resend_link": "resend link",
     "set_email": "Set Email",
     "show_in_label_list": "Show in label list",
