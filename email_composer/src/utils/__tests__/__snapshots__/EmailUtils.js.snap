@@ -3,16 +3,16 @@
 exports[`[Edit draft]  Form data to edit draft 1`] = `
 Object {
   "bccEmails": Array [
-    "bccUser@criptext.com",
+    "usuario3@criptext.com",
   ],
   "ccEmails": Array [
-    "ccUser@criptext.com",
+    "usuario2@criptext.com",
   ],
   "htmlBody": "<p>Modified body content</p>",
   "textSubject": "Email subject 1",
   "threadId": "1",
   "toEmails": Array [
-    "toUser@criptext.com",
+    "usuario1@criptext.com",
   ],
 }
 `;
@@ -38,6 +38,7 @@ Object {
     "email": Object {
       "content": "<p>Hello</p>",
       "date": 1524861748481,
+      "fromAddress": "myAccountName <myAccountRecipientId@criptext.com>",
       "isMuted": false,
       "key": 1524861748481,
       "preview": "Hello",
@@ -58,7 +59,7 @@ Object {
         "ccUser@criptext.com",
       ],
       "from": Array [
-        "julian@criptext.com",
+        "myAccountRecipientId@criptext.com",
       ],
       "to": Array [
         "toUser@criptext.com",
@@ -136,7 +137,8 @@ Object {
   "threadId": "1",
   "toEmails": Array [
     Object {
-      "email": "fromUser@criptext.com",
+      "email": "from1@criptext.com",
+      "name": "From1",
     },
   ],
 }
@@ -147,10 +149,10 @@ Object {
   "bccEmails": Array [],
   "ccEmails": Array [
     Object {
-      "email": "ccUser@criptext.com",
+      "email": "usuario2@criptext.com",
     },
     Object {
-      "email": "toUser@criptext.com",
+      "email": "usuario1@criptext.com",
     },
   ],
   "files": Array [],
@@ -160,7 +162,8 @@ Object {
   "threadId": "1",
   "toEmails": Array [
     Object {
-      "email": "fromUser@criptext.com",
+      "email": "from1@criptext.com",
+      "name": "From1",
     },
   ],
 }

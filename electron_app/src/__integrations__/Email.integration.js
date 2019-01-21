@@ -16,7 +16,8 @@ const emailDraft = {
     secure: true,
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdA'
+    messageId: 'messageIdA',
+    fromAddress: '<User me> <user@criptext.com>'
   },
   recipients: {
     from: ['<User me> <user@criptext.com>']
@@ -38,7 +39,8 @@ const emailSent = {
     secure: true,
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdB'
+    messageId: 'messageIdB',
+    fromAddress: 'User me <user@criptext.com>'
   },
   recipients: {
     from: ['User me <user@criptext.com>'],
@@ -63,7 +65,8 @@ const emailInbox = {
     secure: true,
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdC'
+    messageId: 'messageIdC',
+    fromAddress: 'User A <usera@criptext.com>'
   },
   recipients: {
     from: ['User A <usera@criptext.com>'],
@@ -99,7 +102,8 @@ const emailReply = {
     secure: true,
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdD'
+    messageId: 'messageIdD',
+    fromAddress: 'user@criptext.com'
   },
   recipients: {
     from: ['user@criptext.com'],
@@ -123,7 +127,8 @@ const emailSpam = {
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
     trashDate: null,
-    messageId: 'messageIdE'
+    messageId: 'messageIdE',
+    fromAddress: 'user@criptext.com'
   },
   recipients: {
     from: ['user@criptext.com'],
@@ -147,7 +152,8 @@ const emailStarred = {
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20.000',
     trashDate: null,
-    messageId: 'messageIdF'
+    messageId: 'messageIdF',
+    fromAddress: 'User me <user@criptext.com>'
   },
   recipients: {
     from: ['User me <user@criptext.com>'],
@@ -187,7 +193,8 @@ describe('Store data email to Email Table:', () => {
         secure: true,
         isMuted: false,
         unsendDate: '2018-06-14 08:23:20.000',
-        messageId: 'messageId'
+        messageId: 'messageId',
+        fromAddress: 'From Contact <from@criptext.com>'
       }
     });
     const key = 'keyId';

@@ -1,7 +1,6 @@
 const ClientAPI = require('@criptext/api');
 const {
-  DEV_SERVER_URL,
-  PROD_SERVER_URL,
+  SERVER_URL,
   API_CLIENT_VERSION,
   LINK_DEVICES_FILE_VERSION
 } = require('./utils/const');
@@ -21,9 +20,8 @@ const { getOsAndArch } = require('./utils/osUtils');
 let client = {};
 
 const initializeClient = ({ token, refreshToken, language, os }) => {
-  const isDev = process.env.NODE_ENV === 'development';
   const clientOptions = {
-    url: isDev ? DEV_SERVER_URL : PROD_SERVER_URL,
+    url: SERVER_URL,
     token,
     refreshToken,
     timeout: 60 * 1000,

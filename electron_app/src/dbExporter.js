@@ -143,6 +143,10 @@ const exportEmailTable = async db => {
             row['trashDate'] = parseDate(row.unsendDate);
           }
 
+          if (row.replyTo === null) {
+            row.replyTo = '';
+          }
+
           const key = parseInt(row.key);
           return Object.assign(row, {
             unread: !!row.unread,

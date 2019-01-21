@@ -3,9 +3,9 @@ import EmailView from './../components/EmailWrapper';
 import { defineTimeByToday, defineLargeTime } from './../utils/TimeUtils';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
-import { addCollapseDiv } from './../utils/EmailUtils';
+import { addCollapseDiv, parseContactRow } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
-import { LabelType, myAccount } from './../utils/electronInterface';
+import { LabelType, myAccount, mySettings } from './../utils/electronInterface';
 import { openFilledComposerWindow, sendPrintEmailEvent } from './../utils/ipc';
 import {
   loadFiles,
@@ -16,10 +16,17 @@ import {
 } from './../actions/index';
 import { EmailStatus, unsentText, composerEvents } from '../utils/const';
 
+const defineFrom = (email, contacts) => {
+  const emailFrom = parseContactRow(email.fromAddress || '');
+  return emailFrom.name
+    ? [emailFrom]
+    : getContacts(contacts, email.fromContactIds);
+};
+
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
   const contacts = state.get('contacts');
-  const from = getContacts(contacts, email.from);
+  const from = defineFrom(email, contacts);
   const to = getContacts(contacts, email.to);
   const cc = getContacts(contacts, email.cc);
   const bcc = getContacts(contacts, email.bcc);
@@ -28,7 +35,7 @@ const mapStateToProps = (state, ownProps) => {
   const color = senderEmail
     ? randomcolor({
         seed: senderName || senderEmail,
-        luminosity: 'bright'
+        luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
       })
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');

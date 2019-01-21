@@ -1,5 +1,6 @@
 export const myAccount = {
-  recipientId: 'julian'
+  recipientId: 'myAccountRecipientId',
+  name: 'myAccountName'
 };
 
 export const emailKey = '1';

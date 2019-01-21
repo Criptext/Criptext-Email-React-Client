@@ -119,7 +119,8 @@
     "to": "To",
     "unread": "unread",
     "print_email": "Print",
-    "print_thread": "Print All"
+    "print_thread": "Print All",
+    "me": "Me"
   },
   "messages": {
     "change_password": {

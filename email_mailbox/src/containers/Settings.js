@@ -5,7 +5,8 @@ import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataLogout,
   LabelType,
-  myAccount
+  myAccount,
+  mySettings
 } from '../utils/electronInterface';
 import {
   getUserSettings,
@@ -91,7 +92,7 @@ const mapDispatchToProps = dispatch => {
     onAddLabel: text => {
       const color = randomcolor({
         seed: text,
-        luminosity: 'bright'
+        luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
       });
       const label = {
         text,

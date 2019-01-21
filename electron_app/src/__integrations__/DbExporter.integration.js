@@ -70,7 +70,9 @@ const email = {
     isMuted: false,
     unsendDate: '2018-06-14 08:23:20',
     trashDate: null,
-    messageId: 'messageId1'
+    messageId: 'messageId1',
+    fromAddress: 'Alice <alice@criptext.com>',
+    replyTo: ''
   },
   recipients: {
     from: ['Alice <alice@criptext.com>'],
@@ -135,6 +137,11 @@ const cleanTempDirectory = () => {
   }
 };
 
+beforeAll(async () => {
+  await DBManager.cleanDataBase();
+  await DBManager.createTables();
+});
+
 beforeEach(async () => {
   await DBManager.cleanDataBase();
   await DBManager.createTables();
@@ -176,7 +183,7 @@ describe('Parse database: ', () => {
 
   it('Should parse Emails to string', async () => {
     await insertEmail(email);
-    const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"isMuted":false,"messageId":"messageId1","unsentDate":"2018-06-14 08:23:20"}}`;
+    const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"isMuted":false,"messageId":"messageId1","fromAddress":"Alice <alice@criptext.com>","replyTo":"","unsentDate":"2018-06-14 08:23:20"}}`;
     const emailsString = await exportEmailTable(dbConnection);
     expect(emailsString).toBe(expectedString);
   });
@@ -259,7 +266,7 @@ describe('Import Database: ', () => {
     const { fileTokens } = emailImported;
     const labelIds = emailImported.labelIds.split(',').map(Number);
     const contactIds = [
-      ...emailImported.from.split(',').map(Number),
+      ...emailImported.fromContactIds.split(',').map(Number),
       ...emailImported.to.split(',').map(Number)
     ];
     const [fileImported] = await DBManager.getFilesByTokens([fileTokens]);

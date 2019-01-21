@@ -270,6 +270,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     fileKeys,
     files,
     from,
+    replyTo,
     labels,
     messageType,
     metadataKey,
@@ -360,7 +361,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       to: to || toArray,
       threadId,
       unread,
-      messageId
+      messageId,
+      replyTo
     };
     const { email, recipients } = await formIncomingEmailFromData(data);
     notificationPreview = email.preview;

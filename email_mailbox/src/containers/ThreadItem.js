@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import randomcolor from 'randomcolor';
 import * as actions from './../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
-import { LabelType, myAccount } from '../utils/electronInterface';
+import { LabelType, myAccount, mySettings } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
 import { defineTimeByToday } from '../utils/TimeUtils';
 import {
@@ -11,6 +11,7 @@ import {
 } from '../utils/StringUtils';
 import { SectionType, composerEvents } from '../utils/const';
 import string from './../lang';
+import { parseContactRow } from '../utils/EmailUtils';
 
 const defineLabels = (labelIds, labels, labelsToExclude) => {
   if (!labels.size) return [];
@@ -46,13 +47,19 @@ const defineSubject = (subject, emailSize) => {
 };
 
 const formatRecipientsForThreadItem = (recipients, currentUserName) => {
-  const myFormattedRecipient = 'Me';
+  const shouldShowOnlyFirstName = recipients.length > 1;
+  const myFormattedRecipient = string.mailbox.me;
   let listMyselftAtEnd = false;
   const formattedRecipients = recipients.reduce((formatted, recipient) => {
-    if (recipient === currentUserName) {
+    const cleanRecipientName = parseContactRow(recipient);
+    const recipientName = cleanRecipientName.name || cleanRecipientName.email;
+    if (recipientName === currentUserName) {
       listMyselftAtEnd = true;
     } else {
-      formatted.push(recipient);
+      const recipientFirstName = shouldShowOnlyFirstName
+        ? recipientName.replace(/[<>]/g, '').split(' ')[0]
+        : recipientName;
+      formatted.push(recipientFirstName);
     }
     return formatted;
   }, []);
@@ -75,7 +82,7 @@ const mapStateToProps = (state, ownProps) => {
   const letters = getTwoCapitalLetters(firstRecipient, 'D');
   const color = randomcolor({
     seed: firstRecipient,
-    luminosity: 'bright'
+    luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
   });
   const thread = ownProps.thread.merge({
     date: defineTimeByToday(ownProps.thread.get('date')),
