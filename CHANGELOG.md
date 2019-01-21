@@ -1,5 +1,111 @@
 # Change Log
 
+## [0.14.4](https://github.com/criptext/Criptext-Email-React-Client/tree/0.14.4) (2018-12-08)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.14.2...0.14.4)
+
+**Fixed bugs:**
+
+- Mailbox: Fix update own contact [\#589](https://github.com/Criptext/Criptext-Email-React-Client/issues/589)
+- Mailbox: Fix notification on initialize [\#580](https://github.com/Criptext/Criptext-Email-React-Client/issues/580)
+
+**Closed issues:**
+
+- Mailbox/Composer:  User Guide [\#596](https://github.com/Criptext/Criptext-Email-React-Client/issues/596)
+- Composer: Filekey for unencrypted external recipients [\#592](https://github.com/Criptext/Criptext-Email-React-Client/issues/592)
+- Composer: Add limit attachment by header from server response [\#579](https://github.com/Criptext/Criptext-Email-React-Client/issues/579)
+- Login: Change message to timeout response \(link device\) [\#578](https://github.com/Criptext/Criptext-Email-React-Client/issues/578)
+- Settings: Delete account [\#576](https://github.com/Criptext/Criptext-Email-React-Client/issues/576)
+- Composer: Forward from and to external emails [\#552](https://github.com/Criptext/Criptext-Email-React-Client/issues/552)
+
+**Merged pull requests:**
+
+- Update version 0.14.4 [\#595](https://github.com/Criptext/Criptext-Email-React-Client/pull/595) ([erikaperugachi](https://github.com/erikaperugachi))
+- Add contact support in sidebar [\#594](https://github.com/Criptext/Criptext-Email-React-Client/pull/594) ([erikaperugachi](https://github.com/erikaperugachi))
+- Filekey for unencrypted external recipients [\#593](https://github.com/Criptext/Criptext-Email-React-Client/pull/593) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update popups && Fix Login [\#591](https://github.com/Criptext/Criptext-Email-React-Client/pull/591) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fixes & Translate [\#590](https://github.com/Criptext/Criptext-Email-React-Client/pull/590) ([JulianAdams4](https://github.com/JulianAdams4))
+- refactor [\#588](https://github.com/Criptext/Criptext-Email-React-Client/pull/588) ([erikaperugachi](https://github.com/erikaperugachi))
+- refactor [\#587](https://github.com/Criptext/Criptext-Email-React-Client/pull/587) ([erikaperugachi](https://github.com/erikaperugachi))
+- Delete account [\#586](https://github.com/Criptext/Criptext-Email-React-Client/pull/586) ([JulianAdams4](https://github.com/JulianAdams4))
+- Refactor [\#585](https://github.com/Criptext/Criptext-Email-React-Client/pull/585) ([erikaperugachi](https://github.com/erikaperugachi))
+- Login: Change timeout response \(Link devices\) [\#584](https://github.com/Criptext/Criptext-Email-React-Client/pull/584) ([JulianAdams4](https://github.com/JulianAdams4))
+- Composer: Add limit attachments size [\#583](https://github.com/Criptext/Criptext-Email-React-Client/pull/583) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update version 0.14.3 [\#582](https://github.com/Criptext/Criptext-Email-React-Client/pull/582) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fixes add attachments on forward & Group notifications & Forward attachments to externals [\#581](https://github.com/Criptext/Criptext-Email-React-Client/pull/581) ([JulianAdams4](https://github.com/JulianAdams4))
+
+## [0.14.2](https://github.com/criptext/Criptext-Email-React-Client/tree/0.14.2) (2018-12-03)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/v0.14.0...0.14.2)
+
+**Implemented enhancements:**
+
+- Download File: Download once and add status downloaded [\#555](https://github.com/Criptext/Criptext-Email-React-Client/issues/555)
+
+**Fixed bugs:**
+
+- Mailbox: Cancel button to upload db \(Link devices\) [\#572](https://github.com/Criptext/Criptext-Email-React-Client/issues/572)
+- Mailbox: Fix notifications on Mac Store [\#571](https://github.com/Criptext/Criptext-Email-React-Client/issues/571)
+- App: Fix batch exporting database on Link devices [\#569](https://github.com/Criptext/Criptext-Email-React-Client/issues/569)
+- Download File: Download once and add status downloaded [\#555](https://github.com/Criptext/Criptext-Email-React-Client/issues/555)
+
+**Closed issues:**
+
+- Javascript injection leads to remote code execution in Criptext 0.14.1 [\#565](https://github.com/Criptext/Criptext-Email-React-Client/issues/565)
+- New email: hangle flag external emails [\#553](https://github.com/Criptext/Criptext-Email-React-Client/issues/553)
+- Add rate limit message [\#551](https://github.com/Criptext/Criptext-Email-React-Client/issues/551)
+- Javascript injection in Criptext app [\#550](https://github.com/Criptext/Criptext-Email-React-Client/issues/550)
+
+**Merged pull requests:**
+
+- Fix icon [\#575](https://github.com/Criptext/Criptext-Email-React-Client/pull/575) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix composer style [\#574](https://github.com/Criptext/Criptext-Email-React-Client/pull/574) ([JulianAdams4](https://github.com/JulianAdams4))
+- Mailbox: Cancel button to upload db [\#573](https://github.com/Criptext/Criptext-Email-React-Client/pull/573) ([JulianAdams4](https://github.com/JulianAdams4))
+- Batch exporting database on Link devices [\#570](https://github.com/Criptext/Criptext-Email-React-Client/pull/570) ([JulianAdams4](https://github.com/JulianAdams4))
+- Add call throwError [\#568](https://github.com/Criptext/Criptext-Email-React-Client/pull/568) ([erikaperugachi](https://github.com/erikaperugachi))
+- composer refactor [\#567](https://github.com/Criptext/Criptext-Email-React-Client/pull/567) ([erikaperugachi](https://github.com/erikaperugachi))
+- Refactoring errors & Translate [\#566](https://github.com/Criptext/Criptext-Email-React-Client/pull/566) ([JulianAdams4](https://github.com/JulianAdams4))
+- Refactor dialog project [\#564](https://github.com/Criptext/Criptext-Email-React-Client/pull/564) ([erikaperugachi](https://github.com/erikaperugachi))
+- Hangle flag for external emails [\#563](https://github.com/Criptext/Criptext-Email-React-Client/pull/563) ([JulianAdams4](https://github.com/JulianAdams4))
+- Refactor ipc [\#562](https://github.com/Criptext/Criptext-Email-React-Client/pull/562) ([erikaperugachi](https://github.com/erikaperugachi))
+- App Single Instance: Only production \(Windows & Linux\) [\#561](https://github.com/Criptext/Criptext-Email-React-Client/pull/561) ([JulianAdams4](https://github.com/JulianAdams4))
+- Rate limit message [\#560](https://github.com/Criptext/Criptext-Email-React-Client/pull/560) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update package.json [\#559](https://github.com/Criptext/Criptext-Email-React-Client/pull/559) ([erikaperugachi](https://github.com/erikaperugachi))
+- Sanitize all type emails [\#558](https://github.com/Criptext/Criptext-Email-React-Client/pull/558) ([erikaperugachi](https://github.com/erikaperugachi))
+- Windows Store Settings, Icons & Single Instance [\#557](https://github.com/Criptext/Criptext-Email-React-Client/pull/557) ([JulianAdams4](https://github.com/JulianAdams4))
+- Add file download interaction. Close \#555 [\#556](https://github.com/Criptext/Criptext-Email-React-Client/pull/556) ([erikaperugachi](https://github.com/erikaperugachi))
+
+## [v0.14.0](https://github.com/criptext/Criptext-Email-React-Client/tree/v0.14.0) (2018-11-27)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.13.9...v0.14.0)
+
+**Implemented enhancements:**
+
+- Websocket: Detect lost connection [\#535](https://github.com/Criptext/Criptext-Email-React-Client/issues/535)
+
+**Fixed bugs:**
+
+- Database: Fix poorly saved emails [\#536](https://github.com/Criptext/Criptext-Email-React-Client/issues/536)
+- Websocket: Detect lost connection [\#535](https://github.com/Criptext/Criptext-Email-React-Client/issues/535)
+
+**Closed issues:**
+
+- Add language structure [\#545](https://github.com/Criptext/Criptext-Email-React-Client/issues/545)
+- Mailbox: Read receipts [\#540](https://github.com/Criptext/Criptext-Email-React-Client/issues/540)
+- Mailbox: Show Email Preview [\#539](https://github.com/Criptext/Criptext-Email-React-Client/issues/539)
+- Update file item view [\#531](https://github.com/Criptext/Criptext-Email-React-Client/issues/531)
+- Composer: Keep attachments at forwarding an email [\#365](https://github.com/Criptext/Criptext-Email-React-Client/issues/365)
+
+**Merged pull requests:**
+
+- Websocket: Detect lost connection \(Banner\) [\#554](https://github.com/Criptext/Criptext-Email-React-Client/pull/554) ([JulianAdams4](https://github.com/JulianAdams4))
+- Add language structure. Close \#545 [\#549](https://github.com/Criptext/Criptext-Email-React-Client/pull/549) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix poorly saved contacts \(Fix\) [\#548](https://github.com/Criptext/Criptext-Email-React-Client/pull/548) ([JulianAdams4](https://github.com/JulianAdams4))
+- Keep attachments at forwarding an email [\#547](https://github.com/Criptext/Criptext-Email-React-Client/pull/547) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update version 0.14.0 [\#546](https://github.com/Criptext/Criptext-Email-React-Client/pull/546) ([erikaperugachi](https://github.com/erikaperugachi))
+- Settings table [\#544](https://github.com/Criptext/Criptext-Email-React-Client/pull/544) ([JulianAdams4](https://github.com/JulianAdams4))
+- Socket: Detect lost connection [\#543](https://github.com/Criptext/Criptext-Email-React-Client/pull/543) ([JulianAdams4](https://github.com/JulianAdams4))
+- Read receipts [\#541](https://github.com/Criptext/Criptext-Email-React-Client/pull/541) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix poorly saved emails [\#538](https://github.com/Criptext/Criptext-Email-React-Client/pull/538) ([JulianAdams4](https://github.com/JulianAdams4))
+- File view [\#537](https://github.com/Criptext/Criptext-Email-React-Client/pull/537) ([erikaperugachi](https://github.com/erikaperugachi))
+
 ## [0.13.9](https://github.com/criptext/Criptext-Email-React-Client/tree/0.13.9) (2018-11-19)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.13.6...0.13.9)
 
@@ -317,18 +423,24 @@
 - Unify [\#366](https://github.com/Criptext/Criptext-Email-React-Client/pull/366) ([erikaperugachi](https://github.com/erikaperugachi))
 
 ## [0.9.0](https://github.com/criptext/Criptext-Email-React-Client/tree/0.9.0) (2018-08-21)
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.8.2...0.9.0)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.8.1...0.9.0)
 
 **Fixed bugs:**
 
 - Mailbox: Check peer read events \(email and thread\) [\#359](https://github.com/Criptext/Criptext-Email-React-Client/issues/359)
+- Mailbox: Fix acknowledge events [\#355](https://github.com/Criptext/Criptext-Email-React-Client/issues/355)
 - Composer: Add signature to reply [\#342](https://github.com/Criptext/Criptext-Email-React-Client/issues/342)
 - SignUp: Don't allow special characters in the username [\#340](https://github.com/Criptext/Criptext-Email-React-Client/issues/340)
+- Open some composers [\#270](https://github.com/Criptext/Criptext-Email-React-Client/issues/270)
+- Sidebar: Fix badge [\#210](https://github.com/Criptext/Criptext-Email-React-Client/issues/210)
+- Email Detail:  Check hyperlink to open out app [\#151](https://github.com/Criptext/Criptext-Email-React-Client/issues/151)
+- Fix parser contacts [\#140](https://github.com/Criptext/Criptext-Email-React-Client/issues/140)
 
 **Closed issues:**
 
 - Mailbox: Check peer label update [\#361](https://github.com/Criptext/Criptext-Email-React-Client/issues/361)
 - Mailbox: Peer delete permanent events \(email and thread\) [\#353](https://github.com/Criptext/Criptext-Email-React-Client/issues/353)
+- Composer: Attachments for non-Criptext users [\#352](https://github.com/Criptext/Criptext-Email-React-Client/issues/352)
 - Composer: Change characters minimum to 3 in the validation for external email password  [\#339](https://github.com/Criptext/Criptext-Email-React-Client/issues/339)
 - EmailDetail: Change audio icon of the attachments [\#291](https://github.com/Criptext/Criptext-Email-React-Client/issues/291)
 - Composer: Fix bold button [\#189](https://github.com/Criptext/Criptext-Email-React-Client/issues/189)
@@ -339,24 +451,6 @@
 - Peer labels update [\#363](https://github.com/Criptext/Criptext-Email-React-Client/pull/363) ([JulianAdams4](https://github.com/JulianAdams4))
 - Fix peers: Delete permanent & Unread [\#362](https://github.com/Criptext/Criptext-Email-React-Client/pull/362) ([JulianAdams4](https://github.com/JulianAdams4))
 - Scroll [\#360](https://github.com/Criptext/Criptext-Email-React-Client/pull/360) ([erikaperugachi](https://github.com/erikaperugachi))
-
-## [0.8.2](https://github.com/criptext/Criptext-Email-React-Client/tree/0.8.2) (2018-08-15)
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.8.1...0.8.2)
-
-**Fixed bugs:**
-
-- Mailbox: Fix acknowledge events [\#355](https://github.com/Criptext/Criptext-Email-React-Client/issues/355)
-- Open some composers [\#270](https://github.com/Criptext/Criptext-Email-React-Client/issues/270)
-- Sidebar: Fix badge [\#210](https://github.com/Criptext/Criptext-Email-React-Client/issues/210)
-- Email Detail:  Check hyperlink to open out app [\#151](https://github.com/Criptext/Criptext-Email-React-Client/issues/151)
-- Fix parser contacts [\#140](https://github.com/Criptext/Criptext-Email-React-Client/issues/140)
-
-**Closed issues:**
-
-- Composer: Attachments for non-Criptext users [\#352](https://github.com/Criptext/Criptext-Email-React-Client/issues/352)
-
-**Merged pull requests:**
-
 - 0.8.2 [\#356](https://github.com/Criptext/Criptext-Email-React-Client/pull/356) ([erikaperugachi](https://github.com/erikaperugachi))
 - Attachments for non-Criptext users [\#354](https://github.com/Criptext/Criptext-Email-React-Client/pull/354) ([JulianAdams4](https://github.com/JulianAdams4))
 - Add mac certificate configuration [\#350](https://github.com/Criptext/Criptext-Email-React-Client/pull/350) ([erikaperugachi](https://github.com/erikaperugachi))
