@@ -76,6 +76,7 @@ const mapStateToProps = (state, ownProps) => {
       ownProps.threadIdSelected
     );
   const emails = getEmails(state.get('emails'), thread);
+  const indexFirstUnread = emails.findIndex(email => email.unread);
   const emailKeysUnread = emails
     .filter(email => email.status === 3 && email.unread)
     .map(email => email.key);
@@ -98,6 +99,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     emails,
     emailKeysUnread,
+    indexFirstUnread,
     labels,
     myEmailKeysUnread,
     starred,

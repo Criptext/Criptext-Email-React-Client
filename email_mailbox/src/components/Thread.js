@@ -6,7 +6,20 @@ import Label from './Label';
 import Message from '../containers/Message';
 import './thread.scss';
 
+const MIN_INDEX_TO_COLLAPSE = 4;
+
 class Thread extends Component {
+  constructor(props) {
+    super(props);
+    const groupedIndex =
+      props.indexFirstUnread < 0
+        ? props.emails.length - 1
+        : props.indexFirstUnread;
+    this.state = {
+      groupedIndex: groupedIndex || 0
+    };
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.thread && !nextProps.thread) {
       this.props.onBackOption();
@@ -23,6 +36,18 @@ class Thread extends Component {
           nextProps.thread.threadId
         );
       }
+    }
+    if (
+      this.props.emails.length === 0 &&
+      nextProps.emails.length > this.props.emails.length
+    ) {
+      const groupedIndex =
+        nextProps.indexFirstUnread < 0
+          ? nextProps.emails.length - 1
+          : nextProps.indexFirstUnread;
+      this.setState({
+        groupedIndex: groupedIndex || 0
+      });
     }
   }
 
@@ -58,20 +83,7 @@ class Thread extends Component {
               />
             </div>
           </div>
-          <div className="thread-emails">
-            {this.props.emails.map((email, index) => {
-              const isLast = this.props.emails.length - 1 === index;
-              return (
-                <Email
-                  key={index}
-                  email={email}
-                  staticOpen={isLast}
-                  count={this.props.emails.length}
-                  onBackOption={this.props.onBackOption}
-                />
-              );
-            })}
-          </div>
+          <div className="thread-emails">{this.renderEmails()}</div>
         </div>
       </div>
     );
@@ -96,12 +108,62 @@ class Thread extends Component {
   handleToggleStar = () => {
     this.props.onToggleStar(this.props.thread.threadId, this.props.starred);
   };
+
+  renderEmails = () => {
+    const emailContainers = this.props.emails.map((email, index) => {
+      const isLast = this.props.emails.length - 1 === index;
+      return (
+        <Email
+          key={index}
+          email={email}
+          staticOpen={isLast}
+          count={this.props.emails.length}
+          onBackOption={this.props.onBackOption}
+        />
+      );
+    });
+    const index = this.state.groupedIndex;
+    const collapsedEmails = index - 1;
+    if (!this.props.emails.length || index <= MIN_INDEX_TO_COLLAPSE) {
+      return emailContainers;
+    }
+    emailContainers.splice(
+      1,
+      collapsedEmails,
+      <ExpandView
+        key={-1}
+        collapsedNumber={collapsedEmails}
+        onExpandGroup={this.onExpandGroup}
+      />
+    );
+    return emailContainers;
+  };
+
+  onExpandGroup = () => {
+    this.setState({
+      groupedIndex: 0
+    });
+  };
 }
+
+const ExpandView = props => (
+  <div className="thread-collapsed">
+    <div className="thread-collapsed-clickable" onClick={props.onExpandGroup}>
+      <div className="thread-collapsed-counter">{props.collapsedNumber}</div>
+    </div>
+  </div>
+);
+
+ExpandView.propTypes = {
+  collapsedNumber: PropTypes.number,
+  onExpandGroup: PropTypes.func
+};
 
 Thread.propTypes = {
   emailIds: PropTypes.array,
   emails: PropTypes.array,
   emailKeysUnread: PropTypes.array,
+  indexFirstUnread: PropTypes.number,
   labels: PropTypes.array,
   mailboxSelected: PropTypes.string,
   myEmailKeysUnread: PropTypes.array,

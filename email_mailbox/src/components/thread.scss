@@ -77,6 +77,33 @@
   margin: 0 25px 25px;
 }
 
+.thread-collapsed {
+  height: 0;
+  position: relative;
+
+  .thread-collapsed-clickable {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 36px;
+    margin-top: -21px;
+    cursor: pointer;
+
+    .thread-collapsed-counter {
+      height: 36px;
+      width: 36px;
+      margin-left: 40px;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #e4e5e7;
+      color: #a1a2a3;
+      border-radius: 30px;
+    }
+  }
+}
+
 /* THEME
    ----------------------------- */
 @mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE){
