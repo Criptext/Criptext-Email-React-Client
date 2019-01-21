@@ -828,9 +828,20 @@ class SettingGeneralWrapper extends Component {
     }
   };
 
-  handleRemoveReplyTo = async () => {
-    const SUCCESS_STATUS = 200;
+  handleRemoveReplyTo = () => {
+    this.setState(
+      {
+        replyToParams: {
+          ...this.state.replyToParams,
+          isLoading: true
+        }
+      },
+      this.handleRemoveReplyToRequest
+    );
+  };
 
+  handleRemoveReplyToRequest = async () => {
+    const SUCCESS_STATUS = 200;
     const { status } = await setReplyTo({
       enable: false,
       address: this.state.replyToParams.replyToEmail
@@ -838,8 +849,6 @@ class SettingGeneralWrapper extends Component {
     if (status === SUCCESS_STATUS) {
       this.setState(
         {
-          isHiddenSettingsPopup: true,
-          settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
           replyToParams: {
             isLoading: false,
             replyToEmail: ''
@@ -860,8 +869,10 @@ class SettingGeneralWrapper extends Component {
     } else {
       this.setState(
         {
-          isHiddenSettingsPopup: true,
-          settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+          replyToParams: {
+            ...this.state.replyToParams,
+            isLoading: false
+          },
           setReplyToPopupParams: {
             isDisabledSubmitButton: true,
             replyToInput: {

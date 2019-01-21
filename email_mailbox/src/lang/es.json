@@ -437,7 +437,7 @@
     "read_receipts_description": "Si desactivas confirmación de leído, no podrás saber cuando otros leen tus correos tampoco.",
     "remove": "Remover",
     "reply_to_email": "Correo de Respuesta",
-    "reply_to_not_set": "Correo de Respuesta no establecido",
+    "reply_to_not_set": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
     "resend_link": "Reenviar enlace",
     "recovery_email": "Correo de Recuperación",
     "recovery_not_set": "Correo de Recuperación no establecido",

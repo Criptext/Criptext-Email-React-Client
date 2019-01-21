@@ -309,15 +309,15 @@
     .section-block-content-item{
       &:nth-child(1){
         .reply-to-email > div {
-          display: flex;
       
           .address {
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 300;
             margin-right: 15px;
           }
       
           > div {
-            display: flex;
+            display: inline-block;
 
             .button-b{
               margin-right: 5px;
