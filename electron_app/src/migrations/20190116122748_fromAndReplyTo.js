@@ -2,7 +2,7 @@ const { Table, fieldTypes } = require('./../models');
 const { MEDIUM_STRING_SIZE } = fieldTypes;
 const { formContactsRow } = require('./../utils/dataTableUtils');
 
-const batch = 1;
+const batch = 2;
 
 const createFromColumn = async knex => {
   await knex.schema.table(Table.EMAIL, table => {

@@ -59,16 +59,6 @@ import { AttachItemStatus } from '../components/AttachItem';
 import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
 import string from './../lang';
 
-const eventPriority = {
-  NEW_EMAIL: 0,
-  THREAD_STATUS: 1,
-  EMAIL_STATUS: 2,
-  EMAIL_LABELS: 3,
-  THREAD_LABELS: 4,
-  EMAIL_DELETE: 5,
-  THREAD_DELETE: 6,
-  OTHERS: 7
-};
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
 const { ipcRenderer } = electron;
@@ -80,118 +70,33 @@ export const getGroupEvents = async () => {
   if (isGettingEvents) return;
   isGettingEvents = true;
   const { events, hasMoreEvents } = await getEvents();
-  const eventsGroups = events.reduce(
-    (result, event) => {
-      const eventId = event.cmd;
-      if (eventId === SocketCommand.NEW_EMAIL) {
-        return {
-          ...result,
-          [eventPriority.NEW_EMAIL]: [...result[eventPriority.NEW_EMAIL], event]
-        };
-      } else if (eventId === SocketCommand.PEER_THREAD_READ_UPDATE) {
-        return {
-          ...result,
-          [eventPriority.THREAD_STATUS]: [
-            ...result[eventPriority.THREAD_STATUS],
-            event
-          ]
-        };
-      } else if (
-        eventId === SocketCommand.EMAIL_TRACKING_UPDATE ||
-        eventId === SocketCommand.PEER_EMAIL_READ_UPDATE ||
-        eventId === SocketCommand.PEER_EMAIL_UNSEND
-      ) {
-        return {
-          ...result,
-          [eventPriority.EMAIL_STATUS]: [
-            ...result[eventPriority.EMAIL_STATUS],
-            event
-          ]
-        };
-      } else if (eventId === SocketCommand.PEER_EMAIL_LABELS_UPDATE) {
-        return {
-          ...result,
-          [eventPriority.EMAIL_LABELS]: [
-            ...result[eventPriority.EMAIL_LABELS],
-            event
-          ]
-        };
-      } else if (eventId === SocketCommand.PEER_THREAD_LABELS_UPDATE) {
-        return {
-          ...result,
-          [eventPriority.THREAD_LABELS]: [
-            ...result[eventPriority.THREAD_LABELS],
-            event
-          ]
-        };
-      } else if (eventId === SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY) {
-        return {
-          ...result,
-          [eventPriority.EMAIL_DELETE]: [
-            ...result[eventPriority.EMAIL_DELETE],
-            event
-          ]
-        };
-      } else if (eventId === SocketCommand.PEER_THREAD_DELETED_PERMANENTLY) {
-        return {
-          ...result,
-          [eventPriority.THREAD_DELETE]: [
-            ...result[eventPriority.THREAD_DELETE],
-            event
-          ]
-        };
-      }
-      return {
-        ...result,
-        [eventPriority.OTHERS]: [...result[eventPriority.OTHERS], event]
-      };
-    },
-    {
-      [eventPriority.NEW_EMAIL]: [],
-      [eventPriority.EMAIL_STATUS]: [],
-      [eventPriority.THREAD_STATUS]: [],
-      [eventPriority.EMAIL_LABELS]: [],
-      [eventPriority.THREAD_LABELS]: [],
-      [eventPriority.EMAIL_DELETE]: [],
-      [eventPriority.THREAD_DELETE]: [],
-      [eventPriority.OTHERS]: []
-    }
-  );
-  isGettingEvents = !(await processEvent(eventsGroups));
-  if (hasMoreEvents) await getGroupEvents();
-};
+  const rowIds = [];
+  for (const event of events) {
+    try {
+      const rowId = await handleEvent(event);
+      rowIds.push(rowId);
 
-const processEvent = async eventsGroups => {
-  let rowIds = [];
-  for (const key in eventsGroups) {
-    if (eventsGroups.hasOwnProperty(key)) {
-      const events = eventsGroups[key];
-      if (events.length) {
-        const managedEvents = events.map(async newEvent => {
-          return await handleEvent(newEvent);
-        });
-        try {
-          const res = await Promise.all(managedEvents);
-          rowIds = rowIds.concat(res);
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error(e);
-          if (
-            !(e.name === 'PreKeyMessage' || e.name === 'MessageCounterError')
-          ) {
-            sendFetchEmailsErrorMessage();
-          }
-        }
+      const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
+      if (rowIdsFiltered.length) {
+        await setEventAsHandled(rowIdsFiltered);
+      }
+      sendNewEmailNotification();
+      await updateOwnContact();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      if (
+        !(
+          error.name === 'PreKeyMessage' || error.name === 'MessageCounterError'
+        )
+      ) {
+        sendFetchEmailsErrorMessage();
       }
     }
   }
-  const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
-  if (rowIdsFiltered.length) {
-    await setEventAsHandled(rowIdsFiltered);
-  }
-  sendNewEmailNotification();
-  await updateOwnContact();
-  return true;
+
+  isGettingEvents = false;
+  if (hasMoreEvents) await getGroupEvents();
 };
 
 export const handleEvent = incomingEvent => {
