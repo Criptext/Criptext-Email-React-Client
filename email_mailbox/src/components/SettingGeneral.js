@@ -12,7 +12,7 @@ import SetReplyToEmailPopup from './SetReplyToEmailPopup';
 import LogoutPopup from './LogoutPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
-import ReplyTo from './ReplyTo';
+import SettingsGeneralReplyTo from './SettingsGeneralReplyTo';
 import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain, usefulLinks } from '../utils/const';
@@ -54,7 +54,7 @@ const SettingGeneral = props => (
     <ShowEmailPreviewBlock {...props} />
     <ReadReceiptsBlock {...props} />
     <RecoveryEmailBlock {...props} />
-    <ReplyTo {...props} />
+    <SettingsGeneralReplyTo {...props} />
     <SettingsGeneralLanguageWrapper />
     <SettingsGeneralThemeWrapper />
     <UsefulLinksBlock />
