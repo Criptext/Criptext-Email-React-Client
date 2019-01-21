@@ -93,12 +93,10 @@
       height: 36px;
       width: 36px;
       margin-left: 40px;
-      background: white;
       display: flex;
       justify-content: center;
       align-items: center;
-      border: 1px solid #e4e5e7;
-      color: #a1a2a3;
+      border: 1px solid;
       border-radius: 30px;
     }
   }
@@ -106,7 +104,7 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_BACKGROUND_COLOR_THREAD_ITEM, $_COLOR_TEXT_EXPAND_VIEW, $_BORDER_COLOR_EXPAND_VIEW){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .thread-content{
@@ -120,8 +118,19 @@
         }
       }
     }
+
+    .thread-collapsed {
+      .thread-collapsed-clickable {
+        .thread-collapsed-counter {
+          background: $_BACKGROUND_COLOR_THREAD_ITEM;
+          border-color: $_BORDER_COLOR_EXPAND_VIEW;
+          color: $_COLOR_TEXT_EXPAND_VIEW;
+        }
+      }
+    }
+    
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT, $_BACKGROUND_COLOR_THREAD_ITEM_UNREAD_LIGHT, $_COLOR_TEXT_EXPAND_LIGHT, $_BORDER_COLOR_EXPAND_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK, $_BACKGROUND_COLOR_THREAD_ITEM_UNREAD_DARK, $_COLOR_TEXT_EXPAND_DARK, $_BORDER_COLOR_EXPAND_DARK);

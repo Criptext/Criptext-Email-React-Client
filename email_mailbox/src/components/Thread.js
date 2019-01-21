@@ -6,7 +6,7 @@ import Label from './Label';
 import Message from '../containers/Message';
 import './thread.scss';
 
-const MIN_INDEX_TO_COLLAPSE = 4;
+const MIN_INDEX_TO_COLLAPSE = 3;
 
 class Thread extends Component {
   constructor(props) {
