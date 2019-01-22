@@ -2,8 +2,6 @@ const { Table, fieldTypes } = require('./../models');
 const { MEDIUM_STRING_SIZE } = fieldTypes;
 const { formContactsRow } = require('./../utils/dataTableUtils');
 
-const batch = 2;
-
 const createFromColumn = async knex => {
   await knex.schema.table(Table.EMAIL, table => {
     table
@@ -20,14 +18,12 @@ const createReplyToColumn = knex => {
 };
 const updateFromColumn = async knex => {
   let shouldGetMoreEmailContacts = true;
-  let offset = 0,
-    limit = batch;
+  let offset = 0;
   while (shouldGetMoreEmailContacts) {
     const fromEmailContacts = await knex
       .select('*')
       .from(Table.EMAIL_CONTACT)
       .where('type', 'from')
-      .limit(limit)
       .offset(offset);
     if (!fromEmailContacts.length) {
       shouldGetMoreEmailContacts = false;
@@ -48,21 +44,17 @@ const updateFromColumn = async knex => {
         })
         .where({ id: emailContact.emailId });
     }
-    limit += batch;
-    offset += batch;
+    offset += fromEmailContacts.length;
   }
 };
 
 const recreateRelation = async knex => {
   let shouldGetMoreEmails = true;
-  let offset = 0,
-    limit = batch;
-
+  let offset = 0;
   while (shouldGetMoreEmails) {
     const emails = await knex
       .select('id, fromAddress')
       .from(Table.EMAIL)
-      .limit(limit)
       .offset(offset);
     if (!emails.length) {
       shouldGetMoreEmails = false;
@@ -76,8 +68,7 @@ const recreateRelation = async knex => {
         .insert({ emailId: email.id, contactId: id })
         .into(Table.EMAIL_CONTACT);
     }
-    limit += batch;
-    offset += batch;
+    offset += emails.length;
   }
   await deleteFromAndReplyToColumns(knex);
 };
