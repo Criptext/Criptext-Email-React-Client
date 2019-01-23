@@ -20,7 +20,7 @@ require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
 require('./src/ipc/mailbox.js');
 require('./src/ipc/database.js');
-require('./src/ipc/client.js');
+
 const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
@@ -29,6 +29,7 @@ let tray = null;
 async function initApp() {
   try {
     await dbManager.createTables();
+    require('./src/ipc/client.js');
   } catch (ex) {
     console.log(ex);
   }
