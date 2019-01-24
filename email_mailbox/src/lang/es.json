@@ -120,7 +120,8 @@
     "unread": "no leídos",
     "print_email": "Imprimir",
     "print_thread": "Imprimir todo",
-    "me": "Yo"
+    "me": "Yo",
+    "unsend": "Retractar"
   },
   "messages": {
     "change_password": {
