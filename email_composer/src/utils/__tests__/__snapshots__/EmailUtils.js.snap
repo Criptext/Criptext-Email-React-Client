@@ -35,8 +35,9 @@ Object {
     },
   ],
   "emailData": Object {
+    "body": "<p>Hello</p>",
     "email": Object {
-      "content": "<p>Hello</p>",
+      "content": "",
       "date": 1524861748481,
       "fromAddress": "myAccountName <myAccountRecipientId@criptext.com>",
       "isMuted": false,
