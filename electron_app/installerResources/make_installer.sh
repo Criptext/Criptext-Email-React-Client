@@ -2,7 +2,7 @@
 
 has_error=0
 isSupported=0
-installerTypeDefaultValue="<LINUX|MACOS|WINDOWS>-<STORE|INSTALLER>";
+installerTypeDefaultValue="DEVELOPMENT";
 entitlementsOriginalFileName="entitlements.mac.plist"
 entitlementsBackupFileName="backup-entitlements.mac.plist"
 # Folders

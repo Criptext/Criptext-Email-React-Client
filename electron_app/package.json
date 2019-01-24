@@ -26,7 +26,7 @@
     "package": "sh ./installerResources/converge_builds.sh",
     "release": "sh ./installerResources/make_installer.sh"
   },
-  "criptextInstallerType": "<LINUX|MACOS|WINDOWS>-<STORE|INSTALLER>",
+  "criptextInstallerType": "DEVELOPMENT",
   "build": {
     "appId": "com.criptext.criptextmail",
     "buildVersion": "1",

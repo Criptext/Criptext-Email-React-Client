@@ -101,8 +101,8 @@ const mapDispatchToProps = dispatch => {
       };
       dispatch(addLabel(label));
     },
-    onComposeContactSupportEmail: () => {
-      const data = formContactSupportEmailContent();
+    onComposeContactSupportEmail: async () => {
+      const data = await formContactSupportEmailContent();
       openFilledComposerWindow({
         type: composerEvents.NEW_WITH_DATA,
         data

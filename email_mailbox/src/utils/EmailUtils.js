@@ -7,10 +7,10 @@ import { version } from './../../package.json';
 import { LabelType, myAccount } from './electronInterface';
 import { HTMLTagsRegex, emailRegex } from './RegexUtils';
 import { Utf8Decode } from './EncodingUtils';
-import { removeAppDomain } from './StringUtils';
-import { getOS } from './OSUtils';
+import { removeAppDomain, toCapitalize } from './StringUtils';
 import { appDomain } from './const';
 import string from './../lang';
+import { getOsAndArch } from './ipc';
 
 const cleanEmails = emails => {
   return emails.map(email => {
@@ -190,18 +190,30 @@ export const filterCriptextRecipients = recipients => {
   return recipients.filter(email => email.indexOf(`@${appDomain}`) > 0);
 };
 
-export const formContactSupportEmailContent = () => {
-  const OSType = getOS();
+export const formContactSupportEmailContent = async () => {
+  const {
+    os,
+    distribution,
+    distVersion,
+    arch,
+    installerType
+  } = await getOsAndArch();
   const lines = '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>';
   const header = `<strong>${string.emails.contact_support.content}</strong>`;
   const separator = '<br/>*****************************<br/>';
-  const appVersion = `<strong>Version:</strong>  ${version}<br/>`;
-  const OS = `<strong>OS:</strong>  ${OSType}<br/>`;
-  const content = lines + header + separator + appVersion + OS;
+  const appInfo = `
+    <strong> App Version: </strong> ${version}<br/>
+    <strong> Installer type: </strong> ${installerType}<br/>
+    ${os && `<strong> OS: </strong> ${toCapitalize(os)}<br/>`}
+    ${distribution && `<strong> Dist: </strong> ${distribution}<br/>`}
+    ${distVersion && `<strong> OS Vers: </strong> ${distVersion}<br/>`}
+    ${arch && `<strong> Arch: </strong> ${arch}<br/>`}
+  `;
+  const content = lines + header + separator + appInfo;
 
   return {
     email: {
-      subject: `${string.emails.contact_support.subject} ${OSType}`,
+      subject: `${string.emails.contact_support.subject} - ${os} (${arch})`,
       content
     },
     recipients: {
