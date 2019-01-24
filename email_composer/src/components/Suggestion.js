@@ -3,6 +3,7 @@ import randomcolor from 'randomcolor';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
+import { mySettings } from '../utils/electronInterface';
 import './suggestion.scss';
 
 const Suggestion = (suggestion, { query }) => {
@@ -11,7 +12,7 @@ const Suggestion = (suggestion, { query }) => {
   const letters = getTwoCapitalLetters(suggestionText);
   const color = randomcolor({
     seed: letters,
-    luminosity: 'bright'
+    luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
   });
   const parts = name
     ? getMatchesOnNameAndEmail(name, email, query)
