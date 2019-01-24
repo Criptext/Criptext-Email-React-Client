@@ -6,7 +6,9 @@ const { app } = require('electron');
 const getUserPath = async (node_env, user) => {
   switch (node_env) {
     case 'test': {
-      return `./src/__integrations__/${user}`;
+      const path = `./src/__integrations__/${user}`;
+      await createIfNotExist(path);
+      return path;
     }
     case 'development': {
       const myPath = path.join(__dirname, `/../userData`).replace('/src', '');
@@ -81,11 +83,15 @@ const deleteEmailContent = async ({ metadataKey, username }) => {
   await remove(emailPath).catch(console.error);
 };
 
+const removeUserDir = async username => {
+  const myPath = await getUserPath(process.env.NODE_ENV, username);
+  await remove(myPath);
+};
+
 const store = (path, text) => {
   return new Promise((resolve, reject) => {
     fs.writeFile(path, text, err => {
       if (err) {
-        console.log(err);
         return reject(err);
       }
       resolve();
@@ -97,7 +103,6 @@ const retrieve = path => {
   return new Promise((resolve, reject) => {
     fs.readFile(path, { encoding: 'utf-8' }, (err, data) => {
       if (err) {
-        console.log(err);
         return reject(err);
       }
       resolve(data);
@@ -130,5 +135,6 @@ module.exports = {
   saveEmailBody,
   getEmailBody,
   getEmailHeaders,
-  deleteEmailContent
+  deleteEmailContent,
+  removeUserDir
 };

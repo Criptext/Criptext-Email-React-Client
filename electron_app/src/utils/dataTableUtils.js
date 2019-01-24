@@ -1,7 +1,6 @@
 const { HTMLTagsRegex } = require('./RegexUtils');
 
 const formContactsRow = contacts => {
-  console.log(contacts);
   return contacts.map(contact => {
     const emailMatched = contact.match(HTMLTagsRegex);
     if (emailMatched) {

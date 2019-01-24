@@ -155,6 +155,10 @@ const exportEmailTable = async db => {
           row.replyTo = '';
         }
 
+        if (!row.boundary) {
+          delete row.boundary;
+        }
+
         const body =
           (await getEmailBody({ username, metadataKey: row.key })) ||
           row.content;
@@ -164,15 +168,18 @@ const exportEmailTable = async db => {
         });
 
         const key = parseInt(row.key);
-        return Object.assign(row, {
-          unread: !!row.unread,
-          secure: !!row.secure,
-          isMuted: !!row.isMuted,
-          content: body,
-          headers,
-          key,
-          date: parseDate(row.date)
-        });
+        return Object.assign(
+          row,
+          {
+            unread: !!row.unread,
+            secure: !!row.secure,
+            isMuted: !!row.isMuted,
+            content: body,
+            key,
+            date: parseDate(row.date)
+          },
+          headers ? { headers } : null
+        );
       })
     );
     emailRows = [...emailRows, ...result];
@@ -448,13 +455,15 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
 };
 
 const storeEmailBodies = emailRows => {
+  const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
+  console.log(username);
   return Promise.all(
     emailRows.map(email => {
       const body = email.content;
       const headers = email.header;
       email.content = '';
       delete email.headers;
-      return saveEmailBody({ body, headers });
+      return saveEmailBody({ body, headers, username, metadataKey: email.key });
     })
   );
 };
