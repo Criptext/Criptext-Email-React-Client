@@ -120,7 +120,7 @@ export const getFileParamsToSend = files => {
         token: file.token,
         name: file.fileData.name,
         size: file.fileData.size,
-        mimeType: file.fileData.type,
+        mimeType: file.fileData.type || 'application/octet-stream',
         key: file.key,
         iv: file.iv
       }));
@@ -135,7 +135,7 @@ export const getFileParamsToSend = files => {
           token: file.shouldDuplicate ? duplicates[file.token] : file.token,
           name: file.fileData.name,
           size: file.fileData.size,
-          mimeType: file.fileData.type,
+          mimeType: file.fileData.type || 'application/octet-stream',
           key: file.key,
           iv: file.iv
         }));

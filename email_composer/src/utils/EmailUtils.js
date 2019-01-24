@@ -189,7 +189,10 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     const prevFiles = await getFilesByEmailId(emailData.id);
     files = prevFiles.map(file => {
       return {
-        fileData: { ...file, type: file.mimeType },
+        fileData: {
+          ...file,
+          type: file.mimeType || 'application/octet-stream'
+        },
         mode: FILE_MODES.UPLOADED,
         percentage: 100,
         token: file.token,
