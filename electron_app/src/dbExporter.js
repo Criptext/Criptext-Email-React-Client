@@ -7,6 +7,13 @@ const moment = require('moment');
 const LineByLineReader = require('line-by-line');
 const { Table } = require('./models.js');
 const systemLabels = require('./systemLabels');
+const {
+  getEmailBody,
+  getEmailHeaders,
+  saveEmailBody
+} = require('./utils/FileUtils');
+const myAccount = require('./Account');
+const { APP_DOMAIN } = require('./utils/const');
 
 const CIPHER_ALGORITHM = 'aes128';
 const STREAM_SIZE = 512 * 1024;
@@ -118,47 +125,58 @@ const exportLabelTable = async db => {
 };
 
 const exportEmailTable = async db => {
+  const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
   let emailRows = [];
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
-    const result = await db
+    const rows = await db
       .table(Table.EMAIL)
       .select('*')
       .whereRaw(whereRawEmailQuery)
       .limit(SELECT_ALL_BATCH)
-      .offset(offset)
-      .then(rows =>
-        rows.map(row => {
-          if (!row.unsendDate) {
-            delete row.unsendDate;
-          } else {
-            row['unsentDate'] = parseDate(row.unsendDate);
-            delete row.unsendDate;
-          }
+      .offset(offset);
+    const result = await Promise.all(
+      rows.map(async row => {
+        if (!row.unsendDate) {
+          delete row.unsendDate;
+        } else {
+          row['unsentDate'] = parseDate(row.unsendDate);
+          delete row.unsendDate;
+        }
 
-          if (!row.trashDate) {
-            delete row.trashDate;
-          } else {
-            row['trashDate'] = parseDate(row.unsendDate);
-          }
+        if (!row.trashDate) {
+          delete row.trashDate;
+        } else {
+          row['trashDate'] = parseDate(row.unsendDate);
+        }
 
-          if (row.replyTo === null) {
-            row.replyTo = '';
-          }
+        if (row.replyTo === null) {
+          row.replyTo = '';
+        }
 
-          const key = parseInt(row.key);
-          return Object.assign(row, {
-            unread: !!row.unread,
-            secure: !!row.secure,
-            isMuted: !!row.isMuted,
-            key,
-            date: parseDate(row.date)
-          });
-        })
-      );
+        const body =
+          (await getEmailBody({ username, metadataKey: row.key })) ||
+          row.content;
+        const headers = await getEmailHeaders({
+          username,
+          metadataKey: row.key
+        });
+
+        const key = parseInt(row.key);
+        return Object.assign(row, {
+          unread: !!row.unread,
+          secure: !!row.secure,
+          isMuted: !!row.isMuted,
+          content: body,
+          headers,
+          key,
+          date: parseDate(row.date)
+        });
+      })
+    );
     emailRows = [...emailRows, ...result];
-    if (result.length < SELECT_ALL_BATCH) {
+    if (rows.length < SELECT_ALL_BATCH) {
       shouldEnd = true;
     } else {
       offset += SELECT_ALL_BATCH;
@@ -374,6 +392,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               emails.push(parsedEmail);
               if (emails.length === EMAILS_BATCH) {
                 lineReader.pause();
+                await storeEmailBodies(emails);
                 await trx.insert(emails).into(Table.EMAIL);
                 emails = [];
                 lineReader.resume();
@@ -417,6 +436,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
         .on('end', async () => {
           await insertRemainingRows(contacts, Table.CONTACT, trx);
           await insertRemainingRows(labels, Table.LABEL, trx);
+          await storeEmailBodies(emails);
           await insertRemainingRows(emails, Table.EMAIL, trx);
           await insertRemainingRows(emailContacts, Table.EMAIL_CONTACT, trx);
           await insertRemainingRows(emailLabels, Table.EMAIL_LABEL, trx);
@@ -425,6 +445,18 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
         });
     });
   });
+};
+
+const storeEmailBodies = emailRows => {
+  return Promise.all(
+    emailRows.map(email => {
+      const body = email.content;
+      const headers = email.header;
+      email.content = '';
+      delete email.headers;
+      return saveEmailBody({ body, headers });
+    })
+  );
 };
 
 const insertRemainingRows = async (rows, tablename, trx) => {

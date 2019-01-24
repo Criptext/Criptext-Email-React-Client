@@ -13,14 +13,14 @@ const decryptEmail = async ({
   deviceId,
   messageType
 }) => {
-  const { status, text } = await getEmailBody(bodyKey);
+  const { status, body } = await getEmailBody(bodyKey);
   if (status !== 200) {
     return;
   }
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
-    return text;
+    return body.body;
   }
-  const textEncrypted = util.toArrayBufferFromBase64(text);
+  const textEncrypted = util.toArrayBufferFromBase64(body.body);
   const addressFrom = new libsignal.SignalProtocolAddress(
     recipientId,
     deviceId
@@ -31,7 +31,21 @@ const decryptEmail = async ({
     textEncrypted,
     messageType
   );
-  return util.toString(binaryText);
+  const decryptedBody = util.toString(binaryText);
+  let decryptedHeaders;
+  if (body.headers) {
+    const headersEncrypted = util.toArrayBufferFromBase64(body.headers);
+    const headersText = await decryptMessage(
+      sessionCipher,
+      headersEncrypted,
+      messageType
+    );
+    decryptedHeaders = util.toString(headersText);
+  }
+  return {
+    decryptedBody,
+    decryptedHeaders
+  };
 };
 
 const decryptMessage = async (sessionCipher, textEncrypted, messageType) => {

@@ -15,8 +15,6 @@ ipc.answerRenderer('db-create-contact', params =>
   dbManager.createContact(params)
 );
 
-ipc.answerRenderer('db-create-email', params => dbManager.createEmail(params));
-
 ipc.answerRenderer('db-create-email-label', params =>
   dbManager.createEmailLabel(params)
 );
@@ -51,22 +49,8 @@ ipc.answerRenderer('db-create-signed-prekey-record', params =>
 
 ipc.answerRenderer('db-create-tables', () => dbManager.createTables());
 
-ipc.answerRenderer('db-delete-email-by-keys', keys =>
-  dbManager.deleteEmailByKeys(keys)
-);
-
 ipc.answerRenderer('db-delete-email-label', params =>
   dbManager.deleteEmailLabel(params)
-);
-
-ipc.answerRenderer('db-delete-emails-by-ids', params =>
-  dbManager.deleteEmailsByIds(params)
-);
-
-ipc.answerRenderer(
-  'db-delete-emails-by-threadid-and-labelid',
-  ({ threadIds, labelId }) =>
-    dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId)
 );
 
 ipc.answerRenderer('db-delete-feed-item-by-id', feedItemId =>
@@ -117,10 +101,6 @@ ipc.answerRenderer('db-get-emails-by-keys', emailKeys =>
 
 ipc.answerRenderer('db-get-emails-by-labelids', labelIds =>
   dbManager.getEmailsByLabelIds(labelIds)
-);
-
-ipc.answerRenderer('db-get-emails-by-threadid', threadId =>
-  dbManager.getEmailsByThreadId(threadId)
 );
 
 ipc.answerRenderer(

@@ -70,6 +70,17 @@ export const sendPrintThreadEvent = threadId => {
 
 export const getOsAndArch = () => callMain('get-os-and-arch');
 
+/* File System
+   ----------------------------- */
+
+export const saveEmailBody = async params => {
+  return await callMain('client-save-email-body', params);
+};
+
+export const deleteEmailContent = async params => {
+  return await callMain('client-delete-email-content', params);
+};
+
 /* Criptext Client
    ----------------------------- */
 export const acknowledgeEvents = async eventIds => {
@@ -341,6 +352,10 @@ export const updateAccount = async params => {
 
 export const updateContactByEmail = async ({ email, name }) => {
   return await callMain('db-update-contact-by-email', { email, name });
+};
+
+export const unsendEmail = async params => {
+  return await callMain('db-unsend-email', params);
 };
 
 export const updateEmail = async params => {

@@ -16,6 +16,7 @@ import {
   deleteEmailsByIds,
   getEmailByKey,
   saveDraftChangesComposerWindow,
+  saveEmailBody,
   throwError,
   updateEmail
 } from './../utils/ipc';
@@ -534,6 +535,11 @@ class ComposerWrapper extends Component {
         messageId
       };
       await updateEmail(emailParams);
+      await saveEmailBody({
+        body,
+        metadataKey: metadataKey,
+        replaceKey: emailData.email.key
+      });
       closeComposerWindow({
         threadId,
         emailId,
