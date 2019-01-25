@@ -1,5 +1,9 @@
 import { myAccount } from './electronInterface';
-import { getContactsByEmailId, getEmailByKey, getFilesByEmailId } from './ipc';
+import {
+  getContactsByEmailId,
+  getFilesByEmailId,
+  getEmailByKeyWithbody
+} from './ipc';
 import {
   cleanHTML,
   removeActionsFromSubject,
@@ -45,7 +49,7 @@ export const EmailStatus = {
 };
 
 export const formDataToEditDraft = async emailKeyToEdit => {
-  const [emailData] = await getEmailByKey(emailKeyToEdit);
+  const emailData = await getEmailByKeyWithbody(emailKeyToEdit);
   const contacts = await getContactsByEmailId(emailData.id);
   const htmlBody = emailData.content;
   const textSubject = emailData.subject;
@@ -94,7 +98,6 @@ export const formOutgoingEmailFromData = ({
   const email = {
     key: Date.now(),
     subject: textSubject,
-    content: secure ? body : `${body}${formAppSign()}`,
     preview: cleanHTML(body).slice(0, 100),
     date: Date.now(),
     status,
@@ -102,6 +105,7 @@ export const formOutgoingEmailFromData = ({
     secure,
     isMuted: false,
     threadId,
+    content: '',
     fromAddress: `${myAccount.name} <${myEmailAddress}>`
   };
 
@@ -115,14 +119,15 @@ export const formOutgoingEmailFromData = ({
   const emailData = {
     email,
     recipients,
-    labels: [labelId]
+    labels: [labelId],
+    body: secure ? body : `${body}${formAppSign()}`
   };
 
   return {
     emailData,
     criptextRecipients,
     externalRecipients,
-    body: email.content
+    body: body
   };
 };
 
@@ -183,7 +188,7 @@ const formReplyForwardContent = (replyType, subject, date, from, to, body) => {
 
 export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const emailIsForward = replyType === composerEvents.FORWARD;
-  const [emailData] = await getEmailByKey(emailKeyToEdit);
+  const emailData = await getEmailByKeyWithbody(emailKeyToEdit);
   let files = [];
   if (emailIsForward) {
     const prevFiles = await getFilesByEmailId(emailData.id);

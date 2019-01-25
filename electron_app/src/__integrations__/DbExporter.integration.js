@@ -3,6 +3,7 @@
 jest.setTimeout(10000);
 
 const DBManager = require('../DBManager');
+const fileUtils = require('../utils/FileUtils');
 const {
   closeDatabaseConnection,
   createDatabaseConnection,
@@ -19,10 +20,14 @@ const {
   importDatabaseFromFile
 } = require('./../dbExporter');
 const fs = require('fs');
+const myAccount = require('../Account');
+const { APP_DOMAIN } = require('../utils/const');
 
 const DATABASE_PATH = `${__dirname}/test.db`;
 const PARSED_SAMPLE_FILEPATH = `${__dirname}/parsed_sample_file.txt`;
 const TEMP_DIRECTORY = '/tmp/criptext-tests';
+
+const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
 
 const contacts = [
   {
@@ -108,6 +113,11 @@ const insertLabels = async params => {
 };
 
 const insertEmail = async params => {
+  fileUtils.saveEmailBody({
+    metadataKey: params.key,
+    username,
+    body: params.content
+  });
   await DBManager.createEmail(params);
 };
 
@@ -143,11 +153,13 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  await fileUtils.removeUserDir(username);
   await DBManager.cleanDataBase();
   await DBManager.createTables();
 });
 
 afterAll(() => {
+  fileUtils.removeUserDir(username);
   cleanTempDirectory();
   closeDatabaseConnection(dbConnection);
 });
@@ -184,8 +196,10 @@ describe('Parse database: ', () => {
   it('Should parse Emails to string', async () => {
     await insertEmail(email);
     const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"isMuted":false,"messageId":"messageId1","fromAddress":"Alice <alice@criptext.com>","replyTo":"","unsentDate":"2018-06-14 08:23:20"}}`;
+    const expectedJSON = JSON.parse(expectedString);
     const emailsString = await exportEmailTable(dbConnection);
-    expect(emailsString).toBe(expectedString);
+    const emailsJSON = JSON.parse(emailsString);
+    expect(emailsJSON).toMatchObject(expect.objectContaining(expectedJSON));
   });
 
   it('Should parse relation EmailContact to string', async () => {
@@ -260,9 +274,18 @@ describe('Import Database: ', () => {
       filepath: PARSED_SAMPLE_FILEPATH,
       databasePath: DATABASE_PATH
     });
-    const [emailImported] = await DBManager.getEmailsByThreadId(
+    const [rawEmail] = await DBManager.getEmailsByThreadId(
       email.email.threadId
     );
+    const body =
+      (await fileUtils.getEmailBody({
+        username,
+        metadataKey: email.email.key
+      })) || rawEmail.content;
+    const emailImported = {
+      ...rawEmail,
+      content: body
+    };
     const { fileTokens } = emailImported;
     const labelIds = emailImported.labelIds.split(',').map(Number);
     const contactIds = [

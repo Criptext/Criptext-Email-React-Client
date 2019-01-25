@@ -20,7 +20,7 @@ require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
 require('./src/ipc/mailbox.js');
 require('./src/ipc/database.js');
-
+require('./src/ipc/manager.js');
 const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);

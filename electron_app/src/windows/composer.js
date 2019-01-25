@@ -5,6 +5,9 @@ const { composerUrl } = require('./../window_routing');
 const mailboxWindow = require('./mailbox');
 const dbManager = require('./../DBManager');
 const globalManager = require('./../globalManager');
+const fileUtils = require('../utils/FileUtils');
+const myAccount = require('../Account');
+const { APP_DOMAIN } = require('../utils/const');
 
 const lang = require('./../lang');
 const { closeWarning, windowTitle } = lang.strings.windows.composer;
@@ -190,26 +193,41 @@ const sendEventToMailbox = (eventName, data) => {
 };
 
 const saveDraftToDatabase = async (composerId, data) => {
+  const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
   const filteredRecipients = {
     from: data.recipients.from,
     to: filterInvalidEmailAddresses(data.recipients.to),
     cc: filterInvalidEmailAddresses(data.recipients.cc),
     bcc: filterInvalidEmailAddresses(data.recipients.bcc)
   };
+  const content = data.body;
   const dataDraft = Object.assign(data, { recipients: filteredRecipients });
   const emailToEdit = globalManager.emailToEdit.get(composerId);
   const { type, key } = emailToEdit || {};
   let shouldUpdateBadge = false;
   if ((!type && !key) || type !== composerEvents.EDIT_DRAFT) {
     await dbManager.createEmail(dataDraft);
+    await fileUtils.saveEmailBody({
+      body: content,
+      username,
+      metadataKey: parseInt(dataDraft.email.key)
+    });
     shouldUpdateBadge = true;
   } else {
     const [oldEmail] = await dbManager.getEmailByKey(key);
+    const newDataDraft = Object.assign(dataDraft, {
+      email: Object.assign(dataDraft.email, { key: oldEmail.key })
+    });
     const newEmailId = await dbManager.deleteEmailLabelAndContactByEmailId(
       oldEmail.id,
-      dataDraft
+      newDataDraft
     );
-    if (type === composerEvents.EDIT_DRAFT && dataDraft.email.threadId) {
+    await fileUtils.saveEmailBody({
+      body: content,
+      username,
+      metadataKey: parseInt(newDataDraft.email.key)
+    });
+    if (type === composerEvents.EDIT_DRAFT && newDataDraft.email.threadId) {
       const dataToMailbox = {
         threadId: oldEmail.threadId,
         newEmailId,

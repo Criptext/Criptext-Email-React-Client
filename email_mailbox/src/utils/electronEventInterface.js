@@ -15,6 +15,7 @@ import {
   createFeedItem,
   createLabel,
   deleteEmailByKeys,
+  deleteEmailContent,
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   getEmailByKey,
@@ -30,6 +31,7 @@ import {
   showNotificationApp,
   sendStartSyncDeviceEvent,
   sendStartLinkDevicesEvent,
+  unsendEmail,
   updateAccount,
   updateContactByEmail,
   updateEmail,
@@ -186,7 +188,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     to,
     toArray,
     messageId,
-    external
+    external,
+    boundary
   } = params;
   const recipientId =
     external === true
@@ -209,14 +212,17 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
 
   let notificationPreview = '';
   if (!prevEmail) {
-    let body = '';
+    let body = '',
+      headers;
     try {
-      body = await signal.decryptEmail({
+      const { decryptedBody, decryptedHeaders } = await signal.decryptEmail({
         bodyKey: metadataKey,
         recipientId,
         deviceId,
         messageType
       });
+      body = decryptedBody;
+      headers = decryptedHeaders;
     } catch (e) {
       body = 'Content unencrypted';
     }
@@ -267,7 +273,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       threadId,
       unread,
       messageId,
-      replyTo
+      replyTo,
+      boundary
     };
     const { email, recipients } = await formIncomingEmailFromData(data);
     notificationPreview = email.preview;
@@ -291,7 +298,9 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       email,
       labels,
       files: filesData,
-      recipients
+      recipients,
+      body,
+      headers
     };
     const [newEmailId] = await createEmail(emailData);
     eventParams = {
@@ -397,6 +406,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
           emailId: email.id,
           status: AttachItemStatus.UNSENT
         });
+        await deleteEmailContent({ metadataKey });
       }
       const isFromMe = from === myAccount.recipientId;
       const isOpened = type === EmailStatus.READ;
@@ -429,7 +439,7 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
   const [email] = await getEmailByKey(metadataKey);
   if (email) {
     const status = validateEmailStatusToSet(email.status, type);
-    await updateEmail({
+    await unsendEmail({
       key: String(metadataKey),
       content: '',
       preview: '',

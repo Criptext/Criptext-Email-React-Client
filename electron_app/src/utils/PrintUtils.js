@@ -10,7 +10,14 @@ const {
 const { formContactsRow } = require('./dataTableUtils');
 const lang = require('./../lang');
 const dbManager = require('./../DBManager');
+const fileUtils = require('./FileUtils');
 const path = require('path');
+const myAccount = require('../../src/Account');
+const { APP_DOMAIN } = require('../utils/const');
+
+const getUsername = () => {
+  return `${myAccount.recipientId}@${APP_DOMAIN}`;
+};
 
 const printEmailOrThread = async ({ emailId, threadId }) => {
   let workerWin;
@@ -69,9 +76,19 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
   // Document variables
   let documentContent;
   let clearSubject;
-
+  const username = getUsername();
   if (threadId) {
-    const emails = await dbManager.getEmailsByThreadId(threadId);
+    const rawEmails = await dbManager.getEmailsByThreadId(threadId);
+    const emails = await Promise.all(
+      rawEmails.map(async email => {
+        const emailBody =
+          (await fileUtils.getEmailBody({
+            metadataKey: email.key,
+            username
+          })) || email.content;
+        return Object.assign(email, { content: emailBody });
+      })
+    );
     if (emails.length) {
       clearSubject = cleanEmojisFromString(emails[0].subject);
       const emailsContents = await Promise.all(
@@ -79,7 +96,7 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
           const [fromContact] = await dbManager.getContactByIds([
             email.fromContactIds
           ]);
-          const [fromAddress] = formContactsRow([email.from]);
+          const [fromAddress] = formContactsRow([email.fromAddress]);
           const [fromName, fromMail] = fromAddress.name
             ? [fromAddress.name, fromAddress.email]
             : [fromContact.name, fromContact.email];
@@ -108,8 +125,14 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
         printDocumentTemplateClose;
     }
   } else if (emailId) {
-    const [email] = await dbManager.getEmailsByIds([emailId]);
-    if (email) {
+    const [rawEmail] = await dbManager.getEmailsByIds([emailId]);
+    if (rawEmail) {
+      const emailBody =
+        (await fileUtils.getEmailBody({
+          username,
+          metadataKey: rawEmail.key
+        })) || rawEmail.content;
+      const email = Object.assign(rawEmail, { content: emailBody });
       const { to, cc, from } = await dbManager.getContactsByEmailId(email.id);
       const [fromName, fromMail] = [from[0].name, from[0].email];
       const emailContent = cleanHTMLTagsFromEmailContentToPrint(email.content);
@@ -126,7 +149,6 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
         printDocumentTemplateClose;
     }
   }
-
   try {
     // Send to hidden window for print
     const defaultDocumentName = clearSubject.split(' ').join('-');

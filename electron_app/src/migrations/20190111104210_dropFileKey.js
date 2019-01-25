@@ -88,9 +88,9 @@ const reFillFileKey = async knex => {
         offset = files.length;
       }
     }
-    const columnExists = await trx.schema.hasColumn(Table.EMAIL, 'messageId');
+    const columnExists = await trx.schema.hasColumn(Table.FILE, 'key');
     if (columnExists)
-      await trx.schema.table(Table.EMAIL, table => {
+      await trx.schema.table(Table.FILE, table => {
         table.dropColumn('key');
         table.dropColumn('iv');
       });

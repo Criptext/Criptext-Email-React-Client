@@ -2,6 +2,7 @@ import { Email } from './types';
 import {
   createEmailLabel,
   deleteEmailByKeys,
+  deleteEmailContent,
   deleteEmailLabel,
   getContactByIds,
   getEmailsByThreadId,
@@ -173,6 +174,7 @@ export const unsendEmail = params => {
           preview: '',
           unsendDate
         });
+        await deleteEmailContent({ metadataKey: key });
         dispatch(unsendEmailFiles(emailId)).then(() =>
           dispatch(
             unsendEmailOnSuccess(

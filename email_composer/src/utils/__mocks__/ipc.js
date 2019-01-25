@@ -76,6 +76,10 @@ export const getEmailByKey = key => {
   return emails.filter(email => email.key === key);
 };
 
+export const getEmailByKeyWithbody = key => {
+  return emails.filter(email => email.key === key)[0];
+};
+
 export const getFilesByEmailId = emailId => {
   return files.filter(file => file.emailId === emailId);
 };
