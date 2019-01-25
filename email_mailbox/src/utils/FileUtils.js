@@ -64,13 +64,3 @@ export const identifyFileType = mimetype => {
       return FileTypes.DEFAULT;
   }
 };
-
-export const saveBlobAsFile = (incomingBlob, mimeType, filename) => {
-  const hiddenLink = document.createElement('a');
-  hiddenLink.style = 'display: none';
-  document.body.appendChild(hiddenLink);
-  hiddenLink.href = incomingBlob;
-  hiddenLink.target = '_blank';
-  hiddenLink.download = filename;
-  hiddenLink.click();
-};

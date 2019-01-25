@@ -75,7 +75,7 @@ export const sendOpenEmailSource = metadataKey => {
 };
 
 /* File System
-   ----------------------------- */
+----------------------------- */
 export const saveEmailBody = async params => {
   return await callMain('client-save-email-body', params);
 };
@@ -84,8 +84,12 @@ export const deleteEmailContent = async params => {
   return await callMain('client-delete-email-content', params);
 };
 
+export const downloadFileInFileSystem = async ({ url, filename }) => {
+  return await callMain('download-file', { url, filename });
+};
+
 /* Criptext Client
-   ----------------------------- */
+----------------------------- */
 export const acknowledgeEvents = async eventIds => {
   return await callMain('client-acknowledge-events', eventIds);
 };
@@ -170,8 +174,8 @@ export const updateNameEvent = async params => {
   return await callMain('client-update-name-event', params);
 };
 
-/* DataBase
-   ----------------------------- */
+/*  DataBase
+----------------------------- */
 export const cleanDatabase = async () => {
   return await callMain('db-clean-database');
 };

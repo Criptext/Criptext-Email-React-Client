@@ -1,5 +1,6 @@
 const ipc = require('@criptext/electron-better-ipc');
-const { app } = require('electron');
+const { app, BrowserWindow } = require('electron');
+const { download } = require('electron-dl');
 const mailboxWindow = require('../windows/mailbox');
 const { downloadUpdate } = require('./../updater');
 const myAccount = require('./../Account');
@@ -44,3 +45,30 @@ ipc.answerRenderer('print-to-pdf', async ({ emailId, threadId }) => {
 ipc.answerRenderer('open-email-source', async metadataKey => {
   await buildEmailSource({ metadataKey });
 });
+
+ipc.answerRenderer('download-file', ({ url, filename, downloadType }) => {
+  const directory = defineDownloadDirectory(downloadType);
+  download(BrowserWindow.getFocusedWindow(), url, {
+    directory,
+    filename,
+    openFolderWhenDone: true
+  })
+    .then(dl => {
+      mailboxWindow.send('display-message-success-download');
+      if (downloadType === 'inline') {
+        return dl.getSavePath();
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      mailboxWindow.send('display-message-error-download');
+    });
+});
+
+const defineDownloadDirectory = type => {
+  const customDownloadPath = '/home/julian/Esritorio';
+  if (type === 'inline') {
+    return customDownloadPath;
+  }
+  return app.getPath('downloads');
+};
