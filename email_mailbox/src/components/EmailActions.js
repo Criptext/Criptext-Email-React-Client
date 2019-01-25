@@ -72,10 +72,10 @@ const EmailActions = props => {
         >
           <span>{string.mailbox.print_email}</span>
         </li>
-        {!props.hasBoundary && (
+        {props.hasBoundary && (
           <li
           onClick={ev => {
-            props.onPrintEmail(ev);
+            props.onOpenEmailSource(ev);
             props.onToggleMenu(ev);
           }}
           >

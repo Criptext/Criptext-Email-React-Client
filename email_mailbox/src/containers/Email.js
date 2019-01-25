@@ -208,7 +208,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onOpenEmailSource: ev => {
       ev.stopPropagation();
-      sendOpenEmailSource()
+      sendOpenEmailSource(email.key)
     },
     onPrintEmail: ev => {
       ev.stopPropagation();

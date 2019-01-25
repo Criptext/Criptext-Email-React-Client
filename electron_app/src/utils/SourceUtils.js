@@ -3,14 +3,16 @@ const dbManager = require('../DBManager');
 const myAccount = require('../Account');
 const { APP_DOMAIN } = require('./const');
 const { dialog, BrowserWindow } = require('electron');
+const path = require('path');
 
 const HTMLTagsRegex = /<[^>]*>?/g;
 const getUsername = () => (`${myAccount.recipientId}@${APP_DOMAIN}`)
 
 const buildEmailSource = async ({metadataKey}) => {
+  console.log("OVER HERE ", metadataKey);
   const username = getUsername()
   const [email] = await dbManager.getEmailByKey(metadataKey)
-
+  console.log(email)
   if (!email || !email.boundary) {
     throw("Unable to build email source. No boundary found!");
   }
@@ -18,28 +20,29 @@ const buildEmailSource = async ({metadataKey}) => {
   const headers = await fileUtils.getEmailHeaders({username, metadataKey}) 
 
   const source = `
-    ${headers}
-    
-    ${email.boundary}
+${headers}
 
-    Content-Type: text/plain; charset=UTF-8
-    Content-Transfer-Encoding: quoted-printable
+--${email.boundary}
 
-    ${cleanHTML(body)}
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-    ${email.boundary}
+${cleanHTML(body)}
 
-    Content-Type: text/html; charset=UTF-8
-    Content-Transfer-Encoding: 7bit
+--${email.boundary}
 
-    ${body}
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-    ${email.boundary}
+${body.replace(/[\n\r]/g, "")}
+
+--${email.boundary}
   `
   openWindowWithSource(source, email.subject)
 }
 
 const openWindowWithSource = (source, subject) => {
+  let workerWin;
   try {
     // Send to hidden window for print
     const defaultDocumentName = subject;
@@ -47,17 +50,17 @@ const openWindowWithSource = (source, subject) => {
       workerWin = new BrowserWindow({ show: true });
     }
     workerWin.loadURL(
-      path.join('file://', __dirname, '..', 'windows', 'worker.html')
+      path.join('file://', __dirname, '..', 'windows', 'source.html')
     );
     workerWin.webContents.closeDevTools();
     workerWin.webContents.once('dom-ready', () => {
       workerWin.webContents.send(
-        'setPdfContent',
+        'setContent',
         source,
         defaultDocumentName
       );
     });
-  } catch (printErr) {
+  } catch (ex) {
     dialog.showErrorBox(lang.strings.errorMessages.PRINTING_ERROR);
   }
 }
