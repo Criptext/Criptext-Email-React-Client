@@ -9,7 +9,7 @@ import { mySettings } from '../utils/electronInterface';
 import './composer.scss';
 
 const Composer = props => (
-  <div className="wrapper" data-theme={mySettings.theme}>
+  <div className="wrapper" data-theme={mySettings.theme || 'light'}>
     <RecipientWrapper
       disableSendButton={props.disableSendButtonOnInvalidEmail}
       toEmails={props.toEmails}

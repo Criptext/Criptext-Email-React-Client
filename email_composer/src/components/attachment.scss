@@ -1,3 +1,4 @@
+@import "./../styles/index.scss";
 
 .files-container{
   display: flex;
@@ -5,8 +6,6 @@
 }
 
 .file-container{
-  border: 1px solid rgba(216, 216, 216, 0.45);
-  background-color: #fafafa;
   border-radius: 5px;
   height: 40px;
   margin: 5px 0;
@@ -109,8 +108,6 @@
 
   .file-delete{
     align-items: center;
-    background-color: white;
-    border: solid 1px #cdcdcd;
     box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.18);
     border-radius: 50%;
     display: none;
@@ -121,7 +118,6 @@
     width: 19px;
   
     i{
-      color: #6e6e6e;
       font-size: 18px;
       margin: 0 auto;
     }
@@ -134,3 +130,28 @@
     top: 41px;
   }
 }
+
+
+
+/* THEME
+----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_ATTACHMENT, $_BORDER_COLOR_ATTACHMENT, $_BACKGROUND_COLOR_DELETE_ATTACHMENT, $_BORDER_COLOR_DELETE_ATTACHMENT, $_COLOR_TEXT_DELETE_ATTACHMENT){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .file-container{
+      background-color: $_BACKGROUND_COLOR_ATTACHMENT;
+      border: 1px solid $_BORDER_COLOR_ATTACHMENT;
+
+      .file-delete {
+        background-color: $_BACKGROUND_COLOR_DELETE_ATTACHMENT;
+        border: solid 1px $_BORDER_COLOR_DELETE_ATTACHMENT;
+        i {
+          color: $_COLOR_TEXT_DELETE_ATTACHMENT;
+        }
+      }
+    }
+  }
+}
+    
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_ATTACHMENT_LIGHT,$_BORDER_COLOR_ATTACHMENT_LIGHT, $_BACKGROUND_COLOR_DELETE_ATTACHMENT_LIGHT, $_BORDER_COLOR_DELETE_ATTACHMENT_LIGHT,$_COLOR_TEXT_DELETE_ATTACHMENT_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_ATTACHMENT_DARK,$_BORDER_COLOR_ATTACHMENT_DARK,$_BACKGROUND_COLOR_DELETE_ATTACHMENT_DARK, $_BORDER_COLOR_DELETE_ATTACHMENT_DARK,$_COLOR_TEXT_DELETE_ATTACHMENT_DARK);

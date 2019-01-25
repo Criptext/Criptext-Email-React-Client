@@ -1,6 +1,10 @@
 const ipc = require('@criptext/electron-better-ipc');
 const { app, dialog, BrowserWindow } = require('electron');
-const { getComputerName, isWindows } = require('../utils/osUtils');
+const {
+  getComputerName,
+  isWindows,
+  getOsAndArch
+} = require('../utils/osUtils');
 const { processEventsQueue } = require('../eventQueueManager');
 const { showNotification } = require('../updater');
 const globalManager = require('./../globalManager');
@@ -9,6 +13,8 @@ const loadingWindow = require('./../windows/loading');
 ipc.answerRenderer('get-computer-name', () => getComputerName());
 
 ipc.answerRenderer('get-isWindows', () => isWindows());
+
+ipc.answerRenderer('get-os-and-arch', () => getOsAndArch());
 
 ipc.answerRenderer('process-pending-events', () => {
   processEventsQueue();

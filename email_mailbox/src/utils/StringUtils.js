@@ -65,3 +65,15 @@ export const replaceAllOccurrences = (text, search, replacement) => {
 export const toLowerCaseWithoutSpaces = string => {
   return string.toLowerCase().replace(/\s/g, '');
 };
+
+export const toCapitalize = (string, eachWord) => {
+  if (!eachWord) {
+    return string.replace(/\b\w/g, firstLetter => firstLetter.toUpperCase());
+  }
+  return string
+    .split(' ')
+    .map(word =>
+      word.replace(/\b\w/g, firstLetter => firstLetter.toUpperCase())
+    )
+    .join(' ');
+};

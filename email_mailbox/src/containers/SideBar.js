@@ -54,8 +54,8 @@ const formInviteFriendEmailContent = () => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onClickComposeContactSupportEmail: () => {
-      const data = formContactSupportEmailContent();
+    onClickComposeContactSupportEmail: async () => {
+      const data = await formContactSupportEmailContent();
       openFilledComposerWindow({
         type: composerEvents.NEW_WITH_DATA,
         data

@@ -68,6 +68,8 @@ export const sendPrintThreadEvent = threadId => {
   callMain('print-to-pdf', { threadId });
 };
 
+export const getOsAndArch = () => callMain('get-os-and-arch');
+
 /* Criptext Client
    ----------------------------- */
 export const acknowledgeEvents = async eventIds => {

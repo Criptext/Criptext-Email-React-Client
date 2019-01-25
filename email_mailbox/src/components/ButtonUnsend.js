@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './buttonunsend.scss';
+import string from './../lang';
 
 const ButtonUnsend = props => (
   <button
@@ -16,7 +17,7 @@ const ButtonUnsend = props => (
 const renderButton = () => (
   <div>
     <i className="icon-unsend" />
-    <span>unsend</span>
+    <span>{string.mailbox.unsend}</span>
   </div>
 );
 

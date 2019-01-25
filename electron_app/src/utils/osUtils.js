@@ -1,5 +1,7 @@
 const os = require('os');
 const getos = require('getos');
+const packagedata = require('./../../package.json');
+console.log(packagedata.criptextInstallerType);
 
 const getComputerName = () => {
   const hostname = os.hostname();
@@ -19,7 +21,14 @@ const getOsAndArch = () => {
       if (err) {
         resolve('');
       }
-      resolve(`${res.os} ${res.dist} ${res.release} ${process.arch}`);
+      const data = {
+        os: res.os,
+        distribution: res.dist,
+        distVersion: res.release,
+        arch: process.arch,
+        installerType: packagedata.criptextInstallerType
+      };
+      resolve(data);
     });
   });
 };

@@ -38,13 +38,16 @@ const initializeClient = ({ token, refreshToken, language, os }) => {
 
 const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
   const { language } = await getSettings();
-  const os = await getOsAndArch();
+  const osAndArch = await getOsAndArch();
+  const osInfo = Object.values(osAndArch)
+    .filter(val => !!val)
+    .join(' ');
   if (optionalSessionToken || optionalRefreshToken) {
     return initializeClient({
       token: optionalSessionToken,
       refreshToken: optionalRefreshToken,
       language,
-      os
+      os: osInfo
     });
   }
   const [account] = await getAccount();
@@ -58,7 +61,7 @@ const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
     client.refreshToken !== refreshToken ||
     client.language !== language
   ) {
-    return initializeClient({ token, refreshToken, language, os });
+    return initializeClient({ token, refreshToken, language, os: osInfo });
   }
 };
 
