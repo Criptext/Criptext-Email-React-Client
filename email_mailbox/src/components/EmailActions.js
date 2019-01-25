@@ -72,6 +72,16 @@ const EmailActions = props => {
         >
           <span>{string.mailbox.print_email}</span>
         </li>
+        {!props.hasBoundary && (
+          <li
+          onClick={ev => {
+            props.onPrintEmail(ev);
+            props.onToggleMenu(ev);
+          }}
+          >
+            <span>Show Source</span>
+          </li>
+        )}
       </ul>
     </div>
   );
@@ -84,10 +94,11 @@ EmailActions.propTypes = {
   onDeletePermanently: PropTypes.func,
   onForward: PropTypes.func,
   onMarkAsSpam: PropTypes.func,
+  onOpenEmailSource: PropTypes.func,
   onPrintEmail: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyEmail: PropTypes.func,
-  onToggleMenu: PropTypes.func
+  onToggleMenu: PropTypes.func,
 };
 
 export default EmailActions;
