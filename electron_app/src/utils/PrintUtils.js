@@ -149,7 +149,6 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
         printDocumentTemplateClose;
     }
   }
-  console.log('que tiro weh');
   try {
     // Send to hidden window for print
     const defaultDocumentName = clearSubject.split(' ').join('-');
@@ -167,7 +166,6 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
         defaultDocumentName
       );
     });
-    console.log('que tiro weh 2');
     workerWin.webContents.once('did-finish-load', () => {
       setTimeout(() => {
         workerWin.webContents.print({ printBackground: true }, successPrint => {

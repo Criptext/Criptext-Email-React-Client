@@ -72,7 +72,6 @@ export const getOsAndArch = () => callMain('get-os-and-arch');
 
 /* File System
    ----------------------------- */
-
 export const saveEmailBody = async params => {
   return await callMain('client-save-email-body', params);
 };
