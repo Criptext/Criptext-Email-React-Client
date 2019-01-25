@@ -2,6 +2,7 @@ import FileManager from 'criptext-files-sdk';
 import CryptoJS from 'crypto-js';
 import base64js from 'base64-js';
 import { myAccount } from './electronInterface';
+import { defaultEmptyMimetypeValue } from './const';
 
 const MAX_REQUESTS = 5;
 
@@ -120,7 +121,7 @@ export const getFileParamsToSend = files => {
         token: file.token,
         name: file.fileData.name,
         size: file.fileData.size,
-        mimeType: file.fileData.type || 'application/octet-stream',
+        mimeType: file.fileData.type || defaultEmptyMimetypeValue,
         key: file.key,
         iv: file.iv
       }));
@@ -135,7 +136,7 @@ export const getFileParamsToSend = files => {
           token: file.shouldDuplicate ? duplicates[file.token] : file.token,
           name: file.fileData.name,
           size: file.fileData.size,
-          mimeType: file.fileData.type || 'application/octet-stream',
+          mimeType: file.fileData.type || defaultEmptyMimetypeValue,
           key: file.key,
           iv: file.iv
         }));
