@@ -6,7 +6,7 @@ import {
   removeAppDomain
 } from './StringUtils';
 import { getFormattedDate } from './DateUtils';
-import { appDomain, composerEvents } from './const';
+import { appDomain, composerEvents, defaultEmptyMimetypeValue } from './const';
 import { FILE_MODES } from './FileUtils';
 import { Status } from '../components/Control';
 import { HTMLTagsRegex } from './RegexUtils';
@@ -189,7 +189,10 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     const prevFiles = await getFilesByEmailId(emailData.id);
     files = prevFiles.map(file => {
       return {
-        fileData: { ...file, type: file.mimeType },
+        fileData: {
+          ...file,
+          type: file.mimeType || defaultEmptyMimetypeValue
+        },
         mode: FILE_MODES.UPLOADED,
         percentage: 100,
         token: file.token,
