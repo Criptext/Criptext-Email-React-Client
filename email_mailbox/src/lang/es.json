@@ -121,7 +121,8 @@
     "print_email": "Imprimir",
     "print_thread": "Imprimir todo",
     "me": "Yo",
-    "unsend": "Retractar"
+    "unsend": "Retractar",
+    "email_source": "Mostrar Original"
   },
   "messages": {
     "change_password": {

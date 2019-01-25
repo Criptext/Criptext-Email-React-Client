@@ -71,8 +71,8 @@ export const sendPrintThreadEvent = threadId => {
 export const getOsAndArch = () => callMain('get-os-and-arch');
 
 export const sendOpenEmailSource = metadataKey => {
-  callMain('open-email-source', metadataKey)
-}
+  callMain('open-email-source', metadataKey);
+};
 
 /* File System
    ----------------------------- */

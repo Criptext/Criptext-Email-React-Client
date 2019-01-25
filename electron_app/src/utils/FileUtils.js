@@ -3,7 +3,7 @@ const path = require('path');
 const rimraf = require('rimraf');
 const { app } = require('electron');
 
-const getUserPath = async (node_env, user) => {
+const getUserEmailsPath = async (node_env, user) => {
   switch (node_env) {
     case 'test': {
       const path = `./src/__integrations__/${user}`;
@@ -15,9 +15,13 @@ const getUserPath = async (node_env, user) => {
       const myInnerPath = path
         .join(__dirname, `/../userData/${user}`)
         .replace('/src', '');
+      const myEmailsPath = path
+        .join(__dirname, `/../userData/${user}/emails`)
+        .replace('/src', '');
       await createIfNotExist(myPath);
       await createIfNotExist(myInnerPath);
-      return myInnerPath;
+      await createIfNotExist(myEmailsPath);
+      return myEmailsPath;
     }
     default: {
       const userDataPath = app.getPath('userData');
@@ -36,7 +40,7 @@ const saveEmailBody = async ({
   metadataKey,
   replaceKey
 }) => {
-  const myPath = await getUserPath(process.env.NODE_ENV, username);
+  const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
 
   const emailPath = `${myPath}/${metadataKey}`;
   await createIfNotExist(emailPath);
@@ -53,7 +57,7 @@ const saveEmailBody = async ({
 };
 
 const getEmailBody = async ({ username, metadataKey }) => {
-  const myPath = await getUserPath(process.env.NODE_ENV, username);
+  const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
 
   const emailPath = `${myPath}/${metadataKey}`;
   const bodyPath = `${emailPath}/body.txt`;
@@ -66,7 +70,7 @@ const getEmailBody = async ({ username, metadataKey }) => {
 };
 
 const getEmailHeaders = async ({ username, metadataKey }) => {
-  const myPath = await getUserPath(process.env.NODE_ENV, username);
+  const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
   const emailPath = `${myPath}/${metadataKey}`;
   const headersPath = `${emailPath}/headers.txt`;
   try {
@@ -78,13 +82,13 @@ const getEmailHeaders = async ({ username, metadataKey }) => {
 };
 
 const deleteEmailContent = async ({ metadataKey, username }) => {
-  const myPath = await getUserPath(process.env.NODE_ENV, username);
+  const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
   const emailPath = `${myPath}/${metadataKey}`;
   await remove(emailPath).catch(console.error);
 };
 
 const removeUserDir = async username => {
-  const myPath = await getUserPath(process.env.NODE_ENV, username);
+  const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
   await remove(myPath);
 };
 

@@ -4,20 +4,19 @@ const myAccount = require('../Account');
 const { APP_DOMAIN } = require('./const');
 const { dialog, BrowserWindow } = require('electron');
 const path = require('path');
+const lang = require('./../lang');
 
 const HTMLTagsRegex = /<[^>]*>?/g;
-const getUsername = () => (`${myAccount.recipientId}@${APP_DOMAIN}`)
+const getUsername = () => `${myAccount.recipientId}@${APP_DOMAIN}`;
 
-const buildEmailSource = async ({metadataKey}) => {
-  console.log("OVER HERE ", metadataKey);
-  const username = getUsername()
-  const [email] = await dbManager.getEmailByKey(metadataKey)
-  console.log(email)
+const buildEmailSource = async ({ metadataKey }) => {
+  const username = getUsername();
+  const [email] = await dbManager.getEmailByKey(metadataKey);
   if (!email || !email.boundary) {
-    throw("Unable to build email source. No boundary found!");
+    throw 'Unable to build email source. No boundary found!';
   }
-  const body = await fileUtils.getEmailBody({username, metadataKey})
-  const headers = await fileUtils.getEmailHeaders({username, metadataKey}) 
+  const body = await fileUtils.getEmailBody({ username, metadataKey });
+  const headers = await fileUtils.getEmailHeaders({ username, metadataKey });
 
   const source = `
 ${headers}
@@ -34,12 +33,12 @@ ${cleanHTML(body)}
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-${body.replace(/[\n\r]/g, "")}
+${body.replace(/[\n\r]/g, '')}
 
 --${email.boundary}
-  `
-  openWindowWithSource(source, email.subject)
-}
+  `;
+  openWindowWithSource(source, email.subject);
+};
 
 const openWindowWithSource = (source, subject) => {
   let workerWin;
@@ -54,16 +53,12 @@ const openWindowWithSource = (source, subject) => {
     );
     workerWin.webContents.closeDevTools();
     workerWin.webContents.once('dom-ready', () => {
-      workerWin.webContents.send(
-        'setContent',
-        source,
-        defaultDocumentName
-      );
+      workerWin.webContents.send('setContent', source, defaultDocumentName);
     });
   } catch (ex) {
-    dialog.showErrorBox(lang.strings.errorMessages.PRINTING_ERROR);
+    dialog.showErrorBox(lang.strings.errorMessages.SOURCE_ERROR);
   }
-}
+};
 
 const cleanHTML = string => {
   const stringHTMLcontentRemoved = string
@@ -80,4 +75,4 @@ const removeHTMLTags = string => {
 
 module.exports = {
   buildEmailSource
-}
+};

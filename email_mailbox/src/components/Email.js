@@ -166,8 +166,8 @@ const renderEmailInfoExpand = props => (
               onDelete={props.onDelete}
               onDeletePermanently={props.handleClickPermanentlyDeleteEmail}
               onToggleMenu={props.onTogglePopOverEmailActions}
-              onPrintEmail={props.onPrintEmail}
               onOpenEmailSource={props.onOpenEmailSource}
+              onPrintEmail={props.onPrintEmail}
             />
           </i>
         </div>
@@ -257,6 +257,7 @@ renderEmailInfoExpand.propTypes = {
   onDeletePermanently: PropTypes.func,
   onForward: PropTypes.func,
   onMarkAsSpam: PropTypes.func,
+  onOpenEmailSource: PropTypes.func,
   onPrintEmail: PropTypes.func,
   onReplyEmail: PropTypes.func,
   onReplyAll: PropTypes.func,
@@ -280,7 +281,6 @@ Email.propTypes = {
   isDraft: PropTypes.bool,
   isUnsend: PropTypes.bool,
   onForward: PropTypes.func,
-  onOpenEmailSource: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,

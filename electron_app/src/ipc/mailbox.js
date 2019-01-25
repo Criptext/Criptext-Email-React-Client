@@ -5,7 +5,7 @@ const { downloadUpdate } = require('./../updater');
 const myAccount = require('./../Account');
 const wsClient = require('./../socketClient');
 const { printEmailOrThread } = require('./../utils/PrintUtils');
-const { buildEmailSource } = require('../utils/SourceUtils')
+const { buildEmailSource } = require('../utils/SourceUtils');
 
 ipc.answerRenderer('close-mailbox', () => {
   mailboxWindow.close();
@@ -42,5 +42,5 @@ ipc.answerRenderer('print-to-pdf', async ({ emailId, threadId }) => {
 });
 
 ipc.answerRenderer('open-email-source', async metadataKey => {
-  await buildEmailSource({metadataKey});
+  await buildEmailSource({ metadataKey });
 });
