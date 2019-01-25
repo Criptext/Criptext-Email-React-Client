@@ -456,7 +456,6 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
 
 const storeEmailBodies = emailRows => {
   const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
-  console.log(username);
   return Promise.all(
     emailRows.map(email => {
       const body = email.content;
