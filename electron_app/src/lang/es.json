@@ -106,6 +106,10 @@
     "PRINTING_ERROR": {
       "name": "Error de impresión",
       "description": "Falló al imprimir el documento. Intente de nuevo."
+    },
+    "SOURCE_ERROR": {
+      "name": "Error al mostrar.",
+      "description": "Error al mostrar el correo original. Intente de nuevo."
     }
   },
   "updaterMessages": {

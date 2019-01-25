@@ -6,7 +6,11 @@ import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv, parseContactRow } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
 import { LabelType, myAccount, mySettings } from './../utils/electronInterface';
-import { openFilledComposerWindow, sendPrintEmailEvent } from './../utils/ipc';
+import {
+  openFilledComposerWindow,
+  sendPrintEmailEvent,
+  sendOpenEmailSource
+} from './../utils/ipc';
 import {
   loadFiles,
   muteEmail,
@@ -205,6 +209,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         unsendDate
       };
       dispatch(unsendEmail(params));
+    },
+    onOpenEmailSource: ev => {
+      ev.stopPropagation();
+      sendOpenEmailSource(email.key);
     },
     onPrintEmail: ev => {
       ev.stopPropagation();
