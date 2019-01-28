@@ -77,13 +77,6 @@ export const getGroupEvents = async () => {
     try {
       const rowId = await handleEvent(event);
       rowIds.push(rowId);
-
-      const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
-      if (rowIdsFiltered.length) {
-        await setEventAsHandled(rowIdsFiltered);
-      }
-      sendNewEmailNotification();
-      await updateOwnContact();
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
@@ -96,6 +89,13 @@ export const getGroupEvents = async () => {
       }
     }
   }
+
+  const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
+  if (rowIdsFiltered.length) {
+    await setEventAsHandled(rowIdsFiltered);
+  }
+  sendNewEmailNotification();
+  await updateOwnContact();
 
   isGettingEvents = false;
   if (hasMoreEvents) await getGroupEvents();
@@ -513,10 +513,10 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
     if (email) {
       emailsId.push(email.id);
       threads.push({ id: email.threadId, emailId: email.id });
-    } else {
-      return null;
     }
   }
+
+  if (!emailsId.length) return null;
   const labelsToRemove = await getLabelsByText(labelsRemoved);
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
 
@@ -542,7 +542,6 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
       });
     }
   }
-
   return rowid;
 };
 
