@@ -84,8 +84,18 @@ export const deleteEmailContent = async params => {
   return await callMain('client-delete-email-content', params);
 };
 
-export const downloadFileInFileSystem = async ({ url, filename }) => {
-  return await callMain('download-file', { url, filename });
+export const downloadFileInFileSystem = async ({
+  url,
+  filename,
+  downloadType,
+  metadataKey
+}) => {
+  return await callMain('download-file', {
+    url,
+    filename,
+    downloadType,
+    metadataKey
+  });
 };
 
 /* Criptext Client

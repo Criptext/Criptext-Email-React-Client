@@ -65,7 +65,7 @@ const Email = props => (
       <hr />
       <div className="email-body">
         <div disabled={props.hideView || props.isUnsend} className="email-text">
-          <div dangerouslySetInnerHTML={{ __html: props.email.content }} />
+          <div dangerouslySetInnerHTML={{ __html: props.emailContent }} />
         </div>
         {!!props.files.length &&
           isExpand(props.displayEmail, props.staticOpen) && (
@@ -274,6 +274,7 @@ Email.propTypes = {
   dismissPopup: PropTypes.func,
   displayEmail: PropTypes.bool,
   email: PropTypes.object,
+  emailContent: PropTypes.string,
   files: PropTypes.array,
   handleClickPermanentlyDeleteEmail: PropTypes.func,
   handlePopupConfirm: PropTypes.func,

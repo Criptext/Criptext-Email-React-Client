@@ -7,6 +7,8 @@ const myAccount = require('./../Account');
 const wsClient = require('./../socketClient');
 const { printEmailOrThread } = require('./../utils/PrintUtils');
 const { buildEmailSource } = require('../utils/SourceUtils');
+const { getUserEmailsPath, createIfNotExist } = require('../utils/FileUtils');
+const { getUsername } = require('./../utils/stringUtils');
 
 ipc.answerRenderer('close-mailbox', () => {
   mailboxWindow.close();
@@ -46,29 +48,31 @@ ipc.answerRenderer('open-email-source', async metadataKey => {
   await buildEmailSource({ metadataKey });
 });
 
-ipc.answerRenderer('download-file', ({ url, filename, downloadType }) => {
-  const directory = defineDownloadDirectory(downloadType);
-  download(BrowserWindow.getFocusedWindow(), url, {
-    directory,
-    filename,
-    openFolderWhenDone: true
-  })
-    .then(dl => {
-      mailboxWindow.send('display-message-success-download');
-      if (downloadType === 'inline') {
-        return dl.getSavePath();
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      mailboxWindow.send('display-message-error-download');
+ipc.answerRenderer('download-file', async ({ url, filename, downloadType, metadataKey }) => {
+  const openFolderWhenDone = downloadType !== 'inline';
+  const shouldShowMessage = openFolderWhenDone;
+  try {
+    const directory = await defineDownloadDirectory({ downloadType, metadataKey });
+    const downloadedItem = await download(BrowserWindow.getFocusedWindow(), url, {
+      directory,
+      filename,
+      openFolderWhenDone
     });
+    return downloadedItem.getSavePath();
+  } catch (e) {
+    console.log(e);
+    if (shouldShowMessage) 
+      mailboxWindow.send('display-message-error-download');
+  }
 });
 
-const defineDownloadDirectory = type => {
-  const customDownloadPath = '/home/julian/Esritorio';
-  if (type === 'inline') {
-    return customDownloadPath;
+const defineDownloadDirectory = async ({ downloadType, metadataKey }) => {
+  if (downloadType === 'inline') {
+    const username = getUsername();
+    const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
+    const emailPath = `${myPath}/${metadataKey}`;
+    await createIfNotExist(emailPath);
+    return emailPath;
   }
   return app.getPath('downloads');
 };

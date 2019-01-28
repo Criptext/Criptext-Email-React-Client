@@ -35,7 +35,7 @@ const getUserEmailsPath = async (node_env, user) => {
         .replace('/src', '');
       await createIfNotExist(innerPath);
       await createIfNotExist(myEmailsPath);
-      return;
+      return myEmailsPath;
     }
   }
 };
@@ -147,5 +147,7 @@ module.exports = {
   getEmailBody,
   getEmailHeaders,
   deleteEmailContent,
-  removeUserDir
+  removeUserDir,
+  getUserEmailsPath,
+  createIfNotExist
 };

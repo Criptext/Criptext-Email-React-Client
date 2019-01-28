@@ -44,7 +44,10 @@ const mapStateToProps = (state, ownProps) => {
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
   const date = email.date;
-  const files = getFiles(state.get('files'), email.fileTokens);
+  const { files, inlineImages } = getFiles(
+    state.get('files'),
+    email.fileTokens
+  );
   const preview =
     email.status === EmailStatus.UNSEND ? unsentText : email.preview;
   const content =
@@ -81,7 +84,8 @@ const mapStateToProps = (state, ownProps) => {
     isTrash,
     isDraft,
     isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
-    isUnsend
+    isUnsend,
+    inlineImages
   };
 };
 
@@ -96,14 +100,25 @@ const getContacts = (contacts, contactIds) => {
     : [];
 };
 
-const getFiles = (files, fileTokens) => {
-  return fileTokens
-    ? files.size
-      ? fileTokens.filter(token => files.get(token)).map(token => {
-          return files.get(token).toJS();
-        })
-      : []
-    : [];
+const getFiles = (fileStore, fileTokens) => {
+  if (!fileTokens) return { files: [], inlineImages: [] };
+  if (!fileStore.size) return { files: [], inlineImages: [] };
+  return fileTokens.reduce(
+    (result, token) => {
+      const inlineImages = [...result.inlineImages];
+      const files = [...result.files];
+      if (fileStore.get(token)) {
+        const file = fileStore.get(token);
+        if (file.get('cid')) {
+          inlineImages.push(file.toJS());
+        } else {
+          files.push(file.toJS());
+        }
+      }
+      return { files, inlineImages };
+    },
+    { files: [], inlineImages: [] }
+  );
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {

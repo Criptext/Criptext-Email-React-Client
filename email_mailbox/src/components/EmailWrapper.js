@@ -1,3 +1,4 @@
+/* eslint react/no-deprecated: 0 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Email from './Email';
@@ -5,19 +6,27 @@ import { ButtonUnsendStatus } from './ButtonUnsend';
 import { checkUserGuideSteps } from '../utils/electronEventInterface';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import string from '../lang';
+import {
+  setCryptoInterfaces,
+  setDownloadHandler,
+  setFileSuccessHandler
+} from '../utils/FileManager';
+import { downloadFileInFileSystem } from '../utils/ipc';
 
 const { popups } = string;
 
 class EmailWrapper extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       buttonUnsendStatus: ButtonUnsendStatus.NORMAL,
       displayEmail: false,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
       hideView: false,
-      popupContent: undefined
+      popupContent: undefined,
+      emailContent: props.email.content,
+      inlineImages: []
     };
   }
 
@@ -25,6 +34,7 @@ class EmailWrapper extends Component {
     return (
       <Email
         {...this.props}
+        emailContent={this.state.emailContent}
         buttonUnsendStatus={this.state.buttonUnsendStatus}
         displayEmail={this.state.displayEmail}
         isHiddenPopOverEmailMoreInfo={this.state.isHiddenPopOverEmailMoreInfo}
@@ -71,6 +81,17 @@ class EmailWrapper extends Component {
     }
     const steps = [USER_GUIDE_STEPS.EMAIL_READ];
     checkUserGuideSteps(steps);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      this.state.inlineImages.length === 0 &&
+      this.state.inlineImages.length !== nextProps.inlineImages.length
+    ) {
+      this.setState({ inlineImages: nextProps.inlineImages }, async () => {
+        await this.handleDownloadInlineImages();
+      });
+    }
   }
 
   handleToggleEmail = () => {
@@ -133,12 +154,48 @@ class EmailWrapper extends Component {
       popupContent: undefined
     });
   };
+
+  handleSuccessDownloadInlineImage = async ({ token, url }) => {
+    const [inlineImage] = this.state.inlineImages.filter(
+      img => img.token === token
+    );
+    if (inlineImage) {
+      const downloadParams = {
+        downloadType: 'inline',
+        filename: inlineImage.name,
+        metadataKey: this.props.email.key,
+        url
+      };
+      const filePath = await downloadFileInFileSystem(downloadParams);
+      this.injectImagePathIntoEmailContent(filePath, inlineImage.cid);
+    }
+  };
+
+  injectImagePathIntoEmailContent = (imgPath, cid) => {
+    const prevContent = this.state.emailContent;
+    const newContent = prevContent.replace(
+      `src="cid:${cid}"`,
+      `src="${imgPath}"`
+    );
+    this.setState({ emailContent: newContent });
+  };
+
+  handleDownloadInlineImages = () => {
+    const inlineImages = this.state.inlineImages;
+    const { key, iv } = inlineImages[0];
+    setCryptoInterfaces(key, iv);
+    setFileSuccessHandler(this.handleSuccessDownloadInlineImage);
+    for (const inlineImg of inlineImages) {
+      setDownloadHandler(inlineImg.token);
+    }
+  };
 }
 
 EmailWrapper.propTypes = {
   displayEmail: PropTypes.func,
   email: PropTypes.object,
   files: PropTypes.array,
+  inlineImages: PropTypes.array,
   onEditDraft: PropTypes.func,
   onDeletePermanently: PropTypes.func,
   onLoadFiles: PropTypes.func,

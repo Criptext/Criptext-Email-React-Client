@@ -1,5 +1,7 @@
-const lang = require('./../lang');
 const moment = require('moment');
+const lang = require('./../lang');
+const myAccount = require('./../Account');
+const { APP_DOMAIN } = require('./../utils/const');
 
 const removeProtocolFromUrl = (protocol, url) => {
   return url.replace(protocol, '');
@@ -92,6 +94,10 @@ const genUUID = () => {
   );
 };
 
+const getUsername = () => {
+  return `${myAccount.recipientId}@${APP_DOMAIN}`;
+};
+
 module.exports = {
   removeProtocolFromUrl,
   printDocumentTemplateHeader,
@@ -100,5 +106,6 @@ module.exports = {
   cleanEmojisFromString,
   formatRecipientsToPrint,
   defineLargeTime,
+  getUsername,
   genUUID
 };
