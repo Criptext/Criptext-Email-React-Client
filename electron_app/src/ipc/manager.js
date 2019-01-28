@@ -29,8 +29,9 @@ ipc.answerRenderer(
   }
 );
 
-ipc.answerRenderer('db-clean-database', async () => {
-  await fileUtils.removeUserDir(getUsername());
+ipc.answerRenderer('db-clean-database', async username => {
+  const user = `${username || getUsername()}@${APP_DOMAIN}`;
+  await fileUtils.removeUserDir(user);
   await dbManager.cleanDataBase();
 });
 
