@@ -17,6 +17,10 @@ import {
 } from '../utils/AESUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 import { noNulls } from './../utils/ObjectUtils';
+import {
+  createObjectRecipientIdByDevices,
+  filterRecipientsByBlacklisted
+} from './../utils/EncryptionUtils';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -167,16 +171,7 @@ const encryptPostEmail = async ({
       ? false
       : true;
   const sessions = await getSessionRecordByRecipientIds(recipientIds);
-  let knownAddresses = sessions.reduce((result, item) => {
-    if (!item.recipientId) {
-      return result;
-    }
-    return {
-      ...result,
-      [item.recipientId]: item.deviceIds.split(',').map(Number)
-    };
-  }, {});
-
+  let knownAddresses = createObjectRecipientIdByDevices(sessions);
   const {
     keyBundles,
     blacklistedKnownDevices
@@ -184,41 +179,16 @@ const encryptPostEmail = async ({
   if (keyBundles.includes(null)) {
     throw new CustomError(errors.server.UNAUTHORIZED);
   }
-
-  const blacklistedKnownDevicesObject = {};
   if (blacklistedKnownDevices.length) {
-    for (const blacklistedKnownDevice of blacklistedKnownDevices) {
-      const blacklistedRecipient = blacklistedKnownDevice.name;
-      const blacklistedDevicesOfRecipient = blacklistedKnownDevice.devices;
-      blacklistedKnownDevicesObject[
-        blacklistedRecipient
-      ] = blacklistedDevicesOfRecipient;
-
-      for (const blacklistedDevice of blacklistedDevicesOfRecipient) {
-        const sessionIdentifier = `${blacklistedRecipient}.${blacklistedDevice}`;
-        await store.removeSession(sessionIdentifier);
-      }
-    }
-
-    knownAddresses = Object.keys(knownAddresses).reduce(
-      (result, knownAddressRecipientId) => {
-        const filteredKnownAddressDevicesIds = knownAddresses[
-          knownAddressRecipientId
-        ].filter(
-          deviceId =>
-            !blacklistedKnownDevicesObject[knownAddressRecipientId].includes(
-              deviceId
-            )
-        );
-        if (!filteredKnownAddressDevicesIds.length) {
-          return result;
-        }
-        return {
-          ...result,
-          [knownAddressRecipientId]: filteredKnownAddressDevicesIds
-        };
-      },
-      {}
+    const {
+      knownAddressesFiltered,
+      sessionIdentifiersToDelete
+    } = filterRecipientsByBlacklisted(blacklistedKnownDevices, knownAddresses);
+    knownAddresses = knownAddressesFiltered;
+    await Promise.all(
+      sessionIdentifiersToDelete.map(
+        async sessionIdentifier => await store.removeSession(sessionIdentifier)
+      )
     );
   }
 
