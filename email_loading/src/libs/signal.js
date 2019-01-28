@@ -173,7 +173,7 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
     }
   } else {
     if (currentAccount) {
-      await cleanDatabase();
+      await cleanDatabase(currentAccount.recipientId);
       await createTables();
     }
     try {
@@ -293,7 +293,7 @@ const createAccountToDB = async ({
     }
   } else {
     if (currentAccount) {
-      await cleanDatabase();
+      await cleanDatabase(currentAccount.recipientId);
       await createTables();
     }
     try {

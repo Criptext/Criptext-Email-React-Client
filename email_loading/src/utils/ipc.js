@@ -62,8 +62,8 @@ export const syncDeny = async randomId => {
 
 /* DataBase
 ----------------------------- */
-export const cleanDatabase = async () => {
-  return await callMain('db-clean-database');
+export const cleanDatabase = async username => {
+  return await callMain('db-clean-database', username);
 };
 
 export const createAccount = async params => {

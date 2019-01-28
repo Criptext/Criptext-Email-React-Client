@@ -29,6 +29,12 @@ ipc.answerRenderer(
   }
 );
 
+ipc.answerRenderer('db-clean-database', async username => {
+  const user = `${username || getUsername()}@${APP_DOMAIN}`;
+  await fileUtils.removeUserDir(user);
+  await dbManager.cleanDataBase();
+});
+
 ipc.answerRenderer('db-delete-emails-by-ids', async emailIds => {
   const emails = await dbManager.getEmailsByIds(emailIds);
   await Promise.all(
