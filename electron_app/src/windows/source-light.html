@@ -1,0 +1,34 @@
+<html>
+    <head>
+      <style>
+        html {
+          width: 100%;
+        }  
+        body {
+          width: 100%;
+          margin: 0px;
+          background-color: rgba(242, 242, 242, 1);
+        }
+        pre {
+          white-space: pre-wrap;
+          word-break: break-word;
+          word-wrap: break-word;
+          margin: 20px;
+          padding: 10px 20px;
+          background-color: white;
+        }
+      </style>
+    </head>
+    <body>
+      <pre id="content">
+      </pre>
+      <script>
+        // Html string to window for print command
+        const ipcRenderer = window.require("electron").ipcRenderer;
+        ipcRenderer.on("setContent", (ev, content, windowTitle) => {
+          document.getElementById("content").innerText = content;
+          document.title = windowTitle;
+        });
+      </script>
+    </body>
+</html>

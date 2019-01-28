@@ -1,6 +1,7 @@
 const fileUtils = require('./FileUtils');
 const dbManager = require('../DBManager');
 const myAccount = require('../Account');
+const mySetting = require('../Settings');
 const { APP_DOMAIN } = require('./const');
 const { dialog, BrowserWindow } = require('electron');
 const path = require('path');
@@ -49,7 +50,13 @@ const openWindowWithSource = (source, subject) => {
       workerWin = new BrowserWindow({ show: true });
     }
     workerWin.loadURL(
-      path.join('file://', __dirname, '..', 'windows', 'source.html')
+      path.join(
+        'file://',
+        __dirname,
+        '..',
+        'windows',
+        `source-${mySetting.theme}.html`
+      )
     );
     workerWin.webContents.closeDevTools();
     workerWin.webContents.once('dom-ready', () => {
