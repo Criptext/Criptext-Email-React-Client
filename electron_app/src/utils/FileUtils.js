@@ -142,6 +142,14 @@ const createIfNotExist = path => {
   });
 };
 
+const checkIfExists = path => {
+  try {
+    return fs.existsSync(path);
+  } catch (e) {
+    return false;
+  }
+};
+
 module.exports = {
   saveEmailBody,
   getEmailBody,
@@ -149,5 +157,6 @@ module.exports = {
   deleteEmailContent,
   removeUserDir,
   getUserEmailsPath,
-  createIfNotExist
+  createIfNotExist,
+  checkIfExists
 };
