@@ -283,7 +283,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         ? await formFilesFromData({
             files,
             date,
-            fileKeys: myFileKeys
+            fileKeys: myFileKeys,
+            emailContent: body
           })
         : null;
 

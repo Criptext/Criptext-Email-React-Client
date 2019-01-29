@@ -25,14 +25,16 @@ const getUserEmailsPath = async (node_env, user) => {
     }
     default: {
       const userDataPath = app.getPath('userData');
+      const myPath = path.join(userDataPath, 'userData');
       const innerPath = path
-        .join(userDataPath, `/${user}`)
+        .join(myPath, `/${user}`)
         .replace('/app.asar', '')
         .replace('/src', '');
       const myEmailsPath = path
         .join(innerPath, `/emails`)
         .replace('/app.asar', '')
         .replace('/src', '');
+      await createIfNotExist(myPath);
       await createIfNotExist(innerPath);
       await createIfNotExist(myEmailsPath);
       return;
@@ -132,14 +134,20 @@ const remove = path => {
 
 const createIfNotExist = path => {
   return new Promise((resolve, reject) => {
-    fs.exists(path, exists => {
-      if (exists) return resolve();
-      fs.mkdir(path, err => {
-        if (err) return reject(err);
-        resolve();
-      });
+    if (fs.existsSync(path)) return resolve();
+    fs.mkdir(path, err => {
+      if (err) return reject(err);
+      resolve();
     });
   });
+};
+
+const checkIfExists = path => {
+  try {
+    return fs.existsSync(path);
+  } catch (e) {
+    return false;
+  }
 };
 
 module.exports = {
@@ -147,5 +155,8 @@ module.exports = {
   getEmailBody,
   getEmailHeaders,
   deleteEmailContent,
-  removeUserDir
+  removeUserDir,
+  getUserEmailsPath,
+  createIfNotExist,
+  checkIfExists
 };

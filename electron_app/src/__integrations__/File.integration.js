@@ -38,7 +38,8 @@ describe('Store data file to File Table:', () => {
       emailId: 1,
       mimeType: 'image/png',
       key: 'fileKeyA',
-      iv: 'fileIvA'
+      iv: 'fileIvA',
+      cid: 'cidA'
     });
     const tokens = ['token2'];
     const files = await DBManager.getFilesByTokens(tokens);

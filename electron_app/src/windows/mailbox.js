@@ -68,21 +68,6 @@ const create = () => {
 
   mailboxWindow.webContents.on('new-window', openLinkInDefaultBrowser);
   mailboxWindow.webContents.on('will-navigate', openLinkInDefaultBrowser);
-
-  mailboxWindow.webContents.session.on('will-download', (ev, item) => {
-    const downloadsPath = app.getPath('downloads');
-    const filename = item.getFilename();
-    const filePath = path.join(downloadsPath, filename);
-    item.setSavePath(filePath);
-    item.once('done', (e, state) => {
-      if (state === 'completed') {
-        shell.showItemInFolder(filePath);
-        mailboxWindow.send('display-message-success-download');
-      } else {
-        mailboxWindow.send('display-message-error-download');
-      }
-    });
-  });
   mailboxWindow.webContents.once('did-frame-finish-load', () => {
     const isStore =
       globalManager.isWindowsStore.get() || globalManager.isMAS.get();

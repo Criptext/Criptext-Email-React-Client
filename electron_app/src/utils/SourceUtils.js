@@ -55,7 +55,7 @@ const openWindowWithSource = (source, subject) => {
         __dirname,
         '..',
         'windows',
-        `source-${mySetting.theme}.html`
+        `source-${mySetting.theme || 'light'}.html`
       )
     );
     workerWin.webContents.closeDevTools();

@@ -3,6 +3,7 @@
 exports[`Store data file to File Table: should insert file to database 1`] = `
 Array [
   Object {
+    "cid": "cidA",
     "date": "2018-06-14T23:45:57.466Z",
     "emailId": "1",
     "ephemeral": 0,

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { saveBlobAsFile } from './../utils/FileUtils';
 import {
   setCancelDownloadHandler,
   setFileProgressHandler,
@@ -10,6 +9,7 @@ import {
   setCryptoInterfaces
 } from './../utils/FileManager';
 import File, { FileStatus } from './File';
+import { downloadFileInFileSystem } from '../utils/ipc';
 
 class FileWrapper extends Component {
   constructor(props) {
@@ -78,9 +78,12 @@ class FileWrapper extends Component {
           displayProgressBar: false,
           status: FileStatus.DOWNLOADED
         },
-        () => {
-          const { name, mimeType } = this.props.file;
-          saveBlobAsFile(url, mimeType, name);
+        async () => {
+          await downloadFileInFileSystem({
+            url,
+            filename: this.props.file.name,
+            downloadType: 'attachment'
+          });
         }
       );
     }
