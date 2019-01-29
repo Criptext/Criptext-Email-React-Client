@@ -25,17 +25,19 @@ const getUserEmailsPath = async (node_env, user) => {
     }
     default: {
       const userDataPath = app.getPath('userData');
+      const myPath = path.join(userDataPath, 'userData');
       const innerPath = path
-        .join(userDataPath, `/${user}`)
+        .join(myPath, `/${user}`)
         .replace('/app.asar', '')
         .replace('/src', '');
       const myEmailsPath = path
         .join(innerPath, `/emails`)
         .replace('/app.asar', '')
         .replace('/src', '');
+      await createIfNotExist(myPath);
       await createIfNotExist(innerPath);
       await createIfNotExist(myEmailsPath);
-      return myEmailsPath;
+      return;
     }
   }
 };
