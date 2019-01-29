@@ -54,7 +54,7 @@ ipc.answerRenderer('open-email-source', async metadataKey => {
 });
 
 ipc.answerRenderer(
-  'download-file',
+  'fs-download-file',
   async ({ url, filename, downloadType, metadataKey }) => {
     const openFolderWhenDone = downloadType !== 'inline';
     const shouldShowMessage = openFolderWhenDone;

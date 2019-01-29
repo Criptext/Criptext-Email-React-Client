@@ -90,7 +90,7 @@ export const downloadFileInFileSystem = async ({
   downloadType,
   metadataKey
 }) => {
-  return await callMain('download-file', {
+  return await callMain('fs-download-file', {
     url,
     filename,
     downloadType,
