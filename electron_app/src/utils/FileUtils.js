@@ -3,41 +3,35 @@ const path = require('path');
 const rimraf = require('rimraf');
 const { app } = require('electron');
 
-const getUserEmailsPath = async (node_env, user) => {
+const getUserEmailsPath = (node_env, user) => {
   switch (node_env) {
     case 'test': {
-      const path = `./src/__integrations__/${user}`;
-      await createIfNotExist(path);
-      return path;
+      const emailsPath = path.join(
+        './src',
+        '__integrations__',
+        `${user}`,
+        'userData'
+      );
+      createPathRecursive(emailsPath);
+      return emailsPath;
     }
     case 'development': {
-      const myPath = path.join(__dirname, `/../userData`).replace('/src', '');
-      const myInnerPath = path
-        .join(__dirname, `/../userData/${user}`)
+      const emailsPath = path
+        .join(__dirname, '/../userData', `${user}`, 'emails')
         .replace('/src', '');
-      const myEmailsPath = path
-        .join(__dirname, `/../userData/${user}/emails`)
-        .replace('/src', '');
-      await createIfNotExist(myPath);
-      await createIfNotExist(myInnerPath);
-      await createIfNotExist(myEmailsPath);
-      return myEmailsPath;
+      createPathRecursive(emailsPath);
+      return emailsPath;
     }
     default: {
       const userDataPath = app.getPath('userData');
-      const myPath = path.join(userDataPath, 'userData');
-      const innerPath = path
-        .join(myPath, `/${user}`)
-        .replace('/app.asar', '')
-        .replace('/src', '');
-      const myEmailsPath = path
-        .join(innerPath, `/emails`)
-        .replace('/app.asar', '')
-        .replace('/src', '');
-      await createIfNotExist(myPath);
-      await createIfNotExist(innerPath);
-      await createIfNotExist(myEmailsPath);
-      return;
+      const emailsPath = path.join(
+        userDataPath,
+        'userData',
+        `${user}`,
+        'emails'
+      );
+      createPathRecursive(emailsPath);
+      return emailsPath;
     }
   }
 };
@@ -148,6 +142,18 @@ const checkIfExists = path => {
   } catch (e) {
     return false;
   }
+};
+
+const createPathRecursive = fullpath => {
+  const sep = path.sep;
+  const initDir = path.isAbsolute(fullpath) ? sep : '';
+  fullpath.split(sep).reduce((parentDir, childDir) => {
+    const curDir = path.resolve(parentDir, childDir);
+    if (!fs.existsSync(curDir)) {
+      fs.mkdirSync(curDir);
+    }
+    return curDir;
+  }, initDir);
 };
 
 module.exports = {
