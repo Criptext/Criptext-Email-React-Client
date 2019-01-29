@@ -234,12 +234,12 @@ export const formEmailLabel = ({ emailId, labels }) => {
   });
 };
 
-export const formFilesFromData = ({ files, date, fileKeys }) => {
+export const formFilesFromData = ({ files, date, fileKeys, emailContent }) => {
   return files.map((file, index) => {
     const { token, name, read_only, size, status, mimeType, cid } = file;
     const key = fileKeys ? fileKeys[index].key : null;
     const iv = fileKeys ? fileKeys[index].iv : null;
-    return {
+    let fileData = {
       token,
       name,
       readOnly: read_only ? true : false,
@@ -248,9 +248,12 @@ export const formFilesFromData = ({ files, date, fileKeys }) => {
       date,
       mimeType,
       key,
-      iv,
-      cid
+      iv
     };
+    if (emailContent.includes(`cid:${cid}`)) {
+      fileData = { ...fileData, cid };
+    }
+    return fileData;
   });
 };
 
