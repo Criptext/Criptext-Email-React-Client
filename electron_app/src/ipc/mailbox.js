@@ -65,7 +65,6 @@ ipc.answerRenderer(
       });
       const filePath = path.join(directory, filename);
       if (checkIfExists(filePath)) {
-        console.log('Ya existe. No se descarga. ', filePath);
         return filePath;
       }
       const downloadedItem = await download(
@@ -79,7 +78,6 @@ ipc.answerRenderer(
       );
       return downloadedItem.getSavePath();
     } catch (e) {
-      console.log(e);
       if (shouldShowMessage)
         mailboxWindow.send('display-message-error-download');
     }

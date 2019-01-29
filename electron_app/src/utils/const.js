@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 const API_CLIENT_VERSION = '6.0.0';
-const LINK_DEVICES_FILE_VERSION = '2';
+const LINK_DEVICES_FILE_VERSION = '3';
 const PROD_SOCKET_URL = 'wss://socket.criptext.com:3002';
 const PROD_SERVER_URL = 'https://api.criptext.com';
 const PROD_DATA_TRANSFER_URL = 'https://transfer.criptext.com';

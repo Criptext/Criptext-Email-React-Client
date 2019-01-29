@@ -278,13 +278,17 @@ const exportFileTable = async db => {
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
       .then(rows =>
-        rows.map(row =>
-          Object.assign(row, {
+        rows.map(row => {
+          if (!row.cid) {
+            delete row.cid;
+          }
+
+          return Object.assign(row, {
             readOnly: !!row.readOnly,
             emailId: parseInt(row.emailId),
             date: parseDate(row.date)
-          })
-        )
+          });
+        })
       );
     fileRows = [...fileRows, ...result];
     if (result.length < SELECT_ALL_BATCH) {
