@@ -132,12 +132,10 @@ const remove = path => {
 
 const createIfNotExist = path => {
   return new Promise((resolve, reject) => {
-    fs.exists(path, exists => {
-      if (exists) return resolve();
-      fs.mkdir(path, err => {
-        if (err) return reject(err);
-        resolve();
-      });
+    if (fs.existsSync(path)) return resolve();
+    fs.mkdir(path, err => {
+      if (err) return reject(err);
+      resolve();
     });
   });
 };

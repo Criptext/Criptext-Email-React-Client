@@ -182,10 +182,10 @@ class EmailWrapper extends Component {
 
   handleDownloadInlineImages = () => {
     const inlineImages = this.state.inlineImages;
-    const { key, iv } = inlineImages[0];
-    setCryptoInterfaces(key, iv);
     setFileSuccessHandler(this.handleSuccessDownloadInlineImage);
     for (const inlineImg of inlineImages) {
+      const { key, iv } = inlineImg;
+      setCryptoInterfaces(key, iv);
       setDownloadHandler(inlineImg.token);
     }
   };

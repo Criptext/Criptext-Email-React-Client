@@ -239,7 +239,7 @@ export const formFilesFromData = ({ files, date, fileKeys, emailContent }) => {
     const { token, name, read_only, size, status, mimeType, cid } = file;
     const key = fileKeys ? fileKeys[index].key : null;
     const iv = fileKeys ? fileKeys[index].iv : null;
-    let fileData = {
+    return {
       token,
       name,
       readOnly: read_only ? true : false,
@@ -248,12 +248,9 @@ export const formFilesFromData = ({ files, date, fileKeys, emailContent }) => {
       date,
       mimeType,
       key,
-      iv
+      iv,
+      cid: emailContent.includes(`cid:${cid}`) ? cid : null
     };
-    if (emailContent.includes(`cid:${cid}`)) {
-      fileData = { ...fileData, cid };
-    }
-    return fileData;
   });
 };
 
