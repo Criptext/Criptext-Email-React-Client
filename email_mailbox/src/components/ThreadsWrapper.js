@@ -109,13 +109,17 @@ class ThreadsWrapper extends Component {
       const date = lastThread.get('maxDate');
       const threadIdRejected = lastThread.get('threadId');
       if (this.state.lastMinDate !== date) {
+        const unreadSwitchStatus = this.props.switchUnreadThreadsStatus;
+        const unreadParam =
+          unreadSwitchStatus === true ? unreadSwitchStatus : undefined;
         this.setState({ lastMinDate: date }, () => {
           this.props.onLoadThreads(
             this.props.mailboxSelected,
             false,
             this.props.searchParams,
             date,
-            threadIdRejected
+            threadIdRejected,
+            unreadParam
           );
         });
       }
@@ -123,7 +127,19 @@ class ThreadsWrapper extends Component {
   };
 
   handleChangeSwitch = ev => {
-    this.props.onUnreadToggle(ev.target.checked);
+    const { currentUnreadThreadsLength, mailboxSelected } = this.props;
+    const checked = ev.target.checked;
+    const mailbox = mailboxSelected;
+    const loadParams = {
+      clear: true,
+      unread: ev.target.checked === true ? ev.target.checked : undefined
+    };
+    this.props.onUnreadToggle(
+      checked,
+      currentUnreadThreadsLength,
+      mailbox,
+      loadParams
+    );
   };
 
   handlePopupConfirm = () => {
@@ -140,6 +156,7 @@ class ThreadsWrapper extends Component {
 }
 
 ThreadsWrapper.propTypes = {
+  currentUnreadThreadsLength: PropTypes.number,
   isUpdateAvailable: PropTypes.bool,
   mailboxSelected: PropTypes.string,
   onBackOption: PropTypes.func,
@@ -149,6 +166,7 @@ ThreadsWrapper.propTypes = {
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,
   searchParams: PropTypes.object,
+  switchUnreadThreadsStatus: PropTypes.bool,
   threadItemsChecked: PropTypes.object,
   threads: PropTypes.object
 };

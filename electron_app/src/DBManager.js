@@ -536,7 +536,8 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
     contactTypes = ['from'],
     contactFilter,
     rejectedLabelIds,
-    threadIdRejected
+    threadIdRejected,
+    unread
   } = params;
 
   let queryDb = baseThreadQuery({
@@ -559,6 +560,10 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
   }
   if (subject) {
     queryDb = queryDb.andWhere('subject', 'like', `%${subject}%`);
+  }
+
+  if (unread !== undefined) {
+    queryDb = queryDb.andWhere('unread', unread);
   }
 
   if (labelId && labelId !== -1) {
