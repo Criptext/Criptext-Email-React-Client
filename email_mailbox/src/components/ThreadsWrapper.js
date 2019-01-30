@@ -110,7 +110,7 @@ class ThreadsWrapper extends Component {
       const threadIdRejected = lastThread.get('threadId');
       if (this.state.lastMinDate !== date) {
         const unreadSwitchStatus = this.props.switchUnreadThreadsStatus;
-        const unreadParam =
+        const unread =
           unreadSwitchStatus === true ? unreadSwitchStatus : undefined;
         this.setState({ lastMinDate: date }, () => {
           this.props.onLoadThreads(
@@ -119,7 +119,7 @@ class ThreadsWrapper extends Component {
             this.props.searchParams,
             date,
             threadIdRejected,
-            unreadParam
+            unread
           );
         });
       }

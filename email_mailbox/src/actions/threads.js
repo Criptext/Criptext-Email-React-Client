@@ -213,11 +213,11 @@ export const filterThreadsOrLoadMoreByUnread = (
 ) => {
   return async dispatch => {
     const LIMIT_UNREAD_THREADS = 20;
-    const shoulLoadMoreThreads = checked
+    const shouldLoadMoreThreads = checked
       ? currentUnreadThreadsLength < LIMIT_UNREAD_THREADS
       : true;
     try {
-      if (shoulLoadMoreThreads) {
+      if (shouldLoadMoreThreads) {
         const threads = await getEmailsGroupByThreadByParams(loadParams);
         if (threads.length || !loadParams.date) {
           dispatch(addThreads(threads, loadParams.clear));
