@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   loadEvents,
   loadThreads,
-  filterThreadsByUnread,
+  filterThreadsOrLoadMoreByUnread,
   startLoadThread,
   removeThreads
 } from '../actions/index';
@@ -52,13 +52,21 @@ const mapStateToProps = (state, ownProps) => {
     isLoadingThreads,
     mailboxTitle,
     switchUnreadThreadsStatus,
-    threads: switchUnreadThreadsStatus ? unreadThreads : threads
+    threads: switchUnreadThreadsStatus ? unreadThreads : threads,
+    currentUnreadThreadsLength: unreadThreads.size
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoadThreads: (mailbox, clear, searchParams, date, threadIdRejected) => {
+    onLoadThreads: (
+      mailbox,
+      clear,
+      searchParams,
+      date,
+      threadIdRejected,
+      unread
+    ) => {
       dispatch(startLoadThread());
       const labelId = LabelType[mailbox].id;
       const contactTypes = defineContactType(
@@ -89,15 +97,36 @@ const mapDispatchToProps = dispatch => {
               date,
               contactTypes,
               rejectedLabelIds,
-              threadIdRejected
+              threadIdRejected,
+              unread
             };
       dispatch(loadThreads(params));
     },
     onLoadEvents: () => {
       dispatch(loadEvents());
     },
-    onUnreadToggle: enabled => {
-      dispatch(filterThreadsByUnread(enabled));
+    onUnreadToggle: (
+      checked,
+      currentUnreadThreadsLength,
+      mailbox,
+      loadParams
+    ) => {
+      const labelId = LabelType[mailbox].id;
+      const rejectedLabelIds = defineRejectedLabels(labelId);
+      const contactTypes = defineContactType(labelId, null, null);
+      const paramsToLoadMoreThreads = {
+        ...loadParams,
+        labelId,
+        rejectedLabelIds,
+        contactTypes
+      };
+      dispatch(
+        filterThreadsOrLoadMoreByUnread(
+          checked,
+          currentUnreadThreadsLength,
+          paramsToLoadMoreThreads
+        )
+      );
     },
     onEmptyTrash: async () => {
       const labelId = LabelType.trash.id;

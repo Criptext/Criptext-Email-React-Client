@@ -201,10 +201,35 @@ export const addMoveLabelIdThreads = ({
   };
 };
 
-export const filterThreadsByUnread = enabled => ({
+const filterThreadsByUnread = checked => ({
   type: Thread.UNREAD_FILTER,
-  enabled: enabled
+  enabled: checked
 });
+
+export const filterThreadsOrLoadMoreByUnread = (
+  checked,
+  currentUnreadThreadsLength,
+  loadParams
+) => {
+  return async dispatch => {
+    const LIMIT_UNREAD_THREADS = 20;
+    const shouldLoadMoreThreads = checked
+      ? currentUnreadThreadsLength < LIMIT_UNREAD_THREADS
+      : true;
+    try {
+      if (shouldLoadMoreThreads) {
+        const threads = await getEmailsGroupByThreadByParams(loadParams);
+        if (threads.length || !loadParams.date) {
+          dispatch(addThreads(threads, loadParams.clear));
+        }
+      }
+      dispatch(filterThreadsByUnread(checked));
+      dispatch(stopLoadThread());
+    } catch (e) {
+      sendFetchEmailsErrorMessage();
+    }
+  };
+};
 
 export const moveThreads = (threadIds, labelId) => ({
   type: Thread.MOVE_THREADS,
