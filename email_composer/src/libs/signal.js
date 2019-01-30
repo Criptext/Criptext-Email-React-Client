@@ -226,7 +226,7 @@ const encryptPostEmail = async ({
     ? await encryptExternalEmail({
         body,
         externalEmailPassword,
-        file: files
+        files
       })
     : { session: null, encryptedBody: null };
 
