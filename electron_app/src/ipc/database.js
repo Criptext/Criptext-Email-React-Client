@@ -145,6 +145,8 @@ ipc.answerRenderer('db-get-prekey-pair', params =>
   dbManager.getPreKeyPair(params)
 );
 
+ipc.answerRenderer('db-get-prekeys-ids', () => dbManager.getPreKeyRecordIds());
+
 ipc.answerRenderer('db-get-session-record', params =>
   dbManager.getSessionRecord(params)
 );

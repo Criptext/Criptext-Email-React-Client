@@ -999,6 +999,13 @@ const deletePreKeyPair = params => {
     .del();
 };
 
+const getPreKeyRecordIds = () => {
+  return db
+    .select('preKeyId')
+    .from(Table.PREKEYRECORD)
+    .then(preKeyIds => preKeyIds.map(obj => obj.preKeyId));
+};
+
 const getPreKeyPair = params => {
   return db
     .select('preKeyPrivKey', 'preKeyPubKey')
@@ -1178,6 +1185,7 @@ module.exports = {
   getLabelById,
   getLabelsByText,
   getPreKeyPair,
+  getPreKeyRecordIds,
   getSessionRecord,
   getSessionRecordByRecipientIds,
   getSettings,

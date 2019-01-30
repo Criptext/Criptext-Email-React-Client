@@ -233,6 +233,13 @@ const parseUserSettings = settings => {
   };
 };
 
+const insertPreKeys = async preKeys => {
+  const res = await client.insertPreKeys(preKeys);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, insertPreKeys, preKeys);
+};
+
 const linkAccept = async randomId => {
   const data = { randomId, version: LINK_DEVICES_FILE_VERSION };
   const res = await client.linkAccept(data);
@@ -451,6 +458,7 @@ module.exports = {
   getEvents,
   getKeyBundle,
   getUserSettings,
+  insertPreKeys,
   linkAccept,
   linkAuth,
   linkBegin,

@@ -112,6 +112,9 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.SEND_EMAIL_ERROR: {
       return handleSendEmailError(incomingEvent);
     }
+    case SocketCommand.LOW_PREKEYS_AVAILABLE: {
+      return handleLowPrekeysAvailable(incomingEvent);
+    }
     case SocketCommand.PEER_EMAIL_UNSEND: {
       return handlePeerEmailUnsend(incomingEvent);
     }
@@ -675,6 +678,11 @@ const handleNewAnnouncementEvent = async ({ rowid, params }) => {
 };
 
 const handleSendEmailError = ({ rowid }) => {
+  return rowid;
+};
+
+const handleLowPrekeysAvailable = async ({ rowid }) => {
+  await signal.generateAndInsertMorePreKeys();
   return rowid;
 };
 

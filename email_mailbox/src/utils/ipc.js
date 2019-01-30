@@ -128,6 +128,10 @@ export const getUserSettings = async () => {
   return await callMain('client-get-user-settings');
 };
 
+export const insertPreKeys = async preKeys => {
+  return await callMain('client-insert-prekeys', preKeys);
+};
+
 export const logout = async () => {
   return await callMain('client-logout');
 };
@@ -353,6 +357,10 @@ export const getPreKeyPair = async params => {
 
 export const getSessionRecord = async params => {
   return await callMain('db-get-session-record', params);
+};
+
+export const getSessionRecordIds = async () => {
+  return await callMain('db-get-prekeys-ids');
 };
 
 export const getSignedPreKey = async params => {
