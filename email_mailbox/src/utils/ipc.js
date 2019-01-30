@@ -77,11 +77,11 @@ export const sendOpenEmailSource = metadataKey => {
 /* File System
 ----------------------------- */
 export const saveEmailBody = async params => {
-  return await callMain('client-save-email-body', params);
+  return await callMain('fs-save-email-body', params);
 };
 
 export const deleteEmailContent = async params => {
-  return await callMain('client-delete-email-content', params);
+  return await callMain('fs-delete-email-content', params);
 };
 
 export const downloadFileInFileSystem = async ({
