@@ -117,14 +117,20 @@ export const getFileParamsToSend = files => {
       .filter(file => file.shouldDuplicate === true)
       .map(file => file.token);
     if (tokensToDuplicate.length === 0) {
-      const data = files.map(file => ({
-        token: file.token,
-        name: file.fileData.name,
-        size: file.fileData.size,
-        mimeType: file.fileData.type || defaultEmptyMimetypeValue,
-        key: file.key,
-        iv: file.iv
-      }));
+      const data = files.map(file => {
+        const fileParams = {
+          token: file.token,
+          name: file.fileData.name,
+          size: file.fileData.size,
+          mimeType: file.fileData.type || defaultEmptyMimetypeValue,
+          key: file.key,
+          iv: file.iv
+        };
+        if (file.fileData.cid) {
+          fileParams['cid'] = file.fileData.cid;
+        }
+        return fileParams;
+      });
       return resolve(data);
     } else if (tokensToDuplicate.length > 0) {
       fileManager.duplicateFiles(tokensToDuplicate, (err, res) => {
@@ -132,14 +138,20 @@ export const getFileParamsToSend = files => {
           return reject(undefined);
         }
         const { duplicates } = JSON.parse(res);
-        const data = files.map(file => ({
-          token: file.shouldDuplicate ? duplicates[file.token] : file.token,
-          name: file.fileData.name,
-          size: file.fileData.size,
-          mimeType: file.fileData.type || defaultEmptyMimetypeValue,
-          key: file.key,
-          iv: file.iv
-        }));
+        const data = files.map(file => {
+          const fileParams = {
+            token: file.shouldDuplicate ? duplicates[file.token] : file.token,
+            name: file.fileData.name,
+            size: file.fileData.size,
+            mimeType: file.fileData.type || defaultEmptyMimetypeValue,
+            key: file.key,
+            iv: file.iv
+          };
+          if (file.fileData.cid) {
+            fileParams['cid'] = file.fileData.cid;
+          }
+          return fileParams;
+        });
         return resolve(data);
       });
     }
