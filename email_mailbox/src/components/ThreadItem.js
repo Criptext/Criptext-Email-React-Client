@@ -4,7 +4,7 @@ import { EmailStatus, avatarBaseUrl } from './../utils/const';
 import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import { replaceMatches } from './../utils/ReactUtils';
 import { replaceAllOccurrences } from './../utils/StringUtils';
-import AvatarImage from './AvatarImage'
+import AvatarImage from './AvatarImage';
 import string from '../lang';
 import './threaditem.scss';
 
@@ -87,7 +87,7 @@ class ThreadItem extends Component {
         />
       );
     }
-    let avatarUrl = `${avatarBaseUrl}${this.props.firstRecipientEmail}`
+    const avatarUrl = `${avatarBaseUrl}${this.props.firstRecipientEmail}`;
     return (
       <div style={{ background: this.props.color }} className="thread-letters">
         <AvatarImage
@@ -273,6 +273,7 @@ HoverMenuItem.propTypes = {
 ThreadItem.propTypes = {
   color: PropTypes.string,
   checked: PropTypes.bool,
+  firstRecipientEmail: PropTypes.string,
   hovering: PropTypes.bool,
   isDraft: PropTypes.bool,
   isHiddenCheckBox: PropTypes.bool,

@@ -49,7 +49,7 @@ import {
   setReadReceiptsStatus,
   getReadReceiptsStatus
 } from '../utils/storage';
-import { avatarBaseUrl } from '../utils/const'
+import { avatarBaseUrl } from '../utils/const';
 import { emailRegex } from '../utils/RegexUtils';
 import string from './../lang';
 
@@ -1088,38 +1088,47 @@ class SettingGeneralWrapper extends Component {
     const files = ev.dataTransfer ? ev.dataTransfer.files : ev.target.files;
     const file = files[0];
     if (!file) {
-      return
+      return;
     }
-    this.setState({
-      avatarParams: {
-        ...this.state.avatarParams,
-        isLoading: true
+    this.setState(
+      {
+        avatarParams: {
+          ...this.state.avatarParams,
+          isLoading: true
+        }
+      },
+      () => {
+        this.handleChangeAvatarRequest(file);
       }
-    }, () => {
-      this.handleChangeAvatarRequest(file)
-    })
-  }
+    );
+  };
 
   handleChangeAvatarRequest = async file => {
     const SUCCESS_STATUS = 200;
-    const status = await this.props.onUploadAvatar({path: file.path, contentLength: file.size, contentType: file.type})
+    const status = await this.props.onUploadAvatar({
+      path: file.path,
+      contentLength: file.size,
+      contentType: file.type
+    });
     if (status === SUCCESS_STATUS) {
       return this.setState({
         avatarParams: {
           showImage: true,
           isLoading: false,
-          avatarUrl: `${avatarBaseUrl}${myAccount.recipientId}?random=${new Date().getTime()}`
+          avatarUrl: `${avatarBaseUrl}${
+            myAccount.recipientId
+          }?random=${new Date().getTime()}`
         }
-      })
+      });
     }
     this.setState({
       avatarParams: {
         ...this.state.avatarParams,
         showImage: false,
-        isLoading: false,
+        isLoading: false
       }
-    })
-  }
+    });
+  };
 
   handleErrorAvatar = () => {
     this.setState({
@@ -1127,8 +1136,8 @@ class SettingGeneralWrapper extends Component {
         ...this.state.avatarParams,
         showImage: false
       }
-    })
-  }
+    });
+  };
 }
 
 SettingGeneralWrapper.propTypes = {
@@ -1138,6 +1147,7 @@ SettingGeneralWrapper.propTypes = {
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,
   onSetReadReceiptsTracking: PropTypes.func,
+  onUploadAvatar: PropTypes.func,
   onUpdateAccount: PropTypes.func,
   onUpdateContact: PropTypes.func,
   readReceiptsEnabled: PropTypes.bool,

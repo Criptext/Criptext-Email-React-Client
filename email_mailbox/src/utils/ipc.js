@@ -189,8 +189,8 @@ export const updateNameEvent = async params => {
 };
 
 export const uploadAvatar = async params => {
-  return await callMain('client-upload-avatar', params)
-}
+  return await callMain('client-upload-avatar', params);
+};
 
 /*  DataBase
 ----------------------------- */

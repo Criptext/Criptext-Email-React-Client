@@ -14,9 +14,8 @@ class ProfileShortCutWrapper extends Component {
   }
 
   render() {
-    console.log(avatarBaseUrl)
     const letters = getTwoCapitalLetters(myAccount.name);
-    const avatarUrl = `${avatarBaseUrl}${myAccount.recipientId}`
+    const avatarUrl = `${avatarBaseUrl}${myAccount.recipientId}`;
     return (
       <ProfileShortCut
         avatarUrl={avatarUrl}

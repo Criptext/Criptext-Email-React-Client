@@ -17,7 +17,6 @@ const socketClient = require('./socketClient');
 const packageInfo = require('./../package.json');
 const appVersion = packageInfo.version;
 const { getOsAndArch } = require('./utils/osUtils');
-const fs = require('fs');
 const { Readable } = require('stream');
 const sharp = require('sharp');
 let client = {};
@@ -443,17 +442,20 @@ const upgradeToRefreshToken = async () => {
 };
 
 const uploadAvatar = async params => {
-  const {data, info} = await sharp(params.path).resize(256, 256).jpeg().toBuffer({ resolveWithObject: true })
-  const readable = new Readable()
+  const { data, info } = await sharp(params.path)
+    .resize(256, 256)
+    .jpeg()
+    .toBuffer({ resolveWithObject: true });
+  const readable = new Readable();
   readable.push(data);
   readable.push(null);
   const clientParams = {
     contentType: 'image/jpeg',
     contentLength: info.size,
     readable: readable
-  }
-  return await client.uploadAvatar(clientParams)
-}
+  };
+  return await client.uploadAvatar(clientParams);
+};
 
 const unsendEmail = async params => {
   const res = await client.unsendEmail(params);

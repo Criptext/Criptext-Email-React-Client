@@ -8,10 +8,7 @@ const ProfilePreview = props => (
   <div className="profile-preview">
     <div className="profile-preview-content">
       <div className="icon">
-        <AvatarImage
-          letters={props.letters}
-          avatarUrl={props.avatarUrl}
-        />
+        <AvatarImage letters={props.letters} avatarUrl={props.avatarUrl} />
       </div>
       <div className="profile-preview-detail">
         <span className="name">{props.name}</span>

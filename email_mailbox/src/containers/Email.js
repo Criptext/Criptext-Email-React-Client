@@ -18,7 +18,13 @@ import {
   updateEmailLabels,
   removeEmails
 } from './../actions/index';
-import { EmailStatus, unsentText, composerEvents, appDomain, avatarBaseUrl } from '../utils/const';
+import {
+  EmailStatus,
+  unsentText,
+  composerEvents,
+  appDomain,
+  avatarBaseUrl
+} from '../utils/const';
 
 const defineFrom = (email, contacts) => {
   const emailFrom = parseContactRow(email.fromAddress || '');
@@ -43,7 +49,7 @@ const mapStateToProps = (state, ownProps) => {
       })
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
-  const recipient = senderEmail.replace(`@${appDomain}`, "")
+  const recipient = senderEmail.replace(`@${appDomain}`, '');
   const avatarUrl = `${avatarBaseUrl}${recipient}`;
   const date = email.date;
   const { files, inlineImages } = getFiles(

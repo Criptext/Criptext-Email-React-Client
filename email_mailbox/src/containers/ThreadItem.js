@@ -5,7 +5,7 @@ import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import { LabelType, myAccount, mySettings } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
 import { defineTimeByToday } from '../utils/TimeUtils';
-import { appDomain } from '../utils/const'
+import { appDomain } from '../utils/const';
 import {
   getTwoCapitalLetters,
   toLowerCaseWithoutSpaces
@@ -47,15 +47,21 @@ const defineSubject = (subject, emailSize) => {
   return `${text}${emailCounter}`;
 };
 
-const formatRecipientsForThreadItem = (recipients, currentUserName, contacts) => {
+const formatRecipientsForThreadItem = (
+  recipients,
+  currentUserName,
+  contacts
+) => {
   const shouldShowOnlyFirstName = recipients.length > 1;
   const myFormattedRecipient = string.mailbox.me;
   let listMyselftAtEnd = false;
   let firstRecipientEmail;
-  const formattedRecipients = recipients.reduce((formatted, recipient, index) => {
+  const formattedRecipients = recipients.reduce((formatted, recipient) => {
     const cleanRecipientName = parseContactRow(recipient);
-    const contactFound = contacts.find( contact => contact.get('email') === cleanRecipientName.email)
-    const contact = contactFound ? contactFound.toJS() : cleanRecipientName
+    const contactFound = contacts.find(
+      contact => contact.get('email') === cleanRecipientName.email
+    );
+    const contact = contactFound ? contactFound.toJS() : cleanRecipientName;
     const recipientName = contact.name || contact.email;
     if (recipientName === currentUserName) {
       listMyselftAtEnd = true;
@@ -74,7 +80,10 @@ const formatRecipientsForThreadItem = (recipients, currentUserName, contacts) =>
   if (!firstRecipientEmail) {
     firstRecipientEmail = myAccount.recipientId;
   }
-  return {firstRecipientEmail, formattedRecipients: formattedRecipients.join(', ')};
+  return {
+    firstRecipientEmail,
+    formattedRecipients: formattedRecipients.join(', ')
+  };
 };
 
 const getFirstRecipient = recipients => {
@@ -85,11 +94,10 @@ const getFirstRecipient = recipients => {
 const mapStateToProps = (state, ownProps) => {
   const contacts = state.get('contacts');
   const recipients = ownProps.thread.get('fromContactName').toArray();
-  const { firstRecipientEmail, formattedRecipients } = formatRecipientsForThreadItem(
-    recipients,
-    myAccount.name,
-    contacts
-  );
+  const {
+    firstRecipientEmail,
+    formattedRecipients
+  } = formatRecipientsForThreadItem(recipients, myAccount.name, contacts);
   const firstRecipient = getFirstRecipient(formattedRecipients);
   const letters = getTwoCapitalLetters(firstRecipient, 'D');
   const color = randomcolor({

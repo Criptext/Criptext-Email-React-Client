@@ -40,10 +40,7 @@ const Email = props => (
           style={{ background: props.email.color }}
           className="email-info-letter"
         >
-          <AvatarImage
-            avatarUrl={props.avatarUrl}
-            letters={props.letters}
-          />
+          <AvatarImage avatarUrl={props.avatarUrl} letters={props.letters} />
         </div>
         <div className="email-info-content">
           <div className="email-info-content-line">
@@ -275,6 +272,7 @@ renderMuteIcon.propTypes = {
 };
 
 Email.propTypes = {
+  avatarUrl: PropTypes.string,
   dismissPopup: PropTypes.func,
   displayEmail: PropTypes.bool,
   email: PropTypes.object,
@@ -285,6 +283,7 @@ Email.propTypes = {
   hideView: PropTypes.bool,
   isDraft: PropTypes.bool,
   isUnsend: PropTypes.bool,
+  letters: PropTypes.string,
   onForward: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyLast: PropTypes.func,

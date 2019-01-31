@@ -481,9 +481,11 @@ export const loadThreads = params => {
       }
       const threads = await getEmailsGroupByThreadByParams(params);
       const contactIds = threads.reduce((previousValue, thread) => {
-        return previousValue.concat(thread.recipientContactIds.split(",").map(Number))
-      }, [])
-      const uniqueContactsIds = Array.from(new Set(contactIds))
+        return previousValue.concat(
+          thread.recipientContactIds.split(',').map(Number)
+        );
+      }, []);
+      const uniqueContactsIds = Array.from(new Set(contactIds));
       const response = await getContactByIds(uniqueContactsIds);
       if (response.length) {
         const contacts = response.reduce(
@@ -493,7 +495,7 @@ export const loadThreads = params => {
           }),
           {}
         );
-        dispatch(addContacts(contacts))
+        dispatch(addContacts(contacts));
       }
       if (threads.length || !params.date) {
         dispatch(addThreads(threads, params.clear));

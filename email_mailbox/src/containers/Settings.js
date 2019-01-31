@@ -165,8 +165,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(updateLabel(params));
     },
     onUploadAvatar: async params => {
-      const { status } = await uploadAvatar(params)
-      return status
+      const { status } = await uploadAvatar(params);
+      return status;
     },
     onResetPassword: async () => {
       const { recipientId } = myAccount;

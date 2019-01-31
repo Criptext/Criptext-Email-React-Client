@@ -21,20 +21,27 @@ const ProfileBlock = props => (
   </div>
 );
 
-const renderBlockEmail = (props) => (
+const renderBlockEmail = props => (
   <div className="section-block-content-item">
     <div className="general-letters">
-      {props.showAvatar
-        ? <img src={props.avatarUrl} onError={props.onErrorAvatar} />
-        : <span>{getTwoCapitalLetters(myAccount.name)}</span>
-      }
+      {props.showAvatar ? (
+        <img
+          src={props.avatarUrl}
+          onError={props.onErrorAvatar}
+          alt="user avatar"
+        />
+      ) : (
+        <span>{getTwoCapitalLetters(myAccount.name)}</span>
+      )}
       <div className="general-avatar-edit">
         <span>edit</span>
       </div>
-      <input type="file" accept="image/*" onChange={props.onChangeAvatar}/>
-      {props.avatarIsLoading && (<div className="general-avatar-loading-overlay">
-        <Loading />
-      </div>)}
+      <input type="file" accept="image/*" onChange={props.onChangeAvatar} />
+      {props.avatarIsLoading && (
+        <div className="general-avatar-loading-overlay">
+          <Loading />
+        </div>
+      )}
     </div>
     <label>{`${myAccount.recipientId}@${appDomain}`}</label>
   </div>
@@ -137,6 +144,14 @@ const Loading = () => (
     <div />
   </div>
 );
+
+renderBlockEmail.propTypes = {
+  avatarIsLoading: PropTypes.bool,
+  avatarUrl: PropTypes.string,
+  onChangeAvatar: PropTypes.func,
+  onErrorAvatar: PropTypes.func,
+  showAvatar: PropTypes.bool
+};
 
 renderBlockName.propTypes = {
   mode: PropTypes.string,

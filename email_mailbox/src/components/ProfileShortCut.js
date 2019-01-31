@@ -18,10 +18,7 @@ const ProfileShortCut = props => (
       className="header-profile"
       onClick={() => props.onToggleMenuProfilePreview()}
     >
-      <AvatarImage
-        avatarUrl={props.avatarUrl}
-        letters={props.letters}
-      />
+      <AvatarImage avatarUrl={props.avatarUrl} letters={props.letters} />
     </span>
     <MenuProfilePreview
       avatarUrl={props.avatarUrl}
@@ -38,6 +35,7 @@ const ProfileShortCut = props => (
 );
 
 ProfileShortCut.propTypes = {
+  avatarUrl: PropTypes.string,
   emailAddress: PropTypes.string,
   letters: PropTypes.string,
   name: PropTypes.string,

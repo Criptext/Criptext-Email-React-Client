@@ -19,7 +19,7 @@ const Suggestion = (suggestion, { query }) => {
   const parts = name
     ? getMatchesOnNameAndEmail(name, email, query)
     : getMatchesOnEmail(email, query);
-  const avatarUrl = `${avatarBaseUrl}${email.replace(`@${appDomain}`, '')}`
+  const avatarUrl = `${avatarBaseUrl}${email.replace(`@${appDomain}`, '')}`;
 
   return (
     <div className="recipient-suggestion">
@@ -56,10 +56,7 @@ const getMatchesOnEmail = (email, query) => {
 
 const renderCapitalLetters = (color, letters, avatarUrl) => (
   <div style={{ background: color }} className="recipient-icon">
-    <AvatarImage
-      letters={letters}
-      avatarUrl={avatarUrl}
-    />
+    <AvatarImage letters={letters} avatarUrl={avatarUrl} />
   </div>
 );
 

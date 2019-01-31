@@ -7,7 +7,7 @@ export const appDomain =
 export const avatarBaseUrl =
   process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_AVATAR_URL
-    : `https://api.criptext.com/user/avatar/`
+    : `https://api.criptext.com/user/avatar/`;
 
 export const composerEvents = {
   EDIT_DRAFT: 'edit-draft',
