@@ -8,6 +8,7 @@ const threads = (state = List([]), action) => {
       const threads = action.threads.map(thread => {
         const subject = StringUtils.removeActionsFromSubject(thread.subject);
         const fromContactName = thread.fromContactName || '';
+        const fromContactEmail = thread.fromContactEmail || '';
         return Map(thread).merge({
           labels: Set(
             thread.labels ? thread.labels.split(',').map(Number) : []
@@ -24,7 +25,7 @@ const threads = (state = List([]), action) => {
               ? thread.recipientContactIds.split(',').map(Number)
               : []
           ),
-          fromContactName: List(fromContactName.split(','))
+          fromContactName: List(fromContactName.split(',')),
         });
       });
       if (action.clear) {

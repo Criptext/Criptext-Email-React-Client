@@ -5,6 +5,7 @@ import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import { LabelType, myAccount, mySettings } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
 import { defineTimeByToday } from '../utils/TimeUtils';
+import { appDomain } from '../utils/const'
 import {
   getTwoCapitalLetters,
   toLowerCaseWithoutSpaces
@@ -46,13 +47,16 @@ const defineSubject = (subject, emailSize) => {
   return `${text}${emailCounter}`;
 };
 
-const formatRecipientsForThreadItem = (recipients, currentUserName) => {
+const formatRecipientsForThreadItem = (recipients, currentUserName, contacts) => {
   const shouldShowOnlyFirstName = recipients.length > 1;
   const myFormattedRecipient = string.mailbox.me;
   let listMyselftAtEnd = false;
-  const formattedRecipients = recipients.reduce((formatted, recipient) => {
+  let firstRecipientEmail;
+  const formattedRecipients = recipients.reduce((formatted, recipient, index) => {
     const cleanRecipientName = parseContactRow(recipient);
-    const recipientName = cleanRecipientName.name || cleanRecipientName.email;
+    const contactFound = contacts.find( contact => contact.get('email') === cleanRecipientName.email)
+    const contact = contactFound ? contactFound.toJS() : cleanRecipientName
+    const recipientName = contact.name || contact.email;
     if (recipientName === currentUserName) {
       listMyselftAtEnd = true;
     } else {
@@ -60,11 +64,17 @@ const formatRecipientsForThreadItem = (recipients, currentUserName) => {
         ? recipientName.replace(/[<>]/g, '').split(' ')[0]
         : recipientName;
       formatted.push(recipientFirstName);
+      if (!firstRecipientEmail) {
+        firstRecipientEmail = contact.email.replace(`@${appDomain}`, '');
+      }
     }
     return formatted;
   }, []);
   if (listMyselftAtEnd) formattedRecipients.push(myFormattedRecipient);
-  return formattedRecipients.join(', ');
+  if (!firstRecipientEmail) {
+    firstRecipientEmail = myAccount.recipientId;
+  }
+  return {firstRecipientEmail, formattedRecipients: formattedRecipients.join(', ')};
 };
 
 const getFirstRecipient = recipients => {
@@ -73,10 +83,12 @@ const getFirstRecipient = recipients => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const contacts = state.get('contacts');
   const recipients = ownProps.thread.get('fromContactName').toArray();
-  const formattedRecipients = formatRecipientsForThreadItem(
+  const { firstRecipientEmail, formattedRecipients } = formatRecipientsForThreadItem(
     recipients,
-    myAccount.name
+    myAccount.name,
+    contacts
   );
   const firstRecipient = getFirstRecipient(formattedRecipients);
   const letters = getTwoCapitalLetters(firstRecipient, 'D');
@@ -101,6 +113,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     thread: thread.toJS(),
     color,
+    firstRecipientEmail,
     multiselect: state.get('activities').get('multiselect'),
     isStarred: thread.get('allLabels').contains(LabelType.starred.id),
     isDraft: thread.get('allLabels').contains(LabelType.draft.id),

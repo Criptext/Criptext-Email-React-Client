@@ -2,7 +2,9 @@ import React from 'react';
 import randomcolor from 'randomcolor';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
+import AvatarImage from './AvatarImage';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
+import { appDomain, avatarBaseUrl } from '../utils/const';
 import { mySettings } from '../utils/electronInterface';
 import './suggestion.scss';
 
@@ -17,10 +19,11 @@ const Suggestion = (suggestion, { query }) => {
   const parts = name
     ? getMatchesOnNameAndEmail(name, email, query)
     : getMatchesOnEmail(email, query);
+  const avatarUrl = `${avatarBaseUrl}${email.replace(`@${appDomain}`, '')}`
 
   return (
     <div className="recipient-suggestion">
-      {renderCapitalLetters(color, letters)}
+      {renderCapitalLetters(color, letters, avatarUrl)}
       {renderHighlightedText(parts, name)}
       {name ? renderHighlightedRightEmail(parts.email) : null}
     </div>
@@ -51,9 +54,12 @@ const getMatchesOnEmail = (email, query) => {
   };
 };
 
-const renderCapitalLetters = (color, letters) => (
+const renderCapitalLetters = (color, letters, avatarUrl) => (
   <div style={{ background: color }} className="recipient-icon">
-    <span className="recipient-icon-letters">{letters}</span>
+    <AvatarImage
+      letters={letters}
+      avatarUrl={avatarUrl}
+    />
   </div>
 );
 

@@ -49,6 +49,7 @@ import {
   setReadReceiptsStatus,
   getReadReceiptsStatus
 } from '../utils/storage';
+import { avatarBaseUrl } from '../utils/const'
 import { emailRegex } from '../utils/RegexUtils';
 import string from './../lang';
 
@@ -100,6 +101,11 @@ class SettingGeneralWrapper extends Component {
       twoFactorParams: {
         twoFactorEnabled: props.twoFactorAuth,
         isLoading: true
+      },
+      avatarParams: {
+        avatarUrl: `${avatarBaseUrl}${myAccount.recipientId}`,
+        showImage: true,
+        isLoading: false
       },
       changePasswordPopupParams: {
         isDisabledSubmitButton: true,
@@ -178,6 +184,11 @@ class SettingGeneralWrapper extends Component {
     return (
       <SettingGeneral
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
+        avatarIsLoading={this.state.avatarParams.isLoading}
+        showAvatar={this.state.avatarParams.showImage}
+        avatarUrl={this.state.avatarParams.avatarUrl}
+        onChangeAvatar={this.handleChangeAvatar}
+        onErrorAvatar={this.handleErrorAvatar}
         name={this.state.nameParams.name}
         setReplyToInput={this.state.setReplyToPopupParams.replyToInput}
         onChangeInputValueOnSetReplyTo={
@@ -1072,6 +1083,52 @@ class SettingGeneralWrapper extends Component {
       });
     });
   };
+
+  handleChangeAvatar = ev => {
+    const files = ev.dataTransfer ? ev.dataTransfer.files : ev.target.files;
+    const file = files[0];
+    if (!file) {
+      return
+    }
+    this.setState({
+      avatarParams: {
+        ...this.state.avatarParams,
+        isLoading: true
+      }
+    }, () => {
+      this.handleChangeAvatarRequest(file)
+    })
+  }
+
+  handleChangeAvatarRequest = async file => {
+    const SUCCESS_STATUS = 200;
+    const status = await this.props.onUploadAvatar({path: file.path, contentLength: file.size, contentType: file.type})
+    if (status === SUCCESS_STATUS) {
+      return this.setState({
+        avatarParams: {
+          showImage: true,
+          isLoading: false,
+          avatarUrl: `${avatarBaseUrl}${myAccount.recipientId}?random=${new Date().getTime()}`
+        }
+      })
+    }
+    this.setState({
+      avatarParams: {
+        ...this.state.avatarParams,
+        showImage: false,
+        isLoading: false,
+      }
+    })
+  }
+
+  handleErrorAvatar = () => {
+    this.setState({
+      avatarParams: {
+        ...this.state.avatarParams,
+        showImage: false
+      }
+    })
+  }
 }
 
 SettingGeneralWrapper.propTypes = {

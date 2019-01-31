@@ -188,6 +188,10 @@ export const updateNameEvent = async params => {
   return await callMain('client-update-name-event', params);
 };
 
+export const uploadAvatar = async params => {
+  return await callMain('client-upload-avatar', params)
+}
+
 /*  DataBase
 ----------------------------- */
 export const cleanDatabase = async () => {

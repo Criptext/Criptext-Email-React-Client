@@ -81,19 +81,70 @@
         align-items: center;
 
         .general-letters{
+          position: relative;
           align-items: center;
           background-color: rgba(74, 108, 98, 0.96);
           border-radius: 50%;
           display: flex;
           margin-right: 10px;
-          height: 38px;
-          width: 38px;
+          overflow: hidden;
+          height: 56px;
+          width: 56px;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
         
+          .loading-ring {
+            top: 13px;
+            left: -13px;
+          }
+
           span{
             color: white;
             font-size: 15px;
             font-weight: 300;
             margin: 0 auto;
+          }
+
+          .general-avatar-loading-overlay {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.60);
+          }
+
+          .general-avatar-edit {
+            height: 100%;
+            width: 100%;
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            position: absolute;
+            background: rgba(0,0,0,0.4);
+            cursor: pointer;
+
+            span {
+              font-size: 11px;
+              background-color: black;
+              padding: 1px 50% 3px 50%;
+            }
+          }
+
+          input {
+            opacity: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            cursor: pointer;
+          }
+
+          &:hover > .general-avatar-edit {
+            display: flex;
           }
         }
       

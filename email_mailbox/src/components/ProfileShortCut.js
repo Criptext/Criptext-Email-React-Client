@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ProfilePreview from './ProfilePreview';
+import AvatarImage from './AvatarImage';
 import MenuHOC, { MenuType } from './MenuHOC';
 import './profileshortcut.scss';
 
@@ -17,9 +18,13 @@ const ProfileShortCut = props => (
       className="header-profile"
       onClick={() => props.onToggleMenuProfilePreview()}
     >
-      {props.letters}
+      <AvatarImage
+        avatarUrl={props.avatarUrl}
+        letters={props.letters}
+      />
     </span>
     <MenuProfilePreview
+      avatarUrl={props.avatarUrl}
       emailAddress={props.emailAddress}
       letters={props.letters}
       name={props.name}

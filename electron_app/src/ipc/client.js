@@ -127,6 +127,8 @@ ipc.answerRenderer('client-sync-deny', randomId =>
 
 ipc.answerRenderer('client-sync-status', () => clientManager.syncStatus());
 
+ipc.answerRenderer('client-upload-avatar', clientManager.uploadAvatar);
+
 ipc.answerRenderer('client-unlock-device', params =>
   clientManager.unlockDevice(params)
 );

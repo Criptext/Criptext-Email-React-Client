@@ -18,7 +18,7 @@ import {
   updateEmailLabels,
   removeEmails
 } from './../actions/index';
-import { EmailStatus, unsentText, composerEvents } from '../utils/const';
+import { EmailStatus, unsentText, composerEvents, appDomain, avatarBaseUrl } from '../utils/const';
 
 const defineFrom = (email, contacts) => {
   const emailFrom = parseContactRow(email.fromAddress || '');
@@ -43,6 +43,8 @@ const mapStateToProps = (state, ownProps) => {
       })
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
+  const recipient = senderEmail.replace(`@${appDomain}`, "")
+  const avatarUrl = `${avatarBaseUrl}${recipient}`;
   const date = email.date;
   const { files, inlineImages } = getFiles(
     state.get('files'),
@@ -78,6 +80,7 @@ const mapStateToProps = (state, ownProps) => {
       ? false
       : true;
   return {
+    avatarUrl,
     email: myEmail,
     files,
     isSpam,
@@ -85,7 +88,8 @@ const mapStateToProps = (state, ownProps) => {
     isDraft,
     isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
     isUnsend,
-    inlineImages
+    inlineImages,
+    letters
   };
 };
 

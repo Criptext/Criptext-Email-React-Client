@@ -19,6 +19,7 @@ import {
   updateAccount,
   updateContactByEmail,
   updateNameEvent,
+  uploadAvatar,
   setReadTracking
 } from './../utils/ipc';
 import { appDomain, composerEvents } from '../utils/const';
@@ -162,6 +163,10 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateLabel: params => {
       dispatch(updateLabel(params));
+    },
+    onUploadAvatar: async params => {
+      const { status } = await uploadAvatar(params)
+      return status
     },
     onResetPassword: async () => {
       const { recipientId } = myAccount;
