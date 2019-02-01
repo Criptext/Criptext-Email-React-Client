@@ -23,7 +23,9 @@ const mapStateToProps = state => {
   const suggestions = state.get('suggestions');
   const allLabels = defineLabels(state.get('labels'));
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
-  const avatarUrl = `${avatarBaseUrl}${myAccount.recipientId}?date=${avatarTimestamp}`;
+  const avatarUrl = `${avatarBaseUrl}${
+    myAccount.recipientId
+  }?date=${avatarTimestamp}`;
   return {
     avatarUrl,
     allLabels,

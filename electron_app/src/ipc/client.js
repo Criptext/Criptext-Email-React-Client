@@ -127,8 +127,6 @@ ipc.answerRenderer('client-sync-deny', randomId =>
 
 ipc.answerRenderer('client-sync-status', () => clientManager.syncStatus());
 
-ipc.answerRenderer('client-upload-avatar', clientManager.uploadAvatar);
-
 ipc.answerRenderer('client-unlock-device', params =>
   clientManager.unlockDevice(params)
 );
@@ -140,3 +138,5 @@ ipc.answerRenderer('client-unsend-email', metadataKey =>
 ipc.answerRenderer('client-update-name-event', params =>
   clientManager.updateName(params)
 );
+
+ipc.answerRenderer('client-upload-avatar', clientManager.uploadAvatar);

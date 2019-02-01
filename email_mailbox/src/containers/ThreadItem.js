@@ -92,7 +92,7 @@ const getFirstRecipient = recipients => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const avatarTimestamp = state.get('activities').get('avatarTimestamp')
+  const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const contacts = state.get('contacts');
   const recipients = ownProps.thread.get('fromContactName').toArray();
   const {

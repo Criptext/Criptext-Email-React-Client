@@ -21,7 +21,10 @@ const HeaderMain = props => (
       threads={props.threads}
       hints={props.hints}
     />
-    <ProfileShortCutWrapper avatarUrl={props.avatarUrl} onClickSettings={props.onClickSection} />
+    <ProfileShortCutWrapper
+      avatarUrl={props.avatarUrl}
+      onClickSettings={props.onClickSection}
+    />
   </div>
 );
 

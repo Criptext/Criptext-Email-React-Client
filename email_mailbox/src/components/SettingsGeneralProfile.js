@@ -8,7 +8,7 @@ import { EDITING_MODES } from './SettingGeneralWrapper';
 import { Editor } from 'react-draft-wysiwyg';
 import string from '../lang';
 
-const ProfileBlock = props => (
+const SettingsGeneralProfile = props => (
   <div id="settings-general-profile" className="section-block">
     <div className="section-block-title">
       <h1>{string.settings.profile}</h1>
@@ -168,4 +168,4 @@ renderBlockSignature.propTypes = {
   signature: PropTypes.string
 };
 
-export default ProfileBlock;
+export default SettingsGeneralProfile;

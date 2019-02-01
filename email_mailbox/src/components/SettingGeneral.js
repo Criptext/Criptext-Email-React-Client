@@ -21,7 +21,7 @@ import SettingsGeneralThemeWrapper from './SettingsGeneralThemeWrapper';
 import SettingsGeneralManualSync from './SettingsGeneralManualSync';
 import ManualSyncPopup from './ManualSyncPopup';
 import ManualSyncProcessPopup from './ManualSyncProcessPopup';
-import Profile from './SettingsGeneralProfile';
+import SettingsGeneralProfile from '../containers/SettingsGeneralProfile';
 
 import './settinggeneral.scss';
 import './signatureeditor.scss';
@@ -42,7 +42,7 @@ const TWO_FACTOR_DISABLED_TEXT = string.settings.off;
 
 const SettingGeneral = props => (
   <div id="setting-general">
-    <Profile {...props} />
+    <SettingsGeneralProfile {...props} />
     <SettingsGeneralManualSync
       onShowSettingsPopup={props.onShowSettingsPopup}
       devicesQuantity={props.devicesQuantity}

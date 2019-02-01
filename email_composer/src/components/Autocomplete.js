@@ -32,7 +32,7 @@ class Autocomplete extends Component {
       ) {
         this.autosuggest.input.focus();
       }
-    }, 500)    
+    }, 500);
   }
 }
 

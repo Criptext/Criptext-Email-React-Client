@@ -87,7 +87,7 @@ class ThreadItem extends Component {
         />
       );
     }
-    
+
     return (
       <div style={{ background: this.props.color }} className="thread-letters">
         <AvatarImage
@@ -271,6 +271,7 @@ HoverMenuItem.propTypes = {
 };
 
 ThreadItem.propTypes = {
+  avatarUrl: PropTypes.string,
   color: PropTypes.string,
   checked: PropTypes.bool,
   firstRecipientEmail: PropTypes.string,

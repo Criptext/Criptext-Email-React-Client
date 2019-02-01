@@ -53,7 +53,7 @@ const Control = props => (
 const onMouseDown = ev => {
   ev = ev || window.event;
   ev.preventDefault();
-}
+};
 
 const renderSendNormalButton = () => (
   <div>

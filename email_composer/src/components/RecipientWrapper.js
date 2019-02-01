@@ -39,7 +39,7 @@ class RecipientWrapper extends Component {
       />
     );
   }
-  
+
   handleCheckDisableSendButton = isValidEmailAddress => {
     if (!isValidEmailAddress) {
       this.props.disableSendButton();

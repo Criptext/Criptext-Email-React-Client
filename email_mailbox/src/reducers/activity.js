@@ -9,7 +9,7 @@ const initActivity = Map({
 const activity = (state = initActivity, action) => {
   switch (action.type) {
     case Activity.AVATAR_UPDATED_TIMESTAMP:
-      return state.set('avatarTimestamp', action.timestamp)
+      return state.set('avatarTimestamp', action.timestamp);
     case Thread.UNREAD_FILTER:
       return state.update(
         'isFilteredByUnreadThreads',
