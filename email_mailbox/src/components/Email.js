@@ -7,6 +7,7 @@ import DialogPopup from './DialogPopup';
 import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
 import ButtonUnsend from './ButtonUnsendWrapper';
+import AvatarImage from './AvatarImage';
 import { EmailStatus } from './../utils/const';
 import string from '../lang';
 import './email.scss';
@@ -39,7 +40,7 @@ const Email = props => (
           style={{ background: props.email.color }}
           className="email-info-letter"
         >
-          <span>{props.email.letters}</span>
+          <AvatarImage avatarUrl={props.avatarUrl} letters={props.letters} />
         </div>
         <div className="email-info-content">
           <div className="email-info-content-line">
@@ -271,6 +272,7 @@ renderMuteIcon.propTypes = {
 };
 
 Email.propTypes = {
+  avatarUrl: PropTypes.string,
   dismissPopup: PropTypes.func,
   displayEmail: PropTypes.bool,
   email: PropTypes.object,
@@ -281,6 +283,7 @@ Email.propTypes = {
   hideView: PropTypes.bool,
   isDraft: PropTypes.bool,
   isUnsend: PropTypes.bool,
+  letters: PropTypes.string,
   onForward: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyLast: PropTypes.func,

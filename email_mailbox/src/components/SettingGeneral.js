@@ -2,10 +2,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch } from 'react-switch-input';
-import { Editor } from 'react-draft-wysiwyg';
 import Countdown from 'react-countdown-now';
 import PopupHOC from './PopupHOC';
-import { EDITING_MODES, SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
+import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
 import SetReplyToEmailPopup from './SetReplyToEmailPopup';
@@ -13,9 +12,7 @@ import LogoutPopup from './LogoutPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
 import SettingsGeneralReplyTo from './SettingsGeneralReplyTo';
-import { myAccount } from './../utils/electronInterface';
-import { getTwoCapitalLetters } from './../utils/StringUtils';
-import { appDomain, usefulLinks } from '../utils/const';
+import { usefulLinks } from '../utils/const';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import string from './../lang';
 import SettingsGeneralDeleteAccount from './SettingsGeneralDeleteAccount';
@@ -24,6 +21,7 @@ import SettingsGeneralThemeWrapper from './SettingsGeneralThemeWrapper';
 import SettingsGeneralManualSync from './SettingsGeneralManualSync';
 import ManualSyncPopup from './ManualSyncPopup';
 import ManualSyncProcessPopup from './ManualSyncProcessPopup';
+import SettingsGeneralProfile from '../containers/SettingsGeneralProfile';
 
 import './settinggeneral.scss';
 import './signatureeditor.scss';
@@ -44,7 +42,7 @@ const TWO_FACTOR_DISABLED_TEXT = string.settings.off;
 
 const SettingGeneral = props => (
   <div id="setting-general">
-    <ProfileBlock {...props} />
+    <SettingsGeneralProfile {...props} />
     <SettingsGeneralManualSync
       onShowSettingsPopup={props.onShowSettingsPopup}
       devicesQuantity={props.devicesQuantity}
@@ -63,117 +61,6 @@ const SettingGeneral = props => (
       onShowSettingsPopup={props.onShowSettingsPopup}
     />
     <SettingsPopup {...props} />
-  </div>
-);
-
-const ProfileBlock = props => (
-  <div id="settings-general-profile" className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.profile}</h1>
-    </div>
-    <div className="section-block-content">
-      {renderBlockEmail()}
-      {renderBlockName(props)}
-      {renderBlockSignature(props)}
-    </div>
-  </div>
-);
-
-const renderBlockEmail = () => (
-  <div className="section-block-content-item">
-    <div className="general-letters">
-      <span>{getTwoCapitalLetters(myAccount.name)}</span>
-    </div>
-    <label>{`${myAccount.recipientId}@${appDomain}`}</label>
-  </div>
-);
-
-const renderBlockName = props => (
-  <div className="section-block-content-item" onBlur={props.onBlurInputName}>
-    <span className="section-block-content-item-title">
-      {string.settings.name}
-    </span>
-    {props.mode === EDITING_MODES.EDITING_NAME ? (
-      <div>
-        <input
-          className="input-a"
-          type="text"
-          placeholder="Enter new name"
-          value={props.name}
-          onChange={ev => props.onChangeInputName(ev)}
-          onKeyPress={e => props.onAddNameInputKeyPressed(e)}
-          autoFocus={true}
-        />
-        <button className="button-b" onClick={props.onBlurInputName}>
-          <span>Cancel</span>
-        </button>
-      </div>
-    ) : (
-      <div className="profile-name">
-        <span onDoubleClick={props.onClickEditName}>{myAccount.name}</span>
-        <i
-          className="icon-pencil"
-          title="Edit name"
-          onClick={props.onClickEditName}
-        />
-      </div>
-    )}
-  </div>
-);
-
-const renderBlockSignature = props => (
-  <div className="section-block-content-item">
-    <span className="section-block-content-item-title">
-      {string.settings.signature}
-    </span>
-    <div className="signature-switch">
-      <div className="settings-switch">
-        <Switch
-          theme="two"
-          name="setPasswordSwitch"
-          onChange={props.onChangeRadioButtonSignature}
-          checked={!!myAccount.signatureEnabled}
-        />
-      </div>
-      <div className="settings-switch-label">
-        <span>
-          {`${string.settings.signature} ${
-            myAccount.signatureEnabled
-              ? string.settings.enabled
-              : string.settings.disabled
-          }`}
-        </span>
-      </div>
-    </div>
-    <div
-      className={`signature-editor ${
-        !myAccount.signatureEnabled ? 'signature-editor-disabled' : ''
-      }`}
-    >
-      <Editor
-        toolbar={{
-          options: [
-            'inline',
-            'fontSize',
-            'fontFamily',
-            'colorPicker',
-            'link',
-            'emoji'
-          ],
-          inline: {
-            options: ['bold', 'italic', 'underline']
-          },
-          textAlign: { inDropdown: true },
-          link: {
-            inDropdown: false,
-            defaultTargetOption: '_blank'
-          },
-          history: { inDropdown: true }
-        }}
-        editorState={props.signature}
-        onEditorStateChange={ev => props.onChangeTextareaSignature(ev)}
-      />
-    </div>
   </div>
 );
 
@@ -564,21 +451,6 @@ const SettingsPopup = props => {
     default:
       return null;
   }
-};
-
-renderBlockName.propTypes = {
-  mode: PropTypes.string,
-  name: PropTypes.string,
-  onAddNameInputKeyPressed: PropTypes.func,
-  onBlurInputName: PropTypes.func,
-  onChangeInputName: PropTypes.func,
-  onClickEditName: PropTypes.func
-};
-
-renderBlockSignature.propTypes = {
-  onChangeRadioButtonSignature: PropTypes.func,
-  onChangeTextareaSignature: PropTypes.func,
-  signature: PropTypes.string
 };
 
 PasswordBlock.propTypes = {

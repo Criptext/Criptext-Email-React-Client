@@ -17,6 +17,7 @@ class ProfileShortCutWrapper extends Component {
     const letters = getTwoCapitalLetters(myAccount.name);
     return (
       <ProfileShortCut
+        avatarUrl={this.props.avatarUrl}
         letters={letters}
         name={myAccount.name}
         emailAddress={`${myAccount.recipientId}@${appDomain}`}
@@ -42,6 +43,7 @@ class ProfileShortCutWrapper extends Component {
 }
 
 ProfileShortCutWrapper.propTypes = {
+  avatarUrl: PropTypes.func,
   onClickSettings: PropTypes.func
 };
 

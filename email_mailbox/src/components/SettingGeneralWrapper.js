@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { myAccount, requiredMinLength } from './../utils/electronInterface';
+import { requiredMinLength } from './../utils/electronInterface';
 import {
   changePassword,
   changeRecoveryEmail,
@@ -16,11 +16,6 @@ import {
   sendRecoveryEmailLinkConfirmationErrorMessage
 } from './../utils/electronEventInterface';
 import SettingGeneral from './SettingGeneral';
-import { EditorState } from 'draft-js';
-import {
-  parseSignatureContentToHtml,
-  parseSignatureHtmlToEdit
-} from '../utils/EmailUtils';
 import {
   sendRemoveDeviceErrorMessage,
   sendChangePasswordErrorMessage,
@@ -31,7 +26,6 @@ import {
 } from '../utils/electronEventInterface';
 import {
   validateRecoveryEmail,
-  validateFullname,
   validatePassword,
   validateConfirmPassword
 } from '../validators/validators';
@@ -87,16 +81,8 @@ class SettingGeneralWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: EDITING_MODES.NONE,
       isHiddenSettingsPopup: true,
       settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
-      nameParams: {
-        name: myAccount.name
-      },
-      signatureParams: {
-        signature: EditorState.createEmpty(),
-        signatureEnabled: undefined
-      },
       twoFactorParams: {
         twoFactorEnabled: props.twoFactorAuth,
         isLoading: true
@@ -178,7 +164,6 @@ class SettingGeneralWrapper extends Component {
     return (
       <SettingGeneral
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
-        name={this.state.nameParams.name}
         setReplyToInput={this.state.setReplyToPopupParams.replyToInput}
         onChangeInputValueOnSetReplyTo={
           this.handleChangeInputValueOnSetReplyPopup
@@ -209,17 +194,11 @@ class SettingGeneralWrapper extends Component {
         isDisabledChangeRecoveryEmailSubmitButton={
           this.state.changeRecoveryEmailPopupParams.isDisabledSubmitButton
         }
-        mode={this.state.mode}
-        onAddNameInputKeyPressed={this.handleAddNameInputKeyPressed}
-        onBlurInputName={this.handleBlurInputName}
         onBlurInputRecoveryEmail={this.handleBlurInputRecoveryEmail}
-        onChangeInputName={this.handleChangeInputName}
         onChangeInputRecoveryEmail={this.handleChangeInputRecoveryEmail}
         onChangeInputValueChangePassword={
           this.handleChangeInputValueOnChangePasswordPopup
         }
-        onChangeRadioButtonSignature={this.handleChangeRadioButtonSignature}
-        onChangeTextareaSignature={this.handleChangeTextareaSignature}
         onClickCancelChangePassword={this.handleClickCancelChangePassword}
         onClickCancelChangeRecoveryEmail={
           this.handleClickCancelChangeRecoveryEmail
@@ -227,7 +206,6 @@ class SettingGeneralWrapper extends Component {
         onClickCancelLogout={this.handleClickCancelLogout}
         onClickChangePasswordButton={this.handleClickChangePasswordButton}
         onClickChangePasswordInputType={this.handleClickChangePasswordInputType}
-        onClickEditName={this.handleClickEditName}
         onClickChangeRecoveryEmail={this.handleClickChangeRecoveryEmail}
         onClickLogout={this.handleClickLogout}
         onConfirmChangePassword={this.handleConfirmChangePassword}
@@ -243,8 +221,6 @@ class SettingGeneralWrapper extends Component {
           this.handleResendConfirmationCountdownEnd
         }
         settingsPupopType={this.state.settingsPupopType}
-        signatureEnabled={this.state.signatureParams.signatureEnabled}
-        signature={this.state.signatureParams.signature}
         twoFactorEnabled={this.state.twoFactorParams.twoFactorEnabled}
         twoFactorLabelIsLoading={this.state.twoFactorParams.isLoading}
         onChangeSwitchTwoFactor={this.handleChangeSwitchTwoFactor}
@@ -268,14 +244,6 @@ class SettingGeneralWrapper extends Component {
         devicesQuantity={devicesQuantity}
       />
     );
-  }
-
-  componentWillMount() {
-    const signatureParams = {
-      signature: parseSignatureHtmlToEdit(myAccount.signature),
-      signatureEnabled: !!myAccount.signatureEnabled
-    };
-    this.setState({ signatureParams });
   }
 
   componentDidMount() {
@@ -384,17 +352,6 @@ class SettingGeneralWrapper extends Component {
     });
   }
 
-  handleBlurInputName = e => {
-    const currentTarget = e.currentTarget;
-    if (!currentTarget.contains(document.activeElement)) {
-      const nameParams = { name: myAccount.name };
-      this.setState({
-        mode: EDITING_MODES.NONE,
-        nameParams
-      });
-    }
-  };
-
   handleClickCancelChangePassword = () => {
     this.setState({
       isHiddenSettingsPopup: true,
@@ -484,10 +441,6 @@ class SettingGeneralWrapper extends Component {
     });
   };
 
-  handleClickEditName = () => {
-    this.setState({ mode: EDITING_MODES.EDITING_NAME });
-  };
-
   handleClickChangeRecoveryEmail = () => {
     this.setState({
       isHiddenSettingsPopup: false,
@@ -521,14 +474,6 @@ class SettingGeneralWrapper extends Component {
 
   handleResendConfirmationCountdownEnd = () => {
     storeResendConfirmationTimestamp(null);
-  };
-
-  handleChangeInputName = ev => {
-    this.setState({
-      nameParams: {
-        name: ev.target.value
-      }
-    });
   };
 
   handleChangeInputValueOnChangePasswordPopup = ev => {
@@ -732,20 +677,6 @@ class SettingGeneralWrapper extends Component {
       }
     };
     this.setState({ changeRecoveryEmailPopupParams });
-  };
-
-  handleAddNameInputKeyPressed = async e => {
-    const inputValue = e.target.value.trim();
-    const isValidName = validateFullname(inputValue);
-    if (e.key === 'Enter' && inputValue !== '' && isValidName) {
-      await this.props.onUpdateAccount({ name: inputValue });
-      await this.props.onUpdateContact(inputValue);
-      const nameParams = { name: inputValue };
-      this.setState({
-        nameParams,
-        mode: EDITING_MODES.NONE
-      });
-    }
   };
 
   handleConfirmChangePassword = async () => {
@@ -958,27 +889,6 @@ class SettingGeneralWrapper extends Component {
     }
   };
 
-  handleChangeTextareaSignature = signatureContent => {
-    const signatureParams = {
-      ...this.state.signatureParams,
-      signature: signatureContent
-    };
-    this.setState({ signatureParams }, async () => {
-      const htmlSignature = parseSignatureContentToHtml(signatureContent);
-      await this.props.onUpdateAccount({ signature: htmlSignature });
-    });
-  };
-
-  handleChangeRadioButtonSignature = async ev => {
-    const value = ev.target.checked;
-    await this.props.onUpdateAccount({ signatureEnabled: value });
-    const signatureParams = {
-      ...this.state.signatureParams,
-      signatureEnabled: value
-    };
-    this.setState({ signatureParams });
-  };
-
   handleClickLogout = () => {
     this.setState({
       isHiddenSettingsPopup: false,
@@ -1081,8 +991,6 @@ SettingGeneralWrapper.propTypes = {
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,
   onSetReadReceiptsTracking: PropTypes.func,
-  onUpdateAccount: PropTypes.func,
-  onUpdateContact: PropTypes.func,
   readReceiptsEnabled: PropTypes.bool,
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,

@@ -18,7 +18,13 @@ import {
   updateEmailLabels,
   removeEmails
 } from './../actions/index';
-import { EmailStatus, unsentText, composerEvents } from '../utils/const';
+import {
+  EmailStatus,
+  unsentText,
+  composerEvents,
+  appDomain,
+  avatarBaseUrl
+} from '../utils/const';
 
 const defineFrom = (email, contacts) => {
   const emailFrom = parseContactRow(email.fromAddress || '');
@@ -30,6 +36,7 @@ const defineFrom = (email, contacts) => {
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
   const contacts = state.get('contacts');
+  const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const from = defineFrom(email, contacts);
   const to = getContacts(contacts, email.to);
   const cc = getContacts(contacts, email.cc);
@@ -43,6 +50,8 @@ const mapStateToProps = (state, ownProps) => {
       })
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
+  const recipient = senderEmail.replace(`@${appDomain}`, '');
+  const avatarUrl = `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`;
   const date = email.date;
   const { files, inlineImages } = getFiles(
     state.get('files'),
@@ -78,6 +87,7 @@ const mapStateToProps = (state, ownProps) => {
       ? false
       : true;
   return {
+    avatarUrl,
     email: myEmail,
     files,
     isSpam,
@@ -85,7 +95,8 @@ const mapStateToProps = (state, ownProps) => {
     isDraft,
     isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
     isUnsend,
-    inlineImages
+    inlineImages,
+    letters
   };
 };
 

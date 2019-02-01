@@ -2,7 +2,8 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
-import { SectionType } from '../utils/const';
+import { SectionType, avatarBaseUrl } from '../utils/const';
+import { myAccount } from '../utils/electronInterface';
 import string from './../lang';
 
 const defineLabels = labels => {
@@ -21,7 +22,12 @@ const defineLabels = labels => {
 const mapStateToProps = state => {
   const suggestions = state.get('suggestions');
   const allLabels = defineLabels(state.get('labels'));
+  const avatarTimestamp = state.get('activities').get('avatarTimestamp');
+  const avatarUrl = `${avatarBaseUrl}${
+    myAccount.recipientId
+  }?date=${avatarTimestamp}`;
   return {
+    avatarUrl,
     allLabels,
     hints: suggestions.get('hints'),
     threads: suggestions.get('threads')

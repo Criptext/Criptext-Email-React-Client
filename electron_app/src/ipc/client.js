@@ -138,3 +138,5 @@ ipc.answerRenderer('client-unsend-email', metadataKey =>
 ipc.answerRenderer('client-update-name-event', params =>
   clientManager.updateName(params)
 );
+
+ipc.answerRenderer('client-upload-avatar', clientManager.uploadAvatar);

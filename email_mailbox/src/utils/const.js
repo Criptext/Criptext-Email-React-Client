@@ -7,6 +7,11 @@ export const appDomain =
     ? process.env.REACT_APP_APPDOMAIN
     : 'criptext.com';
 
+export const avatarBaseUrl =
+  process.env.NODE_ENV === 'development'
+    ? process.env.REACT_APP_AVATAR_URL
+    : `https://api.criptext.com/user/avatar/`;
+
 export const unsentText = 'This content was unsent';
 
 export const IconLabels = {

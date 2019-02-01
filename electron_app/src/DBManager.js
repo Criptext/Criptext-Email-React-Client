@@ -620,11 +620,7 @@ const defineFromContactName = contactTypes => {
       Table.EMAIL
     }.fromAddress)) as fromContactName`;
   }
-  return `GROUP_CONCAT( DISTINCT( CASE WHEN ${
-    Table.CONTACT
-  }.name IS NOT NULL THEN ${Table.CONTACT}.name ELSE ${
-    Table.CONTACT
-  }.email END ) ) as fromContactName`;
+  return `GROUP_CONCAT(DISTINCT(${Table.CONTACT}.email)) as fromContactName`;
 };
 
 const baseThreadQuery = ({

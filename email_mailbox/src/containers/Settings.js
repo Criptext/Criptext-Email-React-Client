@@ -1,7 +1,12 @@
 import { connect } from 'react-redux';
 import randomcolor from 'randomcolor';
 import SettingsWrapper from './../components/SettingsWrapper';
-import { addLabel, updateLabel, removeLabel } from './../actions';
+import {
+  addLabel,
+  updateLabel,
+  removeLabel,
+  setAvatarUpdatedTimestamp
+} from './../actions';
 import {
   cleanDataLogout,
   LabelType,
@@ -19,6 +24,7 @@ import {
   updateAccount,
   updateContactByEmail,
   updateNameEvent,
+  uploadAvatar,
   setReadTracking
 } from './../utils/ipc';
 import { appDomain, composerEvents } from '../utils/const';
@@ -162,6 +168,11 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateLabel: params => {
       dispatch(updateLabel(params));
+    },
+    onUploadAvatar: async params => {
+      const { status } = await uploadAvatar(params);
+      dispatch(setAvatarUpdatedTimestamp(Date.now()));
+      return status;
     },
     onResetPassword: async () => {
       const { recipientId } = myAccount;
