@@ -1,4 +1,4 @@
-import { startLoadThread } from './activity';
+import { startLoadThread, setAvatarUpdatedTimestamp } from './activity';
 import { addContacts } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
@@ -108,6 +108,7 @@ export {
   selectFeedItem,
   searchThreads,
   sendOpenEvent,
+  setAvatarUpdatedTimestamp,
   startLoadThread,
   unsendEmail,
   unsendEmailFiles,

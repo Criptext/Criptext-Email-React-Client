@@ -10,7 +10,7 @@ import {
   getTwoCapitalLetters,
   toLowerCaseWithoutSpaces
 } from '../utils/StringUtils';
-import { SectionType, composerEvents } from '../utils/const';
+import { SectionType, composerEvents, avatarBaseUrl } from '../utils/const';
 import string from './../lang';
 import { parseContactRow } from '../utils/EmailUtils';
 
@@ -92,6 +92,7 @@ const getFirstRecipient = recipients => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const avatarTimestamp = state.get('activities').get('avatarTimestamp')
   const contacts = state.get('contacts');
   const recipients = ownProps.thread.get('fromContactName').toArray();
   const {
@@ -118,9 +119,11 @@ const mapStateToProps = (state, ownProps) => {
     state.get('labels'),
     labelsToExclude
   );
+  const avatarUrl = `${avatarBaseUrl}${firstRecipientEmail}?date=${avatarTimestamp}`;
   return {
     thread: thread.toJS(),
     color,
+    avatarUrl,
     firstRecipientEmail,
     multiselect: state.get('activities').get('multiselect'),
     isStarred: thread.get('allLabels').contains(LabelType.starred.id),

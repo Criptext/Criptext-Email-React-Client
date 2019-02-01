@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { EmailStatus, avatarBaseUrl } from './../utils/const';
+import { EmailStatus } from './../utils/const';
 import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import { replaceMatches } from './../utils/ReactUtils';
 import { replaceAllOccurrences } from './../utils/StringUtils';
@@ -87,12 +87,12 @@ class ThreadItem extends Component {
         />
       );
     }
-    const avatarUrl = `${avatarBaseUrl}${this.props.firstRecipientEmail}`;
+    
     return (
       <div style={{ background: this.props.color }} className="thread-letters">
         <AvatarImage
-          key={avatarUrl}
-          avatarUrl={avatarUrl}
+          key={this.props.firstRecipientEmail}
+          avatarUrl={this.props.avatarUrl}
           letters={this.props.letters}
         />
       </div>

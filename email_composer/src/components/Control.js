@@ -36,6 +36,7 @@ const Control = props => (
         <div
           className="button-editor button-editor-border-left button-editor-border-right"
           onClick={props.onClickTextEditor}
+          onMouseDown={onMouseDown}
         >
           <i className="icon-text-edit" />
         </div>
@@ -48,6 +49,11 @@ const Control = props => (
     </div>
   </div>
 );
+
+const onMouseDown = ev => {
+  ev = ev || window.event;
+  ev.preventDefault();
+}
 
 const renderSendNormalButton = () => (
   <div>

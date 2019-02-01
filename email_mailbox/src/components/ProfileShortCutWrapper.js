@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ProfileShortCut from './ProfileShortCut';
 import { myAccount } from '../utils/electronInterface';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
-import { appDomain, avatarBaseUrl } from '../utils/const';
+import { appDomain } from '../utils/const';
 
 class ProfileShortCutWrapper extends Component {
   constructor(props) {
@@ -15,10 +15,9 @@ class ProfileShortCutWrapper extends Component {
 
   render() {
     const letters = getTwoCapitalLetters(myAccount.name);
-    const avatarUrl = `${avatarBaseUrl}${myAccount.recipientId}`;
     return (
       <ProfileShortCut
-        avatarUrl={avatarUrl}
+        avatarUrl={this.props.avatarUrl}
         letters={letters}
         name={myAccount.name}
         emailAddress={`${myAccount.recipientId}@${appDomain}`}

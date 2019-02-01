@@ -23,3 +23,10 @@ export const stopLoadThread = () => {
     type: Activity.STOP_LOAD_THREAD
   };
 };
+
+export const setAvatarUpdatedTimestamp = timestamp => {
+  return {
+    type: Activity.AVATAR_UPDATED_TIMESTAMP,
+    timestamp
+  };
+};

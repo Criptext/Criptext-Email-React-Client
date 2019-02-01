@@ -30,6 +30,14 @@ class EditorWrapper extends Component {
     );
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.props.isFocusEditorInput) {
+        document.getElementById('react-trumbowyg').focus();
+      }
+    }, 500);
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps.htmlBody !== this.props.htmlBody) {
       this.props.getHtmlBody(this.props.htmlBody);

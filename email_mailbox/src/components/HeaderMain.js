@@ -8,6 +8,7 @@ const HeaderMain = props => (
   <div className="header-main">
     <SearchBox
       allLabels={props.allLabels}
+      avatarUrl={props.avatarUrl}
       isHiddenMenuSearchHints={props.isHiddenMenuSearchHints}
       isHiddenMenuSearchOptions={props.isHiddenMenuSearchOptions}
       getSearchParams={props.getSearchParams}
@@ -20,12 +21,13 @@ const HeaderMain = props => (
       threads={props.threads}
       hints={props.hints}
     />
-    <ProfileShortCutWrapper onClickSettings={props.onClickSection} />
+    <ProfileShortCutWrapper avatarUrl={props.avatarUrl} onClickSettings={props.onClickSection} />
   </div>
 );
 
 HeaderMain.propTypes = {
   allLabels: PropTypes.array,
+  avatarUrl: PropTypes.string,
   getSearchParams: PropTypes.func,
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,

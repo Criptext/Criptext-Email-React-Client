@@ -36,6 +36,7 @@ const defineFrom = (email, contacts) => {
 const mapStateToProps = (state, ownProps) => {
   const email = ownProps.email;
   const contacts = state.get('contacts');
+  const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const from = defineFrom(email, contacts);
   const to = getContacts(contacts, email.to);
   const cc = getContacts(contacts, email.cc);
@@ -50,7 +51,7 @@ const mapStateToProps = (state, ownProps) => {
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
   const recipient = senderEmail.replace(`@${appDomain}`, '');
-  const avatarUrl = `${avatarBaseUrl}${recipient}`;
+  const avatarUrl = `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`;
   const date = email.date;
   const { files, inlineImages } = getFiles(
     state.get('files'),
