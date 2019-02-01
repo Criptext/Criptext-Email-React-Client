@@ -1,7 +1,14 @@
 /*global libsignal util*/
-import { getEmailBody } from './../utils/ipc';
+import {
+  getEmailBody,
+  getSessionRecordIds,
+  insertPreKeys
+} from './../utils/ipc';
 import SignalProtocolStore from './store';
+
+const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
+const PREKEY_INITIAL_QUANTITY = 100;
 const ciphertextType = {
   CIPHERTEXT: 1,
   PREKEY_BUNDLE: 3
@@ -100,8 +107,42 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   return binaryText;
 };
 
+const generateAndInsertMorePreKeys = async () => {
+  const currentPreKeyIds = await getSessionRecordIds();
+  if (currentPreKeyIds.length === PREKEY_INITIAL_QUANTITY) return;
+
+  const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
+    (item, index) => index + 1
+  );
+  const newPreKeyIds = preKeyIds.filter(id => !currentPreKeyIds.includes(id));
+  const preKeysToServer = [];
+  const preKeysToStore = [];
+  for (const preKeyId of newPreKeyIds) {
+    const preKey = await KeyHelper.generatePreKey(preKeyId);
+    preKeysToServer.push({
+      publicKey: util.toBase64(preKey.keyPair.pubKey),
+      id: preKeyId
+    });
+    preKeysToStore.push(preKey.keyPair);
+  }
+  try {
+    const { status } = await insertPreKeys(preKeysToServer);
+    if (status === 200) {
+      return await Promise.all(
+        preKeysToStore.map(async (preKeyPair, index) => {
+          await store.storePreKey(newPreKeyIds[index], preKeyPair);
+        })
+      );
+    }
+  } catch (newPreKeysError) {
+    // eslint-disable-next-line no-console
+    console.error(newPreKeysError);
+  }
+};
+
 export default {
   decryptEmail,
   decryptFileKey,
-  decryptKey
+  decryptKey,
+  generateAndInsertMorePreKeys
 };

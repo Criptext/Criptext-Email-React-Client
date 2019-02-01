@@ -112,6 +112,9 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.SEND_EMAIL_ERROR: {
       return handleSendEmailError(incomingEvent);
     }
+    case SocketCommand.LOW_PREKEYS_AVAILABLE: {
+      return handleLowPrekeysAvailable(incomingEvent);
+    }
     case SocketCommand.PEER_EMAIL_UNSEND: {
       return handlePeerEmailUnsend(incomingEvent);
     }
@@ -678,18 +681,26 @@ const handleSendEmailError = ({ rowid }) => {
   return rowid;
 };
 
+const handleLowPrekeysAvailable = async ({ rowid }) => {
+  await signal.generateAndInsertMorePreKeys();
+  return rowid;
+};
+
 const setEventAsHandled = async eventIds => {
   return await acknowledgeEvents(eventIds);
 };
 
 /* Window events: listener
   ----------------------------- */
-ipcRenderer.on('socket-message', (ev, message) => {
+ipcRenderer.on('socket-message', async (ev, message) => {
   const eventId = message.cmd;
   if (eventId === 400) {
     emitter.emit(Event.LOAD_EVENTS, {});
   } else {
-    handleEvent(message);
+    const singleRowid = await handleEvent(message);
+    if (singleRowid > 0) {
+      await setEventAsHandled([singleRowid]);
+    }
   }
 });
 
