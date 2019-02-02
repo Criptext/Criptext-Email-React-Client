@@ -25,7 +25,7 @@ const decryptEmail = async ({
     return;
   }
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
-    return body.body;
+    return { decryptedBody: body.body };
   }
   const textEncrypted = util.toArrayBufferFromBase64(body.body);
   const addressFrom = new libsignal.SignalProtocolAddress(

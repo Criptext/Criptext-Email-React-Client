@@ -2,16 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const rimraf = require('rimraf');
 const { app } = require('electron');
+const { removeLast } = require('./stringUtils');
 
 const getUserEmailsPath = (node_env, user) => {
   switch (node_env) {
     case 'test': {
-      const emailsPath = path.join(
-        './src',
-        '__integrations__',
-        `${user}`,
-        'userData'
-      );
+      const emailsPath = path.join('./src', '__integrations__', `${user}`);
       createPathRecursive(emailsPath);
       return emailsPath;
     }
@@ -91,8 +87,9 @@ const deleteEmailContent = async ({ metadataKey, username }) => {
 };
 
 const removeUserDir = async username => {
-  const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
-  await remove(myPath);
+  const emailsPath = await getUserEmailsPath(process.env.NODE_ENV, username);
+  const userPath = removeLast(emailsPath, '/emails');
+  await remove(userPath);
 };
 
 const store = (path, text) => {

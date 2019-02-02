@@ -30,7 +30,7 @@ ipc.answerRenderer(
 );
 
 ipc.answerRenderer('db-clean-database', async username => {
-  const user = `${username || getUsername()}@${APP_DOMAIN}`;
+  const user = username ? `${username}@${APP_DOMAIN}` : getUsername();
   await fileUtils.removeUserDir(user);
   await dbManager.cleanDataBase();
 });

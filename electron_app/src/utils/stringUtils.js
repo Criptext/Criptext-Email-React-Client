@@ -73,6 +73,13 @@ const defineLargeTime = (time, optionalLanguage) => {
   return moment(time).format(`ddd, D MMM YYYY [${localizedAt}] h:mm A`);
 };
 
+const removeLast = (myString, lastWord) => {
+  if (myString.indexOf(lastWord) !== myString.length - lastWord.length) {
+    return myString;
+  }
+  return myString.slice(0, myString.length - lastWord.length);
+};
+
 const genUUID = () => {
   const s4 = () =>
     Math.floor((1 + Math.random()) * 0x10000)
@@ -100,6 +107,7 @@ const getUsername = () => {
 
 module.exports = {
   removeProtocolFromUrl,
+  removeLast,
   printDocumentTemplateHeader,
   printDocumentTemplateClose,
   cleanHTMLTagsFromEmailContentToPrint,

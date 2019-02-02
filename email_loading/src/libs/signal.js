@@ -33,7 +33,12 @@ const createAccount = async ({
   name,
   recoveryEmail
 }) => {
-  await cleanDatabase();
+  const [currentAccount] = await getAccount();
+  if (currentAccount) {
+    await cleanDatabase(currentAccount.recipientId);
+  } else {
+    await cleanDatabase();
+  }
   await createTables();
 
   const signedPreKeyId = 1;
@@ -155,7 +160,6 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
   const currentAccountExists = currentAccount
     ? currentAccount.recipientId === recipientId
     : false;
-
   if (currentAccountExists) {
     try {
       await updateAccount({
