@@ -212,7 +212,6 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   });
   const isFromMe = checkEmailIsTo({ from, type: 'from' });
   let eventParams = {};
-
   let notificationPreview = '';
   if (!prevEmail) {
     let body = '',
