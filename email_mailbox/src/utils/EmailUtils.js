@@ -145,7 +145,7 @@ export const addCollapseDiv = (htmlString, key) => {
     div.appendChild(i);
     div.setAttribute('id', `div-collapse-${key}`);
     blockquote.parentElement.insertBefore(div, blockquote);
-    blockquote.style.display = 'none';
+    blockquote.style.display = 'block';
     blockquote.setAttribute('id', `blockquote-${key}`);
     return doc.documentElement.innerHTML;
   }
