@@ -400,6 +400,17 @@ describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
     expect(emailIds).toEqual([2]);
   });
 
+  it('should update thread param: emailIds', () => {
+    const state = initState(threads);
+    const threadId = '6Za2dcMlE0OSSc9';
+    const emailIds = [100, 200, 300];
+    const action = actions.updateEmailIdsThread({ threadId, emailIds });
+    const newState = threadsReducer(state, action);
+    const threadUpdated = newState.get('0');
+    const emailIdsUpdated = threadUpdated.get('emailIds').toJS();
+    expect(emailIdsUpdated).toEqual(emailIds);
+  });
+
   it('should not update thread param: emailIds, when threadId is undefined', () => {
     const state = initState(threads);
     const threadId = undefined;

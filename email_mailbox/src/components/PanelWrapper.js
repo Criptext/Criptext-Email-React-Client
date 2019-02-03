@@ -8,7 +8,7 @@ import {
 } from '../utils/electronEventInterface';
 import { processPendingEvents } from '../utils/ipc';
 import { LabelType } from '../utils/electronInterface';
-import { SectionType, EmailStatus } from '../utils/const';
+import { SectionType } from '../utils/const';
 import { USER_GUIDE_STEPS } from './UserGuide';
 
 const MAILBOX_POPUP_TYPES = {
@@ -168,33 +168,6 @@ class PanelWrapper extends Component {
       this.props.onLoadEvents();
     });
 
-    addEvent(Event.NEW_EMAIL, emailParams => {
-      const { emailId, labels, threadId } = emailParams;
-      const currentSectionType = this.state.sectionSelected.type;
-      const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
-      const isRenderingThread = currentSectionType === SectionType.THREAD;
-      const currentLabelId =
-        LabelType[this.state.sectionSelected.params.mailboxSelected].id;
-      const isNewEmailInMailbox = labels.includes(currentLabelId);
-      const currentThreadId = this.state.sectionSelected.params
-        .threadIdSelected;
-      if (isRenderingMailbox && isNewEmailInMailbox) {
-        props.onLoadThreads({
-          labelId: Number(currentLabelId),
-          clear: true
-        });
-      } else if (isRenderingThread && threadId === currentThreadId) {
-        props.onLoadEmails(threadId);
-        props.onUpdateEmailIdsThread({
-          threadId,
-          emailIdToAdd: emailId
-        });
-      }
-      if (labels.length) {
-        props.onUpdateUnreadEmailsBadge(labels);
-      }
-    });
-
     addEvent(Event.EMAIL_MOVE_TO, ({ threadId, emailIdsToRemove }) => {
       const currentSectionType = this.state.sectionSelected.type;
       const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
@@ -228,27 +201,58 @@ class PanelWrapper extends Component {
     });
 
     addEvent(
-      Event.EMAIL_TRACKING_UPDATE,
-      ({ threadId, emailId, status, date }) => {
+      Event.STORE_LOAD,
+      ({ labelIds, threadIds, labels, badgeLabelIds }) => {
+        if (!labelIds && !threadIds && !labels) return;
+
         const currentSectionType = this.state.sectionSelected.type;
         const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
-        if (status === EmailStatus.READ && isRenderingMailbox) {
-          props.onMarkThreadAsOpen(threadId, status);
+        const isRenderingThread = currentSectionType === SectionType.THREAD;
+        const currentThreadId = this.state.sectionSelected.params
+          .threadIdSelected;
+        const currentLabelId =
+          LabelType[this.state.sectionSelected.params.mailboxSelected].id;
+        const limit =
+          this.props.threadsCount > 20 ? this.props.threadsCount : undefined;
+        if (labels) {
+          props.onAddLabels(labels);
         }
-        if (status === EmailStatus.UNSEND) {
-          const isRenderingThread = currentSectionType === SectionType.THREAD;
-          if (isRenderingMailbox) {
-            const currentLabelId =
-              LabelType[this.state.sectionSelected.params.mailboxSelected].id;
+
+        if (labelIds && isRenderingMailbox) {
+          if (labelIds.includes(currentLabelId)) {
             props.onLoadThreads({
               labelId: Number(currentLabelId),
               clear: true,
-              limit: props.threadsCount
+              limit
             });
           }
-          if (isRenderingThread) {
-            props.onUnsendEmail(emailId, date, status);
+        } else if (threadIds && isRenderingThread) {
+          if (threadIds.includes(currentThreadId)) {
+            props.onLoadThreads({
+              labelId: Number(currentLabelId),
+              clear: true,
+              limit
+            });
+            props.onLoadEmails(currentThreadId);
           }
+        } else if (threadIds && isRenderingMailbox) {
+          props.onLoadThreads({
+            labelId: Number(currentLabelId),
+            clear: true,
+            limit
+          });
+        }
+
+        if (badgeLabelIds) {
+          let labelIdsBadge = [];
+          if (badgeLabelIds.includes(LabelType.inbox.id))
+            labelIdsBadge = [...labelIdsBadge, LabelType.inbox.id];
+          if (badgeLabelIds.includes(LabelType.spam.id))
+            labelIdsBadge = [...labelIdsBadge, LabelType.spam.id];
+          if (badgeLabelIds.includes(LabelType.draft.id))
+            labelIdsBadge = [...labelIdsBadge, LabelType.draft.id];
+          if (labelIdsBadge.length)
+            props.onUpdateUnreadEmailsBadge(labelIdsBadge);
         }
       }
     );
@@ -285,10 +289,6 @@ class PanelWrapper extends Component {
       if (threadIds.length && isRenderingMailbox) {
         props.onRemoveThreads(threadIds);
       }
-    });
-
-    addEvent(Event.THREADS_UPDATE_READ, (threadIds, unread) => {
-      props.onUpdateUnreadThreads(threadIds, unread);
     });
 
     addEvent(Event.DEVICE_REMOVED, () => {
@@ -341,7 +341,6 @@ PanelWrapper.propTypes = {
   onUpdateOpenedAccount: PropTypes.func,
   onUpdateTimestamp: PropTypes.func,
   onUpdateUnreadEmailsBadge: PropTypes.func,
-  onUpdateUnreadThreads: PropTypes.func,
   threadsCount: PropTypes.number
 };
 

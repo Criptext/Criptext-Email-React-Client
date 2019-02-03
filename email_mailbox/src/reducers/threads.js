@@ -126,8 +126,8 @@ const threads = (state = List([]), action) => {
       );
     }
     case Thread.UPDATE_EMAILIDS_THREAD: {
-      const { threadId, emailIdToAdd, emailIdsToRemove } = action;
-      if (!threadId || (!emailIdToAdd && !emailIdsToRemove)) {
+      const { threadId, emailIdToAdd, emailIdsToRemove, emailIds } = action;
+      if (!threadId || (!emailIdToAdd && !emailIdsToRemove && !emailIds)) {
         return state;
       }
       return state
@@ -224,17 +224,20 @@ const thread = (state, action) => {
       return state.merge({ allLabels, labels });
     }
     case Thread.UPDATE_EMAILIDS_THREAD: {
-      const { emailIdToAdd, emailIdsToRemove } = action;
-      let emailIds = state.get('emailIds');
+      const { emailIdToAdd, emailIdsToRemove, emailIds } = action;
+      if (emailIds) {
+        return state.set('emailIds', List(emailIds));
+      }
+      let newEmailIds = state.get('emailIds');
       if (emailIdsToRemove) {
-        emailIds = emailIds.filter(
+        newEmailIds = newEmailIds.filter(
           emailId => !emailIdsToRemove.includes(emailId)
         );
       }
       if (emailIdToAdd) {
-        emailIds = emailIds.push(emailIdToAdd);
+        newEmailIds = newEmailIds.push(emailIdToAdd);
       }
-      return state.set('emailIds', emailIds);
+      return state.set('emailIds', newEmailIds);
     }
     case Thread.UPDATE_STATUS_THREAD: {
       return state.set('status', action.status);

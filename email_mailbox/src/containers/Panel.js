@@ -10,8 +10,7 @@ import {
   updateAllFeedItemsAsOlder,
   updateStatusThread,
   unsendEmailOnSuccess,
-  unsendEmailFiles,
-  updateUnreadThreadsSuccess
+  unsendEmailFiles
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import { LabelType } from '../utils/electronInterface';
@@ -74,9 +73,6 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateUnreadEmailsBadge: labelIds => {
       dispatch(updateBadgeLabels(labelIds));
-    },
-    onUpdateUnreadThreads: (threadIds, unread) => {
-      dispatch(updateUnreadThreadsSuccess(threadIds, unread));
     }
   };
 };
