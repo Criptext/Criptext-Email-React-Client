@@ -11,7 +11,9 @@ const getUsername = () => {
 ipc.answerRenderer(
   'db-delete-emails-by-threadid-and-labelid',
   async ({ threadIds, labelId }) => {
-    const [threadEmails] = await dbManager.getEmailsByThreadIdAndLabelId(
+    const [
+      threadEmails
+    ] = await dbManager.getEmailsToDeleteByThreadIdAndLabelId(
       threadIds,
       labelId
     );
