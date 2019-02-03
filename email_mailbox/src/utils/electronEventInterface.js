@@ -67,16 +67,40 @@ const { ipcRenderer } = electron;
 const emitter = new EventEmitter();
 let isGettingEvents = false;
 let newEmailNotificationList = [];
+let labelIdsEvent = new Set();
+let threadIdsEvent = new Set();
+let badgeLabelIdsEvent = new Set();
+let labelsEvent = {};
 
 export const getGroupEvents = async () => {
   if (isGettingEvents) return;
   isGettingEvents = true;
+  labelIdsEvent = new Set();
+  threadIdsEvent = new Set();
+  badgeLabelIdsEvent = new Set();
+  labelsEvent = {};
   const { events, hasMoreEvents } = await getEvents();
   const rowIds = [];
+
   for (const event of events) {
     try {
-      const rowId = await handleEvent(event);
-      rowIds.push(rowId);
+      const {
+        rowid,
+        labelIds,
+        threadIds,
+        labels,
+        badgeLabelIds
+      } = await handleEvent(event);
+      rowIds.push(rowid);
+      if (threadIds)
+        threadIdsEvent = new Set([...threadIdsEvent, ...threadIds]);
+      if (labelIds) {
+        labelIdsEvent = new Set([...labelIdsEvent, ...labelIds]);
+        badgeLabelIdsEvent = new Set([...badgeLabelIdsEvent, ...labelIds]);
+      }
+      if (badgeLabelIds)
+        badgeLabelIdsEvent = new Set([...badgeLabelIdsEvent, ...badgeLabelIds]);
+      if (labels) labelsEvent = { ...labelsEvent, labels };
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
@@ -93,12 +117,28 @@ export const getGroupEvents = async () => {
   const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
   if (rowIdsFiltered.length) {
     await setEventAsHandled(rowIdsFiltered);
-  }
-  sendNewEmailNotification();
-  await updateOwnContact();
+    sendNewEmailNotification();
+    await updateOwnContact();
 
-  isGettingEvents = false;
+    const labelIds = labelIdsEvent.size ? Array.from(labelIdsEvent) : null;
+    const threadIds = threadIdsEvent.size ? Array.from(threadIdsEvent) : null;
+    const badgeLabelIds = badgeLabelIdsEvent.size
+      ? Array.from(badgeLabelIdsEvent)
+      : null;
+    const labels = labelsEvent
+      ? Object.keys(labelsEvent).length
+        ? labelsEvent
+        : null
+      : null;
+    emitter.emit(Event.STORE_LOAD, {
+      labelIds,
+      threadIds,
+      labels,
+      badgeLabelIds
+    });
+  }
   if (hasMoreEvents) await getGroupEvents();
+  isGettingEvents = false;
 };
 
 export const handleEvent = incomingEvent => {
@@ -115,20 +155,20 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.LOW_PREKEYS_AVAILABLE: {
       return handleLowPrekeysAvailable(incomingEvent);
     }
-    case SocketCommand.PEER_EMAIL_UNSEND: {
-      return handlePeerEmailUnsend(incomingEvent);
-    }
     case SocketCommand.DEVICE_LINK_AUTHORIZATION_REQUEST: {
       return handleLinkDeviceRequest(incomingEvent);
-    }
-    case SocketCommand.SYNC_DEVICE_REQUEST: {
-      return handleSyncDeviceRequest(incomingEvent);
     }
     case SocketCommand.DEVICE_REMOVED: {
       return handlePeerRemoveDevice(incomingEvent);
     }
+    case SocketCommand.SYNC_DEVICE_REQUEST: {
+      return handleSyncDeviceRequest(incomingEvent);
+    }
     case SocketCommand.PEER_EMAIL_READ_UPDATE: {
       return handlePeerEmailRead(incomingEvent);
+    }
+    case SocketCommand.PEER_EMAIL_UNSEND: {
+      return handlePeerEmailUnsend(incomingEvent);
     }
     case SocketCommand.PEER_THREAD_READ_UPDATE: {
       return handlePeerThreadRead(incomingEvent);
@@ -164,7 +204,7 @@ export const handleEvent = incomingEvent => {
       return handleNewAnnouncementEvent(incomingEvent);
     }
     default: {
-      return;
+      return { rowid: null };
     }
   }
 };
@@ -211,8 +251,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     type: 'to'
   });
   const isFromMe = checkEmailIsTo({ from, type: 'from' });
-  let eventParams = {};
   let notificationPreview = '';
+  let labelIds = [];
   if (!prevEmail) {
     let body = '',
       headers;
@@ -290,54 +330,43 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
           })
         : null;
 
-    const labels = isSpam ? [LabelType.spam.id] : [];
+    labelIds = isSpam ? [LabelType.spam.id] : [];
     if (isToMe) {
-      labels.push(InboxLabelId);
+      labelIds.push(InboxLabelId);
     }
     if (isFromMe) {
-      labels.push(SentLabelId);
+      labelIds.push(SentLabelId);
     }
     const emailData = {
       email,
-      labels,
+      labels: labelIds,
       files: filesData,
       recipients,
       body,
       headers
     };
-    const [newEmailId] = await createEmail(emailData);
-    eventParams = {
-      ...eventParams,
-      emailId: newEmailId,
-      labels,
-      threadId
-    };
-    emitter.emit(Event.NEW_EMAIL, eventParams);
+    await createEmail(emailData);
   } else {
-    const labels = [];
+    const labelIds = [];
     const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
     const prevLabels = prevEmailLabels.map(item => item.labelId);
 
     const hasInboxLabelId = prevLabels.includes(InboxLabelId);
     if (isToMe && !hasInboxLabelId) {
-      labels.push(InboxLabelId);
+      labelIds.push(InboxLabelId);
     }
 
     const hasSentLabelId = prevLabels.includes(SentLabelId);
     if (isFromMe && !hasSentLabelId) {
-      labels.push(SentLabelId);
+      labelIds.push(SentLabelId);
     }
-    if (labels.length) {
-      const emailLabel = formEmailLabel({ emailId: prevEmail.id, labels });
+    if (labelIds.length) {
+      const emailLabel = formEmailLabel({
+        emailId: prevEmail.id,
+        labels: labelIds
+      });
       await createEmailLabel(emailLabel);
     }
-
-    eventParams = {
-      ...eventParams,
-      emailId: prevEmail.id,
-      labels,
-      threadId: prevEmail.threadId
-    };
     notificationPreview = prevEmail.preview;
   }
   if (isToMe) {
@@ -348,7 +377,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       emailPreview: notificationPreview
     });
   }
-  return rowid;
+  return { rowid, labelIds, threadIds: threadId ? [threadId] : null };
 };
 
 const addEmailToNotificationList = ({
@@ -392,15 +421,13 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   const [email] = await getEmailByKey(metadataKey);
   if (email) {
     const isUnsend = type === EmailStatus.UNSEND;
-    const content = isUnsend ? '' : null;
     const preview = isUnsend ? '' : null;
     const status = validateEmailStatusToSet(email.status, type);
     const unsendDate = isUnsend ? date : null;
-    if (status || content || preview || unsendDate) {
+    if (status || preview || unsendDate) {
       await updateEmail({
         key: String(metadataKey),
         status,
-        content,
         preview,
         unsendDate
       });
@@ -424,16 +451,26 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
         };
         await createFeedItem([feedItemParams]);
       }
-      const eventParams = {
-        threadId: email.threadId,
-        emailId: email.id,
-        status: type,
-        date
-      };
-      emitter.emit(Event.EMAIL_TRACKING_UPDATE, eventParams);
     }
   }
-  return rowid;
+  return { rowid, threadIds: email ? [email.threadId] : [] };
+};
+
+const handlePeerEmailRead = async ({ rowid, params }) => {
+  const { metadataKeys, unread } = params;
+  const emails = await getEmailsByKeys(metadataKeys);
+  if (emails.length) {
+    const emailKeys = emails.map(email => email.key);
+    const res = await updateEmails({
+      keys: emailKeys,
+      unread: !!unread
+    });
+    if (res) {
+      return { rowid, threadIds: [emails[0].threadId] };
+    }
+    return { rowid: null, threadIds: [] };
+  }
+  return { rowid: null, threadIds: [] };
 };
 
 const handlePeerEmailUnsend = async ({ rowid, params }) => {
@@ -453,15 +490,8 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
       emailId: email.id,
       status: AttachItemStatus.UNSENT
     });
-    const eventParams = {
-      threadId: email.threadId,
-      emailId: email.id,
-      status: type,
-      date
-    };
-    emitter.emit(Event.EMAIL_TRACKING_UPDATE, eventParams);
   }
-  return rowid;
+  return { rowid, threadIds: email ? [email.threadId] : [] };
 };
 
 const handleLinkDeviceRequest = ({ rowid, params }) => {
@@ -476,53 +506,33 @@ const handlePeerRemoveDevice = async ({ rowid }) => {
   return await sendDeviceRemovedEvent(rowid);
 };
 
-const handlePeerEmailRead = async ({ rowid, params }) => {
-  const { metadataKeys, unread } = params;
-  const emails = await getEmailsByKeys(metadataKeys);
-  if (emails.length) {
-    const emailKeys = emails.map(email => email.key);
-    const res = await updateEmails({
-      keys: emailKeys,
-      unread: !!unread
-    });
-    emitter.emit(Event.REFRESH_THREADS, { labelIds: [LabelType.inbox.id] });
-    if (res) {
-      return rowid;
-    }
-    return null;
-  }
-  return null;
-};
-
 const handlePeerThreadRead = async ({ rowid, params }) => {
   const { threadIds, unread } = params;
   const res = await updateUnreadEmailByThreadIds({
     threadIds,
     unread: !!unread
   });
-  emitter.emit(Event.THREADS_UPDATE_READ, threadIds, !!unread);
   if (res) {
-    return rowid;
+    return { rowid, threadIds };
   }
-  return null;
+  return { rowid: null, threadIds: [] };
 };
 
 const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
   const { metadataKeys, labelsRemoved, labelsAdded } = params;
   const emailsId = [];
-  const threads = [];
+  const threadIds = [];
   for (const metadataKey of metadataKeys) {
     const [email] = await getEmailByKey(metadataKey);
     if (email) {
       emailsId.push(email.id);
-      threads.push({ id: email.threadId, emailId: email.id });
+      threadIds.push(email.threadId);
     }
   }
 
-  if (!emailsId.length) return null;
+  if (!emailsId.length) return { rowid: null };
   const labelsToRemove = await getLabelsByText(labelsRemoved);
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
-
   const labelsToAdd = await getLabelsByText(labelsAdded);
   const labelIdsToAdd = labelsToAdd.map(label => label.id);
 
@@ -532,20 +542,18 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
     labelIdsToRemove
   });
 
-  if (
-    labelsAdded.length === 1 &&
-    (labelsAdded[0] === LabelType.trash.text ||
-      labelsAdded[0] === LabelType.spam.text) &&
-    !labelsRemoved.length
-  ) {
-    for (const thread of threads) {
-      emitter.emit(Event.EMAIL_MOVE_TO, {
-        threadId: thread.id,
-        emailIdsToRemove: [thread.emailId]
-      });
-    }
-  }
-  return rowid;
+  const hasInbox =
+    labelIdsToAdd.includes(LabelType.inbox.id) ||
+    labelIdsToRemove.includes(LabelType.inbox.id) ||
+    labelIdsToAdd.includes(LabelType.trash.id);
+  const hasSpam =
+    labelIdsToAdd.includes(LabelType.spam.id) ||
+    labelIdsToRemove.includes(LabelType.spam.id);
+  let badgeLabelIds = [];
+  if (hasInbox) badgeLabelIds = [...badgeLabelIds, LabelType.inbox.id];
+  if (hasSpam) badgeLabelIds = [...badgeLabelIds, LabelType.spam.id];
+
+  return { rowid, threadIds, badgeLabelIds };
 };
 
 const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
@@ -575,11 +583,11 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
   const hasSpam =
     labelIdsToAdd.includes(LabelType.spam.id) ||
     labelIdsToRemove.includes(LabelType.spam.id);
-  let labelIds = [];
-  if (hasInbox) labelIds = [...labelIds, LabelType.inbox.id];
-  if (hasSpam) labelIds = [...labelIds, LabelType.spam.id];
-  if (labelIds.length) emitter.emit(Event.REFRESH_THREADS, { labelIds });
-  return rowid;
+  let badgeLabelIds = [];
+  if (hasInbox) badgeLabelIds = [...badgeLabelIds, LabelType.inbox.id];
+  if (hasSpam) badgeLabelIds = [...badgeLabelIds, LabelType.spam.id];
+
+  return { rowid, threadIds, badgeLabelIds };
 };
 
 const formAndSaveEmailLabelsUpdate = async ({
@@ -602,27 +610,25 @@ const formAndSaveEmailLabelsUpdate = async ({
 
 const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
   const { metadataKeys } = params;
-  const emailIds = [];
+  const threadIds = [];
   const keys = [];
   for (const metadataKey of metadataKeys) {
     const [email] = await getEmailByKey(metadataKey);
     if (email) {
-      emailIds.push(email.id);
       keys.push(email.key);
+      threadIds.push(email.threadId);
     }
   }
   await deleteEmailByKeys(keys);
-  emitter.emit(Event.EMAIL_DELETED, emailIds);
-  return rowid;
+  const labelIds = [LabelType.trash.id, LabelType.spam.id];
+  return { rowid, threadIds, labelIds };
 };
 
 const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
   const { threadIds } = params;
-  const wereDeleted = await deleteEmailsByThreadIdAndLabelId({ threadIds });
-  if (wereDeleted) {
-    emitter.emit(Event.THREADS_DELETED, threadIds);
-  }
-  return rowid;
+  await deleteEmailsByThreadIdAndLabelId({ threadIds });
+  const labelIds = [LabelType.trash.id, LabelType.spam.id];
+  return { rowid, threadIds, labelIds };
 };
 
 const handlePeerLabelCreated = async ({ rowid, params }) => {
@@ -639,16 +645,16 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
         visible: true
       }
     };
-    await emitter.emit(Event.LABEL_CREATED, labels);
+    return { rowid, labels };
   }
-  return rowid;
+  return { rowid };
 };
 
 const handlePeerUserNameChanged = async ({ rowid, params }) => {
   const { name } = params;
   const { recipientId } = myAccount;
   await updateAccount({ name, recipientId });
-  return rowid;
+  return { rowid };
 };
 
 const handlePeerPasswordChanged = () => {
@@ -673,16 +679,16 @@ const handleNewAnnouncementEvent = async ({ rowid, params }) => {
     description: title
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
-  return rowid;
+  return { rowid };
 };
 
 const handleSendEmailError = ({ rowid }) => {
-  return rowid;
+  return { rowid };
 };
 
 const handleLowPrekeysAvailable = async ({ rowid }) => {
   await signal.generateAndInsertMorePreKeys();
-  return rowid;
+  return { rowid };
 };
 
 const setEventAsHandled = async eventIds => {
@@ -696,9 +702,9 @@ ipcRenderer.on('socket-message', async (ev, message) => {
   if (eventId === 400) {
     emitter.emit(Event.LOAD_EVENTS, {});
   } else {
-    const singleRowid = await handleEvent(message);
-    if (singleRowid > 0) {
-      await setEventAsHandled([singleRowid]);
+    const { rowid } = await handleEvent(message);
+    if (rowid) {
+      await setEventAsHandled([rowid]);
     }
   }
 });
@@ -713,8 +719,8 @@ ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
 });
 
 ipcRenderer.on(
-  'display-message-email-sent',
-  (ev, { threadId, hasExternalPassphrase }) => {
+  'composer-email-sent',
+  (ev, { type, threadId, hasExternalPassphrase, threadData }) => {
     const messageData = hasExternalPassphrase
       ? {
           ...Messages.success.rememberSharePassphrase,
@@ -726,6 +732,33 @@ ipcRenderer.on(
           params: { threadId }
         };
     emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+    switch (type) {
+      case 'new-email': {
+        emitter.emit(Event.STORE_LOAD, {
+          labelIds: [LabelType.sent.id],
+          threadIds: [threadId]
+        });
+        break;
+      }
+      case 'draft-edited': {
+        emitter.emit(Event.STORE_LOAD, {
+          labelIds: [LabelType.sent.id, LabelType.draft.id],
+          threadIds: [threadId]
+        });
+        break;
+      }
+      case 'reply': {
+        const { threadId, newEmailId, oldEmailId } = threadData;
+        emitter.emit(Event.UPDATE_THREAD_EMAILS, {
+          threadId,
+          newEmailId,
+          oldEmailId
+        });
+        break;
+      }
+      default:
+        break;
+    }
   }
 );
 
@@ -970,9 +1003,9 @@ export const handleDeleteDeviceData = async rowid => {
   return await setTimeout(async () => {
     await deleteAllDeviceData();
     if (rowid) {
-      return rowid;
+      return { rowid };
     }
-    return null;
+    return { rowid: null };
   }, 4000);
 };
 
@@ -1069,21 +1102,19 @@ export const Event = {
   EMAIL_DELETED: 'email-deleted-permanently',
   EMAIL_MOVE_TO: 'email-move-to',
   ENABLE_WINDOW: 'remove-window-overlay',
-  EMAIL_TRACKING_UPDATE: 'email-tracking-update',
   LABEL_CREATED: 'label-created',
   LINK_DEVICE_END: 'link-devices-finished',
   LINK_DEVICE_GETTING_KEYS: 'getting-keys',
   LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
   LINK_DEVICE_PREPARING_MAILBOX: 'preparing-mailbox',
   LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
-  NEW_EMAIL: 'new-email',
   PASSWORD_CHANGED: 'password-changed',
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
   REFRESH_THREADS: 'refresh-threads',
   SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
   SET_SECTION_TYPE: 'set-section-type',
+  STORE_LOAD: 'store-load',
   THREADS_DELETED: 'thread-deleted-permanently',
-  THREADS_UPDATE_READ: 'threads-update-read',
   UPDATE_EMAILS: 'update-emails'
 };

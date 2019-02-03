@@ -412,12 +412,14 @@ export const removeThreadsDrafts = draftsParams => {
 export const updateEmailIdsThread = ({
   threadId,
   emailIdToAdd,
-  emailIdsToRemove
+  emailIdsToRemove,
+  emailIds
 }) => ({
   type: Thread.UPDATE_EMAILIDS_THREAD,
   threadId,
   emailIdToAdd,
-  emailIdsToRemove
+  emailIdsToRemove,
+  emailIds
 });
 
 export const updateStatusThread = (threadId, status) => ({
