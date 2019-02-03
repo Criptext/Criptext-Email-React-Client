@@ -6,12 +6,6 @@ import { ButtonUnsendStatus } from './ButtonUnsend';
 import { checkUserGuideSteps } from '../utils/electronEventInterface';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import string from '../lang';
-import {
-  setCryptoInterfaces,
-  setDownloadHandler,
-  setFileSuccessHandler
-} from '../utils/FileManager';
-import { downloadFileInFileSystem } from '../utils/ipc';
 
 const { popups } = string;
 
@@ -25,7 +19,7 @@ class EmailWrapper extends Component {
       isHiddenPopOverEmailMoreInfo: true,
       hideView: false,
       popupContent: undefined,
-      emailContent: props.email.content,
+      emailContent: '',
       inlineImages: []
     };
   }
@@ -59,11 +53,29 @@ class EmailWrapper extends Component {
     if (this.props.email.fileTokens.length && !this.props.files.length) {
       this.props.onLoadFiles(this.props.email.fileTokens);
     }
+    this.setState({ emailContent: this.props.email.content });
     if (this.props.email.unread) {
       this.setState({
         displayEmail: true
       });
     }
+    this.setCollapseListener();
+    const steps = [USER_GUIDE_STEPS.EMAIL_READ];
+    checkUserGuideSteps(steps);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      this.state.inlineImages.length === 0 &&
+      this.state.inlineImages.length !== nextProps.inlineImages.length
+    ) {
+      this.setState({ inlineImages: nextProps.inlineImages }, async () => {
+        await this.handleDownloadInlineImages(this.state.inlineImages);
+      });
+    }
+  }
+
+  setCollapseListener = () => {
     const divCollapse = document.getElementById(
       `div-collapse-${this.props.email.key}`
     );
@@ -79,20 +91,7 @@ class EmailWrapper extends Component {
         }
       });
     }
-    const steps = [USER_GUIDE_STEPS.EMAIL_READ];
-    checkUserGuideSteps(steps);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      this.state.inlineImages.length === 0 &&
-      this.state.inlineImages.length !== nextProps.inlineImages.length
-    ) {
-      this.setState({ inlineImages: nextProps.inlineImages }, async () => {
-        await this.handleDownloadInlineImages();
-      });
-    }
-  }
+  };
 
   handleToggleEmail = () => {
     if (!this.props.staticOpen) {
@@ -155,39 +154,16 @@ class EmailWrapper extends Component {
     });
   };
 
-  handleSuccessDownloadInlineImage = async ({ token, url }) => {
-    const [inlineImage] = this.state.inlineImages.filter(
-      img => img.token === token
-    );
-    if (inlineImage) {
-      const downloadParams = {
-        downloadType: 'inline',
-        filename: inlineImage.name,
-        metadataKey: this.props.email.key,
-        url
-      };
-      const filePath = await downloadFileInFileSystem(downloadParams);
-      this.injectImagePathIntoEmailContent(filePath, inlineImage.cid);
-    }
-  };
-
-  injectImagePathIntoEmailContent = (imgPath, cid) => {
-    const prevContent = this.state.emailContent;
-    const newContent = prevContent.replace(
-      `src="cid:${cid}"`,
-      `src="${imgPath}"`
-    );
-    this.setState({ emailContent: newContent });
-  };
-
-  handleDownloadInlineImages = () => {
-    const inlineImages = this.state.inlineImages;
-    setFileSuccessHandler(this.handleSuccessDownloadInlineImage);
-    for (const inlineImg of inlineImages) {
-      const { key, iv } = inlineImg;
-      setCryptoInterfaces(key, iv);
-      setDownloadHandler(inlineImg.token);
-    }
+  handleDownloadInlineImages = async inlineImages => {
+    await this.props.onDownloadInlineImages(inlineImages, cidFilepathPairs => {
+      const newContent = this.props.onInjectFilepathsOnEmailContentByCid(
+        this.state.emailContent,
+        cidFilepathPairs
+      );
+      this.setState({ emailContent: newContent }, () => {
+        this.setCollapseListener();
+      });
+    });
   };
 }
 
@@ -198,6 +174,8 @@ EmailWrapper.propTypes = {
   inlineImages: PropTypes.array,
   onEditDraft: PropTypes.func,
   onDeletePermanently: PropTypes.func,
+  onDownloadInlineImages: PropTypes.func,
+  onInjectFilepathsOnEmailContentByCid: PropTypes.func,
   onLoadFiles: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   staticOpen: PropTypes.bool
