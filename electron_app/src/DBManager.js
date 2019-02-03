@@ -761,6 +761,33 @@ const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
     });
 };
 
+const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
+  const labelIdsToDelete = labelId
+    ? [labelId]
+    : [systemLabels.spam.id, systemLabels.trash.id];
+  return db
+    .select(
+      `${Table.EMAIL}.*`,
+      db.raw(`GROUP_CONCAT(${Table.EMAIL}.key) as keys`)
+    )
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL}.id`,
+      `${Table.EMAIL_LABEL}.emailId`
+    )
+    .from(Table.EMAIL)
+    .whereIn(`${Table.EMAIL_LABEL}.labelId`, labelIdsToDelete)
+    .whereIn(`${Table.EMAIL}.threadId`, threadIds)
+    .groupBy(`${Table.EMAIL}.threadId`)
+    .then(rows => {
+      return rows.map(row => ({
+        id: row.id,
+        threadId: row.threadId,
+        keys: row.keys ? row.keys.split(',').map(Number) : []
+      }));
+    });
+};
+
 const partThreadQueryByMatchText = (query, text) =>
   query.andWhere(function() {
     this.where('preview', 'like', `%${text}%`)
@@ -1173,6 +1200,7 @@ module.exports = {
   getEmailsCounterByLabelId,
   getEmailsGroupByThreadByParams,
   getEmailsByThreadIdAndLabelId,
+  getEmailsToDeleteByThreadIdAndLabelId,
   getEmailsUnredByLabelId,
   getEmailLabelsByEmailId,
   getFilesByEmailId,
