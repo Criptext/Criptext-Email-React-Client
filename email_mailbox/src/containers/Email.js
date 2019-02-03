@@ -9,7 +9,8 @@ import { LabelType, myAccount, mySettings } from './../utils/electronInterface';
 import {
   openFilledComposerWindow,
   sendPrintEmailEvent,
-  sendOpenEmailSource
+  sendOpenEmailSource,
+  downloadFileInFileSystem
 } from './../utils/ipc';
 import {
   loadFiles,
@@ -25,6 +26,11 @@ import {
   appDomain,
   avatarBaseUrl
 } from '../utils/const';
+import {
+  setFileSuccessHandler,
+  setCryptoInterfaces,
+  setDownloadHandler
+} from '../utils/FileManager';
 
 const defineFrom = (email, contacts) => {
   const emailFrom = parseContactRow(email.fromAddress || '');
@@ -243,6 +249,45 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onPrintEmail: ev => {
       ev.stopPropagation();
       sendPrintEmailEvent(email.id);
+    },
+    onDownloadInlineImages: (inlineImages, callback) => {
+      const cidFilepathPairs = {};
+      const handleSuccessDownloadInlineImage = async ({ token, url }) => {
+        const [inlineImage] = inlineImages.filter(img => img.token === token);
+        if (inlineImage) {
+          const { cid, name } = inlineImage;
+          const downloadParams = {
+            downloadType: 'inline',
+            filename: `${cid}-${name}`,
+            metadataKey: email.key,
+            url
+          };
+          const filePath = await downloadFileInFileSystem(downloadParams);
+          cidFilepathPairs[inlineImage.cid] = filePath;
+          if (Object.keys(cidFilepathPairs).length === inlineImages.length)
+            callback(cidFilepathPairs);
+        }
+      };
+
+      setFileSuccessHandler(handleSuccessDownloadInlineImage);
+      for (const inlineImg of inlineImages) {
+        const { key, iv } = inlineImg;
+        setCryptoInterfaces(key, iv);
+        setDownloadHandler(inlineImg.token);
+      }
+    },
+    onInjectFilepathsOnEmailContentByCid: (emailContent, cidFilepathPairs) => {
+      const newEmailContent = Object.keys(cidFilepathPairs).reduce(
+        (emailContentInjected, cid) => {
+          const imgPath = cidFilepathPairs[cid];
+          return emailContentInjected.replace(
+            `src="cid:${cid}"`,
+            `src="${imgPath}"`
+          );
+        },
+        emailContent
+      );
+      return newEmailContent;
     }
   };
 };
