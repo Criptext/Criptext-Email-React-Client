@@ -24,6 +24,17 @@ class EmailWrapper extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (
+      this.state.inlineImages.length === 0 &&
+      this.state.inlineImages.length !== nextProps.inlineImages.length
+    ) {
+      this.setState({ inlineImages: nextProps.inlineImages }, async () => {
+        await this.handleDownloadInlineImages(this.state.inlineImages);
+      });
+    }
+  }
+
   render() {
     return (
       <Email
@@ -62,17 +73,6 @@ class EmailWrapper extends Component {
     this.setCollapseListener();
     const steps = [USER_GUIDE_STEPS.EMAIL_READ];
     checkUserGuideSteps(steps);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      this.state.inlineImages.length === 0 &&
-      this.state.inlineImages.length !== nextProps.inlineImages.length
-    ) {
-      this.setState({ inlineImages: nextProps.inlineImages }, async () => {
-        await this.handleDownloadInlineImages(this.state.inlineImages);
-      });
-    }
   }
 
   setCollapseListener = () => {
