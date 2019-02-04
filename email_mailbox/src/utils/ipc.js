@@ -144,6 +144,10 @@ export const postPeerEvent = async params => {
   return await callMain('client-post-peer-event', params);
 };
 
+export const removeAvatar = async params => {
+  return await callMain('client-remove-avatar', params);
+};
+
 export const removeDevice = async params => {
   return await callMain('client-remove-device', params);
 };

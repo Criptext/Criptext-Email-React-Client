@@ -3,6 +3,7 @@ import SettingsGeneralProfileWrapper from './../components/SettingsGeneralProfil
 import { setAvatarUpdatedTimestamp } from './../actions';
 import { myAccount } from '../utils/electronInterface';
 import {
+  removeAvatar,
   updateAccount,
   updateContactByEmail,
   updateNameEvent,
@@ -22,6 +23,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onRemoveAvatar: async () => {
+      const { status } = await removeAvatar();
+      dispatch(setAvatarUpdatedTimestamp(Date.now()));
+      return status;
+    },
     onUpdateAccount: async params => {
       const recipientId = myAccount.recipientId;
       const { name } = params;

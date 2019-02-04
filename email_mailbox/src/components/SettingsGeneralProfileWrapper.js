@@ -46,6 +46,7 @@ class SettingGeneralProfileWrapper extends Component {
         onChangeRadioButtonSignature={this.handleChangeRadioButtonSignature}
         onChangeTextareaSignature={this.handleChangeTextareaSignature}
         onClickEditName={this.handleClickEditName}
+        onRemoveAvatar={this.handleRemoveAvatar}
         signatureEnabled={this.state.signatureParams.signatureEnabled}
         signature={this.state.signatureParams.signature}
       />
@@ -118,6 +119,39 @@ class SettingGeneralProfileWrapper extends Component {
     this.setState({ signatureParams });
   };
 
+  handleRemoveAvatar = () => {
+    this.setState(
+      {
+        avatarParams: {
+          ...this.state.avatarParams,
+          isLoading: true
+        }
+      },
+      () => {
+        this.handleRemoveAvatarRequest();
+      }
+    );
+  };
+
+  handleRemoveAvatarRequest = async () => {
+    const SUCCESS_STATUS = 200;
+    const status = await this.props.onRemoveAvatar();
+    if (status === SUCCESS_STATUS) {
+      return this.setState({
+        avatarParams: {
+          showImage: false,
+          isLoading: false
+        }
+      });
+    }
+    this.setState({
+      avatarParams: {
+        showImage: true,
+        isLoading: false
+      }
+    });
+  };
+
   handleChangeAvatar = ev => {
     const files = ev.dataTransfer ? ev.dataTransfer.files : ev.target.files;
     const file = files[0];
@@ -172,6 +206,7 @@ class SettingGeneralProfileWrapper extends Component {
 
 SettingGeneralProfileWrapper.propTypes = {
   avatarUrl: PropTypes.string,
+  onRemoveAvatar: PropTypes.func,
   onUploadAvatar: PropTypes.func,
   onUpdateAccount: PropTypes.func,
   onUpdateContact: PropTypes.func

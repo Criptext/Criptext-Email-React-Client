@@ -47,7 +47,7 @@
     },
     "selected": "Selected",
     "selected_plural": "Selected",
-    "print_all": "Imprimir Todo"
+    "print_all": "Print All"
   },
   "labelsItems": {
     "inbox": "Inbox",
@@ -418,6 +418,8 @@
     "criptext_libraries": "Criptext Libraries",
     "current_device": "current device",
     "disabled": "disabled",
+    "edit": "Edit",
+    "email": "Email",
     "enabled": "enabled",
     "enter_new_label_name": "Enter new label name",
     "faq": "FAQ",

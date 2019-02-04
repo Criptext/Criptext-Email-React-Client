@@ -91,6 +91,8 @@ ipc.answerRenderer('client-post-user', params =>
   clientManager.postUser(params)
 );
 
+ipc.answerRenderer('client-remove-avatar', clientManager.removeAvatar);
+
 ipc.answerRenderer('client-remove-device', params =>
   clientManager.removeDevice(params)
 );

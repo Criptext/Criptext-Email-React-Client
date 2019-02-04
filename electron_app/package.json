@@ -148,7 +148,6 @@
     "node-notifier": "^5.2.1",
     "os-locale": "^3.0.1",
     "rimraf": "^2.6.3",
-    "sharp": "^0.21.3",
     "sqlite3": "^4.0.2",
     "websocket": "^1.0.25"
   }
