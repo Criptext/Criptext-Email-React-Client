@@ -7,6 +7,7 @@ import { Switch } from 'react-switch-input';
 import { EDITING_MODES } from './SettingGeneralWrapper';
 import { Editor } from 'react-draft-wysiwyg';
 import string from '../lang';
+import './settingsgeneralprofile.scss';
 
 const SettingsGeneralProfile = props => (
   <div id="settings-general-profile" className="section-block">
@@ -14,6 +15,7 @@ const SettingsGeneralProfile = props => (
       <h1>{string.settings.profile}</h1>
     </div>
     <div className="section-block-content">
+      {renderBlockAvatar(props)}
       {renderBlockEmail(props)}
       {renderBlockName(props)}
       {renderBlockSignature(props)}
@@ -21,7 +23,7 @@ const SettingsGeneralProfile = props => (
   </div>
 );
 
-const renderBlockEmail = props => (
+const renderBlockAvatar = props => (
   <div className="section-block-content-item">
     <div className="general-letters">
       {props.showAvatar ? (
@@ -33,17 +35,53 @@ const renderBlockEmail = props => (
       ) : (
         <span>{getTwoCapitalLetters(myAccount.name)}</span>
       )}
-      <div className="general-avatar-edit">
-        <span>edit</span>
-      </div>
-      <input type="file" accept="image/*" onChange={props.onChangeAvatar} />
       {props.avatarIsLoading && (
         <div className="general-avatar-loading-overlay">
           <Loading />
         </div>
       )}
     </div>
-    <label>{`${myAccount.recipientId}@${appDomain}`}</label>
+    <div>
+      <input
+        type="file"
+        name="fileAvatar"
+        id="fileAvatar"
+        accept="image/*"
+        onChange={props.onChangeAvatar}
+      />
+      <label
+        className={props.avatarIsLoading ? 'disabled' : null}
+        htmlFor={props.avatarIsLoading ? null : 'fileAvatar'}
+      >
+        {string.settings.edit}
+      </label>
+    </div>
+    <div className="general-avatar-divider" />
+    <div>
+      <label
+        className={
+          props.avatarIsLoading || !props.showAvatar ? 'disabled' : null
+        }
+        onClick={
+          props.avatarIsLoading || !props.showAvatar
+            ? null
+            : props.onRemoveAvatar
+        }
+      >
+        {string.settings.remove}
+      </label>
+    </div>
+  </div>
+);
+
+const renderBlockEmail = () => (
+  <div className="section-block-content-item">
+    <span className="section-block-content-item-title">
+      {string.settings.email}
+    </span>
+    <div className="profile-name">
+      <span>{`${myAccount.recipientId}@${appDomain}`}</span>
+    </div>
   </div>
 );
 
@@ -145,11 +183,12 @@ const Loading = () => (
   </div>
 );
 
-renderBlockEmail.propTypes = {
+renderBlockAvatar.propTypes = {
   avatarIsLoading: PropTypes.bool,
   avatarUrl: PropTypes.string,
   onChangeAvatar: PropTypes.func,
   onErrorAvatar: PropTypes.func,
+  onRemoveAvatar: PropTypes.func,
   showAvatar: PropTypes.bool
 };
 

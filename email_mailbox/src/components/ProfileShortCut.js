@@ -18,7 +18,11 @@ const ProfileShortCut = props => (
       className="header-profile"
       onClick={() => props.onToggleMenuProfilePreview()}
     >
-      <AvatarImage avatarUrl={props.avatarUrl} letters={props.letters} />
+      <AvatarImage
+        key={props.avatarUrl}
+        avatarUrl={props.avatarUrl}
+        letters={props.letters}
+      />
     </span>
     <MenuProfilePreview
       avatarUrl={props.avatarUrl}

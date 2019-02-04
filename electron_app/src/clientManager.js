@@ -18,7 +18,7 @@ const packageInfo = require('./../package.json');
 const appVersion = packageInfo.version;
 const { getOsAndArch } = require('./utils/osUtils');
 const { Readable } = require('stream');
-const sharp = require('sharp');
+const nativeImage = require('electron').nativeImage;
 let client = {};
 
 const initializeClient = ({ token, refreshToken, language, os }) => {
@@ -358,6 +358,10 @@ const postUser = async params => {
   return await client.postUser(params);
 };
 
+const removeAvatar = async () => {
+  return await client.deleteAvatar();
+};
+
 const removeDevice = async params => {
   const res = await client.removeDevice(params);
   return res.status === 200
@@ -442,16 +446,21 @@ const upgradeToRefreshToken = async () => {
 };
 
 const uploadAvatar = async params => {
-  const { data, info } = await sharp(params.path)
-    .resize(256, 256)
-    .jpeg()
-    .toBuffer({ resolveWithObject: true });
+  const QUALITY = 100;
+  const RESIZE_DIM = 256;
+  const JPEG_MIME = 'image/jpeg';
+  const image = nativeImage.createFromPath(params.path);
+  const size = image.getSize();
+  const resizeDim =
+    size.width > size.height ? { width: RESIZE_DIM } : { height: RESIZE_DIM };
+  const resizedImage = image.resize(resizeDim);
+  const imageBuffer = resizedImage.toJPEG(QUALITY);
   const readable = new Readable();
-  readable.push(data);
+  readable.push(imageBuffer);
   readable.push(null);
   const clientParams = {
-    contentType: 'image/jpeg',
-    contentLength: info.size,
+    contentType: JPEG_MIME,
+    contentLength: imageBuffer.byteLength,
     readable: readable
   };
   return await client.uploadAvatar(clientParams);
@@ -491,6 +500,7 @@ module.exports = {
   postPeerEvent,
   pushPeerEvents,
   postUser,
+  removeAvatar,
   removeDevice,
   resendConfirmationEmail,
   resetPassword,
