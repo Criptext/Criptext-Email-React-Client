@@ -3,13 +3,13 @@ import signal from '../libs/signal';
 import {
   remoteData,
   startSocket,
-  decryptBackupFile,
   importDatabase,
   clearSyncData
 } from '../utils/electronInterface';
 import {
   acknowledgeEvents,
   closeCreatingKeysLoadingWindow,
+  decryptBackupFile,
   downloadBackupFile,
   getDataReady,
   openMailboxWindow,

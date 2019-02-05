@@ -6,7 +6,6 @@ import ManualSyncDeviceAuthenticationPopup from './ManualSyncDeviceAuthenticatio
 import ManualSyncDeviceRejectedPopup from './ManualSyncDeviceRejectedPopup';
 import ManualSyncDeviceApprovedPopup from './ManualSyncDeviceApprovedPopup';
 import {
-  decryptBackupFile,
   importDatabase,
   clearSyncData,
   myAccount
@@ -14,6 +13,7 @@ import {
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';
 import {
   acknowledgeEvents,
+  decryptBackupFile,
   downloadBackupFile,
   getDataReady,
   syncBegin,

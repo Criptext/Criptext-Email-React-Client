@@ -431,3 +431,7 @@ export const updateUnreadEmailByThreadIds = async ({ threadIds, unread }) => {
 export const downloadBackupFile = async address => {
   return await callMain('data-transfer-download', address);
 };
+
+export const decryptBackupFile = async key => {
+  return await callMain('data-transfer-decrypt', key);
+};

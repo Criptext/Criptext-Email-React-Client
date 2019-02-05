@@ -139,3 +139,7 @@ export const updateIdentityKeyRecord = async params => {
 export const downloadBackupFile = async address => {
   return await callMain('data-transfer-download', address);
 };
+
+export const decryptBackupFile = async key => {
+  return await callMain('data-transfer-decrypt', key);
+};

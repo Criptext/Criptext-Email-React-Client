@@ -51,10 +51,6 @@ export const clearSyncData = () => {
   return dataTransferManager.clearSyncData();
 };
 
-export const decryptBackupFile = key => {
-  return dataTransferManager.decrypt(key);
-};
-
 export const importDatabase = () => {
   return dataTransferManager.importDatabase();
 };
