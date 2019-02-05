@@ -274,7 +274,7 @@ export const formIncomingEmailFromData = ({
   replyTo,
   boundary
 }) => {
-  const content = body ? Utf8Decode(sanitize(body)) : '';
+  const content = body || '';
   const preview = body
     ? cleanHTML(content)
         .slice(0, 100)

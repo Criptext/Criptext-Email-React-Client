@@ -84,7 +84,7 @@
       "createAccount": "Crear cuenta"
     },
     "errorMessages": {
-      "USERNAME_INVALID": "Usuario no válido",
+      "USERNAME_INVALID": "Al menos 3 caracteres. Debe comenzar con letras A-Z.",
       "USERNAME_EXISTS": "Usuario no disponible",
       "USERNAME_UNCERTAIN": "Falló al comprobar el usuario",
       "STATUS_UNKNOWN": "Error desconocido. Código: ",

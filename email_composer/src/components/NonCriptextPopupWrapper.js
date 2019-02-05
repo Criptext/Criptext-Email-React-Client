@@ -20,7 +20,7 @@ class NonCriptextWrapper extends Component {
         password: {
           value: '',
           error: null,
-          type: inputTypes.PASSWORD
+          type: inputTypes.TEXT
         }
       },
       disabled: true
