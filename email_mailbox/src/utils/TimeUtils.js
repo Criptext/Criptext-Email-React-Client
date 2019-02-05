@@ -2,7 +2,6 @@ import moment from 'moment';
 import { mySettings } from './electronInterface';
 import string from './../lang';
 
-const oneDay = 86400000;
 const language = mySettings.language;
 const { momentLocales } = string;
 
@@ -24,19 +23,22 @@ const getTimeLocal = time => {
 
 export const defineTimeByToday = time => {
   const timeLocal = getTimeLocal(time);
-  const diffTime = moment().diff(moment(timeLocal));
-  if (diffTime <= oneDay) {
+  const todayStartTime = moment().endOf('day');
+  const timeStartLocal = getTimeLocal(time).endOf('day');
+
+  const diffDays = todayStartTime.diff(moment(timeStartLocal), 'days');
+  if (diffDays < 1) {
     return moment(timeLocal).format('h:mm A');
-  } else if (diffTime < oneDay * 2) {
+  } else if (diffDays < 2) {
     return moment(timeLocal).format(`[${momentLocales.yesterdayText}]`);
-  } else if (diffTime < oneDay * 7) {
+  } else if (diffDays < 7) {
     return moment(timeLocal).format('dddd');
   }
   return moment(timeLocal).format('MMM DD');
 };
 
 export const defineLargeTime = time => {
-  return moment(time).format(
+  return moment(getTimeLocal(time)).format(
     `ddd, D MMM YYYY [${momentLocales.atText}] h:mm A`
   );
 };

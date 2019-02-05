@@ -202,7 +202,11 @@ class PanelWrapper extends Component {
 
     addEvent(
       Event.STORE_LOAD,
-      ({ labelIds, threadIds, labels, badgeLabelIds }) => {
+      ({ avatarHasChanged, labelIds, threadIds, labels, badgeLabelIds }) => {
+        if (avatarHasChanged) {
+          props.onUpdateAvatar();
+        }
+
         if (!labelIds && !threadIds && !labels) return;
 
         const currentSectionType = this.state.sectionSelected.type;
@@ -337,6 +341,7 @@ PanelWrapper.propTypes = {
   onLoadThreads: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,
   onUnsendEmail: PropTypes.func,
+  onUpdateAvatar: PropTypes.func,
   onUpdateEmailIdsThread: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,
   onUpdateTimestamp: PropTypes.func,

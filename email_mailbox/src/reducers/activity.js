@@ -2,6 +2,7 @@ import { Thread, Activity } from '../actions/types';
 import { Map } from 'immutable';
 
 const initActivity = Map({
+  avatarTimestamp: Date.now(),
   isFilteredByUnreadThreads: false,
   isLoadingThreads: false,
   isSyncing: false

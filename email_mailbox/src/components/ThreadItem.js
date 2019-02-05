@@ -89,11 +89,12 @@ class ThreadItem extends Component {
     }
 
     return (
-      <div style={{ background: this.props.color }} className="thread-letters">
+      <div className="thread-letters">
         <AvatarImage
-          key={this.props.firstRecipientEmail}
+          key={this.props.avatarUrl}
           avatarUrl={this.props.avatarUrl}
           letters={this.props.letters}
+          color={this.props.color}
         />
       </div>
     );
@@ -274,7 +275,6 @@ ThreadItem.propTypes = {
   avatarUrl: PropTypes.string,
   color: PropTypes.string,
   checked: PropTypes.bool,
-  firstRecipientEmail: PropTypes.string,
   hovering: PropTypes.bool,
   isDraft: PropTypes.bool,
   isHiddenCheckBox: PropTypes.bool,

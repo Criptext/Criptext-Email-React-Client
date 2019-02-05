@@ -56,10 +56,11 @@ const formatRecipientsForThreadItem = (
   const myFormattedRecipient = string.mailbox.me;
   let listMyselftAtEnd = false;
   let firstRecipientEmail;
+
   const formattedRecipients = recipients.reduce((formatted, recipient) => {
     const cleanRecipientName = parseContactRow(recipient);
     const contactFound = contacts.find(
-      contact => contact.get('email') === cleanRecipientName.email
+      contact => contact.get('email') === recipient
     );
     const contact = contactFound ? contactFound.toJS() : cleanRecipientName;
     const recipientName = contact.name || contact.email;
@@ -71,14 +72,14 @@ const formatRecipientsForThreadItem = (
         : recipientName;
       formatted.push(recipientFirstName);
       if (!firstRecipientEmail) {
-        firstRecipientEmail = contact.email.replace(`@${appDomain}`, '');
+        firstRecipientEmail = contact.email;
       }
     }
     return formatted;
   }, []);
   if (listMyselftAtEnd) formattedRecipients.push(myFormattedRecipient);
   if (!firstRecipientEmail) {
-    firstRecipientEmail = myAccount.recipientId;
+    firstRecipientEmail = `${myAccount.recipientId}@${appDomain}`;
   }
   return {
     firstRecipientEmail,
@@ -119,12 +120,14 @@ const mapStateToProps = (state, ownProps) => {
     state.get('labels'),
     labelsToExclude
   );
-  const avatarUrl = `${avatarBaseUrl}${firstRecipientEmail}?date=${avatarTimestamp}`;
+  const recipient = firstRecipientEmail.replace(`@${appDomain}`, '');
+  const avatarUrl = firstRecipientEmail.includes(`@${appDomain}`)
+    ? `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`
+    : null;
   return {
     thread: thread.toJS(),
     color,
     avatarUrl,
-    firstRecipientEmail,
     multiselect: state.get('activities').get('multiselect'),
     isStarred: thread.get('allLabels').contains(LabelType.starred.id),
     isDraft: thread.get('allLabels').contains(LabelType.draft.id),

@@ -16,8 +16,9 @@ class AvatarImage extends Component {
     const provName = this.props.name
       ? getTwoCapitalLetters(this.props.name)
       : '';
+    const color = !this.state.showAvatar ? this.props.color : null;
     return (
-      <div className="avatar-letters">
+      <div className="avatar-letters" style={{ background: color }}>
         {(this.state.isLoading || this.state.showAvatar) && (
           <img
             src={this.props.avatarUrl}
@@ -50,6 +51,7 @@ class AvatarImage extends Component {
 
 AvatarImage.propTypes = {
   avatarUrl: PropTypes.string,
+  color: PropTypes.string,
   letters: PropTypes.string,
   name: PropTypes.string
 };

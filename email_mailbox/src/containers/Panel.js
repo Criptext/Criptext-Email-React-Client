@@ -10,7 +10,8 @@ import {
   updateAllFeedItemsAsOlder,
   updateStatusThread,
   unsendEmailOnSuccess,
-  unsendEmailFiles
+  unsendEmailFiles,
+  setAvatarUpdatedTimestamp
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import { LabelType } from '../utils/electronInterface';
@@ -58,6 +59,9 @@ const mapDispatchToProps = dispatch => {
     onUnsendEmail: (emailId, date, status) => {
       dispatch(unsendEmailOnSuccess(String(emailId), date, status));
       dispatch(unsendEmailFiles(emailId));
+    },
+    onUpdateAvatar: () => {
+      dispatch(setAvatarUpdatedTimestamp(Date.now()));
     },
     onUpdateEmailIdsThread: ({ threadId, emailIdToAdd, emailIdsToRemove }) => {
       dispatch(
