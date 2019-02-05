@@ -36,11 +36,12 @@ const Email = props => (
       )} ${defineEmailType(props.isUnsend, props.isDraft)}`}
     >
       <div className="email-info" onClick={props.onToggleEmail}>
-        <div
-          style={{ background: props.email.color }}
-          className="email-info-letter"
-        >
-          <AvatarImage avatarUrl={props.avatarUrl} letters={props.letters} />
+        <div className="email-info-letter">
+          <AvatarImage
+            color={props.email.color}
+            avatarUrl={props.avatarUrl}
+            letters={props.letters}
+          />
         </div>
         <div className="email-info-content">
           <div className="email-info-content-line">

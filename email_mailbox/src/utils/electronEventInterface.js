@@ -41,6 +41,7 @@ import {
 } from './ipc';
 import {
   checkEmailIsTo,
+  cleanEmailBody,
   formEmailLabel,
   formFilesFromData,
   formIncomingEmailFromData,
@@ -71,6 +72,7 @@ let labelIdsEvent = new Set();
 let threadIdsEvent = new Set();
 let badgeLabelIdsEvent = new Set();
 let labelsEvent = {};
+let avatarHasChanged = false;
 
 export const getGroupEvents = async () => {
   if (isGettingEvents) return;
@@ -79,12 +81,14 @@ export const getGroupEvents = async () => {
   threadIdsEvent = new Set();
   badgeLabelIdsEvent = new Set();
   labelsEvent = {};
+  avatarHasChanged = false;
   const { events, hasMoreEvents } = await getEvents();
   const rowIds = [];
 
   for (const event of events) {
     try {
       const {
+        avatarChanged,
         rowid,
         labelIds,
         threadIds,
@@ -101,6 +105,7 @@ export const getGroupEvents = async () => {
       if (badgeLabelIds)
         badgeLabelIdsEvent = new Set([...badgeLabelIdsEvent, ...badgeLabelIds]);
       if (labels) labelsEvent = { ...labelsEvent, labels };
+      if (avatarChanged) avatarHasChanged = true;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
@@ -113,7 +118,6 @@ export const getGroupEvents = async () => {
       }
     }
   }
-
   const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
   if (rowIdsFiltered.length) {
     await setEventAsHandled(rowIdsFiltered);
@@ -131,6 +135,7 @@ export const getGroupEvents = async () => {
         : null
       : null;
     emitter.emit(Event.STORE_LOAD, {
+      avatarHasChanged,
       labelIds,
       threadIds,
       labels,
@@ -163,6 +168,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.SYNC_DEVICE_REQUEST: {
       return handleSyncDeviceRequest(incomingEvent);
+    }
+    case SocketCommand.PEER_AVATAR_CHANGED: {
+      return handlePeerAvatarChanged(incomingEvent);
     }
     case SocketCommand.PEER_EMAIL_READ_UPDATE: {
       return handlePeerEmailRead(incomingEvent);
@@ -263,7 +271,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         deviceId,
         messageType
       });
-      body = decryptedBody;
+      body = cleanEmailBody(decryptedBody);
       headers = decryptedHeaders;
     } catch (e) {
       body = 'Content unencrypted';
@@ -454,6 +462,10 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
     }
   }
   return { rowid, threadIds: email ? [email.threadId] : [] };
+};
+
+const handlePeerAvatarChanged = ({ rowid }) => {
+  return { rowid, avatarChanged: true };
 };
 
 const handlePeerEmailRead = async ({ rowid, params }) => {

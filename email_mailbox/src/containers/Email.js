@@ -57,7 +57,9 @@ const mapStateToProps = (state, ownProps) => {
     : 'transparent';
   const letters = getTwoCapitalLetters(senderName || senderEmail || '');
   const recipient = senderEmail.replace(`@${appDomain}`, '');
-  const avatarUrl = `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`;
+  const avatarUrl = senderEmail.includes(`@${appDomain}`)
+    ? `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`
+    : null;
   const date = email.date;
   const { files, inlineImages } = getFiles(
     state.get('files'),
