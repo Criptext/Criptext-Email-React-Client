@@ -8,3 +8,7 @@ ipc.answerRenderer('data-transfer-download', address =>
 ipc.answerRenderer('data-transfer-decrypt', key =>
   dataTransferManager.decrypt(key)
 );
+
+ipc.answerRenderer('data-transfer-import', () =>
+  dataTransferManager.importDatabase()
+);

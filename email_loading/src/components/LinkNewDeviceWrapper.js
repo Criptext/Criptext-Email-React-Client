@@ -3,7 +3,6 @@ import signal from '../libs/signal';
 import {
   remoteData,
   startSocket,
-  importDatabase,
   clearSyncData
 } from '../utils/electronInterface';
 import {
@@ -12,6 +11,7 @@ import {
   decryptBackupFile,
   downloadBackupFile,
   getDataReady,
+  importDatabase,
   openMailboxWindow,
   throwError
 } from './../utils/ipc';

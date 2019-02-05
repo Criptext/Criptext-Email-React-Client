@@ -435,3 +435,7 @@ export const downloadBackupFile = async address => {
 export const decryptBackupFile = async key => {
   return await callMain('data-transfer-decrypt', key);
 };
+
+export const importDatabase = async () => {
+  return await callMain('data-transfer-import');
+};

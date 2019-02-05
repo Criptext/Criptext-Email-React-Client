@@ -16,10 +16,6 @@ export const setRemoteData = data => {
   globalManager.loadingData.set(data);
 };
 
-export const importDatabase = () => {
-  return dataTransferManager.importDatabase();
-};
-
 export const clearSyncData = () => {
   return dataTransferManager.clearSyncData();
 };

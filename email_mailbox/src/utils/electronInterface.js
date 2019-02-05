@@ -51,10 +51,6 @@ export const clearSyncData = () => {
   return dataTransferManager.clearSyncData();
 };
 
-export const importDatabase = () => {
-  return dataTransferManager.importDatabase();
-};
-
 /*  DataBase
 ----------------------------- */
 export const cleanDataLogout = async recipientId => {

@@ -6,7 +6,6 @@ import ManualSyncDeviceAuthenticationPopup from './ManualSyncDeviceAuthenticatio
 import ManualSyncDeviceRejectedPopup from './ManualSyncDeviceRejectedPopup';
 import ManualSyncDeviceApprovedPopup from './ManualSyncDeviceApprovedPopup';
 import {
-  importDatabase,
   clearSyncData,
   myAccount
 } from '../utils/electronInterface';
@@ -16,6 +15,7 @@ import {
   decryptBackupFile,
   downloadBackupFile,
   getDataReady,
+  importDatabase,
   syncBegin,
   syncStatus
 } from '../utils/ipc';
