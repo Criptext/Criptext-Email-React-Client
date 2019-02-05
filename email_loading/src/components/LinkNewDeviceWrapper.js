@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import signal from '../libs/signal';
-import {
-  remoteData,
-  startSocket,
-  clearSyncData
-} from '../utils/electronInterface';
+import { remoteData, startSocket } from '../utils/electronInterface';
 import {
   acknowledgeEvents,
+  clearSyncData,
   closeCreatingKeysLoadingWindow,
   decryptBackupFile,
   downloadBackupFile,

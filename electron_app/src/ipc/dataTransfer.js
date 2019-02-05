@@ -12,3 +12,7 @@ ipc.answerRenderer('data-transfer-decrypt', key =>
 ipc.answerRenderer('data-transfer-import', () =>
   dataTransferManager.importDatabase()
 );
+
+ipc.answerRenderer('data-transfer-clear-sync-data', () =>
+  dataTransferManager.clearSyncData()
+);

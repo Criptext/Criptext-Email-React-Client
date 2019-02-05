@@ -5,7 +5,6 @@ const electron = window.require('electron');
 const { remote } = electron;
 const { getCurrentWindow } = remote;
 const newsClient = remote.require('./src/newsClient');
-const dataTransferManager = remote.require('./src/dataTransferClient');
 
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
@@ -45,10 +44,6 @@ export const reloadWindow = () => {
 ----------------------------- */
 export const getNews = ({ code }) => {
   return newsClient.getNews({ code });
-};
-
-export const clearSyncData = () => {
-  return dataTransferManager.clearSyncData();
 };
 
 /*  DataBase

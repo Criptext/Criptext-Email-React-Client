@@ -5,13 +5,11 @@ import string from './../lang';
 import ManualSyncDeviceAuthenticationPopup from './ManualSyncDeviceAuthenticationPopup';
 import ManualSyncDeviceRejectedPopup from './ManualSyncDeviceRejectedPopup';
 import ManualSyncDeviceApprovedPopup from './ManualSyncDeviceApprovedPopup';
-import {
-  clearSyncData,
-  myAccount
-} from '../utils/electronInterface';
+import { myAccount } from '../utils/electronInterface';
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';
 import {
   acknowledgeEvents,
+  clearSyncData,
   decryptBackupFile,
   downloadBackupFile,
   getDataReady,

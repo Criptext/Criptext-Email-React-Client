@@ -7,7 +7,6 @@ import {
   remoteData,
   loadingType,
   startSocket,
-  clearSyncData,
   myAccount,
   exportDatabase,
   stopSocket,
@@ -16,6 +15,7 @@ import {
   setRemoteData
 } from '../utils/electronInterface';
 import {
+  clearSyncData,
   closeCreatingKeysLoadingWindow,
   postDataReady,
   syncAccept,

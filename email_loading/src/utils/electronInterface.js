@@ -16,10 +16,6 @@ export const setRemoteData = data => {
   globalManager.loadingData.set(data);
 };
 
-export const clearSyncData = () => {
-  return dataTransferManager.clearSyncData();
-};
-
 export const startSocket = jwt => {
   const data = jwt ? { jwt } : myAccount;
   socketManager.start(data);
