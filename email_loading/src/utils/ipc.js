@@ -133,3 +133,9 @@ export const updateAccount = async params => {
 export const updateIdentityKeyRecord = async params => {
   return await callMain('db-update-identity-key-record', params);
 };
+
+/* DataTransfer
+----------------------------- */
+export const downloadBackupFile = async address => {
+  return await callMain('data-transfer-download', address);
+};

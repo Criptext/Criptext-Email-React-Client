@@ -55,10 +55,6 @@ export const decryptBackupFile = key => {
   return dataTransferManager.decrypt(key);
 };
 
-export const downloadBackupFile = address => {
-  return dataTransferManager.download(address);
-};
-
 export const importDatabase = () => {
   return dataTransferManager.importDatabase();
 };

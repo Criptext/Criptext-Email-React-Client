@@ -16,10 +16,6 @@ export const setRemoteData = data => {
   globalManager.loadingData.set(data);
 };
 
-export const downloadBackupFile = address => {
-  return dataTransferManager.download(address);
-};
-
 export const decryptBackupFile = key => {
   return dataTransferManager.decrypt(key);
 };

@@ -425,3 +425,9 @@ export const updateUnreadEmailByThreadIds = async ({ threadIds, unread }) => {
     unread
   });
 };
+
+/* DataTransfer
+----------------------------- */
+export const downloadBackupFile = async address => {
+  return await callMain('data-transfer-download', address);
+};

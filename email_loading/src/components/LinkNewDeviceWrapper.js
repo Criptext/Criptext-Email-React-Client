@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import signal from '../libs/signal';
 import {
   remoteData,
-  downloadBackupFile,
   startSocket,
   decryptBackupFile,
   importDatabase,
@@ -11,6 +10,7 @@ import {
 import {
   acknowledgeEvents,
   closeCreatingKeysLoadingWindow,
+  downloadBackupFile,
   getDataReady,
   openMailboxWindow,
   throwError
