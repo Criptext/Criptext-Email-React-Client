@@ -1,6 +1,6 @@
 /*global libsignal util*/
 
-import { myAccount, errors, LabelType } from './../utils/electronInterface';
+import { myAccount, LabelType } from './../utils/electronInterface';
 import {
   cleanDatabase,
   createAccount as createAccountDB,
@@ -18,6 +18,7 @@ import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
 import { appDomain, DEVICE_TYPE } from './../utils/const';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
+import string from './../lang';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -57,7 +58,7 @@ const createAccount = async ({
     preKeyIds
   });
   if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
-    throw CustomError(errors.user.PREKEYBUNDLE_FAILED);
+    throw CustomError(string.errors.prekeybundleFailed);
   }
   const { status, body, headers } = await postUser({
     recipientId,
@@ -67,18 +68,18 @@ const createAccount = async ({
     keybundle
   });
   if (status === 400) {
-    throw CustomError(errors.user.ALREADY_EXISTS);
+    throw CustomError(string.errors.alreadyExists);
   } else if (status === 429) {
     const seconds = headers['retry-after'];
-    const tooManyRequestErrorMessage = { ...errors.login.TOO_MANY_REQUESTS };
+    const tooManyRequestErrorMessage = { ...string.errors.tooManyRequests };
     tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
       seconds
     );
     throw CustomError(tooManyRequestErrorMessage);
   } else if (status !== 200) {
     throw CustomError({
-      name: errors.user.CREATE_USER_FAILED.name,
-      description: errors.user.CREATE_USER_FAILED.description + status
+      name: string.errors.createUserFailed.name,
+      description: string.errors.createUserFailed.description + status
     });
   }
   const { token, refreshToken } = body;
@@ -96,11 +97,11 @@ const createAccount = async ({
       registrationId
     });
   } catch (createAccountDbError) {
-    throw CustomError(errors.user.SAVE_LOCAL);
+    throw CustomError(string.errors.saveLocal);
   }
   const [newAccount] = await getAccount();
   if (!newAccount) {
-    throw CustomError(errors.user.SAVE_LOCAL);
+    throw CustomError(string.errors.saveLocal);
   }
   myAccount.initialize(newAccount);
 
@@ -114,7 +115,7 @@ const createAccount = async ({
   try {
     await createLabel(labels);
   } catch (createLabelsDbError) {
-    throw CustomError(errors.user.SAVE_LABELS);
+    throw CustomError(string.errors.saveLabels);
   }
   try {
     await createContact({
@@ -122,7 +123,7 @@ const createAccount = async ({
       email: `${recipientId}@${appDomain}`
     });
   } catch (createContactDbError) {
-    throw CustomError(errors.user.SAVE_OWN_CONTACT);
+    throw CustomError(string.errors.saveOwnContact);
   }
   return true;
 };
@@ -144,13 +145,13 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
     preKeyIds
   });
   if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
-    throw CustomError(errors.user.PREKEYBUNDLE_FAILED);
+    throw CustomError(string.errors.prekeybundleFailed);
   }
   const { status, body } = await postKeyBundle(keybundle);
   if (status !== 200) {
     throw CustomError({
-      name: errors.user.POST_KEYBUNDLE.name,
-      description: errors.user.POST_KEYBUNDLE.description + status
+      name: string.errors.postKeybundle.name,
+      description: string.errors.postKeybundle.description + status
     });
   }
   const { token, refreshToken } = body;
@@ -173,7 +174,7 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
         registrationId
       });
     } catch (updateAccountDbError) {
-      throw CustomError(errors.user.UPDATE_ACCOUNT_DATA);
+      throw CustomError(string.errors.updateAccountData);
     }
   } else {
     if (currentAccount) {
@@ -192,14 +193,14 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
         registrationId
       });
     } catch (createAccountDbError) {
-      throw CustomError(errors.user.SAVE_LOCAL);
+      throw CustomError(string.errors.saveLocal);
     }
 
     const labels = Object.values(LabelType);
     try {
       await createLabel(labels);
     } catch (createLabelsDbError) {
-      throw CustomError(errors.user.SAVE_LABELS);
+      throw CustomError(string.errors.saveLabels);
     }
     try {
       await createContact({
@@ -207,7 +208,7 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
         email: `${recipientId}@${appDomain}`
       });
     } catch (createContactDbError) {
-      throw CustomError(errors.user.SAVE_OWN_CONTACT);
+      throw CustomError(string.errors.saveOwnContact);
     }
   }
   const [newAccount] = await getAccount();
@@ -241,8 +242,8 @@ const uploadKeys = async () => {
   const { status, body } = await postKeyBundle(keybundle);
   if (status !== 200) {
     throw CustomError({
-      name: errors.user.POST_KEYBUNDLE.name,
-      description: errors.user.POST_KEYBUNDLE.description + status
+      name: string.errors.postKeybundle.name,
+      description: string.errors.postKeybundle.description + status
     });
   }
   const { token, refreshToken } = body;
@@ -293,7 +294,7 @@ const createAccountToDB = async ({
         registrationId
       });
     } catch (updateAccountDbError) {
-      throw CustomError(errors.user.UPDATE_ACCOUNT_DATA);
+      throw CustomError(string.errors.updateAccountData);
     }
   } else {
     if (currentAccount) {
@@ -312,14 +313,14 @@ const createAccountToDB = async ({
         registrationId
       });
     } catch (createAccountDbError) {
-      throw CustomError(errors.user.SAVE_LOCAL);
+      throw CustomError(string.errors.saveLocal);
     }
 
     const labels = Object.values(LabelType);
     try {
       await createLabel(labels);
     } catch (createLabelsDbError) {
-      throw CustomError(errors.user.SAVE_LABELS);
+      throw CustomError(string.errors.saveLabels);
     }
   }
   const [newAccount] = await getAccount();

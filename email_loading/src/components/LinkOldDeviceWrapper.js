@@ -13,8 +13,7 @@ import {
   stopSocket,
   encryptDatabaseFile,
   uploadDatabaseFile,
-  setRemoteData,
-  errors
+  setRemoteData
 } from '../utils/electronInterface';
 import {
   closeCreatingKeysLoadingWindow,
@@ -171,7 +170,7 @@ class LinkOldDeviceWrapper extends Component {
       );
     } catch (e) {
       if (e.code === 'ECONNREFUSED') {
-        throwError(errors.server.UNABLE_TO_CONNECT);
+        throwError(string.errors.unableToConnect);
       } else {
         throwError({
           name: e.name,
@@ -223,7 +222,7 @@ class LinkOldDeviceWrapper extends Component {
       );
     } else {
       clearSyncData();
-      const { name, description } = errors.linkDevices.UPLOAD_DATA;
+      const { name, description } = string.errors.unableToConnect;
       throwError({
         name,
         description: description + statusCode

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Loading from './Loading';
 import signal from './../libs/signal';
-import { remoteData, errors } from './../utils/electronInterface';
+import { remoteData } from './../utils/electronInterface';
 import {
   closeCreatingKeysLoadingWindow,
   openMailboxWindow,
   throwError
 } from './../utils/ipc';
-import Loading from './Loading';
+import string from './../lang';
 
 const animationTypes = {
   RUNNING: 'running-animation',
@@ -90,7 +91,7 @@ class LoadingWrapper extends Component {
       }
     } catch (e) {
       if (e.code === 'ECONNREFUSED') {
-        throwError(errors.server.UNABLE_TO_CONNECT);
+        throwError(string.errors.unableToConnect);
       } else {
         throwError({
           name: e.name,
@@ -120,7 +121,7 @@ class LoadingWrapper extends Component {
       }
     } catch (e) {
       if (e.code === 'ECONNREFUSED') {
-        throwError(errors.server.UNABLE_TO_CONNECT);
+        throwError(string.errors.unableToConnect);
       } else {
         throwError({
           name: e.name,
@@ -137,7 +138,7 @@ class LoadingWrapper extends Component {
       this.state.accountResponse === undefined
     ) {
       clearTimeout(this.state.timeout);
-      throwError(errors.server.NO_RESPONSE);
+      throwError(string.errors.noResponse);
       this.loadingThrowError();
       return;
     }

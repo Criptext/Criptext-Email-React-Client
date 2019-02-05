@@ -53,5 +53,55 @@
     "buttonLabels": {
       "close": "Entendido"
     }
+  },
+  "errors": {
+    "alreadyExists":{
+      "name": "El usuario ya existe",
+      "description": "El usuario ya existe. Prueba con otro nombre de usuario"
+    },
+    "createUserFailed": {
+      "name": "Error al crear el usuario",
+      "description": "Ha ocurrido un error al crear el usuario.\nCódigo: "
+    },
+    "noResponse": {
+      "name": "No hay respuesta",
+      "description": "No se ha obtenido respuesta del servidor"
+    },
+    "postKeybundle":{
+      "name": "Error al crear la cuenta",
+      "description": "Ha ocurrido un error al subir el paquete de llaves. Código: "
+    },
+    "prekeybundleFailed":{
+      "name": "Error al crear cuenta",
+      "description": "Ha ocurrido un error al generar el paquete de llaves"
+    },
+    "saveLabels":{
+      "name": "Error al crear la cuenta",
+      "description": "Error al crear etiquetas en la base de datos local"
+    },
+    "saveLocal": {
+      "name": "Error al crear la cuenta",
+      "description": "Error al guardar el usuario en la base de datos local"
+    },
+    "saveOwnContact":{
+      "name": "Error al crear la cuenta",
+      "description": "Fallo al guardar tu información de contacto en la base de datos"
+    },
+    "tooManyRequests": {
+      "name": "Limite de peticiones excedido",
+      "description": "Has realizado muchas peticiones consecutivas.\nPor favor, intenta nuevamente dentro de "
+    },
+    "unableToConnect": {
+      "name": "No se puede conectar",
+      "description": "No se ha podido establecer una conexión con el servidor."
+    },
+    "updateAccountData": {
+      "name": "Error al crear la cuenta",
+      "description": "Ha ocurrido un error al actualizar la información de la cuenta"
+    },
+    "uploadData": {
+      "name": "Error al sincronizar",
+      "description": "Ha ocurrido un error al sincronizar los dispositivos.\nCódigo: "
+    }
   }
 }

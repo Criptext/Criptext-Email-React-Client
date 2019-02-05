@@ -7,7 +7,6 @@ import {
   createTemporalAccount,
   deleteTemporalAccount,
   socketClient,
-  errors,
   confirmWaitingApprovalLogin
 } from './../utils/electronInterface';
 import {
@@ -345,7 +344,7 @@ class LoginWrapper extends Component {
   obtainEphemeralToken = async username => {
     const { status, text } = await linkBegin(username);
     if (status === 439) {
-      throwError(errors.login.TOO_MANY_DEVICES);
+      throwError(string.errors.tooManyDevices);
     } else if (status === 400) {
       return this.goToPasswordLogin();
     } else if (status === 404) {

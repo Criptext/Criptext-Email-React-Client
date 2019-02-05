@@ -37,5 +37,54 @@
         "cancel": "Cancel"
       }
     }
+  },
+  "errors": {
+    "attachmentsTotalSize": {
+      "name": "Error",
+      "description": {
+        "prefix": "The email has surpassed the attachment limit of ",
+        "suffix": "."
+      }
+    },
+    "encrypting": {
+      "name": "Encrypting error",
+      "description": "An error occurred while encrypting message.\nCode: "
+    },
+    "nonExistingUsers":{
+      "name": "Non existing users",
+      "description": "One or more users doesn't exists.\nCheck the recipients and try again"
+    },
+    "pendingFiles":{
+      "name": "Pending files",
+      "description": "You have uploading or failed files. Please check your files and try again"
+    },
+    "tooBigFile":{
+      "name": "Too big file",
+      "description": {
+        "prefix": "The file",
+        "suffix": "exceeds",
+        "defaultEnd": "allowed size"
+      }
+    },
+    "tooManyRecipients": {
+      "name": "Too many recipients",
+      "description": "Your emails can only contain until 300 recipients.\nPlease verify and try again."
+    },
+    "tooManyRequests": {
+      "name": "Too many requests",
+      "description": "Too many consecutive attempts.\nPlease try again in "
+    },
+    "unableToConnect": {
+      "name": "Unable to connect",
+      "description": "Unable to connect to server"
+    },
+    "unauthorized": {
+      "name": "Encrypting error",
+      "description": "An error occurred in your request.\nPlease try again"
+    },
+    "uploadFailed": {
+      "name": "Upload failed",
+      "description": "An error occurred while uploading file.\nPlease try again"
+    }
   }
 }

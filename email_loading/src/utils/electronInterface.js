@@ -4,8 +4,6 @@ const dataTransferManager = remote.require('./src/dataTransferClient');
 const socketManager = remote.require('./src/socketClient');
 const globalManager = remote.require('./src/globalManager');
 
-export const errors = remote.require('./src/errors');
-
 export const myAccount = remote.require('./src/Account');
 
 export const mySettings = remote.require('./src/Settings');

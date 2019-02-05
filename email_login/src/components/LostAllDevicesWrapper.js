@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { validatePassword } from './../validators/validators';
 import LostAllDevices from './LostAllDevices';
-import { errors } from './../utils/electronInterface';
 import {
   closeLoginWindow,
   login,
@@ -120,13 +119,13 @@ class LostDevicesWrapper extends Component {
         break;
       }
       case LOGIN_STATUS.WRONG_CREDENTIALS: {
-        this.throwLoginError(errors.login.WRONG_CREDENTIALS);
+        this.throwLoginError(string.errors.wrongCredentials);
         break;
       }
       case LOGIN_STATUS.TOO_MANY_REQUESTS: {
         const seconds = headers['retry-after'];
         const tooManyRequestErrorMessage = {
-          ...errors.login.TOO_MANY_REQUESTS
+          ...string.errors.tooManyRequests
         };
         // eslint-disable-next-line fp/no-mutation
         tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
@@ -136,13 +135,13 @@ class LostDevicesWrapper extends Component {
         break;
       }
       case LOGIN_STATUS.TOO_MANY_DEVICES: {
-        this.throwLoginError(errors.login.TOO_MANY_DEVICES);
+        this.throwLoginError(string.errors.tooManyDevices);
         break;
       }
       default: {
         this.throwLoginError({
-          name: errors.login.FAILED.name,
-          description: errors.login.FAILED.description + status
+          name: string.errors.loginFailed.name,
+          description: string.errors.loginFailed.description + status
         });
         break;
       }

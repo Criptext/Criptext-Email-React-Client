@@ -115,5 +115,23 @@
       "message": "Algo ha sucedido que está retrasando este proceso.",
       "detail": "¿Quieres seguir esperando?"
     }
+  },
+  "errors":{
+    "loginFailed": {
+      "name": "Error de inicio de sesión",
+      "description": "Ha ocurrido un error durante el inicio de sesión. Por favor, intenta de nuevo.\nCódigo: "
+    },
+    "tooManyDevices": {
+      "name": "Demasiados dispositivos autorizados",
+      "description": "Tienes demasiados dispositivos autorizados. \nDesde uno de tus dispositivos, remueve algún dispositivo que ya no uses e intenta de nuevo. Si no puedes acceder a ninguno de tus dispositivos, por favor contacta a soporte"
+    },
+    "tooManyRequests": {
+      "name": "Limite de peticiones excedido",
+      "description": "Has realizado muchas peticiones consecutivas.\nPor favor, intenta nuevamente dentro de "
+    },
+    "wrongCredentials": {
+      "name": "Credenciales incorrectas",
+      "description": "Usuario o contraseña incorrectos. Verifica tus credenciales e intenta de nuevo"
+    }
   }
 }
