@@ -1,5 +1,4 @@
 /*global libsignal util*/
-import { errors } from './../utils/electronInterface';
 import {
   findKeyBundles,
   getSessionRecordByRecipientIds,
@@ -21,6 +20,7 @@ import {
   createObjectRecipientIdByDevices,
   filterRecipientsByBlacklisted
 } from './../utils/EncryptionUtils';
+import string from './../lang';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -177,7 +177,7 @@ const encryptPostEmail = async ({
     blacklistedKnownDevices
   } = await getKeyBundlesOfRecipients(recipientIds, knownAddresses);
   if (keyBundles.includes(null)) {
-    throw new CustomError(errors.server.UNAUTHORIZED);
+    throw new CustomError(string.errors.unauthorized);
   }
   if (blacklistedKnownDevices.length) {
     const {
@@ -200,7 +200,7 @@ const encryptPostEmail = async ({
     !(recipientsToSendAmount <= recipientDevicesAmount) ||
     recipientDevicesAmount === 0
   ) {
-    throw new CustomError(errors.message.NON_EXISTING_USERS);
+    throw new CustomError(string.errors.nonExistingUsers);
   }
   const keyBundleJSONbyRecipientIdAndDeviceId = keyBundles.reduce(
     (result, keyBundle) => {
@@ -257,16 +257,16 @@ const encryptPostEmail = async ({
   const res = await postEmail(data);
   if (res.status === 429) {
     const seconds = res.headers['retry-after'];
-    const tooManyRequestErrorMessage = { ...errors.login.TOO_MANY_REQUESTS };
+    const tooManyRequestErrorMessage = { ...string.errors.tooManyRequests };
     tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
       seconds
     );
     throw new CustomError(tooManyRequestErrorMessage);
   } else if (res.status !== 200) {
     throw new CustomError({
-      name: errors.message.ENCRYPTING.name,
+      name: string.errors.encrypting.name,
       description:
-        errors.message.ENCRYPTING.description + `${res.status || 'Unknown'}`
+        string.errors.encrypting.description + `${res.status || 'Unknown'}`
     });
   }
   return res;

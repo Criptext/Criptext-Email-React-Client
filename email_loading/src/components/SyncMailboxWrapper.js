@@ -13,16 +13,15 @@ import {
   stopSocket,
   encryptDatabaseFile,
   uploadDatabaseFile,
-  setRemoteData,
-  errors
+  setRemoteData
 } from '../utils/electronInterface';
 import {
-  syncDeny,
-  throwError,
-  syncAccept,
-  postDataReady,
   closeCreatingKeysLoadingWindow,
-  sendEndLinkDevicesEvent
+  postDataReady,
+  syncAccept,
+  syncDeny,
+  sendEndLinkDevicesEvent,
+  throwError
 } from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
@@ -161,7 +160,7 @@ class SyncMailboxWrapper extends Component {
       );
     } catch (e) {
       if (e.code === 'ECONNREFUSED') {
-        throwError(errors.server.UNABLE_TO_CONNECT);
+        throwError(string.errors.unableToConnect);
       } else {
         throwError({
           name: e.name,
@@ -211,7 +210,7 @@ class SyncMailboxWrapper extends Component {
       );
     } else {
       clearSyncData();
-      const { name, description } = errors.linkDevices.UPLOAD_DATA;
+      const { name, description } = string.errors.unableToConnect;
       throwError({
         name,
         description: description + statusCode

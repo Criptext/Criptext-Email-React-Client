@@ -1,6 +1,6 @@
 /*global util*/
-import { myAccount } from './../utils/electronInterface';
 
+import { myAccount } from './../utils/electronInterface';
 import {
   createIdentityKeyRecord,
   createPreKeyRecord,

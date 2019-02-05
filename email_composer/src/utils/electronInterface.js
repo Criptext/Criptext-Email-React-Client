@@ -12,8 +12,6 @@ export const getEmailToEdit = () => {
   return globalManager.emailToEdit.get(composerId);
 };
 
-export const errors = remote.require('./src/errors');
-
 export const myAccount = remote.require('./src/Account');
 export const mySettings = remote.require('./src/Settings');
 

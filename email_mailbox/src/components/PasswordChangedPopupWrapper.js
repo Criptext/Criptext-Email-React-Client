@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import PasswordChangedPopup from './PasswordChangedPopup';
 import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
-import { requiredMinLength, errors } from './../utils/electronInterface';
+import { requiredMinLength } from './../utils/electronInterface';
 import { throwError, unlockDevice } from './../utils/ipc';
 import { handleDeleteDeviceData } from '../utils/electronEventInterface';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
@@ -103,7 +103,7 @@ class PasswordChangedPopupWrapper extends Component {
       case UNLOCK_DEVICE_STATUS.TOO_MANY_REQUESTS: {
         const seconds = headers['retry-after'];
         const tooManyRequestErrorMessage = {
-          ...errors.login.TOO_MANY_REQUESTS
+          ...string.errors.tooManyRequests
         };
         tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
           seconds

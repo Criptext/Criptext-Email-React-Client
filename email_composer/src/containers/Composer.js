@@ -4,7 +4,6 @@ import { Status } from './../components/Control';
 import {
   LabelType,
   myAccount,
-  errors,
   getEmailToEdit,
   sendEventToMailbox
 } from './../utils/electronInterface';
@@ -35,18 +34,17 @@ import {
   parseEmailAddress
 } from './../utils/EmailUtils';
 import {
-  formFileParamsToDatabase,
-  getFileParamsToSend,
-  setCryptoInterfaces
-} from './../utils/FileUtils';
-import {
-  fileManager,
   CHUNK_SIZE,
   FILE_ERROR,
   FILE_FINISH,
   FILE_MODES,
-  FILE_PROGRESS
+  FILE_PROGRESS,
+  fileManager,
+  formFileParamsToDatabase,
+  getFileParamsToSend,
+  setCryptoInterfaces
 } from './../utils/FileUtils';
+import string from './../lang';
 import { appDomain, composerEvents } from '../utils/const';
 import { generateKeyAndIv } from '../utils/AESUtils';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
@@ -285,7 +283,7 @@ class ComposerWrapper extends Component {
         MAX_ATTACMENTS_TOAL_SIZE
       ) {
         setTimeout(() => {
-          const { name, description } = errors.message.ATTACHMENTS_TOTAL_SIZE;
+          const { name, description } = string.errors.attachmentsTotalSize;
           throwError({
             name,
             description:
@@ -332,9 +330,9 @@ class ComposerWrapper extends Component {
           prefix,
           suffix,
           defaultEnd
-        } = errors.message.TOO_BIG_FILE.description;
+        } = string.errors.tooBigFile.description;
         throwError({
-          name: errors.message.TOO_BIG_FILE.name,
+          name: string.errors.tooBigFile.name,
           description: `${prefix} ${file.name} ${suffix}${
             error.maxSize
               ? ` ${convertToHumanSize(Number(error.maxSize), true)}`
@@ -344,7 +342,7 @@ class ComposerWrapper extends Component {
         return;
       }
       default:
-        return throwError(errors.message.UPLOAD_FAILED);
+        return throwError(string.errors.uploadFailed);
     }
   };
 
@@ -452,7 +450,7 @@ class ComposerWrapper extends Component {
       PENDING_ATTACHMENTS_MODES.includes(file.mode)
     );
     if (hasPendingAttachments.length) {
-      throwError(errors.message.PENDING_FILES);
+      throwError(string.errors.pendingFiles);
       return;
     }
     const hasNonCriptextRecipients = !!this.checkNonCriptextRecipients();
@@ -465,7 +463,7 @@ class ComposerWrapper extends Component {
       this.setState({ displayNonCriptextPopup: true });
     } else if (recipientsAmount >= MAX_RECIPIENTS_AMOUNT) {
       this.setState({ status: Status.DISABLED }, () => {
-        throwError(errors.message.TOO_MANY_RECIPIENTS);
+        throwError(string.errors.tooManyRecipients);
       });
     } else {
       const isEmailSecure = hasNonCriptextRecipients
@@ -556,7 +554,7 @@ class ComposerWrapper extends Component {
         await createEmailLabel(emailLabels);
         closeComposerWindow({});
       } else if (e.code === 'ECONNREFUSED') {
-        throwError(errors.server.UNABLE_TO_CONNECT);
+        throwError(string.errors.unableToConnect);
       } else {
         const errorToShow = {
           name: e.name,

@@ -6,8 +6,7 @@ import {
   startSocket,
   decryptBackupFile,
   importDatabase,
-  clearSyncData,
-  errors
+  clearSyncData
 } from '../utils/electronInterface';
 import {
   acknowledgeEvents,
@@ -124,7 +123,7 @@ class LoadingWrapper extends Component {
       }
     } catch (e) {
       if (e.code === 'ECONNREFUSED') {
-        throwError(errors.server.UNABLE_TO_CONNECT);
+        throwError(string.errors.unableToConnect);
       } else {
         throwError({
           name: e.name,

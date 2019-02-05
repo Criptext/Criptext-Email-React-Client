@@ -24,6 +24,10 @@
     },
     "email": {
       "invalid": "Invalid email"
+    },
+    "tooManyRequests": {
+      "name": "Too many requests",
+      "description": "Too many consecutive attempts.\nPlease try again in "
     }
   },
   "header": {

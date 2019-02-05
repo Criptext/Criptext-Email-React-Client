@@ -54,5 +54,55 @@
     "buttonLabels": {
       "close": "Got it"
     }
+  },
+  "errors": {
+    "alreadyExists":{
+      "name": "User already exists",
+      "description": "User already exists. Try another username"
+    },
+    "createUserFailed": {
+      "name": "Error creating user",
+      "description": "Failed to create user.\nCode: "
+    },
+    "noResponse": {
+      "name": "No response",
+      "description": "No response from server"
+    },
+    "postKeybundle":{
+      "name": "Error creating account",
+      "description": "Failed to post keybundle.\nCode: "
+    },
+    "prekeybundleFailed":{
+      "name": "Error creating account",
+      "description": "Failed to generate prekeybundle"
+    },
+    "saveLabels":{
+      "name": "Error creating account",
+      "description": "Failed to create labels in local database"
+    },
+    "saveLocal": {
+      "name": "Error creating account",
+      "description": "Failed to create user in local database"
+    },
+    "saveOwnContact":{
+      "name": "Error creating account",
+      "description": "Failed to save own contact in local database"
+    },
+    "tooManyRequests": {
+      "name": "Too many requests",
+      "description": "Too many consecutive attempts.\nPlease try again in "
+    },
+    "unableToConnect": {
+      "name": "Unable to connect",
+      "description": "Unable to connect to server"
+    },
+    "updateAccountData": {
+      "name": "Error creating account",
+      "description": "Failed to update account data"
+    },
+    "uploadData": {
+      "name": "Link device error",
+      "description": "Failed to upload data.\nCode: "
+    }
   }
 }

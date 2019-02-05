@@ -24,6 +24,10 @@
     },
     "email": {
       "invalid": "Correo inválido"
+    },
+    "tooManyRequests": {
+      "name": "Limite de peticiones excedido",
+      "description": "Has realizado muchas peticiones consecutivas.\nPor favor, intenta nuevamente dentro de "
     }
   },
   "header": {
