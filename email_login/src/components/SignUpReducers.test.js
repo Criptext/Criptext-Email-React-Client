@@ -141,7 +141,7 @@ describe('updateForm', () => {
     ${'verylongnamethatisnotallowed'} | ${ErrorMsgs.USERNAME_INVALID}
     ${'sebastian.caceres'}            | ${toBeConfirmed}
     ${'carlos1996'}                   | ${toBeConfirmed}
-    ${'1jeff'}                        | ${toBeConfirmed}
+    ${'1jeff'}                        | ${ErrorMsgs.USERNAME_INVALID}
     ${'0'}                            | ${ErrorMsgs.USERNAME_INVALID}
   `('with username input $input sets error: $error', ({ input, error }) => {
     const newState = updateForm(defaultState, {

@@ -84,7 +84,7 @@
       "createAccount": "Create account"
     },
     "errorMessages": {
-      "USERNAME_INVALID": "Invalid username",
+      "USERNAME_INVALID": "At least 3 characters. Must begin with letters A-Z.",
       "USERNAME_EXISTS": "Username not available",
       "USERNAME_UNCERTAIN": "Failed to check username",
       "STATUS_UNKNOWN": "Unknown status code: ",

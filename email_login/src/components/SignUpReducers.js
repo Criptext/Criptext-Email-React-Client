@@ -1,7 +1,7 @@
 import { toBeConfirmed, optionallyEmpty } from './SignUpSymbols';
 import * as ErrorMsgs from './SignUpErrorMsgs';
 import {
-  validateUsername,
+  validateSignupUsername,
   validateFullname,
   validatePassword,
   validateConfirmPassword,
@@ -58,7 +58,7 @@ export const updateForm = (state, { itemName, itemValue }) => {
   };
   switch (itemName) {
     case 'username': {
-      if (!validateUsername(itemValue))
+      if (!validateSignupUsername(itemValue))
         return {
           ...newState,
           errors: { ...newState.errors, username: ErrorMsgs.USERNAME_INVALID }
