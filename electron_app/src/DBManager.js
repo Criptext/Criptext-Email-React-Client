@@ -15,6 +15,8 @@ const mySettings = require('./Settings');
 const { setLanguage } = require('./lang');
 const { genUUID } = require('./utils/stringUtils');
 
+const EMAIL_CONTACT_TYPE_FROM = 'from';
+
 /* Account
 ----------------------------- */
 const createAccount = params => {
@@ -105,6 +107,16 @@ const createContactsIfOrNotStore = async (contacts, trx) => {
   return emailAddresses;
 };
 
+const updateContactScore = (emailId, trx) => {
+  return trx.raw(
+    `UPDATE ${
+      Table.CONTACT
+    } SET SCORE = SCORE + 1 WHERE id IN (SELECT contactId from ${
+      Table.EMAIL_CONTACT
+    } where emailId = ${emailId} AND type <> '${EMAIL_CONTACT_TYPE_FROM}')`
+  );
+};
+
 const filterUniqueContacts = contacts => {
   const contactsUnique = contacts.reduce(
     (result, contact) => {
@@ -121,7 +133,11 @@ const filterUniqueContacts = contacts => {
 };
 
 const getAllContacts = () => {
-  return db.select('name', 'email').from(Table.CONTACT);
+  return db
+    .select('name', 'email')
+    .from(Table.CONTACT)
+    .orderBy('score', 'DESC')
+    .orderBy('name');
 };
 
 const getContactByEmails = (emails, trx) => {
@@ -325,6 +341,10 @@ const createEmail = async (params, trx) => {
       });
       const emailLabelRow = [...emailLabel];
       await createEmailLabel(emailLabelRow, trx);
+
+      if (params.labels.includes(systemLabels.sent.id)) {
+        await updateContactScore(emailId, trx);
+      }
 
       if (params.files) {
         const files = params.files.map(file =>
