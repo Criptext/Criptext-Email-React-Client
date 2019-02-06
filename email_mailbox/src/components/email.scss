@@ -109,7 +109,8 @@
     .email-body{
       .email-text{
         font-weight: 200;
-        overflow: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
       
         &[disabled]{
           opacity: 0.3;
