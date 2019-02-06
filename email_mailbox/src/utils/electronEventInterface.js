@@ -163,6 +163,9 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.DEVICE_LINK_AUTHORIZATION_REQUEST: {
       return handleLinkDeviceRequest(incomingEvent);
     }
+    case SocketCommand.KEYBUNDLE_UPLOADED: {
+      return handleKeybundleUploaded(incomingEvent);
+    }
     case SocketCommand.DEVICE_REMOVED: {
       return handlePeerRemoveDevice(incomingEvent);
     }
@@ -482,7 +485,7 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
     }
     return { rowid: null, threadIds: [] };
   }
-  return { rowid: null, threadIds: [] };
+  return { rowid };
 };
 
 const handlePeerEmailUnsend = async ({ rowid, params }) => {
@@ -508,6 +511,10 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
 
 const handleLinkDeviceRequest = ({ rowid, params }) => {
   sendStartLinkDevicesEvent({ rowid, params });
+};
+
+const handleKeybundleUploaded = ({ rowid }) => {
+  return { rowid };
 };
 
 const handleSyncDeviceRequest = ({ rowid, params }) => {
@@ -733,6 +740,7 @@ ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
 ipcRenderer.on(
   'composer-email-sent',
   (ev, { type, threadId, hasExternalPassphrase, threadData }) => {
+    if (!threadId) return;
     const messageData = hasExternalPassphrase
       ? {
           ...Messages.success.rememberSharePassphrase,
