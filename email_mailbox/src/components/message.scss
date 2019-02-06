@@ -1,8 +1,9 @@
 .message-wrapper{
   display: flex;
+  margin: 0 125px;
   position: absolute;
   top: 10px;
-  width: 100%;
+  width: calc(100% - 250px);
   z-index: 3;
 
   &.displayed {
@@ -14,9 +15,8 @@
 
   .message-container{
     display: -webkit-box;
-    margin: 0 160px;
     position: relative;
-    width: calc(100% - 320px);
+    width: 100%;
 
     .message-content {
       align-items: center;
