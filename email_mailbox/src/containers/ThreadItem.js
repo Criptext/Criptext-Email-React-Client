@@ -57,30 +57,30 @@ const formatRecipientsForThreadItem = (
   let listMyselftAtEnd = false;
   let firstRecipientEmail;
 
-  const formattedRecipients = recipients.reduce((formatted, recipient) => {
-    const cleanRecipientName = parseContactRow(recipient);
-    const contactFound = contacts.find(
-      contact => contact.get('email') === recipient
-    );
-    const contact = contactFound ? contactFound.toJS() : cleanRecipientName;
-    const recipientName = contact.name || contact.email;
-    if (recipientName === currentUserName) {
-      listMyselftAtEnd = true;
-    } else {
-      const recipientFirstName = shouldShowOnlyFirstName
-        ? recipientName.replace(/[<>]/g, '').split(' ')[0]
-        : recipientName;
-      formatted.push(recipientFirstName);
-      if (!firstRecipientEmail) {
+  const formattedRecipients = recipients.reduce(
+    (formatted, recipient, index) => {
+      const cleanRecipientName = parseContactRow(recipient);
+      const contactFound = contacts.find(
+        contact => contact.get('email') === recipient
+      );
+      const contact = contactFound ? contactFound.toJS() : cleanRecipientName;
+      const recipientName = contact.name || contact.email;
+      if (recipientName === currentUserName) {
+        listMyselftAtEnd = true;
+      } else {
+        const recipientFirstName = shouldShowOnlyFirstName
+          ? recipientName.replace(/[<>]/g, '').split(' ')[0]
+          : recipientName;
+        formatted.push(recipientFirstName);
+      }
+      if (index === recipients.length - 1) {
         firstRecipientEmail = contact.email;
       }
-    }
-    return formatted;
-  }, []);
+      return formatted;
+    },
+    []
+  );
   if (listMyselftAtEnd) formattedRecipients.push(myFormattedRecipient);
-  if (!firstRecipientEmail) {
-    firstRecipientEmail = `${myAccount.recipientId}@${appDomain}`;
-  }
   return {
     firstRecipientEmail,
     formattedRecipients: formattedRecipients.join(', ')

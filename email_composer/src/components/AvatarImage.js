@@ -25,6 +25,7 @@ class AvatarImage extends Component {
             style={{ visibility: this.state.isLoading ? 'hidden' : 'visible' }}
             onLoad={this.onLoadAvatar}
             onError={this.onErrorAvatar}
+            alt="avatar"
           />
         )}
         {(this.state.isLoading || !this.state.showAvatar) && (
