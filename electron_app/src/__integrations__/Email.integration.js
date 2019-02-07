@@ -162,6 +162,31 @@ const emailStarred = {
   labels: [4]
 };
 
+const emailScore = {
+  email: {
+    threadId: 'threadG',
+    key: 'keyG',
+    s3Key: 's3KeyG',
+    subject: 'Greetings there',
+    content: '<p>Hello there</p>',
+    preview: 'Hello there',
+    date: '2014-09-11 09:23:19.120',
+    status: 5,
+    unread: false,
+    secure: false,
+    isMuted: false,
+    unsendDate: '2018-06-14 08:23:20.000',
+    trashDate: null,
+    messageId: 'messageIdG',
+    fromAddress: 'User me <user@criptext.com>'
+  },
+  recipients: {
+    from: ['User me <user@criptext.com>'],
+    to: ['userscore@criptext.com']
+  },
+  labels: [3]
+};
+
 const insertEmails = async () => {
   await DBManager.createEmail(emailDraft);
   await DBManager.createEmail(emailSent);
@@ -388,5 +413,15 @@ describe('Store relation data to EmailLabel Table: ', () => {
     ];
     const response = await DBManager.createEmailLabel(emailLabelDraft);
     expect(response).toBeUndefined();
+  });
+});
+
+describe('Update data contact to Contact Table: ', () => {
+  it('Should update contact score to 1 after inserting email', async () => {
+    await DBManager.createEmail(emailScore);
+    const [contact] = await DBManager.getContactByEmail(
+      emailScore.recipients.to[0]
+    );
+    expect(contact.score).toEqual(1);
   });
 });

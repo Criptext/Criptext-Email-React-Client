@@ -140,6 +140,14 @@ const getAllContacts = () => {
     .orderBy('name');
 };
 
+const getContactByEmail = (email, trx) => {
+  const knex = trx || db;
+  return knex
+    .select()
+    .from(Table.CONTACT)
+    .where({ email });
+};
+
 const getContactByEmails = (emails, trx) => {
   const knex = trx || db;
   return knex
@@ -1209,6 +1217,7 @@ module.exports = {
   getAllContacts,
   getAllFeedItems,
   getAllLabels,
+  getContactByEmail,
   getContactByEmails,
   getContactByIds,
   getContactsByEmailId,
