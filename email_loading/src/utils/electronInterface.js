@@ -25,10 +25,6 @@ export const stopSocket = () => {
   return socketManager.disconnect();
 };
 
-export const exportDatabase = () => {
-  return dataTransferManager.exportDatabase();
-};
-
 export const encryptDatabaseFile = () => {
   return dataTransferManager.encrypt();
 };

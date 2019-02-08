@@ -151,3 +151,7 @@ export const importDatabase = async () => {
 export const clearSyncData = async () => {
   return await callMain('data-transfer-clear-sync-data');
 };
+
+export const exportDatabase = async () => {
+  return await callMain('data-transfer-export-database');
+};

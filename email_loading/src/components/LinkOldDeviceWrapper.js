@@ -8,7 +8,6 @@ import {
   loadingType,
   startSocket,
   myAccount,
-  exportDatabase,
   stopSocket,
   encryptDatabaseFile,
   uploadDatabaseFile,
@@ -17,6 +16,7 @@ import {
 import {
   clearSyncData,
   closeCreatingKeysLoadingWindow,
+  exportDatabase,
   linkAccept,
   linkDeny,
   postDataReady,
