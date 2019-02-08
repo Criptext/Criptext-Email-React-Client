@@ -159,3 +159,7 @@ export const exportDatabase = async () => {
 export const encryptDatabaseFile = async () => {
   return await callMain('data-transfer-encrypt');
 };
+
+export const uploadDatabaseFile = async randomId => {
+  return await callMain('data-transfer-upload', randomId);
+};

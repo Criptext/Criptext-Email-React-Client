@@ -1,6 +1,5 @@
 import { labels } from './systemLabels';
 const { remote } = window.require('electron');
-const dataTransferManager = remote.require('./src/dataTransferClient');
 const socketManager = remote.require('./src/socketClient');
 const globalManager = remote.require('./src/globalManager');
 
@@ -23,8 +22,4 @@ export const startSocket = jwt => {
 
 export const stopSocket = () => {
   return socketManager.disconnect();
-};
-
-export const uploadDatabaseFile = randomId => {
-  return dataTransferManager.upload(randomId);
 };

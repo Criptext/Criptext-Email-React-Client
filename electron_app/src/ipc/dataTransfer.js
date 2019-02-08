@@ -24,3 +24,7 @@ ipc.answerRenderer('data-transfer-export-database', () =>
 ipc.answerRenderer('data-transfer-import', () =>
   dataTransferManager.importDatabase()
 );
+
+ipc.answerRenderer('data-transfer-upload', randomId =>
+  dataTransferManager.upload(randomId)
+);

@@ -9,7 +9,6 @@ import {
   startSocket,
   myAccount,
   stopSocket,
-  uploadDatabaseFile,
   setRemoteData
 } from '../utils/electronInterface';
 import {
@@ -21,7 +20,8 @@ import {
   syncAccept,
   syncDeny,
   sendEndLinkDevicesEvent,
-  throwError
+  throwError,
+  uploadDatabaseFile
 } from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
