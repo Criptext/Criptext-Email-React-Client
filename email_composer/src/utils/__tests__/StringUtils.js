@@ -25,7 +25,7 @@ describe('String Utils - Human File Size :', () => {
 describe('String Utils - HTML style and script tags', () => {
   it('Should remove HTML tags: style and script with your content', () => {
     const text = 'Hello';
-    const string = `<style type="text/css">...</style><script src="">xxx</script><style type="text/css">...</style><p>${text}&nbsp;<span>${text}</span>!</p><script src="">xxx</script>`;
+    const string = `<style type="text/css">a{color:red;}</style><!-- Comments --><style>*{-moz-box-sizing:border-box;}</style><script src=""></script><style type="text/css">...</style></br><p>${text}&nbsp;<span>${text}</span>!</p><p>&lt;&gt;&gt;&amp;&quot;&apos;&cent;&pound;&yen;&euro;&copy;&reg;</p><script src="">xxx</script>`;
     const stringCleaned = utils.cleanHTML(string);
     const result = `${text} ${text} !`;
     expect(stringCleaned).toEqual(result);

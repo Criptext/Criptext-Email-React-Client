@@ -79,6 +79,7 @@ Composer.propTypes = {
   isCollapsedMoreRecipient: PropTypes.bool,
   isDragActive: PropTypes.bool,
   isFocusEditorInput: PropTypes.bool,
+  isLinkingDevices: PropTypes.bool,
   onClickCancelSendMessage: PropTypes.func,
   onDrop: PropTypes.func,
   onClearFile: PropTypes.func,
