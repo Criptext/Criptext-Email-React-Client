@@ -205,8 +205,8 @@ export const formContactSupportEmailContent = async () => {
     <strong> App Version: </strong> ${version}<br/>
     <strong> Installer type: </strong> ${installerType}<br/>
     ${os && `<strong> OS: </strong> ${toCapitalize(os)}<br/>`}
-    ${!!distribution && `<strong> Dist: </strong> ${distribution}<br/>`}
-    ${!!distVersion && `<strong> OS Vers: </strong> ${distVersion}<br/>`}
+    ${distribution ? `<strong> Dist: </strong> ${distribution}<br/>` : ''}
+    ${distVersion ? `<strong> OS Vers: </strong> ${distVersion}<br/>` : ''}
     ${arch && `<strong> Arch: </strong> ${arch}<br/>`}
   `;
   const content = lines + header + separator + appInfo;
