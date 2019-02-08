@@ -45,7 +45,7 @@ export const cleanHTML = string => {
   const stringHTMLcontentRemoved = string
     .replace(/<style[^>]*>[^>]*<\/style>/g, '')
     .replace(/<script[^>]*>[^>]*<\/script>/g, '')
-    .replace(/&nbsp;/, ' ');
+    .replace(/&[a-z]{2,5};/g, ' ');
   return removeHTMLTags(stringHTMLcontentRemoved);
 };
 

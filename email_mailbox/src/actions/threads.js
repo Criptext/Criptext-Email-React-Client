@@ -477,9 +477,11 @@ export const searchThreads = params => {
 export const loadThreads = params => {
   return async dispatch => {
     try {
-      const expiredDeletedEmails = await getTrashExpiredEmails();
-      if (expiredDeletedEmails.length) {
-        dispatch(removeEmails(expiredDeletedEmails));
+      if (LabelType.trash.id === params.labelId) {
+        const expiredDeletedEmails = await getTrashExpiredEmails();
+        if (expiredDeletedEmails.length) {
+          dispatch(removeEmails(expiredDeletedEmails));
+        }
       }
       const threads = await getEmailsGroupByThreadByParams(params);
       const contactIds = threads.reduce((previousValue, thread) => {

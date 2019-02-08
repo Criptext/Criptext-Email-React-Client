@@ -52,7 +52,6 @@
         top: -6px;
       }
     }
-
   }
 }
 
@@ -73,7 +72,6 @@
     .menu-container{
       background-color: $_BACKGROUND_COLOR_POPOVER;
       border-color: $_BORDER_COLOR_POPOVER;
-      color: $_COLOR_TEXT_POPOVER;
 
       &.menu-arrow{
         &:before{
@@ -83,6 +81,10 @@
         &:after{
           border-color:$_BACKGROUND_COLOR_POPOVER transparent;
         }
+      }
+
+      li{
+        color: $_COLOR_TEXT_POPOVER;
       }
     }
   }
