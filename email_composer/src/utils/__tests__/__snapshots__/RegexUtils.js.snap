@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Regex Utils - Filter Contacts : Should filter contacts with word beginning with user 1`] = `
+Array [
+  "User Test1",
+  "user1@criptext.com",
+  "New User2",
+  "user 3",
+]
+`;

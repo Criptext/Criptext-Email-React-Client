@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { getAllContacts } from './../utils/ipc';
 import Autocomplete from './Autocomplete';
 import { appDomain } from '../utils/const';
+import { contactsRegex } from '../utils/RegexUtils';
 
 let people = undefined;
 let filtered = [];
@@ -70,12 +71,10 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
     filtered = filtered.filter(person => {
       const emailHasMatches =
         person.email.toLowerCase().slice(0, inputLength) === inputValue;
-      if (person.name) {
-        const nameHasMatches =
-          person.name.toLowerCase().slice(0, inputLength) === inputValue;
-        return nameHasMatches || emailHasMatches;
-      }
-      return emailHasMatches;
+      const nameHasMatches = person.name
+        ? contactsRegex(inputValue).test(person.name)
+        : false;
+      return emailHasMatches || nameHasMatches;
     });
     return filtered;
   };

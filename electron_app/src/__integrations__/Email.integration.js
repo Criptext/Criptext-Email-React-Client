@@ -419,8 +419,8 @@ describe('Store relation data to EmailLabel Table: ', () => {
 describe('Update data contact to Contact Table: ', () => {
   it('Should update contact score to 1 after inserting email', async () => {
     await DBManager.createEmail(emailScore);
-    const [contact] = await DBManager.getContactByEmail(
-      emailScore.recipients.to[0]
+    const [contact] = await DBManager.getContactByEmails(
+      emailScore.recipients.to
     );
     expect(contact.score).toEqual(1);
   });
