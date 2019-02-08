@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import signal from '../libs/signal';
-import {
-  remoteData,
-  downloadBackupFile,
-  startSocket,
-  decryptBackupFile,
-  importDatabase,
-  clearSyncData
-} from '../utils/electronInterface';
+import { remoteData, startSocket } from '../utils/electronInterface';
 import {
   acknowledgeEvents,
+  clearSyncData,
   closeCreatingKeysLoadingWindow,
+  decryptBackupFile,
+  downloadBackupFile,
   getDataReady,
+  importDatabase,
   openMailboxWindow,
   throwError
 } from './../utils/ipc';

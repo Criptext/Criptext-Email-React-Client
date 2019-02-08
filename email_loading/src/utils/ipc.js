@@ -133,3 +133,33 @@ export const updateAccount = async params => {
 export const updateIdentityKeyRecord = async params => {
   return await callMain('db-update-identity-key-record', params);
 };
+
+/* DataTransfer
+----------------------------- */
+export const downloadBackupFile = async address => {
+  return await callMain('data-transfer-download', address);
+};
+
+export const decryptBackupFile = async key => {
+  return await callMain('data-transfer-decrypt', key);
+};
+
+export const importDatabase = async () => {
+  return await callMain('data-transfer-import');
+};
+
+export const clearSyncData = async () => {
+  return await callMain('data-transfer-clear-sync-data');
+};
+
+export const exportDatabase = async () => {
+  return await callMain('data-transfer-export-database');
+};
+
+export const encryptDatabaseFile = async () => {
+  return await callMain('data-transfer-encrypt');
+};
+
+export const uploadDatabaseFile = async randomId => {
+  return await callMain('data-transfer-upload', randomId);
+};

@@ -14,7 +14,6 @@ export const getEmailToEdit = () => {
 
 export const myAccount = remote.require('./src/Account');
 export const mySettings = remote.require('./src/Settings');
-
 export const LabelType = labels;
 
 /* Window events

@@ -7,21 +7,21 @@ import {
   remoteData,
   loadingType,
   startSocket,
-  clearSyncData,
   myAccount,
-  exportDatabase,
   stopSocket,
-  encryptDatabaseFile,
-  uploadDatabaseFile,
   setRemoteData
 } from '../utils/electronInterface';
 import {
+  clearSyncData,
   closeCreatingKeysLoadingWindow,
+  encryptDatabaseFile,
+  exportDatabase,
   linkAccept,
   linkDeny,
   postDataReady,
   throwError,
-  sendEndLinkDevicesEvent
+  sendEndLinkDevicesEvent,
+  uploadDatabaseFile
 } from '../utils/ipc';
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';

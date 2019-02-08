@@ -5,17 +5,15 @@ import string from './../lang';
 import ManualSyncDeviceAuthenticationPopup from './ManualSyncDeviceAuthenticationPopup';
 import ManualSyncDeviceRejectedPopup from './ManualSyncDeviceRejectedPopup';
 import ManualSyncDeviceApprovedPopup from './ManualSyncDeviceApprovedPopup';
-import {
-  downloadBackupFile,
-  decryptBackupFile,
-  importDatabase,
-  clearSyncData,
-  myAccount
-} from '../utils/electronInterface';
+import { myAccount } from '../utils/electronInterface';
 import { ArrayBufferToBuffer } from '../utils/BytesUtils';
 import {
-  getDataReady,
   acknowledgeEvents,
+  clearSyncData,
+  decryptBackupFile,
+  downloadBackupFile,
+  getDataReady,
+  importDatabase,
   syncBegin,
   syncStatus
 } from '../utils/ipc';
