@@ -82,6 +82,7 @@ const exportContactTable = async db => {
       .offset(offset)
       .then(rows =>
         rows.map(row => {
+          delete row.score;
           if (!row.name) {
             delete row.name;
           }
