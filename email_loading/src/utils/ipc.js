@@ -155,3 +155,7 @@ export const clearSyncData = async () => {
 export const exportDatabase = async () => {
   return await callMain('data-transfer-export-database');
 };
+
+export const encryptDatabaseFile = async () => {
+  return await callMain('data-transfer-encrypt');
+};

@@ -25,10 +25,6 @@ export const stopSocket = () => {
   return socketManager.disconnect();
 };
 
-export const encryptDatabaseFile = () => {
-  return dataTransferManager.encrypt();
-};
-
 export const uploadDatabaseFile = randomId => {
   return dataTransferManager.upload(randomId);
 };

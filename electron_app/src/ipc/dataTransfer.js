@@ -13,6 +13,10 @@ ipc.answerRenderer('data-transfer-decrypt', key =>
   dataTransferManager.decrypt(key)
 );
 
+ipc.answerRenderer('data-transfer-encrypt', () =>
+  dataTransferManager.encrypt()
+);
+
 ipc.answerRenderer('data-transfer-export-database', () =>
   dataTransferManager.exportDatabase()
 );

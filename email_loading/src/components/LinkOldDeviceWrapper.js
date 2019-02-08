@@ -9,13 +9,13 @@ import {
   startSocket,
   myAccount,
   stopSocket,
-  encryptDatabaseFile,
   uploadDatabaseFile,
   setRemoteData
 } from '../utils/electronInterface';
 import {
   clearSyncData,
   closeCreatingKeysLoadingWindow,
+  encryptDatabaseFile,
   exportDatabase,
   linkAccept,
   linkDeny,
