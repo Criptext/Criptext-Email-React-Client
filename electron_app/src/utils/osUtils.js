@@ -1,7 +1,6 @@
 const os = require('os');
 const getos = require('getos');
 const packagedata = require('./../../package.json');
-console.log(packagedata.criptextInstallerType);
 
 const getComputerName = () => {
   const hostname = os.hostname();

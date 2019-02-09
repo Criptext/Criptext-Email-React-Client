@@ -14,6 +14,7 @@ import {
   getSignedPreKey,
   updateIdentityKeyRecord
 } from './../utils/ipc';
+import { splitSignalIdentifier } from './../utils/StringUtils';
 
 export default class SignalProtocolStore {
   constructor() {
@@ -99,8 +100,7 @@ export default class SignalProtocolStore {
     if (identifier === null || identifier === undefined)
       throw new Error('Tried to get identity key for undefined/null key');
 
-    const identifierArray = identifier.split('.');
-    const recipientId = identifierArray[0];
+    const { recipientId } = splitSignalIdentifier(identifier);
     const [identityKeyRecord] = await getIdentityKeyRecord({ recipientId });
     return Promise.resolve(util.toArrayBuffer(identityKeyRecord.identityKey));
   };
@@ -109,9 +109,7 @@ export default class SignalProtocolStore {
     if (identifier === null || identifier === undefined)
       throw new Error('Tried to put identity key for undefined/null key');
 
-    const identifierArray = identifier.split('.');
-    const recipientId = identifierArray[0];
-    const deviceId = identifierArray[1];
+    const { recipientId, deviceId } = splitSignalIdentifier(identifier);
     const [oldIdentityKeyRecord] = await getIdentityKeyRecord({
       recipientId,
       deviceId
@@ -200,9 +198,7 @@ export default class SignalProtocolStore {
   loadSession = async identifier => {
     let recordText = this.get('session' + identifier);
     if (!recordText) {
-      const identifierArray = identifier.split('.');
-      const recipientId = identifierArray[0];
-      const deviceId = Number(identifierArray[1]);
+      const { recipientId, deviceId } = splitSignalIdentifier(identifier);
       const [session] = await getSessionRecord({ recipientId, deviceId });
       if (session) {
         recordText = session.record;
@@ -213,18 +209,14 @@ export default class SignalProtocolStore {
   };
 
   storeSession = async (identifier, record) => {
-    const identifierArray = identifier.split('.');
-    const recipientId = identifierArray[0];
-    const deviceId = Number(identifierArray[1]);
+    const { recipientId, deviceId } = splitSignalIdentifier(identifier);
     const recordText = util.jsonThing(record);
     await createSessionRecord({ recipientId, deviceId, record: recordText });
     return Promise.resolve(this.put('session' + identifier, recordText));
   };
 
   removeSession = async identifier => {
-    const identifierArray = identifier.split('.');
-    const recipientId = identifierArray[0];
-    const deviceId = Number(identifierArray[1]);
+    const { recipientId, deviceId } = splitSignalIdentifier(identifier);
     await deleteSessionRecord({ recipientId, deviceId });
     return Promise.resolve(this.remove('session' + identifier));
   };
