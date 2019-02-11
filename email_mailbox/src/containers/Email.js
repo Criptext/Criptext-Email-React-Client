@@ -10,7 +10,8 @@ import {
   openFilledComposerWindow,
   sendPrintEmailEvent,
   sendOpenEmailSource,
-  downloadFileInFileSystem
+  downloadFileInFileSystem,
+  checkFileDownloaded
 } from './../utils/ipc';
 import {
   loadFiles,
@@ -252,30 +253,47 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ev.stopPropagation();
       sendPrintEmailEvent(email.id);
     },
-    onDownloadInlineImages: (inlineImages, callback) => {
+    onDownloadInlineImages: async (inlineImages, callback) => {
       const cidFilepathPairs = {};
+      const metadataKey = email.key;
+
+      const addFilePathToResponseObject = (filePath, cid) => {
+        cidFilepathPairs[cid] = filePath;
+        if (Object.keys(cidFilepathPairs).length === inlineImages.length)
+          callback(cidFilepathPairs);
+      };
+
       const handleSuccessDownloadInlineImage = async ({ token, url }) => {
         const [inlineImage] = inlineImages.filter(img => img.token === token);
         if (inlineImage) {
           const { cid, name } = inlineImage;
+          const filename = `${cid}-${name}`;
           const downloadParams = {
             downloadType: 'inline',
-            filename: `${cid}-${name}`,
-            metadataKey: email.key,
+            metadataKey,
+            filename,
             url
           };
           const filePath = await downloadFileInFileSystem(downloadParams);
-          cidFilepathPairs[inlineImage.cid] = filePath;
-          if (Object.keys(cidFilepathPairs).length === inlineImages.length)
-            callback(cidFilepathPairs);
+          addFilePathToResponseObject(filePath, cid);
         }
       };
-
       setFileSuccessHandler(handleSuccessDownloadInlineImage);
+
       for (const inlineImg of inlineImages) {
-        const { key, iv } = inlineImg;
-        setCryptoInterfaces(key, iv);
-        setDownloadHandler(inlineImg.token);
+        const { key, iv, cid, name } = inlineImg;
+        const filename = `${cid}-${name}`;
+        const downloadedPath = await checkFileDownloaded({
+          type: 'inline',
+          metadataKey,
+          filename
+        });
+        if (downloadedPath === null) {
+          setCryptoInterfaces(key, iv);
+          setDownloadHandler(inlineImg.token);
+        } else {
+          addFilePathToResponseObject(downloadedPath, cid);
+        }
       }
     },
     onInjectFilepathsOnEmailContentByCid: (emailContent, cidFilepathPairs) => {

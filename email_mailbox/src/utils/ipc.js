@@ -98,6 +98,14 @@ export const downloadFileInFileSystem = async ({
   });
 };
 
+export const checkFileDownloaded = async ({ filename, metadataKey, type }) => {
+  return await callMain('fs-check-file-downloaded', {
+    filename,
+    metadataKey,
+    type
+  });
+};
+
 /* Criptext Client
 ----------------------------- */
 export const acknowledgeEvents = async eventIds => {

@@ -94,3 +94,15 @@ const defineDownloadDirectory = async ({ downloadType, metadataKey }) => {
   }
   return app.getPath('downloads');
 };
+
+ipc.answerRenderer(
+  'fs-check-file-downloaded',
+  async ({ filename, metadataKey, type }) => {
+    const directory = await defineDownloadDirectory({
+      downloadType: type,
+      metadataKey
+    });
+    const filePath = path.join(directory, filename);
+    return checkIfExists(filePath) ? filePath : null;
+  }
+);
