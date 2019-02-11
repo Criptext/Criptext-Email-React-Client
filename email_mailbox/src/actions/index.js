@@ -40,7 +40,8 @@ import {
   removeEmailsOnSuccess,
   unsendEmail,
   unsendEmailOnSuccess,
-  updateEmailLabels
+  updateEmailLabels,
+  updateEmailOnSuccess
 } from './emails';
 import {
   addLabels,
@@ -118,6 +119,7 @@ export {
   updateFeedItemSuccess,
   updateEmailIdsThread,
   updateEmailLabels,
+  updateEmailOnSuccess,
   updateLabel,
   updateLabelSuccess,
   updateStatusThread,

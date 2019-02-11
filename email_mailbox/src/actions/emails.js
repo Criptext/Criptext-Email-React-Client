@@ -202,6 +202,11 @@ export const unsendEmailOnSuccess = (emailId, unsendDate, status) => ({
   status
 });
 
+export const updateEmailOnSuccess = email => ({
+  type: Email.UPDATE,
+  email
+});
+
 export const updateEmailLabels = ({ email, labelsAdded, labelsRemoved }) => {
   return async dispatch => {
     try {

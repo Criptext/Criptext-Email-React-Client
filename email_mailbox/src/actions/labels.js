@@ -164,6 +164,7 @@ export const updateBadgeLabels = labelIds => {
     }
   };
 };
+
 export const updateBadgeLabelsSuccess = labelIds => {
   return {
     type: Label.UPDATE_BADGE_LABELS,
