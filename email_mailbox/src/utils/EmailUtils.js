@@ -125,7 +125,9 @@ const sanitize = body => {
         'valign',
         'width'
       ]
-    }
+    },
+    allowedSchemes: ['cid', 'http', 'https', 'data'],
+    allowedSchemesAppliedToAttributes: ['src']
   });
 };
 
