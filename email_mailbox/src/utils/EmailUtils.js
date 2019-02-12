@@ -131,15 +131,16 @@ const sanitize = body => {
   });
 };
 
-export const addCollapseDiv = (htmlString, key) => {
-  const regexTag = /<blockquote|criptext_quote/;
+export const addCollapseDiv = (htmlString, key, isCollapse) => {
+  const regexTag = /<blockquote|criptext_quote|gmail_quote/;
   const matches = htmlString.match(regexTag);
   if (matches) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, 'text/html');
     const blockquote =
       doc.getElementsByClassName('criptext_quote')[0] ||
-      doc.getElementsByTagName('blockquote')[0];
+      doc.getElementsByTagName('blockquote')[0] ||
+      doc.getElementsByClassName('gmail_quote')[0];
     const i = document.createElement('i');
     i.className = 'icon-dots';
     const div = document.createElement('div');
@@ -147,7 +148,7 @@ export const addCollapseDiv = (htmlString, key) => {
     div.appendChild(i);
     div.setAttribute('id', `div-collapse-${key}`);
     blockquote.parentElement.insertBefore(div, blockquote);
-    blockquote.style.display = 'block';
+    blockquote.style.display = isCollapse ? 'none' : 'block';
     blockquote.setAttribute('id', `blockquote-${key}`);
     return doc.documentElement.innerHTML;
   }

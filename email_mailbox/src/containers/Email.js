@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import EmailView from './../components/EmailWrapper';
 import { defineTimeByToday, defineLargeTime } from './../utils/TimeUtils';
-import { getTwoCapitalLetters } from './../utils/StringUtils';
+import { getTwoCapitalLetters, hasAnySubstring } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv, parseContactRow } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
@@ -15,9 +15,9 @@ import {
 } from './../utils/ipc';
 import {
   loadFiles,
-  muteEmail,
   unsendEmail,
   updateEmailLabels,
+  updateEmailOnSuccess,
   removeEmails
 } from './../actions/index';
 import {
@@ -68,10 +68,11 @@ const mapStateToProps = (state, ownProps) => {
   );
   const preview =
     email.status === EmailStatus.UNSEND ? unsentText : email.preview;
+  const isCollapse = !!hasAnySubstring(['Re:', 'RE:'], email.subject);
   const content =
     email.status === EmailStatus.UNSEND
       ? `Unsent: At ${defineTimeByToday(email.unsendDate)}`
-      : addCollapseDiv(email.content, email.key);
+      : addCollapseDiv(email.content, email.key, isCollapse);
   const myEmail = {
     ...email,
     date: defineTimeByToday(date),
@@ -152,14 +153,64 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: composerEvents.EDIT_DRAFT
       });
     },
-    toggleMute: ev => {
+    onDelete: ev => {
       ev.stopPropagation();
-      const emailId = String(email.id);
-      const valueToSet = email.isMuted === 1 ? false : true;
-      dispatch(muteEmail(emailId, valueToSet));
+      const labelsAdded = [LabelType.trash.text];
+      const labelsRemoved = [];
+      dispatch(
+        updateEmailLabels({
+          email,
+          labelsAdded,
+          labelsRemoved
+        })
+      ).then(() => {
+        if (ownProps.count === 1) {
+          ownProps.onBackOption();
+        }
+      });
+    },
+    onDeletePermanently: () => {
+      const emailsToDelete = [email];
+      dispatch(removeEmails(emailsToDelete)).then(() => {
+        if (ownProps.count === 1) {
+          ownProps.onBackOption();
+        }
+      });
+    },
+    onForward: ev => {
+      ev.stopPropagation();
+      const keyEmailToRespond = email.key;
+      openFilledComposerWindow({
+        keyEmailToRespond,
+        type: composerEvents.FORWARD
+      });
     },
     onLoadFiles: tokens => {
       dispatch(loadFiles(tokens));
+    },
+    onMarkAsSpam: ev => {
+      ev.stopPropagation();
+      const labelsAdded = [LabelType.spam.text];
+      const labelsRemoved = [];
+      dispatch(
+        updateEmailLabels({
+          email,
+          labelsAdded,
+          labelsRemoved
+        })
+      ).then(() => {
+        if (ownProps.count === 1) {
+          ownProps.onBackOption();
+        }
+      });
+    },
+    onOpenEmailSource: ev => {
+      ev.stopPropagation();
+      sendOpenEmailSource(email.key);
+    },
+    onPrintEmail: ev => {
+      ev.stopPropagation();
+      sendPrintEmailEvent(email.id);
     },
     onReplyEmail: ev => {
       ev.stopPropagation();
@@ -186,54 +237,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: composerEvents.REPLY_ALL
       });
     },
-    onForward: ev => {
-      ev.stopPropagation();
-      const keyEmailToRespond = email.key;
-      openFilledComposerWindow({
-        keyEmailToRespond,
-        type: composerEvents.FORWARD
-      });
-    },
-    onMarkAsSpam: ev => {
-      ev.stopPropagation();
-      const labelsAdded = [LabelType.spam.text];
-      const labelsRemoved = [];
-      dispatch(
-        updateEmailLabels({
-          email,
-          labelsAdded,
-          labelsRemoved
-        })
-      ).then(() => {
-        if (ownProps.count === 1) {
-          ownProps.onBackOption();
-        }
-      });
-    },
-    onDelete: ev => {
-      ev.stopPropagation();
-      const labelsAdded = [LabelType.trash.text];
-      const labelsRemoved = [];
-      dispatch(
-        updateEmailLabels({
-          email,
-          labelsAdded,
-          labelsRemoved
-        })
-      ).then(() => {
-        if (ownProps.count === 1) {
-          ownProps.onBackOption();
-        }
-      });
-    },
-    onDeletePermanently: () => {
-      const emailsToDelete = [email];
-      dispatch(removeEmails(emailsToDelete)).then(() => {
-        if (ownProps.count === 1) {
-          ownProps.onBackOption();
-        }
-      });
-    },
     onUnsendEmail: () => {
       const contactIds = [...email.to, ...email.cc, ...email.bcc];
       const unsendDate = new Date();
@@ -245,13 +248,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       };
       dispatch(unsendEmail(params));
     },
-    onOpenEmailSource: ev => {
-      ev.stopPropagation();
-      sendOpenEmailSource(email.key);
-    },
-    onPrintEmail: ev => {
-      ev.stopPropagation();
-      sendPrintEmailEvent(email.id);
+    onUpdateEmailContent: content => {
+      dispatch(updateEmailOnSuccess({ id: email.id, content }));
     },
     onDownloadInlineImages: async (inlineImages, callback) => {
       const cidFilepathPairs = {};
