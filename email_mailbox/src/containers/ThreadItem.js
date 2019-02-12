@@ -1,6 +1,12 @@
 import { connect } from 'react-redux';
 import randomcolor from 'randomcolor';
-import * as actions from './../actions/index';
+import {
+  addLabelIdThread,
+  addLabelIdThreadDraft,
+  addMoveLabelIdThreads,
+  removeLabelIdThread,
+  removeLabelIdThreadDraft
+} from './../actions/index';
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import { LabelType, myAccount, mySettings } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
@@ -192,7 +198,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         threadIdDB: ownProps.thread.get('threadId')
       };
       dispatch(
-        actions.addMoveLabelIdThreads({
+        addMoveLabelIdThreads({
           threadsParams: [threadParams],
           labelIdToAdd: labelId,
           currentLabelId
@@ -205,15 +211,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (currentLabelId === LabelType.draft.id && !threadId) {
         const uniqueId = thread.get('uniqueId');
         if (isAdded) {
-          dispatch(actions.removeLabelIdThreadDraft(uniqueId, labelId));
+          dispatch(removeLabelIdThreadDraft(uniqueId, labelId));
         } else {
-          dispatch(actions.addLabelIdThreadDraft(uniqueId, labelId));
+          dispatch(addLabelIdThreadDraft(uniqueId, labelId));
         }
       } else {
         if (isAdded) {
-          dispatch(actions.removeLabelIdThread(threadId, labelId));
+          dispatch(removeLabelIdThread(threadId, labelId));
         } else {
-          dispatch(actions.addLabelIdThread(threadId, labelId));
+          dispatch(addLabelIdThread(threadId, labelId));
         }
       }
     }

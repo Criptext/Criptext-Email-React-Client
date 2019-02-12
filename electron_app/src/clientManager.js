@@ -306,25 +306,6 @@ const postKeyBundle = async params => {
     : await checkExpiredSession(res, postKeyBundle, params);
 };
 
-const postOpenEvent = async metadataKeys => {
-  const OPEN_EVENT_CMD = 500;
-  try {
-    const data = {
-      cmd: OPEN_EVENT_CMD,
-      params: {
-        metadataKeys: [...metadataKeys]
-      }
-    };
-    await createPendingEvent({
-      data: JSON.stringify(data)
-    });
-    processEventsQueue();
-    return Promise.resolve({ status: 200 });
-  } catch (e) {
-    return Promise.reject({ status: 422 });
-  }
-};
-
 const postPeerEvent = async params => {
   try {
     await createPendingEvent({
@@ -496,7 +477,6 @@ module.exports = {
   postDataReady,
   postEmail,
   postKeyBundle,
-  postOpenEvent,
   postPeerEvent,
   pushPeerEvents,
   postUser,

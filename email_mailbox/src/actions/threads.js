@@ -12,7 +12,6 @@ import {
   getEmailsGroupByThreadByParams,
   getLabelById,
   getTrashExpiredEmails,
-  postOpenEvent,
   postPeerEvent,
   updateEmails,
   updateUnreadEmailByThreadIds,
@@ -519,36 +518,19 @@ export const loadEvents = () => {
   };
 };
 
-export const sendOpenEvent = (
-  emailKeysUnread,
-  myEmailKeysUnread,
-  threadId,
-  labelId
-) => {
+export const sendOpenEvent = (emailKeysUnread, threadId, labelId) => {
   return async dispatch => {
     try {
-      let postSuccess = true;
       if (emailKeysUnread.length) {
-        const { status } = await postOpenEvent(emailKeysUnread.map(Number));
-        if (status === 200) {
-          await updateEmails({
-            keys: emailKeysUnread,
-            unread: false
-          });
-        } else {
-          postSuccess = false;
-        }
-      }
-
-      if (myEmailKeysUnread.length && postSuccess) {
+        const metadataKeys = emailKeysUnread.map(Number);
         const eventParams = {
-          cmd: SocketCommand.PEER_EMAIL_READ_UPDATE,
-          params: { metadataKeys: myEmailKeysUnread.map(Number), unread: 0 }
+          cmd: SocketCommand.SEND_OPEN_EVENT,
+          params: { metadataKeys }
         };
         const { status } = await postPeerEvent(eventParams);
         if (status === 200) {
           const response = await updateEmails({
-            keys: myEmailKeysUnread,
+            keys: metadataKeys,
             unread: false
           });
           if (response) {
