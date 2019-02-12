@@ -59,6 +59,13 @@ const emails = (state = new Map(), action) => {
       }
       return state.set(emailId, email(item, action));
     }
+    case Email.UPDATE: {
+      const emailId = action.email.id;
+      if (!emailId) return state;
+      const emailItem = state.get(`${emailId}`);
+      if (!emailItem) return state;
+      return state.set(`${emailId}`, email(emailItem, action));
+    }
     default:
       return state;
   }
@@ -80,6 +87,12 @@ const email = (state, action) => {
           unsendDate
         })
       );
+    }
+    case Email.UPDATE: {
+      const { content } = action.email;
+      return state.merge({
+        content: content || state.get('content')
+      });
     }
     default:
       return state;

@@ -25,7 +25,7 @@ export const deletePrefixingSubstrings = (substrings, subject) => {
   return subject;
 };
 
-const hasAnySubstring = (substrings, string) => {
+export const hasAnySubstring = (substrings, string) => {
   return substrings.find(substring => {
     return string.indexOf(substring) === 0;
   });

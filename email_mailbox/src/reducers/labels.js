@@ -63,12 +63,11 @@ const label = (state = new Map({}), action) => {
   switch (action.type) {
     case Label.UPDATE:
     case Label.UPDATE_BADGE_LABELS: {
-      const visible = action.label.visible;
-      const badge = action.label.badge;
+      const { badge, color, text, visible } = action.label;
       return state.merge({
         badge: typeof badge === 'number' ? badge : state.get('badge'),
-        color: action.label.color || state.get('color'),
-        text: action.label.text || state.get('text'),
+        color: color || state.get('color'),
+        text: text || state.get('text'),
         visible: typeof visible === 'boolean' ? visible : state.get('visible')
       });
     }

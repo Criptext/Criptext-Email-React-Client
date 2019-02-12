@@ -19,7 +19,6 @@ class EmailWrapper extends Component {
       isHiddenPopOverEmailMoreInfo: true,
       hideView: false,
       popupContent: undefined,
-      emailContent: '',
       inlineImages: []
     };
   }
@@ -39,7 +38,6 @@ class EmailWrapper extends Component {
     return (
       <Email
         {...this.props}
-        emailContent={this.state.emailContent}
         buttonUnsendStatus={this.state.buttonUnsendStatus}
         displayEmail={this.state.displayEmail}
         isHiddenPopOverEmailMoreInfo={this.state.isHiddenPopOverEmailMoreInfo}
@@ -64,7 +62,6 @@ class EmailWrapper extends Component {
     if (this.props.email.fileTokens.length && !this.props.files.length) {
       this.props.onLoadFiles(this.props.email.fileTokens);
     }
-    this.setState({ emailContent: this.props.email.content });
     if (this.props.email.unread) {
       this.setState({
         displayEmail: true
@@ -73,6 +70,12 @@ class EmailWrapper extends Component {
     this.setCollapseListener();
     const steps = [USER_GUIDE_STEPS.EMAIL_READ];
     checkUserGuideSteps(steps);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.email.content !== this.props.email.content) {
+      this.setCollapseListener();
+    }
   }
 
   setCollapseListener = () => {
@@ -157,12 +160,10 @@ class EmailWrapper extends Component {
   handleDownloadInlineImages = async inlineImages => {
     await this.props.onDownloadInlineImages(inlineImages, cidFilepathPairs => {
       const newContent = this.props.onInjectFilepathsOnEmailContentByCid(
-        this.state.emailContent,
+        this.props.email.content,
         cidFilepathPairs
       );
-      this.setState({ emailContent: newContent }, () => {
-        this.setCollapseListener();
-      });
+      this.props.onUpdateEmailContent(newContent);
     });
   };
 }
@@ -178,6 +179,7 @@ EmailWrapper.propTypes = {
   onInjectFilepathsOnEmailContentByCid: PropTypes.func,
   onLoadFiles: PropTypes.func,
   onUnsendEmail: PropTypes.func,
+  onUpdateEmailContent: PropTypes.func,
   staticOpen: PropTypes.bool
 };
 

@@ -28,7 +28,7 @@ describe('Email actions - ADD_BATCH ', () => {
 describe('Email actions - UNSEND: ', () => {
   const emails = [myEmails[0]];
 
-  it('should update email param: content, preview, status, unsendDate by emailId', () => {
+  it('should update email with param: content, preview, status, unsendDate by emailId', () => {
     const state = initState(emails);
     const emailId = '1';
     const unsendDate = '2018-08-28T20:14:52.593Z';
@@ -57,6 +57,36 @@ describe('Email actions - UNSEND: ', () => {
     const emailUpdated = newState.get(emailId);
     expect(emailUpdated).toBe(undefined);
     expect(email).toBe(newState.get('1'));
+  });
+});
+
+describe('Email actions - UPDATE ', () => {
+  it('should update content, with params: id and content', () => {
+    const id = '1';
+    const content = 'Text changed';
+    const prevState = initState(myEmails);
+    const action = actions.updateEmailOnSuccess({ id, content });
+    const nextState = emailReducer(prevState, action);
+    const emailUpdated = nextState.get(id);
+    expect(emailUpdated.get('content')).toBe(content);
+  });
+
+  it('should not update content, without param: id', () => {
+    const id = null;
+    const content = 'Text changed';
+    const prevState = initState(myEmails);
+    const action = actions.updateEmailOnSuccess({ id, content });
+    const nextState = emailReducer(prevState, action);
+    expect(prevState).toBe(nextState);
+  });
+
+  it('should not update content, when id does not exists', () => {
+    const id = '10';
+    const content = 'Text changed';
+    const prevState = initState(myEmails);
+    const action = actions.updateEmailOnSuccess({ id, content });
+    const nextState = emailReducer(prevState, action);
+    expect(prevState).toBe(nextState);
   });
 });
 
