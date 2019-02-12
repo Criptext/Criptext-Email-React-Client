@@ -79,10 +79,6 @@ ipc.answerRenderer('client-post-key-bundle', params =>
   clientManager.postKeyBundle(params)
 );
 
-ipc.answerRenderer('client-post-open-event', params =>
-  clientManager.postOpenEvent(params)
-);
-
 ipc.answerRenderer('client-post-peer-event', params =>
   clientManager.postPeerEvent(params)
 );

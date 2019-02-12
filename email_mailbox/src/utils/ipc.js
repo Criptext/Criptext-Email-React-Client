@@ -144,10 +144,6 @@ export const logout = async () => {
   return await callMain('client-logout');
 };
 
-export const postOpenEvent = async params => {
-  return await callMain('client-post-open-event', params);
-};
-
 export const postPeerEvent = async params => {
   return await callMain('client-post-peer-event', params);
 };

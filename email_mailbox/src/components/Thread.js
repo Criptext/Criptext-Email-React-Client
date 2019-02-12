@@ -25,14 +25,10 @@ class Thread extends Component {
       this.props.onBackOption();
     } else if (this.props.thread.unread) {
       if (
-        nextProps.emailKeysUnread.length !==
-          this.props.emailKeysUnread.length ||
-        nextProps.myEmailKeysUnread.length !==
-          this.props.myEmailKeysUnread.length
+        nextProps.emailKeysUnread.length !== this.props.emailKeysUnread.length
       ) {
         this.props.onUpdateUnreadEmails(
           nextProps.emailKeysUnread,
-          nextProps.myEmailKeysUnread,
           nextProps.thread.threadId
         );
       }
@@ -95,7 +91,6 @@ class Thread extends Component {
     } else {
       this.props.onUpdateUnreadEmails(
         this.props.emailKeysUnread,
-        this.props.myEmailKeysUnread,
         this.props.thread.threadId
       );
     }
@@ -166,7 +161,6 @@ Thread.propTypes = {
   indexFirstUnread: PropTypes.number,
   labels: PropTypes.array,
   mailboxSelected: PropTypes.string,
-  myEmailKeysUnread: PropTypes.array,
   onBackOption: PropTypes.func,
   onClickSection: PropTypes.func,
   onLoadEmails: PropTypes.func,
