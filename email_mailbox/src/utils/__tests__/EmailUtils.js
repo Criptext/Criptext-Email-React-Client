@@ -5,7 +5,8 @@ import {
   compareEmailDate,
   defineRejectedLabels,
   filterCriptextRecipients,
-  getRecipientIdFromEmailAddressTag
+  getRecipientIdFromEmailAddressTag,
+  cleanEmailBody
 } from '../EmailUtils';
 import { LabelType } from '../electronInterface';
 import { appDomain } from './../const';
@@ -142,5 +143,35 @@ describe('[Filter emails by domain] ', () => {
     const filtered = filterCriptextRecipients(recipients);
     const result = [`userA@${appDomain}`, `userB@${appDomain}`];
     expect(filtered).toEqual(result);
+  });
+});
+
+describe('Sanitize emails ', () => {
+  it('Should clear unauthorized tags', () => {
+    const unsanitizedHtml = `<div><script>alert("I am a malicious script")</script><p>And I'm just a paragraph</p></div>`;
+    const expectedHtml = `<div><p>And I'm just a paragraph</p></div>`;
+    const sanitizedHtml = cleanEmailBody(unsanitizedHtml);
+    expect(sanitizedHtml).toEqual(expectedHtml);
+  });
+
+  it('Should clear unauthorized attributes', () => {
+    const unsanitizedTag = `<a href="http://www.criptext.com" onclick="execMaliciousScript()"> Link </a>`;
+    const expectedTag = `<a href="http://www.criptext.com"> Link </a>`;
+    const sanitizedTag = cleanEmailBody(unsanitizedTag);
+    expect(sanitizedTag).toEqual(expectedTag);
+  });
+
+  it('Should not clear authorized schemes on attributes', () => {
+    const unsanitizedTag = `<img src="http://www.domain.com/path/to/image.png" />`;
+    const expectedTag = `<img src="http://www.domain.com/path/to/image.png" />`;
+    const sanitizedTag = cleanEmailBody(unsanitizedTag);
+    expect(sanitizedTag).toEqual(expectedTag);
+  });
+
+  it('Should clear unauthorized schemes on attributes', () => {
+    const unsanitizedTag = `<img src="unknownScheme:data/format" alt="filename.jpg" />`;
+    const expectedTag = `<img alt="filename.jpg" />`;
+    const sanitizedTag = cleanEmailBody(unsanitizedTag);
+    expect(sanitizedTag).toEqual(expectedTag);
   });
 });
