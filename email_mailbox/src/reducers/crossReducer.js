@@ -9,13 +9,23 @@ import { App } from './../actions/types';
 export const crossReducer = (state = new Map(), action) => {
   console.log('crossReducer', action.type);
   switch (action.type) {
-    case App.ADD_INIT_DATA: {
+    case App.ADD_DATA: {
+      const { activity, contact, feeditem, label, thread } = action;
+      const activitiesState = state.get('activities');
+      const contactsState = state.get('contacts');
+      const feeditemsState = state.get('feeditems');
+      const labelsState = state.get('labels');
+      const threadsState = state.get('threads');
       return state.merge({
-        activities: activities(state.get('activities'), action.activity),
-        contacts: contacts(state.get('contacts'), action.contact),
-        feeditems: feeditems(state.get('feeditems'), action.feeditem),
-        labels: labels(state.get('labels'), action.label),
-        threads: threads(state.get('threads'), action.thread)
+        activities: activity
+          ? activities(activitiesState, activity)
+          : activitiesState,
+        contacts: contact ? contacts(contactsState, contact) : contactsState,
+        feeditems: feeditem
+          ? feeditems(feeditemsState, feeditem)
+          : feeditemsState,
+        labels: label ? labels(labelsState, label) : labelsState,
+        threads: thread ? threads(threadsState, thread) : threadsState
       });
     }
     default:

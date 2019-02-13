@@ -11,14 +11,8 @@ import { defineThreads } from './../utils/ThreadUtils';
 import { defineFeedItems } from './../utils/FeedItemUtils';
 import { getGroupEvents } from './../utils/electronEventInterface';
 
-export const addInitDataApp = ({
-  activity,
-  contact,
-  feeditem,
-  label,
-  thread
-}) => ({
-  type: App.ADD_INIT_DATA,
+export const addDataApp = ({ activity, contact, feeditem, label, thread }) => ({
+  type: App.ADD_DATA,
   activity,
   contact,
   feeditem,
@@ -38,7 +32,7 @@ export const loadApp = params => {
     const label = addLabels(labels);
     const thread = addThreads(threads, true);
 
-    dispatch(addInitDataApp({ activity, contact, label, feeditem, thread }));
+    dispatch(addDataApp({ activity, contact, label, feeditem, thread }));
     await getGroupEvents();
   };
 };
