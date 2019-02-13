@@ -32,10 +32,6 @@ class ActivityPanel extends Component {
     );
   }
 
-  componentDidMount() {
-    this.props.onLoadFeeds();
-  }
-
   renderHeaderIcon = () => {
     return (
       <div className="feed-header-icon">

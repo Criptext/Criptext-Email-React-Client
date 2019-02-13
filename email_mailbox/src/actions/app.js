@@ -18,3 +18,15 @@ export const addInitDataApp = ({
   threads,
   clear
 });
+
+export const loadApp = params => {
+  return async dispatch => {
+    const labels = await defineLabels();
+    const { threads, contacts } = await defineThreads(params);
+    const feeditems = await defineFeedItems();
+    dispatch(
+      addInitDataApp({ contacts, labels, threads, feeditems, clear: true })
+    );
+    await getGroupEvents();
+  };
+};

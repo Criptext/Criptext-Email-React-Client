@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import {
-  loadEvents,
+  loadApp,
   loadThreads,
   filterThreadsOrLoadMoreByUnread,
   startLoadThread,
@@ -57,8 +57,55 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+const defineParamsToLoadThread = (
+  mailbox,
+  clear,
+  searchParams,
+  date,
+  threadIdRejected,
+  unread
+) => {
+  const labelId = LabelType[mailbox].id;
+  const contactTypes = defineContactType(
+    labelId,
+    searchParams ? searchParams.from : null,
+    searchParams ? searchParams.to : null
+  );
+  const rejectedLabelIds = defineRejectedLabels(labelId);
+  const contactFilter = searchParams
+    ? { from: searchParams.from, to: searchParams.to }
+    : undefined;
+  const params =
+    mailbox === 'search'
+      ? {
+          labelId,
+          clear,
+          date,
+          contactTypes,
+          contactFilter,
+          plain: true,
+          text: searchParams.text,
+          rejectedLabelIds,
+          threadIdRejected
+        }
+      : {
+          labelId,
+          clear,
+          date,
+          contactTypes,
+          rejectedLabelIds,
+          threadIdRejected,
+          unread
+        };
+  return params;
+};
+
 const mapDispatchToProps = dispatch => {
   return {
+    onLoadApp: (mailbox, clear) => {
+      const params = defineParamsToLoadThread(mailbox, clear);
+      dispatch(loadApp(params));
+    },
     onLoadThreads: (
       mailbox,
       clear,
@@ -68,42 +115,15 @@ const mapDispatchToProps = dispatch => {
       unread
     ) => {
       dispatch(startLoadThread());
-      const labelId = LabelType[mailbox].id;
-      const contactTypes = defineContactType(
-        labelId,
-        searchParams ? searchParams.from : null,
-        searchParams ? searchParams.to : null
+      const params = defineParamsToLoadThread(
+        mailbox,
+        clear,
+        searchParams,
+        date,
+        threadIdRejected,
+        unread
       );
-      const rejectedLabelIds = defineRejectedLabels(labelId);
-      const contactFilter = searchParams
-        ? { from: searchParams.from, to: searchParams.to }
-        : undefined;
-      const params =
-        mailbox === 'search'
-          ? {
-              labelId,
-              clear,
-              date,
-              contactTypes,
-              contactFilter,
-              plain: true,
-              text: searchParams.text,
-              rejectedLabelIds,
-              threadIdRejected
-            }
-          : {
-              labelId,
-              clear,
-              date,
-              contactTypes,
-              rejectedLabelIds,
-              threadIdRejected,
-              unread
-            };
       dispatch(loadThreads(params));
-    },
-    onLoadEvents: () => {
-      dispatch(loadEvents());
     },
     onUnreadToggle: (
       checked,

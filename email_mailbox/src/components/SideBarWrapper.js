@@ -22,10 +22,6 @@ class SideBarWrapper extends Component {
     );
   }
 
-  componentDidMount() {
-    this.props.onLoadLabels();
-  }
-
   handleToggleShowLabelView = () => {
     this.setState({ showLabels: !this.state.showLabels });
   };
@@ -38,8 +34,7 @@ class SideBarWrapper extends Component {
 }
 
 SideBarWrapper.propTypes = {
-  onClickSection: PropTypes.func,
-  onLoadLabels: PropTypes.func
+  onClickSection: PropTypes.func
 };
 
 export default SideBarWrapper;

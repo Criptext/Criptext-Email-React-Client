@@ -5,7 +5,7 @@ const feeditems = (state = new Map({}), action) => {
   switch (action.type) {
     case FeedItem.ADD_BATCH: {
       if (action.clear) {
-        return fromJS(action.feeds);
+        return Map(fromJS(action.feeds));
       }
       return state.merge(fromJS(action.feeds));
     }
