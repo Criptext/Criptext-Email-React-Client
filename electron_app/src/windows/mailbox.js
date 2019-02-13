@@ -1,12 +1,14 @@
 const { app, BrowserWindow, shell } = require('electron');
 const windowStateManager = require('electron-window-state');
 const ipc = require('@criptext/electron-better-ipc');
+const { setup: setupPushReceiver } = require('electron-push-receiver');
+const path = require('path');
 const { mailboxUrl } = require('./../window_routing');
 const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
-const path = require('path');
+
 const { isWindows } = require('./../utils/osUtils');
 
 let mailboxWindow;
@@ -39,6 +41,8 @@ const create = () => {
     frame: !isWindows()
   });
   mailboxWindow.loadURL(mailboxUrl);
+  // Firebase
+  setupPushReceiver(mailboxWindow.webContents);
   if (isWindows()) {
     mailboxWindow.setMenuBarVisibility(false);
   }
@@ -54,16 +58,13 @@ const create = () => {
     ev.preventDefault();
   });
   mailboxWindow.on('close', e => {
-    const isMacOs = process.platform === 'darwin';
-    if (isMacOs && !globalManager.forcequit.get()) {
+    if (!globalManager.forcequit.get()) {
       e.preventDefault();
       mailboxWindow.hide();
     }
   });
   mailboxWindow.on('closed', () => {
-    if (process.platform !== 'darwin') {
-      mailboxWindow = undefined;
-    }
+    require('./../socketClient').disconnect();
   });
 
   mailboxWindow.webContents.on('new-window', openLinkInDefaultBrowser);
@@ -160,16 +161,10 @@ const isVisibleAndFocused = () => {
   return mailboxWindow.isVisible() && mailboxWindow.isFocused();
 };
 
-const quit = () => {
-  globalManager.forcequit.set(true);
-  app.quit();
-};
-
 module.exports = {
   close,
   hide,
   mailboxWindow,
-  quit,
   send,
   show,
   isVisibleAndFocused,

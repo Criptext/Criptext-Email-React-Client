@@ -23,7 +23,6 @@
       <pre id="content">
       </pre>
       <script>
-        // Html string to window for print command
         const ipcRenderer = window.require("electron").ipcRenderer;
         ipcRenderer.on("setContent", (ev, content, windowTitle) => {
           document.getElementById("content").innerText = content;
