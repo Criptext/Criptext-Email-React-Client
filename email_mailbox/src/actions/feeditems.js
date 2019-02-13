@@ -1,11 +1,6 @@
 import { FeedItem } from './types';
-import {
-  deleteFeedItemById,
-  getAllFeedItems,
-  getEmailsByIds,
-  updateFeedItem
-} from './../utils/ipc';
-import { getSeenTimestamp } from '../utils/storage';
+import { deleteFeedItemById, updateFeedItem } from './../utils/ipc';
+import { defineFeedItems } from '../utils/FeedItemUtils';
 
 export const addFeedItems = (feeds, clear) => {
   return {
@@ -40,21 +35,8 @@ export const updateAllFeedItemsAsOlder = () => {
 export const loadFeedItems = clear => {
   return async dispatch => {
     try {
-      const allFeeds = await getAllFeedItems();
-      const feeds = await Promise.all(
-        allFeeds.map(async feed => {
-          const [emailData] = await getEmailsByIds([feed.emailId]);
-          const lastTimestamp = new Date(getSeenTimestamp());
-          const feedDate = new Date(feed.date);
-          const isNew = feedDate.getTime() > lastTimestamp.getTime();
-          return { ...feed, emailData, isNew };
-        })
-      );
-      const feedsToState = feeds.reduce((result, feedItem) => {
-        result[feedItem.id] = feedItem;
-        return result;
-      }, {});
-      dispatch(addFeedItems(feedsToState, clear));
+      const feedItems = await defineFeedItems();
+      dispatch(addFeedItems(feedItems, clear));
     } catch (e) {
       // TO DO
     }

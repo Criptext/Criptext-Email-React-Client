@@ -14,8 +14,7 @@ import {
   getTrashExpiredEmails,
   postPeerEvent,
   updateEmails,
-  updateUnreadEmailByThreadIds,
-  getContactByIds
+  updateUnreadEmailByThreadIds
 } from '../utils/ipc';
 import { storeValue } from './../utils/storage';
 import {
@@ -30,6 +29,7 @@ import { loadFeedItems } from './feeditems';
 import { SocketCommand } from '../utils/const';
 import { removeEmails } from './emails';
 import { filterTemporalThreadIds } from '../utils/EmailUtils';
+import { defineThreads } from '../utils/ThreadUtils';
 import { addContacts } from '.';
 
 export const addThreads = (threads, clear) => ({
@@ -482,24 +482,9 @@ export const loadThreads = params => {
           dispatch(removeEmails(expiredDeletedEmails));
         }
       }
-      const threads = await getEmailsGroupByThreadByParams(params);
-      const contactIds = threads.reduce((previousValue, thread) => {
-        return previousValue.concat(
-          thread.recipientContactIds.split(',').map(Number)
-        );
-      }, []);
-      const uniqueContactsIds = Array.from(new Set(contactIds));
-      const response = await getContactByIds(uniqueContactsIds);
-      if (response.length) {
-        const contacts = response.reduce(
-          (result, element) => ({
-            ...result,
-            [element.id]: element
-          }),
-          {}
-        );
-        dispatch(addContacts(contacts));
-      }
+      const { threads, contacts } = await defineThreads(params);
+      if (contacts) dispatch(addContacts(contacts));
+
       if (threads.length || !params.date) {
         dispatch(addThreads(threads, params.clear));
       }

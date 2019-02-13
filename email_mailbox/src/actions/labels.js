@@ -3,7 +3,6 @@ import { LabelType } from '../utils/electronInterface';
 import {
   createLabel,
   deleteLabelById,
-  getAllLabels,
   getEmailsCounterByLabelId,
   getEmailsUnredByLabelId,
   postPeerEvent,
@@ -45,39 +44,6 @@ export const addLabels = labels => {
   return {
     type: Label.ADD_BATCH,
     labels
-  };
-};
-
-export const loadLabels = () => {
-  return async dispatch => {
-    try {
-      const response = await getAllLabels();
-      const rejectedLabelIds = [LabelType.spam.id, LabelType.trash.id];
-      const unreadInbox = await getEmailsUnredByLabelId({
-        labelId: LabelType.inbox.id,
-        rejectedLabelIds
-      });
-      const badgeInbox = unreadInbox.length;
-      updateDockBadgeApp(badgeInbox);
-      const unreadSpam = await getEmailsUnredByLabelId({
-        labelId: LabelType.spam.id
-      });
-      const badgeSpam = unreadSpam.length;
-      const badgeDraft = await getEmailsCounterByLabelId(LabelType.draft.id);
-      const labels = response.reduce(
-        (result, element) => ({
-          ...result,
-          [element.id]: element
-        }),
-        {}
-      );
-      labels[LabelType.inbox.id].badge = badgeInbox;
-      labels[LabelType.spam.id].badge = badgeSpam;
-      labels[LabelType.draft.id].badge = badgeDraft[0].count;
-      dispatch(addLabels(labels));
-    } catch (e) {
-      sendUpdateLabelsErrorMessage();
-    }
   };
 };
 
