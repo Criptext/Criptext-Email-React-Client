@@ -75,9 +75,8 @@ let labelsEvent = {};
 let avatarHasChanged = false;
 
 export const getGroupEvents = async isContinued => {
-  if (isGettingEvents && !isContinued) {
-    return;
-  }
+  if (isGettingEvents && !isContinued) return;
+
   isGettingEvents = true;
   const { events, hasMoreEvents } = await getEvents();
   if (!events.length) {
