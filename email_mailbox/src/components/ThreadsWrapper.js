@@ -157,6 +157,7 @@ ThreadsWrapper.propTypes = {
   onBackOption: PropTypes.func,
   onCloseUpdateMessage: PropTypes.func,
   onEmptyTrash: PropTypes.func,
+  onLoadApp: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,
   searchParams: PropTypes.object,

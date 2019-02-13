@@ -11,7 +11,8 @@ import {
   updateStatusThread,
   unsendEmailOnSuccess,
   unsendEmailFiles,
-  setAvatarUpdatedTimestamp
+  setAvatarUpdatedTimestamp,
+  stopLoadSync
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import { LabelType } from '../utils/electronInterface';
@@ -55,6 +56,9 @@ const mapDispatchToProps = dispatch => {
     },
     onRemoveThreads: threadIds => {
       dispatch(removeThreadsSuccess(threadIds));
+    },
+    onStopLoadSync: () => {
+      dispatch(stopLoadSync());
     },
     onUnsendEmail: (emailId, date, status) => {
       dispatch(unsendEmailOnSuccess(String(emailId), date, status));

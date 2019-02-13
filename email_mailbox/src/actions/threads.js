@@ -1,5 +1,5 @@
 import { Thread } from './types';
-import { startLoadSync, stopLoadSync, stopLoadThread } from './activity';
+import { startLoadSync, stopLoadThread } from './activity';
 import { updateBadgeLabels } from './labels';
 import { LabelType } from '../utils/electronInterface';
 import {
@@ -499,7 +499,6 @@ export const loadEvents = () => {
   return async dispatch => {
     dispatch(startLoadSync());
     await getGroupEvents();
-    dispatch(stopLoadSync());
   };
 };
 

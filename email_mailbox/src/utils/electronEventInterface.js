@@ -77,12 +77,19 @@ let avatarHasChanged = false;
 export const getGroupEvents = async () => {
   if (isGettingEvents) return;
   isGettingEvents = true;
+  const { events, hasMoreEvents } = await getEvents();
+  if (!events.length) {
+    isGettingEvents = false;
+    emitter.emit(Event.STOP_LOAD_SYNC, {});
+    return;
+  }
+
   labelIdsEvent = new Set();
   threadIdsEvent = new Set();
   badgeLabelIdsEvent = new Set();
   labelsEvent = {};
   avatarHasChanged = false;
-  const { events, hasMoreEvents } = await getEvents();
+
   const rowIds = [];
 
   for (const event of events) {
@@ -1135,6 +1142,7 @@ export const Event = {
   SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
+  STOP_LOAD_SYNC: 'stop-load-sync',
   THREADS_DELETED: 'thread-deleted-permanently',
   UPDATE_EMAILS: 'update-emails'
 };
