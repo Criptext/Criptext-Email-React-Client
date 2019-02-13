@@ -1,7 +1,8 @@
 import {
   setAvatarUpdatedTimestamp,
   startLoadThread,
-  stopLoadSync
+  stopLoadSync,
+  stopLoadThread
 } from './activity';
 import { addContacts } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
@@ -116,6 +117,7 @@ export {
   setAvatarUpdatedTimestamp,
   startLoadThread,
   stopLoadSync,
+  stopLoadThread,
   unsendEmail,
   unsendEmailFiles,
   unsendEmailOnSuccess,

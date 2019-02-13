@@ -4,45 +4,18 @@ import contacts from './contacts';
 import labels from './labels';
 import feeditems from './feeditems';
 import threads from './threads';
-import {
-  Activity,
-  App,
-  Contact,
-  FeedItem,
-  Label,
-  Thread
-} from './../actions/types';
+import { App } from './../actions/types';
 
 export const crossReducer = (state = new Map(), action) => {
+  console.log('crossReducer', action.type);
   switch (action.type) {
     case App.ADD_INIT_DATA: {
-      const actionActivities = {
-        type: Activity.STOP_LOAD_THREAD
-      };
-      const actionContacts = {
-        type: Contact.ADD_BATCH,
-        contacts: action.contacts
-      };
-      const actionFeedItems = {
-        type: FeedItem.ADD_BATCH,
-        feeds: action.feeditems,
-        clear: action.clear
-      };
-      const actionLabels = {
-        type: Label.ADD_BATCH,
-        labels: action.labels
-      };
-      const actionThreads = {
-        type: Thread.ADD_BATCH,
-        threads: action.threads,
-        clear: action.clear
-      };
       return state.merge({
-        activities: activities(state.get('activities'), actionActivities),
-        contacts: contacts(state.get('contacts'), actionContacts),
-        feeditems: feeditems(state.get('feeditems'), actionFeedItems),
-        labels: labels(state.get('labels'), actionLabels),
-        threads: threads(state.get('threads'), actionThreads)
+        activities: activities(state.get('activities'), action.activity),
+        contacts: contacts(state.get('contacts'), action.contact),
+        feeditems: feeditems(state.get('feeditems'), action.feeditem),
+        labels: labels(state.get('labels'), action.label),
+        threads: threads(state.get('threads'), action.thread)
       });
     }
     default:
