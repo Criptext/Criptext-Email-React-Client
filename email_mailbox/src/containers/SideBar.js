@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { loadLabels } from '../actions';
 import SideBarView from '../components/SideBarWrapper';
 import { IconLabels, SectionType, composerEvents } from './../utils/const';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
@@ -75,9 +74,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onClickSettings: () => {
       const type = SectionType.SETTINGS;
       ownProps.onClickSection(type);
-    },
-    onLoadLabels: () => {
-      dispatch(loadLabels(dispatch));
     }
   };
 };

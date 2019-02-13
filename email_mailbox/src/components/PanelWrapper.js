@@ -200,6 +200,10 @@ class PanelWrapper extends Component {
       }
     });
 
+    addEvent(Event.STOP_LOAD_SYNC, () => {
+      props.onStopLoadSync();
+    });
+
     addEvent(
       Event.STORE_LOAD,
       ({ avatarHasChanged, labelIds, threadIds, labels, badgeLabelIds }) => {
@@ -258,6 +262,8 @@ class PanelWrapper extends Component {
           if (labelIdsBadge.length)
             props.onUpdateUnreadEmailsBadge(labelIdsBadge);
         }
+
+        props.onStopLoadSync();
       }
     );
 
@@ -340,6 +346,7 @@ PanelWrapper.propTypes = {
   onMarkThreadAsOpen: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,
+  onStopLoadSync: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   onUpdateAvatar: PropTypes.func,
   onUpdateEmailIdsThread: PropTypes.func,

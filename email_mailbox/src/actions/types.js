@@ -1,3 +1,7 @@
+export const App = {
+  ADD_INIT_DATA: 'ADD_INIT_DATA_APP'
+};
+
 export const File = {
   ADD_BATCH: 'ADD_FILES',
   UNSEND_FILES: 'UNSEND_FILES'

@@ -59,12 +59,7 @@ class ThreadsWrapper extends Component {
   }
 
   componentDidMount() {
-    this.props.onLoadThreads(
-      this.props.mailboxSelected,
-      true,
-      this.props.searchParams
-    );
-    this.props.onLoadEvents();
+    this.props.onLoadApp(this.props.mailboxSelected, true);
   }
 
   handleCloseMessage = () => {
@@ -162,7 +157,7 @@ ThreadsWrapper.propTypes = {
   onBackOption: PropTypes.func,
   onCloseUpdateMessage: PropTypes.func,
   onEmptyTrash: PropTypes.func,
-  onLoadEvents: PropTypes.func,
+  onLoadApp: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,
   searchParams: PropTypes.object,

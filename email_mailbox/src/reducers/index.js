@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux-immutable';
+import reduceReducers from 'reduce-reducers';
 import activities from './activity';
 import contacts from './contacts';
 import emails from './emails';
@@ -7,8 +8,9 @@ import labels from './labels';
 import feeditems from './feeditems';
 import suggestions from './suggestions';
 import threads from './threads';
+import { crossReducer } from './crossReducer';
 
-export default combineReducers({
+const combinedReducers = combineReducers({
   activities,
   contacts,
   emails,
@@ -18,3 +20,6 @@ export default combineReducers({
   suggestions,
   threads
 });
+
+const rootReducer = reduceReducers(combinedReducers, crossReducer);
+export default rootReducer;

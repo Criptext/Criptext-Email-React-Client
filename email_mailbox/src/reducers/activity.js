@@ -4,9 +4,10 @@ import { Map } from 'immutable';
 const initActivity = Map({
   avatarTimestamp: Date.now(),
   isFilteredByUnreadThreads: false,
-  isLoadingThreads: false,
-  isSyncing: false
+  isLoadingThreads: true,
+  isSyncing: true
 });
+
 const activity = (state = initActivity, action) => {
   switch (action.type) {
     case Activity.AVATAR_UPDATED_TIMESTAMP:

@@ -1,4 +1,8 @@
-import { startLoadThread, setAvatarUpdatedTimestamp } from './activity';
+import {
+  setAvatarUpdatedTimestamp,
+  startLoadThread,
+  stopLoadSync
+} from './activity';
 import { addContacts } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
@@ -46,7 +50,6 @@ import {
 import {
   addLabels,
   addLabel,
-  loadLabels,
   removeLabel,
   removeLabelOnSuccess,
   updateBadgeLabels,
@@ -63,6 +66,7 @@ import {
   updateFeedItemSuccess
 } from './feeditems';
 import { loadSuggestions } from './suggestions';
+import { loadApp } from './app';
 
 export {
   addContacts,
@@ -80,11 +84,11 @@ export {
   addMoveLabelIdThreads,
   addThreads,
   filterThreadsOrLoadMoreByUnread,
+  loadApp,
   loadEmails,
   loadEvents,
   loadFiles,
   loadFeedItems,
-  loadLabels,
   loadSuggestions,
   loadThreads,
   markEmailUnread,
@@ -111,6 +115,7 @@ export {
   sendOpenEvent,
   setAvatarUpdatedTimestamp,
   startLoadThread,
+  stopLoadSync,
   unsendEmail,
   unsendEmailFiles,
   unsendEmailOnSuccess,
