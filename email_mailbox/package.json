@@ -25,6 +25,7 @@
     "react-redux": "^5.0.6",
     "react-switch-input": "^0.1.10",
     "react-tooltip": "^3.4.0",
+    "reduce-reducers": "^0.4.3",
     "redux": "^3.7.2",
     "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.2.0",
