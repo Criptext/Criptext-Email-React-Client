@@ -1,5 +1,5 @@
 import { Thread } from './types';
-import { startLoadSync, stopLoadThread } from './activity';
+import { addDataApp, startLoadSync, stopLoadThread } from './index';
 import { updateBadgeLabels } from './labels';
 import { LabelType } from '../utils/electronInterface';
 import {
@@ -483,12 +483,13 @@ export const loadThreads = params => {
         }
       }
       const { threads, contacts } = await defineThreads(params);
-      if (contacts) dispatch(addContacts(contacts));
-
-      if (threads.length || !params.date) {
-        dispatch(addThreads(threads, params.clear));
-      }
-      dispatch(stopLoadThread());
+      const contact = contacts ? addContacts(contacts) : undefined;
+      const thread =
+        threads.length || !params.date
+          ? addThreads(threads, params.clear)
+          : undefined;
+      const activity = stopLoadThread();
+      dispatch(addDataApp({ activity, contact, thread }));
     } catch (e) {
       sendFetchEmailsErrorMessage();
     }

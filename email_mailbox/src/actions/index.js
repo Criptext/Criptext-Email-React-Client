@@ -1,5 +1,6 @@
 import {
   setAvatarUpdatedTimestamp,
+  startLoadSync,
   startLoadThread,
   stopLoadSync,
   stopLoadThread
@@ -67,10 +68,11 @@ import {
   updateFeedItemSuccess
 } from './feeditems';
 import { loadSuggestions } from './suggestions';
-import { loadApp } from './app';
+import { addDataApp, loadApp } from './app';
 
 export {
   addContacts,
+  addDataApp,
   addEmails,
   addFiles,
   addFeedItems,
@@ -115,6 +117,7 @@ export {
   searchThreads,
   sendOpenEvent,
   setAvatarUpdatedTimestamp,
+  startLoadSync,
   startLoadThread,
   stopLoadSync,
   stopLoadThread,
