@@ -74,8 +74,10 @@ let badgeLabelIdsEvent = new Set();
 let labelsEvent = {};
 let avatarHasChanged = false;
 
-export const getGroupEvents = async () => {
-  if (isGettingEvents) return;
+export const getGroupEvents = async isContinued => {
+  if (isGettingEvents && !isContinued) {
+    return;
+  }
   isGettingEvents = true;
   const { events, hasMoreEvents } = await getEvents();
   if (!events.length) {
@@ -149,7 +151,10 @@ export const getGroupEvents = async () => {
       badgeLabelIds
     });
   }
-  if (hasMoreEvents) await getGroupEvents();
+  if (hasMoreEvents) {
+    await getGroupEvents(hasMoreEvents);
+    return;
+  }
   isGettingEvents = false;
 };
 
