@@ -1,4 +1,5 @@
 import { appDomain } from './const';
+import { getContactByIds } from './ipc';
 
 const compareContacts = (recipient1, recipient2) => {
   if (!recipient1.name) {
@@ -24,4 +25,15 @@ export const matchOwnEmail = (myUsername, incomingEmail) =>
 
 export const orderContactsByNameOrEmail = recipients => {
   return recipients.sort(compareContacts);
+};
+
+export const defineContacts = async ids => {
+  const response = await getContactByIds(ids);
+  return response.reduce(
+    (result, element) => ({
+      ...result,
+      [element.id]: element
+    }),
+    {}
+  );
 };

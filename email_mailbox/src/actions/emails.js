@@ -11,25 +11,33 @@ import {
   unsendEmailEvent,
   updateEmail
 } from '../utils/ipc';
-import { loadContacts } from './contacts';
+import {
+  addDataApp,
+  addContacts,
+  addFiles,
+  unsendEmailFiles,
+  updateEmailIdsThread
+} from './index';
 import { EmailStatus, SocketCommand } from '../utils/const';
-import { unsendEmailFiles } from './files';
 import {
   sendUnsendEmailErrorMessage,
   sendUnsendEmailExpiredErrorMessage,
   sendUpdateThreadLabelsErrorMessage,
   sendRemoveThreadsErrorMessage
 } from './../utils/electronEventInterface';
-import { filterCriptextRecipients } from './../utils/EmailUtils';
-import { updateEmailIdsThread } from './threads';
-import { formEmailLabel } from '../utils/EmailUtils';
+import {
+  filterCriptextRecipients,
+  formEmailLabel
+} from './../utils/EmailUtils';
+import { defineContacts } from './../utils/ContactUtils';
+import { defineFiles } from './../utils/FileUtils';
 
 const eventlessEmailStatuses = [EmailStatus.FAIL, EmailStatus.SENDING];
 
 export const addEmails = emails => {
   return {
     type: Email.ADD_BATCH,
-    emails: emails
+    emails
   };
 };
 
@@ -66,16 +74,25 @@ export const loadEmails = threadId => {
             ...element.cc,
             ...element.bcc
           ];
+          const fileTokens = element.fileTokens
+            ? element.fileTokens.split(',')
+            : [];
           return {
             emails: { ...result.emails, [element.id]: element },
+            fileTokens: new Set([...result.fileTokens, ...fileTokens]),
             contactIds: new Set([...result.contactIds, ...contactIds])
           };
         },
-        { emails: {}, contactIds: new Set() }
+        { emails: {}, fileTokens: new Set(), contactIds: new Set() }
       );
       data.contactIds = Array.from(data.contactIds);
-      dispatch(loadContacts(data.contactIds));
-      dispatch(addEmails(data.emails));
+      data.fileTokens = Array.from(data.fileTokens);
+      const contacts = await defineContacts(data.contactIds);
+      const contact = addContacts(contacts);
+      const email = addEmails(data.emails);
+      const files = await defineFiles(data.fileTokens);
+      const file = addFiles(files);
+      dispatch(addDataApp({ contact, email, file }));
     } catch (e) {
       // TO DO
     }

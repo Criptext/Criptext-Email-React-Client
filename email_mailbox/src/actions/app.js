@@ -11,10 +11,20 @@ import { defineThreads } from './../utils/ThreadUtils';
 import { defineFeedItems } from './../utils/FeedItemUtils';
 import { getGroupEvents } from './../utils/electronEventInterface';
 
-export const addDataApp = ({ activity, contact, feeditem, label, thread }) => ({
+export const addDataApp = ({
+  activity,
+  contact,
+  email,
+  file,
+  feeditem,
+  label,
+  thread
+}) => ({
   type: App.ADD_DATA,
   activity,
   contact,
+  email,
+  file,
   feeditem,
   label,
   thread

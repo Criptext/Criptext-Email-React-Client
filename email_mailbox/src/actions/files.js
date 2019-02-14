@@ -1,6 +1,7 @@
 import { File } from './types';
-import { getFilesByTokens, updateFilesByEmailId } from '../utils/ipc';
+import { updateFilesByEmailId } from '../utils/ipc';
 import { AttachItemStatus } from '../components/AttachItem';
+import { defineFiles } from './../utils/FileUtils';
 
 export const addFiles = files => {
   return {
@@ -12,14 +13,7 @@ export const addFiles = files => {
 export const loadFiles = tokens => {
   return async dispatch => {
     try {
-      const response = await getFilesByTokens(tokens);
-      const files = response.reduce(
-        (result, file) => ({
-          ...result,
-          [file.token]: file
-        }),
-        {}
-      );
+      const files = await defineFiles(tokens);
       dispatch(addFiles(files));
     } catch (e) {
       // TO DO

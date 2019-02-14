@@ -59,9 +59,6 @@ class EmailWrapper extends Component {
   }
 
   componentDidMount() {
-    if (this.props.email.fileTokens.length && !this.props.files.length) {
-      this.props.onLoadFiles(this.props.email.fileTokens);
-    }
     if (this.props.email.unread) {
       this.setState({
         displayEmail: true
@@ -177,7 +174,6 @@ EmailWrapper.propTypes = {
   onDeletePermanently: PropTypes.func,
   onDownloadInlineImages: PropTypes.func,
   onInjectFilepathsOnEmailContentByCid: PropTypes.func,
-  onLoadFiles: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   onUpdateEmailContent: PropTypes.func,
   staticOpen: PropTypes.bool

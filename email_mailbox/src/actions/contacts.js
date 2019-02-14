@@ -1,5 +1,5 @@
 import { Contact } from './types';
-import { getContactByIds } from '../utils/ipc';
+import { defineContacts } from './../utils/ContactUtils';
 
 export const addContacts = contacts => {
   return {
@@ -11,14 +11,7 @@ export const addContacts = contacts => {
 export const loadContacts = ids => {
   return async dispatch => {
     try {
-      const response = await getContactByIds(ids);
-      const contacts = response.reduce(
-        (result, element) => ({
-          ...result,
-          [element.id]: element
-        }),
-        {}
-      );
+      const contacts = await defineContacts(ids);
       dispatch(addContacts(contacts));
     } catch (e) {
       // TO DO
