@@ -221,31 +221,12 @@ const encryptPostEmail = async ({
     peer,
     files
   );
-
-  const { session, encryptedBody } = externalEmailPassword.length
-    ? await encryptExternalEmail({
-        body,
-        externalEmailPassword,
-        files
-      })
-    : { session: null, encryptedBody: null };
-
-  const allExternalRecipients = [
-    ...externalRecipients.to,
-    ...externalRecipients.cc,
-    ...externalRecipients.bcc
-  ];
-  const hasExternalRecipients = allExternalRecipients.length > 0;
-
-  const guestEmail = hasExternalRecipients
-    ? noNulls({
-        to: externalRecipients.to,
-        cc: externalRecipients.cc,
-        bcc: externalRecipients.bcc,
-        body: session ? encryptedBody : body,
-        session
-      })
-    : null;
+  const guestEmail = await createGuestEmail({
+    externalEmailPassword,
+    externalRecipients,
+    files,
+    body
+  });
 
   const data = noNulls({
     guestEmail,
@@ -272,11 +253,48 @@ const encryptPostEmail = async ({
   return res;
 };
 
-const createDummyKeyBundle = async files => {
-  const fileWithKeys = files.filter(file => file.key && file.iv)[0];
-  const fileKey = fileWithKeys
-    ? `${fileWithKeys.key}:${fileWithKeys.iv}`
-    : null;
+const createGuestEmail = async ({
+  externalEmailPassword,
+  externalRecipients,
+  files,
+  body
+}) => {
+  const { to, cc, bcc } = externalRecipients;
+  const allExternalRecipients = [...to, ...cc, ...bcc];
+  const hasExternalRecipients = allExternalRecipients.length > 0;
+  if (!hasExternalRecipients) return null;
+
+  let fileKey = null,
+    fileKeys = null;
+  if (files.length) {
+    const fileWithKeys = files.filter(file => file.key && file.iv)[0];
+    fileKey = fileWithKeys ? `${fileWithKeys.key}:${fileWithKeys.iv}` : null;
+    fileKeys = files ? files.map(() => fileKey) : null;
+  }
+  const hasPassphrase = externalEmailPassword.length > 0;
+  const { session, encryptedBody } = hasPassphrase
+    ? await encryptExternalEmail({
+        body,
+        externalEmailPassword,
+        fileKey,
+        fileKeys
+      })
+    : { session: null, encryptedBody: null };
+
+  const guestBody = hasPassphrase ? encryptedBody : body;
+  const guestEmailParams = {
+    to,
+    cc,
+    bcc,
+    body: guestBody,
+    session,
+    fileKey,
+    fileKeys
+  };
+  return noNulls(guestEmailParams);
+};
+
+const createDummyKeyBundle = async ({ fileKey, fileKeys }) => {
   const preKeyId = 1;
   const signedPreKeyId = 1;
   const { identityKey, registrationId } = await generateIdentity();
@@ -285,15 +303,13 @@ const createDummyKeyBundle = async files => {
     signedPreKeyId,
     preKeyId
   });
-  const fileKeys = files ? files.map(() => fileKey) : null;
-
   const sessionParams = {
     identityKey,
     registrationId,
     preKey,
     signedPreKey
   };
-  const dummySession = {
+  const dummySession = noNulls({
     fileKey,
     fileKeys,
     identityKey: {
@@ -311,7 +327,7 @@ const createDummyKeyBundle = async files => {
       publicKey: util.toBase64(signedPreKey.keyPair.pubKey),
       privateKey: util.toBase64(signedPreKey.keyPair.privKey)
     }
-  };
+  });
   return { dummySession, sessionParams };
 };
 
@@ -339,10 +355,18 @@ const generatePreKeyBundle = async ({
   return { preKey, signedPreKey };
 };
 
-const encryptExternalEmail = async ({ body, externalEmailPassword, files }) => {
+const encryptExternalEmail = async ({
+  body,
+  externalEmailPassword,
+  fileKey,
+  fileKeys
+}) => {
   const recipient = externalEmailPassword;
   const deviceId = 1;
-  const { dummySession, sessionParams } = await createDummyKeyBundle(files);
+  const { dummySession, sessionParams } = await createDummyKeyBundle({
+    fileKey,
+    fileKeys
+  });
   const keys = {
     preKey: {
       id: sessionParams.preKey.keyId,
