@@ -1,22 +1,23 @@
 import { App } from './types';
+import {
+  addContacts,
+  addFeedItems,
+  addLabels,
+  addThreads,
+  stopLoadThread
+} from './index';
 import { defineLabels } from './../utils/LabelUtils';
 import { defineThreads } from './../utils/ThreadUtils';
 import { defineFeedItems } from './../utils/FeedItemUtils';
 import { getGroupEvents } from './../utils/electronEventInterface';
 
-export const addInitDataApp = ({
-  contacts,
-  feeditems,
-  labels,
-  threads,
-  clear
-}) => ({
-  type: App.ADD_INIT_DATA,
-  contacts,
-  feeditems,
-  labels,
-  threads,
-  clear
+export const addDataApp = ({ activity, contact, feeditem, label, thread }) => ({
+  type: App.ADD_DATA,
+  activity,
+  contact,
+  feeditem,
+  label,
+  thread
 });
 
 export const loadApp = params => {
@@ -24,9 +25,14 @@ export const loadApp = params => {
     const labels = await defineLabels();
     const { threads, contacts } = await defineThreads(params);
     const feeditems = await defineFeedItems();
-    dispatch(
-      addInitDataApp({ contacts, labels, threads, feeditems, clear: true })
-    );
+
+    const activity = stopLoadThread();
+    const contact = addContacts(contacts);
+    const feeditem = addFeedItems(feeditems, true);
+    const label = addLabels(labels);
+    const thread = addThreads(threads, true);
+
+    dispatch(addDataApp({ activity, contact, label, feeditem, thread }));
     await getGroupEvents();
   };
 };

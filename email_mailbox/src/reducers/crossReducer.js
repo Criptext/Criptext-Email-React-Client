@@ -4,45 +4,27 @@ import contacts from './contacts';
 import labels from './labels';
 import feeditems from './feeditems';
 import threads from './threads';
-import {
-  Activity,
-  App,
-  Contact,
-  FeedItem,
-  Label,
-  Thread
-} from './../actions/types';
+import { App } from './../actions/types';
 
 export const crossReducer = (state = new Map(), action) => {
   switch (action.type) {
-    case App.ADD_INIT_DATA: {
-      const actionActivities = {
-        type: Activity.STOP_LOAD_THREAD
-      };
-      const actionContacts = {
-        type: Contact.ADD_BATCH,
-        contacts: action.contacts
-      };
-      const actionFeedItems = {
-        type: FeedItem.ADD_BATCH,
-        feeds: action.feeditems,
-        clear: action.clear
-      };
-      const actionLabels = {
-        type: Label.ADD_BATCH,
-        labels: action.labels
-      };
-      const actionThreads = {
-        type: Thread.ADD_BATCH,
-        threads: action.threads,
-        clear: action.clear
-      };
+    case App.ADD_DATA: {
+      const { activity, contact, feeditem, label, thread } = action;
+      const activitiesState = state.get('activities');
+      const contactsState = state.get('contacts');
+      const feeditemsState = state.get('feeditems');
+      const labelsState = state.get('labels');
+      const threadsState = state.get('threads');
       return state.merge({
-        activities: activities(state.get('activities'), actionActivities),
-        contacts: contacts(state.get('contacts'), actionContacts),
-        feeditems: feeditems(state.get('feeditems'), actionFeedItems),
-        labels: labels(state.get('labels'), actionLabels),
-        threads: threads(state.get('threads'), actionThreads)
+        activities: activity
+          ? activities(activitiesState, activity)
+          : activitiesState,
+        contacts: contact ? contacts(contactsState, contact) : contactsState,
+        feeditems: feeditem
+          ? feeditems(feeditemsState, feeditem)
+          : feeditemsState,
+        labels: label ? labels(labelsState, label) : labelsState,
+        threads: thread ? threads(threadsState, thread) : threadsState
       });
     }
     default:

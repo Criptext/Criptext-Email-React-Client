@@ -4,7 +4,7 @@ import { getContactByIds } from '../utils/ipc';
 export const addContacts = contacts => {
   return {
     type: Contact.ADD_BATCH,
-    contacts: contacts
+    contacts
   };
 };
 

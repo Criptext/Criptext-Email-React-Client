@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import {
   loadApp,
+  loadEvents,
   loadThreads,
   filterThreadsOrLoadMoreByUnread,
   startLoadThread,
@@ -105,6 +106,9 @@ const mapDispatchToProps = dispatch => {
     onLoadApp: (mailbox, clear) => {
       const params = defineParamsToLoadThread(mailbox, clear);
       dispatch(loadApp(params));
+    },
+    onLoadEvents: () => {
+      dispatch(loadEvents());
     },
     onLoadThreads: (
       mailbox,

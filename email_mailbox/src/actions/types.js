@@ -1,5 +1,5 @@
 export const App = {
-  ADD_INIT_DATA: 'ADD_INIT_DATA_APP'
+  ADD_DATA: 'ADD_DATA_APP'
 };
 
 export const File = {
