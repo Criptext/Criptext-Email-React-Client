@@ -121,7 +121,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
       });
     },
-    onAddMoveLabel: (threadIds, labelId, notMove) => {
+    onAddMoveLabel: (threadIds, labelId) => {
       const currentLabelId = LabelType[ownProps.mailboxSelected].id;
       const isTrashCurrentLabelId = currentLabelId === LabelType.trash.id;
       const isSpamLabelIdToAdd = labelId === LabelType.spam.id;
@@ -133,8 +133,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             isSpamLabelIdToAdd && isTrashCurrentLabelId
               ? currentLabelId
               : undefined,
-          currentLabelId,
-          notMove
+          currentLabelId
         })
       ).then(() => ownProps.onBackOption());
     },
