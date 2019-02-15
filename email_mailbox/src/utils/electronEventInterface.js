@@ -141,12 +141,14 @@ export const getGroupEvents = async isContinued => {
         ? labelsEvent
         : null
       : null;
+    const hasStopLoad = !hasMoreEvents;
     emitter.emit(Event.STORE_LOAD, {
       avatarHasChanged,
       labelIds,
       threadIds,
       labels,
-      badgeLabelIds
+      badgeLabelIds,
+      hasStopLoad
     });
   }
   if (hasMoreEvents) {
