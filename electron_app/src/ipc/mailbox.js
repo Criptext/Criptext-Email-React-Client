@@ -3,7 +3,7 @@ const { app, BrowserWindow } = require('electron');
 const { download } = require('electron-dl');
 const path = require('path');
 const mailboxWindow = require('../windows/mailbox');
-const { installUpdate } = require('./../updater');
+const { showNotification, installUpdate } = require('./../updater');
 const myAccount = require('./../Account');
 const wsClient = require('./../socketClient');
 const { printEmailOrThread } = require('./../utils/PrintUtils');
@@ -14,6 +14,7 @@ const {
   checkIfExists
 } = require('../utils/FileUtils');
 const { getUsername } = require('./../utils/stringUtils');
+const { showWindows } = require('./../windows/windowUtils');
 
 ipc.answerRenderer('close-mailbox', () => {
   mailboxWindow.close();
@@ -106,3 +107,12 @@ ipc.answerRenderer(
     return checkIfExists(filePath) ? filePath : null;
   }
 );
+
+ipc.answerRenderer('show-notification', ({ title, message, threadId }) => {
+  const onClickNotification = () => {
+    showWindows();
+    if (threadId)
+      mailboxWindow.send('open-thread-by-notification', { threadId });
+  };
+  showNotification({ title, message, clickHandler: onClickNotification });
+});

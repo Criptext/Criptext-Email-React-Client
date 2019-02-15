@@ -1,231 +1,172 @@
-const { BrowserWindow } = require('electron');
-const path = require('path');
+const { Menu } = require('electron');
 const { checkForUpdates } = require('./../updater');
-const { quit } = require('./mailbox');
 const composerWindowManager = require('./composer');
-const globalManager = require('./../globalManager');
-const mainIcon = path.join(__dirname, './../../resources/icons/png/16x16.png');
-const trayIcon = path.join(__dirname, './../../resources/icons/png/32x32.png');
+const { isFromStore, showWindows, quit } = require('./windowUtils');
 
-const lang = require('./../lang');
-const string = lang.strings.windows.menu;
+const createAppMenu = () => {
+  const lang = require('./../lang');
+  const string = lang.strings.windows.menu.template;
 
-const template = [
-  {
-    label: string.template.file,
-    submenu: [
-      {
-        label: string.template.newEmail,
-        click: function() {
-          composerWindowManager.openNewComposer();
+  const separatorItem = { type: 'separator' };
+
+  const baseMenuTemplate = [
+    {
+      label: string.file,
+      submenu: [
+        {
+          label: string.newEmail,
+          click: () => composerWindowManager.openNewComposer()
         }
-      }
-    ]
-  },
-  {
-    label: string.template.edit,
-    submenu: [
-      {
-        label: string.template.undo,
-        accelerator: 'CmdOrCtrl+Z',
-        role: 'undo'
-      },
-      {
-        label: string.template.redo,
-        accelerator: 'Shift+CmdOrCtrl+Z',
-        role: 'redo'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: string.template.cut,
-        accelerator: 'CmdOrCtrl+X',
-        role: 'cut'
-      },
-      {
-        label: string.template.copy,
-        accelerator: 'CmdOrCtrl+C',
-        role: 'copy'
-      },
-      {
-        label: string.template.paste,
-        accelerator: 'CmdOrCtrl+V',
-        role: 'paste'
-      },
-      {
-        label: string.template.selectAll,
-        accelerator: 'CmdOrCtrl+A',
-        role: 'selectall'
-      }
-    ]
-  },
-  {
-    label: string.template.window,
-    role: 'window',
-    submenu: [
-      {
-        label: string.template.minimize,
-        accelerator: 'CmdOrCtrl+M',
-        role: 'minimize'
-      },
-      {
-        label: string.template.close,
-        accelerator: 'CmdOrCtrl+W',
-        role: 'close'
-      },
-      {
-        label: string.template.developer,
-        type: 'submenu',
-        submenu: [
-          {
-            label: string.template.toggleDeveloperTools,
-            accelerator:
-              process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-            click(item, focusedWindow) {
-              if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+      ]
+    },
+    {
+      label: string.edit,
+      submenu: [
+        {
+          label: string.undo,
+          accelerator: 'CmdOrCtrl+Z',
+          role: 'undo'
+        },
+        {
+          label: string.redo,
+          accelerator: 'Shift+CmdOrCtrl+Z',
+          role: 'redo'
+        },
+        separatorItem,
+        {
+          label: string.cut,
+          accelerator: 'CmdOrCtrl+X',
+          role: 'cut'
+        },
+        {
+          label: string.copy,
+          accelerator: 'CmdOrCtrl+C',
+          role: 'copy'
+        },
+        {
+          label: string.paste,
+          accelerator: 'CmdOrCtrl+V',
+          role: 'paste'
+        },
+        {
+          label: string.selectAll,
+          accelerator: 'CmdOrCtrl+A',
+          role: 'selectall'
+        }
+      ]
+    },
+    {
+      label: string.window,
+      role: 'window',
+      submenu: [
+        {
+          label: string.minimize,
+          accelerator: 'CmdOrCtrl+M',
+          role: 'minimize'
+        },
+        {
+          label: string.close,
+          accelerator: 'CmdOrCtrl+W',
+          role: 'close'
+        },
+        {
+          label: string.developer,
+          type: 'submenu',
+          submenu: [
+            {
+              label: string.toggleDeveloperTools,
+              accelerator:
+                process.platform === 'darwin'
+                  ? 'Alt+Command+I'
+                  : 'Ctrl+Shift+I',
+              click(item, focusedWindow) {
+                if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+              }
             }
-          }
-        ]
-      }
-    ]
-  }
-];
-
-if (process.platform === 'darwin') {
-  template.unshift({
-    label: string.template.criptext,
-    submenu: [
-      {
-        label: string.template.aboutCriptext,
-        role: 'about'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: string.template.services,
-        role: 'services',
-        submenu: []
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: string.template.hideCriptext,
-        accelerator: 'Command+H',
-        role: 'hide'
-      },
-      {
-        label: string.template.hideOthers,
-        accelerator: 'Command+Shift+H',
-        role: 'hideothers'
-      },
-      {
-        label: string.template.showAll,
-        role: 'unhide'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: string.template.quit,
-        accelerator: 'Command+Q',
-        click: function() {
-          quit();
+          ]
         }
-      }
-    ]
-  });
-  // Criptext menu - updater
-  if (!globalManager.isMAS.get()) {
-    template[0].submenu.splice(1, 0, {
-      label: string.template.checkForUpdates,
-      click: checkForUpdates
+      ]
+    }
+  ];
+
+  if (process.platform === 'darwin') {
+    baseMenuTemplate.unshift({
+      label: string.criptext,
+      submenu: [
+        {
+          label: string.aboutCriptext,
+          role: 'about'
+        },
+        separatorItem,
+        {
+          label: string.services,
+          role: 'services',
+          submenu: []
+        },
+        separatorItem,
+        {
+          label: string.hideCriptext,
+          accelerator: 'Command+H',
+          role: 'hide'
+        },
+        {
+          label: string.hideOthers,
+          accelerator: 'Command+Shift+H',
+          role: 'hideothers'
+        },
+        {
+          label: string.showAll,
+          role: 'unhide'
+        },
+        separatorItem,
+        {
+          label: string.quit,
+          accelerator: 'Command+Q',
+          click: () => quit()
+        }
+      ]
     });
+    // Criptext menu - updater
+    if (!isFromStore) {
+      baseMenuTemplate[0].submenu.splice(1, 0, {
+        label: string.checkForUpdates,
+        click: checkForUpdates
+      });
+    }
+
+    // Window menu.
+    baseMenuTemplate[3].submenu.push(
+      separatorItem,
+      {
+        label: string.bringAllToFront,
+        role: 'front'
+      },
+      separatorItem,
+      {
+        label: string.criptext,
+        click: () => showWindows()
+      }
+    );
+  } else {
+    // File menu.
+    baseMenuTemplate[0].submenu.push(
+      separatorItem,
+      {
+        label: string.checkForUpdates,
+        click: checkForUpdates
+      },
+      separatorItem,
+      {
+        label: string.quit,
+        accelerator: 'Alt+F4',
+        click: () => quit()
+      }
+    );
   }
 
-  // Window menu.
-  template[3].submenu.push(
-    {
-      type: 'separator'
-    },
-    {
-      label: string.template.bringAllToFront,
-      role: 'front'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: string.template.criptext,
-      click: function() {
-        showWindows();
-      }
-    }
-  );
-} else {
-  // File menu.
-  template[0].submenu.push(
-    {
-      type: 'separator'
-    },
-    {
-      label: string.template.checkForUpdates,
-      click: checkForUpdates
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: string.template.quit,
-      accelerator: 'Alt+F4',
-      click: function() {
-        quit();
-      }
-    }
-  );
-}
-
-const trayIconTemplate = [
-  {
-    label: string.trayIcon.criptext,
-    icon: mainIcon,
-    type: 'normal',
-    enabled: false
-  },
-  { type: 'separator' },
-  {
-    label: string.trayIcon.newEmail,
-    type: 'normal',
-    click: () => composerWindowManager.openNewComposer()
-  },
-  {
-    label: string.trayIcon.quit,
-    type: 'normal',
-    click: () => quit()
-  }
-];
-
-// Criptext menu - updater (Windows Store)
-if (!globalManager.isWindowsStore.get()) {
-  trayIconTemplate.splice(3, 0, {
-    label: string.trayIcon.checkForUpdates,
-    type: 'normal',
-    click: checkForUpdates
-  });
-}
-
-const showWindows = () => {
-  const visibleWindows = BrowserWindow.getAllWindows();
-  visibleWindows.reverse().forEach(w => {
-    w.show();
-  });
+  // Add menu to app
+  const menu = Menu.buildFromTemplate(baseMenuTemplate);
+  Menu.setApplicationMenu(menu);
 };
 
-module.exports = {
-  template,
-  showWindows,
-  trayIconTemplate,
-  trayIcon
-};
+module.exports = { createAppMenu };

@@ -95,6 +95,7 @@
         "criptext": "Criptext"
       },
       "trayIcon": {
+        "openCriptext": "Open Criptext",
         "criptext": "Criptext",
         "newEmail": "New email",
         "quit": "Quit",

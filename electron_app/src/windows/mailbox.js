@@ -1,12 +1,16 @@
 const { app, BrowserWindow, shell } = require('electron');
 const windowStateManager = require('electron-window-state');
 const ipc = require('@criptext/electron-better-ipc');
+const { setup: setupPushReceiver } = require('electron-push-receiver');
+const path = require('path');
 const { mailboxUrl } = require('./../window_routing');
 const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
-const path = require('path');
+const { isFromStore } = require('./windowUtils');
+const { createTrayIcon, destroyTrayIcon } = require('./tray');
+
 const { isWindows } = require('./../utils/osUtils');
 
 let mailboxWindow;
@@ -39,6 +43,8 @@ const create = () => {
     frame: !isWindows()
   });
   mailboxWindow.loadURL(mailboxUrl);
+  // Firebase
+  setupPushReceiver(mailboxWindow.webContents);
   if (isWindows()) {
     mailboxWindow.setMenuBarVisibility(false);
   }
@@ -54,24 +60,23 @@ const create = () => {
     ev.preventDefault();
   });
   mailboxWindow.on('close', e => {
-    const isMacOs = process.platform === 'darwin';
-    if (isMacOs && !globalManager.forcequit.get()) {
+    if (!globalManager.forcequit.get()) {
       e.preventDefault();
       mailboxWindow.hide();
     }
   });
   mailboxWindow.on('closed', () => {
-    if (process.platform !== 'darwin') {
-      mailboxWindow = undefined;
+    try {
+      destroyTrayIcon();
+    } catch (e) {
+      console.error(e);
     }
   });
 
   mailboxWindow.webContents.on('new-window', openLinkInDefaultBrowser);
   mailboxWindow.webContents.on('will-navigate', openLinkInDefaultBrowser);
   mailboxWindow.webContents.once('did-frame-finish-load', () => {
-    const isStore =
-      globalManager.isWindowsStore.get() || globalManager.isMAS.get();
-    if (!isStore) {
+    if (!isFromStore) {
       appUpdater();
     }
   });
@@ -86,15 +91,17 @@ const showFileExplorer = filename => {
 };
 
 const show = async () => {
-  const existVisibleWindow = BrowserWindow.getAllWindows().filter(w => {
-    return w.isVisible();
-  });
+  const existVisibleWindow = BrowserWindow.getAllWindows().filter(w =>
+    w.isVisible()
+  );
   if (mailboxWindow) {
     mailboxWindow.show();
+    createTrayIcon();
   } else if (!existVisibleWindow.length || !mailboxWindow) {
     await create();
     mailboxWindow.on('ready-to-show', () => {
       mailboxWindow.show();
+      createTrayIcon();
     });
     mailboxWindow.on('focus', () => {
       send('check-network-status');
@@ -160,16 +167,10 @@ const isVisibleAndFocused = () => {
   return mailboxWindow.isVisible() && mailboxWindow.isFocused();
 };
 
-const quit = () => {
-  globalManager.forcequit.set(true);
-  app.quit();
-};
-
 module.exports = {
   close,
   hide,
   mailboxWindow,
-  quit,
   send,
   show,
   isVisibleAndFocused,

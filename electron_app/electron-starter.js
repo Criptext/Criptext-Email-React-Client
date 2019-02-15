@@ -1,4 +1,4 @@
-const { app, ipcMain, Menu, Tray } = require('electron');
+const { app, ipcMain } = require('electron');
 const osLocale = require('os-locale');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
@@ -9,12 +9,8 @@ const loginWindow = require('./src/windows/login');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
-const {
-  template,
-  showWindows,
-  trayIconTemplate,
-  trayIcon
-} = require('./src/windows/menu');
+const { createAppMenu } = require('./src/windows/menu');
+const { showWindows } = require('./src/windows/windowUtils');
 require('./src/ipc/composer.js');
 require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
@@ -25,7 +21,6 @@ require('./src/ipc/dataTransfer.js');
 const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
-let tray = null;
 
 async function initApp() {
   try {
@@ -42,14 +37,16 @@ async function initApp() {
       myAccount.initialize(existingAccount);
       mySettings.initialize(appSettings);
       wsClient.start(myAccount);
+      createAppMenu();
       mailboxWindow.show();
-      setTrayIcon();
     } else {
       await getUserLanguage();
+      createAppMenu();
       loginWindow.show();
     }
   } else {
     await getUserLanguage();
+    createAppMenu();
     loginWindow.show();
   }
 
@@ -83,24 +80,6 @@ const isWindows = process.platform === 'win32';
 const isLinux = process.platform === 'linux';
 const isDev = process.env.NODE_ENV === 'development';
 
-const setTrayIcon = () => {
-  const isWindowsInstaller = isWindows && !globalManager.isWindowsStore.get();
-  if (isWindowsInstaller && !tray) {
-    tray = new Tray(trayIcon);
-    const contextMenu = Menu.buildFromTemplate(trayIconTemplate);
-    tray.setToolTip('Criptext');
-    tray.setContextMenu(contextMenu);
-    tray.on('click', initApp);
-  }
-};
-
-const destroyTrayIcon = () => {
-  if (isWindows && tray) {
-    tray.destroy();
-    tray = null;
-  }
-};
-
 if ((isWindows || isLinux) && !isDev) {
   const shouldQuitInstance = app.makeSingleInstance((cmdL, wdir) => {
     initApp();
@@ -120,17 +99,7 @@ const getUserLanguage = async () => {
 };
 
 app.on('ready', () => {
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
   initApp();
-});
-
-app.on('window-all-closed', () => {
-  destroyTrayIcon();
-  require('./src/socketClient').disconnect();
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
 });
 
 app.on('activate', () => {

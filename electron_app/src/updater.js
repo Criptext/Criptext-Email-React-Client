@@ -1,10 +1,10 @@
-const { dialog } = require('electron');
+const { app, dialog, Notification } = require('electron');
 const { autoUpdater } = require('electron-updater');
-const notifier = require('node-notifier');
 const path = require('path');
 const globalManager = require('./globalManager');
-const appId = 'com.criptext.criptextmail';
 const { updaterMessages } = require('./lang').strings;
+
+app.setAppUserModelId('com.criptext.criptextmail');
 
 let currentUpdaterType;
 let isDownloadingUpdate = false;
@@ -77,14 +77,15 @@ autoUpdater.on('update-available', () => {
     } else {
       showNotification({
         title: updaterMessages.availableAuto.title,
-        message: updaterMessages.availableAuto.subtitle
-      });
-      notifier.on('click', () => {
-        showNotification({
-          title: updaterMessages.downloading.title,
-          message: updaterMessages.downloading.subtitle
-        });
-        downloadUpdate();
+        message: updaterMessages.availableAuto.subtitle,
+        clickHandler: () => {
+          downloadUpdate();
+          showNotification({
+            title: updaterMessages.downloading.title,
+            message: updaterMessages.downloading.subtitle,
+            closeOnClick: true
+          });
+        }
       });
     }
   }
@@ -151,20 +152,26 @@ const installUpdate = () => {
   });
 };
 
-const showNotification = ({ title, message }) => {
+const showNotification = ({ title, message, clickHandler, closeOnClick }) => {
   const mailboxWindow = require('./windows/mailbox');
+  const isSupportedByOS = Notification.isSupported();
   const isVisibleAndFocused = mailboxWindow.isVisibleAndFocused();
   const isMAS = globalManager.isMAS.get();
-  if (!isMAS && !isVisibleAndFocused) {
+  if (isSupportedByOS && !isMAS && !isVisibleAndFocused) {
     const notifyOptions = {
-      appName: appId,
       title,
-      message,
-      icon: iconPath,
-      timeout: 15,
-      wait: true
+      body: message,
+      icon: iconPath
     };
-    notifier.notify(notifyOptions);
+    const notificationItem = new Notification(notifyOptions);
+    if (closeOnClick) {
+      notificationItem.on('click', () => {
+        notificationItem.close();
+      });
+    } else if (clickHandler) {
+      notificationItem.on('click', clickHandler);
+    }
+    notificationItem.show();
   }
 };
 
