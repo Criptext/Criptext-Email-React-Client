@@ -12,7 +12,12 @@ Immutable.Map {
     "date": 1514231264772,
     "unread": 1,
     "status": 3,
-    "fileTokens": Immutable.Set [],
+    "fileTokens": Immutable.Set [
+      "5t1o3uwfilajs3rfz8h4xsg96pkva",
+      "7sjpb3vj1vijs3rfzcabjv2vdqde",
+      "w4l31fx4cyjs3rfzbycuqddqr27b",
+      "y89y5jpwc8js3rfzc6y0c3ihdu7i",
+    ],
     "secure": true,
     "content": "Email content 1",
     "id": 1,

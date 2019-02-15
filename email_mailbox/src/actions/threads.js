@@ -138,8 +138,7 @@ export const addMoveLabelIdThreads = ({
   threadsParams,
   labelIdToAdd,
   labelIdToRemove,
-  currentLabelId,
-  notMove
+  currentLabelId
 }) => {
   return async dispatch => {
     try {
@@ -192,9 +191,7 @@ export const addMoveLabelIdThreads = ({
         if (labelIdToAdd === LabelType.spam.id)
           labelIds = [...labelIds, labelIdToAdd];
         if (labelIds.length) dispatch(updateBadgeLabels(labelIds));
-        if (!notMove) {
-          dispatch(moveThreads(threadIds, labelIdToAdd));
-        }
+        dispatch(moveThreads(threadIds, labelIdToAdd));
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();

@@ -1,3 +1,5 @@
+import { getFilesByTokens } from './ipc';
+
 export const FileTypes = {
   IMAGE: 'image',
   AUDIO: 'audio',
@@ -63,4 +65,15 @@ export const identifyFileType = mimetype => {
     default:
       return FileTypes.DEFAULT;
   }
+};
+
+export const defineFiles = async tokens => {
+  const response = await getFilesByTokens(tokens);
+  return response.reduce(
+    (result, file) => ({
+      ...result,
+      [file.token]: file
+    }),
+    {}
+  );
 };

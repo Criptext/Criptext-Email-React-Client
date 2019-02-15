@@ -14,7 +14,6 @@ import {
   checkFileDownloaded
 } from './../utils/ipc';
 import {
-  loadFiles,
   unsendEmail,
   updateEmailLabels,
   updateEmailOnSuccess,
@@ -184,9 +183,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         keyEmailToRespond,
         type: composerEvents.FORWARD
       });
-    },
-    onLoadFiles: tokens => {
-      dispatch(loadFiles(tokens));
     },
     onMarkAsSpam: ev => {
       ev.stopPropagation();

@@ -5,7 +5,7 @@ import {
   stopLoadSync,
   stopLoadThread
 } from './activity';
-import { addContacts } from './contacts';
+import { addContacts, loadContacts } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
 import {
   addLabelIdThread,
@@ -88,6 +88,7 @@ export {
   addThreads,
   filterThreadsOrLoadMoreByUnread,
   loadApp,
+  loadContacts,
   loadEmails,
   loadEvents,
   loadFiles,
