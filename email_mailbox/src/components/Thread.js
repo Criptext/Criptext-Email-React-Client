@@ -109,7 +109,7 @@ class Thread extends Component {
       const isLast = this.props.emails.length - 1 === index;
       return (
         <Email
-          key={index}
+          key={email.id}
           email={email}
           staticOpen={isLast}
           count={this.props.emails.length}

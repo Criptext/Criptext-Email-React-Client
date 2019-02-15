@@ -64,9 +64,10 @@ const Threads = props => (
         )}
         {props.threads.map((thread, index) => {
           const checked = props.threadItemsChecked.has(thread.get('uniqueId'));
+          const key = `${props.mailboxSelected}-${thread.get('uniqueId')}`;
           return (
             <ThreadItem
-              key={index}
+              key={key}
               myIndex={index}
               checked={checked}
               mailbox={props.mailboxSelected}
