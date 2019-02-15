@@ -8,6 +8,8 @@ const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
+const { isFromStore } = require('./windowUtils');
+const { createTrayIcon, destroyTrayIcon } = require('./tray');
 
 const { isWindows } = require('./../utils/osUtils');
 
@@ -64,15 +66,17 @@ const create = () => {
     }
   });
   mailboxWindow.on('closed', () => {
-    require('./../socketClient').disconnect();
+    try {
+      destroyTrayIcon();
+    } catch (e) {
+      console.error(e);
+    }
   });
 
   mailboxWindow.webContents.on('new-window', openLinkInDefaultBrowser);
   mailboxWindow.webContents.on('will-navigate', openLinkInDefaultBrowser);
   mailboxWindow.webContents.once('did-frame-finish-load', () => {
-    const isStore =
-      globalManager.isWindowsStore.get() || globalManager.isMAS.get();
-    if (!isStore) {
+    if (!isFromStore) {
       appUpdater();
     }
   });
@@ -87,15 +91,17 @@ const showFileExplorer = filename => {
 };
 
 const show = async () => {
-  const existVisibleWindow = BrowserWindow.getAllWindows().filter(w => {
-    return w.isVisible();
-  });
+  const existVisibleWindow = BrowserWindow.getAllWindows().filter(w =>
+    w.isVisible()
+  );
   if (mailboxWindow) {
     mailboxWindow.show();
+    createTrayIcon();
   } else if (!existVisibleWindow.length || !mailboxWindow) {
     await create();
     mailboxWindow.on('ready-to-show', () => {
       mailboxWindow.show();
+      createTrayIcon();
     });
     mailboxWindow.on('focus', () => {
       send('check-network-status');

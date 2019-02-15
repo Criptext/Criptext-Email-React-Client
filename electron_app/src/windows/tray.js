@@ -1,7 +1,7 @@
 const { Menu, Tray } = require('electron');
 const path = require('path');
 const composerWindowManager = require('./composer');
-const { isFromStore, quit } = require('./windowUtils');
+const { isFromStore, showWindows, quit } = require('./windowUtils');
 const globalManager = require('./../globalManager');
 const { checkForUpdates } = require('./../updater');
 
@@ -21,6 +21,11 @@ const createTrayIcon = () => {
       enabled: false
     },
     { type: 'separator' },
+    {
+      label: string.openCriptext,
+      type: 'normal',
+      click: () => showWindows()
+    },
     {
       label: string.newEmail,
       type: 'normal',

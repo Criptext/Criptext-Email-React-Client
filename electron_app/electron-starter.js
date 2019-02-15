@@ -1,4 +1,4 @@
-const { app, ipcMain, Menu } = require('electron');
+const { app, ipcMain } = require('electron');
 const osLocale = require('os-locale');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
@@ -10,7 +10,6 @@ const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { createAppMenu } = require('./src/windows/menu');
-const { createTrayIcon, destroyTrayIcon } = require('./src/windows/tray');
 const { showWindows } = require('./src/windows/windowUtils');
 require('./src/ipc/composer.js');
 require('./src/ipc/loading.js');
@@ -22,7 +21,6 @@ require('./src/ipc/dataTransfer.js');
 const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
-let tray = null;
 
 async function initApp() {
   try {
@@ -41,7 +39,6 @@ async function initApp() {
       wsClient.start(myAccount);
       createAppMenu();
       mailboxWindow.show();
-      createTrayIcon();
     } else {
       await getUserLanguage();
       createAppMenu();
@@ -103,13 +100,6 @@ const getUserLanguage = async () => {
 
 app.on('ready', () => {
   initApp();
-});
-
-app.on('window-all-closed', () => {
-  destroyTrayIcon();
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
 });
 
 app.on('activate', () => {
