@@ -138,8 +138,7 @@ export const addMoveLabelIdThreads = ({
   threadsParams,
   labelIdToAdd,
   labelIdToRemove,
-  currentLabelId,
-  notMove
+  currentLabelId
 }) => {
   return async dispatch => {
     try {

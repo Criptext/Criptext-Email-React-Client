@@ -73,7 +73,7 @@ autoUpdater.on('update-available', () => {
     const mailboxWindow = require('./windows/mailbox');
     const isVisibleAndFocused = mailboxWindow.isVisibleAndFocused();
     if (isVisibleAndFocused) {
-      mailboxWindow.send('update-available');
+      downloadUpdate();
     } else {
       showNotification({
         title: updaterMessages.availableAuto.title,
@@ -100,21 +100,23 @@ autoUpdater.on('download-progress', data => {
 });
 
 autoUpdater.on('update-downloaded', () => {
-  dialog.showMessageBox(
-    {
-      title: updaterMessages.downloaded.title,
-      message: updaterMessages.downloaded.subtitle,
-      buttons: ['Ok']
-    },
-    () => {
-      currentUpdaterType = updaterTypes.NONE;
-      isDownloadingUpdate = false;
-      setImmediate(() => {
-        globalManager.forcequit.set(true);
-        autoUpdater.quitAndInstall();
-      });
-    }
-  );
+  const mailboxWindow = require('./windows/mailbox');
+  if (currentUpdaterType === updaterTypes.MANUAL) {
+    dialog.showMessageBox(
+      {
+        title: updaterMessages.downloaded.title,
+        message: updaterMessages.downloaded.subtitle,
+        buttons: ['Ok']
+      },
+      () => {
+        installUpdate();
+      }
+    );
+  }
+
+  if (currentUpdaterType === updaterTypes.AUTO) {
+    mailboxWindow.send('update-available');
+  }
 });
 
 const appUpdater = () => {
@@ -140,6 +142,15 @@ const downloadUpdate = () => {
   isDownloadingUpdate = true;
 };
 
+const installUpdate = () => {
+  currentUpdaterType = updaterTypes.NONE;
+  isDownloadingUpdate = false;
+  setImmediate(() => {
+    globalManager.forcequit.set(true);
+    autoUpdater.quitAndInstall();
+  });
+};
+
 const showNotification = ({ title, message }) => {
   const mailboxWindow = require('./windows/mailbox');
   const isVisibleAndFocused = mailboxWindow.isVisibleAndFocused();
@@ -160,7 +171,7 @@ const showNotification = ({ title, message }) => {
 module.exports = {
   appUpdater,
   checkForUpdates,
-  downloadUpdate,
+  installUpdate,
   showNotification,
   iconPath
 };

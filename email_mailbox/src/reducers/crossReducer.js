@@ -9,7 +9,6 @@ import threads from './threads';
 import { App } from './../actions/types';
 
 export const crossReducer = (state = new Map(), action) => {
-  console.log('crossReducer', action.type);
   switch (action.type) {
     case App.ADD_DATA: {
       const {

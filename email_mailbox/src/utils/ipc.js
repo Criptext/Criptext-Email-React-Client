@@ -6,8 +6,8 @@ export const closeMailboxWindow = () => {
   callMain('close-mailbox');
 };
 
-export const downloadUpdate = () => {
-  callMain('download-update');
+export const installUpdate = () => {
+  callMain('install-update');
 };
 
 export const logoutApp = () => {

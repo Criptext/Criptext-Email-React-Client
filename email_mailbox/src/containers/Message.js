@@ -3,7 +3,7 @@ import { MessageType } from '../components/Message';
 import MessageWrapper from './../components/MessageWrapper';
 import MessageContent, { actionHandlerKeys } from './../data/message';
 import { LabelType } from './../utils/electronInterface';
-import { downloadUpdate } from './../utils/ipc';
+import { installUpdate } from './../utils/ipc';
 import { SectionType } from '../utils/const';
 import { loadThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
@@ -99,7 +99,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
         }
         case actionHandlerKeys.suggestion.update: {
-          downloadUpdate();
+          installUpdate();
           ownProps.onClickClose();
           break;
         }

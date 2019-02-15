@@ -3,7 +3,7 @@ const { app, BrowserWindow } = require('electron');
 const { download } = require('electron-dl');
 const path = require('path');
 const mailboxWindow = require('../windows/mailbox');
-const { downloadUpdate } = require('./../updater');
+const { installUpdate } = require('./../updater');
 const myAccount = require('./../Account');
 const wsClient = require('./../socketClient');
 const { printEmailOrThread } = require('./../utils/PrintUtils');
@@ -19,8 +19,8 @@ ipc.answerRenderer('close-mailbox', () => {
   mailboxWindow.close();
 });
 
-ipc.answerRenderer('download-update', () => {
-  downloadUpdate();
+ipc.answerRenderer('install-update', () => {
+  installUpdate();
 });
 
 ipc.answerRenderer('logout-app', () => {
