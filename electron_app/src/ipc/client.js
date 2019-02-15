@@ -137,4 +137,8 @@ ipc.answerRenderer('client-update-name-event', params =>
   clientManager.updateName(params)
 );
 
+ipc.answerRenderer('client-update-push-token', pushToken =>
+  clientManager.updatePushToken(pushToken)
+);
+
 ipc.answerRenderer('client-upload-avatar', clientManager.uploadAvatar);

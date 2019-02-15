@@ -60,7 +60,6 @@ import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
-import string from './../lang';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -396,7 +395,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     addEmailToNotificationList({
       senderInfo: parsedContact.name || parsedContact.email,
       emailSubject: subject,
-      emailPreview: notificationPreview
+      emailPreview: notificationPreview,
+      threadId
     });
   }
   return { rowid, labelIds, threadIds: threadId ? [threadId] : null };
@@ -405,19 +405,32 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
 const addEmailToNotificationList = ({
   senderInfo,
   emailSubject,
-  emailPreview
+  emailPreview,
+  threadId
 }) => {
-  newEmailNotificationList.push({ senderInfo, emailSubject, emailPreview });
+  newEmailNotificationList.push({
+    senderInfo,
+    emailSubject,
+    emailPreview,
+    threadId
+  });
 };
 
 const sendNewEmailNotification = () => {
+  // eslint-disable-next-line no-undef
+  const string = require('./../lang');
   if (newEmailNotificationList.length <= 3) {
     newEmailNotificationList.forEach(notificationData => {
-      const { emailSubject, emailPreview, senderInfo } = notificationData;
+      const {
+        emailSubject,
+        emailPreview,
+        senderInfo,
+        threadId
+      } = notificationData;
       const message = getShowEmailPreviewStatus()
         ? `${emailSubject}\n${emailPreview}`
         : `${emailSubject}`;
-      showNotificationApp({ title: senderInfo, message });
+      showNotificationApp({ title: senderInfo, message, threadId });
     });
   } else if (newEmailNotificationList.length > 3) {
     const title = 'Criptext';
@@ -425,7 +438,7 @@ const sendNewEmailNotification = () => {
       string.notification.newEmailGroup.prefix +
       newEmailNotificationList.length +
       string.notification.newEmailGroup.sufix;
-    showNotificationApp({ title, message });
+    showNotificationApp({ title, message, threadId: null });
   }
   newEmailNotificationList = [];
 };
@@ -725,12 +738,16 @@ const setEventAsHandled = async eventIds => {
   return await acknowledgeEvents(eventIds);
 };
 
-/* Window events: listener
-  ----------------------------- */
+/*  Window events: listener
+----------------------------- */
+export const sendLoadEventsEvent = () => {
+  emitter.emit(Event.LOAD_EVENTS, {});
+};
+
 ipcRenderer.on('socket-message', async (ev, message) => {
   const eventId = message.cmd;
   if (eventId === 400) {
-    emitter.emit(Event.LOAD_EVENTS, {});
+    sendLoadEventsEvent();
   } else {
     const { rowid } = await handleEvent(message);
     if (rowid) {
@@ -740,7 +757,7 @@ ipcRenderer.on('socket-message', async (ev, message) => {
 });
 
 ipc.answerMain('get-events', () => {
-  emitter.emit(Event.LOAD_EVENTS, {});
+  sendLoadEventsEvent();
 });
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
@@ -1113,6 +1130,10 @@ export const sendManualSyncSuccessMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+ipcRenderer.on('open-thread-by-notification', (ev, { threadId }) => {
+  emitter.emit(Event.OPEN_THREAD, { threadId, mailbox: 'inbox' });
+});
+
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
@@ -1139,6 +1160,8 @@ export const Event = {
   LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
   LINK_DEVICE_PREPARING_MAILBOX: 'preparing-mailbox',
   LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
+  LOAD_EVENTS: 'load-events',
+  OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',

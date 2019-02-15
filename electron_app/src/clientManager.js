@@ -422,6 +422,13 @@ const updateName = async ({ name }) => {
     : await checkExpiredSession(res, updateName, { name });
 };
 
+const updatePushToken = async pushToken => {
+  const res = await client.updatePushToken(pushToken);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, updatePushToken, pushToken);
+};
+
 const upgradeToRefreshToken = async () => {
   return await client.upgradeToRefreshToken();
 };
@@ -493,6 +500,7 @@ module.exports = {
   syncStatus,
   unlockDevice,
   updateName,
+  updatePushToken,
   uploadAvatar,
   unsendEmail
 };
