@@ -21,7 +21,7 @@ import { storeSeenTimestamp } from '../utils/storage';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 
 const mapStateToProps = state => {
-  const threadsCount = state.get('threads').size;
+  const threadsCount = state.get('threads').get('list').size;
   return {
     threadsCount
   };

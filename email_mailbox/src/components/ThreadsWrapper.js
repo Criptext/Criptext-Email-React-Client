@@ -59,7 +59,8 @@ class ThreadsWrapper extends Component {
   }
 
   componentDidMount() {
-    this.props.onLoadApp(this.props.mailboxSelected, true);
+    if (!this.props.threads.size)
+      this.props.onLoadApp(this.props.mailboxSelected, true);
   }
 
   handleCloseMessage = () => {

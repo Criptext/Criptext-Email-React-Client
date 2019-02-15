@@ -86,7 +86,7 @@ const getLabelIdsFromThreadIds = (threads, uniqueIds) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const threads = state.get('threads');
+  const threads = state.get('threads').get('list');
   const threadIds = getThreadsIds(threads);
   const threadsSelected = ownProps.itemsChecked
     ? defineThreadsSelected(threads, ownProps.itemsChecked)

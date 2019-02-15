@@ -44,10 +44,8 @@ const mapStateToProps = (state, ownProps) => {
     state.get('activities').get('isSyncing')
   );
   const isLoadingThreads = state.get('activities').get('isLoadingThreads');
-  const threads = state.get('threads');
-  const unreadThreads = state
-    .get('threads')
-    .filter(thread => thread.get('unread'));
+  const threads = state.get('threads').get('list');
+  const unreadThreads = threads.filter(thread => thread.get('unread'));
   return {
     buttonSyncStatus,
     isLoadingThreads,

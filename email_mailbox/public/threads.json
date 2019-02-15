@@ -18,6 +18,7 @@
       "emailIds": "1,2",
       "fromContactName": "User a",
       "recipientContactIds": "1",
+      "uniqueId":"6Za2dcMlE0OSSc9",
       "trashDate": null
     },
     {
@@ -59,6 +60,7 @@
       "emailIds": "2",
       "fromContactName": "User a",
       "recipientContactIds": "1",
+      "uniqueId":"cuW6ElyoqsR7MMh",
       "trashDate": null
     }
   ]
