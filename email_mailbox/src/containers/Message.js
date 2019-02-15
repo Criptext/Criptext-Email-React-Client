@@ -106,6 +106,22 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         default:
           break;
       }
+    },
+    onOpenThreadInMailbox: ({ mailbox, threadId }) => {
+      const labelId = LabelType[mailbox].id;
+      const loadThreadsParams = {
+        labelId,
+        rejectedLabelIds: defineRejectedLabels(labelId),
+        contactTypes: defineContactType(labelId)
+      };
+      dispatch(loadThreads(loadThreadsParams)).then(() => {
+        const threadType = SectionType.THREAD;
+        const openThreadParams = {
+          mailboxSelected: mailbox,
+          threadIdSelected: threadId
+        };
+        ownProps.onClickSection(threadType, openThreadParams);
+      });
     }
   };
 };

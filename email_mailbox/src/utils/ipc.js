@@ -40,8 +40,8 @@ export const processPendingEvents = () => {
   }, 1000);
 };
 
-export const showNotificationApp = ({ title, message }) => {
-  callMain('show-notification', { title, message });
+export const showNotificationApp = ({ title, message, threadId }) => {
+  callMain('show-notification', { title, message, threadId });
 };
 
 export const throwError = error => {
@@ -194,6 +194,10 @@ export const unsendEmailEvent = async metadataKey => {
 
 export const updateNameEvent = async params => {
   return await callMain('client-update-name-event', params);
+};
+
+export const updatePushToken = async pushToken => {
+  return await callMain('client-update-push-token', pushToken);
 };
 
 export const uploadAvatar = async params => {

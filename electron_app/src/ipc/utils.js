@@ -6,7 +6,6 @@ const {
   getOsAndArch
 } = require('../utils/osUtils');
 const { processEventsQueue } = require('../eventQueueManager');
-const { showNotification } = require('../updater');
 const globalManager = require('./../globalManager');
 const loadingWindow = require('./../windows/loading');
 
@@ -18,10 +17,6 @@ ipc.answerRenderer('get-os-and-arch', () => getOsAndArch());
 
 ipc.answerRenderer('process-pending-events', () => {
   processEventsQueue();
-});
-
-ipc.answerRenderer('show-notification', ({ title, message }) => {
-  showNotification({ title, message });
 });
 
 ipc.answerRenderer('throwError', ({ name, description }) => {

@@ -25,6 +25,7 @@ class MessageWrapper extends Component {
 
     this.clearTimeouts();
     addEvent(Event.DISPLAY_MESSAGE, this.handleDisplayMessageEvent);
+    addEvent(Event.OPEN_THREAD, this.handleOpenThreadEvent);
   }
 
   render() {
@@ -54,6 +55,7 @@ class MessageWrapper extends Component {
   componentWillUnmount() {
     this.clearTimeouts();
     removeEvent(Event.DISPLAY_MESSAGE, this.handleDisplayMessageEvent);
+    removeEvent(Event.OPEN_THREAD, this.handleOpenThreadEvent);
   }
 
   handleDisplayMessageEvent = ({
@@ -193,6 +195,10 @@ class MessageWrapper extends Component {
     clearTimeout(this.hideMessageTimeout);
     clearTimeout(this.clearMessageTimeout);
   };
+
+  handleOpenThreadEvent = async ({ mailbox, threadId }) => {
+    await this.props.onOpenThreadInMailbox({ mailbox, threadId });
+  };
 }
 
 MessageWrapper.propTypes = {
@@ -204,6 +210,7 @@ MessageWrapper.propTypes = {
   onClickClose: PropTypes.func,
   onExecuteMessageAction: PropTypes.func,
   onExportDatabase: PropTypes.func,
+  onOpenThreadInMailbox: PropTypes.func,
   onUploadDatabase: PropTypes.func,
   params: PropTypes.object,
   type: PropTypes.number
