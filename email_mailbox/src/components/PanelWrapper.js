@@ -206,7 +206,14 @@ class PanelWrapper extends Component {
 
     addEvent(
       Event.STORE_LOAD,
-      ({ avatarHasChanged, labelIds, threadIds, labels, badgeLabelIds }) => {
+      ({
+        avatarHasChanged,
+        labelIds,
+        threadIds,
+        labels,
+        badgeLabelIds,
+        hasStopLoad
+      }) => {
         if (avatarHasChanged) {
           props.onUpdateAvatar();
         }
@@ -263,7 +270,7 @@ class PanelWrapper extends Component {
             props.onUpdateUnreadEmailsBadge(labelIdsBadge);
         }
 
-        props.onStopLoadSync();
+        if (hasStopLoad) props.onStopLoadSync();
       }
     );
 

@@ -1,5 +1,86 @@
 # Change Log
 
+## [0.16.5](https://github.com/criptext/Criptext-Email-React-Client/tree/0.16.5) (2019-02-14)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.16.4...0.16.5)
+
+**Implemented enhancements:**
+
+- Refactor: Use crossReducer [\#723](https://github.com/Criptext/Criptext-Email-React-Client/issues/723)
+- Thread item: Improve read update [\#713](https://github.com/Criptext/Criptext-Email-React-Client/issues/713)
+- Mailbox:  Show banner when update is downloaded \(duplicated\) [\#711](https://github.com/Criptext/Criptext-Email-React-Client/issues/711)
+
+**Fixed bugs:**
+
+- Composer:  Check passphrase on mixed recipients emails [\#722](https://github.com/Criptext/Criptext-Email-React-Client/issues/722)
+- Email detail: Fix inline image [\#710](https://github.com/Criptext/Criptext-Email-React-Client/issues/710)
+- Email detail: Fix handle collapse/expand dots reply/forward  [\#708](https://github.com/Criptext/Criptext-Email-React-Client/issues/708)
+
+**Merged pull requests:**
+
+- Component [\#725](https://github.com/Criptext/Criptext-Email-React-Client/pull/725) ([erikaperugachi](https://github.com/erikaperugachi))
+- Cross reducer [\#724](https://github.com/Criptext/Criptext-Email-React-Client/pull/724) ([erikaperugachi](https://github.com/erikaperugachi))
+- Unread threads [\#721](https://github.com/Criptext/Criptext-Email-React-Client/pull/721) ([JulianAdams4](https://github.com/JulianAdams4))
+- Dots [\#720](https://github.com/Criptext/Criptext-Email-React-Client/pull/720) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix sanitize [\#719](https://github.com/Criptext/Criptext-Email-React-Client/pull/719) ([JulianAdams4](https://github.com/JulianAdams4))
+- Email detail: Fix inline images [\#718](https://github.com/Criptext/Criptext-Email-React-Client/pull/718) ([JulianAdams4](https://github.com/JulianAdams4))
+
+## [0.16.4](https://github.com/criptext/Criptext-Email-React-Client/tree/0.16.4) (2019-02-11)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.16.2...0.16.4)
+
+**Implemented enhancements:**
+
+- UX Improvements [\#700](https://github.com/Criptext/Criptext-Email-React-Client/issues/700)
+- Composer: show passphrase as default option [\#694](https://github.com/Criptext/Criptext-Email-React-Client/issues/694)
+- Sign up: chance text username error [\#693](https://github.com/Criptext/Criptext-Email-React-Client/issues/693)
+- Refactor: add ipc to data transfer [\#641](https://github.com/Criptext/Criptext-Email-React-Client/issues/641)
+- Avatar: Get avatar user only to criptext user [\#348](https://github.com/Criptext/Criptext-Email-React-Client/issues/348)
+- Refactor: Spread errors.js to each components [\#338](https://github.com/Criptext/Criptext-Email-React-Client/issues/338)
+
+**Fixed bugs:**
+
+- UX Improvements [\#700](https://github.com/Criptext/Criptext-Email-React-Client/issues/700)
+- Email: fix error characters [\#695](https://github.com/Criptext/Criptext-Email-React-Client/issues/695)
+- Thread item: fix name repeated [\#398](https://github.com/Criptext/Criptext-Email-React-Client/issues/398)
+- Avatar: Get avatar user only to criptext user [\#348](https://github.com/Criptext/Criptext-Email-React-Client/issues/348)
+
+**Closed issues:**
+
+- Update avatar by event 313 [\#648](https://github.com/Criptext/Criptext-Email-React-Client/issues/648)
+
+**Merged pull requests:**
+
+- Update version 0.16.4 [\#707](https://github.com/Criptext/Criptext-Email-React-Client/pull/707) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix signal identifiers parse [\#706](https://github.com/Criptext/Criptext-Email-React-Client/pull/706) ([JulianAdams4](https://github.com/JulianAdams4))
+- Ipc [\#705](https://github.com/Criptext/Criptext-Email-React-Client/pull/705) ([erikaperugachi](https://github.com/erikaperugachi))
+- Composer [\#704](https://github.com/Criptext/Criptext-Email-React-Client/pull/704) ([erikaperugachi](https://github.com/erikaperugachi))
+- Suggestions [\#703](https://github.com/Criptext/Criptext-Email-React-Client/pull/703) ([Hirobreak](https://github.com/Hirobreak))
+- Fix [\#702](https://github.com/Criptext/Criptext-Email-React-Client/pull/702) ([erikaperugachi](https://github.com/erikaperugachi))
+- Score [\#701](https://github.com/Criptext/Criptext-Email-React-Client/pull/701) ([Hirobreak](https://github.com/Hirobreak))
+- Passphrase visible and signup error text [\#699](https://github.com/Criptext/Criptext-Email-React-Client/pull/699) ([Hirobreak](https://github.com/Hirobreak))
+- Participants and Date labels fix, Event 313 handler [\#698](https://github.com/Criptext/Criptext-Email-React-Client/pull/698) ([Hirobreak](https://github.com/Hirobreak))
+- Remove Avatar & Native Image [\#697](https://github.com/Criptext/Criptext-Email-React-Client/pull/697) ([Hirobreak](https://github.com/Hirobreak))
+- Spread error.js. \#338 [\#696](https://github.com/Criptext/Criptext-Email-React-Client/pull/696) ([erikaperugachi](https://github.com/erikaperugachi))
+
+## [0.16.2](https://github.com/criptext/Criptext-Email-React-Client/tree/0.16.2) (2019-02-04)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.16.1...0.16.2)
+
+**Closed issues:**
+
+- \[App\]: Generate and upload more prekeys [\#684](https://github.com/Criptext/Criptext-Email-React-Client/issues/684)
+
+**Merged pull requests:**
+
+- Add print permission [\#692](https://github.com/Criptext/Criptext-Email-React-Client/pull/692) ([erikaperugachi](https://github.com/erikaperugachi))
+- Key [\#691](https://github.com/Criptext/Criptext-Email-React-Client/pull/691) ([erikaperugachi](https://github.com/erikaperugachi))
+- Download all inline images and Inject image paths only one time [\#690](https://github.com/Criptext/Criptext-Email-React-Client/pull/690) ([JulianAdams4](https://github.com/JulianAdams4))
+- hotfix delete by label id [\#689](https://github.com/Criptext/Criptext-Email-React-Client/pull/689) ([Hirobreak](https://github.com/Hirobreak))
+- Handle just one render by load events [\#688](https://github.com/Criptext/Criptext-Email-React-Client/pull/688) ([erikaperugachi](https://github.com/erikaperugachi))
+- welcome fix, remove dir fix [\#687](https://github.com/Criptext/Criptext-Email-React-Client/pull/687) ([Hirobreak](https://github.com/Hirobreak))
+- Avatar [\#686](https://github.com/Criptext/Criptext-Email-React-Client/pull/686) ([Hirobreak](https://github.com/Hirobreak))
+- Generate and upload more prekeys [\#685](https://github.com/Criptext/Criptext-Email-React-Client/pull/685) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update changelog [\#683](https://github.com/Criptext/Criptext-Email-React-Client/pull/683) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix forward inline images from externals [\#682](https://github.com/Criptext/Criptext-Email-React-Client/pull/682) ([JulianAdams4](https://github.com/JulianAdams4))
+
 ## [0.16.1](https://github.com/criptext/Criptext-Email-React-Client/tree/0.16.1) (2019-01-30)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.16.0...0.16.1)
 

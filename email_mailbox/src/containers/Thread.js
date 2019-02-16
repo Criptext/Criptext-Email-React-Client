@@ -70,7 +70,7 @@ const createReadableThread = thread => {
 
 const mapStateToProps = (state, ownProps) => {
   const thread =
-    getThread(state.get('threads'), ownProps.threadIdSelected) ||
+    getThread(state.get('threads').get('list'), ownProps.threadIdSelected) ||
     getThreadFromSuggestions(
       state.get('suggestions'),
       ownProps.threadIdSelected
