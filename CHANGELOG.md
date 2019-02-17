@@ -1,5 +1,28 @@
 # Change Log
 
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.16.5...HEAD)
+
+**Implemented enhancements:**
+
+- Mailbox: Appear download update when update it is downloaded [\#715](https://github.com/Criptext/Criptext-Email-React-Client/issues/715)
+- App:  Firebase Push notifications [\#347](https://github.com/Criptext/Criptext-Email-React-Client/issues/347)
+
+**Fixed bugs:**
+
+- Composer: Fix guest email [\#709](https://github.com/Criptext/Criptext-Email-React-Client/issues/709)
+
+**Closed issues:**
+
+- Refactor: load components by keys [\#403](https://github.com/Criptext/Criptext-Email-React-Client/issues/403)
+
+**Merged pull requests:**
+
+- Remove Tray icon for MacOS [\#731](https://github.com/Criptext/Criptext-Email-React-Client/pull/731) ([JulianAdams4](https://github.com/JulianAdams4))
+- Component [\#730](https://github.com/Criptext/Criptext-Email-React-Client/pull/730) ([erikaperugachi](https://github.com/erikaperugachi))
+- Notifications, Firebase & Tray [\#729](https://github.com/Criptext/Criptext-Email-React-Client/pull/729) ([JulianAdams4](https://github.com/JulianAdams4))
+- Thread [\#728](https://github.com/Criptext/Criptext-Email-React-Client/pull/728) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix guest email [\#727](https://github.com/Criptext/Criptext-Email-React-Client/pull/727) ([JulianAdams4](https://github.com/JulianAdams4))
+
 ## [0.16.5](https://github.com/criptext/Criptext-Email-React-Client/tree/0.16.5) (2019-02-14)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.16.4...0.16.5)
 
