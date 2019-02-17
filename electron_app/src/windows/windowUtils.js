@@ -16,7 +16,19 @@ const quit = () => {
 const isFromStore =
   globalManager.isWindowsStore.get() || globalManager.isMAS.get();
 
+const isLinux = process.platform === 'linux';
+
+const isWindows = process.platform === 'win32';
+
+const isMacOS = process.platform === 'darwin';
+
+const isDev = process.env.NODE_ENV === 'development';
+
 module.exports = {
+  isDev,
+  isLinux,
+  isWindows,
+  isMacOS,
   isFromStore,
   showWindows,
   quit
