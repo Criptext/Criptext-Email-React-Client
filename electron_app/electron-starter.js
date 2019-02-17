@@ -10,7 +10,12 @@ const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { createAppMenu } = require('./src/windows/menu');
-const { showWindows } = require('./src/windows/windowUtils');
+const {
+  showWindows, 
+  isDev, 
+  isLinux, 
+  isWindows
+} = require('./src/windows/windowUtils');
 require('./src/ipc/composer.js');
 require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
@@ -75,10 +80,6 @@ async function initApp() {
 
 //   App
 app.disableHardwareAcceleration();
-
-const isWindows = process.platform === 'win32';
-const isLinux = process.platform === 'linux';
-const isDev = process.env.NODE_ENV === 'development';
 
 if ((isWindows || isLinux) && !isDev) {
   const shouldQuitInstance = app.makeSingleInstance((cmdL, wdir) => {

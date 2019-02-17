@@ -1,7 +1,7 @@
 const { Menu, Tray } = require('electron');
 const path = require('path');
 const composerWindowManager = require('./composer');
-const { isFromStore, showWindows, quit } = require('./windowUtils');
+const { isFromStore, showWindows, quit, isMacOS } = require('./windowUtils');
 const globalManager = require('./../globalManager');
 const { checkForUpdates } = require('./../updater');
 
@@ -46,7 +46,7 @@ const createTrayIcon = () => {
     });
   }
 
-  if (!isFromStore && !tray) {
+  if (!isMacOS && !isFromStore && !tray) {
     tray = new Tray(trayIcon);
     const contextMenu = Menu.buildFromTemplate(trayIconTemplate);
     tray.setToolTip('Criptext');
@@ -59,7 +59,8 @@ const createTrayIcon = () => {
 };
 
 const destroyTrayIcon = () => {
-  if (globalManager.forcequit.get() && tray) {
+  const isForcedToQuit = globalManager.forcequit.get();
+  if (!isMacOS && isForcedToQuit && tray) {
     tray.destroy();
     tray = null;
   }
