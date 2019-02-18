@@ -2,7 +2,6 @@ const { BrowserWindow, dialog } = require('electron');
 const path = require('path');
 const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
 const { composerUrl } = require('./../window_routing');
-const mailboxWindow = require('./mailbox');
 const dbManager = require('./../DBManager');
 const globalManager = require('./../globalManager');
 const fileUtils = require('../utils/FileUtils');
@@ -189,7 +188,8 @@ const destroy = async ({
 };
 
 const sendEventToMailbox = (eventName, data) => {
-  if (mailboxWindow) {
+  const mailboxWindow = require('./mailbox');
+  if (mailboxWindow && mailboxWindow.send) {
     mailboxWindow.send(eventName, data);
   }
 };
