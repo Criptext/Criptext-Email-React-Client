@@ -126,7 +126,8 @@
     "print_thread": "Print All",
     "me": "Me",
     "unsend": "Unsend",
-    "email_source": "Show Source"
+    "email_source": "Show Source",
+    "unsentText": "Unsent"
   },
   "messages": {
     "change_password": {

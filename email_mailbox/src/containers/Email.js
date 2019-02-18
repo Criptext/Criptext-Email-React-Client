@@ -1,6 +1,10 @@
 import { connect } from 'react-redux';
 import EmailView from './../components/EmailWrapper';
-import { defineTimeByToday, defineLargeTime } from './../utils/TimeUtils';
+import {
+  defineTimeByToday,
+  defineLargeTime,
+  defineUnsentText
+} from './../utils/TimeUtils';
 import { getTwoCapitalLetters, hasAnySubstring } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv, parseContactRow } from './../utils/EmailUtils';
@@ -21,7 +25,6 @@ import {
 } from './../actions/index';
 import {
   EmailStatus,
-  unsentText,
   composerEvents,
   appDomain,
   avatarBaseUrl
@@ -37,6 +40,20 @@ const defineFrom = (email, contacts) => {
   return emailFrom.name
     ? [emailFrom]
     : getContacts(contacts, email.fromContactIds);
+};
+
+const definePreviewAndContent = (email, isCollapse) => {
+  if (email.status === EmailStatus.UNSEND) {
+    const unsentText = defineUnsentText(email.unsendDate);
+    return {
+      preview: unsentText,
+      content: unsentText
+    };
+  }
+  return {
+    preview: email.preview,
+    content: addCollapseDiv(email.content, email.key, isCollapse)
+  };
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -65,13 +82,8 @@ const mapStateToProps = (state, ownProps) => {
     state.get('files'),
     email.fileTokens
   );
-  const preview =
-    email.status === EmailStatus.UNSEND ? unsentText : email.preview;
   const isCollapse = !!hasAnySubstring(['Re:', 'RE:'], email.subject);
-  const content =
-    email.status === EmailStatus.UNSEND
-      ? `Unsent: At ${defineTimeByToday(email.unsendDate)}`
-      : addCollapseDiv(email.content, email.key, isCollapse);
+  const { preview, content } = definePreviewAndContent(email, isCollapse);
   const myEmail = {
     ...email,
     date: defineTimeByToday(date),
