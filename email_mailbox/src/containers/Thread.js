@@ -64,7 +64,10 @@ const defineLabels = (labels, labelIds) => {
 const createReadableThread = thread => {
   const subject = thread.get('subject');
   return thread
-    .set('subject', subject.length === 0 ? '(No Subject)' : subject)
+    .set(
+      'subject',
+      subject.length === 0 ? `(${string.mailbox.empty_subject})` : subject
+    )
     .toJS();
 };
 

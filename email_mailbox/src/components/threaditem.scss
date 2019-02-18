@@ -37,7 +37,21 @@
   }
 
   &.thread-item-unread{
-    font-weight: 600;
+    font-weight: 500;
+
+    > .thread-item-content
+    > .thread-item-labels {
+
+      .thread-item-subject,
+      .thread-item-recipients {
+        font-weight: 700;
+      }
+
+      .thread-preview {
+        font-weight: 600;
+      }
+
+    }
   }
 
   .thread-item-content {
@@ -152,6 +166,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        font-weight: 600;
       }
 
       .thread-preview{
@@ -161,6 +176,12 @@
         text-overflow: ellipsis;
         text-align: left;
         white-space: nowrap;
+
+        &.thread-preview-unsent, 
+        &.thread-preview-empty {
+          color: #a2a2a2;
+          transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-11deg, 0deg);
+        }
       } 
     }
 

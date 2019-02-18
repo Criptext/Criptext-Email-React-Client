@@ -127,6 +127,8 @@
     "me": "Yo",
     "unsend": "Retractar",
     "email_source": "Mostrar Original",
+    "empty_body": "Este correo no tiene contenido",
+    "empty_subject": "Sin asunto",
     "unsentText": "Retractado"
   },
   "messages": {

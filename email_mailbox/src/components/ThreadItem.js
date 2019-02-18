@@ -58,11 +58,15 @@ class ThreadItem extends Component {
           </div>
           <div className="thread-item-labels">
             {this.renderLabels(labels, thread.id)}
-            <div className="thread-item-subject">
+            <div
+              className={`thread-item-subject ${this.defineThreadSubjectClass()}`}
+            >
               <span>{this.renderSubject()}</span>
             </div>
-            <div className="thread-preview">
-              {this.renderMultipleSpaces(3)}
+            <div
+              className={`thread-preview ${this.defineThreadPreviewClass()}`}
+            >
+              {this.renderMultipleSpaces(4)}
               <span>{this.renderPreview()}</span>
             </div>
           </div>
@@ -119,6 +123,21 @@ class ThreadItem extends Component {
     }
   };
 
+  defineThreadSubjectClass = () => {
+    const { hasNoSubject } = this.props;
+    return hasNoSubject ? 'thread-subject-empty' : '';
+  };
+
+  defineThreadPreviewClass = () => {
+    const { isUnsend, isEmpty } = this.props;
+    if (isUnsend) {
+      return 'thread-preview-unsent';
+    } else if (isEmpty) {
+      return 'thread-preview-empty';
+    }
+    return '';
+  };
+
   renderLabels = (labels, threadId) => {
     if (!labels.length) {
       return null;
@@ -148,11 +167,10 @@ class ThreadItem extends Component {
   };
 
   renderPreview = () => {
-    const preview = replaceAllOccurrences(this.props.thread.preview, '\n', ' ');
+    const preview = replaceAllOccurrences(this.props.preview, '\n', ' ');
     if (this.props.mailbox !== 'search') {
       return preview;
     }
-
     return replaceMatches(this.props.searchParams.text, preview);
   };
 
@@ -275,11 +293,14 @@ ThreadItem.propTypes = {
   avatarUrl: PropTypes.string,
   color: PropTypes.string,
   checked: PropTypes.bool,
+  hasNoSubject: PropTypes.bool,
   hovering: PropTypes.bool,
   isDraft: PropTypes.bool,
+  isEmpty: PropTypes.bool,
   isHiddenCheckBox: PropTypes.bool,
   isStarred: PropTypes.bool,
   isVisibleMoveToTrash: PropTypes.bool,
+  isUnsend: PropTypes.bool,
   labels: PropTypes.array,
   letters: PropTypes.string,
   mailbox: PropTypes.string,
@@ -292,6 +313,7 @@ ThreadItem.propTypes = {
   onRegionEnter: PropTypes.func,
   onRegionLeave: PropTypes.func,
   onSelectThread: PropTypes.func,
+  preview: PropTypes.string,
   recipients: PropTypes.string,
   searchParams: PropTypes.object,
   thread: PropTypes.object

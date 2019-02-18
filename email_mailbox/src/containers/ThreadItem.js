@@ -10,15 +10,22 @@ import {
 import ThreadItemWrapper from '../components/ThreadItemWrapper';
 import { LabelType, myAccount, mySettings } from '../utils/electronInterface';
 import { openFilledComposerWindow } from './../utils/ipc';
-import { defineTimeByToday } from '../utils/TimeUtils';
-import { appDomain } from '../utils/const';
+import { defineTimeByToday, defineUnsentText } from '../utils/TimeUtils';
 import {
   getTwoCapitalLetters,
   toLowerCaseWithoutSpaces
 } from '../utils/StringUtils';
-import { SectionType, composerEvents, avatarBaseUrl } from '../utils/const';
-import string from './../lang';
+import {
+  appDomain,
+  EmailStatus,
+  SectionType,
+  composerEvents,
+  avatarBaseUrl
+} from '../utils/const';
 import { parseContactRow } from '../utils/EmailUtils';
+import string from './../lang';
+
+const EMPTY_SUBJECT_DEFAULT = `(${string.mailbox.empty_subject})`;
 
 const defineLabels = (labelIds, labels, labelsToExclude) => {
   if (!labels.size) return [];
@@ -48,7 +55,7 @@ const defineLabelsToExcludeByMailbox = currentLabelId => {
 };
 
 const defineSubject = (subject, emailSize) => {
-  const text = subject.length === 0 ? '(No Subject)' : subject;
+  const text = subject.length === 0 ? EMPTY_SUBJECT_DEFAULT : subject;
   const emailCounter = emailSize > 1 ? ` (${emailSize})` : '';
   return `${text}${emailCounter}`;
 };
@@ -98,6 +105,23 @@ const getFirstRecipient = recipients => {
   return first;
 };
 
+const definePreviewAndStatus = thread => {
+  if (thread.get('status') === EmailStatus.UNSEND) {
+    const unsentText = defineUnsentText(thread.get('unsendDate'));
+    return {
+      preview: unsentText,
+      isUnsend: true,
+      isEmpty: false
+    };
+  }
+  const emptyEmailText = string.mailbox.empty_body;
+  return {
+    preview: thread.get('preview') || emptyEmailText,
+    isUnsend: false,
+    isEmpty: !(thread.get('preview').length > 0)
+  };
+};
+
 const mapStateToProps = (state, ownProps) => {
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const contacts = state.get('contacts');
@@ -130,6 +154,8 @@ const mapStateToProps = (state, ownProps) => {
   const avatarUrl = firstRecipientEmail.includes(`@${appDomain}`)
     ? `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`
     : null;
+  const { preview, isUnsend, isEmpty } = definePreviewAndStatus(thread);
+  const hasNoSubject = thread.get('subject') === EMPTY_SUBJECT_DEFAULT;
   return {
     thread: thread.toJS(),
     color,
@@ -137,9 +163,13 @@ const mapStateToProps = (state, ownProps) => {
     multiselect: state.get('activities').get('multiselect'),
     isStarred: thread.get('allLabels').contains(LabelType.starred.id),
     isDraft: thread.get('allLabels').contains(LabelType.draft.id),
+    isEmpty,
+    isUnsend,
     labels,
     letters,
-    recipients: formattedRecipients
+    recipients: formattedRecipients,
+    preview,
+    hasNoSubject
   };
 };
 

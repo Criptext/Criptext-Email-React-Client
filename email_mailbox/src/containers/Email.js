@@ -34,6 +34,7 @@ import {
   setCryptoInterfaces,
   setDownloadHandler
 } from '../utils/FileManager';
+import string from './../lang';
 
 const defineFrom = (email, contacts) => {
   const emailFrom = parseContactRow(email.fromAddress || '');
@@ -50,9 +51,12 @@ const definePreviewAndContent = (email, isCollapse) => {
       content: unsentText
     };
   }
+  const emptyEmailText = string.mailbox.empty_body;
   return {
-    preview: email.preview,
-    content: addCollapseDiv(email.content, email.key, isCollapse)
+    preview: email.preview || emptyEmailText,
+    content: email.content.length
+      ? addCollapseDiv(email.content, email.key, isCollapse)
+      : emptyEmailText
   };
 };
 
@@ -88,7 +92,7 @@ const mapStateToProps = (state, ownProps) => {
     ...email,
     date: defineTimeByToday(date),
     dateLong: defineLargeTime(date),
-    subject: email.subject || '(No Subject)',
+    subject: email.subject || `(${string.mailbox.empty_subject})`,
     from,
     to,
     cc,
@@ -98,6 +102,7 @@ const mapStateToProps = (state, ownProps) => {
     preview,
     content
   };
+  const isEmpty = !(email.content && email.content.length);
   const isUnsend = email.status === EmailStatus.UNSEND;
   const isSpam = email.labelIds.includes(LabelType.spam.id);
   const isTrash = email.labelIds.includes(LabelType.trash.id);
@@ -114,6 +119,7 @@ const mapStateToProps = (state, ownProps) => {
     isSpam,
     isTrash,
     isDraft,
+    isEmpty,
     isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
     isUnsend,
     inlineImages,
