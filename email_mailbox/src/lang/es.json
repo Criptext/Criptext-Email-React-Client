@@ -230,7 +230,7 @@
     },
     "update": {
       "description": "¡Una nueva versión de Criptext está disponible!",
-      "action": "Clic aquí para descargar actualización"
+      "action": "Clic aquí para instalar la actualización"
     },
     "update_labels": {
       "description": "Error al actualizar las etiquetas. Inténtalo de nuevo"
