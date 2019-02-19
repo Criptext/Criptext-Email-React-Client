@@ -114,9 +114,9 @@ const emailReply = {
 
 const emailSpam = {
   email: {
-    threadId: 'threadIdE',
-    key: 'keyIdE',
-    s3Key: 's3KeyIdE',
+    threadId: 'threadE',
+    key: 'keyE',
+    s3Key: 's3KeyE',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -187,6 +187,30 @@ const emailScore = {
   labels: [3]
 };
 
+const emailUpdate = {
+  email: {
+    threadId: 'threadH',
+    key: 'keyH',
+    s3Key: 's3KeyH',
+    subject: 'Greetings',
+    content: '<p>Hello there</p>',
+    preview: 'Hello there',
+    date: '2013-10-07 08:23:20.120',
+    status: 1,
+    unread: true,
+    secure: true,
+    isMuted: false,
+    unsendDate: '2018-06-14 08:23:20.000',
+    messageId: 'messageIdH',
+    fromAddress: 'User me <user@criptext.com>'
+  },
+  recipients: {
+    from: ['User me <user@criptext.com>'],
+    to: ['usera@criptext.com', 'userb@criptext.com']
+  },
+  labels: [3]
+};
+
 const insertEmails = async () => {
   await DBManager.createEmail(emailDraft);
   await DBManager.createEmail(emailSent);
@@ -194,6 +218,7 @@ const insertEmails = async () => {
   await DBManager.createEmail(emailReply);
   await DBManager.createEmail(emailSpam);
   await DBManager.createEmail(emailStarred);
+  await DBManager.createEmail(emailUpdate);
 };
 
 beforeAll(async () => {
@@ -230,7 +255,7 @@ describe('Store data email to Email Table:', () => {
 
 describe('Store relation data to EmailLabel Table: ', () => {
   it('Should insert emailLabel relation to database', async () => {
-    const [email] = await DBManager.getEmailByKey(emailSent.email.key);
+    const [email] = await DBManager.getEmailByKey(emailUpdate.email.key);
     const emailLabelToInsert = [
       { emailId: email.id, labelId: systemLabels.starred.id },
       { emailId: email.id, labelId: systemLabels.trash.id }
@@ -381,7 +406,7 @@ describe('Load data thread from Email Table:', () => {
   it('should load threads from DB with the correct shape: sent', async () => {
     const params = {
       labelId: 3,
-      rejectedLabelIds: [2, 6]
+      rejectedLabelIds: [2, 7]
     };
     const threads = await DBManager.getEmailsGroupByThreadByParams(params);
     expect(threads).toMatchSnapshot();
@@ -390,7 +415,7 @@ describe('Load data thread from Email Table:', () => {
   it('should load threads from DB with the correct shape: inbox. Scroll action', async () => {
     const params = {
       labelId: 1,
-      rejectedLabelIds: [2, 6],
+      rejectedLabelIds: [2, 7],
       limit: 1
     };
     const [lastThread] = await DBManager.getEmailsGroupByThreadByParams(params);
@@ -404,7 +429,7 @@ describe('Load data thread from Email Table:', () => {
     );
     const moreParams = {
       labelId: 1,
-      rejectedLabelIds: [2, 6],
+      rejectedLabelIds: [2, 7],
       limit: 1,
       date: maxDate,
       threadIdRejected
