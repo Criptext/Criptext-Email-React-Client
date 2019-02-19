@@ -128,7 +128,7 @@
   },
   "devDependencies": {
     "criptext-js-tools": "0.5.0",
-    "electron": "^1.7.10",
+    "electron": "2.0.17",
     "electron-builder": "^20.18.0"
   },
   "dependencies": {
