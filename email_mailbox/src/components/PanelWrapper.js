@@ -217,10 +217,10 @@ class PanelWrapper extends Component {
         if (avatarHasChanged) {
           props.onUpdateAvatar();
         }
-
-        if (!labelIds && !threadIds && !labels) return;
-
         const currentSectionType = this.state.sectionSelected.type;
+        const isRenderingSettings = currentSectionType === SectionType.SETTINGS;
+        if ((!labelIds && !threadIds && !labels) || isRenderingSettings) return;
+
         const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
         const isRenderingThread = currentSectionType === SectionType.THREAD;
         const currentThreadId = this.state.sectionSelected.params
