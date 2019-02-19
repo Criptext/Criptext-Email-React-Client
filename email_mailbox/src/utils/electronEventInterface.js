@@ -63,7 +63,7 @@ import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
-const { ipcRenderer } = electron;
+const { ipcRenderer, remote } = electron;
 const emitter = new EventEmitter();
 let isGettingEvents = false;
 let newEmailNotificationList = [];
@@ -128,7 +128,8 @@ export const getGroupEvents = async isContinued => {
   const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
   if (rowIdsFiltered.length) {
     await setEventAsHandled(rowIdsFiltered);
-    sendNewEmailNotification();
+    const mailboxIsFocus = remote.getCurrentWindow().isFocused();
+    if (!mailboxIsFocus) sendNewEmailNotification();
     await updateOwnContact();
 
     const labelIds = labelIdsEvent.size ? Array.from(labelIdsEvent) : null;
