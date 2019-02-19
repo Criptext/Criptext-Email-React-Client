@@ -17,7 +17,6 @@ import {
   getUserSettings,
   logout,
   logoutApp,
-  openFilledComposerWindow,
   removeDevice,
   resendConfirmationEmail,
   resetPassword,
@@ -25,11 +24,11 @@ import {
   updateContactByEmail,
   updateNameEvent,
   uploadAvatar,
-  setReadTracking
+  setReadTracking,
+  checkForUpdates
 } from './../utils/ipc';
-import { appDomain, composerEvents } from '../utils/const';
+import { appDomain } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
-import { formContactSupportEmailContent } from '../utils/EmailUtils';
 import { toLowerCaseWithoutSpaces } from '../utils/StringUtils';
 import { clearStorage } from '../utils/storage';
 import {
@@ -107,13 +106,6 @@ const mapDispatchToProps = dispatch => {
       };
       dispatch(addLabel(label));
     },
-    onComposeContactSupportEmail: async () => {
-      const data = await formContactSupportEmailContent();
-      openFilledComposerWindow({
-        type: composerEvents.NEW_WITH_DATA,
-        data
-      });
-    },
     onDeleteDeviceData: async () => {
       await deleteDeviceData();
     },
@@ -186,6 +178,9 @@ const mapDispatchToProps = dispatch => {
     onSetReadReceiptsTracking: async enabled => {
       const { status } = await setReadTracking(enabled);
       return status;
+    },
+    onCheckForUpdates: () => {
+      checkForUpdates();
     }
   };
 };

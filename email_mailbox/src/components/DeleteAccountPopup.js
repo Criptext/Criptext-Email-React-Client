@@ -30,7 +30,7 @@ const DeleteAccountPopup = props => {
       <div className="popup-buttons">
         <button
           className="button-a popup-cancel-button"
-          onClick={props.onClickCancelDeleteAccount}
+          onClick={props.onTogglePopup}
         >
           <span>{cancelButtonLabel}</span>
         </button>
@@ -99,7 +99,7 @@ DeleteAccountPopupInput.propTypes = {
 
 DeleteAccountPopup.propTypes = {
   isDisabledConfirmButton: PropTypes.bool,
-  onClickCancelDeleteAccount: PropTypes.func,
+  onTogglePopup: PropTypes.func,
   onClickConfirmDeleteAccount: PropTypes.func
 };
 

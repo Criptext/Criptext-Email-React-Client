@@ -17,7 +17,6 @@ import {
 } from './../utils/electronEventInterface';
 import SettingGeneral from './SettingGeneral';
 import {
-  sendRemoveDeviceErrorMessage,
   sendChangePasswordErrorMessage,
   sendChangePasswordSuccessMessage,
   sendTwoFactorAuthenticationTurnedOffMessage,
@@ -82,7 +81,7 @@ class SettingGeneralWrapper extends Component {
     super(props);
     this.state = {
       isHiddenSettingsPopup: true,
-      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+      settingsPopupType: SETTINGS_POPUP_TYPES.NONE,
       twoFactorParams: {
         twoFactorEnabled: props.twoFactorAuth,
         isLoading: true
@@ -169,7 +168,6 @@ class SettingGeneralWrapper extends Component {
           this.handleChangeInputValueOnSetReplyPopup
         }
         onClickSetReplyTo={this.handleClickSetReplyTo}
-        onClickCancelSetReplyTo={this.handleClickCancelSetReplyTo}
         onConfirmSetReplyTo={this.handleConfirmSetReplyTo}
         onRemoveReplyTo={this.handleRemoveReplyTo}
         replyToEmail={this.state.replyToParams.replyToEmail}
@@ -199,18 +197,11 @@ class SettingGeneralWrapper extends Component {
         onChangeInputValueChangePassword={
           this.handleChangeInputValueOnChangePasswordPopup
         }
-        onClickCancelChangePassword={this.handleClickCancelChangePassword}
-        onClickCancelChangeRecoveryEmail={
-          this.handleClickCancelChangeRecoveryEmail
-        }
-        onClickCancelLogout={this.handleClickCancelLogout}
         onClickChangePasswordButton={this.handleClickChangePasswordButton}
         onClickChangePasswordInputType={this.handleClickChangePasswordInputType}
         onClickChangeRecoveryEmail={this.handleClickChangeRecoveryEmail}
-        onClickLogout={this.handleClickLogout}
         onConfirmChangePassword={this.handleConfirmChangePassword}
         onConfirmChangeRecoveryEmail={this.handleConfirmChangeRecoveryEmail}
-        onConfirmLogout={this.handleConfirmLogout}
         recoveryEmail={this.state.recoveryEmailParams.recoveryEmail}
         recoveryEmailConfirmed={
           this.state.recoveryEmailParams.recoveryEmailConfirmed
@@ -220,7 +211,7 @@ class SettingGeneralWrapper extends Component {
         onResendConfirmationCountdownEnd={
           this.handleResendConfirmationCountdownEnd
         }
-        settingsPupopType={this.state.settingsPupopType}
+        settingsPopupType={this.state.settingsPopupType}
         twoFactorEnabled={this.state.twoFactorParams.twoFactorEnabled}
         twoFactorLabelIsLoading={this.state.twoFactorParams.isLoading}
         onChangeSwitchTwoFactor={this.handleChangeSwitchTwoFactor}
@@ -229,9 +220,6 @@ class SettingGeneralWrapper extends Component {
         }
         onClickChangeRecoveryEmailInputType={
           this.handleClickChangeRecoveryEmailInputType
-        }
-        onClickCloseTwoFactorEnabledPopup={
-          this.handleClickCloseTwoFactorEnabledPopup
         }
         onClickForgotPasswordLink={this.handleClickForgotPasswordLink}
         onChangeSwitchEmailPreview={this.handleChangeSwitchEmailPreview}
@@ -242,6 +230,8 @@ class SettingGeneralWrapper extends Component {
         onShowSettingsPopup={this.handleShowSettingsPopup}
         onHideSettingsPopup={this.handleHideSettingsPopup}
         devicesQuantity={devicesQuantity}
+        onConfirmLogout={this.props.onConfirmLogout}
+        onClearPopupParams={this.handleClearPopupParams}
       />
     );
   }
@@ -291,6 +281,7 @@ class SettingGeneralWrapper extends Component {
     const newReadReceipts = {};
     const newReplyToParams = {};
     const popupParams = {};
+    let { isHiddenSettingsPopup, settingsPopupType } = this.state;
     if (
       nextProps.recoveryEmail &&
       this.state.recoveryEmail !== nextProps.recoveryEmail
@@ -324,7 +315,15 @@ class SettingGeneralWrapper extends Component {
       newReplyToParams.isLoading = false;
       popupParams.email = nextProps.replyToEmail;
     }
+    if (this.state.isHiddenSettingsPopup !== nextProps.isHiddenSettingsPopup) {
+      isHiddenSettingsPopup = nextProps.isHiddenSettingsPopup;
+    }
+    if (this.state.settingsPopupType !== nextProps.settingsPopupType) {
+      settingsPopupType = nextProps.settingsPopupType;
+    }
     this.setState({
+      isHiddenSettingsPopup,
+      settingsPopupType,
       recoveryEmailParams: {
         ...this.state.recoveryEmailParams,
         ...newRecoveryEmailParams
@@ -352,106 +351,103 @@ class SettingGeneralWrapper extends Component {
     });
   }
 
-  handleClickCancelChangePassword = () => {
-    this.setState({
-      isHiddenSettingsPopup: true,
-      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
-      changePasswordPopupParams: {
-        isDisabledSubmitButton: true,
-        confirmNewPasswordInput: {
-          name: 'confirmNewPasswordInput',
-          type: 'password',
-          icon: 'icon-not-show',
-          value: '',
-          errorMessage: '',
-          hasError: true
-        },
-        newPasswordInput: {
-          name: 'newPasswordInput',
-          type: 'password',
-          icon: 'icon-not-show',
-          value: '',
-          errorMessage: '',
-          hasError: true
-        },
-        oldPasswordInput: {
-          name: 'oldPasswordInput',
-          type: 'password',
-          icon: 'icon-not-show',
-          value: '',
-          errorMessage: '',
-          hasError: true
-        }
+  handleClearPopupParams = popupType => {
+    let newState = {};
+    switch (popupType) {
+      case SETTINGS_POPUP_TYPES.CHANGE_PASSWORD: {
+        newState = {
+          changePasswordPopupParams: {
+            isDisabledSubmitButton: true,
+            confirmNewPasswordInput: {
+              name: 'confirmNewPasswordInput',
+              type: 'password',
+              icon: 'icon-not-show',
+              value: '',
+              errorMessage: '',
+              hasError: true
+            },
+            newPasswordInput: {
+              name: 'newPasswordInput',
+              type: 'password',
+              icon: 'icon-not-show',
+              value: '',
+              errorMessage: '',
+              hasError: true
+            },
+            oldPasswordInput: {
+              name: 'oldPasswordInput',
+              type: 'password',
+              icon: 'icon-not-show',
+              value: '',
+              errorMessage: '',
+              hasError: true
+            }
+          }
+        };
+        break;
       }
-    });
-  };
-
-  handleClickCancelSetReplyTo = () => {
-    this.setState({
-      isHiddenSettingsPopup: true,
-      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
-      setReplyToPopupParams: {
-        isDisabledSubmitButton: true,
-        replyToInput: {
-          email: this.state.replyToParams.replyToEmail,
-          hasError: false,
-          errorMessage: ''
-        }
+      case SETTINGS_POPUP_TYPES.SET_REPLY_TO: {
+        newState = {
+          setReplyToPopupParams: {
+            isDisabledSubmitButton: true,
+            replyToInput: {
+              email: this.state.replyToParams.replyToEmail,
+              hasError: false,
+              errorMessage: ''
+            }
+          }
+        };
+        break;
       }
-    });
-  };
-
-  handleClickCancelChangeRecoveryEmail = () => {
-    this.setState({
-      isHiddenSettingsPopup: true,
-      settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
-      changeRecoveryEmailPopupParams: {
-        isDisabledSubmitButton: true,
-        recoveryEmailInput: {
-          name: 'recoveryEmailInput',
-          type: 'text',
-          icon: 'icon-not-show',
-          value: '',
-          errorMessage: '',
-          hasError: true
-        },
-        recoveryEmailPasswordInput: {
-          name: 'recoveryEmailPasswordInput',
-          type: 'password',
-          icon: 'icon-not-show',
-          value: '',
-          errorMessage: '',
-          hasError: true
-        }
+      case SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL: {
+        newState = {
+          changeRecoveryEmailPopupParams: {
+            isDisabledSubmitButton: true,
+            recoveryEmailInput: {
+              name: 'recoveryEmailInput',
+              type: 'text',
+              icon: 'icon-not-show',
+              value: '',
+              errorMessage: '',
+              hasError: true
+            },
+            recoveryEmailPasswordInput: {
+              name: 'recoveryEmailPasswordInput',
+              type: 'password',
+              icon: 'icon-not-show',
+              value: '',
+              errorMessage: '',
+              hasError: true
+            }
+          }
+        };
+        break;
       }
-    });
-  };
-
-  handleClickCancelLogout = () => {
-    this.setState({
-      isHiddenSettingsPopup: true,
-      settingsPupopType: SETTINGS_POPUP_TYPES.NONE
-    });
+      default:
+        newState = {};
+        break;
+    }
+    this.setState(newState);
   };
 
   handleClickChangePasswordButton = () => {
     this.setState({
       isHiddenSettingsPopup: false,
-      settingsPupopType: SETTINGS_POPUP_TYPES.CHANGE_PASSWORD
+      settingsPopupType: SETTINGS_POPUP_TYPES.CHANGE_PASSWORD
     });
   };
 
   handleClickChangeRecoveryEmail = () => {
     this.setState({
       isHiddenSettingsPopup: false,
-      settingsPupopType: SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL
+      settingsPopupType: SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL
     });
   };
 
   handleClickSetReplyTo = () => {
     this.setState({
       isHiddenSettingsPopup: false,
-      settingsPupopType: SETTINGS_POPUP_TYPES.SET_REPLY_TO
+      settingsPopupType: SETTINGS_POPUP_TYPES.SET_REPLY_TO
     });
   };
 
@@ -516,7 +512,7 @@ class SettingGeneralWrapper extends Component {
             newState = {
               ...newState,
               isHiddenSettingsPopup: false,
-              settingsPupopType: SETTINGS_POPUP_TYPES.TWO_FACTOR_AUTH_ENABLED
+              settingsPopupType: SETTINGS_POPUP_TYPES.TWO_FACTOR_AUTH_ENABLED
             };
           } else {
             sendTwoFactorAuthenticationTurnedOffMessage();
@@ -533,13 +529,6 @@ class SettingGeneralWrapper extends Component {
         }
       }
     );
-  };
-
-  handleClickCloseTwoFactorEnabledPopup = () => {
-    this.setState({
-      isHiddenSettingsPopup: true,
-      settingsPupopType: SETTINGS_POPUP_TYPES.NONE
-    });
   };
 
   handleChangeInputValueOnSetReplyPopup = ev => {
@@ -702,7 +691,9 @@ class SettingGeneralWrapper extends Component {
     }
     if (status === 200) {
       sendChangePasswordSuccessMessage();
-      return this.handleClickCancelChangePassword();
+      this.handleHideSettingsPopup();
+      this.handleClearPopupParams(SETTINGS_POPUP_TYPES.CHANGE_PASSWORD);
+      return;
     }
     sendChangePasswordErrorMessage();
   };
@@ -720,7 +711,7 @@ class SettingGeneralWrapper extends Component {
       this.setState(
         {
           isHiddenSettingsPopup: true,
-          settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+          settingsPopupType: SETTINGS_POPUP_TYPES.NONE,
           replyToParams: {
             isLoading: false,
             replyToEmail: email
@@ -742,7 +733,7 @@ class SettingGeneralWrapper extends Component {
       this.setState(
         {
           isHiddenSettingsPopup: true,
-          settingsPupopType: SETTINGS_POPUP_TYPES.NONE,
+          settingsPopupType: SETTINGS_POPUP_TYPES.NONE,
           setReplyToPopupParams: {
             isDisabledSubmitButton: true,
             replyToInput: {
@@ -847,8 +838,11 @@ class SettingGeneralWrapper extends Component {
           }
         },
         () => {
-          this.handleClickCancelChangeRecoveryEmail();
           sendRecoveryEmailChangedSuccessMessage();
+          this.handleHideSettingsPopup();
+          this.handleClearPopupParams(
+            SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL
+          );
         }
       );
     }
@@ -876,31 +870,11 @@ class SettingGeneralWrapper extends Component {
     sendRecoveryEmailChangedErrorMessage();
   };
 
-  handleConfirmLogout = async () => {
-    const isSuccess = await this.props.onLogout();
-    if (isSuccess) {
-      this.setState({
-        isHiddenSettingsPopup: true,
-        settingsPupopType: SETTINGS_POPUP_TYPES.NONE
-      });
-      await this.props.onDeleteDeviceData();
-    } else {
-      sendRemoveDeviceErrorMessage();
-    }
-  };
-
-  handleClickLogout = () => {
-    this.setState({
-      isHiddenSettingsPopup: false,
-      settingsPupopType: SETTINGS_POPUP_TYPES.LOGOUT
-    });
-  };
-
   handleClickForgotPasswordLink = () => {
     this.setState(
       {
         isHiddenSettingsPopup: false,
-        settingsPupopType: SETTINGS_POPUP_TYPES.NONE
+        settingsPopupType: SETTINGS_POPUP_TYPES.NONE
       },
       () => {
         this.props.onResetPassword();
@@ -952,14 +926,14 @@ class SettingGeneralWrapper extends Component {
   handleShowSettingsPopup = popupType => {
     this.setState({
       isHiddenSettingsPopup: false,
-      settingsPupopType: popupType
+      settingsPopupType: popupType
     });
   };
 
   handleHideSettingsPopup = () => {
     this.setState({
       isHiddenSettingsPopup: true,
-      settingsPupopType: SETTINGS_POPUP_TYPES.NONE
+      settingsPopupType: SETTINGS_POPUP_TYPES.NONE
     });
   };
 
@@ -986,8 +960,9 @@ class SettingGeneralWrapper extends Component {
 
 SettingGeneralWrapper.propTypes = {
   devices: PropTypes.array,
+  isHiddenSettingsPopup: PropTypes.bool,
+  onConfirmLogout: PropTypes.func,
   onDeleteDeviceData: PropTypes.func,
-  onLogout: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,
   onSetReadReceiptsTracking: PropTypes.func,
@@ -995,6 +970,7 @@ SettingGeneralWrapper.propTypes = {
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   replyToEmail: PropTypes.string,
+  settingsPopupType: PropTypes.string,
   twoFactorAuth: PropTypes.bool
 };
 

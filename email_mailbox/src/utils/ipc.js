@@ -74,6 +74,10 @@ export const sendOpenEmailSource = metadataKey => {
   callMain('open-email-source', metadataKey);
 };
 
+export const checkForUpdates = () => {
+  callMain('check-for-updates');
+};
+
 /* File System
 ----------------------------- */
 export const saveEmailBody = async params => {

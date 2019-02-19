@@ -32,7 +32,7 @@ const Settings = props => (
         ))}
       </ul>
       <div className="settings-content-scroll">{renderSection(props)}</div>
-      {renderFooter(props.onClickContactSupport)}
+      {renderFooter(props.onClickCheckForUpdates, props.onClickLogout)}
     </div>
   </div>
 );
@@ -60,21 +60,25 @@ const renderSection = props => {
   }
 };
 
-const renderFooter = onClick => (
+const renderFooter = (onClickCheckForUpdates, onClickLogout) => (
   <div className="settings-footer">
-    <div className="settings-footer-version">
-      <span>
-        Criptext&nbsp;
-        <b>
-          v.
-          {version}
-        </b>
-      </span>
+    <div className="settings-footer-left">
+      <div className="settings-footer-version">
+        <span>Criptext Version: {version}</span>
+      </div>
+      <div
+        className="settings-footer-check-for-updates"
+        onClick={onClickCheckForUpdates}
+      >
+        <span>{string.settings.check_for_updates}</span>
+      </div>
     </div>
-    <hr />
-    <div className="settings-footer-support" onClick={() => onClick()}>
-      <i className="icon-ask" />
-      <span>{string.settings.contact_support}</span>
+    <div className="settings-footer-right">
+      <hr />
+      <div className="logout-label" onClick={onClickLogout}>
+        <i className="icon-log-out" />
+        <span>{string.settings.logout}</span>
+      </div>
     </div>
   </div>
 );
@@ -86,7 +90,8 @@ Items.propTypes = {
 };
 
 Settings.propTypes = {
-  onClickContactSupport: PropTypes.func,
+  onClickCheckForUpdates: PropTypes.func,
+  onClickLogout: PropTypes.func,
   onClickSection: PropTypes.func,
   sectionSelected: PropTypes.string
 };

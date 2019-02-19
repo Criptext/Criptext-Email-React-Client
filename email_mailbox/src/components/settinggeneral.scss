@@ -200,43 +200,6 @@
   }
 }
 
-#settings-general-logout{
-  .section-block-content{
-    .section-block-content-item{
-      &:nth-child(1){
-        .logout-button{
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-
-          i{
-            font-size: 17px;
-            font-weight: 600;
-            margin-right: 5px;
-          }
-
-          span{
-            font-size: 13px;
-            font-weight: 600;
-          }
-        }
-
-        .logout-account-icon {
-          width: 14px;
-          height: 12px;
-        }
-
-        .logout-label {
-          font-weight: 600;
-          position: relative;
-          bottom: 2px;
-          left: 6px;
-        }
-      }
-    }
-  }
-}
-
 .loading-ring {
   display: inline-block;
   position: relative;
@@ -338,18 +301,6 @@
               .address {
                 color: $_COLOR_TEXT_SETTINGS_CONTENT;
               }
-            }
-          }
-        }
-      }
-    }
-
-    #settings-general-logout{
-      .section-block-content{
-        .section-block-content-item{
-          &:nth-child(1){
-            .logout-button{
-              color: $_COLOR_TEXT_SETTINGS_CONTENT;
             }
           }
         }
