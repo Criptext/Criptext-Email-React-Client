@@ -709,10 +709,12 @@ const handlePeerPasswordChanged = () => {
 const handlePeerRecoveryEmailChanged = ({ params }) => {
   const { address } = params;
   emitter.emit(Event.RECOVERY_EMAIL_CHANGED, address);
+  return { rowId: null };
 };
 
 const handlePeerRecoveryEmailConfirmed = () => {
   emitter.emit(Event.RECOVERY_EMAIL_CONFIRMED);
+  return { rowId: null };
 };
 
 const handleNewAnnouncementEvent = async ({ rowid, params }) => {
@@ -1047,6 +1049,7 @@ export const sendDeviceRemovedEvent = async rowid => {
 
 export const sendPasswordChangedEvent = () => {
   emitter.emit(Event.PASSWORD_CHANGED, null);
+  return { rowId: null };
 };
 
 export const handleDeleteDeviceData = async rowid => {
