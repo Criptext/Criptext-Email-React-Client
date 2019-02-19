@@ -94,6 +94,13 @@ describe('Add collapse div ', () => {
     const result = addCollapseDiv(html, 1);
     expect(result).toMatchSnapshot();
   });
+
+  it('Should add div collpase to html with: <div class="gmail_quote">', () => {
+    const html =
+      '<div class="gmail_quote"><blockquote><p></p><br/><blockquote></blockquote></blockquote></div>';
+    const result = addCollapseDiv(html, 1);
+    expect(result).toMatchSnapshot();
+  });
 });
 
 describe('Get recipientId from EmailAddressTag ', () => {

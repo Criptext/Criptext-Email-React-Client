@@ -228,6 +228,27 @@ describe('Store data email to Email Table:', () => {
   });
 });
 
+describe('Store relation data to EmailLabel Table: ', () => {
+  it('Should insert emailLabel relation to database', async () => {
+    const [email] = await DBManager.getEmailByKey(emailSent.email.key);
+    const emailLabelToInsert = [
+      { emailId: email.id, labelId: systemLabels.starred.id },
+      { emailId: email.id, labelId: systemLabels.trash.id }
+    ];
+    const response = await DBManager.createEmailLabel(emailLabelToInsert);
+    expect(response[0]).toEqual(expect.any(Number));
+  });
+
+  it('Should not insert emailLabel relation to database', async () => {
+    const [email] = await DBManager.getEmailByKey(emailDraft.email.key);
+    const emailLabelDraft = [
+      { emailId: email.id, labelId: systemLabels.draft.id }
+    ];
+    const response = await DBManager.createEmailLabel(emailLabelDraft);
+    expect(response).toBeUndefined();
+  });
+});
+
 describe('Load data emails from Email Table:', () => {
   it('should retrieve emails from DB with label id: Sent', async () => {
     const labelIds = [3];
@@ -392,27 +413,6 @@ describe('Load data thread from Email Table:', () => {
       moreParams
     );
     expect(moreLastThreads).toEqual([]);
-  });
-});
-
-describe('Store relation data to EmailLabel Table: ', () => {
-  it('Should insert emailLabel relation to database', async () => {
-    const [email] = await DBManager.getEmailByKey(emailSent.email.key);
-    const emailLabelToInsert = [
-      { emailId: email.id, labelId: systemLabels.starred.id },
-      { emailId: email.id, labelId: systemLabels.trash.id }
-    ];
-    const response = await DBManager.createEmailLabel(emailLabelToInsert);
-    expect(response[0]).toEqual(expect.any(Number));
-  });
-
-  it('Should not insert emailLabel relation to database', async () => {
-    const [email] = await DBManager.getEmailByKey(emailDraft.email.key);
-    const emailLabelDraft = [
-      { emailId: email.id, labelId: systemLabels.draft.id }
-    ];
-    const response = await DBManager.createEmailLabel(emailLabelDraft);
-    expect(response).toBeUndefined();
   });
 });
 
