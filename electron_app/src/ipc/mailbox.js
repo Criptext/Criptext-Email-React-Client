@@ -3,11 +3,8 @@ const { app, BrowserWindow } = require('electron');
 const { download } = require('electron-dl');
 const path = require('path');
 const mailboxWindow = require('../windows/mailbox');
-const {
-  showNotification,
-  installUpdate,
-  checkForUpdates
-} = require('./../updater');
+const { installUpdate, checkForUpdates } = require('./../updater');
+const { showNotification } = require('./../notificationManager');
 const myAccount = require('./../Account');
 const wsClient = require('./../socketClient');
 const { printEmailOrThread } = require('./../utils/PrintUtils');
