@@ -230,7 +230,7 @@
     },
     "update": {
       "description": "A new version of Criptext is available!",
-      "action": "Click here to Download Update"
+      "action": "Click here to Install Update"
     },
     "update_labels": {
       "description": "Failed updating labels. Please try again"

@@ -15,7 +15,7 @@ import './threads.scss';
 const EmptyTrashPopover = PopupHOC(DialogPopup);
 
 const Threads = props => (
-  <div className="threads-container">
+  <div className={defineClassComponent(props.isVisible)}>
     <Message
       isUpdateAvailable={props.isUpdateAvailable}
       mailbox={props.mailboxSelected}
@@ -133,6 +133,11 @@ const renderLabelsForThread = (hoverTarget, labels) => {
   );
 };
 
+const defineClassComponent = isVisible => {
+  const visibleClass = !isVisible ? 'hidden' : '';
+  return `threads-container ${visibleClass}`;
+};
+
 Threads.propTypes = {
   buttonSyncStatus: PropTypes.number,
   dismissPopup: PropTypes.func,
@@ -140,6 +145,7 @@ Threads.propTypes = {
   hoverTarget: PropTypes.string,
   isLoadingThreads: PropTypes.bool,
   isUpdateAvailable: PropTypes.bool,
+  isVisible: PropTypes.bool,
   labels: PropTypes.array,
   mailboxSelected: PropTypes.string,
   mailboxTitle: PropTypes.string,

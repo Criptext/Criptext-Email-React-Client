@@ -5,6 +5,10 @@
   width: 100%;
   position: relative;
 
+  &.hidden{
+    display: none;
+  }
+
   .threads-header{
     align-items: center;
     display: flex;
