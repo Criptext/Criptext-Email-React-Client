@@ -107,7 +107,7 @@ const ChangeRecoveryEmailPopupButtons = props => (
   <div className="popup-buttons">
     <button
       className="button-a popup-cancel-button"
-      onClick={props.onClickCancelChangePassword}
+      onClick={props.onTogglePopup}
     >
       <span>{string.popups.change_recovery_email.cancelButtonLabel}</span>
     </button>
@@ -149,7 +149,7 @@ InputErrorMessage.propTypes = {
 
 ChangeRecoveryEmailPopupButtons.propTypes = {
   isDisabledChangeRecoveryEmailSubmitButton: PropTypes.bool,
-  onClickCancelChangePassword: PropTypes.func,
+  onTogglePopup: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func
 };
 

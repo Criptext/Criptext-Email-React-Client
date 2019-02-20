@@ -20,7 +20,7 @@ const LogoutPopup = props => (
     <div className="popup-buttons">
       <button
         className="button-a popup-cancel-button"
-        onClick={props.onClickCancelLogout}
+        onClick={props.onTogglePopup}
       >
         <span>{cancelButtonLabel}</span>
       </button>
@@ -36,7 +36,7 @@ const LogoutPopup = props => (
 
 LogoutPopup.propTypes = {
   onConfirmLogout: PropTypes.func,
-  onClickCancelLogout: PropTypes.func
+  onTogglePopup: PropTypes.func
 };
 
 export default LogoutPopup;

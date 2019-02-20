@@ -12,9 +12,6 @@ import LogoutPopup from './LogoutPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
 import SettingsGeneralReplyTo from './SettingsGeneralReplyTo';
-import { usefulLinks } from '../utils/const';
-import { getResendConfirmationTimestamp } from '../utils/storage';
-import string from './../lang';
 import SettingsGeneralDeleteAccount from './SettingsGeneralDeleteAccount';
 import SettingsGeneralLanguageWrapper from './SettingsGeneralLanguageWrapper';
 import SettingsGeneralThemeWrapper from './SettingsGeneralThemeWrapper';
@@ -22,7 +19,9 @@ import SettingsGeneralManualSync from './SettingsGeneralManualSync';
 import ManualSyncPopup from './ManualSyncPopup';
 import ManualSyncProcessPopup from './ManualSyncProcessPopup';
 import SettingsGeneralProfile from '../containers/SettingsGeneralProfile';
-
+import { getResendConfirmationTimestamp } from '../utils/storage';
+import { usefulLinks } from '../utils/const';
+import string from './../lang';
 import './settinggeneral.scss';
 import './signatureeditor.scss';
 
@@ -56,7 +55,6 @@ const SettingGeneral = props => (
     <SettingsGeneralLanguageWrapper />
     <SettingsGeneralThemeWrapper />
     <UsefulLinksBlock />
-    <LogoutAccountBlock {...props} />
     <SettingsGeneralDeleteAccount
       onShowSettingsPopup={props.onShowSettingsPopup}
     />
@@ -77,22 +75,6 @@ const PasswordBlock = props => (
         >
           <span>{string.settings.change_password}</span>
         </button>
-      </div>
-    </div>
-  </div>
-);
-
-const LogoutAccountBlock = props => (
-  <div id="settings-general-logout" className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.logout_account}</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item">
-        <div className="logout-button" onClick={() => props.onClickLogout()}>
-          <i className="icon-log-out" />
-          <span>{string.settings.logout}</span>
-        </div>
       </div>
     </div>
   </div>
@@ -356,54 +338,71 @@ const UsefulLinksBlock = () => (
 );
 
 const SettingsPopup = props => {
-  const type = props.settingsPupopType;
+  const type = props.settingsPopupType;
   const isHidden = props.isHiddenSettingsPopup;
+  const {
+    CHANGE_PASSWORD,
+    CHANGE_RECOVERY_EMAIL,
+    DELETE_ACCOUNT,
+    LOGOUT,
+    MANUAL_SYNC,
+    MANUAL_SYNC_DEVICE_AUTHENTICATION,
+    SET_REPLY_TO,
+    TWO_FACTOR_AUTH_ENABLED
+  } = SETTINGS_POPUP_TYPES;
+
   switch (type) {
-    case SETTINGS_POPUP_TYPES.CHANGE_PASSWORD: {
+    case CHANGE_PASSWORD: {
       return (
         <Changepasswordpopup
           isHidden={isHidden}
-          onTogglePopup={props.onClickCancelChangePassword}
+          onTogglePopup={() => {
+            props.onHideSettingsPopup();
+            props.onClearPopupParams(CHANGE_PASSWORD);
+          }}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
         />
       );
     }
-    case SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL: {
+    case CHANGE_RECOVERY_EMAIL: {
       return (
         <Changerecoveryemailpopup
           isHidden={isHidden}
-          onTogglePopup={props.onClickCancelSetReplyTo}
+          onTogglePopup={() => {
+            props.onHideSettingsPopup();
+            props.onClearPopupParams(CHANGE_RECOVERY_EMAIL);
+          }}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
         />
       );
     }
-    case SETTINGS_POPUP_TYPES.LOGOUT: {
+    case LOGOUT: {
       return (
         <Logoutpopup
           isHidden={isHidden}
-          onTogglePopup={props.onClickCancelChangePassword}
+          onTogglePopup={props.onHideSettingsPopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
         />
       );
     }
-    case SETTINGS_POPUP_TYPES.TWO_FACTOR_AUTH_ENABLED: {
+    case TWO_FACTOR_AUTH_ENABLED: {
       return (
         <Twofactorauthenabledpopup
           isHidden={isHidden}
-          onTogglePopup={props.onClickCloseTwoFactorEnabledPopup}
+          onTogglePopup={props.onHideSettingsPopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
         />
       );
     }
-    case SETTINGS_POPUP_TYPES.DELETE_ACCOUNT: {
+    case DELETE_ACCOUNT: {
       return (
         <Deleteaccountpopup
           isHidden={isHidden}
@@ -414,7 +413,7 @@ const SettingsPopup = props => {
         />
       );
     }
-    case SETTINGS_POPUP_TYPES.MANUAL_SYNC: {
+    case MANUAL_SYNC: {
       return (
         <Manualsyncpopup
           isHidden={isHidden}
@@ -425,7 +424,7 @@ const SettingsPopup = props => {
         />
       );
     }
-    case SETTINGS_POPUP_TYPES.MANUAL_SYNC_DEVICE_AUTHENTICATION: {
+    case MANUAL_SYNC_DEVICE_AUTHENTICATION: {
       return (
         <Manualsyncprocesspopup
           isHidden={isHidden}
@@ -437,11 +436,14 @@ const SettingsPopup = props => {
         />
       );
     }
-    case SETTINGS_POPUP_TYPES.SET_REPLY_TO: {
+    case SET_REPLY_TO: {
       return (
         <SetReplyTo
           isHidden={isHidden}
-          onTogglePopup={props.onClickCancelSetReplyTo}
+          onTogglePopup={() => {
+            props.onHideSettingsPopup();
+            props.onClearPopupParams(SET_REPLY_TO);
+          }}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
@@ -462,10 +464,6 @@ SettingsPopup.propTypes = {
   settingsPupopType: PropTypes.string,
   onClickCancelChangePassword: PropTypes.func,
   onClickCancelChangeRecoveryEmail: PropTypes.func
-};
-
-LogoutAccountBlock.propTypes = {
-  onClickLogout: PropTypes.func
 };
 
 RecoveryEmailBlock.propTypes = {

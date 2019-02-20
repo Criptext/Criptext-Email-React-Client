@@ -58,7 +58,7 @@ const SetReplyToEmailPopupButtons = props => (
   <div className="popup-buttons">
     <button
       className="button-a popup-cancel-button"
-      onClick={props.onClickCancelSetReplyTo}
+      onClick={props.onTogglePopup}
     >
       <span>{string.popups.set_reply_to.cancelButtonLabel}</span>
     </button>
@@ -80,7 +80,7 @@ SetReplyToPopupInput.propTypes = {
 };
 
 SetReplyToEmailPopupButtons.propTypes = {
-  onClickCancelSetReplyTo: PropTypes.func,
+  onTogglePopup: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
   isDisabledSetReplyToSubmitButton: PropTypes.bool
 };

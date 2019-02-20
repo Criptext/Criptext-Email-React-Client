@@ -109,7 +109,7 @@ const ChangePasswordPopupButtons = props => (
   <div className="popup-buttons">
     <button
       className="button-a popup-cancel-button"
-      onClick={props.onClickCancelChangePassword}
+      onClick={props.onTogglePopup}
     >
       <span>{string.popups.change_password.cancelButtonLabel}</span>
     </button>
@@ -147,7 +147,7 @@ ChangePasswordPopupInput.propTypes = {
 ChangePasswordPopupButtons.propTypes = {
   isDisabledChangePasswordSubmitButton: PropTypes.bool,
   onConfirmChangePassword: PropTypes.func,
-  onClickCancelChangePassword: PropTypes.func
+  onTogglePopup: PropTypes.func
 };
 
 export default ChangePasswordPopup;

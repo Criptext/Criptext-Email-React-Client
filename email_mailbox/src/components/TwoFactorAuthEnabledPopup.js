@@ -14,7 +14,7 @@ const TwoFactorAuthEnabledPopup = props => (
     <div className="popup-buttons">
       <button
         className="button-a popup-confirm-button"
-        onClick={props.onClickCloseTwoFactorEnabledPopup}
+        onClick={props.onTogglePopup}
       >
         <span>{string.popups.two_fa.button}</span>
       </button>
@@ -23,7 +23,7 @@ const TwoFactorAuthEnabledPopup = props => (
 );
 
 TwoFactorAuthEnabledPopup.propTypes = {
-  onClickCloseTwoFactorEnabledPopup: PropTypes.func
+  onTogglePopup: PropTypes.func
 };
 
 export default TwoFactorAuthEnabledPopup;

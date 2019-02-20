@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Settings from './Settings';
 import { myAccount } from '../utils/electronInterface';
+import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
+import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
 
 class SettingsWrapper extends Component {
   constructor(props) {
@@ -13,7 +15,9 @@ class SettingsWrapper extends Component {
       recoveryEmailConfirmed: !!myAccount.recoveryEmailConfirmed,
       twoFactorAuth: undefined,
       readReceiptsEnabled: undefined,
-      replyToEmail: undefined
+      replyToEmail: undefined,
+      isHiddenSettingsPopup: true,
+      settingsPopupType: SETTINGS_POPUP_TYPES.NONE
     };
   }
 
@@ -22,7 +26,7 @@ class SettingsWrapper extends Component {
       <Settings
         {...this.props}
         devices={this.state.devices}
-        onClickContactSupport={this.props.onComposeContactSupportEmail}
+        onClickCheckForUpdates={this.props.onCheckForUpdates}
         onClickSection={this.handleClickSection}
         onRemoveDevice={this.handleRemoveDevice}
         recoveryEmail={this.state.recoveryEmail}
@@ -31,6 +35,11 @@ class SettingsWrapper extends Component {
         twoFactorAuth={this.state.twoFactorAuth}
         readReceiptsEnabled={this.state.readReceiptsEnabled}
         replyToEmail={this.state.replyToEmail}
+        onClickLogout={this.handleClickLogout}
+        onConfirmLogout={this.handleConfirmLogout}
+        onClickCancelLogout={this.handleClickCancelLogout}
+        isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
+        settingsPopupType={this.state.settingsPopupType}
       />
     );
   }
@@ -68,11 +77,40 @@ class SettingsWrapper extends Component {
     }
     return isSuccess;
   };
+
+  handleClickLogout = () => {
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPopupType: SETTINGS_POPUP_TYPES.LOGOUT
+    });
+  };
+
+  handleConfirmLogout = async () => {
+    const isSuccess = await this.props.onLogout();
+    if (isSuccess) {
+      this.setState({
+        isHiddenSettingsPopup: true,
+        settingsPopupType: SETTINGS_POPUP_TYPES.NONE
+      });
+      await this.props.onDeleteDeviceData();
+    } else {
+      sendRemoveDeviceErrorMessage();
+    }
+  };
+
+  handleClickCancelLogout = () => {
+    this.setState({
+      isHiddenSettingsPopup: true,
+      settingsPopupType: SETTINGS_POPUP_TYPES.NONE
+    });
+  };
 }
 
 SettingsWrapper.propTypes = {
-  onComposeContactSupportEmail: PropTypes.func,
+  onCheckForUpdates: PropTypes.func,
+  onDeleteDeviceData: PropTypes.func,
   onGetUserSettings: PropTypes.func,
+  onLogout: PropTypes.func,
   onRemoveDevice: PropTypes.func
 };
 

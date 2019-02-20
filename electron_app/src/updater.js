@@ -1,7 +1,7 @@
-const { app, dialog, Notification } = require('electron');
+const { app, dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
-const path = require('path');
 const globalManager = require('./globalManager');
+const { showNotification } = require('./notificationManager');
 const { updaterMessages } = require('./lang').strings;
 
 app.setAppUserModelId('com.criptext.criptextmail');
@@ -13,7 +13,6 @@ const updaterTypes = {
   MANUAL: 'manual',
   NONE: 'none'
 };
-const iconPath = path.join(__dirname, './../resources/launch-icons/icon.png');
 
 autoUpdater.autoDownload = false;
 
@@ -152,33 +151,8 @@ const installUpdate = () => {
   });
 };
 
-const showNotification = ({ title, message, clickHandler, closeOnClick }) => {
-  const mailboxWindow = require('./windows/mailbox');
-  const isSupportedByOS = Notification.isSupported();
-  const isVisibleAndFocused = mailboxWindow.isVisibleAndFocused();
-  const isMAS = globalManager.isMAS.get();
-  if (isSupportedByOS && !isMAS && !isVisibleAndFocused) {
-    const notifyOptions = {
-      title,
-      body: message,
-      icon: iconPath
-    };
-    const notificationItem = new Notification(notifyOptions);
-    if (closeOnClick) {
-      notificationItem.on('click', () => {
-        notificationItem.close();
-      });
-    } else if (clickHandler) {
-      notificationItem.on('click', clickHandler);
-    }
-    notificationItem.show();
-  }
-};
-
 module.exports = {
   appUpdater,
   checkForUpdates,
-  installUpdate,
-  showNotification,
-  iconPath
+  installUpdate
 };
