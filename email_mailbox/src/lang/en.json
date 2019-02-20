@@ -126,7 +126,10 @@
     "print_thread": "Print All",
     "me": "Me",
     "unsend": "Unsend",
-    "email_source": "Show Source"
+    "email_source": "Show Source",
+    "empty_body": "This email has no content",
+    "empty_subject": "No subject",
+    "unsentText": "Unsent"
   },
   "messages": {
     "change_password": {

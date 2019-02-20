@@ -1,6 +1,10 @@
 import { connect } from 'react-redux';
 import EmailView from './../components/EmailWrapper';
-import { defineTimeByToday, defineLargeTime } from './../utils/TimeUtils';
+import {
+  defineTimeByToday,
+  defineLargeTime,
+  defineUnsentText
+} from './../utils/TimeUtils';
 import { getTwoCapitalLetters, hasAnySubstring } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv, parseContactRow } from './../utils/EmailUtils';
@@ -21,7 +25,6 @@ import {
 } from './../actions/index';
 import {
   EmailStatus,
-  unsentText,
   composerEvents,
   appDomain,
   avatarBaseUrl
@@ -31,12 +34,30 @@ import {
   setCryptoInterfaces,
   setDownloadHandler
 } from '../utils/FileManager';
+import string from './../lang';
 
 const defineFrom = (email, contacts) => {
   const emailFrom = parseContactRow(email.fromAddress || '');
   return emailFrom.name
     ? [emailFrom]
     : getContacts(contacts, email.fromContactIds);
+};
+
+const definePreviewAndContent = (email, isCollapse) => {
+  if (email.status === EmailStatus.UNSEND) {
+    const unsentText = defineUnsentText(email.unsendDate);
+    return {
+      preview: unsentText,
+      content: unsentText
+    };
+  }
+  const emptyEmailText = string.mailbox.empty_body;
+  return {
+    preview: email.preview || emptyEmailText,
+    content: email.content.length
+      ? addCollapseDiv(email.content, email.key, isCollapse)
+      : emptyEmailText
+  };
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -65,18 +86,13 @@ const mapStateToProps = (state, ownProps) => {
     state.get('files'),
     email.fileTokens
   );
-  const preview =
-    email.status === EmailStatus.UNSEND ? unsentText : email.preview;
   const isCollapse = !!hasAnySubstring(['Re:', 'RE:'], email.subject);
-  const content =
-    email.status === EmailStatus.UNSEND
-      ? `Unsent: At ${defineTimeByToday(email.unsendDate)}`
-      : addCollapseDiv(email.content, email.key, isCollapse);
+  const { preview, content } = definePreviewAndContent(email, isCollapse);
   const myEmail = {
     ...email,
     date: defineTimeByToday(date),
     dateLong: defineLargeTime(date),
-    subject: email.subject || '(No Subject)',
+    subject: email.subject || `(${string.mailbox.empty_subject})`,
     from,
     to,
     cc,
@@ -86,6 +102,7 @@ const mapStateToProps = (state, ownProps) => {
     preview,
     content
   };
+  const isEmpty = !(email.content && email.content.length);
   const isUnsend = email.status === EmailStatus.UNSEND;
   const isSpam = email.labelIds.includes(LabelType.spam.id);
   const isTrash = email.labelIds.includes(LabelType.trash.id);
@@ -102,6 +119,7 @@ const mapStateToProps = (state, ownProps) => {
     isSpam,
     isTrash,
     isDraft,
+    isEmpty,
     isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
     isUnsend,
     inlineImages,

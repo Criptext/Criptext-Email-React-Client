@@ -3,7 +3,7 @@ import { mySettings } from './electronInterface';
 import string from './../lang';
 
 const language = mySettings.language;
-const { momentLocales } = string;
+const { momentLocales, mailbox } = string;
 
 moment.locale(language, {
   months: momentLocales.months.split('_'),
@@ -21,12 +21,16 @@ const getTimeLocal = time => {
   return moment(timeUTC).local();
 };
 
-export const defineTimeByToday = time => {
-  const timeLocal = getTimeLocal(time);
+const getDiffDays = time => {
   const todayStartTime = moment().endOf('day');
   const timeStartLocal = getTimeLocal(time).endOf('day');
+  return todayStartTime.diff(moment(timeStartLocal), 'days');
+};
 
-  const diffDays = todayStartTime.diff(moment(timeStartLocal), 'days');
+export const defineTimeByToday = time => {
+  const timeLocal = getTimeLocal(time);
+  const diffDays = getDiffDays(time);
+
   if (diffDays < 1) {
     return moment(timeLocal).format('h:mm A');
   } else if (diffDays < 2) {
@@ -53,4 +57,22 @@ export const parseRateLimitBlockingTime = secondsString => {
   seconds %= 3600;
   const minutes = Math.floor(seconds / 60);
   return `${hours ? `${hours}h ` : ''}${minutes ? `${minutes}min` : ''}`;
+};
+
+export const defineUnsentText = time => {
+  const timeLocal = getTimeLocal(time);
+  const diffDays = getDiffDays(time);
+  const { atText, yesterdayText } = momentLocales;
+  const prefix = mailbox.unsentText;
+  const suffix = `[${atText}] h:mm A`;
+
+  if (diffDays < 1) {
+    return moment(timeLocal).format(`[${prefix}] ${suffix}`);
+  } else if (diffDays < 2) {
+    const text = `[${prefix} ${yesterdayText}] ${suffix}`;
+    return moment(timeLocal).format(text);
+  } else if (diffDays < 7) {
+    return moment(timeLocal).format(`dddd ${suffix}]`);
+  }
+  return moment(timeLocal).format(`DD MMM YYYY ${suffix}`);
 };

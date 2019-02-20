@@ -45,6 +45,13 @@
         font-style: italic;
       }
     }
+
+    &.email-empty {
+      .email-body > .email-text {
+        font-style: italic;
+        color: gray;
+      }
+    }
   
     > div{
       margin: 5px 17px 0px 17px;

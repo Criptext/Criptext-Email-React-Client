@@ -33,7 +33,7 @@ const Email = props => (
       className={`email-container ${defineEmailState(
         props.displayEmail,
         props.staticOpen
-      )} ${defineEmailType(props.isUnsend, props.isDraft)}`}
+      )} ${defineEmailType(props.isUnsend, props.isDraft, props.isEmpty)}`}
     >
       <div className="email-info" onClick={props.onToggleEmail}>
         <div className="email-info-letter">
@@ -229,11 +229,13 @@ const defineEmailState = (displayEmail, staticOpen) => {
   return 'email-container-collapse';
 };
 
-const defineEmailType = (isUnsend, isDraft) => {
+const defineEmailType = (isUnsend, isDraft, isEmpty) => {
   if (isUnsend) {
     return 'email-unsend';
   } else if (isDraft) {
     return 'email-draft';
+  } else if (isEmpty) {
+    return 'email-empty';
   }
   return 'email-normal';
 };
@@ -282,6 +284,7 @@ Email.propTypes = {
   handlePopupConfirm: PropTypes.func,
   hideView: PropTypes.bool,
   isDraft: PropTypes.bool,
+  isEmpty: PropTypes.bool,
   isUnsend: PropTypes.bool,
   letters: PropTypes.string,
   onForward: PropTypes.func,
