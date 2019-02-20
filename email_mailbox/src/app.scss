@@ -473,6 +473,12 @@ h2{
   min-width: 560px;
 }
 
+.content-container{
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
 .navigation-feed-collapse .wrapper-left{
   transition: width $_DURATION_NAVIGATION_FEED_COLLAPSE linear;
   width: 100%;

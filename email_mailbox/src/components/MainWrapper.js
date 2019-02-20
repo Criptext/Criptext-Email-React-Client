@@ -88,10 +88,25 @@ class MainWrapper extends Component {
 
   renderSection = () => {
     switch (this.props.sectionSelected.type) {
-      case SectionType.MAILBOX: {
-        return (
+      case SectionType.SETTINGS: {
+        return <Settings />;
+      }
+      default:
+        return this.renderThreads();
+    }
+  };
+
+  renderThreads = () => {
+    const isThreadsVisible =
+      this.props.sectionSelected.type === SectionType.MAILBOX;
+    const isThreadVisible =
+      this.props.sectionSelected.type === SectionType.THREAD;
+    if (isThreadsVisible || isThreadVisible) {
+      return (
+        <div className="content-container">
           <Threads
             isUpdateAvailable={this.state.isUpdateAvailable}
+            isVisible={!isThreadVisible}
             mailboxSelected={this.props.sectionSelected.params.mailboxSelected}
             onBackOption={this.handleClickBackHeaderMailbox}
             onClickSection={this.props.onClickSection}
@@ -100,31 +115,27 @@ class MainWrapper extends Component {
             searchParams={this.props.sectionSelected.params.searchParams}
             threadItemsChecked={this.state.threadItemsChecked}
           />
-        );
-      }
-      case SectionType.THREAD: {
-        return (
-          <Thread
-            mailboxSelected={this.props.sectionSelected.params.mailboxSelected}
-            onBackOption={() =>
-              this.handleClickBackHeaderThread(
-                this.props.sectionSelected.params.mailboxSelected,
-                this.props.onClickSection
-              )
-            }
-            onClickSection={this.props.onClickSection}
-            threadIdSelected={
-              this.props.sectionSelected.params.threadIdSelected
-            }
-          />
-        );
-      }
-      case SectionType.SETTINGS: {
-        return <Settings />;
-      }
-      default:
-        break;
+          {isThreadVisible && (
+            <Thread
+              mailboxSelected={
+                this.props.sectionSelected.params.mailboxSelected
+              }
+              onBackOption={() =>
+                this.handleClickBackHeaderThread(
+                  this.props.sectionSelected.params.mailboxSelected,
+                  this.props.onClickSection
+                )
+              }
+              onClickSection={this.props.onClickSection}
+              threadIdSelected={
+                this.props.sectionSelected.params.threadIdSelected
+              }
+            />
+          )}
+        </div>
+      );
     }
+    return;
   };
 
   handleCheckAllThreadItems = (value, threadIds) => {
