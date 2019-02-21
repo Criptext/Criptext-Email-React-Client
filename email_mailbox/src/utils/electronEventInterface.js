@@ -1158,7 +1158,6 @@ export const Event = {
   DISPLAY_MESSAGE: 'display-message',
   EMAIL_DELETED: 'email-deleted-permanently',
   ENABLE_WINDOW: 'remove-window-overlay',
-  LABEL_CREATED: 'label-created',
   LINK_DEVICE_END: 'link-devices-finished',
   LINK_DEVICE_GETTING_KEYS: 'getting-keys',
   LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',

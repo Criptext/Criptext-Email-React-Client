@@ -300,10 +300,6 @@ class PanelWrapper extends Component {
       });
     });
 
-    addEvent(Event.LABEL_CREATED, labels => {
-      this.props.onAddLabels(labels);
-    });
-
     addEvent(Event.DISABLE_WINDOW, () => {
       this.setState({
         isHiddenMailboxPopup: false,
