@@ -60,6 +60,7 @@ import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
+import string from './../lang';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -420,8 +421,6 @@ const addEmailToNotificationList = ({
 };
 
 const sendNewEmailNotification = () => {
-  // eslint-disable-next-line no-undef
-  const string = require('./../lang');
   if (newEmailNotificationList.length <= 3) {
     newEmailNotificationList.forEach(notificationData => {
       const {
