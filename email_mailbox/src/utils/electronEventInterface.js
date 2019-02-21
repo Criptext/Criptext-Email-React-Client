@@ -1157,7 +1157,6 @@ export const Event = {
   DISABLE_WINDOW: 'add-window-overlay',
   DISPLAY_MESSAGE: 'display-message',
   EMAIL_DELETED: 'email-deleted-permanently',
-  EMAIL_MOVE_TO: 'email-move-to',
   ENABLE_WINDOW: 'remove-window-overlay',
   LABEL_CREATED: 'label-created',
   LINK_DEVICE_END: 'link-devices-finished',
