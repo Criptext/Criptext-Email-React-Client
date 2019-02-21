@@ -1156,7 +1156,6 @@ export const Event = {
   DEVICE_REMOVED: 'device-removed',
   DISABLE_WINDOW: 'add-window-overlay',
   DISPLAY_MESSAGE: 'display-message',
-  EMAIL_DELETED: 'email-deleted-permanently',
   ENABLE_WINDOW: 'remove-window-overlay',
   LINK_DEVICE_END: 'link-devices-finished',
   LINK_DEVICE_GETTING_KEYS: 'getting-keys',

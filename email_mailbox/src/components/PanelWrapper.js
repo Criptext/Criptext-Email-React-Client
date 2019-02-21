@@ -275,17 +275,6 @@ class PanelWrapper extends Component {
       }
     });
 
-    addEvent(Event.EMAIL_DELETED, emailIds => {
-      if (emailIds.length) {
-        const currentThreadId = this.state.sectionSelected.params
-          .threadIdSelected;
-        props.onUpdateEmailIdsThread({
-          threadId: currentThreadId,
-          emailIdsToRemove: emailIds
-        });
-      }
-    });
-
     addEvent(Event.DEVICE_REMOVED, () => {
       this.setState({
         isHiddenMailboxPopup: false,

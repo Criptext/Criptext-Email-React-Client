@@ -4,7 +4,6 @@ import {
   loadEmails,
   loadEvents,
   loadThreads,
-  removeThreadsSuccess,
   updateBadgeLabels,
   updateEmailIdsThread,
   updateAllFeedItemsAsOlder,
