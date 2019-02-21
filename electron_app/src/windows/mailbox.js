@@ -10,7 +10,6 @@ const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
 const { isFromStore } = require('./windowUtils');
 const { createTrayIcon, destroyTrayIcon } = require('./tray');
-
 const { isWindows } = require('./../utils/osUtils');
 
 let mailboxWindow;
@@ -63,13 +62,9 @@ const create = () => {
     if (!globalManager.forcequit.get()) {
       e.preventDefault();
       mailboxWindow.hide();
-    }
-  });
-  mailboxWindow.on('closed', () => {
-    try {
+    } else {
       destroyTrayIcon();
-    } catch (e) {
-      console.error(e);
+      require('./../socketClient').disconnect();
     }
   });
 

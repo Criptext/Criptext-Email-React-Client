@@ -72,7 +72,7 @@ export const defineUnsentText = time => {
     const text = `[${prefix} ${yesterdayText}] ${suffix}`;
     return moment(timeLocal).format(text);
   } else if (diffDays < 7) {
-    return moment(timeLocal).format(`dddd ${suffix}]`);
+    return moment(timeLocal).format(`[${prefix}] dddd ${suffix}`);
   }
   return moment(timeLocal).format(`DD MMM YYYY ${suffix}`);
 };
