@@ -51,6 +51,7 @@ const Threads = props => (
           name="unreadSwitch"
           onChange={props.onChangeSwitch}
           checked={props.switchUnreadThreadsStatus}
+          disabled={props.disableSwitch}
         />
         <span className={props.switchUnreadThreadsStatus ? '' : 'disabled'}>
           {string.mailbox.unread}
@@ -141,6 +142,7 @@ const defineClassComponent = isVisible => {
 Threads.propTypes = {
   buttonSyncStatus: PropTypes.number,
   dismissPopup: PropTypes.func,
+  disableSwitch: PropTypes.bool,
   handlePopupConfirm: PropTypes.func,
   hoverTarget: PropTypes.string,
   isLoadingThreads: PropTypes.bool,

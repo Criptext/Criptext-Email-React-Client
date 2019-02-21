@@ -13,7 +13,8 @@ class ThreadsWrapper extends Component {
       labels: [],
       lastMinDate: undefined,
       tip: '',
-      popupContent: undefined
+      popupContent: undefined,
+      disableSwitch: false
     };
   }
 
@@ -54,6 +55,7 @@ class ThreadsWrapper extends Component {
         setPopupContent={this.setPopupContent}
         dismissPopup={this.dismissPopup}
         handlePopupConfirm={this.handlePopupConfirm}
+        disableSwitch={this.state.disableSwitch}
       />
     );
   }
@@ -130,12 +132,15 @@ class ThreadsWrapper extends Component {
       clear: true,
       unread: ev.target.checked === true ? ev.target.checked : undefined
     };
-    this.props.onUnreadToggle(
-      checked,
-      currentUnreadThreadsLength,
-      mailbox,
-      loadParams
-    );
+    this.setState({ disableSwitch: true }, async () => {
+      await this.props.onUnreadToggle(
+        checked,
+        currentUnreadThreadsLength,
+        mailbox,
+        loadParams
+      );
+      this.setState({ disableSwitch: false });
+    });
   };
 
   handlePopupConfirm = () => {
