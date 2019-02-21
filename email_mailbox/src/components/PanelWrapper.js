@@ -300,14 +300,6 @@ class PanelWrapper extends Component {
       }
     });
 
-    addEvent(Event.THREADS_DELETED, threadIds => {
-      const isRenderingMailbox =
-        this.state.sectionSelected.type === SectionType.MAILBOX;
-      if (threadIds.length && isRenderingMailbox) {
-        props.onRemoveThreads(threadIds);
-      }
-    });
-
     addEvent(Event.DEVICE_REMOVED, () => {
       this.setState({
         isHiddenMailboxPopup: false,

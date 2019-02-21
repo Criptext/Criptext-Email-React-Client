@@ -1174,7 +1174,5 @@ export const Event = {
   SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
-  STOP_LOAD_SYNC: 'stop-load-sync',
-  THREADS_DELETED: 'thread-deleted-permanently',
-  UPDATE_EMAILS: 'update-emails'
+  STOP_LOAD_SYNC: 'stop-load-sync'
 };
