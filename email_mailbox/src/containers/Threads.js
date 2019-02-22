@@ -148,7 +148,7 @@ const mapDispatchToProps = dispatch => {
           currentUnreadThreadsLength,
           paramsToLoadMoreThreads
         )
-      );
+      ).then(() => true);
     },
     onEmptyTrash: async () => {
       const labelId = LabelType.trash.id;

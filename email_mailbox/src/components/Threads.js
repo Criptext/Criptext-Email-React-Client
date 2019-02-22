@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ReactTooltip from 'react-tooltip';
+import { Switch } from 'react-switch-input';
 import EmptyMailbox from './EmptyMailbox';
 import ButtonSync from './ButtonSync';
 import ItemTooltip from './ItemTooltip';
@@ -7,8 +9,7 @@ import ThreadItem from '../containers/ThreadItem';
 import Message from './../containers/Message';
 import PopupHOC from './PopupHOC';
 import DialogPopup from './DialogPopup';
-import ReactTooltip from 'react-tooltip';
-import { Switch } from 'react-switch-input';
+import { UNREAD_SWITCH_STATUS } from './ThreadsWrapper';
 import string from './../lang';
 import './threads.scss';
 
@@ -51,6 +52,7 @@ const Threads = props => (
           name="unreadSwitch"
           onChange={props.onChangeSwitch}
           checked={props.switchUnreadThreadsStatus}
+          disabled={props.switchStatus === UNREAD_SWITCH_STATUS.DISABLED}
         />
         <span className={props.switchUnreadThreadsStatus ? '' : 'disabled'}>
           {string.mailbox.unread}
@@ -161,6 +163,7 @@ Threads.propTypes = {
   popupContent: PropTypes.object,
   searchParams: PropTypes.object,
   setPopupContent: PropTypes.func,
+  switchStatus: PropTypes.string,
   switchUnreadThreadsStatus: PropTypes.bool,
   threadItemsChecked: PropTypes.object,
   threads: PropTypes.object,

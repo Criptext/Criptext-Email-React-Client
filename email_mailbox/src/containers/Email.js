@@ -43,7 +43,7 @@ const defineFrom = (email, contacts) => {
     : getContacts(contacts, email.fromContactIds);
 };
 
-const definePreviewAndContent = (email, isCollapse) => {
+const definePreviewAndContent = (email, isCollapse, inlineImages) => {
   if (email.status === EmailStatus.UNSEND) {
     const unsentText = defineUnsentText(email.unsendDate);
     return {
@@ -52,11 +52,14 @@ const definePreviewAndContent = (email, isCollapse) => {
     };
   }
   const emptyEmailText = string.mailbox.empty_body;
+  const hasInlineImages = inlineImages.length > 0;
   return {
     preview: email.preview || emptyEmailText,
-    content: email.content.length
-      ? addCollapseDiv(email.content, email.key, isCollapse)
-      : emptyEmailText
+    content: !email.preview
+      ? hasInlineImages
+        ? email.content
+        : emptyEmailText
+      : addCollapseDiv(email.content, email.key, isCollapse)
   };
 };
 
@@ -87,7 +90,11 @@ const mapStateToProps = (state, ownProps) => {
     email.fileTokens
   );
   const isCollapse = !!hasAnySubstring(['Re:', 'RE:'], email.subject);
-  const { preview, content } = definePreviewAndContent(email, isCollapse);
+  const { preview, content } = definePreviewAndContent(
+    email,
+    isCollapse,
+    inlineImages
+  );
   const myEmail = {
     ...email,
     date: defineTimeByToday(date),
