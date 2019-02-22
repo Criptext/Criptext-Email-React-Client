@@ -5,6 +5,11 @@ import Threads from './Threads';
 
 const SCROLL_BOTTOM_LIMIT = 25;
 
+const UNREAD_SWITCH_STATUS = {
+  ENABLED: 'enabled',
+  DISABLED: 'disabled'
+};
+
 class ThreadsWrapper extends Component {
   constructor() {
     super();
@@ -14,7 +19,7 @@ class ThreadsWrapper extends Component {
       lastMinDate: undefined,
       tip: '',
       popupContent: undefined,
-      disableSwitch: false
+      switchStatus: UNREAD_SWITCH_STATUS.ENABLED
     };
   }
 
@@ -55,7 +60,7 @@ class ThreadsWrapper extends Component {
         setPopupContent={this.setPopupContent}
         dismissPopup={this.dismissPopup}
         handlePopupConfirm={this.handlePopupConfirm}
-        disableSwitch={this.state.disableSwitch}
+        switchStatus={this.state.switchStatus}
       />
     );
   }
@@ -125,21 +130,21 @@ class ThreadsWrapper extends Component {
   };
 
   handleChangeSwitch = ev => {
-    const { currentUnreadThreadsLength, mailboxSelected } = this.props;
     const checked = ev.target.checked;
-    const mailbox = mailboxSelected;
-    const loadParams = {
-      clear: true,
-      unread: ev.target.checked === true ? ev.target.checked : undefined
-    };
-    this.setState({ disableSwitch: true }, async () => {
+    this.setState({ switchStatus: UNREAD_SWITCH_STATUS.DISABLED }, async () => {
+      const { currentUnreadThreadsLength, mailboxSelected } = this.props;
+      const mailbox = mailboxSelected;
+      const loadParams = {
+        clear: true,
+        unread: checked === true ? checked : undefined
+      };
       await this.props.onUnreadToggle(
         checked,
         currentUnreadThreadsLength,
         mailbox,
         loadParams
       );
-      this.setState({ disableSwitch: false });
+      this.setState({ switchStatus: UNREAD_SWITCH_STATUS.ENABLED });
     });
   };
 
@@ -172,4 +177,4 @@ ThreadsWrapper.propTypes = {
   threads: PropTypes.object
 };
 
-export default ThreadsWrapper;
+export { ThreadsWrapper as default, UNREAD_SWITCH_STATUS };
