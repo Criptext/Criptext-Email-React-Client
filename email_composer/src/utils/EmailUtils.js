@@ -208,7 +208,7 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     });
   }
 
-  const threadId = emailIsForward ? undefined : emailData.threadId;
+  const threadId = emailData.threadId;
   const contacts = await getContactsByEmailId(emailData.id);
 
   const emailFrom = parseContactRow(emailData.fromAddress);

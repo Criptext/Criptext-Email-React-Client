@@ -83,7 +83,7 @@ Object {
   "htmlBody": "<p>Modified body content</p>",
   "status": 1,
   "textSubject": "FW: Email subject 1",
-  "threadId": undefined,
+  "threadId": "1",
   "toEmails": Array [],
 }
 `;
@@ -122,7 +122,7 @@ Object {
   "htmlBody": "<p>Modified body content</p>",
   "status": 1,
   "textSubject": "FW: Email subject 2",
-  "threadId": undefined,
+  "threadId": "2",
   "toEmails": Array [],
 }
 `;
