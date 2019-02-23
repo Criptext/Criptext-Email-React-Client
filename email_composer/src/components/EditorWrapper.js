@@ -26,6 +26,7 @@ class EditorWrapper extends Component {
         data={this.props.htmlBody}
         onChange={this.onChangeHtmlBody}
         placeholder={string.editor.placeholder}
+        removeformatPasted={false}
       />
     );
   }
