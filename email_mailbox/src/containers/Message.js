@@ -5,7 +5,7 @@ import MessageContent, { actionHandlerKeys } from './../data/message';
 import { LabelType } from './../utils/electronInterface';
 import { installUpdate } from './../utils/ipc';
 import { SectionType } from '../utils/const';
-import { loadThreads } from '../actions';
+import { loadThreads, updateUnreadThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 import string from '../lang';
 
@@ -107,21 +107,22 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
       }
     },
-    onOpenThreadInMailbox: ({ mailbox, threadId }) => {
+    onOpenThreadInMailbox: async ({ mailbox, threadId }) => {
       const labelId = LabelType[mailbox].id;
+      const unread = false;
       const loadThreadsParams = {
         labelId,
         rejectedLabelIds: defineRejectedLabels(labelId),
         contactTypes: defineContactType(labelId)
       };
-      dispatch(loadThreads(loadThreadsParams)).then(() => {
-        const threadType = SectionType.THREAD;
-        const openThreadParams = {
-          mailboxSelected: mailbox,
-          threadIdSelected: threadId
-        };
-        ownProps.onClickSection(threadType, openThreadParams);
-      });
+      const threadType = SectionType.THREAD;
+      const openThreadParams = {
+        mailboxSelected: mailbox,
+        threadIdSelected: threadId
+      };
+      await dispatch(loadThreads(loadThreadsParams));
+      await dispatch(updateUnreadThreads([threadId], unread, labelId));
+      ownProps.onClickSection(threadType, openThreadParams);
     }
   };
 };
