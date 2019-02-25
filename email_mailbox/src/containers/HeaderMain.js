@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import * as actions from '../actions/index';
+import { loadSuggestions } from '../actions/index';
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
 import { SectionType, avatarBaseUrl } from '../utils/const';
@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ownProps.onClickSection(type);
     },
     onSearchChange: filter => {
-      dispatch(actions.loadSuggestions(filter));
+      dispatch(loadSuggestions(filter));
     },
     onSearchSelectThread: (threadId, searchParams) => {
       const type = SectionType.THREAD;

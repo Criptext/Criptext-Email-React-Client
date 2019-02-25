@@ -16,7 +16,6 @@ import {
   updateEmails,
   updateUnreadEmailByThreadIds
 } from '../utils/ipc';
-import { storeValue } from './../utils/storage';
 import {
   getGroupEvents,
   sendFetchEmailsErrorMessage,
@@ -452,20 +451,6 @@ export const updateUnreadThreads = (threadsParams, unread, labelId) => {
       }
     } catch (e) {
       sendUpdateUnreadThreadsErrorMessage();
-    }
-  };
-};
-
-export const searchThreads = params => {
-  return async dispatch => {
-    try {
-      await storeValue(params.text);
-      const threads = await getEmailsGroupByThreadByParams(params);
-      dispatch(addThreads(threads, true));
-    } catch (e) {
-      /* TO DO display message about the error and a link/button to execute a fix. The most posible error is the corruption of the data, 
-        the request should not fail because of a bad query built or a non existing column/relation. Its fix should be a restore of
-        the db using a backup previously made. If the backup is also corrupted for some reason, user should log out.*/
     }
   };
 };

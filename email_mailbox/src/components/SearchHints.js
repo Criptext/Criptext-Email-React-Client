@@ -29,7 +29,6 @@ const SearchHints = props => (
           searchText={props.searchText}
           onClickSearchSuggestiontItem={props.onClickSearchSuggestiontItem}
         />
-
         {props.threads.map((thread, index) => (
           <SearchMail
             key={index}
@@ -50,23 +49,18 @@ const SearchSuggestion = props => {
   if (props.items.size === 0) {
     return null;
   }
-  return (
-    <div className="search-recent">
+  return props.items.map((item, index) => (
+    <div
+      className="search-recent"
+      onClick={() => {
+        props.onClickSearchSuggestiontItem(item);
+      }}
+      key={index}
+    >
       <i className={props.icon} />
-      <ul>
-        {props.items.map((item, index) => (
-          <li
-            onClick={() => {
-              props.onClickSearchSuggestiontItem(item);
-            }}
-            key={index}
-          >
-            {replaceMatches(props.searchText, item)}
-          </li>
-        ))}
-      </ul>
+      {replaceMatches(props.searchText, item)}
     </div>
-  );
+  ));
 };
 
 const SearchMail = props => {

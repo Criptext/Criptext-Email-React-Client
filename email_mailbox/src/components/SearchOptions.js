@@ -65,7 +65,10 @@ const SearchOptions = props => (
                 );
               }}
             />
-            <button className="button-a" onClick={() => props.onClickSearch()}>
+            <button
+              className="button-a button-search"
+              onClick={props.onClickSearch}
+            >
               <i className="icon-search" />
               <span>{string.header.search}</span>
             </button>
@@ -84,6 +87,7 @@ const SearchOptionRowInput = props => (
     <td>
       <input
         type="text"
+        className="search-options-input"
         onChange={props.onChange}
         placeholder={props.placeholder}
         value={props.value}

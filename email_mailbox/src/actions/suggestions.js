@@ -1,6 +1,7 @@
 import { Suggestions } from './types';
 import { getEmailsGroupByThreadByParams } from '../utils/ipc';
 import { getMatches } from '../utils/storage';
+import { LabelType } from '../utils/electronInterface';
 
 export const setSuggestions = (threads, hints) => ({
   type: Suggestions.SET_THREADS,
@@ -21,6 +22,7 @@ export const loadSuggestions = filter => {
         plain: true,
         text: filter,
         labelId: -1,
+        rejectedLabelIds: [LabelType.spam.id, LabelType.trash.id],
         limit: 5
       });
       dispatch(setSuggestions(threads, hints));
