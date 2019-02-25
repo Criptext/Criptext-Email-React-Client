@@ -1,5 +1,6 @@
 const { Notification } = require('electron');
 const globalManager = require('./globalManager');
+const { isMacOS } = require('./windows/windowUtils');
 const path = require('path');
 
 const iconPath = path.join(__dirname, './../resources/launch-icons/icon.png');
@@ -12,9 +13,11 @@ const showNotification = ({ title, message, clickHandler, closeOnClick }) => {
   if (isSupportedByOS && !isMAS && !isVisibleAndFocused) {
     const notifyOptions = {
       title,
-      body: message,
-      icon: iconPath
+      body: message
     };
+    if (!isMacOS) {
+      notifyOptions['icon'] = iconPath;
+    }
     const notificationItem = new Notification(notifyOptions);
     if (closeOnClick) {
       notificationItem.on('click', () => {
