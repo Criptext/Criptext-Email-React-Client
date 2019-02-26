@@ -303,7 +303,7 @@ ThreadItem.propTypes = {
   isUnsend: PropTypes.bool,
   labels: PropTypes.array,
   letters: PropTypes.string,
-  mailbox: PropTypes.string,
+  mailbox: PropTypes.object,
   multiselect: PropTypes.bool,
   onCheckItem: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,

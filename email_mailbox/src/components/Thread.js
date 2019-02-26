@@ -160,7 +160,7 @@ Thread.propTypes = {
   emailKeysUnread: PropTypes.array,
   indexFirstUnread: PropTypes.number,
   labels: PropTypes.array,
-  mailboxSelected: PropTypes.string,
+  mailboxSelected: PropTypes.object,
   onBackOption: PropTypes.func,
   onClickSection: PropTypes.func,
   onLoadEmails: PropTypes.func,

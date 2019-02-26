@@ -5,7 +5,7 @@ import './emptymailbox.scss';
 
 const EmptyMailbox = props => {
   const { header, subheader, iconClass } = defineEmptyParamsByMailbox(
-    props.mailbox
+    props.mailbox.text
   );
   return (
     <div className="empty-container empty-mailbox-container">
@@ -20,49 +20,49 @@ const EmptyMailbox = props => {
 
 const defineEmptyParamsByMailbox = mailbox => {
   switch (mailbox) {
-    case 'inbox':
+    case 'Inbox':
       return {
         header: string.mailbox.empty.inbox.header,
         subheader: string.mailbox.empty.inbox.subheader,
         iconClass: 'empty-inbox'
       };
-    case 'starred':
+    case 'Starred':
       return {
         header: string.mailbox.empty.starred.header,
         subheader: string.mailbox.empty.starred.subheader,
         iconClass: 'empty-starred'
       };
-    case 'trash':
+    case 'Trash':
       return {
         header: string.mailbox.empty.trash.header,
         subheader: string.mailbox.empty.trash.subheader,
         iconClass: 'empty-trash'
       };
-    case 'draft':
+    case 'Draft':
       return {
         header: string.mailbox.empty.draft.header,
         subheader: string.mailbox.empty.draft.subheader,
         iconClass: 'empty-draft'
       };
-    case 'sent':
+    case 'Sent':
       return {
         header: string.mailbox.empty.sent.header,
         subheader: string.mailbox.empty.sent.subheader,
         iconClass: 'empty-sent'
       };
-    case 'spam':
+    case 'Spam':
       return {
         header: string.mailbox.empty.spam.header,
         subheader: string.mailbox.empty.spam.subheader,
         iconClass: 'empty-spam'
       };
-    case 'allmail':
+    case 'All mail':
       return {
         header: string.mailbox.empty.allmail.header,
         subheader: string.mailbox.empty.allmail.subheader,
         iconClass: 'empty-allmail'
       };
-    case 'search':
+    case 'Search':
       return {
         header: string.mailbox.empty.search.header,
         subheader: string.mailbox.empty.search.subheader,
@@ -78,7 +78,7 @@ const defineEmptyParamsByMailbox = mailbox => {
 };
 
 EmptyMailbox.propTypes = {
-  mailbox: PropTypes.string
+  mailbox: PropTypes.object
 };
 
 export default EmptyMailbox;

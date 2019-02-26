@@ -30,7 +30,10 @@ class PanelWrapper extends Component {
       sectionSelected: {
         type: SectionType.MAILBOX,
         params: {
-          mailboxSelected: 'inbox',
+          mailboxSelected: {
+            id: 1,
+            text: 'Inbox'
+          },
           threadIdSelected: null,
           searchParams: {
             text: '',
@@ -170,8 +173,8 @@ class PanelWrapper extends Component {
 
     addEvent(Event.REFRESH_THREADS, eventParams => {
       if (this.state.sectionSelected.params.mailboxSelected) {
-        const currentLabelId =
-          LabelType[this.state.sectionSelected.params.mailboxSelected].id;
+        const currentLabelId = this.state.sectionSelected.params.mailboxSelected
+          .id;
         props.onLoadThreads({
           labelId: Number(currentLabelId),
           clear: true
@@ -211,8 +214,8 @@ class PanelWrapper extends Component {
         const isRenderingThread = currentSectionType === SectionType.THREAD;
         const currentThreadId = this.state.sectionSelected.params
           .threadIdSelected;
-        const currentLabelId =
-          LabelType[this.state.sectionSelected.params.mailboxSelected].id;
+        const currentLabelId = this.state.sectionSelected.params.mailboxSelected
+          .id;
         const limit =
           this.props.threadsCount > 20 ? this.props.threadsCount : undefined;
         if (labels) {
@@ -228,12 +231,12 @@ class PanelWrapper extends Component {
             });
           }
         } else if (threadIds && isRenderingThread) {
+          props.onLoadThreads({
+            labelId: Number(currentLabelId),
+            clear: true,
+            limit
+          });
           if (threadIds.includes(currentThreadId)) {
-            props.onLoadThreads({
-              labelId: Number(currentLabelId),
-              clear: true,
-              limit
-            });
             props.onLoadEmails(currentThreadId);
           }
         } else if (threadIds && isRenderingMailbox) {

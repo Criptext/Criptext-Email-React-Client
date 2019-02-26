@@ -372,7 +372,6 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     };
     await createEmail(emailData);
   } else {
-    const labelIds = [];
     const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
     const prevLabels = prevEmailLabels.map(item => item.labelId);
 
@@ -403,7 +402,12 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       threadId
     });
   }
-  return { rowid, labelIds, threadIds: threadId ? [threadId] : null };
+  const labelIdsFiltered = isSpam ? [LabelType.spam.id] : labelIds;
+  return {
+    rowid,
+    labelIds: labelIdsFiltered,
+    threadIds: threadId ? [threadId] : null
+  };
 };
 
 const addEmailToNotificationList = ({
@@ -507,9 +511,13 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
       unread: !!unread
     });
     if (res) {
-      return { rowid, threadIds: [emails[0].threadId] };
+      return {
+        rowid,
+        threadIds: [emails[0].threadId],
+        badgeLabelIds: [LabelType.inbox.id, LabelType.spam.id]
+      };
     }
-    return { rowid: null, threadIds: [] };
+    return { rowid: null };
   }
   return { rowid };
 };
@@ -558,9 +566,13 @@ const handlePeerThreadRead = async ({ rowid, params }) => {
     unread: !!unread
   });
   if (res) {
-    return { rowid, threadIds };
+    return {
+      rowid,
+      threadIds,
+      badgeLabelIds: [LabelType.inbox.id, LabelType.spam.id]
+    };
   }
-  return { rowid: null, threadIds: [] };
+  return { rowid: null };
 };
 
 const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
@@ -1171,5 +1183,6 @@ export const Event = {
   SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
-  STOP_LOAD_SYNC: 'stop-load-sync'
+  STOP_LOAD_SYNC: 'stop-load-sync',
+  UPDATE_THREAD_EMAILS: 'update-thread-emails'
 };

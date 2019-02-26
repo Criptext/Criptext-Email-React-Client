@@ -149,7 +149,7 @@ Threads.propTypes = {
   isUpdateAvailable: PropTypes.bool,
   isVisible: PropTypes.bool,
   labels: PropTypes.array,
-  mailboxSelected: PropTypes.string,
+  mailboxSelected: PropTypes.object,
   mailboxTitle: PropTypes.string,
   message: PropTypes.object,
   onChangeSwitch: PropTypes.func,

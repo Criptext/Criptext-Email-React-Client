@@ -122,7 +122,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       });
     },
     onAddMoveLabel: (threadIds, labelId) => {
-      const currentLabelId = LabelType[ownProps.mailboxSelected].id;
+      const currentLabelId = ownProps.mailboxSelected.id;
       const isTrashCurrentLabelId = currentLabelId === LabelType.trash.id;
       const isSpamLabelIdToAdd = labelId === LabelType.spam.id;
       dispatch(
@@ -143,13 +143,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       );
     },
     onMarkRead: (threadIds, unread) => {
-      const labelId = LabelType[ownProps.mailboxSelected].id;
+      const labelId = ownProps.mailboxSelected.id;
       dispatch(actions.updateUnreadThreads(threadIds, unread, labelId)).then(
         () => ownProps.onBackOption()
       );
     },
     onRemoveThreads: async (threadIds, backFirst) => {
-      const labelId = LabelType[ownProps.mailboxSelected].id;
+      const labelId = ownProps.mailboxSelected.id;
       if (backFirst) {
         await ownProps.onBackOption();
         dispatch(actions.removeThreads(threadIds, labelId));

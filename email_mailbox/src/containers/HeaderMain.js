@@ -45,8 +45,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onSearchSelectThread: (threadId, searchParams) => {
       const type = SectionType.THREAD;
+      const mailboxSelected = {
+        id: -1,
+        text: 'Search'
+      };
       const params = {
-        mailboxSelected: 'search',
+        mailboxSelected,
         threadIdSelected: threadId,
         searchParams
       };
@@ -54,8 +58,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onSearchThreads: searchParams => {
       const type = SectionType.MAILBOX;
+      const mailboxSelected = {
+        id: -1,
+        text: 'Search'
+      };
       const params = {
-        mailboxSelected: 'search',
+        mailboxSelected,
         searchParams
       };
       ownProps.onClickSection(type, params);

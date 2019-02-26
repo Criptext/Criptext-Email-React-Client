@@ -16,7 +16,7 @@ const defineMessageData = (
   threadsCount,
   isUpdateAvailable
 ) => {
-  const targetLabelId = mailboxSelected && LabelType[mailboxSelected].id;
+  const targetLabelId = mailboxSelected.id;
   const isEmpty = threadsCount < 1;
   if (targetLabelId === LabelType.trash.id && !isEmpty) {
     return {

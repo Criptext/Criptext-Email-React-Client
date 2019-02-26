@@ -84,7 +84,7 @@ const mapStateToProps = (state, ownProps) => {
     .filter(email => email.unread)
     .map(email => email.key);
   const labelIds =
-    LabelType[ownProps.mailboxSelected].id === LabelType.inbox.id
+    ownProps.mailboxSelected.id === LabelType.inbox.id
       ? thread
         ? thread.get('allLabels')
         : []
@@ -124,7 +124,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onUpdateUnreadEmails: (emailKeysUnread, threadId) => {
       if (emailKeysUnread.length) {
-        const labelId = LabelType[ownProps.mailboxSelected].id;
+        const labelId = ownProps.mailboxSelected.id;
         dispatch(sendOpenEvent(emailKeysUnread, threadId, labelId));
       }
     }

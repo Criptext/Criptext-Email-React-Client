@@ -2,6 +2,7 @@
 
 .nav-item-label{
   align-items: center;
+  cursor: pointer;
   height: 26px;
   width: 100%;
   overflow: hidden;
@@ -14,6 +15,7 @@
   }
 
   label{
+    cursor: inherit;
     font-size: 13px;
     font-weight: 300;
     text-align: left;
@@ -32,10 +34,19 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_COLOR_TEXT_NAVITEM){
+@mixin themable($_THEME, $_COLOR_TEXT_NAVITEM, $_BACKGROUND_COLOR_NAVITEM_SELECTED, $_COLOR_TEXT_NAVITEM_SELECTED){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .nav-item-label{
+
+      &.nav-item-selected{
+        background-color: $_BACKGROUND_COLOR_NAVITEM_SELECTED;
+
+        >span{
+          color: $_COLOR_TEXT_NAVITEM_SELECTED;
+        }
+      }
+
       label{
         color: $_COLOR_TEXT_NAVITEM;
       }
@@ -43,5 +54,5 @@
   }
 }
   
-@include themable($_THEME_LIGHT, $_COLOR_TEXT_NAVITEM_LIGHT);
-@include themable($_THEME_DARK, $_COLOR_TEXT_NAVITEM_DARK);
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_NAVITEM_LIGHT, $_BACKGROUND_COLOR_NAVITEM_SELECTED_LIGHT, $_COLOR_TEXT_NAVITEM_SELECTED_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_NAVITEM_DARK, $_BACKGROUND_COLOR_NAVITEM_SELECTED_DARK, $_COLOR_TEXT_NAVITEM_SELECTED_DARK);
