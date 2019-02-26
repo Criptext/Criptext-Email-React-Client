@@ -27,37 +27,24 @@
   }
 
   .search-hints-success{
+    margin-top: 10px;
+    margin-bottom: 5px;
+
     .search-recent{
       display: flex;
-
-      &:first-child{
-        margin-top: 10px
-      }
-
-      &:last-child{
-        margin-bottom: 5px;
-      }
+      align-items: center;
+      cursor: pointer;
+      height: 30px;
 
       i{
         font-size: 16px;
-        margin: 5px 15px 0;
+        margin: 5px 15px 5px;
       }
 
-      ul{
-        flex: 1 0;
+      span {
         font-size: 12px;
-        list-style-type: none;
-        margin: 5px 0 0;
+        margin: 5px 0 5px;
         padding: 0;
-
-        li{
-          cursor: pointer;
-          height: 20px;
-
-          &:hover{
-            background-color: transparent;
-          }
-        }
       }
     }
 
@@ -66,19 +53,14 @@
       display: flex;
       align-items: center;
 
-      &:hover{
-        background-color: #f7f7f7;
-      }
-
       i{
         margin: 0 12px;
         font-size: 20px;
         color: #6a707e;
       }
 
-      >div{
+      > div{
         border-top: 1px solid #d8d8d8;
-        color: #6a707e;
         display: flex;
         flex: 1 0;
         flex-direction: row;
@@ -118,18 +100,23 @@
 
 /* THEME
    ----------------------------- */
-   @mixin themable($_THEME, $_COLOR_TEXT_SEARCH_HINT){
+   @mixin themable($_THEME, $_COLOR_TEXT_SEARCH_HINT, $_BACKGROUND_COLOR_SEARCH_HOVER){
     [data-theme^=#{$_THEME}],
     [data-theme] [data-theme^=#{$_THEME}] {
       .search-hints{
         .search-hints-success{
-          .search-recent{
-            i{
+          .search-recent,
+          .search-mail {
+            i {
               color: $_COLOR_TEXT_SEARCH_HINT;
             }
       
-            ul{
+            span {
               color: $_COLOR_TEXT_SEARCH_HINT;
+            }
+
+            &:hover {
+              background-color: $_BACKGROUND_COLOR_SEARCH_HOVER;
             }
           }
         }
@@ -137,6 +124,6 @@
     }
   }
     
-  @include themable($_THEME_LIGHT, $_COLOR_TEXT_SEARCH_HINT_LIGHT);
-  @include themable($_THEME_DARK, $_COLOR_TEXT_SEARCH_HINT_DARK);
+  @include themable($_THEME_LIGHT, $_COLOR_TEXT_SEARCH_HINT_LIGHT, $_BACKGROUND_COLOR_SEARCH_HOVER_LIGHT);
+  @include themable($_THEME_DARK, $_COLOR_TEXT_SEARCH_HINT_DARK, $_BACKGROUND_COLOR_SEARCH_HOVER_DARK);
   

@@ -575,11 +575,7 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
   if (plain) {
     return partThreadQueryByMatchText(queryDb, text);
   }
-  if (text) {
-    queryDb = queryDb
-      .andWhere('preview', 'like', `%${text}%`)
-      .andWhere('content', 'like', `%${text}%`);
-  }
+
   if (subject) {
     queryDb = queryDb.andWhere('subject', 'like', `%${subject}%`);
   }
@@ -623,16 +619,25 @@ const buildContactMatchQuery = (contactTypes, contactFilter) => {
   if (!contactFilter) {
     return `${Table.CONTACT}.id is not null`;
   }
-  return contactTypes.reduce((queryString, type) => {
-    const tempQuery = `(${Table.EMAIL_CONTACT}.type = "${type}" AND (${
-      Table.CONTACT
-    }.name LIKE "%${contactFilter[type]}%" OR ${Table.CONTACT}.email LIKE "%${
-      contactFilter[type]
-    }%"))`;
+  return contactTypes.sort().reduce((queryString, type) => {
+    let tempQuery;
+    const contactFilterValue = contactFilter[type];
+    if (type === 'from') {
+      tempQuery = `(${Table.EMAIL}.fromAddress LIKE "%${contactFilterValue}%")`;
+    } else {
+      const emailContactType = `${Table.EMAIL_CONTACT}.type = "${type}"`;
+      const contactNameLike = `${
+        Table.CONTACT
+      }.name LIKE "%${contactFilterValue}%"`;
+      const contactEmailLike = `${
+        Table.CONTACT
+      }.email LIKE "%${contactFilterValue}%"`;
+      tempQuery = `(${emailContactType} AND (${contactNameLike} OR ${contactEmailLike}))`;
+    }
     if (!queryString) {
       return tempQuery;
     }
-    return queryString + ' OR ' + tempQuery;
+    return `${queryString} OR ${tempQuery}`;
   }, '');
 };
 
@@ -742,14 +747,14 @@ const getQueryParamsIfOrNotRejectedLabel = ({ labelId, rejectedLabelIds }) => {
         whereRawParams: [labelId]
       }
     : {
-        labelsQuery: `GROUP_CONCAT(CASE WHEN ${
+        labelsQuery: `GROUP_CONCAT(DISTINCT(CASE WHEN ${
           Table.EMAIL_LABEL
         }.labelId <> ${labelId || -1} THEN ${
           Table.EMAIL_LABEL
-        }.labelId ELSE NULL END) as labels`,
-        allLabelsQuery: `GROUP_CONCAT(${
+        }.labelId ELSE NULL END)) as labels`,
+        allLabelsQuery: `GROUP_CONCAT(DISTINCT(${
           Table.EMAIL_LABEL
-        }.labelId) as allLabels`,
+        }.labelId)) as allLabels`,
         whereRawQuery: `NOT EXISTS (SELECT * FROM ${Table.EMAIL_LABEL} WHERE ${
           Table.EMAIL
         }.id = ${Table.EMAIL_LABEL}.emailId AND ${
@@ -814,7 +819,8 @@ const partThreadQueryByMatchText = (query, text) =>
   query.andWhere(function() {
     this.where('preview', 'like', `%${text}%`)
       .orWhere('content', 'like', `%${text}%`)
-      .orWhere('subject', 'like', `%${text}%`);
+      .orWhere('subject', 'like', `%${text}%`)
+      .orWhere('fromAddress', 'like', `%${text}%`);
   });
 
 const getEmailsUnredByLabelId = params => {

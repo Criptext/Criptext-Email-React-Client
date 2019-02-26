@@ -32,7 +32,6 @@ import {
   removeThreads,
   removeThreadsDrafts,
   removeThreadsSuccess,
-  searchThreads,
   sendOpenEvent,
   updateStatusThread
 } from './threads';
@@ -115,7 +114,6 @@ export {
   removeThreadsDrafts,
   removeThreadsSuccess,
   selectFeedItem,
-  searchThreads,
   sendOpenEvent,
   setAvatarUpdatedTimestamp,
   startLoadSync,

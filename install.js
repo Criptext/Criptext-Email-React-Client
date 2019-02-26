@@ -8,7 +8,6 @@ const abs = r => path.join(__dirname, r);
 const packageDirs = [
   abs('electron_app'),
   abs('email_composer'),
-  abs('email_dialog'),
   abs('email_loading'),
   abs('email_login'),
   abs('email_mailbox')
@@ -20,13 +19,13 @@ const installModules = cwd =>
     cp.on('exit', code => {
       code == 0
         ? resolve() 
-        : reject(`failed to install modules at ${cwd}. Yarn exited with code: ${code}`)
+        : reject(` Failed to install modules at ${cwd}.\n Yarn exited with code: ${code}`)
     });
   })
 
 const installations = Promise.all(packageDirs.map(installModules));
 
 installations.then(
-  () => console.log('Installed modules successfully'), 
+  () => console.log(' Installed modules successfully!'), 
   err => console.error(err)
 );

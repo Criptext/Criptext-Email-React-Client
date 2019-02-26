@@ -13,6 +13,7 @@ import { ButtonSyncType } from '../components/ButtonSync';
 import { LabelType } from './../utils/electronInterface';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
+import { storeValue } from '../utils/storage';
 import string from './../lang';
 
 const defineStatus = isSyncing => {
@@ -74,6 +75,12 @@ const defineParamsToLoadThread = (
   const contactFilter = searchParams
     ? { from: searchParams.from, to: searchParams.to }
     : undefined;
+  let plain, text, subject;
+  if (searchParams) {
+    text = searchParams.text;
+    subject = searchParams.subject;
+    plain = !!searchParams.text;
+  }
   const params =
     mailbox === 'search'
       ? {
@@ -82,8 +89,9 @@ const defineParamsToLoadThread = (
           date,
           contactTypes,
           contactFilter,
-          plain: true,
-          text: searchParams.text,
+          plain,
+          text,
+          subject,
           rejectedLabelIds,
           threadIdRejected
         }
@@ -125,7 +133,11 @@ const mapDispatchToProps = dispatch => {
         threadIdRejected,
         unread
       );
-      dispatch(loadThreads(params));
+      dispatch(loadThreads(params)).then(async () => {
+        if (mailbox === 'search' && params.plain) {
+          await storeValue(params.text);
+        }
+      });
     },
     onUnreadToggle: (
       checked,

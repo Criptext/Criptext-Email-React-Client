@@ -32,8 +32,8 @@ Clone this repository and run a few scripts:
 ``` bash
 git clone https://github.com/Criptext/Criptext-Email-React-Client
 cd Criptext-Email-React-Client
-node install.js # install dependencies
-node start.js # Run locally
+node install.js # Install dependencies
+node start.js   # Run locally
 ```
 
 On some directories, like `email_login` it is recommended to have a .env file 
@@ -49,7 +49,6 @@ Contributions are welcome. This project contains subdirectories according to eac
 * email_mailbox: contains the main view of the app which is made-up of the mailbox itself, settings, contacts, etc.
 * email_composer: contains the view and code that handles the window that edits new emails.
 * email_login: contains the views and code that handles user sign in and sign up.
-* email_dialog: contains various dialogs that pop up in the app.
 * email_loading: contains the views and code that handles spinners and progress bars between window transitions.
 
 
@@ -57,15 +56,15 @@ The main application logic is the `electron_app` dir.
 Before submitting any patches to the main application run the linter and tests:
 
 ``` bash
-yarn lint # Run the linter
-yarn test # Run unit tests
+yarn lint        # Run the linter
+yarn test        # Run unit tests
 yarn integration # Run integrations
 ```
 
 The other directories are React Apps built with [create-react-app](
 https://github.com/facebook/create-react-app) used as the UI of the main 
 application. Please note that they won't work on the browser because they 
-require electron APIs. Once again, Before submitting any patches run the linter 
+require electron APIs. Once again, before submitting any patches run the linter 
 and tests:
 
 ``` bash

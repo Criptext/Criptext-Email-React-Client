@@ -33,13 +33,6 @@ const tasks = [
     cwd: abs('./email_composer')
   },
   {
-    ...startDevServer,
-    cwd: abs('./email_dialog'),
-    env: {
-      PORT: '3006',
-    }
-  },
-  {
     ...runSass,
     cwd: abs('./email_dialog')
   },
