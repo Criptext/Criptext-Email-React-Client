@@ -575,11 +575,7 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
   if (plain) {
     return partThreadQueryByMatchText(queryDb, text);
   }
-  if (text) {
-    queryDb = queryDb
-      .andWhere('preview', 'like', `%${text}%`)
-      .andWhere('content', 'like', `%${text}%`);
-  }
+
   if (subject) {
     queryDb = queryDb.andWhere('subject', 'like', `%${subject}%`);
   }
@@ -751,14 +747,14 @@ const getQueryParamsIfOrNotRejectedLabel = ({ labelId, rejectedLabelIds }) => {
         whereRawParams: [labelId]
       }
     : {
-        labelsQuery: `GROUP_CONCAT(CASE WHEN ${
+        labelsQuery: `GROUP_CONCAT(DISTINCT(CASE WHEN ${
           Table.EMAIL_LABEL
         }.labelId <> ${labelId || -1} THEN ${
           Table.EMAIL_LABEL
-        }.labelId ELSE NULL END) as labels`,
-        allLabelsQuery: `GROUP_CONCAT(${
+        }.labelId ELSE NULL END)) as labels`,
+        allLabelsQuery: `GROUP_CONCAT(DISTINCT(${
           Table.EMAIL_LABEL
-        }.labelId) as allLabels`,
+        }.labelId)) as allLabels`,
         whereRawQuery: `NOT EXISTS (SELECT * FROM ${Table.EMAIL_LABEL} WHERE ${
           Table.EMAIL
         }.id = ${Table.EMAIL_LABEL}.emailId AND ${

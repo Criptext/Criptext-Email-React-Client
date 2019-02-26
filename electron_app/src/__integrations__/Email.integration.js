@@ -211,6 +211,29 @@ const emailUpdate = {
   labels: [3]
 };
 
+const emailToSearch = {
+  email: {
+    threadId: 'threadIdSearch',
+    key: 'keyI',
+    s3Key: 's3KeyI',
+    subject: 'Lorem ipsum is amet',
+    content: '<p>Find me!</p>',
+    preview: 'Find me!',
+    date: '2019-02-26 16:55:25.000',
+    status: 1,
+    unread: true,
+    secure: true,
+    isMuted: false,
+    messageId: 'messageIdI',
+    fromAddress: 'Alice <alice@criptext.com>'
+  },
+  recipients: {
+    from: ['Alice <alice@criptext.com>'],
+    to: ['bob@criptext.com']
+  },
+  labels: [6]
+};
+
 const insertEmails = async () => {
   await DBManager.createEmail(emailDraft);
   await DBManager.createEmail(emailSent);
@@ -219,6 +242,7 @@ const insertEmails = async () => {
   await DBManager.createEmail(emailSpam);
   await DBManager.createEmail(emailStarred);
   await DBManager.createEmail(emailUpdate);
+  await DBManager.createEmail(emailToSearch);
 };
 
 beforeAll(async () => {
@@ -438,6 +462,51 @@ describe('Load data thread from Email Table:', () => {
       moreParams
     );
     expect(moreLastThreads).toEqual([]);
+  });
+
+  it('should load threads from DB with the correct shape: search', async () => {
+    const threadIdToSearch = emailToSearch.email.threadId;
+    const plainParamsSubject = {
+      plain: true,
+      text: 'Find me',
+      labelId: -1,
+      rejectedLabelIds: [2, 7]
+    };
+    const plainParamsPreview = {
+      plain: true,
+      text: 'Lorem',
+      labelId: -1,
+      rejectedLabelIds: [2, 7]
+    };
+    const specificParamsFrom = {
+      contactFilter: { from: 'Alice' },
+      contactTypes: ['from'],
+      labelId: -1,
+      rejectedLabelIds: [2, 7]
+    };
+    const specificParamsTo = {
+      contactFilter: { to: 'bob' },
+      contactTypes: ['to'],
+      labelId: -1,
+      rejectedLabelIds: [2, 7]
+    };
+    const [plainSubjectFound] = await DBManager.getEmailsGroupByThreadByParams(
+      plainParamsSubject
+    );
+    const [plainPreviewFound] = await DBManager.getEmailsGroupByThreadByParams(
+      plainParamsPreview
+    );
+    const [specificFromFound] = await DBManager.getEmailsGroupByThreadByParams(
+      specificParamsFrom
+    );
+    const [specificToFound] = await DBManager.getEmailsGroupByThreadByParams(
+      specificParamsTo
+    );
+
+    expect(plainSubjectFound.threadId).toBe(threadIdToSearch);
+    expect(plainPreviewFound.threadId).toBe(threadIdToSearch);
+    expect(specificFromFound.threadId).toBe(threadIdToSearch);
+    expect(specificToFound.threadId).toBe(threadIdToSearch);
   });
 });
 
