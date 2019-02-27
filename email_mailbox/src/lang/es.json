@@ -33,9 +33,10 @@
   "header": {
     "add_labels": "Agregar etiquetas",
     "archive": "Archivar",
+    "back": "Atrás",
     "delete": "Eliminar",
     "discard_drafts": "Descartar borradores",
-    "dismiss": "Atrás",
+    "dismiss": "Descartar",
     "move_to": "Mover a",
     "move_to_inbox": "Mover a Recibidos",
     "restore": "Restaurar",

@@ -26,7 +26,7 @@ class ThreadItemWrapper extends Component {
   }
 
   handleIsVisibleMoveToTrash = () => {
-    const currentLabelId = LabelType[this.props.mailbox].id;
+    const currentLabelId = this.props.mailbox.id;
     const isDraftMailbox = currentLabelId === LabelType.draft.id;
     const isTrashMailbox = currentLabelId === LabelType.trash.id;
     const isSpamMailbox = currentLabelId === LabelType.spam.id;
@@ -55,7 +55,7 @@ class ThreadItemWrapper extends Component {
 }
 
 ThreadItemWrapper.propTypes = {
-  mailbox: PropTypes.string,
+  mailbox: PropTypes.object,
   onAddMoveLabel: PropTypes.func,
   onAddOrRemoveLabel: PropTypes.func
 };

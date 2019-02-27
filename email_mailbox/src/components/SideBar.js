@@ -25,11 +25,15 @@ const SideBar = props => (
       <nav className="nav-main">
         <ul>
           {props.items.map((item, key) => {
-            const selected = item.idText === props.mailboxSelected;
+            const selected = item.text === props.mailboxSelected.text;
+            const mailboxSelected = {
+              id: item.id,
+              text: item.text
+            };
             return (
               <SideBarItem
                 onClick={() => {
-                  props.onClickSection(item.idText);
+                  props.onClickSection(mailboxSelected);
                 }}
                 key={key}
                 item={item}
@@ -60,7 +64,12 @@ const SideBar = props => (
                 />
               </div>
             </div>
-            {renderLabels(props.showLabels, props.labels)}
+            {renderLabels(
+              props.showLabels,
+              props.labels,
+              props.mailboxSelected,
+              props.onClickSection
+            )}
           </li>
         </ul>
       </nav>
@@ -94,11 +103,19 @@ const SideBar = props => (
   </aside>
 );
 
-const renderLabels = (showLabels, labels) => (
+const renderLabels = (showLabels, labels, mailboxSelected, onClickSection) => (
   <ul>
     {showLabels &&
       labels.map((label, key) => {
-        return <SideBarLabelItem key={key} label={label} />;
+        const selected = label.text === mailboxSelected.text;
+        return (
+          <SideBarLabelItem
+            key={key}
+            label={label}
+            selected={selected}
+            onClickSection={onClickSection}
+          />
+        );
       })}
     {showLabels && <LabelAdd />}
   </ul>
@@ -107,9 +124,10 @@ const renderLabels = (showLabels, labels) => (
 SideBar.propTypes = {
   items: PropTypes.array,
   labels: PropTypes.object,
-  mailboxSelected: PropTypes.string,
+  mailboxSelected: PropTypes.object,
   onClickComposeContactSupportEmail: PropTypes.func,
   onClickInviteFriend: PropTypes.func,
+  onClickSection: PropTypes.func,
   onClickSettings: PropTypes.func,
   onToggleShowLabelView: PropTypes.func,
   onToggleSideBar: PropTypes.func,

@@ -71,7 +71,7 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   isVisibleArchiveButton = () => {
-    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    const currentLabelId = this.props.mailboxSelected.id;
     return (
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
@@ -80,12 +80,12 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   isVisibleMoveToInboxButton = () => {
-    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    const currentLabelId = this.props.mailboxSelected.id;
     return currentLabelId === LabelType.allmail.id;
   };
 
   isVisibleRestoreButton = () => {
-    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    const currentLabelId = this.props.mailboxSelected.id;
     return (
       currentLabelId === LabelType.trash.id ||
       currentLabelId === LabelType.spam.id
@@ -93,7 +93,7 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   isVisibleSpamButton = () => {
-    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    const currentLabelId = this.props.mailboxSelected.id;
     return (
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
@@ -104,7 +104,7 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   isVisibleTrashButton = () => {
-    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    const currentLabelId = this.props.mailboxSelected.id;
     return (
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
@@ -114,7 +114,7 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   isVisibleDeleteButton = () => {
-    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    const currentLabelId = this.props.mailboxSelected.id;
     return (
       currentLabelId === LabelType.spam.id ||
       currentLabelId === LabelType.trash.id
@@ -122,7 +122,7 @@ class HeaderThreadOptionsWrapper extends Component {
   };
 
   isVisibleDiscardDraftsButton = () => {
-    const currentLabelId = LabelType[this.props.mailboxSelected].id;
+    const currentLabelId = this.props.mailboxSelected.id;
     return currentLabelId === LabelType.draft.id;
   };
 
@@ -187,7 +187,7 @@ class HeaderThreadOptionsWrapper extends Component {
 
   handleClickRestore = () => {
     const LabelIdToDelete =
-      LabelType[this.props.mailboxSelected].id === LabelType.trash.id
+      this.props.mailboxSelected.id === LabelType.trash.id
         ? LabelType.trash.id
         : LabelType.spam.id;
     this.props.onRemoveLabel(this.props.threadsSelected, LabelIdToDelete);
@@ -206,7 +206,7 @@ class HeaderThreadOptionsWrapper extends Component {
 }
 
 HeaderThreadOptionsWrapper.propTypes = {
-  mailboxSelected: PropTypes.string,
+  mailboxSelected: PropTypes.object,
   markAsUnread: PropTypes.bool,
   onAddLabel: PropTypes.func,
   onAddMoveLabel: PropTypes.func,

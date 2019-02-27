@@ -133,7 +133,6 @@ class ThreadsWrapper extends Component {
     const checked = ev.target.checked;
     this.setState({ switchStatus: UNREAD_SWITCH_STATUS.DISABLED }, async () => {
       const { currentUnreadThreadsLength, mailboxSelected } = this.props;
-      const mailbox = mailboxSelected;
       const loadParams = {
         clear: true,
         unread: checked === true ? checked : undefined
@@ -141,7 +140,7 @@ class ThreadsWrapper extends Component {
       await this.props.onUnreadToggle(
         checked,
         currentUnreadThreadsLength,
-        mailbox,
+        mailboxSelected,
         loadParams
       );
       this.setState({ switchStatus: UNREAD_SWITCH_STATUS.ENABLED });
@@ -164,7 +163,7 @@ class ThreadsWrapper extends Component {
 ThreadsWrapper.propTypes = {
   currentUnreadThreadsLength: PropTypes.number,
   isUpdateAvailable: PropTypes.bool,
-  mailboxSelected: PropTypes.string,
+  mailboxSelected: PropTypes.object,
   onBackOption: PropTypes.func,
   onCloseUpdateMessage: PropTypes.func,
   onEmptyTrash: PropTypes.func,

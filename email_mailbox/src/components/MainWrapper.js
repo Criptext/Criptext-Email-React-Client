@@ -172,14 +172,7 @@ class MainWrapper extends Component {
     this.setState({ isUpdateAvailable: false });
   };
 
-  initEventHandlers = props => {
-    addEvent(Event.THREADS_DELETED, () => {
-      this.handleClickBackHeaderThread(
-        props.sectionSelected.params.mailboxSelected,
-        props.onClickSection
-      );
-    });
-
+  initEventHandlers = () => {
     addEvent(Event.UPDATE_AVAILABLE, ({ value }) => {
       if (value) {
         this.setState({ isUpdateAvailable: value });

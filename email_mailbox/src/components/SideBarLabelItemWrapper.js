@@ -17,6 +17,7 @@ class SideBarLabelItemWrapper extends Component {
         isEditable={this.state.isEditable}
         onBlur={this.handleOnBlur}
         onChange={this.handleOnChange}
+        onClick={this.handleOnClick}
         onDoubleClick={this.handleOnDoubleClick}
         onKeyPress={this.handleOnKeyPress}
         textEditable={this.state.textEditable}
@@ -24,15 +25,6 @@ class SideBarLabelItemWrapper extends Component {
       />
     );
   }
-
-  handleOnDoubleClick = () => {
-    if (this.props.label.type === 'none') {
-      this.setState({
-        isEditable: true,
-        textEditable: this.props.label.text
-      });
-    }
-  };
 
   handleOnBlur = () => {
     this.setState({
@@ -42,6 +34,23 @@ class SideBarLabelItemWrapper extends Component {
 
   handleOnChange = e => {
     this.setState({ textEditable: e.target.value });
+  };
+
+  handleOnClick = () => {
+    const mailboxSelected = {
+      id: this.props.label.id,
+      text: this.props.label.text
+    };
+    this.props.onClickSection(mailboxSelected);
+  };
+
+  handleOnDoubleClick = () => {
+    if (this.props.label.type === 'none') {
+      this.setState({
+        isEditable: true,
+        textEditable: this.props.label.text
+      });
+    }
   };
 
   handleOnKeyPress = e => {
@@ -58,6 +67,7 @@ class SideBarLabelItemWrapper extends Component {
 }
 
 SideBarLabelItemWrapper.propTypes = {
+  onClickSection: PropTypes.func,
   onUpdateLabel: PropTypes.func,
   label: PropTypes.object
 };

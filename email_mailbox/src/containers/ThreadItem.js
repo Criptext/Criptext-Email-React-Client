@@ -143,7 +143,8 @@ const mapStateToProps = (state, ownProps) => {
       ownProps.thread.get('emailIds').size
     )
   });
-  const mailboxlId = LabelType[ownProps.mailbox].id;
+  const isLabelCustome = !LabelType[ownProps.mailbox];
+  const mailboxlId = isLabelCustome ? null : LabelType[ownProps.mailbox].id;
   const labelsToExclude = defineLabelsToExcludeByMailbox(mailboxlId);
   const labels = defineLabels(
     thread.get('labels'),
@@ -174,7 +175,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const currentLabelId = LabelType[ownProps.mailbox].id;
+  const currentLabelId = ownProps.mailbox.id;
   return {
     onSelectThread: thread => {
       const threadIdDb = thread.threadId;
@@ -202,7 +203,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         case LabelType.allmail.id: {
           const { allLabels } = thread;
           const draftLabelId = LabelType.draft.id;
-          if (ownProps.mailbox === 'search') {
+          if (ownProps.mailbox.text === 'Search') {
             ownProps.onClickSelectedItem(type, {
               ...params,
               searchParams: ownProps.searchParams

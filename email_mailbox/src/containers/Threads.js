@@ -34,10 +34,9 @@ const defineContactType = (labelId, from, to) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const mailboxIdText = toLowerCaseWithoutSpaces(
-    LabelType[ownProps.mailboxSelected].text
-  );
-  const mailboxTitle = string.labelsItems[mailboxIdText];
+  const mailboxIdText = toLowerCaseWithoutSpaces(ownProps.mailboxSelected.text);
+  const mailboxTitle =
+    string.labelsItems[mailboxIdText] || ownProps.mailboxSelected.text;
   const switchUnreadThreadsStatus = state
     .get('activities')
     .get('isFilteredByUnreadThreads');
@@ -65,7 +64,7 @@ const defineParamsToLoadThread = (
   threadIdRejected,
   unread
 ) => {
-  const labelId = LabelType[mailbox].id;
+  const labelId = mailbox.id;
   const contactTypes = defineContactType(
     labelId,
     searchParams ? searchParams.from : null,
@@ -82,7 +81,7 @@ const defineParamsToLoadThread = (
     plain = !!searchParams.text;
   }
   const params =
-    mailbox === 'search'
+    mailbox.text === 'Search'
       ? {
           labelId,
           clear,
@@ -145,7 +144,7 @@ const mapDispatchToProps = dispatch => {
       mailbox,
       loadParams
     ) => {
-      const labelId = LabelType[mailbox].id;
+      const labelId = mailbox.id;
       const rejectedLabelIds = defineRejectedLabels(labelId);
       const contactTypes = defineContactType(labelId, null, null);
       const paramsToLoadMoreThreads = {

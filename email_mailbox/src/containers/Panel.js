@@ -4,7 +4,6 @@ import {
   loadEmails,
   loadEvents,
   loadThreads,
-  removeThreadsSuccess,
   updateBadgeLabels,
   updateEmailIdsThread,
   updateAllFeedItemsAsOlder,
@@ -53,9 +52,6 @@ const mapDispatchToProps = dispatch => {
     },
     onMarkThreadAsOpen: (threadId, status) => {
       dispatch(updateStatusThread(threadId, Number(status)));
-    },
-    onRemoveThreads: threadIds => {
-      dispatch(removeThreadsSuccess(threadIds));
     },
     onStopLoadSync: () => {
       dispatch(stopLoadSync());

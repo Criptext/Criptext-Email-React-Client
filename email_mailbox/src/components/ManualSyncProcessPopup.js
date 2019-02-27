@@ -209,7 +209,11 @@ class ManualSyncProcessPopup extends Component {
                 clearSyncData();
                 await setTimeout(() => {
                   this.props.onHideSettingsPopup();
-                  sendSetSectionTypeEvent(SectionType.MAILBOX, 'inbox');
+                  const mailboxSelected = {
+                    id: 1,
+                    text: 'Inbox'
+                  };
+                  sendSetSectionTypeEvent(SectionType.MAILBOX, mailboxSelected);
                   setTimeout(() => {
                     sendManualSyncSuccessMessage();
                   }, SHOW_SUCCESS_MESSAGE_DELAY);

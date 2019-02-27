@@ -372,7 +372,6 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     };
     await createEmail(emailData);
   } else {
-    const labelIds = [];
     const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
     const prevLabels = prevEmailLabels.map(item => item.labelId);
 
@@ -403,7 +402,12 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       threadId
     });
   }
-  return { rowid, labelIds, threadIds: threadId ? [threadId] : null };
+  const labelIdsFiltered = isSpam ? [LabelType.spam.id] : labelIds;
+  return {
+    rowid,
+    labelIds: labelIdsFiltered,
+    threadIds: threadId ? [threadId] : null
+  };
 };
 
 const addEmailToNotificationList = ({
@@ -507,9 +511,13 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
       unread: !!unread
     });
     if (res) {
-      return { rowid, threadIds: [emails[0].threadId] };
+      return {
+        rowid,
+        threadIds: [emails[0].threadId],
+        badgeLabelIds: [LabelType.inbox.id, LabelType.spam.id]
+      };
     }
-    return { rowid: null, threadIds: [] };
+    return { rowid: null };
   }
   return { rowid };
 };
@@ -558,9 +566,13 @@ const handlePeerThreadRead = async ({ rowid, params }) => {
     unread: !!unread
   });
   if (res) {
-    return { rowid, threadIds };
+    return {
+      rowid,
+      threadIds,
+      badgeLabelIds: [LabelType.inbox.id, LabelType.spam.id]
+    };
   }
-  return { rowid: null, threadIds: [] };
+  return { rowid: null };
 };
 
 const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
@@ -1156,10 +1168,7 @@ export const Event = {
   DEVICE_REMOVED: 'device-removed',
   DISABLE_WINDOW: 'add-window-overlay',
   DISPLAY_MESSAGE: 'display-message',
-  EMAIL_DELETED: 'email-deleted-permanently',
-  EMAIL_MOVE_TO: 'email-move-to',
   ENABLE_WINDOW: 'remove-window-overlay',
-  LABEL_CREATED: 'label-created',
   LINK_DEVICE_END: 'link-devices-finished',
   LINK_DEVICE_GETTING_KEYS: 'getting-keys',
   LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
@@ -1175,6 +1184,5 @@ export const Event = {
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
   STOP_LOAD_SYNC: 'stop-load-sync',
-  THREADS_DELETED: 'thread-deleted-permanently',
-  UPDATE_EMAILS: 'update-emails'
+  UPDATE_THREAD_EMAILS: 'update-thread-emails'
 };

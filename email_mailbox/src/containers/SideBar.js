@@ -9,9 +9,14 @@ import string from './../lang';
 const defineLabels = labels => {
   return labels
     .valueSeq()
-    .filter(
-      element => element.get('type') === 'custom' && element.get('visible')
-    );
+    .filter(label => label.get('type') === 'custom' && label.get('visible'))
+    .map(label => {
+      return {
+        id: label.get('id'),
+        color: label.get('color'),
+        text: label.get('text')
+      };
+    });
 };
 
 const defineSideBarItems = labels => {
@@ -21,7 +26,7 @@ const defineSideBarItems = labels => {
     .map(label => {
       const idText = toLowerCaseWithoutSpaces(label.get('text'));
       return {
-        idText,
+        id: label.get('id'),
         icon: IconLabels[label.get('id')]
           ? IconLabels[label.get('id')].icon
           : 'icon-tag',
@@ -32,7 +37,6 @@ const defineSideBarItems = labels => {
     .toJS();
   const allMailIdText = toLowerCaseWithoutSpaces(IconLabels.allmail.text);
   const allMailItem = {
-    idText: allMailIdText,
     icon: IconLabels.allmail.icon,
     text: string.labelsItems[allMailIdText]
   };

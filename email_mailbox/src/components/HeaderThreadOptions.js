@@ -123,7 +123,9 @@ class HeaderThreadOptions extends Component {
     <div className="header-action">
       <ButtonCircle
         onClick={() => this.props.onBackOption()}
-        tip={string.header.dismiss}
+        tip={
+          this.props.itemsChecked ? string.header.dismiss : string.header.back
+        }
         enableTip={true}
         icon="icon-back"
         targetName="actionDismiss"
