@@ -170,17 +170,17 @@ const formRecipientObject = contact => {
 const formReplyForwardContent = (replyType, subject, date, from, to, body) => {
   let content = '';
   if (replyType === composerEvents.FORWARD) {
-    content = `<section class="criptext_quote">${formForwardHeader(
+    content = `<div class="criptext_quote">${formForwardHeader(
       subject,
       date,
       from,
       to
-    )}${body}</section>`;
+    )}${body}</div>`;
   } else {
-    content = `<section class="criptext_quote">${formReplyHeader(
+    content = `<div class="criptext_quote">${formReplyHeader(
       date,
       from
-    )}<blockquote style="margin:10px 0 0 10px;padding-left: 10px;border-left:1px #0091ff solid;">${body}</blockquote></section>`;
+    )}<blockquote style="margin:10px 0 0 10px;padding-left: 10px;border-left:1px #0091ff solid;">${body}</blockquote></div>`;
   }
 
   return `${insertEmptyLine(2)}${content}${formSignature()}`;

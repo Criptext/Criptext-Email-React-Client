@@ -77,7 +77,7 @@ class EmailWrapper extends Component {
 
   setCollapseListener = () => {
     const divCollapse = document.getElementById(
-      `div-collapse-${this.props.email.key}`
+      `cptx-div-collapse-${this.props.email.key}`
     );
     const blockquote = document.getElementById(
       `blockquote-${this.props.email.key}`
@@ -85,9 +85,13 @@ class EmailWrapper extends Component {
     if (divCollapse && blockquote) {
       divCollapse.addEventListener('click', function() {
         if (blockquote.style.display === 'block') {
+          divCollapse.classList.remove('cptx-div-expanded');
+          divCollapse.classList.add('cptx-div-collapsed');
           blockquote.style.display = 'none';
         } else {
           blockquote.style.display = 'block';
+          divCollapse.classList.remove('cptx-div-collapsed');
+          divCollapse.classList.add('cptx-div-expanded');
         }
       });
     }
