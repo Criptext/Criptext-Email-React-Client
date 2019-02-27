@@ -25,7 +25,9 @@ const SideBar = props => (
       <nav className="nav-main">
         <ul>
           {props.items.map((item, key) => {
-            const selected = item.text === props.mailboxSelected.text;
+            const selected = props.mailboxSelected
+              ? item.text === props.mailboxSelected.text
+              : false;
             const mailboxSelected = {
               id: item.id,
               text: item.text

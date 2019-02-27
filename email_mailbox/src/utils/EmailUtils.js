@@ -144,9 +144,11 @@ export const addCollapseDiv = (htmlString, key, isCollapse) => {
     const i = document.createElement('i');
     i.className = 'icon-dots';
     const div = document.createElement('div');
-    div.className = 'div-collapse';
+    div.className = `cptx-div-collapse ${
+      isCollapse ? 'cptx-div-collapsed' : 'cptx-div-expanded'
+    }`;
     div.appendChild(i);
-    div.setAttribute('id', `div-collapse-${key}`);
+    div.setAttribute('id', `cptx-div-collapse-${key}`);
     blockquote.parentElement.insertBefore(div, blockquote);
     blockquote.style.display = isCollapse ? 'none' : 'block';
     blockquote.setAttribute('id', `blockquote-${key}`);

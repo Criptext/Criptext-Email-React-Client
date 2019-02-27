@@ -30,7 +30,7 @@ const Email = props => (
       />
     )}
     <div
-      className={`email-container ${defineEmailState(
+      className={`cptx-email-container ${defineEmailState(
         props.displayEmail,
         props.staticOpen
       )} ${defineEmailType(props.isUnsend, props.isDraft, props.isEmpty)}`}
