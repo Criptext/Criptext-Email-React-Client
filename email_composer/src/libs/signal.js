@@ -6,14 +6,7 @@ import {
 } from './../utils/ipc';
 import SignalProtocolStore from './store';
 import { CustomError } from './../utils/CustomError';
-import {
-  AesEncrypt,
-  generateKeyAndIv,
-  base64ToWordArray,
-  wordArrayToByteArray,
-  wordArrayToBase64,
-  byteArrayToWordArray
-} from '../utils/AESUtils';
+import { generateKeyAndIv, encryptDummySession } from '../utils/AESUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 import { noNulls } from './../utils/ObjectUtils';
 import {
@@ -379,41 +372,23 @@ const encryptExternalEmail = async ({
     signedPreKeySignature: sessionParams.signedPreKey.signature
   };
   const keyBundleArrayBuffer = await keysToArrayBuffer(keys);
-
   const encryptedBody = await encryptText(
     recipient,
     deviceId,
     body,
     keyBundleArrayBuffer
   );
-
-  const saltLength = 8;
-  const { key, iv, salt } = generateKeyAndIv(externalEmailPassword, saltLength);
-  const saltWArray = base64ToWordArray(salt);
-  const ivWArray = base64ToWordArray(iv);
-  const keyWArray = base64ToWordArray(key);
-
-  const dummySessionString = JSON.stringify(dummySession);
-  const encryptedSessionWArray = AesEncrypt(
-    dummySessionString,
-    keyWArray,
-    ivWArray
-  );
-  const saltBArray = wordArrayToByteArray(saltWArray);
-  const ivBArray = wordArrayToByteArray(ivWArray);
-  const encryptedSessionBArray = wordArrayToByteArray(encryptedSessionWArray);
-  const sessionByteArray = saltBArray.concat(
-    ivBArray.concat(encryptedSessionBArray)
-  );
-
-  const sessionWordArray = byteArrayToWordArray(sessionByteArray);
-  const session = wordArrayToBase64(sessionWordArray);
+  const { key, iv, salt } = generateKeyAndIv(externalEmailPassword);
+  const session = encryptDummySession({
+    dummyString: JSON.stringify(dummySession),
+    keyB64: key,
+    IvB64: iv,
+    saltB64: salt
+  });
   return {
     session,
     encryptedBody: encryptedBody.body
   };
 };
 
-export default {
-  encryptPostEmail
-};
+export { encryptPostEmail as default, createDummyKeyBundle };
