@@ -3,11 +3,7 @@ import PropTypes from 'prop-types';
 import './sidebarlabelitem.scss';
 
 const SideBarLabelItem = props => (
-  <li
-    className={
-      props.selected ? 'nav-item-label nav-item-selected' : 'nav-item-label'
-    }
-  >
+  <li className={defineClassComponent(props.selected)}>
     <div style={{ backgroundColor: props.label.color }} />
     {props.isEditable ? (
       <input
@@ -28,6 +24,10 @@ const SideBarLabelItem = props => (
     )}
   </li>
 );
+
+const defineClassComponent = selected => {
+  return `nav-item-label ${selected && 'nav-item-selected'}`;
+};
 
 SideBarLabelItem.propTypes = {
   isEditable: PropTypes.bool,
