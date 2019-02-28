@@ -9,9 +9,6 @@
       &.default-empty-mailbox {
         background-image: url(../#{$_PATH_TO_IMAGES}/default-empty-mailbox.svg);
       }
-      &.empty-search {
-        background-image: url(../#{$_PATH_TO_IMAGES}/empty-search.svg);
-      }
     }
   }
 }
@@ -45,6 +42,9 @@
           }
           &.empty-allmail {
             background-image: url(../#{$_PATH_TO_IMAGES}/empty-allmail-#{$_THEME}.svg);
+          }
+          &.empty-search {
+            background-image: url(../#{$_PATH_TO_IMAGES}/empty-search-#{$_THEME}.svg);
           }
         }
       }
