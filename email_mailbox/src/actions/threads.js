@@ -478,10 +478,10 @@ export const loadThreads = params => {
   };
 };
 
-export const loadEvents = () => {
+export const loadEvents = ({ showNotification }) => {
   return async dispatch => {
     dispatch(startLoadSync());
-    await getGroupEvents();
+    await getGroupEvents({ showNotification });
   };
 };
 

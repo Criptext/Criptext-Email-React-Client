@@ -37,7 +37,8 @@ import {
   updateEmail,
   updateEmails,
   updateFilesByEmailId,
-  updateUnreadEmailByThreadIds
+  updateUnreadEmailByThreadIds,
+  updatePushToken
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -65,6 +66,12 @@ import string from './../lang';
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
 const { ipcRenderer, remote } = electron;
+const {
+  START_NOTIFICATION_SERVICE,
+  NOTIFICATION_RECEIVED,
+  TOKEN_UPDATED
+} = remote.require('electron-push-receiver/src/constants');
+const senderNotificationId = '73243261136';
 const emitter = new EventEmitter();
 let isGettingEvents = false;
 let newEmailNotificationList = [];
@@ -74,8 +81,11 @@ let badgeLabelIdsEvent = new Set();
 let labelsEvent = {};
 let avatarHasChanged = false;
 
-export const getGroupEvents = async isContinued => {
-  if (isGettingEvents && !isContinued) return;
+export const getGroupEvents = async ({
+  shouldGetMoreEvents,
+  showNotification
+}) => {
+  if (isGettingEvents && !shouldGetMoreEvents) return;
 
   isGettingEvents = true;
   const { events, hasMoreEvents } = await getEvents();
@@ -129,9 +139,6 @@ export const getGroupEvents = async isContinued => {
   const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
   if (rowIdsFiltered.length) {
     await setEventAsHandled(rowIdsFiltered);
-    const mailboxIsFocus = remote.getCurrentWindow().isFocused();
-    if (!mailboxIsFocus) sendNewEmailNotification();
-    await updateOwnContact();
 
     const labelIds = labelIdsEvent.size ? Array.from(labelIdsEvent) : null;
     const threadIds = threadIdsEvent.size ? Array.from(threadIdsEvent) : null;
@@ -153,11 +160,18 @@ export const getGroupEvents = async isContinued => {
       hasStopLoad
     });
   }
-  if (hasMoreEvents) {
-    await getGroupEvents(hasMoreEvents);
+  if (!hasMoreEvents) {
+    await updateOwnContact();
+    if (showNotification) {
+      sendNewEmailNotification();
+    }
+    isGettingEvents = false;
     return;
   }
-  isGettingEvents = false;
+  await getGroupEvents({
+    shouldGetMoreEvents: hasMoreEvents,
+    showNotification
+  });
 };
 
 export const handleEvent = incomingEvent => {
@@ -756,14 +770,14 @@ const setEventAsHandled = async eventIds => {
 
 /*  Window events: listener
 ----------------------------- */
-export const sendLoadEventsEvent = () => {
-  emitter.emit(Event.LOAD_EVENTS, {});
+export const sendLoadEventsEvent = params => {
+  emitter.emit(Event.LOAD_EVENTS, params);
 };
 
 ipcRenderer.on('socket-message', async (ev, message) => {
   const eventId = message.cmd;
   if (eventId === 400) {
-    sendLoadEventsEvent();
+    sendLoadEventsEvent({ showNotification: true });
   } else {
     const { rowid } = await handleEvent(message);
     if (rowid) {
@@ -773,7 +787,7 @@ ipcRenderer.on('socket-message', async (ev, message) => {
 });
 
 ipc.answerMain('get-events', () => {
-  sendLoadEventsEvent();
+  sendLoadEventsEvent({});
 });
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
@@ -1147,8 +1161,20 @@ export const sendManualSyncSuccessMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+/*  Firebase
+----------------------------- */
+ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
+  await updatePushToken(token);
+});
+
+ipcRenderer.on(NOTIFICATION_RECEIVED, () => {
+  sendLoadEventsEvent({ showNotification: true });
+});
+
+ipcRenderer.send(START_NOTIFICATION_SERVICE, senderNotificationId);
+
 ipcRenderer.on('open-thread-by-notification', (ev, { threadId }) => {
-  emitter.emit(Event.OPEN_THREAD, { threadId, mailbox: 'inbox' });
+  emitter.emit(Event.OPEN_THREAD, { threadId });
 });
 
 export const addEvent = (eventName, callback) => {

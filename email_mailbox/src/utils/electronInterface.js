@@ -1,20 +1,9 @@
 import { labels } from './systemLabels';
-import {
-  cleanDataLogout as cleanData,
-  createSignalTables,
-  updatePushToken
-} from './ipc';
+import { cleanDataLogout as cleanData, createSignalTables } from './ipc';
 
-const electron = window.require('electron');
-const { remote, ipcRenderer } = electron;
+const { remote } = window.require('electron');
 const { getCurrentWindow } = remote;
 const newsClient = remote.require('./src/newsClient');
-const {
-  START_NOTIFICATION_SERVICE,
-  NOTIFICATION_RECEIVED,
-  TOKEN_UPDATED
-} = remote.require('electron-push-receiver/src/constants');
-const senderNotificationId = '73243261136';
 
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
@@ -62,18 +51,3 @@ export const cleanDataLogout = async recipientId => {
   await cleanData(recipientId);
   return createSignalTables();
 };
-
-/*  Firebase
------------------------------ */
-ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
-  await updatePushToken(token);
-});
-
-ipcRenderer.on(NOTIFICATION_RECEIVED, (_, notificationPayload) => {
-  const EventEmitter = window.require('events');
-  const emitter = new EventEmitter();
-  const LOAD_EVENTS = 'load-events';
-  emitter.emit(LOAD_EVENTS, notificationPayload);
-});
-
-ipcRenderer.send(START_NOTIFICATION_SERVICE, senderNotificationId);

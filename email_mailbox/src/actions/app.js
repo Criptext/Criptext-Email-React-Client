@@ -43,6 +43,6 @@ export const loadApp = params => {
     const thread = addThreads(threads, true);
 
     dispatch(addDataApp({ activity, contact, label, feeditem, thread }));
-    await getGroupEvents();
+    await getGroupEvents({});
   };
 };
