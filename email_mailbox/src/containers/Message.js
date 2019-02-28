@@ -107,8 +107,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
       }
     },
-    onOpenThreadInMailbox: async ({ mailbox, threadId }) => {
-      const labelId = LabelType[mailbox].id;
+    onOpenThreadInMailbox: async ({ threadId }) => {
+      const labelId = LabelType.inbox.id;
       const unread = false;
       const loadThreadsParams = {
         labelId,
@@ -117,7 +117,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       };
       const threadType = SectionType.THREAD;
       const openThreadParams = {
-        mailboxSelected: mailbox,
+        mailboxSelected: {
+          id: 1,
+          text: 'Inbox'
+        },
         threadIdSelected: threadId
       };
       await dispatch(loadThreads(loadThreadsParams));

@@ -196,8 +196,8 @@ class MessageWrapper extends Component {
     clearTimeout(this.clearMessageTimeout);
   };
 
-  handleOpenThreadEvent = async ({ mailbox, threadId }) => {
-    await this.props.onOpenThreadInMailbox({ mailbox, threadId });
+  handleOpenThreadEvent = async ({ threadId }) => {
+    await this.props.onOpenThreadInMailbox({ threadId });
   };
 }
 
