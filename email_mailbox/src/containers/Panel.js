@@ -41,8 +41,8 @@ const mapDispatchToProps = dispatch => {
     onLoadEmails: threadId => {
       dispatch(loadEmails(threadId));
     },
-    onLoadEvents: () => {
-      dispatch(loadEvents());
+    onLoadEvents: params => {
+      dispatch(loadEvents(params));
     },
     onLoadThreads: params => {
       const { labelId } = params;

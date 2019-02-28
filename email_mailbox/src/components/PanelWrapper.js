@@ -167,8 +167,8 @@ class PanelWrapper extends Component {
       });
     });
 
-    addEvent(Event.LOAD_EVENTS, () => {
-      this.props.onLoadEvents();
+    addEvent(Event.LOAD_EVENTS, params => {
+      this.props.onLoadEvents(params);
     });
 
     addEvent(Event.REFRESH_THREADS, eventParams => {

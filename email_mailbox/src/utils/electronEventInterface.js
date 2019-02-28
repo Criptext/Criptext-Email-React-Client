@@ -81,8 +81,11 @@ let badgeLabelIdsEvent = new Set();
 let labelsEvent = {};
 let avatarHasChanged = false;
 
-export const getGroupEvents = async isContinued => {
-  if (isGettingEvents && !isContinued) return;
+export const getGroupEvents = async ({
+  shouldGetMoreEvents,
+  showNotification
+}) => {
+  if (isGettingEvents && !shouldGetMoreEvents) return;
 
   isGettingEvents = true;
   const { events, hasMoreEvents } = await getEvents();
@@ -136,9 +139,6 @@ export const getGroupEvents = async isContinued => {
   const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
   if (rowIdsFiltered.length) {
     await setEventAsHandled(rowIdsFiltered);
-    const mailboxIsFocus = remote.getCurrentWindow().isFocused();
-    if (!mailboxIsFocus) sendNewEmailNotification();
-    await updateOwnContact();
 
     const labelIds = labelIdsEvent.size ? Array.from(labelIdsEvent) : null;
     const threadIds = threadIdsEvent.size ? Array.from(threadIdsEvent) : null;
@@ -160,11 +160,18 @@ export const getGroupEvents = async isContinued => {
       hasStopLoad
     });
   }
-  if (hasMoreEvents) {
-    await getGroupEvents(hasMoreEvents);
+  if (!hasMoreEvents) {
+    await updateOwnContact();
+    if (showNotification) {
+      sendNewEmailNotification();
+    }
+    isGettingEvents = false;
     return;
   }
-  isGettingEvents = false;
+  await getGroupEvents({
+    shouldGetMoreEvents: hasMoreEvents,
+    showNotification
+  });
 };
 
 export const handleEvent = incomingEvent => {
@@ -763,14 +770,14 @@ const setEventAsHandled = async eventIds => {
 
 /*  Window events: listener
 ----------------------------- */
-export const sendLoadEventsEvent = () => {
-  emitter.emit(Event.LOAD_EVENTS, {});
+export const sendLoadEventsEvent = params => {
+  emitter.emit(Event.LOAD_EVENTS, params);
 };
 
 ipcRenderer.on('socket-message', async (ev, message) => {
   const eventId = message.cmd;
   if (eventId === 400) {
-    sendLoadEventsEvent();
+    sendLoadEventsEvent({ showNotification: true });
   } else {
     const { rowid } = await handleEvent(message);
     if (rowid) {
@@ -780,7 +787,7 @@ ipcRenderer.on('socket-message', async (ev, message) => {
 });
 
 ipc.answerMain('get-events', () => {
-  sendLoadEventsEvent();
+  sendLoadEventsEvent({});
 });
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
@@ -1161,7 +1168,7 @@ ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
 });
 
 ipcRenderer.on(NOTIFICATION_RECEIVED, () => {
-  sendLoadEventsEvent();
+  sendLoadEventsEvent({ showNotification: true });
 });
 
 ipcRenderer.send(START_NOTIFICATION_SERVICE, senderNotificationId);
