@@ -3,11 +3,32 @@ import { Map, Set, List } from 'immutable';
 import * as StringUtils from '../utils/StringUtils';
 
 const initThreads = Map({
+  1: Map({
+    list: List([]),
+    allIds: Set([])
+  })
+});
+
+const initMailbox = Map({
   list: List([]),
   allIds: Set([])
 });
 
-const threads = (state = initThreads, action) => {
+const mailbox = (state = initThreads, action) => {
+  switch (action.type) {
+    case Thread.ADD_BATCH: {
+      const labelId = action.labelId;
+      const mailbox = state.get(`${labelId}`) || initMailbox;
+      return state.merge({
+        [labelId]: threads(mailbox, action)
+      });
+    }
+    default:
+      return state;
+  }
+};
+
+const threads = (state, action) => {
   switch (action.type) {
     case Thread.ADD_BATCH: {
       let allIds = Set([]);
@@ -298,4 +319,4 @@ const thread = (state, action) => {
   }
 };
 
-export default threads;
+export default mailbox;

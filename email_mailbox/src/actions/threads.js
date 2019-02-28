@@ -31,8 +31,9 @@ import { filterTemporalThreadIds } from '../utils/EmailUtils';
 import { defineThreads } from '../utils/ThreadUtils';
 import { addContacts } from '.';
 
-export const addThreads = (threads, clear) => ({
+export const addThreads = (labelId, threads, clear) => ({
   type: Thread.ADD_BATCH,
+  labelId: labelId,
   threads: threads,
   clear: clear
 });
@@ -219,7 +220,7 @@ export const filterThreadsOrLoadMoreByUnread = (
       if (shouldLoadMoreThreads) {
         const threads = await getEmailsGroupByThreadByParams(loadParams);
         if (threads.length || !loadParams.date) {
-          dispatch(addThreads(threads, loadParams.clear));
+          dispatch(addThreads(loadParams.labelId, threads, loadParams.clear));
         }
       }
       dispatch(filterThreadsByUnread(checked));
@@ -474,7 +475,7 @@ export const loadThreads = params => {
       const contact = contacts ? addContacts(contacts) : undefined;
       const thread =
         threads.length || !params.date
-          ? addThreads(threads, params.clear)
+          ? addThreads(params.labelId, threads, params.clear)
           : undefined;
       const activity = stopLoadThread();
       dispatch(addDataApp({ activity, contact, thread }));

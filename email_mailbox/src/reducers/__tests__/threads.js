@@ -10,16 +10,17 @@ jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
 
 const myThreads = file.threads;
+const labelId = 1;
 
-function initState(threads) {
-  return threadsReducer(undefined, actions.addThreads(threads));
+function initState(labelId, threads) {
+  return threadsReducer(undefined, actions.addThreads(labelId, threads));
 }
 
 describe('Thread actions - ADD_BATCH', () => {
   const manyThreads = [myThreads[0], myThreads[1]];
 
   it('should add threads to state', () => {
-    expect(initState(manyThreads)).toMatchSnapshot();
+    expect(initState(labelId, manyThreads)).toMatchSnapshot();
   });
 });
 

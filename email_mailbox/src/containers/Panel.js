@@ -20,7 +20,10 @@ import { storeSeenTimestamp } from '../utils/storage';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 
 const mapStateToProps = state => {
-  const threadsCount = state.get('threads').get('list').size;
+  const threadsCount = state
+    .get('threads')
+    .get(`${LabelType.inbox.id}`)
+    .get('list').size;
   return {
     threadsCount
   };

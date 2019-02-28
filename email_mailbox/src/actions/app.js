@@ -40,7 +40,7 @@ export const loadApp = params => {
     const contact = addContacts(contacts);
     const feeditem = addFeedItems(feeditems, true);
     const label = addLabels(labels);
-    const thread = addThreads(threads, true);
+    const thread = addThreads(params.labelId, threads, true);
 
     dispatch(addDataApp({ activity, contact, label, feeditem, thread }));
     await getGroupEvents({});

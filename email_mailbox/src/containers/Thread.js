@@ -72,8 +72,9 @@ const createReadableThread = thread => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const mailbox = state.get('threads').get(`${ownProps.mailboxSelected.id}`);
   const thread =
-    getThread(state.get('threads').get('list'), ownProps.threadIdSelected) ||
+    getThread(mailbox.get('list'), ownProps.threadIdSelected) ||
     getThreadFromSuggestions(
       state.get('suggestions'),
       ownProps.threadIdSelected

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import HeaderThreadOptionsWrapper from '../components/HeaderThreadOptionsWrapper';
 import { LabelType } from '../utils/electronInterface';
-import { Set } from 'immutable';
+import { Set, List } from 'immutable';
 import { sendPrintThreadEvent } from '../utils/ipc';
 
 const defineOneThreadSelected = (threads, threadId) => {
@@ -86,7 +86,8 @@ const getLabelIdsFromThreadIds = (threads, uniqueIds) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const threads = state.get('threads').get('list');
+  const mailbox = state.get('threads').get(`${ownProps.mailboxSelected.id}`);
+  const threads = mailbox.get('list') || List([]);
   const threadIds = getThreadsIds(threads);
   const threadsSelected = ownProps.itemsChecked
     ? defineThreadsSelected(threads, ownProps.itemsChecked)

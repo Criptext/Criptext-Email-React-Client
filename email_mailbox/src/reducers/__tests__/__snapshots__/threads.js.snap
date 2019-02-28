@@ -2,79 +2,81 @@
 
 exports[`Thread actions - ADD_BATCH should add threads to state 1`] = `
 Immutable.Map {
-  "list": Immutable.List [
-    Immutable.Map {
-      "allLabels": Immutable.Set [
-        1,
-        2,
-        3,
-        4,
-      ],
-      "fromContactName": Immutable.List [
-        "User a",
-      ],
-      "isMuted": 0,
-      "lastEmailId": "6Za2dcMlE0OSSc9",
-      "threadId": "6Za2dcMlE0OSSc9",
-      "trashDate": null,
-      "preview": "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-      "uniqueId": "6Za2dcMlE0OSSc9",
-      "subject": "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-      "date": "2018-09-10 16:13:30",
-      "unread": true,
-      "recipientContactIds": Immutable.Set [
-        1,
-      ],
-      "status": 0,
-      "secure": 1,
-      "content": "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
-      "id": 1,
-      "emailIds": Immutable.List [
-        1,
-        2,
-      ],
-      "s3Key": "6Za2dcMlE0OSSc9",
-      "key": "6Za2dcMlE0OSSc9",
-      "labels": Immutable.Set [
-        1,
-        2,
-        3,
-      ],
-    },
-    Immutable.Map {
-      "allLabels": Immutable.Set [
-        5,
-      ],
-      "fromContactName": Immutable.List [
-        "User a",
-      ],
-      "isMuted": 0,
-      "lastEmailId": "cuW6ElyoqsR7MMw",
-      "threadId": null,
-      "trashDate": null,
-      "preview": "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-      "uniqueId": 2,
-      "subject": "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-      "date": "2018-09-10 16:23:30",
-      "unread": true,
-      "recipientContactIds": Immutable.Set [
-        1,
-      ],
-      "status": 0,
-      "secure": 1,
-      "content": "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
-      "id": 2,
-      "emailIds": Immutable.List [
-        2,
-      ],
-      "s3Key": "cuW6ElyoqsR7MMw",
-      "key": "cuW6ElyoqsR7MMw",
-      "labels": Immutable.Set [],
-    },
-  ],
-  "allIds": Immutable.Set [
-    "6Za2dcMlE0OSSc9",
-    2,
-  ],
+  "1": Immutable.Map {
+    "list": Immutable.List [
+      Immutable.Map {
+        "allLabels": Immutable.Set [
+          1,
+          2,
+          3,
+          4,
+        ],
+        "fromContactName": Immutable.List [
+          "User a",
+        ],
+        "isMuted": 0,
+        "lastEmailId": "6Za2dcMlE0OSSc9",
+        "threadId": "6Za2dcMlE0OSSc9",
+        "trashDate": null,
+        "preview": "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
+        "uniqueId": "6Za2dcMlE0OSSc9",
+        "subject": "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
+        "date": "2018-09-10 16:13:30",
+        "unread": true,
+        "recipientContactIds": Immutable.Set [
+          1,
+        ],
+        "status": 0,
+        "secure": 1,
+        "content": "v3m cNvAeKiY1EakWwnfTvLdO22YzkuS7bILjnWncQCwqHBHWfYNsQekd4A3",
+        "id": 1,
+        "emailIds": Immutable.List [
+          1,
+          2,
+        ],
+        "s3Key": "6Za2dcMlE0OSSc9",
+        "key": "6Za2dcMlE0OSSc9",
+        "labels": Immutable.Set [
+          1,
+          2,
+          3,
+        ],
+      },
+      Immutable.Map {
+        "allLabels": Immutable.Set [
+          5,
+        ],
+        "fromContactName": Immutable.List [
+          "User a",
+        ],
+        "isMuted": 0,
+        "lastEmailId": "cuW6ElyoqsR7MMw",
+        "threadId": null,
+        "trashDate": null,
+        "preview": "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
+        "uniqueId": 2,
+        "subject": "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
+        "date": "2018-09-10 16:23:30",
+        "unread": true,
+        "recipientContactIds": Immutable.Set [
+          1,
+        ],
+        "status": 0,
+        "secure": 1,
+        "content": "Jq pUgbu1A0gywTYTeKuWfyfCNGgvWKnAK6SHx0ur 7qcMH3PU5S7ESoLTA3",
+        "id": 2,
+        "emailIds": Immutable.List [
+          2,
+        ],
+        "s3Key": "cuW6ElyoqsR7MMw",
+        "key": "cuW6ElyoqsR7MMw",
+        "labels": Immutable.Set [],
+      },
+    ],
+    "allIds": Immutable.Set [
+      "6Za2dcMlE0OSSc9",
+      2,
+    ],
+  },
 }
 `;

@@ -15,6 +15,7 @@ import { defineRejectedLabels } from '../utils/EmailUtils';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
 import { storeValue } from '../utils/storage';
 import string from './../lang';
+import { List } from 'immutable';
 
 const defineStatus = isSyncing => {
   return isSyncing ? ButtonSyncType.LOAD : ButtonSyncType.STOP;
@@ -44,7 +45,8 @@ const mapStateToProps = (state, ownProps) => {
     state.get('activities').get('isSyncing')
   );
   const isLoadingThreads = state.get('activities').get('isLoadingThreads');
-  const threads = state.get('threads').get('list');
+  const mailbox = state.get('threads').get(`${ownProps.mailboxSelected.id}`);
+  const threads = mailbox ? mailbox.get('list') : List([]);
   const unreadThreads = threads.filter(thread => thread.get('unread'));
   return {
     buttonSyncStatus,
