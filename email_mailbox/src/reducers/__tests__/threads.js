@@ -10,7 +10,6 @@ jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/electronEventInterface');
 
 const myThreads = file.threads;
-const labelId = 1;
 
 function initState(labelId, threads) {
   return threadsReducer(undefined, actions.addThreads(labelId, threads));
@@ -18,6 +17,7 @@ function initState(labelId, threads) {
 
 describe('Thread actions - ADD_BATCH', () => {
   const manyThreads = [myThreads[0], myThreads[1]];
+  const labelId = 1;
 
   it('should add threads to state', () => {
     expect(initState(labelId, manyThreads)).toMatchSnapshot();
@@ -28,53 +28,77 @@ describe('Thread actions - ADD_LABELID_THREAD', () => {
   const threads = [myThreads[0]];
 
   it('should update thread params: allLabels and labels', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
-    const labelId = 5;
-    const action = actions.addLabelIdThreadSuccess(threadId, labelId);
+    const labelIdToAdd = 5;
+    const action = actions.addLabelIdThreadSuccess(
+      labelId,
+      threadId,
+      labelIdToAdd
+    );
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     expect(threadUpdated.toJS()).toMatchObject(
       expect.objectContaining({
-        allLabels: [1, 2, 3, 4, 5],
-        labels: [1, 2, 3, 5]
+        allLabels: [1, 2, 3, 5],
+        labels: [2, 3, 5]
       })
     );
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['6Za2dcMlE0OSSc9']);
   });
 
   it('should not update thread param: allLabels and labels, when threadId is undefined', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
-    const labelId = undefined;
-    const action = actions.addLabelIdThreadSuccess(threadId, labelId);
+    const labelIdToAdd = undefined;
+    const action = actions.addLabelIdThreadSuccess(
+      labelId,
+      threadId,
+      labelIdToAdd
+    );
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     expect(threadUpdated.toJS()).toMatchObject(
       expect.objectContaining({
-        allLabels: [1, 2, 3, 4],
-        labels: [1, 2, 3]
+        allLabels: [1, 2, 3],
+        labels: [2, 3]
       })
     );
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['6Za2dcMlE0OSSc9']);
   });
 
   it('should not update thread param: allLabels and labels, when labelId is not number type', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
-    const labelId = '4';
-    const action = actions.addLabelIdThreadSuccess(threadId, labelId);
+    const labelIdToAdd = '4';
+    const action = actions.addLabelIdThreadSuccess(
+      labelId,
+      threadId,
+      labelIdToAdd
+    );
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     expect(threadUpdated.toJS()).toMatchObject(
       expect.objectContaining({
-        allLabels: [1, 2, 3, 4],
-        labels: [1, 2, 3]
+        allLabels: [1, 2, 3],
+        labels: [2, 3]
       })
     );
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['6Za2dcMlE0OSSc9']);
   });
 });

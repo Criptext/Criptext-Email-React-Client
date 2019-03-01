@@ -23,6 +23,14 @@ const mailbox = (state = initThreads, action) => {
         [labelId]: threads(mailbox, action)
       });
     }
+    case Thread.ADD_LABELID_THREAD: {
+      const labelId = action.labelId;
+      const mailbox = state.get(`${labelId}`);
+      if (!mailbox) return state;
+      return state.merge({
+        [labelId]: threads(mailbox, action)
+      });
+    }
     default:
       return state;
   }
@@ -72,8 +80,8 @@ const threads = (state, action) => {
       });
     }
     case Thread.ADD_LABELID_THREAD: {
-      const { threadId, labelId } = action;
-      if (!threadId || typeof labelId !== 'number') {
+      const { threadId, labelIdToAdd } = action;
+      if (!threadId || typeof labelIdToAdd !== 'number') {
         return state;
       }
 
@@ -257,9 +265,9 @@ const threads = (state, action) => {
 const thread = (state, action) => {
   switch (action.type) {
     case Thread.ADD_LABELID_THREAD: {
-      const { labelId } = action;
-      const allLabels = state.get('allLabels').add(labelId);
-      const labels = state.get('labels').add(labelId);
+      const { labelIdToAdd } = action;
+      const allLabels = state.get('allLabels').add(labelIdToAdd);
+      const labels = state.get('labels').add(labelIdToAdd);
       return state.merge({ allLabels, labels });
     }
     case Thread.ADD_LABELID_THREAD_DRAFT: {

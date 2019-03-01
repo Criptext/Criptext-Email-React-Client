@@ -120,7 +120,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (isStarred) {
         dispatch(removeLabelIdThread(threadId, labelId));
       } else {
-        dispatch(addLabelIdThread(threadId, labelId));
+        dispatch(
+          addLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
+        );
       }
     },
     onUpdateUnreadEmails: (emailKeysUnread, threadId) => {

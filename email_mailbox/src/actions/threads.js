@@ -38,7 +38,7 @@ export const addThreads = (labelId, threads, clear) => ({
   clear: clear
 });
 
-export const addLabelIdThread = (threadId, labelId) => {
+export const addLabelIdThread = (currentLabelId, threadId, labelId) => {
   return async dispatch => {
     try {
       const [label] = await getLabelById(labelId);
@@ -57,7 +57,7 @@ export const addLabelIdThread = (threadId, labelId) => {
         const params = formAddThreadLabelParams(emails, labelId);
         const dbResponse = await createEmailLabel(params);
         if (dbResponse) {
-          dispatch(addLabelIdThreadSuccess(threadId, labelId));
+          dispatch(addLabelIdThreadSuccess(currentLabelId, threadId, labelId));
         }
       }
     } catch (e) {
@@ -66,10 +66,11 @@ export const addLabelIdThread = (threadId, labelId) => {
   };
 };
 
-export const addLabelIdThreadSuccess = (threadId, labelId) => ({
+export const addLabelIdThreadSuccess = (labelId, threadId, labelIdToAdd) => ({
   type: Thread.ADD_LABELID_THREAD,
+  labelId,
   threadId,
-  labelId
+  labelIdToAdd
 });
 
 export const addLabelIdThreadDraft = (uniqueId, labelId) => {

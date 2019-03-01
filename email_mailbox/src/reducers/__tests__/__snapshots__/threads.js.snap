@@ -9,7 +9,6 @@ Immutable.Map {
           1,
           2,
           3,
-          4,
         ],
         "fromContactName": Immutable.List [
           "User a",
@@ -37,7 +36,6 @@ Immutable.Map {
         "s3Key": "6Za2dcMlE0OSSc9",
         "key": "6Za2dcMlE0OSSc9",
         "labels": Immutable.Set [
-          1,
           2,
           3,
         ],

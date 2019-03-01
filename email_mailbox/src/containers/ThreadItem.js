@@ -250,7 +250,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         if (isAdded) {
           dispatch(removeLabelIdThread(threadId, labelId));
         } else {
-          dispatch(addLabelIdThread(threadId, labelId));
+          dispatch(addLabelIdThread(currentLabelId, threadId, labelId));
         }
       }
     }
