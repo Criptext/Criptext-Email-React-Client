@@ -244,7 +244,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         if (isAdded) {
           dispatch(removeLabelIdThreadDraft(uniqueId, labelId));
         } else {
-          dispatch(addLabelIdThreadDraft(uniqueId, labelId));
+          dispatch(addLabelIdThreadDraft(currentLabelId, uniqueId, labelId));
         }
       } else {
         if (isAdded) {

@@ -86,21 +86,7 @@ const threads = (state, action) => {
       }
 
       const list = state.get('list').map(threadItem => {
-        if (threadItem.get('threadId') === threadId) {
-          return thread(threadItem, action);
-        }
-        return threadItem;
-      });
-      return state.set('list', list);
-    }
-    case Thread.ADD_LABELID_THREAD_DRAFT: {
-      const { uniqueId, labelId } = action;
-      if (typeof uniqueId !== 'number' || typeof labelId !== 'number') {
-        return state;
-      }
-
-      const list = state.get('list').map(threadItem => {
-        if (threadItem.get('uniqueId') === uniqueId) {
+        if (threadItem.get('uniqueId') === threadId) {
           return thread(threadItem, action);
         }
         return threadItem;
@@ -268,12 +254,6 @@ const thread = (state, action) => {
       const { labelIdToAdd } = action;
       const allLabels = state.get('allLabels').add(labelIdToAdd);
       const labels = state.get('labels').add(labelIdToAdd);
-      return state.merge({ allLabels, labels });
-    }
-    case Thread.ADD_LABELID_THREAD_DRAFT: {
-      const { labelId } = action;
-      const allLabels = state.get('allLabels').add(labelId);
-      const labels = state.get('labels').add(labelId);
       return state.merge({ allLabels, labels });
     }
     case Thread.ADD_LABELID_THREADS: {
