@@ -1,22 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`[Edit draft]  Form data to edit draft 1`] = `
-Object {
-  "bccEmails": Array [
-    "usuario3@criptext.com",
-  ],
-  "ccEmails": Array [
-    "usuario2@criptext.com",
-  ],
-  "htmlBody": "<p>Modified body content</p>",
-  "textSubject": "Email subject 1",
-  "threadId": "1",
-  "toEmails": Array [
-    "usuario1@criptext.com",
-  ],
-}
-`;
-
 exports[`[Form outgoing email]  Should form outgoing email from data 1`] = `
 Object {
   "body": "<p>Hello</p>",
@@ -75,7 +58,24 @@ Object {
 }
 `;
 
-exports[`[Reply, Reply-all, Forward]  Form data to forward 1`] = `
+exports[`Edit draft:  Should load a draft correctly 1`] = `
+Object {
+  "bccEmails": Array [
+    "usuario3@criptext.com",
+  ],
+  "ccEmails": Array [
+    "usuario2@criptext.com",
+  ],
+  "htmlBody": "<p>Modified body content</p>",
+  "textSubject": "Email subject 1",
+  "threadId": "1",
+  "toEmails": Array [
+    "usuario1@criptext.com",
+  ],
+}
+`;
+
+exports[`Reply, Reply-all, Forward:  Should load an email to forward 1`] = `
 Object {
   "bccEmails": Array [],
   "ccEmails": Array [],
@@ -88,7 +88,7 @@ Object {
 }
 `;
 
-exports[`[Reply, Reply-all, Forward]  Form data to forward: Forward attachments 1`] = `
+exports[`Reply, Reply-all, Forward:  Should load an email to forward: Load attachments 1`] = `
 Object {
   "bccEmails": Array [],
   "ccEmails": Array [],
@@ -127,7 +127,7 @@ Object {
 }
 `;
 
-exports[`[Reply, Reply-all, Forward]  Form data to reply email 1`] = `
+exports[`Reply, Reply-all, Forward:  Should load an email to reply 1`] = `
 Object {
   "bccEmails": Array [],
   "ccEmails": Array [],
@@ -145,7 +145,7 @@ Object {
 }
 `;
 
-exports[`[Reply, Reply-all, Forward]  Form data to reply-all 1`] = `
+exports[`Reply, Reply-all, Forward:  Should load an email to reply to all 1`] = `
 Object {
   "bccEmails": Array [],
   "ccEmails": Array [
