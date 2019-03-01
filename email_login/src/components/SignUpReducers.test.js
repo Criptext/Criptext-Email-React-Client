@@ -139,9 +139,11 @@ describe('updateForm', () => {
     ${'yi'}                           | ${ErrorMsgs.USERNAME_INVALID}
     ${'joe'}                          | ${toBeConfirmed}
     ${'verylongnamethatisnotallowed'} | ${ErrorMsgs.USERNAME_INVALID}
-    ${'sebastian.caceres'}            | ${toBeConfirmed}
+    ${'erika.isabel'}                 | ${toBeConfirmed}
+    ${'benalcazar.benalcazar'}        | ${ErrorMsgs.USERNAME_INVALID}
     ${'carlos1996'}                   | ${toBeConfirmed}
-    ${'1jeff'}                        | ${ErrorMsgs.USERNAME_INVALID}
+    ${'1jeff'}                        | ${toBeConfirmed}
+    ${'dtb9'}                         | ${toBeConfirmed}
     ${'0'}                            | ${ErrorMsgs.USERNAME_INVALID}
   `('with username input $input sets error: $error', ({ input, error }) => {
     const newState = updateForm(defaultState, {
