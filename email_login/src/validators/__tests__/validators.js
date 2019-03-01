@@ -10,35 +10,55 @@ import {
 
 jest.mock('./../../utils/electronInterface');
 
-describe('Validate username:', () => {
+describe('Validate Username: ', () => {
   const fn = validateUsername;
 
-  it('Returns true if the username has enough characters.', () => {
+  it('Should return valid if it receives a valid username', () => {
     const username = 'bob';
     expect(fn(username)).toBe(true);
   });
 
-  it('Returns false if the username has very few characters.', () => {
+  it('Should return error if it receives less than 3 characters', () => {
     const username = 'un';
     expect(fn(username)).toBe(false);
   });
+
+  it('Should return error if it receives spaces in middle', () => {
+    const username = 'user name';
+    expect(fn(username)).toBe(false);
+  });
+
+  it('Should return error if it receives invalid characters', () => {
+    const username = 'u$3rnAme';
+    expect(fn(username)).toBe(false);
+  });
+
+  it('Should return error if username starts with dot', () => {
+    const username = '.username';
+    expect(fn(username)).toBe(false);
+  });
+
+  it('Should return valid if it receives dots, dashes or low dashes in username', () => {
+    const username = 'usr-name.valid_1';
+    expect(fn(username)).toBe(true);
+  });
 });
 
-describe('Validate fullname:', () => {
+describe('Validate Fullname:', () => {
   const fn = validateFullname;
 
-  it('Returns true if the fullname has enough characters.', () => {
+  it('Should return valid if fullname has enough characters', () => {
     const fullname = 'myfullname';
     expect(fn(fullname)).toBe(true);
   });
 
-  it('Returns false if the fullname has very few characters.', () => {
+  it('Should return error if the fullname has very few characters', () => {
     const fullname = '';
     expect(fn(fullname)).toBe(false);
   });
 });
 
-describe('Validate password:', () => {
+describe('Validate Password:', () => {
   const fn = validatePassword;
 
   it('Returns true if the password has enough characters.', () => {
@@ -52,7 +72,7 @@ describe('Validate password:', () => {
   });
 });
 
-describe('Validate password confirmation:', () => {
+describe('Validate Password confirmation:', () => {
   const fn = validateConfirmPassword;
 
   it('Returns true if the password and its confirmation have enough characters and they are equals.', () => {
@@ -73,14 +93,16 @@ describe('Validate password confirmation:', () => {
   });
 });
 
-describe('Validate email:', () => {
+describe('Validate Email address: ', () => {
   const fn = validateEmail;
-
-  it('Returns true if the email has a valid format', () => {
+  it('Should return valid if it receives a valid address', () => {
     const email = 'username@criptext.com';
     expect(fn(email)).toBe(true);
   });
-
+  it('Should return error if it receives a angular brackets and spaces', () => {
+    const email = 'Fullname <username@criptext.com>';
+    expect(fn(email)).toBe(false);
+  });
   it('Returns false if the email has a invalid format (without @)', () => {
     const email = 'username.criptext.com';
     expect(fn(email)).toBe(false);
