@@ -22,23 +22,17 @@ export const encryptDummySession = ({
   const sessionByteArray = saltBArray.concat(
     ivBArray.concat(encryptedSessionBArray)
   );
-  const sessionWordArray = byteArrayToWordArray(sessionByteArray);
-  return wordArrayToBase64(sessionWordArray);
+  return byteArrayToBase64(sessionByteArray);
 };
 
 export const decryptDummySession = ({
   encryptedDummySessionB64,
   passphrase
 }) => {
-  const encryptedDummySessionWA = base64ToWordArray(encryptedDummySessionB64);
-  const encryptedDummySessionBA = wordArrayToByteArray(encryptedDummySessionWA);
-
+  const encryptedDummySessionBA = base64ToByteArray(encryptedDummySessionB64);
   const saltBA = encryptedDummySessionBA.slice(0, 8);
   const ivBA = encryptedDummySessionBA.slice(8, 24);
-  const sessionBA = encryptedDummySessionBA.slice(
-    24,
-    encryptedDummySessionBA.length
-  );
+  const sessionBA = encryptedDummySessionBA.slice(24);
 
   const saltWA = byteArrayToWordArray(saltBA);
   const ivWA = byteArrayToWordArray(ivBA);
@@ -98,33 +92,21 @@ export const generateKeyAndIv = (
   };
 };
 
-/*   Utils
+/*   Base 64
 ---------------------*/
 export const base64ToWordArray = base64String => {
   return CryptoJS.enc.Base64.parse(base64String);
 };
 
+export const base64ToByteArray = base64String => {
+  const wordArray = base64ToWordArray(base64String);
+  return wordArrayToByteArray(wordArray);
+};
+
+/*   WordArray
+---------------------*/
 export const wordArrayToBase64 = wordArray => {
   return CryptoJS.enc.Base64.stringify(wordArray);
-};
-
-export const byteArrayToWordArray = bytearray => {
-  const wa = [];
-  let i;
-  for (i = 0; i < bytearray.length; i++) {
-    wa[(i / 4) | 0] |= bytearray[i] << (24 - 8 * i);
-  }
-  return CryptoJS.lib.WordArray.create(wa, bytearray.length);
-};
-
-const wordToByteArray = (word, length) => {
-  const ba = [];
-  const xFF = 0xff;
-  if (length > 0) ba.push(word >>> 24);
-  if (length > 1) ba.push((word >>> 16) & xFF);
-  if (length > 2) ba.push((word >>> 8) & xFF);
-  if (length > 3) ba.push(word & xFF);
-  return ba;
 };
 
 export const wordArrayToByteArray = (wordarray, length) => {
@@ -145,4 +127,30 @@ export const wordArrayToByteArray = (wordarray, length) => {
     i++;
   }
   return [].concat.apply([], result);
+};
+
+const wordToByteArray = (word, length) => {
+  const ba = [];
+  const xFF = 0xff;
+  if (length > 0) ba.push(word >>> 24);
+  if (length > 1) ba.push((word >>> 16) & xFF);
+  if (length > 2) ba.push((word >>> 8) & xFF);
+  if (length > 3) ba.push(word & xFF);
+  return ba;
+};
+
+/*   ByteArray
+---------------------*/
+export const byteArrayToWordArray = bytearray => {
+  const wa = [];
+  let i;
+  for (i = 0; i < bytearray.length; i++) {
+    wa[(i / 4) | 0] |= bytearray[i] << (24 - 8 * i);
+  }
+  return CryptoJS.lib.WordArray.create(wa, bytearray.length);
+};
+
+export const byteArrayToBase64 = bytearray => {
+  const wordArray = byteArrayToWordArray(bytearray);
+  return wordArrayToBase64(wordArray);
 };
