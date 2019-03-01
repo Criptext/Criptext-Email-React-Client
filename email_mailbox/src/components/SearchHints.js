@@ -29,17 +29,18 @@ const SearchHints = props => (
           searchText={props.searchText}
           onClickSearchSuggestiontItem={props.onClickSearchSuggestiontItem}
         />
-        {props.threads.map((thread, index) => (
-          <SearchMail
-            key={index}
-            threadId={thread.get('threadId')}
-            preview={thread.get('preview')}
-            date={thread.get('date')}
-            participants={thread.get('fromContactName')}
-            searchText={props.searchText}
-            onSearchSelectThread={props.onSearchSelectThread}
-          />
-        ))}
+        {props.searchText &&
+          props.threads.map((thread, index) => (
+            <SearchMail
+              key={index}
+              threadId={thread.get('threadId')}
+              preview={thread.get('preview')}
+              date={thread.get('date')}
+              participants={thread.get('fromContactName')}
+              searchText={props.searchText}
+              onSearchSelectThread={props.onSearchSelectThread}
+            />
+          ))}
       </div>
     )}
   </div>
