@@ -1,5 +1,5 @@
 import isemail from 'isemail';
-import { usernameRegex, usernameSignupRegex } from './../utils/RegexUtils';
+import { usernameRegex } from './../utils/RegexUtils';
 
 const requiredMinLength = {
   username: 3,
@@ -8,7 +8,7 @@ const requiredMinLength = {
 };
 
 const requiredMaxLength = {
-  username: 24,
+  username: 16,
   fullname: 255,
   password: 255
 };
@@ -27,15 +27,6 @@ export const validateUsername = username =>
     requiredMaxLength.username
   ) &&
   checkFormat(username, usernameRegex);
-
-export const validateSignupUsername = username =>
-  username &&
-  hasLengthBetween(
-    username,
-    requiredMinLength.username,
-    requiredMaxLength.username
-  ) &&
-  checkFormat(username, usernameSignupRegex);
 
 export const validateFullname = fullname =>
   !!fullname &&
