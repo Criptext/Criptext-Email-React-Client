@@ -89,31 +89,59 @@ export const addLabelIdThreadDraft = (currentLabelId, uniqueId, labelId) => {
   };
 };
 
-export const addLabelIdThreads = (threadsParams, labelId) => {
+export const addLabelIdThreads = (currentLabelId, threadsParams, labelId) => {
   return async dispatch => {
     try {
-      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const { threadIds, uniqueIds } = threadsParams.reduce(
+        (result, item) => {
+          let threadIds = [];
+          if (item.threadIdDB) {
+            threadIds = [...result.threadIds, item.threadIdDB];
+          }
+          const uniqueIds = [
+            ...result.uniqueIds,
+            item.threadIdDB || item.emailId
+          ];
+          return { ...result, threadIds, uniqueIds };
+        },
+        { threadIds: [], uniqueIds: [] }
+      );
+
       const [label] = await getLabelById(labelId);
-      const eventParams = {
-        cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
-        params: {
-          threadIds: filterTemporalThreadIds(threadIds),
-          labelsRemoved: [],
-          labelsAdded: [label.text]
+      if (threadIds) {
+        const eventParams = {
+          cmd: SocketCommand.PEER_THREAD_LABELS_UPDATE,
+          params: {
+            threadIds: filterTemporalThreadIds(threadIds),
+            labelsRemoved: [],
+            labelsAdded: [label.text]
+          }
+        };
+        if (eventParams.params.threadIds.length) {
+          await postPeerEvent(eventParams);
         }
-      };
-      if (eventParams.params.threadIds.length) {
-        await postPeerEvent(eventParams);
       }
+
       const dbReponse = await Promise.all(
-        threadIds.map(async threadId => {
-          const threadEmails = await getEmailsByThreadId(threadId);
-          const params = formAddThreadLabelParams(threadEmails, labelId);
+        threadsParams.map(async uniqueId => {
+          let params = [];
+          if (uniqueId.threadIdDB) {
+            const emails = await getEmailsByThreadId(uniqueId.threadIdDB);
+            params = formAddThreadLabelParams(emails, labelId);
+          } else {
+            params = [
+              {
+                emailId: uniqueId.emailId,
+                labelId
+              }
+            ];
+          }
           return await createEmailLabel(params);
         })
       );
+
       if (dbReponse) {
-        dispatch(addLabelIdThreadsSuccess(threadIds, labelId));
+        dispatch(addLabelIdThreadsSuccess(currentLabelId, uniqueIds, labelId));
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -121,10 +149,11 @@ export const addLabelIdThreads = (threadsParams, labelId) => {
   };
 };
 
-export const addLabelIdThreadsSuccess = (threadIds, labelId) => ({
+export const addLabelIdThreadsSuccess = (labelId, uniqueIds, labelIdToAdd) => ({
   type: Thread.ADD_LABELID_THREADS,
-  threadIds,
-  labelId
+  labelId,
+  threadIds: uniqueIds,
+  labelIdToAdd
 });
 
 export const addMoveLabelIdThreads = ({

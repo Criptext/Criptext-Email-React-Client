@@ -108,9 +108,16 @@ describe('Thread actions - ADD_LABELID_THREAD', () => {
     const state = initState(labelId, threadsdDraft);
     const uniqueId = 2;
     const labelIdToAdd = 10;
-    const action = actions.addLabelIdThreadSuccess(labelId, uniqueId, labelIdToAdd);
+    const action = actions.addLabelIdThreadSuccess(
+      labelId,
+      uniqueId,
+      labelIdToAdd
+    );
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get(`${labelId}`).get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     expect(threadUpdated.toJS()).toMatchObject(
       expect.objectContaining({
         allLabels: [5, 10],
@@ -126,9 +133,16 @@ describe('Thread actions - ADD_LABELID_THREAD', () => {
     const state = initState(labelId, threadsdDraft);
     const uniqueId = '2';
     const labelIdToAdd = undefined;
-    const action = actions.addLabelIdThreadSuccess(labelId, uniqueId, labelIdToAdd);
+    const action = actions.addLabelIdThreadSuccess(
+      labelId,
+      uniqueId,
+      labelIdToAdd
+    );
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get(`${labelId}`).get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     expect(threadUpdated.toJS()).toMatchObject(
       expect.objectContaining({
         allLabels: [5],
@@ -144,9 +158,16 @@ describe('Thread actions - ADD_LABELID_THREAD', () => {
     const state = initState(labelId, threadsdDraft);
     const uniqueId = 2;
     const labelIdToAdd = '4';
-    const action = actions.addLabelIdThreadSuccess(labelId, uniqueId, labelIdToAdd);
+    const action = actions.addLabelIdThreadSuccess(
+      labelId,
+      uniqueId,
+      labelIdToAdd
+    );
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get(`${labelId}`).get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     expect(threadUpdated.toJS()).toMatchObject(
       expect.objectContaining({
         allLabels: [5],
@@ -160,19 +181,31 @@ describe('Thread actions - ADD_LABELID_THREAD', () => {
 
 describe('Thread actions - ADD_LABELID_THREADS', () => {
   const threads = [myThreads[0], myThreads[2]];
+  const threadsdDraft = [myThreads[1]];
 
   it('should update threads params: allLabels and labels', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = ['6Za2dcMlE0OSSc9', 'cuW6ElyoqsR7MMh'];
-    const labelId = 5;
-    const action = actions.addLabelIdThreadsSuccess(threadIds, labelId);
+    const labelIdToAdd = 5;
+    const action = actions.addLabelIdThreadsSuccess(
+      labelId,
+      threadIds,
+      labelIdToAdd
+    );
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
-    const threadUpdated2 = newState.get('list').get('1');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
+    const threadUpdated2 = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('1');
     expect(threadUpdated.toJS()).toMatchObject(
       expect.objectContaining({
-        allLabels: [1, 2, 3, 4, 5],
-        labels: [1, 2, 3, 5]
+        allLabels: [1, 2, 3, 5],
+        labels: [2, 3, 5]
       })
     );
     expect(threadUpdated2.toJS()).toMatchObject(
@@ -181,22 +214,33 @@ describe('Thread actions - ADD_LABELID_THREADS', () => {
         labels: [1, 2, 5]
       })
     );
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(threadIds);
   });
 
   it('should not update threads param: allLabels and labels, when threadIds is undefined', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = undefined;
-    const labelId = 5;
-    const action = actions.addLabelIdThreadsSuccess(threadIds, labelId);
+    const labelIdToAdd = 5;
+    const action = actions.addLabelIdThreadsSuccess(
+      labelId,
+      threadIds,
+      labelIdToAdd
+    );
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
-    const threadUpdated2 = newState.get('list').get('1');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
+    const threadUpdated2 = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('1');
     expect(threadUpdated.toJS()).toMatchObject(
       expect.objectContaining({
-        allLabels: [1, 2, 3, 4],
-        labels: [1, 2, 3]
+        allLabels: [1, 2, 3],
+        labels: [2, 3]
       })
     );
     expect(threadUpdated2.toJS()).toMatchObject(
@@ -205,22 +249,33 @@ describe('Thread actions - ADD_LABELID_THREADS', () => {
         labels: [1, 2]
       })
     );
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['6Za2dcMlE0OSSc9', 'cuW6ElyoqsR7MMh']);
   });
 
   it('should not update threads param: allLabels and labels, when labelId is not number type', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = ['6Za2dcMlE0OSSc9', 'cuW6ElyoqsR7MMh'];
-    const labelId = '5';
-    const action = actions.addLabelIdThreadsSuccess(threadIds, labelId);
+    const labelIdToAdd = '5';
+    const action = actions.addLabelIdThreadsSuccess(
+      labelId,
+      threadIds,
+      labelIdToAdd
+    );
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
-    const threadUpdated2 = newState.get('list').get('1');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
+    const threadUpdated2 = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('1');
     expect(threadUpdated.toJS()).toMatchObject(
       expect.objectContaining({
-        allLabels: [1, 2, 3, 4],
-        labels: [1, 2, 3]
+        allLabels: [1, 2, 3],
+        labels: [2, 3]
       })
     );
     expect(threadUpdated2.toJS()).toMatchObject(
@@ -229,7 +284,32 @@ describe('Thread actions - ADD_LABELID_THREADS', () => {
         labels: [1, 2]
       })
     );
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
+    expect(Array.from(allIds)).toEqual(threadIds);
+  });
+
+  it('should update draft threads params: allLabels and labels', () => {
+    const labelId = 1;
+    const state = initState(labelId, threadsdDraft);
+    const threadIds = [2];
+    const labelIdToAdd = 6;
+    const action = actions.addLabelIdThreadsSuccess(
+      labelId,
+      threadIds,
+      labelIdToAdd
+    );
+    const newState = threadsReducer(state, action);
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
+    expect(threadUpdated.toJS()).toMatchObject(
+      expect.objectContaining({
+        allLabels: [5, 6],
+        labels: [6]
+      })
+    );
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(threadIds);
   });
 });

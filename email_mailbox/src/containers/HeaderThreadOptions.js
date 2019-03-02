@@ -116,7 +116,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onAddLabel: (threadIds, labelId) => {
-      dispatch(actions.addLabelIdThreads(threadIds, labelId)).then(() => {
+      const currentLabelId = ownProps.mailboxSelected.id;
+      dispatch(
+        actions.addLabelIdThreads(currentLabelId, threadIds, labelId)
+      ).then(() => {
         if (ownProps.itemsChecked) {
           ownProps.onBackOption();
         }
