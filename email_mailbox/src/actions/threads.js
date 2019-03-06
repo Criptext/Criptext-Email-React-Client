@@ -317,7 +317,11 @@ export const removeLabelIdThreadDraft = (currentLabelId, uniqueId, labelId) => {
   };
 };
 
-export const removeLabelIdThreads = (threadsParams, labelId) => {
+export const removeLabelIdThreads = (
+  currentLabelId,
+  threadsParams,
+  labelId
+) => {
   return async dispatch => {
     try {
       const threadIds = threadsParams.map(param => param.threadIdDB);
@@ -342,7 +346,9 @@ export const removeLabelIdThreads = (threadsParams, labelId) => {
         })
       );
       if (dbReponse) {
-        dispatch(removeLabelIdThreadsSuccess(threadIds, labelId));
+        dispatch(
+          removeLabelIdThreadsSuccess(currentLabelId, threadIds, labelId)
+        );
         let labelIds = [LabelType.inbox.id];
         if (labelId === LabelType.spam.id) labelIds = [...labelIds, labelId];
         dispatch(updateBadgeLabels(labelIds));
@@ -353,10 +359,15 @@ export const removeLabelIdThreads = (threadsParams, labelId) => {
   };
 };
 
-export const removeLabelIdThreadsSuccess = (threadIds, labelId) => ({
-  type: Thread.REMOVE_LABELID_THREADS,
+export const removeLabelIdThreadsSuccess = (
+  labelId,
   threadIds,
-  labelId
+  labelIdToRemove
+) => ({
+  type: Thread.REMOVE_LABELID_THREADS,
+  labelId,
+  threadIds,
+  labelIdToRemove
 });
 
 export const removeThreads = (threadsParams, labelId) => {

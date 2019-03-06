@@ -26,7 +26,8 @@ const mailbox = (state = initThreads, action) => {
     case Thread.ADD_LABELID_THREAD:
     case Thread.ADD_LABELID_THREADS:
     case Thread.MOVE_THREADS:
-    case Thread.REMOVE_LABELID_THREAD: {
+    case Thread.REMOVE_LABELID_THREAD:
+    case Thread.REMOVE_LABELID_THREADS: {
       const labelId = action.labelId;
       const mailbox = state.get(`${labelId}`);
       if (!mailbox) return state;
@@ -140,8 +141,8 @@ const threads = (state, action) => {
       return state.set('list', list);
     }
     case Thread.REMOVE_LABELID_THREADS: {
-      const { threadIds, labelId } = action;
-      if (!threadIds || typeof labelId !== 'number') {
+      const { threadIds, labelIdToRemove } = action;
+      if (!threadIds || typeof labelIdToRemove !== 'number') {
         return state;
       }
 
@@ -258,9 +259,9 @@ const thread = (state, action) => {
       return state.merge({ allLabels, labels });
     }
     case Thread.REMOVE_LABELID_THREADS: {
-      const { labelId } = action;
-      const allLabels = state.get('allLabels').delete(labelId);
-      const labels = state.get('labels').delete(labelId);
+      const { labelIdToRemove } = action;
+      const allLabels = state.get('allLabels').delete(labelIdToRemove);
+      const labels = state.get('labels').delete(labelIdToRemove);
       return state.merge({ allLabels, labels });
     }
     case Thread.UPDATE_EMAILIDS_THREAD: {

@@ -142,9 +142,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ).then(() => ownProps.onBackOption());
     },
     onRemoveLabel: (threadIds, labelId) => {
-      dispatch(actions.removeLabelIdThreads(threadIds, labelId)).then(() =>
-        ownProps.onBackOption()
-      );
+      const currentLabelId = ownProps.mailboxSelected.id;
+      dispatch(
+        actions.removeLabelIdThreads(currentLabelId, threadIds, labelId)
+      ).then(() => ownProps.onBackOption());
     },
     onMarkRead: (threadIds, unread) => {
       const labelId = ownProps.mailboxSelected.id;
