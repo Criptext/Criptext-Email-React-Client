@@ -23,3 +23,6 @@ export const startSocket = jwt => {
 export const stopSocket = () => {
   return socketManager.disconnect();
 };
+
+export const isFromStore =
+  globalManager.isWindowsStore.get() || globalManager.isMAS.get();

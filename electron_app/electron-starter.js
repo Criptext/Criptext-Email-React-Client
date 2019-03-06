@@ -1,5 +1,4 @@
 const { app, ipcMain } = require('electron');
-const osLocale = require('os-locale');
 const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient');
@@ -14,7 +13,9 @@ const {
   showWindows, 
   isDev, 
   isLinux, 
-  isWindows
+  isWindows,
+  isFromStore,
+  getSystemLanguage
 } = require('./src/windows/windowUtils');
 require('./src/ipc/composer.js');
 require('./src/ipc/loading.js');
@@ -39,8 +40,9 @@ async function initApp() {
   if (existingAccount) {
     if (!!existingAccount.deviceId) {
       const appSettings = await dbManager.getSettings();
+      const settings = Object.assign(appSettings, { isFromStore });
       myAccount.initialize(existingAccount);
-      mySettings.initialize(appSettings);
+      mySettings.initialize(settings);
       wsClient.start(myAccount);
       createAppMenu();
       mailboxWindow.show();
@@ -92,10 +94,7 @@ if ((isWindows || isLinux) && !isDev) {
 }
 
 const getUserLanguage = async () => {
-  const localeLanguage = await osLocale();
-  const isEnglish = localeLanguage.indexOf('en') > -1;
-  const isSpanish = localeLanguage.indexOf('es') > -1;
-  const osLanguage = isEnglish ? 'en' : isSpanish ? 'es' : 'en';
+  const osLanguage = await getSystemLanguage();
   await dbManager.updateSettings({ language: osLanguage });
 };
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Settings from './Settings';
-import { myAccount } from '../utils/electronInterface';
+import { myAccount, mySettings } from '../utils/electronInterface';
 import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
 import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
 
@@ -40,6 +40,7 @@ class SettingsWrapper extends Component {
         onClickCancelLogout={this.handleClickCancelLogout}
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
         settingsPopupType={this.state.settingsPopupType}
+        isFromStore={mySettings.isFromStore}
       />
     );
   }
