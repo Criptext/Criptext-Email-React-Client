@@ -14,7 +14,7 @@ const {
   createIfNotExist,
   checkIfExists
 } = require('../utils/FileUtils');
-const { getUsername } = require('./../utils/stringUtils');
+const { getUsername, genUUID } = require('./../utils/stringUtils');
 const { showWindows } = require('./../windows/windowUtils');
 
 ipc.answerRenderer('close-mailbox', () => {
@@ -119,3 +119,5 @@ ipc.answerRenderer('show-notification', ({ title, message, threadId }) => {
 });
 
 ipc.answerRenderer('check-for-updates', checkForUpdates);
+
+ipc.answerRenderer('generate-label-uuid', genUUID);

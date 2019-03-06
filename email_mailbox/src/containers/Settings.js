@@ -25,7 +25,8 @@ import {
   updateNameEvent,
   uploadAvatar,
   setReadTracking,
-  checkForUpdates
+  checkForUpdates,
+  generateLabelUUID
 } from './../utils/ipc';
 import { appDomain } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
@@ -94,15 +95,17 @@ const deleteDeviceData = async () => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddLabel: text => {
+    onAddLabel: async text => {
       const color = randomcolor({
         seed: text,
         luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
       });
+      const uuid = await generateLabelUUID();
       const label = {
         text,
         color: color.replace('#', ''),
-        visible: true
+        visible: true,
+        uuid
       };
       dispatch(addLabel(label));
     },

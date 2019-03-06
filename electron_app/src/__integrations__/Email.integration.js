@@ -425,11 +425,22 @@ describe('Load data thread from Email Table:', () => {
   });
 
   it('should save a restored draft deleting the previous one', async () => {
-    const [oldDraftBeforeReplace] = await DBManager.getEmailByKey(emailDraft.email.key);
-    const [newDraftBeforeReplace] = await DBManager.getEmailByKey(draftToReplaceOld.email.key);
-    await DBManager.deleteEmailLabelAndContactByEmailId(oldDraftBeforeReplace.id, draftToReplaceOld);
-    const [oldDraftAfterReplace] = await DBManager.getEmailByKey(emailDraft.email.key);
-    const [newDraftAfterReplace] = await DBManager.getEmailByKey(draftToReplaceOld.email.key);
+    const [oldDraftBeforeReplace] = await DBManager.getEmailByKey(
+      emailDraft.email.key
+    );
+    const [newDraftBeforeReplace] = await DBManager.getEmailByKey(
+      draftToReplaceOld.email.key
+    );
+    await DBManager.deleteEmailLabelAndContactByEmailId(
+      oldDraftBeforeReplace.id,
+      draftToReplaceOld
+    );
+    const [oldDraftAfterReplace] = await DBManager.getEmailByKey(
+      emailDraft.email.key
+    );
+    const [newDraftAfterReplace] = await DBManager.getEmailByKey(
+      draftToReplaceOld.email.key
+    );
     expect(oldDraftBeforeReplace.key).toBe(emailDraft.email.key);
     expect(newDraftBeforeReplace).toBeUndefined();
     expect(oldDraftAfterReplace).toBeUndefined();

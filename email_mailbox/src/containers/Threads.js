@@ -113,7 +113,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(loadApp(params));
     },
     onLoadEvents: () => {
-      dispatch(loadEvents());
+      dispatch(loadEvents({}));
     },
     onLoadThreads: (
       mailbox,
