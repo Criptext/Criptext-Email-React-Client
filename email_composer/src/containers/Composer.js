@@ -271,7 +271,7 @@ class ComposerWrapper extends Component {
       key = fileWithKey.key;
       iv = fileWithKey.iv;
     } else {
-      const keyAndIv = generateKeyAndIv(null, 8);
+      const keyAndIv = generateKeyAndIv(null, null);
       key = keyAndIv.key;
       iv = keyAndIv.iv;
     }
