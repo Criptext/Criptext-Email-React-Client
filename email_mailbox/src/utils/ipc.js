@@ -78,6 +78,10 @@ export const checkForUpdates = () => {
   callMain('check-for-updates');
 };
 
+export const generateLabelUUID = async () => {
+  return await callMain('generate-label-uuid');
+};
+
 /* File System
 ----------------------------- */
 export const saveEmailBody = async params => {

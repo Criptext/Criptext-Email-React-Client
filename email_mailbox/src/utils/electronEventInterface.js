@@ -703,17 +703,18 @@ const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
 };
 
 const handlePeerLabelCreated = async ({ rowid, params }) => {
-  const { text, color } = params;
+  const { text, color, uuid } = params;
   const [label] = await getLabelsByText([text]);
   if (!label) {
-    const [labelId] = await createLabel({ text, color });
+    const [labelId] = await createLabel({ text, color, uuid });
     const labels = {
       [labelId]: {
         id: labelId,
         color,
         text,
         type: 'custom',
-        visible: true
+        visible: true,
+        uuid
       }
     };
     return { rowid, labels };

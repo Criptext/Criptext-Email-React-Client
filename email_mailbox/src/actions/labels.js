@@ -17,19 +17,20 @@ export const addLabel = label => {
     try {
       const [labelId] = await createLabel(label);
       if (labelId) {
-        const { text, color, visible } = label;
+        const { text, color, visible, uuid } = label;
         const labels = {
           [labelId]: {
             id: labelId,
             color,
             text,
             type: 'custom',
-            visible
+            visible,
+            uuid
           }
         };
         const eventParams = {
           cmd: SocketCommand.PEER_LABEL_CREATED,
-          params: { text, color }
+          params: { text, color, uuid }
         };
         await postPeerEvent(eventParams);
         dispatch(addLabels(labels));

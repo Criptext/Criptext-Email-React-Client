@@ -234,6 +234,29 @@ const emailToSearch = {
   labels: [6]
 };
 
+const draftToReplaceOld = {
+  email: {
+    threadId: 'threadJ',
+    key: 'keyJ',
+    s3Key: 's3KeyJ',
+    subject: 'New Draft',
+    content: '<p>I am a edited draft</p>',
+    preview: 'I am a edited draft',
+    date: '2013-03-01 16:44:00.000',
+    status: 0,
+    unread: false,
+    secure: true,
+    isMuted: false,
+    messageId: 'messageIdJ',
+    fromAddress: '<User me> <user@criptext.com>'
+  },
+  recipients: {
+    from: ['<User me> <user@criptext.com>'],
+    to: ['toUser@criptext.com']
+  },
+  labels: [6]
+};
+
 const insertEmails = async () => {
   await DBManager.createEmail(emailDraft);
   await DBManager.createEmail(emailSent);
@@ -399,6 +422,29 @@ describe('Load data thread from Email Table:', () => {
     expect(to).toBeNull();
     expect(cc).toBeNull();
     expect(bcc).toBeNull();
+  });
+
+  it('should save a restored draft deleting the previous one', async () => {
+    const [oldDraftBeforeReplace] = await DBManager.getEmailByKey(
+      emailDraft.email.key
+    );
+    const [newDraftBeforeReplace] = await DBManager.getEmailByKey(
+      draftToReplaceOld.email.key
+    );
+    await DBManager.deleteEmailLabelAndContactByEmailId(
+      oldDraftBeforeReplace.id,
+      draftToReplaceOld
+    );
+    const [oldDraftAfterReplace] = await DBManager.getEmailByKey(
+      emailDraft.email.key
+    );
+    const [newDraftAfterReplace] = await DBManager.getEmailByKey(
+      draftToReplaceOld.email.key
+    );
+    expect(oldDraftBeforeReplace.key).toBe(emailDraft.email.key);
+    expect(newDraftBeforeReplace).toBeUndefined();
+    expect(oldDraftAfterReplace).toBeUndefined();
+    expect(newDraftAfterReplace.key).toBe(draftToReplaceOld.email.key);
   });
 
   it('should load sent email with recipients', async () => {

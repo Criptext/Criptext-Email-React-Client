@@ -12,34 +12,34 @@ jest.mock('./../../utils/const');
 jest.mock('./../../utils/ipc');
 jest.mock('./../../utils/electronInterface');
 
-describe('[Edit draft] ', () => {
-  it('Form data to edit draft', async () => {
+describe('Edit draft: ', () => {
+  it('Should load a draft correctly', async () => {
     const dataToEdit = await formDataToEditDraft(emailKey);
     dataToEdit.htmlBody = '<p>Modified body content</p>';
     expect(dataToEdit).toMatchSnapshot();
   });
 });
 
-describe('[Reply, Reply-all, Forward] ', () => {
-  it('Form data to reply email', async () => {
+describe('Reply, Reply-all, Forward: ', () => {
+  it('Should load an email to reply', async () => {
     const dataToEdit = await formDataToReply(emailKey, 'reply');
     dataToEdit.htmlBody = '<p>Modified body content</p>';
     expect(dataToEdit).toMatchSnapshot();
   });
 
-  it('Form data to reply-all', async () => {
+  it('Should load an email to reply to all', async () => {
     const dataToEdit = await formDataToReply(emailKey, 'reply-all');
     dataToEdit.htmlBody = '<p>Modified body content</p>';
     expect(dataToEdit).toMatchSnapshot();
   });
 
-  it('Form data to forward', async () => {
+  it('Should load an email to forward', async () => {
     const dataToEdit = await formDataToReply(emailKey, 'forward');
     dataToEdit.htmlBody = '<p>Modified body content</p>';
     expect(dataToEdit).toMatchSnapshot();
   });
 
-  it('Form data to forward: Forward attachments', async () => {
+  it('Should load an email to forward: Load attachments', async () => {
     const dataToEdit = await formDataToReply(emailKeyWithFile, 'forward');
     dataToEdit.htmlBody = '<p>Modified body content</p>';
     expect(dataToEdit).toMatchSnapshot();
