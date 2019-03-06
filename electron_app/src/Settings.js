@@ -1,9 +1,11 @@
 const appSettings = {
+  isFromStore: this.isFromStore,
   language: this.language,
   opened: this.opened,
   theme: this.theme,
 
-  initialize({ language, opened, theme }) {
+  initialize({ language, opened, theme, isFromStore }) {
+    this.isFromStore = isFromStore;
     this.language = language;
     this.opened = opened;
     this.theme = theme;

@@ -23,7 +23,7 @@ import {
   areEmptyAllArrays,
   updateObjectFieldsInArray
 } from './../utils/ArrayUtils';
-import signal from './../libs/signal';
+import { encryptPostEmail } from './../libs/signal';
 import {
   EmailStatus,
   formDataToEditDraft,
@@ -515,7 +515,7 @@ class ComposerWrapper extends Component {
         peer,
         externalEmailPassword
       };
-      const res = await signal.encryptPostEmail(params);
+      const res = await encryptPostEmail(params);
       const filesDbParams = formFileParamsToDatabase(files, emailId);
       if (filesDbParams.length) {
         await createFile(filesDbParams);

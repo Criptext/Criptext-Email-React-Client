@@ -8,6 +8,9 @@ const {
 const { processEventsQueue } = require('../eventQueueManager');
 const globalManager = require('./../globalManager');
 const loadingWindow = require('./../windows/loading');
+const { getSystemLanguage } = require('./../windows/windowUtils');
+
+ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
 ipc.answerRenderer('get-computer-name', () => getComputerName());
 

@@ -18,6 +18,10 @@ export const sendEndLinkDevicesEvent = () => {
   callMain('end-link-devices-event');
 };
 
+export const getSystemLanguage = async () => {
+  return await callMain('get-system-language');
+};
+
 /* Criptext Client
 ----------------------------- */
 export const acknowledgeEvents = async eventIds => {

@@ -391,4 +391,4 @@ const encryptExternalEmail = async ({
   };
 };
 
-export { encryptPostEmail as default, createDummyKeyBundle };
+export { encryptPostEmail, createDummyKeyBundle };

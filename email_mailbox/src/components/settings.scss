@@ -137,7 +137,7 @@
       box-shadow: 0 -2px 0px rgba(216, 216, 216, 0.5);
       justify-content: space-between;
 
-      .settings-footer-left {
+      .settings-footer-version-info {
         display: flex;
         flex-direction: row;
         min-width: 347px;
@@ -171,7 +171,7 @@
         }
       }
 
-      .settings-footer-right {
+      .settings-footer-logout {
         padding-right: 35px;
         line-height: 10px;
         display: flex;
@@ -262,13 +262,13 @@
         .settings-footer {
           background-color: $_BACKGROUND_COLOR_SETTINGS;
 
-          .settings-footer-left {
+          .settings-footer-version-info {
             .settings-footer-version {
               color: $_COLOR_TEXT_MAIN_TITLE;
             }
           }
 
-          .settings-footer-right {
+          .settings-footer-logout {
             color: $_COLOR_TEXT_MAIN_TITLE;
           }
         }

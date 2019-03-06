@@ -1,6 +1,11 @@
 /*global libsignal util*/
 
-import { myAccount, LabelType } from './../utils/electronInterface';
+import {
+  myAccount,
+  LabelType,
+  mySettings,
+  isFromStore
+} from './../utils/electronInterface';
 import {
   cleanDatabase,
   createAccount as createAccountDB,
@@ -12,7 +17,8 @@ import {
   getKeyBundle,
   postKeyBundle,
   postUser,
-  updateAccount
+  updateAccount,
+  getSystemLanguage
 } from './../utils/ipc';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
@@ -104,6 +110,7 @@ const createAccount = async ({
     throw CustomError(string.errors.saveLocal);
   }
   myAccount.initialize(newAccount);
+  setDefaultSettings();
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -213,6 +220,7 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
+  setDefaultSettings();
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -325,6 +333,7 @@ const createAccountToDB = async ({
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
+  setDefaultSettings();
 
   return await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -332,6 +341,16 @@ const createAccountToDB = async ({
     }),
     store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
   );
+};
+
+const setDefaultSettings = async () => {
+  const language = await getSystemLanguage();
+  mySettings.initialize({
+    language,
+    opened: false,
+    theme: 'light',
+    isFromStore: isFromStore
+  });
 };
 
 const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
