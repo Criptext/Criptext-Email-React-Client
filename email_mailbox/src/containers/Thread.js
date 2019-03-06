@@ -113,12 +113,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       return dispatch(loadEmails(threadId));
     },
     onRemoveLabelIdThread: (threadId, labelId) => {
-      return dispatch(removeLabelIdThread(threadId, labelId));
+      return dispatch(
+        removeLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
+      );
     },
     onToggleStar: (threadId, isStarred) => {
       const labelId = LabelType.starred.id;
       if (isStarred) {
-        dispatch(removeLabelIdThread(threadId, labelId));
+        dispatch(
+          removeLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
+        );
       } else {
         dispatch(
           addLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)

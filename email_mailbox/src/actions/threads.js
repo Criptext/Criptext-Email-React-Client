@@ -260,7 +260,7 @@ export const moveThreads = (labelId, threadIds, labelIdToAdd) => ({
   labelIdToAdd
 });
 
-export const removeLabelIdThread = (threadId, labelId) => {
+export const removeLabelIdThread = (currentLabelId, threadId, labelId) => {
   return async dispatch => {
     try {
       const [label] = await getLabelById(labelId);
@@ -279,7 +279,9 @@ export const removeLabelIdThread = (threadId, labelId) => {
         const params = formRemoveThreadLabelParams(emails, labelId);
         const dbResponse = await deleteEmailLabel(params);
         if (dbResponse) {
-          dispatch(removeLabelIdThreadSuccess(threadId, labelId));
+          dispatch(
+            removeLabelIdThreadSuccess(currentLabelId, threadId, labelId)
+          );
         }
       }
     } catch (e) {
@@ -288,33 +290,30 @@ export const removeLabelIdThread = (threadId, labelId) => {
   };
 };
 
-export const removeLabelIdThreadSuccess = (threadId, labelId) => ({
+export const removeLabelIdThreadSuccess = (
+  labelId,
+  uniqueId,
+  labelIdToRemove
+) => ({
   type: Thread.REMOVE_LABELID_THREAD,
-  threadId,
-  labelId
+  labelId,
+  uniqueId,
+  labelIdToRemove
 });
 
-export const removeLabelIdThreadDraft = (uniqueId, labelId) => {
+export const removeLabelIdThreadDraft = (currentLabelId, uniqueId, labelId) => {
   return async dispatch => {
     try {
       const emailId = uniqueId;
       const response = await deleteEmailLabel([{ emailId, labelId }]);
       if (response) {
-        dispatch(removeLabelIdThreadDraftSuccess(uniqueId, labelId));
+        dispatch(removeLabelIdThreadSuccess(currentLabelId, uniqueId, labelId));
       } else {
         sendUpdateThreadLabelsErrorMessage();
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
     }
-  };
-};
-
-export const removeLabelIdThreadDraftSuccess = (uniqueId, labelId) => {
-  return {
-    type: Thread.REMOVE_LABELID_THREAD_DRAFT,
-    uniqueId,
-    labelId
   };
 };
 

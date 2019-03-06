@@ -586,7 +586,7 @@ const handlePeerThreadRead = async ({ rowid, params }) => {
       badgeLabelIds: [LabelType.inbox.id, LabelType.spam.id]
     };
   }
-  return { rowid: null };
+  return { rowid };
 };
 
 const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
@@ -635,6 +635,8 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
     const emailIds = emails.map(email => email.id);
     allEmailsIds = [...allEmailsIds, ...emailIds];
   }
+  if (!allEmailsIds.length) return { rowid };
+
   const labelsToRemove = await getLabelsByText(labelsRemoved);
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
 
@@ -657,7 +659,6 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
   let badgeLabelIds = [];
   if (hasInbox) badgeLabelIds = [...badgeLabelIds, LabelType.inbox.id];
   if (hasSpam) badgeLabelIds = [...badgeLabelIds, LabelType.spam.id];
-
   return { rowid, threadIds, badgeLabelIds };
 };
 

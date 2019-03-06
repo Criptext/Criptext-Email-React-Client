@@ -242,13 +242,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (currentLabelId === LabelType.draft.id && !threadId) {
         const uniqueId = thread.get('uniqueId');
         if (isAdded) {
-          dispatch(removeLabelIdThreadDraft(uniqueId, labelId));
+          dispatch(removeLabelIdThreadDraft(currentLabelId, uniqueId, labelId));
         } else {
           dispatch(addLabelIdThreadDraft(currentLabelId, uniqueId, labelId));
         }
       } else {
         if (isAdded) {
-          dispatch(removeLabelIdThread(threadId, labelId));
+          dispatch(removeLabelIdThread(currentLabelId, threadId, labelId));
         } else {
           dispatch(addLabelIdThread(currentLabelId, threadId, labelId));
         }

@@ -23,9 +23,10 @@ const mailbox = (state = initThreads, action) => {
         [labelId]: threads(mailbox, action)
       });
     }
-    case Thread.MOVE_THREADS:
+    case Thread.ADD_LABELID_THREAD:
     case Thread.ADD_LABELID_THREADS:
-    case Thread.ADD_LABELID_THREAD: {
+    case Thread.MOVE_THREADS:
+    case Thread.REMOVE_LABELID_THREAD: {
       const labelId = action.labelId;
       const mailbox = state.get(`${labelId}`);
       if (!mailbox) return state;
@@ -125,22 +126,8 @@ const threads = (state, action) => {
       });
     }
     case Thread.REMOVE_LABELID_THREAD: {
-      const { threadId, labelId } = action;
-      if (!threadId || typeof labelId !== 'number') {
-        return state;
-      }
-
-      const list = state.get('list').map(threadItem => {
-        if (threadItem.get('threadId') === threadId) {
-          return thread(threadItem, action);
-        }
-        return threadItem;
-      });
-      return state.set('list', list);
-    }
-    case Thread.REMOVE_LABELID_THREAD_DRAFT: {
-      const { uniqueId, labelId } = action;
-      if (typeof uniqueId !== 'number' || typeof labelId !== 'number') {
+      const { uniqueId, labelIdToRemove } = action;
+      if (!uniqueId || typeof labelIdToRemove !== 'number') {
         return state;
       }
 
@@ -265,15 +252,9 @@ const thread = (state, action) => {
       return state.merge({ allLabels, labels });
     }
     case Thread.REMOVE_LABELID_THREAD: {
-      const { labelId } = action;
-      const allLabels = state.get('allLabels').delete(labelId);
-      const labels = state.get('labels').delete(labelId);
-      return state.merge({ allLabels, labels });
-    }
-    case Thread.REMOVE_LABELID_THREAD_DRAFT: {
-      const { labelId } = action;
-      const allLabels = state.get('allLabels').delete(labelId);
-      const labels = state.get('labels').delete(labelId);
+      const { labelIdToRemove } = action;
+      const allLabels = state.get('allLabels').delete(labelIdToRemove);
+      const labels = state.get('labels').delete(labelIdToRemove);
       return state.merge({ allLabels, labels });
     }
     case Thread.REMOVE_LABELID_THREADS: {
