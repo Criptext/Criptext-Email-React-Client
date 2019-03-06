@@ -27,7 +27,8 @@ const mailbox = (state = initThreads, action) => {
     case Thread.ADD_LABELID_THREADS:
     case Thread.MOVE_THREADS:
     case Thread.REMOVE_LABELID_THREAD:
-    case Thread.REMOVE_LABELID_THREADS: {
+    case Thread.REMOVE_LABELID_THREADS:
+    case Thread.REMOVE_THREADS: {
       const labelId = action.labelId;
       const mailbox = state.get(`${labelId}`);
       if (!mailbox) return state;

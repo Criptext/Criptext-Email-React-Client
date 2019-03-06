@@ -638,35 +638,38 @@ describe('Thread actions - REMOVE_THREADS', () => {
   const threads = [myThreads[0], myThreads[2]];
 
   it('should remove threads params: threadIds', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = ['6Za2dcMlE0OSSc9'];
-    const action = actions.removeThreadsSuccess(threadIds);
+    const action = actions.removeThreadsSuccess(labelId, threadIds);
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list');
+    const threadUpdated = newState.get(`${labelId}`).get('list');
     expect(threadUpdated.size).toEqual(1);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['cuW6ElyoqsR7MMh']);
   });
 
   it('should move threads params: threadIds not exist', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = null;
-    const action = actions.removeThreadsSuccess(threadIds);
+    const action = actions.removeThreadsSuccess(labelId, threadIds);
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list');
+    const threadUpdated = newState.get(`${labelId}`).get('list');
     expect(threadUpdated.size).toEqual(2);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['6Za2dcMlE0OSSc9', 'cuW6ElyoqsR7MMh']);
   });
 
   it('should move threads params: threadIds is different', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = ['6Za2dMlE0OSS9'];
-    const action = actions.removeThreadsSuccess(threadIds);
+    const action = actions.removeThreadsSuccess(labelId, threadIds);
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list');
+    const threadUpdated = newState.get(`${labelId}`).get('list');
     expect(threadUpdated.size).toEqual(2);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['6Za2dcMlE0OSSc9', 'cuW6ElyoqsR7MMh']);
   });
 });

@@ -392,7 +392,7 @@ export const removeThreads = (threadsParams, labelId) => {
         if (status === 200) {
           const uniqueIds = emails.map(email => email.threadId);
           await deleteEmailsByThreadIdAndLabelId({ threadIds, labelId });
-          dispatch(removeThreadsSuccess(uniqueIds));
+          dispatch(removeThreadsSuccess(labelId, uniqueIds));
         } else {
           sendRemoveThreadsErrorMessage();
         }
@@ -407,12 +407,13 @@ export const removeThreads = (threadsParams, labelId) => {
   };
 };
 
-export const removeThreadsSuccess = uniqueIds => ({
+export const removeThreadsSuccess = (labelId, uniqueIds) => ({
   type: Thread.REMOVE_THREADS,
+  labelId,
   uniqueIds
 });
 
-export const removeThreadsDrafts = draftsParams => {
+export const removeThreadsDrafts = (labelId, draftsParams) => {
   return async dispatch => {
     try {
       const threadIdsDB = draftsParams
@@ -432,7 +433,7 @@ export const removeThreadsDrafts = draftsParams => {
         await deleteEmailsByIds(emailIds);
       }
       const uniqueIds = [...threadIdsDB, ...emailIds];
-      dispatch(removeThreadsSuccess(uniqueIds));
+      dispatch(removeThreadsSuccess(labelId, uniqueIds));
       dispatch(updateBadgeLabels([draftLabelId]));
     } catch (e) {
       sendRemoveThreadsErrorMessage();

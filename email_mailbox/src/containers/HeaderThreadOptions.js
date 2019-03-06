@@ -165,7 +165,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     },
     onDiscardDrafts: draftsParams => {
-      dispatch(actions.removeThreadsDrafts(draftsParams)).then(() =>
+      const labelId = ownProps.mailboxSelected.id;
+      dispatch(actions.removeThreadsDrafts(labelId, draftsParams)).then(() =>
         ownProps.onBackOption()
       );
     },
