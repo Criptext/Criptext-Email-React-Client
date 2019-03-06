@@ -77,7 +77,7 @@ const defineEmptyParamsByMailbox = ({ id, text }) => {
           return {
             header: string.mailbox.empty.default.header,
             subheader: string.mailbox.empty.default.subheader,
-            iconClass: 'default-empty-mailbox'
+            iconClass: 'empty-allmail'
           };
       }
     }
