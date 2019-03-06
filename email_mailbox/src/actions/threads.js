@@ -144,6 +144,8 @@ export const addMoveLabelIdThreads = ({
       const threadIds = threadsParams
         .map(param => param.threadIdDB)
         .filter(item => item !== null);
+      if (!threadIds.length) return;
+
       const [labeltoAdd] = await getLabelById(labelIdToAdd);
       const labelsAdded = [labeltoAdd.text];
       const [labeltoRemove] = labelIdToRemove
@@ -432,7 +434,11 @@ export const updateUnreadThreadsSuccess = (threadIds, unread) => ({
 export const updateUnreadThreads = (threadsParams, unread, labelId) => {
   return async dispatch => {
     try {
-      const threadIds = threadsParams.map(param => param.threadIdDB);
+      const threadIds = threadsParams
+        .map(param => param.threadIdDB)
+        .filter(item => item !== null);
+      if (!threadIds.length) return;
+
       const eventParams = {
         cmd: SocketCommand.PEER_THREAD_READ_UPDATE,
         params: { threadIds, unread: unread ? 1 : 0 }
