@@ -215,7 +215,7 @@ export const addMoveLabelIdThreads = ({
         if (labelIdToAdd === LabelType.spam.id)
           labelIds = [...labelIds, labelIdToAdd];
         if (labelIds.length) dispatch(updateBadgeLabels(labelIds));
-        dispatch(moveThreads(threadIds, labelIdToAdd));
+        dispatch(moveThreads(currentLabelId, threadIds, labelIdToAdd));
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -253,10 +253,11 @@ export const filterThreadsOrLoadMoreByUnread = (
   };
 };
 
-export const moveThreads = (threadIds, labelId) => ({
+export const moveThreads = (labelId, threadIds, labelIdToAdd) => ({
   type: Thread.MOVE_THREADS,
+  labelId,
   threadIds,
-  labelId
+  labelIdToAdd
 });
 
 export const removeLabelIdThread = (threadId, labelId) => {

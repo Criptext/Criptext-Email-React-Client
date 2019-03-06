@@ -23,6 +23,7 @@ const mailbox = (state = initThreads, action) => {
         [labelId]: threads(mailbox, action)
       });
     }
+    case Thread.MOVE_THREADS:
     case Thread.ADD_LABELID_THREADS:
     case Thread.ADD_LABELID_THREAD: {
       const labelId = action.labelId;
