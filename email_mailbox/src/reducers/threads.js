@@ -218,12 +218,6 @@ const threads = (state, action) => {
       });
       return state.set('list', list);
     }
-    case Thread.SELECT_THREADS: {
-      const list = state
-        .get('list')
-        .map(thread => thread.set('selected', true));
-      return state.set('list', list);
-    }
     default:
       return state;
   }
