@@ -31,7 +31,7 @@ import {
   removeThreadsDrafts,
   removeThreadsSuccess,
   sendOpenEvent,
-  updateStatusThread
+  updateThread
 } from './threads';
 import {
   addEmails,
@@ -127,7 +127,7 @@ export {
   updateEmailOnSuccess,
   updateLabel,
   updateLabelSuccess,
-  updateStatusThread,
+  updateThread,
   updateUnreadThreads,
   updateUnreadThreadsSuccess
 };

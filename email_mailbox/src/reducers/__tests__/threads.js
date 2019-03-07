@@ -820,27 +820,43 @@ describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
   });
 });
 
-describe('Thread actions - UPDATE_STATUS_THREAD', () => {
+describe('Thread actions - UPDATE_THREAD', () => {
   const threads = [myThreads[0]];
 
   it('should update thread param: status', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
     const newStatus = 2;
-    const action = actions.updateStatusThread(threadId, newStatus);
+    const action = actions.updateThread({
+      labelId,
+      threadId,
+      status: newStatus
+    });
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const status = threadUpdated.get('status');
     expect(status).toBe(newStatus);
   });
 
   it('should not update thread param: status when status is not number type', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
     const newStatus = '1';
-    const action = actions.updateStatusThread(threadId, newStatus);
+    const action = actions.updateThread({
+      labelId,
+      threadId,
+      status: newStatus
+    });
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const status = threadUpdated.get('status');
     expect(status).not.toBe(newStatus);
     expect(status).toBe(0);

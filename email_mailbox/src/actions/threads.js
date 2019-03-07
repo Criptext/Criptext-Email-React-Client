@@ -456,8 +456,9 @@ export const updateEmailIdsThread = ({
   emailIds
 });
 
-export const updateStatusThread = (threadId, status) => ({
-  type: Thread.UPDATE_STATUS_THREAD,
+export const updateThread = ({ labelId, threadId, status }) => ({
+  type: Thread.UPDATE_THREAD,
+  labelId,
   threadId,
   status
 });

@@ -7,7 +7,6 @@ import {
   updateBadgeLabels,
   updateEmailIdsThread,
   updateAllFeedItemsAsOlder,
-  updateStatusThread,
   unsendEmailOnSuccess,
   unsendEmailFiles,
   setAvatarUpdatedTimestamp,
@@ -52,9 +51,6 @@ const mapDispatchToProps = dispatch => {
       const rejectedLabelIds = defineRejectedLabels(labelId);
       const contactTypes = defineContactType(labelId);
       dispatch(loadThreads({ ...params, rejectedLabelIds, contactTypes }));
-    },
-    onMarkThreadAsOpen: (threadId, status) => {
-      dispatch(updateStatusThread(threadId, Number(status)));
     },
     onStopLoadSync: () => {
       dispatch(stopLoadSync());

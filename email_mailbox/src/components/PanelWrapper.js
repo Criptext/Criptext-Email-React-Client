@@ -326,7 +326,6 @@ PanelWrapper.propTypes = {
   onAddLabels: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onLoadEvents: PropTypes.func,
-  onMarkThreadAsOpen: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,
   onStopLoadSync: PropTypes.func,
