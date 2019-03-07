@@ -1,4 +1,4 @@
-import { Thread } from './types';
+import { Thread, Activity } from './types';
 import { addDataApp, startLoadSync, stopLoadThread } from './index';
 import { updateBadgeLabels } from './labels';
 import { LabelType } from '../utils/electronInterface';
@@ -224,7 +224,7 @@ export const addMoveLabelIdThreads = ({
 };
 
 const filterThreadsByUnread = checked => ({
-  type: Thread.UNREAD_FILTER,
+  type: Activity.UNREAD_FILTER,
   enabled: checked
 });
 

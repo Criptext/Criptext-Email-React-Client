@@ -218,12 +218,6 @@ const threads = (state, action) => {
       });
       return state.set('list', list);
     }
-    case Thread.UNREAD_FILTER: {
-      const list = state
-        .get('list')
-        .map(thread => thread.set('selected', false));
-      return state.set('list', list);
-    }
     case Thread.DESELECT_THREADS: {
       const list = state
         .get('list')

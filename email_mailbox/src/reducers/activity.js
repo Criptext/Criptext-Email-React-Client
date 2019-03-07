@@ -12,7 +12,7 @@ const activity = (state = initActivity, action) => {
   switch (action.type) {
     case Activity.AVATAR_UPDATED_TIMESTAMP:
       return state.set('avatarTimestamp', action.timestamp);
-    case Thread.UNREAD_FILTER:
+    case Activity.UNREAD_FILTER:
       return state.update(
         'isFilteredByUnreadThreads',
         switchUnreadThreadsStatus => !switchUnreadThreadsStatus
