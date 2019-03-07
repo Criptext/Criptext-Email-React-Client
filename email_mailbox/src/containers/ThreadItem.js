@@ -161,7 +161,6 @@ const mapStateToProps = (state, ownProps) => {
     thread: thread.toJS(),
     color,
     avatarUrl,
-    multiselect: state.get('activities').get('multiselect'),
     isStarred: thread.get('allLabels').contains(LabelType.starred.id),
     isDraft: thread.get('allLabels').contains(LabelType.draft.id),
     isEmpty,

@@ -1,4 +1,4 @@
-import { Thread, Activity } from '../actions/types';
+import { Activity } from '../actions/types';
 import { Map } from 'immutable';
 
 const initActivity = Map({
@@ -17,11 +17,6 @@ const activity = (state = initActivity, action) => {
         'isFilteredByUnreadThreads',
         switchUnreadThreadsStatus => !switchUnreadThreadsStatus
       );
-    case Thread.DESELECT_THREADS:
-      if (action.spread) {
-        return state.set('multiselect', false);
-      }
-      return state;
     case Activity.START_LOAD_SYNC:
       return state.set('isSyncing', true);
     case Activity.STOP_LOAD_SYNC:

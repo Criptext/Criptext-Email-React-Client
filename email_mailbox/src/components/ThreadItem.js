@@ -10,7 +10,6 @@ import './threaditem.scss';
 
 class ThreadItem extends Component {
   render() {
-    const visibleStyle = this.getStyleVisibilityByMultiselect();
     const {
       checked,
       isDraft,
@@ -21,6 +20,7 @@ class ThreadItem extends Component {
       labels,
       recipients
     } = this.props;
+    const visibleStyle = this.getStyleVisibilityByMultiselect(checked);
     return (
       <div
         className={
@@ -182,7 +182,7 @@ class ThreadItem extends Component {
   };
 
   renderMenu = () => {
-    if (this.props.multiselect) {
+    if (this.props.checked) {
       return null;
     }
 
@@ -217,8 +217,8 @@ class ThreadItem extends Component {
     );
   };
 
-  getStyleVisibilityByMultiselect = () => {
-    if (!this.props.multiselect) {
+  getStyleVisibilityByMultiselect = checked => {
+    if (!checked) {
       return null;
     }
 
@@ -304,7 +304,6 @@ ThreadItem.propTypes = {
   labels: PropTypes.array,
   letters: PropTypes.string,
   mailbox: PropTypes.object,
-  multiselect: PropTypes.bool,
   onCheckItem: PropTypes.func,
   onClickMoveToTrash: PropTypes.func,
   onToggleFavorite: PropTypes.func,
