@@ -442,12 +442,14 @@ export const removeThreadsDrafts = (labelId, draftsParams) => {
 };
 
 export const updateEmailIdsThread = ({
+  labelId,
   threadId,
   emailIdToAdd,
   emailIdsToRemove,
   emailIds
 }) => ({
   type: Thread.UPDATE_EMAILIDS_THREAD,
+  labelId,
   threadId,
   emailIdToAdd,
   emailIdsToRemove,
@@ -502,7 +504,7 @@ export const loadThreads = params => {
       if (LabelType.trash.id === params.labelId) {
         const expiredDeletedEmails = await getTrashExpiredEmails();
         if (expiredDeletedEmails.length) {
-          dispatch(removeEmails(expiredDeletedEmails));
+          dispatch(removeEmails(LabelType.trash.id, expiredDeletedEmails));
         }
       }
       const { threads, contacts } = await defineThreads(params);

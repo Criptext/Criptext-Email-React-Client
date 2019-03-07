@@ -79,7 +79,7 @@ ipc.answerRenderer('db-get-emails-by-threadid', async threadId => {
 });
 
 ipc.answerRenderer('db-delete-email-by-keys', async keys => {
-  await dbManager.deleteEmailByKeys(keys);
+  const res = await dbManager.deleteEmailByKeys(keys);
   await Promise.all(
     keys.map(key =>
       fileUtils.deleteEmailContent({
@@ -88,6 +88,7 @@ ipc.answerRenderer('db-delete-email-by-keys', async keys => {
       })
     )
   );
+  return res;
 });
 
 ipc.answerRenderer('fs-save-email-body', async params => {

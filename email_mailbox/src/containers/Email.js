@@ -181,8 +181,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ev.stopPropagation();
       const labelsAdded = [LabelType.trash.text];
       const labelsRemoved = [];
+      const labelId = ownProps.mailboxSelected.id;
       dispatch(
         updateEmailLabels({
+          labelId,
           email,
           labelsAdded,
           labelsRemoved
@@ -195,7 +197,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onDeletePermanently: () => {
       const emailsToDelete = [email];
-      dispatch(removeEmails(emailsToDelete)).then(() => {
+      const labelId = ownProps.mailboxSelected.id;
+      dispatch(removeEmails(labelId, emailsToDelete)).then(() => {
         if (ownProps.count === 1) {
           ownProps.onBackOption();
         }
@@ -213,8 +216,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ev.stopPropagation();
       const labelsAdded = [LabelType.spam.text];
       const labelsRemoved = [];
+      const labelId = ownProps.mailboxSelected.id;
       dispatch(
         updateEmailLabels({
+          labelId,
           email,
           labelsAdded,
           labelsRemoved

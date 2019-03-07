@@ -66,9 +66,19 @@ const mapDispatchToProps = dispatch => {
     onUpdateAvatar: () => {
       dispatch(setAvatarUpdatedTimestamp(Date.now()));
     },
-    onUpdateEmailIdsThread: ({ threadId, emailIdToAdd, emailIdsToRemove }) => {
+    onUpdateEmailIdsThread: ({
+      labelId,
+      threadId,
+      emailIdToAdd,
+      emailIdsToRemove
+    }) => {
       dispatch(
-        updateEmailIdsThread({ threadId, emailIdToAdd, emailIdsToRemove })
+        updateEmailIdsThread({
+          labelId,
+          threadId,
+          emailIdToAdd,
+          emailIdsToRemove
+        })
       );
     },
     onUpdateOpenedAccount: async () => {

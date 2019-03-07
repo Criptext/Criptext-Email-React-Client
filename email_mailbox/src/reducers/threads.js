@@ -28,8 +28,10 @@ const mailbox = (state = initThreads, action) => {
     case Thread.MOVE_THREADS:
     case Thread.REMOVE_LABELID_THREAD:
     case Thread.REMOVE_LABELID_THREADS:
-    case Thread.REMOVE_THREADS: {
+    case Thread.REMOVE_THREADS:
+    case Thread.UPDATE_EMAILIDS_THREAD: {
       const labelId = action.labelId;
+      if (!labelId) return state;
       const mailbox = state.get(`${labelId}`);
       if (!mailbox) return state;
       return state.merge({

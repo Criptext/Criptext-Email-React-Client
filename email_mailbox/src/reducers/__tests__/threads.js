@@ -678,101 +678,144 @@ describe('Thread actions - UPDATE_EMAILIDS_THREAD', () => {
   const threads = [myThreads[0]];
 
   it('should update thread param: emailIds, add and remove', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
     const emailIdToAdd = 4;
     const emailIdsToRemove = [1];
     const action = actions.updateEmailIdsThread({
+      labelId,
       threadId,
       emailIdToAdd,
       emailIdsToRemove
     });
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([2, 4]);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual([threadId]);
   });
 
   it('should update thread param: emailIds, just add', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
     const emailIdToAdd = 4;
-    const action = actions.updateEmailIdsThread({ threadId, emailIdToAdd });
+    const action = actions.updateEmailIdsThread({
+      labelId,
+      threadId,
+      emailIdToAdd
+    });
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([1, 2, 4]);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual([threadId]);
   });
 
   it('should update thread param: emailIds, just remove', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
     const emailIdsToRemove = [1];
-    const action = actions.updateEmailIdsThread({ threadId, emailIdsToRemove });
+    const action = actions.updateEmailIdsThread({
+      labelId,
+      threadId,
+      emailIdsToRemove
+    });
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([2]);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual([threadId]);
   });
 
   it('should update thread param: emailIds', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
     const emailIds = [100, 200, 300];
-    const action = actions.updateEmailIdsThread({ threadId, emailIds });
+    const action = actions.updateEmailIdsThread({
+      labelId,
+      threadId,
+      emailIds
+    });
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const emailIdsUpdated = threadUpdated.get('emailIds').toJS();
     expect(emailIdsUpdated).toEqual(emailIds);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual([threadId]);
   });
 
   it('should not update thread param: emailIds, when threadId is undefined', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = undefined;
     const emailIdToAdd = 4;
     const emailIdsToRemove = 1;
     const action = actions.updateEmailIdsThread({
+      labelId,
       threadId,
       emailIdToAdd,
       emailIdsToRemove
     });
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([1, 2]);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['6Za2dcMlE0OSSc9']);
   });
 
   it('should not update thread param: emailIds, when emailIdToAdd and emailIdToRemove are undefined', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
-    const action = actions.updateEmailIdsThread({ threadId });
+    const action = actions.updateEmailIdsThread({ labelId, threadId });
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const emailIds = threadUpdated.get('emailIds').toJS();
     expect(emailIds).toEqual([1, 2]);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual([threadId]);
   });
 
   it('should remove thread param: emailIds', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadId = '6Za2dcMlE0OSSc9';
     const emailIdsToRemove = [1, 2];
-    const action = actions.updateEmailIdsThread({ threadId, emailIdsToRemove });
+    const action = actions.updateEmailIdsThread({
+      labelId,
+      threadId,
+      emailIdsToRemove
+    });
     const newState = threadsReducer(state, action);
-    const listUpdated = newState.get('list');
+    const listUpdated = newState.get(`${labelId}`).get('list');
     expect(listUpdated.size).toEqual(0);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(allIds.size).toEqual(0);
   });
 });
