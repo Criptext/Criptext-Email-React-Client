@@ -463,10 +463,11 @@ export const updateThread = ({ labelId, threadId, status }) => ({
   status
 });
 
-export const updateUnreadThreadsSuccess = (threadIds, unread) => ({
+export const updateThreadsSuccess = (labelId, threadIds, unread) => ({
+  type: Thread.UPDATE_THREADS,
+  labelId,
   threadIds,
-  unread,
-  type: Thread.UPDATE_UNREAD_THREADS
+  unread
 });
 
 export const updateUnreadThreads = (threadsParams, unread, labelId) => {
@@ -488,7 +489,7 @@ export const updateUnreadThreads = (threadsParams, unread, labelId) => {
           unread
         });
         if (response) {
-          dispatch(updateUnreadThreadsSuccess(threadIds, unread));
+          dispatch(updateThreadsSuccess(labelId, threadIds, unread));
           if (labelId === LabelType.inbox.id || labelId === LabelType.spam.id)
             dispatch(updateBadgeLabels([labelId]));
         }
@@ -545,7 +546,7 @@ export const sendOpenEvent = (emailKeysUnread, threadId, labelId) => {
             unread: false
           });
           if (response) {
-            dispatch(updateUnreadThreadsSuccess([threadId], false));
+            dispatch(updateThreadsSuccess(labelId, [threadId], false));
           }
         }
       }

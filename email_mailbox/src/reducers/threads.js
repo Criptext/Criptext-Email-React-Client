@@ -30,7 +30,8 @@ const mailbox = (state = initThreads, action) => {
     case Thread.REMOVE_LABELID_THREADS:
     case Thread.REMOVE_THREADS:
     case Thread.UPDATE_EMAILIDS_THREAD:
-    case Thread.UPDATE_THREAD: {
+    case Thread.UPDATE_THREAD:
+    case Thread.UPDATE_THREADS: {
       const labelId = action.labelId;
       if (!labelId) return state;
       const mailbox = state.get(`${labelId}`);
@@ -205,9 +206,9 @@ const threads = (state, action) => {
       });
       return state.set('list', list);
     }
-    case Thread.UPDATE_UNREAD_THREADS: {
-      const { threadIds, unread } = action;
-      if (!threadIds || !threadIds.length || typeof unread !== 'boolean') {
+    case Thread.UPDATE_THREADS: {
+      const { threadIds } = action;
+      if (!threadIds || !threadIds.length) {
         return state;
       }
       const list = state.get('list').map(threadItem => {
@@ -282,14 +283,13 @@ const thread = (state, action) => {
       }
       return state.set('emailIds', newEmailIds);
     }
-    case Thread.UPDATE_THREAD: {
-      const { status } = action;
+    case Thread.UPDATE_THREAD:
+    case Thread.UPDATE_THREADS: {
+      const { status, unread } = action;
       return state.merge({
-        status: typeof status === 'number' ? status : state.get('status')
+        status: typeof status === 'number' ? status : state.get('status'),
+        unread: typeof unread === 'boolean' ? unread : state.get('unread')
       });
-    }
-    case Thread.UPDATE_UNREAD_THREADS: {
-      return state.set('unread', action.unread);
     }
     default:
       return state;

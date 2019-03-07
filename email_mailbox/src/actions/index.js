@@ -25,8 +25,8 @@ import {
   removeLabelIdThreads,
   removeLabelIdThreadsSuccess,
   updateEmailIdsThread,
+  updateThreadsSuccess,
   updateUnreadThreads,
-  updateUnreadThreadsSuccess,
   removeThreads,
   removeThreadsDrafts,
   removeThreadsSuccess,
@@ -128,6 +128,6 @@ export {
   updateLabel,
   updateLabelSuccess,
   updateThread,
-  updateUnreadThreads,
-  updateUnreadThreadsSuccess
+  updateThreadsSuccess,
+  updateUnreadThreads
 };

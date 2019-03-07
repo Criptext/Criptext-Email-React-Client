@@ -863,54 +863,70 @@ describe('Thread actions - UPDATE_THREAD', () => {
   });
 });
 
-describe('Thread actions - UPDATE_UNREAD_THREADS', () => {
+describe('Thread actions - UPDATE_THREADS', () => {
   const threads = [myThreads[0]];
 
   it('should update thread param: unread', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = ['6Za2dcMlE0OSSc9'];
-    const action = actions.updateUnreadThreadsSuccess(threadIds, false);
+    const action = actions.updateThreadsSuccess(labelId, threadIds, false);
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const unread = threadUpdated.get('unread');
     expect(unread).toBe(false);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(threadIds);
   });
 
   it('should not update thread param: unread, when unread is not bool type', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = ['6Za2dcMlE0OSSc9'];
-    const action = actions.updateUnreadThreadsSuccess(threadIds, 'false');
+    const action = actions.updateThreadsSuccess(labelId, threadIds, 'false');
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const unread = threadUpdated.get('unread');
     expect(unread).toBe(true);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(threadIds);
   });
 
   it('should not update thread param: unread, when threadIds is empty', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = [];
-    const action = actions.updateUnreadThreadsSuccess(threadIds, 'true');
+    const action = actions.updateThreadsSuccess(labelId, threadIds, 'true');
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const unread = threadUpdated.get('unread');
     expect(unread).toBe(true);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['6Za2dcMlE0OSSc9']);
   });
 
   it('should not update thread param: unread, when threadIds is undefined', () => {
-    const state = initState(threads);
+    const labelId = 1;
+    const state = initState(labelId, threads);
     const threadIds = undefined;
-    const action = actions.updateUnreadThreadsSuccess(threadIds, 'true');
+    const action = actions.updateThreadsSuccess(labelId, threadIds, 'true');
     const newState = threadsReducer(state, action);
-    const threadUpdated = newState.get('list').get('0');
+    const threadUpdated = newState
+      .get(`${labelId}`)
+      .get('list')
+      .get('0');
     const unread = threadUpdated.get('unread');
     expect(unread).toBe(true);
-    const allIds = newState.get('allIds');
+    const allIds = newState.get(`${labelId}`).get('allIds');
     expect(Array.from(allIds)).toEqual(['6Za2dcMlE0OSSc9']);
   });
 });
