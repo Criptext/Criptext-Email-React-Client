@@ -113,6 +113,7 @@ class Thread extends Component {
           email={email}
           staticOpen={isLast}
           count={this.props.emails.length}
+          mailboxSelected={this.props.mailboxSelected}
           onBackOption={this.props.onBackOption}
         />
       );

@@ -121,12 +121,11 @@ export const markEmailUnread = (emailId, valueToSet) => {
   };
 };
 
-export const removeEmails = emailsParams => {
+export const removeEmails = (labelId, emailsParams) => {
   return async dispatch => {
     try {
       const allMetadataKeys = emailsParams.map(param => param.key);
       const allEmailIds = emailsParams.map(param => param.id);
-
       const metadataKeys = emailsParams.reduce((result, item) => {
         if (!eventlessEmailStatuses.includes(item.status)) {
           result.push(item.key);
@@ -149,6 +148,7 @@ export const removeEmails = emailsParams => {
               const [email] = emailsParams;
               dispatch(
                 updateEmailIdsThread({
+                  labelId,
                   threadId: email.threadId,
                   emailIdToAdd: null,
                   emailIdsToRemove: [email.id]
@@ -224,7 +224,12 @@ export const updateEmailOnSuccess = email => ({
   email
 });
 
-export const updateEmailLabels = ({ email, labelsAdded, labelsRemoved }) => {
+export const updateEmailLabels = ({
+  labelId,
+  email,
+  labelsAdded,
+  labelsRemoved
+}) => {
   return async dispatch => {
     try {
       if (email) {
@@ -270,6 +275,7 @@ export const updateEmailLabels = ({ email, labelsAdded, labelsRemoved }) => {
         if (shouldDispatch) {
           dispatch(
             updateEmailIdsThread({
+              labelId,
               threadId: email.threadId,
               emailIdToAdd: null,
               emailIdsToRemove: [email.id]

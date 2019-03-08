@@ -11,7 +11,6 @@ import {
   addLabelIdThread,
   addLabelIdThreadSuccess,
   addLabelIdThreadDraft,
-  addLabelIdThreadDraftSuccess,
   addLabelIdThreads,
   addLabelIdThreadsSuccess,
   addMoveLabelIdThreads,
@@ -23,17 +22,16 @@ import {
   removeLabelIdThread,
   removeLabelIdThreadSuccess,
   removeLabelIdThreadDraft,
-  removeLabelIdThreadDraftSuccess,
   removeLabelIdThreads,
   removeLabelIdThreadsSuccess,
   updateEmailIdsThread,
+  updateThreadsSuccess,
   updateUnreadThreads,
-  updateUnreadThreadsSuccess,
   removeThreads,
   removeThreadsDrafts,
   removeThreadsSuccess,
   sendOpenEvent,
-  updateStatusThread
+  updateThread
 } from './threads';
 import {
   addEmails,
@@ -80,7 +78,6 @@ export {
   addLabelIdThread,
   addLabelIdThreadSuccess,
   addLabelIdThreadDraft,
-  addLabelIdThreadDraftSuccess,
   addLabelIdThreads,
   addLabelIdThreadsSuccess,
   addMoveLabelIdThreads,
@@ -104,7 +101,6 @@ export {
   removeLabelIdThread,
   removeLabelIdThreadSuccess,
   removeLabelIdThreadDraft,
-  removeLabelIdThreadDraftSuccess,
   removeLabelIdThreads,
   removeLabelIdThreadsSuccess,
   removeLabelOnSuccess,
@@ -131,7 +127,7 @@ export {
   updateEmailOnSuccess,
   updateLabel,
   updateLabelSuccess,
-  updateStatusThread,
-  updateUnreadThreads,
-  updateUnreadThreadsSuccess
+  updateThread,
+  updateThreadsSuccess,
+  updateUnreadThreads
 };

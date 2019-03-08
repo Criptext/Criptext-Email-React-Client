@@ -161,7 +161,6 @@ const mapStateToProps = (state, ownProps) => {
     thread: thread.toJS(),
     color,
     avatarUrl,
-    multiselect: state.get('activities').get('multiselect'),
     isStarred: thread.get('allLabels').contains(LabelType.starred.id),
     isDraft: thread.get('allLabels').contains(LabelType.draft.id),
     isEmpty,
@@ -242,15 +241,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (currentLabelId === LabelType.draft.id && !threadId) {
         const uniqueId = thread.get('uniqueId');
         if (isAdded) {
-          dispatch(removeLabelIdThreadDraft(uniqueId, labelId));
+          dispatch(removeLabelIdThreadDraft(currentLabelId, uniqueId, labelId));
         } else {
-          dispatch(addLabelIdThreadDraft(uniqueId, labelId));
+          dispatch(addLabelIdThreadDraft(currentLabelId, uniqueId, labelId));
         }
       } else {
         if (isAdded) {
-          dispatch(removeLabelIdThread(threadId, labelId));
+          dispatch(removeLabelIdThread(currentLabelId, threadId, labelId));
         } else {
-          dispatch(addLabelIdThread(threadId, labelId));
+          dispatch(addLabelIdThread(currentLabelId, threadId, labelId));
         }
       }
     }

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import HeaderThreadOptionsWrapper from '../components/HeaderThreadOptionsWrapper';
 import { LabelType } from '../utils/electronInterface';
-import { Set } from 'immutable';
+import { Set, List } from 'immutable';
 import { sendPrintThreadEvent } from '../utils/ipc';
 
 const defineOneThreadSelected = (threads, threadId) => {
@@ -86,7 +86,8 @@ const getLabelIdsFromThreadIds = (threads, uniqueIds) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const threads = state.get('threads').get('list');
+  const mailbox = state.get('threads').get(`${ownProps.mailboxSelected.id}`);
+  const threads = mailbox.get('list') || List([]);
   const threadIds = getThreadsIds(threads);
   const threadsSelected = ownProps.itemsChecked
     ? defineThreadsSelected(threads, ownProps.itemsChecked)
@@ -115,7 +116,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onAddLabel: (threadIds, labelId) => {
-      dispatch(actions.addLabelIdThreads(threadIds, labelId)).then(() => {
+      const currentLabelId = ownProps.mailboxSelected.id;
+      dispatch(
+        actions.addLabelIdThreads(currentLabelId, threadIds, labelId)
+      ).then(() => {
         if (ownProps.itemsChecked) {
           ownProps.onBackOption();
         }
@@ -138,9 +142,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ).then(() => ownProps.onBackOption());
     },
     onRemoveLabel: (threadIds, labelId) => {
-      dispatch(actions.removeLabelIdThreads(threadIds, labelId)).then(() =>
-        ownProps.onBackOption()
-      );
+      const currentLabelId = ownProps.mailboxSelected.id;
+      dispatch(
+        actions.removeLabelIdThreads(currentLabelId, threadIds, labelId)
+      ).then(() => ownProps.onBackOption());
     },
     onMarkRead: (threadIds, unread) => {
       const labelId = ownProps.mailboxSelected.id;
@@ -160,7 +165,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     },
     onDiscardDrafts: draftsParams => {
-      dispatch(actions.removeThreadsDrafts(draftsParams)).then(() =>
+      const labelId = ownProps.mailboxSelected.id;
+      dispatch(actions.removeThreadsDrafts(labelId, draftsParams)).then(() =>
         ownProps.onBackOption()
       );
     },

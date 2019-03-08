@@ -19,7 +19,7 @@ const EmptyMailbox = props => {
   );
 };
 
-const defineEmptyParamsByMailbox = ({ id, text }) => {
+const defineEmptyParamsByMailbox = ({ id }) => {
   switch (id) {
     case LabelType.inbox.id:
       return {
@@ -57,30 +57,24 @@ const defineEmptyParamsByMailbox = ({ id, text }) => {
         subheader: string.mailbox.empty.spam.subheader,
         iconClass: 'empty-spam'
       };
-    default: {
-      switch (text) {
-        case 'Buscar':
-        case 'Search':
-          return {
-            header: string.mailbox.empty.search.header,
-            subheader: string.mailbox.empty.search.subheader,
-            iconClass: 'empty-search'
-          };
-        case 'All Mail':
-        case 'Todos':
-          return {
-            header: string.mailbox.empty.allmail.header,
-            subheader: string.mailbox.empty.allmail.subheader,
-            iconClass: 'empty-allmail'
-          };
-        default:
-          return {
-            header: string.mailbox.empty.default.header,
-            subheader: string.mailbox.empty.default.subheader,
-            iconClass: 'empty-allmail'
-          };
-      }
-    }
+    case LabelType.allmail.id:
+      return {
+        header: string.mailbox.empty.allmail.header,
+        subheader: string.mailbox.empty.allmail.subheader,
+        iconClass: 'empty-allmail'
+      };
+    case LabelType.search.id:
+      return {
+        header: string.mailbox.empty.search.header,
+        subheader: string.mailbox.empty.search.subheader,
+        iconClass: 'empty-search'
+      };
+    default:
+      return {
+        header: string.mailbox.empty.default.header,
+        subheader: string.mailbox.empty.default.subheader,
+        iconClass: 'empty-allmail'
+      };
   }
 };
 

@@ -265,14 +265,24 @@ class PanelWrapper extends Component {
 
     addEvent(Event.UPDATE_THREAD_EMAILS, eventParams => {
       if (!eventParams) return;
+      const currentSectionType = this.state.sectionSelected.type;
+      const isRenderingMailbox =
+        currentSectionType === SectionType.MAILBOX ||
+        currentSectionType === SectionType.THREAD;
+      const currentLabelId = isRenderingMailbox
+        ? this.state.sectionSelected.params.mailboxSelected.id
+        : null;
       const { threadId, newEmailId, oldEmailId } = eventParams;
       if (!threadId && !newEmailId && !oldEmailId) return;
-      props.onLoadEmails(threadId);
-      props.onUpdateEmailIdsThread({
-        threadId,
-        emailIdToAdd: newEmailId,
-        emailIdsToRemove: [oldEmailId]
-      });
+      if (currentLabelId) {
+        props.onLoadEmails(threadId);
+        props.onUpdateEmailIdsThread({
+          labelId: currentLabelId,
+          threadId,
+          emailIdToAdd: newEmailId,
+          emailIdsToRemove: [oldEmailId]
+        });
+      }
       if (!newEmailId && !oldEmailId) {
         props.onUpdateUnreadEmailsBadge([LabelType.inbox.id]);
       }
@@ -316,7 +326,6 @@ PanelWrapper.propTypes = {
   onAddLabels: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onLoadEvents: PropTypes.func,
-  onMarkThreadAsOpen: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,
   onStopLoadSync: PropTypes.func,

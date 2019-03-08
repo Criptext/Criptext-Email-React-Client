@@ -15,7 +15,7 @@ export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
 
 const additionalLabels = {
   search: {
-    id: -1,
+    id: -2,
     text: 'Search'
   },
   allmail: {

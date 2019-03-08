@@ -72,8 +72,9 @@ const createReadableThread = thread => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const mailbox = state.get('threads').get(`${ownProps.mailboxSelected.id}`);
   const thread =
-    getThread(state.get('threads').get('list'), ownProps.threadIdSelected) ||
+    getThread(mailbox.get('list'), ownProps.threadIdSelected) ||
     getThreadFromSuggestions(
       state.get('suggestions'),
       ownProps.threadIdSelected
@@ -112,14 +113,20 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       return dispatch(loadEmails(threadId));
     },
     onRemoveLabelIdThread: (threadId, labelId) => {
-      return dispatch(removeLabelIdThread(threadId, labelId));
+      return dispatch(
+        removeLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
+      );
     },
     onToggleStar: (threadId, isStarred) => {
       const labelId = LabelType.starred.id;
       if (isStarred) {
-        dispatch(removeLabelIdThread(threadId, labelId));
+        dispatch(
+          removeLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
+        );
       } else {
-        dispatch(addLabelIdThread(threadId, labelId));
+        dispatch(
+          addLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
+        );
       }
     },
     onUpdateUnreadEmails: (emailKeysUnread, threadId) => {

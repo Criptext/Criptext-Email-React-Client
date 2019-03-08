@@ -7,7 +7,6 @@ import {
   updateBadgeLabels,
   updateEmailIdsThread,
   updateAllFeedItemsAsOlder,
-  updateStatusThread,
   unsendEmailOnSuccess,
   unsendEmailFiles,
   setAvatarUpdatedTimestamp,
@@ -20,7 +19,10 @@ import { storeSeenTimestamp } from '../utils/storage';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 
 const mapStateToProps = state => {
-  const threadsCount = state.get('threads').get('list').size;
+  const threadsCount = state
+    .get('threads')
+    .get(`${LabelType.inbox.id}`)
+    .get('list').size;
   return {
     threadsCount
   };
@@ -50,9 +52,6 @@ const mapDispatchToProps = dispatch => {
       const contactTypes = defineContactType(labelId);
       dispatch(loadThreads({ ...params, rejectedLabelIds, contactTypes }));
     },
-    onMarkThreadAsOpen: (threadId, status) => {
-      dispatch(updateStatusThread(threadId, Number(status)));
-    },
     onStopLoadSync: () => {
       dispatch(stopLoadSync());
     },
@@ -63,9 +62,19 @@ const mapDispatchToProps = dispatch => {
     onUpdateAvatar: () => {
       dispatch(setAvatarUpdatedTimestamp(Date.now()));
     },
-    onUpdateEmailIdsThread: ({ threadId, emailIdToAdd, emailIdsToRemove }) => {
+    onUpdateEmailIdsThread: ({
+      labelId,
+      threadId,
+      emailIdToAdd,
+      emailIdsToRemove
+    }) => {
       dispatch(
-        updateEmailIdsThread({ threadId, emailIdToAdd, emailIdsToRemove })
+        updateEmailIdsThread({
+          labelId,
+          threadId,
+          emailIdToAdd,
+          emailIdsToRemove
+        })
       );
     },
     onUpdateOpenedAccount: async () => {
