@@ -36,9 +36,16 @@ const MessageStandard = props => {
       <span className="message-description">{props.description}</span>
       {!!props.action &&
         !!props.onClickAction && (
-          <button onClick={props.onClickAction}>
+          <button
+            className={defineActionClass(props.status)}
+            onClick={props.onClickAction}
+          >
             <span>{props.action}</span>
-            <i className="icon-arrow-right" />
+            {props.status === MessageActionStatus.ENABLED ? (
+              <i className="icon-arrow-right" />
+            ) : (
+              renderLoading()
+            )}
           </button>
         )}
       {isSuggestionOrAnnouncement && (
@@ -65,6 +72,15 @@ const MessageQuestion = props => (
   </div>
 );
 
+const renderLoading = () => (
+  <div className="cptx-spinning-circle ctpx-spinning-circle-a">
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
+
 const defineMessageClass = type => {
   switch (type) {
     case MessageType.ADVICE:
@@ -84,7 +100,18 @@ const defineMessageClass = type => {
   }
 };
 
-const MessageType = {
+const defineActionClass = status => {
+  switch (status) {
+    case MessageActionStatus.ENABLED:
+      return 'message-action-enabled';
+    case MessageActionStatus.DISABLED:
+      return 'message-action-disabled';
+    default:
+      return 'message-action-enabled';
+  }
+};
+
+export const MessageType = {
   ADVICE: 1,
   SUGGESTION: 2,
   QUESTION: 3,
@@ -92,6 +119,11 @@ const MessageType = {
   ERROR: 5,
   ESTABLISH: 6,
   ANNOUNCEMENT: 7
+};
+
+export const MessageActionStatus = {
+  ENABLED: 0,
+  DISABLED: 1
 };
 
 renderMessageType.propTypes = {
@@ -103,6 +135,7 @@ MessageStandard.propTypes = {
   description: PropTypes.string,
   onClickAction: PropTypes.func,
   onClickClose: PropTypes.func,
+  status: PropTypes.number,
   type: PropTypes.number
 };
 
@@ -115,4 +148,5 @@ MessageQuestion.propTypes = {
 Message.propTypes = {
   message: PropTypes.object
 };
-export { Message as default, MessageType };
+
+export default Message;

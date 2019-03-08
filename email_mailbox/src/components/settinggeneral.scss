@@ -200,41 +200,6 @@
   }
 }
 
-.loading-ring {
-  display: inline-block;
-  position: relative;
-  top: -17px;
-  left: 10px;
-  height: inherit;
-
-  > div {
-    box-sizing: border-box;
-    display: block;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    margin: 3px;
-    border: 3px solid rgb(211,211,211);
-    border-radius: 50%;
-    animation: loading-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: rgb(211,211,211) transparent transparent transparent;
-
-    &:nth-child(1) {
-      animation-delay: -0.45s;
-    }
-    &:nth-child(2) {
-      animation-delay: -0.3s;
-    }
-    &:nth-child(3) {
-      animation-delay: -0.15s;
-    }
-    @keyframes loading-ring {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  }
-}
-
 /* THEME
    ----------------------------- */
 @mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_BACKGROUND_COLOR_SETTINGS, $_COLOR_TEXT_SETTINGS_TITLE, $_BORDER_COLOR_SETTINGS_HEADER, $_COLOR_TEXT_SETTINGS_SUBTITLE, $_COLOR_TEXT_SETTINGS_CONTENT, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE, $_BORDER_COLOR_SETTINGS_SIGNATURE, $_COLOR_TEXT_SETTINGS_SIGNATURE){
