@@ -165,7 +165,8 @@
       "description": "Connection reestablished"
     },
     "network": {
-      "description": "Not connected. Trying to reconnect"
+      "description": "Not connected. Trying to reconnect",
+      "action": "Try now"
     },
     "new_device": {
       "ask": "Are you trying to access from"

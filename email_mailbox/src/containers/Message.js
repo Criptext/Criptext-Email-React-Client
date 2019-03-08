@@ -2,8 +2,8 @@ import { connect } from 'react-redux';
 import { MessageType } from '../components/Message';
 import MessageWrapper from './../components/MessageWrapper';
 import MessageContent, { actionHandlerKeys } from './../data/message';
-import { LabelType } from './../utils/electronInterface';
-import { installUpdate } from './../utils/ipc';
+import { LabelType, myAccount } from './../utils/electronInterface';
+import { installUpdate, restartSocket } from './../utils/ipc';
 import { SectionType } from '../utils/const';
 import { loadThreads, updateUnreadThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
@@ -74,7 +74,7 @@ const defineContactType = labelId => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onExecuteMessageAction: (actionHandlerKey, params) => {
+    onExecuteMessageAction: async (actionHandlerKey, params) => {
       switch (actionHandlerKey) {
         case actionHandlerKeys.success.emailSent: {
           const labelId = LabelType.sent.id;
@@ -101,6 +101,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         case actionHandlerKeys.suggestion.update: {
           installUpdate();
           ownProps.onClickClose();
+          break;
+        }
+        case actionHandlerKeys.error.network: {
+          await restartSocket(myAccount.jwt);
           break;
         }
         default:

@@ -105,7 +105,8 @@ const setConnectionStatus = networkStatus => {
 
 const checkAlive = () => {
   pingProcess = spawn('ping', ['www.google.com', '-i', '15']);
-  pingProcess.stderr.on('data', () => {
+  pingProcess.stderr.on('data', err => {
+    log(err.toString());
     setConnectionStatus(NETWORK_STATUS.OFFLINE);
   });
   pingProcess.stdout.on('data', () => {

@@ -23,19 +23,29 @@ let client = {};
 
 const initializeClient = ({ token, refreshToken, language, os }) => {
   const clientOptions = {
-    url: SERVER_URL,
+    os,
     token,
-    refreshToken,
-    timeout: 60 * 1000,
-    version: API_CLIENT_VERSION,
     language,
     appVersion,
-    os
+    refreshToken,
+    url: SERVER_URL,
+    timeout: 60 * 1000,
+    version: API_CLIENT_VERSION,
+    errorCallback: handleClientError
   };
   client = new ClientAPI(clientOptions);
   client.token = token;
   client.refreshToken = refreshToken;
   client.language = language;
+};
+
+const handleClientError = err => {
+  const NO_INTERNET_CONNECTION_CODE = 'ENOTFOUND';
+  if (err.code === NO_INTERNET_CONNECTION_CODE) {
+    mailboxWindow.send('lost-network-connection', null);
+  } else {
+    throw err;
+  }
 };
 
 const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {

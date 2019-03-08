@@ -165,7 +165,8 @@
       "description": "Conexión restablecida"
     },
     "network": {
-      "description": "Sin conexión. Intentando reconectar"
+      "description": "Sin conexión. Intentando reconectar",
+      "action": "Reconectar ahora"
     },
     "new_device": {
       "ask": "Estás tratando de acceder desde"

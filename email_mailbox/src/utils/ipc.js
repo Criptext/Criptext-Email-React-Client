@@ -82,6 +82,10 @@ export const generateLabelUUID = async () => {
   return await callMain('generate-label-uuid');
 };
 
+export const restartSocket = async jwt => {
+  await callMain('restart-socket', jwt);
+};
+
 /* File System
 ----------------------------- */
 export const saveEmailBody = async params => {

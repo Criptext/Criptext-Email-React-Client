@@ -81,6 +81,11 @@ let badgeLabelIdsEvent = new Set();
 let labelsEvent = {};
 let avatarHasChanged = false;
 
+const stopGettingEvents = () => {
+  isGettingEvents = false;
+  emitter.emit(Event.STOP_LOAD_SYNC, {});
+};
+
 export const getGroupEvents = async ({
   shouldGetMoreEvents,
   showNotification
@@ -88,10 +93,15 @@ export const getGroupEvents = async ({
   if (isGettingEvents && !shouldGetMoreEvents) return;
 
   isGettingEvents = true;
-  const { events, hasMoreEvents } = await getEvents();
+  const response = await getEvents();
+  if (!response) {
+    stopGettingEvents();
+    return;
+  }
+
+  const { events, hasMoreEvents } = response;
   if (!events.length) {
-    isGettingEvents = false;
-    emitter.emit(Event.STOP_LOAD_SYNC, {});
+    stopGettingEvents();
     return;
   }
 
@@ -407,7 +417,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     }
     notificationPreview = prevEmail.preview;
   }
-  if (isToMe) {
+  if (isToMe && !isSpam) {
     const parsedContact = parseContactRow(from);
     addEmailToNotificationList({
       senderInfo: parsedContact.name || parsedContact.email,
@@ -937,6 +947,7 @@ ipcRenderer.on('lost-network-connection', () => {
     type: MessageType.ERROR
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+  stopGettingEvents();
 });
 
 /* Window events
