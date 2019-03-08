@@ -5,7 +5,7 @@ import { Event, addEvent, removeEvent } from '../utils/electronEventInterface';
 import { messagePriorities } from '../data/message';
 
 const MESSAGE_DURATION = 5000;
-const QUESTION_DURATION = 5 * 60 * 1000;
+const QUESTION_DURATION = 10 * 60 * 1000;
 const DELAY_TO_CLEAR_MESSAGE = 500;
 
 class MessageWrapper extends Component {

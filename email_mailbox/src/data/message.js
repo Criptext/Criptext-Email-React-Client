@@ -15,6 +15,9 @@ const actionHandlerKeys = {
   },
   success: {
     emailSent: 'view-message'
+  },
+  error: {
+    network: 'try-reconnect'
   }
 };
 
@@ -118,7 +121,9 @@ const messagesContent = {
     },
     network: {
       priority: messagePriorities.HIGH,
-      description: string.messages.network.description
+      description: string.messages.network.description,
+      action: string.messages.network.action,
+      actionHandlerKey: actionHandlerKeys.error.network
     },
     recoveryEmailChanged: {
       priority: messagePriorities.MEDIUM,

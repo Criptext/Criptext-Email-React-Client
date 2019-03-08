@@ -1,6 +1,6 @@
 .message-wrapper{
   display: flex;
-  margin: 0 125px;
+  margin: 0 135px;
   position: absolute;
   top: 10px;
   width: calc(100% - 250px);
@@ -75,6 +75,9 @@
         background-color: #d26054;
         border-color: #d26054;
         color: white;
+        > .message-description {
+          margin-right: 15px;
+        }
     
         button{
           color: white;
@@ -94,6 +97,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         margin-right: 10px;
+        font-weight: 300;
       }
     
       button {

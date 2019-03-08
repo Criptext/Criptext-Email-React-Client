@@ -103,6 +103,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           ownProps.onClickClose();
           break;
         }
+        case actionHandlerKeys.error.network: {
+          console.log('Wingardium leviosa!');
+          break;
+        }
         default:
           break;
       }
