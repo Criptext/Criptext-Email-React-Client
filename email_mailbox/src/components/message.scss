@@ -97,6 +97,15 @@
       }
     
       button {
+        &.message-action-disabled{
+          opacity: 0.5;
+          pointer-events: none;
+
+          .cptx-spinning-circle{
+            margin-left: 2px;
+          }
+        }
+
         align-items: center;
         background-color: transparent;
         color: #373a45;

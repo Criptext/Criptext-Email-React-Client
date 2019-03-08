@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Message, { MessageType } from './Message';
+import Message, { MessageType, MessageActionStatus } from './Message';
 import { Event, addEvent, removeEvent } from '../utils/electronEventInterface';
 import { messagePriorities } from '../data/message';
 
@@ -20,7 +20,8 @@ class MessageWrapper extends Component {
       type: undefined,
       priority: undefined,
       params: {},
-      displayMessage: false
+      displayMessage: false,
+      status: MessageActionStatus.ENABLED
     };
 
     this.clearTimeouts();
@@ -47,6 +48,7 @@ class MessageWrapper extends Component {
         onClickAcceptOption={this.handleClickAcceptOption}
         onClickDenyOption={this.handleClickDenyOption}
         onClickClose={this.handleClickClose}
+        status={this.state.status}
         type={type}
       />
     );

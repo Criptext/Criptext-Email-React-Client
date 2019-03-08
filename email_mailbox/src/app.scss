@@ -10,11 +10,12 @@ TABLE OF CONTENTS
  1.2.- Icon
 2.- CONTENT
 3.- POPUP
-4.- CONTROLS
- 4.1.- Input Text
- 4.2.- Select
- 4.3.- Button
- 4.4.- Tooltip
+4.- SPINNING
+5.- CONTROLS
+ 5.1.- Input Text
+ 5.2.- Select
+ 5.3.- Button
+ 5.4.- Tooltip
 
 ***/
 
@@ -647,13 +648,90 @@ h2{
   }
 }
 
-/* 4.- CONTROLS
+/* 4.- SPINNING
+   ----------------------------- */
+.loading-ring {
+  display: inline-block;
+  position: relative;
+  top: -17px;
+  left: 10px;
+  height: inherit;
+
+  > div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    margin: 3px;
+    border: 3px solid rgb(211,211,211);
+    border-radius: 50%;
+    animation: loading-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: rgb(211,211,211) transparent transparent transparent;
+
+    &:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+    &:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+    &:nth-child(3) {
+      animation-delay: -0.15s;
+    }
+    @keyframes loading-ring {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  }
+}
+
+.cptx-spinning-circle {
+  display: inline-block;
+  position: relative;
+
+  > div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    margin: 2px;
+    border: 2px solid #373a45;
+    border-radius: 50%;
+    animation: cptx-spinning-circle 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #373a45 transparent transparent transparent;
+
+    &:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+    &:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+    &:nth-child(3) {
+      animation-delay: -0.15s;
+    }
+    @keyframes cptx-spinning-circle {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  }
+
+  &.ctpx-spinning-circle-a{
+    height: 18px;
+    width: 18px;
+
+    >div{
+      width: 12px;
+      height: 12px;
+    }
+  }
+}
+
+/* 5.- CONTROLS
    ----------------------------- */
 .disabled{
   opacity: 0.3;
 }
 
-/* 4.1.- CONTROLS: Input text
+/* 5.1.- CONTROLS: Input text
    ----------------------------- */
 input{
   width: 100%;
@@ -684,7 +762,7 @@ input[type="password"]{
   }
 }
 
-/* 4.2.- CONTROLS: Select
+/* 5.2.- CONTROLS: Select
    ----------------------------- */
 select {
   background-color: #f0f0f0;
@@ -696,7 +774,7 @@ select {
   outline: none;
 }
 
-/* 4.3.- CONTROLS: Button
+/* 5.3.- CONTROLS: Button
    ----------------------------- */
 button{
   border: none;
@@ -772,7 +850,7 @@ button{
   }
 }
 
-/* 4.4.- CONTROLS: Tooltip
+/* 5.4.- CONTROLS: Tooltip
    ----------------------------- */
 .labels-tooltip{
   border-radius: 3px;
