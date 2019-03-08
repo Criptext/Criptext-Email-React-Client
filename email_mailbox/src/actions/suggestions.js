@@ -21,7 +21,7 @@ export const loadSuggestions = filter => {
       const threads = await getEmailsGroupByThreadByParams({
         plain: true,
         text: filter,
-        labelId: -1,
+        labelId: -2,
         rejectedLabelIds: [LabelType.spam.id, LabelType.trash.id],
         limit: 5
       });

@@ -182,6 +182,8 @@ export const defineRejectedLabels = labelId => {
   switch (labelId) {
     case LabelType.allmail.id:
       return [LabelType.spam.id, LabelType.trash.id, LabelType.draft.id];
+    case LabelType.search.id:
+      return [LabelType.spam.id, LabelType.trash.id];
     case LabelType.spam.id:
       return [LabelType.trash.id];
     case LabelType.trash.id:

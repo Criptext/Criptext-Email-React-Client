@@ -37,6 +37,7 @@ const defineSideBarItems = labels => {
     .toJS();
   const allMailIdText = toLowerCaseWithoutSpaces(IconLabels.allmail.text);
   const allMailItem = {
+    id: -1,
     icon: IconLabels.allmail.icon,
     text: string.labelsItems[allMailIdText]
   };
