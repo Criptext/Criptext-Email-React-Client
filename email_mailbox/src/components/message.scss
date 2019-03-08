@@ -81,6 +81,10 @@
     
         button{
           color: white;
+
+          .cptx-spinning-circle > div {
+            border-color: white transparent transparent transparent;
+          }
         }
       }
     

@@ -696,7 +696,7 @@ h2{
     margin: 2px;
     border: 2px solid #373a45;
     border-radius: 50%;
-    animation: cptx-spinning-circle 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    animation: cptx-spinning-circle 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     border-color: #373a45 transparent transparent transparent;
 
     &:nth-child(1) {

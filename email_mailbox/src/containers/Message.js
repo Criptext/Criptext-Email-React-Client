@@ -74,7 +74,7 @@ const defineContactType = labelId => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onExecuteMessageAction: (actionHandlerKey, params) => {
+    onExecuteMessageAction: async (actionHandlerKey, params) => {
       switch (actionHandlerKey) {
         case actionHandlerKeys.success.emailSent: {
           const labelId = LabelType.sent.id;
@@ -104,7 +104,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
         }
         case actionHandlerKeys.error.network: {
-          restartSocket(myAccount.jwt);
+          await restartSocket(myAccount.jwt);
           break;
         }
         default:

@@ -171,10 +171,15 @@ class MessageWrapper extends Component {
   };
 
   handleClickAction = () => {
-    const actionHandlerKey =
-      this.state.actionHandlerKey || this.props.actionHandlerKey;
-    const params = this.state.params || this.props.params;
-    this.props.onExecuteMessageAction(actionHandlerKey, params);
+    this.setState({ status: MessageActionStatus.DISABLED }, async () => {
+      const actionHandlerKey =
+        this.state.actionHandlerKey || this.props.actionHandlerKey;
+      const params = this.state.params || this.props.params;
+      await this.props.onExecuteMessageAction(actionHandlerKey, params);
+      setTimeout(() => {
+        this.setState({ status: MessageActionStatus.ENABLED });
+      }, 3000);
+    });
   };
 
   handleClickAcceptOption = async () => {
