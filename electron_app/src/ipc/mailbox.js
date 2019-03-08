@@ -16,6 +16,7 @@ const {
 } = require('../utils/FileUtils');
 const { getUsername, genUUID } = require('./../utils/stringUtils');
 const { showWindows } = require('./../windows/windowUtils');
+const { restartSocket } = require('./../socketClient');
 
 ipc.answerRenderer('close-mailbox', () => {
   mailboxWindow.close();
@@ -121,3 +122,5 @@ ipc.answerRenderer('show-notification', ({ title, message, threadId }) => {
 ipc.answerRenderer('check-for-updates', checkForUpdates);
 
 ipc.answerRenderer('generate-label-uuid', genUUID);
+
+ipc.answerRenderer('restart-socket', jwt => restartSocket({ jwt }));
