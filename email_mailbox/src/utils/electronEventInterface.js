@@ -1,12 +1,6 @@
 import ipc from '@criptext/electron-better-ipc/renderer';
 import signal from './../libs/signal';
-import {
-  LabelType,
-  myAccount,
-  setInternetConnectionStatus,
-  mySettings,
-  getNews
-} from './electronInterface';
+import { LabelType, myAccount, mySettings, getNews } from './electronInterface';
 import {
   acknowledgeEvents,
   cleanDatabase,
@@ -27,7 +21,6 @@ import {
   getLabelsByText,
   logoutApp,
   openFilledComposerWindow,
-  processPendingEvents,
   showNotificationApp,
   sendStartSyncDeviceEvent,
   sendStartLinkDevicesEvent,
@@ -906,14 +899,6 @@ ipcRenderer.on('update-available', () => {
 });
 
 /* Window events: handle */
-ipcRenderer.on('check-network-status', () => {
-  const isOnline = window.navigator.onLine;
-  setInternetConnectionStatus(isOnline);
-  if (isOnline) {
-    processPendingEvents();
-  }
-});
-
 ipcRenderer.on(
   'open-mailto-in-composer',
   (ev, { subject, content, emailAddress }) => {

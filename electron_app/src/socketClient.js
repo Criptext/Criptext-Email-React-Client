@@ -109,8 +109,11 @@ const checkAlive = () => {
     log(err.toString());
     setConnectionStatus(NETWORK_STATUS.OFFLINE);
   });
-  pingProcess.stdout.on('data', () => {
-    setConnectionStatus(NETWORK_STATUS.ONLINE);
+  pingProcess.stdout.on('data', data => {
+    const status = data.toString().includes('timeout')
+      ? NETWORK_STATUS.OFFLINE
+      : NETWORK_STATUS.ONLINE;
+    setConnectionStatus(status);
   });
 };
 
