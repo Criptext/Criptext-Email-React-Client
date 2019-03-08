@@ -99,7 +99,6 @@ const show = async () => {
       createTrayIcon();
     });
     mailboxWindow.on('focus', () => {
-      send('check-network-status');
       if (!globalManager.windowsEvents.checkDisabled()) {
         ipc.callRenderer(mailboxWindow, 'get-events');
       }
