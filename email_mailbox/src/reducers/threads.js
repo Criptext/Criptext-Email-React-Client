@@ -2,6 +2,8 @@ import { Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
 import * as StringUtils from '../utils/StringUtils';
 
+const THREADS_SIZE = 20;
+
 const initThreads = Map({
   1: Map({
     list: List([]),
@@ -15,10 +17,44 @@ const initMailbox = Map({
 });
 
 const mailbox = (state = initThreads, action) => {
+  const searchLabelId = -2;
   switch (action.type) {
     case Thread.ADD_BATCH: {
+      const lastLabelId = state.findKey(
+        label => label.get('allIds').size > THREADS_SIZE
+      );
       const labelId = action.labelId;
       const mailbox = state.get(`${labelId}`) || initMailbox;
+      if (
+        lastLabelId !== undefined &&
+        action.clear &&
+        Number(lastLabelId) !== searchLabelId
+      ) {
+        const lastLabel = state.get(`${lastLabelId}`);
+        const ids = lastLabel.get('allIds');
+        const idsSize = ids.size;
+        const uniqueIdsToRemove = ids.slice(THREADS_SIZE, idsSize).toJS();
+
+        return state.merge({
+          [labelId]: threads(mailbox, action),
+          [lastLabelId]: threads(lastLabel, {
+            type: Thread.REMOVE_THREADS,
+            labelId: lastLabelId,
+            uniqueIds: uniqueIdsToRemove
+          })
+        });
+      }
+
+      const searchMailbox = state.get(`${searchLabelId}`);
+      if (labelId !== searchLabelId && action.clear && searchMailbox) {
+        if (searchMailbox.get('allIds').size) {
+          return state.merge({
+            [labelId]: threads(mailbox, action),
+            [searchLabelId]: initMailbox
+          });
+        }
+      }
+
       return state.merge({
         [labelId]: threads(mailbox, action)
       });
