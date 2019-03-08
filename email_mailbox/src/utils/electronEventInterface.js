@@ -417,7 +417,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     }
     notificationPreview = prevEmail.preview;
   }
-  if (isToMe) {
+  if (isToMe && !isSpam) {
     const parsedContact = parseContactRow(from);
     addEmailToNotificationList({
       senderInfo: parsedContact.name || parsedContact.email,
