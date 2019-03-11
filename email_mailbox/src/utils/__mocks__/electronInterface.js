@@ -1,5 +1,7 @@
 export const openEmptyComposerWindow = () => {};
 
+export const myAccount = { recipientId: 'test' };
+
 export const mySettings = { language: 'en' };
 
 export const LabelType = {
