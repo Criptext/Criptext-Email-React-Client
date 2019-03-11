@@ -61,7 +61,7 @@ const create = () => {
   mailboxWindow.on('close', e => {
     if (!globalManager.forcequit.get()) {
       e.preventDefault();
-      mailboxWindow.hide();
+      hide();
     } else {
       destroyTrayIcon();
       require('./../socketClient').disconnect();
@@ -107,7 +107,7 @@ const show = async () => {
 };
 
 const hide = () => {
-  if (mailboxWindow !== undefined) {
+  if (mailboxWindow && mailboxWindow.hide) {
     mailboxWindow.hide();
   }
 };
