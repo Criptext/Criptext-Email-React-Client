@@ -35,7 +35,7 @@ const create = () => {
     const isMacOs = process.platform === 'darwin';
     if (isMacOs && !globalManager.forcequit.get()) {
       e.preventDefault();
-      loginWindow.hide();
+      hide();
     }
   });
   loginWindow.on('closed', () => {
@@ -67,7 +67,7 @@ const close = () => {
 };
 
 const hide = () => {
-  if (loginWindow !== undefined) {
+  if (loginWindow && loginWindow.hide) {
     loginWindow.hide();
   }
 };

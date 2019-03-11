@@ -96,7 +96,7 @@ elif [ "$CURRENT_OS" = "Darwin" ]; then
     tput setaf 2;tput bold; echo "    Installer done"; tput sgr0;
 
 
-elif [ "$CURRENT_OS" = "CYGWIN" ] || [ "$CURRENT_OS" = "CYGWIN" ]; then
+else
 	printf "    OS:    Windows \n\n";
     isSupported=1;
     # Check USB token
@@ -149,8 +149,6 @@ elif [ "$CURRENT_OS" = "CYGWIN" ] || [ "$CURRENT_OS" = "CYGWIN" ]; then
     cd ..
     tput setaf 2;tput bold; echo "    Store done"; tput sgr0;
 
-else 
-    tput setaf 1;tput bold;printf "    Not supported OS \n\n\n\n"; tput sgr0;
 fi
 
 
