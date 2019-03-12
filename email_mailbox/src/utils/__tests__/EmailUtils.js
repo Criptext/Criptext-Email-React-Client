@@ -2,10 +2,12 @@
 
 import {
   addCollapseDiv,
+  checkEmailIsTo,
   compareEmailDate,
   defineRejectedLabels,
   filterCriptextRecipients,
   getRecipientIdFromEmailAddressTag,
+  getRecipientsFromData,
   cleanEmailBody
 } from '../EmailUtils';
 import { LabelType } from '../electronInterface';
@@ -140,7 +142,7 @@ describe('Get recipientId from EmailAddressTag ', () => {
   });
 });
 
-describe('[Filter emails by domain] ', () => {
+describe('Filter emails by domain ', () => {
   it('Should filter emails by a different domain defined', () => {
     const recipients = [
       `userA@${appDomain}`,
@@ -180,5 +182,66 @@ describe('Sanitize emails ', () => {
     const expectedTag = `<img alt="filename.jpg" />`;
     const sanitizedTag = cleanEmailBody(unsanitizedTag);
     expect(sanitizedTag).toEqual(expectedTag);
+  });
+});
+
+describe('Form recipients', () => {
+  it('Should form recipients', () => {
+    const data = {
+      to: ['<test@criptext.com>'],
+      cc: [
+        'Name<>1 <test1@criptext.com>',
+        '<error@criptext.com> <test2@criptext.com>',
+        'error2@criptext.com <test3@criptext.com>'
+      ],
+      bcc: ['test4@criptext.com'],
+      from: 'Name Surname <test5@criptext.com>'
+    };
+    const recipients = getRecipientsFromData(data);
+    expect(recipients).toMatchSnapshot();
+
+    const oldData = {
+      to: '<test@criptext.com>',
+      cc:
+        'Name<>1 <test1@criptext.com>, <error@criptext.com> <test2@criptext.com>, error2@criptext.com <test3@criptext.com>',
+      bcc: 'test4@criptext.com',
+      from: 'Name Surname <test5@criptext.com>'
+    };
+    const oldRecipients = getRecipientsFromData(oldData);
+    expect(oldRecipients).toMatchSnapshot();
+  });
+});
+
+describe('Check email is: to me or from me', () => {
+  it('Should valid email as to me', () => {
+    const data = {
+      to: ['<test@criptext.com>'],
+      cc: [
+        'Name<>1 <test1@criptext.com>',
+        '<error@criptext.com> <test2@criptext.com>',
+        'error2@criptext.com <test3@criptext.com>'
+      ],
+      bcc: ['test4@criptext.com'],
+      from: 'Name Surname <test5@criptext.com>'
+    };
+    const recipients = getRecipientsFromData(data);
+    const isToMe = checkEmailIsTo(recipients);
+    expect(isToMe).toBeTruthy();
+  });
+
+  it('Should not valid email as to me', () => {
+    const data = {
+      to: ['<1test@criptext.com>'],
+      cc: [
+        'Name<>1 <test1@criptext.com>',
+        '<error@criptext.com> <test2@criptext.com>',
+        'error2@criptext.com <test3@criptext.com>'
+      ],
+      bcc: ['test4@criptext.com'],
+      from: 'Name Surname <test5@criptext.com>'
+    };
+    const recipients = getRecipientsFromData(data);
+    const isToMe = checkEmailIsTo(recipients);
+    expect(isToMe).toBeFalsy();
   });
 });

@@ -44,7 +44,7 @@ const formRecipients = recipientString => {
     });
 };
 
-const getRecipientsFromData = ({ to, cc, bcc, from }) => {
+export const getRecipientsFromData = ({ to, cc, bcc, from }) => {
   return {
     to: Array.isArray(to) ? cleanEmails(to) : formRecipients(to),
     cc: Array.isArray(cc) ? cleanEmails(cc) : formRecipients(cc),
@@ -160,22 +160,23 @@ export const addCollapseDiv = (htmlString, key, isCollapse) => {
 export const compareEmailDate = (emailA, emailB) =>
   emailA.date < emailB.date ? -1 : emailA.date > emailB.date ? 1 : 0;
 
-export const checkEmailIsTo = ({ to, cc, bcc, from, type }) => {
-  const recipients = getRecipientsFromData({
-    to,
-    cc,
-    bcc,
-    from
+export const checkEmailIsTo = recipients => {
+  const recipientsArray = [
+    ...recipients.to,
+    ...recipients.cc,
+    ...recipients.bcc
+  ];
+  const emails = recipientsArray.map(recipient => {
+    const matchTag = recipient.match(HTMLTagsRegex);
+    if (matchTag) {
+      const matchSize = matchTag.length;
+      const email = matchTag[matchSize - 1];
+      return email.replace(/<|>/g, '');
+    }
+    return recipient;
   });
-  const recipientsArray =
-    type === 'to'
-      ? [...recipients.to, ...recipients.cc, ...recipients.bcc]
-      : [...recipients.from];
-  const [isTo] = recipientsArray.filter(
-    email =>
-      email.toLowerCase().indexOf(`${myAccount.recipientId}@${appDomain}`) > -1
-  );
-  return isTo ? true : false;
+  const res = emails.includes(`${myAccount.recipientId}@${appDomain}`);
+  return res;
 };
 
 export const defineRejectedLabels = labelId => {
@@ -266,15 +267,12 @@ export const cleanEmailBody = body => {
 };
 
 export const formIncomingEmailFromData = ({
-  bcc,
   body,
-  cc,
   date,
   from,
   isFromMe,
   metadataKey,
   subject,
-  to,
   threadId,
   unread,
   messageId,
@@ -288,12 +286,6 @@ export const formIncomingEmailFromData = ({
         .trim()
     : '';
   const status = isFromMe ? EmailStatus.DELIVERED : EmailStatus.NONE;
-  const recipients = getRecipientsFromData({
-    to,
-    cc,
-    bcc,
-    from
-  });
   const email = {
     key: metadataKey,
     threadId,
@@ -311,7 +303,7 @@ export const formIncomingEmailFromData = ({
     boundary,
     content: ''
   };
-  return { email, recipients };
+  return email;
 };
 
 export const getRecipientIdFromEmailAddressTag = emailAddressTag => {

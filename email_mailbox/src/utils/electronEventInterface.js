@@ -40,6 +40,7 @@ import {
   formFilesFromData,
   formIncomingEmailFromData,
   getRecipientIdFromEmailAddressTag,
+  getRecipientsFromData,
   validateEmailStatusToSet,
   parseContactRow
 } from './EmailUtils';
@@ -286,13 +287,14 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     : undefined;
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
-  const isToMe = checkEmailIsTo({
+  const isFromMe = recipientId === myAccount.recipientId;
+  const recipients = getRecipientsFromData({
     to: to || toArray,
     cc: cc || ccArray,
     bcc: bcc || bccArray,
-    type: 'to'
+    from
   });
-  const isFromMe = checkEmailIsTo({ from, type: 'from' });
+  const isToMe = checkEmailIsTo(recipients);
   let notificationPreview = '';
   let labelIds = [];
   if (!prevEmail) {
@@ -344,23 +346,20 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     }
     const unread = isFromMe && !isToMe ? false : true;
     const data = {
-      bcc: bcc || bccArray,
       body,
-      cc: cc || ccArray,
       date,
       from,
       isFromMe,
       metadataKey,
       deviceId,
       subject,
-      to: to || toArray,
       threadId,
       unread,
       messageId,
       replyTo,
       boundary
     };
-    const { email, recipients } = await formIncomingEmailFromData(data);
+    const email = await formIncomingEmailFromData(data);
     notificationPreview = email.preview;
     const filesData =
       files && files.length
