@@ -38,17 +38,17 @@ class SideBarLabelItemWrapper extends Component {
 
   handleOnClick = () => {
     const mailboxSelected = {
-      id: this.props.label.id,
-      text: this.props.label.text
+      id: this.props.id,
+      text: this.props.text
     };
     this.props.onClickSection(mailboxSelected);
   };
 
   handleOnDoubleClick = () => {
-    if (this.props.label.type === 'none') {
+    if (this.props.type === 'none') {
       this.setState({
         isEditable: true,
-        textEditable: this.props.label.text
+        textEditable: this.props.text
       });
     }
   };

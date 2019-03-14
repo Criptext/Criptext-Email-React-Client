@@ -113,7 +113,10 @@ const renderLabels = (showLabels, labels, mailboxSelected, onClickSection) => (
         return (
           <SideBarLabelItem
             key={key}
-            label={label}
+            color={label.color}
+            id={label.id}
+            text={label.text}
+            type={label.type}
             selected={selected}
             onClickSection={onClickSection}
           />
