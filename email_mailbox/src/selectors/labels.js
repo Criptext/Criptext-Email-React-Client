@@ -18,6 +18,19 @@ const defineLabels = labels => {
     });
 };
 
+const defineAllLabels = labels => {
+  return labels.toArray().map(label => {
+    const text = label.get('text');
+    return {
+      id: label.get('id'),
+      text:
+        label.get('type') === 'system'
+          ? string.labelsItems[toLowerCaseWithoutSpaces(text)]
+          : text
+    };
+  });
+};
+
 const defineSideBarItems = labels => {
   const sideBarItems = labels
     .valueSeq()
@@ -42,6 +55,10 @@ const defineSideBarItems = labels => {
   };
   return [...sideBarItems, allMailItem];
 };
+
+export const getAllLabels = createSelector([getLabels], labels =>
+  defineAllLabels(labels)
+);
 
 export const getSystemLabels = createSelector([getLabels], labels =>
   defineSideBarItems(labels)
