@@ -1,9 +1,13 @@
 import { createSelector } from 'reselect';
 import { IconLabels } from './../utils/const';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
+import { LabelType } from '../utils/electronInterface';
 import string from './../lang';
 
 const getLabels = state => state.get('labels');
+
+const getThreadLabels = (state, getLabelIdsFromThreadIds) =>
+  getLabelIdsFromThreadIds;
 
 const defineLabels = labels => {
   return labels
@@ -56,8 +60,47 @@ const defineSideBarItems = labels => {
   return [...sideBarItems, allMailItem];
 };
 
+const defineLabelsIncluded = (labels, threadLabels) => {
+  const filteredLabels = labels.filter(item => {
+    const isStarred = item.get('id') === LabelType.starred.id;
+    const isCustomAndVisible =
+      item.get('type') === 'custom' && item.get('visible');
+    return isStarred || isCustomAndVisible;
+  });
+
+  if (!threadLabels) return [];
+  const hasLabels = threadLabels.reduce((lbs, label) => {
+    if (!lbs[label]) {
+      lbs[label] = 1;
+    } else {
+      lbs[label]++;
+    }
+    return lbs;
+  }, {});
+
+  return filteredLabels.reduce((lbs, label) => {
+    const labelId = label.get('id');
+    const labelText = label.get('text');
+    let checked = 'none';
+    if (hasLabels[labelId]) {
+      checked = 'all';
+    }
+    lbs.push({
+      id: labelId,
+      text: labelText,
+      checked
+    });
+    return lbs;
+  }, []);
+};
+
 export const getAllLabels = createSelector([getLabels], labels =>
   defineAllLabels(labels)
+);
+
+export const getLabelsIncluded = createSelector(
+  [getLabels, getThreadLabels],
+  (labels, threadLabels) => defineLabelsIncluded(labels, threadLabels)
 );
 
 export const getSystemLabels = createSelector([getLabels], labels =>
