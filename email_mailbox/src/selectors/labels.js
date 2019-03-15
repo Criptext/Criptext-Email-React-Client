@@ -35,6 +35,13 @@ const defineAllLabels = labels => {
   });
 };
 
+const defineCustomLabels = labels => {
+  return labels
+    .valueSeq()
+    .filter(label => label.get('type') === 'custom')
+    .toJS();
+};
+
 const defineSideBarItems = labels => {
   const sideBarItems = labels
     .valueSeq()
@@ -58,6 +65,18 @@ const defineSideBarItems = labels => {
     text: string.labelsItems[allMailIdText]
   };
   return [...sideBarItems, allMailItem];
+};
+
+const defineSystemLabelsToEdit = labels => {
+  return [
+    labels.find(label => {
+      return label.get('id') === LabelType.starred.id;
+    })
+  ].map(label => {
+    const text =
+      string.labelsItems[toLowerCaseWithoutSpaces(label.get('text'))];
+    return { id: label.get('id'), text, visible: label.get('visible') };
+  });
 };
 
 const defineLabelsIncluded = (labels, threadLabels) => {
@@ -98,6 +117,10 @@ export const getAllLabels = createSelector([getLabels], labels =>
   defineAllLabels(labels)
 );
 
+export const getCustomeLabels = createSelector([getLabels], labels =>
+  defineCustomLabels(labels)
+);
+
 export const getLabelsIncluded = createSelector(
   [getLabels, getThreadLabels],
   (labels, threadLabels) => defineLabelsIncluded(labels, threadLabels)
@@ -105,6 +128,10 @@ export const getLabelsIncluded = createSelector(
 
 export const getSystemLabels = createSelector([getLabels], labels =>
   defineSideBarItems(labels)
+);
+
+export const getSystemLabelToEdit = createSelector([getLabels], labels =>
+  defineSystemLabelsToEdit(labels)
 );
 
 export const getVisibleLabels = createSelector([getLabels], labels =>
