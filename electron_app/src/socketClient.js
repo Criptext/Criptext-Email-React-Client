@@ -34,7 +34,9 @@ const start = ({ jwt }) => {
 
   client.on('connectFailed', error => {
     handleError(error, 'Failed to connect');
-    reconnect();
+    if (shouldReconnect) {
+      reconnect();
+    }
   });
 
   client.on('connect', connection => {
@@ -121,8 +123,10 @@ const restartSocket = ({ jwt }) => {
   shouldReconnect = false;
   disconnect();
   client = null;
-  shouldReconnect = true;
-  start({ jwt });
+  setTimeout(() => {
+    shouldReconnect = true;
+    start({ jwt });
+  }, reconnectDelay * 2);
 };
 
 module.exports = {

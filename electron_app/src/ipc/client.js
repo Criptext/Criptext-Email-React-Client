@@ -17,6 +17,12 @@ ipc.answerRenderer('client-check-available-username', params =>
   clientManager.checkAvailableUsername(params)
 );
 
+ipc.answerRenderer(
+  'client-check-expired-session',
+  ({ response, initialRequest, requestParams }) =>
+    clientManager.checkExpiredSession(response, initialRequest, requestParams)
+);
+
 ipc.answerRenderer('client-delete-my-account', password =>
   clientManager.deleteMyAccount(password)
 );

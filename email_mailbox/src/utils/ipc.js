@@ -132,6 +132,10 @@ export const changeRecoveryEmail = async params => {
   return await callMain('client-change-recovery-email', params);
 };
 
+export const checkExpiredSession = async params => {
+  return await callMain('client-check-expired-session', params);
+};
+
 export const deleteMyAccount = async password => {
   return await callMain('client-delete-my-account', password);
 };
