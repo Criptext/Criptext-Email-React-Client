@@ -9,17 +9,28 @@ const getLabels = state => state.get('labels');
 const getThreadLabels = (state, getLabelIdsFromThreadIds) =>
   getLabelIdsFromThreadIds;
 
-const defineLabels = labels => {
-  return labels
-    .valueSeq()
-    .filter(label => label.get('type') === 'custom' && label.get('visible'))
-    .map(label => {
+const getLabelIds = (state, props) => props.labelIds;
+
+const defineLabels = (labels, labelIds) => {
+  const labelIdsFiltered = labelIds.filter(
+    labelId => labelId !== LabelType.sent.id
+  );
+  const result = labelIdsFiltered
+    .map(labelId => {
+      const label = labels.get(`${labelId}`);
+      if (!label) return null;
+      const text = label.get('text');
       return {
         id: label.get('id'),
         color: label.get('color'),
-        text: label.get('text')
+        text:
+          label.get('type') === 'system'
+            ? string.labelsItems[toLowerCaseWithoutSpaces(text)]
+            : text
       };
-    });
+    })
+    .filter(item => item !== null);
+  return result ? result : [];
 };
 
 const defineAllLabels = labels => {
@@ -79,6 +90,19 @@ const defineSystemLabelsToEdit = labels => {
   });
 };
 
+const defineVisibleLabels = labels => {
+  return labels
+    .valueSeq()
+    .filter(label => label.get('type') === 'custom' && label.get('visible'))
+    .map(label => {
+      return {
+        id: label.get('id'),
+        color: label.get('color'),
+        text: label.get('text')
+      };
+    });
+};
+
 const defineLabelsIncluded = (labels, threadLabels) => {
   const filteredLabels = labels.filter(item => {
     const isStarred = item.get('id') === LabelType.starred.id;
@@ -135,5 +159,11 @@ export const getSystemLabelToEdit = createSelector([getLabels], labels =>
 );
 
 export const getVisibleLabels = createSelector([getLabels], labels =>
-  defineLabels(labels)
+  defineVisibleLabels(labels)
 );
+
+export const makeGetLabels = () => {
+  return createSelector([getLabels, getLabelIds], (labels, labelIds) =>
+    defineLabels(labels, labelIds)
+  );
+};

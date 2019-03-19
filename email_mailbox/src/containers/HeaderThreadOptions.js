@@ -1,10 +1,14 @@
 import { connect } from 'react-redux';
 import { getLabelsIncluded } from '../selectors/labels';
-import { makeGetThreadIds, makeGetThreadsSelected } from '../selectors/threads';
+import {
+  makeGetLabelIdsFromThreads,
+  makeGetThreads,
+  makeGetThreadIds,
+  makeGetThreadsSelected
+} from '../selectors/threads';
 import * as actions from '../actions/index';
 import HeaderThreadOptionsWrapper from '../components/HeaderThreadOptionsWrapper';
 import { LabelType } from '../utils/electronInterface';
-import { List } from 'immutable';
 import { sendPrintThreadEvent } from '../utils/ipc';
 
 const shouldMarkAsUnread = (threads, itemsChecked) => {
@@ -17,31 +21,20 @@ const shouldMarkAsUnread = (threads, itemsChecked) => {
   return hasUnread !== undefined;
 };
 
-const getLabelIdsFromThreadIds = (threads, uniqueIds) => {
-  return threads
-    .filter(thread => uniqueIds.includes(thread.get('uniqueId')))
-    .reduce((result, thread) => {
-      const labels = thread.get('labels').toArray();
-      return [...result, ...labels];
-    }, []);
-};
-
 const makeMapStateToProps = () => {
   const getThreadIds = makeGetThreadIds();
+  const getThreads = makeGetThreads();
   const getThreadsSelected = makeGetThreadsSelected();
+  const getLabelIdsFromThreads = makeGetLabelIdsFromThreads();
 
   const mapStateToProps = (state, ownProps) => {
-    const mailbox = state.get('threads').get(`${ownProps.mailboxSelected.id}`);
-    const threads = mailbox.get('list') || List([]);
-    const threadIds = getThreadIds(state, ownProps.mailboxSelected.id);
+    const threads = getThreads(state, ownProps);
+    const threadIds = getThreadIds(state, ownProps);
     const threadsSelected = getThreadsSelected(state, ownProps);
-    const uniqueIdsSelected = threadsSelected.map(
-      thread => thread.threadIdDB || thread.emailId
-    );
-    const threadsLabelIds = getLabelIdsFromThreadIds(
-      threads,
-      uniqueIdsSelected
-    );
+    const threadsLabelIds = getLabelIdsFromThreads(state, {
+      ...ownProps,
+      threadsSelected
+    });
     const labels = getLabelsIncluded(state, threadsLabelIds);
     const markAsUnread = ownProps.itemsChecked
       ? shouldMarkAsUnread(threads, ownProps.itemsChecked)
@@ -127,7 +120,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const HeaderThreadOptions = connect(
-  mapStateToProps,
+  makeMapStateToProps,
   mapDispatchToProps
 )(HeaderThreadOptionsWrapper);
 

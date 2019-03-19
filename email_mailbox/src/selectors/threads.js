@@ -1,5 +1,15 @@
 import { List } from 'immutable';
 import { createSelector } from 'reselect';
+import string from './../lang';
+
+const getThreadsByMailboxOrSuggestions = (state, props) => {
+  if (!props.threadIdSelected) return List([]);
+  const mailbox = state.get('threads').get(`${props.mailboxSelected.id}`);
+  if (!mailbox) return state.get('suggestions').get('threads');
+  return mailbox.get('list');
+};
+
+const getThreadIdSelected = (state, props) => props.threadIdSelected;
 
 const getThreadsByMailbox = (state, props) => {
   const mailbox = state.get('threads').get(`${props.mailboxSelected.id}`);
@@ -11,6 +21,19 @@ const getThreadsIdentifier = (state, props) =>
 
 const getUniqueIdsSelected = (state, props) =>
   props.threadsSelected.map(thread => thread.threadIdDB || thread.emailId);
+
+const defineThread = (threads, threadIdSelected) => {
+  const thread = threads.find(thread => {
+    return thread.get('threadId') === threadIdSelected;
+  });
+  if (!thread) return undefined;
+  const subject = thread.get('subject');
+  return thread
+    .merge({
+      subject: !subject ? string.mailbox.empty_subject : subject
+    })
+    .toJS();
+};
 
 const defineThreadIds = threads => {
   return !threads.size
@@ -52,6 +75,17 @@ const defineLabelIdsFromThreads = (threads, uniqueIds) => {
       const labels = thread.get('labels').toArray();
       return [...result, ...labels];
     }, []);
+};
+
+export const makeGetThread = () => {
+  return createSelector(
+    [getThreadsByMailboxOrSuggestions, getThreadIdSelected],
+    (threads, threadIdSelected) => defineThread(threads, threadIdSelected)
+  );
+};
+
+export const makeGetThreads = () => {
+  return createSelector([getThreadsByMailboxOrSuggestions], threads => threads);
 };
 
 export const makeGetThreadsSelected = () => {
