@@ -33,12 +33,6 @@ ipc.answerRenderer('client-find-key-bundles', params =>
 
 ipc.answerRenderer('client-get-data-ready', () => clientManager.getDataReady());
 
-ipc.answerRenderer('client-get-email-body', params =>
-  clientManager.getEmailBody(params)
-);
-
-ipc.answerRenderer('client-get-events', () => clientManager.getEvents());
-
 ipc.answerRenderer('client-get-key-bundle', deviceId =>
   clientManager.getKeyBundle(deviceId)
 );

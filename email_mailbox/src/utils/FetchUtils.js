@@ -4,21 +4,25 @@ import { checkExpiredSession } from './ipc';
 const PENDING_EVENTS_STATUS_OK = 200;
 const PENDING_EVENTS_STATUS_MORE = 201;
 const NO_EVENTS_STATUS = 204;
-const INITIAL_REQUEST_EMPTY_STATUS = 202;
+const INITIAL_REQUEST_EMPTY_STATUS = 499;
 
 export const fetchEmailBody = async bodyKey => {
   const res = await apiCriptextRequest({
     endpoint: '/email/body/' + bodyKey,
     method: 'GET'
   });
-  const jsonRes = await res.json();
-  return res.status === 200
-    ? { status: 200, body: jsonRes }
-    : await checkExpiredSession({
-        response: { status: res.status },
-        initialRequest: fetchEmailBody,
-        requestParams: bodyKey
-      });
+  if (res.status === 200) {
+    const jsonRes = await res.json();
+    return { status: 200, body: jsonRes };
+  }
+  const expiredResponse = await checkExpiredSession({
+    response: { status: res.status },
+    initialRequest: fetchEmailBody,
+    requestParams: bodyKey
+  });
+  if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
+    return await fetchEvents();
+  }
 };
 
 const formEvents = events =>
@@ -63,11 +67,15 @@ export const fetchAcknowledgeEvents = async eventIds => {
     method: 'POST',
     params: { ids: eventIds }
   });
-  return res.status === 200
-    ? { status: 200 }
-    : await checkExpiredSession({
-        response: { status: res.status },
-        initialRequest: fetchAcknowledgeEvents,
-        requestParams: eventIds
-      });
+  if (res.status === 200) {
+    return { status: 200 };
+  }
+  const expiredResponse = await checkExpiredSession({
+    response: { status: res.status },
+    initialRequest: fetchAcknowledgeEvents,
+    requestParams: eventIds
+  });
+  if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
+    return await fetchEvents();
+  }
 };

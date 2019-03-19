@@ -85,7 +85,7 @@ const checkExpiredSession = async (
   const NEW_SESSION_SUCCESS_STATUS = 200;
   const EXPIRED_SESSION_STATUS = 401;
   const CHANGED_PASSWORD_STATUS = 403;
-  const INITIAL_REQUEST_EMPTY_STATUS = 202;
+  const INITIAL_REQUEST_EMPTY_STATUS = 499;
 
   const status = requirementResponse.status;
   switch (status) {

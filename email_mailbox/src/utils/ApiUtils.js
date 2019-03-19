@@ -1,18 +1,37 @@
 /* global process */
+import { getOS } from './OSUtils';
+import { getOsAndArch } from './ipc';
 import { myAccount } from './electronInterface';
 import { version as appVersion } from './../../package.json';
 
-let token;
+const token = myAccount.jwt;
 const API_CLIENT_VERSION = '6.0.0';
 const apiBaseUrl =
-  process.env.REACT_APP_ENV === 'development'
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_DEV_API_URL
     : 'https://api.criptext.com';
 
+// Default
+let osInfo = getOS();
+
+const getDetails = async () => {
+  const {
+    distribution,
+    distVersion,
+    arch,
+    installerType
+  } = await getOsAndArch();
+  osInfo =
+    installerType +
+    `${distribution ? distribution : ''}` +
+    `${distVersion ? distVersion : ''}` +
+    arch;
+};
+getDetails();
+
 const formDefaultRequestHeaders = () => {
-  token = myAccount.jwt;
   return {
-    os: 'Linux',
+    os: osInfo,
     'app-version': appVersion,
     'criptext-api-version': API_CLIENT_VERSION,
     Authorization: 'Bearer ' + token
