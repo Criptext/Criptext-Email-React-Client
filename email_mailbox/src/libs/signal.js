@@ -1,10 +1,7 @@
 /*global libsignal util*/
-import {
-  getEmailBody,
-  getSessionRecordIds,
-  insertPreKeys
-} from './../utils/ipc';
+import { getSessionRecordIds, insertPreKeys } from './../utils/ipc';
 import SignalProtocolStore from './store';
+import { fetchEmailBody } from '../utils/FetchUtils';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -20,7 +17,7 @@ const decryptEmail = async ({
   deviceId,
   messageType
 }) => {
-  const { status, body } = await getEmailBody(bodyKey);
+  const { status, body } = await fetchEmailBody(bodyKey);
   if (status !== 200) {
     return;
   }

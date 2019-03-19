@@ -8,7 +8,7 @@ const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
-const { isFromStore } = require('./windowUtils');
+const { isFromStore, isDev } = require('./windowUtils');
 const { createTrayIcon, destroyTrayIcon } = require('./tray');
 const { isWindows } = require('./../utils/osUtils');
 
@@ -39,7 +39,8 @@ const create = () => {
     icon: iconPath,
     show: false,
     title: 'Criptext',
-    frame: !isWindows()
+    frame: !isWindows(),
+    webPreferences: { webSecurity: !isDev }
   });
   mailboxWindow.loadURL(mailboxUrl);
   // Firebase

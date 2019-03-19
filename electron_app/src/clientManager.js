@@ -85,6 +85,7 @@ const checkExpiredSession = async (
   const NEW_SESSION_SUCCESS_STATUS = 200;
   const EXPIRED_SESSION_STATUS = 401;
   const CHANGED_PASSWORD_STATUS = 403;
+  const INITIAL_REQUEST_EMPTY_STATUS = 499;
 
   const status = requirementResponse.status;
   switch (status) {
@@ -114,7 +115,10 @@ const checkExpiredSession = async (
           recipientId
         });
         socketClient.restartSocket({ jwt: newSessionToken });
-        return await initialRequest(requestparams);
+        if (initialRequest) {
+          return await initialRequest(requestparams);
+        }
+        return { status: INITIAL_REQUEST_EMPTY_STATUS };
       }
       break;
     }
@@ -476,6 +480,7 @@ module.exports = {
   changePassword,
   changeRecoveryEmail,
   checkAvailableUsername,
+  checkExpiredSession,
   deleteMyAccount,
   findKeyBundles,
   getDataReady,

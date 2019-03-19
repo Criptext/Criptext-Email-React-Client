@@ -2,7 +2,6 @@ import ipc from '@criptext/electron-better-ipc/renderer';
 import signal from './../libs/signal';
 import { LabelType, myAccount, mySettings, getNews } from './electronInterface';
 import {
-  acknowledgeEvents,
   cleanDatabase,
   createEmail,
   createEmailLabel,
@@ -16,7 +15,6 @@ import {
   getEmailLabelsByEmailId,
   getEmailsByKeys,
   getEmailsByThreadId,
-  getEvents,
   getContactByEmails,
   getLabelsByText,
   logoutApp,
@@ -55,6 +53,7 @@ import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
+import { fetchAcknowledgeEvents, fetchEvents } from './FetchUtils';
 import string from './../lang';
 
 const EventEmitter = window.require('events');
@@ -87,7 +86,7 @@ export const getGroupEvents = async ({
   if (isGettingEvents && !shouldGetMoreEvents) return;
 
   isGettingEvents = true;
-  const response = await getEvents();
+  const response = await fetchEvents();
   if (!response) {
     stopGettingEvents();
     return;
@@ -769,7 +768,7 @@ const handleLowPrekeysAvailable = async ({ rowid }) => {
 };
 
 const setEventAsHandled = async eventIds => {
-  return await acknowledgeEvents(eventIds);
+  return await fetchAcknowledgeEvents(eventIds);
 };
 
 /*  Window events: listener
