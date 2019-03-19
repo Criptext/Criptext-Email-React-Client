@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { makeGetFiles } from './../selectors/files';
 import EmailView from './../components/EmailWrapper';
 import {
   defineTimeByToday,
@@ -7,7 +8,7 @@ import {
 } from './../utils/TimeUtils';
 import { getTwoCapitalLetters, hasAnySubstring } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
-import { addCollapseDiv, parseContactRow } from './../utils/EmailUtils';
+import { addCollapseDiv } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
 import { LabelType, myAccount, mySettings } from './../utils/electronInterface';
 import {
@@ -36,13 +37,6 @@ import {
 } from '../utils/FileManager';
 import string from './../lang';
 
-const defineFrom = (email, contacts) => {
-  const emailFrom = parseContactRow(email.fromAddress || '');
-  return emailFrom.name
-    ? [emailFrom]
-    : getContacts(contacts, email.fromContactIds);
-};
-
 const definePreviewAndContent = (email, isCollapse, inlineImages) => {
   if (email.status === EmailStatus.UNSEND) {
     const unsentText = defineUnsentText(email.unsendDate);
@@ -63,107 +57,63 @@ const definePreviewAndContent = (email, isCollapse, inlineImages) => {
   };
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const email = ownProps.email;
-  const contacts = state.get('contacts');
-  const avatarTimestamp = state.get('activities').get('avatarTimestamp');
-  const from = defineFrom(email, contacts);
-  const to = getContacts(contacts, email.to);
-  const cc = getContacts(contacts, email.cc);
-  const bcc = getContacts(contacts, email.bcc);
-  const senderName = from.length ? from[0].name : '';
-  const senderEmail = from.length ? from[0].email : '';
-  const color = senderEmail
-    ? randomcolor({
-        seed: senderName || senderEmail,
-        luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
-      })
-    : 'transparent';
-  const letters = getTwoCapitalLetters(senderName || senderEmail || '');
-  const recipient = senderEmail.replace(`@${appDomain}`, '');
-  const avatarUrl = senderEmail.includes(`@${appDomain}`)
-    ? `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`
-    : null;
-  const date = email.date;
-  const { files, inlineImages } = getFiles(
-    state.get('files'),
-    email.fileTokens
-  );
-  const isCollapse = !!hasAnySubstring(['Re:', 'RE:'], email.subject);
-  const { preview, content } = definePreviewAndContent(
-    email,
-    isCollapse,
-    inlineImages
-  );
-  const myEmail = {
-    ...email,
-    date: defineTimeByToday(date),
-    dateLong: defineLargeTime(date),
-    subject: email.subject || `(${string.mailbox.empty_subject})`,
-    from,
-    to,
-    cc,
-    bcc,
-    color,
-    letters,
-    preview,
-    content
-  };
-  const isEmpty = !(email.content && email.content.length);
-  const isUnsend = email.status === EmailStatus.UNSEND;
-  const isSpam = email.labelIds.includes(LabelType.spam.id);
-  const isTrash = email.labelIds.includes(LabelType.trash.id);
-  const isDraft =
-    email.labelIds.findIndex(labelId => {
-      return labelId === LabelType.draft.id;
-    }) === -1
-      ? false
-      : true;
-  return {
-    avatarUrl,
-    email: myEmail,
-    files,
-    isSpam,
-    isTrash,
-    isDraft,
-    isEmpty,
-    isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
-    isUnsend,
-    inlineImages,
-    letters
-  };
-};
+const makeMapStateToProps = () => {
+  const getFiles = makeGetFiles();
 
-const getContacts = (contacts, contactIds) => {
-  return contactIds
-    ? contactIds.map(contactId => {
-        const contact = contacts.get(String(contactId));
-        return contacts.size && contact
-          ? contact.toObject()
-          : { id: contactId };
-      })
-    : [];
-};
-
-const getFiles = (fileStore, fileTokens) => {
-  if (!fileTokens) return { files: [], inlineImages: [] };
-  if (!fileStore.size) return { files: [], inlineImages: [] };
-  return fileTokens.reduce(
-    (result, token) => {
-      const inlineImages = [...result.inlineImages];
-      const files = [...result.files];
-      if (fileStore.get(token)) {
-        const file = fileStore.get(token);
-        if (file.get('cid')) {
-          inlineImages.push(file.toJS());
-        } else {
-          files.push(file.toJS());
-        }
-      }
-      return { files, inlineImages };
-    },
-    { files: [], inlineImages: [] }
-  );
+  const mapStateToProps = (state, ownProps) => {
+    const email = ownProps.email;
+    const avatarTimestamp = state.get('activities').get('avatarTimestamp');
+    const senderName = email.from.length ? email.from[0].name : '';
+    const senderEmail = email.from.length ? email.from[0].email : '';
+    const color = senderEmail
+      ? randomcolor({
+          seed: senderName || senderEmail,
+          luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
+        })
+      : 'transparent';
+    const letters = getTwoCapitalLetters(senderName || senderEmail || '');
+    const recipient = senderEmail.replace(`@${appDomain}`, '');
+    const avatarUrl = senderEmail.includes(`@${appDomain}`)
+      ? `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`
+      : null;
+    const date = email.date;
+    const { files, inlineImages } = getFiles(state, email);
+    const isCollapse = !!hasAnySubstring(['Re:', 'RE:'], email.subject);
+    const { preview, content } = definePreviewAndContent(
+      email,
+      isCollapse,
+      inlineImages
+    );
+    const isEmpty = !(email.content && email.content.length);
+    const isUnsend = email.status === EmailStatus.UNSEND;
+    const isSpam = email.labelIds.includes(LabelType.spam.id);
+    const isTrash = email.labelIds.includes(LabelType.trash.id);
+    const isDraft =
+      email.labelIds.findIndex(labelId => {
+        return labelId === LabelType.draft.id;
+      }) === -1
+        ? false
+        : true;
+    return {
+      avatarUrl,
+      color,
+      content,
+      date: defineTimeByToday(date),
+      dateLong: defineLargeTime(date),
+      email,
+      files,
+      isSpam,
+      isTrash,
+      isDraft,
+      isEmpty,
+      isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
+      isUnsend,
+      inlineImages,
+      letters,
+      preview
+    };
+  };
+  return mapStateToProps;
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -264,7 +214,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       });
     },
     onUnsendEmail: () => {
-      const contactIds = [...email.to, ...email.cc, ...email.bcc];
+      const contactIds = [...email.toIds, ...email.ccIds, ...email.bccIds];
       const unsendDate = new Date();
       const params = {
         key: email.key,
@@ -337,7 +287,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const Email = connect(
-  mapStateToProps,
+  makeMapStateToProps,
   mapDispatchToProps
 )(EmailView);
 
