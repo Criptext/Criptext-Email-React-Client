@@ -30,14 +30,15 @@ const defineClassComponent = selected => {
 };
 
 SideBarLabelItem.propTypes = {
+  color: PropTypes.string,
   isEditable: PropTypes.bool,
-  label: PropTypes.object,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onKeyPress: PropTypes.func,
   selected: PropTypes.bool,
+  text: PropTypes.string,
   textEditable: PropTypes.string
 };
 

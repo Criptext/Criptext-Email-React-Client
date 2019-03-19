@@ -1,4 +1,3 @@
-import ReactPerformance from 'react-performance';
 import { connect } from 'react-redux';
 import SideBarView from '../components/SideBarWrapper';
 import { getSystemLabels, getVisibleLabels } from '../selectors/labels';
@@ -44,16 +43,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-// const SideBar = connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(SideBarView);
-
-const SideBar = ReactPerformance.connect({
+const SideBar = connect(
   mapStateToProps,
-  mapDispatchToProps,
-  getId: 'SideBarContainer',
-  Component: SideBarView
-});
+  mapDispatchToProps
+)(SideBarView);
 
 export default SideBar;

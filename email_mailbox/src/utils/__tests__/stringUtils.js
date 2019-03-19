@@ -23,7 +23,7 @@ describe('string utils:', () => {
   it('return two capital letters from email address', () => {
     const string = 'info@criptext.com';
     const state = utils.getTwoCapitalLetters(string);
-    expect(state).toEqual('IN');
+    expect(state).toEqual('I');
   });
 
   it('not return any capital letters from empty string', () => {
@@ -32,17 +32,17 @@ describe('string utils:', () => {
     expect(state).toEqual('');
   });
 
-  it('return string in lower case and without spaces', () => {
-    const string = 'All Mail';
-    const state = utils.toLowerCaseWithoutSpaces(string);
-    expect(state).toEqual('allmail');
-  });
-
   it('return default string from empty string', () => {
     const string = '';
     const stringDefault = 'A';
     const state = utils.getTwoCapitalLetters(string, stringDefault);
     expect(state).toEqual(stringDefault);
+  });
+
+  it('return string in lower case and without spaces', () => {
+    const string = 'All Mail';
+    const state = utils.toLowerCaseWithoutSpaces(string);
+    expect(state).toEqual('allmail');
   });
 });
 

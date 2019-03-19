@@ -246,6 +246,7 @@ const isExpand = (displayEmail, staticOpen) => {
 
 renderEmailInfoExpand.propTypes = {
   buttonUnsendStatus: PropTypes.number,
+  dateLong: PropTypes.string,
   email: PropTypes.object,
   handleClickPermanentlyDeleteEmail: PropTypes.func,
   isDraft: PropTypes.bool,
@@ -276,6 +277,9 @@ renderMuteIcon.propTypes = {
 
 Email.propTypes = {
   avatarUrl: PropTypes.string,
+  color: PropTypes.string,
+  content: PropTypes.string,
+  date: PropTypes.date,
   dismissPopup: PropTypes.func,
   displayEmail: PropTypes.bool,
   email: PropTypes.object,
@@ -292,6 +296,7 @@ Email.propTypes = {
   onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,
   popupContent: PropTypes.object,
+  preview: PropTypes.string,
   staticOpen: PropTypes.bool
 };
 

@@ -67,9 +67,11 @@ class SideBarLabelItemWrapper extends Component {
 }
 
 SideBarLabelItemWrapper.propTypes = {
+  id: PropTypes.number,
   onClickSection: PropTypes.func,
   onUpdateLabel: PropTypes.func,
-  label: PropTypes.object
+  text: PropTypes.string,
+  type: PropTypes.string
 };
 
 export default SideBarLabelItemWrapper;
