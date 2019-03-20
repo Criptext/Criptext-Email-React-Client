@@ -60,7 +60,7 @@ class LoadingWrapper extends Component {
     this.setState({ message: messages.sendingKeys, pauseAt: 10 }, async () => {
       this.incrementPercentage();
       await setTimeout(async () => {
-        await this.uploadKeys();
+        await this.uploadKeys({ deviceType: remoteData.deviceType });
       }, ANIMATION_DURATION);
     });
   }
@@ -97,9 +97,9 @@ class LoadingWrapper extends Component {
     this.tm = setTimeout(this.incrementPercentage, this.state.delay);
   };
 
-  uploadKeys = async () => {
+  uploadKeys = async ({ deviceType }) => {
     try {
-      const accountData = await signal.uploadKeys();
+      const accountData = await signal.uploadKeys({ deviceType });
       if (!accountData) {
         this.linkingDevicesThrowError();
       } else {

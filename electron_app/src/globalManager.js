@@ -1,5 +1,6 @@
 const packageData = require('./../package.json');
 const allInstallerTypes = require('./../installerResources/installerTypes.json');
+const { getDeviceType } = require('./utils/osUtils');
 const currrentInstallerType = packageData.criptextInstallerType;
 
 global.composerData = {};
@@ -12,6 +13,7 @@ global.windowsEventsDisabled = false;
 global.internetConnection;
 global.isWindowsStore =
   currrentInstallerType === allInstallerTypes.windows.store;
+global.deviceType = getDeviceType(currrentInstallerType, allInstallerTypes);
 
 /*  Composer
 ----------------------------- */
@@ -52,6 +54,13 @@ const getForceQuit = () => {
 /*  Loading
 ----------------------------- */
 const setLoadingData = data => {
+  if (data.remoteData) {
+    const deviceType = global.deviceType;
+    const remoteData = { ...data.remoteData, deviceType };
+    const dataUpdated = { ...data, remoteData };
+    global.loadingData = dataUpdated;
+    return;
+  }
   global.loadingData = data;
 };
 const getLoadingData = () => {

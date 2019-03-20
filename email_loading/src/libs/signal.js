@@ -22,7 +22,7 @@ import {
 } from './../utils/ipc';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
-import { appDomain, DEVICE_TYPE } from './../utils/const';
+import { appDomain } from './../utils/const';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 import string from './../lang';
 
@@ -38,6 +38,7 @@ const createAccount = async ({
   recipientId,
   password,
   name,
+  deviceType,
   recoveryEmail
 }) => {
   const [currentAccount] = await getAccount();
@@ -61,7 +62,8 @@ const createAccount = async ({
     identityKey,
     registrationId,
     signedPreKeyId,
-    preKeyIds
+    preKeyIds,
+    deviceType
   });
   if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
     throw CustomError(string.errors.prekeybundleFailed);
@@ -135,7 +137,12 @@ const createAccount = async ({
   return true;
 };
 
-const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
+const createAccountWithNewDevice = async ({
+  recipientId,
+  deviceId,
+  name,
+  deviceType
+}) => {
   const signedPreKeyId = 1;
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
     (item, index) => index + 1
@@ -149,7 +156,8 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
     identityKey,
     registrationId,
     signedPreKeyId,
-    preKeyIds
+    preKeyIds,
+    deviceType
   });
   if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
     throw CustomError(string.errors.prekeybundleFailed);
@@ -231,7 +239,7 @@ const createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
   return true;
 };
 
-const uploadKeys = async () => {
+const uploadKeys = async ({ deviceType }) => {
   const signedPreKeyId = 1;
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
     (item, index) => index + 1
@@ -245,7 +253,8 @@ const uploadKeys = async () => {
     identityKey,
     registrationId,
     signedPreKeyId,
-    preKeyIds
+    preKeyIds,
+    deviceType
   });
   const { status, body } = await postKeyBundle(keybundle);
   if (status !== 200) {
@@ -400,7 +409,8 @@ const generatePreKeyBundle = async ({
   identityKey,
   registrationId,
   signedPreKeyId,
-  preKeyIds
+  preKeyIds,
+  deviceType
 }) => {
   const preKeyPairArray = [];
   const preKeys = await Promise.all(
@@ -421,7 +431,7 @@ const generatePreKeyBundle = async ({
   const keybundle = {
     deviceName: pcName || window.navigator.platform,
     deviceFriendlyName: pcName || window.navigator.platform,
-    deviceType: DEVICE_TYPE,
+    deviceType,
     signedPreKeySignature: util.toBase64(signedPreKey.signature),
     signedPreKeyPublic: util.toBase64(signedPreKey.keyPair.pubKey),
     signedPreKeyId: signedPreKeyId,

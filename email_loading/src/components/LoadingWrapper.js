@@ -56,8 +56,13 @@ class LoadingWrapper extends Component {
       if (this.props.loadingType === loadingTypes.SIGNUP) {
         this.createNewAccount();
       } else if (this.props.loadingType === loadingTypes.LOGIN) {
-        const { recipientId, deviceId, name } = remoteData;
-        this.createAccountWithNewDevice({ recipientId, deviceId, name });
+        const { recipientId, deviceId, name, deviceType } = remoteData;
+        this.createAccountWithNewDevice({
+          recipientId,
+          deviceId,
+          name,
+          deviceType
+        });
       }
     }
     if (percent > 99) {
@@ -73,7 +78,8 @@ class LoadingWrapper extends Component {
     const userCredentials = {
       recipientId: remoteData.username,
       password: remoteData.password,
-      name: remoteData.name
+      name: remoteData.name,
+      deviceType: remoteData.deviceType
     };
     if (remoteData.recoveryEmail !== '') {
       userCredentials['recoveryEmail'] = remoteData.recoveryEmail;
@@ -103,12 +109,18 @@ class LoadingWrapper extends Component {
     }
   };
 
-  createAccountWithNewDevice = async ({ recipientId, deviceId, name }) => {
+  createAccountWithNewDevice = async ({
+    recipientId,
+    deviceId,
+    name,
+    deviceType
+  }) => {
     try {
       const loginResponse = await signal.createAccountWithNewDevice({
         recipientId,
         deviceId,
-        name
+        name,
+        deviceType
       });
       if (loginResponse === false) {
         this.loadingThrowError();

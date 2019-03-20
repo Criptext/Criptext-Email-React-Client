@@ -32,4 +32,28 @@ const getOsAndArch = () => {
   });
 };
 
-module.exports = { getComputerName, isWindows, isLinux, isMacOs, getOsAndArch };
+const getDeviceType = (type, allInstallerTypes) => {
+  switch (type) {
+    case allInstallerTypes.mac.installer:
+      return 4;
+    case allInstallerTypes.mac.store:
+      return 5;
+    case allInstallerTypes.windows.installer:
+      return 6;
+    case allInstallerTypes.windows.store:
+      return 7;
+    case allInstallerTypes.linux.installer:
+      return 8;
+    default:
+      return 1;
+  }
+};
+
+module.exports = {
+  getComputerName,
+  isWindows,
+  isLinux,
+  isMacOs,
+  getOsAndArch,
+  getDeviceType
+};
