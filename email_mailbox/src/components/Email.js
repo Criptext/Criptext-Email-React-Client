@@ -38,7 +38,7 @@ const Email = props => (
       <div className="email-info" onClick={props.onToggleEmail}>
         <div className="email-info-letter">
           <AvatarImage
-            color={props.email.color}
+            color={props.color}
             avatarUrl={props.avatarUrl}
             letters={props.letters}
           />
@@ -55,19 +55,19 @@ const Email = props => (
             <div className="email-info-content-detail">
               {renderFileExist(props.email.fileTokens)}
               <span className="email-info-content-detail-date">
-                {props.email.date}
+                {props.date}
               </span>
             </div>
           </div>
           {isExpand(props.displayEmail, props.staticOpen)
             ? renderEmailInfoExpand(props)
-            : renderEmailInfoCollapse(props.email)}
+            : renderEmailInfoCollapse(props.email.status, props.preview)}
         </div>
       </div>
       <hr />
       <div className="email-body">
         <div disabled={props.hideView || props.isUnsend} className="email-text">
-          <div dangerouslySetInnerHTML={{ __html: props.email.content }} />
+          <div dangerouslySetInnerHTML={{ __html: props.content }} />
         </div>
         {!!props.files.length &&
           isExpand(props.displayEmail, props.staticOpen) && (
@@ -103,10 +103,10 @@ const Email = props => (
   </div>
 );
 
-const renderEmailInfoCollapse = email => (
+const renderEmailInfoCollapse = (status, preview) => (
   <div className="email-info-content-line">
-    {renderEmailStatus(email.status)}
-    <span className="email-preview-content">{email.preview}</span>
+    {renderEmailStatus(status)}
+    <span className="email-preview-content">{preview}</span>
   </div>
 );
 
@@ -124,7 +124,7 @@ const renderEmailInfoExpand = props => (
           cc={props.email.cc}
           from={props.email.from}
           to={props.email.to}
-          date={props.email.dateLong}
+          date={props.dateLong}
           isHidden={props.isHiddenPopOverEmailMoreInfo}
           menuPosition={{ left: '-150px', top: '25px' }}
           onToggleMenu={props.onTooglePopOverEmailMoreInfo}
@@ -246,6 +246,7 @@ const isExpand = (displayEmail, staticOpen) => {
 
 renderEmailInfoExpand.propTypes = {
   buttonUnsendStatus: PropTypes.number,
+  dateLong: PropTypes.string,
   email: PropTypes.object,
   handleClickPermanentlyDeleteEmail: PropTypes.func,
   isDraft: PropTypes.bool,
@@ -276,6 +277,9 @@ renderMuteIcon.propTypes = {
 
 Email.propTypes = {
   avatarUrl: PropTypes.string,
+  color: PropTypes.string,
+  content: PropTypes.string,
+  date: PropTypes.date,
   dismissPopup: PropTypes.func,
   displayEmail: PropTypes.bool,
   email: PropTypes.object,
@@ -292,6 +296,7 @@ Email.propTypes = {
   onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,
   popupContent: PropTypes.object,
+  preview: PropTypes.string,
   staticOpen: PropTypes.bool
 };
 

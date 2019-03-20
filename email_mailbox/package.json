@@ -29,6 +29,7 @@
     "redux": "^3.7.2",
     "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.2.0",
+    "reselect": "^4.0.0",
     "sanitize-html": "^1.19.1",
     "styled-components": "^4.1.2"
   },

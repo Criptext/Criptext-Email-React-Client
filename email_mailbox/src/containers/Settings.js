@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import randomcolor from 'randomcolor';
 import SettingsWrapper from './../components/SettingsWrapper';
+import { getCustomeLabels, getSystemLabelToEdit } from './../selectors/labels';
 import {
   addLabel,
   updateLabel,
@@ -9,7 +10,6 @@ import {
 } from './../actions';
 import {
   cleanDataLogout,
-  LabelType,
   myAccount,
   mySettings
 } from '../utils/electronInterface';
@@ -30,38 +30,15 @@ import {
 } from './../utils/ipc';
 import { appDomain } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
-import { toLowerCaseWithoutSpaces } from '../utils/StringUtils';
 import { clearStorage } from '../utils/storage';
 import {
   sendResetPasswordSendLinkSuccessMessage,
   sendResetPasswordSendLinkErrorMessage
 } from '../utils/electronEventInterface';
-import string from './../lang';
-
-const defineSystemLabels = labelsArray => {
-  return labelsArray
-    .filter(label => {
-      const isStarred = label.id === LabelType.starred.id;
-      return isStarred;
-    })
-    .map(label => {
-      const text =
-        label.type === 'system'
-          ? string.labelsItems[toLowerCaseWithoutSpaces(label.text)]
-          : label.text;
-      return { id: label.id, text, visible: label.visible };
-    });
-};
-
-const defineCustomLabels = labelsArray => {
-  return labelsArray.filter(label => label.type === 'custom');
-};
 
 const mapStateToProps = state => {
-  const labels = state.get('labels').toJS();
-  const labelsArray = Object.values(labels);
-  const systemLabels = defineSystemLabels(labelsArray);
-  const customLabels = defineCustomLabels(labelsArray);
+  const systemLabels = getSystemLabelToEdit(state);
+  const customLabels = getCustomeLabels(state);
   return {
     systemLabels,
     customLabels

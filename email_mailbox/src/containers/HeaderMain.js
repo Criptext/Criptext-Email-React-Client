@@ -1,27 +1,13 @@
 import { connect } from 'react-redux';
+import { getAllLabels } from '../selectors/labels';
 import { loadSuggestions } from '../actions/index';
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
-import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
 import { SectionType, avatarBaseUrl } from '../utils/const';
 import { myAccount } from '../utils/electronInterface';
-import string from './../lang';
-
-const defineLabels = labels => {
-  return labels.toArray().map(label => {
-    const text = label.get('text');
-    return {
-      id: label.get('id'),
-      text:
-        label.get('type') === 'system'
-          ? string.labelsItems[toLowerCaseWithoutSpaces(text)]
-          : text
-    };
-  });
-};
 
 const mapStateToProps = state => {
   const suggestions = state.get('suggestions');
-  const allLabels = defineLabels(state.get('labels'));
+  const allLabels = getAllLabels(state);
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const avatarUrl = `${avatarBaseUrl}${
     myAccount.recipientId

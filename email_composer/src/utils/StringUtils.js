@@ -54,10 +54,12 @@ export const removeHTMLTags = string => {
   return stringHTMLTagRemoved.replace(/\s\s+/g, ' ').trim();
 };
 
-export const getTwoCapitalLetters = string => {
+export const getTwoCapitalLetters = (string, defaultString) => {
   const strings = string.split(' ');
-  if (strings.length === 1) {
-    return strings[0].slice(0, 2).toUpperCase();
+  if (strings.length === 1 && strings[0].length === 0) {
+    return defaultString || '';
+  } else if (strings.length === 1) {
+    return strings[0].charAt(0).toUpperCase();
   }
   return (strings[0].charAt(0) + strings[1].charAt(0)).toUpperCase();
 };
