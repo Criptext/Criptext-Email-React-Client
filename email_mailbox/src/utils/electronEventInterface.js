@@ -276,6 +276,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     external,
     boundary
   } = params;
+  if (!metadataKey) return { rowid: null };
   const recipientId =
     external === true
       ? EXTERNAL_RECIPIENT_ID_SERVER
