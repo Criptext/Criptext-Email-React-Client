@@ -5,6 +5,7 @@ const PENDING_EVENTS_STATUS_OK = 200;
 const PENDING_EVENTS_STATUS_MORE = 201;
 const NO_EVENTS_STATUS = 204;
 const INITIAL_REQUEST_EMPTY_STATUS = 499;
+const EVENTS_BATCH = 25;
 
 export const fetchEmailBody = async bodyKey => {
   const res = await apiCriptextRequest({
@@ -21,7 +22,7 @@ export const fetchEmailBody = async bodyKey => {
     requestParams: bodyKey
   });
   if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-    return await fetchEvents();
+    return await fetchEmailBody();
   }
 };
 
@@ -35,6 +36,7 @@ const formEvents = events =>
 export const fetchEvents = async () => {
   const res = await apiCriptextRequest({
     endpoint: '/event',
+    querystring: `?count=${EVENTS_BATCH}`,
     method: 'GET'
   });
   switch (res.status) {
@@ -76,6 +78,6 @@ export const fetchAcknowledgeEvents = async eventIds => {
     requestParams: eventIds
   });
   if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-    return await fetchEvents();
+    return await fetchAcknowledgeEvents();
   }
 };
