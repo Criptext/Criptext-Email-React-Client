@@ -104,7 +104,8 @@ class PanelWrapper extends Component {
               params: {
                 mailboxSelected,
                 threadIdSelected,
-                searchParams
+                searchParams:
+                  searchParams || this.state.sectionSelected.params.searchParams
               }
             }
           }));
