@@ -2,12 +2,7 @@ import { connect } from 'react-redux';
 import randomcolor from 'randomcolor';
 import SettingsWrapper from './../components/SettingsWrapper';
 import { getCustomeLabels, getSystemLabelToEdit } from './../selectors/labels';
-import {
-  addLabel,
-  updateLabel,
-  removeLabel,
-  setAvatarUpdatedTimestamp
-} from './../actions';
+import { addLabel, updateLabel, removeLabel } from './../actions';
 import {
   cleanDataLogout,
   myAccount,
@@ -23,7 +18,6 @@ import {
   updateAccount,
   updateContactByEmail,
   updateNameEvent,
-  uploadAvatar,
   setReadTracking,
   checkForUpdates,
   generateLabelUUID
@@ -140,11 +134,6 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateLabel: params => {
       dispatch(updateLabel(params));
-    },
-    onUploadAvatar: async params => {
-      const { status } = await uploadAvatar(params);
-      dispatch(setAvatarUpdatedTimestamp(Date.now()));
-      return status;
     },
     onResetPassword: async () => {
       const { recipientId } = myAccount;

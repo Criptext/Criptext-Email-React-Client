@@ -3,7 +3,12 @@ import { cleanDataLogout as cleanData, createSignalTables } from './ipc';
 
 const { remote } = window.require('electron');
 const { getCurrentWindow } = remote;
+
 const newsClient = remote.require('./src/newsClient');
+const globalManager = remote.require('./src/globalManager');
+
+export const myAccount = remote.require('./src/Account');
+export const mySettings = remote.require('./src/Settings');
 
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
@@ -24,14 +29,12 @@ const additionalLabels = {
   }
 };
 export const LabelType = Object.assign(labels, additionalLabels);
-export const myAccount = remote.require('./src/Account');
 
 export const setInternetConnectionStatus = status => {
-  const globalManager = remote.require('./src/globalManager');
   globalManager.internetConnection.setStatus(status);
 };
 
-export const mySettings = remote.require('./src/Settings');
+export const getDeviceType = () => globalManager.deviceType.id;
 
 /*  Window events
 ----------------------------- */

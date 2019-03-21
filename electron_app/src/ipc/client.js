@@ -133,6 +133,10 @@ ipc.answerRenderer('client-unsend-email', metadataKey =>
   clientManager.unsendEmail(metadataKey)
 );
 
+ipc.answerRenderer('client-update-device-type', newDeviceType =>
+  clientManager.updateDeviceType(newDeviceType)
+);
+
 ipc.answerRenderer('client-update-name-event', params =>
   clientManager.updateName(params)
 );

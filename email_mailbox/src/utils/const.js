@@ -102,7 +102,8 @@ export const SocketCommand = {
   PEER_RECOVERY_EMAIL_CONFIRMED: 312,
   PEER_AVATAR_CHANGED: 313,
 
-  NEW_ANNOUNCEMENT: 401
+  NEW_ANNOUNCEMENT: 401,
+  UPDATE_DEVICE_TYPE: 403
 };
 
 export const deviceTypes = {
