@@ -3,7 +3,6 @@ import { createSelector } from 'reselect';
 import string from './../lang';
 
 const getThreadsByMailboxOrSuggestions = (state, props) => {
-  if (!props.threadIdSelected) return List([]);
   const mailbox = state.get('threads').get(`${props.mailboxSelected.id}`);
   if (!mailbox) return state.get('suggestions').get('threads');
   return mailbox.get('list');

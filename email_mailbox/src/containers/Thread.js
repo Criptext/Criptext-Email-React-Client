@@ -18,11 +18,9 @@ const makeMapStateToProps = () => {
 
   const mapStateToProps = (state, ownProps) => {
     const thread = getThread(state, ownProps);
-    const { emails, emailKeysUnread } = thread
-      ? getEmails(state, {
-          emailIds: thread.emailIds
-        })
-      : [];
+    const { emails, emailKeysUnread } = getEmails(state, {
+      emailIds: thread.emailIds
+    });
     const indexFirstUnread = emails.findIndex(email => email.unread);
     const labelIds =
       ownProps.mailboxSelected.id === LabelType.inbox.id
