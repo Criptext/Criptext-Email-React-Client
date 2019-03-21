@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { LabelType } from '../utils/electronInterface';
-import { toLowerCaseWithoutSpaces } from '../utils/StringUtils';
 import string from './../lang';
 import './emptymailbox.scss';
 
@@ -43,11 +42,7 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
   const { id, text } = mailbox;
   let headerLoading = undefined;
   if (status === EmptyMailboxStatus.LOADING) {
-    const mailboxText =
-      id >= 1 && id <= 7
-        ? LabelType[toLowerCaseWithoutSpaces(text)].text
-        : text;
-    headerLoading = `${string.mailbox.empty.loading} ${mailboxText}`;
+    headerLoading = `${string.mailbox.empty.loading} ${text}`;
   }
 
   switch (id) {
