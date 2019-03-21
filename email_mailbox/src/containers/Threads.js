@@ -10,6 +10,7 @@ import {
 import { getEmailsByLabelIds } from './../utils/ipc';
 import ThreadsView from '../components/ThreadsWrapper';
 import { ButtonSyncType } from '../components/ButtonSync';
+import { EmptyMailboxStatus } from '../components/EmptyMailbox';
 import { LabelType } from './../utils/electronInterface';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
@@ -17,8 +18,13 @@ import { storeValue } from '../utils/storage';
 import string from './../lang';
 import { List } from 'immutable';
 
-const defineStatus = isSyncing => {
+const defineSyncStatus = isSyncing => {
   return isSyncing ? ButtonSyncType.LOAD : ButtonSyncType.STOP;
+};
+
+const defineMailboxStatus = (isLoadingThreads, mailboxSize) => {
+  if (isLoadingThreads && !mailboxSize) return EmptyMailboxStatus.LOADING;
+  return EmptyMailboxStatus.EMPTY;
 };
 
 const defineContactType = (labelId, from, to) => {
@@ -41,20 +47,22 @@ const mapStateToProps = (state, ownProps) => {
   const switchUnreadThreadsStatus = state
     .get('activities')
     .get('isFilteredByUnreadThreads');
-  const buttonSyncStatus = defineStatus(
+  const buttonSyncStatus = defineSyncStatus(
     state.get('activities').get('isSyncing')
   );
   const isLoadingThreads = state.get('activities').get('isLoadingThreads');
   const mailbox = state.get('threads').get(`${ownProps.mailboxSelected.id}`);
   const threads = mailbox ? mailbox.get('list') : List([]);
   const unreadThreads = threads.filter(thread => thread.get('unread'));
+  const mailboxStatus = defineMailboxStatus(isLoadingThreads, threads.size);
   return {
     buttonSyncStatus,
+    currentUnreadThreadsLength: unreadThreads.size,
     isLoadingThreads,
     mailboxTitle,
+    mailboxStatus,
     switchUnreadThreadsStatus,
-    threads: switchUnreadThreadsStatus ? unreadThreads : threads,
-    currentUnreadThreadsLength: unreadThreads.size
+    threads: switchUnreadThreadsStatus ? unreadThreads : threads
   };
 };
 

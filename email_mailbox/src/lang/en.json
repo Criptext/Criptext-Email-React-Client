@@ -107,7 +107,8 @@
       "default": {
         "header": "You have no emails yet",
         "subheader": "Send an email to get started"
-      }
+      },
+      "loading": "Loading"
     },
     "forward": "Forward",
     "from": "From",

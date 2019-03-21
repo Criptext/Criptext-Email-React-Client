@@ -107,7 +107,8 @@
       "default": {
         "header": "No tienes correos todavía",
         "subheader": "Envía un correo para comenzar"
-      }
+      },
+      "loading": "Cargando"
     },
     "forward": "Reenviar",
     "from": "De",
