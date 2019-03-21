@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import './message.scss';
 
 const Message = props => (
-  <div className={`message-wrapper ${defineMessageStatus(props)}`}>
+  <div className={defineClassComponent(props)}>
     <div className="message-container">{renderMessageType(props)}</div>
   </div>
 );
 
-const defineMessageStatus = props =>
-  props.displayMessage ? 'displayed' : 'hidden';
+const defineClassComponent = props => {
+  const statusClass = props.displayMessage ? 'displayed' : 'hidden';
+  return `cptx-message-wrapper ${statusClass}`;
+};
 
 const renderMessageType = props => {
   if (

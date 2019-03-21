@@ -279,7 +279,7 @@ Email.propTypes = {
   avatarUrl: PropTypes.string,
   color: PropTypes.string,
   content: PropTypes.string,
-  date: PropTypes.date,
+  date: PropTypes.string,
   dismissPopup: PropTypes.func,
   displayEmail: PropTypes.bool,
   email: PropTypes.object,

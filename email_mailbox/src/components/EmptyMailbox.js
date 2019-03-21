@@ -6,80 +6,129 @@ import './emptymailbox.scss';
 
 const EmptyMailbox = props => {
   const { header, subheader, iconClass } = defineEmptyParamsByMailbox(
-    props.mailbox
+    props.mailbox,
+    props.status
   );
   return (
-    <div className="empty-container empty-mailbox-container">
+    <div className={defineClassComponent(props.status)}>
       <div className="empty-content">
         <div className={`empty-icon ${iconClass}`} />
         <div className="header-text">{header}</div>
-        <div className="subheader-text">{subheader}</div>
+        {props.status === EmptyMailboxStatus.LOADING ? (
+          renderLoading()
+        ) : (
+          <div className="subheader-text">{subheader}</div>
+        )}
       </div>
     </div>
   );
 };
 
-const defineEmptyParamsByMailbox = ({ id }) => {
+const renderLoading = () => (
+  <div className="cptx-linear-animate">
+    <div className="cptx-indeterminate" />
+  </div>
+);
+
+const defineClassComponent = status => {
+  const statusClass =
+    status === EmptyMailboxStatus.LOADING
+      ? 'cptx-empty-mailbox-status-loading'
+      : '';
+  return `empty-container empty-mailbox-container ${statusClass}`;
+};
+
+const defineEmptyParamsByMailbox = (mailbox, status) => {
+  const { id, text } = mailbox;
+  let headerLoading = undefined;
+  if (status === EmptyMailboxStatus.LOADING) {
+    headerLoading = `${string.mailbox.empty.loading} ${text}`;
+  }
+
   switch (id) {
-    case LabelType.inbox.id:
+    case LabelType.inbox.id: {
+      const header = headerLoading || string.mailbox.empty.inbox.header;
       return {
-        header: string.mailbox.empty.inbox.header,
+        header,
         subheader: string.mailbox.empty.inbox.subheader,
         iconClass: 'empty-inbox'
       };
-    case LabelType.starred.id:
+    }
+    case LabelType.starred.id: {
+      const header = headerLoading || string.mailbox.empty.starred.header;
       return {
-        header: string.mailbox.empty.starred.header,
+        header,
         subheader: string.mailbox.empty.starred.subheader,
         iconClass: 'empty-starred'
       };
-    case LabelType.trash.id:
+    }
+    case LabelType.trash.id: {
+      const header = headerLoading || string.mailbox.empty.trash.header;
       return {
-        header: string.mailbox.empty.trash.header,
+        header,
         subheader: string.mailbox.empty.trash.subheader,
         iconClass: 'empty-trash'
       };
-    case LabelType.draft.id:
+    }
+    case LabelType.draft.id: {
+      const header = headerLoading || string.mailbox.empty.draft.header;
       return {
-        header: string.mailbox.empty.draft.header,
+        header,
         subheader: string.mailbox.empty.draft.subheader,
         iconClass: 'empty-draft'
       };
-    case LabelType.sent.id:
+    }
+    case LabelType.sent.id: {
+      const header = headerLoading || string.mailbox.empty.sent.header;
       return {
-        header: string.mailbox.empty.sent.header,
+        header,
         subheader: string.mailbox.empty.sent.subheader,
         iconClass: 'empty-sent'
       };
-    case LabelType.spam.id:
+    }
+    case LabelType.spam.id: {
+      const header = headerLoading || string.mailbox.empty.spam.header;
       return {
-        header: string.mailbox.empty.spam.header,
+        header,
         subheader: string.mailbox.empty.spam.subheader,
         iconClass: 'empty-spam'
       };
-    case LabelType.allmail.id:
+    }
+    case LabelType.allmail.id: {
+      const header = headerLoading || string.mailbox.empty.allmail.header;
       return {
-        header: string.mailbox.empty.allmail.header,
+        header,
         subheader: string.mailbox.empty.allmail.subheader,
         iconClass: 'empty-allmail'
       };
-    case LabelType.search.id:
+    }
+    case LabelType.search.id: {
+      const header = headerLoading || string.mailbox.empty.search.header;
       return {
-        header: string.mailbox.empty.search.header,
+        header,
         subheader: string.mailbox.empty.search.subheader,
         iconClass: 'empty-search'
       };
-    default:
+    }
+    default: {
+      const header = headerLoading || string.mailbox.empty.default.header;
       return {
-        header: string.mailbox.empty.default.header,
+        header,
         subheader: string.mailbox.empty.default.subheader,
         iconClass: 'empty-allmail'
       };
+    }
   }
 };
 
 EmptyMailbox.propTypes = {
-  mailbox: PropTypes.object
+  mailbox: PropTypes.object,
+  status: PropTypes.number
+};
+
+export const EmptyMailboxStatus = {
+  LOADING: 0,
+  EMPTY: 1
 };
 
 export default EmptyMailbox;

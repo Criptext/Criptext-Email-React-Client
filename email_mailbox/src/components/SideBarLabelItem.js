@@ -26,7 +26,8 @@ const SideBarLabelItem = props => (
 );
 
 const defineClassComponent = selected => {
-  return `nav-item-label ${selected && 'nav-item-selected'}`;
+  const statusClass = selected ? 'nav-item-selected' : '';
+  return `nav-item-label ${statusClass}`;
 };
 
 SideBarLabelItem.propTypes = {

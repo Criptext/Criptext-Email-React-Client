@@ -26,7 +26,7 @@ const SideBar = props => (
         <ul>
           {props.items.map((item, key) => {
             const selected = props.mailboxSelected
-              ? item.text === props.mailboxSelected.text
+              ? item.id === props.mailboxSelected.id
               : false;
             const mailboxSelected = {
               id: item.id,

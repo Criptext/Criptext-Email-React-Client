@@ -62,7 +62,10 @@ const Threads = props => (
     <div className="threads-content" onScroll={props.onScroll}>
       <div className="threads-items">
         {props.threads.size < 1 && (
-          <EmptyMailbox mailbox={props.mailboxSelected} />
+          <EmptyMailbox
+            mailbox={props.mailboxSelected}
+            status={props.mailboxStatus}
+          />
         )}
         {props.threads.map((thread, index) => {
           const checked = props.threadItemsChecked.has(thread.get('uniqueId'));
@@ -83,14 +86,15 @@ const Threads = props => (
             />
           );
         })}
-        {props.isLoadingThreads && (
-          <div className="threads-loading">
-            <div />
-            <div />
-            <div />
-            <div />
-          </div>
-        )}
+        {props.isLoadingThreads &&
+          props.threads.size !== 0 && (
+            <div className="threads-loading">
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+          )}
       </div>
     </div>
     {renderTooltipForThread(props.hoverTarget, props.tip)}
@@ -150,6 +154,7 @@ Threads.propTypes = {
   isVisible: PropTypes.bool,
   labels: PropTypes.array,
   mailboxSelected: PropTypes.object,
+  mailboxStatus: PropTypes.number,
   mailboxTitle: PropTypes.string,
   message: PropTypes.object,
   onChangeSwitch: PropTypes.func,

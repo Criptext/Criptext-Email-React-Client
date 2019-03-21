@@ -10,12 +10,66 @@
         background-image: url(../#{$_PATH_TO_IMAGES}/default-empty-mailbox.svg);
       }
     }
+
+    .cptx-linear-animate {
+      border-radius: 3px;
+      height: 6px;
+      margin: 8px auto;
+      overflow: hidden;
+      width: 95%;
+
+      .cptx-indeterminate {
+        border-radius: 3px;
+        height: 100%;
+        position: relative;
+        width: 100%;
+
+        &:before {
+          content: '';
+          background-color: #53AAF9;
+          border-radius: 3px;
+          position: absolute;
+          height: 100%;
+          animation: cptx-indeterminate_first 1.5s infinite ease-out;
+        }
+
+        &:after {
+          content: '';
+          border-radius: 3px;
+          position: absolute;
+          height: 100%;
+          animation: cptx-indeterminate_second 1.5s infinite ease-in;
+        }
+      }
+
+      @keyframes cptx-indeterminate_first {
+        0% {
+          left: -100%;
+          width: 100%;
+        }
+        100% {
+          left: 100%;
+          width: 10%;
+        }
+      }
+      
+      @keyframes cptx-indeterminate_second {
+        0% {
+          left: -150%;
+          width: 100%;
+        }
+        100% {
+          left: 100%;
+          width: 10%;
+        }
+      }
+    }
   }
 }
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN_EMPTY){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN_EMPTY, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_BAR){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .empty-mailbox-container {
@@ -47,10 +101,20 @@
             background-image: url(../#{$_PATH_TO_IMAGES}/empty-search-#{$_THEME}.svg);
           }
         }
+
+        .cptx-linear-animate {
+          background-color: $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING;
+
+          .cptx-indeterminate {
+            &:after {
+              background-color: $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_BAR;
+            }
+          }
+        }
       }
     }
   }
 }
 
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_EMPTY_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_EMPTY_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_EMPTY_LIGHT, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_LIGHT, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_BAR_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_EMPTY_DARK, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_DARK, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_BAR_DARK);

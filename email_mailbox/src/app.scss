@@ -876,6 +876,12 @@ button{
           color: $_COLOR_TEXT_CONTAINER_EMPTY_TITLE;
         }
       }
+      
+      &.cptx-empty-mailbox-status-loading{
+        .header-text {
+          color: #9b9b9b;
+        }
+      }
     }
 
     .popup-content{
