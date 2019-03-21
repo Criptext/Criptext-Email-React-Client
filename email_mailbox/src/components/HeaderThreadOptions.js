@@ -143,9 +143,7 @@ class HeaderThreadOptions extends Component {
             myClass={this.props.allSelected ? 'menu-select-all' : ''}
             icon={this.props.allSelected ? 'icon-check' : 'icon-box'}
           />
-          <span>{`${this.props.itemsChecked.size} ${this.defineSelectedText(
-            this.props.itemsChecked.size
-          )}`}</span>
+          <span>{this.defineSelectedText(this.props.itemsChecked)}</span>
         </div>
       ) : null}
     </div>
@@ -176,8 +174,12 @@ class HeaderThreadOptions extends Component {
     ));
   };
 
-  defineSelectedText = value => {
-    return value > 1 ? string.header.selected_plural : string.header.selected;
+  defineSelectedText = itemsChecked => {
+    if (!itemsChecked) return '';
+    const value = itemsChecked.size;
+    const selectedText =
+      value > 1 ? string.header.selected_plural : string.header.selected;
+    return `${value} ${selectedText}`;
   };
 }
 
