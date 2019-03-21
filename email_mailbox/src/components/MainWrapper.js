@@ -155,9 +155,7 @@ class MainWrapper extends Component {
   };
 
   handleClickBackHeaderMailbox = () => {
-    this.setState({
-      threadItemsChecked: this.state.threadItemsChecked.clear()
-    });
+    this.setState({ threadItemsChecked: Set() });
   };
 
   handleClickBackHeaderThread = (mailboxSelected, onClickSection) => {
