@@ -207,45 +207,46 @@ class PanelWrapper extends Component {
         if (avatarHasChanged) {
           props.onUpdateAvatar();
         }
+
         const currentSectionType = this.state.sectionSelected.type;
         const isRenderingSettings = currentSectionType === SectionType.SETTINGS;
-        if ((!labelIds && !threadIds && !labels) || isRenderingSettings) return;
-
-        const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
-        const isRenderingThread = currentSectionType === SectionType.THREAD;
-        const currentThreadId = this.state.sectionSelected.params
-          .threadIdSelected;
-        const currentLabelId = this.state.sectionSelected.params.mailboxSelected
-          .id;
-        const limit =
-          this.props.threadsCount > 20 ? this.props.threadsCount : undefined;
-        if (labels) {
-          props.onAddLabels(labels);
-        }
-
-        if (labelIds && isRenderingMailbox) {
-          if (labelIds.includes(currentLabelId)) {
+        if (!isRenderingSettings && (labelIds || threadIds)) {
+          const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
+          const isRenderingThread = currentSectionType === SectionType.THREAD;
+          const currentThreadId = this.state.sectionSelected.params
+            .threadIdSelected;
+          const currentLabelId = this.state.sectionSelected.params
+            .mailboxSelected.id;
+          const limit =
+            this.props.threadsCount > 20 ? this.props.threadsCount : undefined;
+          if (labelIds && isRenderingMailbox) {
+            if (labelIds.includes(currentLabelId)) {
+              props.onLoadThreads({
+                labelId: Number(currentLabelId),
+                clear: true,
+                limit
+              });
+            }
+          } else if (threadIds && isRenderingThread) {
+            props.onLoadThreads({
+              labelId: Number(currentLabelId),
+              clear: true,
+              limit
+            });
+            if (threadIds.includes(currentThreadId)) {
+              props.onLoadEmails(currentThreadId);
+            }
+          } else if (threadIds && isRenderingMailbox) {
             props.onLoadThreads({
               labelId: Number(currentLabelId),
               clear: true,
               limit
             });
           }
-        } else if (threadIds && isRenderingThread) {
-          props.onLoadThreads({
-            labelId: Number(currentLabelId),
-            clear: true,
-            limit
-          });
-          if (threadIds.includes(currentThreadId)) {
-            props.onLoadEmails(currentThreadId);
-          }
-        } else if (threadIds && isRenderingMailbox) {
-          props.onLoadThreads({
-            labelId: Number(currentLabelId),
-            clear: true,
-            limit
-          });
+        }
+
+        if (labels) {
+          props.onAddLabels(labels);
         }
 
         if (badgeLabelIds) {

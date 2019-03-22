@@ -146,9 +146,10 @@ export const getGroupEvents = async ({
       }
     }
   }
+
   const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
-  if (rowIdsFiltered.length) {
-    await setEventAsHandled(rowIdsFiltered);
+  if (rowIdsFiltered.length || (events.length && !rowIdsFiltered.length)) {
+    if (rowIdsFiltered.length) await setEventAsHandled(rowIdsFiltered);
 
     const labelIds = labelIdsEvent.size ? Array.from(labelIdsEvent) : null;
     const threadIds = threadIdsEvent.size ? Array.from(threadIdsEvent) : null;
@@ -571,6 +572,7 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
 
 const handleLinkDeviceRequest = ({ rowid, params }) => {
   sendStartLinkDevicesEvent({ rowid, params });
+  return { rowid: null };
 };
 
 const handleKeybundleUploaded = ({ rowid }) => {
@@ -579,6 +581,7 @@ const handleKeybundleUploaded = ({ rowid }) => {
 
 const handleSyncDeviceRequest = ({ rowid, params }) => {
   sendStartSyncDeviceEvent({ rowid, params });
+  return { rowid: null };
 };
 
 const handlePeerRemoveDevice = async ({ rowid }) => {
