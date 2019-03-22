@@ -154,5 +154,8 @@ module.exports = {
   },
   isWindowsStore: {
     get: getWinStore
+  },
+  deviceType: {
+    id: global.deviceType
   }
 };

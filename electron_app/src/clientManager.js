@@ -429,6 +429,13 @@ const unlockDevice = async params => {
     : await checkExpiredSession(res, unlockDevice, params);
 };
 
+const updateDeviceType = async newDeviceType => {
+  const res = await client.updateDeviceType(newDeviceType);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, updateDeviceType, newDeviceType);
+};
+
 const updateName = async ({ name }) => {
   const res = await client.updateName(name);
   return res.status === 200
@@ -514,6 +521,7 @@ module.exports = {
   syncDeny,
   syncStatus,
   unlockDevice,
+  updateDeviceType,
   updateName,
   updatePushToken,
   uploadAvatar,

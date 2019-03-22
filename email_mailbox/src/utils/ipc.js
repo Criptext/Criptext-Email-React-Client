@@ -200,6 +200,10 @@ export const unsendEmailEvent = async metadataKey => {
   return await callMain('client-unsend-email', metadataKey);
 };
 
+export const updateDeviceType = async newDeviceType => {
+  return await callMain('client-update-device-type', newDeviceType);
+};
+
 export const updateNameEvent = async params => {
   return await callMain('client-update-name-event', params);
 };

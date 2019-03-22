@@ -1,6 +1,12 @@
 import ipc from '@criptext/electron-better-ipc/renderer';
 import signal from './../libs/signal';
-import { LabelType, myAccount, mySettings, getNews } from './electronInterface';
+import {
+  LabelType,
+  myAccount,
+  mySettings,
+  getNews,
+  getDeviceType
+} from './electronInterface';
 import {
   cleanDatabase,
   createEmail,
@@ -29,7 +35,8 @@ import {
   updateEmails,
   updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
-  updatePushToken
+  updatePushToken,
+  updateDeviceType
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -244,6 +251,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.NEW_ANNOUNCEMENT: {
       return handleNewAnnouncementEvent(incomingEvent);
+    }
+    case SocketCommand.UPDATE_DEVICE_TYPE: {
+      return handleUpdateDeviceTypeEvent(incomingEvent);
     }
     default: {
       return { rowid: null };
@@ -757,6 +767,12 @@ const handleNewAnnouncementEvent = async ({ rowid, params }) => {
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
   return { rowid };
+};
+
+const handleUpdateDeviceTypeEvent = async ({ rowid }) => {
+  const newDeviceType = getDeviceType();
+  const { status } = await updateDeviceType(newDeviceType);
+  return status === 200 ? { rowid } : { rowid: null };
 };
 
 const handleSendEmailError = ({ rowid }) => {
