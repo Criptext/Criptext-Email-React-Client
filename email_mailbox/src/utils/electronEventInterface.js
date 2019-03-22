@@ -146,9 +146,10 @@ export const getGroupEvents = async ({
       }
     }
   }
+
   const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
-  if (rowIdsFiltered.length) {
-    await setEventAsHandled(rowIdsFiltered);
+  if (rowIdsFiltered.length || (events.length && !rowIdsFiltered.length)) {
+    if (rowIdsFiltered.length) await setEventAsHandled(rowIdsFiltered);
 
     const labelIds = labelIdsEvent.size ? Array.from(labelIdsEvent) : null;
     const threadIds = threadIdsEvent.size ? Array.from(threadIdsEvent) : null;
@@ -486,8 +487,8 @@ const updateOwnContact = async () => {
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   const { date, metadataKey, type, from } = params;
   const [email] = await getEmailByKey(metadataKey);
+  const isUnsend = type === EmailStatus.UNSEND;
   if (email) {
-    const isUnsend = type === EmailStatus.UNSEND;
     const preview = isUnsend ? '' : null;
     const status = validateEmailStatusToSet(email.status, type);
     const unsendDate = isUnsend ? date : null;
@@ -520,6 +521,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
       }
     }
   }
+  if (!email && isUnsend) return { rowid: null };
   return { rowid, threadIds: email ? [email.threadId] : [] };
 };
 
@@ -571,6 +573,7 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
 
 const handleLinkDeviceRequest = ({ rowid, params }) => {
   sendStartLinkDevicesEvent({ rowid, params });
+  return { rowid: null };
 };
 
 const handleKeybundleUploaded = ({ rowid }) => {
@@ -579,6 +582,7 @@ const handleKeybundleUploaded = ({ rowid }) => {
 
 const handleSyncDeviceRequest = ({ rowid, params }) => {
   sendStartSyncDeviceEvent({ rowid, params });
+  return { rowid: null };
 };
 
 const handlePeerRemoveDevice = async ({ rowid }) => {

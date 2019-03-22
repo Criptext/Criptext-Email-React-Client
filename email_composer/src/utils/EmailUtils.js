@@ -72,6 +72,7 @@ export const formOutgoingEmailFromData = ({
   bccEmails,
   body,
   ccEmails,
+  isDraft,
   labelId,
   secure,
   status,
@@ -120,14 +121,13 @@ export const formOutgoingEmailFromData = ({
     email,
     recipients,
     labels: [labelId],
-    body: secure ? body : `${body}${formAppSign()}`
+    body: secure || isDraft ? body : `${body}${formAppSign()}`
   };
 
   return {
     emailData,
     criptextRecipients,
-    externalRecipients,
-    body: body
+    externalRecipients
   };
 };
 

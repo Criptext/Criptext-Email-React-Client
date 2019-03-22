@@ -2,7 +2,6 @@
 
 exports[`[Form outgoing email]  Should form outgoing email from data 1`] = `
 Object {
-  "body": "<p>Hello</p>",
   "criptextRecipients": Array [
     Object {
       "recipientId": "toUser",
