@@ -487,8 +487,8 @@ const updateOwnContact = async () => {
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   const { date, metadataKey, type, from } = params;
   const [email] = await getEmailByKey(metadataKey);
+  const isUnsend = type === EmailStatus.UNSEND;
   if (email) {
-    const isUnsend = type === EmailStatus.UNSEND;
     const preview = isUnsend ? '' : null;
     const status = validateEmailStatusToSet(email.status, type);
     const unsendDate = isUnsend ? date : null;
@@ -521,6 +521,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
       }
     }
   }
+  if (!email && isUnsend) return { rowid: null };
   return { rowid, threadIds: email ? [email.threadId] : [] };
 };
 
