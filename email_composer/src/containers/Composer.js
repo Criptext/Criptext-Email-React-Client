@@ -491,8 +491,7 @@ class ComposerWrapper extends Component {
     const {
       emailData,
       criptextRecipients,
-      externalRecipients,
-      body
+      externalRecipients
     } = formOutgoingEmailFromData(data);
     let emailId, key;
     try {
@@ -510,7 +509,7 @@ class ComposerWrapper extends Component {
         threadId: this.state.threadId,
         recipients,
         externalRecipients,
-        body,
+        body: emailData.body,
         files,
         peer,
         externalEmailPassword
@@ -534,7 +533,7 @@ class ComposerWrapper extends Component {
       };
       await updateEmail(emailParams);
       await saveEmailBody({
-        body,
+        body: data.body,
         metadataKey: metadataKey,
         replaceKey: emailData.email.key
       });
@@ -580,6 +579,7 @@ class ComposerWrapper extends Component {
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
       files: this.state.files,
+      isDraft: true,
       labelId: LabelType.draft.id,
       secure: false,
       textSubject: this.state.textSubject,
