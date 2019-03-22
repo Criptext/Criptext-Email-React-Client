@@ -156,6 +156,6 @@ module.exports = {
     get: getWinStore
   },
   deviceType: {
-    id: getDeviceType(currrentInstallerType, allInstallerTypes)
+    id: global.deviceType
   }
 };
