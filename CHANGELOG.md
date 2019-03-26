@@ -1,5 +1,60 @@
 # Change Log
 
+## [0.17.8](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
+
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.7...HEAD)
+
+**Fixed bugs:**
+
+- Events: Fix infinite sync [\#816](https://github.com/Criptext/Criptext-Email-React-Client/issues/816)
+- Composer: bottem text repeated [\#815](https://github.com/Criptext/Criptext-Email-React-Client/issues/815)
+- Email: unsend does not work [\#813](https://github.com/Criptext/Criptext-Email-React-Client/issues/813)
+
+**Closed issues:**
+
+- Events: Handle update device type [\#798](https://github.com/Criptext/Criptext-Email-React-Client/issues/798)
+
+**Merged pull requests:**
+
+- Update version 0.17.8 [\#818](https://github.com/Criptext/Criptext-Email-React-Client/pull/818) ([erikaperugachi](https://github.com/erikaperugachi))
+- Unsend [\#817](https://github.com/Criptext/Criptext-Email-React-Client/pull/817) ([erikaperugachi](https://github.com/erikaperugachi))
+- Handle event; Update device type [\#811](https://github.com/Criptext/Criptext-Email-React-Client/pull/811) ([JulianAdams4](https://github.com/JulianAdams4))
+
+## [0.17.7](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.7) (2019-03-21)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.6...0.17.7)
+
+**Implemented enhancements:**
+
+- Refactor: Fix re-renders [\#799](https://github.com/Criptext/Criptext-Email-React-Client/issues/799)
+- Refactor: Handle endpoints by fetch [\#794](https://github.com/Criptext/Criptext-Email-React-Client/issues/794)
+- Refactor: Enhancement "checkEmailIsTo" function [\#791](https://github.com/Criptext/Criptext-Email-React-Client/issues/791)
+
+**Fixed bugs:**
+
+- Mailbox: Fix crash on select all threads [\#808](https://github.com/Criptext/Criptext-Email-React-Client/issues/808)
+- Multiple fixes [\#806](https://github.com/Criptext/Criptext-Email-React-Client/issues/806)
+- Refactor: Fix re-renders [\#799](https://github.com/Criptext/Criptext-Email-React-Client/issues/799)
+
+**Closed issues:**
+
+- Sign up: Add correct device type [\#797](https://github.com/Criptext/Criptext-Email-React-Client/issues/797)
+- Mailbox: Add loading mailbox changed [\#796](https://github.com/Criptext/Criptext-Email-React-Client/issues/796)
+- Events: Get events by 25 batch [\#795](https://github.com/Criptext/Criptext-Email-React-Client/issues/795)
+
+**Merged pull requests:**
+
+- Fix set read/unread multiple emails. Close \#806 [\#810](https://github.com/Criptext/Criptext-Email-React-Client/pull/810) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix: Crash on select all threads [\#809](https://github.com/Criptext/Criptext-Email-React-Client/pull/809) ([JulianAdams4](https://github.com/JulianAdams4))
+- Loading and more [\#807](https://github.com/Criptext/Criptext-Email-React-Client/pull/807) ([erikaperugachi](https://github.com/erikaperugachi))
+- Get events by 25 batch [\#805](https://github.com/Criptext/Criptext-Email-React-Client/pull/805) ([JulianAdams4](https://github.com/JulianAdams4))
+- Send correctly device type [\#804](https://github.com/Criptext/Criptext-Email-React-Client/pull/804) ([erikaperugachi](https://github.com/erikaperugachi))
+- Refactor reselect [\#803](https://github.com/Criptext/Criptext-Email-React-Client/pull/803) ([erikaperugachi](https://github.com/erikaperugachi))
+- Requests by fetch [\#801](https://github.com/Criptext/Criptext-Email-React-Client/pull/801) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update check email. Close \#791 [\#793](https://github.com/Criptext/Criptext-Email-React-Client/pull/793) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix open email sent [\#792](https://github.com/Criptext/Criptext-Email-React-Client/pull/792) ([erikaperugachi](https://github.com/erikaperugachi))
+- Windows fixes [\#790](https://github.com/Criptext/Criptext-Email-React-Client/pull/790) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update changelog [\#789](https://github.com/Criptext/Criptext-Email-React-Client/pull/789) ([erikaperugachi](https://github.com/erikaperugachi))
+
 ## [0.17.6](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.6) (2019-03-11)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.1...0.17.6)
 

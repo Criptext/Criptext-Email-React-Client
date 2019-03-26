@@ -73,38 +73,22 @@ const {
 } = remote.require('electron-push-receiver/src/constants');
 const senderNotificationId = '73243261136';
 const emitter = new EventEmitter();
+
 let isGettingEvents = false;
-let newEmailNotificationList = [];
 let labelIdsEvent = new Set();
 let threadIdsEvent = new Set();
 let badgeLabelIdsEvent = new Set();
 let labelsEvent = {};
 let avatarHasChanged = false;
 
+let newEmailNotificationList = [];
+
 const stopGettingEvents = () => {
   isGettingEvents = false;
   emitter.emit(Event.STOP_LOAD_SYNC, {});
 };
 
-export const getGroupEvents = async ({
-  shouldGetMoreEvents,
-  showNotification
-}) => {
-  if (isGettingEvents && !shouldGetMoreEvents) return;
-
-  isGettingEvents = true;
-  const response = await fetchEvents();
-  if (!response) {
-    stopGettingEvents();
-    return;
-  }
-
-  const { events, hasMoreEvents } = response;
-  if (!events.length) {
-    stopGettingEvents();
-    return;
-  }
-
+const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
   labelIdsEvent = new Set();
   threadIdsEvent = new Set();
   badgeLabelIdsEvent = new Set();
@@ -112,7 +96,6 @@ export const getGroupEvents = async ({
   avatarHasChanged = false;
 
   const rowIds = [];
-
   for (const event of events) {
     try {
       const {
@@ -132,7 +115,7 @@ export const getGroupEvents = async ({
       }
       if (badgeLabelIds)
         badgeLabelIdsEvent = new Set([...badgeLabelIdsEvent, ...badgeLabelIds]);
-      if (labels) labelsEvent = { ...labelsEvent, labels };
+      if (labels) labelsEvent = { ...labelsEvent, ...labels };
       if (avatarChanged) avatarHasChanged = true;
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -171,6 +154,29 @@ export const getGroupEvents = async ({
       hasStopLoad
     });
   }
+};
+
+export const getGroupEvents = async ({
+  shouldGetMoreEvents,
+  showNotification
+}) => {
+  if (isGettingEvents && !shouldGetMoreEvents) return;
+
+  isGettingEvents = true;
+  const response = await fetchEvents();
+  if (!response) {
+    stopGettingEvents();
+    return;
+  }
+
+  const { events, hasMoreEvents } = response;
+  if (!events.length) {
+    stopGettingEvents();
+    return;
+  }
+
+  await parseAndStoreEventsBatch({ events, hasMoreEvents });
+
   if (!hasMoreEvents) {
     await updateOwnContact();
     if (showNotification) {
@@ -803,10 +809,7 @@ ipcRenderer.on('socket-message', async (ev, message) => {
   if (eventId === 400) {
     sendLoadEventsEvent({ showNotification: true });
   } else {
-    const { rowid } = await handleEvent(message);
-    if (rowid) {
-      await setEventAsHandled([rowid]);
-    }
+    await parseAndStoreEventsBatch({ events: [message], hasMoreEvents: false });
   }
 });
 
