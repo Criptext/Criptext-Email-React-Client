@@ -119,7 +119,9 @@ ipc.answerRenderer('show-notification', ({ title, message, threadId }) => {
   showNotification({ title, message, clickHandler: onClickNotification });
 });
 
-ipc.answerRenderer('check-for-updates', checkForUpdates);
+ipc.answerRenderer('check-for-updates', showDialog => {
+  checkForUpdates(showDialog);
+});
 
 ipc.answerRenderer('generate-label-uuid', genUUID);
 

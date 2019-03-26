@@ -36,7 +36,8 @@ import {
   updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
   updatePushToken,
-  updateDeviceType
+  updateDeviceType,
+  checkForUpdates
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -258,6 +259,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.NEW_ANNOUNCEMENT: {
       return handleNewAnnouncementEvent(incomingEvent);
+    }
+    case SocketCommand.UPDATE_AVAILABLE: {
+      return handleNewUpdateAvailable(incomingEvent);
     }
     case SocketCommand.UPDATE_DEVICE_TYPE: {
       return handleUpdateDeviceTypeEvent(incomingEvent);
@@ -779,6 +783,12 @@ const handleNewAnnouncementEvent = async ({ rowid, params }) => {
   return { rowid };
 };
 
+const handleNewUpdateAvailable = async ({ rowid }) => {
+  const showUpdateDialogs = false;
+  await checkForUpdates(showUpdateDialogs);
+  return { rowid };
+};
+
 const handleUpdateDeviceTypeEvent = async ({ rowid }) => {
   const newDeviceType = getDeviceType();
   const { status } = await updateDeviceType(newDeviceType);
@@ -1230,5 +1240,6 @@ export const Event = {
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
   STOP_LOAD_SYNC: 'stop-load-sync',
-  UPDATE_THREAD_EMAILS: 'update-thread-emails'
+  UPDATE_THREAD_EMAILS: 'update-thread-emails',
+  UPDATE_AVAILABLE: 'update-available'
 };

@@ -74,8 +74,8 @@ export const sendOpenEmailSource = metadataKey => {
   callMain('open-email-source', metadataKey);
 };
 
-export const checkForUpdates = () => {
-  callMain('check-for-updates');
+export const checkForUpdates = showDialog => {
+  callMain('check-for-updates', showDialog);
 };
 
 export const generateLabelUUID = async () => {
