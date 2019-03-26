@@ -19,7 +19,7 @@ const makeMapStateToProps = () => {
   const mapStateToProps = (state, ownProps) => {
     const thread = getThread(state, ownProps);
     const { emails, emailKeysUnread } = getEmails(state, {
-      emailIds: thread.emailIds
+      emailIds: thread ? thread.emailIds : []
     });
     const indexFirstUnread = emails.findIndex(email => email.unread);
     const labelIds =
