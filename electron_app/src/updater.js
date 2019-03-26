@@ -7,6 +7,7 @@ const { updaterMessages } = require('./lang').strings;
 app.setAppUserModelId('com.criptext.criptextmail');
 
 let currentUpdaterType;
+let showUpdateDialogs = true;
 let isDownloadingUpdate = false;
 const updaterTypes = {
   AUTO: 'auto',
@@ -30,14 +31,16 @@ autoUpdater.on('error', updaterError => {
         ? updaterMessages.unknownError
         : (error.stack || error).toString()
       : updaterMessages.error.description;
-    dialog.showErrorBox(updaterMessages.error.name, errorMessage);
+    if (showUpdateDialogs) {
+      dialog.showErrorBox(updaterMessages.error.name, errorMessage);
+    }
     currentUpdaterType = updaterTypes.NONE;
     isDownloadingUpdate = false;
   }
 });
 
 autoUpdater.on('update-not-available', () => {
-  if (currentUpdaterType === updaterTypes.MANUAL) {
+  if (currentUpdaterType === updaterTypes.MANUAL && showUpdateDialogs) {
     dialog.showMessageBox({
       title: updaterMessages.notAvailable.name,
       message: updaterMessages.notAvailable.description,
@@ -45,27 +48,32 @@ autoUpdater.on('update-not-available', () => {
     });
   }
   currentUpdaterType = updaterTypes.NONE;
+  showUpdateDialogs = true;
 });
 
 autoUpdater.on('update-available', () => {
   if (currentUpdaterType === updaterTypes.MANUAL) {
-    dialog.showMessageBox(
-      {
-        type: 'info',
-        title: updaterMessages.availableManual.name,
-        message: updaterMessages.availableManual.description,
-        buttons: [
-          updaterMessages.availableManual.confirmButton,
-          updaterMessages.availableManual.cancelButton
-        ],
-        noLink: true
-      },
-      buttonIndex => {
-        if (buttonIndex === 0) {
-          downloadUpdate();
+    if (!showUpdateDialogs) {
+      downloadUpdate();
+    } else {
+      dialog.showMessageBox(
+        {
+          type: 'info',
+          title: updaterMessages.availableManual.name,
+          message: updaterMessages.availableManual.description,
+          buttons: [
+            updaterMessages.availableManual.confirmButton,
+            updaterMessages.availableManual.cancelButton
+          ],
+          noLink: true
+        },
+        buttonIndex => {
+          if (buttonIndex === 0) {
+            downloadUpdate();
+          }
         }
-      }
-    );
+      );
+    }
   }
 
   if (currentUpdaterType === updaterTypes.AUTO) {
@@ -100,18 +108,25 @@ autoUpdater.on('download-progress', data => {
 });
 
 autoUpdater.on('update-downloaded', () => {
+  isDownloadingUpdate = false;
   const mailboxWindow = require('./windows/mailbox');
   if (currentUpdaterType === updaterTypes.MANUAL) {
-    dialog.showMessageBox(
-      {
-        title: updaterMessages.downloaded.title,
-        message: updaterMessages.downloaded.subtitle,
-        buttons: ['Ok']
-      },
-      () => {
-        installUpdate();
-      }
-    );
+    if (showUpdateDialogs) {
+      dialog.showMessageBox(
+        {
+          title: updaterMessages.downloaded.title,
+          message: updaterMessages.downloaded.subtitle,
+          buttons: ['Ok']
+        },
+        () => {
+          installUpdate();
+        }
+      );
+    } else {
+      mailboxWindow.send('update-available');
+      currentUpdaterType = updaterTypes.NONE;
+      showUpdateDialogs = true;
+    }
   }
 
   if (currentUpdaterType === updaterTypes.AUTO) {
@@ -124,11 +139,13 @@ const appUpdater = () => {
   autoUpdater.checkForUpdates();
 };
 
-const checkForUpdates = () => {
+const checkForUpdates = showDialog => {
   if (!isDownloadingUpdate) {
     currentUpdaterType = updaterTypes.MANUAL;
+    showUpdateDialogs = typeof showDialog === 'boolean' ? showDialog : true;
+
     autoUpdater.checkForUpdates();
-  } else {
+  } else if (isDownloadingUpdate && showUpdateDialogs) {
     dialog.showMessageBox({
       title: updaterMessages.alreadyDownloading.title,
       message: updaterMessages.alreadyDownloading.subtitle,
