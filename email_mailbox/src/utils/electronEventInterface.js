@@ -71,7 +71,7 @@ const {
   START_NOTIFICATION_SERVICE,
   NOTIFICATION_RECEIVED,
   TOKEN_UPDATED
-} = remote.require('electron-push-receiver/src/constants');
+} = remote.require('@criptext/electron-push-receiver/src/constants');
 const senderNotificationId = '73243261136';
 const emitter = new EventEmitter();
 
