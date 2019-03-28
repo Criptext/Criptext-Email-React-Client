@@ -18,3 +18,5 @@ export const composerEvents = {
 };
 
 export const defaultEmptyMimetypeValue = 'application/octet-stream';
+
+export const previewLength = 100;

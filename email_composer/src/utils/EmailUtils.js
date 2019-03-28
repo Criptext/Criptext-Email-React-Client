@@ -10,7 +10,12 @@ import {
   removeAppDomain
 } from './StringUtils';
 import { getFormattedDate } from './DateUtils';
-import { appDomain, composerEvents, defaultEmptyMimetypeValue } from './const';
+import {
+  appDomain,
+  composerEvents,
+  defaultEmptyMimetypeValue,
+  previewLength
+} from './const';
 import { FILE_MODES } from './FileUtils';
 import { Status } from '../components/Control';
 import { HTMLTagsRegex } from './RegexUtils';
@@ -99,7 +104,7 @@ export const formOutgoingEmailFromData = ({
   const email = {
     key: Date.now(),
     subject: textSubject,
-    preview: cleanHTML(body).slice(0, 100),
+    preview: cleanHTML(body).slice(0, previewLength),
     date: Date.now(),
     status,
     unread: false,

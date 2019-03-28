@@ -14,6 +14,8 @@ import {
   filterRecipientsByBlacklisted
 } from './../utils/EncryptionUtils';
 import string from './../lang';
+import { cleanHTML } from '../utils/StringUtils';
+import { previewLength } from '../utils/const';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -74,9 +76,19 @@ const createEmails = async (
   peer,
   files
 ) => {
-  let result = [];
+  const criptextEmailsByRecipientId = {};
+  const preview = cleanHTML(body).slice(0, previewLength);
+
   for (const recipient of recipients) {
     const { recipientId, type } = recipient;
+
+    if (!criptextEmailsByRecipientId[recipientId]) {
+      criptextEmailsByRecipientId[recipientId] = {
+        username: recipientId,
+        emails: []
+      };
+    }
+
     const knownDeviceIds = knownAddresses[recipientId] || [];
     const deviceIdWithKeys = keyBundleJSONbyRecipientIdAndDeviceId[recipientId]
       ? Object.keys(keyBundleJSONbyRecipientIdAndDeviceId[recipientId]).map(
@@ -86,7 +98,7 @@ const createEmails = async (
         )
       : [];
     const deviceIds = [...knownDeviceIds, ...deviceIdWithKeys];
-    const criptextEmail = await Promise.all(
+    await Promise.all(
       deviceIds
         .filter(item => {
           const deviceId = typeof item === 'number' ? item : item.deviceId;
@@ -100,11 +112,16 @@ const createEmails = async (
           const deviceId = typeof item === 'number' ? item : item.deviceId;
           const keyBundleArrayBuffer =
             typeof item === 'object' ? keysToArrayBuffer(item) : undefined;
-          const textEncrypted = await encryptText(
+          const bodyEncrypted = await encryptText(
             recipientId,
             deviceId,
             body,
             keyBundleArrayBuffer
+          );
+          const previewEncripted = await encryptText(
+            recipientId,
+            deviceId,
+            preview
           );
           const fileKeys = files
             ? await Promise.all(
@@ -128,22 +145,25 @@ const createEmails = async (
             existingFileKeys.length > 0 ? existingFileKeys[0] : null;
 
           let criptextEmail = {
-            type,
             recipientId,
             deviceId,
-            body: textEncrypted.body,
-            messageType: textEncrypted.type
+            type,
+            body: bodyEncrypted.body,
+            messageType: bodyEncrypted.type,
+            preview: previewEncripted.body,
+            previewMessageType: previewEncripted.type
           };
           if (fileKey) {
             criptextEmail = { ...criptextEmail, fileKey: fileKey, fileKeys };
           }
+          criptextEmailsByRecipientId[recipientId]['emails'].push(
+            criptextEmail
+          );
           return criptextEmail;
         })
     );
-    result = [...result, ...criptextEmail];
   }
-
-  return result;
+  return Object.values(criptextEmailsByRecipientId);
 };
 
 const encryptPostEmail = async ({
@@ -157,12 +177,6 @@ const encryptPostEmail = async ({
   externalEmailPassword
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
-  const isSendToMySelf =
-    recipients.findIndex(item => {
-      return item.recipientId === peer.recipientId && item.type !== peer.type;
-    }) === -1
-      ? false
-      : true;
   const sessions = await getSessionRecordByRecipientIds(recipientIds);
   let knownAddresses = createObjectRecipientIdByDevices(sessions);
   const {
@@ -184,17 +198,6 @@ const encryptPostEmail = async ({
       )
     );
   }
-
-  const recipientsToSendAmount =
-    recipientIds.length + (isSendToMySelf ? -1 : 0);
-  const recipientDevicesAmount = sessions.length + keyBundles.length;
-
-  if (
-    !(recipientsToSendAmount <= recipientDevicesAmount) ||
-    recipientDevicesAmount === 0
-  ) {
-    throw new CustomError(string.errors.nonExistingUsers);
-  }
   const keyBundleJSONbyRecipientIdAndDeviceId = keyBundles.reduce(
     (result, keyBundle) => {
       const recipientId = keyBundle.recipientId;
@@ -205,7 +208,6 @@ const encryptPostEmail = async ({
     },
     {}
   );
-
   const criptextEmails = await createEmails(
     body,
     recipients,
@@ -222,10 +224,10 @@ const encryptPostEmail = async ({
   });
 
   const data = noNulls({
-    guestEmail,
-    criptextEmails,
     subject,
     threadId,
+    criptextEmails,
+    guestEmail,
     files
   });
   const res = await postEmail(data);
