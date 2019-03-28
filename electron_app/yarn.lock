@@ -113,6 +113,14 @@
   version "0.1.2-rc5"
   resolved "https://registry.yarnpkg.com/@criptext/electron-better-ipc/-/electron-better-ipc-0.1.2-rc5.tgz#4a51755de1168b441fe6a68872fe8b95eaa742ab"
 
+"@criptext/electron-push-receiver@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@criptext/electron-push-receiver/-/electron-push-receiver-2.1.2.tgz#d971523d21bb473e9340f157af0c30760f7c417b"
+  integrity sha512-1QIx54AuC/XtdO37a7ExXF1yoKvyEnq7kXnsCGo1mTh9ER3hNqS9ox8hpBPRuA7TgkH2dQzDeAqsQS7IflsKMw==
+  dependencies:
+    electron-config "^1.0.0"
+    push-receiver "^2.0.2"
+
 "@criptext/news-api-client@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@criptext/news-api-client/-/news-api-client-1.0.1.tgz#c9a616c2e1256e6bbb9f8b930b2b3536b8ee4b5a"
@@ -178,9 +186,9 @@
   integrity sha512-1w52Nyx4Gq47uuu0EVcsHBxZFJgurQ+rTKS3qMHxR1GY2T8c2AJYd6vZoZ9q1rupaDjU0yT+Jc2XTyXkjeMA+Q==
 
 "@types/node@^10.1.0":
-  version "10.12.25"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.25.tgz#0d01a7dd6127de60d861ece4a650963042abb538"
-  integrity sha512-IcvnGLGSQFDvC07Bz2I8SX+QKErDZbUdiQq7S2u3XyzTyJfUmT0sWJMbeQkMzpTAkO7/N7sZpW/arUM2jfKsbQ==
+  version "10.14.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.4.tgz#1c586b991457cbb58fef51bc4e0cfcfa347714b5"
+  integrity sha512-DT25xX/YgyPKiHFOpNuANIQIVvYEwCWXgK2jYYwqgaMrYE6+tq+DtmMwlD3drl6DJbUwtlIDnn0d7tIn/EbXBg==
 
 "@types/node@^8.0.24":
   version "8.10.40"
@@ -1428,14 +1436,6 @@ electron-publish@20.22.2:
     fs-extra-p "^4.6.1"
     lazy-val "^1.0.3"
     mime "^2.3.1"
-
-electron-push-receiver@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/electron-push-receiver/-/electron-push-receiver-2.1.2.tgz#68d552af252c100d3b05fd16521c7e771a81f663"
-  integrity sha512-2SSjQ9qpfOszo27p5gRtSVRYlDMvcgsZhevRi2e8w/cY8AncP/Pq2AOf06kTwA+8DTOAZ+I4EBKHmBnwiq/ebA==
-  dependencies:
-    electron-config "^1.0.0"
-    push-receiver "^2.0.2"
 
 electron-updater@^3.0.3:
   version "3.0.3"
@@ -3246,6 +3246,11 @@ lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, 
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
+lodash@^4.17.11:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+
 long@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/long/-/long-3.2.0.tgz#d821b7138ca1cb581c172990ef14db200b5c474b"
@@ -4082,9 +4087,9 @@ pupa@^1.0.0:
   resolved "https://registry.yarnpkg.com/pupa/-/pupa-1.0.0.tgz#9a9568a5af7e657b8462a6e9d5328743560ceff6"
 
 push-receiver@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/push-receiver/-/push-receiver-2.0.2.tgz#e2e050d5c1d7ab30bba4c99d4036b5fd8a3ba483"
-  integrity sha512-L7e+0F6lt2Mp3ZQjtY8oiFd3DxWSGDLly4zTpoq5YsyHloDnyu9dzbfc5GSZ52xYO9JXgwWSKdRMi8AKpmR3lQ==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/push-receiver/-/push-receiver-2.1.0.tgz#a8d50018720e5f0f0507ba525eee6fcbfcdee765"
+  integrity sha512-l9e6ccSLZ3adyjDQGYMCVNdaEaLQQkGPl0OnWbh0wM3/u1gACHoBLx9IBaIaQpfXvMvVy+vQxN4JxBaL6PUfZA==
   dependencies:
     http_ece "^1.0.5"
     long "^3.2.0"
@@ -4247,6 +4252,13 @@ request-promise-core@1.1.1:
   dependencies:
     lodash "^4.13.1"
 
+request-promise-core@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/request-promise-core/-/request-promise-core-1.1.2.tgz#339f6aababcafdb31c799ff158700336301d3346"
+  integrity sha512-UHYyq1MO8GsefGEt7EprS8UrXsm1TxEvFUX1IMTuSLU2Rh7fTIdFtl8xD7JiEYiWU2dl+NYAjCTksTehQUxPag==
+  dependencies:
+    lodash "^4.17.11"
+
 request-promise-native@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/request-promise-native/-/request-promise-native-1.0.5.tgz#5281770f68e0c9719e5163fd3fab482215f4fda5"
@@ -4256,14 +4268,14 @@ request-promise-native@^1.0.5:
     tough-cookie ">=2.3.3"
 
 request-promise@^4.2.1:
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/request-promise/-/request-promise-4.2.2.tgz#d1ea46d654a6ee4f8ee6a4fea1018c22911904b4"
-  integrity sha1-0epG1lSm7k+O5qT+oQGMIpEZBLQ=
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/request-promise/-/request-promise-4.2.4.tgz#1c5ed0d71441e38ad58c7ce4ea4ea5b06d54b310"
+  integrity sha512-8wgMrvE546PzbR5WbYxUQogUnUDfM0S7QIFZMID+J73vdFARkFy+HElj4T+MWYhpXwlLp0EQ8Zoj8xUA0he4Vg==
   dependencies:
     bluebird "^3.5.0"
-    request-promise-core "1.1.1"
-    stealthy-require "^1.1.0"
-    tough-cookie ">=2.3.3"
+    request-promise-core "1.1.2"
+    stealthy-require "^1.1.1"
+    tough-cookie "^2.3.3"
 
 request@^2.45.0, request@^2.81.0, request@^2.87.0, request@^2.88.0:
   version "2.88.0"
@@ -4682,7 +4694,7 @@ static-extend@^0.1.1:
     define-property "^0.2.5"
     object-copy "^0.1.0"
 
-stealthy-require@^1.1.0:
+stealthy-require@^1.1.0, stealthy-require@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
 

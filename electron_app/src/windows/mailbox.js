@@ -1,7 +1,9 @@
 const { app, BrowserWindow, shell } = require('electron');
-const windowStateManager = require('electron-window-state');
+const {
+  setup: setupPushReceiver
+} = require('@criptext/electron-push-receiver');
 const ipc = require('@criptext/electron-better-ipc');
-const { setup: setupPushReceiver } = require('electron-push-receiver');
+const windowStateManager = require('electron-window-state');
 const path = require('path');
 const { mailboxUrl } = require('./../window_routing');
 const { appUpdater } = require('./../updater');
@@ -11,6 +13,7 @@ const { removeProtocolFromUrl } = require('./../utils/stringUtils');
 const { isFromStore, isDev } = require('./windowUtils');
 const { createTrayIcon, destroyTrayIcon } = require('./tray');
 const { isWindows } = require('./../utils/osUtils');
+const { APP_DOMAIN } = require('./../utils/const');
 
 let mailboxWindow;
 
@@ -44,7 +47,12 @@ const create = () => {
   });
   mailboxWindow.loadURL(mailboxUrl);
   // Firebase
-  setupPushReceiver(mailboxWindow.webContents);
+  const firebaseFilename = getUsername() || 'config';
+  setupPushReceiver({
+    filename: firebaseFilename,
+    webContents: mailboxWindow.webContents
+  });
+
   if (isWindows()) {
     mailboxWindow.setMenuBarVisibility(false);
   }
@@ -77,6 +85,11 @@ const create = () => {
     }
   });
   mailboxWindowState.manage(mailboxWindow);
+};
+
+const getUsername = () => {
+  const myAccount = require('./../Account');
+  return myAccount ? `${myAccount.recipientId}@${APP_DOMAIN}` : '';
 };
 
 const showFileExplorer = filename => {
