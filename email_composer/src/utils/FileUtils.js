@@ -93,20 +93,17 @@ export const identifyFileType = mimetype => {
   }
 };
 
-export const formFileParamsToDatabase = (files, emailId) => {
-  return files.map(item => {
-    return {
-      token: item.token,
-      name: item.name,
-      size: item.size,
-      key: item.key,
-      iv: item.iv,
-      status: 1,
-      date: Date.now(),
-      mimeType: item.mimeType,
-      emailId
-    };
-  });
+export const formFileParamsToDatabase = files => {
+  return files.map(item => ({
+    token: item.token,
+    name: item.name,
+    size: item.size,
+    key: item.key,
+    iv: item.iv,
+    mimeType: item.mimeType,
+    status: 1,
+    date: Date.now()
+  }));
 };
 
 export const getFileParamsToSend = files => {

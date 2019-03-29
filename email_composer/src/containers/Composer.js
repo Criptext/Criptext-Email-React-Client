@@ -11,7 +11,6 @@ import {
   closeComposerWindow,
   createEmail,
   createEmailLabel,
-  createFile,
   deleteEmailsByIds,
   getEmailByKey,
   saveDraftChangesComposerWindow,
@@ -45,13 +44,17 @@ import {
   setCryptoInterfaces
 } from './../utils/FileUtils';
 import string from './../lang';
-import { appDomain, composerEvents } from '../utils/const';
+import {
+  appDomain,
+  composerEvents,
+  defaultEmptyMimetypeValue
+} from '../utils/const';
 import { generateKeyAndIv } from '../utils/AESUtils';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import { convertToHumanSize } from './../utils/StringUtils';
 
 const MAX_RECIPIENTS_AMOUNT = 300;
-const MAX_ATTACMENTS_TOAL_SIZE = 25 * 1000 * 1000;
+const MAX_ATTACMENTS_TOTAL_SIZE = 25 * 1000 * 1000;
 const TOO_BIG_FILE_STATUS = 413;
 const PENDING_ATTACHMENTS_MODES = [FILE_MODES.UPLOADING, FILE_MODES.FAILED];
 
@@ -280,7 +283,7 @@ class ComposerWrapper extends Component {
 
       if (
         this.state.totalFilesSize + firstNewFile.size >
-        MAX_ATTACMENTS_TOAL_SIZE
+        MAX_ATTACMENTS_TOTAL_SIZE
       ) {
         setTimeout(() => {
           const { name, description } = string.errors.attachmentsTotalSize;
@@ -288,7 +291,7 @@ class ComposerWrapper extends Component {
             name,
             description:
               description.prefix +
-              convertToHumanSize(MAX_ATTACMENTS_TOAL_SIZE, true, 0) +
+              convertToHumanSize(MAX_ATTACMENTS_TOTAL_SIZE, true, 0) +
               description.suffix
           });
         }, 1500);
@@ -359,7 +362,7 @@ class ComposerWrapper extends Component {
       mode: FILE_MODES.UPLOADED,
       percentage: 100
     });
-    this.setState({ files });
+    this.setState({ files }, this.saveTemporalDraft);
   };
 
   handleUploadError = ({ token }) => {
@@ -399,7 +402,7 @@ class ComposerWrapper extends Component {
 
   handleClearFile = token => {
     const files = this.state.files.filter(file => file.token !== token);
-    this.setState({ files });
+    this.setState({ files }, this.saveTemporalDraft);
   };
 
   handleDragLeave = () => {
@@ -480,7 +483,6 @@ class ComposerWrapper extends Component {
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
-      files: this.state.files,
       labelId: LabelType.sent.id,
       secure,
       status: EmailStatus.SENDING,
@@ -495,8 +497,13 @@ class ComposerWrapper extends Component {
     } = formOutgoingEmailFromData(data);
     let emailId, key;
     try {
-      [emailId] = await createEmail(emailData);
       const files = await getFileParamsToSend(this.state.files);
+      const filesDbParams = formFileParamsToDatabase(files);
+      if (filesDbParams.length) {
+        emailData['files'] = filesDbParams;
+      }
+
+      [emailId] = await createEmail(emailData);
       const peer = {
         recipientId: myAccount.recipientId,
         type: 'peer',
@@ -506,7 +513,7 @@ class ComposerWrapper extends Component {
       const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
       const params = {
         subject: emailData.email.subject,
-        threadId: this.state.threadId,
+        threadId: emailData.email.threadId,
         recipients,
         externalRecipients,
         body: emailData.body,
@@ -516,10 +523,6 @@ class ComposerWrapper extends Component {
         externalEmailPassword
       };
       const res = await encryptPostEmail(params);
-      const filesDbParams = formFileParamsToDatabase(files, emailId);
-      if (filesDbParams.length) {
-        await createFile(filesDbParams);
-      }
 
       const { metadataKey, date, messageId } = res.body;
       const threadId = this.state.threadId || res.body.threadId;
@@ -544,7 +547,7 @@ class ComposerWrapper extends Component {
         hasExternalPassphrase: !!externalEmailPassword
       });
     } catch (e) {
-      if (e.message.includes('SQLITE_CONSTRAINT')) {
+      if (e.message && e.message.includes('SQLITE_CONSTRAINT')) {
         // To remove
         await deleteEmailsByIds([emailId]);
         const email = await getEmailByKey(key);
@@ -575,11 +578,27 @@ class ComposerWrapper extends Component {
   };
 
   saveTemporalDraft = () => {
+    const parseDraftFiles = files => {
+      return files.map(file => {
+        const fileParams = {
+          token: file.token,
+          name: file.fileData.name,
+          size: file.fileData.size,
+          mimeType: file.fileData.type || defaultEmptyMimetypeValue,
+          key: file.key,
+          iv: file.iv,
+          date: Date.now(),
+          status: 1
+        };
+        if (file.fileData.cid) fileParams['cid'] = file.fileData.cid;
+        return fileParams;
+      });
+    };
+
     const data = {
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
-      files: this.state.files,
       isDraft: true,
       labelId: LabelType.draft.id,
       secure: false,
@@ -588,6 +607,9 @@ class ComposerWrapper extends Component {
       threadId: this.state.threadId,
       status: EmailStatus.NONE
     };
+    if (this.state.files.length) {
+      data['files'] = parseDraftFiles(this.state.files);
+    }
     const { emailData } = formOutgoingEmailFromData(data);
     saveDraftChangesComposerWindow(emailData);
   };

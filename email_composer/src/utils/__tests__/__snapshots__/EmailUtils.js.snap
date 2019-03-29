@@ -31,6 +31,7 @@ Object {
       "threadId": undefined,
       "unread": false,
     },
+    "files": Array [],
     "labels": Array [
       6,
     ],
@@ -65,6 +66,7 @@ Object {
   "ccEmails": Array [
     "usuario2@criptext.com",
   ],
+  "files": Array [],
   "htmlBody": "<p>Modified body content</p>",
   "textSubject": "Email subject 1",
   "threadId": "1",
