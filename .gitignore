@@ -6,6 +6,7 @@
 
 # testing
 */coverage
+electron_app/src/__integrations__/**@criptext.com/
 
 #dev
 electron_app/userData/
