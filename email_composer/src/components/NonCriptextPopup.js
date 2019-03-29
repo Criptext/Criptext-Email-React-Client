@@ -16,7 +16,7 @@ const {
 
 const NonCriptextPopup = props => {
   return (
-    <div className="non-criptext-container">
+    <div id="non-criptext-container">
       <div className="non-criptext-content">
         <section>{renderPopUp(props)}</section>
       </div>

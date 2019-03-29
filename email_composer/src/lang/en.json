@@ -29,8 +29,8 @@
         }
       },
       "note": {
-        "header": "Note:",
-        "content": "non-Criptext email addresses will receive a normal, un-encrypted email."
+        "header": "Note: ",
+        "content": "Non-Criptext email addresses will receive a normal, un-encrypted email."
       },
       "buttons": {
         "send": "Send",

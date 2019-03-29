@@ -1,5 +1,6 @@
+@import "./../styles/index.scss";
 
-.non-criptext-container{
+#non-criptext-container{
   align-items: center;
   background-color: rgba(0,0,0,0.5);
   display: flex;
@@ -20,7 +21,6 @@
 
     section{
       align-items: center;
-      background-color: white;
       border-radius: 5px;
       display: flex;
       height: 100%;
@@ -51,7 +51,6 @@
           margin-bottom: 8px;
           .text {
             flex-grow: 7;
-            color: #1a1a1a;
             margin: 0px;
           }
           .switch {
@@ -62,7 +61,6 @@
 
         .non-criptext-description {
           font-size: 11px;
-          color: #8d8d8d;
           margin-top: 5px;
         }
 
@@ -76,7 +74,6 @@
             padding-left: 5px;
             height: 21px;
             border: none;
-            border-bottom: 1px solid #d4d4d4;
             font-size: 13px;
             margin-top: 16%;
             &:focus {
@@ -93,25 +90,19 @@
             left: 148px;
             top: -20px;
             float: left;
-            color: #cdcdcd;
           }
 
           .error-password-message{
-            color: red;
             font-size: 10px;
             position: relative;
             top: -4px;
             left: -10px;
-            &.hidden {
-              color: #fff;
-            }
           }
         }
 
         .non-criptext-note {
           flex-grow: 1;
           height: 74px;
-          color: #000000;
           font-size: 12px;
           margin-top: 20px;
           margin-bottom: 25px;
@@ -155,3 +146,67 @@
     width: 100%;
   }
 }
+
+/*  THEME
+----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_POPUP, $_BORDER_COLOR_POPUP_INPUT, $_COLOR_TEXT_POPUP_TITLE, $_COLOR_TEXT_POPUP_SUBTITLE, $_COLOR_TEXT_POPUP_PARAGRAPH, $_COLOR_TEXT_POPUP_BUTTON_CANCEL, $_COLOR_TEXT_POPUP_ERROR_MESSAGE){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+
+    #non-criptext-container{
+      .non-criptext-content {
+        section {
+          background-color: $_BACKGROUND_COLOR_POPUP;
+
+          .content {
+            .non-criptext-title {
+              color: $_COLOR_TEXT_POPUP_TITLE;
+            }
+            .non-criptext-label > .text {
+              color: $_COLOR_TEXT_POPUP_PARAGRAPH;
+            }
+            .non-criptext-description {
+              color: $_COLOR_TEXT_POPUP_SUBTITLE;
+            }
+            .non-criptext-form {
+              input {
+                color: $_COLOR_TEXT_POPUP_PARAGRAPH;
+                background-color: $_BACKGROUND_COLOR_POPUP;
+                border-bottom: 1px solid $_BORDER_COLOR_POPUP_INPUT;
+                &:focus {
+                  border-bottom: 1px solid #0091ff;
+                }
+                &::placeholder {
+                  color: $_COLOR_TEXT_POPUP_SUBTITLE;
+                }
+              }
+              .icon-show, .icon-not-show {
+                color: $_COLOR_TEXT_POPUP_SUBTITLE;
+              }
+              .error-password-message {
+                color: $_COLOR_TEXT_POPUP_ERROR_MESSAGE;
+                &.hidden {
+                  color: $_BACKGROUND_COLOR_POPUP;
+                }
+              }
+            }
+            .non-criptext-note {
+              color: $_COLOR_TEXT_POPUP_PARAGRAPH;
+            }
+            .non-criptext-buttons {
+              button {
+                &.button-cancel {
+                  background-color: $_BACKGROUND_COLOR_POPUP;
+                  color: $_COLOR_TEXT_POPUP_BUTTON_CANCEL;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_POPUP_LIGHT, $_BORDER_COLOR_POPUP_INPUT_LIGHT, $_COLOR_TEXT_POPUP_TITLE_LIGHT, $_COLOR_TEXT_POPUP_SUBTITLE_LIGHT, $_COLOR_TEXT_POPUP_PARAGRAPH_LIGHT, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_LIGHT, $_COLOR_TEXT_POPUP_ERROR_MESSAGE_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_POPUP_DARK, $_BORDER_COLOR_POPUP_INPUT_DARK, $_COLOR_TEXT_POPUP_TITLE_DARK, $_COLOR_TEXT_POPUP_SUBTITLE_DARK, $_COLOR_TEXT_POPUP_PARAGRAPH_DARK, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_DARK, $_COLOR_TEXT_POPUP_ERROR_MESSAGE_DARK);
