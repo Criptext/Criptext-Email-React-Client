@@ -14,8 +14,6 @@ import {
   filterRecipientsByBlacklisted
 } from './../utils/EncryptionUtils';
 import string from './../lang';
-import { cleanHTML } from '../utils/StringUtils';
-import { previewLength } from '../utils/const';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -70,6 +68,7 @@ const keysToArrayBuffer = keys => {
 
 const createEmails = async (
   body,
+  preview,
   recipients,
   knownAddresses,
   keyBundleJSONbyRecipientIdAndDeviceId,
@@ -77,7 +76,6 @@ const createEmails = async (
   files
 ) => {
   const criptextEmailsByRecipientId = {};
-  const preview = cleanHTML(body).slice(0, previewLength);
 
   for (const recipient of recipients) {
     const { recipientId, type } = recipient;
@@ -170,6 +168,7 @@ const encryptPostEmail = async ({
   recipients,
   externalRecipients,
   body,
+  preview,
   subject,
   threadId,
   files,
@@ -210,6 +209,7 @@ const encryptPostEmail = async ({
   );
   const criptextEmails = await createEmails(
     body,
+    preview,
     recipients,
     knownAddresses,
     keyBundleJSONbyRecipientIdAndDeviceId,
