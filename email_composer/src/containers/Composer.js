@@ -510,6 +510,7 @@ class ComposerWrapper extends Component {
         recipients,
         externalRecipients,
         body: emailData.body,
+        preview: emailData.email.preview,
         files,
         peer,
         externalEmailPassword

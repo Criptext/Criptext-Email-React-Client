@@ -9,7 +9,7 @@ let people = undefined;
 let filtered = [];
 let isConsulting = false;
 let lastTextValue = '';
-const autocompleteCharacters = [',', ' '];
+const autocompleteCharacters = [',', ';'];
 
 const AutocompleteWrapper = ({ addTag, ...props }) => {
   let inputProps = props;
