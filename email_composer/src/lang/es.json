@@ -29,8 +29,8 @@
         }
       },
       "note": {
-        "header": "Nota:",
-        "content": "los destinatarios que no sean Criptext recibirán un correo normal, no encriptado."
+        "header": "Nota: ",
+        "content": "Los destinatarios que no sean Criptext recibirán un correo normal, no encriptado."
       },
       "buttons": {
         "send": "Enviar",

@@ -62,6 +62,21 @@ export const formDataToEditDraft = async emailKeyToEdit => {
   const toEmails = contacts.to.map(contact => contact.email);
   const ccEmails = contacts.cc.map(contact => contact.email);
   const bccEmails = contacts.bcc.map(contact => contact.email);
+  const prevFiles = await getFilesByEmailId(emailData.id);
+  const files = prevFiles.map(file => {
+    return {
+      fileData: {
+        ...file,
+        type: file.mimeType || defaultEmptyMimetypeValue
+      },
+      mode: FILE_MODES.UPLOADED,
+      percentage: 100,
+      token: file.token,
+      shouldDuplicate: false,
+      key: file.key,
+      iv: file.iv
+    };
+  });
 
   return {
     toEmails,
@@ -69,7 +84,8 @@ export const formDataToEditDraft = async emailKeyToEdit => {
     bccEmails,
     htmlBody,
     textSubject,
-    threadId
+    threadId,
+    files
   };
 };
 
@@ -83,7 +99,8 @@ export const formOutgoingEmailFromData = ({
   status,
   textSubject,
   toEmails,
-  threadId
+  threadId,
+  files
 }) => {
   const to = getEmailAddressesFromEmailObject(toEmails);
   const cc = getEmailAddressesFromEmailObject(ccEmails);
@@ -126,7 +143,8 @@ export const formOutgoingEmailFromData = ({
     email,
     recipients,
     labels: [labelId],
-    body: secure || isDraft ? body : `${body}${formAppSign()}`
+    body: secure || isDraft ? body : `${body}${formAppSign()}`,
+    files
   };
 
   return {
