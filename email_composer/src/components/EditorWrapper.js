@@ -1,11 +1,11 @@
 import './global';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Trumbowyg from 'react-trumbowyg';
+import Trumbowyg from './Trumbowyg';
 import string from './../lang';
-import '../../node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js';
-import '../../node_modules/trumbowyg/dist/plugins/fontfamily/trumbowyg.fontfamily.js';
-import '../../node_modules/trumbowyg/dist/plugins/fontsize/trumbowyg.fontsize.js';
+import '../../node_modules/@criptext/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js';
+import '../../node_modules/@criptext/trumbowyg/dist/plugins/fontfamily/trumbowyg.fontfamily.js';
+import '../../node_modules/@criptext/trumbowyg/dist/plugins/fontsize/trumbowyg.fontsize.js';
 import './editor.scss';
 
 class EditorWrapper extends Component {
