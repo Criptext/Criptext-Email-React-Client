@@ -8,7 +8,7 @@ import Thread from '../containers/Thread';
 import Settings from './../containers/Settings';
 import { SectionType } from '../utils/const';
 import { Set } from 'immutable';
-import { addEvent, Event } from '../utils/electronEventInterface';
+import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
 
 const HeaderMain = HeaderHOC(HeaderMainBasic);
 const HeaderThreadOptions = HeaderHOC(HeaderThreadOptionsBasic);
@@ -171,11 +171,17 @@ class MainWrapper extends Component {
   };
 
   initEventHandlers = () => {
-    addEvent(Event.UPDATE_AVAILABLE, ({ value }) => {
-      if (value) {
-        this.setState({ isUpdateAvailable: value });
-      }
-    });
+    addEvent(Event.UPDATE_AVAILABLE, this.updateAvailableListenerCallback);
+  };
+
+  removeEventHandlers = () => {
+    removeEvent(Event.UPDATE_AVAILABLE, this.updateAvailableListenerCallback);
+  };
+
+  updateAvailableListenerCallback = ({ value }) => {
+    if (value) {
+      this.setState({ isUpdateAvailable: value });
+    }
   };
 }
 

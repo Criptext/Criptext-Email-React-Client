@@ -3,6 +3,7 @@ import Panel from './Panel';
 import PropTypes from 'prop-types';
 import {
   addEvent,
+  removeEvent,
   Event,
   checkUserGuideSteps
 } from '../utils/electronEventInterface';
@@ -46,7 +47,7 @@ class PanelWrapper extends Component {
         }
       }
     };
-    this.initEventHandlers(props);
+    this.initEventHandlers();
     processPendingEvents();
   }
 
@@ -129,6 +130,10 @@ class PanelWrapper extends Component {
     }
   };
 
+  componentWillUnmount() {
+    this.removeEventHandlers();
+  }
+
   handleClickThreadBack = () => {
     this.setState({ threadIdSelected: null });
   };
@@ -161,185 +166,202 @@ class PanelWrapper extends Component {
     });
   };
 
-  initEventHandlers = props => {
-    addEvent(Event.ENABLE_WINDOW, () => {
-      this.setState({
-        isHiddenMailboxPopup: true,
-        mailboxPopupType: undefined
-      });
-    });
-
-    addEvent(Event.LOAD_EVENTS, params => {
-      this.props.onLoadEvents(params);
-    });
-
-    addEvent(Event.REFRESH_THREADS, eventParams => {
-      if (this.state.sectionSelected.params.mailboxSelected) {
-        const currentLabelId = this.state.sectionSelected.params.mailboxSelected
-          .id;
-        props.onLoadThreads({
-          labelId: Number(currentLabelId),
-          clear: true
-        });
-      }
-      if (this.state.sectionSelected.params.threadIdSelected) {
-        props.onLoadEmails(this.state.sectionSelected.params.threadIdSelected);
-      }
-      if (eventParams) {
-        const { labelIds } = eventParams;
-        props.onUpdateUnreadEmailsBadge(labelIds);
-      }
-    });
-
-    addEvent(Event.STOP_LOAD_SYNC, () => {
-      props.onStopLoadSync();
-    });
-
+  initEventHandlers = () => {
+    addEvent(Event.ENABLE_WINDOW, this.enableWindowListenerCallback);
+    addEvent(Event.LOAD_EVENTS, this.loadEventsListenerCallback);
+    addEvent(Event.REFRESH_THREADS, this.refreshThreadsListenerCallback);
+    addEvent(Event.STOP_LOAD_SYNC, this.stopLoadSyncListenerCallback);
+    addEvent(Event.STORE_LOAD, this.storeLoadListenerCallback);
     addEvent(
-      Event.STORE_LOAD,
-      ({
-        avatarHasChanged,
-        labelIds,
-        threadIds,
-        labels,
-        badgeLabelIds,
-        hasStopLoad
-      }) => {
-        let activity = undefined;
-        let label = undefined;
-        if (avatarHasChanged) {
-          activity = setAvatarUpdatedTimestamp(Date.now());
-        }
+      Event.UPDATE_THREAD_EMAILS,
+      this.updateThreadEmailsListenerCallback
+    );
+    addEvent(Event.DEVICE_REMOVED, this.deviceRemovedListenerCallback);
+    addEvent(Event.PASSWORD_CHANGED, this.passwordChangedListenerCallback);
+    addEvent(Event.DISABLE_WINDOW, this.disableWindowListenerCallback);
+    addEvent(Event.ACCOUNT_DELETED, this.accountDeletedListenerCallback);
+    addEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
+  };
 
-        const currentSectionType = this.state.sectionSelected.type;
-        const isRenderingSettings = currentSectionType === SectionType.SETTINGS;
-        if (!isRenderingSettings && (labelIds || threadIds)) {
-          const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
-          const isRenderingThread = currentSectionType === SectionType.THREAD;
-          const currentThreadId = this.state.sectionSelected.params
-            .threadIdSelected;
-          const currentLabelId = this.state.sectionSelected.params
-            .mailboxSelected.id;
-          const limit =
-            this.props.threadsCount > 20 ? this.props.threadsCount : undefined;
-          if (labelIds && isRenderingMailbox) {
-            if (labelIds.includes(currentLabelId)) {
-              props.onLoadThreads(
-                {
-                  labelId: Number(currentLabelId),
-                  clear: true,
-                  limit
-                },
-                hasStopLoad
-              );
-            }
-          } else if (threadIds && isRenderingThread) {
-            props.onLoadThreads(
-              {
-                labelId: Number(currentLabelId),
-                clear: true,
-                limit
-              },
-              hasStopLoad
-            );
-            if (threadIds.includes(currentThreadId)) {
-              props.onLoadEmails(currentThreadId);
-            }
-          } else if (threadIds && isRenderingMailbox) {
-            props.onLoadThreads(
-              {
-                labelId: Number(currentLabelId),
-                clear: true,
-                limit
-              },
-              hasStopLoad
-            );
-          }
-        } else {
-          if (hasStopLoad) {
-            if (!activity) activity = stopLoadSync();
-            else props.onStopLoadSync();
-          }
-        }
+  removeEventHandlers = () => {
+    removeEvent(Event.ENABLE_WINDOW, this.enableWindowListenerCallback);
+    removeEvent(Event.LOAD_EVENTS, this.loadEventsListenerCallback);
+    removeEvent(Event.REFRESH_THREADS, this.refreshThreadsListenerCallback);
+    removeEvent(Event.STOP_LOAD_SYNC, this.stopLoadSyncListenerCallback);
+    removeEvent(Event.STORE_LOAD, this.storeLoadListenerCallback);
+    removeEvent(
+      Event.UPDATE_THREAD_EMAILS,
+      this.updateThreadEmailsListenerCallback
+    );
+    removeEvent(Event.DEVICE_REMOVED, this.deviceRemovedListenerCallback);
+    removeEvent(Event.PASSWORD_CHANGED, this.passwordChangedListenerCallback);
+    removeEvent(Event.DISABLE_WINDOW, this.disableWindowListenerCallback);
+    removeEvent(Event.ACCOUNT_DELETED, this.accountDeletedListenerCallback);
+    removeEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
+  };
 
-        if (labels) {
-          label = addLabels(labels);
-        }
+  enableWindowListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: true,
+      mailboxPopupType: undefined
+    });
+  };
 
-        if (badgeLabelIds) {
-          let labelIdsBadge = [];
-          if (badgeLabelIds.includes(LabelType.inbox.id))
-            labelIdsBadge = [...labelIdsBadge, LabelType.inbox.id];
-          if (badgeLabelIds.includes(LabelType.spam.id))
-            labelIdsBadge = [...labelIdsBadge, LabelType.spam.id];
-          if (badgeLabelIds.includes(LabelType.draft.id))
-            labelIdsBadge = [...labelIdsBadge, LabelType.draft.id];
-          if (labelIdsBadge.length)
-            props.onUpdateUnreadEmailsBadge(labelIdsBadge);
-        }
+  disableWindowListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.ONLY_BACKDROP
+    });
+  };
 
+  loadEventsListenerCallback = params => {
+    this.props.onLoadEvents(params);
+  };
+
+  refreshThreadsListenerCallback = eventParams => {
+    if (this.state.sectionSelected.params.mailboxSelected) {
+      const currentLabelId = this.state.sectionSelected.params.mailboxSelected
+        .id;
+      this.props.onLoadThreads({
+        labelId: Number(currentLabelId),
+        clear: true
+      });
+    }
+    if (this.state.sectionSelected.params.threadIdSelected) {
+      this.props.onLoadEmails(
+        this.state.sectionSelected.params.threadIdSelected
+      );
+    }
+    if (eventParams) {
+      const { labelIds } = eventParams;
+      this.props.onUpdateUnreadEmailsBadge(labelIds);
+    }
+  };
+
+  stopLoadSyncListenerCallback = () => {
+    this.props.onStopLoadSync();
+  };
+
+<<<<<<< HEAD
         if (activity || label) {
           props.onAddDataApp({ activity, label });
         }
       }
     );
+=======
+  storeLoadListenerCallback = ({
+    avatarHasChanged,
+    labelIds,
+    threadIds,
+    labels,
+    badgeLabelIds,
+    hasStopLoad
+  }) => {
+    if (avatarHasChanged) this.props.onUpdateAvatar();
+>>>>>>> Remove event listener on componnent unmount
 
-    addEvent(Event.UPDATE_THREAD_EMAILS, eventParams => {
-      if (!eventParams) return;
-      const currentSectionType = this.state.sectionSelected.type;
-      const isRenderingMailbox =
-        currentSectionType === SectionType.MAILBOX ||
-        currentSectionType === SectionType.THREAD;
-      const currentLabelId = isRenderingMailbox
-        ? this.state.sectionSelected.params.mailboxSelected.id
-        : null;
-      const { threadId, newEmailId, oldEmailId } = eventParams;
-      if (!threadId && !newEmailId && !oldEmailId) return;
-      if (currentLabelId) {
-        props.onLoadEmails(threadId);
-        props.onUpdateEmailIdsThread({
-          labelId: currentLabelId,
-          threadId,
-          emailIdToAdd: newEmailId,
-          emailIdsToRemove: [oldEmailId]
+    const currentSectionType = this.state.sectionSelected.type;
+    const isRenderingSettings = currentSectionType === SectionType.SETTINGS;
+    if (!isRenderingSettings && (labelIds || threadIds)) {
+      const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
+      const isRenderingThread = currentSectionType === SectionType.THREAD;
+      const currentThreadId = this.state.sectionSelected.params
+        .threadIdSelected;
+      const currentLabelId = this.state.sectionSelected.params.mailboxSelected
+        .id;
+      const limit =
+        this.props.threadsCount > 20 ? this.props.threadsCount : undefined;
+      if (labelIds && isRenderingMailbox) {
+        if (labelIds.includes(currentLabelId)) {
+          this.props.onLoadThreads({
+            labelId: Number(currentLabelId),
+            clear: true,
+            limit
+          });
+        }
+      } else if (threadIds && isRenderingThread) {
+        this.props.onLoadThreads({
+          labelId: Number(currentLabelId),
+          clear: true,
+          limit
+        });
+        if (threadIds.includes(currentThreadId)) {
+          this.props.onLoadEmails(currentThreadId);
+        }
+      } else if (threadIds && isRenderingMailbox) {
+        this.props.onLoadThreads({
+          labelId: Number(currentLabelId),
+          clear: true,
+          limit
         });
       }
-      if (!newEmailId && !oldEmailId) {
-        props.onUpdateUnreadEmailsBadge([LabelType.inbox.id]);
-      }
-    });
+    }
 
-    addEvent(Event.DEVICE_REMOVED, () => {
-      this.setState({
-        isHiddenMailboxPopup: false,
-        mailboxPopupType: MAILBOX_POPUP_TYPES.DEVICE_REMOVED
+    if (labels) this.props.onAddLabels(labels);
+
+    if (badgeLabelIds) {
+      let labelIdsBadge = [];
+      if (badgeLabelIds.includes(LabelType.inbox.id))
+        labelIdsBadge = [...labelIdsBadge, LabelType.inbox.id];
+      if (badgeLabelIds.includes(LabelType.spam.id))
+        labelIdsBadge = [...labelIdsBadge, LabelType.spam.id];
+      if (badgeLabelIds.includes(LabelType.draft.id))
+        labelIdsBadge = [...labelIdsBadge, LabelType.draft.id];
+      if (labelIdsBadge.length)
+        this.props.onUpdateUnreadEmailsBadge(labelIdsBadge);
+    }
+
+    if (hasStopLoad) this.props.onStopLoadSync();
+  };
+
+  updateThreadEmailsListenerCallback = eventParams => {
+    if (!eventParams) return;
+    const currentSectionType = this.state.sectionSelected.type;
+    const isRenderingMailbox =
+      currentSectionType === SectionType.MAILBOX ||
+      currentSectionType === SectionType.THREAD;
+    const currentLabelId = isRenderingMailbox
+      ? this.state.sectionSelected.params.mailboxSelected.id
+      : null;
+    const { threadId, newEmailId, oldEmailId } = eventParams;
+    if (!threadId && !newEmailId && !oldEmailId) return;
+    if (currentLabelId) {
+      this.props.onLoadEmails(threadId);
+      this.props.onUpdateEmailIdsThread({
+        labelId: currentLabelId,
+        threadId,
+        emailIdToAdd: newEmailId,
+        emailIdsToRemove: [oldEmailId]
       });
-    });
+    }
+    if (!newEmailId && !oldEmailId) {
+      this.props.onUpdateUnreadEmailsBadge([LabelType.inbox.id]);
+    }
+  };
 
-    addEvent(Event.PASSWORD_CHANGED, () => {
-      this.setState({
-        isHiddenMailboxPopup: false,
-        mailboxPopupType: MAILBOX_POPUP_TYPES.PASSWORD_CHANGED
-      });
+  deviceRemovedListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.DEVICE_REMOVED
     });
+  };
 
-    addEvent(Event.DISABLE_WINDOW, () => {
-      this.setState({
-        isHiddenMailboxPopup: false,
-        mailboxPopupType: MAILBOX_POPUP_TYPES.ONLY_BACKDROP
-      });
+  passwordChangedListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.PASSWORD_CHANGED
     });
+  };
 
-    addEvent(Event.ACCOUNT_DELETED, () => {
-      this.setState({
-        isHiddenMailboxPopup: false,
-        mailboxPopupType: MAILBOX_POPUP_TYPES.ACCOUNT_DELETED
-      });
+  accountDeletedListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.ACCOUNT_DELETED
     });
+  };
 
-    addEvent(Event.SET_SECTION_TYPE, (type, mailboxSelected) => {
-      this.handleClickSection(type, { mailboxSelected });
-    });
+  setSectionTypeListenerCallback = (type, mailboxSelected) => {
+    this.handleClickSection(type, { mailboxSelected });
   };
 }
 
