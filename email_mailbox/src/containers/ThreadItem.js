@@ -68,41 +68,28 @@ const formatRecipientsForThreadItem = (
   const shouldShowOnlyFirstName = recipients.length > 1;
   const myFormattedRecipient = string.mailbox.me;
   let listMyselftAtEnd = false;
-  let firstRecipientEmail;
 
-  const formattedRecipients = recipients.reduce(
-    (formatted, recipient, index) => {
-      const cleanRecipientName = parseContactRow(recipient);
-      const contactFound = contacts.find(
-        contact => contact.get('email') === recipient
-      );
-      const contact = contactFound ? contactFound.toJS() : cleanRecipientName;
-      const recipientName = contact.name || contact.email;
-      if (recipientName === currentUserName) {
-        listMyselftAtEnd = true;
-      } else {
-        const recipientFirstName = shouldShowOnlyFirstName
-          ? recipientName.replace(/[<>]/g, '').split(' ')[0]
-          : recipientName;
-        formatted.push(recipientFirstName);
-      }
-      if (index === recipients.length - 1) {
-        firstRecipientEmail = contact.email;
-      }
-      return formatted;
-    },
-    []
-  );
+  const formattedRecipients = recipients.reduce((formatted, recipient) => {
+    const cleanRecipientName = parseContactRow(recipient);
+    const contactFound = contacts.find(
+      contact => contact.get('email') === recipient
+    );
+    const contact = contactFound ? contactFound.toJS() : cleanRecipientName;
+    const recipientName = contact.name || contact.email;
+    if (recipientName === currentUserName) {
+      listMyselftAtEnd = true;
+    } else {
+      const recipientFirstName = shouldShowOnlyFirstName
+        ? recipientName.replace(/[<>]/g, '').split(' ')[0]
+        : recipientName;
+      formatted.push(recipientFirstName);
+    }
+    return formatted;
+  }, []);
   if (listMyselftAtEnd) formattedRecipients.push(myFormattedRecipient);
   return {
-    firstRecipientEmail,
     formattedRecipients: formattedRecipients.join(', ')
   };
-};
-
-const getFirstRecipient = recipients => {
-  const [first] = recipients.split(', ');
-  return first;
 };
 
 const definePreviewAndStatus = thread => {
@@ -126,14 +113,18 @@ const mapStateToProps = (state, ownProps) => {
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const contacts = state.get('contacts');
   const recipients = ownProps.thread.get('fromContactName').toArray();
-  const {
-    firstRecipientEmail,
-    formattedRecipients
-  } = formatRecipientsForThreadItem(recipients, myAccount.name, contacts);
-  const firstRecipient = getFirstRecipient(formattedRecipients);
-  const letters = getTwoCapitalLetters(firstRecipient, 'D');
+  const { formattedRecipients } = formatRecipientsForThreadItem(
+    recipients,
+    myAccount.name,
+    contacts
+  );
+  const lastRecipient = parseContactRow(ownProps.thread.get('fromAddress'));
+  const letters = getTwoCapitalLetters(
+    lastRecipient.name || lastRecipient.email,
+    'D'
+  );
   const color = randomcolor({
-    seed: firstRecipient,
+    seed: lastRecipient.name || lastRecipient.email,
     luminosity: mySettings.theme === 'dark' ? 'dark' : 'bright'
   });
   const thread = ownProps.thread.merge({
@@ -151,8 +142,8 @@ const mapStateToProps = (state, ownProps) => {
     state.get('labels'),
     labelsToExclude
   );
-  const recipient = firstRecipientEmail.replace(`@${appDomain}`, '');
-  const avatarUrl = firstRecipientEmail.includes(`@${appDomain}`)
+  const recipient = lastRecipient.email.replace(`@${appDomain}`, '');
+  const avatarUrl = lastRecipient.email.includes(`@${appDomain}`)
     ? `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`
     : null;
   const { preview, isUnsend, isEmpty } = definePreviewAndStatus(thread);
