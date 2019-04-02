@@ -52,6 +52,11 @@ class ThreadItem extends Component {
             ) : (
               <span>{recipients}</span>
             )}
+            {thread.emailIds.length > 1 && (
+              <div className={'thread-item-emails-size'}>
+                <span>{thread.emailIds.length}</span>
+              </div>
+            )}
           </div>
           <div className="thread-item-status">
             {this.renderThreadStatus(thread.status)}

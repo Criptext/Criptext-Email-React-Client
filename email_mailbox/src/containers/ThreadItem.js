@@ -54,10 +54,8 @@ const defineLabelsToExcludeByMailbox = currentLabelId => {
   return currentLabelId === labelInboxId ? [LabelType.sent.id] : [];
 };
 
-const defineSubject = (subject, emailSize) => {
-  const text = subject.length === 0 ? EMPTY_SUBJECT_DEFAULT : subject;
-  const emailCounter = emailSize > 1 ? ` (${emailSize})` : '';
-  return `${text}${emailCounter}`;
+const defineSubject = subject => {
+  return subject.length === 0 ? EMPTY_SUBJECT_DEFAULT : subject;
 };
 
 const formatRecipientsForThreadItem = (
@@ -129,10 +127,7 @@ const mapStateToProps = (state, ownProps) => {
   });
   const thread = ownProps.thread.merge({
     date: defineTimeByToday(ownProps.thread.get('date')),
-    subject: defineSubject(
-      ownProps.thread.get('subject'),
-      ownProps.thread.get('emailIds').size
-    )
+    subject: defineSubject(ownProps.thread.get('subject'))
   });
   const isLabelCustome = !LabelType[ownProps.mailbox];
   const mailboxlId = isLabelCustome ? null : LabelType[ownProps.mailbox].id;
