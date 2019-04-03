@@ -93,7 +93,7 @@ class ActivityPanel extends Component {
 
   renderEmptyFeedSection = () => {
     return (
-      <div className="empty-container empty-activity-container">
+      <div className="empty-container empty-activity-container">
         <div className="empty-content">
           <div className="empty-icon" />
           <div className="header-text">There&#39;s nothing new yet</div>

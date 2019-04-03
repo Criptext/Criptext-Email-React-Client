@@ -1,42 +1,59 @@
-#error-boundary-container {
-  padding: 6% 10%;
-  min-width: 370px;
+@import "./../styles/index.scss";
 
-  > .error-boundary-title {
-    text-align: center;
-    h1 { 
-      font-size: 30px;
-    }
-  }
+#error-boundary-container {
+  width: 100%;
+  height: 100vh;
+  min-width: 375px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   > .error-boundary-content {
-    margin-top: 5%;
-    padding: 0% 4%;
-    pre {
-      margin-bottom: 5%;
-      background-color: rgba($color: #d0d0d0, $alpha: 0.6);
-      padding: 10px 20px;
-      border-radius: 7px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    > .error-boundary-logo {
+      width: 240px;
+      height: 171px;
+      margin-left: 4%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: auto 100%;
+      background-image: url(../#{$_PATH_TO_IMAGES}/crash-app-light.svg);
     }
 
-    p {
-      font-size: 20px;
+    > .error-boundary-text {
+      text-align: center;
+      margin: 7% auto;
+
+      > h1 {
+        font-size: 24px;
+        color: #373a45;
+        margin: 3 auto;
+      }
+      > h2 {
+        font-size: 23px;
+        color: #939393;
+        margin: 3 auto;
+      }
     }
 
     > .error-boundary-options {
-      margin-top: 4%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       button {
         color: #ffffff;
         background-color: #0091ff;
+        width: 150px;
         height: 40px;
         padding: 7px 17px;
         text-transform: capitalize;
         font-size: 17px;
         opacity: 0.9;
-        margin-right: 3%;
 
         &:hover {
           opacity: 1;

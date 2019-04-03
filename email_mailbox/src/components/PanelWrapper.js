@@ -242,13 +242,6 @@ class PanelWrapper extends Component {
     this.props.onStopLoadSync();
   };
 
-<<<<<<< HEAD
-        if (activity || label) {
-          props.onAddDataApp({ activity, label });
-        }
-      }
-    );
-=======
   storeLoadListenerCallback = ({
     avatarHasChanged,
     labelIds,
@@ -257,8 +250,11 @@ class PanelWrapper extends Component {
     badgeLabelIds,
     hasStopLoad
   }) => {
-    if (avatarHasChanged) this.props.onUpdateAvatar();
->>>>>>> Remove event listener on componnent unmount
+    let activity = undefined;
+    let label = undefined;
+    if (avatarHasChanged) {
+      activity = setAvatarUpdatedTimestamp(Date.now());
+    }
 
     const currentSectionType = this.state.sectionSelected.type;
     const isRenderingSettings = currentSectionType === SectionType.SETTINGS;
@@ -273,31 +269,47 @@ class PanelWrapper extends Component {
         this.props.threadsCount > 20 ? this.props.threadsCount : undefined;
       if (labelIds && isRenderingMailbox) {
         if (labelIds.includes(currentLabelId)) {
-          this.props.onLoadThreads({
+          this.props.onLoadThreads(
+            {
+              labelId: Number(currentLabelId),
+              clear: true,
+              limit
+            },
+            hasStopLoad
+          );
+        }
+      } else if (threadIds && isRenderingThread) {
+        this.props.onLoadThreads(
+          {
             labelId: Number(currentLabelId),
             clear: true,
             limit
-          });
-        }
-      } else if (threadIds && isRenderingThread) {
-        this.props.onLoadThreads({
-          labelId: Number(currentLabelId),
-          clear: true,
-          limit
-        });
+          },
+          hasStopLoad
+        );
         if (threadIds.includes(currentThreadId)) {
           this.props.onLoadEmails(currentThreadId);
         }
       } else if (threadIds && isRenderingMailbox) {
-        this.props.onLoadThreads({
-          labelId: Number(currentLabelId),
-          clear: true,
-          limit
-        });
+        this.props.onLoadThreads(
+          {
+            labelId: Number(currentLabelId),
+            clear: true,
+            limit
+          },
+          hasStopLoad
+        );
+      }
+    } else {
+      if (hasStopLoad) {
+        if (!activity) activity = stopLoadSync();
+        else this.props.onStopLoadSync();
       }
     }
 
-    if (labels) this.props.onAddLabels(labels);
+    if (labels) {
+      label = addLabels(labels);
+    }
 
     if (badgeLabelIds) {
       let labelIdsBadge = [];
@@ -311,7 +323,9 @@ class PanelWrapper extends Component {
         this.props.onUpdateUnreadEmailsBadge(labelIdsBadge);
     }
 
-    if (hasStopLoad) this.props.onStopLoadSync();
+    if (activity || label) {
+      this.props.onAddDataApp({ activity, label });
+    }
   };
 
   updateThreadEmailsListenerCallback = eventParams => {
@@ -366,12 +380,14 @@ class PanelWrapper extends Component {
 }
 
 PanelWrapper.propTypes = {
+  onAddDataApp: PropTypes.func,
   onAddLabels: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onLoadEvents: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,
   onStopLoadSync: PropTypes.func,
+  onUpdateAvatar: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   onUpdateEmailIdsThread: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,

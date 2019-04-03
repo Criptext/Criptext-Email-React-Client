@@ -20,13 +20,11 @@ class App extends Component {
       <Provider store={store}>
         <div className="wrapper-out">
           <CustomTitleBar />
-          <MainErrorBoundary>
-            <Panel />
-          </MainErrorBoundary>
+          <Panel />
         </div>
       </Provider>
     );
   }
 }
 
-export default App;
+export default MainErrorBoundary(App);

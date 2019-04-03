@@ -542,5 +542,15 @@
     },
     "yesterdayText": "Ayer",
     "atText": "a las"
+  },
+  "crash": {
+    "title": "¡Ups! Parece que algo falló",
+    "counter": {
+      "a": "Criptext se reiniciará en",
+      "b": "segundos"
+    },
+    "buttons": {
+      "restart_now": "Reiniciar ya"
+    }
   }
 }

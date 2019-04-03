@@ -1,82 +1,89 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './mainerrorboundary.scss';
 import { reloadWindow } from '../utils/electronInterface';
+import './mainerrorboundary.scss';
+import string from './../lang';
 
-const logErrorToMyService = (err, info) => {
-  console.log(`
-    Error:${err} \n
-    Info: ${JSON.stringify(info)}
-  `);
-};
+const { crash } = string;
 
-class MainErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+const HighOrderBoundarie = AppComponent =>
+  class ErrorBoundaries extends Component {
+    state = {
       hasError: false,
       errorTitle: '',
-      errorInfo: ''
+      errorInfo: '',
+      counter: 11
     };
-  }
 
-  componentDidCatch(error, info) {
-    const firstErrorLine = info.componentStack
-      .split('\n')
-      .slice(0,3)
-      .join('\n');
-    this.setState({
-      hasError: true,
-      errorTitle: error,
-      errorInfo: firstErrorLine
-    });
-    logErrorToMyService(error, info);
-  }
+    componentDidCatch(error, info) {
+      const errorInfo = info.componentStack;
+      this.setState(
+        {
+          hasError: true,
+          errorTitle: error,
+          errorInfo
+        },
+        this.updateCounter
+      );
+    }
 
-  render() {
-    return this.state.hasError 
-      ? this.renderAppError()
-      : this.props.children;
-  }
+    render() {
+      if (this.state.hasError) {
+        return (
+          <div id="error-boundary-container">
+            <div className="error-boundary-content">
+              <div className="error-boundary-logo" />
 
-  renderAppError = () => (
-    <div id="error-boundary-container">
-      <div className="error-boundary-title">
-        <h1>Oops! Something went wrong :(</h1>
-      </div>
-      <hr />
+              <div className="error-boundary-text">
+                <h1>{crash.title}</h1>
+                <h2>
+                  {`${crash.counter.a} ${this.state.counter} ${
+                    crash.counter.b
+                  }`}
+                </h2>
+              </div>
 
-      <div className="error-boundary-content">
-        <pre>
-          {`${this.state.errorTitle}\n ${this.state.errorInfo}`}
-        </pre>
+              <div className="error-boundary-options">
+                <button
+                  className="button button-a"
+                  onClick={() => this.restartApp()}
+                >
+                  {crash.buttons.restart_now}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+      return <AppComponent />;
+    }
 
-        <p>Do not worry. Just choose an action:</p>
-        <div className="error-boundary-options">
-          <button className="button button-a" onClick={this.handleClickRestartApp}>
-            Restart app
-          </button>
-          <button className="button button-a" onClick={this.handleClickNotifyError}>
-            Notify error
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+    componentWillUnmount() {
+      clearTimeout(this.counterTimeout);
+    }
 
-  handleClickRestartApp = () => {
-    reloadWindow();
+    updateCounter = () => {
+      if (this.state.counter === 1) {
+        clearTimeout(this.counterTimeout);
+        this.restartApp();
+        return;
+      }
+      this.setState(
+        prevState => ({
+          counter: prevState.counter - 1
+        }),
+        () => {
+          this.counterTimeout = setTimeout(this.updateCounter, 1000);
+        }
+      );
+    };
+
+    restartApp = () => reloadWindow();
   };
 
-  handleClickNotifyError = () => {
-    const message = this.state.errorTitle + ': ' + this.state.errorInfo;
-    alert(message);
-    setTimeout(this.handleClickRestartApp, 3000);
-  };
-}
-
-MainErrorBoundary.propTypes = {
-  children: PropTypes.object
+HighOrderBoundarie.propTypes = {
+  error: PropTypes.object,
+  info: PropTypes.string
 };
 
-export default MainErrorBoundary;
+export default HighOrderBoundarie;
