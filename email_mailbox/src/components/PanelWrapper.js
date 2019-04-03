@@ -9,6 +9,7 @@ import {
 import { processPendingEvents } from '../utils/ipc';
 import { LabelType } from '../utils/electronInterface';
 import { SectionType } from '../utils/const';
+import { addLabels, setAvatarUpdatedTimestamp, stopLoadSync } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
 
 const MAILBOX_POPUP_TYPES = {
@@ -204,8 +205,10 @@ class PanelWrapper extends Component {
         badgeLabelIds,
         hasStopLoad
       }) => {
+        let activity = undefined;
+        let label = undefined;
         if (avatarHasChanged) {
-          props.onUpdateAvatar();
+          activity = setAvatarUpdatedTimestamp(Date.now());
         }
 
         const currentSectionType = this.state.sectionSelected.type;
@@ -221,32 +224,46 @@ class PanelWrapper extends Component {
             this.props.threadsCount > 20 ? this.props.threadsCount : undefined;
           if (labelIds && isRenderingMailbox) {
             if (labelIds.includes(currentLabelId)) {
-              props.onLoadThreads({
+              props.onLoadThreads(
+                {
+                  labelId: Number(currentLabelId),
+                  clear: true,
+                  limit
+                },
+                hasStopLoad
+              );
+            }
+          } else if (threadIds && isRenderingThread) {
+            props.onLoadThreads(
+              {
                 labelId: Number(currentLabelId),
                 clear: true,
                 limit
-              });
-            }
-          } else if (threadIds && isRenderingThread) {
-            props.onLoadThreads({
-              labelId: Number(currentLabelId),
-              clear: true,
-              limit
-            });
+              },
+              hasStopLoad
+            );
             if (threadIds.includes(currentThreadId)) {
               props.onLoadEmails(currentThreadId);
             }
           } else if (threadIds && isRenderingMailbox) {
-            props.onLoadThreads({
-              labelId: Number(currentLabelId),
-              clear: true,
-              limit
-            });
+            props.onLoadThreads(
+              {
+                labelId: Number(currentLabelId),
+                clear: true,
+                limit
+              },
+              hasStopLoad
+            );
+          }
+        } else {
+          if (hasStopLoad) {
+            if (!activity) activity = stopLoadSync();
+            else props.onStopLoadSync();
           }
         }
 
         if (labels) {
-          props.onAddLabels(labels);
+          label = addLabels(labels);
         }
 
         if (badgeLabelIds) {
@@ -261,7 +278,9 @@ class PanelWrapper extends Component {
             props.onUpdateUnreadEmailsBadge(labelIdsBadge);
         }
 
-        if (hasStopLoad) props.onStopLoadSync();
+        if (activity || label) {
+          props.onAddDataApp({ activity, label });
+        }
       }
     );
 
@@ -332,7 +351,6 @@ PanelWrapper.propTypes = {
   onRemoveEmailIdToThread: PropTypes.func,
   onStopLoadSync: PropTypes.func,
   onUnsendEmail: PropTypes.func,
-  onUpdateAvatar: PropTypes.func,
   onUpdateEmailIdsThread: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,
   onUpdateTimestamp: PropTypes.func,

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import {
-  addLabels,
+  addDataApp,
   loadEmails,
   loadEvents,
   loadThreads,
@@ -9,7 +9,6 @@ import {
   updateAllFeedItemsAsOlder,
   unsendEmailOnSuccess,
   unsendEmailFiles,
-  setAvatarUpdatedTimestamp,
   stopLoadSync
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
@@ -37,8 +36,8 @@ const defineContactType = labelId => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddLabels: labels => {
-      dispatch(addLabels(labels));
+    onAddDataApp: data => {
+      dispatch(addDataApp(data));
     },
     onLoadEmails: threadId => {
       dispatch(loadEmails(threadId));
@@ -46,11 +45,16 @@ const mapDispatchToProps = dispatch => {
     onLoadEvents: params => {
       dispatch(loadEvents(params));
     },
-    onLoadThreads: params => {
+    onLoadThreads: (params, shouldStopAll) => {
       const { labelId } = params;
       const rejectedLabelIds = defineRejectedLabels(labelId);
       const contactTypes = defineContactType(labelId);
-      dispatch(loadThreads({ ...params, rejectedLabelIds, contactTypes }));
+      dispatch(
+        loadThreads(
+          { ...params, rejectedLabelIds, contactTypes },
+          shouldStopAll
+        )
+      );
     },
     onStopLoadSync: () => {
       dispatch(stopLoadSync());
@@ -58,9 +62,6 @@ const mapDispatchToProps = dispatch => {
     onUnsendEmail: (emailId, date, status) => {
       dispatch(unsendEmailOnSuccess(String(emailId), date, status));
       dispatch(unsendEmailFiles(emailId));
-    },
-    onUpdateAvatar: () => {
-      dispatch(setAvatarUpdatedTimestamp(Date.now()));
     },
     onUpdateEmailIdsThread: ({
       labelId,
