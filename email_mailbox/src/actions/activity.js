@@ -1,5 +1,11 @@
 import { Activity } from './types';
 
+export const stopAll = () => {
+  return {
+    type: Activity.STOP_ALL
+  };
+};
+
 export const startLoadSync = () => {
   return {
     type: Activity.START_LOAD_SYNC

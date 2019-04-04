@@ -25,6 +25,12 @@ const activity = (state = initActivity, action) => {
       return state.set('isLoadingThreads', true);
     case Activity.STOP_LOAD_THREAD:
       return state.set('isLoadingThreads', false);
+    case Activity.STOP_ALL: {
+      return state.merge({
+        isLoadingThreads: false,
+        isSyncing: false
+      });
+    }
     default:
       return state;
   }

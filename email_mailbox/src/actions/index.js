@@ -2,6 +2,7 @@ import {
   setAvatarUpdatedTimestamp,
   startLoadSync,
   startLoadThread,
+  stopAll,
   stopLoadSync,
   stopLoadThread
 } from './activity';
@@ -114,6 +115,7 @@ export {
   setAvatarUpdatedTimestamp,
   startLoadSync,
   startLoadThread,
+  stopAll,
   stopLoadSync,
   stopLoadThread,
   unsendEmail,
