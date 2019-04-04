@@ -8,6 +8,10 @@ class Trumbowyg extends Component {
     super(props);
   }
 
+  render() {
+    return <div id={`${this.props.id}`} placeholder={this.props.placeholder} />;
+  }
+
   componentDidMount() {
     const {
       id,
@@ -99,10 +103,6 @@ class Trumbowyg extends Component {
 
   componentWillUnmount() {
     $(`#${this.props.id}`).trumbowyg('destroy');
-  }
-
-  render() {
-    return <div id={`${this.props.id}`} placeholder={this.props.placeholder} />;
   }
 }
 

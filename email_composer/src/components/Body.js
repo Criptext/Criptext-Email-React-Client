@@ -14,8 +14,8 @@ const Body = props => (
       isFocusEditorInput={props.isFocusEditorInput}
       isToolbarHidden={props.isToolbarHidden}
       onClearFile={props.onClearFile}
-      onDragLeave={props.handleDragLeave}
-      onDragOver={props.handleDragOver}
+      onDragLeave={props.onDragLeave}
+      onDragOver={props.onDragOver}
       onDrop={props.onDrop}
       onFocusTextEditor={props.onFocusTextEditor}
       onPauseUploadFile={props.onPauseUploadFile}
@@ -35,8 +35,6 @@ Body.propTypes = {
   addFiletoken: PropTypes.func,
   files: PropTypes.array,
   getHtmlBody: PropTypes.func,
-  handleDragLeave: PropTypes.func,
-  handleDragOver: PropTypes.func,
   htmlBody: PropTypes.string,
   isDragActive: PropTypes.bool,
   isFocusEditorInput: PropTypes.bool,
@@ -45,6 +43,8 @@ Body.propTypes = {
   onClickDiscardDraft: PropTypes.func,
   onClickSendMessage: PropTypes.func,
   onClickTextEditor: PropTypes.func,
+  onDragLeave: PropTypes.func,
+  onDragOver: PropTypes.func,
   onDrop: PropTypes.func,
   onFocusTextEditor: PropTypes.func,
   onPauseUploadFile: PropTypes.func,

@@ -115,8 +115,6 @@ class ComposerWrapper extends Component {
         getTextSubject={this.handleGetSubject}
         getToEmails={this.handleGetToEmail}
         getHtmlBody={this.handleGetHtmlBody}
-        handleDragLeave={this.handleDragLeave}
-        handleDragOver={this.handleDragOver}
         htmlBody={this.state.htmlBody}
         isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
         isDragActive={this.state.isDragActive}
@@ -125,6 +123,8 @@ class ComposerWrapper extends Component {
         onClickCancelSendMessage={this.handleClickCancelSendMessage}
         onClickDiscardDraft={this.handleClickDiscardDraft}
         onClickSendMessage={this.handleSendMessage}
+        onDragLeave={this.handleDragLeave}
+        onDragOver={this.handleDragOver}
         onDrop={this.handleDrop}
         onPauseUploadFile={this.handlePauseUploadFile}
         onResumeUploadFile={this.handleResumeUploadFile}

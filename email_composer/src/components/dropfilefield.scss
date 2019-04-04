@@ -31,40 +31,30 @@
 .dragActive{
   border: 2px dashed #0091ff;
   border-radius: 8px;
+
+  &::before{
+    content: url(../#{$_PATH_TO_IMAGES}/upload.svg);
+    margin: 0 auto;
+    position: relative;
+    top: calc(50% - 28px);
+  }
 }
 
 .dropfilefiled-content{
   align-items: center;
   display: flex;
-  height: 100%;
+  flex-direction: column;
   position: absolute;
-  width: 100%;
+  right: calc(50% - 50px);
+  top: calc(50% + 30px);
+  width: 100px;
 
-  >div{
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    height: 100px;
-    margin: 0 auto;
-    width: 130px;
-    
-    >div{
-      background-image: url(../#{$_PATH_TO_IMAGES}/upload.png);
-      background-position: center;
-      background-size: auto 100%;
-      background-repeat: no-repeat;
-      height: 45px;
-      width: 37px;
-    }
-  
-    span{
-      color: #4a4a4a;
-      font-family: NunitoSans;
-      font-size: 18px;
-      font-weight: 600;
-      margin: 10px auto 0;
-      text-align: center;
-    }
+  span{
+    color: #4a4a4a;
+    font-family: NunitoSans;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
   }
 }
 
@@ -73,11 +63,11 @@
 @mixin themable($_THEME, $_COLOR_TEXT_DROPFILE, $_BACKGROUND_COLOR_DROPFILE){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
-    .dropfilefiled-content{
+    .dragActive{
       background-color: $_BACKGROUND_COLOR_DROPFILE;
-
-      span{
-        color: $_COLOR_TEXT_DROPFILE;
+      
+      .dropfilefiled-content span{
+          color: $_COLOR_TEXT_DROPFILE;
       }
     }
   }
