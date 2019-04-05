@@ -100,13 +100,15 @@ export const downloadFileInFileSystem = async ({
   url,
   filename,
   downloadType,
-  metadataKey
+  metadataKey,
+  filesize
 }) => {
   return await callMain('fs-download-file', {
     url,
     filename,
     downloadType,
-    metadataKey
+    metadataKey,
+    filesize
   });
 };
 
