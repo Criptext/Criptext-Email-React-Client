@@ -30,14 +30,14 @@ const Composer = props => (
     <BodyWrapper
       files={props.files}
       getHtmlBody={props.getHtmlBody}
-      handleDragLeave={props.handleDragLeave}
-      handleDragOver={props.handleDragOver}
       htmlBody={props.htmlBody}
       isDragActive={props.isDragActive}
       isFocusEditorInput={props.isFocusEditorInput}
       onClearFile={props.onClearFile}
       onClickDiscardDraft={props.onClickDiscardDraft}
       onClickSendMessage={props.onClickSendMessage}
+      onDragLeave={props.onDragLeave}
+      onDragOver={props.onDragOver}
       onDrop={props.onDrop}
       onFocusTextEditor={props.onToggleRecipient}
       onPauseUploadFile={props.handlePauseUploadFile}
@@ -71,8 +71,6 @@ Composer.propTypes = {
   getHtmlBody: PropTypes.func,
   getTextSubject: PropTypes.func,
   getToEmails: PropTypes.func,
-  handleDragLeave: PropTypes.func,
-  handleDragOver: PropTypes.func,
   handlePauseUploadFile: PropTypes.func,
   handleResumeUploadFile: PropTypes.func,
   htmlBody: PropTypes.string,
@@ -81,10 +79,12 @@ Composer.propTypes = {
   isFocusEditorInput: PropTypes.bool,
   isLinkingDevices: PropTypes.bool,
   onClickCancelSendMessage: PropTypes.func,
+  onDragLeave: PropTypes.func,
   onDrop: PropTypes.func,
   onClearFile: PropTypes.func,
   onClickDiscardDraft: PropTypes.func,
   onClickSendMessage: PropTypes.func,
+  onDragOver: PropTypes.func,
   onSetNonCriptextRecipientsPassword: PropTypes.func,
   onToggleRecipient: PropTypes.func,
   status: PropTypes.number,

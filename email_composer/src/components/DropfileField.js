@@ -12,9 +12,9 @@ const DropfileField = props => (
       (props.isDragActive ? ' dragActive' : '') +
       (props.isToolbarHidden ? ' toolbarHidden' : '')
     }
-    onDragLeave={props.onDragLeave}
-    onDragOver={props.onDragOver}
-    onDrop={props.onDrop}
+    onDragLeave={e => props.onDragLeave(e)}
+    onDragOver={e => props.onDragOver(e)}
+    onDrop={e => props.onDrop(e)}
   >
     <EditorWrapper
       htmlBody={props.htmlBody}
@@ -39,10 +39,7 @@ const DropfileField = props => (
     />
     {props.isDragActive && (
       <div className="dropfilefiled-content">
-        <div>
-          <div />
-          <span>{string.dropFilesArea.text}</span>
-        </div>
+        <span>{string.dropFilesArea.text}</span>
       </div>
     )}
   </div>
