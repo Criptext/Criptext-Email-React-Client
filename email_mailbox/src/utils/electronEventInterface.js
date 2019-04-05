@@ -289,7 +289,6 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     metadataKey,
     subject,
     senderDeviceId,
-    deviceId = senderDeviceId,
     threadId,
     to,
     toArray,
@@ -302,6 +301,12 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     external === true
       ? EXTERNAL_RECIPIENT_ID_SERVER
       : getRecipientIdFromEmailAddressTag(from);
+  const deviceId =
+    external === undefined
+      ? typeof messageType === 'number'
+        ? senderDeviceId
+        : undefined
+      : senderDeviceId;
   const [prevEmail] = await getEmailByKey(metadataKey);
   const isSpam = labels
     ? labels.find(label => label === LabelType.spam.text)

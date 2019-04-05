@@ -82,7 +82,8 @@ class FileWrapper extends Component {
           await downloadFileInFileSystem({
             url,
             filename: this.props.file.name,
-            downloadType: 'attachment'
+            downloadType: 'attachment',
+            filesize: this.props.file.size
           });
         }
       );

@@ -1,5 +1,6 @@
 const ipc = require('@criptext/electron-better-ipc');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, shell } = require('electron');
+const unusedFilename = require('unused-filename');
 const { download } = require('electron-dl');
 const path = require('path');
 const mailboxWindow = require('../windows/mailbox');
@@ -12,7 +13,8 @@ const { buildEmailSource } = require('../utils/SourceUtils');
 const {
   getUserEmailsPath,
   createIfNotExist,
-  checkIfExists
+  checkIfExists,
+  getFilesizeInBytes
 } = require('../utils/FileUtils');
 const { getUsername, genUUID } = require('./../utils/stringUtils');
 const { showWindows } = require('./../windows/windowUtils');
@@ -58,7 +60,7 @@ ipc.answerRenderer('open-email-source', async metadataKey => {
 
 ipc.answerRenderer(
   'fs-download-file',
-  async ({ url, filename, downloadType, metadataKey }) => {
+  async ({ url, filename, downloadType, metadataKey, filesize }) => {
     const openFolderWhenDone = downloadType !== 'inline';
     const shouldShowMessage = openFolderWhenDone;
     try {
@@ -68,7 +70,14 @@ ipc.answerRenderer(
       });
       const filePath = path.join(directory, filename);
       if (checkIfExists(filePath)) {
-        return filePath;
+        if (downloadType === 'inline') return filePath;
+
+        const previousFileSize = getFilesizeInBytes(filePath);
+        if (previousFileSize === filesize) {
+          shell.showItemInFolder(filePath);
+          return;
+        }
+        filename = path.basename(unusedFilename.sync(filePath));
       }
       const downloadedItem = await download(
         BrowserWindow.getFocusedWindow(),
