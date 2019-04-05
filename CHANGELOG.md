@@ -1,14 +1,70 @@
 # Change Log
 
-## [0.17.8](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/v.0.17.10...HEAD)
 
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.7...HEAD)
+**Implemented enhancements:**
+
+- Mailbox: Add counter suffix on download files [\#842](https://github.com/Criptext/Criptext-Email-React-Client/issues/842)
+
+**Fixed bugs:**
+
+- Mailbox: Add counter suffix on download files [\#842](https://github.com/Criptext/Criptext-Email-React-Client/issues/842)
+- Mailbox:  Fix email decryption on failure emails [\#841](https://github.com/Criptext/Criptext-Email-React-Client/issues/841)
+- Thread item: Load avatar by last email from [\#802](https://github.com/Criptext/Criptext-Email-React-Client/issues/802)
+- Composer: Check drag and drop blinked [\#712](https://github.com/Criptext/Criptext-Email-React-Client/issues/712)
+
+**Closed issues:**
+
+- Thread Item: Add new design emails size [\#835](https://github.com/Criptext/Criptext-Email-React-Client/issues/835)
+- Mailbox: Improvement render, when sync ends [\#831](https://github.com/Criptext/Criptext-Email-React-Client/issues/831)
+
+**Merged pull requests:**
+
+- Fix bounce email decryption && Add counter suffix on download [\#843](https://github.com/Criptext/Criptext-Email-React-Client/pull/843) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix blink drag and drop from composer. Fix \#712 [\#840](https://github.com/Criptext/Criptext-Email-React-Client/pull/840) ([erikaperugachi](https://github.com/erikaperugachi))
+- Render [\#839](https://github.com/Criptext/Criptext-Email-React-Client/pull/839) ([erikaperugachi](https://github.com/erikaperugachi))
+- Avatar [\#836](https://github.com/Criptext/Criptext-Email-React-Client/pull/836) ([erikaperugachi](https://github.com/erikaperugachi))
+- Add "@criptext/trumbowyg" [\#834](https://github.com/Criptext/Criptext-Email-React-Client/pull/834) ([erikaperugachi](https://github.com/erikaperugachi))
+
+## [v.0.17.10](https://github.com/criptext/Criptext-Email-React-Client/tree/v.0.17.10) (2019-04-01)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.8...v.0.17.10)
+
+**Implemented enhancements:**
+
+- Composer: Remove space as email address delimiter [\#825](https://github.com/Criptext/Criptext-Email-React-Client/issues/825)
+- App: Customize firebase configuration [\#823](https://github.com/Criptext/Criptext-Email-React-Client/issues/823)
+
+**Fixed bugs:**
+
+- Mailbox:  Fix crash on deleting email from detail [\#820](https://github.com/Criptext/Criptext-Email-React-Client/issues/820)
+- Composer: save draft with attachments [\#814](https://github.com/Criptext/Criptext-Email-React-Client/issues/814)
+
+**Closed issues:**
+
+- Composer: Refactor rich editor trumbowyg [\#833](https://github.com/Criptext/Criptext-Email-React-Client/issues/833)
+- Composer: Add dark theme to popups [\#800](https://github.com/Criptext/Criptext-Email-React-Client/issues/800)
+- Email: Handle preview encrypted [\#774](https://github.com/Criptext/Criptext-Email-React-Client/issues/774)
+- Banner Update: realtime [\#758](https://github.com/Criptext/Criptext-Email-React-Client/issues/758)
+
+**Merged pull requests:**
+
+- Adapt criptext trumbowyg [\#829](https://github.com/Criptext/Criptext-Email-React-Client/pull/829) ([erikaperugachi](https://github.com/erikaperugachi))
+- Draft w/ attachments  &&  Dark theme composer popup [\#828](https://github.com/Criptext/Criptext-Email-React-Client/pull/828) ([JulianAdams4](https://github.com/JulianAdams4))
+- Encrypted preview  &&  Bounce email [\#826](https://github.com/Criptext/Criptext-Email-React-Client/pull/826) ([JulianAdams4](https://github.com/JulianAdams4))
+- App: Customize firebase configuration [\#824](https://github.com/Criptext/Criptext-Email-React-Client/pull/824) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update version 0.17.9 [\#822](https://github.com/Criptext/Criptext-Email-React-Client/pull/822) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix crash on deleting email from detail & Handle update available event [\#821](https://github.com/Criptext/Criptext-Email-React-Client/pull/821) ([JulianAdams4](https://github.com/JulianAdams4))
+- Peer: Check create label event [\#819](https://github.com/Criptext/Criptext-Email-React-Client/pull/819) ([JulianAdams4](https://github.com/JulianAdams4))
+
+## [0.17.8](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.8) (2019-03-22)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.7...0.17.8)
 
 **Fixed bugs:**
 
 - Events: Fix infinite sync [\#816](https://github.com/Criptext/Criptext-Email-React-Client/issues/816)
 - Composer: bottem text repeated [\#815](https://github.com/Criptext/Criptext-Email-React-Client/issues/815)
 - Email: unsend does not work [\#813](https://github.com/Criptext/Criptext-Email-React-Client/issues/813)
+- Peer: Check create label event [\#812](https://github.com/Criptext/Criptext-Email-React-Client/issues/812)
 
 **Closed issues:**
 
