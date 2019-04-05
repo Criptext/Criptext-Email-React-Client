@@ -28,7 +28,8 @@ const mailbox = (state = initThreads, action) => {
       if (
         lastLabelId !== undefined &&
         action.clear &&
-        Number(lastLabelId) !== searchLabelId
+        Number(lastLabelId) !== searchLabelId &&
+        labelId !== Number(lastLabelId)
       ) {
         const lastLabel = state.get(`${lastLabelId}`);
         const ids = lastLabel.get('allIds');
