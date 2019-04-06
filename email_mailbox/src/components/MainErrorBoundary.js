@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { reloadWindow } from '../utils/electronInterface';
+import { reloadWindow, mySettings } from '../utils/electronInterface';
 import './mainerrorboundary.scss';
 import string from './../lang';
 
@@ -30,26 +30,28 @@ const HighOrderBoundarie = AppComponent =>
     render() {
       if (this.state.hasError) {
         return (
-          <div id="error-boundary-container">
-            <div className="error-boundary-content">
-              <div className="error-boundary-logo" />
+          <div data-theme={mySettings.theme || 'light'}>
+            <div id="error-boundary-container">
+              <div className="error-boundary-content">
+                <div className="error-boundary-logo" />
 
-              <div className="error-boundary-text">
-                <h1>{crash.title}</h1>
-                <h2>
-                  {`${crash.counter.a} ${this.state.counter} ${
-                    crash.counter.b
-                  }`}
-                </h2>
-              </div>
+                <div className="error-boundary-text">
+                  <h1>{crash.title}</h1>
+                  <h2>
+                    {`${crash.counter.a} ${this.state.counter} ${
+                      crash.counter.b
+                    }`}
+                  </h2>
+                </div>
 
-              <div className="error-boundary-options">
-                <button
-                  className="button button-a"
-                  onClick={() => this.restartApp()}
-                >
-                  {crash.buttons.restart_now}
-                </button>
+                <div className="error-boundary-options">
+                  <button
+                    className="button button-a"
+                    onClick={() => this.restartApp()}
+                  >
+                    {crash.buttons.restart_now}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

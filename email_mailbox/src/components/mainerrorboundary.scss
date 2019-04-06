@@ -21,7 +21,6 @@
       background-position: center;
       background-repeat: no-repeat;
       background-size: auto 100%;
-      background-image: url(../#{$_PATH_TO_IMAGES}/crash-app-light.svg);
     }
 
     > .error-boundary-text {
@@ -30,12 +29,10 @@
 
       > h1 {
         font-size: 24px;
-        color: #373a45;
         margin: 3 auto;
       }
       > h2 {
         font-size: 23px;
-        color: #939393;
         margin: 3 auto;
       }
     }
@@ -54,6 +51,7 @@
         text-transform: capitalize;
         font-size: 17px;
         opacity: 0.9;
+        font-weight: bold;
 
         &:hover {
           opacity: 1;
@@ -62,3 +60,33 @@
     }
   }
 }
+
+
+/*  THEME
+----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_CRASH_APP, $_COLOR_TEXT_CRASH_TITLE, $_COLOR_TEXT_CRASH_COUNTER){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    #error-boundary-container {
+      background-color: $_BACKGROUND_COLOR_CRASH_APP;
+
+      > .error-boundary-content {
+        > .error-boundary-logo {
+          background-image: url(../#{$_PATH_TO_IMAGES}/crash-app-#{$_THEME}.svg);
+        }
+
+        > .error-boundary-text {
+          h1 {
+            color: $_COLOR_TEXT_CRASH_TITLE;
+          }
+          h2 {
+            color: $_COLOR_TEXT_CRASH_COUNTER;
+          }
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_CRASH_APP_LIGHT, $_COLOR_TEXT_CRASH_TITLE_LIGHT, $_COLOR_TEXT_CRASH_COUNTER_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_CRASH_APP_DARK, $_COLOR_TEXT_CRASH_TITLE_DARK, $_COLOR_TEXT_CRASH_COUNTER_DARK);
