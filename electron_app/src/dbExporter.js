@@ -349,9 +349,18 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
   let emailContacts = [];
   let emailLabels = [];
   let files = [];
+  let accountContactRelations = [];
   const dbConn = await createDatabaseConnection(databasePath);
 
   return dbConn.transaction(async trx => {
+    const currentAccount = await trx
+      .select('id')
+      .from(Table.ACCOUNT)
+      .first();
+    const accountId = currentAccount ? currentAccount.id : 1;
+
+    console.log('currentAccount: ', JSON.stringify(currentAccount));
+
     await trx.table(Table.CONTACT).del();
     await trx.table(Table.EMAIL).del();
     await trx.table(Table.EMAIL_CONTACT).del();
@@ -370,16 +379,21 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
           switch (table) {
             case Table.CONTACT: {
               contacts.push(object);
+              accountContactRelations.push({ contactId: object.id, accountId });
               if (contacts.length === CONTACTS_BATCH) {
                 lineReader.pause();
                 await trx.insert(contacts).into(Table.CONTACT);
+                await trx
+                  .insert(accountContactRelations)
+                  .into(Table.ACCOUNT_CONTACT);
                 contacts = [];
+                accountContactRelations = [];
                 lineReader.resume();
               }
               break;
             }
             case Table.LABEL: {
-              labels.push(object);
+              labels.push(Object.assign(object, { accountId }));
               if (labels.length === LABELS_BATCH) {
                 lineReader.pause();
                 await trx.insert(labels).into(Table.LABEL);
@@ -397,7 +411,8 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
                 {
                   key: metadataKey || object.key,
                   unsendDate: unsentDate || object.unsendDate,
-                  status: object.status || delivered
+                  status: object.status || delivered,
+                  accountId
                 },
                 object
               );
@@ -445,8 +460,14 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               break;
           }
         })
+        .on('error', err => console.log(err))
         .on('end', async () => {
           await insertRemainingRows(contacts, Table.CONTACT, trx);
+          await insertRemainingRows(
+            accountContactRelations,
+            Table.ACCOUNT_CONTACT,
+            trx
+          );
           await insertRemainingRows(labels, Table.LABEL, trx);
           await storeEmailBodies(emails);
           await insertRemainingRows(emails, Table.EMAIL, trx);

@@ -111,6 +111,7 @@ const createAccount = async ({
   if (!newAccount) {
     throw CustomError(string.errors.saveLocal);
   }
+  const accountId = newAccount.id;
   myAccount.initialize(newAccount);
   setDefaultSettings();
 
@@ -120,7 +121,9 @@ const createAccount = async ({
     }),
     store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
   );
-  const labels = Object.values(LabelType);
+  const labels = Object.values(LabelType).map(
+    systemLabel => Object.assign(systemLabel, { accountId })
+  );
   try {
     await createLabel(labels);
   } catch (createLabelsDbError) {
@@ -172,11 +175,13 @@ const createAccountWithNewDevice = async ({
   const { token, refreshToken } = body;
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
+  let accountId;
   const [currentAccount] = await getAccount();
   const currentAccountExists = currentAccount
     ? currentAccount.recipientId === recipientId
     : false;
   if (currentAccountExists) {
+    accountId = currentAccount.id;
     try {
       await updateAccount({
         jwt: token,
@@ -197,7 +202,7 @@ const createAccountWithNewDevice = async ({
       await createTables();
     }
     try {
-      await createAccountDB({
+      [accountId] = await createAccountDB({
         jwt: token,
         refreshToken,
         deviceId,
@@ -211,7 +216,9 @@ const createAccountWithNewDevice = async ({
       throw CustomError(string.errors.saveLocal);
     }
 
-    const labels = Object.values(LabelType);
+    const labels = Object.values(LabelType).map(
+      systemLabel => Object.assign(systemLabel, { accountId })
+    );
     try {
       await createLabel(labels);
     } catch (createLabelsDbError) {
@@ -293,12 +300,14 @@ const createAccountToDB = async ({
   signedPreKeyId,
   signedPreKeyPair
 }) => {
+  let accountId;
   const [currentAccount] = await getAccount();
   const currentAccountExists = currentAccount
     ? currentAccount.recipientId === recipientId
     : false;
 
   if (currentAccountExists) {
+    accountId = currentAccount.id;
     try {
       await updateAccount({
         jwt,
@@ -319,7 +328,7 @@ const createAccountToDB = async ({
       await createTables();
     }
     try {
-      await createAccountDB({
+      [accountId] = await createAccountDB({
         jwt,
         refreshToken,
         deviceId,
@@ -333,7 +342,9 @@ const createAccountToDB = async ({
       throw CustomError(string.errors.saveLocal);
     }
 
-    const labels = Object.values(LabelType);
+    const labels = Object.values(LabelType).map(
+      systemLabel => Object.assign(systemLabel, { accountId })
+    );
     try {
       await createLabel(labels);
     } catch (createLabelsDbError) {

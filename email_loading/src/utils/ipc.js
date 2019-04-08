@@ -1,4 +1,5 @@
 import { callMain } from '@criptext/electron-better-ipc/renderer';
+let accountId = '';
 
 export const closeCreatingKeysLoadingWindow = () => {
   callMain('close-create-keys-loading');
@@ -66,6 +67,13 @@ export const syncDeny = async randomId => {
 
 /* DataBase
 ----------------------------- */
+const checkCurrentAccount = async () => {
+  if (!accountId) {
+    const [myAccount] = await getAccount();
+    accountId = myAccount ? myAccount.id : '';
+  }
+};
+
 export const cleanDatabase = async username => {
   return await callMain('db-clean-database', username);
 };
@@ -75,11 +83,13 @@ export const createAccount = async params => {
 };
 
 export const createContact = async params => {
-  return await callMain('db-create-contact', params);
+  await checkCurrentAccount();
+  return await callMain('db-create-contact', { accountId, ...params });
 };
 
 export const createIdentityKeyRecord = async params => {
-  return await callMain('db-create-identity-key-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-create-identity-key-record', { accountId, ...params });
 };
 
 export const createLabel = async params => {
@@ -87,15 +97,18 @@ export const createLabel = async params => {
 };
 
 export const createPreKeyRecord = async params => {
-  return await callMain('db-create-prekey-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-create-prekey-record', { accountId, ...params });
 };
 
 export const createSessionRecord = async params => {
-  return await callMain('db-create-session-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-create-session-record', { accountId, ...params });
 };
 
 export const createSignedPreKeyRecord = async params => {
-  return await callMain('db-create-signed-prekey-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-create-signed-prekey-record', { accountId, ...params });
 };
 
 export const createTables = async () => {
@@ -103,11 +116,13 @@ export const createTables = async () => {
 };
 
 export const deletePreKeyPair = async params => {
-  return await callMain('db-delete-prekey-pair', params);
+  await checkCurrentAccount();
+  return await callMain('db-delete-prekey-pair', { accountId, ...params });
 };
 
 export const deleteSessionRecord = async params => {
-  return await callMain('db-delete-session-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-delete-session-record', { accountId, ...params });
 };
 
 export const getAccount = async () => {
@@ -115,19 +130,23 @@ export const getAccount = async () => {
 };
 
 export const getIdentityKeyRecord = async params => {
-  return await callMain('db-get-identity-key-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-get-identity-key-record', { accountId, ...params });
 };
 
 export const getPreKeyPair = async params => {
-  return await callMain('db-get-prekey-pair', params);
+  await checkCurrentAccount();
+  return await callMain('db-get-prekey-pair', { accountId, ...params });
 };
 
 export const getSessionRecord = async params => {
-  return await callMain('db-get-session-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-get-session-record', { accountId, ...params });
 };
 
 export const getSignedPreKey = async params => {
-  return await callMain('db-get-signed-prekey', params);
+  await checkCurrentAccount();
+  return await callMain('db-get-signed-prekey', { accountId, ...params });
 };
 
 export const updateAccount = async params => {
@@ -135,7 +154,8 @@ export const updateAccount = async params => {
 };
 
 export const updateIdentityKeyRecord = async params => {
-  return await callMain('db-update-identity-key-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-update-identity-key-record', { accountId, ...params });
 };
 
 /* DataTransfer
