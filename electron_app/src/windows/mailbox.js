@@ -43,7 +43,7 @@ const create = () => {
     show: false,
     title: 'Criptext',
     frame: !isWindows(),
-    webPreferences: { webSecurity: !isDev }
+    webPreferences: { webSecurity: isDev }
   });
   mailboxWindow.loadURL(mailboxUrl);
   // Firebase
