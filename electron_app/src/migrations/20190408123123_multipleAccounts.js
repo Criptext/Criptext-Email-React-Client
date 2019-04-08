@@ -326,6 +326,64 @@ const rollbackSignedPreKeyRecordTable = async knex => {
   });
 };
 
+/*   Triggers
+----------------------*/
+const TRIGERS = {
+  EMAIL_AFTER_DELETE_ACCOUNT: {
+    name: 'email_after_delete_account',
+    table: Table.EMAIL
+  },
+  LABEL_AFTER_DELETE_ACCOUNT: {
+    name: 'label_after_delete_account',
+    table: Table.LABEL
+  },
+  PENDING_EVENT_AFTER_DELETE_ACCOUNT: {
+    name: 'pending_event_after_delete_account',
+    table: Table.PENDINGEVENT
+  },
+  ACCOUNT_CONTACT_AFTER_DELETE_ACCOUNT: {
+    name: 'account_contact_after_delete_account',
+    table: Table.ACCOUNT_CONTACT
+  },
+  IDENTITYKEYRECORD_AFTER_DELETE_ACCOUNT: {
+    name: 'identitykeyrecord_after_delete_account',
+    table: Table.IDENTITYKEYRECORD
+  },
+  PREKEYRECORD_AFTER_DELETE_ACCOUNT: {
+    name: 'prekeyrecord_after_delete_account',
+    table: Table.PREKEYRECORD
+  },
+  SESSIONRECORD_AFTER_DELETE_ACCOUNT: {
+    name: 'sessionrecord_after_delete_account',
+    table: Table.SESSIONRECORD
+  },
+  SIGNEDPREKEYRECORD_AFTER_DELETE_ACCOUNT: {
+    name: 'signedprekeyrecord_after_delete_account',
+    table: Table.SIGNEDPREKEYRECORD
+  }
+};
+
+const createTriggersAfterDeleteAccount = async trx => {
+  const triggerList = Object.values(TRIGERS);
+  for (const trigger of triggerList) {
+    await trx.raw(`
+      CREATE TRIGGER IF NOT EXISTS ${trigger.name}
+      AFTER DELETE ON ${Table.ACCOUNT}
+      BEGIN
+        DELETE FROM ${trigger.table}
+        WHERE ${trigger.table}.accountId = OLD.id;
+      END;
+  `);
+  }
+};
+
+const dropTriggerAfterDeleteEmail = async knex => {
+  const triggerList = Object.values(TRIGERS);
+  for (const trigger of triggerList) {
+    await knex.raw(`DROP TRIGGER IF EXISTS ${trigger.name};`);
+  }
+};
+
 /*   Exports
 ----------------------*/
 exports.up = async knex => {
@@ -339,6 +397,8 @@ exports.up = async knex => {
     await addAccountIdToPreKeyRecordTable(trx);
     await addAccountIdToSessionRecordTable(trx);
     await addAccountIdToSignedPreKeyRecordTable(trx);
+
+    await createTriggersAfterDeleteAccount(trx);
   });
 };
 
@@ -353,6 +413,8 @@ exports.down = async (knex, Promise) => {
     rollbackIdentityKeyRecordTable(knex),
     rollbackPreKeyRecordTable(knex),
     rollbackSessionRecordTable(knex),
-    rollbackSignedPreKeyRecordTable(knex)
+    rollbackSignedPreKeyRecordTable(knex),
+
+    dropTriggerAfterDeleteEmail(knex)
   ]);
 };

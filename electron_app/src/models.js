@@ -69,7 +69,8 @@ const Table = {
   SESSIONRECORD: 'sessionrecord',
   IDENTITYKEYRECORD: 'identitykeyrecord',
   PENDINGEVENT: 'pendingEvent',
-  SETTINGS: 'settings'
+  SETTINGS: 'settings',
+  ACCOUNT_CONTACT: 'accountcontact'
 };
 
 const db = knex(dbConfiguration);
