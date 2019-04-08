@@ -230,6 +230,38 @@ const rollbackIdentityKeyRecordTable = async knex => {
   });
 };
 
+/*   PreKeyRecord table
+--------------------------*/
+const addAccountIdToPreKeyRecordTable = async trx => {
+  const accountValue = await trx
+    .select('id')
+    .from(Table.ACCOUNT)
+    .first();
+  if (!accountValue) return;
+
+  return trx.schema
+    .table(Table.PREKEYRECORD, table => {
+      table.string('accountId', XSMALL_STRING_SIZE);
+    })
+    .then(() => {
+      return trx.raw(`
+        UPDATE ${Table.PREKEYRECORD}
+        SET accountId = ${accountValue.id};
+      `);
+    });
+};
+
+const rollbackPreKeyRecordTable = async knex => {
+  const columnExists = await knex.schema.hasColumn(
+    Table.PREKEYRECORD,
+    'accountId'
+  );
+  if (!columnExists) return;
+  return knex.schema.table(Table.PREKEYRECORD, table => {
+    table.dropColumn('accountId');
+  });
+};
+
 /*   Exports
 ----------------------*/
 exports.up = async knex => {
@@ -240,6 +272,7 @@ exports.up = async knex => {
     await addAccountIdToLabelTable(trx);
     await addAccountIdToPendingEventTable(trx);
     await addAccountIdToIdentityKeyRecordTable(trx);
+    await addAccountIdToPreKeyRecordTable(trx);
   });
 };
 
@@ -251,6 +284,7 @@ exports.down = async (knex, Promise) => {
     rollbackEmailTable(knex),
     rollbackLabelTable(knex),
     rollbackPendingEventTable(knex),
-    rollbackIdentityKeyRecordTable(knex)
+    rollbackIdentityKeyRecordTable(knex),
+    rollbackPreKeyRecordTable(knex)
   ]);
 };
