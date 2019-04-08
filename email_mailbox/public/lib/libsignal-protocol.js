@@ -80,7 +80,6 @@
     if (typeof module !== 'undefined') {
       module['exports'] = Module;
     }
-  
     process['on']('uncaughtException', function(ex) {
       // suppress ExitStatus exceptions from showing an error
       if (!(ex instanceof ExitStatus)) {

@@ -13,7 +13,8 @@ import {
   sendRecoveryEmailChangedSuccessMessage,
   sendRecoveryEmailChangedErrorMessage,
   sendRecoveryEmailLinkConfirmationSuccessMessage,
-  sendRecoveryEmailLinkConfirmationErrorMessage
+  sendRecoveryEmailLinkConfirmationErrorMessage,
+  removeEvent
 } from './../utils/electronEventInterface';
 import SettingGeneral from './SettingGeneral';
 import {
@@ -349,6 +350,10 @@ class SettingGeneralWrapper extends Component {
         }
       }
     });
+  }
+
+  componentWillUnmount() {
+    this.removeEventHandlers();
   }
 
   handleClearPopupParams = popupType => {
@@ -938,22 +943,42 @@ class SettingGeneralWrapper extends Component {
   };
 
   initEventHandlers = () => {
-    addEvent(Event.RECOVERY_EMAIL_CHANGED, recoveryEmail => {
-      this.setState({
-        recoveryEmailParams: {
-          recoveryEmail: recoveryEmail,
-          recoveryEmailConfirmed: false
-        }
-      });
-    });
+    addEvent(
+      Event.RECOVERY_EMAIL_CHANGED,
+      this.recoveryEmailChangedListenerCallback
+    );
+    addEvent(
+      Event.RECOVERY_EMAIL_CONFIRMED,
+      this.recoveryEmailConfirmedListenerCallback
+    );
+  };
 
-    addEvent(Event.RECOVERY_EMAIL_CONFIRMED, () => {
-      this.setState({
-        recoveryEmailParams: {
-          ...this.state.recoveryEmailParams,
-          recoveryEmailConfirmed: true
-        }
-      });
+  removeEventHandlers = () => {
+    removeEvent(
+      Event.RECOVERY_EMAIL_CHANGED,
+      this.recoveryEmailChangedListenerCallback
+    );
+    removeEvent(
+      Event.RECOVERY_EMAIL_CONFIRMED,
+      this.recoveryEmailConfirmedListenerCallback
+    );
+  };
+
+  recoveryEmailChangedListenerCallback = recoveryEmail => {
+    this.setState({
+      recoveryEmailParams: {
+        recoveryEmail: recoveryEmail,
+        recoveryEmailConfirmed: false
+      }
+    });
+  };
+
+  recoveryEmailConfirmedListenerCallback = () => {
+    this.setState({
+      recoveryEmailParams: {
+        ...this.state.recoveryEmailParams,
+        recoveryEmailConfirmed: true
+      }
     });
   };
 }

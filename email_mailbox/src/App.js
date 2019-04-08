@@ -5,6 +5,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import rootReducer from './reducers/index';
 import CustomTitleBar from './components/CustomTitleBar';
+import MainErrorBoundary from './components/MainErrorBoundary';
 import './app.scss';
 
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
@@ -26,4 +27,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default MainErrorBoundary(App);

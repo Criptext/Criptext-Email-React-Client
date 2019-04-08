@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FeedItem from './../containers/FeedItem';
-import { addEvent, Event } from '../utils/electronEventInterface';
+import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import string from '../lang';
 import './activitypanel.scss';
 
 class ActivityPanel extends Component {
   constructor() {
     super();
-    addEvent(Event.EMAIL_TRACKING_UPDATE, () => {
-      this.props.onLoadFeeds();
-    });
+    addEvent(
+      Event.EMAIL_TRACKING_UPDATE,
+      this.emailTrackingUpdateListenerCallback
+    );
   }
 
   render() {
@@ -29,6 +30,13 @@ class ActivityPanel extends Component {
           {this.renderFeedSection(this.props)}
         </div>
       </aside>
+    );
+  }
+
+  componentWillUnmount() {
+    removeEvent(
+      Event.EMAIL_TRACKING_UPDATE,
+      this.emailTrackingUpdateListenerCallback
     );
   }
 
@@ -85,7 +93,7 @@ class ActivityPanel extends Component {
 
   renderEmptyFeedSection = () => {
     return (
-      <div className="empty-container empty-activity-container">
+      <div className="empty-container empty-activity-container">
         <div className="empty-content">
           <div className="empty-icon" />
           <div className="header-text">There&#39;s nothing new yet</div>
@@ -93,6 +101,10 @@ class ActivityPanel extends Component {
         </div>
       </div>
     );
+  };
+
+  emailTrackingUpdateListenerCallback = () => {
+    this.props.onLoadFeeds();
   };
 }
 

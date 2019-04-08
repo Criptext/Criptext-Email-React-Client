@@ -64,18 +64,22 @@ class EmailWrapper extends Component {
         displayEmail: true
       });
     }
-    this.setCollapseListener();
+    this.setCollapseListener('add');
     const steps = [USER_GUIDE_STEPS.EMAIL_READ];
     checkUserGuideSteps(steps);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.email.content !== this.props.email.content) {
-      this.setCollapseListener();
+      this.setCollapseListener('add');
     }
   }
 
-  setCollapseListener = () => {
+  componentWillUnmount() {
+    this.setCollapseListener('remove');
+  }
+
+  setCollapseListener = typeAction => {
     const divCollapse = document.getElementById(
       `cptx-div-collapse-${this.props.email.key}`
     );
@@ -83,7 +87,7 @@ class EmailWrapper extends Component {
       `blockquote-${this.props.email.key}`
     );
     if (divCollapse && blockquote) {
-      divCollapse.addEventListener('click', function() {
+      const clickHandler = () => {
         if (blockquote.style.display === 'block') {
           divCollapse.classList.remove('cptx-div-expanded');
           divCollapse.classList.add('cptx-div-collapsed');
@@ -93,7 +97,13 @@ class EmailWrapper extends Component {
           divCollapse.classList.remove('cptx-div-collapsed');
           divCollapse.classList.add('cptx-div-expanded');
         }
-      });
+      };
+
+      if (typeAction === 'add') {
+        divCollapse.addEventListener('click', clickHandler);
+      } else if (typeAction === 'remove') {
+        divCollapse.removeEventListener('click', clickHandler);
+      }
     }
   };
 

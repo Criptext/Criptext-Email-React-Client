@@ -1,0 +1,92 @@
+@import "./../styles/index.scss";
+
+#error-boundary-container {
+  width: 100%;
+  height: 100vh;
+  min-width: 375px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > .error-boundary-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    > .error-boundary-logo {
+      width: 240px;
+      height: 171px;
+      margin-left: 4%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: auto 100%;
+    }
+
+    > .error-boundary-text {
+      text-align: center;
+      margin: 7% auto;
+
+      > h1 {
+        font-size: 24px;
+        margin: 3 auto;
+      }
+      > h2 {
+        font-size: 23px;
+        margin: 3 auto;
+      }
+    }
+
+    > .error-boundary-options {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      button {
+        color: #ffffff;
+        background-color: #0091ff;
+        width: 150px;
+        height: 40px;
+        padding: 7px 17px;
+        text-transform: capitalize;
+        font-size: 17px;
+        opacity: 0.9;
+        font-weight: bold;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+
+/*  THEME
+----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_CRASH_APP, $_COLOR_TEXT_CRASH_TITLE, $_COLOR_TEXT_CRASH_COUNTER){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    #error-boundary-container {
+      background-color: $_BACKGROUND_COLOR_CRASH_APP;
+
+      > .error-boundary-content {
+        > .error-boundary-logo {
+          background-image: url(../#{$_PATH_TO_IMAGES}/crash-app-#{$_THEME}.svg);
+        }
+
+        > .error-boundary-text {
+          h1 {
+            color: $_COLOR_TEXT_CRASH_TITLE;
+          }
+          h2 {
+            color: $_COLOR_TEXT_CRASH_COUNTER;
+          }
+        }
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_CRASH_APP_LIGHT, $_COLOR_TEXT_CRASH_TITLE_LIGHT, $_COLOR_TEXT_CRASH_COUNTER_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_CRASH_APP_DARK, $_COLOR_TEXT_CRASH_TITLE_DARK, $_COLOR_TEXT_CRASH_COUNTER_DARK);

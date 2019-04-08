@@ -542,5 +542,15 @@
     },
     "yesterdayText": "Yesterday",
     "atText": "at"
+  },
+  "crash": {
+    "title": "Oops! It looks like something went wrong",
+    "counter": {
+      "a": "Criptext will restart in",
+      "b": "seconds"
+    },
+    "buttons": {
+      "restart_now": "Restart now"
+    }
   }
 }
