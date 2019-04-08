@@ -133,6 +133,39 @@ const rollbackEmailTable = async knex => {
   });
 };
 
+/*   Label table
+---------------------*/
+const addAccountIdToLabelTable = async trx => {
+  const accountValue = await trx
+    .select('id')
+    .from(Table.ACCOUNT)
+    .first();
+  if (!accountValue) return;
+
+  return trx.schema
+    .table(Table.LABEL, table => {
+      table.string('accountId', XSMALL_STRING_SIZE);
+    })
+    .then(async () => {
+      await trx
+        .table(Table.LABEL)
+        .where({ type: 'system' })
+        .update({ accountId: null });
+      return trx
+        .table(Table.LABEL)
+        .where({ type: 'custom' })
+        .update({ accountId: accountValue.id });
+    });
+};
+
+const rollbackLabelTable = async knex => {
+  const columnExists = await knex.schema.hasColumn(Table.LABEL, 'accountId');
+  if (!columnExists) return;
+  return knex.schema.table(Table.LABEL, table => {
+    table.dropColumn('accountId');
+  });
+};
+
 /*   Exports
 ----------------------*/
 exports.up = async knex => {
@@ -140,6 +173,7 @@ exports.up = async knex => {
     await updateAccountTable(trx);
     await createAccountContactTable(trx);
     await addAccountIdToEmailTable(trx);
+    await addAccountIdToLabelTable(trx);
   });
 };
 
@@ -148,6 +182,7 @@ exports.down = async (knex, Promise) => {
   return await Promise.all([
     rollbackAccountTable(knex),
     rollbackAccountContactTable(knex),
-    rollbackEmailTable(knex)
+    rollbackEmailTable(knex),
+    rollbackLabelTable(knex)
   ]);
 };
