@@ -108,6 +108,7 @@ const createAccount = async ({
   if (!newAccount) {
     throw CustomError(string.errors.saveLocal);
   }
+  const accountId = newAccount.id;
   myAccount.initialize(newAccount);
   await setDefaultSettings();
 
