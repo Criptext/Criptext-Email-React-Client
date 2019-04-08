@@ -61,8 +61,29 @@ const updateAccount = async ({
 
 /* Contact
 ----------------------------- */
+const createAccountContact = (params, trx) => {
+  const knex = trx || db;
+  return knex.table(Table.ACCOUNT_CONTACT).insert(params);
+};
+
+const deleteAccountContact = ({ accountId }, trx) => {
+  const knex = trx || db;
+  return knex
+    .table(Table.ACCOUNT_CONTACT)
+    .where({ accountId })
+    .del();
+};
+
+/* Contact
+----------------------------- */
 const createContact = params => {
-  return db.table(Table.CONTACT).insert(params);
+  return db.transaction(async trx => {
+    const { accountId } = params;
+    delete params.accountId;
+    const [contactId] = await trx.table(Table.CONTACT).insert(params);
+    await createAccountContact({ contactId, accountId }, trx);
+    return contactId;
+  });
 };
 
 const createContactsIfOrNotStore = async (contacts, trx) => {
@@ -1241,6 +1262,7 @@ module.exports = {
   cleanDataLogout,
   closeDB,
   createAccount,
+  createAccountContact,
   createContact,
   createFile,
   createLabel,
@@ -1254,6 +1276,7 @@ module.exports = {
   createSignedPreKeyRecord,
   createSignalTables,
   createTables,
+  deleteAccountContact,
   deleteEmailsByIds,
   deleteEmailByKeys,
   deleteEmailsByThreadIdAndLabelId,
