@@ -104,12 +104,42 @@ const rollbackAccountContactTable = knex => {
   return knex.schema.dropTableIfExists(Table.ACCOUNT_CONTACT);
 };
 
+/*   Email table
+----------------------*/
+const addAccountIdToEmailTable = async trx => {
+  const accountValue = await trx
+    .select('id')
+    .from(Table.ACCOUNT)
+    .first();
+  if (!accountValue) return;
+
+  return trx.schema
+    .table(Table.EMAIL, table => {
+      table.string('accountId', XSMALL_STRING_SIZE);
+    })
+    .then(() => {
+      return trx.raw(`
+        UPDATE ${Table.EMAIL}
+        SET accountId = ${accountValue.id};
+      `);
+    });
+};
+
+const rollbackEmailTable = async knex => {
+  const columnExists = await knex.schema.hasColumn(Table.EMAIL, 'accountId');
+  if (!columnExists) return;
+  return knex.schema.table(Table.EMAIL, table => {
+    table.dropColumn('accountId');
+  });
+};
+
 /*   Exports
 ----------------------*/
 exports.up = async knex => {
   return await knex.transaction(async trx => {
     await updateAccountTable(trx);
     await createAccountContactTable(trx);
+    await addAccountIdToEmailTable(trx);
   });
 };
 
@@ -117,6 +147,7 @@ exports.up = async knex => {
 exports.down = async (knex, Promise) => {
   return await Promise.all([
     rollbackAccountTable(knex),
-    rollbackAccountContactTable(knex)
+    rollbackAccountContactTable(knex),
+    rollbackEmailTable(knex)
   ]);
 };
