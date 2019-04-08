@@ -55,15 +55,68 @@ const rollbackAccountTable = async knex => {
   });
 };
 
+/*   Account Contact table
+------------------------------*/
+const createAccountContactTable = async trx => {
+  const tableExists = await trx.schema.hasTable(Table.ACCOUNT_CONTACT);
+  if (tableExists) return;
+
+  await trx.schema.createTable(Table.ACCOUNT_CONTACT, table => {
+    table.increments('id').primary();
+    table.integer('accountId').notNullable();
+    table.integer('contactId').notNullable();
+    table
+      .foreign('accountId')
+      .references('id')
+      .inTable(Table.ACCOUNT);
+  });
+
+  const accountValue = await trx
+    .select('id')
+    .from(Table.ACCOUNT)
+    .first();
+  if (!accountValue) return;
+
+  let shouldGetMoreContacIds = true;
+  const batch = 100;
+  let minId = 0,
+    maxId = batch;
+  do {
+    const ids = await trx
+      .select('id')
+      .from(Table.CONTACT)
+      .whereBetween('id', [minId, maxId]);
+    if (ids.length > 0) {
+      const accountContactsToInsert = ids.map(row => ({
+        accountId: accountValue.id,
+        contactId: row.id
+      }));
+      await trx.table(Table.ACCOUNT_CONTACT).insert(accountContactsToInsert);
+      minId += batch;
+      maxId += batch;
+    } else {
+      shouldGetMoreContacIds = false;
+    }
+  } while (shouldGetMoreContacIds);
+};
+
+const rollbackAccountContactTable = knex => {
+  return knex.schema.dropTableIfExists(Table.ACCOUNT_CONTACT);
+};
+
 /*   Exports
 ----------------------*/
 exports.up = async knex => {
   return await knex.transaction(async trx => {
     await updateAccountTable(trx);
+    await createAccountContactTable(trx);
   });
 };
 
 // On Rollback
 exports.down = async (knex, Promise) => {
-  return await Promise.all([rollbackAccountTable(knex)]);
+  return await Promise.all([
+    rollbackAccountTable(knex),
+    rollbackAccountContactTable(knex)
+  ]);
 };
