@@ -294,6 +294,38 @@ const rollbackSessionRecordTable = async knex => {
   });
 };
 
+/*   SignedPreKeyRecord table
+--------------------------------*/
+const addAccountIdToSignedPreKeyRecordTable = async trx => {
+  const accountValue = await trx
+    .select('id')
+    .from(Table.ACCOUNT)
+    .first();
+  if (!accountValue) return;
+
+  return trx.schema
+    .table(Table.SIGNEDPREKEYRECORD, table => {
+      table.string('accountId', XSMALL_STRING_SIZE);
+    })
+    .then(() => {
+      return trx.raw(`
+        UPDATE ${Table.SIGNEDPREKEYRECORD}
+        SET accountId = ${accountValue.id};
+      `);
+    });
+};
+
+const rollbackSignedPreKeyRecordTable = async knex => {
+  const columnExists = await knex.schema.hasColumn(
+    Table.SIGNEDPREKEYRECORD,
+    'accountId'
+  );
+  if (!columnExists) return;
+  return knex.schema.table(Table.SIGNEDPREKEYRECORD, table => {
+    table.dropColumn('accountId');
+  });
+};
+
 /*   Exports
 ----------------------*/
 exports.up = async knex => {
@@ -306,6 +338,7 @@ exports.up = async knex => {
     await addAccountIdToIdentityKeyRecordTable(trx);
     await addAccountIdToPreKeyRecordTable(trx);
     await addAccountIdToSessionRecordTable(trx);
+    await addAccountIdToSignedPreKeyRecordTable(trx);
   });
 };
 
@@ -319,6 +352,7 @@ exports.down = async (knex, Promise) => {
     rollbackPendingEventTable(knex),
     rollbackIdentityKeyRecordTable(knex),
     rollbackPreKeyRecordTable(knex),
-    rollbackSessionRecordTable(knex)
+    rollbackSessionRecordTable(knex),
+    rollbackSignedPreKeyRecordTable(knex)
   ]);
 };
