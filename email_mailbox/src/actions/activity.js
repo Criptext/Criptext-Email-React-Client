@@ -36,3 +36,11 @@ export const setAvatarUpdatedTimestamp = timestamp => {
     timestamp
   };
 };
+
+export const updateSwitchThreads = ({ checked, disabled }) => {
+  return {
+    type: Activity.UPDATE_SWITCH_THREADS,
+    checked,
+    disabled
+  };
+};

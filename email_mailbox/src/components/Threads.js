@@ -9,7 +9,6 @@ import ThreadItem from '../containers/ThreadItem';
 import Message from './../containers/Message';
 import PopupHOC from './PopupHOC';
 import DialogPopup from './DialogPopup';
-import { UNREAD_SWITCH_STATUS } from './ThreadsWrapper';
 import string from './../lang';
 import './threads.scss';
 
@@ -44,17 +43,17 @@ const Threads = props => (
         />
       </div>
       <div className="threads-header-switch-container">
-        <span className={props.switchUnreadThreadsStatus ? 'disabled' : ''}>
+        <span className={props.switchChecked ? 'disabled' : ''}>
           {string.mailbox.all}
         </span>
         <Switch
           theme="two"
           name="unreadSwitch"
           onChange={props.onChangeSwitch}
-          checked={props.switchUnreadThreadsStatus}
-          disabled={props.switchStatus === UNREAD_SWITCH_STATUS.DISABLED}
+          checked={props.switchChecked}
+          disabled={props.switchDisabled}
         />
-        <span className={props.switchUnreadThreadsStatus ? '' : 'disabled'}>
+        <span className={props.switchChecked ? '' : 'disabled'}>
           {string.mailbox.unread}
         </span>
       </div>
@@ -168,8 +167,8 @@ Threads.propTypes = {
   popupContent: PropTypes.object,
   searchParams: PropTypes.object,
   setPopupContent: PropTypes.func,
-  switchStatus: PropTypes.string,
-  switchUnreadThreadsStatus: PropTypes.bool,
+  switchChecked: PropTypes.bool,
+  switchDisabled: PropTypes.bool,
   threadItemsChecked: PropTypes.object,
   threads: PropTypes.object,
   tip: PropTypes.string
