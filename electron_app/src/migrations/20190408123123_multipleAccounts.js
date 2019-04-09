@@ -29,7 +29,7 @@ const updateAccountTable = async trx => {
     table.string('signature', XLARGE_STRING_SIZE).defaultTo('');
     table.boolean('signatureEnabled').defaultTo(false);
     table.integer('domain').nullable();
-    table.boolean('isActive').defaultTo(false);
+    table.boolean('isActive').defaultTo(true);
     table.boolean('isLoggedIn').defaultTo(true);
   });
   const prevAccountValues = await trx
