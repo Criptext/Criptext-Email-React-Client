@@ -5,13 +5,28 @@ const initActivity = Map({
   avatarTimestamp: Date.now(),
   isFilteredByUnreadThreads: false,
   isLoadingThreads: true,
-  isSyncing: true
+  isSyncing: true,
+  switchThread: Map({
+    checked: false,
+    disabled: false
+  })
 });
 
 const activity = (state = initActivity, action) => {
   switch (action.type) {
     case Activity.AVATAR_UPDATED_TIMESTAMP:
       return state.set('avatarTimestamp', action.timestamp);
+    case Activity.UPDATE_SWITCH_THREADS: {
+      const checked = action.checked;
+      const disabled = action.disabled;
+      if (typeof checked === 'boolean' || typeof disabled === 'boolean') {
+        return state.set(
+          'switchThread',
+          switchThread(state.get('switchThread'), action)
+        );
+      }
+      return state;
+    }
     case Activity.UNREAD_FILTER:
       return state.update(
         'isFilteredByUnreadThreads',
@@ -29,6 +44,22 @@ const activity = (state = initActivity, action) => {
       return state.merge({
         isLoadingThreads: false,
         isSyncing: false
+      });
+    }
+    default:
+      return state;
+  }
+};
+
+const switchThread = (state, action) => {
+  switch (action.type) {
+    case Activity.UPDATE_SWITCH_THREADS: {
+      const checked = action.checked;
+      const disabled = action.disabled;
+      return state.merge({
+        checked: typeof checked === 'boolean' ? checked : state.get('checked'),
+        disabled:
+          typeof disabled === 'boolean' ? disabled : state.get('disabled')
       });
     }
     default:

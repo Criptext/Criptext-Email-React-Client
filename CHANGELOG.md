@@ -1,6 +1,7 @@
 # Change Log
 
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/v.0.17.10...HEAD)
+## [0.17.11](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.11) (2019-04-08)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/v.0.17.10...0.17.11)
 
 **Implemented enhancements:**
 
@@ -8,8 +9,10 @@
 
 **Fixed bugs:**
 
+- Mailbox: Error to update threads [\#844](https://github.com/Criptext/Criptext-Email-React-Client/issues/844)
 - Mailbox: Add counter suffix on download files [\#842](https://github.com/Criptext/Criptext-Email-React-Client/issues/842)
 - Mailbox:  Fix email decryption on failure emails [\#841](https://github.com/Criptext/Criptext-Email-React-Client/issues/841)
+- Mailbox: Add restart app button on unhandled crash [\#832](https://github.com/Criptext/Criptext-Email-React-Client/issues/832)
 - Thread item: Load avatar by last email from [\#802](https://github.com/Criptext/Criptext-Email-React-Client/issues/802)
 - Composer: Check drag and drop blinked [\#712](https://github.com/Criptext/Criptext-Email-React-Client/issues/712)
 
@@ -20,9 +23,11 @@
 
 **Merged pull requests:**
 
+- Reducer [\#845](https://github.com/Criptext/Criptext-Email-React-Client/pull/845) ([erikaperugachi](https://github.com/erikaperugachi))
 - Fix bounce email decryption && Add counter suffix on download [\#843](https://github.com/Criptext/Criptext-Email-React-Client/pull/843) ([JulianAdams4](https://github.com/JulianAdams4))
 - Fix blink drag and drop from composer. Fix \#712 [\#840](https://github.com/Criptext/Criptext-Email-React-Client/pull/840) ([erikaperugachi](https://github.com/erikaperugachi))
 - Render [\#839](https://github.com/Criptext/Criptext-Email-React-Client/pull/839) ([erikaperugachi](https://github.com/erikaperugachi))
+- App Error Boundary [\#837](https://github.com/Criptext/Criptext-Email-React-Client/pull/837) ([JulianAdams4](https://github.com/JulianAdams4))
 - Avatar [\#836](https://github.com/Criptext/Criptext-Email-React-Client/pull/836) ([erikaperugachi](https://github.com/erikaperugachi))
 - Add "@criptext/trumbowyg" [\#834](https://github.com/Criptext/Criptext-Email-React-Client/pull/834) ([erikaperugachi](https://github.com/erikaperugachi))
 

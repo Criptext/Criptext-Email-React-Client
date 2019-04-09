@@ -4,7 +4,8 @@ import {
   startLoadThread,
   stopAll,
   stopLoadSync,
-  stopLoadThread
+  stopLoadThread,
+  updateSwitchThreads
 } from './activity';
 import { addContacts, loadContacts } from './contacts';
 import { addFiles, loadFiles, unsendEmailFiles } from './files';
@@ -129,6 +130,7 @@ export {
   updateEmailOnSuccess,
   updateLabel,
   updateLabelSuccess,
+  updateSwitchThreads,
   updateThread,
   updateThreadsSuccess,
   updateUnreadThreads

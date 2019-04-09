@@ -5,7 +5,8 @@ import {
   loadThreads,
   filterThreadsOrLoadMoreByUnread,
   startLoadThread,
-  removeThreads
+  removeThreads,
+  updateSwitchThreads
 } from '../actions/index';
 import { getEmailsByLabelIds } from './../utils/ipc';
 import ThreadsView from '../components/ThreadsWrapper';
@@ -44,9 +45,9 @@ const mapStateToProps = (state, ownProps) => {
   const mailboxIdText = toLowerCaseWithoutSpaces(ownProps.mailboxSelected.text);
   const mailboxTitle =
     string.labelsItems[mailboxIdText] || ownProps.mailboxSelected.text;
-  const switchUnreadThreadsStatus = state
-    .get('activities')
-    .get('isFilteredByUnreadThreads');
+  const switchState = state.get('activities').get('switchThread');
+  const switchChecked = switchState.get('checked');
+  const switchDisabled = switchState.get('disabled');
   const buttonSyncStatus = defineSyncStatus(
     state.get('activities').get('isSyncing')
   );
@@ -61,8 +62,9 @@ const mapStateToProps = (state, ownProps) => {
     isLoadingThreads,
     mailboxTitle,
     mailboxStatus,
-    switchUnreadThreadsStatus,
-    threads: switchUnreadThreadsStatus ? unreadThreads : threads
+    switchChecked,
+    switchDisabled,
+    threads: switchChecked ? unreadThreads : threads
   };
 };
 
@@ -154,6 +156,7 @@ const mapDispatchToProps = dispatch => {
       mailbox,
       loadParams
     ) => {
+      dispatch(updateSwitchThreads({ checked, disabled: true }));
       const labelId = mailbox.id;
       const rejectedLabelIds = defineRejectedLabels(labelId);
       const contactTypes = defineContactType(labelId, null, null);

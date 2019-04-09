@@ -1,5 +1,11 @@
-import { Thread, Activity } from './types';
-import { addDataApp, startLoadSync, stopLoadThread, stopAll } from './index';
+import { Thread } from './types';
+import {
+  addDataApp,
+  startLoadSync,
+  stopLoadThread,
+  stopAll,
+  updateSwitchThreads
+} from './index';
 import { updateBadgeLabels } from './labels';
 import { LabelType } from '../utils/electronInterface';
 import {
@@ -223,11 +229,6 @@ export const addMoveLabelIdThreads = ({
   };
 };
 
-const filterThreadsByUnread = checked => ({
-  type: Activity.UNREAD_FILTER,
-  enabled: checked
-});
-
 export const filterThreadsOrLoadMoreByUnread = (
   checked,
   currentUnreadThreadsLength,
@@ -244,10 +245,11 @@ export const filterThreadsOrLoadMoreByUnread = (
         if (threads.length || !loadParams.date) {
           dispatch(addThreads(loadParams.labelId, threads, loadParams.clear));
         }
+        dispatch(updateSwitchThreads({ checked: null, disabled: false }));
       }
-      dispatch(filterThreadsByUnread(checked));
       dispatch(stopLoadThread());
     } catch (e) {
+      dispatch(updateSwitchThreads({ checked: !checked, disabled: false }));
       sendFetchEmailsErrorMessage();
     }
   };
