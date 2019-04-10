@@ -126,7 +126,7 @@ const renderEmailInfoExpand = props => (
           to={props.email.to}
           date={props.dateLong}
           isHidden={props.isHiddenPopOverEmailMoreInfo}
-          menuPosition={{ left: '-150px', top: '25px' }}
+          menuPosition={{ left: '-102px', top: '25px' }}
           onToggleMenu={props.onTooglePopOverEmailMoreInfo}
           subject={props.email.subject}
         />

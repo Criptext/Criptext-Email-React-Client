@@ -431,11 +431,11 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         : null;
 
     labelIds = isSpam ? [LabelType.spam.id] : [];
-    if (isToMe) {
-      labelIds.push(InboxLabelId);
-    }
     if (isFromMe) {
       labelIds.push(SentLabelId);
+    }
+    if (isToMe || (!isFromMe && !isToMe)) {
+      labelIds.push(InboxLabelId);
     }
     const emailData = {
       email,
