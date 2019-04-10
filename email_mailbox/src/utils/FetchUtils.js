@@ -22,7 +22,26 @@ export const fetchEmailBody = async bodyKey => {
     requestParams: bodyKey
   });
   if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-    return await fetchEmailBody();
+    return await fetchEmailBody(bodyKey);
+  }
+};
+
+export const fetchEventAction = async ({ cmd, action }) => {
+  const res = await apiCriptextRequest({
+    endpoint: `/event/${cmd}/${action}`,
+    method: 'GET'
+  });
+  if (res.status === 200) {
+    const jsonRes = await res.json();
+    return jsonRes;
+  }
+  const expiredResponse = await checkExpiredSession({
+    response: { status: res.status },
+    initialRequest: fetchEventAction,
+    requestParams: { cmd, action }
+  });
+  if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
+    return await fetchEventAction({ cmd, action });
   }
 };
 
@@ -78,6 +97,6 @@ export const fetchAcknowledgeEvents = async eventIds => {
     requestParams: eventIds
   });
   if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-    return await fetchAcknowledgeEvents();
+    return await fetchAcknowledgeEvents(eventIds);
   }
 };

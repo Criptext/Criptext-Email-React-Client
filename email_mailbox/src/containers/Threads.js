@@ -45,9 +45,13 @@ const mapStateToProps = (state, ownProps) => {
   const mailboxIdText = toLowerCaseWithoutSpaces(ownProps.mailboxSelected.text);
   const mailboxTitle =
     string.labelsItems[mailboxIdText] || ownProps.mailboxSelected.text;
-  const switchState = state.get('activities').get('switchThread');
+  const activities = state.get('activities');
+  const switchState = activities.get('switchThread');
   const switchChecked = switchState.get('checked');
   const switchDisabled = switchState.get('disabled');
+  const loadingSync = activities.get('loadingSync');
+  const totalTask = loadingSync.get('totalTask');
+  const completedTask = loadingSync.get('completedTask');
   const buttonSyncStatus = defineSyncStatus(
     state.get('activities').get('isSyncing')
   );
@@ -58,13 +62,15 @@ const mapStateToProps = (state, ownProps) => {
   const mailboxStatus = defineMailboxStatus(isLoadingThreads, threads.size);
   return {
     buttonSyncStatus,
+    completedTask,
     currentUnreadThreadsLength: unreadThreads.size,
     isLoadingThreads,
     mailboxTitle,
     mailboxStatus,
     switchChecked,
     switchDisabled,
-    threads: switchChecked ? unreadThreads : threads
+    threads: switchChecked ? unreadThreads : threads,
+    totalTask
   };
 };
 

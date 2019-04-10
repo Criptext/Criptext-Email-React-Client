@@ -10,6 +10,7 @@ class ThreadsWrapper extends Component {
     super();
     this.state = {
       hoverTarget: null,
+      isHiddenLoadingSync: true,
       labels: [],
       lastMinDate: undefined,
       tip: '',
@@ -36,6 +37,21 @@ class ThreadsWrapper extends Component {
     ) {
       this.props.onBackOption();
     }
+
+    if (
+      this.state.isHiddenLoadingSync &&
+      nextProps.totalTask > nextProps.completedTask
+    ) {
+      this.setState({ isHiddenLoadingSync: false });
+    }
+    if (
+      !this.state.isHiddenLoadingSync &&
+      nextProps.totalTask > 0 &&
+      nextProps.completedTask > 0 &&
+      nextProps.totalTask === nextProps.completedTask
+    ) {
+      setTimeout(() => this.setState({ isHiddenLoadingSync: true }), 1000);
+    }
   }
 
   render() {
@@ -43,6 +59,7 @@ class ThreadsWrapper extends Component {
       <Threads
         {...this.props}
         hoverTarget={this.state.hoverTarget}
+        isHiddenLoadingSync={this.state.isHiddenLoadingSync}
         labels={this.state.labels}
         onCloseMessage={this.handleCloseMessage}
         onMouseEnterItem={this.handleMouseEnterItem}
@@ -151,6 +168,7 @@ class ThreadsWrapper extends Component {
 }
 
 ThreadsWrapper.propTypes = {
+  completedTask: PropTypes.number,
   currentUnreadThreadsLength: PropTypes.number,
   isUpdateAvailable: PropTypes.bool,
   mailboxSelected: PropTypes.object,
@@ -163,7 +181,8 @@ ThreadsWrapper.propTypes = {
   searchParams: PropTypes.object,
   switchChecked: PropTypes.bool,
   threadItemsChecked: PropTypes.object,
-  threads: PropTypes.object
+  threads: PropTypes.object,
+  totalTask: PropTypes.number
 };
 
 export default ThreadsWrapper;

@@ -61,7 +61,11 @@ import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
-import { fetchAcknowledgeEvents, fetchEvents } from './FetchUtils';
+import {
+  fetchAcknowledgeEvents,
+  fetchEvents,
+  fetchEventAction
+} from './FetchUtils';
 import string from './../lang';
 
 const EventEmitter = window.require('events');
@@ -74,6 +78,8 @@ const {
 } = remote.require('@criptext/electron-push-receiver/src/constants');
 const senderNotificationId = '73243261136';
 const emitter = new EventEmitter();
+let totalEmailsPending = null;
+let totalEmailsHandled = 0;
 
 let isGettingEvents = false;
 let labelIdsEvent = new Set();
@@ -97,6 +103,14 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
   avatarHasChanged = false;
 
   const rowIds = [];
+  const completedTask = events.reduce((count, event) => {
+    if (event.cmd === SocketCommand.NEW_EMAIL) {
+      count++;
+    }
+    return count;
+  }, 0);
+  totalEmailsHandled = totalEmailsHandled + completedTask;
+
   for (const event of events) {
     try {
       const {
@@ -148,6 +162,7 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
     const hasStopLoad = !hasMoreEvents;
     emitter.emit(Event.STORE_LOAD, {
       avatarHasChanged,
+      completedTask: totalEmailsHandled,
       labelIds,
       threadIds,
       labels,
@@ -164,6 +179,23 @@ export const getGroupEvents = async ({
   if (isGettingEvents && !shouldGetMoreEvents) return;
 
   isGettingEvents = true;
+  if (totalEmailsPending === null) {
+    totalEmailsHandled = 0;
+    const res = await fetchEventAction({ cmd: 101, action: 'count' });
+    if (!res) {
+      stopGettingEvents();
+      return;
+    }
+
+    const { total } = res;
+    if (total) {
+      totalEmailsPending = total;
+      emitter.emit(Event.UPDATE_LOADING_SYNC, {
+        totalTask: total,
+        completedTask: 0
+      });
+    }
+  }
   const response = await fetchEvents();
   if (!response) {
     stopGettingEvents();
@@ -184,6 +216,7 @@ export const getGroupEvents = async ({
       sendNewEmailNotification();
     }
     isGettingEvents = false;
+    totalEmailsPending = null;
     return;
   }
   await getGroupEvents({
@@ -1245,6 +1278,7 @@ export const Event = {
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
   STOP_LOAD_SYNC: 'stop-load-sync',
-  UPDATE_THREAD_EMAILS: 'update-thread-emails',
-  UPDATE_AVAILABLE: 'update-available'
+  UPDATE_AVAILABLE: 'update-available',
+  UPDATE_LOADING_SYNC: 'update-loading-sync',
+  UPDATE_THREAD_EMAILS: 'update-thread-emails'
 };

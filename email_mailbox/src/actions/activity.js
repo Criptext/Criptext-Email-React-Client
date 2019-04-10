@@ -37,6 +37,14 @@ export const setAvatarUpdatedTimestamp = timestamp => {
   };
 };
 
+export const updateLoadingSync = ({ totalTask, completedTask }) => {
+  return {
+    type: Activity.UPDATE_LOADING_SYNC,
+    totalTask,
+    completedTask
+  };
+};
+
 export const updateSwitchThreads = ({ checked, disabled }) => {
   return {
     type: Activity.UPDATE_SWITCH_THREADS,

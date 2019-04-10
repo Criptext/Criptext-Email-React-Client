@@ -5,6 +5,7 @@ import { Switch } from 'react-switch-input';
 import EmptyMailbox from './EmptyMailbox';
 import ButtonSync from './ButtonSync';
 import ItemTooltip from './ItemTooltip';
+import LoadingSync from './LoadingSync';
 import ThreadItem from '../containers/ThreadItem';
 import Message from './../containers/Message';
 import PopupHOC from './PopupHOC';
@@ -41,6 +42,12 @@ const Threads = props => (
           onClick={props.onLoadEvents}
           status={props.buttonSyncStatus}
         />
+        {!props.isHiddenLoadingSync && (
+          <LoadingSync
+            totalTask={props.totalTask}
+            completedTask={props.completedTask}
+          />
+        )}
       </div>
       <div className="threads-header-switch-container">
         <span className={props.switchChecked ? 'disabled' : ''}>
@@ -145,9 +152,11 @@ const defineClassComponent = isVisible => {
 
 Threads.propTypes = {
   buttonSyncStatus: PropTypes.number,
+  completedTask: PropTypes.number,
   dismissPopup: PropTypes.func,
   handlePopupConfirm: PropTypes.func,
   hoverTarget: PropTypes.string,
+  isHiddenLoadingSync: PropTypes.bool,
   isLoadingThreads: PropTypes.bool,
   isUpdateAvailable: PropTypes.bool,
   isVisible: PropTypes.bool,
@@ -171,7 +180,8 @@ Threads.propTypes = {
   switchDisabled: PropTypes.bool,
   threadItemsChecked: PropTypes.object,
   threads: PropTypes.object,
-  tip: PropTypes.string
+  tip: PropTypes.string,
+  totalTask: PropTypes.number
 };
 
 export default Threads;
