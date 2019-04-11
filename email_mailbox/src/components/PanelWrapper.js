@@ -172,6 +172,7 @@ class PanelWrapper extends Component {
     addEvent(Event.REFRESH_THREADS, this.refreshThreadsListenerCallback);
     addEvent(Event.STOP_LOAD_SYNC, this.stopLoadSyncListenerCallback);
     addEvent(Event.STORE_LOAD, this.storeLoadListenerCallback);
+    addEvent(Event.UPDATE_LOADING_SYNC, this.updateLoadingSync);
     addEvent(
       Event.UPDATE_THREAD_EMAILS,
       this.updateThreadEmailsListenerCallback
@@ -244,6 +245,7 @@ class PanelWrapper extends Component {
 
   storeLoadListenerCallback = ({
     avatarHasChanged,
+    completedTask,
     labelIds,
     threadIds,
     labels,
@@ -254,6 +256,10 @@ class PanelWrapper extends Component {
     let label = undefined;
     if (avatarHasChanged) {
       activity = setAvatarUpdatedTimestamp(Date.now());
+    }
+
+    if (completedTask) {
+      this.props.onUpdateLoadingSync({ completedTask });
     }
 
     const currentSectionType = this.state.sectionSelected.type;
@@ -328,6 +334,11 @@ class PanelWrapper extends Component {
     }
   };
 
+  updateLoadingSync = eventParams => {
+    const { totalTask, completedTask } = eventParams;
+    this.props.onUpdateLoadingSync({ totalTask, completedTask });
+  };
+
   updateThreadEmailsListenerCallback = eventParams => {
     if (!eventParams) return;
     const currentSectionType = this.state.sectionSelected.type;
@@ -390,6 +401,7 @@ PanelWrapper.propTypes = {
   onUpdateAvatar: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   onUpdateEmailIdsThread: PropTypes.func,
+  onUpdateLoadingSync: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,
   onUpdateTimestamp: PropTypes.func,
   onUpdateUnreadEmailsBadge: PropTypes.func,

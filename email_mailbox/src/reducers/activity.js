@@ -6,6 +6,10 @@ const initActivity = Map({
   isFilteredByUnreadThreads: false,
   isLoadingThreads: true,
   isSyncing: true,
+  loadingSync: Map({
+    totalTask: 0,
+    completedTask: 0
+  }),
   switchThread: Map({
     checked: false,
     disabled: false
@@ -16,6 +20,17 @@ const activity = (state = initActivity, action) => {
   switch (action.type) {
     case Activity.AVATAR_UPDATED_TIMESTAMP:
       return state.set('avatarTimestamp', action.timestamp);
+    case Activity.UPDATE_LOADING_SYNC: {
+      const totalTask = action.totalTask;
+      const completedTask = action.completedTask;
+      if (typeof totalTask === 'number' || typeof completedTask === 'number') {
+        return state.set(
+          'loadingSync',
+          loadingSync(state.get('loadingSync'), action)
+        );
+      }
+      return state;
+    }
     case Activity.UPDATE_SWITCH_THREADS: {
       const checked = action.checked;
       const disabled = action.disabled;
@@ -60,6 +75,25 @@ const switchThread = (state, action) => {
         checked: typeof checked === 'boolean' ? checked : state.get('checked'),
         disabled:
           typeof disabled === 'boolean' ? disabled : state.get('disabled')
+      });
+    }
+    default:
+      return state;
+  }
+};
+
+const loadingSync = (state, action) => {
+  switch (action.type) {
+    case Activity.UPDATE_LOADING_SYNC: {
+      const totalTask = action.totalTask;
+      const completedTask = action.completedTask;
+      return state.merge({
+        totalTask:
+          typeof totalTask === 'number' ? totalTask : state.get('totalTask'),
+        completedTask:
+          typeof completedTask === 'number'
+            ? completedTask
+            : state.get('completedTask')
       });
     }
     default:

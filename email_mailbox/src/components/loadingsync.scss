@@ -1,0 +1,29 @@
+.cptx-loading-sync-container{
+  align-items: center;
+  display: flex;
+  margin: 5px 0 0 10px;
+
+  .cptx-loading-background{
+    background-color: #e9e9e9;
+    border-radius: 4px;
+    height: 4px;
+    width: 55px;
+
+    .cptx-loading-progress{
+      background-color: #43aeff;
+      border-radius: 4px;
+      height: 100%;
+      width: 0;
+    }
+  }
+
+  .cptx-loading-description{
+    display: flex;
+    margin-left: 10px;
+
+    span{
+      color: #a5a5a5;
+      font-size: 9px;
+    }
+  }
+}
