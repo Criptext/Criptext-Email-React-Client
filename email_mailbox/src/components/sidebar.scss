@@ -223,7 +223,7 @@
     @include collapse-header;
   }
 
-  button.button-a.button-compose{
+  #button-compose{
     @include collapse-button-compose;
   }
 
@@ -240,7 +240,7 @@
       @include collapse-header;
     }
 
-    button.button-a.button-compose{
+    #button-compose{
       @include collapse-button-compose;
     }
 
