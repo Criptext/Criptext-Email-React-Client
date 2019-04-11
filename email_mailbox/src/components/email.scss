@@ -333,135 +333,135 @@
 
 /* THEME
    ----------------------------- */
-   @mixin themable($_THEME, $_BACKGROUND_COLOR_EMAIL, $_BORDER_COLOR_EMAIL, $_BORDER_COLOR_EMAIL_UNSEND, $_COLOR_TEXT_EMAIL_SUBJECT, $_COLOR_TEXT_EMAIL_PREVIEW, $_COLOR_TEXT_EMAIL_CONTENT, $_COLOR_ICON_EMAIL_BUTTON_OPTION, $_COLOR_TEXT_EMAIL_CONTENT_LINK, $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT, $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT, $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT, $_COLOR_ICON_EMAIL_BUTTON_SEGMENT, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_HOVER, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_HOVER, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_HOVER, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED, $_COLOR_ICON_EMAIL_DOTS_EXPANDED, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_HOVER, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_HOVER, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_HOVER){
-    [data-theme^=#{$_THEME}],
-    [data-theme] [data-theme^=#{$_THEME}] {
-      .cptx-email-container{
-        background-color: $_BACKGROUND_COLOR_EMAIL;
-        border-color: $_BORDER_COLOR_EMAIL;
+@mixin themable($_THEME, $_BACKGROUND_COLOR_EMAIL, $_BORDER_COLOR_EMAIL, $_BORDER_COLOR_EMAIL_UNSEND, $_COLOR_TEXT_EMAIL_SUBJECT, $_COLOR_TEXT_EMAIL_PREVIEW, $_COLOR_TEXT_EMAIL_CONTENT, $_COLOR_ICON_EMAIL_BUTTON_OPTION, $_COLOR_TEXT_EMAIL_CONTENT_LINK, $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT, $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT, $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT, $_COLOR_ICON_EMAIL_BUTTON_SEGMENT, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_HOVER, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_HOVER, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_HOVER, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED, $_COLOR_ICON_EMAIL_DOTS_EXPANDED, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_HOVER, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_HOVER, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_HOVER){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .cptx-email-container{
+      background-color: $_BACKGROUND_COLOR_EMAIL;
+      border-color: $_BORDER_COLOR_EMAIL;
 
-        &.email-container-collapse{
-          .email-preview-content{
-            color: $_COLOR_TEXT_EMAIL_PREVIEW;
-          }
+      &.email-container-collapse{
+        .email-preview-content{
+          color: $_COLOR_TEXT_EMAIL_PREVIEW;
         }
+      }
 
-        &.email-container-expand{
-          .email-info{
-            .email-info-content{
-              .email-info-content-to{
-                >span{
-                  color: $_COLOR_TEXT_EMAIL_PREVIEW;
-                }
-              }
-
-              .email-info-content-actions{
-                >div{
-                  >i{
-                    color: $_COLOR_ICON_EMAIL_BUTTON_OPTION;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        &.email-unsend {
-          border-color: $_BORDER_COLOR_EMAIL_UNSEND;
-        }
-
+      &.email-container-expand{
         .email-info{
           .email-info-content{
-            .email-info-content-line{
-              .email-info-content-from{
-                span{
-                  color: $_COLOR_TEXT_EMAIL_SUBJECT;
-                }
+            .email-info-content-to{
+              >span{
+                color: $_COLOR_TEXT_EMAIL_PREVIEW;
               }
+            }
 
-              .email-info-content-detail{      
-                .email-info-content-detail-date{
-                  color: $_COLOR_TEXT_EMAIL_PREVIEW;
+            .email-info-content-actions{
+              >div{
+                >i{
+                  color: $_COLOR_ICON_EMAIL_BUTTON_OPTION;
                 }
               }
             }
-          }
-        }
-
-        .email-body{
-          color: $_COLOR_TEXT_EMAIL_CONTENT;
-
-          .email-text{
-            .cptx-div-collapse{
-              &.cptx-div-collapsed{
-                background-color: $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED;
-                border-color: $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED;
-        
-                i{
-                  color: $_COLOR_ICON_EMAIL_DOTS_COLLAPSED;
-                }
-                &:hover{
-                  background-color: $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_HOVER;
-                  border-color: $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_HOVER;
-          
-                  i{
-                    color: $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_HOVER;
-                  }
-                }
-              }
-
-              &.cptx-div-expanded{
-                background-color: $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED;
-                border-color: $_BORDER_COLOR_EMAIL_DOTS_EXPANDED;
-        
-                i{
-                  color: $_COLOR_ICON_EMAIL_DOTS_EXPANDED;
-                }
-                &:hover{
-                  background-color: $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_HOVER;
-                  border-color: $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_HOVER;
-          
-                  i{
-                    color: $_COLOR_ICON_EMAIL_DOTS_EXPANDED_HOVER;
-                  }
-                }
-              }
-            }
-          }
-          
-          a{
-            color: $_COLOR_TEXT_EMAIL_CONTENT_LINK;
           }
         }
       }
 
-      .email-segment-controls{
-        background-color: $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT;
-        border-color: $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT;
-      
-        > div{      
-          &:nth-child(2){
-            border-left-color: $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT;
-            border-right-color: $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT;
-          }
-      
-          i{
-            color: $_COLOR_ICON_EMAIL_BUTTON_SEGMENT;
-          }
-      
-          span{
-            color: $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT;
-          }
+      &.email-unsend {
+        border-color: $_BORDER_COLOR_EMAIL_UNSEND;
+      }
 
-          &:hover{
-            i, span{
-              color: white;
+      .email-info{
+        .email-info-content{
+          .email-info-content-line{
+            .email-info-content-from{
+              span{
+                color: $_COLOR_TEXT_EMAIL_SUBJECT;
+              }
             }
+
+            .email-info-content-detail{      
+              .email-info-content-detail-date{
+                color: $_COLOR_TEXT_EMAIL_PREVIEW;
+              }
+            }
+          }
+        }
+      }
+
+      .email-body{
+        color: $_COLOR_TEXT_EMAIL_CONTENT;
+
+        .email-text{
+          .cptx-div-collapse{
+            &.cptx-div-collapsed{
+              background-color: $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED;
+              border-color: $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED;
+      
+              i{
+                color: $_COLOR_ICON_EMAIL_DOTS_COLLAPSED;
+              }
+              &:hover{
+                background-color: $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_HOVER;
+                border-color: $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_HOVER;
+        
+                i{
+                  color: $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_HOVER;
+                }
+              }
+            }
+
+            &.cptx-div-expanded{
+              background-color: $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED;
+              border-color: $_BORDER_COLOR_EMAIL_DOTS_EXPANDED;
+      
+              i{
+                color: $_COLOR_ICON_EMAIL_DOTS_EXPANDED;
+              }
+              &:hover{
+                background-color: $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_HOVER;
+                border-color: $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_HOVER;
+        
+                i{
+                  color: $_COLOR_ICON_EMAIL_DOTS_EXPANDED_HOVER;
+                }
+              }
+            }
+          }
+        }
+        
+        a{
+          color: $_COLOR_TEXT_EMAIL_CONTENT_LINK;
+        }
+      }
+    }
+
+    .email-segment-controls{
+      background-color: $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT;
+      border-color: $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT;
+    
+      > div{      
+        &:nth-child(2){
+          border-left-color: $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT;
+          border-right-color: $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT;
+        }
+    
+        i{
+          color: $_COLOR_ICON_EMAIL_BUTTON_SEGMENT;
+        }
+    
+        span{
+          color: $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT;
+        }
+
+        &:hover{
+          i, span{
+            color: white;
           }
         }
       }
     }
   }
+}
     
-  @include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_EMAIL_LIGHT, $_BORDER_COLOR_EMAIL_LIGHT, $_BORDER_COLOR_EMAIL_UNSEND_LIGHT, $_COLOR_TEXT_EMAIL_SUBJECT_LIGHT, $_COLOR_TEXT_EMAIL_PREVIEW_LIGHT, $_COLOR_TEXT_EMAIL_CONTENT_LIGHT, $_COLOR_ICON_EMAIL_BUTTON_OPTION_LIGHT, $_COLOR_TEXT_EMAIL_CONTENT_LINK_LIGHT, $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT_LIGHT, $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT_LIGHT, $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT_LIGHT, $_COLOR_ICON_EMAIL_BUTTON_SEGMENT_LIGHT, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_LIGHT, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_LIGHT, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_LIGHT, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_HOVER_LIGHT, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_HOVER_LIGHT, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_HOVER_LIGHT, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_LIGHT, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_LIGHT, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_LIGHT, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_HOVER_LIGHT, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_HOVER_LIGHT, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_HOVER_LIGHT);
-  @include themable($_THEME_DARK, $_BACKGROUND_COLOR_EMAIL_DARK, $_BORDER_COLOR_EMAIL_DARK, $_BORDER_COLOR_EMAIL_UNSEND_DARK, $_COLOR_TEXT_EMAIL_SUBJECT_DARK, $_COLOR_TEXT_EMAIL_PREVIEW_DARK, $_COLOR_TEXT_EMAIL_CONTENT_DARK, $_COLOR_ICON_EMAIL_BUTTON_OPTION_DARK, $_COLOR_TEXT_EMAIL_CONTENT_LINK_DARK, $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT_DARK, $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT_DARK, $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT_DARK, $_COLOR_ICON_EMAIL_BUTTON_SEGMENT_DARK, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_DARK, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_DARK, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_DARK, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_HOVER_DARK, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_HOVER_DARK, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_HOVER_DARK, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_DARK, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_DARK, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_DARK, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_HOVER_DARK, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_HOVER_DARK, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_HOVER_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_EMAIL_LIGHT, $_BORDER_COLOR_EMAIL_LIGHT, $_BORDER_COLOR_EMAIL_UNSEND_LIGHT, $_COLOR_TEXT_EMAIL_SUBJECT_LIGHT, $_COLOR_TEXT_EMAIL_PREVIEW_LIGHT, $_COLOR_TEXT_EMAIL_CONTENT_LIGHT, $_COLOR_ICON_EMAIL_BUTTON_OPTION_LIGHT, $_COLOR_TEXT_EMAIL_CONTENT_LINK_LIGHT, $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT_LIGHT, $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT_LIGHT, $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT_LIGHT, $_COLOR_ICON_EMAIL_BUTTON_SEGMENT_LIGHT, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_LIGHT, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_LIGHT, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_LIGHT, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_HOVER_LIGHT, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_HOVER_LIGHT, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_HOVER_LIGHT, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_LIGHT, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_LIGHT, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_LIGHT, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_HOVER_LIGHT, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_HOVER_LIGHT, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_HOVER_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_EMAIL_DARK, $_BORDER_COLOR_EMAIL_DARK, $_BORDER_COLOR_EMAIL_UNSEND_DARK, $_COLOR_TEXT_EMAIL_SUBJECT_DARK, $_COLOR_TEXT_EMAIL_PREVIEW_DARK, $_COLOR_TEXT_EMAIL_CONTENT_DARK, $_COLOR_ICON_EMAIL_BUTTON_OPTION_DARK, $_COLOR_TEXT_EMAIL_CONTENT_LINK_DARK, $_BACKGROUND_COLOR_EMAIL_BUTTON_SEGMENT_DARK, $_BORDER_COLOR_EMAIL_BUTTON_SEGMENT_DARK, $_COLOR_TEXT_EMAIL_BUTTON_SEGMENT_DARK, $_COLOR_ICON_EMAIL_BUTTON_SEGMENT_DARK, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_DARK, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_DARK, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_DARK, $_BACKGROUND_COLOR_EMAIL_DOTS_COLLAPSED_HOVER_DARK, $_BORDER_COLOR_EMAIL_DOTS_COLLAPSED_HOVER_DARK, $_COLOR_ICON_EMAIL_DOTS_COLLAPSED_HOVER_DARK, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_DARK, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_DARK, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_DARK, $_BACKGROUND_COLOR_EMAIL_DOTS_EXPANDED_HOVER_DARK, $_BORDER_COLOR_EMAIL_DOTS_EXPANDED_HOVER_DARK, $_COLOR_ICON_EMAIL_DOTS_EXPANDED_HOVER_DARK);

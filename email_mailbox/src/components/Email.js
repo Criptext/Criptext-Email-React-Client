@@ -8,6 +8,7 @@ import EmailMoreInfo from './EmailMoreInfo';
 import EmailActions from './EmailActions';
 import ButtonUnsend from './ButtonUnsendWrapper';
 import AvatarImage from './AvatarImage';
+import ButtonIcon from './ButtonIcon';
 import { EmailStatus } from './../utils/const';
 import string from '../lang';
 import './email.scss';
@@ -150,7 +151,11 @@ const renderEmailInfoExpand = props => (
                 status={props.buttonUnsendStatus}
               />
             )}
-          <i className="icon-replay" onClick={ev => props.onReplyEmail(ev)} />
+          <ButtonIcon
+            icon={'icon-replay'}
+            onClick={props.onClickReplyEmail}
+            status={props.buttonReplyStatus}
+          />
           <i
             className="icon-dots"
             onClick={ev => props.onTogglePopOverEmailActions(ev)}
@@ -245,6 +250,7 @@ const isExpand = (displayEmail, staticOpen) => {
 };
 
 renderEmailInfoExpand.propTypes = {
+  buttonReplyStatus: PropTypes.number,
   buttonUnsendStatus: PropTypes.number,
   dateLong: PropTypes.string,
   email: PropTypes.object,
@@ -257,6 +263,7 @@ renderEmailInfoExpand.propTypes = {
   isHiddenPopOverEmailMoreInfo: PropTypes.bool,
   isUnsend: PropTypes.bool,
   onClickEditDraft: PropTypes.func,
+  onClickReplyEmail: PropTypes.func,
   onClickUnsendButton: PropTypes.func,
   onDelete: PropTypes.func,
   onDeletePermanently: PropTypes.func,

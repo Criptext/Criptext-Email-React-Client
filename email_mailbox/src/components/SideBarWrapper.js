@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SideBar from './SideBar';
+import { ButtonStatus } from './Button';
 import { SectionType } from './../utils/const';
+import { openEmptyComposerWindow } from './../utils/ipc';
 
 class SideBarWrapper extends Component {
   constructor() {
     super();
     this.state = {
-      showLabels: false
+      showLabels: false,
+      buttonComposerStatus: ButtonStatus.NORMAL
     };
   }
 
@@ -15,6 +18,8 @@ class SideBarWrapper extends Component {
     return (
       <SideBar
         {...this.props}
+        onClickButtonComposer={this.handleButtonComposer}
+        buttonComposerStatus={this.state.buttonComposerStatus}
         onClickSection={this.handleClickSection}
         onToggleShowLabelView={this.handleToggleShowLabelView}
         showLabels={this.state.showLabels}
@@ -24,6 +29,15 @@ class SideBarWrapper extends Component {
 
   handleToggleShowLabelView = () => {
     this.setState({ showLabels: !this.state.showLabels });
+  };
+
+  handleButtonComposer = () => {
+    this.setState({ buttonComposerStatus: ButtonStatus.DISABLED }, () => {
+      openEmptyComposerWindow();
+    });
+    setTimeout(() => {
+      this.setState({ buttonComposerStatus: ButtonStatus.NORMAL });
+    }, 1000);
   };
 
   handleClickSection = mailboxSelected => {
