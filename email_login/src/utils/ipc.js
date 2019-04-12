@@ -20,8 +20,18 @@ export const throwError = error => {
   callMain('throwError', error);
 };
 
-/* Criptext Client
-   ----------------------------- */
+/*  Database
+----------------------------- */
+export const getAccountByParams = async params => {
+  return await callMain('db-get-account-by-params', params);
+};
+
+export const updateAccount = async params => {
+  return await callMain('db-update-account', params);
+};
+
+/*  Criptext Client
+----------------------------- */
 export const checkAvailableUsername = async username => {
   return await callMain('client-check-available-username', username);
 };

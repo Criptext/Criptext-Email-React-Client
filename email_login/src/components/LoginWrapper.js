@@ -17,10 +17,11 @@ import {
   linkBegin,
   linkStatus,
   openCreateKeysLoadingWindow,
-  throwError
+  throwError,
+  getAccountByParams
 } from '../utils/ipc.js';
 import { validateUsername } from './../validators/validators';
-import { DEVICE_TYPE } from '../utils/const';
+import { DEVICE_TYPE, appDomain } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
 import string from './../lang';
@@ -59,6 +60,7 @@ const shouldDisableLogin = state =>
 const LoginWithPasswordPopup = PopupHOC(DialogPopup);
 const ResetPasswordPopup = PopupHOC(LoginPopup);
 const NoRecoverySignUpPopup = PopupHOC(DialogPopup);
+const SignInAnotherAccount = PopupHOC(DialogPopup);
 
 const commitNewUser = validInputData => {
   openCreateKeysLoadingWindow({
@@ -121,6 +123,14 @@ class LoginWrapper extends Component {
             {...this.state.popupContent}
             onLeftButtonClick={this.dismissPopup}
             onRightButtonClick={this.handleSignUpContinue}
+          />
+        );
+      case mode.LOGIN:
+        return (
+          <SignInAnotherAccount
+            {...this.state.popupContent}
+            onLeftButtonClick={this.dismissPopup}
+            onRightButtonClick={this.handleSignInAnotherAccount}
           />
         );
       default:
@@ -214,7 +224,6 @@ class LoginWrapper extends Component {
 
   handleSignUpContinue = () => {
     const inputData = this.state.popupContent.data;
-    console.log(inputData);
     if (!inputData) {
       return;
     }
@@ -226,6 +235,11 @@ class LoginWrapper extends Component {
         commitNewUser(inputData);
       }
     );
+  };
+
+  handleSignInAnotherAccount = async () => {
+    this.dismissPopup();
+    await this.initLinkDevice(this.state.values.username);
   };
 
   toggleContinue = ev => {
@@ -317,7 +331,46 @@ class LoginWrapper extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     const username = this.state.values.username;
-    await this.initLinkDevice(username);
+    const [existsAccount] = await getAccountByParams({
+      recipientId: username
+    });
+    if (!existsAccount) {
+      await this.checkLoggedOutAccounts(username);
+    } else {
+      // eslint-disable-next-line no-extra-boolean-cast
+      if (!!existsAccount.isLoggedIn) {
+        alert('Usuario ya tiene sesión');
+        return;
+      }
+      await this.initLinkDevice(username);
+    }
+  };
+
+  checkLoggedOutAccounts = async username => {
+    const loggedOutAccounts = await getAccountByParams({
+      isLoggedIn: false
+    });
+    if (loggedOutAccounts.length) {
+      this.setState({
+        mode: mode.LOGIN,
+        popupContent: {
+          title: login.loginNewAccount.title,
+          prefix: login.loginNewAccount.prefix,
+          strong: this.formLoggedOutAccountsList(loggedOutAccounts),
+          suffix: login.loginNewAccount.suffix,
+          leftButtonLabel: login.loginNewAccount.leftButtonLabel,
+          rightButtonLabel: login.loginNewAccount.rightButtonLabel
+        }
+      });
+    } else {
+      await this.initLinkDevice(username);
+    }
+  };
+
+  formLoggedOutAccountsList = loggedOutAccounts => {
+    return loggedOutAccounts
+      .map(account => `${account.recipientId}@${appDomain}`)
+      .join(' \n ');
   };
 
   goToPasswordLogin = () => {

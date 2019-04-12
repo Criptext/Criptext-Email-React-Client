@@ -39,6 +39,14 @@
       "suffix": "en este dispositivo. ¿Te gustaria continuar?",
       "leftButtonLabel": "Cancelar",
       "rightButtonLabel": "Continuar"
+    },
+    "loginNewAccount": {
+      "title": "Advertencia de inicio de sesión",
+      "prefix": "Iniciar sesión con otra cuenta de usuario borrará todos los correos guardados en este dispoitivo de la(s) cuenta(s)",
+      "strong": "",
+      "suffix": "¿Deseas continuar?",
+      "leftButtonLabel": "Cancelar",
+      "rightButtonLabel": "Continuar"
     }
   },
   "signin": {

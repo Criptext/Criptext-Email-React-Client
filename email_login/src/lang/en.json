@@ -39,6 +39,14 @@
       "suffix": "on this device. Would you like to continue?",
       "leftButtonLabel": "Cancel",
       "rightButtonLabel": "Continue"
+    },
+    "loginNewAccount": {
+      "title": "Sign In Warning",
+      "prefix": "Sign in with another account will delete all mail saved on this device of the accounts",
+      "strong": "",
+      "suffix": "Would you like to continue?",
+      "leftButtonLabel": "Cancel",
+      "rightButtonLabel": "Continue"
     }
   },
   "signin": {
