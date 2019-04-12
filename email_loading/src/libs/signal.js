@@ -108,7 +108,6 @@ const createAccount = async ({
   if (!newAccount) {
     throw CustomError(string.errors.saveLocal);
   }
-  const accountId = newAccount.id;
   myAccount.initialize(newAccount);
   await setDefaultSettings();
 
@@ -331,6 +330,32 @@ const setDefaultSettings = async () => {
       theme: 'light',
       isFromStore: isFromStore
     });
+  }
+};
+
+const createSystemLabels = async () => {
+  const prevLabels = await getAllLabels();
+  const prevSystemLabels = prevLabels.map(label => label.type === 'system');
+  if (!prevSystemLabels.length) {
+    const labels = Object.values(LabelType).map(systemLabel =>
+      Object.assign(systemLabel, { accountId: null })
+    );
+    try {
+      await createLabel(labels);
+    } catch (createLabelsDbError) {
+      throw CustomError(string.errors.saveLabels);
+    }
+  }
+};
+
+const createOwnContact = async (name, email) => {
+  const [prevOwnContact] = await getContactByEmails([email]);
+  if (!prevOwnContact) {
+    try {
+      await createContact({ name, email });
+    } catch (createContactDbError) {
+      throw CustomError(string.errors.saveOwnContact);
+    }
   }
 };
 
