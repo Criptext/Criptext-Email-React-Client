@@ -380,7 +380,6 @@ const importDatabaseFromFile = async ({
   let emailContacts = [];
   let emailLabels = [];
   let files = [];
-  let accountContactRelations = [];
   const dbConn = await createDatabaseConnection(databasePath);
 
   return dbConn.transaction(trx => {
@@ -428,12 +427,10 @@ const importDatabaseFromFile = async ({
           switch (table) {
             case Table.CONTACT: {
               contacts.push(object);
-              accountContactRelations.push({ contactId: object.id, accountId });
               if (contacts.length === CONTACTS_BATCH) {
                 lineReader.pause();
                 await insertContactBatch(contacts);
                 contacts = [];
-                accountContactRelations = [];
                 lineReader.resume();
               }
               break;
