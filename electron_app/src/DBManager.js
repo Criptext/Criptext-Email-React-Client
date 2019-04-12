@@ -20,11 +20,34 @@ const EMAIL_CONTACT_TYPE_FROM = 'from';
 /* Account
 ----------------------------- */
 const createAccount = params => {
-  return db.table(Table.ACCOUNT).insert(params);
+  return db.transaction(async trx => {
+    await trx
+      .table(Table.ACCOUNT)
+      .where({ isActive: true })
+      .update({ isActive: false });
+    return await trx.table(Table.ACCOUNT).insert(params);
+  });
+};
+
+const deleteAccountByParams = params => {
+  return db
+    .table(Table.ACCOUNT)
+    .where(params)
+    .del();
 };
 
 const getAccount = () => {
-  return db.table(Table.ACCOUNT).select('*');
+  return db
+    .table(Table.ACCOUNT)
+    .select('*')
+    .where({ isActive: true });
+};
+
+const getAccountByParams = params => {
+  return db
+    .table(Table.ACCOUNT)
+    .select('*')
+    .where(params);
 };
 
 const updateAccount = async ({
@@ -37,7 +60,9 @@ const updateAccount = async ({
   recipientId,
   registrationId,
   signature,
-  signatureEnabled
+  signatureEnabled,
+  isLoggedIn,
+  isActive
 }) => {
   const params = noNulls({
     deviceId,
@@ -49,7 +74,9 @@ const updateAccount = async ({
     registrationId,
     signature,
     signatureEnabled:
-      typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined
+      typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined,
+    isLoggedIn: typeof isLoggedIn === 'boolean' ? isLoggedIn : undefined,
+    isActive: typeof isActive === 'boolean' ? isActive : undefined
   });
   const response = await db
     .table(Table.ACCOUNT)
@@ -1131,6 +1158,7 @@ module.exports = {
   createSignedPreKeyRecord,
   createSignalTables,
   createTables,
+  deleteAccountByParams,
   deleteAccountContact,
   deleteEmailsByIds,
   deleteEmailByKeys,
@@ -1140,11 +1168,12 @@ module.exports = {
   deleteEmailLabel,
   deleteEmailLabelsByEmailId,
   deleteLabelById,
-  deletePendingEventsByIds,
   deleteFeedItemById,
+  deletePendingEventsByIds,
   deletePreKeyPair,
   deleteSessionRecord,
   getAccount,
+  getAccountByParams,
   getAllContacts,
   getAllFeedItems,
   getAllLabels,

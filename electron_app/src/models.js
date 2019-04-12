@@ -99,7 +99,9 @@ const cleanDataLogout = async recipientId => {
   const params = {
     deviceId: '',
     jwt: '',
-    refreshToken: ''
+    refreshToken: '',
+    isActive: false,
+    isLoggedIn: false
   };
 
   await db
