@@ -34,7 +34,7 @@ const ProfileShortCut = props => (
       menuPosition={{ top: '48px', right: '-38px' }}
       onClickAddAccount={props.onClickAddAccount}
       onClickSettings={props.onClickSettings}
-      onToggleMenu={props.onToggleMenuProfilePreview}      
+      onToggleMenu={props.onToggleMenuProfilePreview}
     />
   </div>
 );
@@ -45,6 +45,7 @@ ProfileShortCut.propTypes = {
   letters: PropTypes.string,
   name: PropTypes.string,
   isHiddenMenuProfilePreview: PropTypes.bool,
+  onClickAddAccount: PropTypes.func,
   onClickSettings: PropTypes.func,
   onToggleMenuProfilePreview: PropTypes.func
 };

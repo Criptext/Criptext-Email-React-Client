@@ -7,8 +7,8 @@ export const closeCreatingKeysLoadingWindow = () => {
 
 export const getComputerName = () => callMain('get-computer-name');
 
-export const openMailboxWindow = () => {
-  callMain('open-mailbox');
+export const openMailboxWindow = email => {
+  callMain('open-mailbox', email);
 };
 
 export const throwError = error => {
@@ -193,7 +193,7 @@ export const decryptBackupFile = async key => {
   return await callMain('data-transfer-decrypt', key);
 };
 
-export const importDatabase = async (accountId) => {
+export const importDatabase = async accountId => {
   return await callMain('data-transfer-import', accountId);
 };
 

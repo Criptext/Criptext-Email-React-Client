@@ -45,9 +45,9 @@ ipc.answerRenderer('open-file-explorer', filename => {
   mailboxWindow.showFileExplorer(filename);
 });
 
-ipc.answerRenderer('open-mailbox', () => {
+ipc.answerRenderer('open-mailbox', email => {
   wsClient.start(myAccount);
-  mailboxWindow.show();
+  mailboxWindow.show(email);
 });
 
 ipc.answerRenderer('print-to-pdf', async ({ emailId, threadId }) => {

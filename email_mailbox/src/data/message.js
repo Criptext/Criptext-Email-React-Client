@@ -100,6 +100,10 @@ const messagesContent = {
     manualSync: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.manual_sync.description
+    },
+    loggedAs: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.logged_as.description
     }
   },
   error: {

@@ -43,7 +43,7 @@ const create = () => {
     show: false,
     title: 'Criptext',
     frame: !isWindows(),
-    webPreferences: { webSecurity: isDev }
+    webPreferences: { webSecurity: !isDev }
   });
   mailboxWindow.loadURL(mailboxUrl);
   // Firebase
@@ -99,13 +99,18 @@ const showFileExplorer = filename => {
   mailboxWindow.send('display-message-success-download');
 };
 
-const show = async () => {
+const show = async emailAddress => {
   const existVisibleWindow = BrowserWindow.getAllWindows().filter(w =>
     w.isVisible()
   );
   if (mailboxWindow) {
-    mailboxWindow.show();
-    createTrayIcon();
+    const isOpened = mailboxWindow.isVisible();
+    if (isOpened && emailAddress) {
+      send('refresh-window-logged-as', emailAddress);
+    } else {
+      mailboxWindow.show();
+      createTrayIcon();
+    }
   } else if (!existVisibleWindow.length || !mailboxWindow) {
     await create();
     mailboxWindow.on('ready-to-show', () => {

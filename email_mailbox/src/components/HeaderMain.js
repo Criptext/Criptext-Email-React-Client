@@ -38,6 +38,7 @@ HeaderMain.propTypes = {
   isHiddenMenuSearchOptions: PropTypes.bool,
   onClickSection: PropTypes.func,
   onClickSearch: PropTypes.func,
+  openLogin: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onToggleMenuSearchHints: PropTypes.func,
   onToggleMenuSearchOptions: PropTypes.func,
