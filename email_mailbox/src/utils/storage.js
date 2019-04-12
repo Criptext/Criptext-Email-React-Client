@@ -140,6 +140,23 @@ export const setUserGuideStepStatus = stepName => {
   localStorage.setItem(stepName, true);
 };
 
+/*  Show message on start app
+------------------------------------*/
+export const setPendingMessageToDisplay = message => {
+  localStorage.setItem('pendingMessageToDisplay', message);
+};
+
+export const getPendingMessageToDisplay = () => {
+  try {
+    const storedValue = localStorage.getItem('pendingMessageToDisplay');
+    const pendingMessage = JSON.parse(storedValue);
+    localStorage.removeItem('pendingMessageToDisplay');
+    return pendingMessage;
+  } catch (e) {
+    return null;
+  }
+};
+
 /*  Clear All Storage
 -------------------------------------*/
 export const clearStorage = () => {

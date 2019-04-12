@@ -251,6 +251,9 @@
     },
     "manual_sync": {
       "description": "Sincronización de Buzón Completa"
+    },
+    "logged_as": {
+      "description": "Conectado como "
     }
   },
   "notification": {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Message, { MessageType, MessageActionStatus } from './Message';
 import { Event, addEvent, removeEvent } from '../utils/electronEventInterface';
 import { messagePriorities } from '../data/message';
+import { getPendingMessageToDisplay } from '../utils/storage';
 
 const MESSAGE_DURATION = 5000;
 const QUESTION_DURATION = 10 * 60 * 1000;
@@ -52,6 +53,13 @@ class MessageWrapper extends Component {
         type={type}
       />
     );
+  }
+
+  componentDidMount() {
+    const pendingMessage = getPendingMessageToDisplay();
+    if (pendingMessage) {
+      this.handleDisplayMessageEvent(pendingMessage);
+    }
   }
 
   componentWillUnmount() {

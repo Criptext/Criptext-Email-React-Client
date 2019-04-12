@@ -8,6 +8,7 @@ import {
   openMailboxWindow,
   throwError
 } from './../utils/ipc';
+import { appDomain } from '../utils/const';
 import string from './../lang';
 
 const animationTypes = {
@@ -161,7 +162,8 @@ class LoadingWrapper extends Component {
     if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
       this.setState({ percent: 100 }, () => {
-        openMailboxWindow();
+        const email = `${remoteData.recipientId}@${appDomain}`;
+        openMailboxWindow(email);
         closeCreatingKeysLoadingWindow();
       });
     }

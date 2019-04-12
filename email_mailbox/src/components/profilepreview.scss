@@ -83,17 +83,13 @@
       &:hover {
         background-color: rgba($color: white, $alpha: 0.05);
       }
-
-      :nth-child(1) {
-        padding-left: 10px;
-      }
-      :nth-child(2) {
-        padding-right: 10px;
-      }
+    }
+    
+    :nth-child(1) {
+      padding-left: 10px;
     }
   }
-}
-/* THEME
+}/* THEME
    ----------------------------- */
 @mixin themable($_THEME, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT){
   [data-theme^=#{$_THEME}],

@@ -52,7 +52,8 @@ class ProfileShortCutWrapper extends Component {
 
 ProfileShortCutWrapper.propTypes = {
   avatarUrl: PropTypes.string,
-  onClickSettings: PropTypes.func
+  onClickSettings: PropTypes.func,
+  openLogin: PropTypes.func
 };
 
 export default ProfileShortCutWrapper;
