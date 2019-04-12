@@ -8,6 +8,7 @@ import {
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
 import { SectionType, avatarBaseUrl } from '../utils/const';
 import { LabelType, myAccount } from '../utils/electronInterface';
+import { openLoginWindow } from '../utils/ipc';
 
 const mapStateToProps = state => {
   const suggestions = state.get('suggestions');
@@ -69,6 +70,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         searchParams
       };
       ownProps.onClickSection(type, params);
+    },
+    openLogin: () => {
+      openLoginWindow();
     }
   };
 };

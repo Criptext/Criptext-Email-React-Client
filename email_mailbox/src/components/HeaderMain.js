@@ -26,6 +26,7 @@ const HeaderMain = props => (
     <ProfileShortCutWrapper
       avatarUrl={props.avatarUrl}
       onClickSettings={props.onClickSection}
+      openLogin={props.openLogin}
     />
   </div>
 );

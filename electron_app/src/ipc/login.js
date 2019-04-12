@@ -8,3 +8,7 @@ ipc.answerRenderer('close-login', ({ forceClose }) => {
 ipc.answerRenderer('minimize-login', () => {
   loginWindow.minimize();
 });
+
+ipc.answerRenderer('open-login', () => {
+  loginWindow.show();
+});

@@ -32,8 +32,9 @@ const ProfileShortCut = props => (
       arrowPosition={MenuType.TOP_RIGHT}
       isHidden={props.isHiddenMenuProfilePreview}
       menuPosition={{ top: '48px', right: '-38px' }}
+      onClickAddAccount={props.onClickAddAccount}
       onClickSettings={props.onClickSettings}
-      onToggleMenu={props.onToggleMenuProfilePreview}
+      onToggleMenu={props.onToggleMenuProfilePreview}      
     />
   </div>
 );

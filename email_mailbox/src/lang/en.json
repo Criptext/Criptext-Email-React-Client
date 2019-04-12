@@ -68,7 +68,8 @@
     },
     "selected": "Selected",
     "selected_plural": "Selected",
-    "print_all": "Print All"
+    "print_all": "Print All",
+    "add_account": "Add Account"
   },
   "labelsItems": {
     "inbox": "Inbox",
