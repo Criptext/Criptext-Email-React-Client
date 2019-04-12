@@ -52,7 +52,8 @@
     },
     "selected": "Seleccionado",
     "selected_plural": "Seleccionados",
-    "print_all": "Imprimir todo"
+    "print_all": "Imprimir todo",
+    "add_account": "Añadir cuenta"
   },
   "labelsItems": {
     "inbox": "Recibidos",

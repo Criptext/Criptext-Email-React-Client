@@ -24,6 +24,7 @@ class ProfileShortCutWrapper extends Component {
         isHiddenMenuProfilePreview={this.state.isHiddenMenuProfilePreview}
         onClickSettings={this.handleClickSettings}
         onToggleMenuProfilePreview={this.handleToggleMenuProfilePreview}
+        onClickAddAccount={this.handleClickAddAccount}
       />
     );
   }
@@ -33,6 +34,13 @@ class ProfileShortCutWrapper extends Component {
       isHiddenMenuProfilePreview: true
     });
     this.props.onClickSettings();
+  };
+
+  handleClickAddAccount = () => {
+    this.setState({
+      isHiddenMenuProfilePreview: true
+    });
+    this.props.openLogin();
   };
 
   handleToggleMenuProfilePreview = () => {
