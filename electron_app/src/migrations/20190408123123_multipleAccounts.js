@@ -2,6 +2,8 @@ const { Table, fieldTypes } = require('./../models');
 const {
   XSMALL_STRING_SIZE,
   LARGE_STRING_SIZE,
+  MEDIUM_STRING_SIZE,
+  SMALL_STRING_SIZE,
   XLARGE_STRING_SIZE
 } = fieldTypes;
 
@@ -107,9 +109,43 @@ const addAccountIdToEmailTable = async (trx, accountId) => {
     'accountId'
   );
   if (columnAccountIdExists) return;
-  await trx.schema.table(Table.EMAIL, table => {
-    table.string('accountId', XSMALL_STRING_SIZE);
+  // Duplicate table
+  const tempTablename = `old${Table.EMAIL}`;
+  await trx.schema.renameTable(Table.EMAIL, tempTablename);
+  await trx.schema.createTable(Table.EMAIL, table => {
+    table.increments('id').primary();
+    table.string('key', SMALL_STRING_SIZE).notNullable();
+    table.string('threadId', SMALL_STRING_SIZE);
+    table.string('s3Key', SMALL_STRING_SIZE);
+    table.string('subject').notNullable();
+    table.text('content').notNullable();
+    table.string('preview', LARGE_STRING_SIZE).notNullable();
+    table.dateTime('date').notNullable();
+    table.integer('status').notNullable();
+    table.boolean('unread').notNullable();
+    table.boolean('secure').notNullable();
+    table.boolean('isMuted').notNullable();
+    table.dateTime('unsendDate');
+    table.dateTime('trashDate');
+    table.string('messageId', SMALL_STRING_SIZE);
+    table
+      .string('fromAddress', MEDIUM_STRING_SIZE)
+      .notNullable()
+      .defaultTo('');
+    table.string('replyTo', MEDIUM_STRING_SIZE).nullable();
+    table.string('boundary', LARGE_STRING_SIZE);
+    table.integer('accountId');
+    table
+      .foreign('accountId')
+      .references('id')
+      .inTable(Table.ACCOUNT);
   });
+  // Insert values
+  const prevValues = await trx.select('*').from(tempTablename);
+  if (prevValues.length) {
+    await trx.table(Table.EMAIL).insert(prevValues);
+  }
+  await trx.schema.dropTable(tempTablename);
   if (accountId) {
     await trx.raw(`UPDATE ${Table.EMAIL} SET accountId = ${accountId};`);
   }
@@ -133,7 +169,11 @@ const addAccountIdToLabelTable = async (trx, accountId) => {
   if (columnAccountIdExists) return;
 
   await trx.schema.table(Table.LABEL, table => {
-    table.string('accountId', XSMALL_STRING_SIZE);
+    table.integer('accountId');
+    table
+      .foreign('accountId')
+      .references('id')
+      .inTable(Table.ACCOUNT);
   });
   await trx
     .table(Table.LABEL)
@@ -164,7 +204,11 @@ const addAccountIdToPendingEventTable = async (trx, accountId) => {
   );
   if (columnAccountIdExists) return;
   await trx.schema.table(Table.PENDINGEVENT, table => {
-    table.string('accountId', XSMALL_STRING_SIZE);
+    table.integer('accountId');
+    table
+      .foreign('accountId')
+      .references('id')
+      .inTable(Table.ACCOUNT);
   });
   if (accountId) {
     await trx.raw(`UPDATE ${Table.PENDINGEVENT} SET accountId = ${accountId};`);
@@ -190,9 +234,26 @@ const addAccountIdToIdentityKeyRecordTable = async (trx, accountId) => {
     'accountId'
   );
   if (columnAccountIdExists) return;
-  await trx.schema.table(Table.IDENTITYKEYRECORD, table => {
-    table.string('accountId', XSMALL_STRING_SIZE);
+  // Duplicate table
+  const tempTablename = `old${Table.IDENTITYKEYRECORD}`;
+  await trx.schema.renameTable(Table.IDENTITYKEYRECORD, tempTablename);
+  await trx.schema.createTable(Table.IDENTITYKEYRECORD, table => {
+    table.increments('id').primary();
+    table.string('recipientId', XSMALL_STRING_SIZE).notNullable();
+    table.integer('deviceId').notNullable();
+    table.string('identityKey', LARGE_STRING_SIZE).notNullable();
+    table.integer('accountId');
+    table
+      .foreign('accountId')
+      .references('id')
+      .inTable(Table.ACCOUNT);
   });
+  // Insert values
+  const prevValues = await trx.select('*').from(tempTablename);
+  if (prevValues.length) {
+    await trx.table(Table.IDENTITYKEYRECORD).insert(prevValues);
+  }
+  await trx.schema.dropTable(tempTablename);
   if (accountId) {
     await trx.raw(
       `UPDATE ${Table.IDENTITYKEYRECORD} SET accountId = ${accountId};`
@@ -219,9 +280,26 @@ const addAccountIdToPreKeyRecordTable = async (trx, accountId) => {
     'accountId'
   );
   if (columnAccountIdExists) return;
-  await trx.schema.table(Table.PREKEYRECORD, table => {
-    table.string('accountId', XSMALL_STRING_SIZE);
+  // Duplicate table
+  const tempTablename = `old${Table.PREKEYRECORD}`;
+  await trx.schema.renameTable(Table.PREKEYRECORD, tempTablename);
+  await trx.schema.createTable(Table.PREKEYRECORD, table => {
+    table.increments('id').primary();
+    table.integer('preKeyId').notNullable();
+    table.string('preKeyPrivKey', LARGE_STRING_SIZE).notNullable();
+    table.string('preKeyPubKey', LARGE_STRING_SIZE).notNullable();
+    table.integer('accountId');
+    table
+      .foreign('accountId')
+      .references('id')
+      .inTable(Table.ACCOUNT);
   });
+  // Insert values
+  const prevValues = await trx.select('*').from(tempTablename);
+  if (prevValues.length) {
+    await trx.table(Table.PREKEYRECORD).insert(prevValues);
+  }
+  await trx.schema.dropTable(tempTablename);
   if (accountId) {
     await trx.raw(`UPDATE ${Table.PREKEYRECORD} SET accountId = ${accountId};`);
   }
@@ -246,9 +324,26 @@ const addAccountIdToSessionRecordTable = async (trx, accountId) => {
     'accountId'
   );
   if (columnAccountIdExists) return;
-  await trx.schema.table(Table.SESSIONRECORD, table => {
-    table.string('accountId', XSMALL_STRING_SIZE);
+  // Duplicate table
+  const tempTablename = `old${Table.SESSIONRECORD}`;
+  await trx.schema.renameTable(Table.SESSIONRECORD, tempTablename);
+  await trx.schema.createTable(Table.SESSIONRECORD, table => {
+    table.increments('id').primary();
+    table.string('recipientId', XSMALL_STRING_SIZE).notNullable();
+    table.integer('deviceId').notNullable();
+    table.text('record').notNullable();
+    table.integer('accountId');
+    table
+      .foreign('accountId')
+      .references('id')
+      .inTable(Table.ACCOUNT);
   });
+  // Insert values
+  const prevValues = await trx.select('*').from(tempTablename);
+  if (prevValues.length) {
+    await trx.table(Table.SESSIONRECORD).insert(prevValues);
+  }
+  await trx.schema.dropTable(tempTablename);
   if (accountId) {
     await trx.raw(
       `UPDATE ${Table.SESSIONRECORD} SET accountId = ${accountId};`
@@ -275,9 +370,26 @@ const addAccountIdToSignedPreKeyRecordTable = async (trx, accountId) => {
     'accountId'
   );
   if (columnAccountIdExists) return;
-  await trx.schema.table(Table.SIGNEDPREKEYRECORD, table => {
-    table.string('accountId', XSMALL_STRING_SIZE);
+  // Duplicate table
+  const tempTablename = `old${Table.SIGNEDPREKEYRECORD}`;
+  await trx.schema.renameTable(Table.SIGNEDPREKEYRECORD, tempTablename);
+  await trx.schema.createTable(Table.SIGNEDPREKEYRECORD, table => {
+    table.increments('id').primary();
+    table.integer('signedPreKeyId').notNullable();
+    table.string('signedPreKeyPrivKey', LARGE_STRING_SIZE).notNullable();
+    table.string('signedPreKeyPubKey', LARGE_STRING_SIZE).notNullable();
+    table.integer('accountId');
+    table
+      .foreign('accountId')
+      .references('id')
+      .inTable(Table.ACCOUNT);
   });
+  // Insert values
+  const prevValues = await trx.select('*').from(tempTablename);
+  if (prevValues.length) {
+    await trx.table(Table.SIGNEDPREKEYRECORD).insert(prevValues);
+  }
+  await trx.schema.dropTable(tempTablename);
   if (accountId) {
     await trx.raw(
       `UPDATE ${Table.SIGNEDPREKEYRECORD} SET accountId = ${accountId};`
