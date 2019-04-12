@@ -46,7 +46,7 @@ const USER_GUIDE_STEPS = {
 const USER_GUIDE_STEPS_INFO = {
   [USER_GUIDE_STEPS.BUTTON_COMPOSE]: {
     name: USER_GUIDE_STEPS.BUTTON_COMPOSE,
-    target: '.button-compose',
+    target: '#button-compose',
     content: userGuide.buttonCompose.text,
     placement: 'right',
     disableBeacon: true,

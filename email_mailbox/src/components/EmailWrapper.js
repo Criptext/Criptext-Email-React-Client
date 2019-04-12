@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Email from './Email';
 import { ButtonUnsendStatus } from './ButtonUnsend';
+import { ButtonStatus } from './ButtonIcon';
 import { checkUserGuideSteps } from '../utils/electronEventInterface';
 import { USER_GUIDE_STEPS } from './UserGuide';
 import string from '../lang';
@@ -14,6 +15,7 @@ class EmailWrapper extends Component {
     super(props);
     this.state = {
       buttonUnsendStatus: ButtonUnsendStatus.NORMAL,
+      buttonReplyStatus: ButtonStatus.NORMAL,
       displayEmail: false,
       isHiddenPopOverEmailActions: true,
       isHiddenPopOverEmailMoreInfo: true,
@@ -38,6 +40,7 @@ class EmailWrapper extends Component {
     return (
       <Email
         {...this.props}
+        buttonReplyStatus={this.state.buttonReplyStatus}
         buttonUnsendStatus={this.state.buttonUnsendStatus}
         displayEmail={this.state.displayEmail}
         isHiddenPopOverEmailMoreInfo={this.state.isHiddenPopOverEmailMoreInfo}
@@ -48,6 +51,7 @@ class EmailWrapper extends Component {
         onTogglePopOverEmailActions={this.handleTogglePopOverEmailActions}
         onClickEditDraft={this.handleClickEditDraft}
         onClickUnsendButton={this.handleClickUnsendButton}
+        onClickReplyEmail={this.handleReplyEmail}
         popupContent={this.state.popupContent}
         handlePopupConfirm={this.handlePopupConfirm}
         dismissPopup={this.dismissPopup}
@@ -120,6 +124,14 @@ class EmailWrapper extends Component {
     this.props.onEditDraft();
   };
 
+  handleReplyEmail = ev => {
+    this.setState({ buttonReplyStatus: ButtonStatus.DISABLED });
+    this.props.onReplyEmail(ev);
+    setTimeout(() => {
+      this.setState({ buttonReplyStatus: ButtonStatus.NORMAL });
+    }, 1000);
+  };
+
   handleTooglePopOverEmailMoreInfo = ev => {
     if (ev) ev.stopPropagation();
     this.setState({
@@ -188,6 +200,7 @@ EmailWrapper.propTypes = {
   onDeletePermanently: PropTypes.func,
   onDownloadInlineImages: PropTypes.func,
   onInjectFilepathsOnEmailContentByCid: PropTypes.func,
+  onReplyEmail: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   onUpdateEmailContent: PropTypes.func,
   staticOpen: PropTypes.bool

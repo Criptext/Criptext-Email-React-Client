@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SideBarItem from './../components/SideBarItem';
+import SideBarItem from './SideBarItem';
+import Button, { ButtonTypes } from './Button';
 import SideBarLabelItem from './../containers/SideBarLabelItem';
 import LabelAdd from './../containers/LabelAdd';
-import { openEmptyComposerWindow } from './../utils/ipc';
+
 import string from './../lang';
 import './sidebar.scss';
 
@@ -14,13 +15,14 @@ const SideBar = props => (
     </header>
     <div className="navigation-partial-mail">
       <div className="nav-item-free">
-        <button
-          className="button button-a button-compose"
-          onClick={openEmptyComposerWindow}
-        >
-          <i className="icon-edit" />
-          <span>{string.sidebar.compose}</span>
-        </button>
+        <Button
+          id={'button-compose'}
+          icon={'icon-edit'}
+          onClick={props.onClickButtonComposer}
+          status={props.buttonComposerStatus}
+          text={string.sidebar.compose}
+          type={ButtonTypes.PRIMARY}
+        />
       </div>
       <nav className="nav-main">
         <ul>
@@ -127,9 +129,11 @@ const renderLabels = (showLabels, labels, mailboxSelected, onClickSection) => (
 );
 
 SideBar.propTypes = {
+  buttonComposerStatus: PropTypes.number,
   items: PropTypes.array,
   labels: PropTypes.object,
   mailboxSelected: PropTypes.object,
+  onClickButtonComposer: PropTypes.func,
   onClickComposeContactSupportEmail: PropTypes.func,
   onClickInviteFriend: PropTypes.func,
   onClickSection: PropTypes.func,

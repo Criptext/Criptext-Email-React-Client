@@ -1,0 +1,25 @@
+@import "./../styles/index.scss";
+
+.button-icon{
+  background-color: transparent;
+  
+  i{
+    font-size: 21px;
+  }
+}
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_ICON_EMAIL_BUTTON_OPTION){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .button-icon{
+      >i{
+        color: $_COLOR_ICON_EMAIL_BUTTON_OPTION;
+      }
+    }
+  }
+}
+    
+@include themable($_THEME_LIGHT, $_COLOR_ICON_EMAIL_BUTTON_OPTION_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_ICON_EMAIL_BUTTON_OPTION_DARK);

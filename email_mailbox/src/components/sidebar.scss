@@ -141,18 +141,16 @@
   width: 100%;
 }
 
-button{
-  &.button-compose{
-    background-color: #0091ff;
-    margin: 15px 0;
-    width: 141px;
-  
-    i{
-      left: -8px;
-      margin-right: 10px;
-    }
+#button-compose{
+  margin: 15px 0;
+  width: 141px;
+
+  i{
+    left: -8px;
+    margin-right: 10px;
   }
 }
+
 
 .nav-item-collapse{
   height: 75px;
@@ -225,7 +223,7 @@ button{
     @include collapse-header;
   }
 
-  button.button-a.button-compose{
+  #button-compose{
     @include collapse-button-compose;
   }
 
@@ -242,7 +240,7 @@ button{
       @include collapse-header;
     }
 
-    button.button-a.button-compose{
+    #button-compose{
       @include collapse-button-compose;
     }
 
