@@ -36,21 +36,15 @@ async function initApp() {
     console.log(ex);
   }
 
-  const [existingAccount] = await dbManager.getAccount();
-  if (existingAccount) {
-    if (!!existingAccount.deviceId) {
-      const appSettings = await dbManager.getSettings();
-      const settings = Object.assign(appSettings, { isFromStore });
-      myAccount.initialize(existingAccount);
-      mySettings.initialize(settings);
-      wsClient.start(myAccount);
-      createAppMenu();
-      mailboxWindow.show();
-    } else {
-      await getUserLanguage();
-      createAppMenu();
-      loginWindow.show();
-    }
+  const [activeAccount] = await dbManager.getAccount();
+  if (activeAccount) {
+    const appSettings = await dbManager.getSettings();
+    const settings = Object.assign(appSettings, { isFromStore });
+    myAccount.initialize(activeAccount);
+    mySettings.initialize(settings);
+    wsClient.start(myAccount);
+    createAppMenu();
+    mailboxWindow.show();
   } else {
     await getUserLanguage();
     createAppMenu();
