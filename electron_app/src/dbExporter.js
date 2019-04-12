@@ -340,37 +340,24 @@ const exportDatabaseToFile = async ({ databasePath, outputPath }) => {
   closeDatabaseConnection(dbConn);
 };
 
+let contactIdsMapped = {};
+
 /* Import Database from String
 ------------------------------- */
-const importDatabaseFromFile = async ({ filepath, databasePath }) => {
+const importDatabaseFromFile = async ({
+  filepath,
+  databasePath,
+  accountId
+}) => {
   let contacts = [];
   let labels = [];
   let emails = [];
   let emailContacts = [];
   let emailLabels = [];
   let files = [];
-  let accountContactRelations = [];
   const dbConn = await createDatabaseConnection(databasePath);
 
-  return dbConn.transaction(async trx => {
-    const currentAccount = await trx
-      .select('id')
-      .from(Table.ACCOUNT)
-      .first();
-    const accountId = currentAccount ? currentAccount.id : 1;
-
-    console.log('currentAccount: ', JSON.stringify(currentAccount));
-
-    await trx.table(Table.CONTACT).del();
-    await trx.table(Table.EMAIL).del();
-    await trx.table(Table.EMAIL_CONTACT).del();
-    await trx.table(Table.EMAIL_LABEL).del();
-    await trx.table(Table.FILE).del();
-    await trx
-      .table(Table.LABEL)
-      .where({ type: 'custom' })
-      .del();
-
+  return dbConn.transaction(trx => {
     const lineReader = new LineByLineReader(filepath);
     return new Promise(resolve => {
       lineReader
@@ -379,15 +366,19 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
           switch (table) {
             case Table.CONTACT: {
               contacts.push(object);
-              accountContactRelations.push({ contactId: object.id, accountId });
               if (contacts.length === CONTACTS_BATCH) {
                 lineReader.pause();
-                await trx.insert(contacts).into(Table.CONTACT);
+                const contactIdsByAccount = await populateContactMapAndInsert(
+                  contacts,
+                  trx
+                );
+                const accountContactRelations = contactIdsByAccount.map(
+                  contactId => ({ contactId, accountId })
+                );
                 await trx
                   .insert(accountContactRelations)
                   .into(Table.ACCOUNT_CONTACT);
                 contacts = [];
-                accountContactRelations = [];
                 lineReader.resume();
               }
               break;
@@ -427,7 +418,11 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               break;
             }
             case 'email_contact': {
-              emailContacts.push(object);
+              const updatedObject = Object.assign(object, {
+                contactId:
+                  contactIdsMapped[object.contactId] || object.contactId
+              });
+              emailContacts.push(updatedObject);
               if (emailContacts.length === EMAIL_CONTACTS_BATCH) {
                 lineReader.pause();
                 await trx.insert(emailContacts).into(Table.EMAIL_CONTACT);
@@ -460,14 +455,17 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               break;
           }
         })
-        .on('error', err => console.log(err))
+        .on('error', console.log)
         .on('end', async () => {
-          await insertRemainingRows(contacts, Table.CONTACT, trx);
-          await insertRemainingRows(
-            accountContactRelations,
-            Table.ACCOUNT_CONTACT,
+          const contactIdsByAccount = await populateContactMapAndInsert(
+            contacts,
             trx
           );
+          const accountContactRelations = contactIdsByAccount.map(
+            contactId => ({ contactId, accountId })
+          );
+          await trx.insert(accountContactRelations).into(Table.ACCOUNT_CONTACT);
+          contactIdsMapped = {};
           await insertRemainingRows(labels, Table.LABEL, trx);
           await storeEmailBodies(emails);
           await insertRemainingRows(emails, Table.EMAIL, trx);
@@ -478,6 +476,39 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
         });
     });
   });
+};
+
+const populateContactMapAndInsert = async (contacts, trx) => {
+  const emails = contacts.map(contact => contact.email);
+  const foundContacts = await trx
+    .select('*')
+    .from(Table.CONTACT)
+    .whereIn('email', emails);
+  for (const found of foundContacts) {
+    const prevContact = contacts.find(contact => contact.email === found.email);
+    contactIdsMapped[prevContact.id] = found.id;
+  }
+  const newContacts = contacts.filter(contact => !contactIdsMapped[contact.id]);
+  let insertedIds = [];
+  if (newContacts.length) {
+    const contactToInsert = newContacts.map(item => ({
+      email: item.email,
+      name: item.name,
+      isTrusted: item.isTrusted
+    }));
+    const [lastInsertedId] = await trx
+      .insert(contactToInsert)
+      .into(Table.CONTACT);
+    insertedIds = Array.apply(null, { length: newContacts.length }).map(
+      (it, index) => index + (lastInsertedId - newContacts.length + 1)
+    );
+    for (let i = 0; i < newContacts.length; i++) {
+      const contact = newContacts[i];
+      contactIdsMapped[contact.id] = insertedIds[i];
+    }
+  }
+  const foundIds = foundContacts.map(found => found.id);
+  return [...foundIds, ...insertedIds];
 };
 
 const storeEmailBodies = emailRows => {
