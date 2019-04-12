@@ -5,12 +5,14 @@
 }
 
 .profile-preview{
-  padding: 20px 20px 0;
-  width: 240px;
+  // padding: 20px 20px 0;
+  // padding: 20px 0px 0px 0px;
+  width: 280px;
 
   .profile-preview-content{
     align-items: center;
     display: flex;
+    margin: 15px;
     margin-bottom: 15px;
     width: 100%;
 
@@ -67,15 +69,25 @@
   }
 
   .profile-preview-controls{
-    border-top: 1px solid #d8d8d8;
+    border-top: 1px solid #eaeaea;
     display: flex;
-    justify-content: flex-end;
 
     .button-b{
+      width: 50%;
       align-items: center;
       display: flex;
       height: 40px;
-      padding: 5px 10px;
+
+      &:hover {
+        background-color: rgba($color: white, $alpha: 0.05);
+      }
+
+      :nth-child(1) {
+        padding-left: 10px;
+      }
+      :nth-child(2) {
+        padding-right: 10px;
+      }
     }
   }
 }

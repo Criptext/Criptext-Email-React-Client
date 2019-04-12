@@ -16,6 +16,10 @@ const ProfilePreview = props => (
       </div>
     </div>
     <div className="profile-preview-controls">
+      <button className="button-b" onClick={() => props.onClickAddAccount()}>
+        <i className="icon-plus" />
+        <span>{string.header.add_account}</span>
+      </button>
       <button className="button-b" onClick={() => props.onClickSettings()}>
         <i className="icon-settings" />
         <span>{string.sidebar.settings}</span>
@@ -29,6 +33,7 @@ ProfilePreview.propTypes = {
   letters: PropTypes.string,
   emailAddress: PropTypes.string,
   name: PropTypes.string,
+  onClickAddAccount: PropTypes.func,
   onClickSettings: PropTypes.func
 };
 
