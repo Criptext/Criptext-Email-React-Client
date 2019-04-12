@@ -130,10 +130,11 @@ const decrypt = async key => {
   });
 };
 
-const importDatabase = async () => {
+const importDatabase = async accountId => {
   return await dbExporter.importDatabaseFromFile({
     filepath: decryptedFileName,
-    databasePath
+    databasePath,
+    accountId
   });
 };
 

@@ -202,8 +202,7 @@ class LoadingWrapper extends Component {
           ...remoteData,
           ...this.state.accountData
         };
-
-        await signal.createAccountToDB(newAccountData);
+        const accountId = await signal.createAccountToDB(newAccountData);
         const response = await downloadBackupFile(address);
         if (response.statusCode !== 200) {
           this.linkingDevicesThrowError();
@@ -227,7 +226,7 @@ class LoadingWrapper extends Component {
               authorizerId
             });
             await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
-            await importDatabase();
+            await importDatabase(accountId);
 
             this.setState(
               {

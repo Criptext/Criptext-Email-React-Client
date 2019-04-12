@@ -82,6 +82,18 @@ export const createAccount = async params => {
   return await callMain('db-create-account', params);
 };
 
+export const deleteAccountByParams = async params => {
+  return await callMain('db-delete-account-by-params', params);
+};
+
+export const getAccountByParams = async params => {
+  return await callMain('db-get-account-by-params', params);
+};
+
+export const getContactByEmails = async emails => {
+  return await callMain('db-get-contact-by-emails', emails);
+};
+
 export const createContact = async params => {
   await checkCurrentAccount();
   return await callMain('db-create-contact', { accountId, ...params });
@@ -89,7 +101,10 @@ export const createContact = async params => {
 
 export const createIdentityKeyRecord = async params => {
   await checkCurrentAccount();
-  return await callMain('db-create-identity-key-record', { accountId, ...params });
+  return await callMain('db-create-identity-key-record', {
+    accountId,
+    ...params
+  });
 };
 
 export const createLabel = async params => {
@@ -108,7 +123,10 @@ export const createSessionRecord = async params => {
 
 export const createSignedPreKeyRecord = async params => {
   await checkCurrentAccount();
-  return await callMain('db-create-signed-prekey-record', { accountId, ...params });
+  return await callMain('db-create-signed-prekey-record', {
+    accountId,
+    ...params
+  });
 };
 
 export const createTables = async () => {
@@ -134,6 +152,10 @@ export const getIdentityKeyRecord = async params => {
   return await callMain('db-get-identity-key-record', { accountId, ...params });
 };
 
+export const getAllLabels = async () => {
+  return await callMain('db-get-all-labels');
+};
+
 export const getPreKeyPair = async params => {
   await checkCurrentAccount();
   return await callMain('db-get-prekey-pair', { accountId, ...params });
@@ -155,7 +177,10 @@ export const updateAccount = async params => {
 
 export const updateIdentityKeyRecord = async params => {
   await checkCurrentAccount();
-  return await callMain('db-update-identity-key-record', { accountId, ...params });
+  return await callMain('db-update-identity-key-record', {
+    accountId,
+    ...params
+  });
 };
 
 /* DataTransfer
@@ -168,8 +193,8 @@ export const decryptBackupFile = async key => {
   return await callMain('data-transfer-decrypt', key);
 };
 
-export const importDatabase = async () => {
-  return await callMain('data-transfer-import');
+export const importDatabase = async (accountId) => {
+  return await callMain('data-transfer-import', accountId);
 };
 
 export const clearSyncData = async () => {
