@@ -676,6 +676,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   ${labelWhereQuery}
   ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
   AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
+  AND ${Table.EMAIL}.accountId = ${myAccount.id}
   ${textQuery}
   ${subject ? `AND subject LIKE %${subject}%` : ''}
   ${unread !== undefined ? `AND unread = ${unread}` : ''}
