@@ -109,7 +109,7 @@ const createAccount = async ({
     throw CustomError(string.errors.saveLocal);
   }
   myAccount.initialize(newAccount);
-  setDefaultSettings();
+  await setDefaultSettings();
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -203,7 +203,7 @@ const createAccountWithNewDevice = async ({
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  setDefaultSettings();
+  await setDefaultSettings();
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -310,7 +310,7 @@ const createAccountToDB = async ({
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  setDefaultSettings();
+  await setDefaultSettings();
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -322,13 +322,15 @@ const createAccountToDB = async ({
 };
 
 const setDefaultSettings = async () => {
-  const language = await getSystemLanguage();
-  mySettings.initialize({
-    language,
-    opened: false,
-    theme: 'light',
-    isFromStore: isFromStore
-  });
+  if (!mySettings.theme) {
+    const language = await getSystemLanguage();
+    mySettings.initialize({
+      language,
+      opened: false,
+      theme: 'light',
+      isFromStore: isFromStore
+    });
+  }
 };
 
 const createSystemLabels = async () => {
