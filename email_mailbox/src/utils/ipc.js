@@ -146,6 +146,10 @@ export const deleteMyAccount = async password => {
   return await callMain('client-delete-my-account', password);
 };
 
+export const getDataReady = async () => {
+  return await callMain('client-get-data-ready');
+};
+
 export const getUserSettings = async () => {
   return await callMain('client-get-user-settings');
 };
@@ -268,6 +272,10 @@ export const createSignedPreKeyRecord = async params => {
   return await callMain('db-create-signed-prekey-record', params);
 };
 
+export const defineActiveAccountById = async accountId => {
+  return await callMain('db-define-active-account-by-id', accountId);
+};
+
 export const deleteEmailByKeys = async keys => {
   return await callMain('db-delete-email-by-keys', keys);
 };
@@ -310,12 +318,12 @@ export const getAccount = async () => {
   return await callMain('db-get-account');
 };
 
-export const getAllFeedItems = async () => {
-  return await callMain('db-get-all-feed-items');
+export const getAccountByParams = async params => {
+  return await callMain('db-get-account-by-params', params);
 };
 
-export const getDataReady = async () => {
-  return await callMain('client-get-data-ready');
+export const getAllFeedItems = async () => {
+  return await callMain('db-get-all-feed-items');
 };
 
 export const getAllLabels = async () => {

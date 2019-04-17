@@ -2,19 +2,20 @@ import { connect } from 'react-redux';
 import { getAllLabels } from '../selectors/labels';
 import { loadSuggestions } from '../actions/index';
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
-import { SectionType, avatarBaseUrl } from '../utils/const';
-import { myAccount } from '../utils/electronInterface';
-import { openLoginWindow } from '../utils/ipc';
+import { SectionType, appDomain } from '../utils/const';
+import {
+  openLoginWindow,
+  defineActiveAccountById,
+  getAccountByParams
+} from '../utils/ipc';
+import { showLoggedAsMessage } from '../utils/electronEventInterface';
 
 const mapStateToProps = state => {
   const suggestions = state.get('suggestions');
   const allLabels = getAllLabels(state);
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
-  const avatarUrl = `${avatarBaseUrl}${
-    myAccount.recipientId
-  }?date=${avatarTimestamp}`;
   return {
-    avatarUrl,
+    avatarTimestamp,
     allLabels,
     hints: suggestions.get('hints'),
     threads: suggestions.get('threads')
@@ -57,6 +58,20 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     openLogin: () => {
       openLoginWindow();
+    },
+    onSelectAccount: async ({ id, recipientId }) => {
+      await defineActiveAccountById(id);
+      const email = `${recipientId}@${appDomain}`;
+      showLoggedAsMessage(email);
+    },
+    getLoggedAccounts: async () => {
+      try {
+        return await getAccountByParams({
+          isLoggedIn: true
+        });
+      } catch (e) {
+        return [];
+      }
     }
   };
 };

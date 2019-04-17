@@ -49,6 +49,10 @@ ipc.answerRenderer('db-create-signed-prekey-record', params =>
 
 ipc.answerRenderer('db-create-tables', () => dbManager.createTables());
 
+ipc.answerRenderer('db-define-active-account-by-id', accountId =>
+  dbManager.defineActiveAccountById(accountId)
+);
+
 ipc.answerRenderer('db-delete-email-label', params =>
   dbManager.deleteEmailLabel(params)
 );
