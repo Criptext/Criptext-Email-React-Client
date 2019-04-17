@@ -1,20 +1,25 @@
+@import "./../styles/index.scss";
+
 .profile-shortcut-container .menu-container.menu-arrow.arrow-top-right{
   &:before, &:after {
     right: 10px;
   }
 }
 
-.profile-preview{
-  // padding: 20px 20px 0;
-  // padding: 20px 0px 0px 0px;
+#profiles-previews {
   width: 280px;
+  user-select: none;
 
-  .profile-preview-content{
+  .profile-preview-content {
     align-items: center;
     display: flex;
-    margin: 15px;
-    margin-bottom: 15px;
-    width: 100%;
+    padding: 15px;
+    width: calc(100% - 30px);
+    opacity: 0.80;
+
+    &:hover {
+      opacity: 1;
+    }
 
     .icon{
       align-items: center;
@@ -44,32 +49,17 @@
       }
 
       .email-address{
-        color: #a7a9ae;
         font-size: 13px;
         margin-top: 2px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-
-      .button-a{
-        background-color: #0091ff;
-        height: 25px;
-        margin-top: 5px;
-        width: 105px;
-
-        span{
-          font-size: 12px;
-          font-weight: 300;
-          text-transform: capitalize;
-          top: 0;
-        }
-      }
     }
   }
 
-  .profile-preview-controls{
-    border-top: 1px solid #eaeaea;
+  .profile-preview-controls {
+    border-top: 0.5px solid #eaeaea;
     display: flex;
 
     .button-b{
@@ -77,9 +67,10 @@
       align-items: center;
       display: flex;
       height: 40px;
+      opacity: 0.80;
 
       &:hover {
-        background-color: rgba($color: white, $alpha: 0.05);
+        opacity: 1;
       }
     }
     
@@ -88,3 +79,37 @@
     }
   }
 }
+
+/*  THEME
+----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    #profiles-previews {
+      .profile-preview-content {
+        &.active {
+          background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE;
+        }
+        &.logged {
+          background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED;
+        }
+
+        .profile-preview-detail {
+          > .name {
+            color: $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT;
+          }
+          > .email-address {
+            color: $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT;
+          }
+        }
+      }
+
+      .profile-preview-controls {
+        background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE;
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE_LIGHT, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED_LIGHT, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT_LIGHT, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE_DARK, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED_DARK, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT_DARK, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT_DARK);

@@ -25,29 +25,29 @@ const ProfileShortCut = props => (
       />
     </span>
     <MenuProfilePreview
-      avatarUrl={props.avatarUrl}
-      emailAddress={props.emailAddress}
-      letters={props.letters}
-      name={props.name}
+      loggedAccounts={props.loggedAccounts}
+      avatarTimestamp={props.avatarTimestamp}
       arrowPosition={MenuType.TOP_RIGHT}
       isHidden={props.isHiddenMenuProfilePreview}
       menuPosition={{ top: '48px', right: '-38px' }}
       onClickAddAccount={props.onClickAddAccount}
       onClickSettings={props.onClickSettings}
       onToggleMenu={props.onToggleMenuProfilePreview}
+      onSelectAccount={props.onClickSelectAccount}
     />
   </div>
 );
 
 ProfileShortCut.propTypes = {
+  avatarTimestamp: PropTypes.number,
   avatarUrl: PropTypes.string,
-  emailAddress: PropTypes.string,
   letters: PropTypes.string,
-  name: PropTypes.string,
+  loggedAccounts: PropTypes.array,
   isHiddenMenuProfilePreview: PropTypes.bool,
   onClickAddAccount: PropTypes.func,
   onClickSettings: PropTypes.func,
-  onToggleMenuProfilePreview: PropTypes.func
+  onToggleMenuProfilePreview: PropTypes.func,
+  onClickSelectAccount: PropTypes.func
 };
 
 export default ProfileShortCut;

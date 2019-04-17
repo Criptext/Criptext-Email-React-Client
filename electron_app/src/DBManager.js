@@ -21,11 +21,28 @@ const EMAIL_CONTACT_TYPE_FROM = 'from';
 ----------------------------- */
 const createAccount = params => {
   return db.transaction(async trx => {
+    const [accountId] = await trx.table(Table.ACCOUNT).insert(params);
+    await defineActiveAccountById(accountId, trx);
+    return [accountId];
+  });
+};
+
+const defineActiveAccountById = async (accountId, prevTrx) => {
+  const transaction = prevTrx ? fn => fn(prevTrx) : db.transaction;
+  await transaction(async trx => {
     await trx
       .table(Table.ACCOUNT)
       .where({ isActive: true })
       .update({ isActive: false });
-    return await trx.table(Table.ACCOUNT).insert(params);
+    await trx
+      .table(Table.ACCOUNT)
+      .where('id', accountId)
+      .update({ isActive: true });
+    const [activeAccount] = await trx
+      .table(Table.ACCOUNT)
+      .select('*')
+      .where({ isActive: true });
+    myAccount.update(activeAccount);
   });
 };
 
@@ -1159,6 +1176,7 @@ module.exports = {
   createSignedPreKeyRecord,
   createSignalTables,
   createTables,
+  defineActiveAccountById,
   deleteAccountByParams,
   deleteAccountContact,
   deleteEmailsByIds,
