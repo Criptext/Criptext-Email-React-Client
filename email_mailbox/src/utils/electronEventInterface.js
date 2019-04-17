@@ -1717,6 +1717,15 @@ export const sendManualSyncSuccessMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const showLoggedAsMessage = email => {
+  const messageData = {
+    ...Messages.success.loggedAs,
+    description: Messages.success.loggedAs.description + email,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 /*  Firebase
 ----------------------------- */
 ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, async (_, token) => {
