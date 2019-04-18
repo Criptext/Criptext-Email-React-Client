@@ -1,5 +1,6 @@
 const { Table, fieldTypes } = require('./../models');
 const {
+  TINY_STRING_SIZE,
   XSMALL_STRING_SIZE,
   LARGE_STRING_SIZE,
   MEDIUM_STRING_SIZE,
@@ -167,14 +168,29 @@ const addAccountIdToLabelTable = async (trx, accountId) => {
     'accountId'
   );
   if (columnAccountIdExists) return;
-
-  await trx.schema.table(Table.LABEL, table => {
+  // Duplicate table
+  const tempTablename = `old${Table.LABEL}`;
+  await trx.schema.renameTable(Table.LABEL, tempTablename);
+  await trx.schema.createTable(Table.LABEL, table => {
+    table.increments('id').primary();
+    table.string('text', MEDIUM_STRING_SIZE).notNullable();
+    table.string('color', TINY_STRING_SIZE).notNullable();
+    table.string('type', TINY_STRING_SIZE).defaultTo('custom');
+    table.boolean('visible').defaultTo(true);
+    table.uuid('uuid').notNullable();
     table.integer('accountId');
     table
       .foreign('accountId')
       .references('id')
       .inTable(Table.ACCOUNT);
+    table.unique(['text', 'accountId']);
   });
+  // Insert values
+  const prevValues = await trx.select('*').from(tempTablename);
+  if (prevValues.length) {
+    await trx.table(Table.LABEL).insert(prevValues);
+  }
+  await trx.schema.dropTable(tempTablename);
   await trx
     .table(Table.LABEL)
     .where({ type: 'system' })
@@ -192,6 +208,37 @@ const rollbackLabelTable = async knex => {
   if (!columnExists) return;
   return knex.schema.table(Table.LABEL, table => {
     table.dropColumn('accountId');
+  });
+};
+
+/*   EmailLabel table
+--------------------------*/
+const updateEmailLabelTable = async trx => {
+  const tempTablename = `old${Table.EMAIL_LABEL}`;
+  await trx.schema.renameTable(Table.EMAIL_LABEL, tempTablename);
+  await trx.schema.createTable(Table.EMAIL_LABEL, table => {
+    table.increments('id').primary();
+    table.integer('labelId').notNullable();
+    table.string('emailId', SMALL_STRING_SIZE).notNullable();
+    table
+      .foreign('labelId')
+      .references('id')
+      .inTable(Table.LABEL);
+    table
+      .foreign('emailId')
+      .references('id')
+      .inTable(Table.EMAIL);
+  });
+  const prevValues = await trx.select('*').from(tempTablename);
+  if (prevValues.length) {
+    await trx.table(Table.EMAIL_LABEL).insert(prevValues);
+  }
+  await trx.schema.dropTable(tempTablename);
+};
+
+const rollbackEmailLabelTable = async knex => {
+  await knex.schema.table(Table.EMAIL_LABEL, table => {
+    table.unique(['emailId', 'labelId']);
   });
 };
 
@@ -479,6 +526,7 @@ exports.up = async knex => {
     await createAccountContactTable(trx, accountId);
     await addAccountIdToEmailTable(trx, accountId);
     await addAccountIdToLabelTable(trx, accountId);
+    await updateEmailLabelTable(trx);
     await addAccountIdToPendingEventTable(trx, accountId);
     await addAccountIdToIdentityKeyRecordTable(trx, accountId);
     await addAccountIdToPreKeyRecordTable(trx, accountId);
@@ -496,6 +544,7 @@ exports.down = async (knex, Promise) => {
     rollbackAccountContactTable(knex),
     rollbackEmailTable(knex),
     rollbackLabelTable(knex),
+    rollbackEmailLabelTable(knex),
     rollbackPendingEventTable(knex),
     rollbackIdentityKeyRecordTable(knex),
     rollbackPreKeyRecordTable(knex),

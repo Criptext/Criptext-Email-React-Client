@@ -340,7 +340,11 @@ const exportDatabaseToFile = async ({ databasePath, outputPath }) => {
   closeDatabaseConnection(dbConn);
 };
 
-let contactIdsMapped = {};
+let relationsMap = {
+  [Table.CONTACT]: {},
+  [Table.LABEL]: {},
+  [Table.EMAIL]: {}
+};
 
 /* Import Database from String
 ------------------------------- */
@@ -359,6 +363,42 @@ const importDatabaseFromFile = async ({
 
   return dbConn.transaction(trx => {
     const lineReader = new LineByLineReader(filepath);
+
+    const insertContactBatch = async contactBatch => {
+      const contactIdsByAccount = await mapRelationsAndInsert(
+        Table.CONTACT,
+        contactBatch,
+        'email',
+        trx
+      );
+      const accountContactRelations = contactIdsByAccount.map(contactId => ({
+        contactId,
+        accountId
+      }));
+      await trx.insert(accountContactRelations).into(Table.ACCOUNT_CONTACT);
+    };
+
+    const insertLabelBatch = async labelBatch => {
+      await mapRelationsAndInsert(Table.LABEL, labelBatch, null, trx);
+    };
+
+    const insertEmailBatch = async emailBatch => {
+      await storeEmailBodies(emailBatch);
+      await mapRelationsAndInsert(Table.EMAIL, emailBatch, null, trx);
+    };
+
+    const insertEmailContactBatch = async emailContactBatch => {
+      await trx.insert(emailContactBatch).into(Table.EMAIL_CONTACT);
+    };
+
+    const insertEmailLabelBatch = async emailLabelBatch => {
+      await trx.insert(emailLabelBatch).into(Table.EMAIL_LABEL);
+    };
+
+    const insertFileBatch = async fileBatch => {
+      await trx.insert(fileBatch).into(Table.FILE);
+    };
+
     return new Promise(resolve => {
       lineReader
         .on('line', async line => {
@@ -368,84 +408,121 @@ const importDatabaseFromFile = async ({
               contacts.push(object);
               if (contacts.length === CONTACTS_BATCH) {
                 lineReader.pause();
-                const contactIdsByAccount = await populateContactMapAndInsert(
-                  contacts,
-                  trx
-                );
-                const accountContactRelations = contactIdsByAccount.map(
-                  contactId => ({ contactId, accountId })
-                );
-                await trx
-                  .insert(accountContactRelations)
-                  .into(Table.ACCOUNT_CONTACT);
+                await insertContactBatch(contacts);
                 contacts = [];
                 lineReader.resume();
               }
               break;
             }
+
             case Table.LABEL: {
-              labels.push(Object.assign(object, { accountId }));
+              const updatedObject = Object.assign(object, { accountId });
+              labels.push(updatedObject);
               if (labels.length === LABELS_BATCH) {
                 lineReader.pause();
-                await trx.insert(labels).into(Table.LABEL);
+                await insertLabelBatch(labels);
                 labels = [];
                 lineReader.resume();
               }
               break;
             }
+
             case Table.EMAIL: {
               const { delivered, metadataKey, unsentDate } = object;
               delete object.delivered;
               delete object.metadataKey;
               delete object.unsentDate;
-              const parsedEmail = Object.assign(
-                {
-                  key: metadataKey || object.key,
-                  unsendDate: unsentDate || object.unsendDate,
-                  status: object.status || delivered,
-                  accountId
-                },
-                object
-              );
+              const parsedEmail = Object.assign(object, {
+                key: metadataKey || object.key,
+                unsendDate: unsentDate || object.unsendDate,
+                status: object.status || delivered,
+                accountId
+              });
               emails.push(parsedEmail);
               if (emails.length === EMAILS_BATCH) {
                 lineReader.pause();
-                await storeEmailBodies(emails);
-                await trx.insert(emails).into(Table.EMAIL);
+                await insertEmailBatch(emails);
                 emails = [];
                 lineReader.resume();
               }
               break;
             }
+
             case 'email_contact': {
-              const updatedObject = Object.assign(object, {
+              // Insert Remaining Previous Data
+              if (emails.length) {
+                lineReader.pause();
+                await insertEmailBatch(emails);
+                emails = [];
+                lineReader.resume();
+              }
+              if (contacts.length) {
+                lineReader.pause();
+                await insertContactBatch(contacts);
+                contacts = [];
+                lineReader.resume();
+              }
+              const updatedObject = {
                 contactId:
-                  contactIdsMapped[object.contactId] || object.contactId
-              });
+                  relationsMap[Table.CONTACT][object.contactId] ||
+                  object.contactId,
+                emailId:
+                  relationsMap[Table.EMAIL][object.emailId] || object.emailId,
+                type: object.type
+              };
               emailContacts.push(updatedObject);
               if (emailContacts.length === EMAIL_CONTACTS_BATCH) {
                 lineReader.pause();
-                await trx.insert(emailContacts).into(Table.EMAIL_CONTACT);
+                await insertEmailContactBatch(emailContacts);
                 emailContacts = [];
                 lineReader.resume();
               }
               break;
             }
+
             case 'email_label': {
-              emailLabels.push(object);
+              // Insert Remaining Dependencies
+              if (emails.length) {
+                lineReader.pause();
+                await insertEmailBatch(emails);
+                emails = [];
+                lineReader.resume();
+              }
+              if (labels.length) {
+                lineReader.pause();
+                await insertLabelBatch(labels);
+                labels = [];
+                lineReader.resume();
+              }
+              const updatedObject = {
+                labelId:
+                  relationsMap[Table.LABEL][object.labelId] || object.labelId,
+                emailId:
+                  relationsMap[Table.EMAIL][object.emailId] || object.emailId
+              };
+              emailLabels.push(updatedObject);
               if (emailLabels.length === EMAIL_LABELS_BATCH) {
                 lineReader.pause();
-                await trx.insert(emailLabels).into(Table.EMAIL_LABEL);
+                await insertEmailLabelBatch(emailLabels);
                 emailLabels = [];
                 lineReader.resume();
               }
               break;
             }
+
             case Table.FILE: {
+              // Insert Remaining Dependencies
+              if (emails.length) {
+                lineReader.pause();
+                await insertEmailBatch(emails);
+                emails = [];
+                lineReader.resume();
+              }
+              delete object.id;
               files.push(object);
               if (files.length === FILES_BATCH) {
                 lineReader.pause();
-                await trx.insert(files).into(Table.FILE);
+                await insertFileBatch(files);
                 files = [];
                 lineReader.resume();
               }
@@ -457,58 +534,68 @@ const importDatabaseFromFile = async ({
         })
         .on('error', console.log)
         .on('end', async () => {
-          const contactIdsByAccount = await populateContactMapAndInsert(
-            contacts,
-            trx
-          );
-          const accountContactRelations = contactIdsByAccount.map(
-            contactId => ({ contactId, accountId })
-          );
-          await trx.insert(accountContactRelations).into(Table.ACCOUNT_CONTACT);
-          contactIdsMapped = {};
-          await insertRemainingRows(labels, Table.LABEL, trx);
-          await storeEmailBodies(emails);
-          await insertRemainingRows(emails, Table.EMAIL, trx);
-          await insertRemainingRows(emailContacts, Table.EMAIL_CONTACT, trx);
-          await insertRemainingRows(emailLabels, Table.EMAIL_LABEL, trx);
-          await insertRemainingRows(files, Table.FILE, trx);
+          if (emailContacts.length) {
+            await insertEmailContactBatch(emailContacts);
+            emailContacts = [];
+          }
+          if (emailLabels.length) {
+            await insertEmailLabelBatch(emailLabels);
+            emailLabels = [];
+          }
+          if (files.length) {
+            await insertFileBatch(files);
+            files = [];
+          }
+          relationsMap = {
+            [Table.CONTACT]: {},
+            [Table.LABEL]: {},
+            [Table.EMAIL]: {}
+          };
           resolve();
         });
     });
   });
 };
 
-const populateContactMapAndInsert = async (contacts, trx) => {
-  const emails = contacts.map(contact => contact.email);
-  const foundContacts = await trx
-    .select('*')
-    .from(Table.CONTACT)
-    .whereIn('email', emails);
-  for (const found of foundContacts) {
-    const prevContact = contacts.find(contact => contact.email === found.email);
-    contactIdsMapped[prevContact.id] = found.id;
+const mapRelationsAndInsert = async (table, rows, uniqueField, trx) => {
+  let foundIds = [];
+  let nonExistingRows = rows;
+  if (typeof uniqueField === 'string') {
+    const uniqueValuesArray = rows.map(row => row[uniqueField]);
+    const foundValues = await trx
+      .select('*')
+      .from(table)
+      .whereIn(`${uniqueField}`, uniqueValuesArray);
+    for (const found of foundValues) {
+      const existingRow = rows.find(
+        row => row[uniqueField] === found[uniqueField]
+      );
+      relationsMap[table][existingRow.id] = found.id;
+    }
+    foundIds = foundValues.map(row => row.id);
+    nonExistingRows = rows.filter(row => !relationsMap[table][row.id]);
   }
-  const newContacts = contacts.filter(contact => !contactIdsMapped[contact.id]);
   let insertedIds = [];
-  if (newContacts.length) {
-    const contactToInsert = newContacts.map(item => ({
-      email: item.email,
-      name: item.name,
-      isTrusted: item.isTrusted
-    }));
-    const [lastInsertedId] = await trx
-      .insert(contactToInsert)
-      .into(Table.CONTACT);
-    insertedIds = Array.apply(null, { length: newContacts.length }).map(
-      (it, index) => index + (lastInsertedId - newContacts.length + 1)
-    );
-    for (let i = 0; i < newContacts.length; i++) {
-      const contact = newContacts[i];
-      contactIdsMapped[contact.id] = insertedIds[i];
+  if (nonExistingRows.length) {
+    const valuesToInsert = nonExistingRows.map(row => {
+      const newRow = Object.assign({}, row);
+      delete newRow.id;
+      return newRow;
+    });
+    const [lastInsertedId] = await trx.insert(valuesToInsert).into(table);
+    insertedIds = generateIdsArray(nonExistingRows.length, lastInsertedId);
+    for (let i = 0; i < nonExistingRows.length; i++) {
+      const nonExistingRow = nonExistingRows[i];
+      relationsMap[table][nonExistingRow.id] = insertedIds[i];
     }
   }
-  const foundIds = foundContacts.map(found => found.id);
   return [...foundIds, ...insertedIds];
+};
+
+const generateIdsArray = (length, lastNumber) => {
+  return Array.apply(null, { length }).map(
+    (it, index) => index + (lastNumber - length + 1)
+  );
 };
 
 const storeEmailBodies = emailRows => {
@@ -522,12 +609,6 @@ const storeEmailBodies = emailRows => {
       return saveEmailBody({ body, headers, username, metadataKey: email.key });
     })
   );
-};
-
-const insertRemainingRows = async (rows, tablename, trx) => {
-  if (rows.length > 0) {
-    return await trx.insert(rows).into(tablename);
-  }
 };
 
 /* Encrypt and Decrypt
