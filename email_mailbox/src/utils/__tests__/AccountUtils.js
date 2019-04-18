@@ -1,6 +1,6 @@
 /* eslint-env node, jest */
 
-import { compareAccounts } from "../AccountUtils";
+import { compareAccounts } from '../AccountUtils';
 
 jest.mock('./../../utils/electronInterface');
 jest.mock('./../../utils/ipc');
@@ -13,7 +13,7 @@ describe('Account Utils - ', () => {
       { name: 'UserB', isLoggedIn: false, isActive: false },
       { name: 'UserE', isLoggedIn: true, isActive: true },
       { name: 'UserC', isLoggedIn: false, isActive: false },
-      { name: 'UserD', isLoggedIn: true, isActive: false },
+      { name: 'UserD', isLoggedIn: true, isActive: false }
     ];
     const expectedOrder = [
       { name: 'UserE', isLoggedIn: true, isActive: true },
