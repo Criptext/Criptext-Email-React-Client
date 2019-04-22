@@ -611,6 +611,7 @@ const formStringSeparatedByOperator = (array, operator = ',') => {
 
 const getEmailsGroupByThreadByParams = (params = {}) => {
   const {
+    accountId = myAccount.id,
     contactFilter,
     contactTypes = ['from'],
     date,
@@ -618,8 +619,8 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
     limit,
     plain,
     rejectedLabelIds,
-    threadIdRejected,
     subject,
+    threadIdRejected,
     text,
     unread
   } = params;
@@ -731,7 +732,7 @@ const getEmailsGroupByThreadByParams = (params = {}) => {
   ${labelWhereQuery}
   ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
   AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
-  AND ${Table.EMAIL}.accountId = ${myAccount.id}
+  AND ${Table.EMAIL}.accountId = ${accountId}
   ${textQuery}
   ${subject ? `AND subject LIKE %${subject}%` : ''}
   ${unread !== undefined ? `AND unread = ${unread}` : ''}
