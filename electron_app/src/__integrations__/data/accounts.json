@@ -1,0 +1,41 @@
+{
+  "accounts": [
+    {
+      "recipientId": "usera",
+      "name": "User A",
+      "deviceId": 1,
+      "jwt": "asdfghjkl",
+      "refreshToken": "lkjhgfdsa",
+      "privKey": "privA",
+      "pubKey": "pubA",
+      "registrationId": 666,
+      "isActive": true,
+      "isLoggedIn": true
+    },
+    {
+      "recipientId": "userb",
+      "name": "User B",
+      "deviceId": 1,
+      "jwt": "asdfghjkl-B",
+      "refreshToken": "lkjhgfdsa-B",
+      "privKey": "privB",
+      "pubKey": "pubB",
+      "registrationId": 667,
+      "isActive": false,
+      "isLoggedIn": true
+    },
+
+    {
+      "recipientId": "userc",
+      "name": "User C",
+      "deviceId": 1,
+      "jwt": "asdfghjkl-C",
+      "refreshToken": "lkjhgfdsa-C",
+      "privKey": "privC",
+      "pubKey": "pubC",
+      "registrationId": 668,
+      "isActive": false,
+      "isLoggedIn": false
+    }
+  ]
+}
