@@ -1,19 +1,28 @@
 /* eslint-env node, jest */
 
 const DBManager = require('../DBManager');
+const { accounts } = require('./data/accounts.json');
+const accountA = accounts[0];
 
+let accountId;
 const contact = {
   email: 'user@domain.com',
   name: 'User'
 };
 
+const insertAccount = async () => {
+  [accountId] = await DBManager.createAccount(accountA);
+};
+
 const insertContact = async () => {
-  await DBManager.createContact(contact);
+  const updatedContact = Object.assign(contact, { accountId });
+  await DBManager.createContact(updatedContact);
 };
 
 beforeAll(async () => {
   await DBManager.cleanDataBase();
   await DBManager.createTables();
+  await insertAccount();
   await insertContact();
 });
 
@@ -21,7 +30,8 @@ describe('Store data contact to Contact Table:', () => {
   it('should insert contact to database', async () => {
     const contact = {
       email: 'userhello@domain.com',
-      name: 'User Hello'
+      name: 'User Hello',
+      accountId
     };
     await DBManager.createContact(contact);
     const emails = [contact.email];
