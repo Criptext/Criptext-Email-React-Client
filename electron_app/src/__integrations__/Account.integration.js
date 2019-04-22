@@ -7,7 +7,7 @@ const accountA = accounts[0];
 const accountB = accounts[1];
 const accountC = accounts[2];
 
-const createAccount = async (account) => {
+const createAccount = async account => {
   return await DBManager.createAccount(account);
 };
 
@@ -23,7 +23,7 @@ describe('Store account data to Account Table: ', () => {
     const parsedResult = Object.assign(result, {
       isActive: !!result.isActive,
       isLoggedIn: !!result.isLoggedIn
-    })
+    });
     expect(parsedResult).toMatchObject(
       expect.objectContaining({
         recipientId: accountA.recipientId,
@@ -73,8 +73,8 @@ describe('Load account data from Account Table: ', () => {
     const loggedAccounts = await DBManager.getAccountByParams({
       isLoggedIn: true
     });
-    const parsedAccounts = loggedAccounts.map(
-      account => Object.assign(account, {
+    const parsedAccounts = loggedAccounts.map(account =>
+      Object.assign(account, {
         isActive: !!account.isActive,
         isLoggedIn: !!account.isLoggedIn
       })
