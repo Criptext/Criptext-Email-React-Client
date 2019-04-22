@@ -3,6 +3,7 @@
 exports[`TABLE[Label]: should create label to db 1`] = `
 Array [
   Object {
+    "accountId": null,
     "color": "111111",
     "id": 1,
     "text": "Inbox",
@@ -11,6 +12,7 @@ Array [
     "visible": 1,
   },
   Object {
+    "accountId": null,
     "color": "222222",
     "id": 2,
     "text": "Sent",
