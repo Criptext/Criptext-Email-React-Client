@@ -25,7 +25,6 @@ const SettngsGeneralManualSync = props => {
             props.onShowSettingsPopup(popupType);
           }}
           disabled={!disabled}
-          title={'hello'}
         >
           <span>{mailbox_sync.button}</span>
         </button>

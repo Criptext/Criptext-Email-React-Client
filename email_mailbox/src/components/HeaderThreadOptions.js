@@ -94,9 +94,9 @@ class HeaderThreadOptions extends Component {
           <ul className="multiselect-list">
             <li onClick={() => this.props.onClickMarkAsRead()}>
               <span>
-                {!markAsUnread
-                  ? string.mailbox.mark_as_unread
-                  : string.mailbox.mark_as_read}
+                {markAsUnread
+                  ? string.mailbox.mark_as_read
+                  : string.mailbox.mark_as_unread}
               </span>
             </li>
             {!this.props.itemsChecked && (
