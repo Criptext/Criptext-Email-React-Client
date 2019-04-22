@@ -1,260 +1,25 @@
 /* eslint-env node, jest */
 const DBManager = require('../DBManager');
 const systemLabels = require('./../systemLabels');
+const { accounts } = require('./data/accounts.json');
+const {
+  emailDraft,
+  emailSent,
+  emailInbox,
+  emailReply,
+  emailSpam,
+  emailStarred,
+  emailScore,
+  emailUpdate,
+  emailToSearch,
+  draftToReplaceOld
+} = require('./data/emails.json');
 
-const emailDraft = {
-  email: {
-    threadId: 'threadA',
-    key: 'keyA',
-    s3Key: 's3KeyA',
-    subject: 'Greetings',
-    content: '<p>Hello there</p>',
-    preview: 'Hello there',
-    date: '2013-10-07 08:23:19.120',
-    status: 0,
-    unread: true,
-    secure: true,
-    isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdA',
-    fromAddress: '<User me> <user@criptext.com>'
-  },
-  recipients: {
-    from: ['<User me> <user@criptext.com>']
-  },
-  labels: [5, 6]
-};
+let accountId;
+const accountA = accounts[0];
 
-const emailSent = {
-  email: {
-    threadId: 'threadB',
-    key: 'keyB',
-    s3Key: 's3KeyB',
-    subject: 'Greetings',
-    content: '<p>Hello there</p>',
-    preview: 'Hello there',
-    date: '2013-10-07 08:23:19.120',
-    status: 1,
-    unread: true,
-    secure: true,
-    isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdB',
-    fromAddress: 'User me <user@criptext.com>'
-  },
-  recipients: {
-    from: ['User me <user@criptext.com>'],
-    to: ['usera@criptext.com', 'userb@criptext.com'],
-    cc: ['userc@criptext.com'],
-    bcc: ['userd@criptext.com']
-  },
-  labels: [3]
-};
-
-const emailInbox = {
-  email: {
-    threadId: 'threadC',
-    key: 'keyC',
-    s3Key: 's3KeyC',
-    subject: 'Greetings',
-    content: '<p>Hello there</p>',
-    preview: 'Hello there',
-    date: '2018-06-14 08:23:19.120',
-    status: 0,
-    unread: true,
-    secure: true,
-    isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdC',
-    fromAddress: 'User A <usera@criptext.com>'
-  },
-  recipients: {
-    from: ['User A <usera@criptext.com>'],
-    to: ['user@criptext.com', 'userb@criptext.com'],
-    cc: ['userc@criptext.com'],
-    bcc: ['userd@criptext.com']
-  },
-  labels: [1],
-  files: [
-    {
-      token: 'tokenC',
-      name: 'Criptext_Image_2018_06_14.png',
-      readOnly: false,
-      size: 183241,
-      status: 1,
-      date: '2018-06-14T23:45:57.466Z',
-      mimeType: 'image/png'
-    }
-  ]
-};
-
-const emailReply = {
-  email: {
-    threadId: 'threadC',
-    key: 'keyD',
-    s3Key: 's3KeyD',
-    subject: 'Greetings',
-    content: '<p>RE: Hello there</p>',
-    preview: 'RE: Hello there',
-    date: '2018-06-15 08:23:19.120',
-    status: 0,
-    unread: true,
-    secure: true,
-    isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdD',
-    fromAddress: 'user@criptext.com'
-  },
-  recipients: {
-    from: ['user@criptext.com'],
-    to: ['usera@criptext.com']
-  },
-  labels: [3]
-};
-
-const emailSpam = {
-  email: {
-    threadId: 'threadE',
-    key: 'keyE',
-    s3Key: 's3KeyE',
-    subject: 'Greetings',
-    content: '<p>Hello there</p>',
-    preview: 'Hello there',
-    date: '2018-09-11 14:38:19.120',
-    status: 5,
-    unread: true,
-    secure: true,
-    isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
-    trashDate: null,
-    messageId: 'messageIdE',
-    fromAddress: 'user@criptext.com'
-  },
-  recipients: {
-    from: ['user@criptext.com'],
-    to: ['usera@criptext.com']
-  },
-  labels: [2]
-};
-
-const emailStarred = {
-  email: {
-    threadId: 'threadF',
-    key: 'keyF',
-    s3Key: 's3KeyF',
-    subject: 'Greetings there',
-    content: '<p>Hello there</p>',
-    preview: 'Hello there',
-    date: '2013-09-11 08:23:19.120',
-    status: 5,
-    unread: false,
-    secure: false,
-    isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
-    trashDate: null,
-    messageId: 'messageIdF',
-    fromAddress: 'User me <user@criptext.com>'
-  },
-  recipients: {
-    from: ['User me <user@criptext.com>'],
-    to: ['usera@criptext.com', 'userb@criptext.com']
-  },
-  labels: [4]
-};
-
-const emailScore = {
-  email: {
-    threadId: 'threadG',
-    key: 'keyG',
-    s3Key: 's3KeyG',
-    subject: 'Greetings there',
-    content: '<p>Hello there</p>',
-    preview: 'Hello there',
-    date: '2014-09-11 09:23:19.120',
-    status: 5,
-    unread: false,
-    secure: false,
-    isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
-    trashDate: null,
-    messageId: 'messageIdG',
-    fromAddress: 'User me <user@criptext.com>'
-  },
-  recipients: {
-    from: ['User me <user@criptext.com>'],
-    to: ['userscore@criptext.com']
-  },
-  labels: [3]
-};
-
-const emailUpdate = {
-  email: {
-    threadId: 'threadH',
-    key: 'keyH',
-    s3Key: 's3KeyH',
-    subject: 'Greetings',
-    content: '<p>Hello there</p>',
-    preview: 'Hello there',
-    date: '2013-10-07 08:23:20.120',
-    status: 1,
-    unread: true,
-    secure: true,
-    isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
-    messageId: 'messageIdH',
-    fromAddress: 'User me <user@criptext.com>'
-  },
-  recipients: {
-    from: ['User me <user@criptext.com>'],
-    to: ['usera@criptext.com', 'userb@criptext.com']
-  },
-  labels: [3]
-};
-
-const emailToSearch = {
-  email: {
-    threadId: 'threadIdSearch',
-    key: 'keyI',
-    s3Key: 's3KeyI',
-    subject: 'Lorem ipsum is amet',
-    content: '<p>Find me!</p>',
-    preview: 'Find me!',
-    date: '2019-02-26 16:55:25.000',
-    status: 1,
-    unread: true,
-    secure: true,
-    isMuted: false,
-    messageId: 'messageIdI',
-    fromAddress: 'Alice <alice@criptext.com>'
-  },
-  recipients: {
-    from: ['Alice <alice@criptext.com>'],
-    to: ['bob@criptext.com']
-  },
-  labels: [6]
-};
-
-const draftToReplaceOld = {
-  email: {
-    threadId: 'threadJ',
-    key: 'keyJ',
-    s3Key: 's3KeyJ',
-    subject: 'New Draft',
-    content: '<p>I am a edited draft</p>',
-    preview: 'I am a edited draft',
-    date: '2013-03-01 16:44:00.000',
-    status: 0,
-    unread: false,
-    secure: true,
-    isMuted: false,
-    messageId: 'messageIdJ',
-    fromAddress: '<User me> <user@criptext.com>'
-  },
-  recipients: {
-    from: ['<User me> <user@criptext.com>'],
-    to: ['toUser@criptext.com']
-  },
-  labels: [6]
+const insertAccount = async () => {
+  [accountId] = await DBManager.createAccount(accountA);
 };
 
 const insertEmails = async () => {
@@ -271,6 +36,7 @@ const insertEmails = async () => {
 beforeAll(async () => {
   await DBManager.cleanDataBase();
   await DBManager.createTables();
+  await insertAccount();
   await insertEmails();
 });
 
@@ -291,7 +57,8 @@ describe('Store data email to Email Table:', () => {
         isMuted: false,
         unsendDate: '2018-06-14 08:23:20.000',
         messageId: 'messageId',
-        fromAddress: 'From Contact <from@criptext.com>'
+        fromAddress: 'From Contact <from@criptext.com>',
+        accountId
       }
     });
     const key = 'keyId';
@@ -467,7 +234,8 @@ describe('Load data thread from Email Table:', () => {
   it('should load threads from DB with the correct shape: inbox', async () => {
     const params = {
       labelId: 1,
-      rejectedLabelIds: [2, 6]
+      rejectedLabelIds: [2, 6],
+      accountId
     };
     const threads = await DBManager.getEmailsGroupByThreadByParams(params);
     expect(threads).toMatchSnapshot();
@@ -476,7 +244,8 @@ describe('Load data thread from Email Table:', () => {
   it('should load threads from DB with the correct shape: sent', async () => {
     const params = {
       labelId: 3,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const threads = await DBManager.getEmailsGroupByThreadByParams(params);
     expect(threads).toMatchSnapshot();
@@ -486,7 +255,8 @@ describe('Load data thread from Email Table:', () => {
     const params = {
       labelId: 1,
       rejectedLabelIds: [2, 7],
-      limit: 1
+      limit: 1,
+      accountId
     };
     const [lastThread] = await DBManager.getEmailsGroupByThreadByParams(params);
     const maxDate = lastThread.maxDate;
@@ -502,7 +272,8 @@ describe('Load data thread from Email Table:', () => {
       rejectedLabelIds: [2, 7],
       limit: 1,
       date: maxDate,
-      threadIdRejected
+      threadIdRejected,
+      accountId
     };
     const moreLastThreads = await DBManager.getEmailsGroupByThreadByParams(
       moreParams
@@ -516,25 +287,29 @@ describe('Load data thread from Email Table:', () => {
       plain: true,
       text: 'Find me',
       labelId: -2,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const plainParamsPreview = {
       plain: true,
       text: 'Lorem',
       labelId: -2,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const specificParamsFrom = {
       contactFilter: { from: 'Alice' },
       contactTypes: ['from'],
       labelId: -2,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const specificParamsTo = {
       contactFilter: { to: 'bob' },
       contactTypes: ['to'],
       labelId: -2,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const [plainSubjectFound] = await DBManager.getEmailsGroupByThreadByParams(
       plainParamsSubject

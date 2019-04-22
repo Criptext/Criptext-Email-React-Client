@@ -1,0 +1,266 @@
+{
+  "emailDraft": {
+    "email": {
+      "threadId": "threadA",
+      "key": "keyA",
+      "s3Key": "s3KeyA",
+      "subject": "Greetings",
+      "content": "<p>Hello there</p>",
+      "preview": "Hello there",
+      "date": "2013-10-07 08:23:19.120",
+      "status": 0,
+      "unread": true,
+      "secure": true,
+      "isMuted": false,
+      "unsendDate": "2018-06-14 08:23:20.000",
+      "messageId": "messageIdA",
+      "fromAddress": "<User me> <user@criptext.com>",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["<User me> <user@criptext.com>"]
+    },
+    "labels": [5, 6]
+  },
+
+  "emailSent": {
+    "email": {
+      "threadId": "threadB",
+      "key": "keyB",
+      "s3Key": "s3KeyB",
+      "subject": "Greetings",
+      "content": "<p>Hello there</p>",
+      "preview": "Hello there",
+      "date": "2013-10-07 08:23:19.120",
+      "status": 1,
+      "unread": true,
+      "secure": true,
+      "isMuted": false,
+      "unsendDate": "2018-06-14 08:23:20.000",
+      "messageId": "messageIdB",
+      "fromAddress": "User me <user@criptext.com>",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["User me <user@criptext.com>"],
+      "to": ["usera@criptext.com", "userb@criptext.com"],
+      "cc": ["userc@criptext.com"],
+      "bcc": ["userd@criptext.com"]
+    },
+    "labels": [3]
+  },
+
+  "emailInbox": {
+    "email": {
+      "threadId": "threadC",
+      "key": "keyC",
+      "s3Key": "s3KeyC",
+      "subject": "Greetings",
+      "content": "<p>Hello there</p>",
+      "preview": "Hello there",
+      "date": "2018-06-14 08:23:19.120",
+      "status": 0,
+      "unread": true,
+      "secure": true,
+      "isMuted": false,
+      "unsendDate": "2018-06-14 08:23:20.000",
+      "messageId": "messageIdC",
+      "fromAddress": "User A <usera@criptext.com>",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["User A <usera@criptext.com>"],
+      "to": ["user@criptext.com", "userb@criptext.com"],
+      "cc": ["userc@criptext.com"],
+      "bcc": ["userd@criptext.com"]
+    },
+    "labels": [1],
+    "files": [
+      {
+        "token": "tokenC",
+        "name": "Criptext_Image_2018_06_14.png",
+        "readOnly": false,
+        "size": 183241,
+        "status": 1,
+        "date": "2018-06-14T23:45:57.466Z",
+        "mimeType": "image/png"
+      }
+    ]
+  },
+
+  "emailReply": {
+    "email": {
+      "threadId": "threadC",
+      "key": "keyD",
+      "s3Key": "s3KeyD",
+      "subject": "Greetings",
+      "content": "<p>RE: Hello there</p>",
+      "preview": "RE: Hello there",
+      "date": "2018-06-15 08:23:19.120",
+      "status": 0,
+      "unread": true,
+      "secure": true,
+      "isMuted": false,
+      "unsendDate": "2018-06-14 08:23:20.000",
+      "messageId": "messageIdD",
+      "fromAddress": "user@criptext.com",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["user@criptext.com"],
+      "to": ["usera@criptext.com"]
+    },
+    "labels": [3]
+  },
+
+  "emailSpam": {
+    "email": {
+      "threadId": "threadE",
+      "key": "keyE",
+      "s3Key": "s3KeyE",
+      "subject": "Greetings",
+      "content": "<p>Hello there</p>",
+      "preview": "Hello there",
+      "date": "2018-09-11 14:38:19.120",
+      "status": 5,
+      "unread": true,
+      "secure": true,
+      "isMuted": false,
+      "unsendDate": "2018-06-14 08:23:20.000",
+      "trashDate": null,
+      "messageId": "messageIdE",
+      "fromAddress": "user@criptext.com",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["user@criptext.com"],
+      "to": ["usera@criptext.com"]
+    },
+    "labels": [2]
+  },
+  
+  "emailStarred": {
+    "email": {
+      "threadId": "threadF",
+      "key": "keyF",
+      "s3Key": "s3KeyF",
+      "subject": "Greetings there",
+      "content": "<p>Hello there</p>",
+      "preview": "Hello there",
+      "date": "2013-09-11 08:23:19.120",
+      "status": 5,
+      "unread": false,
+      "secure": false,
+      "isMuted": false,
+      "unsendDate": "2018-06-14 08:23:20.000",
+      "trashDate": null,
+      "messageId": "messageIdF",
+      "fromAddress": "User me <user@criptext.com>",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["User me <user@criptext.com>"],
+      "to": ["usera@criptext.com", "userb@criptext.com"]
+    },
+    "labels": [4]
+  },
+  
+  "emailScore": {
+    "email": {
+      "threadId": "threadG",
+      "key": "keyG",
+      "s3Key": "s3KeyG",
+      "subject": "Greetings there",
+      "content": "<p>Hello there</p>",
+      "preview": "Hello there",
+      "date": "2014-09-11 09:23:19.120",
+      "status": 5,
+      "unread": false,
+      "secure": false,
+      "isMuted": false,
+      "unsendDate": "2018-06-14 08:23:20.000",
+      "trashDate": null,
+      "messageId": "messageIdG",
+      "fromAddress": "User me <user@criptext.com>",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["User me <user@criptext.com>"],
+      "to": ["userscore@criptext.com"]
+    },
+    "labels": [3]
+  },
+  
+  "emailUpdate": {
+    "email": {
+      "threadId": "threadH",
+      "key": "keyH",
+      "s3Key": "s3KeyH",
+      "subject": "Greetings",
+      "content": "<p>Hello there</p>",
+      "preview": "Hello there",
+      "date": "2013-10-07 08:23:20.120",
+      "status": 1,
+      "unread": true,
+      "secure": true,
+      "isMuted": false,
+      "unsendDate": "2018-06-14 08:23:20.000",
+      "messageId": "messageIdH",
+      "fromAddress": "User me <user@criptext.com>",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["User me <user@criptext.com>"],
+      "to": ["usera@criptext.com", "userb@criptext.com"]
+    },
+    "labels": [3]
+  },
+  
+  "emailToSearch": {
+    "email": {
+      "threadId": "threadIdSearch",
+      "key": "keyI",
+      "s3Key": "s3KeyI",
+      "subject": "Lorem ipsum is amet",
+      "content": "<p>Find me!</p>",
+      "preview": "Find me!",
+      "date": "2019-02-26 16:55:25.000",
+      "status": 1,
+      "unread": true,
+      "secure": true,
+      "isMuted": false,
+      "messageId": "messageIdI",
+      "fromAddress": "Alice <alice@criptext.com>",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["Alice <alice@criptext.com>"],
+      "to": ["bob@criptext.com"]
+    },
+    "labels": [6]
+  },
+  
+  "draftToReplaceOld": {
+    "email": {
+      "threadId": "threadJ",
+      "key": "keyJ",
+      "s3Key": "s3KeyJ",
+      "subject": "New Draft",
+      "content": "<p>I am a edited draft</p>",
+      "preview": "I am a edited draft",
+      "date": "2013-03-01 16:44:00.000",
+      "status": 0,
+      "unread": false,
+      "secure": true,
+      "isMuted": false,
+      "messageId": "messageIdJ",
+      "fromAddress": "<User me> <user@criptext.com>",
+      "accountId": 1
+    },
+    "recipients": {
+      "from": ["<User me> <user@criptext.com>"],
+      "to": ["toUser@criptext.com"]
+    },
+    "labels": [6]
+  }
+}

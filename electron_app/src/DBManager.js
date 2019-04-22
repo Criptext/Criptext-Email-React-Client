@@ -757,6 +757,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
 
 const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   const {
+    accountId = myAccount.id,
     contactFilter,
     contactTypes = ['from'],
     date,
@@ -764,8 +765,8 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
     limit,
     plain,
     rejectedLabelIds,
-    threadIdRejected,
     subject,
+    threadIdRejected,
     text,
     unread
   } = params;
@@ -877,6 +878,7 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   ${labelWhereQuery}
   ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
   AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
+  AND ${Table.EMAIL}.accountId = ${accountId}
   ${textQuery}
   ${subject ? `AND subject LIKE %${subject}%` : ''}
   ${unread !== undefined ? `AND unread = ${unread}` : ''}

@@ -3,6 +3,7 @@
 exports[`Load data thread from Email Table: should load threads from DB with the correct shape: inbox 1`] = `
 Array [
   Object {
+    "accountId": 1,
     "allLabels": "1,3",
     "boundary": null,
     "content": "<p>RE: Hello there</p>",
@@ -35,6 +36,7 @@ Array [
 exports[`Load data thread from Email Table: should load threads from DB with the correct shape: sent 1`] = `
 Array [
   Object {
+    "accountId": 1,
     "allLabels": "1,3",
     "boundary": null,
     "content": "<p>RE: Hello there</p>",
@@ -62,6 +64,7 @@ Array [
     "unsendDate": "2018-06-14 08:23:20.000",
   },
   Object {
+    "accountId": 1,
     "allLabels": "3",
     "boundary": null,
     "content": "<p>Hello there</p>",
@@ -94,6 +97,7 @@ Array [
 exports[`Store data email to Email Table: should insert email to database 1`] = `
 Array [
   Object {
+    "accountId": 1,
     "boundary": null,
     "content": "<p>Hello there</p>",
     "date": "2018-06-14 08:23:19.120",
