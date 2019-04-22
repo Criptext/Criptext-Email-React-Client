@@ -47,7 +47,7 @@ const ChangePasswordPopupInputs = props => {
         value={props.newPasswordInput.value}
         icon={props.newPasswordInput.icon}
         placeholder={
-          string.popups.change_password.input.old_password.placeholder
+          string.popups.change_password.input.new_password.placeholder
         }
         onChangeValue={props.onChangeInputValueChangePassword}
         onChangeType={props.onClickChangePasswordInputType}
