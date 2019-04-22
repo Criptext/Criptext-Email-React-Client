@@ -14,7 +14,7 @@ import { sendPrintThreadEvent } from '../utils/ipc';
 const shouldMarkAsUnread = (threads, itemsChecked) => {
   const hasUnread = threads.find(thread => {
     if (itemsChecked.has(thread.get('threadId'))) {
-      return !thread.get('unread');
+      return thread.get('unread') === true;
     }
     return false;
   });
