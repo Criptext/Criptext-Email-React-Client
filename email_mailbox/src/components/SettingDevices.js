@@ -13,17 +13,15 @@ const SettingDevices = props => (
 );
 
 const renderDevicesBlock = props => (
-  <div className="section-block">
+  <div className="cptx-section-block">
     {!props.isHiddenRemoveDevicePopup && renderRemoveDevicePopup(props)}
-    <div className="section-block-title">
+    <div className="cptx-section-block-title">
       <h1>{string.settings.linked_devices}</h1>
     </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item content-linked-devices">
-        {props.devices.map((device, index) =>
-          renderTrustedDevice(index, device, props)
-        )}
-      </div>
+    <div className="cptx-section-block-content">
+      {props.devices.map((device, index) =>
+        renderTrustedDevice(index, device, props)
+      )}
     </div>
   </div>
 );
@@ -39,7 +37,7 @@ const renderRemoveDevicePopup = props => (
 );
 
 const renderTrustedDevice = (index, deviceData, props) => (
-  <div key={index} className="linked-device">
+  <div key={index} className="cptx-section-item">
     <div className="device-icon">
       <i className={defineDeviceIconByType(deviceData.type)} />
     </div>
@@ -58,12 +56,12 @@ const renderTrustedDevice = (index, deviceData, props) => (
         </div>
       )}
     {!deviceData.isCurrentDevice && (
-      <div
-        className="device-action"
+      <button
+        className="button-b"
         onClick={() => props.onClickRemoveDevice(deviceData.deviceId)}
       >
         {string.settings.remove}
-      </div>
+      </button>
     )}
   </div>
 );
