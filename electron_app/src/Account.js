@@ -10,25 +10,22 @@ class Account {
     this.deviceId = accountObj.deviceId;
     this.signature = accountObj.signature;
     this.signatureEnabled = accountObj.signatureEnabled;
-    this.isActive = accountObj.isActive;
-    this.isLoggedIn = accountObj.isLoggedIn;
   }
 
   update(accountObj) {
     this.id = accountObj.id || this.id;
-    this.jwt = accountObj.jwt || this.jwt;
+    this.recipientId = accountObj.recipientId || this.recipientId;
     this.name = accountObj.name || this.name;
+    this.jwt = accountObj.jwt || this.jwt;
+    this.privKey = accountObj.privKey || this.privKey;
+    this.pubKey = accountObj.pubKey || this.pubKey;
+    this.registrationId = accountObj.registrationId || this.registrationId;
+    this.deviceId = accountObj.deviceId || this.deviceId;
     this.signature = accountObj.signature || this.signature;
     this.signatureEnabled =
       accountObj.signatureEnabled !== undefined
         ? accountObj.signatureEnabled
         : this.signatureEnabled;
-    this.isActive =
-      accountObj.isActive !== undefined ? accountObj.isActive : this.isActive;
-    this.isLoggedIn =
-      accountObj.isLoggedIn !== undefined
-        ? accountObj.isLoggedIn
-        : this.isLoggedIn;
   }
 
   getIdentityKeyPair() {
