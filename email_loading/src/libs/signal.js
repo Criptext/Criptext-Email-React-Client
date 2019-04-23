@@ -359,32 +359,6 @@ const createOwnContact = async (name, email) => {
   }
 };
 
-const createSystemLabels = async () => {
-  const prevLabels = await getAllLabels();
-  const prevSystemLabels = prevLabels.map(label => label.type === 'system');
-  if (!prevSystemLabels.length) {
-    const labels = Object.values(LabelType).map(systemLabel =>
-      Object.assign(systemLabel, { accountId: null })
-    );
-    try {
-      await createLabel(labels);
-    } catch (createLabelsDbError) {
-      throw CustomError(string.errors.saveLabels);
-    }
-  }
-};
-
-const createOwnContact = async (name, email) => {
-  const [prevOwnContact] = await getContactByEmails([email]);
-  if (!prevOwnContact) {
-    try {
-      await createContact({ name, email });
-    } catch (createContactDbError) {
-      throw CustomError(string.errors.saveOwnContact);
-    }
-  }
-};
-
 const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return text;
