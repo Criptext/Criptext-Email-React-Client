@@ -1,6 +1,7 @@
 {
   "accounts": [
     {
+      "id": 1,
       "recipientId": "usera",
       "name": "User A",
       "deviceId": 1,
@@ -13,6 +14,7 @@
       "isLoggedIn": true
     },
     {
+      "id": 2,
       "recipientId": "userb",
       "name": "User B",
       "deviceId": 1,
@@ -26,6 +28,7 @@
     },
 
     {
+      "id": 3,
       "recipientId": "userc",
       "name": "User C",
       "deviceId": 1,

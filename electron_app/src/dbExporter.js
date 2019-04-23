@@ -70,7 +70,7 @@ const formatTableRowsToString = (tableName, rowsObject) => {
     .join('\n');
 };
 
-const exportContactTable = async db => {
+const exportContactTable = async (db, accountId) => {
   let contactRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -78,6 +78,13 @@ const exportContactTable = async db => {
     const result = await db
       .select('*')
       .from(Table.CONTACT)
+      .whereIn(
+        'id',
+        db
+          .select('contactId')
+          .from(Table.ACCOUNT_CONTACT)
+          .where({ accountId })
+      )
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
       .then(rows =>
@@ -101,7 +108,7 @@ const exportContactTable = async db => {
   return formatTableRowsToString(Table.CONTACT, contactRows);
 };
 
-const exportLabelTable = async db => {
+const exportLabelTable = async (db, accountId) => {
   let labelRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -110,10 +117,14 @@ const exportLabelTable = async db => {
       .table(Table.LABEL)
       .select('*')
       .where(`${Table.LABEL}.type`, 'custom')
+      .andWhere({ accountId })
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
       .then(rows =>
-        rows.map(row => Object.assign(row, { visible: !!row.visible }))
+        rows.map(row => {
+          delete row.accountId;
+          return Object.assign(row, { visible: !!row.visible });
+        })
       );
     labelRows = [...labelRows, ...result];
     if (result.length < SELECT_ALL_BATCH) {
@@ -125,7 +136,7 @@ const exportLabelTable = async db => {
   return formatTableRowsToString(Table.LABEL, labelRows);
 };
 
-const exportEmailTable = async db => {
+const exportEmailTable = async (db, accountId) => {
   const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
   let emailRows = [];
   let shouldEnd = false;
@@ -135,10 +146,13 @@ const exportEmailTable = async db => {
       .table(Table.EMAIL)
       .select('*')
       .whereRaw(whereRawEmailQuery)
+      .andWhere({ accountId })
       .limit(SELECT_ALL_BATCH)
       .offset(offset);
     const result = await Promise.all(
       rows.map(async row => {
+        delete row.accountId;
+
         if (!row.unsendDate) {
           delete row.unsendDate;
         } else {
@@ -193,7 +207,7 @@ const exportEmailTable = async db => {
   return formatTableRowsToString(Table.EMAIL, emailRows);
 };
 
-const exportEmailContactTable = async db => {
+const exportEmailContactTable = async (db, accountId) => {
   let emailContactRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -207,6 +221,7 @@ const exportEmailContactTable = async db => {
           .from(Table.EMAIL)
           .whereRaw(`${Table.EMAIL}.id = ${Table.EMAIL_CONTACT}.emailId`)
           .whereRaw(whereRawEmailQuery)
+          .whereRaw(`${Table.EMAIL}.accountId = ${accountId}`)
       )
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
@@ -227,7 +242,7 @@ const exportEmailContactTable = async db => {
   return formatTableRowsToString('email_contact', emailContactRows);
 };
 
-const exportEmailLabelTable = async db => {
+const exportEmailLabelTable = async (db, accountId) => {
   let emailLabelRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -241,6 +256,7 @@ const exportEmailLabelTable = async db => {
           .from(Table.EMAIL)
           .whereRaw(`${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId`)
           .whereRaw(whereRawEmailQuery)
+          .whereRaw(`${Table.EMAIL}.accountId = ${accountId}`)
       )
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
@@ -261,7 +277,7 @@ const exportEmailLabelTable = async db => {
   return formatTableRowsToString('email_label', emailLabelRows);
 };
 
-const exportFileTable = async db => {
+const exportFileTable = async (db, accountId) => {
   let fileRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -275,6 +291,7 @@ const exportFileTable = async db => {
           .from(Table.EMAIL)
           .whereRaw(`${Table.EMAIL}.id = ${Table.FILE}.emailId`)
           .whereRaw(whereRawEmailQuery)
+          .whereRaw(`${Table.EMAIL}.accountId = ${accountId}`)
       )
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
@@ -313,28 +330,32 @@ const saveToFile = ({ data, filepath, mode }, isFirstRecord) => {
   }
 };
 
-const exportDatabaseToFile = async ({ databasePath, outputPath }) => {
+const exportDatabaseToFile = async ({
+  databasePath,
+  outputPath,
+  accountId
+}) => {
   const fileName = 'db-exported.criptext';
   const filepath = outputPath || path.join(__dirname, fileName);
   const dbConn = await createDatabaseConnection(databasePath);
 
-  const contacts = await exportContactTable(dbConn);
+  const contacts = await exportContactTable(dbConn, accountId);
   const isFirstRecord = true;
   saveToFile({ data: contacts, filepath, mode: 'w' }, isFirstRecord);
 
-  const labels = await exportLabelTable(dbConn);
+  const labels = await exportLabelTable(dbConn, accountId);
   saveToFile({ data: labels, filepath, mode: 'a' });
 
-  const emails = await exportEmailTable(dbConn);
+  const emails = await exportEmailTable(dbConn, accountId);
   saveToFile({ data: emails, filepath, mode: 'a' });
 
-  const emailContacts = await exportEmailContactTable(dbConn);
+  const emailContacts = await exportEmailContactTable(dbConn, accountId);
   saveToFile({ data: emailContacts, filepath, mode: 'a' });
 
-  const emailLabels = await exportEmailLabelTable(dbConn);
+  const emailLabels = await exportEmailLabelTable(dbConn, accountId);
   saveToFile({ data: emailLabels, filepath, mode: 'a' });
 
-  const files = await exportFileTable(dbConn);
+  const files = await exportFileTable(dbConn, accountId);
   saveToFile({ data: files, filepath, mode: 'a' });
 
   closeDatabaseConnection(dbConn);
