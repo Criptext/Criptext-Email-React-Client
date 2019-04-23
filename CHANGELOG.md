@@ -1,5 +1,34 @@
 # Change Log
 
+## [0.17.14](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
+
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.11...HEAD)
+
+**Implemented enhancements:**
+
+- Mailbox: Add sync progress bar [\#848](https://github.com/Criptext/Criptext-Email-React-Client/issues/848)
+- Mailbox: Improvement velocity to unread switch [\#846](https://github.com/Criptext/Criptext-Email-React-Client/issues/846)
+- Component: Add button component with states [\#716](https://github.com/Criptext/Criptext-Email-React-Client/issues/716)
+- Mailbox:  Refactoring Settings [\#542](https://github.com/Criptext/Criptext-Email-React-Client/issues/542)
+
+**Fixed bugs:**
+
+- Mailbox: New email with empty recipients, should add user self as to recipient. [\#847](https://github.com/Criptext/Criptext-Email-React-Client/issues/847)
+
+**Closed issues:**
+
+- Mailbox: Mark as read shoulb be as default action [\#856](https://github.com/Criptext/Criptext-Email-React-Client/issues/856)
+- Wrong placeholder in Change Password window [\#854](https://github.com/Criptext/Criptext-Email-React-Client/issues/854)
+
+**Merged pull requests:**
+
+- Settings [\#857](https://github.com/Criptext/Criptext-Email-React-Client/pull/857) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix wrong placeholder in ChangePasswordPopup.js [\#855](https://github.com/Criptext/Criptext-Email-React-Client/pull/855) ([glitsj16](https://github.com/glitsj16))
+- Multiple Accounts: Migration [\#852](https://github.com/Criptext/Criptext-Email-React-Client/pull/852) ([JulianAdams4](https://github.com/JulianAdams4))
+- button with states [\#851](https://github.com/Criptext/Criptext-Email-React-Client/pull/851) ([erikaperugachi](https://github.com/erikaperugachi))
+- Loading sync [\#850](https://github.com/Criptext/Criptext-Email-React-Client/pull/850) ([erikaperugachi](https://github.com/erikaperugachi))
+- Enhancement handle switch. Close \#846 [\#849](https://github.com/Criptext/Criptext-Email-React-Client/pull/849) ([erikaperugachi](https://github.com/erikaperugachi))
+
 ## [0.17.11](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.11) (2019-04-08)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/v.0.17.10...0.17.11)
 
@@ -825,24 +854,18 @@
 - Unify [\#366](https://github.com/Criptext/Criptext-Email-React-Client/pull/366) ([erikaperugachi](https://github.com/erikaperugachi))
 
 ## [0.9.0](https://github.com/criptext/Criptext-Email-React-Client/tree/0.9.0) (2018-08-21)
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.8.1...0.9.0)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.8.2...0.9.0)
 
 **Fixed bugs:**
 
 - Mailbox: Check peer read events \(email and thread\) [\#359](https://github.com/Criptext/Criptext-Email-React-Client/issues/359)
-- Mailbox: Fix acknowledge events [\#355](https://github.com/Criptext/Criptext-Email-React-Client/issues/355)
 - Composer: Add signature to reply [\#342](https://github.com/Criptext/Criptext-Email-React-Client/issues/342)
 - SignUp: Don't allow special characters in the username [\#340](https://github.com/Criptext/Criptext-Email-React-Client/issues/340)
-- Open some composers [\#270](https://github.com/Criptext/Criptext-Email-React-Client/issues/270)
-- Sidebar: Fix badge [\#210](https://github.com/Criptext/Criptext-Email-React-Client/issues/210)
-- Email Detail:  Check hyperlink to open out app [\#151](https://github.com/Criptext/Criptext-Email-React-Client/issues/151)
-- Fix parser contacts [\#140](https://github.com/Criptext/Criptext-Email-React-Client/issues/140)
 
 **Closed issues:**
 
 - Mailbox: Check peer label update [\#361](https://github.com/Criptext/Criptext-Email-React-Client/issues/361)
 - Mailbox: Peer delete permanent events \(email and thread\) [\#353](https://github.com/Criptext/Criptext-Email-React-Client/issues/353)
-- Composer: Attachments for non-Criptext users [\#352](https://github.com/Criptext/Criptext-Email-React-Client/issues/352)
 - Composer: Change characters minimum to 3 in the validation for external email password  [\#339](https://github.com/Criptext/Criptext-Email-React-Client/issues/339)
 - EmailDetail: Change audio icon of the attachments [\#291](https://github.com/Criptext/Criptext-Email-React-Client/issues/291)
 - Composer: Fix bold button [\#189](https://github.com/Criptext/Criptext-Email-React-Client/issues/189)
@@ -853,6 +876,24 @@
 - Peer labels update [\#363](https://github.com/Criptext/Criptext-Email-React-Client/pull/363) ([JulianAdams4](https://github.com/JulianAdams4))
 - Fix peers: Delete permanent & Unread [\#362](https://github.com/Criptext/Criptext-Email-React-Client/pull/362) ([JulianAdams4](https://github.com/JulianAdams4))
 - Scroll [\#360](https://github.com/Criptext/Criptext-Email-React-Client/pull/360) ([erikaperugachi](https://github.com/erikaperugachi))
+
+## [0.8.2](https://github.com/criptext/Criptext-Email-React-Client/tree/0.8.2) (2018-08-15)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.8.1...0.8.2)
+
+**Fixed bugs:**
+
+- Mailbox: Fix acknowledge events [\#355](https://github.com/Criptext/Criptext-Email-React-Client/issues/355)
+- Open some composers [\#270](https://github.com/Criptext/Criptext-Email-React-Client/issues/270)
+- Sidebar: Fix badge [\#210](https://github.com/Criptext/Criptext-Email-React-Client/issues/210)
+- Email Detail:  Check hyperlink to open out app [\#151](https://github.com/Criptext/Criptext-Email-React-Client/issues/151)
+- Fix parser contacts [\#140](https://github.com/Criptext/Criptext-Email-React-Client/issues/140)
+
+**Closed issues:**
+
+- Composer: Attachments for non-Criptext users [\#352](https://github.com/Criptext/Criptext-Email-React-Client/issues/352)
+
+**Merged pull requests:**
+
 - 0.8.2 [\#356](https://github.com/Criptext/Criptext-Email-React-Client/pull/356) ([erikaperugachi](https://github.com/erikaperugachi))
 - Attachments for non-Criptext users [\#354](https://github.com/Criptext/Criptext-Email-React-Client/pull/354) ([JulianAdams4](https://github.com/JulianAdams4))
 - Add mac certificate configuration [\#350](https://github.com/Criptext/Criptext-Email-React-Client/pull/350) ([erikaperugachi](https://github.com/erikaperugachi))
