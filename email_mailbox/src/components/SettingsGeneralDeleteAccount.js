@@ -7,23 +7,22 @@ import './settingsgeneraldeleteaccount.scss';
 const { delete_account } = string.settings;
 
 const SettingsGeneralDeleteAccount = props => (
-  <div id="settings-general-delete-account" className="section-block">
-    <div className="section-block-title">
-      <h1>{delete_account.label}</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item">
-        <div
-          className="delete-account-button"
-          onClick={() => {
-            const popupType = SETTINGS_POPUP_TYPES.DELETE_ACCOUNT;
-            props.onShowSettingsPopup(popupType);
-          }}
-        >
-          <i className="icon-exit" />
-          <span>{delete_account.button}</span>
-        </div>
-      </div>
+  <div id="settings-general-delete-account" className="cptx-section-item">
+    <span className="cptx-section-item-title">{delete_account.label}</span>
+    <span className="cptx-section-item-description">
+      {delete_account.description}
+    </span>
+    <div className="cptx-section-item-control">
+      <button
+        className="button-b"
+        onClick={() => {
+          const popupType = SETTINGS_POPUP_TYPES.DELETE_ACCOUNT;
+          props.onShowSettingsPopup(popupType);
+        }}
+      >
+        <i className="icon-exit" />
+        <span>{delete_account.button}</span>
+      </button>
     </div>
   </div>
 );

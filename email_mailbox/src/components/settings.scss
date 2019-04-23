@@ -115,7 +115,7 @@
           width: 100%;
           user-select: none;
 
-          .section-block-content-item-title {
+          .cptx-section-item-title {
             font-size: 11px;
             font-weight: 600;
             margin-top: 22px;
@@ -208,16 +208,74 @@
   }
 }
 
+.cptx-section-block{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .cptx-section-block-title{
+    align-items: center;
+    display: flex;
+    height: 41px;
+
+    h1{
+      color: #6a707e;
+      font-weight: 700;
+      margin-left: 28px;
+      text-transform: uppercase;
+    }
+  }
+
+  .cptx-section-block-content{
+    display: flex;
+    flex-direction: column;
+
+    .cptx-section-item{
+      border-bottom: 1px solid rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+      padding: 17px 28px;
+      position: relative;
+      width: 518px;
+
+      .cptx-section-item-title{
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .cptx-section-item-description{
+        font-size: 12px;
+        font-weight: 300;
+      }
+
+      .cptx-section-item-control{
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        right: 20px;
+        top: 30px;
+
+        button{
+          align-self: flex-end;
+          display: inherit;
+          width: fit-content;
+        }
+      }
+    }
+  }
+}
+
 /* THEME
    ----------------------------- */
 @mixin themable(
   $_THEME,
   $_BACKGROUND_COLOR_MAIN,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE,
   $_COLOR_TEXT_MAIN_TITLE,
   $_BACKGROUND_COLOR_SETTINGS,
   $_COLOR_TEXT_SETTINGS_TITLE,
-  $_BORDER_COLOR_SETTINGS_HEADER,
-  $_COLOR_TEXT_SETTINGS_SUBTITLE
+  $_BORDER_COLOR_SETTINGS_HEADER
 ) {
   [data-theme^="#{$_THEME}"],
   [data-theme] [data-theme^="#{$_THEME}"] {
@@ -244,17 +302,21 @@
         }
 
         .settings-content-scroll {
-          .section-block {
-            .section-block-title {
-              h1 {
-                color: $_COLOR_TEXT_MAIN_TITLE;
-              }
+          .cptx-section-block{
+            .cptx-section-block-title {
+              background-color: $_BACKGROUND_COLOR_SETTINGS_TITLE;
             }
           }
 
-          .section-block-content-item {
-            .section-block-content-item-title {
-              color: $_COLOR_TEXT_SETTINGS_SUBTITLE;
+          .cptx-section-item {
+            border-color: $_BORDER_COLOR_SETTINGS_HEADER;
+            
+            .cptx-section-item-title {
+              color: $_COLOR_TEXT_MAIN_TITLE;
+            }
+
+            .cptx-section-item-description{
+              color: $_COLOR_TEXT_MAIN_TITLE;
             }
           }
         }
@@ -280,18 +342,18 @@
 @include themable(
   $_THEME_LIGHT,
   $_BACKGROUND_COLOR_MAIN_LIGHT,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE_LIGHT,
   $_COLOR_TEXT_MAIN_TITLE_LIGHT,
   $_BACKGROUND_COLOR_SETTINGS_LIGHT,
   $_COLOR_TEXT_SETTINGS_TITLE_LIGHT,
-  $_BORDER_COLOR_SETTINGS_HEADER_LIGHT,
-  $_COLOR_TEXT_SETTINGS_SUBTITLE_LIGHT
+  $_BORDER_COLOR_SETTINGS_HEADER_LIGHT
 );
 @include themable(
   $_THEME_DARK,
   $_BACKGROUND_COLOR_MAIN_DARK,
+  $_BACKGROUND_COLOR_SETTINGS_TITLE_DARK,
   $_COLOR_TEXT_MAIN_TITLE_DARK,
   $_BACKGROUND_COLOR_SETTINGS_DARK,
   $_COLOR_TEXT_SETTINGS_TITLE_DARK,
-  $_BORDER_COLOR_SETTINGS_HEADER_DARK,
-  $_COLOR_TEXT_SETTINGS_SUBTITLE_DARK
+  $_BORDER_COLOR_SETTINGS_HEADER_DARK
 );

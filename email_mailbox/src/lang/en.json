@@ -423,64 +423,92 @@
     "action": "Action",
     "cancel": "Cancel",
     "change": "Change",
-    "change_password": "change password",
     "contact_support": "Contact Support",
     "check_for_updates": "Check for updates",
     "create_new_label": "Create new label",
-    "criptext_libraries": "Criptext Libraries",
+    "criptext_libraries": {
+      "label": "Criptext Libraries",
+      "description": "See some of the ingredients that have made Criptext possible"
+    },
     "current_device": "current device",
+    "delete_account": {
+      "label": "Delete Account",
+      "description": "This action can’t be reversed",
+      "button": "Delete permanently"
+    },
     "disabled": "disabled",
     "edit": "Edit",
     "email": "Email",
     "enabled": "enabled",
     "enter_new_label_name": "Enter new label name",
-    "faq": "FAQ",
+    "faq": {
+      "label": "FAQ",
+      "description": "Get common questions answered"
+    },
+    "fullname": "Full Name",
     "general": "general",
-    "language": "language",
+    "language": {
+      "label": "Language",
+      "description": "Select a prefered language"
+    },
     "last_activity": "Last activity",
     "linked_devices": "Linked devices",
     "logout": "Logout",
-    "name": "name",
-    "not_verified": "Not verified",
-    "notification_preview": "notification preview",
+    "mailbox_sync": {
+      "label": "Sync Mailbox",
+      "description": "Lets you transfer your entire mailbox from another device into this one",
+      "button": "Sync",
+      "tooltip": "You must have at least one additional device to sync"
+    },
+    "not_verified": "not verified",
+    "notification_preview": {
+      "label": "Show Notification Preview",
+      "description": "Preview email content in desktop notification"
+    },
     "off": "off",
     "on": "on",
-    "password": "password",
+    "password": {
+      "label": "Password",
+      "description": "Choose a strong password, don’t reuse it"
+    },
     "profile": "profile",
-    "privacy_policy": "Privacy Policy",
-    "read_receipts": "read receipts",
+    "privacy_policy": {
+      "label": "Privacy Policy",
+      "description": "See our commitment to protecting your privacy"
+    },
+    "read_receipts": "Read Receipts",
     "read_receipts_description": "If you turn off read receipts, you won't be able to see read receipts from other people",
-    "recovery_email": "Recovery Email",
+    "recovery_email": {
+      "label": "Recovery Email",
+      "description": "This is in case you forget your password and need to reset it"
+    },
     "recovery_not_set": "Recovery email not configured",
-    "reply_to": "Reply To",
     "remove": "Remove",
+    "reply_to": "Reply To",
     "reply_to_email": "Reply To",
     "reply_to_not_set": "When someone replies to one of your emails, they will reply to the address set here.",
     "resend_link": "resend link",
+    "see_more": "See More",
     "set_email": "Set Email",
     "show_in_label_list": "Show in label list",
     "signature": "Signature",
     "system_labels": "System Labels",
-    "theme": "Theme",
+    "theme": {
+      "label": "Theme",
+      "description": "Personalize your experience"
+    },
     "themeLabels": {
       "light": "Light",
       "dark": "Dark"
     },
-    "terms_of_service": "Terms of service",
-    "trusted_devices": "trusted devices",
-    "two_factor_authentication": "two-factor authentication",
-    "two_factor_not_available_text" : "To enable Two-Factor Authentication you must set and verify a recovery email",
-    "üseful_links": "Useful links",
-    "verified": "Verified",
-    "delete_account": {
-      "label": "Delete Account",
-      "button": "Delete permanently"
+    "terms_of_service": {
+      "label": "Terms of service",
+      "description": "Our lawyers really emphasized this be here ;)"
     },
-    "mailbox_sync": {
-      "label": "Mailbox",
-      "button": "Sync Mailbox",
-      "tooltip": "You must have at least one additional device to sync"
-    }
+    "trusted_devices": "trusted devices",
+    "two_factor_authentication": "Two-Factor Authentication",
+    "two_factor_not_available_text" : "To enable Two-Factor Authentication you must set and verify a recovery email",
+    "verified": "verified"
   },
   "sidebar": {
     "compose": "compose",

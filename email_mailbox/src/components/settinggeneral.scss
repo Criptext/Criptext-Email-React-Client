@@ -31,178 +31,74 @@
       font-size: 13px;
       font-weight: 300;
     }
-
-    &:nth-child(3){
-      .section-block-content{
-        .section-block-content-item{
-          &:nth-child(1){
-            .button-reset-password {
-              background-color: #0091ff;
-              width: 140px;
-              height: 24px;
-              text-transform: capitalize;
-          
-              span {
-                font-size: 13px;
-                font-weight: 300;
-                position: relative;
-                top: 1px;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    &:nth-child(11){
-      .section-block-content{
-        .section-block-content-item{
-          &:nth-child(1){
-            flex-direction: column;
-
-            .useful-link{
-              color: #0091ff;
-              font-size: 12px;
-              font-weight: 400;
-              margin-top: 7px;
-              text-decoration: none;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-#settings-general-two-factor{
-  .section-block-content{
-    .section-block-content-item{
-      &:nth-child(1){
-        flex-direction: column;
-
-        .two-factor-switch {
-          display: flex;
-          margin: 10px 0px 7px 0px;
-        }
-      }
-    }
-  }
-}
-
-#settings-general-email-preview{
-  .section-block-content{
-    .section-block-content-item{
-      &:nth-child(1){
-        flex-direction: column;
-
-        .email-preview-switch {
-          display: flex;
-          margin: 10px 0px 7px 0px;
-        }
-      }
-    }
-  }
-}
-
-#settings-general-read-receipts{
-  .section-block-content{
-    .section-block-content-item{
-      &:nth-child(1){
-        flex-direction: column;
-
-        .read-receipts-switch {
-          display: flex;
-          margin: 10px 0px 7px 0px;
-
-          .settings-switch-label {
-            word-wrap: break-word;
-          }
-        }
-      }
-    }
   }
 }
 
 #settings-general-recovery-email{
-  .section-block-content{
-    .section-block-content-item{
-      &:nth-child(1){
-        .recovery-email > div {
-          display: flex;
-      
-          .address {
-            font-size: 14px;
-            margin-right: 15px;
-          }
-      
-          > div {
-            display: flex;
-      
-            .recovery-email-confirmation-section {
-              align-items: center;
-              display: flex;
-              margin-right: 10px;
-        
-              &.recovery-email-confirmed {
-                color: #8ac43f;
-              }
-      
-              &.recovery-email-not-confirmed {
-                color: #d94e47;
-              }
-      
-              .text {
-                font-size: 13px;
-                font-weight: 300;
-                position: relative;
-              }  
-        
-              i {
-                font-size: 15px;
-                font-weight: bold;
-                line-height: 18px;
-                position: relative;
-              }
-            }
-      
-            .button-b{
-              margin-right: 5px;
-            }
-          }
-        }
+  .cptx-recovery-email{
+    margin-top: 10px;
+    text-align: center;
+    width: 270px;
+
+    &.cptx-recovery-email-confirmed{
+      .cptx-recovery-email-address{
+        background-color: #f6f9f2;
+      }
+
+      .cptx-recovery-email-status{
+        color: #58a40b;
+      }
+    }
+
+    &.cptx-recovery-email-not-confirmed{
+      .cptx-recovery-email-address{
+        background-color: #fff6f6;
+      }
+
+      .cptx-recovery-email-status{
+        color: #da341a;
+      }
+    }
+
+    .cptx-recovery-email-address{
+      align-items: center;
+      background-color: #f4f4f4;
+      height: 29px;
+      display: flex;
+
+      .loading-ring{
+        top: 2px;
+        left: 122px;
+      }
+
+      span{
+        font-size: 12px;
+        margin: 0 auto;
+      }
+    }
+
+    .cptx-recovery-email-status{
+      span{
+        font-size: 11px;
+        font-weight: 600;
       }
     }
   }
 }
 
-#settings-general-reply-to{
-  .section-block-content{
-    .section-block-content-item{
-      &:nth-child(1){
-        .reply-to-email > div {
-      
-          .address {
-            font-size: 13px;
-            font-weight: 300;
-            margin-right: 15px;
-          }
-      
-          > div {
-            display: inline-block;
-
-            .button-b{
-              margin-right: 5px;
-            }
-          }
-        }
-      }
-    }
-  }
+#settings-general-usefullinks{
+.cptx-useful-link{
+  color: #0091ff;
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 7px;
+  text-decoration: none;
+}
 }
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_BACKGROUND_COLOR_SETTINGS, $_COLOR_TEXT_SETTINGS_TITLE, $_BORDER_COLOR_SETTINGS_HEADER, $_COLOR_TEXT_SETTINGS_SUBTITLE, $_COLOR_TEXT_SETTINGS_CONTENT, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE, $_BORDER_COLOR_SETTINGS_SIGNATURE, $_COLOR_TEXT_SETTINGS_SIGNATURE){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_BACKGROUND_COLOR_SETTINGS, $_COLOR_TEXT_SETTINGS_TITLE, $_BORDER_COLOR_SETTINGS_HEADER, $_COLOR_TEXT_SETTINGS_CONTENT){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     #setting-general{
@@ -212,67 +108,8 @@
         }
       }
     }
-
-    #settings-general-profile{
-      .section-block-content{
-        .section-block-content-item{
-          &:nth-child(1){          
-            label{
-              color: $_COLOR_TEXT_SETTINGS_CONTENT;
-            }
-          }
-    
-          &:nth-child(2){
-            > div{
-              &.profile-name {
-                color: $_COLOR_TEXT_SETTINGS_CONTENT;
-              }
-            }
-          }
-
-          &:nth-child(3){
-            .signature-editor {
-              background-color: $_BACKGROUND_COLOR_SETTINGS_SIGNATURE;
-              border-color: $_BORDER_COLOR_SETTINGS_SIGNATURE;
-
-              .rdw-editor-main{
-                color: $_COLOR_TEXT_SETTINGS_SIGNATURE;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    #settings-general-recovery-email{
-      .section-block-content{
-        .section-block-content-item{
-          &:nth-child(1){
-            .recovery-email > div {
-              .address {
-                color: $_COLOR_TEXT_SETTINGS_CONTENT;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    #settings-general-reply-to{
-      .section-block-content{
-        .section-block-content-item{
-          &:nth-child(1){
-            .reply-to-email > div {
-              .address {
-                color: $_COLOR_TEXT_SETTINGS_CONTENT;
-              }
-            }
-          }
-        }
-      }
-    }
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT, $_BACKGROUND_COLOR_SETTINGS_LIGHT, $_COLOR_TEXT_SETTINGS_TITLE_LIGHT, $_BORDER_COLOR_SETTINGS_HEADER_LIGHT, $_COLOR_TEXT_SETTINGS_SUBTITLE_LIGHT, $_COLOR_TEXT_SETTINGS_CONTENT_LIGHT, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_LIGHT, $_BORDER_COLOR_SETTINGS_SIGNATURE_LIGHT, $_COLOR_TEXT_SETTINGS_SIGNATURE_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK, $_BACKGROUND_COLOR_SETTINGS_DARK, $_COLOR_TEXT_SETTINGS_TITLE_DARK, $_BORDER_COLOR_SETTINGS_HEADER_DARK, $_COLOR_TEXT_SETTINGS_SUBTITLE_DARK, $_COLOR_TEXT_SETTINGS_CONTENT_DARK, $_BACKGROUND_COLOR_SETTINGS_SIGNATURE_DARK, $_BORDER_COLOR_SETTINGS_SIGNATURE_DARK, $_COLOR_TEXT_SETTINGS_SIGNATURE_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT, $_BACKGROUND_COLOR_SETTINGS_LIGHT, $_COLOR_TEXT_SETTINGS_TITLE_LIGHT, $_BORDER_COLOR_SETTINGS_HEADER_LIGHT, $_COLOR_TEXT_SETTINGS_CONTENT_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK, $_BACKGROUND_COLOR_SETTINGS_DARK, $_COLOR_TEXT_SETTINGS_TITLE_DARK, $_BORDER_COLOR_SETTINGS_HEADER_DARK, $_COLOR_TEXT_SETTINGS_CONTENT_DARK);

@@ -41,88 +41,82 @@ const TWO_FACTOR_DISABLED_TEXT = string.settings.off;
 
 const SettingGeneral = props => (
   <div id="setting-general">
-    <SettingsGeneralProfile {...props} />
-    <SettingsGeneralManualSync
-      onShowSettingsPopup={props.onShowSettingsPopup}
-      devicesQuantity={props.devicesQuantity}
-    />
-    <PasswordBlock {...props} />
-    <TwoFactorAuthenticationBlock {...props} />
-    <ShowEmailPreviewBlock {...props} />
-    <ReadReceiptsBlock {...props} />
-    <RecoveryEmailBlock {...props} />
-    <SettingsGeneralReplyTo {...props} />
-    <SettingsGeneralLanguageWrapper />
-    <SettingsGeneralThemeWrapper />
-    <UsefulLinksBlock />
-    <SettingsGeneralDeleteAccount
-      onShowSettingsPopup={props.onShowSettingsPopup}
-    />
+    <div className="cptx-section-block">
+      <div className="cptx-section-block-title">
+        <h1>{string.settings.profile}</h1>
+      </div>
+      <div className="cptx-section-block-content">
+        <SettingsGeneralProfile {...props} />
+        <SettingsGeneralManualSync
+          onShowSettingsPopup={props.onShowSettingsPopup}
+          devicesQuantity={props.devicesQuantity}
+        />
+        <PasswordBlock {...props} />
+        <TwoFactorAuthenticationBlock {...props} />
+        <ShowEmailPreviewBlock {...props} />
+        <ReadReceiptsBlock {...props} />
+        <RecoveryEmailBlock {...props} />
+        <SettingsGeneralReplyTo {...props} />
+        <SettingsGeneralLanguageWrapper />
+        <SettingsGeneralThemeWrapper />
+        <UsefulLinksBlock />
+        <SettingsGeneralDeleteAccount
+          onShowSettingsPopup={props.onShowSettingsPopup}
+        />
+      </div>
+    </div>
     <SettingsPopup {...props} />
   </div>
 );
 
 const PasswordBlock = props => (
-  <div className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.password}</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item">
-        <button
-          className="button-a button-reset-password"
-          onClick={props.onClickChangePasswordButton}
-        >
-          <span>{string.settings.change_password}</span>
-        </button>
-      </div>
+  <div id="settings-general-password" className="cptx-section-item">
+    <span className="cptx-section-item-title">
+      {string.settings.password.label}
+    </span>
+    <span className="cptx-section-item-description">
+      {string.settings.password.description}
+    </span>
+    <div className="cptx-section-item-control">
+      <button className="button-b" onClick={props.onClickChangePasswordButton}>
+        <span>{string.settings.change}</span>
+      </button>
     </div>
   </div>
 );
 
 const RecoveryEmailBlock = props => (
-  <div id="settings-general-recovery-email" className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.recovery_email}</h1>
+  <div id="settings-general-recovery-email" className="cptx-section-item">
+    <span className="cptx-section-item-title">
+      {string.settings.recovery_email.label}
+    </span>
+    <span className="cptx-section-item-description">
+      {string.settings.recovery_email.description}
+    </span>
+    <div className="cptx-section-item-control">
+      <button
+        className="button-b"
+        onClick={() => props.onClickChangeRecoveryEmail()}
+      >
+        <span>
+          {!props.recoveryEmail
+            ? string.settings.set_email
+            : string.settings.change}
+        </span>
+      </button>
+      {props.recoveryEmail &&
+        !props.recoveryEmailConfirmed && (
+          <ResendConfirmationRecoveryEmailLink {...props} />
+        )}
     </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item content-recovery-email">
-        <div className="recovery-email">
-          {props.recoveryEmailIsLoading ? (
-            <RecoveryEmailLoading />
-          ) : (
-            <div>
-              <span className="address">
-                {props.recoveryEmail || string.settings.recovery_not_set}
-              </span>
-              {!props.recoveryEmail && (
-                <button
-                  className="button-b"
-                  onClick={() => props.onClickChangeRecoveryEmail()}
-                >
-                  <span>{string.settings.set_email}</span>
-                </button>
-              )}
-              {props.recoveryEmail && (
-                <div>
-                  <RecoveryEmailConfirmationMessage
-                    recoveryEmailConfirmed={props.recoveryEmailConfirmed}
-                  />
-                  <button
-                    className="button-b"
-                    onClick={() => props.onClickChangeRecoveryEmail()}
-                  >
-                    <span>{string.settings.change}</span>
-                  </button>
-                  {!props.recoveryEmailConfirmed && (
-                    <ResendConfirmationRecoveryEmailLink {...props} />
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
+    <div className="cptx-section-item-block">
+      {props.recoveryEmail && (
+        <RecoveryEmailConfirmationMessage
+          recoveryEmail={props.recoveryEmail}
+          recoveryEmailConfirmed={props.recoveryEmailConfirmed}
+          recoveryEmailIsLoading={props.recoveryEmailIsLoading}
+        />
+      )}
     </div>
   </div>
 );
@@ -137,35 +131,29 @@ const RecoveryEmailLoading = () => (
 );
 
 const TwoFactorAuthenticationBlock = props => (
-  <div id="settings-general-two-factor" className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.two_factor_authentication}</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item">
-        <div className="two-factor-switch">
-          <div className="settings-switch">
-            <Switch
-              theme="two"
-              name="setTwoFactorSwitch"
-              onChange={props.onChangeSwitchTwoFactor}
-              checked={!!props.twoFactorEnabled}
-              disabled={
-                !props.recoveryEmail ||
-                !props.recoveryEmailConfirmed ||
-                props.twoFactorLabelIsLoading
-              }
-            />
-          </div>
-          <div className="settings-switch-label">
-            {props.twoFactorLabelIsLoading ? (
-              <TwoFactorLoadingLabel />
-            ) : (
-              renderTwoFactorTextLabel(props)
-            )}
-          </div>
-        </div>
-      </div>
+  <div id="settings-general-two-factor" className="cptx-section-item">
+    <span className="cptx-section-item-title">
+      {string.settings.two_factor_authentication}
+    </span>
+    <span className="cptx-section-item-description">
+      {renderTwoFactorTextLabel(props)}
+    </span>
+    <div className="cptx-section-item-control">
+      {props.twoFactorLabelIsLoading ? (
+        <TwoFactorLoadingLabel />
+      ) : (
+        <Switch
+          theme="two"
+          name="setTwoFactorSwitch"
+          onChange={props.onChangeSwitchTwoFactor}
+          checked={!!props.twoFactorEnabled}
+          disabled={
+            !props.recoveryEmail ||
+            !props.recoveryEmailConfirmed ||
+            props.twoFactorLabelIsLoading
+          }
+        />
+      )}
     </div>
   </div>
 );
@@ -188,64 +176,48 @@ const renderTwoFactorTextLabel = props => {
     : isEnabled
       ? TWO_FACTOR_ENABLED_TEXT
       : TWO_FACTOR_DISABLED_TEXT;
-  return <span>{textLabel}</span>;
+  return textLabel;
 };
 
 const ShowEmailPreviewBlock = props => (
-  <div id="settings-general-email-preview" className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.notification_preview}</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item">
-        <div className="email-preview-switch">
-          <div className="settings-switch">
-            <Switch
-              theme="two"
-              name="setEmailPreviewSwitch"
-              onChange={props.onChangeSwitchEmailPreview}
-              checked={!!props.emailPreviewEnabled}
-            />
-          </div>
-          <div className="settings-switch-label">
-            <span>
-              {props.emailPreviewEnabled
-                ? string.settings.on
-                : string.settings.off}
-            </span>
-          </div>
-        </div>
-      </div>
+  <div id="settings-general-email-preview" className="cptx-section-item">
+    <span className="cptx-section-item-title">
+      {string.settings.notification_preview.label}
+    </span>
+    <span className="cptx-section-item-description">
+      {string.settings.notification_preview.description}
+    </span>
+    <div className="cptx-section-item-control">
+      <Switch
+        theme="two"
+        name="setEmailPreviewSwitch"
+        onChange={props.onChangeSwitchEmailPreview}
+        checked={!!props.emailPreviewEnabled}
+      />
     </div>
   </div>
 );
 
 const ReadReceiptsBlock = props => (
-  <div id="settings-general-read-receipts" className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.read_receipts}</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item">
-        <div className="read-receipts-switch">
-          <div className="settings-switch">
-            <Switch
-              theme="two"
-              name="setReadReceiptsSwitch"
-              onChange={props.onChangeSwitchReadReceipts}
-              checked={!!props.readReceiptsEnabled}
-              disabled={props.readReceiptsLabelisLoading}
-            />
-          </div>
-          <div className="settings-switch-label">
-            {props.readReceiptsLabelisLoading ? (
-              <ReadReceiptsLoadingLabel />
-            ) : (
-              <span>{string.settings.read_receipts_description}</span>
-            )}
-          </div>
-        </div>
-      </div>
+  <div id="settings-general-read-receipts" className="cptx-section-item">
+    <span className="cptx-section-item-title">
+      {string.settings.read_receipts}
+    </span>
+    <span className="cptx-section-item-description">
+      {string.settings.read_receipts_description}
+    </span>
+    <div className="cptx-section-item-control">
+      {props.readReceiptsLabelisLoading ? (
+        <ReadReceiptsLoadingLabel />
+      ) : (
+        <Switch
+          theme="two"
+          name="setReadReceiptsSwitch"
+          onChange={props.onChangeSwitchReadReceipts}
+          checked={!!props.readReceiptsEnabled}
+          disabled={props.readReceiptsLabelisLoading}
+        />
+      )}
     </div>
   </div>
 );
@@ -287,50 +259,100 @@ const renderer = ({ minutes, seconds, completed, children }) => {
   );
 };
 
-const RecoveryEmailConfirmationMessage = ({ recoveryEmailConfirmed }) => {
-  return recoveryEmailConfirmed ? (
-    <div className="recovery-email-confirmation-section recovery-email-confirmed">
-      <i className="icon-correct" />
-      <span className="text">{string.settings.verified}</span>
-    </div>
-  ) : (
-    <div className="recovery-email-confirmation-section recovery-email-not-confirmed">
-      <i className="icon-incorret" />
-      <span className="text">{string.settings.not_verified}</span>
+const RecoveryEmailConfirmationMessage = ({
+  recoveryEmail,
+  recoveryEmailConfirmed,
+  recoveryEmailIsLoading
+}) => {
+  return (
+    <div
+      className={`cptx-recovery-email ${
+        recoveryEmailConfirmed
+          ? 'cptx-recovery-email-confirmed'
+          : 'cptx-recovery-email-not-confirmed'
+      }`}
+    >
+      <div className="cptx-recovery-email-address">
+        {recoveryEmailIsLoading ? (
+          <RecoveryEmailLoading />
+        ) : (
+          <span>{recoveryEmail || string.settings.recovery_not_set}</span>
+        )}
+      </div>
+      <div className="cptx-recovery-email-status">
+        <span>
+          {recoveryEmailConfirmed
+            ? string.settings.verified
+            : string.settings.not_verified}
+        </span>
+      </div>
     </div>
   );
 };
 
 const UsefulLinksBlock = () => (
-  <div className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.üseful_links}</h1>
-    </div>
-    <div className="section-block-content">
-      <div className="section-block-content-item">
-        <a className="useful-link" href={usefulLinks.FAQ} target="_blank">
-          {string.settings.faq}
+  <div id="settings-general-usefullinks">
+    <div className="cptx-section-item">
+      <span className="cptx-section-item-title">
+        {string.settings.faq.label}
+      </span>
+      <span className="cptx-section-item-description">
+        {string.settings.faq.description}
+      </span>
+      <div className="cptx-section-item-control">
+        <a className="cptx-useful-link" href={usefulLinks.FAQ} target="_blank">
+          {string.settings.see_more}
         </a>
+      </div>
+    </div>
+    <div className="cptx-section-item">
+      <span className="cptx-section-item-title">
+        {string.settings.privacy_policy.label}
+      </span>
+      <span className="cptx-section-item-description">
+        {string.settings.privacy_policy.description}
+      </span>
+      <div className="cptx-section-item-control">
         <a
-          className="useful-link"
+          className="cptx-useful-link"
           href={usefulLinks.PRIVACY_POLICY}
           target="_blank"
         >
-          {string.settings.privacy_policy}
+          {string.settings.see_more}
         </a>
+      </div>
+    </div>
+    <div className="cptx-section-item">
+      <span className="cptx-section-item-title">
+        {string.settings.terms_of_service.label}
+      </span>
+      <span className="cptx-section-item-description">
+        {string.settings.terms_of_service.description}
+      </span>
+      <div className="cptx-section-item-control">
         <a
-          className="useful-link"
+          className="cptx-useful-link"
           href={usefulLinks.TERMS_OF_SERVICE}
           target="_blank"
         >
-          {string.settings.terms_of_service}
+          {string.settings.see_more}
         </a>
+      </div>
+    </div>
+    <div className="cptx-section-item">
+      <span className="cptx-section-item-title">
+        {string.settings.criptext_libraries.label}
+      </span>
+      <span className="cptx-section-item-description">
+        {string.settings.criptext_libraries.description}
+      </span>
+      <div className="cptx-section-item-control">
         <a
-          className="useful-link"
+          className="cptx-useful-link"
           href={usefulLinks.CRIPTEXT_LIBRARIES}
           target="_blank"
         >
-          {string.settings.criptext_libraries}
+          {string.settings.see_more}
         </a>
       </div>
     </div>
@@ -520,7 +542,9 @@ renderer.propTypes = {
 };
 
 RecoveryEmailConfirmationMessage.propTypes = {
-  recoveryEmailConfirmed: PropTypes.bool
+  recoveryEmail: PropTypes.string,
+  recoveryEmailConfirmed: PropTypes.bool,
+  recoveryEmailIsLoading: PropTypes.bool
 };
 
 SettingGeneral.propTypes = {

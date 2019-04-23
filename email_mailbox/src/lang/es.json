@@ -423,64 +423,92 @@
     "action": "Acción",
     "cancel": "Cancelar",
     "change": "Cambiar",
-    "change_password": "cambiar contraseña",
     "contact_support": "Soporte",
     "check_for_updates": "Buscar actualizaciones",
     "create_new_label": "Crear nueva etiqueta",
-    "criptext_libraries": "Librerías de Criptext",
+    "criptext_libraries": {
+      "label": "Librerías de Criptext",
+      "description": "Revisa nuestros ingredientes que hacen posible que Criptext exista"
+    },
     "current_device": "dispositivo actual",
+    "delete_account": {
+      "label": "Eliminar cuenta",
+      "description": "Esta acción no puede ser revertida",
+      "button": "Eliminar permanentemente"
+    },
     "disabled": "desactivada",
     "edit": "Editar",
     "email": "Correo",
     "enabled": "activada",
     "enter_new_label_name": "Introducir nueva etiqueta",
-    "faq": "Preguntas Frecuentes",
+    "faq": {
+      "label": "Preguntas Frecuentes",
+      "description": "Encuentra respuestas de nuestras preguntas frecuentes"
+    },
+    "fullname": "Nombre Completo",
     "general": "general",
-    "language": "lenguaje",
+    "language": {
+      "label": "Lenguaje",
+      "description": "Selecciona tu lenguaje preferido"
+    },
     "last_activity": "Última actividad",
     "linked_devices": "Dispositivos enlazados",
     "logout": "Cerrar Sesión",
-    "name": "nombre",
-    "not_verified": "No verificado",
-    "notification_preview": "Vista previa de notificaciones",
+    "mailbox_sync": {
+      "label": "Sincronizar Buzón",
+      "description": "Transfiere todo tu buzón a otro dispositivo",
+      "button": "Sincronizar",
+      "tooltip": "Debes tener al menos un dispositivo adicional para sincronizar"
+    },
+    "not_verified": "no verificado",
+    "notification_preview": {
+      "label": "Mostrar Notificación Previa",
+      "description": "Previo contenido del email en las notificaciones de escritorio"
+    },
     "off": "desactivado",
     "on": "activado",
-    "password": "contraseña",
-    "privacy_policy": "Políticas de Privacidad",
+    "password": {
+      "label": "Contraseña",
+      "description": "Cambia por una contraseña fuerte, no la repitas"
+    },
+    "privacy_policy": {
+      "label": "Políticas de Privacidad",
+      "description": "Revisa nuestra política de privacidad"
+    },
     "profile": "perfil",
-    "read_receipts": "confirmación de leído",
+    "read_receipts": "Confirmación de Leído",
     "read_receipts_description": "Si desactivas confirmación de leído, no podrás saber cuando otros leen tus correos tampoco.",
+    "recovery_email": {
+      "label": "Correo de Recuperación",
+      "description": "Para el caso que olvides tu contraseña y requieras reestablecerla"
+    },
+    "recovery_not_set": "Correo de Recuperación no establecido",
     "remove": "Remover",
+    "reply_to": "Responder A",
     "reply_to_email": "Correo de Respuesta",
     "reply_to_not_set": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
     "resend_link": "Reenviar enlace",
-    "recovery_email": "Correo de Recuperación",
-    "recovery_not_set": "Correo de Recuperación no establecido",
-    "reply_to": "Responder A",
+    "see_more": "See More",
     "set_email": "Establecer correo",
     "show_in_label_list": "Mostrar en lista de etiquetas",
     "signature": "Firma",
     "system_labels": "Etiquetas del Sistema",
-    "theme": "Tema",
+    "theme": {
+      "label": "Tema",
+      "description": "Personaliza tu experiencia"
+    },
     "themeLabels": {
       "light": "Claro",
       "dark": "Oscuro"
     },
-    "terms_of_service": "Términos de servicio",
-    "trusted_devices": "dispositivos verificados",
-    "two_factor_authentication": "autenticación de dos factores",
-    "two_factor_not_available_text" : "Para deshabilitar Autenticación de dos factores deberás introducir tu correo de recuperación",
-    "üseful_links": "Enlaces útiles",
-    "verified": "Verificado",
-    "delete_account": {
-      "label": "Eliminar cuenta",
-      "button": "Eliminar permanentemente"
+    "terms_of_service": {
+      "label": "Términos de servicio",
+      "description": "Nuestras leyes están definidas aquí ;)"
     },
-    "mailbox_sync": {
-      "label": "Buzón",
-      "button": "Sincronizar buzón",
-      "tooltip": "Debes tener al menos un dispositivo adicional para sincronizar"
-    }
+    "trusted_devices": "dispositivos verificados",
+    "two_factor_authentication": "Autenticación de dos factores",
+    "two_factor_not_available_text" : "Para deshabilitar Autenticación de dos factores deberás introducir tu correo de recuperación",
+    "verified": "verificado"
   },
   "sidebar": {
     "compose": "redactar",

@@ -10,22 +10,17 @@ import string from '../lang';
 import './settingsgeneralprofile.scss';
 
 const SettingsGeneralProfile = props => (
-  <div id="settings-general-profile" className="section-block">
-    <div className="section-block-title">
-      <h1>{string.settings.profile}</h1>
-    </div>
-    <div className="section-block-content">
-      {renderBlockAvatar(props)}
-      {renderBlockEmail(props)}
-      {renderBlockName(props)}
-      {renderBlockSignature(props)}
-    </div>
+  <div id="cptx-settings-profile">
+    {renderBlockAvatar(props)}
+    {renderBlockEmail(props)}
+    {renderBlockName(props)}
+    {renderBlockSignature(props)}
   </div>
 );
 
 const renderBlockAvatar = props => (
-  <div className="section-block-content-item">
-    <div className="general-letters">
+  <div className="cptx-section-item">
+    <div className="cptx-profile-avatar">
       {props.showAvatar ? (
         <img
           src={props.avatarUrl}
@@ -33,15 +28,21 @@ const renderBlockAvatar = props => (
           alt="user avatar"
         />
       ) : (
-        <span>{getTwoCapitalLetters(myAccount.name)}</span>
+        <div className="cptx-profile-avatar-letters">
+          <span>{getTwoCapitalLetters(myAccount.name)}</span>
+        </div>
       )}
       {props.avatarIsLoading && (
-        <div className="general-avatar-loading-overlay">
+        <div className="cptx-profile-avatar-loading-overlay">
           <Loading />
         </div>
       )}
     </div>
-    <div>
+    <button
+      id="cptx-button-edit-avatar"
+      className="button-b"
+      disabled={props.avatarIsLoading}
+    >
       <input
         type="file"
         name="fileAvatar"
@@ -49,47 +50,34 @@ const renderBlockAvatar = props => (
         accept="image/*"
         onChange={props.onChangeAvatar}
       />
-      <label
-        className={props.avatarIsLoading ? 'disabled' : null}
-        htmlFor={props.avatarIsLoading ? null : 'fileAvatar'}
-      >
+      <label htmlFor={props.avatarIsLoading ? null : 'fileAvatar'}>
         {string.settings.edit}
       </label>
-    </div>
-    <div className="general-avatar-divider" />
-    <div>
-      <label
-        className={
-          props.avatarIsLoading || !props.showAvatar ? 'disabled' : null
-        }
-        onClick={
-          props.avatarIsLoading || !props.showAvatar
-            ? null
-            : props.onRemoveAvatar
-        }
-      >
-        {string.settings.remove}
-      </label>
-    </div>
+    </button>
+    <button
+      className="button-b"
+      disabled={props.avatarIsLoading}
+      onClick={
+        props.avatarIsLoading || !props.showAvatar ? null : props.onRemoveAvatar
+      }
+    >
+      <span>{string.settings.remove}</span>
+    </button>
   </div>
 );
 
 const renderBlockEmail = () => (
-  <div className="section-block-content-item">
-    <span className="section-block-content-item-title">
-      {string.settings.email}
-    </span>
-    <div className="profile-name">
-      <span>{`${myAccount.recipientId}@${appDomain}`}</span>
-    </div>
+  <div className="cptx-section-item">
+    <span className="cptx-section-item-title">{string.settings.email}</span>
+    <span className="cptx-section-item-description">{`${
+      myAccount.recipientId
+    }@${appDomain}`}</span>
   </div>
 );
 
 const renderBlockName = props => (
-  <div className="section-block-content-item" onBlur={props.onBlurInputName}>
-    <span className="section-block-content-item-title">
-      {string.settings.name}
-    </span>
+  <div className="cptx-section-item" onBlur={props.onBlurInputName}>
+    <span className="cptx-section-item-title">{string.settings.fullname}</span>
     {props.mode === EDITING_MODES.EDITING_NAME ? (
       <div>
         <input
@@ -107,7 +95,12 @@ const renderBlockName = props => (
       </div>
     ) : (
       <div className="profile-name">
-        <span onDoubleClick={props.onClickEditName}>{myAccount.name}</span>
+        <span
+          className="cptx-section-item-description"
+          onDoubleClick={props.onClickEditName}
+        >
+          {myAccount.name}
+        </span>
         <i
           className="icon-pencil"
           title="Edit name"
@@ -119,10 +112,8 @@ const renderBlockName = props => (
 );
 
 const renderBlockSignature = props => (
-  <div className="section-block-content-item">
-    <span className="section-block-content-item-title">
-      {string.settings.signature}
-    </span>
+  <div className="cptx-section-item">
+    <span className="cptx-section-item-title">{string.settings.signature}</span>
     <div className="signature-switch">
       <div className="settings-switch">
         <Switch
@@ -133,7 +124,7 @@ const renderBlockSignature = props => (
         />
       </div>
       <div className="settings-switch-label">
-        <span>
+        <span className="cptx-section-item-description">
           {`${string.settings.signature} ${
             myAccount.signatureEnabled
               ? string.settings.enabled
@@ -143,8 +134,8 @@ const renderBlockSignature = props => (
       </div>
     </div>
     <div
-      className={`signature-editor ${
-        !myAccount.signatureEnabled ? 'signature-editor-disabled' : ''
+      className={`cptx-signature-editor ${
+        !myAccount.signatureEnabled ? 'cptx-signature-editor-disabled' : ''
       }`}
     >
       <Editor

@@ -48,7 +48,8 @@ class ThreadsWrapper extends Component {
       !this.state.isHiddenLoadingSync &&
       nextProps.totalTask > 0 &&
       nextProps.completedTask > 0 &&
-      nextProps.totalTask === nextProps.completedTask
+      (nextProps.totalTask === nextProps.completedTask ||
+        nextProps.completedTask > nextProps.totalTask)
     ) {
       setTimeout(() => this.setState({ isHiddenLoadingSync: true }), 1000);
     }

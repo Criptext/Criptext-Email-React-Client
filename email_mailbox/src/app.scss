@@ -653,8 +653,8 @@ h2{
 .loading-ring {
   display: inline-block;
   position: relative;
-  top: -17px;
-  left: 10px;
+  top: -4px;
+  left: -27px;
   height: inherit;
 
   > div {
@@ -817,7 +817,7 @@ button{
       font-size: 14px;
     }
   
-    span{
+    span, label{
       font-size: 13px;
     }
   }

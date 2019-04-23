@@ -1,4 +1,14 @@
 #settings-general-delete-account {
+button{
+  color: #d94e47;
+
+  i{
+    font-size: 17px;
+    font-weight: 600;
+  }
+}
+
+
   > .section-block-content{
     .section-block-content-item{
       &:nth-child(1){
