@@ -430,7 +430,7 @@
       "label": "Criptext Libraries",
       "description": "See some of the ingredients that have made Criptext possible"
     },
-    "current_device": "current device",
+    "current_device": "Current Device",
     "delete_account": {
       "label": "Delete Account",
       "description": "This action can’t be reversed",

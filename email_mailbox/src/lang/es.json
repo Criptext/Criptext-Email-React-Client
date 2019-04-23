@@ -430,7 +430,7 @@
       "label": "Librerías de Criptext",
       "description": "Revisa nuestros ingredientes que hacen posible que Criptext exista"
     },
-    "current_device": "dispositivo actual",
+    "current_device": "Dispositivo Actual",
     "delete_account": {
       "label": "Eliminar cuenta",
       "description": "Esta acción no puede ser revertida",
@@ -488,7 +488,7 @@
     "reply_to_email": "Correo de Respuesta",
     "reply_to_not_set": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
     "resend_link": "Reenviar enlace",
-    "see_more": "See More",
+    "see_more": "Ver más",
     "set_email": "Establecer correo",
     "show_in_label_list": "Mostrar en lista de etiquetas",
     "signature": "Firma",

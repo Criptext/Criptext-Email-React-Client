@@ -1,22 +1,16 @@
 @import "./../styles/index.scss";
 
-.content-linked-devices {
-  flex-direction: column;
-  position: relative;
-  top: -5px;
-
-  .linked-device {
-    display: flex;
-    flex-direction: row;
+#setting-devices{
+  .cptx-section-item{
     align-items: stretch;
-    border-bottom: 1px solid transparent;
-    height: 55px;
+    flex-direction: row;
     font-size: 13px;
-    width: 97%;
+    margin: 0 10%;
     min-width: 490px;
+    width: 75%;
 
     > :nth-child(1) {
-      width: 5%;
+      width: 3%;
     }
     > :nth-child(2) {
       width: 20%;
@@ -30,8 +24,10 @@
       align-items: center;
       font-size: 22px;
       align-content: center;
+
       i {
         color: #9b9b9b;
+        font-size: 25px;
         margin: 0 auto;
       }
     }
@@ -58,8 +54,8 @@
         color: #61b900;
         font-size: 12px;
         font-weight: 300;
-        text-transform: uppercase;
       }
+
       .device-connection-data {
         span {
           &:nth-child(1) {
@@ -72,14 +68,14 @@
         }
       }
     }
-    .device-action {
+
+    button {
       display: flex;
       align-items: center;
       padding-left: 5%;
       color: #d94e47;
-      font-size: 11px;
-      font-weight: 300;
-      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
     }
   }
@@ -87,13 +83,11 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_SETTINGS_DEVICES_ITEM_HOVER, $_BORDER_COLOR_SETTINGS_DEVICES_ITEM, $_COLOR_TEXT_SETTINGS_DEVICES_TITLE){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_SETTINGS_DEVICES_ITEM_HOVER, $_COLOR_TEXT_SETTINGS_DEVICES_TITLE){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
-    .content-linked-devices {
-      .linked-device {
-        border-bottom-color: $_BORDER_COLOR_SETTINGS_DEVICES_ITEM;
-    
+    #setting-devices{
+      .cptx-section-item {
         &:hover{
           background-color: $_BACKGROUND_COLOR_SETTINGS_DEVICES_ITEM_HOVER;
         }
@@ -118,5 +112,5 @@
   }
 }
 
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SETTINGS_DEVICES_ITEM_HOVER_LIGHT, $_BORDER_COLOR_SETTINGS_DEVICES_ITEM_LIGHT, $_COLOR_TEXT_SETTINGS_DEVICES_TITLE_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SETTINGS_DEVICES_ITEM_HOVER_DARK, $_BORDER_COLOR_SETTINGS_DEVICES_ITEM_DARK, $_COLOR_TEXT_SETTINGS_DEVICES_TITLE_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SETTINGS_DEVICES_ITEM_HOVER_LIGHT, $_COLOR_TEXT_SETTINGS_DEVICES_TITLE_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SETTINGS_DEVICES_ITEM_HOVER_DARK, $_COLOR_TEXT_SETTINGS_DEVICES_TITLE_DARK);
