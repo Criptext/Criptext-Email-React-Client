@@ -1,0 +1,70 @@
+@import "./../styles/index.scss";
+
+.cptx-from-container{
+  border-bottom: 1px solid transparent;
+
+  .cptx-from-content{
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    height: 40px;
+  }
+
+  .cptx-from-more {
+    display: flex;
+    flex-direction: column;
+    transition: height linear 130ms;
+
+    &.collapsed{
+      display: none;
+      height: 0px;
+    }
+
+    &.expanded {
+      height: auto;
+    }
+
+    ul{
+      list-style-type: none;
+      margin: 0;
+      padding-left: 51px;
+
+      li{
+        cursor: pointer;
+        margin-bottom: 10px;
+
+        &.selected{
+          .cptx-from-address{
+            font-weight: 400;
+          }
+        }
+      }
+    }
+  }
+
+  .cptx-from-address{
+    font-size: 12px;
+    font-weight: 200;
+    margin-left: 10px;
+  }
+}
+
+/* THEME
+   ----------------------------- */
+   @mixin themable($_THEME, $_COLOR_TEXT_RECIPIENT_LABEL, $_BORDER_COLOR_SEPARATE){
+    [data-theme^=#{$_THEME}],
+    [data-theme] [data-theme^=#{$_THEME}] {
+      .cptx-from-container{
+        .cptx-from-address{
+          color: $_COLOR_TEXT_RECIPIENT_LABEL;
+        }
+
+        ul li.selected .cptx-from-address{
+          color: #0091ff;
+        }
+      }
+    }
+  }
+    
+  @include themable($_THEME_LIGHT, $_COLOR_TEXT_RECIPIENT_LABEL_LIGHT, $_BORDER_COLOR_SEPARATE_LIGHT);
+  @include themable($_THEME_DARK, $_COLOR_TEXT_RECIPIENT_LABEL_DARK, $_BORDER_COLOR_SEPARATE_DARK);
