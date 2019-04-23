@@ -50,8 +50,14 @@ const defineLabels = (labelIds, labels, labelsToExclude) => {
 };
 
 const defineLabelsToExcludeByMailbox = currentLabelId => {
-  const labelInboxId = LabelType.inbox.id;
-  return currentLabelId === labelInboxId ? [LabelType.sent.id] : [];
+  switch (currentLabelId) {
+    case LabelType.inbox.id:
+      return [LabelType.sent.id];
+    case LabelType.sent.id:
+      return [LabelType.inbox.id];
+    default:
+      return [];
+  }
 };
 
 const defineSubject = subject => {
@@ -129,9 +135,11 @@ const mapStateToProps = (state, ownProps) => {
     date: defineTimeByToday(ownProps.thread.get('date')),
     subject: defineSubject(ownProps.thread.get('subject'))
   });
-  const isLabelCustome = !LabelType[ownProps.mailbox];
-  const mailboxlId = isLabelCustome ? null : LabelType[ownProps.mailbox].id;
-  const labelsToExclude = defineLabelsToExcludeByMailbox(mailboxlId);
+  const mailboxlId = ownProps.mailbox.id;
+  const isLabelCustome = mailboxlId === LabelType.starred.id || mailboxlId > 7;
+  const labelsToExclude = isLabelCustome
+    ? []
+    : defineLabelsToExcludeByMailbox(mailboxlId);
   const labels = defineLabels(
     thread.get('labels'),
     state.get('labels'),
