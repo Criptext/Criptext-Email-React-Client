@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FromWrapper from './FromWrapper';
 import RecipientWrapper from './RecipientWrapper';
 import SubjectWrapper from './SubjectWrapper';
 import BodyWrapper from './BodyWrapper';
@@ -10,6 +11,7 @@ import './composer.scss';
 
 const Composer = props => (
   <div className="wrapper" data-theme={mySettings.theme || 'light'}>
+    <FromWrapper />
     <RecipientWrapper
       disableSendButton={props.disableSendButtonOnInvalidEmail}
       toEmails={props.toEmails}
