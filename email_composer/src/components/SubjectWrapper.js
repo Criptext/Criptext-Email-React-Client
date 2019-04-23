@@ -7,7 +7,6 @@ class SubjectWrapper extends Component {
     return (
       <Subject
         {...this.props}
-        getSubject={this.handleGetText}
         onChangeInput={this.handleChangeInput}
         onFocusInput={this.handleFocusInput}
         text={this.props.text}

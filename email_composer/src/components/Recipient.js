@@ -10,7 +10,7 @@ import './recipient.scss';
 const { inputLabels } = string;
 
 const Recipient = props => (
-  <div className="recipient-container ">
+  <div className="recipient-container">
     {renderRecipientTo(props)}
     <div
       className={`recipient-more ${
@@ -24,7 +24,10 @@ const Recipient = props => (
         </div>
       )}
     </div>
-    <div className="recipient-toggle" onClick={() => props.onToggleRecipient()}>
+    <div
+      className="cptx-recipient-toggle"
+      onClick={() => props.onToggleRecipient()}
+    >
       <i
         className={
           props.isCollapsedMoreRecipient ? 'icon-arrow-down' : 'icon-arrow-up'
@@ -36,7 +39,7 @@ const Recipient = props => (
 
 const renderRecipientTo = props => (
   <div className="recipient-content">
-    <span className="recipient-input-label">{inputLabels.to}</span>
+    <span className="cptx-recipient-input-label">{inputLabels.to}</span>
     <TagsInput
       addKeys={[9, 13]}
       addOnBlur={true}
@@ -68,7 +71,7 @@ const renderRecipientTo = props => (
 
 const renderRecipientCc = props => (
   <div className="recipient-content">
-    <span className="recipient-input-label">{inputLabels.cc}</span>
+    <span className="cptx-recipient-input-label">{inputLabels.cc}</span>
     <TagsInput
       addKeys={[9, 13, 32, 188]}
       addOnBlur={true}
@@ -99,7 +102,7 @@ const renderRecipientCc = props => (
 
 const renderRecipientBcc = props => (
   <div className="recipient-content">
-    <span className="recipient-input-label">{inputLabels.bcc}</span>
+    <span className="cptx-recipient-input-label">{inputLabels.bcc}</span>
     <TagsInput
       addKeys={[9, 13, 32, 188]}
       addOnBlur={true}
