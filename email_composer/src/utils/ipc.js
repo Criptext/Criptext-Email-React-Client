@@ -2,6 +2,7 @@ import { callMain } from '@criptext/electron-better-ipc/renderer';
 const electron = window.require('electron');
 const { remote } = electron;
 const composerId = remote.getCurrentWindow().id;
+let accountId = '';
 
 /*  Windows call
 ----------------------------- */
@@ -56,6 +57,13 @@ export const getEmailByKeyWithbody = async params => {
 
 /* DataBase
    ----------------------------- */
+const checkCurrentAccount = async () => {
+  if (!accountId) {
+    const [myAccount] = await getAccount();
+    accountId = myAccount ? myAccount.id : '';
+  }
+};
+
 export const createEmail = async params => {
   return await callMain('db-create-email', params);
 };
@@ -96,12 +104,17 @@ export const deleteSessionRecord = async params => {
   return await callMain('db-delete-session-record', params);
 };
 
+export const getAccount = async () => {
+  return await callMain('db-get-account');
+};
+
 export const getAccountByParams = async params => {
   return await callMain('db-get-account-by-params', params);
 };
 
 export const getAllContacts = async () => {
-  return await callMain('db-get-all-contacts');
+  await checkCurrentAccount();
+  return await callMain('db-get-all-contacts', accountId);
 };
 
 export const getContactsByEmailId = async emailId => {
