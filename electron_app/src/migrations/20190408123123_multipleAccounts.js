@@ -8,6 +8,8 @@ const {
   XLARGE_STRING_SIZE
 } = fieldTypes;
 
+const batch = 50;
+
 /*   Account table
 ----------------------*/
 const updateAccountTable = async trx => {
@@ -77,7 +79,7 @@ const createAccountContactTable = async (trx, accountId) => {
 
   let shouldGetMoreContacIds = true;
   const batch = 100;
-  let minId = 0,
+  let minId = 1,
     maxId = batch;
   do {
     const ids = await trx
@@ -142,10 +144,22 @@ const addAccountIdToEmailTable = async (trx, accountId) => {
       .inTable(Table.ACCOUNT);
   });
   // Insert values
-  const prevValues = await trx.select('*').from(tempTablename);
-  if (prevValues.length) {
-    await trx.table(Table.EMAIL).insert(prevValues);
-  }
+  let getMoreRows = true;
+  let offset = 0;
+  do {
+    const rows = await trx
+      .select('*')
+      .from(tempTablename)
+      .limit(batch)
+      .offset(offset);
+    if (rows.length > 0) {
+      await trx.table(Table.EMAIL).insert(rows);
+      offset += batch;
+    } else {
+      getMoreRows = false;
+    }
+  } while (getMoreRows);
+  // Drop & Update
   await trx.schema.dropTable(tempTablename);
   if (accountId) {
     await trx.raw(`UPDATE ${Table.EMAIL} SET accountId = ${accountId};`);
@@ -186,10 +200,22 @@ const addAccountIdToLabelTable = async (trx, accountId) => {
     table.unique(['text', 'accountId']);
   });
   // Insert values
-  const prevValues = await trx.select('*').from(tempTablename);
-  if (prevValues.length) {
-    await trx.table(Table.LABEL).insert(prevValues);
-  }
+  let getMoreRows = true;
+  let offset = 0;
+  do {
+    const rows = await trx
+      .select('*')
+      .from(tempTablename)
+      .limit(batch)
+      .offset(offset);
+    if (rows.length > 0) {
+      await trx.table(Table.LABEL).insert(rows);
+      offset += batch;
+    } else {
+      getMoreRows = false;
+    }
+  } while (getMoreRows);
+  // Drop & Update
   await trx.schema.dropTable(tempTablename);
   await trx
     .table(Table.LABEL)
@@ -214,6 +240,7 @@ const rollbackLabelTable = async knex => {
 /*   EmailLabel table
 --------------------------*/
 const updateEmailLabelTable = async trx => {
+  // Duplicate Table
   const tempTablename = `old${Table.EMAIL_LABEL}`;
   await trx.schema.renameTable(Table.EMAIL_LABEL, tempTablename);
   await trx.schema.createTable(Table.EMAIL_LABEL, table => {
@@ -229,10 +256,23 @@ const updateEmailLabelTable = async trx => {
       .references('id')
       .inTable(Table.EMAIL);
   });
-  const prevValues = await trx.select('*').from(tempTablename);
-  if (prevValues.length) {
-    await trx.table(Table.EMAIL_LABEL).insert(prevValues);
-  }
+  // Insert values
+  let getMoreRows = true;
+  let offset = 0;
+  do {
+    const rows = await trx
+      .select('*')
+      .from(tempTablename)
+      .limit(batch)
+      .offset(offset);
+    if (rows.length > 0) {
+      await trx.table(Table.EMAIL_LABEL).insert(rows);
+      offset += batch;
+    } else {
+      getMoreRows = false;
+    }
+  } while (getMoreRows);
+  // Drop
   await trx.schema.dropTable(tempTablename);
 };
 
@@ -250,13 +290,36 @@ const addAccountIdToPendingEventTable = async (trx, accountId) => {
     'accountId'
   );
   if (columnAccountIdExists) return;
-  await trx.schema.table(Table.PENDINGEVENT, table => {
+  // Duplicate Table
+  const tempTablename = `old${Table.PENDINGEVENT}`;
+  await trx.schema.renameTable(Table.PENDINGEVENT, tempTablename);
+  await trx.schema.createTable(Table.PENDINGEVENT, table => {
+    table.increments('id').primary();
+    table.text('data').notNullable();
     table.integer('accountId');
     table
       .foreign('accountId')
       .references('id')
       .inTable(Table.ACCOUNT);
   });
+  // Insert values
+  let getMoreRows = true;
+  let offset = 0;
+  do {
+    const rows = await trx
+      .select('*')
+      .from(tempTablename)
+      .limit(batch)
+      .offset(offset);
+    if (rows.length > 0) {
+      await trx.table(Table.PENDINGEVENT).insert(rows);
+      offset += batch;
+    } else {
+      getMoreRows = false;
+    }
+  } while (getMoreRows);
+  // Drop & Update
+  await trx.schema.dropTable(tempTablename);
   if (accountId) {
     await trx.raw(`UPDATE ${Table.PENDINGEVENT} SET accountId = ${accountId};`);
   }
@@ -296,10 +359,22 @@ const addAccountIdToIdentityKeyRecordTable = async (trx, accountId) => {
       .inTable(Table.ACCOUNT);
   });
   // Insert values
-  const prevValues = await trx.select('*').from(tempTablename);
-  if (prevValues.length) {
-    await trx.table(Table.IDENTITYKEYRECORD).insert(prevValues);
-  }
+  let getMoreRows = true;
+  let offset = 0;
+  do {
+    const rows = await trx
+      .select('*')
+      .from(tempTablename)
+      .limit(batch)
+      .offset(offset);
+    if (rows.length > 0) {
+      await trx.table(Table.IDENTITYKEYRECORD).insert(rows);
+      offset += batch;
+    } else {
+      getMoreRows = false;
+    }
+  } while (getMoreRows);
+  // Drop & Update
   await trx.schema.dropTable(tempTablename);
   if (accountId) {
     await trx.raw(
@@ -386,10 +461,22 @@ const addAccountIdToSessionRecordTable = async (trx, accountId) => {
       .inTable(Table.ACCOUNT);
   });
   // Insert values
-  const prevValues = await trx.select('*').from(tempTablename);
-  if (prevValues.length) {
-    await trx.table(Table.SESSIONRECORD).insert(prevValues);
-  }
+  let getMoreRows = true;
+  let offset = 0;
+  do {
+    const rows = await trx
+      .select('*')
+      .from(tempTablename)
+      .limit(batch)
+      .offset(offset);
+    if (rows.length > 0) {
+      await trx.table(Table.SESSIONRECORD).insert(rows);
+      offset += batch;
+    } else {
+      getMoreRows = false;
+    }
+  } while (getMoreRows);
+  // Drop & Update
   await trx.schema.dropTable(tempTablename);
   if (accountId) {
     await trx.raw(
