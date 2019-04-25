@@ -3,6 +3,10 @@
 .cptx-from-container{
   border-bottom: 1px solid transparent;
 
+  &.hidden{
+    display: none;
+  }
+
   .cptx-from-content{
     align-items: center;
     cursor: pointer;

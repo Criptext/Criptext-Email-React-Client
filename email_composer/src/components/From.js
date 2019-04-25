@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import string from './../lang';
 import './from.scss';
 
-const accounts = [
-  { id: 1, emailAdress: 'erika@criptext.com' },
-  { id: 2, emailAdress: 'erika1@criptext.com' },
-  { id: 3, emailAdress: 'erika2@criptext.com' }
-];
-
 const From = props => (
-  <div className="cptx-from-container">
+  <div
+    className={`cptx-from-container ${defineClassComponent(
+      props.accounts.length === 1
+    )}`}
+  >
     <div className="cptx-from-content" onClick={() => props.onToggleFrom()}>
       <span className="cptx-recipient-input-label">
         {string.inputLabels.from}
@@ -25,7 +23,7 @@ const From = props => (
       }`}
     >
       <ul>
-        {accounts.map(account => {
+        {props.accounts.map(account => {
           const classItem =
             account.id === props.accountSelected.id ? 'selected' : '';
           return (
@@ -50,7 +48,15 @@ const From = props => (
   </div>
 );
 
+const defineClassComponent = hasOnlyOneAccount => {
+  if (hasOnlyOneAccount) {
+    return 'hidden';
+  }
+  return '';
+};
+
 From.propTypes = {
+  accounts: PropTypes.array,
   accountSelected: PropTypes.object,
   isCollapsedMoreFrom: PropTypes.bool,
   onToggleFrom: PropTypes.func

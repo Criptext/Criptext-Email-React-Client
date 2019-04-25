@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import From from './From';
+import { getAccountByParams } from '../utils/ipc';
+import { appDomain } from '../utils/const';
 
 class FromWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accountSelected: { id: 1, emailAdress: 'erika@criptext.com' },
+      accounts: [],
+      accountSelected: {},
       isCollapsedMoreFrom: true
     };
   }
@@ -14,6 +17,7 @@ class FromWrapper extends Component {
   render() {
     return (
       <From
+        accounts={this.state.accounts}
         accountSelected={this.state.accountSelected}
         isCollapsedMoreFrom={this.state.isCollapsedMoreFrom}
         onClick={this.handleClick}
@@ -23,6 +27,10 @@ class FromWrapper extends Component {
     );
   }
 
+  componentDidMount() {
+    this.getLoggedAccounts();
+  }
+
   handleClick = account => {
     this.setState({ accountSelected: account });
     this.handleToggleFrom();
@@ -30,6 +38,29 @@ class FromWrapper extends Component {
 
   handleToggleFrom = () => {
     this.setState({ isCollapsedMoreFrom: !this.state.isCollapsedMoreFrom });
+  };
+
+  getLoggedAccounts = async () => {
+    try {
+      const res = await getAccountByParams({
+        isLoggedIn: true
+      });
+      const accounts = [];
+      let accountSelected = {};
+      res.forEach(account => {
+        const item = {
+          id: account.id,
+          emailAdress: `${account.recipientId}@${appDomain}`
+        };
+        accounts.push(item);
+        if (account.isActive) {
+          accountSelected = item;
+        }
+      });
+      this.setState({ accounts, accountSelected });
+    } catch (e) {
+      return [];
+    }
   };
 }
 

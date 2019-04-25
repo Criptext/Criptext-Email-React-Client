@@ -96,6 +96,10 @@ export const deleteSessionRecord = async params => {
   return await callMain('db-delete-session-record', params);
 };
 
+export const getAccountByParams = async params => {
+  return await callMain('db-get-account-by-params', params);
+};
+
 export const getAllContacts = async () => {
   return await callMain('db-get-all-contacts');
 };
