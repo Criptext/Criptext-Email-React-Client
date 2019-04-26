@@ -896,6 +896,7 @@ ipcRenderer.on(
       case 'draft-edited': {
         emitter.emit(Event.STORE_LOAD, {
           labelIds: [LabelType.sent.id, LabelType.draft.id],
+          badgeLabelIds: [LabelType.draft.id],
           threadIds: [threadId]
         });
         break;

@@ -170,6 +170,7 @@ const renderEmailInfoExpand = props => (
               onReplyAll={props.onReplyAll}
               onForward={props.onForward}
               onMarkAsSpam={props.onMarkAsSpam}
+              onMarkUnread={props.onMarkUnread}
               onDelete={props.onDelete}
               onDeletePermanently={props.handleClickPermanentlyDeleteEmail}
               onToggleMenu={props.onTogglePopOverEmailActions}
@@ -184,10 +185,14 @@ const renderEmailInfoExpand = props => (
 );
 
 const showContacts = contacts => {
-  return contacts.reduce(
-    (result, contact) => `${result} ${contact.name || contact.email}`,
-    ''
-  );
+  return contacts.reduce((result, contact, index) => {
+    if (contacts.length > 1) {
+      const name = contact.name || contact.email;
+      const firstname = `${index !== 0 ? ', ' : ''}${name.split(' ')[0]}`;
+      return `${result}${firstname}`;
+    }
+    return `${result} ${contact.name || contact.email}`;
+  }, '');
 };
 
 const renderEmailStatus = status => {
@@ -269,6 +274,7 @@ renderEmailInfoExpand.propTypes = {
   onDeletePermanently: PropTypes.func,
   onForward: PropTypes.func,
   onMarkAsSpam: PropTypes.func,
+  onMarkUnread: PropTypes.func,
   onOpenEmailSource: PropTypes.func,
   onPrintEmail: PropTypes.func,
   onReplyEmail: PropTypes.func,
