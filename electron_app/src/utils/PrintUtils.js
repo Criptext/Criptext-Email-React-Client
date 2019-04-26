@@ -19,7 +19,7 @@ const getUsername = () => {
   return `${myAccount.recipientId}@${APP_DOMAIN}`;
 };
 
-const printEmailOrThread = async ({ emailId, threadId }) => {
+const printEmailOrThread = async ({ emailId, threadId, accountId }) => {
   let workerWin;
   // Refresh lang for document header
   const { language } = require('./../Settings');
@@ -78,7 +78,10 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
   let clearSubject;
   const username = getUsername();
   if (threadId) {
-    const rawEmails = await dbManager.getEmailsByThreadId(threadId);
+    const rawEmails = await dbManager.getEmailsByThreadId({
+      threadId,
+      accountId
+    });
     const emails = await Promise.all(
       rawEmails.map(async email => {
         const emailBody =

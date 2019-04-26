@@ -104,16 +104,27 @@ const cleanDataLogout = async recipientId => {
     isLoggedIn: false
   };
 
-  await db
+  const [accountId] = await db
     .table(Table.ACCOUNT)
     .where({ recipientId })
     .update(params);
 
-  return db.schema
-    .dropTableIfExists(Table.PREKEYRECORD)
-    .dropTableIfExists(Table.SIGNEDPREKEYRECORD)
-    .dropTableIfExists(Table.SESSIONRECORD)
-    .dropTableIfExists(Table.IDENTITYKEYRECORD);
+  await db
+    .table(Table.PREKEYRECORD)
+    .where('accountId', accountId)
+    .del();
+  await db
+    .table(Table.SIGNEDPREKEYRECORD)
+    .where('accountId', accountId)
+    .del();
+  await db
+    .table(Table.SESSIONRECORD)
+    .where('accountId', accountId)
+    .del();
+  await db
+    .table(Table.IDENTITYKEYRECORD)
+    .where('accountId', accountId)
+    .del();
 };
 
 const createContactColumns = table => {

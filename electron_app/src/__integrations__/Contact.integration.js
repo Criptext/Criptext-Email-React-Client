@@ -35,7 +35,10 @@ describe('Store data contact to Contact Table:', () => {
     };
     await DBManager.createContact(contact);
     const emails = [contact.email];
-    const [result] = await DBManager.getContactByEmails(emails);
+    const [result] = await DBManager.getContactByEmails({
+      emails,
+      accountId: accountA.id
+    });
     expect(result).toMatchObject(
       expect.objectContaining({
         email: contact.email
@@ -46,7 +49,7 @@ describe('Store data contact to Contact Table:', () => {
 
 describe('Load data contact from Contact Table:', () => {
   it('should load all contacts', async () => {
-    const contacts = await DBManager.getAllContacts();
+    const contacts = await DBManager.getAllContacts(accountA.id);
     expect(contacts).toMatchSnapshot();
   });
 });

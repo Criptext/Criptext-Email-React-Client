@@ -93,7 +93,8 @@ const email = {
     cc: [],
     bcc: []
   },
-  labels: [1, 2]
+  labels: [1, 2],
+  accountId: accountA.id
 };
 
 const file = {
@@ -298,9 +299,10 @@ describe('Import Database: ', () => {
       databasePath: DATABASE_PATH,
       accountId
     });
-    const [rawEmail] = await DBManager.getEmailsByThreadId(
-      email.email.threadId
-    );
+    const [rawEmail] = await DBManager.getEmailsByThreadId({
+      threadId: email.email.threadId,
+      accountId: accountA.id
+    });
     const body =
       (await fileUtils.getEmailBody({
         username,

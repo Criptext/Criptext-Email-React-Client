@@ -463,6 +463,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       labelIds.push(SpamLabelId);
     }
     const emailData = {
+      accountId: myAccount.id,
       email,
       labels: labelIds,
       files: filesData,

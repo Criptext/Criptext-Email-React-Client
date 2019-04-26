@@ -1,4 +1,8 @@
-const { getPendingEvents, deletePendingEventsByIds } = require('./DBManager');
+const {
+  getAccount,
+  getPendingEvents,
+  deletePendingEventsByIds
+} = require('./DBManager');
 const { mailformedEventRegex } = require('./utils/RegexUtils');
 const globalManager = require('./globalManager');
 let clientManager;
@@ -16,7 +20,8 @@ const processEventsQueue = async () => {
     if (!clientManager) {
       clientManager = require('./clientManager');
     }
-    const queuedEvents = await getPendingEvents();
+    const [account] = await getAccount();
+    const queuedEvents = await getPendingEvents(account.id);
     while (queuedEvents.length > 0) {
       const batch = queuedEvents.splice(0, QUEUE_BATCH);
       const { ids, parsedEvents } = await removeMalformedEvents(batch);
@@ -26,7 +31,7 @@ const processEventsQueue = async () => {
       if (status === MALFORMED_EVENT_STATUS) {
         continue;
       } else if (status === SUCCESS_STATUS) {
-        await deletePendingEventsByIds(ids);
+        await deletePendingEventsByIds({ ids, accountId: account.id });
       }
     }
     isProcessingQueue = false;
@@ -47,9 +52,9 @@ const removeMalformedEvents = async batch => {
       }
     })
     .filter(data => !!data);
-
+  const [account] = await getAccount();
   if (invalidIds.length > 0) {
-    await deletePendingEventsByIds(invalidIds);
+    await deletePendingEventsByIds({ ids: invalidIds, accountId: account.id });
   }
   return {
     ids: validIds,

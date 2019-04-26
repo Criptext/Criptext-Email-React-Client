@@ -119,7 +119,7 @@ const createAccount = async ({
   );
   await createSystemLabels();
   const email = `${recipientId}@${appDomain}`;
-  await createOwnContact(name, email);
+  await createOwnContact(name, email, newAccount.id);
   return true;
 };
 
@@ -179,8 +179,6 @@ const createAccountWithNewDevice = async ({
       throw CustomError(string.errors.saveLocal);
     }
     await createSystemLabels();
-    const email = `${recipientId}@${appDomain}`;
-    await createOwnContact(name, email);
   } else {
     if (!existsAccount.isLoggedIn) {
       try {
@@ -205,12 +203,16 @@ const createAccountWithNewDevice = async ({
   myAccount.initialize(newAccount);
   await setDefaultSettings();
 
+  const email = `${recipientId}@${appDomain}`;
+  await createOwnContact(name, email);
+
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
       await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
     }),
     store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
   );
+
   return true;
 };
 
@@ -348,8 +350,11 @@ const createSystemLabels = async () => {
   }
 };
 
-const createOwnContact = async (name, email) => {
-  const [prevOwnContact] = await getContactByEmails([email]);
+const createOwnContact = async (name, email, accountId) => {
+  const [prevOwnContact] = await getContactByEmails({
+    emails: [email],
+    accountId
+  });
   if (!prevOwnContact) {
     try {
       await createContact({ name, email });
