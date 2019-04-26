@@ -86,6 +86,7 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.FILE_KEY)
     .dropTableIfExists(Table.FEEDITEM)
     .dropTableIfExists(Table.ACCOUNT)
+    .dropTableIfExists(Table.ACCOUNT_CONTACT)
     .dropTableIfExists(Table.PREKEYRECORD)
     .dropTableIfExists(Table.SIGNEDPREKEYRECORD)
     .dropTableIfExists(Table.SESSIONRECORD)

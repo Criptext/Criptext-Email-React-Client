@@ -23,8 +23,8 @@ describe('TABLE[Label]:', () => {
         accountId: null
       }
     ];
-    await DBManager.createLabel(labelsToInsert);
-    const labels = await DBManager.getAllLabels();
+    await DBManager.createLabel({ params: labelsToInsert });
+    const labels = await DBManager.getAllLabels(null);
     expect(labels).toMatchSnapshot();
   });
 
@@ -35,7 +35,7 @@ describe('TABLE[Label]:', () => {
       uuid: '00000000-0000-0000-0000-000000000003',
       accountId: null
     };
-    const [labelId] = await DBManager.createLabel(labelParams);
+    const [labelId] = await DBManager.createLabel({ params: labelParams });
     const newColor = '333334';
     const newText = 'DraftModified';
     await DBManager.updateLabel({
@@ -52,10 +52,12 @@ describe('TABLE[Label]:', () => {
 
   it('should update label: color', async () => {
     const [id] = await DBManager.createLabel({
-      color: '444444',
-      text: 'Starred',
-      uuid: '00000000-0000-0000-0000-000000000004',
-      accountId: null
+      params: {
+        color: '444444',
+        text: 'Starred',
+        uuid: '00000000-0000-0000-0000-000000000004',
+        accountId: null
+      }
     });
     const newColor = '444555';
     await DBManager.updateLabel({ id, color: newColor });
@@ -65,10 +67,12 @@ describe('TABLE[Label]:', () => {
 
   it('should update label: text', async () => {
     const [id] = await DBManager.createLabel({
-      color: '555555',
-      text: 'Trash',
-      uuid: '00000000-0000-0000-0000-000000000005',
-      accountId: null
+      params: {
+        color: '555555',
+        text: 'Trash',
+        uuid: '00000000-0000-0000-0000-000000000005',
+        accountId: null
+      }
     });
     const newText = 'LabelModified2';
     await DBManager.updateLabel({ id, text: newText });
@@ -78,10 +82,12 @@ describe('TABLE[Label]:', () => {
 
   it('should update label: visible', async () => {
     const [id] = await DBManager.createLabel({
-      color: '666666',
-      text: 'Important',
-      uuid: '00000000-0000-0000-0000-000000000006',
-      accountId: null
+      params: {
+        color: '666666',
+        text: 'Important',
+        uuid: '00000000-0000-0000-0000-000000000006',
+        accountId: null
+      }
     });
     const newVisibleValue = false;
     await DBManager.updateLabel({ id, visible: newVisibleValue });
@@ -115,11 +121,11 @@ describe('TABLE[Label]:', () => {
       accountId: null
     };
     const labelsToInsert = [label1, label2, label3, label4];
-    await DBManager.createLabel(labelsToInsert);
+    await DBManager.createLabel({ params: labelsToInsert });
 
     const textToSearch = ['label', 'Test'];
     const expectedLabels = [label1, label2, label4];
-    const labels = await DBManager.getLabelsByText(textToSearch);
+    const labels = await DBManager.getLabelsByText({ textArray: textToSearch });
 
     // Custom label matcher
     expect.extend({

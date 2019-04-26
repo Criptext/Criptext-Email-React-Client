@@ -49,7 +49,7 @@ describe('Store data contact to Contact Table:', () => {
 
 describe('Load data contact from Contact Table:', () => {
   it('should load all contacts', async () => {
-    const contacts = await DBManager.getAllContacts(accountA.id);
+    const contacts = await DBManager.getAllContacts(accountId);
     expect(contacts).toMatchSnapshot();
   });
 });

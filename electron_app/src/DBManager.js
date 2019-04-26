@@ -123,6 +123,19 @@ const deleteAccountContact = ({ accountId }, trx) => {
 const createContact = params => {
   return db.transaction(async trx => {
     const { accountId = myAccount.id } = params;
+    const [existingContact] = await trx
+      .select(`${Table.CONTACT}.*`)
+      .from(Table.CONTACT)
+      .leftJoin(
+        Table.ACCOUNT_CONTACT,
+        `${Table.ACCOUNT_CONTACT}.contactId`,
+        `${Table.CONTACT}.id`
+      )
+      .where('email', params.email)
+      .andWhere('accountId', accountId);
+    if (existingContact) {
+      return existingContact.id;
+    }
     const contactData = Object.assign({}, params);
     delete contactData.accountId;
     const [contactId] = await trx.table(Table.CONTACT).insert(contactData);
@@ -142,7 +155,7 @@ const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
 
   const knex = trx || db;
   const contactsFound = await knex
-    .select(`${Table.CONTACT}.*`, `${Table.ACCOUNT_CONTACT}.accountId`)
+    .select(`${Table.CONTACT}.*`)
     .from(Table.CONTACT)
     .leftJoin(
       Table.ACCOUNT_CONTACT,
@@ -167,7 +180,6 @@ const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
   const newContacts = parsedContacts.filter(
     contact => !storedEmailAddresses.includes(contact.email)
   );
-
   if (newContacts.length) {
     await Promise.all(
       newContacts.map(async contact => {
@@ -213,7 +225,7 @@ const filterUniqueContacts = contacts => {
 
 const getAllContacts = accountId => {
   return db
-    .select('name', 'email', 'accountId')
+    .select('name', 'email')
     .from(Table.CONTACT)
     .leftJoin(
       Table.ACCOUNT_CONTACT,
@@ -523,20 +535,13 @@ const getTrashExpiredEmails = () => {
     );
 };
 
-const deleteEmailLabelAndContactByEmailId = ({
-  id,
-  optionalEmailToSave,
-  accountId
-}) => {
+const deleteEmailLabelAndContactByEmailId = ({ id, optionalEmailToSave }) => {
   return db.transaction(async trx => {
     await deleteEmailsByIds([id], trx);
     await deleteEmailContactByEmailId(id, trx);
     await deleteEmailLabelsByEmailId(id, trx);
     if (optionalEmailToSave) {
-      const [emailId] = await createEmail(
-        { optionalEmailToSave, accountId },
-        trx
-      );
+      const [emailId] = await createEmail(optionalEmailToSave, trx);
       return emailId;
     }
   });
@@ -921,11 +926,11 @@ const updateEmails = ({ ids, keys, unread, trashDate, accountId }, trx) => {
   const { whereParamName, whereParamValue } = ids
     ? { whereParamName: 'id', whereParamValue: ids }
     : { whereParamName: 'key', whereParamValue: keys };
-  return knex
-    .table(Table.EMAIL)
-    .whereIn(whereParamName, whereParamValue)
-    .andWhere('accountId', accountId)
-    .update(params);
+  let query = knex.table(Table.EMAIL).whereIn(whereParamName, whereParamValue);
+  if (!ids) {
+    query = query.andWhere('accountId', accountId);
+  }
+  return query.update(params);
 };
 
 const updateUnreadEmailByThreadIds = ({ threadIds, unread, accountId }) => {
@@ -946,21 +951,27 @@ const createLabel = ({ params, accountId = null }) => {
   if (isLabelArray) {
     labelsToInsert = params.map(labelParams => {
       if (!labelParams.uuid) {
-        return Object.assign(labelParams, {
-          accountId: accountId,
-          uuid: genUUID()
-        });
+        return Object.assign(
+          {
+            accountId: accountId,
+            uuid: genUUID()
+          },
+          labelParams
+        );
       }
-      return Object.assign(labelParams, { accountId: accountId });
+      return Object.assign({ accountId: accountId }, labelParams);
     });
   } else {
     if (!params.uuid) {
-      labelsToInsert = Object.assign(params, {
-        accountId: accountId,
-        uuid: genUUID()
-      });
+      labelsToInsert = Object.assign(
+        {
+          accountId: accountId,
+          uuid: genUUID()
+        },
+        params
+      );
     }
-    labelsToInsert = Object.assign(params, { accountId: accountId });
+    labelsToInsert = Object.assign({ accountId: accountId }, params);
   }
   return db.table(Table.LABEL).insert(labelsToInsert);
 };
@@ -997,7 +1008,7 @@ const getLabelById = id => {
     .where({ id });
 };
 
-const getLabelsByText = async ({ textArray, accountId }) => {
+const getLabelsByText = async ({ textArray, accountId = null }) => {
   let labels = [];
   for (const text of textArray) {
     const labelsMatched = await db
