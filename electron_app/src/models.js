@@ -104,12 +104,14 @@ const cleanDataLogout = async recipientId => {
     isActive: false,
     isLoggedIn: false
   };
-
   const [accountId] = await db
+    .table(Table.ACCOUNT)
+    .select('*')
+    .where({ recipientId });
+  await db
     .table(Table.ACCOUNT)
     .where({ recipientId })
     .update(params);
-
   await db
     .table(Table.PREKEYRECORD)
     .where('accountId', accountId)

@@ -204,7 +204,7 @@ const createAccountWithNewDevice = async ({
   await setDefaultSettings();
 
   const email = `${recipientId}@${appDomain}`;
-  await createOwnContact(name, email);
+  await createOwnContact(name, email, newAccount.id);
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -350,11 +350,8 @@ const createSystemLabels = async () => {
   }
 };
 
-const createOwnContact = async (name, email, accountId) => {
-  const [prevOwnContact] = await getContactByEmails({
-    emails: [email],
-    accountId
-  });
+const createOwnContact = async (name, email) => {
+  const [prevOwnContact] = await getContactByEmails([email]);
   if (!prevOwnContact) {
     try {
       await createContact({ name, email });
