@@ -443,6 +443,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       labelIds.push(InboxLabelId);
     }
     const emailData = {
+      accountId: myAccount.id,
       email,
       labels: labelIds,
       files: filesData,

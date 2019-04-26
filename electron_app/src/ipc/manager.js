@@ -10,7 +10,7 @@ const getUsername = () => {
 
 ipc.answerRenderer(
   'db-delete-emails-by-threadid-and-labelid',
-  async ({ threadIds, labelId }) => {
+  async ({ threadIds, labelId, accountId }) => {
     const [
       threadEmails
     ] = await dbManager.getEmailsToDeleteByThreadIdAndLabelId(
@@ -27,7 +27,11 @@ ipc.answerRenderer(
         )
       );
     }
-    await dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId);
+    await dbManager.deleteEmailsByThreadIdAndLabelId({
+      threadIds,
+      labelId,
+      accountId
+    });
   }
 );
 
@@ -51,7 +55,10 @@ ipc.answerRenderer('db-delete-emails-by-ids', async emailIds => {
 });
 
 ipc.answerRenderer('db-get-email-with-body', async key => {
-  const [email] = await dbManager.getEmailByKey(key);
+  const [email] = await dbManager.getEmailByKey({
+    key,
+    accountId: myAccount.id
+  });
   const body = await fileUtils.getEmailBody({
     username: getUsername(),
     metadataKey: parseInt(key)
@@ -62,24 +69,27 @@ ipc.answerRenderer('db-get-email-with-body', async key => {
   return Object.assign(email, { content: body });
 });
 
-ipc.answerRenderer('db-get-emails-by-threadid', async threadId => {
-  const emails = await dbManager.getEmailsByThreadId(threadId);
-  return await Promise.all(
-    emails.map(async email => {
-      const body = await fileUtils.getEmailBody({
-        username: getUsername(),
-        metadataKey: parseInt(email.key)
-      });
-      if (!body) {
-        return email;
-      }
-      return Object.assign(email, { content: body });
-    })
-  );
-});
+ipc.answerRenderer(
+  'db-get-emails-by-threadid',
+  async ({ threadId, accountId }) => {
+    const emails = await dbManager.getEmailsByThreadId({ threadId, accountId });
+    return await Promise.all(
+      emails.map(async email => {
+        const body = await fileUtils.getEmailBody({
+          username: getUsername(),
+          metadataKey: parseInt(email.key)
+        });
+        if (!body) {
+          return email;
+        }
+        return Object.assign(email, { content: body });
+      })
+    );
+  }
+);
 
-ipc.answerRenderer('db-delete-email-by-keys', async keys => {
-  const res = await dbManager.deleteEmailByKeys(keys);
+ipc.answerRenderer('db-delete-email-by-keys', async ({ keys, accountId }) => {
+  const res = await dbManager.deleteEmailByKeys({ keys, accountId });
   await Promise.all(
     keys.map(key =>
       fileUtils.deleteEmailContent({

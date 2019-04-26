@@ -91,7 +91,8 @@ export const getAccountByParams = async params => {
 };
 
 export const getContactByEmails = async emails => {
-  return await callMain('db-get-contact-by-emails', emails);
+  await checkCurrentAccount();
+  return await callMain('db-get-contact-by-emails', { emails, accountId });
 };
 
 export const createContact = async params => {
@@ -108,7 +109,7 @@ export const createIdentityKeyRecord = async params => {
 };
 
 export const createLabel = async params => {
-  return await callMain('db-create-label', params);
+  return await callMain('db-create-label', { params });
 };
 
 export const createPreKeyRecord = async params => {
@@ -153,7 +154,7 @@ export const getIdentityKeyRecord = async params => {
 };
 
 export const getAllLabels = async () => {
-  return await callMain('db-get-all-labels');
+  return await callMain('db-get-all-labels', accountId);
 };
 
 export const getPreKeyPair = async params => {

@@ -1,5 +1,6 @@
 {
   "emailDraft": {
+    "accountId": 1,
     "email": {
       "threadId": "threadA",
       "key": "keyA",
@@ -24,6 +25,7 @@
   },
 
   "emailSent": {
+    "accountId": 1,
     "email": {
       "threadId": "threadB",
       "key": "keyB",
@@ -51,6 +53,7 @@
   },
 
   "emailInbox": {
+    "accountId": 1,
     "email": {
       "threadId": "threadC",
       "key": "keyC",
@@ -89,6 +92,7 @@
   },
 
   "emailReply": {
+    "accountId": 1,
     "email": {
       "threadId": "threadC",
       "key": "keyD",
@@ -114,6 +118,7 @@
   },
 
   "emailSpam": {
+    "accountId": 1,
     "email": {
       "threadId": "threadE",
       "key": "keyE",
@@ -140,6 +145,7 @@
   },
   
   "emailStarred": {
+    "accountId": 1,
     "email": {
       "threadId": "threadF",
       "key": "keyF",
@@ -166,6 +172,7 @@
   },
   
   "emailScore": {
+    "accountId": 1,
     "email": {
       "threadId": "threadG",
       "key": "keyG",
@@ -192,6 +199,7 @@
   },
   
   "emailUpdate": {
+    "accountId": 1,
     "email": {
       "threadId": "threadH",
       "key": "keyH",
@@ -217,6 +225,7 @@
   },
   
   "emailToSearch": {
+    "accountId": 1,
     "email": {
       "threadId": "threadIdSearch",
       "key": "keyI",
@@ -241,6 +250,7 @@
   },
   
   "draftToReplaceOld": {
+    "accountId": 1,
     "email": {
       "threadId": "threadJ",
       "key": "keyJ",

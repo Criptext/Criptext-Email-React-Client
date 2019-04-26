@@ -195,8 +195,9 @@ const getEvents = async () => {
   const PENDING_EVENTS_STATUS_OK = 200;
   const PENDING_EVENTS_STATUS_MORE = 201;
   const NO_EVENTS_STATUS = 204;
+  const [account] = await getAccount();
   await checkClient({});
-  const res = await client.getPendingEvents();
+  const res = await client.getPendingEvents(account.id);
   switch (res.status) {
     case PENDING_EVENTS_STATUS_OK:
       return { events: formEvents(res.body) };
@@ -321,8 +322,12 @@ const postKeyBundle = async params => {
 };
 
 const postPeerEvent = async params => {
+  const { accountId } = params;
+  const event = Object.assign({}, params);
+  delete event.accountId;
   try {
     await createPendingEvent({
+      accountId,
       data: JSON.stringify(params)
     });
     processEventsQueue();

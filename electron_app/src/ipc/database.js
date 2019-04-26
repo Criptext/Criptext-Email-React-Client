@@ -89,14 +89,18 @@ ipc.answerRenderer('db-get-account-by-params', params =>
   dbManager.getAccountByParams(params)
 );
 
-ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
+ipc.answerRenderer('db-get-all-contacts', accountId =>
+  dbManager.getAllContacts(accountId)
+);
 
 ipc.answerRenderer('db-get-all-feed-items', () => dbManager.getAllFeedItems());
 
-ipc.answerRenderer('db-get-all-labels', () => dbManager.getAllLabels());
+ipc.answerRenderer('db-get-all-labels', accountId =>
+  dbManager.getAllLabels(accountId)
+);
 
-ipc.answerRenderer('db-get-contact-by-emails', emails =>
-  dbManager.getContactByEmails(emails)
+ipc.answerRenderer('db-get-contact-by-emails', params =>
+  dbManager.getContactByEmails(params)
 );
 
 ipc.answerRenderer('db-get-contact-by-emailid', emailId =>
@@ -107,24 +111,26 @@ ipc.answerRenderer('db-get-contact-by-ids', ids =>
   dbManager.getContactByIds(ids)
 );
 
-ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));
+ipc.answerRenderer('db-get-email-by-key', params =>
+  dbManager.getEmailByKey(params)
+);
 
 ipc.answerRenderer('db-get-emails-by-ids', emailIds =>
   dbManager.getEmailsByIds(emailIds)
 );
 
-ipc.answerRenderer('db-get-emails-by-keys', emailKeys =>
-  dbManager.getEmailsByKeys(emailKeys)
+ipc.answerRenderer('db-get-emails-by-keys', params =>
+  dbManager.getEmailsByKeys(params)
 );
 
-ipc.answerRenderer('db-get-emails-by-labelids', labelIds =>
-  dbManager.getEmailsByLabelIds(labelIds)
+ipc.answerRenderer('db-get-emails-by-labelids', params =>
+  dbManager.getEmailsByLabelIds(params)
 );
 
 ipc.answerRenderer(
   'db-get-emails-by-threadid-and-labelid',
-  ({ threadIds, labelId }) =>
-    dbManager.getEmailsByThreadIdAndLabelId(threadIds, labelId)
+  ({ threadIds, labelId, accountId }) =>
+    dbManager.getEmailsByThreadIdAndLabelId({ threadIds, labelId, accountId })
 );
 
 ipc.answerRenderer('db-get-emails-counter-by-labelid', labelId =>
@@ -157,8 +163,8 @@ ipc.answerRenderer('db-get-identity-key-record', params =>
 
 ipc.answerRenderer('db-get-labelid', id => dbManager.getLabelById(id));
 
-ipc.answerRenderer('db-get-labesls-by-text', text =>
-  dbManager.getLabelsByText(text)
+ipc.answerRenderer('db-get-labesls-by-text', params =>
+  dbManager.getLabelsByText(params)
 );
 
 ipc.answerRenderer('db-get-prekey-pair', params =>
@@ -217,6 +223,6 @@ ipc.answerRenderer('db-update-settings', ({ opened, language, theme }) =>
 
 ipc.answerRenderer(
   'db-update-unread-email-by-threadids',
-  ({ threadIds, unread }) =>
-    dbManager.updateUnreadEmailByThreadIds({ threadIds, unread })
+  ({ threadIds, unread, accountId }) =>
+    dbManager.updateUnreadEmailByThreadIds({ threadIds, unread, accountId })
 );
