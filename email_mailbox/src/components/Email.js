@@ -170,6 +170,7 @@ const renderEmailInfoExpand = props => (
               onReplyAll={props.onReplyAll}
               onForward={props.onForward}
               onMarkAsSpam={props.onMarkAsSpam}
+              onMarkUnread={props.onMarkUnread}
               onDelete={props.onDelete}
               onDeletePermanently={props.handleClickPermanentlyDeleteEmail}
               onToggleMenu={props.onTogglePopOverEmailActions}
@@ -269,6 +270,7 @@ renderEmailInfoExpand.propTypes = {
   onDeletePermanently: PropTypes.func,
   onForward: PropTypes.func,
   onMarkAsSpam: PropTypes.func,
+  onMarkUnread: PropTypes.func,
   onOpenEmailSource: PropTypes.func,
   onPrintEmail: PropTypes.func,
   onReplyEmail: PropTypes.func,

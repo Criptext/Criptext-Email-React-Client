@@ -16,7 +16,8 @@ import {
   addContacts,
   addFiles,
   unsendEmailFiles,
-  updateEmailIdsThread
+  updateEmailIdsThread,
+  updateThreadsSuccess
 } from './index';
 import { EmailStatus, SocketCommand } from '../utils/const';
 import {
@@ -48,11 +49,11 @@ export const muteNotifications = emailId => {
   };
 };
 
-export const markEmailUnreadSuccess = (emailId, unreadValue) => {
+export const markEmailUnreadSuccess = (emailId, unread) => {
   return {
     type: Email.MARK_UNREAD,
     emailId,
-    unread: unreadValue
+    unread
   };
 };
 
@@ -110,11 +111,12 @@ export const muteEmail = (emailId, valueToSet) => {
   };
 };
 
-export const markEmailUnread = (emailId, valueToSet) => {
+export const markEmailUnread = (labelId, threadId, emailId, valueToSet) => {
   return async dispatch => {
     try {
       await updateEmail({ id: emailId, unread: !!valueToSet });
       dispatch(markEmailUnreadSuccess(emailId, valueToSet));
+      dispatch(updateThreadsSuccess(labelId, [threadId], valueToSet));
     } catch (e) {
       // To do
     }

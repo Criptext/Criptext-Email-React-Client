@@ -51,7 +51,12 @@ const EmailActions = props => {
           </li>
         )}
 
-        <li>
+        <li
+          onClick={ev => {
+            props.onMarkUnread(ev);
+            props.onToggleMenu(ev);
+          }}
+        >
           <span>{string.mailbox.mark_as_unread}</span>
         </li>
         {!props.isSpam && (
@@ -95,6 +100,7 @@ EmailActions.propTypes = {
   onDeletePermanently: PropTypes.func,
   onForward: PropTypes.func,
   onMarkAsSpam: PropTypes.func,
+  onMarkUnread: PropTypes.func,
   onOpenEmailSource: PropTypes.func,
   onPrintEmail: PropTypes.func,
   onReplyAll: PropTypes.func,

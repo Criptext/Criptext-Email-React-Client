@@ -95,8 +95,8 @@ class HeaderThreadOptions extends Component {
             <li onClick={() => this.props.onClickMarkAsRead()}>
               <span>
                 {markAsUnread
-                  ? string.mailbox.mark_as_read
-                  : string.mailbox.mark_as_unread}
+                  ? string.mailbox.mark_as_unread
+                  : string.mailbox.mark_as_read}
               </span>
             </li>
             {!this.props.itemsChecked && (

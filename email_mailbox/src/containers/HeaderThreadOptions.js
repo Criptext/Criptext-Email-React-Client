@@ -37,7 +37,7 @@ const makeMapStateToProps = () => {
     });
     const labels = getLabelsIncluded(state, threadsLabelIds);
     const markAsUnread = ownProps.itemsChecked
-      ? shouldMarkAsUnread(threads, ownProps.itemsChecked)
+      ? !shouldMarkAsUnread(threads, ownProps.itemsChecked)
       : true;
     const allSelected = ownProps.itemsChecked
       ? threadIds.size === ownProps.itemsChecked.size
