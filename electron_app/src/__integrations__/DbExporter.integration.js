@@ -124,7 +124,7 @@ const insertContacts = async () => {
 };
 
 const insertLabels = async () => {
-  await DBManager.createLabel(labels);
+  await DBManager.createLabel({ params: labels });
 };
 
 const insertEmail = async () => {

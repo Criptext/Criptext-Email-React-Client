@@ -132,10 +132,11 @@ describe('Update data email to Email Table:', () => {
   });
 
   it('should update emails: unread by keys', async () => {
-    const keys = ['keyC', 'keyId'];
+    const keys = ['keyC', 'keyI'];
     await DBManager.updateEmails({
       keys,
-      unread: false
+      unread: false,
+      accountId
     });
     const emails = await DBManager.getEmailsByKeys({
       keys,
@@ -256,8 +257,8 @@ describe('Load data thread from Email Table:', () => {
 
   it('should load sent email with recipients', async () => {
     const emails = await DBManager.getEmailsByThreadId({
-      threaId: 'threadB',
-      accountId: accountA.id
+      threadId: 'threadB',
+      accountId
     });
     const email = emails[0];
     const { bcc, cc, to } = email;
@@ -380,9 +381,10 @@ describe('Load data thread from Email Table:', () => {
 describe('Update data contact to Contact Table: ', () => {
   it('Should update contact score to 1 after inserting email', async () => {
     await DBManager.createEmail(emailScore);
-    const [contact] = await DBManager.getContactByEmails(
-      emailScore.recipients.to
-    );
+    const [contact] = await DBManager.getContactByEmails({
+      emails: emailScore.recipients.to,
+      accountId
+    });
     expect(contact.score).toEqual(1);
   });
 });
