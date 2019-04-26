@@ -232,9 +232,6 @@ export const uploadAvatar = async params => {
 
 /*  DataBase
 ----------------------------- */
-export const getAccount = async () => {
-  return await callMain('db-get-account');
-};
 
 const checkCurrentAccount = async () => {
   if (!accountId) {
@@ -342,6 +339,10 @@ export const deletePreKeyPair = async params => {
 
 export const deleteSessionRecord = async params => {
   return await callMain('db-delete-session-record', params);
+};
+
+export const getAccount = async () => {
+  return await callMain('db-get-account');
 };
 
 export const getAccountByParams = async params => {
