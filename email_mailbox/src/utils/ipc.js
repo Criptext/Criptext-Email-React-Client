@@ -232,9 +232,6 @@ export const uploadAvatar = async params => {
 
 /*  DataBase
 ----------------------------- */
-export const getAccount = async () => {
-  return await callMain('db-get-account');
-};
 
 const checkCurrentAccount = async () => {
   if (!accountId) {
