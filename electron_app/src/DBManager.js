@@ -123,23 +123,25 @@ const deleteAccountContact = ({ accountId }, trx) => {
 const createContact = params => {
   return db.transaction(async trx => {
     const { accountId = myAccount.id } = params;
+    let contactId;
     const [existingContact] = await trx
-      .select(`${Table.CONTACT}.*`)
+      .select('*')
       .from(Table.CONTACT)
-      .leftJoin(
-        Table.ACCOUNT_CONTACT,
-        `${Table.ACCOUNT_CONTACT}.contactId`,
-        `${Table.CONTACT}.id`
-      )
-      .where('email', params.email)
-      .andWhere('accountId', accountId);
-    if (existingContact) {
-      return existingContact.id;
+      .where('email', params.email);
+    if (!existingContact) {
+      const contactData = Object.assign({}, params);
+      delete contactData.accountId;
+      [contactId] = await trx.table(Table.CONTACT).insert(contactData);
+    } else {
+      contactId = existingContact.id;
     }
-    const contactData = Object.assign({}, params);
-    delete contactData.accountId;
-    const [contactId] = await trx.table(Table.CONTACT).insert(contactData);
-    await createAccountContact({ contactId, accountId }, trx);
+    const [existingContactRelation] = await trx
+      .select('*')
+      .from(Table.ACCOUNT_CONTACT)
+      .where({ contactId, accountId });
+    if (!existingContactRelation) {
+      await createAccountContact({ contactId, accountId }, trx);
+    }
     return contactId;
   });
 };
