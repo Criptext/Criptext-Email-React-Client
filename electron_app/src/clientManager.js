@@ -8,7 +8,8 @@ const {
   createPendingEvent,
   getAccount,
   getSettings,
-  updateAccount
+  updateAccount,
+  getAccountByParams
 } = require('./DBManager');
 const { processEventsQueue } = require('./eventQueueManager');
 const globalManager = require('./globalManager');
@@ -75,6 +76,17 @@ const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
   ) {
     return initializeClient({ token, refreshToken, language, os: osInfo });
   }
+};
+
+const restartClient = async ({ accountId }) => {
+  const [account] = await getAccountByParams({ id: accountId });
+  const [token, refreshToken] = account
+    ? [account.jwt, account.refreshToken]
+    : [undefined, undefined];
+  await checkClient({
+    optionalSessionToken: token,
+    optionalRefreshToken: refreshToken
+  });
 };
 
 const checkExpiredSession = async (
@@ -529,6 +541,7 @@ module.exports = {
   removeDevice,
   resendConfirmationEmail,
   resetPassword,
+  restartClient,
   setReadTracking,
   setReplyTo,
   setTwoFactorAuth,
