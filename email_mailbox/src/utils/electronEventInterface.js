@@ -79,8 +79,9 @@ const electron = window.require('electron');
 const { ipcRenderer, remote } = electron;
 const {
   START_NOTIFICATION_SERVICE,
-  NOTIFICATION_RECEIVED,
-  TOKEN_UPDATED
+  NOTIFICATION_SERVICE_STARTED,
+  TOKEN_UPDATED,
+  NOTIFICATION_RECEIVED
 } = remote.require('@criptext/electron-push-receiver/src/constants');
 const senderNotificationId = '73243261136';
 const emitter = new EventEmitter();
@@ -1277,6 +1278,10 @@ export const sendManualSyncSuccessMessage = () => {
 
 /*  Firebase
 ----------------------------- */
+ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, async (_, token) => {
+  await updatePushToken(token);
+});
+
 ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
   await updatePushToken(token);
 });

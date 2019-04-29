@@ -9,6 +9,8 @@ const { processEventsQueue } = require('../eventQueueManager');
 const globalManager = require('./../globalManager');
 const loadingWindow = require('./../windows/loading');
 const { getSystemLanguage } = require('./../windows/windowUtils');
+const dbManager = require('./../DBManager');
+const socketClient = require('./../socketClient');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
@@ -89,6 +91,17 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
   loadingWindow.show();
   return await clientManager.acknowledgeEvents([data.rowid]);
 };
+
+ipc.answerRenderer('define-active-account-by-id', async accountId => {
+  // Database
+  await dbManager.defineActiveAccountById(accountId);
+  // Client
+  const clientManager = require('./../clientManager');
+  await clientManager.restartClient({ accountId });
+  // Socket
+  const [account] = await dbManager.getAccount();
+  socketClient.restartSocket(account);
+});
 
 module.exports = {
   sendLinkDeviceStartEventToAllWindows,
