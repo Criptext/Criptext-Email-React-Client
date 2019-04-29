@@ -173,8 +173,10 @@ ipc.answerRenderer('db-get-session-record', params =>
   dbManager.getSessionRecord(params)
 );
 
-ipc.answerRenderer('db-get-session-record-by-recipientids', recipientIds =>
-  dbManager.getSessionRecordByRecipientIds(recipientIds)
+ipc.answerRenderer(
+  'db-get-session-record-by-recipientids',
+  ({ recipientIds, accountId }) =>
+    dbManager.getSessionRecordByRecipientIds({ recipientIds, accountId })
 );
 
 ipc.answerRenderer('db-get-signed-prekey', params =>

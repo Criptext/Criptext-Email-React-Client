@@ -50,6 +50,7 @@ describe('[Form outgoing email] ', () => {
   it('Should form outgoing email from data', () => {
     const labelId = 6;
     const composerData = {
+      account: { id: 1 },
       toEmails: [`toUser@${appDomain}`],
       ccEmails: [`ccUser@${appDomain}`],
       bccEmails: [`bccUser@${appDomain}`],

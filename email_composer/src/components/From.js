@@ -14,7 +14,7 @@ const From = props => (
         {string.inputLabels.from}
       </span>
       <span className="cptx-from-address">
-        {props.accountSelected.emailAdress}
+        {props.accountSelected.emailAddress}
       </span>
     </div>
     <div
@@ -32,7 +32,7 @@ const From = props => (
               className={classItem}
               onClick={() => props.onClick(account)}
             >
-              <span className="cptx-from-address">{account.emailAdress}</span>
+              <span className="cptx-from-address">{account.emailAddress}</span>
             </li>
           );
         })}

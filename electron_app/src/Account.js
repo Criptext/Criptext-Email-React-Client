@@ -10,6 +10,7 @@ class Account {
     this.deviceId = accountObj.deviceId;
     this.signature = accountObj.signature;
     this.signatureEnabled = accountObj.signatureEnabled;
+    this.other = {};
   }
 
   update(accountObj) {
@@ -26,6 +27,7 @@ class Account {
       accountObj.signatureEnabled !== undefined
         ? accountObj.signatureEnabled
         : this.signatureEnabled;
+    this.other = accountObj.other || this.other;
   }
 
   getIdentityKeyPair() {

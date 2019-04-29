@@ -182,11 +182,18 @@ const deleteMyAccount = async password => {
     : await checkExpiredSession(res, deleteMyAccount, password);
 };
 
-const findKeyBundles = async params => {
+const findKeyBundles = async ({ params, accountId }) => {
+  if (accountId) await restartClient({ accountId });
   const res = await client.findKeyBundles(params);
-  return res.status === 200
-    ? res
-    : await checkExpiredSession(res, findKeyBundles, params);
+  const result =
+    res.status === 200
+      ? res
+      : await checkExpiredSession(res, findKeyBundles, { params, accountId });
+  if (accountId) {
+    const [account] = await getAccount();
+    await restartClient({ accountId: account.id });
+  }
+  return result;
 };
 
 const getDataReady = async () => {
@@ -319,11 +326,18 @@ const postDataReady = async params => {
     : await checkExpiredSession(res, postDataReady, params);
 };
 
-const postEmail = async params => {
+const postEmail = async ({ params, accountId }) => {
+  if (accountId) await restartClient({ accountId });
   const res = await client.postEmail(params);
-  return res.status === 200
-    ? res
-    : await checkExpiredSession(res, postEmail, params);
+  const result =
+    res.status === 200
+      ? res
+      : await checkExpiredSession(res, postEmail, { params, accountId });
+  if (accountId) {
+    const [account] = await getAccount();
+    await restartClient({ accountId: account.id });
+  }
+  return result;
 };
 
 const postKeyBundle = async params => {

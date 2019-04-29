@@ -10,7 +10,7 @@ const Control = props => (
         'button-a button-send ' +
         (props.status === Status.WAITING ? 'button-send-loading' : '')
       }
-      onClick={props.onClickSendMessage}
+      onClick={() => props.onClickSendMessage()}
       disabled={
         props.status === Status.WAITING || props.status === Status.DISABLED
       }

@@ -12,6 +12,7 @@ import {
   createEmail,
   createEmailLabel,
   deleteEmailsByIds,
+  getAccountByParams,
   getEmailByKey,
   saveDraftChangesComposerWindow,
   saveEmailBody,
@@ -68,6 +69,8 @@ class ComposerWrapper extends Component {
         : false
       : false;
     this.state = {
+      accounts: [],
+      accountSelected: {},
       bccEmails: [],
       ccEmails: [],
       displayNonCriptextPopup: false,
@@ -103,6 +106,8 @@ class ComposerWrapper extends Component {
     return (
       <Composer
         {...this.props}
+        accounts={this.state.accounts}
+        accountSelected={this.state.accountSelected}
         bccEmails={this.state.bccEmails}
         ccEmails={this.state.ccEmails}
         disableSendButtonOnInvalidEmail={
@@ -110,6 +115,7 @@ class ComposerWrapper extends Component {
         }
         displayNonCriptextPopup={this.state.displayNonCriptextPopup}
         files={this.state.files}
+        getAccount={this.hangleGetAccount}
         getBccEmails={this.handleGetBccEmail}
         getCcEmails={this.handleGetCcEmail}
         getTextSubject={this.handleGetSubject}
@@ -161,6 +167,13 @@ class ComposerWrapper extends Component {
     setCryptoInterfaces(filetoken => {
       return this.state.files.filter(file => file.token === filetoken)[0];
     });
+    const { accounts, accountSelected } = await this.getLoggedAccounts();
+    state = {
+      ...state,
+      accounts,
+      accountSelected
+    };
+    myAccount.update({ other: accountSelected });
     await this.setState(state);
   }
 
@@ -191,6 +204,31 @@ class ComposerWrapper extends Component {
     return await formDataToReply(keyEmailToRespond, type);
   };
 
+  getLoggedAccounts = async () => {
+    try {
+      const res = await getAccountByParams({
+        isLoggedIn: true
+      });
+      const accounts = [];
+      let accountSelected = {};
+      res.forEach(account => {
+        const item = {
+          id: account.id,
+          emailAddress: `${account.recipientId}@${appDomain}`,
+          recipientId: account.recipientId,
+          deviceId: account.deviceId
+        };
+        accounts.push(item);
+        if (account.isActive) {
+          accountSelected = item;
+        }
+      });
+      return { accounts, accountSelected };
+    } catch (e) {
+      return { accounts: [], accountSelected: {} };
+    }
+  };
+
   handleClickDiscardDraft = () => {
     closeComposerWindow({});
   };
@@ -201,6 +239,11 @@ class ComposerWrapper extends Component {
         return { status: Status.DISABLED };
       }
     });
+  };
+
+  hangleGetAccount = account => {
+    myAccount.update({ other: account });
+    this.setState({ accountSelected: account });
   };
 
   handleGetToEmail = emails => {
@@ -479,7 +522,10 @@ class ComposerWrapper extends Component {
   sendMessage = async secure => {
     this.setState({ status: Status.WAITING });
     const temporalThreadId = `<criptext-temp-${Date.now()}>`;
+    const account = this.state.accountSelected;
+    const accountId = account.id;
     const data = {
+      account,
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
@@ -505,9 +551,9 @@ class ComposerWrapper extends Component {
 
       [emailId] = await createEmail(emailData);
       const peer = {
-        recipientId: myAccount.recipientId,
+        recipientId: account.recipientId,
         type: 'peer',
-        deviceId: myAccount.deviceId
+        deviceId: account.deviceId
       };
       const recipients = [...criptextRecipients, peer];
       const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
@@ -528,6 +574,7 @@ class ComposerWrapper extends Component {
       const threadId = this.state.threadId || res.body.threadId;
       key = metadataKey;
       const emailParams = {
+        accountId,
         id: emailId,
         key,
         threadId,
@@ -594,8 +641,9 @@ class ComposerWrapper extends Component {
         return fileParams;
       });
     };
-
+    const account = this.state.accountSelected;
     const data = {
+      account,
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
