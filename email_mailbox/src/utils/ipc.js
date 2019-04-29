@@ -145,6 +145,10 @@ export const checkExpiredSession = async params => {
   return await callMain('client-check-expired-session', params);
 };
 
+export const defineActiveAccountById = async accountId => {
+  return await callMain('define-active-account-by-id', accountId);
+};
+
 export const deleteMyAccount = async password => {
   return await callMain('client-delete-my-account', password);
 };
@@ -293,10 +297,6 @@ export const createSignedPreKeyRecord = async params => {
     accountId,
     ...params
   });
-};
-
-export const defineActiveAccountById = async accountId => {
-  return await callMain('db-define-active-account-by-id', accountId);
 };
 
 export const deleteEmailByKeys = async keys => {

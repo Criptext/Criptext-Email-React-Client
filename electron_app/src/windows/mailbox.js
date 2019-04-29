@@ -13,7 +13,6 @@ const { removeProtocolFromUrl } = require('./../utils/stringUtils');
 const { isFromStore, isDev } = require('./windowUtils');
 const { createTrayIcon, destroyTrayIcon } = require('./tray');
 const { isWindows } = require('./../utils/osUtils');
-const { APP_DOMAIN } = require('./../utils/const');
 
 let mailboxWindow;
 
@@ -47,7 +46,7 @@ const create = () => {
   });
   mailboxWindow.loadURL(mailboxUrl);
   // Firebase
-  const firebaseFilename = getUsername() || 'config';
+  const firebaseFilename = 'pushNotificationConfig';
   setupPushReceiver({
     filename: firebaseFilename,
     webContents: mailboxWindow.webContents
@@ -85,11 +84,6 @@ const create = () => {
     }
   });
   mailboxWindowState.manage(mailboxWindow);
-};
-
-const getUsername = () => {
-  const myAccount = require('./../Account');
-  return myAccount ? `${myAccount.recipientId}@${APP_DOMAIN}` : '';
 };
 
 const showFileExplorer = filename => {
