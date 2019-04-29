@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ProfileShortCut from './ProfileShortCut';
 import { myAccount } from '../utils/electronInterface';
-import { compareAccounts, formAvatarUrl } from '../utils/AccountUtils';
+import {
+  compareAccounts,
+  defineAccountVisibleParams
+} from '../utils/AccountUtils';
 
 class ProfileShortCutWrapper extends Component {
   constructor(props) {
@@ -16,12 +19,13 @@ class ProfileShortCutWrapper extends Component {
   render() {
     const currentAccount = this.state.loggedAccounts[0];
     const { avatarTimestamp } = this.props;
-    const avatarUrl = formAvatarUrl(
-      currentAccount.recipientId,
+    const { letters, avatarUrl } = defineAccountVisibleParams(
+      currentAccount,
       avatarTimestamp
     );
     return (
       <ProfileShortCut
+        letters={letters}
         avatarUrl={avatarUrl}
         avatarTimestamp={avatarTimestamp}
         loggedAccounts={this.state.loggedAccounts}
@@ -68,7 +72,7 @@ class ProfileShortCutWrapper extends Component {
 }
 
 ProfileShortCutWrapper.propTypes = {
-  avatarTimestamp: PropTypes.string,
+  avatarTimestamp: PropTypes.number,
   getLoggedAccounts: PropTypes.func,
   onClickSettings: PropTypes.func,
   onSelectAccount: PropTypes.func,
