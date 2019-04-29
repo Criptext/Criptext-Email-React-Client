@@ -152,7 +152,8 @@ describe('Update data email to Email Table:', () => {
     const key = 'keyB';
     await DBManager.updateEmail({
       key,
-      status: 6
+      status: 6,
+      accountId: accountA.id
     });
     const [email] = await DBManager.getEmailByKey({
       key,

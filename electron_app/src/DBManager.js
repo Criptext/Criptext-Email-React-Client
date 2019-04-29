@@ -103,7 +103,7 @@ const updateAccount = async ({
   return response;
 };
 
-/* Contact
+/* Contact Account
 ----------------------------- */
 const createAccountContact = (params, trx) => {
   const knex = trx || db;
@@ -148,7 +148,6 @@ const createContact = params => {
 
 const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
   const parsedContacts = filterUniqueContacts(formContactsRow(contacts));
-
   const contactsMap = parsedContacts.reduce((contactsObj, contact) => {
     contactsObj[contact.email] = contact;
     return contactsObj;
@@ -166,7 +165,6 @@ const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
     )
     .whereIn('email', emailAddresses)
     .andWhere('accountId', accountId);
-
   const contactsToUpdate = contactsFound.reduce((toUpdateArray, contact) => {
     const email = contact.email;
     const newName = contactsMap[email].name || contact.name;
@@ -175,7 +173,6 @@ const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
     }
     return toUpdateArray;
   }, []);
-
   const storedEmailAddresses = contactsFound.map(
     storedContact => storedContact.email
   );
@@ -185,7 +182,16 @@ const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
   if (newContacts.length) {
     await Promise.all(
       newContacts.map(async contact => {
-        const [contactId] = await knex.table(Table.CONTACT).insert(contact);
+        const [contactExists] = await knex
+          .select('id')
+          .from(Table.CONTACT)
+          .where('email', contact.email);
+        let contactId = undefined;
+        if (contactExists) {
+          contactId = contactExists.id;
+        } else {
+          [contactId] = await knex.table(Table.CONTACT).insert(contact);
+        }
         await createAccountContact({ contactId, accountId }, knex);
       })
     );
@@ -196,18 +202,6 @@ const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
     );
   }
   return emailAddresses;
-};
-
-const updateContactScore = (emailId, trx) => {
-  const subquery = trx
-    .table(Table.EMAIL_CONTACT)
-    .select('contactId')
-    .where('emailId', emailId)
-    .andWhere('type', '<>', EMAIL_CONTACT_TYPE_FROM);
-  return trx
-    .table(Table.CONTACT)
-    .whereIn('id', subquery)
-    .increment('score', 1);
 };
 
 const filterUniqueContacts = contacts => {
@@ -290,6 +284,18 @@ const updateContactByEmail = ({ email, name }, trx) => {
     .table(Table.CONTACT)
     .where({ email })
     .update({ name });
+};
+
+const updateContactScore = (emailId, trx) => {
+  const subquery = trx
+    .table(Table.EMAIL_CONTACT)
+    .select('contactId')
+    .where('emailId', emailId)
+    .andWhere('type', '<>', EMAIL_CONTACT_TYPE_FROM);
+  return trx
+    .table(Table.CONTACT)
+    .whereIn('id', subquery)
+    .increment('score', 1);
 };
 
 /* EmailContact
@@ -420,7 +426,6 @@ const createEmail = async (params, trx) => {
         trx
       );
       const [emailId] = await createEmail({ email, accountId }, trx);
-
       const from = formEmailContact({
         emailId,
         contactStored,
@@ -1034,6 +1039,7 @@ const getEmailsUnredByLabelId = params => {
 };
 
 const updateEmail = ({
+  accountId,
   id,
   key,
   threadId,
@@ -1059,13 +1065,14 @@ const updateEmail = ({
     messageId
   });
   const whereParam = id ? { id } : { key };
-  return db
-    .table(Table.EMAIL)
-    .where(whereParam)
-    .update(params);
+  let query = db.table(Table.EMAIL).where(whereParam);
+  if (!id) {
+    query = query.andWhere('accountId', accountId);
+  }
+  return query.update(params);
 };
 
-const updateEmails = ({ ids, keys, unread, trashDate, accountId }, trx) => {
+const updateEmails = ({ accountId, ids, keys, unread, trashDate }, trx) => {
   const knex = trx || db;
   const params = noNulls({
     unread: typeof unread === 'boolean' ? unread : undefined,

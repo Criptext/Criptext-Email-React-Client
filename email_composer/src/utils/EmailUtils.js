@@ -90,6 +90,7 @@ export const formDataToEditDraft = async emailKeyToEdit => {
 };
 
 export const formOutgoingEmailFromData = ({
+  account,
   bccEmails,
   body,
   ccEmails,
@@ -117,7 +118,12 @@ export const formOutgoingEmailFromData = ({
     bcc: filterNonCriptextRecipients(bcc)
   };
 
+  const accountId = account.id;
+  const nameAddress = myAccount.id === account.id ? `${myAccount.name} ` : '';
+  const myEmailAddress =
+    account.emailAddress || `${myAccount.recipientId}@${appDomain}`;
   const email = {
+    accountId,
     key: Date.now(),
     subject: textSubject,
     preview: cleanHTML(body).slice(0, previewLength),
@@ -128,7 +134,7 @@ export const formOutgoingEmailFromData = ({
     isMuted: false,
     threadId,
     content: '',
-    fromAddress: `${myAccount.name} <${myEmailAddress}>`
+    fromAddress: `${nameAddress}<${myEmailAddress}>`
   };
   const recipients = {
     to,
@@ -145,6 +151,7 @@ export const formOutgoingEmailFromData = ({
   }
 
   const emailData = {
+    accountId,
     email,
     recipients,
     labels,

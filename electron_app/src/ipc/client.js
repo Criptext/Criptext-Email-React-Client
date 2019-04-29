@@ -27,8 +27,8 @@ ipc.answerRenderer('client-delete-my-account', password =>
   clientManager.deleteMyAccount(password)
 );
 
-ipc.answerRenderer('client-find-key-bundles', params =>
-  clientManager.findKeyBundles(params)
+ipc.answerRenderer('client-find-key-bundles', ({ params, accountId }) =>
+  clientManager.findKeyBundles({ params, accountId })
 );
 
 ipc.answerRenderer('client-get-data-ready', () => clientManager.getDataReady());
@@ -71,8 +71,8 @@ ipc.answerRenderer('client-post-data-ready', params =>
   clientManager.postDataReady(params)
 );
 
-ipc.answerRenderer('client-post-email', params =>
-  clientManager.postEmail(params)
+ipc.answerRenderer('client-post-email', ({ params, accountId }) =>
+  clientManager.postEmail({ params, accountId })
 );
 
 ipc.answerRenderer('client-post-key-bundle', params =>

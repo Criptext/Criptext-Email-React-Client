@@ -1,4 +1,5 @@
 export const myAccount = {
+  id: 1,
   recipientId: 'myAccountRecipientId',
   name: 'myAccountName'
 };

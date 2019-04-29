@@ -17,8 +17,10 @@ Object {
     },
   ],
   "emailData": Object {
+    "accountId": 1,
     "body": "<p>Hello</p>",
     "email": Object {
+      "accountId": 1,
       "content": "",
       "date": 1524861748481,
       "fromAddress": "myAccountName <myAccountRecipientId@criptext.com>",
