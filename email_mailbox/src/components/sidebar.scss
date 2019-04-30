@@ -10,12 +10,16 @@
     cursor: pointer;
     display: flex;
     height: $_HEIGHT_HEADER;
+    margin: 0;
+    padding: 0;
     position: relative;
+    width: auto;
   }
 }
 
 .header-icon{
   align-items: center;
+  background-color: transparent;
   background-image: url(../#{$_PATH_TO_IMAGES}/header-icon.svg);
   background-position: center;
   background-repeat: no-repeat;
@@ -35,9 +39,17 @@
 
   nav {
     &.nav-main{
-      li{
-        &:last-child {
-          &:hover{
+      background-color: transparent;
+
+      ul{
+        li{
+          &:last-child {
+            &:hover{
+              background-color: transparent;
+            }
+          }
+
+          span{
             background-color: transparent;
           }
         }
@@ -45,6 +57,7 @@
     }
 
     &.nav-footer{
+      background-color: transparent;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
@@ -68,11 +81,13 @@
     }
 
     ul{
+      background-color: transparent;
       list-style: none;
       margin: 0;
       padding: 0;
 
       li {
+        background-color: transparent;
         display: flex;
         margin: 0;
         padding: 0;
@@ -87,6 +102,7 @@
           }
         
           .nav-item-container{
+            background-color: transparent;
             align-items: center;
             display: flex;
             height: 40px;
@@ -137,6 +153,7 @@
 }
 
 .nav-item-free{
+  background-color: transparent;
   text-align: center;
   width: 100%;
 }
@@ -146,6 +163,7 @@
   width: 141px;
 
   i{
+    background-color: transparent;
     left: -8px;
     margin-right: 10px;
   }
@@ -157,10 +175,12 @@
 }
 
 .nav-item-option{
+  background-color: transparent;
   height: 18px;
   position: relative;
 
   i{
+    background-color: transparent;
     font-size: 22px;
     line-height: 18px;
   }
