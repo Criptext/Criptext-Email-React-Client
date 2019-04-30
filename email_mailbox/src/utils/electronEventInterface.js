@@ -550,7 +550,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
     const unsendDate = isUnsend ? date : null;
     if (status || preview || unsendDate) {
       await updateEmail({
-        key: String(metadataKey),
+        id: email.id,
         status,
         preview,
         unsendDate
