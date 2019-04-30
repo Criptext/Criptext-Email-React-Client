@@ -27,7 +27,8 @@ import { defineLastDeviceActivity } from '../utils/TimeUtils';
 import { clearStorage } from '../utils/storage';
 import {
   sendResetPasswordSendLinkSuccessMessage,
-  sendResetPasswordSendLinkErrorMessage
+  sendResetPasswordSendLinkErrorMessage,
+  selectAccountAsActive
 } from '../utils/electronEventInterface';
 
 const mapStateToProps = state => {
@@ -60,7 +61,11 @@ const formatDevicesData = devices => {
 
 const deleteDeviceData = async () => {
   clearStorage();
-  await cleanDataLogout(myAccount.recipientId);
+  const nextAccount = await cleanDataLogout(myAccount.recipientId);
+  if (nextAccount) {
+    const { id, recipientId } = nextAccount;
+    return await selectAccountAsActive({ id, recipientId });
+  }
   await logoutApp();
 };
 

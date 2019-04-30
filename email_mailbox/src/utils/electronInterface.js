@@ -1,5 +1,5 @@
 import { labels } from './systemLabels';
-import { cleanDataLogout as cleanData, createSignalTables } from './ipc';
+import { cleanDataLogout as cleanData } from './ipc';
 
 const { remote } = window.require('electron');
 const { getCurrentWindow } = remote;
@@ -51,6 +51,5 @@ export const getNews = ({ code }) => {
 /*  DataBase
 ----------------------------- */
 export const cleanDataLogout = async recipientId => {
-  await cleanData(recipientId);
-  return createSignalTables();
+  return await cleanData(recipientId);
 };

@@ -97,37 +97,48 @@ const cleanDataBase = () => {
 };
 
 const cleanDataLogout = async recipientId => {
-  const params = {
-    deviceId: '',
-    jwt: '',
-    refreshToken: '',
-    isActive: false,
-    isLoggedIn: false
-  };
-  const [accountId] = await db
+  const [account] = await db
     .table(Table.ACCOUNT)
     .select('*')
     .where({ recipientId });
-  await db
-    .table(Table.ACCOUNT)
-    .where({ recipientId })
-    .update(params);
-  await db
-    .table(Table.PREKEYRECORD)
-    .where('accountId', accountId)
-    .del();
-  await db
-    .table(Table.SIGNEDPREKEYRECORD)
-    .where('accountId', accountId)
-    .del();
-  await db
-    .table(Table.SESSIONRECORD)
-    .where('accountId', accountId)
-    .del();
-  await db
-    .table(Table.IDENTITYKEYRECORD)
-    .where('accountId', accountId)
-    .del();
+  if (account) {
+    const accountId = account.id;
+    const params = {
+      deviceId: '',
+      jwt: '',
+      refreshToken: '',
+      isActive: false,
+      isLoggedIn: false
+    };
+    await db
+      .table(Table.ACCOUNT)
+      .where({ recipientId })
+      .update(params);
+    await db
+      .table(Table.PREKEYRECORD)
+      .where('accountId', accountId)
+      .del();
+    await db
+      .table(Table.SIGNEDPREKEYRECORD)
+      .where('accountId', accountId)
+      .del();
+    await db
+      .table(Table.SESSIONRECORD)
+      .where('accountId', accountId)
+      .del();
+    await db
+      .table(Table.IDENTITYKEYRECORD)
+      .where('accountId', accountId)
+      .del();
+    // Next logged account
+    const nextLogged = await db
+      .table(Table.ACCOUNT)
+      .select('id', 'recipientId')
+      .where({ isLoggedIn: true })
+      .orderBy('id', 'desc')
+      .first();
+    return nextLogged || undefined;
+  }
 };
 
 const createContactColumns = table => {
