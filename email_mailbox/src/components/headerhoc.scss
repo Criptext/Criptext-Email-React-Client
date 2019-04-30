@@ -3,10 +3,14 @@
 header.header-container{
   background-color: #373a45;
   display: flex;
-  justify-content: space-between;
   height: $_HEIGHT_HEADER;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  width: auto;
 
   .header-content{
+    background-color: transparent;
     flex-grow: 1;
   }
 }

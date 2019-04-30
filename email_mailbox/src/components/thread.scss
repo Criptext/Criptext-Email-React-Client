@@ -10,6 +10,7 @@
     overflow: auto;
 
     .thread-info{
+      background-color: transparent;
       display: flex;
       justify-content: space-between;
       margin: 0 25px;
@@ -17,11 +18,13 @@
       width: calc(100% - 50px);
     
       .thread-info-title{
+        background-color: transparent;
         display: flex;
         margin: 26px 0 0 0;
         width: calc(100% - 50px);
     
         h1{
+          background-color: transparent;
           font-size: 21px;
           font-weight: 700;
           line-height: 21px;
@@ -51,6 +54,7 @@
 
 .thread-starred-status{
   align-items: flex-start;
+  background-color: transparent;
   display: flex;
   margin: 26px 0 0 0;
 
@@ -67,14 +71,20 @@
   }
 
   i{
+    background-color: transparent;
     cursor: pointer;
     font-size: 19px;
   }
 }
 
 .thread-emails{
-  width: calc(100% - 50px);
+  background-color: transparent;
   margin: 0 25px 25px;
+  width: calc(100% - 50px);
+
+  >div{
+    background-color: transparent;
+  }
 }
 
 .thread-collapsed {

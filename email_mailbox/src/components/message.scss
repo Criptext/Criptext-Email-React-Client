@@ -75,6 +75,7 @@
         background-color: #d26054;
         border-color: #d26054;
         color: white;
+
         > .message-description {
           margin-right: 15px;
         }
@@ -95,6 +96,7 @@
       }
     
       .message-description{
+        background-color: transparent;
         font-size: 13px;
         font-weight: 200;
         overflow: hidden;

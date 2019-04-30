@@ -9,11 +9,16 @@
   width: 100%;
 
   .nav-item-icon{
+    background-color: transparent;
     font-family: none;
     font-size: 16px;
     height: 18px;
     margin: 0 10px 0 32px;
     width: 15px;
+
+    i{
+      background-color: transparent;
+    }
   }
 
   span{
