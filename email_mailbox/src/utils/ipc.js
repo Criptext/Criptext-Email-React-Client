@@ -482,7 +482,8 @@ export const unsendEmail = async params => {
 };
 
 export const updateEmail = async params => {
-  return await callMain('db-update-email', params);
+  await checkCurrentAccount();
+  return await callMain('db-update-email', { accountId, ...params });
 };
 
 export const updateEmails = async params => {
