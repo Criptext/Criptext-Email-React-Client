@@ -39,7 +39,8 @@ import {
   updateUnreadEmailByThreadIds,
   updatePushToken,
   updateDeviceType,
-  checkForUpdates
+  checkForUpdates,
+  defineActiveAccountById
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -900,6 +901,12 @@ ipc.answerMain('get-events', () => {
 ipcRenderer.on('refresh-window-logged-as', (ev, email) => {
   showLoggedAsMessage(email);
 });
+
+export const selectAccountAsActive = async ({ id, recipientId }) => {
+  await defineActiveAccountById(id);
+  const email = `${recipientId}@${appDomain}`;
+  showLoggedAsMessage(email);
+};
 
 export const showLoggedAsMessage = email => {
   const messageData = {
