@@ -7,94 +7,157 @@
 }
 
 #profiles-previews {
-  width: 280px;
+  width: 310px;
   user-select: none;
 
-  .profile-preview-content {
-    align-items: center;
-    display: flex;
-    padding: 15px;
-    width: calc(100% - 30px);
-    opacity: 0.80;
+  ul.cptx-profile-preview-accounts{
+    margin: 0;
+    padding: 0;
 
-    &:hover {
-      opacity: 1;
-    }
-
-    .icon{
+    li.cptx-profile-preview-content{
       align-items: center;
-      background-color: rgba(74, 108, 98, 0.96);
-      border-radius: 50%;
-      display: inline-flex;
-      height: 60px;
-      width: 60px;
+      cursor: pointer;
+      display: flex;
+      padding: 15px 23px;
+      width: calc(100% - 46px);
 
-      span{
-        color: white;
-        font-size: 26px;
-        margin: 0 auto;
+      &.active{  
+        .cptx-profile-preview-icon{
+          height: 49px;
+          width: 49px;
+  
+          span{
+            font-size: 21px;
+          }
+        }
+
+        .cptx-profile-preview-detail{
+          .name{
+            font-size: 14px;
+            font-weight: 700;
+          }
+
+          .email-address{
+            font-size: 13px;
+          }
+        }
       }
-    }
+  
+      &.logged{
+        .cptx-profile-preview-icon{
+          height: 34px;
+          width: 34px;
+  
+          span{
+            font-size: 15px;
+          }
+        }
 
-    .profile-preview-detail{
-      display: inline-flex;
-      flex-direction: column;
-      margin-left: 10px;
-      vertical-align: top;
-      width: calc(100% - 70px);
-
-      .name{
-        font-size: 14px;
-        font-weight: 700;
+        .cptx-profile-preview-detail{
+          .name{
+            font-size: 12px;
+          }
+          
+          .email-address{
+            color: #a3a6b3;
+            font-size: 12px;
+          }
+        }
       }
 
-      .email-address{
-        font-size: 13px;
-        margin-top: 2px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+      &:nth-child(1) {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+      .cptx-profile-preview-icon{
+        align-items: center;
+        background-color: rgba(141, 166, 210, 0.8);
+        border-radius: 50%;
+        display: inline-flex;
+  
+        span{
+          color: white;
+          font-weight: 600;
+        }
+      }
+
+      .cptx-profile-preview-detail{
+        display: inline-flex;
+        flex-direction: column;
+        margin-left: 10px;
+        vertical-align: top;
+        width: calc(100% - 70px);
+    
+        .email-address{
+          margin-top: 2px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+
+      &:hover {
+        opacity: 0.8;
       }
     }
   }
 
-  .profile-preview-controls {
-    border-top: 0.5px solid #eaeaea;
+  .cptx-profile-preview-controls {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
     display: flex;
+    justify-content: center;
 
     .button-b{
-      width: 50%;
+      width: 45%;
       align-items: center;
       display: flex;
+      font-weight: 600;
       height: 40px;
-      opacity: 0.80;
+      justify-content: center;
 
-      &:hover {
-        opacity: 1;
+      i{
+        margin-right: 3px;
       }
-    }
-    
-    :nth-child(1) {
-      padding-left: 10px;
+
+      span{
+        font-weight: 600;
+      }
+
+      &:nth-child(1) {
+        i{
+          font-size: 17px;
+          font-weight: 800;
+          margin-right: 0px;
+        }
+      }
     }
   }
 }
 
 /*  THEME
 ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT, $_COLOR_TEXT_SECONDARY_ACTIVE_PROFILE_SHORTCUT, $_BORDER_COLOR_POPOVER){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     #profiles-previews {
-      .profile-preview-content {
+      .cptx-profile-preview-content {
+        border-bottom: 1px solid $_BORDER_COLOR_POPOVER;
+
         &.active {
           background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE;
+
+          .cptx-profile-preview-detail{
+            .email-address {
+              color: $_COLOR_TEXT_SECONDARY_ACTIVE_PROFILE_SHORTCUT;
+            }
+          }
         }
         &.logged {
           background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED;
         }
 
-        .profile-preview-detail {
+        .cptx-profile-preview-detail {
           > .name {
             color: $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT;
           }
@@ -104,12 +167,12 @@
         }
       }
 
-      .profile-preview-controls {
+      .cptx-profile-preview-controls {
         background-color: $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE;
       }
     }
   }
 }
 
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE_LIGHT, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED_LIGHT, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT_LIGHT, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE_DARK, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED_DARK, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT_DARK, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE_LIGHT, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED_LIGHT, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT_LIGHT, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT_LIGHT, $_COLOR_TEXT_SECONDARY_ACTIVE_PROFILE_SHORTCUT_LIGHT, $_BORDER_COLOR_POPOVER_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE_DARK, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED_DARK, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT_DARK, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT_DARK, $_COLOR_TEXT_SECONDARY_ACTIVE_PROFILE_SHORTCUT_DARK, $_BORDER_COLOR_POPOVER_DARK);

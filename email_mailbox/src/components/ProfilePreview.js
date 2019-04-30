@@ -7,16 +7,18 @@ import './profilepreview.scss';
 
 const ProfilePreview = props => (
   <div id="profiles-previews">
-    {props.loggedAccounts.map((account, key) => (
-      <ProfileItem
-        key={key}
-        account={account}
-        timestamp={props.avatarTimestamp}
-        onSelectAccount={props.onSelectAccount}
-        onToggleMenu={props.onToggleMenu}
-      />
-    ))}
-    <div className="profile-preview-controls">
+    <ul className="cptx-profile-preview-accounts">
+      {props.loggedAccounts.map((account, key) => (
+        <ProfileItem
+          key={key}
+          account={account}
+          timestamp={props.avatarTimestamp}
+          onSelectAccount={props.onSelectAccount}
+          onToggleMenu={props.onToggleMenu}
+        />
+      ))}
+    </ul>
+    <div className="cptx-profile-preview-controls">
       <button className="button-b" onClick={() => props.onClickAddAccount()}>
         <i className="icon-plus" />
         <span>{string.header.add_account}</span>
@@ -40,18 +42,20 @@ const ProfileItem = ({ account, timestamp, onToggleMenu, onSelectAccount }) => {
   const clickHandler = () =>
     isActive ? onToggleMenu() : onSelectAccount(account);
   return (
-    <div
-      className={`profile-preview-content ${isActive ? 'active' : 'logged'}`}
+    <li
+      className={`cptx-profile-preview-content ${
+        isActive ? 'active' : 'logged'
+      }`}
       onClick={() => clickHandler()}
     >
-      <div className="icon">
+      <div className="cptx-profile-preview-icon">
         <AvatarImage letters={letters} avatarUrl={avatarUrl} />
       </div>
-      <div className="profile-preview-detail">
+      <div className="cptx-profile-preview-detail">
         <span className="name">{name}</span>
         <span className="email-address">{emailAddress}</span>
       </div>
-    </div>
+    </li>
   );
 };
 
