@@ -540,7 +540,6 @@ class ComposerWrapper extends Component {
     this.setState({ status: Status.WAITING });
     const temporalThreadId = `<criptext-temp-${Date.now()}>`;
     const account = this.state.accountSelected;
-    const accountId = account.id;
     const data = {
       account,
       bccEmails: this.state.bccEmails,
@@ -593,7 +592,6 @@ class ComposerWrapper extends Component {
       const threadId = res.body.threadId || this.state.threadId;
       key = metadataKey;
       const emailParams = {
-        accountId,
         id: emailId,
         key,
         threadId,

@@ -10,17 +10,20 @@ const lang = require('./../lang');
 const HTMLTagsRegex = /<[^>]*>?/g;
 const getUsername = () => `${myAccount.recipientId}@${APP_DOMAIN}`;
 
-const buildEmailSource = async ({ metadataKey }) => {
+const buildEmailSource = async ({ key, accountId }) => {
   const username = getUsername();
   const [email] = await dbManager.getEmailByKey({
-    key: metadataKey,
-    accountId: myAccount.id
+    key,
+    accountId
   });
   if (!email || !email.boundary) {
     throw 'Unable to build email source. No boundary found!';
   }
-  const body = await fileUtils.getEmailBody({ username, metadataKey });
-  const headers = await fileUtils.getEmailHeaders({ username, metadataKey });
+  const body = await fileUtils.getEmailBody({ username, metadataKey: key });
+  const headers = await fileUtils.getEmailHeaders({
+    username,
+    metadataKey: key
+  });
 
   const source = `
 ${headers}

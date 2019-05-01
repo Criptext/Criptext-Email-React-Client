@@ -54,10 +54,10 @@ ipc.answerRenderer('db-delete-emails-by-ids', async emailIds => {
   await dbManager.deleteEmailsByIds(emailIds);
 });
 
-ipc.answerRenderer('db-get-email-with-body', async key => {
+ipc.answerRenderer('db-get-email-with-body', async ({ key, accountId }) => {
   const [email] = await dbManager.getEmailByKey({
     key,
-    accountId: myAccount.id
+    accountId
   });
   const body = await fileUtils.getEmailBody({
     username: getUsername(),

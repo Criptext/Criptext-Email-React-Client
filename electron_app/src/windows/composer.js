@@ -158,14 +158,13 @@ const destroy = async ({
   let typeEmailSent = 'new-email';
   let threadData = undefined;
   if (emailToEdit) {
-    const { type, key } = emailToEdit;
+    const { type, key, accountId } = emailToEdit;
     if (type === composerEvents.EDIT_DRAFT) {
       typeEmailSent = 'draft-edited';
-      const [oldDraftEmail] = await dbManager.getEmailByKey(key);
-      await dbManager.deleteEmailLabelAndContactByEmailId(
-        oldDraftEmail.id,
-        undefined
-      );
+      const [oldDraftEmail] = await dbManager.getEmailByKey({ key, accountId });
+      await dbManager.deleteEmailLabelAndContactByEmailId({
+        id: oldDraftEmail.id
+      });
     } else if (
       type === composerEvents.REPLY ||
       type === composerEvents.REPLY_ALL
@@ -216,14 +215,17 @@ const saveDraftToDatabase = async (composerId, data) => {
     });
     shouldUpdateBadge = true;
   } else {
-    const [oldEmail] = await dbManager.getEmailByKey(key);
+    const [oldEmail] = await dbManager.getEmailByKey({
+      key,
+      accountId: data.accountId
+    });
     const newDataDraft = Object.assign(dataDraft, {
       email: Object.assign(dataDraft.email, { key: oldEmail.key })
     });
-    const newEmailId = await dbManager.deleteEmailLabelAndContactByEmailId(
-      oldEmail.id,
-      newDataDraft
-    );
+    const newEmailId = await dbManager.deleteEmailLabelAndContactByEmailId({
+      id: oldEmail.id,
+      optionalEmailToSave: newDataDraft
+    });
     await fileUtils.saveEmailBody({
       body: content,
       username,

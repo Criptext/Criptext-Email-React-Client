@@ -77,8 +77,9 @@ export const sendPrintThreadEvent = async threadId => {
 
 export const getOsAndArch = () => callMain('get-os-and-arch');
 
-export const sendOpenEmailSource = metadataKey => {
-  callMain('open-email-source', metadataKey);
+export const sendOpenEmailSource = async key => {
+  await checkCurrentAccount();
+  callMain('open-email-source', { key, accountId });
 };
 
 export const checkForUpdates = showDialog => {
@@ -338,7 +339,8 @@ export const deletePreKeyPair = async params => {
 };
 
 export const deleteSessionRecord = async params => {
-  return await callMain('db-delete-session-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-delete-session-record', { accountId, ...params });
 };
 
 export const getAccount = async () => {
@@ -501,7 +503,10 @@ export const updateFilesByEmailId = async ({ emailId, status }) => {
 
 export const updateIdentityKeyRecord = async params => {
   await checkCurrentAccount();
-  return await callMain('db-update-identity-key-record', { accountId, params });
+  return await callMain('db-update-identity-key-record', {
+    accountId,
+    ...params
+  });
 };
 
 export const updateLabel = async params => {

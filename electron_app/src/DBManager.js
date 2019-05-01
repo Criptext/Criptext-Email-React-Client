@@ -1289,10 +1289,10 @@ const getSignedPreKey = params => {
 /* SessionRecord
 ----------------------------- */
 const createSessionRecord = params => {
-  const { recipientId, deviceId } = params;
+  const { recipientId, deviceId, accountId } = params;
   return db
     .transaction(async trx => {
-      await deleteSessionRecord({ recipientId, deviceId }, trx);
+      await deleteSessionRecord({ recipientId, deviceId, accountId }, trx);
       return trx.table(Table.SESSIONRECORD).insert(params);
     })
     .then(result => {

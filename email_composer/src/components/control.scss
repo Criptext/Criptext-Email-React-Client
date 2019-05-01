@@ -8,6 +8,7 @@
   width: calc(100% - 40px);
 
   >div{
+    background-color: transparent;
     display: flex;
     flex-grow: 1;
     justify-content: space-between;
@@ -16,6 +17,7 @@
 
 button.button-send{
   i{
+    background-color: transparent;
     margin-right: 5px;
     top: 1px;
   }
@@ -31,7 +33,6 @@ button.button-send{
   background-color: #0091ff;
   padding: 0 12px 0 9px;
   transition: width 0.5s;
-  // width: 90px;
 
   &[disabled]{
     opacity: 0.5;
@@ -39,6 +40,7 @@ button.button-send{
   }
 
   >div{
+    background-color: transparent;
     color: white;
   }
   
@@ -130,19 +132,23 @@ button.button-send{
 }
 
 .buttons-container{
+  background-color: transparent;
   display: flex;
   flex-direction: row;
 }
 
 .button-editor{
+  background-color: transparent;
   cursor: pointer;
   padding: 0 10px;
 
   label{
+    background-color: transparent;
     cursor: inherit;
   }
 
   i{
+    background-color: transparent;
     font-size: 18px;
   }
 }

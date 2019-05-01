@@ -125,6 +125,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onEditDraft: () => {
       const key = email.key;
       openFilledComposerWindow({
+        accountId: myAccount.id,
         key,
         type: composerEvents.EDIT_DRAFT
       });
