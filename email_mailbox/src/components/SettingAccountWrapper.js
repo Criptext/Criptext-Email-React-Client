@@ -16,7 +16,7 @@ import {
   sendRecoveryEmailLinkConfirmationErrorMessage,
   removeEvent
 } from './../utils/electronEventInterface';
-import SettingGeneral from './SettingGeneral';
+import SettingAccount from './SettingAccount';
 import {
   sendChangePasswordErrorMessage,
   sendChangePasswordSuccessMessage,
@@ -77,7 +77,7 @@ const recoveryEmailErrors = {
 const RESEND_CONFIRMATION_MINUTES_DELAY = 5;
 
 /* eslint-disable-next-line react/no-deprecated */
-class SettingGeneralWrapper extends Component {
+class SettingAccountWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -162,7 +162,7 @@ class SettingGeneralWrapper extends Component {
   render() {
     const devicesQuantity = this.props.devices ? this.props.devices.length : 0;
     return (
-      <SettingGeneral
+      <SettingAccount
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
         setReplyToInput={this.state.setReplyToPopupParams.replyToInput}
         onChangeInputValueOnSetReplyTo={
@@ -983,7 +983,7 @@ class SettingGeneralWrapper extends Component {
   };
 }
 
-SettingGeneralWrapper.propTypes = {
+SettingAccountWrapper.propTypes = {
   devices: PropTypes.array,
   isHiddenSettingsPopup: PropTypes.bool,
   onConfirmLogout: PropTypes.func,
@@ -1000,7 +1000,7 @@ SettingGeneralWrapper.propTypes = {
 };
 
 export {
-  SettingGeneralWrapper as default,
+  SettingAccountWrapper as default,
   EDITING_MODES,
   SETTINGS_POPUP_TYPES
 };

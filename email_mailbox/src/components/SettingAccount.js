@@ -4,25 +4,25 @@ import PropTypes from 'prop-types';
 import { Switch } from 'react-switch-input';
 import Countdown from 'react-countdown-now';
 import PopupHOC from './PopupHOC';
-import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
+import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
 import SetReplyToEmailPopup from './SetReplyToEmailPopup';
 import LogoutPopup from './LogoutPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
-import SettingsGeneralReplyTo from './SettingsGeneralReplyTo';
-import SettingsGeneralDeleteAccount from './SettingsGeneralDeleteAccount';
+import SettingBlockReplyTo from './SettingBlockReplyTo';
+import SettingBlockDeleteAccount from './SettingBlockDeleteAccount';
 import SettingsGeneralLanguageWrapper from './SettingsGeneralLanguageWrapper';
 import SettingsGeneralThemeWrapper from './SettingsGeneralThemeWrapper';
-import SettingsGeneralManualSync from './SettingsGeneralManualSync';
+import SettingBlockManualSync from './SettingBlockManualSync';
 import ManualSyncPopup from './ManualSyncPopup';
 import ManualSyncProcessPopup from './ManualSyncProcessPopup';
 import SettingsGeneralProfile from '../containers/SettingsGeneralProfile';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import { usefulLinks } from '../utils/const';
 import string from './../lang';
-import './settinggeneral.scss';
+import './settingaccount.scss';
 import './signatureeditor.scss';
 
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
@@ -39,30 +39,40 @@ const TWO_FACTOR_NOT_AVAILABLE_TEXT =
 const TWO_FACTOR_ENABLED_TEXT = string.settings.on;
 const TWO_FACTOR_DISABLED_TEXT = string.settings.off;
 
-const SettingGeneral = props => (
-  <div id="setting-general">
+const SettingAccount = props => (
+  <div id="setting-account">
     <div className="cptx-section-block">
       <div className="cptx-section-block-title">
         <h1>{string.settings.profile}</h1>
       </div>
       <div className="cptx-section-block-content">
         <SettingsGeneralProfile {...props} />
-        <SettingsGeneralManualSync
+      </div>
+      <div className="cptx-section-block-title">
+        <h1>{string.settings.privacy}</h1>
+      </div>
+      <div className="cptx-section-block-content">
+        <ReadReceiptsBlock {...props} />
+        <TwoFactorAuthenticationBlock {...props} />
+      </div>
+      <div className="cptx-section-block-title">
+        <h1>{string.settings.configurations}</h1>
+      </div>
+      <div className="cptx-section-block-content">
+        <PasswordBlock {...props} />
+        <RecoveryEmailBlock {...props} />
+        <SettingBlockReplyTo {...props} />
+        <SettingBlockManualSync
           onShowSettingsPopup={props.onShowSettingsPopup}
           devicesQuantity={props.devicesQuantity}
         />
-        <PasswordBlock {...props} />
-        <TwoFactorAuthenticationBlock {...props} />
+        <SettingBlockDeleteAccount
+          onShowSettingsPopup={props.onShowSettingsPopup}
+        />
         <ShowEmailPreviewBlock {...props} />
-        <ReadReceiptsBlock {...props} />
-        <RecoveryEmailBlock {...props} />
-        <SettingsGeneralReplyTo {...props} />
         <SettingsGeneralLanguageWrapper />
         <SettingsGeneralThemeWrapper />
         <UsefulLinksBlock />
-        <SettingsGeneralDeleteAccount
-          onShowSettingsPopup={props.onShowSettingsPopup}
-        />
       </div>
     </div>
     <SettingsPopup {...props} />
@@ -547,9 +557,9 @@ RecoveryEmailConfirmationMessage.propTypes = {
   recoveryEmailIsLoading: PropTypes.bool
 };
 
-SettingGeneral.propTypes = {
+SettingAccount.propTypes = {
   devicesQuantity: PropTypes.number,
   onShowSettingsPopup: PropTypes.func
 };
 
-export default SettingGeneral;
+export default SettingAccount;
