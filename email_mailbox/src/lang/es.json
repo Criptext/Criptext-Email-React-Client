@@ -420,8 +420,10 @@
     }
   },
   "settings": {
+    "about": "Acerca de",
     "account": "Cuenta",
     "action": "Acción",
+    "appearance": "Apariencia",
     "cancel": "Cancelar",
     "change": "Cambiar",
     "configurations": "Configuraciones",
@@ -463,6 +465,7 @@
       "tooltip": "Debes tener al menos un dispositivo adicional para sincronizar"
     },
     "not_verified": "no verificado",
+    "notifications": "Notificaciones",
     "notification_preview": {
       "label": "Mostrar Notificación Previa",
       "description": "Previo contenido del email en las notificaciones de escritorio"
@@ -512,6 +515,7 @@
     "trusted_devices": "dispositivos verificados",
     "two_factor_authentication": "Autenticación de dos factores",
     "two_factor_not_available_text" : "Para deshabilitar Autenticación de dos factores deberás introducir tu correo de recuperación",
+    "user_labels": "Etiquetas del Usuario",
     "verified": "verificado"
   },
   "sidebar": {

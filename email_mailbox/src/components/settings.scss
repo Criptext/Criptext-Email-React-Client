@@ -37,10 +37,10 @@
 
         &.selected {
           color: #0091ff;
-          font-weight: 700;
 
           span {
             border-bottom: 1px solid #0091ff;
+            font-weight: 700;
           }
         }
 
@@ -239,6 +239,10 @@
       position: relative;
       width: 518px;
 
+      &:last-child{
+        border-bottom: none;
+      }
+
       .cptx-section-item-title{
         font-size: 12px;
         font-weight: 600;
@@ -297,6 +301,11 @@
           .section-item {
             span {
               color: $_COLOR_TEXT_SETTINGS_TITLE;
+            }
+            &.selected {
+              span {
+                color: #0091ff;
+              }
             }
           }
         }
