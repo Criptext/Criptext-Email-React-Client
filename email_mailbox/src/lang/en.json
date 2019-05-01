@@ -420,9 +420,11 @@
     }
   },
   "settings": {
+    "account": "Account",
     "action": "Action",
     "cancel": "Cancel",
     "change": "Change",
+    "configurations": "Configurations",
     "contact_support": "Contact Support",
     "check_for_updates": "Check for updates",
     "create_new_label": "Create new label",
@@ -473,6 +475,7 @@
       "description": "Choose a strong password, don’t reuse it"
     },
     "profile": "profile",
+    "privacy": "Privacy",
     "privacy_policy": {
       "label": "Privacy Policy",
       "description": "See our commitment to protecting your privacy"

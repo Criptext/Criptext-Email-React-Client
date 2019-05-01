@@ -1,6 +1,6 @@
 @import "./../styles/index.scss";
 
-#setting-general{
+#setting-account{
   .forgot-password-link {
     display: flex;
     flex-direction: row-reverse;
@@ -100,7 +100,7 @@
 @mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN, $_COLOR_TEXT_MAIN_TITLE, $_BACKGROUND_COLOR_SETTINGS, $_COLOR_TEXT_SETTINGS_TITLE, $_BORDER_COLOR_SETTINGS_HEADER, $_COLOR_TEXT_SETTINGS_CONTENT){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
-    #setting-general{
+    #setting-account{
       .section-block{
         .settings-switch-label {
           color: $_COLOR_TEXT_SETTINGS_CONTENT;

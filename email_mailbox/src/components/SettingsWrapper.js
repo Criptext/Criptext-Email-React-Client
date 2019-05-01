@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Settings from './Settings';
 import { myAccount, mySettings } from '../utils/electronInterface';
-import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
+import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
 import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
 
 class SettingsWrapper extends Component {

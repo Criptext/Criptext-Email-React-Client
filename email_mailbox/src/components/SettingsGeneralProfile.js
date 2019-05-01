@@ -4,7 +4,7 @@ import { myAccount } from './../utils/electronInterface';
 import { getTwoCapitalLetters } from './../utils/StringUtils';
 import { appDomain } from '../utils/const';
 import { Switch } from 'react-switch-input';
-import { EDITING_MODES } from './SettingGeneralWrapper';
+import { EDITING_MODES } from './SettingAccountWrapper';
 import { Editor } from 'react-draft-wysiwyg';
 import string from '../lang';
 import './settingsgeneralprofile.scss';

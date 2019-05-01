@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SettingGeneralWrapper from './SettingGeneralWrapper';
+import SettingAccountWrapper from './SettingAccountWrapper';
 import SettingLabelsWrapper from './SettingLabelsWrapper';
 import SettingDevicesWrapper from './SettingDevicesWrapper';
 import Message from '../containers/Message';
@@ -9,6 +9,7 @@ import string from '../lang';
 import './settings.scss';
 
 const Sections = [
+  string.settings.account,
   string.settings.general,
   string.sidebar.labels,
   string.settings.trusted_devices
@@ -50,10 +51,10 @@ const renderSection = props => {
   const section = props.sectionSelected;
   switch (section) {
     case Sections[0]:
-      return <SettingGeneralWrapper {...props} />;
-    case Sections[1]:
-      return <SettingLabelsWrapper {...props} />;
+      return <SettingAccountWrapper {...props} />;
     case Sections[2]:
+      return <SettingLabelsWrapper {...props} />;
+    case Sections[3]:
       return <SettingDevicesWrapper {...props} />;
     default:
       break;

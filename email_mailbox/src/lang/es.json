@@ -420,9 +420,11 @@
     }
   },
   "settings": {
+    "account": "Cuenta",
     "action": "Acción",
     "cancel": "Cancelar",
     "change": "Cambiar",
+    "configurations": "Configuraciones",
     "contact_support": "Soporte",
     "check_for_updates": "Buscar actualizaciones",
     "create_new_label": "Crear nueva etiqueta",
@@ -472,6 +474,7 @@
       "label": "Contraseña",
       "description": "Cambia por una contraseña fuerte, no la repitas"
     },
+    "privacy": "Privacidad",
     "privacy_policy": {
       "label": "Políticas de Privacidad",
       "description": "Revisa nuestra política de privacidad"
