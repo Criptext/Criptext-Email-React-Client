@@ -62,8 +62,9 @@ export const saveEmailBody = async params => {
   return await callMain('fs-save-email-body', params);
 };
 
-export const getEmailByKeyWithbody = async params => {
-  return await callMain('db-get-email-with-body', params);
+export const getEmailByKeyWithbody = async key => {
+  checkCurrentAccount();
+  return await callMain('db-get-email-with-body', { key, accountId });
 };
 
 /* DataBase
@@ -95,7 +96,8 @@ export const createIdentityKeyRecord = async params => {
 };
 
 export const createPreKeyRecord = async params => {
-  return await callMain('db-create-prekey-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-create-prekey-record', { accountId, ...params });
 };
 
 export const createSessionRecord = async params => {
@@ -104,7 +106,11 @@ export const createSessionRecord = async params => {
 };
 
 export const createSignedPreKeyRecord = async params => {
-  return await callMain('db-create-signed-prekey-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-create-signed-prekey-record', {
+    accountId,
+    ...params
+  });
 };
 
 export const deleteEmailsByIds = async ids => {
@@ -112,15 +118,13 @@ export const deleteEmailsByIds = async ids => {
 };
 
 export const deletePreKeyPair = async params => {
-  return await callMain('db-delete-prekey-pair', params);
+  await checkCurrentAccount();
+  return await callMain('db-delete-prekey-pair', { accountId, ...params });
 };
 
 export const deleteSessionRecord = async params => {
-  return await callMain('db-delete-session-record', params);
-};
-
-export const getAccount = async () => {
-  return await callMain('db-get-account');
+  await checkCurrentAccount();
+  return await callMain('db-delete-session-record', { accountId, ...params });
 };
 
 export const getAccountByParams = async params => {
@@ -137,7 +141,8 @@ export const getContactsByEmailId = async emailId => {
 };
 
 export const getEmailByKey = async key => {
-  return await callMain('db-get-email-by-key', key);
+  await checkCurrentAccount();
+  return await callMain('db-get-email-by-key', { key, accountId });
 };
 
 export const getFilesByEmailId = async emailId => {
@@ -150,7 +155,8 @@ export const getIdentityKeyRecord = async params => {
 };
 
 export const getPreKeyPair = async params => {
-  return await callMain('db-get-prekey-pair', params);
+  await checkCurrentAccount();
+  return await callMain('db-get-prekey-pair', { accountId, ...params });
 };
 
 export const getSessionRecord = async params => {
@@ -167,13 +173,19 @@ export const getSessionRecordByRecipientIds = async ({ recipientIds }) => {
 };
 
 export const getSignedPreKey = async params => {
-  return await callMain('db-get-signed-prekey', params);
+  await checkCurrentAccount();
+  return await callMain('db-get-signed-prekey', { accountId, ...params });
 };
 
 export const updateEmail = async params => {
-  return await callMain('db-update-email', params);
+  checkCurrentAccount();
+  return await callMain('db-update-email', { accountId, ...params });
 };
 
 export const updateIdentityKeyRecord = async params => {
-  return await callMain('db-update-identity-key-record', params);
+  await checkCurrentAccount();
+  return await callMain('db-update-identity-key-record', {
+    accountId,
+    ...params
+  });
 };

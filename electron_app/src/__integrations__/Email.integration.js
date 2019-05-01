@@ -239,8 +239,7 @@ describe('Load data thread from Email Table:', () => {
     });
     await DBManager.deleteEmailLabelAndContactByEmailId({
       id: oldDraftBeforeReplace.id,
-      optionalEmailToSave: draftToReplaceOld,
-      accountId: accountA.id
+      optionalEmailToSave: draftToReplaceOld
     });
     const [oldDraftAfterReplace] = await DBManager.getEmailByKey({
       key: emailDraft.email.key,

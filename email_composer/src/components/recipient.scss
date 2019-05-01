@@ -1,9 +1,10 @@
 @import "./../styles/index.scss";
 
 .recipient-container{
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
   font-family: 'NunitoSans';
   font-size: 15px;
-  border-bottom: 1px solid transparent;
   min-height: 40px;
   position: relative;
 
@@ -16,6 +17,7 @@
   }
 
   > .recipient-more {
+    background-color: transparent;
     transition: height linear 130ms;
 
     &.collapsed{
@@ -25,11 +27,16 @@
     &.expanded {
       height: 77px;
     }
+
+    >div{
+      background-color: transparent;
+    }
   }
 }
 
 .recipient-content{
   align-items: center;
+  background-color: transparent;
   box-sizing: initial;
   display: flex;
   min-height: 30px;
@@ -52,6 +59,7 @@
       height: 100%;
   
       > div {
+        background-color: transparent;
         display: flex;
         flex-grow: 1;
   
@@ -74,6 +82,7 @@
 
 .cptx-recipient-toggle{
   align-items: center;
+  background-color: transparent;
   display: flex;
   cursor: pointer;
   height: 41px;
@@ -84,6 +93,7 @@
   width: 40px;
   
   i{
+    background-color: transparent;
     color: #6a707e;
     font-size: 32px;
     margin: 0 auto;

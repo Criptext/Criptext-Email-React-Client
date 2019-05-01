@@ -54,8 +54,8 @@ ipc.answerRenderer('print-to-pdf', async ({ emailId, threadId }) => {
   await printEmailOrThread({ emailId, threadId });
 });
 
-ipc.answerRenderer('open-email-source', async metadataKey => {
-  await buildEmailSource({ metadataKey });
+ipc.answerRenderer('open-email-source', async params => {
+  await buildEmailSource(params);
 });
 
 ipc.answerRenderer(
