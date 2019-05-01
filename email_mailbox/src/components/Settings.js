@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import SettingAccountWrapper from './SettingAccountWrapper';
 import SettingLabelsWrapper from './SettingLabelsWrapper';
 import SettingDevicesWrapper from './SettingDevicesWrapper';
+import SettingGeneral from './SettingGeneral';
 import Message from '../containers/Message';
 import { version } from './../../package.json';
 import string from '../lang';
@@ -52,6 +53,8 @@ const renderSection = props => {
   switch (section) {
     case Sections[0]:
       return <SettingAccountWrapper {...props} />;
+    case Sections[1]:
+      return <SettingGeneral {...props} />;
     case Sections[2]:
       return <SettingLabelsWrapper {...props} />;
     case Sections[3]:

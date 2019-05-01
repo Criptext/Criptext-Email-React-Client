@@ -4,12 +4,13 @@ import Settings from './Settings';
 import { myAccount, mySettings } from '../utils/electronInterface';
 import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
 import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
+import string from '../lang';
 
 class SettingsWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sectionSelected: 'general',
+      sectionSelected: string.settings.account,
       devices: [],
       recoveryEmail: myAccount.recoveryEmail,
       recoveryEmailConfirmed: !!myAccount.recoveryEmailConfirmed,
