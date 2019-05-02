@@ -23,6 +23,7 @@
     }
   
     .email-preview-content{
+      background-color: transparent;
       flex-grow: 1;
       font-size: 14px;
       font-weight: 100;
@@ -70,6 +71,7 @@
           width: calc(100% - 69px);
   
           >span{
+            background-color: transparent;
             font-size: 14px;
             font-weight: 100;
             line-height: 14px;
@@ -79,11 +81,13 @@
           }
   
           .email-info-content-to-more{
+            background-color: transparent;
             display: flex;
             margin-left: 5px;
             position: relative;
             
             >span{
+              background-color: transparent;
               color: #0091ff;
               cursor: pointer;
               font-size: 14px;
@@ -191,6 +195,7 @@
   }
 
   > hr{
+    background-color: transparent;
     border: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     margin: 0;
@@ -251,10 +256,12 @@
         }
 
         .email-info-content-detail{
+          background-color: transparent;
           display: flex;
           margin-right: 13px;
 
           .email-info-content-detail-date{
+            background-color: transparent;
             color: black;
             font-size: 13px;
             font-weight: 300;
@@ -304,6 +311,7 @@
 
   > div{
     align-items: center;
+    background-color: transparent;
     cursor: pointer;
     display: flex;
     flex-grow: 1;
