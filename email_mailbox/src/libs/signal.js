@@ -136,7 +136,7 @@ const generateAndInsertMorePreKeys = async () => {
     }
   } catch (newPreKeysError) {
     // eslint-disable-next-line no-console
-    console.error(newPreKeysError);
+    console.error('Generate preKeys error: ', newPreKeysError);
   }
 };
 
