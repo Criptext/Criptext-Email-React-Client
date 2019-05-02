@@ -1,5 +1,5 @@
 const ipc = require('@criptext/electron-better-ipc');
-const {close, minimize, show} = require('../windows/login');
+const { close, minimize, show } = require('../windows/login');
 
 ipc.answerRenderer('close-login', () => {
   close();
