@@ -658,13 +658,14 @@ const getEmailsByThreadId = ({ threadId, accountId }) => {
   return db.raw(query);
 };
 
-const getEmailsCounterByLabelId = labelId => {
+const getEmailsCounterByLabelId = ({ labelId, accountId }) => {
   const query = `SELECT COUNT(DISTINCT ${Table.EMAIL}.id) AS count
   FROM ${Table.EMAIL}
   LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
     Table.EMAIL_LABEL
   }.emailId
-  WHERE ${Table.EMAIL_LABEL}.labelId = ${labelId}`;
+  WHERE ${Table.EMAIL_LABEL}.labelId = ${labelId}
+  AND ${Table.EMAIL}.accountId = ${accountId}`;
   return db.raw(query);
 };
 
