@@ -159,6 +159,13 @@ export const getPendingMessageToDisplay = () => {
 
 /*  Clear All Storage
 -------------------------------------*/
-export const clearStorage = () => {
-  localStorage.clear();
+export const clearStorage = ({ deleteAll }) => {
+  if (deleteAll === true) return localStorage.clear();
+
+  const userGuideStepNameRegex = /userGuide.*/g;
+  const allItems = Object.keys(localStorage);
+  for (const item of allItems) {
+    const match = item.match(userGuideStepNameRegex);
+    if (!match) localStorage.removeItem(item);
+  }
 };
