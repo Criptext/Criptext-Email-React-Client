@@ -8,6 +8,7 @@ const path = require('path');
 const { mailboxUrl } = require('./../window_routing');
 const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
+const mySettings = require('./../Settings');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
 const { isFromStore, isDev } = require('./windowUtils');
@@ -42,7 +43,8 @@ const create = () => {
     show: false,
     title: 'Criptext',
     frame: !isWindows(),
-    webPreferences: { webSecurity: !isDev }
+    webPreferences: { webSecurity: !isDev },
+    backgroundColor: mySettings.theme === 'dark' ? '#2a2d32' : '#fff'
   });
   mailboxWindow.loadURL(mailboxUrl);
   // Firebase
