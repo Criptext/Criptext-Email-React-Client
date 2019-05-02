@@ -3,8 +3,8 @@ const dbManager = require('./../DBManager');
 const fileUtils = require('./../utils/FileUtils');
 const { APP_DOMAIN } = require('./../utils/const');
 
-ipc.answerRenderer('db-clean-data-logout', recipientId =>
-  dbManager.cleanDataLogout(recipientId)
+ipc.answerRenderer('db-clean-data-logout', ({ recipientId, deleteAll }) =>
+  dbManager.cleanDataLogout({ recipientId, deleteAll })
 );
 
 ipc.answerRenderer('db-create-account', params =>

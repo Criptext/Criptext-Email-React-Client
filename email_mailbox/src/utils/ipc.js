@@ -249,8 +249,8 @@ export const cleanDatabase = async () => {
   return await callMain('db-clean-database');
 };
 
-export const cleanDataLogout = async recipientId => {
-  return await callMain('db-clean-data-logout', recipientId);
+export const cleanDataLogout = async ({ recipientId, deleteAll }) => {
+  return await callMain('db-clean-data-logout', { recipientId, deleteAll });
 };
 
 export const createEmail = async params => {

@@ -61,12 +61,15 @@ const formatDevicesData = devices => {
 };
 
 const deleteDeviceData = async () => {
-  clearStorage();
-  const nextAccount = await cleanDataLogout(myAccount.recipientId);
+  clearStorage({});
+  const nextAccount = await cleanDataLogout({
+    recipientId: myAccount.recipientId
+  });
   if (nextAccount) {
     const { id, recipientId } = nextAccount;
     return await selectAccountAsActive({ id, recipientId });
   }
+  clearStorage({ deleteAll: true });
   await logoutApp();
 };
 

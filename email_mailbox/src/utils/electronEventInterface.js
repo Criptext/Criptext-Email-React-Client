@@ -9,7 +9,6 @@ import {
   reloadWindow
 } from './electronInterface';
 import {
-  cleanDatabase,
   createEmail,
   createEmailLabel,
   createFeedItem,
@@ -40,7 +39,8 @@ import {
   updatePushToken,
   updateDeviceType,
   checkForUpdates,
-  defineActiveAccountById
+  defineActiveAccountById,
+  cleanDataLogout
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -66,7 +66,8 @@ import { AttachItemStatus } from '../components/AttachItem';
 import {
   getShowEmailPreviewStatus,
   getUserGuideStepStatus,
-  setPendingMessageToDisplay
+  setPendingMessageToDisplay,
+  clearStorage
 } from './storage';
 import {
   fetchAcknowledgeEvents,
@@ -1202,7 +1203,7 @@ export const sendPasswordChangedEvent = () => {
 
 export const handleDeleteDeviceData = async rowid => {
   return await setTimeout(async () => {
-    await deleteAllDeviceData();
+    await deleteAccountData();
     if (rowid) {
       return { rowid };
     }
@@ -1210,8 +1211,17 @@ export const handleDeleteDeviceData = async rowid => {
   }, 4000);
 };
 
-export const deleteAllDeviceData = async () => {
-  await cleanDatabase();
+export const deleteAccountData = async () => {
+  clearStorage({});
+  const nextAccount = await cleanDataLogout({
+    recipientId: myAccount.recipientId,
+    deleteAll: true
+  });
+  if (nextAccount) {
+    const { id, recipientId } = nextAccount;
+    return await selectAccountAsActive({ id, recipientId });
+  }
+  clearStorage({ deleteAll: true });
   await logoutApp();
 };
 

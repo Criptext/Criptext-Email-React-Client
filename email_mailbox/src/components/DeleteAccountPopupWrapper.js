@@ -4,10 +4,12 @@ import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
 import { requiredMinLength } from './../utils/electronInterface';
 import DeleteAccountPopup from './DeleteAccountPopup';
-import { clearStorage } from '../utils/storage';
-import { cleanDatabase, deleteMyAccount, logoutApp } from '../utils/ipc';
+import { deleteMyAccount } from '../utils/ipc';
 import string from '../lang';
-import { sendAccountDeletedEvent } from './../utils/electronEventInterface';
+import {
+  sendAccountDeletedEvent,
+  deleteAccountData
+} from './../utils/electronEventInterface';
 
 const { inputs } = string.popups.delete_account;
 
@@ -82,11 +84,7 @@ class DeleteAccountPopupWrapper extends Component {
     if (status === 200) {
       this.props.onHideSettingsPopup();
       sendAccountDeletedEvent();
-      clearStorage();
-      await cleanDatabase();
-      setTimeout(() => {
-        logoutApp();
-      }, 1500);
+      await deleteAccountData();
     } else {
       this.setState({
         hasError: true,
