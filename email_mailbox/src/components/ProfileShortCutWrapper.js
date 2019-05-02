@@ -57,7 +57,7 @@ class ProfileShortCutWrapper extends Component {
     this.setState({
       isHiddenMenuProfilePreview: true
     });
-    this.props.openLogin();
+    this.props.openLogin({ shouldBeClose: true });
   };
 
   handleToggleMenuProfilePreview = () => {
