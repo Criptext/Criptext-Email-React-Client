@@ -3,6 +3,7 @@ const { loginUrl } = require('./../window_routing');
 const globalManager = require('./../globalManager');
 const path = require('path');
 let loginWindow;
+let loginShouldBeClose;
 
 const loginSize = {
   width: 328,
@@ -14,7 +15,7 @@ const iconPath = path.join(
   './../../resources/launch-icons/icon.png'
 );
 
-const create = () => {
+const create = ({ shouldBeClose }) => {
   loginWindow = new BrowserWindow({
     icon: iconPath,
     width: loginSize.width,
@@ -24,6 +25,7 @@ const create = () => {
     show: false,
     transparent: true
   });
+  loginShouldBeClose = shouldBeClose;
   loginWindow.loadURL(loginUrl);
   loginWindow.setResizable(false);
   if (process.env.NODE_ENV === 'development') {
@@ -33,13 +35,13 @@ const create = () => {
 
   loginWindow.on('close', e => {
     const isMacOs = process.platform === 'darwin';
-    if (isMacOs && !globalManager.forcequit.get()) {
+    if (isMacOs && !globalManager.forcequit.get() && !loginShouldBeClose) {
       e.preventDefault();
       hide();
     }
   });
   loginWindow.on('closed', () => {
-    if (process.platform !== 'darwin') {
+    if (process.platform !== 'darwin' || loginShouldBeClose) {
       loginWindow = undefined;
     }
   });
@@ -49,11 +51,11 @@ const create = () => {
   });
 };
 
-const show = async () => {
+const show = async params => {
   if (loginWindow) {
     loginWindow.show();
   } else {
-    await create();
+    await create(params);
     loginWindow.once('ready-to-show', () => {
       loginWindow.show();
     });

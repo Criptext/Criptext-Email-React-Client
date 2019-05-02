@@ -52,8 +52,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       };
       ownProps.onClickSection(type, params);
     },
-    openLogin: () => {
-      openLoginWindow();
+    openLogin: params => {
+      openLoginWindow(params);
     },
     onSelectAccount: async ({ id, recipientId }) => {
       await selectAccountAsActive({ id, recipientId });

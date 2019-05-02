@@ -35,8 +35,8 @@ export const openFileExplorer = filename => {
   callMain('open-file-explorer', filename);
 };
 
-export const openLoginWindow = () => {
-  callMain('open-login');
+export const openLoginWindow = params => {
+  callMain('open-login', params);
 };
 
 export const processPendingEvents = () => {
