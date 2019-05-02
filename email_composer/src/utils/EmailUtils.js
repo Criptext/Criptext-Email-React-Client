@@ -1,4 +1,4 @@
-import { myAccount } from './electronInterface';
+import { myAccount, LabelType } from './electronInterface';
 import {
   getContactsByEmailId,
   getFilesByEmailId,
@@ -112,7 +112,6 @@ export const formOutgoingEmailFromData = ({
     ...getCriptextRecipients(cc, 'cc'),
     ...getCriptextRecipients(bcc, 'bcc')
   ];
-
   const externalRecipients = {
     to: filterNonCriptextRecipients(to),
     cc: filterNonCriptextRecipients(cc),
@@ -137,19 +136,25 @@ export const formOutgoingEmailFromData = ({
     content: '',
     fromAddress: `${nameAddress}<${myEmailAddress}>`
   };
-
   const recipients = {
     to,
     cc,
     bcc,
     from: [`${myEmailAddress}`]
   };
+  const labels = [labelId];
+  const isToMe = criptextRecipients.find(
+    item => item.recipientId === myAccount.recipientId
+  );
+  if (isToMe) {
+    labels.push(LabelType.inbox.id);
+  }
 
   const emailData = {
     accountId,
     email,
     recipients,
-    labels: [labelId],
+    labels,
     body: secure || isDraft ? body : `${body}${formAppSign()}`,
     files
   };
