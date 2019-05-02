@@ -4,6 +4,7 @@ import jquery from 'jquery';
 import trumbowyg from '@criptext/trumbowyg'; // eslint-disable-line no-unused-vars
 const $ = jquery;
 class Trumbowyg extends Component {
+  // eslint-disable-next-line no-useless-constructor
   constructor(props) {
     super(props);
   }
