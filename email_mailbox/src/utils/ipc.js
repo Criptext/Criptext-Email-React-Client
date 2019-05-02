@@ -415,7 +415,10 @@ export const getEmailsByThreadIdAndLabelId = async ({ threadIds, labelId }) => {
 
 export const getEmailsCounterByLabelId = async labelId => {
   await checkCurrentAccount();
-  return await callMain('db-get-emails-counter-by-labelid', { labelId, accountId });
+  return await callMain('db-get-emails-counter-by-labelid', {
+    labelId,
+    accountId
+  });
 };
 
 export const getEmailsGroupByThreadByParams = async params => {
