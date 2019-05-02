@@ -513,7 +513,10 @@ class ComposerWrapper extends Component {
       const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
       const params = {
         subject: emailData.email.subject,
-        threadId: emailData.email.threadId,
+        threadId:
+          emailData.email.threadId === temporalThreadId
+            ? undefined
+            : emailData.email.threadId,
         recipients,
         externalRecipients,
         body: emailData.body,
@@ -523,9 +526,8 @@ class ComposerWrapper extends Component {
         externalEmailPassword
       };
       const res = await encryptPostEmail(params);
-
       const { metadataKey, date, messageId } = res.body;
-      const threadId = this.state.threadId || res.body.threadId;
+      const threadId = res.body.threadId || this.state.threadId;
       key = metadataKey;
       const emailParams = {
         id: emailId,
