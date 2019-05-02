@@ -96,40 +96,47 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.SETTINGS);
 };
 
-const cleanDataLogout = async recipientId => {
+const cleanDataLogout = async ({ recipientId, deleteAll }) => {
   const [account] = await db
     .table(Table.ACCOUNT)
     .select('*')
     .where({ recipientId });
   if (account) {
-    const accountId = account.id;
-    const params = {
-      deviceId: '',
-      jwt: '',
-      refreshToken: '',
-      isActive: false,
-      isLoggedIn: false
-    };
-    await db
-      .table(Table.ACCOUNT)
-      .where({ recipientId })
-      .update(params);
-    await db
-      .table(Table.PREKEYRECORD)
-      .where('accountId', accountId)
-      .del();
-    await db
-      .table(Table.SIGNEDPREKEYRECORD)
-      .where('accountId', accountId)
-      .del();
-    await db
-      .table(Table.SESSIONRECORD)
-      .where('accountId', accountId)
-      .del();
-    await db
-      .table(Table.IDENTITYKEYRECORD)
-      .where('accountId', accountId)
-      .del();
+    if (deleteAll === true) {
+      await db
+        .table(Table.ACCOUNT)
+        .where({ recipientId })
+        .del();
+    } else {
+      const accountId = account.id;
+      const params = {
+        deviceId: '',
+        jwt: '',
+        refreshToken: '',
+        isActive: false,
+        isLoggedIn: false
+      };
+      await db
+        .table(Table.ACCOUNT)
+        .where({ recipientId })
+        .update(params);
+      await db
+        .table(Table.PREKEYRECORD)
+        .where('accountId', accountId)
+        .del();
+      await db
+        .table(Table.SIGNEDPREKEYRECORD)
+        .where('accountId', accountId)
+        .del();
+      await db
+        .table(Table.SESSIONRECORD)
+        .where('accountId', accountId)
+        .del();
+      await db
+        .table(Table.IDENTITYKEYRECORD)
+        .where('accountId', accountId)
+        .del();
+    }
     // Next logged account
     const nextLogged = await db
       .table(Table.ACCOUNT)
