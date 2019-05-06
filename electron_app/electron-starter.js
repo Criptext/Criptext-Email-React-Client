@@ -54,7 +54,7 @@ async function initApp() {
   } else {
     await getUserLanguage();
     createAppMenu();
-    loginWindow.show();
+    loginWindow.show({});
   }
 
   //   Composer
