@@ -476,6 +476,7 @@
     },
     "off": "off",
     "on": "on",
+    "over_time": "Over 2 month ago",
     "password": {
       "label": "Password",
       "description": "Choose a strong password, don’t reuse it"
