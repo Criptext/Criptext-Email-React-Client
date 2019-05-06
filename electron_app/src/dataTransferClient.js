@@ -120,20 +120,22 @@ const decrypt = async key => {
   });
 };
 
-const importDatabase = async accountId => {
+const importDatabase = async ({ accountId, resetAccountData }) => {
   return await dbExporter.importDatabaseFromFile({
     filepath: decryptedFileName,
     databasePath,
-    accountId
+    accountId,
+    resetAccountData
   });
 };
 
-const exportDatabase = async () => {
+const exportDatabase = async ({ accountId }) => {
   await checkClient();
   checkDataTransferDirectory();
   return await dbExporter.exportDatabaseToFile({
     databasePath,
-    outputPath: exportedFileName
+    outputPath: exportedFileName,
+    accountId
   });
 };
 

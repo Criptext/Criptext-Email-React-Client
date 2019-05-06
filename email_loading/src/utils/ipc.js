@@ -194,16 +194,19 @@ export const decryptBackupFile = async key => {
   return await callMain('data-transfer-decrypt', key);
 };
 
-export const importDatabase = async accountId => {
-  return await callMain('data-transfer-import', accountId);
+export const importDatabase = async ({ accountId, resetAccountData }) => {
+  return await callMain('data-transfer-import-database', {
+    accountId,
+    resetAccountData
+  });
 };
 
 export const clearSyncData = async () => {
   return await callMain('data-transfer-clear-sync-data');
 };
 
-export const exportDatabase = async () => {
-  return await callMain('data-transfer-export-database');
+export const exportDatabase = async ({ accountId }) => {
+  return await callMain('data-transfer-export-database', { accountId });
 };
 
 export const encryptDatabaseFile = async () => {

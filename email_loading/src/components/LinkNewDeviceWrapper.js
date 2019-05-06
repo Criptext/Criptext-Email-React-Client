@@ -221,7 +221,10 @@ class LoadingWrapper extends Component {
               authorizerId
             });
             await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
-            await importDatabase(accountId);
+            await importDatabase({
+              accountId,
+              resetAccountData: false
+            });
 
             this.setState(
               {
