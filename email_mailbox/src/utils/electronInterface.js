@@ -50,6 +50,6 @@ export const getNews = ({ code }) => {
 
 /*  DataBase
 ----------------------------- */
-export const cleanDataLogout = async recipientId => {
+export const cleanDataLogout = async ({ recipientId }) => {
   return await cleanData({ recipientId });
 };
