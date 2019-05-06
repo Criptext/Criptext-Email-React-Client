@@ -16,12 +16,12 @@
 
     li.cptx-profile-preview-content{
       align-items: center;
-      cursor: pointer;
       display: flex;
       padding: 15px 23px;
       width: calc(100% - 46px);
 
-      &.active{  
+      &.active{
+        cursor: auto;
         .cptx-profile-preview-icon{
           height: 49px;
           width: 49px;
@@ -44,6 +44,7 @@
       }
   
       &.logged{
+        cursor: pointer;
         .cptx-profile-preview-icon{
           height: 34px;
           width: 34px;
@@ -63,12 +64,17 @@
             font-size: 12px;
           }
         }
+
+        &:hover {
+          opacity: 0.8;
+        }
       }
 
       &:nth-child(1) {
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
       }
+
       .cptx-profile-preview-icon{
         align-items: center;
         background-color: rgba(141, 166, 210, 0.8);
@@ -94,10 +100,6 @@
           text-overflow: ellipsis;
           white-space: nowrap;
         }
-      }
-
-      &:hover {
-        opacity: 0.8;
       }
     }
   }
