@@ -15,7 +15,8 @@ ipc.answerRenderer(
       threadEmails
     ] = await dbManager.getEmailsToDeleteByThreadIdAndLabelId(
       threadIds,
-      labelId
+      labelId,
+      accountId
     );
     if (threadEmails) {
       await Promise.all(
@@ -27,7 +28,7 @@ ipc.answerRenderer(
         )
       );
     }
-    await dbManager.deleteEmailsByThreadIdAndLabelId({
+    return await dbManager.deleteEmailsByThreadIdAndLabelId({
       threadIds,
       labelId,
       accountId
