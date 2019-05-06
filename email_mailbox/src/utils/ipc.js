@@ -442,9 +442,9 @@ export const getLabelById = async id => {
   return await callMain('db-get-labelid', id);
 };
 
-export const getLabelsByText = async textArray => {
+export const getLabelsByParams = async ({ textArray }) => {
   await checkCurrentAccount();
-  return await callMain('db-get-labesls-by-text', { textArray, accountId });
+  return await callMain('db-get-labels-by-params', { textArray, accountId });
 };
 
 export const getPreKeyPair = async params => {

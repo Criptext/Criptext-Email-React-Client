@@ -125,7 +125,10 @@ describe('TABLE[Label]:', () => {
 
     const textToSearch = ['label', 'Test'];
     const expectedLabels = [label1, label2, label4];
-    const labels = await DBManager.getLabelsByText({ textArray: textToSearch });
+    const labels = await DBManager.getLabelsByParams({
+      textArray: textToSearch,
+      accountId: null
+    });
 
     // Custom label matcher
     expect.extend({

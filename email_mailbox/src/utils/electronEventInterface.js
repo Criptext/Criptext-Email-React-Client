@@ -22,7 +22,7 @@ import {
   getEmailsByKeys,
   getEmailsByThreadId,
   getContactByEmails,
-  getLabelsByText,
+  getLabelsByParams,
   logoutApp,
   openFilledComposerWindow,
   showNotificationApp,
@@ -684,11 +684,10 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
       threadIds.push(email.threadId);
     }
   }
-
   if (!emailsId.length) return { rowid: null };
-  const labelsToRemove = await getLabelsByText(labelsRemoved);
+  const labelsToRemove = await getLabelsByParams({ textArray: labelsRemoved });
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
-  const labelsToAdd = await getLabelsByText(labelsAdded);
+  const labelsToAdd = await getLabelsByParams({ textArray: labelsAdded });
   const labelIdsToAdd = labelsToAdd.map(label => label.id);
 
   await formAndSaveEmailLabelsUpdate({
@@ -721,12 +720,10 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
   }
   if (!allEmailsIds.length) return { rowid };
 
-  const labelsToRemove = await getLabelsByText(labelsRemoved);
+  const labelsToRemove = await getLabelsByParams({ textArray: labelsRemoved });
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
-
-  const labelsToAdd = await getLabelsByText(labelsAdded);
+  const labelsToAdd = await getLabelsByParams({ textArray: labelsAdded });
   const labelIdsToAdd = labelsToAdd.map(label => label.id);
-
   await formAndSaveEmailLabelsUpdate({
     emailsId: allEmailsIds,
     labelIdsToAdd,
@@ -789,7 +786,9 @@ const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
 
 const handlePeerLabelCreated = async ({ rowid, params }) => {
   const { text, color, uuid } = params;
-  const [label] = await getLabelsByText([text]);
+  const [label] = await getLabelsByParams({
+    textArray: [text]
+  });
   if (!label) {
     const [labelId] = await createLabel({ text, color, uuid });
     const labels = {
