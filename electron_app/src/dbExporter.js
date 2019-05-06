@@ -116,7 +116,7 @@ const exportLabelTable = async (db, accountId) => {
     const result = await db
       .table(Table.LABEL)
       .select('*')
-      .where(`${Table.LABEL}.type`, 'custom')
+      .where('type', 'custom')
       .andWhere({ accountId })
       .limit(SELECT_ALL_BATCH)
       .offset(offset)
@@ -372,7 +372,8 @@ let relationsMap = {
 const importDatabaseFromFile = async ({
   filepath,
   databasePath,
-  accountId
+  accountId,
+  resetAccountData
 }) => {
   let contacts = [];
   let labels = [];
@@ -382,8 +383,23 @@ const importDatabaseFromFile = async ({
   let files = [];
   const dbConn = await createDatabaseConnection(databasePath);
 
-  return dbConn.transaction(trx => {
+  return dbConn.transaction(async trx => {
     const lineReader = new LineByLineReader(filepath);
+
+    if (resetAccountData === true) {
+      await trx
+        .table(Table.ACCOUNT_CONTACT)
+        .where({ accountId })
+        .del();
+      await trx
+        .table(Table.LABEL)
+        .where({ accountId })
+        .del();
+      await trx
+        .table(Table.EMAIL)
+        .where({ accountId })
+        .del();
+    }
 
     const insertContactBatch = async contactBatch => {
       const contactIdsByAccount = await mapRelationsAndInsert(

@@ -541,8 +541,11 @@ export const decryptBackupFile = async key => {
   return await callMain('data-transfer-decrypt', key);
 };
 
-export const importDatabase = async () => {
-  return await callMain('data-transfer-import');
+export const importDatabase = async ({ accountId, resetAccountData }) => {
+  return await callMain('data-transfer-import-database', {
+    accountId,
+    resetAccountData
+  });
 };
 
 export const clearSyncData = async () => {

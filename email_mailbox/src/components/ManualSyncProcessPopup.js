@@ -195,8 +195,10 @@ class ManualSyncProcessPopup extends Component {
               authorizerId
             });
             await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
-            await importDatabase();
-
+            await importDatabase({
+              accountId: myAccount.id,
+              resetAccountData: true
+            });
             this.setState(
               {
                 message: messages.syncComplete,

@@ -142,7 +142,9 @@ class SyncMailboxWrapper extends Component {
   exportDatabase = async () => {
     try {
       await stopSocket();
-      await exportDatabase();
+      await exportDatabase({
+        accountId: myAccount.id
+      });
       const { key } = await encryptDatabaseFile();
       await startSocket();
       this.setState(

@@ -151,7 +151,9 @@ class LinkOldDeviceWrapper extends Component {
   exportDatabase = async () => {
     try {
       await stopSocket();
-      await exportDatabase();
+      await exportDatabase({
+        accountId: myAccount.id
+      });
       const { key } = await encryptDatabaseFile();
       await startSocket();
       const { session, deviceId } = this.state.remoteData;
