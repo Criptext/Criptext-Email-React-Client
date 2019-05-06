@@ -130,5 +130,8 @@ ipc.answerRenderer('db-create-email', async params => {
 
 ipc.answerRenderer('db-unsend-email', async params => {
   await dbManager.updateEmail(params);
-  await fileUtils.deleteEmailContent({ metadataKey: parseInt(params.key) });
+  return await fileUtils.deleteEmailContent({
+    metadataKey: parseInt(params.key),
+    username: getUsername()
+  });
 });
