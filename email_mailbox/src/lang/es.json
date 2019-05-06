@@ -467,6 +467,7 @@
     },
     "off": "desactivado",
     "on": "activado",
+    "over_time": "Hace más de 2 meses",
     "password": {
       "label": "Contraseña",
       "description": "Cambia por una contraseña fuerte, no la repitas"
