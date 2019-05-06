@@ -13,8 +13,7 @@ const ProfilePreview = props => (
           key={key}
           account={account}
           timestamp={props.avatarTimestamp}
-          onSelectAccount={props.onSelectAccount}
-          onToggleMenu={props.onToggleMenu}
+          onClick={props.onClickItemAccount}
         />
       ))}
     </ul>
@@ -31,7 +30,7 @@ const ProfilePreview = props => (
   </div>
 );
 
-const ProfileItem = ({ account, timestamp, onToggleMenu, onSelectAccount }) => {
+const ProfileItem = ({ account, timestamp, onClick }) => {
   const {
     name,
     letters,
@@ -39,14 +38,12 @@ const ProfileItem = ({ account, timestamp, onToggleMenu, onSelectAccount }) => {
     avatarUrl,
     isActive
   } = defineAccountVisibleParams(account, timestamp);
-  const clickHandler = () =>
-    isActive ? onToggleMenu() : onSelectAccount(account);
   return (
     <li
       className={`cptx-profile-preview-content ${
         isActive ? 'active' : 'logged'
       }`}
-      onClick={() => clickHandler()}
+      onClick={isActive ? undefined : () => onClick(account)}
     >
       <div className="cptx-profile-preview-icon">
         <AvatarImage letters={letters} avatarUrl={avatarUrl} />
@@ -64,16 +61,14 @@ ProfilePreview.propTypes = {
   avatarUrl: PropTypes.string,
   loggedAccounts: PropTypes.array,
   onClickAddAccount: PropTypes.func,
-  onClickSettings: PropTypes.func,
-  onSelectAccount: PropTypes.func,
-  onToggleMenu: PropTypes.func
+  onClickItemAccount: PropTypes.func,
+  onClickSettings: PropTypes.func
 };
 
 ProfileItem.propTypes = {
   account: PropTypes.object,
   timestamp: PropTypes.number,
-  onToggleMenu: PropTypes.func,
-  onSelectAccount: PropTypes.func
+  onClick: PropTypes.func
 };
 
 export default ProfilePreview;
