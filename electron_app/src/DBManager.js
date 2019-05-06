@@ -1164,15 +1164,19 @@ const getLabelById = id => {
     .where({ id });
 };
 
-const getLabelsByText = async ({ textArray, accountId = null }) => {
+const getLabelsByParams = async ({ textArray, accountId = null }) => {
   let labels = [];
   for (const text of textArray) {
     const labelsMatched = await db
       .select('*')
       .from(Table.LABEL)
-      .where('text', 'like', `${text}`)
-      .andWhere('accountId', accountId);
-    labels = labels.concat(labelsMatched);
+      .where('text', 'like', `${text}`);
+    const filtered = labelsMatched.filter(
+      label =>
+        label.type === 'system' ||
+        (label.type === 'custom' && label.accountId === accountId)
+    );
+    labels = labels.concat(filtered);
   }
   return labels;
 };
@@ -1458,7 +1462,7 @@ module.exports = {
   getPendingEvents,
   getIdentityKeyRecord,
   getLabelById,
-  getLabelsByText,
+  getLabelsByParams,
   getPreKeyPair,
   getPreKeyRecordIds,
   getSessionRecord,

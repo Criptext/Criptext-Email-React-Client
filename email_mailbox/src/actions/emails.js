@@ -6,7 +6,7 @@ import {
   deleteEmailLabel,
   getContactByIds,
   getEmailsByThreadId,
-  getLabelsByText,
+  getLabelsByParams,
   postPeerEvent,
   unsendEmailEvent,
   updateEmail
@@ -236,7 +236,9 @@ export const updateEmailLabels = ({
     try {
       if (email) {
         if (labelsAdded.length) {
-          const addedLabels = await getLabelsByText(labelsAdded);
+          const addedLabels = await getLabelsByParams({
+            textArray: labelsAdded
+          });
           const addedLabelsIds = addedLabels.map(label => label.id);
           const emailLabelsToAdd = formEmailLabel({
             emailId: email.id,
@@ -246,7 +248,9 @@ export const updateEmailLabels = ({
           await createEmailLabel(emailLabelsToAdd);
         }
         if (labelsRemoved.length) {
-          const removedLabels = await getLabelsByText(labelsAdded);
+          const removedLabels = await getLabelsByParams({
+            textArray: labelsRemoved
+          });
           const removedLabelsIds = removedLabels.map(label => label.id);
           const emailLabelsToRemove = formEmailLabel({
             emailId: email.id,
