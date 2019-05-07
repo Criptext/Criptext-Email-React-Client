@@ -30,7 +30,8 @@
       "usernameNotExits": "Usuario no existe",
       "usernameInvalid": "Usuario no valido",
       "statusUnknown": "Error desconocido. Código: ",
-      "usernameNotAvailable": "Usuario no disponible"
+      "usernameNotAvailable": "Usuario no disponible",
+      "accountAlreadyAdded": "La cuenta ya está agregada"
     },
     "usePassword": {
       "title": "Advertencia",

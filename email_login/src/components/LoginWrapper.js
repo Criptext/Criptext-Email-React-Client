@@ -28,7 +28,7 @@ import string from './../lang';
 
 import PopupHOC from './PopupHOC';
 import LoginPopup from './LoginPopup';
-import DialogPopup from './DialogPopup';
+import DialogPopup, { DialogTypes } from './DialogPopup';
 
 const { login, signin } = string;
 
@@ -44,7 +44,8 @@ const errorMessages = {
   USERNAME_NOT_EXISTS: login.errorMessages.usernameNotExits,
   USERNAME_INVALID: login.errorMessages.usernameInvalid,
   STATUS_UNKNOWN: login.errorMessages.statusUnknown,
-  USERNAME_NOT_AVAILABLE: login.errorMessages.usernameNotAvailable
+  USERNAME_NOT_AVAILABLE: login.errorMessages.usernameNotAvailable,
+  ACCOUNT_ALREADY_ADDED: login.errorMessages.accountAlreadyAdded
 };
 
 const LINK_STATUS_RETRIES = 12;
@@ -106,8 +107,8 @@ class LoginWrapper extends Component {
         return (
           <LoginWithPasswordPopup
             {...this.state.popupContent}
-            onLeftButtonClick={this.handleStayLinking}
-            onRightButtonClick={this.handleCancelLink}
+            onCancelClick={this.handleStayLinking}
+            onConfirmClick={this.handleCancelLink}
           />
         );
       case mode.LOST_DEVICES:
@@ -121,16 +122,17 @@ class LoginWrapper extends Component {
         return (
           <NoRecoverySignUpPopup
             {...this.state.popupContent}
-            onLeftButtonClick={this.dismissPopup}
-            onRightButtonClick={this.handleSignUpContinue}
+            onCancelClick={this.dismissPopup}
+            onConfirmClick={this.handleSignUpContinue}
           />
         );
       case mode.LOGIN:
         return (
           <SignInAnotherAccount
             {...this.state.popupContent}
-            onLeftButtonClick={this.dismissPopup}
-            onRightButtonClick={this.handleSignInAnotherAccount}
+            type={DialogTypes.SIGN_ANOTHER_ACCOUNT}
+            onCancelClick={this.dismissPopup}
+            onConfirmClick={this.handleSignInAnotherAccount}
           />
         );
       default:
@@ -195,11 +197,17 @@ class LoginWrapper extends Component {
     }
   };
 
-  toggleSignUp = ev => {
+  toggleSignUp = async ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    const nextMode = this.state.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN;
-    this.setState({ mode: nextMode });
+    if (this.state.mode === mode.LOGIN) {
+      const check = await this.checkLoggedOutAccounts();
+      if (check === true) {
+        this.setState(curState => ({
+          mode: curState.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN
+        }));
+      }
+    }
   };
 
   handleToggleSignUp = e => {
@@ -283,6 +291,7 @@ class LoginWrapper extends Component {
   handleCheckUsernameResponse = newUsername => ({ status }) => {
     this.setState(curState => {
       if (curState.values.username !== newUsername) return curState;
+      if (curState.errorMessage) return curState;
 
       switch (status) {
         case 200:
@@ -347,18 +356,23 @@ class LoginWrapper extends Component {
       recipientId: username
     });
     if (!existsAccount) {
-      await this.checkLoggedOutAccounts(username);
+      const check = await this.checkLoggedOutAccounts(username);
+      if (check === true) {
+        await this.initLinkDevice(username);
+      }
     } else {
       // eslint-disable-next-line no-extra-boolean-cast
       if (!!existsAccount.isLoggedIn) {
-        alert('Usuario ya tiene sesión');
+        this.setState({
+          errorMessage: errorMessages.ACCOUNT_ALREADY_ADDED
+        });
         return;
       }
       await this.initLinkDevice(username);
     }
   };
 
-  checkLoggedOutAccounts = async username => {
+  checkLoggedOutAccounts = async () => {
     const loggedOutAccounts = await getAccountByParams({
       isLoggedIn: false
     });
@@ -368,21 +382,21 @@ class LoginWrapper extends Component {
         popupContent: {
           title: login.loginNewAccount.title,
           prefix: login.loginNewAccount.prefix,
-          strong: this.formLoggedOutAccountsList(loggedOutAccounts),
+          list: this.formLoggedOutAccountsList(loggedOutAccounts),
           suffix: login.loginNewAccount.suffix,
-          leftButtonLabel: login.loginNewAccount.leftButtonLabel,
-          rightButtonLabel: login.loginNewAccount.rightButtonLabel
+          cancelButtonLabel: login.loginNewAccount.leftButtonLabel,
+          confirmButtonLabel: login.loginNewAccount.rightButtonLabel
         }
       });
-    } else {
-      await this.initLinkDevice(username);
+      return false;
     }
+    return true;
   };
 
   formLoggedOutAccountsList = loggedOutAccounts => {
-    return loggedOutAccounts
-      .map(account => `${account.recipientId}@${appDomain}`)
-      .join(' \n ');
+    return loggedOutAccounts.map(
+      account => `${account.recipientId}@${appDomain}`
+    );
   };
 
   goToPasswordLogin = () => {

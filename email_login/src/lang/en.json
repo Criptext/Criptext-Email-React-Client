@@ -30,7 +30,8 @@
       "usernameNotExits": "Username doesn't exist",
       "usernameInvalid": "Invalid username",
       "statusUnknown": "Unknown status code: ",
-      "usernameNotAvailable": "Username not available"
+      "usernameNotAvailable": "Username not available",
+      "accountAlreadyAdded": "Account already added"
     },
     "usePassword": {
       "title": "Warning",
