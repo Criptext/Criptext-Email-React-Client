@@ -538,14 +538,30 @@ button {
     }
   }
 
-  .popup-paragraph {
-    padding: 0px 0px;
-    margin-top: 25px;
-    line-height: 16px;
+  .popup-items {
+    > .popup-paragraph {
+      padding: 0px 0px;
+      margin-top: 25px;
+      line-height: 16px;
 
-    p {
-      font-size: 13px;
-      font-weight: 300;
+      > p {
+        font-size: 13px;
+        font-weight: 300;
+      }
+    }
+
+    > .popup-list {
+      padding: 0px;
+      margin-top: 20px;
+
+      > ul {
+        list-style-type: none;
+        padding-left: 0px;
+
+        > li {
+          font-weight: bold;
+        }
+      }
     }
   }
 
@@ -557,8 +573,10 @@ button {
 
     .button-a {
       height: 30px;
-      text-transform: capitalize;
       width: 75px;
+      text-transform: capitalize;
+      font-weight: bold;
+      cursor: pointer;
 
       &.popup-cancel-button {
         background-color: transparent;
