@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux-immutable';
 import reduceReducers from 'reduce-reducers';
+import accounts from './accounts';
 import activities from './activity';
 import contacts from './contacts';
 import emails from './emails';
@@ -11,6 +12,7 @@ import threads from './threads';
 import { crossReducer } from './crossReducer';
 
 const combinedReducers = combineReducers({
+  accounts,
   activities,
   contacts,
   emails,

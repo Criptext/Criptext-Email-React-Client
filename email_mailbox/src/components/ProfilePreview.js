@@ -6,7 +6,7 @@ import string from './../lang';
 import './profilepreview.scss';
 
 const ProfilePreview = props => (
-  <div id="profiles-previews">
+  <div id="cptx-profiles-previews">
     <ul className="cptx-profile-preview-accounts">
       {props.loggedAccounts.map((account, key) => (
         <ProfileItem

@@ -6,7 +6,7 @@
   }
 }
 
-#profiles-previews {
+#cptx-profiles-previews {
   width: 310px;
   user-select: none;
 
@@ -142,7 +142,7 @@
 @mixin themable($_THEME, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_ACTIVE, $_BACKGROUND_COLOR_PROFILE_SHORTCUT_LOGGED, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT, $_COLOR_TEXT_SECONDARY_PROFILE_SHORTCUT, $_COLOR_TEXT_SECONDARY_ACTIVE_PROFILE_SHORTCUT, $_BORDER_COLOR_POPOVER){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
-    #profiles-previews {
+    #cptx-profiles-previews {
       .cptx-profile-preview-content {
         border-bottom: 1px solid $_BORDER_COLOR_POPOVER;
 

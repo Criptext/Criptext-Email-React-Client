@@ -1,3 +1,4 @@
+import { addAccounts } from './accounts';
 import {
   setAvatarUpdatedTimestamp,
   startLoadSync,
@@ -71,6 +72,7 @@ import { loadSuggestions } from './suggestions';
 import { addDataApp, loadApp } from './app';
 
 export {
+  addAccounts,
   addContacts,
   addDataApp,
   addEmails,
