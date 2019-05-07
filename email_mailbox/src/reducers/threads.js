@@ -2,7 +2,7 @@ import { Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
 import * as StringUtils from '../utils/StringUtils';
 
-const THREADS_SIZE = 20;
+const THREADS_SIZE = 22;
 
 const initThreads = Map({
   1: Map({
