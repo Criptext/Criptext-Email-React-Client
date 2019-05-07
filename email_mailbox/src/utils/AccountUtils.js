@@ -1,5 +1,6 @@
 import { getTwoCapitalLetters } from './StringUtils';
 import { avatarBaseUrl, appDomain } from './const';
+import { getAccountByParams } from '../utils/ipc';
 
 export const compareAccounts = (account1, account2) => {
   return (
@@ -11,6 +12,28 @@ export const compareAccounts = (account1, account2) => {
 
 const compareAccountName = (name1, name2) => {
   return name1 > name2 ? 1 : name1 < name2 ? -1 : 0;
+};
+
+export const defineAccounts = accounts => {
+  return accounts.reduce((result, element) => {
+    const account = {
+      id: element.id,
+      isActive: element.isActive,
+      name: element.name,
+      recipientId: element.recipientId
+    };
+    return {
+      ...result,
+      [element.id]: account
+    };
+  }, {});
+};
+
+export const loadAccounts = async () => {
+  const accounts = await getAccountByParams({
+    isLoggedIn: true
+  });
+  return defineAccounts(accounts);
 };
 
 export const defineAccountVisibleParams = (account, timestamp) => {

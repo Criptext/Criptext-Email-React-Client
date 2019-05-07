@@ -1,34 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ProfileShortCut from './ProfileShortCut';
-import { myAccount } from '../utils/electronInterface';
-import {
-  compareAccounts,
-  defineAccountVisibleParams
-} from '../utils/AccountUtils';
+import { defineAccountVisibleParams } from '../utils/AccountUtils';
 
 class ProfileShortCutWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedAccounts: [myAccount],
       isHiddenMenuProfilePreview: true
     };
+    this.currentAccount = this.props.accounts[0];
+    const { letters, avatarUrl } = defineAccountVisibleParams(
+      this.currentAccount,
+      this.props.avatarTimestamp
+    );
+    this.letters = letters;
+    this.avatarUrl = avatarUrl;
   }
 
   render() {
-    const currentAccount = this.state.loggedAccounts[0];
-    const { avatarTimestamp } = this.props;
-    const { letters, avatarUrl } = defineAccountVisibleParams(
-      currentAccount,
-      avatarTimestamp
-    );
     return (
       <ProfileShortCut
-        letters={letters}
-        avatarUrl={avatarUrl}
-        avatarTimestamp={avatarTimestamp}
-        loggedAccounts={this.state.loggedAccounts}
+        letters={this.letters}
+        avatarUrl={this.avatarUrl}
+        avatarTimestamp={this.props.avatarTimestamp}
+        loggedAccounts={this.props.accounts}
         isHiddenMenuProfilePreview={this.state.isHiddenMenuProfilePreview}
         onClickSettings={this.handleClickSettings}
         onToggleMenuProfilePreview={this.handleToggleMenuProfilePreview}
@@ -36,14 +32,6 @@ class ProfileShortCutWrapper extends Component {
         onClickItemAccount={this.handleClickItemAccount}
       />
     );
-  }
-
-  async componentDidMount() {
-    const loggedAccounts = await this.props.getLoggedAccounts();
-    const orderedByStatusAndName = loggedAccounts.sort(compareAccounts);
-    this.setState({
-      loggedAccounts: orderedByStatusAndName
-    });
   }
 
   handleClickSettings = () => {
@@ -72,8 +60,8 @@ class ProfileShortCutWrapper extends Component {
 }
 
 ProfileShortCutWrapper.propTypes = {
+  accounts: PropTypes.array,
   avatarTimestamp: PropTypes.number,
-  getLoggedAccounts: PropTypes.func,
   onClickSettings: PropTypes.func,
   onSelectAccount: PropTypes.func,
   openLogin: PropTypes.func
