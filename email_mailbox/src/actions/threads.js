@@ -235,7 +235,7 @@ export const filterThreadsOrLoadMoreByUnread = (
   loadParams
 ) => {
   return async dispatch => {
-    const LIMIT_UNREAD_THREADS = 20;
+    const LIMIT_UNREAD_THREADS = 22;
     const shouldLoadMoreThreads = checked
       ? currentUnreadThreadsLength < LIMIT_UNREAD_THREADS
       : true;

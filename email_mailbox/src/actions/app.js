@@ -12,6 +12,7 @@ import { defineLabels } from './../utils/LabelUtils';
 import { defineThreads } from './../utils/ThreadUtils';
 import { defineFeedItems } from './../utils/FeedItemUtils';
 import { getGroupEvents } from './../utils/electronEventInterface';
+const INIT_LIMIT_THREADS = 22;
 
 export const addDataApp = ({
   account,
@@ -38,7 +39,10 @@ export const loadApp = params => {
   return async dispatch => {
     const accounts = await loadAccounts();
     const labels = await defineLabels();
-    const { threads, contacts } = await defineThreads(params);
+    const { threads, contacts } = await defineThreads({
+      ...params,
+      limit: INIT_LIMIT_THREADS
+    });
     const feeditems = await defineFeedItems();
 
     const account = addAccounts(accounts);
