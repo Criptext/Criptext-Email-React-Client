@@ -1268,6 +1268,10 @@ export const sendAccountDeletedEvent = () => {
   emitter.emit(Event.ACCOUNT_DELETED);
 };
 
+export const sendAddedAccountsLimitEvent = () => {
+  emitter.emit(Event.ADDED_ACCOUNTS_LIMIT);
+};
+
 export const checkUserGuideSteps = stepsNames => {
   // eslint-disable-next-line no-extra-boolean-cast
   if (!!mySettings.opened) {
@@ -1326,6 +1330,7 @@ export const sendMailboxEvent = (eventName, eventData) => {
 
 export const Event = {
   ACCOUNT_DELETED: 'account-deleted',
+  ADDED_ACCOUNTS_LIMIT: 'added-accounts-limit',
   DEVICE_REMOVED: 'device-removed',
   DISABLE_WINDOW: 'add-window-overlay',
   DISPLAY_MESSAGE: 'display-message',

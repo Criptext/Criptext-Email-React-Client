@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ProfileShortCut from './ProfileShortCut';
 import { defineAccountVisibleParams } from '../utils/AccountUtils';
+import { sendAddedAccountsLimitEvent } from '../utils/electronEventInterface';
 
 class ProfileShortCutWrapper extends Component {
   constructor(props) {
@@ -42,10 +43,18 @@ class ProfileShortCutWrapper extends Component {
   };
 
   handleClickAddAccount = () => {
-    this.setState({
-      isHiddenMenuProfilePreview: true
-    });
-    this.props.openLogin({ shouldBeClose: true });
+    this.setState(
+      {
+        isHiddenMenuProfilePreview: true
+      },
+      () => {
+        if (this.props.accountsLimitReached) {
+          sendAddedAccountsLimitEvent();
+        } else {
+          this.props.openLogin({ shouldBeClose: true });
+        }
+      }
+    );
   };
 
   handleToggleMenuProfilePreview = () => {
@@ -61,6 +70,7 @@ class ProfileShortCutWrapper extends Component {
 
 ProfileShortCutWrapper.propTypes = {
   accounts: PropTypes.array,
+  accountsLimitReached: PropTypes.bool,
   avatarTimestamp: PropTypes.number,
   onClickSettings: PropTypes.func,
   onSelectAccount: PropTypes.func,

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import string from '../lang';
 
 const { title, paragraphs } = string.popups.account_deleted;
@@ -15,10 +14,6 @@ const AccountDeletedPopup = () => {
       </div>
     </div>
   );
-};
-
-AccountDeletedPopup.propTypes = {
-  title: PropTypes.string
 };
 
 export default AccountDeletedPopup;

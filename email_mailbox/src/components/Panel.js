@@ -8,6 +8,7 @@ import { mySettings } from '../utils/electronInterface';
 import PopupHOC from './PopupHOC';
 import DeviceRemovedPopup from './DeviceRemovedPopup';
 import AccountDeletedPopup from './AccountDeletedPopup';
+import AddedAccountsLimitPopup from './AddedAccountsLimitPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
 import UserGuide from './UserGuide';
@@ -60,7 +61,17 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
         <Accountdeletedpopup
           isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
-          {...props}
+        />
+      );
+    }
+    case MAILBOX_POPUP_TYPES.ADDED_ACCOUNTS_LIMIT: {
+      const Addedaccountslimitpopup = PopupHOC(AddedAccountsLimitPopup);
+      return (
+        <Addedaccountslimitpopup
+          isHidden={isHidden}
+          popupPosition={{ left: '50%', top: '50%' }}
+          onTogglePopup={props.onCloseMailboxPopup}
+          theme={'dark'}
         />
       );
     }
@@ -70,7 +81,6 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
         <DeviceRemovedpopup
           isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
-          {...props}
         />
       );
     }

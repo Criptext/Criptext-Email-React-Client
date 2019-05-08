@@ -15,6 +15,7 @@ import { USER_GUIDE_STEPS } from './UserGuide';
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
+  ADDED_ACCOUNTS_LIMIT: 'added-accounts-limit',
   DEVICE_REMOVED: 'device-removed',
   PASSWORD_CHANGED: 'password-changed',
   ONLY_BACKDROP: 'only-backdrop'
@@ -182,6 +183,10 @@ class PanelWrapper extends Component {
     addEvent(Event.DISABLE_WINDOW, this.disableWindowListenerCallback);
     addEvent(Event.ACCOUNT_DELETED, this.accountDeletedListenerCallback);
     addEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
+    addEvent(
+      Event.ADDED_ACCOUNTS_LIMIT,
+      this.addedAccountsLimitListenerCallback
+    );
   };
 
   removeEventHandlers = () => {
@@ -199,6 +204,10 @@ class PanelWrapper extends Component {
     removeEvent(Event.DISABLE_WINDOW, this.disableWindowListenerCallback);
     removeEvent(Event.ACCOUNT_DELETED, this.accountDeletedListenerCallback);
     removeEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
+    removeEvent(
+      Event.ADDED_ACCOUNTS_LIMIT,
+      this.addedAccountsLimitListenerCallback
+    );
   };
 
   enableWindowListenerCallback = () => {
@@ -382,6 +391,13 @@ class PanelWrapper extends Component {
     this.setState({
       isHiddenMailboxPopup: false,
       mailboxPopupType: MAILBOX_POPUP_TYPES.ACCOUNT_DELETED
+    });
+  };
+
+  addedAccountsLimitListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.ADDED_ACCOUNTS_LIMIT
     });
   };
 

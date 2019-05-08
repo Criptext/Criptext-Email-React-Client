@@ -269,6 +269,11 @@
         "header": "Eliminando toda la información..."
       }
     },
+    "added_accounts_limit": {
+      "title": "Límite de cuentas agregadas", 
+      "paragraph": "Has alcanzado el límite de cuentas registradas que puedes tener en este dispositivo", 
+      "buttonLabel": "Okay"
+    },
     "change_password": {
       "title": "Cambiar Contraseña",
       "paragraphs": {
@@ -329,6 +334,11 @@
       },
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Enviar"
+    },
+    "device_removed": {
+      "title": "Dispositivo removido",
+      "preffix": "Este dispositivo fue removido desde otro de tus dispositivos",
+      "suffix": "La aplicación se cerrará en breves momentos..."
     },
     "logout": {
       "title": "Cerrar sesión",
