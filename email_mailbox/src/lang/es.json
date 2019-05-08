@@ -272,7 +272,7 @@
     "added_accounts_limit": {
       "title": "Límite de cuentas agregadas", 
       "paragraph": "Has alcanzado el límite de cuentas registradas que puedes tener en este dispositivo", 
-      "buttonLabel": "Okay"
+      "buttonLabel": "Ok"
     },
     "change_password": {
       "title": "Cambiar Contraseña",
