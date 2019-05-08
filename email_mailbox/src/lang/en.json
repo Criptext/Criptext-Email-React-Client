@@ -269,6 +269,11 @@
         "header": "Removing all data..."
       }
     },
+    "added_accounts_limit": {
+      "title": "Added accounts limit", 
+      "paragraph": "You have reached the logged accounts limit which you can have in this device", 
+      "buttonLabel": "Ok"
+    },
     "change_password": {
       "title": "Change Password",
       "paragraphs": {
@@ -329,6 +334,11 @@
       },
       "cancelButtonLabel": "Cancel",
       "confirmButtonLabel": "Send"
+    },
+    "device_removed": {
+      "title": "Removed device",
+      "prefix": "This device was removed from another of your devices",
+      "suffix": "The app will be closed in few seconds..."
     },
     "logout": {
       "title": "Logout",
