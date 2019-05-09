@@ -35,4 +35,46 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+
+  <script>
+      const electronSpellchecker = window.require('@jadams4/electron-spellchecker');
+      window.addEventListener('load', function () { loadSpellChecker(); });
+      function loadSpellChecker() {
+        if (window.require) {
+          const editor = window.$("#react-trumbowyg");
+          const SpellCheckHandler = electronSpellchecker.SpellCheckHandler;
+          const ContextMenuListener = electronSpellchecker.ContextMenuListener;
+          const ContextMenuBuilder = electronSpellchecker.ContextMenuBuilder;
+          // Replace wrong word
+          function replaceSelection(mispelledWord, correction) {
+            editor.trumbowyg('saveRange');
+            const range = editor.trumbowyg('getRangeText');
+            if (range.replace(/\s/g, '') !== '') {
+              try {
+                const replacement = range.replace(mispelledWord, correction);
+                editor.trumbowyg('execCmd', {
+                  cmd: 'insertHTML',
+                  param: replacement,
+                  forceCss: false,
+                });
+              } 
+              catch (e) {}
+            }
+          }
+          // Configure the spellcheckhandler
+          window.spellCheckHandler = new SpellCheckHandler();
+          window.spellCheckHandler.attachToInput();
+          window.spellCheckHandler.switchLanguage('en-US');
+          window.spellCheckHandler.autoUnloadDictionariesOnBlur();
+          // Create the builder with the configured spellhandler
+          let contextMenuBuilder = new ContextMenuBuilder(window.spellCheckHandler);
+          // Add context menu listener
+          let contextMenuListener = new ContextMenuListener(async (info) => {
+            info.selection = info.selectionText;
+            info.misspelledWord = info.selection;
+            await contextMenuBuilder.showPopupMenu(info, replaceSelection);
+          });
+        }
+      }
+    </script>
 </html>

@@ -47,6 +47,7 @@ const createComposerWindow = () => {
     title: `  ${windowTitle}`,
     minWidth: composerSize.minWidth,
     minHeight: composerSize.minHeight
+    ,webPreferences: { nodeIntegration: true }
   });
   globalManager.composerData.set(window.id, {});
   window.loadURL(composerUrl);
@@ -72,13 +73,6 @@ const createComposerWindow = () => {
     } catch (error) {
       sendEventToMailbox('save-draft-failed');
     }
-  });
-
-  require('electron-context-menu')({
-    window,
-    showSaveImageAs: false,
-    showInspectElement: false,
-    showCopyImageAddress: false
   });
   return window;
 };

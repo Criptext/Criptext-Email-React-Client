@@ -10,7 +10,14 @@ class Trumbowyg extends Component {
   }
 
   render() {
-    return <div id={`${this.props.id}`} placeholder={this.props.placeholder} />;
+    return (
+      <div
+        id={`${this.props.id}`}
+        placeholder={this.props.placeholder}
+        contentEditable={true}
+        spellCheck={true}
+      />
+    );
   }
 
   componentDidMount() {
@@ -34,7 +41,9 @@ class Trumbowyg extends Component {
       onCloseFullScreen,
       onClose,
       btnsDef,
-      plugins
+      plugins,
+      spellCheck,
+      contentEditable
     } = this.props;
 
     const trumbowygInstance = $(`#${id}`).trumbowyg({
@@ -45,7 +54,9 @@ class Trumbowyg extends Component {
       resetCss: resetCss,
       removeformatPasted: removeformatPasted,
       autogrow: autogrow,
-      plugins: plugins
+      plugins: plugins,
+      spellcheck: spellCheck,
+      contenteditable: contentEditable
     });
 
     if (onFocus) {
@@ -141,6 +152,8 @@ Trumbowyg.propTypes = {
   autogrow: PropTypes.bool,
   disabled: PropTypes.bool,
   btnsDef: PropTypes.object,
+  spellCheck: PropTypes.bool,
+  contentEditable: PropTypes.bool,
   //event handlers
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,

@@ -27,6 +27,8 @@ class EditorWrapper extends Component {
         onChange={e => this.onChangeHtmlBody(e)}
         placeholder={string.editor.placeholder}
         removeformatPasted={false}
+        contentEditable={true}
+        spellCheck={true}
       />
     );
   }
