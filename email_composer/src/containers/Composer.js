@@ -64,7 +64,8 @@ class ComposerWrapper extends Component {
     super(props);
     this.emailToEdit = getEmailToEdit();
     this.isFocusEditorInput = this.emailToEdit
-      ? this.emailToEdit.type === 'reply'
+      ? this.emailToEdit.type === 'reply' ||
+        this.emailToEdit.type === 'reply-all'
         ? true
         : false
       : false;
