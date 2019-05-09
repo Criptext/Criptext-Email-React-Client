@@ -1,4 +1,4 @@
-.profile-shortcut-container{
+.header-profile-shortcut-container{
   border-radius: 50%;
   border: 1px solid transparent;
   cursor: pointer;
@@ -22,5 +22,19 @@
     justify-content: center;
     margin: 0 auto;
     width: 33px;
+  }
+
+  .cptx-header-profile-badge{
+    position: absolute;
+    right: 3px;
+    top: 3px;
+
+    >div{
+      height: 7px;
+      width: 7px;
+      background-color: red;
+      border: 2px solid #373a45;
+      border-radius: 50%;
+    }
   }
 }

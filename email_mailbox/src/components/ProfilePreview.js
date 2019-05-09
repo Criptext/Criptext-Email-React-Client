@@ -8,7 +8,7 @@ import './profilepreview.scss';
 const ProfilePreview = props => (
   <div id="cptx-profiles-previews">
     <ul className="cptx-profile-preview-accounts">
-      {props.loggedAccounts.map((account, key) => (
+      {props.accounts.map((account, key) => (
         <ProfileItem
           key={key}
           account={account}
@@ -52,6 +52,11 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
         <span className="name">{name}</span>
         <span className="email-address">{emailAddress}</span>
       </div>
+      {!!account.badge && (
+        <div className="cptx-profile-preview-badge">
+          <span className="cptx-badge">{account.badge}</span>
+        </div>
+      )}
     </li>
   );
 };
@@ -59,7 +64,7 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
 ProfilePreview.propTypes = {
   avatarTimestamp: PropTypes.number,
   avatarUrl: PropTypes.string,
-  loggedAccounts: PropTypes.array,
+  accounts: PropTypes.array,
   onClickAddAccount: PropTypes.func,
   onClickItemAccount: PropTypes.func,
   onClickSettings: PropTypes.func

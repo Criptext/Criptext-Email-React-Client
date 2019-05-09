@@ -1,6 +1,6 @@
 @import "./../styles/index.scss";
 
-.profile-shortcut-container .menu-container.menu-arrow.arrow-top-right{
+.header-profile-shortcut-container .menu-container.menu-arrow.arrow-top-right{
   &:before, &:after {
     right: 10px;
   }
@@ -100,6 +100,10 @@
           text-overflow: ellipsis;
           white-space: nowrap;
         }
+      }
+
+      .cptx-profile-preview-badge{
+
       }
     }
   }

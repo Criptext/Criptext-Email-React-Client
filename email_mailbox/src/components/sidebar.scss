@@ -48,10 +48,6 @@
               background-color: transparent;
             }
           }
-
-          span{
-            background-color: transparent;
-          }
         }
       }
     }
@@ -123,7 +119,7 @@
           }
         }
 
-        span {
+        > span, .nav-item-container >span {
           display: block;
           font-size: 13px;
           text-align: left;

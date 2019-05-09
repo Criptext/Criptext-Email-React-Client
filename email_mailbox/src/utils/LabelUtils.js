@@ -6,7 +6,7 @@ import {
 } from './ipc';
 import { LabelType } from './electronInterface';
 
-export const defineLabels = async () => {
+export const assembleLabels = async () => {
   const response = await getAllLabels();
   const rejectedLabelIds = [LabelType.spam.id, LabelType.trash.id];
   const unreadInbox = await getEmailsUnredByLabelId({

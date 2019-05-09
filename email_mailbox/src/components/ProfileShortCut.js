@@ -10,7 +10,7 @@ const MenuProfilePreview = MenuHOC(ProfilePreview);
 const ProfileShortCut = props => (
   <div
     className={
-      'profile-shortcut-container' +
+      'header-profile-shortcut-container' +
       (!props.isHiddenMenuProfilePreview ? ' profile-opened' : '')
     }
   >
@@ -24,8 +24,13 @@ const ProfileShortCut = props => (
         letters={props.letters}
       />
     </span>
+    {props.badgeAccount && (
+      <div className="cptx-header-profile-badge">
+        <div />
+      </div>
+    )}
     <MenuProfilePreview
-      loggedAccounts={props.loggedAccounts}
+      accounts={props.accounts}
       avatarTimestamp={props.avatarTimestamp}
       arrowPosition={MenuType.TOP_RIGHT}
       isHidden={props.isHiddenMenuProfilePreview}
@@ -41,8 +46,9 @@ const ProfileShortCut = props => (
 ProfileShortCut.propTypes = {
   avatarTimestamp: PropTypes.number,
   avatarUrl: PropTypes.string,
+  badgeAccount: PropTypes.bool,
   letters: PropTypes.string,
-  loggedAccounts: PropTypes.array,
+  accounts: PropTypes.array,
   isHiddenMenuProfilePreview: PropTypes.bool,
   onClickAddAccount: PropTypes.func,
   onClickSettings: PropTypes.func,

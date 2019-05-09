@@ -1,6 +1,6 @@
 import { getEmailsGroupByThreadByParams, getContactByIds } from './ipc';
 
-export const defineThreads = async params => {
+export const assembleThreads = async params => {
   const threads = await getEmailsGroupByThreadByParams(params);
   const contactIds = threads.reduce((result, thread) => {
     return result.concat(thread.recipientContactIds.split(',').map(Number));

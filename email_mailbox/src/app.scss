@@ -16,7 +16,7 @@ TABLE OF CONTENTS
  5.2.- Select
  5.3.- Button
  5.4.- Tooltip
-
+6.- BADGE
 ***/
 
 @import "./styles/index.scss";
@@ -866,8 +866,27 @@ button{
 .__floater__open {
   padding: 0px 12px !important;
 }
+
 .__floater__arrow > span {
   transform: scale(0.5);
+}
+
+/* 6.- BADGE
+   ----------------------------- */
+span.cptx-badge{
+  background-color: #65bdff;
+  border-radius: 13px;
+  color: white;
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  height: 17px;
+  line-height: 17px;
+  margin: 0;
+  min-width: 24px;
+  padding: 0 1px;
+  text-align: center;
+  width: auto;
 }
 
 /* THEME

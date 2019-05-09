@@ -1,6 +1,6 @@
 import { FeedItem } from './types';
 import { deleteFeedItemById, updateFeedItem } from './../utils/ipc';
-import { defineFeedItems } from '../utils/FeedItemUtils';
+import { assembleFeedItems } from '../utils/FeedItemUtils';
 
 export const addFeedItems = (feeds, clear) => {
   return {
@@ -35,7 +35,7 @@ export const updateAllFeedItemsAsOlder = () => {
 export const loadFeedItems = clear => {
   return async dispatch => {
     try {
-      const feedItems = await defineFeedItems();
+      const feedItems = await assembleFeedItems();
       dispatch(addFeedItems(feedItems, clear));
     } catch (e) {
       // TO DO

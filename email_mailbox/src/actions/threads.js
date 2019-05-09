@@ -34,7 +34,7 @@ import { loadFeedItems } from './feeditems';
 import { SocketCommand } from '../utils/const';
 import { removeEmails } from './emails';
 import { filterTemporalThreadIds } from '../utils/EmailUtils';
-import { defineThreads } from '../utils/ThreadUtils';
+import { assembleThreads } from '../utils/ThreadUtils';
 import { addContacts } from '.';
 
 export const addThreads = (labelId, threads, clear) => ({
@@ -509,7 +509,7 @@ export const loadThreads = (params, shouldStopAll) => {
           dispatch(removeEmails(LabelType.trash.id, expiredDeletedEmails));
         }
       }
-      const { threads, contacts } = await defineThreads(params);
+      const { threads, contacts } = await assembleThreads(params);
       const contact = contacts ? addContacts(contacts) : undefined;
       const thread =
         threads.length || !params.date

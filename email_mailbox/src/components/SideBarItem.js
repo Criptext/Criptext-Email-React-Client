@@ -13,7 +13,7 @@ const SideBarItem = props => (
     <span>{props.item.text}</span>
     {props.item.badge ? (
       <div className="nav-item-badge">
-        <span className="badge">{props.item.badge}</span>
+        <span className="cptx-badge">{props.item.badge}</span>
       </div>
     ) : null}
   </li>

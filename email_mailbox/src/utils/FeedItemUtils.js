@@ -1,7 +1,7 @@
 import { getAllFeedItems, getEmailsByIds } from './ipc';
 import { getSeenTimestamp } from './storage';
 
-export const defineFeedItems = async () => {
+export const assembleFeedItems = async () => {
   const allFeeds = await getAllFeedItems();
   const feeds = await Promise.all(
     allFeeds.map(async feed => {
