@@ -2,6 +2,7 @@
 
 .nav-item-label{
   align-items: center;
+  background-color: transparent;
   cursor: pointer;
   height: 26px;
   width: 100%;
@@ -15,6 +16,7 @@
   }
 
   label{
+    background-color: transparent;
     cursor: inherit;
     font-size: 13px;
     font-weight: 300;

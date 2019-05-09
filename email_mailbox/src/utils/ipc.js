@@ -426,11 +426,17 @@ export const getEmailsGroupByThreadByParams = async params => {
 };
 
 export const getEmailsUnredByLabelId = async params => {
-  await checkCurrentAccount();
-  return await callMain('db-get-emails-unread-by-labelid', {
-    accountId,
-    ...params
-  });
+  let data;
+  if (params.accountId) {
+    data = params;
+  } else {
+    await checkCurrentAccount();
+    data = {
+      accountId,
+      ...params
+    };
+  }
+  return await callMain('db-get-emails-unread-by-labelid', data);
 };
 
 export const getFilesByTokens = async tokens => {
