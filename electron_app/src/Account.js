@@ -11,6 +11,7 @@ class Account {
     this.signature = accountObj.signature;
     this.signatureEnabled = accountObj.signatureEnabled;
     this.other = {};
+    this.logged = accountObj.logged;
   }
 
   update(accountObj) {
@@ -28,6 +29,7 @@ class Account {
         ? accountObj.signatureEnabled
         : this.signatureEnabled;
     this.other = accountObj.other || this.other;
+    this.logged = accountObj.logged || this.logged;
   }
 
   getIdentityKeyPair() {
