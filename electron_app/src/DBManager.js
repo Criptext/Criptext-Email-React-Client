@@ -53,11 +53,31 @@ const deleteAccountByParams = params => {
     .del();
 };
 
-const getAccount = () => {
-  return db
+const getAccount = async () => {
+  const accounts = await db
     .table(Table.ACCOUNT)
     .select('*')
-    .where({ isActive: true });
+    .where({ isLoggedIn: true })
+    .orderBy('isActive', 'desc');
+  const accountObj = formAccountObject(accounts);
+  return [accountObj];
+};
+
+const formAccountObject = accounts => {
+  const [currentAccount, ...logged] = accounts;
+  if (!currentAccount) return {};
+
+  if (!currentAccount.logged) {
+    currentAccount['logged'] = {};
+    if (logged && logged.length) {
+      const inactiveAccounts = logged.reduce((result, account) => {
+        result[account.recipientId] = account;
+        return result;
+      }, {});
+      currentAccount['logged'] = inactiveAccounts;
+    }
+  }
+  return currentAccount;
 };
 
 const getAccountByParams = params => {
