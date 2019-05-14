@@ -17,7 +17,7 @@ const decryptEmail = async ({
   deviceId,
   messageType
 }) => {
-  const { status, body } = await fetchEmailBody(bodyKey);
+  const { status, body } = await fetchEmailBody({ bodyKey });
   if (status !== 200) {
     return;
   }

@@ -45,7 +45,7 @@ export const apiCriptextRequest = async ({
   querystring,
   optionalToken
 }) => {
-  const defaultHeaders = await formDefaultRequestHeaders(optionalToken);
+  const defaultHeaders = formDefaultRequestHeaders(optionalToken);
   switch (method) {
     case 'GET': {
       const requestUrl = `${apiBaseUrl}${endpoint}${querystring || ''}`;
