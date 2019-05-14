@@ -853,7 +853,7 @@ const handleLowPrekeysAvailable = async ({ rowid }) => {
 };
 
 const setEventAsHandled = async eventIds => {
-  return await fetchAcknowledgeEvents(eventIds);
+  return await fetchAcknowledgeEvents({ eventIds });
 };
 
 /*  Window events: listener

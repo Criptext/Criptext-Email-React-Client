@@ -7,10 +7,11 @@ const NO_EVENTS_STATUS = 204;
 const INITIAL_REQUEST_EMPTY_STATUS = 499;
 const EVENTS_BATCH = 25;
 
-export const fetchEmailBody = async bodyKey => {
+export const fetchEmailBody = async ({ bodyKey, optionalToken }) => {
   const res = await apiCriptextRequest({
     endpoint: '/email/body/' + bodyKey,
-    method: 'GET'
+    method: 'GET',
+    optionalToken
   });
   if (res.status === 200) {
     const jsonRes = await res.json();
@@ -19,10 +20,14 @@ export const fetchEmailBody = async bodyKey => {
   const expiredResponse = await checkExpiredSession({
     response: { status: res.status },
     initialRequest: fetchEmailBody,
-    requestParams: bodyKey
+    requestParams: { bodyKey, optionalToken }
   });
   if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-    return await fetchEmailBody(bodyKey);
+    let newSessionToken = null;
+    if (expiredResponse.newSessionToken) {
+      newSessionToken = expiredResponse.newSessionToken;
+    }
+    return await fetchEmailBody({ bodyKey, optionalToken: newSessionToken });
   }
 };
 
@@ -42,11 +47,15 @@ export const fetchEventAction = async ({ cmd, action, optionalToken }) => {
     requestParams: { cmd, action, optionalToken }
   });
   if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-    let sessionToken = null;
+    let newSessionToken = null;
     if (expiredResponse.newSessionToken) {
-      sessionToken = expiredResponse.newSessionToken;
+      newSessionToken = expiredResponse.newSessionToken;
     }
-    return await fetchEventAction({ cmd, action, optionalToken: sessionToken });
+    return await fetchEventAction({
+      cmd,
+      action,
+      optionalToken: newSessionToken
+    });
   }
 };
 
@@ -57,11 +66,12 @@ const formEvents = events =>
     rowid: event.rowid
   }));
 
-export const fetchEvents = async () => {
+export const fetchEvents = async optionalToken => {
   const res = await apiCriptextRequest({
     endpoint: '/event',
     querystring: `?count=${EVENTS_BATCH}`,
-    method: 'GET'
+    method: 'GET',
+    optionalToken
   });
   switch (res.status) {
     case PENDING_EVENTS_STATUS_OK: {
@@ -78,20 +88,25 @@ export const fetchEvents = async () => {
       const expiredResponse = await checkExpiredSession({
         response: { status: res.status },
         initialRequest: fetchEvents,
-        requestParams: null
+        requestParams: optionalToken
       });
       if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-        return await fetchEvents();
+        let newSessionToken = null;
+        if (expiredResponse.newSessionToken) {
+          newSessionToken = expiredResponse.newSessionToken;
+        }
+        return await fetchEvents(newSessionToken);
       }
     }
   }
 };
 
-export const fetchAcknowledgeEvents = async eventIds => {
+export const fetchAcknowledgeEvents = async ({ eventIds, optionalToken }) => {
   const res = await apiCriptextRequest({
     endpoint: '/event/ack',
     method: 'POST',
-    params: { ids: eventIds }
+    params: { ids: eventIds },
+    optionalToken
   });
   if (res.status === 200) {
     return { status: 200 };
@@ -99,9 +114,16 @@ export const fetchAcknowledgeEvents = async eventIds => {
   const expiredResponse = await checkExpiredSession({
     response: { status: res.status },
     initialRequest: fetchAcknowledgeEvents,
-    requestParams: eventIds
+    requestParams: { eventIds, optionalToken }
   });
   if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-    return await fetchAcknowledgeEvents(eventIds);
+    let newSessionToken = null;
+    if (expiredResponse.newSessionToken) {
+      newSessionToken = expiredResponse.newSessionToken;
+    }
+    return await fetchAcknowledgeEvents({
+      eventIds,
+      optionalToken: newSessionToken
+    });
   }
 };
