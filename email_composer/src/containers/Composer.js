@@ -507,11 +507,7 @@ class ComposerWrapper extends Component {
       toEmails: this.state.toEmails,
       threadId: this.state.threadId || temporalThreadId
     };
-    const {
-      emailData,
-      criptextRecipients,
-      externalRecipients
-    } = formOutgoingEmailFromData(data);
+    const { emailData, recipientDomains } = formOutgoingEmailFromData(data);
     let emailId, key;
     try {
       const files = await getFileParamsToSend(this.state.files);
@@ -522,11 +518,13 @@ class ComposerWrapper extends Component {
 
       [emailId] = await createEmail(emailData);
       const peer = {
-        recipientId: myAccount.recipientId,
+        recipientId: account.recipientId,
+        username: account.recipientId,
+        domain: account.domain,
         type: 'peer',
         deviceId: myAccount.deviceId
       };
-      const recipients = [...criptextRecipients, peer];
+      const recipients = [...recipientDomains, peer];
       const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
       const params = {
         subject: emailData.email.subject,
@@ -535,7 +533,6 @@ class ComposerWrapper extends Component {
             ? undefined
             : emailData.email.threadId,
         recipients,
-        externalRecipients,
         body: emailData.body,
         preview: emailData.email.preview,
         files,

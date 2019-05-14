@@ -10,10 +10,11 @@ import { generateKeyAndIv, encryptDummySession } from '../utils/AESUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 import { noNulls } from './../utils/ObjectUtils';
 import {
-  createObjectRecipientIdByDevices,
+  createObjectRecipientDomainIdByDevices,
   filterRecipientsByBlacklisted
 } from './../utils/EncryptionUtils';
 import string from './../lang';
+import { appDomain } from '../utils/const';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -165,8 +166,7 @@ const createEmails = async (
 };
 
 const encryptPostEmail = async ({
-  recipients,
-  externalRecipients,
+  recipientDomains,
   body,
   preview,
   subject,
@@ -175,9 +175,13 @@ const encryptPostEmail = async ({
   peer,
   externalEmailPassword
 }) => {
-  const recipientIds = recipients.map(item => item.recipientId);
+  const recipientIds = recipientDomains.map(item => item.recipientId);
   const sessions = await getSessionRecordByRecipientIds(recipientIds);
-  let knownAddresses = createObjectRecipientIdByDevices(sessions);
+  let knownAddresses = createObjectRecipientDomainIdByDevices(
+    sessions,
+    recipientDomains,
+    appDomain
+  );
   const {
     keyBundles,
     blacklistedKnownDevices
@@ -210,7 +214,7 @@ const encryptPostEmail = async ({
   const criptextEmails = await createEmails(
     body,
     preview,
-    recipients,
+    recipientDomains,
     knownAddresses,
     keyBundleJSONbyRecipientIdAndDeviceId,
     peer,

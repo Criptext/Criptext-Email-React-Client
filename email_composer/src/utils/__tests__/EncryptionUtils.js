@@ -8,8 +8,21 @@ const sessions = [
     deviceIds: '1,5,6'
   },
   {
-    recipientId: 'isabel',
+    recipientId: 'isabel@criptext.app',
     deviceIds: '3,4,5'
+  }
+];
+
+const recipientDomains = [
+  {
+    recipientId: 'erika',
+    username: 'erika',
+    domain: 'criptext.com'
+  },
+  {
+    recipientId: 'isabel@criptext.app',
+    username: 'isabel',
+    domain: 'criptext.app'
   }
 ];
 
@@ -22,12 +35,28 @@ const blacklistedKnownDevices = [
 
 describe('Methods to encrypt emails', () => {
   it('Should create object recipientId with its deviceIds', () => {
-    const knownAddresses = utils.createObjectRecipientIdByDevices(sessions);
+    const knownAddresses = utils.createObjectRecipientDomainIdByDevices(
+      sessions,
+      recipientDomains,
+      'criptext.com'
+    );
     expect(knownAddresses).toMatchObject(
-      expect.objectContaining({
-        erika: [1, 5, 6],
-        isabel: [3, 4, 5]
-      })
+      expect.objectContaining([
+        {
+          name: 'criptext.com',
+          recipients: ['erika'],
+          knownAddresses: {
+            erika: [1, 5, 6]
+          }
+        },
+        {
+          name: 'criptext.com',
+          recipients: ['erika'],
+          knownAddresses: {
+            erika: [1, 5, 6]
+          }
+        }
+      ])
     );
   });
 
