@@ -26,10 +26,11 @@ export const fetchEmailBody = async bodyKey => {
   }
 };
 
-export const fetchEventAction = async ({ cmd, action }) => {
+export const fetchEventAction = async ({ cmd, action, optionalToken }) => {
   const res = await apiCriptextRequest({
     endpoint: `/event/${cmd}/${action}`,
-    method: 'GET'
+    method: 'GET',
+    optionalToken
   });
   if (res.status === 200) {
     const jsonRes = await res.json();
@@ -38,10 +39,14 @@ export const fetchEventAction = async ({ cmd, action }) => {
   const expiredResponse = await checkExpiredSession({
     response: { status: res.status },
     initialRequest: fetchEventAction,
-    requestParams: { cmd, action }
+    requestParams: { cmd, action, optionalToken }
   });
   if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-    return await fetchEventAction({ cmd, action });
+    let sessionToken = null;
+    if (expiredResponse.newSessionToken) {
+      sessionToken = expiredResponse.newSessionToken;
+    }
+    return await fetchEventAction({ cmd, action, optionalToken: sessionToken });
   }
 };
 

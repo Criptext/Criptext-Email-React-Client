@@ -83,6 +83,7 @@ const checkExpiredSession = async (
   requestparams
 ) => {
   const NEW_SESSION_SUCCESS_STATUS = 200;
+  const UPDATE_USER_TOKENS = 201;
   const EXPIRED_SESSION_STATUS = 401;
   const CHANGED_PASSWORD_STATUS = 403;
   const INITIAL_REQUEST_EMPTY_STATUS = 499;
@@ -103,22 +104,32 @@ const checkExpiredSession = async (
       } else {
         const newSessionResponse = await client.refreshSession();
         newSessionStatus = newSessionResponse.status;
-        newSessionToken = newSessionResponse.text;
+        if (newSessionStatus === NEW_SESSION_SUCCESS_STATUS) {
+          newSessionToken = newSessionResponse.text;
+        } else if (newSessionStatus === UPDATE_USER_TOKENS) {
+          newSessionToken = newSessionResponse.body.token;
+          newRefreshToken = newSessionResponse.body.refreshToken;
+        }
       }
-
       if (newSessionStatus === EXPIRED_SESSION_STATUS) {
         return mailboxWindow.send('device-removed', null);
-      } else if (newSessionStatus === NEW_SESSION_SUCCESS_STATUS) {
+      }
+
+      if (
+        newSessionStatus === NEW_SESSION_SUCCESS_STATUS ||
+        newSessionStatus === UPDATE_USER_TOKENS
+      ) {
         await updateAccount({
           jwt: newSessionToken,
           refreshToken: newRefreshToken,
           recipientId
         });
+        if (client.token) client.token = newSessionToken;
         socketClient.restartSocket({ jwt: newSessionToken });
         if (initialRequest) {
           return await initialRequest(requestparams);
         }
-        return { status: INITIAL_REQUEST_EMPTY_STATUS };
+        return { status: INITIAL_REQUEST_EMPTY_STATUS, newSessionToken };
       }
       break;
     }
