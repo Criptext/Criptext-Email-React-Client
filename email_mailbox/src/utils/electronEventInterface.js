@@ -18,6 +18,7 @@ import {
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   getEmailByKey,
+  getEmailByParams,
   getEmailLabelsByEmailId,
   getEmailsByKeys,
   getEmailsByThreadId,
@@ -324,6 +325,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     fileKeys,
     files,
     from,
+    inReplyTo,
     replyTo,
     labels,
     messageType,
@@ -414,6 +416,16 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       }
     }
     const unread = isFromMe && !isToMe ? false : true;
+    let emailThreadId = threadId;
+    if (inReplyTo) {
+      const emailWithMessageId = await getEmailByParams({
+        messageId: inReplyTo
+      });
+      if (emailWithMessageId) {
+        emailThreadId = emailWithMessageId.threadId;
+      }
+    }
+
     const data = {
       body,
       date,
@@ -422,7 +434,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       metadataKey,
       deviceId,
       subject,
-      threadId,
+      threadId: emailThreadId,
       unread,
       messageId,
       replyTo,

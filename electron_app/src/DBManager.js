@@ -65,7 +65,7 @@ const getAccount = async () => {
 
 const formAccountObject = accounts => {
   const [currentAccount, ...logged] = accounts;
-  if (!currentAccount) return {};
+  if (!currentAccount) return;
 
   if (!currentAccount.logged) {
     currentAccount['logged'] = {};
@@ -617,6 +617,14 @@ const getEmailByKey = ({ key, accountId }) => {
     .from(Table.EMAIL)
     .where({ key })
     .andWhere('accountId', accountId);
+};
+
+const getEmailByParams = async params => {
+  const [email] = await db
+    .select('*')
+    .from(Table.EMAIL)
+    .where(params);
+  return email;
 };
 
 const getEmailsByKeys = ({ keys, accountId }) => {
@@ -1321,6 +1329,7 @@ module.exports = {
   getContactByIds,
   getContactsByEmailId,
   getEmailsByIds,
+  getEmailByParams,
   getEmailByKey,
   getEmailsByKeys,
   getEmailsByLabelIds,

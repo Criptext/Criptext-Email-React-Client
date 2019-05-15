@@ -111,6 +111,10 @@ ipc.answerRenderer('db-get-email-by-key', params =>
   dbManager.getEmailByKey(params)
 );
 
+ipc.answerRenderer('db-get-email-by-params', params =>
+  dbManager.getEmailByParams(params)
+);
+
 ipc.answerRenderer('db-get-emails-by-ids', emailIds =>
   dbManager.getEmailsByIds(emailIds)
 );
