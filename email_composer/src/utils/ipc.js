@@ -37,7 +37,11 @@ export const throwError = error => {
 };
 
 /* Criptext Client
-   ----------------------------- */
+----------------------------- */
+export const checkExpiredSession = async params => {
+  return await callMain('client-check-expired-session', params);
+};
+
 export const findKeyBundles = async params => {
   checkCurrentAccount();
   const data = { params };
