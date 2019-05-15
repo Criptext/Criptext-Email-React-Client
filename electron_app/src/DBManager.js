@@ -483,6 +483,14 @@ const getEmailsByKeys = keys => {
     .whereIn('key', keys);
 };
 
+const getEmailByParams = async params => {
+  const [email] = await db
+    .select('*')
+    .from(Table.EMAIL)
+    .where(params);
+  return email;
+};
+
 const getEmailsByLabelIds = labelIds => {
   return db
     .select(`${Table.EMAIL}.*`)
@@ -1129,6 +1137,7 @@ module.exports = {
   getContactByIds,
   getContactsByEmailId,
   getEmailsByIds,
+  getEmailByParams,
   getEmailByKey,
   getEmailsByKeys,
   getEmailsByLabelIds,
