@@ -77,10 +77,15 @@ const download = async addr => {
   await checkClient();
   checkDataTransferDirectory();
   const downloadStream = fs.createWriteStream(downloadedFileName);
-  const downloadResponse = await transferClient.download({
-    addr,
-    downloadStream
-  });
+  let downloadResponse;
+  try {
+    downloadResponse = await transferClient.download({
+      addr,
+      downloadStream
+    });
+  } catch (ex) {
+    return { statusCode: 500 };
+  }
   return downloadResponse.statusCode === 200
     ? downloadResponse
     : await checkExpiredSession(downloadResponse, download, addr);
@@ -91,11 +96,16 @@ const upload = async uuid => {
   const uploadStream = fs.createReadStream(encryptedFileName);
   const stat = fs.statSync(encryptedFileName);
   const fileSize = stat.size;
-  const uploadResponse = await transferClient.upload({
-    uploadStream,
-    fileSize,
-    uuid
-  });
+  let uploadResponse;
+  try {
+    uploadResponse = await transferClient.upload({
+      uploadStream,
+      fileSize,
+      uuid
+    });
+  } catch (ex) {
+    return { statusCode: 500 };
+  }
   return uploadResponse.statusCode === 200
     ? uploadResponse
     : await checkExpiredSession(uploadResponse, upload, uuid);

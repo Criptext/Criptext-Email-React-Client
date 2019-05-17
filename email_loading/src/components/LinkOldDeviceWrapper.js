@@ -156,17 +156,18 @@ class LinkOldDeviceWrapper extends Component {
       });
       const { key } = await encryptDatabaseFile();
       await startSocket();
+      const { session, deviceId } = this.state.remoteData;
+      const { randomId } = session;
       this.setState(
         {
           message: messages.gettingKeys,
           pauseAt: 50,
           delay: (50 - this.state.percent) / ANIMATION_DURATION,
-          lastStep: STEPS.ENCRYPT_MAILBOX
+          lastStep: STEPS.ENCRYPT_MAILBOX,
+          retryData: { randomId, deviceId, key }
         },
         async () => {
           this.incrementPercentage();
-          const { session, deviceId } = this.state.remoteData;
-          const { randomId } = session;
           await this.uploadFile(randomId, deviceId, key);
         }
       );
@@ -185,51 +186,46 @@ class LinkOldDeviceWrapper extends Component {
 
   uploadFile = async (randomId, deviceId, key) => {
     const { statusCode } = await uploadDatabaseFile(randomId);
-    if (statusCode === 200) {
-      const keyEncrypted = await signal.encryptKeyForNewDevice({
-        recipientId: myAccount.recipientId,
-        deviceId,
-        key
-      });
-      this.setState(
-        {
-          message: messages.uploadingMailbox,
-          pauseAt: 75,
-          delay: (75 - this.state.percent) / ANIMATION_DURATION,
-          lastStep: STEPS.GETTING_KEYS
-        },
-        async () => {
-          this.incrementPercentage();
-          await postDataReady({
-            deviceId,
-            key: keyEncrypted
-          });
-          this.setState(
-            {
-              message: messages.uploadSuccess,
-              pauseAt: 100,
-              delay: (100 - this.state.percent) / ANIMATION_DURATION,
-              lastStep: STEPS.UPLOAD_MAILBOX
-            },
-            async () => {
-              this.incrementPercentage();
-              await setTimeout(() => {
-                clearSyncData();
-                closeCreatingKeysLoadingWindow();
-                sendEndLinkDevicesEvent();
-              }, 4000);
-            }
-          );
-        }
-      );
-    } else {
-      clearSyncData();
-      const { name, description } = string.errors.unableToConnect;
-      throwError({
-        name,
-        description: description + statusCode
-      });
+    if (statusCode !== 200) {
+      this.linkingDevicesThrowError();
+      return;
     }
+    const keyEncrypted = await signal.encryptKeyForNewDevice({
+      recipientId: myAccount.recipientId,
+      deviceId,
+      key
+    });
+    this.setState(
+      {
+        message: messages.uploadingMailbox,
+        pauseAt: 75,
+        delay: (75 - this.state.percent) / ANIMATION_DURATION,
+        lastStep: STEPS.GETTING_KEYS
+      },
+      async () => {
+        this.incrementPercentage();
+        await postDataReady({
+          deviceId,
+          key: keyEncrypted
+        });
+        this.setState(
+          {
+            message: messages.uploadSuccess,
+            pauseAt: 100,
+            delay: (100 - this.state.percent) / ANIMATION_DURATION,
+            lastStep: STEPS.UPLOAD_MAILBOX
+          },
+          async () => {
+            this.incrementPercentage();
+            await setTimeout(() => {
+              clearSyncData();
+              closeCreatingKeysLoadingWindow();
+              sendEndLinkDevicesEvent();
+            }, 4000);
+          }
+        );
+      }
+    );
   };
 
   handleClickCancelSync = () => {
@@ -246,6 +242,27 @@ class LinkOldDeviceWrapper extends Component {
     this.setState({
       failed: true
     });
+  };
+
+  handleClickRetry = () => {
+    const step = this.state.lastStep;
+    switch (step) {
+      case STEPS.ENCRYPT_MAILBOX: {
+        const { randomId, deviceId, key } = this.state.retryData;
+        this.setState(
+          {
+            failed: false
+          },
+          () => {
+            this.uploadFile(randomId, deviceId, key);
+          }
+        );
+        return;
+      }
+      default: {
+        return;
+      }
+    }
   };
 }
 

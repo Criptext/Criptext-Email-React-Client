@@ -193,7 +193,8 @@ class LoadingWrapper extends Component {
         message: messages.downloadingMailbox,
         pauseAt: 70,
         delay: (70 - this.state.percent) / ANIMATION_DURATION,
-        lastStep: STEPS.WAIT_MAILBOX
+        lastStep: STEPS.WAIT_MAILBOX,
+        retryData: { authorizerId, address, key }
       },
       async () => {
         this.incrementPercentage();
@@ -202,7 +203,12 @@ class LoadingWrapper extends Component {
           ...this.state.accountData
         };
         const accountId = await signal.createAccountToDB(newAccountData);
-        await downloadBackupFile(address);
+        const response = await downloadBackupFile(address);
+
+        if (response.statusCode !== 200) {
+          this.linkingDevicesThrowError();
+          return;
+        }
 
         this.setState(
           {
@@ -263,6 +269,31 @@ class LoadingWrapper extends Component {
     this.setState({
       failed: true
     });
+  };
+
+  handleClickRetry = () => {
+    const step = this.state.lastStep;
+    const retryData = this.state.retryData;
+    switch (step) {
+      case STEPS.WAIT_MAILBOX: {
+        this.setState(
+          {
+            failed: false
+          },
+          () => {
+            this.downloadAndProcessMailbox(
+              retryData.authorizerId,
+              retryData.address,
+              retryData.key
+            );
+          }
+        );
+        return;
+      }
+      default: {
+        return;
+      }
+    }
   };
 }
 
