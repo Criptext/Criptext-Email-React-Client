@@ -4,7 +4,6 @@ import { loadSuggestions } from '../actions/index';
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
 import { SectionType } from '../utils/const';
 import { openLoginWindow } from '../utils/ipc';
-import { selectAccountAsActive } from '../utils/electronEventInterface';
 
 const mapStateToProps = state => {
   const suggestions = state.get('suggestions');
@@ -54,9 +53,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     openLogin: params => {
       openLoginWindow(params);
-    },
-    onSelectAccount: async ({ id, recipientId }) => {
-      await selectAccountAsActive({ id, recipientId });
     }
   };
 };

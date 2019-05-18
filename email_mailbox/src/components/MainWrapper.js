@@ -18,10 +18,22 @@ class MainWrapper extends Component {
     super(props);
     this.state = {
       isUpdateAvailable: false,
-      threadItemsChecked: Set()
+      threadItemsChecked: Set(),
+      shouldLoadMailbox: false
     };
 
     this.initEventHandlers(props);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.sectionSelected.type !== this.props.sectionSelected.type &&
+      this.props.sectionSelected.type === SectionType.MAILBOX
+    ) {
+      this.setState({ shouldLoadMailbox: true });
+    } else if (this.state.shouldLoadMailbox) {
+      this.setState({ shouldLoadMailbox: false });
+    }
   }
 
   render() {
@@ -53,6 +65,7 @@ class MainWrapper extends Component {
           <HeaderMain
             onClickSection={this.props.onClickSection}
             onToggleActivityPanel={this.props.onToggleActivityPanel}
+            onUpdateApp={this.props.onUpdateApp}
           />
         );
       }
@@ -78,6 +91,7 @@ class MainWrapper extends Component {
           <HeaderMain
             onClickSection={this.props.onClickSection}
             onToggleActivityPanel={this.props.onToggleActivityPanel}
+            onUpdateApp={this.props.onUpdateApp}
           />
         );
       }
@@ -89,7 +103,12 @@ class MainWrapper extends Component {
   renderSection = () => {
     switch (this.props.sectionSelected.type) {
       case SectionType.SETTINGS: {
-        return <Settings />;
+        return (
+          <Settings
+            onUpdateApp={this.props.onUpdateApp}
+            onClickSection={this.props.onClickSection}
+          />
+        );
       }
       default:
         return this.renderThreads();
@@ -112,6 +131,7 @@ class MainWrapper extends Component {
             onClickSection={this.props.onClickSection}
             onCheckThreadItem={this.handleCheckThreadItem}
             onCloseUpdateMessage={this.handleCloseUpdateMessage}
+            shouldInitLoad={this.state.shouldLoadMailbox}
             searchParams={this.props.sectionSelected.params.searchParams}
             threadItemsChecked={this.state.threadItemsChecked}
           />
@@ -188,6 +208,7 @@ class MainWrapper extends Component {
 MainWrapper.propTypes = {
   onClickSection: PropTypes.func,
   onToggleActivityPanel: PropTypes.func,
+  onUpdateApp: PropTypes.func,
   sectionSelected: PropTypes.object
 };
 

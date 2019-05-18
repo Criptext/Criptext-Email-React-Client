@@ -1,7 +1,7 @@
 import { getTwoCapitalLetters } from './StringUtils';
 import { LabelType } from './electronInterface';
 import { avatarBaseUrl, appDomain } from './const';
-import { getAccountByParams, getEmailsUnredByLabelId } from './ipc';
+import { getEmailsUnredByLabelId } from './ipc';
 
 export const compareAccounts = (account1, account2) => {
   return (
@@ -20,7 +20,7 @@ export const defineAccounts = accounts => {
     const account = {
       id: element.id,
       badge: element.badge,
-      isActive: element.isActive,
+      isActive: !!element.isActive,
       name: element.name,
       recipientId: element.recipientId
     };
@@ -31,12 +31,8 @@ export const defineAccounts = accounts => {
   }, {});
 };
 
-export const assembleAccounts = async () => {
-  const accounts = await getAccountByParams({
-    isLoggedIn: true,
-    isActive: false
-  });
-  const result = await Promise.all(
+export const assembleAccounts = async accounts => {
+  return await Promise.all(
     accounts.map(async account => {
       const labelId = LabelType.inbox.id;
       const rejectedLabelIds = [LabelType.spam.id, LabelType.trash.id];
@@ -49,7 +45,6 @@ export const assembleAccounts = async () => {
       return { ...account, badge: badgeInbox };
     })
   );
-  return defineAccounts(result);
 };
 
 export const defineAccountVisibleParams = (account, timestamp) => {

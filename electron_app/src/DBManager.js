@@ -22,12 +22,12 @@ const EMAIL_CONTACT_TYPE_FROM = 'from';
 const createAccount = params => {
   return db.transaction(async trx => {
     const [accountId] = await trx.table(Table.ACCOUNT).insert(params);
-    await defineActiveAccountById(accountId, trx);
+    await defineActiveAccountById({ accountId }, trx);
     return [accountId];
   });
 };
 
-const defineActiveAccountById = async (accountId, prevTrx) => {
+const defineActiveAccountById = async ({ accountId, recipientId }, prevTrx) => {
   const transaction = prevTrx ? fn => fn(prevTrx) : db.transaction;
   await transaction(async trx => {
     await trx
@@ -36,13 +36,8 @@ const defineActiveAccountById = async (accountId, prevTrx) => {
       .update({ isActive: false });
     await trx
       .table(Table.ACCOUNT)
-      .where('id', accountId)
+      .where(accountId ? 'id' : 'recipientId', accountId || recipientId)
       .update({ isActive: true });
-    const [activeAccount] = await trx
-      .table(Table.ACCOUNT)
-      .select('*')
-      .where({ isActive: true });
-    myAccount.initialize(activeAccount);
   });
 };
 
@@ -59,8 +54,11 @@ const getAccount = async () => {
     .select('*')
     .where({ isLoggedIn: true })
     .orderBy('isActive', 'desc');
-  const accountObj = formAccountObject(accounts);
-  return [accountObj];
+  if (accounts.length) {
+    const accountObj = formAccountObject(accounts);
+    return [accountObj];
+  }
+  return accounts;
 };
 
 const formAccountObject = accounts => {
@@ -87,20 +85,23 @@ const getAccountByParams = params => {
     .where(params);
 };
 
-const updateAccount = async ({
-  deviceId,
-  jwt,
-  refreshToken,
-  name,
-  privKey,
-  pubKey,
-  recipientId,
-  registrationId,
-  signature,
-  signatureEnabled,
-  isLoggedIn,
-  isActive
-}) => {
+const updateAccount = async (
+  {
+    deviceId,
+    jwt,
+    refreshToken,
+    name,
+    privKey,
+    pubKey,
+    recipientId,
+    registrationId,
+    signature,
+    signatureEnabled,
+    isLoggedIn,
+    isActive
+  },
+  trx
+) => {
   const params = noNulls({
     deviceId,
     jwt,
@@ -115,12 +116,26 @@ const updateAccount = async ({
     isLoggedIn: typeof isLoggedIn === 'boolean' ? isLoggedIn : undefined,
     isActive: typeof isActive === 'boolean' ? isActive : undefined
   });
-  const response = await db
+
+  const knex = trx || db;
+  const response = await knex
     .table(Table.ACCOUNT)
     .where({ recipientId })
     .update(params);
   myAccount.update(params);
   return response;
+};
+
+const updateAccounts = async params => {
+  const { recipientId } = params;
+
+  if (params.isActive && recipientId) {
+    return db.transaction(async trx => {
+      await defineActiveAccountById({ recipientId }, trx);
+      return await updateAccount(params, trx);
+    });
+  }
+  return await updateAccount(params);
 };
 
 /* Contact Account
@@ -846,7 +861,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
 
 const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   const {
-    accountId = myAccount.id,
+    accountId,
     contactFilter,
     contactTypes = ['from'],
     date,
@@ -1500,6 +1515,7 @@ module.exports = {
   getTrashExpiredEmails,
   getFilesByTokens,
   updateAccount,
+  updateAccounts,
   updateContactByEmail,
   updateEmail,
   updateEmails,

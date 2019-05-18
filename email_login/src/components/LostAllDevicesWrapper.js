@@ -115,7 +115,7 @@ class LostDevicesWrapper extends Component {
             name
           }
         });
-        closeLoginWindow();
+        closeLoginWindow(true);
         break;
       }
       case LOGIN_STATUS.WRONG_CREDENTIALS: {

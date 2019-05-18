@@ -79,6 +79,7 @@ const defineSideBarItems = labels => {
 };
 
 const defineSystemLabelsToEdit = labels => {
+  if (!labels.size) return [];
   return [
     labels.find(label => {
       return label.get('id') === LabelType.starred.id;

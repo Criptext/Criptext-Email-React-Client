@@ -92,9 +92,7 @@ DialogPopup.propTypes = {
   suffix: PropTypes.string,
   prefix: PropTypes.string,
   strong: PropTypes.string,
-  title: PropTypes.string,
-  leftButtonLabel: PropTypes.string,
-  rightButtonLabel: PropTypes.string
+  title: PropTypes.string
 };
 
 export const DialogTypes = {

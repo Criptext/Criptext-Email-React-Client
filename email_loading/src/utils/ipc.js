@@ -7,8 +7,8 @@ export const closeCreatingKeysLoadingWindow = () => {
 
 export const getComputerName = () => callMain('get-computer-name');
 
-export const openMailboxWindow = email => {
-  callMain('open-mailbox', email);
+export const openMailboxWindow = params => {
+  callMain('open-mailbox', params);
 };
 
 export const throwError = error => {
@@ -174,6 +174,10 @@ export const getSignedPreKey = async params => {
 
 export const updateAccount = async params => {
   return await callMain('db-update-account', params);
+};
+
+export const updateAccounts = async params => {
+  return await callMain('db-update-accounts', params);
 };
 
 export const updateIdentityKeyRecord = async params => {

@@ -253,7 +253,7 @@
       "description": "Mailbox Sync Complete"
     },
     "logged_as": {
-      "description": "Logged as "
+      "description": "Logged in as "
     }
   },
   "notification": {

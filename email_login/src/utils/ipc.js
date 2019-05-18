@@ -1,7 +1,7 @@
 import { callMain } from '@criptext/electron-better-ipc/renderer';
 
-export const closeLoginWindow = () => {
-  callMain('close-login');
+export const closeLoginWindow = isExit => {
+  callMain('close-login', isExit);
 };
 
 export const getComputerName = () => callMain('get-computer-name');

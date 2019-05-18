@@ -1,5 +1,6 @@
 import { addAccounts } from './accounts';
 import {
+  logout,
   setAvatarUpdatedTimestamp,
   startLoadSync,
   startLoadThread,
@@ -96,6 +97,7 @@ export {
   loadFeedItems,
   loadSuggestions,
   loadThreads,
+  logout,
   markEmailUnread,
   moveThreads,
   muteEmail,

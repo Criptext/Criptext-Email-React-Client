@@ -8,7 +8,6 @@ import {
   openMailboxWindow,
   throwError
 } from './../utils/ipc';
-import { appDomain } from '../utils/const';
 import string from './../lang';
 
 const animationTypes = {
@@ -34,6 +33,7 @@ class LoadingWrapper extends Component {
       timeout: 0,
       accountResponse: undefined
     };
+    this.accountId = undefined;
   }
 
   componentDidMount() {
@@ -117,18 +117,19 @@ class LoadingWrapper extends Component {
     deviceType
   }) => {
     try {
-      const loginResponse = await signal.createAccountWithNewDevice({
+      const { accountId } = await signal.createAccountWithNewDevice({
         recipientId,
         deviceId,
         name,
         deviceType
       });
-      if (loginResponse === false) {
+      if (!accountId) {
         this.loadingThrowError();
       }
-      if (loginResponse === true) {
+      if (accountId) {
+        this.accountId = accountId;
         this.setState({
-          accountResponse: loginResponse,
+          accountResponse: true,
           failed: false
         });
       }
@@ -162,8 +163,9 @@ class LoadingWrapper extends Component {
     if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
       this.setState({ percent: 100 }, () => {
-        const email = `${remoteData.recipientId}@${appDomain}`;
-        openMailboxWindow(email);
+        const accountId = this.accountId;
+        const recipientId = remoteData.recipientId;
+        openMailboxWindow({ accountId, recipientId });
         closeCreatingKeysLoadingWindow();
       });
     }

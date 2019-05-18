@@ -5,8 +5,7 @@ import {
   myAccount,
   mySettings,
   getNews,
-  getDeviceType,
-  reloadWindow
+  getDeviceType
 } from './electronInterface';
 import {
   createEmail,
@@ -39,7 +38,7 @@ import {
   updatePushToken,
   updateDeviceType,
   checkForUpdates,
-  defineActiveAccountById,
+  changeAccountApp,
   cleanDataLogout
 } from './ipc';
 import {
@@ -66,7 +65,6 @@ import { AttachItemStatus } from '../components/AttachItem';
 import {
   getShowEmailPreviewStatus,
   getUserGuideStepStatus,
-  setPendingMessageToDisplay,
   clearStorage
 } from './storage';
 import {
@@ -232,6 +230,11 @@ export const getGroupEvents = async ({
     shouldGetMoreEvents: hasMoreEvents,
     showNotification
   });
+};
+
+export const isGettingEventsGet = () => isGettingEvents;
+export const isGettingEventsUpdate = value => {
+  isGettingEvents = value;
 };
 
 export const handleEvent = incomingEvent => {
@@ -898,12 +901,12 @@ ipc.answerMain('get-events', () => {
   sendLoadEventsEvent({});
 });
 
-ipcRenderer.on('refresh-window-logged-as', (ev, email) => {
-  showLoggedAsMessage(email);
+ipcRenderer.on('refresh-window-logged-as', (ev, { accountId, recipientId }) => {
+  emitter.emit(Event.LOAD_APP, { accountId, recipientId });
 });
 
-export const selectAccountAsActive = async ({ id, recipientId }) => {
-  await defineActiveAccountById(id);
+export const selectAccountAsActive = async ({ accountId, recipientId }) => {
+  await changeAccountApp({ accountId });
   const email = `${recipientId}@${appDomain}`;
   showLoggedAsMessage(email);
 };
@@ -914,8 +917,7 @@ export const showLoggedAsMessage = email => {
     description: Messages.success.loggedAs.description + email,
     type: MessageType.SUCCESS
   };
-  setPendingMessageToDisplay(JSON.stringify(messageData));
-  reloadWindow();
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
@@ -1340,6 +1342,7 @@ export const Event = {
   LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
   LINK_DEVICE_PREPARING_MAILBOX: 'preparing-mailbox',
   LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
+  LOAD_APP: 'load-app',
   LOAD_EVENTS: 'load-events',
   OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',

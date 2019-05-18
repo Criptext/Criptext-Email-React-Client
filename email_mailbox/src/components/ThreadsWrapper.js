@@ -23,7 +23,8 @@ class ThreadsWrapper extends Component {
       this.props.mailboxSelected !== nextProps.mailboxSelected ||
       this.props.searchParams !== nextProps.searchParams ||
       (nextProps.threadItemsChecked.size === 0 &&
-        this.props.threadItemsChecked.size > 0)
+        this.props.threadItemsChecked.size > 0) ||
+      nextProps.shouldInitLoad
     ) {
       this.setState({ lastMinDate: undefined });
       this.props.onLoadThreads(
@@ -179,6 +180,7 @@ ThreadsWrapper.propTypes = {
   onLoadApp: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onUnreadToggle: PropTypes.func,
+  shouldInitLoad: PropTypes.bool,
   searchParams: PropTypes.object,
   switchChecked: PropTypes.bool,
   threadItemsChecked: PropTypes.object,

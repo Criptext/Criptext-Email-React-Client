@@ -175,6 +175,7 @@ class LoginWrapper extends Component {
       case mode.LOST_DEVICES:
         return (
           <LostAllDevicesWrapper
+            cleanState={this.cleanState}
             setPopupContent={this.setPopupContent}
             dismissPopup={this.dismissPopup}
             usernameValue={this.state.values.username}
@@ -229,8 +230,8 @@ class LoginWrapper extends Component {
         prefix: signin.prefix,
         strong: signin.strong,
         suffix: signin.suffix,
-        leftButtonLabel: signin.leftButtonLabel,
-        rightButtonLabel: signin.rightButtonLabel,
+        cancelButtonLabel: signin.cancelButtonLabel,
+        confirmButtonLabel: signin.confirmButtonLabel,
         data: validInputData
       }
     });
@@ -384,8 +385,8 @@ class LoginWrapper extends Component {
           prefix: login.loginNewAccount.prefix,
           list: this.formLoggedOutAccountsList(loggedOutAccounts),
           suffix: login.loginNewAccount.suffix,
-          cancelButtonLabel: login.loginNewAccount.leftButtonLabel,
-          confirmButtonLabel: login.loginNewAccount.rightButtonLabel
+          cancelButtonLabel: login.loginNewAccount.cancelButtonLabel,
+          confirmButtonLabel: login.loginNewAccount.confirmButtonLabel
         }
       });
       return false;
@@ -502,8 +503,8 @@ class LoginWrapper extends Component {
         prefix: login.usePassword.prefix,
         strong: login.usePassword.strong,
         suffix: login.usePassword.suffix,
-        leftButtonLabel: login.usePassword.leftButtonLabel,
-        rightButtonLabel: login.usePassword.rightButtonLabel
+        cancelButtonLabel: login.usePassword.cancelButtonLabel,
+        confirmButtonLabel: login.usePassword.confirmButtonLabel
       }
     });
   };
