@@ -15,7 +15,7 @@ import {
   getKeyBundle,
   postKeyBundle,
   postUser,
-  updateAccount,
+  updateAccounts,
   getSystemLanguage,
   deleteAccountByParams,
   getAccountByParams,
@@ -182,7 +182,7 @@ const createAccountWithNewDevice = async ({
   } else {
     if (!existsAccount.isLoggedIn) {
       try {
-        await updateAccount({
+        await updateAccounts({
           jwt: token,
           refreshToken,
           deviceId,
@@ -212,8 +212,7 @@ const createAccountWithNewDevice = async ({
     }),
     store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
   );
-
-  return true;
+  return { accountId: newAccount.id };
 };
 
 const uploadKeys = async ({ deviceType }) => {
@@ -293,7 +292,7 @@ const createAccountToDB = async ({
   } else {
     if (!existsAccount.isLoggedIn) {
       try {
-        await updateAccount({
+        await updateAccounts({
           jwt,
           refreshToken,
           deviceId,

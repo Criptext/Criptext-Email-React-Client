@@ -5,7 +5,7 @@ const globalManager = require('./../globalManager');
 const showWindows = () => {
   const visibleWindows = BrowserWindow.getAllWindows();
   visibleWindows.reverse().forEach(w => {
-    w.show();
+    w.show({});
   });
 };
 

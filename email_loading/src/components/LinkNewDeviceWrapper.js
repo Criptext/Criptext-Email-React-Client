@@ -243,8 +243,8 @@ class LoadingWrapper extends Component {
                 this.incrementPercentage();
                 clearSyncData();
                 await setTimeout(() => {
-                  const email = `${remoteData.recipientId}@${appDomain}`;
-                  openMailboxWindow(email);
+                  const recipientId = remoteData.recipientId;
+                  openMailboxWindow({ accountId, recipientId });
                   closeCreatingKeysLoadingWindow();
                 }, 4000);
               }

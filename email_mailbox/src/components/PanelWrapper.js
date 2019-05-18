@@ -66,6 +66,7 @@ class PanelWrapper extends Component {
         onCloseMailboxPopup={this.handleCloseMailboxPopup}
         onToggleActivityPanel={this.handleToggleActivityPanel}
         onToggleSideBar={this.handleToggleSideBar}
+        onUpdateApp={this.handleUpdateApp}
         sectionSelected={this.state.sectionSelected}
         {...this.props}
       />
@@ -75,6 +76,10 @@ class PanelWrapper extends Component {
   componentDidMount() {
     const steps = [USER_GUIDE_STEPS.BUTTON_COMPOSE];
     checkUserGuideSteps(steps);
+  }
+
+  componentWillUnmount() {
+    this.removeEventHandlers();
   }
 
   handleClickSection = (type, params) => {
@@ -131,12 +136,21 @@ class PanelWrapper extends Component {
     }
   };
 
-  componentWillUnmount() {
-    this.removeEventHandlers();
-  }
-
   handleClickThreadBack = () => {
     this.setState({ threadIdSelected: null });
+  };
+
+  handleCloseMailboxPopup = () => {
+    this.setState({
+      isHiddenMailboxPopup: true,
+      mailboxPopupType: undefined
+    });
+  };
+
+  handleCloseWelcome = () => {
+    this.setState({ isOpenWelcome: false }, () => {
+      this.props.onUpdateOpenedAccount();
+    });
   };
 
   handleToggleActivityPanel = () => {
@@ -154,21 +168,15 @@ class PanelWrapper extends Component {
     this.setState({ isOpenSideBar: !this.state.isOpenSideBar });
   };
 
-  handleCloseWelcome = () => {
-    this.setState({ isOpenWelcome: false }, () => {
-      this.props.onUpdateOpenedAccount();
-    });
-  };
-
-  handleCloseMailboxPopup = () => {
-    this.setState({
-      isHiddenMailboxPopup: true,
-      mailboxPopupType: undefined
-    });
+  handleUpdateApp = ({ mailbox, accountId, recipientId }) => {
+    const mailboxSelected =
+      mailbox || this.state.sectionSelected.params.mailboxSelected;
+    this.props.onUpdateAccountApp({ mailboxSelected, accountId, recipientId });
   };
 
   initEventHandlers = () => {
     addEvent(Event.ENABLE_WINDOW, this.enableWindowListenerCallback);
+    addEvent(Event.LOAD_APP, this.loadAppListenerCallback);
     addEvent(Event.LOAD_EVENTS, this.loadEventsListenerCallback);
     addEvent(Event.REFRESH_THREADS, this.refreshThreadsListenerCallback);
     addEvent(Event.STOP_LOAD_SYNC, this.stopLoadSyncListenerCallback);
@@ -191,10 +199,12 @@ class PanelWrapper extends Component {
 
   removeEventHandlers = () => {
     removeEvent(Event.ENABLE_WINDOW, this.enableWindowListenerCallback);
+    removeEvent(Event.LOAD_APP, this.loadAppListenerCallback);
     removeEvent(Event.LOAD_EVENTS, this.loadEventsListenerCallback);
     removeEvent(Event.REFRESH_THREADS, this.refreshThreadsListenerCallback);
     removeEvent(Event.STOP_LOAD_SYNC, this.stopLoadSyncListenerCallback);
     removeEvent(Event.STORE_LOAD, this.storeLoadListenerCallback);
+    removeEvent(Event.UPDATE_LOADING_SYNC, this.updateLoadingSync);
     removeEvent(
       Event.UPDATE_THREAD_EMAILS,
       this.updateThreadEmailsListenerCallback
@@ -222,6 +232,10 @@ class PanelWrapper extends Component {
       isHiddenMailboxPopup: false,
       mailboxPopupType: MAILBOX_POPUP_TYPES.ONLY_BACKDROP
     });
+  };
+
+  loadAppListenerCallback = ({ mailbox, accountId, recipientId }) => {
+    this.handleUpdateApp({ mailbox, accountId, recipientId });
   };
 
   loadEventsListenerCallback = params => {
@@ -416,6 +430,7 @@ PanelWrapper.propTypes = {
   onStopLoadSync: PropTypes.func,
   onUpdateAvatar: PropTypes.func,
   onUnsendEmail: PropTypes.func,
+  onUpdateAccountApp: PropTypes.func,
   onUpdateEmailIdsThread: PropTypes.func,
   onUpdateLoadingSync: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,

@@ -15,6 +15,10 @@ import { EmptyMailboxStatus } from '../components/EmptyMailbox';
 import { LabelType } from './../utils/electronInterface';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
+import {
+  defineContactType,
+  defineParamsToLoadThread
+} from './../utils/ThreadUtils';
 import { storeValue } from '../utils/storage';
 import string from './../lang';
 import { List } from 'immutable';
@@ -26,19 +30,6 @@ const defineSyncStatus = isSyncing => {
 const defineMailboxStatus = (isLoadingThreads, mailboxSize) => {
   if (isLoadingThreads && !mailboxSize) return EmptyMailboxStatus.LOADING;
   return EmptyMailboxStatus.EMPTY;
-};
-
-const defineContactType = (labelId, from, to) => {
-  if (from || to) {
-    if (from && to) return ['from', 'to'];
-    else if (from) return ['from'];
-    return ['to'];
-  }
-
-  if (labelId === LabelType.sent.id || labelId === LabelType.draft.id) {
-    return ['to', 'cc'];
-  }
-  return ['from'];
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -74,6 +65,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+<<<<<<< HEAD
 const defineParamsToLoadThread = (
   mailbox,
   clear,
@@ -125,6 +117,8 @@ const defineParamsToLoadThread = (
   return params;
 };
 
+=======
+>>>>>>> Change account without refresh app. Close #932
 const mapDispatchToProps = dispatch => {
   return {
     onLoadApp: (mailbox, clear) => {

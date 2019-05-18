@@ -38,12 +38,13 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
     avatarUrl,
     isActive
   } = defineAccountVisibleParams(account, timestamp);
+  const data = { accountId: account.id, recipientId: account.recipientId };
   return (
     <li
       className={`cptx-profile-preview-content ${
         isActive ? 'active' : 'logged'
       }`}
-      onClick={isActive ? undefined : () => onClick(account)}
+      onClick={isActive ? undefined : () => onClick(data)}
     >
       <div className="cptx-profile-preview-icon">
         <AvatarImage letters={letters} avatarUrl={avatarUrl} />

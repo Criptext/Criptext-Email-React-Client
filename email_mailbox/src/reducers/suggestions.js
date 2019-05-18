@@ -1,14 +1,13 @@
-import { Suggestions } from '../actions/types';
+import { Activity, Suggestions } from '../actions/types';
 import { Map, List, Set } from 'immutable';
 import * as TimeUtils from '../utils/TimeUtils';
 
-export default (
-  state = Map({
-    threads: List(),
-    hints: List()
-  }),
-  action
-) => {
+const initSuggestions = Map({
+  threads: List(),
+  hints: List()
+});
+
+export default (state = initSuggestions, action) => {
   switch (action.type) {
     case Suggestions.SET_THREADS: {
       const threadsList = List(
@@ -34,6 +33,8 @@ export default (
         error: null
       });
     }
+    case Activity.LOGOUT:
+      return initSuggestions;
     case Suggestions.SET_ERROR_SUGGESTIONS: {
       return state.set('error', action.error);
     }

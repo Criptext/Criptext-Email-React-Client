@@ -197,6 +197,10 @@ ipc.answerRenderer('db-update-account', params =>
   dbManager.updateAccount(params)
 );
 
+ipc.answerRenderer('db-update-accounts', params =>
+  dbManager.updateAccounts(params)
+);
+
 ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>
   dbManager.updateContactByEmail({ email, name })
 );

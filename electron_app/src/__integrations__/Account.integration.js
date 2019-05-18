@@ -67,6 +67,11 @@ describe('Store account data to Account Table: ', () => {
 });
 
 describe('Load account data from Account Table: ', () => {
+  it('Should not load accounts', async () => {
+    const [activeAccount] = await DBManager.getAccount();
+    expect(activeAccount).toBeUndefined();
+  });
+
   it('Should load all logged accounts', async () => {
     await createAccount(accountA);
     await createAccount(accountB);

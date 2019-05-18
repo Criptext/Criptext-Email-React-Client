@@ -95,22 +95,22 @@ const showFileExplorer = filename => {
   mailboxWindow.send('display-message-success-download');
 };
 
-const show = async emailAddress => {
+const show = async ({ accountId, recipientId }) => {
   const existVisibleWindow = BrowserWindow.getAllWindows().filter(w =>
     w.isVisible()
   );
   if (mailboxWindow) {
     const isOpened = mailboxWindow.isVisible();
-    if (isOpened && emailAddress) {
-      send('refresh-window-logged-as', emailAddress);
+    if (isOpened && accountId && recipientId) {
+      send('refresh-window-logged-as', { accountId, recipientId });
     } else {
-      mailboxWindow.show();
+      mailboxWindow.show({});
       createTrayIcon();
     }
   } else if (!existVisibleWindow.length || !mailboxWindow) {
     await create();
     mailboxWindow.on('ready-to-show', () => {
-      mailboxWindow.show();
+      mailboxWindow.show({});
       createTrayIcon();
     });
     mailboxWindow.on('focus', () => {

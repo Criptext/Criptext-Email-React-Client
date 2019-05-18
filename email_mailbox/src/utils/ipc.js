@@ -1,8 +1,13 @@
 import { callMain } from '@criptext/electron-better-ipc/renderer';
+import { myAccount } from './electronInterface';
 let accountId = '';
 
 /*  Windows call
 ----------------------------- */
+export const changeAccountApp = async params => {
+  return await callMain('change-account-app', params);
+};
+
 export const closeMailboxWindow = () => {
   callMain('close-mailbox');
 };
@@ -65,20 +70,20 @@ export const sendStartLinkDevicesEvent = data => {
   callMain('start-link-devices-event', data);
 };
 
-export const sendPrintEmailEvent = async emailId => {
-  await checkCurrentAccount();
+export const sendPrintEmailEvent = emailId => {
+  checkCurrentAccount();
   callMain('print-to-pdf', { emailId, accountId });
 };
 
-export const sendPrintThreadEvent = async threadId => {
-  await checkCurrentAccount();
+export const sendPrintThreadEvent = threadId => {
+  checkCurrentAccount();
   callMain('print-to-pdf', { threadId, accountId });
 };
 
 export const getOsAndArch = () => callMain('get-os-and-arch');
 
-export const sendOpenEmailSource = async key => {
-  await checkCurrentAccount();
+export const sendOpenEmailSource = key => {
+  checkCurrentAccount();
   callMain('open-email-source', { key, accountId });
 };
 
@@ -146,10 +151,6 @@ export const checkExpiredSession = async params => {
   return await callMain('client-check-expired-session', params);
 };
 
-export const defineActiveAccountById = async accountId => {
-  return await callMain('define-active-account-by-id', accountId);
-};
-
 export const deleteMyAccount = async password => {
   return await callMain('client-delete-my-account', password);
 };
@@ -171,7 +172,7 @@ export const logout = async () => {
 };
 
 export const postPeerEvent = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('client-post-peer-event', { accountId, ...params });
 };
 
@@ -238,10 +239,9 @@ export const uploadAvatar = async params => {
 /*  DataBase
 ----------------------------- */
 
-const checkCurrentAccount = async () => {
-  if (!accountId) {
-    const [myAccount] = await getAccount();
-    accountId = myAccount ? myAccount.id : '';
+const checkCurrentAccount = () => {
+  if (!accountId || accountId !== myAccount.id) {
+    accountId = myAccount.id;
   }
 };
 
@@ -266,7 +266,7 @@ export const createFeedItem = async params => {
 };
 
 export const createIdentityKeyRecord = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-create-identity-key-record', {
     accountId,
     ...params
@@ -274,17 +274,17 @@ export const createIdentityKeyRecord = async params => {
 };
 
 export const createLabel = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-create-label', { params, accountId });
 };
 
 export const createPreKeyRecord = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-create-prekey-record', { accountId, ...params });
 };
 
 export const createSessionRecord = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-create-session-record', { accountId, ...params });
 };
 
@@ -293,7 +293,7 @@ export const createSignalTables = async () => {
 };
 
 export const createSignedPreKeyRecord = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-create-signed-prekey-record', {
     accountId,
     ...params
@@ -301,7 +301,7 @@ export const createSignedPreKeyRecord = async params => {
 };
 
 export const deleteEmailByKeys = async keys => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-delete-email-by-keys', { keys, accountId });
 };
 
@@ -317,7 +317,7 @@ export const deleteEmailsByThreadIdAndLabelId = async ({
   threadIds,
   labelId
 }) => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-delete-emails-by-threadid-and-labelid', {
     threadIds,
     labelId,
@@ -334,12 +334,12 @@ export const deleteLabelById = async labelId => {
 };
 
 export const deletePreKeyPair = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-delete-prekey-pair', { accountId, ...params });
 };
 
 export const deleteSessionRecord = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-delete-session-record', { accountId, ...params });
 };
 
@@ -356,12 +356,12 @@ export const getAllFeedItems = async () => {
 };
 
 export const getAllLabels = async () => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-all-labels', accountId);
 };
 
 export const getContactByEmails = async emails => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-contact-by-emails', { emails, accountId });
 };
 
@@ -370,7 +370,7 @@ export const getContactByIds = async ids => {
 };
 
 export const getEmailByKey = async key => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-email-by-key', { key, accountId });
 };
 
@@ -388,7 +388,7 @@ export const getEmailsByIds = async emailIds => {
 };
 
 export const getEmailsByKeys = async emailKeys => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-emails-by-keys', {
     keys: emailKeys,
     accountId: accountId
@@ -396,17 +396,17 @@ export const getEmailsByKeys = async emailKeys => {
 };
 
 export const getEmailsByLabelIds = async labelIds => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-emails-by-labelids', { labelIds, accountId });
 };
 
 export const getEmailsByThreadId = async threadId => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-emails-by-threadid', { threadId, accountId });
 };
 
 export const getEmailsByThreadIdAndLabelId = async ({ threadIds, labelId }) => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-emails-by-threadid-and-labelid', {
     threadIds,
     labelId,
@@ -415,7 +415,7 @@ export const getEmailsByThreadIdAndLabelId = async ({ threadIds, labelId }) => {
 };
 
 export const getEmailsCounterByLabelId = async labelId => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-emails-counter-by-labelid', {
     labelId,
     accountId
@@ -423,7 +423,11 @@ export const getEmailsCounterByLabelId = async labelId => {
 };
 
 export const getEmailsGroupByThreadByParams = async params => {
-  return await callMain('db-get-emails-group-by-thread-by-params', params);
+  checkCurrentAccount();
+  return await callMain('db-get-emails-group-by-thread-by-params', {
+    accountId,
+    ...params
+  });
 };
 
 export const getEmailsUnredByLabelId = async params => {
@@ -431,7 +435,7 @@ export const getEmailsUnredByLabelId = async params => {
   if (params.accountId) {
     data = params;
   } else {
-    await checkCurrentAccount();
+    checkCurrentAccount();
     data = {
       accountId,
       ...params
@@ -445,7 +449,7 @@ export const getFilesByTokens = async tokens => {
 };
 
 export const getIdentityKeyRecord = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-identity-key-record', { accountId, ...params });
 };
 
@@ -454,27 +458,27 @@ export const getLabelById = async id => {
 };
 
 export const getLabelsByParams = async ({ textArray }) => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-labels-by-params', { textArray, accountId });
 };
 
 export const getPreKeyPair = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-prekey-pair', { accountId, ...params });
 };
 
 export const getSessionRecord = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-session-record', { accountId, ...params });
 };
 
 export const getSessionRecordIds = async () => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-prekeys-ids', accountId);
 };
 
 export const getSignedPreKey = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-get-signed-prekey', { accountId, ...params });
 };
 
@@ -491,17 +495,17 @@ export const updateContactByEmail = async ({ email, name }) => {
 };
 
 export const unsendEmail = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-unsend-email', { accountId, ...params });
 };
 
 export const updateEmail = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-update-email', { accountId, ...params });
 };
 
 export const updateEmails = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-update-emails', { accountId, ...params });
 };
 
@@ -514,7 +518,7 @@ export const updateFilesByEmailId = async ({ emailId, status }) => {
 };
 
 export const updateIdentityKeyRecord = async params => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-update-identity-key-record', {
     accountId,
     ...params
@@ -530,7 +534,7 @@ export const updateSettings = async ({ opened, language, theme }) => {
 };
 
 export const updateUnreadEmailByThreadIds = async ({ threadIds, unread }) => {
-  await checkCurrentAccount();
+  checkCurrentAccount();
   return await callMain('db-update-unread-email-by-threadids', {
     threadIds,
     unread,

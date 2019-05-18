@@ -1,4 +1,4 @@
-import { Label } from '../actions/types';
+import { Activity, Label } from '../actions/types';
 import { Map, fromJS } from 'immutable';
 
 const labels = (state = new Map({}), action) => {
@@ -15,6 +15,8 @@ const labels = (state = new Map({}), action) => {
       });
       return state.merge(batch);
     }
+    case Activity.LOGOUT:
+      return new Map({});
     case Label.UPDATE: {
       const labelId = action.label.id;
       if (!labelId) {

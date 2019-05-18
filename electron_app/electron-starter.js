@@ -44,7 +44,7 @@ async function initApp() {
     mySettings.initialize(settings);
     wsClient.start(myAccount);
     createAppMenu();
-    mailboxWindow.show();
+    mailboxWindow.show({});
   } else {
     await getUserLanguage();
     createAppMenu();

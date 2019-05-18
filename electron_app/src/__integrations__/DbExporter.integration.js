@@ -3,6 +3,7 @@
 jest.setTimeout(10000);
 
 const DBManager = require('../DBManager');
+const myAccount = require('../Account');
 const fileUtils = require('../utils/FileUtils');
 const {
   closeDatabaseConnection,
@@ -115,6 +116,7 @@ let dbConnection;
 
 const createAccount = async () => {
   await DBManager.createAccount(accountA);
+  myAccount.initialize(accountA);
 };
 
 const insertContacts = async () => {

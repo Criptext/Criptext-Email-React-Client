@@ -20,6 +20,8 @@ const activity = (state = initActivity, action) => {
   switch (action.type) {
     case Activity.AVATAR_UPDATED_TIMESTAMP:
       return state.set('avatarTimestamp', action.timestamp);
+    case Activity.LOGOUT:
+      return initActivity;
     case Activity.UPDATE_LOADING_SYNC: {
       const totalTask = action.totalTask;
       const completedTask = action.completedTask;

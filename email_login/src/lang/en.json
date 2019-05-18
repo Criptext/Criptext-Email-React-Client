@@ -38,16 +38,16 @@
       "prefix": "If you sign in using your password your",
       "strong": " mailbox history from other devices won't be available ",
       "suffix": "on this device. Would you like to continue?",
-      "leftButtonLabel": "Cancel",
-      "rightButtonLabel": "Continue"
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Continue"
     },
     "loginNewAccount": {
       "title": "Sign In Warning",
       "prefix": "Sign in with another account will delete all mail saved on this device of the accounts",
       "strong": "",
       "suffix": "Would you like to continue?",
-      "leftButtonLabel": "Cancel",
-      "rightButtonLabel": "Continue"
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Continue"
     }
   },
   "signin": {
@@ -55,8 +55,8 @@
     "prefix": "You did not set a Recovery Email, so",
     "strong": " account recovery is impossible ",
     "suffix": "if you forget your password",
-    "leftButtonLabel": "Cancel",
-    "rightButtonLabel": "Continue"
+    "cancelButtonLabel": "Cancel",
+    "confirmButtonLabel": "Continue"
   },
   "passwordLogin": {
     "sectionTitleSignIn": "Sign In",

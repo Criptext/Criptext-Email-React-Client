@@ -65,7 +65,8 @@ class ProfileShortCutWrapper extends Component {
   };
 
   handleClickItemAccount = async account => {
-    await this.props.onSelectAccount(account);
+    await this.props.onUpdateApp(account);
+    this.handleToggleMenuProfilePreview();
   };
 }
 
@@ -74,7 +75,7 @@ ProfileShortCutWrapper.propTypes = {
   accountsLimitReached: PropTypes.bool,
   avatarTimestamp: PropTypes.number,
   onClickSettings: PropTypes.func,
-  onSelectAccount: PropTypes.func,
+  onUpdateApp: PropTypes.func,
   openLogin: PropTypes.func
 };
 

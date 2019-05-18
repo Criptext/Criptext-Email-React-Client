@@ -10,6 +10,7 @@ const globalManager = require('./../globalManager');
 const loadingWindow = require('./../windows/loading');
 const { getSystemLanguage } = require('./../windows/windowUtils');
 const dbManager = require('./../DBManager');
+const myAccount = require('./../Account');
 const socketClient = require('./../socketClient');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
@@ -92,15 +93,17 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
   return await clientManager.acknowledgeEvents([data.rowid]);
 };
 
-ipc.answerRenderer('define-active-account-by-id', async accountId => {
+ipc.answerRenderer('change-account-app', async ({ accountId }) => {
   // Database
-  await dbManager.defineActiveAccountById(accountId);
+  await dbManager.defineActiveAccountById({ accountId });
   // Client
   const clientManager = require('./../clientManager');
   await clientManager.restartClient({ accountId });
   // Socket
   const [account] = await dbManager.getAccount();
   socketClient.restartSocket(account);
+  //Account
+  myAccount.update(account);
 });
 
 module.exports = {

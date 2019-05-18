@@ -38,16 +38,16 @@
       "prefix": "Si inicias sesión con tu contraseña",
       "strong": " los correos de otros dispositivos no estarán disponibles ",
       "suffix": "en este dispositivo. ¿Te gustaria continuar?",
-      "leftButtonLabel": "Cancelar",
-      "rightButtonLabel": "Continuar"
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Continuar"
     },
     "loginNewAccount": {
       "title": "Advertencia de inicio de sesión",
       "prefix": "Iniciar sesión con otra cuenta de usuario borrará todos los correos guardados en este dispoitivo de la(s) cuenta(s)",
       "strong": "",
       "suffix": "¿Deseas continuar?",
-      "leftButtonLabel": "Cancelar",
-      "rightButtonLabel": "Continuar"
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Continuar"
     }
   },
   "signin": {
@@ -55,8 +55,8 @@
     "prefix": "NO estableciste un Correo de Recuperación por lo que la",
     "strong": " recuperación de la cuenta es imposible ",
     "suffix": "si olvidas tu contraseña.",
-    "leftButtonLabel": "Cancelar",
-    "rightButtonLabel": "Continuar"
+    "cancelButtonLabel": "Cancelar",
+    "confirmButtonLabel": "Continuar"
   },
   "passwordLogin": {
     "sectionTitleSignIn": "Iniciar sesión",

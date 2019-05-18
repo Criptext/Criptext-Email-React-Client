@@ -1,9 +1,11 @@
 import { connect } from 'react-redux';
 import {
   addDataApp,
+  loadApp,
   loadEmails,
   loadEvents,
   loadThreads,
+  logout,
   updateBadgeLabels,
   updateEmailIdsThread,
   updateAllFeedItemsAsOlder,
@@ -14,9 +16,15 @@ import {
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import { LabelType } from '../utils/electronInterface';
+import {
+  isGettingEventsGet,
+  isGettingEventsUpdate,
+  selectAccountAsActive
+} from '../utils/electronEventInterface';
 import { updateSettings } from '../utils/ipc';
 import { storeSeenTimestamp } from '../utils/storage';
 import { defineRejectedLabels } from '../utils/EmailUtils';
+import { defineParamsToLoadThread } from '../utils/ThreadUtils';
 
 const mapStateToProps = state => {
   const threadsCount = state
@@ -39,6 +47,18 @@ const mapDispatchToProps = dispatch => {
   return {
     onAddDataApp: data => {
       dispatch(addDataApp(data));
+    },
+    onUpdateAccountApp: async ({ mailboxSelected, accountId, recipientId }) => {
+      if (!isGettingEventsGet()) {
+        isGettingEventsUpdate(true);
+        await selectAccountAsActive({ accountId, recipientId });
+        dispatch(logout());
+        if (mailboxSelected) {
+          const params = defineParamsToLoadThread(mailboxSelected, true);
+          dispatch(loadApp(params));
+        }
+        isGettingEventsUpdate(false);
+      }
     },
     onLoadEmails: threadId => {
       dispatch(loadEmails(threadId));
