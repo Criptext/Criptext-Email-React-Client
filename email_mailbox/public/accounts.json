@@ -1,0 +1,16 @@
+{
+  "accounts": [
+    {
+      "id": 3,
+      "name": "User 3",
+      "recipientId": "user3",
+      "isActive": 0
+    },
+    {
+      "id": 4,
+      "name": "User 4",
+      "recipientId": "user4",
+      "isActive": 0
+    }
+  ]
+}

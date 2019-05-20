@@ -1,6 +1,12 @@
 export const openEmptyComposerWindow = () => {};
 
-export const myAccount = { recipientId: 'test' };
+export const myAccount = {
+  id: 1,
+  recipientId: 'test',
+  isActive: true,
+  name: 'User test',
+  logged: { 2: { id: 2, name: 'User 2', recipientId: 'user2', isActive: 0 } }
+};
 
 export const mySettings = { language: 'en' };
 

@@ -6,3 +6,10 @@ export const addAccounts = accounts => {
     accounts
   };
 };
+
+export const updateAccounts = accounts => {
+  return {
+    type: Account.UPDATE_ACCOUNTS,
+    accounts
+  };
+};

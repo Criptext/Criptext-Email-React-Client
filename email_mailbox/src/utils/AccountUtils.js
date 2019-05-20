@@ -1,5 +1,5 @@
 import { getTwoCapitalLetters } from './StringUtils';
-import { LabelType } from './electronInterface';
+import { LabelType, myAccount } from './electronInterface';
 import { avatarBaseUrl, appDomain } from './const';
 import { getEmailsUnredByLabelId } from './ipc';
 
@@ -31,18 +31,21 @@ export const defineAccounts = accounts => {
   }, {});
 };
 
-export const assembleAccounts = async accounts => {
+export const assembleAccounts = async (accounts = myAccount.logged) => {
+  const recipientIds = Object.keys(accounts);
   return await Promise.all(
-    accounts.map(async account => {
+    recipientIds.map(async recipientId => {
+      const account = accounts[recipientId];
       const labelId = LabelType.inbox.id;
       const rejectedLabelIds = [LabelType.spam.id, LabelType.trash.id];
+      const accountId = account.id;
       const unreadInbox = await getEmailsUnredByLabelId({
         labelId,
         rejectedLabelIds,
         accountId: account.id
       });
       const badgeInbox = unreadInbox.length;
-      return { ...account, badge: badgeInbox };
+      return { id: accountId, badge: badgeInbox };
     })
   );
 };

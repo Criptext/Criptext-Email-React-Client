@@ -8,24 +8,19 @@ class ProfileShortCutWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isHiddenMenuProfilePreview: true,
-      hasUnreadsEmailsOtherAccounts: false
+      isHiddenMenuProfilePreview: true
     };
-    this.currentAccount = this.props.accounts[0];
-    const { letters, avatarUrl } = defineAccountVisibleParams(
-      this.currentAccount,
-      this.props.avatarTimestamp
-    );
-    this.letters = letters;
-    this.avatarUrl = avatarUrl;
   }
 
   render() {
+    const { letters, avatarUrl } = defineAccountVisibleParams(
+      this.props.accounts[0],
+      this.props.avatarTimestamp
+    );
     return (
       <ProfileShortCut
-        hasUnreadsEmailsOtherAccounts={this.state.hasUnreadsEmailsOtherAccounts}
-        letters={this.letters}
-        avatarUrl={this.avatarUrl}
+        letters={letters}
+        avatarUrl={avatarUrl}
         isHiddenMenuProfilePreview={this.state.isHiddenMenuProfilePreview}
         onClickAddAccount={this.handleClickAddAccount}
         onClickItemAccount={this.handleClickItemAccount}
