@@ -16,8 +16,10 @@ const decryptEmail = async ({
   recipientId,
   deviceId,
   messageType
+
+  ,optionalToken
 }) => {
-  const { status, body } = await fetchEmailBody({ bodyKey });
+  const { status, body } = await fetchEmailBody({ bodyKey, optionalToken });
   if (status !== 200) {
     return;
   }

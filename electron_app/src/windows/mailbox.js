@@ -43,7 +43,7 @@ const create = () => {
     show: false,
     title: 'Criptext',
     frame: !isWindows(),
-    webPreferences: { webSecurity: !isDev },
+    webPreferences: { webSecurity: isDev },
     backgroundColor: mySettings.theme === 'dark' ? '#2a2d32' : '#fff'
   });
   mailboxWindow.loadURL(mailboxUrl);
