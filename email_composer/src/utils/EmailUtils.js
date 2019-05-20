@@ -130,7 +130,7 @@ export const formOutgoingEmailFromData = ({
     from: [`${myEmailAddress}`]
   };
   const labels = [labelId];
-  const isToMe = criptextRecipients.find(
+  const isToMe = recipientDomains.find(
     item => item.recipientId === myAccount.recipientId
   );
   if (isToMe) {

@@ -76,14 +76,18 @@ const addRecipientDevices = (
 
 export const filterRecipientsByBlacklisted = (
   blacklistedKnownDevices,
-  knownAddresses
+  knownAddresses,
+  appDomain
 ) => {
   const knownAddressesFiltered = knownAddresses;
   const sessionIdentifiersToDelete = [];
 
   for (const item of blacklistedKnownDevices) {
-    const recipientId = item.name;
+    const username = item.name;
+    const domain = item.domain;
     const deviceIds = item.devices;
+    const recipientId =
+      domain === appDomain ? username : `${username}@${appDomain}`;
 
     deviceIds.forEach(deviceId => {
       const sessionIdentifier = `${recipientId}.${deviceId}`;
