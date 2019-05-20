@@ -42,6 +42,18 @@ export const reloadWindow = () => {
   getCurrentWindow().reload();
 };
 
+export const checkDisableRequests = () => {
+  return globalManager.windowsEvents.checkDisabled();
+};
+
+export const disableEventRequests = () => {
+  globalManager.windowsEvents.disable();
+};
+
+export const enableEventRequests = () => {
+  globalManager.windowsEvents.enable();
+};
+
 /*  News Client
 ----------------------------- */
 export const getNews = ({ code }) => {

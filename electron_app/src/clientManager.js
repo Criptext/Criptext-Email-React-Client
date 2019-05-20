@@ -137,7 +137,7 @@ const checkExpiredSession = async (
           recipientId
         });
         if (client.token) client.token = newSessionToken;
-        socketClient.restartSocket({ jwt: newSessionToken });
+        await socketClient.restartSocket({ jwt: newSessionToken });
         if (initialRequest) {
           return await initialRequest(requestparams);
         }

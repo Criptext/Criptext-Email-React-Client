@@ -94,15 +94,14 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
 };
 
 ipc.answerRenderer('change-account-app', async ({ accountId }) => {
+  await socketClient.disconnect();
   // Database
   await dbManager.defineActiveAccountById({ accountId });
   // Client
   const clientManager = require('./../clientManager');
   await clientManager.restartClient({ accountId });
-  // Socket
+  // Update account object
   const [account] = await dbManager.getAccount();
-  socketClient.restartSocket(account);
-  //Account
   myAccount.update(account);
 });
 
