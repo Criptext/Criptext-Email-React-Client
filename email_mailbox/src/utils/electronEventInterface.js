@@ -5,7 +5,10 @@ import {
   myAccount,
   mySettings,
   getNews,
-  getDeviceType
+  getDeviceType,
+  checkDisableRequests,
+  disableEventRequests,
+  enableEventRequests
 } from './electronInterface';
 import {
   createEmail,
@@ -39,7 +42,8 @@ import {
   updateDeviceType,
   checkForUpdates,
   changeAccountApp,
-  cleanDataLogout
+  cleanDataLogout,
+  startSocket
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -183,6 +187,9 @@ export const getGroupEvents = async ({
   shouldGetMoreEvents,
   showNotification
 }) => {
+  const isDisabledParsingEvents = checkDisableRequests();
+  if (isDisabledParsingEvents) return stopGettingEvents();
+
   if (isGettingEvents && !shouldGetMoreEvents) return;
 
   isGettingEvents = true;
@@ -889,6 +896,9 @@ export const sendLoadEventsEvent = params => {
 };
 
 ipcRenderer.on('socket-message', async (ev, message) => {
+  const isDisabledParsingEvents = checkDisableRequests();
+  if (isDisabledParsingEvents) return;
+
   const eventId = message.cmd;
   if (eventId === 400) {
     sendLoadEventsEvent({ showNotification: true });
@@ -906,9 +916,12 @@ ipcRenderer.on('refresh-window-logged-as', (ev, { accountId, recipientId }) => {
 });
 
 export const selectAccountAsActive = async ({ accountId, recipientId }) => {
+  disableEventRequests();
   await changeAccountApp({ accountId });
   const email = `${recipientId}@${appDomain}`;
   showLoggedAsMessage(email);
+  startSocket(myAccount.jwt);
+  enableEventRequests();
 };
 
 export const showLoggedAsMessage = email => {
@@ -1309,6 +1322,9 @@ ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
 });
 
 ipcRenderer.on(NOTIFICATION_RECEIVED, () => {
+  const isDisabledParsingEvents = checkDisableRequests();
+  if (isDisabledParsingEvents) return;
+
   sendLoadEventsEvent({ showNotification: true });
 });
 

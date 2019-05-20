@@ -58,9 +58,6 @@ const start = ({ jwt }) => {
       handleError(error, 'Connection Error');
       reconnect();
     });
-    connection.on('close', () => {
-      log('Socket connection closed');
-    });
     connection.on('message', data => {
       const message = JSON.parse(data.utf8Data);
       messageListener(message);
@@ -129,9 +126,9 @@ const checkAlive = () => {
   });
 };
 
-const restartSocket = ({ jwt }) => {
+const restartSocket = async ({ jwt }) => {
   shouldReconnect = false;
-  disconnect();
+  await disconnect();
   client = null;
   setTimeout(() => {
     shouldReconnect = true;

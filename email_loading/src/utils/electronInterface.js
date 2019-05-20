@@ -20,8 +20,8 @@ export const startSocket = jwt => {
   socketManager.start(data);
 };
 
-export const stopSocket = () => {
-  return socketManager.disconnect();
+export const stopSocket = async () => {
+  return await socketManager.disconnect();
 };
 
 export const isFromStore =

@@ -99,6 +99,10 @@ export const restartSocket = async jwt => {
   await callMain('restart-socket', jwt);
 };
 
+export const startSocket = async jwt => {
+  await callMain('start-socket', jwt);
+};
+
 /* File System
 ----------------------------- */
 export const saveEmailBody = async params => {
