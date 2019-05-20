@@ -119,14 +119,28 @@ ipc.answerRenderer(
   }
 );
 
-ipc.answerRenderer('show-notification', ({ title, message, threadId }) => {
-  const onClickNotification = () => {
-    showWindows();
-    if (threadId)
-      mailboxWindow.send('open-thread-by-notification', { threadId });
-  };
-  showNotification({ title, message, clickHandler: onClickNotification });
-});
+ipc.answerRenderer(
+  'show-notification',
+  ({ switchToAccount, title, message, threadId }) => {
+    console.log(`
+    [show-notification]
+    - switchToAccount:  ${switchToAccount}
+    - title          :  ${title}
+    - message        :  ${message}
+    - threadId:      :  ${threadId}
+  `);
+    const onClickNotification = () => {
+      showWindows();
+      if (switchToAccount) {
+        console.log('Cambiar a cuenta: ', switchToAccount);
+      } else {
+        if (threadId)
+          mailboxWindow.send('open-thread-by-notification', { threadId });
+      }
+    };
+    showNotification({ title, message, clickHandler: onClickNotification });
+  }
+);
 
 ipc.answerRenderer('check-for-updates', showDialog => {
   checkForUpdates(showDialog);

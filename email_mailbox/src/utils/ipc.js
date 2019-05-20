@@ -50,8 +50,8 @@ export const processPendingEvents = () => {
   }, 1000);
 };
 
-export const showNotificationApp = ({ title, message, threadId }) => {
-  callMain('show-notification', { title, message, threadId });
+export const showNotificationApp = ({ switchToAccount, title, message, threadId }) => {
+  callMain('show-notification', { switchToAccount, title, message, threadId });
 };
 
 export const throwError = error => {

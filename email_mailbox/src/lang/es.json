@@ -341,7 +341,7 @@
     },
     "device_removed": {
       "title": "Dispositivo removido",
-      "preffix": "Este dispositivo fue removido desde otro de tus dispositivos",
+      "prefix": "Este dispositivo fue removido desde otro de tus dispositivos",
       "suffix": "La aplicación se cerrará en breves momentos..."
     },
     "logout": {
