@@ -1,4 +1,4 @@
-import { addAccounts } from './accounts';
+import { addAccounts, updateAccounts } from './accounts';
 import {
   logout,
   setAvatarUpdatedTimestamp,
@@ -127,6 +127,7 @@ export {
   unsendEmail,
   unsendEmailFiles,
   unsendEmailOnSuccess,
+  updateAccounts,
   updateAllFeedItemsAsOlder,
   updateBadgeLabels,
   updateFeedItemSuccess,

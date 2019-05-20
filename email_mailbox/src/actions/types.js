@@ -1,5 +1,6 @@
 export const Account = {
-  ADD_BATCH: 'ADD_ACCOUNTS'
+  ADD_BATCH: 'ADD_ACCOUNTS',
+  UPDATE_ACCOUNTS: 'UPDATE_ACCOUNTS'
 };
 
 export const Activity = {
