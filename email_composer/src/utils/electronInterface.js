@@ -16,8 +16,12 @@ export const myAccount = remote.require('./src/Account');
 export const mySettings = remote.require('./src/Settings');
 export const LabelType = labels;
 
-/* Window events
-   ----------------------------- */
+/*  Window events
+----------------------------- */
 export const sendEventToMailbox = (name, params) => {
   ipcRenderer.send(name, params);
+};
+
+export const disableEventRequests = () => {
+  globalManager.windowsEvents.disable();
 };

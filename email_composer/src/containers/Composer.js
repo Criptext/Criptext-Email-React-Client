@@ -5,7 +5,8 @@ import {
   LabelType,
   myAccount,
   getEmailToEdit,
-  sendEventToMailbox
+  sendEventToMailbox,
+  disableEventRequests
 } from './../utils/electronInterface';
 import {
   closeComposerWindow,
@@ -536,7 +537,7 @@ class ComposerWrapper extends Component {
   };
 
   sendMessage = async secure => {
-    this.setState({ status: Status.WAITING });
+    this.setState({ status: Status.WAITING }, disableEventRequests);
     const temporalThreadId = `<criptext-temp-${Date.now()}>`;
     const account = this.state.accountSelected;
     const data = {
