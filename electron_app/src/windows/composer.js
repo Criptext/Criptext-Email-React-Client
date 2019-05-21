@@ -105,6 +105,7 @@ const createComposerWindow = () => {
     } else {
       globalManager.composerData.delete(window.id);
     }
+    checkEnableWindowsEvents();
   });
 
   require('electron-context-menu')({
@@ -183,6 +184,7 @@ const destroy = async ({
     threadData
   });
   globalManager.composerData.delete(composer.id);
+  checkEnableWindowsEvents();
   composer.destroy();
 };
 
@@ -242,6 +244,11 @@ const saveDraftToDatabase = async (composerId, data) => {
     }
   }
   sendEventToMailbox('update-drafts', shouldUpdateBadge);
+};
+
+const checkEnableWindowsEvents = () => {
+  if (globalManager.windowsEvents.checkDisabled())
+    globalManager.windowsEvents.enable();
 };
 
 module.exports = {
