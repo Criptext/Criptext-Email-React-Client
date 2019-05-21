@@ -306,7 +306,24 @@ export const handleEvent = incomingEvent => {
   }
 };
 
-const handleNewMessageEvent = async ({ rowid, params }) => {
+const buildSenderRecipientId = ({ senderId, senderDomain, from, external }) => {
+  if (senderDomain && senderId) {
+    return senderDomain === appDomain
+      ? senderId
+      : `${senderId}@${senderDomain}`;
+  }
+
+  return external === true
+    ? EXTERNAL_RECIPIENT_ID_SERVER
+    : getRecipientIdFromEmailAddressTag(from);
+};
+
+const handleNewMessageEvent = async ({
+  rowid,
+  params,
+  accountId,
+  optionalToken
+}) => {
   const {
     bcc,
     bccArray,
@@ -323,6 +340,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     labels,
     messageType,
     metadataKey,
+    senderDomain,
+    senderId,
     subject,
     senderDeviceId,
     threadId,
@@ -333,10 +352,12 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     boundary
   } = params;
   if (!metadataKey) return { rowid: null };
-  const recipientId =
-    external === true
-      ? EXTERNAL_RECIPIENT_ID_SERVER
-      : getRecipientIdFromEmailAddressTag(from);
+  const recipientId = buildSenderRecipientId({
+    senderId,
+    senderDomain,
+    from,
+    external
+  });
   const deviceId =
     external === undefined
       ? typeof messageType === 'number'

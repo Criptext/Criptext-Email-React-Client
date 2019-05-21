@@ -1,4 +1,4 @@
-export const createObjectRecipientDomainIdByDevices = (
+export const createObjectRecipientIdDomainByDevices = (
   sessions,
   recipientDomains,
   appDomain
@@ -76,10 +76,10 @@ const addRecipientDevices = (
 
 export const filterRecipientsByBlacklisted = (
   blacklistedKnownDevices,
-  knownAddresses,
+  domainAddresses,
   appDomain
 ) => {
-  const knownAddressesFiltered = knownAddresses;
+  const domainAddressesFiltered = domainAddresses;
   const sessionIdentifiersToDelete = [];
 
   for (const item of blacklistedKnownDevices) {
@@ -89,13 +89,22 @@ export const filterRecipientsByBlacklisted = (
     const recipientId =
       domain === appDomain ? username : `${username}@${appDomain}`;
 
+    const domainIndex = domainAddressesFiltered.findIndex(domainAddress => {
+      return domainAddress.name === domain;
+    });
+
     deviceIds.forEach(deviceId => {
       const sessionIdentifier = `${recipientId}.${deviceId}`;
       sessionIdentifiersToDelete.push(sessionIdentifier);
-      const indexOf = knownAddressesFiltered[recipientId].indexOf(deviceId);
-      knownAddressesFiltered[recipientId].splice(indexOf, 1);
+      const indexOf = domainAddressesFiltered[domainIndex].knownAddresses[
+        username
+      ].indexOf(deviceId);
+      domainAddressesFiltered[domainIndex].knownAddresses[username].splice(
+        indexOf,
+        1
+      );
     });
   }
 
-  return { knownAddressesFiltered, sessionIdentifiersToDelete };
+  return { domainAddressesFiltered, sessionIdentifiersToDelete };
 };

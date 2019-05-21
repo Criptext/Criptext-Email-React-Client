@@ -520,7 +520,7 @@ class ComposerWrapper extends Component {
       const peer = {
         recipientId: account.recipientId,
         username: account.recipientId,
-        domain: account.domain,
+        domain: account.domain || appDomain,
         type: 'peer',
         deviceId: myAccount.deviceId
       };

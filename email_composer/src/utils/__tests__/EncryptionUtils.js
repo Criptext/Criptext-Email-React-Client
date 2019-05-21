@@ -2,6 +2,8 @@
 
 import * as utils from '../EncryptionUtils';
 
+const appDomain = 'criptext.com';
+
 const sessions = [
   {
     recipientId: 'erika',
@@ -28,53 +30,77 @@ const recipientDomains = [
 
 const blacklistedKnownDevices = [
   {
+    domain: 'criptext.com',
     name: 'erika',
     devices: [1, 5]
+  },
+  {
+    domain: 'criptext.app',
+    name: 'isabel',
+    devices: [3, 4]
   }
 ];
 
 describe('Methods to encrypt emails', () => {
   it('Should create object recipientId with its deviceIds', () => {
-    const knownAddresses = utils.createObjectRecipientDomainIdByDevices(
+    const knownAddresses = utils.createObjectRecipientIdDomainByDevices(
       sessions,
       recipientDomains,
-      'criptext.com'
+      appDomain
     );
-    expect(knownAddresses).toMatchObject(
-      expect.objectContaining([
-        {
-          name: 'criptext.com',
-          recipients: ['erika'],
-          knownAddresses: {
-            erika: [1, 5, 6]
-          }
-        },
-        {
-          name: 'criptext.com',
-          recipients: ['erika'],
-          knownAddresses: {
-            erika: [1, 5, 6]
-          }
-        }
-      ])
+    knownAddresses.sort((address1, address2) => address1.name > address2.name);
+    expect(knownAddresses[0]).toMatchObject(
+      expect.objectContaining({
+        knownAddresses: { isabel: [3, 4, 5] },
+        name: 'criptext.app',
+        recipients: ['isabel']
+      })
+    );
+    expect(knownAddresses[1]).toMatchObject(
+      expect.objectContaining({
+        knownAddresses: { erika: [1, 5, 6] },
+        name: 'criptext.com',
+        recipients: ['erika']
+      })
     );
   });
 
   it('Should filter knownAddresses by blacklist', () => {
-    const knownAddresses = utils.createObjectRecipientIdByDevices(sessions);
+    const knownAddresses = utils.createObjectRecipientIdDomainByDevices(
+      sessions,
+      recipientDomains,
+      appDomain
+    );
     const {
-      knownAddressesFiltered,
+      domainAddressesFiltered,
       sessionIdentifiersToDelete
     } = utils.filterRecipientsByBlacklisted(
       blacklistedKnownDevices,
-      knownAddresses
+      knownAddresses,
+      appDomain
     );
-    expect(knownAddressesFiltered).toMatchObject(
+    domainAddressesFiltered.sort(
+      (address1, address2) => address1.name > address2.name
+    );
+    expect(domainAddressesFiltered[0]).toMatchObject(
       expect.objectContaining({
-        erika: [6],
-        isabel: [3, 4, 5]
+        knownAddresses: { isabel: [5] },
+        name: 'criptext.app',
+        recipients: ['isabel']
       })
     );
-    expect(sessionIdentifiersToDelete).toEqual(['erika.1', 'erika.5']);
+    expect(domainAddressesFiltered[1]).toMatchObject(
+      expect.objectContaining({
+        knownAddresses: { erika: [6] },
+        name: 'criptext.com',
+        recipients: ['erika']
+      })
+    );
+    expect(sessionIdentifiersToDelete).toEqual([
+      'erika.1',
+      'erika.5',
+      'isabel@criptext.com.3',
+      'isabel@criptext.com.4'
+    ]);
   });
 });
