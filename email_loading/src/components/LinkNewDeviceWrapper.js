@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import signal from '../libs/signal';
-import { remoteData, startSocket } from '../utils/electronInterface';
+import {
+  remoteData,
+  startSocket,
+  getMailboxGettingEventsStatus,
+  disableEventRequests
+} from '../utils/electronInterface';
 import {
   acknowledgeEvents,
   clearSyncData,
@@ -22,6 +27,7 @@ import string from './../lang';
 const messages = string.linkNewDevice.messages;
 
 const ANIMATION_DURATION = 1500;
+const LAST_STEP_DURATION = 2000;
 const DATA_STATUS_DELAY = 5000;
 const DATA_READY_STATUS = 200;
 const DATA_STATUS_RETRIES = 12;
@@ -230,28 +236,57 @@ class LoadingWrapper extends Component {
               accountId,
               resetAccountData: false
             });
-
             this.setState(
               {
                 message: messages.syncComplete,
-                pauseAt: 100,
-                delay: (100 - this.state.percent) / ANIMATION_DURATION,
+                pauseAt: 99,
+                delay: (99 - this.state.percent) / ANIMATION_DURATION,
                 lastStep: STEPS.PROCESS_MAILBOX
               },
-              async () => {
+              () => {
                 this.incrementPercentage();
                 clearSyncData();
-                await setTimeout(() => {
-                  const recipientId = remoteData.recipientId;
-                  openMailboxWindow({ accountId, recipientId });
-                  closeCreatingKeysLoadingWindow();
-                }, 4000);
+                const recipientId = remoteData.recipientId;
+                this.checkMailboxWindowIsReady({ accountId, recipientId });
               }
             );
           }
         );
       }
     );
+  };
+
+  checkMailboxWindowIsReady = ({ accountId, recipientId }) => {
+    const isGettingEvents = getMailboxGettingEventsStatus();
+    if (isGettingEvents === false) {
+      clearTimeout(this.mailboxIsReadyTimeout);
+      this.setState(
+        {
+          message: messages.mailboxIsReady,
+          pauseAt: 100,
+          delay: (100 - this.state.percent) / ANIMATION_DURATION
+        },
+        async () => {
+          this.incrementPercentage();
+          await setTimeout(() => {
+            disableEventRequests();
+            openMailboxWindow({ accountId, recipientId });
+            closeCreatingKeysLoadingWindow();
+          }, LAST_STEP_DURATION);
+        }
+      );
+    } else {
+      this.setState(
+        {
+          message: messages.waitingMailboxIsReady
+        },
+        () => {
+          this.mailboxIsReadyTimeout = setTimeout(() => {
+            this.checkMailboxWindowIsReady({ accountId, recipientId });
+          }, 2000);
+        }
+      );
+    }
   };
 
   handleClickCancelSync = () => {

@@ -104,6 +104,7 @@ const show = async ({ accountId, recipientId }) => {
     if (isOpened && accountId && recipientId) {
       send('refresh-window-logged-as', { accountId, recipientId });
     } else {
+      globalManager.windowsEvents.enable();
       mailboxWindow.show({});
       createTrayIcon();
     }

@@ -14,6 +14,7 @@ global.internetConnection;
 global.isWindowsStore =
   currrentInstallerType === allInstallerTypes.windows.store;
 global.deviceType = getDeviceType(currrentInstallerType, allInstallerTypes);
+global.isGettingEvents = false;
 
 /*  Composer
 ----------------------------- */
@@ -72,7 +73,6 @@ const getLoadingData = () => {
 const getMAS = () => {
   return global.isMAS;
 };
-
 const getWinStore = () => {
   return global.isWindowsStore;
 };
@@ -94,21 +94,27 @@ const deleteTemporalAccountData = () => {
 const disableWindowsEvents = () => {
   global.windowsEventsDisabled = true;
 };
-
 const enableWindowsEvents = () => {
   global.windowsEventsDisabled = false;
 };
-
 const checkWindowsEvents = () => {
   return global.windowsEventsDisabled;
 };
 
-/*  Windows Events
+/*  Getting Events Status
 ----------------------------- */
+const getGettingEventsStatus = () => {
+  return global.isGettingEvents;
+};
+const setGettingEventsStatus = value => {
+  global.isGettingEvents = value;
+};
+
+/*  Internet Connection Status
+--------------------------------- */
 const setInternetConnectionStatus = status => {
   global.internetConnection = status;
 };
-
 const getInternetConnectionStatus = () => {
   return global.internetConnection;
 };
@@ -157,5 +163,9 @@ module.exports = {
   },
   deviceType: {
     id: global.deviceType
+  },
+  isGettingEvents: {
+    get: getGettingEventsStatus,
+    set: setGettingEventsStatus
   }
 };

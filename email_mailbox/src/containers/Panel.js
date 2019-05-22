@@ -16,11 +16,7 @@ import {
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import { LabelType } from '../utils/electronInterface';
-import {
-  isGettingEventsGet,
-  isGettingEventsUpdate,
-  selectAccountAsActive
-} from '../utils/electronEventInterface';
+import { selectAccountAsActive } from '../utils/electronEventInterface';
 import { updateSettings } from '../utils/ipc';
 import { storeSeenTimestamp } from '../utils/storage';
 import { defineRejectedLabels } from '../utils/EmailUtils';
@@ -49,15 +45,11 @@ const mapDispatchToProps = dispatch => {
       dispatch(addDataApp(data));
     },
     onUpdateAccountApp: async ({ mailboxSelected, accountId, recipientId }) => {
-      if (!isGettingEventsGet()) {
-        isGettingEventsUpdate(true);
-        await selectAccountAsActive({ accountId, recipientId });
-        dispatch(logout());
-        if (mailboxSelected) {
-          const params = defineParamsToLoadThread(mailboxSelected, true);
-          dispatch(loadApp(params));
-        }
-        isGettingEventsUpdate(false);
+      await selectAccountAsActive({ accountId, recipientId });
+      dispatch(logout());
+      if (mailboxSelected) {
+        const params = defineParamsToLoadThread(mailboxSelected, true);
+        dispatch(loadApp(params));
       }
     },
     onLoadEmails: threadId => {
