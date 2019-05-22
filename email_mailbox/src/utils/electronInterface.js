@@ -54,6 +54,14 @@ export const enableEventRequests = () => {
   globalManager.windowsEvents.enable();
 };
 
+export const getGettingEventsStatus = () => {
+  return globalManager.isGettingEvents.get();
+};
+
+export const setGettingEventsStatus = value => {
+  globalManager.isGettingEvents.set(value);
+};
+
 /*  News Client
 ----------------------------- */
 export const getNews = ({ code }) => {

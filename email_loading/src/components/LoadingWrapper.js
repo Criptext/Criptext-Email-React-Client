@@ -2,13 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
 import signal from './../libs/signal';
-import { remoteData } from './../utils/electronInterface';
+import {
+  remoteData,
+  getMailboxGettingEventsStatus,
+  disableEventRequests
+} from './../utils/electronInterface';
 import {
   closeCreatingKeysLoadingWindow,
   openMailboxWindow,
   throwError
 } from './../utils/ipc';
 import string from './../lang';
+
+const messages = string.loading.messages;
 
 const animationTypes = {
   RUNNING: 'running-animation',
@@ -29,6 +35,8 @@ class LoadingWrapper extends Component {
     this.state = {
       percent: 0,
       failed: false,
+      message: '',
+      retryMessage: '',
       animationClass: animationTypes.RUNNING,
       timeout: 0,
       accountResponse: undefined
@@ -37,12 +45,15 @@ class LoadingWrapper extends Component {
   }
 
   componentDidMount() {
+    this.setState({ message: messages.creatingKeys });
     this.increasePercent();
   }
 
   render() {
     return (
       <Loading
+        message={this.state.message}
+        retryMessage={this.state.retryMessage}
         animationClass={this.state.animationClass}
         percent={this.state.percent}
         failed={this.state.failed}
@@ -162,11 +173,10 @@ class LoadingWrapper extends Component {
     }
     if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
-      this.setState({ percent: 100 }, () => {
+      this.setState({ percent: 99 }, () => {
         const accountId = this.accountId;
         const recipientId = remoteData.recipientId;
-        openMailboxWindow({ accountId, recipientId });
-        closeCreatingKeysLoadingWindow();
+        this.checkMailboxWindowIsReady({ accountId, recipientId });
       });
     }
     this.setState({
@@ -174,16 +184,47 @@ class LoadingWrapper extends Component {
     });
   };
 
+  checkMailboxWindowIsReady = ({ accountId, recipientId }) => {
+    const isGettingEvents = getMailboxGettingEventsStatus();
+    if (isGettingEvents === false) {
+      clearTimeout(this.mailboxIsReadyTimeout);
+      this.setState(
+        {
+          percent: 100,
+          message: messages.mailboxIsReady
+        },
+        async () => {
+          await setTimeout(() => {
+            disableEventRequests();
+            openMailboxWindow({ accountId, recipientId });
+            closeCreatingKeysLoadingWindow();
+          }, 2500);
+        }
+      );
+    } else {
+      this.setState(
+        {
+          message: messages.waitingMailboxIsReady
+        },
+        () => {
+          this.mailboxIsReadyTimeout = setTimeout(() => {
+            this.checkMailboxWindowIsReady({ accountId, recipientId });
+          }, 2000);
+        }
+      );
+    }
+  };
+
   loadingThrowError = async () => {
     clearTimeout(this.tm);
     this.setState({
       failed: true,
+      message: messages.error,
+      retryMessage: messages.retry,
       animationClass: animationTypes.STOP
     });
     await setTimeout(() => {
-      this.setState({
-        percent: 0
-      });
+      this.setState({ percent: 0 });
     }, 1000);
   };
 
@@ -191,9 +232,11 @@ class LoadingWrapper extends Component {
     clearTimeout(this.tm);
     this.setState(
       {
+        failed: false,
         percent: 0,
-        animationClass: animationTypes.RUNNING,
-        failed: false
+        message: messages.creatingKeys,
+        retryMessage: '',
+        animationClass: animationTypes.RUNNING
       },
       () => {
         this.increasePercent();

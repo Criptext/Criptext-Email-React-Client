@@ -20,7 +20,9 @@
       },
       "downloadingMailbox": "Descargando Buzón",
       "decryptingMailbox": "Desencriptando Buzón",
-      "syncComplete": "¡Sincronización Completa!"
+      "syncComplete": "¡Sincronización Completa!",
+      "waitingMailboxIsReady": "Esperando que el buzón esté listo",
+      "mailboxIsReady": "Abriendo buzón"
     },
     "cancelSyncLabel": "Cancelar Sincronización",
     "continueLabel": "Continuar",
@@ -44,7 +46,9 @@
     "messages": {
       "error": "Error al generar las llaves.",
       "retry": "Reintentar",
-      "creatingKeys": "Creando Llaves"
+      "creatingKeys": "Creando Llaves",
+      "waitingMailboxIsReady": "Esperando que el buzón esté listo",
+      "mailboxIsReady": "Abriendo buzón"
     }
   },
   "incompatibleSyncVersions": {

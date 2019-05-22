@@ -22,12 +22,14 @@ const disconnect = () => {
     if (!socketConnection || !pingProcess) return resolve();
     try {
       pingProcess.on('close', () => {
+        pingProcess = undefined;
         socketConnection.close();
       });
       socketConnection.on('close', () => {
-        resolve();
+        socketConnection = undefined;
+        return resolve();
       });
-      pingProcess.kill();
+      pingProcess.kill('SIGKILL');
     } catch (err) {
       return reject(err);
     }

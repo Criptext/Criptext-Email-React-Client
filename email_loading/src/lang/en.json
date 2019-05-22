@@ -20,13 +20,14 @@
       },
       "downloadingMailbox": "Downloading mailbox",
       "decryptingMailbox": "Decrypting mailbox",
-      "syncComplete": "Sync complete"
+      "syncComplete": "Sync complete",
+      "waitingMailboxIsReady": "Waiting for the mailbox to be ready",
+      "mailboxIsReady": "Opening mailbox"
     },
     "cancelSyncLabel": "Cancel sync",
     "continueLabel": "Continue",
     "skipStepLabel": "Skip step"
   },
-
   "linkOldDevice": {
     "header": "Mailbox Sync",
     "messages": {
@@ -45,7 +46,9 @@
     "messages": {
       "error": "Error generating the keys.",
       "retry": "Retry",
-      "creatingKeys": "Creating Keys"
+      "creatingKeys": "Creating Keys",
+      "waitingMailboxIsReady": "Waiting for the mailbox to be ready",
+      "mailboxIsReady": "Opening mailbox"
     }
   },
   "incompatibleSyncVersions": {

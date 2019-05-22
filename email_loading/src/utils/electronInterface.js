@@ -11,6 +11,14 @@ export const LabelType = labels;
 
 export const { loadingType, remoteData } = remote.getGlobal('loadingData');
 
+export const disableEventRequests = () => {
+  globalManager.windowsEvents.disable();
+};
+
+export const getMailboxGettingEventsStatus = () => {
+  return globalManager.isGettingEvents.get();
+};
+
 export const setRemoteData = data => {
   globalManager.loadingData.set(data);
 };

@@ -7,8 +7,9 @@ import {
   getNews,
   getDeviceType,
   checkDisableRequests,
-  disableEventRequests,
-  enableEventRequests
+  enableEventRequests,
+  setGettingEventsStatus,
+  getGettingEventsStatus
 } from './electronInterface';
 import {
   createEmail,
@@ -92,7 +93,6 @@ const emitter = new EventEmitter();
 let totalEmailsPending = null;
 let totalEmailsHandled = 0;
 
-let isGettingEvents = false;
 let labelIdsEvent = new Set();
 let threadIdsEvent = new Set();
 let badgeLabelIdsEvent = new Set();
@@ -102,7 +102,7 @@ let avatarHasChanged = false;
 let newEmailNotificationList = [];
 
 const stopGettingEvents = () => {
-  isGettingEvents = false;
+  setGettingEventsStatus(false);
   emitter.emit(Event.STOP_LOAD_SYNC, {});
 };
 
@@ -190,9 +190,10 @@ export const getGroupEvents = async ({
   const isDisabledParsingEvents = checkDisableRequests();
   if (isDisabledParsingEvents) return stopGettingEvents();
 
+  const isGettingEvents = getGettingEventsStatus();
   if (isGettingEvents && !shouldGetMoreEvents) return;
 
-  isGettingEvents = true;
+  setGettingEventsStatus(true);
   if (totalEmailsPending === null) {
     totalEmailsHandled = 0;
     const res = await fetchEventAction({ cmd: 101, action: 'count' });
@@ -229,8 +230,9 @@ export const getGroupEvents = async ({
     if (showNotification) {
       sendNewEmailNotification();
     }
-    isGettingEvents = false;
+    setGettingEventsStatus(false);
     totalEmailsPending = null;
+    stopGettingEvents();
     return;
   }
   await getGroupEvents({
@@ -239,10 +241,8 @@ export const getGroupEvents = async ({
   });
 };
 
-export const isGettingEventsGet = () => isGettingEvents;
-export const isGettingEventsUpdate = value => {
-  isGettingEvents = value;
-};
+export const isGettingEventsGet = () => getGettingEventsStatus();
+export const isGettingEventsUpdate = value => setGettingEventsStatus(value);
 
 export const handleEvent = incomingEvent => {
   switch (incomingEvent.cmd) {
@@ -914,7 +914,6 @@ ipcRenderer.on('refresh-window-logged-as', (ev, { accountId, recipientId }) => {
 });
 
 export const selectAccountAsActive = async ({ accountId, recipientId }) => {
-  disableEventRequests();
   await changeAccountApp({ accountId });
   const email = `${recipientId}@${appDomain}`;
   showLoggedAsMessage(email);
@@ -1231,7 +1230,7 @@ export const deleteAccountData = async () => {
   });
   if (nextAccount) {
     const { id, recipientId } = nextAccount;
-    return await selectAccountAsActive({ id, recipientId });
+    return await selectAccountAsActive({ accountId: id, recipientId });
   }
   clearStorage({ deleteAll: true });
   await logoutApp();
