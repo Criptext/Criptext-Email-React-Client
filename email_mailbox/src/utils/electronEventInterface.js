@@ -579,7 +579,10 @@ const updateOwnContact = async () => {
 };
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
-  const { date, metadataKey, type, from } = params;
+  const { date, metadataKey, type, from, fromDomain } = params;
+  const contactEmailAddress = fromDomain
+    ? `${fromDomain.recipientId}@${fromDomain.domain}`
+    : `${from}@${appDomain}`;
   const [email] = await getEmailByKey(metadataKey);
   const isUnsend = type === EmailStatus.UNSEND;
   if (email) {
@@ -603,7 +606,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
       const isFromMe = from === myAccount.recipientId;
       const isOpened = type === EmailStatus.READ;
       if (!isFromMe && isOpened) {
-        const contactEmail = `${from}@${appDomain}`;
+        const contactEmail = contactEmailAddress;
         const [contact] = await getContactByEmails([contactEmail]);
         const feedItemParams = {
           date,
