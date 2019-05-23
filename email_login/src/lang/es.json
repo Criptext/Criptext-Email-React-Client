@@ -20,15 +20,17 @@
   },
   "login": {
     "header": "Bienvenido a Criptext!",
-    "usernameInputPlaceholder": "Usuario",
+    "inputPlaceholder": "Correo electrónico",
     "signInButtonLabel": "Ingresar",
     "signUpMessage": {
       "text": "¿No estás registrado?",
       "strong": "Crear cuenta"
     },
     "errorMessages": {
-      "usernameNotExits": "Usuario no existe",
+      "emailAddressNotExits": "Correo electrónico no existe",
+      "usernameOrEmailAddressInvalid": "Usuario o correo electrónico no válido",
       "usernameInvalid": "Usuario no valido",
+      "usernameNotExits": "Usuario no existe",
       "statusUnknown": "Error desconocido. Código: ",
       "usernameNotAvailable": "Usuario no disponible"
     },

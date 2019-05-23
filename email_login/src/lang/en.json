@@ -20,15 +20,17 @@
   },
   "login": {
     "header": "Welcome to Criptext!",
-    "usernameInputPlaceholder": "Username",
+    "inputPlaceholder": "Email address",
     "signInButtonLabel": "Sign In",
     "signUpMessage": {
       "text": "Not registered?",
       "strong": "Sign up"
     },
     "errorMessages": {
-      "usernameNotExits": "Username doesn't exist",
+      "emailAddressNotExits": "Email address doesn't exist",
+      "usernameOrEmailAddressInvalid": "Invalid username or email address",
       "usernameInvalid": "Invalid username",
+      "usernameNotExits": "Username doesn't exist",
       "statusUnknown": "Unknown status code: ",
       "usernameNotAvailable": "Username not available"
     },

@@ -149,18 +149,15 @@ const acknowledgeEvents = async eventIds => {
     : await checkExpiredSession(res, acknowledgeEvents, eventIds);
 };
 
+const canLogin = async ({ username, domain }) => {
+  return await client.canLogin({ username, domain });
+};
+
 const changeRecoveryEmail = async params => {
   const res = await client.changeRecoveryEmail(params);
   return res.status === 200
     ? res
     : await checkExpiredSession(res, changeRecoveryEmail, params);
-};
-
-const setReplyTo = async params => {
-  const res = await client.setReplyTo(params);
-  return res.status === 200
-    ? { status: res.status }
-    : await checkExpiredSession(res, setReplyTo, params);
 };
 
 const changePassword = async params => {
@@ -280,8 +277,12 @@ const linkAuth = async ({ newDeviceData, jwt }) => {
   return await client.linkAuth(newDeviceData);
 };
 
-const linkBegin = async username => {
-  const data = { targetUsername: username, version: LINK_DEVICES_FILE_VERSION };
+const linkBegin = async ({ username, domain }) => {
+  const data = {
+    targetUsername: username,
+    domain,
+    version: LINK_DEVICES_FILE_VERSION
+  };
   return await client.linkBegin(data);
 };
 
@@ -396,6 +397,13 @@ const setReadTracking = async enabled => {
     : await checkExpiredSession(res, setReadTracking, enabled);
 };
 
+const setReplyTo = async params => {
+  const res = await client.setReplyTo(params);
+  return res.status === 200
+    ? { status: res.status }
+    : await checkExpiredSession(res, setReplyTo, params);
+};
+
 const setTwoFactorAuth = async enable => {
   const res = await client.setTwoFactorAuth(enable);
   return res.status === 200
@@ -495,6 +503,7 @@ const unsendEmail = async params => {
 
 module.exports = {
   acknowledgeEvents,
+  canLogin,
   changePassword,
   changeRecoveryEmail,
   checkAvailableUsername,

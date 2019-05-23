@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { appDomain } from './../utils/const';
 import string from './../lang';
 import './login.scss';
 
@@ -30,18 +29,14 @@ const renderHeader = () => (
 const renderForm = props => (
   <div className="form">
     <form autoComplete="off">
-      <div className="label">
-        <input
-          type="text"
-          name="username"
-          placeholder={login.usernameInputPlaceholder}
-          value={props.value}
-          onChange={props.onChangeField}
-          autoFocus={true}
-        />
-        &nbsp;
-        <span>{`@${appDomain}`}</span>
-      </div>
+      <input
+        type="text"
+        name="username"
+        placeholder={login.inputPlaceholder}
+        value={props.value}
+        onChange={props.onChangeField}
+        autoFocus={true}
+      />
       <span className="error-message">{props.errorMessage}</span>
       <div className="button">
         <button

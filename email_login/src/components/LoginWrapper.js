@@ -10,6 +10,7 @@ import {
   confirmWaitingApprovalLogin
 } from './../utils/electronInterface';
 import {
+  canLogin,
   checkAvailableUsername,
   closeLoginWindow,
   getComputerName,
@@ -19,8 +20,8 @@ import {
   openCreateKeysLoadingWindow,
   throwError
 } from '../utils/ipc.js';
-import { validateUsername } from './../validators/validators';
-import { DEVICE_TYPE } from '../utils/const';
+import { validateEmail, validateUsername } from './../validators/validators';
+import { DEVICE_TYPE, appDomain } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
 import string from './../lang';
@@ -40,8 +41,11 @@ const mode = {
 };
 
 const errorMessages = {
-  USERNAME_NOT_EXISTS: login.errorMessages.usernameNotExits,
+  EMAILADDRESS_NOT_EXISTS: login.errorMessages.emailAddressNotExits,
+  USERNAME_EMAILADDRESS_INVALID:
+    login.errorMessages.usernameOrEmailAddressInvalid,
   USERNAME_INVALID: login.errorMessages.usernameInvalid,
+  USERNAME_NOT_EXISTS: login.errorMessages.usernameNotExits,
   STATUS_UNKNOWN: login.errorMessages.statusUnknown,
   USERNAME_NOT_AVAILABLE: login.errorMessages.usernameNotAvailable
 };
@@ -54,7 +58,7 @@ const rejectedDeviceStatus = 493;
 const approvedDeviceStastus = 200;
 
 const shouldDisableLogin = state =>
-  !!state.errorMessage || state.values.username === '';
+  !!state.errorMessage || state.values.usernameOrEmailAddress === '';
 
 const LoginWithPasswordPopup = PopupHOC(DialogPopup);
 const ResetPasswordPopup = PopupHOC(LoginPopup);
@@ -75,6 +79,7 @@ class LoginWrapper extends Component {
       mode: mode.LOGIN,
       values: {
         username: '',
+        usernameOrEmailAddress: '',
         password: ''
       },
       disabledResendLoginRequest: false,
@@ -174,22 +179,15 @@ class LoginWrapper extends Component {
       default:
         return (
           <Login
-            onChangeField={this.handleChange}
-            onClickSignIn={this.handleClickSignIn}
-            onToggleSignUp={this.handleToggleSignUp}
             disabledLoginButton={shouldDisableLogin(this.state)}
-            value={this.state.values.username}
             errorMessage={this.state.errorMessage}
+            onClickSignIn={this.handleClickSignIn}
+            onChangeField={this.handleChange}
+            onToggleSignUp={this.handleToggleSignUp}
+            value={this.state.values.usernameOrEmailAddress}
           />
         );
     }
-  };
-
-  toggleSignUp = ev => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    const nextMode = this.state.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN;
-    this.setState({ mode: nextMode });
   };
 
   handleToggleSignUp = e => {
@@ -240,6 +238,11 @@ class LoginWrapper extends Component {
     );
   };
 
+  handleSignInAnotherAccount = async () => {
+    this.dismissPopup();
+    await this.initLinkDevice(this.state.values.usernameOrEmailAddress);
+  };
+
   toggleContinue = ev => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -266,9 +269,31 @@ class LoginWrapper extends Component {
     clearTimeout(this.linkStatusTimeout);
   };
 
-  handleCheckUsernameResponse = newUsername => ({ status }) => {
-    this.setState(curState => {
-      if (curState.values.username !== newUsername) return curState;
+  handleCanLoginResponse = emailAddress => ({ status }) => {
+    this.setState(state => {
+      if (state.values.usernameOrEmailAddress !== emailAddress) return state;
+      if (state.errorMessage) return state;
+
+      switch (status) {
+        case 200:
+          return { errorMessage: '' };
+
+        case 400:
+          return {
+            errorMessage: errorMessages.EMAILADDRESS_NOT_EXISTS
+          };
+        default:
+          return {
+            errorMessage: errorMessages.STATUS_UNKNOWN + status
+          };
+      }
+    });
+  };
+
+  handleCheckUsernameResponse = username => ({ status }) => {
+    this.setState(state => {
+      if (state.values.usernameOrEmailAddress !== username) return state;
+      if (state.errorMessage) return state;
 
       switch (status) {
         case 200:
@@ -295,32 +320,50 @@ class LoginWrapper extends Component {
   };
 
   handleChange = event => {
-    const newUsername = event.target.value;
-
-    if (!newUsername)
+    const usernameOrEmailAddress = event.target.value;
+    if (!usernameOrEmailAddress) {
       return this.setState({
-        values: { ...this.state.values, username: newUsername },
+        values: {
+          ...this.state.values,
+          usernameOrEmailAddress: usernameOrEmailAddress
+        },
         errorMessage: ''
       });
-
-    if (!validateUsername(newUsername))
+    }
+    const isUsernameValid = validateUsername(usernameOrEmailAddress);
+    const isEmailAddressValid = validateEmail(usernameOrEmailAddress);
+    if (!isUsernameValid && !isEmailAddressValid) {
       return this.setState({
-        values: { ...this.state.values, username: newUsername },
-        errorMessage: errorMessages.USERNAME_INVALID
+        values: {
+          ...this.state.values,
+          usernameOrEmailAddress: usernameOrEmailAddress
+        },
+        errorMessage: errorMessages.USERNAME_EMAILADDRESS_INVALID
       });
-
+    }
     if (this.lastCheck) clearTimeout(this.lastCheck);
 
     this.lastCheck = setTimeout(() => {
-      if (this.state.values.username !== newUsername) return;
+      if (this.state.values.usernameOrEmailAddress !== usernameOrEmailAddress)
+        return;
 
-      checkAvailableUsername(newUsername).then(
-        this.handleCheckUsernameResponse(newUsername)
-      );
+      if (isUsernameValid) {
+        checkAvailableUsername(usernameOrEmailAddress).then(
+          this.handleCheckUsernameResponse(usernameOrEmailAddress)
+        );
+      } else if (isEmailAddressValid) {
+        const [username, domain] = usernameOrEmailAddress.split('@');
+        canLogin({ username, domain }).then(
+          this.handleCanLoginResponse(usernameOrEmailAddress)
+        );
+      }
     }, 300);
 
     this.setState({
-      values: { ...this.state.values, username: newUsername },
+      values: {
+        ...this.state.values,
+        usernameOrEmailAddress: usernameOrEmailAddress
+      },
       errorMessage: ''
     });
   };
@@ -328,8 +371,52 @@ class LoginWrapper extends Component {
   handleClickSignIn = async ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    const username = this.state.values.username;
-    await this.initLinkDevice(username);
+    const usernameOrEmailAddress = this.state.values.usernameOrEmailAddress;
+    const [existsAccount] = await getAccountByParams({
+      recipientId: usernameOrEmailAddress
+    });
+    if (!existsAccount) {
+      const check = await this.checkLoggedOutAccounts();
+      if (check === true) {
+        await this.initLinkDevice(usernameOrEmailAddress);
+      }
+    } else {
+      // eslint-disable-next-line no-extra-boolean-cast
+      if (!!existsAccount.isLoggedIn) {
+        this.setState({
+          errorMessage: errorMessages.ACCOUNT_ALREADY_ADDED
+        });
+        return;
+      }
+      await this.initLinkDevice(usernameOrEmailAddress);
+    }
+  };
+
+  checkLoggedOutAccounts = async () => {
+    const loggedOutAccounts = await getAccountByParams({
+      isLoggedIn: false
+    });
+    if (loggedOutAccounts.length) {
+      this.setState({
+        mode: mode.LOGIN,
+        popupContent: {
+          title: login.loginNewAccount.title,
+          prefix: login.loginNewAccount.prefix,
+          list: this.formLoggedOutAccountsList(loggedOutAccounts),
+          suffix: login.loginNewAccount.suffix,
+          cancelButtonLabel: login.loginNewAccount.cancelButtonLabel,
+          confirmButtonLabel: login.loginNewAccount.confirmButtonLabel
+        }
+      });
+      return false;
+    }
+    return true;
+  };
+
+  formLoggedOutAccountsList = loggedOutAccounts => {
+    return loggedOutAccounts.map(
+      account => `${account.recipientId}@${appDomain}`
+    );
   };
 
   goToPasswordLogin = () => {
@@ -348,21 +435,21 @@ class LoginWrapper extends Component {
         }
       },
       () => {
-        this.initLinkDevice(this.state.values.username);
+        this.initLinkDevice(this.state.values.usernameOrEmailAddress);
       }
     );
   };
 
-  obtainEphemeralToken = async username => {
-    const { status, text } = await linkBegin(username);
+  obtainEphemeralToken = async ({ username, domain }) => {
+    const { status, text } = await linkBegin({ username, domain });
     if (status === 439) {
       throwError(string.errors.tooManyDevices);
     } else if (status === 400) {
       return this.goToPasswordLogin();
     } else if (status === 404) {
-      this.setState(prevState => ({
+      this.setState(state => ({
         values: {
-          username: prevState.values.username,
+          usernameOrEmailAddress: state.values.usernameOrEmailAddress,
           password: ''
         },
         disabledResendLoginRequest: false,
@@ -379,9 +466,13 @@ class LoginWrapper extends Component {
     }
   };
 
-  initLinkDevice = async username => {
+  initLinkDevice = async usernameOrEmailAddress => {
     if (!this.state.ephemeralToken) {
-      await this.obtainEphemeralToken(username);
+      const [username, domain] = usernameOrEmailAddress.split('@');
+      await this.obtainEphemeralToken({
+        username,
+        domain: domain || appDomain
+      });
     }
     if (this.state.hasTwoFactorAuth && !this.state.values.password) {
       this.goToPasswordLogin();
@@ -391,7 +482,7 @@ class LoginWrapper extends Component {
       );
       if (response) {
         this.setState({ mode: mode.CONTINUE }, () => {
-          createTemporalAccount({ recipientId: username });
+          createTemporalAccount({ recipientId: usernameOrEmailAddress });
           socketClient.start({ jwt: this.state.ephemeralToken });
           this.checkLinkStatus();
         });
@@ -402,10 +493,14 @@ class LoginWrapper extends Component {
   };
 
   sendLoginConfirmationRequest = async ephemeralToken => {
-    const recipientId = this.state.values.username;
+    const [
+      recipientId,
+      domain
+    ] = this.state.values.usernameOrEmailAddress.split('@');
     const pcName = await getComputerName();
     const newDeviceData = {
       recipientId,
+      domain: domain || appDomain,
       deviceName: pcName || window.navigator.platform,
       deviceFriendlyName: pcName || window.navigator.platform,
       deviceType: DEVICE_TYPE
@@ -511,7 +606,7 @@ class LoginWrapper extends Component {
           socketClient.disconnect();
           const remoteData = {
             ...body,
-            recipientId: this.state.values.username
+            recipientId: this.state.values.usernameOrEmailAddress
           };
           openCreateKeysLoadingWindow({
             loadingType: 'link-new-device',
@@ -536,7 +631,7 @@ class LoginWrapper extends Component {
   cleanState = () => {
     this.setState({
       values: {
-        username: '',
+        usernameOrEmailAddress: '',
         password: ''
       },
       disabledResendLoginRequest: false,

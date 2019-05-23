@@ -40,38 +40,24 @@
     position: relative;
 
     form {
-      .label {
+      input {
+        background: transparent;
         width: 100%;
-        margin: 0px;
-        padding: 0px;
-        display: flex;
+        border: 0px;
+        border-bottom: solid 1px rgba(255, 255, 255, 0.19);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 300;
+        text-indent: 7px;
 
-        input {
-          background: transparent;
-          width: 55%;
-          border: 0px;
-          border-bottom: solid 1px rgba(255, 255, 255, 0.19);
-          color: #ffffff;
-          font-size: 13px;
-          font-weight: 300;
-          text-indent: 7px;
-
-          &::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-            opacity: 1;
-          }
-
-          &:focus {
-            outline: none;
-            border-bottom: solid 1px #fff;
-          }
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.6);
+          opacity: 1;
         }
-        span {
-          width: 40%;
-          font-size: 14px;
-          font-weight: 400;
-          color: #ffffff;
-          text-align: center;
+
+        &:focus {
+          outline: none;
+          border-bottom: solid 1px #fff;
         }
       }
 

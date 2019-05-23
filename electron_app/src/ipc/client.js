@@ -5,6 +5,10 @@ ipc.answerRenderer('client-acknowledge-events', params =>
   clientManager.acknowledgeEvents(params)
 );
 
+ipc.answerRenderer('client-can-login', ({ username, domain }) =>
+  clientManager.canLogin({ username, domain })
+);
+
 ipc.answerRenderer('client-change-password', params =>
   clientManager.changePassword(params)
 );
@@ -59,8 +63,8 @@ ipc.answerRenderer('client-link-auth', newDeviceData =>
   clientManager.linkAuth(newDeviceData)
 );
 
-ipc.answerRenderer('client-link-begin', username =>
-  clientManager.linkBegin(username)
+ipc.answerRenderer('client-link-begin', ({ username, domain }) =>
+  clientManager.linkBegin({ username, domain })
 );
 
 ipc.answerRenderer('client-login', params => clientManager.login(params));
