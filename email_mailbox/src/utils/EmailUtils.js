@@ -178,7 +178,8 @@ export const checkEmailIsTo = recipients => {
     }
     return recipient;
   });
-  const res = emails.includes(`${myAccount.recipientId}@${appDomain}`);
+  const [recipientId, domain = appDomain] = myAccount.recipientId.split('@');
+  const res = emails.includes(`${recipientId}@${domain}`);
   return res;
 };
 
