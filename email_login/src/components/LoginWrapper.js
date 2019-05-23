@@ -527,9 +527,7 @@ class LoginWrapper extends Component {
   };
 
   handleCancelLink = async () => {
-    console.log('handleCancelLink');
     await socketClient.disconnect();
-    console.log('socket disconnected');
     this.setState({ popupContent: undefined }, () => {
       this.goToPasswordLogin();
     });

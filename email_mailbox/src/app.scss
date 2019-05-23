@@ -725,6 +725,60 @@ h2{
   }
 }
 
+.cptx-linear-animate {
+  border-radius: 3px;
+  height: 6px;
+  margin: 8px auto;
+  overflow: hidden;
+  width: 95%;
+
+  .cptx-indeterminate {
+    border-radius: 3px;
+    height: 100%;
+    position: relative;
+    width: 100%;
+
+    &:before {
+      content: '';
+      background-color: #53AAF9;
+      border-radius: 3px;
+      position: absolute;
+      height: 100%;
+      animation: cptx-indeterminate_first 1.5s infinite ease-out;
+    }
+
+    &:after {
+      content: '';
+      border-radius: 3px;
+      position: absolute;
+      height: 100%;
+      animation: cptx-indeterminate_second 1.5s infinite ease-in;
+    }
+  }
+
+  @keyframes cptx-indeterminate_first {
+    0% {
+      left: -100%;
+      width: 100%;
+    }
+    100% {
+      left: 100%;
+      width: 10%;
+    }
+  }
+  
+  @keyframes cptx-indeterminate_second {
+    0% {
+      left: -150%;
+      width: 100%;
+    }
+    100% {
+      left: 100%;
+      width: 10%;
+    }
+  }
+}
+
 /* 5.- CONTROLS
    ----------------------------- */
 .disabled{
@@ -891,7 +945,7 @@ span.cptx-badge{
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE, $_COLOR_TEXT_POPUP_TITLE, $_COLOR_TEXT_POPUP_SUBTITLE, $_COLOR_TEXT_POPUP_PARAGRAPH, $_BORDER_COLOR_POPUP_INPUT, $_COLOR_TEXT_POPUP_BUTTON_CANCEL, $_BACKGROUND_COLOR_BUTTON-B, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_SELECT, $_COLOR_TEXT_INPUT, $_BACKGROUND_COLOR_TOOLTIP, $_COLOR_TEXT_TOOLTIP){
+@mixin themable($_THEME, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE, $_COLOR_TEXT_POPUP_TITLE, $_COLOR_TEXT_POPUP_SUBTITLE, $_COLOR_TEXT_POPUP_PARAGRAPH, $_BORDER_COLOR_POPUP_INPUT, $_COLOR_TEXT_POPUP_BUTTON_CANCEL, $_BACKGROUND_COLOR_BUTTON-B, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_SELECT, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_BAR, $_COLOR_TEXT_INPUT, $_BACKGROUND_COLOR_TOOLTIP, $_COLOR_TEXT_TOOLTIP){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .empty-container {
@@ -950,13 +1004,23 @@ span.cptx-badge{
       }
     }
 
-    select {
-      background-color: $_BACKGROUND_COLOR_SELECT;
-      color: $_COLOR_TEXT_SELECT;
+    .cptx-linear-animate {
+      background-color: $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING;
+
+      .cptx-indeterminate {
+        &:after {
+          background-color: $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_BAR;
+        }
+      }
     }
 
     input{
       color: $_COLOR_TEXT_INPUT;
+    }
+
+    select {
+      background-color: $_BACKGROUND_COLOR_SELECT;
+      color: $_COLOR_TEXT_SELECT;
     }
 
     .labels-tooltip{
@@ -972,5 +1036,5 @@ span.cptx-badge{
   }
 }
   
-@include themable($_THEME_LIGHT, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_LIGHT, $_COLOR_TEXT_POPUP_TITLE_LIGHT, $_COLOR_TEXT_POPUP_SUBTITLE_LIGHT, $_COLOR_TEXT_POPUP_PARAGRAPH_LIGHT, $_BORDER_COLOR_POPUP_INPUT_LIGHT, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_LIGHT, $_BACKGROUND_COLOR_BUTTON-B_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_SELECT_LIGHT, $_COLOR_TEXT_INPUT_LIGHT, $_BACKGROUND_COLOR_TOOLTIP_LIGHT, $_COLOR_TEXT_TOOLTIP_LIGHT);
-@include themable($_THEME_DARK, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_DARK, $_COLOR_TEXT_POPUP_TITLE_DARK, $_COLOR_TEXT_POPUP_SUBTITLE_DARK, $_COLOR_TEXT_POPUP_PARAGRAPH_DARK, $_BORDER_COLOR_POPUP_INPUT_DARK, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_DARK, $_BACKGROUND_COLOR_BUTTON-B_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_SELECT_DARK, $_COLOR_TEXT_INPUT_DARK, $_BACKGROUND_COLOR_TOOLTIP_DARK, $_COLOR_TEXT_TOOLTIP_DARK);
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_LIGHT, $_COLOR_TEXT_POPUP_TITLE_LIGHT, $_COLOR_TEXT_POPUP_SUBTITLE_LIGHT, $_COLOR_TEXT_POPUP_PARAGRAPH_LIGHT, $_BORDER_COLOR_POPUP_INPUT_LIGHT, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_LIGHT, $_BACKGROUND_COLOR_BUTTON-B_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_SELECT_LIGHT, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_LIGHT, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_BAR_LIGHT, $_COLOR_TEXT_INPUT_LIGHT, $_BACKGROUND_COLOR_TOOLTIP_LIGHT, $_COLOR_TEXT_TOOLTIP_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_DARK, $_COLOR_TEXT_POPUP_TITLE_DARK, $_COLOR_TEXT_POPUP_SUBTITLE_DARK, $_COLOR_TEXT_POPUP_PARAGRAPH_DARK, $_BORDER_COLOR_POPUP_INPUT_DARK, $_COLOR_TEXT_POPUP_BUTTON_CANCEL_DARK, $_BACKGROUND_COLOR_BUTTON-B_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_SELECT_DARK, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_DARK, $_BACKGROUND_COLOR_MAIN_EMPTY_LOADING_BAR_DARK, $_COLOR_TEXT_INPUT_DARK, $_BACKGROUND_COLOR_TOOLTIP_DARK, $_COLOR_TEXT_TOOLTIP_DARK);

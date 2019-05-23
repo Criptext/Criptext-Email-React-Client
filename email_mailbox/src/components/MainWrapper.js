@@ -63,6 +63,7 @@ class MainWrapper extends Component {
         }
         return (
           <HeaderMain
+            isLoadAppCompleted={this.props.isLoadAppCompleted}
             onClickSection={this.props.onClickSection}
             onToggleActivityPanel={this.props.onToggleActivityPanel}
             onUpdateApp={this.props.onUpdateApp}
@@ -206,6 +207,7 @@ class MainWrapper extends Component {
 }
 
 MainWrapper.propTypes = {
+  isLoadAppCompleted: PropTypes.bool,
   onClickSection: PropTypes.func,
   onToggleActivityPanel: PropTypes.func,
   onUpdateApp: PropTypes.func,

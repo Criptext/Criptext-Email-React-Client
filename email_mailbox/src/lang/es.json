@@ -274,6 +274,10 @@
       "paragraph": "Has alcanzado el límite de cuentas registradas que puedes tener en este dispositivo", 
       "buttonLabel": "Ok"
     },
+    "change_account": {
+      "title": "Cambiando cuenta",
+      "description": "Cargando tu cuenta..."
+    },
     "change_password": {
       "title": "Cambiar Contraseña",
       "paragraphs": {
@@ -348,39 +352,6 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Continuar"
     },
-    "remove_device": {
-      "title": "Remover Dispositivo",
-      "paragraphs": {
-        "header":"Eliminar este dispositivo hará que se cierre la sesión de forma remota.",
-        "password": "Para confirmar introduzca su contraseña"
-      },
-      "input": {
-        "password": {
-          "placeholder": "Contraseña"
-        }
-      },
-      "cancelButtonLabel": "Cancelar",
-      "confirmButtonLabel": "Remover"
-    },
-    "two_fa": {
-      "title": "¡A2F Habilitada!",
-      "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
-      "button": "¡Listo!"
-    },
-    "set_reply_to": {
-      "title": "Correo de Respuesta",
-      "paragraph": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
-      "input": {
-        "email": {
-          "placeholder": "Ingresa un correo"
-        }
-      },
-      "errors": {
-        "email": "Correo Inválido! Ejemplo: example@criptext.com"
-      },
-      "cancelButtonLabel": "Cancelar",
-      "confirmButtonLabel": "Establecer"
-    },
     "mailbox_sync": {
       "title": "Advertencia de Sincronización",
       "paragraphs": {
@@ -431,6 +402,39 @@
       "message": "Estos elementos se eliminarán permanentemente y no podrás recuperarlos. ¿Estás seguro?",
       "leftButtonLabel": "Cancelar",
       "rightButtonLabel": "Confirmar"
+    },
+    "remove_device": {
+      "title": "Remover Dispositivo",
+      "paragraphs": {
+        "header":"Eliminar este dispositivo hará que se cierre la sesión de forma remota.",
+        "password": "Para confirmar introduzca su contraseña"
+      },
+      "input": {
+        "password": {
+          "placeholder": "Contraseña"
+        }
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Remover"
+    },
+    "set_reply_to": {
+      "title": "Correo de Respuesta",
+      "paragraph": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
+      "input": {
+        "email": {
+          "placeholder": "Ingresa un correo"
+        }
+      },
+      "errors": {
+        "email": "Correo Inválido! Ejemplo: example@criptext.com"
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Establecer"
+    },
+    "two_fa": {
+      "title": "¡A2F Habilitada!",
+      "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
+      "button": "¡Listo!"
     }
   },
   "settings": {

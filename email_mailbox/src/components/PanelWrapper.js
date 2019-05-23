@@ -16,6 +16,7 @@ import { USER_GUIDE_STEPS } from './UserGuide';
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
   ADDED_ACCOUNTS_LIMIT: 'added-accounts-limit',
+  CHANGE_ACCOUNT: 'change-account',
   DEVICE_REMOVED: 'device-removed',
   PASSWORD_CHANGED: 'password-changed',
   ONLY_BACKDROP: 'only-backdrop'
@@ -76,6 +77,16 @@ class PanelWrapper extends Component {
   componentDidMount() {
     const steps = [USER_GUIDE_STEPS.BUTTON_COMPOSE];
     checkUserGuideSteps(steps);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      !prevProps.isLoadAppCompleted &&
+      this.props.isLoadAppCompleted &&
+      this.state.mailboxPopupType === MAILBOX_POPUP_TYPES.CHANGE_ACCOUNT
+    ) {
+      this.handleCloseMailboxPopup();
+    }
   }
 
   componentWillUnmount() {
@@ -169,6 +180,10 @@ class PanelWrapper extends Component {
   };
 
   handleUpdateApp = ({ mailbox, accountId, recipientId }) => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.CHANGE_ACCOUNT
+    });
     const mailboxSelected =
       mailbox || this.state.sectionSelected.params.mailboxSelected;
     this.props.onUpdateAccountApp({ mailboxSelected, accountId, recipientId });
@@ -421,6 +436,7 @@ class PanelWrapper extends Component {
 }
 
 PanelWrapper.propTypes = {
+  isLoadAppCompleted: PropTypes.bool,
   onAddDataApp: PropTypes.func,
   onAddLabels: PropTypes.func,
   onLoadEmails: PropTypes.func,

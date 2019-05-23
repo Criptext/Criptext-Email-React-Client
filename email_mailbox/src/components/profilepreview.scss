@@ -10,6 +10,12 @@
   width: 310px;
   user-select: none;
 
+  &.disabled{
+    cursor: move;
+    opacity: 1;
+    pointer-events: none;
+  }
+
   ul.cptx-profile-preview-accounts{
     margin: 0;
     padding: 0;

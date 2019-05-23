@@ -22,9 +22,10 @@ const HeaderMain = props => (
       hints={props.hints}
     />
     <ProfileShortCut
-      onUpdateApp={props.onUpdateApp}
       avatarTimestamp={props.avatarTimestamp}
+      isLoadAppCompleted={props.isLoadAppCompleted}
       onClickSettings={props.onClickSection}
+      onUpdateApp={props.onUpdateApp}
       openLogin={props.openLogin}
     />
   </div>
@@ -37,6 +38,7 @@ HeaderMain.propTypes = {
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,
   isHiddenMenuSearchOptions: PropTypes.bool,
+  isLoadAppCompleted: PropTypes.bool,
   onClickSearch: PropTypes.func,
   onClickSection: PropTypes.func,
   openLogin: PropTypes.func,

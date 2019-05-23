@@ -23,12 +23,14 @@ import { defineRejectedLabels } from '../utils/EmailUtils';
 import { defineParamsToLoadThread } from '../utils/ThreadUtils';
 
 const mapStateToProps = state => {
+  const isLoadAppCompleted = !!state.get('labels').size;
   const threadsCount = state
     .get('threads')
     .get(`${LabelType.inbox.id}`)
     .get('list').size;
   return {
-    threadsCount
+    threadsCount,
+    isLoadAppCompleted
   };
 };
 
