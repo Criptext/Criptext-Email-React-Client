@@ -4,7 +4,7 @@ import SignalProtocolStore from './store';
 import { fetchEmailBody } from '../utils/FetchUtils';
 
 const KeyHelper = libsignal.KeyHelper;
-const store = new SignalProtocolStore();
+const myStore = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
 const ciphertextType = {
   CIPHERTEXT: 1,
@@ -15,11 +15,13 @@ const decryptEmail = async ({
   bodyKey,
   recipientId,
   deviceId,
-  messageType
-
-  ,optionalToken
+  messageType,
+  optionalToken,
+  optionalStore
 }) => {
+  const store = optionalStore || myStore;
   const { status, body } = await fetchEmailBody({ bodyKey, optionalToken });
+  console.log(body, optionalStore)
   if (status !== 200) {
     return;
   }
@@ -72,11 +74,13 @@ const decryptFileKey = async ({
   fileKey,
   messageType,
   recipientId,
-  deviceId
+  deviceId,
+  optionalStore
 }) => {
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return fileKey;
   }
+  const store = optionalStore || myStore;
   const fileKeyEncrypted = util.toArrayBufferFromBase64(fileKey);
   const addressFrom = new libsignal.SignalProtocolAddress(
     recipientId,
@@ -91,7 +95,8 @@ const decryptFileKey = async ({
   return util.toString(binaryText);
 };
 
-const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
+const decryptKey = async ({ text, recipientId, deviceId, messageType = 3, optionalStore }) => {
+  const store = optionalStore || myStore;
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return text;
   }
@@ -109,8 +114,9 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   return binaryText;
 };
 
-const generateAndInsertMorePreKeys = async () => {
-  const currentPreKeyIds = await getSessionRecordIds();
+const generateAndInsertMorePreKeys = async ({accountId, optionalStore}) => {
+  const currentPreKeyIds = await getSessionRecordIds(accountId);
+  const store = optionalStore || myStore;
   if (currentPreKeyIds.length === PREKEY_INITIAL_QUANTITY) return;
 
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
