@@ -78,6 +78,7 @@ import {
   fetchEventAction,
   fetchGetSingleEvent
 } from './FetchUtils';
+import SignalProtocolStore from '../libs/scopedStore';
 import string from './../lang';
 
 const EventEmitter = window.require('events');
@@ -132,7 +133,7 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents, accountId, opti
   badgeLabelIdsEvent = new Set();
   labelsEvent = {};
   avatarHasChanged = false;
-
+  console.log(accountId)
   const rowIds = [];
   const completedTask = events.reduce((count, event) => {
     if (event.cmd === SocketCommand.NEW_EMAIL) {
@@ -276,6 +277,7 @@ export const isGettingEventsUpdate = value => setGettingEventsStatus(value);
 export const handleEvent = incomingEvent => {
   switch (incomingEvent.cmd) {
     case SocketCommand.NEW_EMAIL: {
+      console.log(incomingEvent)
       return handleNewMessageEvent(incomingEvent);
     }
     case SocketCommand.EMAIL_TRACKING_UPDATE: {
@@ -378,6 +380,7 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
     external,
     boundary
   } = params;
+  console.log('holi : ', metadataKey, accountId)
   if (!metadataKey) return { rowid: null };
   const recipientId =
     external === true
@@ -407,22 +410,27 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
   const isToMe = checkEmailIsTo(recipients);
   let notificationPreview = '';
   const labelIds = [];
+  console.log(prevEmail);
   if (!prevEmail) {
     let body = '',
       headers;
     try {
+      console.log(metadataKey, accountId)
       const { decryptedBody, decryptedHeaders } = await signal.decryptEmail({
         bodyKey: metadataKey,
         recipientId,
         deviceId,
         messageType,
-        optionalToken
+        optionalToken,
+        optionalStore: SignalProtocolStore(accountId)
       });
       body = cleanEmailBody(decryptedBody);
       headers = decryptedHeaders;
     } catch (e) {
       body = 'Content unencrypted';
     }
+    console.log(body, accountId);
+    if (body === 'Content unencrypted') return { rowid: null };
     let myFileKeys;
     if (fileKeys) {
       myFileKeys = await Promise.all(
@@ -1364,10 +1372,11 @@ ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
 });
 
 ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
+  console.log("Notificacion recibida: ", data);
   const isDisabledParsingEvents = checkDisableRequests();
   if (isDisabledParsingEvents) return;
-
-  console.log("Notificacion recibida: ", data);
+  console.log("Notification GO : ", myAccount.logged)
+  
   try {
     const { account, rowId } = data;
     let eventAccount = {};
@@ -1383,6 +1392,8 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
     if (eventAccount) {
       console.log("Si existe la cuenta: ", eventAccount);
       const eventData = await fetchGetSingleEvent({ rowId, optionalToken });
+      
+      console.log(account);
       console.log("eventData: ", eventData);
       await parseAndStoreEventsBatch({
         events: [eventData],
