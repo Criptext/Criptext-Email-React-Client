@@ -145,10 +145,10 @@ class LoginWrapper extends Component {
       case mode.SIGNUP:
         return (
           <SignUpWrapper
-            toggleSignUp={ev => this.toggleSignUp(ev)}
             checkAvailableUsername={checkAvailableUsername}
             onFormReady={this.onFormReady}
             onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
+            onToggleSignUp={this.handleToggleSignUp}
           />
         );
       case mode.CONTINUE:
@@ -187,9 +187,9 @@ class LoginWrapper extends Component {
       default:
         return (
           <Login
-            toggleSignUp={ev => this.toggleSignUp(ev)}
-            onClickSignIn={this.handleClickSignIn}
             onChangeField={this.handleChange}
+            onClickSignIn={this.handleClickSignIn}
+            onToggleSignUp={this.handleToggleSignUp}
             disabledLoginButton={shouldDisableLogin(this.state)}
             value={this.state.values.username}
             errorMessage={this.state.errorMessage}
@@ -208,6 +208,21 @@ class LoginWrapper extends Component {
           mode: curState.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN
         }));
       }
+    }
+  };
+
+  handleToggleSignUp = async e => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (this.state.mode === mode.LOGIN) {
+      const check = await this.checkLoggedOutAccounts();
+      if (check === true) {
+        this.setState(curState => ({
+          mode: curState.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN
+        }));
+      }
+    } else if (this.state.mode === mode.SIGNUP) {
+      this.setState({ mode: mode.LOGIN });
     }
   };
 
@@ -512,7 +527,9 @@ class LoginWrapper extends Component {
   };
 
   handleCancelLink = async () => {
+    console.log('handleCancelLink');
     await socketClient.disconnect();
+    console.log('socket disconnected');
     this.setState({ popupContent: undefined }, () => {
       this.goToPasswordLogin();
     });

@@ -1,5 +1,6 @@
 import { toBeConfirmed, optionallyEmpty } from './SignUpSymbols';
 import string from './../lang';
+import { appDomain } from './../utils/const';
 
 const { form, errorMessages } = string.signUp;
 const { placeholders } = form;
@@ -10,7 +11,7 @@ export const formItems = [
     placeholder: placeholders.username,
     type: 'text',
     label: {
-      text: '@criptext.com',
+      text: `@${appDomain}`,
       strong: ''
     },
     icon: '',
