@@ -8,6 +8,7 @@ import { mySettings } from '../utils/electronInterface';
 import PopupHOC from './PopupHOC';
 import DeviceRemovedPopup from './DeviceRemovedPopup';
 import AccountDeletedPopup from './AccountDeletedPopup';
+import ChangeAccountPopup from './ChangeAccountPopup';
 import AddedAccountsLimitPopup from './AddedAccountsLimitPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
@@ -24,11 +25,13 @@ const Panel = props => (
   >
     <div className="wrapper-left">
       <SideBar
+        isLoadAppCompleted={props.isLoadAppCompleted}
         mailboxSelected={props.sectionSelected.params.mailboxSelected}
         onClickSection={props.onClickSection}
         onToggleSideBar={props.onToggleSideBar}
       />
       <MainWrapper
+        isLoadAppCompleted={props.isLoadAppCompleted}
         onClickSection={props.onClickSection}
         onClickThreadBack={props.onClickThreadBack}
         onUpdateApp={props.onUpdateApp}
@@ -76,6 +79,16 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
         />
       );
     }
+    case MAILBOX_POPUP_TYPES.CHANGE_ACCOUNT: {
+      const ChangeAccountpopup = PopupHOC(ChangeAccountPopup);
+      return (
+        <ChangeAccountpopup
+          isHidden={isHidden}
+          popupPosition={{ left: '50%', top: '50%' }}
+          theme={'dark'}
+        />
+      );
+    }
     case MAILBOX_POPUP_TYPES.DEVICE_REMOVED: {
       const DeviceRemovedpopup = PopupHOC(DeviceRemovedPopup);
       return (
@@ -117,6 +130,7 @@ const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
 
 Panel.propTypes = {
   isHiddenMailboxPopup: PropTypes.bool,
+  isLoadAppCompleted: PropTypes.bool,
   isOpenActivityPanel: PropTypes.bool,
   isOpenSideBar: PropTypes.bool,
   isOpenWelcome: PropTypes.bool,

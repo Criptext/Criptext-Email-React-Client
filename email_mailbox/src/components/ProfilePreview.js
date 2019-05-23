@@ -6,7 +6,10 @@ import string from './../lang';
 import './profilepreview.scss';
 
 const ProfilePreview = props => (
-  <div id="cptx-profiles-previews">
+  <div
+    id="cptx-profiles-previews"
+    className={defineClassComponent(props.isLoadAppCompleted)}
+  >
     <ul className="cptx-profile-preview-accounts">
       {props.accounts.map((account, key) => (
         <ProfileItem
@@ -62,10 +65,15 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
   );
 };
 
+const defineClassComponent = isLoadAppCompleted => {
+  return `${isLoadAppCompleted ? '' : 'disabled'}`;
+};
+
 ProfilePreview.propTypes = {
   avatarTimestamp: PropTypes.number,
   avatarUrl: PropTypes.string,
   accounts: PropTypes.array,
+  isLoadAppCompleted: PropTypes.bool,
   onClickAddAccount: PropTypes.func,
   onClickItemAccount: PropTypes.func,
   onClickSettings: PropTypes.func

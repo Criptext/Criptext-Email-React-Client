@@ -34,6 +34,7 @@ const ProfileShortCut = props => (
       avatarTimestamp={props.avatarTimestamp}
       arrowPosition={MenuType.TOP_RIGHT}
       isHidden={props.isHiddenMenuProfilePreview}
+      isLoadAppCompleted={props.isLoadAppCompleted}
       menuPosition={{ top: '48px', right: '-38px' }}
       onClickAddAccount={props.onClickAddAccount}
       onClickSettings={props.onClickSettings}
@@ -44,12 +45,13 @@ const ProfileShortCut = props => (
 );
 
 ProfileShortCut.propTypes = {
+  accounts: PropTypes.array,
   avatarTimestamp: PropTypes.number,
   avatarUrl: PropTypes.string,
   badgeAccount: PropTypes.bool,
-  letters: PropTypes.string,
-  accounts: PropTypes.array,
   isHiddenMenuProfilePreview: PropTypes.bool,
+  isLoadAppCompleted: PropTypes.bool,
+  letters: PropTypes.string,
   onClickAddAccount: PropTypes.func,
   onClickSettings: PropTypes.func,
   onToggleMenuProfilePreview: PropTypes.func,

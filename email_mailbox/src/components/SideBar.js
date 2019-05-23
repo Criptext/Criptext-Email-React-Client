@@ -9,7 +9,7 @@ import string from './../lang';
 import './sidebar.scss';
 
 const SideBar = props => (
-  <aside className="sidebar-app">
+  <aside className={defineClassComponent(props.isLoadAppCompleted)}>
     <header onClick={() => props.onToggleSideBar()}>
       <div className="header-icon" />
     </header>
@@ -128,8 +128,13 @@ const renderLabels = (showLabels, labels, mailboxSelected, onClickSection) => (
   </ul>
 );
 
+const defineClassComponent = isLoadAppCompleted => {
+  return `sidebar-app ${isLoadAppCompleted ? '' : 'disabled'}`;
+};
+
 SideBar.propTypes = {
   buttonComposerStatus: PropTypes.number,
+  isLoadAppCompleted: PropTypes.bool,
   items: PropTypes.array,
   labels: PropTypes.object,
   mailboxSelected: PropTypes.object,

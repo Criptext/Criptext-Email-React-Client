@@ -4,6 +4,11 @@
   display: inline-table;
   height: 100%;
 
+  &.disabled{
+    opacity: 1;
+    pointer-events: none;
+  }
+
   header{
     align-items: center;
     background-color: #373a45;
