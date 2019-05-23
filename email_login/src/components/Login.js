@@ -61,7 +61,7 @@ const renderFooter = props => (
     <div className="signup-message">
       <span>
         {login.signUpMessage.text} &nbsp;
-        <strong onClick={props.toggleSignUp}>
+        <strong onClick={e => props.onToggleSignUp(e)}>
           {login.signUpMessage.strong}
         </strong>
       </span>
@@ -80,7 +80,7 @@ renderForm.propTypes = {
 
 // eslint-disable-next-line fp/no-mutation
 renderFooter.propTypes = {
-  toggleSignUp: PropTypes.func
+  onToggleSignUp: PropTypes.func
 };
 
 export default Login;
