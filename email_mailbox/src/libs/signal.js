@@ -21,7 +21,6 @@ const decryptEmail = async ({
 }) => {
   const store = optionalStore || myStore;
   const { status, body } = await fetchEmailBody({ bodyKey, optionalToken });
-  console.log(body, optionalStore)
   if (status !== 200) {
     return;
   }

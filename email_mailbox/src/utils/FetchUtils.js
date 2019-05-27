@@ -13,10 +13,8 @@ export const fetchEmailBody = async ({ bodyKey, optionalToken }) => {
     method: 'GET',
     optionalToken
   });
-  console.log("fetchEmailBody: ", res.status);
   if (res.status === 200) {
     const jsonRes = await res.json();
-    console.log("fetchEmailBody: ", jsonRes);
     return { status: 200, body: jsonRes };
   }
   const expiredResponse = await checkExpiredSession({

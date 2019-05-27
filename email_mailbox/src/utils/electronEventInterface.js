@@ -78,7 +78,7 @@ import {
   fetchEventAction,
   fetchGetSingleEvent
 } from './FetchUtils';
-import SignalProtocolStore from '../libs/scopedStore';
+import ScopedSignalProtocolStore from '../libs/scopedStore';
 import string from './../lang';
 
 const EventEmitter = window.require('events');
@@ -415,15 +415,16 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
   if (!prevEmail) {
     let body = '',
       headers;
+    let optionalStore = new ScopedSignalProtocolStore(accountId)
     try {
-      console.log(metadataKey, accountId)
+      console.log('welp => ', metadataKey, accountId)
       const { decryptedBody, decryptedHeaders } = await signal.decryptEmail({
         bodyKey: metadataKey,
         recipientId,
         deviceId,
         messageType,
         optionalToken,
-        optionalStore: SignalProtocolStore(accountId)
+        optionalStore
       });
       body = cleanEmailBody(decryptedBody);
       headers = decryptedHeaders;
@@ -431,7 +432,6 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
       body = 'Content unencrypted';
     }
     console.log(body, accountId);
-    if (body === 'Content unencrypted') return { rowid: null };
     let myFileKeys;
     if (fileKeys) {
       myFileKeys = await Promise.all(
