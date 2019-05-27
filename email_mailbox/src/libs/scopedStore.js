@@ -9,6 +9,7 @@ import {
   deletePreKeyPair,
   deleteSessionRecord,
   getIdentityKeyRecord,
+  getAccountByParams,
   getPreKeyPair,
   getSessionRecord,
   getSignedPreKey,
@@ -16,7 +17,7 @@ import {
 } from './../utils/ipc';
 import { splitSignalIdentifier } from './../utils/StringUtils';
 
-export default class SignalProtocolStore {
+export default class ScopedSignalProtocolStore {
   constructor(accountId) {
     this.store = {};
     this.accountId = accountId
@@ -27,17 +28,21 @@ export default class SignalProtocolStore {
     RECEIVING: 2
   };
 
-  getIdentityKeyPair = () => {
+  getIdentityKeyPair = async () => {
     let result = this.get('identityKey');
     if (!result) {
-      const res = myAccount.getIdentityKeyPair();
+      const [account] = await getAccountByParams({id: this.accountId});
+      const res = {
+        privKey: account.privKey,
+        pubKey: account.pubKey
+      };
       result = {
         privKey: util.toArrayBufferFromBase64(res.privKey),
         pubKey: util.toArrayBufferFromBase64(res.pubKey)
       };
       this.put('identityKey', result);
     }
-    return Promise.resolve(result);
+    return result;
   };
 
   getLocalRegistrationId = () => {
