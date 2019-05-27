@@ -11,7 +11,7 @@
     "crypto-js": "^3.1.9-1",
     "draftjs-to-html": "^0.8.2",
     "immutable": "^3.8.2",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "moment": "^2.22.2",
     "randomcolor": "^0.5.3",
     "react": "^16.2.0",
