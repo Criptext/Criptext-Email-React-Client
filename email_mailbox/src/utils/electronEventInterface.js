@@ -570,7 +570,9 @@ const sendNewEmailNotification = () => {
 };
 
 const updateOwnContact = async () => {
-  const ownEmail = `${myAccount.recipientId}@${appDomain}`;
+  const ownEmail = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${appDomain}`;
   const accountName = myAccount.name;
   if (accountName) {
     await updateContactByEmail({ email: ownEmail, name: accountName });
@@ -912,6 +914,32 @@ ipcRenderer.on('socket-message', async (ev, message) => {
 ipc.answerMain('get-events', () => {
   sendLoadEventsEvent({});
 });
+
+ipcRenderer.on(
+  'refresh-window-logged-as',
+  (ev, { accountId, recipientId, selectedThreadId }) => {
+    emitter.emit(Event.LOAD_APP, { accountId, recipientId, selectedThreadId });
+  }
+);
+
+export const selectAccountAsActive = async ({ accountId, recipientId }) => {
+  await changeAccountApp({ accountId });
+  const email = recipientId.includes('@')
+    ? recipientId
+    : `${recipientId}@${appDomain}`;
+  showLoggedAsMessage(email);
+  startSocket(myAccount.jwt);
+  enableEventRequests();
+};
+
+export const showLoggedAsMessage = email => {
+  const messageData = {
+    ...Messages.success.loggedAs,
+    description: Messages.success.loggedAs.description + email,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
   const labelId = shouldUpdateBadge ? LabelType.draft.id : undefined;
