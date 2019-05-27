@@ -123,8 +123,17 @@ class LoginWrapper extends Component {
         return (
           <NoRecoverySignUpPopup
             {...this.state.popupContent}
-            onLeftButtonClick={this.dismissPopup}
-            onRightButtonClick={this.handleSignUpContinue}
+            onCancelClick={this.dismissPopup}
+            onConfirmClick={this.handleSignUpContinue}
+          />
+        );
+      case mode.LOGIN:
+        return (
+          <SignInAnotherAccount
+            {...this.state.popupContent}
+            type={DialogTypes.SIGN_ANOTHER_ACCOUNT}
+            onCancelClick={this.dismissPopup}
+            onConfirmClick={this.handleConfirmSignInAnotherAccount}
           />
         );
       default:
@@ -238,9 +247,15 @@ class LoginWrapper extends Component {
     );
   };
 
-  handleSignInAnotherAccount = async () => {
+  handleConfirmSignInAnotherAccount = async () => {
+    const nextMode = this.state.popupContent.successMode;
     this.dismissPopup();
-    await this.initLinkDevice(this.state.values.usernameOrEmailAddress);
+    if (nextMode === mode.CONTINUE) {
+      await this.initLinkDevice(this.state.values.usernameOrEmailAddress);
+      return;
+    } else if (nextMode === mode.SIGNUP) {
+      this.setState({ mode: nextMode });
+    }
   };
 
   toggleContinue = ev => {
@@ -381,7 +396,8 @@ class LoginWrapper extends Component {
       recipientId
     });
     if (!existsAccount) {
-      const check = await this.checkLoggedOutAccounts();
+      const successMode = mode.CONTINUE;
+      const check = await this.checkLoggedOutAccounts(successMode);
       if (check === true) {
         await this.initLinkDevice(recipientId);
       }
@@ -397,7 +413,7 @@ class LoginWrapper extends Component {
     }
   };
 
-  checkLoggedOutAccounts = async () => {
+  checkLoggedOutAccounts = async successMode => {
     const loggedOutAccounts = await getAccountByParams({
       isLoggedIn: false
     });
@@ -410,7 +426,8 @@ class LoginWrapper extends Component {
           list: this.formLoggedOutAccountsList(loggedOutAccounts),
           suffix: login.loginNewAccount.suffix,
           cancelButtonLabel: login.loginNewAccount.cancelButtonLabel,
-          confirmButtonLabel: login.loginNewAccount.confirmButtonLabel
+          confirmButtonLabel: login.loginNewAccount.confirmButtonLabel,
+          successMode
         }
       });
       return false;

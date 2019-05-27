@@ -120,21 +120,10 @@ const createAccount = async ({
     }),
     store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
   );
-  const labels = Object.values(LabelType);
-  try {
-    await createLabel(labels);
-  } catch (createLabelsDbError) {
-    throw CustomError(string.errors.saveLabels);
-  }
-  try {
-    await createContact({
-      name,
-      email: `${recipientId}@${appDomain}`
-    });
-  } catch (createContactDbError) {
-    throw CustomError(string.errors.saveOwnContact);
-  }
-  return true;
+  await createSystemLabels();
+  const email = `${recipientId}@${appDomain}`;
+  await createOwnContact(name, email, newAccount.id);
+  return newAccount.id;
 };
 
 const createAccountWithNewDevice = async ({
@@ -284,45 +273,24 @@ const uploadKeys = async ({ deviceType }) => {
 };
 
 const createAccountToDB = async ({
-  recipientId,
-  deviceId,
-  name,
   jwt,
   refreshToken,
-  preKeyIds,
+  deviceId,
+  name,
   privKey,
   pubKey,
+  recipientId,
+  isRecipientApp,
   registrationId,
+  preKeyIds,
   preKeyPairArray,
   signedPreKeyId,
   signedPreKeyPair
 }) => {
-  const [currentAccount] = await getAccount();
-  const currentAccountExists = currentAccount
-    ? currentAccount.recipientId === recipientId
-    : false;
-
-  if (currentAccountExists) {
+  const [existsAccount] = await getAccountByParams({ recipientId });
+  if (!existsAccount) {
     try {
-      await updateAccount({
-        jwt,
-        refreshToken,
-        deviceId,
-        name,
-        privKey,
-        pubKey,
-        recipientId,
-        registrationId
-      });
-    } catch (updateAccountDbError) {
-      throw CustomError(string.errors.updateAccountData);
-    }
-  } else {
-    if (currentAccount) {
-      await cleanDatabase(currentAccount.recipientId);
-      await createTables();
-    }
-    try {
+      await deleteAccountByParams({ isLoggedIn: false });
       await createAccountDB({
         jwt,
         refreshToken,
@@ -336,24 +304,40 @@ const createAccountToDB = async ({
     } catch (createAccountDbError) {
       throw CustomError(string.errors.saveLocal);
     }
-
-    const labels = Object.values(LabelType);
-    try {
-      await createLabel(labels);
-    } catch (createLabelsDbError) {
-      throw CustomError(string.errors.saveLabels);
+    await createSystemLabels();
+    const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
+    await createOwnContact(name, email);
+  } else {
+    if (!existsAccount.isLoggedIn) {
+      try {
+        await updateAccounts({
+          jwt,
+          refreshToken,
+          deviceId,
+          name,
+          privKey,
+          pubKey,
+          recipientId,
+          registrationId,
+          isActive: true,
+          isLoggedIn: true
+        });
+      } catch (updateAccountDbError) {
+        throw CustomError(string.errors.updateAccountData);
+      }
     }
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  setDefaultSettings();
+  await setDefaultSettings();
 
-  return await Promise.all(
+  await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
       await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
     }),
     store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
   );
+  return newAccount.id;
 };
 
 const setDefaultSettings = async () => {

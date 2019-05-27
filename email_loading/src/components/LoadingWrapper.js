@@ -23,6 +23,7 @@ const loadingTypes = {
 
 const delay = 85;
 const responseMaxDelay = 300;
+const lastMessageDelay = 2000;
 
 class LoadingWrapper extends Component {
   constructor(props) {
@@ -93,13 +94,11 @@ class LoadingWrapper extends Component {
       userCredentials['recoveryEmail'] = remoteData.recoveryEmail;
     }
     try {
-      const accountResponse = await signal.createAccount(userCredentials);
-      if (accountResponse === false) {
-        this.loadingThrowError();
-      }
-      if (accountResponse === true) {
+      const accountId = await signal.createAccount(userCredentials);
+      if (accountId) {
+        this.accountId = accountId;
         this.setState({
-          accountResponse,
+          accountResponse: true,
           failed: false
         });
       }
@@ -170,14 +169,46 @@ class LoadingWrapper extends Component {
     }
     if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
-      this.setState({ percent: 100 }, () => {
-        openMailboxWindow();
-        closeCreatingKeysLoadingWindow();
+      this.setState({ percent: 99 }, () => {
+        const accountId = this.accountId;
+        const recipientId = remoteData.recipientId || remoteData.username;
+        this.checkMailboxWindowIsReady({ accountId, recipientId });
       });
     }
     this.setState({
       timeout: setTimeout(this.checkResult, 1000)
     });
+  };
+
+  checkMailboxWindowIsReady = ({ accountId, recipientId }) => {
+    const isGettingEvents = getMailboxGettingEventsStatus();
+    if (isGettingEvents === false) {
+      clearTimeout(this.mailboxIsReadyTimeout);
+      this.setState(
+        {
+          percent: 100,
+          message: messages.mailboxIsReady
+        },
+        async () => {
+          await setTimeout(() => {
+            disableEventRequests();
+            openMailboxWindow({ accountId, recipientId });
+            closeCreatingKeysLoadingWindow();
+          }, lastMessageDelay);
+        }
+      );
+    } else {
+      this.setState(
+        {
+          message: messages.waitingMailboxIsReady
+        },
+        () => {
+          this.mailboxIsReadyTimeout = setTimeout(() => {
+            this.checkMailboxWindowIsReady({ accountId, recipientId });
+          }, lastMessageDelay);
+        }
+      );
+    }
   };
 
   loadingThrowError = async () => {
