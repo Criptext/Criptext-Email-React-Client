@@ -56,6 +56,6 @@ export const login = async params => {
   return await callMain('client-login', params);
 };
 
-export const resetPassword = async recipientId => {
-  return await callMain('client-reset-password', recipientId);
+export const resetPassword = async params => {
+  return await callMain('client-reset-password', params);
 };

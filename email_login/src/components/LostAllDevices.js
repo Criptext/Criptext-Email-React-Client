@@ -38,7 +38,7 @@ const renderSubHeader = props => (
       ) : (
         <p>{passwordLogin.sectionTitleSignIn}</p>
       )}
-      <p>{`${props.values.username}@${appDomain}`}</p>
+      <p>{defineEmailAddress(props.values.usernameOrEmailAddress)}</p>
     </div>
   </div>
 );
@@ -95,6 +95,12 @@ const renderLoadingContent = () => (
     <div />
   </div>
 );
+
+const defineEmailAddress = usernameOrEmailAddress => {
+  return usernameOrEmailAddress.includes('@')
+    ? usernameOrEmailAddress
+    : `${usernameOrEmailAddress}@${appDomain}`;
+};
 
 // eslint-disable-next-line fp/no-mutation
 renderHeader.propTypes = {

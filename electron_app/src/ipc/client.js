@@ -101,8 +101,8 @@ ipc.answerRenderer('client-resend-confirmation-email', () =>
   clientManager.resendConfirmationEmail()
 );
 
-ipc.answerRenderer('client-reset-password', recipientId =>
-  clientManager.resetPassword(recipientId)
+ipc.answerRenderer('client-reset-password', params =>
+  clientManager.resetPassword(params)
 );
 
 ipc.answerRenderer('client-set-read-tracking', enabled =>

@@ -141,7 +141,8 @@ const createAccountWithNewDevice = async ({
   recipientId,
   deviceId,
   name,
-  deviceType
+  deviceType,
+  isRecipientApp
 }) => {
   const signedPreKeyId = 1;
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
@@ -228,7 +229,10 @@ const createAccountWithNewDevice = async ({
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  setDefaultSettings();
+  await setDefaultSettings();
+
+  const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
+  await createOwnContact(name, email, newAccount.id);
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {

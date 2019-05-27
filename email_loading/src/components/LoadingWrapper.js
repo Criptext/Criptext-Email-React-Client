@@ -9,6 +9,7 @@ import {
   throwError
 } from './../utils/ipc';
 import string from './../lang';
+import { appDomain } from '../utils/const';
 
 const animationTypes = {
   RUNNING: 'running-animation',
@@ -57,11 +58,18 @@ class LoadingWrapper extends Component {
         this.createNewAccount();
       } else if (this.props.loadingType === loadingTypes.LOGIN) {
         const { recipientId, deviceId, name, deviceType } = remoteData;
+        let isRecipientApp = false;
+        let username = recipientId;
+        if (recipientId.includes(`@${appDomain}`)) {
+          isRecipientApp = true;
+          [username] = recipientId.split('@');
+        }
         this.createAccountWithNewDevice({
-          recipientId,
+          recipientId: username,
           deviceId,
           name,
-          deviceType
+          deviceType,
+          isRecipientApp
         });
       }
     }
@@ -113,14 +121,16 @@ class LoadingWrapper extends Component {
     recipientId,
     deviceId,
     name,
-    deviceType
+    deviceType,
+    isRecipientApp
   }) => {
     try {
       const loginResponse = await signal.createAccountWithNewDevice({
         recipientId,
         deviceId,
         name,
-        deviceType
+        deviceType,
+        isRecipientApp
       });
       if (loginResponse === false) {
         this.loadingThrowError();

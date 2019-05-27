@@ -78,7 +78,6 @@ class LoginWrapper extends Component {
     this.state = {
       mode: mode.LOGIN,
       values: {
-        username: '',
         usernameOrEmailAddress: '',
         password: ''
       },
@@ -168,12 +167,13 @@ class LoginWrapper extends Component {
       case mode.LOST_DEVICES:
         return (
           <LostAllDevicesWrapper
-            setPopupContent={this.setPopupContent}
+            cleanState={this.cleanState}
             dismissPopup={this.dismissPopup}
-            usernameValue={this.state.values.username}
-            toggleLostAllDevices={ev => this.toggleLostAllDevices(ev)}
-            hasTwoFactorAuth={this.state.hasTwoFactorAuth}
             goToWaitingApproval={this.goToWaitingApproval}
+            hasTwoFactorAuth={this.state.hasTwoFactorAuth}
+            setPopupContent={this.setPopupContent}
+            toggleLostAllDevices={ev => this.toggleLostAllDevices(ev)}
+            value={this.state.values.usernameOrEmailAddress}
           />
         );
       default:
@@ -371,14 +371,19 @@ class LoginWrapper extends Component {
   handleClickSignIn = async ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    const usernameOrEmailAddress = this.state.values.usernameOrEmailAddress;
+    // eslint-disable-next-line fp/no-let
+    let recipientId = this.state.values.usernameOrEmailAddress;
+    if (recipientId.includes(`@${appDomain}`)) {
+      // eslint-disable-next-line fp/no-mutation
+      [recipientId] = recipientId.split('@');
+    }
     const [existsAccount] = await getAccountByParams({
-      recipientId: usernameOrEmailAddress
+      recipientId
     });
     if (!existsAccount) {
       const check = await this.checkLoggedOutAccounts();
       if (check === true) {
-        await this.initLinkDevice(usernameOrEmailAddress);
+        await this.initLinkDevice(recipientId);
       }
     } else {
       // eslint-disable-next-line no-extra-boolean-cast
@@ -388,7 +393,7 @@ class LoginWrapper extends Component {
         });
         return;
       }
-      await this.initLinkDevice(usernameOrEmailAddress);
+      await this.initLinkDevice(recipientId);
     }
   };
 
@@ -414,9 +419,15 @@ class LoginWrapper extends Component {
   };
 
   formLoggedOutAccountsList = loggedOutAccounts => {
-    return loggedOutAccounts.map(
-      account => `${account.recipientId}@${appDomain}`
+    return loggedOutAccounts.map(account =>
+      this.defineEmailAddress(account.recipientId)
     );
+  };
+
+  defineEmailAddress = usernameOrEmailAddress => {
+    return usernameOrEmailAddress.includes('@')
+      ? usernameOrEmailAddress
+      : `${usernameOrEmailAddress}@${appDomain}`;
   };
 
   goToPasswordLogin = () => {
@@ -467,11 +478,11 @@ class LoginWrapper extends Component {
   };
 
   initLinkDevice = async usernameOrEmailAddress => {
+    const [username, domain = appDomain] = usernameOrEmailAddress.split('@');
     if (!this.state.ephemeralToken) {
-      const [username, domain] = usernameOrEmailAddress.split('@');
       await this.obtainEphemeralToken({
         username,
-        domain: domain || appDomain
+        domain
       });
     }
     if (this.state.hasTwoFactorAuth && !this.state.values.password) {
@@ -482,7 +493,11 @@ class LoginWrapper extends Component {
       );
       if (response) {
         this.setState({ mode: mode.CONTINUE }, () => {
-          createTemporalAccount({ recipientId: usernameOrEmailAddress });
+          // eslint-disable-next-line fp/no-let
+          let recipientId = usernameOrEmailAddress;
+          // eslint-disable-next-line fp/no-mutation
+          if (domain === appDomain) recipientId = username;
+          createTemporalAccount({ recipientId });
           socketClient.start({ jwt: this.state.ephemeralToken });
           this.checkLinkStatus();
         });

@@ -383,11 +383,11 @@ const resendConfirmationEmail = async () => {
     : await checkExpiredSession(res, resendConfirmationEmail, null);
 };
 
-const resetPassword = async recipientId => {
-  const res = await client.resetPassword(recipientId);
+const resetPassword = async params => {
+  const res = await client.resetPassword(params);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, resetPassword, recipientId);
+    : await checkExpiredSession(res, resetPassword, params);
 };
 
 const setReadTracking = async enabled => {
