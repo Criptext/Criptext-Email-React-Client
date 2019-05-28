@@ -130,7 +130,7 @@ export const fetchAcknowledgeEvents = async ({ eventIds, optionalToken }) => {
 
 export const fetchGetSingleEvent = async ({ rowId, optionalToken }) => {
   const res = await apiCriptextRequest({
-    endpoint: '/event/'+String(rowId),
+    endpoint: '/event/' + String(rowId),
     method: 'GET',
     optionalToken
   });
@@ -140,7 +140,7 @@ export const fetchGetSingleEvent = async ({ rowId, optionalToken }) => {
       cmd: jsonRes.cmd,
       rowid: jsonRes.rowid,
       params: JSON.parse(jsonRes.params)
-    }
+    };
     return eventResponse;
   }
   const expiredResponse = await checkExpiredSession({

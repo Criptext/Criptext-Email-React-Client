@@ -41,6 +41,9 @@ export const setDownloadHandler = (token, filename) => {
     return;
   }
   fileManager.downloadFile(token, async error => {
+    if (!error) {
+      return;
+    }
     const { status } = error;
     if (status === EXPIRED_SESSION_STATUS) {
       const expiredResponse = await checkExpiredSession({
