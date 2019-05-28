@@ -92,6 +92,8 @@ const senderNotificationId = '73243261136';
 const emitter = new EventEmitter();
 let totalEmailsPending = null;
 let totalEmailsHandled = 0;
+let shouldBreakEvents = false;
+let isBreakEventsEnded = false;
 
 let labelIdsEvent = new Set();
 let threadIdsEvent = new Set();
@@ -104,6 +106,23 @@ let newEmailNotificationList = [];
 const stopGettingEvents = () => {
   setGettingEventsStatus(false);
   emitter.emit(Event.STOP_LOAD_SYNC, {});
+};
+
+export const breakHandleEvents = () => {
+  shouldBreakEvents = true;
+  return new Promise(resolve => {
+    if (!isBreakEventsEnded) {
+      setTimeout(() => {
+        resolve(breakHandleEvents());
+      }, 1000);
+    } else resolve(true);
+  });
+};
+
+export const updateBreakValues = () => {
+  shouldBreakEvents = false;
+  isBreakEventsEnded = false;
+  stopGettingEvents();
 };
 
 const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
@@ -121,8 +140,10 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
     return count;
   }, 0);
   totalEmailsHandled = totalEmailsHandled + completedTask;
-
-  for (const event of events) {
+  const eventsSize = events.length;
+  let i = 0;
+  while (!shouldBreakEvents && i < eventsSize) {
+    const event = events[i];
     try {
       const {
         avatarChanged,
@@ -154,12 +175,16 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
         sendFetchEmailsErrorMessage();
       }
     }
+    i++;
   }
 
   const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
-  if (rowIdsFiltered.length || (events.length && !rowIdsFiltered.length)) {
-    if (rowIdsFiltered.length) await setEventAsHandled(rowIdsFiltered);
+  if (rowIdsFiltered.length) await setEventAsHandled(rowIdsFiltered);
 
+  if (
+    (rowIdsFiltered.length || (eventsSize && !rowIdsFiltered.length)) &&
+    !shouldBreakEvents
+  ) {
     const labelIds = labelIdsEvent.size ? Array.from(labelIdsEvent) : null;
     const threadIds = threadIdsEvent.size ? Array.from(threadIdsEvent) : null;
     const badgeLabelIds = badgeLabelIdsEvent.size
@@ -224,21 +249,24 @@ export const getGroupEvents = async ({
   }
 
   await parseAndStoreEventsBatch({ events, hasMoreEvents });
-
-  if (!hasMoreEvents) {
-    await updateOwnContact();
-    if (showNotification) {
-      sendNewEmailNotification();
-    }
-    setGettingEventsStatus(false);
+  if (shouldBreakEvents) {
+    isBreakEventsEnded = true;
     totalEmailsPending = null;
-    stopGettingEvents();
-    return;
+  } else {
+    if (!hasMoreEvents) {
+      await updateOwnContact();
+      if (showNotification) {
+        sendNewEmailNotification();
+      }
+      totalEmailsPending = null;
+      stopGettingEvents();
+      return;
+    }
+    await getGroupEvents({
+      shouldGetMoreEvents: hasMoreEvents,
+      showNotification
+    });
   }
-  await getGroupEvents({
-    shouldGetMoreEvents: hasMoreEvents,
-    showNotification
-  });
 };
 
 export const isGettingEventsGet = () => getGettingEventsStatus();
