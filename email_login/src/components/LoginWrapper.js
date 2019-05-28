@@ -263,10 +263,10 @@ class LoginWrapper extends Component {
     await this.initLinkDevice(this.state.values.username);
   };
 
-  toggleContinue = async ev => {
+  toggleContinue = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    await socketClient.disconnect();
+    socketClient.disconnect();
     this.stopCountdown();
     const nextMode =
       this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN;
@@ -523,8 +523,8 @@ class LoginWrapper extends Component {
     });
   };
 
-  handleCancelLink = async () => {
-    await socketClient.disconnect();
+  handleCancelLink = () => {
+    socketClient.disconnect();
     this.setState({ popupContent: undefined }, () => {
       this.goToPasswordLogin();
     });
@@ -568,7 +568,7 @@ class LoginWrapper extends Component {
       switch (status) {
         case rejectedDeviceStatus: {
           this.stopCountdown();
-          await socketClient.disconnect();
+          socketClient.disconnect();
           this.setState({
             mode: mode.DEVICE_NOT_APPROVED
           });
@@ -576,7 +576,7 @@ class LoginWrapper extends Component {
         }
         case approvedDeviceStastus: {
           this.stopCountdown();
-          await socketClient.disconnect();
+          socketClient.disconnect();
           const remoteData = {
             ...body,
             recipientId: this.state.values.username

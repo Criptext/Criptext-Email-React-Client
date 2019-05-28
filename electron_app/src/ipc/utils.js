@@ -94,7 +94,7 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
 };
 
 ipc.answerRenderer('change-account-app', async ({ accountId }) => {
-  await socketClient.disconnect();
+  socketClient.disconnect();
   // Database
   await dbManager.defineActiveAccountById({ accountId });
   // Client

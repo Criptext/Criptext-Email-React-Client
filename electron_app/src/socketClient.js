@@ -126,9 +126,9 @@ const checkAlive = () => {
   });
 };
 
-const restartSocket = async ({ jwt }) => {
+const restartSocket = ({ jwt }) => {
   shouldReconnect = false;
-  await disconnect();
+  disconnect();
   client = null;
   setTimeout(() => {
     shouldReconnect = true;
