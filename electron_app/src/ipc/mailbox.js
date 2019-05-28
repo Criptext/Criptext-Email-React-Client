@@ -121,18 +121,15 @@ ipc.answerRenderer(
 
 ipc.answerRenderer(
   'show-notification',
-  ({ switchToAccount, title, message, threadId }) => {
-    console.log(`
-    [show-notification]
-    - switchToAccount:  ${switchToAccount}
-    - title          :  ${title}
-    - message        :  ${message}
-    - threadId:      :  ${threadId}
-  `);
+  ({ account, title, message, threadId }) => {
     const onClickNotification = () => {
       showWindows();
-      if (switchToAccount) {
-        console.log('Cambiar a cuenta: ', switchToAccount);
+      if (account) {
+        mailboxWindow.send('refresh-window-logged-as', {
+          accountId: account.id,
+          recipientId: account.recipientId,
+          selectedThreadId: threadId
+        });
       } else {
         if (threadId)
           mailboxWindow.send('open-thread-by-notification', { threadId });

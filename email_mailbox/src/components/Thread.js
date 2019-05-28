@@ -86,6 +86,9 @@ class Thread extends Component {
   }
 
   componentDidMount() {
+    if (!this.props.thread) {
+      return;
+    }
     if (this.props.emails.length !== this.props.thread.emailIds.length) {
       this.props.onLoadEmails(this.props.thread.threadId);
     } else {
