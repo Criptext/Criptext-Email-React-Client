@@ -48,8 +48,8 @@ class ThreadsWrapper extends Component {
     }
     if (
       !this.state.isHiddenLoadingSync &&
-      nextProps.totalTask > 0 &&
-      nextProps.completedTask > 0 &&
+      nextProps.totalTask >= 0 &&
+      nextProps.completedTask >= 0 &&
       (nextProps.totalTask === nextProps.completedTask ||
         nextProps.completedTask > nextProps.totalTask)
     ) {

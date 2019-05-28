@@ -3,9 +3,11 @@ import Panel from './Panel';
 import PropTypes from 'prop-types';
 import {
   addEvent,
-  removeEvent,
+  breakHandleEvents,
+  checkUserGuideSteps,
   Event,
-  checkUserGuideSteps
+  isGettingEventsGet,
+  removeEvent
 } from '../utils/electronEventInterface';
 import { processPendingEvents } from '../utils/ipc';
 import { LabelType } from '../utils/electronInterface';
@@ -179,7 +181,9 @@ class PanelWrapper extends Component {
     this.setState({ isOpenSideBar: !this.state.isOpenSideBar });
   };
 
-  handleUpdateApp = ({ mailbox, accountId, recipientId }) => {
+  handleUpdateApp = async ({ mailbox, accountId, recipientId }) => {
+    const isGettingEvents = isGettingEventsGet();
+    if (isGettingEvents) await breakHandleEvents();
     this.setState({
       isHiddenMailboxPopup: false,
       mailboxPopupType: MAILBOX_POPUP_TYPES.CHANGE_ACCOUNT
