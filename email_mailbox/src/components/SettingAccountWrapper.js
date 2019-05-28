@@ -154,6 +154,9 @@ class SettingAccountWrapper extends Component {
       readReceipts: {
         enabled: props.readReceiptsEnabled,
         isLoading: true
+      },
+      encryptToExternals: {
+        enabled: props.encryptToExternals
       }
     };
     this.initEventHandlers();
