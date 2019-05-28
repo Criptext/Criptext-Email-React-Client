@@ -68,13 +68,13 @@ const create = () => {
   mailboxWindow.on('page-title-updated', ev => {
     ev.preventDefault();
   });
-  mailboxWindow.on('close', async e => {
+  mailboxWindow.on('close', e => {
     if (!globalManager.forcequit.get()) {
       e.preventDefault();
       hide();
     } else {
       destroyTrayIcon();
-      await require('./../socketClient').disconnect();
+      require('./../socketClient').disconnect();
     }
   });
 

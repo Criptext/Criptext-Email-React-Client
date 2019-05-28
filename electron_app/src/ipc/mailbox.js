@@ -148,8 +148,6 @@ ipc.answerRenderer('check-for-updates', showDialog => {
 
 ipc.answerRenderer('generate-label-uuid', genUUID);
 
-ipc.answerRenderer('restart-socket', async jwt => {
-  await restartSocket({ jwt });
-});
+ipc.answerRenderer('restart-socket', jwt => restartSocket({ jwt }));
 
 ipc.answerRenderer('start-socket', jwt => start({ jwt }));

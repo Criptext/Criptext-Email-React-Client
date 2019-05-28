@@ -18,22 +18,19 @@ let pingProcess;
 const setMessageListener = mListener => (messageListener = mListener);
 
 const disconnect = () => {
-  return new Promise((resolve, reject) => {
-    if (!socketConnection || !pingProcess) return resolve();
-    try {
-      pingProcess.on('close', () => {
-        pingProcess = undefined;
-        socketConnection.close();
-      });
-      socketConnection.on('close', () => {
-        socketConnection = undefined;
-        return resolve();
-      });
-      pingProcess.kill('SIGKILL');
-    } catch (err) {
-      return reject(err);
-    }
-  });
+  if (!socketConnection || !pingProcess) return;
+  try {
+    pingProcess.on('close', () => {
+      pingProcess = undefined;
+    });
+    socketConnection.on('close', () => {
+      socketConnection = undefined;
+    });
+    pingProcess.kill('SIGKILL');
+    socketConnection.close();
+  } catch (err) {
+    return;
+  }
 };
 
 const start = ({ jwt }) => {
@@ -127,9 +124,9 @@ const checkAlive = () => {
   });
 };
 
-const restartSocket = async ({ jwt }) => {
+const restartSocket = ({ jwt }) => {
   shouldReconnect = false;
-  await disconnect();
+  disconnect();
   client = null;
   setTimeout(() => {
     shouldReconnect = true;
