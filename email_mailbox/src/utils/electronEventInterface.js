@@ -261,7 +261,7 @@ export const getGroupEvents = async ({
     if (!hasMoreEvents) {
       await updateOwnContact();
       if (showNotification) {
-        sendNewEmailNotification({ account: myAccount.recipientId });
+        sendNewEmailNotification({ account: myAccount });
       }
       totalEmailsPending = null;
       stopGettingEvents();
@@ -586,7 +586,7 @@ const addEmailToNotificationList = ({
 };
 
 const sendNewEmailNotification = ({ account }) => {
-  const switchToAccount = account === myAccount.recipientId ? null : account;
+  const switchToAccount = account.id === myAccount.id ? null : account;
   if (newEmailNotificationList.length <= 3) {
     newEmailNotificationList.forEach(notificationData => {
       const {
@@ -599,8 +599,8 @@ const sendNewEmailNotification = ({ account }) => {
         ? `${emailSubject}\n${emailPreview}`
         : `${emailSubject}`;
       showNotificationApp({
-        switchToAccount,
-        title: `${senderInfo} [${account}@${appDomain}]`,
+        account: switchToAccount,
+        title: `${senderInfo} [${account.recipientId}@${appDomain}]`,
         message,
         threadId
       });
@@ -612,7 +612,7 @@ const sendNewEmailNotification = ({ account }) => {
       newEmailNotificationList.length +
       string.notification.newEmailGroup.sufix;
     showNotificationApp({
-      switchToAccount,
+      account: switchToAccount,
       title,
       message,
       threadId: null
@@ -964,9 +964,12 @@ ipc.answerMain('get-events', () => {
   sendLoadEventsEvent({});
 });
 
-ipcRenderer.on('refresh-window-logged-as', (ev, { accountId, recipientId }) => {
-  emitter.emit(Event.LOAD_APP, { accountId, recipientId });
-});
+ipcRenderer.on(
+  'refresh-window-logged-as',
+  (ev, { accountId, recipientId, selectedThreadId }) => {
+    emitter.emit(Event.LOAD_APP, { accountId, recipientId, selectedThreadId });
+  }
+);
 
 export const selectAccountAsActive = async ({ accountId, recipientId }) => {
   await changeAccountApp({ accountId });
@@ -1401,7 +1404,7 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
       accountId: eventAccount.id,
       optionalToken
     });
-    sendNewEmailNotification({ account });
+    sendNewEmailNotification({ account: eventAccount });
 
     if (eventAccount.recipientId === myAccount.recipientId) {
       sendLoadEventsEvent({ showNotification: true });

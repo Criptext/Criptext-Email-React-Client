@@ -89,6 +89,20 @@ class PanelWrapper extends Component {
     ) {
       this.handleCloseMailboxPopup();
     }
+    if (
+      this.selectedThreadId &&
+      prevProps.threadsCount < this.props.threadsCount
+    ) {
+      const openThreadParams = {
+        mailboxSelected: {
+          id: 1,
+          text: 'Inbox'
+        },
+        threadIdSelected: this.selectedThreadId
+      };
+      this.handleClickSection(SectionType.THREAD, openThreadParams);
+      this.selectedThreadId = null;
+    }
   }
 
   componentWillUnmount() {
@@ -181,7 +195,12 @@ class PanelWrapper extends Component {
     this.setState({ isOpenSideBar: !this.state.isOpenSideBar });
   };
 
-  handleUpdateApp = async ({ mailbox, accountId, recipientId }) => {
+  handleUpdateApp = async ({
+    mailbox,
+    accountId,
+    recipientId,
+    selectedThreadId
+  }) => {
     const isGettingEvents = isGettingEventsGet();
     if (isGettingEvents) await breakHandleEvents();
     this.setState({
@@ -190,7 +209,12 @@ class PanelWrapper extends Component {
     });
     const mailboxSelected =
       mailbox || this.state.sectionSelected.params.mailboxSelected;
-    this.props.onUpdateAccountApp({ mailboxSelected, accountId, recipientId });
+    this.props.onUpdateAccountApp({
+      mailboxSelected,
+      accountId,
+      recipientId,
+      selectedThreadId
+    });
   };
 
   initEventHandlers = () => {
@@ -253,8 +277,14 @@ class PanelWrapper extends Component {
     });
   };
 
-  loadAppListenerCallback = ({ mailbox, accountId, recipientId }) => {
+  loadAppListenerCallback = ({
+    mailbox,
+    accountId,
+    recipientId,
+    selectedThreadId
+  }) => {
     this.handleUpdateApp({ mailbox, accountId, recipientId });
+    this.selectedThreadId = selectedThreadId;
   };
 
   loadEventsListenerCallback = params => {
