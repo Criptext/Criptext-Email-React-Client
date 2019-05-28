@@ -18,9 +18,18 @@ let pingProcess;
 const setMessageListener = mListener => (messageListener = mListener);
 
 const disconnect = () => {
-  if (socketConnection) {
+  if (!socketConnection || !pingProcess) return;
+  try {
+    pingProcess.on('close', () => {
+      pingProcess = undefined;
+    });
+    socketConnection.on('close', () => {
+      socketConnection = undefined;
+    });
+    pingProcess.kill('SIGKILL');
     socketConnection.close();
-    pingProcess.kill();
+  } catch (err) {
+    return;
   }
 };
 
