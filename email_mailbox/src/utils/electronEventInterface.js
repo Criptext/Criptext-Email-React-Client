@@ -78,7 +78,6 @@ import {
   fetchEventAction,
   fetchGetSingleEvent
 } from './FetchUtils';
-import ScopedSignalProtocolStore from '../libs/scopedStore';
 import string from './../lang';
 
 const EventEmitter = window.require('events');
@@ -127,13 +126,17 @@ export const updateBreakValues = () => {
   stopGettingEvents();
 };
 
-const parseAndStoreEventsBatch = async ({ events, hasMoreEvents, accountId, optionalToken }) => {
+const parseAndStoreEventsBatch = async ({
+  events,
+  hasMoreEvents,
+  accountId,
+  optionalToken
+}) => {
   labelIdsEvent = new Set();
   threadIdsEvent = new Set();
   badgeLabelIdsEvent = new Set();
   labelsEvent = {};
   avatarHasChanged = false;
-  console.log(accountId)
   const rowIds = [];
   const completedTask = events.reduce((count, event) => {
     if (event.cmd === SocketCommand.NEW_EMAIL) {
@@ -277,7 +280,6 @@ export const isGettingEventsUpdate = value => setGettingEventsStatus(value);
 export const handleEvent = incomingEvent => {
   switch (incomingEvent.cmd) {
     case SocketCommand.NEW_EMAIL: {
-      console.log(incomingEvent)
       return handleNewMessageEvent(incomingEvent);
     }
     case SocketCommand.EMAIL_TRACKING_UPDATE: {
@@ -355,7 +357,12 @@ export const handleEvent = incomingEvent => {
   }
 };
 
-const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }) => {
+const handleNewMessageEvent = async ({
+  rowid,
+  params,
+  accountId,
+  optionalToken
+}) => {
   const {
     bcc,
     bccArray,
@@ -381,7 +388,6 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
     external,
     boundary
   } = params;
-  console.log('holi : ', metadataKey, accountId)
   if (!metadataKey) return { rowid: null };
   const recipientId =
     external === true
@@ -411,27 +417,23 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
   const isToMe = checkEmailIsTo(recipients);
   let notificationPreview = '';
   const labelIds = [];
-  console.log(prevEmail);
   if (!prevEmail) {
     let body = '',
       headers;
-    let optionalStore = new ScopedSignalProtocolStore(accountId)
     try {
-      console.log('welp => ', metadataKey, accountId)
       const { decryptedBody, decryptedHeaders } = await signal.decryptEmail({
         bodyKey: metadataKey,
         recipientId,
         deviceId,
         messageType,
         optionalToken,
-        optionalStore
+        accountId
       });
       body = cleanEmailBody(decryptedBody);
       headers = decryptedHeaders;
     } catch (e) {
       body = 'Content unencrypted';
     }
-    console.log(body, accountId);
     let myFileKeys;
     if (fileKeys) {
       myFileKeys = await Promise.all(
@@ -441,7 +443,8 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
               fileKey,
               messageType,
               recipientId,
-              deviceId
+              deviceId,
+              accountId
             });
             const [key, iv] = decrypted.split(':');
             return { key, iv };
@@ -456,7 +459,8 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
           fileKey,
           messageType,
           recipientId,
-          deviceId
+          deviceId,
+          accountId
         });
         const [key, iv] = decrypted.split(':');
         myFileKeys = files.map(() => ({ key, iv }));
@@ -550,7 +554,6 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
     }
     notificationPreview = prevEmail.preview;
   }
-  console.log("isToMe, isSpam: ", isToMe, isSpam);
   if (!isSpam) {
     const parsedContact = parseContactRow(from);
     addEmailToNotificationList({
@@ -559,7 +562,6 @@ const handleNewMessageEvent = async ({ rowid, params, accountId, optionalToken }
       emailPreview: notificationPreview,
       threadId
     });
-    console.log("Añaido a la lista de push");
   }
   const mailboxIdsToUpdate = isSpam ? [LabelType.spam.id] : labelIds;
   return {
@@ -584,9 +586,7 @@ const addEmailToNotificationList = ({
 };
 
 const sendNewEmailNotification = ({ account }) => {
-  const switchToAccount = account === myAccount.recipientId
-    ? null
-    : account;
+  const switchToAccount = account === myAccount.recipientId ? null : account;
   if (newEmailNotificationList.length <= 3) {
     newEmailNotificationList.forEach(notificationData => {
       const {
@@ -601,7 +601,7 @@ const sendNewEmailNotification = ({ account }) => {
       showNotificationApp({
         switchToAccount,
         title: `${senderInfo} [${account}@${appDomain}]`,
-        message, 
+        message,
         threadId
       });
     });
@@ -612,9 +612,9 @@ const sendNewEmailNotification = ({ account }) => {
       newEmailNotificationList.length +
       string.notification.newEmailGroup.sufix;
     showNotificationApp({
-      switchToAccount, 
-      title, 
-      message, 
+      switchToAccount,
+      title,
+      message,
       threadId: null
     });
   }
@@ -1374,11 +1374,9 @@ ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
 });
 
 ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
-  console.log("Notificacion recibida: ", data);
   const isDisabledParsingEvents = checkDisableRequests();
   if (isDisabledParsingEvents) return;
-  console.log("Notification GO : ", myAccount.logged)
-  
+
   try {
     const { account, rowId } = data;
     let eventAccount = {};
@@ -1387,28 +1385,31 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
       eventAccount = myAccount;
       optionalToken = null;
     } else {
-      eventAccount =  myAccount.logged[account];
+      eventAccount = myAccount.logged[account];
       optionalToken = eventAccount ? eventAccount.jwt : '';
     }
 
-    if (eventAccount) {
-      console.log("Si existe la cuenta: ", eventAccount);
-      const eventData = await fetchGetSingleEvent({ rowId, optionalToken });
-      
-      console.log(account);
-      console.log("eventData: ", eventData);
-      await parseAndStoreEventsBatch({
-        events: [eventData],
-        hasMoreEvents: false,
-        accountId: eventAccount.id,
-        optionalToken
-      });
-      console.log("Parsed");
-      sendNewEmailNotification({ account });
-      console.log("Se manda el push");
+    if (!eventAccount) {
+      return;
     }
-    // sendLoadEventsEvent({ showNotification: true });
-  } catch (e) {}
+
+    const eventData = await fetchGetSingleEvent({ rowId, optionalToken });
+
+    await parseAndStoreEventsBatch({
+      events: [eventData],
+      hasMoreEvents: false,
+      accountId: eventAccount.id,
+      optionalToken
+    });
+    sendNewEmailNotification({ account });
+
+    if (eventAccount.recipientId === myAccount.recipientId) {
+      sendLoadEventsEvent({ showNotification: true });
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+  }
 });
 
 ipcRenderer.send(START_NOTIFICATION_SERVICE, senderNotificationId);

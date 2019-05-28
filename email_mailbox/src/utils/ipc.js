@@ -50,7 +50,12 @@ export const processPendingEvents = () => {
   }, 1000);
 };
 
-export const showNotificationApp = ({ switchToAccount, title, message, threadId }) => {
+export const showNotificationApp = ({
+  switchToAccount,
+  title,
+  message,
+  threadId
+}) => {
   callMain('show-notification', { switchToAccount, title, message, threadId });
 };
 
@@ -284,12 +289,18 @@ export const createLabel = async params => {
 
 export const createPreKeyRecord = async params => {
   checkCurrentAccount();
-  return await callMain('db-create-prekey-record', { accountId: params.accountId || accountId, ...params });
+  return await callMain('db-create-prekey-record', {
+    accountId: params.accountId || accountId,
+    ...params
+  });
 };
 
 export const createSessionRecord = async params => {
   checkCurrentAccount();
-  return await callMain('db-create-session-record', { accountId: params.accountId || accountId, ...params });
+  return await callMain('db-create-session-record', {
+    accountId: params.accountId || accountId,
+    ...params
+  });
 };
 
 export const createSignalTables = async () => {
@@ -339,12 +350,18 @@ export const deleteLabelById = async labelId => {
 
 export const deletePreKeyPair = async params => {
   checkCurrentAccount();
-  return await callMain('db-delete-prekey-pair', { accountId: params.accountId || accountId, ...params });
+  return await callMain('db-delete-prekey-pair', {
+    accountId: params.accountId || accountId,
+    ...params
+  });
 };
 
 export const deleteSessionRecord = async params => {
   checkCurrentAccount();
-  return await callMain('db-delete-session-record', { accountId: params.accountId || accountId, ...params });
+  return await callMain('db-delete-session-record', {
+    accountId: params.accountId || accountId,
+    ...params
+  });
 };
 
 export const getAccount = async () => {
@@ -467,22 +484,31 @@ export const getLabelsByParams = async ({ textArray }) => {
 
 export const getPreKeyPair = async params => {
   checkCurrentAccount();
-  return await callMain('db-get-prekey-pair', { accountId: params.accountId || accountId, ...params });
+  return await callMain('db-get-prekey-pair', {
+    accountId: params.accountId || accountId,
+    ...params
+  });
 };
 
 export const getSessionRecord = async params => {
   checkCurrentAccount();
-  return await callMain('db-get-session-record', { accountId: params.accountId || accountId, ...params });
+  return await callMain('db-get-session-record', {
+    accountId: params.accountId || accountId,
+    ...params
+  });
 };
 
-export const getSessionRecordIds = async myAccountId => {
+export const getSessionRecordIds = async () => {
   checkCurrentAccount();
-  return await callMain('db-get-prekeys-ids', myAccount || accountId);
+  return await callMain('db-get-prekeys-ids', accountId);
 };
 
 export const getSignedPreKey = async params => {
   checkCurrentAccount();
-  return await callMain('db-get-signed-prekey', { accountId: params.accountId || accountId, ...params });
+  return await callMain('db-get-signed-prekey', {
+    accountId: params.accountId || accountId,
+    ...params
+  });
 };
 
 export const getTrashExpiredEmails = async () => {

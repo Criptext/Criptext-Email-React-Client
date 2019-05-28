@@ -20,7 +20,7 @@ import { splitSignalIdentifier } from './../utils/StringUtils';
 export default class ScopedSignalProtocolStore {
   constructor(accountId) {
     this.store = {};
-    this.accountId = accountId
+    this.accountId = accountId;
   }
 
   Direction = {
@@ -31,7 +31,7 @@ export default class ScopedSignalProtocolStore {
   getIdentityKeyPair = async () => {
     let result = this.get('identityKey');
     if (!result) {
-      const [account] = await getAccountByParams({id: this.accountId});
+      const [account] = await getAccountByParams({ id: this.accountId });
       const res = {
         privKey: account.privKey,
         pubKey: account.pubKey
@@ -108,7 +108,10 @@ export default class ScopedSignalProtocolStore {
       throw new Error('Tried to get identity key for undefined/null key');
 
     const { recipientId } = splitSignalIdentifier(identifier);
-    const [identityKeyRecord] = await getIdentityKeyRecord({ accountId: this.accountId, recipientId });
+    const [identityKeyRecord] = await getIdentityKeyRecord({
+      accountId: this.accountId,
+      recipientId
+    });
     return Promise.resolve(util.toArrayBuffer(identityKeyRecord.identityKey));
   };
 
@@ -147,7 +150,10 @@ export default class ScopedSignalProtocolStore {
   loadPreKey = async keyId => {
     let res = this.get('25519KeypreKey' + keyId);
     if (!res) {
-      const [resp] = await getPreKeyPair({ accountId: this.accountId, preKeyId: keyId });
+      const [resp] = await getPreKeyPair({
+        accountId: this.accountId,
+        preKeyId: keyId
+      });
       if (resp) {
         res = {
           privKey: util.toArrayBufferFromBase64(resp.preKeyPrivKey),
@@ -179,7 +185,10 @@ export default class ScopedSignalProtocolStore {
   loadSignedPreKey = async keyId => {
     let res = this.get('25519KeysignedKey' + keyId);
     if (!res) {
-      const [resp] = await getSignedPreKey({ accountId: this.accountId, signedPreKeyId: keyId });
+      const [resp] = await getSignedPreKey({
+        accountId: this.accountId,
+        signedPreKeyId: keyId
+      });
       if (resp) {
         res = {
           privKey: util.toArrayBufferFromBase64(resp.signedPreKeyPrivKey),
@@ -211,7 +220,11 @@ export default class ScopedSignalProtocolStore {
     let recordText = this.get('session' + identifier);
     if (!recordText) {
       const { recipientId, deviceId } = splitSignalIdentifier(identifier);
-      const [session] = await getSessionRecord({ accountId: this.accountId, recipientId, deviceId });
+      const [session] = await getSessionRecord({
+        accountId: this.accountId,
+        recipientId,
+        deviceId
+      });
       if (session) {
         recordText = session.record;
         this.put('session' + identifier, recordText);
@@ -223,13 +236,22 @@ export default class ScopedSignalProtocolStore {
   storeSession = async (identifier, record) => {
     const { recipientId, deviceId } = splitSignalIdentifier(identifier);
     const recordText = util.jsonThing(record);
-    await createSessionRecord({ accountId: this.accountId, recipientId, deviceId, record: recordText });
+    await createSessionRecord({
+      accountId: this.accountId,
+      recipientId,
+      deviceId,
+      record: recordText
+    });
     return Promise.resolve(this.put('session' + identifier, recordText));
   };
 
   removeSession = async identifier => {
     const { recipientId, deviceId } = splitSignalIdentifier(identifier);
-    await deleteSessionRecord({ recipientId, deviceId, accountId: this.accountId });
+    await deleteSessionRecord({
+      recipientId,
+      deviceId,
+      accountId: this.accountId
+    });
     return Promise.resolve(this.remove('session' + identifier));
   };
 
