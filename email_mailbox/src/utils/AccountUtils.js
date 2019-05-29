@@ -54,10 +54,9 @@ export const defineAccountVisibleParams = (account, timestamp) => {
   const name = account.name;
   const recipientId = account.recipientId;
   const letters = getTwoCapitalLetters(name);
-  const emailAddress = recipientId.includes('@')
-    ? recipientId
-    : `${recipientId}@${appDomain}`;
-  const avatarUrl = formAvatarUrl(recipientId, timestamp);
+  const [username, domain = appDomain] = recipientId.split('@');
+  const emailAddress = `${username}@${domain}`;
+  const avatarUrl = formAvatarUrl(username, domain, timestamp);
   const isActive = account.isActive || false;
   return {
     name,
@@ -68,6 +67,6 @@ export const defineAccountVisibleParams = (account, timestamp) => {
   };
 };
 
-export const formAvatarUrl = (recipientId, timestamp) => {
-  return `${avatarBaseUrl}${recipientId}?date=${timestamp}`;
+export const formAvatarUrl = (username, domain, timestamp) => {
+  return `${avatarBaseUrl}${domain}/${username}?date=${timestamp}`;
 };

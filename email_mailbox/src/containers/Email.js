@@ -73,10 +73,8 @@ const makeMapStateToProps = () => {
         })
       : 'transparent';
     const letters = getTwoCapitalLetters(senderName || senderEmail || '');
-    const recipient = senderEmail.replace(`@${appDomain}`, '');
-    const avatarUrl = senderEmail.includes(`@${appDomain}`)
-      ? `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`
-      : null;
+    const [username, domain = appDomain] = senderEmail.split(`@`);
+    const avatarUrl = `${avatarBaseUrl}${domain}/${username}?date=${avatarTimestamp}`;
     const date = email.date;
     const { files, inlineImages } = getFiles(state, email);
     const isCollapse = !!hasAnySubstring(['Re:', 'RE:'], email.subject);

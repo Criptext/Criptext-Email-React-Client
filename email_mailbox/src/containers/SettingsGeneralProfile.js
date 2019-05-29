@@ -13,9 +13,8 @@ import { appDomain, avatarBaseUrl } from '../utils/const';
 
 const mapStateToProps = state => {
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
-  const avatarUrl = `${avatarBaseUrl}${
-    myAccount.recipientId
-  }?date=${avatarTimestamp}`;
+  const [username, domain = appDomain] = myAccount.recipientId.split(`@`);
+  const avatarUrl = `${avatarBaseUrl}${domain}/${username}?date=${avatarTimestamp}`;
   return {
     avatarUrl
   };

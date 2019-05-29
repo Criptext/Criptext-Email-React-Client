@@ -146,10 +146,8 @@ const mapStateToProps = (state, ownProps) => {
     state.get('labels'),
     labelsToExclude
   );
-  const recipient = lastRecipient.email.replace(`@${appDomain}`, '');
-  const avatarUrl = lastRecipient.email.includes(`@${appDomain}`)
-    ? `${avatarBaseUrl}${recipient}?date=${avatarTimestamp}`
-    : null;
+  const [username, domain = appDomain] = lastRecipient.email.split(`@`);
+  const avatarUrl = `${avatarBaseUrl}${domain}/${username}?date=${avatarTimestamp}`;
   const { preview, isUnsend, isEmpty } = definePreviewAndStatus(thread);
   const hasNoSubject = thread.get('subject') === EMPTY_SUBJECT_DEFAULT;
   return {
