@@ -13,7 +13,7 @@ const createScoreColumn = async knex => {
 const deleteScoreColumn = async knex => {
   const columnExists = await knex.schema.hasColumn(Table.CONTACT, SCORE_COLUMN);
   if (columnExists)
-    await knex.schema.table(Table.FILE, table => {
+    await knex.schema.table(Table.CONTACT, table => {
       table.dropColumn(SCORE_COLUMN);
     });
 };

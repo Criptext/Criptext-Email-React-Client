@@ -444,6 +444,8 @@
     "edit": "Editar",
     "email": "Correo",
     "enabled": "activada",
+    "encrypt_to_externals": "Encriptar a Emails Externos",
+    "encrypt_to_externals_description": "Si esta activado, al enviar un correo se te preguntara por una contrasenia para encriptar el correo a usuarios que no son de criptext. Si esta desactivado, el correo se enviara encriptado para usuarios de criptext y sin encriptar para el resto.",
     "enter_new_label_name": "Introducir nueva etiqueta",
     "faq": {
       "label": "Preguntas Frecuentes",

@@ -444,6 +444,8 @@
     "edit": "Edit",
     "email": "Email",
     "enabled": "enabled",
+    "encrypt_to_externals": "Encrypt To Externals",
+    "encrypt_to_externals_description": "If enabled, when sending an email you will be asked for a password to encrypt the email for non-criptext recipient. If disable, criptext emails will receive an encrypted email while others won't.",
     "enter_new_label_name": "Enter new label name",
     "faq": {
       "label": "FAQ",
