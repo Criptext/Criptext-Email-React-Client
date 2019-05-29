@@ -141,18 +141,21 @@ export const addCollapseDiv = (htmlString, key, isCollapse) => {
       doc.getElementsByClassName('criptext_quote')[0] ||
       doc.getElementsByTagName('blockquote')[0] ||
       doc.getElementsByClassName('gmail_quote')[0];
-    const i = document.createElement('i');
-    i.className = 'icon-dots';
-    const div = document.createElement('div');
-    div.className = `cptx-div-collapse ${
-      isCollapse ? 'cptx-div-collapsed' : 'cptx-div-expanded'
-    }`;
-    div.appendChild(i);
-    div.setAttribute('id', `cptx-div-collapse-${key}`);
-    blockquote.parentElement.insertBefore(div, blockquote);
-    blockquote.style.display = isCollapse ? 'none' : 'block';
-    blockquote.setAttribute('id', `blockquote-${key}`);
-    return doc.documentElement.innerHTML;
+    if (blockquote) {
+      const i = document.createElement('i');
+      i.className = 'icon-dots';
+      const div = document.createElement('div');
+      div.className = `cptx-div-collapse ${
+        isCollapse ? 'cptx-div-collapsed' : 'cptx-div-expanded'
+      }`;
+      div.appendChild(i);
+      div.setAttribute('id', `cptx-div-collapse-${key}`);
+
+      blockquote.parentElement.insertBefore(div, blockquote);
+      blockquote.style.display = isCollapse ? 'none' : 'block';
+      blockquote.setAttribute('id', `blockquote-${key}`);
+      return doc.documentElement.innerHTML;
+    }
   }
   return htmlString;
 };
