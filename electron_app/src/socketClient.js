@@ -1,7 +1,6 @@
 const { client: WebSocketClient } = require('websocket');
-let client, reconnect, messageListener, socketConnection;
 const { SOCKET_URL } = require('./utils/const');
-
+let client, reconnect, messageListener, socketConnection;
 const NETWORK_STATUS = {
   ONLINE: 'online',
   OFFLINE: 'offline'

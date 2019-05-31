@@ -143,13 +143,13 @@
     "electron-updater": "^3.0.3",
     "electron-window-state": "^4.1.1",
     "getos": "^3.1.1",
-    "knex": "^0.14.2",
+    "knex": "0.15.2",
     "line-by-line": "^0.1.6",
     "moment": "^2.22.2",
     "os-locale": "^3.0.1",
     "rimraf": "^2.6.3",
-    "sqlite3": "^4.0.2",
+    "sqlite3": "^4.0.8",
     "unused-filename": "^2.1.0",
-    "websocket": "^1.0.25"
+    "websocket": "^1.0.28"
   }
 }
