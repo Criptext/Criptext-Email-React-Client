@@ -69,6 +69,10 @@ ipc.answerRenderer('db-delete-session-record', params =>
 
 ipc.answerRenderer('db-get-account', () => dbManager.getAccount());
 
+ipc.answerRenderer('db-get-account-by-params', params =>
+  dbManager.getAccountByParams(params)
+);
+
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
 
 ipc.answerRenderer('db-get-all-feed-items', () => dbManager.getAllFeedItems());

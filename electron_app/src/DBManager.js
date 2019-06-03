@@ -27,6 +27,13 @@ const getAccount = () => {
   return db.table(Table.ACCOUNT).select('*');
 };
 
+const getAccountByParams = params => {
+  let query = db.table(Table.ACCOUNT).select('*');
+  query =
+    typeof params === 'string' ? query.whereRaw(params) : query.where(params);
+  return query;
+};
+
 const updateAccount = async ({
   deviceId,
   jwt,
@@ -476,19 +483,19 @@ const getEmailByKey = key => {
     .where({ key });
 };
 
-const getEmailsByKeys = keys => {
-  return db
-    .select('*')
-    .from(Table.EMAIL)
-    .whereIn('key', keys);
-};
-
 const getEmailByParams = async params => {
   const [email] = await db
     .select('*')
     .from(Table.EMAIL)
     .where(params);
   return email;
+};
+
+const getEmailsByKeys = keys => {
+  return db
+    .select('*')
+    .from(Table.EMAIL)
+    .whereIn('key', keys);
 };
 
 const getEmailsByLabelIds = labelIds => {
@@ -1267,15 +1274,16 @@ module.exports = {
   deletePreKeyPair,
   deleteSessionRecord,
   getAccount,
+  getAccountByParams,
   getAllContacts,
   getAllFeedItems,
   getAllLabels,
   getContactByEmails,
   getContactByIds,
   getContactsByEmailId,
-  getEmailsByIds,
-  getEmailByParams,
   getEmailByKey,
+  getEmailByParams,
+  getEmailsByIds,
   getEmailsByKeys,
   getEmailsByLabelIds,
   getEmailsByThreadId,

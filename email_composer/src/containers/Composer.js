@@ -611,7 +611,6 @@ class ComposerWrapper extends Component {
         return fileParams;
       });
     };
-
     const data = {
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,

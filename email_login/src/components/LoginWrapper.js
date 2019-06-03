@@ -18,7 +18,8 @@ import {
   linkBegin,
   linkStatus,
   openCreateKeysLoadingWindow,
-  throwError
+  throwError,
+  getAccountByParams
 } from '../utils/ipc.js';
 import { validateEmail, validateUsername } from './../validators/validators';
 import { DEVICE_TYPE, appDomain } from '../utils/const';
@@ -28,7 +29,7 @@ import string from './../lang';
 
 import PopupHOC from './PopupHOC';
 import LoginPopup from './LoginPopup';
-import DialogPopup from './DialogPopup';
+import DialogPopup, { DialogTypes } from './DialogPopup';
 
 const { login, signin } = string;
 
@@ -63,6 +64,7 @@ const shouldDisableLogin = state =>
 const LoginWithPasswordPopup = PopupHOC(DialogPopup);
 const ResetPasswordPopup = PopupHOC(LoginPopup);
 const NoRecoverySignUpPopup = PopupHOC(DialogPopup);
+const SignInAnotherAccount = PopupHOC(DialogPopup);
 
 const commitNewUser = validInputData => {
   openCreateKeysLoadingWindow({
@@ -102,14 +104,13 @@ class LoginWrapper extends Component {
     if (!this.state.popupContent) {
       return null;
     }
-
     switch (this.state.mode) {
       case mode.CONTINUE:
         return (
           <LoginWithPasswordPopup
             {...this.state.popupContent}
-            onLeftButtonClick={this.handleStayLinking}
-            onRightButtonClick={this.handleCancelLink}
+            onCancelClick={this.handleStayLinking}
+            onConfirmClick={this.handleCancelLink}
           />
         );
       case mode.LOST_DEVICES:
@@ -146,6 +147,7 @@ class LoginWrapper extends Component {
       case mode.SIGNUP:
         return (
           <SignUpWrapper
+            onToggleSignUp={this.handleToggleSignUp}
             checkAvailableUsername={checkAvailableUsername}
             onFormReady={this.onFormReady}
             onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
@@ -218,8 +220,8 @@ class LoginWrapper extends Component {
         prefix: signin.prefix,
         strong: signin.strong,
         suffix: signin.suffix,
-        leftButtonLabel: signin.leftButtonLabel,
-        rightButtonLabel: signin.rightButtonLabel,
+        cancelButtonLabel: signin.leftButtonLabel,
+        confirmButtonLabel: signin.rightButtonLabel,
         data: validInputData
       }
     });
@@ -233,7 +235,6 @@ class LoginWrapper extends Component {
 
   handleSignUpContinue = () => {
     const inputData = this.state.popupContent.data;
-    console.log(inputData);
     if (!inputData) {
       return;
     }
@@ -414,25 +415,22 @@ class LoginWrapper extends Component {
   };
 
   checkLoggedOutAccounts = async successMode => {
-    const loggedOutAccounts = await getAccountByParams({
-      isLoggedIn: false
+    const loggedOutAccounts = await getAccountByParams({ deviceId: '' });
+    if (!loggedOutAccounts.length) return true;
+
+    this.setState({
+      mode: mode.LOGIN,
+      popupContent: {
+        title: login.loginNewAccount.title,
+        prefix: login.loginNewAccount.prefix,
+        list: this.formLoggedOutAccountsList(loggedOutAccounts),
+        suffix: login.loginNewAccount.suffix,
+        cancelButtonLabel: login.loginNewAccount.cancelButtonLabel,
+        confirmButtonLabel: login.loginNewAccount.confirmButtonLabel,
+        successMode
+      }
     });
-    if (loggedOutAccounts.length) {
-      this.setState({
-        mode: mode.LOGIN,
-        popupContent: {
-          title: login.loginNewAccount.title,
-          prefix: login.loginNewAccount.prefix,
-          list: this.formLoggedOutAccountsList(loggedOutAccounts),
-          suffix: login.loginNewAccount.suffix,
-          cancelButtonLabel: login.loginNewAccount.cancelButtonLabel,
-          confirmButtonLabel: login.loginNewAccount.confirmButtonLabel,
-          successMode
-        }
-      });
-      return false;
-    }
-    return true;
+    return false;
   };
 
   formLoggedOutAccountsList = loggedOutAccounts => {
@@ -562,8 +560,8 @@ class LoginWrapper extends Component {
         prefix: login.usePassword.prefix,
         strong: login.usePassword.strong,
         suffix: login.usePassword.suffix,
-        leftButtonLabel: login.usePassword.leftButtonLabel,
-        rightButtonLabel: login.usePassword.rightButtonLabel
+        cancelButtonLabel: login.usePassword.leftButtonLabel,
+        confirmButtonLabel: login.usePassword.rightButtonLabel
       }
     });
   };

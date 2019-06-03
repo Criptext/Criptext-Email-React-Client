@@ -102,7 +102,6 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
   badgeLabelIdsEvent = new Set();
   labelsEvent = {};
   avatarHasChanged = false;
-
   const rowIds = [];
   const completedTask = events.reduce((count, event) => {
     if (event.cmd === SocketCommand.NEW_EMAIL) {
@@ -318,12 +317,7 @@ const buildSenderRecipientId = ({ senderId, senderDomain, from, external }) => {
     : getRecipientIdFromEmailAddressTag(from);
 };
 
-const handleNewMessageEvent = async ({
-  rowid,
-  params,
-  accountId,
-  optionalToken
-}) => {
+const handleNewMessageEvent = async ({ rowid, params }) => {
   const {
     bcc,
     bccArray,
@@ -714,7 +708,6 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
       threadIds.push(email.threadId);
     }
   }
-
   if (!emailsId.length) return { rowid: null };
   const labelsToRemove = await getLabelsByText(labelsRemoved);
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
@@ -914,32 +907,6 @@ ipcRenderer.on('socket-message', async (ev, message) => {
 ipc.answerMain('get-events', () => {
   sendLoadEventsEvent({});
 });
-
-ipcRenderer.on(
-  'refresh-window-logged-as',
-  (ev, { accountId, recipientId, selectedThreadId }) => {
-    emitter.emit(Event.LOAD_APP, { accountId, recipientId, selectedThreadId });
-  }
-);
-
-export const selectAccountAsActive = async ({ accountId, recipientId }) => {
-  await changeAccountApp({ accountId });
-  const email = recipientId.includes('@')
-    ? recipientId
-    : `${recipientId}@${appDomain}`;
-  showLoggedAsMessage(email);
-  startSocket(myAccount.jwt);
-  enableEventRequests();
-};
-
-export const showLoggedAsMessage = email => {
-  const messageData = {
-    ...Messages.success.loggedAs,
-    description: Messages.success.loggedAs.description + email,
-    type: MessageType.SUCCESS
-  };
-  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
-};
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
   const labelId = shouldUpdateBadge ? LabelType.draft.id : undefined;
@@ -1345,6 +1312,7 @@ export const Event = {
   LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
   LINK_DEVICE_PREPARING_MAILBOX: 'preparing-mailbox',
   LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
+  LOAD_APP: 'load-app',
   LOAD_EVENTS: 'load-events',
   OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',

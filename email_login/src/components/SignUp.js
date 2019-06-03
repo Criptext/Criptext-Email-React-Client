@@ -76,8 +76,9 @@ Form.propTypes = {
   values: PropTypes.object.isRequired,
   items: PropTypes.array.isRequired,
   isShowingPassword: PropTypes.bool.isRequired,
-  onToggleShowPassword: PropTypes.func,
   onChangeField: PropTypes.func,
+  onToggleShowPassword: PropTypes.func,
+  onToggleSignUp: PropTypes.func,
   disabled: PropTypes.bool.isRequired,
   web: PropTypes.bool
 };

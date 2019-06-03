@@ -11,6 +11,7 @@ import {
 } from './../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
+import { PopupTypes } from './LoginPopup';
 import string from './../lang';
 import { appDomain } from '../utils/const';
 
@@ -177,7 +178,7 @@ class LostDevicesWrapper extends Component {
           suffix: messages.suffix,
           dismissButtonLabel: messages.dismissButtonLabel,
           email: customText,
-          type: Type.FORGOT_LINK
+          type: PopupTypes.FORGOT_LINK
         });
       case 400:
         return this.props.setPopupContent({
@@ -185,7 +186,7 @@ class LostDevicesWrapper extends Component {
           dismissButtonLabel: messages.notSetError.dismissButtonLabel,
           message: messages.notSetError.message,
           email: 'support@criptext.com',
-          type: Type.EMAIL_NOT_SET
+          type: PopupTypes.EMAIL_NOT_SET
         });
       default:
         return this.props.setPopupContent({
