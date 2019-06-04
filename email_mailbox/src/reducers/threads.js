@@ -92,9 +92,6 @@ const threads = (state, action) => {
         const fromContactName = thread.fromContactName || '';
         allIds = allIds.add(thread.uniqueId);
         return Map(thread).merge({
-          labels: Set(
-            thread.labels ? thread.labels.split(',').map(Number) : []
-          ),
           allLabels: Set(
             thread.allLabels ? thread.allLabels.split(',').map(Number) : []
           ),

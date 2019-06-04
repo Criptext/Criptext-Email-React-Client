@@ -52,9 +52,8 @@ const defineLabels = (labelIds, labels, labelsToExclude) => {
 const defineLabelsToExcludeByMailbox = currentLabelId => {
   switch (currentLabelId) {
     case LabelType.inbox.id:
-      return [LabelType.sent.id];
     case LabelType.sent.id:
-      return [LabelType.inbox.id];
+      return [LabelType.sent.id, LabelType.inbox.id];
     default:
       return [];
   }
@@ -141,7 +140,7 @@ const mapStateToProps = (state, ownProps) => {
     ? []
     : defineLabelsToExcludeByMailbox(mailboxlId);
   const labels = defineLabels(
-    thread.get('labels'),
+    thread.get('allLabels'),
     state.get('labels'),
     labelsToExclude
   );

@@ -549,219 +549,144 @@ const getEmailsCounterByLabelId = labelId => {
 
 const getEmailsGroupByThreadByParams = (params = {}) => {
   const {
-    date,
-    subject,
-    text,
-    labelId,
-    plain,
-    limit,
-    contactTypes = ['from'],
     contactFilter,
+    contactTypes = ['from'],
+    date,
+    labelId,
+    limit,
+    plain,
     rejectedLabelIds,
     threadIdRejected,
+    subject,
+    text,
     unread
   } = params;
-
-  let queryDb = baseThreadQuery({
-    date,
-    labelId,
-    limit,
-    contactTypes,
-    contactFilter,
-    rejectedLabelIds,
-    threadIdRejected
-  });
-
-  if (plain) {
-    return partThreadQueryByMatchText(queryDb, text);
-  }
-
-  if (subject) {
-    queryDb = queryDb.andWhere('subject', 'like', `%${subject}%`);
-  }
-
-  if (unread !== undefined) {
-    queryDb = queryDb.andWhere('unread', unread);
-  }
-
-  if (labelId && labelId !== -1) {
-    queryDb = queryDb.having('allLabels', 'like', `%${labelId}%`);
-  }
-
-  if (contactFilter) {
-    queryDb = queryDb.havingRaw(buildMatchedContactFilterQuery(contactTypes));
-  }
-  return queryDb;
-};
-
-const buildMatchedContactFilterQuery = contactTypes => {
-  return contactTypes.reduce((queryString, type) => {
-    const tempQuery = `matchedContacts like "%${type}%"`;
-    if (!queryString) {
-      return tempQuery;
-    }
-    return `${queryString} AND ${tempQuery}`;
-  }, '');
-};
-
-const buildParamsOrQuery = (builder, contactTypes) => {
-  let firstIteration = true;
-  contactTypes.forEach(type => {
-    if (firstIteration) {
-      firstIteration = false;
-      builder.on(`${Table.EMAIL_CONTACT}.type`, db.raw('?', [type]));
-    }
-    builder.orOn(`${Table.EMAIL_CONTACT}.type`, db.raw('?', [type]));
-  });
-};
-
-const buildContactMatchQuery = (contactTypes, contactFilter) => {
-  if (!contactFilter) {
-    return `${Table.CONTACT}.id is not null`;
-  }
-  return contactTypes.sort().reduce((queryString, type) => {
-    let tempQuery;
-    const contactFilterValue = contactFilter[type];
-    if (type === 'from') {
-      tempQuery = `(${Table.EMAIL}.fromAddress LIKE "%${contactFilterValue}%")`;
-    } else {
-      const emailContactType = `${Table.EMAIL_CONTACT}.type = "${type}"`;
-      const contactNameLike = `${
-        Table.CONTACT
-      }.name LIKE "%${contactFilterValue}%"`;
-      const contactEmailLike = `${
-        Table.CONTACT
-      }.email LIKE "%${contactFilterValue}%"`;
-      tempQuery = `(${emailContactType} AND (${contactNameLike} OR ${contactEmailLike}))`;
-    }
-    if (!queryString) {
-      return tempQuery;
-    }
-    return `${queryString} OR ${tempQuery}`;
-  }, '');
-};
-
-const defineFromContactName = contactTypes => {
-  if (contactTypes.includes('from')) {
-    return `GROUP_CONCAT(DISTINCT(${
-      Table.EMAIL
-    }.fromAddress)) as fromContactName`;
-  }
-  return `GROUP_CONCAT(DISTINCT(${Table.CONTACT}.email)) as fromContactName`;
-};
-
-const baseThreadQuery = ({
-  date,
-  labelId,
-  limit,
-  contactTypes,
-  contactFilter,
-  rejectedLabelIds,
-  threadIdRejected
-}) => {
-  const {
-    labelsQuery,
-    allLabelsQuery,
-    whereRawQuery,
-    whereRawParams
-  } = getQueryParamsIfOrNotRejectedLabel({ labelId, rejectedLabelIds });
-  const fromContactNameQuery = defineFromContactName(contactTypes);
-
-  let query = db
-    .select(
-      `${Table.EMAIL}.*`,
-      db.raw(`IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId`),
-      db.raw(labelsQuery),
-      db.raw(allLabelsQuery),
-      db.raw(`GROUP_CONCAT(DISTINCT(${Table.EMAIL}.id)) as emailIds`),
-      db.raw(
-        `GROUP_CONCAT(DISTINCT(CASE WHEN ${buildContactMatchQuery(
-          contactTypes,
-          contactFilter
-        )} THEN ${Table.EMAIL_CONTACT}.type ELSE NULL END)) as matchedContacts`
-      ),
-      db.raw(fromContactNameQuery),
-      db.raw(
-        `GROUP_CONCAT(DISTINCT(${Table.CONTACT}.id)) as recipientContactIds`
-      ),
-      db.raw(`GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens`),
-      db.raw(`MAX(${Table.EMAIL}.unread) as unread`),
-      db.raw(`MAX(email.date) as maxDate`)
-    )
-    .from(Table.EMAIL)
-    .leftJoin(
-      Table.EMAIL_LABEL,
-      `${Table.EMAIL}.id`,
-      `${Table.EMAIL_LABEL}.emailId`
-    )
-    .leftJoin(
-      `${Table.FILE} as file`,
-      `${Table.EMAIL}.id`,
-      `${Table.FILE}.emailId`
-    )
-    .leftJoin(Table.EMAIL_CONTACT, builder => {
-      builder
-        .on(`${Table.EMAIL}.id`, `${Table.EMAIL_CONTACT}.emailId`)
-        .andOn(builder2 => {
-          buildParamsOrQuery(builder2, contactTypes);
-        });
-    })
-    .leftJoin(
-      Table.CONTACT,
-      `${Table.EMAIL_CONTACT}.contactId`,
-      `${Table.CONTACT}.id`
-    )
-    .whereRaw(whereRawQuery, whereRawParams);
-  if (threadIdRejected !== undefined) {
-    query = query.whereNot('uniqueId', threadIdRejected);
-  }
-  return query
-    .andWhere(`${Table.EMAIL}.date`, '<', date || 'now')
-    .groupBy('uniqueId')
-    .orderBy(`${Table.EMAIL}.date`, 'DESC')
-    .limit(limit || 20);
-};
-
-const getQueryParamsIfOrNotRejectedLabel = ({ labelId, rejectedLabelIds }) => {
   const excludedLabels = [systemLabels.trash.id, systemLabels.spam.id];
   const isRejectedLabel = excludedLabels.includes(labelId);
-  return isRejectedLabel
-    ? {
-        labelsQuery: `GROUP_CONCAT((SELECT GROUP_CONCAT(${
-          Table.EMAIL_LABEL
-        }.labelId) FROM ${Table.EMAIL_LABEL} WHERE ${
-          Table.EMAIL_LABEL
-        }.emailId = ${Table.EMAIL}.id AND ${
-          Table.EMAIL_LABEL
-        }.labelId <> ${labelId} and ${Table.EMAIL_LABEL}.labelId not in (${[
-          rejectedLabelIds
-        ].join(',')}))) as labels`,
-        allLabelsQuery: `GROUP_CONCAT((SELECT GROUP_CONCAT(${
-          Table.EMAIL_LABEL
-        }.labelId) FROM ${Table.EMAIL_LABEL} WHERE ${
-          Table.EMAIL_LABEL
-        }.emailId = ${Table.EMAIL}.id and ${
-          Table.EMAIL_LABEL
-        }.labelId not in (${[rejectedLabelIds].join(',')}))) as allLabels`,
-        whereRawQuery: `${Table.EMAIL_LABEL}.labelId = ?`,
-        whereRawParams: [labelId]
-      }
-    : {
-        labelsQuery: `GROUP_CONCAT(DISTINCT(CASE WHEN ${
-          Table.EMAIL_LABEL
-        }.labelId <> ${labelId || -1} THEN ${
-          Table.EMAIL_LABEL
-        }.labelId ELSE NULL END)) as labels`,
-        allLabelsQuery: `GROUP_CONCAT(DISTINCT(${
-          Table.EMAIL_LABEL
-        }.labelId)) as allLabels`,
-        whereRawQuery: `NOT EXISTS (SELECT * FROM ${Table.EMAIL_LABEL} WHERE ${
+  let rejectedLabelIdsString;
+  if (rejectedLabelIds) {
+    rejectedLabelIdsString = rejectedLabelIds.reduce(
+      (result, labelId, index) => {
+        if (index > 0) {
+          return `${result}, ${labelId}`;
+        }
+        return `${labelId}`;
+      },
+      ''
+    );
+  }
+
+  let labelSelectQuery;
+  let labelWhereQuery;
+  if (isRejectedLabel) {
+    labelSelectQuery = `GROUP_CONCAT((SELECT GROUP_CONCAT(${
+      Table.EMAIL_LABEL
+    }.labelId)
+  FROM ${Table.EMAIL_LABEL} WHERE ${Table.EMAIL_LABEL}.emailId = ${
+      Table.EMAIL
+    }.id
+  AND ${
+    Table.EMAIL_LABEL
+  }.labelId NOT IN (${rejectedLabelIdsString}))) as allLabels,`;
+    labelWhereQuery = `WHERE ${Table.EMAIL_LABEL}.labelId = ${labelId}`;
+  } else {
+    labelSelectQuery = `GROUP_CONCAT(DISTINCT(${
+      Table.EMAIL_LABEL
+    }.labelId)) as allLabels,`;
+    labelWhereQuery = `WHERE NOT EXISTS (SELECT * FROM ${Table.EMAIL_LABEL} 
+    WHERE ${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId 
+    AND ${Table.EMAIL_LABEL}.labelId IN (${rejectedLabelIdsString}))`;
+  }
+
+  let contactQuery;
+  if (contactFilter) {
+    contactQuery = contactTypes.reduce((query, type) => {
+      const contactFilterValue = contactFilter[type];
+      let tmpQuery;
+      if (type === 'from') {
+        tmpQuery = `(${
           Table.EMAIL
-        }.id = ${Table.EMAIL_LABEL}.emailId AND ${
-          Table.EMAIL_LABEL
-        }.labelId in (??))`,
-        whereRawParams: [rejectedLabelIds]
-      };
+        }.fromAddress LIKE "%${contactFilterValue}%")`;
+      } else {
+        tmpQuery = `(${Table.EMAIL_CONTACT}.type = "${type}"
+      AND ${Table.CONTACT}.name LIKE "%${contactFilterValue}%"
+      OR ${Table.CONTACT}.email LIKE "%${contactFilterValue}%")`;
+      }
+      if (!query) return tmpQuery;
+      return `${query} OR ${tmpQuery}`;
+    }, '');
+  } else {
+    contactQuery = `${Table.CONTACT}.id IS NOT NULL`;
+  }
+
+  let contactNameQuery;
+  if (contactTypes.includes('from')) {
+    contactNameQuery = `GROUP_CONCAT(DISTINCT(${
+      Table.EMAIL
+    }.fromAddress)) as fromContactName,`;
+  } else {
+    contactNameQuery = `GROUP_CONCAT(DISTINCT(${
+      Table.CONTACT
+    }.email)) as fromContactName,`;
+  }
+
+  const emailContactOrQuery = contactTypes[1]
+    ? `OR ${Table.EMAIL_CONTACT}.type = "${contactTypes[1]}"`
+    : null;
+
+  const textQuery = plain
+    ? `AND (preview LIKE "%${text}%" OR subject LIKE "%${text}%" OR fromAddress LIKE "%${text}%")`
+    : '';
+
+  let matchContactQuery;
+  if (contactFilter) {
+    if (contactFilter.from)
+      matchContactQuery = `HAVING matchedContacts LIKE '%from%'`;
+    if (contactFilter.to) {
+      matchContactQuery = `${
+        matchContactQuery ? 'AND' : 'HAVING'
+      } matchedContacts LIKE '%to%'`;
+    }
+  }
+
+  const query = `SELECT ${Table.EMAIL}.*,
+IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId,
+${labelSelectQuery}
+GROUP_CONCAT(DISTINCT(${Table.EMAIL}.id)) as emailIds,
+GROUP_CONCAT(DISTINCT(CASE WHEN ${contactQuery} THEN ${
+    Table.EMAIL_CONTACT
+  }.type ELSE NULL END)) as matchedContacts,
+${contactNameQuery}
+GROUP_CONCAT(DISTINCT(${Table.CONTACT}.id)) as recipientContactIds,
+GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens,
+MAX(${Table.EMAIL}.unread) as unread,
+MAX(email.date) as maxDate
+from ${Table.EMAIL}
+LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
+    Table.EMAIL_LABEL
+  }.emailId
+LEFT JOIN ${Table.FILE} ON ${Table.EMAIL}.id = ${Table.FILE}.emailId
+LEFT JOIN ${Table.EMAIL_CONTACT} ON ${Table.EMAIL}.id = ${
+    Table.EMAIL_CONTACT
+  }.emailId AND (${Table.EMAIL_CONTACT}.type = "${
+    contactTypes[0]
+  }" ${emailContactOrQuery || ''})
+LEFT JOIN ${Table.CONTACT} ON ${Table.EMAIL_CONTACT}.contactId = ${
+    Table.CONTACT
+  }.id
+${labelWhereQuery}
+${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
+AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
+${textQuery}
+${subject ? `AND subject LIKE %${subject}%` : ''}
+${unread !== undefined ? `AND unread = ${unread}` : ''}
+GROUP BY uniqueId
+${labelId > 0 ? `HAVING allLabels LIKE "%${labelId}%"` : ''}
+${matchContactQuery || ''}
+ORDER BY ${Table.EMAIL}.date DESC
+LIMIT ${limit || 22}`;
+
+  return db.raw(query);
 };
 
 const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
@@ -814,14 +739,6 @@ const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
       }));
     });
 };
-
-const partThreadQueryByMatchText = (query, text) =>
-  query.andWhere(function() {
-    this.where('preview', 'like', `%${text}%`)
-      .orWhere('content', 'like', `%${text}%`)
-      .orWhere('subject', 'like', `%${text}%`)
-      .orWhere('fromAddress', 'like', `%${text}%`);
-  });
 
 const getEmailsUnredByLabelId = params => {
   const { labelId, rejectedLabelIds } = params;
@@ -1209,6 +1126,7 @@ module.exports = {
   deleteEmailContactByEmailId,
   deleteEmailLabel,
   deleteEmailLabelsByEmailId,
+  deleteLabelById,
   deletePendingEventsByIds,
   deleteFeedItemById,
   deletePreKeyPair,
@@ -1244,7 +1162,6 @@ module.exports = {
   getSignedPreKey,
   getTrashExpiredEmails,
   getFilesByTokens,
-  deleteLabelById,
   updateAccount,
   updateContactByEmail,
   updateEmail,
