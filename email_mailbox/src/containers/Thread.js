@@ -42,10 +42,10 @@ const makeMapStateToProps = () => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onLoadEmails: threadId => {
-      return dispatch(loadEmails(threadId));
+      dispatch(loadEmails(threadId));
     },
     onRemoveLabelIdThread: (threadId, labelId) => {
-      return dispatch(
+      dispatch(
         removeLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
       );
     },
