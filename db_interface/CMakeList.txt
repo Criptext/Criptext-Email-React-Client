@@ -1,0 +1,17 @@
+#!bin/bash
+
+apt-get update
+apt-get install gcc -y
+apt-get install cmake -y
+apt-get install git -y
+apt-get install pkg-config -y
+
+mkdir deps && pushd deps
+
+git clone https://github.com/SRombauts/SQLiteCpp
+pushd SQLiteCpp
+cmake -DSQLITECPP_BUILD_EXAMPLES=ON -DSQLITECPP_BUILD_TESTS=ON ..
+cmake --build .
+popd
+
+popd && rm -rf deps
