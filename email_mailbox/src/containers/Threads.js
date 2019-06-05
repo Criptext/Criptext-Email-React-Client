@@ -95,8 +95,8 @@ const defineParamsToLoadThread = (
     text = searchParams.text;
     subject = searchParams.subject;
     plain = !!searchParams.text;
-    if (!!searchParams.from) contactFilter = { from: searchParams.from };
-    if (!!searchParams.to) contactFilter = { to: searchParams.to };
+    if (searchParams.from) contactFilter = { from: searchParams.from };
+    if (searchParams.to) contactFilter = { to: searchParams.to };
   }
 
   const params =
