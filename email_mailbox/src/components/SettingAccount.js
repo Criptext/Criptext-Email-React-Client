@@ -176,7 +176,7 @@ const EncryptToExternalsBlock = props => (
       ) : (
         <Switch
           theme="two"
-          name="setEncruptToExternalsSwitch"
+          name="setEncryptToExternalsSwitch"
           onChange={props.onChangeSwitchEncryptToExternals}
           checked={props.encryptToExternalsEnabled}
           disabled={props.encryptToExternalsisLoading}
