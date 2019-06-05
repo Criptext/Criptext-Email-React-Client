@@ -147,7 +147,6 @@ class LoginWrapper extends Component {
       case mode.SIGNUP:
         return (
           <SignUpWrapper
-            onToggleSignUp={this.handleToggleSignUp}
             checkAvailableUsername={checkAvailableUsername}
             onFormReady={this.onFormReady}
             onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}

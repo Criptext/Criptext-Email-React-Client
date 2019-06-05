@@ -479,7 +479,11 @@ class ComposerWrapper extends Component {
       this.state.toEmails.length +
       this.state.ccEmails.length +
       this.state.bccEmails.length;
-    if (hasNonCriptextRecipients && !isVerified && myAccount.encryptToExternals) {
+    if (
+      hasNonCriptextRecipients &&
+      !isVerified &&
+      myAccount.encryptToExternals
+    ) {
       this.setState({ displayNonCriptextPopup: true });
     } else if (recipientsAmount >= MAX_RECIPIENTS_AMOUNT) {
       this.setState({ status: Status.DISABLED }, () => {

@@ -15,12 +15,15 @@ class ProfileShortCutWrapper extends Component {
 
   render() {
     const letters = getTwoCapitalLetters(myAccount.name);
+    const emailAddress = myAccount.recipientId.includes('@')
+      ? myAccount.recipientId
+      : `${myAccount.recipientId}@${appDomain}`;
     return (
       <ProfileShortCut
         avatarUrl={this.props.avatarUrl}
         letters={letters}
         name={myAccount.name}
-        emailAddress={`${myAccount.recipientId}@${appDomain}`}
+        emailAddress={emailAddress}
         isHiddenMenuProfilePreview={this.state.isHiddenMenuProfilePreview}
         onClickSettings={this.handleClickSettings}
         onToggleMenuProfilePreview={this.handleToggleMenuProfilePreview}
