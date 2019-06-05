@@ -54,6 +54,8 @@ const defineLabelsToExcludeByMailbox = currentLabelId => {
     case LabelType.inbox.id:
     case LabelType.sent.id:
       return [LabelType.sent.id, LabelType.inbox.id];
+    case LabelType.spam.id:
+      return [currentLabelId];
     default:
       return [];
   }
