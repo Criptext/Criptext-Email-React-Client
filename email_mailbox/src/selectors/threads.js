@@ -71,7 +71,7 @@ const defineLabelIdsFromThreads = (threads, uniqueIds) => {
   return threads
     .filter(thread => uniqueIds.includes(thread.get('uniqueId')))
     .reduce((result, thread) => {
-      const labels = thread.get('labels').toArray();
+      const labels = thread.get('allLabels').toArray();
       return [...result, ...labels];
     }, []);
 };

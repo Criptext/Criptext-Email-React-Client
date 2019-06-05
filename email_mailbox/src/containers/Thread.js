@@ -22,14 +22,7 @@ const makeMapStateToProps = () => {
       emailIds: thread ? thread.emailIds : []
     });
     const indexFirstUnread = emails.findIndex(email => email.unread);
-    const labelIds =
-      ownProps.mailboxSelected.id === LabelType.inbox.id
-        ? thread
-          ? thread.allLabels
-          : []
-        : thread
-          ? thread.labels
-          : [];
+    const labelIds = thread ? thread.allLabels : [];
     const labels = thread ? getLabels(state, { labelIds }) : [];
     const starred = thread
       ? thread.allLabels.includes(LabelType.starred.id)
@@ -49,10 +42,10 @@ const makeMapStateToProps = () => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onLoadEmails: threadId => {
-      return dispatch(loadEmails(threadId));
+      dispatch(loadEmails(threadId));
     },
     onRemoveLabelIdThread: (threadId, labelId) => {
-      return dispatch(
+      dispatch(
         removeLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
       );
     },

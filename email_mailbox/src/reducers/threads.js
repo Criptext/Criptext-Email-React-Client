@@ -92,9 +92,6 @@ const threads = (state, action) => {
         const fromContactName = thread.fromContactName || '';
         allIds = allIds.add(thread.uniqueId);
         return Map(thread).merge({
-          labels: Set(
-            thread.labels ? thread.labels.split(',').map(Number) : []
-          ),
           allLabels: Set(
             thread.allLabels ? thread.allLabels.split(',').map(Number) : []
           ),
@@ -265,26 +262,22 @@ const thread = (state, action) => {
     case Thread.ADD_LABELID_THREAD: {
       const { labelIdToAdd } = action;
       const allLabels = state.get('allLabels').add(labelIdToAdd);
-      const labels = state.get('labels').add(labelIdToAdd);
-      return state.merge({ allLabels, labels });
+      return state.merge({ allLabels });
     }
     case Thread.ADD_LABELID_THREADS: {
       const { labelIdToAdd } = action;
       const allLabels = state.get('allLabels').add(labelIdToAdd);
-      const labels = state.get('labels').add(labelIdToAdd);
-      return state.merge({ allLabels, labels });
+      return state.merge({ allLabels });
     }
     case Thread.REMOVE_LABELID_THREAD: {
       const { labelIdToRemove } = action;
       const allLabels = state.get('allLabels').delete(labelIdToRemove);
-      const labels = state.get('labels').delete(labelIdToRemove);
-      return state.merge({ allLabels, labels });
+      return state.merge({ allLabels });
     }
     case Thread.REMOVE_LABELID_THREADS: {
       const { labelIdToRemove } = action;
       const allLabels = state.get('allLabels').delete(labelIdToRemove);
-      const labels = state.get('labels').delete(labelIdToRemove);
-      return state.merge({ allLabels, labels });
+      return state.merge({ allLabels });
     }
     case Thread.UPDATE_EMAILIDS_THREAD: {
       const { emailIdToAdd, emailIdsToRemove, emailIds } = action;

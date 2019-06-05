@@ -35,10 +35,6 @@ Immutable.Map {
         ],
         "s3Key": "6Za2dcMlE0OSSc9",
         "key": "6Za2dcMlE0OSSc9",
-        "labels": Immutable.Set [
-          2,
-          3,
-        ],
       },
       Immutable.Map {
         "allLabels": Immutable.Set [
@@ -68,7 +64,6 @@ Immutable.Map {
         ],
         "s3Key": "cuW6ElyoqsR7MMw",
         "key": "cuW6ElyoqsR7MMw",
-        "labels": Immutable.Set [],
       },
     ],
     "allIds": Immutable.Set [

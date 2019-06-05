@@ -89,15 +89,16 @@ const defineParamsToLoadThread = (
     searchParams ? searchParams.to : null
   );
   const rejectedLabelIds = defineRejectedLabels(labelId);
-  const contactFilter = searchParams
-    ? { from: searchParams.from, to: searchParams.to }
-    : undefined;
-  let plain, text, subject;
+
+  let plain, text, subject, contactFilter;
   if (searchParams) {
     text = searchParams.text;
     subject = searchParams.subject;
     plain = !!searchParams.text;
+    if (searchParams.from) contactFilter = { from: searchParams.from };
+    if (searchParams.to) contactFilter = { to: searchParams.to };
   }
+
   const params =
     mailbox.text === 'Search'
       ? {
