@@ -137,7 +137,7 @@
     "@criptext/electron-push-receiver": "^2.1.2",
     "@criptext/news-api-client": "^1.0.1",
     "dotenv": "^6.2.0",
-    "electron": "4.2.2",
+    "electron": "3.1.10",
     "electron-context-menu": "^0.10.1",
     "electron-dl": "^1.12.0",
     "electron-updater": "^3.0.3",
