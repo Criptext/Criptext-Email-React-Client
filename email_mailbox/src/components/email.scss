@@ -23,6 +23,7 @@
     }
   
     .email-preview-content{
+      background-color: transparent;
       flex-grow: 1;
       font-size: 14px;
       font-weight: 100;
@@ -54,6 +55,7 @@
     }
   
     > div{
+      background-color: transparent;
       margin: 5px 17px 0px 17px;
       width: calc(100% - 32px);
     }
@@ -62,12 +64,14 @@
       .email-info-content{
         .email-info-content-to{
           align-items: center;
+          background-color: transparent;
           display: flex;
           flex-direction: row;
           position: relative;
           width: calc(100% - 69px);
   
           >span{
+            background-color: transparent;
             font-size: 14px;
             font-weight: 100;
             line-height: 14px;
@@ -77,11 +81,13 @@
           }
   
           .email-info-content-to-more{
+            background-color: transparent;
             display: flex;
             margin-left: 5px;
             position: relative;
             
             >span{
+              background-color: transparent;
               color: #0091ff;
               cursor: pointer;
               font-size: 14px;
@@ -91,13 +97,19 @@
         }
   
         .email-info-content-actions{
+          background-color: transparent;
           margin-right: 10px;
           
           >div{
             align-items: center;
+            background-color: transparent;
             display: flex;
             position: relative;
   
+            i{
+              background-color: transparent;
+            }
+
             >i{
               cursor: pointer;
               font-size: 21px;
@@ -183,6 +195,7 @@
   }
 
   > hr{
+    background-color: transparent;
     border: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     margin: 0;
@@ -205,6 +218,7 @@
       width: 36px;
     
       span{
+        background-color: transparent;
         color: white;
         font-size: 15px;
         font-weight: 200;
@@ -213,12 +227,14 @@
     }
 
     .email-info-content{
+      background-color: transparent;
       display: flex;
       flex-direction: column;
       position: relative;
       width: calc(100% - 46px);
 
       .email-info-content-line{
+        background-color: transparent;
         align-items: center;
         display: flex;
         flex-direction: row;
@@ -229,19 +245,23 @@
         }
 
         .email-info-content-from{
+          background-color: transparent;
           line-height: initial;
 
           span{
+            background-color: transparent;
             font-size: 15px;
             font-weight: 600;
           }
         }
 
         .email-info-content-detail{
+          background-color: transparent;
           display: flex;
           margin-right: 13px;
 
           .email-info-content-detail-date{
+            background-color: transparent;
             color: black;
             font-size: 13px;
             font-weight: 300;
@@ -291,6 +311,7 @@
 
   > div{
     align-items: center;
+    background-color: transparent;
     cursor: pointer;
     display: flex;
     flex-grow: 1;

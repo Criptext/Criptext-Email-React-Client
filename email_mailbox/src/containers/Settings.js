@@ -29,6 +29,7 @@ import {
   sendResetPasswordSendLinkSuccessMessage,
   sendResetPasswordSendLinkErrorMessage
 } from '../utils/electronEventInterface';
+import string from '../lang';
 
 const mapStateToProps = state => {
   const systemLabels = getSystemLabelToEdit(state);
@@ -48,9 +49,9 @@ const formatDevicesData = devices => {
         deviceId: device.deviceId,
         lastConnection: {
           place: null,
-          time: device.lastActivity
+          time: device.lastActivity.date
             ? defineLastDeviceActivity(device.lastActivity.date)
-            : null
+            : string.settings.over_time
         },
         isCurrentDevice: device.deviceId === myAccount.deviceId
       };

@@ -2,9 +2,11 @@ import FileManager from 'criptext-files-sdk';
 import CryptoJS from 'crypto-js';
 import base64js from 'base64-js';
 import { myAccount } from './electronInterface';
-import { openFileExplorer } from './ipc';
+import { openFileExplorer, checkExpiredSession } from './ipc';
 
 const MAX_REQUESTS = 5;
+const EXPIRED_SESSION_STATUS = 401;
+const INITIAL_REQUEST_EMPTY_STATUS = 499;
 
 export const fileManager = new FileManager({
   auth: 'Bearer',
@@ -38,8 +40,19 @@ export const setDownloadHandler = (token, filename) => {
     openFileExplorer(filename);
     return;
   }
-  fileManager.downloadFile(token, err => {
-    return err;
+  fileManager.downloadFile(token, async error => {
+    const { status } = error;
+    if (status === EXPIRED_SESSION_STATUS) {
+      const expiredResponse = await checkExpiredSession({
+        response: { status },
+        initialRequest: setDownloadHandler,
+        requestParams: token
+      });
+      if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
+        return setDownloadHandler(token, filename);
+      }
+    }
+    return error;
   });
 };
 

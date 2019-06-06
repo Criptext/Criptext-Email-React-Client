@@ -4,8 +4,7 @@ import { getOsAndArch } from './ipc';
 import { myAccount } from './electronInterface';
 import { version as appVersion } from './../../package.json';
 
-const token = myAccount.jwt;
-const API_CLIENT_VERSION = '6.0.0';
+const API_CLIENT_VERSION = '8.0.0';
 const apiBaseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_DEV_API_URL
@@ -29,12 +28,13 @@ const getDetails = async () => {
 };
 getDetails();
 
-const formDefaultRequestHeaders = () => {
+const formDefaultRequestHeaders = optionalToken => {
+  const token = optionalToken || myAccount.jwt;
   return {
     os: osInfo,
     'app-version': appVersion,
     'criptext-api-version': API_CLIENT_VERSION,
-    Authorization: 'Bearer ' + token
+    Authorization: `Bearer ${token}`
   };
 };
 
@@ -42,9 +42,10 @@ export const apiCriptextRequest = async ({
   endpoint,
   method,
   params,
-  querystring
+  querystring,
+  optionalToken
 }) => {
-  const defaultHeaders = formDefaultRequestHeaders(method);
+  const defaultHeaders = formDefaultRequestHeaders(optionalToken);
   switch (method) {
     case 'GET': {
       const requestUrl = `${apiBaseUrl}${endpoint}${querystring || ''}`;

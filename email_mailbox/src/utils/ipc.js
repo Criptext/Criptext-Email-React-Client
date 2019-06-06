@@ -326,6 +326,10 @@ export const getEmailByKey = async key => {
   return await callMain('db-get-email-by-key', key);
 };
 
+export const getEmailByParams = async params => {
+  return await callMain('db-get-email-by-params', params);
+};
+
 export const getEmailLabelsByEmailId = async emailId => {
   return await callMain('db-get-email-labels-by-emailid', emailId);
 };

@@ -16,7 +16,8 @@ import {
   saveDraftChangesComposerWindow,
   saveEmailBody,
   throwError,
-  updateEmail
+  updateEmail,
+  checkExpiredSession
 } from './../utils/ipc';
 import {
   areEmptyAllArrays,
@@ -56,6 +57,8 @@ import { convertToHumanSize } from './../utils/StringUtils';
 const MAX_RECIPIENTS_AMOUNT = 300;
 const MAX_ATTACMENTS_TOTAL_SIZE = 25 * 1000 * 1000;
 const TOO_BIG_FILE_STATUS = 413;
+const EXPIRED_SESSION_STATUS = 401;
+const INITIAL_REQUEST_EMPTY_STATUS = 499;
 const PENDING_ATTACHMENTS_MODES = [FILE_MODES.UPLOADING, FILE_MODES.FAILED];
 
 class ComposerWrapper extends Component {
@@ -63,7 +66,8 @@ class ComposerWrapper extends Component {
     super(props);
     this.emailToEdit = getEmailToEdit();
     this.isFocusEditorInput = this.emailToEdit
-      ? this.emailToEdit.type === 'reply'
+      ? this.emailToEdit.type === 'reply' ||
+        this.emailToEdit.type === 'reply-all'
         ? true
         : false
       : false;
@@ -325,7 +329,7 @@ class ComposerWrapper extends Component {
     }
   };
 
-  handleUploadFileErrorStatus = (error, file) => {
+  handleUploadFileErrorStatus = async (error, file) => {
     const { status } = error;
     switch (status) {
       case TOO_BIG_FILE_STATUS: {
@@ -343,6 +347,18 @@ class ComposerWrapper extends Component {
           }`
         });
         return;
+      }
+      // To check
+      case EXPIRED_SESSION_STATUS: {
+        const expiredResponse = await checkExpiredSession({
+          response: { status },
+          initialRequest: fileManager.uploadFile,
+          requestParams: file
+        });
+        if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
+          return fileManager.uploadFile(file, CHUNK_SIZE);
+        }
+        break;
       }
       default:
         return throwError(string.errors.uploadFailed);
@@ -513,7 +529,10 @@ class ComposerWrapper extends Component {
       const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
       const params = {
         subject: emailData.email.subject,
-        threadId: emailData.email.threadId,
+        threadId:
+          emailData.email.threadId === temporalThreadId
+            ? undefined
+            : emailData.email.threadId,
         recipients,
         externalRecipients,
         body: emailData.body,
@@ -523,9 +542,8 @@ class ComposerWrapper extends Component {
         externalEmailPassword
       };
       const res = await encryptPostEmail(params);
-
       const { metadataKey, date, messageId } = res.body;
-      const threadId = this.state.threadId || res.body.threadId;
+      const threadId = res.body.threadId || this.state.threadId;
       key = metadataKey;
       const emailParams = {
         id: emailId,

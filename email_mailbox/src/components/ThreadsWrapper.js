@@ -25,6 +25,7 @@ class ThreadsWrapper extends Component {
       (nextProps.threadItemsChecked.size === 0 &&
         this.props.threadItemsChecked.size > 0)
     ) {
+      this.setState({ lastMinDate: undefined });
       this.props.onLoadThreads(
         nextProps.mailboxSelected,
         true,
@@ -118,7 +119,6 @@ class ThreadsWrapper extends Component {
     const height = e.target.clientHeight;
     const scrollHeight = e.target.scrollHeight;
     const lastThread = this.props.threads.last();
-
     if (scrollTop + height > scrollHeight - SCROLL_BOTTOM_LIMIT && lastThread) {
       const date = lastThread.get('maxDate');
       const threadIdRejected = lastThread.get('threadId');

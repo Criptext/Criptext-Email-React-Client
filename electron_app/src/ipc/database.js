@@ -89,6 +89,10 @@ ipc.answerRenderer('db-get-contact-by-ids', ids =>
 
 ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));
 
+ipc.answerRenderer('db-get-email-by-params', params =>
+  dbManager.getEmailByParams(params)
+);
+
 ipc.answerRenderer('db-get-emails-by-ids', emailIds =>
   dbManager.getEmailsByIds(emailIds)
 );

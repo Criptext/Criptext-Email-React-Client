@@ -18,6 +18,7 @@ import {
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   getEmailByKey,
+  getEmailByParams,
   getEmailLabelsByEmailId,
   getEmailsByKeys,
   getEmailsByThreadId,
@@ -316,6 +317,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     fileKeys,
     files,
     from,
+    inReplyTo,
     replyTo,
     labels,
     messageType,
@@ -346,7 +348,9 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     : undefined;
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
-  const isFromMe = recipientId === myAccount.recipientId;
+  const SpamLabelId = LabelType.spam.id;
+  const isFromMe =
+    myAccount.recipientId === getRecipientIdFromEmailAddressTag(from);
   const recipients = getRecipientsFromData({
     to: to || toArray,
     cc: cc || ccArray,
@@ -355,7 +359,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   });
   const isToMe = checkEmailIsTo(recipients);
   let notificationPreview = '';
-  let labelIds = [];
+  const labelIds = [];
   if (!prevEmail) {
     let body = '',
       headers;
@@ -404,6 +408,16 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       }
     }
     const unread = isFromMe && !isToMe ? false : true;
+    let emailThreadId = threadId;
+    if (inReplyTo) {
+      const emailWithMessageId = await getEmailByParams({
+        messageId: inReplyTo
+      });
+      if (emailWithMessageId) {
+        emailThreadId = emailWithMessageId.threadId;
+      }
+    }
+
     const data = {
       body,
       date,
@@ -412,7 +426,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       metadataKey,
       deviceId,
       subject,
-      threadId,
+      threadId: emailThreadId,
       unread,
       messageId,
       replyTo,
@@ -430,12 +444,16 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
           })
         : null;
 
-    labelIds = isSpam ? [LabelType.spam.id] : [];
     if (isFromMe) {
       labelIds.push(SentLabelId);
-    }
-    if (isToMe || (!isFromMe && !isToMe)) {
+      if (isToMe) {
+        labelIds.push(InboxLabelId);
+      }
+    } else {
       labelIds.push(InboxLabelId);
+    }
+    if (isSpam) {
+      labelIds.push(SpamLabelId);
     }
     const emailData = {
       email,
@@ -450,15 +468,20 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
     const prevLabels = prevEmailLabels.map(item => item.labelId);
 
-    const hasInboxLabelId = prevLabels.includes(InboxLabelId);
-    if (isToMe && !hasInboxLabelId) {
-      labelIds.push(InboxLabelId);
-    }
-
     const hasSentLabelId = prevLabels.includes(SentLabelId);
     if (isFromMe && !hasSentLabelId) {
       labelIds.push(SentLabelId);
+
+      const hasInboxLabelId = prevLabels.includes(InboxLabelId);
+      if (isToMe && !hasInboxLabelId) {
+        labelIds.push(InboxLabelId);
+      }
     }
+    const hasSpamLabelId = prevLabels.includes(SpamLabelId);
+    if (isSpam && !hasSpamLabelId) {
+      labelIds.push(SpamLabelId);
+    }
+
     if (labelIds.length) {
       const emailLabel = formEmailLabel({
         emailId: prevEmail.id,
@@ -477,10 +500,10 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       threadId
     });
   }
-  const labelIdsFiltered = isSpam ? [LabelType.spam.id] : labelIds;
+  const mailboxIdsToUpdate = isSpam ? [LabelType.spam.id] : labelIds;
   return {
     rowid,
-    labelIds: labelIdsFiltered,
+    labelIds: mailboxIdsToUpdate,
     threadIds: threadId ? [threadId] : null
   };
 };
@@ -843,7 +866,7 @@ const handleLowPrekeysAvailable = async ({ rowid }) => {
 };
 
 const setEventAsHandled = async eventIds => {
-  return await fetchAcknowledgeEvents(eventIds);
+  return await fetchAcknowledgeEvents({ eventIds });
 };
 
 /*  Window events: listener

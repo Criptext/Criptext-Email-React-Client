@@ -54,7 +54,7 @@ class Thread extends Component {
           mailbox={this.props.mailboxSelected}
           onClickSection={this.props.onClickSection}
         />
-        <div className="thread-content">
+        <div className="cptx-thread-content">
           <div className="thread-info">
             <div className="thread-info-title">
               <h1>{this.props.thread ? this.props.thread.subject : ''}</h1>
@@ -79,7 +79,7 @@ class Thread extends Component {
               />
             </div>
           </div>
-          <div className="thread-emails">{this.renderEmails()}</div>
+          <div className="cptx-thread-emails">{this.renderEmails()}</div>
         </div>
       </div>
     );
