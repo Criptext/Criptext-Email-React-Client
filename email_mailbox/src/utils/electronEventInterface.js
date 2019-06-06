@@ -500,9 +500,10 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       threadId
     });
   }
+  const mailboxIdsToUpdate = isSpam ? [LabelType.spam.id] : labelIds;
   return {
     rowid,
-    labelIds,
+    labelIds: mailboxIdsToUpdate,
     threadIds: threadId ? [threadId] : null
   };
 };

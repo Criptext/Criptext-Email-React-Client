@@ -327,8 +327,7 @@ export const getEmailByKey = async key => {
 };
 
 export const getEmailByParams = async params => {
-  await checkCurrentAccount();
-  return await callMain('db-get-email-by-params', { ...params, accountId });
+  return await callMain('db-get-email-by-params', params);
 };
 
 export const getEmailLabelsByEmailId = async emailId => {

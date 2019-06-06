@@ -24,7 +24,6 @@ class EditorWrapper extends Component {
           ['removeformat']
         ]}
         data={this.props.htmlBody}
-        onChange={this.onChangeHtmlBody}
         onChange={e => this.onChangeHtmlBody(e)}
         placeholder={string.editor.placeholder}
         removeformatPasted={false}

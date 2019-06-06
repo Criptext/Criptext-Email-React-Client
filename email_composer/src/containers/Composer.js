@@ -329,7 +329,7 @@ class ComposerWrapper extends Component {
     }
   };
 
-  handleUploadFileErrorStatus = (error, file) => {
+  handleUploadFileErrorStatus = async (error, file) => {
     const { status } = error;
     switch (status) {
       case TOO_BIG_FILE_STATUS: {
@@ -358,6 +358,7 @@ class ComposerWrapper extends Component {
         if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
           return fileManager.uploadFile(file, CHUNK_SIZE);
         }
+        break;
       }
       default:
         return throwError(string.errors.uploadFailed);
