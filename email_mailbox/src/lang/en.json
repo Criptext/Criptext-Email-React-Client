@@ -420,9 +420,13 @@
     }
   },
   "settings": {
+    "about": "about",
+    "account": "Account",
     "action": "Action",
+    "appearance": "Appearance",
     "cancel": "Cancel",
     "change": "Change",
+    "configurations": "Configurations",
     "contact_support": "Contact Support",
     "check_for_updates": "Check for updates",
     "create_new_label": "Create new label",
@@ -461,6 +465,7 @@
       "tooltip": "You must have at least one additional device to sync"
     },
     "not_verified": "not verified",
+    "notifications": "Notifications",
     "notification_preview": {
       "label": "Show Notification Preview",
       "description": "Preview email content in desktop notification"
@@ -473,6 +478,7 @@
       "description": "Choose a strong password, don’t reuse it"
     },
     "profile": "profile",
+    "privacy": "Privacy",
     "privacy_policy": {
       "label": "Privacy Policy",
       "description": "See our commitment to protecting your privacy"
@@ -509,6 +515,7 @@
     "trusted_devices": "trusted devices",
     "two_factor_authentication": "Two-Factor Authentication",
     "two_factor_not_available_text" : "To enable Two-Factor Authentication you must set and verify a recovery email",
+    "user_labels": "User Labels",
     "verified": "verified"
   },
   "sidebar": {

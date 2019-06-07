@@ -12,14 +12,14 @@ class AttachmentWrapper extends Component {
         file={this.props.file.fileData}
         status={this.defineStatus(mode)}
         percentage={percentage}
-        onRemoveAttachment={this.onRemoveAttachment}
+        onRemove={this.handleRemove}
         onPauseUploadFile={this.onPauseUploadFile}
         onResumeUploadFile={this.onResumeUploadFile}
       />
     );
   }
 
-  onRemoveAttachment = () => {
+  handleRemove = () => {
     const { mode, token } = this.props.file;
     if (mode === FILE_MODES.UPLOADING) {
       return this.cancelUploadingFile();

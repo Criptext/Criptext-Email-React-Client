@@ -302,6 +302,10 @@ export const deleteSessionRecord = async params => {
   return await callMain('db-delete-session-record', params);
 };
 
+export const getAccount = async () => {
+  return await callMain('db-get-account');
+};
+
 export const getAllFeedItems = async () => {
   return await callMain('db-get-all-feed-items');
 };

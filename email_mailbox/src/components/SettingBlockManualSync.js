@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
+import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
 import string from '../lang';
-import './settingsgeneralmanualsync.scss';
+import './settingblockmanualsync.scss';
 
 const { mailbox_sync } = string.settings;
 

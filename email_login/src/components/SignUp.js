@@ -19,7 +19,7 @@ const SignUp = props =>
 const Header = props => (
   <div className="header">
     <div className="button-section">
-      <button className="back-button" onClick={props.toggleSignUp}>
+      <button className="back-button" onClick={e => props.onToggleSignUp(e)}>
         <i className="icon-back" />
       </button>
     </div>
@@ -66,7 +66,7 @@ const Form = props => (
 
 // eslint-disable-next-line fp/no-mutation
 Header.propTypes = {
-  toggleSignUp: PropTypes.func
+  onToggleSignUp: PropTypes.func
 };
 
 // eslint-disable-next-line fp/no-mutation
@@ -78,7 +78,6 @@ Form.propTypes = {
   isShowingPassword: PropTypes.bool.isRequired,
   onToggleShowPassword: PropTypes.func,
   onChangeField: PropTypes.func,
-  toggleSignUp: PropTypes.func,
   disabled: PropTypes.bool.isRequired,
   web: PropTypes.bool
 };

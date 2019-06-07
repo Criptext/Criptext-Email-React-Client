@@ -421,7 +421,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     const data = {
       body,
       date,
-      from,
+      from: from.replace(/"/g, ''),
       isFromMe,
       metadataKey,
       deviceId,

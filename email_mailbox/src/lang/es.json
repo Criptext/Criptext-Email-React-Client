@@ -420,9 +420,13 @@
     }
   },
   "settings": {
+    "about": "Acerca de",
+    "account": "Cuenta",
     "action": "Acción",
+    "appearance": "Apariencia",
     "cancel": "Cancelar",
     "change": "Cambiar",
+    "configurations": "Configuraciones",
     "contact_support": "Soporte",
     "check_for_updates": "Buscar actualizaciones",
     "create_new_label": "Crear nueva etiqueta",
@@ -461,6 +465,7 @@
       "tooltip": "Debes tener al menos un dispositivo adicional para sincronizar"
     },
     "not_verified": "no verificado",
+    "notifications": "Notificaciones",
     "notification_preview": {
       "label": "Mostrar Notificación Previa",
       "description": "Previo contenido del email en las notificaciones de escritorio"
@@ -472,6 +477,7 @@
       "label": "Contraseña",
       "description": "Cambia por una contraseña fuerte, no la repitas"
     },
+    "privacy": "Privacidad",
     "privacy_policy": {
       "label": "Políticas de Privacidad",
       "description": "Revisa nuestra política de privacidad"
@@ -509,6 +515,7 @@
     "trusted_devices": "dispositivos verificados",
     "two_factor_authentication": "Autenticación de dos factores",
     "two_factor_not_available_text" : "Para deshabilitar Autenticación de dos factores deberás introducir tu correo de recuperación",
+    "user_labels": "Etiquetas del Usuario",
     "verified": "verificado"
   },
   "sidebar": {

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SETTINGS_POPUP_TYPES } from './SettingGeneralWrapper';
+import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
 import string from './../lang';
-import './settingsgeneraldeleteaccount.scss';
+import './settingblockdeleteaccount.scss';
 
 const { delete_account } = string.settings;
 
-const SettingsGeneralDeleteAccount = props => (
+const SettingBlockDeleteAccount = props => (
   <div id="settings-general-delete-account" className="cptx-section-item">
     <span className="cptx-section-item-title">{delete_account.label}</span>
     <span className="cptx-section-item-description">
@@ -27,8 +27,8 @@ const SettingsGeneralDeleteAccount = props => (
   </div>
 );
 
-SettingsGeneralDeleteAccount.propTypes = {
+SettingBlockDeleteAccount.propTypes = {
   onShowSettingsPopup: PropTypes.func
 };
 
-export default SettingsGeneralDeleteAccount;
+export default SettingBlockDeleteAccount;

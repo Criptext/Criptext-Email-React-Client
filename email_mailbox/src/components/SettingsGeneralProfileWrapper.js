@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { EDITING_MODES } from './SettingGeneralWrapper';
+import { EDITING_MODES } from './SettingAccountWrapper';
 import SettingsGeneralProfile from './SettingsGeneralProfile';
 import { myAccount } from './../utils/electronInterface';
 import { EditorState } from 'draft-js';

@@ -6,13 +6,25 @@ import string from './../lang';
 
 const SettingLabels = props => (
   <div id="setting-labels">
-    {renderSystemLabelsBlock(props)}
-    {renderCustomLabelsBlock(props)}
+    <div className="cptx-section-block">
+      <div className="cptx-section-block-title">
+        <h1>{string.settings.system_labels}</h1>
+      </div>
+      <div className="cptx-section-block-content">
+        {renderSystemLabelsBlock(props)}
+      </div>
+      <div className="cptx-section-block-title">
+        <h1>{string.settings.user_labels}</h1>
+      </div>
+      <div className="cptx-section-block-content">
+        {renderCustomLabelsBlock(props)}
+      </div>
+    </div>
   </div>
 );
 
 const renderSystemLabelsBlock = props => (
-  <div className="section-block">
+  <div className="cptx-section-item">
     <div className="section-block-table">
       <div className="table-header">
         <div className="table-column-a">
@@ -53,7 +65,7 @@ const renderSystemLabelItem = (index, systemLabelItem, onChange) => (
 );
 
 const renderCustomLabelsBlock = props => (
-  <div className="section-block">
+  <div className="cptx-section-item">
     <div className="section-block-table">
       <div className="table-header">
         <div className="table-column-a">

@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch } from 'react-switch-input';
 import string from '../lang';
-import './settingsgeneralreplyto.scss';
+import './settingblockreplyto.scss';
 
-const SettingsGeneralReplyTo = props => (
+const SettingBlockReplyTo = props => (
   <div id="settings-general-reply-to" className="cptx-section-item">
     <span className="cptx-section-item-title">
       {string.settings.reply_to_email}
@@ -48,11 +48,11 @@ const Loader = () => (
   </div>
 );
 
-SettingsGeneralReplyTo.propTypes = {
+SettingBlockReplyTo.propTypes = {
   replyToIsLoading: PropTypes.bool,
   replyToEmail: PropTypes.string,
   onClickSetReplyTo: PropTypes.func,
   onRemoveReplyTo: PropTypes.func
 };
 
-export default SettingsGeneralReplyTo;
+export default SettingBlockReplyTo;

@@ -1,3 +1,5 @@
+@import "./../styles/index.scss";
+
 .profile-shortcut-container .menu-container.menu-arrow.arrow-top-right{
   &:before, &:after {
     right: 10px;
@@ -79,3 +81,19 @@
     }
   }
 }
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .profile-preview-detail{
+      .name{
+        color: $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT;
+      }
+    }
+  }
+}
+  
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_PRIMARY_PROFILE_SHORTCUT_DARK);

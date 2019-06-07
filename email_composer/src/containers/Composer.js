@@ -271,8 +271,7 @@ class ComposerWrapper extends Component {
   };
 
   setFiles = newFiles => {
-    const files = [...this.state.files];
-    const fileWithKey = files.filter(file => file.key && file.iv)[0];
+    const fileWithKey = this.state.files.filter(file => file.key && file.iv)[0];
     let iv, key;
     if (fileWithKey) {
       key = fileWithKey.key;
@@ -303,10 +302,11 @@ class ComposerWrapper extends Component {
       }
 
       fileManager.uploadFile(firstNewFile, CHUNK_SIZE, (error, token) => {
+        let uploadingFile;
         if (error) {
           this.handleUploadFileErrorStatus(error, firstNewFile);
         } else {
-          const uploadingFile = {
+          uploadingFile = {
             token,
             key,
             iv,
@@ -314,11 +314,12 @@ class ComposerWrapper extends Component {
             fileData: firstNewFile,
             mode: FILE_MODES.UPLOADING
           };
-          files.push(uploadingFile);
         }
         this.setState(
           prevState => ({
-            files,
+            files: uploadingFile
+              ? prevState.files.concat(uploadingFile)
+              : prevState.files,
             totalFilesSize: prevState.totalFilesSize + firstNewFile.size
           }),
           () => {

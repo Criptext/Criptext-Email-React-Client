@@ -12,7 +12,7 @@ const Attachment = props => {
         <span>{props.file.name}</span>
         <span>{convertToHumanSize(props.file.size, true)}</span>
       </div>
-      <div className="file-delete" onClick={() => props.onRemoveAttachment()}>
+      <div className="file-delete" onClick={() => props.onRemove()}>
         <i className="icon-exit" />
       </div>
       {props.status === FileStatus.UPLOADING && (
@@ -58,7 +58,7 @@ const FileStatus = {
 
 Attachment.propTypes = {
   file: PropTypes.object,
-  onRemoveAttachment: PropTypes.func,
+  onRemove: PropTypes.func,
   percentage: PropTypes.number,
   status: PropTypes.string
 };
