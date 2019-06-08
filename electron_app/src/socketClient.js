@@ -1,5 +1,6 @@
 const { client: WebSocketClient } = require('websocket');
 const { SOCKET_URL } = require('./utils/const');
+const { processEventsQueue } = require('./eventQueueManager');
 let client, reconnect, messageListener, socketConnection;
 const NETWORK_STATUS = {
   ONLINE: 'online',
@@ -98,6 +99,7 @@ const setConnectionStatus = networkStatus => {
         mailboxWindow.send('network-connection-established');
       }
       globalManager.internetConnection.setStatus(true);
+      processEventsQueue();
       break;
     }
     case NETWORK_STATUS.OFFLINE: {
