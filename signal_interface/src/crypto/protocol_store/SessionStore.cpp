@@ -9,11 +9,14 @@ int session_store_load_session(signal_buffer **record, signal_buffer **user_reco
     CriptextDB::Account *account = user_data;
     string recipientId = str(address->name);
     int deviceId = address->device_id;
-    CriptextDB::SessionRecord sessionRecord = CriptextDB::getSessionRecord("<path>", account->id, recipientId, deviceId);
+    CriptextDB::SessionRecord sessionRecord;
 
-    if(!sessionRecord) {
+    try {
+        sessionRecord = CriptextDB::getSessionRecord("<path>", account->id, recipientId, deviceId);
+    } catch (exception& e) {
         return 0;
     }
+    
     uint8_t* recordData = reinterpret_cast<const uint8_t*>(sessionRecord.record.c_str());
     signal_buffer *result = signal_buffer_create(recordData, sizeof(recordData));
     if(!result) {
@@ -35,7 +38,7 @@ int session_store_get_sub_device_sessions(signal_int_list **sessions, const char
     CriptextDB::SessionRecord sessionRecords = CriptextDB::getSessionRecords("<path>", account->id, recipientId);
 
     for (auto sessionRecord : sessionRecords) {
-      signal_int_list_push_back(result, sessionRecord.deviceId)
+      signal_int_list_push_back(result, sessionRecord.deviceId);
     }
 
     *sessions = result;
@@ -48,18 +51,24 @@ int session_store_store_session(const signal_protocol_address *address, uint8_t 
     string recipientId = str(address->name);
     int deviceId = address->device_id;
     string record(user_record_data, user_record_len);
-    bool success = CriptextDB::createSessionRecord("<path>", account->id, recipientId, deviceId, record)
+    bool success = CriptextDB::createSessionRecord("<path>", account->id, recipientId, deviceId, record);
 
-    return bool ? 1 : 0;
+    return success ? 1 : 0;
 }
 
 int session_store_contains_session(const signal_protocol_address *address, void *user_data)
 {
     string recipientId = str(address->name);
     int deviceId = address->device_id;
-    CriptextDB::SessionRecord sessionRecord = CriptextDB::getSessionRecord("", account->id, recipientId, deviceId);
 
-    return (!sessionRecord) ? 0 : 1;
+    CriptextDB::SessionRecord sessionRecord;
+    try {
+        sessionRecord = CriptextDB::getSessionRecord("<path>", account->id, recipientId, deviceId);
+    } catch (exception& e) {
+        return 0;
+    }
+
+    return 1;
 }
 
 int session_store_delete_session(const signal_protocol_address *address, void *user_data)

@@ -6,12 +6,16 @@ apt-get install cmake -y
 apt-get install git -y
 apt-get install pkg-config -y
 
-mkdir deps && pushd deps
+mkdir deps 
+pushd deps
 
 git clone https://github.com/SRombauts/SQLiteCpp
 pushd SQLiteCpp
-cmake -DSQLITECPP_BUILD_EXAMPLES=ON -DSQLITECPP_BUILD_TESTS=ON ..
-cmake --build .
+mkdir build && pushd build
+cmake -DSQLITECPP_BUILD_EXAMPLES=OFF -DSQLITECPP_BUILD_TESTS=OFF ..
+cmake --build . && make install
+ctest --output-on-failure
 popd
 
-popd && rm -rf deps
+popd
+rm -rf deps

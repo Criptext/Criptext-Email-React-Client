@@ -7,11 +7,14 @@
 int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t signed_pre_key_id, void *user_data)
 {
     CriptextDB::Account *account = user_data;
-    CriptextDB::SignedPreKey signedPreKey = CriptextDB::getSignedPreKey("<dbPath>", signed_pre_key_id, account->id);
+    CriptextDB::SignedPreKey signedPreKey;
 
-    if(!preKeyRecord) {
+    try {
+        signedPreKey = CriptextDB::getSignedPreKey("<dbPath>", signed_pre_key_id, account->id);
+    } catch (exception& e){
         return 0;
     }
+
     uint8_t* recordData = reinterpret_cast<const uint8_t*>(signedPreKey.privKey.getString());
     signal_buffer *result = signal_buffer_create(recordData, sizeof(recordData));
     if(!result) {
@@ -31,8 +34,13 @@ int signed_pre_key_store_store_signed_pre_key(uint32_t signed_pre_key_id, uint8_
 int signed_pre_key_store_contains_signed_pre_key(uint32_t signed_pre_key_id, void *user_data)
 {
     CriptextDB::Account *account = user_data;
-    CriptextDB::PreKey preKey = CriptextDB::getSignedPreKey("<dbPath>", signed_pre_key_id, account->id);
-    return !preKey ? 0 : 1;
+    CriptextDB::SignedPreKey signedPreKey;
+    try {
+        signedPreKey = CriptextDB::getSignedPreKey("<dbPath>", signed_pre_key_id, account->id);
+    } catch (exception& e){
+        return 0;
+    }
+    return 1;
 }
 
 int signed_pre_key_store_remove_signed_pre_key(uint32_t signed_pre_key_id, void *user_data)

@@ -8,11 +8,14 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
 {
 
     CriptextDB::Account *account = user_data;
-    CriptextDB::PreKey preKey = CriptextDB::getPreKey("<path>", pre_key_id, account->id);
+    CriptextDB::PreKey preKey;
 
-    if(!preKey) {
+    try {
+        preKey = CriptextDB::getPreKey("<path>", pre_key_id, account->id)
+    } catch (exception& e){
         return 0;
     }
+
     uint8_t* recordData = reinterpret_cast<const uint8_t*>(preKey.privKey.getString());
     signal_buffer *result = signal_buffer_create(recordData, sizeof(recordData));
     if(!result) {
@@ -32,8 +35,15 @@ int pre_key_store_store_pre_key(uint32_t pre_key_id, uint8_t *record, size_t rec
 int pre_key_store_contains_pre_key(uint32_t pre_key_id, void *user_data)
 {
     CriptextDB::Account *account = user_data;
-    CriptextDB::PreKey preKey = CriptextDB::getPreKey("<path>", pre_key_id, account->id);
-    return !preKey ? 0 : 1;
+    CriptextDB::PreKey preKey;
+
+    try {
+        preKey = CriptextDB::getPreKey("<path>", pre_key_id, account->id)
+    } catch (exception& e){
+        return 0;
+    }
+    
+    return 1;
 }
 
 int pre_key_store_remove_pre_key(uint32_t pre_key_id, void *user_data)
