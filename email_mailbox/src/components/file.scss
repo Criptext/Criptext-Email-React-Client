@@ -1,7 +1,7 @@
 @import "./../styles/index.scss";
 
 .file-container{
-  margin: 5px 15px;
+  margin: 5px 15px 5px 0;
   position: relative;
 
   .file-content{
@@ -126,7 +126,7 @@
         overflow: hidden;
         padding-right: 5px;
         text-overflow: ellipsis;
-        white-space: pre-wrap;
+        white-space: nowrap;
       }
     
       .file-detail-size{

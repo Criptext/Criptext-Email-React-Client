@@ -10,7 +10,7 @@ const Attachment = props => {
       <div className="file-icon">{renderFileIcon(props.file.type)}</div>
       <div className="file-info">
         <span>{props.file.name}</span>
-        <span>{convertToHumanSize(props.file.size, true)}</span>
+        <span>{convertToHumanSize(props.file.size, true, 0)}</span>
       </div>
       <div className="file-delete" onClick={() => props.onRemove()}>
         <i className="icon-exit" />

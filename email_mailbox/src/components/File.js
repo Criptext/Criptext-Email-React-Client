@@ -16,7 +16,7 @@ const File = props => {
         <div className="file-content-detail">
           <span className="file-detail-name">{props.file.name}</span>
           <span className="file-detail-size">
-            {convertToHumanSize(props.file.size, true)}
+            {convertToHumanSize(props.file.size, true, 0)}
           </span>
         </div>
         <div className="file-button-container">
