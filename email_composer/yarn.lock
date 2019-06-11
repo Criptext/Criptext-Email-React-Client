@@ -845,10 +845,10 @@
   optionalDependencies:
     fsevents "1.2.4"
 
-"@criptext/trumbowyg@^2.16.1":
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/@criptext/trumbowyg/-/trumbowyg-2.16.1.tgz#a12f9dbf0bf9981b11c18d29488fef5aa0eed70e"
-  integrity sha512-A8SeG/s2kxscofB/nGZx0rv3GfnjEhSY0Tc94b1051srIkx9D9cbFq6zuZsbFCQxIkg20CHkCoxaZgBcECODpA==
+"@criptext/trumbowyg@^2.16.3":
+  version "2.16.3"
+  resolved "https://registry.yarnpkg.com/@criptext/trumbowyg/-/trumbowyg-2.16.3.tgz#8b8d926e767a6d17f45baafa38a9dbba2ffc4a77"
+  integrity sha512-dOjq46EJFFUo3wPe8XX8aIIUrpX/CORLKu9w7rSIDj3mlx+U97Yome/FmNlX36gLMmUj507BdaG4ldtcJQOE0Q==
 
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"

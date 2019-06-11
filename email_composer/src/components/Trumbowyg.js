@@ -151,7 +151,6 @@ Trumbowyg.propTypes = {
   onOpenFullScreen: PropTypes.func,
   onCloseFullScreen: PropTypes.func,
   onClose: PropTypes.func,
-
   plugins: PropTypes.object
 };
 
