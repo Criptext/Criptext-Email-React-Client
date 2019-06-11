@@ -72,6 +72,9 @@ const decryptFileKey = async ({
   recipientId,
   deviceId
 }) => {
+  if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
+    return fileKey;
+  }
   const fileKeyEncrypted = util.toArrayBufferFromBase64(fileKey);
   const addressFrom = new libsignal.SignalProtocolAddress(
     recipientId,
