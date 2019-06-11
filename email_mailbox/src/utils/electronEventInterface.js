@@ -418,8 +418,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         emailThreadId = emailWithMessageId.threadId;
       }
     }
-    const secure =
-      guestEncryption === 1 || guestEncryption === 3 ? true : false;
+    const secure = guestEncryption === 1 || guestEncryption === 3;
     const data = {
       body,
       boundary,
