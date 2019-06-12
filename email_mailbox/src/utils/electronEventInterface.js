@@ -317,6 +317,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     fileKeys,
     files,
     from,
+    guestEncryption,
     inReplyTo,
     replyTo,
     labels,
@@ -417,20 +418,21 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         emailThreadId = emailWithMessageId.threadId;
       }
     }
-
+    const secure = guestEncryption === 1 || guestEncryption === 3;
     const data = {
       body,
+      boundary,
       date,
+      deviceId,
       from: from.replace(/"/g, ''),
       isFromMe,
       metadataKey,
-      deviceId,
-      subject,
-      threadId: emailThreadId,
-      unread,
       messageId,
       replyTo,
-      boundary
+      secure,
+      subject,
+      threadId: emailThreadId,
+      unread
     };
     const email = await formIncomingEmailFromData(data);
     notificationPreview = email.preview;

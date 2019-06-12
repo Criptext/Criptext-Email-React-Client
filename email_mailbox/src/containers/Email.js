@@ -85,6 +85,7 @@ const makeMapStateToProps = () => {
       isCollapse,
       inlineImages
     );
+    const isFromMe = matchOwnEmail(myAccount.recipientId, senderEmail);
     const isEmpty = !(email.content && email.content.length);
     const isUnsend = email.status === EmailStatus.UNSEND;
     const isSpam = email.labelIds.includes(LabelType.spam.id);
@@ -107,7 +108,7 @@ const makeMapStateToProps = () => {
       isTrash,
       isDraft,
       isEmpty,
-      isFromMe: matchOwnEmail(myAccount.recipientId, senderEmail),
+      isFromMe,
       isUnsend,
       inlineImages,
       letters,

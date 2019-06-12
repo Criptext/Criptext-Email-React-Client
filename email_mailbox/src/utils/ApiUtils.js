@@ -53,7 +53,11 @@ export const apiCriptextRequest = async ({
         method,
         headers: defaultHeaders
       };
-      return await fetch(requestUrl, options);
+      try {
+        return await fetch(requestUrl, options);
+      } catch (error) {
+        return { status: 500 };
+      }
     }
     case 'POST': {
       const requestUrl = apiBaseUrl + endpoint;

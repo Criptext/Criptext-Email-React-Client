@@ -127,6 +127,7 @@
   
     .email-body{
       .email-text{
+        font-size: medium;
         font-weight: 200;
         overflow-x: auto;
         overflow-y: hidden;
@@ -174,7 +175,7 @@
         flex-direction: row;
         flex-wrap: wrap;
         margin-bottom: 20px;
-        margin-top: 60px;
+        margin-top: 30px;
       
         &[disabled]{
           opacity: 0.2;

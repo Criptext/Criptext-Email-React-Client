@@ -26,7 +26,7 @@ const removeDomainFromEmail = (email, domain) => {
 
 export const convertToHumanSize = (bytes, si, decimals) => {
   const thresh = si ? 1000 : 1024;
-  const fixedAt = decimals !== undefined ? decimals : 1;
+  const fixedAt = decimals || 1;
   if (Math.abs(bytes) < thresh) {
     return bytes + ' B';
   }
