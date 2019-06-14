@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Email from './../containers/Email';
+import EmailLoading from './EmailLoading';
 import Label from './Label';
 import Message from '../containers/Message';
 import './thread.scss';
@@ -105,6 +106,9 @@ class Thread extends Component {
   };
 
   renderEmails = () => {
+    if (!this.props.emails.length) {
+      return <EmailLoading />;
+    }
     const emailContainers = this.props.emails.map((email, index) => {
       const isLast = this.props.emails.length - 1 === index;
       return (
