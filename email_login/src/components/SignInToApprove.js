@@ -1,38 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import string from './../lang';
-import './continueLogin.scss';
+import string from '../lang';
+import './signintoapprove.scss';
 import './clockLoading.scss';
 
-const { continueLogin } = string;
+const { signInToApprove } = string;
 
-const ContinueLogin = props => (
-  <div className="continue">
-    {renderHeader(props)}
-    {renderContent(props)}
-  </div>
-);
-
-const renderHeader = props => (
-  <div className="header">
-    <div className="button-section">
-      <button className="back-button" onClick={ev => props.toggleContinue(ev)}>
-        <i className="icon-back" />
-      </button>
-    </div>
-    <div className="criptext-logo">
-      <div className="icon" />
-    </div>
-  </div>
+const SignInToApprove = props => (
+  <div id="section-signintoapprove">{renderContent(props)}</div>
 );
 
 const renderContent = props => (
   <div className="content">
     <div className="content-header">
-      <p>{continueLogin.title}</p>
+      <p>{signInToApprove.title}</p>
     </div>
     <div className="message">
-      <p>{continueLogin.message}</p>
+      <p>{signInToApprove.message}</p>
     </div>
     <div className="loading">
       <div className="icon-clock" />
@@ -50,7 +34,7 @@ const renderContent = props => (
       </div>
     </div>
     <div className="button">
-      <p>{continueLogin.getPromptLabel}</p>
+      <p>{signInToApprove.getPromptLabel}</p>
       <button
         className="resend-button"
         disabled={props.disabledResendLoginRequest}
@@ -58,25 +42,20 @@ const renderContent = props => (
       >
         <span>
           {props.disabledResendLoginRequest
-            ? continueLogin.buttons.sending
-            : continueLogin.buttons.resend}
+            ? signInToApprove.buttons.sending
+            : signInToApprove.buttons.resend}
         </span>
       </button>
     </div>
     {!props.hasTwoFactorAuth && (
       <div className="cant-access">
         <span onClick={props.onClickSignInWithPassword}>
-          {continueLogin.passwordLoginLabel}
+          {signInToApprove.passwordLoginLabel}
         </span>
       </div>
     )}
   </div>
 );
-
-// eslint-disable-next-line fp/no-mutation
-renderHeader.propTypes = {
-  toggleContinue: PropTypes.func
-};
 
 // eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {
@@ -86,4 +65,4 @@ renderContent.propTypes = {
   onClickResendLoginRequest: PropTypes.func
 };
 
-export default ContinueLogin;
+export default SignInToApprove;

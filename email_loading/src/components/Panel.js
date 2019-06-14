@@ -7,7 +7,7 @@ import { loadingType } from '../utils/electronInterface';
 
 const loadingTypes = {
   SIGNUP: 'signup',
-  LOGIN: 'login',
+  SIGNIN: 'signin',
   LINK_NEW_DEVICE: 'link-new-device',
   LINK_OLD_DEVICE: 'link-old-device',
   LINK_DEVICE_REQUEST: 'link-device-request',
@@ -19,7 +19,7 @@ const loadingTypes = {
 const Panel = () => {
   switch (loadingType) {
     case loadingTypes.SIGNUP:
-    case loadingTypes.LOGIN:
+    case loadingTypes.SIGNIN:
       return <LoadingWrapper loadingType={loadingType} />;
     case loadingTypes.LINK_NEW_DEVICE:
       return <LinkNewDeviceWrapper />;

@@ -1,18 +1,20 @@
 @import './../styles/index.scss';
 
-.login {
+#section-signin {
   font-family: 'NunitoSans';
-  width: 328px;
-  height: 513px;
   border-radius: 0px 0px 7px 7px;
-  background: linear-gradient(to bottom, #00c4ff, #0091ff);
-  .header {
-    height: 55%;
+  height: 100%;
+  position: relative;
+  width: 328px;
+
+  .signin-welcome {
+    height: 45%;
     width: 100%;
     text-align: center;
+
     .logo {
       height: 65%;
-      padding: 0 auto;
+
       .icon {
         height: 51px;
         width: 57px;
@@ -24,6 +26,7 @@
         background-size: 100%;
       }
     }
+
     .text {
       height: 35%;
       position: relative;
@@ -33,7 +36,7 @@
     }
   }
 
-  .form {
+  .signin-form {
     height: 20%;
     width: 65%;
     margin: 0 auto;
@@ -110,8 +113,8 @@
     }
   }
 
-  .footer {
-    height: 20%;
+  .signin-footer {
+    height: 25%;
     color: #ffffff;
     font-size: 13px;
 

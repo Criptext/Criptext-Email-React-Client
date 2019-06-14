@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { validatePassword } from './../validators/validators';
-import LostAllDevices from './LostAllDevices';
+import { validatePassword } from '../validators/validators';
+import SignInPassword from './SignInPassword';
 import {
   closeLoginWindow,
   login,
   openCreateKeysLoadingWindow,
   resetPassword,
   throwError
-} from './../utils/ipc';
+} from '../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
-import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
+import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 import { PopupTypes } from './LoginPopup';
-import string from './../lang';
+import string from '../lang';
 import { appDomain } from '../utils/const';
 
-const { passwordLogin } = string;
+const { signInPassword } = string;
 
 const LOGIN_STATUS = {
   SUCCESS: 200,
@@ -24,7 +24,7 @@ const LOGIN_STATUS = {
   TOO_MANY_DEVICES: 439
 };
 
-class LostDevicesWrapper extends Component {
+class SignInPasswordWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,7 +43,7 @@ class LostDevicesWrapper extends Component {
 
   render() {
     return (
-      <LostAllDevices
+      <SignInPassword
         {...this.props}
         disabled={this.state.disabled}
         handleForgot={this.handleForgot}
@@ -116,7 +116,7 @@ class LostDevicesWrapper extends Component {
       case LOGIN_STATUS.SUCCESS: {
         const { deviceId, name } = body;
         openCreateKeysLoadingWindow({
-          loadingType: 'login',
+          loadingType: 'signin',
           remoteData: {
             recipientId,
             deviceId,
@@ -169,7 +169,7 @@ class LostDevicesWrapper extends Component {
     };
     const { status, text } = await resetPassword(params);
     const customText = this.getForgotPasswordMessage(status, text);
-    const messages = passwordLogin.forgotPasswordMessage;
+    const messages = signInPassword.forgotPasswordMessage;
     switch (status) {
       case 200:
         return this.props.setPopupContent({
@@ -208,7 +208,7 @@ class LostDevicesWrapper extends Component {
       const { address } = JSON.parse(text);
       return address;
     }
-    return passwordLogin.forgotPasswordMessage.error;
+    return signInPassword.forgotPasswordMessage.error;
   };
 
   throwLoginError = error => {
@@ -221,8 +221,8 @@ class LostDevicesWrapper extends Component {
 }
 
 // eslint-disable-next-line fp/no-mutation
-LostDevicesWrapper.propTypes = {
+SignInPasswordWrapper.propTypes = {
   usernameValue: PropTypes.string
 };
 
-export default LostDevicesWrapper;
+export default SignInPasswordWrapper;

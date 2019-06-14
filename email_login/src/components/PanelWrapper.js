@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import Login from './Login';
+import SignIn from './SignIn';
 import SignUpWrapper from './SignUpWrapper';
-import LostAllDevicesWrapper from './LostAllDevicesWrapper';
-import ContinueLogin from './ContinueLogin';
+import SignInPasswordWrapper from './SignInPasswordWrapper';
+import SignInToApprove from './SignInToApprove';
+import PopupHOC from './PopupHOC';
+import LoginPopup from './LoginPopup';
+import DialogPopup, { DialogTypes } from './DialogPopup';
 import {
   createTemporalAccount,
   deleteTemporalAccount,
@@ -26,29 +29,26 @@ import { DEVICE_TYPE, appDomain } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
 import string from './../lang';
+import './panelwrapper.scss';
 
-import PopupHOC from './PopupHOC';
-import LoginPopup from './LoginPopup';
-import DialogPopup, { DialogTypes } from './DialogPopup';
-
-const { login, signin } = string;
+const { signIn, signUp } = string;
 
 const mode = {
   SIGNUP: 'SIGNUP',
-  LOGIN: 'LOGIN',
-  CONTINUE: 'CONTINUE',
-  DEVICE_NOT_APPROVED: 'DEVICE_NOT_APPROVED',
-  LOST_DEVICES: 'LOST_DEVICES'
+  SIGNIN: 'SIGNIN',
+  SIGNINTOAPPROVE: 'SIGNINTOAPPROVE',
+  SIGNINPASSWORD: 'SIGNINPASSWORD',
+  DEVICE_NOT_APPROVED: 'DEVICE_NOT_APPROVED'
 };
 
 const errorMessages = {
-  EMAILADDRESS_NOT_EXISTS: login.errorMessages.emailAddressNotExits,
+  EMAILADDRESS_NOT_EXISTS: signIn.errorMessages.emailAddressNotExits,
   USERNAME_EMAILADDRESS_INVALID:
-    login.errorMessages.usernameOrEmailAddressInvalid,
-  USERNAME_INVALID: login.errorMessages.usernameInvalid,
-  USERNAME_NOT_EXISTS: login.errorMessages.usernameNotExits,
-  STATUS_UNKNOWN: login.errorMessages.statusUnknown,
-  USERNAME_NOT_AVAILABLE: login.errorMessages.usernameNotAvailable
+    signIn.errorMessages.usernameOrEmailAddressInvalid,
+  USERNAME_INVALID: signIn.errorMessages.usernameInvalid,
+  USERNAME_NOT_EXISTS: signIn.errorMessages.usernameNotExits,
+  STATUS_UNKNOWN: signIn.errorMessages.statusUnknown,
+  USERNAME_NOT_AVAILABLE: signIn.errorMessages.usernameNotAvailable
 };
 
 const LINK_STATUS_RETRIES = 12;
@@ -74,11 +74,13 @@ const commitNewUser = validInputData => {
   closeLoginWindow();
 };
 
-class LoginWrapper extends Component {
+class PanelWrapper extends Component {
   constructor() {
     super();
     this.state = {
-      mode: mode.LOGIN,
+      currentStep: mode.SIGNIN,
+      lastStep: [mode.SIGNIN],
+      mode: mode.SIGNIN,
       values: {
         usernameOrEmailAddress: '',
         password: ''
@@ -93,19 +95,36 @@ class LoginWrapper extends Component {
 
   render() {
     return (
-      <div>
+      <div className="panel-wrapper">
         {this.renderPopup()}
-        {this.renderSection()}
+        {this.renderHeader()}
+        <section>{this.renderSection()}</section>
       </div>
     );
   }
+
+  renderHeader = () => (
+    <header className={this.defineHeaderClass()}>
+      <div className="button-section">
+        <button
+          className="back-button"
+          onClick={ev => this.onClickBackView(ev)}
+        >
+          <i className="icon-back" />
+        </button>
+      </div>
+      <div className="criptext-logo">
+        <div className="icon" />
+      </div>
+    </header>
+  );
 
   renderPopup = () => {
     if (!this.state.popupContent) {
       return null;
     }
     switch (this.state.mode) {
-      case mode.CONTINUE:
+      case mode.SIGNINTOAPPROVE:
         return (
           <LoginWithPasswordPopup
             {...this.state.popupContent}
@@ -113,7 +132,7 @@ class LoginWrapper extends Component {
             onConfirmClick={this.handleCancelLink}
           />
         );
-      case mode.LOST_DEVICES:
+      case mode.SIGNINPASSWORD:
         return (
           <ResetPasswordPopup
             {...this.state.popupContent}
@@ -128,7 +147,7 @@ class LoginWrapper extends Component {
             onConfirmClick={this.handleSignUpContinue}
           />
         );
-      case mode.LOGIN:
+      case mode.SIGNIN:
         return (
           <SignInAnotherAccount
             {...this.state.popupContent}
@@ -150,17 +169,15 @@ class LoginWrapper extends Component {
             checkAvailableUsername={checkAvailableUsername}
             onFormReady={this.onFormReady}
             onSubmitWithoutRecoveryEmail={this.onSubmitWithoutRecoveryEmail}
-            onToggleSignUp={this.handleToggleSignUp}
           />
         );
-      case mode.CONTINUE:
+      case mode.SIGNINTOAPPROVE:
         return (
-          <ContinueLogin
+          <SignInToApprove
             onLeftButtonClick={this.handlePopupLeftButton}
             onRightButtonClick={this.handlePopupRightButton}
             popupContent={this.state.popupContent}
             disabledResendLoginRequest={this.state.disabledResendLoginRequest}
-            toggleContinue={this.toggleContinue}
             onClickSignInWithPassword={this.handleClickSignInWithPassword}
             onClickResendLoginRequest={this.handleClickResendLoginRequest}
             hasTwoFactorAuth={this.state.hasTwoFactorAuth}
@@ -169,58 +186,46 @@ class LoginWrapper extends Component {
       case mode.DEVICE_NOT_APPROVED:
         return (
           <DeviceNotApproved
-            toggleDeviceNotApproved={this.toggleDeviceNotApproved}
             onClickSignInWithPassword={this.handleClickSignInWithPassword}
             hasTwoFactorAuth={this.state.hasTwoFactorAuth}
           />
         );
-      case mode.LOST_DEVICES:
+      case mode.SIGNINPASSWORD:
         return (
-          <LostAllDevicesWrapper
+          <SignInPasswordWrapper
             cleanState={this.cleanState}
             dismissPopup={this.dismissPopup}
             goToWaitingApproval={this.goToWaitingApproval}
             hasTwoFactorAuth={this.state.hasTwoFactorAuth}
             setPopupContent={this.setPopupContent}
-            toggleLostAllDevices={ev => this.toggleLostAllDevices(ev)}
             value={this.state.values.usernameOrEmailAddress}
           />
         );
+      case mode.SIGNIN:
       default:
         return (
-          <Login
+          <SignIn
             disabledLoginButton={shouldDisableLogin(this.state)}
             errorMessage={this.state.errorMessage}
+            goToSignUp={this.goToSignUp}
             onClickSignIn={this.handleClickSignIn}
             onChangeField={this.handleChange}
-            onToggleSignUp={this.handleToggleSignUp}
             value={this.state.values.usernameOrEmailAddress}
           />
         );
-    }
-  };
-
-  handleToggleSignUp = e => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (this.state.mode === mode.LOGIN) {
-      this.setState(curState => ({
-        mode: curState.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN
-      }));
-    } else if (this.state.mode === mode.SIGNUP) {
-      this.setState({ mode: mode.LOGIN });
     }
   };
 
   onSubmitWithoutRecoveryEmail = validInputData => {
+    const popUp = signUp.popUp.warningRecoveryEmail;
     this.setState({
       popupContent: {
-        title: signin.title,
-        prefix: signin.prefix,
-        strong: signin.strong,
-        suffix: signin.suffix,
-        cancelButtonLabel: signin.leftButtonLabel,
-        confirmButtonLabel: signin.rightButtonLabel,
+        title: popUp.title,
+        prefix: popUp.prefix,
+        strong: popUp.strong,
+        suffix: popUp.suffix,
+        cancelButtonLabel: popUp.leftButtonLabel,
+        confirmButtonLabel: popUp.rightButtonLabel,
         data: validInputData
       }
     });
@@ -250,7 +255,7 @@ class LoginWrapper extends Component {
   handleConfirmSignInAnotherAccount = async () => {
     const nextMode = this.state.popupContent.successMode;
     this.dismissPopup();
-    if (nextMode === mode.CONTINUE) {
+    if (nextMode === mode.SIGNINTOAPPROVE) {
       await this.initLinkDevice(this.state.values.usernameOrEmailAddress);
       return;
     } else if (nextMode === mode.SIGNUP) {
@@ -258,26 +263,35 @@ class LoginWrapper extends Component {
     }
   };
 
-  toggleContinue = ev => {
+  onClickBackView = ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    socketClient.disconnect();
-    this.stopCountdown();
-    const nextMode =
-      this.state.mode === mode.LOGIN ? mode.CONTINUE : mode.LOGIN;
-    this.setState({ mode: nextMode }, this.cleanState);
-  };
-
-  toggleLostAllDevices = ev => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.setState({ mode: mode.LOGIN }, this.cleanState);
-  };
-
-  toggleDeviceNotApproved = ev => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.setState({ mode: mode.LOGIN }, this.cleanState);
+    if (this.state.currentStep === mode.SIGNINTOAPPROVE) {
+      socketClient.disconnect();
+      this.stopCountdown();
+    }
+    const tmplastStep = [...this.state.lastStep];
+    const popStep = tmplastStep.pop();
+    const checkStep = tmplastStep[tmplastStep.length - 1];
+    if (
+      (popStep === mode.SIGNINPASSWORD && checkStep === mode.SIGNINTOAPPROVE) ||
+      (popStep === mode.SIGNINTOAPPROVE && checkStep === mode.SIGNINPASSWORD) ||
+      popStep === mode.DEVICE_NOT_APPROVED
+    ) {
+      tmplastStep.pop();
+      const checkOtherStep = tmplastStep[tmplastStep.length - 1];
+      if (checkOtherStep === mode.SIGNINPASSWORD) tmplastStep.pop();
+    }
+    const lastStep = tmplastStep;
+    const currentStep = tmplastStep[tmplastStep.length - 1];
+    this.setState(
+      {
+        lastStep,
+        currentStep,
+        mode: currentStep
+      },
+      this.cleanState
+    );
   };
 
   stopCountdown = () => {
@@ -396,7 +410,7 @@ class LoginWrapper extends Component {
       recipientId
     });
     if (!existsAccount) {
-      const successMode = mode.CONTINUE;
+      const successMode = mode.SIGNINTOAPPROVE;
       const check = await this.checkLoggedOutAccounts(successMode);
       if (check === true) {
         await this.initLinkDevice(recipientId);
@@ -418,14 +432,14 @@ class LoginWrapper extends Component {
     if (!loggedOutAccounts.length) return true;
 
     this.setState({
-      mode: mode.LOGIN,
+      mode: mode.SIGNIN,
       popupContent: {
-        title: login.loginNewAccount.title,
-        prefix: login.loginNewAccount.prefix,
+        title: signIn.loginNewAccount.title,
+        prefix: signIn.loginNewAccount.prefix,
         list: this.formLoggedOutAccountsList(loggedOutAccounts),
-        suffix: login.loginNewAccount.suffix,
-        cancelButtonLabel: login.loginNewAccount.cancelButtonLabel,
-        confirmButtonLabel: login.loginNewAccount.confirmButtonLabel,
+        suffix: signIn.loginNewAccount.suffix,
+        cancelButtonLabel: signIn.loginNewAccount.cancelButtonLabel,
+        confirmButtonLabel: signIn.loginNewAccount.confirmButtonLabel,
         successMode
       }
     });
@@ -445,20 +459,34 @@ class LoginWrapper extends Component {
   };
 
   goToPasswordLogin = () => {
-    this.setState({
-      mode: mode.LOST_DEVICES
-    });
+    this.setState(state => ({
+      lastStep: this.concat(state.lastStep, mode.SIGNINPASSWORD),
+      currentStep: mode.SIGNINPASSWORD,
+      mode: mode.SIGNINPASSWORD
+    }));
+  };
+
+  goToSignUp = async e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const check = await this.checkLoggedOutAccounts();
+    if (check === true) {
+      this.setState(state => ({
+        lastStep: this.concat(state.lastStep, mode.SIGNUP),
+        currentStep: mode.SIGNUP,
+        mode: mode.SIGNUP
+      }));
+    }
   };
 
   goToWaitingApproval = password => {
     this.setState(
-      {
-        mode: mode.CONTINUE,
-        values: {
-          ...this.state.values,
-          password
-        }
-      },
+      state => ({
+        lastStep: this.concat(state.lastStep, mode.SIGNINTOAPPROVE),
+        currentStep: mode.SIGNINTOAPPROVE,
+        mode: mode.SIGNINTOAPPROVE,
+        values: { ...state.values, password }
+      }),
       () => {
         this.initLinkDevice(this.state.values.usernameOrEmailAddress);
       }
@@ -470,7 +498,7 @@ class LoginWrapper extends Component {
     if (status === 439) {
       throwError(string.errors.tooManyDevices);
     } else if (status === 400) {
-      return this.goToPasswordLogin();
+      this.goToPasswordLogin();
     } else if (status === 404) {
       this.setState(state => ({
         values: {
@@ -506,19 +534,32 @@ class LoginWrapper extends Component {
         this.state.ephemeralToken
       );
       if (response) {
-        this.setState({ mode: mode.CONTINUE }, () => {
-          // eslint-disable-next-line fp/no-let
-          let recipientId = usernameOrEmailAddress;
-          // eslint-disable-next-line fp/no-mutation
-          if (domain === appDomain) recipientId = username;
-          createTemporalAccount({ recipientId });
-          socketClient.start({ jwt: this.state.ephemeralToken });
-          this.checkLinkStatus();
-        });
+        this.setState(
+          state => ({
+            lastStep: this.concat(state.lastStep, mode.SIGNINTOAPPROVE),
+            currentStep: mode.SIGNINTOAPPROVE,
+            mode: mode.SIGNINTOAPPROVE
+          }),
+          () => {
+            // eslint-disable-next-line fp/no-let
+            let recipientId = usernameOrEmailAddress;
+            // eslint-disable-next-line fp/no-mutation
+            if (domain === appDomain) recipientId = username;
+            createTemporalAccount({ recipientId });
+            socketClient.start({ jwt: this.state.ephemeralToken });
+            this.checkLinkStatus();
+          }
+        );
       } else {
         this.goToPasswordLogin();
       }
     }
+  };
+
+  concat = (array, item) => {
+    const popItem = array[array.length - 1];
+    if (popItem === item) return array;
+    return array.concat([item]);
   };
 
   sendLoginConfirmationRequest = async ephemeralToken => {
@@ -555,12 +596,12 @@ class LoginWrapper extends Component {
     this.stopCountdown();
     this.setState({
       popupContent: {
-        title: login.usePassword.title,
-        prefix: login.usePassword.prefix,
-        strong: login.usePassword.strong,
-        suffix: login.usePassword.suffix,
-        cancelButtonLabel: login.usePassword.leftButtonLabel,
-        confirmButtonLabel: login.usePassword.rightButtonLabel
+        title: signIn.usePassword.title,
+        prefix: signIn.usePassword.prefix,
+        strong: signIn.usePassword.strong,
+        suffix: signIn.usePassword.suffix,
+        cancelButtonLabel: signIn.usePassword.leftButtonLabel,
+        confirmButtonLabel: signIn.usePassword.rightButtonLabel
       }
     });
   };
@@ -581,9 +622,12 @@ class LoginWrapper extends Component {
 
   handleCancelLink = () => {
     socketClient.disconnect();
-    this.setState({ popupContent: undefined }, () => {
-      this.goToPasswordLogin();
-    });
+    this.setState(state => ({
+      lastStep: this.concat(state.lastStep, mode.SIGNINPASSWORD),
+      currentStep: mode.SIGNINPASSWORD,
+      mode: mode.SIGNINPASSWORD,
+      popupContent: undefined
+    }));
   };
 
   handleClickResendLoginRequest = ev => {
@@ -612,7 +656,7 @@ class LoginWrapper extends Component {
           LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
           this.checkLinkStatus();
         } else {
-          this.setState({ mode: mode.LOGIN }, () => {
+          this.setState({ mode: mode.SIGNIN }, () => {
             this.cleanState();
             // eslint-disable-next-line fp/no-mutation
             LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
@@ -625,9 +669,11 @@ class LoginWrapper extends Component {
         case rejectedDeviceStatus: {
           this.stopCountdown();
           socketClient.disconnect();
-          this.setState({
+          this.setState(state => ({
+            lastStep: this.concat(state.lastStep, mode.DEVICE_NOT_APPROVED),
+            currentStep: mode.DEVICE_NOT_APPROVED,
             mode: mode.DEVICE_NOT_APPROVED
-          });
+          }));
           return;
         }
         case approvedDeviceStastus: {
@@ -669,6 +715,12 @@ class LoginWrapper extends Component {
       hasTwoFactorAuth: undefined
     });
   };
+
+  defineHeaderClass = () => {
+    return this.state.lastStep[this.state.lastStep.length - 1] === mode.SIGNIN
+      ? 'invisible'
+      : 'visible';
+  };
 }
 
-export default LoginWrapper;
+export default PanelWrapper;

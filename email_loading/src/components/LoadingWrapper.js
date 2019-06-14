@@ -23,7 +23,7 @@ const animationTypes = {
 
 const loadingTypes = {
   SIGNUP: 'signup',
-  LOGIN: 'login'
+  SIGNIN: 'signin'
 };
 
 const delay = 85;
@@ -62,7 +62,7 @@ class LoadingWrapper extends Component {
     if (percent === 2) {
       if (this.props.loadingType === loadingTypes.SIGNUP) {
         this.createNewAccount();
-      } else if (this.props.loadingType === loadingTypes.LOGIN) {
+      } else if (this.props.loadingType === loadingTypes.SIGNIN) {
         const { recipientId, deviceId, name, deviceType } = remoteData;
         let isRecipientApp = false;
         let username = recipientId;

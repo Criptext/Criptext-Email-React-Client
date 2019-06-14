@@ -1,14 +1,4 @@
 {
-  "continueLogin": {
-    "title": "Sign In",
-    "message": "Check and approve on your existing Criptext device to continue",
-    "getPromptLabel": "Didn't get the prompt?",
-    "passwordLoginLabel": "Sign In with password",
-    "buttons": {
-      "sending": "Sending...",
-      "resend": "Resend it"
-    }
-  },
   "deviceNotApproved": {
     "title": "Sign In Rejected",
     "message": "Your request to access this account was rejected by a verified device.",
@@ -18,7 +8,35 @@
     },
     "passwordLoginLabel": "Sign In with password"
   },
-  "login": {
+  "dialogContent": {
+    "confirmWaitingApprovalLogin": {
+      "cancelResponse": "Cancel",
+      "keepResponse": "Keep waiting",
+      "title": "Well, that's odd...",
+      "message": "Something has happened that is delaying this process.",
+      "detail": "Do you want to continue waiting?"
+    }
+  },
+  "errors":{
+    "loginFailed": {
+      "name": "Login error",
+      "description": "An error occurred while login. Please try again.\nCode: "
+    },
+    "tooManyDevices": {
+      "name": "Too many devices",
+      "description": "You already have too many active devices. \nFrom one of your trusted devices remove some inactive device and try again. If you can't access any of your trusted devices, contact support"
+    },
+    "tooManyRequests": {
+      "name": "Too many requests",
+      "description": "Too many consecutive attempts.\nPlease try again in "
+    },
+    "wrongCredentials": {
+      "name": "Wrong credentials",
+      "description":
+        "Incorrect username or password. Check credentials and try again."
+    }
+  },
+  "signIn": {
     "header": "Welcome to Criptext!",
     "inputPlaceholder": "Email address",
     "signInButtonLabel": "Sign In",
@@ -51,42 +69,6 @@
       "confirmButtonLabel": "Continue"
     }
   },
-  "signin": {
-    "title": "Warning!",
-    "prefix": "You did not set a Recovery Email, so",
-    "strong": " account recovery is impossible ",
-    "suffix": "if you forget your password",
-    "leftButtonLabel": "Cancel",
-    "rightButtonLabel": "Continue"
-  },
-  "passwordLogin": {
-    "sectionTitleSignIn": "Sign In",
-    "sectionTitleTwoFactorAuth": "Two-Factor Authentication",
-    "form": {
-      "passwordInputPlaceholder": "Password",
-      "forgotLabel": "Forgot?"
-    },
-    "buttons": {
-      "nextLabel": "Next",
-      "confirmLabel": "Confirm"
-    },
-    "forgotPasswordMessage": {
-      "title": "Reset Password",
-      "prefix": "A reset link was sent to",
-      "suffix": "The link will be valid for 30 minutes",
-      "dismissButtonLabel": "Okay",
-      "notSetError": {
-        "title": "No Recovery Email",
-        "message": "Password recovery is impossible as no recovery email was set on your account. For further assistance contact us:",
-        "dismissButtonLabel": "Okay"
-      },
-      "fallbackError": {
-        "title": "Reset Password",
-        "message": "Failed to send the Reset password link. Try again",
-        "dismissButtonLabel": "Okay"
-      }
-    }
-  },
   "signUp": {
     "header": "Sign Up",
     "subheader": "Create your Criptext account",
@@ -115,34 +97,54 @@
           "suffix": "Terms and Conditions"
         }
       }
+    },
+    "popUp": {
+      "warningRecoveryEmail": {
+        "title": "Warning!",
+        "prefix": "You did not set a Recovery Email, so",
+        "strong": " account recovery is impossible ",
+        "suffix": "if you forget your password",
+        "leftButtonLabel": "Cancel",
+        "rightButtonLabel": "Continue"
+      }
     }
   },
-  "dialogContent": {
-    "confirmWaitingApprovalLogin": {
-      "cancelResponse": "Cancel",
-      "keepResponse": "Keep waiting",
-      "title": "Well, that's odd...",
-      "message": "Something has happened that is delaying this process.",
-      "detail": "Do you want to continue waiting?"
+  "signInToApprove": {
+    "title": "Sign In",
+    "message": "Check and approve on your existing Criptext device to continue",
+    "getPromptLabel": "Didn't get the prompt?",
+    "passwordLoginLabel": "Sign In with password",
+    "buttons": {
+      "sending": "Sending...",
+      "resend": "Resend it"
     }
   },
-  "errors":{
-    "loginFailed": {
-      "name": "Login error",
-      "description": "An error occurred while login. Please try again.\nCode: "
+  "signInPassword": {
+    "sectionTitleSignIn": "Sign In",
+    "sectionTitleTwoFactorAuth": "Two-Factor Authentication",
+    "form": {
+      "passwordInputPlaceholder": "Password",
+      "forgotLabel": "Forgot?"
     },
-    "tooManyDevices": {
-      "name": "Too many devices",
-      "description": "You already have too many active devices. \nFrom one of your trusted devices remove some inactive device and try again. If you can't access any of your trusted devices, contact support"
+    "buttons": {
+      "nextLabel": "Next",
+      "confirmLabel": "Confirm"
     },
-    "tooManyRequests": {
-      "name": "Too many requests",
-      "description": "Too many consecutive attempts.\nPlease try again in "
-    },
-    "wrongCredentials": {
-      "name": "Wrong credentials",
-      "description":
-        "Incorrect username or password. Check credentials and try again."
+    "forgotPasswordMessage": {
+      "title": "Reset Password",
+      "prefix": "A reset link was sent to",
+      "suffix": "The link will be valid for 30 minutes",
+      "dismissButtonLabel": "Okay",
+      "notSetError": {
+        "title": "No Recovery Email",
+        "message": "Password recovery is impossible as no recovery email was set on your account. For further assistance contact us:",
+        "dismissButtonLabel": "Okay"
+      },
+      "fallbackError": {
+        "title": "Reset Password",
+        "message": "Failed to send the Reset password link. Try again",
+        "dismissButtonLabel": "Okay"
+      }
     }
   }
 }

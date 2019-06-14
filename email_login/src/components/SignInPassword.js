@@ -1,29 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { appDomain } from '../utils/const';
-import string from './../lang';
-import './lostAllDevices.scss';
+import string from '../lang';
+import './signinpassword.scss';
 
-const { passwordLogin } = string;
+const { signInPassword } = string;
 
-const LostAllDevices = props => (
-  <div className="lost">
-    {renderHeader(props)}
+const SignInPassword = props => (
+  <div id="section-signinpassword">
     {renderSubHeader(props)}
     {renderForm(props)}
-  </div>
-);
-
-const renderHeader = props => (
-  <div className="header">
-    <div className="button-section">
-      <button className="back-button" onClick={props.toggleLostAllDevices}>
-        <i className="icon-back" />
-      </button>
-    </div>
-    <div className="criptext-logo">
-      <div className="icon" />
-    </div>
   </div>
 );
 
@@ -34,9 +20,9 @@ const renderSubHeader = props => (
     </div>
     <div className="sub-text">
       {props.hasTwoFactorAuth ? (
-        <p>{passwordLogin.sectionTitleTwoFactorAuth}</p>
+        <p>{signInPassword.sectionTitleTwoFactorAuth}</p>
       ) : (
-        <p>{passwordLogin.sectionTitleSignIn}</p>
+        <p>{signInPassword.sectionTitleSignIn}</p>
       )}
       <p>{defineEmailAddress(props.values.usernameOrEmailAddress)}</p>
     </div>
@@ -50,14 +36,14 @@ const renderForm = props => (
         <input
           type="password"
           name="password"
-          placeholder={passwordLogin.form.passwordInputPlaceholder}
+          placeholder={signInPassword.form.passwordInputPlaceholder}
           value={props.values.password}
           onChange={props.onChangeField}
           disabled={props.isLoading}
           autoFocus={true}
         />
         <span className="forgot-password" onClick={props.handleForgot}>
-          {passwordLogin.form.forgotLabel}
+          {signInPassword.form.forgotLabel}
         </span>
       </div>
       <div className="button">
@@ -77,9 +63,9 @@ const renderForm = props => (
 
 const renderBaseContent = props => {
   return props.hasTwoFactorAuth ? (
-    <span className="button-text">{passwordLogin.buttons.nextLabel}</span>
+    <span className="button-text">{signInPassword.buttons.nextLabel}</span>
   ) : (
-    <span className="button-text">{passwordLogin.buttons.confirmLabel}</span>
+    <span className="button-text">{signInPassword.buttons.confirmLabel}</span>
   );
 };
 
@@ -100,11 +86,6 @@ const defineEmailAddress = usernameOrEmailAddress => {
   return usernameOrEmailAddress.includes('@')
     ? usernameOrEmailAddress
     : `${usernameOrEmailAddress}@${appDomain}`;
-};
-
-// eslint-disable-next-line fp/no-mutation
-renderHeader.propTypes = {
-  toggleLostAllDevices: PropTypes.func
 };
 
 // eslint-disable-next-line fp/no-mutation
@@ -129,4 +110,4 @@ renderBaseContent.propTypes = {
   hasTwoFactorAuth: PropTypes.bool
 };
 
-export default LostAllDevices;
+export default SignInPassword;

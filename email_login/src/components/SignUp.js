@@ -11,23 +11,9 @@ const SignUp = props =>
     </div>
   ) : (
     <div className="signup">
-      <Header {...props} />
       <Form {...props} />
     </div>
   );
-
-const Header = props => (
-  <div className="header">
-    <div className="button-section">
-      <button className="back-button" onClick={e => props.onToggleSignUp(e)}>
-        <i className="icon-back" />
-      </button>
-    </div>
-    <div className="criptext-logo">
-      <div className="icon" />
-    </div>
-  </div>
-);
 
 const Form = props => (
   <div className="form">
@@ -65,11 +51,6 @@ const Form = props => (
 );
 
 // eslint-disable-next-line fp/no-mutation
-Header.propTypes = {
-  onToggleSignUp: PropTypes.func
-};
-
-// eslint-disable-next-line fp/no-mutation
 Form.propTypes = {
   onClickSignUp: PropTypes.func,
   errors: PropTypes.object.isRequired,
@@ -78,7 +59,6 @@ Form.propTypes = {
   isShowingPassword: PropTypes.bool.isRequired,
   onChangeField: PropTypes.func,
   onToggleShowPassword: PropTypes.func,
-  onToggleSignUp: PropTypes.func,
   disabled: PropTypes.bool.isRequired,
   web: PropTypes.bool
 };

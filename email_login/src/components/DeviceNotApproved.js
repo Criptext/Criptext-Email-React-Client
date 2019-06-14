@@ -6,21 +6,7 @@ import './devicenotapproved.scss';
 const { deviceNotApproved } = string;
 
 const DeviceNotApproved = props => (
-  <div className="device-not-approved-container">
-    {renderHeader(props)}
-    {renderContent(props)}
-  </div>
-);
-
-const renderHeader = props => (
-  <div className="device-not-approved-header">
-    <button className="back-button" onClick={props.toggleDeviceNotApproved}>
-      <i className="icon-back" />
-    </button>
-    <div className="criptext-logo">
-      <div className="icon" />
-    </div>
-  </div>
+  <div className="device-not-approved-container">{renderContent(props)}</div>
 );
 
 const renderContent = props => (
@@ -47,11 +33,6 @@ const renderContent = props => (
     )}
   </div>
 );
-
-// eslint-disable-next-line fp/no-mutation
-renderHeader.propTypes = {
-  toggleDeviceNotApproved: PropTypes.func
-};
 
 // eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {

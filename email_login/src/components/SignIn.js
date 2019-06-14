@@ -1,38 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import string from './../lang';
-import './login.scss';
+import './signin.scss';
 
-const { login } = string;
+const { signIn } = string;
 
-const Login = props => renderLogin(props);
+const SignIn = props => renderLogin(props);
 
 const renderLogin = props => (
-  <div className="login">
-    {renderHeader()}
+  <div id="section-signin">
+    {renderWelcome()}
     {renderForm(props)}
     {renderFooter(props)}
   </div>
 );
 
-const renderHeader = () => (
-  <div className="header">
+const renderWelcome = () => (
+  <div className="signin-welcome">
     <div className="logo">
       <div className="icon" />
     </div>
     <div className="text">
-      <span>{login.header}</span>
+      <span>{signIn.header}</span>
     </div>
   </div>
 );
 
 const renderForm = props => (
-  <div className="form">
+  <div className="signin-form">
     <form autoComplete="off">
       <input
         type="text"
         name="username"
-        placeholder={login.inputPlaceholder}
+        placeholder={signIn.inputPlaceholder}
         value={props.value}
         onChange={props.onChangeField}
         autoFocus={true}
@@ -44,7 +44,7 @@ const renderForm = props => (
           onClick={props.onClickSignIn}
           disabled={props.disabledLoginButton}
         >
-          <span>{login.signInButtonLabel}</span>
+          <span>{signIn.signInButtonLabel}</span>
         </button>
       </div>
     </form>
@@ -52,12 +52,12 @@ const renderForm = props => (
 );
 
 const renderFooter = props => (
-  <div className="footer">
+  <div className="signin-footer">
     <div className="signup-message">
       <span>
-        {login.signUpMessage.text} &nbsp;
-        <strong onClick={e => props.onToggleSignUp(e)}>
-          {login.signUpMessage.strong}
+        {signIn.signUpMessage.text} &nbsp;
+        <strong onClick={e => props.goToSignUp(e)}>
+          {signIn.signUpMessage.strong}
         </strong>
       </span>
     </div>
@@ -75,7 +75,7 @@ renderForm.propTypes = {
 
 // eslint-disable-next-line fp/no-mutation
 renderFooter.propTypes = {
-  onToggleSignUp: PropTypes.func
+  goToSignUp: PropTypes.func
 };
 
-export default Login;
+export default SignIn;
