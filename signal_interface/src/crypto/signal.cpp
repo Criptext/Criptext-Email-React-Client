@@ -3,11 +3,7 @@
 #include <iostream>
 
 CriptextSignal::CriptextSignal(int accountId){
-
-    int result = 0;
-
-    result = signal_context_create(&global_context, 0);
-
+    signal_context_create(&global_context, 0);
     signal_crypto_provider provider = {
         .random_func = random_generator,
         .hmac_sha256_init_func = hmac_sha256_init,
@@ -23,9 +19,13 @@ CriptextSignal::CriptextSignal(int accountId){
         .user_data = 0
     };
 
-    result = signal_context_set_crypto_provider(global_context, &provider);
-
-    setup_store_context(&encrypter_stote, global_context, accountId);
+    signal_context_set_crypto_provider(global_context, &provider);
+    try {
+        account = CriptextDB::getAccount("Criptext.db", accountId);
+    } catch (exception &e) {
+        return;
+    }
+    setup_store_context(&encrypter_stote, global_context, &account);
 }
 
 std::string CriptextSignal::decryptText(std::string encryptedText, std::string recipientId, int deviceId, int message_type){
@@ -40,7 +40,7 @@ std::string CriptextSignal::decryptText(std::string encryptedText, std::string r
 
     session_cipher *session_cipher = 0;
     result = session_cipher_create(&session_cipher, encrypter_stote, &address, global_context);
-    
+    std::cout << result << std::endl;
     size_t decode_len = 0;
     const unsigned char *encryptedCText = reinterpret_cast<const unsigned char*>(encryptedText.c_str());
     unsigned char* textFromB64 = base64_decode(encryptedCText, strlen((char *)encryptedCText), &decode_len);
@@ -56,12 +56,9 @@ std::string CriptextSignal::decryptText(std::string encryptedText, std::string r
         } else {
             const uint8_t *preKeyMessageData = reinterpret_cast<const uint8_t*>(textFromB64);
             pre_key_signal_message *incoming_message = 0;
-            std::cout << "GOING 1 : " << encryptedCText << " : " << textFromB64 << " : " << decode_len << std::endl;
             pre_key_signal_message_deserialize(&incoming_message, preKeyMessageData, decode_len, global_context);
-            std::cout << "GOING 2 : " << sizeof(preKeyMessageData) << " : " << *preKeyMessageData << std::endl;
             signal_buffer *plainMessage = 0;
             session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
-            std::cout << "GOING 3" << std::endl;
             return std::string(*plainMessage->data, *plainMessage->data + plainMessage->len);
         }
     } catch(exception &ex) {

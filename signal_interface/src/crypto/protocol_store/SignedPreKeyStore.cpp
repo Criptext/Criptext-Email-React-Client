@@ -3,6 +3,7 @@
 #include "../uthash.h"
 #include <string>
 #include <vector>
+#include <iostream>
 
 int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t signed_pre_key_id, void *user_data)
 {
@@ -14,13 +15,16 @@ int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t si
     } catch (exception& e){
         return 0;
     }
-
+    
     const uint8_t* recordData = reinterpret_cast<const uint8_t*>(signedPreKey.privKey.c_str());
-    signal_buffer *result = signal_buffer_create(recordData, sizeof(recordData));
+    signal_buffer *result = signal_buffer_create(recordData, strlen(signedPreKey.privKey.c_str()));
+    
     if(!result) {
         return SG_ERR_NOMEM;
     }
     *record = result;
+
+    std::cout << "WELP" << std::endl;
     return 1;
 }
 

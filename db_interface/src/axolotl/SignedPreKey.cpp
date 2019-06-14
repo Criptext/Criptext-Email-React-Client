@@ -7,7 +7,7 @@
 using namespace std;
 
 CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id, int accountId) {
-  std::cout << "Get SignedPreKey : " << id << std::endl;
+  std::cout << "Get SignedPreKey : " << id << " : " <<  dbPath << " : " << accountId << std::endl;
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "Select * from signedprekeyrecord where signedPreKeyId == ? and accountId == ?");
@@ -16,7 +16,7 @@ CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id
 
   query.executeStep();
 
-  CriptextDB::SignedPreKey signedPreKey = { query.getColumn(1).getInt(), query.getColumn(2).getString(), query.getColumn(3).getString() };
+  CriptextDB::SignedPreKey signedPreKey = { query.getColumn(2).getInt(), query.getColumn(3).getString(), query.getColumn(4).getString() };
   return signedPreKey;
 }
 

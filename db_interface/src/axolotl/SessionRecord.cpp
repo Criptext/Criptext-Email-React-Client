@@ -7,7 +7,7 @@
 using namespace std;
 
 CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, int accountId, string recipientId, long int deviceId) {
-  std::cout << "Get Session Record : " << recipientId << std::endl;
+  std::cout << "Get Session Record : " << accountId << std::endl;
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "Select * from sessionrecord where recipientId == ? and deviceId == ? and accountId == ?");

@@ -28,6 +28,7 @@ struct signal_buffer {
 
 class CriptextSignal {
 
+    CriptextDB::Account account;
     signal_context* global_context = 0;
     signal_protocol_store_context* encrypter_stote = 0;
 

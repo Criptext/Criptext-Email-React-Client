@@ -3,6 +3,7 @@
 #include "../uthash.h"
 #include <string>
 #include <vector>
+#include <iostream>
 
 int session_store_load_session(signal_buffer **record, signal_buffer **user_record, const signal_protocol_address *address, void *user_data)
 {
@@ -10,6 +11,8 @@ int session_store_load_session(signal_buffer **record, signal_buffer **user_reco
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
     CriptextDB::SessionRecord sessionRecord;
+
+    std::cout << "YAS : " << recipientId << " : " << account->id << std::endl;
 
     try {
         sessionRecord = CriptextDB::getSessionRecord("Criptext.db", account->id, recipientId, deviceId);
