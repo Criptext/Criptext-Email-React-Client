@@ -1,4 +1,4 @@
-#include "./crypto.h"
+#include "crypto.h"
 
 #include <openssl/opensslv.h>
 #include <openssl/evp.h>
@@ -193,7 +193,7 @@ void sha512_digest_cleanup(void *digest_context, void *user_data)
     EVP_MD_CTX_destroy(ctx);
 }
 
-int encrypt(signal_buffer **output,
+int encrypth(signal_buffer **output,
         int cipher,
         const uint8_t *key, size_t key_len,
         const uint8_t *iv, size_t iv_len,

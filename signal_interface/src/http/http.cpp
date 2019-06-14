@@ -1,8 +1,12 @@
 #include "http.h"
-
-#include <openssl/sha.h>
 #include <unistd.h>
-#include <CriptextSignal>
+#include <iostream>
+
+struct mg_callbacks callbacks;
+struct mg_context *ctx;
+
+char* login_url;
+char* get_kb_url;
 
 const char* civet_options[] = {
     "document_root",
@@ -18,27 +22,29 @@ const char* civet_options[] = {
     0
 };
 
-void http_init(){
-  curl_global_init(CURL_GLOBAL_ALL);
+int decrypt(struct mg_connection *conn, void *cbdata){
+  std::cout << "DECRYPT" << std::endl;
+  return postDecrypt(conn, cbdata);
+}
 
+
+int pong(struct mg_connection *conn, void *cbdata){
+  std::cout << "PING PING" << std::endl;
+  mg_send_http_ok( conn, "text/plain", 5);
+  mg_write(conn, "pong\n", 5);
+  return 1;
+}
+
+void http_init(){
   login_url = getenv("BOB_LOGIN_URL");
   get_kb_url = getenv("BOB_GET_KEYBUNDLE_URL");
 
   ctx = mg_start(&callbacks, 0, civet_options);
   mg_set_request_handler(ctx, "/decrypt", decrypt, 0);
-
+  mg_set_request_handler(ctx, "/ping", pong, 0);
 }
 
 void http_shutdown(){
-  curl_global_cleanup();
   mg_stop(ctx);
 }
 
-int decrypt(struct mg_connection *conn, void *cbdata){
-
-    CriptextSignal signal();
-
-    mg_send_http_ok( conn, "text/plain", 5);
-    mg_write(conn, "pong\n", 5);
-    return 1;
-}

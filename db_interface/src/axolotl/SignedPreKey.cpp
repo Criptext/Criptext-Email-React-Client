@@ -1,62 +1,57 @@
+#include "SignedPreKey.h"
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
-namespace CriptextDB {
+CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id, int accountId) {
+  std::cout << "Get SignedPreKey : " << id << std::endl;
+  SQLite::Database db(dbPath);
 
-  struct SignedPreKey { 
-    int id;
-    string privKey;
-    string pubKey;
-  };
+  SQLite::Statement query(db, "Select * from signedprekeyrecord where signedPreKeyId == ? and accountId == ?");
+  query.bind(1, id);
+  query.bind(2, accountId);
 
-  SignedPreKey getSignedPreKey(string dbPath, short int id, int accountId) {
+  query.executeStep();
+
+  CriptextDB::SignedPreKey signedPreKey = { query.getColumn(1).getInt(), query.getColumn(2).getString(), query.getColumn(3).getString() };
+  return signedPreKey;
+}
+
+bool CriptextDB::createSignedPreKey(string dbPath, short int id, string privKey, string pubKey, int accountId) {
+  std::cout << "Create SignedPreKey : " << id << std::endl;
+  try {
     SQLite::Database db(dbPath);
 
-    SQLite::Statement query(db, "Select * from signedprekeyrecord where signedPreKeyId == ? and accountId == ?");
+    SQLite::Statement query(db, "insert into signedprekey (signedPreKeyId, signedPreKeyPrivKey, signedPreKeyPubKey, accountId) values (?,?,?,?)");
+    query.bind(1, id);
+    query.bind(2, privKey);
+    query.bind(3, pubKey);
+    query.bind(4, accountId);
+
+    query.exec();
+  } catch (exception& e) {
+    return false;
+  }
+
+  return true;
+}
+
+bool CriptextDB::deleteSignedPreKey(string dbPath, short int id, int accountId) {
+  std::cout << "Delete SignedPreKey : " << id << std::endl;
+  try {
+    SQLite::Database db(dbPath);
+
+    SQLite::Statement query(db, "delete from signedPrekeyrecord where signedPreKeyId == ? and accountId == ?");
     query.bind(1, id);
     query.bind(2, accountId);
 
-    query.executeStep();
-
-    SignedPreKey signedPreKey = { query.getColumn(1).getInt(), query.getColumn(2).getString(), query.getColumn(3).getString() };
-    return signedPreKey;
+    query.exec();
+  } catch (exception& e) {
+    return false;
   }
 
-  bool createSignedPreKey(string dbPath, short int id, string privKey, string pubKey, int accountId) {
-    try {
-      SQLite::Database db(dbPath);
-
-      SQLite::Statement query(db, "insert into signedprekey (signedPreKeyId, signedPreKeyPrivKey, signedPreKeyPubKey, accountId) values (?,?,?,?)");
-      query.bind(1, id);
-      query.bind(2, privKey);
-      query.bind(3, pubKey);
-      query.bind(4, accountId);
-
-      query.exec();
-    } catch (exception& e) {
-      return false;
-    }
-
-    return true;
-  }
-
-  bool deleteSignedPreKey(string dbPath, short int id, int accountId) {
-    try {
-      SQLite::Database db(dbPath);
-
-      SQLite::Statement query(db, "delete from signedPrekeyrecord where signedPreKeyId == ? and accountId == ?");
-      query.bind(1, id);
-      query.bind(2, accountId);
-
-      query.exec();
-    } catch (exception& e) {
-      return false;
-    }
-
-    return true;
-  }
-
-} 
+  return true;
+}

@@ -1,9 +1,7 @@
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include <civetweb.h>
-
-struct mg_callbacks callbacks;
-struct mg_context *ctx;
+#include "./handlers/decrypt.h"
 
 void http_init();
 void http_shutdown();

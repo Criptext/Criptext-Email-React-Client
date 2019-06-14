@@ -1,22 +1,22 @@
-#include <check.h>
-#include "./store.h"
-#include "./uthash.h"
+#include "PreKeyStore.h"
+#include "../store.h"
+#include "../uthash.h"
 #include <string>
 #include <vector>
 
 int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void *user_data)
 {
 
-    CriptextDB::Account *account = user_data;
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     CriptextDB::PreKey preKey;
 
     try {
-        preKey = CriptextDB::getPreKey("<path>", pre_key_id, account->id)
+        preKey = CriptextDB::getPreKey("Criptext.db", pre_key_id, account->id);
     } catch (exception& e){
         return 0;
     }
 
-    uint8_t* recordData = reinterpret_cast<const uint8_t*>(preKey.privKey.getString());
+    const uint8_t* recordData = reinterpret_cast<const uint8_t*>(preKey.privKey.c_str());
     signal_buffer *result = signal_buffer_create(recordData, sizeof(recordData));
     if(!result) {
         return SG_ERR_NOMEM;
@@ -27,18 +27,18 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
 
 int pre_key_store_store_pre_key(uint32_t pre_key_id, uint8_t *record, size_t record_len, void *user_data)
 {
-    CriptextDB::Account *account = user_data;
-    bool success = CriptextDB::createPreKey("<path>", pre_key_id, "<PrivKey>", "<PubKey>", account->id);
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
+    bool success = CriptextDB::createPreKey("Criptext.db", pre_key_id, "<PrivKey>", "<PubKey>", account->id);
     return success ? 1 : 0;
 }
 
 int pre_key_store_contains_pre_key(uint32_t pre_key_id, void *user_data)
 {
-    CriptextDB::Account *account = user_data;
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     CriptextDB::PreKey preKey;
 
     try {
-        preKey = CriptextDB::getPreKey("<path>", pre_key_id, account->id)
+        preKey = CriptextDB::getPreKey("Criptext.db", pre_key_id, account->id);
     } catch (exception& e){
         return 0;
     }
@@ -48,8 +48,8 @@ int pre_key_store_contains_pre_key(uint32_t pre_key_id, void *user_data)
 
 int pre_key_store_remove_pre_key(uint32_t pre_key_id, void *user_data)
 {
-    CriptextDB::Account *account = user_data;
-    bool success = CriptextDB::deletePreKey("<path>", pre_key_id, account->id);
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
+    bool success = CriptextDB::deletePreKey("Criptext.db", pre_key_id, account->id);
     return success ? 1 : 0;
 }
 

@@ -12,6 +12,7 @@ electron_app/src/__integrations__/**@criptext.com/
 electron_app/userData/
 
 # production
+*_interface/build
 email_*/build
 */dist
 */src/**/*.css

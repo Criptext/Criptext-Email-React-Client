@@ -1,21 +1,21 @@
-#include <check.h>
-#include "./store.h"
-#include "./uthash.h"
+#include "SignedPreKeyStore.h"
+#include "../store.h"
+#include "../uthash.h"
 #include <string>
 #include <vector>
 
 int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t signed_pre_key_id, void *user_data)
 {
-    CriptextDB::Account *account = user_data;
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     CriptextDB::SignedPreKey signedPreKey;
 
     try {
-        signedPreKey = CriptextDB::getSignedPreKey("<dbPath>", signed_pre_key_id, account->id);
+        signedPreKey = CriptextDB::getSignedPreKey("Criptext.db", signed_pre_key_id, account->id);
     } catch (exception& e){
         return 0;
     }
 
-    uint8_t* recordData = reinterpret_cast<const uint8_t*>(signedPreKey.privKey.getString());
+    const uint8_t* recordData = reinterpret_cast<const uint8_t*>(signedPreKey.privKey.c_str());
     signal_buffer *result = signal_buffer_create(recordData, sizeof(recordData));
     if(!result) {
         return SG_ERR_NOMEM;
@@ -26,17 +26,16 @@ int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t si
 
 int signed_pre_key_store_store_signed_pre_key(uint32_t signed_pre_key_id, uint8_t *record, size_t record_len, void *user_data)
 {
-    CriptextDB::Account *account = user_data;
-    bool success = CriptextDB::createSignedPreKey("<dbPath>", signed_pre_key_id, "<PrivKey>", "<PubKey>", account->id);
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
+    bool success = CriptextDB::createSignedPreKey("Criptext.db", signed_pre_key_id, "<PrivKey>", "<PubKey>", account->id);
     return success ? 1 : 0;
 }
 
 int signed_pre_key_store_contains_signed_pre_key(uint32_t signed_pre_key_id, void *user_data)
 {
-    CriptextDB::Account *account = user_data;
-    CriptextDB::SignedPreKey signedPreKey;
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     try {
-        signedPreKey = CriptextDB::getSignedPreKey("<dbPath>", signed_pre_key_id, account->id);
+        CriptextDB::getSignedPreKey("Criptext.db", signed_pre_key_id, account->id);
     } catch (exception& e){
         return 0;
     }
@@ -45,8 +44,8 @@ int signed_pre_key_store_contains_signed_pre_key(uint32_t signed_pre_key_id, voi
 
 int signed_pre_key_store_remove_signed_pre_key(uint32_t signed_pre_key_id, void *user_data)
 {
-    CriptextDB::Account *account = user_data;
-    bool success = CriptextDB::deleteSignedPreKey("<dbPath>", signed_pre_key_id, account->id);
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
+    bool success = CriptextDB::deleteSignedPreKey("Criptext.db", signed_pre_key_id, account->id);
     return success ? 1 : 0;
 }
 

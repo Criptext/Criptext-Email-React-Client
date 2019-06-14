@@ -1,15 +1,40 @@
 #ifndef SIGNAL_H
 #define SIGNAL_H
 
-#include "../types.h"
+#include <string>
+#include <signal/session_builder.h>
+#include <signal/session_cipher.h>
+#include <signal/protocol.h>
 
-#include <signal/signal_protocol.h>
+#include "store.h"
+extern "C" {
+    #include "crypto.h"
+    #include "base64.h"
+}
+/*static pthread_mutex_t global_mutex;
 
-void signal_shutdown();
-signal_context* signal_init();
-void signal_setup_session(struct keybundle* kb);
-int signal_encrypt_bytes(const char* original, int original_len, char** bytes, signal_protocol_address* address, int* message_type);
-int signal_get_known_addresses(int** addresses, char* recipient, char* domain);
-void signal_delete_session(struct blacklisted* bl);
+void lock_fn(void *user_data){
+    pthread_mutex_lock(&global_mutex);
+}
+
+void unlock_fn(void *user_data){
+    pthread_mutex_unlock(&global_mutex);
+}
+*/
+struct signal_buffer {
+    size_t len;
+    uint8_t data[];
+};
+
+class CriptextSignal {
+
+    signal_context* global_context = 0;
+    signal_protocol_store_context* encrypter_stote = 0;
+
+    public :
+        CriptextSignal(int accountId);
+        std::string decryptText(std::string encryptedText, std::string recipientId, int deviceId, int message_type);
+        void clean();
+};
 
 #endif

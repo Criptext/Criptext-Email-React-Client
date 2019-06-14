@@ -17,7 +17,7 @@ int sha512_digest_update(void *digest_context, const uint8_t *data, size_t data_
 int sha512_digest_final(void *digest_context, signal_buffer **output, void *user_data);
 void sha512_digest_cleanup(void *digest_context, void *user_data);
 
-int encrypt(signal_buffer **output,
+int encrypth(signal_buffer **output,
         int cipher,
         const uint8_t *key, size_t key_len,
         const uint8_t *iv, size_t iv_len,

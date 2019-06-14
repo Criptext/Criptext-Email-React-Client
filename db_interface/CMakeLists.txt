@@ -1,5 +1,6 @@
 set(SOURCES
     src/main.cpp
+    src/axolotl/Account.cpp
     src/axolotl/IdentityKey.cpp
     src/axolotl/PreKey.cpp
     src/axolotl/SessionRecord.cpp
