@@ -1,0 +1,122 @@
+@import "./../styles/index.scss";
+
+.cptx-email-loading-container{
+  border: solid 1px transparent;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 8px);
+  margin-bottom: 6px;
+  width: calc(100% - 2px);
+
+  .cptx-email-loading-info{
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    height: 65px;
+    margin: 5px 17px 0;
+    width: calc(100% - 32px);
+
+    .cptx-email-loading-info-letter{
+      border-radius: 50%;
+      height: 36px;
+      margin-right: 10px;
+      width: 36px;
+      @extend .animated-background;
+    }
+
+    .cptx-email-loading-info-content{
+      align-content: space-around;
+      display: flex;
+      flex-direction: column;
+      width: calc(100% - 46px);
+
+      .cptx-email-loading-text-line{
+        &:nth-child(1){
+          width: 35%;
+        }
+
+        &:nth-child(2){
+          margin-top: 10px;
+          width: 50%;
+        }
+      }
+    }
+  }
+
+  > hr{
+    background-color: transparent;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    width: calc(100% - 20px);
+  }
+
+  .cptx-email-loading-body{
+    margin: 5px 17px 0;
+    width: calc(100% - 32px);
+
+    .cptx-email-loading-text-line{
+      &:nth-child(1){
+        margin-top: 40px;
+        width: 40%;
+      }
+
+      &:nth-child(2){
+        margin-top: 30px;
+      }
+
+      &:nth-child(3), &:nth-child(4){
+        margin-top: 10px;
+      }
+
+      &:nth-child(4){
+        width: 60%;
+      }
+    }
+  }
+
+  .cptx-email-loading-text-line{
+    background-color: #cbd4dc;
+    border-radius: 2px;
+    height: 7px;
+    margin: 5px 0;
+    width: 100%;
+    @extend .animated-background;
+  } 
+}
+
+@keyframes placeHolderShimmer{
+  0%{
+      background-position: -468px 0
+  }
+  100%{
+      background-position: 468px 0
+  }
+}
+
+.animated-background {
+  animation-duration: 1.25s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  position: relative;
+}
+
+@mixin themable($_THEME, $_BACKGROUND_COLOR_EMAIL, $_BORDER_COLOR_EMAIL, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT1, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT2, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT3){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .cptx-email-loading-container{
+      background-color: $_BACKGROUND_COLOR_EMAIL;
+      border-color: $_BORDER_COLOR_EMAIL;
+    }
+
+    .animated-background{
+      background: linear-gradient(to right, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT1 8%, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT2 18%, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT3 33%);
+      background-size: 800px 104px;
+    }
+  }
+}
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_EMAIL_LIGHT, $_BORDER_COLOR_EMAIL_LIGHT, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT1_LIGHT, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT2_LIGHT, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT3_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_EMAIL_DARK, $_BORDER_COLOR_EMAIL_DARK, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT1_DARK, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT2_DARK, $_BACKGROUND_COLOR_EMAIL_LOADING_GRADIENT3_DARK);
