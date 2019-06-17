@@ -1,8 +1,166 @@
 # Change Log
 
-## [0.17.14](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
+## [0.17.18](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
 
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.11...HEAD)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.17...HEAD)
+
+**Closed issues:**
+
+- Mailbox: Add loading emails [\#974](https://github.com/Criptext/Criptext-Email-React-Client/issues/974)
+
+**Merged pull requests:**
+
+- Add loading emails. Close \#974 [\#979](https://github.com/Criptext/Criptext-Email-React-Client/pull/979) ([erikaperugachi](https://github.com/erikaperugachi))
+
+## [0.17.17](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.17) (2019-06-12)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.15...0.17.17)
+
+**Implemented enhancements:**
+
+- Composer: Set default font-family and font-size [\#977](https://github.com/Criptext/Criptext-Email-React-Client/issues/977)
+- File: enhancement design [\#975](https://github.com/Criptext/Criptext-Email-React-Client/issues/975)
+- Database: Pass query builder to raw query. [\#964](https://github.com/Criptext/Criptext-Email-React-Client/issues/964)
+- Mailbox: Avatars for enterprise should be retrieved using domain [\#963](https://github.com/Criptext/Criptext-Email-React-Client/issues/963)
+- Composer: Show encryption popup if enabled in settings [\#960](https://github.com/Criptext/Criptext-Email-React-Client/issues/960)
+- Mailbox: Handle Push Notifications for background accounts [\#956](https://github.com/Criptext/Criptext-Email-React-Client/issues/956)
+- Mailbox: Stop sync events [\#951](https://github.com/Criptext/Criptext-Email-React-Client/issues/951)
+- Mailbox: FromDomain in tracking update event [\#941](https://github.com/Criptext/Criptext-Email-React-Client/issues/941)
+- Loading: Stop window closing until mailbox window is ready [\#936](https://github.com/Criptext/Criptext-Email-React-Client/issues/936)
+- App: Change account without refresh app. [\#932](https://github.com/Criptext/Criptext-Email-React-Client/issues/932)
+- Catch and Retry Data Transfer Error [\#930](https://github.com/Criptext/Criptext-Email-React-Client/issues/930)
+- Loading: Restart upload if data transfer fails [\#928](https://github.com/Criptext/Criptext-Email-React-Client/issues/928)
+- In Reply To [\#923](https://github.com/Criptext/Criptext-Email-React-Client/issues/923)
+- Composer: Implement findKeyBundle and PostEmail v9.0.0 [\#920](https://github.com/Criptext/Criptext-Email-React-Client/issues/920)
+- Mailbox: Add badge to multiple account [\#917](https://github.com/Criptext/Criptext-Email-React-Client/issues/917)
+- Multiple Accounts:  Show login warnings and popup error [\#909](https://github.com/Criptext/Criptext-Email-React-Client/issues/909)
+- Mailbox: Enlarge threads size [\#908](https://github.com/Criptext/Criptext-Email-React-Client/issues/908)
+- Multiple Account: Add account store [\#905](https://github.com/Criptext/Criptext-Email-React-Client/issues/905)
+- Multiple Account: Delete action click to accoint item active [\#902](https://github.com/Criptext/Criptext-Email-React-Client/issues/902)
+- Multiple Account: Fix slow change account [\#897](https://github.com/Criptext/Criptext-Email-React-Client/issues/897)
+- Encrypt to Externals optional with password [\#962](https://github.com/Criptext/Criptext-Email-React-Client/pull/962) ([Hirobreak](https://github.com/Hirobreak))
+
+**Fixed bugs:**
+
+- Composer: Set default font-family and font-size [\#977](https://github.com/Criptext/Criptext-Email-React-Client/issues/977)
+- Email: Fix unsend button [\#976](https://github.com/Criptext/Criptext-Email-React-Client/issues/976)
+- Composer: Fix files, does not show real state [\#971](https://github.com/Criptext/Criptext-Email-React-Client/issues/971)
+- Mailbox: No decrypt file in not email encrypted. [\#970](https://github.com/Criptext/Criptext-Email-React-Client/issues/970)
+- App: Fix socket disconnect hang up [\#957](https://github.com/Criptext/Criptext-Email-React-Client/issues/957)
+- Enterprise: Refactor all email addresses formed with myAccount [\#952](https://github.com/Criptext/Criptext-Email-React-Client/issues/952)
+- Account: Add, update and test to reducer [\#937](https://github.com/Criptext/Criptext-Email-React-Client/issues/937)
+- App: Stop getting events \(firebase, socket & client\) on changing account [\#935](https://github.com/Criptext/Criptext-Email-React-Client/issues/935)
+- Fix sidebar collapse transition [\#929](https://github.com/Criptext/Criptext-Email-React-Client/issues/929)
+- Mailbox: Fix scroll [\#915](https://github.com/Criptext/Criptext-Email-React-Client/issues/915)
+- Composer: Accept email address with replyTo format [\#914](https://github.com/Criptext/Criptext-Email-React-Client/issues/914)
+- Composer: Fix slow typing [\#911](https://github.com/Criptext/Criptext-Email-React-Client/issues/911)
+- Mailbox: Enlarge threads size [\#908](https://github.com/Criptext/Criptext-Email-React-Client/issues/908)
+- Loading:  Fix import/export database \(Sync & Link\) [\#904](https://github.com/Criptext/Criptext-Email-React-Client/issues/904)
+- Mailbox: Fix peer labels update by email and thread \(303, 304\) [\#901](https://github.com/Criptext/Criptext-Email-React-Client/issues/901)
+- Mailbox: Fix peer delete permanent by threadId \(306\) [\#900](https://github.com/Criptext/Criptext-Email-React-Client/issues/900)
+- Mailbox: Fix peer event 307 \(unsend\) [\#899](https://github.com/Criptext/Criptext-Email-React-Client/issues/899)
+- Sync: Fix sync account [\#898](https://github.com/Criptext/Criptext-Email-React-Client/issues/898)
+- Settings: Fix last activity time of the devices [\#896](https://github.com/Criptext/Criptext-Email-React-Client/issues/896)
+- Mailbox: Fix low prekeys event [\#893](https://github.com/Criptext/Criptext-Email-React-Client/issues/893)
+- Mailbox:  Don't show user guide on loggin' out [\#892](https://github.com/Criptext/Criptext-Email-React-Client/issues/892)
+- Mailbox: Keep another account data on remove device [\#891](https://github.com/Criptext/Criptext-Email-React-Client/issues/891)
+- Composer: Fix outgoing email labels [\#889](https://github.com/Criptext/Criptext-Email-React-Client/issues/889)
+- Mailbox: Fix incoming email labels [\#888](https://github.com/Criptext/Criptext-Email-React-Client/issues/888)
+- App: Close permanently login window, when this is opened from mailbox [\#887](https://github.com/Criptext/Criptext-Email-React-Client/issues/887)
+- Email: Fix update starred label [\#886](https://github.com/Criptext/Criptext-Email-React-Client/issues/886)
+- Composer: Fix edit draft [\#882](https://github.com/Criptext/Criptext-Email-React-Client/issues/882)
+- Database: Fix update email with accountId [\#879](https://github.com/Criptext/Criptext-Email-React-Client/issues/879)
+- UI: Fix css email crush with css app [\#877](https://github.com/Criptext/Criptext-Email-React-Client/issues/877)
+- App:  Fix create contact query [\#871](https://github.com/Criptext/Criptext-Email-React-Client/issues/871)
+- Restart API client on swapping accounts [\#870](https://github.com/Criptext/Criptext-Email-React-Client/issues/870)
+- Mialbox: Fix Parsing new email event results on error [\#861](https://github.com/Criptext/Criptext-Email-React-Client/issues/861)
+- Websocket not reconnecting for new active account [\#860](https://github.com/Criptext/Criptext-Email-React-Client/issues/860)
+- Push Notifications working only for the first Account [\#859](https://github.com/Criptext/Criptext-Email-React-Client/issues/859)
+
+**Closed issues:**
+
+- Login: Add login with email address [\#947](https://github.com/Criptext/Criptext-Email-React-Client/issues/947)
+- Mailbox: Add popup while the app is changing account [\#944](https://github.com/Criptext/Criptext-Email-React-Client/issues/944)
+- Composer & Mailbox: Refresh token when file server returns 401 [\#926](https://github.com/Criptext/Criptext-Email-React-Client/issues/926)
+- App:  Refresh session v8 [\#922](https://github.com/Criptext/Criptext-Email-React-Client/issues/922)
+- Composer: Focus teaxtarea body when is a reply-all email [\#919](https://github.com/Criptext/Criptext-Email-React-Client/issues/919)
+- Multiple Accounts:  Add accounts limit [\#912](https://github.com/Criptext/Criptext-Email-React-Client/issues/912)
+- Settings: Add multiple accounts [\#884](https://github.com/Criptext/Criptext-Email-React-Client/issues/884)
+- Mailbox: Add design menu multilple account [\#880](https://github.com/Criptext/Criptext-Email-React-Client/issues/880)
+- App:  Select next account on logout [\#876](https://github.com/Criptext/Criptext-Email-React-Client/issues/876)
+- Composer: Send emails by differents accounts. [\#872](https://github.com/Criptext/Criptext-Email-React-Client/issues/872)
+- Composer: Show and load multiple account as from input. [\#868](https://github.com/Criptext/Criptext-Email-React-Client/issues/868)
+
+**Merged pull requests:**
+
+- Fixes [\#978](https://github.com/Criptext/Criptext-Email-React-Client/pull/978) ([erikaperugachi](https://github.com/erikaperugachi))
+- Deprecate SEND\_OPEN\_EVEN, and call pending events to reconnection sta… [\#973](https://github.com/Criptext/Criptext-Email-React-Client/pull/973) ([erikaperugachi](https://github.com/erikaperugachi))
+- Settings [\#972](https://github.com/Criptext/Criptext-Email-React-Client/pull/972) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fixes from account to master [\#969](https://github.com/Criptext/Criptext-Email-React-Client/pull/969) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix labels [\#967](https://github.com/Criptext/Criptext-Email-React-Client/pull/967) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix update electron [\#966](https://github.com/Criptext/Criptext-Email-React-Client/pull/966) ([erikaperugachi](https://github.com/erikaperugachi))
+- Enhacements and updates [\#965](https://github.com/Criptext/Criptext-Email-React-Client/pull/965) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix blockquote that is not in the DOM. [\#959](https://github.com/Criptext/Criptext-Email-React-Client/pull/959) ([erikaperugachi](https://github.com/erikaperugachi))
+- Multiple accounts: Fix socket disconnect [\#958](https://github.com/Criptext/Criptext-Email-React-Client/pull/958) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fixes enterprise [\#955](https://github.com/Criptext/Criptext-Email-React-Client/pull/955) ([JulianAdams4](https://github.com/JulianAdams4))
+- Stop sync events. Close \#951 [\#954](https://github.com/Criptext/Criptext-Email-React-Client/pull/954) ([erikaperugachi](https://github.com/erikaperugachi))
+- Handle one new email when receiving push notification [\#953](https://github.com/Criptext/Criptext-Email-React-Client/pull/953) ([Hirobreak](https://github.com/Hirobreak))
+- Login with email address. Close \#947 [\#950](https://github.com/Criptext/Criptext-Email-React-Client/pull/950) ([erikaperugachi](https://github.com/erikaperugachi))
+- Receiving and Sending from Peers [\#949](https://github.com/Criptext/Criptext-Email-React-Client/pull/949) ([Hirobreak](https://github.com/Hirobreak))
+- Login with username or email address. Close \#947 [\#948](https://github.com/Criptext/Criptext-Email-React-Client/pull/948) ([erikaperugachi](https://github.com/erikaperugachi))
+- update jquery to remove warning [\#946](https://github.com/Criptext/Criptext-Email-React-Client/pull/946) ([Hirobreak](https://github.com/Hirobreak))
+- UI to change account [\#945](https://github.com/Criptext/Criptext-Email-React-Client/pull/945) ([erikaperugachi](https://github.com/erikaperugachi))
+- Getting Events Handling [\#943](https://github.com/Criptext/Criptext-Email-React-Client/pull/943) ([JulianAdams4](https://github.com/JulianAdams4))
+- Tracking Update Event parse domain [\#942](https://github.com/Criptext/Criptext-Email-React-Client/pull/942) ([Hirobreak](https://github.com/Hirobreak))
+- Fix close button. [\#940](https://github.com/Criptext/Criptext-Email-React-Client/pull/940) ([erikaperugachi](https://github.com/erikaperugachi))
+- Multiple accounts: Stop & start socket on changing account [\#939](https://github.com/Criptext/Criptext-Email-React-Client/pull/939) ([JulianAdams4](https://github.com/JulianAdams4))
+- Reducer account: add, update and test. Close \#937 [\#938](https://github.com/Criptext/Criptext-Email-React-Client/pull/938) ([erikaperugachi](https://github.com/erikaperugachi))
+- Find KeyBundle and Post Email v9.0.0 [\#934](https://github.com/Criptext/Criptext-Email-React-Client/pull/934) ([Hirobreak](https://github.com/Hirobreak))
+- Change account without refresh app. Close \#932 [\#933](https://github.com/Criptext/Criptext-Email-React-Client/pull/933) ([erikaperugachi](https://github.com/erikaperugachi))
+- Catch Error and Retry Linking when DataTransfer fails [\#931](https://github.com/Criptext/Criptext-Email-React-Client/pull/931) ([Hirobreak](https://github.com/Hirobreak))
+- Refresh on file server when returning 401 [\#927](https://github.com/Criptext/Criptext-Email-React-Client/pull/927) ([Hirobreak](https://github.com/Hirobreak))
+- In Reply To [\#925](https://github.com/Criptext/Criptext-Email-React-Client/pull/925) ([Hirobreak](https://github.com/Hirobreak))
+- Refresh session v8 [\#924](https://github.com/Criptext/Criptext-Email-React-Client/pull/924) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update myAccount object [\#921](https://github.com/Criptext/Criptext-Email-React-Client/pull/921) ([JulianAdams4](https://github.com/JulianAdams4))
+- Add multiple account badge. Close \#917 [\#918](https://github.com/Criptext/Criptext-Email-React-Client/pull/918) ([erikaperugachi](https://github.com/erikaperugachi))
+- Composer [\#916](https://github.com/Criptext/Criptext-Email-React-Client/pull/916) ([erikaperugachi](https://github.com/erikaperugachi))
+- Multiple Accounts: Add accounts limit [\#913](https://github.com/Criptext/Criptext-Email-React-Client/pull/913) ([JulianAdams4](https://github.com/JulianAdams4))
+- Multiple Accounts: Show login warnings and popup error [\#910](https://github.com/Criptext/Criptext-Email-React-Client/pull/910) ([JulianAdams4](https://github.com/JulianAdams4))
+- Add account store. Close \#897 [\#907](https://github.com/Criptext/Criptext-Email-React-Client/pull/907) ([erikaperugachi](https://github.com/erikaperugachi))
+- Multiple Accounts: Fixes: Peer events & Link/Sync [\#906](https://github.com/Criptext/Criptext-Email-React-Client/pull/906) ([JulianAdams4](https://github.com/JulianAdams4))
+- Settings [\#903](https://github.com/Criptext/Criptext-Email-React-Client/pull/903) ([erikaperugachi](https://github.com/erikaperugachi))
+- Multiple Accounts:  Fixes [\#895](https://github.com/Criptext/Criptext-Email-React-Client/pull/895) ([JulianAdams4](https://github.com/JulianAdams4))
+- Draft [\#894](https://github.com/Criptext/Criptext-Email-React-Client/pull/894) ([erikaperugachi](https://github.com/erikaperugachi))
+- Starred [\#890](https://github.com/Criptext/Criptext-Email-React-Client/pull/890) ([erikaperugachi](https://github.com/erikaperugachi))
+- Settings [\#885](https://github.com/Criptext/Criptext-Email-React-Client/pull/885) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix edit draft [\#883](https://github.com/Criptext/Criptext-Email-React-Client/pull/883) ([erikaperugachi](https://github.com/erikaperugachi))
+- Menu account [\#881](https://github.com/Criptext/Criptext-Email-React-Client/pull/881) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix multiple account [\#878](https://github.com/Criptext/Criptext-Email-React-Client/pull/878) ([erikaperugachi](https://github.com/erikaperugachi))
+- Multiple Accounts:  Set next logged account on logout [\#875](https://github.com/Criptext/Criptext-Email-React-Client/pull/875) ([JulianAdams4](https://github.com/JulianAdams4))
+- Composer [\#874](https://github.com/Criptext/Criptext-Email-React-Client/pull/874) ([erikaperugachi](https://github.com/erikaperugachi))
+- Multiple Accounts:  Fixes [\#873](https://github.com/Criptext/Criptext-Email-React-Client/pull/873) ([JulianAdams4](https://github.com/JulianAdams4))
+- Login and Logout Fix [\#869](https://github.com/Criptext/Criptext-Email-React-Client/pull/869) ([Hirobreak](https://github.com/Hirobreak))
+
+## [0.17.15](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.15) (2019-04-26)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.14...0.17.15)
+
+**Implemented enhancements:**
+
+- Email: show recipient only one name [\#865](https://github.com/Criptext/Criptext-Email-React-Client/issues/865)
+
+**Fixed bugs:**
+
+- Badge: Fix update inbox draft [\#866](https://github.com/Criptext/Criptext-Email-React-Client/issues/866)
+- Thread: Fix mark email as read/unread [\#864](https://github.com/Criptext/Criptext-Email-React-Client/issues/864)
+
+**Merged pull requests:**
+
+- Fixes [\#867](https://github.com/Criptext/Criptext-Email-React-Client/pull/867) ([erikaperugachi](https://github.com/erikaperugachi))
+- Account Id to Queries [\#863](https://github.com/Criptext/Criptext-Email-React-Client/pull/863) ([Hirobreak](https://github.com/Hirobreak))
+- Multiple Accounts: Fix migration from older db model [\#862](https://github.com/Criptext/Criptext-Email-React-Client/pull/862) ([JulianAdams4](https://github.com/JulianAdams4))
+- Multiple accounts [\#853](https://github.com/Criptext/Criptext-Email-React-Client/pull/853) ([JulianAdams4](https://github.com/JulianAdams4))
+
+## [0.17.14](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.14) (2019-04-23)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.11...0.17.14)
 
 **Implemented enhancements:**
 
@@ -22,6 +180,7 @@
 
 **Merged pull requests:**
 
+- Settings [\#858](https://github.com/Criptext/Criptext-Email-React-Client/pull/858) ([erikaperugachi](https://github.com/erikaperugachi))
 - Settings [\#857](https://github.com/Criptext/Criptext-Email-React-Client/pull/857) ([erikaperugachi](https://github.com/erikaperugachi))
 - Fix wrong placeholder in ChangePasswordPopup.js [\#855](https://github.com/Criptext/Criptext-Email-React-Client/pull/855) ([glitsj16](https://github.com/glitsj16))
 - Multiple Accounts: Migration [\#852](https://github.com/Criptext/Criptext-Email-React-Client/pull/852) ([JulianAdams4](https://github.com/JulianAdams4))
