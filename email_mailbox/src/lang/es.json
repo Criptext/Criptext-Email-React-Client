@@ -417,6 +417,10 @@
       "message": "Estos elementos se eliminarán permanentemente y no podrás recuperarlos. ¿Estás seguro?",
       "leftButtonLabel": "Cancelar",
       "rightButtonLabel": "Confirmar"
+    },
+    "suspended_account": {
+      "title": "Estás suspendido",
+      "paragraph": "Esta cuenta ha sido suspendida temporalmente por tu administrador. Por favor, contacta al admiistrador de tu companía para más información."
     }
   },
   "settings": {

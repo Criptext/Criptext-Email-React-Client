@@ -17,7 +17,8 @@ const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
   DEVICE_REMOVED: 'device-removed',
   PASSWORD_CHANGED: 'password-changed',
-  ONLY_BACKDROP: 'only-backdrop'
+  ONLY_BACKDROP: 'only-backdrop',
+  SUSPENDED_ACCOUNT: 'suspended-account'
 };
 
 class PanelWrapper extends Component {
@@ -182,6 +183,11 @@ class PanelWrapper extends Component {
     addEvent(Event.DISABLE_WINDOW, this.disableWindowListenerCallback);
     addEvent(Event.ACCOUNT_DELETED, this.accountDeletedListenerCallback);
     addEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
+    addEvent(Event.SUSPENDED_ACCOUNT, this.suspendedAccountListenerCallback);
+    addEvent(
+      Event.REACTIVATED_ACCOUNT,
+      this.reactivatedAccountListenerCallback
+    );
   };
 
   removeEventHandlers = () => {
@@ -199,6 +205,11 @@ class PanelWrapper extends Component {
     removeEvent(Event.DISABLE_WINDOW, this.disableWindowListenerCallback);
     removeEvent(Event.ACCOUNT_DELETED, this.accountDeletedListenerCallback);
     removeEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
+    removeEvent(Event.SUSPENDED_ACCOUNT, this.suspendedAccountListenerCallback);
+    removeEvent(
+      Event.REACTIVATED_ACCOUNT,
+      this.reactivatedAccountListenerCallback
+    );
   };
 
   enableWindowListenerCallback = () => {
@@ -387,6 +398,22 @@ class PanelWrapper extends Component {
 
   setSectionTypeListenerCallback = (type, mailboxSelected) => {
     this.handleClickSection(type, { mailboxSelected });
+  };
+
+  suspendedAccountListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.SUSPENDED_ACCOUNT
+    });
+  };
+
+  reactivatedAccountListenerCallback = () => {
+    const isShowingPopup = !this.state.isHiddenMailboxPopup;
+    const isVisibleSuspendedAccountPopup =
+      this.state.mailboxPopupType === MAILBOX_POPUP_TYPES.SUSPENDED_ACCOUNT;
+    if (isShowingPopup && isVisibleSuspendedAccountPopup) {
+      this.handleCloseMailboxPopup();
+    }
   };
 }
 

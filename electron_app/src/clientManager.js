@@ -87,11 +87,16 @@ const checkExpiredSession = async (
   const EXPIRED_SESSION_STATUS = 401;
   const CHANGED_PASSWORD_STATUS = 403;
   const INITIAL_REQUEST_EMPTY_STATUS = 499;
+  const SUSPENDED_ACCOUNT_REQ_STATUS = 451;
 
   const status = requirementResponse.status;
   switch (status) {
     case CHANGED_PASSWORD_STATUS: {
       return mailboxWindow.send('password-changed', null);
+    }
+    case SUSPENDED_ACCOUNT_REQ_STATUS: {
+      mailboxWindow.send('suspended-account', null);
+      return {};
     }
     case EXPIRED_SESSION_STATUS: {
       let newSessionToken, newRefreshToken, newSessionStatus;

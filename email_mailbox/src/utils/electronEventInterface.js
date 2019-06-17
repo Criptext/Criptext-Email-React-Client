@@ -299,6 +299,12 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.UPDATE_DEVICE_TYPE: {
       return handleUpdateDeviceTypeEvent(incomingEvent);
     }
+    case SocketCommand.SUSPENDED_ACCOUNT_EVENT: {
+      return handleSuspendedAccountEvent(incomingEvent);
+    }
+    case SocketCommand.REACTIVATED_ACCOUNT_EVENT: {
+      return handleReactivatedAccountEvent(incomingEvent);
+    }
     default: {
       return { rowid: null };
     }
@@ -876,6 +882,15 @@ const handleUpdateDeviceTypeEvent = async ({ rowid }) => {
   return status === 200 ? { rowid } : { rowid: null };
 };
 
+const handleSuspendedAccountEvent = () => {
+  return sendSuspendedAccountEvent();
+};
+
+const handleReactivatedAccountEvent = () => {
+  emitter.emit(Event.REACTIVATED_ACCOUNT);
+  return { rowId: null };
+};
+
 const handleSendEmailError = ({ rowid }) => {
   return { rowid };
 };
@@ -998,6 +1013,10 @@ ipcRenderer.on('device-removed', async () => {
 
 ipcRenderer.on('password-changed', () => {
   return sendPasswordChangedEvent();
+});
+
+ipcRenderer.on('suspended-account', () => {
+  return sendSuspendedAccountEvent();
 });
 
 ipcRenderer.on('disable-window-link-devices', () => {
@@ -1190,6 +1209,11 @@ export const sendPasswordChangedEvent = () => {
   return { rowId: null };
 };
 
+export const sendSuspendedAccountEvent = () => {
+  emitter.emit(Event.SUSPENDED_ACCOUNT, null);
+  return { rowId: null };
+};
+
 export const handleDeleteDeviceData = async rowid => {
   return await setTimeout(async () => {
     await deleteAllDeviceData();
@@ -1316,6 +1340,7 @@ export const Event = {
   LOAD_EVENTS: 'load-events',
   OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',
+  REACTIVATED_ACCOUNT: 'reactivated-account',
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
   REFRESH_THREADS: 'refresh-threads',
@@ -1323,6 +1348,7 @@ export const Event = {
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
   STOP_LOAD_SYNC: 'stop-load-sync',
+  SUSPENDED_ACCOUNT: 'suspended-account',
   UPDATE_AVAILABLE: 'update-available',
   UPDATE_LOADING_SYNC: 'update-loading-sync',
   UPDATE_THREAD_EMAILS: 'update-thread-emails'

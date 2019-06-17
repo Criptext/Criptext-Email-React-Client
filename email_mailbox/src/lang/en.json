@@ -417,6 +417,10 @@
       "message": "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",
       "leftButtonLabel": "Cancel",
       "rightButtonLabel": "Confirm"
+    },
+    "suspended_account": {
+      "title": "You are suspended",
+      "paragraph": "This account has been temporarily suspended by your administrator. Please contact your company administrator for more information."
     }
   },
   "settings": {

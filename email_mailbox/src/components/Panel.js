@@ -9,6 +9,7 @@ import PopupHOC from './PopupHOC';
 import DeviceRemovedPopup from './DeviceRemovedPopup';
 import AccountDeletedPopup from './AccountDeletedPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
+import SuspendedAccountPopup from './SuspendedAccountPopup';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
 import UserGuide from './UserGuide';
 import './panel.scss';
@@ -88,6 +89,17 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
     }
     case MAILBOX_POPUP_TYPES.ONLY_BACKDROP: {
       return <div className="mailbox-linking-devices-backdrop" />;
+    }
+    case MAILBOX_POPUP_TYPES.SUSPENDED_ACCOUNT: {
+      const Suspendedaccountpopup = PopupHOC(SuspendedAccountPopup);
+      return (
+        <Suspendedaccountpopup
+          isHidden={props.isHiddenMailboxPopup}
+          popupPosition={{ left: '50%', top: '50%' }}
+          isClosable={false}
+          theme={'dark'}
+        />
+      );
     }
     default:
       return null;
