@@ -85,6 +85,10 @@
     "uploadFailed": {
       "name": "Error al subir el archivo",
       "description": "Ha ocurrido un error mientras se subía el archivo.\nPor favor, intenta de nuevo"
+    },
+    "suspendedUser": {
+      "name": "Estás suspendido",
+      "description": "Esta cuenta ha sido suspendida temporalmente por tu administrador. Por favor, contacta al administrador de tu compañía para más información."
     }
   }
 }

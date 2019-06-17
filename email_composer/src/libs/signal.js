@@ -23,7 +23,9 @@ const getKeyBundlesOfRecipients = async domains => {
   const res = await findKeyBundles({
     domains
   });
-  if (res.status !== 200) {
+  if (res.status === 451) {
+    throw new CustomError(string.errors.suspendedUser);
+  } else if (res.status !== 200) {
     return new Array(domains.length).fill(null);
   }
   return res.body;
