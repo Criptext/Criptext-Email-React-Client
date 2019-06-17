@@ -92,7 +92,8 @@ const checkExpiredSession = async (
   const status = requirementResponse.status;
   switch (status) {
     case CHANGED_PASSWORD_STATUS: {
-      return mailboxWindow.send('password-changed', null);
+      mailboxWindow.send('password-changed', null);
+      return {};
     }
     case SUSPENDED_ACCOUNT_REQ_STATUS: {
       mailboxWindow.send('suspended-account', null);
