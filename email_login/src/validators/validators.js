@@ -44,6 +44,14 @@ export const validatePassword = field =>
     requiredMaxLength.password
   );
 
+export const validateEnterprisePassword = field =>
+  field &&
+  hasLengthBetween(
+    field,
+    requiredMinLength.password,
+    requiredMaxLength.password
+  );
+
 export const validateConfirmPassword = (field1, field2) =>
   field1 && field2 && validatePassword(field1) && field1 === field2;
 

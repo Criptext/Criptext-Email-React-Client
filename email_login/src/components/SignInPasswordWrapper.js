@@ -20,6 +20,7 @@ const { signInPassword } = string;
 const LOGIN_STATUS = {
   SUCCESS: 200,
   WRONG_CREDENTIALS: 400,
+  CHANGE_PASSWORD: 412,
   TOO_MANY_REQUESTS: 429,
   TOO_MANY_DEVICES: 439
 };
@@ -144,6 +145,10 @@ class SignInPasswordWrapper extends Component {
       }
       case LOGIN_STATUS.TOO_MANY_DEVICES: {
         this.throwLoginError(string.errors.tooManyDevices);
+        break;
+      }
+      case LOGIN_STATUS.CHANGE_PASSWORD: {
+        this.props.onGoToChangePassword(this.state.values.password);
         break;
       }
       default: {

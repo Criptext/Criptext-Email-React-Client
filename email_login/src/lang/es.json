@@ -1,4 +1,16 @@
 {
+  "changePassword": {
+    "title": "Cambiar la contraseña para:",
+    "inputs": {
+      "newPassword": {
+        "placeholder": "Nueva contraseña"
+      },
+      "repeatNewPassword": {
+        "placeholder": "Repetir la nueva contraseña"
+      }
+    },
+    "button": "Cambiar contraseña"
+  },
   "deviceNotApproved": {
     "title": "Ingreso rechazado",
     "message": "Tu solicitud para acceder a esta cuenta fue rechazada por un dispositivo verificado.",
@@ -75,7 +87,7 @@
       "createAccount": "Crear cuenta"
     },
     "errorMessages": {
-      "USERNAME_INVALID": "Al menos 3 caracteres. Debe comenzar con letras A-Z.",
+      "USERNAME_INVALID": "Al menos 3 caracteres. Debe comenzar con letras a-z.",
       "USERNAME_EXISTS": "Usuario no disponible",
       "USERNAME_UNCERTAIN": "Falló al comprobar el usuario",
       "STATUS_UNKNOWN": "Error desconocido. Código: ",

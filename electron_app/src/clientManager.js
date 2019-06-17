@@ -310,6 +310,10 @@ const login = async data => {
   return await client.login(data);
 };
 
+const loginFirst = async data => {
+  return await client.loginFirst(data);
+};
+
 const logout = async () => {
   const res = await client.logout();
   return res.status === 200
@@ -528,6 +532,7 @@ module.exports = {
   linkDeny,
   linkStatus,
   login,
+  loginFirst,
   logout,
   postDataReady,
   postEmail,

@@ -69,6 +69,10 @@ ipc.answerRenderer('client-link-begin', ({ username, domain }) =>
 
 ipc.answerRenderer('client-login', params => clientManager.login(params));
 
+ipc.answerRenderer('client-login-first', params =>
+  clientManager.loginFirst(params)
+);
+
 ipc.answerRenderer('client-logout', () => clientManager.logout());
 
 ipc.answerRenderer('client-post-data-ready', params =>

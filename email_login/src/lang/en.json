@@ -1,4 +1,16 @@
 {
+  "changePassword": {
+    "title": "Change the password for:",
+    "inputs": {
+      "newPassword": {
+        "placeholder": "New password"
+      },
+      "repeatNewPassword": {
+        "placeholder": "Repeat new password"
+      }
+    },
+    "button": "Change Password"
+  },
   "deviceNotApproved": {
     "title": "Sign In Rejected",
     "message": "Your request to access this account was rejected by a verified device.",
@@ -76,7 +88,7 @@
       "createAccount": "Create account"
     },
     "errorMessages": {
-      "USERNAME_INVALID": "At least 3 characters. Must begin with letters A-Z.",
+      "USERNAME_INVALID": "At least 3 characters. Must begin with letters a-z.",
       "USERNAME_EXISTS": "Username not available",
       "USERNAME_UNCERTAIN": "Failed to check username",
       "STATUS_UNKNOWN": "Unknown status code: ",

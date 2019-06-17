@@ -13,14 +13,15 @@
     text-align: center;
 
     .logo {
-      height: 65%;
+      align-items: flex-end;
+      display: flex;
+      height: 60%;
 
       .icon {
         height: 51px;
         width: 57px;
         margin: 0 auto;
         position: relative;
-        top: 65%;
         background: url('./../images/logo-2-copy@2x.png') no-repeat center
           center;
         background-size: 100%;
@@ -28,11 +29,11 @@
     }
 
     .text {
-      height: 35%;
-      position: relative;
-      top: 5px;
       color: #ffffff;
       font-size: 20px;
+      margin-top: 10px;
+      position: relative;
+      top: 5px;
     }
   }
 

@@ -3,6 +3,7 @@ import SignIn from './SignIn';
 import SignUpWrapper from './SignUpWrapper';
 import SignInPasswordWrapper from './SignInPasswordWrapper';
 import SignInToApprove from './SignInToApprove';
+import ChangePasswordWrapper from './ChangePasswordWrapper';
 import PopupHOC from './PopupHOC';
 import LoginPopup from './LoginPopup';
 import DialogPopup, { DialogTypes } from './DialogPopup';
@@ -38,6 +39,7 @@ const mode = {
   SIGNIN: 'SIGNIN',
   SIGNINTOAPPROVE: 'SIGNINTOAPPROVE',
   SIGNINPASSWORD: 'SIGNINPASSWORD',
+  CHANGEPASSWORD: 'CHANGEPASSWORD',
   DEVICE_NOT_APPROVED: 'DEVICE_NOT_APPROVED'
 };
 
@@ -89,7 +91,8 @@ class PanelWrapper extends Component {
       errorMessage: '',
       ephemeralToken: undefined,
       hasTwoFactorAuth: undefined,
-      popupContent: undefined
+      popupContent: undefined,
+      oldPassword: undefined
     };
   }
 
@@ -198,7 +201,16 @@ class PanelWrapper extends Component {
             goToWaitingApproval={this.goToWaitingApproval}
             hasTwoFactorAuth={this.state.hasTwoFactorAuth}
             setPopupContent={this.setPopupContent}
+            onGoToChangePassword={this.hangleGoToChangePassword}
             value={this.state.values.usernameOrEmailAddress}
+          />
+        );
+      case mode.CHANGEPASSWORD:
+        return (
+          <ChangePasswordWrapper
+            emailAddress={this.state.values.usernameOrEmailAddress}
+            oldPassword={this.state.oldPassword}
+            values={''}
           />
         );
       case mode.SIGNIN:
@@ -214,6 +226,15 @@ class PanelWrapper extends Component {
           />
         );
     }
+  };
+
+  hangleGoToChangePassword = oldPassword => {
+    this.setState(state => ({
+      lastStep: state.lastStep.concat([mode.CHANGEPASSWORD]),
+      currentStep: mode.CHANGEPASSWORD,
+      mode: mode.CHANGEPASSWORD,
+      oldPassword
+    }));
   };
 
   onSubmitWithoutRecoveryEmail = validInputData => {
