@@ -3,6 +3,7 @@
 #include "../uthash.h"
 #include <string>
 #include <vector>
+#include <iostream>
 
 int identity_key_store_get_identity_key_pair(signal_buffer **public_data, signal_buffer **private_data, void *user_data)
 {

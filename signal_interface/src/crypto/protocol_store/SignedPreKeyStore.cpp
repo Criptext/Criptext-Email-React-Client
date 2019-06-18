@@ -15,16 +15,40 @@ int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t si
     } catch (exception& e){
         return 0;
     }
+
+    size_t privDecodeLen = 0;
+    const unsigned char *signedPrivKeyC = reinterpret_cast<const unsigned char*>(signedPreKey.privKey.c_str());
+    unsigned char* privKeyFromB64 = base64_decode(signedPrivKeyC, strlen((char *)signedPrivKeyC), &privDecodeLen);
+    const uint8_t *privKeyData = reinterpret_cast<const uint8_t*>(privKeyFromB64);
     
-    const uint8_t* recordData = reinterpret_cast<const uint8_t*>(signedPreKey.privKey.c_str());
-    signal_buffer *result = signal_buffer_create(recordData, strlen(signedPreKey.privKey.c_str()));
+    size_t pubDecodeLen = 0;
+    const unsigned char *signedPubKeyC = reinterpret_cast<const unsigned char*>(signedPreKey.pubKey.c_str());
+    unsigned char* pubKeyFromB64 = base64_decode(signedPubKeyC, strlen((char *)signedPubKeyC), &pubDecodeLen);
+    const uint8_t *pubKeyData = reinterpret_cast<const uint8_t*>(pubKeyFromB64);
+
+    ec_public_key *publicKey = 0;
+    curve_decode_point(&publicKey, pubKeyData, pubDecodeLen, 0);
+
+    ec_private_key *privateKey = 0;
+    curve_decode_private_point(&privateKey, privKeyData, privDecodeLen, 0);
     
-    if(!result) {
+    ec_key_pair *keypair = 0;
+    ec_key_pair_create(&keypair, publicKey, privateKey);
+
+    session_signed_pre_key *signedPreKeyRecord = 0;
+    const uint8_t dummySignature = {0xFA};
+    session_signed_pre_key_create(&signedPreKeyRecord, signed_pre_key_id, 1000000, keypair, &dummySignature, sizeof(dummySignature));
+
+    int result = 0;
+    signal_buffer *buffer = 0;
+    result = session_signed_pre_key_serialize(&buffer, signedPreKeyRecord);
+    
+    if(result < 0) {
         return SG_ERR_NOMEM;
     }
-    *record = result;
+    *record = buffer;
 
-    std::cout << "WELP" << std::endl;
+    std::cout << "WELP 4" << std::endl;
     return 1;
 }
 

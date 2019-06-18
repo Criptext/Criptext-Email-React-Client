@@ -58,6 +58,7 @@ std::string CriptextSignal::decryptText(std::string encryptedText, std::string r
             pre_key_signal_message *incoming_message = 0;
             pre_key_signal_message_deserialize(&incoming_message, preKeyMessageData, decode_len, global_context);
             signal_buffer *plainMessage = 0;
+            std::cout << "TIENE PRE KEY ID :  " << pre_key_signal_message_get_pre_key_id(incoming_message) << std::endl;
             session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
             return std::string(*plainMessage->data, *plainMessage->data + plainMessage->len);
         }

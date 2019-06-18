@@ -16,7 +16,7 @@ CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id
 
   query.executeStep();
 
-  CriptextDB::SignedPreKey signedPreKey = { query.getColumn(2).getInt(), query.getColumn(3).getString(), query.getColumn(4).getString() };
+  CriptextDB::SignedPreKey signedPreKey = { query.getColumn(1).getInt(), query.getColumn(2).getString(), query.getColumn(3).getString() };
   return signedPreKey;
 }
 

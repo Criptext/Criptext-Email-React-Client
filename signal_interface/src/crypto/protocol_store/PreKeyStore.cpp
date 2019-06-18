@@ -3,9 +3,12 @@
 #include "../uthash.h"
 #include <string>
 #include <vector>
+#include <iostream>
 
 int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void *user_data)
 {
+
+    std::cout << "LOAD PREKEY : " << pre_key_id << std::endl; 
 
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     CriptextDB::PreKey preKey;
@@ -34,6 +37,7 @@ int pre_key_store_store_pre_key(uint32_t pre_key_id, uint8_t *record, size_t rec
 
 int pre_key_store_contains_pre_key(uint32_t pre_key_id, void *user_data)
 {
+    std::cout << "CONTAINS PREKEY : " << pre_key_id << std::endl; 
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     CriptextDB::PreKey preKey;
 
