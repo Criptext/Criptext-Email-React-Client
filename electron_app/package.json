@@ -148,7 +148,7 @@
     "moment": "^2.22.2",
     "os-locale": "^3.0.1",
     "rimraf": "^2.6.3",
-    "sqlite3": "^4.0.8",
+    "sqlite3": "4.0.2",
     "unused-filename": "^2.1.0",
     "websocket": "^1.0.28"
   }
