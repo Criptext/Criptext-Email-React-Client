@@ -192,16 +192,13 @@ class LoginWrapper extends Component {
     this.setState({ mode: nextMode });
   };
 
-  handleToggleSignUp = async e => {
+  handleToggleSignUp = e => {
     e.preventDefault();
     e.stopPropagation();
     if (this.state.mode === mode.LOGIN) {
-      const check = await this.checkLoggedOutAccounts();
-      if (check === true) {
-        this.setState(curState => ({
-          mode: curState.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN
-        }));
-      }
+      this.setState(curState => ({
+        mode: curState.mode === mode.LOGIN ? mode.SIGNUP : mode.LOGIN
+      }));
     } else if (this.state.mode === mode.SIGNUP) {
       this.setState({ mode: mode.LOGIN });
     }
