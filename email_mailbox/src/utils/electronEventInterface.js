@@ -381,6 +381,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   const isToMe = checkEmailIsTo(recipients);
   let notificationPreview = '';
   const labelIds = [];
+  let emailThreadId = threadId;
   if (!prevEmail) {
     let body = '',
       headers;
@@ -429,7 +430,6 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       }
     }
     const unread = isFromMe && !isToMe ? false : true;
-    let emailThreadId = threadId;
     if (inReplyTo) {
       const emailWithMessageId = await getEmailByParams({
         messageId: inReplyTo
@@ -519,7 +519,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       senderInfo: parsedContact.name || parsedContact.email,
       emailSubject: subject,
       emailPreview: notificationPreview,
-      threadId
+      threadId: emailThreadId
     });
   }
   const mailboxIdsToUpdate = isSpam ? [LabelType.spam.id] : labelIds;
