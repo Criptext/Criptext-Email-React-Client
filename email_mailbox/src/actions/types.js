@@ -50,6 +50,7 @@ export const FeedItem = {
 };
 
 export const Suggestions = {
+  RESET_SUGGESTIONS: 'RESET_SUGGESTIONS',
   SET_THREADS: 'SET_THREADS',
   SET_ERROR_SUGGESTIONS: 'SET_ERROR_SUGGESTIONS'
 };

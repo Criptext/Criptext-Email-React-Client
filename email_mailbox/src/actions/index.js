@@ -68,7 +68,7 @@ import {
   updateAllFeedItemsAsOlder,
   updateFeedItemSuccess
 } from './feeditems';
-import { loadSuggestions } from './suggestions';
+import { clearSuggestions, loadSuggestions } from './suggestions';
 import { addDataApp, loadApp } from './app';
 
 export {
@@ -86,6 +86,7 @@ export {
   addLabelIdThreadsSuccess,
   addMoveLabelIdThreads,
   addThreads,
+  clearSuggestions,
   clearThreads,
   filterThreadsOrLoadMoreByUnread,
   loadApp,
