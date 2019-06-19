@@ -12,8 +12,6 @@ int session_store_load_session(signal_buffer **record, signal_buffer **user_reco
     int deviceId = address->device_id;
     CriptextDB::SessionRecord sessionRecord;
 
-    std::cout << "YAS : " << recipientId << " : " << account->id << std::endl;
-
     try {
         sessionRecord = CriptextDB::getSessionRecord("Criptext.db", account->id, recipientId, deviceId);
     } catch (exception& e) {
@@ -55,7 +53,12 @@ int session_store_store_session(const signal_protocol_address *address, uint8_t 
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
-    std::string myRecord = std::string(record, record + user_record_len);
+
+    //session_record *sessionRecord = 0;
+    //session_record_deserialize(&sessionRecord, record, record_len, 0);
+
+    std::string myRecord = std::string(reinterpret_cast<char *>(record));
+    std::cout << myRecord << std::endl;
     bool success = CriptextDB::createSessionRecord("Criptext.db", account->id, recipientId, deviceId, myRecord);
 
     return success ? 1 : 0;

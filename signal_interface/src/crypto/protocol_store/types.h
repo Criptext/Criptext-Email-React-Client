@@ -30,4 +30,10 @@ struct signal_buffer {
     uint8_t data[];
 };
 
+struct session_pre_key {
+    signal_type_base base;
+    uint32_t id;
+    ec_key_pair *key_pair;
+};
+
 #endif
