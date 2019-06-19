@@ -50,15 +50,7 @@ class SearchBox extends Component {
           placeholder={string.header.search}
           value={this.props.searchParams.text}
         />
-        {this.props.searchParams.text && (
-          <i
-            className="icon-exit"
-            onClick={() => {
-              this.props.onClearSearchInput()
-              this.input.focus();
-            }}
-          />
-        )}
+        {this.renderSearchIcon()}
         <div className="header-search-toggle">
           <i
             className="icon-arrow-down"
@@ -120,7 +112,7 @@ class SearchBox extends Component {
   };
 
   onClearSearchText = () => {
-    this.props.searchParams.text = ''
+    this.props.searchParams.text = '';
   };
 
   onToggleMenuSearchOptions = () => {
@@ -137,6 +129,22 @@ class SearchBox extends Component {
         this.props.onToggleMenuSearchOptions();
       });
     });
+  };
+
+  renderSearchIcon = () => {
+    if (!this.props.searchParams.text) return null;
+    if (this.props.isLoadingThreads) {
+      return <SearchBoxLoading />;
+    }
+    return (
+      <i
+        className="icon-exit"
+        onClick={() => {
+          this.props.onClearSearchInput();
+          this.input.focus();
+        }}
+      />
+    );
   };
 }
 
@@ -171,6 +179,15 @@ const clearCurrentAnimation = () => {
   if (currentAnimation) currentAnimation.pause();
 };
 
+const SearchBoxLoading = () => (
+  <div className="loading-ring search-loading-ring">
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
+
 SearchBox.defaultProps = {
   isHiddenMenuSearchHints: true,
   isHiddenMenuSearchOptions: true,
@@ -185,6 +202,8 @@ SearchBox.propTypes = {
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,
   isHiddenMenuSearchOptions: PropTypes.bool,
+  isLoadingThreads: PropTypes.bool,
+  onClearSearchInput: PropTypes.func,
   onClickSearch: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onToggleMenuSearchHints: PropTypes.func,

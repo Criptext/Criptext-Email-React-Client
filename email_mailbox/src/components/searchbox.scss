@@ -42,6 +42,17 @@
     }
   }
 
+  .search-loading-ring {
+    pointer-events: none;
+    top: 5px;
+    left: -15px;
+    > div {
+      width: 12px;
+      height: 12px;
+      border-width: 1.8px;
+    }
+  }
+
   .header-search-toggle{
     align-items: center;
     display: flex;

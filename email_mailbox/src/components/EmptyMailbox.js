@@ -41,8 +41,12 @@ const defineClassComponent = status => {
 const defineEmptyParamsByMailbox = (mailbox, status) => {
   const { id, text } = mailbox;
   let headerLoading = undefined;
+  let iconLoading = undefined;
   if (status === EmptyMailboxStatus.LOADING) {
     headerLoading = `${string.mailbox.empty.loading} ${text}`;
+    if (id === LabelType.search.id) {
+      iconLoading = 'loading-search';
+    }
   }
 
   switch (id) {
@@ -104,10 +108,11 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
     }
     case LabelType.search.id: {
       const header = headerLoading || string.mailbox.empty.search.header;
+      const iconClass = iconLoading || 'empty-search';
       return {
         header,
         subheader: string.mailbox.empty.search.subheader,
-        iconClass: 'empty-search'
+        iconClass
       };
     }
     default: {

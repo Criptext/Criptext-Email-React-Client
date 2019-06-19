@@ -44,12 +44,12 @@ class HeaderMainWrapper extends Component {
         to: '',
         subject: '',
         hasAttachments: false
-      }      
+      }
     };
     if (!this.state.isHiddenMenuSearchOptions) {
-      newState["isHiddenMenuSearchOptions"] = true
+      newState['isHiddenMenuSearchOptions'] = true;
     }
-    this.setState(newState);
+    this.setState(newState, this.props.onClearSearchResults);
   };
 
   handleClickSearch = () => {
@@ -97,9 +97,16 @@ class HeaderMainWrapper extends Component {
       !this.state.isHiddenMenuSearchOptions ||
       !this.state.searchParams.text
     ) {
-      return this.setState({
-        isHiddenMenuSearchHints: true
-      });
+      return this.setState(
+        {
+          isHiddenMenuSearchHints: true
+        },
+        () => {
+          if (!this.state.searchParams.text) {
+            this.props.onGoToDefaultInbox();
+          }
+        }
+      );
     }
 
     this.setState(
@@ -114,6 +121,8 @@ class HeaderMainWrapper extends Component {
 }
 
 HeaderMainWrapper.propTypes = {
+  onClearSearchResults: PropTypes.func,
+  onGoToDefaultInbox: PropTypes.func,
   onSearchChange: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onSearchThreads: PropTypes.func,

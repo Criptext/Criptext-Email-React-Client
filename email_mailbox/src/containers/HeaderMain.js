@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { getAllLabels } from '../selectors/labels';
-import { loadSuggestions } from '../actions/index';
+import { loadSuggestions, clearThreads } from '../actions/index';
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
 import { SectionType, avatarBaseUrl } from '../utils/const';
 import { myAccount } from '../utils/electronInterface';
@@ -9,6 +9,7 @@ const mapStateToProps = state => {
   const suggestions = state.get('suggestions');
   const allLabels = getAllLabels(state);
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
+  const isLoadingThreads = state.get('activities').get('isLoadingThreads');
   const avatarUrl = `${avatarBaseUrl}${
     myAccount.recipientId
   }?date=${avatarTimestamp}`;
@@ -16,15 +17,31 @@ const mapStateToProps = state => {
     avatarUrl,
     allLabels,
     hints: suggestions.get('hints'),
+    isLoadingThreads,
     threads: suggestions.get('threads')
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    onClearSearchResults: () => {
+      const searchLabelId = -2;
+      dispatch(clearThreads(searchLabelId));
+    },
     onClickSection: () => {
       const type = SectionType.SETTINGS;
       ownProps.onClickSection(type);
+    },
+    onGoToDefaultInbox: () => {
+      const type = SectionType.MAILBOX;
+      const mailboxSelected = {
+        id: 1,
+        text: 'Inbox'
+      };
+      const params = {
+        mailboxSelected
+      };
+      ownProps.onClickSection(type, params);
     },
     onSearchChange: filter => {
       dispatch(loadSuggestions(filter));
