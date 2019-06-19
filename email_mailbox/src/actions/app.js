@@ -4,12 +4,14 @@ import {
   addFeedItems,
   addLabels,
   addThreads,
-  stopLoadThread
+  stopLoadThread,
+  updateBadgeLabels
 } from './index';
 import { defineLabels } from './../utils/LabelUtils';
 import { defineThreads } from './../utils/ThreadUtils';
 import { defineFeedItems } from './../utils/FeedItemUtils';
 import { getGroupEvents } from './../utils/electronEventInterface';
+import { LabelType } from './../utils/electronInterface';
 const INIT_LIMIT_THREADS = 22;
 
 export const addDataApp = ({
@@ -47,6 +49,8 @@ export const loadApp = params => {
     const thread = addThreads(params.labelId, threads, true);
 
     dispatch(addDataApp({ activity, contact, label, feeditem, thread }));
+    const labelIds = [LabelType.inbox.id, LabelType.spam.id];
+    dispatch(updateBadgeLabels(labelIds));
     await getGroupEvents({});
   };
 };
