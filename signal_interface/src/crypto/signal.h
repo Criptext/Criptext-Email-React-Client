@@ -21,7 +21,7 @@ class CriptextSignal {
 
     public :
         CriptextSignal(int accountId);
-        std::string decryptText(std::string encryptedText, std::string recipientId, int deviceId, int message_type);
+        int decryptText(uint8_t **plaintext_data, size_t *plaintext_len, std::string encryptedText, std::string recipientId, int deviceId, int message_type);
         void clean();
 };
 

@@ -47,7 +47,6 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
     }
     *record = buffer;
 
-    std::cout << "WELP 5" << std::endl;
     return 1;
 }
 

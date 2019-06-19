@@ -43,9 +43,18 @@ int postDecrypt(struct mg_connection *conn, void *cbdata) {
 
   CriptextSignal signal(accountId->valueint);
 
-  std::string decryptedBody = signal.decryptText(body->valuestring, senderId->valuestring, deviceId->valueint, type->valueint);
+  uint8_t *plaintext_data = 0;
+  size_t plaintext_len = 0;
+  int result = signal.decryptText(&plaintext_data, &plaintext_len, body->valuestring, senderId->valuestring, deviceId->valueint, type->valueint);
 
-  mg_send_http_ok( conn, "text/plain", 5);
-  mg_write(conn, &decryptedBody, 5);
+  if (result < 0) {
+    std::string unencrypted = "Content Unencrypted";
+    mg_send_http_ok( conn, "text/plain", strlen(unencrypted.c_str()));
+    mg_write(conn, unencrypted.c_str(), strlen(unencrypted.c_str()));
+    return -1;
+  }
+
+  mg_send_http_ok( conn, "text/plain", plaintext_len);
+  mg_write(conn, plaintext_data, plaintext_len);
   return 1;
 }

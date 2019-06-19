@@ -28,7 +28,7 @@ CriptextSignal::CriptextSignal(int accountId){
     setup_store_context(&encrypter_stote, global_context, &account);
 }
 
-std::string CriptextSignal::decryptText(std::string encryptedText, std::string recipientId, int deviceId, int message_type){
+int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len, std::string encryptedText, std::string recipientId, int deviceId, int message_type){
 
     int result;
 
@@ -52,23 +52,26 @@ std::string CriptextSignal::decryptText(std::string encryptedText, std::string r
             signal_message_deserialize(&incoming_message, messageData, sizeof(messageData), global_context);
             signal_buffer *plainMessage = 0;
             session_cipher_decrypt_signal_message(session_cipher, incoming_message, 0, &plainMessage);
-            return std::string(*plainMessage->data, *plainMessage->data + plainMessage->len);
+            return 0;
         } else {
             const uint8_t *preKeyMessageData = reinterpret_cast<const uint8_t*>(textFromB64);
             pre_key_signal_message *incoming_message = 0;
             pre_key_signal_message_deserialize(&incoming_message, preKeyMessageData, decode_len, global_context);
             signal_buffer *plainMessage = 0;
-            std::cout << "TIENE PRE KEY ID :  " << pre_key_signal_message_get_pre_key_id(incoming_message) << std::endl;
             session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
 
-            uint8_t *plaintext_data = signal_buffer_data(plainMessage);
-            size_t plaintext_len = signal_buffer_len(plainMessage);
+            uint8_t *data = signal_buffer_data(plainMessage);
+            size_t len = signal_buffer_len(plainMessage);
 
-            std::cout << "Message :  " << plaintext_data << " - size: " << plaintext_len << std::endl; 
-            return std::string(*plainMessage->data, *plainMessage->data + plainMessage->len);
+            std::cout << "Message :  " << data << " - size: " << len << std::endl;
+
+            *plaintext_data = data;
+            *plaintext_len = len;
+             
+            return 0;
         }
     } catch(exception &ex) {
-        return "Content Unencrypted";
+        return -1;
     }
 }
 
