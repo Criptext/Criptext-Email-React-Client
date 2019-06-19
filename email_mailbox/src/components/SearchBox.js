@@ -50,6 +50,15 @@ class SearchBox extends Component {
           placeholder={string.header.search}
           value={this.props.searchParams.text}
         />
+        {this.props.searchParams.text && (
+          <i
+            className="icon-exit"
+            onClick={() => {
+              this.props.onClearSearchInput()
+              this.input.focus();
+            }}
+          />
+        )}
         <div className="header-search-toggle">
           <i
             className="icon-arrow-down"
@@ -108,6 +117,10 @@ class SearchBox extends Component {
   handleSearchSuggestiontItem = hint => {
     this.props.getSearchParams('text', hint);
     this.props.onTriggerSearch();
+  };
+
+  onClearSearchText = () => {
+    this.props.searchParams.text = ''
   };
 
   onToggleMenuSearchOptions = () => {

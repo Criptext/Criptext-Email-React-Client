@@ -12,6 +12,7 @@ const HeaderMain = props => (
       isHiddenMenuSearchHints={props.isHiddenMenuSearchHints}
       isHiddenMenuSearchOptions={props.isHiddenMenuSearchOptions}
       getSearchParams={props.getSearchParams}
+      onClearSearchInput={props.onClearSearchInput}
       onClickSearch={props.onClickSearch}
       onSearchSelectThread={props.onSearchSelectThread}
       onToggleMenuSearchHints={props.onToggleMenuSearchHints}
@@ -36,6 +37,7 @@ HeaderMain.propTypes = {
   isHiddenMenuSearchHints: PropTypes.bool,
   isHiddenMenuSearchOptions: PropTypes.bool,
   onClickSection: PropTypes.func,
+  onClearSearchInput: PropTypes.func,
   onClickSearch: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onToggleMenuSearchHints: PropTypes.func,

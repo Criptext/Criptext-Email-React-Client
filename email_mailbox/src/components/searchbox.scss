@@ -32,6 +32,14 @@
     color: #c8c8c8;
     font-size: 20px;
     margin: 0 8px;
+    cursor: pointer;
+    &.icon-exit {
+      position: relative;
+      right: -15px;
+      font-size: 24px;
+      font-weight: bold;
+      z-index: 11;
+    }
   }
 
   .header-search-toggle{

@@ -31,9 +31,26 @@ class HeaderMainWrapper extends Component {
         onClickSearch={this.handleClickSearch}
         searchParams={this.state.searchParams}
         getSearchParams={this.handleGetSearchParams}
+        onClearSearchInput={this.handleClearSearchInput}
       />
     );
   }
+
+  handleClearSearchInput = () => {
+    const newState = {
+      searchParams: {
+        text: '',
+        from: '',
+        to: '',
+        subject: '',
+        hasAttachments: false
+      }      
+    };
+    if (!this.state.isHiddenMenuSearchOptions) {
+      newState["isHiddenMenuSearchOptions"] = true
+    }
+    this.setState(newState);
+  };
 
   handleClickSearch = () => {
     this.setState({ isHiddenMenuSearchOptions: true }, () => {
