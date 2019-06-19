@@ -515,25 +515,25 @@ describe('Load data thread from Email Table:', () => {
     const plainParamsSubject = {
       plain: true,
       text: 'Find me',
-      labelId: -1,
+      labelId: -2,
       rejectedLabelIds: [2, 7]
     };
     const plainParamsPreview = {
       plain: true,
       text: 'Lorem',
-      labelId: -1,
+      labelId: -2,
       rejectedLabelIds: [2, 7]
     };
     const specificParamsFrom = {
       contactFilter: { from: 'Alice' },
       contactTypes: ['from'],
-      labelId: -1,
+      labelId: -2,
       rejectedLabelIds: [2, 7]
     };
     const specificParamsTo = {
       contactFilter: { to: 'bob' },
       contactTypes: ['to'],
-      labelId: -1,
+      labelId: -2,
       rejectedLabelIds: [2, 7]
     };
     const [plainSubjectFound] = await DBManager.getEmailsGroupByThreadByParams(

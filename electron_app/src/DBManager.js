@@ -552,7 +552,144 @@ const formStringSeparatedByOperator = (array, operator = ',') => {
   }, '');
 };
 
-const getEmailsGroupByThreadByParams = (params = {}) => {
+const getEmailsGroupByThreadByParams = async (params = {}) => {
+  if (params.contactFilter)
+    return getEmailsGroupByThreadByParamsToSearch(params);
+  const {
+    contactTypes = ['from'],
+    date,
+    labelId,
+    limit,
+    plain,
+    rejectedLabelIds,
+    threadIdRejected,
+    subject,
+    text,
+    unread
+  } = params;
+  const excludedLabels = [systemLabels.trash.id, systemLabels.spam.id];
+  const isRejectedLabel = excludedLabels.includes(labelId);
+  let rejectedLabelIdsString;
+  if (rejectedLabelIds) {
+    rejectedLabelIdsString = formStringSeparatedByOperator(rejectedLabelIds);
+  }
+
+  let labelSelectQuery;
+  let labelWhereQuery;
+  if (isRejectedLabel) {
+    labelSelectQuery = `GROUP_CONCAT((SELECT GROUP_CONCAT(${
+      Table.EMAIL_LABEL
+    }.labelId)
+  FROM ${Table.EMAIL_LABEL} WHERE ${Table.EMAIL_LABEL}.emailId = ${
+      Table.EMAIL
+    }.id
+  AND ${
+    Table.EMAIL_LABEL
+  }.labelId NOT IN (${rejectedLabelIdsString}))) as allLabels,`;
+    labelWhereQuery = `WHERE ${Table.EMAIL_LABEL}.labelId = ${labelId}`;
+  } else {
+    labelSelectQuery = `GROUP_CONCAT(DISTINCT(${
+      Table.EMAIL_LABEL
+    }.labelId)) as allLabels,`;
+    labelWhereQuery = `WHERE NOT EXISTS (SELECT * FROM ${Table.EMAIL_LABEL} 
+    WHERE ${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId 
+    AND ${Table.EMAIL_LABEL}.labelId IN (${rejectedLabelIdsString}))`;
+  }
+
+  let contactNameQuery;
+  if (contactTypes.includes('from')) {
+    contactNameQuery = `GROUP_CONCAT(DISTINCT(${
+      Table.EMAIL
+    }.fromAddress)) as fromContactName,`;
+  } else {
+    contactNameQuery = `GROUP_CONCAT(DISTINCT(${
+      Table.CONTACT
+    }.email)) as fromContactName,`;
+  }
+
+  const emailContactOrQuery = contactTypes[1]
+    ? `OR ${Table.EMAIL_CONTACT}.type = "${contactTypes[1]}"`
+    : null;
+
+  const textQuery = plain
+    ? `AND (preview LIKE "%${text}%" OR subject LIKE "%${text}%" OR fromAddress LIKE "%${text}%")`
+    : '';
+
+  const query = `SELECT ${Table.EMAIL}.*,
+    IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId,
+    ${labelSelectQuery}
+    GROUP_CONCAT(DISTINCT(${Table.EMAIL}.id)) as emailIds,
+    MAX(${Table.EMAIL}.unread) as unread,
+    MAX(email.date) as maxDate
+    from ${Table.EMAIL}
+    LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
+    Table.EMAIL_LABEL
+  }.emailId
+  ${labelWhereQuery}
+  ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
+  AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
+  ${textQuery}
+  ${subject ? `AND subject LIKE %${subject}%` : ''}
+  ${unread !== undefined ? `AND unread = ${unread}` : ''}
+    GROUP BY uniqueId
+    ${labelId > 0 ? `HAVING allLabels LIKE "%${labelId}%"` : ''}
+    ORDER BY ${Table.EMAIL}.date DESC
+    LIMIT ${limit || 22}`;
+
+  const threads = await db.raw(query);
+  const emailIds = threads.reduce((result, thread) => {
+    const emailIds = thread.emailIds;
+    return result ? `${result},${emailIds}` : emailIds;
+  }, '');
+  const files = await db.raw(
+    `SELECT ${Table.EMAIL}.threadId,
+    GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens
+    FROM ${Table.EMAIL}
+    LEFT JOIN ${Table.FILE} ON ${Table.EMAIL}.id = ${Table.FILE}.emailId
+    WHERE ${Table.EMAIL}.id IN (${emailIds})
+    GROUP BY ${Table.EMAIL}.threadId`
+  );
+  const filesObj = files.reduce(
+    (result, element) => ({
+      ...result,
+      [element.threadId]: element
+    }),
+    {}
+  );
+  const contacts = await db.raw(
+    `SELECT ${Table.EMAIL}.threadId,
+    ${contactNameQuery}
+    GROUP_CONCAT(DISTINCT(${Table.CONTACT}.id)) as recipientContactIds
+    FROM ${Table.EMAIL}
+    LEFT JOIN ${Table.EMAIL_CONTACT} ON ${Table.EMAIL}.id = ${
+      Table.EMAIL_CONTACT
+    }.emailId AND (${Table.EMAIL_CONTACT}.type = "${
+      contactTypes[0]
+    }" ${emailContactOrQuery || ''})
+    LEFT JOIN ${Table.CONTACT} ON ${Table.EMAIL_CONTACT}.contactId = ${
+      Table.CONTACT
+    }.id
+    WHERE ${Table.EMAIL}.id IN (${emailIds})
+    GROUP BY ${Table.EMAIL}.threadId`
+  );
+  const contactsObj = contacts.reduce(
+    (result, element) => ({
+      ...result,
+      [element.threadId]: element
+    }),
+    {}
+  );
+  return threads.map(thread => {
+    return {
+      ...thread,
+      fileTokens: filesObj[thread.threadId].fileTokens,
+      fromContactName: contactsObj[thread.threadId].fromContactName,
+      recipientContactIds: contactsObj[thread.threadId].recipientContactIds
+    };
+  });
+};
+
+const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   const {
     contactFilter,
     contactTypes = ['from'],
