@@ -60,6 +60,11 @@ std::string CriptextSignal::decryptText(std::string encryptedText, std::string r
             signal_buffer *plainMessage = 0;
             std::cout << "TIENE PRE KEY ID :  " << pre_key_signal_message_get_pre_key_id(incoming_message) << std::endl;
             session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
+
+            uint8_t *plaintext_data = signal_buffer_data(plainMessage);
+            size_t plaintext_len = signal_buffer_len(plainMessage);
+
+            std::cout << "Message :  " << plaintext_data << " - size: " << plaintext_len << std::endl; 
             return std::string(*plainMessage->data, *plainMessage->data + plainMessage->len);
         }
     } catch(exception &ex) {

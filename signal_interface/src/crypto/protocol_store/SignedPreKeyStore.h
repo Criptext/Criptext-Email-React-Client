@@ -3,6 +3,7 @@
 #include "../../../../db_interface/src/axolotl/SignedPreKey.h"
 #include "../../../../db_interface/src/axolotl/Account.h"
 #include "types.h"
+#include "decode_utils.h"
 
 extern "C" {
     #include "../base64.h"

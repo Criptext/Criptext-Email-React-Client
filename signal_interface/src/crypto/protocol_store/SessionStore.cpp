@@ -31,6 +31,7 @@ int session_store_load_session(signal_buffer **record, signal_buffer **user_reco
 
 int session_store_get_sub_device_sessions(signal_int_list **sessions, const char *name, size_t name_len, void *user_data)
 {
+    std::cout << "GET SUB DEVICE" << std::endl;
     signal_int_list *result = signal_int_list_alloc();
     if(!result) {
         return SG_ERR_NOMEM;
@@ -50,6 +51,7 @@ int session_store_get_sub_device_sessions(signal_int_list **sessions, const char
 
 int session_store_store_session(const signal_protocol_address *address, uint8_t *record, size_t record_len, uint8_t *user_record_data, size_t user_record_len, void *user_data)
 {
+    std::cout << "STORE SESSION" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
@@ -61,6 +63,7 @@ int session_store_store_session(const signal_protocol_address *address, uint8_t 
 
 int session_store_contains_session(const signal_protocol_address *address, void *user_data)
 {
+    std::cout << "CONTAINS" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
@@ -76,6 +79,7 @@ int session_store_contains_session(const signal_protocol_address *address, void 
 
 int session_store_delete_session(const signal_protocol_address *address, void *user_data)
 {
+    std::cout << "DELETE SESSION" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
@@ -86,6 +90,7 @@ int session_store_delete_session(const signal_protocol_address *address, void *u
 
 int session_store_delete_all_sessions(const char *name, size_t name_len, void *user_data)
 {
+    std::cout << "DELETE ALL SESSIONS" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(name, name_len);
     bool success = CriptextDB::deleteSessionRecords("Criptext.db", account->id, recipientId);

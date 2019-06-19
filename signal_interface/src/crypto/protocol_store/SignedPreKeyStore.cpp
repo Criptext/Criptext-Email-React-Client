@@ -17,14 +17,11 @@ int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t si
     }
 
     size_t privDecodeLen = 0;
-    const unsigned char *signedPrivKeyC = reinterpret_cast<const unsigned char*>(signedPreKey.privKey.c_str());
-    unsigned char* privKeyFromB64 = base64_decode(signedPrivKeyC, strlen((char *)signedPrivKeyC), &privDecodeLen);
-    const uint8_t *privKeyData = reinterpret_cast<const uint8_t*>(privKeyFromB64);
-    
+    const uint8_t *privKeyData = 0;
     size_t pubDecodeLen = 0;
-    const unsigned char *signedPubKeyC = reinterpret_cast<const unsigned char*>(signedPreKey.pubKey.c_str());
-    unsigned char* pubKeyFromB64 = base64_decode(signedPubKeyC, strlen((char *)signedPubKeyC), &pubDecodeLen);
-    const uint8_t *pubKeyData = reinterpret_cast<const uint8_t*>(pubKeyFromB64);
+    const uint8_t *pubKeyData = 0;
+    
+    getKeyPairData(&pubKeyData, &privKeyData, &pubDecodeLen, &privDecodeLen, signedPreKey.pubKey, signedPreKey.privKey);
 
     ec_public_key *publicKey = 0;
     curve_decode_point(&publicKey, pubKeyData, pubDecodeLen, 0);

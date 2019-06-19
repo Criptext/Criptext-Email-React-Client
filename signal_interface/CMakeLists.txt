@@ -11,6 +11,7 @@ set(SOURCES
     src/crypto/protocol_store/PreKeyStore.cpp
     src/crypto/protocol_store/SessionStore.cpp
     src/crypto/protocol_store/SignedPreKeyStore.cpp
+    src/crypto/protocol_store/decode_utils.cpp
     ../../db_interface/src/axolotl/Account.cpp
     ../../db_interface/src/axolotl/IdentityKey.cpp
     ../../db_interface/src/axolotl/PreKey.cpp

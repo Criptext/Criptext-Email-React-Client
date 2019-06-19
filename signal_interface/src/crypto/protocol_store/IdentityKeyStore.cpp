@@ -7,11 +7,18 @@
 
 int identity_key_store_get_identity_key_pair(signal_buffer **public_data, signal_buffer **private_data, void *user_data)
 {
+    std::cout << "GET IDENTITY KEY PAIR" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    const uint8_t *pubKey = reinterpret_cast<const uint8_t*>(account->pubKey.c_str());
-    const uint8_t *privKey = reinterpret_cast<const uint8_t*>(account->privKey.c_str());
-    signal_buffer *pubKeyBuffer = signal_buffer_create(pubKey, sizeof(pubKey));
-    signal_buffer *privKeyBuffer = signal_buffer_create(privKey, sizeof(pubKey));
+
+    size_t pubDecodeLen = 0;
+    const uint8_t *pubKeyData = 0;
+    size_t privDecodeLen = 0;
+    const uint8_t *privKeyData = 0;
+    
+    getKeyPairData(&pubKeyData, &privKeyData, &pubDecodeLen, &privDecodeLen, account->pubKey, account->privKey);
+
+    signal_buffer *pubKeyBuffer = signal_buffer_create(pubKeyData, pubDecodeLen);
+    signal_buffer *privKeyBuffer = signal_buffer_create(privKeyData, privDecodeLen);
     *public_data = pubKeyBuffer;
     *private_data = privKeyBuffer;
     return 0;
@@ -19,6 +26,7 @@ int identity_key_store_get_identity_key_pair(signal_buffer **public_data, signal
 
 int identity_key_store_get_local_registration_id(void *user_data, uint32_t *registration_id)
 {
+    std::cout << "GET LOCAL ID" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     *registration_id = account->registrationId;
     return 0;
@@ -26,6 +34,7 @@ int identity_key_store_get_local_registration_id(void *user_data, uint32_t *regi
 
 int identity_key_store_save_identity(const signal_protocol_address *address, uint8_t *key_data, size_t key_len, void *user_data)
 {
+    std::cout << "STORE IDENTITY KEY PAIR" << std::endl;
     CriptextDB::Account* account = (CriptextDB::Account*)user_data;
     string recipientId = std::string(address->name);
     int deviceId = address->device_id;
@@ -38,6 +47,7 @@ int identity_key_store_save_identity(const signal_protocol_address *address, uin
 
 int identity_key_store_is_trusted_identity(const signal_protocol_address *address, uint8_t *key_data, size_t key_len, void *user_data)
 {
+    std::cout << "IS TRUSTED" << std::endl;
     return 1;
 }
 
