@@ -89,7 +89,7 @@ class MainWrapper extends Component {
   renderSection = () => {
     switch (this.props.sectionSelected.type) {
       case SectionType.SETTINGS: {
-        return <Settings />;
+        return <Settings onClickMailboxSection={this.props.onClickSection} />;
       }
       default:
         return this.renderThreads();

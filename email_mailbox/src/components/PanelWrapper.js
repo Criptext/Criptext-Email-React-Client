@@ -275,6 +275,15 @@ class PanelWrapper extends Component {
 
     const currentSectionType = this.state.sectionSelected.type;
     const isRenderingSettings = currentSectionType === SectionType.SETTINGS;
+    if (isRenderingSettings && labelIds) {
+      this.props.onLoadThreads(
+        {
+          labelId: Number(labelIds[0]),
+          clear: true
+        },
+        hasStopLoad
+      );
+    }
     if (!isRenderingSettings && (labelIds || threadIds)) {
       const isRenderingMailbox = currentSectionType === SectionType.MAILBOX;
       const isRenderingThread = currentSectionType === SectionType.THREAD;
