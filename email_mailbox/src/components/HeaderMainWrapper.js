@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderMain from './HeaderMain';
 
+/* eslint-disable-next-line react/no-deprecated */
 class HeaderMainWrapper extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +37,22 @@ class HeaderMainWrapper extends Component {
     );
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.sectionSelected) return;
+    const mailboxSelectedId = nextProps.sectionSelected.params.mailboxSelected
+      ? nextProps.sectionSelected.params.mailboxSelected.id
+      : null;
+    const prevSearchParams = nextProps.sectionSelected.params.searchParams.text;
+    const currentSearchParams = this.state.searchParams.text;
+    const searchMailboxId = -2;
+    if (
+      prevSearchParams === currentSearchParams &&
+      mailboxSelectedId !== searchMailboxId
+    ) {
+      this.handleClearSearchInput();
+    }
+  }
+
   handleClearSearchInput = () => {
     const newState = {
       searchParams: {
@@ -62,17 +79,24 @@ class HeaderMainWrapper extends Component {
     const isHiddenMenuSearchHints =
       key === 'text' ? !this.state.isHiddenMenuSearchOptions : true;
     const searchParams = { ...this.state.searchParams, [key]: value };
-    this.setState(
-      {
+    if (!value) {
+      return this.setState({
         searchParams,
         isHiddenMenuSearchHints
-      },
-      () => {
-        if (!isHiddenMenuSearchHints && key === 'text') {
-          this.props.onSearchChange(value);
-        }
+      });
+    }
+
+    if (this.lastSearchChange) clearTimeout(this.lastSearchChange);
+    this.lastSearchChange = setTimeout(() => {
+      if (this.state.searchParams[key] !== value) return;
+      if (!isHiddenMenuSearchHints && key === 'text') {
+        this.props.onSearchChange(value);
       }
-    );
+    }, 500);
+    this.setState({
+      searchParams,
+      isHiddenMenuSearchHints
+    });
   };
 
   handleSearchSelectThread = threadId => {
@@ -126,7 +150,8 @@ HeaderMainWrapper.propTypes = {
   onSearchChange: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onSearchThreads: PropTypes.func,
-  searchParams: PropTypes.object
+  searchParams: PropTypes.object,
+  sectionSelected: PropTypes.object
 };
 
 export default HeaderMainWrapper;

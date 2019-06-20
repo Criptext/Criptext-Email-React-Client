@@ -49,6 +49,7 @@ class SearchBox extends Component {
           onKeyPress={this.handleKeyPressInput}
           placeholder={string.header.search}
           value={this.props.searchParams.text}
+          disabled={this.props.isLoadingThreads}
         />
         {this.renderSearchIcon()}
         <div className="header-search-toggle">
@@ -111,10 +112,6 @@ class SearchBox extends Component {
     this.props.onTriggerSearch();
   };
 
-  onClearSearchText = () => {
-    this.props.searchParams.text = '';
-  };
-
   onToggleMenuSearchOptions = () => {
     if (this.state.isInputBoxExtended) {
       clearCurrentAnimation();
@@ -131,19 +128,18 @@ class SearchBox extends Component {
     });
   };
 
+  handleClearSearchInput = () => {
+    this.props.onClearSearchInput();
+    this.input.focus();
+  };
+
   renderSearchIcon = () => {
     if (!this.props.searchParams.text) return null;
     if (this.props.isLoadingThreads) {
       return <SearchBoxLoading />;
     }
     return (
-      <i
-        className="icon-exit"
-        onClick={() => {
-          this.props.onClearSearchInput();
-          this.input.focus();
-        }}
-      />
+      <i className="icon-exit" onClick={() => this.handleClearSearchInput()} />
     );
   };
 }

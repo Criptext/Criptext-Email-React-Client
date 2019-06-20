@@ -53,6 +53,7 @@ class MainWrapper extends Component {
           <HeaderMain
             onClickSection={this.props.onClickSection}
             onToggleActivityPanel={this.props.onToggleActivityPanel}
+            sectionSelected={this.props.sectionSelected}
           />
         );
       }
