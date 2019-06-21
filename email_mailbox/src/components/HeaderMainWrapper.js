@@ -37,6 +37,10 @@ class HeaderMainWrapper extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.sectionSelected && !this.props.sectionSelected) {
+      this.handleClearSearchInput();
+      return;
+    }
     if (!prevProps.sectionSelected) return;
     const searchMailboxId = -2;
     const prevMailboxId = prevProps.sectionSelected.params.mailboxSelected.id;
