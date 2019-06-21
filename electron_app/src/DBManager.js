@@ -1090,12 +1090,12 @@ const getAllFeedItems = () => {
   return db.select('*').from(Table.FEEDITEM);
 };
 
-const updateFeedItem = ({ id, seen }) => {
+const updateFeedItems = ({ ids, seen }) => {
   const params = {};
-  if (seen) params.seen = seen;
+  if (typeof seen === 'boolean') params.seen = seen;
   return db
     .table(Table.FEEDITEM)
-    .where({ id })
+    .whereIn('id', ids)
     .update(params);
 };
 
@@ -1313,7 +1313,7 @@ module.exports = {
   updateContactByEmail,
   updateEmail,
   updateEmails,
-  updateFeedItem,
+  updateFeedItems,
   updateFilesByEmailId,
   updateIdentityKeyRecord,
   updateLabel,

@@ -32,8 +32,7 @@ describe('Feed actions: ', () => {
         seen: false,
         emailId: 1,
         contactId: 2,
-        fileId: undefined,
-        isNew: true
+        fileId: undefined
       }
     };
     const clear = true;
@@ -46,7 +45,7 @@ describe('Feed actions: ', () => {
     const idToUpdate = 1;
     const prevState = initState(feeds);
     const action = updateFeedItemSuccess({
-      feedItemId: idToUpdate,
+      id: idToUpdate,
       seen: true
     });
     const nextState = feedItemsReducer(prevState, action);

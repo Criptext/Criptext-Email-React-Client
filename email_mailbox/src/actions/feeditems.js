@@ -1,5 +1,8 @@
 import { FeedItem } from './types';
-import { deleteFeedItemById, updateFeedItem } from './../utils/ipc';
+import {
+  deleteFeedItemById,
+  updateFeedItems as updateFeedItemsDB
+} from './../utils/ipc';
 import { defineFeedItems } from '../utils/FeedItemUtils';
 
 export const addFeedItems = (feeds, clear) => {
@@ -17,18 +20,28 @@ export const removeFeedItemSuccess = feedItemId => {
   };
 };
 
-export const updateFeedItemSuccess = ({ feedItemId, seen }) => {
+export const updateFeedItemSuccess = ({ id, seen }) => {
   return {
-    type: FeedItem.UPDATE_SUCCESS,
-    feed: { id: feedItemId, seen }
+    type: FeedItem.UPDATE,
+    feed: { id, seen }
   };
 };
 
-export const updateAllFeedItemsAsOlder = () => {
+export const updateFeedItems = ({ ids, seen }) => {
+  return async dispatch => {
+    try {
+      await updateFeedItemsDB({ ids, seen });
+      dispatch(updateFeedItemsSuccess({ ids, seen }));
+    } catch (e) {
+      // TO DO
+    }
+  };
+};
+
+export const updateFeedItemsSuccess = ({ ids, seen }) => {
   return {
-    type: FeedItem.UPDATE_ALL,
-    field: 'isNew',
-    value: false
+    type: FeedItem.UPDATE_FEED_ITEMS,
+    feed: { ids, seen }
   };
 };
 
@@ -43,12 +56,11 @@ export const loadFeedItems = clear => {
   };
 };
 
-export const selectFeedItem = feedItemId => {
+export const updateFeedItem = ({ id, seen }) => {
   return async dispatch => {
     try {
-      const seen = true;
-      await updateFeedItem({ feedItemId, seen });
-      dispatch(updateFeedItemSuccess({ feedItemId, seen }));
+      await updateFeedItemsDB({ ids: [id], seen });
+      dispatch(updateFeedItemSuccess({ id, seen }));
     } catch (e) {
       // TO DO
     }

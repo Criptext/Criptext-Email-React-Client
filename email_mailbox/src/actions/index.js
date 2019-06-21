@@ -64,8 +64,8 @@ import {
   loadFeedItems,
   removeFeedItem,
   removeFeedItemSuccess,
-  selectFeedItem,
-  updateAllFeedItemsAsOlder,
+  updateFeedItem,
+  updateFeedItems,
   updateFeedItemSuccess
 } from './feeditems';
 import { clearSuggestions, loadSuggestions } from './suggestions';
@@ -115,7 +115,6 @@ export {
   removeThreads,
   removeThreadsDrafts,
   removeThreadsSuccess,
-  selectFeedItem,
   sendOpenEvent,
   setAvatarUpdatedTimestamp,
   startLoadSync,
@@ -126,8 +125,9 @@ export {
   unsendEmail,
   unsendEmailFiles,
   unsendEmailOnSuccess,
-  updateAllFeedItemsAsOlder,
   updateBadgeLabels,
+  updateFeedItem,
+  updateFeedItems,
   updateFeedItemSuccess,
   updateEmailIdsThread,
   updateEmailLabels,

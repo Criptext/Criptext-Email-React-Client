@@ -87,6 +87,7 @@ let labelIdsEvent = new Set();
 let threadIdsEvent = new Set();
 let badgeLabelIdsEvent = new Set();
 let labelsEvent = {};
+let feedItemHasAdded = false;
 let avatarHasChanged = false;
 
 let newEmailNotificationList = [];
@@ -115,6 +116,7 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
     try {
       const {
         avatarChanged,
+        feedItemAdded,
         rowid,
         labelIds,
         threadIds,
@@ -132,6 +134,7 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
         badgeLabelIdsEvent = new Set([...badgeLabelIdsEvent, ...badgeLabelIds]);
       if (labels) labelsEvent = { ...labelsEvent, ...labels };
       if (avatarChanged) avatarHasChanged = true;
+      if (feedItemAdded) feedItemHasAdded = true;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
@@ -163,6 +166,7 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
     emitter.emit(Event.STORE_LOAD, {
       avatarHasChanged,
       completedTask: totalEmailsHandled,
+      feedItemHasAdded,
       labelIds,
       threadIds,
       labels,
@@ -580,12 +584,10 @@ const updateOwnContact = async () => {
 };
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
-  const { date, metadataKey, type, from, fromDomain } = params;
-  const contactEmailAddress = fromDomain
-    ? `${fromDomain.recipientId}@${fromDomain.domain}`
-    : `${from}@${appDomain}`;
+  const { date, metadataKey, type, fromDomain } = params;
   const [email] = await getEmailByKey(metadataKey);
   const isUnsend = type === EmailStatus.UNSEND;
+  let feedItemAdded = false;
   if (email) {
     const preview = isUnsend ? '' : null;
     const status = validateEmailStatusToSet(email.status, type);
@@ -604,23 +606,29 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
         });
         await deleteEmailContent({ metadataKey });
       }
-      const isFromMe = from === myAccount.recipientId;
+
+      const { domain, recipientId } = fromDomain;
       const isOpened = type === EmailStatus.READ;
-      if (!isFromMe && isOpened) {
-        const contactEmail = contactEmailAddress;
-        const [contact] = await getContactByEmails([contactEmail]);
+      if (isOpened) {
+        let contactId = undefined;
+        if (domain === appDomain) {
+          const contactEmail = `${recipientId}@${appDomain}`;
+          const [contact] = await getContactByEmails([contactEmail]);
+          contactId = contact.id;
+        }
         const feedItemParams = {
           date,
           type,
           emailId: email.id,
-          contactId: contact.id
+          contactId
         };
         await createFeedItem([feedItemParams]);
+        feedItemAdded = true;
       }
     }
   }
   if (!email && isUnsend) return { rowid: null };
-  return { rowid, threadIds: email ? [email.threadId] : [] };
+  return { rowid, threadIds: email ? [email.threadId] : [], feedItemAdded };
 };
 
 const handlePeerAvatarChanged = ({ rowid }) => {

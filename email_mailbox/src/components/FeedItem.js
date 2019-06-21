@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FeedItemType } from './../utils/const';
+import string from '../lang';
+import './feeditem.scss';
 
 const Feed = props =>
   props.isRemoved ? renderDeletedFeed() : renderFeed(props);
@@ -11,7 +13,7 @@ const renderDeletedFeed = () => (
       <i className="icon-trash" />
     </div>
     <div className="deleted-feed-content">
-      <span>Deleted</span>
+      <span>{string.activity.deleted}</span>
     </div>
   </div>
 );
@@ -19,7 +21,7 @@ const renderDeletedFeed = () => (
 const renderFeed = props => (
   <li
     className={'feed-item ' + (props.seen === 0 ? 'unread-feed' : '')}
-    onClick={() => onSelectFeed(props)}
+    onClick={() => props.onSelectFeed(props.id, !props.seen)}
   >
     <div
       className="feed-content"
@@ -43,12 +45,6 @@ const renderFeed = props => (
   </li>
 );
 
-const onSelectFeed = props => {
-  if (props.seen === 0) {
-    props.onSelectFeed();
-  }
-};
-
 const renderFeedIcon = feed => {
   const { action } = feed;
   switch (action) {
@@ -66,7 +62,6 @@ const renderFeedActions = props =>
 
 const renderHoveringActions = props => (
   <div className="feed-actions">
-    {renderNotificationIcon(props)}
     <div className="feed-delete" onClick={ev => removeFeedFromPanel(ev, props)}>
       <i className="icon-trash" />
     </div>
@@ -78,27 +73,6 @@ const renderTime = props => (
     <span>{props.date}</span>
   </div>
 );
-
-const renderNotificationIcon = props =>
-  props.isMuted === 1 ? renderMutedIcon(props) : renderUnmutedIcon(props);
-
-const renderMutedIcon = props => (
-  <div className="feed-mute" onClick={ev => onToggleMute(ev, props)}>
-    <i className="icon-bell-mute" />
-  </div>
-);
-
-const renderUnmutedIcon = props => (
-  <div className="feed-mute" onClick={ev => onToggleMute(ev, props)}>
-    <i className="icon-bell" />
-  </div>
-);
-
-const onToggleMute = (ev, props) => {
-  ev.preventDefault();
-  ev.stopPropagation();
-  props.toggleMute();
-};
 
 const removeFeedFromPanel = (ev, props) => {
   ev.preventDefault();
@@ -115,17 +89,14 @@ Feed.propTypes = {
 };
 
 renderFeed.propTypes = {
+  id: PropTypes.number,
   feed: PropTypes.object,
   onRegionEnter: PropTypes.func,
   onRegionLeave: PropTypes.func,
-  seen: PropTypes.number,
+  onSelectFeed: PropTypes.func,
+  seen: PropTypes.bool,
   subtitle: PropTypes.string,
   title: PropTypes.string
-};
-
-onSelectFeed.propTypes = {
-  onSelectFeed: PropTypes.func,
-  seen: PropTypes.number
 };
 
 renderFeedActions.propTypes = {
@@ -134,14 +105,6 @@ renderFeedActions.propTypes = {
 
 renderTime.propTypes = {
   date: PropTypes.string
-};
-
-renderNotificationIcon.propTypes = {
-  isMuted: PropTypes.bool
-};
-
-onToggleMute.propTypes = {
-  toggleMute: PropTypes.func
 };
 
 removeFeedFromPanel.propTypes = {

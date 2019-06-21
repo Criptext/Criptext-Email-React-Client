@@ -8,8 +8,7 @@
       "seen": false,
       "emailId": 1,
       "contactId": 2,
-      "fileId": "undefined",
-      "isNew": true
+      "fileId": "undefined"
     },
     "2": {
       "id": "2",
@@ -19,8 +18,7 @@
       "seen": false,
       "emailId": 2,
       "contactId": 2,
-      "fileId": "undefined",
-      "isNew": true
+      "fileId": "undefined"
     },
     "3": {
       "id": "3",
@@ -30,8 +28,7 @@
       "seen": false,
       "emailId": 3,
       "contactId": 2,
-      "fileId": "undefined",
-      "isNew": true
+      "fileId": "undefined"
     }
   }
 }

@@ -20,7 +20,9 @@ class ActivityPanel extends Component {
         <header>
           <div
             className="header-content"
-            onClick={() => this.props.onToggleActivityPanel()}
+            onClick={() =>
+              this.props.onToggleActivityPanel(this.props.feedItemIds)
+            }
           >
             {this.renderHeaderIcon()}
             <div className="header-title">{string.activity.activity_feed}</div>
@@ -56,11 +58,13 @@ class ActivityPanel extends Component {
       <div>
         {this.renderFeedList(
           props.newFeeds,
+          props.newFeeds.length,
           props.onClickThreadIdSelected,
           string.activity.new
         )}
         {this.renderFeedList(
           props.oldFeeds,
+          props.newFeeds.length,
           props.onClickThreadIdSelected,
           string.activity.older
         )}
@@ -68,13 +72,21 @@ class ActivityPanel extends Component {
     );
   };
 
-  renderFeedList = (feedList, onClickThreadIdSelected, listName) => {
+  renderFeedList = (
+    feedList,
+    feedNewSize,
+    onClickThreadIdSelected,
+    listName
+  ) => {
     if (feedList && feedList.length > 0) {
       return (
         <ul className="new-feeds">
-          <li className="feed-section-title">
-            <p className="text">{listName}</p>
-          </li>
+          {!!feedNewSize && (
+            <li className="feed-section-title">
+              <p className="text">{listName}</p>
+            </li>
+          )}
+
           {feedList.map((feed, index) => {
             return (
               <FeedItem
@@ -109,6 +121,7 @@ class ActivityPanel extends Component {
 }
 
 ActivityPanel.propTypes = {
+  feedItemIds: PropTypes.array,
   onLoadFeeds: PropTypes.func,
   onToggleActivityPanel: PropTypes.func
 };

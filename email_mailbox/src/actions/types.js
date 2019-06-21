@@ -45,8 +45,8 @@ export const Label = {
 export const FeedItem = {
   ADD_BATCH: 'ADD_FEED_ITEMS',
   REMOVE_SUCCESS: 'REMOVE_FEED_ITEM',
-  UPDATE_SUCCESS: 'UPDATE_FEED_ITEM',
-  UPDATE_ALL: 'UPDATE_ALL_FEED_ITEMS'
+  UPDATE: 'UPDATE_FEED_ITEM',
+  UPDATE_FEED_ITEMS: 'UPDATE_FEED_ITEMS'
 };
 
 export const Suggestions = {
