@@ -479,7 +479,11 @@ class ComposerWrapper extends Component {
       this.state.toEmails.length +
       this.state.ccEmails.length +
       this.state.bccEmails.length;
-    if (hasNonCriptextRecipients && !isVerified) {
+    if (
+      hasNonCriptextRecipients &&
+      !isVerified &&
+      myAccount.encryptToExternals
+    ) {
       this.setState({ displayNonCriptextPopup: true });
     } else if (recipientsAmount >= MAX_RECIPIENTS_AMOUNT) {
       this.setState({ status: Status.DISABLED }, () => {
@@ -507,11 +511,7 @@ class ComposerWrapper extends Component {
       toEmails: this.state.toEmails,
       threadId: this.state.threadId || temporalThreadId
     };
-    const {
-      emailData,
-      criptextRecipients,
-      externalRecipients
-    } = formOutgoingEmailFromData(data);
+    const { emailData, recipientDomains } = formOutgoingEmailFromData(data);
     let emailId, key;
     try {
       const files = await getFileParamsToSend(this.state.files);
@@ -521,12 +521,15 @@ class ComposerWrapper extends Component {
       }
 
       [emailId] = await createEmail(emailData);
+      const [username, domain] = myAccount.recipientId.split('@');
       const peer = {
         recipientId: myAccount.recipientId,
+        username: username,
+        domain: domain || appDomain,
         type: 'peer',
         deviceId: myAccount.deviceId
       };
-      const recipients = [...criptextRecipients, peer];
+      const recipients = [...recipientDomains, peer];
       const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
       const params = {
         subject: emailData.email.subject,
@@ -535,7 +538,6 @@ class ComposerWrapper extends Component {
             ? undefined
             : emailData.email.threadId,
         recipients,
-        externalRecipients,
         body: emailData.body,
         preview: emailData.email.preview,
         files,
@@ -613,7 +615,6 @@ class ComposerWrapper extends Component {
         return fileParams;
       });
     };
-
     const data = {
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,

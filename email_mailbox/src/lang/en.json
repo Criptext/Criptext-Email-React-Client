@@ -417,6 +417,10 @@
       "message": "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",
       "leftButtonLabel": "Cancel",
       "rightButtonLabel": "Confirm"
+    },
+    "suspended_account": {
+      "title": "You are suspended",
+      "paragraph": "This account has been temporarily suspended by your administrator. Please contact your company administrator for more information."
     }
   },
   "settings": {
@@ -444,6 +448,8 @@
     "edit": "Edit",
     "email": "Email",
     "enabled": "enabled",
+    "encrypt_to_externals": "Encrypt To Externals",
+    "encrypt_to_externals_description": "If enabled, when sending an email you will be asked for a password to encrypt the email for non-criptext recipient. If disable, criptext addresses will receive an encrypted email while others won't.",
     "enter_new_label_name": "Enter new label name",
     "faq": {
       "label": "FAQ",

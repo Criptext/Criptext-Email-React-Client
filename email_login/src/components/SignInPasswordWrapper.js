@@ -1,34 +1,36 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { validatePassword } from './../validators/validators';
-import LostAllDevices from './LostAllDevices';
+import { validatePassword } from '../validators/validators';
+import SignInPassword from './SignInPassword';
 import {
   closeLoginWindow,
   login,
   openCreateKeysLoadingWindow,
   resetPassword,
   throwError
-} from './../utils/ipc';
+} from '../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
-import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
-import string from './../lang';
-import { Type } from './LoginPopup';
+import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
+import { PopupTypes } from './LoginPopup';
+import string from '../lang';
+import { appDomain } from '../utils/const';
 
-const { passwordLogin } = string;
+const { signInPassword } = string;
 
 const LOGIN_STATUS = {
   SUCCESS: 200,
   WRONG_CREDENTIALS: 400,
+  CHANGE_PASSWORD: 412,
   TOO_MANY_REQUESTS: 429,
   TOO_MANY_DEVICES: 439
 };
 
-class LostDevicesWrapper extends Component {
+class SignInPasswordWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       values: {
-        username: props.usernameValue,
+        usernameOrEmailAddress: props.value,
         password: ''
       },
       disabled: true,
@@ -42,23 +44,23 @@ class LostDevicesWrapper extends Component {
 
   render() {
     return (
-      <LostAllDevices
+      <SignInPassword
         {...this.props}
+        disabled={this.state.disabled}
         handleForgot={this.handleForgot}
+        isLoading={this.state.isLoading}
         onCLickSignInWithPassword={this.handleClickSignInWithPassword}
         onChangeField={this.handleChangeField}
-        disabled={this.state.disabled}
+        onDismissPopup={this.onDismissPopup}
+        popupContent={this.state.popupContent}
         validator={this.validatePassword}
         values={this.state.values}
-        isLoading={this.state.isLoading}
-        popupContent={this.state.popupContent}
-        onDismissPopup={this.onDismissPopup}
       />
     );
   }
 
   validatePassword = () => {
-    const password = this.state.values['password'];
+    const password = this.state.values.password;
     return validatePassword(password);
   };
 
@@ -89,26 +91,33 @@ class LostDevicesWrapper extends Component {
         isLoading: true,
         disabled: true
       });
-      const username = this.state.values.username;
+      const [
+        username,
+        domain = appDomain
+      ] = this.state.values.usernameOrEmailAddress.split('@');
       const password = this.state.values.password;
       const hashedPassword = hashPassword(password);
       const submittedData = {
         username,
+        domain,
         password: hashedPassword
       };
       const res = await login(submittedData);
       const { status, body, headers } = res;
-      this.handleLoginStatus(status, body, headers, username);
+      // eslint-disable-next-line fp/no-let
+      let recipientId = this.state.values.usernameOrEmailAddress;
+      // eslint-disable-next-line fp/no-mutation
+      if (domain === appDomain) recipientId = username;
+      this.handleLoginStatus(status, body, headers, recipientId);
     }
   };
 
-  handleLoginStatus = (status, body, headers, username) => {
+  handleLoginStatus = (status, body, headers, recipientId) => {
     switch (status) {
       case LOGIN_STATUS.SUCCESS: {
-        const recipientId = username;
         const { deviceId, name } = body;
         openCreateKeysLoadingWindow({
-          loadingType: 'login',
+          loadingType: 'signin',
           remoteData: {
             recipientId,
             deviceId,
@@ -138,6 +147,10 @@ class LostDevicesWrapper extends Component {
         this.throwLoginError(string.errors.tooManyDevices);
         break;
       }
+      case LOGIN_STATUS.CHANGE_PASSWORD: {
+        this.props.onGoToChangePassword(this.state.values.password);
+        break;
+      }
       default: {
         this.throwLoginError({
           name: string.errors.loginFailed.name,
@@ -151,10 +164,17 @@ class LostDevicesWrapper extends Component {
   handleForgot = async ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    const recipientId = this.state.values.username;
-    const { status, text } = await resetPassword(recipientId);
+    const [
+      recipientId,
+      domain = appDomain
+    ] = this.state.values.usernameOrEmailAddress.split('@');
+    const params = {
+      recipientId,
+      domain
+    };
+    const { status, text } = await resetPassword(params);
     const customText = this.getForgotPasswordMessage(status, text);
-    const messages = passwordLogin.forgotPasswordMessage;
+    const messages = signInPassword.forgotPasswordMessage;
     switch (status) {
       case 200:
         return this.props.setPopupContent({
@@ -163,7 +183,7 @@ class LostDevicesWrapper extends Component {
           suffix: messages.suffix,
           dismissButtonLabel: messages.dismissButtonLabel,
           email: customText,
-          type: Type.FORGOT_LINK
+          type: PopupTypes.FORGOT_LINK
         });
       case 400:
         return this.props.setPopupContent({
@@ -171,7 +191,7 @@ class LostDevicesWrapper extends Component {
           dismissButtonLabel: messages.notSetError.dismissButtonLabel,
           message: messages.notSetError.message,
           email: 'support@criptext.com',
-          type: Type.EMAIL_NOT_SET
+          type: PopupTypes.EMAIL_NOT_SET
         });
       default:
         return this.props.setPopupContent({
@@ -193,7 +213,7 @@ class LostDevicesWrapper extends Component {
       const { address } = JSON.parse(text);
       return address;
     }
-    return passwordLogin.forgotPasswordMessage.error;
+    return signInPassword.forgotPasswordMessage.error;
   };
 
   throwLoginError = error => {
@@ -206,8 +226,8 @@ class LostDevicesWrapper extends Component {
 }
 
 // eslint-disable-next-line fp/no-mutation
-LostDevicesWrapper.propTypes = {
+SignInPasswordWrapper.propTypes = {
   usernameValue: PropTypes.string
 };
 
-export default LostDevicesWrapper;
+export default SignInPasswordWrapper;

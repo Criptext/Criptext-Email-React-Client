@@ -2,13 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
 import signal from './../libs/signal';
-import { remoteData } from './../utils/electronInterface';
+import {
+  remoteData,
+  getMailboxGettingEventsStatus
+} from './../utils/electronInterface';
 import {
   closeCreatingKeysLoadingWindow,
   openMailboxWindow,
   throwError
 } from './../utils/ipc';
 import string from './../lang';
+import { appDomain } from '../utils/const';
+
+const messages = string.loading.messages;
 
 const animationTypes = {
   RUNNING: 'running-animation',
@@ -17,11 +23,13 @@ const animationTypes = {
 
 const loadingTypes = {
   SIGNUP: 'signup',
-  LOGIN: 'login'
+  SIGNIN: 'signin',
+  SIGNIN_NEW_PASSWORD: 'signin-new-password'
 };
 
 const delay = 85;
 const responseMaxDelay = 300;
+const lastMessageDelay = 2000;
 
 class LoadingWrapper extends Component {
   constructor(props) {
@@ -55,13 +63,23 @@ class LoadingWrapper extends Component {
     if (percent === 2) {
       if (this.props.loadingType === loadingTypes.SIGNUP) {
         this.createNewAccount();
-      } else if (this.props.loadingType === loadingTypes.LOGIN) {
+      } else if (
+        this.props.loadingType === loadingTypes.SIGNIN ||
+        this.props.loadingType === loadingTypes.SIGNIN_NEW_PASSWORD
+      ) {
         const { recipientId, deviceId, name, deviceType } = remoteData;
+        let isRecipientApp = false;
+        let username = recipientId;
+        if (recipientId.includes(`@${appDomain}`)) {
+          isRecipientApp = true;
+          [username] = recipientId.split('@');
+        }
         this.createAccountWithNewDevice({
-          recipientId,
+          recipientId: username,
           deviceId,
           name,
-          deviceType
+          deviceType,
+          isRecipientApp
         });
       }
     }
@@ -85,16 +103,11 @@ class LoadingWrapper extends Component {
       userCredentials['recoveryEmail'] = remoteData.recoveryEmail;
     }
     try {
-      const accountResponse = await signal.createAccount(userCredentials);
-      if (accountResponse === false) {
-        this.loadingThrowError();
-      }
-      if (accountResponse === true) {
-        this.setState({
-          accountResponse,
-          failed: false
-        });
-      }
+      const response = await signal.createAccount(userCredentials);
+      this.setState({
+        accountResponse: response,
+        failed: false
+      });
     } catch (e) {
       if (e.code === 'ECONNREFUSED') {
         throwError(string.errors.unableToConnect);
@@ -113,24 +126,21 @@ class LoadingWrapper extends Component {
     recipientId,
     deviceId,
     name,
-    deviceType
+    deviceType,
+    isRecipientApp
   }) => {
     try {
-      const loginResponse = await signal.createAccountWithNewDevice({
+      const response = await signal.createAccountWithNewDevice({
         recipientId,
         deviceId,
         name,
-        deviceType
+        deviceType,
+        isRecipientApp
       });
-      if (loginResponse === false) {
-        this.loadingThrowError();
-      }
-      if (loginResponse === true) {
-        this.setState({
-          accountResponse: loginResponse,
-          failed: false
-        });
-      }
+      this.setState({
+        accountResponse: response,
+        failed: false
+      });
     } catch (e) {
       if (e.code === 'ECONNREFUSED') {
         throwError(string.errors.unableToConnect);
@@ -161,13 +171,49 @@ class LoadingWrapper extends Component {
     if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
       this.setState({ percent: 100 }, () => {
-        openMailboxWindow();
-        closeCreatingKeysLoadingWindow();
+        const accountId = this.accountId;
+        const recipientId = remoteData.recipientId || remoteData.username;
+        this.openMailbox({ accountId, recipientId });
       });
     }
     this.setState({
       timeout: setTimeout(this.checkResult, 1000)
     });
+  };
+
+  // Multiple Accounts Check
+  checkMailboxWindowIsReady = ({ accountId, recipientId }) => {
+    const isGettingEvents = getMailboxGettingEventsStatus();
+    if (isGettingEvents === false) {
+      clearTimeout(this.mailboxIsReadyTimeout);
+      this.setState(
+        {
+          percent: 100,
+          message: messages.mailboxIsReady
+        },
+        async () => {
+          await setTimeout(() => {
+            this.openMailbox({ accountId, recipientId });
+          }, lastMessageDelay);
+        }
+      );
+    } else {
+      this.setState(
+        {
+          message: messages.waitingMailboxIsReady
+        },
+        () => {
+          this.mailboxIsReadyTimeout = setTimeout(() => {
+            this.checkMailboxWindowIsReady({ accountId, recipientId });
+          }, lastMessageDelay);
+        }
+      );
+    }
+  };
+
+  openMailbox = ({ accountId, recipientId }) => {
+    openMailboxWindow({ accountId, recipientId });
+    closeCreatingKeysLoadingWindow();
   };
 
   loadingThrowError = async () => {
@@ -177,9 +223,7 @@ class LoadingWrapper extends Component {
       animationClass: animationTypes.STOP
     });
     await setTimeout(() => {
-      this.setState({
-        percent: 0
-      });
+      this.setState({ percent: 0 });
     }, 1000);
   };
 

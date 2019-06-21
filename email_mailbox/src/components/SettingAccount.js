@@ -51,6 +51,7 @@ const SettingAccount = props => (
       <div className="cptx-section-block-content">
         <ReadReceiptsBlock {...props} />
         <TwoFactorAuthenticationBlock {...props} />
+        <EncryptToExternalsBlock {...props} />
       </div>
       <div className="cptx-section-block-title">
         <h1>{string.settings.configurations}</h1>
@@ -155,6 +156,30 @@ const TwoFactorAuthenticationBlock = props => (
             !props.recoveryEmailConfirmed ||
             props.twoFactorLabelIsLoading
           }
+        />
+      )}
+    </div>
+  </div>
+);
+
+const EncryptToExternalsBlock = props => (
+  <div id="settings-general-ecrypt-externals" className="cptx-section-item">
+    <span className="cptx-section-item-title">
+      {string.settings.encrypt_to_externals}
+    </span>
+    <span className="cptx-section-item-description">
+      {string.settings.encrypt_to_externals_description}
+    </span>
+    <div className="cptx-section-item-control">
+      {props.encryptToExternalsisLoading ? (
+        <ReadReceiptsLoadingLabel />
+      ) : (
+        <Switch
+          theme="two"
+          name="setEncryptToExternalsSwitch"
+          onChange={props.onChangeSwitchEncryptToExternals}
+          checked={props.encryptToExternalsEnabled}
+          disabled={props.encryptToExternalsisLoading}
         />
       )}
     </div>
@@ -390,6 +415,12 @@ const SettingsPopup = props => {
     default:
       return null;
   }
+};
+
+EncryptToExternalsBlock.propTypes = {
+  encryptToExternalsEnabled: PropTypes.bool,
+  encryptToExternalsisLoading: PropTypes.bool,
+  onChangeSwitchEncryptToExternals: PropTypes.func
 };
 
 PasswordBlock.propTypes = {

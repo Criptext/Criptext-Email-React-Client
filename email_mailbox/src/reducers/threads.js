@@ -65,6 +65,7 @@ const mailbox = (state = initThreads, action) => {
     case Thread.MOVE_THREADS:
     case Thread.REMOVE_LABELID_THREAD:
     case Thread.REMOVE_LABELID_THREADS:
+    case Thread.REMOVE_ALL_THREADS:
     case Thread.REMOVE_THREADS:
     case Thread.UPDATE_EMAILIDS_THREAD:
     case Thread.UPDATE_THREAD:
@@ -208,6 +209,9 @@ const threads = (state, action) => {
         list,
         allIds
       });
+    }
+    case Thread.REMOVE_ALL_THREADS: {
+      return initMailbox;
     }
     case Thread.UPDATE_EMAILIDS_THREAD: {
       const { threadId, emailIdToAdd, emailIdsToRemove, emailIds } = action;

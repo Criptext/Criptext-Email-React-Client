@@ -9,6 +9,7 @@ class Account {
     this.deviceId = accountObj.deviceId;
     this.signature = accountObj.signature;
     this.signatureEnabled = accountObj.signatureEnabled;
+    this.encryptToExternals = accountObj.encryptToExternals;
   }
 
   update(accountObj) {
@@ -19,6 +20,10 @@ class Account {
       accountObj.signatureEnabled !== undefined
         ? accountObj.signatureEnabled
         : this.signatureEnabled;
+    this.encryptToExternals =
+      accountObj.encryptToExternals !== undefined
+        ? accountObj.encryptToExternals
+        : this.encryptToExternals;
   }
 
   getIdentityKeyPair() {

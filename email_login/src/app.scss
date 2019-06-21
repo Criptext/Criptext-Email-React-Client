@@ -10,6 +10,7 @@ TABLE OF CONTENTS
 2.- CONTENT
 3.- CONTROLS
  3.1.- Button
+4.- POPUP
 
 ***/
 
@@ -456,7 +457,7 @@ TABLE OF CONTENTS
 }
 
 /* 2.- CONTENT
-   ----------------------------- */
+----------------------------- */
 * {
   font-family: NunitoSans;
 }
@@ -475,7 +476,7 @@ body {
 }
 
 /* 3.1.- CONTROLS: Button
-   ----------------------------- */
+----------------------------- */
 button {
   border: none;
   cursor: pointer;
@@ -524,7 +525,7 @@ button {
 }
 
 /* 4.- POPUP
-   ----------------------------- */
+----------------------------- */
 .popup-content {
   border-radius: 15px;
   padding: 30px 25px;
@@ -541,14 +542,30 @@ button {
     }
   }
 
-  .popup-paragraph {
-    padding: 0px 0px;
-    margin-top: 25px;
-    line-height: 16px;
+  .popup-items {
+    > .popup-paragraph {
+      padding: 0px 0px;
+      margin-top: 25px;
+      line-height: 16px;
 
-    p {
-      font-size: 13px;
-      font-weight: 300;
+      > p {
+        font-size: 13px;
+        font-weight: 300;
+      }
+    }
+
+    > .popup-list {
+      padding: 0px;
+      margin-top: 20px;
+
+      ul {
+        list-style-type: none;
+        padding-left: 0px;
+
+        li {
+          font-weight: bold;
+        }
+      }
     }
   }
 
@@ -560,8 +577,10 @@ button {
 
     .button-a {
       height: 30px;
-      text-transform: capitalize;
       width: 75px;
+      text-transform: capitalize;
+      font-weight: bold;
+      cursor: pointer;
 
       &.popup-cancel-button {
         background-color: transparent;

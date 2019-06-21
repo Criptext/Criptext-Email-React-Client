@@ -3,9 +3,9 @@ import React from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import PropTypes from 'prop-types';
 import { mySettings } from '../utils/electronInterface';
-import './signup.scss';
+import './formitem.scss';
 
-const hasError = props => typeof props.error == 'string';
+const hasError = props => typeof props.error == 'string' && props.error;
 const isValid = props => props.error === undefined;
 
 const formItemType = (formItem, isShowingPassword) => {
@@ -15,7 +15,11 @@ const formItemType = (formItem, isShowingPassword) => {
 };
 
 const FormItem = props => (
-  <div className={'form-item ' + (hasError(props) ? 'hasError' : '')}>
+  <div
+    className={`form-item ${props.formItem.type} ${
+      hasError(props) ? 'hasError' : ''
+    }`}
+  >
     <div className="validate-icon-section">{renderValidateIcon(props)}</div>
     {renderItem(props)}
   </div>
@@ -73,6 +77,7 @@ const renderInput = props => (
     type={formItemType(props.formItem, props.isShowingPassword)}
     placeholder={props.formItem.placeholder}
     onChange={ev => props.onChange(ev, props.formItem.name)}
+    autoFocus={props.formItem.autoFocus}
   />
 );
 
@@ -86,7 +91,7 @@ const renderLabel = formItem =>
 
 const renderShowPasswordIcon = props => {
   const { formItem, isShowingPassword, onToggleShowPassword } = props;
-  if (!formItem.name.endsWith('password')) return null;
+  if (formItem.type !== 'password') return null;
 
   const icon = isShowingPassword ? 'icon-show' : 'icon-not-show';
   return (

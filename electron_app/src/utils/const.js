@@ -1,7 +1,7 @@
 /* process */
 require('dotenv').config();
 
-const API_CLIENT_VERSION = '8.0.0';
+const API_CLIENT_VERSION = '9.0.0';
 const LINK_DEVICES_FILE_VERSION = '3';
 const PROD_SOCKET_URL = 'wss://socket.criptext.com';
 const PROD_SERVER_URL = 'https://api.criptext.com';

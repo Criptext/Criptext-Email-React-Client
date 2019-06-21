@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { requiredMinLength } from './../utils/electronInterface';
+import { myAccount, requiredMinLength } from './../utils/electronInterface';
 import {
   changePassword,
   changeRecoveryEmail,
@@ -154,6 +154,10 @@ class SettingAccountWrapper extends Component {
       readReceipts: {
         enabled: props.readReceiptsEnabled,
         isLoading: true
+      },
+      encryptToExternals: {
+        enabled: myAccount.encryptToExternals,
+        isLoading: false
       }
     };
     this.initEventHandlers();
@@ -225,6 +229,11 @@ class SettingAccountWrapper extends Component {
         onClickForgotPasswordLink={this.handleClickForgotPasswordLink}
         onChangeSwitchEmailPreview={this.handleChangeSwitchEmailPreview}
         emailPreviewEnabled={this.state.emailPreviewEnabled}
+        encryptToExternalsisLoading={this.state.encryptToExternals.isLoading}
+        encryptToExternalsEnabled={!!this.state.encryptToExternals.enabled}
+        onChangeSwitchEncryptToExternals={
+          this.handleChangeSwitchEncryptToExternals
+        }
         onChangeSwitchReadReceipts={this.handleChangeSwitchReadReceipts}
         readReceiptsEnabled={this.state.readReceipts.enabled}
         readReceiptsLabelisLoading={this.state.readReceipts.isLoading}
@@ -928,6 +937,27 @@ class SettingAccountWrapper extends Component {
     );
   };
 
+  handleChangeSwitchEncryptToExternals = ev => {
+    const nextValue = ev.target.checked;
+    this.setState(
+      {
+        encryptToExternals: {
+          ...this.state.encryptToExternals,
+          isLoading: true
+        }
+      },
+      async () => {
+        await this.props.onUpdateAccount({ encryptToExternals: nextValue });
+        this.setState({
+          encryptToExternals: {
+            enabled: nextValue,
+            isLoading: false
+          }
+        });
+      }
+    );
+  };
+
   handleShowSettingsPopup = popupType => {
     this.setState({
       isHiddenSettingsPopup: false,
@@ -991,6 +1021,7 @@ SettingAccountWrapper.propTypes = {
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,
   onSetReadReceiptsTracking: PropTypes.func,
+  onUpdateAccount: PropTypes.func,
   readReceiptsEnabled: PropTypes.bool,
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,

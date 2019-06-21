@@ -66,14 +66,17 @@ const renderBlockAvatar = props => (
   </div>
 );
 
-const renderBlockEmail = () => (
-  <div className="cptx-section-item">
-    <span className="cptx-section-item-title">{string.settings.email}</span>
-    <span className="cptx-section-item-description">{`${
-      myAccount.recipientId
-    }@${appDomain}`}</span>
-  </div>
-);
+const renderBlockEmail = () => {
+  const username = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${appDomain}`;
+  return (
+    <div className="cptx-section-item">
+      <span className="cptx-section-item-title">{string.settings.email}</span>
+      <span className="cptx-section-item-description">{username}</span>
+    </div>
+  );
+};
 
 const renderBlockName = props => (
   <div className="cptx-section-item" onBlur={props.onBlurInputName}>

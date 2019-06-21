@@ -85,6 +85,10 @@
     "uploadFailed": {
       "name": "Upload failed",
       "description": "An error occurred while uploading file.\nPlease try again"
+    },
+    "suspendedUser": {
+      "name": "You are suspended",
+      "description": "This account has been temporarily suspended by your administrator. Please contact your company administrator for more information."
     }
   }
 }

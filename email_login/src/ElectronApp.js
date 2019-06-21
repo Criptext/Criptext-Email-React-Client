@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TitleBar from './components/titleBar';
-import LoginWrapper from './components/LoginWrapper';
+import PanelWrapper from './components/PanelWrapper';
 import './electronapp.scss';
 
 class ElectronApp extends Component {
@@ -8,7 +8,7 @@ class ElectronApp extends Component {
     return (
       <div className="main-container">
         <TitleBar />
-        <LoginWrapper />
+        <PanelWrapper />
       </div>
     );
   }

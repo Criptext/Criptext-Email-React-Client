@@ -1,13 +1,15 @@
 {
-  "continueLogin": {
-    "title": "Sign In",
-    "message": "Check and approve on your existing Criptext device to continue",
-    "getPromptLabel": "Didn't get the prompt?",
-    "passwordLoginLabel": "Sign In with password",
-    "buttons": {
-      "sending": "Sending...",
-      "resend": "Resend it"
-    }
+  "changePassword": {
+    "title": "Change the password for:",
+    "inputs": {
+      "newPassword": {
+        "placeholder": "New password"
+      },
+      "repeatNewPassword": {
+        "placeholder": "Repeat new password"
+      }
+    },
+    "button": "Change Password"
   },
   "deviceNotApproved": {
     "title": "Sign In Rejected",
@@ -17,95 +19,6 @@
       "text": "Multiple rejections could lead your device to be blacklisted from Criptext."
     },
     "passwordLoginLabel": "Sign In with password"
-  },
-  "login": {
-    "header": "Welcome to Criptext!",
-    "usernameInputPlaceholder": "Username",
-    "signInButtonLabel": "Sign In",
-    "signUpMessage": {
-      "text": "Not registered?",
-      "strong": "Sign up"
-    },
-    "errorMessages": {
-      "usernameNotExits": "Username doesn't exist",
-      "usernameInvalid": "Invalid username",
-      "statusUnknown": "Unknown status code: ",
-      "usernameNotAvailable": "Username not available"
-    },
-    "usePassword": {
-      "title": "Warning",
-      "prefix": "If you sign in using your password your",
-      "strong": " mailbox history from other devices won't be available ",
-      "suffix": "on this device. Would you like to continue?",
-      "leftButtonLabel": "Cancel",
-      "rightButtonLabel": "Continue"
-    }
-  },
-  "signin": {
-    "title": "Warning!",
-    "prefix": "You did not set a Recovery Email, so",
-    "strong": " account recovery is impossible ",
-    "suffix": "if you forget your password",
-    "leftButtonLabel": "Cancel",
-    "rightButtonLabel": "Continue"
-  },
-  "passwordLogin": {
-    "sectionTitleSignIn": "Sign In",
-    "sectionTitleTwoFactorAuth": "Two-Factor Authentication",
-    "form": {
-      "passwordInputPlaceholder": "Password",
-      "forgotLabel": "Forgot?"
-    },
-    "buttons": {
-      "nextLabel": "Next",
-      "confirmLabel": "Confirm"
-    },
-    "forgotPasswordMessage": {
-      "title": "Reset Password",
-      "prefix": "A reset link was sent to",
-      "suffix": "The link will be valid for 30 minutes",
-      "dismissButtonLabel": "Okay",
-      "notSetError": {
-        "title": "No Recovery Email",
-        "message": "Password recovery is impossible as no recovery email was set on your account. For further assistance contact us:",
-        "dismissButtonLabel": "Okay"
-      },
-      "fallbackError": {
-        "title": "Reset Password",
-        "message": "Failed to send the Reset password link. Try again",
-        "dismissButtonLabel": "Okay"
-      }
-    }
-  },
-  "signUp": {
-    "header": "Sign Up",
-    "subheader": "Create your Criptext account",
-    "buttons": {
-      "createAccount": "Create account"
-    },
-    "errorMessages": {
-      "USERNAME_INVALID": "At least 3 characters. Must begin with letters A-Z.",
-      "USERNAME_EXISTS": "Username not available",
-      "USERNAME_UNCERTAIN": "Failed to check username",
-      "STATUS_UNKNOWN": "Unknown status code: ",
-      "FULLNAME_INVALID": "Invalid name",
-      "PASSWORD_INVALID": "Invalid password",
-      "PASSWORD_NOMATCH": "Passwords do not match",
-      "EMAIL_INVALID": "Invalid email address"
-    },
-    "form": {
-      "placeholders": {
-        "username": "Username",
-        "fullName": "Full name",
-        "password": "Password",
-        "confirmPassword": "Confirm password",
-        "recoveryEmail": "Recovery email address (optional)",
-        "checkbox": {
-          "prefix": "I have read and agree with the ",
-          "suffix": "Terms and Conditions"
-        }
-      }
-    }
   },
   "dialogContent": {
     "confirmWaitingApprovalLogin": {
@@ -133,6 +46,117 @@
       "name": "Wrong credentials",
       "description":
         "Incorrect username or password. Check credentials and try again."
+    }
+  },
+  "signIn": {
+    "header": "Welcome to Criptext!",
+    "inputPlaceholder": "Email address",
+    "signInButtonLabel": "Sign In",
+    "signUpMessage": {
+      "text": "Not registered?",
+      "strong": "Sign up"
+    },
+    "errorMessages": {
+      "emailAddressNotExits": "Email address doesn't exist",
+      "usernameOrEmailAddressInvalid": "Invalid username or email address",
+      "usernameInvalid": "Invalid username",
+      "usernameNotExits": "Username doesn't exist",
+      "statusUnknown": "Unknown status code: ",
+      "usernameNotAvailable": "Username not available"
+    },
+    "usePassword": {
+      "title": "Warning",
+      "prefix": "If you sign in using your password your",
+      "strong": " mailbox history from other devices won't be available ",
+      "suffix": "on this device. Would you like to continue?",
+      "leftButtonLabel": "Cancel",
+      "rightButtonLabel": "Continue"
+    },
+    "loginNewAccount": {
+      "title": "Sign In Warning",
+      "prefix": "Sign in with another account will delete all mail saved on this device of the accounts",
+      "strong": "",
+      "suffix": "Would you like to continue?",
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Continue"
+    }
+  },
+  "signUp": {
+    "header": "Sign Up",
+    "subheader": "Create your Criptext account",
+    "buttons": {
+      "createAccount": "Create account"
+    },
+    "errorMessages": {
+      "USERNAME_INVALID": "At least 3 characters. Must begin with letters a-z.",
+      "USERNAME_EXISTS": "Username not available",
+      "USERNAME_UNCERTAIN": "Failed to check username",
+      "STATUS_UNKNOWN": "Unknown status code: ",
+      "FULLNAME_INVALID": "Invalid name",
+      "PASSWORD_INVALID": "Invalid password",
+      "PASSWORD_NOMATCH": "Passwords do not match",
+      "EMAIL_INVALID": "Invalid email address"
+    },
+    "form": {
+      "placeholders": {
+        "username": "Username",
+        "fullName": "Full name",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "recoveryEmail": "Recovery email address (optional)",
+        "checkbox": {
+          "prefix": "I have read and agree with the ",
+          "suffix": "Terms and Conditions"
+        }
+      }
+    },
+    "popUp": {
+      "warningRecoveryEmail": {
+        "title": "Warning!",
+        "prefix": "You did not set a Recovery Email, so",
+        "strong": " account recovery is impossible ",
+        "suffix": "if you forget your password",
+        "leftButtonLabel": "Cancel",
+        "rightButtonLabel": "Continue"
+      }
+    }
+  },
+  "signInToApprove": {
+    "title": "Sign In",
+    "message": "Check and approve on your existing Criptext device to continue",
+    "getPromptLabel": "Didn't get the prompt?",
+    "passwordLoginLabel": "Sign In with password",
+    "buttons": {
+      "sending": "Sending...",
+      "resend": "Resend it"
+    }
+  },
+  "signInPassword": {
+    "sectionTitleSignIn": "Sign In",
+    "sectionTitleTwoFactorAuth": "Two-Factor Authentication",
+    "form": {
+      "passwordInputPlaceholder": "Password",
+      "forgotLabel": "Forgot?"
+    },
+    "buttons": {
+      "nextLabel": "Next",
+      "confirmLabel": "Confirm"
+    },
+    "forgotPasswordMessage": {
+      "title": "Reset Password",
+      "prefix": "A reset link was sent to",
+      "suffix": "The link will be valid for 30 minutes",
+      "dismissButtonLabel": "Okay",
+      "notSetError": {
+        "title": "No Recovery Email",
+        "message": "Password recovery is impossible as no recovery email was set on your account. For further assistance contact us:",
+        "dismissButtonLabel": "Okay"
+      },
+      "fallbackError": {
+        "title": "Reset Password",
+        "message": "Failed to send the Reset password link. Try again",
+        "dismissButtonLabel": "Okay"
+      }
     }
   }
 }

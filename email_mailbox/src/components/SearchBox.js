@@ -49,7 +49,9 @@ class SearchBox extends Component {
           onKeyPress={this.handleKeyPressInput}
           placeholder={string.header.search}
           value={this.props.searchParams.text}
+          disabled={this.props.isLoadingThreads}
         />
+        {this.renderSearchIcon()}
         <div className="header-search-toggle">
           <i
             className="icon-arrow-down"
@@ -125,6 +127,21 @@ class SearchBox extends Component {
       });
     });
   };
+
+  handleClearSearchInput = () => {
+    this.props.onClearSearchInput();
+    this.input.focus();
+  };
+
+  renderSearchIcon = () => {
+    if (!this.props.searchParams.text) return null;
+    if (this.props.isLoadingThreads) {
+      return <SearchBoxLoading />;
+    }
+    return (
+      <i className="icon-exit" onClick={() => this.handleClearSearchInput()} />
+    );
+  };
 }
 
 const animateIn = (gridContainer, callback) => {
@@ -158,6 +175,15 @@ const clearCurrentAnimation = () => {
   if (currentAnimation) currentAnimation.pause();
 };
 
+const SearchBoxLoading = () => (
+  <div className="loading-ring search-loading-ring">
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+);
+
 SearchBox.defaultProps = {
   isHiddenMenuSearchHints: true,
   isHiddenMenuSearchOptions: true,
@@ -172,6 +198,8 @@ SearchBox.propTypes = {
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,
   isHiddenMenuSearchOptions: PropTypes.bool,
+  isLoadingThreads: PropTypes.bool,
+  onClearSearchInput: PropTypes.func,
   onClickSearch: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onToggleMenuSearchHints: PropTypes.func,

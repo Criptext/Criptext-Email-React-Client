@@ -130,9 +130,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         threadIdSelected: threadId
       };
+      ownProps.onClickSection(threadType, openThreadParams);
       await dispatch(loadThreads(loadThreadsParams));
       await dispatch(updateUnreadThreads([threadId], unread, labelId));
-      ownProps.onClickSection(threadType, openThreadParams);
     }
   };
 };

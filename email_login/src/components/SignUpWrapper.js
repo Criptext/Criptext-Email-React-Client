@@ -15,19 +15,17 @@ class SignUpWrapper extends Component {
 
   render() {
     return (
-      <div>
-        <SignUp
-          {...this.props}
-          values={this.state.values}
-          items={formItems}
-          onChangeField={this.handleChange}
-          onClickSignUp={this.handleClickSignUp}
-          errors={this.state.errors}
-          disabled={model.shouldDisableSubmitButton(this.state)}
-          isShowingPassword={this.state.isShowingPassword}
-          onToggleShowPassword={this.onToggleShowPassword}
-        />
-      </div>
+      <SignUp
+        {...this.props}
+        values={this.state.values}
+        items={formItems}
+        onChangeField={this.handleChange}
+        onClickSignUp={this.handleClickSignUp}
+        errors={this.state.errors}
+        disabled={model.shouldDisableSubmitButton(this.state)}
+        isShowingPassword={this.state.isShowingPassword}
+        onToggleShowPassword={this.onToggleShowPassword}
+      />
     );
   }
 
@@ -67,7 +65,6 @@ class SignUpWrapper extends Component {
 
   withThrottling = fn => {
     if (this.lastUserCheck) clearTimeout(this.lastUserCheck);
-
     this.lastUserCheck = setTimeout(fn, 300);
   };
 

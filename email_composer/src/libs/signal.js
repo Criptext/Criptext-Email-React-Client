@@ -10,21 +10,23 @@ import { generateKeyAndIv, encryptDummySession } from '../utils/AESUtils';
 import { parseRateLimitBlockingTime } from './../utils/TimeUtils';
 import { noNulls } from './../utils/ObjectUtils';
 import {
-  createObjectRecipientIdByDevices,
+  createObjectRecipientIdDomainByDevices,
   filterRecipientsByBlacklisted
 } from './../utils/EncryptionUtils';
 import string from './../lang';
+import { appDomain } from '../utils/const';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 
-const getKeyBundlesOfRecipients = async (recipients, knownAddresses) => {
+const getKeyBundlesOfRecipients = async domains => {
   const res = await findKeyBundles({
-    recipients,
-    knownAddresses
+    domains
   });
-  if (res.status !== 200) {
-    return new Array(recipients.length).fill(null);
+  if (res.status === 451) {
+    throw new CustomError(string.errors.suspendedUser);
+  } else if (res.status !== 200) {
+    return new Array(domains.length).fill(null);
   }
   return res.body;
 };
@@ -70,24 +72,34 @@ const createEmails = async (
   body,
   preview,
   recipients,
-  knownAddresses,
+  domainAddresses,
   keyBundleJSONbyRecipientIdAndDeviceId,
+  guestDomains,
   peer,
   files
 ) => {
   const criptextEmailsByRecipientId = {};
-
   for (const recipient of recipients) {
-    const { recipientId, type } = recipient;
+    const { recipientId, type, username, domain } = recipient;
+
+    if (guestDomains.indexOf(domain) > -1) {
+      continue;
+    }
 
     if (!criptextEmailsByRecipientId[recipientId]) {
       criptextEmailsByRecipientId[recipientId] = {
-        username: recipientId,
+        username,
+        domain,
         emails: []
       };
     }
 
-    const knownDeviceIds = knownAddresses[recipientId] || [];
+    const domainIndex = domainAddresses.findIndex(domainAddress => {
+      return domainAddress.name === domain;
+    });
+
+    const knownDeviceIds =
+      domainAddresses[domainIndex].knownAddresses[username] || [];
     const deviceIdWithKeys = keyBundleJSONbyRecipientIdAndDeviceId[recipientId]
       ? Object.keys(keyBundleJSONbyRecipientIdAndDeviceId[recipientId]).map(
           deviceId => {
@@ -143,7 +155,7 @@ const createEmails = async (
             existingFileKeys.length > 0 ? existingFileKeys[0] : null;
 
           let criptextEmail = {
-            recipientId,
+            recipientId: username,
             deviceId,
             type,
             body: bodyEncrypted.body,
@@ -166,7 +178,6 @@ const createEmails = async (
 
 const encryptPostEmail = async ({
   recipients,
-  externalRecipients,
   body,
   preview,
   subject,
@@ -177,20 +188,29 @@ const encryptPostEmail = async ({
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const sessions = await getSessionRecordByRecipientIds(recipientIds);
-  let knownAddresses = createObjectRecipientIdByDevices(sessions);
+  let domainAddresses = createObjectRecipientIdDomainByDevices(
+    sessions,
+    recipients,
+    appDomain
+  );
   const {
     keyBundles,
-    blacklistedKnownDevices
-  } = await getKeyBundlesOfRecipients(recipientIds, knownAddresses);
+    blacklistedKnownDevices,
+    guestDomains
+  } = await getKeyBundlesOfRecipients(domainAddresses);
   if (keyBundles.includes(null)) {
     throw new CustomError(string.errors.unauthorized);
   }
   if (blacklistedKnownDevices.length) {
     const {
-      knownAddressesFiltered,
+      domainAddressesFiltered,
       sessionIdentifiersToDelete
-    } = filterRecipientsByBlacklisted(blacklistedKnownDevices, knownAddresses);
-    knownAddresses = knownAddressesFiltered;
+    } = filterRecipientsByBlacklisted(
+      blacklistedKnownDevices,
+      domainAddresses,
+      appDomain
+    );
+    domainAddresses = domainAddressesFiltered;
     await Promise.all(
       sessionIdentifiersToDelete.map(
         async sessionIdentifier => await store.removeSession(sessionIdentifier)
@@ -199,8 +219,11 @@ const encryptPostEmail = async ({
   }
   const keyBundleJSONbyRecipientIdAndDeviceId = keyBundles.reduce(
     (result, keyBundle) => {
-      const recipientId = keyBundle.recipientId;
+      const username = keyBundle.recipientId;
       const deviceId = keyBundle.deviceId;
+      const domain = keyBundle.domain;
+      const recipientId =
+        keyBundle.domain === appDomain ? username : `${username}@${domain}`;
       const recipientKeys = result[recipientId] || {};
       const item = { ...recipientKeys, [deviceId]: keyBundle };
       return { ...result, [recipientId]: item };
@@ -211,18 +234,19 @@ const encryptPostEmail = async ({
     body,
     preview,
     recipients,
-    knownAddresses,
+    domainAddresses,
     keyBundleJSONbyRecipientIdAndDeviceId,
+    guestDomains,
     peer,
     files
   );
   const guestEmail = await createGuestEmail({
     externalEmailPassword,
-    externalRecipients,
+    recipients,
+    guestDomains,
     files,
     body
   });
-
   const data = noNulls({
     subject,
     threadId,
@@ -250,11 +274,30 @@ const encryptPostEmail = async ({
 
 const createGuestEmail = async ({
   externalEmailPassword,
-  externalRecipients,
+  recipients,
+  guestDomains,
   files,
   body
 }) => {
-  const { to, cc, bcc } = externalRecipients;
+  const externalRecipients = recipients.reduce((result, recipient) => {
+    if (guestDomains.indexOf(recipient.domain) <= -1) {
+      return result;
+    }
+    if (!result[recipient.type]) {
+      return {
+        ...result,
+        [recipient.type]: [`${recipient.username}@${recipient.domain}`]
+      };
+    }
+    return {
+      ...result,
+      [recipient.type]: [
+        ...result[recipient.type],
+        `${recipient.username}@${recipient.domain}`
+      ]
+    };
+  }, {});
+  const { to = [], cc = [], bcc = [] } = externalRecipients;
   const allExternalRecipients = [...to, ...cc, ...bcc];
   const hasExternalRecipients = allExternalRecipients.length > 0;
   if (!hasExternalRecipients) return null;

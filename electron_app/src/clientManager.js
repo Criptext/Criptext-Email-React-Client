@@ -87,11 +87,17 @@ const checkExpiredSession = async (
   const EXPIRED_SESSION_STATUS = 401;
   const CHANGED_PASSWORD_STATUS = 403;
   const INITIAL_REQUEST_EMPTY_STATUS = 499;
+  const SUSPENDED_ACCOUNT_REQ_STATUS = 451;
 
   const status = requirementResponse.status;
   switch (status) {
     case CHANGED_PASSWORD_STATUS: {
-      return mailboxWindow.send('password-changed', null);
+      mailboxWindow.send('password-changed', null);
+      return { status: CHANGED_PASSWORD_STATUS };
+    }
+    case SUSPENDED_ACCOUNT_REQ_STATUS: {
+      mailboxWindow.send('suspended-account', null);
+      return { status: SUSPENDED_ACCOUNT_REQ_STATUS };
     }
     case EXPIRED_SESSION_STATUS: {
       let newSessionToken, newRefreshToken, newSessionStatus;
@@ -149,18 +155,15 @@ const acknowledgeEvents = async eventIds => {
     : await checkExpiredSession(res, acknowledgeEvents, eventIds);
 };
 
+const canLogin = async ({ username, domain }) => {
+  return await client.canLogin({ username, domain });
+};
+
 const changeRecoveryEmail = async params => {
   const res = await client.changeRecoveryEmail(params);
   return res.status === 200
     ? res
     : await checkExpiredSession(res, changeRecoveryEmail, params);
-};
-
-const setReplyTo = async params => {
-  const res = await client.setReplyTo(params);
-  return res.status === 200
-    ? { status: res.status }
-    : await checkExpiredSession(res, setReplyTo, params);
 };
 
 const changePassword = async params => {
@@ -280,8 +283,12 @@ const linkAuth = async ({ newDeviceData, jwt }) => {
   return await client.linkAuth(newDeviceData);
 };
 
-const linkBegin = async username => {
-  const data = { targetUsername: username, version: LINK_DEVICES_FILE_VERSION };
+const linkBegin = async ({ username, domain }) => {
+  const data = {
+    targetUsername: username,
+    domain,
+    version: LINK_DEVICES_FILE_VERSION
+  };
   return await client.linkBegin(data);
 };
 
@@ -301,6 +308,10 @@ const linkStatus = async () => {
 
 const login = async data => {
   return await client.login(data);
+};
+
+const loginFirst = async data => {
+  return await client.loginFirst(data);
 };
 
 const logout = async () => {
@@ -382,11 +393,11 @@ const resendConfirmationEmail = async () => {
     : await checkExpiredSession(res, resendConfirmationEmail, null);
 };
 
-const resetPassword = async recipientId => {
-  const res = await client.resetPassword(recipientId);
+const resetPassword = async params => {
+  const res = await client.resetPassword(params);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, resetPassword, recipientId);
+    : await checkExpiredSession(res, resetPassword, params);
 };
 
 const setReadTracking = async enabled => {
@@ -394,6 +405,13 @@ const setReadTracking = async enabled => {
   return res.status === 200
     ? res
     : await checkExpiredSession(res, setReadTracking, enabled);
+};
+
+const setReplyTo = async params => {
+  const res = await client.setReplyTo(params);
+  return res.status === 200
+    ? { status: res.status }
+    : await checkExpiredSession(res, setReplyTo, params);
 };
 
 const setTwoFactorAuth = async enable => {
@@ -495,6 +513,7 @@ const unsendEmail = async params => {
 
 module.exports = {
   acknowledgeEvents,
+  canLogin,
   changePassword,
   changeRecoveryEmail,
   checkAvailableUsername,
@@ -513,6 +532,7 @@ module.exports = {
   linkDeny,
   linkStatus,
   login,
+  loginFirst,
   logout,
   postDataReady,
   postEmail,

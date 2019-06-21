@@ -53,6 +53,7 @@ class MainWrapper extends Component {
           <HeaderMain
             onClickSection={this.props.onClickSection}
             onToggleActivityPanel={this.props.onToggleActivityPanel}
+            sectionSelected={this.props.sectionSelected}
           />
         );
       }
@@ -89,7 +90,7 @@ class MainWrapper extends Component {
   renderSection = () => {
     switch (this.props.sectionSelected.type) {
       case SectionType.SETTINGS: {
-        return <Settings />;
+        return <Settings onClickMailboxSection={this.props.onClickSection} />;
       }
       default:
         return this.renderThreads();

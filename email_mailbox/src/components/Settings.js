@@ -18,7 +18,7 @@ const Sections = [
 
 const Settings = props => (
   <div className="settings-container">
-    <Message />
+    <Message onClickSection={props.onClickMailboxSection} />
     <div className="settings-title">
       <h1>{string.sidebar.settings}</h1>
     </div>
@@ -101,6 +101,7 @@ Items.propTypes = {
 
 Settings.propTypes = {
   onClickSection: PropTypes.func,
+  onClickMailboxSection: PropTypes.func,
   sectionSelected: PropTypes.string
 };
 

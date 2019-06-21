@@ -1,77 +1,67 @@
 @import './../styles/index.scss';
 
-.login {
+#section-signin {
   font-family: 'NunitoSans';
-  width: 328px;
-  height: 513px;
   border-radius: 0px 0px 7px 7px;
-  background: linear-gradient(to bottom, #00c4ff, #0091ff);
-  .header {
-    height: 55%;
+  height: 100%;
+  position: relative;
+  width: 328px;
+
+  .signin-welcome {
+    height: 45%;
     width: 100%;
     text-align: center;
+
     .logo {
-      height: 65%;
-      padding: 0 auto;
+      align-items: flex-end;
+      display: flex;
+      height: 60%;
+
       .icon {
         height: 51px;
         width: 57px;
         margin: 0 auto;
         position: relative;
-        top: 65%;
         background: url('./../images/logo-2-copy@2x.png') no-repeat center
           center;
         background-size: 100%;
       }
     }
+
     .text {
-      height: 35%;
-      position: relative;
-      top: 5px;
       color: #ffffff;
       font-size: 20px;
+      margin-top: 10px;
+      position: relative;
+      top: 5px;
     }
   }
 
-  .form {
+  .signin-form {
     height: 20%;
     width: 65%;
     margin: 0 auto;
     position: relative;
 
     form {
-      .label {
+      input {
+        background: transparent;
         width: 100%;
-        margin: 0px;
-        padding: 0px;
-        display: flex;
+        border: 0px;
+        border-bottom: solid 1px rgba(255, 255, 255, 0.19);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 300;
+        text-indent: 7px;
 
-        input {
-          background: transparent;
-          width: 55%;
-          border: 0px;
-          border-bottom: solid 1px rgba(255, 255, 255, 0.19);
-          color: #ffffff;
-          font-size: 13px;
-          font-weight: 300;
-          text-indent: 7px;
-
-          &::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-            opacity: 1;
-          }
-
-          &:focus {
-            outline: none;
-            border-bottom: solid 1px #fff;
-          }
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.6);
+          opacity: 1;
         }
-        span {
-          width: 40%;
-          font-size: 14px;
-          font-weight: 400;
-          color: #ffffff;
-          text-align: center;
+
+        &:focus {
+          outline: none;
+          border-bottom: solid 1px #fff;
         }
       }
 
@@ -124,8 +114,8 @@
     }
   }
 
-  .footer {
-    height: 20%;
+  .signin-footer {
+    height: 25%;
     color: #ffffff;
     font-size: 13px;
 

@@ -13,9 +13,8 @@ import { appDomain, avatarBaseUrl } from '../utils/const';
 
 const mapStateToProps = state => {
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
-  const avatarUrl = `${avatarBaseUrl}${
-    myAccount.recipientId
-  }?date=${avatarTimestamp}`;
+  const [username, domain = appDomain] = myAccount.recipientId.split(`@`);
+  const avatarUrl = `${avatarBaseUrl}${domain}/${username}?date=${avatarTimestamp}`;
   return {
     avatarUrl
   };
@@ -41,7 +40,9 @@ const mapDispatchToProps = dispatch => {
       }
     },
     onUpdateContact: async name => {
-      const email = `${myAccount.recipientId}@${appDomain}`;
+      const email = myAccount.recipientId.includes('@')
+        ? myAccount.recipientId
+        : `${myAccount.recipientId}@${appDomain}`;
       await updateContactByEmail({ email, name });
     },
     onUploadAvatar: async params => {

@@ -102,7 +102,6 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
   badgeLabelIdsEvent = new Set();
   labelsEvent = {};
   avatarHasChanged = false;
-
   const rowIds = [];
   const completedTask = events.reduce((count, event) => {
     if (event.cmd === SocketCommand.NEW_EMAIL) {
@@ -300,10 +299,28 @@ export const handleEvent = incomingEvent => {
     case SocketCommand.UPDATE_DEVICE_TYPE: {
       return handleUpdateDeviceTypeEvent(incomingEvent);
     }
+    case SocketCommand.SUSPENDED_ACCOUNT_EVENT: {
+      return handleSuspendedAccountEvent(incomingEvent);
+    }
+    case SocketCommand.REACTIVATED_ACCOUNT_EVENT: {
+      return handleReactivatedAccountEvent(incomingEvent);
+    }
     default: {
       return { rowid: null };
     }
   }
+};
+
+const buildSenderRecipientId = ({ senderId, senderDomain, from, external }) => {
+  if (senderDomain && senderId) {
+    return senderDomain === appDomain
+      ? senderId
+      : `${senderId}@${senderDomain}`;
+  }
+
+  return external === true
+    ? EXTERNAL_RECIPIENT_ID_SERVER
+    : getRecipientIdFromEmailAddressTag(from);
 };
 
 const handleNewMessageEvent = async ({ rowid, params }) => {
@@ -323,6 +340,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     labels,
     messageType,
     metadataKey,
+    senderDomain,
+    senderId,
     subject,
     senderDeviceId,
     threadId,
@@ -333,10 +352,12 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     boundary
   } = params;
   if (!metadataKey) return { rowid: null };
-  const recipientId =
-    external === true
-      ? EXTERNAL_RECIPIENT_ID_SERVER
-      : getRecipientIdFromEmailAddressTag(from);
+  const recipientId = buildSenderRecipientId({
+    senderId,
+    senderDomain,
+    from,
+    external
+  });
   const deviceId =
     external === undefined
       ? typeof messageType === 'number'
@@ -350,8 +371,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
   const SpamLabelId = LabelType.spam.id;
-  const isFromMe =
-    myAccount.recipientId === getRecipientIdFromEmailAddressTag(from);
+  const isFromMe = myAccount.recipientId === recipientId;
   const recipients = getRecipientsFromData({
     to: to || toArray,
     cc: cc || ccArray,
@@ -361,6 +381,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   const isToMe = checkEmailIsTo(recipients);
   let notificationPreview = '';
   const labelIds = [];
+  let emailThreadId = threadId;
   if (!prevEmail) {
     let body = '',
       headers;
@@ -409,7 +430,6 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       }
     }
     const unread = isFromMe && !isToMe ? false : true;
-    let emailThreadId = threadId;
     if (inReplyTo) {
       const emailWithMessageId = await getEmailByParams({
         messageId: inReplyTo
@@ -499,7 +519,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       senderInfo: parsedContact.name || parsedContact.email,
       emailSubject: subject,
       emailPreview: notificationPreview,
-      threadId
+      threadId: emailThreadId
     });
   }
   const mailboxIdsToUpdate = isSpam ? [LabelType.spam.id] : labelIds;
@@ -550,7 +570,9 @@ const sendNewEmailNotification = () => {
 };
 
 const updateOwnContact = async () => {
-  const ownEmail = `${myAccount.recipientId}@${appDomain}`;
+  const ownEmail = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${appDomain}`;
   const accountName = myAccount.name;
   if (accountName) {
     await updateContactByEmail({ email: ownEmail, name: accountName });
@@ -558,7 +580,10 @@ const updateOwnContact = async () => {
 };
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
-  const { date, metadataKey, type, from } = params;
+  const { date, metadataKey, type, from, fromDomain } = params;
+  const contactEmailAddress = fromDomain
+    ? `${fromDomain.recipientId}@${fromDomain.domain}`
+    : `${from}@${appDomain}`;
   const [email] = await getEmailByKey(metadataKey);
   const isUnsend = type === EmailStatus.UNSEND;
   if (email) {
@@ -582,7 +607,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
       const isFromMe = from === myAccount.recipientId;
       const isOpened = type === EmailStatus.READ;
       if (!isFromMe && isOpened) {
-        const contactEmail = `${from}@${appDomain}`;
+        const contactEmail = contactEmailAddress;
         const [contact] = await getContactByEmails([contactEmail]);
         const feedItemParams = {
           date,
@@ -689,7 +714,6 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
       threadIds.push(email.threadId);
     }
   }
-
   if (!emailsId.length) return { rowid: null };
   const labelsToRemove = await getLabelsByText(labelsRemoved);
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
@@ -858,6 +882,15 @@ const handleUpdateDeviceTypeEvent = async ({ rowid }) => {
   return status === 200 ? { rowid } : { rowid: null };
 };
 
+const handleSuspendedAccountEvent = () => {
+  return sendSuspendedAccountEvent();
+};
+
+const handleReactivatedAccountEvent = () => {
+  emitter.emit(Event.REACTIVATED_ACCOUNT);
+  return { rowId: null };
+};
+
 const handleSendEmailError = ({ rowid }) => {
   return { rowid };
 };
@@ -980,6 +1013,10 @@ ipcRenderer.on('device-removed', async () => {
 
 ipcRenderer.on('password-changed', () => {
   return sendPasswordChangedEvent();
+});
+
+ipcRenderer.on('suspended-account', () => {
+  return sendSuspendedAccountEvent();
 });
 
 ipcRenderer.on('disable-window-link-devices', () => {
@@ -1172,6 +1209,11 @@ export const sendPasswordChangedEvent = () => {
   return { rowId: null };
 };
 
+export const sendSuspendedAccountEvent = () => {
+  emitter.emit(Event.SUSPENDED_ACCOUNT, null);
+  return { rowId: null };
+};
+
 export const handleDeleteDeviceData = async rowid => {
   return await setTimeout(async () => {
     await deleteAllDeviceData();
@@ -1294,9 +1336,11 @@ export const Event = {
   LINK_DEVICE_MAILBOX_UPLOADED: 'mailbox-uploaded-successfully',
   LINK_DEVICE_PREPARING_MAILBOX: 'preparing-mailbox',
   LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
+  LOAD_APP: 'load-app',
   LOAD_EVENTS: 'load-events',
   OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',
+  REACTIVATED_ACCOUNT: 'reactivated-account',
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
   REFRESH_THREADS: 'refresh-threads',
@@ -1304,6 +1348,7 @@ export const Event = {
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
   STOP_LOAD_SYNC: 'stop-load-sync',
+  SUSPENDED_ACCOUNT: 'suspended-account',
   UPDATE_AVAILABLE: 'update-available',
   UPDATE_LOADING_SYNC: 'update-loading-sync',
   UPDATE_THREAD_EMAILS: 'update-thread-emails'

@@ -9,7 +9,6 @@ const globalManager = remote.require('./src/globalManager');
 
 export const myAccount = remote.require('./src/Account');
 export const mySettings = remote.require('./src/Settings');
-
 export const { requiredMinLength, requiredMaxLength } = remote.require(
   './src/validationConsts'
 );

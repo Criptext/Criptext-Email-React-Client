@@ -20,8 +20,22 @@ export const throwError = error => {
   callMain('throwError', error);
 };
 
-/* Criptext Client
-   ----------------------------- */
+/*  Database
+----------------------------- */
+export const getAccountByParams = async params => {
+  return await callMain('db-get-account-by-params', params);
+};
+
+export const updateAccount = async params => {
+  return await callMain('db-update-account', params);
+};
+
+/*  Criptext Client
+----------------------------- */
+export const canLogin = async params => {
+  return await callMain('client-can-login', params);
+};
+
 export const checkAvailableUsername = async username => {
   return await callMain('client-check-available-username', username);
 };
@@ -30,8 +44,8 @@ export const linkAuth = async newDeviceData => {
   return await callMain('client-link-auth', newDeviceData);
 };
 
-export const linkBegin = async username => {
-  return await callMain('client-link-begin', username);
+export const linkBegin = async params => {
+  return await callMain('client-link-begin', params);
 };
 
 export const linkStatus = async () => {
@@ -42,6 +56,10 @@ export const login = async params => {
   return await callMain('client-login', params);
 };
 
-export const resetPassword = async recipientId => {
-  return await callMain('client-reset-password', recipientId);
+export const loginFirst = async params => {
+  return await callMain('client-login-first', params);
+};
+
+export const resetPassword = async params => {
+  return await callMain('client-reset-password', params);
 };

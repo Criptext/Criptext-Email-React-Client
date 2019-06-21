@@ -114,6 +114,14 @@ export const getAccount = async () => {
   return await callMain('db-get-account');
 };
 
+export const getAllLabels = async () => {
+  return await callMain('db-get-all-labels');
+};
+
+export const getContactByEmails = async emails => {
+  return await callMain('db-get-contact-by-emails', emails);
+};
+
 export const getIdentityKeyRecord = async params => {
   return await callMain('db-get-identity-key-record', params);
 };

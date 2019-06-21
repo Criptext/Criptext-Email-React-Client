@@ -18,7 +18,9 @@ import {
   postKeyBundle,
   postUser,
   updateAccount,
-  getSystemLanguage
+  getSystemLanguage,
+  getAllLabels,
+  getContactByEmails
 } from './../utils/ipc';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
@@ -42,11 +44,8 @@ const createAccount = async ({
   recoveryEmail
 }) => {
   const [currentAccount] = await getAccount();
-  if (currentAccount) {
-    await cleanDatabase(currentAccount.recipientId);
-  } else {
-    await cleanDatabase();
-  }
+  const username = currentAccount ? currentAccount.recipientId : null;
+  await cleanDatabase(username);
   await createTables();
 
   const signedPreKeyId = 1;
@@ -112,7 +111,7 @@ const createAccount = async ({
     throw CustomError(string.errors.saveLocal);
   }
   myAccount.initialize(newAccount);
-  setDefaultSettings();
+  await setDefaultSettings();
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -120,20 +119,9 @@ const createAccount = async ({
     }),
     store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
   );
-  const labels = Object.values(LabelType);
-  try {
-    await createLabel(labels);
-  } catch (createLabelsDbError) {
-    throw CustomError(string.errors.saveLabels);
-  }
-  try {
-    await createContact({
-      name,
-      email: `${recipientId}@${appDomain}`
-    });
-  } catch (createContactDbError) {
-    throw CustomError(string.errors.saveOwnContact);
-  }
+  await createSystemLabels();
+  const email = `${recipientId}@${appDomain}`;
+  await createOwnContact(name, email, newAccount.id);
   return true;
 };
 
@@ -141,7 +129,8 @@ const createAccountWithNewDevice = async ({
   recipientId,
   deviceId,
   name,
-  deviceType
+  deviceType,
+  isRecipientApp
 }) => {
   const signedPreKeyId = 1;
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
@@ -172,26 +161,12 @@ const createAccountWithNewDevice = async ({
   const { token, refreshToken } = body;
   const privKey = util.toBase64(identityKey.privKey);
   const pubKey = util.toBase64(identityKey.pubKey);
+
   const [currentAccount] = await getAccount();
   const currentAccountExists = currentAccount
     ? currentAccount.recipientId === recipientId
     : false;
-  if (currentAccountExists) {
-    try {
-      await updateAccount({
-        jwt: token,
-        refreshToken,
-        deviceId,
-        name,
-        privKey,
-        pubKey,
-        recipientId,
-        registrationId
-      });
-    } catch (updateAccountDbError) {
-      throw CustomError(string.errors.updateAccountData);
-    }
-  } else {
+  if (!currentAccountExists) {
     if (currentAccount) {
       await cleanDatabase(currentAccount.recipientId);
       await createTables();
@@ -210,25 +185,31 @@ const createAccountWithNewDevice = async ({
     } catch (createAccountDbError) {
       throw CustomError(string.errors.saveLocal);
     }
-
-    const labels = Object.values(LabelType);
+    await createSystemLabels();
+  } else {
     try {
-      await createLabel(labels);
-    } catch (createLabelsDbError) {
-      throw CustomError(string.errors.saveLabels);
-    }
-    try {
-      await createContact({
+      await updateAccount({
+        jwt: token,
+        refreshToken,
+        deviceId,
         name,
-        email: `${recipientId}@${appDomain}`
+        privKey,
+        pubKey,
+        recipientId,
+        registrationId,
+        isActive: true,
+        isLoggedIn: true
       });
-    } catch (createContactDbError) {
-      throw CustomError(string.errors.saveOwnContact);
+    } catch (updateAccountDbError) {
+      throw CustomError(string.errors.updateAccountData);
     }
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  setDefaultSettings();
+  await setDefaultSettings();
+
+  const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
+  await createOwnContact(name, email, newAccount.id);
 
   await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
@@ -280,15 +261,16 @@ const uploadKeys = async ({ deviceType }) => {
 };
 
 const createAccountToDB = async ({
-  recipientId,
-  deviceId,
-  name,
   jwt,
   refreshToken,
-  preKeyIds,
+  deviceId,
+  name,
   privKey,
   pubKey,
+  recipientId,
+  isRecipientApp,
   registrationId,
+  preKeyIds,
   preKeyPairArray,
   signedPreKeyId,
   signedPreKeyPair
@@ -297,23 +279,7 @@ const createAccountToDB = async ({
   const currentAccountExists = currentAccount
     ? currentAccount.recipientId === recipientId
     : false;
-
-  if (currentAccountExists) {
-    try {
-      await updateAccount({
-        jwt,
-        refreshToken,
-        deviceId,
-        name,
-        privKey,
-        pubKey,
-        recipientId,
-        registrationId
-      });
-    } catch (updateAccountDbError) {
-      throw CustomError(string.errors.updateAccountData);
-    }
-  } else {
+  if (!currentAccountExists) {
     if (currentAccount) {
       await cleanDatabase(currentAccount.recipientId);
       await createTables();
@@ -332,19 +298,30 @@ const createAccountToDB = async ({
     } catch (createAccountDbError) {
       throw CustomError(string.errors.saveLocal);
     }
-
-    const labels = Object.values(LabelType);
+    await createSystemLabels();
+    const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
+    await createOwnContact(name, email);
+  } else {
     try {
-      await createLabel(labels);
-    } catch (createLabelsDbError) {
-      throw CustomError(string.errors.saveLabels);
+      await updateAccount({
+        jwt,
+        refreshToken,
+        deviceId,
+        name,
+        privKey,
+        pubKey,
+        recipientId,
+        registrationId
+      });
+    } catch (updateAccountDbError) {
+      throw CustomError(string.errors.updateAccountData);
     }
   }
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  setDefaultSettings();
+  await setDefaultSettings();
 
-  return await Promise.all(
+  await Promise.all(
     Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
       await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
     }),
@@ -353,13 +330,39 @@ const createAccountToDB = async ({
 };
 
 const setDefaultSettings = async () => {
-  const language = await getSystemLanguage();
-  mySettings.initialize({
-    language,
-    opened: false,
-    theme: 'light',
-    isFromStore: isFromStore
-  });
+  if (!mySettings.theme) {
+    const language = await getSystemLanguage();
+    mySettings.initialize({
+      language,
+      opened: false,
+      theme: 'light',
+      isFromStore: isFromStore
+    });
+  }
+};
+
+const createSystemLabels = async () => {
+  const prevLabels = await getAllLabels();
+  const prevSystemLabels = prevLabels.map(label => label.type === 'system');
+  if (!prevSystemLabels.length) {
+    const labels = Object.values(LabelType);
+    try {
+      await createLabel(labels);
+    } catch (createLabelsDbError) {
+      throw CustomError(string.errors.saveLabels);
+    }
+  }
+};
+
+const createOwnContact = async (name, email) => {
+  const [prevOwnContact] = await getContactByEmails([email]);
+  if (!prevOwnContact) {
+    try {
+      await createContact({ name, email });
+    } catch (createContactDbError) {
+      throw CustomError(string.errors.saveOwnContact);
+    }
+  }
 };
 
 const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
