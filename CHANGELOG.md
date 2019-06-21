@@ -1,15 +1,53 @@
 # Change Log
 
-## [0.17.18](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
+## [0.17.20](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
 
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.17...HEAD)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.18...HEAD)
+
+**Implemented enhancements:**
+
+- Database: Separate queries. [\#990](https://github.com/Criptext/Criptext-Email-React-Client/issues/990)
+
+**Fixed bugs:**
+
+- Activity Feed: Fix feed items [\#998](https://github.com/Criptext/Criptext-Email-React-Client/issues/998)
+- Search:  Reset search on selectig some mailbox [\#996](https://github.com/Criptext/Criptext-Email-React-Client/issues/996)
+- Search: Reset search results on clearing input [\#995](https://github.com/Criptext/Criptext-Email-React-Client/issues/995)
+- Search: Reset suggestions on clearing input [\#994](https://github.com/Criptext/Criptext-Email-React-Client/issues/994)
+- Search: Change icon on Searching emails [\#992](https://github.com/Criptext/Criptext-Email-React-Client/issues/992)
 
 **Closed issues:**
 
+- Search: Add icon for clearing search input [\#993](https://github.com/Criptext/Criptext-Email-React-Client/issues/993)
+- Handle Suspend and Reactivate events [\#984](https://github.com/Criptext/Criptext-Email-React-Client/issues/984)
+
+**Merged pull requests:**
+
+- Fix FeedItem. Fix \#998 [\#1000](https://github.com/Criptext/Criptext-Email-React-Client/pull/1000) ([erikaperugachi](https://github.com/erikaperugachi))
+- Search:  Fixes [\#997](https://github.com/Criptext/Criptext-Email-React-Client/pull/997) ([JulianAdams4](https://github.com/JulianAdams4))
+- Separate queries. Close \#990 [\#991](https://github.com/Criptext/Criptext-Email-React-Client/pull/991) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix: Click on push notifications [\#989](https://github.com/Criptext/Criptext-Email-React-Client/pull/989) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix: Windows issue on building executable [\#988](https://github.com/Criptext/Criptext-Email-React-Client/pull/988) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix enable sign up. Update 0.17.19 [\#987](https://github.com/Criptext/Criptext-Email-React-Client/pull/987) ([erikaperugachi](https://github.com/erikaperugachi))
+- First Login: Change password [\#986](https://github.com/Criptext/Criptext-Email-React-Client/pull/986) ([erikaperugachi](https://github.com/erikaperugachi))
+- Handle Suspend and Reactivate events [\#985](https://github.com/Criptext/Criptext-Email-React-Client/pull/985) ([JulianAdams4](https://github.com/JulianAdams4))
+- Enterprise: Single Account [\#982](https://github.com/Criptext/Criptext-Email-React-Client/pull/982) ([JulianAdams4](https://github.com/JulianAdams4))
+
+## [0.17.18](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.18) (2019-06-17)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.17...0.17.18)
+
+**Implemented enhancements:**
+
+- Login: Create header with history views [\#980](https://github.com/Criptext/Criptext-Email-React-Client/issues/980)
+
+**Closed issues:**
+
+- Login: Add change password view, to enterprise user. [\#981](https://github.com/Criptext/Criptext-Email-React-Client/issues/981)
 - Mailbox: Add loading emails [\#974](https://github.com/Criptext/Criptext-Email-React-Client/issues/974)
 
 **Merged pull requests:**
 
+- Update [\#983](https://github.com/Criptext/Criptext-Email-React-Client/pull/983) ([erikaperugachi](https://github.com/erikaperugachi))
 - Add loading emails. Close \#974 [\#979](https://github.com/Criptext/Criptext-Email-React-Client/pull/979) ([erikaperugachi](https://github.com/erikaperugachi))
 
 ## [0.17.17](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.17) (2019-06-12)
