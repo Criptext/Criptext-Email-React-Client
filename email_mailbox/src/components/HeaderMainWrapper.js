@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderMain from './HeaderMain';
 
-/* eslint-disable-next-line react/no-deprecated */
 class HeaderMainWrapper extends Component {
   constructor(props) {
     super(props);
@@ -37,18 +36,14 @@ class HeaderMainWrapper extends Component {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.sectionSelected) return;
-    const mailboxSelectedId = nextProps.sectionSelected.params.mailboxSelected
-      ? nextProps.sectionSelected.params.mailboxSelected.id
-      : null;
-    const prevSearchParams = nextProps.sectionSelected.params.searchParams.text;
-    const currentSearchParams = this.state.searchParams.text;
+  componentDidUpdate(prevProps) {
+    if (!prevProps.sectionSelected) return;
     const searchMailboxId = -2;
-    if (
-      prevSearchParams === currentSearchParams &&
-      mailboxSelectedId !== searchMailboxId
-    ) {
+    const prevMailboxId = prevProps.sectionSelected.params.mailboxSelected.id;
+    const nextMailboxId = this.props.sectionSelected.params.mailboxSelected.id;
+    const prevMailboxIsSearch = prevMailboxId === searchMailboxId;
+    const nextMailboxIsDifferent = prevMailboxId !== nextMailboxId;
+    if (prevMailboxIsSearch && nextMailboxIsDifferent) {
       this.handleClearSearchInput();
     }
   }

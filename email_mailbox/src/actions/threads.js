@@ -229,8 +229,8 @@ export const addMoveLabelIdThreads = ({
   };
 };
 
-export const clearThreads = labelId => ({
-  type: Thread.RESET_THREADS,
+export const removeAllThreads = labelId => ({
+  type: Thread.REMOVE_ALL_THREADS,
   labelId: labelId
 });
 

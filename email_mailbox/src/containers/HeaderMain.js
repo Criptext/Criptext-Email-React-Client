@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import { getAllLabels } from '../selectors/labels';
 import {
+  clearSuggestions,
   loadSuggestions,
-  clearThreads,
-  clearSuggestions
+  removeAllThreads
 } from '../actions/index';
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
 import { SectionType, avatarBaseUrl } from '../utils/const';
@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onClearSearchResults: () => {
       const searchLabelId = -2;
-      dispatch(clearThreads(searchLabelId));
+      dispatch(removeAllThreads(searchLabelId));
       dispatch(clearSuggestions());
     },
     onClickSection: () => {
