@@ -1090,6 +1090,13 @@ const getAllFeedItems = () => {
   return db.select('*').from(Table.FEEDITEM);
 };
 
+const getFeedItemsCounterBySeen = (seen = 0) => {
+  const query = `SELECT COUNT(DISTINCT ${Table.FEEDITEM}.id) AS count
+  FROM ${Table.FEEDITEM}
+  WHERE ${Table.FEEDITEM}.seen = ${seen}`;
+  return db.raw(query);
+};
+
 const updateFeedItems = ({ ids, seen }) => {
   const params = {};
   if (typeof seen === 'boolean') params.seen = seen;
@@ -1296,6 +1303,7 @@ module.exports = {
   getEmailsToDeleteByThreadIdAndLabelId,
   getEmailsUnredByLabelId,
   getEmailLabelsByEmailId,
+  getFeedItemsCounterBySeen,
   getFilesByEmailId,
   getPendingEvents,
   getIdentityKeyRecord,

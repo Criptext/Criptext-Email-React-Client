@@ -58,7 +58,8 @@ const populateFeeds = (state, feeds) => {
 };
 
 const mapStateToProps = state => {
-  const feeds = state.get('feeditems').toList();
+  const feedItems = state.get('feeditems');
+  const feeds = feedItems.get('list').toList();
   const orderedFeeds = orderFeedsByDate(feeds);
   const populated = populateFeeds(state, orderedFeeds);
   const { newFeeds, oldFeeds } = clasifyFeeds(populated);

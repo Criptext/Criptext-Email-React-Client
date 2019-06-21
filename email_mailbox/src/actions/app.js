@@ -40,11 +40,10 @@ export const loadApp = params => {
       ...params,
       limit: INIT_LIMIT_THREADS
     });
-    const feeditems = await defineFeedItems();
-
+    const { feedItems, badge } = await defineFeedItems();
     const activity = stopLoadThread();
     const contact = addContacts(contacts);
-    const feeditem = addFeedItems(feeditems, true);
+    const feeditem = addFeedItems(feedItems, badge, true);
     const label = addLabels(labels);
     const thread = addThreads(params.labelId, threads, true);
 

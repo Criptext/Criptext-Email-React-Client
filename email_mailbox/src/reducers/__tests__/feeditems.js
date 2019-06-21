@@ -49,7 +49,12 @@ describe('Feed actions: ', () => {
       seen: true
     });
     const nextState = feedItemsReducer(prevState, action);
-    expect(nextState.get(`${idToUpdate}`).get('seen')).toBe(true);
+    expect(
+      nextState
+        .get('list')
+        .get(`${idToUpdate}`)
+        .get('seen')
+    ).toBe(true);
   });
 
   it('Remove FeedItem by id', () => {
@@ -57,6 +62,6 @@ describe('Feed actions: ', () => {
     const prevState = initState(feeds);
     const action = removeFeedItemSuccess(idToDelete);
     const nextState = feedItemsReducer(prevState, action);
-    expect(nextState.get(`${idToDelete}`)).toBe(undefined);
+    expect(nextState.get('list').get(`${idToDelete}`)).toBe(undefined);
   });
 });
