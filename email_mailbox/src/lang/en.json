@@ -1,8 +1,11 @@
 {
   "activity": {
     "activity_feed": "Activity Feed",
+    "deleted": "Deleted",
+    "downloaded": "downloaded",
     "new": "new",
     "older": "older",
+    "opened": "opened",
     "someone": "Someone"
   },
   "emails": {

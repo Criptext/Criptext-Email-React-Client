@@ -3,10 +3,11 @@ import {
   addDataApp,
   loadEmails,
   loadEvents,
+  loadFeedItems,
   loadThreads,
   updateBadgeLabels,
   updateEmailIdsThread,
-  updateAllFeedItemsAsOlder,
+  updateFeedItems,
   unsendEmailOnSuccess,
   unsendEmailFiles,
   updateLoadingSync,
@@ -15,7 +16,6 @@ import {
 import PanelWrapper from '../components/PanelWrapper';
 import { LabelType } from '../utils/electronInterface';
 import { updateSettings } from '../utils/ipc';
-import { storeSeenTimestamp } from '../utils/storage';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 
 const mapStateToProps = state => {
@@ -45,6 +45,9 @@ const mapDispatchToProps = dispatch => {
     },
     onLoadEvents: params => {
       dispatch(loadEvents(params));
+    },
+    onLoadFeedItems: () => {
+      dispatch(loadFeedItems(true));
     },
     onLoadThreads: (params, shouldStopAll) => {
       const { labelId } = params;
@@ -85,9 +88,8 @@ const mapDispatchToProps = dispatch => {
     onUpdateOpenedAccount: async () => {
       return await updateSettings({ opened: true });
     },
-    onUpdateTimestamp: () => {
-      storeSeenTimestamp();
-      dispatch(updateAllFeedItemsAsOlder());
+    onUpdateFeedItems: feedItemIds => {
+      dispatch(updateFeedItems({ ids: feedItemIds, seen: true }));
     },
     onUpdateUnreadEmailsBadge: labelIds => {
       dispatch(updateBadgeLabels(labelIds));

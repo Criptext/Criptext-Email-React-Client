@@ -1,11 +1,16 @@
 import { FeedItem } from './../actions/types';
 import { Map, fromJS } from 'immutable';
 
-const feeditems = (state = new Map({}), action) => {
+const feeditems = (state = new Map(), action) => {
   switch (action.type) {
     case FeedItem.ADD_BATCH: {
       if (action.clear) {
-        return Map(fromJS(action.feeds));
+        const feedItems = fromJS(action.feeds);
+        const batch = feedItems.map(feedItem => {
+          const seen = !!feedItem.get('seen');
+          return feedItem.merge({ seen });
+        });
+        return Map(batch);
       }
       return state.merge(fromJS(action.feeds));
     }
@@ -16,7 +21,7 @@ const feeditems = (state = new Map({}), action) => {
       }
       return state.delete(`${feedItemId}`);
     }
-    case FeedItem.UPDATE_SUCCESS: {
+    case FeedItem.UPDATE: {
       const feedItemId = action.feed.id;
       if (!feedItemId) {
         return state;
@@ -26,18 +31,16 @@ const feeditems = (state = new Map({}), action) => {
         feeditem(state.get(`${feedItemId}`), action)
       );
     }
-    case FeedItem.UPDATE_ALL: {
-      const { field, value } = action;
-      return Map(
-        state.reduce((result, item, key) => {
-          const action = {
-            type: FeedItem.UPDATE_SUCCESS,
-            feed: { [field]: value }
-          };
-          result[key] = feeditem(item, action);
-          return result;
-        }, {})
-      );
+    case FeedItem.UPDATE_FEED_ITEMS: {
+      const { ids, seen } = action.feed;
+      return ids.reduce((state, id) => {
+        return state.merge({
+          [`${id}`]: feeditem(state.get(`${id}`), {
+            type: FeedItem.UPDATE,
+            feed: { id, seen }
+          })
+        });
+      }, state);
     }
     default:
       return state;
@@ -46,13 +49,13 @@ const feeditems = (state = new Map({}), action) => {
 
 const feeditem = (state, action) => {
   switch (action.type) {
-    case FeedItem.UPDATE_SUCCESS: {
-      const seen = action.feed.seen || state.get('seen');
-      const isNew =
-        action.feed.isNew !== undefined
-          ? action.feed.isNew
-          : state.get('isNew');
-      return state.merge(Map({ seen, isNew }));
+    case FeedItem.UPDATE: {
+      const { seen } = action.feed;
+      return state.merge(
+        Map({
+          seen: typeof seen === 'boolean' ? seen : state.get('seen')
+        })
+      );
     }
     default:
       return state;

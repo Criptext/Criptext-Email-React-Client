@@ -93,9 +93,11 @@ aside.navigation-feed-container{
   background-color: rgba(233, 233, 233, 0.76);
   box-shadow: inset 0 0 10px rgba(220,220,220,0.1);
 }
+
 .navigation-feed-content::-webkit-scrollbar{
   width: 6.5px;
 }
+
 .navigation-feed-content::-webkit-scrollbar-thumb{
   border-radius: 10px;
   background-color: #b0b2b4;
@@ -168,198 +170,13 @@ aside.navigation-feed-container{
       100% {
         transform: translateX(0);
       }
-    } 
-
-    .deleted-feed {
-      height: 55px;
-      padding: 0%;
-      margin: 0%;
-      background-color: #dc4d48;
-      color: #ffffff;
-      animation-name: fadeInRight;
-      animation-duration: 300ms;
-
-      .deleted-feed-icon {
-        margin: 0%;
-        width: 19%;
-        height: 100%;
-        float: left;
-        text-align: center;
-        font-size: 18px;
-        color: #ffffff;
-
-        i {
-          position:relative;
-          top: calc(50% - 9px);
-        }
-      }
-
-      .deleted-feed-content {
-        height: 100%;
-        width: 81%;
-        padding: 0%;
-        margin: 0%;
-        text-align: left;
-        line-height: 100%;
-        font-weight: 600;
-        float: right;
-
-        span {
-          position: relative;
-          top: 38%;
-        }
-      }
-
-    }
-    
-    .feed-item {
-      height: 55px;
-      padding-bottom: 0px;
-      margin-bottom: 2px;
-
-      .feed-content {
-        margin: 0%;
-        padding: 0%;
-        height: 100%;
-
-        .feed-icon {
-          margin: 0%;
-          width: 19%;
-          height: 100%;
-          float: left;
-          text-align: center;
-          font-size: 18px;
-
-          i {
-            position:relative;
-            top: calc(50% - 9px);
-            color: #0091ff;
-          }
-        }
-
-        .feed-data {
-          height: 100%;
-          width: 72%;
-          padding: 0%;
-          margin: 0% 9% 0% 0%;
-          float: right;
-          text-align: left;
-          color: #000000;
-
-          .feed-preview {
-            width: 75%;
-            height: 31px;
-            padding: 12px 0px 12px 0px;
-            margin: 0%;
-            float: left;
-
-            .feed-title {
-              width: 100%;
-              height: 16px;
-              font-size: 12px;
-              white-space: nowrap; 
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-
-            .feed-subject {
-              width: 95%;
-              color: #9b9b9b;
-              float: left;
-              margin: 0%;
-              font-size: 12px;
-              white-space: nowrap; 
-              overflow: hidden;
-              text-overflow: ellipsis;
-
-              span {
-                width: 100%;
-              }
-            }
-          }
-
-          .feed-actions-time {
-            width: 25%;
-            height: 31px;
-            padding: 12px 0px 12px 0px;
-            margin: 0%;
-            float: left;
-            text-align: right;
-            color: #dcdde0;
-
-            .feed-time {
-              width: 100%;
-              font-size: 10px;
-              position: relative;
-              bottom: -20px;
-            }
-
-            .feed-actions {
-              height: 100%;
-              width: 100%;
-
-              .feed-mute {
-                font-size: 18px;
-                height: 50%;
-                i {
-                  position: relative;
-                  top: -3px;
-                }
-                i:hover {
-                  color: #c2c2c2;
-                }
-              }
-
-              .feed-delete {
-                height: 50%;
-                i {
-                  position: relative;
-                  right: 2px;
-                  bottom: -3px;
-                }
-                i:hover {
-                  color: #c2c2c2;
-                }
-              }
-
-            }
-          }
-        }
-
-        .feed-clear {
-          clear: both;
-        }
-      }
-    }
-
-    .unread-feed {
-      .feed-content {
-        .feed-icon {
-          i {
-            color: #0091ff;
-          }
-        }
-        .feed-data {
-          .feed-preview {
-            .feed-title {
-               font-weight: bold;
-             }
-           }
-          .feed-actions-time {
-            .feed-time {
-              font-weight: bold;
-              font-style: normal;
-            }
-          }
-        }
-      }
     }
   }
 }
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_ACTIVITY, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE){
+@mixin themable($_THEME, $_BACKGROUND_COLOR_ACTIVITY, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .navigation-feed-content{
@@ -373,18 +190,6 @@ aside.navigation-feed-container{
         }
       }
 
-      .feed-item {
-        .feed-content {
-          .feed-data {
-            .feed-preview {
-              .feed-title {
-                color: $_COLOR_TEXT_ACTIVITY_ITEM_TITLE;
-              }
-            }
-          }
-        }
-      }
-
       .new-feeds{
         .unread-feed {
           background-color: $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD;
@@ -394,5 +199,5 @@ aside.navigation-feed-container{
   }
 }
   
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_LIGHT, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_LIGHT, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_ACTIVITY_DARK, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_DARK, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_DARK, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_LIGHT, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_LIGHT, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_ACTIVITY_DARK, $_BACKGROUND_COLOR_ACTIVITY_ITEM_UNREAD_DARK, $_COLOR_TEXT_CONTAINER_EMPTY_TITLE_DARK);

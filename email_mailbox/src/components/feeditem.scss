@@ -1,0 +1,207 @@
+@import "./../styles/index.scss";
+
+.deleted-feed {
+  height: 55px;
+  padding: 0%;
+  margin: 0%;
+  background-color: #dc4d48;
+  color: #ffffff;
+  animation-name: fadeInRight;
+  animation-duration: 300ms;
+
+  .deleted-feed-icon {
+    margin: 0%;
+    width: 19%;
+    height: 100%;
+    float: left;
+    text-align: center;
+    font-size: 18px;
+    color: #ffffff;
+
+    i {
+      position:relative;
+      top: calc(50% - 9px);
+    }
+  }
+
+  .deleted-feed-content {
+    height: 100%;
+    width: 81%;
+    padding: 0%;
+    margin: 0%;
+    text-align: left;
+    line-height: 100%;
+    font-weight: 600;
+    float: right;
+
+    span {
+      position: relative;
+      top: 38%;
+    }
+  }
+}
+
+.feed-item {
+  height: 55px;
+  padding-bottom: 0px;
+  margin-bottom: 2px;
+
+  &.unread-feed {
+    .feed-content {
+      .feed-icon {
+        i {
+          color: #0091ff;
+        }
+      }
+      .feed-data {
+        .feed-preview {
+          .feed-title {
+             font-weight: bold;
+           }
+         }
+        .feed-actions-time {
+          .feed-time {
+            font-weight: bold;
+            font-style: normal;
+          }
+        }
+      }
+    }
+  }
+  
+  .feed-content {
+    margin: 0%;
+    padding: 0%;
+    height: 100%;
+
+    .feed-icon {
+      margin: 0%;
+      width: 19%;
+      height: 100%;
+      float: left;
+      text-align: center;
+      font-size: 18px;
+
+      i {
+        position:relative;
+        top: calc(50% - 9px);
+        color: #0091ff;
+      }
+    }
+
+    .feed-data {
+      height: 100%;
+      width: 72%;
+      padding: 0%;
+      margin: 0% 9% 0% 0%;
+      float: right;
+      text-align: left;
+      color: #000000;
+
+      .feed-preview {
+        width: 75%;
+        height: 31px;
+        padding: 12px 0px 12px 0px;
+        margin: 0%;
+        float: left;
+
+        .feed-title {
+          width: 100%;
+          height: 16px;
+          font-size: 12px;
+          white-space: nowrap; 
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .feed-subject {
+          width: 95%;
+          color: #9b9b9b;
+          float: left;
+          margin: 0%;
+          font-size: 12px;
+          white-space: nowrap; 
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          span {
+            width: 100%;
+          }
+        }
+      }
+
+      .feed-actions-time {
+        width: 25%;
+        height: 31px;
+        padding: 12px 0px 12px 0px;
+        margin: 0%;
+        float: left;
+        text-align: right;
+        color: #dcdde0;
+
+        .feed-time {
+          width: 100%;
+          font-size: 10px;
+          position: relative;
+          bottom: -20px;
+        }
+
+        .feed-actions {
+          height: 100%;
+          width: 100%;
+
+          .feed-mute {
+            font-size: 18px;
+            height: 50%;
+            i {
+              position: relative;
+              top: -3px;
+            }
+            i:hover {
+              color: #c2c2c2;
+            }
+          }
+
+          .feed-delete {
+            height: 50%;
+            i {
+              position: relative;
+              right: 2px;
+              bottom: -3px;
+            }
+            i:hover {
+              color: #c2c2c2;
+            }
+          }
+
+        }
+      }
+    }
+
+    .feed-clear {
+      clear: both;
+    }
+  }
+}
+
+/* THEME
+   ----------------------------- */
+@mixin themable($_THEME, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE){
+  [data-theme^=#{$_THEME}],
+  [data-theme] [data-theme^=#{$_THEME}] {
+    .feed-item {
+      .feed-content {
+        .feed-data {
+          .feed-preview {
+            .feed-title {
+              color: $_COLOR_TEXT_ACTIVITY_ITEM_TITLE;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    
+@include themable($_THEME_LIGHT, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_LIGHT);
+@include themable($_THEME_DARK, $_COLOR_TEXT_ACTIVITY_ITEM_TITLE_DARK);

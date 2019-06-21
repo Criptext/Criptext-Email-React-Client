@@ -14,17 +14,17 @@ const setFeedTime = (feed, field) => {
 };
 
 const clasifyFeeds = feeds => {
-  const newFeeds = feeds.filter(feed => feed.get('isNew'));
-  const oldFeeds = feeds.filter(feed => !feed.get('isNew'));
+  const newFeeds = feeds.filter(feed => !feed.get('seen'));
+  const oldFeeds = feeds.filter(feed => feed.get('seen'));
   return { newFeeds, oldFeeds };
 };
 
 const defineFeedAction = feed => {
   switch (feed.get('type')) {
     case FeedItemType.DOWNLOADED.value:
-      return feed.set('action', 'downloaded');
+      return feed.set('action', string.activity.downloaded);
     default:
-      return feed.set('action', 'opened');
+      return feed.set('action', string.activity.opened);
   }
 };
 
@@ -62,9 +62,12 @@ const mapStateToProps = state => {
   const orderedFeeds = orderFeedsByDate(feeds);
   const populated = populateFeeds(state, orderedFeeds);
   const { newFeeds, oldFeeds } = clasifyFeeds(populated);
+  const newFeedsPlain = newFeeds.toJS();
+  const feedItemIds = newFeedsPlain.map(feedItem => feedItem.id);
   return {
-    newFeeds: newFeeds.toJS(),
-    oldFeeds: oldFeeds.toJS()
+    newFeeds: newFeedsPlain,
+    oldFeeds: oldFeeds.toJS(),
+    feedItemIds
   };
 };
 

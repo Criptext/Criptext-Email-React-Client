@@ -185,8 +185,8 @@ ipc.answerRenderer('db-update-emails', params =>
   dbManager.updateEmails(params)
 );
 
-ipc.answerRenderer('db-update-feed-item', ({ feedItemId, seen }) =>
-  dbManager.updateFeedItem({ feedItemId, seen })
+ipc.answerRenderer('db-update-feed-items', params =>
+  dbManager.updateFeedItems(params)
 );
 
 ipc.answerRenderer('db-update-files-by-emailid', ({ emailId, status }) =>

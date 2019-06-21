@@ -139,12 +139,12 @@ class PanelWrapper extends Component {
     this.setState({ threadIdSelected: null });
   };
 
-  handleToggleActivityPanel = () => {
+  handleToggleActivityPanel = feedItemIds => {
     this.setState(
       { isOpenActivityPanel: !this.state.isOpenActivityPanel },
       () => {
         if (this.state.isOpenActivityPanel === false) {
-          this.props.onUpdateTimestamp();
+          this.props.onUpdateFeedItems(feedItemIds);
         }
       }
     );
@@ -257,6 +257,7 @@ class PanelWrapper extends Component {
   storeLoadListenerCallback = ({
     avatarHasChanged,
     completedTask,
+    feedItemHasAdded,
     labelIds,
     threadIds,
     labels,
@@ -267,6 +268,10 @@ class PanelWrapper extends Component {
     let label = undefined;
     if (avatarHasChanged) {
       activity = setAvatarUpdatedTimestamp(Date.now());
+    }
+
+    if (feedItemHasAdded) {
+      this.props.onLoadFeedItems(true);
     }
 
     if (completedTask) {
@@ -431,6 +436,7 @@ PanelWrapper.propTypes = {
   onAddLabels: PropTypes.func,
   onLoadEmails: PropTypes.func,
   onLoadEvents: PropTypes.func,
+  onLoadFeedItems: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,
   onStopLoadSync: PropTypes.func,
@@ -439,7 +445,7 @@ PanelWrapper.propTypes = {
   onUpdateEmailIdsThread: PropTypes.func,
   onUpdateLoadingSync: PropTypes.func,
   onUpdateOpenedAccount: PropTypes.func,
-  onUpdateTimestamp: PropTypes.func,
+  onUpdateFeedItems: PropTypes.func,
   onUpdateUnreadEmailsBadge: PropTypes.func,
   threadsCount: PropTypes.number
 };

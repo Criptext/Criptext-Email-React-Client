@@ -127,6 +127,7 @@
   
     .email-body{
       .email-text{
+        background-color: transparent;
         font-size: medium;
         font-weight: 200;
         overflow-x: auto;
@@ -138,6 +139,7 @@
         }
   
         >div{
+          background-color: transparent;
           margin: 10px 0;
         }
   
@@ -158,6 +160,7 @@
           width: 35px;
   
           i{
+            background-color: transparent;
             font-size: 23px;
           }
         }
@@ -167,6 +170,10 @@
           margin-top: 10px;
           padding-left: 10px;
           border-left: 1px solid #0091ff;
+        }
+
+        .criptext_quote{
+          background-color: transparent;
         }
       }
   
@@ -189,12 +196,6 @@
     border: solid 1px transparent;
   }
 
-  &.email-draft {
-    .email-info-content-from{
-      color: #dd4040;
-    }
-  }
-
   > hr{
     background-color: transparent;
     border: 0;
@@ -205,6 +206,7 @@
 
   .email-info{
     align-items: center;
+    background-color: transparent;
     display: flex;
     flex-direction: row;
     height: 65px;
@@ -337,12 +339,14 @@
     }
 
     i{
+      background-color: transparent;
       color: rgba(60, 72, 88, 0.6);
       font-size: 19px;
       margin-right: 5px;
     }
 
     span{
+      background-color: transparent;
       font-family: NunitoSans;
       font-size: 12px;
     }
@@ -390,6 +394,12 @@
 
       &.email-unsend {
         border-color: $_BORDER_COLOR_EMAIL_UNSEND;
+      }
+
+      &.email-draft {
+        .email-info .email-info-content .email-info-content-line .email-info-content-from span{
+          color: #dd4040;
+        }
       }
 
       .email-info{
