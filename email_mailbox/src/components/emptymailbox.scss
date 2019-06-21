@@ -100,6 +100,9 @@
           &.empty-search {
             background-image: url(../#{$_PATH_TO_IMAGES}/empty-search-#{$_THEME}.svg);
           }
+          &.loading-search {
+            background-image: url(../#{$_PATH_TO_IMAGES}/loading-search-#{$_THEME}.svg);
+          }
         }
 
         .cptx-linear-animate {

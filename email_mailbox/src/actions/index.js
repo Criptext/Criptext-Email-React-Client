@@ -22,6 +22,7 @@ import {
   loadEvents,
   loadThreads,
   moveThreads,
+  removeAllThreads,
   removeLabelIdThread,
   removeLabelIdThreadSuccess,
   removeLabelIdThreadDraft,
@@ -67,7 +68,7 @@ import {
   updateAllFeedItemsAsOlder,
   updateFeedItemSuccess
 } from './feeditems';
-import { loadSuggestions } from './suggestions';
+import { clearSuggestions, loadSuggestions } from './suggestions';
 import { addDataApp, loadApp } from './app';
 
 export {
@@ -85,6 +86,7 @@ export {
   addLabelIdThreadsSuccess,
   addMoveLabelIdThreads,
   addThreads,
+  clearSuggestions,
   filterThreadsOrLoadMoreByUnread,
   loadApp,
   loadContacts,
@@ -98,6 +100,7 @@ export {
   moveThreads,
   muteEmail,
   muteNotifications,
+  removeAllThreads,
   removeEmails,
   removeEmailsOnSuccess,
   removeLabel,

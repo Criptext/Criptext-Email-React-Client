@@ -229,6 +229,11 @@ export const addMoveLabelIdThreads = ({
   };
 };
 
+export const removeAllThreads = labelId => ({
+  type: Thread.REMOVE_ALL_THREADS,
+  labelId: labelId
+});
+
 export const filterThreadsOrLoadMoreByUnread = (
   checked,
   currentUnreadThreadsLength,

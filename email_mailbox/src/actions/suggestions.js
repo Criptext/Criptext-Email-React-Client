@@ -31,3 +31,7 @@ export const loadSuggestions = filter => {
     }
   };
 };
+
+export const clearSuggestions = () => ({
+  type: Suggestions.RESET_SUGGESTIONS
+});

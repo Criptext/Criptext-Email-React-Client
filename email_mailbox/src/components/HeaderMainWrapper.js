@@ -31,9 +31,38 @@ class HeaderMainWrapper extends Component {
         onClickSearch={this.handleClickSearch}
         searchParams={this.state.searchParams}
         getSearchParams={this.handleGetSearchParams}
+        onClearSearchInput={this.handleClearSearchInput}
       />
     );
   }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.sectionSelected) return;
+    const searchMailboxId = -2;
+    const prevMailboxId = prevProps.sectionSelected.params.mailboxSelected.id;
+    const nextMailboxId = this.props.sectionSelected.params.mailboxSelected.id;
+    const prevMailboxIsSearch = prevMailboxId === searchMailboxId;
+    const nextMailboxIsDifferent = prevMailboxId !== nextMailboxId;
+    if (prevMailboxIsSearch && nextMailboxIsDifferent) {
+      this.handleClearSearchInput();
+    }
+  }
+
+  handleClearSearchInput = () => {
+    const newState = {
+      searchParams: {
+        text: '',
+        from: '',
+        to: '',
+        subject: '',
+        hasAttachments: false
+      }
+    };
+    if (!this.state.isHiddenMenuSearchOptions) {
+      newState['isHiddenMenuSearchOptions'] = true;
+    }
+    this.setState(newState, this.props.onClearSearchResults);
+  };
 
   handleClickSearch = () => {
     this.setState({ isHiddenMenuSearchOptions: true }, () => {
@@ -45,17 +74,24 @@ class HeaderMainWrapper extends Component {
     const isHiddenMenuSearchHints =
       key === 'text' ? !this.state.isHiddenMenuSearchOptions : true;
     const searchParams = { ...this.state.searchParams, [key]: value };
-    this.setState(
-      {
+    if (!value) {
+      return this.setState({
         searchParams,
         isHiddenMenuSearchHints
-      },
-      () => {
-        if (!isHiddenMenuSearchHints && key === 'text') {
-          this.props.onSearchChange(value);
-        }
+      });
+    }
+
+    if (this.lastSearchChange) clearTimeout(this.lastSearchChange);
+    this.lastSearchChange = setTimeout(() => {
+      if (this.state.searchParams[key] !== value) return;
+      if (!isHiddenMenuSearchHints && key === 'text') {
+        this.props.onSearchChange(value);
       }
-    );
+    }, 500);
+    this.setState({
+      searchParams,
+      isHiddenMenuSearchHints
+    });
   };
 
   handleSearchSelectThread = threadId => {
@@ -80,9 +116,16 @@ class HeaderMainWrapper extends Component {
       !this.state.isHiddenMenuSearchOptions ||
       !this.state.searchParams.text
     ) {
-      return this.setState({
-        isHiddenMenuSearchHints: true
-      });
+      return this.setState(
+        {
+          isHiddenMenuSearchHints: true
+        },
+        () => {
+          if (!this.state.searchParams.text) {
+            this.props.onGoToDefaultInbox();
+          }
+        }
+      );
     }
 
     this.setState(
@@ -97,10 +140,13 @@ class HeaderMainWrapper extends Component {
 }
 
 HeaderMainWrapper.propTypes = {
+  onClearSearchResults: PropTypes.func,
+  onGoToDefaultInbox: PropTypes.func,
   onSearchChange: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   onSearchThreads: PropTypes.func,
-  searchParams: PropTypes.object
+  searchParams: PropTypes.object,
+  sectionSelected: PropTypes.object
 };
 
 export default HeaderMainWrapper;
