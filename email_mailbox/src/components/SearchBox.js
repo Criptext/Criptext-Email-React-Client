@@ -49,7 +49,7 @@ class SearchBox extends Component {
           onKeyPress={this.handleKeyPressInput}
           placeholder={string.header.search}
           value={this.props.searchParams.text}
-          disabled={this.props.isLoadingThreads}
+          disabled={this.props.isLoadingSearch}
         />
         {this.renderSearchIcon()}
         <div className="header-search-toggle">
@@ -135,7 +135,7 @@ class SearchBox extends Component {
 
   renderSearchIcon = () => {
     if (!this.props.searchParams.text) return null;
-    if (this.props.isLoadingThreads) {
+    if (this.props.isLoadingSearch) {
       return <SearchBoxLoading />;
     }
     return (
@@ -198,7 +198,7 @@ SearchBox.propTypes = {
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,
   isHiddenMenuSearchOptions: PropTypes.bool,
-  isLoadingThreads: PropTypes.bool,
+  isLoadingSearch: PropTypes.bool,
   onClearSearchInput: PropTypes.func,
   onClickSearch: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
