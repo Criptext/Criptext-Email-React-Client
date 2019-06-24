@@ -25,17 +25,6 @@ class EmailWrapper extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (
-      this.state.inlineImages.length === 0 &&
-      this.state.inlineImages.length !== nextProps.inlineImages.length
-    ) {
-      this.setState({ inlineImages: nextProps.inlineImages }, async () => {
-        await this.handleDownloadInlineImages(this.state.inlineImages);
-      });
-    }
-  }
-
   render() {
     return (
       <Email
@@ -63,9 +52,16 @@ class EmailWrapper extends Component {
   }
 
   componentDidMount() {
-    if (this.props.email.unread) {
-      this.setState({
-        displayEmail: true
+    const newState = {};
+    const { inlineImages, email } = this.props;
+    if (email.unread) newState['displayEmail'] = true;
+    if (inlineImages && inlineImages.length > 0)
+      newState['inlineImages'] = inlineImages;
+    if (Object.keys(newState).length) {
+      this.setState(newState, () => {
+        if (this.state.inlineImages.length) {
+          this.handleDownloadInlineImages(this.state.inlineImages);
+        }
       });
     }
     this.setCollapseListener('add');
@@ -181,13 +177,16 @@ class EmailWrapper extends Component {
   };
 
   handleDownloadInlineImages = async inlineImages => {
-    await this.props.onDownloadInlineImages(inlineImages, cidFilepathPairs => {
-      const newContent = this.props.onInjectFilepathsOnEmailContentByCid(
-        this.props.email.content,
-        cidFilepathPairs
-      );
-      this.props.onUpdateEmailContent(newContent);
-    });
+    await this.props.onDownloadInlineImages(
+      inlineImages,
+      cidFilepathPairsCallback => {
+        const newContent = this.props.onInjectFilepathsOnEmailContentByCid(
+          this.props.email.content,
+          cidFilepathPairsCallback
+        );
+        this.props.onUpdateEmailContent(newContent);
+      }
+    );
   };
 }
 
