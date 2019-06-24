@@ -1,6 +1,9 @@
 import { Thread } from './types';
 import {
   addDataApp,
+  addContacts,
+  loadFeedItems,
+  removeEmails,
   startLoadSync,
   stopLoadThread,
   stopAll,
@@ -30,12 +33,9 @@ import {
   sendUpdateThreadLabelsErrorMessage,
   sendUpdateUnreadThreadsErrorMessage
 } from './../utils/electronEventInterface';
-import { loadFeedItems } from './feeditems';
 import { SocketCommand } from '../utils/const';
-import { removeEmails } from './emails';
 import { filterTemporalThreadIds } from '../utils/EmailUtils';
 import { defineThreads } from '../utils/ThreadUtils';
-import { addContacts } from '.';
 
 export const addThreads = (labelId, threads, clear) => ({
   type: Thread.ADD_BATCH,

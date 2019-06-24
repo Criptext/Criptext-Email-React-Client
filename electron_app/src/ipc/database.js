@@ -131,6 +131,10 @@ ipc.answerRenderer('db-get-emails-unread-by-labelid', params =>
   dbManager.getEmailsUnredByLabelId(params)
 );
 
+ipc.answerRenderer('db-get-feeditems-counter-by-seen', seen =>
+  dbManager.getFeedItemsCounterBySeen(seen)
+);
+
 ipc.answerRenderer('db-get-files-by-emailid', emailId =>
   dbManager.getFilesByEmailId(emailId)
 );

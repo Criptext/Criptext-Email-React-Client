@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ActivityPanelShortCut from './ActivityPanelShortCut';
+import ActivityPanelShortCut from './../containers/ActivityPanelShortCut';
 import './headerhoc.scss';
 
 const HeaderHOC = InComponent =>

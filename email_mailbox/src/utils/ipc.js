@@ -377,6 +377,10 @@ export const getFilesByTokens = async tokens => {
   return await callMain('db-get-files-by-tokens', tokens);
 };
 
+export const getFeedItemsCounterBySeen = async seen => {
+  return await callMain('db-get-feeditems-counter-by-seen', seen);
+};
+
 export const getIdentityKeyRecord = async params => {
   return await callMain('db-get-identity-key-record', params);
 };

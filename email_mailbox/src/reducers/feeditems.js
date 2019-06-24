@@ -1,7 +1,31 @@
 import { FeedItem } from './../actions/types';
 import { Map, fromJS } from 'immutable';
 
-const feeditems = (state = new Map(), action) => {
+const initFeedItems = Map({
+  badge: 0,
+  list: Map({})
+});
+
+const feeditems = (state = initFeedItems, action) => {
+  switch (action.type) {
+    case FeedItem.ADD_BATCH:
+    case FeedItem.UPDATE_FEED_ITEMS: {
+      const { badge } = action;
+      return state.merge({
+        badge,
+        list: list(state.get('list'), action)
+      });
+    }
+    case FeedItem.REMOVE_SUCCESS:
+    case FeedItem.UPDATE: {
+      return state.merge({ list: list(state.get('list'), action) });
+    }
+    default:
+      return state;
+  }
+};
+
+const list = (state, action) => {
   switch (action.type) {
     case FeedItem.ADD_BATCH: {
       if (action.clear) {
@@ -36,7 +60,7 @@ const feeditems = (state = new Map(), action) => {
       return ids.reduce((state, id) => {
         return state.merge({
           [`${id}`]: feeditem(state.get(`${id}`), {
-            type: FeedItem.UPDATE,
+            type: action.type,
             feed: { id, seen }
           })
         });
@@ -49,7 +73,8 @@ const feeditems = (state = new Map(), action) => {
 
 const feeditem = (state, action) => {
   switch (action.type) {
-    case FeedItem.UPDATE: {
+    case FeedItem.UPDATE:
+    case FeedItem.UPDATE_FEED_ITEMS: {
       const { seen } = action.feed;
       return state.merge(
         Map({
