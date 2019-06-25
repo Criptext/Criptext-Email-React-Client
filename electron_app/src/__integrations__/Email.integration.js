@@ -5,7 +5,7 @@ const systemLabels = require('./../systemLabels');
 const emailDraft = {
   email: {
     threadId: 'threadA',
-    key: 'keyA',
+    key: '1',
     s3Key: 's3KeyA',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
@@ -28,7 +28,7 @@ const emailDraft = {
 const emailSent = {
   email: {
     threadId: 'threadB',
-    key: 'keyB',
+    key: '2',
     s3Key: 's3KeyB',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
@@ -54,7 +54,7 @@ const emailSent = {
 const emailInbox = {
   email: {
     threadId: 'threadC',
-    key: 'keyC',
+    key: '3',
     s3Key: 's3KeyC',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
@@ -91,7 +91,7 @@ const emailInbox = {
 const emailReply = {
   email: {
     threadId: 'threadC',
-    key: 'keyD',
+    key: '4',
     s3Key: 's3KeyD',
     subject: 'Greetings',
     content: '<p>RE: Hello there</p>',
@@ -115,7 +115,7 @@ const emailReply = {
 const emailSpam = {
   email: {
     threadId: 'threadE',
-    key: 'keyE',
+    key: '5',
     s3Key: 's3KeyE',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
@@ -140,7 +140,7 @@ const emailSpam = {
 const emailStarred = {
   email: {
     threadId: 'threadF',
-    key: 'keyF',
+    key: '6',
     s3Key: 's3KeyF',
     subject: 'Greetings there',
     content: '<p>Hello there</p>',
@@ -165,7 +165,7 @@ const emailStarred = {
 const emailScore = {
   email: {
     threadId: 'threadG',
-    key: 'keyG',
+    key: '7',
     s3Key: 's3KeyG',
     subject: 'Greetings there',
     content: '<p>Hello there</p>',
@@ -190,7 +190,7 @@ const emailScore = {
 const emailUpdate = {
   email: {
     threadId: 'threadH',
-    key: 'keyH',
+    key: '8',
     s3Key: 's3KeyH',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
@@ -214,7 +214,7 @@ const emailUpdate = {
 const emailToSearch = {
   email: {
     threadId: 'threadIdSearch',
-    key: 'keyI',
+    key: '9',
     s3Key: 's3KeyI',
     subject: 'Lorem ipsum is amet',
     content: '<p>Find me!</p>',
@@ -237,7 +237,7 @@ const emailToSearch = {
 const draftToReplaceOld = {
   email: {
     threadId: 'threadJ',
-    key: 'keyJ',
+    key: '10',
     s3Key: 's3KeyJ',
     subject: 'New Draft',
     content: '<p>I am a edited draft</p>',
@@ -279,7 +279,7 @@ describe('Store data email to Email Table:', () => {
     await DBManager.createEmail({
       email: {
         threadId: 'threadId',
-        key: 'keyId',
+        key: '11',
         s3Key: 's3KeyId',
         subject: 'Greetings',
         content: '<p>Hello there</p>',
@@ -294,7 +294,7 @@ describe('Store data email to Email Table:', () => {
         fromAddress: 'From Contact <from@criptext.com>'
       }
     });
-    const key = 'keyId';
+    const key = 11;
     const email = await DBManager.getEmailByKey(key);
     expect(email).toMatchSnapshot();
   });
@@ -336,7 +336,7 @@ describe('Update data email to Email Table:', () => {
       id,
       isMuted: true
     });
-    const [email] = await DBManager.getEmailsByIds([id]);
+    const [email] = await DBManager.getEmailsByArrayParam({ ids: [id] });
     const isMuted = email.isMuted;
     expect(isMuted).toBe(1);
   });
@@ -347,18 +347,18 @@ describe('Update data email to Email Table:', () => {
       id,
       unread: false
     });
-    const [email] = await DBManager.getEmailsByIds([id]);
+    const [email] = await DBManager.getEmailsByArrayParam({ ids: [id] });
     const unread = email.unread;
     expect(unread).toBe(0);
   });
 
   it('should update emails: unread by keys', async () => {
-    const keys = ['keyC', 'keyId'];
+    const keys = [3, 11];
     await DBManager.updateEmails({
       keys,
       unread: false
     });
-    const emails = await DBManager.getEmailsByKeys(keys);
+    const emails = await DBManager.getEmailsByArrayParam({ keys });
     const unreadEmailA = emails[0].unread;
     const unreadEmailB = emails[1].unread;
     expect(unreadEmailA).toBe(0);
@@ -366,7 +366,7 @@ describe('Update data email to Email Table:', () => {
   });
 
   it('should update email: status by key', async () => {
-    const key = 'keyB';
+    const key = 2;
     await DBManager.updateEmail({
       key,
       status: 6
@@ -382,11 +382,11 @@ describe('Update data email to Email Table:', () => {
       { emailId: email.id, labelId: systemLabels.trash.id }
     ];
     await DBManager.createEmailLabel(emailLabelTrash);
-    const [updatedEmail] = await DBManager.getEmailsByThreadId(
-      emailStarred.email.threadId
+    const [updatedEmail] = await DBManager.getEmailsByThreadIdAndLabelId(
+      [emailStarred.email.threadId],
+      systemLabels.trash.id
     );
-    const labelIds = updatedEmail.labelIds.split(',').map(Number);
-    expect(labelIds).toContain(systemLabels.trash.id);
+    expect(typeof updatedEmail).toBe('object');
     expect(new Date(updatedEmail.trashDate)).toEqual(expect.any(Date));
   });
 
@@ -396,11 +396,11 @@ describe('Update data email to Email Table:', () => {
       { emailId: email.id, labelId: systemLabels.starred.id }
     ];
     await DBManager.createEmailLabel(emailLabelStarred);
-    const [updatedEmail] = await DBManager.getEmailsByThreadId(
-      emailSpam.email.threadId
+    const [updatedEmail] = await DBManager.getEmailsByThreadIdAndLabelId(
+      [emailSpam.email.threadId],
+      systemLabels.starred.id
     );
-    const labelIds = updatedEmail.labelIds.split(',').map(Number);
-    expect(labelIds).toContain(systemLabels.starred.id);
+    expect(typeof updatedEmail).toBe('object');
     expect(updatedEmail.trashDate).toBeNull();
   });
 });

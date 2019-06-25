@@ -125,7 +125,9 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
         printDocumentTemplateClose;
     }
   } else if (emailId) {
-    const [rawEmail] = await dbManager.getEmailsByIds([emailId]);
+    const [rawEmail] = await dbManager.getEmailsByArrayParam({
+      ids: [emailId]
+    });
     if (rawEmail) {
       const emailBody =
         (await fileUtils.getEmailBody({

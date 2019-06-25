@@ -274,9 +274,18 @@ describe('Import Database: ', () => {
       filepath: PARSED_SAMPLE_FILEPATH,
       databasePath: DATABASE_PATH
     });
+    const [emailChecked1] = await DBManager.getEmailsByThreadIdAndLabelId(
+      [email.email.threadId],
+      email.labels[0]
+    );
+    const [emailChecked2] = await DBManager.getEmailsByThreadIdAndLabelId(
+      [email.email.threadId],
+      email.labels[1]
+    );
     const [rawEmail] = await DBManager.getEmailsByThreadId(
       email.email.threadId
     );
+
     const body =
       (await fileUtils.getEmailBody({
         username,
@@ -287,14 +296,12 @@ describe('Import Database: ', () => {
       content: body
     };
     const { fileTokens } = emailImported;
-    const labelIds = emailImported.labelIds.split(',').map(Number);
     const contactIds = [
       ...emailImported.fromContactIds.split(',').map(Number),
       ...emailImported.to.split(',').map(Number)
     ];
     const [fileImported] = await DBManager.getFilesByTokens([fileTokens]);
-    const [firstLabel] = await DBManager.getLabelById(labelIds[0]);
-    const [secondLabel] = await DBManager.getLabelById(labelIds[1]);
+
     let [
       firstContact,
       secondContact,
@@ -314,10 +321,11 @@ describe('Import Database: ', () => {
       ...fileImported,
       readOnly: !!fileImported.readOnly
     };
+    const same =
+      emailChecked1.id === emailChecked2.id && emailChecked1.id === rawEmail.id;
+    expect(same).toBe(true);
     expect(emailResult).toMatchObject(expect.objectContaining(email.email));
     expect(fileResult).toMatchObject(file);
-    expect(firstLabel).toMatchObject(labels[0]);
-    expect(secondLabel).toMatchObject(labels[1]);
     expect(firstContact).toMatchObject(contacts[0]);
     expect(secondContact).toMatchObject(contacts[1]);
     expect(thirdContact).toMatchObject(contacts[2]);

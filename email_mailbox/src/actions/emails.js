@@ -5,6 +5,7 @@ import {
   deleteEmailContent,
   deleteEmailLabel,
   getContactByIds,
+  getEmailsByIds,
   getEmailsByThreadId,
   getLabelsByText,
   postPeerEvent,
@@ -57,10 +58,12 @@ export const markEmailUnreadSuccess = (emailId, unread) => {
   };
 };
 
-export const loadEmails = threadId => {
+export const loadEmails = ({ threadId, emailIds }) => {
   return async dispatch => {
     try {
-      const response = await getEmailsByThreadId(threadId);
+      const response = threadId
+        ? await getEmailsByThreadId(threadId)
+        : await getEmailsByIds(emailIds);
       const data = response.reduce(
         (result, element) => {
           element.fromContactIds = element.fromContactIds

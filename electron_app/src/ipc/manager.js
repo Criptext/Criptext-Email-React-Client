@@ -38,7 +38,7 @@ ipc.answerRenderer('db-clean-database', async username => {
 });
 
 ipc.answerRenderer('db-delete-emails-by-ids', async emailIds => {
-  const emails = await dbManager.getEmailsByIds(emailIds);
+  const emails = await dbManager.getEmailsByArrayParam({ ids: emailIds });
   await Promise.all(
     emails.map(email =>
       fileUtils.deleteEmailContent({
@@ -60,6 +60,22 @@ ipc.answerRenderer('db-get-email-with-body', async key => {
     return email;
   }
   return Object.assign(email, { content: body });
+});
+
+ipc.answerRenderer('db-get-emails-by-ids', async emailIds => {
+  const emails = await dbManager.getEmailsByIds(emailIds);
+  return await Promise.all(
+    emails.map(async email => {
+      const body = await fileUtils.getEmailBody({
+        username: getUsername(),
+        metadataKey: parseInt(email.key)
+      });
+      if (!body) {
+        return email;
+      }
+      return Object.assign(email, { content: body });
+    })
+  );
 });
 
 ipc.answerRenderer('db-get-emails-by-threadid', async threadId => {

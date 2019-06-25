@@ -20,7 +20,7 @@ import {
   getEmailByKey,
   getEmailByParams,
   getEmailLabelsByEmailId,
-  getEmailsByKeys,
+  getEmailsByArrayParam,
   getEmailsByThreadId,
   getContactByEmails,
   getLabelsByText,
@@ -637,7 +637,7 @@ const handlePeerAvatarChanged = ({ rowid }) => {
 
 const handlePeerEmailRead = async ({ rowid, params }) => {
   const { metadataKeys, unread } = params;
-  const emails = await getEmailsByKeys(metadataKeys);
+  const emails = await getEmailsByArrayParam({ keys: metadataKeys });
   if (emails.length) {
     const emailKeys = emails.map(email => email.key);
     const res = await updateEmails({
