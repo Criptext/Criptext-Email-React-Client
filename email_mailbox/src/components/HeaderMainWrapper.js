@@ -8,6 +8,7 @@ class HeaderMainWrapper extends Component {
     this.state = {
       isHiddenMenuSearchHints: true,
       isHiddenMenuSearchOptions: true,
+      isLoadingSearch: false,
       searchParams: {
         text: '',
         from: '',
@@ -24,6 +25,7 @@ class HeaderMainWrapper extends Component {
         {...this.props}
         isHiddenMenuSearchHints={this.state.isHiddenMenuSearchHints}
         isHiddenMenuSearchOptions={this.state.isHiddenMenuSearchOptions}
+        isLoadingSearch={this.state.isLoadingSearch}
         onSearchSelectThread={this.handleSearchSelectThread}
         onToggleMenuSearchHints={this.handleToggleMenuSearchHints}
         onToggleMenuSearchOptions={this.handleToggleMenuSearchOptions}
@@ -37,9 +39,10 @@ class HeaderMainWrapper extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.sectionSelected && !this.props.sectionSelected) {
-      this.handleClearSearchInput();
-      return;
+    const nextSectionIsSettings =
+      prevProps.sectionSelected && !this.props.sectionSelected;
+    if (nextSectionIsSettings) {
+      return this.handleClearSearchInput();
     }
     if (!prevProps.sectionSelected) return;
     const searchMailboxId = -2;
@@ -48,12 +51,18 @@ class HeaderMainWrapper extends Component {
     const prevMailboxIsSearch = prevMailboxId === searchMailboxId;
     const nextMailboxIsDifferent = prevMailboxId !== nextMailboxId;
     if (prevMailboxIsSearch && nextMailboxIsDifferent) {
-      this.handleClearSearchInput();
+      return this.handleClearSearchInput();
+    }
+    const { isLoadingThreads } = this.props;
+    const alreadyIsLoading = this.state.isLoadingSearch;
+    if (prevMailboxIsSearch && !isLoadingThreads && alreadyIsLoading) {
+      return this.setState({ isLoadingSearch: false });
     }
   }
 
   handleClearSearchInput = () => {
     const newState = {
+      isLoadingSearch: false,
       searchParams: {
         text: '',
         from: '',
@@ -69,9 +78,15 @@ class HeaderMainWrapper extends Component {
   };
 
   handleClickSearch = () => {
-    this.setState({ isHiddenMenuSearchOptions: true }, () => {
-      this.props.onSearchThreads(this.state.searchParams);
-    });
+    this.setState(
+      {
+        isHiddenMenuSearchOptions: true,
+        isLoadingSearch: true
+      },
+      () => {
+        this.props.onSearchThreads(this.state.searchParams);
+      }
+    );
   };
 
   handleGetSearchParams = (key, value) => {
@@ -122,19 +137,19 @@ class HeaderMainWrapper extends Component {
     ) {
       return this.setState(
         {
-          isHiddenMenuSearchHints: true
+          isHiddenMenuSearchHints: true,
+          isLoadingSearch: false
         },
         () => {
-          if (!this.state.searchParams.text) {
-            this.props.onGoToDefaultInbox();
-          }
+          if (!this.state.searchParams.text) this.props.onGoToDefaultInbox();
         }
       );
     }
 
     this.setState(
       {
-        isHiddenMenuSearchHints: true
+        isHiddenMenuSearchHints: true,
+        isLoadingSearch: true
       },
       () => {
         this.props.onSearchThreads(this.state.searchParams);
@@ -144,6 +159,7 @@ class HeaderMainWrapper extends Component {
 }
 
 HeaderMainWrapper.propTypes = {
+  isLoadingThreads: PropTypes.bool,
   onClearSearchResults: PropTypes.func,
   onGoToDefaultInbox: PropTypes.func,
   onSearchChange: PropTypes.func,
