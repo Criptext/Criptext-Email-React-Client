@@ -38,7 +38,8 @@ import {
   updateUnreadEmailByThreadIds,
   updatePushToken,
   updateDeviceType,
-  checkForUpdates
+  checkForUpdates,
+  sendEndSyncDevicesEvent
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -254,6 +255,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.SYNC_DEVICE_REQUEST: {
       return handleSyncDeviceRequest(incomingEvent);
+    }
+    case SocketCommand.SYNC_DEVICE_REQUEST_RESPONDED: {
+      return handleSyncDeviceRequestResponded(incomingEvent);
     }
     case SocketCommand.PEER_AVATAR_CHANGED: {
       return handlePeerAvatarChanged(incomingEvent);
@@ -688,6 +692,14 @@ const handleKeybundleUploaded = ({ rowid }) => {
 
 const handleSyncDeviceRequest = ({ rowid, params }) => {
   sendStartSyncDeviceEvent({ rowid, params });
+  return { rowid: null };
+};
+
+const handleSyncDeviceRequestResponded = async ({ recipientId, domain }) => {
+  const eventRecipientId =
+    domain === appDomain ? recipientId : `${recipientId}@${domain}`;
+  if (eventRecipientId === myAccount.recipientId)
+    await sendEndSyncDevicesEvent();
   return { rowid: null };
 };
 

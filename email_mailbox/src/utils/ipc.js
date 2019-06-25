@@ -60,6 +60,11 @@ export const sendStartLinkDevicesEvent = data => {
   callMain('start-link-devices-event', data);
 };
 
+export const sendEndSyncDevicesEvent = async () => {
+  await callMain('close-create-keys-loading');
+  return await callMain('end-sync-mailbox-event');
+};
+
 export const sendPrintEmailEvent = emailId => {
   callMain('print-to-pdf', { emailId });
 };
