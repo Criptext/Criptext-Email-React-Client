@@ -8,6 +8,7 @@ import {
   getDeviceType
 } from './electronInterface';
 import {
+  checkForUpdates,
   cleanDatabase,
   createEmail,
   createEmailLabel,
@@ -26,6 +27,8 @@ import {
   getLabelsByText,
   logoutApp,
   openFilledComposerWindow,
+  sendEndLinkDevicesEvent,
+  sendEndSyncDevicesEvent,
   showNotificationApp,
   sendStartSyncDeviceEvent,
   sendStartLinkDevicesEvent,
@@ -37,9 +40,7 @@ import {
   updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
   updatePushToken,
-  updateDeviceType,
-  checkForUpdates,
-  sendEndSyncDevicesEvent
+  updateDeviceType
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -177,6 +178,19 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
   }
 };
 
+const parseAndDispatchEvent = async event => {
+  isGettingEvents = true;
+  try {
+    const { rowid } = await handleEvent(event);
+    if (rowid) await setEventAsHandled([rowid]);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    sendFetchEmailsErrorMessage();
+  }
+  isGettingEvents = false;
+};
+
 export const getGroupEvents = async ({
   shouldGetMoreEvents,
   showNotification
@@ -252,6 +266,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.DEVICE_REMOVED: {
       return handlePeerRemoveDevice(incomingEvent);
+    }
+    case SocketCommand.DEVICE_LINK_REQUEST_RESPONDED: {
+      return handleLinkDeviceResquestResponded(incomingEvent);
     }
     case SocketCommand.SYNC_DEVICE_REQUEST: {
       return handleSyncDeviceRequest(incomingEvent);
@@ -686,6 +703,14 @@ const handleLinkDeviceRequest = ({ rowid, params }) => {
   return { rowid: null };
 };
 
+const handleLinkDeviceResquestResponded = async ({ recipientId, domain }) => {
+  const eventRecipientId =
+    domain === appDomain ? recipientId : `${recipientId}@${domain}`;
+  if (eventRecipientId === myAccount.recipientId)
+    await sendEndLinkDevicesEvent();
+  return { rowid: null };
+};
+
 const handleKeybundleUploaded = ({ rowid }) => {
   return { rowid };
 };
@@ -704,7 +729,8 @@ const handleSyncDeviceRequestResponded = async ({ recipientId, domain }) => {
 };
 
 const handlePeerRemoveDevice = async ({ rowid }) => {
-  return await sendDeviceRemovedEvent(rowid);
+  await sendDeviceRemovedEvent(rowid);
+  return { rowid: null };
 };
 
 const handlePeerThreadRead = async ({ rowid, params }) => {
@@ -864,18 +890,19 @@ const handlePeerUserNameChanged = async ({ rowid, params }) => {
 };
 
 const handlePeerPasswordChanged = () => {
-  return sendPasswordChangedEvent();
+  sendPasswordChangedEvent();
+  return { rowid: null };
 };
 
 const handlePeerRecoveryEmailChanged = ({ params }) => {
   const { address } = params;
   emitter.emit(Event.RECOVERY_EMAIL_CHANGED, address);
-  return { rowId: null };
+  return { rowid: null };
 };
 
 const handlePeerRecoveryEmailConfirmed = () => {
   emitter.emit(Event.RECOVERY_EMAIL_CONFIRMED);
-  return { rowId: null };
+  return { rowid: null };
 };
 
 const handleNewAnnouncementEvent = async ({ rowid, params }) => {
@@ -903,12 +930,13 @@ const handleUpdateDeviceTypeEvent = async ({ rowid }) => {
 };
 
 const handleSuspendedAccountEvent = () => {
-  return sendSuspendedAccountEvent();
+  sendSuspendedAccountEvent();
+  return { rowid: null };
 };
 
 const handleReactivatedAccountEvent = () => {
   emitter.emit(Event.REACTIVATED_ACCOUNT);
-  return { rowId: null };
+  return { rowid: null };
 };
 
 const handleSendEmailError = ({ rowid }) => {
@@ -935,7 +963,7 @@ ipcRenderer.on('socket-message', async (ev, message) => {
   if (eventId === 400) {
     sendLoadEventsEvent({ showNotification: true });
   } else {
-    await parseAndStoreEventsBatch({ events: [message], hasMoreEvents: false });
+    await parseAndDispatchEvent(message);
   }
 });
 
@@ -1226,12 +1254,12 @@ export const sendDeviceRemovedEvent = async rowid => {
 
 export const sendPasswordChangedEvent = () => {
   emitter.emit(Event.PASSWORD_CHANGED, null);
-  return { rowId: null };
+  return { rowid: null };
 };
 
 export const sendSuspendedAccountEvent = () => {
   emitter.emit(Event.SUSPENDED_ACCOUNT, null);
-  return { rowId: null };
+  return { rowid: null };
 };
 
 export const handleDeleteDeviceData = async rowid => {

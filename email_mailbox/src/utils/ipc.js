@@ -2,9 +2,19 @@ import { callMain } from '@criptext/electron-better-ipc/renderer';
 
 /*  Windows call
 ----------------------------- */
+export const checkForUpdates = showDialog => {
+  callMain('check-for-updates', showDialog);
+};
+
 export const closeMailboxWindow = () => {
   callMain('close-mailbox');
 };
+
+export const generateLabelUUID = async () => {
+  return await callMain('generate-label-uuid');
+};
+
+export const getOsAndArch = () => callMain('get-os-and-arch');
 
 export const installUpdate = () => {
   callMain('install-update');
@@ -40,29 +50,22 @@ export const processPendingEvents = () => {
   }, 1000);
 };
 
-export const showNotificationApp = ({ title, message, threadId }) => {
-  callMain('show-notification', { title, message, threadId });
-};
-
-export const throwError = error => {
-  callMain('throwError', error);
-};
-
-export const updateDockBadgeApp = value => {
-  callMain('update-dock-badge', value);
-};
-
-export const sendStartSyncDeviceEvent = data => {
-  callMain('start-sync-mailbox-event', data);
-};
-
-export const sendStartLinkDevicesEvent = data => {
-  callMain('start-link-devices-event', data);
+export const restartSocket = async jwt => {
+  await callMain('restart-socket', jwt);
 };
 
 export const sendEndSyncDevicesEvent = async () => {
   await callMain('close-create-keys-loading');
   return await callMain('end-sync-mailbox-event');
+};
+
+export const sendEndLinkDevicesEvent = async () => {
+  await callMain('end-link-devices-event');
+  return await callMain('close-create-keys-loading');
+};
+
+export const sendOpenEmailSource = metadataKey => {
+  callMain('open-email-source', metadataKey);
 };
 
 export const sendPrintEmailEvent = emailId => {
@@ -73,22 +76,24 @@ export const sendPrintThreadEvent = threadId => {
   callMain('print-to-pdf', { threadId });
 };
 
-export const getOsAndArch = () => callMain('get-os-and-arch');
-
-export const sendOpenEmailSource = metadataKey => {
-  callMain('open-email-source', metadataKey);
+export const sendStartLinkDevicesEvent = data => {
+  callMain('start-link-devices-event', data);
 };
 
-export const checkForUpdates = showDialog => {
-  callMain('check-for-updates', showDialog);
+export const sendStartSyncDeviceEvent = data => {
+  callMain('start-sync-mailbox-event', data);
 };
 
-export const generateLabelUUID = async () => {
-  return await callMain('generate-label-uuid');
+export const showNotificationApp = ({ title, message, threadId }) => {
+  callMain('show-notification', { title, message, threadId });
 };
 
-export const restartSocket = async jwt => {
-  await callMain('restart-socket', jwt);
+export const throwError = error => {
+  callMain('throwError', error);
+};
+
+export const updateDockBadgeApp = value => {
+  callMain('update-dock-badge', value);
 };
 
 /* File System
