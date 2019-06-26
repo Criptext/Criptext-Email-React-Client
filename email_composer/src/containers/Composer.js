@@ -504,6 +504,7 @@ class ComposerWrapper extends Component {
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
+      isEnterprise: myAccount.recipientId.includes('@'),
       labelId: LabelType.sent.id,
       secure,
       status: EmailStatus.SENDING,
