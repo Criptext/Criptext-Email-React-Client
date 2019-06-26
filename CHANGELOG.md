@@ -1,8 +1,34 @@
 # Change Log
 
-## [0.17.20](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
+## [0.17.22](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
 
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.18...HEAD)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.21...HEAD)
+
+**Implemented enhancements:**
+
+- Mailbox: Handle event 207 [\#1015](https://github.com/Criptext/Criptext-Email-React-Client/issues/1015)
+- Database: Enhancement queries to get emails [\#1011](https://github.com/Criptext/Criptext-Email-React-Client/issues/1011)
+
+**Fixed bugs:**
+
+- Mailbox: Fix missing error status on downloading files [\#1009](https://github.com/Criptext/Criptext-Email-React-Client/issues/1009)
+- Mailbox: Fix inline images [\#1008](https://github.com/Criptext/Criptext-Email-React-Client/issues/1008)
+- Mailbox: Fix search disabled on changing mailbox \(only on searching\) [\#1005](https://github.com/Criptext/Criptext-Email-React-Client/issues/1005)
+
+**Closed issues:**
+
+- Mailbox: Parse and Handle event: 217 [\#1013](https://github.com/Criptext/Criptext-Email-React-Client/issues/1013)
+
+**Merged pull requests:**
+
+- Handle event 207. Close \#1015 [\#1016](https://github.com/Criptext/Criptext-Email-React-Client/pull/1016) ([erikaperugachi](https://github.com/erikaperugachi))
+- Mailbox: Parse and Handle event: 217 \(Mailbox Sync\) [\#1014](https://github.com/Criptext/Criptext-Email-React-Client/pull/1014) ([JulianAdams4](https://github.com/JulianAdams4))
+- Enhancement queries to get emails. Close \#1011 [\#1012](https://github.com/Criptext/Criptext-Email-React-Client/pull/1012) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix inline images download [\#1010](https://github.com/Criptext/Criptext-Email-React-Client/pull/1010) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix: Disabled search only on searching [\#1006](https://github.com/Criptext/Criptext-Email-React-Client/pull/1006) ([JulianAdams4](https://github.com/JulianAdams4))
+
+## [0.17.21](https://github.com/criptext/Criptext-Email-React-Client/tree/0.17.21) (2019-06-24)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.17.18...0.17.21)
 
 **Implemented enhancements:**
 
@@ -20,9 +46,13 @@
 
 - Search: Add icon for clearing search input [\#993](https://github.com/Criptext/Criptext-Email-React-Client/issues/993)
 - Handle Suspend and Reactivate events [\#984](https://github.com/Criptext/Criptext-Email-React-Client/issues/984)
+- Add feed badge [\#214](https://github.com/Criptext/Criptext-Email-React-Client/issues/214)
 
 **Merged pull requests:**
 
+- Add feed badge. Close \#214 [\#1003](https://github.com/Criptext/Criptext-Email-React-Client/pull/1003) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix Search crash on Settigs click [\#1002](https://github.com/Criptext/Criptext-Email-React-Client/pull/1002) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update [\#1001](https://github.com/Criptext/Criptext-Email-React-Client/pull/1001) ([erikaperugachi](https://github.com/erikaperugachi))
 - Fix FeedItem. Fix \#998 [\#1000](https://github.com/Criptext/Criptext-Email-React-Client/pull/1000) ([erikaperugachi](https://github.com/erikaperugachi))
 - Search:  Fixes [\#997](https://github.com/Criptext/Criptext-Email-React-Client/pull/997) ([JulianAdams4](https://github.com/JulianAdams4))
 - Separate queries. Close \#990 [\#991](https://github.com/Criptext/Criptext-Email-React-Client/pull/991) ([erikaperugachi](https://github.com/erikaperugachi))
