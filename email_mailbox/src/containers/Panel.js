@@ -41,7 +41,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(addDataApp(data));
     },
     onLoadEmails: threadId => {
-      dispatch(loadEmails(threadId));
+      dispatch(loadEmails({ threadId }));
     },
     onLoadEvents: params => {
       dispatch(loadEvents(params));

@@ -379,6 +379,18 @@ const deleteEmailByKeys = keys => {
     .del();
 };
 
+const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
+  return db.transaction(async trx => {
+    await deleteEmailsByIds([id], trx);
+    await deleteEmailContactByEmailId(id, trx);
+    await deleteEmailLabelsByEmailId(id, trx);
+    if (optionalEmailToSave) {
+      const [emailId] = await createEmail(optionalEmailToSave, trx);
+      return emailId;
+    }
+  });
+};
+
 const deleteEmailsByIds = (ids, trx) => {
   const knex = trx || db;
   return knex
@@ -430,55 +442,6 @@ const getTrashExpiredEmails = () => {
     );
 };
 
-const deleteEmailLabelAndContactByEmailId = (id, optionalEmailToSave) => {
-  return db.transaction(async trx => {
-    await deleteEmailsByIds([id], trx);
-    await deleteEmailContactByEmailId(id, trx);
-    await deleteEmailLabelsByEmailId(id, trx);
-    if (optionalEmailToSave) {
-      const [emailId] = await createEmail(optionalEmailToSave, trx);
-      return emailId;
-    }
-  });
-};
-
-const formEmailContact = ({ emailId, contactStored, contacts, type }) => {
-  return contacts.map(contactToSearch => {
-    const emailMatched = contactToSearch.match(HTMLTagsRegex);
-    let email;
-    if (emailMatched) {
-      const lastPosition = emailMatched.length - 1;
-      email = emailMatched[lastPosition].replace(/[<>]/g, '');
-    } else {
-      email = contactToSearch;
-    }
-    const { id } = contactStored.find(
-      contact => contact.email === email.toLowerCase()
-    );
-    return {
-      emailId,
-      contactId: id,
-      type
-    };
-  });
-};
-
-const formEmailLabel = ({ emailId, labels }) => {
-  return labels.map(labelId => {
-    return {
-      labelId,
-      emailId
-    };
-  });
-};
-
-const getEmailsByIds = ids => {
-  return db
-    .select('*')
-    .from(Table.EMAIL)
-    .whereIn('id', ids);
-};
-
 const getEmailByKey = key => {
   return db
     .select('*')
@@ -494,11 +457,41 @@ const getEmailByParams = async params => {
   return email;
 };
 
-const getEmailsByKeys = keys => {
+const getEmailsByArrayParam = params => {
+  const key = Object.keys(params)[0];
+  const value = params[key];
+  const param = key.slice(0, -1);
   return db
     .select('*')
     .from(Table.EMAIL)
-    .whereIn('key', keys);
+    .whereIn(param, value);
+};
+
+const getEmailsByIds = ids => {
+  const idsString = formStringSeparatedByOperator(ids);
+  const query = `SELECT ${Table.EMAIL}.*,
+  GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'from' THEN ${
+    Table.EMAIL_CONTACT
+  }.contactId ELSE NULL END)) as 'fromContactIds',
+  GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'to' THEN ${
+    Table.EMAIL_CONTACT
+  }.contactId ELSE NULL END)) as 'to',
+  GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'cc' THEN ${
+    Table.EMAIL_CONTACT
+  }.contactId ELSE NULL END)) as 'cc',
+  GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'bcc' THEN ${
+    Table.EMAIL_CONTACT
+  }.contactId ELSE NULL END)) as 'bcc',
+  GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens
+  FROM ${Table.EMAIL}
+  LEFT JOIN ${Table.EMAIL_CONTACT} ON ${Table.EMAIL_CONTACT}.emailId = ${
+    Table.EMAIL
+  }.id
+  LEFT JOIN ${Table.FILE} ON ${Table.FILE}.emailId = ${Table.EMAIL}.id
+  WHERE ${Table.EMAIL}.id IN (${idsString})
+  GROUP BY ${Table.EMAIL}.id
+  `;
+  return db.raw(query);
 };
 
 const getEmailsByLabelIds = labelIds => {
@@ -527,20 +520,41 @@ const getEmailsByThreadId = threadId => {
   GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'bcc' THEN ${
     Table.EMAIL_CONTACT
   }.contactId ELSE NULL END)) as 'bcc',
-  GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens,
-  GROUP_CONCAT(DISTINCT(${Table.EMAIL_LABEL}.labelId)) as labelIds
+  GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens
   FROM ${Table.EMAIL}
   LEFT JOIN ${Table.EMAIL_CONTACT} ON ${Table.EMAIL_CONTACT}.emailId = ${
     Table.EMAIL
   }.id
   LEFT JOIN ${Table.FILE} ON ${Table.FILE}.emailId = ${Table.EMAIL}.id
-  LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL_LABEL}.emailId = ${
-    Table.EMAIL
-  }.id
   WHERE threadId = '${threadId}'
   GROUP BY ${Table.EMAIL}.id
   `;
   return db.raw(query);
+};
+
+const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
+  return db
+    .select(
+      `${Table.EMAIL}.*`,
+      db.raw(`GROUP_CONCAT(${Table.EMAIL}.key) as keys`)
+    )
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL}.id`,
+      `${Table.EMAIL_LABEL}.emailId`
+    )
+    .from(Table.EMAIL)
+    .where(`${Table.EMAIL_LABEL}.labelId`, labelId)
+    .whereIn(`${Table.EMAIL}.threadId`, threadIds)
+    .groupBy(`${Table.EMAIL}.threadId`)
+    .then(rows => {
+      return rows.map(row => ({
+        id: row.id,
+        keys: row.keys ? row.keys.split(',').map(Number) : [],
+        threadId: row.threadId,
+        trashDate: row.trashDate
+      }));
+    });
 };
 
 const getEmailsCounterByLabelId = labelId => {
@@ -551,15 +565,6 @@ const getEmailsCounterByLabelId = labelId => {
   }.emailId
   WHERE ${Table.EMAIL_LABEL}.labelId = ${labelId}`;
   return db.raw(query);
-};
-
-const formStringSeparatedByOperator = (array, operator = ',') => {
-  return array.reduce((result, item, index) => {
-    if (index > 0) {
-      return `${result}${operator} ${item}`;
-    }
-    return `${item}`;
-  }, '');
 };
 
 const getEmailsGroupByThreadByParams = async (params = {}) => {
@@ -833,57 +838,6 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   return db.raw(query);
 };
 
-const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
-  return db
-    .select(
-      `${Table.EMAIL}.*`,
-      db.raw(`GROUP_CONCAT(${Table.EMAIL}.key) as keys`)
-    )
-    .leftJoin(
-      Table.EMAIL_LABEL,
-      `${Table.EMAIL}.id`,
-      `${Table.EMAIL_LABEL}.emailId`
-    )
-    .from(Table.EMAIL)
-    .where(`${Table.EMAIL_LABEL}.labelId`, labelId)
-    .whereIn(`${Table.EMAIL}.threadId`, threadIds)
-    .groupBy(`${Table.EMAIL}.threadId`)
-    .then(rows => {
-      return rows.map(row => ({
-        id: row.id,
-        threadId: row.threadId,
-        keys: row.keys ? row.keys.split(',').map(Number) : []
-      }));
-    });
-};
-
-const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
-  const labelIdsToDelete = labelId
-    ? [labelId]
-    : [systemLabels.spam.id, systemLabels.trash.id];
-  return db
-    .select(
-      `${Table.EMAIL}.*`,
-      db.raw(`GROUP_CONCAT(${Table.EMAIL}.key) as keys`)
-    )
-    .leftJoin(
-      Table.EMAIL_LABEL,
-      `${Table.EMAIL}.id`,
-      `${Table.EMAIL_LABEL}.emailId`
-    )
-    .from(Table.EMAIL)
-    .whereIn(`${Table.EMAIL_LABEL}.labelId`, labelIdsToDelete)
-    .whereIn(`${Table.EMAIL}.threadId`, threadIds)
-    .groupBy(`${Table.EMAIL}.threadId`)
-    .then(rows => {
-      return rows.map(row => ({
-        id: row.id,
-        threadId: row.threadId,
-        keys: row.keys ? row.keys.split(',').map(Number) : []
-      }));
-    });
-};
-
 const getEmailsUnredByLabelId = params => {
   const { labelId, rejectedLabelIds } = params;
   const rejectedLabelIdsString = rejectedLabelIds
@@ -911,6 +865,33 @@ const getEmailsUnredByLabelId = params => {
   GROUP BY uniqueId
   HAVING allLabels LIKE '%${labelId}%'`;
   return db.raw(query);
+};
+
+const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
+  const labelIdsToDelete = labelId
+    ? [labelId]
+    : [systemLabels.spam.id, systemLabels.trash.id];
+  return db
+    .select(
+      `${Table.EMAIL}.*`,
+      db.raw(`GROUP_CONCAT(${Table.EMAIL}.key) as keys`)
+    )
+    .leftJoin(
+      Table.EMAIL_LABEL,
+      `${Table.EMAIL}.id`,
+      `${Table.EMAIL_LABEL}.emailId`
+    )
+    .from(Table.EMAIL)
+    .whereIn(`${Table.EMAIL_LABEL}.labelId`, labelIdsToDelete)
+    .whereIn(`${Table.EMAIL}.threadId`, threadIds)
+    .groupBy(`${Table.EMAIL}.threadId`)
+    .then(rows => {
+      return rows.map(row => ({
+        id: row.id,
+        threadId: row.threadId,
+        keys: row.keys ? row.keys.split(',').map(Number) : []
+      }));
+    });
 };
 
 const updateEmail = ({
@@ -1248,6 +1229,47 @@ const updateSettings = async ({ language, opened, theme }) => {
   return dbResponse;
 };
 
+/* Utils
+----------------------------- */
+const formEmailContact = ({ emailId, contactStored, contacts, type }) => {
+  return contacts.map(contactToSearch => {
+    const emailMatched = contactToSearch.match(HTMLTagsRegex);
+    let email;
+    if (emailMatched) {
+      const lastPosition = emailMatched.length - 1;
+      email = emailMatched[lastPosition].replace(/[<>]/g, '');
+    } else {
+      email = contactToSearch;
+    }
+    const { id } = contactStored.find(
+      contact => contact.email === email.toLowerCase()
+    );
+    return {
+      emailId,
+      contactId: id,
+      type
+    };
+  });
+};
+
+const formEmailLabel = ({ emailId, labels }) => {
+  return labels.map(labelId => {
+    return {
+      labelId,
+      emailId
+    };
+  });
+};
+
+const formStringSeparatedByOperator = (array, operator = ',') => {
+  return array.reduce((result, item, index) => {
+    if (index > 0) {
+      return `${result}${operator} ${item}`;
+    }
+    return `${item}`;
+  }, '');
+};
+
 const closeDB = () => {
   db.close();
   db.disconnect();
@@ -1293,8 +1315,8 @@ module.exports = {
   getContactsByEmailId,
   getEmailByKey,
   getEmailByParams,
+  getEmailsByArrayParam,
   getEmailsByIds,
-  getEmailsByKeys,
   getEmailsByLabelIds,
   getEmailsByThreadId,
   getEmailsCounterByLabelId,

@@ -88,7 +88,7 @@ class Thread extends Component {
 
   componentDidMount() {
     if (this.props.emails.length !== this.props.thread.emailIds.length) {
-      this.props.onLoadEmails(this.props.thread.threadId);
+      this.props.onLoadEmails(this.props.thread.emailIds);
     } else {
       this.props.onUpdateUnreadEmails(
         this.props.emailKeysUnread,
@@ -96,14 +96,6 @@ class Thread extends Component {
       );
     }
   }
-
-  handleRemoveLabel = labelId => {
-    this.props.onRemoveLabelIdThread(this.props.thread.threadId, labelId);
-  };
-
-  handleToggleStar = () => {
-    this.props.onToggleStar(this.props.thread.threadId, this.props.starred);
-  };
 
   renderEmails = () => {
     if (!this.props.emails.length) {
@@ -139,6 +131,14 @@ class Thread extends Component {
     return emailContainers;
   };
 
+  handleRemoveLabel = labelId => {
+    this.props.onRemoveLabelIdThread(this.props.thread.threadId, labelId);
+  };
+
+  handleToggleStar = () => {
+    this.props.onToggleStar(this.props.thread.threadId, this.props.starred);
+  };
+
   onExpandGroup = () => {
     this.setState({
       groupedIndex: 0
@@ -160,7 +160,6 @@ ExpandView.propTypes = {
 };
 
 Thread.propTypes = {
-  emailIds: PropTypes.array,
   emails: PropTypes.array,
   emailKeysUnread: PropTypes.array,
   indexFirstUnread: PropTypes.number,

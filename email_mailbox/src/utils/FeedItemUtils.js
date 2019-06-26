@@ -1,6 +1,6 @@
 import {
   getAllFeedItems,
-  getEmailsByIds,
+  getEmailsByArrayParam,
   getFeedItemsCounterBySeen
 } from './ipc';
 
@@ -9,7 +9,7 @@ export const defineFeedItems = async () => {
   const badge = await getFeedItemsCounterBySeen(0);
   const feeds = await Promise.all(
     allFeeds.map(async feed => {
-      const [emailData] = await getEmailsByIds([feed.emailId]);
+      const [emailData] = await getEmailsByArrayParam({ ids: [feed.emailId] });
       return { ...feed, emailData };
     })
   );

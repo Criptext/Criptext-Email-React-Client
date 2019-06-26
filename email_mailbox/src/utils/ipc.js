@@ -338,20 +338,20 @@ export const getEmailLabelsByEmailId = async emailId => {
   return await callMain('db-get-email-labels-by-emailid', emailId);
 };
 
-export const getEmailsByIds = async emailIds => {
-  return await callMain('db-get-emails-by-ids', emailIds);
+export const getEmailsByArrayParam = async emailIds => {
+  return await callMain('db-get-emails-by-array-param', emailIds);
 };
 
-export const getEmailsByKeys = async emailKeys => {
-  return await callMain('db-get-emails-by-keys', emailKeys);
+export const getEmailsByIds = async emailIds => {
+  return await callMain('db-get-emails-by-ids', emailIds);
 };
 
 export const getEmailsByLabelIds = async labelIds => {
   return await callMain('db-get-emails-by-labelids', labelIds);
 };
 
-export const getEmailsByThreadId = async threadId => {
-  return await callMain('db-get-emails-by-threadid', threadId);
+export const getEmailsByThreadId = async params => {
+  return await callMain('db-get-emails-by-threadid', params);
 };
 
 export const getEmailsByThreadIdAndLabelId = async ({ threadIds, labelId }) => {
