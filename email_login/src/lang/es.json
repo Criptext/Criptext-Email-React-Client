@@ -49,7 +49,7 @@
   },
   "signIn": {
     "header": "Bienvenido a Criptext!",
-    "inputPlaceholder": "Correo electrónico",
+    "inputPlaceholder": "Correo electrónico o usuario",
     "signInButtonLabel": "Ingresar",
     "signUpMessage": {
       "text": "¿No estás registrado?",

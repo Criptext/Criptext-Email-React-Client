@@ -50,7 +50,7 @@
   },
   "signIn": {
     "header": "Welcome to Criptext!",
-    "inputPlaceholder": "Email address",
+    "inputPlaceholder": "Email address or username",
     "signInButtonLabel": "Sign In",
     "signUpMessage": {
       "text": "Not registered?",
