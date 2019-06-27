@@ -542,7 +542,7 @@ export const sendOpenEvent = (emailKeysUnread, threadId, labelId) => {
         const metadataKeys = emailKeysUnread.map(Number);
         const eventParams = {
           cmd: SocketCommand.SEND_OPEN_EVENT,
-          params: { metadataKeys, unread: 0 }
+          params: { metadataKeys }
         };
         const { status } = await postPeerEvent(eventParams);
         if (status === 200) {
