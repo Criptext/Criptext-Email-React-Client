@@ -3,7 +3,10 @@ import { getEmailsGroupByThreadByParams, getContactByIds } from './ipc';
 export const defineThreads = async params => {
   const threads = await getEmailsGroupByThreadByParams(params);
   const contactIds = threads.reduce((result, thread) => {
-    return result.concat(thread.recipientContactIds.split(',').map(Number));
+    if (thread.recipientContactIds) {
+      return result.concat(thread.recipientContactIds.split(',').map(Number));
+    }
+    return result;
   }, []);
   const uniqueContactsIds = Array.from(new Set(contactIds));
   const response = await getContactByIds(uniqueContactsIds);

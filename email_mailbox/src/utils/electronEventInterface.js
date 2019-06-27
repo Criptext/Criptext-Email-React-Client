@@ -788,12 +788,13 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
 
 const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
   const { threadIds, labelsRemoved, labelsAdded } = params;
-  let allEmailsIds = [];
+  let allEmailsIdsSet = new Set();
   for (const threadId of threadIds) {
     const emails = await getEmailsByThreadId(threadId);
     const emailIds = emails.map(email => email.id);
-    allEmailsIds = [...allEmailsIds, ...emailIds];
+    allEmailsIdsSet = new Set([...allEmailsIdsSet, ...emailIds]);
   }
+  const allEmailsIds = Array.from(allEmailsIdsSet);
   if (!allEmailsIds.length) return { rowid };
 
   const labelsToRemove = await getLabelsByText(labelsRemoved);
