@@ -44,13 +44,13 @@ const removeMalformedEvents = async batch => {
       } else {
         validIds.push(event.id);
         const data = JSON.parse(event.data);
-        if(data.cmd === 500){
-          if(data.params.unread === 0){
-            const params = {metadataKeys: data.params.metadataKeys};
-            const d = {cmd: data.cmd, params};
+        if (data.cmd === 500) {
+          if (data.params.unread === 0) {
+            const params = { metadataKeys: data.params.metadataKeys };
+            const d = { cmd: data.cmd, params };
             return d;
           }
-        } 
+        }
         return JSON.parse(event.data);
       }
     })
