@@ -51,7 +51,16 @@ const SettingAccount = props => (
         />
       </div>
     </div>
-    <SettingsPopup {...props} />
+    <SettingsPopup
+      changePasswordPopupParams={props.changePasswordPopupParams}
+      isHidden={props.isHiddenSettingsPopup}
+      onChangeInputValueChangePassword={props.onChangeInputValueChangePassword}
+      onClearPopupParams={props.onClearPopupParams}
+      onClosePopup={props.onClosePopup}
+      onConfirmChangePassword={props.onConfirmChangePassword}
+      onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
+      type={props.settingsPopupType}
+    />
   </div>
 );
 

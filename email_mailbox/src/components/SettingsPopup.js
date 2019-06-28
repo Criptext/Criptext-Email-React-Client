@@ -36,14 +36,27 @@ const SettingsPopup = props => {
     case CHANGE_PASSWORD: {
       return (
         <Changepasswordpopup
+          confirmNewPasswordInput={
+            props.changePasswordPopupParams.confirmNewPasswordInput
+          }
+          isDisabledChangePasswordSubmitButton={
+            props.changePasswordPopupParams.isDisabledChangePasswordSubmitButton
+          }
           isHidden={props.isHidden}
+          newPasswordInput={props.changePasswordPopupParams.newPasswordInput}
+          oldPasswordInput={props.changePasswordPopupParams.oldPasswordInput}
+          onChangeInputValueChangePassword={
+            props.onChangeInputValueChangePassword
+          }
+          onClickChangePasswordInputType={props.onClickChangePasswordInputType}
+          onClickForgotPasswordLink={props.onClickForgotPasswordLink}
           onTogglePopup={() => {
-            props.onHideSettingsPopup();
+            props.onClosePopup();
             props.onClearPopupParams(CHANGE_PASSWORD);
           }}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
-          {...props}
+          onConfirmChangePassword={props.onConfirmChangePassword}
         />
       );
     }
@@ -51,8 +64,9 @@ const SettingsPopup = props => {
       return (
         <Changerecoveryemailpopup
           isHidden={props.isHidden}
+          onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
           onTogglePopup={() => {
-            props.onHideSettingsPopup();
+            props.onClosePopup();
             props.onClearPopupParams(CHANGE_RECOVERY_EMAIL);
           }}
           popupPosition={{ left: '45%', top: '45%' }}
@@ -76,7 +90,7 @@ const SettingsPopup = props => {
       return (
         <Twofactorauthenabledpopup
           isHidden={props.isHidden}
-          onTogglePopup={props.onHideSettingsPopup}
+          onTogglePopup={props.onClosePopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
@@ -87,7 +101,7 @@ const SettingsPopup = props => {
       return (
         <Deleteaccountpopup
           isHidden={props.isHidden}
-          onTogglePopup={props.onHideSettingsPopup}
+          onTogglePopup={props.onClosePopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
@@ -98,7 +112,7 @@ const SettingsPopup = props => {
       return (
         <Manualsyncpopup
           isHidden={props.isHidden}
-          onTogglePopup={props.onHideSettingsPopup}
+          onTogglePopup={props.onClosePopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
           {...props}
@@ -109,7 +123,7 @@ const SettingsPopup = props => {
       return (
         <Manualsyncprocesspopup
           isHidden={props.isHidden}
-          onTogglePopup={props.onHideSettingsPopup}
+          onTogglePopup={props.onClosePopup}
           popupPosition={{ left: '45%', top: '45%' }}
           isClosable={false}
           theme={'dark'}
@@ -122,7 +136,7 @@ const SettingsPopup = props => {
         <SetReplyTo
           isHidden={props.isHidden}
           onTogglePopup={() => {
-            props.onHideSettingsPopup();
+            props.onClosePopup();
             props.onClearPopupParams(SET_REPLY_TO);
           }}
           popupPosition={{ left: '45%', top: '45%' }}
