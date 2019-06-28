@@ -53,9 +53,16 @@ const SettingAccount = props => (
     </div>
     <SettingsPopup
       changePasswordPopupParams={props.changePasswordPopupParams}
+      changeRecoveryEmailPopupParams={props.changeRecoveryEmailPopupParams}
       isHidden={props.isHiddenSettingsPopup}
       onChangeInputValueChangePassword={props.onChangeInputValueChangePassword}
+      onChangeInputValueOnChangeRecoveryEmailPopup={
+        props.onChangeInputValueOnChangeRecoveryEmailPopup
+      }
       onClearPopupParams={props.onClearPopupParams}
+      onClickChangeRecoveryEmailInputType={
+        props.onClickChangeRecoveryEmailInputType
+      }
       onClosePopup={props.onClosePopup}
       onConfirmChangePassword={props.onConfirmChangePassword}
       onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
@@ -355,8 +362,19 @@ RecoveryEmailConfirmationMessage.propTypes = {
 };
 
 SettingAccount.propTypes = {
+  changePasswordPopupParams: PropTypes.object,
+  changeRecoveryEmailPopupParams: PropTypes.object,
   devicesQuantity: PropTypes.number,
-  onShowSettingsPopup: PropTypes.func
+  isHiddenSettingsPopup: PropTypes.bool,
+  onChangeInputValueChangePassword: PropTypes.func,
+  onChangeInputValueOnChangeRecoveryEmailPopup: PropTypes.func,
+  onClearPopupParams: PropTypes.func,
+  onClickChangeRecoveryEmailInputType: PropTypes.func,
+  onClosePopup: PropTypes.func,
+  onConfirmChangePassword: PropTypes.func,
+  onConfirmChangeRecoveryEmail: PropTypes.func,
+  onShowSettingsPopup: PropTypes.func,
+  settingsPopupType: PropTypes.string
 };
 
 export default SettingAccount;

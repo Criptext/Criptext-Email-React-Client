@@ -63,15 +63,31 @@ const SettingsPopup = props => {
     case CHANGE_RECOVERY_EMAIL: {
       return (
         <Changerecoveryemailpopup
+          isDisabledChangeRecoveryEmailSubmitButton={
+            props.changeRecoveryEmailPopupParams
+              .isDisabledChangeRecoveryEmailSubmitButton
+          }
           isHidden={props.isHidden}
+          onChangeInputValueOnChangeRecoveryEmailPopup={
+            props.onChangeInputValueOnChangeRecoveryEmailPopup
+          }
+          onClickChangeRecoveryEmailInputType={
+            props.onClickChangeRecoveryEmailInputType
+          }
+          onClickForgotPasswordLink={props.onClickForgotPasswordLink}
           onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
           onTogglePopup={() => {
             props.onClosePopup();
             props.onClearPopupParams(CHANGE_RECOVERY_EMAIL);
           }}
           popupPosition={{ left: '45%', top: '45%' }}
+          recoveryEmailPopupInputEmail={
+            props.changeRecoveryEmailPopupParams.recoveryEmailInput
+          }
+          recoveryEmailPopupInputPassword={
+            props.changeRecoveryEmailPopupParams.recoveryEmailPasswordInput
+          }
           theme={'dark'}
-          {...props}
         />
       );
     }
