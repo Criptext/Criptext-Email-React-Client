@@ -3,33 +3,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch } from 'react-switch-input';
 import Countdown from 'react-countdown-now';
-import PopupHOC from './PopupHOC';
-import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
-import ChangePasswordPopup from './ChangePasswordPopup';
-import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
-import SetReplyToEmailPopup from './SetReplyToEmailPopup';
-import LogoutPopup from './LogoutPopup';
-import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
-import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
 import SettingBlockReplyTo from './SettingBlockReplyTo';
+import SettingsPopup from './SettingsPopup';
 import SettingBlockDeleteAccount from './SettingBlockDeleteAccount';
 import SettingBlockManualSync from './SettingBlockManualSync';
-import ManualSyncPopup from './ManualSyncPopup';
-import ManualSyncProcessPopup from './ManualSyncProcessPopup';
 import SettingsGeneralProfile from '../containers/SettingsGeneralProfile';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import string from './../lang';
 import './settingaccount.scss';
 import './signatureeditor.scss';
-
-const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
-const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
-const Logoutpopup = PopupHOC(LogoutPopup);
-const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
-const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
-const Manualsyncpopup = PopupHOC(ManualSyncPopup);
-const Manualsyncprocesspopup = PopupHOC(ManualSyncProcessPopup);
-const SetReplyTo = PopupHOC(SetReplyToEmailPopup);
 
 const TWO_FACTOR_NOT_AVAILABLE_TEXT =
   string.settings.two_factor_not_available_text;
@@ -299,124 +281,6 @@ const RecoveryEmailConfirmationMessage = ({
   );
 };
 
-const SettingsPopup = props => {
-  const type = props.settingsPopupType;
-  const isHidden = props.isHiddenSettingsPopup;
-  const {
-    CHANGE_PASSWORD,
-    CHANGE_RECOVERY_EMAIL,
-    DELETE_ACCOUNT,
-    LOGOUT,
-    MANUAL_SYNC,
-    MANUAL_SYNC_DEVICE_AUTHENTICATION,
-    SET_REPLY_TO,
-    TWO_FACTOR_AUTH_ENABLED
-  } = SETTINGS_POPUP_TYPES;
-
-  switch (type) {
-    case CHANGE_PASSWORD: {
-      return (
-        <Changepasswordpopup
-          isHidden={isHidden}
-          onTogglePopup={() => {
-            props.onHideSettingsPopup();
-            props.onClearPopupParams(CHANGE_PASSWORD);
-          }}
-          popupPosition={{ left: '45%', top: '45%' }}
-          theme={'dark'}
-          {...props}
-        />
-      );
-    }
-    case CHANGE_RECOVERY_EMAIL: {
-      return (
-        <Changerecoveryemailpopup
-          isHidden={isHidden}
-          onTogglePopup={() => {
-            props.onHideSettingsPopup();
-            props.onClearPopupParams(CHANGE_RECOVERY_EMAIL);
-          }}
-          popupPosition={{ left: '45%', top: '45%' }}
-          theme={'dark'}
-          {...props}
-        />
-      );
-    }
-    case LOGOUT: {
-      return (
-        <Logoutpopup
-          isHidden={isHidden}
-          onTogglePopup={props.onHideSettingsPopup}
-          popupPosition={{ left: '45%', top: '45%' }}
-          theme={'dark'}
-          {...props}
-        />
-      );
-    }
-    case TWO_FACTOR_AUTH_ENABLED: {
-      return (
-        <Twofactorauthenabledpopup
-          isHidden={isHidden}
-          onTogglePopup={props.onHideSettingsPopup}
-          popupPosition={{ left: '45%', top: '45%' }}
-          theme={'dark'}
-          {...props}
-        />
-      );
-    }
-    case DELETE_ACCOUNT: {
-      return (
-        <Deleteaccountpopup
-          isHidden={isHidden}
-          onTogglePopup={props.onHideSettingsPopup}
-          popupPosition={{ left: '45%', top: '45%' }}
-          theme={'dark'}
-          {...props}
-        />
-      );
-    }
-    case MANUAL_SYNC: {
-      return (
-        <Manualsyncpopup
-          isHidden={isHidden}
-          onTogglePopup={props.onHideSettingsPopup}
-          popupPosition={{ left: '45%', top: '45%' }}
-          theme={'dark'}
-          {...props}
-        />
-      );
-    }
-    case MANUAL_SYNC_DEVICE_AUTHENTICATION: {
-      return (
-        <Manualsyncprocesspopup
-          isHidden={isHidden}
-          onTogglePopup={props.onHideSettingsPopup}
-          popupPosition={{ left: '45%', top: '45%' }}
-          isClosable={false}
-          theme={'dark'}
-          {...props}
-        />
-      );
-    }
-    case SET_REPLY_TO: {
-      return (
-        <SetReplyTo
-          isHidden={isHidden}
-          onTogglePopup={() => {
-            props.onHideSettingsPopup();
-            props.onClearPopupParams(SET_REPLY_TO);
-          }}
-          popupPosition={{ left: '45%', top: '45%' }}
-          theme={'dark'}
-          {...props}
-        />
-      );
-    }
-    default:
-      return null;
-  }
-};
-
 EncryptToExternalsBlock.propTypes = {
   encryptToExternalsEnabled: PropTypes.bool,
   encryptToExternalsisLoading: PropTypes.bool,
@@ -425,13 +289,6 @@ EncryptToExternalsBlock.propTypes = {
 
 PasswordBlock.propTypes = {
   onClickChangePasswordButton: PropTypes.func
-};
-
-SettingsPopup.propTypes = {
-  isHiddenSettingsPopup: PropTypes.bool,
-  settingsPupopType: PropTypes.string,
-  onClickCancelChangePassword: PropTypes.func,
-  onClickCancelChangeRecoveryEmail: PropTypes.func
 };
 
 RecoveryEmailBlock.propTypes = {

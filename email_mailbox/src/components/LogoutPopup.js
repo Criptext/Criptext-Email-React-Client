@@ -28,7 +28,7 @@ const LogoutPopup = props => (
         className="button-a popup-confirm-button"
         onClick={props.onConfirmLogout}
       >
-        {confirmButtonLabel}
+        <span>{confirmButtonLabel}</span>
       </button>
     </div>
   </div>

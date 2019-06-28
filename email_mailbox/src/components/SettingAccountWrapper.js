@@ -291,7 +291,6 @@ class SettingAccountWrapper extends Component {
     const newReadReceipts = {};
     const newReplyToParams = {};
     const popupParams = {};
-    let { isHiddenSettingsPopup, settingsPopupType } = this.state;
     if (
       nextProps.recoveryEmail &&
       this.state.recoveryEmail !== nextProps.recoveryEmail
@@ -325,15 +324,7 @@ class SettingAccountWrapper extends Component {
       newReplyToParams.isLoading = false;
       popupParams.email = nextProps.replyToEmail;
     }
-    if (this.state.isHiddenSettingsPopup !== nextProps.isHiddenSettingsPopup) {
-      isHiddenSettingsPopup = nextProps.isHiddenSettingsPopup;
-    }
-    if (this.state.settingsPopupType !== nextProps.settingsPopupType) {
-      settingsPopupType = nextProps.settingsPopupType;
-    }
     this.setState({
-      isHiddenSettingsPopup,
-      settingsPopupType,
       recoveryEmailParams: {
         ...this.state.recoveryEmailParams,
         ...newRecoveryEmailParams
@@ -1026,7 +1017,6 @@ SettingAccountWrapper.propTypes = {
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   replyToEmail: PropTypes.string,
-  settingsPopupType: PropTypes.string,
   twoFactorAuth: PropTypes.bool
 };
 
