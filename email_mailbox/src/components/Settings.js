@@ -4,6 +4,7 @@ import SettingAccountWrapper from './SettingAccountWrapper';
 import SettingLabelsWrapper from './SettingLabelsWrapper';
 import SettingDevicesWrapper from './SettingDevicesWrapper';
 import SettingGeneral from './SettingGeneral';
+import SettingsPopup from './SettingsPopup';
 import Message from '../containers/Message';
 import { version } from './../../package.json';
 import string from '../lang';
@@ -36,6 +37,12 @@ const Settings = props => (
       <div className="settings-content-scroll">{renderSection(props)}</div>
       {renderFooter(props)}
     </div>
+    <SettingsPopup
+      isHidden={props.isHiddenSettingsPopup}
+      onClosePopup={props.onClosePopup}
+      onConfirmLogout={props.onConfirmLogout}
+      type={props.settingsPopupType}
+    />
   </div>
 );
 
@@ -100,9 +107,13 @@ Items.propTypes = {
 };
 
 Settings.propTypes = {
+  isHiddenSettingsPopup: PropTypes.bool,
   onClickSection: PropTypes.func,
   onClickMailboxSection: PropTypes.func,
-  sectionSelected: PropTypes.string
+  onClosePopup: PropTypes.func,
+  onConfirmLogout: PropTypes.func,
+  sectionSelected: PropTypes.string,
+  settingsPopupType: PropTypes.string
 };
 
 renderFooter.propTypes = {

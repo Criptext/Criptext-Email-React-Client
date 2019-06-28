@@ -240,7 +240,6 @@ class SettingAccountWrapper extends Component {
         onShowSettingsPopup={this.handleShowSettingsPopup}
         onHideSettingsPopup={this.handleHideSettingsPopup}
         devicesQuantity={devicesQuantity}
-        onConfirmLogout={this.props.onConfirmLogout}
         onClearPopupParams={this.handleClearPopupParams}
       />
     );
@@ -1007,7 +1006,6 @@ class SettingAccountWrapper extends Component {
 SettingAccountWrapper.propTypes = {
   devices: PropTypes.array,
   isHiddenSettingsPopup: PropTypes.bool,
-  onConfirmLogout: PropTypes.func,
   onDeleteDeviceData: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,
