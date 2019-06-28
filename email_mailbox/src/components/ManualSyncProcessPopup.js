@@ -75,14 +75,14 @@ class ManualSyncProcessPopup extends Component {
         return (
           <ManualSyncDeviceAuthenticationPopup
             onClickResendSync={this.handleClickResendSync}
-            onHideSettingsPopup={this.props.onHideSettingsPopup}
+            onTogglePopup={this.props.onTogglePopup}
             disabledSubmitButtons={this.state.disabledSubmitButtons}
           />
         );
       case manualSyncModes.REJECTED:
         return (
           <ManualSyncDeviceRejectedPopup
-            onHideSettingsPopup={this.props.onHideSettingsPopup}
+            onTogglePopup={this.props.onTogglePopup}
           />
         );
       case manualSyncModes.APPROVED:
@@ -210,7 +210,7 @@ class ManualSyncProcessPopup extends Component {
                 this.incrementPercentage();
                 clearSyncData();
                 await setTimeout(() => {
-                  this.props.onHideSettingsPopup();
+                  this.props.onTogglePopup();
                   const mailboxSelected = {
                     id: 1,
                     text: 'Inbox'
@@ -239,13 +239,12 @@ class ManualSyncProcessPopup extends Component {
   };
 
   handleClickCancelSync = () => {
-    this.props.onHideSettingsPopup();
+    this.props.onTogglePopup();
   };
 }
 
 ManualSyncProcessPopup.propTypes = {
-  onClickResendLoginRequest: PropTypes.func,
-  onHideSettingsPopup: PropTypes.func
+  onTogglePopup: PropTypes.func
 };
 
 export { ManualSyncProcessPopup as default, MANUAL_SYNC_STEPS };

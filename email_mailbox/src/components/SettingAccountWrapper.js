@@ -172,7 +172,6 @@ class SettingAccountWrapper extends Component {
           this.state.changeRecoveryEmailPopupParams
         }
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
-        setReplyToInput={this.state.setReplyToPopupParams.replyToInput}
         onChangeInputValueOnSetReplyTo={
           this.handleChangeInputValueOnSetReplyPopup
         }
@@ -185,9 +184,7 @@ class SettingAccountWrapper extends Component {
         onRemoveReplyTo={this.handleRemoveReplyTo}
         replyToEmail={this.state.replyToParams.replyToEmail}
         replyToIsLoading={this.state.replyToParams.isLoading}
-        isDisabledSetReplyToSubmitButton={
-          this.state.setReplyToPopupParams.isDisabledSubmitButton
-        }
+        setReplyToPopupParams={this.state.setReplyToPopupParams}
         onBlurInputRecoveryEmail={this.handleBlurInputRecoveryEmail}
         onChangeInputRecoveryEmail={this.handleChangeInputRecoveryEmail}
         onChangeInputValueChangePassword={

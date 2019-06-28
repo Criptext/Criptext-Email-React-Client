@@ -73,14 +73,14 @@ class DeleteAccountPopupWrapper extends Component {
   };
 
   handleClickCancelDeleteAccount = () => {
-    this.props.onHideSettingsPopup();
+    this.props.onTogglePopup();
   };
 
   handleClickConfirmDeleteAccount = async () => {
     const params = hashPassword(this.state.value);
     const { status } = await deleteMyAccount(params);
     if (status === 200) {
-      this.props.onHideSettingsPopup();
+      this.props.onTogglePopup();
       sendAccountDeletedEvent();
       clearStorage();
       await cleanDatabase();
@@ -97,7 +97,7 @@ class DeleteAccountPopupWrapper extends Component {
 }
 
 DeleteAccountPopupWrapper.propTypes = {
-  onHideSettingsPopup: PropTypes.func
+  onTogglePopup: PropTypes.func
 };
 
 export default DeleteAccountPopupWrapper;

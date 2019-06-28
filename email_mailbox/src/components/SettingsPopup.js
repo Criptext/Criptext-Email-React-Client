@@ -4,7 +4,6 @@ import PopupHOC from './PopupHOC';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
-import LogoutPopup from './LogoutPopup';
 import ManualSyncPopup from './ManualSyncPopup';
 import ManualSyncProcessPopup from './ManualSyncProcessPopup';
 import SetReplyToEmailPopup from './SetReplyToEmailPopup';
@@ -13,7 +12,6 @@ import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
 
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
-const Logoutpopup = PopupHOC(LogoutPopup);
 const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
 const Manualsyncpopup = PopupHOC(ManualSyncPopup);
@@ -25,7 +23,6 @@ const SettingsPopup = props => {
     CHANGE_PASSWORD,
     CHANGE_RECOVERY_EMAIL,
     DELETE_ACCOUNT,
-    LOGOUT,
     MANUAL_SYNC,
     MANUAL_SYNC_DEVICE_AUTHENTICATION,
     SET_REPLY_TO,
@@ -91,17 +88,6 @@ const SettingsPopup = props => {
         />
       );
     }
-    case LOGOUT: {
-      return (
-        <Logoutpopup
-          isHidden={props.isHidden}
-          onConfirmLogout={props.onConfirmLogout}
-          onTogglePopup={props.onClosePopup}
-          popupPosition={{ left: '45%', top: '45%' }}
-          theme={'dark'}
-        />
-      );
-    }
     case TWO_FACTOR_AUTH_ENABLED: {
       return (
         <Twofactorauthenabledpopup
@@ -109,7 +95,6 @@ const SettingsPopup = props => {
           onTogglePopup={props.onClosePopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
-          {...props}
         />
       );
     }
@@ -120,7 +105,6 @@ const SettingsPopup = props => {
           onTogglePopup={props.onClosePopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
-          {...props}
         />
       );
     }
@@ -129,9 +113,9 @@ const SettingsPopup = props => {
         <Manualsyncpopup
           isHidden={props.isHidden}
           onTogglePopup={props.onClosePopup}
+          onShowSettingsPopup={props.onShowSettingsPopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
-          {...props}
         />
       );
     }
@@ -143,21 +127,25 @@ const SettingsPopup = props => {
           popupPosition={{ left: '45%', top: '45%' }}
           isClosable={false}
           theme={'dark'}
-          {...props}
         />
       );
     }
     case SET_REPLY_TO: {
       return (
         <SetReplyTo
+          isDisabledSetReplyToSubmitButton={
+            props.setReplyToPopupParams.isDisabledSubmitButton
+          }
           isHidden={props.isHidden}
+          onChangeInputValueOnSetReplyTo={props.onChangeInputValueOnSetReplyTo}
+          onConfirmSetReplyTo={props.onConfirmSetReplyTo}
           onTogglePopup={() => {
             props.onClosePopup();
             props.onClearPopupParams(SET_REPLY_TO);
           }}
           popupPosition={{ left: '45%', top: '45%' }}
+          setReplyToInput={props.setReplyToPopupParams.replyToInput}
           theme={'dark'}
-          {...props}
         />
       );
     }

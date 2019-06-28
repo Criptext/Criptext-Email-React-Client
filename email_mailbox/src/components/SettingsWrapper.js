@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Settings from './Settings';
 import { myAccount, mySettings } from '../utils/electronInterface';
-import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
 import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
 import string from '../lang';
 
@@ -17,8 +16,7 @@ class SettingsWrapper extends Component {
       twoFactorAuth: undefined,
       readReceiptsEnabled: undefined,
       replyToEmail: undefined,
-      isHiddenSettingsPopup: true,
-      settingsPopupType: SETTINGS_POPUP_TYPES.NONE
+      isHiddenSettingsPopup: true
     };
   }
 
@@ -41,7 +39,6 @@ class SettingsWrapper extends Component {
         twoFactorAuth={this.state.twoFactorAuth}
         readReceiptsEnabled={this.state.readReceiptsEnabled}
         replyToEmail={this.state.replyToEmail}
-        settingsPopupType={this.state.settingsPopupType}
       />
     );
   }
@@ -71,8 +68,7 @@ class SettingsWrapper extends Component {
 
   handleClosePopup = () => {
     this.setState({
-      isHiddenSettingsPopup: true,
-      settingsPopupType: SETTINGS_POPUP_TYPES.NONE
+      isHiddenSettingsPopup: true
     });
   };
 
@@ -89,16 +85,14 @@ class SettingsWrapper extends Component {
 
   handleClickLogout = () => {
     this.setState({
-      isHiddenSettingsPopup: false,
-      settingsPopupType: SETTINGS_POPUP_TYPES.LOGOUT
+      isHiddenSettingsPopup: false
     });
   };
 
   handleConfirmLogout = async () => {
     const isSuccess = await this.props.onLogout();
     this.setState({
-      isHiddenSettingsPopup: true,
-      settingsPopupType: SETTINGS_POPUP_TYPES.NONE
+      isHiddenSettingsPopup: true
     });
     if (isSuccess) {
       await this.props.onDeleteDeviceData();
