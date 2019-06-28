@@ -14,8 +14,6 @@ class ThreadItem extends Component {
       checked,
       isDraft,
       thread,
-      onRegionEnter,
-      onRegionLeave,
       onSelectThread,
       labels,
       recipients
@@ -33,13 +31,7 @@ class ThreadItem extends Component {
         }}
       >
         <div className="thread-item-content">
-          <div
-            className="thread-item-contact-letters"
-            onMouseEnter={onRegionEnter}
-            onMouseLeave={onRegionLeave}
-          >
-            {this.renderFirstColumn()}
-          </div>
+          {this.renderFirstColumn()}
           <div className="thread-item-recipients">
             {thread.threadId && isDraft ? (
               <span>
@@ -88,23 +80,29 @@ class ThreadItem extends Component {
   }
 
   renderFirstColumn = () => {
-    if (!this.props.isHiddenCheckBox || this.props.hovering) {
-      return (
+    const classComponent = `thread-item-icon-option ${
+      !this.props.isHiddenCheckBox || this.props.hovering
+        ? 'show-option'
+        : 'show-avatar'
+    }`;
+    return (
+      <div
+        className={classComponent}
+        onMouseEnter={this.props.onRegionEnter}
+        onMouseLeave={this.props.onRegionLeave}
+      >
         <CustomCheckbox
           status={CustomCheckboxStatus.fromBoolean(this.props.checked)}
           onCheck={this.onCheck}
         />
-      );
-    }
-
-    return (
-      <div className="thread-letters">
-        <AvatarImage
-          key={this.props.avatarUrl}
-          avatarUrl={this.props.avatarUrl}
-          letters={this.props.letters}
-          color={this.props.color}
-        />
+        <div className="thread-letters">
+          <AvatarImage
+            key={this.props.avatarUrl}
+            avatarUrl={this.props.avatarUrl}
+            letters={this.props.letters}
+            color={this.props.color}
+          />
+        </div>
       </div>
     );
   };

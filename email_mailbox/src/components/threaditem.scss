@@ -66,7 +66,7 @@
       display: flex;
     }
 
-    .thread-item-contact-letters{
+    .thread-item-icon-option{
       align-items: center;
       flex-shrink: 0;
       justify-content: center;
@@ -74,7 +74,20 @@
       padding: 1px 13px 0 15px;
       width: 21px;
 
+      &.show-avatar{
+        .thread-letters{
+          display: flex;
+        }
+      }
+
+      &.show-option{
+        .checkmark-container{
+          display: flex;
+        }
+      }
+      
       .checkmark-container{
+        display: none;
         margin-left: 3px;
         margin-right: 4px;
 
@@ -86,9 +99,9 @@
       .thread-letters{
         border-radius: 50%;
         color: white;
+        display: none;
         width: 21px;
         height: 21px;
-        display: flex;
         justify-content: center;
         align-items: center;
         font-size: 9px;
