@@ -466,6 +466,32 @@
     "account": "Cuenta",
     "action": "Acción",
     "appearance": "Apariencia",
+    "mailbox_backup": {
+      "manual": {
+        "label": "Respaldo de buzón",
+        "button": "Exportar Archivo de Respaldo"
+      },
+      "auto": {
+        "label": "Respaldo de correos",
+        "description": "Nota: Los respaldos automáticos no están protegidos con contraseña",
+        "backup_now": "Respaldar ahora",
+        "last_backup": "Último respaldo",
+        "backup_folder": "Carpeta de destino",
+        "change_folder": "Cambiar carpeta",
+        "frequency": "Frecuencia",
+        "frequencies": {
+          "daily": "Diario",
+          "weekly": "Semanal",
+          "monthly": "Mensual"
+        }
+      }
+    },
+    "backupLastLabels": {
+      "date": "Último respaldo",
+      "inProgress": "Calculando...",
+      "never": "No respaldado",
+      "size": "Tamaño"
+    },
     "cancel": "Cancelar",
     "change": "Cambiar",
     "configurations": "Configuraciones",

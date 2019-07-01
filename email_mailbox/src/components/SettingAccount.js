@@ -8,6 +8,7 @@ import SettingsPopup from './SettingsPopup';
 import SettingBlockDeleteAccount from './SettingBlockDeleteAccount';
 import SettingBlockManualSync from './SettingBlockManualSync';
 import SettingsGeneralProfile from '../containers/SettingsGeneralProfile';
+import SettingsAccountBackupWrapper from './SettingsAccountBackupWrapper';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import string from './../lang';
 import './settingaccount.scss';
@@ -42,6 +43,7 @@ const SettingAccount = props => (
         <PasswordBlock {...props} />
         <RecoveryEmailBlock {...props} />
         <SettingBlockReplyTo {...props} />
+        <SettingsAccountBackupWrapper {...props} />
         <SettingBlockManualSync
           onShowSettingsPopup={props.onShowSettingsPopup}
           devicesQuantity={props.devicesQuantity}

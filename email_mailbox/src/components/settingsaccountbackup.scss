@@ -1,0 +1,14 @@
+#settings-account-backup {
+  > .local-backup-manual {
+    height: 20px;
+    margin-bottom: 20px;
+    .cptx-section-item-title {
+      line-height: 20px;
+    }
+    .cptx-section-item-control {
+      position: relative;
+      top: -20px;
+      right: -15px;
+    }
+  }
+}

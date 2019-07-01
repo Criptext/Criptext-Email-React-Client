@@ -466,6 +466,26 @@
     "account": "Account",
     "action": "Action",
     "appearance": "Appearance",
+    "mailbox_backup": {
+      "manual": {
+        "label": "Mailbox Backup",
+        "button": "Export Backup File"
+      },
+      "auto": {
+        "label": "Auto Backup",
+        "description": "Note: Auto backups are not password protected",
+        "backup_now": "Back up Now",
+        "last_backup": "Last Backup",
+        "backup_folder": "Back Up Folder",
+        "change_folder": "Change folder",
+        "frequency": "Frequency",
+        "frequencies": {
+          "daily": "Daily",
+          "weekly": "Weekly",
+          "monthly": "Monthly"          
+        }
+      }
+    },
     "cancel": "Cancel",
     "change": "Change",
     "configurations": "Configurations",

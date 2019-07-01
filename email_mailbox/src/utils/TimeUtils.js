@@ -76,3 +76,9 @@ export const defineUnsentText = time => {
   }
   return moment(timeLocal).format(`DD MMM YYYY ${suffix}`);
 };
+
+export const defineBackupLastTime = time => {
+  return moment(getTimeLocal(time)).format(
+    `D MMM YYYY [${momentLocales.atText}] h:mm A`
+  );
+};
