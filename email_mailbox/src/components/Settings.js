@@ -1,13 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import PopupHOC from './PopupHOC';
 import SettingAccountWrapper from './SettingAccountWrapper';
 import SettingLabelsWrapper from './SettingLabelsWrapper';
 import SettingDevicesWrapper from './SettingDevicesWrapper';
 import SettingGeneral from './SettingGeneral';
+import LogoutPopup from './LogoutPopup';
 import Message from '../containers/Message';
 import { version } from './../../package.json';
 import string from '../lang';
 import './settings.scss';
+
+const Logoutpopup = PopupHOC(LogoutPopup);
 
 const Sections = [
   string.settings.account,
@@ -36,6 +40,13 @@ const Settings = props => (
       <div className="settings-content-scroll">{renderSection(props)}</div>
       {renderFooter(props)}
     </div>
+    <Logoutpopup
+      isHidden={props.isHiddenSettingsPopup}
+      onConfirmLogout={props.onConfirmLogout}
+      onTogglePopup={props.onClosePopup}
+      popupPosition={{ left: '45%', top: '45%' }}
+      theme={'dark'}
+    />
   </div>
 );
 
@@ -100,9 +111,13 @@ Items.propTypes = {
 };
 
 Settings.propTypes = {
+  isHiddenSettingsPopup: PropTypes.bool,
   onClickSection: PropTypes.func,
   onClickMailboxSection: PropTypes.func,
-  sectionSelected: PropTypes.string
+  onClosePopup: PropTypes.func,
+  onConfirmLogout: PropTypes.func,
+  sectionSelected: PropTypes.string,
+  settingsPopupType: PropTypes.string
 };
 
 renderFooter.propTypes = {

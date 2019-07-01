@@ -34,7 +34,7 @@ const ManualSyncDeviceRejectedPopup = props => (
     <div className="popup-buttons">
       <button
         className="button-a popup-confirm-button"
-        onClick={props.onHideSettingsPopup}
+        onClick={props.onTogglePopup}
       >
         <span>{closeButtonLabel}</span>
       </button>
@@ -44,7 +44,7 @@ const ManualSyncDeviceRejectedPopup = props => (
 
 // eslint-disable-next-line fp/no-mutation
 ManualSyncDeviceRejectedPopup.propTypes = {
-  onHideSettingsPopup: PropTypes.func
+  onTogglePopup: PropTypes.func
 };
 
 export default ManualSyncDeviceRejectedPopup;

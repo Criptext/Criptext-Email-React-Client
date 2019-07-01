@@ -54,7 +54,7 @@ const ManualSyncDeviceAuthenticationPopup = props => (
     </div>
 
     <button className="button button-c">
-      <span onClick={props.onHideSettingsPopup}>{cancelSyncLabel}</span>
+      <span onClick={props.onTogglePopup}>{cancelSyncLabel}</span>
     </button>
   </div>
 );
@@ -63,7 +63,7 @@ const ManualSyncDeviceAuthenticationPopup = props => (
 ManualSyncDeviceAuthenticationPopup.propTypes = {
   disabledSubmitButtons: PropTypes.bool,
   onClickResendSync: PropTypes.func,
-  onHideSettingsPopup: PropTypes.func
+  onTogglePopup: PropTypes.func
 };
 
 export default ManualSyncDeviceAuthenticationPopup;

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Settings from './Settings';
 import { myAccount, mySettings } from '../utils/electronInterface';
-import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
 import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
 import string from '../lang';
 
@@ -17,8 +16,7 @@ class SettingsWrapper extends Component {
       twoFactorAuth: undefined,
       readReceiptsEnabled: undefined,
       replyToEmail: undefined,
-      isHiddenSettingsPopup: true,
-      settingsPopupType: SETTINGS_POPUP_TYPES.NONE
+      isHiddenSettingsPopup: true
     };
   }
 
@@ -27,8 +25,13 @@ class SettingsWrapper extends Component {
       <Settings
         {...this.props}
         devices={this.state.devices}
+        isFromStore={mySettings.isFromStore}
+        isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
         onClickCheckForUpdates={this.props.onCheckForUpdates}
+        onClickLogout={this.handleClickLogout}
         onClickSection={this.handleClickSection}
+        onClosePopup={this.handleClosePopup}
+        onConfirmLogout={this.handleConfirmLogout}
         onRemoveDevice={this.handleRemoveDevice}
         recoveryEmail={this.state.recoveryEmail}
         recoveryEmailConfirmed={this.state.recoveryEmailConfirmed}
@@ -36,12 +39,6 @@ class SettingsWrapper extends Component {
         twoFactorAuth={this.state.twoFactorAuth}
         readReceiptsEnabled={this.state.readReceiptsEnabled}
         replyToEmail={this.state.replyToEmail}
-        onClickLogout={this.handleClickLogout}
-        onConfirmLogout={this.handleConfirmLogout}
-        onClickCancelLogout={this.handleClickCancelLogout}
-        isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
-        settingsPopupType={this.state.settingsPopupType}
-        isFromStore={mySettings.isFromStore}
       />
     );
   }
@@ -69,6 +66,12 @@ class SettingsWrapper extends Component {
     this.setState({ sectionSelected: section });
   };
 
+  handleClosePopup = () => {
+    this.setState({
+      isHiddenSettingsPopup: true
+    });
+  };
+
   handleRemoveDevice = async ({ deviceId, password }) => {
     const isSuccess = await this.props.onRemoveDevice({ deviceId, password });
     if (isSuccess) {
@@ -82,29 +85,20 @@ class SettingsWrapper extends Component {
 
   handleClickLogout = () => {
     this.setState({
-      isHiddenSettingsPopup: false,
-      settingsPopupType: SETTINGS_POPUP_TYPES.LOGOUT
+      isHiddenSettingsPopup: false
     });
   };
 
   handleConfirmLogout = async () => {
     const isSuccess = await this.props.onLogout();
+    this.setState({
+      isHiddenSettingsPopup: true
+    });
     if (isSuccess) {
-      this.setState({
-        isHiddenSettingsPopup: true,
-        settingsPopupType: SETTINGS_POPUP_TYPES.NONE
-      });
       await this.props.onDeleteDeviceData();
     } else {
       sendRemoveDeviceErrorMessage();
     }
-  };
-
-  handleClickCancelLogout = () => {
-    this.setState({
-      isHiddenSettingsPopup: true,
-      settingsPopupType: SETTINGS_POPUP_TYPES.NONE
-    });
   };
 }
 

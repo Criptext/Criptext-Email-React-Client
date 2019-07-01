@@ -1,4 +1,4 @@
-import { List } from 'immutable';
+import { List, Set } from 'immutable';
 import { createSelector } from 'reselect';
 import string from './../lang';
 
@@ -36,8 +36,8 @@ const defineThread = (threads, threadIdSelected) => {
 
 const defineThreadIds = threads => {
   return !threads.size
-    ? new Set()
-    : new Set(threads.map(thread => thread.get('uniqueId')));
+    ? Set()
+    : Set(threads.map(thread => thread.get('uniqueId')));
 };
 
 const defineThreadsSelected = (threads, identifier) => {

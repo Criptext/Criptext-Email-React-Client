@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Set } from 'immutable';
 import HeaderHOC from './HeaderHOC';
 import HeaderMainBasic from './../containers/HeaderMain';
 import HeaderThreadOptionsBasic from './../containers/HeaderThreadOptions';
@@ -7,7 +8,6 @@ import Threads from '../containers/Threads';
 import Thread from '../containers/Thread';
 import Settings from './../containers/Settings';
 import { SectionType } from '../utils/const';
-import { Set } from 'immutable';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
 
 const HeaderMain = HeaderHOC(HeaderMainBasic);
@@ -146,13 +146,13 @@ class MainWrapper extends Component {
 
   handleCheckThreadItem = (threadId, value) => {
     if (value)
-      this.setState({
-        threadItemsChecked: this.state.threadItemsChecked.add(threadId)
-      });
+      this.setState(state => ({
+        threadItemsChecked: state.threadItemsChecked.add(threadId)
+      }));
     else
-      this.setState({
-        threadItemsChecked: this.state.threadItemsChecked.delete(threadId)
-      });
+      this.setState(state => ({
+        threadItemsChecked: state.threadItemsChecked.delete(threadId)
+      }));
   };
 
   handleClickBackHeaderMailbox = () => {

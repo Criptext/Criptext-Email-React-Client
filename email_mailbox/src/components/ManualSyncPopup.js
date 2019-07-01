@@ -54,7 +54,7 @@ class ManualSyncPopup extends Component {
   }
 
   handleClickCancelWarning = () => {
-    this.props.onHideSettingsPopup();
+    this.props.onTogglePopup();
   };
 
   handleOnClickConfirm = () => {
@@ -71,7 +71,7 @@ class ManualSyncPopup extends Component {
 }
 
 ManualSyncPopup.propTypes = {
-  onHideSettingsPopup: PropTypes.func,
+  onTogglePopup: PropTypes.func,
   onShowSettingsPopup: PropTypes.func
 };
 

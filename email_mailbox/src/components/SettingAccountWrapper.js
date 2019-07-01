@@ -167,36 +167,24 @@ class SettingAccountWrapper extends Component {
     const devicesQuantity = this.props.devices ? this.props.devices.length : 0;
     return (
       <SettingAccount
+        changePasswordPopupParams={this.state.changePasswordPopupParams}
+        changeRecoveryEmailPopupParams={
+          this.state.changeRecoveryEmailPopupParams
+        }
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
-        setReplyToInput={this.state.setReplyToPopupParams.replyToInput}
         onChangeInputValueOnSetReplyTo={
           this.handleChangeInputValueOnSetReplyPopup
         }
+        onClearPopupParams={this.handleClearPopupParams}
         onClickSetReplyTo={this.handleClickSetReplyTo}
+        onClosePopup={this.handleClosePopup}
+        onConfirmChangePassword={this.handleConfirmChangePassword}
+        onConfirmChangeRecoveryEmail={this.handleConfirmChangeRecoveryEmail}
         onConfirmSetReplyTo={this.handleConfirmSetReplyTo}
         onRemoveReplyTo={this.handleRemoveReplyTo}
         replyToEmail={this.state.replyToParams.replyToEmail}
         replyToIsLoading={this.state.replyToParams.isLoading}
-        isDisabledSetReplyToSubmitButton={
-          this.state.setReplyToPopupParams.isDisabledSubmitButton
-        }
-        recoveryEmailPopupInputEmail={
-          this.state.changeRecoveryEmailPopupParams.recoveryEmailInput
-        }
-        recoveryEmailPopupInputPassword={
-          this.state.changeRecoveryEmailPopupParams.recoveryEmailPasswordInput
-        }
-        oldPasswordInput={this.state.changePasswordPopupParams.oldPasswordInput}
-        newPasswordInput={this.state.changePasswordPopupParams.newPasswordInput}
-        confirmNewPasswordInput={
-          this.state.changePasswordPopupParams.confirmNewPasswordInput
-        }
-        isDisabledChangePasswordSubmitButton={
-          this.state.changePasswordPopupParams.isDisabledSubmitButton
-        }
-        isDisabledChangeRecoveryEmailSubmitButton={
-          this.state.changeRecoveryEmailPopupParams.isDisabledSubmitButton
-        }
+        setReplyToPopupParams={this.state.setReplyToPopupParams}
         onBlurInputRecoveryEmail={this.handleBlurInputRecoveryEmail}
         onChangeInputRecoveryEmail={this.handleChangeInputRecoveryEmail}
         onChangeInputValueChangePassword={
@@ -205,8 +193,6 @@ class SettingAccountWrapper extends Component {
         onClickChangePasswordButton={this.handleClickChangePasswordButton}
         onClickChangePasswordInputType={this.handleClickChangePasswordInputType}
         onClickChangeRecoveryEmail={this.handleClickChangeRecoveryEmail}
-        onConfirmChangePassword={this.handleConfirmChangePassword}
-        onConfirmChangeRecoveryEmail={this.handleConfirmChangeRecoveryEmail}
         recoveryEmail={this.state.recoveryEmailParams.recoveryEmail}
         recoveryEmailConfirmed={
           this.state.recoveryEmailParams.recoveryEmailConfirmed
@@ -238,10 +224,7 @@ class SettingAccountWrapper extends Component {
         readReceiptsEnabled={this.state.readReceipts.enabled}
         readReceiptsLabelisLoading={this.state.readReceipts.isLoading}
         onShowSettingsPopup={this.handleShowSettingsPopup}
-        onHideSettingsPopup={this.handleHideSettingsPopup}
         devicesQuantity={devicesQuantity}
-        onConfirmLogout={this.props.onConfirmLogout}
-        onClearPopupParams={this.handleClearPopupParams}
       />
     );
   }
@@ -291,7 +274,6 @@ class SettingAccountWrapper extends Component {
     const newReadReceipts = {};
     const newReplyToParams = {};
     const popupParams = {};
-    let { isHiddenSettingsPopup, settingsPopupType } = this.state;
     if (
       nextProps.recoveryEmail &&
       this.state.recoveryEmail !== nextProps.recoveryEmail
@@ -325,15 +307,7 @@ class SettingAccountWrapper extends Component {
       newReplyToParams.isLoading = false;
       popupParams.email = nextProps.replyToEmail;
     }
-    if (this.state.isHiddenSettingsPopup !== nextProps.isHiddenSettingsPopup) {
-      isHiddenSettingsPopup = nextProps.isHiddenSettingsPopup;
-    }
-    if (this.state.settingsPopupType !== nextProps.settingsPopupType) {
-      settingsPopupType = nextProps.settingsPopupType;
-    }
     this.setState({
-      isHiddenSettingsPopup,
-      settingsPopupType,
       recoveryEmailParams: {
         ...this.state.recoveryEmailParams,
         ...newRecoveryEmailParams
@@ -705,7 +679,7 @@ class SettingAccountWrapper extends Component {
     }
     if (status === 200) {
       sendChangePasswordSuccessMessage();
-      this.handleHideSettingsPopup();
+      this.handleClosePopup();
       this.handleClearPopupParams(SETTINGS_POPUP_TYPES.CHANGE_PASSWORD);
       return;
     }
@@ -853,7 +827,7 @@ class SettingAccountWrapper extends Component {
         },
         () => {
           sendRecoveryEmailChangedSuccessMessage();
-          this.handleHideSettingsPopup();
+          this.handleClosePopup();
           this.handleClearPopupParams(
             SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL
           );
@@ -965,7 +939,7 @@ class SettingAccountWrapper extends Component {
     });
   };
 
-  handleHideSettingsPopup = () => {
+  handleClosePopup = () => {
     this.setState({
       isHiddenSettingsPopup: true,
       settingsPopupType: SETTINGS_POPUP_TYPES.NONE
@@ -1016,7 +990,6 @@ class SettingAccountWrapper extends Component {
 SettingAccountWrapper.propTypes = {
   devices: PropTypes.array,
   isHiddenSettingsPopup: PropTypes.bool,
-  onConfirmLogout: PropTypes.func,
   onDeleteDeviceData: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,
@@ -1026,7 +999,6 @@ SettingAccountWrapper.propTypes = {
   recoveryEmail: PropTypes.string,
   recoveryEmailConfirmed: PropTypes.bool,
   replyToEmail: PropTypes.string,
-  settingsPopupType: PropTypes.string,
   twoFactorAuth: PropTypes.bool
 };
 
