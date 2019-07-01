@@ -9,7 +9,8 @@ class RecipientWrapper extends Component {
     this.state = {
       inputBccValue: '',
       inputCcValue: '',
-      inputToValue: ''
+      inputToValue: '',
+      inputFocus: false
     };
   }
 
@@ -25,12 +26,15 @@ class RecipientWrapper extends Component {
         inputToValue={this.state.inputToValue}
         isCollapsedMoreRecipient={this.props.isCollapsedMoreRecipient}
         onToggleRecipient={this.props.onToggleRecipient}
+        onBlurTag={this.handleBlurTag}
         onChangeBccTag={this.handleChangeBccTag}
         onChangeCcTag={this.handleChangeCcTag}
         onChangeToTag={this.handleChangeToTag}
         onChangeBccInput={this.handleChangeBccInput}
         onChangeCcInput={this.handleChangeCcInput}
         onChangeToInput={this.handleChangeToInput}
+        onChangeTag={this.handleChangeTag}
+        onDoubleClickTag={this.handleDoubleClickTag}
         onValidationRejectBccTag={this.handleOnValidationRejectBccTag}
         onValidationRejectCcTag={this.handleOnValidationRejectCcTag}
         onValidationRejectToTag={this.handleOnValidationRejectToTag}
@@ -39,6 +43,11 @@ class RecipientWrapper extends Component {
       />
     );
   }
+
+  handleBlurTag = (e, type, key) => {
+    const value = e.target.value;
+    this.props.tagBlured(type, key, value);
+  };
 
   handleCheckDisableSendButton = isValidEmailAddress => {
     if (!isValidEmailAddress) {
@@ -70,6 +79,15 @@ class RecipientWrapper extends Component {
     this.props.getToEmails(tags);
   };
 
+  handleChangeTag = (e, type, key) => {
+    const value = e.target.value;
+    this.props.tagChanged(type, key, value);
+  };
+
+  handleDoubleClickTag = (type, key) => {
+    this.props.tagUpdated(type, key);
+  };
+
   handleOnValidationRejectBccTag = tags => {
     if (tags[0] === '') return;
   };
@@ -92,6 +110,9 @@ RecipientWrapper.propTypes = {
   getToEmails: PropTypes.func,
   isCollapsedMoreRecipient: PropTypes.bool,
   onToggleRecipient: PropTypes.func,
+  tagBlured: PropTypes.func,
+  tagChanged: PropTypes.func,
+  tagUpdated: PropTypes.func,
   toEmails: PropTypes.array
 };
 

@@ -10,39 +10,78 @@ import './tagrecipient.scss';
 
 const TagRecipient = props => {
   const {
-    tag,
-    key,
-    disabled,
-    onRemove,
     classNameRemove,
-    getTagDisplayValue,
     checkDisableSendButton,
+    key,
+    getTagDisplayValue,
+    disabled,
+    onBlur,
+    onChange,
+    onDoubleClick,
+    onRemove,
+    tag,
+    type,
     ...other
   } = props;
-
-  const { name, email } = getTagDisplayValue(tag);
+  const { name, email, complete, state } = getTagDisplayValue(tag);
   const formattedTag =
-    !name && !email ? { name: tag, email: tag } : { name, email };
-
+    !name && !email
+      ? { name: tag, email: tag, complete: tag }
+      : { name, email, complete, state };
   const isEmailAddressFromAppDomain =
     formattedTag.email.indexOf(`@${appDomain}`) > 0;
 
   const isValidEmailAddress = emailRegex.test(formattedTag.email);
   checkDisableSendButton(isValidEmailAddress);
 
-  const className = isValidEmailAddress
-    ? isEmailAddressFromAppDomain
-      ? 'tag-item tag-app-domain'
-      : 'tag-item tag-default'
-    : 'tag-item tag-error';
+  const className = defineClassComponent(
+    isValidEmailAddress,
+    isEmailAddressFromAppDomain,
+    formattedTag.state
+  );
+
+  const tagText = formattedTag.state
+    ? formattedTag.complete
+    : formattedTag.name || formattedTag.email;
   return (
-    <span key={key} className={className} {...other}>
-      {formattedTag.name || formattedTag.email}
-      {!disabled && (
-        <a className={classNameRemove} onClick={() => onRemove(key)} />
+    <span
+      key={key}
+      className={className}
+      {...other}
+      onDoubleClick={() => onDoubleClick(type, key)}
+    >
+      <a>{tagText}</a>
+      {!!formattedTag.state && (
+        <input
+          autoFocus={true}
+          onBlur={e => onBlur(e, type, key)}
+          onChange={e => onChange(e, type, key)}
+          value={tagText}
+        />
       )}
+
+      {!disabled &&
+        !formattedTag.state && (
+          <a className={classNameRemove} onClick={() => onRemove(key)} />
+        )}
     </span>
   );
+};
+
+const defineClassComponent = (
+  isValidEmailAddress,
+  isEmailAddressFromAppDomain,
+  state
+) => {
+  let typeTagClass;
+  if (!isValidEmailAddress) {
+    typeTagClass = 'tag-error';
+  } else if (isEmailAddressFromAppDomain) {
+    typeTagClass = 'tag-app-domain';
+  } else {
+    typeTagClass = 'tag-default';
+  }
+  return `tag-item ${typeTagClass} ${state || ''}`;
 };
 
 TagRecipient.propTypes = {
@@ -51,8 +90,12 @@ TagRecipient.propTypes = {
   disabled: PropTypes.bool,
   getTagDisplayValue: PropTypes.func,
   key: PropTypes.string,
+  onBlur: PropTypes.func,
+  onChange: PropTypes.func,
+  onDoubleClick: PropTypes.func,
   onRemove: PropTypes.func,
-  tag: PropTypes.string
+  tag: PropTypes.string,
+  type: PropTypes.string
 };
 
 export default TagRecipient;

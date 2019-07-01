@@ -427,10 +427,10 @@ html, html body {
    ----------------------------- */
 input{
   font-family: 'NunitoSans';
-}
 
-input[type="text"]:focus {
-  outline: 0;
+  &:focus{
+    outline: 0;
+  }
 }
 
 /* 3.2.- CONTROLS: Input text

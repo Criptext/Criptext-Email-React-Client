@@ -326,11 +326,26 @@ export const formNewEmailFromData = data => {
   };
 };
 
-export const parseEmailAddress = emailAddressObject => {
-  const email = emailAddressObject.email || emailAddressObject;
-  const isEmailAddressFromAppDomain = email.indexOf(`@${appDomain}`) > 0;
-  const parsedEmail = isEmailAddressFromAppDomain ? email.toLowerCase() : email;
-  return { name: emailAddressObject.name, email: parsedEmail };
+export const parseEmailAddress = emailAddress => {
+  let name = emailAddress.name;
+  let email = emailAddress.email || emailAddress.trim();
+  let isEmailTag = false;
+  if (typeof emailAddress === 'string') {
+    const matched = emailAddress.match(HTMLTagsRegex);
+    if (matched) {
+      if (matched[0] === email) {
+        isEmailTag = true;
+        email = email.replace(/<|>/g, '').trim();
+      } else if (matched.length === 1) {
+        email = matched[0].replace(/<|>/g, '').trim();
+        name = emailAddress.replace(matched[0], '').trim();
+      }
+    }
+  }
+  email = email.toLowerCase();
+  const emailTag = isEmailTag ? email : `<${email}>`;
+  const complete = `${name || ''} ${emailTag}`;
+  return { name, email, complete: complete.trim() };
 };
 
 export const parseContactRow = contact => {

@@ -3,7 +3,8 @@
 import {
   formDataToEditDraft,
   formDataToReply,
-  formOutgoingEmailFromData
+  formOutgoingEmailFromData,
+  parseEmailAddress
 } from './../EmailUtils';
 import { emailKey, emailKeyWithFile } from './../__mocks__/electronInterface';
 import { appDomain } from './../const';
@@ -46,7 +47,7 @@ describe('Reply, Reply-all, Forward: ', () => {
   });
 });
 
-describe('[Form outgoing email] ', () => {
+describe('Form outgoing email: ', () => {
   it('Should form outgoing email from data', () => {
     const labelId = 6;
     const composerData = {
@@ -65,5 +66,68 @@ describe('[Form outgoing email] ', () => {
     outgoingData.emailData.email.date = 1524861748481;
     outgoingData.emailData.email.key = 1524861748481;
     expect(outgoingData).toMatchSnapshot();
+  });
+});
+
+describe('Parse email address: ', () => {
+  it('Should parse object', () => {
+    const emailObject = { name: 'User name', email: 'username@domain.com' };
+    const result = parseEmailAddress(emailObject);
+    expect(result).toMatchObject({
+      name: emailObject.name,
+      email: emailObject.email,
+      complete: `${emailObject.name} <${emailObject.email}>`
+    });
+  });
+
+  it('Should parse object, email address with uppercase', () => {
+    const emailObject = { name: 'User name', email: 'usernAme@domain.com' };
+    const result = parseEmailAddress(emailObject);
+    expect(result).toMatchObject({
+      name: emailObject.name,
+      email: emailObject.email.toLowerCase(),
+      complete: `${emailObject.name} <${emailObject.email.toLowerCase()}>`
+    });
+  });
+
+  it('Should parse object with app domain and email address with uppercase', () => {
+    const emailObject = { name: 'User name', email: `userName@${appDomain}` };
+    const result = parseEmailAddress(emailObject);
+    expect(result).toMatchObject({
+      name: emailObject.name,
+      email: emailObject.email.toLowerCase(),
+      complete: `${emailObject.name} <${emailObject.email.toLowerCase()}>`
+    });
+  });
+
+  it('Should parse text: email address', () => {
+    const text = 'username@domain.com';
+    const result = parseEmailAddress(text);
+    expect(result).toMatchObject({
+      name: undefined,
+      email: text,
+      complete: `<${text}>`
+    });
+  });
+
+  it('Should parse text: email address tag', () => {
+    const text = '<username@domain.com>';
+    const textClean = text.replace(/<|>/g, '').trim();
+    const result = parseEmailAddress(text);
+    expect(result).toMatchObject({
+      name: undefined,
+      email: textClean,
+      complete: textClean
+    });
+  });
+
+  it('Should parse text: email address tag with name', () => {
+    const text = 'User name <username@domain.com>';
+    const result = parseEmailAddress(text);
+    expect(result).toMatchObject({
+      name: 'User name',
+      email: 'username@domain.com',
+      complete: text
+    });
   });
 });
