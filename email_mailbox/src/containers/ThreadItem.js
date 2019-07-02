@@ -150,19 +150,21 @@ const mapStateToProps = (state, ownProps) => {
   const avatarUrl = `${avatarBaseUrl}${domain}/${username}?date=${avatarTimestamp}`;
   const { preview, isUnsend, isEmpty } = definePreviewAndStatus(thread);
   const hasNoSubject = thread.get('subject') === EMPTY_SUBJECT_DEFAULT;
+  const isSecure = thread.get('secure');
   return {
-    thread: thread.toJS(),
-    color,
     avatarUrl,
+    color,
+    hasNoSubject,
     isStarred: thread.get('allLabels').contains(LabelType.starred.id),
     isDraft: thread.get('allLabels').contains(LabelType.draft.id),
     isEmpty,
+    isSecure,
     isUnsend,
     labels,
     letters,
-    recipients: formattedRecipients,
     preview,
-    hasNoSubject
+    recipients: formattedRecipients,
+    thread: thread.toJS()
   };
 };
 
