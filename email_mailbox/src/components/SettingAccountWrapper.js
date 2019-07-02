@@ -38,8 +38,6 @@ import {
   getLastRecoveryEmailConfirmed,
   setLastRecoveryEmail,
   setLastRecoveryEmailConfirmed,
-  getShowEmailPreviewStatus,
-  setShowEmailPreviewStatus,
   setReadReceiptsStatus,
   getReadReceiptsStatus
 } from '../utils/storage';
@@ -150,7 +148,6 @@ class SettingAccountWrapper extends Component {
           errorMessage: ''
         }
       },
-      emailPreviewEnabled: getShowEmailPreviewStatus(),
       readReceipts: {
         enabled: props.readReceiptsEnabled,
         isLoading: true
@@ -213,8 +210,6 @@ class SettingAccountWrapper extends Component {
           this.handleClickChangeRecoveryEmailInputType
         }
         onClickForgotPasswordLink={this.handleClickForgotPasswordLink}
-        onChangeSwitchEmailPreview={this.handleChangeSwitchEmailPreview}
-        emailPreviewEnabled={this.state.emailPreviewEnabled}
         encryptToExternalsisLoading={this.state.encryptToExternals.isLoading}
         encryptToExternalsEnabled={!!this.state.encryptToExternals.enabled}
         onChangeSwitchEncryptToExternals={
@@ -866,18 +861,6 @@ class SettingAccountWrapper extends Component {
       },
       () => {
         this.props.onResetPassword();
-      }
-    );
-  };
-
-  handleChangeSwitchEmailPreview = ev => {
-    const status = ev.target.checked;
-    this.setState(
-      {
-        emailPreviewEnabled: status
-      },
-      () => {
-        setShowEmailPreviewStatus(status);
       }
     );
   };
