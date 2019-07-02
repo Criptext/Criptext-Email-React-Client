@@ -54,7 +54,7 @@ const Email = props => (
               )}
             </div>
             <div className="email-info-content-detail">
-              {renderFileExist(props.email.fileTokens)}
+              {renderIcons(props.email.fileTokens, props.email.secure)}
               <span className="email-info-content-detail-date">
                 {props.date}
               </span>
@@ -199,15 +199,13 @@ const renderEmailStatus = status => {
   return <div className="email-status">{defineEmailStatus(status)}</div>;
 };
 
-const renderFileExist = fileTokens => {
-  if (fileTokens.length) {
-    return (
-      <div className="email-file-icon">
-        <i className="icon-attach" />
-      </div>
-    );
-  }
-  return null;
+const renderIcons = (fileTokens, isSecure) => {
+  return (
+    <div className="email-info-content-detail-icons">
+      {!!fileTokens.length && <i className="icon-attach" />}
+      {!!isSecure && <i className="icon-secure" />}
+    </div>
+  );
 };
 
 const renderMuteIcon = props => (

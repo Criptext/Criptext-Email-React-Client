@@ -18,7 +18,7 @@
     width: calc(100% - 7px);
 
     .thread-item-content {
-      .thread-item-file{
+      .thread-item-details{
         visibility: hidden;
       }
 
@@ -50,7 +50,6 @@
       .thread-preview {
         font-weight: 600;
       }
-
     }
   }
 
@@ -156,7 +155,7 @@
       flex-direction: row;
       justify-content: flex-start;
       flex-wrap: nowrap;
-      width: calc(100% - 340px);
+      width: calc(100% - 358px);
 
       .thread-label{
         display: flex;
@@ -211,14 +210,27 @@
       } 
     }
 
-    .thread-item-file{
-      width: 20px;
+    .thread-item-details{
+      align-items: center;
       flex-shrink: 0;
+      justify-content: flex-end;
+      width: 38px;
 
       i{
         color: #d5d5d5;
-        font-size: 19px;
-        transform: rotate(-90deg);
+
+        &.icon-attach{
+          font-size: 19px;
+          transform: rotate(-90deg);
+        }
+
+        &.icon-secure{
+          font-size: 14px;
+        }
+
+        &:nth-child(2){
+          margin-left: 3px;
+        }
       }
     }
 

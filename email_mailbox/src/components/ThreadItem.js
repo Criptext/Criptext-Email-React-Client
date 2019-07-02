@@ -13,6 +13,7 @@ class ThreadItem extends Component {
     const {
       checked,
       isDraft,
+      isSecure,
       thread,
       onSelectThread,
       labels,
@@ -67,8 +68,9 @@ class ThreadItem extends Component {
               <span>{this.renderPreview()}</span>
             </div>
           </div>
-          <div className="thread-item-file" style={visibleStyle}>
+          <div className="thread-item-details" style={visibleStyle}>
             {this.renderFileExist(thread.fileTokens)}
+            {this.renderSecure(isSecure)}
           </div>
           <div className="thread-item-date" style={visibleStyle}>
             <span>{thread.date}</span>
@@ -78,6 +80,48 @@ class ThreadItem extends Component {
       </div>
     );
   }
+
+  defineThreadPreviewClass = () => {
+    const { isUnsend, isEmpty } = this.props;
+    if (isUnsend) {
+      return 'thread-preview-unsent';
+    } else if (isEmpty) {
+      return 'thread-preview-empty';
+    }
+    return '';
+  };
+
+  defineThreadSubjectClass = () => {
+    const { hasNoSubject } = this.props;
+    return hasNoSubject ? 'thread-subject-empty' : '';
+  };
+
+  getStyleVisibilityByMultiselect = checked => {
+    if (!checked) {
+      return null;
+    }
+
+    return {
+      visibility: 'visible'
+    };
+  };
+
+  handleCheck = value => {
+    this.props.onCheckItem(
+      this.props.thread.threadId || this.props.thread.uniqueId,
+      CustomCheckboxStatus.toBoolean(value)
+    );
+  };
+
+  handleClickMoveToTrash = ev => {
+    ev.stopPropagation();
+    this.props.onClickMoveToTrash();
+  };
+
+  handleToggleFavorite = ev => {
+    ev.stopPropagation();
+    this.props.onToggleFavorite(this.props.isStarred);
+  };
 
   renderFirstColumn = () => {
     const classComponent = `thread-item-icon-option ${
@@ -93,7 +137,7 @@ class ThreadItem extends Component {
       >
         <CustomCheckbox
           status={CustomCheckboxStatus.fromBoolean(this.props.checked)}
-          onCheck={this.onCheck}
+          onCheck={this.handleCheck}
         />
         <div className="thread-letters">
           <AvatarImage
@@ -124,21 +168,6 @@ class ThreadItem extends Component {
       default:
         return null;
     }
-  };
-
-  defineThreadSubjectClass = () => {
-    const { hasNoSubject } = this.props;
-    return hasNoSubject ? 'thread-subject-empty' : '';
-  };
-
-  defineThreadPreviewClass = () => {
-    const { isUnsend, isEmpty } = this.props;
-    if (isUnsend) {
-      return 'thread-preview-unsent';
-    } else if (isEmpty) {
-      return 'thread-preview-empty';
-    }
-    return '';
   };
 
   renderLabels = (labels, threadId) => {
@@ -184,6 +213,11 @@ class ThreadItem extends Component {
     return null;
   };
 
+  renderSecure = isSecure => {
+    if (isSecure) return <i className="icon-secure" />;
+    return null;
+  };
+
   renderMenu = () => {
     if (this.props.checked) {
       return null;
@@ -202,7 +236,7 @@ class ThreadItem extends Component {
           }
           icon="icon-star-fill"
           myClass={this.props.isStarred ? 'thread-label-mark' : ''}
-          onClick={this.onToggleFavorite}
+          onClick={this.handleToggleFavorite}
           onMouseEnterItem={this.props.onMouseEnterItem}
           onMouseLeaveItem={this.props.onMouseLeaveItem}
         />
@@ -211,40 +245,13 @@ class ThreadItem extends Component {
             targetId={`remove${threadId}`}
             tip={string.mailbox.move_to_trash}
             icon="icon-trash"
-            onClick={this.onClickMoveToTrash}
+            onClick={this.handleClickMoveToTrash}
             onMouseEnterItem={this.props.onMouseEnterItem}
             onMouseLeaveItem={this.props.onMouseLeaveItem}
           />
         )}
       </div>
     );
-  };
-
-  getStyleVisibilityByMultiselect = checked => {
-    if (!checked) {
-      return null;
-    }
-
-    return {
-      visibility: 'visible'
-    };
-  };
-
-  onCheck = value => {
-    this.props.onCheckItem(
-      this.props.thread.threadId || this.props.thread.uniqueId,
-      CustomCheckboxStatus.toBoolean(value)
-    );
-  };
-
-  onToggleFavorite = ev => {
-    ev.stopPropagation();
-    this.props.onToggleFavorite(this.props.isStarred);
-  };
-
-  onClickMoveToTrash = ev => {
-    ev.stopPropagation();
-    this.props.onClickMoveToTrash();
   };
 
   renderMoreLabels = (labels, threadId) => {
@@ -301,6 +308,7 @@ ThreadItem.propTypes = {
   isDraft: PropTypes.bool,
   isEmpty: PropTypes.bool,
   isHiddenCheckBox: PropTypes.bool,
+  isSecure: PropTypes.bool,
   isStarred: PropTypes.bool,
   isVisibleMoveToTrash: PropTypes.bool,
   isUnsend: PropTypes.bool,

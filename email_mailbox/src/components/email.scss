@@ -259,6 +259,7 @@
         }
 
         .email-info-content-detail{
+          align-items: center;
           background-color: transparent;
           display: flex;
           margin-right: 13px;
@@ -268,8 +269,8 @@
             color: black;
             font-size: 13px;
             font-weight: 300;
+            margin-left: 5px;
             text-align: right;
-            width: 70px;
           }
         }
       }
@@ -293,13 +294,25 @@
     }
   }
 
-  .email-file-icon{
+  .email-info-content-detail-icons{
+    align-items: center;
     display: flex;
     
     i{
       color: #d5d5d5;
-      font-size: 19px;
-      transform: rotate(-90deg);
+
+      &.icon-attach{
+        font-size: 19px;
+        transform: rotate(-90deg);
+      }
+
+      &.icon-secure{
+        font-size: 14px;
+      }
+
+      &:nth-child(2){
+        margin-left: 5px;
+      }
     }
   }
 }
