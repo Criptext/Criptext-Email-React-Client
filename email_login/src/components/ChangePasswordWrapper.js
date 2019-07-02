@@ -100,7 +100,7 @@ class ChangePasswordWrapper extends Component {
   handleClickChangePassword = async () => {
     const [username, domain] = this.props.emailAddress.split('@');
     const hashedOldPassword = hashPassword(this.props.oldPassword);
-    const hashedNewPassword = hashPassword(this.state.values.newPasswordsword);
+    const hashedNewPassword = hashPassword(this.state.values.newPassword);
     const data = {
       username,
       domain,
