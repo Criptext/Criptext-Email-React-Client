@@ -58,8 +58,12 @@ const renderRecipientTo = props => (
       renderInput={AutocompleteWrapper}
       renderTag={TagRecipient}
       tagProps={{
+        type: 'to',
         classNameRemove: 'icon-exit',
-        checkDisableSendButton: props.checkDisableSendButton
+        checkDisableSendButton: props.checkDisableSendButton,
+        onBlur: props.onBlurTag,
+        onChange: props.onChangeTag,
+        onDoubleClick: props.onDoubleClickTag
       }}
       value={props.toTags}
     />
@@ -89,8 +93,12 @@ const renderRecipientCc = props => (
       renderInput={AutocompleteWrapper}
       renderTag={TagRecipient}
       tagProps={{
+        type: 'cc',
         classNameRemove: 'icon-exit',
-        checkDisableSendButton: props.checkDisableSendButton
+        checkDisableSendButton: props.checkDisableSendButton,
+        onBlur: props.onBlurTag,
+        onChange: props.onChangeTag,
+        onDoubleClick: props.onDoubleClickTag
       }}
       value={props.ccTags}
     />
@@ -120,8 +128,12 @@ const renderRecipientBcc = props => (
       renderInput={AutocompleteWrapper}
       renderTag={TagRecipient}
       tagProps={{
+        type: 'bcc',
         classNameRemove: 'icon-exit',
-        checkDisableSendButton: props.checkDisableSendButton
+        checkDisableSendButton: props.checkDisableSendButton,
+        onBlur: props.onBlurTag,
+        onChange: props.onChangeTag,
+        onDoubleClick: props.onDoubleClickTag
       }}
       value={props.bccTags}
     />
@@ -139,8 +151,11 @@ renderRecipientTo.propTypes = {
   handleOnValidationRejectToTag: PropTypes.func,
   inputToValue: PropTypes.string,
   isFocusEditorInput: PropTypes.bool,
+  onBlurTag: PropTypes.func,
   onChangeToInput: PropTypes.func,
   onChangeToTag: PropTypes.func,
+  onChangeTag: PropTypes.func,
+  onDoubleClickTag: PropTypes.func,
   toTags: PropTypes.string
 };
 
@@ -149,8 +164,11 @@ renderRecipientCc.propTypes = {
   checkDisableSendButton: PropTypes.func,
   handleOnValidationRejectCcTag: PropTypes.func,
   inputCcValue: PropTypes.string,
+  onBlurTag: PropTypes.func,
   onChangeCcInput: PropTypes.func,
-  onChangeCcTag: PropTypes.func
+  onChangeCcTag: PropTypes.func,
+  onChangeTag: PropTypes.func,
+  onDoubleClickTag: PropTypes.func
 };
 
 renderRecipientBcc.propTypes = {
@@ -158,8 +176,11 @@ renderRecipientBcc.propTypes = {
   checkDisableSendButton: PropTypes.func,
   handleOnValidationRejectBccTag: PropTypes.func,
   inputBccValue: PropTypes.string,
+  onBlurTag: PropTypes.func,
   onChangeBccInput: PropTypes.func,
-  onChangeBccTag: PropTypes.func
+  onChangeBccTag: PropTypes.func,
+  onChangeTag: PropTypes.func,
+  onDoubleClickTag: PropTypes.func
 };
 
 export default Recipient;

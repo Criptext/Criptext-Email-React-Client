@@ -1,6 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`[Form outgoing email]  Should form outgoing email from data 1`] = `
+exports[`Edit draft:  Should load a draft correctly 1`] = `
+Object {
+  "bccEmails": Array [
+    "usuario3@criptext.com",
+  ],
+  "ccEmails": Array [
+    "usuario2@criptext.com",
+  ],
+  "files": Array [],
+  "htmlBody": "<p>Modified body content</p>",
+  "textSubject": "Email subject 1",
+  "threadId": "1",
+  "toEmails": Array [
+    "usuario1@criptext.com",
+  ],
+}
+`;
+
+exports[`Form outgoing email:  Should form outgoing email from data 1`] = `
 Object {
   "emailData": Object {
     "body": "<p>Hello</p>",
@@ -55,24 +73,6 @@ Object {
       "type": "bcc",
       "username": "bccUser",
     },
-  ],
-}
-`;
-
-exports[`Edit draft:  Should load a draft correctly 1`] = `
-Object {
-  "bccEmails": Array [
-    "usuario3@criptext.com",
-  ],
-  "ccEmails": Array [
-    "usuario2@criptext.com",
-  ],
-  "files": Array [],
-  "htmlBody": "<p>Modified body content</p>",
-  "textSubject": "Email subject 1",
-  "threadId": "1",
-  "toEmails": Array [
-    "usuario1@criptext.com",
   ],
 }
 `;

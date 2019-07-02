@@ -14,6 +14,7 @@
 
   &.tag-default{
     border: solid 1px transparent;
+    cursor: pointer;
   }
 
   &.tag-error {
@@ -30,7 +31,44 @@
     border: solid 1px transparent;
   }
 
-  a{
+  &.tag-expanded{
+    border-style: dashed;
+    display: block;
+    padding-left: 3px;
+    padding-right: 3px;
+    position: relative;
+
+    a{
+      margin: 0 8px;
+      visibility: hidden;
+    }
+
+    input{
+      background-color: transparent;
+      border: none;
+      font-family: NunitoSans;
+      font-size: 13px;
+      font-weight: 200;
+      left: 10px;
+      margin-top: 0px;
+      padding: 0px;
+      position: absolute;
+      width: calc(100% - 15px);
+    }
+
+    textarea{
+      border: none;
+      resize: none;
+      width: calc(100% - 0px);
+
+      &:focus{
+        outline: 0;
+      }
+    }
+  }
+  
+  a.icon-exit{
+    background-color: transparent;
     font-size: 22px;
     line-height: 10px;
     text-decoration: none;
@@ -50,7 +88,7 @@
         border-color: $_BORDER_COLOR_TAG_APP_DOMAIN;
         color: $_COLOR_TEXT_TAG_APP_DOMAIN;
 
-        a{
+        a.icon-exit{
           color: $_COLOR_ICON_TAG_APP_DOMAIN;
         }
       }
@@ -59,7 +97,7 @@
         background-color: $_BACKGROUND_COLOR_TAG_DEFAULT;
         border-color: $_BORDER_COLOR_TAG_DEFAULT;
 
-        a{
+        a.icon-exit{
           color: $_COLOR_ICON_TAG_DEFAULT;
         }
       }
@@ -68,7 +106,7 @@
         background-color: $_BACKGROUND_COLOR_TAG_ERROR;
         border-color: $_BORDER_COLOR_TAG_ERROR;
 
-        a{
+        a.icon-exit{
           color: $_COLOR_ICON_TAG_ERROR;
         }
       }

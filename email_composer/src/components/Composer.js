@@ -21,6 +21,9 @@ const Composer = props => (
       isCollapsedMoreRecipient={props.isCollapsedMoreRecipient}
       isFocusEditorInput={props.isFocusEditorInput}
       onToggleRecipient={props.onToggleRecipient}
+      tagBlured={props.tagBlured}
+      tagChanged={props.tagChanged}
+      tagUpdated={props.tagUpdated}
     />
     <SubjectWrapper
       getText={props.getTextSubject}
@@ -88,7 +91,10 @@ Composer.propTypes = {
   onSetNonCriptextRecipientsPassword: PropTypes.func,
   onToggleRecipient: PropTypes.func,
   status: PropTypes.number,
+  tagBlured: PropTypes.func,
+  tagChanged: PropTypes.func,
   textSubject: PropTypes.string,
+  tagUpdated: PropTypes.string,
   toEmails: PropTypes.array
 };
 

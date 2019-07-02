@@ -137,6 +137,9 @@ class ComposerWrapper extends Component {
         onSetNonCriptextRecipientsPassword={
           this.handleSetNonCriptextRecipientsPassword
         }
+        tagBlured={this.handleTagBlured}
+        tagChanged={this.handleTagChanged}
+        tagUpdated={this.handleTagUpdated}
         textSubject={this.state.textSubject}
         toEmails={this.state.toEmails}
         isLinkingDevices={this.state.isLinkingDevices}
@@ -589,6 +592,132 @@ class ComposerWrapper extends Component {
       }
       sendEventToMailbox('failed-to-send', undefined);
       this.setState({ status: Status.ENABLED });
+    }
+  };
+
+  handleTagBlured = (type, key, value) => {
+    switch (type) {
+      case 'to':
+        {
+          this.setState(state => {
+            const emails = [...state.toEmails];
+            const contact = parseEmailAddress(value);
+            emails.splice(key, 1, contact);
+            return {
+              toEmails: emails
+            };
+          });
+        }
+        break;
+      case 'cc':
+        {
+          this.setState(state => {
+            const emails = [...state.ccEmails];
+            const contact = parseEmailAddress(value);
+            emails.splice(key, 1, contact);
+            return {
+              ccEmails: emails
+            };
+          });
+        }
+        break;
+      case 'bcc':
+        {
+          this.setState(state => {
+            const emails = [...state.bccEmails];
+            const contact = parseEmailAddress(value);
+            emails.splice(key, 1, contact);
+            return {
+              bccEmails: emails
+            };
+          });
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  handleTagChanged = (type, key, value) => {
+    switch (type) {
+      case 'to':
+        {
+          this.setState(state => {
+            const emails = [...state.toEmails];
+            const contact = { ...emails[key], complete: value };
+            emails.splice(key, 1, contact);
+            return {
+              toEmails: emails
+            };
+          });
+        }
+        break;
+      case 'cc':
+        {
+          this.setState(state => {
+            const emails = [...state.ccEmails];
+            const contact = { ...emails[key], complete: value };
+            emails.splice(key, 1, contact);
+            return {
+              ccEmails: emails
+            };
+          });
+        }
+        break;
+      case 'bcc':
+        {
+          this.setState(state => {
+            const emails = [...state.bccEmails];
+            const contact = { ...emails[key], complete: value };
+            emails.splice(key, 1, contact);
+            return {
+              bccEmails: emails
+            };
+          });
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  handleTagUpdated = (type, key) => {
+    switch (type) {
+      case 'to':
+        {
+          this.setState(state => {
+            const emails = [...state.toEmails];
+            emails.splice(key, 1, { ...emails[key], state: 'tag-expanded' });
+            return {
+              toEmails: emails
+            };
+          });
+        }
+        break;
+      case 'cc':
+        {
+          this.setState(state => {
+            const emails = [...state.ccEmails];
+            emails.splice(key, 1, { ...emails[key], state: 'tag-expanded' });
+            return {
+              ccEmails: emails
+            };
+          });
+        }
+        break;
+      case 'bcc':
+        {
+          this.setState(state => {
+            const emails = [...state.bccEmails];
+            emails.splice(key, 1, { ...emails[key], state: 'tag-expanded' });
+            return {
+              bccEmails: emails
+            };
+          });
+        }
+        break;
+      default:
+        break;
     }
   };
 
