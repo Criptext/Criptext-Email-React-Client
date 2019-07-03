@@ -43,7 +43,7 @@
   "proxy": "http://localhost:8000",
   "devDependencies": {
     "@criptext/react-scripts": "^2.0.6-rc1",
-    "criptext-js-tools": "^0.5.0",
+    "criptext-js-tools": "0.5.0",
     "node-sass": "^4.10.0"
   },
   "homepage": "./",

@@ -109,10 +109,9 @@ const RecoveryEmailBlock = props => (
             : string.settings.change}
         </span>
       </button>
-      {props.recoveryEmail &&
-        !props.recoveryEmailConfirmed && (
-          <ResendConfirmationRecoveryEmailLink {...props} />
-        )}
+      {props.recoveryEmail && !props.recoveryEmailConfirmed && (
+        <ResendConfirmationRecoveryEmailLink {...props} />
+      )}
     </div>
     <div className="cptx-section-item-block">
       {props.recoveryEmail && (
@@ -203,8 +202,8 @@ const renderTwoFactorTextLabel = props => {
   const textLabel = !hasRecoveryEmailConnfirmed
     ? TWO_FACTOR_NOT_AVAILABLE_TEXT
     : isEnabled
-      ? TWO_FACTOR_ENABLED_TEXT
-      : TWO_FACTOR_DISABLED_TEXT;
+    ? TWO_FACTOR_ENABLED_TEXT
+    : TWO_FACTOR_DISABLED_TEXT;
   return textLabel;
 };
 

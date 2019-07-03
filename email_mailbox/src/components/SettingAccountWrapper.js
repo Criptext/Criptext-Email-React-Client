@@ -62,9 +62,7 @@ const SETTINGS_POPUP_TYPES = {
 };
 
 const changePasswordErrors = {
-  LENGTH: `${string.errors.password.length.a} ${requiredMinLength.password} ${
-    string.errors.password.length.b
-  }`,
+  LENGTH: `${string.errors.password.length.a} ${requiredMinLength.password} ${string.errors.password.length.b}`,
   MATCH: string.errors.password.match
 };
 
@@ -74,7 +72,6 @@ const recoveryEmailErrors = {
 
 const RESEND_CONFIRMATION_MINUTES_DELAY = 5;
 
-/* eslint-disable-next-line react/no-deprecated */
 class SettingAccountWrapper extends Component {
   constructor(props) {
     super(props);
@@ -263,6 +260,7 @@ class SettingAccountWrapper extends Component {
     }, 5000);
   }
 
+  /* eslint-disable-next-line react/no-deprecated */
   componentWillReceiveProps(nextProps) {
     const newRecoveryEmailParams = {};
     const newTwoFactorParams = {};

@@ -39,15 +39,13 @@ const Panel = props => (
       onClickSection={props.onClickSection}
       onToggleActivityPanel={props.onToggleActivityPanel}
     />
-    {props.isOpenWelcome &&
-      !mySettings.opened && (
-        <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
-      )}
+    {props.isOpenWelcome && !mySettings.opened && (
+      <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
+    )}
     {!props.isHiddenMailboxPopup &&
       renderMailboxPopup({
         type: props.mailboxPopupType,
-        isHidden: props.isHiddenMailboxPopup,
-        props
+        isHidden: props.isHiddenMailboxPopup
       })}
     <UserGuide />
   </div>
@@ -79,7 +77,7 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
       const PasswordChangedpopup = PopupHOC(PasswordChangedPopupWrapper);
       return (
         <PasswordChangedpopup
-          isHidden={props.isHiddenMailboxPopup}
+          isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
           isClosable={false}
           theme={'dark'}
@@ -94,7 +92,7 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
       const Suspendedaccountpopup = PopupHOC(SuspendedAccountPopup);
       return (
         <Suspendedaccountpopup
-          isHidden={props.isHiddenMailboxPopup}
+          isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
           isClosable={false}
           theme={'dark'}
@@ -114,6 +112,12 @@ const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
     ? ' navigation-feed-expand'
     : ' navigation-feed-collapse';
   return sidebarClass.concat(navigationClass);
+};
+
+renderMailboxPopup.propTypes = {
+  isHidden: PropTypes.bool,
+  props: PropTypes.object,
+  type: PropTypes.string
 };
 
 Panel.propTypes = {
