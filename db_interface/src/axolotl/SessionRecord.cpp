@@ -45,15 +45,30 @@ vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, i
 bool CriptextDB::createSessionRecord(string dbPath, int accountId, string recipientId, long int deviceId, string record) {
   std::cout << "Create Session Record : " << recipientId << std::endl;
   try {
-    SQLite::Database db(dbPath);
+    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+    SQLite::Transaction transaction(db);
 
-    SQLite::Statement query(db, "insert into sessionrecord (recipientId, deviceId, record, accountId) values (?,?,?,?)");
-    query.bind(1, recipientId);
-    query.bind(2, deviceId);
-    query.bind(3, accountId);
-    query.bind(4, record);
+    SQLite::Statement getQuery(db, "Select * from sessionrecord where recipientId == ? and accountId == ?");
+    getQuery.bind(1, recipientId);
+    getQuery.bind(2, accountId);
+    getQuery.executeStep();
 
-    query.exec();
+    if (getQuery.hasRow()) {
+      int rowId = getQuery.getColumn(0).getInt();
+      SQLite::Statement query(db, "update sessionrecord set record = ? where id == ?");
+      query.bind(1, record);
+      query.bind(2, rowId);
+      query.exec();
+    } else {
+      SQLite::Statement query(db, "insert into sessionrecord (recipientId, deviceId, record, accountId) values (?,?,?,?)");
+      query.bind(1, recipientId);
+      query.bind(2, deviceId);
+      query.bind(3, record);
+      query.bind(4, accountId);
+      query.exec();
+    }
+
+    transaction.commit();
   } catch (exception& e) {
     return false;
   }
