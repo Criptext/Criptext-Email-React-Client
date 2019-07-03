@@ -84,7 +84,10 @@ export const makeGetThread = () => {
 };
 
 export const makeGetThreads = () => {
-  return createSelector([getThreadsByMailboxOrSuggestions], threads => threads);
+  return createSelector(
+    [getThreadsByMailboxOrSuggestions],
+    threads => threads
+  );
 };
 
 export const makeGetThreadsSelected = () => {
@@ -95,8 +98,9 @@ export const makeGetThreadsSelected = () => {
 };
 
 export const makeGetThreadIds = () => {
-  return createSelector([getThreadsByMailbox], threads =>
-    defineThreadIds(threads)
+  return createSelector(
+    [getThreadsByMailbox],
+    threads => defineThreadIds(threads)
   );
 };
 

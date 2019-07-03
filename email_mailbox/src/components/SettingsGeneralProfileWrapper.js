@@ -10,7 +10,6 @@ import {
   parseSignatureHtmlToEdit
 } from '../utils/EmailUtils';
 
-/* eslint-disable-next-line react/no-deprecated */
 class SettingGeneralProfileWrapper extends Component {
   constructor(props) {
     super(props);
@@ -53,6 +52,7 @@ class SettingGeneralProfileWrapper extends Component {
     );
   }
 
+  /* eslint-disable-next-line react/no-deprecated */
   componentWillMount() {
     const signatureParams = {
       signature: parseSignatureHtmlToEdit(myAccount.signature),

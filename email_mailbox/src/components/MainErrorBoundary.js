@@ -38,9 +38,7 @@ const HighOrderBoundarie = AppComponent =>
                 <div className="error-boundary-text">
                   <h1>{crash.title}</h1>
                   <h2>
-                    {`${crash.counter.a} ${this.state.counter} ${
-                      crash.counter.b
-                    }`}
+                    {`${crash.counter.a} ${this.state.counter} ${crash.counter.b}`}
                   </h2>
                 </div>
 

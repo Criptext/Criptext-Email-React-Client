@@ -14,9 +14,7 @@ const LoadingSync = props => (
       />
     </div>
     <div className="cptx-loading-description">
-      <span>{`${props.completedTask} ${string.mailbox.of} ${
-        props.totalTask
-      }`}</span>
+      <span>{`${props.completedTask} ${string.mailbox.of} ${props.totalTask}`}</span>
     </div>
   </div>
 );

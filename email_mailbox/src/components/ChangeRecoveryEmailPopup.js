@@ -58,9 +58,8 @@ const ChangeRecoveryEmailPopup = props => {
       </div>
       <div className="popup-paragraph change-recovery-email-note">
         <p>
-          <strong>{`${
-            string.popups.change_recovery_email.paragraph.note
-          }:`}</strong>{' '}
+          <strong>{`${string.popups.change_recovery_email.paragraph.note}:`}</strong>
+          &nbsp;
           {noteText}
         </p>
       </div>

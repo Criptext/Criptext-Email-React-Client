@@ -137,12 +137,14 @@ const defineLabelsIncluded = (labels, threadLabels) => {
   }, []);
 };
 
-export const getAllLabels = createSelector([getLabels], labels =>
-  defineAllLabels(labels)
+export const getAllLabels = createSelector(
+  [getLabels],
+  labels => defineAllLabels(labels)
 );
 
-export const getCustomeLabels = createSelector([getLabels], labels =>
-  defineCustomLabels(labels)
+export const getCustomeLabels = createSelector(
+  [getLabels],
+  labels => defineCustomLabels(labels)
 );
 
 export const getLabelsIncluded = createSelector(
@@ -150,20 +152,24 @@ export const getLabelsIncluded = createSelector(
   (labels, threadLabels) => defineLabelsIncluded(labels, threadLabels)
 );
 
-export const getSystemLabels = createSelector([getLabels], labels =>
-  defineSideBarItems(labels)
+export const getSystemLabels = createSelector(
+  [getLabels],
+  labels => defineSideBarItems(labels)
 );
 
-export const getSystemLabelToEdit = createSelector([getLabels], labels =>
-  defineSystemLabelsToEdit(labels)
+export const getSystemLabelToEdit = createSelector(
+  [getLabels],
+  labels => defineSystemLabelsToEdit(labels)
 );
 
-export const getVisibleLabels = createSelector([getLabels], labels =>
-  defineVisibleLabels(labels)
+export const getVisibleLabels = createSelector(
+  [getLabels],
+  labels => defineVisibleLabels(labels)
 );
 
 export const makeGetLabels = () => {
-  return createSelector([getLabels, getLabelIds], (labels, labelIds) =>
-    defineLabels(labels, labelIds)
+  return createSelector(
+    [getLabels, getLabelIds],
+    (labels, labelIds) => defineLabels(labels, labelIds)
   );
 };

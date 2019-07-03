@@ -155,10 +155,23 @@ const SettingsPopup = props => {
 };
 
 SettingsPopup.propTypes = {
+  changePasswordPopupParams: PropTypes.object,
+  changeRecoveryEmailPopupParams: PropTypes.object,
   isHidden: PropTypes.bool,
   type: PropTypes.string,
-  onClickCancelChangePassword: PropTypes.func,
-  onClickCancelChangeRecoveryEmail: PropTypes.func
+  onChangeInputValueChangePassword: PropTypes.func,
+  onChangeInputValueOnChangeRecoveryEmailPopup: PropTypes.func,
+  onChangeInputValueOnSetReplyTo: PropTypes.func,
+  onClearPopupParams: PropTypes.func,
+  onClickChangePasswordInputType: PropTypes.func,
+  onClickChangeRecoveryEmailInputType: PropTypes.func,
+  onClickForgotPasswordLink: PropTypes.func,
+  onClosePopup: PropTypes.func,
+  onConfirmChangePassword: PropTypes.func,
+  onConfirmChangeRecoveryEmail: PropTypes.func,
+  onConfirmSetReplyTo: PropTypes.func,
+  onShowSettingsPopup: PropTypes.func,
+  setReplyToPopupParams: PropTypes.object
 };
 
 export default SettingsPopup;
