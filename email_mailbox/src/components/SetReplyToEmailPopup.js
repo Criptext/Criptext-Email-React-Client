@@ -7,7 +7,7 @@ const replyToText = string.popups.set_reply_to.paragraph;
 
 const SetReplyToEmailPopup = props => {
   return (
-    <div className="popup-content set-reply-to-popup-content">
+    <div id="set-reply-to-popup-content" className="popup-content">
       <div className="popup-title">
         <h1>{string.popups.set_reply_to.title}</h1>
       </div>
