@@ -29,10 +29,6 @@ const additionalLabels = {
 };
 export const LabelType = Object.assign(labels, additionalLabels);
 
-export const setInternetConnectionStatus = status => {
-  globalManager.internetConnection.setStatus(status);
-};
-
 export const getDeviceType = () => globalManager.deviceType.id;
 
 /*  Window events
