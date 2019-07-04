@@ -65,12 +65,7 @@ class ComposerWrapper extends Component {
   constructor(props) {
     super(props);
     this.emailToEdit = getEmailToEdit();
-    this.isFocusEditorInput = this.emailToEdit
-      ? this.emailToEdit.type === 'reply' ||
-        this.emailToEdit.type === 'reply-all'
-        ? true
-        : false
-      : false;
+    this.focusInput = this.defineFocusInput(this.emailToEdit);
     this.state = {
       bccEmails: [],
       ccEmails: [],
@@ -122,7 +117,9 @@ class ComposerWrapper extends Component {
         htmlBody={this.state.htmlBody}
         isCollapsedMoreRecipient={this.state.isCollapsedMoreRecipient}
         isDragActive={this.state.isDragActive}
-        isFocusEditorInput={this.isFocusEditorInput}
+        isFocusEditorInput={this.focusInput.isFocusEditorInput}
+        isFocusRecipientInput={this.focusInput.isFocusRecipientInput}
+        isFocusSubjectInput={this.focusInput.isFocusSubjectInput}
         onClearFile={this.handleClearFile}
         onClickCancelSendMessage={this.handleClickCancelSendMessage}
         onClickDiscardDraft={this.handleClickDiscardDraft}
@@ -184,6 +181,35 @@ class ComposerWrapper extends Component {
       });
     });
   }
+
+  defineFocusInput = emailToEdit => {
+    let isFocusRecipientInput = false,
+      isFocusSubjectInput = false,
+      isFocusEditorInput = false;
+    if (emailToEdit) {
+      if (emailToEdit.type === 'reply' || emailToEdit.type === 'reply-all') {
+        isFocusEditorInput = true;
+      } else if (emailToEdit.type === 'new-with-data') {
+        if (!emailToEdit.data.recipients) {
+          isFocusRecipientInput = true;
+        } else if (
+          emailToEdit.data.recipients &&
+          !emailToEdit.data.email.subject
+        ) {
+          isFocusSubjectInput = true;
+        } else if (
+          emailToEdit.data.recipients &&
+          emailToEdit.data.email.subject
+        ) {
+          isFocusEditorInput = true;
+        }
+      }
+    }
+    if (!isFocusRecipientInput) {
+      isFocusRecipientInput = !isFocusEditorInput && !isFocusSubjectInput;
+    }
+    return { isFocusRecipientInput, isFocusSubjectInput, isFocusEditorInput };
+  };
 
   getDefaultComposerWithSignature = async () => {
     return await formComposerDataWithSignature();
