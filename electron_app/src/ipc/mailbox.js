@@ -62,7 +62,7 @@ ipc.answerRenderer(
   'fs-download-file',
   async ({ url, filename, downloadType, metadataKey, filesize }) => {
     const openFolderWhenDone = downloadType !== 'inline';
-    const shouldShowMessage = openFolderWhenDone;
+    if (openFolderWhenDone) mailboxWindow.showFileExplorer(filename);
     try {
       const directory = await defineDownloadDirectory({
         downloadType,
@@ -90,7 +90,7 @@ ipc.answerRenderer(
       );
       return downloadedItem.getSavePath();
     } catch (e) {
-      if (shouldShowMessage)
+      if (openFolderWhenDone)
         mailboxWindow.send('display-message-error-download');
     }
   }
