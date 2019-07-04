@@ -46,9 +46,11 @@ const SettingAccount = props => (
           onShowSettingsPopup={props.onShowSettingsPopup}
           devicesQuantity={props.devicesQuantity}
         />
-        <SettingBlockDeleteAccount
-          onShowSettingsPopup={props.onShowSettingsPopup}
-        />
+        {!props.isEnterprise && (
+          <SettingBlockDeleteAccount
+            onShowSettingsPopup={props.onShowSettingsPopup}
+          />
+        )}
       </div>
     </div>
     <SettingsPopup
@@ -367,6 +369,7 @@ SettingAccount.propTypes = {
   changePasswordPopupParams: PropTypes.object,
   changeRecoveryEmailPopupParams: PropTypes.object,
   devicesQuantity: PropTypes.number,
+  isEnterprise: PropTypes.bool,
   isHiddenSettingsPopup: PropTypes.bool,
   onChangeInputValueChangePassword: PropTypes.func,
   onChangeInputValueOnChangeRecoveryEmailPopup: PropTypes.func,
