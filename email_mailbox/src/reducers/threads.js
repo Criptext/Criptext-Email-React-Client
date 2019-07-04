@@ -97,15 +97,16 @@ const threads = (state, action) => {
             thread.allLabels ? thread.allLabels.split(',').map(Number) : []
           ),
           emailIds: List(thread.emailIds.split(',').map(Number)),
-          subject,
+          fromContactName: List(fromContactName.split(',')),
+          secure: !!thread.secure,
           lastEmailId: thread.key,
-          unread: !!thread.unread,
           recipientContactIds: Set(
             thread.recipientContactIds
               ? thread.recipientContactIds.split(',').map(Number)
               : []
           ),
-          fromContactName: List(fromContactName.split(','))
+          subject,
+          unread: !!thread.unread
         });
       });
       if (action.clear) {
