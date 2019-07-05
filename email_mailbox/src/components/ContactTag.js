@@ -7,7 +7,9 @@ const ContactTag = props => (
     {props.contact.name ? (
       <span className="name">{`${props.contact.name} `}</span>
     ) : null}
-    <span className="tag">{props.contact.email}</span>
+    <a className="tag" href={`mailto:${props.contact.email}`}>
+      {props.contact.email}
+    </a>
     {!props.isLast ? <br /> : null}
   </span>
 );

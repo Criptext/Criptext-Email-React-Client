@@ -28,7 +28,7 @@ class Autocomplete extends Component {
     setTimeout(() => {
       if (
         inputName === 'To' &&
-        this.props.inputProps.isfocuseditorinput === 'false'
+        this.props.inputProps.isfocusrecipientinput === 'true'
       ) {
         this.autosuggest.input.focus();
       }

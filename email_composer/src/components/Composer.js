@@ -19,7 +19,7 @@ const Composer = props => (
       getCcEmails={props.getCcEmails}
       getBccEmails={props.getBccEmails}
       isCollapsedMoreRecipient={props.isCollapsedMoreRecipient}
-      isFocusEditorInput={props.isFocusEditorInput}
+      isFocusRecipientInput={props.isFocusRecipientInput}
       onToggleRecipient={props.onToggleRecipient}
       tagBlured={props.tagBlured}
       tagChanged={props.tagChanged}
@@ -27,6 +27,7 @@ const Composer = props => (
     />
     <SubjectWrapper
       getText={props.getTextSubject}
+      isFocusSubjectInput={props.isFocusSubjectInput}
       onFocusInput={props.onToggleRecipient}
       text={props.textSubject}
     />
@@ -80,6 +81,8 @@ Composer.propTypes = {
   isCollapsedMoreRecipient: PropTypes.bool,
   isDragActive: PropTypes.bool,
   isFocusEditorInput: PropTypes.bool,
+  isFocusRecipientInput: PropTypes.bool,
+  isFocusSubjectInput: PropTypes.bool,
   isLinkingDevices: PropTypes.bool,
   onClickCancelSendMessage: PropTypes.func,
   onDragLeave: PropTypes.func,

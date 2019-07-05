@@ -201,7 +201,7 @@ const renderIcons = (fileTokens, isSecure) => {
   return (
     <div className="email-info-content-detail-icons">
       {!!fileTokens.length && <i className="icon-attach" />}
-      {!!isSecure && <i className="icon-secure" />}
+      {isSecure && <i className="icon-secure" />}
     </div>
   );
 };
