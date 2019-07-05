@@ -45,7 +45,8 @@ class FileWrapper extends Component {
     const isDownloaded = this.state.status === FileStatus.DOWNLOADED;
     await setDownloadHandler(
       this.props.file.token,
-      isDownloaded ? this.props.file.name : null
+      this.props.file.name,
+      isDownloaded
     );
     if (!isDownloaded) {
       this.setState({
@@ -55,7 +56,8 @@ class FileWrapper extends Component {
     }
   };
 
-  handleClickCancelDownload = async () => {
+  handleClickCancelDownload = async e => {
+    e.stopPropagation();
     await setCancelDownloadHandler(this.props.file.token);
     this.setState({
       percentage: 0,

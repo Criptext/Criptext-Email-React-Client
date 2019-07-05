@@ -2,8 +2,8 @@
 
 div.subject-container{
   align-items: center;
+  border-bottom: 1px solid transparent;
   display: flex;
-  margin-left: 20px;
   height: 46px;
   width: 100%;
 
@@ -14,6 +14,7 @@ div.subject-container{
     font-family: NunitoSans;
     font-size: 16px;
     font-weight: 600;
+    margin-left: 20px;
     width: calc(100% - 30px);
   }
 
@@ -24,10 +25,12 @@ div.subject-container{
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_COLOR_TEXT_SUBJECT){
+@mixin themable($_THEME, $_BORDER_COLOR_SEPARATE, $_COLOR_TEXT_SUBJECT){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .subject-container{
+      border-bottom-color: $_BORDER_COLOR_SEPARATE;
+
       input{
         color: $_COLOR_TEXT_SUBJECT;
       }
@@ -35,5 +38,5 @@ div.subject-container{
   }
 }
   
-@include themable($_THEME_LIGHT, $_COLOR_TEXT_SUBJECT_LIGHT);
-@include themable($_THEME_DARK, $_COLOR_TEXT_SUBJECT_DARK);
+@include themable($_THEME_LIGHT, $_BORDER_COLOR_SEPARATE_LIGHT, $_COLOR_TEXT_SUBJECT_LIGHT);
+@include themable($_THEME_DARK, $_BORDER_COLOR_SEPARATE_DARK, $_COLOR_TEXT_SUBJECT_DARK);

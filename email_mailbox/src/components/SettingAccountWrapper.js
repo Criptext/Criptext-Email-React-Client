@@ -154,17 +154,20 @@ class SettingAccountWrapper extends Component {
         isLoading: false
       }
     };
+    this.isEnterprise = myAccount.recipientId.includes('@');
     this.initEventHandlers();
   }
 
   render() {
     const devicesQuantity = this.props.devices ? this.props.devices.length : 0;
+
     return (
       <SettingAccount
         changePasswordPopupParams={this.state.changePasswordPopupParams}
         changeRecoveryEmailPopupParams={
           this.state.changeRecoveryEmailPopupParams
         }
+        isEnterprise={this.isEnterprise}
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
         onChangeInputValueOnSetReplyTo={
           this.handleChangeInputValueOnSetReplyPopup

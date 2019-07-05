@@ -104,7 +104,11 @@ class SettingGeneralProfileWrapper extends Component {
       signature: signatureContent
     };
     this.setState({ signatureParams }, async () => {
-      const htmlSignature = parseSignatureContentToHtml(signatureContent);
+      let htmlSignature = parseSignatureContentToHtml(signatureContent);
+      htmlSignature = htmlSignature
+        .replace(/<p><\/p>/g, '</br>')
+        .replace(/<p>/g, '<div>')
+        .replace(/<\/p>/g, '</div>');
       await this.props.onUpdateAccount({ signature: htmlSignature });
     });
   };

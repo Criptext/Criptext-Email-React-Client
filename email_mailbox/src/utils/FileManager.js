@@ -35,8 +35,8 @@ export const setFileErrorHandler = errorHandler => {
   fileManager.on(FILE_ERROR, errorHandler);
 };
 
-export const setDownloadHandler = (token, filename) => {
-  if (filename) {
+export const setDownloadHandler = (token, filename, isDownloaded) => {
+  if (isDownloaded && filename) {
     openFileExplorer(filename);
     return;
   }

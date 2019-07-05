@@ -68,7 +68,7 @@ const renderDownloadButton = () => (
 const renderCancelButton = props => (
   <button
     className="file-button-cancel"
-    onClick={() => props.onClickCancelDownloadFile()}
+    onClick={e => props.onClickCancelDownloadFile(e)}
   >
     <i className="icon-exit" />
   </button>
