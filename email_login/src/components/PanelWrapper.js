@@ -280,7 +280,11 @@ class PanelWrapper extends Component {
       await this.initLinkDevice(this.state.values.usernameOrEmailAddress);
       return;
     } else if (nextMode === mode.SIGNUP) {
-      this.setState({ mode: nextMode });
+      this.setState({
+        lastStep: this.concat(this.state.lastStep, nextMode),
+        currentStep: mode.SIGNUP,
+        mode: mode.SIGNUP
+      });
     }
   };
 
@@ -421,12 +425,10 @@ class PanelWrapper extends Component {
   handleClickSignIn = async ev => {
     ev.preventDefault();
     ev.stopPropagation();
-    // eslint-disable-next-line fp/no-let
-    let recipientId = this.state.values.usernameOrEmailAddress;
-    if (recipientId.includes(`@${appDomain}`)) {
-      // eslint-disable-next-line fp/no-mutation
-      [recipientId] = recipientId.split('@');
-    }
+    const { usernameOrEmailAddress } = this.state.values;
+    const [recipientId] = usernameOrEmailAddress.includes(`@${appDomain}`)
+      ? usernameOrEmailAddress.split('@')
+      : [usernameOrEmailAddress];
     const [existsAccount] = await getAccountByParams({
       recipientId
     });
@@ -437,13 +439,6 @@ class PanelWrapper extends Component {
         await this.initLinkDevice(recipientId);
       }
     } else {
-      // eslint-disable-next-line no-extra-boolean-cast
-      if (!!existsAccount.isLoggedIn) {
-        this.setState({
-          errorMessage: errorMessages.ACCOUNT_ALREADY_ADDED
-        });
-        return;
-      }
       await this.initLinkDevice(recipientId);
     }
   };
@@ -490,7 +485,8 @@ class PanelWrapper extends Component {
   goToSignUp = async e => {
     e.preventDefault();
     e.stopPropagation();
-    const check = await this.checkLoggedOutAccounts();
+    const successMode = mode.SIGNUP;
+    const check = await this.checkLoggedOutAccounts(successMode);
     if (check === true) {
       this.setState(state => ({
         lastStep: this.concat(state.lastStep, mode.SIGNUP),
@@ -562,10 +558,8 @@ class PanelWrapper extends Component {
             mode: mode.SIGNINTOAPPROVE
           }),
           () => {
-            // eslint-disable-next-line fp/no-let
-            let recipientId = usernameOrEmailAddress;
-            // eslint-disable-next-line fp/no-mutation
-            if (domain === appDomain) recipientId = username;
+            const recipientId =
+              domain === appDomain ? username : usernameOrEmailAddress;
             createTemporalAccount({ recipientId });
             socketClient.start({ jwt: this.state.ephemeralToken });
             this.checkLinkStatus();
