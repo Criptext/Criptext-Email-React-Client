@@ -549,7 +549,7 @@
       "buttonLabel": "Ok"
     },
     "secureMessage": {
-      "text": "El ícono del candado significa que este correo está encriptado",
+      "text": "Este ícono significa que este correo está encriptado",
       "buttonLabel": "Entendido"
     }
   },
