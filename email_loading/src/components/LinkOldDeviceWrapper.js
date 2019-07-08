@@ -26,6 +26,7 @@ import {
 import { loadingTypes } from './Panel';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 import string from './../lang';
+import './linkdevicerequest.scss';
 
 const messages = string.linkOldDevice.messages;
 

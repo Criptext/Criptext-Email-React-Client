@@ -1,103 +1,99 @@
-.loading-body {
-  font-family: 'NunitoSans';
-  width: 402px;
-  height: 266px;
-  border-radius: 8px;
-  background-color: #fff;
-  user-select: none;
-
-  .content {
-    height: 90%;
-    padding: 3%;
-
-    .logo {
-      position: relative;
-      width: 100%;
-      height: 30%;
-      margin: 0px;
-      text-align: center;
-      padding-top: 40px;
+#loading-container{
+  .dialog-content{
+    width: 330px;
+    
+    .dialog-content-header{
       .icon-criptext {
         color: #0091ff;
         font-size: 40px;
       }
     }
 
-    .bar {
-      position: relative;
-      width: 305px;
-      height: 10px;
-      margin: 0px 38px 16px 38px;
-      border-radius: 5px;
-      background-color: rgba(0, 145, 255, 0.25);
-      .content {
-        padding: 0.5px;
-        opacity: 1;
+    .dialog-content-body{
+      .bar {
+        background-color: rgba(0, 145, 255, 0.25);
         border-radius: 5px;
-      }
-      .running-animation {
-        width: 100%;
-        background: linear-gradient(294deg, #0091ff, #25b1ff 42%, #56c3ff 71%, #ffffff);
-      }
-      .stop-animation {
-        width: 0%;
-        background-color: red;
-        animation: fadeDown 1s linear;
-      }
-      @keyframes fadeDown {
-        0% { width: 100%; }
-        100% { width: 0%; }
-      }
-    }
+        height: 8px;
+        margin: 10px auto 0;
+        position: relative;
+        width: 305px;
 
-    .percent {
-      position: relative;
-      width: 46px;
-      height: 22px;
-      padding: 0px 164px;
-      margin-bottom: 18px;
-      .content {
-        width: 45px;
-        height: 22px;
-        margin-top: 12px;
-        border-radius: 50px;
-        background-color: #373a45;
-        text-align: center;
-        span {
-          margin: 0px 6px;
-          font-size: 13px;
-          color: #fff;
+        .content {
+          border-radius: 5px;
+          height: 100%;
+          opacity: 1;
+          padding: 0.5px;
+        }
+
+        .running-animation {
+          width: 100%;
+          background: linear-gradient(294deg, #0091ff, #25b1ff 42%, #56c3ff 71%, #ffffff);
+        }
+
+        .stop-animation {
+          width: 0%;
+          background-color: red;
+          animation: fadeDown 1s linear;
+        }
+
+        @keyframes fadeDown {
+          0% { width: 100%; }
+          100% { width: 0%; }
         }
       }
-    }
-    .percent::before {
-      content: "";
-      position: absolute;
-      top: -10px;
-      left: 50%;
-      margin-left: -5px;
-      border-width: 5px;
-      border-style: solid;
-      border-color: transparent transparent #373a45 transparent;
-    }
 
-    .message {
-      position: relative;
-      text-align: center;
-      font-size: 14px;
-      .creating {
-        font-weight: 600;
-        color: #373a45;
+      .percent {
+        height: 22px;
+        margin: 8px auto 0;
+        position: relative;
+        width: 46px;
+        
+        .content {
+          width: 45px;
+          height: 22px;
+          border-radius: 50px;
+          background-color: #373a45;
+          text-align: center;
+
+          span {
+            color: #fff;
+            margin: 0px 6px;
+            font-size: 13px;
+          }
+        }
       }
-      .retry {
-        font-weight: 600;
-        color: #373a45;
-        margin-top: 2%;
-        .retry-link {
+
+      .percent::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #373a45 transparent;
+      }
+
+      .message {
+        font-size: 14px;
+        margin-top: 5px;
+        position: relative;
+        text-align: center;
+        width: 100%;
+
+        .retry {
+          font-weight: 400;
+
+          .retry-link {
+            font-weight: 600;
+            color: #0091ff;
+            text-decoration: underline;
+            cursor: pointer;
+          }
+        }
+
+        .creating{
           font-weight: 600;
-          color: #0091ff;
-          text-decoration: underline;
-          cursor: pointer;
         }
       }
     }

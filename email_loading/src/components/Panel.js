@@ -3,7 +3,7 @@ import LoadingWrapper from './LoadingWrapper';
 import LinkNewDeviceWrapper from './LinkNewDeviceWrapper';
 import LinkOldDeviceWrapper from './LinkOldDeviceWrapper';
 import SyncMailboxWrapper from './SyncMailboxWrapper';
-import { loadingType } from '../utils/electronInterface';
+import { loadingType, mySettings } from '../utils/electronInterface';
 
 const loadingTypes = {
   SIGNUP: 'signup',
@@ -17,7 +17,13 @@ const loadingTypes = {
   INCOMPATIBLE_VERSIONS: 'incompatible-versions'
 };
 
-const Panel = () => {
+const Panel = () => (
+  <div className="wrapper" data-theme={mySettings.theme || 'light'}>
+    {renderDialog()}
+  </div>
+);
+
+const renderDialog = () => {
   switch (loadingType) {
     case loadingTypes.SIGNUP:
     case loadingTypes.SIGNIN:
