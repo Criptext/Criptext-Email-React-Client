@@ -42,18 +42,12 @@ class FileWrapper extends Component {
   }
 
   handleDownload = async () => {
-    const isDownloaded = this.state.status === FileStatus.DOWNLOADED;
-    await setDownloadHandler(
-      this.props.file.token,
-      this.props.file.name,
-      isDownloaded
-    );
-    if (!isDownloaded) {
-      this.setState({
-        displayProgressBar: true,
-        status: FileStatus.DOWNLOADING
-      });
-    }
+    const { token, name } = this.props.file;
+    await setDownloadHandler(token, name);
+    this.setState({
+      displayProgressBar: true,
+      status: FileStatus.DOWNLOADING
+    });
   };
 
   handleClickCancelDownload = async e => {
