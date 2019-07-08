@@ -65,7 +65,10 @@ class EmailWrapper extends Component {
       });
     }
     this.setCollapseListener('add');
-    const steps = [USER_GUIDE_STEPS.EMAIL_READ];
+    const steps = [
+      USER_GUIDE_STEPS.SECURE_MESSAGE,
+      USER_GUIDE_STEPS.EMAIL_READ
+    ];
     checkUserGuideSteps(steps);
   }
 

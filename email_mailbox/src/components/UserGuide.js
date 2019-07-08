@@ -40,7 +40,8 @@ const styles = {
 const USER_GUIDE_STEPS = {
   BUTTON_COMPOSE: 'userGuideStepButtonCompose',
   EMAIL_READ: 'userGuideStepEmailRead',
-  ACTIVITY_FEED: 'userGuideStepActivityFeed'
+  ACTIVITY_FEED: 'userGuideStepActivityFeed',
+  SECURE_MESSAGE: 'userGuideStepSecureMessage'
 };
 
 const USER_GUIDE_STEPS_INFO = {
@@ -55,7 +56,7 @@ const USER_GUIDE_STEPS_INFO = {
   },
   [USER_GUIDE_STEPS.EMAIL_READ]: {
     name: USER_GUIDE_STEPS.EMAIL_READ,
-    target: '.email-status.icon-double-checked.status-opened ',
+    target: 'div.email-status > i.status-opened',
     content: userGuide.emailRead.text,
     placement: 'right',
     disableBeacon: true,
@@ -70,6 +71,15 @@ const USER_GUIDE_STEPS_INFO = {
     disableBeacon: true,
     spotlightClicks: false,
     locale: { close: userGuide.activityFeed.buttonLabel }
+  },
+  [USER_GUIDE_STEPS.SECURE_MESSAGE]: {
+    name: USER_GUIDE_STEPS.SECURE_MESSAGE,
+    target: '.email-info-content-detail > div > .icon-secure',
+    content: userGuide.secureMessage.text,
+    placement: 'left',
+    disableBeacon: true,
+    spotlightClicks: false,
+    locale: { close: userGuide.secureMessage.buttonLabel }
   }
 };
 
