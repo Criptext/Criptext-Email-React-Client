@@ -2,7 +2,7 @@ import FileManager from 'criptext-files-sdk';
 import CryptoJS from 'crypto-js';
 import base64js from 'base64-js';
 import { myAccount } from './electronInterface';
-import { openFileExplorer, checkExpiredSession } from './ipc';
+import { checkExpiredSession } from './ipc';
 
 const MAX_REQUESTS = 5;
 const EXPIRED_SESSION_STATUS = 401;
@@ -35,11 +35,7 @@ export const setFileErrorHandler = errorHandler => {
   fileManager.on(FILE_ERROR, errorHandler);
 };
 
-export const setDownloadHandler = (token, filename, isDownloaded) => {
-  if (isDownloaded && filename) {
-    openFileExplorer(filename);
-    return;
-  }
+export const setDownloadHandler = (token, filename) => {
   fileManager.downloadFile(token, async error => {
     if (error) {
       const { status } = error;

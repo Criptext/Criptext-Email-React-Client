@@ -141,15 +141,6 @@ const checkIfExists = path => {
   }
 };
 
-const getFilesizeInBytes = filepath => {
-  try {
-    const stats = fs.statSync(filepath);
-    return stats['size'];
-  } catch (e) {
-    return null;
-  }
-};
-
 const createPathRecursive = fullpath => {
   const sep = path.sep;
   const initDir = path.isAbsolute(fullpath) ? sep : '';
@@ -170,6 +161,5 @@ module.exports = {
   removeUserDir,
   getUserEmailsPath,
   createIfNotExist,
-  checkIfExists,
-  getFilesizeInBytes
+  checkIfExists
 };

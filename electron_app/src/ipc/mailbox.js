@@ -1,5 +1,5 @@
 const ipc = require('@criptext/electron-better-ipc');
-const { app, BrowserWindow, shell } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const unusedFilename = require('unused-filename');
 const { download } = require('electron-dl');
 const path = require('path');
@@ -13,8 +13,7 @@ const { buildEmailSource } = require('../utils/SourceUtils');
 const {
   getUserEmailsPath,
   createIfNotExist,
-  checkIfExists,
-  getFilesizeInBytes
+  checkIfExists
 } = require('../utils/FileUtils');
 const { getUsername, genUUID } = require('./../utils/stringUtils');
 const { showWindows } = require('./../windows/windowUtils');
@@ -60,39 +59,35 @@ ipc.answerRenderer('open-email-source', async metadataKey => {
 
 ipc.answerRenderer(
   'fs-download-file',
-  async ({ url, filename, downloadType, metadataKey, filesize }) => {
-    const openFolderWhenDone = downloadType !== 'inline';
-    if (openFolderWhenDone) mailboxWindow.showFileExplorer(filename);
+  async ({ url, filename, downloadType, metadataKey }) => {
+    const isInlineImage = downloadType === 'inline';
     try {
       const directory = await defineDownloadDirectory({
         downloadType,
         metadataKey
       });
       const filePath = path.join(directory, filename);
-      if (checkIfExists(filePath)) {
-        if (downloadType === 'inline') return filePath;
-
-        const previousFileSize = getFilesizeInBytes(filePath);
-        if (previousFileSize === filesize) {
-          shell.showItemInFolder(filePath);
-          return;
-        }
+      if (isInlineImage) {
+        if (checkIfExists(filePath)) return filePath;
+      } else {
         filename = path.basename(unusedFilename.sync(filePath));
       }
+
       const downloadedItem = await download(
         BrowserWindow.getFocusedWindow(),
         url,
         {
           directory,
           filename,
-          openFolderWhenDone
+          openFolderWhenDone: !isInlineImage
         }
       );
       return downloadedItem.getSavePath();
     } catch (e) {
-      if (openFolderWhenDone)
-        mailboxWindow.send('display-message-error-download');
+      if (!isInlineImage)
+        return mailboxWindow.send('display-message-error-download');
     }
+    if (!isInlineImage) mailboxWindow.showFileExplorer(filename);
   }
 );
 

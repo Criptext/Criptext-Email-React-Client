@@ -547,6 +547,10 @@
     "activityFeed": {
       "text": "See which emails have been read and by whom",
       "buttonLabel": "Okay"
+    },
+    "secureMessage": {
+      "text": "Lock icon means this email is encrypted",
+      "buttonLabel": "Got it"
     }
   },
   "welcome": {

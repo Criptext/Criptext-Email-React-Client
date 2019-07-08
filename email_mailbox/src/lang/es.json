@@ -547,6 +547,10 @@
     "activityFeed": {
       "text": "Mira cuáles correos fueron leídos",
       "buttonLabel": "Ok"
+    },
+    "secureMessage": {
+      "text": "Este ícono significa que este correo está encriptado",
+      "buttonLabel": "Entendido"
     }
   },
   "welcome": {

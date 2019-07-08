@@ -365,6 +365,8 @@
 
             &.trumbowyg-removeformat-button{
               svg{
+                width: 18px;
+                height: 16px;
                 background-image: url(../#{$_PATH_TO_IMAGES}/unformat-#{$_THEME}.svg);
               }
             }
