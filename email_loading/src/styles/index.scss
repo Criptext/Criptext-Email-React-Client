@@ -5,6 +5,7 @@ FILE: index.css
 TABLE OF CONTENTS
 
 1.- PATHS
+2.- THEME
 
 ***/
 
@@ -13,3 +14,23 @@ TABLE OF CONTENTS
 $_PATH_TO_IMAGES: "./images";
 $_PATH_TO_FONTS: "./fonts";
 
+/* 2.- THEME
+   ----------------------------- */
+$_THEME_LIGHT: 'light';
+$_THEME_DARK: 'dark';
+
+/* 2.1- THEME LIGHT
+   ----------------------------- */
+$_BACKGROUND_COLOR_DIALOG_LIGHT: white;
+$_COLOR_TEXT_DIALOG_TITLE_LIGHT: black;
+$_COLOR_TEXT_DIALOG_SUBTITLE_LIGHT: black;
+$_COLOR_TEXT_DIALOG_PARAGRAPH_LIGHT: #373a45;
+$_COLOR_TEXT_DIALOG_BUTTON_CANCEL_LIGHT: black;
+
+/* 2.2- THEME DARK
+   ----------------------------- */
+$_BACKGROUND_COLOR_DIALOG_DARK: #1f222a;
+$_COLOR_TEXT_DIALOG_TITLE_DARK: white;
+$_COLOR_TEXT_DIALOG_SUBTITLE_DARK: #5c6174;
+$_COLOR_TEXT_DIALOG_PARAGRAPH_DARK: #b4b5be;
+$_COLOR_TEXT_DIALOG_BUTTON_CANCEL_DARK: white;

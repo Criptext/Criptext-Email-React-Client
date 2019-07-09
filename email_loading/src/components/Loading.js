@@ -6,23 +6,25 @@ import './loading.scss';
 const messages = string.loading.messages;
 
 const Loading = props => (
-  <div className="loading-body">
-    <div className="content">
-      <div className="logo">
-        <span className="icon-criptext" />
+  <div id={'loading-container'} className="dialog-container">
+    <div className="dialog-content">
+      <div className="dialog-content-header">
+        <i className="icon-criptext" />
       </div>
-      <div className="bar">
-        <div
-          className={`content ${props.animationClass}`}
-          style={{ width: props.percent + '%' }}
-        />
-      </div>
-      <div className="percent">
-        <div className="content">
-          <span className="number">{props.percent}%</span>
+      <div className="dialog-content-body">
+        <div className="bar">
+          <div
+            className={`content ${props.animationClass}`}
+            style={{ width: props.percent + '%' }}
+          />
         </div>
+        <div className="percent">
+          <div className="content">
+            <span className="number">{props.percent}%</span>
+          </div>
+        </div>
+        <div className="message">{renderMessage(props)}</div>
       </div>
-      <div className="message">{renderMessage(props)}</div>
     </div>
   </div>
 );

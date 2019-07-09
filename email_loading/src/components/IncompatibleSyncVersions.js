@@ -9,19 +9,17 @@ import {
 const { header, text, buttonLabels } = string.incompatibleSyncVersions;
 
 const IncompatibleSyncVersions = () => (
-  <div className="incompatible-versions-container">
-    <div className="content">
-      <div className="header">
-        <h3>{header}</h3>
+  <div className="dialog-container">
+    <div className="dialog-content">
+      <div className="dialog-content-header">
+        <h1>{header}</h1>
       </div>
-
-      <div className="text">
-        <span>{text}</span>
+      <div className="dialog-content-body">
+        <p>{text}</p>
       </div>
-
-      <div className="buttons">
+      <div className="dialog-content-buttons">
         <button
-          className="button-a aprove-button"
+          className="button-a button-confirm"
           onClick={() => {
             sendEndLinkDevicesEvent();
             closeCreatingKeysLoadingWindow();

@@ -2,29 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DEVICE_TYPE } from '../utils/const';
 import string from './../lang';
-import './linkdevicerequest.scss';
 
 const { linkDeviceRequest } = string;
 
-const LinkingDevices = props => (
-  <div className="request-container">
-    <div className="content">
-      <div className="header">
-        <h3>{linkDeviceRequest.header}</h3>
+const LinkDeviceRequest = props => (
+  <div className="dialog-container">
+    <div className="dialog-content">
+      <div className="dialog-content-header">
+        <h1>{linkDeviceRequest.header}</h1>
       </div>
-      <div className="question">
-        <span className="text">{linkDeviceRequest.text}</span>
+      <div className="dialog-content-body">
+        <h3>{linkDeviceRequest.text}</h3>
+        {renderDeviceInfo(props)}
       </div>
-      {renderDeviceInfo(props)}
-      <div className="buttons">
+      <div className="dialog-content-buttons">
         <button
-          className="button-a reject-button"
+          className="button-a button-cancel"
           onClick={props.onDenyLinkDeviceRequest}
         >
           <span>{linkDeviceRequest.buttonLabels.reject}</span>
         </button>
         <button
-          className="button-a aprove-button"
+          className="button-a button-confirm"
           onClick={props.onAcceptLinkDeviceRequest}
         >
           <span>{linkDeviceRequest.buttonLabels.approve}</span>
@@ -38,14 +37,14 @@ const renderDeviceInfo = props => {
   const iconClass =
     props.deviceType === DEVICE_TYPE ? 'icon-desktop' : 'icon-mobile';
   return (
-    <div className="device-info">
+    <p className="device-info">
       <i className={iconClass} />
       <span className="device-name">{props.deviceFriendlyName}</span>
-    </div>
+    </p>
   );
 };
 
-LinkingDevices.propTypes = {
+LinkDeviceRequest.propTypes = {
   onDenyLinkDeviceRequest: PropTypes.func,
   onAcceptLinkDeviceRequest: PropTypes.func
 };
@@ -55,4 +54,4 @@ renderDeviceInfo.propTypes = {
   deviceFriendlyName: PropTypes.string
 };
 
-export default LinkingDevices;
+export default LinkDeviceRequest;
