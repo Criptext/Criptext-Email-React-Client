@@ -60,10 +60,9 @@ const TagRecipient = props => {
         />
       )}
 
-      {!disabled &&
-        !formattedTag.state && (
-          <a className={classNameRemove} onClick={() => onRemove(key)} />
-        )}
+      {!disabled && !formattedTag.state && (
+        <a className={classNameRemove} onClick={() => onRemove(key)} />
+      )}
     </span>
   );
 };
