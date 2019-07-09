@@ -3,6 +3,7 @@ const path = require('path');
 const rimraf = require('rimraf');
 const { app } = require('electron');
 const { removeLast } = require('./stringUtils');
+const { APP_DOMAIN } = require('../utils/const');
 
 const getUserEmailsPath = (node_env, user) => {
   switch (node_env) {
@@ -26,7 +27,8 @@ const getUserEmailsPath = (node_env, user) => {
         `${user}`,
         'emails'
       );
-      createPathRecursive(emailsPath);
+      const userToReplace = `${user}@${APP_DOMAIN}`;
+      createPathRecursive(emailsPath, userToReplace, user);
       return emailsPath;
     }
   }
@@ -141,11 +143,21 @@ const checkIfExists = path => {
   }
 };
 
-const createPathRecursive = fullpath => {
+const createPathRecursive = (fullpath, oldUser, newUser) => {
   const sep = path.sep;
   const initDir = path.isAbsolute(fullpath) ? sep : '';
   fullpath.split(sep).reduce((parentDir, childDir) => {
-    const curDir = path.resolve(parentDir, childDir);
+    let curDir = path.resolve(parentDir, childDir);
+
+    if (childDir === newUser) {
+      const lastPath = path.resolve(parentDir, oldUser);
+      if (fs.existsSync(lastPath)) {
+        curDir = path.resolve(parentDir, newUser);
+        fs.renameSync(lastPath, curDir);
+        return curDir;
+      }
+    }
+
     if (!fs.existsSync(curDir)) {
       fs.mkdirSync(curDir);
     }

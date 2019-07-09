@@ -5,7 +5,10 @@ const myAccount = require('../../src/Account');
 const { APP_DOMAIN } = require('../utils/const');
 
 const getUsername = () => {
-  return `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  return username;
 };
 
 ipc.answerRenderer(

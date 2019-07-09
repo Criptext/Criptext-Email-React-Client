@@ -8,7 +8,12 @@ const path = require('path');
 const lang = require('./../lang');
 
 const HTMLTagsRegex = /<[^>]*>?/g;
-const getUsername = () => `${myAccount.recipientId}@${APP_DOMAIN}`;
+const getUsername = () => {
+  const username = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  return username;
+};
 
 const buildEmailSource = async ({ metadataKey }) => {
   const username = getUsername();

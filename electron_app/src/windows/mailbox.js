@@ -89,7 +89,11 @@ const create = () => {
 
 const getUsername = () => {
   const myAccount = require('./../Account');
-  return myAccount ? `${myAccount.recipientId}@${APP_DOMAIN}` : '';
+  if (!myAccount) return '';
+  const username = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  return username;
 };
 
 const showFileExplorer = filename => {
