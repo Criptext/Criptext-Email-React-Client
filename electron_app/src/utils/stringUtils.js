@@ -102,7 +102,10 @@ const genUUID = () => {
 };
 
 const getUsername = () => {
-  return `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  return username;
 };
 
 module.exports = {
