@@ -113,8 +113,10 @@ class ExportBackupPopupWrapper extends Component {
     }));
   };
 
-  handleSubmitExportBackupForm = async () => {
-    await Promise.resolve(true);
+  handleSubmitExportBackupForm = () => {
+    this.props.onSetExportBackupPassword({
+      password: this.state.formItems.password.value
+    });
   };
 }
 

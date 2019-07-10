@@ -18,11 +18,27 @@ const SettingsAccountBackup = props => (
         </button>
       </div>
     </div>
+    {props.inProgress && (
+      <div className="cptx-backing-up-bar">
+        <div className="bar-background">
+          <div
+            className="bar-progress"
+            style={{ width: `${props.backupPercent}%` }}
+          />
+        </div>
+        <span className="cptx-section-item-description bar-message">
+          {props.progressMessage}
+        </span>
+      </div>
+    )}
   </div>
 );
 
 SettingsAccountBackup.propTypes = {
-  onClickExportBackupFile: PropTypes.func
+  backupPercent: PropTypes.number,
+  inProgress: PropTypes.bool,
+  onClickExportBackupFile: PropTypes.func,
+  progressMessage: PropTypes.string
 };
 
 export default SettingsAccountBackup;

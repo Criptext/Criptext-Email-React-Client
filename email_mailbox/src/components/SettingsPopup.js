@@ -115,8 +115,9 @@ const SettingsPopup = props => {
       return (
         <Exportbackuppopup
           isHidden={props.isHidden}
-          onTogglePopup={props.onClosePopup}
+          onSetExportBackupPassword={props.onSetExportBackupPassword}
           onShowSettingsPopup={props.onShowSettingsPopup}
+          onTogglePopup={props.onClosePopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
         />
@@ -184,6 +185,7 @@ SettingsPopup.propTypes = {
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
+  onSetExportBackupPassword: PropTypes.func,
   onShowSettingsPopup: PropTypes.func,
   setReplyToPopupParams: PropTypes.object
 };

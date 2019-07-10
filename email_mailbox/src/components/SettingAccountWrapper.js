@@ -153,6 +153,10 @@ class SettingAccountWrapper extends Component {
       encryptToExternals: {
         enabled: myAccount.encryptToExternals,
         isLoading: false
+      },
+      mailboxBackup: {
+        password: '',
+        displayProgressBar: false
       }
     };
     this.isEnterprise = myAccount.recipientId.includes('@');
@@ -222,6 +226,8 @@ class SettingAccountWrapper extends Component {
         readReceiptsLabelisLoading={this.state.readReceipts.isLoading}
         onShowSettingsPopup={this.handleShowSettingsPopup}
         devicesQuantity={devicesQuantity}
+        mailboxBackupParams={this.state.mailboxBackup}
+        onSetExportBackupPassword={this.handleSetExportBackupPassword}
       />
     );
   }
@@ -442,6 +448,18 @@ class SettingAccountWrapper extends Component {
       isHiddenSettingsPopup: false,
       settingsPopupType: SETTINGS_POPUP_TYPES.EXPORT_BACKUP
     });
+  };
+
+  handleSetExportBackupPassword = ({ password }) => {
+    this.setState(
+      {
+        mailboxBackup: {
+          password,
+          displayProgressBar: true
+        }
+      },
+      this.handleClosePopup
+    );
   };
 
   handleClickResendConfirmationLink = async () => {
