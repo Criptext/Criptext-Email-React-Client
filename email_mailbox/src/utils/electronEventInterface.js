@@ -631,12 +631,9 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
       const { domain, recipientId } = fromDomain;
       const isOpened = type === EmailStatus.READ;
       if (isOpened) {
-        let contactId = undefined;
-        if (domain === appDomain) {
-          const contactEmail = `${recipientId}@${appDomain}`;
-          const [contact] = await getContactByEmails([contactEmail]);
-          contactId = contact.id;
-        }
+        const contactEmail = `${recipientId}@${domain}`;
+        const [contact] = await getContactByEmails([contactEmail]);
+        const contactId = contact.id;
         const feedItemParams = {
           date,
           type,

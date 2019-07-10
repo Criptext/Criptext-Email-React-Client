@@ -81,7 +81,7 @@ class FileWrapper extends Component {
             downloadType: 'attachment',
             filesize: this.props.file.size
           });
-          openFileExplorer(filename);
+          if (filename) openFileExplorer(filename);
         }
       );
     }
