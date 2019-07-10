@@ -51,14 +51,15 @@ const EDITING_MODES = {
 
 const SETTINGS_POPUP_TYPES = {
   CHANGE_PASSWORD: 'change-password',
-  LOGOUT: 'logout',
   CHANGE_RECOVERY_EMAIL: 'change-recovery-email',
-  TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled',
   DELETE_ACCOUNT: 'delete-account',
-  NONE: 'none',
+  EXPORT_BACKUP: 'export-backup',
+  LOGOUT: 'logout',
   MANUAL_SYNC: 'manual-sync',
   MANUAL_SYNC_DEVICE_AUTHENTICATION: 'manual-sync-device-authentication',
-  SET_REPLY_TO: 'reply-to'
+  NONE: 'none',
+  SET_REPLY_TO: 'reply-to',
+  TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled'
 };
 
 const changePasswordErrors = {
@@ -174,6 +175,7 @@ class SettingAccountWrapper extends Component {
         }
         onClearPopupParams={this.handleClearPopupParams}
         onClickSetReplyTo={this.handleClickSetReplyTo}
+        onClickExportBackupFile={this.handleClickExportBackupFile}
         onClosePopup={this.handleClosePopup}
         onConfirmChangePassword={this.handleConfirmChangePassword}
         onConfirmChangeRecoveryEmail={this.handleConfirmChangeRecoveryEmail}
@@ -432,6 +434,13 @@ class SettingAccountWrapper extends Component {
     this.setState({
       isHiddenSettingsPopup: false,
       settingsPopupType: SETTINGS_POPUP_TYPES.SET_REPLY_TO
+    });
+  };
+
+  handleClickExportBackupFile = () => {
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPopupType: SETTINGS_POPUP_TYPES.EXPORT_BACKUP
     });
   };
 

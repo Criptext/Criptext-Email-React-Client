@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SettingsAccountBackup from './SettingsAccountBackup';
 
-class SettingsGeneralLanguageWrapper extends Component {
+class SettingsAccountBackupWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +14,7 @@ class SettingsGeneralLanguageWrapper extends Component {
   render() {
     return (
       <SettingsAccountBackup
+        {...this.props}
         backupPercent={this.state.backupPercent}
         inProgress={this.state.inProgress}
         progressMessage={this.state.progressMessage}
@@ -22,4 +23,4 @@ class SettingsGeneralLanguageWrapper extends Component {
   }
 }
 
-export default SettingsGeneralLanguageWrapper;
+export default SettingsAccountBackupWrapper;

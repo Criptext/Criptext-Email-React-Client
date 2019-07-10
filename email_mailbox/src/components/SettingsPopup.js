@@ -4,6 +4,7 @@ import PopupHOC from './PopupHOC';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
+import ExportBackupPopupWrapper from './ExportBackupPopupWrapper';
 import ManualSyncPopup from './ManualSyncPopup';
 import ManualSyncProcessPopup from './ManualSyncProcessPopup';
 import SetReplyToEmailPopup from './SetReplyToEmailPopup';
@@ -14,6 +15,7 @@ const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
 const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
+const Exportbackuppopup = PopupHOC(ExportBackupPopupWrapper);
 const Manualsyncpopup = PopupHOC(ManualSyncPopup);
 const Manualsyncprocesspopup = PopupHOC(ManualSyncProcessPopup);
 const SetReplyTo = PopupHOC(SetReplyToEmailPopup);
@@ -23,6 +25,7 @@ const SettingsPopup = props => {
     CHANGE_PASSWORD,
     CHANGE_RECOVERY_EMAIL,
     DELETE_ACCOUNT,
+    EXPORT_BACKUP,
     MANUAL_SYNC,
     MANUAL_SYNC_DEVICE_AUTHENTICATION,
     SET_REPLY_TO,
@@ -103,6 +106,17 @@ const SettingsPopup = props => {
         <Deleteaccountpopup
           isHidden={props.isHidden}
           onTogglePopup={props.onClosePopup}
+          popupPosition={{ left: '45%', top: '45%' }}
+          theme={'dark'}
+        />
+      );
+    }
+    case EXPORT_BACKUP: {
+      return (
+        <Exportbackuppopup
+          isHidden={props.isHidden}
+          onTogglePopup={props.onClosePopup}
+          onShowSettingsPopup={props.onShowSettingsPopup}
           popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
         />

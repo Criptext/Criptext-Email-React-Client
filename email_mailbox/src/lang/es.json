@@ -364,6 +364,28 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Enviar"
     },
+    "export_backup": {
+      "title": "Exportar Archivo de Respaldo",
+      "switchLabel": "Encriptar archivo",
+      "description": "Si pierdes/olvidas esta contraseña, ¡No serás capaz de restaurar este respaldo después!",
+      "inputPassphrase": {
+        "placeholder": "Ingrese contraseña",
+        "errorMessages": {
+          "len": {
+            "prefix": "Debe tener",
+            "suffix": "caracteres"
+          }
+        }
+      },
+      "note": {
+        "header": "Nota: ",
+        "content": "Por tu seguridad, te sugerimos que elijas encriptar el archivo de respaldo"
+      },
+      "buttons": {
+        "send": "Respaldar",
+        "cancel": "Cancelar"
+      }
+    },
     "logout": {
       "title": "Cerrar sesión",
       "paragraphs": {
