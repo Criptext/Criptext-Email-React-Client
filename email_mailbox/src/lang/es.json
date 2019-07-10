@@ -8,6 +8,16 @@
     "opened": "ha abierto",
     "someone": "Alguien"
   },
+  "crash": {
+    "title": "¡Ups! Parece que algo falló",
+    "counter": {
+      "a": "Criptext se reiniciará en",
+      "b": "segundos"
+    },
+    "buttons": {
+      "restart_now": "Reiniciar ya"
+    }
+  },
   "emails": {
     "contact_support": {
       "subject": "Soporte - Escritorio",
@@ -254,6 +264,31 @@
     "manual_sync": {
       "description": "Sincronización de Buzón Completa"
     }
+  },
+  "momentLocales": {
+    "months": "Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre",
+    "monthsShort": "Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic",
+    "weekdays": "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado",
+    "weekdaysShort": "Dom_Lun_Mar_Mie_Jue_Vie_Sab",
+    "weekdaysMin": "Do_Lu_Ma_Mi_Ju_Vi_Sa",
+    "relativeTime" : {
+      "future": "En %s",
+      "past": "Hace %s",
+      "s": "Pocos segundos",
+      "ss": "%s segundos",
+      "m": "Un minuto",
+      "mm": "%d minutos",
+      "h": "Una hora",
+      "hh": "%d horas",
+      "d": "Un día",
+      "dd": "%d días",
+      "M": "Un mes",
+      "MM": "Más de 2 meses",
+      "y": "Más de 2 meses",
+      "yy": "Más de 2 meses"
+    },
+    "yesterdayText": "Ayer",
+    "atText": "a las"
   },
   "notification": {
     "newEmailGroup": {
@@ -535,6 +570,9 @@
     "new_label": "Nueva etiqueta",
     "settings": "Configuración"
   },
+  "tooltips": {
+    "secure": "Este correo está encriptado"
+  },
   "userGuide": {
     "buttonCompose": {
       "text": "Empieza enviando un correo nuevo",
@@ -567,40 +605,5 @@
       "description": "Tú creas la información, nosotros creemos que tienes derecho a que sólo sea tuya."
     },
     "skip_tour": "Omitir"
-  },
-  "momentLocales": {
-    "months": "Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre",
-    "monthsShort": "Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic",
-    "weekdays": "Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado",
-    "weekdaysShort": "Dom_Lun_Mar_Mie_Jue_Vie_Sab",
-    "weekdaysMin": "Do_Lu_Ma_Mi_Ju_Vi_Sa",
-    "relativeTime" : {
-      "future": "En %s",
-      "past": "Hace %s",
-      "s": "Pocos segundos",
-      "ss": "%s segundos",
-      "m": "Un minuto",
-      "mm": "%d minutos",
-      "h": "Una hora",
-      "hh": "%d horas",
-      "d": "Un día",
-      "dd": "%d días",
-      "M": "Un mes",
-      "MM": "Más de 2 meses",
-      "y": "Más de 2 meses",
-      "yy": "Más de 2 meses"
-    },
-    "yesterdayText": "Ayer",
-    "atText": "a las"
-  },
-  "crash": {
-    "title": "¡Ups! Parece que algo falló",
-    "counter": {
-      "a": "Criptext se reiniciará en",
-      "b": "segundos"
-    },
-    "buttons": {
-      "restart_now": "Reiniciar ya"
-    }
   }
 }

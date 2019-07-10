@@ -54,7 +54,13 @@ const Email = props => (
               )}
             </div>
             <div className="email-info-content-detail">
-              {renderIcons(props.email.fileTokens, props.email.secure)}
+              {renderIcons(
+                props.email.fileTokens,
+                props.email.secure,
+                props.onMouseEnterTooltip,
+                props.onMouseLeaveTooltip,
+                props.email.id
+              )}
               <span className="email-info-content-detail-date">
                 {props.date}
               </span>
@@ -197,11 +203,35 @@ const renderEmailStatus = status => {
   return <div className="email-status">{defineEmailStatus(status)}</div>;
 };
 
-const renderIcons = (fileTokens, isSecure) => {
+const renderIcons = (
+  fileTokens,
+  isSecure,
+  onMouseEnterTooltip,
+  onMouseLeaveTooltip,
+  id
+) => {
   return (
     <div className="email-info-content-detail-icons">
       {!!fileTokens.length && <i className="icon-attach" />}
-      {isSecure && <i className="icon-secure" />}
+      {isSecure &&
+        renderIconSecure(onMouseEnterTooltip, onMouseLeaveTooltip, id)}
+    </div>
+  );
+};
+
+const renderIconSecure = (onMouseEnterTooltip, onMouseLeaveTooltip, id) => {
+  return (
+    <div
+      data-tip
+      data-for={`securetip${id}`}
+      onMouseEnter={() => {
+        onMouseEnterTooltip(`securetip${id}`);
+      }}
+      onMouseLeave={() => {
+        onMouseLeaveTooltip(`securestip${id}`);
+      }}
+    >
+      <i className="icon-secure" />
     </div>
   );
 };
@@ -301,6 +331,8 @@ Email.propTypes = {
   isUnsend: PropTypes.bool,
   letters: PropTypes.string,
   onForward: PropTypes.func,
+  onMouseEnterTooltip: PropTypes.func,
+  onMouseLeaveTooltip: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyLast: PropTypes.func,
   onToggleEmail: PropTypes.func,
