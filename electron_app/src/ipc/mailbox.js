@@ -82,7 +82,8 @@ ipc.answerRenderer(
           openFolderWhenDone: !isInlineImage
         }
       );
-      return downloadedItem.getSavePath();
+      const newFilePath = downloadedItem.getSavePath();
+      return { filePath: newFilePath, filename };
     } catch (e) {
       if (!isInlineImage)
         return mailboxWindow.send('display-message-error-download');

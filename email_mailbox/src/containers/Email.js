@@ -255,7 +255,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             filename,
             url
           };
-          const filePath = await downloadFileInFileSystem(downloadParams);
+          const { filePath } = await downloadFileInFileSystem(downloadParams);
           addFilePathToResponseObject(filePath, cid);
         }
       };
