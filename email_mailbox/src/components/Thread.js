@@ -3,8 +3,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Email from './../containers/Email';
 import EmailLoading from './EmailLoading';
+import ItemTooltip from './ItemTooltip';
 import Label from './Label';
 import Message from '../containers/Message';
+import string from '../lang';
 import './thread.scss';
 
 const MIN_INDEX_TO_COLLAPSE = 3;
@@ -17,7 +19,9 @@ class Thread extends Component {
         ? props.emails.length - 1
         : props.indexFirstUnread;
     this.state = {
-      groupedIndex: groupedIndex || 0
+      groupedIndex: groupedIndex || 0,
+      hoverTarget: null,
+      tip: ''
     };
   }
 
@@ -82,6 +86,7 @@ class Thread extends Component {
           </div>
           <div className="cptx-thread-emails">{this.renderEmails()}</div>
         </div>
+        {this.renderTooltipForEmail()}
       </div>
     );
   }
@@ -105,12 +110,14 @@ class Thread extends Component {
       const isLast = this.props.emails.length - 1 === index;
       return (
         <Email
-          key={email.id}
           email={email}
-          staticOpen={isLast}
           count={this.props.emails.length}
+          key={email.id}
           mailboxSelected={this.props.mailboxSelected}
           onBackOption={this.props.onBackOption}
+          onMouseEnterTooltip={this.handleOnMouseEnterTooltip}
+          onMouseLeaveTooltip={this.handleOnMouseLeaveTooltip}
+          staticOpen={isLast}
         />
       );
     });
@@ -129,6 +136,32 @@ class Thread extends Component {
       />
     );
     return emailContainers;
+  };
+
+  renderTooltipForEmail = () => {
+    const hoverTarget = this.state.hoverTarget;
+    const tip = this.state.tip;
+    if (!hoverTarget || !tip) {
+      return null;
+    }
+    return <ItemTooltip target={hoverTarget} tip={tip} />;
+  };
+
+  handleOnMouseEnterTooltip = id => {
+    this.setState({
+      hoverTarget: id,
+      tip: string.tooltips.secure
+    });
+  };
+
+  handleOnMouseLeaveTooltip = id => {
+    if (id !== this.state.hoverTarget) {
+      return;
+    }
+    this.setState({
+      hoverTarget: null,
+      tip: ''
+    });
   };
 
   handleRemoveLabel = labelId => {
