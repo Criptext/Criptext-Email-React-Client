@@ -9,7 +9,7 @@ import {
   setCryptoInterfaces
 } from './../utils/FileManager';
 import File, { FileStatus } from './File';
-import { downloadFileInFileSystem } from '../utils/ipc';
+import { downloadFileInFileSystem, openFileExplorer } from '../utils/ipc';
 
 class FileWrapper extends Component {
   constructor(props) {
@@ -75,12 +75,13 @@ class FileWrapper extends Component {
           status: FileStatus.DOWNLOADED
         },
         async () => {
-          await downloadFileInFileSystem({
+          const { filename } = await downloadFileInFileSystem({
             url,
             filename: this.props.file.name,
             downloadType: 'attachment',
             filesize: this.props.file.size
           });
+          if (filename) openFileExplorer(filename);
         }
       );
     }
