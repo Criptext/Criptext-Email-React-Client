@@ -25,33 +25,6 @@ class Thread extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.thread && !nextProps.thread) {
-      this.props.onBackOption();
-    } else if (this.props.thread.unread) {
-      if (
-        nextProps.emailKeysUnread.length !== this.props.emailKeysUnread.length
-      ) {
-        this.props.onUpdateUnreadEmails(
-          nextProps.emailKeysUnread,
-          nextProps.thread.threadId
-        );
-      }
-    }
-    if (
-      this.props.emails.length === 0 &&
-      nextProps.emails.length > this.props.emails.length
-    ) {
-      const groupedIndex =
-        nextProps.indexFirstUnread < 0
-          ? nextProps.emails.length - 1
-          : nextProps.indexFirstUnread;
-      this.setState({
-        groupedIndex: groupedIndex || 0
-      });
-    }
-  }
-
   render() {
     return (
       <div className="thread-container">
@@ -84,7 +57,9 @@ class Thread extends Component {
               />
             </div>
           </div>
-          <div className="cptx-thread-emails">{this.renderEmails()}</div>
+          <div className="cptx-thread-emails" ref={e => (this.scroll = e)}>
+            {this.renderEmails()}
+          </div>
         </div>
         {this.renderTooltipForEmail()}
       </div>
@@ -99,6 +74,42 @@ class Thread extends Component {
         this.props.emailKeysUnread,
         this.props.thread.threadId
       );
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!this.props.thread && prevProps.thread) {
+      return this.props.onBackOption();
+    }
+
+    if (
+      this.props.thread.unread &&
+      prevProps.emailKeysUnread.length !== this.props.emailKeysUnread.length
+    ) {
+      this.props.onUpdateUnreadEmails(
+        this.props.emailKeysUnread,
+        this.props.thread.threadId
+      );
+    }
+
+    if (
+      prevProps.emails.length === 0 &&
+      prevProps.emails.length > this.props.emails.length
+    ) {
+      const groupedIndex =
+        this.props.indexFirstUnread < 0
+          ? this.props.emails.length - 1
+          : this.props.indexFirstUnread;
+      this.setState({
+        groupedIndex: groupedIndex || 0
+      });
+    }
+
+    if (
+      this.props.emails.length > prevProps.emails.length &&
+      prevProps.emails.length !== 0
+    ) {
+      this.setScrollToBottomPosition();
     }
   }
 
@@ -176,6 +187,11 @@ class Thread extends Component {
     this.setState({
       groupedIndex: 0
     });
+  };
+
+  setScrollToBottomPosition = () => {
+    const bottomPosition = this.scroll.scrollHeight - this.scroll.clientHeight;
+    this.scroll.scrollTop = bottomPosition;
   };
 }
 
