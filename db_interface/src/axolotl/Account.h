@@ -17,6 +17,7 @@ namespace CriptextDB {
   };
 
   Account getAccount(string dbPath, int accountId);
+  int createAccount(string dbPath, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId);
 } 
 
 #endif

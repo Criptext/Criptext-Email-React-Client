@@ -147,6 +147,15 @@ struct ec_key_pair
     ec_private_key *private_key;
 };
 
+struct signal_protocol_store_context {
+    signal_context *global_context;
+    signal_protocol_session_store session_store;
+    signal_protocol_pre_key_store pre_key_store;
+    signal_protocol_signed_pre_key_store signed_pre_key_store;
+    signal_protocol_identity_key_store identity_key_store;
+    signal_protocol_sender_key_store sender_key_store;
+};
+
 #define DJB_KEY_LEN 32
 
 struct ec_public_key

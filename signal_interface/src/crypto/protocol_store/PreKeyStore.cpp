@@ -52,35 +52,10 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
 
 int pre_key_store_store_pre_key(uint32_t pre_key_id, uint8_t *record, size_t record_len, void *user_data)
 {
-    session_pre_key *preKeyRecord = 0;
-    session_pre_key_deserialize(&preKeyRecord, record, record_len, 0);
+    char *preKeyRecord = reinterpret_cast<char *>(record);
 
-    ec_public_key *publicKey = ec_key_pair_get_public(preKeyRecord->key_pair);
-    ec_private_key *privateKey = ec_key_pair_get_private(preKeyRecord->key_pair);
-
-    signal_buffer *publicKeyBuffer = 0;
-    ec_public_key_serialize(&publicKeyBuffer, publicKey);
-    uint8_t *publicData = signal_buffer_data(publicKeyBuffer);
-    size_t publicLen = signal_buffer_len(publicKeyBuffer);
-    const unsigned char *publicChar = reinterpret_cast<const unsigned char*>(publicData);
-
-    size_t publicEncodeLen = 0;
-    unsigned char * publicB64 = base64_encode(publicChar, publicLen, &publicEncodeLen);
-    std::string publicKeyString(reinterpret_cast<char *>(publicB64));
-
-    signal_buffer *privateKeyBuffer = 0;
-    ec_private_key_serialize(&privateKeyBuffer, privateKey);
-    uint8_t *privateData = signal_buffer_data(privateKeyBuffer);
-    size_t privateLen = signal_buffer_len(privateKeyBuffer);
-    const unsigned char *privateChar = reinterpret_cast<const unsigned char*>(privateData);
-
-    size_t privateEncodeLen = 0;
-    unsigned char * privateB64 = base64_encode(privateChar, privateLen, &privateEncodeLen);
-    std::string privateKeyString(reinterpret_cast<char *>(privateB64));
-
-    std::cout << "STORE PREKEY" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    bool success = CriptextDB::createPreKey("Criptext.db", pre_key_id, privateKeyString, publicKeyString, account->id);
+    bool success = CriptextDB::createPreKey("Criptext.db", pre_key_id, preKeyRecord, account->id);
     return success ? 1 : 0;
 }
 
@@ -99,16 +74,14 @@ int pre_key_store_contains_pre_key(uint32_t pre_key_id, void *user_data)
     return 1;
 }
 
-int pre_key_store_remove_pre_key(uint32_t pre_key_id, void *user_data)
-{
+int pre_key_store_remove_pre_key(uint32_t pre_key_id, void *user_data) {
     std::cout << "REMOVE PREKEY" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     bool success = CriptextDB::deletePreKey("Criptext.db", pre_key_id, account->id);
     return success ? 1 : 0;
 }
 
-void pre_key_store_destroy(void *user_data)
-{
+void pre_key_store_destroy(void *user_data) {
     
 }
 

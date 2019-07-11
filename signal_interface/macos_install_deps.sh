@@ -5,6 +5,10 @@ if ! type "brew" > /dev/null; then
 fi
 
 brew install openssl
+brew install sqlite3
+echo 'export PATH="/usr/local/opt/sqlite/bin:$PATH"' >> ~/.bash_profile
+export LDFLAGS="-L/usr/local/opt/sqlite/lib"
+export CPPFLAGS="-I/usr/local/opt/sqlite/include"
 
 mkdir deps 
 cd deps

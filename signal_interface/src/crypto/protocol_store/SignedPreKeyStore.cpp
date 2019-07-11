@@ -51,8 +51,10 @@ int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t si
 
 int signed_pre_key_store_store_signed_pre_key(uint32_t signed_pre_key_id, uint8_t *record, size_t record_len, void *user_data)
 {
+    char * signedKeyRecord = reinterpret_cast<char *>(record);
+
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    bool success = CriptextDB::createSignedPreKey("Criptext.db", signed_pre_key_id, "<PrivKey>", "<PubKey>", account->id);
+    bool success = CriptextDB::createSignedPreKey("Criptext.db", signed_pre_key_id, signedKeyRecord, account->id);
     return success ? 1 : 0;
 }
 

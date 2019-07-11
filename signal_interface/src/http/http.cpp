@@ -41,10 +41,11 @@ void http_init(){
 
   ctx = mg_start(&callbacks, 0, civet_options);
   mg_set_request_handler(ctx, "/decrypt", decrypt, 0);
+  mg_set_request_handler(ctx, "/account", createAccount, 0);
+  mg_set_request_handler(ctx, "/keybundle", createKeyBundle, 0);
   mg_set_request_handler(ctx, "/ping", pong, 0);
 }
 
 void http_shutdown(){
   mg_stop(ctx);
 }
-

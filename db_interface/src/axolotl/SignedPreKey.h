@@ -17,7 +17,7 @@ namespace CriptextDB {
 
   SignedPreKey getSignedPreKey(string dbPath, short int id, int accountId);
 
-  bool createSignedPreKey(string dbPath, short int id, string privKey, string pubKey, int accountId);
+  bool createSignedPreKey(string dbPath, short int id, char *keyRecord, int accountId);
 
   bool deleteSignedPreKey(string dbPath, short int id, int accountId);
 } 

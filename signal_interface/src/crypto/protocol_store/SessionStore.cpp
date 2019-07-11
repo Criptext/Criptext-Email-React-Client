@@ -127,10 +127,6 @@ std::string build_session_record_string(session_record *sessionRecord) {
 
     std::string remotePublicKey = uniEncode(reinterpret_cast<char *>(&sessionRecord->state->remote_identity_public->data));
 
-    //std::cout << "YAS" << std::endl;
-    //std::string yasabe = uniEncode(reinterpret_cast<char *>(&sessionRecord->state->));
-
-
     std::string sessionJson = "{"
         "\\\"sessions\\\":{"
             "\\\"" + baseKey + "\\\":{"

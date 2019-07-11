@@ -21,7 +21,7 @@ CriptextDB::IdentityKey CriptextDB::getIdentityKey(string dbPath, string recipie
   return identityKey;
 }
 
-bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int deviceId, string identityKey, int accountId) {
+bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int deviceId, char *identityKey, int accountId) {
   std::cout << "Create Identity Key : " << recipientId << std::endl;
 
   try {
