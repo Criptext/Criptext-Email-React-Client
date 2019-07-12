@@ -91,7 +91,6 @@ export const formOutgoingEmailFromData = ({
   bccEmails,
   body,
   ccEmails,
-  isDraft,
   isEnterprise,
   labelId,
   secure,
@@ -142,11 +141,15 @@ export const formOutgoingEmailFromData = ({
     email,
     recipients,
     labels,
-    body: secure || isDraft || isEnterprise ? body : `${body}${formAppSign()}`,
+    body,
     files
   };
 
+  const bodyWithSign =
+    secure || isEnterprise ? body : `${body}${formAppSign()}`;
+
   return {
+    bodyWithSign,
     emailData,
     recipientDomains
   };
