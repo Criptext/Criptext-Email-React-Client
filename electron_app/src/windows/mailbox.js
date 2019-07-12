@@ -70,7 +70,12 @@ const create = () => {
   mailboxWindow.on('close', e => {
     if (!globalManager.forcequit.get()) {
       e.preventDefault();
-      hide();
+      if (mailboxWindow.isFullScreen()) {
+        mailboxWindow.setFullScreen(false);
+        setTimeout(() => hide(), 1200);
+      } else {
+        hide();
+      }
     } else {
       destroyTrayIcon();
       require('./../socketClient').disconnect();
