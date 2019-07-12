@@ -11,7 +11,7 @@ int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t si
     CriptextDB::SignedPreKey signedPreKey;
 
     try {
-        signedPreKey = CriptextDB::getSignedPreKey("Criptext.db", signed_pre_key_id, account->id);
+        signedPreKey = CriptextDB::getSignedPreKey("../../electron_app/Criptext.db", signed_pre_key_id);
     } catch (exception& e){
         return 0;
     }
@@ -54,7 +54,7 @@ int signed_pre_key_store_store_signed_pre_key(uint32_t signed_pre_key_id, uint8_
     char * signedKeyRecord = reinterpret_cast<char *>(record);
 
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    bool success = CriptextDB::createSignedPreKey("Criptext.db", signed_pre_key_id, signedKeyRecord, account->id);
+    bool success = CriptextDB::createSignedPreKey("../../electron_app/Criptext.db", signed_pre_key_id, signedKeyRecord);
     return success ? 1 : 0;
 }
 
@@ -62,7 +62,7 @@ int signed_pre_key_store_contains_signed_pre_key(uint32_t signed_pre_key_id, voi
 {
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     try {
-        CriptextDB::getSignedPreKey("Criptext.db", signed_pre_key_id, account->id);
+        CriptextDB::getSignedPreKey("../../electron_app/Criptext.db", signed_pre_key_id);
     } catch (exception& e){
         return 0;
     }
@@ -72,7 +72,7 @@ int signed_pre_key_store_contains_signed_pre_key(uint32_t signed_pre_key_id, voi
 int signed_pre_key_store_remove_signed_pre_key(uint32_t signed_pre_key_id, void *user_data)
 {
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    bool success = CriptextDB::deleteSignedPreKey("Criptext.db", signed_pre_key_id, account->id);
+    bool success = CriptextDB::deleteSignedPreKey("../../electron_app/Criptext.db", signed_pre_key_id);
     return success ? 1 : 0;
 }
 

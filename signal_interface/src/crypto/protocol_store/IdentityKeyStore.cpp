@@ -41,7 +41,7 @@ int identity_key_store_save_identity(const signal_protocol_address *address, uin
 
     char *identityKey = reinterpret_cast<char *>(key_data);
     std::cout << identityKey << std::endl;
-    CriptextDB::createIdentityKey("Criptext.db", recipientId, deviceId, identityKey, account->id);
+    CriptextDB::createIdentityKey("../../electron_app/Criptext.db", recipientId, deviceId, identityKey);
     return 1;
 }
 

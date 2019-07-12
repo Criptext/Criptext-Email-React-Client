@@ -14,9 +14,9 @@ namespace CriptextDB {
     string pubKey;
   };
 
-  PreKey getPreKey(string dbPath, short int id, int accountId);
-  bool createPreKey(string dbPath, short int id, char *keyRecord, int accountId);
-  bool deletePreKey(string dbPath, short int id, int accountId);
+  PreKey getPreKey(string dbPath, short int id);
+  bool createPreKey(string dbPath, short int id, char *keyRecord);
+  bool deletePreKey(string dbPath, short int id);
 
 } 
 

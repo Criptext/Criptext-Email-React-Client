@@ -6,13 +6,11 @@
 
 using namespace std;
 
-CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id, int accountId) {
-  std::cout << "Get SignedPreKey : " << id << " : " <<  dbPath << " : " << accountId << std::endl;
+CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id) {
   SQLite::Database db(dbPath);
 
-  SQLite::Statement query(db, "Select * from signedprekeyrecord where signedPreKeyId == ? and accountId == ?");
+  SQLite::Statement query(db, "Select * from signedprekeyrecord where signedPreKeyId == ?");
   query.bind(1, id);
-  query.bind(2, accountId);
 
   query.executeStep();
 
@@ -20,16 +18,15 @@ CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id
   return signedPreKey;
 }
 
-bool CriptextDB::createSignedPreKey(string dbPath, short int id, char *keyRecord, int accountId) {
+bool CriptextDB::createSignedPreKey(string dbPath, short int id, char *keyRecord) {
   std::cout << "Create SignedPreKey : " << id << std::endl;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 
-    SQLite::Statement query(db, "insert into signedprekeyrecord (signedPreKeyId, signedPreKeyPrivKey, signedPreKeyPubKey, accountId) values (?,?,?,?)");
+    SQLite::Statement query(db, "insert into signedprekeyrecord (signedPreKeyId, signedPreKeyPrivKey, signedPreKeyPubKey) values (?,?,?)");
     query.bind(1, id);
     query.bind(2, keyRecord);
     query.bind(3, "");
-    query.bind(4, accountId);
 
     query.exec();
   } catch (exception& e) {
@@ -39,14 +36,13 @@ bool CriptextDB::createSignedPreKey(string dbPath, short int id, char *keyRecord
   return true;
 }
 
-bool CriptextDB::deleteSignedPreKey(string dbPath, short int id, int accountId) {
+bool CriptextDB::deleteSignedPreKey(string dbPath, short int id) {
   std::cout << "Delete SignedPreKey : " << id << std::endl;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 
-    SQLite::Statement query(db, "delete from signedPrekeyrecord where signedPreKeyId == ? and accountId == ?");
+    SQLite::Statement query(db, "delete from signedPrekeyrecord where signedPreKeyId == ?");
     query.bind(1, id);
-    query.bind(2, accountId);
 
     query.exec();
   } catch (exception& e) {

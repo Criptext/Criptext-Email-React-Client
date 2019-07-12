@@ -14,7 +14,7 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
     CriptextDB::PreKey preKey;
 
     try {
-        preKey = CriptextDB::getPreKey("Criptext.db", pre_key_id, account->id);
+        preKey = CriptextDB::getPreKey("../../electron_app/Criptext.db", pre_key_id);
     } catch (exception& e){
         return 0;
     }
@@ -55,7 +55,7 @@ int pre_key_store_store_pre_key(uint32_t pre_key_id, uint8_t *record, size_t rec
     char *preKeyRecord = reinterpret_cast<char *>(record);
 
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    bool success = CriptextDB::createPreKey("Criptext.db", pre_key_id, preKeyRecord, account->id);
+    bool success = CriptextDB::createPreKey("../../electron_app/Criptext.db", pre_key_id, preKeyRecord);
     return success ? 1 : 0;
 }
 
@@ -66,7 +66,7 @@ int pre_key_store_contains_pre_key(uint32_t pre_key_id, void *user_data)
     CriptextDB::PreKey preKey;
 
     try {
-        preKey = CriptextDB::getPreKey("Criptext.db", pre_key_id, account->id);
+        preKey = CriptextDB::getPreKey("../../electron_app/Criptext.db", pre_key_id);
     } catch (exception& e){
         return 0;
     }
@@ -77,7 +77,7 @@ int pre_key_store_contains_pre_key(uint32_t pre_key_id, void *user_data)
 int pre_key_store_remove_pre_key(uint32_t pre_key_id, void *user_data) {
     std::cout << "REMOVE PREKEY" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    bool success = CriptextDB::deletePreKey("Criptext.db", pre_key_id, account->id);
+    bool success = CriptextDB::deletePreKey("../../electron_app/Criptext.db", pre_key_id);
     return success ? 1 : 0;
 }
 

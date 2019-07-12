@@ -14,7 +14,7 @@ int session_store_load_session(signal_buffer **record, signal_buffer **user_reco
     CriptextDB::SessionRecord sessionRecord;
 
     try {
-        sessionRecord = CriptextDB::getSessionRecord("Criptext.db", account->id, recipientId, deviceId);
+        sessionRecord = CriptextDB::getSessionRecord("../../electron_app/Criptext.db", recipientId, deviceId);
     } catch (exception& e) {
         return 0;
     }
@@ -39,7 +39,7 @@ int session_store_get_sub_device_sessions(signal_int_list **sessions, const char
 
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(name, name_len);
-    vector<CriptextDB::SessionRecord> sessionRecords = CriptextDB::getSessionRecords("Criptext.db", account->id, recipientId);
+    vector<CriptextDB::SessionRecord> sessionRecords = CriptextDB::getSessionRecords("../../electron_app/Criptext.db", recipientId);
 
     for (std::vector<CriptextDB::SessionRecord>::iterator it = sessionRecords.begin(); it != sessionRecords.end(); ++it) {
       signal_int_list_push_back(result, it->deviceId);
@@ -183,7 +183,7 @@ int session_store_store_session(const signal_protocol_address *address, uint8_t 
     session_record_deserialize(&sessionRecord, record, record_len, global_context);
 
     std::string mySessionRecord = build_session_record_string(sessionRecord);
-    bool success = CriptextDB::createSessionRecord("Criptext.db", account->id, recipientId, deviceId, mySessionRecord);
+    bool success = CriptextDB::createSessionRecord("../../electron_app/Criptext.db", recipientId, deviceId, mySessionRecord);
     std::cout << mySessionRecord << std::endl;
     return success ? 1 : 0;
 }
@@ -196,7 +196,7 @@ int session_store_contains_session(const signal_protocol_address *address, void 
     int deviceId = address->device_id;
 
     try {
-        CriptextDB::getSessionRecord("Criptext.db", account->id, recipientId, deviceId);
+        CriptextDB::getSessionRecord("../../electron_app/Criptext.db", recipientId, deviceId);
     } catch (exception& e) {
         return 0;
     }
@@ -210,7 +210,7 @@ int session_store_delete_session(const signal_protocol_address *address, void *u
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
-    bool success = CriptextDB::deleteSessionRecord("Criptext.db", account->id, recipientId, deviceId);
+    bool success = CriptextDB::deleteSessionRecord("../../electron_app/Criptext.db", recipientId, deviceId);
 
     return success ? 1 : 0;
 }
@@ -220,7 +220,7 @@ int session_store_delete_all_sessions(const char *name, size_t name_len, void *u
     std::cout << "DELETE ALL SESSIONS" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(name, name_len);
-    bool success = CriptextDB::deleteSessionRecords("Criptext.db", account->id, recipientId);
+    bool success = CriptextDB::deleteSessionRecords("../../electron_app/Criptext.db", recipientId);
 
     return success ? 1 : 0;
 }

@@ -24,24 +24,22 @@ int postDecrypt(struct mg_connection *conn, void *cbdata) {
   }
   std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
-  cJSON *senderId, *deviceId, *type, *accountId, *body, *headers, *fileKeys;
+  cJSON *senderId, *deviceId, *type, *recipientId, *body, *headers, *fileKeys;
   senderId = cJSON_GetObjectItemCaseSensitive(obj, "senderId");
   deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
-  accountId = cJSON_GetObjectItemCaseSensitive(obj, "accountId");
+  recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
   type = cJSON_GetObjectItemCaseSensitive(obj, "messageType");
   body = cJSON_GetObjectItemCaseSensitive(obj, "body");
   headers = cJSON_GetObjectItemCaseSensitive(obj, "headers");
   fileKeys = cJSON_GetObjectItemCaseSensitive(obj, "fileKeys");
 
-  std::cout << "senderId -> " << senderId->valueint << " body -> " << body->valuestring << std::endl;
-
-  if (!cJSON_IsNumber(accountId) || !cJSON_IsString(senderId) || !cJSON_IsNumber(deviceId) || !cJSON_IsNumber(type)) {
+  if (!cJSON_IsString(recipientId) || !cJSON_IsString(senderId) || !cJSON_IsNumber(deviceId) || !cJSON_IsNumber(type)) {
     mg_send_http_error(conn, 400, "%s", "No request data");
     std::cout << "Receiving Request Fail 3" << std::endl;
     return 400;
   }
 
-  CriptextSignal signal(accountId->valueint);
+  CriptextSignal signal(recipientId->valuestring);
 
   uint8_t *plaintext_data = 0;
   size_t plaintext_len = 0;

@@ -5,15 +5,14 @@
 
 using namespace std;
 
-CriptextDB::IdentityKey CriptextDB::getIdentityKey(string dbPath, string recipientId, long int deviceId, int accountId) {
+CriptextDB::IdentityKey CriptextDB::getIdentityKey(string dbPath, string recipientId, long int deviceId) {
   std::cout << "Get Identity Key : " << recipientId << std::endl;
 
   SQLite::Database db(dbPath);
 
-  SQLite::Statement query(db, "Select * from identitykeyrecord where recipientId == ? and deviceId == ? and accountId == ?");
+  SQLite::Statement query(db, "Select * from identitykeyrecord where recipientId == ? and deviceId == ?");
   query.bind(1, recipientId);
   query.bind(2, deviceId);
-  query.bind(3, accountId);
 
   query.executeStep();
 
@@ -21,17 +20,16 @@ CriptextDB::IdentityKey CriptextDB::getIdentityKey(string dbPath, string recipie
   return identityKey;
 }
 
-bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int deviceId, char *identityKey, int accountId) {
+bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int deviceId, char *identityKey) {
   std::cout << "Create Identity Key : " << recipientId << std::endl;
 
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
     SQLite::Transaction transaction(db);
 
-    SQLite::Statement getQuery(db, "Select * from identitykeyrecord where recipientId == ? and deviceId == ? and accountId == ?");
+    SQLite::Statement getQuery(db, "Select * from identitykeyrecord where recipientId == ? and deviceId == ?");
     getQuery.bind(1, recipientId);
     getQuery.bind(2, deviceId);
-    getQuery.bind(3, accountId);
 
     getQuery.executeStep();
 
@@ -46,7 +44,6 @@ bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int device
       query.bind(1, recipientId);
       query.bind(2, deviceId);
       query.bind(3, identityKey);
-      query.bind(4, accountId);
       query.exec();
     }
 

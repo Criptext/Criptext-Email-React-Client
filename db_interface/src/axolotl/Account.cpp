@@ -3,15 +3,15 @@
 
 using namespace std;
 
-CriptextDB::Account CriptextDB::getAccount(string dbPath, int accountId) {
+CriptextDB::Account CriptextDB::getAccount(string dbPath, char *recipientId) {
   SQLite::Database db(dbPath);
 
-  SQLite::Statement query(db, "select * from account where id == ?");
-  query.bind(1, accountId);
+  SQLite::Statement query(db, "select * from account where recipientId == ?");
+  query.bind(1, recipientId);
 
   query.executeStep();
 
-  Account account = { query.getColumn(0).getInt(), query.getColumn(6).getString(), query.getColumn(7).getString(), query.getColumn(8).getInt() };
+  Account account = { query.getColumn(0).getInt(), query.getColumn(6).getString(), query.getColumn(7).getString(), query.getColumn(5).getInt() };
   return account;
 }
 

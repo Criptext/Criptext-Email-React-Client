@@ -26,9 +26,9 @@ class CriptextSignal {
         int generatePreKey(cJSON *preKeyJson, int index);
 
     public :
-        CriptextSignal(int accountId);
+        CriptextSignal(char *recipientId);
         int decryptText(uint8_t **plaintext_data, size_t *plaintext_len, std::string encryptedText, std::string recipientId, int deviceId, int message_type);
-        int generateKeyBundle(cJSON *bundle, string recipientId, int deviceId, int accountId);
+        int generateKeyBundle(cJSON *bundle, string recipientId, int deviceId);
 
         void clean();
 

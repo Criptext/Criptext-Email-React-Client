@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 
-CriptextSignal::CriptextSignal(int accountId){
+CriptextSignal::CriptextSignal(char *recipientId){
     signal_context_create(&global_context, 0);
     signal_crypto_provider provider = {
         .random_func = random_generator,
@@ -21,7 +21,7 @@ CriptextSignal::CriptextSignal(int accountId){
 
     signal_context_set_crypto_provider(global_context, &provider);
     try {
-        account = CriptextDB::getAccount("Criptext.db", accountId);
+        account = CriptextDB::getAccount("../../electron_app/Criptext.db", recipientId);
     } catch (exception &e) {
         return;
     }
@@ -99,7 +99,7 @@ int CriptextSignal::generatePreKey(cJSON *preKeyJson, int index) {
     const char * publicB64 = reinterpret_cast<const char *>(base64_encode(publicChar, publicLen, &publicEncodeLen));
 
     store->pre_key_store.store_pre_key(index, signal_buffer_data(buffer), signal_buffer_len(buffer), store->pre_key_store.user_data);
-    cJSON_AddStringToObject(preKeyJson, "public", publicB64);
+    cJSON_AddStringToObject(preKeyJson, "publicKey", publicB64);
 	cJSON_AddNumberToObject(preKeyJson, "id", index);
 
     return 0;
@@ -147,7 +147,7 @@ int CriptextSignal::createSignedPrekey(char **encodedSignedPublicPreKey, char **
     return result;
 }
 
-int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int deviceId, int accountId) {
+int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int deviceId) {
     int result = 0;
 
     ec_private_key *identityPrivateKey = 0;
