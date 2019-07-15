@@ -179,6 +179,7 @@ const createEmails = async (
 const encryptPostEmail = async ({
   recipients,
   body,
+  bodyWithSign,
   preview,
   subject,
   threadId,
@@ -245,7 +246,7 @@ const encryptPostEmail = async ({
     recipients,
     guestDomains,
     files,
-    body
+    body: bodyWithSign
   });
   const data = noNulls({
     subject,

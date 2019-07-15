@@ -541,7 +541,11 @@ class ComposerWrapper extends Component {
       toEmails: this.state.toEmails,
       threadId: this.state.threadId || temporalThreadId
     };
-    const { emailData, recipientDomains } = formOutgoingEmailFromData(data);
+    const {
+      bodyWithSign,
+      emailData,
+      recipientDomains
+    } = formOutgoingEmailFromData(data);
     let emailId, key;
     try {
       const files = await getFileParamsToSend(this.state.files);
@@ -569,6 +573,7 @@ class ComposerWrapper extends Component {
             : emailData.email.threadId,
         recipients,
         body: emailData.body,
+        bodyWithSign,
         preview: emailData.email.preview,
         files,
         peer,
@@ -775,7 +780,6 @@ class ComposerWrapper extends Component {
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
-      isDraft: true,
       labelId: LabelType.draft.id,
       secure: false,
       textSubject: this.state.textSubject,

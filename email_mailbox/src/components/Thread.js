@@ -82,6 +82,10 @@ class Thread extends Component {
       return this.props.onBackOption();
     }
 
+    if (prevProps.thread.id !== this.props.thread.id) {
+      this.props.onLoadEmails(this.props.thread.emailIds);
+    }
+
     if (
       this.props.thread.unread &&
       prevProps.emailKeysUnread.length !== this.props.emailKeysUnread.length
