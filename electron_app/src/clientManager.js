@@ -270,6 +270,13 @@ const insertPreKeys = async preKeys => {
     : await checkExpiredSession(res, insertPreKeys, preKeys);
 };
 
+const isCriptextDomain = async domains => {
+  const res = await client.isCriptextDomain(domains);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, insertPreKeys, preKeys);
+};
+
 const linkAccept = async randomId => {
   const data = { randomId, version: LINK_DEVICES_FILE_VERSION };
   const res = await client.linkAccept(data);
@@ -526,6 +533,7 @@ module.exports = {
   getKeyBundle,
   getUserSettings,
   insertPreKeys,
+  isCriptextDomain,
   linkAccept,
   linkAuth,
   linkBegin,

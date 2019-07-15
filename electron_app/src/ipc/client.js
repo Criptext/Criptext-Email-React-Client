@@ -49,6 +49,10 @@ ipc.answerRenderer('client-insert-prekeys', preKeys =>
   clientManager.insertPreKeys(preKeys)
 );
 
+ipc.answerRenderer('client-is-criptext-domain', domains =>
+  clientManager.isCriptextDomain(domains)
+);
+
 ipc.answerRenderer('client-link-accept', randomId =>
   clientManager.linkAccept(randomId)
 );
