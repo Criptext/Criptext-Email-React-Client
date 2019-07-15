@@ -90,6 +90,7 @@ const createEmails = async (
       criptextEmailsByRecipientId[recipientId] = {
         username,
         domain,
+        type,
         emails: []
       };
     }
@@ -157,14 +158,13 @@ const createEmails = async (
           let criptextEmail = {
             recipientId: username,
             deviceId,
-            type,
             body: bodyEncrypted.body,
             messageType: bodyEncrypted.type,
             preview: previewEncripted.body,
             previewMessageType: previewEncripted.type
           };
           if (fileKey) {
-            criptextEmail = { ...criptextEmail, fileKey: fileKey, fileKeys };
+            criptextEmail = { ...criptextEmail, fileKey, fileKeys };
           }
           criptextEmailsByRecipientId[recipientId]['emails'].push(
             criptextEmail
