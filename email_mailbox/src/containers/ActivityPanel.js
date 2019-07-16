@@ -3,7 +3,7 @@ import { loadFeedItems } from './../actions/index';
 import ActivityPanelView from './../components/ActivityPanel';
 
 const orderFeedsByDate = feeds => {
-  return feeds.sortBy(feed => feed.get('date')).reverse();
+  return feeds.sortBy(feed => feed.get('date'));
 };
 
 const clasifyFeeds = feeds => {

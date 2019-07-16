@@ -44,6 +44,10 @@ export const findKeyBundles = async params => {
   return await callMain('client-find-key-bundles', params);
 };
 
+export const isCriptextDomain = async domains => {
+  return await callMain('client-is-criptext-domain', domains);
+};
+
 export const postEmail = async params => {
   return await callMain('client-post-email', params);
 };

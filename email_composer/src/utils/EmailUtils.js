@@ -10,11 +10,12 @@ import {
   appDomain,
   composerEvents,
   defaultEmptyMimetypeValue,
+  externalDomains,
   previewLength
 } from './const';
 import { FILE_MODES } from './FileUtils';
 import { Status } from '../components/Control';
-import { HTMLTagsRegex } from './RegexUtils';
+import { emailRegex, HTMLTagsRegex } from './RegexUtils';
 
 const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
 
@@ -347,7 +348,20 @@ export const parseEmailAddress = emailAddress => {
   email = email.toLowerCase();
   const emailTag = isEmailTag ? email : `<${email}>`;
   const complete = `${name || ''} ${emailTag}`;
-  return { name, email, complete: complete.trim() };
+  const domain = email.split('@')[1];
+  const form = emailRegex.test(email)
+    ? email.includes(`@${appDomain}`)
+      ? 'tag-app-domain'
+      : 'tag-default'
+    : 'tag-error';
+  const state =
+    form === 'tag-default'
+      ? externalDomains.includes(domain)
+        ? undefined
+        : 'tag-loading'
+      : undefined;
+  const contact = { name, email, complete: complete.trim(), state, form };
+  return { contact, domain };
 };
 
 export const parseContactRow = contact => {

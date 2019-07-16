@@ -14,6 +14,7 @@ import {
   createEmailLabel,
   deleteEmailsByIds,
   getEmailByKey,
+  isCriptextDomain,
   saveDraftChangesComposerWindow,
   saveEmailBody,
   throwError,
@@ -183,6 +184,27 @@ class ComposerWrapper extends Component {
     });
   }
 
+  checkContactDomain = async (stateKey, contactToCheck, domainToCheck) => {
+    const res = await isCriptextDomain([domainToCheck]);
+    const isUserEnterprise = res.body[0].isCriptextDomain;
+    const index = this.state[stateKey].findIndex(item => {
+      return item.email === contactToCheck.email;
+    });
+    this.setState(state => {
+      const emails = [...state[stateKey]];
+      const contact = state[stateKey][index];
+      const contactChecked = {
+        ...contact,
+        state: undefined,
+        form: isUserEnterprise ? 'tag-app-domain' : contact.form
+      };
+      emails.splice(index, 1, contactChecked);
+      return {
+        [stateKey]: emails
+      };
+    });
+  };
+
   defineFocusInput = emailToEdit => {
     let isFocusRecipientInput = false,
       isFocusSubjectInput = false,
@@ -237,8 +259,18 @@ class ComposerWrapper extends Component {
     });
   };
 
-  handleGetToEmail = emails => {
-    const parsedEmails = emails.map(item => parseEmailAddress(item));
+  handleGetToEmail = async emails => {
+    let parsedEmails = [];
+    let contactToCheck = {};
+    let domainToCheck;
+    if (emails.length > this.state.toEmails.length) {
+      const { contact, domain } = parseEmailAddress(emails[emails.length - 1]);
+      contactToCheck = contact;
+      domainToCheck = domain;
+      parsedEmails = [...this.state.toEmails, contact];
+    } else {
+      parsedEmails = emails;
+    }
     const status = this.checkAndGetSendButtonStatus(
       parsedEmails,
       this.state.ccEmails,
@@ -247,10 +279,23 @@ class ComposerWrapper extends Component {
     this.setState({ toEmails: parsedEmails, status }, () =>
       this.saveTemporalDraft()
     );
+    if (contactToCheck.state) {
+      await this.checkContactDomain('toEmails', contactToCheck, domainToCheck);
+    }
   };
 
-  handleGetCcEmail = emails => {
-    const parsedEmails = emails.map(item => parseEmailAddress(item));
+  handleGetCcEmail = async emails => {
+    let parsedEmails = [];
+    let contactToCheck = {};
+    let domainToCheck;
+    if (emails.length > this.state.ccEmails.length) {
+      const { contact, domain } = parseEmailAddress(emails[emails.length - 1]);
+      contactToCheck = contact;
+      domainToCheck = domain;
+      parsedEmails = [...this.state.ccEmails, contact];
+    } else {
+      parsedEmails = emails;
+    }
     const status = this.checkAndGetSendButtonStatus(
       this.state.toEmails,
       parsedEmails,
@@ -259,10 +304,23 @@ class ComposerWrapper extends Component {
     this.setState({ ccEmails: parsedEmails, status }, () =>
       this.saveTemporalDraft()
     );
+    if (contactToCheck.state) {
+      await this.checkContactDomain('ccEmails', contactToCheck, domainToCheck);
+    }
   };
 
-  handleGetBccEmail = emails => {
-    const parsedEmails = emails.map(item => parseEmailAddress(item));
+  handleGetBccEmail = async emails => {
+    let parsedEmails = [];
+    let contactToCheck = {};
+    let domainToCheck;
+    if (emails.length > this.state.bccEmails.length) {
+      const { contact, domain } = parseEmailAddress(emails[emails.length - 1]);
+      contactToCheck = contact;
+      domainToCheck = domain;
+      parsedEmails = [...this.state.bccEmails, contact];
+    } else {
+      parsedEmails = emails;
+    }
     const status = this.checkAndGetSendButtonStatus(
       this.state.toEmails,
       this.state.ccEmails,
@@ -271,6 +329,9 @@ class ComposerWrapper extends Component {
     this.setState({ bccEmails: parsedEmails, status }, () =>
       this.saveTemporalDraft()
     );
+    if (contactToCheck.state) {
+      await this.checkContactDomain('bccEmails', contactToCheck, domainToCheck);
+    }
   };
 
   checkAndGetSendButtonStatus = (toEmails, ccEmails, bccEmails) => {
@@ -631,38 +692,83 @@ class ComposerWrapper extends Component {
     switch (type) {
       case 'to':
         {
-          this.setState(state => {
-            const emails = [...state.toEmails];
-            const contact = parseEmailAddress(value);
-            emails.splice(key, 1, contact);
-            return {
-              toEmails: emails
-            };
-          });
+          let contactToCheck = {};
+          let domainToCheck;
+          this.setState(
+            state => {
+              const emails = [...state.toEmails];
+              const { domain, contact } = parseEmailAddress(value);
+              contactToCheck = contact;
+              domainToCheck = domain;
+              emails.splice(key, 1, contact);
+              return {
+                toEmails: emails
+              };
+            },
+            async () => {
+              if (contactToCheck.state) {
+                await this.checkContactDomain(
+                  'toEmails',
+                  contactToCheck,
+                  domainToCheck
+                );
+              }
+            }
+          );
         }
         break;
       case 'cc':
         {
-          this.setState(state => {
-            const emails = [...state.ccEmails];
-            const contact = parseEmailAddress(value);
-            emails.splice(key, 1, contact);
-            return {
-              ccEmails: emails
-            };
-          });
+          let contactToCheck = {};
+          let domainToCheck;
+          this.setState(
+            state => {
+              const emails = [...state.ccEmails];
+              const { domain, contact } = parseEmailAddress(value);
+              contactToCheck = contact;
+              domainToCheck = domain;
+              emails.splice(key, 1, contact);
+              return {
+                ccEmails: emails
+              };
+            },
+            async () => {
+              if (contactToCheck.state) {
+                await this.checkContactDomain(
+                  'ccEmails',
+                  contactToCheck,
+                  domainToCheck
+                );
+              }
+            }
+          );
         }
         break;
       case 'bcc':
         {
-          this.setState(state => {
-            const emails = [...state.bccEmails];
-            const contact = parseEmailAddress(value);
-            emails.splice(key, 1, contact);
-            return {
-              bccEmails: emails
-            };
-          });
+          let contactToCheck = {};
+          let domainToCheck;
+          this.setState(
+            state => {
+              const emails = [...state.bccEmails];
+              const { domain, contact } = parseEmailAddress(value);
+              contactToCheck = contact;
+              domainToCheck = domain;
+              emails.splice(key, 1, contact);
+              return {
+                bccEmails: emails
+              };
+            },
+            async () => {
+              if (contactToCheck.state) {
+                await this.checkContactDomain(
+                  'bccEmails',
+                  contactToCheck,
+                  domainToCheck
+                );
+              }
+            }
+          );
         }
         break;
       default:
