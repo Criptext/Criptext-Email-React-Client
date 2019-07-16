@@ -274,7 +274,7 @@ const isCriptextDomain = async domains => {
   const res = await client.isCriptextDomain(domains);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, insertPreKeys, preKeys);
+    : await checkExpiredSession(res, isCriptextDomain, domains);
 };
 
 const linkAccept = async randomId => {

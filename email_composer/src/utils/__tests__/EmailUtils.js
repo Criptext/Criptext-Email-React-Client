@@ -72,8 +72,8 @@ describe('Form outgoing email: ', () => {
 describe('Parse email address: ', () => {
   it('Should parse object', () => {
     const emailObject = { name: 'User name', email: 'username@domain.com' };
-    const result = parseEmailAddress(emailObject);
-    expect(result).toMatchObject({
+    const { contact } = parseEmailAddress(emailObject);
+    expect(contact).toMatchObject({
       name: emailObject.name,
       email: emailObject.email,
       complete: `${emailObject.name} <${emailObject.email}>`
@@ -82,8 +82,8 @@ describe('Parse email address: ', () => {
 
   it('Should parse object, email address with uppercase', () => {
     const emailObject = { name: 'User name', email: 'usernAme@domain.com' };
-    const result = parseEmailAddress(emailObject);
-    expect(result).toMatchObject({
+    const { contact } = parseEmailAddress(emailObject);
+    expect(contact).toMatchObject({
       name: emailObject.name,
       email: emailObject.email.toLowerCase(),
       complete: `${emailObject.name} <${emailObject.email.toLowerCase()}>`
@@ -92,8 +92,8 @@ describe('Parse email address: ', () => {
 
   it('Should parse object with app domain and email address with uppercase', () => {
     const emailObject = { name: 'User name', email: `userName@${appDomain}` };
-    const result = parseEmailAddress(emailObject);
-    expect(result).toMatchObject({
+    const { contact } = parseEmailAddress(emailObject);
+    expect(contact).toMatchObject({
       name: emailObject.name,
       email: emailObject.email.toLowerCase(),
       complete: `${emailObject.name} <${emailObject.email.toLowerCase()}>`
@@ -102,8 +102,8 @@ describe('Parse email address: ', () => {
 
   it('Should parse text: email address', () => {
     const text = 'username@domain.com';
-    const result = parseEmailAddress(text);
-    expect(result).toMatchObject({
+    const { contact } = parseEmailAddress(text);
+    expect(contact).toMatchObject({
       name: undefined,
       email: text,
       complete: `<${text}>`
@@ -113,8 +113,8 @@ describe('Parse email address: ', () => {
   it('Should parse text: email address tag', () => {
     const text = '<username@domain.com>';
     const textClean = text.replace(/<|>/g, '').trim();
-    const result = parseEmailAddress(text);
-    expect(result).toMatchObject({
+    const { contact } = parseEmailAddress(text);
+    expect(contact).toMatchObject({
       name: undefined,
       email: textClean,
       complete: textClean
@@ -123,8 +123,8 @@ describe('Parse email address: ', () => {
 
   it('Should parse text: email address tag with name', () => {
     const text = 'User name <username@domain.com>';
-    const result = parseEmailAddress(text);
-    expect(result).toMatchObject({
+    const { contact } = parseEmailAddress(text);
+    expect(contact).toMatchObject({
       name: 'User name',
       email: 'username@domain.com',
       complete: text
