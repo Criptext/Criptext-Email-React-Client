@@ -9,6 +9,11 @@ const { processEventsQueue } = require('../eventQueueManager');
 const globalManager = require('./../globalManager');
 const loadingWindow = require('./../windows/loading');
 const { getSystemLanguage } = require('./../windows/windowUtils');
+const {
+  createDefaultBackupFolder,
+  exportBackupFile,
+  getDefaultBackupFolder
+} = require('./../BackupManager');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
@@ -89,6 +94,17 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
   loadingWindow.show();
   return await clientManager.acknowledgeEvents([data.rowid]);
 };
+
+// Backup
+ipc.answerRenderer('create-default-backup-folder', () =>
+  createDefaultBackupFolder()
+);
+
+ipc.answerRenderer('export-backup-file', ({ customPath, password }) =>
+  exportBackupFile({ customPath, password })
+);
+
+ipc.answerRenderer('get-default-backup-folder', () => getDefaultBackupFolder());
 
 module.exports = {
   sendLinkDeviceStartEventToAllWindows,

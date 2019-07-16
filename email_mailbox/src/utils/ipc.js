@@ -491,3 +491,13 @@ export const importDatabase = async () => {
 export const clearSyncData = async () => {
   return await callMain('data-transfer-clear-sync-data');
 };
+
+/* Backup
+----------------------------- */
+export const createDefaultBackupFolder = async () => {
+  return await callMain('create-default-backup-folder');
+};
+
+export const exportBackupFile = async ({ customPath, password }) => {
+  return await callMain('export-backup-file', { customPath, password });
+};

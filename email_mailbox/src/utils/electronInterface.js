@@ -2,7 +2,7 @@ import { labels } from './systemLabels';
 import { cleanDataLogout as cleanData, createSignalTables } from './ipc';
 
 const { remote } = window.require('electron');
-const { getCurrentWindow } = remote;
+const { getCurrentWindow, dialog } = remote;
 
 const newsClient = remote.require('./src/newsClient');
 const globalManager = remote.require('./src/globalManager');
@@ -35,6 +35,11 @@ export const getDeviceType = () => globalManager.deviceType.id;
 ----------------------------- */
 export const reloadWindow = () => {
   getCurrentWindow().reload();
+};
+
+export const showSaveFileDialog = (fileName, callback) => {
+  const options = { defaultPath: fileName };
+  dialog.showSaveDialog(null, options, callback);
 };
 
 /*  News Client

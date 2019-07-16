@@ -509,6 +509,12 @@ const generateKeyAndIv = (keySize, ivSize) => {
   }
 };
 
+const generateKeyAndIvFromPassword = password => {
+  const key = crypto.scryptSync(password, 'salt', 128 / 8);
+  const iv = crypto.randomBytes(DEFAULT_KEY_LENGTH);
+  return { key, iv };
+};
+
 const encryptStreamFile = ({ inputFile, outputFile, key, iv }) => {
   return new Promise((resolve, reject) => {
     const reader = fs.createReadStream(inputFile, {
@@ -559,5 +565,6 @@ module.exports = {
   exportDatabaseToFile,
   decryptStreamFile,
   generateKeyAndIv,
+  generateKeyAndIvFromPassword,
   importDatabaseFromFile
 };

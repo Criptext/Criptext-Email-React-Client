@@ -365,9 +365,9 @@
       "confirmButtonLabel": "Enviar"
     },
     "export_backup": {
-      "title": "Exportar Archivo de Respaldo",
-      "switchLabel": "Encriptar archivo",
-      "description": "Si pierdes/olvidas esta contraseña, ¡No serás capaz de restaurar este respaldo después!",
+      "title": "Exportar Respaldo",
+      "switchLabel": "Encriptar respaldo",
+      "description": "Si olvidas/pierdes esta contraseña no podrás restaurar tu respaldo en el futuro",
       "inputPassphrase": {
         "placeholder": "Ingrese contraseña",
         "errorMessages": {
@@ -379,10 +379,10 @@
       },
       "note": {
         "header": "Nota: ",
-        "content": "Por tu seguridad, te sugerimos que elijas encriptar el archivo de respaldo"
+        "content": "Por tu seguridad, sugerimos encriptar el respaldo"
       },
       "buttons": {
-        "send": "Respaldar",
+        "send": "Guardar",
         "cancel": "Cancelar"
       }
     },
@@ -491,11 +491,11 @@
     "mailbox_backup": {
       "manual": {
         "label": "Respaldo de buzón",
-        "button": "Exportar Archivo de Respaldo"
+        "button": "Exportar Respaldo"
       },
       "auto": {
-        "label": "Respaldo de correos",
-        "description": "Nota: Los respaldos automáticos no están protegidos con contraseña",
+        "label": "Auto-Respaldo",
+        "description": "Nota: Auto-Respaldos no están protegidos con contraseña",
         "backup_now": "Respaldar ahora",
         "last_backup": "Último respaldo",
         "backup_folder": "Carpeta de destino",
@@ -505,7 +505,8 @@
           "daily": "Diario",
           "weekly": "Semanal",
           "monthly": "Mensual"
-        }
+        },
+        "backing_up_mailbox": "Exportando archivo de respaldo..."
       }
     },
     "backupLastLabels": {

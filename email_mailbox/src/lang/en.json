@@ -505,7 +505,8 @@
           "daily": "Daily",
           "weekly": "Weekly",
           "monthly": "Monthly"
-        }
+        },
+        "backing_up_mailbox": "Exporting backup file..."
       }
     },
     "cancel": "Cancel",

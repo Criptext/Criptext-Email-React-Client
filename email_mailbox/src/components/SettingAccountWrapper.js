@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { myAccount, requiredMinLength } from './../utils/electronInterface';
+import {
+  myAccount,
+  requiredMinLength,
+  showSaveFileDialog
+} from './../utils/electronInterface';
 import {
   changePassword,
   changeRecoveryEmail,
   setReplyTo,
-  setTwoFactorAuth
+  setTwoFactorAuth,
+  createDefaultBackupFolder
 } from './../utils/ipc';
 import {
   addEvent,
@@ -156,6 +161,7 @@ class SettingAccountWrapper extends Component {
       },
       mailboxBackup: {
         password: '',
+        filePath: '',
         displayProgressBar: false
       }
     };
@@ -450,16 +456,21 @@ class SettingAccountWrapper extends Component {
     });
   };
 
-  handleSetExportBackupPassword = ({ password }) => {
-    this.setState(
-      {
+  handleSetExportBackupPassword = async ({ password }) => {
+    this.handleClosePopup();
+    const defaultBackuppath = await createDefaultBackupFolder();
+    const defaultFileName = `${defaultBackuppath}/${
+      password ? 'backup.enc' : 'backup.db'
+    }`;
+    showSaveFileDialog(defaultFileName, pathToSaveBackup => {
+      this.setState({
         mailboxBackup: {
           password,
-          displayProgressBar: true
+          filePath: pathToSaveBackup,
+          displayProgressBar: !!pathToSaveBackup
         }
-      },
-      this.handleClosePopup
-    );
+      });
+    });
   };
 
   handleClickResendConfirmationLink = async () => {

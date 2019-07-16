@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SettingsAccountBackup from './SettingsAccountBackup';
+import string from './../lang';
+import { exportBackupFile } from '../utils/ipc';
+
+const { auto: autoBackup } = string.settings.mailbox_backup;
+const { backing_up_mailbox } = autoBackup;
 
 class SettingsAccountBackupWrapper extends Component {
   constructor(props) {
@@ -25,31 +30,38 @@ class SettingsAccountBackupWrapper extends Component {
 
   componentDidUpdate(prevProps) {
     if (
-      this.state.inProgress === false &&
-      this.state.inProgress !== prevProps.mailboxBackupParams.displayProgressBar
+      !this.state.inProgress &&
+      !prevProps.mailboxBackupParams.displayProgressBar &&
+      this.props.mailboxBackupParams.displayProgressBar
     ) {
       this.setState(
         {
           inProgress: true,
           backupPercent: 5,
-          progressMessage: 'Backing up mailbox...'
+          progressMessage: backing_up_mailbox
         },
         () => {
-          const { password } = prevProps.mailboxBackupParams;
-          this.initMailboxBackup(password);
+          const { filePath, password } = this.props.mailboxBackupParams;
+          this.initMailboxBackup({ filePath, password });
         }
       );
     }
   }
 
-  initMailboxBackup = () => {
-    setTimeout(() => {
+  initMailboxBackup = async ({ filePath, password }) => {
+    try {
+      await exportBackupFile({
+        customPath: filePath,
+        password
+      });
       this.setState({
         inProgress: false,
         backupPercent: 0,
         progressMessage: ''
       });
-    }, 5000);
+    } catch (e) {
+      return e;
+    }
   };
 }
 
