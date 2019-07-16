@@ -8,7 +8,6 @@
 using namespace std;
 
 CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, string recipientId, long int deviceId) {
-  std::cout << "Get Session Record : " << recipientId << std::endl;
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "Select * from sessionrecord where recipientId == ? and deviceId == ?");
@@ -27,7 +26,6 @@ CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, string rec
 }
 
 vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, string recipientId) {
-  std::cout << "Get Session Records : " << recipientId << std::endl;
   vector<CriptextDB::SessionRecord> sessionRecords;
 
   try {
@@ -38,7 +36,7 @@ vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, s
 
     while (query.executeStep()) {
       char *record = strdup(query.getColumn(1).getText());
-      CriptextDB::SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record };
+      CriptextDB::SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record, query.getColumn(3).getInt() };
       sessionRecords.push_back(sessionRecord);
     }
   } catch (exception& e) {
@@ -74,7 +72,6 @@ bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int
       query.bind(4, static_cast<int>(len));
       query.exec();
     }
-    std::cout << "RETURN SR" << std::endl;
     transaction.commit();
   } catch (exception& e) {
     std::cout << "ERROR : " << e.what() << std::endl;
@@ -85,7 +82,6 @@ bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int
 }
 
 bool CriptextDB::deleteSessionRecord(string dbPath, string recipientId, long int deviceId) {
-  std::cout << "Delete Session Record : " << recipientId << std::endl;
   try {
     SQLite::Database db(dbPath);
 
@@ -103,7 +99,6 @@ bool CriptextDB::deleteSessionRecord(string dbPath, string recipientId, long int
 }
 
 bool CriptextDB::deleteSessionRecords(string dbPath, string recipientId) {
-  std::cout << "Delete Session Records : " << recipientId << std::endl;
   try {
     SQLite::Database db(dbPath);
 

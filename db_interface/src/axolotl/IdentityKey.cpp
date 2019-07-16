@@ -21,8 +21,6 @@ CriptextDB::IdentityKey CriptextDB::getIdentityKey(string dbPath, string recipie
 }
 
 bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int deviceId, char *identityKey) {
-  std::cout << "Create Identity Key : " << recipientId << std::endl;
-
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
     SQLite::Transaction transaction(db);

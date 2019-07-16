@@ -33,14 +33,12 @@ const decryptEmail = async ({
     messageType,
     body: body.body
   })
-  console.log(res);
   if (res.status !== 200) {
     return {
       decryptedBody: 'Content Unencrypted'
     }
   }
   const decryptedBody = await res.text();
-  console.log(decryptedBody);
   return {
     decryptedBody,
     decryptedHeaders: null

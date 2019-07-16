@@ -6,7 +6,6 @@
 using namespace std;
 
 CriptextDB::PreKey CriptextDB::getPreKey(string dbPath, short int id) {
-  std::cout << "Get PreKey : " << id << std::endl;
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "Select * from prekeyrecord where preKeyId == ?");
@@ -36,7 +35,6 @@ bool CriptextDB::createPreKey(string dbPath, short int id, char *keyRecord, size
 }
 
 bool CriptextDB::deletePreKey(string dbPath, short int id) {
-  std::cout << "Delete PreKey : " << id << std::endl;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 

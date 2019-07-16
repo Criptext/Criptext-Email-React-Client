@@ -8,7 +8,6 @@
 using namespace std;
 
 CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id) {
-  std::cout << "Get SignedPreKey : " << id << std::endl;
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "Select * from signedprekeyrecord where signedPreKeyId == ?");
@@ -41,7 +40,6 @@ bool CriptextDB::createSignedPreKey(string dbPath, short int id, char *keyRecord
 }
 
 bool CriptextDB::deleteSignedPreKey(string dbPath, short int id) {
-  std::cout << "Delete SignedPreKey : " << id << std::endl;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 

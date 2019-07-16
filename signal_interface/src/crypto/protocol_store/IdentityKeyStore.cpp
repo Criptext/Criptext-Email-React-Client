@@ -7,7 +7,6 @@
 
 int identity_key_store_get_identity_key_pair(signal_buffer **public_data, signal_buffer **private_data, void *user_data)
 {
-    std::cout << "GET IDENTITY KEY PAIR" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
 
     size_t pubDecodeLen = 33;
@@ -25,7 +24,6 @@ int identity_key_store_get_identity_key_pair(signal_buffer **public_data, signal
 
 int identity_key_store_get_local_registration_id(void *user_data, uint32_t *registration_id)
 {
-    std::cout << "GET LOCAL ID" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     *registration_id = account->registrationId;
     return 0;
@@ -33,7 +31,6 @@ int identity_key_store_get_local_registration_id(void *user_data, uint32_t *regi
 
 int identity_key_store_save_identity(const signal_protocol_address *address, uint8_t *key_data, size_t key_len, void *user_data)
 {
-    std::cout << "STORE IDENTITY KEY PAIR" << std::endl;
     CriptextDB::Account* account = (CriptextDB::Account*)user_data;
     string recipientId = std::string(address->name);
     int deviceId = address->device_id;
@@ -46,7 +43,6 @@ int identity_key_store_save_identity(const signal_protocol_address *address, uin
 
 int identity_key_store_is_trusted_identity(const signal_protocol_address *address, uint8_t *key_data, size_t key_len, void *user_data)
 {
-    std::cout << "IS TRUSTED" << std::endl;
     return 1;
 }
 
