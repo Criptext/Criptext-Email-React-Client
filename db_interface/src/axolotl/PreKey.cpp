@@ -13,7 +13,8 @@ CriptextDB::PreKey CriptextDB::getPreKey(string dbPath, short int id) {
   query.bind(1, id);
 
   query.executeStep();
-  CriptextDB::PreKey preKey = { query.getColumn(0).getInt(), query.getColumn(1).getString(), query.getColumn(2).getString() };
+  char *record = strdup(query.getColumn(1).getText());
+  CriptextDB::PreKey preKey = { query.getColumn(0).getInt(), record };
   return preKey;
 }
 

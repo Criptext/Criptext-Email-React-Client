@@ -12,7 +12,7 @@ namespace CriptextDB {
   struct SessionRecord {
     string recipientId;
     long int deviceId;
-    string record;
+    char *record;
   };
 
   SessionRecord getSessionRecord(string dbPath, string recipientId, long int deviceId);

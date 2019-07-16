@@ -7,54 +7,61 @@
 
 int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t signed_pre_key_id, void *user_data)
 {
+    std::cout << "Get Signed PreKey : " << signed_pre_key_id << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     CriptextDB::SignedPreKey signedPreKey;
 
     try {
         signedPreKey = CriptextDB::getSignedPreKey("../../electron_app/Criptext.db", signed_pre_key_id);
     } catch (exception& e){
+        std::cout << "Get Signed PreKey GG: " << signed_pre_key_id << std::endl;
         return 0;
     }
 
-    size_t privDecodeLen = 0;
-    const uint8_t *privKeyData = 0;
-    size_t pubDecodeLen = 0;
-    const uint8_t *pubKeyData = 0;
-    
-    getKeyPairData(&pubKeyData, &privKeyData, &pubDecodeLen, &privDecodeLen, signedPreKey.pubKey, signedPreKey.privKey);
+    std::cout << "LERO LERO \n " << signedPreKey.record << std::endl;
 
-    ec_public_key *publicKey = 0;
-    curve_decode_point(&publicKey, pubKeyData, pubDecodeLen, 0);
+    size_t len = 0;
+    unsigned char *recordBase64 = reinterpret_cast<unsigned char *>(signedPreKey.record);
+    uint8_t *myRecord = reinterpret_cast<uint8_t *>(base64_decode(recordBase64, signedPreKey.len, &len));    
+    signal_buffer *buffer = signal_buffer_create(myRecord, len);
 
-    ec_private_key *privateKey = 0;
-    curve_decode_private_point(&privateKey, privKeyData, privDecodeLen, 0);
-    
-    ec_key_pair *keypair = 0;
-    ec_key_pair_create(&keypair, publicKey, privateKey);
-
-    session_signed_pre_key *signedPreKeyRecord = 0;
-    const uint8_t dummySignature = {0xFA};
-    session_signed_pre_key_create(&signedPreKeyRecord, signed_pre_key_id, 1000000, keypair, &dummySignature, sizeof(dummySignature));
-
-    int result = 0;
-    signal_buffer *buffer = 0;
-    result = session_signed_pre_key_serialize(&buffer, signedPreKeyRecord);
-    
-    if(result < 0) {
-        return SG_ERR_NOMEM;
-    }
     *record = buffer;
 
-    std::cout << "WELP 4" << std::endl;
+    session_signed_pre_key *pre_key;
+    signal_context* global_context = 0;
+        signal_crypto_provider provider = {
+            .random_func = random_generator,
+            .hmac_sha256_init_func = hmac_sha256_init,
+            .hmac_sha256_update_func = hmac_sha256_update,
+            .hmac_sha256_final_func = hmac_sha256_final,
+            .hmac_sha256_cleanup_func = hmac_sha256_cleanup,
+            .sha512_digest_init_func = sha512_digest_init,
+            .sha512_digest_update_func = sha512_digest_update,
+            .sha512_digest_final_func = sha512_digest_final,
+            .sha512_digest_cleanup_func = sha512_digest_cleanup,
+            .encrypt_func = 0,
+            .decrypt_func = 0,
+            .user_data = 0
+        };
+        signal_context_create(&global_context, 0);
+        signal_context_set_crypto_provider(global_context, &provider);
+    int result = session_signed_pre_key_deserialize(&pre_key, signal_buffer_data(buffer), signal_buffer_len(buffer), global_context);
+    std::cout << "BYE BYE : " << result << std::endl;
+
     return 1;
 }
 
 int signed_pre_key_store_store_signed_pre_key(uint32_t signed_pre_key_id, uint8_t *record, size_t record_len, void *user_data)
 {
-    char * signedKeyRecord = reinterpret_cast<char *>(record);
+    std::cout << "STORE Signed PreKey : " << signed_pre_key_id << std::endl;
 
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    bool success = CriptextDB::createSignedPreKey("../../electron_app/Criptext.db", signed_pre_key_id, signedKeyRecord);
+
+    size_t len = 0;
+    const unsigned char *myRecord = reinterpret_cast<const unsigned char *>(record);
+    char *recordBase64 = reinterpret_cast<char *>(base64_encode(myRecord, record_len, &len));
+
+    bool success = CriptextDB::createSignedPreKey("../../electron_app/Criptext.db", signed_pre_key_id, recordBase64, len);
     return success ? 1 : 0;
 }
 

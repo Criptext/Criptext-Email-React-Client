@@ -11,13 +11,13 @@ namespace CriptextDB {
 
   struct SignedPreKey { 
     int id;
-    string privKey;
-    string pubKey;
+    char *record;
+    int len;
   };
 
   SignedPreKey getSignedPreKey(string dbPath, short int id);
 
-  bool createSignedPreKey(string dbPath, short int id, char *keyRecord);
+  bool createSignedPreKey(string dbPath, short int id, char *keyRecord, size_t len);
 
   bool deleteSignedPreKey(string dbPath, short int id);
 } 

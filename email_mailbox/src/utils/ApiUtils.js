@@ -75,3 +75,24 @@ export const apiCriptextRequest = async ({
       break;
   }
 };
+
+export const fetchDecryptBody = async ({
+  senderId,
+  deviceId,
+  recipientId,
+  messageType,
+  body
+}) => {
+  const requestUrl = "http://localhost:8085/decrypt";
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      senderId,
+      deviceId,
+      recipientId,
+      messageType,
+      body
+    })
+  };
+  return await fetch(requestUrl, options);
+};

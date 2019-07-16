@@ -7,6 +7,7 @@
 
 extern "C" {
     #include "../base64.h"
+    #include "../crypto.h"
 }
 
 void setup_signed_pre_key_store(signal_protocol_store_context *context, CriptextDB::Account *account);

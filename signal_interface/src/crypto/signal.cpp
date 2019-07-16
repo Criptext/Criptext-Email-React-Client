@@ -58,8 +58,8 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
             pre_key_signal_message *incoming_message = 0;
             pre_key_signal_message_deserialize(&incoming_message, preKeyMessageData, decode_len, global_context);
             signal_buffer *plainMessage = 0;
-            session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
-
+            int result = session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
+            std::cout << "NOOOO : " << result << std::endl;
             uint8_t *data = signal_buffer_data(plainMessage);
             size_t len = signal_buffer_len(plainMessage);
 
@@ -132,13 +132,15 @@ int CriptextSignal::createSignedPrekey(char **encodedSignedPublicPreKey, char **
             signal_buffer_data(serializedSignedPublicPreKey),
             signal_buffer_len(serializedSignedPublicPreKey));
     session_signed_pre_key *sessionSignedPreKey = 0;
-    session_signed_pre_key_create(&sessionSignedPreKey, 1, time(0), signedPreKeyPair, signal_buffer_data(signedPreKeySignature), signal_buffer_len(signedPreKeySignature));
+    session_signed_pre_key_create(&sessionSignedPreKey, 1, 100000, signedPreKeyPair, signal_buffer_data(signedPreKeySignature), signal_buffer_len(signedPreKeySignature));
     signal_buffer *serializedSignedPreKeySession = 0;
     session_signed_pre_key_serialize(&serializedSignedPreKeySession, sessionSignedPreKey);
     store->signed_pre_key_store.store_signed_pre_key(1, signal_buffer_data(serializedSignedPreKeySession), signal_buffer_len(serializedSignedPreKeySession), &account);
     size_t *len = 0;
     unsigned char *signedPublicPreKeyEncoded = base64_encode(reinterpret_cast<const unsigned char *>(signal_buffer_data(serializedSignedPublicPreKey)), signal_buffer_len(serializedSignedPublicPreKey), len);
-    unsigned char *signatureEncoded = base64_encode(reinterpret_cast<const unsigned char *>(signal_buffer_data(serializedSignedPreKeySession)), signal_buffer_len(serializedSignedPreKeySession), len);
+    unsigned char *signatureEncoded = base64_encode(reinterpret_cast<const unsigned char *>(signal_buffer_data(signedPreKeySignature)), signal_buffer_len(signedPreKeySignature), len);
+
+    std::cout << "SIGNATURE : \n" << signedPreKeySignature->data << "\nSIZE : " << signedPreKeySignature->len << std::endl; 
 
     *encodedSignedPublicPreKey = reinterpret_cast<char *>(signedPublicPreKeyEncoded);
     *encodedSignature = reinterpret_cast<char *>(signatureEncoded);
@@ -151,7 +153,7 @@ int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int dev
     int result = 0;
 
     ec_private_key *identityPrivateKey = 0;
-    uint8_t *identityPrivKeyBytes = reinterpret_cast<uint8_t *>(&account.privKey);
+    uint8_t *identityPrivKeyBytes = reinterpret_cast<uint8_t *>(account.privKey);
     curve_decode_private_point(&identityPrivateKey, identityPrivKeyBytes, 32, 0);
     std::cout << identityPrivateKey << std::endl; 
     char *signedPublicPreKeyEncoded = 0;
@@ -165,7 +167,7 @@ int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int dev
     }
     
     size_t pubLen = 0;
-    char *identityPublicKey = reinterpret_cast<char *>(base64_encode(reinterpret_cast<const unsigned char *>(account.pubKey.c_str()), 32, &pubLen));
+    char *identityPublicKey = reinterpret_cast<char *>(base64_encode(reinterpret_cast<const unsigned char *>(account.pubKey), 33, &pubLen));
     generateBundle(bundle, account.registrationId, signatureEncoded, signedPublicPreKeyEncoded, 1, identityPublicKey, preKeysArray);
     return 0;
 }

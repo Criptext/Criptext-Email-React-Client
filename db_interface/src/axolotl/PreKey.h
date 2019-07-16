@@ -10,8 +10,7 @@ namespace CriptextDB {
 
   struct PreKey { 
     int id;
-    string privKey;
-    string pubKey;
+    char* record;
   };
 
   PreKey getPreKey(string dbPath, short int id);

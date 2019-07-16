@@ -10,9 +10,8 @@ using namespace std;
 
 namespace CriptextDB {
   struct Account {
-    int id;
-    string privKey;
-    string pubKey;
+    char* privKey;
+    char* pubKey;
     int registrationId;
   };
 

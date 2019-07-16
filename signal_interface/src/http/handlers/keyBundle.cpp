@@ -108,7 +108,6 @@ int createAccount(struct mg_connection *conn, void *cbdata) {
   char *privKey;
   int regId;
   int result = CriptextSignal::createAccountCredentials(&publicKey, &privKey, &regId);
-  std::cout << publicKey << std::endl;
   result = CriptextDB::createAccount("../../electron_app/Criptext.db", recipientId->valuestring, name->valuestring, deviceId->valueint, publicKey, privKey, regId);
 
   if (result < 0) {

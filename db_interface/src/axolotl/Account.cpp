@@ -11,7 +11,9 @@ CriptextDB::Account CriptextDB::getAccount(string dbPath, char *recipientId) {
 
   query.executeStep();
 
-  Account account = { query.getColumn(0).getInt(), query.getColumn(6).getString(), query.getColumn(7).getString(), query.getColumn(5).getInt() };
+  char *privKey = strdup(query.getColumn(6).getText());
+  char *pubKey = strdup(query.getColumn(7).getText());
+  Account account = { privKey, pubKey, query.getColumn(5).getInt() };
   return account;
 }
 

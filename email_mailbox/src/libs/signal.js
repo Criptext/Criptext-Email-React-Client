@@ -2,6 +2,8 @@
 import { getSessionRecordIds, insertPreKeys } from './../utils/ipc';
 import SignalProtocolStore from './store';
 import { fetchEmailBody } from '../utils/FetchUtils';
+import { fetchDecryptBody } from '../utils/ApiUtils';
+import { myAccount } from '../utils/electronInterface'
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -24,31 +26,22 @@ const decryptEmail = async ({
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return { decryptedBody: body.body };
   }
-  const textEncrypted = util.toArrayBufferFromBase64(body.body);
-  const addressFrom = new libsignal.SignalProtocolAddress(
-    recipientId,
-    deviceId
-  );
-  const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
-  const binaryText = await decryptMessage(
-    sessionCipher,
-    textEncrypted,
-    messageType
-  );
-  const decryptedBody = util.toString(binaryText);
-  let decryptedHeaders;
-  if (body.headers) {
-    const headersEncrypted = util.toArrayBufferFromBase64(body.headers);
-    const headersText = await decryptMessage(
-      sessionCipher,
-      headersEncrypted,
-      messageType
-    );
-    decryptedHeaders = util.toString(headersText);
+  const res = fetchDecryptBody({
+    senderId: recipientId,
+    deviceId,
+    recipientId: myAccount.recipientId,
+    messageType,
+    body: body.body
+  })
+  if (res.status !== 200) {
+    return {
+      decryptedBody: 'Content Unencrypted'
+    }
   }
+  const decryptedBody = await res.text();
   return {
     decryptedBody,
-    decryptedHeaders
+    decryptedHeaders: null
   };
 };
 

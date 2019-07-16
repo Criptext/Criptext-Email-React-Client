@@ -3,10 +3,12 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
 CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, string recipientId, long int deviceId) {
+  std::cout << "Get Session Record : " << recipientId << std::endl;
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "Select * from sessionrecord where recipientId == ? and deviceId == ?");
@@ -14,7 +16,13 @@ CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, string rec
   query.bind(2, deviceId);
 
   query.executeStep();
-  SessionRecord sessionRecord = { query.getColumn(1).getString(), query.getColumn(2).getInt(), query.getColumn(3).getString() };
+  
+  if (!query.hasRow()) {
+    throw std::invalid_argument("row not available");
+  }
+
+  char *record = strdup(query.getColumn(2).getText());
+  SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record };
   return sessionRecord;
 }
 
@@ -29,7 +37,8 @@ vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, s
     query.bind(1, recipientId);
 
     while (query.executeStep()) {
-      CriptextDB::SessionRecord sessionRecord = { query.getColumn(1).getString(), query.getColumn(2).getInt(), query.getColumn(3).getString() };
+      char *record = strdup(query.getColumn(1).getText());
+      CriptextDB::SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record };
       sessionRecords.push_back(sessionRecord);
     }
   } catch (exception& e) {
@@ -45,15 +54,16 @@ bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
     SQLite::Transaction transaction(db);
 
-    SQLite::Statement getQuery(db, "Select * from sessionrecord where recipientId == ?");
+    SQLite::Statement getQuery(db, "Select * from sessionrecord where recipientId == ? and deviceId == ?");
     getQuery.bind(1, recipientId);
+    getQuery.bind(2, deviceId);
     getQuery.executeStep();
 
     if (getQuery.hasRow()) {
-      int rowId = getQuery.getColumn(0).getInt();
-      SQLite::Statement query(db, "update sessionrecord set record = ? where id == ?");
+      SQLite::Statement query(db, "update sessionrecord set record = ? where recipientId == ? and deviceId == ?");
       query.bind(1, record);
-      query.bind(2, rowId);
+      getQuery.bind(2, recipientId);
+      getQuery.bind(3, deviceId);
       query.exec();
     } else {
       SQLite::Statement query(db, "insert into sessionrecord (recipientId, deviceId, record) values (?,?,?)");
@@ -62,7 +72,7 @@ bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int
       query.bind(3, record);
       query.exec();
     }
-
+    std::cout << "RETURN SR" << std::endl;
     transaction.commit();
   } catch (exception& e) {
     return false;

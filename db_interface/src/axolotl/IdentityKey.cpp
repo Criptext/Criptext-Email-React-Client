@@ -34,13 +34,13 @@ bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int device
     getQuery.executeStep();
 
     if (getQuery.hasRow()) {
-      int rowId = getQuery.getColumn(0).getInt();
-      SQLite::Statement query(db, "update identitykeyrecord set identityKey = ? where id == ?");
+      SQLite::Statement query(db, "update identitykeyrecord set identityKey = ? where recipientId == ? and deviceId == ?");
       query.bind(1, identityKey);
-      query.bind(2, rowId);
+      getQuery.bind(2, recipientId);
+      getQuery.bind(3, deviceId);
       query.exec();
     } else {
-      SQLite::Statement query(db, "insert into identitykeyrecord (recipientId, deviceId, identityKey, accountId) values (?,?,?,?)");
+      SQLite::Statement query(db, "insert into identitykeyrecord (recipientId, deviceId, identityKey) values (?,?,?)");
       query.bind(1, recipientId);
       query.bind(2, deviceId);
       query.bind(3, identityKey);

@@ -19,32 +19,8 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
         return 0;
     }
 
-    size_t privDecodeLen = 0;
-    const uint8_t *privKeyData = 0;
-    size_t pubDecodeLen = 0;
-    const uint8_t *pubKeyData = 0;
-    
-    getKeyPairData(&pubKeyData, &privKeyData, &pubDecodeLen, &privDecodeLen, preKey.pubKey, preKey.privKey);
-
-    ec_public_key *publicKey = 0;
-    curve_decode_point(&publicKey, pubKeyData, pubDecodeLen, 0);
-
-    ec_private_key *privateKey = 0;
-    curve_decode_private_point(&privateKey, privKeyData, privDecodeLen, 0);
-    
-    ec_key_pair *keypair = 0;
-    ec_key_pair_create(&keypair, publicKey, privateKey);
-
-    session_pre_key *preKeyRecord = 0;
-    session_pre_key_create(&preKeyRecord, pre_key_id, keypair);
-
-    int result = 0;
-    signal_buffer *buffer = 0;
-    result = session_pre_key_serialize(&buffer, preKeyRecord);
-    
-    if(result < 0) {
-        return SG_ERR_NOMEM;
-    }
+    const uint8_t *myRecord = reinterpret_cast<uint8_t *>(preKey.record);
+    signal_buffer *buffer = signal_buffer_create(myRecord, sizeof(myRecord));
     *record = buffer;
 
     return 1;
