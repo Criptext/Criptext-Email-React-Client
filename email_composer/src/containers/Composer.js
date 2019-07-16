@@ -1,3 +1,4 @@
+/*eslint no-lone-blocks: 0*/
 import React, { Component } from 'react';
 import Composer from './../components/Composer';
 import { Status } from './../components/Control';
