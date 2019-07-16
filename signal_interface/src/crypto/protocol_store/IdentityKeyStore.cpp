@@ -11,35 +11,12 @@ int identity_key_store_get_identity_key_pair(signal_buffer **public_data, signal
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
 
     size_t pubDecodeLen = 33;
-    const uint8_t *pubKeyData = reinterpret_cast<uint8_t *>(&account->pubKey);
+    const uint8_t *pubKeyData = reinterpret_cast<uint8_t *>(account->pubKey);
     size_t privDecodeLen = 32;
-    const uint8_t *privKeyData = reinterpret_cast<uint8_t *>(&account->privKey);;
+    const uint8_t *privKeyData = reinterpret_cast<uint8_t *>(account->privKey);;
     
     signal_buffer *pubKeyBuffer = signal_buffer_create(pubKeyData, pubDecodeLen);
     signal_buffer *privKeyBuffer = signal_buffer_create(privKeyData, privDecodeLen);
-
-    signal_context* global_context = 0;
-    signal_crypto_provider provider = {
-        .random_func = random_generator,
-        .hmac_sha256_init_func = hmac_sha256_init,
-        .hmac_sha256_update_func = hmac_sha256_update,
-        .hmac_sha256_final_func = hmac_sha256_final,
-        .hmac_sha256_cleanup_func = hmac_sha256_cleanup,
-        .sha512_digest_init_func = sha512_digest_init,
-        .sha512_digest_update_func = sha512_digest_update,
-        .sha512_digest_final_func = sha512_digest_final,
-        .sha512_digest_cleanup_func = sha512_digest_cleanup,
-        .encrypt_func = 0,
-        .decrypt_func = 0,
-        .user_data = 0
-    };
-    signal_context_create(&global_context, 0);
-    signal_context_set_crypto_provider(global_context, &provider);
-
-    ec_public_key *key;
-    int decoded = curve_decode_point(&key, signal_buffer_data(pubKeyBuffer), signal_buffer_len(pubKeyBuffer), global_context);
-
-    std::cout << "DECODED : " << pubKeyBuffer->data[0] << std::endl;
 
     *public_data = pubKeyBuffer;
     *private_data = privKeyBuffer;

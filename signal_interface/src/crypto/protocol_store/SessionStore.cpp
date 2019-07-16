@@ -9,7 +9,6 @@
 int session_store_load_session(signal_buffer **record, signal_buffer **user_record, const signal_protocol_address *address, void *user_data)
 {
     std::cout << "LOAD SESSION : " << std::endl;
-    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
     CriptextDB::SessionRecord sessionRecord;
@@ -17,14 +16,16 @@ int session_store_load_session(signal_buffer **record, signal_buffer **user_reco
     try {
         sessionRecord = CriptextDB::getSessionRecord("../../electron_app/Criptext.db", recipientId, deviceId);
     } catch (exception& e) {
-        std::cout << "LOAD SESSION 3: " << std::endl;
         return 0;
     }
-    std::cout << "LOAD SESSION 2: " << std::endl;
-    const uint8_t *myRecord = reinterpret_cast<uint8_t *>(sessionRecord.record);
-    signal_buffer *buffer = signal_buffer_create(myRecord, sizeof(myRecord));
+
+    size_t len = 0;
+    unsigned char *recordBase64 = reinterpret_cast<unsigned char *>(sessionRecord.record);
+    uint8_t *myRecord = reinterpret_cast<uint8_t *>(base64_decode(recordBase64, sessionRecord.len, &len));    
+    signal_buffer *buffer = signal_buffer_create(myRecord, len);
+
     *record = buffer;
-    return 0;
+    return 1;
 }
 
 int session_store_get_sub_device_sessions(signal_int_list **sessions, const char *name, size_t name_len, void *user_data)
@@ -35,7 +36,6 @@ int session_store_get_sub_device_sessions(signal_int_list **sessions, const char
         return SG_ERR_NOMEM;
     }
 
-    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(name, name_len);
     vector<CriptextDB::SessionRecord> sessionRecords = CriptextDB::getSessionRecords("../../electron_app/Criptext.db", recipientId);
 
@@ -50,12 +50,14 @@ int session_store_get_sub_device_sessions(signal_int_list **sessions, const char
 int session_store_store_session(const signal_protocol_address *address, uint8_t *record, size_t record_len, uint8_t *user_record_data, size_t user_record_len, void *user_data)
 {
     std::cout << "STORE SESSION" << std::endl;
-    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
 
-    char* mySession = reinterpret_cast<char *>(record);
-    bool success = CriptextDB::createSessionRecord("../../electron_app/Criptext.db", recipientId, deviceId, mySession);
+    size_t len = 0;
+    const unsigned char *myRecord = reinterpret_cast<const unsigned char *>(record);
+    char *recordBase64 = reinterpret_cast<char *>(base64_encode(myRecord, record_len, &len));
+
+    bool success = CriptextDB::createSessionRecord("../../electron_app/Criptext.db", recipientId, deviceId, recordBase64, len);
     return success ? 1 : 0;
 }
 

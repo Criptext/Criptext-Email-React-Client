@@ -19,8 +19,10 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
         return 0;
     }
 
-    const uint8_t *myRecord = reinterpret_cast<uint8_t *>(preKey.record);
-    signal_buffer *buffer = signal_buffer_create(myRecord, sizeof(myRecord));
+    size_t len = 0;
+    unsigned char *recordBase64 = reinterpret_cast<unsigned char *>(preKey.record);
+    uint8_t *myRecord = reinterpret_cast<uint8_t *>(base64_decode(recordBase64, preKey.len, &len));    
+    signal_buffer *buffer = signal_buffer_create(myRecord, len);
     *record = buffer;
 
     return 1;
@@ -28,10 +30,12 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
 
 int pre_key_store_store_pre_key(uint32_t pre_key_id, uint8_t *record, size_t record_len, void *user_data)
 {
-    char *preKeyRecord = reinterpret_cast<char *>(record);
+    size_t len = 0;
+    const unsigned char *myRecord = reinterpret_cast<const unsigned char *>(record);
+    char *recordBase64 = reinterpret_cast<char *>(base64_encode(myRecord, record_len, &len));
 
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    bool success = CriptextDB::createPreKey("../../electron_app/Criptext.db", pre_key_id, preKeyRecord);
+    bool success = CriptextDB::createPreKey("../../electron_app/Criptext.db", pre_key_id, recordBase64, len);
     return success ? 1 : 0;
 }
 

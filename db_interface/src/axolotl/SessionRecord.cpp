@@ -22,7 +22,7 @@ CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, string rec
   }
 
   char *record = strdup(query.getColumn(2).getText());
-  SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record };
+  SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record, query.getColumn(3).getInt() };
   return sessionRecord;
 }
 
@@ -48,7 +48,7 @@ vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, s
   return sessionRecords;
 }
 
-bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int deviceId, string record) {
+bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int deviceId, char* record, size_t len) {
   std::cout << "Create Session Record : " << recipientId << std::endl;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
@@ -60,21 +60,24 @@ bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int
     getQuery.executeStep();
 
     if (getQuery.hasRow()) {
-      SQLite::Statement query(db, "update sessionrecord set record = ? where recipientId == ? and deviceId == ?");
+      SQLite::Statement query(db, "update sessionrecord set record = ?, recordLength = ? where recipientId == ? and deviceId == ?");
       query.bind(1, record);
-      getQuery.bind(2, recipientId);
-      getQuery.bind(3, deviceId);
+      getQuery.bind(2, static_cast<int>(len));
+      getQuery.bind(3, recipientId);
+      getQuery.bind(4, deviceId);
       query.exec();
     } else {
-      SQLite::Statement query(db, "insert into sessionrecord (recipientId, deviceId, record) values (?,?,?)");
+      SQLite::Statement query(db, "insert into sessionrecord (recipientId, deviceId, record, recordLength) values (?,?,?,?)");
       query.bind(1, recipientId);
       query.bind(2, deviceId);
       query.bind(3, record);
+      query.bind(4, static_cast<int>(len));
       query.exec();
     }
     std::cout << "RETURN SR" << std::endl;
     transaction.commit();
   } catch (exception& e) {
+    std::cout << "ERROR : " << e.what() << std::endl;
     return false;
   }
 
@@ -92,6 +95,7 @@ bool CriptextDB::deleteSessionRecord(string dbPath, string recipientId, long int
 
     query.exec();
   } catch (exception& e) {
+    std::cout << "ERROR : " << e.what() << std::endl;
     return false;
   }
 
@@ -108,6 +112,7 @@ bool CriptextDB::deleteSessionRecords(string dbPath, string recipientId) {
 
     query.exec();
   } catch (exception& e) {
+    std::cout << "ERROR : " << e.what() << std::endl;
     return false;
   }
 

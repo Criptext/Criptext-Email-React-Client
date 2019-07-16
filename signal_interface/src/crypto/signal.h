@@ -56,10 +56,8 @@ class CriptextSignal {
         ec_private_key *identity_key_private = ec_key_pair_get_private(identity_key_pair_keys);
         signal_buffer *publickKeySerialized = 0;
         signal_buffer *privKeySerialized = 0;
-
         ec_public_key_serialize(&publickKeySerialized, identity_key_public);
         ec_private_key_serialize(&privKeySerialized, identity_key_private);
-        
         SIGNAL_UNREF(identity_key_pair_keys);
         std::cout << publickKeySerialized->data << std::endl;
         int local_registration_id = (rand() % 16380) + 1;

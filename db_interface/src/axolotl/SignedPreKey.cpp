@@ -33,6 +33,7 @@ bool CriptextDB::createSignedPreKey(string dbPath, short int id, char *keyRecord
 
     query.exec();
   } catch (exception& e) {
+    std::cout << "ERROR : " << e.what() << std::endl;
     return false;
   }
 
@@ -49,6 +50,7 @@ bool CriptextDB::deleteSignedPreKey(string dbPath, short int id) {
 
     query.exec();
   } catch (exception& e) {
+    std::cout << "ERROR : " << e.what() << std::endl;
     return false;
   }
 
