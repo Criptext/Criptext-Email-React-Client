@@ -161,8 +161,7 @@ class SettingAccountWrapper extends Component {
       },
       mailboxBackup: {
         password: '',
-        filePath: '',
-        displayProgressBar: false
+        inProgress: false
       }
     };
     this.isEnterprise = myAccount.recipientId.includes('@');
@@ -234,6 +233,7 @@ class SettingAccountWrapper extends Component {
         devicesQuantity={devicesQuantity}
         mailboxBackupParams={this.state.mailboxBackup}
         onSetExportBackupPassword={this.handleSetExportBackupPassword}
+        onClearMailboxBackupParams={this.handleClearMailboxBackupParams}
       />
     );
   }
@@ -450,9 +450,24 @@ class SettingAccountWrapper extends Component {
   };
 
   handleClickExportBackupFile = () => {
+    this.setState(
+      {
+        isHiddenSettingsPopup: false,
+        settingsPopupType: SETTINGS_POPUP_TYPES.EXPORT_BACKUP
+      },
+      async () => {
+        await createDefaultBackupFolder();
+      }
+    );
+  };
+
+  handleSetExportBackupPassword = ({ password }) => {
+    this.handleClosePopup();
     this.setState({
-      isHiddenSettingsPopup: false,
-      settingsPopupType: SETTINGS_POPUP_TYPES.EXPORT_BACKUP
+      mailboxBackup: {
+        password,
+        inProgress: true
+      }
     });
   };
 
@@ -470,6 +485,15 @@ class SettingAccountWrapper extends Component {
           displayProgressBar: !!pathToSaveBackup
         }
       });
+    });
+  };
+
+  handleClearMailboxBackupParams = () => {
+    this.setState({
+      mailboxBackup: {
+        password: '',
+        inProgress: false
+      }
     });
   };
 

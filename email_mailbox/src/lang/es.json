@@ -505,8 +505,11 @@
           "daily": "Diario",
           "weekly": "Semanal",
           "monthly": "Mensual"
-        },
-        "backing_up_mailbox": "Exportando archivo de respaldo..."
+        }
+      },
+      "progress": {
+        "backing_up_mailbox": "Respaldando buzon...",
+        "backup_mailbox_success": "Buzon respaldado exitosamente"
       }
     },
     "backupLastLabels": {

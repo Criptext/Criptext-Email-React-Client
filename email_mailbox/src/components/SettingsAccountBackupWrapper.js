@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SettingsAccountBackup from './SettingsAccountBackup';
+import { showSaveFileDialog } from './../utils/electronInterface';
 import string from './../lang';
-import { exportBackupFile } from '../utils/ipc';
+import { exportBackupFile, getDefaultBackupFolder } from '../utils/ipc';
 
-const { auto: autoBackup } = string.settings.mailbox_backup;
-const { backing_up_mailbox } = autoBackup;
+const { progress } = string.settings.mailbox_backup;
+const { backing_up_mailbox, backup_mailbox_success } = progress;
 
 class SettingsAccountBackupWrapper extends Component {
   constructor(props) {
@@ -28,45 +29,81 @@ class SettingsAccountBackupWrapper extends Component {
     );
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      !this.state.inProgress &&
-      !prevProps.mailboxBackupParams.displayProgressBar &&
-      this.props.mailboxBackupParams.displayProgressBar
-    ) {
-      this.setState(
-        {
-          inProgress: true,
-          backupPercent: 5,
-          progressMessage: backing_up_mailbox
-        },
-        () => {
-          const { filePath, password } = this.props.mailboxBackupParams;
-          this.initMailboxBackup({ filePath, password });
+  async componentDidUpdate() {
+    if (!this.state.inProgress && this.props.mailboxBackupParams.inProgress) {
+      const { password } = this.props.mailboxBackupParams;
+      const defautlPath = await getDefaultBackupFolder();
+      const filename = password ? 'backup.enc' : 'backup.db';
+      const backupPath = `${defautlPath}/${filename}`;
+      showSaveFileDialog(backupPath, selectedPath => {
+        if (!selectedPath) {
+          this.props.onClearMailboxBackupParams();
+          return this.clearProgressParams();
         }
-      );
+
+        this.setState(
+          {
+            inProgress: true,
+            backupPercent: 1,
+            progressMessage: backing_up_mailbox
+          },
+          () => {
+            this.initMailboxBackup({
+              backupPath: selectedPath,
+              password
+            });
+          }
+        );
+      });
     }
   }
 
-  initMailboxBackup = async ({ filePath, password }) => {
-    try {
-      await exportBackupFile({
-        customPath: filePath,
-        password
-      });
-      this.setState({
-        inProgress: false,
-        backupPercent: 0,
-        progressMessage: ''
-      });
-    } catch (e) {
-      return e;
-    }
+  initMailboxBackup = ({ backupPath, password }) => {
+    if (!password) return this.handleUnencryptedBackup({ backupPath });
+
+    return this.handleEncryptedBackup({ backupPath, password });
+  };
+
+  handleUnencryptedBackup = ({ backupPath }) => {
+    this.setState(
+      {
+        backupPercent: 70
+      },
+      async () => {
+        await exportBackupFile({
+          customPath: backupPath
+        });
+        this.setState(
+          {
+            backupPercent: 100,
+            progressMessage: backup_mailbox_success
+          },
+          () => {
+            this.props.onClearMailboxBackupParams();
+            setTimeout(this.clearProgressParams, 1500);
+          }
+        );
+      }
+    );
+  };
+
+  handleEncryptedBackup = ({ backupPath, password }) => {
+    alert(backupPath, password);
+    this.props.onClearMailboxBackupParams();
+  };
+
+  clearProgressParams = () => {
+    this.setState({
+      inProgress: false,
+      backupPercent: 0,
+      progressMessage: ''
+    });
   };
 }
 
 SettingsAccountBackupWrapper.propTypes = {
-  mailboxBackupParams: PropTypes.object
+  mailboxBackupParams: PropTypes.object,
+  onClearMailboxBackupParams: PropTypes.func
 };
 
 export default SettingsAccountBackupWrapper;

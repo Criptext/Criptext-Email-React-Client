@@ -505,8 +505,11 @@
           "daily": "Daily",
           "weekly": "Weekly",
           "monthly": "Monthly"
-        },
-        "backing_up_mailbox": "Exporting backup file..."
+        }
+      },
+      "progress": {
+        "backing_up_mailbox": "Exporting backup file...",
+        "backup_mailbox_success": "Backup file exported successfully!"
       }
     },
     "cancel": "Cancel",

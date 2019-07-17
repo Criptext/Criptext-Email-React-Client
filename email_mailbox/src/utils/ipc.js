@@ -501,3 +501,7 @@ export const createDefaultBackupFolder = async () => {
 export const exportBackupFile = async ({ customPath, password }) => {
   return await callMain('export-backup-file', { customPath, password });
 };
+
+export const getDefaultBackupFolder = async () => {
+  return await callMain('get-default-backup-folder');
+};
