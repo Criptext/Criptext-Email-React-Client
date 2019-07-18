@@ -423,6 +423,10 @@ export const getTrashExpiredEmails = async () => {
   return await callMain('db-get-trash-expired-emails');
 };
 
+export const unsendEmail = async params => {
+  return await callMain('db-unsend-email', params);
+};
+
 export const updateAccount = async params => {
   return await callMain('db-update-account', params);
 };
@@ -431,8 +435,8 @@ export const updateContactByEmail = async ({ email, name }) => {
   return await callMain('db-update-contact-by-email', { email, name });
 };
 
-export const unsendEmail = async params => {
-  return await callMain('db-unsend-email', params);
+export const updateContactSpamScore = async params => {
+  return await callMain('db-update-contact-spam-acore', params);
 };
 
 export const updateEmail = async params => {
