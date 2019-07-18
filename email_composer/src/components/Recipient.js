@@ -59,7 +59,7 @@ const renderRecipientTo = props => (
       renderTag={TagRecipient}
       tagProps={{
         type: 'to',
-        classNameRemove: 'icon-exit',
+        classNameIconRemove: 'icon-exit',
         checkDisableSendButton: props.checkDisableSendButton,
         onBlur: props.onBlurTag,
         onChange: props.onChangeTag,
@@ -94,7 +94,7 @@ const renderRecipientCc = props => (
       renderTag={TagRecipient}
       tagProps={{
         type: 'cc',
-        classNameRemove: 'icon-exit',
+        classNameIconRemove: 'icon-exit',
         checkDisableSendButton: props.checkDisableSendButton,
         onBlur: props.onBlurTag,
         onChange: props.onChangeTag,
@@ -129,7 +129,7 @@ const renderRecipientBcc = props => (
       renderTag={TagRecipient}
       tagProps={{
         type: 'bcc',
-        classNameRemove: 'icon-exit',
+        classNameIconRemove: 'icon-exit',
         checkDisableSendButton: props.checkDisableSendButton,
         onBlur: props.onBlurTag,
         onChange: props.onChangeTag,

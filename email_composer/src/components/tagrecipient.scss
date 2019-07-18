@@ -17,6 +17,11 @@
     cursor: pointer;
   }
 
+  &.tag-loading{
+    font-style: italic;
+    color: purple;
+  }
+
   &.tag-error {
     color: #fff;
     font-weight: 500;

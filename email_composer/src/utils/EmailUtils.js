@@ -10,13 +10,17 @@ import {
   appDomain,
   composerEvents,
   defaultEmptyMimetypeValue,
+  externalDomains,
   previewLength
 } from './const';
 import { FILE_MODES } from './FileUtils';
 import { Status } from '../components/Control';
-import { HTMLTagsRegex } from './RegexUtils';
+import { emailRegex, HTMLTagsRegex } from './RegexUtils';
 
-const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
+const myEmailAddress = myAccount.recipientId.includes('@')
+  ? myAccount.recipientId
+  : `${myAccount.recipientId}@${appDomain}`;
+const enterpriseDomain = myAccount.recipientId.split('@')[1];
 
 const formAppSign = () => {
   return '<br/><span style="font-size: 12px;">Sent with <a style="color: #0091ff; text-decoration: none;" href="http://bit.ly/2Xzx8Es">Criptext</a> secure email</span>';
@@ -347,7 +351,20 @@ export const parseEmailAddress = emailAddress => {
   email = email.toLowerCase();
   const emailTag = isEmailTag ? email : `<${email}>`;
   const complete = `${name || ''} ${emailTag}`;
-  return { name, email, complete: complete.trim() };
+  const domain = email.split('@')[1];
+  const form = emailRegex.test(email)
+    ? email.includes(`@${appDomain}`) || email.includes(`@${enterpriseDomain}`)
+      ? 'tag-app-domain'
+      : 'tag-default'
+    : 'tag-error';
+  const state =
+    form === 'tag-default'
+      ? externalDomains.includes(domain)
+        ? undefined
+        : 'tag-loading'
+      : undefined;
+  const contact = { name, email, complete: complete.trim(), state, form };
+  return { contact, domain };
 };
 
 export const parseContactRow = contact => {
