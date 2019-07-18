@@ -179,6 +179,10 @@ ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>
   dbManager.updateContactByEmail({ email, name })
 );
 
+ipc.answerRenderer('db-update-contact-spam-acore', params =>
+  dbManager.updateContactSpamScore(params)
+);
+
 ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
 
 ipc.answerRenderer('db-update-emails', params =>

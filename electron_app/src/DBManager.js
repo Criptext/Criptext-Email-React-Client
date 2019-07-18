@@ -117,18 +117,6 @@ const createContactsIfOrNotStore = async (contacts, trx) => {
   return emailAddresses;
 };
 
-const updateContactScore = (emailId, trx) => {
-  const subquery = trx
-    .table(Table.EMAIL_CONTACT)
-    .select('contactId')
-    .where('emailId', emailId)
-    .andWhere('type', '<>', EMAIL_CONTACT_TYPE_FROM);
-  return trx
-    .table(Table.CONTACT)
-    .whereIn('id', subquery)
-    .increment('score', 1);
-};
-
 const filterUniqueContacts = contacts => {
   const contactsUnique = contacts.reduce(
     (result, contact) => {
@@ -155,7 +143,7 @@ const getAllContacts = () => {
 const getContactByEmails = (emails, trx) => {
   const knex = trx || db;
   return knex
-    .select('id', 'email', 'score')
+    .select('id', 'email', 'score', 'spamScore')
     .from(Table.CONTACT)
     .whereIn('email', emails);
 };
@@ -199,6 +187,38 @@ const updateContactByEmail = ({ email, name }, trx) => {
     .update({ name });
 };
 
+const updateContactScore = (emailId, trx) => {
+  const subquery = trx
+    .table(Table.EMAIL_CONTACT)
+    .select('contactId')
+    .where('emailId', emailId)
+    .andWhere('type', '<>', EMAIL_CONTACT_TYPE_FROM);
+  return trx
+    .table(Table.CONTACT)
+    .whereIn('id', subquery)
+    .increment('score', 1);
+};
+
+const updateContactSpamScore = ({ emailIds, notEmailAddress, value }) => {
+  return db
+    .table(Table.EMAIL_CONTACT)
+    .select(
+      db.raw(
+        `GROUP_CONCAT(DISTINCT(${Table.EMAIL_CONTACT}.contactId)) as contactIds`
+      )
+    )
+    .whereIn('emailId', emailIds)
+    .andWhere('type', EMAIL_CONTACT_TYPE_FROM)
+    .then(result => {
+      const contactIds = result[0].contactIds.split(',');
+      return db
+        .table(Table.CONTACT)
+        .whereNot('email', notEmailAddress)
+        .whereIn('id', contactIds)
+        .update({ spamScore: db.raw(`spamScore + ${value}`) });
+    });
+};
+
 /* EmailContact
 ----------------------------- */
 const createEmailContact = (emailContacts, trx) => {
@@ -226,8 +246,8 @@ const createEmailLabel = (emailLabels, prevTrx) => {
   });
 };
 
-const deleteEmailLabel = ({ emailsId, labelIds }, prevTrx) => {
-  const emailLabels = emailsId.map(item => {
+const deleteEmailLabel = ({ emailIds, labelIds }, prevTrx) => {
+  const emailLabels = emailIds.map(item => {
     return {
       emailId: item,
       labelId: labelIds[0]
@@ -239,7 +259,7 @@ const deleteEmailLabel = ({ emailsId, labelIds }, prevTrx) => {
     return await trx
       .table(Table.EMAIL_LABEL)
       .whereIn('labelId', labelIds)
-      .whereIn('emailId', emailsId)
+      .whereIn('emailId', emailIds)
       .del();
   });
 };
@@ -977,9 +997,9 @@ const deleteLabelById = id => {
       .select('*')
       .from(Table.EMAIL_LABEL)
       .where('labelId', id);
-    const emailsId = emailLabels.map(item => item.emailId);
-    if (emailsId.length) {
-      await deleteEmailLabel({ emailsId, labelId: id }, trx);
+    const emailIds = emailLabels.map(item => item.emailId);
+    if (emailIds.length) {
+      await deleteEmailLabel({ emailIds, labelId: id }, trx);
     }
     return trx
       .table(Table.LABEL)
@@ -1341,6 +1361,7 @@ module.exports = {
   getFilesByTokens,
   updateAccount,
   updateContactByEmail,
+  updateContactSpamScore,
   updateEmail,
   updateEmails,
   updateFeedItems,

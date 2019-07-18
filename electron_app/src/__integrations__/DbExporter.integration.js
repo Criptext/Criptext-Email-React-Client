@@ -177,9 +177,9 @@ describe('Parse database: ', () => {
   it('Should parse Contacts to string', async () => {
     await insertContacts(contacts);
     const expectedString =
-      `{"table":"contact","object":{"id":1,"email":"alice@criptext.com","name":"Alice","isTrusted":false}}\n` +
-      `{"table":"contact","object":{"id":2,"email":"bob@criptext.com","name":"Bob","isTrusted":false}}\n` +
-      `{"table":"contact","object":{"id":3,"email":"charlie@criptext.com","name":"Charlie","isTrusted":false}}`;
+      `{"table":"contact","object":{"id":1,"email":"alice@criptext.com","name":"Alice","isTrusted":false,"spamScore":0}}\n` +
+      `{"table":"contact","object":{"id":2,"email":"bob@criptext.com","name":"Bob","isTrusted":false,"spamScore":0}}\n` +
+      `{"table":"contact","object":{"id":3,"email":"charlie@criptext.com","name":"Charlie","isTrusted":false,"spamScore":0}}`;
     const contactsString = await exportContactTable(dbConnection);
     expect(contactsString).toBe(expectedString);
   });

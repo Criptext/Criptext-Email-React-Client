@@ -308,6 +308,9 @@ class PanelWrapper extends Component {
             },
             hasStopLoad
           );
+        } else if (hasStopLoad) {
+          if (!activity) activity = stopLoadSync();
+          else this.props.onStopLoadSync();
         }
       } else if (threadIds && isRenderingThread) {
         this.props.onLoadThreads(

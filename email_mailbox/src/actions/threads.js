@@ -573,7 +573,7 @@ const formAddThreadLabelParams = (emails, labelId) => {
 
 const formRemoveThreadLabelParams = (emails, labelId) => {
   return {
-    emailsId: emails.map(email => email.id),
+    emailIds: emails.map(email => email.id),
     labelIds: [labelId]
   };
 };

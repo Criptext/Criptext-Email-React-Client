@@ -35,6 +35,7 @@ import {
   unsendEmail,
   updateAccount,
   updateContactByEmail,
+  updateContactSpamScore,
   updateEmail,
   updateEmails,
   updateFilesByEmailId,
@@ -390,8 +391,13 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         : undefined
       : senderDeviceId;
   const [prevEmail] = await getEmailByKey(metadataKey);
+  const contactObjectSpamToCheck = parseContactRow(from);
+  const contactSpamToCheck = await getContactByEmails([
+    contactObjectSpamToCheck.email
+  ]);
+  const isContactSpamer = contactSpamToCheck[0].spamScore > 1;
   const isSpam = labels
-    ? labels.find(label => label === LabelType.spam.text)
+    ? labels.find(label => label === LabelType.spam.text) || isContactSpamer
     : undefined;
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
@@ -748,34 +754,48 @@ const handlePeerThreadRead = async ({ rowid, params }) => {
 
 const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
   const { metadataKeys, labelsRemoved, labelsAdded } = params;
-  const emailsId = [];
+  const emailIds = [];
   const threadIds = [];
   for (const metadataKey of metadataKeys) {
     const [email] = await getEmailByKey(metadataKey);
     if (email) {
-      emailsId.push(email.id);
+      emailIds.push(email.id);
       threadIds.push(email.threadId);
     }
   }
-  if (!emailsId.length) return { rowid: null };
+  if (!emailIds.length) return { rowid: null };
   const labelsToRemove = await getLabelsByText(labelsRemoved);
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
   const labelsToAdd = await getLabelsByText(labelsAdded);
   const labelIdsToAdd = labelsToAdd.map(label => label.id);
 
   await formAndSaveEmailLabelsUpdate({
-    emailsId,
+    emailIds,
     labelIdsToAdd,
     labelIdsToRemove
   });
+
+  const isAddedToSpam = labelIdsToAdd.includes(LabelType.spam.id);
+  if (isAddedToSpam) {
+    const notEmailAddress = myAccount.recipientId.includes('@')
+      ? myAccount.recipientId
+      : `${myAccount.recipientId}@${appDomain}`;
+    await updateContactSpamScore({ emailIds, notEmailAddress, value: 1 });
+  }
+
+  const isRemovedToSpam = labelIdsToRemove.includes(LabelType.spam.id);
+  if (isRemovedToSpam) {
+    const notEmailAddress = myAccount.recipientId.includes('@')
+      ? myAccount.recipientId
+      : `${myAccount.recipientId}@${appDomain}`;
+    await updateContactSpamScore({ emailIds, notEmailAddress, value: -1 });
+  }
 
   const hasInbox =
     labelIdsToAdd.includes(LabelType.inbox.id) ||
     labelIdsToRemove.includes(LabelType.inbox.id) ||
     labelIdsToAdd.includes(LabelType.trash.id);
-  const hasSpam =
-    labelIdsToAdd.includes(LabelType.spam.id) ||
-    labelIdsToRemove.includes(LabelType.spam.id);
+  const hasSpam = isAddedToSpam || isRemovedToSpam;
   let badgeLabelIds = [];
   if (hasInbox) badgeLabelIds = [...badgeLabelIds, LabelType.inbox.id];
   if (hasSpam) badgeLabelIds = [...badgeLabelIds, LabelType.spam.id];
@@ -791,8 +811,8 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
     const emailIds = emails.map(email => email.id);
     allEmailsIdsSet = new Set([...allEmailsIdsSet, ...emailIds]);
   }
-  const allEmailsIds = Array.from(allEmailsIdsSet);
-  if (!allEmailsIds.length) return { rowid };
+  const emailIds = Array.from(allEmailsIdsSet);
+  if (!emailIds.length) return { rowid };
 
   const labelsToRemove = await getLabelsByText(labelsRemoved);
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
@@ -801,18 +821,32 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
   const labelIdsToAdd = labelsToAdd.map(label => label.id);
 
   await formAndSaveEmailLabelsUpdate({
-    emailsId: allEmailsIds,
+    emailIds,
     labelIdsToAdd,
     labelIdsToRemove
   });
+
+  const isAddedToSpam = labelIdsToAdd.includes(LabelType.spam.id);
+  if (isAddedToSpam) {
+    const notEmailAddress = myAccount.recipientId.includes('@')
+      ? myAccount.recipientId
+      : `${myAccount.recipientId}@${appDomain}`;
+    await updateContactSpamScore({ emailIds, notEmailAddress, value: 1 });
+  }
+
+  const isRemovedToSpam = labelIdsToRemove.includes(LabelType.spam.id);
+  if (isRemovedToSpam) {
+    const notEmailAddress = myAccount.recipientId.includes('@')
+      ? myAccount.recipientId
+      : `${myAccount.recipientId}@${appDomain}`;
+    await updateContactSpamScore({ emailIds, notEmailAddress, value: -1 });
+  }
 
   const hasInbox =
     labelIdsToAdd.includes(LabelType.inbox.id) ||
     labelIdsToRemove.includes(LabelType.inbox.id) ||
     labelIdsToAdd.includes(LabelType.trash.id);
-  const hasSpam =
-    labelIdsToAdd.includes(LabelType.spam.id) ||
-    labelIdsToRemove.includes(LabelType.spam.id);
+  const hasSpam = isAddedToSpam || isRemovedToSpam;
   let badgeLabelIds = [];
   if (hasInbox) badgeLabelIds = [...badgeLabelIds, LabelType.inbox.id];
   if (hasSpam) badgeLabelIds = [...badgeLabelIds, LabelType.spam.id];
@@ -820,17 +854,17 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
 };
 
 const formAndSaveEmailLabelsUpdate = async ({
-  emailsId,
+  emailIds,
   labelIdsToAdd,
   labelIdsToRemove
 }) => {
-  const formattedEmailLabelsToAdd = emailsId.reduce((result, emailId) => {
+  const formattedEmailLabelsToAdd = emailIds.reduce((result, emailId) => {
     const emailLabel = formEmailLabel({ emailId, labels: labelIdsToAdd });
     return [...result, ...emailLabel];
   }, []);
 
   if (labelIdsToRemove.length) {
-    await deleteEmailLabel({ emailsId, labelIds: labelIdsToRemove });
+    await deleteEmailLabel({ emailIds, labelIds: labelIdsToRemove });
   }
   if (formattedEmailLabelsToAdd.length) {
     await createEmailLabel(formattedEmailLabelsToAdd);
