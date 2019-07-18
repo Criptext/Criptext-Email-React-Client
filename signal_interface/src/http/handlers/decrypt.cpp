@@ -5,6 +5,11 @@
 
 
 int postDecrypt(struct mg_connection *conn, void *cbdata) {
+  int corsResult = cors(conn);
+  if (corsResult < 0) {
+    return 201;
+  }
+  
   std::cout << "Receiving Request" << std::endl;
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
@@ -47,12 +52,64 @@ int postDecrypt(struct mg_connection *conn, void *cbdata) {
 
   if (result < 0) {
     std::string unencrypted = "Content Unencrypted";
-    mg_send_http_ok( conn, "text/plain", strlen(unencrypted.c_str()));
-    mg_write(conn, unencrypted.c_str(), strlen(unencrypted.c_str()));
-    return -1;
+    mg_send_http_error(conn, 400, "%s", unencrypted.c_str());    
+    return 400;
   }
 
   mg_send_http_ok( conn, "text/plain", plaintext_len);
   mg_write(conn, plaintext_data, plaintext_len);
   return 1;
+}
+
+int postDecryptKey(struct mg_connection *conn, void *cbdata) {
+  int corsResult = cors(conn);
+  if (corsResult < 0) {
+    return 201;
+  }
+  
+  std::cout << "Receiving Request" << std::endl;
+  char buffer[1024];
+  int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
+
+  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
+    std::cout << "Receiving Request Fail 1" << std::endl;
+    mg_send_http_error(conn, 400, "%s", "No request data");
+    return 400;
+  }
+  buffer[dlen] = 0;
+  cJSON *obj = cJSON_Parse(buffer);
+  
+  if (obj == NULL) {
+    std::cout << "Receiving Request Fail 2 : " << buffer << std::endl;
+    mg_send_http_error(conn, 400, "%s", "No request data");
+    return 400;
+  }
+  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
+
+  cJSON *deviceId, *type, *recipientId, *key;
+  deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
+  recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
+  type = cJSON_GetObjectItemCaseSensitive(obj, "messageType");
+  key = cJSON_GetObjectItemCaseSensitive(obj, "key");
+
+  if (!cJSON_IsString(recipientId) || !cJSON_IsNumber(deviceId) || !cJSON_IsNumber(type)) {
+    mg_send_http_error(conn, 400, "%s", "No request data");
+    return 400;
+  }
+
+  CriptextSignal signal(recipientId->valuestring);
+
+  uint8_t *plaintext_data = 0;
+  size_t plaintext_len = 0;
+  int result = signal.decryptText(&plaintext_data, &plaintext_len, key->valuestring, recipientId->valuestring, deviceId->valueint, type->valueint);
+
+  if (result < 0) {
+    std::string unencrypted = "Content Unencrypted";
+    mg_send_http_error(conn, 400, "%s", unencrypted.c_str());
+    return 400;
+  }
+
+  mg_send_http_ok( conn, "application/octet-stream", plaintext_len);
+  mg_write(conn, plaintext_data, plaintext_len);
+  return 200;
 }

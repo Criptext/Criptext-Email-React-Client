@@ -27,6 +27,11 @@ int decrypt(struct mg_connection *conn, void *cbdata){
   return postDecrypt(conn, cbdata);
 }
 
+int decryptKey(struct mg_connection *conn, void *cbdata){
+  std::cout << "DECRYPT KEY" << std::endl;
+  return postDecryptKey(conn, cbdata);
+}
+
 
 int pong(struct mg_connection *conn, void *cbdata){
   std::cout << "PING PING" << std::endl;
@@ -41,6 +46,7 @@ void http_init(){
 
   ctx = mg_start(&callbacks, 0, civet_options);
   mg_set_request_handler(ctx, "/decrypt", decrypt, 0);
+  mg_set_request_handler(ctx, "/decrypt/key", decryptKey, 0);
   mg_set_request_handler(ctx, "/account", createAccount, 0);
   mg_set_request_handler(ctx, "/keybundle", createKeyBundle, 0);
   mg_set_request_handler(ctx, "/ping", pong, 0);

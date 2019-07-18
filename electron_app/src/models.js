@@ -286,6 +286,7 @@ const createSessionRecordColumns = table => {
   table.string('recipientId', XSMALL_STRING_SIZE).notNullable();
   table.integer('deviceId').notNullable();
   table.text('record').notNullable();
+  table.integer('recordLength').notNullable();
   table.primary(['recipientId', 'deviceId']);
 };
 
