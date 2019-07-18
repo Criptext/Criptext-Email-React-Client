@@ -143,7 +143,7 @@ const getAllContacts = () => {
 const getContactByEmails = (emails, trx) => {
   const knex = trx || db;
   return knex
-    .select('id', 'email', 'score')
+    .select('id', 'email', 'score', 'spamScore')
     .from(Table.CONTACT)
     .whereIn('email', emails);
 };

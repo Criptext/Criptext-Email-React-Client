@@ -391,8 +391,13 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         : undefined
       : senderDeviceId;
   const [prevEmail] = await getEmailByKey(metadataKey);
+  const contactObjectSpamToCheck = parseContactRow(from);
+  const contactSpamToCheck = await getContactByEmails([
+    contactObjectSpamToCheck.email
+  ]);
+  const isContactSpamer = contactSpamToCheck[0].spamScore > 1;
   const isSpam = labels
-    ? labels.find(label => label === LabelType.spam.text)
+    ? labels.find(label => label === LabelType.spam.text) || isContactSpamer
     : undefined;
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
