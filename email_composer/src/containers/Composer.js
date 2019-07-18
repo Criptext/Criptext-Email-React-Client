@@ -62,6 +62,10 @@ const TOO_BIG_FILE_STATUS = 413;
 const EXPIRED_SESSION_STATUS = 401;
 const INITIAL_REQUEST_EMPTY_STATUS = 499;
 const PENDING_ATTACHMENTS_MODES = [FILE_MODES.UPLOADING, FILE_MODES.FAILED];
+const temporalCheckedDomaind = {
+  is: [],
+  not: []
+};
 
 class ComposerWrapper extends Component {
   constructor(props) {
@@ -185,20 +189,38 @@ class ComposerWrapper extends Component {
   }
 
   checkContactDomain = async (stateKey, contactToCheck, domainToCheck) => {
-    const res = await isCriptextDomain([domainToCheck]);
-    const isUserEnterprise = res.body[0].isCriptextDomain;
+    const isDomainCheckedBefore = temporalCheckedDomaind.is.includes(
+      domainToCheck
+    );
+    const isNotDomainCheckedBefore = temporalCheckedDomaind.not.includes(
+      domainToCheck
+    );
+
+    let isUserEnterprise = false;
+    if (!isDomainCheckedBefore && !isNotDomainCheckedBefore) {
+      const res = await isCriptextDomain([domainToCheck]);
+      isUserEnterprise = res.body[0].isCriptextDomain;
+      if (isUserEnterprise) {
+        temporalCheckedDomaind.is.push(domainToCheck);
+      } else {
+        temporalCheckedDomaind.not.push(domainToCheck);
+      }
+    } else if (isDomainCheckedBefore) {
+      isUserEnterprise = true;
+    }
     const index = this.state[stateKey].findIndex(item => {
       return item.email === contactToCheck.email;
     });
+    const indexItem = index === -1 ? this.state[stateKey].length : index;
     this.setState(state => {
       const emails = [...state[stateKey]];
-      const contact = state[stateKey][index];
+      const contact = state[stateKey][indexItem];
       const contactChecked = {
         ...contact,
         state: undefined,
         form: isUserEnterprise ? 'tag-app-domain' : contact.form
       };
-      emails.splice(index, 1, contactChecked);
+      emails.splice(indexItem, 1, contactChecked);
       return {
         [stateKey]: emails
       };

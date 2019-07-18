@@ -17,7 +17,10 @@ import { FILE_MODES } from './FileUtils';
 import { Status } from '../components/Control';
 import { emailRegex, HTMLTagsRegex } from './RegexUtils';
 
-const myEmailAddress = `${myAccount.recipientId}@${appDomain}`;
+const myEmailAddress = myAccount.recipientId.includes('@')
+  ? myAccount.recipientId
+  : `${myAccount.recipientId}@${appDomain}`;
+const enterpriseDomain = myAccount.recipientId.split('@')[1];
 
 const formAppSign = () => {
   return '<br/><span style="font-size: 12px;">Sent with <a style="color: #0091ff; text-decoration: none;" href="http://bit.ly/2Xzx8Es">Criptext</a> secure email</span>';
@@ -350,7 +353,7 @@ export const parseEmailAddress = emailAddress => {
   const complete = `${name || ''} ${emailTag}`;
   const domain = email.split('@')[1];
   const form = emailRegex.test(email)
-    ? email.includes(`@${appDomain}`)
+    ? email.includes(`@${appDomain}`) || email.includes(`@${enterpriseDomain}`)
       ? 'tag-app-domain'
       : 'tag-default'
     : 'tag-error';
