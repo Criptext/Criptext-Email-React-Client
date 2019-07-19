@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { mimeTypeImageRegex } from './../utils/RegexUtils';
 
 const getFiles = state => state.get('files');
 
@@ -13,7 +14,9 @@ const defineFiles = (files, fileTokens) => {
       const filesFiltered = [...result.files];
       if (files.get(token)) {
         const file = files.get(token);
-        if (file.get('cid')) {
+        const mimeType = file.get('mimeType');
+        const isImage = mimeType.match(mimeTypeImageRegex);
+        if (file.get('cid') && isImage) {
           inlineImages.push(file.toJS());
         } else {
           filesFiltered.push(file.toJS());
