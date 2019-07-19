@@ -395,7 +395,9 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   const contactSpamToCheck = await getContactByEmails([
     contactObjectSpamToCheck.email
   ]);
-  const isContactSpamer = contactSpamToCheck[0].spamScore > 1;
+  const isContactSpamer = contactSpamToCheck[0]
+    ? contactSpamToCheck[0].spamScore > 1
+    : false;
   const isSpam = labels
     ? labels.find(label => label === LabelType.spam.text) || isContactSpamer
     : undefined;
