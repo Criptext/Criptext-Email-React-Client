@@ -5,6 +5,8 @@ const myAccount = require('../../src/Account');
 const { APP_DOMAIN } = require('../utils/const');
 
 const getUsername = () => {
+  if (!Object.keys(myAccount)) return '';
+  if (!myAccount.recipientId) return '';
   const username = myAccount.recipientId.includes('@')
     ? myAccount.recipientId
     : `${myAccount.recipientId}@${APP_DOMAIN}`;
@@ -36,7 +38,9 @@ ipc.answerRenderer(
 
 ipc.answerRenderer('db-clean-database', async username => {
   const user = username ? `${username}@${APP_DOMAIN}` : getUsername();
-  await fileUtils.removeUserDir(user);
+  if (user) {
+    await fileUtils.removeUserDir(user);
+  }
   await dbManager.cleanDataBase();
 });
 
