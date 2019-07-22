@@ -10,9 +10,9 @@
   border: none!important;
   flex-grow: 1;
   line-height: initial;
-  margin: 0 !important;
+  margin: 10px 10px 0 20px;
   min-height: 50px;
-  width: 100%;
+  width: calc(100% - 20px);
 
   .trumbowyg-button-pane{
     border-bottom: none;
@@ -477,9 +477,9 @@
   display: block;
   position: relative;
   border: 1px solid #DDD;
-  width: 100%;
+  width: calc(100% - 20px);
   min-height: 300px;
-  margin: 17px auto; }
+}
 
 .trumbowyg-box .trumbowyg-editor {
   margin: 0 auto; }

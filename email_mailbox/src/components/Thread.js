@@ -57,7 +57,10 @@ class Thread extends Component {
               />
             </div>
           </div>
-          <div className="cptx-thread-emails" ref={e => (this.scroll = e)}>
+          <div
+            className="cptx-thread-emails cptx-scrollbar"
+            ref={e => (this.scroll = e)}
+          >
             {this.renderEmails()}
           </div>
         </div>

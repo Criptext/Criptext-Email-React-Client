@@ -37,7 +37,9 @@ const Settings = props => (
           />
         ))}
       </ul>
-      <div className="settings-content-scroll">{renderSection(props)}</div>
+      <div className="settings-content-scroll cptx-scrollbar">
+        {renderSection(props)}
+      </div>
       {renderFooter(props)}
     </div>
     <Logoutpopup

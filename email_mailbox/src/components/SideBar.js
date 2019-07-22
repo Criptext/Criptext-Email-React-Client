@@ -13,7 +13,7 @@ const SideBar = props => (
     <header onClick={() => props.onToggleSideBar()}>
       <div className="header-icon" />
     </header>
-    <div className="navigation-partial-mail">
+    <div className="navigation-partial-mail cptx-scrollbar">
       <div className="nav-item-free">
         <Button
           id={'button-compose'}

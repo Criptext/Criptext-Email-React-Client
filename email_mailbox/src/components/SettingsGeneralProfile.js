@@ -137,7 +137,7 @@ const renderBlockSignature = props => (
       </div>
     </div>
     <div
-      className={`cptx-signature-editor ${
+      className={`cptx-signature-editor cptx-scrollbar${
         !myAccount.signatureEnabled ? 'cptx-signature-editor-disabled' : ''
       }`}
     >
