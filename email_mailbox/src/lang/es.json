@@ -420,8 +420,33 @@
     "restore_backup_request": {
       "title": "Restaurar respaldo",
       "paragraph": "Restaura tus correos desde un archivo local. Esto puede realizarse después seleccionando Configuración > Cuenta > Restaurar respaldo",
-      "button": "Restaurar desde archivo local",
+      "button": "Seleccionar archivo",
       "cancel": "Cancelar"
+    },
+    "restore_backup_from_file": {
+      "title": "Restaurar respaldo",
+      "paragraphs": {
+        "backed_up": "Respaldado",
+        "size": "Tamaño"
+      },
+      "input": {
+        "label": "Introduce tu clave",
+        "placeholder": "Clave"
+      },
+      "buttons": {
+        "restore": "Restaurar",
+        "cancel": "Cancelar"
+      }
+    },
+    "restore_backup_invalid_file": {
+      "title": "Archivo Inválido",
+      "paragraph": "El archivo seleccionado esta corrompido o le pertenece a otra cuenta de correo",
+      "button": "Cambiar archivo",
+      "cancel": "Cancelar"
+    },
+    "restore_backup_progress": {
+      "header": "Restaurando",
+      "cancelLabel": "Cancelar"
     },
     "set_reply_to": {
       "title": "Correo de Respuesta",

@@ -420,8 +420,33 @@
     "restore_backup_request": {
       "title": "Restore Backup",
       "paragraph": "Restore your emails from a local backup. This can be done later from Settings>Account>Restore Backup",
-      "button": "Select Backup File",
+      "button": "Select file",
       "cancel": "Cancel"
+    },
+    "restore_backup_from_file": {
+      "title": "Restore from Backup File",
+      "paragraphs": {
+        "backed_up": "Backed up",
+        "size": "Size"
+      },
+      "input": {
+        "label": "Introduce your passphrase",
+        "placeholder": "Passphrase"
+      },
+      "buttons": {
+        "restore": "Restore",
+        "cancel": "Cancel"
+      }
+    },
+    "restore_backup_invalid_file": {
+      "title": "Invalid File",
+      "paragraph": "The selected file is either corrupted or belongs to another email account",
+      "button": "Change file",
+      "cancel": "Cancel"
+    },
+    "restore_backup_progress": {
+      "header": "Restoring",
+      "cancelLabel": "Cancel"
     },
     "set_reply_to": {
       "title": "Set Reply To Email",
