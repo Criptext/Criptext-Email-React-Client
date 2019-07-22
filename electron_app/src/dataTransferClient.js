@@ -27,17 +27,17 @@ const checkDataTransferDirectory = () => {
   }
 };
 
-const removeDataTransferDirectoryRecursive = () => {
-  if (fs.existsSync(dataTransferDirectory)) {
-    fs.readdirSync(dataTransferDirectory).forEach(file => {
-      const currentPath = dataTransferDirectory + '/' + file;
+const removeDataTransferDirectoryRecursive = pathToDelete => {
+  if (fs.existsSync(pathToDelete)) {
+    fs.readdirSync(pathToDelete).forEach(file => {
+      const currentPath = path.join(pathToDelete, file);
       if (fs.lstatSync(currentPath).isDirectory()) {
         removeDataTransferDirectoryRecursive(currentPath);
       } else {
         fs.unlinkSync(currentPath);
       }
     });
-    fs.rmdirSync(dataTransferDirectory);
+    fs.rmdirSync(pathToDelete);
   }
 };
 
@@ -147,7 +147,7 @@ const exportDatabase = async () => {
 };
 
 const clearSyncData = () => {
-  return removeDataTransferDirectoryRecursive();
+  return removeDataTransferDirectoryRecursive(dataTransferDirectory);
 };
 
 module.exports = {
