@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import string from '../lang';
-import './restorebackuprequest.scss';
+import './restorebackuprequestpopup.scss';
 
 const {
   title,
@@ -20,12 +20,23 @@ const RestoreBackupRequest = props => {
         <p>{paragraph}</p>
       </div>
       <div className="popup-buttons">
-        <button
-          className="button-a popup-confirm-button"
-          onClick={props.onConfirmRestoreBackup}
-        >
-          <span>{button}</span>
-        </button>
+        <input
+          id="input-restore-backup"
+          type="file"
+          onChange={props.onSelectBackupFile}
+          multiple={false}
+        />
+        <label htmlFor="input-restore-backup">
+          <button
+            className="button-a popup-confirm-button"
+            onClick={() => {
+              document.getElementById('input-restore-backup').click();
+            }}
+          >
+            <span>{button}</span>
+          </button>
+        </label>
+
         <button
           className="button-c popup-cancel-button"
           onClick={props.onDismissRestoreBackup}
@@ -39,7 +50,8 @@ const RestoreBackupRequest = props => {
 
 RestoreBackupRequest.propTypes = {
   onConfirmRestoreBackup: PropTypes.func,
-  onDismissRestoreBackup: PropTypes.func
+  onDismissRestoreBackup: PropTypes.func,
+  onSelectBackupFile: PropTypes.func
 };
 
 export default RestoreBackupRequest;
