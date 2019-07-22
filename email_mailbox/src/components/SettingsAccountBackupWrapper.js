@@ -142,7 +142,7 @@ class SettingsAccountBackupWrapper extends Component {
   };
 
   localBackupSuccessCallback = () => {
-    this.setState({ backupPercent: 99 }, () => {
+    this.setState({ backupPercent: 99.9 }, () => {
       setTimeout(() => {
         const backupPercent = 100;
         const progressMessage = backup_mailbox_success;

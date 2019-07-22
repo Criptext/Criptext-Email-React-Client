@@ -343,6 +343,10 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Cambiar"
     },
+    "creating_backup_file": {
+      "title": "Creando Respaldo",
+      "paragraph": "Por favor, espere un momento..."
+    },
     "delete_account": {
       "title": "Eliminar Mi Cuenta",
       "paragraphs": {

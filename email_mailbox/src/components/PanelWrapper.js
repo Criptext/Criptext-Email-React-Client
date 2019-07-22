@@ -15,6 +15,7 @@ import { USER_GUIDE_STEPS } from './UserGuide';
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
+  CREATING_BACKUP_FILE: 'creating-backup-file',
   DEVICE_REMOVED: 'device-removed',
   PASSWORD_CHANGED: 'password-changed',
   ONLY_BACKDROP: 'only-backdrop',
@@ -188,6 +189,14 @@ class PanelWrapper extends Component {
       Event.REACTIVATED_ACCOUNT,
       this.reactivatedAccountListenerCallback
     );
+    addEvent(
+      Event.LOCAL_BACKUP_DISABLE_EVENTS,
+      this.localBackupDisableEventsListenerCallback
+    );
+    addEvent(
+      Event.LOCAL_BACKUP_ENABLE_EVENTS,
+      this.localBackupEnableEventsListenerCallback
+    );
   };
 
   removeEventHandlers = () => {
@@ -209,6 +218,14 @@ class PanelWrapper extends Component {
     removeEvent(
       Event.REACTIVATED_ACCOUNT,
       this.reactivatedAccountListenerCallback
+    );
+    removeEvent(
+      Event.LOCAL_BACKUP_DISABLE_EVENTS,
+      this.localBackupDisableEventsListenerCallback
+    );
+    removeEvent(
+      Event.LOCAL_BACKUP_ENABLE_EVENTS,
+      this.localBackupEnableEventsListenerCallback
     );
   };
 
@@ -429,6 +446,22 @@ class PanelWrapper extends Component {
     const isVisibleSuspendedAccountPopup =
       this.state.mailboxPopupType === MAILBOX_POPUP_TYPES.SUSPENDED_ACCOUNT;
     if (isShowingPopup && isVisibleSuspendedAccountPopup) {
+      this.handleCloseMailboxPopup();
+    }
+  };
+
+  localBackupDisableEventsListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.CREATING_BACKUP_FILE
+    });
+  };
+
+  localBackupEnableEventsListenerCallback = () => {
+    const isShowingPopup = !this.state.isHiddenMailboxPopup;
+    const isVisibleCreatingBackupFilePopup =
+      this.state.mailboxPopupType === MAILBOX_POPUP_TYPES.CREATING_BACKUP_FILE;
+    if (isShowingPopup && isVisibleCreatingBackupFilePopup) {
       this.handleCloseMailboxPopup();
     }
   };

@@ -106,22 +106,29 @@ ipc.answerRenderer('create-default-backup-folder', () =>
 
 ipc.answerRenderer('export-backup-file', async ({ backupPath }) => {
   try {
+    globalManager.windowsEvents.disable();
     sendEventToAllWindows('local-backup-disable-events');
     await prepareBackupFiles();
+    await simulatePause(2000);
+    globalManager.windowsEvents.enable();
     sendEventToAllWindows('local-backup-enable-events');
     await exportBackupFile({ backupPath });
     sendEventToAllWindows('local-backup-export-finished');
     await simulatePause(3000);
     sendEventToAllWindows('local-backup-success');
   } catch (error) {
+    globalManager.windowsEvents.enable();
     sendEventToAllWindows('local-backup-enable-events', { error });
   }
 });
 
 ipc.answerRenderer('encrypt-backup-file', async ({ backupPath, password }) => {
   try {
+    globalManager.windowsEvents.disable();
     sendEventToAllWindows('local-backup-disable-events');
     await prepareBackupFiles();
+    await simulatePause(2000);
+    globalManager.windowsEvents.enable();
     sendEventToAllWindows('local-backup-enable-events');
     await exportBackupFile({ moveToDest: false });
     sendEventToAllWindows('local-backup-export-finished');
@@ -130,6 +137,7 @@ ipc.answerRenderer('encrypt-backup-file', async ({ backupPath, password }) => {
     await simulatePause(3000);
     sendEventToAllWindows('local-backup-success');
   } catch (error) {
+    globalManager.windowsEvents.enable();
     sendEventToAllWindows('local-backup-enable-events', { error });
   }
 });

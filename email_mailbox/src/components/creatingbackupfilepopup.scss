@@ -1,0 +1,16 @@
+#creating-backup-file-popup {
+  > .popup-paragraph {
+    position: relative;
+    left: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+
+    > .loading-ring {
+      position: relative;
+      top: -15px;
+      margin-right: 5px;
+    }
+  }
+}
