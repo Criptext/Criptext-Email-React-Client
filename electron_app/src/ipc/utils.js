@@ -1,5 +1,5 @@
 const ipc = require('@criptext/electron-better-ipc');
-const { app, dialog, BrowserWindow } = require('electron');
+const { app, dialog } = require('electron');
 const {
   getComputerName,
   isWindows,
@@ -8,11 +8,16 @@ const {
 const { processEventsQueue } = require('../eventQueueManager');
 const globalManager = require('./../globalManager');
 const loadingWindow = require('./../windows/loading');
-const { getSystemLanguage } = require('./../windows/windowUtils');
+const {
+  getSystemLanguage,
+  sendEventToAllWindows
+} = require('./../windows/windowUtils');
 const {
   createDefaultBackupFolder,
+  getDefaultBackupFolder,
+  prepareBackupFiles,
   exportBackupFile,
-  getDefaultBackupFolder
+  encryptBackupFile
 } = require('./../BackupManager');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
@@ -37,13 +42,6 @@ ipc.answerRenderer('update-dock-badge', value => {
     app.setBadgeCount(value);
   }
 });
-
-const sendEventToAllWindows = eventName => {
-  const openedWindows = BrowserWindow.getAllWindows();
-  return openedWindows.forEach(openWindow => {
-    openWindow.webContents.send(eventName);
-  });
-};
 
 // Link devices
 ipc.answerRenderer('start-link-devices-event', data => {
@@ -96,13 +94,45 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
 };
 
 // Backup
+function simulatePause(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
 ipc.answerRenderer('create-default-backup-folder', () =>
   createDefaultBackupFolder()
 );
 
-ipc.answerRenderer('export-backup-file', ({ customPath, password }) =>
-  exportBackupFile({ customPath, password })
-);
+ipc.answerRenderer('export-backup-file', async ({ customPath }) => {
+  try {
+    sendEventToAllWindows('local-backup-disable-events');
+    await prepareBackupFiles();
+    sendEventToAllWindows('local-backup-enable-events');
+    await exportBackupFile({ customPath });
+    sendEventToAllWindows('local-backup-export-finished');
+    await simulatePause(3000);
+    sendEventToAllWindows("local-backup-success");
+  } catch (error) {
+    sendEventToAllWindows('local-backup-enable-events', { error });
+  }
+});
+
+ipc.answerRenderer('encrypt-backup-file', async ({ customPath, password }) => {
+  try {
+    sendEventToAllWindows('local-backup-disable-events');
+    await prepareBackupFiles();
+    sendEventToAllWindows('local-backup-enable-events');
+    await exportBackupFile({ moveToDest: false });
+    sendEventToAllWindows('local-backup-export-finished');
+    await encryptBackupFile({ customPath, password });
+    sendEventToAllWindows('local-backup-encrypt-finished');
+    await simulatePause(3000);
+    sendEventToAllWindows("local-backup-success");
+  } catch (error) {
+    sendEventToAllWindows('local-backup-enable-events', { error });
+  }
+});
 
 ipc.answerRenderer('get-default-backup-folder', () => getDefaultBackupFolder());
 

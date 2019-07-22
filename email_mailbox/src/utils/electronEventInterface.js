@@ -1395,6 +1395,30 @@ ipcRenderer.on('open-thread-by-notification', (ev, { threadId }) => {
   emitter.emit(Event.OPEN_THREAD, { threadId });
 });
 
+/*  Local backup
+----------------------------- */
+ipcRenderer.on('local-backup-disable-events', () => {
+  emitter.emit(Event.LOCAL_BACKUP_DISABLE_EVENTS);
+});
+
+ipcRenderer.on('local-backup-enable-events', (ev, params) => {
+  emitter.emit(Event.LOCAL_BACKUP_ENABLE_EVENTS, params);
+});
+
+ipcRenderer.on('local-backup-export-finished', () => {
+  emitter.emit(Event.LOCAL_BACKUP_EXPORT_FINISHED);
+});
+
+ipcRenderer.on('local-backup-encrypt-finished', () => {
+  emitter.emit(Event.LOCAL_BACKUP_ENCRYPT_FINISHED);
+});
+
+ipcRenderer.on('local-backup-success', () => {
+  emitter.emit(Event.LOCAL_BACKUP_SUCCESS);
+});
+
+/*  Events
+----------------------------- */
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
@@ -1420,6 +1444,11 @@ export const Event = {
   LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
   LOAD_APP: 'load-app',
   LOAD_EVENTS: 'load-events',
+  LOCAL_BACKUP_DISABLE_EVENTS: 'local-backup-disable-events',
+  LOCAL_BACKUP_ENABLE_EVENTS: 'local-backup-enable-events',
+  LOCAL_BACKUP_EXPORT_FINISHED: 'local-backup-export-finished',
+  LOCAL_BACKUP_ENCRYPT_FINISHED: 'local-backup-encrypt-finished',
+  LOCAL_BACKUP_SUCCESS: 'local-backup-success',
   OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',
   REACTIVATED_ACCOUNT: 'reactivated-account',

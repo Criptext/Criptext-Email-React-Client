@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  myAccount,
-  requiredMinLength,
-  showSaveFileDialog
-} from './../utils/electronInterface';
+import { myAccount, requiredMinLength } from './../utils/electronInterface';
 import {
   changePassword,
   changeRecoveryEmail,
@@ -468,23 +464,6 @@ class SettingAccountWrapper extends Component {
         password,
         inProgress: true
       }
-    });
-  };
-
-  handleSetExportBackupPassword = async ({ password }) => {
-    this.handleClosePopup();
-    const defaultBackuppath = await createDefaultBackupFolder();
-    const defaultFileName = `${defaultBackuppath}/${
-      password ? 'backup.enc' : 'backup.db'
-    }`;
-    showSaveFileDialog(defaultFileName, pathToSaveBackup => {
-      this.setState({
-        mailboxBackup: {
-          password,
-          filePath: pathToSaveBackup,
-          displayProgressBar: !!pathToSaveBackup
-        }
-      });
     });
   };
 

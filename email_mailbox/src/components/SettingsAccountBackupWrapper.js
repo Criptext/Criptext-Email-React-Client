@@ -2,19 +2,31 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SettingsAccountBackup from './SettingsAccountBackup';
 import { showSaveFileDialog } from './../utils/electronInterface';
+import {
+  exportBackupFile,
+  getDefaultBackupFolder,
+  encryptBackupFile
+} from '../utils/ipc';
+import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import string from './../lang';
-import { exportBackupFile, getDefaultBackupFolder } from '../utils/ipc';
 
 const { progress } = string.settings.mailbox_backup;
 const { backing_up_mailbox, backup_mailbox_success } = progress;
+
+const BACKUP_TYPES = {
+  UNENCRYPT: 'unencrypted',
+  ENCRYPT: 'encrypted',
+  NONE: 'none'
+};
 
 class SettingsAccountBackupWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inProgress: false,
       backupPercent: 0,
-      progressMessage: ''
+      inProgress: false,
+      progressMessage: '',
+      type: BACKUP_TYPES.NONE
     };
   }
 
@@ -29,74 +41,117 @@ class SettingsAccountBackupWrapper extends Component {
     );
   }
 
-  async componentDidUpdate() {
+  componentDidUpdate() {
     if (!this.state.inProgress && this.props.mailboxBackupParams.inProgress) {
       const { password } = this.props.mailboxBackupParams;
-      const defautlPath = await getDefaultBackupFolder();
-      const filename = password ? 'backup.enc' : 'backup.db';
-      const backupPath = `${defautlPath}/${filename}`;
-      showSaveFileDialog(backupPath, selectedPath => {
-        if (!selectedPath) {
-          this.props.onClearMailboxBackupParams();
-          return this.clearProgressParams();
-        }
-
-        this.setState(
-          {
-            inProgress: true,
-            backupPercent: 1,
-            progressMessage: backing_up_mailbox
-          },
-          () => {
+      this.setState(
+        {
+          inProgress: true,
+          backupPercent: 5,
+          progressMessage: backing_up_mailbox,
+          type: password ? BACKUP_TYPES.ENCRYPT : BACKUP_TYPES.UNENCRYPT
+        },
+        async () => {
+          const defautlPath = await getDefaultBackupFolder();
+          const filename = password ? 'backup.enc' : 'backup.db';
+          const backupPath = `${defautlPath}/${filename}`;
+          showSaveFileDialog(backupPath, selectedPath => {
+            if (!selectedPath) {
+              this.props.onClearMailboxBackupParams();
+              return this.clearProgressParams();
+            }
             this.initMailboxBackup({
               backupPath: selectedPath,
               password
             });
-          }
-        );
-      });
+          });
+        }
+      );
     }
   }
 
+  componentWillUnmount() {
+    this.removeEventHandlers();
+  }
+
   initMailboxBackup = ({ backupPath, password }) => {
-    if (!password) return this.handleUnencryptedBackup({ backupPath });
-
-    return this.handleEncryptedBackup({ backupPath, password });
-  };
-
-  handleUnencryptedBackup = ({ backupPath }) => {
-    this.setState(
-      {
-        backupPercent: 70
-      },
-      async () => {
-        await exportBackupFile({
-          customPath: backupPath
-        });
-        this.setState(
-          {
-            backupPercent: 100,
-            progressMessage: backup_mailbox_success
-          },
-          () => {
-            this.props.onClearMailboxBackupParams();
-            setTimeout(this.clearProgressParams, 1500);
-          }
-        );
-      }
-    );
-  };
-
-  handleEncryptedBackup = ({ backupPath, password }) => {
-    alert(backupPath, password);
-    this.props.onClearMailboxBackupParams();
+    this.initMailboxBackupListeners();
+    if (!password) {
+      exportBackupFile({ backupPath });
+    } else {
+      encryptBackupFile({ backupPath, password });
+    }
   };
 
   clearProgressParams = () => {
     this.setState({
-      inProgress: false,
       backupPercent: 0,
-      progressMessage: ''
+      inProgress: false,
+      progressMessage: '',
+      transition: 0,
+      type: BACKUP_TYPES.NONE
+    });
+  };
+
+  initMailboxBackupListeners = () => {
+    addEvent(
+      Event.LOCAL_BACKUP_ENABLE_EVENTS,
+      this.localBackupEnableEventsCallback
+    );
+    addEvent(
+      Event.LOCAL_BACKUP_EXPORT_FINISHED,
+      this.localBackupExportFinishedCallback
+    );
+    addEvent(
+      Event.LOCAL_BACKUP_ENCRYPT_FINISHED,
+      this.localBackupEncryptFinishedCallback
+    );
+    addEvent(Event.LOCAL_BACKUP_SUCCESS, this.localBackupSuccessCallback);
+  };
+
+  removeEventHandlers = () => {
+    removeEvent(
+      Event.LOCAL_BACKUP_ENABLE_EVENTS,
+      this.localBackupEnableEventsCallback
+    );
+    removeEvent(
+      Event.LOCAL_BACKUP_EXPORT_FINISHED,
+      this.localBackupExportFinishedCallback
+    );
+    removeEvent(
+      Event.LOCAL_BACKUP_ENCRYPT_FINISHED,
+      this.localBackupEncryptFinishedCallback
+    );
+    removeEvent(Event.LOCAL_BACKUP_SUCCESS, this.localBackupSuccessCallback);
+  };
+
+  localBackupEnableEventsCallback = () => {
+    const isOnlyExport = this.state.type === BACKUP_TYPES.UNENCRYPT;
+    const backupPercent = isOnlyExport ? 40 : 30;
+    this.setState({ backupPercent });
+  };
+
+  localBackupExportFinishedCallback = () => {
+    const isOnlyExport = this.state.type === BACKUP_TYPES.UNENCRYPT;
+    const backupPercent = isOnlyExport ? 70 : 60;
+    this.setState({ backupPercent });
+  };
+
+  localBackupEncryptFinishedCallback = () => {
+    this.setState({ backupPercent: 80 });
+  };
+
+  localBackupSuccessCallback = () => {
+    this.setState({ backupPercent: 99 }, () => {
+      setTimeout(() => {
+        const backupPercent = 100;
+        const progressMessage = backup_mailbox_success;
+        this.setState({ backupPercent, progressMessage }, () => {
+          this.props.onClearMailboxBackupParams();
+          this.removeEventHandlers();
+          setTimeout(this.clearProgressParams, 3000);
+        });
+      }, 2000);
     });
   };
 }
