@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import RestoreBackupRequest from './RestoreBackupRequest';
-import { setCanceledSyncStatus } from './../utils/electronInterface';
+import {
+  setCanceledSyncStatus,
+  showOpenBackupFileDialog
+} from './../utils/electronInterface';
 
 const RestoreBackupModes = {
   REQUEST: 'request',
@@ -10,6 +13,11 @@ const RestoreBackupModes = {
   RESTORING: 'restoring',
   RETRY_RESTORE: 'retry',
   INVALID_FILE: 'invalid-file'
+};
+
+const BackupTypes = {
+  ENCRYPTED: 'enc',
+  UNENCRYPTED: 'db'
 };
 
 class RestoreBackupPopupWrapper extends Component {
@@ -36,7 +44,16 @@ class RestoreBackupPopupWrapper extends Component {
   }
 
   handleConfirmRestoreBackup = () => {
-    alert('Seleccionar archivo');
+    const allowedExtensions = Object.values(BackupTypes);
+    showOpenBackupFileDialog(allowedExtensions, paths => {
+      if (!paths || !paths.length) return;
+      const backupType = paths[0].split('.').pop();
+      const nextMode =
+        backupType === BackupTypes.ENCRYPTED
+          ? RestoreBackupModes.ENCRYPTED_FILE
+          : RestoreBackupModes.UNENCRYPTED_FILE;
+      this.setState({ mode: nextMode });
+    });
   };
 
   handleDismissRestoreBackup = () => {
