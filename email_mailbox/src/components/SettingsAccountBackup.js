@@ -22,7 +22,9 @@ const SettingsAccountBackup = props => (
       <div className="cptx-backing-up-bar">
         <div className="bar-background">
           <div
-            className="bar-progress"
+            className={`bar-progress ${defineProgressBarClass(
+              props.backupPercent
+            )}`}
             style={{ width: `${props.backupPercent}%` }}
           />
         </div>
@@ -33,6 +35,10 @@ const SettingsAccountBackup = props => (
     )}
   </div>
 );
+
+const defineProgressBarClass = percentage => {
+  return percentage === 100 ? 'bar-is-success' : 'bar-in-progress';
+};
 
 SettingsAccountBackup.propTypes = {
   backupPercent: PropTypes.number,

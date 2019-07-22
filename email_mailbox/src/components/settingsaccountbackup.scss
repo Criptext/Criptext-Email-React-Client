@@ -23,7 +23,13 @@
       .bar-progress {
         height: 100%;
         border-radius: 4px;
-        background-color: #0091ff;
+        transition: width 2s linear;
+        &.bar-in-progress {
+          background-color: #0091ff;
+        }
+        &.bar-is-success {
+          background-color: #68b515;
+        }
       }
     }
     .bar-message {
