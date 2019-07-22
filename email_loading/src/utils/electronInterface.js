@@ -30,3 +30,7 @@ export const stopSocket = () => {
 
 export const isFromStore =
   globalManager.isWindowsStore.get() || globalManager.isMAS.get();
+
+export const setCanceledSyncStatus = status => {
+  globalManager.canceledSync.set(status);
+};

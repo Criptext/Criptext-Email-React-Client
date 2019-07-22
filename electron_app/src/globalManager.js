@@ -14,6 +14,7 @@ global.internetConnection;
 global.isWindowsStore =
   currrentInstallerType === allInstallerTypes.windows.store;
 global.deviceType = getDeviceType(currrentInstallerType, allInstallerTypes);
+global.canceledSync = false;
 
 /*  Composer
 ----------------------------- */
@@ -113,6 +114,16 @@ const getInternetConnectionStatus = () => {
   return global.internetConnection;
 };
 
+/*  Canceled Sync
+----------------------------- */
+const setCanceledSyncStatus = status => {
+  global.canceledSync = status;
+};
+
+const getCanceledSyncStatus = () => {
+  return global.canceledSync;
+};
+
 module.exports = {
   composerData: {
     get: getComposerData,
@@ -157,5 +168,9 @@ module.exports = {
   },
   deviceType: {
     id: global.deviceType
+  },
+  canceledSync: {
+    get: getCanceledSyncStatus,
+    set: setCanceledSyncStatus
   }
 };

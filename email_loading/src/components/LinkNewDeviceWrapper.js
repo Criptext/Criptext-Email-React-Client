@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import signal from '../libs/signal';
-import { remoteData, startSocket } from '../utils/electronInterface';
+import {
+  remoteData,
+  startSocket,
+  setCanceledSyncStatus
+} from '../utils/electronInterface';
 import {
   acknowledgeEvents,
   clearSyncData,
@@ -261,6 +265,7 @@ class LoadingWrapper extends Component {
 
   handleClickCancelSync = () => {
     if (this.state.lastStep === STEPS.WAIT_MAILBOX) {
+      setCanceledSyncStatus(true);
       openMailboxWindow();
       closeCreatingKeysLoadingWindow();
     }

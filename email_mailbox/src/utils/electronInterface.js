@@ -31,6 +31,14 @@ export const LabelType = Object.assign(labels, additionalLabels);
 
 export const getDeviceType = () => globalManager.deviceType.id;
 
+export const setCanceledSyncStatus = status => {
+  globalManager.canceledSync.set(status);
+};
+
+export const getCanceledSyncStatus = () => {
+  return globalManager.canceledSync.get();
+};
+
 /*  Window events
 ----------------------------- */
 export const reloadWindow = () => {
