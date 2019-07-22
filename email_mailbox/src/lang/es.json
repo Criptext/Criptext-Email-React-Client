@@ -417,6 +417,12 @@
       "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
       "button": "¡Listo!"
     },
+    "restore_backup_request": {
+      "title": "Restaurar respaldo",
+      "paragraph": "Restaura tus correos desde un archivo local. Esto puede realizarse después seleccionando Configuración > Cuenta > Restaurar respaldo",
+      "button": "Restaurar desde archivo local",
+      "cancel": "Cancelar"
+    },
     "set_reply_to": {
       "title": "Correo de Respuesta",
       "paragraph": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",

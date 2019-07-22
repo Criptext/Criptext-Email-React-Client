@@ -8,7 +8,7 @@ import {
   checkUserGuideSteps
 } from '../utils/electronEventInterface';
 import { processPendingEvents } from '../utils/ipc';
-import { LabelType } from '../utils/electronInterface';
+import { LabelType, getCanceledSyncStatus } from '../utils/electronInterface';
 import { SectionType } from '../utils/const';
 import { addLabels, setAvatarUpdatedTimestamp, stopLoadSync } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
@@ -19,8 +19,11 @@ const MAILBOX_POPUP_TYPES = {
   DEVICE_REMOVED: 'device-removed',
   PASSWORD_CHANGED: 'password-changed',
   ONLY_BACKDROP: 'only-backdrop',
+  RESTORE_BACKUP: 'restore-backup',
   SUSPENDED_ACCOUNT: 'suspended-account'
 };
+
+const RESTORE_BACKUP_POPUP_DELAY = 1000;
 
 class PanelWrapper extends Component {
   constructor(props) {
@@ -158,7 +161,20 @@ class PanelWrapper extends Component {
   handleCloseWelcome = () => {
     this.setState({ isOpenWelcome: false }, () => {
       this.props.onUpdateOpenedAccount();
+      this.handleCheckRestoreBackup();
     });
+  };
+
+  handleCheckRestoreBackup = () => {
+    const userHasCanceledSync = getCanceledSyncStatus();
+    if (!this.state.isOpenWelcome && userHasCanceledSync) {
+      setTimeout(() => {
+        this.setState({
+          isHiddenMailboxPopup: false,
+          mailboxPopupType: MAILBOX_POPUP_TYPES.RESTORE_BACKUP
+        });
+      }, RESTORE_BACKUP_POPUP_DELAY);
+    }
   };
 
   handleCloseMailboxPopup = () => {

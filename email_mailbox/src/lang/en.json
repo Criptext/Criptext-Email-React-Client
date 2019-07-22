@@ -417,6 +417,12 @@
       "paragraph": "Next time you sign into your account on another device you'll have to enter your password and then validate the sign in from an existing device.",
       "button": "Got it"
     },
+    "restore_backup_request": {
+      "title": "Restore Backup",
+      "paragraph": "Restore your emails from a local backup. This can be done later from Settings>Account>Restore Backup",
+      "button": "Select Backup File",
+      "cancel": "Cancel"
+    },
     "set_reply_to": {
       "title": "Set Reply To Email",
       "paragraph": "When someone replies to one of your emails, they will reply to the address set here.",

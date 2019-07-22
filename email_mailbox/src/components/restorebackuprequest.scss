@@ -1,0 +1,11 @@
+#restore-backup-request {
+  padding-bottom: 10px;
+  > .popup-buttons {
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 20px;
+    > .popup-cancel-button {
+      margin-top: 15px;
+    }
+  }
+}
