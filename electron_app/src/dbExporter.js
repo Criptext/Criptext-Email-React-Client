@@ -76,10 +76,11 @@ const exportContactTable = async db => {
   let offset = 0;
   while (!shouldEnd) {
     const result = await db
-      .select('*')
-      .from(Table.CONTACT)
-      .limit(SELECT_ALL_BATCH)
-      .offset(offset)
+      .raw(
+        `SELECT * FROM ${
+          Table.CONTACT
+        } LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
+      )
       .then(rows =>
         rows.map(row => {
           delete row.score;
@@ -107,11 +108,11 @@ const exportLabelTable = async db => {
   let offset = 0;
   while (!shouldEnd) {
     const result = await db
-      .table(Table.LABEL)
-      .select('*')
-      .where(`${Table.LABEL}.type`, 'custom')
-      .limit(SELECT_ALL_BATCH)
-      .offset(offset)
+      .raw(
+        `SELECT * FROM ${
+          Table.LABEL
+        } WHERE type='custom' LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
+      )
       .then(rows =>
         rows.map(row => Object.assign(row, { visible: !!row.visible }))
       );
@@ -131,12 +132,11 @@ const exportEmailTable = async db => {
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
-    const rows = await db
-      .table(Table.EMAIL)
-      .select('*')
-      .whereRaw(whereRawEmailQuery)
-      .limit(SELECT_ALL_BATCH)
-      .offset(offset);
+    const rows = await db.raw(
+      `SELECT * FROM ${
+        Table.EMAIL
+      } WHERE ${whereRawEmailQuery} LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
+    );
     const result = await Promise.all(
       rows.map(async row => {
         if (!row.unsendDate) {
@@ -199,17 +199,13 @@ const exportEmailContactTable = async db => {
   let offset = 0;
   while (!shouldEnd) {
     const result = await db
-      .table(Table.EMAIL_CONTACT)
-      .select('*')
-      .whereExists(
-        db
-          .select('*')
-          .from(Table.EMAIL)
-          .whereRaw(`${Table.EMAIL}.id = ${Table.EMAIL_CONTACT}.emailId`)
-          .whereRaw(whereRawEmailQuery)
+      .raw(
+        `SELECT * FROM ${Table.EMAIL_CONTACT} WHERE EXISTS (SELECT * FROM ${
+          Table.EMAIL
+        } WHERE ${Table.EMAIL}.id=${
+          Table.EMAIL_CONTACT
+        }.emailId AND ${whereRawEmailQuery}) LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
       )
-      .limit(SELECT_ALL_BATCH)
-      .offset(offset)
       .then(rows =>
         rows.map(row => {
           return Object.assign(row, {
@@ -233,17 +229,13 @@ const exportEmailLabelTable = async db => {
   let offset = 0;
   while (!shouldEnd) {
     const result = await db
-      .table(Table.EMAIL_LABEL)
-      .select('*')
-      .whereExists(
-        db
-          .select('*')
-          .from(Table.EMAIL)
-          .whereRaw(`${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId`)
-          .whereRaw(whereRawEmailQuery)
+      .raw(
+        `SELECT * FROM ${Table.EMAIL_LABEL} WHERE EXISTS (SELECT * FROM ${
+          Table.EMAIL
+        } WHERE ${Table.EMAIL}.id=${
+          Table.EMAIL_LABEL
+        }.emailId AND ${whereRawEmailQuery}) LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
       )
-      .limit(SELECT_ALL_BATCH)
-      .offset(offset)
       .then(rows =>
         rows.map(row =>
           Object.assign(row, {
@@ -267,17 +259,13 @@ const exportFileTable = async db => {
   let offset = 0;
   while (!shouldEnd) {
     const result = await db
-      .table(Table.FILE)
-      .select('*')
-      .whereExists(
-        db
-          .select('*')
-          .from(Table.EMAIL)
-          .whereRaw(`${Table.EMAIL}.id = ${Table.FILE}.emailId`)
-          .whereRaw(whereRawEmailQuery)
+      .raw(
+        `SELECT * FROM ${Table.FILE} WHERE EXISTS (SELECT * FROM ${
+          Table.EMAIL
+        } WHERE ${Table.EMAIL}.id=${
+          Table.FILE
+        }.emailId AND ${whereRawEmailQuery}) LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
       )
-      .limit(SELECT_ALL_BATCH)
-      .offset(offset)
       .then(rows =>
         rows.map(row => {
           if (!row.cid) {
