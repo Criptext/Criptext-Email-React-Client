@@ -109,7 +109,7 @@ const prepareBackupFiles = async () => {
   }
 };
 
-const exportBackupFile = async ({ customPath, moveToDest = true }) => {
+const exportBackupFile = async ({ backupPath, moveToDest = true }) => {
   try {
     try {
       await exportDatabaseToFile({
@@ -121,19 +121,21 @@ const exportBackupFile = async ({ customPath, moveToDest = true }) => {
     }
     try {
       if (moveToDest) {
-        fs.writeFileSync(customPath, fs.readFileSync(U_ExportedFileName));
+        fs.writeFileSync(backupPath, fs.readFileSync(U_ExportedFileName));
       }
     } catch (fileErr) {
       throw new Error('Backup create file error');
     }
   } catch (error) {
-    return error;
+    throw error;
   } finally {
-    removeTempBackupDirectoryRecursive(TempBackupDirectory);
+    if (moveToDest) {
+      removeTempBackupDirectoryRecursive(TempBackupDirectory);
+    }
   }
 };
 
-const encryptBackupFile = async ({ customPath, password }) => {
+const encryptBackupFile = async ({ backupPath, password }) => {
   try {
     try {
       const { key, iv } = generateKeyAndIvFromPassword(password);
@@ -146,14 +148,13 @@ const encryptBackupFile = async ({ customPath, password }) => {
     } catch (encryptErr) {
       throw new Error('Encrypting error');
     }
-    // Move to destination
     try {
-      fs.writeFileSync(customPath, fs.readFileSync(E_ExportedFileName));
+      fs.writeFileSync(backupPath, fs.readFileSync(E_ExportedFileName));
     } catch (fileErr) {
       throw new Error('Backup create file error');
     }
   } catch (error) {
-    return error;
+    throw error;
   } finally {
     removeTempBackupDirectoryRecursive(TempBackupDirectory);
   }

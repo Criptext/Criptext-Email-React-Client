@@ -498,7 +498,16 @@ const generateKeyAndIv = (keySize, ivSize) => {
 };
 
 const generateKeyAndIvFromPassword = password => {
-  const key = crypto.scryptSync(password, 'salt', 128 / 8);
+  const salt = crypto.randomBytes(16);
+  const iterations = 10000;
+  const pbkdf2Name = 'sha256';
+  const key = crypto.pbkdf2Sync(
+    Buffer.from(password, 'utf8'),
+    salt,
+    iterations,
+    DEFAULT_KEY_LENGTH,
+    pbkdf2Name
+  );
   const iv = crypto.randomBytes(DEFAULT_KEY_LENGTH);
   return { key, iv };
 };

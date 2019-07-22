@@ -104,31 +104,31 @@ ipc.answerRenderer('create-default-backup-folder', () =>
   createDefaultBackupFolder()
 );
 
-ipc.answerRenderer('export-backup-file', async ({ customPath }) => {
+ipc.answerRenderer('export-backup-file', async ({ backupPath }) => {
   try {
     sendEventToAllWindows('local-backup-disable-events');
     await prepareBackupFiles();
     sendEventToAllWindows('local-backup-enable-events');
-    await exportBackupFile({ customPath });
+    await exportBackupFile({ backupPath });
     sendEventToAllWindows('local-backup-export-finished');
     await simulatePause(3000);
-    sendEventToAllWindows("local-backup-success");
+    sendEventToAllWindows('local-backup-success');
   } catch (error) {
     sendEventToAllWindows('local-backup-enable-events', { error });
   }
 });
 
-ipc.answerRenderer('encrypt-backup-file', async ({ customPath, password }) => {
+ipc.answerRenderer('encrypt-backup-file', async ({ backupPath, password }) => {
   try {
     sendEventToAllWindows('local-backup-disable-events');
     await prepareBackupFiles();
     sendEventToAllWindows('local-backup-enable-events');
     await exportBackupFile({ moveToDest: false });
     sendEventToAllWindows('local-backup-export-finished');
-    await encryptBackupFile({ customPath, password });
+    await encryptBackupFile({ backupPath, password });
     sendEventToAllWindows('local-backup-encrypt-finished');
     await simulatePause(3000);
-    sendEventToAllWindows("local-backup-success");
+    sendEventToAllWindows('local-backup-success');
   } catch (error) {
     sendEventToAllWindows('local-backup-enable-events', { error });
   }
