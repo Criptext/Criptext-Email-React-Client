@@ -1,0 +1,18 @@
+#restore-backup-invalid-file {
+  width: 200px;
+  padding-bottom: 15px;
+  > .popup-paragraph {
+    margin-bottom: 0px;
+  }
+  > .popup-buttons {
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 0px;
+    > #change-backup-file-input {
+      visibility: hidden;
+    }
+    > .popup-cancel-button {
+      margin-top: 15px;
+    }
+  }
+}
