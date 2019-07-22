@@ -8,7 +8,7 @@ import './dropfilefield.scss';
 const DropfileField = props => (
   <div
     className={
-      'dropfilefiled-container' +
+      'dropfilefiled-container cptx-scrollbar' +
       (props.isDragActive ? ' dragActive' : '') +
       (props.isToolbarHidden ? ' toolbarHidden' : '')
     }

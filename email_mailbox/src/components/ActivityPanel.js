@@ -28,7 +28,7 @@ class ActivityPanel extends Component {
             <div className="header-title">{string.activity.activity_feed}</div>
           </div>
         </header>
-        <div className="navigation-feed-content">
+        <div className="navigation-feed-content cptx-scrollbar">
           {this.renderFeedSection(this.props)}
         </div>
       </aside>

@@ -65,7 +65,7 @@ const Threads = props => (
         </span>
       </div>
     </div>
-    <div className="threads-content" onScroll={props.onScroll}>
+    <div className="threads-content cptx-scrollbar" onScroll={props.onScroll}>
       <div className="threads-items">
         {props.threads.size < 1 && (
           <EmptyMailbox

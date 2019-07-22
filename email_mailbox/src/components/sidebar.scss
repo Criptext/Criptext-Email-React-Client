@@ -135,23 +135,6 @@
   }
 }
 
-.navigation-partial-mail::-webkit-scrollbar-track{
-  background-color: rgba(233, 233, 233, 0.76);
-  box-shadow: inset 0 0 10px rgba(220,220,220,0.1);
-}
-
-.navigation-partial-mail::-webkit-scrollbar{
-  width: 6.5px;
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
-.navigation-partial-mail::-webkit-scrollbar-thumb{
-  border-radius: 10px;
-  background-color: #d8d8d8;
-}
-
 .nav-item-free{
   background-color: transparent;
   text-align: center;
