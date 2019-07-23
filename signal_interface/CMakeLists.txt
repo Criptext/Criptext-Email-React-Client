@@ -11,6 +11,7 @@ set(SOURCES
     main.cpp
     src/http/http.cpp
     src/http/handlers/cors.cpp
+    src/http/handlers/encrypt.cpp
     src/http/handlers/decrypt.cpp
     src/http/handlers/keyBundle.cpp
     src/helpers/utf8.c

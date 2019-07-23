@@ -34,8 +34,8 @@ bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int device
     if (getQuery.hasRow()) {
       SQLite::Statement query(db, "update identitykeyrecord set identityKey = ? where recipientId == ? and deviceId == ?");
       query.bind(1, identityKey);
-      getQuery.bind(2, recipientId);
-      getQuery.bind(3, deviceId);
+      query.bind(2, recipientId);
+      query.bind(3, deviceId);
       query.exec();
     } else {
       SQLite::Statement query(db, "insert into identitykeyrecord (recipientId, deviceId, identityKey) values (?,?,?)");

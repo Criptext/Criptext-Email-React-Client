@@ -156,6 +156,13 @@ struct signal_protocol_store_context {
     signal_protocol_sender_key_store sender_key_store;
 };
 
+struct ciphertext_message {
+    signal_type_base base;
+    int message_type;
+    signal_context *global_context;
+    signal_buffer *serialized;
+};
+
 #define DJB_KEY_LEN 32
 
 struct ec_public_key

@@ -3,7 +3,6 @@
 #include "../../crypto/signal.h"
 #include "decrypt.h"
 
-
 int postDecrypt(struct mg_connection *conn, void *cbdata) {
   int corsResult = cors(conn);
   if (corsResult < 0) {

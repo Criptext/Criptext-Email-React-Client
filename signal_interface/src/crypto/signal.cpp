@@ -40,36 +40,41 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
 
     session_cipher *session_cipher = 0;
     result = session_cipher_create(&session_cipher, store, &address, global_context);
-    std::cout << result << std::endl;
+    std::cout << result << " : Message Type : " << message_type <<  std::endl;
     size_t decode_len = 0;
     const unsigned char *encryptedCText = reinterpret_cast<const unsigned char*>(encryptedText.c_str());
     unsigned char* textFromB64 = base64_decode(encryptedCText, strlen((char *)encryptedCText), &decode_len);
 
     try {
+        signal_buffer *plainMessage = 0;
+
+
         if (message_type == 1) {
             const uint8_t *messageData = reinterpret_cast<const uint8_t*>(textFromB64);
             signal_message *incoming_message = 0;
-            signal_message_deserialize(&incoming_message, messageData, sizeof(messageData), global_context);
-            signal_buffer *plainMessage = 0;
-            session_cipher_decrypt_signal_message(session_cipher, incoming_message, 0, &plainMessage);
-            return 0;
+            signal_message_deserialize(&incoming_message, messageData, decode_len, global_context);
+            result = session_cipher_decrypt_signal_message(session_cipher, incoming_message, 0, &plainMessage);
         } else {
             const uint8_t *preKeyMessageData = reinterpret_cast<const uint8_t*>(textFromB64);
             pre_key_signal_message *incoming_message = 0;
             pre_key_signal_message_deserialize(&incoming_message, preKeyMessageData, decode_len, global_context);
             signal_buffer *plainMessage = 0;
-            int result = session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
-            std::cout << "NOOOO : " << result << std::endl;
-            uint8_t *data = signal_buffer_data(plainMessage);
-            size_t len = signal_buffer_len(plainMessage);
-
-            std::cout << "Message :  " << data << " - size: " << len << std::endl;
-
-            *plaintext_data = data;
-            *plaintext_len = len;
-             
-            return 0;
+            result = session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
         }
+
+        if (result < 0) {
+            return -1;
+        }
+
+        uint8_t *data = signal_buffer_data(plainMessage);
+        size_t len = signal_buffer_len(plainMessage);
+
+        std::cout << "Message :  " << data << " - size: " << len << std::endl;
+
+        *plaintext_data = data;
+        *plaintext_len = len;
+
+        return 0;
     } catch(exception &ex) {
         return -1;
     }
@@ -175,4 +180,95 @@ int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int dev
 void CriptextSignal::clean() {
     signal_context_destroy(global_context);
     signal_protocol_store_context_destroy(store);
+}
+
+void CriptextSignal::processKeyBundle(struct Keybundle* kb){
+    size_t decode_len = 0;
+    
+    ec_public_key* publicPreKey = 0;
+    
+    if (kb->prekey_public != 0) {
+        const unsigned char *preKeyBase64 = reinterpret_cast<unsigned char *>(kb->prekey_public);
+        const uint8_t *publicKey =  reinterpret_cast<uint8_t *>(base64_decode(preKeyBase64, strlen(kb->prekey_public), &decode_len));
+        curve_decode_point(&publicPreKey, publicKey, decode_len, global_context);
+    }
+
+    ec_public_key* publicSignedPreKey = 0;
+    const unsigned char *signedPreKeyBase64 = reinterpret_cast<unsigned char *>(kb->signed_prekey_public);
+    const uint8_t *publicSignedKey =  reinterpret_cast<uint8_t *>(base64_decode(signedPreKeyBase64, strlen(kb->signed_prekey_public), &decode_len));
+    curve_decode_point(&publicSignedPreKey, publicSignedKey, decode_len, global_context);
+
+    ec_public_key* publicIdentityKey = 0;
+    const unsigned char *identityKeyBase64 = reinterpret_cast<unsigned char *>(kb->identity_public_key);
+    const uint8_t *publicIdKey =  reinterpret_cast<uint8_t *>(base64_decode(identityKeyBase64, strlen(kb->identity_public_key), &decode_len));
+    curve_decode_point(&publicIdentityKey, publicIdKey, decode_len, global_context);
+
+    const unsigned char *signatureBase64 = reinterpret_cast<unsigned char *>(kb->signed_prekey_signature);
+    const uint8_t *signature =  reinterpret_cast<uint8_t *>(base64_decode(signatureBase64, strlen(kb->signed_prekey_signature), &decode_len));
+
+    /* Create a correct pre key bundle */
+    session_pre_key_bundle* pre_key_bundle = 0;
+    int result = session_pre_key_bundle_create(&pre_key_bundle,
+        kb->registration_id,
+        kb->device_id, /* device ID */
+        kb->prekey_id, /* pre key ID */
+        publicPreKey,
+        kb->signed_prekey_id, /* signed pre key ID */
+        publicSignedPreKey,
+        signature,
+        64,
+        publicIdentityKey);
+    
+    //create name
+    std::cout << "6" << std::endl;
+    signal_protocol_address address = {
+        .name = kb->recipient_id,
+        .name_len = strlen(kb->recipient_id),
+        .device_id = kb->device_id
+    };
+
+    session_builder* session_builder = 0;
+    result = session_builder_create(&session_builder, store, &address, global_context);
+    result = session_builder_process_pre_key_bundle(session_builder, pre_key_bundle);
+    session_builder_free(session_builder);
+}
+
+int CriptextSignal::encryptText(char **encryptedText, uint8_t *plainText, size_t plainTextLength, char* recipientId, int deviceId) {
+    std::cout << "0" << std::endl;
+    int result;
+
+    signal_protocol_address address = {
+        .name = recipientId,
+        .name_len = strlen(recipientId),
+        .device_id = deviceId
+    };
+
+    try {
+        
+        session_cipher *session_cipher = 0;
+        ciphertext_message *encryptedMessage = 0;
+        result = session_cipher_create(&session_cipher, store, &address, global_context);
+        std::cout << "text: " << plainText << std::endl;
+        result = session_cipher_encrypt(session_cipher, plainText, plainTextLength, &encryptedMessage);
+        
+        std::cout << result << std::endl;
+        
+        size_t len = 0;
+        int messageType = ciphertext_message_get_type(encryptedMessage);
+        signal_buffer *outgoing_serialized = ciphertext_message_get_serialized(encryptedMessage);
+        const unsigned char *text = reinterpret_cast<const unsigned char *>(signal_buffer_data(outgoing_serialized));
+        char *encodedText = reinterpret_cast<char *>(base64_encode(text, signal_buffer_len(outgoing_serialized), &len));
+
+        std::cout << text << std::endl << encodedText << std::endl << messageType << std::endl;
+
+        session_cipher_free(session_cipher);
+        SIGNAL_UNREF(encryptedMessage);
+
+        *encryptedText = encodedText;
+    } catch (exception &e) {
+        std::cout << "ERROR ENCRYPTING : " << e.what() << std::endl;
+        return -1;
+    }
+
+    return 0;
 }

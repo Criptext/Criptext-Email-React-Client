@@ -15,6 +15,18 @@ extern "C" {
     #include "base64.h"
 }
 
+struct Keybundle {
+  char* recipient_id;
+  int device_id;
+  int registration_id;
+  int signed_prekey_id;
+  char* signed_prekey_public;
+  char* signed_prekey_signature;
+  char* identity_public_key;
+  int prekey_id;
+  char* prekey_public;
+};
+
 class CriptextSignal {
 
     CriptextDB::Account account;
@@ -28,8 +40,9 @@ class CriptextSignal {
     public :
         CriptextSignal(char *recipientId);
         int decryptText(uint8_t **plaintext_data, size_t *plaintext_len, std::string encryptedText, std::string recipientId, int deviceId, int message_type);
+        int encryptText(char **encryptedText, uint8_t *plainText, size_t plainTextLength, char* recipientId, int deviceId);
         int generateKeyBundle(cJSON *bundle, string recipientId, int deviceId);
-
+        void processKeyBundle(struct Keybundle* kb);
         void clean();
 
     static int createAccountCredentials(char **publicKey, char **privKey, int *regId) {
@@ -73,6 +86,9 @@ class CriptextSignal {
         
         return 0;
     }
+
+    
+
 };
 
 #endif

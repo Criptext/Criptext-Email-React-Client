@@ -5,6 +5,7 @@ set(SOURCES
     src/http/http.cpp
     src/http/handlers/cors.cpp
     src/http/handlers/keyBundle.cpp
+    src/http/handlers/encrypt.cpp
     src/http/handlers/decrypt.cpp
     src/crypto/crypto.c
     src/crypto/signal.cpp

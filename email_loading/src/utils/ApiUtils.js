@@ -52,3 +52,35 @@ export const fetchDecryptKey = async ({
   };
   return await fetch(requestUrl, options);
 };
+
+export const createSession = async ({
+  accountRecipientId,
+  keybundles
+}) => {
+  const requestUrl = `${aliceUrl}/session/create`;
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      accountRecipientId,
+      keybundles
+    })
+  };
+  return await fetch(requestUrl, options);
+};
+
+export const encryptKey = async ({
+  deviceId,
+  recipientId,
+  key
+}) => {
+  const requestUrl = `${aliceUrl}/encrypt/key`;
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      deviceId,
+      recipientId,
+      key
+    })
+  };
+  return await fetch(requestUrl, options);
+};

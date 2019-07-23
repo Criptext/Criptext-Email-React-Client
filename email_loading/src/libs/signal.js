@@ -21,19 +21,15 @@ import {
   getAllLabels,
   getContactByEmails
 } from './../utils/ipc';
-import { createAccountCredentials, generateKeyBundle, fetchDecryptKey } from './../utils/ApiUtils';
+import { createAccountCredentials, generateKeyBundle, 
+  fetchDecryptKey, createSession, encryptKey } from './../utils/ApiUtils';
 import { CustomError } from './../utils/CustomError';
 import SignalProtocolStore from './store';
 import { appDomain } from './../utils/const';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 import string from './../lang';
 
-const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
-const ciphertextType = {
-  CIPHERTEXT: 1,
-  PREKEY_BUNDLE: 3
-};
 
 const createAccount = async ({
   recipientId,
@@ -257,63 +253,6 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   return decryptedText;
 };
 
-const decryptText = async (sessionCipher, textEncrypted, messageType) => {
-  switch (messageType) {
-    case ciphertextType.CIPHERTEXT:
-      return await sessionCipher.decryptWhisperMessage(textEncrypted, 'binary');
-    case ciphertextType.PREKEY_BUNDLE:
-      return await sessionCipher.decryptPreKeyWhisperMessage(
-        textEncrypted,
-        'binary'
-      );
-    default:
-      break;
-  }
-};
-
-const generatePreKeyBundle = async ({
-  identityKey,
-  registrationId,
-  signedPreKeyId,
-  preKeyIds,
-  deviceType
-}) => {
-  const preKeyPairArray = [];
-  const preKeys = await Promise.all(
-    preKeyIds.map(async preKeyId => {
-      const preKey = await KeyHelper.generatePreKey(preKeyId);
-      preKeyPairArray.push(preKey.keyPair);
-      return {
-        publicKey: util.toBase64(preKey.keyPair.pubKey),
-        id: preKeyId
-      };
-    })
-  );
-  
-  const signedPreKey = await KeyHelper.generateSignedPreKey(
-    identityKey,
-    signedPreKeyId
-  );
-  const pcName = await getComputerName();
-  const keybundle = {
-    deviceName: pcName || window.navigator.platform,
-    deviceFriendlyName: pcName || window.navigator.platform,
-    deviceType,
-    signedPreKeySignature: util.toBase64(signedPreKey.signature),
-    signedPreKeyPublic: util.toBase64(signedPreKey.keyPair.pubKey),
-    signedPreKeyId: signedPreKeyId,
-    identityPublicKey: util.toBase64(identityKey.pubKey),
-    registrationId: registrationId,
-    preKeys
-  };
-  const data = {
-    keybundle,
-    preKeyPairArray,
-    signedPreKeyPair: signedPreKey.keyPair
-  };
-  return data;
-};
-
 const encryptText = async (
   recipientId,
   deviceId,
@@ -360,17 +299,24 @@ const encryptKeyForNewDevice = async ({ recipientId, deviceId, key }) => {
     }
     await setTimeout(() => {}, 5000);
   }
-  let arrayBufferKeyBundle = undefined;
-  if (newKeyBundle) {
-    arrayBufferKeyBundle = keysToArrayBuffer(newKeyBundle);
+  const res = await createSession({
+    accountRecipientId: recipientId,
+    keybundles: [newKeyBundle]
+  })
+  if (res.status !== 200) {
+    throw CustomError(string.errors.prekeybundleFailed);
   }
-  const { body } = await encryptText(
+  const encryptRes = await encryptKey({
     recipientId,
     deviceId,
-    key,
-    arrayBufferKeyBundle
-  );
-  return body;
+    key
+  }) 
+  if (encryptRes.status !== 200) {
+    throw CustomError(string.errors.prekeybundleFailed);
+  };
+
+  const encryptedKey = await encryptRes.text();
+  return encryptedKey;
 };
 
 export default {
@@ -378,7 +324,6 @@ export default {
   createAccountToDB,
   createAccountWithNewDevice,
   decryptKey,
-  generatePreKeyBundle,
   uploadKeys,
   encryptKeyForNewDevice
 };

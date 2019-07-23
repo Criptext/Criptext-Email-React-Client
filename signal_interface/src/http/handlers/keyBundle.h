@@ -3,4 +3,5 @@
 #include "cors.h"
 
 int createKeyBundle(struct mg_connection *conn, void *cbdata);
+int processKeyBundle(struct mg_connection *conn, void *cbdata);
 int createAccount(struct mg_connection *conn, void *cbdata);

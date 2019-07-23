@@ -60,9 +60,9 @@ bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int
     if (getQuery.hasRow()) {
       SQLite::Statement query(db, "update sessionrecord set record = ?, recordLength = ? where recipientId == ? and deviceId == ?");
       query.bind(1, record);
-      getQuery.bind(2, static_cast<int>(len));
-      getQuery.bind(3, recipientId);
-      getQuery.bind(4, deviceId);
+      query.bind(2, static_cast<int>(len));
+      query.bind(3, recipientId);
+      query.bind(4, deviceId);
       query.exec();
     } else {
       SQLite::Statement query(db, "insert into sessionrecord (recipientId, deviceId, record, recordLength) values (?,?,?,?)");
