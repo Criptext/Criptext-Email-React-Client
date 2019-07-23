@@ -36,7 +36,6 @@ const DropfileField = props => (
       accept={props.accept}
       multiple={props.multiple}
       onChange={props.onDrop}
-      webkitdirectory
     />
     {props.isDragActive && (
       <div className="dropfilefiled-content">
