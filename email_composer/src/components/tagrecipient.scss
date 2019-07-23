@@ -7,7 +7,6 @@
   display: flex;
   flex-grow: 0;
   font-size: 13px;
-  font-weight: 200;
   height: 18px;
   margin: 2px 10px 2px 0;
   padding: 3px 2px 3px 10px;
@@ -72,11 +71,16 @@
     }
   }
   
-  a.icon-exit{
-    background-color: transparent;
-    font-size: 22px;
-    line-height: 10px;
+  a{
+    font-weight: 200;
     text-decoration: none;
+
+    &.icon-exit{
+      background-color: transparent;
+      font-size: 22px;
+      line-height: 10px;
+      text-decoration: none;
+    }
   }
 }
 
@@ -91,14 +95,17 @@
       &.tag-app-domain{
         background-color: $_BACKGROUND_COLOR_TAG_APP_DOMAIN;
         border-color: $_BORDER_COLOR_TAG_APP_DOMAIN;
-        color: $_COLOR_TEXT_TAG_APP_DOMAIN;
 
         &.tag-expanded{
           border-color: $_BORDER_COLOR_TAG_APP_DOMAIN_EDIT;
         }
 
-        a.icon-exit{
-          color: $_COLOR_ICON_TAG_APP_DOMAIN;
+        a{
+          color: $_COLOR_TEXT_TAG_APP_DOMAIN;
+
+          &.icon-exit{
+            color: $_COLOR_ICON_TAG_APP_DOMAIN;
+          }
         }
       }
 
@@ -110,22 +117,29 @@
           border-color: $_BORDER_COLOR_TAG_DEFAULT_EDIT;
         }
 
-        a.icon-exit{
-          color: $_COLOR_ICON_TAG_DEFAULT;
+        a{
+          color: $_COLOR_TEXT_TAG_DEFAULT;
+
+          &.icon-exit{
+            color: $_COLOR_ICON_TAG_DEFAULT;
+          }
         }
       }
 
       &.tag-error {
         background-color: $_BACKGROUND_COLOR_TAG_ERROR;
         border-color: $_BORDER_COLOR_TAG_ERROR;
-        color: $_COLOR_TEXT_TAG_ERROR;
 
         &.tag-expanded{
           border-color: $_BORDER_COLOR_TAG_ERROR_EDIT;
         }
 
-        a.icon-exit{
-          color: $_COLOR_ICON_TAG_ERROR;
+        a{
+          color: $_COLOR_TEXT_TAG_ERROR;
+
+          &.icon-exit{
+            color: $_COLOR_ICON_TAG_ERROR;
+          }
         }
       }
     }
