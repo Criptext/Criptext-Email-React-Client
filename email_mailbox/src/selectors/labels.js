@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { IconLabels } from './../utils/const';
+import { IconLabels, sidebarItemsOrder } from './../utils/const';
 import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
 import { LabelType } from '../utils/electronInterface';
 import string from './../lang';
@@ -54,21 +54,19 @@ const defineCustomLabels = labels => {
 };
 
 const defineSideBarItems = labels => {
-  const sideBarItems = labels
-    .valueSeq()
-    .filter(label => label.get('visible') && label.get('type') === 'system')
-    .map(label => {
-      const idText = toLowerCaseWithoutSpaces(label.get('text'));
-      return {
-        id: label.get('id'),
-        icon: IconLabels[label.get('id')]
-          ? IconLabels[label.get('id')].icon
-          : 'icon-tag',
-        text: string.labelsItems[idText],
-        badge: label.get('badge') || null
-      };
-    })
-    .toJS();
+  const sideBarItems = sidebarItemsOrder.map(id => {
+    const label = labels.get(`${id}`);
+    if (!label) return {};
+    const idText = toLowerCaseWithoutSpaces(label.get('text'));
+    return {
+      id: label.get('id'),
+      icon: IconLabels[label.get('id')]
+        ? IconLabels[label.get('id')].icon
+        : 'icon-tag',
+      text: string.labelsItems[idText],
+      badge: label.get('badge') || null
+    };
+  });
   const allMailIdText = toLowerCaseWithoutSpaces(IconLabels.allmail.text);
   const allMailItem = {
     id: -1,

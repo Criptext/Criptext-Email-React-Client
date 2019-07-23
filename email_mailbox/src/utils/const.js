@@ -14,6 +14,15 @@ export const avatarBaseUrl =
 
 export const unsentText = 'This content was unsent';
 
+export const sidebarItemsOrder = [
+  LabelType.inbox.id,
+  LabelType.sent.id,
+  LabelType.draft.id,
+  LabelType.starred.id,
+  LabelType.spam.id,
+  LabelType.trash.id
+];
+
 export const IconLabels = {
   [LabelType.inbox.id]: {
     icon: 'icon-mailbox'
