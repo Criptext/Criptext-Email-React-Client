@@ -380,7 +380,13 @@ class ComposerWrapper extends Component {
       isDragActive: false
     });
     const files = this.getFilesFromEvent(e);
-    this.setFiles(files);
+    const filesFiltered = [...files].filter(item => {
+      return !!item.type;
+    });
+
+    if (filesFiltered.length) {
+      this.setFiles(filesFiltered);
+    }
   };
 
   setFiles = newFiles => {

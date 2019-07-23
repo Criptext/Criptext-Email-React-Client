@@ -21,7 +21,7 @@ const defineEmails = (emails, contacts, emailIds) => {
           const to = defineContact(contacts, toIds);
           const ccIds = email.cc;
           const cc = defineContact(contacts, ccIds);
-          const bccIds = email.cc;
+          const bccIds = email.bcc;
           const bcc = defineContact(contacts, bccIds);
           const subject = email.subject || `(${string.mailbox.empty_subject})`;
           return { ...email, from, to, toIds, cc, ccIds, bcc, bccIds, subject };

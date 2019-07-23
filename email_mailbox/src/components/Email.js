@@ -121,7 +121,10 @@ const renderEmailInfoExpand = props => (
   <div className="email-info-content-line">
     <div className="email-info-content-to">
       {renderEmailStatus(props.email.status)}
-      <span>{`To ${showContacts(props.email.to)}`}</span>
+      <span>{`To ${showContacts([
+        ...props.email.to,
+        ...props.email.cc
+      ])}`}</span>
       <div className="email-info-content-to-more">
         <span onClick={props.onTooglePopOverEmailMoreInfo}>
           {string.mailbox.more}
@@ -191,7 +194,7 @@ const renderEmailInfoExpand = props => (
 const showContacts = contacts => {
   return contacts.reduce((result, contact, index) => {
     if (contacts.length > 1) {
-      const name = contact.name || contact.email;
+      const name = contact.name || contact.email.split('@')[0];
       const firstname = `${index !== 0 ? ', ' : ''}${name.split(' ')[0]}`;
       return `${result}${firstname}`;
     }

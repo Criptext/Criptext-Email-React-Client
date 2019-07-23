@@ -1,6 +1,5 @@
 const { getPendingEvents, deletePendingEventsByIds } = require('./DBManager');
 const { mailformedEventRegex } = require('./utils/RegexUtils');
-const globalManager = require('./globalManager');
 let clientManager;
 
 const QUEUE_BATCH = 3;
@@ -9,28 +8,26 @@ const SUCCESS_STATUS = 200;
 let isProcessingQueue = false;
 
 const processEventsQueue = async () => {
-  if (globalManager.internetConnection.getStatus() === true) {
-    if (isProcessingQueue) return;
-    isProcessingQueue = true;
+  if (isProcessingQueue) return;
+  isProcessingQueue = true;
 
-    if (!clientManager) {
-      clientManager = require('./clientManager');
-    }
-    const queuedEvents = await getPendingEvents();
-    while (queuedEvents.length > 0) {
-      const batch = queuedEvents.splice(0, QUEUE_BATCH);
-      const { ids, parsedEvents } = await removeMalformedEvents(batch);
-      if (!parsedEvents.length) continue;
-
-      const { status } = await clientManager.pushPeerEvents(parsedEvents);
-      if (status === MALFORMED_EVENT_STATUS) {
-        continue;
-      } else if (status === SUCCESS_STATUS) {
-        await deletePendingEventsByIds(ids);
-      }
-    }
-    isProcessingQueue = false;
+  if (!clientManager) {
+    clientManager = require('./clientManager');
   }
+  const queuedEvents = await getPendingEvents();
+  while (queuedEvents.length > 0) {
+    const batch = queuedEvents.splice(0, QUEUE_BATCH);
+    const { ids, parsedEvents } = await removeMalformedEvents(batch);
+    if (!parsedEvents.length) continue;
+
+    const { status } = await clientManager.pushPeerEvents(parsedEvents);
+    if (status === MALFORMED_EVENT_STATUS) {
+      continue;
+    } else if (status === SUCCESS_STATUS) {
+      await deletePendingEventsByIds(ids);
+    }
+  }
+  isProcessingQueue = false;
 };
 
 const removeMalformedEvents = async batch => {
