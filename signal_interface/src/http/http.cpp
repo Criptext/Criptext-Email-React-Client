@@ -37,6 +37,11 @@ int encryptKey(struct mg_connection *conn, void *cbdata){
   return postEncryptKey(conn, cbdata);
 }
 
+int encryptEmail(struct mg_connection *conn, void *cbdata){
+  std::cout << "ENCRYPT EMAIL" << std::endl;
+  return postEncryptEmail(conn, cbdata);
+}
+
 int sessionCreate(struct mg_connection *conn, void *cbdata){
   std::cout << "SESSION CREATE" << std::endl;
   return processKeyBundle(conn, cbdata);
@@ -57,6 +62,7 @@ void http_init(){
   mg_set_request_handler(ctx, "/decrypt", decrypt, 0);
   mg_set_request_handler(ctx, "/decrypt/key", decryptKey, 0);
   mg_set_request_handler(ctx, "/encrypt/key", encryptKey, 0);
+  mg_set_request_handler(ctx, "/encrypt/email", encryptEmail, 0);
   mg_set_request_handler(ctx, "/account", createAccount, 0);
   mg_set_request_handler(ctx, "/keybundle", createKeyBundle, 0);
   mg_set_request_handler(ctx, "/session/create", sessionCreate, 0);

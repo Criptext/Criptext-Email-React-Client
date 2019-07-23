@@ -2,6 +2,16 @@
 #include <string>
 #include <iostream>
 
+pthread_mutex_t global_mutex;
+
+void lock_fn(void *user_data){
+    pthread_mutex_lock(&global_mutex);
+}
+
+void unlock_fn(void *user_data){
+    pthread_mutex_unlock(&global_mutex);
+}
+
 CriptextSignal::CriptextSignal(char *recipientId){
     signal_context_create(&global_context, 0);
     signal_crypto_provider provider = {
@@ -20,6 +30,7 @@ CriptextSignal::CriptextSignal(char *recipientId){
     };
 
     signal_context_set_crypto_provider(global_context, &provider);
+    signal_context_set_locking_functions(global_context, lock_fn, unlock_fn);
     try {
         account = CriptextDB::getAccount("../../electron_app/Criptext.db", recipientId);
     } catch (exception &e) {
@@ -248,7 +259,6 @@ int CriptextSignal::encryptText(char **encryptedText, uint8_t *plainText, size_t
         session_cipher *session_cipher = 0;
         ciphertext_message *encryptedMessage = 0;
         result = session_cipher_create(&session_cipher, store, &address, global_context);
-        std::cout << "text: " << plainText << std::endl;
         result = session_cipher_encrypt(session_cipher, plainText, plainTextLength, &encryptedMessage);
         
         std::cout << result << std::endl;
@@ -259,12 +269,13 @@ int CriptextSignal::encryptText(char **encryptedText, uint8_t *plainText, size_t
         const unsigned char *text = reinterpret_cast<const unsigned char *>(signal_buffer_data(outgoing_serialized));
         char *encodedText = reinterpret_cast<char *>(base64_encode(text, signal_buffer_len(outgoing_serialized), &len));
 
-        std::cout << text << std::endl << encodedText << std::endl << messageType << std::endl;
+        std::cout << "ENCRYPTED : " << plainText << std::endl << "FROM : " << encodedText << std::endl << "TYPE: " << messageType << std::endl;
 
         session_cipher_free(session_cipher);
         SIGNAL_UNREF(encryptedMessage);
 
         *encryptedText = encodedText;
+        return messageType;
     } catch (exception &e) {
         std::cout << "ERROR ENCRYPTING : " << e.what() << std::endl;
         return -1;

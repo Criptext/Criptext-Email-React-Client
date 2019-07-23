@@ -1,19 +1,4 @@
 #include "keyBundle.h"
-#include <string>
-#include <iostream>
-#include <signal/session_pre_key.h>
-#include "../../crypto/signal.h"
-
-int SendJSON(struct mg_connection *conn, cJSON *json_obj) {
-	char *json_str = cJSON_PrintUnformatted(json_obj);
-	size_t json_str_len = strlen(json_str);
-
-	mg_send_http_ok(conn, "application/json; charset=utf-8", json_str_len);
-	mg_write(conn, json_str, json_str_len);
-
-	cJSON_free(json_str);
-	return (int)json_str_len;
-}
 
 int createKeyBundle(struct mg_connection *conn, void *cbdata) {
   int corsResult = cors(conn);
@@ -100,52 +85,13 @@ int createAccount(struct mg_connection *conn, void *cbdata) {
   return 1;
 }
 
-int parseKeyBundleJSON(Keybundle **keybundle, cJSON *obj) {
-  cJSON *recipientId, *domain, *deviceId, *registrationId, *signedPreKeyId, *signedPreKey, *signature, *identityKey, *preKeyObj, *preKeyId, *preKey;
-
-  recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
-  deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
-  registrationId = cJSON_GetObjectItemCaseSensitive(obj, "registrationId");
-  signedPreKeyId = cJSON_GetObjectItemCaseSensitive(obj, "signedPreKeyId");
-  signedPreKey = cJSON_GetObjectItemCaseSensitive(obj, "signedPreKeyPublic");
-  signature = cJSON_GetObjectItemCaseSensitive(obj, "signedPreKeySignature");
-  identityKey = cJSON_GetObjectItemCaseSensitive(obj, "identityPublicKey");
-
-  if (!cJSON_IsString(recipientId) || !cJSON_IsNumber(deviceId) || !cJSON_IsNumber(registrationId) 
-    || !cJSON_IsNumber(signedPreKeyId) || !cJSON_IsString(signedPreKey) || !cJSON_IsString(signature) 
-    || !cJSON_IsString(identityKey)) {
-    return -1;
-  }
-
-  if (cJSON_HasObjectItem(obj, "preKey")) {
-    preKeyObj = cJSON_GetObjectItemCaseSensitive(obj, "preKey");
-    preKey = cJSON_GetObjectItemCaseSensitive(preKeyObj, "publicKey");
-    preKeyId = cJSON_GetObjectItemCaseSensitive(preKeyObj, "id");
-  }
-
-  Keybundle kb = {
-    .recipient_id = recipientId->valuestring,
-    .device_id = deviceId->valueint,
-    .registration_id = registrationId->valueint,
-    .signed_prekey_id = signedPreKeyId->valueint,
-    .signed_prekey_public = signedPreKey->valuestring,
-    .signed_prekey_signature = signature->valuestring,
-    .identity_public_key = identityKey->valuestring,
-    .prekey_id = preKeyId != 0 ? preKeyId->valueint : 0,
-    .prekey_public = preKey != 0 ? preKey->valuestring : 0,
-  };
-
-  *keybundle = &kb;
-  return 0;
-}
-
 int processKeyBundle(struct mg_connection *conn, void *cbdata) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
   }
 
-  char buffer[1024];
+  char buffer[1024 * 5];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 
   if ((dlen < 1) || (dlen >= sizeof(buffer))) {

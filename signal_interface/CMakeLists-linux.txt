@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(SOURCES
     main.cpp
     src/http/http.cpp
+    src/http/handlers/helpers.cpp
     src/http/handlers/cors.cpp
     src/http/handlers/keyBundle.cpp
     src/http/handlers/encrypt.cpp

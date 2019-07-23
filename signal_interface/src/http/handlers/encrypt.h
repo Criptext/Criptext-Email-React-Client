@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include "../../crypto/signal.h"
+#include "helpers.h"
 #include "cors.h"
 
 int postEncryptKey(struct mg_connection *conn, void *cbdata);
+int postEncryptEmail(struct mg_connection *conn, void *cbdata);

@@ -10,6 +10,7 @@ link_directories(/usr/local/lib)
 set(SOURCES
     main.cpp
     src/http/http.cpp
+    src/http/handlers/helpers.cpp
     src/http/handlers/cors.cpp
     src/http/handlers/encrypt.cpp
     src/http/handlers/decrypt.cpp

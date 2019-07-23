@@ -83,7 +83,7 @@ bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int
 
 bool CriptextDB::deleteSessionRecord(string dbPath, string recipientId, long int deviceId) {
   try {
-    SQLite::Database db(dbPath);
+    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 
     SQLite::Statement query(db, "delete from sessionrecord where recipientId == ? and deviceId == ?");
     query.bind(1, recipientId);
@@ -100,7 +100,7 @@ bool CriptextDB::deleteSessionRecord(string dbPath, string recipientId, long int
 
 bool CriptextDB::deleteSessionRecords(string dbPath, string recipientId) {
   try {
-    SQLite::Database db(dbPath);
+    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 
     SQLite::Statement query(db, "delete from sessionrecord where recipientId == ?");
     query.bind(1, recipientId);

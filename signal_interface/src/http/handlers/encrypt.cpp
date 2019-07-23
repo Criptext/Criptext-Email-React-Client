@@ -66,3 +66,84 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata) {
   mg_write(conn, encryptedText, strlen(encryptedText));
   return 200;
 }
+
+int postEncryptEmail(struct mg_connection *conn, void *cbdata) {
+  int corsResult = cors(conn);
+  if (corsResult < 0) {
+    return 201;
+  }
+  
+  std::cout << "Receiving Request" << std::endl;
+  char buffer[1024 * 10];
+  int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
+
+  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
+    std::cout << "Receiving Request Fail 1" << std::endl;
+    mg_send_http_error(conn, 400, "%s", "No request data");
+    return 400;
+  }
+  buffer[dlen] = 0;
+  cJSON *obj = cJSON_Parse(buffer);
+  
+  if (obj == NULL) {
+    std::cout << "Receiving Request Fail 2 : " << buffer << std::endl;
+    mg_send_http_error(conn, 400, "%s", "No request data");
+    return 400;
+  }
+  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
+
+  cJSON *accountRecipientId, *deviceId, *recipientId, *body, *preview, *fileKeys;
+  accountRecipientId = cJSON_GetObjectItemCaseSensitive(obj, "accountRecipientId");
+  deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
+  recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
+  body = cJSON_GetObjectItemCaseSensitive(obj, "body");
+  preview = cJSON_GetObjectItemCaseSensitive(obj, "preview");
+  fileKeys = cJSON_GetObjectItemCaseSensitive(obj, "fileKeys");
+
+  if (!cJSON_IsString(accountRecipientId) || !cJSON_IsString(recipientId) || !cJSON_IsNumber(deviceId)) {
+    mg_send_http_error(conn, 400, "%s", "No request data");
+    return 400;
+  }
+
+  CriptextSignal signal(accountRecipientId->valuestring);
+
+  char *encryptedBody = 0;
+  int encryptedBodyType = 0;
+  char *encryptedPreview = 0;
+  int encryptedPreviewType = 0;
+  cJSON *response = cJSON_CreateObject();
+
+  if (cJSON_IsString(body)) {
+    try {
+      size_t len = strlen(body->valuestring);
+      uint8_t *text = (uint8_t *)malloc(len);
+      memcpy(text, body->valuestring, len);
+      int type = signal.encryptText(&encryptedBody, text, len, recipientId->valuestring, deviceId->valueint);
+      cJSON_AddStringToObject(response, "bodyEncrypted", encryptedBody);
+      cJSON_AddNumberToObject(response, "bodyMessageType", type);
+      free(text);
+    } catch (exception &ex) {
+      std::cout << "ENCRYPT BODY ERROR: " << ex.what() << std::endl;
+      mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
+      return 500;
+    }
+  }
+
+  if (cJSON_IsString(preview)) {
+    try {
+      size_t len = strlen(preview->valuestring);
+      uint8_t *text = (uint8_t *)malloc(len);
+      memcpy(text, preview->valuestring, len);
+      int type = signal.encryptText(&encryptedPreview, text, len, recipientId->valuestring, deviceId->valueint);
+      cJSON_AddStringToObject(response, "previewEncrypted", encryptedBody);
+      cJSON_AddNumberToObject(response, "previewMessageType", type);
+      free(text);
+    } catch (exception &ex) {
+      std::cout << "ENCRYPT BODY ERROR: " << ex.what() << std::endl;
+      mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
+      return 500;
+    }
+  }
+
+  return SendJSON(conn, response);
+}
