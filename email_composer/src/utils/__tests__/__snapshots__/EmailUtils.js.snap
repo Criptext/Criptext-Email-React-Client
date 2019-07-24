@@ -141,7 +141,9 @@ Object {
   "threadId": "1",
   "toEmails": Array [
     Object {
+      "complete": "From1 <from1@criptext.com>",
       "email": "from1@criptext.com",
+      "form": "tag-app-domain",
       "name": "From1",
     },
   ],
@@ -153,10 +155,16 @@ Object {
   "bccEmails": Array [],
   "ccEmails": Array [
     Object {
+      "complete": "<usuario2@criptext.com>",
       "email": "usuario2@criptext.com",
+      "form": "tag-app-domain",
+      "name": undefined,
     },
     Object {
+      "complete": "<usuario1@criptext.com>",
       "email": "usuario1@criptext.com",
+      "form": "tag-app-domain",
+      "name": undefined,
     },
   ],
   "files": Array [],
@@ -166,7 +174,9 @@ Object {
   "threadId": "1",
   "toEmails": Array [
     Object {
+      "complete": "From1 <from1@criptext.com>",
       "email": "from1@criptext.com",
+      "form": "tag-app-domain",
       "name": "From1",
     },
   ],
