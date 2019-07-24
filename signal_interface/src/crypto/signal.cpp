@@ -265,6 +265,7 @@ int CriptextSignal::encryptText(char **encryptedText, uint8_t *plainText, size_t
         
         size_t len = 0;
         int messageType = ciphertext_message_get_type(encryptedMessage);
+        messageType = messageType == 2 ? 1 : messageType;
         signal_buffer *outgoing_serialized = ciphertext_message_get_serialized(encryptedMessage);
         const unsigned char *text = reinterpret_cast<const unsigned char *>(signal_buffer_data(outgoing_serialized));
         char *encodedText = reinterpret_cast<char *>(base64_encode(text, signal_buffer_len(outgoing_serialized), &len));

@@ -139,13 +139,7 @@ const createEmails = async (
               return `${file.key}:${file.iv}`;
             }, []) 
             : null;
-          const {
-            bodyEncrypted, 
-            previewEncrypted, 
-            bodyMessageType, 
-            previewMessageType,
-            encryptedFileKeys = []
-          } = await encryptEmail({
+          const res = await encryptEmail({
             accountRecipientId: myAccount.recipientId,
             body,
             preview,
@@ -153,6 +147,13 @@ const createEmails = async (
             recipientId,
             deviceId
           });
+          const {
+            bodyEncrypted, 
+            previewEncrypted, 
+            bodyMessageType, 
+            previewMessageType,
+            encryptedFileKeys = []
+          } = await res.json();
           const fileKey = encryptedFileKeys.length > 0 ? encryptedFileKeys[0] : null;
 
           let criptextEmail = {
