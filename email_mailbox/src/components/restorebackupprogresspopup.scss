@@ -22,9 +22,14 @@
         border-radius: 5px;
         max-width: 95%;
         transition: width 1.5s;
-        background-image: repeating-linear-gradient(-45deg, #0091ff, #0091ff 11px, #50b0f9 10px, #50b0f9 20px);
-        background-size: 28px 28px;
-        animation: move 1s linear infinite;
+        &.running-animation {
+          background-image: repeating-linear-gradient(-45deg, #0091ff, #0091ff 11px, #50b0f9 10px, #50b0f9 20px);
+          background-size: 28px 28px;
+          animation: move 1s linear infinite;
+        }
+        &.stop-animation {
+          background-color: red;
+        }
       }
       @keyframes move {
         0% {

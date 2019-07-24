@@ -13,7 +13,7 @@ const ManualSyncDeviceApprovedPopup = props => (
     <div className="progress">
       <div className="bar">
         <div
-          className={`content running-animation`}
+          className={`content ${defineBarClass(props.hasError)}`}
           style={{ width: props.backupPercent + '%' }}
         />
       </div>
@@ -29,8 +29,12 @@ const ManualSyncDeviceApprovedPopup = props => (
   </div>
 );
 
+const defineBarClass = hasError =>
+  hasError ? 'stop-animation' : 'running-animation';
+
 ManualSyncDeviceApprovedPopup.propTypes = {
   backupPercent: PropTypes.number,
+  hasError: PropTypes.bool,
   onClickCancelRestoreBackup: PropTypes.func
 };
 
