@@ -1,10 +1,10 @@
 .avatar-letters {
-  position: relative;
   align-items: center;
   border-radius: 50%;
   display: flex;
-  overflow: hidden;
   height: 100%;
+  overflow: hidden;
+  position: relative;
   width: 100%;
 
   img {
@@ -16,6 +16,7 @@
   }
 
   span{
+    color: white;
     font-weight: 300;
     margin: 0 auto;
   }
