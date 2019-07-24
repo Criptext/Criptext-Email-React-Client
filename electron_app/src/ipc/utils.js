@@ -1,5 +1,5 @@
 const ipc = require('@criptext/electron-better-ipc');
-const { app, dialog } = require('electron');
+const { app, dialog, shell } = require('electron');
 const {
   getComputerName,
   isWindows,
@@ -21,6 +21,7 @@ const {
   restoreUnencryptedBackup,
   restoreEncryptedBackup
 } = require('./../BackupManager');
+const { showNotification } = require('./../notificationManager');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
@@ -111,7 +112,8 @@ ipc.answerRenderer('create-default-backup-folder', () =>
   createDefaultBackupFolder()
 );
 
-ipc.answerRenderer('export-backup-unencrypted', async ({ backupPath }) => {
+ipc.answerRenderer('export-backup-unencrypted', async params => {
+  const { backupPath, notificationParams } = params;
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('local-backup-disable-events', 1);
@@ -123,14 +125,27 @@ ipc.answerRenderer('export-backup-unencrypted', async ({ backupPath }) => {
     commitBackupStatus('local-backup-export-finished', 3);
     await simulatePause(3000);
     commitBackupStatus('local-backup-success', null);
+    showNotification({
+      title: notificationParams.success.title,
+      message: notificationParams.success.message,
+      clickHandler: function () {
+        shell.showItemInFolder(backupPath)
+      },
+      forceToShow: true
+    });
   } catch (error) {
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', null, { error });
+    showNotification({
+      title: notificationParams.error.title,
+      message: notificationParams.error.message,
+      forceToShow: true
+    });
   }
 });
 
 ipc.answerRenderer('export-backup-encrypted', async params => {
-  const { backupPath, password } = params;
+  const { backupPath, password, notificationParams } = params;
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('local-backup-disable-events', 1);

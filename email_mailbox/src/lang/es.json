@@ -294,6 +294,16 @@
     "newEmailGroup": {
       "prefix": "Tienes ",
       "sufix": " correos nuevos"
+    },
+    "export_backup": {
+      "success": {
+        "title": "Respaldo exportado exitosamente! 🙌",
+        "message": "Da clic aquí para ver tu archivo de respaldo"
+      },
+      "error": {
+        "title": "Criptext",
+        "message": "Ups! Algo salió mal al crear tu archivo de respaldo"
+      }
     }
   },
   "popups": {

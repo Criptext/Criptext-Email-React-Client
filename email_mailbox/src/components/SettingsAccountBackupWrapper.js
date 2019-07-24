@@ -11,6 +11,7 @@ import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import string from './../lang';
 import { defineBackupFileName } from '../utils/TimeUtils';
 
+const { export_backup } = string.notification;
 const { progress } = string.settings.mailbox_backup;
 const { backing_up_mailbox, backup_mailbox_success } = progress;
 
@@ -64,7 +65,8 @@ class SettingsAccountBackupWrapper extends Component {
             }
             this.initMailboxBackup({
               backupPath: selectedPath,
-              password
+              password,
+              notificationParams: export_backup
             });
           });
         }
@@ -76,12 +78,12 @@ class SettingsAccountBackupWrapper extends Component {
     this.removeEventHandlers();
   }
 
-  initMailboxBackup = ({ backupPath, password }) => {
+  initMailboxBackup = ({ backupPath, password, notificationParams }) => {
     this.initMailboxBackupListeners();
     if (!password) {
-      exportBackupUnencrypted({ backupPath });
+      exportBackupUnencrypted({ backupPath, notificationParams });
     } else {
-      exportBackupEncrypted({ backupPath, password });
+      exportBackupEncrypted({ backupPath, password, notificationParams });
     }
   };
 

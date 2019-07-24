@@ -294,6 +294,16 @@
     "newEmailGroup": {
       "prefix": "You have ",
       "sufix": " new emails"
+    },
+    "export_backup": {
+      "success": {
+        "title": "Backup exported successfully!",
+        "message": "Click here to open your backup folder"
+      },
+      "error": {
+        "title": "Criptext",
+        "message": "Oops! Something went wrong to export backup"
+      }
     }
   },
   "popups": {
