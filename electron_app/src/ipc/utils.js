@@ -16,8 +16,10 @@ const {
   createDefaultBackupFolder,
   getDefaultBackupFolder,
   prepareBackupFiles,
-  exportBackupFile,
-  encryptBackupFile
+  exportBackupUnencrypted,
+  exportBackupEncrypted,
+  restoreUnencryptedBackup,
+  restoreEncryptedBackup
 } = require('./../BackupManager');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
@@ -94,55 +96,103 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
 };
 
 // Backup
-function simulatePause(ms) {
+const simulatePause = ms => {
   return new Promise(resolve => {
     setTimeout(resolve, ms);
   });
-}
+};
+
+const commitBackupStatus = (eventName, status, params) => {
+  sendEventToAllWindows(eventName, params);
+  if (status) globalManager.backupStatus = status;
+};
 
 ipc.answerRenderer('create-default-backup-folder', () =>
   createDefaultBackupFolder()
 );
 
-ipc.answerRenderer('export-backup-file', async ({ backupPath }) => {
+ipc.answerRenderer('export-backup-unencrypted', async ({ backupPath }) => {
   try {
     globalManager.windowsEvents.disable();
-    sendEventToAllWindows('local-backup-disable-events');
-    await prepareBackupFiles();
+    commitBackupStatus('local-backup-disable-events', 1);
+    await prepareBackupFiles({});
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
-    sendEventToAllWindows('local-backup-enable-events');
-    await exportBackupFile({ backupPath });
-    sendEventToAllWindows('local-backup-export-finished');
+    commitBackupStatus('local-backup-enable-events', 2);
+    await exportBackupUnencrypted({ backupPath });
+    commitBackupStatus('local-backup-export-finished', 3);
     await simulatePause(3000);
-    sendEventToAllWindows('local-backup-success');
+    commitBackupStatus('local-backup-success', null);
   } catch (error) {
     globalManager.windowsEvents.enable();
-    sendEventToAllWindows('local-backup-enable-events', { error });
+    commitBackupStatus('local-backup-enable-events', null, { error });
   }
 });
 
-ipc.answerRenderer('encrypt-backup-file', async ({ backupPath, password }) => {
+ipc.answerRenderer('export-backup-encrypted', async params => {
+  const { backupPath, password } = params;
   try {
     globalManager.windowsEvents.disable();
-    sendEventToAllWindows('local-backup-disable-events');
-    await prepareBackupFiles();
+    commitBackupStatus('local-backup-disable-events', 1);
+    await prepareBackupFiles({});
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
-    sendEventToAllWindows('local-backup-enable-events');
-    await exportBackupFile({ moveToDest: false });
-    sendEventToAllWindows('local-backup-export-finished');
-    await encryptBackupFile({ backupPath, password });
-    sendEventToAllWindows('local-backup-encrypt-finished');
-    await simulatePause(3000);
-    sendEventToAllWindows('local-backup-success');
+    commitBackupStatus('local-backup-enable-events', 2);
+    await exportBackupEncrypted({
+      backupPath,
+      password
+    });
+    commitBackupStatus('local-backup-export-finished', 3);
+    await simulatePause(2000);
+    commitBackupStatus('local-backup-success', null);
   } catch (error) {
     globalManager.windowsEvents.enable();
-    sendEventToAllWindows('local-backup-enable-events', { error });
+    commitBackupStatus('local-backup-enable-events', null, { error });
   }
 });
 
 ipc.answerRenderer('get-default-backup-folder', () => getDefaultBackupFolder());
+
+ipc.answerRenderer('restore-backup-unencrypted', async ({ backupPath }) => {
+  try {
+    globalManager.windowsEvents.disable();
+    commitBackupStatus('restore-backup-disable-events');
+    await prepareBackupFiles({ backupPrevFiles: false });
+    await simulatePause(2000);
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('restore-backup-enable-events');
+    await restoreUnencryptedBackup({ filePath: backupPath });
+    commitBackupStatus('restore-backup-finished');
+    await simulatePause(2000);
+    commitBackupStatus('restore-backup-success', null);
+  } catch (error) {
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('restore-backup-enable-events', null, {
+      error: error.message
+    });
+  }
+});
+
+ipc.answerRenderer('restore-backup-encrypted', async params => {
+  const { backupPath, password } = params;
+  try {
+    globalManager.windowsEvents.disable();
+    commitBackupStatus('restore-backup-disable-events');
+    await prepareBackupFiles({ backupPrevFiles: false });
+    await simulatePause(2000);
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('restore-backup-enable-events');
+    await restoreEncryptedBackup({ filePath: backupPath, password });
+    commitBackupStatus('restore-backup-finished');
+    await simulatePause(2000);
+    commitBackupStatus('restore-backup-success', null);
+  } catch (error) {
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('restore-backup-enable-events', null, {
+      error: error.message
+    });
+  }
+});
 
 module.exports = {
   sendLinkDeviceStartEventToAllWindows,

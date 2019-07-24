@@ -1417,6 +1417,22 @@ ipcRenderer.on('local-backup-success', () => {
   emitter.emit(Event.LOCAL_BACKUP_SUCCESS);
 });
 
+ipcRenderer.on('restore-backup-disable-events', () => {
+  emitter.emit(Event.RESTORE_BACKUP_DISABLE_EVENTS);
+});
+
+ipcRenderer.on('restore-backup-enable-events', (ev, error) => {
+  emitter.emit(Event.RESTORE_BACKUP_ENABLE_EVENTS, error);
+});
+
+ipcRenderer.on('restore-backup-finished', () => {
+  emitter.emit(Event.RESTORE_BACKUP_FINISHED);
+});
+
+ipcRenderer.on('restore-backup-success', () => {
+  emitter.emit(Event.RESTORE_BACKUP_SUCCESS);
+});
+
 /*  Events
 ----------------------------- */
 export const addEvent = (eventName, callback) => {
@@ -1455,6 +1471,10 @@ export const Event = {
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
   REFRESH_THREADS: 'refresh-threads',
+  RESTORE_BACKUP_DISABLE_EVENTS: 'restore-backup-disable-events',
+  RESTORE_BACKUP_ENABLE_EVENTS: 'restore-backup-enable-events',
+  RESTORE_BACKUP_FINISHED: 'restore-backup-finished',
+  RESTORE_BACKUP_SUCCESS: 'restore-backup-success',
   SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',
