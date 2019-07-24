@@ -19,18 +19,22 @@ const RestoreBackupModes = {
 
 const BackupTypes = {
   ENCRYPTED: 'enc',
-  UNENCRYPTED: 'db'
+  UNENCRYPTED: 'db',
+  OLD_UNENCRYPTED: 'gz'
 };
 
 class RestoreBackupPopupWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      backupDate: null,
-      backupFileType: null,
-      backupSize: null,
+      backupFileInfo: {
+        type: null,
+        date: null,
+        size: 0,
+        path: '',
+        password: ''
+      },
       mode: RestoreBackupModes.REQUEST,
-      passphrase: '',
       inputType: 'password'
     };
   }
@@ -56,26 +60,33 @@ class RestoreBackupPopupWrapper extends Component {
       case RestoreBackupModes.RESTORING: {
         return (
           <RestoreBackupProgressPopupWrapper
+            backupPath={this.state.backupFileInfo.path}
             onClickCancelRestoreBackup={this.handleClickCancelRestoreBackup}
-            passphrase={this.state.passphrase}
+            onDismissRestoreBackup={this.handleDismissRestoreBackup}
+            onInvalidBackupFile={this.handleInvalidBackupFile}
+            password={this.state.backupFileInfo.password}
           />
         );
       }
       case RestoreBackupModes.ENCRYPTED_FILE:
       case RestoreBackupModes.UNENCRYPTED_FILE: {
-        const backupDate = formatLastBackupDate(this.state.backupDate);
-        const backupSize = convertToHumanSize(this.state.backupSize, true, 0);
+        const backupDate = formatLastBackupDate(this.state.backupFileInfo.date);
+        const backupSize = convertToHumanSize(
+          this.state.backupFileInfo.size,
+          true,
+          0
+        );
         return (
           <RestoreBackupFromFilePopup
             backupDate={backupDate}
-            backupFileType={this.state.backupFileType}
+            backupFileType={this.state.backupFileInfo.type}
             backupSize={backupSize}
             inputType={this.state.inputType}
             onChangeInputPassphrase={this.handleChangeInputPassphrase}
             onChangeInputTypePassphrase={this.handleChangeInputTypePassphrase}
             onDismissRestoreBackup={this.handleDismissRestoreBackup}
             onRestoreBackupFromFile={this.handleRestoreBackupFromFile}
-            passphrase={this.state.passphrase}
+            password={this.state.backupFileInfo.password}
           />
         );
       }
@@ -88,41 +99,40 @@ class RestoreBackupPopupWrapper extends Component {
     ev.preventDefault();
     const [file] = ev.target.files;
     const fileType = file.name.split('.').pop();
-    let newState = {};
-    switch (fileType) {
-      case BackupTypes.ENCRYPTED:
-        newState = {
-          backupFileType: BackupTypes.ENCRYPTED,
-          mode: RestoreBackupModes.ENCRYPTED_FILE,
-          backupDate: file.lastModified,
-          backupSize: file.size
-        };
-        break;
-      case BackupTypes.UNENCRYPTED:
-        newState = {
-          backupFileType: BackupTypes.UNENCRYPTED,
-          mode: RestoreBackupModes.UNENCRYPTED_FILE,
-          backupDate: file.lastModified,
-          backupSize: file.size
-        };
-        break;
-      default:
-        newState = {
-          backupFileType: null,
-          mode: RestoreBackupModes.INVALID_FILE,
-          backupDate: null,
-          backupSize: null
-        };
-        break;
+    if (!Object.values(BackupTypes).includes(fileType)) {
+      return this.handleInvalidBackupFile();
     }
-    this.setState(newState);
+    const isEncryptedBackup = fileType === BackupTypes.ENCRYPTED;
+    this.setState(state => ({
+      mode: isEncryptedBackup
+        ? RestoreBackupModes.ENCRYPTED_FILE
+        : RestoreBackupModes.UNENCRYPTED_FILE,
+      backupFileInfo: {
+        ...state.backupFileInfo,
+        ...this.getFileProperties(file),
+        type: isEncryptedBackup
+          ? BackupTypes.ENCRYPTED
+          : BackupTypes.UNENCRYPTED,
+        password: ''
+      }
+    }));
   };
+
+  getFileProperties = file => ({
+    date: file.lastModified,
+    size: file.size,
+    path: file.path
+  });
 
   handleChangeInputPassphrase = ev => {
     const value = ev.target.value;
-    this.setState({
-      passphrase: value
-    });
+    this.setState(state => ({
+      ...state,
+      backupFileInfo: {
+        ...state.backupFileInfo,
+        password: value
+      }
+    }));
   };
 
   handleChangeInputTypePassphrase = () => {
@@ -145,6 +155,12 @@ class RestoreBackupPopupWrapper extends Component {
 
   handleClickCancelRestoreBackup = () => {
     this.handleDismissRestoreBackup();
+  };
+
+  handleInvalidBackupFile = () => {
+    this.setState({
+      mode: RestoreBackupModes.INVALID_FILE
+    });
   };
 }
 

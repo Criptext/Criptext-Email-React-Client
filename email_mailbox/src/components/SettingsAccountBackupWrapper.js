@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import SettingsAccountBackup from './SettingsAccountBackup';
 import { showSaveFileDialog } from './../utils/electronInterface';
 import {
-  exportBackupFile,
+  exportBackupUnencrypted,
   getDefaultBackupFolder,
-  encryptBackupFile
+  exportBackupEncrypted
 } from '../utils/ipc';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import string from './../lang';
+import { defineBackupFileName } from '../utils/TimeUtils';
 
 const { progress } = string.settings.mailbox_backup;
 const { backing_up_mailbox, backup_mailbox_success } = progress;
@@ -53,7 +54,8 @@ class SettingsAccountBackupWrapper extends Component {
         },
         async () => {
           const defautlPath = await getDefaultBackupFolder();
-          const filename = password ? 'backup.enc' : 'backup.db';
+          const extension = password ? 'enc' : 'db';
+          const filename = defineBackupFileName(extension);
           const backupPath = `${defautlPath}/${filename}`;
           showSaveFileDialog(backupPath, selectedPath => {
             if (!selectedPath) {
@@ -77,9 +79,9 @@ class SettingsAccountBackupWrapper extends Component {
   initMailboxBackup = ({ backupPath, password }) => {
     this.initMailboxBackupListeners();
     if (!password) {
-      exportBackupFile({ backupPath });
+      exportBackupUnencrypted({ backupPath });
     } else {
-      encryptBackupFile({ backupPath, password });
+      exportBackupEncrypted({ backupPath, password });
     }
   };
 

@@ -34,7 +34,7 @@ const RestoreBackupFromFilePopup = props => {
           <div className="popup-input">
             <input
               type={props.inputType}
-              value={props.passphrase}
+              value={props.password}
               placeholder={placeholder}
               onChange={props.onChangeInputPassphrase}
             />
@@ -75,7 +75,7 @@ RestoreBackupFromFilePopup.propTypes = {
   onConfirmRestoreBackup: PropTypes.func,
   onDismissRestoreBackup: PropTypes.func,
   onRestoreBackupFromFile: PropTypes.func,
-  passphrase: PropTypes.string
+  password: PropTypes.string
 };
 
 export default RestoreBackupFromFilePopup;
