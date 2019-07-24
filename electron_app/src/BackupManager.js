@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const zlib = require('zlib');
 const { app } = require('electron');
 const copy = require('recursive-copy');
 const myAccount = require('./Account');
@@ -7,10 +8,14 @@ const { databasePath } = require('./models');
 const { APP_DOMAIN } = require('./utils/const');
 const { createPathRecursive, getUserEmailsPath } = require('./utils/FileUtils');
 const {
+  decryptStreamFileWithPassword,
   encryptStreamFile,
   exportDatabaseToFile,
-  generateKeyAndIvFromPassword
+  generateKeyAndIvFromPassword,
+  importDatabaseFromFile
 } = require('./dbExporter');
+
+const STREAM_SIZE = 512 * 1024;
 
 /*  Folders & Paths
 ----------------------------- */
@@ -26,16 +31,29 @@ const TempEmailsBackupPath = path.join(
   TempBackupDirectory,
   TempEmailsBackupFolderName
 );
-const U_ExportedFileName = path.join(TempBackupDirectory, 'backup.db');
-const E_ExportedFileName = path.join(TempBackupDirectory, 'backup.enc');
+const ExportUnencryptedFilename = path.join(
+  TempBackupDirectory,
+  'unencrypt.exp'
+);
+const ExportZippedFilename = path.join(TempBackupDirectory, 'zipped.exp');
+const ExportEncryptedFilename = path.join(TempBackupDirectory, 'encrypted.exp');
+
+const RestoreUnzippedFilename = path.join(TempBackupDirectory, 'unzipped.res');
+const RestoreUnencryptedFilename = path.join(
+  TempBackupDirectory,
+  'unencryp.res'
+);
 
 /*  Temp Directory
 ----------------------------- */
 const checkTempBackupDirectory = () => {
   try {
-    fs.statSync(TempBackupDirectory);
-  } catch (e) {
+    if (fs.existsSync(TempBackupDirectory)) {
+      removeTempBackupDirectoryRecursive(TempBackupDirectory);
+    }
     fs.mkdirSync(TempBackupDirectory);
+  } catch (e) {
+    throw new Error('Unable to create temp folder');
   }
 };
 
@@ -98,63 +116,168 @@ const createTempEmailsBackup = () => {
   });
 };
 
-const prepareBackupFiles = async () => {
+const zipStreamFile = ({ inputFile, outputFile }) => {
+  return new Promise((resolve, reject) => {
+    const highWaterMark = STREAM_SIZE;
+    const reader = fs.createReadStream(inputFile, { highWaterMark });
+    const writer = fs.createWriteStream(outputFile);
+    reader
+      .pipe(zlib.createGzip())
+      .pipe(writer)
+      .on('error', reject)
+      .on('finish', resolve);
+  });
+};
+
+const unzipStreamFile = ({ inputFile, outputFile }) => {
+  return new Promise((resolve, reject) => {
+    const highWaterMark = STREAM_SIZE;
+    const reader = fs.createReadStream(inputFile, { highWaterMark });
+    const writer = fs.createWriteStream(outputFile);
+    reader
+      .pipe(zlib.createGunzip())
+      .pipe(writer)
+      .on('error', reject)
+      .on('finish', resolve);
+  });
+};
+
+const prepareBackupFiles = async ({ backupPrevFiles = true }) => {
   try {
     checkTempBackupDirectory();
-    await createTempDatabaseBackup();
-    await createTempEmailsBackup();
+    if (backupPrevFiles) {
+      await createTempDatabaseBackup();
+      await createTempEmailsBackup();
+    }
   } catch (error) {
     removeTempBackupDirectoryRecursive(TempBackupDirectory);
     return error;
   }
 };
 
-const exportBackupFile = async ({ backupPath, moveToDest = true }) => {
+/*  Export Backup 
+----------------------------- */
+const exportBackupUnencrypted = async ({ backupPath }) => {
   try {
     try {
       await exportDatabaseToFile({
         databasePath: TempDatabaseBackupPath,
-        outputPath: U_ExportedFileName
+        outputPath: ExportUnencryptedFilename
       });
     } catch (dbErr) {
-      throw new Error('Backup database error');
+      throw new Error('Failed to export database');
     }
+    // Compress backup file
     try {
-      if (moveToDest) {
-        fs.writeFileSync(backupPath, fs.readFileSync(U_ExportedFileName));
-      }
+      await zipStreamFile({
+        inputFile: ExportUnencryptedFilename,
+        outputFile: ExportZippedFilename
+      });
+    } catch (zipErr) {
+      throw new Error('Failed to compress backup file');
+    }
+    // Move to destination
+    try {
+      fs.writeFileSync(backupPath, fs.readFileSync(ExportZippedFilename));
     } catch (fileErr) {
-      throw new Error('Backup create file error');
+      throw new Error('Failed to move backup file');
     }
-  } catch (error) {
-    throw error;
+  } catch (exportBackupError) {
+    throw exportBackupError;
   } finally {
-    if (moveToDest) {
-      removeTempBackupDirectoryRecursive(TempBackupDirectory);
-    }
+    removeTempBackupDirectoryRecursive(TempBackupDirectory);
   }
 };
 
-const encryptBackupFile = async ({ backupPath, password }) => {
+const exportBackupEncrypted = async ({ backupPath, password }) => {
   try {
+    // Export database
     try {
-      const { key, iv } = generateKeyAndIvFromPassword(password);
+      await exportDatabaseToFile({
+        databasePath: TempDatabaseBackupPath,
+        outputPath: ExportUnencryptedFilename
+      });
+    } catch (dbErr) {
+      throw new Error('Failed to export database');
+    }
+    // GZip & Encrypt
+    try {
+      const { key, iv, salt } = generateKeyAndIvFromPassword(password);
       await encryptStreamFile({
-        inputFile: U_ExportedFileName,
-        outputFile: E_ExportedFileName,
+        inputFile: ExportUnencryptedFilename,
+        outputFile: ExportEncryptedFilename,
         key,
-        iv
+        iv,
+        salt
       });
     } catch (encryptErr) {
-      throw new Error('Encrypting error');
+      throw new Error('Failed to encrypt backup');
     }
+    // Move to destination
     try {
-      fs.writeFileSync(backupPath, fs.readFileSync(E_ExportedFileName));
+      fs.writeFileSync(backupPath, fs.readFileSync(ExportEncryptedFilename));
     } catch (fileErr) {
-      throw new Error('Backup create file error');
+      throw new Error('Failed to create backup file');
     }
-  } catch (error) {
-    throw error;
+  } catch (exportBackupError) {
+    throw exportBackupError;
+  } finally {
+    removeTempBackupDirectoryRecursive(TempBackupDirectory);
+  }
+};
+
+/*  Restore Backup 
+----------------------------- */
+const restoreUnencryptedBackup = async ({ filePath }) => {
+  try {
+    // Unzip file
+    try {
+      await unzipStreamFile({
+        inputFile: filePath,
+        outputFile: RestoreUnzippedFilename
+      });
+    } catch (unzipError) {
+      throw new Error('Failed to unzip backup file');
+    }
+    // Import to database
+    try {
+      await importDatabaseFromFile({
+        filepath: RestoreUnzippedFilename,
+        databasePath: databasePath
+      });
+    } catch (importError) {
+      throw new Error('Failed to import into database');
+    }
+  } catch (restoreBackupError) {
+    throw restoreBackupError;
+  } finally {
+    // removeTempBackupDirectoryRecursive(TempBackupDirectory);
+  }
+};
+
+const restoreEncryptedBackup = async ({ filePath, password }) => {
+  try {
+    // Decrypt & Unzip
+    try {
+      await await decryptStreamFileWithPassword({
+        inputFile: filePath,
+        outputFile: RestoreUnencryptedFilename,
+        password
+      });
+    } catch (decryptErr) {
+      throw new Error('Failed to decrypt backup file');
+    }
+    // Import to database
+    try {
+      await importDatabaseFromFile({
+        filepath: RestoreUnencryptedFilename,
+        databasePath: databasePath
+      });
+    } catch (importError) {
+      throw new Error('Failed to import into database');
+    }
+  } catch (restoreBackupError) {
+    throw restoreBackupError;
   } finally {
     removeTempBackupDirectoryRecursive(TempBackupDirectory);
   }
@@ -164,6 +287,8 @@ module.exports = {
   createDefaultBackupFolder,
   getDefaultBackupFolder,
   prepareBackupFiles,
-  exportBackupFile,
-  encryptBackupFile
+  exportBackupUnencrypted,
+  exportBackupEncrypted,
+  restoreUnencryptedBackup,
+  restoreEncryptedBackup
 };

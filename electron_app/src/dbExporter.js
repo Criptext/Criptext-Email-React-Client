@@ -13,7 +13,7 @@ const {
   saveEmailBody
 } = require('./utils/FileUtils');
 const myAccount = require('./Account');
-const { APP_DOMAIN } = require('./utils/const');
+const { APP_DOMAIN, LINK_DEVICES_FILE_VERSION } = require('./utils/const');
 
 const CIPHER_ALGORITHM = 'aes128';
 const STREAM_SIZE = 512 * 1024;
@@ -306,9 +306,16 @@ const exportDatabaseToFile = async ({ databasePath, outputPath }) => {
   const filepath = outputPath || path.join(__dirname, fileName);
   const dbConn = await createDatabaseConnection(databasePath);
 
+  const [recipientId, domain] = myAccount.recipientId.split('@');
+  const fileInformation = JSON.stringify({
+    fileVersion: LINK_DEVICES_FILE_VERSION,
+    recipientId: recipientId,
+    domain: domain || APP_DOMAIN
+  });
+  saveToFile({ data: fileInformation, filepath, mode: 'w' }, true);
+
   const contacts = await exportContactTable(dbConn);
-  const isFirstRecord = true;
-  saveToFile({ data: contacts, filepath, mode: 'w' }, isFirstRecord);
+  saveToFile({ data: contacts, filepath, mode: 'a' });
 
   const labels = await exportLabelTable(dbConn);
   saveToFile({ data: labels, filepath, mode: 'a' });
@@ -330,6 +337,34 @@ const exportDatabaseToFile = async ({ databasePath, outputPath }) => {
 
 /* Import Database from String
 ------------------------------- */
+const getCustomLinesByStream = (filename, lineCount, callback) => {
+  const stream = fs.createReadStream(filename, {
+    flags: 'r',
+    encoding: 'utf-8',
+    fd: null,
+    mode: 438,
+    bufferSize: 64 * 1024
+  });
+
+  let data = '';
+  let lines = [];
+  stream.on('data', function(moreData) {
+    data += moreData;
+    lines = data.split('\n');
+    if (lines.length > lineCount + 1) {
+      stream.destroy();
+      lines = lines.slice(0, lineCount);
+      callback(false, lines);
+    }
+  });
+  stream.on('error', function() {
+    callback('Error');
+  });
+  stream.on('end', function() {
+    callback(false, lines);
+  });
+};
+
 const importDatabaseFromFile = async ({ filepath, databasePath }) => {
   let contacts = [];
   let labels = [];
@@ -337,9 +372,32 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
   let emailContacts = [];
   let emailLabels = [];
   let files = [];
-  const dbConn = await createDatabaseConnection(databasePath);
 
+  const dbConn = await createDatabaseConnection(databasePath);
   return dbConn.transaction(async trx => {
+    getCustomLinesByStream(filepath, 1, (err, lines) => {
+      if (err) throw new Error('Failed to read file information');
+      const fileInformation = lines[0];
+      const { fileVersion, recipientId, domain } = JSON.parse(fileInformation);
+
+      if (recipientId && domain) {
+        const fileOwner = `${recipientId}@${domain}`;
+        const currentAddress = myAccount.recipientId.includes('@')
+          ? myAccount.recipientId
+          : `${myAccount.recipientId}@${APP_DOMAIN}`;
+        if (fileOwner !== currentAddress) {
+          return trx.rollback();
+        }
+      }
+      if (fileVersion) {
+        const version = Number(fileVersion);
+        const currentVersion = Number(LINK_DEVICES_FILE_VERSION);
+        if (version !== currentVersion) {
+          return trx.rollback();
+        }
+      }
+    });
+
     await trx.table(Table.CONTACT).del();
     await trx.table(Table.EMAIL).del();
     await trx.table(Table.EMAIL_CONTACT).del();
@@ -351,10 +409,11 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
       .del();
 
     const lineReader = new LineByLineReader(filepath);
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       lineReader
         .on('line', async line => {
           const { table, object } = JSON.parse(line);
+
           switch (table) {
             case Table.CONTACT: {
               contacts.push(object);
@@ -433,6 +492,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
               break;
           }
         })
+        .on('error', reject)
         .on('end', async () => {
           await insertRemainingRows(contacts, Table.CONTACT, trx);
           await insertRemainingRows(labels, Table.LABEL, trx);
@@ -497,8 +557,8 @@ const generateKeyAndIv = (keySize, ivSize) => {
   }
 };
 
-const generateKeyAndIvFromPassword = password => {
-  const salt = crypto.randomBytes(16);
+const generateKeyAndIvFromPassword = (password, customSalt) => {
+  const salt = customSalt || crypto.randomBytes(8);
   const iterations = 10000;
   const pbkdf2Name = 'sha256';
   const key = crypto.pbkdf2Sync(
@@ -509,15 +569,16 @@ const generateKeyAndIvFromPassword = password => {
     pbkdf2Name
   );
   const iv = crypto.randomBytes(DEFAULT_KEY_LENGTH);
-  return { key, iv };
+  return { key, iv, salt };
 };
 
-const encryptStreamFile = ({ inputFile, outputFile, key, iv }) => {
+const encryptStreamFile = ({ inputFile, outputFile, key, iv, salt }) => {
   return new Promise((resolve, reject) => {
     const reader = fs.createReadStream(inputFile, {
       highWaterMark: STREAM_SIZE
     });
     const writer = fs.createWriteStream(outputFile);
+    if (salt) writer.write(salt);
     writer.write(iv);
 
     reader
@@ -534,9 +595,29 @@ const decryptStreamFile = ({ inputFile, outputFile, key }) => {
     const ivStartPosition = 0;
     const ivEndPosition = DEFAULT_KEY_LENGTH;
     const iv = readBytesSync(inputFile, ivStartPosition, ivEndPosition);
-
     const reader = fs.createReadStream(inputFile, {
       start: DEFAULT_KEY_LENGTH,
+      highWaterMark: STREAM_SIZE
+    });
+    const writer = fs.createWriteStream(outputFile);
+    reader
+      .pipe(crypto.createDecipheriv(CIPHER_ALGORITHM, key, iv))
+      .pipe(zlib.createGunzip())
+      .pipe(writer)
+      .on('error', reject)
+      .on('finish', resolve);
+  });
+};
+
+const decryptStreamFileWithPassword = ({ inputFile, outputFile, password }) => {
+  return new Promise((resolve, reject) => {
+    const saltSize = 8;
+    const ivSize = 16;
+    const salt = readBytesSync(inputFile, 0, saltSize);
+    const iv = readBytesSync(inputFile, saltSize, ivSize);
+    const { key } = generateKeyAndIvFromPassword(password, salt);
+    const reader = fs.createReadStream(inputFile, {
+      start: saltSize + ivSize,
       highWaterMark: STREAM_SIZE
     });
     const writer = fs.createWriteStream(outputFile);
@@ -563,5 +644,6 @@ module.exports = {
   decryptStreamFile,
   generateKeyAndIv,
   generateKeyAndIvFromPassword,
-  importDatabaseFromFile
+  importDatabaseFromFile,
+  decryptStreamFileWithPassword
 };
