@@ -83,3 +83,9 @@ export const defineUnsentText = time => {
 export const formatLastBackupDate = time => {
   return moment(getTimeLocal(time)).format(`MMM D, YYYY`);
 };
+
+export const defineBackupFileName = extension => {
+  return moment(getTimeLocal(Date.now())).format(
+    `[Backup]-YYYY-MM-D_HH-mm.[${extension}]`
+  );
+};
