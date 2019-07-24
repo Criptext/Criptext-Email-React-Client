@@ -296,8 +296,8 @@ class PanelWrapper extends Component {
         .threadIdSelected;
       const currentLabelId = this.state.sectionSelected.params.mailboxSelected
         .id;
-      const limit =
-        this.props.threadsCount > 20 ? this.props.threadsCount : undefined;
+      const currentMailboxSize = this.props[currentLabelId];
+      const limit = currentMailboxSize > 22 ? currentMailboxSize : undefined;
       if (labelIds && isRenderingMailbox) {
         if (labelIds.includes(currentLabelId)) {
           this.props.onLoadThreads(

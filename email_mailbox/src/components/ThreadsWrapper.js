@@ -16,44 +16,7 @@ class ThreadsWrapper extends Component {
       tip: '',
       popupContent: undefined
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      this.props.mailboxSelected !== nextProps.mailboxSelected ||
-      this.props.searchParams !== nextProps.searchParams ||
-      (nextProps.threadItemsChecked.size === 0 &&
-        this.props.threadItemsChecked.size > 0)
-    ) {
-      this.setState({ lastMinDate: undefined });
-      this.props.onLoadThreads(
-        nextProps.mailboxSelected,
-        true,
-        nextProps.searchParams
-      );
-    }
-    if (
-      this.props.threadItemsChecked.size > 0 &&
-      this.props.mailboxSelected !== nextProps.mailboxSelected
-    ) {
-      this.props.onBackOption();
-    }
-
-    if (
-      this.state.isHiddenLoadingSync &&
-      nextProps.totalTask > nextProps.completedTask
-    ) {
-      this.setState({ isHiddenLoadingSync: false });
-    }
-    if (
-      !this.state.isHiddenLoadingSync &&
-      nextProps.totalTask > 0 &&
-      nextProps.completedTask > 0 &&
-      (nextProps.totalTask === nextProps.completedTask ||
-        nextProps.completedTask > nextProps.totalTask)
-    ) {
-      setTimeout(() => this.setState({ isHiddenLoadingSync: true }), 1000);
-    }
+    this.scroll = null;
   }
 
   render() {
@@ -68,6 +31,7 @@ class ThreadsWrapper extends Component {
         onMouseLeaveItem={this.handleMouseLeaveItem}
         onScroll={this.handleScroll}
         onChangeSwitch={this.handleChangeSwitch}
+        setScrollRef={this.handleSetScrollRef}
         tip={this.state.tip}
         popupContent={this.state.popupContent}
         setPopupContent={this.setPopupContent}
@@ -80,6 +44,46 @@ class ThreadsWrapper extends Component {
   componentDidMount() {
     if (!this.props.threads.size)
       this.props.onLoadApp(this.props.mailboxSelected, true);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.mailboxSelected !== this.props.mailboxSelected ||
+      prevProps.searchParams !== this.props.searchParams ||
+      (this.props.threadItemsChecked.size === 0 &&
+        prevProps.threadItemsChecked.size > 0)
+    ) {
+      this.setState({ lastMinDate: undefined });
+      this.props.onLoadThreads(
+        this.props.mailboxSelected,
+        true,
+        this.props.searchParams
+      );
+      if (this.scroll.scrollTop !== 0) {
+        this.scroll.scrollTop = 0;
+      }
+    }
+    if (
+      this.props.threadItemsChecked.size > 0 &&
+      prevProps.mailboxSelected !== this.props.mailboxSelected
+    ) {
+      this.props.onBackOption();
+    }
+    if (
+      this.state.isHiddenLoadingSync &&
+      this.props.totalTask > this.props.completedTask
+    ) {
+      this.setState({ isHiddenLoadingSync: false });
+    }
+    if (
+      !this.state.isHiddenLoadingSync &&
+      this.props.totalTask > 0 &&
+      this.props.completedTask > 0 &&
+      (this.props.totalTask === this.props.completedTask ||
+        this.props.completedTask > this.props.totalTask)
+    ) {
+      setTimeout(() => this.setState({ isHiddenLoadingSync: true }), 1000);
+    }
   }
 
   handleCloseMessage = () => {
@@ -157,6 +161,10 @@ class ThreadsWrapper extends Component {
 
   handlePopupConfirm = () => {
     this.setState({ popupContent: undefined }, this.props.onEmptyTrash);
+  };
+
+  handleSetScrollRef = e => {
+    this.scroll = e;
   };
 
   setPopupContent = popupContent => {
