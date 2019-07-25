@@ -297,8 +297,8 @@
     },
     "export_backup": {
       "success": {
-        "title": "Respaldo exportado exitosamente! 🙌",
-        "message": "Da clic aquí para ver tu archivo de respaldo"
+        "title": "Respaldo exportado exitosamente!",
+        "message": "Da clic aquí para abrir la ubicación del archivo de respaldo"
       },
       "error": {
         "title": "Criptext",

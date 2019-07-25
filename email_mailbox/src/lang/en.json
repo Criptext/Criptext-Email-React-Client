@@ -298,7 +298,7 @@
     "export_backup": {
       "success": {
         "title": "Backup exported successfully!",
-        "message": "Click here to open your backup folder"
+        "message": "Click here to open backup location folder"
       },
       "error": {
         "title": "Criptext",
