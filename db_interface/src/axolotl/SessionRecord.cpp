@@ -9,6 +9,7 @@ using namespace std;
 
 CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, string recipientId, long int deviceId) {
   SQLite::Database db(dbPath);
+  db.setBusyTimeout(5000);
 
   SQLite::Statement query(db, "Select * from sessionrecord where recipientId == ? and deviceId == ?");
   query.bind(1, recipientId);
@@ -30,6 +31,7 @@ vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, s
 
   try {
     SQLite::Database db(dbPath);
+    db.setBusyTimeout(5000);
 
     SQLite::Statement query(db, "Select * from sessionrecord where recipientId == ?");
     query.bind(1, recipientId);
@@ -47,9 +49,10 @@ vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, s
 }
 
 bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int deviceId, char* record, size_t len) {
-  std::cout << "Create Session Record : " << recipientId << std::endl;
+  std::cout << "Create Session Record : " << recipientId << " : " << record << std::endl;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+    db.setBusyTimeout(5000);
     SQLite::Transaction transaction(db);
 
     SQLite::Statement getQuery(db, "Select * from sessionrecord where recipientId == ? and deviceId == ?");

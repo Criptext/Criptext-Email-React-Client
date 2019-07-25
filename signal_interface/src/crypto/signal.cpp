@@ -69,14 +69,13 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
             const uint8_t *preKeyMessageData = reinterpret_cast<const uint8_t*>(textFromB64);
             pre_key_signal_message *incoming_message = 0;
             pre_key_signal_message_deserialize(&incoming_message, preKeyMessageData, decode_len, global_context);
-            signal_buffer *plainMessage = 0;
             result = session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
         }
 
         if (result < 0) {
             return -1;
         }
-
+        std::cout << "YOLIS : " << plainMessage << std::endl;
         uint8_t *data = signal_buffer_data(plainMessage);
         size_t len = signal_buffer_len(plainMessage);
 

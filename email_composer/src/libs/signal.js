@@ -230,6 +230,7 @@ const encryptPostEmail = async ({
     peer,
     files
   );
+  console.log(criptextEmails);
   const guestEmail = await createGuestEmail({
     externalEmailPassword,
     recipients,
@@ -242,7 +243,7 @@ const encryptPostEmail = async ({
     threadId,
     criptextEmails,
     guestEmail,
-    files
+    files: !!files ? files : null
   });
   const res = await postEmail(data);
   if (res.status === 429) {

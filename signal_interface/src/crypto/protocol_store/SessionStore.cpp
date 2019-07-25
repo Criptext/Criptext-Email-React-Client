@@ -8,14 +8,14 @@
 
 int session_store_load_session(signal_buffer **record, signal_buffer **user_record, const signal_protocol_address *address, void *user_data)
 {
-    std::cout << "LOAD SESSION" << std::endl;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
     CriptextDB::SessionRecord sessionRecord;
-
+    std::cout << "LOAD SESSION : " << recipientId << " : " << deviceId << std::endl;
     try {
         sessionRecord = CriptextDB::getSessionRecord("../../electron_app/Criptext.db", recipientId, deviceId);
     } catch (exception& e) {
+        std::cout << "ERROR 1 : " << e.what() << std::endl;
         return 0;
     }
     size_t len = 0;
