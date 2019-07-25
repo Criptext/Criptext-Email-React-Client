@@ -3,7 +3,7 @@ import signal from '../libs/signal';
 import {
   remoteData,
   startSocket,
-  setCanceledSyncStatus
+  setPendingRestoreStatus
 } from '../utils/electronInterface';
 import {
   acknowledgeEvents,
@@ -265,7 +265,7 @@ class LoadingWrapper extends Component {
 
   handleClickCancelSync = () => {
     if (this.state.lastStep === STEPS.WAIT_MAILBOX) {
-      setCanceledSyncStatus(true);
+      setPendingRestoreStatus(true);
       openMailboxWindow();
       closeCreatingKeysLoadingWindow();
     }

@@ -14,7 +14,7 @@ global.internetConnection;
 global.isWindowsStore =
   currrentInstallerType === allInstallerTypes.windows.store;
 global.deviceType = getDeviceType(currrentInstallerType, allInstallerTypes);
-global.canceledSync = false;
+global.pendingRestore = false;
 
 /*  Composer
 ----------------------------- */
@@ -116,12 +116,12 @@ const getInternetConnectionStatus = () => {
 
 /*  Canceled Sync
 ----------------------------- */
-const setCanceledSyncStatus = status => {
-  global.canceledSync = status;
+const setPendingRestoreStatus = status => {
+  global.pendingRestore = status;
 };
 
-const getCanceledSyncStatus = () => {
-  return global.canceledSync;
+const getPendingRestoreStatus = () => {
+  return global.pendingRestore;
 };
 
 module.exports = {
@@ -169,8 +169,8 @@ module.exports = {
   deviceType: {
     id: global.deviceType
   },
-  canceledSync: {
-    get: getCanceledSyncStatus,
-    set: setCanceledSyncStatus
+  pendingRestore: {
+    get: getPendingRestoreStatus,
+    set: setPendingRestoreStatus
   }
 };

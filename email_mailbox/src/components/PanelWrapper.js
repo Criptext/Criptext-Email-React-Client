@@ -8,7 +8,7 @@ import {
   checkUserGuideSteps
 } from '../utils/electronEventInterface';
 import { processPendingEvents } from '../utils/ipc';
-import { LabelType, getCanceledSyncStatus } from '../utils/electronInterface';
+import { LabelType, getPendingRestoreStatus } from '../utils/electronInterface';
 import { SectionType } from '../utils/const';
 import { addLabels, setAvatarUpdatedTimestamp, stopLoadSync } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
@@ -79,6 +79,7 @@ class PanelWrapper extends Component {
   componentDidMount() {
     const steps = [USER_GUIDE_STEPS.BUTTON_COMPOSE];
     checkUserGuideSteps(steps);
+    this.handleCheckRestoreBackup();
   }
 
   handleClickSection = (type, params) => {
@@ -166,8 +167,8 @@ class PanelWrapper extends Component {
   };
 
   handleCheckRestoreBackup = () => {
-    const userHasCanceledSync = getCanceledSyncStatus();
-    if (!this.state.isOpenWelcome && userHasCanceledSync) {
+    const userHasCanceledSync = getPendingRestoreStatus();
+    if (userHasCanceledSync) {
       setTimeout(() => {
         this.setState({
           isHiddenMailboxPopup: false,

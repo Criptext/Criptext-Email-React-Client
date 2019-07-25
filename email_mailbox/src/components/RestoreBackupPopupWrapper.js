@@ -4,7 +4,7 @@ import RestoreBackupFromFilePopup from './RestoreBackupFromFilePopup';
 import RestoreBackupInvalidFilePopup from './RestoreBackupInvalidFilePopup';
 import RestoreBackupProgressPopupWrapper from './RestoreBackupProgressPopupWrapper';
 import RestoreBackupRequestPopup from './RestoreBackupRequestPopup';
-import { setCanceledSyncStatus } from './../utils/electronInterface';
+import { setPendingRestoreStatus } from './../utils/electronInterface';
 import { convertToHumanSize } from './../utils/StringUtils';
 import { formatLastBackupDate } from './../utils/TimeUtils';
 
@@ -65,6 +65,7 @@ class RestoreBackupPopupWrapper extends Component {
             onDismissRestoreBackup={this.handleDismissRestoreBackup}
             onInvalidBackupFile={this.handleInvalidBackupFile}
             password={this.state.backupFileInfo.password}
+            sectionSelected={this.props.sectionSelected}
           />
         );
       }
@@ -149,7 +150,7 @@ class RestoreBackupPopupWrapper extends Component {
   };
 
   handleDismissRestoreBackup = () => {
-    setCanceledSyncStatus(false);
+    setPendingRestoreStatus(false);
     this.props.onCloseMailboxPopup();
   };
 
@@ -165,7 +166,8 @@ class RestoreBackupPopupWrapper extends Component {
 }
 
 RestoreBackupPopupWrapper.propTypes = {
-  onCloseMailboxPopup: PropTypes.func
+  onCloseMailboxPopup: PropTypes.func,
+  sectionSelected: PropTypes.object
 };
 
 export { RestoreBackupPopupWrapper as default, BackupTypes };
