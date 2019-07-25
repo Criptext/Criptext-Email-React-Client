@@ -1,6 +1,9 @@
 #export-backup-file-popup {
   height: 270px;
   padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .popup-title {
     margin-top: 5%;
   }
@@ -19,11 +22,8 @@
       margin: 0px;
     }
   }
-  .encrypt-description {
-    margin: 12% auto;
-  }
   .unencrypt-note {
-    margin:20% auto;
+    margin: 12% auto;
   }
   .popup-inputs {
     .error-password-message {
@@ -34,8 +34,8 @@
     }
   }
   .popup-buttons {
-    position: absolute;
-    left: 21%;
-    bottom: 8%;
+    button {
+      margin: 0 5px;
+    }
   }
 }

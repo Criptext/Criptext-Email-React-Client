@@ -33,6 +33,14 @@ export const validatePassword = field => {
   );
 };
 
+export const validatePassphrase = field => {
+  return (
+    checkRequired(field) &&
+    checkminLength(field, requiredMinLength.passphrase) &&
+    checkMaxLength(field, requiredMaxLength.passphrase)
+  );
+};
+
 export const validateConfirmPassword = (field1, field2) => {
   const required = checkRequired(field1) && checkRequired(field2);
   const length =

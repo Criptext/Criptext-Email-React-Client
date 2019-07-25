@@ -32,6 +32,7 @@ const RestoreBackupRequest = props => {
             onClick={() => {
               document.getElementById('input-restore-backup').click();
             }}
+            autoFocus
           >
             <span>{button}</span>
           </button>

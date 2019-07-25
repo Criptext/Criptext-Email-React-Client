@@ -32,6 +32,7 @@ const RestoreBackupInvalidFilePopup = props => {
             onClick={() => {
               document.getElementById('change-backup-file-input').click();
             }}
+            autoFocus
           >
             <span>{button}</span>
           </button>

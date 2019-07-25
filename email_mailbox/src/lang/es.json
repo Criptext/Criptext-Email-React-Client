@@ -381,9 +381,9 @@
     "export_backup": {
       "title": "Exportar Respaldo",
       "switchLabel": "Encriptar respaldo",
-      "description": "Si olvidas/pierdes esta contraseña no podrás restaurar tu respaldo en el futuro",
+      "description": "Si olvidas/pierdes esta clave no podrás restaurar tu respaldo en el futuro",
       "inputPassphrase": {
-        "placeholder": "Ingrese contraseña",
+        "placeholder": "Ingrese clave",
         "errorMessages": {
           "len": {
             "prefix": "Debe tener",

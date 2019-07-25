@@ -51,6 +51,7 @@ const RestoreBackupFromFilePopup = props => {
         <button
           className="button-a popup-confirm-button"
           onClick={props.onRestoreBackupFromFile}
+          autoFocus
         >
           <span>{restore}</span>
         </button>

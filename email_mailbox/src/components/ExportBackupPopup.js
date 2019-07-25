@@ -55,9 +55,10 @@ const renderForm = props => {
           onChange={ev => props.onChangeInputValue(ev)}
           value={password.value}
           type={password.type}
+          autoFocus
         />
         <i
-          className={defineIconClass()}
+          className={defineIconClass(password.type)}
           onClick={() => props.onClickChangeInputType()}
         />
         <span
