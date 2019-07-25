@@ -1233,12 +1233,11 @@ const getSettings = async () => {
   return appSettings;
 };
 
-const updateSettings = async ({ language, opened, theme, isFromStore }) => {
+const updateSettings = async ({ language, opened, theme }) => {
   const params = noNulls({
     language,
     opened,
-    theme,
-    isFromStore
+    theme
   });
   if (Object.keys(params).length < 1) {
     return Promise.resolve(true);
