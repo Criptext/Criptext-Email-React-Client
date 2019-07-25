@@ -491,3 +491,29 @@ export const importDatabase = async () => {
 export const clearSyncData = async () => {
   return await callMain('data-transfer-clear-sync-data');
 };
+
+/* Backup
+----------------------------- */
+export const createDefaultBackupFolder = async () => {
+  return await callMain('create-default-backup-folder');
+};
+
+export const exportBackupUnencrypted = async params => {
+  return await callMain('export-backup-unencrypted', params);
+};
+
+export const exportBackupEncrypted = async params => {
+  return await callMain('export-backup-encrypted', params);
+};
+
+export const getDefaultBackupFolder = async () => {
+  return await callMain('get-default-backup-folder');
+};
+
+export const restoreBackupEncrypted = async params => {
+  return await callMain('restore-backup-encrypted', params);
+};
+
+export const restoreBackupUnencrypted = async params => {
+  return await callMain('restore-backup-unencrypted', params);
+};

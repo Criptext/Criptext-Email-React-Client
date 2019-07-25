@@ -1,0 +1,68 @@
+#restore-backup-progress-popup {
+  width: 200px;
+  height: 200px;
+  padding: 50px 30px 15px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  > .progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background-color: rgba(0, 145, 255, 0.25);
+      margin-bottom: 0px;
+
+      > .content {
+        padding: 5px;
+        border-radius: 5px;
+        max-width: 95%;
+        transition: width 1.5s;
+        &.running-animation {
+          background-image: repeating-linear-gradient(-45deg, #0091ff, #0091ff 11px, #50b0f9 10px, #50b0f9 20px);
+          background-size: 28px 28px;
+          animation: move 1s linear infinite;
+        }
+        &.stop-animation {
+          background-color: red;
+        }
+      }
+      @keyframes move {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 28px 0;
+        }
+      }
+    }
+
+    .percent {
+      position: relative;
+      top: -10px;
+      width: 46px;
+      height: 22px;
+      > .content {
+        border-radius: 50px;
+        background-color: #373a45;
+        span {
+          font-size: 13px;
+          color: #fff;
+        }
+      }
+
+      &::before {
+        content: "";
+        position: relative;
+        top: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #373a45 transparent;
+      }
+    }
+  }
+}

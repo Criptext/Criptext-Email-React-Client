@@ -4,13 +4,15 @@ import ActivityPanel from './../containers/ActivityPanel';
 import MainWrapper from './MainWrapper';
 import SideBar from './../containers/SideBar';
 import WelcomeWrapper from './WelcomeWrapper';
-import { mySettings } from '../utils/electronInterface';
 import PopupHOC from './PopupHOC';
-import DeviceRemovedPopup from './DeviceRemovedPopup';
 import AccountDeletedPopup from './AccountDeletedPopup';
+import CreatingBackupFilePopup from './CreatingBackupFilePopup';
+import DeviceRemovedPopup from './DeviceRemovedPopup';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
+import RestoreBackupPopupWrapper from './RestoreBackupPopupWrapper';
 import SuspendedAccountPopup from './SuspendedAccountPopup';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
+import { mySettings } from '../utils/electronInterface';
 import UserGuide from './UserGuide';
 import './panel.scss';
 
@@ -45,13 +47,14 @@ const Panel = props => (
     {!props.isHiddenMailboxPopup &&
       renderMailboxPopup({
         type: props.mailboxPopupType,
-        isHidden: props.isHiddenMailboxPopup
+        isHidden: props.isHiddenMailboxPopup,
+        ...props
       })}
     <UserGuide />
   </div>
 );
 
-const renderMailboxPopup = ({ type, isHidden, props }) => {
+const renderMailboxPopup = ({ type, isHidden, ...props }) => {
   switch (type) {
     case MAILBOX_POPUP_TYPES.ACCOUNT_DELETED: {
       const Accountdeletedpopup = PopupHOC(AccountDeletedPopup);
@@ -59,7 +62,17 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
         <Accountdeletedpopup
           isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
-          {...props}
+        />
+      );
+    }
+    case MAILBOX_POPUP_TYPES.CREATING_BACKUP_FILE: {
+      const Creatingbackupfilepopup = PopupHOC(CreatingBackupFilePopup);
+      return (
+        <Creatingbackupfilepopup
+          isHidden={isHidden}
+          popupPosition={{ left: '50%', top: '50%' }}
+          isClosable={false}
+          theme={'dark'}
         />
       );
     }
@@ -69,9 +82,11 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
         <DeviceRemovedpopup
           isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
-          {...props}
         />
       );
+    }
+    case MAILBOX_POPUP_TYPES.ONLY_BACKDROP: {
+      return <div className="mailbox-linking-devices-backdrop" />;
     }
     case MAILBOX_POPUP_TYPES.PASSWORD_CHANGED: {
       const PasswordChangedpopup = PopupHOC(PasswordChangedPopupWrapper);
@@ -85,8 +100,17 @@ const renderMailboxPopup = ({ type, isHidden, props }) => {
         />
       );
     }
-    case MAILBOX_POPUP_TYPES.ONLY_BACKDROP: {
-      return <div className="mailbox-linking-devices-backdrop" />;
+    case MAILBOX_POPUP_TYPES.RESTORE_BACKUP: {
+      const Restorebackuppopup = PopupHOC(RestoreBackupPopupWrapper);
+      return (
+        <Restorebackuppopup
+          isHidden={isHidden}
+          popupPosition={{ left: '50%', top: '50%' }}
+          isClosable={false}
+          theme={'dark'}
+          {...props}
+        />
+      );
     }
     case MAILBOX_POPUP_TYPES.SUSPENDED_ACCOUNT: {
       const Suspendedaccountpopup = PopupHOC(SuspendedAccountPopup);

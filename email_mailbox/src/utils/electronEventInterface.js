@@ -1007,7 +1007,7 @@ ipc.answerMain('get-events', () => {
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
   const labelId = shouldUpdateBadge ? LabelType.draft.id : undefined;
-  emitter.emit(Event.REFRESH_THREADS, { labelIds: [labelId] });
+  sendRefreshThreadsEvent({ labelIds: [labelId] });
 });
 
 ipcRenderer.on(
@@ -1296,6 +1296,14 @@ export const sendSuspendedAccountEvent = () => {
   return { rowid: null };
 };
 
+export const sendRefreshThreadsEvent = eventParams => {
+  emitter.emit(Event.REFRESH_THREADS, eventParams);
+};
+
+export const sendRestoreBackupInitEvent = () => {
+  emitter.emit(Event.RESTORE_BACKUP_INIT);
+};
+
 export const handleDeleteDeviceData = async rowid => {
   return await setTimeout(async () => {
     await deleteAllDeviceData();
@@ -1395,6 +1403,46 @@ ipcRenderer.on('open-thread-by-notification', (ev, { threadId }) => {
   emitter.emit(Event.OPEN_THREAD, { threadId });
 });
 
+/*  Local backup
+----------------------------- */
+ipcRenderer.on('local-backup-disable-events', () => {
+  emitter.emit(Event.LOCAL_BACKUP_DISABLE_EVENTS);
+});
+
+ipcRenderer.on('local-backup-enable-events', (ev, params) => {
+  emitter.emit(Event.LOCAL_BACKUP_ENABLE_EVENTS, params);
+});
+
+ipcRenderer.on('local-backup-export-finished', () => {
+  emitter.emit(Event.LOCAL_BACKUP_EXPORT_FINISHED);
+});
+
+ipcRenderer.on('local-backup-encrypt-finished', () => {
+  emitter.emit(Event.LOCAL_BACKUP_ENCRYPT_FINISHED);
+});
+
+ipcRenderer.on('local-backup-success', () => {
+  emitter.emit(Event.LOCAL_BACKUP_SUCCESS);
+});
+
+ipcRenderer.on('restore-backup-disable-events', () => {
+  emitter.emit(Event.RESTORE_BACKUP_DISABLE_EVENTS);
+});
+
+ipcRenderer.on('restore-backup-enable-events', (ev, error) => {
+  emitter.emit(Event.RESTORE_BACKUP_ENABLE_EVENTS, error);
+});
+
+ipcRenderer.on('restore-backup-finished', () => {
+  emitter.emit(Event.RESTORE_BACKUP_FINISHED);
+});
+
+ipcRenderer.on('restore-backup-success', () => {
+  emitter.emit(Event.RESTORE_BACKUP_SUCCESS);
+});
+
+/*  Events
+----------------------------- */
 export const addEvent = (eventName, callback) => {
   emitter.addListener(eventName, callback);
 };
@@ -1420,12 +1468,22 @@ export const Event = {
   LINK_DEVICE_UPLOADING_MAILBOX: 'uploading-mailbox',
   LOAD_APP: 'load-app',
   LOAD_EVENTS: 'load-events',
+  LOCAL_BACKUP_DISABLE_EVENTS: 'local-backup-disable-events',
+  LOCAL_BACKUP_ENABLE_EVENTS: 'local-backup-enable-events',
+  LOCAL_BACKUP_EXPORT_FINISHED: 'local-backup-export-finished',
+  LOCAL_BACKUP_ENCRYPT_FINISHED: 'local-backup-encrypt-finished',
+  LOCAL_BACKUP_SUCCESS: 'local-backup-success',
   OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',
   REACTIVATED_ACCOUNT: 'reactivated-account',
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
   REFRESH_THREADS: 'refresh-threads',
+  RESTORE_BACKUP_INIT: 'restore-backup-init',
+  RESTORE_BACKUP_DISABLE_EVENTS: 'restore-backup-disable-events',
+  RESTORE_BACKUP_ENABLE_EVENTS: 'restore-backup-enable-events',
+  RESTORE_BACKUP_FINISHED: 'restore-backup-finished',
+  RESTORE_BACKUP_SUCCESS: 'restore-backup-success',
   SHOW_USER_GUIDE_STEP: 'show-user-guide-step',
   SET_SECTION_TYPE: 'set-section-type',
   STORE_LOAD: 'store-load',

@@ -32,6 +32,13 @@ const getSystemLanguage = async () => {
   return isEnglish ? 'en' : isSpanish ? 'es' : 'en';
 };
 
+const sendEventToAllWindows = (eventName, params) => {
+  const openedWindows = BrowserWindow.getAllWindows();
+  return openedWindows.forEach(openWindow => {
+    openWindow.webContents.send(eventName, params);
+  });
+};
+
 module.exports = {
   quit,
   isDev,
@@ -40,5 +47,6 @@ module.exports = {
   isMacOS,
   isFromStore,
   showWindows,
-  getSystemLanguage
+  getSystemLanguage,
+  sendEventToAllWindows
 };

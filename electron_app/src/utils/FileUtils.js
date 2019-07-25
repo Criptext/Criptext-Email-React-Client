@@ -173,5 +173,6 @@ module.exports = {
   removeUserDir,
   getUserEmailsPath,
   createIfNotExist,
-  checkIfExists
+  checkIfExists,
+  createPathRecursive
 };

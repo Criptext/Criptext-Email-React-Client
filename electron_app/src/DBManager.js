@@ -1234,7 +1234,11 @@ const getSettings = async () => {
 };
 
 const updateSettings = async ({ language, opened, theme }) => {
-  const params = noNulls({ language, opened, theme });
+  const params = noNulls({
+    language,
+    opened,
+    theme
+  });
   if (Object.keys(params).length < 1) {
     return Promise.resolve(true);
   }

@@ -56,7 +56,10 @@ export const parseRateLimitBlockingTime = secondsString => {
   const hours = Math.floor(seconds / 3600);
   seconds %= 3600;
   const minutes = Math.floor(seconds / 60);
-  return `${hours ? `${hours}h ` : ''}${minutes ? `${minutes}min` : ''}`;
+  return (
+    `${hours ? String(hours) + 'h ' : ''}` +
+    `${minutes ? String(minutes) + 'min' : ''}`
+  );
 };
 
 export const defineUnsentText = time => {
@@ -75,4 +78,14 @@ export const defineUnsentText = time => {
     return moment(timeLocal).format(`[${prefix}] dddd ${suffix}`);
   }
   return moment(timeLocal).format(`DD MMM YYYY ${suffix}`);
+};
+
+export const formatLastBackupDate = time => {
+  return moment(getTimeLocal(time)).format(`MMM D, YYYY`);
+};
+
+export const defineBackupFileName = extension => {
+  return moment(getTimeLocal(Date.now())).format(
+    `[Backup]-YYYY-MM-D_HH-mm.[${extension}]`
+  );
 };

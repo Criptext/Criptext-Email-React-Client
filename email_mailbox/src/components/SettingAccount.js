@@ -8,6 +8,8 @@ import SettingsPopup from './SettingsPopup';
 import SettingBlockDeleteAccount from './SettingBlockDeleteAccount';
 import SettingBlockManualSync from './SettingBlockManualSync';
 import SettingsGeneralProfile from '../containers/SettingsGeneralProfile';
+import SettingsAccountBackupWrapper from './SettingsAccountBackupWrapper';
+import SettingsAccountRestoreBackupc from './SettingsAccountRestoreBackup';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import string from './../lang';
 import './settingaccount.scss';
@@ -42,6 +44,8 @@ const SettingAccount = props => (
         <PasswordBlock {...props} />
         <RecoveryEmailBlock {...props} />
         <SettingBlockReplyTo {...props} />
+        <SettingsAccountBackupWrapper {...props} />
+        <SettingsAccountRestoreBackupc />
         <SettingBlockManualSync
           onShowSettingsPopup={props.onShowSettingsPopup}
           devicesQuantity={props.devicesQuantity}
@@ -71,6 +75,7 @@ const SettingAccount = props => (
       onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
       onShowSettingsPopup={props.onShowSettingsPopup}
       setReplyToPopupParams={props.setReplyToPopupParams}
+      onSetExportBackupPassword={props.onSetExportBackupPassword}
       type={props.settingsPopupType}
     />
   </div>
@@ -380,6 +385,7 @@ SettingAccount.propTypes = {
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
+  onSetExportBackupPassword: PropTypes.func,
   onShowSettingsPopup: PropTypes.func,
   setReplyToPopupParams: PropTypes.object,
   settingsPopupType: PropTypes.string

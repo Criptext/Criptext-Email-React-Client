@@ -1,0 +1,41 @@
+#export-backup-file-popup {
+  height: 270px;
+  padding: 30px;
+  .popup-title {
+    margin-top: 5%;
+  }
+  .popup-paragraph,
+  .popup-inputs {
+    width: 85%;
+    margin: auto;
+    text-align: left;
+  }
+  .encrypt-backup-switch-section {
+    width: 100%;
+    margin-top: 15%;
+    display: flex;
+    justify-content: space-around;
+    p {
+      margin: 0px;
+    }
+  }
+  .encrypt-description {
+    margin: 12% auto;
+  }
+  .unencrypt-note {
+    margin:20% auto;
+  }
+  .popup-inputs {
+    .error-password-message {
+      visibility: visible;
+      &.hidden {
+        visibility: hidden;
+      }
+    }
+  }
+  .popup-buttons {
+    position: absolute;
+    left: 21%;
+    bottom: 8%;
+  }
+}

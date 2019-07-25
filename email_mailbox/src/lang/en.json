@@ -22,7 +22,7 @@
     "contact_support": {
       "subject": "Customer Support - Desktop",
       "recipient": {
-        "name": " Contact Support" 
+        "name": " Contact Support"
       },
       "content": "Do not write below this line."
     }
@@ -237,7 +237,7 @@
     },
     "trash": {
       "description": "Messages that have been in Trash more than 30 days will be automatically deleted",
-        "action": "Empty Trash"
+      "action": "Empty Trash"
     },
     "two_factor_auth_turn_off": {
       "description": "Two-Factor Authentication was turned off"
@@ -271,7 +271,7 @@
     "weekdays": "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday",
     "weekdaysShort": "Sun_Mon_Tue_Wed_Thu_Fri_Sat",
     "weekdaysMin": "Su_Mo_Tu_We_Th_Fr_Sa",
-    "relativeTime" : {
+    "relativeTime": {
       "future": "In %s",
       "past": "%s ago",
       "s": "Few seconds",
@@ -294,6 +294,16 @@
     "newEmailGroup": {
       "prefix": "You have ",
       "sufix": " new emails"
+    },
+    "export_backup": {
+      "success": {
+        "title": "Backup exported successfully!",
+        "message": "Click here to open backup location folder"
+      },
+      "error": {
+        "title": "Criptext",
+        "message": "Oops! Something went wrong to export backup"
+      }
     }
   },
   "popups": {
@@ -343,6 +353,10 @@
       "cancelButtonLabel": "Cancel",
       "confirmButtonLabel": "Send"
     },
+    "creating_backup_file": {
+      "title": "Creating Backup File",
+      "paragraph": "Please wait a moment..."
+    },
     "delete_account": {
       "title": "Delete My Account",
       "paragraphs": {
@@ -364,6 +378,28 @@
       "cancelButtonLabel": "Cancel",
       "confirmButtonLabel": "Send"
     },
+    "export_backup": {
+      "title": "Export Backup File",
+      "switchLabel": "Encrypt Backup",
+      "description": "If you lose/forget this password you won't be able to restore this backup in the future",
+      "inputPassphrase": {
+        "placeholder": "Enter passphrase",
+        "errorMessages": {
+          "len": {
+            "prefix": "Must have",
+            "suffix": "characters"
+          }
+        }
+      },
+      "note": {
+        "header": "Note: ",
+        "content": "For your security we sugest you chose to encrypt the backup file. "
+      },
+      "buttons": {
+        "send": "Save File",
+        "cancel": "Cancel"
+      }
+    },
     "logout": {
       "title": "Logout",
       "paragraphs": {
@@ -375,7 +411,7 @@
     "remove_device": {
       "title": "Remove Device",
       "paragraphs": {
-        "header":"Removing access will automatically sign you out of your account on this device.",
+        "header": "Removing access will automatically sign you out of your account on this device.",
         "password": "To confirm enter your password"
       },
       "input": {
@@ -390,6 +426,37 @@
       "title": "2FA Enabled!",
       "paragraph": "Next time you sign into your account on another device you'll have to enter your password and then validate the sign in from an existing device.",
       "button": "Got it"
+    },
+    "restore_backup_request": {
+      "title": "Restore Backup",
+      "paragraph": "Restore your emails from a local backup. This can be done later from Settings>Account>Restore Backup",
+      "button": "Select file",
+      "cancel": "Cancel"
+    },
+    "restore_backup_from_file": {
+      "title": "Restore from Backup File",
+      "paragraphs": {
+        "backed_up": "Backed up",
+        "size": "Size"
+      },
+      "input": {
+        "label": "Introduce your passphrase",
+        "placeholder": "Passphrase"
+      },
+      "buttons": {
+        "restore": "Restore",
+        "cancel": "Cancel"
+      }
+    },
+    "restore_backup_invalid_file": {
+      "title": "Invalid File",
+      "paragraph": "The selected file is either corrupted or belongs to another email account",
+      "button": "Change file",
+      "cancel": "Cancel"
+    },
+    "restore_backup_progress": {
+      "header": "Restoring",
+      "cancelLabel": "Cancel"
     },
     "set_reply_to": {
       "title": "Set Reply To Email",
@@ -466,6 +533,22 @@
     "account": "Account",
     "action": "Action",
     "appearance": "Appearance",
+    "mailbox_backup": {
+      "manual": {
+        "label": "Mailbox Backup",
+        "button": "Export Backup File",
+        "description": "Generate a backup of your inbox that can be exported to external drives"
+      },
+      "progress": {
+        "backing_up_mailbox": "Exporting backup file...",
+        "backup_mailbox_success": "Backup file exported successfully!"
+      }
+    },
+    "restore_backup": {
+      "label": "Restore Backup",
+      "button": "Restore",
+      "description": "Easily restore your mailbox from a local backup file."
+    },
     "cancel": "Cancel",
     "change": "Change",
     "configurations": "Configurations",
@@ -558,7 +641,7 @@
     },
     "trusted_devices": "trusted devices",
     "two_factor_authentication": "Two-Factor Authentication",
-    "two_factor_not_available_text" : "To enable Two-Factor Authentication you must set and verify a recovery email",
+    "two_factor_not_available_text": "To enable Two-Factor Authentication you must set and verify a recovery email",
     "user_labels": "User Labels",
     "verified": "verified"
   },

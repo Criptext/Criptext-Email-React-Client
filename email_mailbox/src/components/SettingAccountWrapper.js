@@ -5,7 +5,8 @@ import {
   changePassword,
   changeRecoveryEmail,
   setReplyTo,
-  setTwoFactorAuth
+  setTwoFactorAuth,
+  createDefaultBackupFolder
 } from './../utils/ipc';
 import {
   addEvent,
@@ -51,14 +52,15 @@ const EDITING_MODES = {
 
 const SETTINGS_POPUP_TYPES = {
   CHANGE_PASSWORD: 'change-password',
-  LOGOUT: 'logout',
   CHANGE_RECOVERY_EMAIL: 'change-recovery-email',
-  TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled',
   DELETE_ACCOUNT: 'delete-account',
-  NONE: 'none',
+  EXPORT_BACKUP: 'export-backup',
+  LOGOUT: 'logout',
   MANUAL_SYNC: 'manual-sync',
   MANUAL_SYNC_DEVICE_AUTHENTICATION: 'manual-sync-device-authentication',
-  SET_REPLY_TO: 'reply-to'
+  NONE: 'none',
+  SET_REPLY_TO: 'reply-to',
+  TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled'
 };
 
 const changePasswordErrors = {
@@ -152,6 +154,10 @@ class SettingAccountWrapper extends Component {
       encryptToExternals: {
         enabled: myAccount.encryptToExternals,
         isLoading: false
+      },
+      mailboxBackup: {
+        password: '',
+        inProgress: false
       }
     };
     this.isEnterprise = myAccount.recipientId.includes('@');
@@ -174,6 +180,7 @@ class SettingAccountWrapper extends Component {
         }
         onClearPopupParams={this.handleClearPopupParams}
         onClickSetReplyTo={this.handleClickSetReplyTo}
+        onClickExportBackupFile={this.handleClickExportBackupFile}
         onClosePopup={this.handleClosePopup}
         onConfirmChangePassword={this.handleConfirmChangePassword}
         onConfirmChangeRecoveryEmail={this.handleConfirmChangeRecoveryEmail}
@@ -220,6 +227,9 @@ class SettingAccountWrapper extends Component {
         readReceiptsLabelisLoading={this.state.readReceipts.isLoading}
         onShowSettingsPopup={this.handleShowSettingsPopup}
         devicesQuantity={devicesQuantity}
+        mailboxBackupParams={this.state.mailboxBackup}
+        onSetExportBackupPassword={this.handleSetExportBackupPassword}
+        onClearMailboxBackupParams={this.handleClearMailboxBackupParams}
       />
     );
   }
@@ -432,6 +442,37 @@ class SettingAccountWrapper extends Component {
     this.setState({
       isHiddenSettingsPopup: false,
       settingsPopupType: SETTINGS_POPUP_TYPES.SET_REPLY_TO
+    });
+  };
+
+  handleClickExportBackupFile = () => {
+    this.setState(
+      {
+        isHiddenSettingsPopup: false,
+        settingsPopupType: SETTINGS_POPUP_TYPES.EXPORT_BACKUP
+      },
+      async () => {
+        await createDefaultBackupFolder();
+      }
+    );
+  };
+
+  handleSetExportBackupPassword = ({ password }) => {
+    this.handleClosePopup();
+    this.setState({
+      mailboxBackup: {
+        password,
+        inProgress: true
+      }
+    });
+  };
+
+  handleClearMailboxBackupParams = () => {
+    this.setState({
+      mailboxBackup: {
+        password: '',
+        inProgress: false
+      }
     });
   };
 

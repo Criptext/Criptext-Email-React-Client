@@ -294,6 +294,16 @@
     "newEmailGroup": {
       "prefix": "Tienes ",
       "sufix": " correos nuevos"
+    },
+    "export_backup": {
+      "success": {
+        "title": "Respaldo exportado exitosamente!",
+        "message": "Da clic aquí para abrir la ubicación del archivo de respaldo"
+      },
+      "error": {
+        "title": "Criptext",
+        "message": "Ups! Algo salió mal al crear tu archivo de respaldo"
+      }
     }
   },
   "popups": {
@@ -343,6 +353,10 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Cambiar"
     },
+    "creating_backup_file": {
+      "title": "Creando Respaldo",
+      "paragraph": "Por favor, espere un momento..."
+    },
     "delete_account": {
       "title": "Eliminar Mi Cuenta",
       "paragraphs": {
@@ -363,6 +377,28 @@
       },
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Enviar"
+    },
+    "export_backup": {
+      "title": "Exportar Respaldo",
+      "switchLabel": "Encriptar respaldo",
+      "description": "Si olvidas/pierdes esta contraseña no podrás restaurar tu respaldo en el futuro",
+      "inputPassphrase": {
+        "placeholder": "Ingrese contraseña",
+        "errorMessages": {
+          "len": {
+            "prefix": "Debe tener",
+            "suffix": "caracteres"
+          }
+        }
+      },
+      "note": {
+        "header": "Nota: ",
+        "content": "Por tu seguridad, sugerimos encriptar el respaldo"
+      },
+      "buttons": {
+        "send": "Guardar",
+        "cancel": "Cancelar"
+      }
     },
     "logout": {
       "title": "Cerrar sesión",
@@ -390,6 +426,37 @@
       "title": "¡A2F Habilitada!",
       "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
       "button": "¡Listo!"
+    },
+    "restore_backup_request": {
+      "title": "Restaurar respaldo",
+      "paragraph": "Restaura tus correos desde un archivo local. Esto puede realizarse después seleccionando Configuración > Cuenta > Restaurar respaldo",
+      "button": "Seleccionar archivo",
+      "cancel": "Cancelar"
+    },
+    "restore_backup_from_file": {
+      "title": "Restaurar respaldo",
+      "paragraphs": {
+        "backed_up": "Respaldado",
+        "size": "Tamaño"
+      },
+      "input": {
+        "label": "Introduce tu clave",
+        "placeholder": "Clave"
+      },
+      "buttons": {
+        "restore": "Restaurar",
+        "cancel": "Cancelar"
+      }
+    },
+    "restore_backup_invalid_file": {
+      "title": "Archivo Inválido",
+      "paragraph": "El archivo seleccionado esta corrompido o le pertenece a otra cuenta de correo",
+      "button": "Cambiar archivo",
+      "cancel": "Cancelar"
+    },
+    "restore_backup_progress": {
+      "header": "Restaurando",
+      "cancelLabel": "Cancelar"
     },
     "set_reply_to": {
       "title": "Correo de Respuesta",
@@ -466,6 +533,22 @@
     "account": "Cuenta",
     "action": "Acción",
     "appearance": "Apariencia",
+    "mailbox_backup": {
+      "manual": {
+        "label": "Respaldo de buzón",
+        "button": "Exportar Respaldo",
+        "description": "Genera un archivo exportable a cualquier otro medio o disco"
+      },
+      "progress": {
+        "backing_up_mailbox": "Respaldando buzon...",
+        "backup_mailbox_success": "Buzon respaldado exitosamente"
+      }
+    },
+    "restore_backup": {
+      "label": "Restaurar Respaldo",
+      "button": "Restaurar",
+      "description": "Restaura tu buzón desde un respaldo local que hayas hecho anteriormente"
+    },
     "cancel": "Cancelar",
     "change": "Cambiar",
     "configurations": "Configuraciones",

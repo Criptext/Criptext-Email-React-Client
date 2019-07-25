@@ -2,7 +2,7 @@ import { labels } from './systemLabels';
 import { cleanDataLogout as cleanData, createSignalTables } from './ipc';
 
 const { remote } = window.require('electron');
-const { getCurrentWindow } = remote;
+const { getCurrentWindow, dialog } = remote;
 
 const newsClient = remote.require('./src/newsClient');
 const globalManager = remote.require('./src/globalManager');
@@ -31,10 +31,22 @@ export const LabelType = Object.assign(labels, additionalLabels);
 
 export const getDeviceType = () => globalManager.deviceType.id;
 
+export const setPendingRestoreStatus = status => {
+  globalManager.pendingRestore.set(status);
+};
+
+export const getPendingRestoreStatus = () => {
+  return globalManager.pendingRestore.get();
+};
+
 /*  Window events
 ----------------------------- */
 export const reloadWindow = () => {
   getCurrentWindow().reload();
+};
+
+export const showSaveFileDialog = (fileName, callback) => {
+  dialog.showSaveDialog(null, { defaultPath: fileName }, callback);
 };
 
 /*  News Client

@@ -8,18 +8,22 @@ import {
   checkUserGuideSteps
 } from '../utils/electronEventInterface';
 import { processPendingEvents } from '../utils/ipc';
-import { LabelType } from '../utils/electronInterface';
+import { LabelType, getPendingRestoreStatus } from '../utils/electronInterface';
 import { SectionType } from '../utils/const';
 import { addLabels, setAvatarUpdatedTimestamp, stopLoadSync } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
+  CREATING_BACKUP_FILE: 'creating-backup-file',
   DEVICE_REMOVED: 'device-removed',
   PASSWORD_CHANGED: 'password-changed',
   ONLY_BACKDROP: 'only-backdrop',
+  RESTORE_BACKUP: 'restore-backup',
   SUSPENDED_ACCOUNT: 'suspended-account'
 };
+
+const RESTORE_BACKUP_POPUP_DELAY = 1000;
 
 class PanelWrapper extends Component {
   constructor(props) {
@@ -75,6 +79,7 @@ class PanelWrapper extends Component {
   componentDidMount() {
     const steps = [USER_GUIDE_STEPS.BUTTON_COMPOSE];
     checkUserGuideSteps(steps);
+    this.handleCheckRestoreBackup();
   }
 
   handleClickSection = (type, params) => {
@@ -157,7 +162,20 @@ class PanelWrapper extends Component {
   handleCloseWelcome = () => {
     this.setState({ isOpenWelcome: false }, () => {
       this.props.onUpdateOpenedAccount();
+      this.handleCheckRestoreBackup();
     });
+  };
+
+  handleCheckRestoreBackup = () => {
+    const userHasCanceledSync = getPendingRestoreStatus();
+    if (userHasCanceledSync) {
+      setTimeout(() => {
+        this.setState({
+          isHiddenMailboxPopup: false,
+          mailboxPopupType: MAILBOX_POPUP_TYPES.RESTORE_BACKUP
+        });
+      }, RESTORE_BACKUP_POPUP_DELAY);
+    }
   };
 
   handleCloseMailboxPopup = () => {
@@ -188,6 +206,15 @@ class PanelWrapper extends Component {
       Event.REACTIVATED_ACCOUNT,
       this.reactivatedAccountListenerCallback
     );
+    addEvent(
+      Event.LOCAL_BACKUP_DISABLE_EVENTS,
+      this.localBackupDisableEventsListenerCallback
+    );
+    addEvent(
+      Event.LOCAL_BACKUP_ENABLE_EVENTS,
+      this.localBackupEnableEventsListenerCallback
+    );
+    addEvent(Event.RESTORE_BACKUP_INIT, this.restoreBackupInitListenerCallback);
   };
 
   removeEventHandlers = () => {
@@ -209,6 +236,18 @@ class PanelWrapper extends Component {
     removeEvent(
       Event.REACTIVATED_ACCOUNT,
       this.reactivatedAccountListenerCallback
+    );
+    removeEvent(
+      Event.LOCAL_BACKUP_DISABLE_EVENTS,
+      this.localBackupDisableEventsListenerCallback
+    );
+    removeEvent(
+      Event.LOCAL_BACKUP_ENABLE_EVENTS,
+      this.localBackupEnableEventsListenerCallback
+    );
+    removeEvent(
+      Event.RESTORE_BACKUP_INIT,
+      this.restoreBackupInitListenerCallback
     );
   };
 
@@ -431,6 +470,29 @@ class PanelWrapper extends Component {
     if (isShowingPopup && isVisibleSuspendedAccountPopup) {
       this.handleCloseMailboxPopup();
     }
+  };
+
+  localBackupDisableEventsListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.CREATING_BACKUP_FILE
+    });
+  };
+
+  localBackupEnableEventsListenerCallback = () => {
+    const isShowingPopup = !this.state.isHiddenMailboxPopup;
+    const isVisibleCreatingBackupFilePopup =
+      this.state.mailboxPopupType === MAILBOX_POPUP_TYPES.CREATING_BACKUP_FILE;
+    if (isShowingPopup && isVisibleCreatingBackupFilePopup) {
+      this.handleCloseMailboxPopup();
+    }
+  };
+
+  restoreBackupInitListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.RESTORE_BACKUP
+    });
   };
 }
 

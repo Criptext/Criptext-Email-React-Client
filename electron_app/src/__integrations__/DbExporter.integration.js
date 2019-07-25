@@ -23,6 +23,8 @@ const fs = require('fs');
 const myAccount = require('../Account');
 const { APP_DOMAIN } = require('../utils/const');
 
+jest.mock('./../Account.js');
+
 const DATABASE_PATH = `${__dirname}/test.db`;
 const PARSED_SAMPLE_FILEPATH = `${__dirname}/parsed_sample_file.txt`;
 const TEMP_DIRECTORY = '/tmp/criptext-tests';

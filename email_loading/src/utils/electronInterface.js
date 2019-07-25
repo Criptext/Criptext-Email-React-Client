@@ -30,3 +30,7 @@ export const stopSocket = () => {
 
 export const isFromStore =
   globalManager.isWindowsStore.get() || globalManager.isMAS.get();
+
+export const setPendingRestoreStatus = status => {
+  globalManager.pendingRestore.set(status);
+};

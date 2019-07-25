@@ -14,6 +14,7 @@ global.internetConnection;
 global.isWindowsStore =
   currrentInstallerType === allInstallerTypes.windows.store;
 global.deviceType = getDeviceType(currrentInstallerType, allInstallerTypes);
+global.pendingRestore = false;
 
 /*  Composer
 ----------------------------- */
@@ -113,6 +114,16 @@ const getInternetConnectionStatus = () => {
   return global.internetConnection;
 };
 
+/*  Pending Restore
+----------------------------- */
+const setPendingRestoreStatus = status => {
+  global.pendingRestore = status;
+};
+
+const getPendingRestoreStatus = () => {
+  return global.pendingRestore;
+};
+
 module.exports = {
   composerData: {
     get: getComposerData,
@@ -157,5 +168,9 @@ module.exports = {
   },
   deviceType: {
     id: global.deviceType
+  },
+  pendingRestore: {
+    get: getPendingRestoreStatus,
+    set: setPendingRestoreStatus
   }
 };

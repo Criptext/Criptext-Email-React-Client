@@ -5,12 +5,18 @@ const path = require('path');
 
 const iconPath = path.join(__dirname, './../resources/launch-icons/icon.png');
 
-const showNotification = ({ title, message, clickHandler, closeOnClick }) => {
+const showNotification = ({
+  title,
+  message,
+  clickHandler,
+  closeOnClick,
+  forceToShow
+}) => {
   const mailboxWindow = require('./windows/mailbox');
   const isSupportedByOS = Notification.isSupported();
   const isVisibleAndFocused = mailboxWindow.isVisibleAndFocused();
   const isMAS = globalManager.isMAS.get();
-  if (isSupportedByOS && !isMAS && !isVisibleAndFocused) {
+  if (isSupportedByOS && !isMAS && (forceToShow || !isVisibleAndFocused)) {
     const notifyOptions = {
       title,
       body: message

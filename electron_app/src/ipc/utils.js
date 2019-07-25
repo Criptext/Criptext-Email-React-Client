@@ -1,5 +1,5 @@
 const ipc = require('@criptext/electron-better-ipc');
-const { app, dialog, BrowserWindow } = require('electron');
+const { app, dialog, shell } = require('electron');
 const {
   getComputerName,
   isWindows,
@@ -8,7 +8,20 @@ const {
 const { processEventsQueue } = require('../eventQueueManager');
 const globalManager = require('./../globalManager');
 const loadingWindow = require('./../windows/loading');
-const { getSystemLanguage } = require('./../windows/windowUtils');
+const {
+  getSystemLanguage,
+  sendEventToAllWindows
+} = require('./../windows/windowUtils');
+const {
+  createDefaultBackupFolder,
+  getDefaultBackupFolder,
+  prepareBackupFiles,
+  exportBackupUnencrypted,
+  exportBackupEncrypted,
+  restoreUnencryptedBackup,
+  restoreEncryptedBackup
+} = require('./../BackupManager');
+const { showNotification } = require('./../notificationManager');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
@@ -32,13 +45,6 @@ ipc.answerRenderer('update-dock-badge', value => {
     app.setBadgeCount(value);
   }
 });
-
-const sendEventToAllWindows = eventName => {
-  const openedWindows = BrowserWindow.getAllWindows();
-  return openedWindows.forEach(openWindow => {
-    openWindow.webContents.send(eventName);
-  });
-};
 
 // Link devices
 ipc.answerRenderer('start-link-devices-event', data => {
@@ -89,6 +95,132 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
   loadingWindow.show();
   return await clientManager.acknowledgeEvents([data.rowid]);
 };
+
+// Backup
+const simulatePause = ms => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+};
+
+const commitBackupStatus = (eventName, status, params) => {
+  sendEventToAllWindows(eventName, params);
+  if (status) globalManager.backupStatus = status;
+};
+
+ipc.answerRenderer('create-default-backup-folder', () =>
+  createDefaultBackupFolder()
+);
+
+ipc.answerRenderer('export-backup-unencrypted', async params => {
+  const { backupPath, notificationParams } = params;
+  try {
+    globalManager.windowsEvents.disable();
+    commitBackupStatus('local-backup-disable-events', 1);
+    await prepareBackupFiles({});
+    await simulatePause(2000);
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('local-backup-enable-events', 2);
+    await exportBackupUnencrypted({ backupPath });
+    commitBackupStatus('local-backup-export-finished', 3);
+    await simulatePause(3000);
+    commitBackupStatus('local-backup-success', null);
+    showNotification({
+      title: notificationParams.success.title,
+      message: notificationParams.success.message,
+      clickHandler: function() {
+        shell.showItemInFolder(backupPath);
+      },
+      forceToShow: true
+    });
+  } catch (error) {
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('local-backup-enable-events', null, { error });
+    showNotification({
+      title: notificationParams.error.title,
+      message: notificationParams.error.message,
+      forceToShow: true
+    });
+  }
+});
+
+ipc.answerRenderer('export-backup-encrypted', async params => {
+  const { backupPath, password, notificationParams } = params;
+  try {
+    globalManager.windowsEvents.disable();
+    commitBackupStatus('local-backup-disable-events', 1);
+    await prepareBackupFiles({});
+    await simulatePause(2000);
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('local-backup-enable-events', 2);
+    await exportBackupEncrypted({
+      backupPath,
+      password
+    });
+    commitBackupStatus('local-backup-export-finished', 3);
+    await simulatePause(2000);
+    commitBackupStatus('local-backup-success', null);
+    showNotification({
+      title: notificationParams.success.title,
+      message: notificationParams.success.message,
+      clickHandler: function() {
+        shell.showItemInFolder(backupPath);
+      },
+      forceToShow: true
+    });
+  } catch (error) {
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('local-backup-enable-events', null, { error });
+    showNotification({
+      title: notificationParams.error.title,
+      message: notificationParams.error.message,
+      forceToShow: true
+    });
+  }
+});
+
+ipc.answerRenderer('get-default-backup-folder', () => getDefaultBackupFolder());
+
+ipc.answerRenderer('restore-backup-unencrypted', async ({ backupPath }) => {
+  try {
+    globalManager.windowsEvents.disable();
+    commitBackupStatus('restore-backup-disable-events');
+    await prepareBackupFiles({ backupPrevFiles: false });
+    await simulatePause(2000);
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('restore-backup-enable-events');
+    await restoreUnencryptedBackup({ filePath: backupPath });
+    commitBackupStatus('restore-backup-finished');
+    await simulatePause(2000);
+    commitBackupStatus('restore-backup-success', null);
+  } catch (error) {
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('restore-backup-enable-events', null, {
+      error: error.message
+    });
+  }
+});
+
+ipc.answerRenderer('restore-backup-encrypted', async params => {
+  const { backupPath, password } = params;
+  try {
+    globalManager.windowsEvents.disable();
+    commitBackupStatus('restore-backup-disable-events');
+    await prepareBackupFiles({ backupPrevFiles: false });
+    await simulatePause(2000);
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('restore-backup-enable-events');
+    await restoreEncryptedBackup({ filePath: backupPath, password });
+    commitBackupStatus('restore-backup-finished');
+    await simulatePause(2000);
+    commitBackupStatus('restore-backup-success', null);
+  } catch (error) {
+    globalManager.windowsEvents.enable();
+    commitBackupStatus('restore-backup-enable-events', null, {
+      error: error.message
+    });
+  }
+});
 
 module.exports = {
   sendLinkDeviceStartEventToAllWindows,
