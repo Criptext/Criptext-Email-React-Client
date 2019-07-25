@@ -404,6 +404,10 @@ TABLE OF CONTENTS
 
 /* 2.- CONTENT
    ----------------------------- */
+*{
+  font-family: NunitoSans;
+}
+
 html, html body {
   height: 100%;
   margin: 0;
@@ -423,7 +427,7 @@ html, html body {
 
 /* 2.1.- CONTENT: SCROLLBAR
    ----------------------------- */
-.cptx-scrollbar{
+@mixin cptx-scrollbar-scheme{
   &::-webkit-scrollbar-track{
     background-color: transparent;
     box-shadow: inset 0 0 10px rgba(220,220,220,0.1);
@@ -438,6 +442,14 @@ html, html body {
     border-radius: 0;
     background-color: transparent;
   }
+}
+
+.cptx-scrollbar{
+  @include cptx-scrollbar-scheme
+}
+
+.react-autosuggest__suggestions-container--open{
+  @include cptx-scrollbar-scheme
 }
 
 /* 3.- CONTROLS
@@ -494,7 +506,7 @@ button{
     &.wrapper{
       background-color: $_BACKGROUND_COLOR_MAIN;
 
-      .cptx-scrollbar{
+      .cptx-scrollbar, .react-autosuggest__suggestions-container--open{
         &::-webkit-scrollbar-track{
           background-color: $_BACKGROUND_COLOR_SCROLLBAR;
         }

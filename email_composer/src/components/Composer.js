@@ -97,7 +97,7 @@ Composer.propTypes = {
   tagBlured: PropTypes.func,
   tagChanged: PropTypes.func,
   textSubject: PropTypes.string,
-  tagUpdated: PropTypes.string,
+  tagUpdated: PropTypes.func,
   toEmails: PropTypes.array
 };
 

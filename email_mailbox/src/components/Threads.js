@@ -65,7 +65,11 @@ const Threads = props => (
         </span>
       </div>
     </div>
-    <div className="threads-content cptx-scrollbar" onScroll={props.onScroll}>
+    <div
+      className="threads-content cptx-scrollbar"
+      onScroll={props.onScroll}
+      ref={props.setScrollRef}
+    >
       <div className="threads-items">
         {props.threads.size < 1 && (
           <EmptyMailbox
@@ -175,6 +179,7 @@ Threads.propTypes = {
   popupContent: PropTypes.object,
   searchParams: PropTypes.object,
   setPopupContent: PropTypes.func,
+  setScrollRef: PropTypes.func,
   switchChecked: PropTypes.bool,
   switchDisabled: PropTypes.bool,
   threadItemsChecked: PropTypes.object,

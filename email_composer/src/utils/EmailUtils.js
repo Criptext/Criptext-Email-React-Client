@@ -192,7 +192,16 @@ const insertEmptyLine = quantity => {
 };
 
 const formRecipientObject = contact => {
-  return contact.name ? { name: contact.name, email: contact.email } : contact;
+  const name = contact.name;
+  const email = contact.email || contact;
+  const emailTag = `<${email}>`;
+  const complete = `${name || ''} ${emailTag}`;
+  const form = emailRegex.test(email)
+    ? email.includes(`@${appDomain}`) || email.includes(`@${enterpriseDomain}`)
+      ? 'tag-app-domain'
+      : 'tag-default'
+    : 'tag-error';
+  return { name, email, complete: complete.trim(), form };
 };
 
 const formReplyForwardContent = (replyType, subject, date, from, to, body) => {

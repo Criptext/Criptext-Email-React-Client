@@ -11,7 +11,7 @@
   font-weight: 200;
   left: 0;
   position: absolute;
-  overflow: hidden;
+  overflow: auto;
   top: 31px;
   width: 370px;
   max-height: calc(100vh - 100px);
@@ -50,6 +50,7 @@
 .react-autosuggest__suggestion {
   color: #6a707e;
   cursor: pointer;
+  margin: 0;
   padding: 8px 16px;
 }
 
@@ -63,19 +64,19 @@
     border-radius: 50%;
     color: #fff;
     display: flex;
+    font-size: 12px;
+    font-weight: 200;
     height: 27px;
     justify-content: center;
     position: relative;
     width: 27px;
-
-    .recipient-icon-letters{
-      font-size: 11px;
-    }
   }
 
   .recipient-text {
     align-items: center;
     display: flex;
+    font-size: 12px;
+    font-weight: 200;
     margin-left: 10px;
     position: relative;
     width: 130px;
@@ -94,8 +95,10 @@
   .sugestion-email-right {
     align-items: center;
     display: flex;
+    font-size: 12px;
+    font-weight: 200;
     margin-left: 10px;
-    width: 160px;
+    width: 150px;
     
     > span{
       overflow: hidden;

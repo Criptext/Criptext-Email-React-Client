@@ -109,7 +109,7 @@ export const formFileParamsToDatabase = files => {
 export const getFileParamsToSend = files => {
   if (!files.length) return [];
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const tokensToDuplicate = files
       .filter(file => file.shouldDuplicate === true)
       .map(file => file.token);
@@ -132,7 +132,7 @@ export const getFileParamsToSend = files => {
     } else if (tokensToDuplicate.length > 0) {
       fileManager.duplicateFiles(tokensToDuplicate, (err, res) => {
         if (err) {
-          return reject(undefined);
+          return resolve([]);
         }
         const { duplicates } = JSON.parse(res);
         const data = files.map(file => {

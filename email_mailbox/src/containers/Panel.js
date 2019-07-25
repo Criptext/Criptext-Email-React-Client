@@ -19,13 +19,18 @@ import { updateSettings } from '../utils/ipc';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 
 const mapStateToProps = state => {
-  const threadsCount = state
+  const labelIds = state
     .get('threads')
-    .get(`${LabelType.inbox.id}`)
-    .get('list').size;
-  return {
-    threadsCount
-  };
+    .keySeq()
+    .toArray();
+  const result = labelIds.reduce((result, id) => {
+    const size = state
+      .get('threads')
+      .get(`${id}`)
+      .get('list').size;
+    return { ...result, [id]: size };
+  }, {});
+  return result;
 };
 
 const defineContactType = labelId => {

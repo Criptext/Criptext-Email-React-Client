@@ -34,10 +34,11 @@
     li{
       align-items: center;
       background-color: transparent;
+      cursor: pointer;
       display: flex;
       height: 30px;
+      margin: 0;
       padding-left: 16px;
-      cursor: pointer;
 
       span{
         font-family: NunitoSans;
