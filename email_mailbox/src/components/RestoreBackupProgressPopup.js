@@ -5,7 +5,7 @@ import './restorebackupprogresspopup.scss';
 
 const { header, cancelLabel } = string.popups.restore_backup_progress;
 
-const ManualSyncDeviceApprovedPopup = props => (
+const RestoreBackupProgressPopup = props => (
   <div id="restore-backup-progress-popup" className="popup-content">
     <div className="popup-title">
       <h1>{header}</h1>
@@ -32,10 +32,10 @@ const ManualSyncDeviceApprovedPopup = props => (
 const defineBarClass = hasError =>
   hasError ? 'stop-animation' : 'running-animation';
 
-ManualSyncDeviceApprovedPopup.propTypes = {
+RestoreBackupProgressPopup.propTypes = {
   backupPercent: PropTypes.number,
   hasError: PropTypes.bool,
   onClickCancelRestoreBackup: PropTypes.func
 };
 
-export default ManualSyncDeviceApprovedPopup;
+export default RestoreBackupProgressPopup;
