@@ -10,7 +10,7 @@ const SettingsAccountRestoreBackup = () => (
     <span className="cptx-section-item-description">{description}</span>
     <div className="cptx-section-item-control">
       <button className="button-b" onClick={() => sendRestoreBackupInitEvent()}>
-        {button}
+        <span>{button}</span>
       </button>
     </div>
   </div>

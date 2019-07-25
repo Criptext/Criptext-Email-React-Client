@@ -16,7 +16,7 @@ const SettingsAccountBackup = props => (
         className="button-b"
         onClick={() => props.onClickExportBackupFile()}
       >
-        {manualBackup.button}
+        <span>{manualBackup.button}</span>
       </button>
     </div>
     {props.inProgress && (
