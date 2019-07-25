@@ -114,7 +114,7 @@ const getInternetConnectionStatus = () => {
   return global.internetConnection;
 };
 
-/*  Canceled Sync
+/*  Pending Restore
 ----------------------------- */
 const setPendingRestoreStatus = status => {
   global.pendingRestore = status;

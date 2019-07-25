@@ -1233,25 +1233,12 @@ const getSettings = async () => {
   return appSettings;
 };
 
-const updateSettings = async ({
-  language,
-  opened,
-  theme,
-  isFromStore,
-  backupPath,
-  backupFrequency,
-  backupLastDate,
-  backupLastSize
-}) => {
+const updateSettings = async ({ language, opened, theme, isFromStore }) => {
   const params = noNulls({
     language,
     opened,
     theme,
-    isFromStore,
-    backupPath,
-    backupFrequency,
-    backupLastDate,
-    backupLastSize
+    isFromStore
   });
   if (Object.keys(params).length < 1) {
     return Promise.resolve(true);

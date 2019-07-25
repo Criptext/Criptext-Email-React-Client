@@ -11,7 +11,7 @@ const CreatingBackupFilePopup = () => {
         <h1>{title}</h1>
       </div>
       <div className="popup-paragraph">
-        <div className="loading-ring creating-backup-file-popup-loading">
+        <div className="loading-ring">
           <div />
           <div />
           <div />

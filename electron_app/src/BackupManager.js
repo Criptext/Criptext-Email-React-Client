@@ -251,7 +251,7 @@ const restoreUnencryptedBackup = async ({ filePath }) => {
   } catch (restoreBackupError) {
     throw restoreBackupError;
   } finally {
-    // removeTempBackupDirectoryRecursive(TempBackupDirectory);
+    removeTempBackupDirectoryRecursive(TempBackupDirectory);
   }
 };
 

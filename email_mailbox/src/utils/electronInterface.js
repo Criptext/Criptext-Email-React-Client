@@ -49,18 +49,6 @@ export const showSaveFileDialog = (fileName, callback) => {
   dialog.showSaveDialog(null, { defaultPath: fileName }, callback);
 };
 
-export const showOpenBackupFileDialog = (extensions, callback) => {
-  dialog.showOpenDialog(
-    null,
-    {
-      openFile: true,
-      multiSelections: false,
-      filters: [{ name: 'Criptext Backup Files', extensions }]
-    },
-    callback
-  );
-};
-
 /*  News Client
 ----------------------------- */
 export const getNews = ({ code }) => {
