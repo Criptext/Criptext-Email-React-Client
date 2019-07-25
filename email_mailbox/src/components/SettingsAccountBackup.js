@@ -7,16 +7,17 @@ const { manual: manualBackup } = string.settings.mailbox_backup;
 
 const SettingsAccountBackup = props => (
   <div id="settings-account-backup" className="cptx-section-item">
-    <div className="local-backup-manual">
-      <span className="cptx-section-item-title">{manualBackup.label}</span>
-      <div className="cptx-section-item-control">
-        <button
-          className="button-b"
-          onClick={() => props.onClickExportBackupFile()}
-        >
-          {manualBackup.button}
-        </button>
-      </div>
+    <span className="cptx-section-item-title">{manualBackup.label}</span>
+    <span className="cptx-section-item-description">
+      {manualBackup.description}
+    </span>
+    <div className="cptx-section-item-control">
+      <button
+        className="button-b"
+        onClick={() => props.onClickExportBackupFile()}
+      >
+        {manualBackup.button}
+      </button>
     </div>
     {props.inProgress && (
       <div className="cptx-backing-up-bar">

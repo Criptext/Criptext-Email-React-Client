@@ -536,7 +536,8 @@
     "mailbox_backup": {
       "manual": {
         "label": "Mailbox Backup",
-        "button": "Export Backup File"
+        "button": "Export Backup File",
+        "description": "Generate a backup of your inbox that can be exported to external drives"
       },
       "auto": {
         "label": "Auto Backup",

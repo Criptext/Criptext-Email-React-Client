@@ -536,7 +536,8 @@
     "mailbox_backup": {
       "manual": {
         "label": "Respaldo de buzón",
-        "button": "Exportar Respaldo"
+        "button": "Exportar Respaldo",
+        "description": "Genera un archivo exportable a cualquier otro medio o disco"
       },
       "auto": {
         "label": "Auto-Respaldo",
@@ -556,12 +557,6 @@
         "backing_up_mailbox": "Respaldando buzon...",
         "backup_mailbox_success": "Buzon respaldado exitosamente"
       }
-    },
-    "backupLastLabels": {
-      "date": "Último respaldo",
-      "inProgress": "Calculando...",
-      "never": "No respaldado",
-      "size": "Tamaño"
     },
     "cancel": "Cancelar",
     "change": "Cambiar",
