@@ -128,8 +128,8 @@ ipc.answerRenderer('export-backup-unencrypted', async params => {
     showNotification({
       title: notificationParams.success.title,
       message: notificationParams.success.message,
-      clickHandler: function () {
-        shell.showItemInFolder(backupPath)
+      clickHandler: function() {
+        shell.showItemInFolder(backupPath);
       },
       forceToShow: true
     });
@@ -160,9 +160,22 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
     commitBackupStatus('local-backup-export-finished', 3);
     await simulatePause(2000);
     commitBackupStatus('local-backup-success', null);
+    showNotification({
+      title: notificationParams.success.title,
+      message: notificationParams.success.message,
+      clickHandler: function() {
+        shell.showItemInFolder(backupPath);
+      },
+      forceToShow: true
+    });
   } catch (error) {
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', null, { error });
+    showNotification({
+      title: notificationParams.error.title,
+      message: notificationParams.error.message,
+      forceToShow: true
+    });
   }
 });
 
