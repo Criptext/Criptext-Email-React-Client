@@ -1007,8 +1007,12 @@ ipc.answerMain('get-events', () => {
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
   const labelId = shouldUpdateBadge ? LabelType.draft.id : undefined;
-  emitter.emit(Event.REFRESH_THREADS, { labelIds: [labelId] });
+  sendRefreshThreadsEvent({ labelIds: [labelId] });
 });
+
+export const sendRefreshThreadsEvent = eventParams => {
+  emitter.emit(Event.REFRESH_THREADS, eventParams);
+};
 
 ipcRenderer.on(
   'composer-email-sent',

@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import RestoreBackupProgressPopup from './RestoreBackupProgressPopup';
-import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
+import {
+  addEvent,
+  removeEvent,
+  Event,
+  sendRefreshThreadsEvent,
+  sendSetSectionTypeEvent
+} from '../utils/electronEventInterface';
 import { restoreBackupEncrypted, restoreBackupUnencrypted } from '../utils/ipc';
+import { SectionType } from './../utils/const';
 
 class RestoreBackupProgressPopupWrapper extends Component {
   constructor(props) {
@@ -103,7 +110,19 @@ class RestoreBackupProgressPopupWrapper extends Component {
         backupPercent: 100
       },
       () => {
-        setTimeout(this.props.onDismissRestoreBackup, 1500);
+        setTimeout(() => {
+          const { type } = this.props.sectionSelected;
+          if (type === SectionType.MAILBOX) {
+            sendRefreshThreadsEvent();
+          } else if (type === SectionType.SETTINGS) {
+            const mailboxSelected = {
+              id: 1,
+              text: 'Inbox'
+            };
+            sendSetSectionTypeEvent(SectionType.MAILBOX, mailboxSelected);
+          }
+          this.props.onDismissRestoreBackup();
+        }, 1500);
       }
     );
   };
@@ -114,7 +133,8 @@ RestoreBackupProgressPopupWrapper.propTypes = {
   onCloseMailboxPopup: PropTypes.func,
   onDismissRestoreBackup: PropTypes.func,
   onInvalidBackupFile: PropTypes.func,
-  password: PropTypes.string
+  password: PropTypes.string,
+  sectionSelected: PropTypes.object
 };
 
 export default RestoreBackupProgressPopupWrapper;
