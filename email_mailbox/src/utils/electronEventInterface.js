@@ -1024,19 +1024,12 @@ ipcRenderer.on(
           type: MessageType.SUCCESS,
           params: { threadId }
         };
+
     emitter.emit(Event.DISPLAY_MESSAGE, messageData);
     switch (type) {
       case 'new-email': {
         emitter.emit(Event.STORE_LOAD, {
           labelIds: [LabelType.sent.id],
-          threadIds: [threadId]
-        });
-        break;
-      }
-      case 'draft-edited': {
-        emitter.emit(Event.STORE_LOAD, {
-          labelIds: [LabelType.sent.id, LabelType.draft.id],
-          badgeLabelIds: [LabelType.draft.id],
           threadIds: [threadId]
         });
         break;
@@ -1055,6 +1048,21 @@ ipcRenderer.on(
     }
   }
 );
+
+ipcRenderer.on('composer-email-delete', (ev, { threadId, oldEmailId }) => {
+  if (threadId && oldEmailId) {
+    return emitter.emit(Event.UPDATE_THREAD_EMAILS, {
+      threadId,
+      oldEmailId,
+      badgeLabelIds: [LabelType.draft.id]
+    });
+  }
+  emitter.emit(Event.STORE_LOAD, {
+    labelIds: [LabelType.sent.id, LabelType.draft.id],
+    badgeLabelIds: [LabelType.draft.id],
+    threadIds: [threadId]
+  });
+});
 
 ipcRenderer.on('display-message-success-download', () => {
   const messageData = {

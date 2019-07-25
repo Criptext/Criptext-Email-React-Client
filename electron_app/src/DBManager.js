@@ -502,12 +502,16 @@ const getEmailsByIds = ids => {
   GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'bcc' THEN ${
     Table.EMAIL_CONTACT
   }.contactId ELSE NULL END)) as 'bcc',
-  GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens
+  GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens,
+  GROUP_CONCAT(DISTINCT(${Table.EMAIL_LABEL}.labelId)) as labelIds
   FROM ${Table.EMAIL}
   LEFT JOIN ${Table.EMAIL_CONTACT} ON ${Table.EMAIL_CONTACT}.emailId = ${
     Table.EMAIL
   }.id
   LEFT JOIN ${Table.FILE} ON ${Table.FILE}.emailId = ${Table.EMAIL}.id
+  LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL_LABEL}.emailId = ${
+    Table.EMAIL
+  }.id
   WHERE ${Table.EMAIL}.id IN (${idsString})
   GROUP BY ${Table.EMAIL}.id
   `;
@@ -540,12 +544,16 @@ const getEmailsByThreadId = threadId => {
   GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'bcc' THEN ${
     Table.EMAIL_CONTACT
   }.contactId ELSE NULL END)) as 'bcc',
-  GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens
+  GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens,
+  GROUP_CONCAT(DISTINCT(${Table.EMAIL_LABEL}.labelId)) as labelIds
   FROM ${Table.EMAIL}
   LEFT JOIN ${Table.EMAIL_CONTACT} ON ${Table.EMAIL_CONTACT}.emailId = ${
     Table.EMAIL
   }.id
   LEFT JOIN ${Table.FILE} ON ${Table.FILE}.emailId = ${Table.EMAIL}.id
+  LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL_LABEL}.emailId = ${
+    Table.EMAIL
+  }.id
   WHERE threadId = '${threadId}'
   GROUP BY ${Table.EMAIL}.id
   `;
