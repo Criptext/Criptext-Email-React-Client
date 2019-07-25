@@ -136,35 +136,37 @@ const renderBlockSignature = props => (
         </span>
       </div>
     </div>
-    <div
-      className={`cptx-signature-editor cptx-scrollbar${
-        !myAccount.signatureEnabled ? 'cptx-signature-editor-disabled' : ''
-      }`}
-    >
-      <Editor
-        toolbar={{
-          options: [
-            'inline',
-            'fontSize',
-            'fontFamily',
-            'colorPicker',
-            'link',
-            'emoji'
-          ],
-          inline: {
-            options: ['bold', 'italic', 'underline']
-          },
-          textAlign: { inDropdown: true },
-          link: {
-            inDropdown: false,
-            defaultTargetOption: '_blank'
-          },
-          history: { inDropdown: true }
-        }}
-        editorState={props.signature}
-        onEditorStateChange={ev => props.onChangeTextareaSignature(ev)}
-      />
-    </div>
+    {!!myAccount.signatureEnabled && (
+      <div
+        className={`cptx-signature-editor cptx-scrollbar${
+          !myAccount.signatureEnabled ? 'cptx-signature-editor-disabled' : ''
+        }`}
+      >
+        <Editor
+          toolbar={{
+            options: [
+              'inline',
+              'fontSize',
+              'fontFamily',
+              'colorPicker',
+              'link',
+              'emoji'
+            ],
+            inline: {
+              options: ['bold', 'italic', 'underline']
+            },
+            textAlign: { inDropdown: true },
+            link: {
+              inDropdown: false,
+              defaultTargetOption: '_blank'
+            },
+            history: { inDropdown: true }
+          }}
+          editorState={props.signature}
+          onEditorStateChange={ev => props.onChangeTextareaSignature(ev)}
+        />
+      </div>
+    )}
   </div>
 );
 
