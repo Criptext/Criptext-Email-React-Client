@@ -415,7 +415,7 @@ class PanelWrapper extends Component {
     const currentLabelId = isRenderingMailbox
       ? this.state.sectionSelected.params.mailboxSelected.id
       : null;
-    const { threadId, newEmailId, oldEmailId } = eventParams;
+    const { threadId, newEmailId, oldEmailId, badgeLabelIds } = eventParams;
     if (!threadId && !newEmailId && !oldEmailId) return;
     if (currentLabelId) {
       this.props.onLoadEmails(threadId);
@@ -428,6 +428,10 @@ class PanelWrapper extends Component {
     }
     if (!newEmailId && !oldEmailId) {
       this.props.onUpdateUnreadEmailsBadge([LabelType.inbox.id]);
+    }
+
+    if (badgeLabelIds) {
+      this.props.onUpdateUnreadEmailsBadge(badgeLabelIds);
     }
   };
 

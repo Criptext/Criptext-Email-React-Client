@@ -270,7 +270,8 @@ class ComposerWrapper extends Component {
   };
 
   handleClickDiscardDraft = () => {
-    closeComposerWindow({});
+    const threadId = this.state.threadId;
+    closeComposerWindow({ threadId });
   };
 
   handleDisableSendButtonOnInvalidEmail = () => {
