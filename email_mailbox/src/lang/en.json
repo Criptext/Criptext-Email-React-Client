@@ -381,7 +381,7 @@
     "export_backup": {
       "title": "Export Backup File",
       "switchLabel": "Encrypt Backup",
-      "description": "If you lose/forget this password you won't be able to restore this backup in the future",
+      "description": "If you lose/forget this passphrase you won't be able to restore this backup in the future",
       "inputPassphrase": {
         "placeholder": "Enter passphrase",
         "errorMessages": {
