@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ExportBackupPopup, { PopUpModes } from './ExportBackupPopup';
 import { requiredMinLength } from './../utils/electronInterface';
-import { validatePassword } from './../validators/validators';
+import { validatePassphrase } from './../validators/validators';
 
 const inputTypes = {
   PASSWORD: 'password',
@@ -32,7 +32,7 @@ class ExportBackupPopupWrapper extends Component {
         disabled={this.state.disabled}
         formItems={this.state.formItems}
         mode={this.state.mode}
-        minLength={requiredMinLength.password}
+        minLength={requiredMinLength.passphrase}
         onClickChangeInputType={this.handleClickChangeInputType}
         onChangeInputValue={this.handleChangeInputValue}
         onSubmitForm={this.handleSubmitExportBackupForm}
@@ -60,16 +60,16 @@ class ExportBackupPopupWrapper extends Component {
 
   checkDisableSubmit = () => {
     const { password } = this.state.formItems;
-    const passwordHasError = !validatePassword(password.value);
+    const passphraseHasError = !validatePassphrase(password.value);
     this.setState(state => ({
       ...state,
       formItems: {
         password: {
           ...state.formItems.password,
-          error: passwordHasError
+          error: passphraseHasError
         }
       },
-      disabled: passwordHasError
+      disabled: passphraseHasError
     }));
   };
 
