@@ -1010,10 +1010,6 @@ ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
   sendRefreshThreadsEvent({ labelIds: [labelId] });
 });
 
-export const sendRefreshThreadsEvent = eventParams => {
-  emitter.emit(Event.REFRESH_THREADS, eventParams);
-};
-
 ipcRenderer.on(
   'composer-email-sent',
   (ev, { type, threadId, hasExternalPassphrase, threadData }) => {
@@ -1300,6 +1296,14 @@ export const sendSuspendedAccountEvent = () => {
   return { rowid: null };
 };
 
+export const sendRefreshThreadsEvent = eventParams => {
+  emitter.emit(Event.REFRESH_THREADS, eventParams);
+};
+
+export const sendRestoreBackupInitEvent = () => {
+  emitter.emit(Event.RESTORE_BACKUP_INIT);
+};
+
 export const handleDeleteDeviceData = async rowid => {
   return await setTimeout(async () => {
     await deleteAllDeviceData();
@@ -1475,6 +1479,7 @@ export const Event = {
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
   REFRESH_THREADS: 'refresh-threads',
+  RESTORE_BACKUP_INIT: 'restore-backup-init',
   RESTORE_BACKUP_DISABLE_EVENTS: 'restore-backup-disable-events',
   RESTORE_BACKUP_ENABLE_EVENTS: 'restore-backup-enable-events',
   RESTORE_BACKUP_FINISHED: 'restore-backup-finished',

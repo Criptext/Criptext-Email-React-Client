@@ -539,24 +539,15 @@
         "button": "Export Backup File",
         "description": "Generate a backup of your inbox that can be exported to external drives"
       },
-      "auto": {
-        "label": "Auto Backup",
-        "description": "Note: Auto backups are not password protected",
-        "backup_now": "Back up Now",
-        "last_backup": "Last Backup",
-        "backup_folder": "Back Up Folder",
-        "change_folder": "Change folder",
-        "frequency": "Frequency",
-        "frequencies": {
-          "daily": "Daily",
-          "weekly": "Weekly",
-          "monthly": "Monthly"
-        }
-      },
       "progress": {
         "backing_up_mailbox": "Exporting backup file...",
         "backup_mailbox_success": "Backup file exported successfully!"
       }
+    },
+    "restore_backup": {
+      "label": "Restore Backup",
+      "button": "Restore",
+      "description": "Easily restore your mailbox from a local backup file."
     },
     "cancel": "Cancel",
     "change": "Change",

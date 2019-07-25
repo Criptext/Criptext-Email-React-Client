@@ -539,24 +539,15 @@
         "button": "Exportar Respaldo",
         "description": "Genera un archivo exportable a cualquier otro medio o disco"
       },
-      "auto": {
-        "label": "Auto-Respaldo",
-        "description": "Nota: Auto-Respaldos no están protegidos con contraseña",
-        "backup_now": "Respaldar ahora",
-        "last_backup": "Último respaldo",
-        "backup_folder": "Carpeta de destino",
-        "change_folder": "Cambiar carpeta",
-        "frequency": "Frecuencia",
-        "frequencies": {
-          "daily": "Diario",
-          "weekly": "Semanal",
-          "monthly": "Mensual"
-        }
-      },
       "progress": {
         "backing_up_mailbox": "Respaldando buzon...",
         "backup_mailbox_success": "Buzon respaldado exitosamente"
       }
+    },
+    "restore_backup": {
+      "label": "Restaurar Respaldo",
+      "button": "Restaurar",
+      "description": "Restaura tu buzón desde un respaldo local que hayas hecho anteriormente"
     },
     "cancel": "Cancelar",
     "change": "Cambiar",

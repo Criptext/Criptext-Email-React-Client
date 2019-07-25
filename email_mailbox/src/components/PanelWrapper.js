@@ -214,6 +214,7 @@ class PanelWrapper extends Component {
       Event.LOCAL_BACKUP_ENABLE_EVENTS,
       this.localBackupEnableEventsListenerCallback
     );
+    addEvent(Event.RESTORE_BACKUP_INIT, this.restoreBackupInitListenerCallback);
   };
 
   removeEventHandlers = () => {
@@ -243,6 +244,10 @@ class PanelWrapper extends Component {
     removeEvent(
       Event.LOCAL_BACKUP_ENABLE_EVENTS,
       this.localBackupEnableEventsListenerCallback
+    );
+    removeEvent(
+      Event.RESTORE_BACKUP_INIT,
+      this.restoreBackupInitListenerCallback
     );
   };
 
@@ -481,6 +486,13 @@ class PanelWrapper extends Component {
     if (isShowingPopup && isVisibleCreatingBackupFilePopup) {
       this.handleCloseMailboxPopup();
     }
+  };
+
+  restoreBackupInitListenerCallback = () => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.RESTORE_BACKUP
+    });
   };
 }
 
