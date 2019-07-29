@@ -425,11 +425,12 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     let body = '',
       headers;
     try {
-      const { decryptedBody, decryptedHeaders } = await signal.decryptEmail({
+      const { decryptedBody, decryptedHeaders, myFileKeys } = await signal.decryptEmail({
         bodyKey: metadataKey,
         recipientId,
         deviceId,
-        messageType
+        messageType,
+        fileKeys: fileKeys || (fileKey ? [fileKey] : null)
       });
       body = cleanEmailBody(decryptedBody);
       headers = decryptedHeaders;

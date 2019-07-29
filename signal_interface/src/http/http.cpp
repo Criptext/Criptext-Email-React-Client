@@ -22,9 +22,9 @@ const char* civet_options[] = {
     0
 };
 
-int decrypt(struct mg_connection *conn, void *cbdata){
+int decryptEmail(struct mg_connection *conn, void *cbdata){
   std::cout << "DECRYPT" << std::endl;
-  return postDecrypt(conn, cbdata);
+  return postDecryptEmail(conn, cbdata);
 }
 
 int decryptKey(struct mg_connection *conn, void *cbdata){
@@ -59,7 +59,7 @@ void http_init(){
   get_kb_url = getenv("BOB_GET_KEYBUNDLE_URL");
 
   ctx = mg_start(&callbacks, 0, civet_options);
-  mg_set_request_handler(ctx, "/decrypt", decrypt, 0);
+  mg_set_request_handler(ctx, "/decrypt", decryptEmail, 0);
   mg_set_request_handler(ctx, "/decrypt/key", decryptKey, 0);
   mg_set_request_handler(ctx, "/encrypt/key", encryptKey, 0);
   mg_set_request_handler(ctx, "/encrypt/email", encryptEmail, 0);
