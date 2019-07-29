@@ -136,7 +136,7 @@ const createEmails = async (
               if (!file.key || !file.iv) {
                 return result;
               }
-              return `${file.key}:${file.iv}`;
+              return [...result, `${file.key}:${file.iv}`];
             }, []) 
             : null;
           const res = await encryptEmail({
@@ -152,9 +152,9 @@ const createEmails = async (
             previewEncrypted, 
             bodyMessageType, 
             previewMessageType,
-            encryptedFileKeys = []
+            fileKeysEncrypted
           } = await res.json();
-          const fileKey = encryptedFileKeys.length > 0 ? encryptedFileKeys[0] : null;
+          const fileKey = (fileKeysEncrypted && fileKeysEncrypted.length > 0) ? fileKeysEncrypted[0] : null;
 
           let criptextEmail = {
             recipientId: username,
@@ -165,7 +165,7 @@ const createEmails = async (
             previewMessageType: previewMessageType
           };
           if (fileKey) {
-            criptextEmail = { ...criptextEmail, fileKey: fileKey, fileKeys: encryptedFileKeys };
+            criptextEmail = { ...criptextEmail, fileKey: fileKey, fileKeys: fileKeysEncrypted };
           }
           criptextEmailsByRecipientId[recipientId]['emails'].push(
             criptextEmail

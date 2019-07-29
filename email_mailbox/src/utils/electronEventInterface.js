@@ -423,9 +423,10 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   let emailThreadId = threadId;
   if (!prevEmail) {
     let body = '',
-      headers;
+      headers, 
+      myFileKeys;
     try {
-      const { decryptedBody, decryptedHeaders, myFileKeys } = await signal.decryptEmail({
+      const { decryptedBody, decryptedHeaders, decryptedFileKeys } = await signal.decryptEmail({
         bodyKey: metadataKey,
         recipientId,
         deviceId,
@@ -434,40 +435,18 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       });
       body = cleanEmailBody(decryptedBody);
       headers = decryptedHeaders;
+      myFileKeys = decryptedFileKeys ? decryptedFileKeys.map( fileKey => {
+        const fileKeySplit = fileKey.split(":");
+        return {
+          key: fileKeySplit[0],
+          iv: fileKeySplit[1]
+        }
+      }) : null;
     } catch (e) {
       body = 'Content unencrypted';
     }
-    let myFileKeys;
-    if (fileKeys) {
-      myFileKeys = await Promise.all(
-        fileKeys.map(async fileKey => {
-          try {
-            const decrypted = await signal.decryptFileKey({
-              fileKey,
-              messageType,
-              recipientId,
-              deviceId
-            });
-            const [key, iv] = decrypted.split(':');
-            return { key, iv };
-          } catch (e) {
-            return { key: undefined, iv: undefined };
-          }
-        })
-      );
-    } else if (fileKey) {
-      try {
-        const decrypted = await signal.decryptFileKey({
-          fileKey,
-          messageType,
-          recipientId,
-          deviceId
-        });
-        const [key, iv] = decrypted.split(':');
-        myFileKeys = files.map(() => ({ key, iv }));
-      } catch (e) {
-        myFileKeys = undefined;
-      }
+    if (!fileKeys && fileKey) {
+      myFileKeys = files.map(() => myFileKeys[0]);
     }
     const unread = isFromMe && !isToMe ? false : true;
     if (inReplyTo) {

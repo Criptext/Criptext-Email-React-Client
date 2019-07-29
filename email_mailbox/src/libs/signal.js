@@ -17,7 +17,8 @@ const decryptEmail = async ({
   bodyKey,
   recipientId,
   deviceId,
-  messageType
+  messageType,
+  fileKeys
 }) => {
   const { status, body } = await fetchEmailBody({ bodyKey });
   if (status !== 200) {
@@ -26,7 +27,6 @@ const decryptEmail = async ({
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return { decryptedBody: body.body };
   }
-  console.log(body);
   const res = await fetchDecryptBody({
     senderId: recipientId,
     deviceId,
@@ -34,17 +34,19 @@ const decryptEmail = async ({
     messageType,
     body: body.body,
     headers: body.headers,
-    headersMessageType: messageType
+    headersMessageType: messageType,
+    fileKeys: fileKeys
   })
   if (res.status !== 200) {
     return {
       decryptedBody: 'Content Unencrypted'
     }
   }
-  const { decryptedBody = null, decryptedHeaders = null} = await res.json();
+  const { decryptedBody = null, decryptedHeaders = null, decryptedFileKeys = null } = await res.json();
   return {
     decryptedBody,
-    decryptedHeaders
+    decryptedHeaders,
+    decryptedFileKeys
   };
 };
 

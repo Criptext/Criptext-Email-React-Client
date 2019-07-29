@@ -51,6 +51,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata) {
       int result = signal.decryptText(&plaintext_data, &plaintext_len, body->valuestring, senderId->valuestring, deviceId->valueint, type->valueint);
       char *text = (char *)malloc(plaintext_len);
       memcpy(text, plaintext_data, plaintext_len);
+      text[plaintext_len] = '\0';
       cJSON_AddStringToObject(response, "decryptedBody", text);
       free(text);
     } catch (exception &ex) {
@@ -67,6 +68,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata) {
       int result = signal.decryptText(&plaintext_data, &plaintext_len, headers->valuestring, senderId->valuestring, deviceId->valueint, headersType->valueint);
       char *text = (char *)malloc(plaintext_len);
       memcpy(text, plaintext_data, plaintext_len);
+      text[plaintext_len] = '\0';
       cJSON_AddStringToObject(response, "decryptedHeaders", text);
       free(text);
     } catch (exception &ex) {
@@ -74,6 +76,32 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata) {
       mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
       return 500;
     }
+  }
+
+  if (cJSON_IsArray(fileKeys)) {
+    cJSON *myFileKeys = cJSON_CreateArray();
+    cJSON *fileKey = NULL;
+
+    cJSON_ArrayForEach(fileKey, fileKeys) {   
+           
+      try {
+        uint8_t *plaintext_data = 0;
+        size_t plaintext_len = 0;
+        int result = signal.decryptText(&plaintext_data, &plaintext_len, fileKey->valuestring, senderId->valuestring, deviceId->valueint, type->valueint);
+        char *text = (char *)malloc(plaintext_len);
+        memcpy(text, plaintext_data, plaintext_len);
+        text[plaintext_len] = '\0';
+        cJSON *decryptedFileKey = cJSON_CreateString(text);
+        cJSON_AddItemToArray(myFileKeys, decryptedFileKey);
+        free(text);
+      } catch (exception &ex) {
+        std::cout << "DECRYPT FILEKEY ERROR: " << ex.what() << std::endl;
+        mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
+        return 500;
+      }
+    }
+
+    cJSON_AddItemToObject(response, "decryptedFileKeys", myFileKeys);
   }
 
   return SendJSON(conn, response);

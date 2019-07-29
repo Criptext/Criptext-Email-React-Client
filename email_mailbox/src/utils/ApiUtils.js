@@ -83,7 +83,8 @@ export const fetchDecryptBody = async ({
   messageType,
   body,
   headers,
-  headersMessageType
+  headersMessageType,
+  fileKeys
 }) => {
   const requestUrl = "http://localhost:8085/decrypt";
   const options = {
@@ -95,7 +96,8 @@ export const fetchDecryptBody = async ({
       messageType,
       body,
       headers,
-      headersMessageType
+      headersMessageType,
+      fileKeys
     })
   };
   return await fetch(requestUrl, options);

@@ -145,5 +145,33 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata) {
     }
   }
 
+  if (cJSON_IsArray(fileKeys)) {
+    std::cout << "IS ARRAY" << std::endl;
+    cJSON *myFileKeys = cJSON_CreateArray();
+    cJSON *fileKey = NULL;
+
+    cJSON_ArrayForEach(fileKey, fileKeys) {   
+           
+      try {
+        char *encryptedFileKey = 0;
+        size_t len = strlen(fileKey->valuestring);
+        uint8_t *text = (uint8_t *)malloc(len);
+        memcpy(text, fileKey->valuestring, len);
+        signal.encryptText(&encryptedFileKey, text, len, recipientId->valuestring, deviceId->valueint);
+
+        std::cout << "PRINTING: " << text << " # " << len << " # " << encryptedFileKey << std::endl;
+        cJSON *decryptedFileKey = cJSON_CreateString(encryptedFileKey);
+        cJSON_AddItemToArray(myFileKeys, decryptedFileKey);
+        free(text);
+      } catch (exception &ex) {
+        std::cout << "DECRYPT HEADER ERROR: " << ex.what() << std::endl;
+        mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
+        return 500;
+      }
+    }
+
+    cJSON_AddItemToObject(response, "fileKeysEncrypted", myFileKeys);
+  }
+
   return SendJSON(conn, response);
 }
