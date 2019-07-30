@@ -2,9 +2,11 @@ const emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{
 const HTMLTagsRegex = /<[^>]*>?/g;
 const mailtoProtocolRegex = /^mailto:/;
 const mailformedEventRegex = /(\[|,)null(\]|,)/g;
+const percentRegex = /\d+(%)/;
 
 module.exports = {
   emailRegex,
+  percentRegex,
   HTMLTagsRegex,
   mailtoProtocolRegex,
   mailformedEventRegex

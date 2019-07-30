@@ -1,22 +1,29 @@
 const { client: WebSocketClient } = require('websocket');
 const { SOCKET_URL } = require('./utils/const');
+const { percentRegex } = require('./utils/RegexUtils');
 const globalManager = require('./globalManager');
 const mailboxWindow = require('./windows/mailbox');
 const { processEventsQueue } = require('./eventQueueManager');
 let client, reconnect, messageListener, socketConnection;
-
 let shouldReconnect = true;
 const reconnectDelay = 2000;
 const NETWORK_STATUS = {
   ONLINE: 'online',
   OFFLINE: 'offline'
 };
+const exec = require('child_process').exec;
+const normalPingDelayMs = 5000;
+const failedPingDelayMs = 2000;
+let pingFailedCounter = 0;
+let checkConnTimeout = null;
+let checkDelay = normalPingDelayMs;
 
 const setMessageListener = mListener => (messageListener = mListener);
 
 const disconnect = () => {
   if (!socketConnection) return;
   try {
+    clearInterval(checkConnTimeout);
     socketConnection.on('close', () => {
       socketConnection = undefined;
     });
@@ -109,14 +116,6 @@ const setConnectionStatus = networkStatus => {
 
 /*   Check alive
 ----------------------*/
-const exec = require('child_process').exec;
-const normalPingDelay = 5 * 1000;
-const failedPingDelay = 2 * 1000;
-
-let pingFailedCounter = 0;
-let checkConnTimeout = null;
-let checkDelay = normalPingDelay;
-
 const getDelay = () => checkDelay;
 
 const checkAlive = () => {
@@ -125,9 +124,14 @@ const checkAlive = () => {
       'ping -c 1 www.criptext.com',
       { encoding: 'utf8', windowsHide: true },
       (err, stdout, stderr) => {
-        if (err !== null || stderr) {
+        let totalLost = 0;
+        if (stdout) {
+          const [lostPackages] = stdout.toString().match(percentRegex);
+          totalLost = Number(lostPackages.replace('%', ''));
+        }
+        if (err !== null || !!stderr || totalLost > 50) {
           if (pingFailedCounter === 0) {
-            checkDelay = failedPingDelay;
+            checkDelay = failedPingDelayMs;
             clearInterval(checkConnTimeout);
             checkAlive();
           } else if (pingFailedCounter + 1 > 2) {
@@ -138,7 +142,7 @@ const checkAlive = () => {
           setConnectionStatus(NETWORK_STATUS.ONLINE);
           if (pingFailedCounter > 0) {
             pingFailedCounter = 0;
-            checkDelay = normalPingDelay;
+            checkDelay = normalPingDelayMs;
             clearInterval(checkConnTimeout);
             checkAlive();
           }
