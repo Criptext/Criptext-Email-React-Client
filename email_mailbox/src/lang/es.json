@@ -408,70 +408,6 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Continuar"
     },
-    "remove_device": {
-      "title": "Remover Dispositivo",
-      "paragraphs": {
-        "header":"Eliminar este dispositivo hará que se cierre la sesión de forma remota.",
-        "password": "Para confirmar introduzca su contraseña"
-      },
-      "input": {
-        "password": {
-          "placeholder": "Contraseña"
-        }
-      },
-      "cancelButtonLabel": "Cancelar",
-      "confirmButtonLabel": "Remover"
-    },
-    "two_fa": {
-      "title": "¡A2F Habilitada!",
-      "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
-      "button": "¡Listo!"
-    },
-    "restore_backup_request": {
-      "title": "Restaurar respaldo",
-      "paragraph": "Restaura tus correos desde un archivo local. Esto puede realizarse después seleccionando Configuración > Cuenta > Restaurar respaldo",
-      "button": "Seleccionar archivo",
-      "cancel": "Cancelar"
-    },
-    "restore_backup_from_file": {
-      "title": "Restaurar respaldo",
-      "paragraphs": {
-        "backed_up": "Respaldado",
-        "size": "Tamaño"
-      },
-      "input": {
-        "label": "Introduce tu clave",
-        "placeholder": "Clave"
-      },
-      "buttons": {
-        "restore": "Restaurar",
-        "cancel": "Cancelar"
-      }
-    },
-    "restore_backup_invalid_file": {
-      "title": "Archivo Inválido",
-      "paragraph": "El archivo seleccionado esta corrompido o le pertenece a otra cuenta de correo",
-      "button": "Cambiar archivo",
-      "cancel": "Cancelar"
-    },
-    "restore_backup_progress": {
-      "header": "Restaurando",
-      "cancelLabel": "Cancelar"
-    },
-    "set_reply_to": {
-      "title": "Correo de Respuesta",
-      "paragraph": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
-      "input": {
-        "email": {
-          "placeholder": "Ingresa un correo"
-        }
-      },
-      "errors": {
-        "email": "Correo Inválido! Ejemplo: example@criptext.com"
-      },
-      "cancelButtonLabel": "Cancelar",
-      "confirmButtonLabel": "Establecer"
-    },
     "mailbox_sync": {
       "title": "Advertencia de Sincronización",
       "paragraphs": {
@@ -523,9 +459,84 @@
       "leftButtonLabel": "Cancelar",
       "rightButtonLabel": "Confirmar"
     },
+    "remove_device": {
+      "title": "Remover Dispositivo",
+      "paragraphs": {
+        "header":"Eliminar este dispositivo hará que se cierre la sesión de forma remota.",
+        "password": "Para confirmar introduzca su contraseña"
+      },
+      "input": {
+        "password": {
+          "placeholder": "Contraseña"
+        }
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Remover"
+    },
+    "restore_backup_request": {
+      "title": "Restaurar respaldo",
+      "paragraph": "Restaura tus correos desde un archivo local. Esto puede realizarse después seleccionando Configuración > Cuenta > Restaurar respaldo",
+      "button": "Seleccionar archivo",
+      "cancel": "Cancelar"
+    },
+    "restore_backup_from_file": {
+      "title": "Restaurar respaldo",
+      "paragraphs": {
+        "backed_up": "Respaldado",
+        "size": "Tamaño"
+      },
+      "input": {
+        "label": "Introduce tu clave",
+        "placeholder": "Clave"
+      },
+      "buttons": {
+        "restore": "Restaurar",
+        "cancel": "Cancelar"
+      }
+    },
+    "restore_backup_invalid_file": {
+      "title": "Archivo Inválido",
+      "paragraph": "El archivo seleccionado esta corrompido o le pertenece a otra cuenta de correo",
+      "button": "Cambiar archivo",
+      "cancel": "Cancelar"
+    },
+    "restore_backup_progress": {
+      "header": "Restaurando",
+      "cancelLabel": "Cancelar"
+    },
+    "set_reply_to": {
+      "title": "Correo de Respuesta",
+      "paragraph": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
+      "input": {
+        "email": {
+          "placeholder": "Ingresa un correo"
+        }
+      },
+      "errors": {
+        "email": "Correo Inválido! Ejemplo: example@criptext.com"
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Establecer"
+    },
+    "select_backup_folder": {
+      "title": "Selecciona Carpeta de Respaldo",
+      "note": {
+        "header": "Nota: ",
+        "content": "Auto-Respaldos no son protegidos con contraseña"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "select": "Seleccionar"
+      }
+    },
     "suspended_account": {
       "title": "Estás suspendido",
       "paragraph": "Esta cuenta ha sido suspendida temporalmente por tu administrador. Por favor, contacta al admiistrador de tu compañía para más información."
+    },
+    "two_fa": {
+      "title": "¡A2F Habilitada!",
+      "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
+      "button": "¡Listo!"
     }
   },
   "settings": {
