@@ -59,6 +59,7 @@ const SETTINGS_POPUP_TYPES = {
   MANUAL_SYNC: 'manual-sync',
   MANUAL_SYNC_DEVICE_AUTHENTICATION: 'manual-sync-device-authentication',
   NONE: 'none',
+  SELECT_BACKUP_FOLDER: 'select-backup-folder',
   SET_REPLY_TO: 'reply-to',
   TWO_FACTOR_AUTH_ENABLED: 'two-factor-auth-enabled'
 };
@@ -156,8 +157,9 @@ class SettingAccountWrapper extends Component {
         isLoading: false
       },
       mailboxBackup: {
-        password: '',
-        inProgress: false
+        showSelectPathDialog: false,
+        type: '',
+        password: ''
       }
     };
     this.isEnterprise = myAccount.recipientId.includes('@');
@@ -177,6 +179,9 @@ class SettingAccountWrapper extends Component {
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
         onChangeInputValueOnSetReplyTo={
           this.handleChangeInputValueOnSetReplyPopup
+        }
+        onChangeSwitchSelectBackupFolder={
+          this.handleChangeSwitchSelectBackupFolder
         }
         onClearPopupParams={this.handleClearPopupParams}
         onClickSetReplyTo={this.handleClickSetReplyTo}
@@ -229,6 +234,7 @@ class SettingAccountWrapper extends Component {
         devicesQuantity={devicesQuantity}
         mailboxBackupParams={this.state.mailboxBackup}
         onSetExportBackupPassword={this.handleSetExportBackupPassword}
+        onSelectBackupFolder={this.handleSelectBackupFolder}
         onClearMailboxBackupParams={this.handleClearMailboxBackupParams}
       />
     );
@@ -457,12 +463,36 @@ class SettingAccountWrapper extends Component {
     );
   };
 
+  handleChangeSwitchSelectBackupFolder = () => {
+    this.setState(
+      {
+        isHiddenSettingsPopup: false,
+        settingsPopupType: SETTINGS_POPUP_TYPES.SELECT_BACKUP_FOLDER
+      },
+      async () => {
+        await createDefaultBackupFolder();
+      }
+    );
+  };
+
   handleSetExportBackupPassword = ({ password }) => {
     this.handleClosePopup();
     this.setState({
       mailboxBackup: {
-        password,
-        inProgress: true
+        showSelectPathDialog: true,
+        type: 'manual',
+        password
+      }
+    });
+  };
+
+  handleSelectBackupFolder = () => {
+    this.handleClosePopup();
+    this.setState({
+      mailboxBackup: {
+        showSelectPathDialog: true,
+        type: 'auto',
+        password: ''
       }
     });
   };
@@ -470,8 +500,9 @@ class SettingAccountWrapper extends Component {
   handleClearMailboxBackupParams = () => {
     this.setState({
       mailboxBackup: {
-        password: '',
-        inProgress: false
+        showSelectPathDialog: false,
+        type: '',
+        password: ''
       }
     });
   };
