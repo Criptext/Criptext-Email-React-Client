@@ -1,33 +1,32 @@
 const { client: WebSocketClient } = require('websocket');
 const { SOCKET_URL } = require('./utils/const');
+const { percentRegex } = require('./utils/RegexUtils');
+const globalManager = require('./globalManager');
+const mailboxWindow = require('./windows/mailbox');
 const { processEventsQueue } = require('./eventQueueManager');
 let client, reconnect, messageListener, socketConnection;
+let shouldReconnect = true;
+const reconnectDelay = 2000;
 const NETWORK_STATUS = {
   ONLINE: 'online',
   OFFLINE: 'offline'
 };
-let shouldReconnect = true;
-const reconnectDelay = 2000;
-
-const globalManager = require('./globalManager');
-const mailboxWindow = require('./windows/mailbox');
-
-//  Ping
-const spawn = require('child_process').spawn;
-let pingProcess;
+const exec = require('child_process').exec;
+const normalPingDelayMs = 15000;
+const failedPingDelayMs = 5000;
+let pingFailedCounter = 0;
+let checkConnTimeout = null;
+let checkDelay = normalPingDelayMs;
 
 const setMessageListener = mListener => (messageListener = mListener);
 
 const disconnect = () => {
-  if (!socketConnection || !pingProcess) return;
+  if (!socketConnection) return;
   try {
-    pingProcess.on('close', () => {
-      pingProcess = undefined;
-    });
+    clearInterval(checkConnTimeout);
     socketConnection.on('close', () => {
       socketConnection = undefined;
     });
-    pingProcess.kill('SIGKILL');
     socketConnection.close();
   } catch (err) {
     return;
@@ -115,19 +114,47 @@ const setConnectionStatus = networkStatus => {
   }
 };
 
+/*   Check alive
+----------------------*/
+const getDelay = () => checkDelay;
+
 const checkAlive = () => {
-  pingProcess = spawn('ping', ['www.google.com', '-i', '15']);
-  pingProcess.stderr.on('data', err => {
-    log(err.toString());
-    setConnectionStatus(NETWORK_STATUS.OFFLINE);
-  });
-  pingProcess.stdout.on('data', data => {
-    const status = data.toString().includes('timeout')
-      ? NETWORK_STATUS.OFFLINE
-      : NETWORK_STATUS.ONLINE;
-    setConnectionStatus(status);
-  });
+  checkConnTimeout = setInterval(() => {
+    exec(
+      'ping -c 1 www.criptext.com',
+      { encoding: 'utf8', windowsHide: true },
+      (err, stdout, stderr) => {
+        let totalLost = 0;
+        if (stdout) {
+          const [lostPackages] = stdout.toString().match(percentRegex);
+          totalLost = Number(lostPackages.replace('%', ''));
+        }
+        if (err !== null || !!stderr || totalLost > 50) {
+          if (pingFailedCounter === 0) {
+            checkDelay = failedPingDelayMs;
+            clearInterval(checkConnTimeout);
+            checkAlive();
+          } else if (pingFailedCounter + 1 > 2) {
+            setConnectionStatus(NETWORK_STATUS.OFFLINE);
+          }
+          pingFailedCounter++;
+        } else if (stdout) {
+          setConnectionStatus(NETWORK_STATUS.ONLINE);
+          if (pingFailedCounter > 0) {
+            pingFailedCounter = 0;
+            checkDelay = normalPingDelayMs;
+            clearInterval(checkConnTimeout);
+            checkAlive();
+          }
+        }
+      }
+    );
+  }, getDelay());
 };
+
+process.on('exit', () => {
+  checkConnTimeout = null;
+});
 
 const restartSocket = ({ jwt }) => {
   shouldReconnect = false;
