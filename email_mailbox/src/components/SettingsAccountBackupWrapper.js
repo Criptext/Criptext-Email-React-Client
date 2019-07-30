@@ -15,7 +15,7 @@ const { export_backup } = string.notification;
 const { progress } = string.settings.mailbox_backup;
 const { backing_up_mailbox, backup_mailbox_success } = progress;
 
-const BACKUP_TYPES = {
+const EXPORT_TYPES = {
   UNENCRYPT: 'unencrypted',
   ENCRYPT: 'encrypted',
   NONE: 'none'
@@ -28,7 +28,8 @@ class SettingsAccountBackupWrapper extends Component {
       backupPercent: 0,
       inProgress: false,
       progressMessage: '',
-      type: BACKUP_TYPES.NONE
+      backupType: '',
+      exportType: EXPORT_TYPES.NONE
     };
   }
 
@@ -44,39 +45,78 @@ class SettingsAccountBackupWrapper extends Component {
   }
 
   componentDidUpdate() {
-    if (!this.state.inProgress && this.props.mailboxBackupParams.inProgress) {
-      const { password } = this.props.mailboxBackupParams;
-      this.setState(
-        {
-          inProgress: true,
-          backupPercent: 5,
-          progressMessage: backing_up_mailbox,
-          type: password ? BACKUP_TYPES.ENCRYPT : BACKUP_TYPES.UNENCRYPT
-        },
-        async () => {
-          const defautlPath = await getDefaultBackupFolder();
-          const extension = password ? 'enc' : 'db';
-          const filename = defineBackupFileName(extension);
-          const backupPath = `${defautlPath}/${filename}`;
-          showSaveFileDialog(backupPath, selectedPath => {
-            if (!selectedPath) {
-              this.props.onClearMailboxBackupParams();
-              return this.clearProgressParams();
-            }
-            this.initMailboxBackup({
-              backupPath: selectedPath,
-              password,
-              notificationParams: export_backup
-            });
-          });
-        }
-      );
+    if (
+      !this.state.inProgress &&
+      this.props.mailboxBackupParams.showSelectPathDialog
+    ) {
+      const { type, password } = this.props.mailboxBackupParams;
+      if (type === 'manual') {
+        this.handleManualBackup({ password });
+      } else if (type === 'auto') {
+        this.handleAutoBackup();
+      }
     }
   }
 
   componentWillUnmount() {
     this.removeEventHandlers();
   }
+
+  handleManualBackup = ({ password }) => {
+    this.setState(
+      {
+        inProgress: true,
+        backupPercent: 5,
+        progressMessage: backing_up_mailbox,
+        backupType: 'manual',
+        exportType: password ? EXPORT_TYPES.ENCRYPT : EXPORT_TYPES.UNENCRYPT
+      },
+      async () => {
+        const defautlPath = await getDefaultBackupFolder();
+        const extension = password ? 'enc' : 'db';
+        const filename = defineBackupFileName(extension);
+        const backupPath = `${defautlPath}/${filename}`;
+        showSaveFileDialog(backupPath, selectedPath => {
+          if (!selectedPath) {
+            this.props.onClearMailboxBackupParams();
+            return this.clearProgressParams();
+          }
+          this.initMailboxBackup({
+            backupPath: selectedPath,
+            password,
+            notificationParams: export_backup
+          });
+        });
+      }
+    );
+  };
+
+  handleAutoBackup = () => {
+    this.setState(
+      {
+        inProgress: true,
+        backupPercent: 0,
+        progressMessage: backing_up_mailbox,
+        backupType: 'auto',
+        exportType: EXPORT_TYPES.UNENCRYPT
+      },
+      async () => {
+        const defautlPath = await getDefaultBackupFolder();
+        const filename = defineBackupFileName('db');
+        const backupPath = `${defautlPath}/${filename}`;
+        showSaveFileDialog(backupPath, selectedPath => {
+          if (!selectedPath) {
+            this.props.onClearMailboxBackupParams();
+            return this.clearProgressParams();
+          }
+          this.initMailboxBackup({
+            backupPath: selectedPath,
+            notificationParams: export_backup
+          });
+        });
+      }
+    );
+  };
 
   initMailboxBackup = ({ backupPath, password, notificationParams }) => {
     this.initMailboxBackupListeners();
@@ -93,7 +133,8 @@ class SettingsAccountBackupWrapper extends Component {
       inProgress: false,
       progressMessage: '',
       transition: 0,
-      type: BACKUP_TYPES.NONE
+      backupType: 'auto',
+      exportType: EXPORT_TYPES.NONE
     });
   };
 
@@ -130,14 +171,16 @@ class SettingsAccountBackupWrapper extends Component {
   };
 
   localBackupEnableEventsCallback = () => {
-    const isOnlyExport = this.state.type === BACKUP_TYPES.UNENCRYPT;
-    const backupPercent = isOnlyExport ? 40 : 30;
+    const isExportUnencrypted =
+      this.state.exportType === EXPORT_TYPES.UNENCRYPT;
+    const backupPercent = isExportUnencrypted ? 40 : 30;
     this.setState({ backupPercent });
   };
 
   localBackupExportFinishedCallback = () => {
-    const isOnlyExport = this.state.type === BACKUP_TYPES.UNENCRYPT;
-    const backupPercent = isOnlyExport ? 70 : 60;
+    const isExportUnencrypted =
+      this.state.exportType === EXPORT_TYPES.UNENCRYPT;
+    const backupPercent = isExportUnencrypted ? 70 : 60;
     this.setState({ backupPercent });
   };
 
