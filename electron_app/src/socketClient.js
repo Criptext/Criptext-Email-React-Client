@@ -12,8 +12,8 @@ const NETWORK_STATUS = {
   OFFLINE: 'offline'
 };
 const exec = require('child_process').exec;
-const normalPingDelayMs = 5000;
-const failedPingDelayMs = 2000;
+const normalPingDelayMs = 15000;
+const failedPingDelayMs = 5000;
 let pingFailedCounter = 0;
 let checkConnTimeout = null;
 let checkDelay = normalPingDelayMs;
