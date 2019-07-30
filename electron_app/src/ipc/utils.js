@@ -123,8 +123,9 @@ ipc.answerRenderer('export-backup-unencrypted', async params => {
     commitBackupStatus('local-backup-enable-events', 2);
     await exportBackupUnencrypted({ backupPath });
     commitBackupStatus('local-backup-export-finished', 3);
-    await simulatePause(3000);
+    await simulatePause(2000);
     commitBackupStatus('local-backup-success', null);
+    await simulatePause(2000);
     showNotification({
       title: notificationParams.success.title,
       message: notificationParams.success.message,
@@ -160,6 +161,7 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
     commitBackupStatus('local-backup-export-finished', 3);
     await simulatePause(2000);
     commitBackupStatus('local-backup-success', null);
+    await simulatePause(2000);
     showNotification({
       title: notificationParams.success.title,
       message: notificationParams.success.message,
