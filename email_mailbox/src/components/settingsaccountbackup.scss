@@ -1,6 +1,70 @@
+@import "./../styles/index.scss";
+
 #settings-account-backup {
+  .cptx-section-item-title {
+    &.auto-backup {
+      margin-top: 17px;
+    }
+  }
+  .cptx-section-item-description {
+    &.auto-backup {
+      margin-bottom: 17px;
+    }
+  }
   .cptx-section-item-control {
-    top: 30px;
+    &.manual-backup {
+      top: 17px;
+    }
+    &.auto-backup {
+      top: 50px;
+    }
+  }
+  .ctpx-section-item-options {
+    width: 100%;
+    .ctpx-item-option {
+      &:nth-child(2) > td {
+        padding-bottom: 5px;
+      }
+      td {
+        line-height: 30px;
+        &.item-option-label {
+          padding-right: 15px;
+        }
+        &.backup-path-info {
+          display: flex;
+        }
+        > button {
+          margin-left: 10px;
+        }
+        > .backup-path {
+          height: 30px;
+          border-width: 1px;
+          border-style: solid;
+          border-radius: 5px 0px 0px 5px;
+          padding-left: 10px;
+        }
+        > .change-path-button {
+          font-size: 18px;
+          padding: 1px 4px;
+          line-height: 5px;
+          border-radius: 0px 5px 5px 0px;
+          cursor: pointer;
+          > .icon-dots {
+            position: relative;
+            top: 10px;
+          }
+        }
+        &.cptx-section-item-control {
+          position: relative;
+          top: 0px;
+          left: 0px;
+          > select {
+            width: 100px;
+            padding: 0px 7px;
+          }
+        }
+      }
+    }
   }
 
   > .cptx-backing-up-bar {
@@ -29,3 +93,27 @@
     }
   }
 }
+
+/*  THEME
+----------------------------- */
+@mixin themable($_THEME, $_BACKGROUND_COLOR_SELECT) {
+  [data-theme^="#{$_THEME}"],
+  [data-theme] [data-theme^="#{$_THEME}"] {
+    #settings-account-backup {
+      .ctpx-section-item-options {
+        tr > td {
+          .backup-path {
+            border-color: $_BACKGROUND_COLOR_SELECT;
+          }
+          .change-path-button {
+            background-color: $_BACKGROUND_COLOR_SELECT;
+            border: 1px solid $_BACKGROUND_COLOR_SELECT;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SELECT_DARK);

@@ -545,6 +545,21 @@
     "action": "Acción",
     "appearance": "Apariencia",
     "mailbox_backup": {
+      "auto": {
+        "label": "Auto Respaldo",
+        "description": "Nota: Auto-respaldos no están protegidos con contraseña",
+        "options": {
+          "last_backup": "Último respaldo",
+          "backup_now": "Respaldar ahora",
+          "backup_folder": "Carpeta de respaldo",
+          "frequency": "Frecuencia",
+          "frequencyLabels": {
+            "daily": "Diario",
+            "weekly": "Semanal",
+            "monthly": "Mensual"
+          }
+        }
+      },
       "manual": {
         "label": "Respaldo de buzón",
         "button": "Exportar Respaldo",

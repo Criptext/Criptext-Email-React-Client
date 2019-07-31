@@ -545,6 +545,21 @@
     "action": "Action",
     "appearance": "Appearance",
     "mailbox_backup": {
+      "auto": {
+        "label": "Auto Backup",
+        "description": "Note: Auto backups are not password protected",
+        "options": {
+          "last_backup": "Last Backup",
+          "backup_now": "Back up Now",
+          "backup_folder": "Back Up Folder",
+          "frequency": "Frequency",
+          "frequencyLabels": {
+            "daily": "Daily",
+            "weekly": "Weekly",
+            "monthly": "Monthly"
+          }
+        }
+      },
       "manual": {
         "label": "Mailbox Backup",
         "button": "Export Backup File",

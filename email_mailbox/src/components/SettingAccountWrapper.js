@@ -180,9 +180,7 @@ class SettingAccountWrapper extends Component {
         onChangeInputValueOnSetReplyTo={
           this.handleChangeInputValueOnSetReplyPopup
         }
-        onChangeSwitchSelectBackupFolder={
-          this.handleChangeSwitchSelectBackupFolder
-        }
+        onShowSelectBackupFolderPopup={this.handleShowSelectBackupFolderPopup}
         onClearPopupParams={this.handleClearPopupParams}
         onClickSetReplyTo={this.handleClickSetReplyTo}
         onClickExportBackupFile={this.handleClickExportBackupFile}
@@ -463,7 +461,7 @@ class SettingAccountWrapper extends Component {
     );
   };
 
-  handleChangeSwitchSelectBackupFolder = () => {
+  handleShowSelectBackupFolderPopup = () => {
     this.setState(
       {
         isHiddenSettingsPopup: false,

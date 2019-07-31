@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SettingsAccountBackup from './SettingsAccountBackup';
-import { showSaveFileDialog } from './../utils/electronInterface';
+import { showSaveFileDialog, mySettings } from './../utils/electronInterface';
 import {
   exportBackupUnencrypted,
   getDefaultBackupFolder,
@@ -12,8 +12,14 @@ import string from './../lang';
 import { defineBackupFileName } from '../utils/TimeUtils';
 
 const { export_backup } = string.notification;
-const { progress } = string.settings.mailbox_backup;
+const { auto, progress } = string.settings.mailbox_backup;
 const { backing_up_mailbox, backup_mailbox_success } = progress;
+const { daily, weekly, monthly } = auto.options.frequencyLabels;
+const frequencies = [
+  { text: daily, value: daily },
+  { text: weekly, value: weekly },
+  { text: monthly, value: monthly }
+];
 
 const EXPORT_TYPES = {
   UNENCRYPT: 'unencrypted',
@@ -29,7 +35,9 @@ class SettingsAccountBackupWrapper extends Component {
       inProgress: false,
       progressMessage: '',
       backupType: '',
-      exportType: EXPORT_TYPES.NONE
+      exportType: EXPORT_TYPES.NONE,
+
+      autoBackupEnabled: false
     };
   }
 
@@ -37,9 +45,14 @@ class SettingsAccountBackupWrapper extends Component {
     return (
       <SettingsAccountBackup
         {...this.props}
+        autoBackupEnabled={this.state.autoBackupEnabled}
         backupPercent={this.state.backupPercent}
+        frequencies={frequencies}
         inProgress={this.state.inProgress}
         progressMessage={this.state.progressMessage}
+        onChangeSwitchSelectBackupFolder={
+          this.handleChangeSwitchSelectBackupFolder
+        }
       />
     );
   }
@@ -91,6 +104,16 @@ class SettingsAccountBackupWrapper extends Component {
     );
   };
 
+  handleChangeSwitchSelectBackupFolder = () => {
+    if (!mySettings.autoBackupPath) {
+      this.props.onShowSelectBackupFolderPopup();
+    } else {
+      this.setState({
+        autoBackupEnabled: true
+      });
+    }
+  };
+
   handleAutoBackup = () => {
     this.setState(
       {
@@ -132,8 +155,7 @@ class SettingsAccountBackupWrapper extends Component {
       backupPercent: 0,
       inProgress: false,
       progressMessage: '',
-      transition: 0,
-      backupType: 'auto',
+      backupType: '',
       exportType: EXPORT_TYPES.NONE
     });
   };
@@ -205,7 +227,8 @@ class SettingsAccountBackupWrapper extends Component {
 
 SettingsAccountBackupWrapper.propTypes = {
   mailboxBackupParams: PropTypes.object,
-  onClearMailboxBackupParams: PropTypes.func
+  onClearMailboxBackupParams: PropTypes.func,
+  onShowSelectBackupFolderPopup: PropTypes.func
 };
 
 export default SettingsAccountBackupWrapper;
