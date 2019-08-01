@@ -6,11 +6,6 @@
       margin-top: 17px;
     }
   }
-  .cptx-section-item-description {
-    &.auto-backup {
-      margin-bottom: 17px;
-    }
-  }
   .cptx-section-item-control {
     &.manual-backup {
       top: 17px;
@@ -19,49 +14,49 @@
       top: 50px;
     }
   }
-  .ctpx-section-item-options {
+
+  > .ctpx-section-item-options {
     width: 100%;
+    margin-top: 17px;
+    display: flex;
+    flex-direction: column;
     .ctpx-item-option {
-      &:nth-child(2) > td {
-        padding-bottom: 5px;
+      display: flex;
+      line-height: 27px;
+      margin-bottom: 5px;
+      .item-option-label {
+        min-width: 130px;
       }
-      td {
-        line-height: 30px;
-        &.item-option-label {
-          padding-right: 15px;
-        }
-        &.backup-path-info {
-          display: flex;
-        }
-        > button {
-          margin-left: 10px;
-        }
-        > .backup-path {
-          height: 30px;
+      .item-option-content {
+        width: calc(100% - 130px);
+        &.ctpx-autobackup-path {
           border-width: 1px;
           border-style: solid;
           border-radius: 5px 0px 0px 5px;
-          padding-left: 10px;
-        }
-        > .change-path-button {
-          font-size: 18px;
-          padding: 1px 4px;
-          line-height: 5px;
-          border-radius: 0px 5px 5px 0px;
-          cursor: pointer;
-          > .icon-dots {
-            position: relative;
-            top: 10px;
-          }
+          padding: 0px 10px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
         &.cptx-section-item-control {
           position: relative;
-          top: 0px;
+          top: 2.5px;
           left: 0px;
           > select {
             width: 100px;
             padding: 0px 7px;
           }
+        }
+      }
+      .change-path-button {
+        font-size: 18px;
+        padding: 1px 4px;
+        line-height: 5px;
+        border-radius: 0px 5px 5px 0px;
+        cursor: pointer;
+        > .icon-dots {
+          position: relative;
+          top: 10px;
         }
       }
     }
@@ -96,13 +91,14 @@
 
 /*  THEME
 ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_SELECT) {
+@mixin themable($_THEME, $_BACKGROUND_COLOR_SELECT, $_COLOR_TEXT_MAIN_TITLE) {
   [data-theme^="#{$_THEME}"],
   [data-theme] [data-theme^="#{$_THEME}"] {
     #settings-account-backup {
       .ctpx-section-item-options {
-        tr > td {
-          .backup-path {
+        .ctpx-item-option {
+          .item-option-content.ctpx-autobackup-path {
+            color: $_COLOR_TEXT_MAIN_TITLE;
             border-color: $_BACKGROUND_COLOR_SELECT;
           }
           .change-path-button {
@@ -115,5 +111,5 @@
   }
 }
 
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SELECT_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_SELECT_LIGHT, $_COLOR_TEXT_MAIN_TITLE_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_COLOR_SELECT_DARK, $_COLOR_TEXT_MAIN_TITLE_DARK);

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Switch } from 'react-switch-input';
 import string from './../lang';
 import './settingsaccountbackup.scss';
+import { mySettings } from '../utils/electronInterface';
 
 const {
   auto: autoBackup,
@@ -18,6 +19,7 @@ const SettingsAccountBackup = props => (
       <button
         className="button-b"
         onClick={() => props.onClickExportBackupFile()}
+        disabled={props.inProgress}
       >
         <span>{manualBackup.button}</span>
       </button>
@@ -34,60 +36,73 @@ const SettingsAccountBackup = props => (
         theme="two"
         name="setAutoBackupSwitch"
         onChange={props.onChangeSwitchSelectBackupFolder}
-        checked={props.autoBackupEnabled}
+        checked={props.autoBackupEnable}
+        disabled={props.inProgress}
       />
     </div>
-    {props.autoBackupEnabled && (
-      <table className="ctpx-section-item-options">
-        <tr className="ctpx-item-option">
-          <td className="item-option-label">
+    {props.autoBackupEnable && (
+      <div className="ctpx-section-item-options">
+        <div className="ctpx-item-option">
+          <div className="item-option-label">
             <span className="cptx-section-item-title">
               {autoBackup.options.last_backup}
             </span>
-          </td>
-          <td>
+          </div>
+          <div className="item-option-content">
             <span className="cptx-section-item-description">
-              Today 10:21 AM (125 MB)
+              {props.lastDate} ({props.lastSize})
             </span>
-            <button className="button-b">
+            <button
+              className="button-b"
+              onClick={() => props.onClickBackupNow()}
+              disabled={props.inProgress}
+            >
               {autoBackup.options.backup_now}
             </button>
-          </td>
-        </tr>
+          </div>
+        </div>
 
-        <tr className="ctpx-item-option">
-          <td className="item-option-label">
+        <div className="ctpx-item-option">
+          <div className="item-option-label">
             <span className="cptx-section-item-title">
               {autoBackup.options.backup_folder}
             </span>
-          </td>
-          <td className="backup-path-info">
-            <span className="cptx-section-item-description backup-path">
-              /home/julian/Documents/Criptext/julian@criptext.com/backups
+          </div>
+          <div className="item-option-content ctpx-autobackup-path">
+            <span className="cptx-section-item-description">
+              {mySettings.autoBackupPath}
             </span>
-            <span className="cptx-section-item-title change-path-button">
-              <i className="icon-dots" />
-            </span>
-          </td>
-        </tr>
+          </div>
+          <div
+            className="cptx-section-item-title change-path-button"
+            onClick={() => props.onClickChangeAutoBackupPath()}
+            disabled={props.inProgress}
+          >
+            <i className="icon-dots" />
+          </div>
+        </div>
 
-        <tr className="ctpx-item-option">
-          <td className="item-option-label">
+        <div className="ctpx-item-option">
+          <div className="item-option-label">
             <span className="cptx-section-item-title">
               {autoBackup.options.frequency}
             </span>
-          </td>
-          <td className="cptx-section-item-control">
-            <select onChange={() => {}} value={props.selectedFrequency}>
+          </div>
+          <div className="item-option-content cptx-section-item-control">
+            <select
+              onChange={props.onChangeSelectBackupFrequency}
+              value={props.selectedFrequency}
+              disabled={props.inProgress}
+            >
               {props.frequencies.map((freq, index) => (
                 <option key={index} value={freq.value}>
                   {freq.text}
                 </option>
               ))}
             </select>
-          </td>
-        </tr>
-      </table>
+          </div>
+        </div>
+      </div>
     )}
 
     {props.inProgress && (
@@ -113,11 +128,16 @@ const defineProgressBarClass = percentage => {
 };
 
 SettingsAccountBackup.propTypes = {
-  autoBackupEnabled: PropTypes.bool,
+  autoBackupEnable: PropTypes.bool,
   backupPercent: PropTypes.number,
   frequencies: PropTypes.array,
   inProgress: PropTypes.bool,
+  lastDate: PropTypes.string,
+  lastSize: PropTypes.string,
+  onChangeSelectBackupFrequency: PropTypes.func,
   onChangeSwitchSelectBackupFolder: PropTypes.func,
+  onClickBackupNow: PropTypes.func,
+  onClickChangeAutoBackupPath: PropTypes.func,
   onClickExportBackupFile: PropTypes.func,
   progressMessage: PropTypes.string,
   selectedFrequency: PropTypes.string

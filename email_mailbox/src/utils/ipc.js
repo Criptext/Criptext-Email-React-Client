@@ -463,8 +463,8 @@ export const updateLabel = async params => {
   return await callMain('db-update-label', params);
 };
 
-export const updateSettings = async ({ opened, language, theme }) => {
-  return await callMain('db-update-settings', { opened, language, theme });
+export const updateSettings = async params => {
+  return await callMain('db-update-settings', params);
 };
 
 export const updateUnreadEmailByThreadIds = async ({ threadIds, unread }) => {
