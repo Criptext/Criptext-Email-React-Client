@@ -61,3 +61,7 @@ export const cleanDataLogout = async recipientId => {
   await cleanData(recipientId);
   return createSignalTables();
 };
+
+export const needsUpgrade = () => {
+  return globalManager.needsUpgrade.getValue()
+}

@@ -465,6 +465,15 @@
       "cancelSyncLabel": "Cancel sync",
       "continueLabel": "Continue"
     },
+    "migration": {
+      "title": "Your app is being upgraded",
+      "paragraphs": {
+        "step1": "Initializing data...",
+        "step2": "Processing remaining events...",
+        "step3": "Generating new session...",
+        "step4": "Successfully upgraded!"
+      }
+    },
     "permanently_delete": {
       "title": "Warning!",
       "message": "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",

@@ -39,6 +39,15 @@ async function initApp() {
 
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
+    const needsMigration = !(await dbManager.hasColumnPreKeyRecordLength());
+    if (needsMigration) {
+      globalManager.windowsEvents.disable()
+      globalManager.needsUpgrade.enable()
+    } else {
+      globalManager.windowsEvents.enable()
+      globalManager.needsUpgrade.disable()
+    }
+
     if (!!existingAccount.deviceId) {
       const appSettings = await dbManager.getSettings();
       const settings = Object.assign(appSettings, { isFromStore });

@@ -21,7 +21,7 @@ bool CriptextDB::createPreKey(string dbPath, short int id, char *keyRecord, size
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 
-    SQLite::Statement query(db, "insert into prekeyrecord (preKeyId, preKeyPrivKey, preKeyPubKey) values (?,?,?)");
+    SQLite::Statement query(db, "insert into prekeyrecord (preKeyId, record, recordLength) values (?,?,?)");
     query.bind(1, id);
     query.bind(2, keyRecord);
     query.bind(3, static_cast<int>(len));

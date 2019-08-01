@@ -1,7 +1,9 @@
 const ipc = require('@criptext/electron-better-ipc');
 const dbManager = require('./../DBManager');
+const clientManager = require('./../clientManager');
 const fileUtils = require('./../utils/FileUtils');
 const myAccount = require('../../src/Account');
+const globalManager = require('../globalManager');
 const { APP_DOMAIN } = require('../utils/const');
 
 const getUsername = () => {
@@ -148,3 +150,16 @@ ipc.answerRenderer('db-unsend-email', async params => {
   await dbManager.updateEmail(params);
   await fileUtils.deleteEmailContent({ metadataKey: parseInt(params.key) });
 });
+
+ipc.answerRenderer('upgrade-account', async ({account, keyBundle}) => {
+  const res = await clientManager.upgradeAccount(keyBundle)
+  const { token, refreshToken, deviceId } = res.body;
+  await dbManager.updateAccount({
+    ...account,
+    refreshToken,
+    jwt: token,
+    deviceId
+  })
+  globalManager.needsUpgrade.disable();
+  globalManager.windowsEvents.enable();
+})

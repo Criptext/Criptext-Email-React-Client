@@ -25,7 +25,7 @@ bool CriptextDB::createSignedPreKey(string dbPath, short int id, char *keyRecord
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 
-    SQLite::Statement query(db, "insert into signedprekeyrecord (signedPreKeyId, signedPreKeyPrivKey, signedPreKeyPubKey) values (?,?,?)");
+    SQLite::Statement query(db, "insert into signedprekeyrecord (signedPreKeyId, record, recordLength) values (?,?,?)");
     query.bind(1, id);
     query.bind(2, keyRecord);
     query.bind(3, static_cast<int>(len));

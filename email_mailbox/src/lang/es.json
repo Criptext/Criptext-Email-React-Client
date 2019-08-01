@@ -465,6 +465,15 @@
       "cancelSyncLabel": "Cancelar Sincronización",
       "continueLabel": "Continuar"
     },
+    "migration": {
+      "title": "Tu app se esta actualizando",
+      "paragraphs": {
+        "step1": "Inicializando datos...",
+        "step2": "Procesando eventos pendientes...",
+        "step3": "Generando una nueva sesión...",
+        "step4": "Actualizada satisfactoriamente!"
+      }
+    },
     "permanently_delete": {
       "title": "Advertencia!",
       "message": "Estos elementos se eliminarán permanentemente y no podrás recuperarlos. ¿Estás seguro?",

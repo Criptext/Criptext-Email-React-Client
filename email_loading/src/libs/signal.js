@@ -99,7 +99,7 @@ const createAcountAndGetKeyBundle = async ({ recipientId, deviceId, name, device
   if (accountRes.status !== 200) {
     throw CustomError(string.errors.updateAccountData);
   }
-  const keybundleRes = await generateKeyBundle({recipientId, deviceId, accountId: 0})
+  const keybundleRes = await generateKeyBundle({recipientId, deviceId})
   if (keybundleRes.status !== 200) {
     throw CustomError(string.errors.prekeybundleFailed);
   }
@@ -251,43 +251,6 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   })
   const decryptedText = await res.arrayBuffer();
   return decryptedText;
-};
-
-const encryptText = async (
-  recipientId,
-  deviceId,
-  textMessage,
-  arrayBufferKey
-) => {
-  const addressTo = new libsignal.SignalProtocolAddress(recipientId, deviceId);
-  if (arrayBufferKey) {
-    const sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
-    await sessionBuilder.processPreKey(arrayBufferKey);
-  }
-  const sessionCipher = new libsignal.SessionCipher(store, addressTo);
-  const ciphertext = await sessionCipher.encrypt(textMessage);
-  const body = util.toBase64(util.toArrayBuffer(ciphertext.body));
-  return { body, type: ciphertext.type };
-};
-
-const keysToArrayBuffer = keys => {
-  let preKey = undefined;
-  if (keys.preKey) {
-    preKey = {
-      keyId: keys.preKey.id,
-      publicKey: util.toArrayBufferFromBase64(keys.preKey.publicKey)
-    };
-  }
-  return {
-    identityKey: util.toArrayBufferFromBase64(keys.identityPublicKey),
-    preKey,
-    registrationId: keys.registrationId,
-    signedPreKey: {
-      keyId: keys.signedPreKeyId,
-      publicKey: util.toArrayBufferFromBase64(keys.signedPreKeyPublic),
-      signature: util.toArrayBufferFromBase64(keys.signedPreKeySignature)
-    }
-  };
 };
 
 const encryptKeyForNewDevice = async ({ recipientId, deviceId, key }) => {

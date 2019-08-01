@@ -19,16 +19,14 @@ export const createAccountCredentials = async ({
 
 export const generateKeyBundle = async ({
   recipientId,
-  deviceId,
-  accountId
+  deviceId
 }) => {
   const requestUrl = `${aliceUrl}/keybundle`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
       recipientId, 
-      deviceId, 
-      accountId
+      deviceId
     })
   };
   return await fetch(requestUrl, options);

@@ -9,7 +9,7 @@ const apiBaseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_DEV_API_URL
     : 'https://api.criptext.com';
-
+const aliceUrl = "http://localhost:8085";
 // Default
 let osInfo = getOS();
 
@@ -86,7 +86,7 @@ export const fetchDecryptBody = async ({
   headersMessageType,
   fileKeys
 }) => {
-  const requestUrl = "http://localhost:8085/decrypt";
+  const requestUrl = `${aliceUrl}/decrypt`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -98,6 +98,40 @@ export const fetchDecryptBody = async ({
       headers,
       headersMessageType,
       fileKeys
+    })
+  };
+  return await fetch(requestUrl, options);
+};
+
+export const createAccountCredentials = async ({
+  recipientId,
+  deviceId,
+  name
+}) => {
+  const requestUrl = `${aliceUrl}/account`;
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      recipientId, 
+      deviceId, 
+      name
+    })
+  };
+  return await fetch(requestUrl, options);
+};
+
+export const generateKeyBundle = async ({
+  recipientId,
+  deviceId,
+  accountId
+}) => {
+  const requestUrl = `${aliceUrl}/keybundle`;
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      recipientId, 
+      deviceId, 
+      accountId
     })
   };
   return await fetch(requestUrl, options);
