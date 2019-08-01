@@ -66,9 +66,8 @@ class MigrationPopupWrapper extends Component {
   };
 
   handlePendingEvents = async () => {
-    console.log("Gwenchana");
     try {
-      await getGroupEvents({showNotification: false, shouldGetMoreEvents: false});
+      await getGroupEvents({showNotification: false, shouldGetMoreEvents: false, useLegacy: true});
     } catch (ex) {
       console.log(ex);
       return this.setState({

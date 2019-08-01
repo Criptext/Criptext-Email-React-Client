@@ -1,11 +1,13 @@
 import ipc from '@criptext/electron-better-ipc/renderer';
 import signal from './../libs/signal';
+import signalLegacy from './../libs/signal-legacy';
 import {
   LabelType,
   myAccount,
   mySettings,
   getNews,
-  getDeviceType
+  getDeviceType,
+  needsUpgrade
 } from './electronInterface';
 import {
   checkForUpdates,
@@ -107,7 +109,7 @@ const stopGettingEvents = () => {
   initAutoBackupMonitor();
 };
 
-const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
+const parseAndStoreEventsBatch = async ({ events, hasMoreEvents, useLegacy }) => {
   labelIdsEvent = new Set();
   threadIdsEvent = new Set();
   badgeLabelIdsEvent = new Set();
@@ -132,7 +134,7 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
         threadIds,
         labels,
         badgeLabelIds
-      } = await handleEvent(event);
+      } = await handleEvent(event, useLegacy);
       rowIds.push(rowid);
       if (threadIds)
         threadIdsEvent = new Set([...threadIdsEvent, ...threadIds]);
@@ -199,8 +201,10 @@ const parseAndDispatchEvent = async event => {
 
 export const getGroupEvents = async ({
   shouldGetMoreEvents,
-  showNotification
+  showNotification,
+  useLegacy
 }) => {
+  if (!useLegacy && needsUpgrade()) return
   if (isGettingEvents && !shouldGetMoreEvents) return;
 
   isGettingEvents = true;
@@ -233,7 +237,7 @@ export const getGroupEvents = async ({
     return;
   }
 
-  await parseAndStoreEventsBatch({ events, hasMoreEvents });
+  await parseAndStoreEventsBatch({ events, hasMoreEvents, useLegacy });
 
   if (!hasMoreEvents) {
     await updateOwnContact();
@@ -246,14 +250,19 @@ export const getGroupEvents = async ({
   }
   await getGroupEvents({
     shouldGetMoreEvents: hasMoreEvents,
-    showNotification
+    showNotification,
+    useLegacy
   });
 };
 
-export const handleEvent = incomingEvent => {
+export const handleEvent = (incomingEvent, useLegacy) => {
   switch (incomingEvent.cmd) {
     case SocketCommand.NEW_EMAIL: {
-      return handleNewMessageEvent(incomingEvent);
+      if (useLegacy) {
+        return handleNewMessageEventLegacy(incomingEvent);
+      } else {
+        return handleNewMessageEvent(incomingEvent);
+      }
     }
     case SocketCommand.EMAIL_TRACKING_UPDATE: {
       return handleEmailTrackingUpdate(incomingEvent);
@@ -352,6 +361,220 @@ const buildSenderRecipientId = ({ senderId, senderDomain, from, external }) => {
   return external === true
     ? EXTERNAL_RECIPIENT_ID_SERVER
     : getRecipientIdFromEmailAddressTag(from);
+};
+
+const handleNewMessageEventLegacy = async ({ rowid, params }) => {
+  const {
+    bcc,
+    bccArray,
+    cc,
+    ccArray,
+    date,
+    fileKey,
+    fileKeys,
+    files,
+    from,
+    guestEncryption,
+    inReplyTo,
+    replyTo,
+    labels,
+    messageType,
+    metadataKey,
+    senderDomain,
+    senderId,
+    subject,
+    senderDeviceId,
+    threadId,
+    to,
+    toArray,
+    messageId,
+    external,
+    boundary
+  } = params;
+  if (!metadataKey) return { rowid: null };
+  const recipientId = buildSenderRecipientId({
+    senderId,
+    senderDomain,
+    from,
+    external
+  });
+  const deviceId =
+    external === undefined
+      ? typeof messageType === 'number'
+        ? senderDeviceId
+        : undefined
+      : senderDeviceId;
+  const [prevEmail] = await getEmailByKey(metadataKey);
+  const contactObjectSpamToCheck = parseContactRow(from);
+  const contactSpamToCheck = await getContactByEmails([
+    contactObjectSpamToCheck.email
+  ]);
+  const isContactSpamer = contactSpamToCheck[0]
+    ? contactSpamToCheck[0].spamScore > 1
+    : false;
+  const isSpam = labels
+    ? labels.find(label => label === LabelType.spam.text) || isContactSpamer
+    : undefined;
+  const InboxLabelId = LabelType.inbox.id;
+  const SentLabelId = LabelType.sent.id;
+  const SpamLabelId = LabelType.spam.id;
+  const isFromMe = myAccount.recipientId === recipientId;
+  const recipients = getRecipientsFromData({
+    to: to || toArray,
+    cc: cc || ccArray,
+    bcc: bcc || bccArray,
+    from
+  });
+  const isToMe = checkEmailIsTo(recipients);
+  let notificationPreview = '';
+  const labelIds = [];
+  let emailThreadId = threadId;
+  if (!prevEmail) {
+    let body = '',
+      headers;
+    try {
+      const { decryptedBody, decryptedHeaders } = await signalLegacy.decryptEmail({
+        bodyKey: metadataKey,
+        recipientId,
+        deviceId,
+        messageType
+      });
+      body = cleanEmailBody(decryptedBody);
+      headers = decryptedHeaders;
+    } catch (e) {
+      body = 'Content unencrypted';
+    }
+    let myFileKeys;
+    if (fileKeys) {
+      myFileKeys = await Promise.all(
+        fileKeys.map(async fileKey => {
+          try {
+            const decrypted = await signalLegacy.decryptFileKey({
+              fileKey,
+              messageType,
+              recipientId,
+              deviceId
+            });
+            const [key, iv] = decrypted.split(':');
+            return { key, iv };
+          } catch (e) {
+            return { key: undefined, iv: undefined };
+          }
+        })
+      );
+    } else if (fileKey) {
+      try {
+        const decrypted = await signalLegacy.decryptFileKey({
+          fileKey,
+          messageType,
+          recipientId,
+          deviceId
+        });
+        const [key, iv] = decrypted.split(':');
+        myFileKeys = files.map(() => ({ key, iv }));
+      } catch (e) {
+        myFileKeys = undefined;
+      }
+    }
+    const unread = isFromMe && !isToMe ? false : true;
+    if (inReplyTo) {
+      const emailWithMessageId = await getEmailByParams({
+        messageId: inReplyTo
+      });
+      if (emailWithMessageId) {
+        emailThreadId = emailWithMessageId.threadId;
+      }
+    }
+    const secure = guestEncryption === 1 || guestEncryption === 3;
+    const data = {
+      body,
+      boundary,
+      date,
+      deviceId,
+      from: from.replace(/"/g, ''),
+      isFromMe,
+      metadataKey,
+      messageId,
+      replyTo,
+      secure,
+      subject,
+      threadId: emailThreadId,
+      unread
+    };
+    const email = await formIncomingEmailFromData(data);
+    notificationPreview = email.preview;
+    const filesData =
+      files && files.length
+        ? await formFilesFromData({
+            files,
+            date,
+            fileKeys: myFileKeys,
+            emailContent: body
+          })
+        : null;
+
+    if (isFromMe) {
+      labelIds.push(SentLabelId);
+      if (isToMe) {
+        labelIds.push(InboxLabelId);
+      }
+    } else {
+      labelIds.push(InboxLabelId);
+    }
+    if (isSpam) {
+      labelIds.push(SpamLabelId);
+    }
+    const emailData = {
+      email,
+      labels: labelIds,
+      files: filesData,
+      recipients,
+      body,
+      headers
+    };
+    await createEmail(emailData);
+  } else {
+    const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
+    const prevLabels = prevEmailLabels.map(item => item.labelId);
+
+    const hasSentLabelId = prevLabels.includes(SentLabelId);
+    if (isFromMe && !hasSentLabelId) {
+      labelIds.push(SentLabelId);
+
+      const hasInboxLabelId = prevLabels.includes(InboxLabelId);
+      if (isToMe && !hasInboxLabelId) {
+        labelIds.push(InboxLabelId);
+      }
+    }
+    const hasSpamLabelId = prevLabels.includes(SpamLabelId);
+    if (isSpam && !hasSpamLabelId) {
+      labelIds.push(SpamLabelId);
+    }
+
+    if (labelIds.length) {
+      const emailLabel = formEmailLabel({
+        emailId: prevEmail.id,
+        labels: labelIds
+      });
+      await createEmailLabel(emailLabel);
+    }
+    notificationPreview = prevEmail.preview;
+  }
+  if (isToMe && !isSpam) {
+    const parsedContact = parseContactRow(from);
+    addEmailToNotificationList({
+      senderInfo: parsedContact.name || parsedContact.email,
+      emailSubject: subject,
+      emailPreview: notificationPreview,
+      threadId: emailThreadId
+    });
+  }
+  const mailboxIdsToUpdate = isSpam ? [LabelType.spam.id] : labelIds;
+  return {
+    rowid,
+    labelIds: mailboxIdsToUpdate,
+    threadIds: threadId ? [threadId] : null
+  };
 };
 
 const handleNewMessageEvent = async ({ rowid, params }) => {
