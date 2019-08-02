@@ -6,7 +6,8 @@ import {
   exportBackupUnencrypted,
   getDefaultBackupFolder,
   exportBackupEncrypted,
-  updateSettings
+  updateSettings,
+  initAutoBackupMonitor
 } from '../utils/ipc';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import string from './../lang';
@@ -358,6 +359,7 @@ class SettingsAccountBackupWrapper extends Component {
       autoBackupNextDate: nextDate,
       autoBackupPath
     });
+    initAutoBackupMonitor();
   };
 }
 

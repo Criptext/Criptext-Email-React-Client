@@ -510,6 +510,10 @@ export const getDefaultBackupFolder = async () => {
   return await callMain('get-default-backup-folder');
 };
 
+export const initAutoBackupMonitor = async () => {
+  return await callMain('init-autobackup-monitor');
+};
+
 export const restoreBackupEncrypted = async params => {
   return await callMain('restore-backup-encrypted', params);
 };

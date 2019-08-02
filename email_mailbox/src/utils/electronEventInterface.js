@@ -41,7 +41,8 @@ import {
   updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
   updatePushToken,
-  updateDeviceType
+  updateDeviceType,
+  initAutoBackupMonitor
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -98,6 +99,7 @@ let newEmailNotificationList = [];
 const stopGettingEvents = () => {
   isGettingEvents = false;
   emitter.emit(Event.STOP_LOAD_SYNC, {});
+  initAutoBackupMonitor();
 };
 
 const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {

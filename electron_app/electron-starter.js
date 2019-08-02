@@ -24,6 +24,7 @@ require('./src/ipc/mailbox.js');
 require('./src/ipc/database.js');
 require('./src/ipc/manager.js');
 require('./src/ipc/dataTransfer.js');
+require('./src/ipc/backup.js');
 const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
