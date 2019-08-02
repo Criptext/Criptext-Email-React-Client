@@ -68,12 +68,13 @@
       .error-message {
         font-size: 12px;
         color: #000;
-        left: 7px;
+        left: 0px;
+        position: absolute;
       }
 
       .buttons {
         bottom: 0;
-        margin: 10% 0% 0% 0%;
+        margin: 15% 0% 0% 0%;
         padding: 0px;
         width: 100%;
       }
@@ -91,8 +92,9 @@
       text-align: center;
 
       span {
-        font-weight: 300;
+        font-weight: 200;
         strong {
+          font-weight: 400;
           cursor: pointer;
         }
       }

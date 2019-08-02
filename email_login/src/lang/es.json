@@ -48,6 +48,10 @@
       "description": "Usuario o contraseña incorrectos. Verifica tus credenciales e intenta de nuevo"
     }
   },
+  "help": {
+    "need_help": "¿Necesitas ayuda?",
+    "contact_support": "Contáctanos"
+  },
   "last_activity": "Última actividad",
   "over_time": "Hace más de 2 meses",
   "popUp": {

@@ -14,4 +14,6 @@ export const setLang = lang => {
   string.setLanguage(lang);
 };
 
+export const getLang = mySettings.language;
+
 export default string;

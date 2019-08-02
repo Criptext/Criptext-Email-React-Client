@@ -32,10 +32,10 @@ import { validateEmail, validateUsername } from './../validators/validators';
 import { DEVICE_TYPE, appDomain } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
-import string from './../lang';
+import string, { getLang } from './../lang';
 import './panelwrapper.scss';
 
-const { errors, signIn, signUp } = string;
+const { errors, help, signIn, signUp } = string;
 
 const mode = {
   SIGNUP: 'SIGNUP',
@@ -112,14 +112,36 @@ class PanelWrapper extends Component {
   }
 
   render() {
+    const showFooter =
+      this.state.mode === mode.SIGNIN ||
+      this.state.mode === mode.SIGNINPASSWORD ||
+      this.state.mode === mode.CHANGEPASSWORD;
     return (
       <div className="panel-wrapper">
         {this.renderPopup()}
         {this.renderHeader()}
         <section>{this.renderSection()}</section>
+        {showFooter && this.renderFooter()}
       </div>
     );
   }
+
+  renderFooter = () => (
+    <footer>
+      <span>
+        {help.need_help}
+        &nbsp;
+        <a
+          className="footer-link"
+          href={`https://criptext.com/${getLang}/contact/`}
+          // eslint-disable-next-line react/jsx-no-target-blank
+          target="_blank"
+        >
+          {help.contact_support}
+        </a>
+      </span>
+    </footer>
+  );
 
   renderHeader = () => (
     <header className={this.defineHeaderClass()}>

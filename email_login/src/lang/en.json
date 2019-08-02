@@ -49,6 +49,10 @@
         "Incorrect username or password. Check credentials and try again."
     }
   },
+  "help": {
+    "need_help": "Need help?",
+    "contact_support": "Contact Support"
+  },
   "last_activity": "Last activity",
   "over_time": "Over 2 month ago",
   "popUp": {
