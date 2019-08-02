@@ -8,8 +8,7 @@ const {
   exportBackupUnencrypted,
   exportBackupEncrypted,
   restoreUnencryptedBackup,
-  restoreEncryptedBackup,
-  removeTempBackupDirectoryRecursive
+  restoreEncryptedBackup
 } = require('./../BackupManager');
 const globalManager = require('./../globalManager');
 const { showNotification } = require('./../notificationManager');
@@ -185,12 +184,11 @@ const initAutoBackupMonitor = async () => {
         backupPath: `${autoBackupPath}/${backupFileName}`
       });
       const timeUnit = defineUnitToAppend(autoBackupFrequency);
-      const currentDate = moment().format(backupDateFormat);
-      const nextDate = moment()
+      const nextDate = moment(autoBackupNextDate)
         .add(1, timeUnit)
         .format(backupDateFormat);
       await updateSettings({
-        autoBackupLastDate: currentDate,
+        autoBackupLastDate: pendingDate,
         autoBackupLastSize: backupSize,
         autoBackupNextDate: nextDate
       });
