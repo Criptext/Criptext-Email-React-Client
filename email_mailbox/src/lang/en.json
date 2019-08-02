@@ -471,7 +471,15 @@
         "step1": "Initializing data...",
         "step2": "Processing remaining events...",
         "step3": "Generating new session...",
-        "step4": "Successfully upgraded!"
+        "step4": "Upgrading Account...",
+        "step5": "Successfully upgraded!"
+      },
+      "errorMessages": {
+        "parseEvents": "Unable to handle events!",
+        "retrieveAccount": "Unable to retrieve account!",
+        "credentials": "Unable to create account credentials!",
+        "keys": "Unable to create generate keys!",
+        "upgrade": "Unable to upgrade account!"
       }
     },
     "permanently_delete": {

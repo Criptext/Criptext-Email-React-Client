@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MigrationPopup from './MigrationPopup';
-import { getComputerName, migrateAlice, upgradeAccount } from './../utils/ipc';
+import { getComputerName, migrateAlice, upgradeAccount, logoutApp } from './../utils/ipc';
 import { createAccountCredentials, generateKeyBundle } from './../utils/ApiUtils';
 import { getDeviceType } from './../utils/electronInterface'
 import {
@@ -9,12 +9,14 @@ import {
 } from './../utils/electronEventInterface';
 import string from '../lang';
 
-const { step1, step2, step3, step4 } = string.popups.migration.paragraphs;
+const { step1, step2, step3, step4, step5 } = string.popups.migration.paragraphs;
+const errors = string.popups.migration.errorMessages;
 
 const MIGRATION_STATUS = {
   NOT_STARTED: 'not-started',
   PENDING_EVENTS: 'pending-events',
   NEW_SESSION: 'new-session',
+  UPGRADE: 'upgrade',
   SUCCEDED: 'success'
 };
 
@@ -22,7 +24,8 @@ const MIGRATION_STATUS_MESSAGES = {
   [MIGRATION_STATUS.NOT_STARTED]: step1,
   [MIGRATION_STATUS.PENDING_EVENTS]: step2,
   [MIGRATION_STATUS.NEW_SESSION]: step3,
-  [MIGRATION_STATUS.SUCCEDED]: step4
+  [MIGRATION_STATUS.UPGRADE]: step4,
+  [MIGRATION_STATUS.SUCCEDED]: step5
 };
 
 class MigrationPopupWrapper extends Component {
@@ -31,7 +34,10 @@ class MigrationPopupWrapper extends Component {
     this.state = {
       isDisabledConfirmButton: false,
       errorMessage: null,
-      step: MIGRATION_STATUS.NOT_STARTED
+      step: MIGRATION_STATUS.NOT_STARTED,
+      retryData: null,
+      shouldRetry: false,
+      shouldRestart: false
     };
   }
 
@@ -42,6 +48,10 @@ class MigrationPopupWrapper extends Component {
         errorMessage={this.state.errorMessage}
         paragraph={MIGRATION_STATUS_MESSAGES[this.state.step]}
         onClickStartMigration={this.handleClickStartMigration}
+        onClickRetry={this.handleRetryUpgrade}
+        onClickRestart={logoutApp}
+        shouldRetry={this.state.shouldRetry}
+        shouldRestart={this.state.shouldRestart}
         {...this.props}
       />
     );
@@ -71,7 +81,9 @@ class MigrationPopupWrapper extends Component {
     } catch (ex) {
       console.log(ex);
       return this.setState({
-        errorMessage: 'Unable to handle events!'
+        errorMessage: errors.parseEvents,
+        shouldRetry: true,
+        shouldRestart: false
       })
     }
 
@@ -84,35 +96,73 @@ class MigrationPopupWrapper extends Component {
 
   migrateAccount = async () => {
     const account = await migrateAlice();
+    if (!account) {
+      this.setState({
+        errorMessage: errors.retrieveAccount,
+        shouldRetry: false,
+        shouldRestart: true
+      })
+      return;
+    }
     const res = await createAccountCredentials({
       recipientId: account.recipientId,
       deviceId: 0,
       name: account.name
     });
+    if (res.status !== 200) {
+      this.setState({
+        errorMessage: errors.credentials
+      })
+      return;
+    }
     const keybundleRes = await generateKeyBundle({recipientId: account.recipientId, deviceId: 0})
     if (keybundleRes.status !== 200) {
-      console.log("GG WP");
+      this.setState({
+        errorMessage: errors.keys,
+        shouldRetry: false,
+        shouldRestart: true
+      })
+      return 
     }
-    console.log("1")
     const keybundle = await keybundleRes.json();
     const pcName = await getComputerName();
     const deviceType = getDeviceType();
-    console.log("2")
     const keybundleData = {
       deviceName: pcName || window.navigator.platform,
       deviceFriendlyName: pcName || window.navigator.platform,
       deviceType,
       ...keybundle
     };
-    console.log("3")
-    await upgradeAccount({
-      account: {
-        recipientId: account.recipientId,
-        signature: account.signature,
-        signatureEnabled: account.signatureEnabled
-      }, 
-      keyBundle: keybundleData
-    });
+    
+    this.setState({
+      step: MIGRATION_STATUS.UPGRADE,
+      retryData: {
+        account: {
+          recipientId: account.recipientId,
+          signature: account.signature,
+          signatureEnabled: account.signatureEnabled
+        }, 
+        keyBundle: keybundleData
+      }
+    }, () => {
+      this.handleUpgradeAccount()
+    })
+    
+  }
+
+  handleUpgradeAccount = async () => {
+    const upgradeData = { ...this.state.retryData };
+    const success = await upgradeAccount(upgradeData);
+
+    if (!success) {
+      this.setState({
+        errorMessage: errors.upgrade,
+        shouldRetry: true,
+        shouldRestart: false
+      })
+      return
+    }
+
     this.setState({
       step: MIGRATION_STATUS.SUCCEDED
     }, () => {
@@ -120,6 +170,27 @@ class MigrationPopupWrapper extends Component {
         this.props.onCloseMailboxPopup()
       }, 1000)
     })
+  }
+
+  handleRetryUpgrade = () => {
+    this.setState({
+      shouldRetry: null,
+      shouldRestart: null
+    })
+    const retryData = { ...this.state.retryData };
+    
+    switch(this.state.step) {
+      case MIGRATION_STATUS.PENDING_EVENTS: {
+        this.handlePendingEvents();
+        break;
+      }
+      case MIGRATION_STATUS.UPGRADE: {
+        this.handleUpgradeAccount(retryData);
+      }
+      default: {
+        break;
+      }
+    }
   }
 
 }

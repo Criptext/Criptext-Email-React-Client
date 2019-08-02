@@ -17,8 +17,24 @@ const MigrationPopup = props => {
           <div />
           <div />
         </div>
-        <p>{props.paragraph}</p>
+        <p>{props.error || props.paragraph}</p>
       </div>
+      {
+        props.shouldRestart 
+          ? (<div>
+            <button onClick={props.onClickRestart}>
+              Restart
+            </button>
+          </div>) 
+          : (props.shouldRetry 
+            ? (<div>
+              <button onClick={props.onClickRetry}>
+                Retry
+              </button>
+            </div>)
+            : null
+          )
+      }
     </div>
   );
 };

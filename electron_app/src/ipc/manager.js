@@ -153,6 +153,9 @@ ipc.answerRenderer('db-unsend-email', async params => {
 
 ipc.answerRenderer('upgrade-account', async ({account, keyBundle}) => {
   const res = await clientManager.upgradeAccount(keyBundle)
+  if (res.status !== 200) {
+    return false;
+  }
   const { token, refreshToken, deviceId } = res.body;
   await dbManager.updateAccount({
     ...account,
@@ -162,4 +165,5 @@ ipc.answerRenderer('upgrade-account', async ({account, keyBundle}) => {
   })
   globalManager.needsUpgrade.disable();
   globalManager.windowsEvents.enable();
+  return true;
 })
