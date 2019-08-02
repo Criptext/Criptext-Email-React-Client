@@ -48,7 +48,7 @@ ChangePassword.propTypes = {
   onChangeInput: PropTypes.func,
   onClickChangePassword: PropTypes.func,
   onToggleShowPassword: PropTypes.func,
-  values: PropTypes.object
+  values: PropTypes.string
 };
 
 export default ChangePassword;

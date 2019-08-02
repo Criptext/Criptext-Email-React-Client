@@ -3,37 +3,51 @@
   cursor: pointer;
   display: flex;
   position: relative;
-}
 
-.checkmark {
-  height: 10px;
-  width: 10px;
-  border-radius: 3px;
-  border: solid 2px #fff;
-  opacity: 0.2;
-  margin-left: 0px;
+  &.reverse {
+    .checkmark {
+      border: solid 2px #bdc7cf;
 
-  &:after {
-    content: '';
-    position: absolute;
-    display: none;
+      &.checkmark-checked {
+        background-color: #0091ff;
+
+        &:after {
+          border-color: white;
+        }
+      }
+    }
   }
-}
 
-.checkmark-checked {
-  background-color: #ffffff;
-  border-color: transparent !important;
-  opacity: 1;
+  .checkmark {
+    height: 10px;
+    width: 10px;
+    border-radius: 3px;
+    border: solid 2px #fff;
+    opacity: 0.2;
+    margin-left: 0px;
 
-  &:after {
-    display: block;
-    left: 5px;
-    top: 3px;
-    width: 3px;
-    height: 9px;
-    border: solid #0091ff;
-    border-width: 0 3px 3px 0;
-    border-radius: 2px;
-    transform: rotate(45deg);
+    &:after {
+      content: '';
+      position: absolute;
+      display: none;
+    }
+
+    &.checkmark-checked {
+      background-color: #ffffff;
+      border-color: transparent !important;
+      opacity: 1;
+
+      &:after {
+        display: block;
+        left: 5px;
+        top: 3px;
+        width: 3px;
+        height: 9px;
+        border: solid #0091ff;
+        border-width: 0 3px 3px 0;
+        border-radius: 2px;
+        transform: rotate(45deg);
+      }
+    }
   }
 }

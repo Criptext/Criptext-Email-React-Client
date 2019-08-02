@@ -40,12 +40,76 @@
     },
     "tooManyRequests": {
       "name": "Too many requests",
-      "description": "Too many consecutive attempts.\nPlease try again in "
+      "description": "Too many consecutive attempts.\nPlease try again in ",
+      "button": "Okay"
     },
     "wrongCredentials": {
       "name": "Wrong credentials",
       "description":
         "Incorrect username or password. Check credentials and try again."
+    }
+  },
+  "last_activity": "Last activity",
+  "over_time": "Over 2 month ago",
+  "popUp": {
+    "deleteDevices": [
+      {
+        "title": "You have reached the device limit (10) on your account",
+        "paragraph": "Introduce your password to remove one or more devices.",
+        "inputs": {
+          "password": {
+            "placeholder": "Password",
+            "error": "Wrong password"
+          }
+        },
+        "buttons": {
+          "cancel": "Cancel",
+          "confirm": "Continue"
+        }
+      },{
+        "title": "Remove Devices",
+        "buttons": {
+          "cancel": "Back",
+          "confirm": "Remove"
+        }
+      },{
+        "title": "Remove Devices ",
+        "paragraph": "You must remove (2) more devices before signing in.",
+        "buttons": {
+          "cancel": "Cancel",
+          "confirm": "Remove"
+        }
+      },{
+        "title": "Session Expired",
+        "paragraph": "You've reached the maximum inactivity time permitted. Please sign in again.",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      }
+    ],
+    "forgotPassword": {
+      "200": {
+        "title": "Reset Password",
+        "paragraph": "A reset link was sent to",
+        "note": "The link will be valid for 30 minutes",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      },
+      "400": {
+        "title": "No Recovery Email",
+        "paragraph": "Password recovery is impossible as no recovery email was set on your account. For further assistance contact us:",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      },
+      "error": {
+        "title": "Reset Password",
+        "paragraph": "Failed to send the Reset password link. Try again",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      }
     }
   },
   "signIn": {
@@ -141,22 +205,6 @@
     "buttons": {
       "nextLabel": "Next",
       "confirmLabel": "Confirm"
-    },
-    "forgotPasswordMessage": {
-      "title": "Reset Password",
-      "prefix": "A reset link was sent to",
-      "suffix": "The link will be valid for 30 minutes",
-      "dismissButtonLabel": "Okay",
-      "notSetError": {
-        "title": "No Recovery Email",
-        "message": "Password recovery is impossible as no recovery email was set on your account. For further assistance contact us:",
-        "dismissButtonLabel": "Okay"
-      },
-      "fallbackError": {
-        "title": "Reset Password",
-        "message": "Failed to send the Reset password link. Try again",
-        "dismissButtonLabel": "Okay"
-      }
     }
   }
 }

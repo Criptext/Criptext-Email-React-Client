@@ -4,9 +4,11 @@ import SignUpWrapper from './SignUpWrapper';
 import SignInPasswordWrapper from './SignInPasswordWrapper';
 import SignInToApprove from './SignInToApprove';
 import ChangePasswordWrapper from './ChangePasswordWrapper';
+import DeleteDeviceWrapperPopup from './DeleteDeviceWrapperPopup';
 import PopupHOC from './PopupHOC';
-import LoginPopup from './LoginPopup';
+import ForgotPasswordPopup from './ForgotPasswordPopup';
 import DialogPopup, { DialogTypes } from './DialogPopup';
+import { ButtonState } from './Button';
 import {
   createTemporalAccount,
   deleteTemporalAccount,
@@ -17,13 +19,14 @@ import {
   canLogin,
   checkAvailableUsername,
   closeLoginWindow,
+  getAccountByParams,
   getComputerName,
   linkAuth,
   linkBegin,
   linkStatus,
+  login,
   openCreateKeysLoadingWindow,
-  throwError,
-  getAccountByParams
+  throwError
 } from '../utils/ipc.js';
 import { validateEmail, validateUsername } from './../validators/validators';
 import { DEVICE_TYPE, appDomain } from '../utils/const';
@@ -32,7 +35,7 @@ import { hashPassword } from '../utils/HashUtils';
 import string from './../lang';
 import './panelwrapper.scss';
 
-const { signIn, signUp } = string;
+const { errors, signIn, signUp } = string;
 
 const mode = {
   SIGNUP: 'SIGNUP',
@@ -41,6 +44,15 @@ const mode = {
   SIGNINPASSWORD: 'SIGNINPASSWORD',
   CHANGEPASSWORD: 'CHANGEPASSWORD',
   DEVICE_NOT_APPROVED: 'DEVICE_NOT_APPROVED'
+};
+
+export const popupType = {
+  WARNING_RECOVERY_EMAIL: 'WARNING_RECOVERY_EMAIL',
+  WARNING_SIGNIN_WITH_PASSWORD: 'WARNING_SIGNIN_WITH_PASSWORD',
+  WARNING_SIGNIN_WITH_OTHER_DEVICE: 'WARNING_SIGNIN_WITH_OTHER_DEVICE',
+  DELETE_DEVICE: 'DELETE_DEVICE',
+  FORGOT_PASSWORD: 'FORGOT_PASSWORD',
+  TOO_MANY_REQUEST: 'TOO_MANY_REQUEST'
 };
 
 const errorMessages = {
@@ -60,13 +72,12 @@ const LINK_STATUS_DELAY = 5000;
 const rejectedDeviceStatus = 493;
 const approvedDeviceStastus = 200;
 
-const shouldDisableLogin = state =>
-  !!state.errorMessage || state.values.usernameOrEmailAddress === '';
-
 const LoginWithPasswordPopup = PopupHOC(DialogPopup);
-const ResetPasswordPopup = PopupHOC(LoginPopup);
+const ResetPasswordPopup = PopupHOC(ForgotPasswordPopup);
 const NoRecoverySignUpPopup = PopupHOC(DialogPopup);
 const SignInAnotherAccount = PopupHOC(DialogPopup);
+const DeleteDevicePopup = PopupHOC(DeleteDeviceWrapperPopup);
+const TooManyRequest = PopupHOC(DialogPopup);
 
 const commitNewUser = validInputData => {
   openCreateKeysLoadingWindow({
@@ -80,6 +91,7 @@ class PanelWrapper extends Component {
   constructor() {
     super();
     this.state = {
+      buttonSignInState: ButtonState.DISABLED,
       currentStep: mode.SIGNIN,
       lastStep: [mode.SIGNIN],
       mode: mode.SIGNIN,
@@ -92,8 +104,11 @@ class PanelWrapper extends Component {
       ephemeralToken: undefined,
       hasTwoFactorAuth: undefined,
       popupContent: undefined,
-      oldPassword: undefined
+      oldPassword: undefined,
+      popupType: undefined
     };
+    this.blurEmailRecovery = undefined;
+    this.forgotPasswordStatus = undefined;
   }
 
   render() {
@@ -123,11 +138,29 @@ class PanelWrapper extends Component {
   );
 
   renderPopup = () => {
-    if (!this.state.popupContent) {
+    if (!this.state.popupType) {
       return null;
     }
-    switch (this.state.mode) {
-      case mode.SIGNINTOAPPROVE:
+    switch (this.state.popupType) {
+      case popupType.WARNING_SIGNIN_WITH_OTHER_DEVICE:
+        return (
+          <SignInAnotherAccount
+            {...this.state.popupContent}
+            type={DialogTypes.SIGN_ANOTHER_ACCOUNT}
+            onCancelClick={this.dismissPopup}
+            onConfirmClick={this.handleConfirmSignInAnotherAccount}
+          />
+        );
+      case popupType.DELETE_DEVICE:
+        return (
+          <DeleteDevicePopup
+            emailAddress={this.state.values.usernameOrEmailAddress}
+            setPopupContent={this.setPopupContent}
+            onDismiss={this.dismissPopup}
+            devicesDeleted={this.handleDevicesDeleted}
+          />
+        );
+      case popupType.WARNING_SIGNIN_WITH_PASSWORD:
         return (
           <LoginWithPasswordPopup
             {...this.state.popupContent}
@@ -135,14 +168,16 @@ class PanelWrapper extends Component {
             onConfirmClick={this.handleCancelLink}
           />
         );
-      case mode.SIGNINPASSWORD:
+      case popupType.FORGOT_PASSWORD:
         return (
           <ResetPasswordPopup
             {...this.state.popupContent}
+            blurEmailRecovery={this.blurEmailRecovery}
+            status={this.forgotPasswordStatus}
             onDismiss={this.dismissPopup}
           />
         );
-      case mode.SIGNUP:
+      case popupType.WARNING_RECOVERY_EMAIL:
         return (
           <NoRecoverySignUpPopup
             {...this.state.popupContent}
@@ -150,13 +185,11 @@ class PanelWrapper extends Component {
             onConfirmClick={this.handleSignUpContinue}
           />
         );
-      case mode.SIGNIN:
+      case popupType.TOO_MANY_REQUEST:
         return (
-          <SignInAnotherAccount
+          <TooManyRequest
             {...this.state.popupContent}
-            type={DialogTypes.SIGN_ANOTHER_ACCOUNT}
-            onCancelClick={this.dismissPopup}
-            onConfirmClick={this.handleConfirmSignInAnotherAccount}
+            onConfirmClick={this.dismissPopup}
           />
         );
       default:
@@ -217,7 +250,7 @@ class PanelWrapper extends Component {
       default:
         return (
           <SignIn
-            disabledLoginButton={shouldDisableLogin(this.state)}
+            buttonState={this.state.buttonSignInState}
             errorMessage={this.state.errorMessage}
             goToSignUp={this.goToSignUp}
             onClickSignIn={this.handleClickSignIn}
@@ -240,6 +273,7 @@ class PanelWrapper extends Component {
   onSubmitWithoutRecoveryEmail = validInputData => {
     const popUp = signUp.popUp.warningRecoveryEmail;
     this.setState({
+      popupType: popupType.WARNING_RECOVERY_EMAIL,
       popupContent: {
         title: popUp.title,
         prefix: popUp.prefix,
@@ -265,7 +299,8 @@ class PanelWrapper extends Component {
     }
     this.setState(
       {
-        popupContent: undefined
+        popupContent: undefined,
+        popupType: undefined
       },
       () => {
         commitNewUser(inputData);
@@ -377,22 +412,24 @@ class PanelWrapper extends Component {
     const usernameOrEmailAddress = event.target.value;
     if (!usernameOrEmailAddress) {
       return this.setState({
+        buttonSignInState: ButtonState.DISABLED,
+        errorMessage: '',
         values: {
           ...this.state.values,
           usernameOrEmailAddress: usernameOrEmailAddress
-        },
-        errorMessage: ''
+        }
       });
     }
     const isUsernameValid = validateUsername(usernameOrEmailAddress);
     const isEmailAddressValid = validateEmail(usernameOrEmailAddress);
     if (!isUsernameValid && !isEmailAddressValid) {
       return this.setState({
+        buttonSignInState: ButtonState.DISABLED,
+        errorMessage: errorMessages.USERNAME_EMAILADDRESS_INVALID,
         values: {
           ...this.state.values,
           usernameOrEmailAddress: usernameOrEmailAddress
-        },
-        errorMessage: errorMessages.USERNAME_EMAILADDRESS_INVALID
+        }
       });
     }
     if (this.lastCheck) clearTimeout(this.lastCheck);
@@ -414,17 +451,19 @@ class PanelWrapper extends Component {
     }, 300);
 
     this.setState({
+      buttonSignInState: ButtonState.ENABLED,
+      errorMessage: '',
       values: {
         ...this.state.values,
         usernameOrEmailAddress: usernameOrEmailAddress
-      },
-      errorMessage: ''
+      }
     });
   };
 
   handleClickSignIn = async ev => {
     ev.preventDefault();
     ev.stopPropagation();
+    this.setState({ buttonSignInState: ButtonState.LOADING });
     const { usernameOrEmailAddress } = this.state.values;
     const [recipientId] = usernameOrEmailAddress.includes(`@${appDomain}`)
       ? usernameOrEmailAddress.split('@')
@@ -446,9 +485,10 @@ class PanelWrapper extends Component {
   checkLoggedOutAccounts = async successMode => {
     const loggedOutAccounts = await getAccountByParams({ deviceId: '' });
     if (!loggedOutAccounts.length) return true;
-
     this.setState({
+      buttonSignInState: ButtonState.ENABLED,
       mode: mode.SIGNIN,
+      popupType: popupType.WARNING_SIGNIN_WITH_OTHER_DEVICE,
       popupContent: {
         title: signIn.loginNewAccount.title,
         prefix: signIn.loginNewAccount.prefix,
@@ -476,8 +516,9 @@ class PanelWrapper extends Component {
 
   goToPasswordLogin = () => {
     this.setState(state => ({
-      lastStep: this.concat(state.lastStep, mode.SIGNINPASSWORD),
+      buttonSignInState: ButtonState.ENABLED,
       currentStep: mode.SIGNINPASSWORD,
+      lastStep: this.concat(state.lastStep, mode.SIGNINPASSWORD),
       mode: mode.SIGNINPASSWORD
     }));
   };
@@ -511,9 +552,11 @@ class PanelWrapper extends Component {
   };
 
   obtainEphemeralToken = async ({ username, domain }) => {
-    const { status, text } = await linkBegin({ username, domain });
+    const { status, body } = await linkBegin({ username, domain });
     if (status === 439) {
-      throwError(string.errors.tooManyDevices);
+      this.setState({
+        popupType: popupType.DELETE_DEVICE
+      });
     } else if (status === 400) {
       this.goToPasswordLogin();
     } else if (status === 404) {
@@ -528,7 +571,7 @@ class PanelWrapper extends Component {
         hasTwoFactorAuth: undefined
       }));
     } else if (status === 200) {
-      const { twoFactorAuth, token } = JSON.parse(text);
+      const { twoFactorAuth, token } = body;
       this.setState({
         ephemeralToken: token,
         hasTwoFactorAuth: !!twoFactorAuth
@@ -546,6 +589,8 @@ class PanelWrapper extends Component {
     }
     if (this.state.hasTwoFactorAuth && !this.state.values.password) {
       this.goToPasswordLogin();
+    } else if (!this.state.hasTwoFactorAuth && this.state.values.password) {
+      this.requestLogin();
     } else if (this.state.ephemeralToken) {
       const response = await this.sendLoginConfirmationRequest(
         this.state.ephemeralToken
@@ -553,8 +598,9 @@ class PanelWrapper extends Component {
       if (response) {
         this.setState(
           state => ({
-            lastStep: this.concat(state.lastStep, mode.SIGNINTOAPPROVE),
+            buttonSignInState: ButtonState.ENABLED,
             currentStep: mode.SIGNINTOAPPROVE,
+            lastStep: this.concat(state.lastStep, mode.SIGNINTOAPPROVE),
             mode: mode.SIGNINTOAPPROVE
           }),
           () => {
@@ -610,6 +656,7 @@ class PanelWrapper extends Component {
     ev.stopPropagation();
     this.stopCountdown();
     this.setState({
+      popupType: popupType.WARNING_SIGNIN_WITH_PASSWORD,
       popupContent: {
         title: signIn.usePassword.title,
         prefix: signIn.usePassword.prefix,
@@ -621,16 +668,45 @@ class PanelWrapper extends Component {
     });
   };
 
-  setPopupContent = popupContent => {
-    this.setState({ popupContent });
+  setPopupContent = (popup, data) => {
+    switch (popup) {
+      case popupType.FORGOT_PASSWORD:
+        {
+          const { blurEmailRecovery, status } = data;
+          this.blurEmailRecovery = blurEmailRecovery;
+          this.forgotPasswordStatus = status;
+          this.setState({ popupType: popup });
+        }
+        break;
+      case popupType.TOO_MANY_REQUEST:
+        {
+          const { tooManyRequests } = errors;
+          this.setState({
+            buttonSignInState: ButtonState.ENABLED,
+            popupType: popup,
+            popupContent: {
+              title: tooManyRequests.name,
+              prefix: tooManyRequests.description,
+              confirmButtonLabel: tooManyRequests.button
+            }
+          });
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   dismissPopup = () => {
-    this.setState({ popupContent: undefined });
+    this.setState({
+      buttonSignInState: ButtonState.ENABLED,
+      popupContent: undefined,
+      popupType: undefined
+    });
   };
 
   handleStayLinking = () => {
-    this.setState({ popupContent: undefined }, () => {
+    this.setState({ popupContent: undefined, popupType: undefined }, () => {
       this.checkLinkStatus();
     });
   };
@@ -641,7 +717,8 @@ class PanelWrapper extends Component {
       lastStep: this.concat(state.lastStep, mode.SIGNINPASSWORD),
       currentStep: mode.SIGNINPASSWORD,
       mode: mode.SIGNINPASSWORD,
-      popupContent: undefined
+      popupContent: undefined,
+      popupType: undefined
     }));
   };
 
@@ -735,6 +812,62 @@ class PanelWrapper extends Component {
     return this.state.lastStep[this.state.lastStep.length - 1] === mode.SIGNIN
       ? 'invisible'
       : 'visible';
+  };
+
+  handleDevicesDeleted = password => {
+    this.setState(
+      state => {
+        return {
+          buttonSignInState: ButtonState.LOADING,
+          popupType: undefined,
+          values: {
+            ...state.values,
+            password
+          }
+        };
+      },
+      () => {
+        this.initLinkDevice(this.state.values.usernameOrEmailAddress);
+      }
+    );
+  };
+
+  requestLogin = async () => {
+    const [
+      username,
+      domain = appDomain
+    ] = this.state.values.usernameOrEmailAddress.split('@');
+    const password = this.state.values.password;
+    const hashedPassword = hashPassword(password);
+    const submittedData = {
+      username,
+      domain,
+      password: hashedPassword
+    };
+    const res = await login(submittedData);
+    const { status, body } = res;
+    const recipientId =
+      domain === appDomain
+        ? username
+        : this.state.values.usernameOrEmailAddress;
+    if (status === 200) {
+      const { deviceId, name } = body;
+      openCreateKeysLoadingWindow({
+        loadingType: 'signin',
+        remoteData: {
+          recipientId,
+          deviceId,
+          name
+        }
+      });
+      closeLoginWindow();
+    } else {
+      const error = {
+        name: string.errors.loginFailed.name,
+        description: string.errors.loginFailed.description + status
+      };
+      throwError(error);
+    }
   };
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button, { ButtonType } from './Button';
 import string from './../lang';
 import './signin.scss';
 
@@ -38,14 +39,13 @@ const renderForm = props => (
         autoFocus={true}
       />
       <span className="error-message">{props.errorMessage}</span>
-      <div className="button">
-        <button
-          className="button-login"
+      <div className="buttons">
+        <Button
           onClick={props.onClickSignIn}
-          disabled={props.disabledLoginButton}
-        >
-          <span>{signIn.signInButtonLabel}</span>
-        </button>
+          state={props.buttonState}
+          text={signIn.signInButtonLabel}
+          type={ButtonType.BASIC}
+        />
       </div>
     </form>
   </div>
@@ -66,7 +66,7 @@ const renderFooter = props => (
 
 // eslint-disable-next-line fp/no-mutation
 renderForm.propTypes = {
-  disabledLoginButton: PropTypes.bool,
+  buttonState: PropTypes.number,
   errorMessage: PropTypes.string,
   onChangeField: PropTypes.func,
   onClickSignIn: PropTypes.func,

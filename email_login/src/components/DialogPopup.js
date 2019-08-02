@@ -8,11 +8,13 @@ const DialogPopup = props => (
     </div>
     <DialogContent {...props} />
     <div className="popup-buttons">
-      <DialogButton
-        type="cancel"
-        label={props.cancelButtonLabel}
-        onClick={props.onCancelClick}
-      />
+      {!!props.onCancelClick && (
+        <DialogButton
+          type="cancel"
+          label={props.cancelButtonLabel}
+          onClick={props.onCancelClick}
+        />
+      )}
       <DialogButton
         type="confirm"
         label={props.confirmButtonLabel}

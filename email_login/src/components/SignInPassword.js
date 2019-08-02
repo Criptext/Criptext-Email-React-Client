@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button, { ButtonType, ButtonState } from './Button';
 import { appDomain } from '../utils/const';
 import string from '../lang';
 import './signinpassword.scss';
@@ -39,53 +40,39 @@ const renderForm = props => (
           placeholder={signInPassword.form.passwordInputPlaceholder}
           value={props.values.password}
           onChange={props.onChangeField}
-          disabled={props.isLoading}
+          disabled={defineDisabledInput(props.buttonState)}
           autoFocus={true}
         />
-        <span className="forgot-password" onClick={props.handleForgot}>
+        <span className="forgot-password" onClick={e => props.onClickForgot(e)}>
           {signInPassword.form.forgotLabel}
         </span>
       </div>
-      <div className="button">
-        <button
-          className={`button-lost ${
-            props.isLoading ? 'button-is-loading' : ''
-          }`}
+      <div className="buttons">
+        <Button
           onClick={props.onCLickSignInWithPassword}
-          disabled={props.disabled}
-        >
-          {props.isLoading ? renderLoadingContent() : renderBaseContent(props)}
-        </button>
+          state={props.buttonState}
+          text={defineTextButton(props.hasTwoFactorAuth)}
+          type={ButtonType.BASIC}
+        />
       </div>
     </form>
   </div>
 );
 
-const renderBaseContent = props => {
-  return props.hasTwoFactorAuth ? (
-    <span className="button-text">{signInPassword.buttons.nextLabel}</span>
-  ) : (
-    <span className="button-text">{signInPassword.buttons.confirmLabel}</span>
-  );
+const defineDisabledInput = state => {
+  return ButtonState.LOADING === state;
 };
-
-const renderLoadingContent = () => (
-  <div className="loading">
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
-  </div>
-);
 
 const defineEmailAddress = usernameOrEmailAddress => {
   return usernameOrEmailAddress.includes('@')
     ? usernameOrEmailAddress
     : `${usernameOrEmailAddress}@${appDomain}`;
+};
+
+const defineTextButton = hasTwoFactorAuth => {
+  return hasTwoFactorAuth
+    ? signInPassword.buttons.nextLabel
+    : signInPassword.buttons.confirmLabel;
 };
 
 // eslint-disable-next-line fp/no-mutation
@@ -96,18 +83,12 @@ renderSubHeader.propTypes = {
 
 // eslint-disable-next-line fp/no-mutation
 renderForm.propTypes = {
+  buttonState: PropTypes.number,
+  hasTwoFactorAuth: PropTypes.bool,
   onChangeField: PropTypes.func,
-  validator: PropTypes.func,
+  onClickForgot: PropTypes.func,
   onCLickSignInWithPassword: PropTypes.func,
-  handleForgot: PropTypes.func,
-  disabled: PropTypes.bool,
-  values: PropTypes.object,
-  isLoading: PropTypes.bool
-};
-
-// eslint-disable-next-line fp/no-mutation
-renderBaseContent.propTypes = {
-  hasTwoFactorAuth: PropTypes.bool
+  values: PropTypes.object
 };
 
 export default SignInPassword;
