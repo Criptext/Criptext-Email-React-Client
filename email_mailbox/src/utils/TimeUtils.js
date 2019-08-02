@@ -92,7 +92,7 @@ export const defineBackupFileName = extension => {
 
 export const getAutoBackupDates = (time, period, unit) => {
   const nowDate = moment(time);
-  const nextDate = nowDate.add(period, unit);
+  const nextDate = moment(time).add(period, unit);
   return {
     nowDate: nowDate.format('YYYY-MM-DD HH:mm:ss'),
     nextDate: nextDate.format('YYYY-MM-DD HH:mm:ss')

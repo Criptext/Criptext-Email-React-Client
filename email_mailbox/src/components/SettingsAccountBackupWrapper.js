@@ -321,7 +321,7 @@ class SettingsAccountBackupWrapper extends Component {
     this.setState({ backupPercent: 80 });
   };
 
-  localBackupSuccessCallback = () => {
+  localBackupSuccessCallback = backupSize => {
     this.setState({ backupPercent: 99.9 }, () => {
       setTimeout(() => {
         const backupPercent = 100;
@@ -334,7 +334,9 @@ class SettingsAccountBackupWrapper extends Component {
               {
                 autoBackupEnable: true
               },
-              this.updateAutoBackupParams
+              () => {
+                this.updateAutoBackupParams(backupSize);
+              }
             );
           }
           setTimeout(this.clearProgressParams, 3000);
@@ -343,7 +345,7 @@ class SettingsAccountBackupWrapper extends Component {
     });
   };
 
-  updateAutoBackupParams = async () => {
+  updateAutoBackupParams = async backupSize => {
     const { selectedFrequency, backupPath } = this.state;
     const timeUnit = defineUnitToAppend(selectedFrequency);
     const { nowDate, nextDate } = getAutoBackupDates(Date.now(), 1, timeUnit);
@@ -352,7 +354,7 @@ class SettingsAccountBackupWrapper extends Component {
       autoBackupEnable: true,
       autoBackupFrequency: selectedFrequency,
       autoBackupLastDate: nowDate,
-      autoBackupLastSize: 9999,
+      autoBackupLastSize: backupSize,
       autoBackupNextDate: nextDate,
       autoBackupPath
     });

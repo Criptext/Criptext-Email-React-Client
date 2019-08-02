@@ -155,6 +155,15 @@ const prepareBackupFiles = async ({ backupPrevFiles = true }) => {
   }
 };
 
+const getFilesizeInBytes = filename => {
+  try {
+    const stats = fs.statSync(filename);
+    return stats.size;
+  } catch (error) {
+    return 0;
+  }
+};
+
 /*  Export Backup 
 ----------------------------- */
 const exportBackupUnencrypted = async ({ backupPath }) => {
@@ -182,6 +191,7 @@ const exportBackupUnencrypted = async ({ backupPath }) => {
     } catch (fileErr) {
       throw new Error('Failed to move backup file');
     }
+    return getFilesizeInBytes(backupPath);
   } catch (exportBackupError) {
     throw exportBackupError;
   } finally {
@@ -219,6 +229,7 @@ const exportBackupEncrypted = async ({ backupPath, password }) => {
     } catch (fileErr) {
       throw new Error('Failed to create backup file');
     }
+    return getFilesizeInBytes(backupPath);
   } catch (exportBackupError) {
     throw exportBackupError;
   } finally {

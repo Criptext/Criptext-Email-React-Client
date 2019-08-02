@@ -121,10 +121,10 @@ ipc.answerRenderer('export-backup-unencrypted', async params => {
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', 2);
-    await exportBackupUnencrypted({ backupPath });
+    const backupSize = await exportBackupUnencrypted({ backupPath });
     commitBackupStatus('local-backup-export-finished', 3);
     await simulatePause(2000);
-    commitBackupStatus('local-backup-success', null);
+    commitBackupStatus('local-backup-success', null, backupSize);
     await simulatePause(2000);
     showNotification({
       title: notificationParams.success.title,
@@ -154,13 +154,13 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', 2);
-    await exportBackupEncrypted({
+    const backupSize = await exportBackupEncrypted({
       backupPath,
       password
     });
     commitBackupStatus('local-backup-export-finished', 3);
     await simulatePause(2000);
-    commitBackupStatus('local-backup-success', null);
+    commitBackupStatus('local-backup-success', null, backupSize);
     await simulatePause(2000);
     showNotification({
       title: notificationParams.success.title,
