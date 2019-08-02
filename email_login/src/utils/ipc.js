@@ -40,8 +40,16 @@ export const checkAvailableUsername = async username => {
   return await callMain('client-check-available-username', username);
 };
 
+export const deleteDeviceToken = async params => {
+  return await callMain('client-delete-device-token', params);
+};
+
 export const linkAuth = async newDeviceData => {
   return await callMain('client-link-auth', newDeviceData);
+};
+
+export const findDevices = async params => {
+  return await callMain('client-find-devices', params);
 };
 
 export const linkBegin = async params => {

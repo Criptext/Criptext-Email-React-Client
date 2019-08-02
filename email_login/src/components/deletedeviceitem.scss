@@ -1,0 +1,52 @@
+.checkbox-item {
+  border-bottom: solid 1px #e6e5e5;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  margin: 0 20px;
+  padding: 15px 0;
+  width: calc(100% - 40px);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .checkmark-container {
+    margin-left: 3px;
+
+    .checkmark.checkmark-checked:after {
+      left: 4px;
+      top: 9px;
+    }
+  }
+
+  .device-type-icon {
+    align-items: center;
+    display: flex;
+    margin: 0 8px;
+
+    i {
+      color: #bfc5cb;
+      font-size: 25px;
+    }
+  }
+
+  .device-description {
+    display: flex;
+    flex-flow: column;
+    text-align: left;
+
+    > strong {
+      color: black;
+    }
+
+    > span {
+      color: #98a3ad;
+      font-weight: 300;
+
+      > b {
+        font-weight: 400;
+      }
+    }
+  }
+}

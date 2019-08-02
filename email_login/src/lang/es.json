@@ -40,11 +40,75 @@
     },
     "tooManyRequests": {
       "name": "Limite de peticiones excedido",
-      "description": "Has realizado muchas peticiones consecutivas.\nPor favor, intenta nuevamente dentro de "
+      "description": "Has realizado muchas peticiones consecutivas.\nPor favor, intenta nuevamente dentro de ",
+      "button": "Okay"
     },
     "wrongCredentials": {
       "name": "Credenciales incorrectas",
       "description": "Usuario o contraseña incorrectos. Verifica tus credenciales e intenta de nuevo"
+    }
+  },
+  "last_activity": "Última actividad",
+  "over_time": "Hace más de 2 meses",
+  "popUp": {
+    "deleteDevices": [
+      {
+        "title": "Superaste el límite de dispositivos conectados (10)",
+        "paragraph": "Ingrese su contraseña para eliminar uno o más dispositivos.",
+        "inputs": {
+          "password": {
+            "placeholder": "Contraseña",
+            "error": "Contraseña incorrecta"
+          }
+        },
+        "buttons": {
+          "cancel": "Cancelar",
+          "confirm": "Continuar"
+        }
+      },{
+        "title": "Eliminar dispositivo(s)",
+        "buttons": {
+          "cancel": "Atras",
+          "confirm": "Eliminar"
+        }
+      },{
+        "title": "Eliminar Dispositivo",
+        "paragraph": "Aún tienes 2 dispositivos pendientes que eliminar antes de poder iniciar sesión",
+        "buttons": {
+          "cancel": "Cancelar",
+          "confirm": "Eliminar"
+        }
+      },{
+        "title": "Sesión Expirada",
+        "paragraph": "Lo sentimos tu sesión ha expirado, excediste el tiempo de inactividad permitido, vuelva a intentarlo.",
+        "buttons": {
+          "confirm": "Aceptar"
+        }
+      }
+    ],
+    "forgotPassword": {
+      "200": {
+        "title": "Restablecer Contraseña",
+        "paragraph": "Un enlace para restablecer la contraseña fue enviado a",
+        "note": "El enlace será válido durante 30 minutos",
+        "buttons": {
+          "confirm": "Ok"
+        }
+      },
+      "400": {
+        "title": "Sin correo de recuperación",
+        "paragraph": "La recuperación de la contraseña es imposible ya que no se configuró un correo de recuperación en su cuenta. Para asistencia adicional contáctenos:",
+        "buttons": {
+          "confirm": "Ok"
+        }
+      },
+      "error": {
+        "title": "Restablecer Contraseña",
+        "paragraph": "Falló al enviar el enlace para restablecer la contraseña. Intente de nuevo",
+        "buttons": {
+          "confirm": "Ok"
+        }
+      }
     }
   },
   "signIn": {
@@ -140,22 +204,6 @@
     "buttons": {
       "nextLabel": "Siguiente",
       "confirmLabel": "Confirmar"
-    },
-    "forgotPasswordMessage": {
-      "title": "Restablecer Contraseña",
-      "prefix": "Un enlace para restablecer la contraseña fue enviado a",
-      "suffix": "El enlace será válido durante 30 minutos",
-      "dismissButtonLabel": "Ok",
-      "notSetError": {
-        "title": "Sin correo de recuperación",
-        "message": "La recuperación de la contraseña es imposible ya que no se configuró un correo de recuperación en su cuenta. Para asistencia adicional contáctenos:",
-        "dismissButtonLabel": "Ok"
-      },
-      "fallbackError": {
-        "title": "Restablecer Contraseña",
-        "message": "Falló al enviar el enlace para restablecer la contraseña. Intente de nuevo",
-        "dismissButtonLabel": "Ok"
-      }
     }
   }
 }

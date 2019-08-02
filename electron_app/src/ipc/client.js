@@ -27,8 +27,16 @@ ipc.answerRenderer(
     clientManager.checkExpiredSession(response, initialRequest, requestParams)
 );
 
+ipc.answerRenderer('client-delete-device-token', params =>
+  clientManager.deleteDeviceToken(params)
+);
+
 ipc.answerRenderer('client-delete-my-account', password =>
   clientManager.deleteMyAccount(password)
+);
+
+ipc.answerRenderer('client-find-devices', params =>
+  clientManager.findDevices(params)
 );
 
 ipc.answerRenderer('client-find-key-bundles', params =>

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { validatePassword } from '../validators/validators';
+import { popupType } from './PanelWrapper';
+import { ButtonState } from './Button';
 import SignInPassword from './SignInPassword';
+import { validatePassword } from '../validators/validators';
 import {
   closeLoginWindow,
   login,
@@ -11,11 +13,8 @@ import {
 } from '../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
-import { PopupTypes } from './LoginPopup';
 import string from '../lang';
 import { appDomain } from '../utils/const';
-
-const { signInPassword } = string;
 
 const LOGIN_STATUS = {
   SUCCESS: 200,
@@ -29,12 +28,11 @@ class SignInPasswordWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      buttonState: ButtonState.DISABLED,
       values: {
         usernameOrEmailAddress: props.value,
         password: ''
-      },
-      disabled: true,
-      isLoading: false
+      }
     };
   }
 
@@ -46,14 +44,12 @@ class SignInPasswordWrapper extends Component {
     return (
       <SignInPassword
         {...this.props}
-        disabled={this.state.disabled}
-        handleForgot={this.handleForgot}
-        isLoading={this.state.isLoading}
+        buttonState={this.state.buttonState}
+        onClickForgot={this.handleClickForgot}
         onCLickSignInWithPassword={this.handleClickSignInWithPassword}
         onChangeField={this.handleChangeField}
         onDismissPopup={this.onDismissPopup}
         popupContent={this.state.popupContent}
-        validator={this.validatePassword}
         values={this.state.values}
       />
     );
@@ -66,8 +62,9 @@ class SignInPasswordWrapper extends Component {
 
   checkDisable = () => {
     const isValid = this.validatePassword();
+    const buttonState = isValid ? ButtonState.ENABLED : ButtonState.DISABLED;
     this.setState({
-      disabled: !isValid
+      buttonState
     });
   };
 
@@ -88,8 +85,7 @@ class SignInPasswordWrapper extends Component {
       this.props.goToWaitingApproval(this.state.values.password);
     } else {
       this.setState({
-        isLoading: true,
-        disabled: true
+        buttonState: ButtonState.LOADING
       });
       const [
         username,
@@ -104,10 +100,10 @@ class SignInPasswordWrapper extends Component {
       };
       const res = await login(submittedData);
       const { status, body, headers } = res;
-      // eslint-disable-next-line fp/no-let
-      let recipientId = this.state.values.usernameOrEmailAddress;
-      // eslint-disable-next-line fp/no-mutation
-      if (domain === appDomain) recipientId = username;
+      const recipientId =
+        domain === appDomain
+          ? username
+          : this.state.values.usernameOrEmailAddress;
       this.handleLoginStatus(status, body, headers, recipientId);
     }
   };
@@ -144,6 +140,7 @@ class SignInPasswordWrapper extends Component {
         break;
       }
       case LOGIN_STATUS.TOO_MANY_DEVICES: {
+        // check
         this.throwLoginError(string.errors.tooManyDevices);
         break;
       }
@@ -161,9 +158,9 @@ class SignInPasswordWrapper extends Component {
     }
   };
 
-  handleForgot = async ev => {
-    ev.preventDefault();
-    ev.stopPropagation();
+  handleClickForgot = async e => {
+    e.preventDefault();
+    e.stopPropagation();
     const [
       recipientId,
       domain = appDomain
@@ -172,33 +169,23 @@ class SignInPasswordWrapper extends Component {
       recipientId,
       domain
     };
-    const { status, text } = await resetPassword(params);
-    const customText = this.getForgotPasswordMessage(status, text);
-    const messages = signInPassword.forgotPasswordMessage;
+    const { status, body } = await resetPassword(params);
+    const popup = popupType.FORGOT_PASSWORD;
+    const data = this.formPopupData(status, body);
+    return this.props.setPopupContent(popup, data);
+  };
+
+  formPopupData = (status, body) => {
     switch (status) {
-      case 200:
-        return this.props.setPopupContent({
-          title: messages.title,
-          prefix: messages.prefix,
-          suffix: messages.suffix,
-          dismissButtonLabel: messages.dismissButtonLabel,
-          email: customText,
-          type: PopupTypes.FORGOT_LINK
-        });
-      case 400:
-        return this.props.setPopupContent({
-          title: messages.notSetError.title,
-          dismissButtonLabel: messages.notSetError.dismissButtonLabel,
-          message: messages.notSetError.message,
-          email: 'support@criptext.com',
-          type: PopupTypes.EMAIL_NOT_SET
-        });
+      case 200: {
+        const blurEmailRecovery = body.address;
+        return { status, blurEmailRecovery };
+      }
+      case 400: {
+        return { status };
+      }
       default:
-        return this.props.setPopupContent({
-          title: messages.fallbackError.title,
-          dismissButtonLabel: messages.fallbackError.dismissButtonLabel,
-          message: messages.fallbackError.message
-        });
+        return { status: 'error' };
     }
   };
 
@@ -208,18 +195,9 @@ class SignInPasswordWrapper extends Component {
     });
   };
 
-  getForgotPasswordMessage = (status, text) => {
-    if (status === 200) {
-      const { address } = JSON.parse(text);
-      return address;
-    }
-    return signInPassword.forgotPasswordMessage.error;
-  };
-
   throwLoginError = error => {
     this.setState({
-      isLoading: false,
-      disabled: false
+      buttonState: ButtonState.ENABLED
     });
     throwError(error);
   };

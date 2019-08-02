@@ -177,11 +177,25 @@ const checkAvailableUsername = async username => {
   return await client.checkAvailableUsername(username);
 };
 
+const deleteDeviceToken = async params => {
+  const res = await client.deleteDeviceToken(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, deleteDeviceToken, params);
+};
+
 const deleteMyAccount = async password => {
   const res = await client.deleteMyAccount(password);
   return res.status === 200
     ? res
     : await checkExpiredSession(res, deleteMyAccount, password);
+};
+
+const findDevices = async params => {
+  const res = await client.findDevices(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, findDevices, params);
 };
 
 const findKeyBundles = async params => {
@@ -525,7 +539,9 @@ module.exports = {
   changeRecoveryEmail,
   checkAvailableUsername,
   checkExpiredSession,
+  deleteDeviceToken,
   deleteMyAccount,
+  findDevices,
   findKeyBundles,
   getDataReady,
   getEmailBody,

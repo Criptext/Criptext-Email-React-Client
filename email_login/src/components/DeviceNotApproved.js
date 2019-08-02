@@ -20,7 +20,8 @@ const renderContent = props => (
         <div className="icon-warning" />
       </div>
       <p>
-        <strong>{deviceNotApproved.warning.strong} </strong>{' '}
+        <strong>{deviceNotApproved.warning.strong} </strong>
+        &nbsp;
         {deviceNotApproved.warning.text}
       </p>
     </div>

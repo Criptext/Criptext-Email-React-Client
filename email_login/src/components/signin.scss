@@ -71,45 +71,11 @@
         left: 7px;
       }
 
-      .button {
+      .buttons {
         bottom: 0;
-        margin: 5% 0% 0% 0%;
+        margin: 10% 0% 0% 0%;
         padding: 0px;
-        position: absolute;
         width: 100%;
-
-        .button-login {
-          border: none;
-          border-radius: 100px;
-          padding: 10px;
-          background-color: #373a45;
-          opacity: 0.5;
-          margin: 15px 0;
-          width: 100%;
-          transition: opacity 0.1s;
-          outline: none;
-
-          span {
-            color: #fff;
-            font-weight: 600;
-            opacity: 0.9;
-            transition: opacity 0.1s;
-          }
-        }
-
-        .button-login:enabled {
-          opacity: 0.9;
-          span {
-            opacity: 0.9;
-          }
-        }
-
-        .button-login:hover:enabled {
-          opacity: 1;
-          span {
-            opacity: 1;
-          }
-        }
       }
     }
   }
