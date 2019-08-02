@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import SettingsAccountBackup from './SettingsAccountBackup';
 import { showSaveFileDialog, mySettings } from './../utils/electronInterface';
 import {
@@ -11,7 +10,11 @@ import {
 } from '../utils/ipc';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import string from './../lang';
-import { defineBackupFileName, formatLastBackupDate } from '../utils/TimeUtils';
+import {
+  defineBackupFileName,
+  formatLastBackupDate,
+  getAutoBackupDates
+} from '../utils/TimeUtils';
 import { convertToHumanSize } from '../utils/StringUtils';
 
 const { export_backup } = string.notification;
@@ -343,15 +346,14 @@ class SettingsAccountBackupWrapper extends Component {
   updateAutoBackupParams = async () => {
     const { selectedFrequency, backupPath } = this.state;
     const timeUnit = defineUnitToAppend(selectedFrequency);
-    const now = moment(Date.now());
-    const nextDate = now.add(1, timeUnit);
+    const { nowDate, nextDate } = getAutoBackupDates(Date.now(), 1, timeUnit);
     const autoBackupPath = removeFilenameFromPath(backupPath);
     await updateSettings({
       autoBackupEnable: true,
       autoBackupFrequency: selectedFrequency,
-      autoBackupLastDate: now.format('YYYY-MM-DD HH:mm:ss'),
+      autoBackupLastDate: nowDate,
       autoBackupLastSize: 9999,
-      autoBackupNextDate: nextDate.format('YYYY-MM-DD HH:mm:ss'),
+      autoBackupNextDate: nextDate,
       autoBackupPath
     });
   };

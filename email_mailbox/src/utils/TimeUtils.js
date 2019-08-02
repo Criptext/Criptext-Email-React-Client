@@ -81,11 +81,20 @@ export const defineUnsentText = time => {
 };
 
 export const formatLastBackupDate = time => {
-  return moment(getTimeLocal(time)).format(`MMM D, YYYY`);
+  return moment(time).format(`MMM D, YYYY [${momentLocales.atText}] h:mm A`);
 };
 
 export const defineBackupFileName = extension => {
   return moment(getTimeLocal(Date.now())).format(
     `[Backup]-YYYY-MM-D_HH-mm.[${extension}]`
   );
+};
+
+export const getAutoBackupDates = (time, period, unit) => {
+  const nowDate = moment(time);
+  const nextDate = nowDate.add(period, unit);
+  return {
+    nowDate: nowDate.format('YYYY-MM-DD HH:mm:ss'),
+    nextDate: nextDate.format('YYYY-MM-DD HH:mm:ss')
+  };
 };
