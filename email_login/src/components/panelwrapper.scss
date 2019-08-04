@@ -62,4 +62,23 @@
     height: 454px;
     position: relative;
   }
+
+  footer {
+    bottom: 0;
+    margin-bottom: 20px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+
+    span {
+      color: #99d9ff;
+      font-size: 14px;
+      font-weight: 300;
+
+      .footer-link {
+        color: white;
+        text-decoration: none;
+      }
+    }
+  }
 }
