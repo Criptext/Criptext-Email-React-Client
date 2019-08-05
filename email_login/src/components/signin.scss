@@ -66,6 +66,7 @@
       }
 
       .error-message {
+        position: absolute;
         font-size: 12px;
         color: #000;
         left: 0px;
@@ -74,7 +75,7 @@
 
       .buttons {
         bottom: 0;
-        margin: 15% 0% 0% 0%;
+        margin: 16% 0% 0% 0%;
         padding: 0px;
         width: 100%;
       }

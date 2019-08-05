@@ -409,22 +409,26 @@ class PanelWrapper extends Component {
       switch (status) {
         case 200:
           return {
-            errorMessage: errorMessages.USERNAME_NOT_EXISTS
+            errorMessage: errorMessages.USERNAME_NOT_EXISTS,
+            buttonSignInState: ButtonState.DISABLED
           };
         case 422:
           return {
-            errorMessage: errorMessages.USERNAME_INVALID
+            errorMessage: errorMessages.USERNAME_INVALID,
+            buttonSignInState: ButtonState.DISABLED
           };
         case 400:
-          return { errorMessage: '' };
+          return { errorMessage: '', buttonSignInState: ButtonState.ENABLED };
         case 410: {
           return {
-            errorMessage: errorMessages.USERNAME_NOT_AVAILABLE
+            errorMessage: errorMessages.USERNAME_NOT_AVAILABLE,
+            buttonSignInState: ButtonState.DISABLED
           };
         }
         default:
           return {
-            errorMessage: errorMessages.STATUS_UNKNOWN + status
+            errorMessage: errorMessages.STATUS_UNKNOWN + status,
+            buttonSignInState: ButtonState.DISABLED
           };
       }
     });

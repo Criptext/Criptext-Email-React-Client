@@ -4,21 +4,31 @@ import string from '../lang';
 import './deletedeviceitem.scss';
 
 const DeleteDeviceItem = props => (
-  <li className="checkbox-item" onClick={ev => props.onClick(ev, props.id)}>
-    <div className="checkmark-container reverse">
-      <span className={defineClassCheckbox(props.checked)} />
-    </div>
-    <div className="device-type-icon">
-      <i className={defineDeviceType(props.deviceType)} />
-    </div>
-    <div className={'device-description'}>
-      <strong>{props.name}</strong>
-      <span>
-        <b>{string.last_activity}</b>: {props.lastActivity}
-      </span>
+  <li
+    className={defineClassComponent(props.checked)}
+    onClick={ev => props.onClick(ev, props.id)}
+  >
+    <div>
+      <div className="checkmark-container reverse">
+        <span className={defineClassCheckbox(props.checked)} />
+      </div>
+      <div className="device-type-icon">
+        <i className={defineDeviceType(props.deviceType)} />
+      </div>
+      <div className={'device-description'}>
+        <strong>{props.name}</strong>
+        <span>
+          <b>{string.last_activity}</b>: {props.lastActivity}
+        </span>
+      </div>
     </div>
   </li>
 );
+
+const defineClassComponent = checked => {
+  const classChecked = 'checkbox-item-checked';
+  return `checkbox-item ${checked ? classChecked : ''}`;
+};
 
 const defineClassCheckbox = checked => {
   return checked ? `checkmark checkmark-checked` : `checkmark`;
