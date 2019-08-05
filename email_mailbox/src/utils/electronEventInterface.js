@@ -27,6 +27,7 @@ import {
   getLabelsByText,
   logoutApp,
   openFilledComposerWindow,
+  restartSocket,
   sendEndLinkDevicesEvent,
   sendEndSyncDevicesEvent,
   showNotificationApp,
@@ -1003,7 +1004,8 @@ ipcRenderer.on('socket-message', async (ev, message) => {
   }
 });
 
-ipc.answerMain('get-events', () => {
+ipc.answerMain('get-events', async () => {
+  await restartSocket(myAccount.jwt);
   sendLoadEventsEvent({});
 });
 
