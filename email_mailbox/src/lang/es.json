@@ -434,7 +434,7 @@
         "strong": "Advertencia",
         "text": "Múltiples rechazos podría provocar que el dispositivo sea baneado de Criptext."
       },
-      "closeButtonLabel": "Okay"
+      "closeButtonLabel": "Aceptar"
     },
     "manual_sync_device_approved": {
       "header": "Sincronización de Buzón",
