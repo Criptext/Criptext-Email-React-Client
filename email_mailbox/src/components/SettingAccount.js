@@ -76,6 +76,7 @@ const SettingAccount = props => (
       onShowSettingsPopup={props.onShowSettingsPopup}
       setReplyToPopupParams={props.setReplyToPopupParams}
       onSetExportBackupPassword={props.onSetExportBackupPassword}
+      onSelectBackupFolder={props.onSelectBackupFolder}
       type={props.settingsPopupType}
     />
   </div>
@@ -385,6 +386,7 @@ SettingAccount.propTypes = {
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
+  onSelectBackupFolder: PropTypes.func,
   onSetExportBackupPassword: PropTypes.func,
   onShowSettingsPopup: PropTypes.func,
   setReplyToPopupParams: PropTypes.object,

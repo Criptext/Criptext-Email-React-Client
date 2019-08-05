@@ -6,6 +6,7 @@ const copy = require('recursive-copy');
 const myAccount = require('./Account');
 const { databasePath } = require('./models');
 const { APP_DOMAIN } = require('./utils/const');
+const { backupFilenameRegex } = require('./utils/RegexUtils');
 const { createPathRecursive, getUserEmailsPath } = require('./utils/FileUtils');
 const {
   decryptStreamFileWithPassword,
@@ -68,6 +69,18 @@ const removeTempBackupDirectoryRecursive = pathToDelete => {
       }
     });
     fs.rmdirSync(pathToDelete);
+  }
+};
+
+const cleanPreviousBackupFilesInFolder = pathToClean => {
+  try {
+    const files = fs.readdirSync(pathToClean);
+    const filtered = files.filter(name => backupFilenameRegex.test(name));
+    filtered.forEach(filename => {
+      fs.unlinkSync(path.join(pathToClean, filename));
+    });
+  } catch (cleanErr) {
+    return cleanErr;
   }
 };
 
@@ -155,6 +168,15 @@ const prepareBackupFiles = async ({ backupPrevFiles = true }) => {
   }
 };
 
+const getFileSizeInBytes = filename => {
+  try {
+    const stats = fs.statSync(filename);
+    return stats.size;
+  } catch (error) {
+    return 0;
+  }
+};
+
 /*  Export Backup 
 ----------------------------- */
 const exportBackupUnencrypted = async ({ backupPath }) => {
@@ -178,10 +200,12 @@ const exportBackupUnencrypted = async ({ backupPath }) => {
     }
     // Move to destination
     try {
+      cleanPreviousBackupFilesInFolder(path.join(backupPath, '..'));
       fs.writeFileSync(backupPath, fs.readFileSync(ExportZippedFilename));
     } catch (fileErr) {
       throw new Error('Failed to move backup file');
     }
+    return getFileSizeInBytes(backupPath);
   } catch (exportBackupError) {
     throw exportBackupError;
   } finally {
@@ -215,10 +239,12 @@ const exportBackupEncrypted = async ({ backupPath, password }) => {
     }
     // Move to destination
     try {
+      cleanPreviousBackupFilesInFolder(path.join(backupPath, '..'));
       fs.writeFileSync(backupPath, fs.readFileSync(ExportEncryptedFilename));
     } catch (fileErr) {
       throw new Error('Failed to create backup file');
     }
+    return getFileSizeInBytes(backupPath);
   } catch (exportBackupError) {
     throw exportBackupError;
   } finally {

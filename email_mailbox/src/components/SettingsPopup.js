@@ -7,6 +7,7 @@ import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
 import ExportBackupPopupWrapper from './ExportBackupPopupWrapper';
 import ManualSyncPopup from './ManualSyncPopup';
 import ManualSyncProcessPopup from './ManualSyncProcessPopup';
+import SelectBackupFolderPopup from './SelectBackupFolderPopup';
 import SetReplyToEmailPopup from './SetReplyToEmailPopup';
 import TwoFactorAuthEnabledPopup from './TwoFactorAuthEnabledPopup';
 import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
@@ -18,6 +19,7 @@ const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
 const Exportbackuppopup = PopupHOC(ExportBackupPopupWrapper);
 const Manualsyncpopup = PopupHOC(ManualSyncPopup);
 const Manualsyncprocesspopup = PopupHOC(ManualSyncProcessPopup);
+const SelectBackupFolder = PopupHOC(SelectBackupFolderPopup);
 const SetReplyTo = PopupHOC(SetReplyToEmailPopup);
 
 const SettingsPopup = props => {
@@ -28,6 +30,7 @@ const SettingsPopup = props => {
     EXPORT_BACKUP,
     MANUAL_SYNC,
     MANUAL_SYNC_DEVICE_AUTHENTICATION,
+    SELECT_BACKUP_FOLDER,
     SET_REPLY_TO,
     TWO_FACTOR_AUTH_ENABLED
   } = SETTINGS_POPUP_TYPES;
@@ -91,16 +94,6 @@ const SettingsPopup = props => {
         />
       );
     }
-    case TWO_FACTOR_AUTH_ENABLED: {
-      return (
-        <Twofactorauthenabledpopup
-          isHidden={props.isHidden}
-          onTogglePopup={props.onClosePopup}
-          popupPosition={{ left: '45%', top: '45%' }}
-          theme={'dark'}
-        />
-      );
-    }
     case DELETE_ACCOUNT: {
       return (
         <Deleteaccountpopup
@@ -145,6 +138,17 @@ const SettingsPopup = props => {
         />
       );
     }
+    case SELECT_BACKUP_FOLDER: {
+      return (
+        <SelectBackupFolder
+          isHidden={props.isHidden}
+          onTogglePopup={props.onClosePopup}
+          popupPosition={{ left: '45%', top: '45%' }}
+          onSelectBackupFolder={props.onSelectBackupFolder}
+          theme={'dark'}
+        />
+      );
+    }
     case SET_REPLY_TO: {
       return (
         <SetReplyTo
@@ -160,6 +164,16 @@ const SettingsPopup = props => {
           }}
           popupPosition={{ left: '45%', top: '45%' }}
           setReplyToInput={props.setReplyToPopupParams.replyToInput}
+          theme={'dark'}
+        />
+      );
+    }
+    case TWO_FACTOR_AUTH_ENABLED: {
+      return (
+        <Twofactorauthenabledpopup
+          isHidden={props.isHidden}
+          onTogglePopup={props.onClosePopup}
+          popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
         />
       );
@@ -185,6 +199,7 @@ SettingsPopup.propTypes = {
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
+  onSelectBackupFolder: PropTypes.func,
   onSetExportBackupPassword: PropTypes.func,
   onShowSettingsPopup: PropTypes.func,
   setReplyToPopupParams: PropTypes.object

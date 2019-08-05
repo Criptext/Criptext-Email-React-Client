@@ -1,76 +1,114 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SettingsAccountBackup from './SettingsAccountBackup';
-import { showSaveFileDialog } from './../utils/electronInterface';
+import { showSaveFileDialog, mySettings } from './../utils/electronInterface';
 import {
   exportBackupUnencrypted,
   getDefaultBackupFolder,
-  exportBackupEncrypted
+  exportBackupEncrypted,
+  updateSettings,
+  initAutoBackupMonitor
 } from '../utils/ipc';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import string from './../lang';
-import { defineBackupFileName } from '../utils/TimeUtils';
+import {
+  defineBackupFileName,
+  formatLastBackupDate,
+  getAutoBackupDates
+} from '../utils/TimeUtils';
+import { convertToHumanSize } from '../utils/StringUtils';
 
 const { export_backup } = string.notification;
-const { progress } = string.settings.mailbox_backup;
+const { auto, progress } = string.settings.mailbox_backup;
 const { backing_up_mailbox, backup_mailbox_success } = progress;
+const { daily, weekly, monthly } = auto.options.frequencyLabels;
+const frequencies = [
+  { text: daily, value: 'daily' },
+  { text: weekly, value: 'weekly' },
+  { text: monthly, value: 'monthly' }
+];
 
-const BACKUP_TYPES = {
+const EXPORT_TYPES = {
   UNENCRYPT: 'unencrypted',
   ENCRYPT: 'encrypted',
   NONE: 'none'
+};
+
+const defineBackupFullpath = async extension => {
+  const defautlPath = await getDefaultBackupFolder();
+  const filename = defineBackupFileName(extension);
+  return `${defautlPath}/${filename}`;
+};
+
+const defineUnitToAppend = frequency => {
+  switch (frequency) {
+    case 'daily':
+      return 'days';
+    case 'weekly':
+      return 'weeks';
+    case 'monthly':
+      return 'months';
+    default:
+      return 'days';
+  }
+};
+
+const removeFilenameFromPath = path => {
+  const parts = path.split('/');
+  parts.pop();
+  return parts.join('/');
 };
 
 class SettingsAccountBackupWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      autoBackupEnable: !!mySettings.autoBackupEnable,
+      backupPath: '',
       backupPercent: 0,
+      backupType: '',
+      exportType: EXPORT_TYPES.NONE,
       inProgress: false,
       progressMessage: '',
-      type: BACKUP_TYPES.NONE
+      selectedFrequency: mySettings.autoBackupFrequency || 'daily'
     };
   }
 
   render() {
+    const lastDate = formatLastBackupDate(mySettings.autoBackupLastDate);
+    const lastSize = convertToHumanSize(mySettings.autoBackupLastSize, true, 0);
     return (
       <SettingsAccountBackup
         {...this.props}
+        autoBackupEnable={this.state.autoBackupEnable}
         backupPercent={this.state.backupPercent}
+        frequencies={frequencies}
         inProgress={this.state.inProgress}
+        lastDate={lastDate}
+        lastSize={lastSize}
+        onChangeSelectBackupFrequency={this.handleChangeSelectBackupFrequency}
+        onChangeSwitchSelectBackupFolder={
+          this.handleChangeSwitchSelectBackupFolder
+        }
+        onClickBackupNow={this.handleClickBackupNow}
+        onClickChangeAutoBackupPath={this.handleClickChangeAutoBackupPath}
         progressMessage={this.state.progressMessage}
+        selectedFrequency={this.state.selectedFrequency}
       />
     );
   }
 
   componentDidUpdate() {
-    if (!this.state.inProgress && this.props.mailboxBackupParams.inProgress) {
-      const { password } = this.props.mailboxBackupParams;
-      this.setState(
-        {
-          inProgress: true,
-          backupPercent: 5,
-          progressMessage: backing_up_mailbox,
-          type: password ? BACKUP_TYPES.ENCRYPT : BACKUP_TYPES.UNENCRYPT
-        },
-        async () => {
-          const defautlPath = await getDefaultBackupFolder();
-          const extension = password ? 'enc' : 'db';
-          const filename = defineBackupFileName(extension);
-          const backupPath = `${defautlPath}/${filename}`;
-          showSaveFileDialog(backupPath, selectedPath => {
-            if (!selectedPath) {
-              this.props.onClearMailboxBackupParams();
-              return this.clearProgressParams();
-            }
-            this.initMailboxBackup({
-              backupPath: selectedPath,
-              password,
-              notificationParams: export_backup
-            });
-          });
-        }
-      );
+    if (
+      !this.state.inProgress &&
+      this.props.mailboxBackupParams.showSelectPathDialog
+    ) {
+      const { type, password } = this.props.mailboxBackupParams;
+      if (type === 'manual') {
+        this.handleManualBackup({ password });
+      } else if (type === 'auto') {
+        this.handleAutoBackup();
+      }
     }
   }
 
@@ -78,12 +116,148 @@ class SettingsAccountBackupWrapper extends Component {
     this.removeEventHandlers();
   }
 
-  initMailboxBackup = ({ backupPath, password, notificationParams }) => {
+  handleManualBackup = ({ password }) => {
+    this.setState(
+      {
+        inProgress: true,
+        backupPercent: 5,
+        progressMessage: backing_up_mailbox,
+        backupType: 'manual',
+        exportType: password ? EXPORT_TYPES.ENCRYPT : EXPORT_TYPES.UNENCRYPT
+      },
+      async () => {
+        const extension = password ? 'enc' : 'db';
+        const backupPath = await defineBackupFullpath(extension);
+        showSaveFileDialog(backupPath, selectedPath => {
+          if (!selectedPath) {
+            this.props.onClearMailboxBackupParams();
+            return this.clearProgressParams();
+          }
+          this.setState(
+            {
+              backupPath: selectedPath,
+              password
+            },
+            this.initMailboxBackup
+          );
+        });
+      }
+    );
+  };
+
+  handleAutoBackup = dialogFolderPath => {
+    this.setState(
+      {
+        inProgress: true,
+        backupPercent: 0,
+        progressMessage: backing_up_mailbox,
+        backupType: 'auto',
+        exportType: EXPORT_TYPES.UNENCRYPT
+      },
+      async () => {
+        const backupPath =
+          dialogFolderPath || (await defineBackupFullpath('db'));
+        showSaveFileDialog(backupPath, selectedPath => {
+          if (!selectedPath) {
+            this.props.onClearMailboxBackupParams();
+            return this.clearProgressParams();
+          }
+          this.setState({ backupPath: selectedPath }, this.initMailboxBackup);
+        });
+      }
+    );
+  };
+
+  handleChangeSwitchSelectBackupFolder = e => {
+    const nextCheckedValue = e.target.checked;
+    if (nextCheckedValue === true) {
+      if (!mySettings.autoBackupPath) {
+        this.props.onShowSelectBackupFolderPopup();
+      } else {
+        this.setState(
+          {
+            autoBackupEnable: nextCheckedValue
+          },
+          () => {
+            const filename = defineBackupFileName('db');
+            const backupPath = `${mySettings.autoBackupPath}/${filename}`;
+            this.setState(
+              {
+                backupType: 'auto',
+                backupPath,
+                inProgress: true,
+                backupPercent: 0,
+                progressMessage: backing_up_mailbox
+              },
+              this.initMailboxBackup
+            );
+          }
+        );
+      }
+    } else {
+      this.setState(
+        {
+          autoBackupEnable: nextCheckedValue
+        },
+        async () => {
+          await updateSettings({ autoBackupEnable: false });
+        }
+      );
+    }
+  };
+
+  handleClickBackupNow = () => {
+    const filename = defineBackupFileName('db');
+    const backupPath = `${mySettings.autoBackupPath}/${filename}`;
+    this.setState(
+      {
+        backupType: 'auto',
+        backupPath,
+        inProgress: true,
+        backupPercent: 0,
+        progressMessage: backing_up_mailbox
+      },
+      this.initMailboxBackup
+    );
+  };
+
+  handleClickChangeAutoBackupPath = () => {
+    const filename = defineBackupFileName('db');
+    const prevAutoBackupPath = `${mySettings.autoBackupPath}/${filename}`;
+    this.handleAutoBackup(prevAutoBackupPath);
+  };
+
+  handleChangeSelectBackupFrequency = e => {
+    const selectedFrequency = e.target.value;
+    const filename = defineBackupFileName('db');
+    const backupPath = `${mySettings.autoBackupPath}/${filename}`;
+    this.setState(
+      {
+        backupType: 'auto',
+        backupPath,
+        inProgress: true,
+        backupPercent: 0,
+        selectedFrequency,
+        progressMessage: backing_up_mailbox
+      },
+      this.initMailboxBackup
+    );
+  };
+
+  initMailboxBackup = () => {
+    const { backupPath, password } = this.state;
     this.initMailboxBackupListeners();
     if (!password) {
-      exportBackupUnencrypted({ backupPath, notificationParams });
+      exportBackupUnencrypted({
+        backupPath,
+        notificationParams: export_backup
+      });
     } else {
-      exportBackupEncrypted({ backupPath, password, notificationParams });
+      exportBackupEncrypted({
+        backupPath,
+        password,
+        notificationParams: export_backup
+      });
     }
   };
 
@@ -92,8 +266,9 @@ class SettingsAccountBackupWrapper extends Component {
       backupPercent: 0,
       inProgress: false,
       progressMessage: '',
-      transition: 0,
-      type: BACKUP_TYPES.NONE
+      backupType: '',
+      exportType: EXPORT_TYPES.NONE,
+      backupPath: ''
     });
   };
 
@@ -130,14 +305,16 @@ class SettingsAccountBackupWrapper extends Component {
   };
 
   localBackupEnableEventsCallback = () => {
-    const isOnlyExport = this.state.type === BACKUP_TYPES.UNENCRYPT;
-    const backupPercent = isOnlyExport ? 40 : 30;
+    const isExportUnencrypted =
+      this.state.exportType === EXPORT_TYPES.UNENCRYPT;
+    const backupPercent = isExportUnencrypted ? 40 : 30;
     this.setState({ backupPercent });
   };
 
   localBackupExportFinishedCallback = () => {
-    const isOnlyExport = this.state.type === BACKUP_TYPES.UNENCRYPT;
-    const backupPercent = isOnlyExport ? 70 : 60;
+    const isExportUnencrypted =
+      this.state.exportType === EXPORT_TYPES.UNENCRYPT;
+    const backupPercent = isExportUnencrypted ? 70 : 60;
     this.setState({ backupPercent });
   };
 
@@ -145,7 +322,7 @@ class SettingsAccountBackupWrapper extends Component {
     this.setState({ backupPercent: 80 });
   };
 
-  localBackupSuccessCallback = () => {
+  localBackupSuccessCallback = backupSize => {
     this.setState({ backupPercent: 99.9 }, () => {
       setTimeout(() => {
         const backupPercent = 100;
@@ -153,16 +330,43 @@ class SettingsAccountBackupWrapper extends Component {
         this.setState({ backupPercent, progressMessage }, () => {
           this.props.onClearMailboxBackupParams();
           this.removeEventHandlers();
+          if (this.state.backupType === 'auto') {
+            this.setState(
+              {
+                autoBackupEnable: true
+              },
+              () => {
+                this.updateAutoBackupParams(backupSize);
+              }
+            );
+          }
           setTimeout(this.clearProgressParams, 3000);
         });
       }, 2000);
     });
   };
+
+  updateAutoBackupParams = async backupSize => {
+    const { selectedFrequency, backupPath } = this.state;
+    const timeUnit = defineUnitToAppend(selectedFrequency);
+    const { nowDate, nextDate } = getAutoBackupDates(Date.now(), 1, timeUnit);
+    const autoBackupPath = removeFilenameFromPath(backupPath);
+    await updateSettings({
+      autoBackupEnable: true,
+      autoBackupFrequency: selectedFrequency,
+      autoBackupLastDate: nowDate,
+      autoBackupLastSize: backupSize,
+      autoBackupNextDate: nextDate,
+      autoBackupPath
+    });
+    initAutoBackupMonitor();
+  };
 }
 
 SettingsAccountBackupWrapper.propTypes = {
   mailboxBackupParams: PropTypes.object,
-  onClearMailboxBackupParams: PropTypes.func
+  onClearMailboxBackupParams: PropTypes.func,
+  onShowSelectBackupFolderPopup: PropTypes.func
 };
 
 export default SettingsAccountBackupWrapper;

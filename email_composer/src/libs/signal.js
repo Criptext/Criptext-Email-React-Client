@@ -150,7 +150,9 @@ const createEmails = async (
               )
             : null;
           const existingFileKeys = fileKeys
-            ? fileKeys.filter(fileKey => fileKey !== null)
+            ? fileKeys.filter(
+                fileKey => !!fileKey && typeof fileKey === 'string'
+              )
             : [];
           const fileKey =
             existingFileKeys.length > 0 ? existingFileKeys[0] : null;

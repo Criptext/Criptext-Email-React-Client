@@ -1237,15 +1237,30 @@ const deletePendingEventsByIds = ids => {
 /* Settings
 ----------------------------- */
 const getSettings = async () => {
-  const [appSettings] = await db.table(Table.SETTINGS).where({ id: 1 });
-  return appSettings;
+  return (await db.table(Table.SETTINGS).first('*')) || {};
 };
 
-const updateSettings = async ({ language, opened, theme }) => {
+const updateSettings = async ({
+  language,
+  opened,
+  theme,
+  autoBackupEnable,
+  autoBackupFrequency,
+  autoBackupLastDate,
+  autoBackupLastSize,
+  autoBackupNextDate,
+  autoBackupPath
+}) => {
   const params = noNulls({
     language,
     opened,
-    theme
+    theme,
+    autoBackupEnable,
+    autoBackupFrequency,
+    autoBackupLastDate,
+    autoBackupLastSize,
+    autoBackupNextDate,
+    autoBackupPath
   });
   if (Object.keys(params).length < 1) {
     return Promise.resolve(true);

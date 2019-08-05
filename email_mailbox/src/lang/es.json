@@ -408,6 +408,57 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Continuar"
     },
+    "mailbox_sync": {
+      "title": "Advertencia de Sincronización",
+      "paragraphs": {
+        "header": "Todos los datos de su buzón se borrarán y se reemplazarán con los datos del buzón de su otro dispositivo.",
+        "question": "¿Estás seguro que deseas continuar?"
+      },
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Confirmar"
+    },
+    "manual_sync_device_authentication": {
+      "title": "Autenticación de dispositivo",
+      "message": "Revisa y aprueba este inicio de sesión desde uno de tus dispositivos Criptext",
+      "getPromptLabel": "¿No recibiste el aviso?",
+      "buttons": {
+        "sending": "Enviando...",
+        "resend": "Reenviarlo"
+      },
+      "cancelSyncLabel": "Cancelar sincronización"
+    },
+    "manual_sync_device_rejected": {
+      "title": "Autenticación rechazada",
+      "message": "Tu solicitud para acceder a esta cuenta fue rechazada por un dispositivo verificado.",
+      "warning": {
+        "strong": "Advertencia",
+        "text": "Múltiples rechazos podría provocar que el dispositivo sea baneado de Criptext."
+      },
+      "closeButtonLabel": "Aceptar"
+    },
+    "manual_sync_device_approved": {
+      "header": "Sincronización de Buzón",
+      "messages": {
+        "error": "Error al sincronizar tu buzón",
+        "retry": "¿Reintentar?",
+        "waitingForMailbox": "Esperando Buzón",
+        "keepWaiting": {
+          "title": "La sincronización esta tardando más de lo habitual",
+          "message": "¿Te gustaría seguir esperando?"
+        },
+        "downloadingMailbox": "Descargando Buzón",
+        "decryptingMailbox": "Desencriptando Buzón",
+        "syncComplete": "¡Sincronización Completa!"
+      },
+      "cancelSyncLabel": "Cancelar Sincronización",
+      "continueLabel": "Continuar"
+    },
+    "permanently_delete": {
+      "title": "Advertencia!",
+      "message": "Estos elementos se eliminarán permanentemente y no podrás recuperarlos. ¿Estás seguro?",
+      "leftButtonLabel": "Cancelar",
+      "rightButtonLabel": "Confirmar"
+    },
     "remove_device": {
       "title": "Remover Dispositivo",
       "paragraphs": {
@@ -421,11 +472,6 @@
       },
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Remover"
-    },
-    "two_fa": {
-      "title": "¡A2F Habilitada!",
-      "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
-      "button": "¡Listo!"
     },
     "restore_backup_request": {
       "title": "Restaurar respaldo",
@@ -472,60 +518,25 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Establecer"
     },
-    "mailbox_sync": {
-      "title": "Advertencia de Sincronización",
-      "paragraphs": {
-        "header": "Todos los datos de su buzón se borrarán y se reemplazarán con los datos del buzón de su otro dispositivo.",
-        "question": "¿Estás seguro que deseas continuar?"
+    "select_backup_folder": {
+      "title": "Selecciona Carpeta de Respaldo",
+      "note": {
+        "header": "Nota: ",
+        "content": "Auto-Respaldos no son protegidos con contraseña"
       },
-      "cancelButtonLabel": "Cancelar",
-      "confirmButtonLabel": "Confirmar"
-    },
-    "manual_sync_device_authentication": {
-      "title": "Autenticación de dispositivo",
-      "message": "Revisa y aprueba este inicio de sesión desde uno de tus dispositivos Criptext",
-      "getPromptLabel": "¿No recibiste el aviso?",
       "buttons": {
-        "sending": "Enviando...",
-        "resend": "Reenviarlo"
-      },
-      "cancelSyncLabel": "Cancelar sincronización"
-    },
-    "manual_sync_device_rejected": {
-      "title": "Autenticación rechazada",
-      "message": "Tu solicitud para acceder a esta cuenta fue rechazada por un dispositivo verificado.",
-      "warning": {
-        "strong": "Advertencia",
-        "text": "Múltiples rechazos podría provocar que el dispositivo sea baneado de Criptext."
-      },
-      "closeButtonLabel": "Okay"
-    },
-    "manual_sync_device_approved": {
-      "header": "Sincronización de Buzón",
-      "messages": {
-        "error": "Error al sincronizar tu buzón",
-        "retry": "¿Reintentar?",
-        "waitingForMailbox": "Esperando Buzón",
-        "keepWaiting": {
-          "title": "La sincronización esta tardando más de lo habitual",
-          "message": "¿Te gustaría seguir esperando?"
-        },
-        "downloadingMailbox": "Descargando Buzón",
-        "decryptingMailbox": "Desencriptando Buzón",
-        "syncComplete": "¡Sincronización Completa!"
-      },
-      "cancelSyncLabel": "Cancelar Sincronización",
-      "continueLabel": "Continuar"
-    },
-    "permanently_delete": {
-      "title": "Advertencia!",
-      "message": "Estos elementos se eliminarán permanentemente y no podrás recuperarlos. ¿Estás seguro?",
-      "leftButtonLabel": "Cancelar",
-      "rightButtonLabel": "Confirmar"
+        "cancel": "Cancelar",
+        "select": "Seleccionar"
+      }
     },
     "suspended_account": {
       "title": "Estás suspendido",
       "paragraph": "Esta cuenta ha sido suspendida temporalmente por tu administrador. Por favor, contacta al admiistrador de tu compañía para más información."
+    },
+    "two_fa": {
+      "title": "¡A2F Habilitada!",
+      "paragraph": "La próxima vez que inicies sesión en otro dispositivo, deberás ingresar tu contraseña y luego validar el inicio de sesión desde un dispositivo existente.",
+      "button": "¡Listo!"
     }
   },
   "settings": {
@@ -534,6 +545,21 @@
     "action": "Acción",
     "appearance": "Apariencia",
     "mailbox_backup": {
+      "auto": {
+        "label": "Auto Respaldo",
+        "description": "Nota: Auto-respaldos no están protegidos con contraseña",
+        "options": {
+          "last_backup": "Último respaldo",
+          "backup_now": "Respaldar ahora",
+          "backup_folder": "Carpeta de respaldo",
+          "frequency": "Frecuencia",
+          "frequencyLabels": {
+            "daily": "Diario",
+            "weekly": "Semanal",
+            "monthly": "Mensual"
+          }
+        }
+      },
       "manual": {
         "label": "Respaldo de buzón",
         "button": "Exportar Respaldo",

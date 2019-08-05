@@ -41,7 +41,8 @@ import {
   updateFilesByEmailId,
   updateUnreadEmailByThreadIds,
   updatePushToken,
-  updateDeviceType
+  updateDeviceType,
+  initAutoBackupMonitor
 } from './ipc';
 import {
   checkEmailIsTo,
@@ -98,6 +99,7 @@ let newEmailNotificationList = [];
 const stopGettingEvents = () => {
   isGettingEvents = false;
   emitter.emit(Event.STOP_LOAD_SYNC, {});
+  initAutoBackupMonitor();
 };
 
 const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
@@ -1429,8 +1431,8 @@ ipcRenderer.on('local-backup-encrypt-finished', () => {
   emitter.emit(Event.LOCAL_BACKUP_ENCRYPT_FINISHED);
 });
 
-ipcRenderer.on('local-backup-success', () => {
-  emitter.emit(Event.LOCAL_BACKUP_SUCCESS);
+ipcRenderer.on('local-backup-success', (ev, backupSize) => {
+  emitter.emit(Event.LOCAL_BACKUP_SUCCESS, backupSize);
 });
 
 ipcRenderer.on('restore-backup-disable-events', () => {

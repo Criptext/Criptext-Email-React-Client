@@ -463,8 +463,8 @@ export const updateLabel = async params => {
   return await callMain('db-update-label', params);
 };
 
-export const updateSettings = async ({ opened, language, theme }) => {
-  return await callMain('db-update-settings', { opened, language, theme });
+export const updateSettings = async params => {
+  return await callMain('db-update-settings', params);
 };
 
 export const updateUnreadEmailByThreadIds = async ({ threadIds, unread }) => {
@@ -508,6 +508,10 @@ export const exportBackupEncrypted = async params => {
 
 export const getDefaultBackupFolder = async () => {
   return await callMain('get-default-backup-folder');
+};
+
+export const initAutoBackupMonitor = async () => {
+  return await callMain('init-autobackup-monitor');
 };
 
 export const restoreBackupEncrypted = async params => {

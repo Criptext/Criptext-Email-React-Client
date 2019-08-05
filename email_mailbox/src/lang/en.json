@@ -408,70 +408,6 @@
       "cancelButtonLabel": "Cancel",
       "confirmButtonLabel": "Continue"
     },
-    "remove_device": {
-      "title": "Remove Device",
-      "paragraphs": {
-        "header": "Removing access will automatically sign you out of your account on this device.",
-        "password": "To confirm enter your password"
-      },
-      "input": {
-        "password": {
-          "placeholder": "Enter password"
-        }
-      },
-      "cancelButtonLabel": "Cancel",
-      "confirmButtonLabel": "Remove"
-    },
-    "two_fa": {
-      "title": "2FA Enabled!",
-      "paragraph": "Next time you sign into your account on another device you'll have to enter your password and then validate the sign in from an existing device.",
-      "button": "Got it"
-    },
-    "restore_backup_request": {
-      "title": "Restore Backup",
-      "paragraph": "Restore your emails from a local backup. This can be done later from Settings>Account>Restore Backup",
-      "button": "Select file",
-      "cancel": "Cancel"
-    },
-    "restore_backup_from_file": {
-      "title": "Restore from Backup File",
-      "paragraphs": {
-        "backed_up": "Backed up",
-        "size": "Size"
-      },
-      "input": {
-        "label": "Introduce your passphrase",
-        "placeholder": "Passphrase"
-      },
-      "buttons": {
-        "restore": "Restore",
-        "cancel": "Cancel"
-      }
-    },
-    "restore_backup_invalid_file": {
-      "title": "Invalid File",
-      "paragraph": "The selected file is either corrupted or belongs to another email account",
-      "button": "Change file",
-      "cancel": "Cancel"
-    },
-    "restore_backup_progress": {
-      "header": "Restoring",
-      "cancelLabel": "Cancel"
-    },
-    "set_reply_to": {
-      "title": "Set Reply To Email",
-      "paragraph": "When someone replies to one of your emails, they will reply to the address set here.",
-      "input": {
-        "email": {
-          "placeholder": "Enter an email"
-        }
-      },
-      "errors": {
-        "email": "Wrong email! Format: example@criptext.com"
-      },
-      "cancelButtonLabel": "Cancel",
-      "confirmButtonLabel": "Set"
-    },
     "mailbox_sync": {
       "title": "Sync Warning",
       "paragraphs": {
@@ -523,9 +459,84 @@
       "leftButtonLabel": "Cancel",
       "rightButtonLabel": "Confirm"
     },
+    "remove_device": {
+      "title": "Remove Device",
+      "paragraphs": {
+        "header": "Removing access will automatically sign you out of your account on this device.",
+        "password": "To confirm enter your password"
+      },
+      "input": {
+        "password": {
+          "placeholder": "Enter password"
+        }
+      },
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Remove"
+    },
+    "restore_backup_request": {
+      "title": "Restore Backup",
+      "paragraph": "Restore your emails from a local backup. This can be done later from Settings>Account>Restore Backup",
+      "button": "Select file",
+      "cancel": "Cancel"
+    },
+    "restore_backup_from_file": {
+      "title": "Restore from Backup File",
+      "paragraphs": {
+        "backed_up": "Backed up",
+        "size": "Size"
+      },
+      "input": {
+        "label": "Introduce your passphrase",
+        "placeholder": "Passphrase"
+      },
+      "buttons": {
+        "restore": "Restore",
+        "cancel": "Cancel"
+      }
+    },
+    "restore_backup_invalid_file": {
+      "title": "Invalid File",
+      "paragraph": "The selected file is either corrupted or belongs to another email account",
+      "button": "Change file",
+      "cancel": "Cancel"
+    },
+    "restore_backup_progress": {
+      "header": "Restoring",
+      "cancelLabel": "Cancel"
+    },
+    "set_reply_to": {
+      "title": "Set Reply To Email",
+      "paragraph": "When someone replies to one of your emails, they will reply to the address set here.",
+      "input": {
+        "email": {
+          "placeholder": "Enter an email"
+        }
+      },
+      "errors": {
+        "email": "Wrong email! Format: example@criptext.com"
+      },
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Set"
+    },
+    "select_backup_folder": {
+      "title": "Select Backup Folder",
+      "note": {
+        "header": "Note: ",
+        "content": "Auto backups are not password protected"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "select": "Select"
+      }
+    },
     "suspended_account": {
       "title": "You are suspended",
       "paragraph": "This account has been temporarily suspended by your administrator. Please contact your company administrator for more information."
+    },
+    "two_fa": {
+      "title": "2FA Enabled!",
+      "paragraph": "Next time you sign into your account on another device you'll have to enter your password and then validate the sign in from an existing device.",
+      "button": "Got it"
     }
   },
   "settings": {
@@ -534,6 +545,21 @@
     "action": "Action",
     "appearance": "Appearance",
     "mailbox_backup": {
+      "auto": {
+        "label": "Auto Backup",
+        "description": "Note: Auto backups are not password protected",
+        "options": {
+          "last_backup": "Last Backup",
+          "backup_now": "Back up Now",
+          "backup_folder": "Back Up Folder",
+          "frequency": "Frequency",
+          "frequencyLabels": {
+            "daily": "Daily",
+            "weekly": "Weekly",
+            "monthly": "Monthly"
+          }
+        }
+      },
       "manual": {
         "label": "Mailbox Backup",
         "button": "Export Backup File",
