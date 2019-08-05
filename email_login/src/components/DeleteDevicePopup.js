@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DeleteDeviceItem from './DeleteDeviceItem';
+import Button, { ButtonType } from './Button';
 import { defineLastDeviceActivity } from './../utils/TimeUtils';
 import string from '../lang';
 import './deletedevicepopup.scss';
@@ -15,17 +16,17 @@ const DeleteDevicePopup = props => (
       {!!props.textButtonCancel && (
         <Button
           id={props.step}
-          type="cancel"
-          label={props.textButtonCancel}
           onClick={props.onClickCancel}
+          text={props.textButtonCancel}
+          type={ButtonType.POPUP_CANCEL}
         />
       )}
       <Button
         id={props.step}
-        disabled={props.isDisabledConfirmButton}
-        type="confirm"
-        label={props.textButtonConfirm}
         onClick={props.onClickConfirm}
+        state={props.confirmButtonState}
+        text={props.textButtonConfirm}
+        type={ButtonType.POPUP_CONFIRM}
       />
     </div>
   </div>
@@ -83,19 +84,6 @@ const Content = props => {
         </div>
       )}
     </div>
-  );
-};
-
-const Button = ({ id, disabled, type, label, onClick }) => {
-  const className = `button-a popup-${type}-button`;
-  return (
-    <button
-      className={className}
-      onClick={e => onClick(e, id)}
-      disabled={disabled}
-    >
-      <span>{label}</span>
-    </button>
   );
 };
 

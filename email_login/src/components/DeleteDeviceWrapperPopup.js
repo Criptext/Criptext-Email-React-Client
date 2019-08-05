@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DeleteDevicePopup from './DeleteDevicePopup';
+import { ButtonState } from './Button';
 import { popupType } from './PanelWrapper';
 import { validatePassword } from '../validators/validators';
 import { hashPassword } from '../utils/HashUtils';
@@ -14,9 +15,9 @@ class DeleteDeviceWrapperPopup extends Component {
   constructor() {
     super();
     this.state = {
+      confirmButtonState: ButtonState.DISABLED,
       deviceIdsChecked: [],
       errorInputPassword: '',
-      isDisabledConfirmButton: true,
       isInputPasswordShow: false,
       step: 0,
       valueInputPassword: ''
@@ -39,9 +40,9 @@ class DeleteDeviceWrapperPopup extends Component {
         : deleteDevices[this.state.step].buttons.confirm;
     return (
       <DeleteDevicePopup
+        confirmButtonState={this.state.confirmButtonState}
         devices={this.state.devices}
         errorInputPassword={this.state.errorInputPassword}
-        isDisabledConfirmButton={this.state.isDisabledConfirmButton}
         isInputPasswordShow={this.state.isInputPasswordShow}
         inputPassword={inputPassword}
         note={deleteDevices[this.state.step].note}
@@ -64,8 +65,11 @@ class DeleteDeviceWrapperPopup extends Component {
   checkStateButtonConfirm = () => {
     if (this.state.step === 0) {
       const isValid = this.validatePassword();
+      const confirmButtonState = isValid
+        ? ButtonState.ENABLED
+        : ButtonState.DISABLED;
       this.setState({
-        isDisabledConfirmButton: !isValid
+        confirmButtonState
       });
     }
   };
@@ -84,7 +88,7 @@ class DeleteDeviceWrapperPopup extends Component {
     } else if (id === 1) {
       this.token = undefined;
       this.setState(state => ({
-        isDisabledConfirmButton: true,
+        confirmButtonState: ButtonState.DISABLED,
         step: state.step - 1,
         valueInputPassword: ''
       }));
@@ -121,8 +125,10 @@ class DeleteDeviceWrapperPopup extends Component {
         if (device.checked) deviceIdsChecked.push(device.deviceId);
         return device;
       });
-      const isDisabledConfirmButton = !deviceIdsChecked.length;
-      return { ...state, devices, isDisabledConfirmButton, deviceIdsChecked };
+      const confirmButtonState = !deviceIdsChecked.length
+        ? ButtonState.DISABLED
+        : ButtonState.ENABLED;
+      return { ...state, confirmButtonState, devices, deviceIdsChecked };
     });
   };
 
@@ -143,6 +149,9 @@ class DeleteDeviceWrapperPopup extends Component {
   };
 
   requestDeleteDevices = async () => {
+    this.setState({
+      confirmButtonState: ButtonState.LOADING
+    });
     const params = {
       recipientId: this.recipientId,
       domain: this.domain,
@@ -162,6 +171,9 @@ class DeleteDeviceWrapperPopup extends Component {
   };
 
   requestFindDevices = async () => {
+    this.setState({
+      confirmButtonState: ButtonState.LOADING
+    });
     const [recipientId, domain] = this.props.emailAddress.split('@');
     this.recipientId = recipientId;
     this.domain = domain || appDomain;
@@ -184,18 +196,24 @@ class DeleteDeviceWrapperPopup extends Component {
         };
       });
       this.setState(state => ({
+        confirmButtonState: ButtonState.ENABLED,
         devices,
-        isDisabledConfirmButton: true,
         step: state.step + 1
       }));
       this.token = res.body.token;
     } else if (res.status === 400) {
       const errorInputPassword =
         deleteDevices[this.state.step].inputs.password.error;
-      this.setState({ errorInputPassword });
+      this.setState({
+        errorInputPassword,
+        confirmButtonState: ButtonState.DISABLED
+      });
     } else if (res.status === 429) {
       const popup = popupType.TOO_MANY_REQUEST;
       this.props.setPopupContent(popup);
+      this.setState({
+        confirmButtonState: ButtonState.ENABLED
+      });
     }
   };
 }
