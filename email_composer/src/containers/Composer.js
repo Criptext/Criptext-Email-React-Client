@@ -594,25 +594,16 @@ class ComposerWrapper extends Component {
       return;
     }
     const hasNonCriptextRecipients = !!this.checkNonCriptextRecipients();
-    const isVerified = this.state.nonCriptextRecipientsVerified;
     const recipientsAmount =
       this.state.toEmails.length +
       this.state.ccEmails.length +
       this.state.bccEmails.length;
-    if (
-      hasNonCriptextRecipients &&
-      !isVerified &&
-      myAccount.encryptToExternals
-    ) {
-      this.setState({ displayNonCriptextPopup: true });
-    } else if (recipientsAmount >= MAX_RECIPIENTS_AMOUNT) {
+    if (recipientsAmount >= MAX_RECIPIENTS_AMOUNT) {
       this.setState({ status: Status.DISABLED }, () => {
         throwError(string.errors.tooManyRecipients);
       });
     } else {
-      const isEmailSecure = hasNonCriptextRecipients
-        ? !!this.state.nonCriptextRecipientsPassword
-        : !hasNonCriptextRecipients;
+      const isEmailSecure = !hasNonCriptextRecipients;
       this.sendMessage(isEmailSecure);
     }
   };
