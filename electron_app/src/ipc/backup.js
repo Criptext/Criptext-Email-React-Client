@@ -184,13 +184,15 @@ const initAutoBackupMonitor = async () => {
         backupPath: `${autoBackupPath}/${backupFileName}`
       });
       const timeUnit = defineUnitToAppend(autoBackupFrequency);
-      const nextDate = moment(autoBackupNextDate)
-        .add(1, timeUnit)
-        .format(backupDateFormat);
+      const today = moment(Date.now());
+      const nextDate = moment(autoBackupNextDate);
+      do {
+        nextDate.add(1, timeUnit);
+      } while (nextDate.isBefore(today));
       await updateSettings({
-        autoBackupLastDate: pendingDate,
+        autoBackupLastDate: pendingDate.format(backupDateFormat),
         autoBackupLastSize: backupSize,
-        autoBackupNextDate: nextDate
+        autoBackupNextDate: nextDate.format(backupDateFormat)
       });
       initAutoBackupMonitor();
     } catch (backupErr) {
