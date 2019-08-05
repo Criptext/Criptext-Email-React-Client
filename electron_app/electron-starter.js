@@ -8,6 +8,7 @@ const loginWindow = require('./src/windows/login');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
+const { spawn } = require('child_process')
 const { createAppMenu } = require('./src/windows/menu');
 const {
   showWindows, 
@@ -29,6 +30,21 @@ const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
 
+const alicePath = "../signal_interface/build/Release/alice"
+let alice = null;
+const startAlice = () => {
+  if (!alice) {
+    alice = spawn(alicePath);
+    alice.stdout.on('data', (data) => {
+      console.log(`alice :\n${data}`);
+    });
+    alice.on('exit', (code, signal) => {
+      console.log('alice exited with ' + `code ${code} and signal ${signal}`);
+      alice = null;
+    });
+  }
+}
+
 async function initApp() {
   try {
     await dbManager.createTables();
@@ -36,6 +52,8 @@ async function initApp() {
   } catch (ex) {
     console.log(ex);
   }
+
+  startAlice();
 
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
@@ -117,5 +135,8 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
+  if (alice) {
+    alice.kill();
+  }
   globalManager.forcequit.set(true);
 });

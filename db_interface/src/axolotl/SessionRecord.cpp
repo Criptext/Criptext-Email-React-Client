@@ -22,7 +22,7 @@ CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, string rec
   }
 
   char *record = strdup(query.getColumn(2).getText());
-  SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record, query.getColumn(3).getInt() };
+  SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record, (size_t)query.getColumn(3).getInt() };
   return sessionRecord;
 }
 
@@ -38,7 +38,7 @@ vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, s
 
     while (query.executeStep()) {
       char *record = strdup(query.getColumn(1).getText());
-      CriptextDB::SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record, query.getColumn(3).getInt() };
+      CriptextDB::SessionRecord sessionRecord = { query.getColumn(0).getString(), (long)query.getColumn(1).getInt(), record, (size_t)query.getColumn(3).getInt() };
       sessionRecords.push_back(sessionRecord);
     }
   } catch (exception& e) {

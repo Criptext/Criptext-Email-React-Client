@@ -61,7 +61,6 @@ int session_store_store_session(const signal_protocol_address *address, uint8_t 
 
 int session_store_contains_session(const signal_protocol_address *address, void *user_data)
 {
-    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
 
@@ -76,7 +75,6 @@ int session_store_contains_session(const signal_protocol_address *address, void 
 
 int session_store_delete_session(const signal_protocol_address *address, void *user_data)
 {
-    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(address->name);
     int deviceId = address->device_id;
     bool success = CriptextDB::deleteSessionRecord("../../electron_app/Criptext.db", recipientId, deviceId);
@@ -86,7 +84,6 @@ int session_store_delete_session(const signal_protocol_address *address, void *u
 
 int session_store_delete_all_sessions(const char *name, size_t name_len, void *user_data)
 {
-    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     std::string recipientId = std::string(name, name_len);
     bool success = CriptextDB::deleteSessionRecords("../../electron_app/Criptext.db", recipientId);
 
