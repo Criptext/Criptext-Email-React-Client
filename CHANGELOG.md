@@ -1,16 +1,61 @@
 # Change Log
 
-## [0.20.0](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
+## [Unreleased](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
 
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.19.1...HEAD)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.22.0...HEAD)
+
+**Merged pull requests:**
+
+- Fix socket [\#1107](https://github.com/Criptext/Criptext-Email-React-Client/pull/1107) ([erikaperugachi](https://github.com/erikaperugachi))
+
+## [0.22.0](https://github.com/criptext/Criptext-Email-React-Client/tree/0.22.0) (2019-08-05)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.19.1...0.22.0)
+
+**Implemented enhancements:**
+
+- Scheduled Backups [\#1094](https://github.com/Criptext/Criptext-Email-React-Client/issues/1094)
+- Detail issues [\#1084](https://github.com/Criptext/Criptext-Email-React-Client/issues/1084)
+- Add scrollbar by theme [\#1079](https://github.com/Criptext/Criptext-Email-React-Client/issues/1079)
+
+**Fixed bugs:**
+
+- Composer: Filter invalid fileKeys [\#1101](https://github.com/Criptext/Criptext-Email-React-Client/issues/1101)
+- Fix delete draft [\#1089](https://github.com/Criptext/Criptext-Email-React-Client/issues/1089)
+- Threads: Fix scroll [\#1086](https://github.com/Criptext/Criptext-Email-React-Client/issues/1086)
+- Composer: Fix forward/reply email about UI and recipients [\#1085](https://github.com/Criptext/Criptext-Email-React-Client/issues/1085)
+- Composer: Don't let attach folder in drag and drop [\#1082](https://github.com/Criptext/Criptext-Email-React-Client/issues/1082)
+- App: Fix username on no-existing account [\#1075](https://github.com/Criptext/Criptext-Email-React-Client/issues/1075)
+- "error generating the keys"  [\#1073](https://github.com/Criptext/Criptext-Email-React-Client/issues/1073)
 
 **Closed issues:**
 
+- Login: Add link contact support [\#1098](https://github.com/Criptext/Criptext-Email-React-Client/issues/1098)
+- Login: Remove devices [\#1096](https://github.com/Criptext/Criptext-Email-React-Client/issues/1096)
+- Settings: Appear/disappear signature section [\#1091](https://github.com/Criptext/Criptext-Email-React-Client/issues/1091)
+- Composer: UI to edit bubble contact [\#1081](https://github.com/Criptext/Criptext-Email-React-Client/issues/1081)
+- Contact: Add spam score [\#1070](https://github.com/Criptext/Criptext-Email-React-Client/issues/1070)
+- File: Inline image with mimeType inside params [\#1069](https://github.com/Criptext/Criptext-Email-React-Client/issues/1069)
+- App: Local backup to filesystem [\#1028](https://github.com/Criptext/Criptext-Email-React-Client/issues/1028)
 - Composer: Send new param \(type\) in postEmail\(\) [\#830](https://github.com/Criptext/Criptext-Email-React-Client/issues/830)
 - Composer: Detect enterprise domain to contact bubble [\#285](https://github.com/Criptext/Criptext-Email-React-Client/issues/285)
 
 **Merged pull requests:**
 
+- Version 0.22.0 [\#1102](https://github.com/Criptext/Criptext-Email-React-Client/pull/1102) ([erikaperugachi](https://github.com/erikaperugachi))
+- Automatic backup [\#1100](https://github.com/Criptext/Criptext-Email-React-Client/pull/1100) ([JulianAdams4](https://github.com/JulianAdams4))
+- Contact [\#1099](https://github.com/Criptext/Criptext-Email-React-Client/pull/1099) ([erikaperugachi](https://github.com/erikaperugachi))
+- Remove devices from login. Close \#1096 [\#1097](https://github.com/Criptext/Criptext-Email-React-Client/pull/1097) ([erikaperugachi](https://github.com/erikaperugachi))
+- Connection [\#1095](https://github.com/Criptext/Criptext-Email-React-Client/pull/1095) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fixes backup: Export popup [\#1093](https://github.com/Criptext/Criptext-Email-React-Client/pull/1093) ([JulianAdams4](https://github.com/JulianAdams4))
+- Add toggle to edit signature. Close \#1091 [\#1092](https://github.com/Criptext/Criptext-Email-React-Client/pull/1092) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fix delete draft [\#1090](https://github.com/Criptext/Criptext-Email-React-Client/pull/1090) ([erikaperugachi](https://github.com/erikaperugachi))
+- Mailbox Backup:  Export & Restore ☠ [\#1088](https://github.com/Criptext/Criptext-Email-React-Client/pull/1088) ([JulianAdams4](https://github.com/JulianAdams4))
+- Composer [\#1087](https://github.com/Criptext/Criptext-Email-React-Client/pull/1087) ([erikaperugachi](https://github.com/erikaperugachi))
+- Composer: fix drag and drop folder and add UI to bubble contact to edit [\#1083](https://github.com/Criptext/Criptext-Email-React-Client/pull/1083) ([erikaperugachi](https://github.com/erikaperugachi))
+- Image mimetype and scrollbar [\#1080](https://github.com/Criptext/Criptext-Email-React-Client/pull/1080) ([erikaperugachi](https://github.com/erikaperugachi))
+- hot fix 🤪 [\#1077](https://github.com/Criptext/Criptext-Email-React-Client/pull/1077) ([erikaperugachi](https://github.com/erikaperugachi))
+- SignUp: Fix username on no-existing account [\#1076](https://github.com/Criptext/Criptext-Email-React-Client/pull/1076) ([JulianAdams4](https://github.com/JulianAdams4))
+- Spam [\#1074](https://github.com/Criptext/Criptext-Email-React-Client/pull/1074) ([erikaperugachi](https://github.com/erikaperugachi))
 - Domain [\#1072](https://github.com/Criptext/Criptext-Email-React-Client/pull/1072) ([erikaperugachi](https://github.com/erikaperugachi))
 - Composer: Send new param \(type\) in postEmail [\#1071](https://github.com/Criptext/Criptext-Email-React-Client/pull/1071) ([JulianAdams4](https://github.com/JulianAdams4))
 
