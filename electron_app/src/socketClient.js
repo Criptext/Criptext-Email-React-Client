@@ -126,8 +126,14 @@ const checkAlive = () => {
       (err, stdout, stderr) => {
         let totalLost = 0;
         if (stdout) {
-          const [lostPackages] = stdout.toString().match(percentRegex);
-          totalLost = Number(lostPackages.replace('%', ''));
+          const stdoutString = stdout.toString();
+          if (stdoutString) {
+            const match = stdoutString.match(percentRegex);
+            if (match) {
+              const [lostPackages] = match;
+              totalLost = Number(lostPackages.replace('%', ''));
+            }
+          }
         }
         if (err !== null || !!stderr || totalLost > 50) {
           if (pingFailedCounter === 0) {
