@@ -6,7 +6,7 @@ const Button = props => (
   <button
     className={defineClassButton(props.type, props.state)}
     disabled={defineDisabledParam(props.state)}
-    onClick={e => props.onClick(e)}
+    onClick={e => props.onClick(e, props.id)}
   >
     {renderContentButton(props.state, props.text)}
     &nbsp;
@@ -56,8 +56,8 @@ const renderLoading = () => (
 );
 
 export const ButtonType = {
-  POPUP_CONFIRM: 'button-a',
-  POPUP_CANCEL: 'button-b',
+  POPUP_CONFIRM: 'button-a popup-confirm-button',
+  POPUP_CANCEL: 'button-a popup-cancel-button',
   BASIC: 'button-c'
 };
 
@@ -69,10 +69,11 @@ export const ButtonState = {
 
 // eslint-disable-next-line fp/no-mutation
 Button.propTypes = {
+  id: PropTypes.number,
   onClick: PropTypes.func,
+  state: PropTypes.number,
   text: PropTypes.string,
-  type: PropTypes.string,
-  state: PropTypes.number
+  type: PropTypes.string
 };
 
 export default Button;
