@@ -31,6 +31,15 @@
   "build": {
     "appId": "com.criptext.criptextmail",
     "buildVersion": "1",
+    "extraResources": [
+      {
+        "from": "../signal_interface/build/Release/",
+        "to": "extraResources",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "mac": {
       "target": [
         "mas",

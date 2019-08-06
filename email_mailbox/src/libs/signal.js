@@ -3,7 +3,7 @@ import { getSessionRecordIds, insertPreKeys } from './../utils/ipc';
 import SignalProtocolStore from './store';
 import { fetchEmailBody } from '../utils/FetchUtils';
 import { fetchDecryptBody } from '../utils/ApiUtils';
-import { myAccount } from '../utils/electronInterface'
+import { myAccount } from '../utils/electronInterface';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -36,13 +36,17 @@ const decryptEmail = async ({
     headers: body.headers,
     headersMessageType: messageType,
     fileKeys: fileKeys
-  })
+  });
   if (res.status !== 200) {
     return {
       decryptedBody: 'Content Unencrypted'
-    }
+    };
   }
-  const { decryptedBody = null, decryptedHeaders = null, decryptedFileKeys = null } = await res.json();
+  const {
+    decryptedBody = null,
+    decryptedHeaders = null,
+    decryptedFileKeys = null
+  } = await res.json();
   return {
     decryptedBody,
     decryptedHeaders,

@@ -152,6 +152,7 @@ const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
 };
 
 renderMailboxPopup.propTypes = {
+  onCloseMailboxPopup: PropTypes.func,
   isHidden: PropTypes.bool,
   props: PropTypes.object,
   type: PropTypes.string

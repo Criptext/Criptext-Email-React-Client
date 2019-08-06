@@ -15,7 +15,7 @@ import {
 } from './../utils/EncryptionUtils';
 import string from './../lang';
 import { appDomain } from '../utils/const';
-import { createSession, encryptEmail } from '../utils/ApiUtils'
+import { createSession, encryptEmail } from '../utils/ApiUtils';
 import { myAccount } from '../utils/electronInterface';
 
 const KeyHelper = libsignal.KeyHelper;
@@ -80,20 +80,21 @@ const createEmails = async (
   peer,
   files
 ) => {
-  const myKeyBundles = keyBundles.map( keybundle => {
+  const myKeyBundles = keyBundles.map(keybundle => {
     return {
       ...keybundle,
-      recipientId: keybundle.domain === appDomain 
-        ? keybundle.recipientId 
-        : `${keybundle.recipientId}@${keybundle.domain}`
-    }
-  })
+      recipientId:
+        keybundle.domain === appDomain
+          ? keybundle.recipientId
+          : `${keybundle.recipientId}@${keybundle.domain}`
+    };
+  });
   while (myKeyBundles.length > 0) {
     const keyBundlesBatch = myKeyBundles.splice(0, 30);
     await createSession({
       accountRecipientId: myAccount.recipientId,
       keybundles: keyBundlesBatch
-    })
+    });
   }
 
   const criptextEmailsByRecipientId = {};
@@ -119,7 +120,10 @@ const createEmails = async (
 
     const knownDeviceIds =
       domainAddresses[domainIndex].knownAddresses[username] || [];
-    const newDevicesIds = keyBundles.filter(keybundle => keybundle.username === username && keybundle.domain === domain)
+    const newDevicesIds = keyBundles.filter(
+      keybundle =>
+        keybundle.username === username && keybundle.domain === domain
+    );
     const deviceIds = [...knownDeviceIds, ...newDevicesIds];
     await Promise.all(
       deviceIds
@@ -132,12 +136,12 @@ const createEmails = async (
         })
         .map(async deviceId => {
           const fileKeys = files
-            ? files.reduce( (result, file) => {
-              if (!file.key || !file.iv) {
-                return result;
-              }
-              return [...result, `${file.key}:${file.iv}`];
-            }, []) 
+            ? files.reduce((result, file) => {
+                if (!file.key || !file.iv) {
+                  return result;
+                }
+                return [...result, `${file.key}:${file.iv}`];
+              }, [])
             : null;
           const res = await encryptEmail({
             accountRecipientId: myAccount.recipientId,
@@ -148,13 +152,16 @@ const createEmails = async (
             deviceId
           });
           const {
-            bodyEncrypted, 
-            previewEncrypted, 
-            bodyMessageType, 
+            bodyEncrypted,
+            previewEncrypted,
+            bodyMessageType,
             previewMessageType,
             fileKeysEncrypted
           } = await res.json();
-          const fileKey = (fileKeysEncrypted && fileKeysEncrypted.length > 0) ? fileKeysEncrypted[0] : null;
+          const fileKey =
+            fileKeysEncrypted && fileKeysEncrypted.length > 0
+              ? fileKeysEncrypted[0]
+              : null;
 
           let criptextEmail = {
             recipientId: username,
@@ -165,7 +172,11 @@ const createEmails = async (
             previewMessageType: previewMessageType
           };
           if (fileKey) {
-            criptextEmail = { ...criptextEmail, fileKey: fileKey, fileKeys: fileKeysEncrypted };
+            criptextEmail = {
+              ...criptextEmail,
+              fileKey: fileKey,
+              fileKeys: fileKeysEncrypted
+            };
           }
           criptextEmailsByRecipientId[recipientId]['emails'].push(
             criptextEmail
@@ -219,7 +230,6 @@ const encryptPostEmail = async ({
       )
     );
   }
-  console.log(keyBundles);
   const criptextEmails = await createEmails(
     body,
     preview,
@@ -230,7 +240,6 @@ const encryptPostEmail = async ({
     peer,
     files
   );
-  console.log(criptextEmails);
   const guestEmail = await createGuestEmail({
     externalEmailPassword,
     recipients,
@@ -243,7 +252,7 @@ const encryptPostEmail = async ({
     threadId,
     criptextEmails,
     guestEmail,
-    files: !!files ? files : null
+    files: files ? files : null
   });
   const res = await postEmail(data);
   if (res.status === 429) {

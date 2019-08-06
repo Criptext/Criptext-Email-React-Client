@@ -1,9 +1,6 @@
-const aliceUrl = "http://localhost:8085"
+const aliceUrl = 'http://localhost:8085';
 
-export const createSession = async ({
-  accountRecipientId,
-  keybundles
-}) => {
+export const createSession = async ({ accountRecipientId, keybundles }) => {
   const requestUrl = `${aliceUrl}/session/create`;
   const options = {
     method: 'POST',

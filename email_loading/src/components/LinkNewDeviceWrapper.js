@@ -64,7 +64,7 @@ class LoadingWrapper extends Component {
     this.setState({ message: messages.sendingKeys, pauseAt: 10 }, async () => {
       this.incrementPercentage();
       await setTimeout(async () => {
-        const { name, recipientId, deviceId, deviceType} = remoteData;
+        const { name, recipientId, deviceId, deviceType } = remoteData;
         await this.uploadKeys({ deviceType, recipientId, deviceId, name });
       }, ANIMATION_DURATION);
     });
@@ -102,7 +102,7 @@ class LoadingWrapper extends Component {
     this.tm = setTimeout(this.incrementPercentage, this.state.delay);
   };
 
-  uploadKeys = async (params) => {
+  uploadKeys = async params => {
     try {
       const accountData = await signal.uploadKeys(params);
       if (!accountData) {

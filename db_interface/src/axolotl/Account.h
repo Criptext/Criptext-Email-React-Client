@@ -13,6 +13,7 @@ namespace CriptextDB {
     char* privKey;
     char* pubKey;
     int registrationId;
+    char* dbPath;
   };
 
   Account getAccount(string dbPath, char* recipientId);

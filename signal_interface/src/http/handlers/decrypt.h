@@ -6,5 +6,5 @@
 #include "helpers.h"
 #include "../../crypto/signal.h"
 
-int postDecryptEmail(struct mg_connection *conn, void *cbdata);
-int postDecryptKey(struct mg_connection *conn, void *cbdata);
+int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath);
+int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath);

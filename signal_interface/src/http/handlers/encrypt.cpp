@@ -1,6 +1,6 @@
 #include "encrypt.h"
 
-int postEncryptKey(struct mg_connection *conn, void *cbdata) {
+int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -12,7 +12,7 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata) {
 
   if ((dlen < 1) || (dlen >= sizeof(buffer))) {
     std::cout << "Receiving Request Fail 1" << std::endl;
-    mg_send_http_error(conn, 400, "%s", "No request data");
+    mg_send_http_error(conn, 400, "%s", "Body data too big");
     return 400;
   }
   buffer[dlen] = 0;
@@ -20,7 +20,7 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata) {
   
   if (obj == NULL) {
     std::cout << "Receiving Request Fail 2 : " << buffer << std::endl;
-    mg_send_http_error(conn, 400, "%s", "No request data");
+    mg_send_http_error(conn, 400, "%s", "Not a json object");
     return 400;
   }
   std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
@@ -32,11 +32,11 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata) {
   key = cJSON_GetObjectItemCaseSensitive(keyData, "data");
 
   if (!cJSON_IsString(recipientId) || !cJSON_IsNumber(deviceId)) {
-    mg_send_http_error(conn, 400, "%s", "No request data");
+    mg_send_http_error(conn, 400, "%s", "Missing params");
     return 400;
   }
 
-  CriptextSignal signal(recipientId->valuestring);
+  CriptextSignal signal(recipientId->valuestring, dbPath);
 
   size_t keyLength = 16;
   char *encryptedText = 0;
@@ -67,7 +67,7 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata) {
   return 200;
 }
 
-int postEncryptEmail(struct mg_connection *conn, void *cbdata) {
+int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -105,7 +105,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata) {
     return 400;
   }
 
-  CriptextSignal signal(accountRecipientId->valuestring);
+  CriptextSignal signal(accountRecipientId->valuestring, dbPath);
 
   char *encryptedBody = 0;
   int encryptedBodyType = 0;

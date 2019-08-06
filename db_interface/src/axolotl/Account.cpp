@@ -4,16 +4,18 @@
 using namespace std;
 
 CriptextDB::Account CriptextDB::getAccount(string dbPath, char *recipientId) {
+  std::cout << "A : " << dbPath << std::endl;
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "select * from account where recipientId == ?");
   query.bind(1, recipientId);
-
+  std::cout << "B" << std::endl;
   query.executeStep();
-
+  std::cout << "C" << std::endl;
   char *privKey = strdup(query.getColumn(6).getText());
   char *pubKey = strdup(query.getColumn(7).getText());
   Account account = { privKey, pubKey, query.getColumn(5).getInt() };
+  std::cout << "D" << std::endl;
   return account;
 }
 

@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MigrationPopup from './MigrationPopup';
-import { getComputerName, migrateAlice, upgradeAccount, logoutApp } from './../utils/ipc';
-import { createAccountCredentials, generateKeyBundle } from './../utils/ApiUtils';
-import { getDeviceType } from './../utils/electronInterface'
 import {
-  getGroupEvents
-} from './../utils/electronEventInterface';
+  getComputerName,
+  migrateAlice,
+  upgradeAccount,
+  logoutApp
+} from './../utils/ipc';
+import {
+  createAccountCredentials,
+  generateKeyBundle
+} from './../utils/ApiUtils';
+import { getDeviceType } from './../utils/electronInterface';
+import { getGroupEvents } from './../utils/electronEventInterface';
 import string from '../lang';
 
-const { step1, step2, step3, step4, step5 } = string.popups.migration.paragraphs;
+const {
+  step1,
+  step2,
+  step3,
+  step4,
+  step5
+} = string.popups.migration.paragraphs;
 const errors = string.popups.migration.errorMessages;
 
 const MIGRATION_STATUS = {
@@ -58,8 +70,8 @@ class MigrationPopupWrapper extends Component {
   }
 
   componentDidMount() {
-    setTimeout( () => {
-      this.handleStartMigration()
+    setTimeout(() => {
+      this.handleStartMigration();
     }, 1500);
   }
 
@@ -77,21 +89,27 @@ class MigrationPopupWrapper extends Component {
 
   handlePendingEvents = async () => {
     try {
-      await getGroupEvents({showNotification: false, shouldGetMoreEvents: false, useLegacy: true});
+      await getGroupEvents({
+        showNotification: false,
+        shouldGetMoreEvents: false,
+        useLegacy: true
+      });
     } catch (ex) {
-      console.log(ex);
       return this.setState({
         errorMessage: errors.parseEvents,
         shouldRetry: true,
         shouldRestart: false
-      })
+      });
     }
 
-    this.setState({
-      step: MIGRATION_STATUS.NEW_SESSION
-    }, () => {
-      this.migrateAccount()
-    })
+    this.setState(
+      {
+        step: MIGRATION_STATUS.NEW_SESSION
+      },
+      () => {
+        this.migrateAccount();
+      }
+    );
   };
 
   migrateAccount = async () => {
@@ -101,7 +119,7 @@ class MigrationPopupWrapper extends Component {
         errorMessage: errors.retrieveAccount,
         shouldRetry: false,
         shouldRestart: true
-      })
+      });
       return;
     }
     const res = await createAccountCredentials({
@@ -112,17 +130,20 @@ class MigrationPopupWrapper extends Component {
     if (res.status !== 200) {
       this.setState({
         errorMessage: errors.credentials
-      })
+      });
       return;
     }
-    const keybundleRes = await generateKeyBundle({recipientId: account.recipientId, deviceId: 0})
+    const keybundleRes = await generateKeyBundle({
+      recipientId: account.recipientId,
+      deviceId: 0
+    });
     if (keybundleRes.status !== 200) {
       this.setState({
         errorMessage: errors.keys,
         shouldRetry: false,
         shouldRestart: true
-      })
-      return 
+      });
+      return;
     }
     const keybundle = await keybundleRes.json();
     const pcName = await getComputerName();
@@ -133,22 +154,24 @@ class MigrationPopupWrapper extends Component {
       deviceType,
       ...keybundle
     };
-    
-    this.setState({
-      step: MIGRATION_STATUS.UPGRADE,
-      retryData: {
-        account: {
-          recipientId: account.recipientId,
-          signature: account.signature,
-          signatureEnabled: account.signatureEnabled
-        }, 
-        keyBundle: keybundleData
+
+    this.setState(
+      {
+        step: MIGRATION_STATUS.UPGRADE,
+        retryData: {
+          account: {
+            recipientId: account.recipientId,
+            signature: account.signature,
+            signatureEnabled: account.signatureEnabled
+          },
+          keyBundle: keybundleData
+        }
+      },
+      () => {
+        this.handleUpgradeAccount();
       }
-    }, () => {
-      this.handleUpgradeAccount()
-    })
-    
-  }
+    );
+  };
 
   handleUpgradeAccount = async () => {
     const upgradeData = { ...this.state.retryData };
@@ -159,40 +182,43 @@ class MigrationPopupWrapper extends Component {
         errorMessage: errors.upgrade,
         shouldRetry: true,
         shouldRestart: false
-      })
-      return
+      });
+      return;
     }
 
-    this.setState({
-      step: MIGRATION_STATUS.SUCCEDED
-    }, () => {
-      setTimeout( () => {
-        this.props.onCloseMailboxPopup()
-      }, 1000)
-    })
-  }
+    this.setState(
+      {
+        step: MIGRATION_STATUS.SUCCEDED
+      },
+      () => {
+        setTimeout(() => {
+          this.props.onCloseMailboxPopup();
+        }, 1000);
+      }
+    );
+  };
 
   handleRetryUpgrade = () => {
     this.setState({
       shouldRetry: null,
       shouldRestart: null
-    })
+    });
     const retryData = { ...this.state.retryData };
-    
-    switch(this.state.step) {
+
+    switch (this.state.step) {
       case MIGRATION_STATUS.PENDING_EVENTS: {
         this.handlePendingEvents();
         break;
       }
       case MIGRATION_STATUS.UPGRADE: {
         this.handleUpgradeAccount(retryData);
+        break;
       }
       default: {
         break;
       }
     }
-  }
-
+  };
 }
 
 MigrationPopupWrapper.propTypes = {

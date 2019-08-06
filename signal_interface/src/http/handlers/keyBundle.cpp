@@ -1,6 +1,6 @@
 #include "keyBundle.h"
 
-int createKeyBundle(struct mg_connection *conn, void *cbdata) {
+int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -30,14 +30,14 @@ int createKeyBundle(struct mg_connection *conn, void *cbdata) {
     return 400;
   }
 
-  CriptextSignal signal(recipientId->valuestring);
+  CriptextSignal signal(recipientId->valuestring, dbPath);
   cJSON *bundle = cJSON_CreateObject();
   signal.generateKeyBundle(bundle, recipientId->valuestring, deviceId->valueint);
 
   return SendJSON(conn, bundle);
 }
 
-int createAccount(struct mg_connection *conn, void *cbdata) {
+int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -73,7 +73,7 @@ int createAccount(struct mg_connection *conn, void *cbdata) {
   char *privKey;
   int regId;
   int result = CriptextSignal::createAccountCredentials(&publicKey, &privKey, &regId);
-  result = CriptextDB::createAccount("../../electron_app/Criptext.db", recipientId->valuestring, name->valuestring, deviceId->valueint, publicKey, privKey, regId);
+  result = CriptextDB::createAccount(string(dbPath), recipientId->valuestring, name->valuestring, deviceId->valueint, publicKey, privKey, regId);
 
   if (result < 0) {
     mg_send_http_error(conn, 500, "%s", "Unable To Create Account");
@@ -85,7 +85,7 @@ int createAccount(struct mg_connection *conn, void *cbdata) {
   return 1;
 }
 
-int processKeyBundle(struct mg_connection *conn, void *cbdata) {
+int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -116,7 +116,7 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata) {
     return 400;
   }
 
-  CriptextSignal signal(accountRecipientId->valuestring);
+  CriptextSignal signal(accountRecipientId->valuestring, dbPath);
   cJSON *keyBundleObj = NULL;
   cJSON_ArrayForEach(keyBundleObj, keybundleArray) {
 

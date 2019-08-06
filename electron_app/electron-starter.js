@@ -9,6 +9,7 @@ const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { spawn } = require('child_process')
+const path = require('path');
 const { createAppMenu } = require('./src/windows/menu');
 const {
   showWindows, 
@@ -30,13 +31,25 @@ const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
 
-const alicePath = "../signal_interface/build/Release/alice"
+const getAlicePath = nodeEnv => {
+  switch (nodeEnv) {
+    case 'development': {
+      return path.join(__dirname, '../signal_interface/build/Release/alice')
+    }
+    default: {
+      return path.join(path.dirname(__dirname), 'extraResources','alice');
+    }
+  }
+}
+
 let alice = null;
 const startAlice = () => {
   if (!alice) {
-    alice = spawn(alicePath);
+    const alicePath = getAlicePath(process.env.NODE_ENV);
+    const dbpath = path.resolve(dbManager.databasePath);
+    alice = spawn(alicePath, [dbpath]);
     alice.stdout.on('data', (data) => {
-      console.log(`alice :\n${data}`);
+      console.log(`-----alice-----\n${data}\n -----end-----`);
     });
     alice.on('exit', (code, signal) => {
       console.log('alice exited with ' + `code ${code} and signal ${signal}`);

@@ -7,10 +7,13 @@
 
 int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void *user_data)
 {
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
+    string dbPath(account->dbPath);
+
     CriptextDB::PreKey preKey;
 
     try {
-        preKey = CriptextDB::getPreKey("../../electron_app/Criptext.db", pre_key_id);
+        preKey = CriptextDB::getPreKey(dbPath, pre_key_id);
     } catch (exception& e){
         return 0;
     }
@@ -24,22 +27,27 @@ int pre_key_store_load_pre_key(signal_buffer **record, uint32_t pre_key_id, void
     return 1;
 }
 
-int pre_key_store_store_pre_key(uint32_t pre_key_id, uint8_t *record, size_t record_len, void *user_data)
-{
+int pre_key_store_store_pre_key(uint32_t pre_key_id, uint8_t *record, size_t record_len, void *user_data) {
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
+    string dbPath(account->dbPath);
+
     size_t len = 0;
     const unsigned char *myRecord = reinterpret_cast<const unsigned char *>(record);
     char *recordBase64 = reinterpret_cast<char *>(base64_encode(myRecord, record_len, &len));
 
-    bool success = CriptextDB::createPreKey("../../electron_app/Criptext.db", pre_key_id, recordBase64, len);
+    bool success = CriptextDB::createPreKey(dbPath, pre_key_id, recordBase64, len);
     return success ? 1 : 0;
 }
 
 int pre_key_store_contains_pre_key(uint32_t pre_key_id, void *user_data)
 {
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
+    string dbPath(account->dbPath);
+
     CriptextDB::PreKey preKey;
 
     try {
-        preKey = CriptextDB::getPreKey("../../electron_app/Criptext.db", pre_key_id);
+        preKey = CriptextDB::getPreKey(dbPath, pre_key_id);
     } catch (exception& e){
         return 0;
     }
@@ -48,8 +56,11 @@ int pre_key_store_contains_pre_key(uint32_t pre_key_id, void *user_data)
 }
 
 int pre_key_store_remove_pre_key(uint32_t pre_key_id, void *user_data) {
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
+    string dbPath(account->dbPath);
+
     std::cout << "REMOVE PREKEY" << std::endl;
-    bool success = CriptextDB::deletePreKey("../../electron_app/Criptext.db", pre_key_id);
+    bool success = CriptextDB::deletePreKey(dbPath, pre_key_id);
     return success ? 1 : 0;
 }
 

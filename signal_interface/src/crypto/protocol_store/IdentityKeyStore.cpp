@@ -31,12 +31,14 @@ int identity_key_store_get_local_registration_id(void *user_data, uint32_t *regi
 
 int identity_key_store_save_identity(const signal_protocol_address *address, uint8_t *key_data, size_t key_len, void *user_data)
 {
+    CriptextDB::Account *account = (CriptextDB::Account*)user_data;
+    string dbPath(account->dbPath);
     string recipientId = std::string(address->name);
     int deviceId = address->device_id;
 
     char *identityKey = reinterpret_cast<char *>(key_data);
     std::cout << identityKey << std::endl;
-    CriptextDB::createIdentityKey("../../electron_app/Criptext.db", recipientId, deviceId, identityKey);
+    CriptextDB::createIdentityKey(dbPath, recipientId, deviceId, identityKey);
     return 1;
 }
 

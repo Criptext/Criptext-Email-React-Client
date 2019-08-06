@@ -1,5 +1,3 @@
-/*global libsignal util*/
-
 import {
   myAccount,
   LabelType,
@@ -21,15 +19,17 @@ import {
   getAllLabels,
   getContactByEmails
 } from './../utils/ipc';
-import { createAccountCredentials, generateKeyBundle, 
-  fetchDecryptKey, createSession, encryptKey } from './../utils/ApiUtils';
+import {
+  createAccountCredentials,
+  generateKeyBundle,
+  fetchDecryptKey,
+  createSession,
+  encryptKey
+} from './../utils/ApiUtils';
 import { CustomError } from './../utils/CustomError';
-import SignalProtocolStore from './store';
 import { appDomain } from './../utils/const';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 import string from './../lang';
-
-const store = new SignalProtocolStore();
 
 const createAccount = async ({
   recipientId,
@@ -49,7 +49,7 @@ const createAccount = async ({
     name,
     deviceId: 1,
     deviceType
-  })
+  });
   const { status, body, headers } = await postUser({
     recipientId,
     password,
@@ -94,12 +94,21 @@ const createAccount = async ({
   return true;
 };
 
-const createAcountAndGetKeyBundle = async ({ recipientId, deviceId, name, deviceType}) => {
-  const accountRes = await createAccountCredentials({recipientId, deviceId, name});
+const createAcountAndGetKeyBundle = async ({
+  recipientId,
+  deviceId,
+  name,
+  deviceType
+}) => {
+  const accountRes = await createAccountCredentials({
+    recipientId,
+    deviceId,
+    name
+  });
   if (accountRes.status !== 200) {
     throw CustomError(string.errors.updateAccountData);
   }
-  const keybundleRes = await generateKeyBundle({recipientId, deviceId})
+  const keybundleRes = await generateKeyBundle({ recipientId, deviceId });
   if (keybundleRes.status !== 200) {
     throw CustomError(string.errors.prekeybundleFailed);
   }
@@ -113,7 +122,7 @@ const createAcountAndGetKeyBundle = async ({ recipientId, deviceId, name, device
   };
 
   return keybundle;
-}
+};
 
 const createAccountWithNewDevice = async ({
   recipientId,
@@ -127,7 +136,7 @@ const createAccountWithNewDevice = async ({
     deviceId,
     name,
     deviceType
-  })
+  });
   const { status, body } = await postKeyBundle(keybundle);
   if (status !== 200) {
     throw CustomError({
@@ -162,7 +171,7 @@ const uploadKeys = async ({ recipientId, name, deviceType, deviceId }) => {
     deviceId,
     name,
     deviceType
-  })
+  });
   const { status, body } = await postKeyBundle(keybundle);
   if (status !== 200) {
     throw CustomError({
@@ -190,8 +199,8 @@ const createAccountToDB = async ({
       jwt,
       refreshToken,
       deviceId,
-      recipientId,
-    })
+      recipientId
+    });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
@@ -245,10 +254,10 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   }
   const res = await fetchDecryptKey({
     recipientId,
-    deviceId, 
+    deviceId,
     messageType,
     key: text
-  })
+  });
   const decryptedText = await res.arrayBuffer();
   return decryptedText;
 };
@@ -265,7 +274,7 @@ const encryptKeyForNewDevice = async ({ recipientId, deviceId, key }) => {
   const res = await createSession({
     accountRecipientId: recipientId,
     keybundles: [newKeyBundle]
-  })
+  });
   if (res.status !== 200) {
     throw CustomError(string.errors.prekeybundleFailed);
   }
@@ -273,10 +282,10 @@ const encryptKeyForNewDevice = async ({ recipientId, deviceId, key }) => {
     recipientId,
     deviceId,
     key
-  }) 
+  });
   if (encryptRes.status !== 200) {
     throw CustomError(string.errors.prekeybundleFailed);
-  };
+  }
 
   const encryptedKey = await encryptRes.text();
   return encryptedKey;

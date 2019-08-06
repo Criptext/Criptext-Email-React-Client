@@ -63,5 +63,5 @@ export const cleanDataLogout = async recipientId => {
 };
 
 export const needsUpgrade = () => {
-  return globalManager.needsUpgrade.getValue()
-}
+  return globalManager.needsUpgrade.getValue();
+};

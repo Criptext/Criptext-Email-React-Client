@@ -528,7 +528,6 @@ export const restoreBackupUnencrypted = async params => {
   return await callMain('restore-backup-unencrypted', params);
 };
 
-
 export const upgradeAccount = async params => {
   return await callMain('upgrade-account', params);
-}
+};

@@ -7,6 +7,6 @@
 #include "../../crypto/signal.h"
 #include "helpers.h"
 
-int createKeyBundle(struct mg_connection *conn, void *cbdata);
-int processKeyBundle(struct mg_connection *conn, void *cbdata);
-int createAccount(struct mg_connection *conn, void *cbdata);
+int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath);
+int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath);
+int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath);

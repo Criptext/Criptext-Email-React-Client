@@ -9,7 +9,7 @@ const apiBaseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_DEV_API_URL
     : 'https://api.criptext.com';
-const aliceUrl = "http://localhost:8085";
+const aliceUrl = 'http://localhost:8085';
 // Default
 let osInfo = getOS();
 
@@ -112,8 +112,8 @@ export const createAccountCredentials = async ({
   const options = {
     method: 'POST',
     body: JSON.stringify({
-      recipientId, 
-      deviceId, 
+      recipientId,
+      deviceId,
       name
     })
   };
@@ -129,8 +129,8 @@ export const generateKeyBundle = async ({
   const options = {
     method: 'POST',
     body: JSON.stringify({
-      recipientId, 
-      deviceId, 
+      recipientId,
+      deviceId,
       accountId
     })
   };

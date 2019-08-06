@@ -8,7 +8,11 @@ import {
   checkUserGuideSteps
 } from '../utils/electronEventInterface';
 import { processPendingEvents } from '../utils/ipc';
-import { LabelType, needsUpgrade, getPendingRestoreStatus } from '../utils/electronInterface';
+import {
+  LabelType,
+  needsUpgrade,
+  getPendingRestoreStatus
+} from '../utils/electronInterface';
 import { SectionType } from '../utils/const';
 import { addLabels, setAvatarUpdatedTimestamp, stopLoadSync } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
@@ -30,7 +34,9 @@ class PanelWrapper extends Component {
   constructor(props) {
     super(props);
 
-    const mailboxType = (needsUpgrade()) ? MAILBOX_POPUP_TYPES.MIGRATE_ALICE : undefined;
+    const mailboxType = needsUpgrade()
+      ? MAILBOX_POPUP_TYPES.MIGRATE_ALICE
+      : undefined;
 
     this.state = {
       isHiddenMailboxPopup: !mailboxType,
