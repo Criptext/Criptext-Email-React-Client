@@ -125,6 +125,7 @@
 
     &:nth-child(4){
       flex-direction: column;
+      padding-bottom: 3px;
 
       .signature-switch {
         display: flex;
@@ -132,7 +133,6 @@
 
         .settings-switch-label {
           font-size: 12px;
-          margin-left: 10px;
         }
       }
 
@@ -163,6 +163,15 @@
         &:focus{
           outline: none;
         }
+      }
+    }
+
+    &:nth-child(5){
+      padding-top: 3px;
+
+      .cptx-section-item-control{
+        left: 200px;
+        top: 3px;
       }
     }
   }

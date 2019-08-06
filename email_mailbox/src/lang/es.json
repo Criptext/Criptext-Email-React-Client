@@ -652,6 +652,9 @@
     "set_email": "Establecer correo",
     "show_in_label_list": "Mostrar en lista de etiquetas",
     "signature": "Firma",
+    "sign_footer": {
+      "description": "Mostrar “Enviado con Criptext”"
+    },
     "system_labels": "Etiquetas del Sistema",
     "theme": {
       "label": "Tema",

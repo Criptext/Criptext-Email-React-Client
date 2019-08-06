@@ -1,20 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { myAccount } from './../utils/electronInterface';
-import { getTwoCapitalLetters } from './../utils/StringUtils';
+import { myAccount } from '../utils/electronInterface';
+import { getTwoCapitalLetters } from '../utils/StringUtils';
 import { appDomain } from '../utils/const';
 import { Switch } from 'react-switch-input';
 import { EDITING_MODES } from './SettingAccountWrapper';
 import { Editor } from 'react-draft-wysiwyg';
 import string from '../lang';
-import './settingsgeneralprofile.scss';
+import './settingblockprofile.scss';
 
-const SettingsGeneralProfile = props => (
+const SettingBlockProfile = props => (
   <div id="cptx-settings-profile">
     {renderBlockAvatar(props)}
     {renderBlockEmail(props)}
     {renderBlockName(props)}
     {renderBlockSignature(props)}
+    {renderBlockSignFooter(props)}
   </div>
 );
 
@@ -118,14 +119,6 @@ const renderBlockSignature = props => (
   <div className="cptx-section-item">
     <span className="cptx-section-item-title">{string.settings.signature}</span>
     <div className="signature-switch">
-      <div className="settings-switch">
-        <Switch
-          theme="two"
-          name="setPasswordSwitch"
-          onChange={props.onChangeRadioButtonSignature}
-          checked={!!myAccount.signatureEnabled}
-        />
-      </div>
       <div className="settings-switch-label">
         <span className="cptx-section-item-description">
           {`${string.settings.signature} ${
@@ -134,6 +127,14 @@ const renderBlockSignature = props => (
               : string.settings.disabled
           }`}
         </span>
+      </div>
+      <div className="settings-switch">
+        <Switch
+          theme="two"
+          name="setPasswordSwitch"
+          onChange={props.onChangeRadioButtonSignature}
+          checked={!!myAccount.signatureEnabled}
+        />
       </div>
     </div>
     {!!myAccount.signatureEnabled && (
@@ -170,6 +171,31 @@ const renderBlockSignature = props => (
   </div>
 );
 
+const renderBlockSignFooter = props => (
+  <div className="cptx-section-item">
+    <span className="cptx-section-item-description">
+      {string.settings.sign_footer.description}
+    </span>
+    <div className="cptx-section-item-control">
+      {props.signFooterSwitchStatus === SwitchStatus.LOADING ? (
+        <Loading />
+      ) : (
+        <Switch
+          theme="two"
+          name="replyToSwitch"
+          onChange={props.onSwitchSignFooter}
+          checked={defineSwitchStatus(props.signFooterSwitchStatus)}
+          disabled={props.signFooterSwitchStatus === SwitchStatus.LOADING}
+        />
+      )}
+    </div>
+  </div>
+);
+
+const defineSwitchStatus = status => {
+  return status === SwitchStatus.ENABLED;
+};
+
 const Loading = () => (
   <div className="loading-ring">
     <div />
@@ -178,6 +204,12 @@ const Loading = () => (
     <div />
   </div>
 );
+
+export const SwitchStatus = {
+  DISABLED: 0,
+  LOADING: 1,
+  ENABLED: 2
+};
 
 renderBlockAvatar.propTypes = {
   avatarIsLoading: PropTypes.bool,
@@ -203,4 +235,9 @@ renderBlockSignature.propTypes = {
   signature: PropTypes.string
 };
 
-export default SettingsGeneralProfile;
+renderBlockSignFooter.propTypes = {
+  onSwitchSignFooter: PropTypes.func,
+  signFooterSwitchStatus: PropTypes.number
+};
+
+export default SettingBlockProfile;

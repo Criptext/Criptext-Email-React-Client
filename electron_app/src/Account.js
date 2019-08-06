@@ -9,6 +9,7 @@ class Account {
     this.deviceId = accountObj.deviceId;
     this.signature = accountObj.signature;
     this.signatureEnabled = accountObj.signatureEnabled;
+    this.signFooter = accountObj.signFooter;
     this.encryptToExternals = accountObj.encryptToExternals;
   }
 
@@ -20,6 +21,10 @@ class Account {
       accountObj.signatureEnabled !== undefined
         ? accountObj.signatureEnabled
         : this.signatureEnabled;
+    this.signFooter =
+      accountObj.signFooter !== undefined
+        ? accountObj.signFooter
+        : this.signFooter;
     this.encryptToExternals =
       accountObj.encryptToExternals !== undefined
         ? accountObj.encryptToExternals

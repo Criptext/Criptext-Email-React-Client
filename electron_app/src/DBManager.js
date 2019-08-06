@@ -44,7 +44,8 @@ const updateAccount = async ({
   recipientId,
   registrationId,
   signature,
-  signatureEnabled
+  signatureEnabled,
+  signFooter
 }) => {
   const params = noNulls({
     deviceId,
@@ -56,7 +57,8 @@ const updateAccount = async ({
     registrationId,
     signature,
     signatureEnabled:
-      typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined
+      typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined,
+    signFooter
   });
   const response = await db
     .table(Table.ACCOUNT)
