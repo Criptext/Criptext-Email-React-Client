@@ -36,7 +36,6 @@ const getAccountByParams = params => {
 
 const updateAccount = async ({
   deviceId,
-  encryptToExternals,
   jwt,
   refreshToken,
   name,
@@ -49,8 +48,6 @@ const updateAccount = async ({
 }) => {
   const params = noNulls({
     deviceId,
-    encryptToExternals:
-      typeof encryptToExternals === 'boolean' ? encryptToExternals : undefined,
     jwt,
     refreshToken,
     name,
