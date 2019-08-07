@@ -1,15 +1,15 @@
-const { BrowserWindow, dialog } = require('electron');
 const path = require('path');
-const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
+const { BrowserWindow } = require('electron');
+const myAccount = require('../Account');
 const { composerUrl } = require('./../window_routing');
 const dbManager = require('./../DBManager');
 const globalManager = require('./../globalManager');
 const fileUtils = require('../utils/FileUtils');
-const myAccount = require('../Account');
 const { APP_DOMAIN } = require('../utils/const');
+const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
 
 const lang = require('./../lang');
-const { closeWarning, windowTitle } = lang.strings.windows.composer;
+const { windowTitle } = lang.strings.windows.composer;
 
 const composerSize = {
   width: 785,
@@ -22,35 +22,6 @@ const iconPath = path.join(
   __dirname,
   './../../resources/launch-icons/icon.png'
 );
-
-const RESPONSES = {
-  DISCARD: {
-    index: 0,
-    label: closeWarning.responses.discard
-  },
-  CONTINUE: {
-    index: 1,
-    label: closeWarning.responses.continue
-  },
-  SAVE: {
-    index: 2,
-    label: closeWarning.responses.save
-  }
-};
-
-const dialogResponses = Object.values(RESPONSES).map(
-  response => response.label
-);
-
-const dialogTemplate = {
-  type: 'warning',
-  title: closeWarning.title,
-  buttons: dialogResponses,
-  defaultId: RESPONSES.SAVE.index,
-  cancelId: RESPONSES.CONTINUE.index,
-  message: closeWarning.message,
-  detail: closeWarning.detail
-};
 
 const composerEvents = {
   EDIT_DRAFT: 'edit-draft',
@@ -83,27 +54,23 @@ const createComposerWindow = () => {
   window.on('page-title-updated', event => {
     event.preventDefault();
   });
-  window.showConfirmation = true;
+  window.saved = false;
 
-  window.on('close', e => {
-    if (window.showConfirmation && !isDraftEmpty(window.id)) {
-      e.preventDefault();
-      dialog.showMessageBox(dialogTemplate, async responseIndex => {
-        if (responseIndex === RESPONSES.DISCARD.index) {
-          window.showConfirmation = false;
-          globalManager.composerData.delete(window.id);
-          window.close();
-        }
-        if (responseIndex === RESPONSES.SAVE.index) {
-          const dataDraft = globalManager.composerData.get(window.id);
-          await saveDraftToDatabase(window.id, dataDraft);
-          window.showConfirmation = false;
-          globalManager.composerData.delete(window.id);
-          window.close();
-        }
-      });
-    } else {
-      globalManager.composerData.delete(window.id);
+  window.on('close', async e => {
+    try {
+      if (!window.saved && !isDraftEmpty(window.id)) {
+        e.preventDefault();
+        const dataDraft = globalManager.composerData.get(window.id);
+        await saveDraftToDatabase(window.id, dataDraft);
+        window.saved = true;
+        globalManager.composerData.delete(window.id);
+        sendEventToMailbox('save-draft-success');
+        window.close();
+      } else {
+        globalManager.composerData.delete(window.id);
+      }
+    } catch (error) {
+      sendEventToMailbox('save-draft-failed');
     }
   });
 

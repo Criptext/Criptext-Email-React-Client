@@ -164,6 +164,14 @@
         "description": "An error occurred during download. The file was not saved"
       }
     },
+    "save_draft": {
+      "success": {
+        "description": "Draft saved"
+      },
+      "error": {
+        "description": "Failed to save draft"
+      }
+    },
     "emailSent": {
       "success": {
         "description": "Your message has been sent.",
