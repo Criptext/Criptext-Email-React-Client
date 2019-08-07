@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { EDITING_MODES } from './SettingAccountWrapper';
-import SettingsGeneralProfile from './SettingsGeneralProfile';
-import { myAccount } from './../utils/electronInterface';
+import SettingBlockProfile, { SwitchStatus } from './SettingBlockProfile';
+import { myAccount } from '../utils/electronInterface';
 import { EditorState } from 'draft-js';
 import { validateFullname } from '../validators/validators';
 import {
@@ -10,28 +10,31 @@ import {
   parseSignatureHtmlToEdit
 } from '../utils/EmailUtils';
 
-class SettingGeneralProfileWrapper extends Component {
+class SettingBlockProfileWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: EDITING_MODES.NONE,
+      avatarParams: {
+        showImage: true,
+        isLoading: false
+      },
       nameParams: {
         name: myAccount.name
       },
+      mode: EDITING_MODES.NONE,
       signatureParams: {
         signature: EditorState.createEmpty(),
         signatureEnabled: undefined
       },
-      avatarParams: {
-        showImage: true,
-        isLoading: false
+      signFooterParams: {
+        switchState: SwitchStatus.LOADING
       }
     };
   }
 
   render() {
     return (
-      <SettingsGeneralProfile
+      <SettingBlockProfile
         avatarIsLoading={this.state.avatarParams.isLoading}
         showAvatar={this.state.avatarParams.showImage}
         avatarUrl={this.props.avatarUrl}
@@ -46,8 +49,10 @@ class SettingGeneralProfileWrapper extends Component {
         onChangeTextareaSignature={this.handleChangeTextareaSignature}
         onClickEditName={this.handleClickEditName}
         onRemoveAvatar={this.handleRemoveAvatar}
+        onSwitchSignFooter={this.handleSwitchSignFooter}
         signatureEnabled={this.state.signatureParams.signatureEnabled}
         signature={this.state.signatureParams.signature}
+        signFooterSwitchStatus={this.state.signFooterParams.switchState}
       />
     );
   }
@@ -58,7 +63,12 @@ class SettingGeneralProfileWrapper extends Component {
       signature: parseSignatureHtmlToEdit(myAccount.signature),
       signatureEnabled: !!myAccount.signatureEnabled
     };
-    this.setState({ signatureParams });
+    const signFooterParams = {
+      switchState: myAccount.signFooter
+        ? SwitchStatus.ENABLED
+        : SwitchStatus.DISABLED
+    };
+    this.setState({ signatureParams, signFooterParams });
   }
 
   handleBlurInputName = e => {
@@ -206,9 +216,16 @@ class SettingGeneralProfileWrapper extends Component {
       }
     });
   };
+
+  handleSwitchSignFooter = e => {
+    const value = e.target.checked;
+    this.props.onUpdateAccount({ signFooter: value });
+    const switchState = value ? SwitchStatus.ENABLED : SwitchStatus.DISABLED;
+    this.setState({ signFooterParams: { switchState } });
+  };
 }
 
-SettingGeneralProfileWrapper.propTypes = {
+SettingBlockProfileWrapper.propTypes = {
   avatarUrl: PropTypes.string,
   onRemoveAvatar: PropTypes.func,
   onUploadAvatar: PropTypes.func,
@@ -216,4 +233,4 @@ SettingGeneralProfileWrapper.propTypes = {
   onUpdateContact: PropTypes.func
 };
 
-export default SettingGeneralProfileWrapper;
+export default SettingBlockProfileWrapper;

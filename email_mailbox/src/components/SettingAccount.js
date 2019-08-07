@@ -7,7 +7,7 @@ import SettingBlockReplyTo from './SettingBlockReplyTo';
 import SettingsPopup from './SettingsPopup';
 import SettingBlockDeleteAccount from './SettingBlockDeleteAccount';
 import SettingBlockManualSync from './SettingBlockManualSync';
-import SettingsGeneralProfile from '../containers/SettingsGeneralProfile';
+import SettingBlockProfile from '../containers/SettingBlockProfile';
 import SettingsAccountBackupWrapper from './SettingsAccountBackupWrapper';
 import SettingsAccountRestoreBackupc from './SettingsAccountRestoreBackup';
 import { getResendConfirmationTimestamp } from '../utils/storage';
@@ -27,7 +27,7 @@ const SettingAccount = props => (
         <h1>{string.settings.profile}</h1>
       </div>
       <div className="cptx-section-block-content">
-        <SettingsGeneralProfile {...props} />
+        <SettingBlockProfile {...props} />
       </div>
       <div className="cptx-section-block-title">
         <h1>{string.settings.privacy}</h1>

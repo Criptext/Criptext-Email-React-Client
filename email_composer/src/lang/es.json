@@ -14,6 +14,10 @@
     "text": "Arrastra archivos aquí"
   },
   "sendButtonLabel": "Enviar",
+  "criptextSignature": {
+    "sent_with": "Enviado con",
+    "secure_email": "correo seguro"
+  },
   "popups": {
     "nonCriptextRecipients": {
       "title": "Destinatario No-Criptext",

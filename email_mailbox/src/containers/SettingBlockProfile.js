@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import SettingsGeneralProfileWrapper from './../components/SettingsGeneralProfileWrapper';
-import { setAvatarUpdatedTimestamp } from './../actions';
+import SettingBlockProfileWrapper from '../components/SettingBlockProfileWrapper';
+import { setAvatarUpdatedTimestamp } from '../actions';
 import { myAccount } from '../utils/electronInterface';
 import {
   removeAvatar,
@@ -8,7 +8,7 @@ import {
   updateContactByEmail,
   updateNameEvent,
   uploadAvatar
-} from './../utils/ipc';
+} from '../utils/ipc';
 import { appDomain, avatarBaseUrl } from '../utils/const';
 
 const mapStateToProps = state => {
@@ -53,9 +53,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const SettingsGeneralProfile = connect(
+const SettingBlockProfile = connect(
   mapStateToProps,
   mapDispatchToProps
-)(SettingsGeneralProfileWrapper);
+)(SettingBlockProfileWrapper);
 
-export default SettingsGeneralProfile;
+export default SettingBlockProfile;
