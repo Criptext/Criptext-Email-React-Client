@@ -8,7 +8,7 @@ import {
   setDownloadHandler,
   setCryptoInterfaces
 } from './../utils/FileManager';
-import File, { FileStatus } from './File';
+import File, { FileStatus, UNSENT_FILE_STATUS } from './File';
 import { downloadFileInFileSystem, openFileExplorer } from '../utils/ipc';
 
 class FileWrapper extends Component {
@@ -22,6 +22,7 @@ class FileWrapper extends Component {
   }
 
   render() {
+    const status = this.defineFileStatus(this.props.file.status);
     return (
       <File
         {...this.props}
@@ -29,7 +30,7 @@ class FileWrapper extends Component {
         onClickCancelDownloadFile={this.handleClickCancelDownload}
         onDownloadFile={this.handleDownload}
         percentage={this.state.percentage}
-        status={this.state.status}
+        status={status}
       />
     );
   }
@@ -40,6 +41,12 @@ class FileWrapper extends Component {
     setFileErrorHandler(this.handleDownloadError);
     setCryptoInterfaces(this.props.file.key, this.props.file.iv);
   }
+
+  defineFileStatus = fileStatus => {
+    return fileStatus === UNSENT_FILE_STATUS
+      ? FileStatus.UNAVAILABLE
+      : this.state.status;
+  };
 
   handleDownload = async () => {
     const { token, name } = this.props.file;

@@ -12,11 +12,11 @@ const File = props => {
         className={'file-content ' + defineClassFile(props.status)}
         onClick={() => props.onDownloadFile()}
       >
-        {renderFileIcon(props.file.mimeType)}
+        {renderFileIcon(props.file)}
         <div className="file-content-detail">
           <span className="file-detail-name">{props.file.name}</span>
           <span className="file-detail-size">
-            {convertToHumanSize(props.file.size, true, 0)}
+            {renderFileDetail(props.file)}
           </span>
         </div>
         <div className="file-button-container">
@@ -42,20 +42,35 @@ const defineClassFile = status => {
       return 'file-paused';
     case FileStatus.DOWNLOADED:
       return 'file-done';
+    case FileStatus.UNAVAILABLE:
+      return 'file-unavailable';
     default:
       return '';
   }
 };
 
-const renderFileIcon = mimeType => {
+const renderFileIcon = ({ status, mimeType }) => {
+  const isUnsent = status === UNSENT_FILE_STATUS;
   const filetype = identifyFileType(mimeType);
-  return (
+  return isUnsent ? (
+    <div className={`file-content-icon file-content-icon-unsent`}>
+      <div className="unsent-icon" />
+    </div>
+  ) : (
     <div className={`file-content-icon file-content-icon-${filetype}`}>
       <i className={`icon-${filetype}`} />
-      <div>
+      <div className="file-icon-status">
         <i className="icon-correct" />
       </div>
     </div>
+  );
+};
+
+const renderFileDetail = ({ status, size }) => {
+  return status === UNSENT_FILE_STATUS ? (
+    <b> — </b>
+  ) : (
+    convertToHumanSize(size, true, 0)
   );
 };
 
@@ -86,8 +101,11 @@ const FileStatus = {
   DOWNLOADING: 'downloading',
   FAILED: 'failed',
   PAUSED: 'paused',
-  DOWNLOADED: 'downloaded'
+  DOWNLOADED: 'downloaded',
+  UNAVAILABLE: 'unavailable'
 };
+
+const UNSENT_FILE_STATUS = 0;
 
 File.propTypes = {
   displayProgressBar: PropTypes.bool,
@@ -97,8 +115,18 @@ File.propTypes = {
   status: PropTypes.string
 };
 
+renderFileIcon.propTypes = {
+  mimeType: PropTypes.string,
+  status: PropTypes.func
+};
+
+renderFileDetail.propTypes = {
+  status: PropTypes.string,
+  size: PropTypes.number
+};
+
 renderCancelButton.propTypes = {
   onClickCancelDownloadFile: PropTypes.func
 };
 
-export { File as default, FileStatus };
+export { File as default, FileStatus, UNSENT_FILE_STATUS };
