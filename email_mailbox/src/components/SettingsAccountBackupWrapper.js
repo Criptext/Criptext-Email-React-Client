@@ -54,9 +54,9 @@ const defineUnitToAppend = frequency => {
 };
 
 const removeFilenameFromPath = path => {
-  const parts = path.split('/');
-  parts.pop();
-  return parts.join('/');
+  const lastSepIndex =
+    path.lastIndexOf('/') > -1 ? path.lastIndexOf('/') : path.lastIndexOf(`\\`);
+  return path.substr(0, lastSepIndex);
 };
 
 class SettingsAccountBackupWrapper extends Component {
