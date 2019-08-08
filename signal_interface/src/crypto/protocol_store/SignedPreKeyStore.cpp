@@ -9,14 +9,11 @@ int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t si
 {
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     string dbPath(account->dbPath);
-
-    std::cout << "Get Signed PreKey : " << signed_pre_key_id << std::endl;
     CriptextDB::SignedPreKey signedPreKey;
-
     try {
         signedPreKey = CriptextDB::getSignedPreKey(dbPath, signed_pre_key_id);
     } catch (exception& e){
-        std::cout << "Get Signed PreKey GG: " << signed_pre_key_id << std::endl;
+        std::cout << "ERROR SPK : " << e.what() << std::endl;
         return 0;
     }
     

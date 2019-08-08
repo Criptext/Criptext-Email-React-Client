@@ -170,9 +170,13 @@ int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int dev
     int result = 0;
 
     ec_private_key *identityPrivateKey = 0;
-    uint8_t *identityPrivKeyBytes = reinterpret_cast<uint8_t *>(account.privKey);
-    curve_decode_private_point(&identityPrivateKey, identityPrivKeyBytes, 32, 0);
-    std::cout << identityPrivateKey << std::endl; 
+
+    size_t privLen = 0;
+    unsigned char *identityKeyPriv = reinterpret_cast<unsigned char *>(account.privKey);
+    uint8_t *myPrivRecord = reinterpret_cast<uint8_t *>(base64_decode(identityKeyPriv, strlen(account.privKey), &privLen));    
+
+    result = curve_decode_private_point(&identityPrivateKey, myPrivRecord, privLen, 0);
+    std::cout << "DECODE PRIV : " << result << " : " << privLen << std::endl;
     char *signedPublicPreKeyEncoded = 0;
     char *signatureEncoded = 0;
     createSignedPrekey(&signedPublicPreKeyEncoded, &signatureEncoded, identityPrivateKey);
@@ -183,9 +187,7 @@ int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int dev
         cJSON_AddItemToArray(preKeysArray, preKeyObject);
     }
     
-    size_t pubLen = 0;
-    char *identityPublicKey = reinterpret_cast<char *>(base64_encode(reinterpret_cast<const unsigned char *>(account.pubKey), 33, &pubLen));
-    generateBundle(bundle, account.registrationId, signatureEncoded, signedPublicPreKeyEncoded, 1, identityPublicKey, preKeysArray);
+    generateBundle(bundle, account.registrationId, signatureEncoded, signedPublicPreKeyEncoded, 1, account.pubKey, preKeysArray);
     return 0;
 }
 
@@ -232,7 +234,6 @@ void CriptextSignal::processKeyBundle(struct Keybundle* kb){
         publicIdentityKey);
     
     //create name
-    std::cout << "6" << std::endl;
     signal_protocol_address address = {
         .name = kb->recipient_id,
         .name_len = strlen(kb->recipient_id),

@@ -122,30 +122,52 @@ class MigrationPopupWrapper extends Component {
       });
       return;
     }
-    const res = await createAccountCredentials({
-      recipientId: account.recipientId,
-      deviceId: 0,
-      name: account.name
-    });
-    if (res.status !== 200) {
+    try {
+      const res = await createAccountCredentials({
+        recipientId: account.recipientId,
+        deviceId: 0,
+        name: account.name
+      });
+      if (res.status !== 200) {
+        this.setState({
+          errorMessage: errors.credentials,
+          shouldRetry: false,
+          shouldRestart: true
+        });
+        return;
+      }
+    } catch (ex) {
+      console.error(ex);
       this.setState({
         errorMessage: errors.credentials
       });
-      return;
+      return
     }
-    const keybundleRes = await generateKeyBundle({
-      recipientId: account.recipientId,
-      deviceId: 0
-    });
-    if (keybundleRes.status !== 200) {
+    
+    let keybundle;
+    try {
+      const keybundleRes = await generateKeyBundle({
+        recipientId: account.recipientId,
+        deviceId: 0
+      });
+      if (keybundleRes.status !== 200) {
+        this.setState({
+          errorMessage: errors.keys,
+          shouldRetry: false,
+          shouldRestart: true
+        });
+        return;
+      }
+      keybundle = await keybundleRes.json();
+    } catch (ex) {
+      console.error(ex);
       this.setState({
         errorMessage: errors.keys,
         shouldRetry: false,
         shouldRestart: true
       });
-      return;
     }
-    const keybundle = await keybundleRes.json();
+    
     const pcName = await getComputerName();
     const deviceType = getDeviceType();
     const keybundleData = {

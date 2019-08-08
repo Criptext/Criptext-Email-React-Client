@@ -6,8 +6,6 @@ struct mg_callbacks callbacks;
 struct mg_context *ctx;
 
 char* db_path;
-char* login_url;
-char* get_kb_url;
 
 const char* civet_options[] = {
     "document_root",
@@ -59,16 +57,16 @@ int keyBundleCreate(struct mg_connection *conn, void *cbdata){
 }
 
 int pong(struct mg_connection *conn, void *cbdata){
-  std::cout << "PING" << std::endl;
+  std::cout.flush();
+  std::cerr << "PING" << std::endl;
   mg_send_http_ok( conn, "text/plain", 5);
   mg_write(conn, "pong\n", 5);
   return 1;
 }
 
 void http_init(char *dbPath){
+  std::cout << "AUXILIO" << std::endl;
   db_path = dbPath;
-  login_url = getenv("BOB_LOGIN_URL");
-  get_kb_url = getenv("BOB_GET_KEYBUNDLE_URL");
 
   ctx = mg_start(&callbacks, 0, civet_options);
   mg_set_request_handler(ctx, "/decrypt", decryptEmail, 0);

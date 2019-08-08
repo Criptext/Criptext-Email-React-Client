@@ -8,15 +8,17 @@
 int identity_key_store_get_identity_key_pair(signal_buffer **public_data, signal_buffer **private_data, void *user_data)
 {
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-
-    size_t pubDecodeLen = 33;
-    const uint8_t *pubKeyData = reinterpret_cast<uint8_t *>(account->pubKey);
-    size_t privDecodeLen = 32;
-    const uint8_t *privKeyData = reinterpret_cast<uint8_t *>(account->privKey);;
     
-    signal_buffer *pubKeyBuffer = signal_buffer_create(pubKeyData, pubDecodeLen);
-    signal_buffer *privKeyBuffer = signal_buffer_create(privKeyData, privDecodeLen);
+    size_t len = 0;
 
+    unsigned char *identityKeyPriv = reinterpret_cast<unsigned char *>(account->privKey);
+    uint8_t *myPrivRecord = reinterpret_cast<uint8_t *>(base64_decode(identityKeyPriv, strlen(account->privKey), &len));    
+    signal_buffer *privKeyBuffer = signal_buffer_create(myPrivRecord, len);
+    
+    unsigned char *identityKeyPub = reinterpret_cast<unsigned char *>(account->pubKey);
+    uint8_t *myPubRecord = reinterpret_cast<uint8_t *>(base64_decode(identityKeyPub, strlen(account->pubKey), &len));    
+    signal_buffer *pubKeyBuffer = signal_buffer_create(myPubRecord, len);
+    
     *public_data = pubKeyBuffer;
     *private_data = privKeyBuffer;
     return 0;
@@ -37,7 +39,6 @@ int identity_key_store_save_identity(const signal_protocol_address *address, uin
     int deviceId = address->device_id;
 
     char *identityKey = reinterpret_cast<char *>(key_data);
-    std::cout << identityKey << std::endl;
     CriptextDB::createIdentityKey(dbPath, recipientId, deviceId, identityKey);
     return 1;
 }

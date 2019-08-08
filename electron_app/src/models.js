@@ -284,8 +284,8 @@ const createPreKeyRecordColumns = table => {
     .integer('preKeyId')
     .primary()
     .notNullable();
-  table.string('preKeyPrivKey', LARGE_STRING_SIZE).notNullable();
-  table.string('preKeyPubKey', LARGE_STRING_SIZE).notNullable();
+  table.string('record').notNullable();
+  table.integer('recordLength').notNullable();
 };
 
 const createSignedPreKeyRecordColumns = table => {
@@ -293,8 +293,8 @@ const createSignedPreKeyRecordColumns = table => {
     .integer('signedPreKeyId')
     .primary()
     .notNullable();
-  table.string('signedPreKeyPrivKey', LARGE_STRING_SIZE).notNullable();
-  table.string('signedPreKeyPubKey', LARGE_STRING_SIZE).notNullable();
+  table.string('record').notNullable();
+  table.integer('recordLength').notNullable();
 };
 
 const createSessionRecordColumns = table => {

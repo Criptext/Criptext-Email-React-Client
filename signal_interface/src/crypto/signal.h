@@ -72,17 +72,15 @@ class CriptextSignal {
         ec_public_key_serialize(&publickKeySerialized, identity_key_public);
         ec_private_key_serialize(&privKeySerialized, identity_key_private);
         SIGNAL_UNREF(identity_key_pair_keys);
-        std::cout << publickKeySerialized->data << std::endl;
         int local_registration_id = (rand() % 16380) + 1;
 
-        char *publicKeyChar = reinterpret_cast<char *>(signal_buffer_data(publickKeySerialized));
+        size_t len = 0;
+        char *publicKeyChar = reinterpret_cast<char *>(base64_encode(reinterpret_cast<const unsigned char *>(signal_buffer_data(publickKeySerialized)), signal_buffer_len(publickKeySerialized), &len));
         *publicKey = publicKeyChar;
-        char *privKeyChar = reinterpret_cast<char *>(signal_buffer_data(privKeySerialized));
+        char *privKeyChar = reinterpret_cast<char *>(base64_encode(reinterpret_cast<const unsigned char *>(signal_buffer_data(privKeySerialized)), signal_buffer_len(privKeySerialized), &len));
         *privKey = privKeyChar;
         *regId = local_registration_id;
 
-        std::cout << "PUBLIC KEY : " << publicKeyChar << "\nSIZE : " << signal_buffer_len(publickKeySerialized) <<  std::endl;
-        std::cout << "PRIVATE KEY : " << privKeyChar << "\nSIZE : " << signal_buffer_len(privKeySerialized) <<  std::endl;
         
         return 0;
     }

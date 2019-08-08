@@ -17,7 +17,7 @@ popd
 
 git clone https://github.com/DaveGamble/cJSON.git
 pushd cJSON
-mkdir build && cd build && cmake .. && make -j4 install
+mkdir build && cd build && cmake -DBUILD_SHARED_LIBS=Off .. && make -j4 install
 popd
 
 git clone https://github.com/civetweb/civetweb.git

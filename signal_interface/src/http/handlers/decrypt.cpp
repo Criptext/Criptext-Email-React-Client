@@ -7,28 +7,26 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
   }
   
   std::cout << "Receiving Request" << std::endl;
-  char buffer[1024 * 5];
-  int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
+  char *bufferData;
+  int readLength = parseBody(&bufferData, conn);
 
-  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
+  if (readLength <= 0) {
     std::cout << "Receiving Request Fail 1" << std::endl;
     mg_send_http_error(conn, 400, "%s", "Request data too big");
     return 400;
   }
-  buffer[dlen] = 0;
-  cJSON *obj = cJSON_Parse(buffer);
+  
+  cJSON *obj = cJSON_Parse(bufferData);
   
   if (obj == NULL) {
-    std::cout << "Receiving Request Fail 2 : " << buffer << std::endl;
-    mg_send_http_error(conn, 400, "%s", "Not a json object");
+    std::cout << "Receiving Request Fail 2 : " << bufferData << " : " << readLength << std::endl;
+    mg_send_http_error(conn, 400, "%s", bufferData);
     return 400;
   }
   std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *senderId, *deviceId, *type, *recipientId, *body, *headers, *fileKeys, *headersType;
-  std::cout << "-2" << std::endl;
   senderId = cJSON_GetObjectItemCaseSensitive(obj, "senderId");
-  std::cout << "-1" << std::endl;
   deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
   recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
   type = cJSON_GetObjectItemCaseSensitive(obj, "messageType");
@@ -36,17 +34,13 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
   headers = cJSON_GetObjectItemCaseSensitive(obj, "headers");
   headersType = cJSON_GetObjectItemCaseSensitive(obj, "headersMessageType");
   fileKeys = cJSON_GetObjectItemCaseSensitive(obj, "fileKeys");
-  std::cout << "0" << std::endl;
   if (!cJSON_IsString(recipientId) || !cJSON_IsString(senderId) || !cJSON_IsNumber(deviceId) || !cJSON_IsNumber(type)) {
     mg_send_http_error(conn, 400, "%s", "Missing params");
     std::cout << "Receiving Request Fail 3" << std::endl;
     return 400;
   }
-  std::cout << "1" << std::endl;
   CriptextSignal signal(recipientId->valuestring, dbPath);
-  std::cout << "2" << std::endl;
   cJSON *response = cJSON_CreateObject();
-  std::cout << "3" << std::endl;
   if (cJSON_IsString(body)) {
     try {
       uint8_t *plaintext_data = 0;
@@ -58,7 +52,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
       cJSON_AddStringToObject(response, "decryptedBody", text);
       free(text);
     } catch (exception &ex) {
-      std::cout << "DENCRYPT BODY ERROR: " << ex.what() << std::endl;
+      std::cout << "DECRYPT BODY ERROR: " << ex.what() << std::endl;
       mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
       return 500;
     }

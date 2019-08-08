@@ -20,7 +20,7 @@ cd ..
 
 git clone https://github.com/DaveGamble/cJSON.git
 cd cJSON
-mkdir build && cd build && cmake .. && make -j4 install
+mkdir build && cd build && cmake -DBUILD_SHARED_LIBS=Off .. && make -j4 install
 cd ..
 
 git clone https://github.com/civetweb/civetweb.git

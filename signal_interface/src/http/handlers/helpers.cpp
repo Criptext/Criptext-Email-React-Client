@@ -10,3 +10,23 @@ int SendJSON(struct mg_connection *conn, cJSON *json_obj) {
 	cJSON_free(json_str);
 	return (int)json_str_len;
 }
+
+int parseBody(char **body, struct mg_connection *conn){
+	int readLength = 0;
+  std::vector<char> myData;
+  while (true) {
+    char buffer[512];
+    int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
+    if (dlen <= 0) {
+      break;
+    }
+    myData.insert(myData.end(), buffer, buffer + dlen);
+    readLength += dlen;
+  }
+
+	char *myBody = myData.data();
+  std::cout << myBody << std::endl;
+  *body = strdup(myBody);
+  return readLength;
+}
+	

@@ -91,15 +91,16 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
     return 201;
   }
 
-  char buffer[1024 * 5];
-  int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
+  char *bufferData;
+  int readLength = parseBody(&bufferData, conn);
 
-  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
-    mg_send_http_error(conn, 400, "%s", "No request data");
+  if (readLength <= 0) {
+    std::cout << "Receiving Request Fail 1" << std::endl;
+    mg_send_http_error(conn, 400, "%s", "Request data too big");
     return 400;
   }
-  buffer[dlen] = 0;
-  cJSON *obj = cJSON_Parse(buffer);
+  
+  cJSON *obj = cJSON_Parse(bufferData);
   
   if (obj == NULL) {
     mg_send_http_error(conn, 400, "%s", "Not a JSON String");
@@ -133,10 +134,8 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
     if (!cJSON_IsString(recipientId) || !cJSON_IsNumber(deviceId) || !cJSON_IsNumber(registrationId) 
       || !cJSON_IsNumber(signedPreKeyId) || !cJSON_IsString(signedPreKey) || !cJSON_IsString(signature) 
       || !cJSON_IsString(identityKey)) {
-      std::cout << "NOPE" << std::endl;
       continue;
     }
-    std::cout << "PARSING" << std::endl;
     if (cJSON_HasObjectItem(keyBundleObj, "preKey")) {
       preKeyObj = cJSON_GetObjectItemCaseSensitive(keyBundleObj, "preKey");
       preKey = cJSON_GetObjectItemCaseSensitive(preKeyObj, "publicKey");
@@ -154,8 +153,6 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
       .prekey_id = preKeyId != 0 ? preKeyId->valueint : 0,
       .prekey_public = preKey != 0 ? preKey->valuestring : 0,
     };
-
-    std::cout << "PARSED" << std::endl;
     signal.processKeyBundle(&kb);
   }
 

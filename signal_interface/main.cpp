@@ -9,7 +9,7 @@ int main(int argc, char const *argv[]){
     }
 
     char *dbPath = const_cast<char *>(argv[1]);
-    std::cout << dbPath << std::endl;
+    std::cout << "DB PATH IS : " << dbPath << std::endl;
     http_init(dbPath);
 
     while(1) {

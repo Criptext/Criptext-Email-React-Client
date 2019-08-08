@@ -122,18 +122,11 @@ const createEmails = async (
       domainAddresses[domainIndex].knownAddresses[username] || [];
     const newDevicesIds = keyBundles.filter(
       keybundle =>
-        keybundle.username === username && keybundle.domain === domain
-    );
-    const deviceIds = [...knownDeviceIds, ...newDevicesIds];
+        keybundle.recipientId === username && keybundle.domain === domain
+    ).map( keybundle => keybundle.deviceId );
+    const deviceIds = ([...knownDeviceIds, ...newDevicesIds]).filter( deviceId => (peer.recipientId !== username || peer.deviceId !== deviceId));
     await Promise.all(
       deviceIds
-        .filter(deviceId => {
-          return !(
-            peer.recipientId === recipientId &&
-            peer.deviceId === deviceId &&
-            type === 'peer'
-          );
-        })
         .map(async deviceId => {
           const fileKeys = files
             ? files.reduce((result, file) => {

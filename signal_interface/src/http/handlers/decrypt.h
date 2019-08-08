@@ -3,6 +3,7 @@
 #include "cors.h"
 #include <string>
 #include <iostream>
+#include <vector>
 #include "helpers.h"
 #include "../../crypto/signal.h"
 

@@ -74,19 +74,19 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
   }
   
   std::cout << "Receiving Request" << std::endl;
-  char buffer[1024 * 10];
-  int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
+  char *bufferData;
+  int readLength = parseBody(&bufferData, conn);
 
-  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
+  if (readLength <= 0) {
     std::cout << "Receiving Request Fail 1" << std::endl;
-    mg_send_http_error(conn, 400, "%s", "No request data");
+    mg_send_http_error(conn, 400, "%s", "Request data too big");
     return 400;
   }
-  buffer[dlen] = 0;
-  cJSON *obj = cJSON_Parse(buffer);
+  
+  cJSON *obj = cJSON_Parse(bufferData);
   
   if (obj == NULL) {
-    std::cout << "Receiving Request Fail 2 : " << buffer << std::endl;
+    std::cout << "Receiving Request Fail 2 : " << bufferData << std::endl;
     mg_send_http_error(conn, 400, "%s", "No request data");
     return 400;
   }
@@ -115,12 +115,16 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
 
   if (cJSON_IsString(body)) {
     try {
+      std::cout << "ENCRYPT BODY 1" << std::endl;
       size_t len = strlen(body->valuestring);
       uint8_t *text = (uint8_t *)malloc(len);
       memcpy(text, body->valuestring, len);
+      std::cout << "ENCRYPT BODY 2" << std::endl;
       int type = signal.encryptText(&encryptedBody, text, len, recipientId->valuestring, deviceId->valueint);
+      std::cout << "ENCRYPT BODY 3" << std::endl;
       cJSON_AddStringToObject(response, "bodyEncrypted", encryptedBody);
       cJSON_AddNumberToObject(response, "bodyMessageType", type);
+      std::cout << "ENCRYPT BODY 4" << std::endl;
       free(text);
     } catch (exception &ex) {
       std::cout << "ENCRYPT BODY ERROR: " << ex.what() << std::endl;
@@ -131,12 +135,16 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
 
   if (cJSON_IsString(preview)) {
     try {
+      std::cout << "ENCRYPT PREVIEW 1" << std::endl;
       size_t len = strlen(preview->valuestring);
       uint8_t *text = (uint8_t *)malloc(len);
       memcpy(text, preview->valuestring, len);
+      std::cout << "ENCRYPT PREVIEW 2" << std::endl;
       int type = signal.encryptText(&encryptedPreview, text, len, recipientId->valuestring, deviceId->valueint);
+      std::cout << "ENCRYPT PREVIEW 3" << std::endl;
       cJSON_AddStringToObject(response, "previewEncrypted", encryptedBody);
       cJSON_AddNumberToObject(response, "previewMessageType", type);
+      std::cout << "ENCRYPT PREVIEW 4" << std::endl;
       free(text);
     } catch (exception &ex) {
       std::cout << "ENCRYPT BODY ERROR: " << ex.what() << std::endl;
@@ -146,7 +154,6 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
   }
 
   if (cJSON_IsArray(fileKeys)) {
-    std::cout << "IS ARRAY" << std::endl;
     cJSON *myFileKeys = cJSON_CreateArray();
     cJSON *fileKey = NULL;
 
@@ -159,7 +166,6 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
         memcpy(text, fileKey->valuestring, len);
         signal.encryptText(&encryptedFileKey, text, len, recipientId->valuestring, deviceId->valueint);
 
-        std::cout << "PRINTING: " << text << " # " << len << " # " << encryptedFileKey << std::endl;
         cJSON *decryptedFileKey = cJSON_CreateString(encryptedFileKey);
         cJSON_AddItemToArray(myFileKeys, decryptedFileKey);
         free(text);

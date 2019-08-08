@@ -18,7 +18,7 @@ int session_store_load_session(signal_buffer **record, signal_buffer **user_reco
     try {
         sessionRecord = CriptextDB::getSessionRecord(dbPath, recipientId, deviceId);
     } catch (exception& e) {
-        std::cout << "ERROR 1 : " << e.what() << std::endl;
+        std::cout << "ERRORs : " << e.what() << std::endl;
         return 0;
     }
     size_t len = 0;
@@ -35,7 +35,6 @@ int session_store_get_sub_device_sessions(signal_int_list **sessions, const char
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     string dbPath(account->dbPath);
 
-    std::cout << "GET SUB DEVICE" << std::endl;
     signal_int_list *result = signal_int_list_alloc();
     if(!result) {
         return SG_ERR_NOMEM;
