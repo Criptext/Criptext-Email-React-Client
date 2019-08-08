@@ -74,7 +74,7 @@ const renderRecipientCc = props => (
   <div className="recipient-content">
     <span className="recipient-input-label">{inputLabels.cc}</span>
     <TagsInput
-      addKeys={[9, 13, 32, 188]}
+      addKeys={[9, 13]}
       addOnBlur={true}
       addOnPaste={true}
       className="recipient-tags"
@@ -109,7 +109,7 @@ const renderRecipientBcc = props => (
   <div className="recipient-content">
     <span className="recipient-input-label">{inputLabels.bcc}</span>
     <TagsInput
-      addKeys={[9, 13, 32, 188]}
+      addKeys={[9, 13]}
       addOnBlur={true}
       addOnPaste={true}
       className="recipient-tags"
