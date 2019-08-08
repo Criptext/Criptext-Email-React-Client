@@ -494,10 +494,14 @@ const updateName = async ({ name }) => {
 };
 
 const updatePushToken = async pushToken => {
-  const res = await client.updatePushToken(pushToken);
-  return res.status === 200
-    ? res
-    : await checkExpiredSession(res, updatePushToken, pushToken);
+  if (client.pushToken !== pushToken) {
+    const res = await client.updatePushToken(pushToken);
+    if (res.status === 200) {
+      client.pushToken = pushToken;
+      return res;
+    }
+    return await checkExpiredSession(res, updatePushToken, pushToken);
+  }
 };
 
 const upgradeToRefreshToken = async () => {
