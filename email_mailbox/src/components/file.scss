@@ -80,8 +80,16 @@
         background-color: #4d9c45;
       }
 
-      &.file-content-icon-file-default { 
+      &.file-content-icon-file-default {
         background-color: #4a90e2; 
+      }
+
+      &.file-content-icon-unsent{
+        > .unsent-icon {
+          width: 30px;
+          height: 30px;
+          background-size: cover;
+        }
       }
 
       >i{
@@ -90,7 +98,7 @@
         margin: 0 auto;
       }
 
-      div{
+      div.file-icon-status{
         align-items: center;
         background: rgb(0, 145, 255);
         border-radius: 50%;
@@ -179,7 +187,7 @@
 
 /* THEME
    ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_FILE, $_BORDER_COLOR_FILE, $_BACKGROUND_FILE_HOVER, $_COLOR_TEXT_FILE_TITLE, $_BACKGROUND_FILE_BUTTON){
+@mixin themable($_THEME, $_BACKGROUND_FILE, $_BORDER_COLOR_FILE, $_BACKGROUND_FILE_HOVER, $_COLOR_TEXT_FILE_TITLE, $_BACKGROUND_FILE_BUTTON, $_BACKGROUND_COLOR_FILE_UNAVAILABLE){
   [data-theme^=#{$_THEME}],
   [data-theme] [data-theme^=#{$_THEME}] {
     .file-container{
@@ -189,6 +197,15 @@
 
         &:hover{
           background-color: $_BACKGROUND_FILE_HOVER;
+        }
+
+        .file-content-icon {
+          &.file-content-icon-unsent{
+            background-color: $_BACKGROUND_COLOR_FILE_UNAVAILABLE;
+            > .unsent-icon {
+              background-image: url(../#{$_PATH_TO_IMAGES}/file-unavailable-#{$_THEME}.svg);
+            }
+          }
         }
 
         .file-content-detail{
@@ -205,5 +222,5 @@
   }
 }
 
-@include themable($_THEME_LIGHT, $_BACKGROUND_FILE_LIGHT, $_BORDER_COLOR_FILE_LIGHT, $_BACKGROUND_FILE_HOVER_LIGHT, $_COLOR_TEXT_FILE_TITLE_LIGHT, $_BACKGROUND_FILE_BUTTON_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_FILE_DARK, $_BORDER_COLOR_FILE_DARK, $_BACKGROUND_FILE_HOVER_DARK, $_COLOR_TEXT_FILE_TITLE_DARK, $_BACKGROUND_FILE_BUTTON_DARK);
+@include themable($_THEME_LIGHT, $_BACKGROUND_FILE_LIGHT, $_BORDER_COLOR_FILE_LIGHT, $_BACKGROUND_FILE_HOVER_LIGHT, $_COLOR_TEXT_FILE_TITLE_LIGHT, $_BACKGROUND_FILE_BUTTON_LIGHT, $_BACKGROUND_COLOR_FILE_UNAVAILABLE_LIGHT);
+@include themable($_THEME_DARK, $_BACKGROUND_FILE_DARK, $_BORDER_COLOR_FILE_DARK, $_BACKGROUND_FILE_HOVER_DARK, $_COLOR_TEXT_FILE_TITLE_DARK, $_BACKGROUND_FILE_BUTTON_DARK, $_BACKGROUND_COLOR_FILE_UNAVAILABLE_DARK);
