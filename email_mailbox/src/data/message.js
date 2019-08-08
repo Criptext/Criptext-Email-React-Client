@@ -62,6 +62,10 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: string.messages.download_file.success.description
     },
+    save_draft: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.save_draft.success.description
+    },
     emailSent: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.emailSent.success.description,
@@ -110,6 +114,10 @@ const messagesContent = {
     downloadFile: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.download_file.error.description
+    },
+    save_draft: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.save_draft.error.description
     },
     emailSent: {
       priority: messagePriorities.MEDIUM,

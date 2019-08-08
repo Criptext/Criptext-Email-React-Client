@@ -1125,6 +1125,22 @@ ipcRenderer.on('update-available', () => {
   emitter.emit(Event.UPDATE_AVAILABLE, { value: true });
 });
 
+ipcRenderer.on('save-draft-success', () => {
+  const messageData = {
+    ...Messages.success.save_draft,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+});
+
+ipcRenderer.on('save-draft-failed', () => {
+  const messageData = {
+    ...Messages.error.save_draft,
+    type: MessageType.ERROR
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+});
+
 /* Window events: handle */
 ipcRenderer.on(
   'open-mailto-in-composer',

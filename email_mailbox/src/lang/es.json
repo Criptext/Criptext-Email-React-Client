@@ -164,6 +164,14 @@
         "description": "Un error ha ocurrido durante la descarga. El archivo no fue guardado"
       }
     },
+    "save_draft": {
+      "success": {
+        "description": "Borrador guardado"
+      },
+      "error": {
+        "description": "Falló al guardar el borrador"
+      }
+    },
     "emailSent": {
       "success": {
         "description": "Tu correo ha sido enviado.",
