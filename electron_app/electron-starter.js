@@ -43,7 +43,9 @@ const getAlicePath = nodeEnv => {
 }
 
 let alice = null;
+let aliceStartTimeout = null;
 const startAlice = () => {
+  aliceStartTimeout = null;
   if (!alice) {
     const alicePath = getAlicePath(process.env.NODE_ENV);
     const dbpath = path.resolve(dbManager.databasePath);
@@ -54,6 +56,12 @@ const startAlice = () => {
     alice.on('exit', (code, signal) => {
       console.log('alice exited with ' + `code ${code} and signal ${signal}`);
       alice = null;
+      if (signal !== 'SIGTERM') {
+        return;
+      }
+      aliceStartTimeout = setTimeout( () => {
+        startAlice();
+      }, 500)
     });
   }
 }
@@ -66,7 +74,7 @@ async function initApp() {
     console.log(ex);
   }
 
-  //startAlice();
+  startAlice();
 
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
@@ -150,6 +158,9 @@ app.on('activate', () => {
 app.on('before-quit', () => {
   if (alice) {
     alice.kill();
+  } else if (aliceStartTimeout) {
+    clearTimeout(aliceStartTimeout);
+    aliceStartTimeout = null;
   }
   globalManager.forcequit.set(true);
 });
