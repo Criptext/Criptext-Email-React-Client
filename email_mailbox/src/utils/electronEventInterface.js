@@ -70,7 +70,8 @@ import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
 import {
   fetchAcknowledgeEvents,
   fetchEvents,
-  fetchEventAction
+  fetchEventAction,
+  fetchGetSingleEvent
 } from './FetchUtils';
 import string from './../lang';
 
@@ -1421,8 +1422,19 @@ ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
   await updatePushToken(token);
 });
 
-ipcRenderer.on(NOTIFICATION_RECEIVED, () => {
-  sendLoadEventsEvent({ showNotification: true });
+ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
+  try {
+    const eventData = await fetchGetSingleEvent({ rowId: data.rowId });
+    await parseAndStoreEventsBatch({
+      events: [eventData],
+      hasMoreEvents: false
+    });
+    sendNewEmailNotification();
+    sendLoadEventsEvent({ showNotification: true });
+  } catch (firebaseNotifErr) {
+    // eslint-disable-next-line no-console
+    console.error(`[Firebase Error]: `, firebaseNotifErr);
+  }
 });
 
 ipcRenderer.send(START_NOTIFICATION_SERVICE, senderNotificationId);

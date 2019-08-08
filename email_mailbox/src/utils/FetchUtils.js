@@ -127,3 +127,28 @@ export const fetchAcknowledgeEvents = async ({ eventIds, optionalToken }) => {
     });
   }
 };
+
+export const fetchGetSingleEvent = async ({ rowId, optionalToken }) => {
+  const res = await apiCriptextRequest({
+    endpoint: '/event/' + String(rowId),
+    method: 'GET',
+    optionalToken
+  });
+  if (res.status === 200) {
+    const jsonRes = await res.json();
+    const eventResponse = {
+      cmd: jsonRes.cmd,
+      rowid: jsonRes.rowid,
+      params: JSON.parse(jsonRes.params)
+    };
+    return eventResponse;
+  }
+  const expiredResponse = await checkExpiredSession({
+    response: { status: res.status },
+    initialRequest: fetchGetSingleEvent,
+    requestParams: { rowId, optionalToken }
+  });
+  if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
+    return await fetchGetSingleEvent({ rowId, optionalToken });
+  }
+};
