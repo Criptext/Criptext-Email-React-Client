@@ -116,12 +116,14 @@ const setConnectionStatus = networkStatus => {
 
 /*   Check alive
 ----------------------*/
+const isWindows = process.platform === 'win32';
+
 const getDelay = () => checkDelay;
 
 const checkAlive = () => {
   checkConnTimeout = setInterval(() => {
     exec(
-      'ping -c 1 www.criptext.com',
+      `ping -${isWindows ? 'n' : 'c'} 1 www.criptext.com`,
       { encoding: 'utf8', windowsHide: true },
       (err, stdout, stderr) => {
         let totalLost = 0;
