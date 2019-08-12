@@ -1,7 +1,5 @@
 const { app, BrowserWindow, shell } = require('electron');
-const {
-  setup: setupPushReceiver
-} = require('@criptext/electron-push-receiver');
+const pushReceiver = require('@criptext/electron-push-receiver');
 const ipc = require('@criptext/electron-better-ipc');
 const windowStateManager = require('electron-window-state');
 const path = require('path');
@@ -13,7 +11,6 @@ const { removeProtocolFromUrl } = require('./../utils/stringUtils');
 const { isFromStore, isDev } = require('./windowUtils');
 const { createTrayIcon, destroyTrayIcon } = require('./tray');
 const { isWindows } = require('./../utils/osUtils');
-const { APP_DOMAIN } = require('./../utils/const');
 
 let mailboxWindow;
 
@@ -46,17 +43,15 @@ const create = () => {
     webPreferences: { webSecurity: !isDev }
   });
   mailboxWindow.loadURL(mailboxUrl);
+
+  if (isWindows()) mailboxWindow.setMenuBarVisibility(false);
+
   // Firebase
-  const firebaseFilename = getUsername() || 'config';
-  setupPushReceiver({
-    filename: firebaseFilename,
+  pushReceiver.setup({
+    filename: 'firebaseConfig',
     webContents: mailboxWindow.webContents
   });
-
-  if (isWindows()) {
-    mailboxWindow.setMenuBarVisibility(false);
-  }
-
+  // Context menu
   require('electron-context-menu')({
     window: mailboxWindow,
     showSaveImageAs: false,
@@ -64,9 +59,9 @@ const create = () => {
     showCopyImageAddress: false
   });
 
-  mailboxWindow.on('page-title-updated', ev => {
-    ev.preventDefault();
-  });
+  mailboxWindow.on('page-title-updated', ev => ev.preventDefault());
+  mailboxWindow.webContents.on('new-window', openLinkInDefaultBrowser);
+  mailboxWindow.webContents.on('will-navigate', openLinkInDefaultBrowser);
   mailboxWindow.on('close', e => {
     if (!globalManager.forcequit.get()) {
       e.preventDefault();
@@ -81,24 +76,10 @@ const create = () => {
       require('./../socketClient').disconnect();
     }
   });
-
-  mailboxWindow.webContents.on('new-window', openLinkInDefaultBrowser);
-  mailboxWindow.webContents.on('will-navigate', openLinkInDefaultBrowser);
   mailboxWindow.webContents.once('did-frame-finish-load', () => {
-    if (!isFromStore) {
-      appUpdater();
-    }
+    if (!isFromStore) appUpdater();
   });
   mailboxWindowState.manage(mailboxWindow);
-};
-
-const getUsername = () => {
-  const myAccount = require('./../Account');
-  if (!myAccount) return '';
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
-  return username;
 };
 
 const showFileExplorer = filename => {
