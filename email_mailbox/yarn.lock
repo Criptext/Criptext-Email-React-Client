@@ -8217,9 +8217,10 @@ react-redux@^5.0.6:
     loose-envify "^1.1.0"
     prop-types "^15.6.0"
 
-react-switch-input@^0.1.10:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/react-switch-input/-/react-switch-input-0.1.10.tgz#5e6f6fdf51b225d7466a21b717e2b88f400f25bb"
+react-switch-input@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-switch-input/-/react-switch-input-1.1.0.tgz#0833b74224059d2317d3e99af89e24916f6c3041"
+  integrity sha512-TnT7E8XI7u0rzMrc78OIsNX5nrMAuAm7qzGkQMckQ7+misa1MGEA4rrY6UT+OPg6Z2JehEBBCTR2+G+K/aXGgw==
 
 react-tooltip@^3.4.0:
   version "3.6.1"
