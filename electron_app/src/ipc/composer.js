@@ -3,9 +3,10 @@ const composerWindowManager = require('../windows/composer');
 
 ipc.answerRenderer(
   'close-composer',
-  ({ composerId, emailId, threadId, hasExternalPassphrase }) => {
+  ({ composerId, emailId, discard, threadId, hasExternalPassphrase }) => {
     composerWindowManager.destroy({
       composerId,
+      discard,
       emailId,
       threadId,
       hasExternalPassphrase
