@@ -44,6 +44,8 @@
     position: relative;
 
     form {
+      position: relative;
+
       input {
         background: transparent;
         width: 100%;
@@ -71,6 +73,7 @@
         color: #000;
         left: 0px;
         position: absolute;
+        top: 24px;
       }
 
       .buttons {
