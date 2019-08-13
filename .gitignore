@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 */node_modules
+*_interface/deps
 
 # testing
 */coverage
