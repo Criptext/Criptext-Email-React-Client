@@ -99,7 +99,8 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.sent.id ||
       currentLabelId === LabelType.starred.id ||
       currentLabelId === LabelType.trash.id ||
-      currentLabelId === LabelType.allmail.id
+      currentLabelId === LabelType.allmail.id ||
+      currentLabelId === LabelType.search.id
     );
   };
 
@@ -109,7 +110,8 @@ class HeaderThreadOptionsWrapper extends Component {
       currentLabelId === LabelType.inbox.id ||
       currentLabelId === LabelType.sent.id ||
       currentLabelId === LabelType.starred.id ||
-      currentLabelId === LabelType.allmail.id
+      currentLabelId === LabelType.allmail.id ||
+      currentLabelId === LabelType.search.id
     );
   };
 

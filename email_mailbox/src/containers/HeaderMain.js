@@ -7,7 +7,7 @@ import {
 } from '../actions/index';
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
 import { SectionType, avatarBaseUrl } from '../utils/const';
-import { myAccount } from '../utils/electronInterface';
+import { LabelType, myAccount } from '../utils/electronInterface';
 
 const mapStateToProps = state => {
   const suggestions = state.get('suggestions');
@@ -51,10 +51,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onSearchSelectThread: (threadId, searchParams) => {
       const type = SectionType.THREAD;
-      const mailboxSelected = {
-        id: -2,
-        text: 'Search'
-      };
+      const mailboxSelected = LabelType.search;
       const params = {
         mailboxSelected,
         threadIdSelected: threadId,
@@ -64,10 +61,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onSearchThreads: searchParams => {
       const type = SectionType.MAILBOX;
-      const mailboxSelected = {
-        id: -2,
-        text: 'Search'
-      };
+      const mailboxSelected = LabelType.search;
       const params = {
         mailboxSelected,
         searchParams
