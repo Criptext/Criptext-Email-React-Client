@@ -38,6 +38,17 @@ class HeaderMainWrapper extends Component {
     );
   }
 
+  componentDidMount() {
+    const text = this.props.sectionSelected.params.searchParams.text;
+    const stateText = this.state.searchParams.text;
+    if (text && !stateText) {
+      this.setState(state => {
+        const searchParams = state.searchParams;
+        return { searchParams: { ...searchParams, text } };
+      });
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const nextSectionIsSettings =
       prevProps.sectionSelected && !this.props.sectionSelected;
