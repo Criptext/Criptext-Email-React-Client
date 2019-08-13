@@ -116,6 +116,7 @@ const editDraft = async emailToEdit => {
 
 const destroy = async ({
   composerId,
+  discard,
   emailId,
   threadId,
   hasExternalPassphrase
@@ -143,11 +144,15 @@ const destroy = async ({
       type === composerEvents.REPLY ||
       type === composerEvents.REPLY_ALL
     ) {
-      params.type = 'reply';
-      params.threadData = {
-        threadId,
-        newEmailId: emailId
-      };
+      if (discard) {
+        params.threadId = undefined;
+      } else {
+        params.type = 'reply';
+        params.threadData = {
+          threadId,
+          newEmailId: emailId
+        };
+      }
     }
   }
   sendEventToMailbox(event, params);

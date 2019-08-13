@@ -8,10 +8,12 @@ const composerId = remote.getCurrentWindow().id;
 export const closeComposerWindow = ({
   threadId,
   emailId,
+  discard,
   hasExternalPassphrase
 }) => {
   callMain('close-composer', {
     composerId,
+    discard,
     threadId,
     emailId,
     hasExternalPassphrase

@@ -403,9 +403,10 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
   const isContactSpamer = contactSpamToCheck[0]
     ? contactSpamToCheck[0].spamScore > 1
     : false;
-  const isSpam = labels
-    ? labels.find(label => label === LabelType.spam.text) || isContactSpamer
-    : undefined;
+  const isSpam =
+    labels & !isContactSpamer
+      ? labels.find(label => label === LabelType.spam.text)
+      : isContactSpamer;
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
   const SpamLabelId = LabelType.spam.id;
