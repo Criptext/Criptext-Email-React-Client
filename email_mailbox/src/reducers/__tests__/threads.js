@@ -306,10 +306,9 @@ describe('Thread actions - MOVE_THREADS', () => {
 
   it('should move threads params: threadIds', () => {
     const labelId = 1;
-    const labelIdToAdd = 7;
     const state = initState(labelId, threads);
     const threadIds = ['6Za2dcMlE0OSSc9'];
-    const action = actions.moveThreads(labelId, threadIds, labelIdToAdd);
+    const action = actions.moveThreads(labelId, threadIds);
     const newState = threadsReducer(state, action);
     const threadUpdated = newState.get(`${labelId}`).get('list');
     expect(threadUpdated.size).toEqual(1);
@@ -319,10 +318,9 @@ describe('Thread actions - MOVE_THREADS', () => {
 
   it('should move threads params: threadIds not exist', () => {
     const labelId = 1;
-    const labelIdToAdd = 7;
     const state = initState(labelId, threads);
     const threadIds = null;
-    const action = actions.moveThreads(labelId, threadIds, labelIdToAdd);
+    const action = actions.moveThreads(labelId, threadIds);
     const newState = threadsReducer(state, action);
     const threadUpdated = newState.get(`${labelId}`).get('list');
     expect(threadUpdated.size).toEqual(2);
@@ -332,10 +330,9 @@ describe('Thread actions - MOVE_THREADS', () => {
 
   it('should move threads params: threadIds is different', () => {
     const labelId = 1;
-    const labelIdToAdd = 7;
     const state = initState(labelId, threads);
     const threadIds = ['6Za2dMlE0OSS9'];
-    const action = actions.moveThreads(labelId, threadIds, labelIdToAdd);
+    const action = actions.moveThreads(labelId, threadIds);
     const newState = threadsReducer(state, action);
     const threadUpdated = newState.get(`${labelId}`).get('list');
     expect(threadUpdated.size).toEqual(2);
@@ -345,10 +342,9 @@ describe('Thread actions - MOVE_THREADS', () => {
 
   it('should move threads params: labelId is different', () => {
     const labelId = 1;
-    const labelIdToAdd = 7;
     const state = initState(labelId, threads);
     const threadIds = ['6Za2dMlE0OSS9'];
-    const action = actions.moveThreads(2, threadIds, labelIdToAdd);
+    const action = actions.moveThreads(2, threadIds);
     const newState = threadsReducer(state, action);
     const threadUpdated = newState.get(`${labelId}`).get('list');
     expect(threadUpdated.size).toEqual(2);
