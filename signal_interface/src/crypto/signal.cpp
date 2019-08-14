@@ -75,6 +75,7 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
         }
 
         if (result < 0) {
+            std::cout << "YA NADA WACHIN : " << result << std::endl;
             return -1;
         }
         std::cout << "YOLIS : " << plainMessage << std::endl;

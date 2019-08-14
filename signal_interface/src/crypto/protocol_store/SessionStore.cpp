@@ -52,7 +52,8 @@ int session_store_get_sub_device_sessions(signal_int_list **sessions, const char
 }
 
 int session_store_store_session(const signal_protocol_address *address, uint8_t *record, size_t record_len, uint8_t *user_record_data, size_t user_record_len, void *user_data)
-{
+{   
+    std::cout << "Dance" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     string dbPath(account->dbPath);
 

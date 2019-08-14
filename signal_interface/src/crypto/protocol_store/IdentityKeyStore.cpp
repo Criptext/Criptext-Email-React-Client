@@ -40,6 +40,7 @@ int identity_key_store_save_identity(const signal_protocol_address *address, uin
 
     char *identityKey = reinterpret_cast<char *>(key_data);
     CriptextDB::createIdentityKey(dbPath, recipientId, deviceId, identityKey);
+    std::cout << "gwenchana" << std::endl;
     return 1;
 }
 

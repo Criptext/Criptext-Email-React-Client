@@ -31,17 +31,17 @@
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       "include_dirs" : [
-        "/usr/local/include"
+        "/usr/local/include"  # Include system libraries
       ],
       "libraries": [
         "-pthread",
-        "-dl"
-        "/usr/local/Cellar/openssl/1.0.2r/lib/libssl.a",
-        "/usr/local/Cellar/openssl/1.0.2r/lib/libcrypto.a",
-        "/usr/local/Cellar/sqlite/3.28.0/lib/libsqlite3.a",
+        "-ldl",
+        "/usr/lib/x86_64-linux-gnu/libssl.a",
+        "/usr/lib/x86_64-linux-gnu/libcrypto.a",
+        "/usr/lib/x86_64-linux-gnu/libsqlite3.a",
         "/usr/local/lib/libSQLiteCpp.a",
         "/usr/local/lib/libsignal-protocol-c.a",
-        "/usr/local/lib/libcivetweb.a",
+        "/usr/lib/libcivetweb.so",
         "/usr/local/lib/libcjson.a"
       ],
       'conditions': [

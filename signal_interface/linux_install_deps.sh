@@ -1,28 +1,25 @@
 #!bin/bash
 
-apt-get update
-apt-get install gcc -y
-apt-get install cmake -y
-apt-get install libssl1.0-dev -y
-apt-get install git -y
-apt-get install pkg-config -y
+sudo apt-get update
+sudo apt-get install libssl-dev -y
+npm install -g node-gyp
 
 mkdir deps 
-pushd deps
+cd deps
 
 git clone https://github.com/signalapp/libsignal-protocol-c.git
-pushd libsignal-protocol-c
+cd libsignal-protocol-c
 mkdir build && cd build && cmake .. && make -j4 install
-popd
+cd ../..
 
 git clone https://github.com/DaveGamble/cJSON.git
-pushd cJSON
-mkdir build && cd build && cmake -DBUILD_SHARED_LIBS=Off .. && make -j4 install
-popd
+cd cJSON
+mkdir build && cd build && cmake -DBUILD_SHARED_LIBS=Off .. && sudo make -j4 install
+cd ../../
 
 git clone https://github.com/civetweb/civetweb.git
-pushd civetweb
-make slib  && cp include/* /usr/include/ && cp libcivetweb.so* /usr/lib/
-popd
+cd civetweb
+make slib  && sudo cp include/* /usr/include/ && sudo cp libcivetweb.so* /usr/lib/
 
-popd && rm -rf deps
+cd ../../..
+rm -rf deps

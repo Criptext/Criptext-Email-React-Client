@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl/1.0.2r)
-include_directories(/usr/local/include)
+include_directories(
+    /usr/local/include 
+    /usr/include)
 
 set(SOURCES
     main.cpp
     src/http/http.cpp
     src/http/handlers/helpers.cpp
     src/http/handlers/cors.cpp
+    src/http/handlers/keyBundle.cpp
     src/http/handlers/encrypt.cpp
     src/http/handlers/decrypt.cpp
-    src/http/handlers/keyBundle.cpp
-    src/helpers/utf8.c
     src/crypto/crypto.c
     src/crypto/signal.cpp
     src/crypto/store.cpp
@@ -28,15 +28,14 @@ set(SOURCES
     ../../db_interface/src/axolotl/SignedPreKey.cpp)
 
 find_package(OpenSSL REQUIRED)
-find_package(sqlite3 REQUIRED)
 
 add_executable(alice ${SOURCES})
 
 target_link_libraries(alice OpenSSL::SSL)
 target_link_libraries(alice pthread)
 target_link_libraries(alice dl)
-target_link_libraries(alice sqlite3)
 target_link_libraries(alice SQLiteCpp)
+target_link_libraries(alice sqlite3)
 target_link_libraries(alice signal-protocol-c m)
 target_link_libraries(alice civetweb)
 target_link_libraries(alice cjson)
