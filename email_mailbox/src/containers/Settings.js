@@ -139,8 +139,12 @@ const mapDispatchToProps = dispatch => {
       dispatch(updateLabel(params));
     },
     onResetPassword: async () => {
-      const { recipientId } = myAccount;
-      const { status } = await resetPassword(recipientId);
+      const [recipientId, domain] = myAccount.recipientId.split('@');
+      const params = {
+        recipientId,
+        domain: domain || appDomain
+      };
+      const { status } = await resetPassword(params);
       if (status === 200) {
         sendResetPasswordSendLinkSuccessMessage();
         return;
