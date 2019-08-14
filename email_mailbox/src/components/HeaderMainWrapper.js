@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HeaderMain from './HeaderMain';
+import { LabelType } from '../utils/electronInterface';
 
 class HeaderMainWrapper extends Component {
   constructor(props) {
@@ -39,7 +40,9 @@ class HeaderMainWrapper extends Component {
   }
 
   componentDidMount() {
-    const text = this.props.sectionSelected.params.searchParams.text;
+    const text = this.props.sectionSelected.params.searchParams
+      ? this.props.sectionSelected.params.searchParams.text
+      : false;
     const stateText = this.state.searchParams.text;
     if (text && !stateText) {
       this.setState(state => {
@@ -56,10 +59,9 @@ class HeaderMainWrapper extends Component {
       return this.handleClearSearchInput();
     }
     if (!prevProps.sectionSelected) return;
-    const searchMailboxId = -2;
     const prevMailboxId = prevProps.sectionSelected.params.mailboxSelected.id;
     const nextMailboxId = this.props.sectionSelected.params.mailboxSelected.id;
-    const prevMailboxIsSearch = prevMailboxId === searchMailboxId;
+    const prevMailboxIsSearch = prevMailboxId === LabelType.search.id;
     const nextMailboxIsDifferent = prevMailboxId !== nextMailboxId;
     if (prevMailboxIsSearch && nextMailboxIsDifferent) {
       return this.handleClearSearchInput();
