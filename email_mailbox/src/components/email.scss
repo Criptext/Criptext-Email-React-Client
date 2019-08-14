@@ -278,9 +278,11 @@
   }
 
   .email-status{
+    background-color: transparent;
     width: auto;
 
     i{
+      background-color: transparent;
       font-size: 13px;
       margin-right: 5px;
 
@@ -296,6 +298,7 @@
 
   .email-info-content-detail-icons{
     align-items: center;
+    background-color: transparent;
     display: flex;
     
     i{
@@ -313,6 +316,10 @@
       &:nth-child(2){
         margin-left: 5px;
       }
+    }
+
+    > div{
+      background-color: transparent;
     }
   }
 }

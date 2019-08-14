@@ -1,6 +1,7 @@
 import { Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
 import * as StringUtils from '../utils/StringUtils';
+import { LabelType } from '../utils/electronInterface';
 
 const THREADS_SIZE = 22;
 
@@ -17,7 +18,7 @@ const initMailbox = Map({
 });
 
 const mailbox = (state = initThreads, action) => {
-  const searchLabelId = -2;
+  const searchLabelId = LabelType.search.id;
   switch (action.type) {
     case Thread.ADD_BATCH: {
       const lastLabelId = state.findKey(
