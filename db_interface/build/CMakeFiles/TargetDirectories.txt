@@ -1,3 +1,0 @@
-/home/criptext/Pedro/git/Criptext-Email-React-Client/db_interface/build/CMakeFiles/rebuild_cache.dir
-/home/criptext/Pedro/git/Criptext-Email-React-Client/db_interface/build/CMakeFiles/axolotl.dir
-/home/criptext/Pedro/git/Criptext-Email-React-Client/db_interface/build/CMakeFiles/edit_cache.dir

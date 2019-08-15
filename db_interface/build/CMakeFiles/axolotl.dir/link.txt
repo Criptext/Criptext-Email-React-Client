@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/axolotl.dir/src/main.o CMakeFiles/axolotl.dir/src/axolotl/IdentityKey.o CMakeFiles/axolotl.dir/src/axolotl/PreKey.o CMakeFiles/axolotl.dir/src/axolotl/SessionRecord.o CMakeFiles/axolotl.dir/src/axolotl/SignedPreKey.o  -o axolotl -lpthread -ldl -lSQLiteCpp -lsqlite3 
