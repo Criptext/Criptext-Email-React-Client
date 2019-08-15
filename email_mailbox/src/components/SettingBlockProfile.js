@@ -15,7 +15,7 @@ const SettingBlockProfile = props => (
     {renderBlockEmail(props)}
     {renderBlockName(props)}
     {renderBlockSignature(props)}
-    {renderBlockSignFooter(props)}
+    {!myAccount.recipientId.includes('@') && renderBlockSignFooter(props)}
   </div>
 );
 

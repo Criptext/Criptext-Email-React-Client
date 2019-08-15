@@ -69,6 +69,7 @@ const SettingAccount = props => (
       onClickChangeRecoveryEmailInputType={
         props.onClickChangeRecoveryEmailInputType
       }
+      onClickForgotPasswordLink={props.onClickForgotPasswordLink}
       onClosePopup={props.onClosePopup}
       onConfirmChangePassword={props.onConfirmChangePassword}
       onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
@@ -351,6 +352,7 @@ SettingAccount.propTypes = {
   onChangeInputValueOnSetReplyTo: PropTypes.func,
   onClearPopupParams: PropTypes.func,
   onClickChangeRecoveryEmailInputType: PropTypes.func,
+  onClickForgotPasswordLink: PropTypes.func,
   onClosePopup: PropTypes.func,
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,

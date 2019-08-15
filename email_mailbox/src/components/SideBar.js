@@ -111,7 +111,9 @@ const renderLabels = (showLabels, labels, mailboxSelected, onClickSection) => (
   <ul>
     {showLabels &&
       labels.map((label, key) => {
-        const selected = label.text === mailboxSelected.text;
+        const selected = mailboxSelected
+          ? label.text === mailboxSelected.text
+          : false;
         return (
           <SideBarLabelItem
             key={key}
