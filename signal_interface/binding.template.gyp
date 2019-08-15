@@ -31,18 +31,19 @@
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       "include_dirs" : [
-        "/usr/local/include"
+        "/usr/local/include",
+        "/usr/include"
       ],
       "libraries": [
         "-pthread",
-        "-ldl",
-        "/usr/lib/x86_64-linux-gnu/libssl.a",
-        "/usr/lib/x86_64-linux-gnu/libcrypto.a",
-        "/usr/lib/x86_64-linux-gnu/libsqlite3.a",
-        "/usr/local/lib/libSQLiteCpp.a",
-        "/usr/local/lib/libsignal-protocol-c.a",
-        "/usr/lib/libcivetweb.so",
-        "/usr/local/lib/libcjson.a"
+        "<-dl/-ldl>"
+        "<libssl>",
+        "<libcrypto>",
+        "<libsqlite3>",
+        "<libSQLiteCpp>",
+        "<libsignal-protocol-c>",
+        "<libcivetweb>",
+        "<libcjson>"
       ],
       'conditions': [
         ['OS=="mac"', {

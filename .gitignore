@@ -35,4 +35,5 @@ electron_app/dev-app-update.yml
 */yarn-debug.log*
 */yarn-error.log*
 *.db
+binding.gyp
 .vscode
