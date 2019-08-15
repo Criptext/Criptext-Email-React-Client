@@ -40,6 +40,7 @@ class HeaderMainWrapper extends Component {
   }
 
   componentDidMount() {
+    if (!this.props.sectionSelected) return;
     const text = this.props.sectionSelected.params.searchParams
       ? this.props.sectionSelected.params.searchParams.text
       : false;
