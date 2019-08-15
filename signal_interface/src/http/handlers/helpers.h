@@ -4,6 +4,7 @@
 #include <string.h>
 #include <vector>
 #include <iostream>
+#include <string.h>
 
 int SendJSON(struct mg_connection *conn, cJSON *json_obj);
 int parseBody(char **body, struct mg_connection *conn);
