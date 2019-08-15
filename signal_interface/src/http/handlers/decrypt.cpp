@@ -6,7 +6,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
     return 201;
   }
   
-  std::cout << "Receiving Request" << std::endl;
+  std::cout << "/decrypt Receiving Request" << std::endl;
   char *bufferData;
   int readLength = parseBody(&bufferData, conn);
 
@@ -74,7 +74,6 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
       return 500;
     }
   }
-
   if (cJSON_IsArray(fileKeys)) {
     cJSON *myFileKeys = cJSON_CreateArray();
     cJSON *fileKey = NULL;
@@ -105,12 +104,13 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
 }
 
 int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
+  
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
   }
   
-  std::cout << "Receiving Request" << std::endl;
+  std::cout << "/decrypt/key Receiving Request" << std::endl;
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 

@@ -32,8 +32,6 @@ int signed_pre_key_store_store_signed_pre_key(uint32_t signed_pre_key_id, uint8_
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     string dbPath(account->dbPath);
 
-    std::cout << "STORE Signed PreKey : " << signed_pre_key_id << std::endl;
-
     size_t len = 0;
     const unsigned char *myRecord = reinterpret_cast<const unsigned char *>(record);
     char *recordBase64 = reinterpret_cast<char *>(base64_encode(myRecord, record_len, &len));

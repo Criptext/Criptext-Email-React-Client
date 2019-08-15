@@ -59,7 +59,6 @@ int pre_key_store_remove_pre_key(uint32_t pre_key_id, void *user_data) {
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
     string dbPath(account->dbPath);
 
-    std::cout << "REMOVE PREKEY" << std::endl;
     bool success = CriptextDB::deletePreKey(dbPath, pre_key_id);
     return success ? 1 : 0;
 }

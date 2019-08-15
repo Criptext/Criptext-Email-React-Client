@@ -24,8 +24,6 @@ CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id
 }
 
 bool CriptextDB::createSignedPreKey(string dbPath, short int id, char *keyRecord, size_t len) {
-  std::cout << "Create SignedPreKey : " << id << std::endl;
-
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
     db.setBusyTimeout(5000);

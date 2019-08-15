@@ -5,6 +5,9 @@ int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
   if (corsResult < 0) {
     return 201;
   }
+
+  std::cout << "/keybundle Receiving Request" << std::endl;
+
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 
@@ -42,6 +45,8 @@ int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath) {
   if (corsResult < 0) {
     return 201;
   }
+
+  std::cout << "/account Receiving Request" << std::endl;
 
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
@@ -90,6 +95,8 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
   if (corsResult < 0) {
     return 201;
   }
+
+  std::cout << "/session/create Receiving Request" << std::endl;
 
   char *bufferData;
   int readLength = parseBody(&bufferData, conn);

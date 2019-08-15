@@ -6,7 +6,7 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
     return 201;
   }
   
-  std::cout << "Receiving Request" << std::endl;
+  std::cout << "/encrypt/key Receiving Request" << std::endl;
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 
@@ -73,7 +73,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
     return 201;
   }
   
-  std::cout << "Receiving Request" << std::endl;
+  std::cout << "/encrypt/email Receiving Request" << std::endl;
   char *bufferData;
   int readLength = parseBody(&bufferData, conn);
 
@@ -115,16 +115,12 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
 
   if (cJSON_IsString(body)) {
     try {
-      std::cout << "ENCRYPT BODY 1" << std::endl;
       size_t len = strlen(body->valuestring);
       uint8_t *text = (uint8_t *)malloc(len);
       memcpy(text, body->valuestring, len);
-      std::cout << "ENCRYPT BODY 2" << std::endl;
       int type = signal.encryptText(&encryptedBody, text, len, recipientId->valuestring, deviceId->valueint);
-      std::cout << "ENCRYPT BODY 3" << std::endl;
       cJSON_AddStringToObject(response, "bodyEncrypted", encryptedBody);
       cJSON_AddNumberToObject(response, "bodyMessageType", type);
-      std::cout << "ENCRYPT BODY 4" << std::endl;
       free(text);
     } catch (exception &ex) {
       std::cout << "ENCRYPT BODY ERROR: " << ex.what() << std::endl;
@@ -135,16 +131,12 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
 
   if (cJSON_IsString(preview)) {
     try {
-      std::cout << "ENCRYPT PREVIEW 1" << std::endl;
       size_t len = strlen(preview->valuestring);
       uint8_t *text = (uint8_t *)malloc(len);
       memcpy(text, preview->valuestring, len);
-      std::cout << "ENCRYPT PREVIEW 2" << std::endl;
       int type = signal.encryptText(&encryptedPreview, text, len, recipientId->valuestring, deviceId->valueint);
-      std::cout << "ENCRYPT PREVIEW 3" << std::endl;
       cJSON_AddStringToObject(response, "previewEncrypted", encryptedBody);
       cJSON_AddNumberToObject(response, "previewMessageType", type);
-      std::cout << "ENCRYPT PREVIEW 4" << std::endl;
       free(text);
     } catch (exception &ex) {
       std::cout << "ENCRYPT BODY ERROR: " << ex.what() << std::endl;

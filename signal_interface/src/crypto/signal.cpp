@@ -2,14 +2,14 @@
 #include <string>
 #include <iostream>
 
-pthread_mutex_t global_mutex;
+std::recursive_mutex global_mutex;
 
 void lock_fn(void *user_data){
-    pthread_mutex_lock(&global_mutex);
+    global_mutex.lock();
 }
 
 void unlock_fn(void *user_data){
-    pthread_mutex_unlock(&global_mutex);
+    global_mutex.unlock();
 }
 
 CriptextSignal::CriptextSignal(char *recipientId, char* dbPath){
@@ -53,7 +53,7 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
 
     session_cipher *session_cipher = 0;
     result = session_cipher_create(&session_cipher, store, &address, global_context);
-    std::cout << result << " : Message Type : " << message_type <<  std::endl;
+    std::cout << "Message Type : " << message_type <<  std::endl;
     size_t decode_len = 0;
     const unsigned char *encryptedCText = reinterpret_cast<const unsigned char*>(encryptedText.c_str());
     unsigned char* textFromB64 = base64_decode(encryptedCText, strlen((char *)encryptedCText), &decode_len);
@@ -75,10 +75,8 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
         }
 
         if (result < 0) {
-            std::cout << "YA NADA WACHIN : " << result << std::endl;
             return -1;
         }
-        std::cout << "YOLIS : " << plainMessage << std::endl;
         uint8_t *data = signal_buffer_data(plainMessage);
         size_t len = signal_buffer_len(plainMessage);
 
@@ -158,8 +156,6 @@ int CriptextSignal::createSignedPrekey(char **encodedSignedPublicPreKey, char **
     unsigned char *signedPublicPreKeyEncoded = base64_encode(reinterpret_cast<const unsigned char *>(signal_buffer_data(serializedSignedPublicPreKey)), signal_buffer_len(serializedSignedPublicPreKey), len);
     unsigned char *signatureEncoded = base64_encode(reinterpret_cast<const unsigned char *>(signal_buffer_data(signedPreKeySignature)), signal_buffer_len(signedPreKeySignature), len);
 
-    std::cout << "SIGNATURE : \n" << signedPreKeySignature->data << "\nSIZE : " << signedPreKeySignature->len << std::endl; 
-
     *encodedSignedPublicPreKey = reinterpret_cast<char *>(signedPublicPreKeyEncoded);
     *encodedSignature = reinterpret_cast<char *>(signatureEncoded);
     signal_buffer_free(signedPreKeySignature);
@@ -177,7 +173,6 @@ int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int dev
     uint8_t *myPrivRecord = reinterpret_cast<uint8_t *>(base64_decode(identityKeyPriv, strlen(account.privKey), &privLen));    
 
     result = curve_decode_private_point(&identityPrivateKey, myPrivRecord, privLen, 0);
-    std::cout << "DECODE PRIV : " << result << " : " << privLen << std::endl;
     char *signedPublicPreKeyEncoded = 0;
     char *signatureEncoded = 0;
     createSignedPrekey(&signedPublicPreKeyEncoded, &signatureEncoded, identityPrivateKey);
@@ -248,7 +243,6 @@ void CriptextSignal::processKeyBundle(struct Keybundle* kb){
 }
 
 int CriptextSignal::encryptText(char **encryptedText, uint8_t *plainText, size_t plainTextLength, char* recipientId, int deviceId) {
-    std::cout << "0" << std::endl;
     int result;
 
     signal_protocol_address address = {
@@ -263,9 +257,7 @@ int CriptextSignal::encryptText(char **encryptedText, uint8_t *plainText, size_t
         ciphertext_message *encryptedMessage = 0;
         result = session_cipher_create(&session_cipher, store, &address, global_context);
         result = session_cipher_encrypt(session_cipher, plainText, plainTextLength, &encryptedMessage);
-        
-        std::cout << result << std::endl;
-        
+                
         size_t len = 0;
         int messageType = ciphertext_message_get_type(encryptedMessage);
         messageType = messageType == 2 ? 1 : messageType;
@@ -273,7 +265,7 @@ int CriptextSignal::encryptText(char **encryptedText, uint8_t *plainText, size_t
         const unsigned char *text = reinterpret_cast<const unsigned char *>(signal_buffer_data(outgoing_serialized));
         char *encodedText = reinterpret_cast<char *>(base64_encode(text, signal_buffer_len(outgoing_serialized), &len));
 
-        std::cout << "ENCRYPTED : " << plainText << std::endl << "FROM : " << encodedText << std::endl << "TYPE: " << messageType << std::endl;
+        std::cout << "ENCRYPTED : " << plainText << std::endl << "TO : " << encodedText << std::endl << "TYPE: " << messageType << std::endl;
 
         session_cipher_free(session_cipher);
         SIGNAL_UNREF(encryptedMessage);

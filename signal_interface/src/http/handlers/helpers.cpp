@@ -25,7 +25,6 @@ int parseBody(char **body, struct mg_connection *conn){
   }
 
 	char *myBody = myData.data();
-  std::cout << myBody << std::endl;
   *body = strdup(myBody);
   return readLength;
 }

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <mutex>
 #include <signal/session_builder.h>
 #include <signal/session_cipher.h>
 #include <signal/protocol.h>
