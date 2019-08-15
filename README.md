@@ -11,6 +11,7 @@ Finally, an email service that's built around your privacy. Get your @criptext.c
 ## Contributing Bug reports
 
 We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked!
+[https://github.com/Criptext/Criptext-Email-React-Client/issues](https://github.com/Criptext/Criptext-Email-React-Client/issues)
 
 ## Contributing Translations
 
@@ -22,7 +23,7 @@ We use Lokalise for translations. If you are interested in helping please write 
 
 To build Criptext on your machine you'll need:
 
-* Node.js (Recommended 8.12+) 
+* Node.js (Recommended 8.15+) 
 * Yarn
 
 ## Run locally
@@ -32,16 +33,40 @@ Clone this repository and run a few scripts:
 ``` bash
 git clone https://github.com/Criptext/Criptext-Email-React-Client
 cd Criptext-Email-React-Client
-node install.js # Install dependencies
-node start.js   # Run locally
+node install.js # Install dependenciess
 ```
 
-On some directories, like `email_login` it is recommended to have a .env file 
+To up all projects, got to each project and run:
+``` bash
+yarn start # Run locally
+```
+First up the projects like `email_*` and last `electrop_app`
+
+On all directories, like `email_*` it is recommended to have a .env file 
 with the following content:
 
 ```
+PORT=####
 SKIP_PREFLIGHT_CHECK=true
+REACT_APP_APPDOMAIN=criptext.com
+REACT_APP_AVATAR_URL=https://api.criptext.com/user/avatar/
 ```
+
+The project `electrop_app` the .env file should have this:
+```
+NODE_ENV=development
+MAILBOX_URL=http://localhost:####
+LOGIN_URL=http://localhost:####
+LOADING_URL=http://localhost:####
+COMPOSER_URL=http://localhost:####
+DEV_SOCKET_URL=wss://socket.criptext.com
+DEV_SERVER_URL=https://api.criptext.com
+DEV_DATA_TRANSFER_URL=https://transfer.criptext.com
+CSC_IDENTITY_AUTO_DISCOVERY=true
+DEV_APP_DOMAIN=criptext.com
+```
+
+
 ## Contributing Code
 
 Contributions are welcome. This project contains subdirectories according to each module of the app:
