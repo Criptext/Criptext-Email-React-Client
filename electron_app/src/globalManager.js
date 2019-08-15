@@ -15,7 +15,7 @@ global.isWindowsStore =
   currrentInstallerType === allInstallerTypes.windows.store;
 global.deviceType = getDeviceType(currrentInstallerType, allInstallerTypes);
 global.pendingRestore = false;
-global.needsUpgrade = false
+global.needsUpgrade = false;
 
 /*  Composer
 ----------------------------- */
@@ -79,8 +79,8 @@ const disableUpgrade = () => {
 };
 
 const getNeedsUpgrade = () => {
-  return global.needsUpgrade
-}
+  return global.needsUpgrade;
+};
 
 /*  App Store (Mac & Windows)
 ----------------------------- */

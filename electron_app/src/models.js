@@ -97,16 +97,19 @@ const cleanDataBase = () => {
 const cleanForAlice = async () => {
   const [account] = await db.table(Table.ACCOUNT).select('*');
 
-  await db.table(Table.ACCOUNT).del()
-  await db.table(Table.SESSIONRECORD).del()
-  await db.table(Table.PREKEYRECORD).del()
-  await db.table(Table.SIGNEDPREKEYRECORD).del()
-  await db.table(Table.IDENTITYKEYRECORD).del()
-  await db.table(Table.MIGRATIONS).where('name', 'like', '20190730144157%').del()
+  await db.table(Table.ACCOUNT).del();
+  await db.table(Table.SESSIONRECORD).del();
+  await db.table(Table.PREKEYRECORD).del();
+  await db.table(Table.SIGNEDPREKEYRECORD).del();
+  await db.table(Table.IDENTITYKEYRECORD).del();
+  await db
+    .table(Table.MIGRATIONS)
+    .where('name', 'like', '20190730144157%')
+    .del();
 
-  await db.migrate.latest(migrationConfig)
+  await db.migrate.latest(migrationConfig);
 
-  return account
+  return account;
 };
 
 const cleanDataLogout = async recipientId => {
@@ -340,8 +343,8 @@ const createSignalTables = async () => {
 };
 
 const hasColumnPreKeyRecordLength = () => {
-  return db.schema.hasColumn(Table.PREKEYRECORD, 'record')
-}
+  return db.schema.hasColumn(Table.PREKEYRECORD, 'record');
+};
 
 const createTables = async () => {
   const emailExists = await db.schema.hasTable(Table.EMAIL);

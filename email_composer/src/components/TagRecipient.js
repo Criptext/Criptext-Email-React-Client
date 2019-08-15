@@ -54,10 +54,9 @@ const TagRecipient = props => {
         />
       )}
 
-      {!disabled &&
-        !isEditable && (
-          <a className={classNameIconRemove} onClick={() => onRemove(key)} />
-        )}
+      {!disabled && !isEditable && (
+        <a className={classNameIconRemove} onClick={() => onRemove(key)} />
+      )}
     </span>
   );
 };

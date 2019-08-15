@@ -120,11 +120,15 @@ const createEmails = async (
 
     const knownDeviceIds =
       domainAddresses[domainIndex].knownAddresses[username] || [];
-    const newDevicesIds = keyBundles.filter(
-      keybundle =>
-        keybundle.recipientId === username && keybundle.domain === domain
-    ).map( keybundle => keybundle.deviceId );
-    const deviceIds = ([...knownDeviceIds, ...newDevicesIds]).filter( deviceId => (peer.recipientId !== username || peer.deviceId !== deviceId));
+    const newDevicesIds = keyBundles
+      .filter(
+        keybundle =>
+          keybundle.recipientId === username && keybundle.domain === domain
+      )
+      .map(keybundle => keybundle.deviceId);
+    const deviceIds = [...knownDeviceIds, ...newDevicesIds].filter(
+      deviceId => peer.recipientId !== username || peer.deviceId !== deviceId
+    );
     for (const deviceId of deviceIds) {
       const fileKeys = files
         ? files.reduce((result, file) => {
@@ -169,9 +173,7 @@ const createEmails = async (
           fileKeys: fileKeysEncrypted
         };
       }
-      criptextEmailsByRecipientId[recipientId]['emails'].push(
-        criptextEmail
-      );
+      criptextEmailsByRecipientId[recipientId]['emails'].push(criptextEmail);
     }
   }
   return Object.values(criptextEmailsByRecipientId);

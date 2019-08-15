@@ -137,13 +137,12 @@ class MigrationPopupWrapper extends Component {
         return;
       }
     } catch (ex) {
-      console.error(ex);
       this.setState({
         errorMessage: errors.credentials
       });
-      return
+      return;
     }
-    
+
     let keybundle;
     try {
       const keybundleRes = await generateKeyBundle({
@@ -160,14 +159,13 @@ class MigrationPopupWrapper extends Component {
       }
       keybundle = await keybundleRes.json();
     } catch (ex) {
-      console.error(ex);
       this.setState({
         errorMessage: errors.keys,
         shouldRetry: false,
         shouldRestart: true
       });
     }
-    
+
     const pcName = await getComputerName();
     const deviceType = getDeviceType();
     const keybundleData = {

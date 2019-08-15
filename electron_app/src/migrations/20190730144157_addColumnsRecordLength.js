@@ -89,13 +89,13 @@ const addRecordColumns = async knex => {
   await createPreKeyRecordColumn(knex);
   await createSignedPreKeyRecordColumn(knex);
   await createSessionRecordLengthColumn(knex);
-}
+};
 
 const removeRecordColumns = async knex => {
   await deletePreKeyRecordColumn(knex);
   await deleteSignedPreKeyRecordColumn(knex);
   await deleteSessionRecordLengthColumn(knex);
-}
+};
 
 exports.up = async function(knex, Promise) {
   const accountsCountRes = await knex.table(Table.ACCOUNT).count();
