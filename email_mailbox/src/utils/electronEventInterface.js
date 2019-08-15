@@ -1429,6 +1429,7 @@ ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
 });
 
 ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
+  isGettingEvents = true;
   try {
     const eventData = await fetchGetSingleEvent({ rowId: data.rowId });
     await parseAndStoreEventsBatch({
@@ -1441,6 +1442,7 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
     // eslint-disable-next-line no-console
     console.error(`[Firebase Error]: `, firebaseNotifErr);
   }
+  isGettingEvents = false;
 });
 
 ipcRenderer.send(START_NOTIFICATION_SERVICE, senderNotificationId);
