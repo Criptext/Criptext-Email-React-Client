@@ -382,6 +382,11 @@ class ComposerWrapper extends Component {
     });
     const files = this.getFilesFromEvent(e);
     const filesFiltered = [...files].filter(item => {
+      if (!item.type) {
+        const texts = item.name.split('.');
+        const ext = texts[texts.length - 1];
+        if (ext === 'xls') return true;
+      }
       return !!item.type;
     });
 
