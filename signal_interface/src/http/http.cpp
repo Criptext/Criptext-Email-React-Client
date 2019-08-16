@@ -7,20 +7,6 @@ struct mg_context *ctx;
 
 char* db_path;
 
-const char* civet_options[] = {
-    "document_root",
-    ".",
-    "listening_ports",
-    "8085",
-    "request_timeout_ms",
-    "10000",
-    "error_log_file",
-    "error.log",
-    "enable_auth_domain_check",
-    "no",
-    0
-};
-
 int decryptEmail(struct mg_connection *conn, void *cbdata){
   return postDecryptEmail(conn, cbdata, db_path);
 }
@@ -57,8 +43,22 @@ int pong(struct mg_connection *conn, void *cbdata){
   return 1;
 }
 
-void http_init(char *dbPath){
+void http_init(char *dbPath, char *port){
   db_path = dbPath;
+
+  const char* civet_options[] = {
+    "document_root",
+    ".",
+    "listening_ports",
+    port,
+    "request_timeout_ms",
+    "10000",
+    "error_log_file",
+    "error.log",
+    "enable_auth_domain_check",
+    "no",
+    0
+  };
 
   ctx = mg_start(&callbacks, 0, civet_options);
   mg_set_request_handler(ctx, "/decrypt", decryptEmail, 0);

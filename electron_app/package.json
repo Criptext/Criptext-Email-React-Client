@@ -158,6 +158,7 @@
     "line-by-line": "^0.1.6",
     "moment": "^2.22.2",
     "os-locale": "^3.0.1",
+    "portscanner": "^2.2.0",
     "recursive-copy": "^2.0.10",
     "rimraf": "^2.6.3",
     "rmdir-recursive": "^0.0.1",

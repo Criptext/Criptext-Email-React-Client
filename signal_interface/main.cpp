@@ -1,6 +1,11 @@
 #include "src/http/http.h"
 #include <string>
 
+bool is_number(const std::string& s) {
+    return !s.empty() && std::find_if(s.begin(), 
+        s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
+}
+
 int main(int argc, char const *argv[]){
 
     if (argc < 2) {
@@ -9,8 +14,17 @@ int main(int argc, char const *argv[]){
     }
 
     char *dbPath = const_cast<char *>(argv[1]);
-    std::cout << "DB PATH IS : " << dbPath << std::endl;
-    http_init(dbPath);
+    char *port = "8085";
+
+    if (argc > 2) {
+      char *myPort = const_cast<char *>(argv[2]);
+      if (is_number(port)) {
+        port = myPort;
+      }
+    }
+
+    std::cout << "DB PATH: " << dbPath << "\nPORT : " << port << std::endl;
+    http_init(dbPath, port);
 
     while(1) {
         

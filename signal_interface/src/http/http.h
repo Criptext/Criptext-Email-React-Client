@@ -6,5 +6,5 @@
 #include "./handlers/encrypt.h"
 #include "./handlers/keyBundle.h"
 
-void http_init(char *dbPath);
+void http_init(char *dbPath, char *port);
 void http_shutdown();

@@ -1,5 +1,9 @@
 /*global libsignal util*/
-import { getSessionRecordIds, insertPreKeys } from './../utils/ipc';
+import {
+  getSessionRecordIds,
+  insertPreKeys,
+  restartAlice
+} from './../utils/ipc';
 import SignalProtocolStore from './store';
 import { fetchEmailBody } from '../utils/FetchUtils';
 import { fetchDecryptBody } from '../utils/ApiUtils';
@@ -27,21 +31,33 @@ const decryptEmail = async ({
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return { decryptedBody: body.body };
   }
-  const res = await fetchDecryptBody({
-    senderId: recipientId,
-    deviceId,
-    recipientId: myAccount.recipientId,
-    messageType,
-    body: body.body,
-    headers: body.headers,
-    headersMessageType: messageType,
-    fileKeys: fileKeys
-  });
-  if (res.status !== 200) {
+  let retries = 3;
+  let res;
+  while (retries <= 3) {
+    try {
+      res = await fetchDecryptBody({
+        senderId: recipientId,
+        deviceId,
+        recipientId: myAccount.recipientId,
+        messageType,
+        body: body.body,
+        headers: body.headers,
+        headersMessageType: messageType,
+        fileKeys: fileKeys
+      });
+      if (res.status === 200) break;
+      retries -= 1;
+    } catch (ex) {
+      if (ex.toString() !== 'TypeError: Failed to fetch') break;
+      await restartAlice();
+    }
+  }
+  if (!res) {
     return {
       decryptedBody: 'Content Unencrypted'
     };
   }
+
   const {
     decryptedBody = null,
     decryptedHeaders = null,

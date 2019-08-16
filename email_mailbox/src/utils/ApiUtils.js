@@ -1,7 +1,7 @@
 /* global process */
 import { getOS } from './OSUtils';
 import { getOsAndArch } from './ipc';
-import { myAccount } from './electronInterface';
+import { myAccount, getAlicePort } from './electronInterface';
 import { version as appVersion } from './../../package.json';
 
 const API_CLIENT_VERSION = '8.0.0';
@@ -9,7 +9,7 @@ const apiBaseUrl =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_DEV_API_URL
     : 'https://api.criptext.com';
-const aliceUrl = 'http://localhost:8085';
+const aliceUrl = 'http://localhost';
 // Default
 let osInfo = getOS();
 
@@ -86,7 +86,7 @@ export const fetchDecryptBody = async ({
   headersMessageType,
   fileKeys
 }) => {
-  const requestUrl = `${aliceUrl}/decrypt`;
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/decrypt`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -108,7 +108,7 @@ export const createAccountCredentials = async ({
   deviceId,
   name
 }) => {
-  const requestUrl = `${aliceUrl}/account`;
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/account`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -125,7 +125,7 @@ export const generateKeyBundle = async ({
   deviceId,
   accountId
 }) => {
-  const requestUrl = `${aliceUrl}/keybundle`;
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/keybundle`;
   const options = {
     method: 'POST',
     body: JSON.stringify({

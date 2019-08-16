@@ -1,7 +1,8 @@
-const aliceUrl = 'http://localhost:8085';
+import { getAlicePort } from './electronInterface';
+const aliceUrl = 'http://localhost';
 
 export const createSession = async ({ accountRecipientId, keybundles }) => {
-  const requestUrl = `${aliceUrl}/session/create`;
+  const requestUrl = `${aliceUrl}:${getAlicePort}/session/create`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -20,7 +21,7 @@ export const encryptEmail = async ({
   preview,
   fileKeys
 }) => {
-  const requestUrl = `${aliceUrl}/encrypt/email`;
+  const requestUrl = `${aliceUrl}:${getAlicePort}/encrypt/email`;
   const options = {
     method: 'POST',
     body: JSON.stringify({

@@ -1,11 +1,12 @@
-const aliceUrl = 'http://localhost:8085';
+import { getAlicePort } from './electronInterface';
+const aliceUrl = 'http://localhost';
 
 export const createAccountCredentials = async ({
   recipientId,
   deviceId,
   name
 }) => {
-  const requestUrl = `${aliceUrl}/account`;
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/account`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -18,7 +19,7 @@ export const createAccountCredentials = async ({
 };
 
 export const generateKeyBundle = async ({ recipientId, deviceId }) => {
-  const requestUrl = `${aliceUrl}/keybundle`;
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/keybundle`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -35,7 +36,7 @@ export const fetchDecryptKey = async ({
   messageType,
   key
 }) => {
-  const requestUrl = `${aliceUrl}/decrypt/key`;
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/decrypt/key`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -49,7 +50,7 @@ export const fetchDecryptKey = async ({
 };
 
 export const createSession = async ({ accountRecipientId, keybundles }) => {
-  const requestUrl = `${aliceUrl}/session/create`;
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/session/create`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -61,7 +62,7 @@ export const createSession = async ({ accountRecipientId, keybundles }) => {
 };
 
 export const encryptKey = async ({ deviceId, recipientId, key }) => {
-  const requestUrl = `${aliceUrl}/encrypt/key`;
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/encrypt/key`;
   const options = {
     method: 'POST',
     body: JSON.stringify({
