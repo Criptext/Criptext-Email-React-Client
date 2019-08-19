@@ -107,14 +107,11 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
 
   CriptextSignal signal(accountRecipientId->valuestring, dbPath);
 
-  char *encryptedBody = 0;
-  int encryptedBodyType = 0;
-  char *encryptedPreview = 0;
-  int encryptedPreviewType = 0;
   cJSON *response = cJSON_CreateObject();
 
   if (cJSON_IsString(body)) {
     try {
+      char *encryptedBody = 0;
       size_t len = strlen(body->valuestring);
       uint8_t *text = (uint8_t *)malloc(len);
       memcpy(text, body->valuestring, len);
@@ -131,11 +128,12 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
 
   if (cJSON_IsString(preview)) {
     try {
+      char *encryptedPreview = 0;
       size_t len = strlen(preview->valuestring);
       uint8_t *text = (uint8_t *)malloc(len);
       memcpy(text, preview->valuestring, len);
       int type = signal.encryptText(&encryptedPreview, text, len, recipientId->valuestring, deviceId->valueint);
-      cJSON_AddStringToObject(response, "previewEncrypted", encryptedBody);
+      cJSON_AddStringToObject(response, "previewEncrypted", encryptedPreview);
       cJSON_AddNumberToObject(response, "previewMessageType", type);
       free(text);
     } catch (exception &ex) {
