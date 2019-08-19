@@ -886,6 +886,7 @@ select {
 button{
   border: none;
   cursor: pointer;
+  font-size: inherit;
 
   &:focus{
     outline: 0;
@@ -943,6 +944,11 @@ button{
 
   &.button-aa{
     background-color: #0091ff;
+  }
+
+  span{
+    font-family: NunitoSans;
+    line-height: inherit;
   }
 }
 

@@ -84,6 +84,7 @@ const {
   NOTIFICATION_SERVICE_STARTED,
   TOKEN_UPDATED
 } = remote.require('@criptext/electron-push-receiver/src/constants');
+const pushActions = ['anti_push', 'open_thread', 'open_activity'];
 const senderNotificationId = '73243261136';
 const emitter = new EventEmitter();
 let totalEmailsPending = null;
@@ -1429,6 +1430,7 @@ ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
 });
 
 ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
+  if (pushActions.includes(data.action) || !data.rowId) return;
   isGettingEvents = true;
   try {
     const eventData = await fetchGetSingleEvent({ rowId: data.rowId });
