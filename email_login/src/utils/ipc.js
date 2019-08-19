@@ -6,6 +6,8 @@ export const closeLoginWindow = () => {
 
 export const getComputerName = () => callMain('get-computer-name');
 
+export const getOsAndArch = () => callMain('get-os-and-arch');
+
 export const isWindows = () => callMain('get-isWindows');
 
 export const minimizeLoginWindow = () => {

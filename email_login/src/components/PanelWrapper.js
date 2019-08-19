@@ -9,6 +9,7 @@ import PopupHOC from './PopupHOC';
 import ForgotPasswordPopup from './ForgotPasswordPopup';
 import DialogPopup, { DialogTypes } from './DialogPopup';
 import { ButtonState } from './Button';
+import { toCapitalize } from './../utils/StringUtils';
 import {
   createTemporalAccount,
   deleteTemporalAccount,
@@ -21,6 +22,7 @@ import {
   closeLoginWindow,
   getAccountByParams,
   getComputerName,
+  getOsAndArch,
   linkAuth,
   linkBegin,
   linkStatus,
@@ -33,6 +35,7 @@ import { DEVICE_TYPE, appDomain } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
 import string, { getLang } from './../lang';
+import { version } from './../../package.json';
 import './panelwrapper.scss';
 
 const { errors, help, signIn, signUp } = string;
@@ -92,6 +95,7 @@ class PanelWrapper extends Component {
     super();
     this.state = {
       buttonSignInState: ButtonState.DISABLED,
+      contactURL: '',
       currentStep: mode.SIGNIN,
       lastStep: [mode.SIGNIN],
       mode: mode.SIGNIN,
@@ -126,6 +130,11 @@ class PanelWrapper extends Component {
     );
   }
 
+  async componentDidMount() {
+    const contactURL = await this.defineContactURL();
+    this.setState({ contactURL });
+  }
+
   renderFooter = () => (
     <footer>
       <span>
@@ -133,7 +142,7 @@ class PanelWrapper extends Component {
         &nbsp;
         <a
           className="footer-link"
-          href={`https://criptext.com/${getLang}/contact/`}
+          href={this.state.contactURL}
           // eslint-disable-next-line react/jsx-no-target-blank
           target="_blank"
         >
@@ -538,6 +547,13 @@ class PanelWrapper extends Component {
     return usernameOrEmailAddress.includes('@')
       ? usernameOrEmailAddress
       : `${usernameOrEmailAddress}@${appDomain}`;
+  };
+
+  defineContactURL = async () => {
+    const { os, arch, installerType } = await getOsAndArch();
+    return `https://criptext.com/${getLang}/contact?version=${version}&os=${toCapitalize(
+      os
+    )}&installer=${installerType}&arch=${arch}`;
   };
 
   goToPasswordLogin = () => {
