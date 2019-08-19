@@ -315,7 +315,7 @@
     },
     "openEmail": {
       "title": "Criptext",
-      "message": "📩 Email '<emailSubject>' was opened"
+      "message": "📩 Email <subject> was opened"
     }
   },
   "popups": {
