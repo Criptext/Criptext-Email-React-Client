@@ -85,3 +85,11 @@ export const splitSignalIdentifier = identifier => {
   const recipientId = parts.join('.');
   return { recipientId, deviceId };
 };
+
+export const getSubjectFromPushMessage = (message, emptySubject) => {
+  const matched = message.match(/"(.*)"/);
+  if (!matched) return null;
+  const substr = matched[0];
+  if (substr === `""`) return `(${emptySubject})`;
+  return substr;
+};

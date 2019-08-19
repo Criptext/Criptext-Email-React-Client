@@ -299,10 +299,6 @@
     "atText": "at"
   },
   "notification": {
-    "newEmailGroup": {
-      "prefix": "You have ",
-      "sufix": " new emails"
-    },
     "export_backup": {
       "success": {
         "title": "Backup exported successfully!",
@@ -312,6 +308,14 @@
         "title": "Criptext",
         "message": "Oops! Something went wrong to export backup"
       }
+    },
+    "newEmailGroup": {
+      "prefix": "You have ",
+      "sufix": " new emails"
+    },
+    "openEmail": {
+      "title": "Criptext",
+      "message": "📩 Email <subject> was opened"
     }
   },
   "popups": {

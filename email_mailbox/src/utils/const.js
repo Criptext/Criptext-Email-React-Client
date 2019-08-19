@@ -122,6 +122,12 @@ export const SocketCommand = {
   REACTIVATED_ACCOUNT_EVENT: 601
 };
 
+export const NOTIFICATION_ACTIONS = {
+  ANTI_PUSH: 'anti_push',
+  NEW_EMAIL: 'open_thread',
+  OPEN_EMAIL: 'open_activity'
+};
+
 export const deviceTypes = {
   PC: 1,
   IOS: 2,
