@@ -61,12 +61,14 @@ import {
   appDomain,
   EmailStatus,
   composerEvents,
-  EXTERNAL_RECIPIENT_ID_SERVER
+  EXTERNAL_RECIPIENT_ID_SERVER,
+  NOTIFICATION_ACTIONS
 } from './const';
 import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
+import { getSubjectFromPushMessage } from './StringUtils';
 import {
   fetchAcknowledgeEvents,
   fetchEvents,
@@ -84,7 +86,6 @@ const {
   NOTIFICATION_SERVICE_STARTED,
   TOKEN_UPDATED
 } = remote.require('@criptext/electron-push-receiver/src/constants');
-const pushActions = ['anti_push', 'open_thread', 'open_activity'];
 const senderNotificationId = '73243261136';
 const emitter = new EventEmitter();
 let totalEmailsPending = null;
@@ -1004,6 +1005,7 @@ ipcRenderer.on('socket-message', async (ev, message) => {
   if (eventId === 400) {
     sendLoadEventsEvent({ showNotification: true });
   } else {
+    if (isGettingEvents) return;
     await parseAndDispatchEvent(message);
   }
 });
@@ -1430,21 +1432,40 @@ ipcRenderer.on(TOKEN_UPDATED, async (_, token) => {
 });
 
 ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
-  if (pushActions.includes(data.action) || !data.rowId) return;
-  isGettingEvents = true;
   try {
-    const eventData = await fetchGetSingleEvent({ rowId: data.rowId });
-    await parseAndStoreEventsBatch({
-      events: [eventData],
-      hasMoreEvents: false
-    });
-    sendNewEmailNotification();
-    sendLoadEventsEvent({ showNotification: true });
+    switch (data.action) {
+      case NOTIFICATION_ACTIONS.NEW_EMAIL: {
+        if (isGettingEvents) return;
+        isGettingEvents = true;
+        const eventData = await fetchGetSingleEvent({ rowId: data.rowId });
+        await parseAndDispatchEvent(eventData);
+        sendNewEmailNotification();
+        isGettingEvents = false;
+        sendLoadEventsEvent({ showNotification: true });
+        break;
+      }
+      case NOTIFICATION_ACTIONS.OPEN_EMAIL: {
+        const subject = getSubjectFromPushMessage(
+          data.body,
+          string.mailbox.empty_subject
+        );
+        if (subject) {
+          const title = string.notification.openEmail.title;
+          const message = string.notification.openEmail.message.replace(
+            '<subject>',
+            subject
+          );
+          showNotificationApp({ title, message });
+        }
+        break;
+      }
+      default:
+        break;
+    }
   } catch (firebaseNotifErr) {
     // eslint-disable-next-line no-console
     console.error(`[Firebase Error]: `, firebaseNotifErr);
   }
-  isGettingEvents = false;
 });
 
 ipcRenderer.send(START_NOTIFICATION_SERVICE, senderNotificationId);

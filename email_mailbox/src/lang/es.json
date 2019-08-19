@@ -299,10 +299,6 @@
     "atText": "a las"
   },
   "notification": {
-    "newEmailGroup": {
-      "prefix": "Tienes ",
-      "sufix": " correos nuevos"
-    },
     "export_backup": {
       "success": {
         "title": "Respaldo exportado exitosamente!",
@@ -312,6 +308,14 @@
         "title": "Criptext",
         "message": "Ups! Algo salió mal al crear tu archivo de respaldo"
       }
+    },
+    "newEmailGroup": {
+      "prefix": "Tienes ",
+      "sufix": " correos nuevos"
+    },
+    "openEmail": {
+      "title": "Criptext",
+      "message": "📩 El correo <subject> fue abierto"
     }
   },
   "popups": {

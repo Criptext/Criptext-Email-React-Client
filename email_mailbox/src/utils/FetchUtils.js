@@ -143,6 +143,9 @@ export const fetchGetSingleEvent = async ({ rowId, optionalToken }) => {
     };
     return eventResponse;
   }
+  if (res.status === 404) {
+    return {};
+  }
   const expiredResponse = await checkExpiredSession({
     response: { status: res.status },
     initialRequest: fetchGetSingleEvent,
