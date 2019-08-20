@@ -1,29 +1,29 @@
 #include "encrypt.h"
 
 int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
+  int endpointId = rand() % 1000000;
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
   }
   
-  std::cout << "/encrypt/key Receiving Request" << std::endl;
-  char buffer[1024];
-  int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
+  spdlog::info("[{0}] /encrypt/key Receiving Request", endpointId);
+  char *bufferData;
+  int readLength = parseBody(&bufferData, conn);
 
-  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
-    std::cout << "Receiving Request Fail 1" << std::endl;
-    mg_send_http_error(conn, 400, "%s", "Body data too big");
+  if (readLength <= 0) {
+    spdlog::error("[{0}] Request data too big", endpointId);
+    mg_send_http_error(conn, 400, "%s", "Request data too big");
     return 400;
   }
-  buffer[dlen] = 0;
-  cJSON *obj = cJSON_Parse(buffer);
+
+  cJSON *obj = cJSON_Parse(bufferData);
   
   if (obj == NULL) {
-    std::cout << "Receiving Request Fail 2 : " << buffer << std::endl;
+    spdlog::error("[{0}] Not a json object: {1}", endpointId, bufferData);
     mg_send_http_error(conn, 400, "%s", "Not a json object");
     return 400;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *deviceId, *recipientId, *keyData, *key;
   deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
@@ -32,6 +32,7 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
   key = cJSON_GetObjectItemCaseSensitive(keyData, "data");
 
   if (!cJSON_IsString(recipientId) || !cJSON_IsNumber(deviceId)) {
+    spdlog::error("[{0}] Missing Params", endpointId, bufferData);
     mg_send_http_error(conn, 400, "%s", "Missing params");
     return 400;
   }
@@ -58,27 +59,30 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
 
   if (result < 0) {
     std::string unencrypted = "Content Unencrypted";
+    spdlog::error("[{0}] {1}", endpointId, unencrypted.c_str());
     mg_send_http_error(conn, 400, "%s", unencrypted.c_str());
     return 400;
   }
 
+  spdlog::info("[{0}] Successful response", endpointId);
   mg_send_http_ok( conn, "plain/text", strlen(encryptedText));
   mg_write(conn, encryptedText, strlen(encryptedText));
   return 200;
 }
 
 int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
+  int endpointId = rand() % 1000000;
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
   }
   
-  std::cout << "/encrypt/email Receiving Request" << std::endl;
+  spdlog::info("[{0}] /encrypt/email Receiving Request", endpointId);
   char *bufferData;
   int readLength = parseBody(&bufferData, conn);
 
   if (readLength <= 0) {
-    std::cout << "Receiving Request Fail 1" << std::endl;
+    spdlog::error("[{0}] Request data too big", endpointId);
     mg_send_http_error(conn, 400, "%s", "Request data too big");
     return 400;
   }
@@ -86,11 +90,10 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
   cJSON *obj = cJSON_Parse(bufferData);
   
   if (obj == NULL) {
-    std::cout << "Receiving Request Fail 2 : " << bufferData << std::endl;
-    mg_send_http_error(conn, 400, "%s", "No request data");
+    spdlog::error("[{0}] Not a json object: {1}", endpointId, bufferData);
+    mg_send_http_error(conn, 400, "%s", "Not a json object");
     return 400;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *accountRecipientId, *deviceId, *recipientId, *body, *preview, *fileKeys;
   accountRecipientId = cJSON_GetObjectItemCaseSensitive(obj, "accountRecipientId");
@@ -104,6 +107,8 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
     mg_send_http_error(conn, 400, "%s", "No request data");
     return 400;
   }
+
+  spdlog::info("[{0}] Request -> <accountId: {1}, recipientId: {2}>", endpointId, accountRecipientId->valuestring, recipientId->valuestring);
 
   CriptextSignal signal(accountRecipientId->valuestring, dbPath);
 
@@ -120,7 +125,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
       cJSON_AddNumberToObject(response, "bodyMessageType", type);
       free(text);
     } catch (exception &ex) {
-      std::cout << "ENCRYPT BODY ERROR: " << ex.what() << std::endl;
+      spdlog::error("[{0}] ENCRYPT BODY ERROR {1}", endpointId, ex.what());
       mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
       return 500;
     }
@@ -137,7 +142,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
       cJSON_AddNumberToObject(response, "previewMessageType", type);
       free(text);
     } catch (exception &ex) {
-      std::cout << "ENCRYPT BODY ERROR: " << ex.what() << std::endl;
+      spdlog::error("[{0}] ENCRYPT PREVIEW ERROR {1}", endpointId, ex.what());
       mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
       return 500;
     }
@@ -160,7 +165,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
         cJSON_AddItemToArray(myFileKeys, decryptedFileKey);
         free(text);
       } catch (exception &ex) {
-        std::cout << "DECRYPT HEADER ERROR: " << ex.what() << std::endl;
+        spdlog::error("[{0}] ENCRYPT FILEKEYS ERROR {1}", endpointId, ex.what());
         mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
         return 500;
       }
@@ -169,5 +174,6 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
     cJSON_AddItemToObject(response, "fileKeysEncrypted", myFileKeys);
   }
 
+  spdlog::info("[{0}] Successful response", endpointId);
   return SendJSON(conn, response);
 }

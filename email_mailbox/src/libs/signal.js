@@ -36,6 +36,7 @@ const decryptEmail = async ({
   while (retries <= 3) {
     try {
       res = await fetchDecryptBody({
+        emailKey: bodyKey,
         senderId: recipientId,
         deviceId,
         recipientId: myAccount.recipientId,

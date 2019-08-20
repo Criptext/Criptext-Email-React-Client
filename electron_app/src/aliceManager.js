@@ -1,7 +1,29 @@
 const { spawn } = require('child_process');
 const path = require('path');
+const { app } = require('electron');
 const dbManager = require('./DBManager');
 const portscanner = require('portscanner');
+
+const getLogsPath = node_env => {
+  switch (node_env) {
+    case 'test': {
+      return './src/__integrations__/alice_logs.txt';
+    }
+    case 'development': {
+      return path
+        .join(__dirname, '/alice_logs.txt')
+        .replace('/app.asar', '')
+        .replace('/src', '');
+    }
+    default: {
+      const userDataPath = app.getPath('userData');
+      return path
+        .join(userDataPath, '/alice_logs.txt')
+        .replace('/app.asar', '')
+        .replace('/src', '');
+    }
+  }
+};
 
 const getAlicePath = nodeEnv => {
   switch (nodeEnv) {
@@ -27,17 +49,18 @@ const startAlice = async () => {
   if (!alice) {
     const myPort = await portscanner.findAPortNotInUse(8085);
     port = myPort;
-    console.log(`port available ${myPort}`);
+
     const alicePath = getAlicePath(process.env.NODE_ENV);
     const dbpath = path.resolve(dbManager.databasePath);
-    alice = spawn(alicePath, [dbpath, myPort]);
+    const logspath = path.resolve(getLogsPath(process.env.NODE_ENV));
+    alice = spawn(alicePath, [dbpath, myPort, logspath]);
     alice.stdout.on('data', data => {
       console.log(`-----alice-----\n${data}\n -----end-----`);
     });
     alice.on('exit', (code, signal) => {
       console.log(`alice exited with code ${code} and signal ${signal}`);
       alice = null;
-      if (signal !== 'SIGTERM') {
+      if (signal !== 'SIGTERM' && signal !== 'SIGABRT') {
         return;
       }
       aliceStartTimeout = setTimeout(() => {

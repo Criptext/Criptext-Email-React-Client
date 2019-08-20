@@ -77,6 +77,7 @@ export const apiCriptextRequest = async ({
 };
 
 export const fetchDecryptBody = async ({
+  emailKey,
   senderId,
   deviceId,
   recipientId,
@@ -90,6 +91,7 @@ export const fetchDecryptBody = async ({
   const options = {
     method: 'POST',
     body: JSON.stringify({
+      emailKey,
       senderId,
       deviceId,
       recipientId,

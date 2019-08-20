@@ -1,17 +1,19 @@
 #include "decrypt.h"
 
 int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
+  int endpointId = rand() % 1000000;
+
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
   }
   
-  std::cout << "/decrypt Receiving Request" << std::endl;
+  spdlog::info("[{0}] /decrypt Receiving Request", endpointId);
   char *bufferData;
   int readLength = parseBody(&bufferData, conn);
 
   if (readLength <= 0) {
-    std::cout << "Receiving Request Fail 1" << std::endl;
+    spdlog::error("[{0}] Request data too big", endpointId);
     mg_send_http_error(conn, 400, "%s", "Request data too big");
     return 400;
   }
@@ -19,26 +21,29 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
   cJSON *obj = cJSON_Parse(bufferData);
   
   if (obj == NULL) {
-    std::cout << "Receiving Request Fail 2 : " << bufferData << " : " << readLength << std::endl;
+    spdlog::error("[{0}] Not a json object: {1}", endpointId, bufferData);
     mg_send_http_error(conn, 400, "%s", bufferData);
     return 400;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
-  cJSON *senderId, *deviceId, *type, *recipientId, *body, *headers, *fileKeys, *headersType;
+  cJSON *emailKey, *senderId, *deviceId, *type, *recipientId, *body, *headers, *fileKeys, *headersType;
   senderId = cJSON_GetObjectItemCaseSensitive(obj, "senderId");
   deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
   recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
+  emailKey = cJSON_GetObjectItemCaseSensitive(obj, "emailKey");
   type = cJSON_GetObjectItemCaseSensitive(obj, "messageType");
   body = cJSON_GetObjectItemCaseSensitive(obj, "body");
   headers = cJSON_GetObjectItemCaseSensitive(obj, "headers");
   headersType = cJSON_GetObjectItemCaseSensitive(obj, "headersMessageType");
   fileKeys = cJSON_GetObjectItemCaseSensitive(obj, "fileKeys");
-  if (!cJSON_IsString(recipientId) || !cJSON_IsString(senderId) || !cJSON_IsNumber(deviceId) || !cJSON_IsNumber(type)) {
+  if (!cJSON_IsNumber(emailKey) || !cJSON_IsString(recipientId) || !cJSON_IsString(senderId) || !cJSON_IsNumber(deviceId) || !cJSON_IsNumber(type)) {
+    spdlog::error("[{0}] Missing params", endpointId);
     mg_send_http_error(conn, 400, "%s", "Missing params");
-    std::cout << "Receiving Request Fail 3" << std::endl;
     return 400;
   }
+
+  spdlog::info("[{0}] Request -> {RecipientId: {1}, senderId: {2}, EmailKey: {3}>", endpointId, recipientId->valuestring, senderId->valuestring, emailKey->valueint);
+
   CriptextSignal signal(recipientId->valuestring, dbPath);
   cJSON *response = cJSON_CreateObject();
   if (cJSON_IsString(body)) {
@@ -52,7 +57,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
       cJSON_AddStringToObject(response, "decryptedBody", text);
       free(text);
     } catch (exception &ex) {
-      std::cout << "DECRYPT BODY ERROR: " << ex.what() << std::endl;
+      spdlog::error("[{0}] DECRYPT BODY ERROR {1}", endpointId, ex.what());
       mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
       return 500;
     }
@@ -69,7 +74,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
       cJSON_AddStringToObject(response, "decryptedHeaders", text);
       free(text);
     } catch (exception &ex) {
-      std::cout << "DECRYPT HEADER ERROR: " << ex.what() << std::endl;
+      spdlog::error("[{0}] DECRYPT HEADER ERROR {1}", endpointId, ex.what());
       mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
       return 500;
     }
@@ -91,7 +96,7 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
         cJSON_AddItemToArray(myFileKeys, decryptedFileKey);
         free(text);
       } catch (exception &ex) {
-        std::cout << "DECRYPT FILEKEY ERROR: " << ex.what() << std::endl;
+        spdlog::error("[{0}] DECRYPT FILEKEY ERROR {1}", endpointId, ex.what());
         mg_send_http_error(conn, 500, "%s", "Unable to encrypt body");
         return 500;
       }
@@ -100,34 +105,36 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
     cJSON_AddItemToObject(response, "decryptedFileKeys", myFileKeys);
   }
 
+  spdlog::info("[{0}] Successful response", endpointId);
   return SendJSON(conn, response);
 }
 
 int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
-  
+  int endpointId = rand() % 1000000;
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
   }
   
-  std::cout << "/decrypt/key Receiving Request" << std::endl;
-  char buffer[1024];
-  int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
+  spdlog::info("[{0}] /decrypt/key Receiving Request", endpointId);
 
-  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
-    std::cout << "Receiving Request Fail 1" << std::endl;
-    mg_send_http_error(conn, 400, "%s", "No request data");
+  char *bufferData;
+  int readLength = parseBody(&bufferData, conn);
+
+  if (readLength <= 0) {
+    spdlog::error("[{0}] Request data too big", endpointId);
+    mg_send_http_error(conn, 400, "%s", "Request data too big");
     return 400;
   }
-  buffer[dlen] = 0;
-  cJSON *obj = cJSON_Parse(buffer);
+  
+  cJSON *obj = cJSON_Parse(bufferData);
   
   if (obj == NULL) {
-    std::cout << "Receiving Request Fail 2 : " << buffer << std::endl;
-    mg_send_http_error(conn, 400, "%s", "No request data");
+    spdlog::error("[{0}] Not a json object: {1}", endpointId, bufferData);
+    mg_send_http_error(conn, 400, "%s", bufferData);
     return 400;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
+  spdlog::info("[{0}] Request -> {1}", endpointId, bufferData);
 
   cJSON *deviceId, *type, *recipientId, *key;
   deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
@@ -136,6 +143,7 @@ int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
   key = cJSON_GetObjectItemCaseSensitive(obj, "key");
 
   if (!cJSON_IsString(recipientId) || !cJSON_IsNumber(deviceId) || !cJSON_IsNumber(type)) {
+    spdlog::error("[{0}]  Missing Params", endpointId);
     mg_send_http_error(conn, 400, "%s", "No request data");
     return 400;
   }
@@ -148,11 +156,13 @@ int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
 
   if (result < 0) {
     std::string unencrypted = "Content Unencrypted";
+    spdlog::error("[{0}]  {1}", unencrypted.c_str());
     mg_send_http_error(conn, 400, "%s", unencrypted.c_str());
     return 400;
   }
 
   mg_send_http_ok( conn, "application/octet-stream", plaintext_len);
   mg_write(conn, plaintext_data, plaintext_len);
+  spdlog::info("[{0}] Successful response", endpointId);
   return 200;
 }

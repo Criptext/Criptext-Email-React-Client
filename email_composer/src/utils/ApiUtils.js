@@ -2,7 +2,7 @@ import { getAlicePort } from './electronInterface';
 const aliceUrl = 'http://localhost';
 
 export const createSession = async ({ accountRecipientId, keybundles }) => {
-  const requestUrl = `${aliceUrl}:${(getAlicePort())}/session/create`;
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/session/create`;
   const options = {
     method: 'POST',
     body: JSON.stringify({

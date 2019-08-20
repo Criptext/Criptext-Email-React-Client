@@ -6,6 +6,7 @@
       "sources": [ 
         "main.cpp",
         "src/http/http.cpp",
+        "src/helpers/logger.cpp",
         "src/http/handlers/helpers.cpp",
         "src/http/handlers/cors.cpp",
         "src/http/handlers/encrypt.cpp",
@@ -27,7 +28,7 @@
         "../db_interface/src/axolotl/SessionRecord.cpp",
         "../db_interface/src/axolotl/SignedPreKey.cpp"
       ],
-      "cflags": ["-Wall", "-std=c++11"],
+      "cflags": ["-Wall", "-std=c++11", "-rdynamic"],
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       "include_dirs" : [
@@ -43,7 +44,8 @@
         "<libSQLiteCpp>",
         "<libsignal-protocol-c>",
         "<libcivetweb>",
-        "<libcjson>"
+        "<libcjson>",
+        "<libspdlog>"
       ],
       'conditions': [
         ['OS=="mac"', {
