@@ -41,9 +41,10 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
     mg_send_http_error(conn, 400, "%s", "Missing params");
     return 400;
   }
-
-  spdlog::info("[{0}] Request -> {RecipientId: {1}, senderId: {2}, EmailKey: {3}>", endpointId, recipientId->valuestring, senderId->valuestring, emailKey->valueint);
-
+  std::cout << "HELLO THERE" << std::endl;
+  spdlog::info("[{0}] Request -> <RecipientId: {1}, senderId: {2}, EmailKey: {3}>", endpointId, recipientId->valuestring, senderId->valuestring, emailKey->valueint);
+  std::cout << "HELLO THERE 2" << std::endl;
+  
   CriptextSignal signal(recipientId->valuestring, dbPath);
   cJSON *response = cJSON_CreateObject();
   if (cJSON_IsString(body)) {

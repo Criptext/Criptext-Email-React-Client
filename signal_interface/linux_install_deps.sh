@@ -118,7 +118,7 @@ cd ./spdlog > /dev/null
 mkdir myBuild && cd myBuild > /dev/null;
 printf "  - Making install spdlog \n";
 cmake .. > /dev/null
-make -j4 install > /dev/null 2>&1;
+sudo make -j4 install > /dev/null 2>&1;
 if [ $? -ne 0 ]; then
   PEM "    Failed to make install spdlogs";
   removeTempFolder3;
