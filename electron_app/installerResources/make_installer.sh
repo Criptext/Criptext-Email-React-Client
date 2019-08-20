@@ -2,7 +2,8 @@
 
 has_error=0
 isSupported=0
-installerTypeDefaultValue="DEVELOPMENT";
+installerTypeDefaultValue="DEVELOPMENT"
+nucleusIdDefaultValue="0.0.0"
 entitlementsOriginalFileName="entitlements.mac.plist"
 entitlementsBackupFileName="backup-entitlements.mac.plist"
 # Folders
@@ -30,11 +31,15 @@ CURRENT_OS=$( uname )
 if [ "$CURRENT_OS" = "Linux" ]; then    
     echo "    OS:    Linux";
     isSupported=1;
+    # Load environment variables
+    source ./.env
     # Update package.json
     linuxInstallerType=$( cat ./installerResources/installerTypes.json | json "linux.installer" )
     json -I -f ./package.json -e "this.criptextInstallerType=\"${linuxInstallerType}\"" -q
+    json -I -f ./package.json -e "this.nucleusId=\"${PROD_NUCLEUS_ID}\"" -q
     printf "    Updated package.json \n";
-    printf "        -> Installer-type:  ${linuxInstallerType} \n";
+    printf "        -> Installer-type:  ${linuxInstallerType}\n";
+    printf "        ->   Nucleus Id  :  ${PROD_NUCLEUS_ID}\n";
     echo "    Executing:    yarn build";
     yarn build > /dev/null;
     # Move to subfolder
@@ -55,9 +60,11 @@ elif [ "$CURRENT_OS" = "Darwin" ]; then
     # Update package.json
     macStoreType=$( cat ./installerResources/installerTypes.json | json "mac.store" )
     json -I -f ./package.json -e "this.criptextInstallerType=\"${macStoreType}\"" -q
+    json -I -f ./package.json -e "this.nucleusId=\"${PROD_NUCLEUS_ID}\"" -q
     json -I -f ./package.json -e 'this.build.mac.target=["mas"]' -q
     printf "    Updated package.json \n";
     printf "        -> Installer-type:  ${macStoreType} \n";
+    printf "        ->   Nucleus Id  :  ${PROD_NUCLEUS_ID}\n";
     printf "        -> Current target:  MAS \n";
     # Building
     printf "    Executing:    yarn build \n";
@@ -77,6 +84,7 @@ elif [ "$CURRENT_OS" = "Darwin" ]; then
     json -I -f ./package.json -e 'this.build.mac.target=["dmg", "zip"]' -q
     printf "\n    Updated package.json \n";
     printf "        -> Installer-type:  ${macInstallerType} \n";
+    printf "        ->   Nucleus Id  :  ${PROD_NUCLEUS_ID}\n";
     printf "        -> Current target:  DMG & ZIP \n";
     mv "build/${entitlementsOriginalFileName}" "build/${entitlementsBackupFileName}";
     printf "    Renamed [${entitlementsOriginalFileName}] to [${entitlementsBackupFileName}] \n";
@@ -107,9 +115,11 @@ else
     # Update package.json
     windowsInstallerType=$( cat ./installerResources/installerTypes.json | json "windows.installer" )
     json -I -f ./package.json -e "this.criptextInstallerType=\"${windowsInstallerType}\"" -q
+    json -I -f ./package.json -e "this.nucleusId=\"${PROD_NUCLEUS_ID}\"" -q
     json -I -f ./package.json -e 'this.build.win.target=["nsis"]' -q
     printf "    Updated package.json \n";
     printf "        -> Installer-type:  ${windowsInstallerType} \n";
+    printf "        ->   Nucleus Id  :  ${PROD_NUCLEUS_ID}\n";
     printf "        -> Current target:  Nsis \n";
     # Building
     printf "    Executing:    yarn build";
@@ -133,8 +143,9 @@ else
     json -I -f ./package.json -e "this.build.appx.publisher=\"${WIN_STORE_DEVELOPER_ID}\"" -q
     printf "\n    Updated package.json \n";
     printf "        -> Installer-type:  ${windowsStoreType} \n";
+    printf "        ->   Nucleus Id  :  ${PROD_NUCLEUS_ID}\n";
     printf "        -> Current target:  AppX \n";
-    printf "        -> Publisher:       ${WIN_STORE_DEVELOPER_ID} \n";
+    printf "        ->    Publisher  :       ${WIN_STORE_DEVELOPER_ID} \n";
     # Building
     printf "    Executing:    yarn build";
     yarn build > /dev/null;
@@ -152,8 +163,9 @@ else
 fi
 
 
-# Set default criptextInstallerType
+# Set default criptextInstallerType & Nucleus Id
 json -I -f ./package.json -e "this.criptextInstallerType=\"${installerTypeDefaultValue}\"" -q
+json -I -f ./package.json -e "this.nucleusId=\"${nucleusIdDefaultValue}\"" -q
 # Remove modified package.json 
 rm -f ./package.json
 # Restore original package.json

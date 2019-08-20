@@ -9,6 +9,7 @@ const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { createAppMenu } = require('./src/windows/menu');
+const { APP_VERSION, NUCLEUS_ID } = require('./src/utils/const');
 const {
   showWindows, 
   isDev, 
@@ -17,7 +18,6 @@ const {
   isFromStore,
   getSystemLanguage
 } = require('./src/windows/windowUtils');
-require('dotenv').config();
 require('./src/ipc/composer.js');
 require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
@@ -27,9 +27,6 @@ require('./src/ipc/manager.js');
 require('./src/ipc/dataTransfer.js');
 require('./src/ipc/backup.js');
 const ipcUtils = require('./src/ipc/utils.js');
-const { version } = require('./package.json');
-const nucleusId = process.env.NUCLEUS_ID;
-const versionApp = process.env.NODE_ENV === 'development' ? '0.0.0' : version;
 
 globalManager.forcequit.set(false);
 
@@ -109,11 +106,11 @@ const upNucleus = () => {
   const data = {
     onlyMainProcess: true,
     userId: myAccount.recipientId,
-    version: versionApp,
+    version: APP_VERSION,
     language: mySettings.language
   }
-  const Nucleus = require('electron-nucleus')(nucleusId, data);
-  Nucleus.track("PLAYED_TRACK");
+  const Nucleus = require('electron-nucleus')(NUCLEUS_ID, data);
+  Nucleus.track("MAILBOX_TRACK");
 }
 
 app.on('ready', () => {

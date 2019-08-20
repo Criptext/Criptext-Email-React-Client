@@ -24,9 +24,10 @@
     "lint": "criptext-js-tools lint",
     "clear-build": "sh ./installerResources/clearBuild.sh",
     "package": "sh ./installerResources/converge_builds.sh",
-    "release": "sh ./installerResources/make_installer.sh"
+    "release": "bash ./installerResources/make_installer.sh"
   },
   "criptextInstallerType": "DEVELOPMENT",
+  "nucleusId": "0.0.0",
   "build": {
     "appId": "com.criptext.criptextmail",
     "buildVersion": "1",

@@ -1,5 +1,6 @@
 /* process */
 require('dotenv').config();
+const { version, nucleusId } = require('./../../package.json');
 
 const API_CLIENT_VERSION = '9.0.0';
 const LINK_DEVICES_FILE_VERSION = '5';
@@ -27,5 +28,9 @@ module.exports = {
     : PROD_DATA_TRANSFER_URL,
   NEWS_SERVER_URL,
   API_CLIENT_VERSION,
-  LINK_DEVICES_FILE_VERSION
+  LINK_DEVICES_FILE_VERSION,
+  APP_VERSION: isDevelopment ? '0.0.0' : version,
+  NUCLEUS_ID: isDevelopment
+    ? process.env.DEV_NUCLEUS_ID
+    : process.env.PROD_NUCLEUS_ID || nucleusId
 };
