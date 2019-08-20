@@ -17,7 +17,6 @@ const {
   isFromStore,
   getSystemLanguage
 } = require('./src/windows/windowUtils');
-require('dotenv').config();
 require('./src/ipc/composer.js');
 require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
@@ -27,9 +26,6 @@ require('./src/ipc/manager.js');
 require('./src/ipc/dataTransfer.js');
 require('./src/ipc/backup.js');
 const ipcUtils = require('./src/ipc/utils.js');
-const { version } = require('./package.json');
-const nucleusId = process.env.NUCLEUS_ID;
-const versionApp = process.env.NODE_ENV === 'development' ? '0.0.0' : version;
 
 globalManager.forcequit.set(false);
 
@@ -50,7 +46,7 @@ async function initApp() {
       mySettings.initialize(settings);
       wsClient.start(myAccount);
       createAppMenu();
-      mailboxWindow.show();
+      mailboxWindow.show({ firstOpenApp: true });
     } else {
       await getUserLanguage();
       createAppMenu();
@@ -83,8 +79,6 @@ async function initApp() {
       loadingWindow.send('socket-message', data);
     }
   });
-
-  upNucleus();
 }
 
 //   App
@@ -104,17 +98,6 @@ const getUserLanguage = async () => {
   const osLanguage = await getSystemLanguage();
   await dbManager.updateSettings({ language: osLanguage });
 };
-
-const upNucleus = () => {
-  const data = {
-    onlyMainProcess: true,
-    userId: myAccount.recipientId,
-    version: versionApp,
-    language: mySettings.language
-  }
-  const Nucleus = require('electron-nucleus')(nucleusId, data);
-  Nucleus.track("PLAYED_TRACK");
-}
 
 app.on('ready', () => {
   initApp();

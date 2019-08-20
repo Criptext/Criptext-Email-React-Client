@@ -53,7 +53,7 @@ const createTrayIcon = () => {
     tray.setContextMenu(contextMenu);
     tray.on('click', () => {
       const mailboxWindow = require('./mailbox');
-      mailboxWindow.show();
+      mailboxWindow.show({});
     });
   }
 };
