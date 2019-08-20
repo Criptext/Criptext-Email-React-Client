@@ -97,6 +97,26 @@ cd ../..
 
 # ================================================
 
+printf "\n  - Downloading spdlog \n";
+git clone "https://github.com/gabime/spdlog.git" --quiet;
+if [ $? -ne 0 ]; then
+  PEM "    Failed to download spdlog";
+  removeTempFolder1;
+fi
+printf "  - Preparing build \n";
+cd ./spdlog > /dev/null
+mkdir myBuild && cd myBuild > /dev/null;
+printf "  - Making install spdlog \n";
+cmake .. > /dev/null
+make -j4 install > /dev/null 2>&1;
+if [ $? -ne 0 ]; then
+  PEM "    Failed to make install spdlogs";
+  removeTempFolder3;
+fi
+cd ../..
+
+# ================================================
+
 rm -rf "${tempBuildFolder}"
 PSM "    Done.";
 printf "\n"
