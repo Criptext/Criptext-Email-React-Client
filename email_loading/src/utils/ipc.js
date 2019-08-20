@@ -7,7 +7,7 @@ export const closeCreatingKeysLoadingWindow = () => {
 export const getComputerName = () => callMain('get-computer-name');
 
 export const openMailboxWindow = () => {
-  callMain('open-mailbox');
+  callMain('open-mailbox', { firstOpenApp: true });
 };
 
 export const throwError = error => {

@@ -1,6 +1,9 @@
 const { app, BrowserWindow } = require('electron');
 const osLocale = require('os-locale');
 const globalManager = require('./../globalManager');
+const myAccount = require('./../Account');
+const mySettings = require('./../Settings');
+const { APP_VERSION, NUCLEUS_ID } = require('./../utils/const');
 
 const showWindows = () => {
   const visibleWindows = BrowserWindow.getAllWindows();
@@ -39,6 +42,23 @@ const sendEventToAllWindows = (eventName, params) => {
   });
 };
 
+const getNucleusPayload = () => ({
+  onlyMainProcess: true,
+  userId: myAccount.recipientId,
+  version: APP_VERSION,
+  language: mySettings.language
+});
+
+const nucleusTrack = eventName => {
+  const data = getNucleusPayload();
+  const Nucleus = require('electron-nucleus')(NUCLEUS_ID, data);
+  Nucleus.track(eventName);
+};
+
+const NUCLEUS_EVENTS = {
+  MAILBOX_TRACK: 'MAILBOX_TRACK'
+};
+
 module.exports = {
   quit,
   isDev,
@@ -48,5 +68,7 @@ module.exports = {
   isFromStore,
   showWindows,
   getSystemLanguage,
-  sendEventToAllWindows
+  sendEventToAllWindows,
+  NUCLEUS_EVENTS,
+  nucleusTrack
 };

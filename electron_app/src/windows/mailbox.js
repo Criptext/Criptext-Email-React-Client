@@ -8,7 +8,12 @@ const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
-const { isFromStore, isDev } = require('./windowUtils');
+const {
+  isFromStore,
+  isDev,
+  nucleusTrack,
+  NUCLEUS_EVENTS
+} = require('./windowUtils');
 const { createTrayIcon, destroyTrayIcon } = require('./tray');
 const { isWindows } = require('./../utils/osUtils');
 
@@ -89,18 +94,20 @@ const showFileExplorer = filename => {
   mailboxWindow.send('display-message-success-download');
 };
 
-const show = async () => {
+const show = async ({ firstOpenApp = false }) => {
   const existVisibleWindow = BrowserWindow.getAllWindows().filter(w =>
     w.isVisible()
   );
   if (mailboxWindow) {
     mailboxWindow.show();
     createTrayIcon();
+    if (firstOpenApp) nucleusTrack(NUCLEUS_EVENTS.MAILBOX_TRACK);
   } else if (!existVisibleWindow.length || !mailboxWindow) {
     await create();
     mailboxWindow.on('ready-to-show', () => {
       mailboxWindow.show();
       createTrayIcon();
+      if (firstOpenApp) nucleusTrack(NUCLEUS_EVENTS.MAILBOX_TRACK);
     });
     mailboxWindow.on('focus', () => {
       if (!globalManager.windowsEvents.checkDisabled()) {

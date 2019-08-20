@@ -9,7 +9,6 @@ const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { createAppMenu } = require('./src/windows/menu');
-const { APP_VERSION, NUCLEUS_ID } = require('./src/utils/const');
 const {
   showWindows, 
   isDev, 
@@ -47,7 +46,7 @@ async function initApp() {
       mySettings.initialize(settings);
       wsClient.start(myAccount);
       createAppMenu();
-      mailboxWindow.show();
+      mailboxWindow.show({ firstOpenApp: true });
     } else {
       await getUserLanguage();
       createAppMenu();
@@ -80,8 +79,6 @@ async function initApp() {
       loadingWindow.send('socket-message', data);
     }
   });
-
-  upNucleus();
 }
 
 //   App
@@ -101,17 +98,6 @@ const getUserLanguage = async () => {
   const osLanguage = await getSystemLanguage();
   await dbManager.updateSettings({ language: osLanguage });
 };
-
-const upNucleus = () => {
-  const data = {
-    onlyMainProcess: true,
-    userId: myAccount.recipientId,
-    version: APP_VERSION,
-    language: mySettings.language
-  }
-  const Nucleus = require('electron-nucleus')(NUCLEUS_ID, data);
-  Nucleus.track("MAILBOX_TRACK");
-}
 
 app.on('ready', () => {
   initApp();
