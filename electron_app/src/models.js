@@ -104,7 +104,7 @@ const cleanForAlice = async () => {
   await db.table(Table.IDENTITYKEYRECORD).del();
   await db
     .table(Table.MIGRATIONS)
-    .where('name', 'like', '20190730144157%')
+    .where('name', 'like', '20190816144157%')
     .del();
 
   await db.migrate.latest(migrationConfig);
