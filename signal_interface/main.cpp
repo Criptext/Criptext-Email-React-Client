@@ -4,6 +4,7 @@
 
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/rotating_file_sink.h"
+#include "signal.h"
 
 void PrintStackTrace()
 {

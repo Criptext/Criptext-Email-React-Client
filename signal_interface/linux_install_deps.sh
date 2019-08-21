@@ -103,7 +103,7 @@ if [ $? -ne 0 ]; then
   PEM "    Failed to make install civetweb";
   removeTempFolder3;
 fi
-cd ../..
+cd ..
 
 # ================================================
 

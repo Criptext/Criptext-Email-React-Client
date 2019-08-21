@@ -42,7 +42,8 @@
         "/usr/local/lib/libSQLiteCpp.a",
         "/usr/local/lib/libsignal-protocol-c.a",
         "/usr/lib/libcivetweb.so",
-        "/usr/local/lib/libcjson.a"
+        "/usr/local/lib/libcjson.a",
+        "/usr/local/lib/spdlog/libspdlog.a"
       ],
       'conditions': [
         ['OS=="mac"', {
