@@ -469,10 +469,9 @@
       "title": "Your app is being upgraded",
       "paragraphs": {
         "step1": "Initializing data...",
-        "step2": "Processing remaining events...",
-        "step3": "Generating new session...",
-        "step4": "Upgrading Account...",
-        "step5": "Successfully upgraded!"
+        "step2": "Generating new session...",
+        "step3": "Upgrading Account...",
+        "step4": "Successfully upgraded!"
       },
       "errorMessages": {
         "parseEvents": "Unable to handle events!",

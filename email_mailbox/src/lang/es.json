@@ -469,10 +469,9 @@
       "title": "Tu app se esta actualizando",
       "paragraphs": {
         "step1": "Inicializando datos...",
-        "step2": "Procesando eventos pendientes...",
-        "step3": "Generando una nueva sesión...",
-        "step4": "Actualizando cuenta...",
-        "step5": "Actualización satisfactoria!"
+        "step2": "Generando una nueva sesión...",
+        "step3": "Actualizando cuenta...",
+        "step4": "Actualización satisfactoria!"
       },
       "errorMessages": {
         "parseEvents": "No fue posible descargar eventos!",

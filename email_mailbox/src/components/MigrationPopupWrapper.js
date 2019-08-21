@@ -12,21 +12,13 @@ import {
   generateKeyBundle
 } from './../utils/ApiUtils';
 import { getDeviceType } from './../utils/electronInterface';
-import { getGroupEvents } from './../utils/electronEventInterface';
 import string from '../lang';
 
-const {
-  step1,
-  step2,
-  step3,
-  step4,
-  step5
-} = string.popups.migration.paragraphs;
+const { step1, step2, step3, step4 } = string.popups.migration.paragraphs;
 const errors = string.popups.migration.errorMessages;
 
 const MIGRATION_STATUS = {
   NOT_STARTED: 'not-started',
-  PENDING_EVENTS: 'pending-events',
   NEW_SESSION: 'new-session',
   UPGRADE: 'upgrade',
   SUCCEDED: 'success'
@@ -34,10 +26,9 @@ const MIGRATION_STATUS = {
 
 const MIGRATION_STATUS_MESSAGES = {
   [MIGRATION_STATUS.NOT_STARTED]: step1,
-  [MIGRATION_STATUS.PENDING_EVENTS]: step2,
-  [MIGRATION_STATUS.NEW_SESSION]: step3,
-  [MIGRATION_STATUS.UPGRADE]: step4,
-  [MIGRATION_STATUS.SUCCEDED]: step5
+  [MIGRATION_STATUS.NEW_SESSION]: step2,
+  [MIGRATION_STATUS.UPGRADE]: step3,
+  [MIGRATION_STATUS.SUCCEDED]: step4
 };
 
 class MigrationPopupWrapper extends Component {
@@ -70,46 +61,14 @@ class MigrationPopupWrapper extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.handleStartMigration();
-    }, 1500);
+    setTimeout(this.handleStartMigration, 1500);
   }
 
   handleStartMigration = () => {
-    this.setState(
-      {
-        isDisabledConfirmButton: true,
-        step: MIGRATION_STATUS.PENDING_EVENTS
-      },
-      () => {
-        this.handlePendingEvents();
-      }
-    );
-  };
-
-  handlePendingEvents = async () => {
-    try {
-      await getGroupEvents({
-        showNotification: false,
-        shouldGetMoreEvents: false,
-        useLegacy: true
-      });
-    } catch (ex) {
-      return this.setState({
-        errorMessage: errors.parseEvents,
-        shouldRetry: true,
-        shouldRestart: false
-      });
+    if (this.state.step === MIGRATION_STATUS.NOT_STARTED) {
+      const step = MIGRATION_STATUS.NEW_SESSION;
+      this.setState({ step }, this.migrateAccount);
     }
-
-    this.setState(
-      {
-        step: MIGRATION_STATUS.NEW_SESSION
-      },
-      () => {
-        this.migrateAccount();
-      }
-    );
   };
 
   migrateAccount = async () => {
@@ -137,6 +96,8 @@ class MigrationPopupWrapper extends Component {
         return;
       }
     } catch (ex) {
+      // eslint-disable-next-line no-console
+      console.log(ex);
       this.setState({
         errorMessage: errors.credentials
       });
@@ -159,11 +120,14 @@ class MigrationPopupWrapper extends Component {
       }
       keybundle = await keybundleRes.json();
     } catch (ex) {
+      // eslint-disable-next-line no-console
+      console.log(ex);
       this.setState({
         errorMessage: errors.keys,
         shouldRetry: false,
         shouldRestart: true
       });
+      return;
     }
 
     const pcName = await getComputerName();
@@ -226,17 +190,12 @@ class MigrationPopupWrapper extends Component {
     const retryData = { ...this.state.retryData };
 
     switch (this.state.step) {
-      case MIGRATION_STATUS.PENDING_EVENTS: {
-        this.handlePendingEvents();
-        break;
-      }
       case MIGRATION_STATUS.UPGRADE: {
         this.handleUpgradeAccount(retryData);
         break;
       }
-      default: {
+      default:
         break;
-      }
     }
   };
 }

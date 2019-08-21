@@ -57,18 +57,6 @@ const Panel = props => (
 
 const renderMailboxPopup = ({ type, isHidden, ...props }) => {
   switch (type) {
-    case MAILBOX_POPUP_TYPES.MIGRATE_ALICE: {
-      const MigrationPopup = PopupHOC(MigrationPopupWrapper);
-      return (
-        <MigrationPopup
-          isHidden={isHidden}
-          isClosable={false}
-          theme={'dark'}
-          popupPosition={{ left: '50%', top: '50%' }}
-          onCloseMailboxPopup={props.onCloseMailboxPopup}
-        />
-      );
-    }
     case MAILBOX_POPUP_TYPES.ACCOUNT_DELETED: {
       const Accountdeletedpopup = PopupHOC(AccountDeletedPopup);
       return (
@@ -95,6 +83,18 @@ const renderMailboxPopup = ({ type, isHidden, ...props }) => {
         <DeviceRemovedpopup
           isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
+        />
+      );
+    }
+    case MAILBOX_POPUP_TYPES.MIGRATE_ALICE: {
+      const MigrationPopup = PopupHOC(MigrationPopupWrapper);
+      return (
+        <MigrationPopup
+          isHidden={isHidden}
+          isClosable={false}
+          theme={'dark'}
+          popupPosition={{ left: '50%', top: '50%' }}
+          onCloseMailboxPopup={props.onCloseMailboxPopup}
         />
       );
     }
