@@ -1,33 +1,30 @@
 #include "SessionRecord.h"
-#include <SQLiteCpp/SQLiteCpp.h>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <stdexcept>
 
+using namespace sqlite;
 using namespace std;
 
 CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, string recipientId, long int deviceId) {
-  SQLite::Database db(dbPath);
-  db.setBusyTimeout(5000);
+  database db(dbPath);
+  SessionRecord *sessionRecord;
 
-  SQLite::Statement query(db, "Select * from sessionrecord where recipientId == ? and deviceId == ?");
-  query.bind(1, recipientId);
-  query.bind(2, deviceId);
+  db << "Select * from sessionrecord where recipientId == ? and deviceId == ?;"
+     << recipientId
+     << deviceId
+     >> [&] (string recipientId, int deviceId, string record, int recordLength) {
+        char *myRecord = const_cast<char *>(record.c_str());
+        SessionRecord mySessionRecord = { 
+          .recipientId = recipientId, 
+          .deviceId = deviceId, 
+          .record = myRecord, 
+          .len = (size_t)recordLength 
+        };
+        sessionRecord = &mySessionRecord;
+    };
 
-  query.executeStep();
-  
-  if (!query.hasRow()) {
+  if (!sessionRecord) {
     throw std::invalid_argument("row not available");
   }
-
-  char *record = strdup(query.getColumn(2).getText());
-  SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), record, (size_t)query.getColumn(3).getInt() };
-  
-  while(query.hasRow()) {
-    query.executeStep();
-  }
-  return sessionRecord;
+  return *sessionRecord;
 }
 
 vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, string recipientId) {

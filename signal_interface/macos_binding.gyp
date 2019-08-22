@@ -44,7 +44,8 @@
         "/usr/local/lib/libSQLiteCpp.a",
         "/usr/local/lib/libsignal-protocol-c.a",
         "/usr/local/lib/libcivetweb.a",
-        "/usr/local/lib/libcjson.a"
+        "/usr/local/lib/libcjson.a",
+        "/usr/local/lib/pkgconfig/sqlite_modern_cpp.pc"
       ],
       'conditions': [
         ['OS=="mac"', {

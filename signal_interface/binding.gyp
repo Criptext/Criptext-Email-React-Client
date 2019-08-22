@@ -27,7 +27,7 @@
         "../db_interface/src/axolotl/SessionRecord.cpp",
         "../db_interface/src/axolotl/SignedPreKey.cpp"
       ],
-      "cflags": ["-Wall", "-std=c++11", "-rdynamic", "-stdlib=libc++"],
+      "cflags": ["-Wall", "-std=c++17", "-rdynamic", "-stdlib=libc++"],
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       "include_dirs" : [
@@ -49,8 +49,9 @@
       'conditions': [
         ['OS=="mac"', {
           'xcode_settings': {
-            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
-            'CXXFLAGS': '-mmacosx-version-min=10.7'
+            'OTHER_CPLUSPLUSFLAGS' : [ '-std=c++17', '-stdlib=libc++' ],
+            'OTHER_LDFLAGS': [ '-stdlib=libc++' ],
+            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
           }
         }]
       ]
