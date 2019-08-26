@@ -151,7 +151,7 @@ const createPathRecursive = (fullpath, oldUser, newUser) => {
   const initDir = path.isAbsolute(fullpath) ? sep : '';
   fullpath.split(sep).reduce((parentDir, childDir) => {
     let curDir = path.resolve(parentDir, childDir);
-    
+
     if (childDir === newUser) {
       const lastPath = path.resolve(parentDir, oldUser);
       if (fs.existsSync(lastPath)) {

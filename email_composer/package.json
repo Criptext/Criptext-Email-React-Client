@@ -1,6 +1,6 @@
 {
   "name": "email_composer",
-  "version": "0.23.3",
+  "version": "0.23.4",
   "private": true,
   "dependencies": {
     "@criptext/electron-better-ipc": "^0.1.2-rc5",
