@@ -168,7 +168,10 @@ const sendEventToMailbox = (eventName, data) => {
 };
 
 const saveDraftToDatabase = async (composerId, data) => {
-  const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const recipientId = myAccount.recipientId;
+  const username = recipientId.includes('@')
+    ? recipientId
+    : `${recipientId}@${APP_DOMAIN}`;
   const filteredRecipients = {
     from: data.recipients.from,
     to: filterInvalidEmailAddresses(data.recipients.to),

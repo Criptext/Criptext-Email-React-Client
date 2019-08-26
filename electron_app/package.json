@@ -151,6 +151,7 @@
     "os-locale": "^3.0.1",
     "recursive-copy": "^2.0.10",
     "rimraf": "^2.6.3",
+    "rmdir-recursive": "^0.0.1",
     "sqlite3": "4.0.2",
     "unused-filename": "^2.1.0",
     "websocket": "^1.0.28"
