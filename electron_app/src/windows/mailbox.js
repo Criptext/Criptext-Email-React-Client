@@ -70,7 +70,7 @@ const create = () => {
   mailboxWindow.on('close', e => {
     if (!globalManager.forcequit.get()) {
       e.preventDefault();
-      if (mailboxWindow.isFullScreen()) {
+      if (mailboxWindow && mailboxWindow.isFullScreen()) {
         mailboxWindow.setFullScreen(false);
         setTimeout(() => hide(), 1200);
       } else {

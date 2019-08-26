@@ -121,7 +121,7 @@ const createTempEmailsBackup = () => {
   const EmailsFolder = getUserEmailsPath(process.env.NODE_ENV, getUsername());
   return new Promise((resolve, reject) => {
     try {
-      copy(EmailsFolder, TempEmailsBackupPath);
+      copy(EmailsFolder, TempEmailsBackupPath, { overwrite: true });
       resolve();
     } catch (error) {
       reject({ error: 'Preparing backup error' });
