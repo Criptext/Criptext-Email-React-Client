@@ -25,7 +25,7 @@ const TagRecipient = props => {
   const { name, email, complete, state, form } = getTagDisplayValue(tag);
   const formattedTag =
     !name && !email
-      ? { name: tag, email: tag, complete: tag, form: tag }
+      ? { name: tag, email: tag, complete: tag }
       : { name, email, complete, state, form };
 
   const isValidEmailAddress = emailRegex.test(formattedTag.email);
