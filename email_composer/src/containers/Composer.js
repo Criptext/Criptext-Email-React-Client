@@ -50,7 +50,8 @@ import string from './../lang';
 import {
   appDomain,
   composerEvents,
-  defaultEmptyMimetypeValue
+  defaultEmptyMimetypeValue,
+  extensionsAccepted
 } from '../utils/const';
 import { generateKeyAndIv } from '../utils/AESUtils';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
@@ -385,7 +386,7 @@ class ComposerWrapper extends Component {
       if (!item.type) {
         const texts = item.name.split('.');
         const ext = texts[texts.length - 1];
-        if (ext === 'xls') return true;
+        if (extensionsAccepted.includes(ext)) return true;
       }
       return !!item.type;
     });
