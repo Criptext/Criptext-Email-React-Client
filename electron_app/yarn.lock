@@ -113,10 +113,10 @@
   version "0.1.2-rc5"
   resolved "https://registry.yarnpkg.com/@criptext/electron-better-ipc/-/electron-better-ipc-0.1.2-rc5.tgz#4a51755de1168b441fe6a68872fe8b95eaa742ab"
 
-"@criptext/electron-push-receiver@^2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@criptext/electron-push-receiver/-/electron-push-receiver-2.1.2.tgz#d971523d21bb473e9340f157af0c30760f7c417b"
-  integrity sha512-1QIx54AuC/XtdO37a7ExXF1yoKvyEnq7kXnsCGo1mTh9ER3hNqS9ox8hpBPRuA7TgkH2dQzDeAqsQS7IflsKMw==
+"@criptext/electron-push-receiver@^2.1.2-rc1":
+  version "2.1.2-rc1"
+  resolved "https://registry.yarnpkg.com/@criptext/electron-push-receiver/-/electron-push-receiver-2.1.2-rc1.tgz#4c6be8acc7d5d17390a31872b52228866f757643"
+  integrity sha512-rYy1ZW5vQ6Z8QuMGMomXW7vKUXHbnsr4rMr7ee1aDjnNA3wzAMDWVTKiYmI3r9NFdnYTmIs2MwKCrQ4PQHy+rw==
   dependencies:
     electron-config "^1.0.0"
     push-receiver "^2.0.2"
@@ -186,9 +186,9 @@
   integrity sha512-1w52Nyx4Gq47uuu0EVcsHBxZFJgurQ+rTKS3qMHxR1GY2T8c2AJYd6vZoZ9q1rupaDjU0yT+Jc2XTyXkjeMA+Q==
 
 "@types/node@^10.1.0":
-  version "10.14.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.4.tgz#1c586b991457cbb58fef51bc4e0cfcfa347714b5"
-  integrity sha512-DT25xX/YgyPKiHFOpNuANIQIVvYEwCWXgK2jYYwqgaMrYE6+tq+DtmMwlD3drl6DJbUwtlIDnn0d7tIn/EbXBg==
+  version "10.14.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.16.tgz#4d690c96cbb7b2728afea0e260d680501b3da5cf"
+  integrity sha512-/opXIbfn0P+VLt+N8DE4l8Mn8rbhiJgabU96ZJ0p9mxOkIks5gh6RUnpHak7Yh0SFkyjO/ODbxsQQPV2bpMmyA==
 
 "@types/node@^8.0.24":
   version "8.10.49"
@@ -3349,9 +3349,9 @@ lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
 lodash@^4.17.11:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
-  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+  version "4.17.15"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
+  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
 long@^3.2.0:
   version "3.2.0"
@@ -4591,6 +4591,11 @@ rimraf@^2.6.3:
   dependencies:
     glob "^7.1.3"
 
+rmdir-recursive@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/rmdir-recursive/-/rmdir-recursive-0.0.1.tgz#57c0234af6e22ce642d0069cb2850f92966581b1"
+  integrity sha1-V8AjSvbiLOZC0AacsoUPkpZlgbE=
+
 rsvp@^3.3.3:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-3.6.2.tgz#2e96491599a96cde1b515d5674a8f7a91452926a"
@@ -5441,9 +5446,9 @@ write-file-atomic@^2.0.0, write-file-atomic@^2.1.0:
     signal-exit "^3.0.2"
 
 write-file-atomic@^2.3.0:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-2.4.2.tgz#a7181706dfba17855d221140a9c06e15fcdd87b9"
-  integrity sha512-s0b6vB3xIVRLWywa6X9TOMA7k9zio0TMOsl9ZnDkliA/cfJlpHXAscj0gbHVJiTdIuAYpIyqS5GW91fqm6gG5g==
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-2.4.3.tgz#1fd2e9ae1df3e75b8d8c367443c692d4ca81f481"
+  integrity sha512-GaETH5wwsX+GcnzhPgKcKjJ6M2Cq3/iZp1WyY/X1CSqrW+jVNM9Y7D8EC2sM4ZG/V8wZlSniJnCKWPmBYAucRQ==
   dependencies:
     graceful-fs "^4.1.11"
     imurmurhash "^0.1.4"

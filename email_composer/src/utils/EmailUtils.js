@@ -80,7 +80,6 @@ export const formDataToEditDraft = async emailKeyToEdit => {
       iv: file.iv
     };
   });
-
   return {
     toEmails,
     ccEmails,

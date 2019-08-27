@@ -48,7 +48,7 @@ const renderBlockAvatar = props => (
         type="file"
         name="fileAvatar"
         id="fileAvatar"
-        accept="image/*"
+        accept="image/x-png,image/jpeg"
         onChange={props.onChangeAvatar}
       />
       <label htmlFor={props.avatarIsLoading ? null : 'fileAvatar'}>

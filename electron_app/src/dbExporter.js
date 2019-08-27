@@ -127,7 +127,9 @@ const exportLabelTable = async db => {
 };
 
 const exportEmailTable = async db => {
-  const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${APP_DOMAIN}`;
   let emailRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -508,7 +510,9 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
 };
 
 const storeEmailBodies = emailRows => {
-  const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${APP_DOMAIN}`;
   return Promise.all(
     emailRows.map(email => {
       const body = email.content;

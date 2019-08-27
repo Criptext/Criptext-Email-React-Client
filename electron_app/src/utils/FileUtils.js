@@ -1,4 +1,6 @@
 const fs = require('fs');
+const copy = require('recursive-copy');
+const rmdirRecursive = require('rmdir-recursive');
 const path = require('path');
 const rimraf = require('rimraf');
 const { app } = require('electron');
@@ -16,7 +18,8 @@ const getUserEmailsPath = (node_env, user) => {
       const emailsPath = path
         .join(__dirname, '/../userData', `${user}`, 'emails')
         .replace('/src', '');
-      createPathRecursive(emailsPath);
+      const userToReplace = `${user}@${APP_DOMAIN}`;
+      createPathRecursive(emailsPath, userToReplace, user);
       return emailsPath;
     }
     default: {
@@ -153,7 +156,16 @@ const createPathRecursive = (fullpath, oldUser, newUser) => {
       const lastPath = path.resolve(parentDir, oldUser);
       if (fs.existsSync(lastPath)) {
         curDir = path.resolve(parentDir, newUser);
-        fs.renameSync(lastPath, curDir);
+        try {
+          fs.renameSync(lastPath, curDir);
+        } catch (err) {
+          const source = path.resolve(parentDir, `${oldUser}/emails/`);
+          const dest = path.resolve(parentDir, `${newUser}/emails/`);
+          copy(source, dest, { overwrite: true }).then(function() {
+            const folder = path.resolve(parentDir, `${oldUser}`);
+            rmdirRecursive(folder);
+          });
+        }
         return curDir;
       }
     }

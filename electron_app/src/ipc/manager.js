@@ -37,7 +37,11 @@ ipc.answerRenderer(
 );
 
 ipc.answerRenderer('db-clean-database', async username => {
-  const user = username ? `${username}@${APP_DOMAIN}` : getUsername();
+  const user = username
+    ? username.includes('@')
+      ? username
+      : `${username}@${APP_DOMAIN}`
+    : getUsername();
   if (user) {
     await fileUtils.removeUserDir(user);
   }

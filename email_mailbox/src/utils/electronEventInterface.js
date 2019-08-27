@@ -187,7 +187,6 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
 };
 
 const parseAndDispatchEvent = async event => {
-  isGettingEvents = true;
   try {
     const { rowid } = await handleEvent(event);
     if (rowid) await setEventAsHandled([rowid]);
@@ -196,7 +195,6 @@ const parseAndDispatchEvent = async event => {
     console.error(error);
     sendFetchEmailsErrorMessage();
   }
-  isGettingEvents = false;
 };
 
 export const getGroupEvents = async ({
@@ -1006,7 +1004,9 @@ ipcRenderer.on('socket-message', async (ev, message) => {
     sendLoadEventsEvent({ showNotification: true });
   } else {
     if (isGettingEvents) return;
+    isGettingEvents = true;
     await parseAndDispatchEvent(message);
+    isGettingEvents = false;
   }
 });
 
