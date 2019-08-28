@@ -108,14 +108,28 @@ const getUsername = () => {
   return username;
 };
 
+const getBasepathAndFilenameFromPath = path => {
+  const lastSepIndex =
+    path.lastIndexOf('/') > 1 ? path.lastIndexOf('/') : path.lastIndexOf('\\');
+  if (lastSepIndex < 1) {
+    return { basename: undefined, filename: undefined };
+  }
+  const [basename, filename] = [
+    path.substring(0, lastSepIndex),
+    path.substring(lastSepIndex + 1)
+  ];
+  return { basename, filename };
+};
+
 module.exports = {
-  removeProtocolFromUrl,
   removeLast,
-  printDocumentTemplateHeader,
+  removeProtocolFromUrl,
   printDocumentTemplateClose,
+  printDocumentTemplateHeader,
   cleanHTMLTagsFromEmailContentToPrint,
-  cleanEmojisFromString,
+  getBasepathAndFilenameFromPath,
   formatRecipientsToPrint,
+  cleanEmojisFromString,
   defineLargeTime,
   getUsername,
   genUUID
