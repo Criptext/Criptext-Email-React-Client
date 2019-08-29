@@ -43,6 +43,7 @@ class CriptextSignal {
         int decryptText(uint8_t **plaintext_data, size_t *plaintext_len, std::string encryptedText, std::string recipientId, int deviceId, int message_type);
         int encryptText(char **encryptedText, uint8_t *plainText, size_t plainTextLength, char* recipientId, int deviceId);
         int generateKeyBundle(cJSON *bundle, string recipientId, int deviceId);
+        int generateMorePreKeys(cJSON *bundle, cJSON *newPreKeys);
         void processKeyBundle(struct Keybundle* kb);
         void clean();
 

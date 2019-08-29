@@ -6,14 +6,19 @@
 using namespace std;
 
 CriptextDB::PreKey CriptextDB::getPreKey(string dbPath, short int id) {
+  std::cout << "GONNA TAKE PRE KEY ID : " << id << std::endl;
   SQLite::Database db(dbPath);
   db.setBusyTimeout(5000);
   SQLite::Statement query(db, "Select * from prekeyrecord where preKeyId == ?");
   query.bind(1, id);
   query.executeStep();
+  if (!query.hasRow()) {
+    throw std::invalid_argument("no row available");
+  }
+
   char *record = strdup(query.getColumn(1).getText());
   CriptextDB::PreKey preKey = { query.getColumn(0).getInt(), record, (size_t)query.getColumn(2).getInt() };
-  
+
   while(query.hasRow()) {
     query.executeStep();
   }

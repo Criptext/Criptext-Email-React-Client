@@ -6,10 +6,9 @@ import {
 } from './../utils/ipc';
 import SignalProtocolStore from './store';
 import { fetchEmailBody } from '../utils/FetchUtils';
-import { fetchDecryptBody } from '../utils/ApiUtils';
+import { fetchDecryptBody, generateMorePreKeys } from '../utils/ApiUtils';
 import { myAccount } from '../utils/electronInterface';
 
-const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
 const ciphertextType = {
@@ -33,7 +32,8 @@ const decryptEmail = async ({
   }
   let retries = 3;
   let res;
-  while (retries <= 3) {
+  while (retries >= 0) {
+    retries -= 1;
     try {
       res = await fetchDecryptBody({
         emailKey: bodyKey,
@@ -47,16 +47,19 @@ const decryptEmail = async ({
         fileKeys: fileKeys
       });
       if (res.status === 200) break;
-      retries -= 1;
     } catch (ex) {
       if (ex.toString() !== 'TypeError: Failed to fetch') break;
       await restartAlice();
     }
   }
   if (!res) {
+    throw new Error('alice unavailable' + typeof thing);
+  } else if (res.status === 500) {
     return {
       decryptedBody: 'Content Unencrypted'
     };
+  } else if (res.status !== 200) {
+    throw new Error('alice unavailable' + typeof thing);
   }
 
   const {
@@ -134,25 +137,18 @@ const generateAndInsertMorePreKeys = async () => {
     (item, index) => index + 1
   );
   const newPreKeyIds = preKeyIds.filter(id => !currentPreKeyIds.includes(id));
-  const preKeysToServer = [];
-  const preKeysToStore = [];
-  for (const preKeyId of newPreKeyIds) {
-    const preKey = await KeyHelper.generatePreKey(preKeyId);
-    preKeysToServer.push({
-      publicKey: util.toBase64(preKey.keyPair.pubKey),
-      id: preKeyId
-    });
-    preKeysToStore.push(preKey.keyPair);
-  }
   try {
-    const { status } = await insertPreKeys(preKeysToServer);
-    if (status === 200) {
-      return await Promise.all(
-        preKeysToStore.map(async (preKeyPair, index) => {
-          await store.storePreKey(newPreKeyIds[index], preKeyPair);
-        })
-      );
+    const res = await generateMorePreKeys({
+      accountId: myAccount.recipientId,
+      newPreKeys: newPreKeyIds
+    });
+    if (res.status !== 200) {
+      // eslint-disable-next-line no-console
+      console.error(res.status);
+      return;
     }
+    const resObj = await res.json();
+    await insertPreKeys(resObj.preKeys);
   } catch (newPreKeysError) {
     // eslint-disable-next-line no-console
     console.error(newPreKeysError);

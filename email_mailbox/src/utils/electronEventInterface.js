@@ -683,6 +683,11 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
           })
         : null;
     } catch (e) {
+      if (e.message === 'unavailable') {
+        return {
+          rowId: null
+        };
+      }
       body = 'Content unencrypted';
     }
     if (!fileKeys && fileKey) {

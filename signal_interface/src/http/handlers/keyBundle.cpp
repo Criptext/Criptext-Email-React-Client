@@ -167,3 +167,43 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
   mg_write(conn, "", 0);
   return 1;
 }
+
+int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath) {
+  int corsResult = cors(conn);
+  if (corsResult < 0) {
+    return 201;
+  }
+
+  std::cout << "/prekey Receiving Request" << std::endl;
+
+  char buffer[1024];
+  int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
+
+  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
+    mg_send_http_error(conn, 400, "%s", "No request data");
+    return 400;
+  }
+  buffer[dlen] = 0;
+  cJSON *obj = cJSON_Parse(buffer);
+  
+  if (obj == NULL) {
+    mg_send_http_error(conn, 400, "%s", "Not a JSON String");
+    return 400;
+  }
+  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
+
+  cJSON *accountId;
+  cJSON *newPreKeys;
+  accountId = cJSON_GetObjectItemCaseSensitive(obj, "accountId");
+  newPreKeys = cJSON_GetObjectItemCaseSensitive(obj, "newPreKeys");
+
+  if (!cJSON_IsString(accountId) || !cJSON_IsArray(newPreKeys)) {
+    mg_send_http_error(conn, 400, "%s", "Wrong data format");
+    return 400;
+  }
+
+  CriptextSignal signal(accountId->valuestring, dbPath);
+  cJSON *bundle = cJSON_CreateObject();
+  signal.generateMorePreKeys(bundle, newPreKeys);
+  return SendJSON(conn, bundle);
+}
