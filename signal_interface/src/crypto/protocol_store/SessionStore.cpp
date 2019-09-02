@@ -20,6 +20,7 @@ int session_store_load_session(signal_buffer **record, signal_buffer **user_reco
         std::cout << "ERRORs : " << e.what() << std::endl;
         return 0;
     }
+    std::cout << 14.8 << " : " << sessionRecord.record << std::endl;
     size_t len = 0;
     unsigned char *recordBase64 = reinterpret_cast<unsigned char *>(sessionRecord.record);
     uint8_t *myRecord = reinterpret_cast<uint8_t *>(base64_decode(recordBase64, sessionRecord.len, &len));    

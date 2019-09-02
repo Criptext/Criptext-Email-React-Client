@@ -7,8 +7,9 @@
 
 int identity_key_store_get_identity_key_pair(signal_buffer **public_data, signal_buffer **private_data, void *user_data)
 {
+    std::cout << "HOLA WOLA" << std::endl;
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-    
+    std::cout << "HOLA WOLA : " << account->privKey << std::endl;
     size_t len = 0;
 
     unsigned char *identityKeyPriv = reinterpret_cast<unsigned char *>(account->privKey);

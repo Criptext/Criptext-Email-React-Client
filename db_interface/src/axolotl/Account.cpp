@@ -2,64 +2,69 @@
 #include <iostream>
 
 using namespace std;
+using namespace sqlite;
 
 CriptextDB::Account CriptextDB::getAccount(string dbPath, char *recipientId) {
-  SQLite::Database db(dbPath);
-  db.setBusyTimeout(5000);
-  SQLite::Statement query(db, "select * from account where recipientId == ?");
-  query.bind(1, recipientId);
-  query.executeStep();
-
-  char *privKey = strdup(query.getColumn(6).getText());
-  char *pubKey = strdup(query.getColumn(7).getText());
-  Account account = { privKey, pubKey, query.getColumn(5).getInt() };
-
-  while(query.hasRow()) {
-    query.executeStep();
-  }
-
+  sqlite_config config;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+  database db(dbPath, config);
+  
+  char *myPrivKey;
+  char *myPubKey;
+  int regId = 0;
+  db << "select privKey, pubKey, registrationId from account where recipientId == ?;"
+    << recipientId
+    >> [&] (string privKey, string pubKey, int registrationId) {
+      myPrivKey = (char *)malloc(privKey.length());
+      myPubKey = (char *)malloc(pubKey.length());
+      strcpy(myPrivKey, privKey.c_str());
+      strcpy(myPubKey, pubKey.c_str());
+      regId = registrationId;
+  };
+  Account account = { 
+    .privKey = myPrivKey, 
+    .pubKey = myPubKey, 
+    .registrationId = regId 
+  };
   return account;
 }
 
 int CriptextDB::createAccount(string dbPath, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
   try {
-    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-    db.setBusyTimeout(5000);
-    SQLite::Statement getQuery(db, "Select * from account where recipientId == ?");
-    getQuery.bind(1, recipientId);
-    getQuery.executeStep();
+    bool hasRow;
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
+    db << "begin;";
+    db << "Select recipientId from account where recipientId == ?;"
+     << recipientId
+     >> [&] (string recipientId) {
+        hasRow = true;
+    };
 
-    if (getQuery.hasRow()) {
-      while(getQuery.hasRow()) {
-        getQuery.executeStep();
-      }
-      SQLite::Statement query(db, "update account set name = ?, deviceId = ?, privKey = ?, pubKey = ?, registrationId = ? where recipientId == ?");
-      query.bind(1, name);
-      query.bind(2, deviceId);
-      query.bind(3, privKey);
-      query.bind(4, pubKey);
-      query.bind(5, registrationId);
-      query.bind(6, recipientId);
-
-      query.exec();
+    if (hasRow) {
+      db << "update account set name = ?, deviceId = ?, privKey = ?, pubKey = ?, registrationId = ? where recipientId == ?;"
+        << name
+        << deviceId
+        << privKey
+        << pubKey
+        << registrationId
+        << recipientId;
     } else {
-      SQLite::Statement query(db, "insert into account (recipientId, name, deviceId, jwt, refreshToken, privKey, pubKey, registrationId) values (?,?,?,?,?,?,?,?)");
-      query.bind(1, recipientId);
-      query.bind(2, name);
-      query.bind(3, deviceId);
-      query.bind(4, "");
-      query.bind(5, "");
-      query.bind(6, privKey);
-      query.bind(7, pubKey);
-      query.bind(8, registrationId);
-
-      query.exec();
+      db << "insert into account (recipientId, name, deviceId, jwt, refreshToken, privKey, pubKey, registrationId) values (?,?,?,?,?,?,?,?);"
+        << recipientId
+        << name
+        << deviceId
+        << ""
+        << ""
+        << privKey
+        << pubKey
+        << registrationId;
     }
-
-    return 0;
-
+    db << "commit;";
   } catch (exception& e) {
-    std::cout << e.what() << std::endl;
-    return -1;
+    std::cout << "ERROR : " << e.what() << std::endl;
+    return false;
   }
+  return true;
 }

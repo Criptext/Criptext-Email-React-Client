@@ -98,84 +98,86 @@ const createEmails = async (
   }
 
   const criptextEmailsByRecipientId = {};
-  for (const recipient of recipients) {
-    const { recipientId, type, username, domain } = recipient;
+  await Promise.all(
+    recipients.map(async recipient => {
+      const { recipientId, type, username, domain } = recipient;
 
-    if (guestDomains.indexOf(domain) > -1) {
-      continue;
-    }
+      if (guestDomains.indexOf(domain) > -1) {
+        return;
+      }
 
-    if (!criptextEmailsByRecipientId[recipientId]) {
-      criptextEmailsByRecipientId[recipientId] = {
-        username,
-        domain,
-        type,
-        emails: []
-      };
-    }
-
-    const domainIndex = domainAddresses.findIndex(domainAddress => {
-      return domainAddress.name === domain;
-    });
-
-    const knownDeviceIds =
-      domainAddresses[domainIndex].knownAddresses[username] || [];
-    const newDevicesIds = keyBundles
-      .filter(
-        keybundle =>
-          keybundle.recipientId === username && keybundle.domain === domain
-      )
-      .map(keybundle => keybundle.deviceId);
-    const deviceIds = [...knownDeviceIds, ...newDevicesIds].filter(
-      deviceId => peer.recipientId !== username || peer.deviceId !== deviceId
-    );
-    for (const deviceId of deviceIds) {
-      const fileKeys = files
-        ? files.reduce((result, file) => {
-            if (!file.key || !file.iv) {
-              return result;
-            }
-            return [...result, `${file.key}:${file.iv}`];
-          }, [])
-        : null;
-      const res = await encryptEmail({
-        accountRecipientId: myAccount.recipientId,
-        body,
-        preview,
-        fileKeys,
-        recipientId,
-        deviceId
-      });
-      const {
-        bodyEncrypted,
-        previewEncrypted,
-        bodyMessageType,
-        previewMessageType,
-        fileKeysEncrypted
-      } = await res.json();
-      const fileKey =
-        fileKeysEncrypted && fileKeysEncrypted.length > 0
-          ? fileKeysEncrypted[0]
-          : null;
-
-      let criptextEmail = {
-        recipientId: username,
-        deviceId,
-        body: bodyEncrypted,
-        messageType: bodyMessageType,
-        preview: previewEncrypted,
-        previewMessageType: previewMessageType
-      };
-      if (fileKey) {
-        criptextEmail = {
-          ...criptextEmail,
-          fileKey: fileKey,
-          fileKeys: fileKeysEncrypted
+      if (!criptextEmailsByRecipientId[recipientId]) {
+        criptextEmailsByRecipientId[recipientId] = {
+          username,
+          domain,
+          type,
+          emails: []
         };
       }
-      criptextEmailsByRecipientId[recipientId]['emails'].push(criptextEmail);
-    }
-  }
+
+      const domainIndex = domainAddresses.findIndex(domainAddress => {
+        return domainAddress.name === domain;
+      });
+
+      const knownDeviceIds =
+        domainAddresses[domainIndex].knownAddresses[username] || [];
+      const newDevicesIds = keyBundles
+        .filter(
+          keybundle =>
+            keybundle.recipientId === username && keybundle.domain === domain
+        )
+        .map(keybundle => keybundle.deviceId);
+      const deviceIds = [...knownDeviceIds, ...newDevicesIds].filter(
+        deviceId => peer.recipientId !== username || peer.deviceId !== deviceId
+      );
+      for (const deviceId of deviceIds) {
+        const fileKeys = files
+          ? files.reduce((result, file) => {
+              if (!file.key || !file.iv) {
+                return result;
+              }
+              return [...result, `${file.key}:${file.iv}`];
+            }, [])
+          : null;
+        const res = await encryptEmail({
+          accountRecipientId: myAccount.recipientId,
+          body,
+          preview,
+          fileKeys,
+          recipientId,
+          deviceId
+        });
+        const {
+          bodyEncrypted,
+          previewEncrypted,
+          bodyMessageType,
+          previewMessageType,
+          fileKeysEncrypted
+        } = await res.json();
+        const fileKey =
+          fileKeysEncrypted && fileKeysEncrypted.length > 0
+            ? fileKeysEncrypted[0]
+            : null;
+
+        let criptextEmail = {
+          recipientId: username,
+          deviceId,
+          body: bodyEncrypted,
+          messageType: bodyMessageType,
+          preview: previewEncrypted,
+          previewMessageType: previewMessageType
+        };
+        if (fileKey) {
+          criptextEmail = {
+            ...criptextEmail,
+            fileKey: fileKey,
+            fileKeys: fileKeysEncrypted
+          };
+        }
+        criptextEmailsByRecipientId[recipientId]['emails'].push(criptextEmail);
+      }
+    })
+  );
   return Object.values(criptextEmailsByRecipientId);
 };
 
