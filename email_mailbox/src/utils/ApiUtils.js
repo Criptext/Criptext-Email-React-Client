@@ -138,3 +138,15 @@ export const generateKeyBundle = async ({
   };
   return await fetch(requestUrl, options);
 };
+
+export const generateMorePreKeys = async ({ accountId, newPreKeys }) => {
+  const requestUrl = `${aliceUrl}:${getAlicePort()}/prekey`;
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      newPreKeys,
+      accountId
+    })
+  };
+  return await fetch(requestUrl, options);
+};

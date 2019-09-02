@@ -14,15 +14,17 @@ void PrintStackTrace()
    if (strings)
    {
       spdlog::critical("--Stack trace follows (%zd frames):\n", size);
-      for (size_t i = 0; i < size; i++) spdlog::critical("  {0}", strings[i]);
+      for (size_t i = 0; i < size; i++) {
+         spdlog::critical("  {0}", strings[i]);
+         std::cout << strings[i] << std::endl;
+      }
       spdlog::critical("--End Stack trace\n");
       free(strings);
    }
    else spdlog::critical("PrintStackTrace:  Error, could not generate stack trace!\n");
 }
 
-static void CrashSignalHandler(int sig)
-{
+static void CrashSignalHandler(int sig) {
    signal(SIGSEGV, SIG_DFL);
    signal(SIGBUS,  SIG_DFL);
    signal(SIGILL,  SIG_DFL);
@@ -50,6 +52,7 @@ int main(int argc, char const *argv[]){
 
    auto rotating_logger = spdlog::rotating_logger_mt("Alice Logs", logsPath, 1048576 * 5, 3);
    spdlog::set_default_logger(rotating_logger);
+   spdlog::flush_on(spdlog::level::warn);
    spdlog::flush_every(std::chrono::seconds(3));
    spdlog::info("Starting Service");
    if (argc < 2) {

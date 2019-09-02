@@ -187,6 +187,20 @@ int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int dev
     return 0;
 }
 
+int CriptextSignal::generateMorePreKeys(cJSON *bundle, cJSON *newPreKeys) {
+    
+    cJSON *preKeysArray = cJSON_CreateArray();
+    cJSON *preKeyId = NULL;
+    cJSON_ArrayForEach(preKeyId, newPreKeys) {
+        cJSON *preKeyObject = cJSON_CreateObject();
+        generatePreKey(preKeyObject, preKeyId->valueint);
+        cJSON_AddItemToArray(preKeysArray, preKeyObject);
+    }
+
+    cJSON_AddItemToObject(bundle, "preKeys", preKeysArray);
+    return 0;
+}
+
 void CriptextSignal::clean() {
     signal_context_destroy(global_context);
     signal_protocol_store_context_destroy(store);

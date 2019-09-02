@@ -35,6 +35,10 @@ int keyBundleCreate(struct mg_connection *conn, void *cbdata){
   return createKeyBundle(conn, cbdata, db_path);
 }
 
+int preKeysCreate(struct mg_connection *conn, void *cbdata){
+  return createPreKeys(conn, cbdata, db_path);
+}
+
 int pong(struct mg_connection *conn, void *cbdata){
   std::cout.flush();
   std::cout << "PING" << std::endl;
@@ -67,6 +71,7 @@ void http_init(char *dbPath, char *port){
   mg_set_request_handler(ctx, "/encrypt/email", encryptEmail, 0);
   mg_set_request_handler(ctx, "/account", accountCreate, 0);
   mg_set_request_handler(ctx, "/keybundle", keyBundleCreate, 0);
+  mg_set_request_handler(ctx, "/prekey", preKeysCreate, 0);
   mg_set_request_handler(ctx, "/session/create", sessionCreate, 0);
   mg_set_request_handler(ctx, "/ping", pong, 0);
 }

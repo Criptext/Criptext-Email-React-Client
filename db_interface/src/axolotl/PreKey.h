@@ -3,6 +3,7 @@
 
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <string>
+#include <vector>
 
 using namespace std;
 
