@@ -38,6 +38,7 @@ namespace CriptextDB {
   Email getEmailByKey(string dbPath, string key, int accountId);
   vector<Email> getEmailsByIds(string dbPath, vector<int> emailIds, int accountId);
   vector<Email> getEmailsByThreadIds(string dbPath, vector<string> threadIds, int labelId, string date, int limit, int accountId);
+  vector<Email> getEmailsByLabelId(string dbPath, int labelId, string date, int limit, int accountId);
 } 
 
 #endif
