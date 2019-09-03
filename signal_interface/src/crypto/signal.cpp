@@ -61,7 +61,6 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
     try {
         signal_buffer *plainMessage = 0;
 
-
         if (message_type == 1) {
             const uint8_t *messageData = reinterpret_cast<const uint8_t*>(textFromB64);
             signal_message *incoming_message = 0;

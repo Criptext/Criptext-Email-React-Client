@@ -1,41 +1,51 @@
 #include "PreKey.h"
-#include <SQLiteCpp/SQLiteCpp.h>
-#include <string>
-#include <iostream>
 
 using namespace std;
+using namespace sqlite;
 
 CriptextDB::PreKey CriptextDB::getPreKey(string dbPath, short int id) {
-  std::cout << "GONNA TAKE PRE KEY ID : " << id << std::endl;
-  SQLite::Database db(dbPath);
-  db.setBusyTimeout(5000);
-  SQLite::Statement query(db, "Select * from prekeyrecord where preKeyId == ?");
-  query.bind(1, id);
-  query.executeStep();
-  if (!query.hasRow()) {
-    throw std::invalid_argument("no row available");
-  }
+  sqlite_config config;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+  database db(dbPath, config);
 
-  char *record = strdup(query.getColumn(1).getText());
-  CriptextDB::PreKey preKey = { query.getColumn(0).getInt(), record, (size_t)query.getColumn(2).getInt() };
+  char *myPreKey;
+  size_t myLen;
+  std::cout << 7 << std::endl;
+  db << "Select * from prekeyrecord where preKeyId == ?;"
+     << id
+     >> [&] (int preKeyId, string record, int recordLength) {
+        myPreKey = (char *)malloc(record.length());
+        strcpy(myPreKey, record.c_str());
+        myLen = (size_t)recordLength;
+    };
 
-  while(query.hasRow()) {
-    query.executeStep();
+  if (!myPreKey) {
+    std::cout << 8 << std::endl;
+    throw std::invalid_argument("row not available");
   }
+  PreKey preKey = { 
+    .id = id, 
+    .record = myPreKey, 
+    .len = myLen
+  };
+  std::cout << 9 << std::endl;
   return preKey;
 }
 
 bool CriptextDB::createPreKey(string dbPath, short int id, char *keyRecord, size_t len) {
   try {
-    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-    db.setBusyTimeout(5000);
-    SQLite::Statement query(db, "insert into prekeyrecord (preKeyId, record, recordLength) values (?,?,?)");
-    query.bind(1, id);
-    query.bind(2, keyRecord);
-    query.bind(3, static_cast<int>(len));
+    std::cout << 10 << std::endl;
 
-    query.exec();
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
+
+    db << "insert into prekeyrecord (preKeyId, record, recordLength) values (?,?,?);"
+     << id
+     << keyRecord
+     << static_cast<int>(len);
     return true;
+    std::cout << 11 << std::endl;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;
     return false;
@@ -44,15 +54,16 @@ bool CriptextDB::createPreKey(string dbPath, short int id, char *keyRecord, size
 
 bool CriptextDB::deletePreKey(string dbPath, short int id) {
   try {
-    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-    db.setBusyTimeout(5000);
-    SQLite::Statement query(db, "delete from prekeyrecord where preKeyId == ?");
-    query.bind(1, id);
-
-    query.exec();
+    std::cout << 12 << std::endl;
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX  | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
+    db << "delete from prekeyrecord where preKeyId == ?;"
+     << id;
+    std::cout << 13 << std::endl;
     return true;
   } catch (exception& e) {
-    std::cout << "ERROR : " << e.what() << std::endl;
+    std::cout << e.what() << std::endl;
     return false;
   }
 }

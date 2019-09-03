@@ -6,53 +6,68 @@
 #include <sstream>
 
 using namespace std;
+using namespace sqlite;
 
 CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id) {
-  SQLite::Database db(dbPath);
-  db.setBusyTimeout(5000);
-  SQLite::Statement query(db, "Select * from signedprekeyrecord where signedPreKeyId == ?");
-  query.bind(1, id);
+  sqlite_config config;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+  database db(dbPath, config);
 
-  query.executeStep();
-  char *record = strdup(query.getColumn(1).getText());
-  CriptextDB::SignedPreKey signedPreKey = { query.getColumn(0).getInt(), record, query.getColumn(2).getInt() };
-  
-  while(query.hasRow()) {
-    query.executeStep();
+  char *mySignedPreKey;
+  int myLen;
+  std::cout << 26 << std::endl;
+  db << "Select * from signedprekeyrecord where signedPreKeyId == ?;"
+     << id
+     >> [&] (int preKeyId, string record, int recordLength) {
+        std::cout << 26.3 << " : " << record << std::endl;
+        mySignedPreKey = (char *)malloc(record.length());
+        strcpy(mySignedPreKey, record.c_str());
+        myLen = (size_t)recordLength;
+        
+    };
+  std::cout << 26.5 << std::endl;
+  if (!mySignedPreKey) {
+    throw std::invalid_argument("row not available");
   }
+  SignedPreKey signedPreKey = { 
+    .id = id, 
+    .record = mySignedPreKey, 
+    .len = myLen 
+  };
+  std::cout << 27 << std::endl;
   return signedPreKey;
 }
 
 bool CriptextDB::createSignedPreKey(string dbPath, short int id, char *keyRecord, size_t len) {
   try {
-    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-    db.setBusyTimeout(5000);
-    SQLite::Statement query(db, "insert into signedprekeyrecord (signedPreKeyId, record, recordLength) values (?,?,?)");
-    query.bind(1, id);
-    query.bind(2, keyRecord);
-    query.bind(3, static_cast<int>(len));
-
-    query.exec();
+    std::cout << 28 << std::endl;
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);  
+    db << "insert into signedprekeyrecord (signedPreKeyId, record, recordLength) values (?,?,?);"
+     << id
+     << keyRecord
+     << static_cast<int>(len);
+    std::cout << 29 << std::endl;
+    return true;
   } catch (exception& e) {
-    std::cout << "ERROR : " << e.what() << std::endl;
+    std::cout << e.what() << std::endl;
     return false;
   }
-
-  return true;
 }
 
 bool CriptextDB::deleteSignedPreKey(string dbPath, short int id) {
   try {
-    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-    db.setBusyTimeout(5000);
-    SQLite::Statement query(db, "delete from signedPrekeyrecord where signedPreKeyId == ?");
-    query.bind(1, id);
-
-    query.exec();
+    std::cout << 29 << std::endl;
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
+    db << "delete from signedPrekeyrecord where signedPreKeyId == ?;"
+     << id;
+    std::cout << 30 << std::endl;
+    return true;
   } catch (exception& e) {
-    std::cout << "ERROR : " << e.what() << std::endl;
+    std::cout << e.what() << std::endl;
     return false;
   }
-
-  return true;
 }

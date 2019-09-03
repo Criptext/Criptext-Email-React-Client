@@ -4,6 +4,9 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <string>
 #include <vector>
+#include <stdexcept>
+#include <sqlite_modern_cpp.h>
+#include <iostream>
 
 using namespace std;
 

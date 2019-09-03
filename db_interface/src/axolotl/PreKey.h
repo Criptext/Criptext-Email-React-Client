@@ -3,7 +3,8 @@
 
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <string>
-#include <vector>
+#include <sqlite_modern_cpp.h>
+#include <iostream>
 
 using namespace std;
 

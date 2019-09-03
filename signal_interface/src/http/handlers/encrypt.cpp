@@ -76,7 +76,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath) {
   if (corsResult < 0) {
     return 201;
   }
-  
+  std::cout << "/encrypt/email Receiving Request" << std::endl;
   spdlog::info("[{0}] /encrypt/email Receiving Request", endpointId);
   char *bufferData;
   int readLength = parseBody(&bufferData, conn);
