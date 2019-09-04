@@ -1,5 +1,5 @@
 import { Suggestions } from './types';
-import { getEmailsGroupByThreadByParams } from '../utils/ipc';
+import { getThreads } from '../utils/ApiUtils'; 
 import { getMatches } from '../utils/storage';
 import { LabelType } from '../utils/electronInterface';
 
@@ -18,7 +18,7 @@ export const loadSuggestions = filter => {
   return async dispatch => {
     try {
       const hints = await getMatches(filter);
-      const threads = await getEmailsGroupByThreadByParams({
+      const threads = await getThreads({
         plain: true,
         text: filter,
         labelId: -2,

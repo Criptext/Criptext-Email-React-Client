@@ -18,13 +18,13 @@ import {
   deleteEmailsByThreadIdAndLabelId,
   getEmailsByThreadId,
   getEmailsByThreadIdAndLabelId,
-  getEmailsGroupByThreadByParams,
   getLabelById,
   getTrashExpiredEmails,
   postPeerEvent,
   updateEmails,
   updateUnreadEmailByThreadIds
 } from '../utils/ipc';
+import { getThreads } from '../utils/ApiUtils';
 import {
   getGroupEvents,
   sendFetchEmailsErrorMessage,
@@ -246,7 +246,12 @@ export const filterThreadsOrLoadMoreByUnread = (
       : true;
     try {
       if (shouldLoadMoreThreads) {
-        const threads = await getEmailsGroupByThreadByParams(loadParams);
+        const threads = await getThreads({
+          labelId: loadParams.labelId,
+          limit: 22,
+          accountId: 1,
+          date: Date.now().toString()
+        });
         if (threads.length || !loadParams.date) {
           dispatch(addThreads(loadParams.labelId, threads, loadParams.clear));
         }
