@@ -3,6 +3,7 @@
 #include "cors.h"
 #include <string>
 #include <iostream>
-#include "helpers.h"
+#include "../../axolotl/Thread.h"
+#include "../../../../signal_interface/src/http/handlers/helpers.h"
 
-int postGetEmailThreads(struct mg_connection *conn, void *cbdata);
+int postGetEmailThreads(struct mg_connection *conn, void *cbdata, std::string dbPath);

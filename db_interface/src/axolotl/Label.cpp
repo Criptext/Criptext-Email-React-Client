@@ -69,19 +69,19 @@ CriptextDB::Label getLabelById(string dbPath, int labelId, int accountId){
   string type = query.getColumn(3).getText();
   bool visible = query.getColumn(4).getInt();
   string uuid = query.getColumn(5).getText();
-  int accountId = query.getColumn(6).getInt();
+  int account_id = query.getColumn(6).getInt();
 
-  CriptextDB::Label label = { id, text, color, type, visible, uuid, accountId };
+  CriptextDB::Label label = { id, text, color, type, visible, uuid, account_id };
 
   return label;
 }
 
-vector<CriptextDB::Label> getLabelsByIds(string dbPath, vector<int> labelIds, int accountId){
+vector<CriptextDB::Label> CriptextDB::getLabelsByIds(string dbPath, vector<int> labelIds, int accountId){
   vector<CriptextDB::Label> allLabels;
   try {
     SQLite::Database db(dbPath);
 
-    SQLite::Statement query(db, "select * from label where id in (" + CriptextDB::DBUtils::joinVector(labelIds) + ") and (accountId is null OR accountId == ?)");
+    SQLite::Statement query(db, "select * from label where id in (" + DBUtils::joinVector(labelIds) + ") and (accountId is null OR accountId == ?)");
     query.bind(1, accountId);
 
     query.executeStep();
@@ -108,7 +108,7 @@ vector<CriptextDB::Label> getLabelsByText(string dbPath, vector<string> names, i
   vector<CriptextDB::Label> allLabels;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-    SQLite::Statement query(db, "select * from label where text in (" + CriptextDB::DBUtils::joinVector(names) + ") and accountId == " + to_string(accountId));
+    SQLite::Statement query(db, "select * from label where text in (" + DBUtils::joinVector(names) + ") and accountId == " + to_string(accountId));
 
     while (query.executeStep())
     {

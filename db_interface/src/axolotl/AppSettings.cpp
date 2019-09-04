@@ -17,7 +17,7 @@ CriptextDB::AppSettings CriptextDB::getSettings(string dbPath, char *recipientId
   return account;
 }
 
-int CriptextDB::createAccount(string dbPath, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
+int CriptextDB::createAccountSettings(string dbPath, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 
@@ -39,7 +39,7 @@ int CriptextDB::createAccount(string dbPath, char* recipientId, char* name, int 
   }
 }
 
-int CriptextDB::updateAccount(string dbPath, char* recipientId, char* jwt, char* name, char* signature, bool signatureEnabled) {
+int CriptextDB::updateAccountSettings(string dbPath, char* recipientId, char* jwt, char* name, char* signature, bool signatureEnabled) {
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 

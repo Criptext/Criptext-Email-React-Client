@@ -26,8 +26,8 @@ namespace CriptextDB {
     string preview;
   };
 
-  vector<FullEmail> getFullEmailsByIds(string dbPath, vector<int> emailIds, int accountId);
-  vector<FullEmail> getFullEmailsByThreadIds(string dbPath, vector<string> threadIds, int accountId);
+  // vector<FullEmail> getFullEmailsByIds(string dbPath, vector<int> emailIds, int accountId);
+  // vector<FullEmail> getFullEmailsByThreadIds(string dbPath, vector<string> threadIds, int accountId);
 } 
 
 #endif

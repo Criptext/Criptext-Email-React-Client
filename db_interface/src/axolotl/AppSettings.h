@@ -16,8 +16,8 @@ namespace CriptextDB {
   };
 
   AppSettings getSettings(string dbPath, char* recipientId);
-  int createAccount(string dbPath, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId);
-  int updateAccount(string dbPath, char* recipientId, char* jwt, char* name, char* signature, bool signatureEnabled);
+  int createAccountSettings(string dbPath, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId);
+  int updateAccountSettings(string dbPath, char* recipientId, char* jwt, char* name, char* signature, bool signatureEnabled);
 } 
 
 #endif

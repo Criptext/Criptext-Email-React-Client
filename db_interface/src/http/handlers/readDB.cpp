@@ -1,7 +1,6 @@
 #include "readDB.h"
-#include "Thread.h"
 
-int postGetEmailThreads(struct mg_connection *conn, void *cbdata) {
+int postGetEmailThreads(struct mg_connection *conn, void *cbdata, string dbPath) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -38,10 +37,9 @@ int postGetEmailThreads(struct mg_connection *conn, void *cbdata) {
     return 400;
   }
 
-  cJSON *response = cJSON_CreateObject();
-
-  CriptextDB::getThreadsByLabel()
-
-
+  cJSON *response;
+  vector<int> rejectedLabels = { CriptextDB::TRASH.id, CriptextDB::SPAM.id };
+  response = CriptextDB::getThreadsByLabel(dbPath, rejectedLabels, labelId->valueint, date->valuestring, limit->valueint, accountId->valueint);
+  
   return SendJSON(conn, response);
 }

@@ -20,8 +20,6 @@ int CriptextDB::deleteEmailLabelByEmailId(string dbPath, int emailId) {
   return query.exec();
 }
 
-
-
 vector<CriptextDB::EmailLabel> CriptextDB::getEmailLabelsByEmailId(string dbPath, int emailId) {
   vector<EmailLabel> allEmailLabels;
   try {

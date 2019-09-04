@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int createEmail(string dbPath, string key, string threadId, string subject, string preview, time_t date, int status, bool unread, bool secure, optional<time_t> unsendDate, optional<time_t> trashDate, string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary, int accountId){
+int CriptextDB::createEmail(string dbPath, string key, string threadId, string subject, string preview, time_t date, int status, bool unread, bool secure, optional<time_t> unsendDate, optional<time_t> trashDate, string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary, int accountId){
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "insert into email (key, threadId, subject, preview, date, status, unread, secure, unsendDate, trashDate, messageId, fromAddress, replyTo, boundary, accountId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -13,12 +13,12 @@ int createEmail(string dbPath, string key, string threadId, string subject, stri
   query.bind(2, threadId);
   query.bind(3, subject);
   query.bind(4, preview);
-  query.bind(5, CriptextDB::DBUtils::getDateForDBSaving(date));
+  query.bind(5, DBUtils::getDateForDBSaving(date));
   query.bind(6, status);
   query.bind(7, unread);
   query.bind(8, secure);
-  query.bind(9, unsendDate ? CriptextDB::DBUtils::getDateForDBSaving(*unsendDate) : "NULL");
-  query.bind(10, trashDate ? CriptextDB::DBUtils::getDateForDBSaving(*trashDate) : "NULL");
+  query.bind(9, unsendDate ? DBUtils::getDateForDBSaving(*unsendDate) : "NULL");
+  query.bind(10, trashDate ? DBUtils::getDateForDBSaving(*trashDate) : "NULL");
   query.bind(11, messageId);
   query.bind(12, fromAddress);
   query.bind(13, replyTo ? *replyTo : "NULL");
@@ -27,7 +27,7 @@ int createEmail(string dbPath, string key, string threadId, string subject, stri
   return query.exec();
 }
 
-int deleteEmailByKey(string dbPath, string key, int accountId){
+int CriptextDB::deleteEmailByKey(string dbPath, string key, int accountId){
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "delete from email where key == ? and accountId == ?");
@@ -36,7 +36,7 @@ int deleteEmailByKey(string dbPath, string key, int accountId){
   return query.exec();
 }
 
-int deleteEmailById(string dbPath, int emailId, int accountId){
+int CriptextDB::deleteEmailById(string dbPath, int emailId, int accountId){
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "delete from email where emailId == ? and accountId == ?");
@@ -45,24 +45,24 @@ int deleteEmailById(string dbPath, int emailId, int accountId){
   return query.exec();
 }
 
-int deleteEmailsById(string dbPath, vector<int> emailIds, int accountId){
+int CriptextDB::deleteEmailsById(string dbPath, vector<int> emailIds, int accountId){
   SQLite::Database db(dbPath);
 
-  SQLite::Statement query(db, "delete from email where accountId == ? and key in (" + CriptextDB::DBUtils::joinVector(emailIds) + ")");
+  SQLite::Statement query(db, "delete from email where accountId == ? and key in (" + DBUtils::joinVector(emailIds) + ")");
   query.bind(1, accountId);
   return query.exec();
 }
 
-int deleteEmailsByThreadIdAndEmailId(string dbPath, vector<int> threadIds, int labelId, int accountId){
+int CriptextDB::deleteEmailsByThreadIdAndEmailId(string dbPath, vector<int> threadIds, int labelId, int accountId){
   SQLite::Database db(dbPath);
 
-  SQLite::Statement query(db, "delete from email where accountId == ? and threadId in (" + CriptextDB::DBUtils::joinVector(threadIds) + ") and exists (select * from emailLabel where emailId == email.id and labelId == ?)");
+  SQLite::Statement query(db, "delete from email where accountId == ? and threadId in (" + DBUtils::joinVector(threadIds) + ") and exists (select * from emailLabel where emailId == email.id and labelId == ?)");
   query.bind(1, accountId);
   query.bind(2, labelId);
   return query.exec();
 }
 
-vector<CriptextDB::Email> getTrashExpiredEmails(string dbPath, int accountId){
+vector<CriptextDB::Email> CriptextDB::getTrashExpiredEmails(string dbPath, int accountId){
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "SELECT DISTINCT emailId FROM email " 
@@ -77,10 +77,10 @@ vector<CriptextDB::Email> getTrashExpiredEmails(string dbPath, int accountId){
     allIds.push_back(query.getColumn(0).getInt());
   }
 
-  return getEmailsByIds(dbPath, allIds, accountId);
+  return CriptextDB::getEmailsByIds(dbPath, allIds, accountId);
 }
 
-CriptextDB::Email getEmailByKey(string dbPath, string key, int accountId){
+CriptextDB::Email CriptextDB::getEmailByKey(string dbPath, string key, int accountId){
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "select * from email where key == ? and accounId == ?");
@@ -89,12 +89,12 @@ CriptextDB::Email getEmailByKey(string dbPath, string key, int accountId){
   query.executeStep();
 
   int id = query.getColumn(0).getInt();
-  string key = query.getColumn(1).getString();
+  string metadataKey = query.getColumn(1).getString();
   string threadId = query.getColumn(2).getString();
   string subject = query.getColumn(4).getString();
   string content = query.getColumn(5).getString();
   string preview = query.getColumn(6).getString();
-  time_t date = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(7).getString());
+  time_t date = DBUtils::getTimeFromDB(query.getColumn(7).getString());
   int status = query.getColumn(8).getInt();
   bool unread = query.getColumn(9).getInt();
   bool secure = query.getColumn(10).getInt();
@@ -102,12 +102,12 @@ CriptextDB::Email getEmailByKey(string dbPath, string key, int accountId){
   if(query.getColumn(12).isNull()) 
     unsendDate = nullopt;
   else 
-    unsendDate = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(12).getString());
+    unsendDate = DBUtils::getTimeFromDB(query.getColumn(12).getString());
   optional<time_t> trashDate; 
   if(query.getColumn(13).isNull()) 
     trashDate = nullopt;
   else 
-    trashDate = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(13).getString());
+    trashDate = DBUtils::getTimeFromDB(query.getColumn(13).getString());
   string messageId = query.getColumn(14).getString();
   string fromAddress = query.getColumn(15).getString();
   optional<string> replyTo; 
@@ -120,19 +120,19 @@ CriptextDB::Email getEmailByKey(string dbPath, string key, int accountId){
     boundary = nullopt;
   else 
     boundary = query.getColumn(17).getString();
-  int accountId = query.getColumn(18).getInt();
+  int account_id = query.getColumn(18).getInt();
 
-  CriptextDB::Email email = { id, key, threadId, subject, content, preview, date, status, unread, secure, unsendDate, trashDate, messageId, fromAddress, replyTo, boundary, accountId };
+  CriptextDB::Email email = { id, metadataKey, threadId, subject, content, preview, date, status, unread, secure, unsendDate, trashDate, messageId, fromAddress, replyTo, boundary, account_id };
 
   return email;
 }
 
-vector<CriptextDB::Email> getEmailsByIds(string dbPath, vector<int> emailIds, int accountId){
+vector<CriptextDB::Email> CriptextDB::getEmailsByIds(string dbPath, vector<int> emailIds, int accountId){
   vector<CriptextDB::Email> allEmails;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
 
-    SQLite::Statement query(db, "select * from email where accountId == ? and id in (" + CriptextDB::DBUtils::joinVector(emailIds) + ")");
+    SQLite::Statement query(db, "select * from email where accountId == ? and id in (" + DBUtils::joinVector(emailIds) + ")");
     query.bind(1, accountId);
 
     while (query.executeStep())
@@ -143,7 +143,7 @@ vector<CriptextDB::Email> getEmailsByIds(string dbPath, vector<int> emailIds, in
         string subject = query.getColumn(4).getString();
         string content = query.getColumn(5).getString();
         string preview = query.getColumn(6).getString();
-        time_t date = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(7).getString());
+        time_t date = DBUtils::getTimeFromDB(query.getColumn(7).getString());
         int status = query.getColumn(8).getInt();
         bool unread = query.getColumn(9).getInt();
         bool secure = query.getColumn(10).getInt();
@@ -151,12 +151,12 @@ vector<CriptextDB::Email> getEmailsByIds(string dbPath, vector<int> emailIds, in
         if(query.getColumn(12).isNull()) 
           unsendDate = nullopt;
         else 
-          unsendDate = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(12).getString());
+          unsendDate = DBUtils::getTimeFromDB(query.getColumn(12).getString());
         optional<time_t> trashDate; 
         if(query.getColumn(13).isNull()) 
           trashDate = nullopt;
         else 
-          trashDate = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(13).getString());
+          trashDate = DBUtils::getTimeFromDB(query.getColumn(13).getString());
         string messageId = query.getColumn(14).getString();
         string fromAddress = query.getColumn(15).getString();
         optional<string> replyTo; 
@@ -182,7 +182,7 @@ vector<CriptextDB::Email> getEmailsByIds(string dbPath, vector<int> emailIds, in
   }
 }
 
-vector<CriptextDB::Email> getEmailsByThreadIds(string dbPath, int labelId, string date, int limit, int accountId){
+vector<CriptextDB::Email> CriptextDB::getEmailsByThreadIds(string dbPath, vector<string> threadIds, int labelId, string date, int limit, int accountId){
   vector<CriptextDB::Email> allEmails;
   vector<int> recjectedLabelIds { CriptextDB::SPAM.id, CriptextDB::TRASH.id };
   try {
@@ -196,7 +196,7 @@ vector<CriptextDB::Email> getEmailsByThreadIds(string dbPath, int labelId, strin
         "where case when ? "
         "then email_label.labelId = (select id from label where label.id= cast(trim(trim(?, '%'), 'L') as integer)) "
         "else not exists "
-        "(select * from email_label where email_label.emailId = email.id and email_label.labelId in (" + CriptextDB::DBUtils::joinVector(recjectedLabelIds) + ")) "
+        "(select * from email_label where email_label.emailId = email.id and email_label.labelId in (" + DBUtils::joinVector(recjectedLabelIds) + ")) "
         "end "
         "AND accountId = ? "
         "group by (CASE WHEN email.threadId = "" THEN email.id ELSE email.threadId END) "
@@ -217,7 +217,7 @@ vector<CriptextDB::Email> getEmailsByThreadIds(string dbPath, int labelId, strin
         string subject = query.getColumn(4).getString();
         string content = query.getColumn(5).getString();
         string preview = query.getColumn(6).getString();
-        time_t date = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(7).getString());
+        time_t date = DBUtils::getTimeFromDB(query.getColumn(7).getString());
         int status = query.getColumn(8).getInt();
         bool unread = query.getColumn(9).getInt();
         bool secure = query.getColumn(10).getInt();
@@ -225,12 +225,12 @@ vector<CriptextDB::Email> getEmailsByThreadIds(string dbPath, int labelId, strin
         if(query.getColumn(12).isNull()) 
           unsendDate = nullopt;
         else 
-          unsendDate = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(12).getString());
+          unsendDate = DBUtils::getTimeFromDB(query.getColumn(12).getString());
         optional<time_t> trashDate; 
         if(query.getColumn(13).isNull()) 
           trashDate = nullopt;
         else 
-          trashDate = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(13).getString());
+          trashDate = DBUtils::getTimeFromDB(query.getColumn(13).getString());
         string messageId = query.getColumn(14).getString();
         string fromAddress = query.getColumn(15).getString();
         optional<string> replyTo; 
@@ -256,7 +256,7 @@ vector<CriptextDB::Email> getEmailsByThreadIds(string dbPath, int labelId, strin
   }
 }
 
-vector<CriptextDB::Email> getEmailsByLabelId(string dbPath, vector<int> rejectedLabels, int labelId, string date, int limit, int accountId){
+vector<CriptextDB::Email> CriptextDB::getEmailsByLabelId(string dbPath, vector<int> rejectedLabels, int labelId, string date, int limit, int accountId){
   vector<CriptextDB::Email> allEmails;
   vector<int> recjectedLabelIds { CriptextDB::SPAM.id, CriptextDB::TRASH.id };
   try {
@@ -270,7 +270,7 @@ vector<CriptextDB::Email> getEmailsByLabelId(string dbPath, vector<int> rejected
         "where case when ? "
         "then email_label.labelId = (select id from label where label.id= cast(trim(trim(?, '%'), 'L') as integer)) "
         "else not exists "
-        "(select * from email_label where email_label.emailId = email.id and email_label.labelId in (" + CriptextDB::DBUtils::joinVector(recjectedLabelIds) + ")) "
+        "(select * from email_label where email_label.emailId = email.id and email_label.labelId in (" + DBUtils::joinVector(recjectedLabelIds) + ")) "
         "end "
         "AND accountId = ? "
         "group by (CASE WHEN email.threadId = "" THEN email.id ELSE email.threadId END) "
@@ -291,7 +291,7 @@ vector<CriptextDB::Email> getEmailsByLabelId(string dbPath, vector<int> rejected
         string subject = query.getColumn(4).getString();
         string content = query.getColumn(5).getString();
         string preview = query.getColumn(6).getString();
-        time_t date = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(7).getString());
+        time_t date = DBUtils::getTimeFromDB(query.getColumn(7).getString());
         int status = query.getColumn(8).getInt();
         bool unread = query.getColumn(9).getInt();
         bool secure = query.getColumn(10).getInt();
@@ -299,12 +299,12 @@ vector<CriptextDB::Email> getEmailsByLabelId(string dbPath, vector<int> rejected
         if(query.getColumn(12).isNull()) 
           unsendDate = nullopt;
         else 
-          unsendDate = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(12).getString());
+          unsendDate = DBUtils::getTimeFromDB(query.getColumn(12).getString());
         optional<time_t> trashDate; 
         if(query.getColumn(13).isNull()) 
           trashDate = nullopt;
         else 
-          trashDate = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(13).getString());
+          trashDate = DBUtils::getTimeFromDB(query.getColumn(13).getString());
         string messageId = query.getColumn(14).getString();
         string fromAddress = query.getColumn(15).getString();
         optional<string> replyTo; 

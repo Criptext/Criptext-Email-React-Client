@@ -12,7 +12,7 @@ int createFile(string dbPath, string token, string name, int size, int status, t
   query.bind(2, name);
   query.bind(3, size);
   query.bind(4, status);
-  query.bind(5, CriptextDB::DBUtils::getDateForDBSaving(date));
+  query.bind(5, DBUtils::getDateForDBSaving(date));
   query.bind(6, mimeType);
   query.bind(7, key ? *key : "NULL");
   query.bind(8, iv ? *iv : "NULL");
@@ -21,7 +21,7 @@ int createFile(string dbPath, string token, string name, int size, int status, t
   return query.exec();
 }
 
-vector<CriptextDB::CRFile> getFilesByEmailId(string dbPath, int emailId){
+vector<CriptextDB::CRFile> CriptextDB::getFilesByEmailId(string dbPath, int emailId){
   vector<CriptextDB::CRFile> allFiles;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
@@ -36,7 +36,7 @@ vector<CriptextDB::CRFile> getFilesByEmailId(string dbPath, int emailId){
         string name = strdup(query.getColumn(2).getText());
         int size = query.getColumn(4).getInt();
         int status = query.getColumn(5).getInt();
-        time_t date = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(6).getString());
+        time_t date = DBUtils::getTimeFromDB(query.getColumn(6).getString());
         string mimeType = query.getColumn(7).getString();
         string key = query.getColumn(13).getString();
         string iv = query.getColumn(14).getString();
@@ -54,11 +54,11 @@ vector<CriptextDB::CRFile> getFilesByEmailId(string dbPath, int emailId){
   }
 }
 
-vector<CriptextDB::CRFile> getFilesByToken(string dbPath, vector<string> tokens){
+vector<CriptextDB::CRFile> CriptextDB::getFilesByToken(string dbPath, vector<string> tokens){
   vector<CriptextDB::CRFile> allFiles;
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-    SQLite::Statement query(db, "select * from file where token in (" + CriptextDB::DBUtils::joinVector(tokens) + ")");
+    SQLite::Statement query(db, "select * from file where token in (" + DBUtils::joinVector(tokens) + ")");
 
     while (query.executeStep())
     {
@@ -67,7 +67,7 @@ vector<CriptextDB::CRFile> getFilesByToken(string dbPath, vector<string> tokens)
         string name = strdup(query.getColumn(2).getText());
         int size = query.getColumn(4).getInt();
         int status = query.getColumn(5).getInt();
-        time_t date = CriptextDB::DBUtils::getTimeFromDB(query.getColumn(6).getString());
+        time_t date = DBUtils::getTimeFromDB(query.getColumn(6).getString());
         string mimeType = query.getColumn(7).getString();
         string key = query.getColumn(13).getString();
         string iv = query.getColumn(14).getString();

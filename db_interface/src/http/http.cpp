@@ -5,23 +5,11 @@
 struct mg_callbacks callbacks;
 struct mg_context *ctx;
 
-const char* civet_options[] = {
-    "document_root",
-    ".",
-    "listening_ports",
-    "8086",
-    "request_timeout_ms",
-    "10000",
-    "error_log_file",
-    "error.log",
-    "enable_auth_domain_check",
-    "no",
-    0
-};
+std::string db_path;
 
 int getEmailThreads(struct mg_connection *conn, void *cbdata){
   std::cout << "GET_THREADS_BY_ID" << std::endl;
-  return postDecryptEmail(conn, cbdata);
+  return postGetEmailThreads(conn, cbdata, db_path);
 }
 
 int pong(struct mg_connection *conn, void *cbdata){
@@ -31,7 +19,23 @@ int pong(struct mg_connection *conn, void *cbdata){
   return 1;
 }
 
-void http_init(){
+void http_init(char *dbPath, char *port){
+  db_path = std::string(dbPath);
+
+  const char* civet_options[] = {
+    "document_root",
+    ".",
+    "listening_ports",
+    port,
+    "request_timeout_ms",
+    "10000",
+    "error_log_file",
+    "error.log",
+    "enable_auth_domain_check",
+    "no",
+    0
+  };
+
   ctx = mg_start(&callbacks, 0, civet_options);
   mg_set_request_handler(ctx, "/threadsById", getEmailThreads, 0);
   mg_set_request_handler(ctx, "/ping", pong, 0);

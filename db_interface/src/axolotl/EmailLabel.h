@@ -17,7 +17,7 @@ namespace CriptextDB {
 
   int createEmailLabel(string dbPath, int labelId, int emailId);
   int deleteEmailLabelByEmailId(string dbPath, int emailId);
-  vector<CriptextDB::EmailLabel> CriptextDB::getEmailLabelsByEmailId(string dbPath, int emailId);
+  vector<EmailLabel> getEmailLabelsByEmailId(string dbPath, int emailId);
 } 
 
 #endif

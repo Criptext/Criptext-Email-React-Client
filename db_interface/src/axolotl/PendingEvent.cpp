@@ -41,7 +41,7 @@ vector<CriptextDB::PendingEvent> getPendingEvents(string dbPath, int accountId){
 int deletePendingEventsByIds(string dbPath, vector<int> pendingEventIds){
   SQLite::Database db(dbPath);
 
-  SQLite::Statement query(db, "delete from pendingEvent where id in (" + CriptextDB::DBUtils::joinVector(pendingEventIds) + ")");
+  SQLite::Statement query(db, "delete from pendingEvent where id in (" + DBUtils::joinVector(pendingEventIds) + ")");
 
   return query.exec();
 }

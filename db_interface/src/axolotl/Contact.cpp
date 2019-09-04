@@ -13,13 +13,13 @@ CriptextDB::Contact CriptextDB::getContactByEmail(string dbPath, string email) {
   query.executeStep();
 
   int id = query.getColumn(0).getInt();
-  string email = strdup(query.getColumn(1).getText());
+  string mail = strdup(query.getColumn(1).getText());
   string name = strdup(query.getColumn(2).getText());
   bool isTrusted = query.getColumn(3).getInt();
   int score = query.getColumn(4).getInt();
   int spamScore = query.getColumn(5).getInt();
 
-  Contact contact = { id, email, name, isTrusted, score, spamScore };
+  Contact contact = { id, mail, name, isTrusted, score, spamScore };
   return contact;
 }
 
