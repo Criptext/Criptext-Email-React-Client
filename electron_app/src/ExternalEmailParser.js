@@ -3,8 +3,49 @@ const path = require('path');
 const Mbox = require('node-mbox');
 const MailParser = require('mailparser').MailParser;
 const { getBasepathAndFilenameFromPath } = require('./utils/stringUtils');
+const { databasePath } = require('./models');
 const ALLOWED_EXTENSIONS = ['.mbox'];
 
+let count = 0;
+
+/*  Temp Directory
+----------------------------- */
+const TempFolderName = 'Imported';
+const TempDirectory = path.join(databasePath, '..', TempFolderName);
+const MODES = {
+  CREATE: 'create',
+  RESUME: 'resume'
+};
+
+const checkTempDirectory = mode => {
+  try {
+    if (mode === 'create') {
+      if (fs.existsSync(TempDirectory)) {
+        removeTempDirectoryRecursive(TempDirectory);
+      }
+      fs.mkdirSync(TempDirectory);
+    }
+  } catch (e) {
+    throw new Error('Unable to check temp folder');
+  }
+};
+
+const removeTempDirectoryRecursive = pathToDelete => {
+  if (fs.existsSync(pathToDelete)) {
+    fs.readdirSync(pathToDelete).forEach(file => {
+      const currentPath = path.join(pathToDelete, file);
+      if (fs.lstatSync(currentPath).isDirectory()) {
+        removeTempDirectoryRecursive(currentPath);
+      } else {
+        fs.unlinkSync(currentPath);
+      }
+    });
+    fs.rmdirSync(pathToDelete);
+  }
+};
+
+/*  Methods
+----------------------------- */
 function checkEmailFileExtension(filepath) {
   const { filename } = getBasepathAndFilenameFromPath(filepath);
   if (!filename) return false;
@@ -12,27 +53,55 @@ function checkEmailFileExtension(filepath) {
   return ALLOWED_EXTENSIONS.includes(ext);
 }
 
-const handleParseMailboxFile = filepath => {
-  const check = checkEmailFileExtension(filepath);
-  if (!check) {
-    return { error: true, message: 'Unable to parse. Invalid file' };
-  }
+const parseFileAndSplitEmailsInFiles = mboxFilepath => {
   return new Promise((resolve, reject) => {
+    const handleError = err => {
+      reject({
+        error: true,
+        message: typeof err === 'string' ? err : err.toString()
+      });
+    };
+    const handleSuccess = () => {
+      resolve({ error: false, message: count });
+    };
+
     try {
-      const inputStream = fs.createReadStream(filepath);
+      const check = checkEmailFileExtension(mboxFilepath);
+      if (!check) handleError('Unable to parse. Invalid file');
+    } catch (checkError) {
+      handleError(checkError);
+    }
+
+    try {
+      checkTempDirectory(MODES.CREATE);
+    } catch (tmpError) {
+      handleError('Unable to check temp folder');
+    }
+
+    try {
+      const inputStream = fs.createReadStream(mboxFilepath);
       const mboxparser = new Mbox();
-      mboxparser.on('message', handleParseExternalEmail);
-      mboxparser.on('error', mboxErr =>
-        reject({ error: true, message: mboxErr })
-      );
-      mboxparser.on('end', () =>
-        resolve({ error: false, message: 'File parsed successfully' })
-      );
+      mboxparser.on('message', saveEmailInTempFile);
+      mboxparser.on('error', handleError);
+      mboxparser.on('end', handleSuccess);
       inputStream.pipe(mboxparser);
-    } catch (error) {
-      reject({ error: true, message: error });
+    } catch (parseError) {
+      handleError(parseError);
     }
   });
+};
+
+const saveEmailInTempFile = msg => {
+  try {
+    const identifier = Date.now();
+    const emailfolder = path.join(TempDirectory, `Imp${identifier}`);
+    const filepath = path.join(emailfolder, `${identifier}.txt`);
+    fs.mkdirSync(emailfolder);
+    fs.writeFileSync(filepath, msg);
+    count++;
+  } catch (error) {
+    count++;
+  }
 };
 
 const handleParseExternalEmail = msg => {
@@ -40,13 +109,15 @@ const handleParseExternalEmail = msg => {
     const attachments = [];
     const mailparser = new MailParser({ streamAttachments: true });
     mailparser.on('headers', headers => {
-      console.log(JSON.stringify(headers));
+      for (const [clave, valor] of headers.entries()) {
+        console.log(clave + ' = ' + `${valor.slice(0, 10)}...`);
+      }
     });
     mailparser.on('data', data => {
       switch (data.type) {
         case 'text': {
           Object.keys(data).forEach(key => {
-            console.log(`${key}: ${data[key]}`);
+            console.log(key + ' = ' + `${data[key].slice(0, 10)}...`);
           });
           break;
         }
@@ -56,7 +127,11 @@ const handleParseExternalEmail = msg => {
           data.chunklen = 0;
           Object.keys(data).forEach(key => {
             if (!['object', 'function'].includes(typeof data[key])) {
-              console.log('%s: %s', key, JSON.stringify(data[key]));
+              console.log(
+                '%s = %s',
+                key,
+                JSON.stringify(data[key]).slice(0, 10)
+              );
             }
           });
           data.content.on('readable', () => {
@@ -85,13 +160,8 @@ const handleParseExternalEmail = msg => {
           done(false, `data:${type};base64,${data}`);
         },
         (err, html) => {
-          if (err) {
-            console.log(err);
-            reject(err);
-          }
-          if (html) {
-            resolve('Ok');
-          }
+          if (err) return reject(err);
+          if (html) resolve('Ok');
         }
       );
     });
@@ -100,6 +170,13 @@ const handleParseExternalEmail = msg => {
   });
 };
 
+const handleParseMailboxFile = async filepath => {
+  const { error, message } = await parseFileAndSplitEmailsInFiles(filepath);
+  if (error) return;
+  console.log('Total de emails: ', message);
+};
+
 module.exports = {
-  handleParseMailboxFile
+  handleParseMailboxFile,
+  handleParseExternalEmail
 };
