@@ -15,7 +15,7 @@ const getDebbyPath = nodeEnv => {
   }
 };
 
-let port = 8085;
+let port = 8086;
 let debby = null;
 let debbyStartTimeout = null;
 
@@ -26,11 +26,13 @@ const getPort = () => {
 const startDebby = async () => {
   debbyStartTimeout = null;
   if (!debby) {
-    const myPort = await portscanner.findAPortNotInUse(8085);
+    const myPort = await portscanner.findAPortNotInUse(8086);
     port = myPort;
 
     const debbyPath = getDebbyPath(process.env.NODE_ENV);
+    console.log("DEBBY PATH: " + debbyPath);
     const dbpath = path.resolve(dbManager.databasePath);
+    console.log("DB PATH: " + dbpath);
     debby = spawn(debbyPath, [dbpath, myPort]);
     debby.stdout.on('data', data => {
       console.log(`-----debby-----\n${data}\n -----end-----`);

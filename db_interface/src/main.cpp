@@ -14,7 +14,7 @@ void PrintStackTrace()
    if (strings)
    {
       spdlog::critical("--Stack trace follows (%zd frames):\n", size);
-      for (size_t i = 0; i < size; i++) spdlog::critical("  {0}", strings[i]);
+      for (size_t i = 0; i < size; i++) std::cout << strings[i] << std::endl;
       spdlog::critical("--End Stack trace\n");
       free(strings);
    }
@@ -43,15 +43,20 @@ bool is_number(const std::string& s) {
 }
 
 int main(int argc, char const *argv[]){
+   std::cout << "INIT MAIN" << std::endl; 
    char *logsPath = "db_logs.txt";
    if (argc > 3) {
       logsPath = const_cast<char *>(argv[3]);
    }
 
+   std::cout << "LOGS PATH DEFINED" << std::endl; 
+
    auto rotating_logger = spdlog::rotating_logger_mt("DB Logs", logsPath, 1048576 * 5, 3);
+   std::cout << "INIT LOGGER" << std::endl; 
    spdlog::set_default_logger(rotating_logger);
    spdlog::flush_every(std::chrono::seconds(3));
    spdlog::info("Starting Service");
+   std::cout << "STARTING SERVICE" << std::endl; 
    if (argc < 2) {
       spdlog::info("No db path argument passed");
       return -1;
@@ -59,6 +64,8 @@ int main(int argc, char const *argv[]){
 
    char *dbPath = const_cast<char *>(argv[1]);
    char *port = "8086";
+
+   std::cout << "PORT AND DB PATH" << std::endl; 
 
    if (argc > 2) {
       char *myPort = const_cast<char *>(argv[2]);

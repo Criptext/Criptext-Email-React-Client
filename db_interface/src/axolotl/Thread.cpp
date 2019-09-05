@@ -34,29 +34,27 @@ string CriptextDB::getThreadsByThreadIds(string dbPath, vector<string> threadIds
     unordered_set<string> fromNames;
     unordered_set<int> contactIds;
     std::transform(fullEmails.cbegin(), fullEmails.cend(), std::back_inserter(emailIds), [](FullEmail fullEmail) -> int {
-      std::unordered_set<int> labelIds;
-      vector<string> fileTokens;
-      unordered_set<string> fromNames;
-      unordered_set<int> contactIds;
-        std::transform(fullEmail.labels.cbegin(), fullEmail.labels.cend(), std::inserter(labelIds, labelIds.cend()), [](Label label) -> int {
-          return label.id;
-        });
-        std::transform(fullEmail.files.cbegin(), fullEmail.files.cend(), std::back_inserter(fileTokens), [](CRFile file) -> string {
-          return file.token;
-        });
-        std::transform(fullEmail.to.cbegin(), fullEmail.to.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
-          return contact.id;
-        });
-        std::transform(fullEmail.cc.cbegin(), fullEmail.cc.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
-          return contact.id;
-        });
-        std::transform(fullEmail.bcc.cbegin(), fullEmail.bcc.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
-          return contact.id;
-        });
-        contactIds.insert(fullEmail.from.id);
-        fromNames.insert(fullEmail.email.fromAddress);
-        return fullEmail.email.id;
+      return fullEmail.email.id;
     });
+    for(FullEmail &fullEmail : fullEmails) {
+      std::transform(fullEmail.labels.cbegin(), fullEmail.labels.cend(), std::inserter(labelIds, labelIds.cend()), [](Label label) -> int {
+        return label.id;
+      });
+      std::transform(fullEmail.files.cbegin(), fullEmail.files.cend(), std::back_inserter(fileTokens), [](CRFile file) -> string {
+        return file.token;
+      });
+      std::transform(fullEmail.to.cbegin(), fullEmail.to.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
+        return contact.id;
+      });
+      std::transform(fullEmail.cc.cbegin(), fullEmail.cc.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
+        return contact.id;
+      });
+      std::transform(fullEmail.bcc.cbegin(), fullEmail.bcc.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
+        return contact.id;
+      });
+      contactIds.insert(fullEmail.from.id);
+      fromNames.insert(fullEmail.email.fromAddress);
+    }
     optional<string> trashDate = fullEmails.back().email.trashDate ? 
     DBUtils::getDateForDBSaving(*fullEmails.back().email.trashDate) : NULL;
     optional<string> unsendDate = fullEmails.back().email.unsendDate ? 
@@ -108,29 +106,27 @@ cJSON* CriptextDB::getThreadsByLabel(string dbPath, vector<int> rejectedLabel, i
   unordered_set<string> fromNames;
   unordered_set<int> contactIds;
   std::transform(fullEmails.cbegin(), fullEmails.cend(), std::back_inserter(emailIds), [](FullEmail fullEmail) -> int {
-      std::unordered_set<int> labelIds;
-      vector<string> fileTokens;
-      unordered_set<string> fromNames;
-      unordered_set<int> contactIds;
-      std::transform(fullEmail.labels.cbegin(), fullEmail.labels.cend(), std::inserter(labelIds, labelIds.cend()), [](Label label) -> int {
-        return label.id;
-      });
-      std::transform(fullEmail.files.cbegin(), fullEmail.files.cend(), std::back_inserter(fileTokens), [](CRFile file) -> string {
-        return file.token;
-      });
-      std::transform(fullEmail.to.cbegin(), fullEmail.to.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
-        return contact.id;
-      });
-      std::transform(fullEmail.cc.cbegin(), fullEmail.cc.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
-        return contact.id;
-      });
-      std::transform(fullEmail.bcc.cbegin(), fullEmail.bcc.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
-        return contact.id;
-      });
-      contactIds.insert(fullEmail.from.id);
-      fromNames.insert(fullEmail.email.fromAddress);
       return fullEmail.email.id;
   });
+  for(FullEmail &fullEmail : fullEmails) {
+    std::transform(fullEmail.labels.cbegin(), fullEmail.labels.cend(), std::inserter(labelIds, labelIds.cend()), [](Label label) -> int {
+      return label.id;
+    });
+    std::transform(fullEmail.files.cbegin(), fullEmail.files.cend(), std::back_inserter(fileTokens), [](CRFile file) -> string {
+      return file.token;
+    });
+    std::transform(fullEmail.to.cbegin(), fullEmail.to.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
+      return contact.id;
+    });
+    std::transform(fullEmail.cc.cbegin(), fullEmail.cc.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
+      return contact.id;
+    });
+    std::transform(fullEmail.bcc.cbegin(), fullEmail.bcc.cend(), std::inserter(contactIds, contactIds.cend()), [](Contact contact) -> int {
+      return contact.id;
+    });
+    contactIds.insert(fullEmail.from.id);
+    fromNames.insert(fullEmail.email.fromAddress);
+  }
   optional<string> trashDate = fullEmails.back().email.trashDate ? 
   DBUtils::getDateForDBSaving(*fullEmails.back().email.trashDate) : NULL;
   optional<string> unsendDate = fullEmails.back().email.unsendDate ? 

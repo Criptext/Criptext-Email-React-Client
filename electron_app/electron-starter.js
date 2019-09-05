@@ -9,6 +9,7 @@ const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { startAlice, closeAlice } = require('./src/aliceManager');
+const { startDebby, closeDebby } = require('./src/debbyManager');
 const { createAppMenu } = require('./src/windows/menu');
 const {
   showWindows, 
@@ -39,6 +40,7 @@ async function initApp() {
   }
 
   await startAlice();
+  //await startDebby();
 
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
@@ -121,5 +123,6 @@ app.on('activate', () => {
 
 app.on('before-quit', () => {
   closeAlice();
+  closeDebby();
   globalManager.forcequit.set(true);
 });

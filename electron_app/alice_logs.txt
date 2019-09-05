@@ -1,0 +1,18 @@
+[2019-09-04 15:20:38.874] [Alice Logs] [info] Starting Service
+[2019-09-04 15:20:38.875] [Alice Logs] [info] DB PATH: /Users/jorgeblacio/Documents/Repos/Criptext-Email-React-Client/electron_app/Criptext.db
+[2019-09-04 15:20:38.875] [Alice Logs] [info] PORT : 8085
+[2019-09-04 15:51:18.746] [Alice Logs] [info] Starting Service
+[2019-09-04 15:51:18.746] [Alice Logs] [info] DB PATH: /Users/jorgeblacio/Documents/Repos/Criptext-Email-React-Client/electron_app/Criptext.db
+[2019-09-04 15:51:18.746] [Alice Logs] [info] PORT : 8085
+[2019-09-04 16:47:54.328] [Alice Logs] [info] Starting Service
+[2019-09-04 16:47:54.329] [Alice Logs] [info] DB PATH: /Users/jorgeblacio/Documents/Repos/Criptext-Email-React-Client/electron_app/Criptext.db
+[2019-09-04 16:47:54.329] [Alice Logs] [info] PORT : 8085
+[2019-09-04 16:50:47.036] [Alice Logs] [info] Starting Service
+[2019-09-04 16:50:47.037] [Alice Logs] [info] DB PATH: /Users/jorgeblacio/Documents/Repos/Criptext-Email-React-Client/electron_app/Criptext.db
+[2019-09-04 16:50:47.037] [Alice Logs] [info] PORT : 8087
+[2019-09-04 16:53:27.872] [Alice Logs] [info] Starting Service
+[2019-09-04 16:53:27.873] [Alice Logs] [info] DB PATH: /Users/jorgeblacio/Documents/Repos/Criptext-Email-React-Client/electron_app/Criptext.db
+[2019-09-04 16:53:27.873] [Alice Logs] [info] PORT : 8088
+[2019-09-04 16:54:22.794] [Alice Logs] [info] Starting Service
+[2019-09-04 16:54:22.794] [Alice Logs] [info] DB PATH: /Users/jorgeblacio/Documents/Repos/Criptext-Email-React-Client/electron_app/Criptext.db
+[2019-09-04 16:54:22.794] [Alice Logs] [info] PORT : 8089

@@ -1,0 +1,9 @@
+[2019-09-04 16:35:19.429] [DB Logs] [info] Starting Service
+[2019-09-04 16:35:19.429] [DB Logs] [info] No db path argument passed
+[2019-09-04 16:43:35.283] [DB Logs] [info] Starting Service
+[2019-09-04 16:43:35.283] [DB Logs] [info] No db path argument passed
+[2019-09-04 16:44:32.799] [DB Logs] [info] Starting Service
+[2019-09-04 16:44:32.800] [DB Logs] [info] No db path argument passed
+[2019-09-04 16:44:58.543] [DB Logs] [info] Starting Service
+[2019-09-04 16:44:58.545] [DB Logs] [info] DB PATH: /Users/jorgeblacio/Documents/Repos/Criptext-Email-React-Client/electron_app/Criptext.db
+[2019-09-04 16:44:58.545] [DB Logs] [info] PORT : 8086
