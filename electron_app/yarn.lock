@@ -3553,7 +3553,7 @@ mailparser@^2.7.1:
     nodemailer "6.1.1"
     tlds "1.203.1"
 
-mailsplit@4.4.1:
+mailsplit@4.4.1, mailsplit@^4.4.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/mailsplit/-/mailsplit-4.4.1.tgz#838603af3c1561e27aedd8599cec2a59c097faa6"
   integrity sha512-AmWLEHQAg/zbNb1MdrPQS9VOzysHaU9IuoQV9kGU5fgjM5RCbgqVkZzp0+DhPep8sj8iHfbWkl16Nb1PbNlTYg==

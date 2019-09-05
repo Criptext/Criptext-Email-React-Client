@@ -104,6 +104,47 @@ const saveEmailInTempFile = msg => {
   }
 };
 
+const parseIndividualEmailFiles = async () => {
+  try {
+    if (fs.existsSync(TempDirectory)) {
+      for (const folder of fs.readdirSync(TempDirectory)) {
+        const subFolderPath = path.join(TempDirectory, folder);
+        for (const email of fs.readdirSync(subFolderPath)) {
+          const emailPath = path.join(subFolderPath, email);
+          const headersResponse = await getHeadersFromEmailFile(emailPath);
+          if (!headersResponse.error) {
+            const headersFilepath = path.join(subFolderPath, 'headers.txt');
+            fs.writeFileSync(headersFilepath, headersResponse.message);
+          }
+        }
+      }
+    }
+  } catch (parseErr) {
+    return { error: true, message: 'Failed to parse emails files' };
+  }
+};
+
+const getHeadersFromEmailFile = emailtopath => {
+  const Splitter = require('mailsplit').Splitter;
+  const splitter = new Splitter();
+  const emailFileStream = fs.createReadStream(emailtopath);
+  let headers;
+  let isFirst = true;
+  return new Promise(resolve => {
+    splitter.on('data', data => {
+      if (data.type === 'node' && isFirst) {
+        headers = `${data.getHeaders()}`;
+        isFirst = false;
+      }
+    });
+    splitter.on('error', () =>
+      resolve({ error: true, message: `Failed to split file: ${emailtopath}` })
+    );
+    splitter.on('end', () => resolve({ error: false, message: headers }));
+    emailFileStream.pipe(splitter);
+  });
+};
+
 const handleParseExternalEmail = msg => {
   return new Promise((resolve, reject) => {
     const attachments = [];
@@ -173,7 +214,8 @@ const handleParseExternalEmail = msg => {
 const handleParseMailboxFile = async filepath => {
   const { error, message } = await parseFileAndSplitEmailsInFiles(filepath);
   if (error) return;
-  console.log('Total de emails: ', message);
+  console.log('> Total de emails: ', message);
+  await parseIndividualEmailFiles();
 };
 
 module.exports = {
