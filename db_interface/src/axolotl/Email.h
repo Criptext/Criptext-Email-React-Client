@@ -37,6 +37,7 @@ namespace CriptextDB {
   vector<Email> getTrashExpiredEmails(string dbPath, int accountId);
   Email getEmailByKey(string dbPath, string key, int accountId);
   vector<Email> getEmailsByIds(string dbPath, vector<int> emailIds, int accountId);
+  vector<Email> getEmailsByThreadId(string dbPath, string threadId, vector<int> rejectedLabels, int accountId);
   vector<Email> getEmailsByThreadIds(string dbPath, vector<string> threadIds, int labelId, string date, int limit, int accountId);
   vector<Email> getEmailsByLabelId(string dbPath, vector<int> rejectedLabels, int labelId, string date, int limit, int accountId);
 } 
