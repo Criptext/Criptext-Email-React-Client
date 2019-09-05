@@ -246,12 +246,13 @@ export const filterThreadsOrLoadMoreByUnread = (
       : true;
     try {
       if (shouldLoadMoreThreads) {
-        const threads = await getThreads({
+        const res = await getThreads({
           labelId: loadParams.labelId,
           limit: 22,
           accountId: 1,
           date: Date.now().toString()
         });
+        const threads = await res.json();
         if (threads.length || !loadParams.date) {
           dispatch(addThreads(loadParams.labelId, threads, loadParams.clear));
         }

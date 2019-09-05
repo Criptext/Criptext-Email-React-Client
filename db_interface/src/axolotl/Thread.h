@@ -48,10 +48,10 @@ namespace CriptextDB {
       if(thread == NULL){
         return NULL;
       }
-      cJSON_AddItemToObject(thread, "labelIds", cJSON_CreateString(DBUtils::joinSet(labelIds).c_str()));
+      cJSON_AddItemToObject(thread, "allLabels", cJSON_CreateString(DBUtils::joinSet(labelIds).c_str()));
       cJSON_AddItemToObject(thread, "boundary", cJSON_CreateString(boundary ? (*boundary).c_str() : NULL));
       cJSON_AddItemToObject(thread, "content", cJSON_CreateString(lastEmailContent.c_str()));
-      cJSON_AddItemToObject(thread, "date", cJSON_CreateString(lastEmailContent.c_str()));
+      cJSON_AddItemToObject(thread, "date", cJSON_CreateString(date.c_str()));
       cJSON_AddItemToObject(thread, "emailIds", cJSON_CreateString(DBUtils::joinVector(emailIds).c_str()));
       cJSON_AddItemToObject(thread, "fileTokens", cJSON_CreateString(DBUtils::joinVector(fileTokens).c_str()));
       cJSON_AddItemToObject(thread, "fromAddress", cJSON_CreateString(fromAddress.c_str()));

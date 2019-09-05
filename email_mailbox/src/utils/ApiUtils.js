@@ -10,7 +10,7 @@ const apiBaseUrl =
     ? process.env.REACT_APP_DEV_API_URL
     : 'https://api.criptext.com';
 const aliceUrl = 'http://localhost';
-const debbyUrl = 'http://localhost:8086';
+const debbyUrl = 'http://localhost:9085';
 
 // Default
 let osInfo = getOS();

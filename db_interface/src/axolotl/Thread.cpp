@@ -4,6 +4,7 @@
 #include "EmailContact.h"
 #include <unordered_set>
 #include <iostream>
+#include <optional>
 
 using namespace std;
 
@@ -57,12 +58,12 @@ string CriptextDB::getThreadsByThreadIds(string dbPath, vector<string> threadIds
       fromNames.insert(fullEmail.email.fromAddress);
     }
     optional<string> trashDate = fullEmails.back().email.trashDate ? 
-    DBUtils::getDateForDBSaving(*fullEmails.back().email.trashDate) : NULL;
+    *fullEmails.back().email.trashDate : NULL;
     optional<string> unsendDate = fullEmails.back().email.unsendDate ? 
-    DBUtils::getDateForDBSaving(*fullEmails.back().email.unsendDate) : NULL;
-    Thread thread = { labelIds, fullEmails.back().email.boundary, fullEmails.back().email.content, DBUtils::getDateForDBSaving(fullEmails.back().email.date), emailIds,
+    *fullEmails.back().email.unsendDate : NULL;
+    Thread thread = { labelIds, fullEmails.back().email.boundary, fullEmails.back().email.content, fullEmails.back().email.date, emailIds,
      fileTokens, fullEmails.back().from.email, DBUtils::joinSet(fromNames), fullEmails.back().email.id,
-     fullEmails.back().email.key, DBUtils::getDateForDBSaving(fullEmails.back().email.date), fullEmails.back().email.messageId, fullEmails.back().email.preview,
+     fullEmails.back().email.key, fullEmails.back().email.date, fullEmails.back().email.messageId, fullEmails.back().email.preview,
      contactIds, fullEmails.back().email.replyTo, fullEmails.back().email.secure, fullEmails.back().email.status, 
      fullEmails.back().email.subject, threadId, trashDate, fullEmails.back().email.unread, 
      unsendDate };
@@ -80,6 +81,7 @@ string CriptextDB::getThreadsByThreadIds(string dbPath, vector<string> threadIds
 }
 
 cJSON* CriptextDB::getThreadsByLabel(string dbPath, vector<int> rejectedLabel, int labelId, string date, int limit, int accountId){
+  std::cout << "CALLED GET_THREADS_BY_ID" << std::endl;
   vector<Thread> threads;
   
   vector<Email> emails = CriptextDB::getEmailsByLabelId(dbPath, rejectedLabel, labelId, date, limit, accountId);
@@ -87,7 +89,9 @@ cJSON* CriptextDB::getThreadsByLabel(string dbPath, vector<int> rejectedLabel, i
   std::transform(emails.cbegin(), emails.cend(), std::inserter(threadIds, threadIds.end()), [](Email email) -> string {
       return email.threadId;
   });
+  std::cout << "GOT ALL THREAD IDS" << std::endl;
   for(const string threadId : threadIds){
+    std::cout << "PROCESSING THREAD" << std::endl;
     vector<Email> threadEmails = CriptextDB::getEmailsByThreadId(dbPath, threadId, rejectedLabel, accountId);
     vector<string> fileTokens;
     unordered_set<string> fromNames;
@@ -96,6 +100,7 @@ cJSON* CriptextDB::getThreadsByLabel(string dbPath, vector<int> rejectedLabel, i
     unordered_set<int> labelIds;
     vector<int> emailIds;
     for(const CriptextDB::Email &email : threadEmails){
+      std::cout << "PROCESSING THREAD EMAILS" << std::endl;
       emailIds.push_back(email.id);
       vector<CRFile> files = CriptextDB::getFilesByEmailId(dbPath, email.id);
       vector<CriptextDB::EmailLabel> emailLabels = CriptextDB::getEmailLabelsByEmailId(dbPath, email.id);
@@ -108,7 +113,7 @@ cJSON* CriptextDB::getThreadsByLabel(string dbPath, vector<int> rejectedLabel, i
       vector<Contact> to = CriptextDB::getContactsByEmailIdAndType(dbPath, email.id, "to");
       vector<Contact> cc = CriptextDB::getContactsByEmailIdAndType(dbPath, email.id, "cc");
       vector<Contact> bcc = CriptextDB::getContactsByEmailIdAndType(dbPath, email.id, "bcc");
-      string fromEmail = DBUtils::getFromEmail(email.fromAddress);
+      string fromEmail = email.fromAddress;
       Contact from = CriptextDB::getContactByEmail(dbPath, fromEmail);
 
       FullEmail fullEmail = { email, labels, to, cc, bcc, from, files, email.preview };
@@ -130,25 +135,34 @@ cJSON* CriptextDB::getThreadsByLabel(string dbPath, vector<int> rejectedLabel, i
       contactIds.insert(from.id);
       fromNames.insert(fromEmail);
     }
-    std::cout << "D" << std::endl;
-    optional<string> trashDate = fullEmails.back().email.trashDate ? 
-    DBUtils::getDateForDBSaving(*fullEmails.back().email.trashDate) : NULL;
-    optional<string> unsendDate = fullEmails.back().email.unsendDate ? 
-    DBUtils::getDateForDBSaving(*fullEmails.back().email.unsendDate) : NULL;
-    Thread thread = { labelIds, fullEmails.back().email.boundary, fullEmails.back().email.content, DBUtils::getDateForDBSaving(fullEmails.back().email.date), emailIds,
+    std::cout << "TRY TO ADD THREAD" << std::endl;
+    std::optional<string> trashDate = std::nullopt;
+    if(fullEmails.back().email.trashDate.has_value()){
+      trashDate = *fullEmails.back().email.trashDate;
+    }
+    std::cout << "GOT TRASH DATE" << std::endl;
+    std::optional<string> unsendDate = std::nullopt;
+    if(fullEmails.back().email.unsendDate.has_value()){
+      trashDate = *fullEmails.back().email.unsendDate;
+    }
+    std::cout << "GOT UNSENT DATE" << std::endl;
+    Thread thread = { labelIds, fullEmails.back().email.boundary, fullEmails.back().email.content, fullEmails.back().email.date, emailIds,
      fileTokens, fullEmails.back().from.email, DBUtils::joinSet(fromNames), fullEmails.back().email.id,
-     fullEmails.back().email.key, DBUtils::getDateForDBSaving(fullEmails.back().email.date), fullEmails.back().email.messageId, fullEmails.back().email.preview,
+     fullEmails.back().email.key, fullEmails.back().email.date, fullEmails.back().email.messageId, fullEmails.back().email.preview,
      contactIds, fullEmails.back().email.replyTo, fullEmails.back().email.secure, fullEmails.back().email.status, 
      fullEmails.back().email.subject, threadId, trashDate, fullEmails.back().email.unread, 
      unsendDate };
+    std::cout << "THREAD CREATED" << std::endl;
 
      threads.push_back(thread);
+     std::cout << "THREAD ADDED" << std::endl;
   }
-  std::cout << "E" << std::endl;
+  std::cout << "CONSTRUCTING JSON RESPONSE" << std::endl;
   cJSON *threadsJSONArray = cJSON_CreateArray();
   for(Thread &t: threads){
     cJSON_AddItemToArray(threadsJSONArray, t.toJSON());
   }
+  std::cout << "JSON RESPONSE: " << std::endl << cJSON_Print(threadsJSONArray) << std::endl << "JSON RESPONSE END" << std::endl;
   return threadsJSONArray;
 }
 

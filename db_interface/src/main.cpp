@@ -63,7 +63,7 @@ int main(int argc, char const *argv[]){
    }
 
    char *dbPath = const_cast<char *>(argv[1]);
-   char *port = "8086";
+   char *port = "9085";
 
    std::cout << "PORT AND DB PATH" << std::endl; 
 

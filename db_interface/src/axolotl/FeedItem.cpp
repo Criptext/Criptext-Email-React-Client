@@ -4,11 +4,11 @@
 
 using namespace std;
 
-int createFeedItem(string dbPath, time_t date, int type, bool seen, int emailId, int contactId, int fileId){
+int createFeedItem(string dbPath, string date, int type, bool seen, int emailId, int contactId, int fileId){
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "insert into feeditem (date, type, seen, emailId, contactId, fileId) values (?,?,?,?,?,?)");
-  query.bind(1, DBUtils::getDateForDBSaving(date));
+  query.bind(1, date);
   query.bind(2, type);
   query.bind(3, seen);
   query.bind(4, emailId);
@@ -35,7 +35,7 @@ vector<CriptextDB::FeedItem> getAllFeedItems(string dbPath){
     while (query.executeStep())
     {
         int id = query.getColumn(0).getInt();
-        time_t date = DBUtils::getTimeFromDB(query.getColumn(1).getText());
+        string date = query.getColumn(1).getText();
         int type = query.getColumn(2).getInt();
         bool seen = query.getColumn(4).getInt();
         int emailId = query.getColumn(5).getInt();

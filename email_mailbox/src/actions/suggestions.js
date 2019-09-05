@@ -18,13 +18,14 @@ export const loadSuggestions = filter => {
   return async dispatch => {
     try {
       const hints = await getMatches(filter);
-      const threads = await getThreads({
+      const res = await getThreads({
         plain: true,
         text: filter,
         labelId: -2,
         rejectedLabelIds: [LabelType.spam.id, LabelType.trash.id],
         limit: 5
       });
+      const threads = await res.json()
       dispatch(setSuggestions(threads, hints));
     } catch (e) {
       dispatch(setSuggestionError('Unable to load suggestions'));

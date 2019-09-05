@@ -28,6 +28,7 @@ const getDiffDays = time => {
 };
 
 export const defineTimeByToday = time => {
+  console.log("TIME: " + time);
   const timeLocal = getTimeLocal(time);
   const diffDays = getDiffDays(time);
 

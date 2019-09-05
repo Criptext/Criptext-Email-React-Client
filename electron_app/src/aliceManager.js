@@ -27,11 +27,14 @@ const getLogsPath = node_env => {
 
 const getAlicePath = nodeEnv => {
   switch (nodeEnv) {
-    case 'development': {
-      return path.join(__dirname, '../../signal_interface/build/Release/alice');
-    }
+    // case 'development': {
+    //   return path.join(__dirname, '../../signal_interface/build/Release/alice');
+    // }
+    // default: {
+    //   return path.join(path.dirname(__dirname), '../extraResources', 'alice');
+    // }
     default: {
-      return path.join(path.dirname(__dirname), '../extraResources', 'alice');
+      return path.join(__dirname, '../../signal_interface/build/Release/alice');
     }
   }
 };

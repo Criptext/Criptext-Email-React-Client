@@ -16,12 +16,12 @@ namespace CriptextDB {
     string subject;
     string content;
     string preview;
-    time_t date;
+    string date;
     int status;
     bool unread;
     bool secure;
-    optional<time_t> unsendDate;
-    optional<time_t> trashDate;
+    optional<string> unsendDate;
+    optional<string> trashDate;
     string messageId;
     string fromAddress;
     optional<string> replyTo;
@@ -29,7 +29,7 @@ namespace CriptextDB {
     int accountId;
   };
   
-  int createEmail(string dbPath, string key, string threadId, string subject, string preview, time_t date, int status, bool unread, bool secure, optional<time_t> unsendDate, optional<time_t> trashDate, string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary, int accountId);
+  int createEmail(string dbPath, string key, string threadId, string subject, string preview, string date, int status, bool unread, bool secure, optional<string> unsendDate, optional<string> trashDate, string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary, int accountId);
   int deleteEmailByKey(string dbPath, string key, int accountId);
   int deleteEmailById(string dbPath, int emailId, int accountId);
   int deleteEmailsById(string dbPath, vector<int> emailIds, int accountId);

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-int createFile(string dbPath, string token, string name, int size, int status, time_t date, string mimeType, optional<string> key, optional<string> iv, optional<string> cid, int emailId){
+int createFile(string dbPath, string token, string name, int size, int status, string date, string mimeType, optional<string> key, optional<string> iv, optional<string> cid, int emailId){
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "insert into file (token, name, size, status, date, mimeType, key, iv, cid, emailId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -12,7 +12,7 @@ int createFile(string dbPath, string token, string name, int size, int status, t
   query.bind(2, name);
   query.bind(3, size);
   query.bind(4, status);
-  query.bind(5, DBUtils::getDateForDBSaving(date));
+  query.bind(5, date);
   query.bind(6, mimeType);
   query.bind(7, key ? *key : "NULL");
   query.bind(8, iv ? *iv : "NULL");
@@ -36,7 +36,7 @@ vector<CriptextDB::CRFile> CriptextDB::getFilesByEmailId(string dbPath, int emai
         string name = strdup(query.getColumn(2).getText());
         int size = query.getColumn(4).getInt();
         int status = query.getColumn(5).getInt();
-        time_t date = DBUtils::getTimeFromDB(query.getColumn(6).getString());
+        string date = query.getColumn(6).getString();
         string mimeType = query.getColumn(7).getString();
         string key = query.getColumn(13).getString();
         string iv = query.getColumn(14).getString();
@@ -67,7 +67,7 @@ vector<CriptextDB::CRFile> CriptextDB::getFilesByToken(string dbPath, vector<str
         string name = strdup(query.getColumn(2).getText());
         int size = query.getColumn(4).getInt();
         int status = query.getColumn(5).getInt();
-        time_t date = DBUtils::getTimeFromDB(query.getColumn(6).getString());
+        string date = query.getColumn(6).getString();
         string mimeType = query.getColumn(7).getString();
         string key = query.getColumn(13).getString();
         string iv = query.getColumn(14).getString();

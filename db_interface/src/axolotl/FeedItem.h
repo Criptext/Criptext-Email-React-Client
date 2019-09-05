@@ -11,7 +11,7 @@ using namespace std;
 namespace CriptextDB {
   struct FeedItem {
     int id;
-    time_t date;
+    string date;
     int type;
     bool seen;
     int emailId;
@@ -19,7 +19,7 @@ namespace CriptextDB {
     int fileId;
   };
 
-  int createFeedItem(string dbPath, time_t date, int type, bool seen, int emailId, int contactId, int fileId);
+  int createFeedItem(string dbPath, string date, int type, bool seen, int emailId, int contactId, int fileId);
   int deleteFeedItemById(string dbPath, int feedId);
   vector<FeedItem> getAllFeedItems(string dbPath);
   int getFeedItemsCounterBySeen(string dbPath);

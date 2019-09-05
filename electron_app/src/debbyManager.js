@@ -6,16 +6,19 @@ const portscanner = require('portscanner');
 
 const getDebbyPath = nodeEnv => {
   switch (nodeEnv) {
-    case 'development': {
-      return path.join(__dirname, '../../db_interface/src/build/Release/trompita');
-    }
+    // case 'development': {
+    //   return path.join(__dirname, '../../db_interface/src/build/Release/trompita');
+    // }
+    // default: {
+    //   return path.join(path.dirname(__dirname), '../extraResources', 'trompita');
+    // }
     default: {
-      return path.join(path.dirname(__dirname), '../extraResources', 'trompita');
+      return path.join(__dirname, '../../db_interface/src/build/Release/trompita');
     }
   }
 };
 
-let port = 8086;
+let port = 9085;
 let debby = null;
 let debbyStartTimeout = null;
 
