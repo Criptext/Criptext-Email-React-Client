@@ -40,7 +40,7 @@ async function initApp() {
   }
 
   await startAlice();
-  //await startDebby();
+  await startDebby();
 
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {

@@ -7,7 +7,7 @@ const portscanner = require('portscanner');
 const getDebbyPath = nodeEnv => {
   switch (nodeEnv) {
     case 'development': {
-      return path.join(__dirname, '../../db_interface/build/Release/trompita');
+      return path.join(__dirname, '../../db_interface/src/build/Release/trompita');
     }
     default: {
       return path.join(path.dirname(__dirname), '../extraResources', 'trompita');
@@ -26,9 +26,9 @@ const getPort = () => {
 const startDebby = async () => {
   debbyStartTimeout = null;
   if (!debby) {
-    const myPort = await portscanner.findAPortNotInUse(8086);
+    const myPort = await portscanner.findAPortNotInUse(port);
     port = myPort;
-
+    console.log("DB PORT: " + port);
     const debbyPath = getDebbyPath(process.env.NODE_ENV);
     console.log("DEBBY PATH: " + debbyPath);
     const dbpath = path.resolve(dbManager.databasePath);

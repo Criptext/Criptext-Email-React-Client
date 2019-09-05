@@ -12,6 +12,11 @@ CriptextDB::Contact CriptextDB::getContactByEmail(string dbPath, string email) {
 
   query.executeStep();
 
+  if (!query.hasRow()) {
+    Contact emptyContact = { .id = 0, .email = "nobody@criptext.com", .name = "NOBODY", .isTrusted = false, .score = 0, .spamScore = 0};
+    return emptyContact;
+  }
+
   int id = query.getColumn(0).getInt();
   string mail = strdup(query.getColumn(1).getText());
   string name = strdup(query.getColumn(2).getText());

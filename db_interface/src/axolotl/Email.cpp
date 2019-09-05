@@ -191,16 +191,16 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByThreadIds(string dbPath, vector
     SQLite::Statement query(db, "select email.*, "
         "max(email.unread) as unread, max(email.date) as date "
         "from email "
-        "left join email_label on email.id = email_label.emailId "
+        "left join emailLabel on email.id = emailLabel.emailId "
         "and date < ? "
         "where case when ? "
-        "then email_label.labelId = (select id from label where label.id= cast(trim(trim(?, '%'), 'L') as integer)) "
+        "then emailLabel.labelId = (select id from label where label.id= cast(trim(trim(?, '%'), 'L') as integer)) "
         "else not exists "
-        "(select * from email_label where email_label.emailId = email.id and email_label.labelId in (" + DBUtils::joinVector(recjectedLabelIds) + ")) "
+        "(select * from emailLabel where emailLabel.emailId = email.id and emailLabel.labelId in (" + DBUtils::joinVector(recjectedLabelIds) + ")) "
         "end "
         "AND accountId = ? "
-        "group by (CASE WHEN email.threadId = "" THEN email.id ELSE email.threadId END) "
-        "having coalesce(group_concat('L' || email_label.labelId), "") like ? "
+        "group by (CASE WHEN email.threadId = \"\" THEN email.id ELSE email.threadId END) "
+        "having coalesce(group_concat('L' || emailLabel.labelId), \"\") like ? "
         "order by date DESC limit ?");
     query.bind(1, date);
     query.bind(2, (labelId == CriptextDB::SPAM.id || labelId == CriptextDB::TRASH.id));
@@ -261,30 +261,34 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByLabelId(string dbPath, vector<i
   vector<int> recjectedLabelIds { CriptextDB::SPAM.id, CriptextDB::TRASH.id };
   try {
     SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
-
+    string myRejectedLabels = DBUtils::joinVector(recjectedLabelIds);
+    std::cout << myRejectedLabels << std::endl;
     SQLite::Statement query(db, "select email.*, "
         "max(email.unread) as unread, max(email.date) as date "
         "from email "
-        "left join email_label on email.id = email_label.emailId "
+        "left join emailLabel on email.id = emailLabel.emailId "
         "and date < ? "
         "where case when ? "
-        "then email_label.labelId = (select id from label where label.id= cast(trim(trim(?, '%'), 'L') as integer)) "
+        "then emailLabel.labelId = (select id from label where label.id= cast(trim(trim(?, '%'), 'L') as integer)) "
         "else not exists "
-        "(select * from email_label where email_label.emailId = email.id and email_label.labelId in (" + DBUtils::joinVector(recjectedLabelIds) + ")) "
+        "(select * from emailLabel where emailLabel.emailId = email.id and emailLabel.labelId in (" + myRejectedLabels + ")) "
         "end "
-        "AND accountId = ? "
-        "group by (CASE WHEN email.threadId = "" THEN email.id ELSE email.threadId END) "
-        "having coalesce(group_concat('L' || email_label.labelId), "") like ? "
+        "group by (CASE WHEN email.threadId = \"\" THEN email.id ELSE email.threadId END) "
+        "having coalesce(group_concat('L' || emailLabel.labelId), \"\") like ? "
         "order by date DESC limit ?");
     query.bind(1, date);
+    std::cout << 1 << std::endl;
     query.bind(2, (labelId == CriptextDB::SPAM.id || labelId == CriptextDB::TRASH.id));
-    query.bind(3, labelId > 0 ? ("%" + to_string(labelId) + "%") : "");
-    query.bind(4, accountId);
-    query.bind(5, labelId > 0 ? ("%" + to_string(labelId) + "%") : "");
-    query.bind(6, limit);
-
+    std::cout << 2 << std::endl;
+    query.bind(3, labelId > 0 ? ("%L" + to_string(labelId) + "%") : "");
+    std::cout << 3 << std::endl;
+    query.bind(4, labelId > 0 ? ("%L" + to_string(labelId) + "%") : "");
+    std::cout << 4 << std::endl;
+    query.bind(5, limit);
+    std::cout << query.getExpandedSQL() << std::endl;
     while (query.executeStep())
     {
+        std::cout << 6 << std::endl;
         int id = query.getColumn(0).getInt();
         string key = query.getColumn(1).getString();
         string threadId = query.getColumn(2).getString();
@@ -317,12 +321,13 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByLabelId(string dbPath, vector<i
           boundary = nullopt;
         else 
           boundary = query.getColumn(17).getString();
-        int accountId = query.getColumn(18).getInt();
 
         CriptextDB::Email email = { id, key, threadId, subject, content, preview, date, status, unread, secure, unsendDate, trashDate, messageId, fromAddress, replyTo, boundary, accountId };
         
         allEmails.push_back(email);
+        std::cout << 7 << std::endl;
     }
+    std::cout << 8 << std::endl;
     return allEmails;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;

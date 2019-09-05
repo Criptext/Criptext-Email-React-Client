@@ -23,9 +23,10 @@
         "../src/axolotl/PendingEvent.cpp",
         "../src/axolotl/Thread.cpp",
       ],
-      "cflags": ["-Wall", "-std=c++17", "-rdynamic", "-stdlib=libc++"],
+      "cflags": ["-Wall", "-std=c++1z"],
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
+      'cflags_cc': ["-std=c++1z", "-libstdc++"],
       "include_dirs" : [
          # Include system & SQLite headers
         "/usr/local/include"
@@ -34,12 +35,11 @@
         "-pthread",
         "-ldl",
         # Check this following paths on your system
-        "/usr/local/Cellar/openssl/1.0.2s/lib/libssl.a",
-        "/usr/local/Cellar/openssl/1.0.2s/lib/libcrypto.a",
-        "/usr/local/Cellar/sqlite/3.28.0/lib/libsqlite3.a",
+        "/usr/lib/x86_64-linux-gnu/libssl.a",
+        "/usr/lib/x86_64-linux-gnu/libcrypto.a",
+        "/usr/lib/x86_64-linux-gnu/libsqlite3.a",
         "/usr/local/lib/libSQLiteCpp.a",
-        "/usr/local/lib/libsignal-protocol-c.a",
-        "/usr/local/lib/libcivetweb.a",
+        "/usr/lib/libcivetweb.so",
         "/usr/local/lib/libcjson.a",
         "/usr/local/lib/spdlog/libspdlog.a",
       ],

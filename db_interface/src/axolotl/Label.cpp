@@ -81,8 +81,7 @@ vector<CriptextDB::Label> CriptextDB::getLabelsByIds(string dbPath, vector<int> 
   try {
     SQLite::Database db(dbPath);
 
-    SQLite::Statement query(db, "select * from label where id in (" + DBUtils::joinVector(labelIds) + ") and (accountId is null OR accountId == ?)");
-    query.bind(1, accountId);
+    SQLite::Statement query(db, "select * from label where id in (" + DBUtils::joinVector(labelIds) + ")");
 
     query.executeStep();
 
@@ -92,7 +91,6 @@ vector<CriptextDB::Label> CriptextDB::getLabelsByIds(string dbPath, vector<int> 
     string type = query.getColumn(3).getText();
     bool visible = query.getColumn(4).getInt();
     string uuid = query.getColumn(5).getText();
-    int accountId = query.getColumn(6).getInt();
 
     CriptextDB::Label label = { id, text, color, type, visible, uuid, accountId };
     allLabels.push_back(label);
