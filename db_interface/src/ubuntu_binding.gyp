@@ -33,7 +33,7 @@
       ],
       "libraries": [
         "-pthread",
-        "-ldl"
+        "-ldl",
         # Check this following paths on your system
         "/usr/lib/x86_64-linux-gnu/libssl.a",
         "/usr/lib/x86_64-linux-gnu/libcrypto.a",

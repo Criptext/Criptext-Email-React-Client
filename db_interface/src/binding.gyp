@@ -32,7 +32,7 @@
       ],
       "libraries": [
         "-pthread",
-        "-dl"
+        "-ldl",
         # Check this following paths on your system
         "/usr/local/Cellar/openssl/1.0.2s/lib/libssl.a",
         "/usr/local/Cellar/openssl/1.0.2s/lib/libcrypto.a",
