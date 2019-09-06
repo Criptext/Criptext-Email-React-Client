@@ -50,6 +50,14 @@ async function initApp() {
       wsClient.start(myAccount);
       createAppMenu();
       mailboxWindow.show({ firstOpenApp: true });
+
+      const { handleParseMailboxFile } = require('./src/ExternalEmailParser');
+      const a = '/home/julian/Escritorio/CorreosGmail/Daniel/Inbox.mbox';
+      const b = '/home/julian/Escritorio/CorreosGmail/Julian/Todo\ el\ correo\,\ con\ Spam\ y\ Papelera\ incluidos.mbox';
+      console.time('handleParseMailboxFile')
+      await handleParseMailboxFile(a);
+      console.timeEnd('handleParseMailboxFile');
+
     } else {
       const language = await getUserLanguage();
       initNucleus({language});
