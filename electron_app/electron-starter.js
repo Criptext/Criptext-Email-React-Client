@@ -17,6 +17,7 @@ const {
   isFromStore,
   getSystemLanguage
 } = require('./src/windows/windowUtils');
+const {initNucleus} = require('./src/nucleusManager');
 require('./src/ipc/composer.js');
 require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
@@ -25,6 +26,7 @@ require('./src/ipc/database.js');
 require('./src/ipc/manager.js');
 require('./src/ipc/dataTransfer.js');
 require('./src/ipc/backup.js');
+require('./src/ipc/nucleus.js');
 const ipcUtils = require('./src/ipc/utils.js');
 
 globalManager.forcequit.set(false);
@@ -36,7 +38,7 @@ async function initApp() {
   } catch (ex) {
     console.log(ex);
   }
-
+  
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
     if (!!existingAccount.deviceId) {
@@ -44,16 +46,19 @@ async function initApp() {
       const settings = Object.assign(appSettings, { isFromStore });
       myAccount.initialize(existingAccount);
       mySettings.initialize(settings);
+      initNucleus({language: mySettings.language});
       wsClient.start(myAccount);
       createAppMenu();
       mailboxWindow.show({ firstOpenApp: true });
     } else {
-      await getUserLanguage();
+      const language = await getUserLanguage();
+      initNucleus({language});
       createAppMenu();
       loginWindow.show();
     }
   } else {
-    await getUserLanguage();
+    const language = await getUserLanguage();
+    initNucleus({language});
     createAppMenu();
     loginWindow.show({});
   }
@@ -97,6 +102,7 @@ if ((isWindows || isLinux) && !isDev) {
 const getUserLanguage = async () => {
   const osLanguage = await getSystemLanguage();
   await dbManager.updateSettings({ language: osLanguage });
+  return osLanguage;
 };
 
 app.on('ready', () => {

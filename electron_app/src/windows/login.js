@@ -1,7 +1,8 @@
 const { BrowserWindow, shell } = require('electron');
+const path = require('path');
 const { loginUrl } = require('./../window_routing');
 const globalManager = require('./../globalManager');
-const path = require('path');
+const { addEventTrack, NUCLEUS_EVENTS } = require('./../nucleusManager');
 let loginWindow;
 
 const loginSize = {
@@ -52,10 +53,12 @@ const create = () => {
 const show = async () => {
   if (loginWindow) {
     loginWindow.show();
+    addEventTrack(NUCLEUS_EVENTS.LOGIN_OPENED);
   } else {
     await create();
     loginWindow.once('ready-to-show', () => {
       loginWindow.show();
+      addEventTrack(NUCLEUS_EVENTS.LOGIN_OPENED);
     });
   }
 };

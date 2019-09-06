@@ -8,12 +8,12 @@ const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
+const { isFromStore, isDev } = require('./windowUtils');
 const {
-  isFromStore,
-  isDev,
-  nucleusTrack,
+  updateUserData,
+  addEventTrack,
   NUCLEUS_EVENTS
-} = require('./windowUtils');
+} = require('./../nucleusManager');
 const { createTrayIcon, destroyTrayIcon } = require('./tray');
 const { isWindows } = require('./../utils/osUtils');
 
@@ -101,17 +101,25 @@ const show = async ({ firstOpenApp = false }) => {
   if (mailboxWindow) {
     mailboxWindow.show();
     createTrayIcon();
-    if (firstOpenApp) nucleusTrack(NUCLEUS_EVENTS.MAILBOX_TRACK);
+    if (firstOpenApp) {
+      updateUserData();
+      addEventTrack(NUCLEUS_EVENTS.MAILBOX_OPENED);
+    }
   } else if (!existVisibleWindow.length || !mailboxWindow) {
     await create();
     mailboxWindow.on('ready-to-show', () => {
       mailboxWindow.show();
       createTrayIcon();
-      if (firstOpenApp) nucleusTrack(NUCLEUS_EVENTS.MAILBOX_TRACK);
+      if (firstOpenApp) {
+        updateUserData();
+        addEventTrack(NUCLEUS_EVENTS.MAILBOX_OPENED);
+      }
     });
     mailboxWindow.on('focus', () => {
       if (!globalManager.windowsEvents.checkDisabled()) {
-        ipc.callRenderer(mailboxWindow, 'get-events');
+        if (mailboxWindow) {
+          ipc.callRenderer(mailboxWindow, 'get-events');
+        }
       }
     });
   }

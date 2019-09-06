@@ -521,3 +521,9 @@ export const restoreBackupEncrypted = async params => {
 export const restoreBackupUnencrypted = async params => {
   return await callMain('restore-backup-unencrypted', params);
 };
+
+/* Nucleus
+----------------------------- */
+export const reportContentUnencrypted = async error => {
+  return await callMain('nucleups-report-content-unencrypted', error);
+};

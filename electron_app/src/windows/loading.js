@@ -2,6 +2,11 @@ const { BrowserWindow } = require('electron');
 const path = require('path');
 const { loadingUrl } = require('./../window_routing');
 const globalManager = require('./../globalManager');
+const {
+  updateUserData,
+  addEventTrack,
+  NUCLEUS_EVENTS
+} = require('./../nucleusManager');
 let loadingWindow;
 
 const LINK_DEVICE_LOADING_TYPES = {
@@ -23,7 +28,6 @@ const create = () => {
     show: false,
     frame: false,
     transparent: true,
-    alwaysOnTop: true,
     center: true
   });
   loadingWindow.loadURL(loadingUrl);
@@ -53,6 +57,7 @@ const create = () => {
 };
 
 const close = () => {
+  updateUserData();
   if (loadingWindow) {
     loadingWindow.close();
   }
@@ -66,13 +71,34 @@ const send = (message, data) => {
   loadingWindow.webContents.send(message, data);
 };
 
-const show = async () => {
+const show = async ({ type }) => {
   if (!loadingWindow) {
     await create();
   }
   loadingWindow.once('ready-to-show', () => {
     loadingWindow.show();
+    sendTrack(type);
   });
+};
+
+const sendTrack = type => {
+  let event;
+  switch (type) {
+    case 'signin-new-password':
+      event = NUCLEUS_EVENTS.LOGIN_NEW_ENTERPRISE;
+      break;
+    case 'signup':
+      event = NUCLEUS_EVENTS.LOGIN_NEW_USER;
+      break;
+    case 'signin':
+    case 'link-new-device':
+      event = NUCLEUS_EVENTS.LOGIN_NEW_DEVICE;
+      break;
+    default:
+      event = '';
+      break;
+  }
+  addEventTrack(event);
 };
 
 module.exports = {

@@ -7,7 +7,7 @@ ipc.answerRenderer('close-create-keys-loading', () => {
   globalManager.loadingData.set({});
 });
 
-ipc.answerRenderer('open-create-keys-loading', arg => {
-  globalManager.loadingData.set(arg);
-  loadingWindow.show();
+ipc.answerRenderer('open-create-keys-loading', params => {
+  globalManager.loadingData.set(params);
+  loadingWindow.show({ type: params.loadingType });
 });
