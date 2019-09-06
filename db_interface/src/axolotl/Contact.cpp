@@ -5,26 +5,15 @@
 using namespace std;
 
 CriptextDB::Contact CriptextDB::getContactByEmail(string dbPath, string email) {
-  SQLite::Database db(dbPath);
-
-  SQLite::Statement query(db, "select * from contact where email == ?");
-  query.bind(1, email);
-
-  query.executeStep();
-
-  if (!query.hasRow()) {
-    Contact emptyContact = { .id = 0, .email = "nobody@criptext.com", .name = "NOBODY", .isTrusted = false, .score = 0, .spamScore = 0};
-    return emptyContact;
-  }
-
-  int id = query.getColumn(0).getInt();
-  string mail = strdup(query.getColumn(1).getText());
-  string name = strdup(query.getColumn(2).getText());
-  bool isTrusted = query.getColumn(3).getInt();
-  int score = query.getColumn(4).getInt();
-  int spamScore = query.getColumn(5).getInt();
-
-  Contact contact = { id, mail, name, isTrusted, score, spamScore };
+  sqlite_config config;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+  database db(dbPath, config);
+  Contact contact;
+  db << "select * from contact where email == ?;"
+      << email
+      >> [&] (int id, string mail, string name, bool isTrusted, int score, int spamScore) {
+        contact = { id, mail, name, isTrusted, score, spamScore };
+      };
   return contact;
 }
 
@@ -116,28 +105,21 @@ std::vector<CriptextDB::Contact> CriptextDB::getAllContacts(string dbPath) {
 vector<CriptextDB::Contact> CriptextDB::getContactsByEmailIdAndType(string dbPath, int emailId, string type) {
   vector<CriptextDB::Contact> allContacts;
   try {
-    SQLite::Database db(dbPath);
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+    database db(dbPath, config);
 
-    SQLite::Statement query(db, "SELECT contact.* FROM contact "
-            "INNER JOIN emailContact "
-            "ON contact.id = emailContact.contactId "
-            "WHERE emailContact.emailId == ? "
-            "AND emailContact.type == ?");
-    query.bind(1, emailId);
-    query.bind(2, type);
-    while(query.executeStep()){
-
-      int id = query.getColumn(0).getInt();
-        string email = strdup(query.getColumn(1).getText());
-        string name = strdup(query.getColumn(2).getText());
-        bool isTrusted = query.getColumn(3).getInt();
-        int score = query.getColumn(4).getInt();
-        int spamScore = query.getColumn(5).getInt();
-
+    db << "SELECT contact.* FROM contact "
+          "INNER JOIN emailContact "
+          "ON contact.id = emailContact.contactId "
+          "WHERE emailContact.emailId == ? "
+          "AND emailContact.type == ?;"
+      << emailId
+      << type
+      >> [&] (int id, string email, string name, bool isTrusted, int score, int spamScore) {
         Contact contact = { id, email, name, isTrusted, score, spamScore };
-        
         allContacts.push_back(contact);
-    }
+      };
     return allContacts;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;

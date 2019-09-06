@@ -184,57 +184,28 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByIds(string dbPath, vector<int> 
 
 vector<CriptextDB::Email> CriptextDB::getEmailsByThreadId(string dbPath, string threadId, vector<int> rejectedLabels, int accountId){
   vector<CriptextDB::Email> allEmails;
+  
   try {
-    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+    database db(dbPath, config);
 
-    SQLite::Statement query(db, "SELECT email.* FROM email "
-            "left join emailLabel on email.id = emailLabel.emailId "
-            "WHERE threadId == ? "
-            "AND NOT EXISTS "
-            "(SELECT * FROM emailLabel WHERE emailLabel.emailId = email.id and emailLabel.labelId IN ("+ DBUtils::joinVector(rejectedLabels) +")) "
-            "GROUP BY email.messageId,email.threadId "
-            "ORDER BY date ASC");
-    query.bind(1, threadId);
-
-    while (query.executeStep())
-    {
-        int id = query.getColumn(0).getInt();
-        string key = query.getColumn(1).getString();
-        string threadId = query.getColumn(2).getString();
-        string subject = query.getColumn(4).getString();
-        string content = query.getColumn(5).getString();
-        string preview = query.getColumn(6).getString();
-        string date = query.getColumn(7).getString();
-        int status = query.getColumn(8).getInt();
-        bool unread = query.getColumn(9).getInt();
-        bool secure = query.getColumn(10).getInt();
-        optional<string> unsendDate; 
-        if(query.getColumn(12).isNull()) 
-          unsendDate = nullopt;
-        else 
-          unsendDate = query.getColumn(12).getString();
-        optional<string> trashDate; 
-        if(query.getColumn(13).isNull()) 
-          trashDate = nullopt;
-        else 
-          trashDate = query.getColumn(13).getString();
-        string messageId = query.getColumn(14).getString();
-        string fromAddress = query.getColumn(15).getString();
-        optional<string> replyTo; 
-        if(query.getColumn(16).isNull()) 
-          replyTo = nullopt;
-        else 
-          replyTo = query.getColumn(16).getString();
-        optional<string> boundary; 
-        if(query.getColumn(17).isNull()) 
-          boundary = nullopt;
-        else 
-          boundary = query.getColumn(17).getString();
+    db << "SELECT email.* FROM email "
+          "left join emailLabel on email.id = emailLabel.emailId "
+          "WHERE threadId == ? "
+          "AND NOT EXISTS "
+          "(SELECT * FROM emailLabel WHERE emailLabel.emailId = email.id and emailLabel.labelId IN ("+ DBUtils::joinVector(rejectedLabels) +")) "
+          "GROUP BY email.messageId,email.threadId "
+          "ORDER BY date ASC;"
+        << threadId
+        >> [&](int id, string key, string threadId, string subject, string content, string preview, string date, 
+                int status, bool unread, bool secure, optional<string> unsendDate, optional<string> trashDate,
+                string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary) {
 
         CriptextDB::Email email = { id, key, threadId, subject, content, preview, date, status, unread, secure, unsendDate, trashDate, messageId, fromAddress, replyTo, boundary, accountId };
-        
+
         allEmails.push_back(email);
-    }
+      };
     return allEmails;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;
@@ -319,11 +290,14 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByThreadIds(string dbPath, vector
 vector<CriptextDB::Email> CriptextDB::getEmailsByLabelId(string dbPath, vector<int> rejectedLabels, int labelId, string date, int limit, int accountId){
   vector<CriptextDB::Email> allEmails;
   vector<int> recjectedLabelIds { CriptextDB::SPAM.id, CriptextDB::TRASH.id };
+
   try {
-    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+    database db(dbPath, config);
     string myRejectedLabels = DBUtils::joinVector(recjectedLabelIds);
     std::cout << myRejectedLabels << std::endl;
-    SQLite::Statement query(db, "select email.*, "
+    db << "select email.*, "
         "max(email.unread) as unread, max(email.date) as date "
         "from email "
         "left join emailLabel on email.id = emailLabel.emailId "
@@ -334,60 +308,20 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByLabelId(string dbPath, vector<i
         "end "
         "group by (CASE WHEN email.threadId = \"\" THEN email.id ELSE email.threadId END) "
         "having coalesce(group_concat('' || emailLabel.labelId), \"\") like ? "
-        "order by date DESC limit ?");
-    std::cout << 1 << std::endl;
-    query.bind(1, (labelId == CriptextDB::SPAM.id || labelId == CriptextDB::TRASH.id));
-    std::cout << 2 << std::endl;
-    query.bind(2, labelId > 0 ? ("%" + to_string(labelId) + "%") : "");
-    std::cout << 3 << std::endl;
-    query.bind(3, labelId > 0 ? ("%" + to_string(labelId) + "%") : "");
-    std::cout << 4 << std::endl;
-    query.bind(4, limit);
-    std::cout << query.getExpandedSQL() << std::endl;
-    std::cout << "BEFORE EXEC" << std::endl;
-    query.exec();
-    std::cout << "AFTER EXEC" << std::endl;
-    while (query.executeStep())
-    {
-        std::cout << 6 << std::endl;
-        int id = query.getColumn(0).getInt();
-        string key = query.getColumn(1).getString();
-        string threadId = query.getColumn(2).getString();
-        string subject = query.getColumn(4).getString();
-        string content = query.getColumn(5).getString();
-        string preview = query.getColumn(6).getString();
-        string date = query.getColumn(7).getString();
-        int status = query.getColumn(8).getInt();
-        bool unread = query.getColumn(9).getInt();
-        bool secure = query.getColumn(10).getInt();
-        optional<string> unsendDate; 
-        if(query.getColumn(12).isNull()) 
-          unsendDate = nullopt;
-        else 
-          unsendDate = query.getColumn(12).getString();
-        optional<string> trashDate; 
-        if(query.getColumn(13).isNull()) 
-          trashDate = nullopt;
-        else 
-          trashDate = query.getColumn(13).getString();
-        string messageId = query.getColumn(14).getString();
-        string fromAddress = query.getColumn(15).getString();
-        optional<string> replyTo; 
-        if(query.getColumn(16).isNull()) 
-          replyTo = nullopt;
-        else 
-          replyTo = query.getColumn(16).getString();
-        optional<string> boundary; 
-        if(query.getColumn(17).isNull()) 
-          boundary = nullopt;
-        else 
-          boundary = query.getColumn(17).getString();
+        "order by date DESC limit ?;"
+      << (labelId == CriptextDB::SPAM.id || labelId == CriptextDB::TRASH.id)
+      << labelId > 0 ? ("%" + to_string(labelId) + "%") : ""
+      << labelId > 0 ? ("%" + to_string(labelId) + "%") : ""
+      << limit
+      >> [&](int id, string key, string threadId, string subject, string content, string preview, string date, 
+                int status, bool unread, bool secure, optional<string> unsendDate, optional<string> trashDate,
+                string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary) {
 
         CriptextDB::Email email = { id, key, threadId, subject, content, preview, date, status, unread, secure, unsendDate, trashDate, messageId, fromAddress, replyTo, boundary, accountId };
-        
+
         allEmails.push_back(email);
         std::cout << 7 << std::endl;
-    }
+      };
     std::cout << 8 << std::endl;
     return allEmails;
   } catch (exception& e) {

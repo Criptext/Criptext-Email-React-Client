@@ -2,6 +2,7 @@
 #define THREAD_H_
 
 #include <SQLiteCpp/SQLiteCpp.h>
+#include <sqlite_modern_cpp.h>
 #include "Email.h"
 #include "Label.h"
 #include "Contact.h"

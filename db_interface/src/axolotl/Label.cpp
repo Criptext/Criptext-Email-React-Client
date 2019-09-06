@@ -79,22 +79,15 @@ CriptextDB::Label getLabelById(string dbPath, int labelId, int accountId){
 vector<CriptextDB::Label> CriptextDB::getLabelsByIds(string dbPath, vector<int> labelIds, int accountId){
   vector<CriptextDB::Label> allLabels;
   try {
-    SQLite::Database db(dbPath);
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+    database db(dbPath, config);
 
-    SQLite::Statement query(db, "select * from label where id in (" + DBUtils::joinVector(labelIds) + ")");
-
-    query.executeStep();
-
-    int id = query.getColumn(0).getInt();
-    string text = query.getColumn(1).getText();
-    string color = query.getColumn(2).getText();
-    string type = query.getColumn(3).getText();
-    bool visible = query.getColumn(4).getInt();
-    string uuid = query.getColumn(5).getText();
-
-    CriptextDB::Label label = { id, text, color, type, visible, uuid, accountId };
-    allLabels.push_back(label);
-
+    db << "select * from label where id in (" + DBUtils::joinVector(labelIds) + ");"
+      >> [&] (int id, string text, string color, string type, bool visible, string uuid){
+        CriptextDB::Label label = { id, text, color, type, visible, uuid, accountId };
+        allLabels.push_back(label);
+      };
     return allLabels;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;

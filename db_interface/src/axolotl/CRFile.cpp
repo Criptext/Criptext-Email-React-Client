@@ -24,29 +24,17 @@ int createFile(string dbPath, string token, string name, int size, int status, s
 vector<CriptextDB::CRFile> CriptextDB::getFilesByEmailId(string dbPath, int emailId){
   vector<CriptextDB::CRFile> allFiles;
   try {
-    SQLite::Database db(dbPath, SQLite::OPEN_READWRITE|SQLite::OPEN_CREATE);
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+    database db(dbPath, config);
 
-    SQLite::Statement query(db, "select * from file where emailId == ?");
-    query.bind(1, emailId);
-
-    while (query.executeStep())
-    {
-        int id = query.getColumn(0).getInt();
-        string token = strdup(query.getColumn(1).getText());
-        string name = strdup(query.getColumn(2).getText());
-        int size = query.getColumn(4).getInt();
-        int status = query.getColumn(5).getInt();
-        string date = query.getColumn(6).getString();
-        string mimeType = query.getColumn(7).getString();
-        string key = query.getColumn(13).getString();
-        string iv = query.getColumn(14).getString();
-        string cid = query.getColumn(15).getString();
-        int emailId = query.getColumn(12).getInt();
-
-        CriptextDB::CRFile file = { id, token, name, size, status, date, mimeType, key, iv, cid, emailId };
-        
-        allFiles.push_back(file);
-    }
+    db << "select * from file where emailId == ?;"
+       << emailId
+       >> [&] (int id, string token, string name, int size, int status, string date, string mimeType, string key, 
+                string iv, string cid, int emailId) {
+          CriptextDB::CRFile file = { id, token, name, size, status, date, mimeType, key, iv, cid, emailId };
+          allFiles.push_back(file);
+       };
     return allFiles;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;

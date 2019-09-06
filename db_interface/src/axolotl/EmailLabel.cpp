@@ -23,19 +23,16 @@ int CriptextDB::deleteEmailLabelByEmailId(string dbPath, int emailId) {
 vector<CriptextDB::EmailLabel> CriptextDB::getEmailLabelsByEmailId(string dbPath, int emailId) {
   vector<EmailLabel> allEmailLabels;
   try {
-    SQLite::Database db(dbPath);
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+    database db(dbPath, config);
 
-    SQLite::Statement query(db, "select * from emailLabel where emailId == ?");
-    query.bind(1, emailId);
-    while(query.executeStep()){
-
-      int id = query.getColumn(0).getInt();
-      int labelId = query.getColumn(1).getInt();
-      int emailId = query.getColumn(2).getInt();
-
-      EmailLabel emailLabel = { id, labelId, emailId };
-      allEmailLabels.push_back(emailLabel);
-    }
+    db << "select * from emailLabel where emailId == ?;"
+       << emailId
+       >> [&] (int id, int labelId, int emailId){
+          EmailLabel emailLabel = { id, labelId, emailId };
+          allEmailLabels.push_back(emailLabel);
+       };
     return allEmailLabels;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;
