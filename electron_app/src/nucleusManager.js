@@ -1,6 +1,5 @@
 const { APP_VERSION, NUCLEUS_ID } = require('./utils/const');
 const myAccount = require('./Account');
-const mySettings = require('./Settings');
 let Nucleus;
 
 const initNucleus = ({ userId }) => {
