@@ -24,6 +24,7 @@ const MAILBOX_POPUP_TYPES = {
 };
 
 const RESTORE_BACKUP_POPUP_DELAY = 1000;
+const THREADS_SIZE = 22;
 
 class PanelWrapper extends Component {
   constructor(props) {
@@ -336,7 +337,8 @@ class PanelWrapper extends Component {
       const currentLabelId = this.state.sectionSelected.params.mailboxSelected
         .id;
       const currentMailboxSize = this.props[currentLabelId];
-      const limit = currentMailboxSize > 22 ? currentMailboxSize : undefined;
+      const limit =
+        currentMailboxSize > THREADS_SIZE ? currentMailboxSize : undefined;
       if (labelIds && isRenderingMailbox) {
         if (labelIds.includes(currentLabelId)) {
           this.props.onLoadThreads(

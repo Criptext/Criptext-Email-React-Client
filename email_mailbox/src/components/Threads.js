@@ -75,6 +75,7 @@ const Threads = props => (
           <EmptyMailbox
             mailbox={props.mailboxSelected}
             status={props.mailboxStatus}
+            isUnread={props.switchChecked}
           />
         )}
         {props.threads.map((thread, index) => {

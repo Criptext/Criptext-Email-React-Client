@@ -7,7 +7,8 @@ import './emptymailbox.scss';
 const EmptyMailbox = props => {
   const { header, subheader, iconClass } = defineEmptyParamsByMailbox(
     props.mailbox,
-    props.status
+    props.status,
+    props.isUnread
   );
   return (
     <div className={defineClassComponent(props.status)}>
@@ -38,7 +39,7 @@ const defineClassComponent = status => {
   return `empty-container empty-mailbox-container ${statusClass}`;
 };
 
-const defineEmptyParamsByMailbox = (mailbox, status) => {
+const defineEmptyParamsByMailbox = (mailbox, status, isUnread) => {
   const { id, text } = mailbox;
   let headerLoading = undefined;
   let iconLoading = undefined;
@@ -51,7 +52,8 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
 
   switch (id) {
     case LabelType.inbox.id: {
-      const header = headerLoading || string.mailbox.empty.inbox.header;
+      let header = headerLoading || string.mailbox.empty.inbox.header;
+      if (isUnread) header = `${header} (${string.mailbox.unread})`;
       return {
         header,
         subheader: string.mailbox.empty.inbox.subheader,
@@ -59,7 +61,8 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
       };
     }
     case LabelType.starred.id: {
-      const header = headerLoading || string.mailbox.empty.starred.header;
+      let header = headerLoading || string.mailbox.empty.starred.header;
+      if (isUnread) header = `${header} (${string.mailbox.unread})`;
       return {
         header,
         subheader: string.mailbox.empty.starred.subheader,
@@ -67,7 +70,8 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
       };
     }
     case LabelType.trash.id: {
-      const header = headerLoading || string.mailbox.empty.trash.header;
+      let header = headerLoading || string.mailbox.empty.trash.header;
+      if (isUnread) header = `${header} (${string.mailbox.unread})`;
       return {
         header,
         subheader: string.mailbox.empty.trash.subheader,
@@ -75,7 +79,8 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
       };
     }
     case LabelType.draft.id: {
-      const header = headerLoading || string.mailbox.empty.draft.header;
+      let header = headerLoading || string.mailbox.empty.draft.header;
+      if (isUnread) header = `${header} (${string.mailbox.unread})`;
       return {
         header,
         subheader: string.mailbox.empty.draft.subheader,
@@ -83,7 +88,8 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
       };
     }
     case LabelType.sent.id: {
-      const header = headerLoading || string.mailbox.empty.sent.header;
+      let header = headerLoading || string.mailbox.empty.sent.header;
+      if (isUnread) header = `${header} (${string.mailbox.unread})`;
       return {
         header,
         subheader: string.mailbox.empty.sent.subheader,
@@ -91,7 +97,8 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
       };
     }
     case LabelType.spam.id: {
-      const header = headerLoading || string.mailbox.empty.spam.header;
+      let header = headerLoading || string.mailbox.empty.spam.header;
+      if (isUnread) header = `${header} (${string.mailbox.unread})`;
       return {
         header,
         subheader: string.mailbox.empty.spam.subheader,
@@ -99,7 +106,8 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
       };
     }
     case LabelType.allmail.id: {
-      const header = headerLoading || string.mailbox.empty.allmail.header;
+      let header = headerLoading || string.mailbox.empty.allmail.header;
+      if (isUnread) header = `${header} (${string.mailbox.unread})`;
       return {
         header,
         subheader: string.mailbox.empty.allmail.subheader,
@@ -107,7 +115,8 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
       };
     }
     case LabelType.search.id: {
-      const header = headerLoading || string.mailbox.empty.search.header;
+      let header = headerLoading || string.mailbox.empty.search.header;
+      if (isUnread) header = `${header} (${string.mailbox.unread})`;
       const iconClass = iconLoading || 'empty-search';
       return {
         header,
@@ -116,7 +125,8 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
       };
     }
     default: {
-      const header = headerLoading || string.mailbox.empty.default.header;
+      let header = headerLoading || string.mailbox.empty.default.header;
+      if (isUnread) header = `${header} (${string.mailbox.unread})`;
       return {
         header,
         subheader: string.mailbox.empty.default.subheader,
@@ -127,6 +137,7 @@ const defineEmptyParamsByMailbox = (mailbox, status) => {
 };
 
 EmptyMailbox.propTypes = {
+  isUnread: PropTypes.bool,
   mailbox: PropTypes.object,
   status: PropTypes.number
 };
