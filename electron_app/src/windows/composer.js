@@ -133,13 +133,15 @@ const destroy = async ({
     const { type, key } = emailToEdit;
     if (type === composerEvents.EDIT_DRAFT) {
       const [oldDraftEmail] = await dbManager.getEmailByKey(key);
-      const oldEmailId = oldDraftEmail.id;
-      await dbManager.deleteEmailLabelAndContactByEmailId(
-        oldEmailId,
-        undefined
-      );
+      if (oldDraftEmail) {
+        const oldEmailId = oldDraftEmail.id;
+        await dbManager.deleteEmailLabelAndContactByEmailId(
+          oldEmailId,
+          undefined
+        );
+      }
       event = 'composer-email-delete';
-      params = { threadId, oldEmailId };
+      params = { threadId };
     } else if (
       type === composerEvents.REPLY ||
       type === composerEvents.REPLY_ALL

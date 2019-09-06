@@ -27,6 +27,7 @@ import {
   getLabelsByText,
   logoutApp,
   openFilledComposerWindow,
+  reportContentUnencrypted,
   restartSocket,
   sendEndLinkDevicesEvent,
   sendEndSyncDevicesEvent,
@@ -188,8 +189,22 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
 
 const parseAndDispatchEvent = async event => {
   try {
-    const { rowid } = await handleEvent(event);
+    const {
+      feedItemAdded,
+      rowid,
+      labelIds,
+      threadIds,
+      labels,
+      badgeLabelIds
+    } = await handleEvent(event);
     if (rowid) await setEventAsHandled([rowid]);
+    emitter.emit(Event.STORE_LOAD, {
+      feedItemHasAdded: feedItemAdded,
+      labelIds,
+      threadIds,
+      labels,
+      badgeLabelIds
+    });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);
@@ -404,8 +419,8 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     ? contactSpamToCheck[0].spamScore > 1
     : false;
   const isSpam =
-    labels & !isContactSpamer
-      ? labels.find(label => label === LabelType.spam.text)
+    labels && !isContactSpamer
+      ? !!labels.find(label => label === LabelType.spam.text)
       : isContactSpamer;
   const InboxLabelId = LabelType.inbox.id;
   const SentLabelId = LabelType.sent.id;
@@ -435,6 +450,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       headers = decryptedHeaders;
     } catch (e) {
       body = 'Content unencrypted';
+      reportContentUnencrypted(e);
     }
     let myFileKeys;
     if (fileKeys) {
@@ -1059,14 +1075,7 @@ ipcRenderer.on(
   }
 );
 
-ipcRenderer.on('composer-email-delete', (ev, { threadId, oldEmailId }) => {
-  if (threadId && oldEmailId) {
-    return emitter.emit(Event.UPDATE_THREAD_EMAILS, {
-      threadId,
-      oldEmailId,
-      badgeLabelIds: [LabelType.draft.id]
-    });
-  }
+ipcRenderer.on('composer-email-delete', (ev, { threadId }) => {
   emitter.emit(Event.STORE_LOAD, {
     labelIds: [LabelType.sent.id, LabelType.draft.id],
     badgeLabelIds: [LabelType.draft.id],
@@ -1438,10 +1447,12 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
         if (isGettingEvents) return;
         isGettingEvents = true;
         const eventData = await fetchGetSingleEvent({ rowId: data.rowId });
-        await parseAndDispatchEvent(eventData);
-        sendNewEmailNotification();
+        if (eventData) {
+          await parseAndDispatchEvent(eventData);
+          sendNewEmailNotification();
+          sendLoadEventsEvent({ showNotification: true });
+        }
         isGettingEvents = false;
-        sendLoadEventsEvent({ showNotification: true });
         break;
       }
       case NOTIFICATION_ACTIONS.OPEN_EMAIL: {
