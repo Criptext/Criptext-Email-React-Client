@@ -113,7 +113,7 @@ cJSON* CriptextDB::getThreadsByLabel(string dbPath, vector<int> rejectedLabel, i
       vector<Contact> to = CriptextDB::getContactsByEmailIdAndType(dbPath, email.id, "to");
       vector<Contact> cc = CriptextDB::getContactsByEmailIdAndType(dbPath, email.id, "cc");
       vector<Contact> bcc = CriptextDB::getContactsByEmailIdAndType(dbPath, email.id, "bcc");
-      string fromEmail = email.fromAddress;
+      string fromEmail = DBUtils::getFromEmail(email.fromAddress);
       Contact from = CriptextDB::getContactByEmail(dbPath, fromEmail);
 
       FullEmail fullEmail = { email, labels, to, cc, bcc, from, files, email.preview };
@@ -133,7 +133,7 @@ cJSON* CriptextDB::getThreadsByLabel(string dbPath, vector<int> rejectedLabel, i
         return file.token;
       });
       contactIds.insert(from.id);
-      fromNames.insert(fromEmail);
+      fromNames.insert(email.fromAddress);
     }
     std::cout << "TRY TO ADD THREAD" << std::endl;
     std::optional<string> trashDate = std::nullopt;

@@ -10,7 +10,7 @@ string DBUtils::getFromEmail(string fromAddress){
   if(rightBracket == string::npos || leftBracket == string::npos)
       fromEmail = fromAddress;
   else
-      fromEmail = fromAddress.substr(leftBracket + 1, rightBracket - 1);
+      fromEmail = fromAddress.substr(leftBracket + 1, (fromAddress.length() - (leftBracket + 1)) - 1);
   return fromEmail;
 }
 

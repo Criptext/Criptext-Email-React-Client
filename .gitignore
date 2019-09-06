@@ -36,5 +36,6 @@ binding.gyp
 */npm-debug.log*
 */yarn-debug.log*
 */yarn-error.log*
+*_logs.txt
 *.db
 .vscode

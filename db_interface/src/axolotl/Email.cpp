@@ -328,22 +328,25 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByLabelId(string dbPath, vector<i
         "from email "
         "left join emailLabel on email.id = emailLabel.emailId "
         "where case when ? "
-        "then emailLabel.labelId = (select id from label where label.id= cast(trim(trim(?, '%'), 'L') as integer)) "
+        "then emailLabel.labelId = (select id from label where label.id = cast(trim(?, '%') as integer)) "
         "else not exists "
         "(select * from emailLabel where emailLabel.emailId = email.id and emailLabel.labelId in (" + myRejectedLabels + ")) "
         "end "
         "group by (CASE WHEN email.threadId = \"\" THEN email.id ELSE email.threadId END) "
-        "having coalesce(group_concat('L' || emailLabel.labelId), \"\") like ? "
+        "having coalesce(group_concat('' || emailLabel.labelId), \"\") like ? "
         "order by date DESC limit ?");
     std::cout << 1 << std::endl;
     query.bind(1, (labelId == CriptextDB::SPAM.id || labelId == CriptextDB::TRASH.id));
     std::cout << 2 << std::endl;
-    query.bind(2, labelId > 0 ? ("%L" + to_string(labelId) + "%") : "");
+    query.bind(2, labelId > 0 ? ("%" + to_string(labelId) + "%") : "");
     std::cout << 3 << std::endl;
-    query.bind(3, labelId > 0 ? ("%L" + to_string(labelId) + "%") : "");
+    query.bind(3, labelId > 0 ? ("%" + to_string(labelId) + "%") : "");
     std::cout << 4 << std::endl;
     query.bind(4, limit);
     std::cout << query.getExpandedSQL() << std::endl;
+    std::cout << "BEFORE EXEC" << std::endl;
+    query.exec();
+    std::cout << "AFTER EXEC" << std::endl;
     while (query.executeStep())
     {
         std::cout << 6 << std::endl;
