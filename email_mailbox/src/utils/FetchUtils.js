@@ -134,24 +134,28 @@ export const fetchGetSingleEvent = async ({ rowId, optionalToken }) => {
     method: 'GET',
     optionalToken
   });
-  if (res.status === 200) {
-    const jsonRes = await res.json();
-    const eventResponse = {
-      cmd: jsonRes.cmd,
-      rowid: jsonRes.rowid,
-      params: JSON.parse(jsonRes.params)
-    };
-    return eventResponse;
-  }
-  if (res.status === 404) {
-    return {};
-  }
-  const expiredResponse = await checkExpiredSession({
-    response: { status: res.status },
-    initialRequest: fetchGetSingleEvent,
-    requestParams: { rowId, optionalToken }
-  });
-  if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-    return await fetchGetSingleEvent({ rowId, optionalToken });
+  switch (res.status) {
+    case PENDING_EVENTS_STATUS_OK: {
+      const jsonRes = await res.json();
+      const eventResponse = {
+        cmd: jsonRes.cmd,
+        rowid: jsonRes.rowid,
+        params: JSON.parse(jsonRes.params)
+      };
+      return eventResponse;
+    }
+    case NO_EVENTS_STATUS:
+    case 404:
+      return undefined;
+    default: {
+      const expiredResponse = await checkExpiredSession({
+        response: { status: res.status },
+        initialRequest: fetchGetSingleEvent,
+        requestParams: { rowId, optionalToken }
+      });
+      if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
+        return await fetchGetSingleEvent({ rowId, optionalToken });
+      }
+    }
   }
 };

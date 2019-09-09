@@ -35,6 +35,8 @@ const disconnect = () => {
 
 const start = ({ jwt }) => {
   client = new WebSocketClient();
+  pingFailedCounter = 0;
+  checkDelay = normalPingDelayMs;
   client.connect(
     `${SOCKET_URL}?token=${jwt}`,
     'criptext-protocol'
