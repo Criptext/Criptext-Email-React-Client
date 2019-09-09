@@ -3,6 +3,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace sqlite;
 
 int createLabel(string dbPath, string text, string color, string type, bool visible, string uuid, int accountId){
   SQLite::Database db(dbPath);

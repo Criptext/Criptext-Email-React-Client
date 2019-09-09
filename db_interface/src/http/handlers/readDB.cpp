@@ -39,7 +39,7 @@ int postGetEmailThreads(struct mg_connection *conn, void *cbdata, string dbPath)
 
   cJSON *response;
   vector<int> rejectedLabels = { CriptextDB::TRASH.id, CriptextDB::SPAM.id };
-  response = CriptextDB::getThreadsByLabel(dbPath, rejectedLabels, labelId->valueint, date->valuestring, limit->valueint, accountId->valueint);
+  response = CriptextDB::getEmailsGroupByThreadByParams(dbPath, rejectedLabels, labelId->valueint, date->valuestring, limit->valueint, accountId->valueint);
   
   return SendJSON(conn, response);
 }

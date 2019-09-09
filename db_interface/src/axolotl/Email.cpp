@@ -4,8 +4,9 @@
 #include <iostream>
 
 using namespace std;
+using namespace sqlite;
 
-int CriptextDB::createEmail(string dbPath, string key, string threadId, string subject, string preview, string date, int status, bool unread, bool secure, optional<string> unsendDate, optional<string> trashDate, string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary, int accountId){
+int CriptextDB::createEmail(string dbPath, string key, string threadId, string subject, string preview, string date, int status, bool unread, bool secure, std::optional<string> unsendDate, std::optional<string> trashDate, string messageId, string fromAddress, std::optional<string> replyTo, std::optional<string> boundary, int accountId){
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "insert into email (key, threadId, subject, preview, date, status, unread, secure, unsendDate, trashDate, messageId, fromAddress, replyTo, boundary, accountId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -98,24 +99,24 @@ CriptextDB::Email CriptextDB::getEmailByKey(string dbPath, string key, int accou
   int status = query.getColumn(8).getInt();
   bool unread = query.getColumn(9).getInt();
   bool secure = query.getColumn(10).getInt();
-  optional<string> unsendDate; 
+  std::optional<string> unsendDate; 
   if(query.getColumn(12).isNull()) 
     unsendDate = nullopt;
   else 
     unsendDate = query.getColumn(12).getString();
-  optional<string> trashDate; 
+  std::optional<string> trashDate; 
   if(query.getColumn(13).isNull()) 
     trashDate = nullopt;
   else 
     trashDate = query.getColumn(13).getString();
   string messageId = query.getColumn(14).getString();
   string fromAddress = query.getColumn(15).getString();
-  optional<string> replyTo; 
+  std::optional<string> replyTo; 
   if(query.getColumn(16).isNull()) 
     replyTo = nullopt;
   else 
     replyTo = query.getColumn(16).getString();
-  optional<string> boundary; 
+  std::optional<string> boundary; 
   if(query.getColumn(17).isNull()) 
     boundary = nullopt;
   else 
@@ -147,24 +148,24 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByIds(string dbPath, vector<int> 
         int status = query.getColumn(8).getInt();
         bool unread = query.getColumn(9).getInt();
         bool secure = query.getColumn(10).getInt();
-        optional<string> unsendDate; 
+        std::optional<string> unsendDate; 
         if(query.getColumn(12).isNull()) 
           unsendDate = nullopt;
         else 
           unsendDate = query.getColumn(12).getString();
-        optional<string> trashDate; 
+        std::optional<string> trashDate; 
         if(query.getColumn(13).isNull()) 
           trashDate = nullopt;
         else 
           trashDate = query.getColumn(13).getString();
         string messageId = query.getColumn(14).getString();
         string fromAddress = query.getColumn(15).getString();
-        optional<string> replyTo; 
+        std::optional<string> replyTo; 
         if(query.getColumn(16).isNull()) 
           replyTo = nullopt;
         else 
           replyTo = query.getColumn(16).getString();
-        optional<string> boundary; 
+        std::optional<string> boundary; 
         if(query.getColumn(17).isNull()) 
           boundary = nullopt;
         else 
@@ -198,9 +199,9 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByThreadId(string dbPath, string 
           "GROUP BY email.messageId,email.threadId "
           "ORDER BY date ASC;"
         << threadId
-        >> [&](int id, string key, string threadId, string subject, string content, string preview, string date, 
-                int status, bool unread, bool secure, optional<string> unsendDate, optional<string> trashDate,
-                string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary) {
+        >> [&](int id, string key, string threadId, std::optional<string> s3Key, string subject, string content, string preview, string date, 
+                int status, bool unread, bool secure, bool isMuted, std::optional<string> unsendDate, std::optional<string> trashDate,
+                string messageId, std::optional<string> replyTo, string fromAddress, std::optional<string> boundary) {
 
         CriptextDB::Email email = { id, key, threadId, subject, content, preview, date, status, unread, secure, unsendDate, trashDate, messageId, fromAddress, replyTo, boundary, accountId };
 
@@ -252,24 +253,24 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByThreadIds(string dbPath, vector
         int status = query.getColumn(8).getInt();
         bool unread = query.getColumn(9).getInt();
         bool secure = query.getColumn(10).getInt();
-        optional<string> unsendDate; 
+        std::optional<string> unsendDate; 
         if(query.getColumn(12).isNull()) 
           unsendDate = nullopt;
         else 
           unsendDate = query.getColumn(12).getString();
-        optional<string> trashDate; 
+        std::optional<string> trashDate; 
         if(query.getColumn(13).isNull()) 
           trashDate = nullopt;
         else 
           trashDate = query.getColumn(13).getString();
         string messageId = query.getColumn(14).getString();
         string fromAddress = query.getColumn(15).getString();
-        optional<string> replyTo; 
+        std::optional<string> replyTo; 
         if(query.getColumn(16).isNull()) 
           replyTo = nullopt;
         else 
           replyTo = query.getColumn(16).getString();
-        optional<string> boundary; 
+        std::optional<string> boundary; 
         if(query.getColumn(17).isNull()) 
           boundary = nullopt;
         else 
@@ -310,12 +311,12 @@ vector<CriptextDB::Email> CriptextDB::getEmailsByLabelId(string dbPath, vector<i
         "having coalesce(group_concat('' || emailLabel.labelId), \"\") like ? "
         "order by date DESC limit ?;"
       << (labelId == CriptextDB::SPAM.id || labelId == CriptextDB::TRASH.id)
-      << labelId > 0 ? ("%" + to_string(labelId) + "%") : ""
-      << labelId > 0 ? ("%" + to_string(labelId) + "%") : ""
+      << (labelId > 0 ? ("%" + to_string(labelId) + "%") : "")
+      << (labelId > 0 ? ("%" + to_string(labelId) + "%") : "")
       << limit
-      >> [&](int id, string key, string threadId, string subject, string content, string preview, string date, 
-                int status, bool unread, bool secure, optional<string> unsendDate, optional<string> trashDate,
-                string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary) {
+      >> [&](int id, string key, string threadId, std::optional<string> s3Key, string subject, string content, string preview, string date, 
+                int status, bool unread, bool secure, bool isMuted, std::optional<string> unsendDate, std::optional<string> trashDate,
+                string messageId, std::optional<string> replyTo, string fromAddress, std::optional<string> boundary) {
 
         CriptextDB::Email email = { id, key, threadId, subject, content, preview, date, status, unread, secure, unsendDate, trashDate, messageId, fromAddress, replyTo, boundary, accountId };
 

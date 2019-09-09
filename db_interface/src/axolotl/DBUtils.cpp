@@ -47,6 +47,30 @@ time_t DBUtils::getTimeFromDB(const std::string& date, bool is_dst, const std::s
   return mktime(&tm);
 }
 
+vector<int> DBUtils::splitToVector(string str, const char delim){
+	std::vector<int> vect;
+  std::stringstream ss(str);
+
+  if(str.empty()) return vect;
+
+	std::string s;
+	while (std::getline(ss, s, delim)) {
+		vect.push_back(std::stoi(s));
+	}
+  return vect;
+}
+
+vector<string> DBUtils::splitToStringVector(string str, const char delim){
+  std::vector<string> vect;
+  std::stringstream ss(str);
+
+	std::string s;
+	while (std::getline(ss, s, delim)) {
+		vect.push_back(s);
+	}
+  return vect;
+}
+
 string DBUtils::joinVector(vector<int> v){
   std::stringstream ss;
   for(size_t i = 0; i < v.size(); ++i)
@@ -67,6 +91,17 @@ string DBUtils::joinVector(vector<string> v){
     ss << v[i];
   }
   return ss.str();
+}
+
+unordered_set<int> DBUtils::splitToSet(string str, const char delim){
+  std::unordered_set<int> set;
+  std::stringstream ss(str);
+
+	std::string s;
+	while (std::getline(ss, s, delim)) {
+		set.insert(std::stoi(s));
+	}
+  return set;
 }
 
 string DBUtils::joinSet(unordered_set<int> v){

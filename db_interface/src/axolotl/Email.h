@@ -21,16 +21,16 @@ namespace CriptextDB {
     int status;
     bool unread;
     bool secure;
-    optional<string> unsendDate;
-    optional<string> trashDate;
+    std::optional<string> unsendDate;
+    std::optional<string> trashDate;
     string messageId;
     string fromAddress;
-    optional<string> replyTo;
-    optional<string> boundary;
+    std::optional<string> replyTo;
+    std::optional<string> boundary;
     int accountId;
   };
   
-  int createEmail(string dbPath, string key, string threadId, string subject, string preview, string date, int status, bool unread, bool secure, optional<string> unsendDate, optional<string> trashDate, string messageId, string fromAddress, optional<string> replyTo, optional<string> boundary, int accountId);
+  int createEmail(string dbPath, string key, string threadId, string subject, string preview, string date, int status, bool unread, bool secure, std::optional<string> unsendDate, std::optional<string> trashDate, string messageId, string fromAddress, std::optional<string> replyTo, std::optional<string> boundary, int accountId);
   int deleteEmailByKey(string dbPath, string key, int accountId);
   int deleteEmailById(string dbPath, int emailId, int accountId);
   int deleteEmailsById(string dbPath, vector<int> emailIds, int accountId);

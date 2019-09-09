@@ -17,7 +17,7 @@ namespace CriptextDB {
     string type;
     bool visible;
     string uuid;
-    optional<int> accountId;
+    std::optional<int> accountId;
   };
 
   int createLabel(string dbPath, string text, string color, string type, bool visible, string uuid, int accountId);

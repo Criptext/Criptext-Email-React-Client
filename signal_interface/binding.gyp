@@ -37,8 +37,8 @@
       "libraries": [
         "-pthread",
         "-dl",
-        "/usr/local/Cellar/openssl/1.0.2r/lib/libssl.a",
-        "/usr/local/Cellar/openssl/1.0.2r/lib/libcrypto.a",
+        "/usr/local/Cellar/openssl/1.0.2s/lib/libssl.a",
+        "/usr/local/Cellar/openssl/1.0.2s/lib/libcrypto.a",
         "/usr/local/Cellar/sqlite/3.28.0/lib/libsqlite3.a",
         "/usr/local/lib/libSQLiteCpp.a",
         "/usr/local/lib/libsignal-protocol-c.a",

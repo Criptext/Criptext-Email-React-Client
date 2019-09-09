@@ -5,8 +5,10 @@
 #include <unordered_set>
 #include <iostream>
 #include <optional>
+#include <chrono>
 
 using namespace std;
+using namespace sqlite;
 
 string CriptextDB::getThreadsByThreadIds(string dbPath, vector<string> threadIds, int labelId, string date, int limit, int accountId){
   vector<Thread> threads;
@@ -57,9 +59,9 @@ string CriptextDB::getThreadsByThreadIds(string dbPath, vector<string> threadIds
       contactIds.insert(fullEmail.from.id);
       fromNames.insert(fullEmail.email.fromAddress);
     }
-    optional<string> trashDate = fullEmails.back().email.trashDate ? 
+    std::optional<string> trashDate = fullEmails.back().email.trashDate ? 
     *fullEmails.back().email.trashDate : NULL;
-    optional<string> unsendDate = fullEmails.back().email.unsendDate ? 
+    std::optional<string> unsendDate = fullEmails.back().email.unsendDate ? 
     *fullEmails.back().email.unsendDate : NULL;
     Thread thread = { labelIds, fullEmails.back().email.boundary, fullEmails.back().email.content, fullEmails.back().email.date, emailIds,
      fileTokens, fullEmails.back().from.email, DBUtils::joinSet(fromNames), fullEmails.back().email.id,
@@ -164,5 +166,154 @@ cJSON* CriptextDB::getThreadsByLabel(string dbPath, vector<int> rejectedLabel, i
   }
   std::cout << "JSON RESPONSE: " << std::endl << cJSON_Print(threadsJSONArray) << std::endl << "JSON RESPONSE END" << std::endl;
   return threadsJSONArray;
+}
+
+cJSON* CriptextDB::getEmailsGroupByThreadByParams(string _dbPath, vector<int> _rejectedLabel, int _labelId, string _date, int _limit, int _accountId){
+  std::cout << "CALLED GET_THREADS_BY_ID DESKTOP STYLE" << std::endl;
+  auto t1 = std::chrono::high_resolution_clock::now();
+  bool isRejectedLabel = std::find(_rejectedLabel.begin(), _rejectedLabel.end(), _labelId) != _rejectedLabel.end();
+  string rejectedLabelIdsString = DBUtils::joinVector(_rejectedLabel);
+
+  std::cout << "PREPARING QUERY" << std::endl;
+
+  string labelSelectQuery;
+  string labelWhereQuery;
+
+  if (isRejectedLabel) {
+    labelSelectQuery = "GROUP_CONCAT((SELECT GROUP_CONCAT(emailLabel \
+    }.labelId) \
+  FROM emailLabel WHERE emailLabel.emailId =  email.id \
+  AND emailLabel.labelId NOT IN (" + rejectedLabelIdsString + "))) as allLabels,";
+    labelWhereQuery = "WHERE emailLabel.labelId = " + to_string(_labelId);
+  } else {
+    labelSelectQuery = "GROUP_CONCAT(DISTINCT(emailLabel.labelId)) as allLabels,";
+    labelWhereQuery = "WHERE NOT EXISTS (SELECT * FROM emailLabel \
+    WHERE email.id = emailLabel.emailId \
+    AND emailLabel.labelId IN (" + rejectedLabelIdsString + "))";
+  }
+
+  string contactQuery = "contact.id IS NOT NULL";
+
+  string contactNameQuery;
+  vector<string> contactTypes = { "from" };
+  if (std::find(contactTypes.begin(), contactTypes.end(), "from") != contactTypes.end()) {
+    contactNameQuery = "GROUP_CONCAT(DISTINCT(email.fromAddress)) as fromContactName,";
+  } else {
+    contactNameQuery = "GROUP_CONCAT(DISTINCT(contact.email)) as fromContactName,";
+  }
+
+  std::optional<string> emailContactOrQuery;
+  if(1 < contactTypes.size()) {
+    emailContactOrQuery = "OR emailContact.type = \'" + contactTypes[1] + "\'";
+  } else { 
+    emailContactOrQuery = std::nullopt;
+  }
+
+  string textQuery = "";
+
+  // string query = "SELECT email.*, IFNULL(email.threadId, email.id) as uniqueId, " 
+  //   + labelSelectQuery + "GROUP_CONCAT(DISTINCT(email.id)) as emailIds, \
+  //   MAX(email.unread) as unread, \
+  //   MAX(email.date) as maxDate from email \
+  //   LEFT JOIN emailLabel ON email.id = emailLabel.emailId " 
+  //   + labelWhereQuery + " AND email.date < date(\'now\') \
+  //   GROUP BY uniqueId "
+  //   + (_labelId > 0 ? ("HAVING allLabels LIKE \'%" + to_string(_labelId) + "%\'") : "") + " ORDER BY email.date DESC \
+  //   LIMIT " + to_string(_limit) + ";";
+
+  string query = "SELECT email.*, \
+    IFNULL(email.threadId ,email.id) as uniqueId, \
+    GROUP_CONCAT(DISTINCT(emailLabel.labelId)) as allLabels, \
+    GROUP_CONCAT(DISTINCT(\'L\' || emailLabel.labelId)) as myAllLabels, \
+    GROUP_CONCAT(DISTINCT(email.id)) as emailIds, \
+    MAX(email.unread) as unread, \
+    MAX(email.date) as maxDate \
+    from email \
+    JOIN emailLabel ON email.id = emailLabel.emailId \
+    AND email.date < date(\'now\') \
+    GROUP BY uniqueId \
+    HAVING allLabels LIKE \'%" + to_string(_labelId) + "%\' \
+    AND myAllLabels not like \'%2%\' and myAllLabels not like \'%L7%\' \
+    ORDER BY email.date DESC \
+    LIMIT " + to_string(_limit) + ";";
+
+  std::cout << "QUERY: \n " << query << std::endl;
+
+  vector<TempThread> tempThreads;
+
+  sqlite_config config;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+  database db(_dbPath, config);
+
+  std::cout << "BEFORE EXEC QUERY" << std::endl;
+  db << query
+      >> [&] (int id, string key, string threadId, string s3Key, string subject, string content, string preview, 
+                string date, int status, bool unread, bool secure, bool isMuted, std::optional<string> unsendDate,
+                std::optional<string> trashDate, string messageId, std::optional<string> replyTo, string fromAddress,
+                std::optional<string> boundary, string uniqueId, string allLabels, string myAllLabels, string emailIds, bool unread2, 
+                string maxDate) {
+                  std::cout << "PROCESSING THREAD" << std::endl;
+                  std::cout << "PROCESSING EMAIL IDS: S: " << emailIds << std::endl;
+                  vector<int> tmpIds = DBUtils::splitToVector(emailIds);
+                  std::cout << "PROCESSING ALL LABELS" << std::endl;
+                  unordered_set<int> tmpLabels = DBUtils::splitToSet(allLabels);
+                  std::cout << "CREATING TEMP THREAD" << std::endl;
+                  TempThread thread = { id, key, threadId, subject, content, preview, date, status, unread, secure,
+                  unsendDate, trashDate, messageId, replyTo, fromAddress, boundary, tmpLabels, 
+                  tmpIds, maxDate };
+                  tempThreads.push_back(thread);
+                };
+
+  std::cout << "GOT ALL THREADS" << std::endl;
+  std::cout << "GETTING ALL FILES" << std::endl;
+  vector<Thread> threads;
+  for(const TempThread &tmpThread : tempThreads){
+    vector<string> fileTokensVector;
+    db << "SELECT email.threadId, \
+          GROUP_CONCAT(DISTINCT(file.token)) as fileTokens \
+          FROM email \
+          LEFT JOIN file ON email.id = file.emailId \
+          WHERE email.id IN (" + DBUtils::joinVector(tmpThread.emailIds) + ") \
+          GROUP BY email.threadId;"
+        >> [&](string threadId, string fileTokens) {
+          fileTokensVector = DBUtils::splitToStringVector(fileTokens);
+        };
+    unordered_set<int> recipientContactIds;
+    string fromContactNames;
+    db << "SELECT email.threadId," + contactNameQuery + " GROUP_CONCAT(DISTINCT(contact.id)) as recipientContactIds \
+          FROM email \
+          LEFT JOIN emailContact ON email.id = emailContact.emailId AND (emailContact.type = \'" 
+          + contactTypes[0] + "\') \
+          LEFT JOIN contact ON emailContact.contactId = contact.id \
+          WHERE email.id IN (" + DBUtils::joinVector(tmpThread.emailIds) + ") \
+          GROUP BY email.threadId;"
+          >> [&](string threadId, string fromNames, string recipientIds){
+            fromContactNames = fromNames;
+            recipientContactIds = DBUtils::splitToSet(recipientIds);
+          };
+    Thread thread = CriptextDB::completeThread(tmpThread, fromContactNames, fileTokensVector, recipientContactIds);
+    threads.push_back(thread);
+  }
+
+  std::cout << "CONSTRUCTING JSON RESPONSE" << std::endl;
+  cJSON *threadsJSONArray = cJSON_CreateArray();
+  for(Thread &t: threads){
+    cJSON_AddItemToArray(threadsJSONArray, t.toJSON());
+  }
+  std::cout << "JSON RESPONSE: " << std::endl << cJSON_Print(threadsJSONArray) << std::endl << "JSON RESPONSE END" << std::endl;
+  auto t2 = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+  std::cout << "TIME TO RESPOND WITH THREADS: " << duration << std::endl;
+  return threadsJSONArray;
+}
+
+CriptextDB::Thread CriptextDB::completeThread(TempThread tmpThread, string fromNames, vector<string> tokens, unordered_set<int> recipientIds){
+  Thread completeThread = {
+      tmpThread.labelIds, tmpThread.boundary, tmpThread.lastEmailContent, tmpThread.date, tmpThread.emailIds, tokens,
+      tmpThread.fromAddress, fromNames, tmpThread.lastEmailId, tmpThread.lastEmailKey, tmpThread.maxDate, tmpThread.messageId,
+      tmpThread.preview, recipientIds ,tmpThread.replyTo, tmpThread.secure, tmpThread.status, tmpThread.subject, tmpThread.threadId,
+      tmpThread.trashDate, tmpThread.unread, tmpThread.unsendDate
+    };
+    return completeThread;
 }
 

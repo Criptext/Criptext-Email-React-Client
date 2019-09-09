@@ -18,13 +18,13 @@ namespace CriptextDB {
     int status;
     string date;
     string mimeType;
-    optional<string> key;
-    optional<string> iv;
-    optional<string> cid;
+    std::optional<string> key;
+    std::optional<string> iv;
+    std::optional<string> cid;
     int emailId;
   };
 
-  int createFile(string dbPath, string token, string name, int size, int status, string date, string mimeType, optional<string> key, optional<string> iv, optional<string> cid, int emailId);
+  int createFile(string dbPath, string token, string name, int size, int status, string date, string mimeType, std::optional<string> key, std::optional<string> iv, std::optional<string> cid, int emailId);
   vector<CRFile> getFilesByEmailId(string dbPath, int emailId);
   vector<CRFile> getFilesByToken(string dbPath, vector<string> tokens);
   int updateFilesByEmailId(string dbPath, int newStatus, int emailId);

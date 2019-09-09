@@ -2,6 +2,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace sqlite;
 
 int CriptextDB::createEmailLabel(string dbPath, int labelId, int emailId) {
 SQLite::Database db(dbPath);

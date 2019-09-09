@@ -3,8 +3,9 @@
 #include <iostream>
 
 using namespace std;
+using namespace sqlite;
 
-int createFile(string dbPath, string token, string name, int size, int status, string date, string mimeType, optional<string> key, optional<string> iv, optional<string> cid, int emailId){
+int createFile(string dbPath, string token, string name, int size, int status, string date, string mimeType, std::optional<string> key, std::optional<string> iv, std::optional<string> cid, int emailId){
   SQLite::Database db(dbPath);
 
   SQLite::Statement query(db, "insert into file (token, name, size, status, date, mimeType, key, iv, cid, emailId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -30,8 +31,9 @@ vector<CriptextDB::CRFile> CriptextDB::getFilesByEmailId(string dbPath, int emai
 
     db << "select * from file where emailId == ?;"
        << emailId
-       >> [&] (int id, string token, string name, int size, int status, string date, string mimeType, string key, 
-                string iv, string cid, int emailId) {
+       >> [&] (int id, string token, string name, bool readOnly, int size, int status, string date, string mimeType, 
+                int ephemeral, string ephemeralDate, int ephemeralTime, int emailId, std::optional<string> key, 
+                std::optional<string> iv, std::optional<string> cid) {
           CriptextDB::CRFile file = { id, token, name, size, status, date, mimeType, key, iv, cid, emailId };
           allFiles.push_back(file);
        };

@@ -20,9 +20,30 @@
 using namespace std;
 
 namespace CriptextDB {
+  struct TempThread {
+    int lastEmailId;
+    string lastEmailKey;
+    string threadId;
+    string subject;
+    string lastEmailContent;
+    string preview;
+    string date;
+    int status;
+    bool unread;
+    bool secure;
+    std::optional<string> unsendDate;
+    std::optional<string> trashDate;
+    string messageId;
+    std::optional<string> replyTo;
+    string fromAddress;
+    std::optional<string> boundary;
+    unordered_set<int> labelIds;
+    vector<int> emailIds;
+    string maxDate;
+  };
   struct Thread {
     unordered_set<int> labelIds;
-    optional<string> boundary;
+    std::optional<string> boundary;
     string lastEmailContent;
     string date;
     vector<int> emailIds;
@@ -35,14 +56,14 @@ namespace CriptextDB {
     string messageId;
     string preview;
     unordered_set<int> recipientContactIds;
-    optional<string> replyTo;
+    std::optional<string> replyTo;
     bool secure;
     int status;
     string subject;
     string threadId;
-    optional<string> trashDate;
+    std::optional<string> trashDate;
     bool unread;
-    optional<string> unsendDate;
+    std::optional<string> unsendDate;
 
     cJSON *toJSON(){
       cJSON *thread = cJSON_CreateObject();
@@ -81,6 +102,8 @@ namespace CriptextDB {
 
   string getThreadsByThreadIds(string dbPath, vector<string> threadIds, int labelId, string date, int limit, int accountId);
   cJSON* getThreadsByLabel(string dbPath, vector<int> rejectedLabels, int labelId, string date, int limit, int accountId);
+  cJSON* getEmailsGroupByThreadByParams(string dbPath, vector<int> rejectedLabels, int labelId, string date, int limit, int accountId);
+  Thread completeThread(TempThread tmpThread, string fromNames, vector<string> tokens, unordered_set<int> recipientIds);
 } 
 
 #endif

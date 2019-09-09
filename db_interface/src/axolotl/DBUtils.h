@@ -18,8 +18,11 @@ class DBUtils{
   static string getFromEmail(string fromAddress);
   static string getDateForDBSaving(time_t date);
   static time_t getTimeFromDB(const std::string& date, bool is_dst = false, const std::string& format = "%Y-%b-%d %H:%M:%S");
+  static vector<int> splitToVector(string str, const char delim = ',');
+  static vector<string> splitToStringVector(string str, const char delim = ',');
   static string joinVector(vector<int> v);
   static string joinVector(vector<string> v);
+  static unordered_set<int> splitToSet(string str, const char delim = ',');
   static string joinSet(unordered_set<int> v);
   static string joinSet(unordered_set<string> v);
 };
