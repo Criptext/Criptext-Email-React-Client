@@ -618,6 +618,8 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
 
   let labelSelectQuery;
   let labelWhereQuery;
+  let customRejectedLabels;
+
   if (isRejectedLabel) {
     labelSelectQuery = `GROUP_CONCAT((SELECT GROUP_CONCAT(${
       Table.EMAIL_LABEL
@@ -632,10 +634,14 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   } else {
     labelSelectQuery = `GROUP_CONCAT(DISTINCT(${
       Table.EMAIL_LABEL
-    }.labelId)) as allLabels,`;
-    labelWhereQuery = `WHERE NOT EXISTS (SELECT * FROM ${Table.EMAIL_LABEL} 
-    WHERE ${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId 
-    AND ${Table.EMAIL_LABEL}.labelId IN (${rejectedLabelIdsString}))`;
+    }.labelId)) as allLabels,
+    GROUP_CONCAT(DISTINCT('L' || ${
+      Table.EMAIL_LABEL
+    }.labelId)) as myAllLabels,`;
+    labelWhereQuery = ``;
+    customRejectedLabels = rejectedLabelIds
+      .map(labelid => `myAllLabels not like "%L${labelid}%"`)
+      .join(' and ');
   }
 
   let contactNameQuery;
@@ -664,7 +670,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
     MAX(${Table.EMAIL}.unread) as unread,
     MAX(email.date) as maxDate
     from ${Table.EMAIL}
-    LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
+    JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
     Table.EMAIL_LABEL
   }.emailId
   ${labelWhereQuery}
@@ -675,6 +681,11 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   ${unread !== undefined ? `AND unread = ${unread}` : ''}
     GROUP BY uniqueId
     ${labelId > 0 ? `HAVING allLabels LIKE "%${labelId}%"` : ''}
+    ${
+      customRejectedLabels
+        ? `${labelId > 0 ? 'AND' : 'HAVING'} ${customRejectedLabels}`
+        : ''
+    }
     ORDER BY ${Table.EMAIL}.date DESC
     LIMIT ${limit || 22}`;
 
@@ -730,6 +741,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
     };
   });
 };
+//
 
 const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   const {
