@@ -611,37 +611,19 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   } = params;
   const excludedLabels = [systemLabels.trash.id, systemLabels.spam.id];
   const isRejectedLabel = excludedLabels.includes(labelId);
-  let rejectedLabelIdsString;
-  if (rejectedLabelIds) {
-    rejectedLabelIdsString = formStringSeparatedByOperator(rejectedLabelIds);
-  }
 
-  let labelSelectQuery;
-  let labelWhereQuery;
-  let customRejectedLabels;
-
-  if (isRejectedLabel) {
-    labelSelectQuery = `GROUP_CONCAT((SELECT GROUP_CONCAT(${
-      Table.EMAIL_LABEL
-    }.labelId)
-  FROM ${Table.EMAIL_LABEL} WHERE ${Table.EMAIL_LABEL}.emailId = ${
-      Table.EMAIL
-    }.id
-  AND ${
+  const labelSelectQuery = `GROUP_CONCAT(DISTINCT(${
     Table.EMAIL_LABEL
-  }.labelId NOT IN (${rejectedLabelIdsString}))) as allLabels,`;
-    labelWhereQuery = `WHERE ${Table.EMAIL_LABEL}.labelId = ${labelId}`;
-  } else {
-    labelSelectQuery = `GROUP_CONCAT(DISTINCT(${
-      Table.EMAIL_LABEL
-    }.labelId)) as allLabels,
-    GROUP_CONCAT(DISTINCT('L' || ${
-      Table.EMAIL_LABEL
-    }.labelId)) as myAllLabels,`;
-    labelWhereQuery = ``;
-    customRejectedLabels = rejectedLabelIds
-      .map(labelid => `myAllLabels not like "%L${labelid}%"`)
+  }.labelId)) as labels,
+     GROUP_CONCAT(DISTINCT('L' || ${Table.EMAIL_LABEL}.labelId)) as myLabels`;
+
+  let customRejectedLabels =
+    'HAVING ' +
+    rejectedLabelIds
+      .map(rejectedLabelId => `myLabels not like "%L${rejectedLabelId}%"`)
       .join(' and ');
+  if (isRejectedLabel) {
+    customRejectedLabels += ` and myLabels like "%L${labelId}%"`;
   }
 
   let contactNameQuery;
@@ -663,30 +645,34 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
     ? `AND (preview LIKE "%${text}%" OR subject LIKE "%${text}%" OR fromAddress LIKE "%${text}%")`
     : '';
 
-  const query = `SELECT ${Table.EMAIL}.*,
-    IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId,
-    ${labelSelectQuery}
-    GROUP_CONCAT(DISTINCT(${Table.EMAIL}.id)) as emailIds,
-    MAX(${Table.EMAIL}.unread) as unread,
-    MAX(email.date) as maxDate
-    from ${Table.EMAIL}
-    JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
+  const query = `
+    SELECT *, 
+      MAX(unread) as unread, 
+      MAX(date) as maxDate,
+      GROUP_CONCAT(DISTINCT(id)) as emailIds,
+      GROUP_CONCAT(DISTINCT(myLabels)) as myAllLabels,
+      GROUP_CONCAT(DISTINCT(labels)) as allLabels
+    FROM (
+      SELECT ${Table.EMAIL}.*,
+        IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId,
+        ${labelSelectQuery}
+      FROM ${Table.EMAIL}
+      JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
     Table.EMAIL_LABEL
   }.emailId
-  ${labelWhereQuery}
-  ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
-  AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
-  ${textQuery}
-  ${subject ? `AND subject LIKE %${subject}%` : ''}
-  ${unread !== undefined ? `AND unread = ${unread}` : ''}
-    GROUP BY uniqueId
-    ${labelId > 0 ? `HAVING allLabels LIKE "%${labelId}%"` : ''}
-    ${
-      customRejectedLabels
-        ? `${labelId > 0 ? 'AND' : 'HAVING'} ${customRejectedLabels}`
-        : ''
-    }
-    ORDER BY ${Table.EMAIL}.date DESC
+      ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
+      AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
+      ${textQuery}
+      ${subject ? `AND subject LIKE %${subject}%` : ''}
+      ${unread !== undefined ? `AND unread = ${unread}` : ''}
+      GROUP BY uniqueId, ${Table.EMAIL_LABEL}.emailId
+      ${customRejectedLabels}
+      ORDER BY ${Table.EMAIL}.date DESC
+      LIMIT 100
+    )
+    GROUP BY threadId
+    ${labelId > 0 ? `HAVING myAllLabels LIKE "%L${labelId}%"` : ''}
+    ORDER BY date DESC
     LIMIT ${limit || 22}`;
 
   const threads = await db.raw(query);

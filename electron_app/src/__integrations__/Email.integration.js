@@ -494,7 +494,7 @@ describe('Load data thread from Email Table:', () => {
     expect(lastThread).toMatchObject(
       expect.objectContaining({
         threadId: 'threadC',
-        emailIds: '3,4'
+        emailIds: '4,3'
       })
     );
     const moreParams = {
