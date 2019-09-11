@@ -53,7 +53,7 @@ const sendLinkDeviceStartEventToAllWindows = async data => {
     loadingType: 'link-device-request',
     remoteData: data.params.newDeviceInfo
   });
-  loadingWindow.show();
+  loadingWindow.show({});
   return await clientManager.acknowledgeEvents([data.rowid]);
 };
 
@@ -82,7 +82,7 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
       version: data.params.version
     })
   });
-  loadingWindow.show();
+  loadingWindow.show({});
   return await clientManager.acknowledgeEvents([data.rowid]);
 };
 
