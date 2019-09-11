@@ -2,11 +2,123 @@
 
 ## [Unreleased](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
 
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.22.0...HEAD)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.23.4...HEAD)
+
+**Implemented enhancements:**
+
+- Mailbox unread empty: Change message [\#1148](https://github.com/Criptext/Criptext-Email-React-Client/issues/1148)
+
+**Fixed bugs:**
+
+- Fix: Missing loading window [\#1165](https://github.com/Criptext/Criptext-Email-React-Client/issues/1165)
+- Multiples issues [\#1162](https://github.com/Criptext/Criptext-Email-React-Client/issues/1162)
+
+**Closed issues:**
+
+- Failed to fetch emails error [\#1155](https://github.com/Criptext/Criptext-Email-React-Client/issues/1155)
 
 **Merged pull requests:**
 
+- ⚠⚠⚠ Fix: Missing loading window [\#1166](https://github.com/Criptext/Criptext-Email-React-Client/pull/1166) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix [\#1163](https://github.com/Criptext/Criptext-Email-React-Client/pull/1163) ([erikaperugachi](https://github.com/erikaperugachi))
+- Const [\#1161](https://github.com/Criptext/Criptext-Email-React-Client/pull/1161) ([Hirobreak](https://github.com/Hirobreak))
+- start debby [\#1160](https://github.com/Criptext/Criptext-Email-React-Client/pull/1160) ([Hirobreak](https://github.com/Hirobreak))
+- replacing get threads [\#1159](https://github.com/Criptext/Criptext-Email-React-Client/pull/1159) ([Hirobreak](https://github.com/Hirobreak))
+- Using modern\_sql\_cpp [\#1158](https://github.com/Criptext/Criptext-Email-React-Client/pull/1158) ([Hirobreak](https://github.com/Hirobreak))
+- handling pre keys creation with alice [\#1157](https://github.com/Criptext/Criptext-Email-React-Client/pull/1157) ([Hirobreak](https://github.com/Hirobreak))
+
+## [0.23.4](https://github.com/criptext/Criptext-Email-React-Client/tree/0.23.4) (2019-08-27)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.23.2...0.23.4)
+
+**Implemented enhancements:**
+
+- App: Accept polish alphabet [\#1151](https://github.com/Criptext/Criptext-Email-React-Client/issues/1151)
+
+**Fixed bugs:**
+
+- Enterprise: Fix folder crush of emails [\#1152](https://github.com/Criptext/Criptext-Email-React-Client/issues/1152)
+- Composer: Enabled upload .db format file [\#1150](https://github.com/Criptext/Criptext-Email-React-Client/issues/1150)
+- App: Fix analytics [\#1145](https://github.com/Criptext/Criptext-Email-React-Client/issues/1145)
+
+**Merged pull requests:**
+
+- Enterprise [\#1153](https://github.com/Criptext/Criptext-Email-React-Client/pull/1153) ([erikaperugachi](https://github.com/erikaperugachi))
+- Alice migration [\#1149](https://github.com/Criptext/Criptext-Email-React-Client/pull/1149) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix analytics [\#1146](https://github.com/Criptext/Criptext-Email-React-Client/pull/1146) ([JulianAdams4](https://github.com/JulianAdams4))
+- Alice Dynamic Port [\#1140](https://github.com/Criptext/Criptext-Email-React-Client/pull/1140) ([Hirobreak](https://github.com/Hirobreak))
+
+## [0.23.2](https://github.com/criptext/Criptext-Email-React-Client/tree/0.23.2) (2019-08-19)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.23.0...0.23.2)
+
+**Implemented enhancements:**
+
+- App: Add analytics [\#1139](https://github.com/Criptext/Criptext-Email-React-Client/issues/1139)
+- Thread: Show thread removed when this is moved to archive [\#1125](https://github.com/Criptext/Criptext-Email-React-Client/issues/1125)
+
+**Fixed bugs:**
+
+- Composer: Don't upload xls file format [\#1138](https://github.com/Criptext/Criptext-Email-React-Client/issues/1138)
+- Firebase: Fix events without cmd or rowId [\#1137](https://github.com/Criptext/Criptext-Email-React-Client/issues/1137)
+- Settings issues [\#1131](https://github.com/Criptext/Criptext-Email-React-Client/issues/1131)
+- Thread: Show thread removed when this is moved to archive [\#1125](https://github.com/Criptext/Criptext-Email-React-Client/issues/1125)
+- Multiple issues [\#1123](https://github.com/Criptext/Criptext-Email-React-Client/issues/1123)
+
+**Closed issues:**
+
+- Mailbox:  Push notifications on opening emails [\#1143](https://github.com/Criptext/Criptext-Email-React-Client/issues/1143)
+- Cyrillic letters shown in wrong font [\#1130](https://github.com/Criptext/Criptext-Email-React-Client/issues/1130)
+- Thread: Show option to emails search in header menu [\#1127](https://github.com/Criptext/Criptext-Email-React-Client/issues/1127)
+- Search box: Keep text searched when one thread has been opened [\#1126](https://github.com/Criptext/Criptext-Email-React-Client/issues/1126)
+
+**Merged pull requests:**
+
+- Push notifications on opening emails [\#1144](https://github.com/Criptext/Criptext-Email-React-Client/pull/1144) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update [\#1142](https://github.com/Criptext/Criptext-Email-React-Client/pull/1142) ([erikaperugachi](https://github.com/erikaperugachi))
+- Analytics [\#1141](https://github.com/Criptext/Criptext-Email-React-Client/pull/1141) ([erikaperugachi](https://github.com/erikaperugachi))
+- Alice scripts [\#1136](https://github.com/Criptext/Criptext-Email-React-Client/pull/1136) ([JulianAdams4](https://github.com/JulianAdams4))
+- Linux Fix [\#1135](https://github.com/Criptext/Criptext-Email-React-Client/pull/1135) ([Hirobreak](https://github.com/Hirobreak))
+- Fix crash events [\#1134](https://github.com/Criptext/Criptext-Email-React-Client/pull/1134) ([erikaperugachi](https://github.com/erikaperugachi))
+- Settings [\#1133](https://github.com/Criptext/Criptext-Email-React-Client/pull/1133) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fixes [\#1128](https://github.com/Criptext/Criptext-Email-React-Client/pull/1128) ([erikaperugachi](https://github.com/erikaperugachi))
+- Fixes [\#1124](https://github.com/Criptext/Criptext-Email-React-Client/pull/1124) ([erikaperugachi](https://github.com/erikaperugachi))
+- Bump handlebars from 4.0.11 to 4.1.2 in /email\_loading [\#1041](https://github.com/Criptext/Criptext-Email-React-Client/pull/1041) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump handlebars from 4.0.12 to 4.1.2 in /email\_login [\#1040](https://github.com/Criptext/Criptext-Email-React-Client/pull/1040) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [0.23.0](https://github.com/criptext/Criptext-Email-React-Client/tree/0.23.0) (2019-08-12)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.22.0...0.23.0)
+
+**Implemented enhancements:**
+
+- Mailbox: Get single event from firebase notifications [\#1119](https://github.com/Criptext/Criptext-Email-React-Client/issues/1119)
+- Composer: Save Drafts automatically \(no dialog\) [\#1115](https://github.com/Criptext/Criptext-Email-React-Client/issues/1115)
+- Email Detail: Update unsent files view [\#1110](https://github.com/Criptext/Criptext-Email-React-Client/issues/1110)
+- Settings: Remove 'Encrypt to externals' option [\#1104](https://github.com/Criptext/Criptext-Email-React-Client/issues/1104)
+- Reconnect socket [\#1103](https://github.com/Criptext/Criptext-Email-React-Client/issues/1103)
+
+**Fixed bugs:**
+
+- Firebase: Fix push token on logout & login [\#1120](https://github.com/Criptext/Criptext-Email-React-Client/issues/1120)
+- Composer: Fix issue on Cc and Bcc fields [\#1117](https://github.com/Criptext/Criptext-Email-React-Client/issues/1117)
+- Settings: Fix backupPath issue on Windows users [\#1113](https://github.com/Criptext/Criptext-Email-React-Client/issues/1113)
+- App: Fix socket issue on Windows [\#1112](https://github.com/Criptext/Criptext-Email-React-Client/issues/1112)
+- Reconnect socket [\#1103](https://github.com/Criptext/Criptext-Email-React-Client/issues/1103)
+
+**Closed issues:**
+
+- Settings: Add enabled/disabled sign criptext footer [\#1108](https://github.com/Criptext/Criptext-Email-React-Client/issues/1108)
+
+**Merged pull requests:**
+
+- Update [\#1122](https://github.com/Criptext/Criptext-Email-React-Client/pull/1122) ([erikaperugachi](https://github.com/erikaperugachi))
+- Firebase: Fix push token on logout & login [\#1121](https://github.com/Criptext/Criptext-Email-React-Client/pull/1121) ([JulianAdams4](https://github.com/JulianAdams4))
+- Composer: Fix issue on Cc and Bcc fields [\#1118](https://github.com/Criptext/Criptext-Email-React-Client/pull/1118) ([JulianAdams4](https://github.com/JulianAdams4))
+- Save Drafts automatically \(no dialog\) [\#1116](https://github.com/Criptext/Criptext-Email-React-Client/pull/1116) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix Windows Issues [\#1114](https://github.com/Criptext/Criptext-Email-React-Client/pull/1114) ([JulianAdams4](https://github.com/JulianAdams4))
+- Email Detail: Update unsent files view [\#1111](https://github.com/Criptext/Criptext-Email-React-Client/pull/1111) ([JulianAdams4](https://github.com/JulianAdams4))
+- Settings: Add criptext signature footer option to show or not [\#1109](https://github.com/Criptext/Criptext-Email-React-Client/pull/1109) ([erikaperugachi](https://github.com/erikaperugachi))
 - Fix socket [\#1107](https://github.com/Criptext/Criptext-Email-React-Client/pull/1107) ([erikaperugachi](https://github.com/erikaperugachi))
+- Socket [\#1106](https://github.com/Criptext/Criptext-Email-React-Client/pull/1106) ([erikaperugachi](https://github.com/erikaperugachi))
+- Remove 'Encrypt to externals' option [\#1105](https://github.com/Criptext/Criptext-Email-React-Client/pull/1105) ([JulianAdams4](https://github.com/JulianAdams4))
 
 ## [0.22.0](https://github.com/criptext/Criptext-Email-React-Client/tree/0.22.0) (2019-08-05)
 [Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.19.1...0.22.0)
