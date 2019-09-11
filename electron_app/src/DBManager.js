@@ -595,7 +595,7 @@ const getEmailsCounterByLabelId = labelId => {
 };
 
 const getEmailsGroupByThreadByParams = async (params = {}) => {
-  if (params.contactFilter)
+  if (params.plain === false)
     return getEmailsGroupByThreadByParamsToSearch(params);
   const {
     contactTypes = ['from'],
@@ -663,7 +663,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
       ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
       AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
       ${textQuery}
-      ${subject ? `AND subject LIKE %${subject}%` : ''}
+      ${subject ? `AND subject LIKE "%${subject}%"` : ''}
       ${unread !== undefined ? `AND unread = ${unread}` : ''}
       GROUP BY uniqueId, ${Table.EMAIL_LABEL}.emailId
       ${customRejectedLabels}
@@ -727,7 +727,6 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
     };
   });
 };
-//
 
 const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   const {
@@ -741,36 +740,15 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
     threadIdRejected,
     subject,
     text,
-    unread
+    unread,
+    searchInLabelId
   } = params;
   const excludedLabels = [systemLabels.trash.id, systemLabels.spam.id];
   const isRejectedLabel = excludedLabels.includes(labelId);
-  let rejectedLabelIdsString;
-  if (rejectedLabelIds) {
-    rejectedLabelIdsString = formStringSeparatedByOperator(rejectedLabelIds);
-  }
-
-  let labelSelectQuery;
-  let labelWhereQuery;
-  if (isRejectedLabel) {
-    labelSelectQuery = `GROUP_CONCAT((SELECT GROUP_CONCAT(${
-      Table.EMAIL_LABEL
-    }.labelId)
-  FROM ${Table.EMAIL_LABEL} WHERE ${Table.EMAIL_LABEL}.emailId = ${
-      Table.EMAIL
-    }.id
-  AND ${
+  const labelSelectQuery = `GROUP_CONCAT(DISTINCT(${
     Table.EMAIL_LABEL
-  }.labelId NOT IN (${rejectedLabelIdsString}))) as allLabels,`;
-    labelWhereQuery = `WHERE ${Table.EMAIL_LABEL}.labelId = ${labelId}`;
-  } else {
-    labelSelectQuery = `GROUP_CONCAT(DISTINCT(${
-      Table.EMAIL_LABEL
-    }.labelId)) as allLabels,`;
-    labelWhereQuery = `WHERE NOT EXISTS (SELECT * FROM ${Table.EMAIL_LABEL} 
-    WHERE ${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId 
-    AND ${Table.EMAIL_LABEL}.labelId IN (${rejectedLabelIdsString}))`;
-  }
+  }.labelId)) as labels,
+     GROUP_CONCAT(DISTINCT('L' || ${Table.EMAIL_LABEL}.labelId)) as myLabels`;
 
   let contactQuery;
   if (contactFilter) {
@@ -812,52 +790,68 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
     ? `AND (preview LIKE "%${text}%" OR subject LIKE "%${text}%" OR fromAddress LIKE "%${text}%")`
     : '';
 
-  let matchContactQuery;
+  let matchContactQuery =
+    'HAVING ' +
+    rejectedLabelIds
+      .map(rejectedLabelId => `myLabels NOT LIKE "%L${rejectedLabelId}%"`)
+      .join(' and ');
+  if (searchInLabelId) {
+    matchContactQuery += ` AND myLabels LIKE "%L${searchInLabelId}%"`;
+  } else if (isRejectedLabel) {
+    matchContactQuery += ` AND myLabels LIKE "%L${labelId}%"`;
+  }
   if (contactFilter) {
     if (contactFilter.from)
-      matchContactQuery = `HAVING matchedContacts LIKE '%from%'`;
+      matchContactQuery += ` AND matchedContacts LIKE '%from%'`;
     if (contactFilter.to) {
-      matchContactQuery = `${
-        matchContactQuery ? 'AND' : 'HAVING'
-      } matchedContacts LIKE '%to%'`;
+      matchContactQuery += ` AND matchedContacts LIKE '%to%'`;
     }
   }
 
-  const query = `SELECT ${Table.EMAIL}.*,
-    IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId,
-    ${labelSelectQuery}
-    GROUP_CONCAT(DISTINCT(${Table.EMAIL}.id)) as emailIds,
-    GROUP_CONCAT(DISTINCT(CASE WHEN ${contactQuery} THEN ${
+  const query = `
+    SELECT *, 
+      MAX(unread) as unread, 
+      MAX(date) as maxDate,
+      GROUP_CONCAT(DISTINCT(id)) as emailIds,
+      GROUP_CONCAT(DISTINCT(myLabels)) as myAllLabels,
+      GROUP_CONCAT(DISTINCT(labels)) as allLabels
+    FROM (
+      SELECT ${Table.EMAIL}.*,
+        IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId,
+        GROUP_CONCAT(DISTINCT(CASE WHEN ${contactQuery} THEN ${
     Table.EMAIL_CONTACT
   }.type ELSE NULL END)) as matchedContacts,
-    ${contactNameQuery}
-    GROUP_CONCAT(DISTINCT(${Table.CONTACT}.id)) as recipientContactIds,
-    GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens,
-    MAX(${Table.EMAIL}.unread) as unread,
-    MAX(email.date) as maxDate
-    from ${Table.EMAIL}
-    LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
+        ${contactNameQuery}
+        GROUP_CONCAT(DISTINCT(${Table.CONTACT}.id)) as recipientContactIds,
+        GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens,
+        ${labelSelectQuery}
+      FROM ${Table.EMAIL}
+      JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
     Table.EMAIL_LABEL
   }.emailId
-    LEFT JOIN ${Table.FILE} ON ${Table.EMAIL}.id = ${Table.FILE}.emailId
-    LEFT JOIN ${Table.EMAIL_CONTACT} ON ${Table.EMAIL}.id = ${
+      LEFT JOIN ${Table.FILE} ON ${Table.EMAIL}.id = ${Table.FILE}.emailId
+      LEFT JOIN ${Table.EMAIL_CONTACT} ON ${Table.EMAIL}.id = ${
     Table.EMAIL_CONTACT
-  }.emailId AND (${Table.EMAIL_CONTACT}.type = "${
+  }.emailId 
+        AND (${Table.EMAIL_CONTACT}.type = "${
     contactTypes[0]
   }" ${emailContactOrQuery || ''})
-    LEFT JOIN ${Table.CONTACT} ON ${Table.EMAIL_CONTACT}.contactId = ${
+      LEFT JOIN ${Table.CONTACT} ON ${Table.EMAIL_CONTACT}.contactId = ${
     Table.CONTACT
   }.id
-  ${labelWhereQuery}
-  ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
-  AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
-  ${textQuery}
-  ${subject ? `AND subject LIKE %${subject}%` : ''}
-  ${unread !== undefined ? `AND unread = ${unread}` : ''}
-    GROUP BY uniqueId
-    ${labelId > 0 ? `HAVING allLabels LIKE "%${labelId}%"` : ''}
-    ${matchContactQuery || ''}
-    ORDER BY ${Table.EMAIL}.date DESC
+      ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
+      WHERE ${Table.EMAIL}.date < '${date || 'date("now")'}'
+      ${textQuery}
+      ${subject ? `AND subject LIKE "%${subject}%"` : ''}
+      ${unread !== undefined ? `AND unread = ${unread}` : ''}
+      GROUP BY uniqueId, ${Table.EMAIL_LABEL}.emailId
+      ${matchContactQuery}
+      ORDER BY ${Table.EMAIL}.date DESC
+      LIMIT 100
+    )
+    GROUP BY threadId
+    ${labelId > 0 ? `HAVING myAllLabels LIKE "%L${labelId}%"` : ''}
+    ORDER BY date DESC
     LIMIT ${limit || 22}`;
 
   return db.raw(query);
