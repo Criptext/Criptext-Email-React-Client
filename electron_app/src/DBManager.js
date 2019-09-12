@@ -625,8 +625,9 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
       .map(rejectedLabelId => `myLabels not like "%L${rejectedLabelId}L%"`)
       .join(' and ');
   if (isRejectedLabel) {
-    customRejectedLabels += ` and myLabels like "%L${labelId}L%"`;
+    customRejectedLabels += ` AND myLabels like "%L${labelId}L%"`;
   }
+  customRejectedLabels += ` OR myLabels is null`;
 
   let contactNameQuery;
   if (contactTypes.includes('from')) {
@@ -659,11 +660,11 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
         IFNULL(${Table.EMAIL}.threadId ,${Table.EMAIL}.id) as uniqueId,
         ${labelSelectQuery}
       FROM ${Table.EMAIL}
-      JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
-    Table.EMAIL_LABEL
-  }.emailId
+      ${labelId < 0 ? 'LEFT' : ''} JOIN ${Table.EMAIL_LABEL} ON ${
+    Table.EMAIL
+  }.id = ${Table.EMAIL_LABEL}.emailId
       ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
-      AND ${Table.EMAIL}.date < '${date || 'date("now")'}'
+      WHERE ${Table.EMAIL}.date < '${date || 'date("now")'}'
       ${textQuery}
       ${subject ? `AND subject LIKE "%${subject}%"` : ''}
       ${unread !== undefined ? `AND unread = ${unread}` : ''}
@@ -804,6 +805,7 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   } else if (isRejectedLabel) {
     matchContactQuery += ` AND myLabels LIKE "%L${labelId}L%"`;
   }
+  matchContactQuery += ` OR myLabels is null`;
   if (contactFilter) {
     if (contactFilter.from)
       matchContactQuery += ` AND matchedContacts LIKE '%from%'`;
@@ -830,7 +832,7 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
         GROUP_CONCAT(DISTINCT(${Table.FILE}.token)) as fileTokens,
         ${labelSelectQuery}
       FROM ${Table.EMAIL}
-      JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
+      LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL}.id = ${
     Table.EMAIL_LABEL
   }.emailId
       LEFT JOIN ${Table.FILE} ON ${Table.EMAIL}.id = ${Table.FILE}.emailId
