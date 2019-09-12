@@ -12,6 +12,7 @@
 
       &:last-child{
         border-bottom: none;
+        text-align: center;
       }
     }
 
@@ -63,8 +64,8 @@
 
       i{
         color: white;
-        font-size: 18px;
-        margin: 0 6px;
+        font-size: 14px;
+        margin: 1 6px;
         top: 3px;
       }
 
@@ -72,7 +73,7 @@
         font-size: 11px;
         font-weight: 500;
         margin-right: 10px;
-        top: -1px;
+        top: 0px;
       }
     }
   }
@@ -94,9 +95,11 @@
         }
 
         .search-options-input {
-          color: black;
+          color: $_COLOR_TEXT_SEARCH_OPTION;
+          font-weight: 300;
           &::placeholder {
             color: $_COLOR_TEXT_SEARCH_OPTION;
+            font-weight: 100;
           }
         }
       }

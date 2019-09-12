@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CustomCheckbox, { CustomCheckboxStatus } from './CustomCheckbox';
 import string from '../lang';
 import './searchoptions.scss';
 
@@ -53,18 +52,6 @@ const SearchOptions = props => (
         />
         <tr>
           <td colSpan={2}>
-            <CustomCheckbox
-              label={string.header.search_options.has_attachment}
-              status={CustomCheckboxStatus.fromBoolean(
-                props.searchParams.hasAttachments
-              )}
-              onCheck={value => {
-                props.getSearchParams(
-                  'hasAttachments',
-                  CustomCheckboxStatus.toBoolean(value)
-                );
-              }}
-            />
             <button
               className="button-a button-search"
               onClick={props.onClickSearch}
