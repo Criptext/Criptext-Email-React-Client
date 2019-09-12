@@ -96,22 +96,22 @@ export const updateBadgeLabels = labelIds => {
       const labels = await Promise.all(
         labelsFiltered.map(async labelId => {
           if (labelId === LabelType.inbox.id) {
-            const rejectedLabelIds = [LabelType.spam.id, LabelType.trash.id];
-            const unreadInbox = await getEmailsUnredByLabelId({
+            const [{ totalUnread }] = await getEmailsUnredByLabelId({
               labelId,
-              rejectedLabelIds
+              rejectedLabelIds: [LabelType.spam.id, LabelType.trash.id]
             });
-            const badgeInbox = unreadInbox.length;
+            const badgeInbox = totalUnread;
             updateDockBadgeApp(badgeInbox);
             return {
               id: String(labelId),
               badge: badgeInbox
             };
           } else if (labelId === LabelType.spam.id) {
-            const unreadSpam = await getEmailsUnredByLabelId({
-              labelId
+            const [{ totalUnread }] = await getEmailsUnredByLabelId({
+              labelId,
+              rejectedLabelIds: [LabelType.trash.id]
             });
-            const badgeSpam = unreadSpam.length;
+            const badgeSpam = totalUnread;
             return {
               id: String(labelId),
               badge: badgeSpam
