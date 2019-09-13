@@ -90,12 +90,14 @@ async function initApp() {
 app.disableHardwareAcceleration();
 
 if ((isWindows || isLinux) && !isDev) {
-  const shouldQuitInstance = app.makeSingleInstance((cmdL, wdir) => {
-    initApp();
-  });
-  if (shouldQuitInstance) {
+  const lock = app.requestSingleInstanceLock();
+  if (!lock) {
     app.quit();
     return;
+  } else {
+    app.on('second-instance', (event, argv, cwd) => {
+      initApp();
+    })
   }
 }
 

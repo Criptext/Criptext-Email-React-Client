@@ -39,13 +39,12 @@ export const assembleAccounts = async (accounts = myAccount.logged) => {
       const labelId = LabelType.inbox.id;
       const rejectedLabelIds = [LabelType.spam.id, LabelType.trash.id];
       const accountId = account.id;
-      const unreadInbox = await getEmailsUnredByLabelId({
+      const badge = await getEmailsUnredByLabelId({
         labelId,
         rejectedLabelIds,
         accountId: account.id
       });
-      const badgeInbox = unreadInbox.length;
-      return { id: accountId, badge: badgeInbox };
+      return { id: accountId, badge };
     })
   );
 };
