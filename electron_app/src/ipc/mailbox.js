@@ -1,5 +1,5 @@
 const ipc = require('@criptext/electron-better-ipc');
-const { app, BrowserWindow } = require('electron');
+const { app } = require('electron');
 const unusedFilename = require('unused-filename');
 const { download } = require('electron-dl');
 const path = require('path');
@@ -67,21 +67,13 @@ ipc.answerRenderer(
         metadataKey
       });
       const filePath = path.join(directory, filename);
-      if (isInlineImage) {
-        if (checkIfExists(filePath)) return filePath;
-      } else {
+      if (!isInlineImage) {
         filename = path.basename(unusedFilename.sync(filePath));
       }
-
-      const downloadedItem = await download(
-        BrowserWindow.getFocusedWindow(),
-        url,
-        {
-          directory,
-          filename,
-          openFolderWhenDone: !isInlineImage
-        }
-      );
+      const downloadedItem = await download(mailboxWindow.getWindow(), url, {
+        directory,
+        filename
+      });
       const newFilePath = downloadedItem.getSavePath();
       return { filePath: newFilePath, filename };
     } catch (e) {
