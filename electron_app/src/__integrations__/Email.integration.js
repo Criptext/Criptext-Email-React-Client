@@ -319,6 +319,57 @@ describe('Store relation data to EmailLabel Table: ', () => {
     const response = await DBManager.createEmailLabel(emailLabelDraft);
     expect(response).toBeUndefined();
   });
+
+  it('Should Add and Remove emailLabel relation to database', async () => {
+    const emailUpdateLabels = {
+      email: {
+        threadId: 'threadK',
+        key: '12',
+        s3Key: 's3KeyK',
+        subject: 'Greetings',
+        content: '<p>Hello there</p>',
+        preview: 'Hello there',
+        date: '2013-10-07 08:23:20.120',
+        status: 1,
+        unread: false,
+        secure: true,
+        isMuted: false,
+        messageId: 'messageIdK',
+        fromAddress: 'User me <user@criptext.com>'
+      },
+      recipients: {
+        from: ['User me <user@criptext.com>'],
+        to: ['usera@criptext.com']
+      },
+      labels: [3, 7]
+    };
+    await DBManager.createEmail(emailUpdateLabels);
+    const [email] = await DBManager.getEmailByKey(emailUpdateLabels.email.key);
+    // Add
+    const emailLabelToAdd = [
+      { emailId: email.id, labelId: systemLabels.starred.id }
+    ];
+    const [addResponse] = await DBManager.createEmailLabel(emailLabelToAdd);
+    expect(addResponse).toEqual(expect.any(Number));
+    // Remove
+    await DBManager.deleteEmailLabel({
+      emailIds: [email.id],
+      labelIds: [systemLabels.starred.id]
+    });
+    // Check if exists
+    let existsRelation = false;
+    const remainingEmailLabels = await DBManager.getEmailLabelsByEmailId(
+      email.id
+    );
+    for (const remainingLabel of remainingEmailLabels) {
+      const { labelId } = remainingLabel;
+      if (labelId === systemLabels.starred.id) {
+        existsRelation = true;
+        break;
+      }
+    }
+    expect(existsRelation).toBe(false);
+  });
 });
 
 describe('Load data emails from Email Table:', () => {
