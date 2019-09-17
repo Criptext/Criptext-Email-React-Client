@@ -1,4 +1,4 @@
-const { APP_VERSION, NUCLEUS_ID } = require('./utils/const');
+const { APP_VERSION, NUCLEUS_ID, INSTALLER_TYPE } = require('./utils/const');
 const myAccount = require('./Account');
 let Nucleus;
 
@@ -6,7 +6,8 @@ const initNucleus = ({ userId }) => {
   const data = {
     onlyMainProcess: true,
     userId: userId || 'unknown',
-    version: APP_VERSION
+    version: APP_VERSION,
+    installerType: INSTALLER_TYPE
   };
   Nucleus = require('electron-nucleus')(NUCLEUS_ID, data);
 };

@@ -1,19 +1,17 @@
-const packageData = require('./../package.json');
-const allInstallerTypes = require('./../installerResources/installerTypes.json');
+const { INSTALLER_TYPE } = require('./utils/const');
 const { getDeviceType } = require('./utils/osUtils');
-const currrentInstallerType = packageData.criptextInstallerType;
+const allInstallerTypes = require('./../installerResources/installerTypes.json');
 
 global.composerData = {};
 global.emailToEdit = {};
-global.isMAS = currrentInstallerType === allInstallerTypes.mac.store;
+global.isMAS = INSTALLER_TYPE === allInstallerTypes.mac.store;
 global.loadingData = {};
 global.modalData = {};
 global.temporalAccount = {};
 global.windowsEventsDisabled = false;
 global.internetConnection;
-global.isWindowsStore =
-  currrentInstallerType === allInstallerTypes.windows.store;
-global.deviceType = getDeviceType(currrentInstallerType, allInstallerTypes);
+global.isWindowsStore = INSTALLER_TYPE === allInstallerTypes.windows.store;
+global.deviceType = getDeviceType(INSTALLER_TYPE, allInstallerTypes);
 global.pendingRestore = false;
 
 /*  Composer
