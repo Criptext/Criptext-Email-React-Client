@@ -1,3 +1,4 @@
+const moment = require('moment');
 const {
   db,
   cleanDataBase,
@@ -324,8 +325,8 @@ const createEmail = async (params, trx) => {
   const { recipients, email } = params;
   if (!recipients) {
     const emailData = Array.isArray(email)
-      ? email.map(noNulls)
-      : noNulls(email);
+      ? email.map(clearAndFormatDateEmails)
+      : clearAndFormatDateEmails(email);
     return knex.table(Table.EMAIL).insert(emailData);
   }
   const recipientsFrom = recipients.from || [];
@@ -443,6 +444,30 @@ const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
         )
     )
     .del();
+};
+
+const clearAndFormatDateEmails = emailObjOrArray => {
+  let tempArr = [];
+  const isAnEmailArray = Array.isArray(emailObjOrArray);
+  const emailDateFormat = 'YYYY-MM-DD HH:mm:ss';
+  if (!isAnEmailArray) {
+    tempArr.push(emailObjOrArray);
+  } else {
+    tempArr = emailObjOrArray;
+  }
+  const formattedDateEmails = tempArr.map(email => {
+    return noNulls({
+      ...email,
+      date: moment(email.date).format(emailDateFormat),
+      trashDate: email.trashDate
+        ? moment(email.trashDate).format(emailDateFormat)
+        : null,
+      unsendDate: email.unsendDate
+        ? moment(email.unsendDate).format(emailDateFormat)
+        : null
+    });
+  });
+  return isAnEmailArray ? formattedDateEmails : formattedDateEmails[0];
 };
 
 const getTrashExpiredEmails = () => {
