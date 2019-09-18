@@ -18,6 +18,7 @@
   "scripts": {
     "electron": "electron .",
     "start": "npm run electron .",
+    "start:dev": "npm run electron . --allow-file-access-from-file",
     "postinstall": "install-app-deps",
     "test": "criptext-js-tools test",
     "integration": "NODE_ENV=test criptext-js-tools integration",

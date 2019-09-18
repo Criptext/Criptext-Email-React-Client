@@ -180,10 +180,14 @@ const isVisibleAndFocused = () => {
   return mailboxWindow.isVisible() && mailboxWindow.isFocused();
 };
 
+function getWindow() {
+  return mailboxWindow;
+}
+
 module.exports = {
   close,
   hide,
-  mailboxWindow,
+  getWindow,
   send,
   show,
   isVisibleAndFocused,

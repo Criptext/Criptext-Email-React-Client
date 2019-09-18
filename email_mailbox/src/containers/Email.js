@@ -1,3 +1,4 @@
+/* eslint-env node, process */
 import { connect } from 'react-redux';
 import { makeGetFiles } from './../selectors/files';
 import EmailView from './../components/EmailWrapper';
@@ -114,6 +115,12 @@ const makeMapStateToProps = () => {
     };
   };
   return mapStateToProps;
+};
+
+const defineInjectedSrc = imgPath => {
+  return `src="${
+    process.env.NODE_ENV === 'development' ? 'file://' : ''
+  }${imgPath}"`;
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -283,7 +290,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           const imgPath = cidFilepathPairs[cid];
           return emailContentInjected.replace(
             `src="cid:${cid}"`,
-            `src="${imgPath}"`
+            defineInjectedSrc(imgPath)
           );
         },
         emailContent
