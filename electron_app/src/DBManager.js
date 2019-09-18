@@ -235,8 +235,11 @@ const deleteEmailContactByEmailId = (emailId, trx) => {
 /* EmailLabel
 ----------------------------- */
 const createEmailLabel = (emailLabels, prevTrx) => {
-  const transaction = prevTrx ? fn => fn(prevTrx) : db.transaction;
-  return transaction(async trx => {
+  const createOrUseTrx = (oldTrx, callback) => {
+    if (oldTrx) return callback(oldTrx);
+    return db.transaction(newTrx => callback(newTrx));
+  };
+  return createOrUseTrx(prevTrx, async trx => {
     const toInsert = await filterEmailLabelIfNotStore(emailLabels, trx);
     if (toInsert.length) {
       await filterEmailLabelTrashToUpdateEmail(toInsert, 'create', trx);
@@ -252,8 +255,11 @@ const deleteEmailLabel = ({ emailIds, labelIds }, prevTrx) => {
       labelId: labelIds[0]
     };
   });
-  const transaction = prevTrx ? fn => fn(prevTrx) : db.transaction;
-  return transaction(async trx => {
+  const createOrUseTrx = (oldTrx, callback) => {
+    if (oldTrx) return callback(oldTrx);
+    return db.transaction(newTrx => callback(newTrx));
+  };
+  return createOrUseTrx(prevTrx, async trx => {
     await filterEmailLabelTrashToUpdateEmail(emailLabels, 'delete', trx);
     return await trx
       .table(Table.EMAIL_LABEL)

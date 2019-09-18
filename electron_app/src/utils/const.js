@@ -1,6 +1,10 @@
 /* process */
 require('dotenv').config();
-const { version, nucleusId } = require('./../../package.json');
+const {
+  version,
+  nucleusId,
+  criptextInstallerType
+} = require('./../../package.json');
 
 const API_CLIENT_VERSION = '9.0.0';
 const LINK_DEVICES_FILE_VERSION = '5';
@@ -32,5 +36,6 @@ module.exports = {
   APP_VERSION: isDevelopment ? '0.0.0' : version,
   NUCLEUS_ID: isDevelopment
     ? process.env.DEV_NUCLEUS_ID
-    : process.env.PROD_NUCLEUS_ID || nucleusId
+    : process.env.PROD_NUCLEUS_ID || nucleusId,
+  INSTALLER_TYPE: criptextInstallerType
 };

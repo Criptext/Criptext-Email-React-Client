@@ -24,8 +24,9 @@
       margin-left: 3px;
 
       .checkmark.checkmark-checked:after {
-        left: 4px;
-        top: 9px;
+        position: relative;
+        left: 2px;
+        top: -2px;
       }
     }
 
