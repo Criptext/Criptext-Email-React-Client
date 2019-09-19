@@ -642,6 +642,14 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   } = params;
   const excludedLabels = [systemLabels.trash.id, systemLabels.spam.id];
   const isRejectedLabel = excludedLabels.includes(labelId);
+  const systemLabelIdsExcludeStarred = Object.values(systemLabels)
+    .filter(label => label.id !== 5)
+    .map(label => label.id);
+  const allMailLabelId = -1;
+  const searchLabelId = -2;
+  systemLabelIdsExcludeStarred.push(allMailLabelId);
+  systemLabelIdsExcludeStarred.push(searchLabelId);
+  const isCustomLabel = !systemLabelIdsExcludeStarred.includes(labelId);
 
   const labelSelectQuery = `GROUP_CONCAT(DISTINCT(${
     Table.EMAIL_LABEL
@@ -655,7 +663,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
     rejectedLabelIds
       .map(rejectedLabelId => `myLabels not like "%L${rejectedLabelId}L%"`)
       .join(' and ');
-  if (isRejectedLabel) {
+  if (isRejectedLabel || isCustomLabel) {
     customRejectedLabels += ` AND myLabels like "%L${labelId}L%"`;
   }
   customRejectedLabels += ` OR myLabels is null`;
