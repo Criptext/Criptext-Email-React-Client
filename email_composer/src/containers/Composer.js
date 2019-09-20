@@ -50,8 +50,7 @@ import string from './../lang';
 import {
   appDomain,
   composerEvents,
-  defaultEmptyMimetypeValue,
-  extensionsAccepted
+  defaultEmptyMimetypeValue
 } from '../utils/const';
 import { generateKeyAndIv } from '../utils/AESUtils';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
@@ -390,14 +389,7 @@ class ComposerWrapper extends Component {
     e.preventDefault();
     this.setState({ isDragActive: false });
     const files = this.getFilesFromEvent(e);
-    const filesFiltered = [...files].filter(item => {
-      if (!item.type && !item.size) {
-        const texts = item.name.split('.');
-        const ext = texts[texts.length - 1];
-        if (extensionsAccepted.includes(ext)) return true;
-      }
-      return !!item.type;
-    });
+    const filesFiltered = [...files].filter(item => item.type || item.size);
     if (filesFiltered.length) {
       this.setFiles(filesFiltered);
     }
