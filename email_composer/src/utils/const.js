@@ -18,13 +18,6 @@ export const composerEvents = {
 };
 
 export const defaultEmptyMimetypeValue = 'application/octet-stream';
-export const extensionsAccepted = [
-  'xls',
-  'db',
-  'dmg',
-  'provisionprofile',
-  'iso'
-];
 
 export const previewLength = 100;
 

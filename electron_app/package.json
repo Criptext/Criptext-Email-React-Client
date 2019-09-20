@@ -1,6 +1,6 @@
 {
   "name": "criptext",
-  "version": "0.23.7",
+  "version": "0.23.8",
   "author": {
     "name": "Criptext Inc",
     "email": "support@criptext.com",
@@ -134,7 +134,7 @@
     "electron-builder": "^20.18.0"
   },
   "dependencies": {
-    "@criptext/api": "^0.15.18",
+    "@criptext/api": "0.15.20",
     "@criptext/data-transfer-client": "^0.1.1",
     "@criptext/electron-better-ipc": "^0.1.2-rc5",
     "@criptext/electron-push-receiver": "^2.1.2-rc1",

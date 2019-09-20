@@ -1,3 +1,4 @@
+const moment = require('moment');
 const {
   db,
   cleanDataBase,
@@ -324,8 +325,8 @@ const createEmail = async (params, trx) => {
   const { recipients, email } = params;
   if (!recipients) {
     const emailData = Array.isArray(email)
-      ? email.map(noNulls)
-      : noNulls(email);
+      ? email.map(clearAndFormatDateEmails)
+      : clearAndFormatDateEmails(email);
     return knex.table(Table.EMAIL).insert(emailData);
   }
   const recipientsFrom = recipients.from || [];
@@ -443,6 +444,30 @@ const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
         )
     )
     .del();
+};
+
+const clearAndFormatDateEmails = emailObjOrArray => {
+  let tempArr = [];
+  const isAnEmailArray = Array.isArray(emailObjOrArray);
+  const emailDateFormat = 'YYYY-MM-DD HH:mm:ss';
+  if (!isAnEmailArray) {
+    tempArr.push(emailObjOrArray);
+  } else {
+    tempArr = emailObjOrArray;
+  }
+  const formattedDateEmails = tempArr.map(email => {
+    return noNulls({
+      ...email,
+      date: moment(email.date).format(emailDateFormat),
+      trashDate: email.trashDate
+        ? moment(email.trashDate).format(emailDateFormat)
+        : null,
+      unsendDate: email.unsendDate
+        ? moment(email.unsendDate).format(emailDateFormat)
+        : null
+    });
+  });
+  return isAnEmailArray ? formattedDateEmails : formattedDateEmails[0];
 };
 
 const getTrashExpiredEmails = () => {
@@ -617,6 +642,14 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   } = params;
   const excludedLabels = [systemLabels.trash.id, systemLabels.spam.id];
   const isRejectedLabel = excludedLabels.includes(labelId);
+  const systemLabelIdsExcludeStarred = Object.values(systemLabels)
+    .filter(label => label.id !== 5)
+    .map(label => label.id);
+  const allMailLabelId = -1;
+  const searchLabelId = -2;
+  systemLabelIdsExcludeStarred.push(allMailLabelId);
+  systemLabelIdsExcludeStarred.push(searchLabelId);
+  const isCustomLabel = !systemLabelIdsExcludeStarred.includes(labelId);
 
   const labelSelectQuery = `GROUP_CONCAT(DISTINCT(${
     Table.EMAIL_LABEL
@@ -630,7 +663,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
     rejectedLabelIds
       .map(rejectedLabelId => `myLabels not like "%L${rejectedLabelId}L%"`)
       .join(' and ');
-  if (isRejectedLabel) {
+  if (isRejectedLabel || isCustomLabel) {
     customRejectedLabels += ` AND myLabels like "%L${labelId}L%"`;
   }
   customRejectedLabels += ` OR myLabels is null`;
