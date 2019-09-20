@@ -376,24 +376,32 @@ class ComposerWrapper extends Component {
     return ev.dataTransfer ? ev.dataTransfer.files : ev.target.files;
   };
 
+  handleClearInputAttachments = () => {
+    try {
+      const input = document.getElementById('input-attachments');
+      if (input) input.value = '';
+    } catch (fileInputErr) {
+      // eslint-disable-next-line no-console
+      console.error(fileInputErr);
+    }
+  };
+
   handleDrop = e => {
     e.preventDefault();
-    this.setState({
-      isDragActive: false
-    });
+    this.setState({ isDragActive: false });
     const files = this.getFilesFromEvent(e);
     const filesFiltered = [...files].filter(item => {
-      if (!item.type) {
+      if (!item.type && !item.size) {
         const texts = item.name.split('.');
         const ext = texts[texts.length - 1];
         if (extensionsAccepted.includes(ext)) return true;
       }
       return !!item.type;
     });
-
     if (filesFiltered.length) {
       this.setFiles(filesFiltered);
     }
+    this.handleClearInputAttachments();
   };
 
   setFiles = newFiles => {
@@ -409,7 +417,6 @@ class ComposerWrapper extends Component {
     }
     if (newFiles && newFiles.length > 0) {
       const [firstNewFile, ...remainingNewFiles] = Array.from(newFiles);
-
       if (
         this.state.totalFilesSize + firstNewFile.size >
         MAX_ATTACMENTS_TOTAL_SIZE
