@@ -190,7 +190,7 @@ describe('Form recipients', () => {
     const data = {
       to: ['<test@criptext.com>'],
       cc: [
-        'Name<>1 <test1@criptext.com>',
+        'Name<>1 <test1@criptext.com>',
         '<error@criptext.com> <test2@criptext.com>',
         'error2@criptext.com <test3@criptext.com>'
       ],
@@ -217,7 +217,7 @@ describe('Check email is: to me or from me', () => {
     const data = {
       to: ['<test@criptext.com>'],
       cc: [
-        'Name<>1 <test1@criptext.com>',
+        'Name<>1 <test1@criptext.com>',
         '<error@criptext.com> <test2@criptext.com>',
         'error2@criptext.com <test3@criptext.com>'
       ],
@@ -233,7 +233,7 @@ describe('Check email is: to me or from me', () => {
     const data = {
       to: ['<1test@criptext.com>'],
       cc: [
-        'Name<>1 <test1@criptext.com>',
+        'Name<>1 <test1@criptext.com>',
         '<error@criptext.com> <test2@criptext.com>',
         'error2@criptext.com <test3@criptext.com>'
       ],

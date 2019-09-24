@@ -12,7 +12,7 @@ Object {
     "test4@criptext.com",
   ],
   "cc": Array [
-    "Name<>1 <test1@criptext.com>",
+    "Name<>1 <test1@criptext.com>",
     "<error@criptext.com> <test2@criptext.com>",
     "error2@criptext.com <test3@criptext.com>",
   ],

@@ -1,4 +1,5 @@
-export const emailRegex = /^(([a-z]*\+)?[\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+/* eslint no-useless-escape: 0 */
+export const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export const HTMLTagsRegex = /<[^>]*>?/g;
 export const contactsRegex = string =>
   new RegExp(`(^${string}| ${string})`, 'i');
