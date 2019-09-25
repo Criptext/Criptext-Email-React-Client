@@ -342,7 +342,23 @@ const createTables = async () => {
       .createTable(Table.IDENTITYKEYRECORD, createIdentityKeyRecordColumns)
       .createTable(Table.SETTINGS, createSettingsColumns);
   }
+  await removeDraftDatesMigration();
   await migrateDatabase();
+};
+
+const removeDraftDatesMigration = async () => {
+  const draftDatesTimestamp = '20190919153109';
+  await removeSpecificMigration(draftDatesTimestamp);
+};
+
+const removeSpecificMigration = async timestamp => {
+  const migrationExists = await db.schema.hasTable(Table.MIGRATIONS);
+  if (migrationExists) {
+    await db
+      .table(Table.MIGRATIONS)
+      .where('name', 'like', `${timestamp}%`)
+      .del();
+  }
 };
 
 const rollbackAllMigrations = async () => {
@@ -362,6 +378,9 @@ const migrateDatabase = async () => {
   if (shouldResetMigrations) {
     await rollbackAllMigrations();
   }
+
+
+
   await db.migrate.latest(migrationConfig);
 };
 
