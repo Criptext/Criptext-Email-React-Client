@@ -378,9 +378,6 @@ const migrateDatabase = async () => {
   if (shouldResetMigrations) {
     await rollbackAllMigrations();
   }
-
-
-
   await db.migrate.latest(migrationConfig);
 };
 

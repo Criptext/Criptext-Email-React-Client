@@ -710,7 +710,6 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
       GROUP BY uniqueId, ${Table.EMAIL_LABEL}.emailId
       ${customRejectedLabels}
       ORDER BY ${Table.EMAIL}.date DESC
-      LIMIT 100
     )
     GROUP BY threadId
     ${labelId > 0 ? `HAVING myAllLabels LIKE "%L${labelId}L%"` : ''}
