@@ -5,7 +5,8 @@ import {
   myAccount,
   mySettings,
   getNews,
-  getDeviceType
+  getDeviceType,
+  getBackupStatus
 } from './electronInterface';
 import {
   checkForUpdates,
@@ -105,7 +106,9 @@ let newEmailNotificationList = [];
 const stopGettingEvents = () => {
   isGettingEvents = false;
   emitter.emit(Event.STOP_LOAD_SYNC, {});
-  initAutoBackupMonitor();
+  if (!getBackupStatus()) {
+    initAutoBackupMonitor();
+  }
 };
 
 const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
@@ -1496,16 +1499,16 @@ ipcRenderer.on('local-backup-enable-events', (ev, params) => {
   emitter.emit(Event.LOCAL_BACKUP_ENABLE_EVENTS, params);
 });
 
-ipcRenderer.on('local-backup-export-finished', () => {
-  emitter.emit(Event.LOCAL_BACKUP_EXPORT_FINISHED);
+ipcRenderer.on('local-backup-export-finished', (ev, backupSize) => {
+  emitter.emit(Event.LOCAL_BACKUP_EXPORT_FINISHED, backupSize);
 });
 
 ipcRenderer.on('local-backup-encrypt-finished', () => {
   emitter.emit(Event.LOCAL_BACKUP_ENCRYPT_FINISHED);
 });
 
-ipcRenderer.on('local-backup-success', (ev, backupSize) => {
-  emitter.emit(Event.LOCAL_BACKUP_SUCCESS, backupSize);
+ipcRenderer.on('local-backup-success', () => {
+  emitter.emit(Event.LOCAL_BACKUP_SUCCESS);
 });
 
 ipcRenderer.on('restore-backup-disable-events', () => {

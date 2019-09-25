@@ -39,6 +39,10 @@ export const getPendingRestoreStatus = () => {
   return globalManager.pendingRestore.get();
 };
 
+export const getBackupStatus = () => {
+  return globalManager.backupStatus.get();
+};
+
 /*  Window events
 ----------------------------- */
 export const reloadWindow = () => {

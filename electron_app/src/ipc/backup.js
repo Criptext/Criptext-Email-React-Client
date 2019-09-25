@@ -29,7 +29,7 @@ const simulatePause = ms => {
 
 const commitBackupStatus = (eventName, status, params) => {
   sendEventToAllWindows(eventName, params);
-  if (status) globalManager.backupStatus = status;
+  globalManager.backupStatus.set(status);
 };
 
 ipc.answerRenderer('create-default-backup-folder', () =>
@@ -46,9 +46,9 @@ const doExportBackupUnencrypted = async params => {
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', 2);
     const backupSize = await exportBackupUnencrypted({ backupPath });
-    commitBackupStatus('local-backup-export-finished', 3);
+    commitBackupStatus('local-backup-export-finished', 3, backupSize);
     await simulatePause(2000);
-    commitBackupStatus('local-backup-success', null, backupSize);
+    commitBackupStatus('local-backup-success', null);
     await simulatePause(2000);
     if (notificationParams) {
       showNotification({
@@ -90,9 +90,9 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
       backupPath,
       password
     });
-    commitBackupStatus('local-backup-export-finished', 3);
+    commitBackupStatus('local-backup-export-finished', 3, backupSize);
     await simulatePause(2000);
-    commitBackupStatus('local-backup-success', null, backupSize);
+    commitBackupStatus('local-backup-success', null);
     await simulatePause(2000);
     if (notificationParams) {
       showNotification({
