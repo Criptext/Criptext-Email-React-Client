@@ -96,7 +96,7 @@ const disableWindowsEvents = () => {
 };
 
 const enableWindowsEvents = () => {
-  global.windowsEventsDisabled = true;
+  global.windowsEventsDisabled = false;
 };
 
 const checkWindowsEvents = () => {
