@@ -1,4 +1,4 @@
-const { Table } = require('./../models');
+const { Table } = require('./../database/models');
 
 const TRIGER_NAMES = {
   EMAIL_LABEL_AFTER_DELETE_EMAIL: 'email_label_after_delete_email',

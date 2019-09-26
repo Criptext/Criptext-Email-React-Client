@@ -1,4 +1,4 @@
-const { Table, fieldTypes } = require('./../models');
+const { Table, fieldTypes } = require('./../database/models');
 const { LARGE_STRING_SIZE } = fieldTypes;
 
 const createColumn = knex => {

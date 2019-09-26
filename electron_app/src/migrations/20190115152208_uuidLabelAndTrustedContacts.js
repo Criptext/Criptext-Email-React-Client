@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { Table } = require('./../models');
+const { Table } = require('./../database/models');
 
 // Migration hash functions
 const genSystemLabelUUID = id => {

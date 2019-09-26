@@ -1,9 +1,9 @@
 const { app, ipcMain } = require('electron');
-const dbManager = require('./src/DBManager');
 const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
 const mySettings = require('./src/Settings');
+const { dbManager, upStepDBEncryptedWithoutPIN } = require('./src/windows');
 const loginWindow = require('./src/windows/login');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
@@ -21,6 +21,7 @@ const {
 } = require('./src/windows/windowUtils');
 const {initNucleus} = require('./src/nucleusManager');
 require('./src/ipc/composer.js');
+require('./src/ipc/pin.js');
 require('./src/ipc/loading.js');
 require('./src/ipc/login.js');
 require('./src/ipc/mailbox.js');
@@ -29,54 +30,82 @@ require('./src/ipc/manager.js');
 require('./src/ipc/dataTransfer.js');
 require('./src/ipc/backup.js');
 require('./src/ipc/nucleus.js');
+require('./src/ipc/client.js');
 const ipcUtils = require('./src/ipc/utils.js');
+const { checkDatabaseStep } = require('./src/utils/dataBaseUtils');
 
 globalManager.forcequit.set(false);
 
 async function initApp() {
-  try {
-    await dbManager.createTables();
-    require('./src/ipc/client.js');
-  } catch (ex) {
-    console.log(ex);
-  }
+  const step = await checkDatabaseStep(dbManager);
+  switch (step) {
+    case 1:{
+      try {
+        await dbManager.createTables();
+        require('./src/ipc/client.js');
+      } catch (ex) {
+        console.log(ex);
+      }
+      await startAlice();
+      await checkReachability();
 
-  await startAlice(true);
-  await checkReachability();
-
-  const [existingAccount] = await dbManager.getAccount();
-  if (existingAccount) {
-    const needsMigration = !(await dbManager.hasColumnPreKeyRecordLength());
-    if (needsMigration) {
-      globalManager.windowsEvents.disable()
-      globalManager.needsUpgrade.enable()
-    } else {
-      globalManager.windowsEvents.enable()
-      globalManager.needsUpgrade.disable()
+      const [existingAccount] = await dbManager.getAccount();
+      if (existingAccount) {
+        const needsMigration = !(await dbManager.hasColumnPreKeyRecordLength());
+        if (needsMigration) {
+          globalManager.windowsEvents.disable()
+          globalManager.needsUpgrade.enable()
+        } else {
+          globalManager.windowsEvents.enable()
+          globalManager.needsUpgrade.disable()
+        }
+        
+        if (!!existingAccount.deviceId) {
+          const appSettings = await dbManager.getSettings();
+          const settings = Object.assign(appSettings, { isFromStore });
+          myAccount.initialize(existingAccount);
+          mySettings.initialize(settings);
+          initNucleus({language: mySettings.language});
+          wsClient.start(myAccount);
+          createAppMenu();
+          mailboxWindow.show({ firstOpenApp: true });
+        } else {
+          const language = await getUserLanguage();
+          initNucleus({language});
+          createAppMenu();
+          loginWindow.show({});
+        }
+      } else {
+        const language = await getUserLanguage();
+        initNucleus({language});
+        createAppMenu();
+        loginWindow.show({});
+      }     
     }
-
-    if (!!existingAccount.deviceId) {
-      const appSettings = await dbManager.getSettings();
-      const settings = Object.assign(appSettings, { isFromStore });
-      myAccount.initialize(existingAccount);
-      mySettings.initialize(settings);
-      initNucleus({language: mySettings.language});
-      wsClient.start(myAccount);
-      createAppMenu();
-      mailboxWindow.show({ firstOpenApp: true });
-      const clientManager = require('./src/clientManager');
-      clientManager.generateEvent(API_TRACKING_EVENT.APP_OPENED);
-    } else {
-      const language = await getUserLanguage();
-      initNucleus({language});
-      createAppMenu();
-      loginWindow.show();
+    break;
+    case 2:{
+      try {
+        await upStepDBEncryptedWithoutPIN();
+      } catch (ex) {
+        console.log(ex);
+      }
     }
-  } else {
-    const language = await getUserLanguage();
-    initNucleus({language});
-    createAppMenu();
-    loginWindow.show({});
+    break;
+    case 3:{
+      try {
+      } catch (ex) {
+        console.log(ex);
+      }
+    }
+    case 4:{
+      try {
+      } catch (ex) {
+        console.log(ex);
+      }
+    }
+    break;
+    default:
+      break;
   }
 
   //   Composer
@@ -118,9 +147,7 @@ if ((isWindows || isLinux) && !isDev) {
 }
 
 const getUserLanguage = async () => {
-  const osLanguage = await getSystemLanguage();
-  await dbManager.updateSettings({ language: osLanguage });
-  return osLanguage;
+  return await getSystemLanguage();
 };
 
 app.on('ready', () => {

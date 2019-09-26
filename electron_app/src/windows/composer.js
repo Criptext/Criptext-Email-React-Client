@@ -2,7 +2,7 @@ const path = require('path');
 const { BrowserWindow } = require('electron');
 const myAccount = require('../Account');
 const { composerUrl } = require('./../window_routing');
-const dbManager = require('./../DBManager');
+const dbManager = require('./../database');
 const clientManager = require('../clientManager');
 const globalManager = require('./../globalManager');
 const fileUtils = require('../utils/FileUtils');
@@ -36,7 +36,7 @@ const openNewComposer = async () => {
   const composer = await createComposerWindow();
   composer.once('ready-to-show', () => {
     composer.show();
-    clientManager.generateEvent(API_TRACKING_EVENT.COMPOSER_OPENED);
+    sendAPIevent(API_TRACKING_EVENT.COMPOSER_OPENED);
   });
 };
 

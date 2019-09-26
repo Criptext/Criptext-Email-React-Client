@@ -9,10 +9,10 @@ const loginUrl =
     slashes: true
   });
 
-const modalUrl =
-  process.env.DIALOG_URL ||
+const pinUrl =
+  process.env.PIN_URL ||
   url.format({
-    pathname: path.join(__dirname, './app/email_dialog/index.html'),
+    pathname: path.join(__dirname, './app/email_pin/index.html'),
     protocol: 'file:',
     slashes: true
   });
@@ -43,7 +43,7 @@ const composerUrl =
 
 module.exports = {
   loginUrl,
-  modalUrl,
+  pinUrl,
   mailboxUrl,
   loadingUrl,
   composerUrl

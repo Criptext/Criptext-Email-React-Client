@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 const path = require('path');
 const { app, dialog } = require('electron');
-const dbManager = require('./DBManager');
+const dbManager = require('./database');
 const portscanner = require('portscanner');
 const http = require('http');
 const ps = require('ps-node');
@@ -17,14 +17,14 @@ const getLogsPath = node_env => {
       return path
         .join(__dirname, '/alice_logs.txt')
         .replace('/app.asar', '')
-        .replace('/src', '');
+        .replace('/src/database', '');
     }
     default: {
       const userDataPath = app.getPath('userData');
       return path
         .join(userDataPath, '/alice_logs.txt')
         .replace('/app.asar', '')
-        .replace('/src', '');
+        .replace('/src/database', '');
     }
   }
 };

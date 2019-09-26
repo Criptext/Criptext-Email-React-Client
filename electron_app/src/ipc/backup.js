@@ -18,7 +18,7 @@ const {
   defineUnitToAppend,
   backupDateFormat
 } = require('./../utils/TimeUtils');
-const { getSettings, updateSettings } = require('./../DBManager');
+const { getSettings, updateSettings } = require('./../database');
 global.autoBackupIntervalId = null;
 
 const simulatePause = ms => {

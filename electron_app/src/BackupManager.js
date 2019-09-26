@@ -4,7 +4,7 @@ const zlib = require('zlib');
 const { app } = require('electron');
 const copy = require('recursive-copy');
 const myAccount = require('./Account');
-const { databasePath } = require('./models');
+const { databasePath } = require('./database/models');
 const { APP_DOMAIN } = require('./utils/const');
 const { backupFilenameRegex } = require('./utils/RegexUtils');
 const { createPathRecursive, getUserEmailsPath } = require('./utils/FileUtils');
@@ -14,7 +14,7 @@ const {
   exportDatabaseToFile,
   generateKeyAndIvFromPassword,
   importDatabaseFromFile
-} = require('./dbExporter');
+} = require('./database/dbExporter');
 
 const STREAM_SIZE = 512 * 1024;
 

@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { Table } = require('../models');
+const { Table } = require('./../database/models');
 const emailDateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 const parseDateToQuery = date => {

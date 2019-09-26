@@ -1,9 +1,9 @@
 const DataTransferClient = require('@criptext/data-transfer-client');
 const path = require('path');
 const fs = require('fs');
-const dbExporter = require('./dbExporter');
-const { getAccount } = require('./DBManager');
-const { databasePath } = require('./models');
+const dbExporter = require('./database/dbExporter');
+const { getAccount } = require('./database/DBManager');
+const { databasePath } = require('./database/models');
 const { DATA_TRANSFER_URL } = require('./utils/const');
 
 /*  Paths

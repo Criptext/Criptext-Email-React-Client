@@ -15,7 +15,7 @@ const emailDraft = {
     unread: true,
     secure: true,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
+    unsentDate: '2018-06-14 08:23:20.000',
     messageId: 'messageIdA',
     fromAddress: '<User me> <user@criptext.com>'
   },
@@ -38,7 +38,7 @@ const emailSent = {
     unread: true,
     secure: true,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
+    unsentDate: '2018-06-14 08:23:20.000',
     messageId: 'messageIdB',
     fromAddress: 'User me <user@criptext.com>'
   },
@@ -64,7 +64,7 @@ const emailInbox = {
     unread: true,
     secure: true,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
+    unsentDate: '2018-06-14 08:23:20.000',
     messageId: 'messageIdC',
     fromAddress: 'User A <usera@criptext.com>'
   },
@@ -103,7 +103,7 @@ const emailReply = {
     unread: true,
     secure: true,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
+    unsentDate: '2018-06-14 08:23:20.000',
     messageId: 'messageIdD',
     fromAddress: 'user@criptext.com'
   },
@@ -127,7 +127,7 @@ const emailSpam = {
     unread: true,
     secure: true,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
+    unsentDate: '2018-06-14 08:23:20.000',
     trashDate: null,
     messageId: 'messageIdE',
     fromAddress: 'user@criptext.com'
@@ -152,7 +152,7 @@ const emailStarred = {
     unread: false,
     secure: false,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
+    unsentDate: '2018-06-14 08:23:20.000',
     trashDate: null,
     messageId: 'messageIdF',
     fromAddress: 'User me <user@criptext.com>'
@@ -177,7 +177,7 @@ const emailScore = {
     unread: false,
     secure: false,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
+    unsentDate: '2018-06-14 08:23:20.000',
     trashDate: null,
     messageId: 'messageIdG',
     fromAddress: 'User me <user@criptext.com>'
@@ -202,7 +202,7 @@ const emailUpdate = {
     unread: true,
     secure: true,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20.000',
+    unsentDate: '2018-06-14 08:23:20.000',
     messageId: 'messageIdH',
     fromAddress: 'User me <user@criptext.com>'
   },
@@ -291,7 +291,7 @@ describe('Store data email to Email Table:', () => {
         unread: true,
         secure: true,
         isMuted: false,
-        unsendDate: '2018-06-14 08:23:20.000',
+        unsentDate: '2018-06-14 08:23:20.000',
         messageId: 'messageId',
         fromAddress: 'From Contact <from@criptext.com>'
       }

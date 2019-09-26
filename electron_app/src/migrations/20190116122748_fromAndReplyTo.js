@@ -1,4 +1,4 @@
-const { Table, fieldTypes } = require('./../models');
+const { Table, fieldTypes } = require('./../database/models');
 const { MEDIUM_STRING_SIZE } = fieldTypes;
 const { formContactsRow } = require('./../utils/dataTableUtils');
 

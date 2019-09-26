@@ -9,7 +9,7 @@ const {
 } = require('./stringUtils');
 const { formContactsRow } = require('./dataTableUtils');
 const lang = require('./../lang');
-const dbManager = require('./../DBManager');
+const dbManager = require('./../database');
 const fileUtils = require('./FileUtils');
 const path = require('path');
 const myAccount = require('../../src/Account');

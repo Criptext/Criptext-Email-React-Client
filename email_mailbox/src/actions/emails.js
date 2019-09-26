@@ -153,7 +153,7 @@ export const removeEmailsOnSuccess = emailIds => ({
 
 export const unsendEmail = params => {
   return async dispatch => {
-    const { key, emailId, contactIds, unsendDate } = params;
+    const { key, emailId, contactIds, unsentDate } = params;
     try {
       const contacts = await getContactByIds(contactIds);
       const emails = contacts.map(contact => contact.email);
@@ -169,14 +169,14 @@ export const unsendEmail = params => {
           status: EmailStatus.UNSEND,
           content: '',
           preview: '',
-          unsendDate
+          unsentDate
         });
         await deleteEmailContent({ metadataKey: key });
         dispatch(unsendEmailFiles(emailId)).then(() =>
           dispatch(
             unsendEmailOnSuccess(
               String(emailId),
-              unsendDate,
+              unsentDate,
               EmailStatus.UNSEND
             )
           )
@@ -192,10 +192,10 @@ export const unsendEmail = params => {
   };
 };
 
-export const unsendEmailOnSuccess = (emailId, unsendDate, status) => ({
+export const unsendEmailOnSuccess = (emailId, unsentDate, status) => ({
   type: Email.UNSEND,
   emailId,
-  unsendDate,
+  unsentDate,
   status
 });
 

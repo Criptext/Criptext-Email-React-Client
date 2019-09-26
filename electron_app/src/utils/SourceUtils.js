@@ -1,5 +1,5 @@
 const fileUtils = require('./FileUtils');
-const dbManager = require('../DBManager');
+const dbManager = require('../database');
 const myAccount = require('../Account');
 const mySetting = require('../Settings');
 const { APP_DOMAIN } = require('./const');

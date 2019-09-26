@@ -56,6 +56,7 @@ The project `electrop_app` the .env file should have this:
 ```
 NODE_ENV=development
 MAILBOX_URL=http://localhost:####
+PIN_URL=http://localhost:####
 LOGIN_URL=http://localhost:####
 LOADING_URL=http://localhost:####
 COMPOSER_URL=http://localhost:####

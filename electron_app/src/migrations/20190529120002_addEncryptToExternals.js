@@ -1,4 +1,4 @@
-const { Table } = require('./../models');
+const { Table } = require('./../database/models');
 
 const ENCRYPT_TO_EXTERNALS_COLUMN = 'encryptToExternals';
 

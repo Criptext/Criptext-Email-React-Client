@@ -1,4 +1,4 @@
-const { Table } = require('./../models');
+const { Table } = require('./../database/models');
 
 const createThrashDateColumn = knex => {
   return knex.schema.table(Table.EMAIL, table => {

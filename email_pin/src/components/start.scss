@@ -1,0 +1,36 @@
+@import './../styles/index.scss';
+
+#start-containter{
+  position: relative;
+
+  .start-content{
+    margin: 0 auto;
+    text-align: center;
+    width: 55%;
+
+    .logo{
+      background-image: url(../#{$_PATH_TO_IMAGES}/shield.svg);
+      background-size: 100%;
+      height: 100px;
+      margin: 40px auto 0;
+      width: 95px;
+    }
+  
+    h1{
+      margin-top: 35px;
+    }
+  
+    p{
+      color: #373a45;
+      margin: 0 auto;
+    }
+
+    button{
+      bottom: 80px;
+      transform: translateX(-50%);
+      min-width: 80px;
+      margin: 0 auto;
+      position: absolute;
+    }
+  }
+}

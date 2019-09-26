@@ -903,13 +903,13 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   if (email) {
     const preview = isUnsend ? '' : null;
     const status = validateEmailStatusToSet(email.status, type);
-    const unsendDate = isUnsend ? date : null;
-    if (status || preview || unsendDate) {
+    const unsentDate = isUnsend ? date : null;
+    if (status || preview || unsentDate) {
       await updateEmail({
         key: String(metadataKey),
         status,
         preview,
-        unsendDate
+        unsentDate
       });
       if (isUnsend) {
         await updateFilesByEmailId({
@@ -976,7 +976,7 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
       content: '',
       preview: '',
       status,
-      unsendDate: date
+      unsentDate: date
     });
     await updateFilesByEmailId({
       emailId: email.id,

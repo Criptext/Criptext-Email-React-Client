@@ -5,15 +5,15 @@ const crypto = require('crypto');
 const zlib = require('zlib');
 const moment = require('moment');
 const LineByLineReader = require('line-by-line');
-const { Table } = require('./models.js');
-const systemLabels = require('./systemLabels');
+const { Table } = require('./models');
+const systemLabels = require('./../systemLabels');
 const {
   getEmailBody,
   getEmailHeaders,
   saveEmailBody
-} = require('./utils/FileUtils');
-const myAccount = require('./Account');
-const { APP_DOMAIN, LINK_DEVICES_FILE_VERSION } = require('./utils/const');
+} = require('./../utils/FileUtils');
+const myAccount = require('./../Account');
+const { APP_DOMAIN, LINK_DEVICES_FILE_VERSION } = require('./../utils/const');
 
 const CIPHER_ALGORITHM = 'aes-128-cbc';
 const STREAM_SIZE = 512 * 1024;
@@ -151,7 +151,7 @@ const exportEmailTable = async db => {
         if (!row.trashDate) {
           delete row.trashDate;
         } else {
-          row['trashDate'] = parseDate(row.unsendDate);
+          row['trashDate'] = parseDate(row.trashDate);
         }
 
         if (row.replyTo === null) {

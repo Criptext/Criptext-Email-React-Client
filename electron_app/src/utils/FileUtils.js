@@ -182,6 +182,7 @@ module.exports = {
   getEmailBody,
   getEmailHeaders,
   deleteEmailContent,
+  remove,
   removeUserDir,
   getUserEmailsPath,
   createIfNotExist,

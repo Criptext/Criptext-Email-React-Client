@@ -18,7 +18,7 @@ const {
   exportDatabaseToFile,
   generateKeyAndIv,
   importDatabaseFromFile
-} = require('./../dbExporter');
+} = require('./../database/dbExporter');
 const fs = require('fs');
 const myAccount = require('../Account');
 const { APP_DOMAIN } = require('../utils/const');
@@ -75,7 +75,7 @@ const email = {
     unread: false,
     secure: true,
     isMuted: false,
-    unsendDate: '2018-06-14 08:23:20',
+    unsentDate: '2018-06-14 08:23:20',
     trashDate: null,
     messageId: 'messageId1',
     fromAddress: 'Alice <alice@criptext.com>',

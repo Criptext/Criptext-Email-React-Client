@@ -4,12 +4,7 @@ const {
   API_CLIENT_VERSION,
   LINK_DEVICES_FILE_VERSION
 } = require('./utils/const');
-const {
-  createPendingEvent,
-  getAccount,
-  getSettings,
-  updateAccount
-} = require('./DBManager');
+const { createPendingEvent, getAccount, updateAccount } = require('./database');
 const { processEventsQueue } = require('./eventQueueManager');
 const globalManager = require('./globalManager');
 const mailboxWindow = require('./windows/mailbox');
@@ -19,7 +14,8 @@ const appVersion = packageInfo.version;
 const { getOsAndArch } = require('./utils/osUtils');
 const { Readable } = require('stream');
 const nativeImage = require('electron').nativeImage;
-let client = {};
+const mySettings = require('./Settings');
+let client = undefined;
 
 const initializeClient = ({ token, refreshToken, language, os }) => {
   const clientOptions = {
@@ -49,7 +45,8 @@ const handleClientError = err => {
 };
 
 const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
-  const { language } = await getSettings();
+  client = {};
+  const language = mySettings.language;
   const osAndArch = await getOsAndArch();
   const osInfo = Object.values(osAndArch)
     .filter(val => !!val)
@@ -145,7 +142,7 @@ const checkExpiredSession = async (
 };
 
 // Auto-init client
-checkClient({});
+// checkClient({});
 
 const acknowledgeEvents = async eventIds => {
   const res = await client.acknowledgeEvents(eventIds);
@@ -173,6 +170,7 @@ const changePassword = async params => {
 };
 
 const checkAvailableUsername = async username => {
+  if (!client) await checkClient({});
   return await client.checkAvailableUsername(username);
 };
 
@@ -313,6 +311,7 @@ const linkCancel = async ({ newDeviceData, jwt }) => {
 };
 
 const linkBegin = async ({ username, domain }) => {
+  if (!client) await checkClient({});
   const data = {
     targetUsername: username,
     domain,

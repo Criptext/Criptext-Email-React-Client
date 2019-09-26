@@ -1,4 +1,4 @@
-const { Table } = require('../models');
+const { Table } = require('./../database/models');
 
 const RECORD_COLUMN = 'record';
 const RECORD_LENGTH_COLUMN = 'recordLength';

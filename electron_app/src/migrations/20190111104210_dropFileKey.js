@@ -1,4 +1,8 @@
-const { Table, fieldTypes, createFileKeyColumns } = require('./../models');
+const {
+  Table,
+  fieldTypes,
+  createFileKeyColumns
+} = require('./../database/models');
 const { MEDIUM_STRING_SIZE } = fieldTypes;
 
 const FILE_KEY_AFTER_DELETE_EMAIL = 'file_key_after_delete_email';
