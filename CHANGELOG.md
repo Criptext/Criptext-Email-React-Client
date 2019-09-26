@@ -1,8 +1,35 @@
 # Change Log
 
-## [Unreleased](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
+## [0.23.9](https://github.com/criptext/Criptext-Email-React-Client/tree/HEAD)
 
-[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.23.4...HEAD)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.23.6...HEAD)
+
+**Implemented enhancements:**
+
+- Some fixes [\#1172](https://github.com/Criptext/Criptext-Email-React-Client/issues/1172)
+
+**Fixed bugs:**
+
+- Some Fixes 2 [\#1175](https://github.com/Criptext/Criptext-Email-React-Client/issues/1175)
+- Mailbox/App: Fix paralleling file download [\#1170](https://github.com/Criptext/Criptext-Email-React-Client/issues/1170)
+- Critical bug: client does not allow letters to some real emails! [\#1164](https://github.com/Criptext/Criptext-Email-React-Client/issues/1164)
+
+**Closed issues:**
+
+- Multiple Accounts [\#1173](https://github.com/Criptext/Criptext-Email-React-Client/issues/1173)
+
+**Merged pull requests:**
+
+- Accept external email addresses format [\#1179](https://github.com/Criptext/Criptext-Email-React-Client/pull/1179) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix mailbox loading issue [\#1178](https://github.com/Criptext/Criptext-Email-React-Client/pull/1178) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fixes 2 [\#1177](https://github.com/Criptext/Criptext-Email-React-Client/pull/1177) ([JulianAdams4](https://github.com/JulianAdams4))
+- Some Fixes [\#1174](https://github.com/Criptext/Criptext-Email-React-Client/pull/1174) ([JulianAdams4](https://github.com/JulianAdams4))
+- Fix paralleling file download [\#1171](https://github.com/Criptext/Criptext-Email-React-Client/pull/1171) ([JulianAdams4](https://github.com/JulianAdams4))
+- Update version .23.7 [\#1169](https://github.com/Criptext/Criptext-Email-React-Client/pull/1169) ([erikaperugachi](https://github.com/erikaperugachi))
+- Optimizing Queries & Fix advanced search [\#1168](https://github.com/Criptext/Criptext-Email-React-Client/pull/1168) ([JulianAdams4](https://github.com/JulianAdams4))
+
+## [0.23.6](https://github.com/criptext/Criptext-Email-React-Client/tree/0.23.6) (2019-09-11)
+[Full Changelog](https://github.com/criptext/Criptext-Email-React-Client/compare/0.23.4...0.23.6)
 
 **Implemented enhancements:**
 
@@ -19,6 +46,7 @@
 
 **Merged pull requests:**
 
+- Update [\#1167](https://github.com/Criptext/Criptext-Email-React-Client/pull/1167) ([erikaperugachi](https://github.com/erikaperugachi))
 - ⚠⚠⚠ Fix: Missing loading window [\#1166](https://github.com/Criptext/Criptext-Email-React-Client/pull/1166) ([JulianAdams4](https://github.com/JulianAdams4))
 - Fix [\#1163](https://github.com/Criptext/Criptext-Email-React-Client/pull/1163) ([erikaperugachi](https://github.com/erikaperugachi))
 - Const [\#1161](https://github.com/Criptext/Criptext-Email-React-Client/pull/1161) ([Hirobreak](https://github.com/Hirobreak))

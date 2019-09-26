@@ -57,7 +57,7 @@ const SettingsAccountBackup = props => (
               onClick={() => props.onClickBackupNow()}
               disabled={props.inProgress}
             >
-              {autoBackup.options.backup_now}
+              <span>{autoBackup.options.backup_now}</span>
             </button>
           </div>
         </div>

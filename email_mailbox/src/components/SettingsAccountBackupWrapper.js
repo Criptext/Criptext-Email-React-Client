@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SettingsAccountBackup from './SettingsAccountBackup';
-import { showSaveFileDialog, mySettings } from './../utils/electronInterface';
+import {
+  showSaveFileDialog,
+  mySettings,
+  getBackupStatus
+} from './../utils/electronInterface';
 import {
   exportBackupUnencrypted,
   getDefaultBackupFolder,
@@ -53,6 +57,25 @@ const defineUnitToAppend = frequency => {
   }
 };
 
+const backupStatus = {
+  DISABLE_EVENTS: 1,
+  ENABLE_EVENTS: 2,
+  BACKUP_FINISHED: 3
+};
+
+const definePercentageByStatus = status => {
+  switch (status) {
+    case backupStatus.DISABLE_EVENTS:
+      return 25;
+    case backupStatus.ENABLE_EVENTS:
+      return 50;
+    case backupStatus.BACKUP_FINISHED:
+      return 75;
+    default:
+      return 0;
+  }
+};
+
 const removeFilenameFromPath = path => {
   const lastSepIndex =
     path.lastIndexOf('/') > -1 ? path.lastIndexOf('/') : path.lastIndexOf(`\\`);
@@ -96,6 +119,21 @@ class SettingsAccountBackupWrapper extends Component {
         selectedFrequency={this.state.selectedFrequency}
       />
     );
+  }
+
+  componentDidMount() {
+    const currentBackupStatus = getBackupStatus();
+    if (currentBackupStatus) {
+      const backupPercent = definePercentageByStatus(currentBackupStatus);
+      this.setState(
+        {
+          inProgress: true,
+          backupPercent,
+          progressMessage: backing_up_mailbox
+        },
+        this.initMailboxBackupListeners
+      );
+    }
   }
 
   componentDidUpdate() {
@@ -311,18 +349,20 @@ class SettingsAccountBackupWrapper extends Component {
     this.setState({ backupPercent });
   };
 
-  localBackupExportFinishedCallback = () => {
+  localBackupExportFinishedCallback = backupSize => {
     const isExportUnencrypted =
       this.state.exportType === EXPORT_TYPES.UNENCRYPT;
     const backupPercent = isExportUnencrypted ? 70 : 60;
-    this.setState({ backupPercent });
+    this.setState({ backupPercent }, () =>
+      this.updateAutoBackupParams(backupSize)
+    );
   };
 
   localBackupEncryptFinishedCallback = () => {
     this.setState({ backupPercent: 80 });
   };
 
-  localBackupSuccessCallback = backupSize => {
+  localBackupSuccessCallback = () => {
     this.setState({ backupPercent: 99.9 }, () => {
       setTimeout(() => {
         const backupPercent = 100;
@@ -331,14 +371,9 @@ class SettingsAccountBackupWrapper extends Component {
           this.props.onClearMailboxBackupParams();
           this.removeEventHandlers();
           if (this.state.backupType === 'auto') {
-            this.setState(
-              {
-                autoBackupEnable: true
-              },
-              () => {
-                this.updateAutoBackupParams(backupSize);
-              }
-            );
+            this.setState({
+              autoBackupEnable: true
+            });
           }
           setTimeout(this.clearProgressParams, 3000);
         });
