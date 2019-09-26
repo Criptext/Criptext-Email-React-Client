@@ -57,13 +57,19 @@ const defineUnitToAppend = frequency => {
   }
 };
 
+const backupStatus = {
+  DISABLE_EVENTS: 1,
+  ENABLE_EVENTS: 2,
+  BACKUP_FINISHED: 3
+};
+
 const definePercentageByStatus = status => {
   switch (status) {
-    case 1:
+    case backupStatus.DISABLE_EVENTS:
       return 25;
-    case 2:
+    case backupStatus.ENABLE_EVENTS:
       return 50;
-    case 3:
+    case backupStatus.BACKUP_FINISHED:
       return 75;
     default:
       return 0;
