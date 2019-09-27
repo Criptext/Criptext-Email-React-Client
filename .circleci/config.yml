@@ -33,6 +33,8 @@ jobs:
           - v3-dependencies-
           - v4-dependencies-
 
+      - run: sudo apt-get install libxkbfile-dev -y
+
       - run: cd email_composer/ && yarn cache clean && yarn install
 
       - run: cd email_loading/ && yarn install
