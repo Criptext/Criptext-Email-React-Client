@@ -711,7 +711,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
       ${customRejectedLabels}
       ORDER BY ${Table.EMAIL}.date DESC
     )
-    GROUP BY threadId
+    GROUP BY uniqueId
     ${labelId > 0 ? `HAVING myAllLabels LIKE "%L${labelId}L%"` : ''}
     ORDER BY date DESC
     LIMIT ${limit || 22}`;
@@ -893,7 +893,7 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
       ORDER BY ${Table.EMAIL}.date DESC
       LIMIT 100
     )
-    GROUP BY threadId
+    GROUP BY uniqueId
     ${labelId > 0 ? `HAVING myAllLabels LIKE "%L${labelId}L%"` : ''}
     ORDER BY date DESC
     LIMIT ${limit || 22}`;
