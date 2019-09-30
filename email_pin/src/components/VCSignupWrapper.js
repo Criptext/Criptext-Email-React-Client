@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import ScreenExportDatabase, { step } from './ScreenExportDatabase';
-import { sendPin } from '../utils/ipc';
+import ScreenSignup, { step } from './ScreenSignup';
+import {
+  closePinWindow,
+  openCreateKeysLoadingWindow,
+  sendPin
+} from './../utils/ipc';
+import { remoteData } from './../utils/electronInterface';
 
 import VCHOC from './VCHOC';
 
-const VCExportDatabase = VCHOC(ScreenExportDatabase);
+const VCSignup = VCHOC(ScreenSignup);
 
-class VCExportDatabaseWrapper extends Component {
+class VCSignupWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +24,7 @@ class VCExportDatabaseWrapper extends Component {
 
   render() {
     return (
-      <VCExportDatabase
+      <VCSignup
         askKeyChain={this.askKeyChain}
         currentStep={this.state.currentStep}
         onClickBackView={this.handleClickBackView}
@@ -80,12 +85,13 @@ class VCExportDatabaseWrapper extends Component {
     }));
   };
 
-  handleClickCompleteIt = value => {
-    this.setState(state => ({
-      steps: this.concat(state.steps, step.ENCRYPT),
-      currentStep: step.ENCRYPT
-    }));
-    sendPin({ pin: this.pin, shouldSave: value, shouldExport: true });
+  handleClickCompleteIt = async value => {
+    await sendPin({ pin: this.pin, shouldSave: value, shouldExport: false });
+    openCreateKeysLoadingWindow({
+      loadingType: 'signup',
+      remoteData
+    });
+    closePinWindow();
   };
 
   concat = (array, item) => {
@@ -95,4 +101,4 @@ class VCExportDatabaseWrapper extends Component {
   };
 }
 
-export default VCExportDatabaseWrapper;
+export default VCSignupWrapper;

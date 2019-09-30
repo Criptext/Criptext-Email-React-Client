@@ -6,6 +6,7 @@ global.composerData = {};
 global.emailToEdit = {};
 global.isMAS = INSTALLER_TYPE === allInstallerTypes.mac.store;
 global.loadingData = {};
+global.pinData = {};
 global.temporalAccount = {};
 global.windowsEventsDisabled = false;
 global.internetConnection;
@@ -57,6 +58,15 @@ const setLoadingData = data => {
 };
 const getLoadingData = () => {
   return global.loadingData;
+};
+
+/*  Pin
+----------------------------- */
+const setPinData = data => {
+  global.pinData = data;
+};
+const getPinData = () => {
+  return global.pinData;
 };
 
 /*  Needs Upgrade
@@ -165,6 +175,10 @@ module.exports = {
   loadingData: {
     get: getLoadingData,
     set: setLoadingData
+  },
+  pinData: {
+    get: getPinData,
+    set: setPinData
   },
   temporalAccount: {
     get: getTemporalAccountData,

@@ -5,18 +5,16 @@ import PinGenerated from './PinGenerated';
 import PinNew from './PinNew';
 import PinSaved from './PinSaved';
 import Complete from './Complete';
-import Encrypt from './Encrypt';
 
 export const step = {
   START: 1,
   PIN_GENERATED: 2,
   PIN_NEW: 3,
   PIN_SAVED: 4,
-  COMPLETE: 5,
-  ENCRYPT: 6
+  COMPLETE: 5
 };
 
-const ScreenExportDatabase = props => {
+const ScreenSignup = props => {
   switch (props.currentStep) {
     case step.START:
       return <Start onClickStart={props.onClickStart} />;
@@ -40,14 +38,12 @@ const ScreenExportDatabase = props => {
           onClickCompleteIt={props.onClickCompleteIt}
         />
       );
-    case step.ENCRYPT:
-      return <Encrypt />;
     default:
       return null;
   }
 };
 
-ScreenExportDatabase.propTypes = {
+ScreenSignup.propTypes = {
   askKeyChain: PropTypes.bool,
   currentStep: PropTypes.number,
   onClickChangeIt: PropTypes.func,
@@ -59,4 +55,4 @@ ScreenExportDatabase.propTypes = {
   pin: PropTypes.string
 };
 
-export default ScreenExportDatabase;
+export default ScreenSignup;

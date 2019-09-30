@@ -14,6 +14,10 @@ export const minimizePinWindow = () => {
   callMain('minimize-pin');
 };
 
+export const openCreateKeysLoadingWindow = params => {
+  callMain('open-create-keys-loading', params);
+};
+
 export const sendPin = params => {
   callMain('send-pin', params);
 };

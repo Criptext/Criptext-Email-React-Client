@@ -30,6 +30,7 @@ import {
   linkStatus,
   login,
   openCreateKeysLoadingWindow,
+  openPinWindow,
   throwError
 } from '../utils/ipc.js';
 import { validateEmail, validateUsername } from './../validators/validators';
@@ -88,8 +89,8 @@ const TooManyRequest = PopupHOC(DialogPopup);
 const RecoveryCodePopup = PopupHOC(RecoveryCodeWrapperPopup);
 
 const commitNewUser = validInputData => {
-  openCreateKeysLoadingWindow({
-    loadingType: 'signup',
+  openPinWindow({
+    pinType: 'signup',
     remoteData: validInputData
   });
   closeLoginWindow({ forceClose: true });

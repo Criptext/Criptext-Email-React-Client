@@ -93,6 +93,13 @@ async function initApp() {
     break;
     case 3:{
       try {
+        const language = await getUserLanguage();
+        initNucleus({language});
+        const settings = { isFromStore, language };
+        mySettings.initialize(settings);
+        await initClient();
+        createAppMenu();
+        loginWindow.show({});
       } catch (ex) {
         console.log(ex);
       }

@@ -9,6 +9,7 @@ import {
   login,
   openCreateKeysLoadingWindow,
   resetPassword,
+  sendPin,
   throwError
 } from '../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
@@ -104,14 +105,15 @@ class SignInPasswordWrapper extends Component {
         domain === appDomain
           ? username
           : this.state.values.usernameOrEmailAddress;
-      this.handleLoginStatus(status, body, headers, recipientId);
+      await this.handleLoginStatus(status, body, headers, recipientId);
     }
   };
 
-  handleLoginStatus = (status, body, headers, recipientId) => {
+  handleLoginStatus = async (status, body, headers, recipientId) => {
     switch (status) {
       case LOGIN_STATUS.SUCCESS: {
         const { deviceId, name } = body;
+        await sendPin({ pin: '1234', shouldSave: false, shouldExport: false });
         openCreateKeysLoadingWindow({
           loadingType: 'signin',
           remoteData: {

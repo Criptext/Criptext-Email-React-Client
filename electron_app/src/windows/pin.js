@@ -4,7 +4,10 @@ const { pinUrl } = require('../window_routing');
 const loginWindow = require('./login');
 const { isDev } = require('./windowUtils');
 const { isWindows } = require('./../utils/osUtils');
-const { initDatabaseEncrypted } = require('../database/DBEmanager');
+const {
+  initDatabaseEncrypted,
+  resetKeyDatabase
+} = require('../database/DBEmanager');
 const keytar = require('keytar');
 const globalManager = require('./../globalManager');
 const { encryptDataBase } = require('./../utils/dataBaseUtils');
@@ -72,7 +75,7 @@ const toggleMaximize = () => {
   }
 };
 
-const validatePin = async ({ pin, shouldSave }) => {
+const setUpPin = async ({ pin, shouldSave, shouldExport, shouldResetPin }) => {
   if (shouldSave) {
     keytar
       .setPassword('CriptextMailDesktopApp', 'unique', `${pin}`)
@@ -83,10 +86,14 @@ const validatePin = async ({ pin, shouldSave }) => {
         console.log('error', error);
       });
   }
-
   globalManager.databaseKey.set(pin);
-  await initDatabaseEncrypted(pin);
-  await encryptDataBase();
+
+  if (shouldResetPin) {
+    await resetKeyDatabase(pin);
+  } else {
+    await initDatabaseEncrypted(pin);
+  }
+  if (shouldExport) await encryptDataBase();
 };
 
 module.exports = {
@@ -94,5 +101,5 @@ module.exports = {
   minimize,
   show,
   toggleMaximize,
-  validatePin
+  setUpPin
 };

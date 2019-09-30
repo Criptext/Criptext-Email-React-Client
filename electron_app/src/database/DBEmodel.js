@@ -343,6 +343,22 @@ const initDatabaseEncrypted = async key => {
   await sequelize.sync({});
 };
 
+const resetKeyDatabase = async key => {
+  return await sequelize.query(`PRAGMA rekey = "${key}";`);
+};
+
+const hasTable = async () => {
+  try {
+    return await sequelize
+      .query("select name from sqlite_master where type='table'")
+      .then(([results]) => {
+        return !!results.length;
+      });
+  } catch (error) {
+    throw new Error('Connection error');
+  }
+};
+
 module.exports = {
   Account: () => Account,
   Contact: () => Contact,
@@ -362,5 +378,6 @@ module.exports = {
   getDB,
   initDatabaseEncrypted,
   Op,
+  resetKeyDatabase,
   Table
 };

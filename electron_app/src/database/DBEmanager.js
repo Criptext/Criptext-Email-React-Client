@@ -15,6 +15,7 @@ const {
   Signedprekeyrecord,
   getDB,
   initDatabaseEncrypted,
+  resetKeyDatabase,
   Table
 } = require('./DBEmodel.js');
 
@@ -45,7 +46,8 @@ module.exports = {
   Signedprekeyrecord,
   Table,
   getDB,
-  initDatabaseEncrypted,
   getAccount,
-  getAccountByParams
+  getAccountByParams,
+  initDatabaseEncrypted,
+  resetKeyDatabase
 };

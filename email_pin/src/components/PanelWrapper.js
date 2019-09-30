@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Panel from './Panel';
+import { pinType } from './../utils/electronInterface';
 
 class PanelWrapper extends Component {
   constructor(props) {
@@ -8,7 +9,7 @@ class PanelWrapper extends Component {
   }
 
   render() {
-    return <Panel />;
+    return <Panel type={pinType} />;
   }
 }
 

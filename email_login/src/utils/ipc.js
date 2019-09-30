@@ -18,6 +18,14 @@ export const openCreateKeysLoadingWindow = params => {
   ipc.callMain('open-create-keys-loading', params);
 };
 
+export const openPinWindow = params => {
+  ipc.callMain('open-pin', params);
+};
+
+export const sendPin = params => {
+  ipc.callMain('send-pin', params);
+};
+
 export const throwError = error => {
   ipc.callMain('throwError', error);
 };

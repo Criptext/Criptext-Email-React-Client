@@ -80,14 +80,18 @@ class Complete extends Component {
             </div>
           </div>
           <h1>{page_complete.title}</h1>
-          <div className="complete-checkbox">
-            <CustomCheckbox
-              value={this.state.value}
-              onChange={this.handleChange}
-            />
-            <h2>{page_complete.checkbox.title}</h2>
-          </div>
-          <p>{page_complete.checkbox.description}</p>
+          {this.props.askKeyChain && (
+            <div>
+              <div className="complete-checkbox">
+                <CustomCheckbox
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                />
+                <h2>{page_complete.checkbox.title}</h2>
+              </div>
+              <p>{page_complete.checkbox.description}</p>
+            </div>
+          )}
           <Button
             onClick={this.handleClickCompleteIt}
             state={this.props.buttonState}
@@ -109,6 +113,7 @@ class Complete extends Component {
 }
 
 Complete.propTypes = {
+  askKeyChain: PropTypes.bool,
   buttonState: PropTypes.string,
   onClickCompleteIt: PropTypes.func
 };

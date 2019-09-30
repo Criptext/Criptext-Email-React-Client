@@ -1,25 +1,26 @@
 import React, { Component } from 'react';
-import ScreenExportDatabase, { step } from './ScreenExportDatabase';
-import { sendPin } from '../utils/ipc';
+import ScreenSignin, { step } from './ScreenSignin';
+import { closePinWindow, sendPin } from './../utils/ipc';
+import { getPin, remoteData } from './../utils/electronInterface';
 
 import VCHOC from './VCHOC';
 
-const VCExportDatabase = VCHOC(ScreenExportDatabase);
+const VCSignin = VCHOC(ScreenSignin);
 
-class VCExportDatabaseWrapper extends Component {
+class VCSigninWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentStep: step.START,
       steps: [step.START]
     };
-    this.pin = undefined;
+    this.pin = getPin();
     this.askKeyChain = false;
   }
 
   render() {
     return (
-      <VCExportDatabase
+      <VCSignin
         askKeyChain={this.askKeyChain}
         currentStep={this.state.currentStep}
         onClickBackView={this.handleClickBackView}
@@ -43,7 +44,7 @@ class VCExportDatabaseWrapper extends Component {
   };
 
   handleClickStart = () => {
-    this.pin = `${Math.round(Math.random() * 9000) + 1000}`;
+    if (!this.pin) this.pin = `${Math.round(Math.random() * 9000) + 1000}`;
     this.setState(state => ({
       steps: this.concat(state.steps, step.PIN_GENERATED),
       currentStep: step.PIN_GENERATED
@@ -80,12 +81,18 @@ class VCExportDatabaseWrapper extends Component {
     }));
   };
 
-  handleClickCompleteIt = value => {
-    this.setState(state => ({
-      steps: this.concat(state.steps, step.ENCRYPT),
-      currentStep: step.ENCRYPT
-    }));
-    sendPin({ pin: this.pin, shouldSave: value, shouldExport: true });
+  handleClickCompleteIt = async value => {
+    await sendPin({
+      pin: this.pin,
+      shouldSave: value,
+      shouldExport: false,
+      shouldResetPin: true
+    });
+    // openCreateKeysLoadingWindow({
+    //   loadingType: 'signup',
+    //   remoteData
+    // });
+    closePinWindow();
   };
 
   concat = (array, item) => {
@@ -95,4 +102,4 @@ class VCExportDatabaseWrapper extends Component {
   };
 }
 
-export default VCExportDatabaseWrapper;
+export default VCSigninWrapper;
