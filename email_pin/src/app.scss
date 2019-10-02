@@ -264,6 +264,49 @@ html, html body {
   
 }
 
+/* 3.- CONTROL
+   ----------------------------- */
+.pin-code{
+  position: relative;
+
+  .styles_react-code-input-container__tpiKG{
+    width: 180px !important;
+    
+    .styles_react-code-input__CRulA{
+      input{
+        border: none;
+        border-radius: 0;
+        font-family: 'NunitoSans';
+        border-bottom: 3px solid #0091ff;
+        margin-right: 17px;
+    
+        &:last-child{
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  &.pin-code-status-error{
+    .styles_react-code-input-container__tpiKG{
+      .styles_react-code-input__CRulA{
+        input{
+          border-bottom: 3px solid #bf2626;
+        }
+      }
+    }
+
+    .error{
+      bottom: -20px;
+      color: #bf2626;
+      left: 0;
+      font-size: 11px;
+      text-align: left;
+      position: absolute;
+    }
+  }
+}
+
   /* THEME
    ----------------------------- */
 @mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN){

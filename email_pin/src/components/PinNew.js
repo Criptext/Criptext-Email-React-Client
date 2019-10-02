@@ -25,7 +25,7 @@ class PinNew extends Component {
           <h1>{page_pin_new.title}</h1>
           <p>{page_pin_new.description}</p>
           <div className="pin-new-code">
-            <div>
+            <div className="pin-code">
               <h2>{page_pin_new.new_pin}</h2>
               <ReactCodeInput
                 autoFocus={true}
@@ -37,7 +37,11 @@ class PinNew extends Component {
               />
             </div>
             <div
-              className={this.state.hasError ? 'pin-new-code-status-error' : ''}
+              className={
+                this.state.hasError
+                  ? 'pin-code pin-code-status-error'
+                  : 'pin-code'
+              }
             >
               <h2>{page_pin_new.confirm_pin}</h2>
               <ReactCodeInput

@@ -6,6 +6,7 @@ const path = require('path');
 const { mailboxUrl } = require('./../window_routing');
 const { appUpdater } = require('./../updater');
 const globalManager = require('./../globalManager');
+const { EVENTS, callEvent } = require('./events');
 const { mailtoProtocolRegex } = require('./../utils/RegexUtils');
 const { removeProtocolFromUrl } = require('./../utils/stringUtils');
 const { API_TRACKING_EVENT } = require('./../utils/const');
@@ -110,7 +111,7 @@ const show = async ({ firstOpenApp = false }) => {
     mailboxWindow.webContents.on('dom-ready', () => {
       mailboxWindow.show();
       createTrayIcon();
-      sendAPIevent(API_TRACKING_EVENT.APP_OPENED);
+      callEvent(EVENTS.Up_app, API_TRACKING_EVENT.APP_OPENED);
       if (firstOpenApp) {
         updateUserData();
         addEventTrack(NUCLEUS_EVENTS.MAILBOX_OPENED);

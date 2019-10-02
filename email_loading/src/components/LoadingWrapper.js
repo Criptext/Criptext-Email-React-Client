@@ -173,6 +173,7 @@ class LoadingWrapper extends Component {
       this.setState({ percent: 100 }, () => {
         const accountId = this.accountId;
         const recipientId = remoteData.recipientId || remoteData.username;
+        // openPinWindow({pinType: 'signin'})
         this.openMailbox({ accountId, recipientId });
       });
     }

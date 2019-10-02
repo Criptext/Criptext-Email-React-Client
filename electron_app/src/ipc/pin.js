@@ -20,6 +20,6 @@ ipc.answerRenderer('open-pin', params => {
   pinWindow.show();
 });
 
-ipc.answerRenderer('send-pin', params => {
-  pinWindow.setUpPin(params);
-});
+ipc.answerRenderer('send-pin', params => pinWindow.setUpPin(params));
+
+ipc.answerRenderer('validate-pin', pin => pinWindow.validatePin(pin));

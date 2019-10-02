@@ -40,11 +40,12 @@ const createAccount = async ({
   recoveryEmail
 }) => {
   const [currentAccount] = await getAccount();
+  console.log('currentAccount', currentAccount);
   const username = currentAccount ? currentAccount.recipientId : null;
   if (username) {
     await cleanDatabase(username);
   }
-  await createTables();
+  // await createTables();
   const keybundle = await createAcountAndGetKeyBundle({
     recipientId,
     name,

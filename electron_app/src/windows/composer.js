@@ -3,8 +3,8 @@ const { BrowserWindow } = require('electron');
 const myAccount = require('../Account');
 const { composerUrl } = require('./../window_routing');
 const dbManager = require('./../database');
-const clientManager = require('../clientManager');
 const globalManager = require('./../globalManager');
+const { EVENTS, callEvent } = require('./events');
 const fileUtils = require('../utils/FileUtils');
 const { APP_DOMAIN, API_TRACKING_EVENT } = require('../utils/const');
 const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
@@ -36,7 +36,7 @@ const openNewComposer = async () => {
   const composer = await createComposerWindow();
   composer.once('ready-to-show', () => {
     composer.show();
-    sendAPIevent(API_TRACKING_EVENT.COMPOSER_OPENED);
+    callEvent(EVENTS.Up_app, API_TRACKING_EVENT.COMPOSER_OPENED);
   });
 };
 
@@ -113,7 +113,7 @@ const editDraft = async emailToEdit => {
   globalManager.emailToEdit.set(newComposer.id, emailToEdit);
   newComposer.once('ready-to-show', () => {
     newComposer.show();
-    clientManager.generateEvent(API_TRACKING_EVENT.COMPOSER_OPENED);
+    callEvent(EVENTS.Up_app, API_TRACKING_EVENT.COMPOSER_OPENED);
   });
 };
 

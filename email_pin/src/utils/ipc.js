@@ -18,6 +18,12 @@ export const openCreateKeysLoadingWindow = params => {
   callMain('open-create-keys-loading', params);
 };
 
-export const sendPin = params => {
-  callMain('send-pin', params);
+export const sendPin = params => callMain('send-pin', params);
+
+export const upApp = ({ shouldSave, pin }) => {
+  callMain('app-up', { shouldSave, pin });
+};
+
+export const validatePin = async pin => {
+  return await callMain('validate-pin', pin);
 };

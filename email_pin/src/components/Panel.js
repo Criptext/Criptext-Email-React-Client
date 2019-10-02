@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import VCExportDatabaseWrapper from './VCExportDatabaseWrapper';
+import VCNewPinWrapper from './VCNewPinWrapper';
 import VCSigninWrapper from './VCSigninWrapper';
 import VCSignupWrapper from './VCSignupWrapper';
 import { mySettings } from '../utils/electronInterface';
@@ -13,6 +14,8 @@ const Panel = props => (
 
 const renderVC = type => {
   switch (type) {
+    case 'new':
+      return <VCNewPinWrapper />;
     case 'signin':
       return <VCSigninWrapper />;
     case 'signup':

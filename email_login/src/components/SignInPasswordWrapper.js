@@ -12,6 +12,7 @@ import {
   sendPin,
   throwError
 } from '../utils/ipc';
+import { hasPin } from '../utils/electronInterface';
 import { hashPassword } from '../utils/HashUtils';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 import string from '../lang';
@@ -112,8 +113,13 @@ class SignInPasswordWrapper extends Component {
   handleLoginStatus = async (status, body, headers, recipientId) => {
     switch (status) {
       case LOGIN_STATUS.SUCCESS: {
+        if (!hasPin())
+          await sendPin({
+            pin: '1234',
+            shouldSave: false,
+            shouldExport: false
+          });
         const { deviceId, name } = body;
-        await sendPin({ pin: '1234', shouldSave: false, shouldExport: false });
         openCreateKeysLoadingWindow({
           loadingType: 'signin',
           remoteData: {

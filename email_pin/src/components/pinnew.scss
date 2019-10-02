@@ -14,33 +14,6 @@
     h2{
       text-align: left;
     }
-
-    .styles_react-code-input-container__tpiKG{
-      width: 180px !important;
-    }
-
-    .pin-new-code-status-error{
-      input{
-        border-bottom: 3px solid #bf2626;
-      }
-    }
-
-    input{
-      border: none;
-      border-radius: 0;
-      font-family: 'NunitoSans';
-      border-bottom: 3px solid #0091ff;
-      margin-right: 17px;
-
-      &:last-child{
-        margin-right: 0;
-      }
-    }
-  }
-
-  .error{
-    color: #bf2626;
-    font-size: 11px;
   }
 
   button{

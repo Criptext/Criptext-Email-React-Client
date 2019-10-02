@@ -1,0 +1,57 @@
+@import './../styles/index.scss';
+
+#enter-pin-containter{
+  .enter-pin-content{
+    margin: 0 auto;
+    text-align: center;
+    width: 75%;
+  
+    .logo{
+      background-image: url(../#{$_PATH_TO_IMAGES}/shield.svg);
+      background-size: 100%;
+      height: 100px;
+      margin: 20px auto 0;
+      width: 95px;
+    }
+
+    h1{
+      margin-bottom: 5px;
+      margin-top: 20px;
+    }
+
+    .pin-code{
+      margin: 0 auto;
+      width: 180px;
+    }
+
+    .enter-ping-content-ask{
+      color: #0091ff;
+      cursor: pointer;
+      margin-top: 30px;
+    }
+
+    .enter-pin-checkbox-content{
+      .enter-pin-checkbox{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+  
+        .checkmark-container{
+          margin-right: 10px;
+        }
+      }
+
+      >p{
+        margin-top: 0;
+      }
+    }
+
+    button{
+      bottom: 80px;
+      transform: translateX(-50%);
+      min-width: 80px;
+      margin: 0 auto;
+      position: absolute;
+    }
+  }
+}

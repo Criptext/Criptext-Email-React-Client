@@ -12,6 +12,7 @@ const {
   getSystemLanguage,
   sendEventToAllWindows
 } = require('./../windows/windowUtils');
+const { upApp } = require('./../windows');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
@@ -85,6 +86,11 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
   loadingWindow.show({});
   return await clientManager.acknowledgeEvents([data.rowid]);
 };
+
+// Start Up
+ipc.answerRenderer('app-up', ({ shouldSave, pin }) => {
+  upApp({ shouldSave, pin });
+});
 
 module.exports = {
   sendLinkDeviceStartEventToAllWindows,

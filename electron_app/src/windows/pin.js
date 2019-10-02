@@ -2,6 +2,7 @@ const { BrowserWindow } = require('electron');
 const path = require('path');
 const { pinUrl } = require('../window_routing');
 const loginWindow = require('./login');
+const { EVENTS, callEvent } = require('./events');
 const { isDev } = require('./windowUtils');
 const { isWindows } = require('./../utils/osUtils');
 const {
@@ -12,6 +13,7 @@ const keytar = require('keytar');
 const globalManager = require('./../globalManager');
 const { encryptDataBase } = require('./../utils/dataBaseUtils');
 let pinWindow;
+let shouldCloseForce = false;
 
 const pinSize = {
   width: 328,
@@ -41,13 +43,38 @@ const create = () => {
     pinWindow.setResizable(true);
     pinWindow.webContents.openDevTools({ mode: 'undocked' });
   }
+
+  pinWindow.on('close', e => {
+    const isMacOs = process.platform === 'darwin';
+    if (shouldCloseForce === true) {
+      shouldCloseForce = false;
+      return;
+    }
+    if (isMacOs && !globalManager.forcequit.get()) {
+      e.preventDefault();
+      hide();
+    }
+  });
+
+  pinWindow.on('closed', () => {
+    if (process.platform !== 'darwin') {
+      pinWindow = undefined;
+    }
+  });
 };
 
-const close = () => {
+const close = ({ forceClose }) => {
+  shouldCloseForce = forceClose;
   if (pinWindow !== undefined) {
     pinWindow.close();
   }
   pinWindow = undefined;
+};
+
+const hide = () => {
+  if (pinWindow && pinWindow.hide) {
+    pinWindow.hide();
+  }
 };
 
 const minimize = () => {
@@ -91,15 +118,38 @@ const setUpPin = async ({ pin, shouldSave, shouldExport, shouldResetPin }) => {
   if (shouldResetPin) {
     await resetKeyDatabase(pin);
   } else {
-    await initDatabaseEncrypted(pin);
+    await initDatabaseEncrypted({ key: pin });
   }
+
   if (shouldExport) await encryptDataBase();
+  callEvent(EVENTS.Up_app, {});
+};
+
+const checkPin = async () => {
+  return await keytar.getPassword('CriptextMailDesktopApp', 'unique');
+};
+
+const validatePin = async pinToValidate => {
+  const credentials = await checkPin();
+  if (credentials) {
+    return pinToValidate === credentials.password;
+  }
+
+  try {
+    await initDatabaseEncrypted({ key: pinToValidate, shouldReset: true });
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 };
 
 module.exports = {
+  checkPin,
   close,
   minimize,
+  setUpPin,
   show,
   toggleMaximize,
-  setUpPin
+  validatePin
 };

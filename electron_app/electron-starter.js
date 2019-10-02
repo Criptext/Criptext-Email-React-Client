@@ -3,7 +3,7 @@ const myAccount = require('./src/Account');
 const wsClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
 const mySettings = require('./src/Settings');
-const { dbManager, upStepDBEncryptedWithoutPIN } = require('./src/windows');
+const { dbManager, upStepDBEncryptedWithoutPIN, upStepCheckPINDBEncrypted } = require('./src/windows');
 const loginWindow = require('./src/windows/login');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
@@ -12,9 +12,9 @@ const { startAlice, closeAlice, checkReachability } = require('./src/aliceManage
 const { createAppMenu } = require('./src/windows/menu');
 const { API_TRACKING_EVENT } = require('./src/utils/const');
 const {
-  showWindows, 
-  isDev, 
-  isLinux, 
+  showWindows,
+  isDev,
+  isLinux,
   isWindows,
   isFromStore,
   getSystemLanguage
@@ -89,8 +89,8 @@ async function initApp() {
       } catch (ex) {
         console.log(ex);
       }
+      break;
     }
-    break;
     case 3:{
       try {
         const language = await getUserLanguage();
@@ -103,19 +103,17 @@ async function initApp() {
       } catch (ex) {
         console.log(ex);
       }
+      break;
     }
     case 4:{
-      try {
-      } catch (ex) {
-        console.log(ex);
-      }
+      await upStepCheckPINDBEncrypted();
+      break; 
     }
-    break;
     default:
       break;
   }
 
-  //   Composer
+  // Composer
   ipcMain.on('failed-to-send', () => {
     composerWindowManager.sendEventToMailbox('failed-to-send', undefined);
   });

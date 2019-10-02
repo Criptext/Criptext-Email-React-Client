@@ -44,5 +44,25 @@
   },
   "page_encrypt": {
     "title": "Encrypting Database"
+  },
+  "page_enter_pin": {
+    "title": "Enter Security PIN",
+    "ask": " Forgot PIN?",
+    "checkbox": {
+      "title": "Do not request PIN starting the app",
+      "description": "The PIN will be saved in your Keychain Access, so you can get in without being asked."  
+    },
+    "error": "Wrong PIN, try again",
+    "button": "Done"
+  },
+  "page_enter_recovery_key": {
+    "title": "Enter Recovery Key",
+    "description": "You can also upload the Recovery File which was generated when you otiginally set up your PIN.",
+    "enter_key": "Enter key",
+    "or": "or",
+    "upload": "upload",
+    "recovery_file": "recovery file",
+    "error_file": "File error, please select another file",
+    "button": "Okay"
   }
 }
