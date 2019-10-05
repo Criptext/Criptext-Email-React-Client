@@ -17,6 +17,11 @@ const nativeImage = require('electron').nativeImage;
 const mySettings = require('./Settings');
 let client = undefined;
 
+const initClient = async () => {
+  if (!client) await checkClient({});
+  return;
+};
+
 const initializeClient = ({ token, refreshToken, language, os }) => {
   const clientOptions = {
     os,
@@ -170,7 +175,6 @@ const changePassword = async params => {
 };
 
 const checkAvailableUsername = async username => {
-  if (!client) await checkClient({});
   return await client.checkAvailableUsername(username);
 };
 
@@ -311,7 +315,6 @@ const linkCancel = async ({ newDeviceData, jwt }) => {
 };
 
 const linkBegin = async ({ username, domain }) => {
-  if (!client) await checkClient({});
   const data = {
     targetUsername: username,
     domain,
@@ -591,6 +594,7 @@ module.exports = {
   getEvents,
   getKeyBundle,
   getUserSettings,
+  initClient,
   insertPreKeys,
   isCriptextDomain,
   linkAccept,

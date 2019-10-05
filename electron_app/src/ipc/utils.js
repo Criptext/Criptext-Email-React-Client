@@ -26,6 +26,11 @@ ipc.answerRenderer('process-pending-events', () => {
   processEventsQueue();
 });
 
+ipc.answerRenderer('restart-app', () => {
+  app.relaunch();
+  app.exit(0);
+});
+
 ipc.answerRenderer('throwError', ({ name, description }) => {
   dialog.showErrorBox(name, description);
 });

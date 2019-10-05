@@ -33,6 +33,7 @@ require('./src/ipc/nucleus.js');
 require('./src/ipc/client.js');
 const ipcUtils = require('./src/ipc/utils.js');
 const { checkDatabaseStep } = require('./src/utils/dataBaseUtils');
+const {initClient} = require('./src/clientManager');
 
 globalManager.forcequit.set(false);
 
@@ -40,47 +41,22 @@ async function initApp() {
   const step = await checkDatabaseStep(dbManager);
   switch (step) {
     case 1:{
-      try {
-        await dbManager.createTables();
-        require('./src/ipc/client.js');
-      } catch (ex) {
-        console.log(ex);
-      }
       await startAlice();
       await checkReachability();
 
+      globalManager.windowsEvents.disable()
+      globalManager.needsUpgrade.enable()
+
       const [existingAccount] = await dbManager.getAccount();
-      if (existingAccount) {
-        const needsMigration = !(await dbManager.hasColumnPreKeyRecordLength());
-        if (needsMigration) {
-          globalManager.windowsEvents.disable()
-          globalManager.needsUpgrade.enable()
-        } else {
-          globalManager.windowsEvents.enable()
-          globalManager.needsUpgrade.disable()
-        }
-        
-        if (!!existingAccount.deviceId) {
-          const appSettings = await dbManager.getSettings();
-          const settings = Object.assign(appSettings, { isFromStore });
-          myAccount.initialize(existingAccount);
-          mySettings.initialize(settings);
-          initNucleus({language: mySettings.language});
-          wsClient.start(myAccount);
-          createAppMenu();
-          mailboxWindow.show({ firstOpenApp: true });
-        } else {
-          const language = await getUserLanguage();
-          initNucleus({language});
-          createAppMenu();
-          loginWindow.show({});
-        }
-      } else {
-        const language = await getUserLanguage();
-        initNucleus({language});
-        createAppMenu();
-        loginWindow.show({});
-      }     
+      const appSettings = await dbManager.getSettings();
+      const settings = Object.assign(appSettings, { isFromStore });
+      myAccount.initialize(existingAccount);
+      mySettings.initialize(settings);
+      await initClient();
+      initNucleus({language: mySettings.language});
+      wsClient.start(myAccount);
+      createAppMenu();
+      mailboxWindow.show({ firstOpenApp: true });
     }
     break;
     case 2:{

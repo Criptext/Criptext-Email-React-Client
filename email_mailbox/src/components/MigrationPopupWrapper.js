@@ -5,7 +5,8 @@ import {
   getComputerName,
   migrateAlice,
   upgradeAccount,
-  logoutApp
+  logoutApp,
+  restartApp
 } from './../utils/ipc';
 import {
   createAccountCredentials,
@@ -161,7 +162,6 @@ class MigrationPopupWrapper extends Component {
   handleUpgradeAccount = async () => {
     const upgradeData = { ...this.state.retryData };
     const success = await upgradeAccount(upgradeData);
-
     if (!success) {
       this.setState({
         errorMessage: errors.upgrade,
@@ -178,7 +178,8 @@ class MigrationPopupWrapper extends Component {
       () => {
         setTimeout(() => {
           this.props.onCloseMailboxPopup();
-        }, 1000);
+          restartApp();
+        }, 5000);
       }
     );
   };

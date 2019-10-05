@@ -19,9 +19,10 @@ const checkDatabaseStep = async dbManager => {
   const existsDatabaseEncrypted = existsDatabase('CriptextEncrypt.db');
   let needsMigration;
   if (existsDatabaseNormal) {
+    await dbManager.createTables();
     needsMigration = !(await dbManager.hasColumnPreKeyRecordLength());
   }
-
+  console.log('needsMigration', needsMigration);
   if (existsDatabaseEncrypted) return 4;
   if (!existsDatabaseEncrypted && !existsDatabaseNormal) return 3;
   if (!existsDatabaseEncrypted && existsDatabaseNormal && !needsMigration)
