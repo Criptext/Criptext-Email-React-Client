@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Update data account from Account Table: should update account 1`] = `
+Array [
+  Object {
+    "deviceId": 1,
+    "encryptToExternals": false,
+    "jwt": "abc",
+    "name": "User One",
+    "privKey": "ghi",
+    "pubKey": "jkl",
+    "recipientId": "user",
+    "refreshToken": "def",
+    "registrationId": 2,
+    "signFooter": true,
+    "signature": "",
+    "signatureEnabled": false,
+  },
+]
+`;

@@ -10,6 +10,7 @@ const {
 } = require('./../database/DBEexporter');
 
 const existsDatabase = filename => {
+  if (process.env.NODE_ENV === 'test') return false;
   const myDBPath = getFilenamePath(process.env.NODE_ENV, filename);
   return checkIfExists(myDBPath);
 };
@@ -49,6 +50,9 @@ const deleteFile = async filepath => {
 
 const getFilenamePath = (node_env, filename) => {
   switch (node_env) {
+    case 'test': {
+      return './src/__integrations__/test.db';
+    }
     case 'development': {
       const a = path
         .join(__dirname, `/${filename}`)
