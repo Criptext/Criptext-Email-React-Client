@@ -74,9 +74,11 @@ const renderCustomLabelsBlock = props => (
         <div className="table-column-b">
           <h1>{string.settings.show_in_label_list}</h1>
         </div>
-        <div className="table-column-c">
-          <h1>{string.settings.action}</h1>
-        </div>
+        {props.exist && (
+          <div className="table-column-c">
+            <h1>{string.settings.action}</h1>
+          </div>
+        )}
       </div>
       <div className="table-body">
         {props.customLabels.map((customLabel, index) =>
@@ -102,12 +104,14 @@ const renderCustomLabelItem = (index, customLabelItem, props) => (
         status={customLabelItem.visible ? 'all' : 'none'}
       />
     </div>
-    <div
-      className="table-column-c"
-      onClick={() => props.onClickRemoveLabel(customLabelItem.id)}
-    >
-      {string.settings.remove}
-    </div>
+    {props.exist && (
+      <div
+        className="table-column-c"
+        onClick={() => props.onClickRemoveLabel(customLabelItem.id)}
+      >
+        {string.settings.remove}
+      </div>
+    )}
   </div>
 );
 
@@ -145,12 +149,14 @@ renderSystemLabelsBlock.propTypes = {
 };
 
 renderCustomLabelsBlock.propTypes = {
-  customLabels: PropTypes.array
+  customLabels: PropTypes.array,
+  exist: PropTypes.bool
 };
 
 renderCustomLabelItem.propTypes = {
   onClickChangeLabelVisibility: PropTypes.func,
-  onClickRemoveLabel: PropTypes.func
+  onClickRemoveLabel: PropTypes.func,
+  exist: PropTypes.bool
 };
 
 renderInputAddNewLabel.propTypes = {
