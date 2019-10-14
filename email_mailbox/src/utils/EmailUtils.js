@@ -304,7 +304,6 @@ export const formIncomingEmailFromData = ({
     status,
     unread,
     secure,
-    isMuted: false,
     messageId,
     replyTo,
     fromAddress: from,

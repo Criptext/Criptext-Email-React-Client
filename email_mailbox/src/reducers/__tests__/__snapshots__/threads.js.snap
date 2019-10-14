@@ -13,7 +13,6 @@ Immutable.Map {
         "fromContactName": Immutable.List [
           "User a",
         ],
-        "isMuted": 0,
         "lastEmailId": "6Za2dcMlE0OSSc9",
         "threadId": "6Za2dcMlE0OSSc9",
         "trashDate": null,
@@ -43,7 +42,6 @@ Immutable.Map {
         "fromContactName": Immutable.List [
           "User a",
         ],
-        "isMuted": 0,
         "lastEmailId": "cuW6ElyoqsR7MMw",
         "threadId": null,
         "trashDate": null,

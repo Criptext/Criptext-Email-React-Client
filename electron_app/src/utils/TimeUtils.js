@@ -1,5 +1,7 @@
 const moment = require('moment');
 
+const DateFormat = 'YYYY-MM-DD HH:mm:ss';
+
 const getTimeLocal = time => {
   const timeUTC = moment.utc(time);
   return moment(timeUTC).local();
@@ -24,10 +26,13 @@ const defineUnitToAppend = frequency => {
   }
 };
 
-const backupDateFormat = 'YYYY-MM-DD HH:mm:ss';
+const parseDate = date => {
+  return moment(date).format(DateFormat);
+};
 
 module.exports = {
+  backupDateFormat: DateFormat,
   defineBackupFileName,
   defineUnitToAppend,
-  backupDateFormat
+  parseDate
 };

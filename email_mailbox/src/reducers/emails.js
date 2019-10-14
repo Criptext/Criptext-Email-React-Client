@@ -20,18 +20,6 @@ const emails = (state = new Map(), action) => {
       });
       return state.merge(batch);
     }
-    case Email.MUTE: {
-      const item = state.get(action.emailId);
-      if (item !== undefined) {
-        const prevMutedState = item.get('isMuted');
-        const newItem =
-          prevMutedState === 1
-            ? item.set('isMuted', 0)
-            : item.set('isMuted', 1);
-        return state.set(action.emailId, newItem);
-      }
-      return state;
-    }
     case Email.MARK_UNREAD: {
       const emailId = action.emailId;
       const item = state.get(`${emailId}`);

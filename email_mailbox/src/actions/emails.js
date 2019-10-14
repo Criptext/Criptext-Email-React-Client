@@ -90,17 +90,6 @@ export const loadEmails = ({ threadId, emailIds }) => {
   };
 };
 
-export const muteEmail = (emailId, valueToSet) => {
-  return async dispatch => {
-    try {
-      await updateEmail({ id: emailId, isMuted: valueToSet });
-      dispatch(muteNotifications(emailId));
-    } catch (e) {
-      // To do
-    }
-  };
-};
-
 export const removeEmails = (labelId, emailsParams) => {
   return async dispatch => {
     try {

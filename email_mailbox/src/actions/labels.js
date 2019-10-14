@@ -123,22 +123,20 @@ export const updateBadgeLabels = labelIds => {
       const labels = await Promise.all(
         labelsFiltered.map(async labelId => {
           if (labelId === LabelType.inbox.id) {
-            const [{ totalUnread }] = await getEmailsUnredByLabelId({
+            const badgeInbox = await getEmailsUnredByLabelId({
               labelId,
               rejectedLabelIds: [LabelType.spam.id, LabelType.trash.id]
             });
-            const badgeInbox = totalUnread;
             updateDockBadgeApp(badgeInbox);
             return {
               id: String(labelId),
               badge: badgeInbox
             };
           } else if (labelId === LabelType.spam.id) {
-            const [{ totalUnread }] = await getEmailsUnredByLabelId({
+            const badgeSpam = await getEmailsUnredByLabelId({
               labelId,
               rejectedLabelIds: [LabelType.trash.id]
             });
-            const badgeSpam = totalUnread;
             return {
               id: String(labelId),
               badge: badgeSpam
@@ -147,7 +145,7 @@ export const updateBadgeLabels = labelIds => {
             const badgeDraft = await getEmailsCounterByLabelId(labelId);
             return {
               id: String(labelId),
-              badge: badgeDraft[0].count
+              badge: badgeDraft
             };
           }
         })

@@ -1,26 +1,203 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Load data emaiLabel from EmailLabel Table:  Should load data emailLabel by emailId 1`] = `
+Array [
+  Object {
+    "labelId": 5,
+  },
+  Object {
+    "labelId": 7,
+  },
+]
+`;
+
+exports[`Load data emails from Email Table: should load email by key 1`] = `
+Object {
+  "boundary": null,
+  "content": "<p>Hello there</p>",
+  "date": "2013-10-07 08:23:19",
+  "fromAddress": "User me <user@criptext.com>",
+  "id": 2,
+  "key": "2",
+  "messageId": "messageIdB",
+  "preview": "Hello there",
+  "replyTo": null,
+  "s3Key": "s3KeyB",
+  "secure": true,
+  "status": 1,
+  "subject": "Greetings",
+  "threadId": "threadB",
+  "trashDate": null,
+  "unread": true,
+  "unsentDate": "2018-06-14 08:23:20",
+}
+`;
+
+exports[`Load data emails from Email Table: should load emails by array params 1`] = `
+Object {
+  "boundary": null,
+  "content": "<p>Hello there</p>",
+  "date": "2013-10-07 08:23:19",
+  "fromAddress": "<User me> <user@criptext.com>",
+  "id": 1,
+  "key": "1",
+  "messageId": "messageIdA",
+  "preview": "Hello there",
+  "replyTo": null,
+  "s3Key": "s3KeyA",
+  "secure": true,
+  "status": 0,
+  "subject": "Greetings",
+  "threadId": "threadA",
+  "trashDate": null,
+  "unread": true,
+  "unsentDate": "2018-06-14 08:23:20",
+}
+`;
+
+exports[`Load data emails from Email Table: should load emails by ids 1`] = `
+Object {
+  "bcc": "6",
+  "boundary": null,
+  "cc": "5",
+  "content": "<p>Hello there</p>",
+  "date": "2018-06-14 13:23:19.000 +00:00",
+  "fileTokens": "tokenC",
+  "fromAddress": "User A <usera@criptext.com>",
+  "fromContactIds": "3",
+  "id": 3,
+  "key": "3",
+  "labelIds": "1",
+  "messageId": "messageIdC",
+  "preview": "Hello there",
+  "replyTo": null,
+  "s3Key": "s3KeyC",
+  "secure": 1,
+  "status": 0,
+  "subject": "Greetings",
+  "threadId": "threadC",
+  "to": "7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,327,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,345,346,347,348,349,350,351,352,353,354,355,356,357,358,359,360,361,362,363,364,365,366,367,368,369,370,371,372,373,374,375,376,377,378,379,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398,399,400,401,402,403,404,405,406",
+  "trashDate": null,
+  "unread": 1,
+  "unsentDate": "2018-06-14 13:23:20.000 +00:00",
+}
+`;
+
+exports[`Load data emails from Email Table: should load emails by params 1`] = `
+Object {
+  "boundary": null,
+  "content": "<p>Hello there</p>",
+  "date": "2013-10-07 08:23:19",
+  "fromAddress": "<User me> <user@criptext.com>",
+  "id": 1,
+  "key": "1",
+  "messageId": "messageIdA",
+  "preview": "Hello there",
+  "replyTo": null,
+  "s3Key": "s3KeyA",
+  "secure": true,
+  "status": 0,
+  "subject": "Greetings",
+  "threadId": "threadA",
+  "trashDate": null,
+  "unread": true,
+  "unsentDate": "2018-06-14 08:23:20",
+}
+`;
+
+exports[`Load data emails from Email Table: should load emails by threadId and labelId 1`] = `
+Object {
+  "EmailLabels": Array [
+    Object {
+      "emailId": 11,
+      "id": 12,
+      "labelId": 1,
+    },
+  ],
+  "id": 11,
+  "keys": "14",
+  "threadId": "threadB",
+  "trashDate": null,
+}
+`;
+
+exports[`Load data emails from Email Table: should load emails from DB with label id: Sent 1`] = `
+Object {
+  "EmailLabels": Array [
+    Object {
+      "emailId": 2,
+      "id": 3,
+      "labelId": 3,
+    },
+  ],
+  "boundary": null,
+  "content": "<p>Hello there</p>",
+  "date": "2013-10-07 08:23:19",
+  "fromAddress": "User me <user@criptext.com>",
+  "id": 2,
+  "key": "2",
+  "messageId": "messageIdB",
+  "preview": "Hello there",
+  "replyTo": null,
+  "s3Key": "s3KeyB",
+  "secure": true,
+  "status": 1,
+  "subject": "Greetings",
+  "threadId": "threadB",
+  "trashDate": null,
+  "unread": true,
+  "unsentDate": "2018-06-14 08:23:20",
+}
+`;
+
+exports[`Load data thread from Email Table: should load drafts, not save [to] recepient and save the others[cc, bcc] 1`] = `
+Object {
+  "bcc": null,
+  "boundary": null,
+  "cc": null,
+  "content": "<p>Hello there</p>",
+  "date": "2013-10-07 08:23:19",
+  "fileTokens": null,
+  "fromAddress": "<User me> <user@criptext.com>",
+  "fromContactIds": "1",
+  "id": 1,
+  "key": "1",
+  "labelIds": "5,6",
+  "messageId": "messageIdA",
+  "preview": "Hello there",
+  "replyTo": null,
+  "s3Key": "s3KeyA",
+  "secure": 1,
+  "status": 0,
+  "subject": "Greetings",
+  "threadId": "threadA",
+  "to": "2",
+  "trashDate": null,
+  "unread": 1,
+  "unsentDate": "2018-06-14 08:23:20",
+}
+`;
+
 exports[`Load data thread from Email Table: should load threads from DB with the correct shape: inbox 1`] = `
 Array [
   Object {
     "allLabels": "3,1",
     "boundary": null,
     "content": "<p>RE: Hello there</p>",
-    "date": "2018-06-15 08:23:19",
+    "date": "2018-06-15 13:23:19.000 +00:00",
     "emailIds": "4,3",
     "fileTokens": "tokenC",
     "fromAddress": "user@criptext.com",
     "fromContactName": "User A <usera@criptext.com>,user@criptext.com",
     "id": 4,
-    "isMuted": 0,
     "key": "4",
     "labels": "3",
-    "maxDate": "2018-06-15 08:23:19",
+    "maxDate": "2018-06-15 13:23:19.000 +00:00",
     "messageId": "messageIdD",
     "myAllLabels": "L3L,L1L",
     "myLabels": "L3L",
     "preview": "RE: Hello there",
-    "recipientContactIds": "2,1",
+    "recipientContactIds": "3,1",
     "replyTo": null,
     "s3Key": "s3KeyD",
     "secure": 1,
@@ -30,7 +207,7 @@ Array [
     "trashDate": null,
     "uniqueId": "threadC",
     "unread": 1,
-    "unsendDate": "2018-06-14 08:23:20",
+    "unsentDate": "2018-06-14 13:23:20.000 +00:00",
   },
 ]
 `;
@@ -41,21 +218,20 @@ Array [
     "allLabels": "3,1",
     "boundary": null,
     "content": "<p>RE: Hello there</p>",
-    "date": "2018-06-15 08:23:19",
+    "date": "2018-06-15 13:23:19.000 +00:00",
     "emailIds": "4,3",
     "fileTokens": "tokenC",
     "fromAddress": "user@criptext.com",
     "fromContactName": "User A <usera@criptext.com>,user@criptext.com",
     "id": 4,
-    "isMuted": 0,
     "key": "4",
     "labels": "3",
-    "maxDate": "2018-06-15 08:23:19",
+    "maxDate": "2018-06-15 13:23:19.000 +00:00",
     "messageId": "messageIdD",
     "myAllLabels": "L3L,L1L",
     "myLabels": "L3L",
     "preview": "RE: Hello there",
-    "recipientContactIds": "2,1",
+    "recipientContactIds": "3,1",
     "replyTo": null,
     "s3Key": "s3KeyD",
     "secure": 1,
@@ -65,22 +241,21 @@ Array [
     "trashDate": null,
     "uniqueId": "threadC",
     "unread": 1,
-    "unsendDate": "2018-06-14 08:23:20",
+    "unsentDate": "2018-06-14 13:23:20.000 +00:00",
   },
   Object {
     "allLabels": "3",
     "boundary": null,
     "content": "<p>Hello there</p>",
-    "date": "2013-10-07 08:23:19",
+    "date": "2013-10-07 13:23:19.000 +00:00",
     "emailIds": "2",
     "fileTokens": null,
     "fromAddress": "User me <user@criptext.com>",
     "fromContactName": "User me <user@criptext.com>",
     "id": 2,
-    "isMuted": 1,
     "key": "2",
     "labels": "3",
-    "maxDate": "2013-10-07 08:23:19",
+    "maxDate": "2013-10-07 13:23:19.000 +00:00",
     "messageId": "messageIdB",
     "myAllLabels": "L3L",
     "myLabels": "L3L",
@@ -95,32 +270,47 @@ Array [
     "trashDate": null,
     "uniqueId": "threadB",
     "unread": 1,
-    "unsendDate": "2018-06-14 08:23:20",
+    "unsentDate": "2018-06-14 13:23:20.000 +00:00",
   },
 ]
 `;
 
 exports[`Store data email to Email Table: should insert email to database 1`] = `
-Array [
-  Object {
-    "boundary": null,
-    "content": "<p>Hello there</p>",
-    "date": "2018-06-14 08:23:19",
-    "fromAddress": "From Contact <from@criptext.com>",
-    "id": 9,
-    "isMuted": 0,
-    "key": "11",
-    "messageId": "messageId",
-    "preview": "Hello there",
-    "replyTo": null,
-    "s3Key": "s3KeyId",
-    "secure": 1,
-    "status": 0,
-    "subject": "Greetings",
-    "threadId": "threadId",
-    "trashDate": null,
-    "unread": 1,
-    "unsendDate": "2018-06-14 08:23:20",
-  },
-]
+Object {
+  "content": "<p>Hello there</p>",
+  "date": "2018-06-14 08:23:19",
+  "fromAddress": "From Contact <from@criptext.com>",
+  "id": 10,
+  "key": "12",
+  "messageId": "messageId",
+  "preview": "Hello there",
+  "s3Key": "s3KeyId",
+  "secure": true,
+  "status": 0,
+  "subject": "Greetings",
+  "threadId": "threadId",
+  "trashDate": null,
+  "unread": true,
+  "unsentDate": "2018-06-14 08:23:20",
+}
+`;
+
+exports[`Store data email to Email Table: should insert email with threadId exist to database 1`] = `
+Object {
+  "content": "<p>Hello there</p>",
+  "date": "2018-06-14 08:23:19",
+  "fromAddress": "From Contact <usera@criptext.com>",
+  "id": 11,
+  "key": "14",
+  "messageId": "messageId",
+  "preview": "Hello there",
+  "s3Key": "s3KeyId",
+  "secure": true,
+  "status": 0,
+  "subject": "Greetings",
+  "threadId": "threadB",
+  "trashDate": null,
+  "unread": true,
+  "unsentDate": "2018-06-14 08:23:20",
+}
 `;

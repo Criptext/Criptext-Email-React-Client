@@ -90,17 +90,6 @@ describe('Email actions - UPDATE ', () => {
   });
 });
 
-describe('Email actions - MUTE ', () => {
-  it('Mute email by id', () => {
-    const emailId = '1';
-    const prevState = initState(myEmails);
-    const action = actions.muteNotifications(emailId);
-    const nextState = emailReducer(prevState, action);
-    const mutedEmail = nextState.get(emailId);
-    expect(mutedEmail.get('isMuted')).toBe(1);
-  });
-});
-
 describe('Email actions - REMOVE_EMAILS ', () => {
   it('should not remove emails from state if param is undefined', () => {
     const state = initState(myEmails);

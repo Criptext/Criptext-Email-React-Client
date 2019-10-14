@@ -715,7 +715,8 @@ class ComposerWrapper extends Component {
         emailData['files'] = filesDbParams;
       }
 
-      [emailId] = await createEmail(emailData);
+      const emailCreated = await createEmail(emailData);
+      emailId = emailCreated.id;
       const [username, domain] = myAccount.recipientId.split('@');
       const peer = {
         recipientId: myAccount.recipientId,

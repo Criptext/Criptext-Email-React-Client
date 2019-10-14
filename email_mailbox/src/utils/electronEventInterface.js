@@ -949,7 +949,7 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
   const emails = await getEmailsByArrayParam({ keys: metadataKeys });
   if (emails.length) {
     const emailKeys = emails.map(email => email.key);
-    const res = await updateEmails({
+    const [res] = await updateEmails({
       keys: emailKeys,
       unread: !!unread
     });
@@ -1023,7 +1023,7 @@ const handlePeerRemoveDevice = async ({ rowid }) => {
 
 const handlePeerThreadRead = async ({ rowid, params }) => {
   const { threadIds, unread } = params;
-  const res = await updateUnreadEmailByThreadIds({
+  const [res] = await updateUnreadEmailByThreadIds({
     threadIds,
     unread: !!unread
   });

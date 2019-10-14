@@ -42,7 +42,6 @@ Object {
       "content": "",
       "date": 1524861748481,
       "fromAddress": "myAccountName <myAccountRecipientId@criptext.com>",
-      "isMuted": false,
       "key": 1524861748481,
       "preview": "Hello",
       "secure": true,

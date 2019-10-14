@@ -243,13 +243,6 @@ const renderIconSecure = (onMouseEnterTooltip, onMouseLeaveTooltip, id) => {
   );
 };
 
-const renderMuteIcon = props => (
-  <i
-    className={props.email.isMuted ? 'icon-bell-mute' : 'icon-bell'}
-    onClick={ev => props.toggleMute(ev)}
-  />
-);
-
 const defineEmailStatus = status => {
   switch (status) {
     case EmailStatus.SENT:
@@ -315,11 +308,6 @@ renderEmailInfoExpand.propTypes = {
   onReportPhishing: PropTypes.func,
   onTogglePopOverEmailActions: PropTypes.func,
   onTooglePopOverEmailMoreInfo: PropTypes.func
-};
-
-renderMuteIcon.propTypes = {
-  email: PropTypes.object,
-  toggleMute: PropTypes.func
 };
 
 Email.propTypes = {

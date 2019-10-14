@@ -138,10 +138,7 @@ const destroy = async ({
       const [oldDraftEmail] = await dbManager.getEmailByKey(key);
       if (oldDraftEmail) {
         const oldEmailId = oldDraftEmail.id;
-        await dbManager.deleteEmailLabelAndContactByEmailId(
-          oldEmailId,
-          undefined
-        );
+        await dbManager.deleteEmailAndRelations(oldEmailId, undefined);
       }
       event = 'composer-email-delete';
       params = { threadId };
@@ -200,7 +197,7 @@ const saveDraftToDatabase = async (composerId, data) => {
     const newDataDraft = Object.assign(dataDraft, {
       email: Object.assign(dataDraft.email, { key: oldEmail.key })
     });
-    const newEmailId = await dbManager.deleteEmailLabelAndContactByEmailId(
+    const newEmailId = await dbManager.deleteEmailAndRelations(
       oldEmail.id,
       newDataDraft
     );

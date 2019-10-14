@@ -126,7 +126,6 @@ export const formOutgoingEmailFromData = ({
     status,
     unread: false,
     secure,
-    isMuted: false,
     threadId,
     content: '',
     fromAddress: `${myAccount.name} <${myEmailAddress}>`
