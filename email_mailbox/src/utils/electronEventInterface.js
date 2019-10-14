@@ -70,7 +70,6 @@ import Messages from './../data/message';
 import { MessageType } from './../components/Message';
 import { AttachItemStatus } from '../components/AttachItem';
 import { getShowEmailPreviewStatus, getUserGuideStepStatus } from './storage';
-import { getSubjectFromPushMessage } from './StringUtils';
 import {
   fetchAcknowledgeEvents,
   fetchEvents,
@@ -1462,15 +1461,11 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
         break;
       }
       case NOTIFICATION_ACTIONS.OPEN_EMAIL: {
-        const subject = getSubjectFromPushMessage(
-          data.body,
-          string.mailbox.empty_subject
-        );
-        if (subject) {
+        if (data.subject) {
           const title = string.notification.openEmail.title;
           const message = string.notification.openEmail.message.replace(
             '<subject>',
-            subject
+            data.subject
           );
           showNotificationApp({ title, message });
         }
