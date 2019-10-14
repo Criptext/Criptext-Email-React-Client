@@ -4,6 +4,7 @@ const { loginUrl } = require('./../window_routing');
 const globalManager = require('./../globalManager');
 const { addEventTrack, NUCLEUS_EVENTS } = require('./../nucleusManager');
 let loginWindow;
+let shouldCloseForce = false;
 
 const loginSize = {
   width: 328,
@@ -34,6 +35,7 @@ const create = () => {
 
   loginWindow.on('close', e => {
     const isMacOs = process.platform === 'darwin';
+    if (shouldCloseForce === true) return;
     if (isMacOs && !globalManager.forcequit.get()) {
       e.preventDefault();
       hide();
@@ -63,7 +65,8 @@ const show = async () => {
   }
 };
 
-const close = () => {
+const close = ({ forceClose }) => {
+  shouldCloseForce = forceClose;
   if (loginWindow !== undefined) {
     loginWindow.close();
   }

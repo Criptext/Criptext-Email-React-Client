@@ -17,7 +17,7 @@ const titleBar = () => (
       <span className="minimize" onClick={minimizeLoginWindow}>
         <i className="icon-minimize" />
       </span>
-      <span className="close" onClick={() => closeLoginWindow()}>
+      <span className="close" onClick={() => closeLoginWindow({})}>
         <i className="icon-exit" />
       </span>
     </span>

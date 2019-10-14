@@ -87,7 +87,7 @@ const commitNewUser = validInputData => {
     loadingType: 'signup',
     remoteData: validInputData
   });
-  closeLoginWindow();
+  closeLoginWindow({ forceClose: true });
 };
 
 class PanelWrapper extends Component {
@@ -822,7 +822,7 @@ class PanelWrapper extends Component {
             remoteData
           });
           deleteTemporalAccount();
-          closeLoginWindow();
+          closeLoginWindow({ forceClose: true });
           return;
         }
         default: {
@@ -902,7 +902,7 @@ class PanelWrapper extends Component {
           name
         }
       });
-      closeLoginWindow();
+      closeLoginWindow({ forceClose: true });
     } else {
       const error = {
         name: string.errors.loginFailed.name,

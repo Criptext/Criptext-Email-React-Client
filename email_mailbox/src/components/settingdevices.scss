@@ -70,13 +70,14 @@
     }
 
     button {
-      display: flex;
       align-items: center;
-      padding-left: 5%;
+      background-color: transparent;
       color: #d94e47;
+      cursor: pointer;
+      display: flex;
       font-size: 12px;
       font-weight: 600;
-      cursor: pointer;
+      padding-left: 5%;
     }
   }
 }

@@ -68,17 +68,16 @@ const create = () => {
   mailboxWindow.webContents.on('new-window', openLinkInDefaultBrowser);
   mailboxWindow.webContents.on('will-navigate', openLinkInDefaultBrowser);
   mailboxWindow.on('close', e => {
-    if (!globalManager.forcequit.get()) {
-      e.preventDefault();
-      if (mailboxWindow && mailboxWindow.isFullScreen()) {
-        mailboxWindow.setFullScreen(false);
-        setTimeout(() => hide(), 1200);
-      } else {
-        hide();
-      }
-    } else {
+    if (!mailboxWindow || globalManager.forcequit.get()) {
       destroyTrayIcon();
       require('./../socketClient').disconnect();
+    }
+    e.preventDefault();
+    if (mailboxWindow && mailboxWindow.isFullScreen()) {
+      mailboxWindow.setFullScreen(false);
+      setTimeout(() => hide(), 1200);
+    } else {
+      hide();
     }
   });
   mailboxWindow.webContents.once('did-frame-finish-load', () => {
@@ -149,15 +148,12 @@ const toggleMaximize = () => {
 };
 
 const minimize = () => {
-  if (mailboxWindow !== undefined) {
-    mailboxWindow.minimize();
-  }
+  if (!mailboxWindow) return;
+  mailboxWindow.minimize();
 };
 
 const send = (message, data) => {
-  if (!mailboxWindow) {
-    return;
-  }
+  if (!mailboxWindow) return;
   mailboxWindow.webContents.send(message, data);
 };
 

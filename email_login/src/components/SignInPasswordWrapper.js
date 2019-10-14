@@ -120,7 +120,7 @@ class SignInPasswordWrapper extends Component {
             name
           }
         });
-        closeLoginWindow();
+        closeLoginWindow({ forceClose: true });
         break;
       }
       case LOGIN_STATUS.WRONG_CREDENTIALS: {
