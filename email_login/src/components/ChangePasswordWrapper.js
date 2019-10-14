@@ -122,7 +122,7 @@ class ChangePasswordWrapper extends Component {
             token
           }
         });
-        closeLoginWindow();
+        closeLoginWindow({ forceClose: true });
         break;
       }
       case LOGIN_FIRST_STATUS.WRONG_CREDENTIALS: {

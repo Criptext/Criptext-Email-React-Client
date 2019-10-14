@@ -164,9 +164,8 @@ const destroy = async ({
 
 const sendEventToMailbox = (eventName, data) => {
   const mailboxWindow = require('./mailbox');
-  if (mailboxWindow && mailboxWindow.send) {
-    mailboxWindow.send(eventName, data);
-  }
+  if (!mailboxWindow) return;
+  mailboxWindow.send(eventName, data);
 };
 
 const saveDraftToDatabase = async (composerId, data) => {
