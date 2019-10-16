@@ -1183,7 +1183,8 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
   const { text, color, uuid } = params;
   const [label] = await getLabelsByText([text]);
   if (!label) {
-    const [labelId] = await createLabel({ text, color, uuid });
+    const labelCreated = await createLabel({ text, color, uuid });
+    const labelId = labelCreated.id;
     const labels = {
       [labelId]: {
         id: labelId,
@@ -1203,7 +1204,7 @@ const handlePeerLabelUpdate = async ({ rowid, params }) => {
   const { uuid, text } = params;
   const [label] = await getLabelByUuid(uuid);
   if (!label) return { rowid };
-  const response = updateLabelDB({ id: label.id, text });
+  const [response] = updateLabelDB({ id: label.id, text });
   if (!response) return { rowid: null };
   return { rowid, updatedLabel: { id: label.id, text } };
 };

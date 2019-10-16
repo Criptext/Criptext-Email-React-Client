@@ -15,7 +15,8 @@ import { SocketCommand } from '../utils/const';
 export const addLabel = label => {
   return async dispatch => {
     try {
-      const [labelId] = await createLabel(label);
+      const labelCreated = await createLabel(label);
+      const labelId = labelCreated.id;
       if (labelId) {
         const { text, color, visible, uuid } = label;
         const labels = {
@@ -82,7 +83,13 @@ export const removeLabelOnSuccess = labelId => {
 export const updateLabel = ({ id, uuid, color, text, visible }) => {
   return async dispatch => {
     try {
-      const response = await updateLabelDB({ id, uuid, color, text, visible });
+      const [response] = await updateLabelDB({
+        id,
+        uuid,
+        color,
+        text,
+        visible
+      });
       if (!response) return;
       dispatch(updateLabelSuccess({ id, uuid, color, text, visible }));
       if (!text) return;

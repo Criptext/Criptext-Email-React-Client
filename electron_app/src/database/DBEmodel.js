@@ -191,7 +191,7 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
       color: Sequelize.STRING,
       type: { type: Sequelize.STRING, defaultValue: 'custom' },
       visible: { type: Sequelize.BOOLEAN, defaultValue: true },
-      uuid: Sequelize.STRING
+      uuid: { type: Sequelize.STRING, unique: true }
     },
     {
       sequelize,
