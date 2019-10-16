@@ -1,5 +1,7 @@
 const fs = require('fs');
+const zlib = require('zlib');
 const knex = require('knex');
+const crypto = require('crypto');
 const LineByLineReader = require('line-by-line');
 const moment = require('moment');
 const {
@@ -18,12 +20,29 @@ const {
   Settings,
   Signedprekeyrecord,
   getDB,
+  Op,
   Table
 } = require('./DBEmanager');
+const myAccount = require('./../Account');
+const systemLabels = require('./../systemLabels');
+const { APP_DOMAIN, LINK_DEVICES_FILE_VERSION } = require('../utils/const');
+const { getEmailBody, getEmailHeaders } = require('./../utils/FileUtils');
+
+const CIPHER_ALGORITHM = 'aes-128-cbc';
+const STREAM_SIZE = 512 * 1024;
+const DEFAULT_KEY_LENGTH = 16;
 
 const excludedEmailStatus = [1, 4];
+const excludedLabels = [systemLabels.draft.id];
 const whereRawEmailQuery = `
-  ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})`;
+  ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')}) AND
+  NOT EXISTS (
+    SELECT * 
+    FROM ${Table.EMAIL_LABEL} 
+    WHERE ${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId 
+    AND ${Table.EMAIL_LABEL}.labelId in (${excludedLabels.join(',')})
+  )
+`;
 
 /* Batches
 ----------------------------- */
@@ -500,7 +519,267 @@ const closeDatabaseConnection = async dbConnection => {
 
 /* Encrypted Database
 ----------------------------- */
-const importDatabaseFromFile = async ({ filepath }) => {
+const exportContactTable = async () => {
+  let contactRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await Contact().findAll({
+      attributes: { exclude: ['score'] },
+      offset,
+      limit: SELECT_ALL_BATCH
+    });
+    contactRows = [...contactRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
+  return formatTableRowsToString(Table.CONTACT, contactRows);
+};
+
+const exportLabelTable = async () => {
+  let labelRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await Label().findAll({
+      where: { type: 'custom' },
+      offset,
+      limit: SELECT_ALL_BATCH
+    });
+    labelRows = [...labelRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
+  return formatTableRowsToString(Table.LABEL, labelRows);
+};
+
+const exportEmailTable = async () => {
+  const username = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  let emailRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const rows = await Email().findAll({
+      where: {
+        [Op.and]: [getDB().literal(`${whereRawEmailQuery}`)]
+      },
+      // include: [
+      //   {
+      //     model: EmailLabel(),
+      //     where: { labelId: { [Op.not]: excludedLabels } }
+      //   }
+      // ],
+      // where: {
+      //   status: { [Op.not]: excludedEmailStatus }
+      // },
+      offset,
+      limit: SELECT_ALL_BATCH
+    });
+
+    const result = await Promise.all(
+      rows.map(async row => {
+        let newRow = row.toJSON();
+
+        if (!newRow.unsentDate) delete newRow.unsentDate;
+        else {
+          newRow = { ...newRow, unsentDate: parseDate(row.unsentDate) };
+        }
+
+        if (!newRow.trashDate) {
+          delete newRow.trashDate;
+        } else {
+          newRow = { ...newRow, trashDate: parseDate(row.trashDate) };
+        }
+
+        if (newRow.replyTo === null) newRow = { ...newRow, replyTo: '' };
+
+        if (!newRow.boundary) delete newRow.boundary;
+
+        const body =
+          (await getEmailBody({ username, metadataKey: newRow.key })) ||
+          newRow.content;
+        const headers = await getEmailHeaders({
+          username,
+          metadataKey: newRow.key
+        });
+
+        const key = parseInt(newRow.key);
+        return {
+          ...newRow,
+          unread: !!newRow.unread,
+          secure: !!newRow.secure,
+          content: body,
+          key,
+          date: parseDate(newRow.date),
+          headers: headers || undefined
+        };
+      })
+    );
+    emailRows = [...emailRows, ...result];
+    if (rows.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
+  return formatTableRowsToString(Table.EMAIL, emailRows);
+};
+
+const exportEmailContactTable = async () => {
+  let emailContactRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await EmailContact()
+      .findAll({
+        where: {
+          [Op.and]: [
+            getDB().literal(
+              `EXISTS (SELECT * FROM ${Table.EMAIL} WHERE ${Table.EMAIL}.id=${
+                Table.EMAIL_CONTACT
+              }.emailId AND ${whereRawEmailQuery})`
+            )
+          ]
+        },
+        offset,
+        limit: SELECT_ALL_BATCH
+      })
+      .then(rows => {
+        return rows.map(item => {
+          const row = item.toJSON();
+          return Object.assign(row, {
+            emailId: parseInt(row.emailId)
+          });
+        });
+      });
+
+    emailContactRows = [...emailContactRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
+  return formatTableRowsToString('email_contact', emailContactRows);
+};
+
+const exportEmailLabelTable = async () => {
+  let emailLabelRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await EmailLabel()
+      .findAll({
+        where: {
+          [Op.and]: [
+            getDB().literal(
+              `EXISTS (SELECT * FROM ${Table.EMAIL} WHERE ${Table.EMAIL}.id=${
+                Table.EMAIL_LABEL
+              }.emailId AND ${whereRawEmailQuery})`
+            )
+          ]
+        },
+        offset,
+        limit: SELECT_ALL_BATCH
+      })
+      .then(rows => {
+        return rows.map(item => {
+          const row = item.toJSON();
+          return Object.assign(row, {
+            emailId: parseInt(row.emailId)
+          });
+        });
+      });
+
+    emailLabelRows = [...emailLabelRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
+  return formatTableRowsToString('email_label', emailLabelRows);
+};
+
+const exportFileTable = async () => {
+  let fileRows = [];
+  let shouldEnd = false;
+  let offset = 0;
+  while (!shouldEnd) {
+    const result = await File()
+      .findAll({
+        where: {
+          [Op.and]: [
+            getDB().literal(
+              `EXISTS (SELECT * FROM ${Table.EMAIL} WHERE ${Table.EMAIL}.id=${
+                Table.FILE
+              }.emailId AND ${whereRawEmailQuery})`
+            )
+          ]
+        },
+        offset,
+        limit: SELECT_ALL_BATCH
+      })
+      .then(rows => {
+        return rows.map(item => {
+          const row = item.toJSON();
+          if (!row.cid) delete row.cid;
+          return Object.assign(row, {
+            emailId: parseInt(row.emailId),
+            date: parseDate(row.date)
+          });
+        });
+      });
+
+    fileRows = [...fileRows, ...result];
+    if (result.length < SELECT_ALL_BATCH) {
+      shouldEnd = true;
+    } else {
+      offset += SELECT_ALL_BATCH;
+    }
+  }
+  return formatTableRowsToString(Table.FILE, fileRows);
+};
+
+const exportEncryptDatabaseToFile = async ({ outputPath }) => {
+  const filepath = outputPath;
+
+  const [recipientId, domain] = myAccount.recipientId.split('@');
+  const fileInformation = JSON.stringify({
+    fileVersion: LINK_DEVICES_FILE_VERSION,
+    recipientId: recipientId,
+    domain: domain || APP_DOMAIN
+  });
+  saveToFile({ data: fileInformation, filepath, mode: 'w' }, true);
+
+  const contacts = await exportContactTable();
+  saveToFile({ data: contacts, filepath, mode: 'a' });
+
+  const labels = await exportLabelTable();
+  saveToFile({ data: labels, filepath, mode: 'a' });
+
+  const emails = await exportEmailTable();
+  saveToFile({ data: emails, filepath, mode: 'a' });
+
+  const emailContacts = await exportEmailContactTable();
+  saveToFile({ data: emailContacts, filepath, mode: 'a' });
+
+  const emailLabels = await exportEmailLabelTable();
+  saveToFile({ data: emailLabels, filepath, mode: 'a' });
+
+  const files = await exportFileTable();
+  saveToFile({ data: files, filepath, mode: 'a' });
+};
+
+const importDatabaseFromFile = async ({ filepath, isStrict }) => {
   let accounts = [];
   let contacts = [];
   let labels = [];
@@ -518,7 +797,37 @@ const importDatabaseFromFile = async ({ filepath }) => {
 
   const sequelize = getDB();
 
-  return await sequelize.transaction(trx => {
+  return await sequelize.transaction(async trx => {
+    if (isStrict) {
+      getCustomLinesByStream(filepath, 1, (err, lines) => {
+        if (err) throw new Error('Failed to read file information');
+        const fileInformation = lines[0];
+        const { fileVersion, recipientId, domain } = JSON.parse(
+          fileInformation
+        );
+
+        if (recipientId && domain) {
+          const fileOwner = `${recipientId}@${domain}`;
+          const currentAddress = myAccount.recipientId.includes('@')
+            ? myAccount.recipientId
+            : `${myAccount.recipientId}@${APP_DOMAIN}`;
+          if (fileOwner !== currentAddress) return;
+        }
+        if (fileVersion) {
+          const version = Number(fileVersion);
+          const currentVersion = Number(LINK_DEVICES_FILE_VERSION);
+          if (version !== currentVersion) return;
+        }
+      });
+
+      await EmailContact().destroy({ where: {}, transaction: trx });
+      await EmailLabel().destroy({ where: {}, transaction: trx });
+      await Contact().destroy({ where: {}, transaction: trx });
+      await Email().destroy({ where: {}, transaction: trx });
+      await Label().destroy({ where: { type: 'custom' }, transaction: trx });
+      await File().destroy({ where: {}, transaction: trx });
+    }
+
     const lineReader = new LineByLineReader(filepath);
     return new Promise((resolve, reject) => {
       lineReader
@@ -713,14 +1022,108 @@ const insertRemainingRows = async (rows, Table, trx) => {
 
 /* Utils
 ----------------------------- */
+const decryptStreamFile = ({ inputFile, outputFile, key }) => {
+  return new Promise((resolve, reject) => {
+    const ivStartPosition = 0;
+    const ivEndPosition = DEFAULT_KEY_LENGTH;
+    const iv = readBytesSync(inputFile, ivStartPosition, ivEndPosition);
+    const reader = fs.createReadStream(inputFile, {
+      start: DEFAULT_KEY_LENGTH,
+      highWaterMark: STREAM_SIZE
+    });
+    const writer = fs.createWriteStream(outputFile);
+    reader
+      .pipe(crypto.createDecipheriv(CIPHER_ALGORITHM, key, iv))
+      .pipe(zlib.createGunzip())
+      .pipe(writer)
+      .on('error', reject)
+      .on('finish', resolve);
+  });
+};
+
+const encryptStreamFile = ({ inputFile, outputFile, key, iv, salt }) => {
+  return new Promise((resolve, reject) => {
+    const reader = fs.createReadStream(inputFile, {
+      highWaterMark: STREAM_SIZE
+    });
+    const writer = fs.createWriteStream(outputFile);
+    if (salt) writer.write(salt);
+    writer.write(iv);
+
+    reader
+      .pipe(zlib.createGzip())
+      .pipe(crypto.createCipheriv(CIPHER_ALGORITHM, key, iv))
+      .pipe(writer)
+      .on('error', reject)
+      .on('finish', resolve);
+  });
+};
+
 const formatTableRowsToString = (tableName, rowsObject) => {
   return rowsObject
     .map(row => JSON.stringify({ table: tableName, object: row }))
     .join('\n');
 };
 
+const generateKeyAndIv = (keySize, ivSize) => {
+  const keyLength = keySize || DEFAULT_KEY_LENGTH;
+  const ivLength = ivSize || DEFAULT_KEY_LENGTH;
+  try {
+    const key = crypto.randomBytes(keyLength);
+    const iv = crypto.randomBytes(ivLength);
+    return { key, iv };
+  } catch (e) {
+    return {
+      key: null,
+      iv: null
+    };
+  }
+};
+
+const getCustomLinesByStream = (filename, lineCount, callback) => {
+  const stream = fs.createReadStream(filename, {
+    flags: 'r',
+    encoding: 'utf-8',
+    fd: null,
+    mode: 438,
+    bufferSize: 64 * 1024
+  });
+
+  let data = '';
+  let lines = [];
+  stream.on('data', function(moreData) {
+    data += moreData;
+    lines = data.split('\n');
+    if (lines.length > lineCount + 1) {
+      stream.destroy();
+      lines = lines.slice(0, lineCount);
+      callback(false, lines);
+    }
+  });
+  stream.on('error', function() {
+    callback('Error');
+  });
+  stream.on('end', function() {
+    callback(false, lines);
+  });
+};
+
 const parseDate = date => {
   return moment(date).format('YYYY-MM-DD HH:mm:ss');
+};
+
+const readBytesSync = (filePath, filePosition, bytesToRead) => {
+  const buf = Buffer.alloc(bytesToRead, 0);
+  let fd;
+  try {
+    fd = fs.openSync(filePath, 'r');
+    fs.readSync(fd, buf, 0, bytesToRead, filePosition);
+  } finally {
+    if (fd) {
+      fs.closeSync(fd);
+    }
+  }
+  return buf;
 };
 
 const saveToFile = ({ data, filepath, mode }, isFirstRecord) => {
@@ -736,6 +1139,17 @@ const saveToFile = ({ data, filepath, mode }, isFirstRecord) => {
 };
 
 module.exports = {
+  decryptStreamFile,
+  encryptStreamFile,
   exportNotEncryptDatabaseToFile,
+  exportContactTable,
+  exportEmailTable,
+  exportEmailContactTable,
+  exportEmailLabelTable,
+  exportEncryptDatabaseToFile,
+  exportFileTable,
+  exportLabelTable,
+  generateKeyAndIv,
+  getCustomLinesByStream,
   importDatabaseFromFile
 };
