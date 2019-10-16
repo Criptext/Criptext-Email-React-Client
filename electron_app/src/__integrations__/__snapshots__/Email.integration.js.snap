@@ -363,7 +363,7 @@ Object {
 }
 `;
 
-exports[`Store data email to Email Table: should insert email with threadId exist to database 1`] = `
+exports[`Store data email to Email Table: should insert email with threadId and File exist to database 1`] = `
 Object {
   "content": "<p>Hello there</p>",
   "date": "2018-06-14 08:23:19",

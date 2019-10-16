@@ -78,10 +78,6 @@ export const createEmailLabel = async params => {
   return await ipc.callMain('db-create-email-label', params);
 };
 
-export const createFile = async params => {
-  return await ipc.callMain('db-create-file', params);
-};
-
 export const createIdentityKeyRecord = async params => {
   return await ipc.callMain('db-create-identity-key-record', params);
 };

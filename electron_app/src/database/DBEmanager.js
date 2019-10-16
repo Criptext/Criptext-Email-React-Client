@@ -1022,10 +1022,24 @@ const getEmailLabelsByEmailId = emailId => {
 
 /* File
 ----------------------------- */
-const createFile = async (files, trx) => {
-  return await File().bulkCreate(files, { transaction: trx });
-  // const knex = trx || db;
-  // return knex.insert(files).into(Table.FILE);
+const createFile = (files, trx) => {
+  return File().bulkCreate(files, { transaction: trx });
+};
+
+const getFilesByEmailId = emailId => {
+  return File().findAll({ where: { emailId } });
+};
+
+const getFilesByTokens = tokens => {
+  return File()
+    .findAll({ where: { token: tokens } })
+    .map(file => file.toJSON());
+};
+
+const updateFilesByEmailId = ({ emailId, status }) => {
+  const params = {};
+  if (typeof status === 'number') params.status = status;
+  return File().update(params, { where: { emailId } });
 };
 
 /* Functions
@@ -1159,6 +1173,7 @@ module.exports = {
   createContactsIfOrNotStore,
   createEmail,
   createEmailLabel,
+  createFile,
   createLabel,
   deleteDatabase,
   deleteEmailsByIds,
@@ -1189,6 +1204,8 @@ module.exports = {
   getEmailsGroupByThreadByParamsToSearch,
   getEmailsToDeleteByThreadIdAndLabelId,
   getEmailsUnredByLabelId,
+  getFilesByEmailId,
+  getFilesByTokens,
   getLabelById,
   getLabelByUuid,
   getLabelsByText,
@@ -1200,6 +1217,7 @@ module.exports = {
   updateContactSpamScore,
   updateEmail,
   updateEmails,
+  updateFilesByEmailId,
   updateLabel,
   updateUnreadEmailByThreadIds
 };

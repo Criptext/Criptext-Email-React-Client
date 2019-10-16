@@ -388,7 +388,7 @@ describe('Store data email to Email Table:', () => {
     expect(email).toMatchSnapshot();
   });
 
-  it('should insert email with threadId exist to database', async () => {
+  it('should insert email with threadId and File exist to database', async () => {
     const email = await DBManager.createEmail({
       email: {
         threadId: 'threadB',
@@ -409,10 +409,23 @@ describe('Store data email to Email Table:', () => {
         from: ['usera@criptext.com'],
         to: ['user@criptext.com']
       },
-      labels: [1]
+      labels: [1],
+      files: [
+        {
+          token: 'tokenB',
+          name: 'Criptext_Image_i_2018_06_14.png',
+          readOnly: false,
+          size: 183291,
+          status: 1,
+          date: '2018-06-14T23:45:57.466Z',
+          mimeType: 'image/png'
+        }
+      ]
     });
     emailIdToDelete = email.id;
     expect(email).toMatchSnapshot();
+    const files = await DBManager.getFilesByEmailId(emailIdToDelete);
+    expect(files.length).toBe(1);
   });
 });
 
