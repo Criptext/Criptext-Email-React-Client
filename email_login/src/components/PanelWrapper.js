@@ -31,7 +31,7 @@ import {
   throwError
 } from '../utils/ipc.js';
 import { validateEmail, validateUsername } from './../validators/validators';
-import { DEVICE_TYPE, appDomain } from '../utils/const';
+import { DEVICE_TYPE, appDomain, externalDomains } from '../utils/const';
 import DeviceNotApproved from './DeviceNotApproved';
 import { hashPassword } from '../utils/HashUtils';
 import string, { getLang } from './../lang';
@@ -60,6 +60,8 @@ export const popupType = {
 
 const errorMessages = {
   EMAILADDRESS_NOT_EXISTS: signIn.errorMessages.emailAddressNotExits,
+  EMAILADDRESS_NOT_VALID_CRIPTEXT:
+    signIn.errorMessages.emailAddressNotValidCriptext,
   USERNAME_EMAILADDRESS_INVALID:
     signIn.errorMessages.usernameOrEmailAddressInvalid,
   USERNAME_INVALID: signIn.errorMessages.usernameInvalid,
@@ -98,7 +100,6 @@ class PanelWrapper extends Component {
       contactURL: '',
       currentStep: mode.SIGNIN,
       lastStep: [mode.SIGNIN],
-      mode: mode.SIGNIN,
       values: {
         usernameOrEmailAddress: '',
         password: ''
@@ -117,9 +118,9 @@ class PanelWrapper extends Component {
 
   render() {
     const showFooter =
-      this.state.mode === mode.SIGNIN ||
-      this.state.mode === mode.SIGNINPASSWORD ||
-      this.state.mode === mode.CHANGEPASSWORD;
+      this.state.currentStep === mode.SIGNIN ||
+      this.state.currentStep === mode.SIGNINPASSWORD ||
+      this.state.currentStep === mode.CHANGEPASSWORD;
     return (
       <div className="panel-wrapper">
         {this.renderPopup()}
@@ -229,7 +230,7 @@ class PanelWrapper extends Component {
   };
 
   renderSection = () => {
-    switch (this.state.mode) {
+    switch (this.state.currentStep) {
       case mode.SIGNUP:
         return (
           <SignUpWrapper
@@ -296,7 +297,6 @@ class PanelWrapper extends Component {
     this.setState(state => ({
       lastStep: state.lastStep.concat([mode.CHANGEPASSWORD]),
       currentStep: mode.CHANGEPASSWORD,
-      mode: mode.CHANGEPASSWORD,
       oldPassword
     }));
   };
@@ -348,15 +348,17 @@ class PanelWrapper extends Component {
     } else if (nextMode === mode.SIGNUP) {
       this.setState({
         lastStep: this.concat(this.state.lastStep, nextMode),
-        currentStep: mode.SIGNUP,
-        mode: mode.SIGNUP
+        currentStep: mode.SIGNUP
       });
     }
   };
 
   onClickBackView = ev => {
-    ev.preventDefault();
-    ev.stopPropagation();
+    if (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
+
     if (this.state.currentStep === mode.SIGNINTOAPPROVE) {
       socketClient.disconnect();
       this.stopCountdown();
@@ -375,14 +377,11 @@ class PanelWrapper extends Component {
     }
     const lastStep = tmplastStep;
     const currentStep = tmplastStep[tmplastStep.length - 1];
-    this.setState(
-      {
-        lastStep,
-        currentStep,
-        mode: currentStep
-      },
-      this.cleanState
-    );
+    const state = { lastStep, currentStep };
+    if (currentStep === mode.SIGNIN)
+      // eslint-disable-next-line fp/no-mutation
+      state.buttonSignInState = ButtonState.DISABLED;
+    this.setState(state, this.cleanState);
   };
 
   stopCountdown = () => {
@@ -396,15 +395,17 @@ class PanelWrapper extends Component {
 
       switch (status) {
         case 200:
-          return { errorMessage: '' };
+          return { errorMessage: '', buttonSignInState: ButtonState.ENABLED };
 
         case 400:
           return {
-            errorMessage: errorMessages.EMAILADDRESS_NOT_EXISTS
+            errorMessage: errorMessages.EMAILADDRESS_NOT_EXISTS,
+            buttonSignInState: ButtonState.DISABLED
           };
         default:
           return {
-            errorMessage: errorMessages.STATUS_UNKNOWN + status
+            errorMessage: errorMessages.STATUS_UNKNOWN + status,
+            buttonSignInState: ButtonState.DISABLED
           };
       }
     });
@@ -468,17 +469,25 @@ class PanelWrapper extends Component {
       });
     }
     if (this.lastCheck) clearTimeout(this.lastCheck);
-
     this.lastCheck = setTimeout(() => {
       if (this.state.values.usernameOrEmailAddress !== usernameOrEmailAddress)
         return;
-
       if (isUsernameValid) {
         checkAvailableUsername(usernameOrEmailAddress).then(
           this.handleCheckUsernameResponse(usernameOrEmailAddress)
         );
       } else if (isEmailAddressValid) {
         const [username, domain] = usernameOrEmailAddress.split('@');
+        if (externalDomains.includes(domain)) {
+          return this.setState({
+            buttonSignInState: ButtonState.DISABLED,
+            errorMessage: errorMessages.EMAILADDRESS_NOT_VALID_CRIPTEXT,
+            values: {
+              ...this.state.values,
+              usernameOrEmailAddress: usernameOrEmailAddress
+            }
+          });
+        }
         canLogin({ username, domain }).then(
           this.handleCanLoginResponse(usernameOrEmailAddress)
         );
@@ -522,7 +531,6 @@ class PanelWrapper extends Component {
     if (!loggedOutAccounts.length) return true;
     this.setState({
       buttonSignInState: ButtonState.ENABLED,
-      mode: mode.SIGNIN,
       popupType: popupType.WARNING_SIGNIN_WITH_OTHER_DEVICE,
       popupContent: {
         title: signIn.loginNewAccount.title,
@@ -560,8 +568,7 @@ class PanelWrapper extends Component {
     this.setState(state => ({
       buttonSignInState: ButtonState.ENABLED,
       currentStep: mode.SIGNINPASSWORD,
-      lastStep: this.concat(state.lastStep, mode.SIGNINPASSWORD),
-      mode: mode.SIGNINPASSWORD
+      lastStep: this.concat(state.lastStep, mode.SIGNINPASSWORD)
     }));
   };
 
@@ -573,8 +580,7 @@ class PanelWrapper extends Component {
     if (check === true) {
       this.setState(state => ({
         lastStep: this.concat(state.lastStep, mode.SIGNUP),
-        currentStep: mode.SIGNUP,
-        mode: mode.SIGNUP
+        currentStep: mode.SIGNUP
       }));
     }
   };
@@ -584,7 +590,6 @@ class PanelWrapper extends Component {
       state => ({
         lastStep: this.concat(state.lastStep, mode.SIGNINTOAPPROVE),
         currentStep: mode.SIGNINTOAPPROVE,
-        mode: mode.SIGNINTOAPPROVE,
         values: { ...state.values, password }
       }),
       () => {
@@ -642,8 +647,7 @@ class PanelWrapper extends Component {
           state => ({
             buttonSignInState: ButtonState.ENABLED,
             currentStep: mode.SIGNINTOAPPROVE,
-            lastStep: this.concat(state.lastStep, mode.SIGNINTOAPPROVE),
-            mode: mode.SIGNINTOAPPROVE
+            lastStep: this.concat(state.lastStep, mode.SIGNINTOAPPROVE)
           }),
           () => {
             const recipientId =
@@ -758,7 +762,6 @@ class PanelWrapper extends Component {
     this.setState(state => ({
       lastStep: this.concat(state.lastStep, mode.SIGNINPASSWORD),
       currentStep: mode.SIGNINPASSWORD,
-      mode: mode.SIGNINPASSWORD,
       popupContent: undefined,
       popupType: undefined
     }));
@@ -790,11 +793,9 @@ class PanelWrapper extends Component {
           LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
           this.checkLinkStatus();
         } else {
-          this.setState({ mode: mode.SIGNIN }, () => {
-            this.cleanState();
-            // eslint-disable-next-line fp/no-mutation
-            LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
-          });
+          this.onClickBackView();
+          // eslint-disable-next-line fp/no-mutation
+          LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
         }
       });
     } else {
@@ -805,8 +806,7 @@ class PanelWrapper extends Component {
           socketClient.disconnect();
           this.setState(state => ({
             lastStep: this.concat(state.lastStep, mode.DEVICE_NOT_APPROVED),
-            currentStep: mode.DEVICE_NOT_APPROVED,
-            mode: mode.DEVICE_NOT_APPROVED
+            currentStep: mode.DEVICE_NOT_APPROVED
           }));
           return;
         }

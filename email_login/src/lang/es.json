@@ -125,6 +125,7 @@
     },
     "errorMessages": {
       "emailAddressNotExits": "Correo electrónico no existe",
+      "emailAddressNotValidCriptext": "El usuario o dirección de correo no pertenece a Criptext",
       "usernameOrEmailAddressInvalid": "Usuario o correo electrónico no válido",
       "usernameInvalid": "Usuario no valido",
       "usernameNotExits": "Usuario no existe",
