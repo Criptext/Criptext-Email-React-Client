@@ -48,7 +48,6 @@ const create = () => {
     webPreferences: { webSecurity: !isDev }
   });
   mailboxWindow.loadURL(mailboxUrl);
-
   if (isWindows()) mailboxWindow.setMenuBarVisibility(false);
 
   // Firebase
@@ -71,6 +70,7 @@ const create = () => {
     if (!mailboxWindow || globalManager.forcequit.get()) {
       destroyTrayIcon();
       require('./../socketClient').disconnect();
+      return;
     }
     e.preventDefault();
     if (mailboxWindow && mailboxWindow.isFullScreen()) {
