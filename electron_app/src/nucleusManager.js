@@ -2,12 +2,12 @@ const { APP_VERSION, NUCLEUS_ID, INSTALLER_TYPE } = require('./utils/const');
 const myAccount = require('./Account');
 let Nucleus;
 
-const initNucleus = ({ userId }) => {
+const initNucleus = ({ userId, language }) => {
   const data = {
     onlyMainProcess: true,
     userId: userId || 'unknown',
     version: APP_VERSION,
-    installerType: INSTALLER_TYPE
+    language
   };
   Nucleus = require('electron-nucleus')(NUCLEUS_ID, data);
 };
@@ -22,6 +22,9 @@ const addEventTrack = (event, data) => {
 
 const updateUserData = () => {
   Nucleus.setUserId(myAccount.recipientId);
+  Nucleus.setProps({
+    installerType: INSTALLER_TYPE
+  });
 };
 
 const NUCLEUS_EVENTS = {
