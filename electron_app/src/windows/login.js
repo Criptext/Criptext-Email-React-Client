@@ -35,7 +35,10 @@ const create = () => {
 
   loginWindow.on('close', e => {
     const isMacOs = process.platform === 'darwin';
-    if (shouldCloseForce === true) return;
+    if (shouldCloseForce === true) {
+      shouldCloseForce = false;
+      return;
+    }
     if (isMacOs && !globalManager.forcequit.get()) {
       e.preventDefault();
       hide();

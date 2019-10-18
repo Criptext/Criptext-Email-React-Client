@@ -24,7 +24,7 @@ const myEmailAddress = myAccount.recipientId.includes('@')
 const enterpriseDomain = myAccount.recipientId.split('@')[1];
 
 const formAppSign = () => {
-  return `<br/><span style="font-size: 12px;">${string.criptextSignature.sent_with} <a style="color: #0091ff; text-decoration: none;" href="http://bit.ly/2Xzx8Es">Criptext</a> ${string.criptextSignature.secure_email}</span>`;
+  return `<br/><i style="font-size: 12px;">${string.criptextSignature.sent_with} <span style="color: #0091ff; text-decoration: none;">Criptext</span> ${string.criptextSignature.secure_email}</i>`;
 };
 
 const getRecipientsWithDomain = (recipients, type) => {

@@ -126,6 +126,7 @@
     },
     "errorMessages": {
       "emailAddressNotExits": "Email address doesn't exist",
+      "emailAddressNotValidCriptext": "Not a valid Criptext address or username",
       "usernameOrEmailAddressInvalid": "Invalid username or email address",
       "usernameInvalid": "Invalid username",
       "usernameNotExits": "Username doesn't exist",

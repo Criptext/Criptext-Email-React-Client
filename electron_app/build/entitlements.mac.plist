@@ -14,5 +14,7 @@
     <true/>
     <key>com.apple.security.print</key>
     <true/>
+    <key>NSRequiresAquaSystemAppearance</key>
+    <false />
   </dict>
 </plist>
