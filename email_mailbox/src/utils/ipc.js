@@ -200,6 +200,10 @@ export const syncBegin = async () => {
   return await callMain('client-sync-begin');
 };
 
+export const syncCancel = async () => {
+  return await callMain('client-sync-cancel');
+};
+
 export const syncStatus = async () => {
   return await callMain('client-sync-status');
 };

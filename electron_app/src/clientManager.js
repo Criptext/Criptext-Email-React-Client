@@ -304,6 +304,12 @@ const linkAuth = async ({ newDeviceData, jwt }) => {
   return await client.linkAuth(newDeviceData);
 };
 
+const linkCancel = async ({ newDeviceData, jwt }) => {
+  console.log(newDeviceData, jwt);
+  await checkClient({ optionalSessionToken: jwt });
+  return await client.linkCancel(newDeviceData);
+};
+
 const linkBegin = async ({ username, domain }) => {
   const data = {
     targetUsername: username,
@@ -458,6 +464,14 @@ const syncBegin = async () => {
     : await checkExpiredSession(res, syncBegin, null);
 };
 
+const syncCancel = async () => {
+  console.log('HERE');
+  const res = await client.syncCancel();
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, syncCancel);
+};
+
 const syncDeny = async randomId => {
   const res = await client.syncDeny(randomId);
   return res.status === 200
@@ -557,6 +571,7 @@ module.exports = {
   linkAccept,
   linkAuth,
   linkBegin,
+  linkCancel,
   linkDeny,
   linkStatus,
   login,
@@ -577,6 +592,7 @@ module.exports = {
   setTwoFactorAuth,
   syncAccept,
   syncBegin,
+  syncCancel,
   syncDeny,
   syncStatus,
   unlockDevice,

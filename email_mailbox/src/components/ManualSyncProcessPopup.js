@@ -15,6 +15,7 @@ import {
   getDataReady,
   importDatabase,
   syncBegin,
+  syncCancel,
   syncStatus
 } from '../utils/ipc';
 import { appDomain, SectionType } from './../utils/const';
@@ -70,12 +71,13 @@ class ManualSyncProcessPopup extends Component {
   }
 
   render() {
+    console.log('OVER HERE');
     switch (this.state.mode) {
       case manualSyncModes.WAITING:
         return (
           <ManualSyncDeviceAuthenticationPopup
             onClickResendSync={this.handleClickResendSync}
-            onTogglePopup={this.props.onTogglePopup}
+            onClickCancelSync={this.handleClickCancelSync}
             disabledSubmitButtons={this.state.disabledSubmitButtons}
           />
         );
@@ -93,7 +95,7 @@ class ManualSyncProcessPopup extends Component {
             message={this.state.message}
             percent={this.state.percent}
             isCancelable={this.state.isCancelable}
-            onClickCancelSync={this.handleClickCancelSync}
+            onClickCancelSync={this.props.onTogglePopup}
             oldDeviceName={this.state.oldDeviceName}
           />
         );
@@ -119,6 +121,15 @@ class ManualSyncProcessPopup extends Component {
       }
     );
   };
+
+  handleClickCancelSync = async () => {
+    try {
+      const response = await syncCancel();
+    } catch (e) {
+      console.error(e);
+    }
+    this.props.onTogglePopup();
+  }
 
   checkManualSyncStatus = async () => {
     const { status } = await syncStatus();
@@ -236,10 +247,6 @@ class ManualSyncProcessPopup extends Component {
     }
     this.setState({ percent });
     this.tm = setTimeout(this.incrementPercentage, this.state.delay);
-  };
-
-  handleClickCancelSync = () => {
-    this.props.onTogglePopup();
   };
 }
 

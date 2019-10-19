@@ -75,6 +75,10 @@ ipc.answerRenderer('client-link-auth', newDeviceData =>
   clientManager.linkAuth(newDeviceData)
 );
 
+ipc.answerRenderer('client-link-cancel', newDeviceData =>
+  clientManager.linkCancel(newDeviceData)
+);
+
 ipc.answerRenderer('client-link-begin', ({ username, domain }) =>
   clientManager.linkBegin({ username, domain })
 );
@@ -138,6 +142,8 @@ ipc.answerRenderer('client-sync-accept', randomId =>
 );
 
 ipc.answerRenderer('client-sync-begin', () => clientManager.syncBegin());
+
+ipc.answerRenderer('client-sync-cancel', () => clientManager.syncCancel());
 
 ipc.answerRenderer('client-sync-deny', randomId =>
   clientManager.syncDeny(randomId)

@@ -25,6 +25,7 @@ import {
   getOsAndArch,
   linkAuth,
   linkBegin,
+  linkCancel,
   linkStatus,
   login,
   openCreateKeysLoadingWindow,
@@ -361,6 +362,7 @@ class PanelWrapper extends Component {
 
     if (this.state.currentStep === mode.SIGNINTOAPPROVE) {
       socketClient.disconnect();
+      this.sendLinkCancel();
       this.stopCountdown();
     }
     const tmplastStep = [...this.state.lastStep];
@@ -696,6 +698,24 @@ class PanelWrapper extends Component {
       return false;
     }
   };
+
+  sendLinkCancel = async () => {
+    const [
+      recipientId,
+      domain = appDomain
+    ] = this.state.values.usernameOrEmailAddress.split('@');
+    try {
+      const response = await linkCancel({
+        newDeviceData: {
+          recipientId,
+          domain
+        },
+        jwt: this.state.ephemeralToken
+      })
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   handleClickSignInWithPassword = ev => {
     ev.preventDefault();
