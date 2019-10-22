@@ -5,6 +5,7 @@ import SignInPasswordWrapper from './SignInPasswordWrapper';
 import SignInToApprove from './SignInToApprove';
 import ChangePasswordWrapper from './ChangePasswordWrapper';
 import DeleteDeviceWrapperPopup from './DeleteDeviceWrapperPopup';
+import RecoveryCodeWrapperPopup from './RecoveryCodeWrapperPopup';
 import PopupHOC from './PopupHOC';
 import ForgotPasswordPopup from './ForgotPasswordPopup';
 import DialogPopup, { DialogTypes } from './DialogPopup';
@@ -51,6 +52,7 @@ const mode = {
 };
 
 export const popupType = {
+  RECOVERY_CODE: 'RECOVERY_CODE',
   WARNING_RECOVERY_EMAIL: 'WARNING_RECOVERY_EMAIL',
   WARNING_SIGNIN_WITH_PASSWORD: 'WARNING_SIGNIN_WITH_PASSWORD',
   WARNING_SIGNIN_WITH_OTHER_DEVICE: 'WARNING_SIGNIN_WITH_OTHER_DEVICE',
@@ -84,6 +86,7 @@ const NoRecoverySignUpPopup = PopupHOC(DialogPopup);
 const SignInAnotherAccount = PopupHOC(DialogPopup);
 const DeleteDevicePopup = PopupHOC(DeleteDeviceWrapperPopup);
 const TooManyRequest = PopupHOC(DialogPopup);
+const RecoveryCodePopup = PopupHOC(RecoveryCodeWrapperPopup);
 
 const commitNewUser = validInputData => {
   openCreateKeysLoadingWindow({
@@ -225,6 +228,15 @@ class PanelWrapper extends Component {
             onConfirmClick={this.dismissPopup}
           />
         );
+      case popupType.RECOVERY_CODE:
+        return (
+          <RecoveryCodePopup
+            emailAddress={this.state.values.usernameOrEmailAddress}
+            jwt={this.state.ephemeralToken}
+            onDismiss={this.dismissPopup}
+            onCodeValidationSuccess={this.handleCodeSuccess}
+          />
+        );
       default:
         return null;
     }
@@ -249,6 +261,7 @@ class PanelWrapper extends Component {
             disabledResendLoginRequest={this.state.disabledResendLoginRequest}
             onClickSignInWithPassword={this.handleClickSignInWithPassword}
             onClickResendLoginRequest={this.handleClickResendLoginRequest}
+            onClickUseRecoveryCode={this.handleClickUseRecoveryCode}
             hasTwoFactorAuth={this.state.hasTwoFactorAuth}
           />
         );
@@ -257,6 +270,7 @@ class PanelWrapper extends Component {
           <DeviceNotApproved
             onClickSignInWithPassword={this.handleClickSignInWithPassword}
             hasTwoFactorAuth={this.state.hasTwoFactorAuth}
+            onClickUseRecoveryCode={this.handleClickUseRecoveryCode}
           />
         );
       case mode.SIGNINPASSWORD:
@@ -354,6 +368,28 @@ class PanelWrapper extends Component {
     }
   };
 
+  handleCodeSuccess = ({ deviceId, name }) => {
+    const [
+      username,
+      domain = appDomain
+    ] = this.state.values.usernameOrEmailAddress.split('@');
+    const recipientId =
+      domain === appDomain
+        ? username
+        : this.state.values.usernameOrEmailAddress;
+    socketClient.disconnect();
+    this.stopCountdown();
+    openCreateKeysLoadingWindow({
+      loadingType: 'signin',
+      remoteData: {
+        recipientId,
+        deviceId,
+        name
+      }
+    });
+    closeLoginWindow({ forceClose: true });
+  };
+
   onClickBackView = ev => {
     if (ev) {
       ev.preventDefault();
@@ -364,6 +400,9 @@ class PanelWrapper extends Component {
       socketClient.disconnect();
       this.sendLinkCancel();
       this.stopCountdown();
+      if (this.state.popupType === popupType.RECOVERY_CODE) {
+        this.dismissPopup();
+      }
     }
     const tmplastStep = [...this.state.lastStep];
     const popStep = tmplastStep.pop();
@@ -705,17 +744,17 @@ class PanelWrapper extends Component {
       domain = appDomain
     ] = this.state.values.usernameOrEmailAddress.split('@');
     try {
-      const response = await linkCancel({
+      await linkCancel({
         newDeviceData: {
           recipientId,
           domain
         },
         jwt: this.state.ephemeralToken
-      })
+      });
     } catch (e) {
       console.error(e);
     }
-  }
+  };
 
   handleClickSignInWithPassword = ev => {
     ev.preventDefault();
@@ -731,6 +770,15 @@ class PanelWrapper extends Component {
         cancelButtonLabel: signIn.usePassword.leftButtonLabel,
         confirmButtonLabel: signIn.usePassword.rightButtonLabel
       }
+    });
+  };
+
+  handleClickUseRecoveryCode = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.stopCountdown();
+    this.setState({
+      popupType: popupType.RECOVERY_CODE
     });
   };
 

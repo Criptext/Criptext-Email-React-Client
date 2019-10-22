@@ -77,3 +77,11 @@ export const loginFirst = async params => {
 export const resetPassword = async params => {
   return await callMain('client-reset-password', params);
 };
+
+export const sendRecoveryCode = async params => {
+  return await callMain('client-send-recovery-code', params);
+};
+
+export const validateRecoveryCode = async params => {
+  return await callMain('client-validate-recovery-code', params);
+};

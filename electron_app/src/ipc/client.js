@@ -125,6 +125,10 @@ ipc.answerRenderer('client-reset-password', params =>
   clientManager.resetPassword(params)
 );
 
+ipc.answerRenderer('client-send-recovery-code', params =>
+  clientManager.sendRecoveryCode(params)
+);
+
 ipc.answerRenderer('client-set-read-tracking', enabled =>
   clientManager.setReadTracking(enabled)
 );
@@ -172,3 +176,7 @@ ipc.answerRenderer('client-update-push-token', pushToken =>
 );
 
 ipc.answerRenderer('client-upload-avatar', clientManager.uploadAvatar);
+
+ipc.answerRenderer('client-validate-recovery-code', params =>
+  clientManager.validateRecoveryCode(params)
+);

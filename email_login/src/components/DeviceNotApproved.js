@@ -25,19 +25,24 @@ const renderContent = props => (
         {deviceNotApproved.warning.text}
       </p>
     </div>
-    {!props.hasTwoFactorAuth && (
-      <div className="cant-access">
+    <div className="cant-access">
+      {props.hasTwoFactorAuth ? (
+        <span onClick={props.onClickUseRecoveryCode}>
+          {deviceNotApproved.sendCodeLabel}
+        </span>
+      ) : (
         <span onClick={props.onClickSignInWithPassword}>
           {deviceNotApproved.passwordLoginLabel}
         </span>
-      </div>
-    )}
+      )}
+    </div>
   </div>
 );
 
 // eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {
   hasTwoFactorAuth: PropTypes.bool,
+  onClickUseRecoveryCode: PropTypes.func,
   onClickSignInWithPassword: PropTypes.func
 };
 

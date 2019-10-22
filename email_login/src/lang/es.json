@@ -18,7 +18,8 @@
       "strong": "Advertencia:",
       "text": "Multiples rechazos podría provocar que el dispositivo sea baneado de Criptext."
     },
-    "passwordLoginLabel": "Acceder con contraseña"
+    "passwordLoginLabel": "Acceder con contraseña",
+    "sendCodeLabel": "Enviar correo de recuperación"
   },
   "dialogContent": {
     "confirmWaitingApprovalLogin": {
@@ -113,6 +114,19 @@
           "confirm": "Ok"
         }
       }
+    },
+    "recoveryCode": {
+      "title": "Código de recuperación",
+      "message": "Por favor revisa tu correo de recuperación e introduce el código que te hemos enviado",
+      "alreadySent": "Te hemos enviado un código a tu correo de recuperación en la ultima hora. Revisa tu buzón e ingresa el código",
+      "buttons": {
+        "confirm": "Okay",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "unknown": "No fue posible validar el código. Intentalo otra vez",
+        "wrong": "Código incorrecto. Revisa que lo hayas ingresado bien e intenta otra vez"
+      }
     }
   },
   "signIn": {
@@ -194,6 +208,7 @@
     "message": "Revisa y aprueba desde un dispositivo\nexistente de Criptext para continuar",
     "getPromptLabel": "¿No recibiste el aviso?",
     "passwordLoginLabel": "Acceder con contraseña",
+    "sendCodeLabel": "Enviar código de recuperación",
     "buttons": {
       "sending": "Enviando...",
       "resend": "Reenviarlo"

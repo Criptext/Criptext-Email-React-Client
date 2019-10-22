@@ -71,7 +71,6 @@ class ManualSyncProcessPopup extends Component {
   }
 
   render() {
-    console.log('OVER HERE');
     switch (this.state.mode) {
       case manualSyncModes.WAITING:
         return (
@@ -123,13 +122,9 @@ class ManualSyncProcessPopup extends Component {
   };
 
   handleClickCancelSync = async () => {
-    try {
-      const response = await syncCancel();
-    } catch (e) {
-      console.error(e);
-    }
+    await syncCancel();
     this.props.onTogglePopup();
-  }
+  };
 
   checkManualSyncStatus = async () => {
     const { status } = await syncStatus();
