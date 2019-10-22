@@ -48,13 +48,19 @@ export const addLabels = labels => {
   };
 };
 
-export const removeLabel = id => {
+export const removeLabel = (id, uuid) => {
   return async dispatch => {
     try {
       const response = await deleteLabelById(id);
-      if (response) {
-        dispatch(removeLabelOnSuccess(id));
+      if (!response) {
+        return;
       }
+      dispatch(removeLabelOnSuccess(id));
+      const eventParams = {
+        cmd: SocketCommand.PEER_DELETE_LABEL,
+        params: { uuid }
+      };
+      await postPeerEvent(eventParams);
     } catch (e) {
       sendUpdateLabelsErrorMessage();
     }

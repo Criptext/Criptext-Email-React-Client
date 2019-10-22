@@ -44,8 +44,8 @@ class SettingLabelsWrapper extends Component {
     }
   };
 
-  handleClickRemoveLabel = labelId => {
-    this.props.onRemoveLabel(labelId);
+  handleClickRemoveLabel = (labelId, labelUuid) => {
+    this.props.onRemoveLabel(labelId, labelUuid);
   };
 
   handleClickChangeLabelVisibility = (nextCheckedValue, id) => {

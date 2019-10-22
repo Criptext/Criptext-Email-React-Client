@@ -104,14 +104,12 @@ const renderCustomLabelItem = (index, customLabelItem, props) => (
         status={customLabelItem.visible ? 'all' : 'none'}
       />
     </div>
-    {props.exist && (
-      <div
-        className="table-column-c"
-        onClick={() => props.onClickRemoveLabel(customLabelItem.id)}
-      >
-        {string.settings.remove}
-      </div>
-    )}
+    <div
+      className="table-column-c"
+      onClick={() => props.onClickRemoveLabel(customLabelItem.id, customLabelItem.uuid)}
+    >
+      {string.settings.remove}
+    </div>
   </div>
 );
 

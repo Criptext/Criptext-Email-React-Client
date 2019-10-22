@@ -107,8 +107,8 @@ const mapDispatchToProps = dispatch => {
       const res = await logout();
       return res.status === 200;
     },
-    onRemoveLabel: labelId => {
-      dispatch(removeLabel(String(labelId)));
+    onRemoveLabel: (labelId, labelUuid) => {
+      dispatch(removeLabel(String(labelId), labelUuid));
     },
     onRemoveDevice: async params => {
       const { status } = await removeDevice(params);
