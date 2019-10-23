@@ -1,5 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Load data contact from Contact and EmailContact Table: Should load contacts by emailId 1`] = `
+Object {
+  "bcc": Array [
+    Object {
+      "email": "userd@criptext.com",
+      "id": 6,
+      "name": null,
+    },
+  ],
+  "cc": Array [
+    Object {
+      "email": "userc@criptext.com",
+      "id": 5,
+      "name": null,
+    },
+  ],
+  "from": Array [
+    Object {
+      "email": "user@criptext.com",
+      "id": 1,
+      "name": "User me",
+    },
+  ],
+  "to": Array [
+    Object {
+      "email": "usera@criptext.com",
+      "id": 3,
+      "name": "User A",
+    },
+    Object {
+      "email": "userb@criptext.com",
+      "id": 4,
+      "name": null,
+    },
+  ],
+}
+`;
+
 exports[`Load data emaiLabel from EmailLabel Table:  Should load data emailLabel by emailId 1`] = `
 Array [
   Object {

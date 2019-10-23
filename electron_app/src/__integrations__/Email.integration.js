@@ -962,3 +962,10 @@ describe('Load data emaiLabel from EmailLabel Table: ', () => {
     expect(emailLabels).toEqual([]);
   });
 });
+
+describe('Load data contact from Contact and EmailContact Table:', () => {
+  it('Should load contacts by emailId', async () => {
+    const contacts = await DBManager.getContactsByEmailId(2);
+    expect(contacts).toMatchSnapshot();
+  });
+});
