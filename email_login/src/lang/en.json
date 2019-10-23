@@ -18,7 +18,8 @@
       "strong": "Warning:",
       "text": "Multiple rejections could lead your device to be blacklisted from Criptext."
     },
-    "passwordLoginLabel": "Sign In with password"
+    "passwordLoginLabel": "Sign In with password",
+    "sendCodeLabel": "Send Recovery Code"
   },
   "dialogContent": {
     "confirmWaitingApprovalLogin": {
@@ -114,6 +115,19 @@
           "confirm": "Okay"
         }
       }
+    },
+    "recoveryCode": {
+      "title": "Recovery Code",
+      "message": "Please check your recovery email and enter the code that was sent to you",
+      "alreadySent": "A code has already been sent to your recovery email in the last hour. Please check your mailbox and enter the code",
+      "buttons": {
+        "confirm": "Okay",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "unknown": "Unable to validate code, please try again",
+        "wrong": "You entered a wrong code. Please check it and try again"
+      }
     }
   },
   "signIn": {
@@ -195,6 +209,7 @@
     "message": "Check and approve on your existing Criptext device to continue",
     "getPromptLabel": "Didn't get the prompt?",
     "passwordLoginLabel": "Sign In with password",
+    "sendCodeLabel": "Send Recovery Code",
     "buttons": {
       "sending": "Sending...",
       "resend": "Resend it"

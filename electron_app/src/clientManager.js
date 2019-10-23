@@ -304,6 +304,11 @@ const linkAuth = async ({ newDeviceData, jwt }) => {
   return await client.linkAuth(newDeviceData);
 };
 
+const linkCancel = async ({ newDeviceData, jwt }) => {
+  await checkClient({ optionalSessionToken: jwt });
+  return await client.linkCancel(newDeviceData);
+};
+
 const linkBegin = async ({ username, domain }) => {
   const data = {
     targetUsername: username,
@@ -421,6 +426,12 @@ const resetPassword = async params => {
     : await checkExpiredSession(res, resetPassword, params);
 };
 
+const sendRecoveryCode = async ({ newDeviceData, jwt }) => {
+  await checkClient({ optionalSessionToken: jwt });
+  const res = await client.generateCodeTwoFactorAuth(newDeviceData);
+  return res;
+};
+
 const setReadTracking = async enabled => {
   const res = await client.setReadTracking(enabled);
   return res.status === 200
@@ -456,6 +467,11 @@ const syncBegin = async () => {
   return res.status === 200
     ? res
     : await checkExpiredSession(res, syncBegin, null);
+};
+
+const syncCancel = async () => {
+  const res = await client.syncCancel();
+  return res.status === 200 ? res : await checkExpiredSession(res, syncCancel);
 };
 
 const syncDeny = async randomId => {
@@ -536,6 +552,12 @@ const unsendEmail = async params => {
     : await checkExpiredSession(res, unsendEmail, params);
 };
 
+const validateRecoveryCode = async ({ newDeviceData, jwt }) => {
+  await checkClient({ optionalSessionToken: jwt });
+  const res = await client.validateCodeTwoFactorAuth(newDeviceData);
+  return res;
+};
+
 module.exports = {
   acknowledgeEvents,
   canLogin,
@@ -557,6 +579,7 @@ module.exports = {
   linkAccept,
   linkAuth,
   linkBegin,
+  linkCancel,
   linkDeny,
   linkStatus,
   login,
@@ -572,11 +595,13 @@ module.exports = {
   removeDevice,
   resendConfirmationEmail,
   resetPassword,
+  sendRecoveryCode,
   setReadTracking,
   setReplyTo,
   setTwoFactorAuth,
   syncAccept,
   syncBegin,
+  syncCancel,
   syncDeny,
   syncStatus,
   unlockDevice,
@@ -584,5 +609,6 @@ module.exports = {
   updateName,
   updatePushToken,
   uploadAvatar,
-  unsendEmail
+  unsendEmail,
+  validateRecoveryCode
 };

@@ -50,6 +50,10 @@ export const linkAuth = async newDeviceData => {
   return await callMain('client-link-auth', newDeviceData);
 };
 
+export const linkCancel = async newDeviceData => {
+  return await callMain('client-link-cancel', newDeviceData);
+};
+
 export const findDevices = async params => {
   return await callMain('client-find-devices', params);
 };
@@ -72,4 +76,12 @@ export const loginFirst = async params => {
 
 export const resetPassword = async params => {
   return await callMain('client-reset-password', params);
+};
+
+export const sendRecoveryCode = async params => {
+  return await callMain('client-send-recovery-code', params);
+};
+
+export const validateRecoveryCode = async params => {
+  return await callMain('client-validate-recovery-code', params);
 };

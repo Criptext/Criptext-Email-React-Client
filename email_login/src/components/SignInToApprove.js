@@ -33,6 +33,7 @@ const renderContent = props => (
         <div />
       </div>
     </div>
+    {SignInToApprove.sendCodeLabel}
     <div className="button">
       <p>{signInToApprove.getPromptLabel}</p>
       <button
@@ -47,13 +48,17 @@ const renderContent = props => (
         </span>
       </button>
     </div>
-    {!props.hasTwoFactorAuth && (
-      <div className="cant-access">
+    <div className="cant-access">
+      {props.hasTwoFactorAuth ? (
+        <span onClick={props.onClickUseRecoveryCode}>
+          {signInToApprove.sendCodeLabel}
+        </span>
+      ) : (
         <span onClick={props.onClickSignInWithPassword}>
           {signInToApprove.passwordLoginLabel}
         </span>
-      </div>
-    )}
+      )}
+    </div>
   </div>
 );
 
@@ -62,7 +67,8 @@ renderContent.propTypes = {
   disabledResendLoginRequest: PropTypes.bool,
   hasTwoFactorAuth: PropTypes.bool,
   onClickSignInWithPassword: PropTypes.func,
-  onClickResendLoginRequest: PropTypes.func
+  onClickResendLoginRequest: PropTypes.func,
+  onClickUseRecoveryCode: PropTypes.func
 };
 
 export default SignInToApprove;

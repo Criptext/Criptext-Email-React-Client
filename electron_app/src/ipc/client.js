@@ -75,6 +75,10 @@ ipc.answerRenderer('client-link-auth', newDeviceData =>
   clientManager.linkAuth(newDeviceData)
 );
 
+ipc.answerRenderer('client-link-cancel', newDeviceData =>
+  clientManager.linkCancel(newDeviceData)
+);
+
 ipc.answerRenderer('client-link-begin', ({ username, domain }) =>
   clientManager.linkBegin({ username, domain })
 );
@@ -121,6 +125,10 @@ ipc.answerRenderer('client-reset-password', params =>
   clientManager.resetPassword(params)
 );
 
+ipc.answerRenderer('client-send-recovery-code', params =>
+  clientManager.sendRecoveryCode(params)
+);
+
 ipc.answerRenderer('client-set-read-tracking', enabled =>
   clientManager.setReadTracking(enabled)
 );
@@ -138,6 +146,8 @@ ipc.answerRenderer('client-sync-accept', randomId =>
 );
 
 ipc.answerRenderer('client-sync-begin', () => clientManager.syncBegin());
+
+ipc.answerRenderer('client-sync-cancel', () => clientManager.syncCancel());
 
 ipc.answerRenderer('client-sync-deny', randomId =>
   clientManager.syncDeny(randomId)
@@ -166,3 +176,7 @@ ipc.answerRenderer('client-update-push-token', pushToken =>
 );
 
 ipc.answerRenderer('client-upload-avatar', clientManager.uploadAvatar);
+
+ipc.answerRenderer('client-validate-recovery-code', params =>
+  clientManager.validateRecoveryCode(params)
+);
