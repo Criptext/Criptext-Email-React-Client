@@ -118,4 +118,12 @@ describe('Label actions - UPDATE', () => {
     const newState = labelReducer(state, action);
     expect(newState).toBe(new Map({}));
   });
+
+  it('should remove group of label', () => {
+    const state = initState(myLabels);
+    const labelIds = ['1', '6'];
+    const action = actions.removeLabels(labelIds);
+    const newState = labelReducer(state, action);
+    expect(newState.size).toBe(5);
+  });
 });

@@ -106,7 +106,9 @@ const renderCustomLabelItem = (index, customLabelItem, props) => (
     </div>
     <div
       className="table-column-c"
-      onClick={() => props.onClickRemoveLabel(customLabelItem.id, customLabelItem.uuid)}
+      onClick={() =>
+        props.onClickRemoveLabel(customLabelItem.id, customLabelItem.uuid)
+      }
     >
       {string.settings.remove}
     </div>

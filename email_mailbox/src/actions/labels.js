@@ -48,6 +48,13 @@ export const addLabels = labels => {
   };
 };
 
+export const removeLabels = labelIds => {
+  return {
+    type: Label.REMOVE_BATCH,
+    labelIds
+  };
+};
+
 export const removeLabel = (id, uuid) => {
   return async dispatch => {
     try {

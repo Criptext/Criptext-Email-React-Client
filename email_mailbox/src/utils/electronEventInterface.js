@@ -19,6 +19,7 @@ import {
   deleteEmailContent,
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
+  deleteLabelById,
   getEmailByKey,
   getEmailByParams,
   getEmailLabelsByEmailId,
@@ -26,6 +27,7 @@ import {
   getEmailsByThreadId,
   getContactByEmails,
   getLabelsByText,
+  getLabelByUuid,
   logoutApp,
   openFilledComposerWindow,
   reportContentUnencrypted,
@@ -97,6 +99,7 @@ let labelIdsEvent = new Set();
 let threadIdsEvent = new Set();
 let badgeLabelIdsEvent = new Set();
 let labelsEvent = {};
+let removedLabels = [];
 let feedItemHasAdded = false;
 let avatarHasChanged = false;
 
@@ -115,6 +118,7 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
   threadIdsEvent = new Set();
   badgeLabelIdsEvent = new Set();
   labelsEvent = {};
+  removedLabels = [];
   avatarHasChanged = false;
   const rowIds = [];
   const completedTask = events.reduce((count, event) => {
@@ -134,7 +138,8 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
         labelIds,
         threadIds,
         labels,
-        badgeLabelIds
+        badgeLabelIds,
+        removedLabel
       } = await handleEvent(event);
       rowIds.push(rowid);
       if (threadIds)
@@ -146,6 +151,7 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
       if (badgeLabelIds)
         badgeLabelIdsEvent = new Set([...badgeLabelIdsEvent, ...badgeLabelIds]);
       if (labels) labelsEvent = { ...labelsEvent, ...labels };
+      if (removedLabel) removedLabels = [...removedLabels, removedLabel];
       if (avatarChanged) avatarHasChanged = true;
       if (feedItemAdded) feedItemHasAdded = true;
     } catch (error) {
@@ -184,7 +190,8 @@ const parseAndStoreEventsBatch = async ({ events, hasMoreEvents }) => {
       threadIds,
       labels,
       badgeLabelIds,
-      hasStopLoad
+      hasStopLoad,
+      removedLabels
     });
   }
 };
@@ -197,7 +204,8 @@ const parseAndDispatchEvent = async event => {
       labelIds,
       threadIds,
       labels,
-      badgeLabelIds
+      badgeLabelIds,
+      removedLabel
     } = await handleEvent(event);
     if (rowid) await setEventAsHandled([rowid]);
     emitter.emit(Event.STORE_LOAD, {
@@ -205,7 +213,8 @@ const parseAndDispatchEvent = async event => {
       labelIds,
       threadIds,
       labels,
-      badgeLabelIds
+      badgeLabelIds,
+      removedLabels: [removedLabel]
     });
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -325,6 +334,9 @@ export const handleEvent = incomingEvent => {
     }
     case SocketCommand.PEER_LABEL_CREATED: {
       return handlePeerLabelCreated(incomingEvent);
+    }
+    case SocketCommand.PEER_DELETE_LABEL: {
+      return handlePeerLabelDelete(incomingEvent);
     }
     case SocketCommand.PEER_USER_NAME_CHANGED: {
       return handlePeerUserNameChanged(incomingEvent);
@@ -940,6 +952,19 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
     return { rowid, labels };
   }
   return { rowid };
+};
+
+const handlePeerLabelDelete = async ({ rowid, params }) => {
+  const { uuid } = params;
+  const [label] = await getLabelByUuid(uuid);
+  if (!label) {
+    return { rowid };
+  }
+  const response = await deleteLabelById(label.id);
+  if (!response) {
+    return { rowid: null };
+  }
+  return { rowid, removedLabel: label.id };
 };
 
 const handlePeerUserNameChanged = async ({ rowid, params }) => {

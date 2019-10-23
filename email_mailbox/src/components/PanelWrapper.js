@@ -10,7 +10,12 @@ import {
 import { processPendingEvents } from '../utils/ipc';
 import { LabelType, getPendingRestoreStatus } from '../utils/electronInterface';
 import { SectionType } from '../utils/const';
-import { addLabels, setAvatarUpdatedTimestamp, stopLoadSync } from '../actions';
+import {
+  addLabels,
+  setAvatarUpdatedTimestamp,
+  stopLoadSync,
+  removeLabels
+} from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
 
 const MAILBOX_POPUP_TYPES = {
@@ -302,10 +307,12 @@ class PanelWrapper extends Component {
     threadIds,
     labels,
     badgeLabelIds,
-    hasStopLoad
+    hasStopLoad,
+    removedLabels
   }) => {
     let activity = undefined;
     let label = undefined;
+    let deletedLabels = undefined;
     if (avatarHasChanged) {
       activity = setAvatarUpdatedTimestamp(Date.now());
     }
@@ -386,6 +393,10 @@ class PanelWrapper extends Component {
       label = addLabels(labels);
     }
 
+    if (removedLabels.length >= 0) {
+      deletedLabels = removeLabels(removedLabels);
+    }
+
     if (badgeLabelIds) {
       let labelIdsBadge = [];
       if (badgeLabelIds.includes(LabelType.inbox.id))
@@ -398,8 +409,8 @@ class PanelWrapper extends Component {
         this.props.onUpdateUnreadEmailsBadge(labelIdsBadge);
     }
 
-    if (activity || label) {
-      this.props.onAddDataApp({ activity, label });
+    if (activity || label || deletedLabels) {
+      this.props.onAddDataApp({ activity, label, deletedLabels });
     }
   };
 
