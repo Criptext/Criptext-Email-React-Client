@@ -54,11 +54,9 @@ const labels = (state = new Map({}), action) => {
       }
       return state.delete(labelId);
     }
-    case Label.REMOVE_BATCH: {
+    case Label.REMOVE_LABELS: {
       const { labelIds } = action;
-      if (!labelIds) {
-        return state;
-      }
+      if (!labelIds) return state;
       return state.deleteAll(labelIds.map(String));
     }
     default:

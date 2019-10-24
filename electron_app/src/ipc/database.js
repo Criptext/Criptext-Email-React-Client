@@ -149,7 +149,7 @@ ipc.answerRenderer('db-get-labesls-by-text', text =>
   dbManager.getLabelsByText(text)
 );
 
-ipc.answerRenderer('db-get-labeluuid', dbManager.getLabelByUuid);
+ipc.answerRenderer('db-get-label-by-uuid', dbManager.getLabelByUuid);
 
 ipc.answerRenderer('db-get-prekey-pair', params =>
   dbManager.getPreKeyPair(params)

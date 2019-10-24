@@ -18,8 +18,7 @@ export const crossReducer = (state = new Map(), action) => {
         file,
         feeditem,
         label,
-        thread,
-        deletedLabels
+        thread
       } = action;
       const activitiesState = state.get('activities');
       const contactsState = state.get('contacts');
@@ -28,11 +27,6 @@ export const crossReducer = (state = new Map(), action) => {
       const feeditemsState = state.get('feeditems');
       const labelsState = state.get('labels');
       const threadsState = state.get('threads');
-
-      const addedLabelsState = label ? labels(labelsState, label) : labelsState;
-      const deletedLabelsState = deletedLabels
-        ? labels(addedLabelsState, deletedLabels)
-        : addedLabelsState;
       return state.merge({
         activities: activity
           ? activities(activitiesState, activity)
@@ -43,7 +37,7 @@ export const crossReducer = (state = new Map(), action) => {
         feeditems: feeditem
           ? feeditems(feeditemsState, feeditem)
           : feeditemsState,
-        labels: deletedLabelsState,
+        labels: label ? labels(labelsState, label) : labelsState,
         threads: thread ? threads(threadsState, thread) : threadsState
       });
     }

@@ -312,7 +312,7 @@ class PanelWrapper extends Component {
   }) => {
     let activity = undefined;
     let label = undefined;
-    let deletedLabels = undefined;
+
     if (avatarHasChanged) {
       activity = setAvatarUpdatedTimestamp(Date.now());
     }
@@ -392,9 +392,9 @@ class PanelWrapper extends Component {
     if (labels) {
       label = addLabels(labels);
     }
-
     if (removedLabels.length >= 0) {
-      deletedLabels = removeLabels(removedLabels);
+      if (!label) label = removeLabels(removedLabels);
+      else this.props.onRemoveLabels(removedLabels);
     }
 
     if (badgeLabelIds) {
@@ -409,8 +409,8 @@ class PanelWrapper extends Component {
         this.props.onUpdateUnreadEmailsBadge(labelIdsBadge);
     }
 
-    if (activity || label || deletedLabels) {
-      this.props.onAddDataApp({ activity, label, deletedLabels });
+    if (activity || label) {
+      this.props.onAddDataApp({ activity, label });
     }
   };
 
@@ -521,6 +521,7 @@ PanelWrapper.propTypes = {
   onLoadFeedItems: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,
+  onRemoveLabels: PropTypes.func,
   onStopLoadSync: PropTypes.func,
   onUpdateAvatar: PropTypes.func,
   onUnsendEmail: PropTypes.func,

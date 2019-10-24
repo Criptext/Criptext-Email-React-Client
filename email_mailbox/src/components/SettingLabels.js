@@ -155,8 +155,7 @@ renderCustomLabelsBlock.propTypes = {
 
 renderCustomLabelItem.propTypes = {
   onClickChangeLabelVisibility: PropTypes.func,
-  onClickRemoveLabel: PropTypes.func,
-  exist: PropTypes.bool
+  onClickRemoveLabel: PropTypes.func
 };
 
 renderInputAddNewLabel.propTypes = {

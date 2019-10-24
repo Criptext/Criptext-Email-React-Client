@@ -957,13 +957,9 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
 const handlePeerLabelDelete = async ({ rowid, params }) => {
   const { uuid } = params;
   const [label] = await getLabelByUuid(uuid);
-  if (!label) {
-    return { rowid };
-  }
+  if (!label) return { rowid };
   const response = await deleteLabelById(label.id);
-  if (!response) {
-    return { rowid: null };
-  }
+  if (!response) return { rowid: null };
   return { rowid, removedLabel: label.id };
 };
 

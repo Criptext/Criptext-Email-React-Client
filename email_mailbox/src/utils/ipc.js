@@ -408,7 +408,7 @@ export const getLabelsByText = async text => {
 };
 
 export const getLabelByUuid = async uuid => {
-  return await callMain('db-get-labeluuid', uuid);
+  return await callMain('db-get-label-by-uuid', uuid);
 };
 
 export const getPreKeyPair = async params => {
