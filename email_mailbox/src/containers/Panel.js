@@ -11,6 +11,7 @@ import {
   unsendEmailOnSuccess,
   unsendEmailFiles,
   updateLoadingSync,
+  removeLabels,
   stopLoadSync
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
@@ -44,6 +45,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onAddDataApp: data => {
       dispatch(addDataApp(data));
+    },
+    onRemoveLabels: labelIds => {
+      dispatch(removeLabels(labelIds));
     },
     onLoadEmails: threadId => {
       dispatch(loadEmails({ threadId }));

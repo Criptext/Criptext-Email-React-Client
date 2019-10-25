@@ -1045,7 +1045,7 @@ const deleteLabelById = id => {
       .where('labelId', id);
     const emailIds = emailLabels.map(item => item.emailId);
     if (emailIds.length) {
-      await deleteEmailLabel({ emailIds, labelId: id }, trx);
+      await deleteEmailLabel({ emailIds, labelIds: [id] }, trx);
     }
     return trx
       .table(Table.LABEL)
@@ -1075,6 +1075,13 @@ const getLabelsByText = async textArray => {
     labels = labels.concat(labelsMatched);
   }
   return labels;
+};
+
+const getLabelByUuid = uuid => {
+  return db
+    .select('*')
+    .from(Table.LABEL)
+    .where({ uuid });
 };
 
 const updateLabel = ({ id, color, text, visible }) => {
@@ -1415,6 +1422,7 @@ module.exports = {
   getPendingEvents,
   getIdentityKeyRecord,
   getLabelById,
+  getLabelByUuid,
   getLabelsByText,
   getPreKeyPair,
   getPreKeyRecordIds,

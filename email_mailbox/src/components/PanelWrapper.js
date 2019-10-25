@@ -10,7 +10,12 @@ import {
 import { processPendingEvents } from '../utils/ipc';
 import { LabelType, getPendingRestoreStatus } from '../utils/electronInterface';
 import { SectionType } from '../utils/const';
-import { addLabels, setAvatarUpdatedTimestamp, stopLoadSync } from '../actions';
+import {
+  addLabels,
+  setAvatarUpdatedTimestamp,
+  stopLoadSync,
+  removeLabels
+} from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
 
 const MAILBOX_POPUP_TYPES = {
@@ -302,10 +307,12 @@ class PanelWrapper extends Component {
     threadIds,
     labels,
     badgeLabelIds,
-    hasStopLoad
+    hasStopLoad,
+    removedLabels
   }) => {
     let activity = undefined;
     let label = undefined;
+
     if (avatarHasChanged) {
       activity = setAvatarUpdatedTimestamp(Date.now());
     }
@@ -384,6 +391,10 @@ class PanelWrapper extends Component {
 
     if (labels) {
       label = addLabels(labels);
+    }
+    if (removedLabels.length >= 0) {
+      if (!label) label = removeLabels(removedLabels);
+      else this.props.onRemoveLabels(removedLabels);
     }
 
     if (badgeLabelIds) {
@@ -510,6 +521,7 @@ PanelWrapper.propTypes = {
   onLoadFeedItems: PropTypes.func,
   onLoadThreads: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,
+  onRemoveLabels: PropTypes.func,
   onStopLoadSync: PropTypes.func,
   onUpdateAvatar: PropTypes.func,
   onUnsendEmail: PropTypes.func,

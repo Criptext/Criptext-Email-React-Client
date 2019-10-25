@@ -55,6 +55,7 @@ import {
   addLabel,
   removeLabel,
   removeLabelOnSuccess,
+  removeLabels,
   updateBadgeLabels,
   updateLabel,
   updateLabelSuccess
@@ -110,6 +111,7 @@ export {
   removeLabelIdThreads,
   removeLabelIdThreadsSuccess,
   removeLabelOnSuccess,
+  removeLabels,
   removeFeedItem,
   removeFeedItemSuccess,
   removeThreads,
