@@ -135,3 +135,33 @@ describe('Label actions - UPDATE', () => {
     expect(newState.size).toBe(state.size);
   });
 });
+
+describe('Label actions - REMOVE', () => {
+  const labels = [myLabels[0]];
+
+  it('should remove label', () => {
+    const state = initState(labels);
+    const labelId = '1';
+    const action = actions.removeLabelOnSuccess(labelId);
+    const newState = labelReducer(state, action);
+    expect(newState).toBe(new Map({}));
+  });
+});
+
+describe('Label actions - REMOVE_LABELS', () => {
+  it('should remove labels by labelIds', () => {
+    const state = initState(myLabels);
+    const labelIds = [1, 6];
+    const action = actions.removeLabels(labelIds);
+    const newState = labelReducer(state, action);
+    expect(newState.size).toBe(state.size - 2);
+  });
+
+  it('should not modify state if labels been removed do not exist', () => {
+    const state = initState(myLabels);
+    const labelIds = [25];
+    const action = actions.removeLabels(labelIds);
+    const newState = labelReducer(state, action);
+    expect(newState.size).toBe(state.size);
+  });
+});
