@@ -3,7 +3,7 @@ import { MessageType } from '../components/Message';
 import MessageWrapper from './../components/MessageWrapper';
 import MessageContent, { actionHandlerKeys } from './../data/message';
 import { LabelType, myAccount } from './../utils/electronInterface';
-import { installUpdate, restartSocket } from './../utils/ipc';
+import { installUpdate, restartConnection } from './../utils/ipc';
 import { SectionType } from '../utils/const';
 import { loadThreads, updateUnreadThreads } from '../actions';
 import { defineRejectedLabels } from '../utils/EmailUtils';
@@ -107,7 +107,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
         }
         case actionHandlerKeys.error.network: {
-          await restartSocket(myAccount.jwt);
+          await restartConnection(myAccount.jwt);
           break;
         }
         default:

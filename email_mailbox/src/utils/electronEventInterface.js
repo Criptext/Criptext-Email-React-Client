@@ -31,7 +31,7 @@ import {
   logoutApp,
   openFilledComposerWindow,
   reportContentUnencrypted,
-  restartSocket,
+  restartConnection,
   sendEndLinkDevicesEvent,
   sendEndSyncDevicesEvent,
   showNotificationApp,
@@ -1052,7 +1052,7 @@ ipcRenderer.on('socket-message', async (ev, message) => {
 });
 
 ipc.answerMain('get-events', async () => {
-  await restartSocket(myAccount.jwt);
+  await restartConnection(myAccount.jwt);
   sendLoadEventsEvent({});
 });
 
