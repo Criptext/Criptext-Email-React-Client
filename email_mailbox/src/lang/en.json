@@ -578,7 +578,7 @@
         "description": "Generate a backup of your inbox that can be exported to external drives"
       },
       "progress": {
-        "backing_up_mailbox": "Exporting backup file...",
+        "backing_up_mailbox": "Exporting backup file. This can take a few minutes...",
         "backup_mailbox_success": "Backup file exported successfully!"
       }
     },

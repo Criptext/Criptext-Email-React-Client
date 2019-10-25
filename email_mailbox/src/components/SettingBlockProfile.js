@@ -182,7 +182,7 @@ const renderBlockSignFooter = props => (
       ) : (
         <Switch
           theme="two"
-          name="replyToSwitch"
+          name="signFooterSwitch"
           onChange={props.onSwitchSignFooter}
           checked={defineSwitchStatus(props.signFooterSwitchStatus)}
           disabled={props.signFooterSwitchStatus === SwitchStatus.LOADING}
