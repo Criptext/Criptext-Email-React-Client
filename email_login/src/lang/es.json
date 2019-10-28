@@ -124,8 +124,8 @@
         "cancel": "Cancel"
       },
       "errors": {
-        "unknown": "No fue posible validar el código. Intentalo otra vez",
-        "wrong": "Código incorrecto. Revisa que lo hayas ingresado bien e intenta otra vez"
+        "unknown": "No fue posible validar el código",
+        "wrong": "Código incorrecto"
       }
     }
   },

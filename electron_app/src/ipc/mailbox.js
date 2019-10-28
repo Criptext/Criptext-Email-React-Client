@@ -126,7 +126,6 @@ ipc.answerRenderer('check-for-updates', showDialog => {
 ipc.answerRenderer('generate-label-uuid', genUUID);
 
 ipc.answerRenderer('restart-connection', jwt => {
-  console.log('RESTARTING');
   restartSocket({ jwt });
   checkAlive(true);
 });

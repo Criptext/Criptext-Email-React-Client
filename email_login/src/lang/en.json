@@ -125,8 +125,8 @@
         "cancel": "Cancel"
       },
       "errors": {
-        "unknown": "Unable to validate code, please try again",
-        "wrong": "You entered a wrong code. Please check it and try again"
+        "unknown": "Unable to validate code",
+        "wrong": "You entered a wrong code"
       }
     }
   },
