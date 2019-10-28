@@ -118,8 +118,8 @@
     },
     "recoveryCode": {
       "title": "Recovery Code",
-      "message": "Please check your recovery email and enter the code that was sent to you",
-      "alreadySent": "A code has already been sent to your recovery email in the last hour. Please check your mailbox and enter the code",
+      "message": "Please check your recovery email {0} and enter the code that was sent to you",
+      "alreadySent": "A code has already been sent to your recovery email {0} in the last hour. Please check your mailbox and enter the code",
       "buttons": {
         "confirm": "Okay",
         "cancel": "Cancel"

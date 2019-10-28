@@ -31,7 +31,10 @@ const RecoveryCodePopup = props => (
 const Content = props => (
   <div className="popup-items">
     <p>
-      {props.codeAlreadySent ? recoveryCode.alreadySent : recoveryCode.message}
+      {string.formatString(
+        props.codeAlreadySent ? recoveryCode.alreadySent : recoveryCode.message,
+        <b>{props.recoveryEmail || ''}</b>
+      )}
     </p>
     <div>
       <input
@@ -56,6 +59,7 @@ Content.propTypes = {
   errorInputCode: PropTypes.string,
   onKeyDown: PropTypes.func,
   onInputCodeChange: PropTypes.func,
+  recoveryEmail: PropTypes.string,
   validateButtonState: PropTypes.number,
   valueInputCode: PropTypes.string
 };

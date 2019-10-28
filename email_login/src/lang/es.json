@@ -117,8 +117,8 @@
     },
     "recoveryCode": {
       "title": "Código de recuperación",
-      "message": "Por favor revisa tu correo de recuperación e introduce el código que te hemos enviado",
-      "alreadySent": "Te hemos enviado un código a tu correo de recuperación en la ultima hora. Revisa tu buzón e ingresa el código",
+      "message": "Por favor revisa tu correo de recuperación {0} e introduce el código que te hemos enviado",
+      "alreadySent": "Te hemos enviado un código a tu correo de recuperación {0} en la ultima hora. Revisa tu buzón e ingresa el código",
       "buttons": {
         "confirm": "Okay",
         "cancel": "Cancel"

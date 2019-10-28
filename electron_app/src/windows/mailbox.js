@@ -106,7 +106,7 @@ const show = async ({ firstOpenApp = false }) => {
     }
   } else if (!existVisibleWindow.length || !mailboxWindow) {
     await create();
-    mailboxWindow.on('ready-to-show', () => {
+    mailboxWindow.webContents.on('dom-ready', () => {
       mailboxWindow.show();
       createTrayIcon();
       if (firstOpenApp) {
