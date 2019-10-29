@@ -6,6 +6,8 @@ class SettingLabelsWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isHiddenRemoveLabelPopup: true,
+      labelToDelete: null,
       isAddinglabel: false,
       labelToAdd: ''
     };
@@ -22,6 +24,10 @@ class SettingLabelsWrapper extends Component {
         onAddLabelInputKeyPressed={this.handleAddLabelInputKeyPressed}
         onClickChangeLabelVisibility={this.handleClickChangeLabelVisibility}
         onClickRemoveLabel={this.handleClickRemoveLabel}
+        onClickCancelRemoveLabel={this.handleCancelRemoveLabel}
+        onClickConfirmRemoveLabel={this.handleRemoveLabel}
+        isHiddenRemoveLabelPopup={this.state.isHiddenRemoveLabelPopup}
+        labelToDelete={this.state.labelToDelete}
       />
     );
   }
@@ -44,8 +50,34 @@ class SettingLabelsWrapper extends Component {
     }
   };
 
-  handleClickRemoveLabel = (labelId, labelUuid) => {
-    this.props.onRemoveLabel(labelId, labelUuid);
+  handleClickRemoveLabel = customLabel => {
+    this.setState({
+      isHiddenRemoveLabelPopup: false,
+      labelToDelete: customLabel
+    });
+  };
+
+  handleRemoveLabel = () => {
+    const { id, uuid } = this.state.labelToDelete;
+    if (!id || !uuid) {
+      return;
+    }
+    this.setState(
+      {
+        isHiddenRemoveLabelPopup: true,
+        labelToDelete: null
+      },
+      () => {
+        this.props.onRemoveLabel(id, uuid);
+      }
+    );
+  };
+
+  handleCancelRemoveLabel = () => {
+    this.setState({
+      isHiddenRemoveLabelPopup: true,
+      labelToDelete: null
+    });
   };
 
   handleClickChangeLabelVisibility = (nextCheckedValue, id) => {

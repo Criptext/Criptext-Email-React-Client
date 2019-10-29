@@ -485,6 +485,12 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Remover"
     },
+    "remove_label": {
+      "title": "Remover Etiqueta",
+      "message": "Estas seguro de querer eliminar permanentemente la etiqueta {0}",
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Remover"
+    },
     "restore_backup_request": {
       "title": "Restaurar respaldo",
       "paragraph": "Restaura tus correos desde un archivo local. Esto puede realizarse después seleccionando Configuración > Cuenta > Restaurar respaldo",

@@ -485,6 +485,12 @@
       "cancelButtonLabel": "Cancel",
       "confirmButtonLabel": "Remove"
     },
+    "remove_label": {
+      "title": "Remove Label",
+      "message": "Are you sure you want to permanently remove label {0}",
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Remove"
+    },
     "restore_backup_request": {
       "title": "Restore Backup",
       "paragraph": "Restore your emails from a local backup. This can be done later from Settings>Account>Restore Backup",
