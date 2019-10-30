@@ -31,7 +31,7 @@ import {
   logoutApp,
   openFilledComposerWindow,
   reportContentUnencrypted,
-  restartSocket,
+  restartConnection,
   sendEndLinkDevicesEvent,
   sendEndSyncDevicesEvent,
   showNotificationApp,
@@ -1052,7 +1052,7 @@ ipcRenderer.on('socket-message', async (ev, message) => {
 });
 
 ipc.answerMain('get-events', async () => {
-  await restartSocket(myAccount.jwt);
+  await restartConnection(myAccount.jwt);
   sendLoadEventsEvent({});
 });
 
@@ -1473,9 +1473,12 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
         isGettingEvents = true;
         const eventData = await fetchGetSingleEvent({ rowId: data.rowId });
         if (eventData) {
-          await parseAndDispatchEvent(eventData);
-          sendNewEmailNotification();
-          sendLoadEventsEvent({ showNotification: true });
+          const [email] = await getEmailByKey(eventData.params.metadataKey);
+          if (!email) {
+            await parseAndDispatchEvent(eventData);
+            sendNewEmailNotification();
+            sendLoadEventsEvent({ showNotification: true });
+          }
         }
         isGettingEvents = false;
         emitter.emit(Event.STOP_LOAD_SYNC, {});

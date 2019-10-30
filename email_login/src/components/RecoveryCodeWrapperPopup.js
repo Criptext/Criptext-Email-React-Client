@@ -16,7 +16,8 @@ class RecoveryCodeWrapperPopup extends Component {
       valueInputCode: '',
       errorInputCode: null,
       codeAlreadySent: false,
-      validateButtonState: ButtonState.ENABLED
+      validateButtonState: ButtonState.ENABLED,
+      recoveryEmail: null
     };
   }
 
@@ -31,6 +32,7 @@ class RecoveryCodeWrapperPopup extends Component {
         codeAlreadySent={this.state.codeAlreadySent}
         validateButtonState={this.state.validateButtonState}
         onKeyDown={this.handleKeyDown}
+        recoveryEmail={this.state.recoveryEmail}
       />
     );
   }
@@ -62,19 +64,24 @@ class RecoveryCodeWrapperPopup extends Component {
         resendRecoveryCodeEnable: false
       },
       async () => {
-        const { status } = await sendRecoveryCode({
+        const res = await sendRecoveryCode({
           jwt: this.props.jwt,
           newDeviceData: {
             recipientId,
             domain
           }
         });
+        const { status } = res;
         switch (status) {
           case 200:
+            this.setState({
+              recoveryEmail: res.body.address
+            });
             return;
           case 400:
             this.setState({
-              codeAlreadySent: true
+              codeAlreadySent: true,
+              recoveryEmail: res.body.address
             });
             return;
           default:

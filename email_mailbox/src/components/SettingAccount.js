@@ -73,6 +73,7 @@ const SettingAccount = props => (
       onClosePopup={props.onClosePopup}
       onConfirmChangePassword={props.onConfirmChangePassword}
       onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
+      onConfirmSetReplyTo={props.onConfirmSetReplyTo}
       onShowSettingsPopup={props.onShowSettingsPopup}
       setReplyToPopupParams={props.setReplyToPopupParams}
       onSetExportBackupPassword={props.onSetExportBackupPassword}

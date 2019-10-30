@@ -50,8 +50,8 @@ export const processPendingEvents = () => {
   }, 1000);
 };
 
-export const restartSocket = async jwt => {
-  await callMain('restart-socket', jwt);
+export const restartConnection = async jwt => {
+  await callMain('restart-connection', jwt);
 };
 
 export const sendEndSyncDevicesEvent = async () => {

@@ -485,6 +485,12 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Remover"
     },
+    "remove_label": {
+      "title": "Remover Etiqueta",
+      "message": "Estas seguro de querer eliminar permanentemente la etiqueta {0}",
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Remover"
+    },
     "restore_backup_request": {
       "title": "Restaurar respaldo",
       "paragraph": "Restaura tus correos desde un archivo local. Esto puede realizarse después seleccionando Configuración > Cuenta > Restaurar respaldo",
@@ -578,8 +584,8 @@
         "description": "Genera un archivo exportable a cualquier otro medio o disco"
       },
       "progress": {
-        "backing_up_mailbox": "Respaldando buzon...",
-        "backup_mailbox_success": "Buzon respaldado exitosamente"
+        "backing_up_mailbox": "Respaldando buzón. Esto puede tomar unos minutos...",
+        "backup_mailbox_success": "Buzón respaldado exitosamente"
       }
     },
     "restore_backup": {

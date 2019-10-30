@@ -392,7 +392,7 @@ class PanelWrapper extends Component {
     if (labels) {
       label = addLabels(labels);
     }
-    if (removedLabels.length >= 0) {
+    if (removedLabels && removedLabels.length >= 0) {
       if (!label) label = removeLabels(removedLabels);
       else this.props.onRemoveLabels(removedLabels);
     }

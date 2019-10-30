@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button, { ButtonType } from './Button';
 import string from '../lang';
+import './recoverycodepopup.scss';
 
 const { recoveryCode } = string.popUp;
 
@@ -30,21 +31,25 @@ const RecoveryCodePopup = props => (
 const Content = props => (
   <div className="popup-items">
     <p>
-      {props.codeAlreadySent ? recoveryCode.alreadySent : recoveryCode.message}
+      {string.formatString(
+        props.codeAlreadySent ? recoveryCode.alreadySent : recoveryCode.message,
+        <b>{props.recoveryEmail || ''}</b>
+      )}
     </p>
-    <div className="popup-input">
+    <div>
       <input
+        className="recovery-code-input"
         type="text"
         value={props.valueInputCode}
         onChange={props.onInputCodeChange}
         onKeyDown={props.onKeyDown}
       />
     </div>
-    {props.errorInputCode && (
-      <div>
+    <div className="recovery-code-input-error">
+      {props.errorInputCode && (
         <span className="popup-error">{props.errorInputCode}</span>
-      </div>
-    )}
+      )}
+    </div>
   </div>
 );
 
@@ -54,6 +59,7 @@ Content.propTypes = {
   errorInputCode: PropTypes.string,
   onKeyDown: PropTypes.func,
   onInputCodeChange: PropTypes.func,
+  recoveryEmail: PropTypes.string,
   validateButtonState: PropTypes.number,
   valueInputCode: PropTypes.string
 };

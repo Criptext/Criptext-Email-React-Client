@@ -250,8 +250,8 @@ export const filterThreadsOrLoadMoreByUnread = (
         if (threads.length || !loadParams.date) {
           dispatch(addThreads(loadParams.labelId, threads, loadParams.clear));
         }
-        dispatch(updateSwitchThreads({ checked: null, disabled: false }));
       }
+      dispatch(updateSwitchThreads({ checked: null, disabled: false }));
       dispatch(stopLoadThread());
     } catch (e) {
       dispatch(updateSwitchThreads({ checked: !checked, disabled: false }));
