@@ -5,10 +5,8 @@
 using namespace sqlite;
 using namespace std;
 
-CriptextDB::IdentityKey CriptextDB::getIdentityKey(string dbPath, string recipientId, long int deviceId) {
-  sqlite_config config;
-  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
-  database db(dbPath, config);
+CriptextDB::IdentityKey CriptextDB::getIdentityKey(string dbPath, string password, string recipientId, long int deviceId) {
+  database db = initializeDB(dbPath, password);
 
   IdentityKey identityKey;
   db << "Select * from identitykeyrecord where recipientId == ? and deviceId == ?;"
@@ -28,13 +26,10 @@ CriptextDB::IdentityKey CriptextDB::getIdentityKey(string dbPath, string recipie
   return identityKey;
 }
 
-bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int deviceId, char *identityKey) {
+bool CriptextDB::createIdentityKey(string dbPath, string password, string recipientId, int deviceId, char *identityKey) {
   try {
     bool hasRow = false;
-    sqlite_config config;
-    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
-
-    database db(dbPath, config);
+    database db = initializeDB(dbPath, password);
     db << "begin;";
     db << "Select * from identitykeyrecord where recipientId == ? and deviceId == ?;"
      << recipientId

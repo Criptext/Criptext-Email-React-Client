@@ -1,6 +1,6 @@
 #include "encrypt.h"
 
-int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
+int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char* password) {
   int endpointId = rand() % 1000000;
   int corsResult = cors(conn);
   if (corsResult < 0) {
@@ -38,7 +38,7 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
     return 400;
   }
 
-  CriptextSignal signal(recipientId->valuestring, dbPath);
+  CriptextSignal signal(recipientId->valuestring, dbPath, password);
 
   size_t keyLength = 16;
   char *encryptedText = 0;
@@ -132,7 +132,7 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
 
   spdlog::info("[{0}] Request -> <accountId: {1}, recipientId: {2}>", endpointId, accountRecipientId->valuestring, recipientId->valuestring);
 
-  CriptextSignal signal(accountRecipientId->valuestring, dbPath);
+  CriptextSignal signal(accountRecipientId->valuestring, dbPath, password);
 
   cJSON *response = cJSON_CreateObject();
 

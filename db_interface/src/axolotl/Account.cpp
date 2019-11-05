@@ -4,10 +4,8 @@
 using namespace std;
 using namespace sqlite;
 
-CriptextDB::Account CriptextDB::getAccount(string dbPath, char *recipientId) {
-  sqlite_config config;
-  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
-  database db(dbPath, config);
+CriptextDB::Account CriptextDB::getAccount(string dbPath, string password, char *recipientId) {
+  database db = initializeDB(dbPath, password);
   
   string myPrivKey;
   string myPubKey;
@@ -22,17 +20,20 @@ CriptextDB::Account CriptextDB::getAccount(string dbPath, char *recipientId) {
   Account account = { 
     .privKey = myPrivKey, 
     .pubKey = myPubKey, 
-    .registrationId = regId 
+    .registrationId = regId,
+    .dbPath = dbPath,
+    .password = password
   };
   return account;
 }
 
-int CriptextDB::createAccount(string dbPath, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
+int CriptextDB::createAccount(string dbPath, string password, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
   try {
+    std::cout << "DB: " << dbPath << " || pass: " << password << std::endl;
+    database db = initializeDB(dbPath, password);
+
     bool hasRow = false;
-    sqlite_config config;
-    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
-    database db(dbPath, config);
+    
     db << "begin;";
     db << "Select recipientId from account where recipientId == ?;"
      << recipientId

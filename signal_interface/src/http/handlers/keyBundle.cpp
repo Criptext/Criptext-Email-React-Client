@@ -1,6 +1,6 @@
 #include "keyBundle.h"
 
-int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
+int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, char *password) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -32,14 +32,14 @@ int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
     return 400;
   }
 
-  CriptextSignal signal(recipientId->valuestring, dbPath);
+  CriptextSignal signal(recipientId->valuestring, dbPath, password);
   cJSON *bundle = cJSON_CreateObject();
   signal.generateKeyBundle(bundle, recipientId->valuestring);
 
   return SendJSON(conn, bundle);
 }
 
-int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath) {
+int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath, char* password) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -76,8 +76,9 @@ int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath) {
   char *publicKey;
   char *privKey;
   int regId;
+  string myPassword = string(dbPath).find("Encrypt.db") != string::npos ? password : "";
   int result = CriptextSignal::createAccountCredentials(&publicKey, &privKey, &regId);
-  result = CriptextDB::createAccount(string(dbPath), recipientId->valuestring, name->valuestring, deviceId->valueint, publicKey, privKey, regId);
+  result = CriptextDB::createAccount(string(dbPath), myPassword, recipientId->valuestring, name->valuestring, deviceId->valueint, publicKey, privKey, regId);
 
   if (result < 0) {
     mg_send_http_error(conn, 500, "%s", "Unable To Create Account");
@@ -89,7 +90,7 @@ int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath) {
   return 1;
 }
 
-int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
+int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, char* password) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -123,7 +124,7 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
     return 400;
   }
 
-  CriptextSignal signal(accountRecipientId->valuestring, dbPath);
+  CriptextSignal signal(accountRecipientId->valuestring, dbPath, password);
   cJSON *keyBundleObj = NULL;
   cJSON_ArrayForEach(keyBundleObj, keybundleArray) {
 
@@ -169,7 +170,7 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
   return 1;
 }
 
-int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath) {
+int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath, char* password) {
   int corsResult = cors(conn);
   if (corsResult < 0) {
     return 201;
@@ -203,7 +204,7 @@ int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath) {
     return 400;
   }
 
-  CriptextSignal signal(accountId->valuestring, dbPath);
+  CriptextSignal signal(accountId->valuestring, dbPath, password);
   cJSON *bundle = cJSON_CreateObject();
   signal.generateMorePreKeys(bundle, newPreKeys);
   return SendJSON(conn, bundle);

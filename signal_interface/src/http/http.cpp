@@ -13,11 +13,11 @@ int decryptEmail(struct mg_connection *conn, void *cbdata){
 }
 
 int decryptKey(struct mg_connection *conn, void *cbdata){
-  return postDecryptKey(conn, cbdata, db_path);
+  return postDecryptKey(conn, cbdata, db_path, password);
 }
 
 int encryptKey(struct mg_connection *conn, void *cbdata){
-  return postEncryptKey(conn, cbdata, db_path);
+  return postEncryptKey(conn, cbdata, db_path, password);
 }
 
 int encryptEmail(struct mg_connection *conn, void *cbdata){
@@ -25,19 +25,19 @@ int encryptEmail(struct mg_connection *conn, void *cbdata){
 }
 
 int sessionCreate(struct mg_connection *conn, void *cbdata){
-  return processKeyBundle(conn, cbdata, db_path);
+  return processKeyBundle(conn, cbdata, db_path, password);
 }
 
 int accountCreate(struct mg_connection *conn, void *cbdata){
-  return createAccount(conn, cbdata, db_path);
+  return createAccount(conn, cbdata, db_path, password);
 }
 
 int keyBundleCreate(struct mg_connection *conn, void *cbdata){
-  return createKeyBundle(conn, cbdata, db_path);
+  return createKeyBundle(conn, cbdata, db_path, password);
 }
 
 int preKeysCreate(struct mg_connection *conn, void *cbdata){
-  return createPreKeys(conn, cbdata, db_path);
+  return createPreKeys(conn, cbdata, db_path, password);
 }
 
 int pong(struct mg_connection *conn, void *cbdata){

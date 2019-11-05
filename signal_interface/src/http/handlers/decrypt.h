@@ -11,4 +11,4 @@
 #include "../../crypto/crypto.h"
 
 int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, char* password);
-int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath);
+int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char* password);
