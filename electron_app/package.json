@@ -16,10 +16,11 @@
     "url": "https://github.com/Criptext/Criptext-Email-React-Client.git"
   },
   "scripts": {
+    "build": "electron-builder",
     "electron": "electron .",
     "start": "npm run electron .",
     "start:dev": "npm run electron . --allow-file-access-from-file",
-    "postinstall": "install-app-deps",
+    "postinstall": "electron-builder install-app-deps",
     "test": "criptext-js-tools test",
     "integration": "NODE_ENV=test criptext-js-tools integration",
     "lint": "criptext-js-tools lint",
@@ -31,8 +32,11 @@
   "nucleusId": "0.0.0",
   "build": {
     "appId": "com.criptext.criptextmail",
+    "afterSign": "notarize.js",
     "buildVersion": "1",
     "mac": {
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
       "target": [
         "mas",
         "dmg",
@@ -132,7 +136,8 @@
   "devDependencies": {
     "criptext-js-tools": "0.5.0",
     "electron": "3.1.10",
-    "electron-builder": "^20.37.0"
+    "electron-builder": "21.2.0",
+    "electron-notarize": "^0.1.1"
   },
   "dependencies": {
     "@criptext/api": "^0.15.22",
