@@ -390,6 +390,12 @@
       "cancelButtonLabel": "Cancel",
       "confirmButtonLabel": "Send"
     },
+    "edit_label": {
+      "title": "Edit Label",
+      "message": "Enter the new name for your label",
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Save"
+    },
     "export_backup": {
       "title": "Export Backup File",
       "switchLabel": "Encrypt Backup",

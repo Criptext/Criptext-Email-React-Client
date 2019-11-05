@@ -6,8 +6,8 @@ class SettingLabelsWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isHiddenRemoveLabelPopup: true,
-      labelToDelete: null,
+      popupType: PopupTypes.NONE,
+      popupState: null,
       isAddinglabel: false,
       labelToAdd: ''
     };
@@ -24,10 +24,14 @@ class SettingLabelsWrapper extends Component {
         onAddLabelInputKeyPressed={this.handleAddLabelInputKeyPressed}
         onClickChangeLabelVisibility={this.handleClickChangeLabelVisibility}
         onClickRemoveLabel={this.handleClickRemoveLabel}
-        onClickCancelRemoveLabel={this.handleCancelRemoveLabel}
+        onClickCancelRemoveLabel={this.handleDismissPopup}
         onClickConfirmRemoveLabel={this.handleRemoveLabel}
-        isHiddenRemoveLabelPopup={this.state.isHiddenRemoveLabelPopup}
-        labelToDelete={this.state.labelToDelete}
+        onClickEditLabel={this.handleClickEditLabel}
+        onClickCancelEditLabel={this.handleDismissPopup}
+        onClickConfirmEditLabel={this.handleEditLabel}
+        onChangeEditLabel={this.handleChangeEditLabel}
+        popupType={this.state.popupType}
+        popupState={this.state.popupState}
       />
     );
   }
@@ -52,20 +56,22 @@ class SettingLabelsWrapper extends Component {
 
   handleClickRemoveLabel = customLabel => {
     this.setState({
-      isHiddenRemoveLabelPopup: false,
-      labelToDelete: customLabel
+      popupType: PopupTypes.REMOVE,
+      popupState: {
+        labelToDelete: customLabel
+      }
     });
   };
 
   handleRemoveLabel = () => {
-    const { id, uuid } = this.state.labelToDelete;
+    const { id, uuid } = this.state.popupState.labelToDelete;
     if (!id || !uuid) {
       return;
     }
     this.setState(
       {
-        isHiddenRemoveLabelPopup: true,
-        labelToDelete: null
+        popupType: PopupTypes.NONE,
+        popupState: null
       },
       () => {
         this.props.onRemoveLabel(id, uuid);
@@ -73,10 +79,10 @@ class SettingLabelsWrapper extends Component {
     );
   };
 
-  handleCancelRemoveLabel = () => {
+  handleDismissPopup = () => {
     this.setState({
-      isHiddenRemoveLabelPopup: true,
-      labelToDelete: null
+      popupType: PopupTypes.NONE,
+      popupState: null
     });
   };
 
@@ -84,12 +90,59 @@ class SettingLabelsWrapper extends Component {
     const visible = nextCheckedValue === 'all';
     this.props.onUpdateLabel({ id, visible });
   };
+
+  handleClickEditLabel = customLabel => {
+    this.setState({
+      popupType: PopupTypes.EDIT,
+      popupState: {
+        newLabel: customLabel.text,
+        labelToEdit: customLabel
+      }
+    });
+  };
+
+  handleEditLabel = () => {
+    const { id, uuid, text } = this.state.popupState.labelToEdit;
+    const labelName = this.state.popupState.newLabel;
+    if (!id || !uuid || labelName === text) {
+      return;
+    }
+    this.setState(
+      {
+        popupType: PopupTypes.NONE,
+        popupState: null
+      },
+      () => {
+        this.props.onUpdateLabel({
+          id,
+          uuid,
+          text: labelName
+        });
+      }
+    );
+  };
+
+  handleChangeEditLabel = ev => {
+    const newLabel = ev.target.value;
+    this.setState({
+      popupState: {
+        ...this.state.popupState,
+        newLabel
+      }
+    });
+  };
 }
 
 SettingLabelsWrapper.propTypes = {
   onAddLabel: PropTypes.func,
   onRemoveLabel: PropTypes.func,
   onUpdateLabel: PropTypes.func
+};
+
+export const PopupTypes = {
+  NONE: 'NONE',
+  REMOVE: 'REMOVE',
+  EDIT: 'EDIT'
 };
 
 export default SettingLabelsWrapper;

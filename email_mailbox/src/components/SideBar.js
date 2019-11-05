@@ -121,6 +121,7 @@ const renderLabels = (showLabels, labels, mailboxSelected, onClickSection) => (
             id={label.id}
             text={label.text}
             type={label.type}
+            uuid={label.uuid}
             selected={selected}
             onClickSection={onClickSection}
           />

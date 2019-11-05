@@ -22,6 +22,19 @@ const labels = (state = new Map({}), action) => {
       }
       return state.set(`${labelId}`, label(state.get(`${labelId}`), action));
     }
+    case Label.UPDATE_LABELS: {
+      const labels = action.labels;
+      const updatedLabels = labels.reduce((result, label) => {
+        return {
+          ...result,
+          [label.id]: {
+            text: label.text
+          }
+        };
+      }, {});
+      const result = state.mergeDeep(updatedLabels);
+      return result;
+    }
     case Label.UPDATE_BADGE_LABELS: {
       const labelIds = action.labelIds;
       if (!labelIds) {

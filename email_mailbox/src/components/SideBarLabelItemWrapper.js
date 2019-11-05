@@ -45,12 +45,10 @@ class SideBarLabelItemWrapper extends Component {
   };
 
   handleOnDoubleClick = () => {
-    if (this.props.type === 'none') {
-      this.setState({
-        isEditable: true,
-        textEditable: this.props.text
-      });
-    }
+    this.setState({
+      isEditable: true,
+      textEditable: this.props.text
+    });
   };
 
   handleOnKeyPress = e => {

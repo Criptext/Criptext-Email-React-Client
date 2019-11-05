@@ -62,7 +62,7 @@ export const removeLabel = (id, uuid) => {
       if (!response) return;
       dispatch(removeLabelOnSuccess(id));
       const eventParams = {
-        cmd: SocketCommand.PEER_DELETE_LABEL,
+        cmd: SocketCommand.PEER_LABEL_DELETE,
         params: { uuid }
       };
       await postPeerEvent(eventParams);
@@ -79,16 +79,32 @@ export const removeLabelOnSuccess = labelId => {
   };
 };
 
-export const updateLabel = ({ id, color, text, visible }) => {
+export const updateLabel = ({ id, uuid, color, text, visible }) => {
   return async dispatch => {
     try {
-      const response = await updateLabelDB({ id, color, text, visible });
-      if (response) {
-        dispatch(updateLabelSuccess({ id, color, text, visible }));
-      }
+      const response = await updateLabelDB({ id, uuid, color, text, visible });
+      if (!response) return;
+      dispatch(updateLabelSuccess({ id, uuid, color, text, visible }));
+      if (!text) return;
+      const eventParams = {
+        cmd: SocketCommand.PEER_LABEL_UPDATE,
+        params: {
+          uuid,
+          color,
+          text
+        }
+      };
+      await postPeerEvent(eventParams);
     } catch (e) {
       sendUpdateLabelsErrorMessage();
     }
+  };
+};
+
+export const updateLabels = labels => {
+  return {
+    type: Label.UPDATE_LABELS,
+    labels
   };
 };
 

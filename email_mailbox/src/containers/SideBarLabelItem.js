@@ -5,11 +5,14 @@ import SideBarLabelItemView from '../components/SideBarLabelItemWrapper';
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onUpdateLabel: text => {
-      dispatch(updateLabel({ id: ownProps.label.id, text }));
+      dispatch(updateLabel({ id: ownProps.id, text, uuid: ownProps.uuid }));
     }
   };
 };
 
-const SideBarLabelItem = connect(mapDispatchToProps)(SideBarLabelItemView);
+const SideBarLabelItem = connect(
+  null,
+  mapDispatchToProps
+)(SideBarLabelItemView);
 
 export default SideBarLabelItem;

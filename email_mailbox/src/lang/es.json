@@ -412,6 +412,12 @@
         "cancel": "Cancelar"
       }
     },
+    "edit_label": {
+      "title": "Editar Etiqueta",
+      "message": "Ingresa el nuevo nombre para tu etiqueta",
+      "cancelButtonLabel": "Cancelar",
+      "confirmButtonLabel": "Guardar"
+    },
     "logout": {
       "title": "Cerrar sesión",
       "paragraphs": {
