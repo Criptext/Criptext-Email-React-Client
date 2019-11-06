@@ -184,6 +184,13 @@ const renderInputAddNewLabel = props => (
   </div>
 );
 
+renderPopup.propTypes = {
+  onClickCancelRemoveLabel: PropTypes.func,
+  onClickCancelEditLabel: PropTypes.func,
+  popupState: PropTypes.object,
+  popupType: PropTypes.string
+};
+
 renderSystemLabelsBlock.propTypes = {
   systemLabels: PropTypes.array,
   onClickChangeLabelVisibility: PropTypes.func
@@ -196,6 +203,7 @@ renderCustomLabelsBlock.propTypes = {
 
 renderCustomLabelItem.propTypes = {
   onClickChangeLabelVisibility: PropTypes.func,
+  onClickEditLabel: PropTypes.func,
   onClickRemoveLabel: PropTypes.func
 };
 

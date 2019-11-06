@@ -25,9 +25,12 @@ const labels = (state = new Map({}), action) => {
     case Label.UPDATE_LABELS: {
       const labels = action.labels;
       const updatedLabels = labels.reduce((result, label) => {
+        if (!state.has(String(label.id))) {
+          return result;
+        }
         return {
           ...result,
-          [label.id]: {
+          [String(label.id)]: {
             text: label.text
           }
         };

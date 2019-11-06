@@ -531,6 +531,7 @@ PanelWrapper.propTypes = {
   onRemoveLabels: PropTypes.func,
   onStopLoadSync: PropTypes.func,
   onUpdateAvatar: PropTypes.func,
+  onUpdateLabels: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   onUpdateEmailIdsThread: PropTypes.func,
   onUpdateLoadingSync: PropTypes.func,

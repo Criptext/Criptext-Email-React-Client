@@ -48,10 +48,18 @@ const EditLabelPopupInput = ({ value, onChangeValue, placeholder }) => (
   </div>
 );
 
+EditLabelPopupInput.propTypes = {
+  value: PropTypes.string,
+  onChangeValue: PropTypes.func,
+  placeholder: PropTypes.string
+};
+
 EditLabelPopup.propTypes = {
-  labelToDelete: PropTypes.object,
-  onClickCancelRemoveLabel: PropTypes.func,
-  onClickConfirmRemoveLabel: PropTypes.func
+  newLabel: PropTypes.string,
+  labelToEdit: PropTypes.object,
+  onChangeEditLabel: PropTypes.func,
+  onClickCancelEditLabel: PropTypes.func,
+  onClickConfirmEditLabel: PropTypes.func
 };
 
 export default EditLabelPopup;
