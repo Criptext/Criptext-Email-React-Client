@@ -3,6 +3,8 @@
     "activity_feed": "Flux d'activité",
     "deleted": "Supprimé",
     "downloaded": "téléchargé",
+    "empty_message": "Profiter de votre journée",
+    "empty_title": "Il n'y a encore rien de nouveau",
     "new": "nouveau",
     "older": "précédent",
     "opened": "ouvert(s)",
@@ -677,7 +679,7 @@
     "show_in_label_list": "Afficher dans la liste de marqueurs",
     "signature": "Signature",
     "sign_footer": {
-      "description": "Afficher le pied de page «Envoyé avec Criptext»"
+      "description": "Afficher «Envoyé avec Criptext»"
     },
     "system_labels": "Marqueurs Système",
     "theme": {

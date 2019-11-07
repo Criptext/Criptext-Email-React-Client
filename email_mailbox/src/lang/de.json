@@ -3,6 +3,8 @@
     "activity_feed": "Aktivitäten-Feed",
     "deleted": "Gelöscht",
     "downloaded": "heruntergeladen",
+    "empty_message": "Genießt dein Tag",
+    "empty_title": "Bis jetzt nichts neues",
     "new": "neu",
     "older": "älter",
     "opened": "geöffnet",
@@ -677,7 +679,7 @@
     "show_in_label_list": "In der Labelliste anzeigen",
     "signature": "Unterschrift",
     "sign_footer": {
-      "description": "Fußzeile \"Gesendet mit Criptext\" anzeigen"
+      "description": "\"Gesendet mit Criptext\" anzeigen"
     },
     "system_labels": "Systemlabels",
     "theme": {

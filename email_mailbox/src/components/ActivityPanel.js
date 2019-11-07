@@ -108,8 +108,8 @@ class ActivityPanel extends Component {
       <div className="empty-container empty-activity-container">
         <div className="empty-content">
           <div className="empty-icon" />
-          <div className="header-text">There&#39;s nothing new yet</div>
-          <div className="subheader-text">Enjoy your day</div>
+          <div className="header-text">{string.activity.empty_title}</div>
+          <div className="subheader-text">{string.activity.empty_message}</div>
         </div>
       </div>
     );

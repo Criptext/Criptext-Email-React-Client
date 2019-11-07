@@ -177,14 +177,14 @@ TABLE OF CONTENTS
 
 @font-face {
   font-family: "Roboto";
-  src:url(#{$_PATH_TO_FONTS}/roboto/Roboto-Thin.ttf) format("truetype");
+  src:url(#{$_PATH_TO_FONTS}/roboto/Roboto-Regular.ttf) format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Roboto";
-  src:url(#{$_PATH_TO_FONTS}/roboto/Roboto-ThinItalic.ttf) format("truetype");
+  src:url(#{$_PATH_TO_FONTS}/roboto/Roboto-Italic.ttf) format("truetype");
   font-weight: normal;
   font-style: italic;
 }
