@@ -170,7 +170,7 @@ class HeaderThreadOptionsWrapper extends Component {
     if (CustomCheckboxStatus.toBoolean(checked)) {
       return this.props.onAddLabel(this.props.threadsSelected, labelId);
     }
-    return this.props.onRemoveLabel(this.props.threadsSelected, labelId, true);
+    return this.props.onRemoveLabel(this.props.threadsSelected, labelId);
   };
 
   handleClickMarkAsRead = () => {
