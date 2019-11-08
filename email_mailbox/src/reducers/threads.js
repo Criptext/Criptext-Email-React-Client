@@ -187,7 +187,6 @@ const threads = (state, action) => {
       if (!threadIds || typeof labelIdToRemove !== 'number') {
         return state;
       }
-
       const list = state.get('list').map(threadItem => {
         if (threadIds.includes(threadItem.get('threadId'))) {
           return thread(threadItem, action);

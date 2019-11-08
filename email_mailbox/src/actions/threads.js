@@ -350,20 +350,19 @@ export const removeLabelIdThreads = (
           return await deleteEmailLabel(params);
         })
       );
-      if (dbReponse) {
-        dispatch(
-          removeLabelIdThreadsSuccess(
-            currentLabelId,
-            threadIds,
-            labelIdToRemove
-          )
-        );
-        dispatch(moveThreads(currentLabelId, threadIds));
-        let labelIds = [LabelType.inbox.id];
-        if (labelIdToRemove === LabelType.spam.id)
-          labelIds = [...labelIds, labelIdToRemove];
-        dispatch(updateBadgeLabels(labelIds));
-      }
+      if (!dbReponse) return;
+      dispatch(
+        removeLabelIdThreadsSuccess(currentLabelId, threadIds, labelIdToRemove)
+      );
+      let labelToUpdateBadge =
+        labelIdToRemove === LabelType.inbox ? LabelType.inbox.id : null;
+      labelToUpdateBadge =
+        labelIdToRemove === LabelType.spam.id
+          ? LabelType.spam.id
+          : labelIdToRemove;
+      if (labelToUpdateBadge) dispatch(updateBadgeLabels([LabelType.inbox.id]));
+      if (labelIdToRemove !== currentLabelId) return;
+      dispatch(moveThreads(currentLabelId, threadIds));
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
     }
