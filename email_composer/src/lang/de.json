@@ -1,0 +1,98 @@
+{
+  "inputLabels": {
+    "to": "An:",
+    "cc": "Cc:",
+    "bcc": "Bcc:"
+  },
+  "subject": {
+    "placeholder": "Betreff"
+  },
+  "editor": {
+    "placeholder": "Nachricht"
+  },
+  "dropFilesArea": {
+    "text": "Dateien hier ablegen"
+  },
+  "sendButtonLabel": "Senden",
+  "criptextSignature": {
+    "sent_with": "Gesendet mit",
+    "secure_email": "sichere E-Mail"
+  },
+  "popups": {
+    "nonCriptextRecipients": {
+      "title": "Nicht-Criptext-Empfänger",
+      "switchLabel": "Verschlüsselt senden",
+      "description": "Legen Sie eine Passphrase fest und geben Sie sie an Nicht-Criptext-Empfänger weiter, damit sie Ihre E-Mails lesen können",
+      "inputPassphrase": {
+        "placeholder": "Geben Sie Ihre Passphrase ein",
+        "errorMessages": {
+          "len": {
+            "prefix": "Muss",
+            "suffix": "Zeichen"
+          }
+        }
+      },
+      "note": {
+        "header": "Hinweis:",
+        "content": "Nicht-Criptext-E-Mail-Adressen erhalten eine normale, unverschlüsselte E-Mail."
+      },
+      "buttons": {
+        "send": "Senden",
+        "cancel": "Abbrechen"
+      }
+    }
+  },
+  "errors": {
+    "attachmentsTotalSize": {
+      "name": "Fehler",
+      "description": {
+        "prefix": "Die E-Mail hat das Anhangslimit von überschritten",
+        "suffix": "."
+      }
+    },
+    "encrypting": {
+      "name": "Verschlüsselungsfehler",
+      "description": "Beim Verschlüsseln der Nachricht ist ein Fehler aufgetreten.\nCode: "
+    },
+    "nonExistingUsers": {
+      "name": "Nicht existierende Benutzer",
+      "description": "Ein oder mehrere Benutzer sind nicht vorhanden. \n Überprüfen Sie die Empfänger und versuchen Sie es erneut"
+    },
+    "pendingFiles": {
+      "name": "Ausstehende Dateien",
+      "description": "Sie haben Dateien hochgeladen oder sind gescheitert. Bitte überprüfen Sie Ihre Dateien und versuchen Sie es erneut"
+    },
+    "tooBigFile": {
+      "name": "Zu große Datei",
+      "description": {
+        "prefix": "Die Datei",
+        "suffix": "übersteigt",
+        "defaultEnd": "zulässige Größe"
+      }
+    },
+    "tooManyRecipients": {
+      "name": "Zu viele Empfänger",
+      "description": "Ihre E-Mails können nur bis zu 300 Empfänger enthalten. \n Bitte überprüfen Sie dies und versuchen Sie es erneut."
+    },
+    "tooManyRequests": {
+      "name": "Zu viele Anfragen",
+      "description": "Zu viele aufeinanderfolgende Versuche. \n Bitte versuchen Sie es erneut in"
+    },
+    "unableToConnect": {
+      "name": "Verbindung kann nicht hergestellt werden",
+      "description": "Verbindung zum Server kann nicht hergestellt werden"
+    },
+    "unauthorized": {
+      "name": "Verschlüsselungsfehler",
+      "description": "Bei Ihrer Anfrage ist ein Fehler aufgetreten. \n Bitte versuche es erneut"
+    },
+    "uploadFailed": {
+      "name": "Upload fehlgeschlagen",
+      "description": "Beim Hochladen der Datei ist ein Fehler aufgetreten. \nBitte versuchen Sie es erneut"
+    },
+    "suspendedUser": {
+      "name": "Sie sind suspendiert",
+      "description": "Das Konto wurde von Ihrem Administrator vorübergehend gesperrt. Für weitere Informationen wenden Sie sich bitte an Ihren Firmenadministrator."
+    }
+  }
+}

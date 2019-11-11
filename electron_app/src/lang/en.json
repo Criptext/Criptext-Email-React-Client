@@ -53,7 +53,7 @@
   "windows": {
     "composer": {
       "windowTitle": "New Secure Message",
-      "closeWarning" : {
+      "closeWarning": {
         "title": "Warning",
         "message": "You are closing a message that has not been sent",
         "detail": "To save the message, click on 'Save as Draft'. The message will be saved on your Drafts folder",
@@ -68,7 +68,6 @@
       "template": {
         "file": "File",
         "newEmail": "New email",
-        
         "edit": "Edit",
         "undo": "Undo",
         "redo": "Redo",
@@ -76,20 +75,17 @@
         "copy": "Copy",
         "paste": "Paste",
         "selectAll": "Select All",
-        
         "window": "Window",
         "minimize": "Minimize",
         "close": "Close",
         "developer": "Developer",
         "toggleDeveloperTools": "Toggle Developer Tools",
-
         "aboutCriptext": "About Criptext",
         "services": "Services",
         "hideCriptext": "Hide Criptext",
         "hideOthers": "Hide Others",
         "showAll": "Show All",
         "quit": "Quit",
-
         "checkForUpdates": "Check for updates",
         "bringAllToFront": "Bring All to Front",
         "criptext": "Criptext"

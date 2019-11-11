@@ -295,7 +295,7 @@
       "y": "More than 2 months",
       "yy": "More than 2 months"
     },
-    "yesterdayText": "Yesterday",
+    "yesterdayText": "Yesterday ",
     "atText": "at"
   },
   "notification": {
@@ -390,16 +390,10 @@
       "cancelButtonLabel": "Cancel",
       "confirmButtonLabel": "Send"
     },
-    "edit_label": {
-      "title": "Edit Label",
-      "message": "Enter the new name for your label",
-      "cancelButtonLabel": "Cancel",
-      "confirmButtonLabel": "Save"
-    },
     "export_backup": {
       "title": "Export Backup File",
       "switchLabel": "Encrypt Backup",
-      "description": "If you lose/forget this passphrase you won't be able to restore this backup in the future",
+      "description": "If you lose\/forget this passphrase you won't be able to restore this backup in the future",
       "inputPassphrase": {
         "placeholder": "Enter passphrase",
         "errorMessages": {
@@ -410,7 +404,7 @@
         }
       },
       "note": {
-        "header": "Note: ",
+        "header": "Note:",
         "content": "For your security we sugest you chose to encrypt the backup file. "
       },
       "buttons": {
@@ -545,7 +539,7 @@
     "select_backup_folder": {
       "title": "Select Backup Folder",
       "note": {
-        "header": "Note: ",
+        "header": "Note:",
         "content": "Auto backups are not password protected"
       },
       "buttons": {
@@ -561,6 +555,12 @@
       "title": "2FA Enabled!",
       "paragraph": "Next time you sign into your account on another device you'll have to enter your password and then validate the sign in from an existing device.",
       "button": "Got it"
+    },
+    "edit_label": {
+      "title": "Edit Label",
+      "message": "Enter the new name for your label",
+      "cancelButtonLabel": "Cancel",
+      "confirmButtonLabel": "Save"
     }
   },
   "settings": {
@@ -734,7 +734,7 @@
     },
     "step_2": {
       "title": "Strong Privacy",
-      "description": "Criptext doesn`t collect email data. Your emails are only stored on your device."
+      "description": "Criptext doesn't collect email data. Your emails are only stored on your device."
     },
     "step_3": {
       "title": "The power is yours",

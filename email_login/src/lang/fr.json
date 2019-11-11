@@ -1,0 +1,232 @@
+{
+  "changePassword": {
+    "title": "Changer le mot de passe pour:",
+    "inputs": {
+      "newPassword": {
+        "placeholder": "Nouveau mot de passe"
+      },
+      "repeatNewPassword": {
+        "placeholder": "Retapez le nouveau mot de passe"
+      }
+    },
+    "button": "Modifier le mot de passe"
+  },
+  "deviceNotApproved": {
+    "title": "Connexion rejetée",
+    "message": "Votre demande d'accès à ce compte a été rejetée par un périphérique vérifié.",
+    "warning": {
+      "strong": "Attention :",
+      "text": "De multiples rejets peuvent conduire votre appareil à être sur la liste noire de Criptext."
+    },
+    "passwordLoginLabel": "Connexion via mot de passe",
+    "sendCodeLabel": "Envoyer le code de récupération"
+  },
+  "dialogContent": {
+    "confirmWaitingApprovalLogin": {
+      "cancelResponse": "Annuler",
+      "keepResponse": "Continuer de patienter",
+      "title": "Hum, c'est bizarre...",
+      "message": "Un problème survenu retarde ce processus. Voulez-vous continuer à patienter ?",
+      "detail": "Voulez-vous continuer à patienter ?"
+    }
+  },
+  "errors": {
+    "loginFailed": {
+      "name": "Erreur de connexion",
+      "description": "Une erreur s'est produite lors de la connexion. Veuillez réessayer.\nCode :"
+    },
+    "tooManyDevices": {
+      "name": "Trop d'appareils",
+      "description": "Vous avez déjà trop de périphériques actifs.\nSupprimez un périphérique inactif de l’un de vos appareils approuvés et réessayez. Si vous ne pouvez accéder à aucun de vos appareils sécurisés, contactez le support."
+    },
+    "tooManyRequests": {
+      "name": "Trop de requêtes",
+      "description": "Trop de tentatives consécutives.\nVeuillez réessayer dans",
+      "button": "Okay"
+    },
+    "wrongCredentials": {
+      "name": "Identifiants erronés",
+      "description": "Identifiant ou mot de passe incorrect. Vérifiez vos identifiants et réessayez."
+    }
+  },
+  "help": {
+    "need_help": "Besoin d'aide pour?",
+    "contact_support": "Contacter le support"
+  },
+  "last_activity": "Dernière activité",
+  "over_time": "Il y a plus de 2 mois",
+  "popUp": {
+    "deleteDevices": [
+      {
+        "title": "Vous avez atteint le nombre maximal d'appareils (10) sur votre compte.",
+        "paragraph": "Introduisez votre mot de passe pour supprimer un ou plusieurs appareils.",
+        "inputs": {
+          "password": {
+            "placeholder": "Changer le mot de passe",
+            "error": "Mot de passe incorrect"
+          }
+        },
+        "buttons": {
+          "cancel": "Annuler",
+          "confirm": "Continuer"
+        }
+      },
+      {
+        "title": "Supprimer des périphériques",
+        "buttons": {
+          "cancel": "Retour",
+          "confirm": "Retirer"
+        }
+      },
+      {
+        "title": "Supprimer des périphériques",
+        "paragraph": "Vous devez supprimer (2) plus de périphériques avant de vous connecter.",
+        "buttons": {
+          "cancel": "Annuler",
+          "confirm": "Retirer"
+        }
+      },
+      {
+        "title": "La session a expiré",
+        "paragraph": "Vous avez atteint le temps d'inactivité maximal autorisé. Veuillez vous connecter à nouveau.",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      }
+    ],
+    "forgotPassword": {
+      "200": {
+        "title": "Réinitialiser le mot de passe",
+        "paragraph": "Un lien de réinitialisation a été envoyé à",
+        "note": "Le lien sera valide pendant 30 minutes",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      },
+      "400": {
+        "title": "Aucun Email de Récupération",
+        "paragraph": "La récupération du mot de passe est impossible car aucune adresse email de récupération n'a été configurée sur votre compte. Contactez-nous pour une assistance supplémentaire:",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      },
+      "error": {
+        "title": "Réinitialiser le mot de passe",
+        "paragraph": "Échec d'envoi du lien de réinitialisation du mot de passe. Veuillez réessayer",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      }
+    },
+    "recoveryCode": {
+      "title": "Code de récupération",
+      "message": "Vérifiez votre e-mail de récupération {0} et entrez le code qui vous a été envoyé.",
+      "alreadySent": "Un code a déjà été envoyé à votre e-mail de récupération {0} au cours de la dernière heure. Veuillez vérifier votre boîte aux lettres et entrer le code",
+      "buttons": {
+        "confirm": "Okay",
+        "cancel": "Annuler"
+      },
+      "errors": {
+        "unknown": "Impossible de valider le code",
+        "wrong": "Vous avez entré un mauvais code"
+      }
+    }
+  },
+  "signIn": {
+    "header": "Bienvenue sur Criptext !",
+    "inputPlaceholder": "Adresse email ou nom d'utilisateur",
+    "signInButtonLabel": "Connexion",
+    "signUpMessage": {
+      "text": "Pas inscrit ?",
+      "strong": "Inscription"
+    },
+    "errorMessages": {
+      "emailAddressNotExits": "L'adresse email n'existe pas",
+      "emailAddressNotValidCriptext": "Adresse ou nom d'utilisateur Criptext non valide",
+      "usernameOrEmailAddressInvalid": "Nom d'utilisateur ou adresse e-mail invalide",
+      "usernameInvalid": "Nom d'utilisateur invalide",
+      "usernameNotExits": "Nom d'utilisateur n'existe pas",
+      "statusUnknown": "Code de statut inconnu :",
+      "usernameNotAvailable": "Nom d'utilisateur non disponible"
+    },
+    "usePassword": {
+      "title": "Avertissement",
+      "prefix": "Si vous vous connectez avec votre mot de passe, votre",
+      "strong": "l'historique de boîte aux lettres d'autres appareils ne sera pas disponible",
+      "suffix": "sur ce dispositif. Voulez-vous continuer ?",
+      "leftButtonLabel": "Annuler",
+      "rightButtonLabel": "Continuer"
+    },
+    "loginNewAccount": {
+      "title": "Avertissement de connexion",
+      "prefix": "Se connecter avec un autre compte supprimera tous les messages enregistrés sur cet appareil des comptes",
+      "suffix": "Souhaitez-vous continuer ?",
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Continuer",
+      "strong": ""
+    }
+  },
+  "signUp": {
+    "header": "S'inscrire",
+    "subheader": "Créez votre compte Criptext",
+    "buttons": {
+      "createAccount": "Créer un compte"
+    },
+    "errorMessages": {
+      "USERNAME_INVALID": "Au moins 3 caractères. Doit commencer par les lettres az.",
+      "USERNAME_EXISTS": "Nom d'utilisateur non disponible",
+      "USERNAME_UNCERTAIN": "Impossible de vérifier le nom d'utilisateur",
+      "STATUS_UNKNOWN": "Code de statut inconnu :",
+      "FULLNAME_INVALID": "Nom invalide",
+      "PASSWORD_INVALID": "Mot de passe invalide",
+      "PASSWORD_NOMATCH": "Les mots de passe ne correspondent pas",
+      "EMAIL_INVALID": "Adresse email invalide"
+    },
+    "form": {
+      "placeholders": {
+        "username": "Nom d'utilisateur",
+        "fullName": "Nom complet",
+        "password": "Changer le mot de passe",
+        "confirmPassword": "Confirmez le mot de passe",
+        "recoveryEmail": "Adresse email de récupération (facultatif)",
+        "checkbox": {
+          "prefix": "J'ai lu et j'accepte les",
+          "suffix": "Conditions d'utilisation"
+        }
+      }
+    },
+    "popUp": {
+      "warningRecoveryEmail": {
+        "title": "Attention !",
+        "prefix": "Vous n'avez pas configuré d'adresse email de récupération,",
+        "strong": "la récupération du compte est donc impossible",
+        "suffix": "si vous oubliez votre mot de passe",
+        "leftButtonLabel": "Annuler",
+        "rightButtonLabel": "Continuer"
+      }
+    }
+  },
+  "signInToApprove": {
+    "title": "Connexion",
+    "message": "Vérifiez et approuvez votre dispositif Criptext existant pour continuer",
+    "getPromptLabel": "Vous n'avez pas reçu l'invitation ?",
+    "passwordLoginLabel": "Connexion via mot de passe",
+    "sendCodeLabel": "Envoyer le code de récupération",
+    "buttons": {
+      "sending": "Envoi...",
+      "resend": "La renvoyer"
+    }
+  },
+  "signInPassword": {
+    "sectionTitleSignIn": "Connexion",
+    "sectionTitleTwoFactorAuth": "Authentification à deux facteurs",
+    "form": {
+      "passwordInputPlaceholder": "Changer le mot de passe",
+      "forgotLabel": "Oublié ?"
+    },
+    "buttons": {
+      "nextLabel": "Suivant",
+      "confirmLabel": "Confirmer"
+    }
+  }
+}

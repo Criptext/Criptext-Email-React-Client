@@ -1,0 +1,98 @@
+{
+  "inputLabels": {
+    "to": "À :",
+    "cc": "Cc :",
+    "bcc": "Bcc :"
+  },
+  "subject": {
+    "placeholder": "Objet"
+  },
+  "editor": {
+    "placeholder": "Message"
+  },
+  "dropFilesArea": {
+    "text": "Déposez les fichiers ici"
+  },
+  "sendButtonLabel": "Envoyer",
+  "criptextSignature": {
+    "sent_with": "Envoyé avec",
+    "secure_email": "email sécurisé"
+  },
+  "popups": {
+    "nonCriptextRecipients": {
+      "title": "Destinataire non-Criptext",
+      "switchLabel": "Envoi Chiffré",
+      "description": "Définissez une phrase secrète et partagez-la avec les destinataires extérieurs à Criptext pour qu'ils puissent lire votre email",
+      "inputPassphrase": {
+        "placeholder": "Saisir la phrase secrète",
+        "errorMessages": {
+          "len": {
+            "prefix": "Doit comporter",
+            "suffix": "caractères"
+          }
+        }
+      },
+      "note": {
+        "header": "Remarque :",
+        "content": "Les adresses e-mail non-Criptext recevront un e-mail normal et non crypté."
+      },
+      "buttons": {
+        "send": "Envoyer",
+        "cancel": "Annuler"
+      }
+    }
+  },
+  "errors": {
+    "attachmentsTotalSize": {
+      "name": "Erreur",
+      "description": {
+        "prefix": "L'email a dépassé la limite de taille de pièce jointe de ",
+        "suffix": "."
+      }
+    },
+    "encrypting": {
+      "name": "Erreur de chiffrement",
+      "description": "Une erreur s'est produite lors du chiffrement du message.\nCode: "
+    },
+    "nonExistingUsers": {
+      "name": "Utilisateurs non existants",
+      "description": "Un ou plusieurs utilisateurs n'existent pas.\nVérifiez les destinataires et réessayez."
+    },
+    "pendingFiles": {
+      "name": "Fichiers en attente",
+      "description": "Vous avez des fichiers en cours de téléchargement ou en échec. Veuillez vérifier vos fichiers et réessayer."
+    },
+    "tooBigFile": {
+      "name": "Fichier trop grand",
+      "description": {
+        "prefix": "Le fichier",
+        "suffix": "dépasse",
+        "defaultEnd": "la taille autorisée"
+      }
+    },
+    "tooManyRecipients": {
+      "name": "Trop de destinataires",
+      "description": "Vos e-mails peuvent être adressés à 300 destinataires maximum. Veuillez vérifier et réessayer."
+    },
+    "tooManyRequests": {
+      "name": "Trop de requêtes",
+      "description": "Trop de tentatives consécutives.\nVeuillez réessayer dans"
+    },
+    "unableToConnect": {
+      "name": "Impossible de se connecter",
+      "description": "Impossible de se connecter au serveur"
+    },
+    "unauthorized": {
+      "name": "Erreur de chiffrement",
+      "description": "Une erreur est survenue dans votre requête.\nVeuillez réessayer"
+    },
+    "uploadFailed": {
+      "name": "Échec du téléchargement",
+      "description": "Une erreur s'est produite lors du téléchargement du fichier. Veuillez réessayer"
+    },
+    "suspendedUser": {
+      "name": "Tu es suspendu",
+      "description": "Ce compte a été temporairement suspendu par votre administrateur. Veuillez contacter l'administrateur de votre entreprise pour plus d'informations."
+    }
+  }
+}

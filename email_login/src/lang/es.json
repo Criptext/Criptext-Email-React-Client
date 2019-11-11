@@ -30,7 +30,7 @@
       "detail": "¿Quieres seguir esperando?"
     }
   },
-  "errors":{
+  "errors": {
     "loginFailed": {
       "name": "Error de inicio de sesión",
       "description": "Ha ocurrido un error durante el inicio de sesión. Por favor, intenta de nuevo.\nCódigo: "
@@ -50,7 +50,7 @@
     }
   },
   "help": {
-    "need_help": "¿Necesitas ayuda?",
+    "need_help": "¿Necesitas ayuda? ",
     "contact_support": "Contáctanos"
   },
   "last_activity": "Última actividad",
@@ -70,20 +70,23 @@
           "cancel": "Cancelar",
           "confirm": "Continuar"
         }
-      },{
+      },
+      {
         "title": "Eliminar dispositivo(s)",
         "buttons": {
           "cancel": "Atras",
           "confirm": "Eliminar"
         }
-      },{
+      },
+      {
         "title": "Eliminar Dispositivo",
         "paragraph": "Aún tienes 2 dispositivos pendientes que eliminar antes de poder iniciar sesión",
         "buttons": {
           "cancel": "Cancelar",
           "confirm": "Eliminar"
         }
-      },{
+      },
+      {
         "title": "Sesión Expirada",
         "paragraph": "Lo sentimos tu sesión ha expirado, excediste el tiempo de inactividad permitido, vuelva a intentarlo.",
         "buttons": {
@@ -157,10 +160,10 @@
     "loginNewAccount": {
       "title": "Advertencia de inicio de sesión",
       "prefix": "Iniciar sesión con otra cuenta de usuario borrará todos los correos guardados en este dispoitivo de la(s) cuenta(s)",
-      "strong": "",
       "suffix": "¿Deseas continuar?",
       "cancelButtonLabel": "Cancelar",
-      "confirmButtonLabel": "Continuar"
+      "confirmButtonLabel": "Continuar",
+      "strong": ""
     }
   },
   "signUp": {
@@ -187,7 +190,7 @@
         "confirmPassword": "Confirma la contraseña",
         "recoveryEmail": "Correo de recuperación (opcional)",
         "checkbox": {
-          "prefix": "He leído y estoy de acuerdo con los ",
+          "prefix": "He leído y estoy de acuerdo con los",
           "suffix": "Términos y Condiciones"
         }
       }

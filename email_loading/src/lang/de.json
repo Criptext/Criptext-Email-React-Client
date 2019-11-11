@@ -1,0 +1,107 @@
+{
+  "linkDeviceRequest": {
+    "header": "Anmeldebestätigung",
+    "text": "Möchten Sie genehmigen?",
+    "buttonLabels": {
+      "reject": "Ablehnen",
+      "approve": "Genehmigen"
+    }
+  },
+  "linkNewDevice": {
+    "header": "Postfachsynchronisation",
+    "messages": {
+      "error": "Fehler beim Synchronisieren Ihres Postfachs",
+      "retry": "Wiederholen?",
+      "sendingKeys": "Senden von Schlüsseln",
+      "waitingForMailbox": "Warten auf Mailbox",
+      "keepWaiting": {
+        "title": "Die Synchronisierung dauert länger als gewöhnlich",
+        "message": "Möchten Sie weiter warten?"
+      },
+      "downloadingMailbox": "Herunterladen von Postfach",
+      "decryptingMailbox": "Entschlüsseln von Postfach",
+      "syncComplete": "Synchronisation abgeschlossen"
+    },
+    "cancelSyncLabel": "Synchronisation abbrechen",
+    "continueLabel": "Fortfahren",
+    "skipStepLabel": "Schritt überspringen"
+  },
+  "linkOldDevice": {
+    "header": "Postfachsynchronisation",
+    "messages": {
+      "error": "Fehler beim Synchronisieren Ihres Postfachs",
+      "retry": "Wiederholen?",
+      "encryptingMailbox": "Postfach verschlüsseln",
+      "gettingKeys": "Abrufen von Schlüsseln",
+      "uploadingMailbox": "Postfach wird hochgeladen",
+      "uploadSuccess": "Postfach erfolgreich hochgeladen!"
+    },
+    "cancelSyncLabel": "Synchronisation abbrechen",
+    "continueLabel": "Fortfahren",
+    "skipStepLabel": "Schritt überspringen"
+  },
+  "loading": {
+    "messages": {
+      "error": "Fehler beim Erzeugen der Schlüssel.",
+      "retry": "Wiederholen",
+      "creatingKeys": "Schlüssel erstellen"
+    }
+  },
+  "incompatibleSyncVersions": {
+    "header": "Inkompatible Versionen",
+    "text": "Sie können Ihr Postfach nicht von diesem Gerät aus synchronisieren, stellen Sie sicher, dass beide Geräte auf dem neuesten Stand sind.",
+    "buttonLabels": {
+      "close": "Verstanden"
+    }
+  },
+  "errors": {
+    "alreadyExists": {
+      "name": "Benutzer existiert bereits",
+      "description": "Benutzer existiert bereits. Versuchen Sie es mit einem anderen Benutzernamen"
+    },
+    "createUserFailed": {
+      "name": "Fehler beim Erstellen des Benutzers",
+      "description": "Benutzer konnte nicht erstellt werden.\nCode: "
+    },
+    "noResponse": {
+      "name": "Keine Antwort",
+      "description": "Keine Antwort vom Server"
+    },
+    "postKeybundle": {
+      "name": "Fehler beim Erstellen des Kontos",
+      "description": "Fehler beim Posten des Keybundle. \n Code:"
+    },
+    "prekeybundleFailed": {
+      "name": "Fehler beim Erstellen des Kontos",
+      "description": "Fehler beim Generieren von Prekeybundle"
+    },
+    "saveLabels": {
+      "name": "Fehler beim Erstellen des Kontos",
+      "description": "Es ist nicht gelungen, Labels in der lokalen Datenbank zu erstellen."
+    },
+    "saveLocal": {
+      "name": "Fehler beim Erstellen des Kontos",
+      "description": "Benutzer konnte nicht in der lokalen Datenbank erstellt werden."
+    },
+    "saveOwnContact": {
+      "name": "Fehler beim Erstellen des Kontos",
+      "description": "Fehler beim Speichern des eigenen Kontakts in der lokalen Datenbank"
+    },
+    "tooManyRequests": {
+      "name": "Zu viele Anfragen",
+      "description": "Zu viele aufeinanderfolgende Versuche. \n Bitte versuchen Sie es erneut in"
+    },
+    "unableToConnect": {
+      "name": "Verbindung kann nicht hergestellt werden",
+      "description": "Verbindung zum Server kann nicht hergestellt werden"
+    },
+    "updateAccountData": {
+      "name": "Fehler beim Erstellen des Kontos",
+      "description": "Aktualisierung der Kontodaten fehlgeschlagen"
+    },
+    "uploadData": {
+      "name": "Verbindungsgerätefehler",
+      "description": "Daten konnten nicht hochgeladen werden. \n Code:"
+    }
+  }
+}

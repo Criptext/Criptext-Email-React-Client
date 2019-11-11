@@ -1,0 +1,232 @@
+{
+  "changePassword": {
+    "title": "Ändern Sie das Passwort für:",
+    "inputs": {
+      "newPassword": {
+        "placeholder": "Neues Passwort"
+      },
+      "repeatNewPassword": {
+        "placeholder": "Neues Passwort wiederholen"
+      }
+    },
+    "button": "Passwort ändern"
+  },
+  "deviceNotApproved": {
+    "title": "Anmeldung abgelehnt",
+    "message": "Ihre Anfrage, auf dieses Konto zuzugreifen, wurde von einem verifizierten Gerät abgelehnt.",
+    "warning": {
+      "strong": "Warnung:",
+      "text": "Mehrere Ablehnungen können dazu führen, dass Ihr Gerät von Criptext auf die schwarze Liste gesetzt wird."
+    },
+    "passwordLoginLabel": "Anmelden mit Passwort",
+    "sendCodeLabel": "Wiederherstellungscode senden"
+  },
+  "dialogContent": {
+    "confirmWaitingApprovalLogin": {
+      "cancelResponse": "Abbrechen",
+      "keepResponse": "Weiter warten",
+      "title": "Nun, das ist seltsam …",
+      "message": "Es ist etwas passiert, das diesen Prozess verzögert.",
+      "detail": "Möchten Sie weiterhin warten?"
+    }
+  },
+  "errors": {
+    "loginFailed": {
+      "name": "Login Fehler",
+      "description": "Beim Anmelden ist ein Fehler aufgetreten. Bitte versuche es erneut. \n Code:"
+    },
+    "tooManyDevices": {
+      "name": "Zu viele Geräte",
+      "description": "Sie haben bereits zu viele aktive Geräte. \nEntfernen Sie ein inaktives Gerät von einem Ihrer vertrauenswürdigen Geräte aus und versuchen Sie es erneut. Wenn Sie nicht auf eines Ihrer vertrauenswürdigen Geräte zugreifen können, wenden Sie sich an den Support."
+    },
+    "tooManyRequests": {
+      "name": "Zu viele Anfragen",
+      "description": "Zu viele aufeinanderfolgende Versuche. \n Bitte versuchen Sie es erneut in",
+      "button": "Okay"
+    },
+    "wrongCredentials": {
+      "name": "Falsche Anmeldeinformationen",
+      "description": "Falscher Benutzername oder falsches Passwort. Überprüfen Sie die Anmeldeinformationen und versuchen Sie es erneut."
+    }
+  },
+  "help": {
+    "need_help": "Benötigen Sie Hilfe?",
+    "contact_support": "Kontaktieren Sie den Support"
+  },
+  "last_activity": "Letzte Aktivität",
+  "over_time": "Vor über 2 Monaten",
+  "popUp": {
+    "deleteDevices": [
+      {
+        "title": "Sie haben die Gerätegrenze (10) auf Ihrem Konto erreicht.",
+        "paragraph": "Geben Sie Ihr Passwort ein, um ein oder mehrere Geräte zu entfernen.",
+        "inputs": {
+          "password": {
+            "placeholder": "Passwort ändern",
+            "error": "Falsches Passwort"
+          }
+        },
+        "buttons": {
+          "cancel": "Abbrechen",
+          "confirm": "Fortfahren"
+        }
+      },
+      {
+        "title": "Geräte entfernen ",
+        "buttons": {
+          "cancel": "Zurück",
+          "confirm": "Entfernen"
+        }
+      },
+      {
+        "title": "Geräte entfernen ",
+        "paragraph": "Sie müssen (2) weitere Geräte entfernen, bevor Sie sich anmelden können.",
+        "buttons": {
+          "cancel": "Abbrechen",
+          "confirm": "Entfernen"
+        }
+      },
+      {
+        "title": "Abgelaufene Sitzung",
+        "paragraph": "Es tut uns leid, aber Ihre Sitzung ist abgelaufen. Dies bedeutet, dass Sie die für Inaktivität zulässige Zeit überschritten haben. Bitte versuchen Sie es erneut.",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      }
+    ],
+    "forgotPassword": {
+      "200": {
+        "title": "Passwort zurücksetzen",
+        "paragraph": "Ein Link zum Zurücksetzen wurde gesendet an",
+        "note": "Der Link ist 30 Minuten lang gültig.",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      },
+      "400": {
+        "title": "Keine Wiederherstellungs-E-Mail",
+        "paragraph": "Die Passwort-Wiederherstellung ist nicht möglich, da keine Wiederherstellungs-E-Mail auf Ihrem Konto eingerichtet wurde. Für weitere Hilfe kontaktieren Sie uns bitte:",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      },
+      "error": {
+        "title": "Passwort zurücksetzen",
+        "paragraph": "Der Link zum Zurücksetzen des Passworts konnte nicht gesendet werden. Versuchen Sie es erneut",
+        "buttons": {
+          "confirm": "Okay"
+        }
+      }
+    },
+    "recoveryCode": {
+      "title": "Wiederherstellungscode",
+      "message": "Bitte überprüfen Sie Ihre Wiederherstellungs-E-Mail {0} und geben Sie den an Sie gesendeten Code ein",
+      "alreadySent": "In der letzten Stunde wurde bereits ein Code an Ihre Wiederherstellungs-E-Mail {0} gesendet. Bitte überprüfen Sie Ihre Mailbox und geben Sie den Code ein.",
+      "buttons": {
+        "confirm": "Okay",
+        "cancel": "Abbrechen"
+      },
+      "errors": {
+        "unknown": "Code kann nicht validiert werden",
+        "wrong": "Sie haben einen falschen Code eingegeben"
+      }
+    }
+  },
+  "signIn": {
+    "header": "Willkommen bei Criptext!",
+    "inputPlaceholder": "E-Mail Adresse oder Benutzername",
+    "signInButtonLabel": "Anmelden",
+    "signUpMessage": {
+      "text": "Nicht registriert?",
+      "strong": "Registrieren"
+    },
+    "errorMessages": {
+      "emailAddressNotExits": "E-Mail-Adresse existiert nicht",
+      "emailAddressNotValidCriptext": "Keine gültige Criptext-Adresse oder Benutzername",
+      "usernameOrEmailAddressInvalid": "Ungültiger Benutzername oder ungültige E-Mail-Adresse",
+      "usernameInvalid": "Ungültiger Benutzername",
+      "usernameNotExits": "Benutzername existiert nicht",
+      "statusUnknown": "Unbekannter Statuscode:",
+      "usernameNotAvailable": "Benutzername nicht verfügbar"
+    },
+    "usePassword": {
+      "title": "Warnung",
+      "prefix": "Wenn Sie sich mit Ihrem Passwort anmelden, wird Ihr",
+      "strong": " Der Postfachverlauf von anderen Geräten wird nicht verfügbar sein. ",
+      "suffix": "auf diesem Gerät. Möchten Sie fortfahren?",
+      "leftButtonLabel": "Abbrechen",
+      "rightButtonLabel": "Fortfahren"
+    },
+    "loginNewAccount": {
+      "title": "Anmeldungswarnung",
+      "prefix": "Wenn Sie sich mit einem anderen Konto anmelden, werden alle auf diesem Gerät gespeicherten E-Mails der Konten gelöscht",
+      "suffix": "Möchten Sie fortfahren?",
+      "cancelButtonLabel": "Abbrechen",
+      "confirmButtonLabel": "Fortfahren",
+      "strong": ""
+    }
+  },
+  "signUp": {
+    "header": "Registrieren",
+    "subheader": "Erstellen Sie Ihr Criptext-Konto",
+    "buttons": {
+      "createAccount": "Benutzerkonto anlegen"
+    },
+    "errorMessages": {
+      "USERNAME_INVALID": "Mindestens 3 Zeichen. Muss mit den Buchstaben a-z beginnen.",
+      "USERNAME_EXISTS": "Benutzername nicht verfügbar",
+      "USERNAME_UNCERTAIN": "Überprüfung des Benutzernamens fehlgeschlagen",
+      "STATUS_UNKNOWN": "Unbekannter Statuscode:",
+      "FULLNAME_INVALID": "Ungültiger Name",
+      "PASSWORD_INVALID": "Ungültiges Passwort",
+      "PASSWORD_NOMATCH": "Passwörter stimmen nicht überein",
+      "EMAIL_INVALID": "Ungültige E-Mail-Adresse"
+    },
+    "form": {
+      "placeholders": {
+        "username": "Benutzername",
+        "fullName": "Vollständiger Name",
+        "password": "Passwort ändern",
+        "confirmPassword": "Passwort bestätigen",
+        "recoveryEmail": "Wiederherstellungs-E-Mail-Adresse (optional)",
+        "checkbox": {
+          "prefix": "Ich habe die Allgemeinen Geschäftsbedingungen gelesen und bin damit einverstanden",
+          "suffix": "Allgemeine Geschäftsbedingungen"
+        }
+      }
+    },
+    "popUp": {
+      "warningRecoveryEmail": {
+        "title": "Warnung!",
+        "prefix": "Sie haben keine Wiederherstellungs-E-Mail gesetzt, also",
+        "strong": "Eine Kontowiederherstellung ist nicht möglich",
+        "suffix": "wenn Sie Ihr Passwort vergessen",
+        "leftButtonLabel": "Abbrechen",
+        "rightButtonLabel": "Fortfahren"
+      }
+    }
+  },
+  "signInToApprove": {
+    "title": "Anmelden",
+    "message": "Überprüfen und genehmigen Sie Ihr vorhandenes Criptext-Gerät, um fortzufahren.",
+    "getPromptLabel": "Haben Sie die Aufforderung nicht erhalten?",
+    "passwordLoginLabel": "Anmelden mit Passwort",
+    "sendCodeLabel": "Wiederherstellungscode senden",
+    "buttons": {
+      "sending": "Senden …",
+      "resend": "Senden Sie es erneut"
+    }
+  },
+  "signInPassword": {
+    "sectionTitleSignIn": "Anmelden",
+    "sectionTitleTwoFactorAuth": "Zwei-Faktor-Authentifizierung",
+    "form": {
+      "passwordInputPlaceholder": "Passwort ändern",
+      "forgotLabel": "Vergessen?"
+    },
+    "buttons": {
+      "nextLabel": "Nächster",
+      "confirmLabel": "Bestätigen"
+    }
+  }
+}

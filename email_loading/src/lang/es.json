@@ -3,8 +3,8 @@
     "header": "Autenticación de dispositivo",
     "text": "¿Quieres aprobar?",
     "buttonLabels": {
-        "reject": "Rechazar",
-        "approve": "Aprobar"
+      "reject": "Rechazar",
+      "approve": "Aprobar"
     }
   },
   "linkNewDevice": {
@@ -55,7 +55,7 @@
     }
   },
   "errors": {
-    "alreadyExists":{
+    "alreadyExists": {
       "name": "El usuario ya existe",
       "description": "El usuario ya existe. Prueba con otro nombre de usuario"
     },
@@ -67,15 +67,15 @@
       "name": "No hay respuesta",
       "description": "No se ha obtenido respuesta del servidor"
     },
-    "postKeybundle":{
+    "postKeybundle": {
       "name": "Error al crear la cuenta",
       "description": "Ha ocurrido un error al subir el paquete de llaves. Código: "
     },
-    "prekeybundleFailed":{
+    "prekeybundleFailed": {
       "name": "Error al crear cuenta",
       "description": "Ha ocurrido un error al generar el paquete de llaves"
     },
-    "saveLabels":{
+    "saveLabels": {
       "name": "Error al crear la cuenta",
       "description": "Error al crear etiquetas en la base de datos local"
     },
@@ -83,7 +83,7 @@
       "name": "Error al crear la cuenta",
       "description": "Error al guardar el usuario en la base de datos local"
     },
-    "saveOwnContact":{
+    "saveOwnContact": {
       "name": "Error al crear la cuenta",
       "description": "Fallo al guardar tu información de contacto en la base de datos"
     },

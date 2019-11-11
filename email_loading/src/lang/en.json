@@ -26,7 +26,6 @@
     "continueLabel": "Continue",
     "skipStepLabel": "Skip step"
   },
-
   "linkOldDevice": {
     "header": "Mailbox Sync",
     "messages": {
@@ -56,7 +55,7 @@
     }
   },
   "errors": {
-    "alreadyExists":{
+    "alreadyExists": {
       "name": "User already exists",
       "description": "User already exists. Try another username"
     },
@@ -68,15 +67,15 @@
       "name": "No response",
       "description": "No response from server"
     },
-    "postKeybundle":{
+    "postKeybundle": {
       "name": "Error creating account",
       "description": "Failed to post keybundle.\nCode: "
     },
-    "prekeybundleFailed":{
+    "prekeybundleFailed": {
       "name": "Error creating account",
       "description": "Failed to generate prekeybundle"
     },
-    "saveLabels":{
+    "saveLabels": {
       "name": "Error creating account",
       "description": "Failed to create labels in local database"
     },
@@ -84,7 +83,7 @@
       "name": "Error creating account",
       "description": "Failed to create user in local database"
     },
-    "saveOwnContact":{
+    "saveOwnContact": {
       "name": "Error creating account",
       "description": "Failed to save own contact in local database"
     },

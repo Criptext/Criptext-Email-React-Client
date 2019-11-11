@@ -30,7 +30,7 @@
       "detail": "Do you want to continue waiting?"
     }
   },
-  "errors":{
+  "errors": {
     "loginFailed": {
       "name": "Login error",
       "description": "An error occurred while login. Please try again.\nCode: "
@@ -46,8 +46,7 @@
     },
     "wrongCredentials": {
       "name": "Wrong credentials",
-      "description":
-        "Incorrect username or password. Check credentials and try again."
+      "description": "Incorrect username or password. Check credentials and try again."
     }
   },
   "help": {
@@ -71,20 +70,23 @@
           "cancel": "Cancel",
           "confirm": "Continue"
         }
-      },{
+      },
+      {
         "title": "Remove Devices",
         "buttons": {
           "cancel": "Back",
           "confirm": "Remove"
         }
-      },{
-        "title": "Remove Devices ",
+      },
+      {
+        "title": "Remove Devices",
         "paragraph": "You must remove (2) more devices before signing in.",
         "buttons": {
           "cancel": "Cancel",
           "confirm": "Remove"
         }
-      },{
+      },
+      {
         "title": "Session Expired",
         "paragraph": "You've reached the maximum inactivity time permitted. Please sign in again.",
         "buttons": {
@@ -149,7 +151,7 @@
     },
     "usePassword": {
       "title": "Warning",
-      "prefix": "If you sign in using your password your",
+      "prefix": "If you sign in using your password your ",
       "strong": " mailbox history from other devices won't be available ",
       "suffix": "on this device. Would you like to continue?",
       "leftButtonLabel": "Cancel",
@@ -158,10 +160,10 @@
     "loginNewAccount": {
       "title": "Sign In Warning",
       "prefix": "Sign in with another account will delete all mail saved on this device of the accounts",
-      "strong": "",
       "suffix": "Would you like to continue?",
       "cancelButtonLabel": "Cancel",
-      "confirmButtonLabel": "Continue"
+      "confirmButtonLabel": "Continue",
+      "strong": ""
     }
   },
   "signUp": {

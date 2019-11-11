@@ -1,0 +1,107 @@
+{
+  "linkDeviceRequest": {
+    "header": "Vérification de la connexion",
+    "text": "Voulez-vous approuver ?",
+    "buttonLabels": {
+      "reject": "Rejeter",
+      "approve": "Approuver"
+    }
+  },
+  "linkNewDevice": {
+    "header": "Synchronisation de la boîte de réception",
+    "messages": {
+      "error": "Erreur lors de la synchronisation de votre messagerie",
+      "retry": "Réessayer ?",
+      "sendingKeys": "Envoi des clés",
+      "waitingForMailbox": "En attente de la boîte mail",
+      "keepWaiting": {
+        "title": "La synchronisation est anormalement longue",
+        "message": "Souhaitez-vous continuer à attendre ?"
+      },
+      "downloadingMailbox": "Téléchargement de la boîte mail",
+      "decryptingMailbox": "Déchiffrement de la boîte mail",
+      "syncComplete": "Synchronisation terminée"
+    },
+    "cancelSyncLabel": "Annuler la synchronisation",
+    "continueLabel": "Continuer",
+    "skipStepLabel": "Ignorer l'étape"
+  },
+  "linkOldDevice": {
+    "header": "Synchronisation de la boîte de réception",
+    "messages": {
+      "error": "Erreur lors de la synchronisation de votre messagerie",
+      "retry": "Réessayer ?",
+      "encryptingMailbox": "Chiffrement de la messagerie",
+      "gettingKeys": "Obtenir les clés",
+      "uploadingMailbox": "Chargement de la messagerie",
+      "uploadSuccess": "La messagerie a bien été chargée !"
+    },
+    "cancelSyncLabel": "Annuler la synchronisation",
+    "continueLabel": "Continuer",
+    "skipStepLabel": "Ignorer l'étape"
+  },
+  "loading": {
+    "messages": {
+      "error": "Erreur lors de la génération des clés.",
+      "retry": "Réessayer",
+      "creatingKeys": "Création de clés"
+    }
+  },
+  "incompatibleSyncVersions": {
+    "header": "Versions incompatibles",
+    "text": "Vous ne pouvez pas synchroniser votre boîte aux lettres depuis cet appareil, assurez-vous que les deux appareils soient à jour.",
+    "buttonLabels": {
+      "close": "J'ai compris"
+    }
+  },
+  "errors": {
+    "alreadyExists": {
+      "name": "L'utilisateur existe déjà",
+      "description": "L'utilisateur existe déjà. Essayez un autre nom d'utilisateur"
+    },
+    "createUserFailed": {
+      "name": "Erreur lors de la création de l'utilisateur",
+      "description": "Échec de la création de l'utilisateur.\nCode :"
+    },
+    "noResponse": {
+      "name": "Pas de réponse",
+      "description": "Pas de réponse du serveur"
+    },
+    "postKeybundle": {
+      "name": "Erreur lors de la création du compte",
+      "description": "Échec de l'envoi de la clé du pack.\nCode :"
+    },
+    "prekeybundleFailed": {
+      "name": "Erreur lors de la création du compte",
+      "description": "Échec de la génération d'une pré-clé de pack"
+    },
+    "saveLabels": {
+      "name": "Erreur lors de la création du compte",
+      "description": "Échec de création de marqueurs dans la base de données locale"
+    },
+    "saveLocal": {
+      "name": "Erreur lors de la création du compte",
+      "description": "Impossible de créer un utilisateur dans la base de données locale"
+    },
+    "saveOwnContact": {
+      "name": "Erreur lors de la création du compte",
+      "description": "Impossible d'enregistrer son propre contact dans la base de données locale"
+    },
+    "tooManyRequests": {
+      "name": "Trop de requêtes",
+      "description": "Trop de tentatives consécutives.\nVeuillez réessayer dans"
+    },
+    "unableToConnect": {
+      "name": "Impossible de se connecter",
+      "description": "Impossible de se connecter au serveur"
+    },
+    "updateAccountData": {
+      "name": "Erreur lors de la création du compte",
+      "description": "Échec de la mise à jour des données du compte"
+    },
+    "uploadData": {
+      "name": "Erreur de liaison avec l'appareil",
+      "description": "Échec du téléchargement des données.\nCode :"
+    }
+  }
+}

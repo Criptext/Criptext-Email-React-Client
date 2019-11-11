@@ -33,7 +33,7 @@
         }
       },
       "note": {
-        "header": "Note: ",
+        "header": "Note:",
         "content": "Non-Criptext email addresses will receive a normal, un-encrypted email."
       },
       "buttons": {
@@ -54,15 +54,15 @@
       "name": "Encrypting error",
       "description": "An error occurred while encrypting message.\nCode: "
     },
-    "nonExistingUsers":{
+    "nonExistingUsers": {
       "name": "Non existing users",
       "description": "One or more users doesn't exists.\nCheck the recipients and try again"
     },
-    "pendingFiles":{
+    "pendingFiles": {
       "name": "Pending files",
       "description": "You have uploading or failed files. Please check your files and try again"
     },
-    "tooBigFile":{
+    "tooBigFile": {
       "name": "Too big file",
       "description": {
         "prefix": "The file",

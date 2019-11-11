@@ -1,0 +1,745 @@
+{
+  "activity": {
+    "activity_feed": "Flux d'activité",
+    "deleted": "Supprimé",
+    "downloaded": "téléchargé",
+    "new": "nouveau",
+    "older": "précédent",
+    "opened": "ouvert(s)",
+    "someone": "Quelqu'un"
+  },
+  "crash": {
+    "title": "Oops! On dirait que quelque chose s'est mal passé",
+    "counter": {
+      "a": "Criptext va redémarrer dans",
+      "b": "secondes"
+    },
+    "buttons": {
+      "restart_now": "Redémarrer maintenant"
+    }
+  },
+  "emails": {
+    "contact_support": {
+      "subject": "Support client - Desktop",
+      "recipient": {
+        "name": " Contactez le support"
+      },
+      "content": "N'écrivez pas sous cette ligne."
+    }
+  },
+  "errors": {
+    "password": {
+      "length": {
+        "a": "Doit comporter au moins",
+        "b": "caractères"
+      },
+      "match": "Les mots de passe ne correspondent pas"
+    },
+    "email": {
+      "invalid": "Email invalide"
+    },
+    "tooManyRequests": {
+      "name": "Trop de requêtes",
+      "description": "Trop de tentatives consécutives.\nVeuillez réessayer dans"
+    }
+  },
+  "header": {
+    "add_labels": "Attribuer des marqueurs",
+    "archive": "Archiver",
+    "back": "Retour",
+    "delete": "Supprimer",
+    "discard_drafts": "Supprimer les brouillons",
+    "dismiss": "Rejeter",
+    "move_to": "Déplacer vers",
+    "move_to_inbox": "Déplacer vers la boîte de réception",
+    "restore": "Restaurer",
+    "search": "rechercher",
+    "search_options": {
+      "from": "de",
+      "from_placeholder": "Personnes par nom ou adresse e-mail",
+      "has_attachment": "Contient une pièce jointe",
+      "subject": "objet",
+      "subject_placeholder": "Saisir un texte",
+      "to": "vers",
+      "to_placeholder": "Personnes par nom ou adresse e-mail"
+    },
+    "selected": "Sélectionné",
+    "selected_plural": "Sélectionné",
+    "print_all": "Tout imprimer"
+  },
+  "labelsItems": {
+    "inbox": "Boîte de réception",
+    "spam": "Spam",
+    "sent": "Messages envoyés",
+    "starred": "Messages suivis",
+    "draft": "Brouillon",
+    "trash": "Corbeille",
+    "allmail": "Tous les messages",
+    "search": "Rechercher"
+  },
+  "mailbox": {
+    "all": "tout",
+    "bcc": "Cci",
+    "cc": "Cc",
+    "date": "Date",
+    "delete": "Supprimer",
+    "delete_permanently": "Supprimer définitivement",
+    "empty": {
+      "inbox": {
+        "header": "La boîte de réception est vide",
+        "subheader": "Détendez-vous et profitez"
+      },
+      "starred": {
+        "header": "Aucun email marqué comme important",
+        "subheader": "Marquez vos emails importants"
+      },
+      "trash": {
+        "header": "La corbeille est vide",
+        "subheader": "La corbeille est vide"
+      },
+      "draft": {
+        "header": "Aucun brouillon",
+        "subheader": "Rien à faire ici"
+      },
+      "sent": {
+        "header": "Aucun email envoyé",
+        "subheader": "Envoyons quelque chose"
+      },
+      "spam": {
+        "header": "Pas de courrier indésirable",
+        "subheader": "C'est génial ! Faisons en sorte que ça dure"
+      },
+      "allmail": {
+        "header": "Aucun Email",
+        "subheader": "Absolument aucun !"
+      },
+      "search": {
+        "header": "Pas de résultats de recherche",
+        "subheader": "Les e-mails dans la corbeille et le courrier indésirable ne sont pas affichés"
+      },
+      "default": {
+        "header": "Vous n'avez pas encore d'e-mails",
+        "subheader": "Envoyez un e-mail pour commencer"
+      },
+      "loading": "Chargement"
+    },
+    "forward": "Transférer",
+    "from": "De",
+    "mark_as_read": "Marquer comme lu",
+    "mark_as_spam": "Marquer comme indésirable",
+    "mark_as_unread": "Marquer comme non lu",
+    "move_to_trash": "Déplacer vers la corbeille",
+    "more": "plus",
+    "not_starred": "Non étoilé",
+    "of": "de",
+    "reply": "Répondre",
+    "reply_all": "Répondre à tout",
+    "starred": "Messages suivis",
+    "subject": "Objet",
+    "to": "À",
+    "unread": "non lu",
+    "print_email": "Imprimer",
+    "print_thread": "Tout imprimer",
+    "me": "Moi",
+    "unsend": "Annuler l'envoi",
+    "email_source": "Voir L'origine",
+    "empty_body": "(Pas de contenu)",
+    "empty_subject": "Pas de sujet",
+    "unsentText": "Envoi annulé"
+  },
+  "messages": {
+    "change_password": {
+      "success": {
+        "description": "Mot de passe modifié"
+      },
+      "error": {
+        "description": "Impossible de modifier le mot de passe. Le mot de passe n'a pas été modifié"
+      }
+    },
+    "download_file": {
+      "success": {
+        "description": "Téléchargement réussi. Vérifiez votre dossier 'Téléchargements'"
+      },
+      "error": {
+        "description": "Une erreur est survenue pendant le téléchargement. Le fichier n'a pas été enregistré"
+      }
+    },
+    "save_draft": {
+      "success": {
+        "description": "Brouillon enregistré"
+      },
+      "error": {
+        "description": "Échec de la sauvegarde du brouillon"
+      }
+    },
+    "emailSent": {
+      "success": {
+        "description": "Votre message a été envoyé.",
+        "action": "Afficher le message"
+      },
+      "error": {
+        "description": "Impossible d'envoyer votre message"
+      }
+    },
+    "fetchEmails": {
+      "description": "Impossible de récupérer les e-mails. Vérifiez votre connexion et réessayez"
+    },
+    "internet": {
+      "description": "Connexion rétablie"
+    },
+    "network": {
+      "description": "Non connecté. Tentative de reconnexion",
+      "action": "Essayez maintenant"
+    },
+    "new_device": {
+      "ask": "Essayez-vous d'accéder depuis"
+    },
+    "recovery_email_change": {
+      "success": {
+        "description": "E-mail de récupération modifié"
+      },
+      "error": {
+        "description": "Impossible de modifier l'e-mail de récupération. Vérifiez votre connexion et réessayez"
+      }
+    },
+    "recovery_email_link_confirmation": {
+      "success": {
+        "description": "Lien de confirmation envoyé. Consultez votre boîte de réception et confirmez"
+      },
+      "error": {
+        "description": "Impossible d'envoyer le lien de confirmation"
+      }
+    },
+    "remember_share_passphrase": {
+      "description": "N'oubliez pas d'envoyer la phrase secrète à vos destinataires extérieurs à Criptext"
+    },
+    "reset_password_send_link": {
+      "success": {
+        "description": "Un lien de réinitialisation a été envoyé à votre e-mail de récupération. Le lien sera valide pendant 30 minutes"
+      },
+      "error": {
+        "description": "Vous devez définir et confirmer un e-mail de récupération pour réinitialiser votre mot de passe"
+      }
+    },
+    "remove_device": {
+      "success": {
+        "description": "Périphérique supprimé"
+      },
+      "error": {
+        "description": "Impossible de supprimer le périphérique. Réessayez"
+      }
+    },
+    "remove_threads": {
+      "description": "Erreur lors du déplacement des emails. Réessayez"
+    },
+    "send_open_event": {
+      "description": "Impossible d'envoyer l'email ouvert. Réessayez"
+    },
+    "set_reply_to": {
+      "success": {
+        "description": "\"Adresse de Réponse\" défini avec succès!"
+      },
+      "error": {
+        "description": "Impossible de définir \"Adresse de Réponse\". L'adresse n'a pas été modifié"
+      }
+    },
+    "trash": {
+      "description": "Les messages qui sont dans la corbeille depuis plus de 30 jours seront automatiquement supprimés",
+      "action": "Vider la corbeille"
+    },
+    "two_factor_auth_turn_off": {
+      "description": "Authentification à deux facteurs désactivée"
+    },
+    "unsend_email": {
+      "description": "Impossible d'annuler l'envoi de l'email. Code d'état inconnu :"
+    },
+    "unsend_email_expired": {
+      "description": "Impossible d'annuler l'envoi de l'email. Le délai d'annulation (1h) a déjà expiré."
+    },
+    "update": {
+      "description": "Une nouvelle version de Criptext est disponible !",
+      "action": "Cliquez ici pour installer la mise à jour"
+    },
+    "update_labels": {
+      "description": "Impossible de mettre à jour les marqueurs. Veuillez réessayer"
+    },
+    "update_thread_labels": {
+      "description": "Impossible de mettre à jour les marqueurs d'email. Veuillez réessayer"
+    },
+    "update_unread_threads": {
+      "description": "Impossible de mettre à jour le statut des emails. Veuillez réessayer"
+    },
+    "manual_sync": {
+      "description": "Synchronisation de la boîte de réception terminée"
+    }
+  },
+  "momentLocales": {
+    "months": "janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre",
+    "monthsShort": "jan_fév_mar_avr_mai_jun_jul_aoû_sep_oct_nov_déc",
+    "weekdays": "dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi",
+    "weekdaysShort": "dim_lun_mar_mer_jeu_ven_sam",
+    "weekdaysMin": "di_lu_ma_me_je_ve_sa",
+    "relativeTime": {
+      "future": "Dans %s",
+      "past": "il y a %s",
+      "s": "Quelques secondes",
+      "ss": "%s secondes",
+      "m": "Une minute",
+      "mm": "%d minutes",
+      "h": "Une heure",
+      "hh": "%d heures",
+      "d": "Un jour",
+      "dd": "%d jours",
+      "M": "Un mois",
+      "MM": "Plus de 2 mois",
+      "y": "Plus de 2 mois",
+      "yy": "Plus de 2 mois"
+    },
+    "yesterdayText": "Hier ",
+    "atText": "à"
+  },
+  "notification": {
+    "export_backup": {
+      "success": {
+        "title": "Sauvegarde exportée avec succès!",
+        "message": "Cliquez ici pour ouvrir le dossier d'emplacement de sauvegarde"
+      },
+      "error": {
+        "title": "Criptext",
+        "message": "Oops! Une erreur s'est produite lors de l'exportation de la sauvegarde."
+      }
+    },
+    "newEmailGroup": {
+      "prefix": "Vous avez",
+      "sufix": " nouveaux emails"
+    },
+    "openEmail": {
+      "title": "Criptext",
+      "message": "📩 Email <subject> été ouvert"
+    }
+  },
+  "popups": {
+    "account_deleted": {
+      "title": "Compte supprimé",
+      "paragraphs": {
+        "header": "Suppression de toutes les données..."
+      }
+    },
+    "change_password": {
+      "title": "Modifier le mot de passe",
+      "paragraphs": {
+        "header": "Tapez votre ancien mot de passe puis votre nouveau mot de passe et confirmez-le."
+      },
+      "input": {
+        "old_password": {
+          "placeholder": "Saisissez l'ancien mot de passe",
+          "button": "Mot de passe oublié ?"
+        },
+        "new_password": {
+          "placeholder": "Saisissez le nouveau mot de passe"
+        },
+        "repeat_password": {
+          "placeholder": "Retapez le nouveau mot de passe"
+        }
+      },
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Confirmer"
+    },
+    "change_recovery_email": {
+      "title": "Changer l'adresse email de récupération",
+      "paragraph": {
+        "password": "Saisissez votre mot de passe pour confirmer",
+        "recovery_email": "Tapez votre nouvelle adresse email de récupération",
+        "note": "Remarque",
+        "note_text": "Changer votre adresse email de récupération désactivera l'authentification à deux facteurs."
+      },
+      "input": {
+        "recovery_email": {
+          "placeholder": "Saisissez la nouvelle adresse e-mail de récupération"
+        },
+        "password": {
+          "placeholder": "Saisir le mot de passe",
+          "button": "Mot de passe oublié ?"
+        }
+      },
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Envoyer"
+    },
+    "creating_backup_file": {
+      "title": "Création d'un fichier de sauvegarde",
+      "paragraph": "Patientez s'il-vous-plait..."
+    },
+    "delete_account": {
+      "title": "Supprimer mon compte",
+      "paragraphs": {
+        "header": "La suppression de votre compte supprimera également tous vos emails dans cet appareil et n'importe quel autre appareil sur lequel votre compte est connecté. Cela permettra en outre à n'importe qui d'enregistrer un compte avec votre adresse email actuelle."
+      },
+      "subtitle": "Saisissez votre mot de passe pour confirmer",
+      "inputs": {
+        "password": {
+          "placeholder": "Saisir le mot de passe",
+          "errorMessages": {
+            "length": {
+              "prefix": "Doit comporter au moins",
+              "suffix": "caractères"
+            },
+            "wrong": "Mot de passe incorrect"
+          }
+        }
+      },
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Envoyer"
+    },
+    "export_backup": {
+      "title": "Exporter un fichier de sauvegarde",
+      "switchLabel": "Chiffrer la sauvegarde",
+      "description": "Si vous perdez \/ oubliez cette phrase secrète, vous ne pourrez plus restaurer cette sauvegarde.",
+      "inputPassphrase": {
+        "placeholder": "Saisir la phrase secrète",
+        "errorMessages": {
+          "len": {
+            "prefix": "Doit comporter",
+            "suffix": "caractères"
+          }
+        }
+      },
+      "note": {
+        "header": "Remarque :",
+        "content": "Pour votre sécurité, nous vous suggérons de chiffrer le fichier de sauvegarde."
+      },
+      "buttons": {
+        "send": "Enregistrer le fichier",
+        "cancel": "Annuler"
+      }
+    },
+    "logout": {
+      "title": "Déconnexion",
+      "paragraphs": {
+        "header": "Êtes-vous sûr de vouloir vous déconnecter ?"
+      },
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Continuer"
+    },
+    "mailbox_sync": {
+      "title": "Alerte de synchronisation",
+      "paragraphs": {
+        "header": "Toutes les données de votre boîte aux lettres seront supprimées et remplacées par celles de votre autre appareil.",
+        "question": "Êtes-vous sûr de vouloir continuer ?"
+      },
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Confirmer"
+    },
+    "manual_sync_device_authentication": {
+      "title": "Authentification de l'appareil",
+      "message": "Vérifiez et approuvez cette connexion depuis vos appareils Criptext existants",
+      "getPromptLabel": "Vous n'avez pas reçu l'invitation ?",
+      "buttons": {
+        "sending": "Envoi...",
+        "resend": "La renvoyer"
+      },
+      "cancelSyncLabel": "Annuler la synchronisation"
+    },
+    "manual_sync_device_rejected": {
+      "title": "Authentification rejetée",
+      "message": "Votre demande d'accès à ce compte a été rejetée par un appareil vérifié",
+      "warning": {
+        "strong": "Avertissement",
+        "text": "Des rejets multiples pourraient entraîner la mise sur liste noire de votre appareil par Criptext"
+      },
+      "closeButtonLabel": "Okay"
+    },
+    "manual_sync_device_approved": {
+      "header": "Synchronisation de la boîte de réception",
+      "messages": {
+        "error": "Erreur lors de la synchronisation de votre messagerie",
+        "retry": "Réessayer ?",
+        "waitingForMailbox": "En attente de la boîte mail",
+        "keepWaiting": {
+          "title": "La synchronisation est anormalement longue",
+          "message": "Souhaitez-vous continuer à attendre ?"
+        },
+        "downloadingMailbox": "Téléchargement de la boîte mail",
+        "decryptingMailbox": "Déchiffrement de la boîte mail",
+        "syncComplete": "Synchronisation terminée"
+      },
+      "cancelSyncLabel": "Annuler la synchronisation",
+      "continueLabel": "Continuer"
+    },
+    "permanently_delete": {
+      "title": "Attention !",
+      "message": "Ces éléments seront supprimés de façon permanente et vous ne pourrez pas les récupérer. Êtes-vous sûr ?",
+      "leftButtonLabel": "Annuler",
+      "rightButtonLabel": "Confirmer"
+    },
+    "remove_device": {
+      "title": "Retirez l'appareil",
+      "paragraphs": {
+        "header": "Supprimer l’accès vous déconnectera automatiquement de votre compte sur cet appareil.",
+        "password": "Saisissez votre mot de passe pour confirmer"
+      },
+      "input": {
+        "password": {
+          "placeholder": "Saisir le mot de passe"
+        }
+      },
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Retirer"
+    },
+    "remove_label": {
+      "title": "Supprimer l'étiquette",
+      "message": "Êtes-vous sûr de vouloir supprimer définitivement l'étiquette {0}",
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Retirer"
+    },
+    "restore_backup_request": {
+      "title": "Restaurer la sauvegarde",
+      "paragraph": "Restaurez vos emails à partir d'une sauvegarde locale. Cela peut être fait plus tard à partir de Paramètres > Compte > Restaurer la sauvegarde",
+      "button": "Choisir le dossier",
+      "cancel": "Annuler"
+    },
+    "restore_backup_from_file": {
+      "title": "Restaurer à partir d'un fichier de sauvegarde",
+      "paragraphs": {
+        "backed_up": "Sauvegardé",
+        "size": "Taille"
+      },
+      "input": {
+        "label": "Introduisez votre phrase secrète",
+        "placeholder": "Phrase secrète"
+      },
+      "buttons": {
+        "restore": "Restaurer",
+        "cancel": "Annuler"
+      }
+    },
+    "restore_backup_invalid_file": {
+      "title": "Fichier non valide",
+      "paragraph": "Le fichier sélectionné est corrompu ou appartient à un autre compte de messagerie.",
+      "button": "Changer de fichier",
+      "cancel": "Annuler"
+    },
+    "restore_backup_progress": {
+      "header": "La restauration",
+      "cancelLabel": "Annuler"
+    },
+    "set_reply_to": {
+      "title": "Définir Adresse de Réponse",
+      "paragraph": "Lorsque quelqu'un répond à l'un de vos e-mails, ils répondront à cette adresse.",
+      "input": {
+        "email": {
+          "placeholder": "Entrez un email"
+        }
+      },
+      "errors": {
+        "email": "Fausse adresse! Format: exemple@criptext.com"
+      },
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Enregistrer"
+    },
+    "select_backup_folder": {
+      "title": "Sélectionner le dossier de sauvegarde",
+      "note": {
+        "header": "Remarque :",
+        "content": "Les sauvegardes automatiques ne sont pas protégées par mot de passe"
+      },
+      "buttons": {
+        "cancel": "Annuler",
+        "select": "Sélectionner"
+      }
+    },
+    "suspended_account": {
+      "title": "Tu es suspendu",
+      "paragraph": "Ce compte a été temporairement suspendu par votre administrateur. Veuillez contacter l'administrateur de votre entreprise pour plus d'informations."
+    },
+    "two_fa": {
+      "title": "2FA activée !",
+      "paragraph": "La prochaine fois que vous vous connecterez à votre compte sur un autre appareil, vous devrez saisir votre mot de passe puis valider la connexion à partir d'un appareil existant.",
+      "button": "J'ai compris"
+    },
+    "edit_label": {
+      "title": "Editer le nom de l'étiquette",
+      "message": "Entrez le nouveau nom du marqueur",
+      "cancelButtonLabel": "Annuler",
+      "confirmButtonLabel": "Sauvegarder"
+    }
+  },
+  "settings": {
+    "about": "sur",
+    "account": "Compte",
+    "action": "Action",
+    "appearance": "Apparence",
+    "mailbox_backup": {
+      "auto": {
+        "label": "Sauvegarde automatique",
+        "description": "Remarque: les sauvegardes automatiques ne sont pas protégées par mot de passe",
+        "options": {
+          "last_backup": "Dernière sauvegarde",
+          "backup_now": "Sauvegarder maintenant",
+          "backup_folder": "Dossier de sauvegarde",
+          "frequency": "La fréquence",
+          "frequencyLabels": {
+            "daily": "du quotidien",
+            "weekly": "Hebdomadaire",
+            "monthly": "Mensuel"
+          }
+        }
+      },
+      "manual": {
+        "label": "Sauvegarde de boîte aux lettres",
+        "button": "Exporter un fichier de sauvegarde",
+        "description": "Générez une sauvegarde de votre boîte de réception pouvant être exportée vers des lecteurs externes"
+      },
+      "progress": {
+        "backing_up_mailbox": "Exporter le fichier de sauvegarde. Cela peut prendre quelques minutes ...",
+        "backup_mailbox_success": "Fichier de sauvegarde exporté avec succès!"
+      }
+    },
+    "restore_backup": {
+      "label": "Restaurer la sauvegarde",
+      "button": "Restaurer",
+      "description": "Restaurez facilement votre boîte aux lettres à partir d'un fichier de sauvegarde local."
+    },
+    "cancel": "Annuler",
+    "change": "Modifier",
+    "configurations": "Les configurations",
+    "contact_support": "Contacter le support",
+    "check_for_updates": "Rechercher des mises à jour",
+    "create_new_label": "Créer un nouveau marqueur",
+    "criptext_libraries": {
+      "label": "Bibliothèques Criptext",
+      "description": "Découvrez certains des ingrédients qui ont rendu Criptext possible"
+    },
+    "current_device": "Périphérique actuel",
+    "delete_account": {
+      "label": "Supprimer le compte",
+      "description": "Cette action ne peut pas être inversée",
+      "button": "Supprimer définitivement"
+    },
+    "disabled": "désactivé",
+    "edit": "Modifier",
+    "email": "E-mail",
+    "enabled": "activé",
+    "encrypt_to_externals": "Crypter vers les externes",
+    "encrypt_to_externals_description": "Si activé, lors de l'envoi d'un e-mail, il vous sera demandé un mot de passe pour chiffrer l'e-mail des destinataires non criptext. Si cette option est désactivée, les adresses criptext recevront un courrier électronique crypté, contrairement aux autres.",
+    "enter_new_label_name": "Entrez le nouveau nom du marqueur",
+    "faq": {
+      "label": "FAQ",
+      "description": "Obtenez des réponses aux questions courantes"
+    },
+    "fullname": "Nom complet",
+    "general": "général",
+    "language": {
+      "label": "La langue",
+      "description": "Sélectionnez une langue préférée"
+    },
+    "last_activity": "Dernière activité",
+    "linked_devices": "Périphériques liés",
+    "logout": "Déconnexion",
+    "mailbox_sync": {
+      "label": "Synchroniser la boîte aux lettres",
+      "description": "Permet de transférer l'intégralité de votre boîte aux lettres d'un autre appareil dans celui-ci",
+      "button": "Sync",
+      "tooltip": "Vous devez avoir au moins un appareil supplémentaire à synchroniser"
+    },
+    "not_verified": "non vérifié",
+    "notifications": "Les notifications",
+    "notification_preview": {
+      "label": "Afficher l'aperçu de la notification",
+      "description": "Aperçu du contenu du courrier électronique dans la notification de bureau"
+    },
+    "off": "désactivé",
+    "on": "activé",
+    "over_time": "Il y a plus de 2 mois",
+    "password": {
+      "label": "Changer le mot de passe",
+      "description": "Choisissez un mot de passe fort, ne le réutilisez pas"
+    },
+    "profile": "profil",
+    "privacy": "Confidentialité et sécurité",
+    "privacy_policy": {
+      "label": "Politique de confidentialité",
+      "description": "Voir notre engagement à protéger votre vie privée"
+    },
+    "read_receipts": "Accusés de Lecture",
+    "read_receipts_description": "Si vous désactivez les accusés de lecture, vous ne pourrez pas voir les accusés de lecture des autres",
+    "recovery_email": {
+      "label": "E-mail de récupération",
+      "description": "C’est au cas où vous oublieriez votre mot de passe et que vous deviez le réinitialiser"
+    },
+    "recovery_not_set": "E-mail de récupération non défini",
+    "remove": "Retirer",
+    "reply_to": "Répondre À",
+    "reply_to_email": "Répondre À",
+    "reply_to_not_set": "Lorsque quelqu'un répond à l'un de vos e-mails, ils répondront à cette adresse.",
+    "resend_link": "envoyer à nouveau le lien",
+    "see_more": "Voir plus",
+    "set_email": "Définir l'adresse email",
+    "show_in_label_list": "Afficher dans la liste de marqueurs",
+    "signature": "Signature",
+    "sign_footer": {
+      "description": "Afficher le pied de page «Envoyé avec Criptext»"
+    },
+    "system_labels": "Marqueurs Système",
+    "theme": {
+      "label": "Thème",
+      "description": "Personnalisez votre expérience"
+    },
+    "themeLabels": {
+      "light": "Clair",
+      "dark": "Sombre"
+    },
+    "terms_of_service": {
+      "label": "Conditions d'utilisation",
+      "description": "Nos avocats ont vraiment insisté sur le fait que ce soit ici;)"
+    },
+    "trusted_devices": "périphériques fiables",
+    "two_factor_authentication": "Authentification à deux facteurs",
+    "two_factor_not_available_text": "Pour activer l’authentification à deux facteurs, vous devez définir et vérifier une adresse email de récupération.",
+    "user_labels": "Étiquettes d'utilisateur",
+    "verified": "vérifié"
+  },
+  "sidebar": {
+    "compose": "composer",
+    "enter_new_label": "entrez un nouveau marqueur",
+    "invite_a_friend": "Invite un ami",
+    "labels": "Marqueurs",
+    "new_label": "Nouveau marqueur",
+    "settings": "Paramètres"
+  },
+  "tooltips": {
+    "secure": "Cet email est crypté"
+  },
+  "userGuide": {
+    "buttonCompose": {
+      "text": "Commencez par envoyer un nouvel email",
+      "buttonLabel": "Okay"
+    },
+    "emailRead": {
+      "text": "Apparemment l'email a été lu!",
+      "buttonLabel": "J'ai compris"
+    },
+    "activityFeed": {
+      "text": "Découvrez quels emails ont été lus et par qui",
+      "buttonLabel": "Okay"
+    },
+    "secureMessage": {
+      "text": "Icône de verrouillage signifie que cet e-mail est crypté",
+      "buttonLabel": "J'ai compris"
+    }
+  },
+  "welcome": {
+    "step_1": {
+      "title": "Bienvenue !",
+      "description": "Votre expérience de messagerie sécurisée commence maintenant. Profitez d'une vie privée sans compromis."
+    },
+    "step_2": {
+      "title": "Forte confidentialité",
+      "description": "Criptext ne collecte pas de données de vos emails. Vos emails ne sont stockés que sur votre appareil."
+    },
+    "step_3": {
+      "title": "C'est vous qui avez le pouvoir",
+      "description": "Vous créez des informations, nous pensons que vous avez le droit de les posséder."
+    },
+    "skip_tour": "Passer l'intro"
+  }
+}

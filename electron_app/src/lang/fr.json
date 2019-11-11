@@ -1,0 +1,107 @@
+{
+  "errorMessages": {
+    "UNABLE_TO_CONNECT": {
+      "name": "Impossible de se connecter",
+      "description": "Impossible de se connecter au serveur"
+    },
+    "UNKNOWN": {
+      "name": "Erreur",
+      "description": "Une erreur s'est produite lors du traitement de votre demande.\nCode :"
+    },
+    "PRINTING_ERROR": {
+      "name": "Erreur d'impression",
+      "description": "Échec de l'impression du document. Veuillez réessayer."
+    },
+    "SOURCE_ERROR": {
+      "name": "Erreur D'origine de L'e-mail",
+      "description": "Impossible d'afficher l'origine de l'e-mail. Veuillez réessayer"
+    }
+  },
+  "updaterMessages": {
+    "error": {
+      "name": "Erreur de mise à jour",
+      "description": "Une erreur s'est produite lors du téléchargement de la mise à jour. Réessayez plus tard"
+    },
+    "unknownError": "Inconnu",
+    "notAvailable": {
+      "name": "Pas de mise a jour disponible",
+      "description": "Vous utilisez la dernière version de Criptext"
+    },
+    "availableManual": {
+      "name": "Mise à jour disponible",
+      "description": "Une nouvelle version de Criptext est disponible. Voulez-vous la télécharger maintenant ?",
+      "confirmButton": "Oui",
+      "cancelButton": "Non"
+    },
+    "availableAuto": {
+      "title": "Une nouvelle version de Criptext est disponible !",
+      "subtitle": "Cliquez ici pour installer la mise à jour"
+    },
+    "downloading": {
+      "title": "Téléchargement de la mise à jour",
+      "subtitle": "Dès qu'elle sera prête, nous vous notifierons"
+    },
+    "alreadyDownloading": {
+      "title": "Téléchargement de la mise à jour",
+      "subtitle": "Une mise à jour est en cours de téléchargement"
+    },
+    "downloaded": {
+      "title": "Installer la mise à jour",
+      "subtitle": "Téléchargement de la mise à jour terminé. Criptext va immédiatement redémarrer et se mettre à jour"
+    }
+  },
+  "windows": {
+    "composer": {
+      "windowTitle": "Nouveau message sécurisé",
+      "closeWarning": {
+        "title": "Avertissement",
+        "message": "Vous fermez un message qui n'a pas été envoyé",
+        "detail": "Pour enregistrer le message, cliquez sur 'Enregistrer en tant que brouillon'. Le message sera enregistré dans votre dossier Brouillons",
+        "responses": {
+          "discard": "Abandonner les modifications",
+          "continue": "Continuer à écrire",
+          "save": "Enregistrer en tant que brouillon"
+        }
+      }
+    },
+    "menu": {
+      "template": {
+        "file": "Fichier",
+        "newEmail": "Nouveau courriel",
+        "edit": "Modifier",
+        "undo": "Défaire",
+        "redo": "Refaire",
+        "cut": "Couper",
+        "copy": "Copier",
+        "paste": "Coller",
+        "selectAll": "Tout sélectionner",
+        "window": "Fenêtre",
+        "minimize": "Réduire",
+        "close": "Fermer",
+        "developer": "Développeur",
+        "toggleDeveloperTools": "Basculer les outils de développement",
+        "aboutCriptext": "À propos de Criptext",
+        "services": "Services",
+        "hideCriptext": "Masquer Criptext",
+        "hideOthers": "Masquer les autres",
+        "showAll": "Tout afficher",
+        "quit": "Quitter",
+        "checkForUpdates": "Rechercher des mises à jour",
+        "bringAllToFront": "Tout ramener au premier plan",
+        "criptext": "Criptext"
+      },
+      "trayIcon": {
+        "openCriptext": "Ouvrir Criptext",
+        "criptext": "Criptext",
+        "newEmail": "Nouveau courriel",
+        "quit": "Quitter",
+        "checkForUpdates": "Rechercher des mises à jour"
+      }
+    }
+  },
+  "printStrings": {
+    "toTag": "À",
+    "message": "Message",
+    "at": "à"
+  }
+}

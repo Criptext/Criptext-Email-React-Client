@@ -1,0 +1,107 @@
+{
+  "errorMessages": {
+    "UNABLE_TO_CONNECT": {
+      "name": "Verbindung kann nicht hergestellt werden",
+      "description": "Verbindung zum Server kann nicht hergestellt werden"
+    },
+    "UNKNOWN": {
+      "name": "Fehler",
+      "description": "Bei der Bearbeitung Ihrer Anfrage ist ein Fehler aufgetreten.\nCode: "
+    },
+    "PRINTING_ERROR": {
+      "name": "Druckfehler",
+      "description": "Das Dokument konnte nicht gedruckt werden. Bitte versuche es erneut"
+    },
+    "SOURCE_ERROR": {
+      "name": "Fehler bei der E-Mail-Quelle",
+      "description": "Fehler beim Anzeigen der E-Mail-Quelle. Bitte versuche es erneut"
+    }
+  },
+  "updaterMessages": {
+    "error": {
+      "name": "Updater-Fehler",
+      "description": "Beim Herunterladen des Updates ist ein Fehler aufgetreten. \n Versuchen Sie es später noch einmal"
+    },
+    "unknownError": "Unbekannt",
+    "notAvailable": {
+      "name": "Kein Update verfügbar",
+      "description": "Sie sind auf der neuesten Version von Criptext"
+    },
+    "availableManual": {
+      "name": "Update verfügbar",
+      "description": "Eine neue Version von Criptext ist verfügbar. Möchten Sie sie jetzt herunterladen?",
+      "confirmButton": "Ja",
+      "cancelButton": "Nein"
+    },
+    "availableAuto": {
+      "title": "Eine neue Version von Criptext ist verfügbar!",
+      "subtitle": "Klicken Sie hier, um das Update zu installieren"
+    },
+    "downloading": {
+      "title": "Update wird heruntergeladen",
+      "subtitle": "Wenn es fertig ist, werden wir Sie benachrichtigen"
+    },
+    "alreadyDownloading": {
+      "title": "Update wird heruntergeladen",
+      "subtitle": "Ein Update wird gerade heruntergeladen"
+    },
+    "downloaded": {
+      "title": "Update installieren",
+      "subtitle": "Update Download abgeschlossen. Criptext wird neu gestartet und sofort aktualisiert"
+    }
+  },
+  "windows": {
+    "composer": {
+      "windowTitle": "Neue sichere Nachricht",
+      "closeWarning": {
+        "title": "Warnung",
+        "message": "Sie schließen eine Nachricht, die nicht gesendet wurde.",
+        "detail": "Um die Nachricht zu speichern, klicken Sie auf 'Als Entwurf speichern'. Die Nachricht wird in Ihrem Ordner Entwürfe gespeichert.",
+        "responses": {
+          "discard": "Änderungen verwerfen",
+          "continue": "Schreiben Sie weiter",
+          "save": "Als Entwurf speichern"
+        }
+      }
+    },
+    "menu": {
+      "template": {
+        "file": "Datei",
+        "newEmail": "Neue E-Mail",
+        "edit": "Bearbeiten",
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "cut": "Ausschneiden",
+        "copy": "Kopieren",
+        "paste": "Einfügen",
+        "selectAll": "Alle auswählen",
+        "window": "Fenster",
+        "minimize": "Minimieren",
+        "close": "Schließen",
+        "developer": "Entwickler",
+        "toggleDeveloperTools": "Umschalten auf Entwicklerwerkzeuge",
+        "aboutCriptext": "Über Criptext",
+        "services": "Dienste",
+        "hideCriptext": "Criptext ausblenden",
+        "hideOthers": "Andere ausblenden",
+        "showAll": "Alle anzeigen",
+        "quit": "Beenden",
+        "checkForUpdates": "Nach Updates suchen",
+        "bringAllToFront": "Bringen Sie alles in den Vordergrund",
+        "criptext": "Criptext"
+      },
+      "trayIcon": {
+        "openCriptext": "Criptext öffnen",
+        "criptext": "Criptext",
+        "newEmail": "Neue E-Mail",
+        "quit": "Beenden",
+        "checkForUpdates": "Nach Updates suchen"
+      }
+    }
+  },
+  "printStrings": {
+    "toTag": "An",
+    "message": "Nachricht",
+    "at": "bei"
+  }
+}
