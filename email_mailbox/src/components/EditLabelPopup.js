@@ -4,7 +4,7 @@ import string from './../lang';
 
 const EditLabelPopup = props => {
   return (
-    <div id="popup-removedevice" className="popup-content">
+    <div className="popup-content">
       <div className="popup-title">
         <h1>{string.popups.edit_label.title}</h1>
       </div>
