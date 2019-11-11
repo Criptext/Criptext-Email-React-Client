@@ -165,7 +165,8 @@ class DeleteDeviceWrapperPopup extends Component {
       this.token = undefined;
       this.setState({
         step: 3,
-        valueInputPassword: ''
+        valueInputPassword: '',
+        confirmButtonState: ButtonState.ENABLED
       });
     }
   };

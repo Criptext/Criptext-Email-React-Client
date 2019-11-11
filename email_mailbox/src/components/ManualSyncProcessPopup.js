@@ -18,11 +18,11 @@ import {
   syncCancel,
   syncStatus
 } from '../utils/ipc';
-import { appDomain, SectionType } from './../utils/const';
+import { appDomain } from './../utils/const';
 import { defineDeviceIcon } from '../utils/linkDeviceUtils';
 import {
-  sendSetSectionTypeEvent,
-  sendManualSyncSuccessMessage
+  sendManualSyncSuccessMessage,
+  sendRefreshMailboxSync
 } from '../utils/electronEventInterface';
 
 const { messages } = string.popups.manual_sync_device_approved;
@@ -217,11 +217,7 @@ class ManualSyncProcessPopup extends Component {
                 clearSyncData();
                 await setTimeout(() => {
                   this.props.onTogglePopup();
-                  const mailboxSelected = {
-                    id: 1,
-                    text: 'Inbox'
-                  };
-                  sendSetSectionTypeEvent(SectionType.MAILBOX, mailboxSelected);
+                  sendRefreshMailboxSync();
                   setTimeout(() => {
                     sendManualSyncSuccessMessage();
                   }, SHOW_SUCCESS_MESSAGE_DELAY);
