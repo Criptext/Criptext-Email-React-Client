@@ -10,6 +10,7 @@ import {
   updateFeedItems,
   unsendEmailOnSuccess,
   unsendEmailFiles,
+  updateLabels,
   updateLoadingSync,
   removeLabels,
   stopLoadSync
@@ -45,6 +46,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onAddDataApp: data => {
       dispatch(addDataApp(data));
+    },
+    onUpdateLabels: labels => {
+      dispatch(updateLabels(labels));
     },
     onRemoveLabels: labelIds => {
       dispatch(removeLabels(labelIds));

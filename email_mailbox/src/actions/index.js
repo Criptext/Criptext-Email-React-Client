@@ -58,6 +58,7 @@ import {
   removeLabels,
   updateBadgeLabels,
   updateLabel,
+  updateLabels,
   updateLabelSuccess
 } from './labels';
 import {
@@ -135,6 +136,7 @@ export {
   updateEmailLabels,
   updateEmailOnSuccess,
   updateLabel,
+  updateLabels,
   updateLabelSuccess,
   updateLoadingSync,
   updateSwitchThreads,

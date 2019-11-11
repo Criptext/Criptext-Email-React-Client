@@ -14,7 +14,8 @@ import {
   addLabels,
   setAvatarUpdatedTimestamp,
   stopLoadSync,
-  removeLabels
+  removeLabels,
+  updateLabels
 } from '../actions';
 import { USER_GUIDE_STEPS } from './UserGuide';
 
@@ -308,7 +309,8 @@ class PanelWrapper extends Component {
     labels,
     badgeLabelIds,
     hasStopLoad,
-    removedLabels
+    removedLabels,
+    updatedLabels
   }) => {
     let activity = undefined;
     let label = undefined;
@@ -395,6 +397,11 @@ class PanelWrapper extends Component {
     if (removedLabels && removedLabels.length >= 0) {
       if (!label) label = removeLabels(removedLabels);
       else this.props.onRemoveLabels(removedLabels);
+    }
+
+    if (updatedLabels && updatedLabels.length >= 0) {
+      if (!label) label = updateLabels(updatedLabels);
+      else this.props.onUpdateLabels(updatedLabels);
     }
 
     if (badgeLabelIds) {
@@ -524,6 +531,7 @@ PanelWrapper.propTypes = {
   onRemoveLabels: PropTypes.func,
   onStopLoadSync: PropTypes.func,
   onUpdateAvatar: PropTypes.func,
+  onUpdateLabels: PropTypes.func,
   onUnsendEmail: PropTypes.func,
   onUpdateEmailIdsThread: PropTypes.func,
   onUpdateLoadingSync: PropTypes.func,

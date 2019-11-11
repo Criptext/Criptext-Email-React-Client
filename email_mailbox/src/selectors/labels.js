@@ -96,7 +96,9 @@ const defineVisibleLabels = labels => {
       return {
         id: label.get('id'),
         color: label.get('color'),
-        text: label.get('text')
+        text: label.get('text'),
+        type: label.get('type'),
+        uuid: label.get('uuid')
       };
     });
 };

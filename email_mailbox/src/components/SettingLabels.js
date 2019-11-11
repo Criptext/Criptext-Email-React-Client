@@ -3,15 +3,18 @@ import PropTypes from 'prop-types';
 import './settinglabel.scss';
 import CustomCheckbox from './CustomCheckbox';
 import RemoveLabelPopup from './RemoveLabelPopup';
+import EditLabelPopup from './EditLabelPopup';
 import string from './../lang';
 import PopupHOC from './PopupHOC';
+import { PopupTypes } from './SettingLabelsWrapper';
 
 const RemovingLabelPopup = PopupHOC(RemoveLabelPopup);
+const EditingLabelPopup = PopupHOC(EditLabelPopup);
 
 const SettingLabels = props => (
   <div id="setting-labels">
     <div className="cptx-section-block">
-      {!props.isHiddenRemoveLabelPopup && renderRemoveLabelPopup(props)}
+      {renderPopup(props)}
       <div className="cptx-section-block-title">
         <h1>{string.settings.system_labels}</h1>
       </div>
@@ -28,15 +31,34 @@ const SettingLabels = props => (
   </div>
 );
 
-const renderRemoveLabelPopup = props => (
-  <RemovingLabelPopup
-    isHidden={props.isHiddenRemoveLabelPopup}
-    popupPosition={{ left: '45%', top: '45%' }}
-    onTogglePopup={props.onClickCancelRemoveDevice}
-    theme={'dark'}
-    {...props}
-  />
-);
+const renderPopup = props => {
+  const popupProps = {
+    ...props,
+    ...props.popupState
+  };
+  switch (props.popupType) {
+    case PopupTypes.REMOVE:
+      return (
+        <RemovingLabelPopup
+          popupPosition={{ left: '45%', top: '45%' }}
+          onTogglePopup={props.onClickCancelRemoveLabel}
+          theme={'dark'}
+          {...popupProps}
+        />
+      );
+    case PopupTypes.EDIT:
+      return (
+        <EditingLabelPopup
+          popupPosition={{ left: '45%', top: '45%' }}
+          onTogglePopup={props.onClickCancelEditLabel}
+          theme={'dark'}
+          {...popupProps}
+        />
+      );
+    default:
+      return null;
+  }
+};
 
 const renderSystemLabelsBlock = props => (
   <div className="cptx-section-item">
@@ -121,6 +143,12 @@ const renderCustomLabelItem = (index, customLabelItem, props) => (
     </div>
     <div
       className="table-column-c"
+      onClick={() => props.onClickEditLabel({ ...customLabelItem })}
+    >
+      {string.settings.edit}
+    </div>
+    <div
+      className="table-column-c"
       onClick={() => props.onClickRemoveLabel({ ...customLabelItem })}
     >
       {string.settings.remove}
@@ -156,6 +184,13 @@ const renderInputAddNewLabel = props => (
   </div>
 );
 
+renderPopup.propTypes = {
+  onClickCancelRemoveLabel: PropTypes.func,
+  onClickCancelEditLabel: PropTypes.func,
+  popupState: PropTypes.object,
+  popupType: PropTypes.string
+};
+
 renderSystemLabelsBlock.propTypes = {
   systemLabels: PropTypes.array,
   onClickChangeLabelVisibility: PropTypes.func
@@ -168,12 +203,8 @@ renderCustomLabelsBlock.propTypes = {
 
 renderCustomLabelItem.propTypes = {
   onClickChangeLabelVisibility: PropTypes.func,
+  onClickEditLabel: PropTypes.func,
   onClickRemoveLabel: PropTypes.func
-};
-
-renderRemoveLabelPopup.propTypes = {
-  isHiddenRemoveLabelPopup: PropTypes.bool,
-  onClickCancelRemoveDevice: PropTypes.func
 };
 
 renderInputAddNewLabel.propTypes = {

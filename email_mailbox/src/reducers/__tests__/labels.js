@@ -165,3 +165,33 @@ describe('Label actions - REMOVE_LABELS', () => {
     expect(newState.size).toBe(state.size);
   });
 });
+
+describe('Label actions - UPDATE_LABELS', () => {
+  it('should update labels 6 and 10 name', () => {
+    const state = initState(myLabels);
+    const updatedLabels = [{ id: 6, text: 'star' }, { id: 10, text: 'test' }];
+    const action = actions.updateLabels(updatedLabels);
+    const newState = labelReducer(state, action);
+    expect(newState.size).toBe(state.size);
+
+    const labelUpdated1 = newState.get('6');
+    const labelUpdated2 = newState.get('10');
+
+    expect(labelUpdated1.toJS().text).toBe('star');
+    expect(labelUpdated2.toJS().text).toBe('test');
+  });
+
+  it('should update label 6 and not create label if not exist', () => {
+    const state = initState(myLabels);
+    const updatedLabels = [
+      { id: 6, text: 'star' },
+      { id: 7, text: 'important' }
+    ];
+    const action = actions.updateLabels(updatedLabels);
+    const newState = labelReducer(state, action);
+    expect(newState.size).toBe(state.size);
+    expect(newState.has('7')).toBe(false);
+    const labelUpdated = newState.get('6');
+    expect(labelUpdated.toJS().text).toBe('star');
+  });
+});
