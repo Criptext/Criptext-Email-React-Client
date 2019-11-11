@@ -222,6 +222,7 @@ class PanelWrapper extends Component {
       this.localBackupEnableEventsListenerCallback
     );
     addEvent(Event.RESTORE_BACKUP_INIT, this.restoreBackupInitListenerCallback);
+    addEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
   };
 
   removeEventHandlers = () => {
@@ -256,6 +257,7 @@ class PanelWrapper extends Component {
       Event.RESTORE_BACKUP_INIT,
       this.restoreBackupInitListenerCallback
     );
+    removeEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
   };
 
   enableWindowListenerCallback = () => {
@@ -517,6 +519,23 @@ class PanelWrapper extends Component {
       isHiddenMailboxPopup: false,
       mailboxPopupType: MAILBOX_POPUP_TYPES.RESTORE_BACKUP
     });
+  };
+
+  refreshMailboxSync = () => {
+    this.handleClickSection(SectionType.MAILBOX, {
+      mailboxSelected: {
+        id: 1,
+        text: 'Inbox'
+      }
+    });
+    this.props.onLoadThreads({
+      labelId: Number(1),
+      clear: true
+    });
+    this.props.onUpdateUnreadEmailsBadge([
+      LabelType.inbox.id,
+      LabelType.spam.id
+    ]);
   };
 }
 

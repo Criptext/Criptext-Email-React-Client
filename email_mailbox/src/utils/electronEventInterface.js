@@ -1407,6 +1407,10 @@ export const deleteAllDeviceData = async () => {
   await logoutApp();
 };
 
+export const sendRefreshMailboxSync = () => {
+  emitter.emit(Event.REFRESH_MAILBOX_SYNC);
+};
+
 export const sendChangePasswordSuccessMessage = () => {
   const messageData = {
     ...Messages.success.changePassword,
@@ -1605,6 +1609,7 @@ export const Event = {
   REACTIVATED_ACCOUNT: 'reactivated-account',
   RECOVERY_EMAIL_CHANGED: 'recovery-email-changed',
   RECOVERY_EMAIL_CONFIRMED: 'recovery-email-confirmed',
+  REFRESH_MAILBOX_SYNC: 'refresh-mailbox-sync',
   REFRESH_THREADS: 'refresh-threads',
   RESTORE_BACKUP_INIT: 'restore-backup-init',
   RESTORE_BACKUP_DISABLE_EVENTS: 'restore-backup-disable-events',
