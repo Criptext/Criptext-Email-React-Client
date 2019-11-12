@@ -3,6 +3,8 @@
     "activity_feed": "Лента Активности",
     "deleted": "удаленный",
     "downloaded": "загружено",
+    "empty_message": "Приятного дня",
+    "empty_title": "Там нет ничего нового пока",
     "new": "новое",
     "older": "старое",
     "opened": "открыто",
@@ -677,7 +679,7 @@
     "show_in_label_list": "Показать в списке этикеток",
     "signature": "Подпись",
     "sign_footer": {
-      "description": "Показать нижний колонтитул «Отправлено с криптекстом»"
+      "description": "Показать «Отправлено с Criptext»"
     },
     "system_labels": "Системные метки",
     "theme": {
