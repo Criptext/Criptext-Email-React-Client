@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DEVICE_TYPE } from '../utils/const';
 import string from './../lang';
+import './linkdevicerequest.scss';
 
 const { linkDeviceRequest } = string;
 

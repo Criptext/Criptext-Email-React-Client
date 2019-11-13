@@ -3,7 +3,7 @@
   "version": "0.24.1",
   "private": true,
   "dependencies": {
-    "@criptext/electron-better-ipc": "^0.1.2-rc5",
+    "@criptext/electron-better-ipc": "^0.7.0-rc1-0.2",
     "@criptext/trumbowyg": "^2.16.3",
     "autosuggest-highlight": "^3.1.1",
     "base64-js": "^1.3.0",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@criptext/react-scripts": "^2.0.6-rc1",
     "criptext-js-tools": "0.5.0",
-    "node-sass": "^4.10.0"
+    "node-sass": "^4.13.0"
   },
   "homepage": "./",
   "browserslist": [
