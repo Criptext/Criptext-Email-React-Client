@@ -15,7 +15,7 @@ const {
 const myAccount = require('./Account');
 const { APP_DOMAIN, LINK_DEVICES_FILE_VERSION } = require('./utils/const');
 
-const CIPHER_ALGORITHM = 'aes128';
+const CIPHER_ALGORITHM = 'aes-128-cbc';
 const STREAM_SIZE = 512 * 1024;
 const DEFAULT_KEY_LENGTH = 16;
 

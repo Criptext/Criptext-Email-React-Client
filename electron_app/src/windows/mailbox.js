@@ -1,6 +1,6 @@
 const { app, BrowserWindow, shell } = require('electron');
 const pushReceiver = require('@criptext/electron-push-receiver');
-const ipc = require('@criptext/electron-better-ipc');
+const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const windowStateManager = require('electron-window-state');
 const path = require('path');
 const { mailboxUrl } = require('./../window_routing');
@@ -45,7 +45,7 @@ const create = () => {
     show: false,
     title: 'Criptext',
     frame: !isWindows(),
-    webPreferences: { webSecurity: !isDev }
+    webPreferences: { webSecurity: !isDev, nodeIntegration: true }
   });
   mailboxWindow.loadURL(mailboxUrl);
   if (isWindows()) mailboxWindow.setMenuBarVisibility(false);

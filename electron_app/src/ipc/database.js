@@ -1,4 +1,4 @@
-const ipc = require('@criptext/electron-better-ipc');
+const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const dbManager = require('./../DBManager');
 
 ipc.answerRenderer('db-clean-data-logout', recipientId =>

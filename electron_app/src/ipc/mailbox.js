@@ -1,4 +1,4 @@
-const ipc = require('@criptext/electron-better-ipc');
+const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const { app } = require('electron');
 const unusedFilename = require('unused-filename');
 const { download } = require('electron-dl');

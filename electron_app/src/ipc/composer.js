@@ -1,4 +1,4 @@
-const ipc = require('@criptext/electron-better-ipc');
+const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const composerWindowManager = require('../windows/composer');
 
 ipc.answerRenderer(

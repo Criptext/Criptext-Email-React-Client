@@ -1,4 +1,4 @@
-const ipc = require('@criptext/electron-better-ipc');
+const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const loadingWindow = require('../windows/loading');
 const globalManager = require('../globalManager');
 
