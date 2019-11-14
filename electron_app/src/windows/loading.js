@@ -28,7 +28,10 @@ const create = () => {
     show: false,
     frame: false,
     transparent: true,
-    center: true
+    center: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
   loadingWindow.loadURL(loadingUrl);
   loadingWindow.setMenu(null);

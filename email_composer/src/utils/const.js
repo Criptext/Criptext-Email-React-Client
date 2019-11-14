@@ -19,7 +19,7 @@ export const composerEvents = {
 
 export const defaultEmptyMimetypeValue = 'application/octet-stream';
 
-export const previewLength = 100;
+export const previewLength = 300;
 
 export const externalDomains = [
   /* Default domains included */

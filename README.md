@@ -23,8 +23,8 @@ We use Lokalise for translations. If you are interested in helping please write 
 
 To build Criptext on your machine you'll need:
 
-* Node.js (Recommended 8.15+) 
-* Yarn (Recommended 1.13+) 
+* Node.js (Recommended 12.12+) 
+* Yarn (Recommended 1.19.1+) 
 
 ## Run locally
 

@@ -24,7 +24,10 @@ const create = () => {
     center: true,
     frame: false,
     show: false,
-    transparent: true
+    transparent: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
   loginWindow.loadURL(loginUrl);
   loginWindow.setResizable(false);

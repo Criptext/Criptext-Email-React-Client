@@ -1,6 +1,6 @@
 {
   "name": "criptext",
-  "version": "0.24.1",
+  "version": "0.25.0",
   "author": {
     "name": "Criptext Inc",
     "email": "support@criptext.com",
@@ -135,14 +135,14 @@
   },
   "devDependencies": {
     "criptext-js-tools": "0.5.0",
-    "electron": "3.1.10",
+    "electron": "6.1.4",
     "electron-builder": "21.2.0",
     "electron-notarize": "^0.1.1"
   },
   "dependencies": {
     "@criptext/api": "^0.15.22",
     "@criptext/data-transfer-client": "^0.1.1",
-    "@criptext/electron-better-ipc": "^0.1.2-rc5",
+    "@criptext/electron-better-ipc": "^0.7.0-rc1-0.2",
     "@criptext/electron-push-receiver": "^2.1.2-rc1",
     "@criptext/news-api-client": "^1.0.1",
     "dotenv": "^6.2.0",
@@ -159,7 +159,7 @@
     "recursive-copy": "^2.0.10",
     "rimraf": "^2.6.3",
     "rmdir-recursive": "^0.0.1",
-    "sqlite3": "4.0.2",
+    "sqlite3": "^4.1.0",
     "unused-filename": "^2.1.0",
     "websocket": "^1.0.28"
   }

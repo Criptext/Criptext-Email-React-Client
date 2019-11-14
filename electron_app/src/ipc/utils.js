@@ -1,4 +1,4 @@
-const ipc = require('@criptext/electron-better-ipc');
+const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const { app, dialog } = require('electron');
 const {
   getComputerName,

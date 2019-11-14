@@ -1,4 +1,4 @@
-const ipc = require('@criptext/electron-better-ipc');
+const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const { shell } = require('electron');
 const moment = require('moment');
 const {

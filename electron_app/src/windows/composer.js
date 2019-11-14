@@ -46,7 +46,10 @@ const createComposerWindow = () => {
     show: false,
     title: `  ${windowTitle}`,
     minWidth: composerSize.minWidth,
-    minHeight: composerSize.minHeight
+    minHeight: composerSize.minHeight,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
   globalManager.composerData.set(window.id, {});
   window.loadURL(composerUrl);

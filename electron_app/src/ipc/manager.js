@@ -1,4 +1,4 @@
-const ipc = require('@criptext/electron-better-ipc');
+const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const dbManager = require('./../DBManager');
 const fileUtils = require('./../utils/FileUtils');
 const myAccount = require('../../src/Account');
