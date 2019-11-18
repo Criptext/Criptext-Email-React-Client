@@ -221,8 +221,8 @@ const parseAndDispatchEvent = async event => {
       threadIds,
       labels,
       badgeLabelIds,
-      removedLabels: [removedLabel],
-      updatedLabels: [updatedLabel]
+      removedLabels: removedLabel ? [removedLabel] : null,
+      updatedLabels: updatedLabel ? [updatedLabel] : null
     });
   } catch (error) {
     // eslint-disable-next-line no-console
