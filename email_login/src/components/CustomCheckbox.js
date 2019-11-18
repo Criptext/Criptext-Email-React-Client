@@ -21,7 +21,6 @@ function onClick(ev, props) {
   return props.onChange({ target: { value: !props.value } });
 }
 
-// eslint-disable-next-line fp/no-mutation
 CustomCheckbox.propTypes = {
   value: PropTypes.bool.isRequired,
   onChange: PropTypes.func

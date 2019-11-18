@@ -53,21 +53,19 @@ const Content = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 Content.propTypes = {
   codeAlreadySent: PropTypes.bool,
   errorInputCode: PropTypes.string,
   onKeyDown: PropTypes.func,
   onInputCodeChange: PropTypes.func,
   recoveryEmail: PropTypes.string,
-  validateButtonState: PropTypes.number,
   valueInputCode: PropTypes.string
 };
 
-// eslint-disable-next-line fp/no-mutation
 RecoveryCodePopup.propTypes = {
   onClickCancel: PropTypes.func,
-  onClickConfirm: PropTypes.func
+  onClickConfirm: PropTypes.func,
+  validateButtonState: PropTypes.number
 };
 
 export default RecoveryCodePopup;

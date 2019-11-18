@@ -20,10 +20,7 @@ const disconnect = () => {
 
 const start = ({ jwt }) => {
   client = new WebSocketClient();
-  client.connect(
-    `${SOCKET_URL}?token=${jwt}`,
-    'criptext-protocol'
-  );
+  client.connect(`${SOCKET_URL}?token=${jwt}`, 'criptext-protocol');
 
   client.on('connectFailed', error => {
     if (shouldReconnect) {

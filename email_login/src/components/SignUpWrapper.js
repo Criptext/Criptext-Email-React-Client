@@ -90,7 +90,6 @@ class SignUpWrapper extends Component {
     });
 }
 
-// eslint-disable-next-line fp/no-mutation
 SignUpWrapper.propTypes = {
   checkAvailableUsername: PropTypes.func.isRequired,
   onFormReady: PropTypes.func

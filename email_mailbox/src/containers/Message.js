@@ -137,9 +137,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const Message = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MessageWrapper);
+const Message = connect(mapStateToProps, mapDispatchToProps)(MessageWrapper);
 
 export default Message;

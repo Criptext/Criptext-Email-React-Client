@@ -49,7 +49,9 @@ class RemoveDevicePopupWrapper extends Component {
 
   checkInputError = value => {
     const isValid = validatePassword(value);
-    const errorMessage = `${string.errors.password.length.a} ${requiredMinLength.password} ${string.errors.password.length.b}`;
+    const errorMessage = `${string.errors.password.length.a} ${
+      requiredMinLength.password
+    } ${string.errors.password.length.b}`;
     return { hasError: !isValid, errorMessage };
   };
 

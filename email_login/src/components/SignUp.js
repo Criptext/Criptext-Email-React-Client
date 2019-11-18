@@ -50,7 +50,6 @@ const Form = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 Form.propTypes = {
   onClickSignUp: PropTypes.func,
   errors: PropTypes.object.isRequired,
@@ -59,7 +58,10 @@ Form.propTypes = {
   isShowingPassword: PropTypes.bool.isRequired,
   onChangeField: PropTypes.func,
   onToggleShowPassword: PropTypes.func,
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired
+};
+
+SignUp.propTypes = {
   web: PropTypes.bool
 };
 

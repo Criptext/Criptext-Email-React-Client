@@ -137,7 +137,6 @@ class RecoveryCodeWrapperPopup extends Component {
   };
 }
 
-// eslint-disable-next-line fp/no-mutation
 RecoveryCodeWrapperPopup.propTypes = {
   jwt: PropTypes.string,
   emailAddress: PropTypes.string,

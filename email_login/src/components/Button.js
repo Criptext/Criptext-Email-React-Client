@@ -67,7 +67,6 @@ export const ButtonState = {
   LOADING: 2
 };
 
-// eslint-disable-next-line fp/no-mutation
 Button.propTypes = {
   id: PropTypes.number,
   onClick: PropTypes.func,

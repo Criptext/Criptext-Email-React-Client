@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:8.15
+      - image: circleci/node:10.17.0
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -53,9 +53,13 @@ jobs:
         
       # run tests!
       - checkout
+      - run: 
+          name: Composer Build
+          command: cd email_composer/ && echo 'SKIP_PREFLIGHT_CHECK=true' >> .env && yarn build
+
       - run:
           name: Composer Unit test
-          command: cd email_composer/ && echo 'SKIP_PREFLIGHT_CHECK=true' >> .env && yarn test
+          command: cd email_composer/ && yarn test
 
       - run:
           name: Composer Lint

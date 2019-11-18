@@ -62,7 +62,6 @@ const renderContent = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {
   disabledResendLoginRequest: PropTypes.bool,
   hasTwoFactorAuth: PropTypes.bool,

@@ -13,11 +13,15 @@ const SettingBlockReplyTo = props => (
       {props.replyToEmail || string.settings.reply_to_not_set}
     </span>
     <div className="cptx-section-item-control">
-      {props.replyToEmail && !props.replyToIsLoading && (
-        <button className="button-b" onClick={() => props.onClickSetReplyTo()}>
-          <span>{string.settings.change}</span>
-        </button>
-      )}
+      {props.replyToEmail &&
+        !props.replyToIsLoading && (
+          <button
+            className="button-b"
+            onClick={() => props.onClickSetReplyTo()}
+          >
+            <span>{string.settings.change}</span>
+          </button>
+        )}
       {props.replyToIsLoading ? (
         <Loader />
       ) : (

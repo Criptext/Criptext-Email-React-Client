@@ -161,9 +161,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const Settings = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingsWrapper);
+const Settings = connect(mapStateToProps, mapDispatchToProps)(SettingsWrapper);
 
 export { Settings as default, deleteDeviceData };

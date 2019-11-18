@@ -38,7 +38,6 @@ const ChangePassword = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 ChangePassword.propTypes = {
   disabled: PropTypes.bool,
   emailAddress: PropTypes.string,

@@ -65,7 +65,9 @@ const SETTINGS_POPUP_TYPES = {
 };
 
 const changePasswordErrors = {
-  LENGTH: `${string.errors.password.length.a} ${requiredMinLength.password} ${string.errors.password.length.b}`,
+  LENGTH: `${string.errors.password.length.a} ${requiredMinLength.password} ${
+    string.errors.password.length.b
+  }`,
   MATCH: string.errors.password.match
 };
 

@@ -51,7 +51,6 @@ const ManualSyncDeviceApprovedPopup = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 ManualSyncDeviceApprovedPopup.propTypes = {
   newDeviceIcon: PropTypes.string,
   oldDeviceIcon: PropTypes.string,

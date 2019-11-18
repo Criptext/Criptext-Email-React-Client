@@ -53,9 +53,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const SettingBlockProfile = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingBlockProfileWrapper);
+const SettingBlockProfile = connect(mapStateToProps, mapDispatchToProps)(
+  SettingBlockProfileWrapper
+);
 
 export default SettingBlockProfile;

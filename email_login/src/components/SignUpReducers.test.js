@@ -62,6 +62,7 @@ describe('checkUsername', () => {
     );
 
     if (result !== true) {
+      // eslint-disable-next-line no-console
       console.error(shrunk);
       throw result;
     }
@@ -86,6 +87,7 @@ describe('checkUsername', () => {
     );
 
     if (result !== true) {
+      // eslint-disable-next-line no-console
       console.error(shrunk);
       throw result;
     }
@@ -187,6 +189,7 @@ describe('updateForm', () => {
     );
 
     if (result !== true) {
+      // eslint-disable-next-line no-console
       console.error(shrunk);
       throw result;
     }

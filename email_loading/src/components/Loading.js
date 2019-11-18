@@ -49,7 +49,7 @@ Loading.propTypes = {
 };
 
 renderMessage.propTypes = {
-  failed: PropTypes.boolean,
+  failed: PropTypes.bool,
   restart: PropTypes.func
 };
 

@@ -59,7 +59,6 @@ const ManualSyncDeviceAuthenticationPopup = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 ManualSyncDeviceAuthenticationPopup.propTypes = {
   disabledSubmitButtons: PropTypes.bool,
   onClickResendSync: PropTypes.func,

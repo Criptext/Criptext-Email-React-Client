@@ -41,9 +41,10 @@ const Panel = props => (
       onClickSection={props.onClickSection}
       onToggleActivityPanel={props.onToggleActivityPanel}
     />
-    {props.isOpenWelcome && !mySettings.opened && (
-      <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
-    )}
+    {props.isOpenWelcome &&
+      !mySettings.opened && (
+        <WelcomeWrapper onClickCloseWelcome={props.onClickCloseWelcome} />
+      )}
     {!props.isHiddenMailboxPopup &&
       renderMailboxPopup({
         type: props.mailboxPopupType,

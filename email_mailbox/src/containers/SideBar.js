@@ -43,9 +43,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const SideBar = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SideBarView);
+const SideBar = connect(mapStateToProps, mapDispatchToProps)(SideBarView);
 
 export default SideBar;

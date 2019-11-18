@@ -41,7 +41,6 @@ const defineDeviceType = type => {
   return 'icon-desktop';
 };
 
-// eslint-disable-next-line fp/no-mutation
 DeleteDeviceItem.propTypes = {
   checked: PropTypes.bool,
   deviceType: PropTypes.number,

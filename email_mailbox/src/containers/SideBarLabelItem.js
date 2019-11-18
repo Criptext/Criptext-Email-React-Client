@@ -10,9 +10,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const SideBarLabelItem = connect(
-  null,
-  mapDispatchToProps
-)(SideBarLabelItemView);
+const SideBarLabelItem = connect(null, mapDispatchToProps)(
+  SideBarLabelItemView
+);
 
 export default SideBarLabelItem;

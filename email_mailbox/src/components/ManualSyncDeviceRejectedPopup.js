@@ -42,7 +42,6 @@ const ManualSyncDeviceRejectedPopup = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 ManualSyncDeviceRejectedPopup.propTypes = {
   onTogglePopup: PropTypes.func
 };

@@ -300,9 +300,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const Email = connect(
-  makeMapStateToProps,
-  mapDispatchToProps
-)(EmailView);
+const Email = connect(makeMapStateToProps, mapDispatchToProps)(EmailView);
 
 export default Email;

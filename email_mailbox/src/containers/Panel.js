@@ -110,9 +110,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const Panel = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PanelWrapper);
+const Panel = connect(mapStateToProps, mapDispatchToProps)(PanelWrapper);
 
 export default Panel;
