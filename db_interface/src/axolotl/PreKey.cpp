@@ -1,68 +1,61 @@
-#include <SQLiteCpp/SQLiteCpp.h>
-#include <string>
-#include <memory>
-#include <vector>
+#include "PreKey.h"
 
 using namespace std;
+using namespace sqlite;
 
-namespace CriptextDB {
+CriptextDB::PreKey CriptextDB::getPreKey(string dbPath, short int id) {
+  sqlite_config config;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+  database db(dbPath, config);
 
-  struct PreKey { 
-    short int id;
-    string privKey;
-    string pubKey;
+  string myPreKey;
+  size_t myLen = 0;
+  db << "Select * from prekeyrecord where preKeyId == ?;"
+     << id
+     >> [&] (int preKeyId, string record, int recordLength) {
+        myPreKey = record;
+        myLen = (size_t)recordLength;
+    };
+
+  if (myLen == 0) {
+    throw std::invalid_argument("row not available");
   }
+  PreKey preKey = { 
+    .id = id, 
+    .record = myPreKey, 
+    .len = myLen
+  };
+  return preKey;
+}
 
-  unique_ptr<PreKey> getPreKey(string dbPath, short int id, int accountId) {
-    try {
-      SQLITE::Database db(dbPath);
+bool CriptextDB::createPreKey(string dbPath, short int id, char *keyRecord, size_t len) {
+  try {
 
-      SQLITE::Statement query(db, 'Select * from prekeyrecord where preKeyId == ? and accountId == ?')
-      query.bind(1, id);
-      query.bind(2, accountId)
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
 
-      query.executeStep();
-    } catch (exception& e) {
-      return NULL;
-    }
-
-    PreKey preKey = { query.getColumn(1).getInt(), query.getColumn(2).getString(), query.getColumn(3).getString() }
-
-    return preKey
+    db << "insert into prekeyrecord (preKeyId, record, recordLength) values (?,?,?);"
+     << id
+     << keyRecord
+     << static_cast<int>(len);
+    return true;
+  } catch (exception& e) {
+    std::cout << e.what() << std::endl;
+    return false;
   }
+}
 
-  bool createPreKey(string dbPath, short int id, string privKey, string pubKey, int accountId) {
-    try {
-      SQLITE::Database db(dbPath);
-
-      SQLITE::Statement query(db, 'insert into prekey (preKeyId, preKeyPrivKey, preKeyPubKey, accountId) values (?,?,?,?)')
-      query.bind(1, id);
-      query.bind(2, privKey);
-      query.bind(3, pubKey);
-      query.bind(4, accountId);
-
-      query.exec();
-    } catch (exception& e) {
-      return false
-    }
-
-    return true
+bool CriptextDB::deletePreKey(string dbPath, short int id) {
+  try {
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX  | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
+    db << "delete from prekeyrecord where preKeyId == ?;"
+     << id;
+    return true;
+  } catch (exception& e) {
+    std::cout << e.what() << std::endl;
+    return false;
   }
-
-  bool deletePreKey(string dbPath, short int id, int accountId) {
-    try {
-      SQLITE::Database db(dbPath);
-
-      SQLITE::Statement query(db, 'delete from prekeyrecord where preKeyId == ? and accountId == ?')
-      query.bind(1, id);
-      query.bind(2, accountId);
-
-      query.exec();
-    } catch (exception& e) {
-      return false
-    }
-
-    return true
-  }
-
-} 
+}

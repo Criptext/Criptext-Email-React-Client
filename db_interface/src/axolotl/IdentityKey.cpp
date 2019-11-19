@@ -1,53 +1,62 @@
-#include <SQLiteCpp/SQLiteCpp.h>
+#include "IdentityKey.h"
 #include <string>
-#include <memory>
-#include <vector>
+#include <iostream>
 
+using namespace sqlite;
 using namespace std;
 
-namespace CriptextDB {
+CriptextDB::IdentityKey CriptextDB::getIdentityKey(string dbPath, string recipientId, long int deviceId) {
+  sqlite_config config;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+  database db(dbPath, config);
 
-  struct IdentityKey { 
-    string recipientId;
-    long int deviceId;
-    string identityKey;
+  IdentityKey identityKey;
+  db << "Select * from identitykeyrecord where recipientId == ? and deviceId == ?;"
+     << recipientId
+     << deviceId
+     >> [&] (string recipientId, int deviceId, string identity) {
+        identityKey = { 
+          .recipientId = recipientId, 
+          .deviceId = deviceId, 
+          .identityKey = identity
+        };
+    };
+
+  if (identityKey.deviceId == 0 || identityKey.identityKey.empty()) {
+    throw std::invalid_argument("row not available");
   }
+  return identityKey;
+}
 
-  unique_ptr<IdentityKey> getIdentityKey(string dbPath, string recipientId, long int deviceId, int accountId) {
-    try {
-      SQLITE::Database db(dbPath);
+bool CriptextDB::createIdentityKey(string dbPath, string recipientId, int deviceId, char *identityKey) {
+  try {
+    bool hasRow = false;
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
 
-      SQLITE::Statement query(db, 'Select * from identitykeyrecord where recipientId == ? and deviceId == ? and accountId == ?')
-      query.bind(1, recipientId);
-      query.bind(2, deviceId)
-      query.bind(3, accountId)
-
-      query.executeStep();
-    } catch (exception& e) {
-      return NULL;
+    database db(dbPath, config);
+    db << "begin;";
+    db << "Select * from identitykeyrecord where recipientId == ? and deviceId == ?;"
+     << recipientId
+     << deviceId
+     >> [&] (string recipientId, int deviceId, string identity) {
+        hasRow = true;
+    };
+    if (hasRow) {
+      db << "update identitykeyrecord set identityKey = ? where recipientId == ? and deviceId == ?;"
+        << identityKey
+        << recipientId
+        << deviceId;
+    } else {
+      db << "insert into identitykeyrecord (recipientId, deviceId, identityKey) values (?,?,?);"
+        << recipientId
+        << deviceId
+        << identityKey;
     }
-
-    IdentityKey identityKey = { query.getColumn(1).c_str(), query.getColumn(2).getInt(), query.getColumn(3).c_str() }
-
-    return identityKey
+    db << "commit;";
+  } catch (exception& e) {
+    std::cout << "ERROR Creating Identity Key: " << e.what() << std::endl;
+    return false;
   }
-
-  bool createIdentityKey(string dbPath, string recipientId, int deviceId, string identityKey, int accountId) {
-    try {
-      SQLITE::Database db(dbPath);
-
-      SQLITE::Statement query(db, 'insert into identitykeyrecord (recipientId, deviceId, identityKey, accountId) values (?,?,?,?)')
-      query.bind(1, recipientId);
-      query.bind(2, deviceId);
-      query.bind(3, identityKey);
-      query.bind(4, accountId);
-
-      query.exec();
-    } catch (exception& e) {
-      return false
-    }
-
-    return true
-  }
-
-} 
+  return true;
+}

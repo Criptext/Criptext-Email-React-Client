@@ -1,68 +1,63 @@
-#include <SQLiteCpp/SQLiteCpp.h>
+#include "SignedPreKey.h"
 #include <string>
-#include <memory>
 #include <vector>
+#include <iostream>
+#include <sstream>
 
 using namespace std;
+using namespace sqlite;
 
-namespace CriptextDB {
+CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, short int id) {
+  sqlite_config config;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+  database db(dbPath, config);
 
-  struct SignedPreKey { 
-    short int id;
-    string privKey;
-    string pubKey;
+  string mySignedPreKey;
+  int myLen = 0;
+  db << "Select * from signedprekeyrecord where signedPreKeyId == ?;"
+     << id
+     >> [&] (int preKeyId, string record, int recordLength) {
+        mySignedPreKey = record;
+        myLen = (size_t)recordLength;
+        
+    };
+  if (myLen == 0) {
+    throw std::invalid_argument("row not available");
   }
+  SignedPreKey signedPreKey = { 
+    .id = id, 
+    .record = mySignedPreKey, 
+    .len = myLen 
+  };
+  return signedPreKey;
+}
 
-  unique_ptr<SignedPreKey> getSignedPreKey(string dbPath, short int id, int accountId) {
-    try {
-      SQLITE::Database db(dbPath);
-
-      SQLITE::Statement query(db, 'Select * from signedprekeyrecord where signedPreKeyId == ? and accountId == ?')
-      query.bind(1, id);
-      query.bind(2, accountId)
-
-      query.executeStep();
-    } catch (exception& e) {
-      return NULL;
-    }
-
-    SignedPreKey signedPreKey = { query.getColumn(1).getInt(), query.getColumn(2).c_str(), query.getColumn(3).c_str() }
-
-    return signedPreKey
+bool CriptextDB::createSignedPreKey(string dbPath, short int id, char *keyRecord, size_t len) {
+  try {
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);  
+    db << "insert into signedprekeyrecord (signedPreKeyId, record, recordLength) values (?,?,?);"
+     << id
+     << keyRecord
+     << static_cast<int>(len);
+    return true;
+  } catch (exception& e) {
+    std::cout << e.what() << std::endl;
+    return false;
   }
+}
 
-  bool createSignedPreKey(string dbPath, short int id, string privKey, string pubKey, int accountId) {
-    try {
-      SQLITE::Database db(dbPath);
-
-      SQLITE::Statement query(db, 'insert into signedprekey (signedPreKeyId, signedPreKeyPrivKey, signedPreKeyPubKey, accountId) values (?,?,?,?)')
-      query.bind(1, id);
-      query.bind(2, privKey);
-      query.bind(3, pubKey);
-      query.bind(4, accountId);
-
-      query.exec();
-    } catch (exception& e) {
-      return false
-    }
-
-    return true
+bool CriptextDB::deleteSignedPreKey(string dbPath, short int id) {
+  try {
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
+    db << "delete from signedPrekeyrecord where signedPreKeyId == ?;"
+     << id;
+    return true;
+  } catch (exception& e) {
+    std::cout << e.what() << std::endl;
+    return false;
   }
-
-  bool deletePreKey(string dbPath, short int id, int accountId) {
-    try {
-      SQLITE::Database db(dbPath);
-
-      SQLITE::Statement query(db, 'delete from signedPrekeyrecord where signedPreKeyId == ? and accountId == ?')
-      query.bind(1, id);
-      query.bind(2, accountId);
-
-      query.exec();
-    } catch (exception& e) {
-      return false
-    }
-
-    return true
-  }
-
-} 
+}

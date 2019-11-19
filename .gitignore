@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 */node_modules
+*_interface/deps
 
 # testing
 */coverage
@@ -10,8 +11,11 @@ electron_app/src/__integrations__/**@criptext.com/
 
 #dev
 electron_app/userData/
+electron_app/src/userData/
+valgrind-out.txt
 
 # production
+*_interface/build
 email_*/build
 */dist
 */src/**/*.css
@@ -21,6 +25,7 @@ email_*/build
 electron_app/build/Certificates.p12
 electron_app/build/Criptext_Mail_Distribution.provisionprofile
 electron_app/dev-app-update.yml
+binding.gyp
 
 # misc
 */.env*

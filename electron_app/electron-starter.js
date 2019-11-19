@@ -8,6 +8,7 @@ const loginWindow = require('./src/windows/login');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
+const { startAlice, closeAlice, checkReachability } = require('./src/aliceManager');
 const { createAppMenu } = require('./src/windows/menu');
 const {
   showWindows, 
@@ -38,9 +39,21 @@ async function initApp() {
   } catch (ex) {
     console.log(ex);
   }
-  
+
+  await startAlice();
+  await checkReachability();
+
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
+    const needsMigration = !(await dbManager.hasColumnPreKeyRecordLength());
+    if (needsMigration) {
+      globalManager.windowsEvents.disable()
+      globalManager.needsUpgrade.enable()
+    } else {
+      globalManager.windowsEvents.enable()
+      globalManager.needsUpgrade.disable()
+    }
+
     if (!!existingAccount.deviceId) {
       const appSettings = await dbManager.getSettings();
       const settings = Object.assign(appSettings, { isFromStore });
@@ -116,5 +129,6 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
+  closeAlice();
   globalManager.forcequit.set(true);
 });

@@ -3,6 +3,9 @@ const electron = window.require('electron');
 const { remote, ipcRenderer } = electron;
 const composerId = remote.getCurrentWindow().id;
 const globalManager = remote.require('./src/globalManager');
+export const getAlicePort = remote.require('./src/aliceManager').getPort;
+export const getAlicePassword = remote.require('./src/aliceManager')
+  .getPassword;
 
 export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
   './src/utils/const'

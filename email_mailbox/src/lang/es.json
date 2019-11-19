@@ -467,6 +467,24 @@
       "cancelSyncLabel": "Cancelar Sincronización",
       "continueLabel": "Continuar"
     },
+    "migration": {
+      "title": "Tu app se esta actualizando",
+      "restartApp": "Reiniciar Aplicación",
+      "retry": "Reintentar",
+      "paragraphs": {
+        "step1": "Inicializando datos...",
+        "step2": "Generando una nueva sesión...",
+        "step3": "Actualizando cuenta...",
+        "step4": "Actualización satisfactoria!"
+      },
+      "errorMessages": {
+        "parseEvents": "No fue posible descargar eventos!",
+        "retrieveAccount": "No fue posible retornar la cuenta!",
+        "credentials": "No fue posible crear credenciales de la cuenta!",
+        "keys": "No fue posible generar llaves de encriptación!",
+        "upgrade": "No fue posible actualizar la cuenta!"
+      }
+    },
     "permanently_delete": {
       "title": "Advertencia!",
       "message": "Estos elementos se eliminarán permanentemente y no podrás recuperarlos. ¿Estás seguro?",

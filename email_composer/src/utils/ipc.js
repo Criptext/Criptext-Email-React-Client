@@ -36,6 +36,10 @@ export const throwError = error => {
   ipc.callMain('throwError', error);
 };
 
+export const restartAlice = async () => {
+  return await ipc.callMain('restart-alice');
+};
+
 /* Criptext Client
 ----------------------------- */
 export const checkExpiredSession = async params => {

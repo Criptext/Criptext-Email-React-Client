@@ -1,0 +1,25 @@
+#migration-popup {
+  > .popup-paragraph {
+    font-weight: 400;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+
+    > .loading-ring {
+      position: relative;
+      top: -7px;
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  .retry-link {
+    font-weight: 600;
+    color: #0091ff;
+    text-decoration: underline;
+    cursor: pointer;
+    background-color: #00000000;
+  }
+}

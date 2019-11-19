@@ -1,11 +1,21 @@
 /*global libsignal util*/
-import { getSessionRecordIds, insertPreKeys } from './../utils/ipc';
+import {
+  getSessionRecordIds,
+  insertPreKeys,
+  restartAlice
+} from './../utils/ipc';
 import SignalProtocolStore from './store';
 import { fetchEmailBody } from '../utils/FetchUtils';
+import {
+  fetchDecryptKey,
+  fetchDecryptBody,
+  generateMorePreKeys
+} from '../utils/ApiUtils';
+import { myAccount } from '../utils/electronInterface';
 
-const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
+const ALICE_ERROR = 'alice unavailable';
 const ciphertextType = {
   CIPHERTEXT: 1,
   PREKEY_BUNDLE: 3
@@ -15,7 +25,8 @@ const decryptEmail = async ({
   bodyKey,
   recipientId,
   deviceId,
-  messageType
+  messageType,
+  fileKeys
 }) => {
   const { status, body } = await fetchEmailBody({ bodyKey });
   if (status !== 200) {
@@ -24,31 +35,38 @@ const decryptEmail = async ({
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return { decryptedBody: body.body };
   }
-  const textEncrypted = util.toArrayBufferFromBase64(body.body);
-  const addressFrom = new libsignal.SignalProtocolAddress(
-    recipientId,
-    deviceId
-  );
-  const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
-  const binaryText = await decryptMessage(
-    sessionCipher,
-    textEncrypted,
-    messageType
-  );
-  const decryptedBody = util.toString(binaryText);
-  let decryptedHeaders;
-  if (body.headers) {
-    const headersEncrypted = util.toArrayBufferFromBase64(body.headers);
-    const headersText = await decryptMessage(
-      sessionCipher,
-      headersEncrypted,
-      messageType
-    );
-    decryptedHeaders = util.toString(headersText);
+  const res = await aliceRequestWrapper(() => {
+    return fetchDecryptBody({
+      emailKey: bodyKey,
+      senderId: recipientId,
+      deviceId,
+      recipientId: myAccount.recipientId,
+      messageType,
+      body: body.body,
+      headers: body.headers,
+      headersMessageType: messageType,
+      fileKeys: fileKeys
+    });
+  });
+  if (!res) {
+    throw new Error(ALICE_ERROR);
+  } else if (res.status === 500) {
+    return {
+      decryptedBody: 'Content Unencrypted'
+    };
+  } else if (res.status !== 200) {
+    throw new Error(ALICE_ERROR);
   }
+
+  const {
+    decryptedBody = null,
+    decryptedHeaders = null,
+    decryptedFileKeys = null
+  } = await res;
   return {
     decryptedBody,
-    decryptedHeaders
+    decryptedHeaders,
+    decryptedFileKeys
   };
 };
 
@@ -93,18 +111,16 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return text;
   }
-  const textEncrypted = util.toArrayBufferFromBase64(text);
-  const addressFrom = new libsignal.SignalProtocolAddress(
-    recipientId,
-    deviceId
-  );
-  const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
-  const binaryText = await decryptMessage(
-    sessionCipher,
-    textEncrypted,
-    messageType
-  );
-  return binaryText;
+  const res = await aliceRequestWrapper(() => {
+    return fetchDecryptKey({
+      recipientId,
+      deviceId,
+      messageType,
+      key: text
+    });
+  });
+  const decryptedText = await res.arrayBuffer();
+  return decryptedText;
 };
 
 const generateAndInsertMorePreKeys = async () => {
@@ -115,32 +131,44 @@ const generateAndInsertMorePreKeys = async () => {
     (item, index) => index + 1
   );
   const newPreKeyIds = preKeyIds.filter(id => !currentPreKeyIds.includes(id));
-  const preKeysToServer = [];
-  const preKeysToStore = [];
-  for (const preKeyId of newPreKeyIds) {
-    const preKey = await KeyHelper.generatePreKey(preKeyId);
-    preKeysToServer.push({
-      publicKey: util.toBase64(preKey.keyPair.pubKey),
-      id: preKeyId
-    });
-    preKeysToStore.push(preKey.keyPair);
-  }
   try {
-    const { status } = await insertPreKeys(preKeysToServer);
-    if (status === 200) {
-      return await Promise.all(
-        preKeysToStore.map(async (preKeyPair, index) => {
-          await store.storePreKey(newPreKeyIds[index], preKeyPair);
-        })
-      );
+    const res = await aliceRequestWrapper(() => {
+      return generateMorePreKeys({
+        accountId: myAccount.recipientId,
+        newPreKeys: newPreKeyIds
+      });
+    });
+    if (res.status !== 200) {
+      // eslint-disable-next-line no-console
+      console.error(res.status);
+      return;
     }
+    const resObj = await res.json();
+    await insertPreKeys(resObj.preKeys);
   } catch (newPreKeysError) {
     // eslint-disable-next-line no-console
     console.error(newPreKeysError);
   }
 };
 
+const aliceRequestWrapper = async func => {
+  let retries = 3;
+  let res;
+  while (retries >= 0) {
+    retries -= 1;
+    try {
+      res = await func();
+      if (res.status === 200) break;
+    } catch (ex) {
+      if (ex.toString() !== 'TypeError: Failed to fetch') break;
+      await restartAlice();
+    }
+  }
+  return res;
+};
+
 export default {
+  ALICE_ERROR,
   decryptEmail,
   decryptFileKey,
   decryptKey,

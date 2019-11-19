@@ -1,108 +1,123 @@
-#include <SQLiteCpp/SQLiteCpp.h>
-#include <string>
-#include <memory>
-#include <vector>
+#include "SessionRecord.h"
 
+using namespace sqlite;
 using namespace std;
 
-namespace CriptextDB {
+CriptextDB::SessionRecord CriptextDB::getSessionRecord(string dbPath, string recipientId, long int deviceId) {
+  sqlite_config config;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+  database db(dbPath, config);
+  
+  string myRecord;
+  int myLen = 0;
+  db << "Select * from sessionrecord where recipientId == ? and deviceId == ?;"
+     << recipientId
+     << deviceId
+     >> [&] (string recipientId, int deviceId, string record, int recordLength) {
+        myLen = recordLength;
+        myRecord = record;
+    };
+  if (myLen == 0) {
+    throw std::invalid_argument("row not available");
+  }
+  SessionRecord sessionRecord = { 
+    .recipientId = recipientId, 
+    .deviceId = deviceId, 
+    .record = myRecord, 
+    .len = (size_t)myLen 
+  };
 
-  struct SessionRecord {
-    string recipientId;
-    long int deviceId;
-    string record;
+  return sessionRecord;
+}
+
+vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(string dbPath, string recipientId) {
+  vector<CriptextDB::SessionRecord> sessionRecords;
+
+  try {
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
+    database db(dbPath, config);
+
+    db << "Select * from sessionrecord where recipientId == ?;"
+     << recipientId
+     >> [&] (string recipientId, int deviceId, string record, int recordLength) {
+        SessionRecord mySessionRecord = { 
+          .recipientId = recipientId, 
+          .deviceId = deviceId, 
+          .record = const_cast<char *>(record.c_str()), 
+          .len = (size_t)recordLength 
+        };
+        sessionRecords.push_back(mySessionRecord);
+    };
+  } catch (exception& e) {
+    std::cout << e.what() << std::endl; 
+    return sessionRecords;
   }
 
-  unique_ptr<SessionRecord> getSessionRecord(string dbPath, int accountId, string recipientId, long int deviceId) {
-    try {
-      SQLITE::Database db(dbPath);
+  return sessionRecords;
+}
 
-      SQLITE::Statement query(db, 'Select * from sessionrecord where recipientId == ? and deviceId == ? and accountId == ?')
-      query.bind(1, recipientId);
-      query.bind(2, deviceId);
-      query.bind(3, accountId)
-
-      query.executeStep();
-    } catch (exception& e) {
-      return NULL;
+bool CriptextDB::createSessionRecord(string dbPath, string recipientId, long int deviceId, char* record, size_t len) {
+  try {
+    bool hasRow = false;
+              
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
+    db << "begin;";
+    db << "Select * from sessionrecord where recipientId == ? and deviceId == ?;"
+     << recipientId
+     << deviceId
+     >> [&] (string recipientId, int deviceId, string record, int recordLength) {
+        hasRow = true;
+    };
+    if (hasRow) {
+      db << "update sessionrecord set record = ?, recordLength = ? where recipientId == ? and deviceId == ?;"
+        << record
+        << static_cast<int>(len)
+        << recipientId
+        << deviceId;
+    } else {
+      db << "insert into sessionrecord (recipientId, deviceId, record, recordLength) values (?,?,?,?);"
+        << recipientId
+        << deviceId
+        << record
+        << static_cast<int>(len);
     }
-
-    SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), query.getColumn(2).getString() }
-
-    return sessionRecord
+    db << "commit;";
+  } catch (exception& e) {
+    std::cout << "ERROR CREATING SESSION: " << e.what() << std::endl;
+    return false;
   }
+  return true;
+}
 
-  vector<unique_ptr<SessionRecord>> getSessionRecords(string dbPath, int accountId, string recipientId) {
-
-    vector<unique_ptr<SessionRecord>> sessionRecords;
-
-    try {
-      SQLITE::Database db(dbPath);
-
-      SQLITE::Statement query(db, 'Select * from sessionrecord where recipientId == ? and accountId == ?')
-      query.bind(1, recipientId);
-      query.bind(2, accountId)
-
-      while (query.executeStep()) {
-        SessionRecord sessionRecord = { query.getColumn(0).getString(), query.getColumn(1).getInt(), query.getColumn(2).getString() }
-        sessionRecords.push_back(sessionRecord)
-      }
-    } catch (exception& e) {
-      return NULL;
-    }
-
-    return sessionRecords
+bool CriptextDB::deleteSessionRecord(string dbPath, string recipientId, long int deviceId) {
+  try {
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
+    db << "delete from sessionrecord where recipientId == ? and deviceId == ?;"
+     << recipientId
+     << deviceId;
+  } catch (exception& e) {
+    std::cout << "Error deleting session : " << e.what() << std::endl;
+    return false;
   }
+  return true;
+}
 
-  bool createSessionRecord(string dbPath, int accountId, string recipientId, long int deviceId, string record) {
-    try {
-      SQLITE::Database db(dbPath);
+bool CriptextDB::deleteSessionRecords(string dbPath, string recipientId) {
+  try {
+    sqlite_config config;
+    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+    database db(dbPath, config);
 
-      SQLITE::Statement query(db, 'insert into sessionrecord (recipientId, deviceId, record, accountId) values (?,?,?,?)')
-      query.bind(1, recipientId);
-      query.bind(2, deviceId);
-      query.bind(3, accountId);
-      query.bind(4, record);
-
-      query.exec();
-    } catch (exception& e) {
-      return false
-    }
-
-    return true
+    db << "delete from sessionrecord where recipientId == ?;"
+     << recipientId;
+  } catch (exception& e) {
+    std::cout << "Error deleting sessions : " << e.what() << std::endl;
+    return false;
   }
-
-  bool deleteSessionRecord(string dbPath, int accountId, string recipientId, long int deviceId, string record) {
-    try {
-      SQLITE::Database db(dbPath);
-
-      SQLITE::Statement query(db, 'delete from sessionrecord where recipientId == ? and deviceId == ? and accountId == ?')
-      query.bind(1, recipientId);
-      query.bind(2, deviceId);
-      query.bind(3, accountId);
-
-      query.exec();
-    } catch (exception& e) {
-      return false
-    }
-
-    return true
-  }
-
-  bool deleteSessionRecords(string dbPath, int accountId, string recipientId, string record) {
-    try {
-      SQLITE::Database db(dbPath);
-
-      SQLITE::Statement query(db, 'delete from sessionrecord where recipientId == ? and accountId == ?')
-      query.bind(1, recipientId);
-      query.bind(2, accountId);
-
-      query.exec();
-    } catch (exception& e) {
-      return false
-    }
-
-    return true
-  }
-
-} 
+  return true;
+}

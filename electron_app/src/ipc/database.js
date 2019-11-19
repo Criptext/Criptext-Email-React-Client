@@ -1,6 +1,8 @@
 const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const dbManager = require('./../DBManager');
 
+ipc.answerRenderer('db-migrate-alice', () => dbManager.cleanForAlice());
+
 ipc.answerRenderer('db-clean-data-logout', recipientId =>
   dbManager.cleanDataLogout(recipientId)
 );

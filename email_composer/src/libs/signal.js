@@ -2,7 +2,8 @@
 import {
   findKeyBundles,
   getSessionRecordByRecipientIds,
-  postEmail
+  postEmail,
+  restartAlice
 } from './../utils/ipc';
 import SignalProtocolStore from './store';
 import { CustomError } from './../utils/CustomError';
@@ -15,6 +16,8 @@ import {
 } from './../utils/EncryptionUtils';
 import string from './../lang';
 import { appDomain } from '../utils/const';
+import { createSession, encryptEmail } from '../utils/ApiUtils';
+import { myAccount } from '../utils/electronInterface';
 
 const KeyHelper = libsignal.KeyHelper;
 const store = new SignalProtocolStore();
@@ -73,108 +76,113 @@ const createEmails = async (
   preview,
   recipients,
   domainAddresses,
-  keyBundleJSONbyRecipientIdAndDeviceId,
+  keyBundles,
   guestDomains,
   peer,
   files
 ) => {
-  const criptextEmailsByRecipientId = {};
-  for (const recipient of recipients) {
-    const { recipientId, type, username, domain } = recipient;
-
-    if (guestDomains.indexOf(domain) > -1) {
-      continue;
-    }
-
-    if (!criptextEmailsByRecipientId[recipientId]) {
-      criptextEmailsByRecipientId[recipientId] = {
-        username,
-        domain,
-        type,
-        emails: []
-      };
-    }
-
-    const domainIndex = domainAddresses.findIndex(domainAddress => {
-      return domainAddress.name === domain;
+  const myKeyBundles = keyBundles.map(keybundle => {
+    return {
+      ...keybundle,
+      recipientId:
+        keybundle.domain === appDomain
+          ? keybundle.recipientId
+          : `${keybundle.recipientId}@${keybundle.domain}`
+    };
+  });
+  while (myKeyBundles.length > 0) {
+    const keyBundlesBatch = myKeyBundles.splice(0, 30);
+    await aliceRequestWrapper(() => {
+      return createSession({
+        accountRecipientId: myAccount.recipientId,
+        keybundles: keyBundlesBatch
+      });
     });
-
-    const knownDeviceIds =
-      domainAddresses[domainIndex].knownAddresses[username] || [];
-    const deviceIdWithKeys = keyBundleJSONbyRecipientIdAndDeviceId[recipientId]
-      ? Object.keys(keyBundleJSONbyRecipientIdAndDeviceId[recipientId]).map(
-          deviceId => {
-            return keyBundleJSONbyRecipientIdAndDeviceId[recipientId][deviceId];
-          }
-        )
-      : [];
-    const deviceIds = [...knownDeviceIds, ...deviceIdWithKeys];
-    await Promise.all(
-      deviceIds
-        .filter(item => {
-          const deviceId = typeof item === 'number' ? item : item.deviceId;
-          return !(
-            peer.recipientId === recipientId &&
-            peer.deviceId === deviceId &&
-            type === 'peer'
-          );
-        })
-        .map(async item => {
-          const deviceId = typeof item === 'number' ? item : item.deviceId;
-          const keyBundleArrayBuffer =
-            typeof item === 'object' ? keysToArrayBuffer(item) : undefined;
-          const bodyEncrypted = await encryptText(
-            recipientId,
-            deviceId,
-            body,
-            keyBundleArrayBuffer
-          );
-          const previewEncripted = await encryptText(
-            recipientId,
-            deviceId,
-            preview
-          );
-          const fileKeys = files
-            ? await Promise.all(
-                files.map(async file => {
-                  if (!file.key || !file.iv) {
-                    return null;
-                  }
-                  const fileKey = await encryptText(
-                    recipientId,
-                    deviceId,
-                    `${file.key}:${file.iv}`
-                  );
-                  return fileKey.body;
-                })
-              )
-            : null;
-          const existingFileKeys = fileKeys
-            ? fileKeys.filter(
-                fileKey => !!fileKey && typeof fileKey === 'string'
-              )
-            : [];
-          const fileKey =
-            existingFileKeys.length > 0 ? existingFileKeys[0] : null;
-
-          let criptextEmail = {
-            recipientId: username,
-            deviceId,
-            body: bodyEncrypted.body,
-            messageType: bodyEncrypted.type,
-            preview: previewEncripted.body,
-            previewMessageType: previewEncripted.type
-          };
-          if (fileKey) {
-            criptextEmail = { ...criptextEmail, fileKey, fileKeys };
-          }
-          criptextEmailsByRecipientId[recipientId]['emails'].push(
-            criptextEmail
-          );
-          return criptextEmail;
-        })
-    );
   }
+
+  const criptextEmailsByRecipientId = {};
+  await Promise.all(
+    recipients.map(async recipient => {
+      const { recipientId, type, username, domain } = recipient;
+
+      if (guestDomains.indexOf(domain) > -1) {
+        return;
+      }
+
+      if (!criptextEmailsByRecipientId[recipientId]) {
+        criptextEmailsByRecipientId[recipientId] = {
+          username,
+          domain,
+          type,
+          emails: []
+        };
+      }
+
+      const domainIndex = domainAddresses.findIndex(domainAddress => {
+        return domainAddress.name === domain;
+      });
+
+      const knownDeviceIds =
+        domainAddresses[domainIndex].knownAddresses[username] || [];
+      const newDevicesIds = keyBundles
+        .filter(
+          keybundle =>
+            keybundle.recipientId === username && keybundle.domain === domain
+        )
+        .map(keybundle => keybundle.deviceId);
+      const deviceIds = [...knownDeviceIds, ...newDevicesIds].filter(
+        deviceId => peer.recipientId !== username || peer.deviceId !== deviceId
+      );
+      for (const deviceId of deviceIds) {
+        const fileKeys = files
+          ? files.reduce((result, file) => {
+              if (!file.key || !file.iv) {
+                return result;
+              }
+              return [...result, `${file.key}:${file.iv}`];
+            }, [])
+          : null;
+        const res = await aliceRequestWrapper(() => {
+          return encryptEmail({
+            accountRecipientId: myAccount.recipientId,
+            body,
+            preview,
+            fileKeys,
+            recipientId,
+            deviceId
+          });
+        });
+        const {
+          bodyEncrypted,
+          previewEncrypted,
+          bodyMessageType,
+          previewMessageType,
+          fileKeysEncrypted
+        } = await res.json();
+        const fileKey =
+          fileKeysEncrypted && fileKeysEncrypted.length > 0
+            ? fileKeysEncrypted[0]
+            : null;
+
+        let criptextEmail = {
+          recipientId: username,
+          deviceId,
+          body: bodyEncrypted,
+          messageType: bodyMessageType,
+          preview: previewEncrypted,
+          previewMessageType: previewMessageType
+        };
+        if (fileKey) {
+          criptextEmail = {
+            ...criptextEmail,
+            fileKey: fileKey,
+            fileKeys: fileKeysEncrypted
+          };
+        }
+        criptextEmailsByRecipientId[recipientId]['emails'].push(criptextEmail);
+      }
+    })
+  );
   return Object.values(criptextEmailsByRecipientId);
 };
 
@@ -220,25 +228,12 @@ const encryptPostEmail = async ({
       )
     );
   }
-  const keyBundleJSONbyRecipientIdAndDeviceId = keyBundles.reduce(
-    (result, keyBundle) => {
-      const username = keyBundle.recipientId;
-      const deviceId = keyBundle.deviceId;
-      const domain = keyBundle.domain;
-      const recipientId =
-        keyBundle.domain === appDomain ? username : `${username}@${domain}`;
-      const recipientKeys = result[recipientId] || {};
-      const item = { ...recipientKeys, [deviceId]: keyBundle };
-      return { ...result, [recipientId]: item };
-    },
-    {}
-  );
   const criptextEmails = await createEmails(
     body,
     preview,
     recipients,
     domainAddresses,
-    keyBundleJSONbyRecipientIdAndDeviceId,
+    keyBundles,
     guestDomains,
     peer,
     files
@@ -255,7 +250,7 @@ const encryptPostEmail = async ({
     threadId,
     criptextEmails,
     guestEmail,
-    files
+    files: files ? files : null
   });
   const res = await postEmail(data);
   if (res.status === 429) {
@@ -437,6 +432,22 @@ const encryptExternalEmail = async ({
     session,
     encryptedBody: encryptedBody.body
   };
+};
+
+const aliceRequestWrapper = async func => {
+  let retries = 3;
+  let res;
+  while (retries >= 0) {
+    retries -= 1;
+    try {
+      res = await func();
+      if (res.status === 200) break;
+    } catch (ex) {
+      if (ex.toString() !== 'TypeError: Failed to fetch') break;
+      await restartAlice();
+    }
+  }
+  return res;
 };
 
 export { encryptPostEmail, createDummyKeyBundle };

@@ -467,6 +467,24 @@
       "cancelSyncLabel": "Cancel sync",
       "continueLabel": "Continue"
     },
+    "migration": {
+      "title": "Your app is being upgraded",
+      "restartApp": "Restart App",
+      "retry": "Retry",
+      "paragraphs": {
+        "step1": "Initializing data...",
+        "step2": "Generating new session...",
+        "step3": "Upgrading Account...",
+        "step4": "Successfully upgraded!"
+      },
+      "errorMessages": {
+        "parseEvents": "Unable to handle events!",
+        "retrieveAccount": "Unable to retrieve account!",
+        "credentials": "Unable to create account credentials!",
+        "keys": "Unable to create generate keys!",
+        "upgrade": "Unable to upgrade account!"
+      }
+    },
     "permanently_delete": {
       "title": "Warning!",
       "message": "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",
