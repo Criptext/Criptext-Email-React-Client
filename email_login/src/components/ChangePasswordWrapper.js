@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ChangePassword from './ChangePassword';
 import {
   closeLoginWindow,
@@ -193,5 +194,10 @@ class ChangePasswordWrapper extends Component {
     throwError(error);
   };
 }
+
+ChangePasswordWrapper.propTypes = {
+  emailAddress: PropTypes.string,
+  oldPassword: PropTypes.string
+};
 
 export default ChangePasswordWrapper;

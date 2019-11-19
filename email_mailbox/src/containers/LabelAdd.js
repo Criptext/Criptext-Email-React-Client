@@ -24,9 +24,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const LabelAdd = connect(
-  null,
-  mapDispatchToProps
-)(LabelAddWrapper);
+const LabelAdd = connect(null, mapDispatchToProps)(LabelAddWrapper);
 
 export default LabelAdd;

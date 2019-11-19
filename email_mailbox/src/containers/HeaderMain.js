@@ -14,7 +14,9 @@ const mapStateToProps = state => {
   const allLabels = getAllLabels(state);
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const isLoadingThreads = state.get('activities').get('isLoadingThreads');
-  const avatarUrl = `${avatarBaseUrl}${myAccount.recipientId}?date=${avatarTimestamp}`;
+  const avatarUrl = `${avatarBaseUrl}${
+    myAccount.recipientId
+  }?date=${avatarTimestamp}`;
   return {
     avatarUrl,
     allLabels,
@@ -71,9 +73,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const HeaderMain = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(HeaderMainWrapper);
+const HeaderMain = connect(mapStateToProps, mapDispatchToProps)(
+  HeaderMainWrapper
+);
 
 export default HeaderMain;

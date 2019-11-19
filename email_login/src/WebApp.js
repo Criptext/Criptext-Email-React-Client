@@ -13,6 +13,7 @@ const onFormReady = data => {
     return;
 
   runReCaptcha().then(recaptchaToken => {
+    // eslint-disable-next-line no-console
     console.log('validated: ', { ...data, recaptchaToken });
   });
 };

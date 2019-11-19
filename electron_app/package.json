@@ -134,7 +134,7 @@
     }
   },
   "devDependencies": {
-    "criptext-js-tools": "0.5.0",
+    "@criptext/criptext-js-tools": "^0.5.2",
     "electron": "6.1.4",
     "electron-builder": "21.2.0",
     "electron-notarize": "^0.1.1"
@@ -162,5 +162,9 @@
     "sqlite3": "^4.1.0",
     "unused-filename": "^2.1.0",
     "websocket": "^1.0.28"
+  },
+  "jest": {
+    "verbose": true,
+    "testURL": "http://localhost/"
   }
 }

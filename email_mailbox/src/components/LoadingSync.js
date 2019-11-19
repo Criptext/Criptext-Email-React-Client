@@ -14,14 +14,16 @@ const LoadingSync = props => (
       />
     </div>
     <div className="cptx-loading-description">
-      <span>{`${props.completedTask} ${string.mailbox.of} ${props.totalTask}`}</span>
+      <span>{`${props.completedTask} ${string.mailbox.of} ${
+        props.totalTask
+      }`}</span>
     </div>
   </div>
 );
 
 const calculateProgress = (totalTask, completedTask) => {
   if (totalTask === 0 && completedTask) return 0;
-  return (completedTask / totalTask) * 100;
+  return completedTask / totalTask * 100;
 };
 
 LoadingSync.propTypes = {

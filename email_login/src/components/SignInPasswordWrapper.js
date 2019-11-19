@@ -132,7 +132,7 @@ class SignInPasswordWrapper extends Component {
         const tooManyRequestErrorMessage = {
           ...string.errors.tooManyRequests
         };
-        // eslint-disable-next-line fp/no-mutation
+
         tooManyRequestErrorMessage['description'] += parseRateLimitBlockingTime(
           seconds
         );
@@ -140,7 +140,6 @@ class SignInPasswordWrapper extends Component {
         break;
       }
       case LOGIN_STATUS.TOO_MANY_DEVICES: {
-        // check
         this.throwLoginError(string.errors.tooManyDevices);
         break;
       }
@@ -203,9 +202,13 @@ class SignInPasswordWrapper extends Component {
   };
 }
 
-// eslint-disable-next-line fp/no-mutation
 SignInPasswordWrapper.propTypes = {
-  usernameValue: PropTypes.string
+  goToWaitingApproval: PropTypes.func,
+  hasTwoFactorAuth: PropTypes.bool,
+  onGoToChangePassword: PropTypes.func,
+  setPopupContent: PropTypes.func,
+  usernameValue: PropTypes.string,
+  value: PropTypes.string
 };
 
 export default SignInPasswordWrapper;

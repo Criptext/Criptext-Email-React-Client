@@ -31,7 +31,6 @@ export const replaceCharacters = (string, positionsToExclude, character) => {
       const newCharacter = sanitizedPositions.includes(i)
         ? string.charAt(i)
         : character;
-      // eslint-disable-next-line fp/no-mutation
       replacedString += newCharacter;
     }
     return replacedString;

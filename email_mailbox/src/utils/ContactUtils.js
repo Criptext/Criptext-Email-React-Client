@@ -6,18 +6,18 @@ const compareContacts = (recipient1, recipient2) => {
     return recipient2.name
       ? 1
       : recipient1.email > recipient2.email
-      ? 1
-      : recipient1.email < recipient2.email
-      ? -1
-      : 0;
+        ? 1
+        : recipient1.email < recipient2.email
+          ? -1
+          : 0;
   }
   return !recipient2.name
     ? -1
     : recipient1.name > recipient2.name
-    ? 1
-    : recipient1.name > recipient2.name
-    ? -1
-    : 0;
+      ? 1
+      : recipient1.name > recipient2.name
+        ? -1
+        : 0;
 };
 
 export const matchOwnEmail = (myUsername, incomingEmail) =>

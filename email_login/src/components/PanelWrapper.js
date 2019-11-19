@@ -74,7 +74,6 @@ const errorMessages = {
 };
 
 const LINK_STATUS_RETRIES = 12;
-// eslint-disable-next-line fp/no-let
 let LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
 const LINK_STATUS_DELAY = 5000;
 const rejectedDeviceStatus = 493;
@@ -420,7 +419,6 @@ class PanelWrapper extends Component {
     const currentStep = tmplastStep[tmplastStep.length - 1];
     const state = { lastStep, currentStep };
     if (currentStep === mode.SIGNIN)
-      // eslint-disable-next-line fp/no-mutation
       state.buttonSignInState = ButtonState.DISABLED;
     this.setState(state, this.cleanState);
   };
@@ -724,7 +722,6 @@ class PanelWrapper extends Component {
       deviceType: DEVICE_TYPE
     };
     if (this.state.hasTwoFactorAuth) {
-      // eslint-disable-next-line fp/no-mutation
       newDeviceData.password = hashPassword(this.state.values.password);
     }
     try {
@@ -752,6 +749,7 @@ class PanelWrapper extends Component {
         jwt: this.state.ephemeralToken
       });
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(e);
     }
   };
@@ -857,12 +855,10 @@ class PanelWrapper extends Component {
       this.stopCountdown();
       confirmWaitingApprovalLogin(shouldKeepWaiting => {
         if (shouldKeepWaiting) {
-          // eslint-disable-next-line fp/no-mutation
           LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
           this.checkLinkStatus();
         } else {
           this.onClickBackView();
-          // eslint-disable-next-line fp/no-mutation
           LINK_STATUS_ATTEMPS = LINK_STATUS_RETRIES;
         }
       });
@@ -898,7 +894,6 @@ class PanelWrapper extends Component {
             this.checkLinkStatus,
             LINK_STATUS_DELAY
           );
-          // eslint-disable-next-line fp/no-mutation
           LINK_STATUS_ATTEMPS--;
         }
       }

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { mySettings } from '../utils/electronInterface';
 import './formitem.scss';
 
-const hasError = props => typeof props.error == 'string' && props.error;
+const hasError = props => typeof props.error === 'string' && props.error;
 const isValid = props => props.error === undefined;
 
 const formItemType = (formItem, isShowingPassword) => {
@@ -106,29 +106,16 @@ const renderErrorMessage = props =>
     </span>
   ) : null;
 
-// eslint-disable-next-line fp/no-mutation
-FormItem.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.symbol]),
-  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  formItem: PropTypes.object,
-  isShowingPassword: PropTypes.bool.isRequired,
-  onToggleShowPassword: PropTypes.func,
-  onChange: PropTypes.func
-};
-
-// eslint-disable-next-line fp/no-mutation
 renderValidateIcon.propTypes = {
   formItem: PropTypes.object
 };
 
-// eslint-disable-next-line fp/no-mutation
 renderToSCheckInput.propTypes = {
   formItem: PropTypes.object,
   value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   onChange: PropTypes.func
 };
 
-// eslint-disable-next-line fp/no-mutation
 renderItem.propTypes = {
   formItem: PropTypes.object,
   isShowingPassword: PropTypes.bool.isRequired,
@@ -137,28 +124,34 @@ renderItem.propTypes = {
   onChange: PropTypes.func
 };
 
-// eslint-disable-next-line fp/no-mutation
 renderInput.propTypes = {
   formItem: PropTypes.object.isRequired,
   isShowingPassword: PropTypes.object.isShowingPassword,
   onChange: PropTypes.func
 };
 
-// eslint-disable-next-line fp/no-mutation
 renderTextInput.propTypes = {
   formItem: PropTypes.object.isRequired
 };
-// eslint-disable-next-line fp/no-mutation
+
 renderShowPasswordIcon.propTypes = {
   isShowingPassword: PropTypes.bool.isRequired,
   onToggleShowPassword: PropTypes.func,
   formItem: PropTypes.object.isRequired
 };
 
-// eslint-disable-next-line fp/no-mutation
 renderErrorMessage.propTypes = {
   error: PropTypes.string,
   formItem: PropTypes.object
+};
+
+FormItem.propTypes = {
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.symbol]),
+  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  formItem: PropTypes.object,
+  isShowingPassword: PropTypes.bool.isRequired,
+  onToggleShowPassword: PropTypes.func,
+  onChange: PropTypes.func
 };
 
 export default FormItem;

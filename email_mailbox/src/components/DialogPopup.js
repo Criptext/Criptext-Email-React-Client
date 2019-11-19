@@ -26,7 +26,6 @@ const DialogPopup = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 DialogPopup.propTypes = {
   onLeftButtonClick: PropTypes.func,
   onRightButtonClick: PropTypes.func,

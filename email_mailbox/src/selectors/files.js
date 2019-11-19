@@ -29,8 +29,7 @@ const defineFiles = (files, fileTokens) => {
 };
 
 export const makeGetFiles = () => {
-  return createSelector(
-    [getFiles, getFileTokens],
-    (files, fileTokens) => defineFiles(files, fileTokens)
+  return createSelector([getFiles, getFileTokens], (files, fileTokens) =>
+    defineFiles(files, fileTokens)
   );
 };

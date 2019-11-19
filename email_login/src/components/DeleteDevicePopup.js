@@ -87,7 +87,6 @@ const Content = props => {
   );
 };
 
-// eslint-disable-next-line fp/no-mutation
 Content.propTypes = {
   devices: PropTypes.array,
   errorInputPassword: PropTypes.string,
@@ -103,13 +102,14 @@ Content.propTypes = {
   valueInputPassword: PropTypes.string
 };
 
-// eslint-disable-next-line fp/no-mutation
-Button.propTypes = {
-  disabled: PropTypes.bool,
-  id: PropTypes.number,
-  label: PropTypes.string,
-  onClick: PropTypes.func,
-  type: PropTypes.string
+DeleteDevicePopup.propTypes = {
+  confirmButtonState: PropTypes.string,
+  onClickCancel: PropTypes.func,
+  onClickConfirm: PropTypes.func,
+  step: PropTypes.number,
+  textButtonCancel: PropTypes.string,
+  textButtonConfirm: PropTypes.string,
+  title: PropTypes.string
 };
 
 export const PopupTypes = {

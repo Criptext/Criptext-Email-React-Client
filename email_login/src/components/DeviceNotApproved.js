@@ -39,7 +39,6 @@ const renderContent = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 renderContent.propTypes = {
   hasTwoFactorAuth: PropTypes.bool,
   onClickUseRecoveryCode: PropTypes.func,

@@ -34,9 +34,7 @@ const DialogContent = props => {
           </div>
           <div className="popup-list">
             <ul>
-              {props.list.map((email, index) => (
-                <li key={index}>{email}</li>
-              ))}
+              {props.list.map((email, index) => <li key={index}>{email}</li>)}
             </ul>
           </div>
           <div className="popup-paragraph">
@@ -85,13 +83,25 @@ const DialogButton = ({ type, label, onClick }) => {
   }
 };
 
-// eslint-disable-next-line fp/no-mutation
-DialogPopup.propTypes = {
-  onLeftButtonClick: PropTypes.func,
-  onRightButtonClick: PropTypes.func,
-  suffix: PropTypes.string,
+DialogContent.propTypes = {
+  list: PropTypes.array,
   prefix: PropTypes.string,
   strong: PropTypes.string,
+  suffix: PropTypes.string,
+  type: PropTypes.string
+};
+
+DialogButton.propTypes = {
+  label: PropTypes.string,
+  onClick: PropTypes.func,
+  type: PropTypes.string
+};
+
+DialogPopup.propTypes = {
+  cancelButtonLabel: PropTypes.string,
+  confirmButtonLabel: PropTypes.string,
+  onCancelClick: PropTypes.func,
+  onConfirmClick: PropTypes.func,
   title: PropTypes.string
 };
 

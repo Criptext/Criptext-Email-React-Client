@@ -56,15 +56,14 @@ const PopupContent = props => {
   }
 };
 
-// eslint-disable-next-line fp/no-mutation
+PopupContent.propTypes = {
+  status: PropTypes.string,
+  blurEmailRecovery: PropTypes.string
+};
+
 ForgotPasswordPopup.propTypes = {
   onDismiss: PropTypes.func,
-  suffix: PropTypes.string,
-  prefix: PropTypes.string,
-  message: PropTypes.string,
-  email: PropTypes.string,
-  title: PropTypes.string,
-  dismissButtonLabel: PropTypes.string
+  status: PropTypes.string
 };
 
 export default ForgotPasswordPopup;

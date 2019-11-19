@@ -64,7 +64,6 @@ const renderFooter = props => (
   </div>
 );
 
-// eslint-disable-next-line fp/no-mutation
 renderForm.propTypes = {
   buttonState: PropTypes.number,
   errorMessage: PropTypes.string,
@@ -73,7 +72,6 @@ renderForm.propTypes = {
   value: PropTypes.string
 };
 
-// eslint-disable-next-line fp/no-mutation
 renderFooter.propTypes = {
   goToSignUp: PropTypes.func
 };

@@ -97,14 +97,15 @@ const Threads = props => (
             />
           );
         })}
-        {props.isLoadingThreads && props.threads.size !== 0 && (
-          <div className="threads-loading">
-            <div />
-            <div />
-            <div />
-            <div />
-          </div>
-        )}
+        {props.isLoadingThreads &&
+          props.threads.size !== 0 && (
+            <div className="threads-loading">
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+          )}
       </div>
     </div>
     {renderTooltipForThread(props.hoverTarget, props.tip)}

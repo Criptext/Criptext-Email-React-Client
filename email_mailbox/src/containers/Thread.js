@@ -71,9 +71,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const Thread = connect(
-  makeMapStateToProps,
-  mapDispatchToProps
-)(ThreadView);
+const Thread = connect(makeMapStateToProps, mapDispatchToProps)(ThreadView);
 
 export default Thread;

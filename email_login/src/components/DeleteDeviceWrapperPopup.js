@@ -219,7 +219,6 @@ class DeleteDeviceWrapperPopup extends Component {
   };
 }
 
-// eslint-disable-next-line fp/no-mutation
 DeleteDeviceWrapperPopup.propTypes = {
   devicesDeleted: PropTypes.func,
   emailAddress: PropTypes.string,

@@ -49,11 +49,12 @@ const renderTrustedDevice = (index, deviceData, props) => (
         <span className="current-device">{string.settings.current_device}</span>
       </div>
     )}
-    {deviceData.lastConnection.time && !deviceData.isCurrentDevice && (
-      <div className="device-status">
-        {renderLastConnection(deviceData.lastConnection)}
-      </div>
-    )}
+    {deviceData.lastConnection.time &&
+      !deviceData.isCurrentDevice && (
+        <div className="device-status">
+          {renderLastConnection(deviceData.lastConnection)}
+        </div>
+      )}
     {!deviceData.isCurrentDevice && (
       <button
         className="button-b"

@@ -36,19 +36,20 @@ const MessageStandard = props => {
   return (
     <div className={`message-content ${defineMessageClass(props.type)}`}>
       <span className="message-description">{props.description}</span>
-      {!!props.action && !!props.onClickAction && (
-        <button
-          className={defineActionClass(props.status)}
-          onClick={props.onClickAction}
-        >
-          <span>{props.action}</span>
-          {props.status === MessageActionStatus.ENABLED ? (
-            <i className="icon-arrow-right" />
-          ) : (
-            renderLoading()
-          )}
-        </button>
-      )}
+      {!!props.action &&
+        !!props.onClickAction && (
+          <button
+            className={defineActionClass(props.status)}
+            onClick={props.onClickAction}
+          >
+            <span>{props.action}</span>
+            {props.status === MessageActionStatus.ENABLED ? (
+              <i className="icon-arrow-right" />
+            ) : (
+              renderLoading()
+            )}
+          </button>
+        )}
       {isSuggestionOrAnnouncement && (
         <button className="message-close" onClick={props.onClickClose}>
           <i className="icon-exit" />

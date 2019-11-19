@@ -79,7 +79,7 @@ LinkOldDevice.propTypes = {
 };
 
 renderMessage.propTypes = {
-  failed: PropTypes.boolean,
+  failed: PropTypes.bool,
   message: PropTypes.string,
   onClickRetry: PropTypes.func
 };

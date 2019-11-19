@@ -75,13 +75,11 @@ const defineTextButton = hasTwoFactorAuth => {
     : signInPassword.buttons.confirmLabel;
 };
 
-// eslint-disable-next-line fp/no-mutation
 renderSubHeader.propTypes = {
   hasTwoFactorAuth: PropTypes.bool,
   values: PropTypes.object
 };
 
-// eslint-disable-next-line fp/no-mutation
 renderForm.propTypes = {
   buttonState: PropTypes.number,
   hasTwoFactorAuth: PropTypes.bool,

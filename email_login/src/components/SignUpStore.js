@@ -94,14 +94,12 @@ export const formItems = [
 
 const onInitState = (array, field) =>
   array.reduce((obj, item) => {
-    // eslint-disable-next-line fp/no-mutation
     obj[item[field]] = item.value;
     return obj;
   }, {});
 
 const onInitErrors = (array, field) =>
   array.reduce((obj, item) => {
-    // eslint-disable-next-line fp/no-mutation
     obj[item[field]] = item.optional ? optionallyEmpty : toBeConfirmed;
     return obj;
   }, {});
