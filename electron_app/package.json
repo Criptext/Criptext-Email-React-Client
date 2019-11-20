@@ -1,6 +1,6 @@
 {
   "name": "criptext",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "author": {
     "name": "Criptext Inc",
     "email": "support@criptext.com",
@@ -18,6 +18,7 @@
   "scripts": {
     "build": "electron-builder",
     "electron": "electron .",
+    "electron:debug": "electron . --inspect=5858",
     "start": "npm run electron .",
     "start:dev": "npm run electron . --allow-file-access-from-file",
     "postinstall": "electron-builder install-app-deps",
@@ -34,15 +35,13 @@
     "appId": "com.criptext.criptextmail",
     "afterSign": "notarize.js",
     "buildVersion": "1",
-    "extraResources": [
-      {
-        "from": "../signal_interface/build/Release/",
-        "to": "extraResources",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ],
+    "extraResources": [{
+      "from": "../signal_interface/build/Release/",
+      "to": "extraResources",
+      "filter": [
+        "**/*"
+      ]
+    }],
     "mac": {
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
@@ -56,12 +55,10 @@
       "provisioningProfile": "build/Criptext_Mail_Distribution.provisionprofile",
       "darkModeSupport": true,
       "type": "distribution",
-      "publish": [
-        {
-          "provider": "generic",
-          "url": "https://cdn.criptext.com/Criptext-Email-Desktop/mac"
-        }
-      ]
+      "publish": [{
+        "provider": "generic",
+        "url": "https://cdn.criptext.com/Criptext-Email-Desktop/mac"
+      }]
     },
     "mas": {
       "category": "public.app-category.productivity",
@@ -78,8 +75,7 @@
       "background": "build/background.png",
       "icon": "build/volume.icns",
       "title": "${productName}",
-      "contents": [
-        {
+      "contents": [{
           "x": 145,
           "y": 195
         },
@@ -103,12 +99,10 @@
         "Comment": "Encrypted email built on privacy",
         "Categories": "Network"
       },
-      "publish": [
-        {
-          "provider": "generic",
-          "url": "https://cdn.criptext.com/Criptext-Email-Desktop/linux"
-        }
-      ]
+      "publish": [{
+        "provider": "generic",
+        "url": "https://cdn.criptext.com/Criptext-Email-Desktop/linux"
+      }]
     },
     "win": {
       "target": [
@@ -116,12 +110,10 @@
         "appx"
       ],
       "icon": "build/icon.ico",
-      "publish": [
-        {
-          "provider": "generic",
-          "url": "https://cdn.criptext.com/Criptext-Email-Desktop/windows"
-        }
-      ],
+      "publish": [{
+        "provider": "generic",
+        "url": "https://cdn.criptext.com/Criptext-Email-Desktop/windows"
+      }],
       "certificateSubjectName": "Criptext Inc"
     },
     "nsis": {

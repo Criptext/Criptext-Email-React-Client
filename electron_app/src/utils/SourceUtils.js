@@ -52,7 +52,12 @@ const openWindowWithSource = (source, subject) => {
     // Send to hidden window for print
     const defaultDocumentName = subject;
     if (!workerWin) {
-      workerWin = new BrowserWindow({ show: true });
+      workerWin = new BrowserWindow({
+        show: true,
+        webPreferences: {
+          nodeIntegration: true
+        }
+      });
     }
     workerWin.loadURL(
       path.join(
