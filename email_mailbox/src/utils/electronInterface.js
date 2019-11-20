@@ -6,6 +6,9 @@ const { getCurrentWindow, dialog } = remote;
 
 const newsClient = remote.require('./src/newsClient');
 const globalManager = remote.require('./src/globalManager');
+export const getAlicePort = remote.require('./src/aliceManager').getPort;
+export const getAlicePassword = remote.require('./src/aliceManager')
+  .getPassword;
 
 export const myAccount = remote.require('./src/Account');
 export const mySettings = remote.require('./src/Settings');
@@ -64,4 +67,8 @@ export const getNews = ({ code }) => {
 export const cleanDataLogout = async recipientId => {
   await cleanData(recipientId);
   return createSignalTables();
+};
+
+export const needsUpgrade = () => {
+  return globalManager.needsUpgrade.getValue();
 };

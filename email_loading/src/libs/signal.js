@@ -1,5 +1,3 @@
-/*global libsignal util*/
-
 import {
   myAccount,
   LabelType,
@@ -8,7 +6,6 @@ import {
 } from './../utils/electronInterface';
 import {
   cleanDatabase,
-  createAccount as createAccountDB,
   createContact,
   createLabel,
   createTables,
@@ -20,21 +17,20 @@ import {
   updateAccount,
   getSystemLanguage,
   getAllLabels,
-  getContactByEmails
+  getContactByEmails,
+  restartAlice
 } from './../utils/ipc';
+import {
+  createAccountCredentials,
+  generateKeyBundle,
+  fetchDecryptKey,
+  createSession,
+  encryptKey
+} from './../utils/ApiUtils';
 import { CustomError } from './../utils/CustomError';
-import SignalProtocolStore from './store';
 import { appDomain } from './../utils/const';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 import string from './../lang';
-
-const KeyHelper = libsignal.KeyHelper;
-const store = new SignalProtocolStore();
-const PREKEY_INITIAL_QUANTITY = 100;
-const ciphertextType = {
-  CIPHERTEXT: 1,
-  PREKEY_BUNDLE: 3
-};
 
 const createAccount = async ({
   recipientId,
@@ -45,28 +41,16 @@ const createAccount = async ({
 }) => {
   const [currentAccount] = await getAccount();
   const username = currentAccount ? currentAccount.recipientId : null;
-  await cleanDatabase(username);
+  if (username) {
+    await cleanDatabase(username);
+  }
   await createTables();
-
-  const signedPreKeyId = 1;
-  const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
-    (item, index) => index + 1
-  );
-  const { identityKey, registrationId } = await generateIdentity();
-  const {
-    keybundle,
-    preKeyPairArray,
-    signedPreKeyPair
-  } = await generatePreKeyBundle({
-    identityKey,
-    registrationId,
-    signedPreKeyId,
-    preKeyIds,
+  const keybundle = await createAcountAndGetKeyBundle({
+    recipientId,
+    name,
+    deviceId: 1,
     deviceType
   });
-  if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
-    throw CustomError(string.errors.prekeybundleFailed);
-  }
   const { status, body, headers } = await postUser({
     recipientId,
     password,
@@ -90,39 +74,64 @@ const createAccount = async ({
     });
   }
   const { token, refreshToken } = body;
-  const privKey = util.toBase64(identityKey.privKey);
-  const pubKey = util.toBase64(identityKey.pubKey);
   try {
-    await createAccountDB({
+    updateAccount({
       recipientId,
-      deviceId: 1,
-      name,
-      jwt: token,
       refreshToken,
-      privKey,
-      pubKey,
-      registrationId
+      jwt: token
     });
   } catch (createAccountDbError) {
-    throw CustomError(string.errors.saveLocal);
+    throw CustomError(string.errors.updateAccountData);
   }
+  await setDefaultSettings();
+  await createSystemLabels();
+  const email = `${recipientId}@${appDomain}`;
   const [newAccount] = await getAccount();
+  await createOwnContact(name, email, newAccount.id);
   if (!newAccount) {
     throw CustomError(string.errors.saveLocal);
   }
   myAccount.initialize(newAccount);
-  await setDefaultSettings();
-
-  await Promise.all(
-    Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
-      await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
-    }),
-    store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
-  );
-  await createSystemLabels();
-  const email = `${recipientId}@${appDomain}`;
-  await createOwnContact(name, email, newAccount.id);
   return true;
+};
+
+const createAcountAndGetKeyBundle = async ({
+  recipientId,
+  deviceId,
+  name,
+  deviceType
+}) => {
+  const [currentAccount] = await getAccount();
+  if (currentAccount && currentAccount.recipientId !== recipientId) {
+    await cleanDatabase(currentAccount.recipientId);
+    await createTables();
+  }
+  const accountRes = await aliceRequestWrapper(() => {
+    return createAccountCredentials({
+      recipientId,
+      deviceId,
+      name
+    });
+  });
+  if (accountRes.status !== 200) {
+    throw CustomError(string.errors.updateAccountData);
+  }
+  const keybundleRes = await aliceRequestWrapper(() => {
+    return generateKeyBundle({ recipientId, deviceId });
+  });
+  if (keybundleRes.status !== 200) {
+    throw CustomError(string.errors.prekeybundleFailed);
+  }
+  const jsonRes = await keybundleRes.json();
+  const pcName = await getComputerName();
+  const keybundle = {
+    deviceName: pcName || window.navigator.platform,
+    deviceFriendlyName: pcName || window.navigator.platform,
+    deviceType,
+    ...jsonRes
+  };
+
+  return keybundle;
 };
 
 const createAccountWithNewDevice = async ({
@@ -132,25 +141,12 @@ const createAccountWithNewDevice = async ({
   deviceType,
   isRecipientApp
 }) => {
-  const signedPreKeyId = 1;
-  const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
-    (item, index) => index + 1
-  );
-  const { identityKey, registrationId } = await generateIdentity();
-  const {
-    keybundle,
-    preKeyPairArray,
-    signedPreKeyPair
-  } = await generatePreKeyBundle({
-    identityKey,
-    registrationId,
-    signedPreKeyId,
-    preKeyIds,
+  const keybundle = await createAcountAndGetKeyBundle({
+    recipientId,
+    deviceId,
+    name,
     deviceType
   });
-  if (!keybundle || !preKeyPairArray || !signedPreKeyPair) {
-    throw CustomError(string.errors.prekeybundleFailed);
-  }
   const { status, body } = await postKeyBundle(keybundle);
   if (status !== 200) {
     throw CustomError({
@@ -159,82 +155,36 @@ const createAccountWithNewDevice = async ({
     });
   }
   const { token, refreshToken } = body;
-  const privKey = util.toBase64(identityKey.privKey);
-  const pubKey = util.toBase64(identityKey.pubKey);
-
-  const [currentAccount] = await getAccount();
-  const currentAccountExists = currentAccount
-    ? currentAccount.recipientId === recipientId
-    : false;
-  if (!currentAccountExists) {
-    if (currentAccount) {
-      await cleanDatabase(currentAccount.recipientId);
-      await createTables();
-    }
-    try {
-      await createAccountDB({
-        jwt: token,
-        refreshToken,
-        deviceId,
-        name,
-        privKey,
-        pubKey,
-        recipientId,
-        registrationId
-      });
-    } catch (createAccountDbError) {
-      throw CustomError(string.errors.saveLocal);
-    }
-    await createSystemLabels();
-  } else {
-    try {
-      await updateAccount({
-        jwt: token,
-        refreshToken,
-        deviceId,
-        name,
-        privKey,
-        pubKey,
-        recipientId,
-        registrationId,
-        isActive: true,
-        isLoggedIn: true
-      });
-    } catch (updateAccountDbError) {
-      throw CustomError(string.errors.updateAccountData);
-    }
+  try {
+    await updateAccount({
+      jwt: token,
+      refreshToken,
+      recipientId,
+      isActive: true,
+      isLoggedIn: true
+    });
+  } catch (createAccountDbError) {
+    throw CustomError(string.errors.updateAccountData);
   }
+  await createSystemLabels();
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  await setDefaultSettings();
-
   const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
   await createOwnContact(name, email, newAccount.id);
-
-  await Promise.all(
-    Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
-      await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
-    }),
-    store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
-  );
+  await setDefaultSettings();
   return true;
 };
 
-const uploadKeys = async ({ deviceType }) => {
-  const signedPreKeyId = 1;
-  const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
-    (item, index) => index + 1
-  );
-  const { identityKey, registrationId } = await generateIdentity();
-  const {
-    keybundle,
-    preKeyPairArray,
-    signedPreKeyPair
-  } = await generatePreKeyBundle({
-    identityKey,
-    registrationId,
-    signedPreKeyId,
-    preKeyIds,
+const uploadKeys = async ({ recipientId, name, deviceType, deviceId }) => {
+  const [currentAccount] = await getAccount();
+  if (currentAccount && currentAccount.recipientId !== recipientId) {
+    await cleanDatabase(currentAccount.recipientId);
+    await createTables();
+  }
+  const keybundle = await createAcountAndGetKeyBundle({
+    recipientId,
+    deviceId,
+    name,
     deviceType
   });
   const { status, body } = await postKeyBundle(keybundle);
@@ -245,88 +195,36 @@ const uploadKeys = async ({ deviceType }) => {
     });
   }
   const { token, refreshToken } = body;
-  const privKey = util.toBase64(identityKey.privKey);
-  const pubKey = util.toBase64(identityKey.pubKey);
   return {
-    privKey,
-    pubKey,
     jwt: token,
-    refreshToken,
-    preKeyIds,
-    preKeyPairArray,
-    registrationId,
-    signedPreKeyId,
-    signedPreKeyPair
+    refreshToken
   };
 };
 
 const createAccountToDB = async ({
+  name,
   jwt,
   refreshToken,
   deviceId,
-  name,
-  privKey,
-  pubKey,
   recipientId,
-  isRecipientApp,
-  registrationId,
-  preKeyIds,
-  preKeyPairArray,
-  signedPreKeyId,
-  signedPreKeyPair
+  isRecipientApp
 }) => {
-  const [currentAccount] = await getAccount();
-  const currentAccountExists = currentAccount
-    ? currentAccount.recipientId === recipientId
-    : false;
-  if (!currentAccountExists) {
-    if (currentAccount) {
-      await cleanDatabase(currentAccount.recipientId);
-      await createTables();
-    }
-    try {
-      await createAccountDB({
-        jwt,
-        refreshToken,
-        deviceId,
-        name,
-        privKey,
-        pubKey,
-        recipientId,
-        registrationId
-      });
-    } catch (createAccountDbError) {
-      throw CustomError(string.errors.saveLocal);
-    }
-    await createSystemLabels();
-    const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
-    await createOwnContact(name, email);
-  } else {
-    try {
-      await updateAccount({
-        jwt,
-        refreshToken,
-        deviceId,
-        name,
-        privKey,
-        pubKey,
-        recipientId,
-        registrationId
-      });
-    } catch (updateAccountDbError) {
-      throw CustomError(string.errors.updateAccountData);
-    }
+  try {
+    await updateAccount({
+      jwt,
+      refreshToken,
+      deviceId,
+      recipientId
+    });
+  } catch (createAccountDbError) {
+    throw CustomError(string.errors.updateAccountData);
   }
+  await createSystemLabels();
+  const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
+  await createOwnContact(name, email);
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
   await setDefaultSettings();
-
-  await Promise.all(
-    Object.keys(preKeyPairArray).map(async (preKeyPair, index) => {
-      await store.storePreKey(preKeyIds[index], preKeyPairArray[preKeyPair]);
-    }),
-    store.storeSignedPreKey(signedPreKeyId, signedPreKeyPair)
-  );
 };
 
 const setDefaultSettings = async () => {
@@ -369,122 +267,16 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return text;
   }
-  const textEncrypted = util.toArrayBufferFromBase64(text);
-  const addressFrom = new libsignal.SignalProtocolAddress(
-    recipientId,
-    deviceId
-  );
-  const sessionCipher = new libsignal.SessionCipher(store, addressFrom);
-  const binaryText = await decryptText(
-    sessionCipher,
-    textEncrypted,
-    messageType
-  );
-  return binaryText;
-};
-
-const decryptText = async (sessionCipher, textEncrypted, messageType) => {
-  switch (messageType) {
-    case ciphertextType.CIPHERTEXT:
-      return await sessionCipher.decryptWhisperMessage(textEncrypted, 'binary');
-    case ciphertextType.PREKEY_BUNDLE:
-      return await sessionCipher.decryptPreKeyWhisperMessage(
-        textEncrypted,
-        'binary'
-      );
-    default:
-      break;
-  }
-};
-
-const generateIdentity = () => {
-  return Promise.all([
-    KeyHelper.generateIdentityKeyPair(),
-    KeyHelper.generateRegistrationId()
-  ]).then(function(result) {
-    const identityKey = result[0];
-    const registrationId = result[1];
-    return { identityKey, registrationId };
+  const res = await aliceRequestWrapper(() => {
+    return fetchDecryptKey({
+      recipientId,
+      deviceId,
+      messageType,
+      key: text
+    });
   });
-};
-
-const generatePreKeyBundle = async ({
-  identityKey,
-  registrationId,
-  signedPreKeyId,
-  preKeyIds,
-  deviceType
-}) => {
-  const preKeyPairArray = [];
-  const preKeys = await Promise.all(
-    preKeyIds.map(async preKeyId => {
-      const preKey = await KeyHelper.generatePreKey(preKeyId);
-      preKeyPairArray.push(preKey.keyPair);
-      return {
-        publicKey: util.toBase64(preKey.keyPair.pubKey),
-        id: preKeyId
-      };
-    })
-  );
-  const signedPreKey = await KeyHelper.generateSignedPreKey(
-    identityKey,
-    signedPreKeyId
-  );
-  const pcName = await getComputerName();
-  const keybundle = {
-    deviceName: pcName || window.navigator.platform,
-    deviceFriendlyName: pcName || window.navigator.platform,
-    deviceType,
-    signedPreKeySignature: util.toBase64(signedPreKey.signature),
-    signedPreKeyPublic: util.toBase64(signedPreKey.keyPair.pubKey),
-    signedPreKeyId: signedPreKeyId,
-    identityPublicKey: util.toBase64(identityKey.pubKey),
-    registrationId: registrationId,
-    preKeys
-  };
-  const data = {
-    keybundle,
-    preKeyPairArray,
-    signedPreKeyPair: signedPreKey.keyPair
-  };
-  return data;
-};
-
-const encryptText = async (
-  recipientId,
-  deviceId,
-  textMessage,
-  arrayBufferKey
-) => {
-  const addressTo = new libsignal.SignalProtocolAddress(recipientId, deviceId);
-  if (arrayBufferKey) {
-    const sessionBuilder = new libsignal.SessionBuilder(store, addressTo);
-    await sessionBuilder.processPreKey(arrayBufferKey);
-  }
-  const sessionCipher = new libsignal.SessionCipher(store, addressTo);
-  const ciphertext = await sessionCipher.encrypt(textMessage);
-  const body = util.toBase64(util.toArrayBuffer(ciphertext.body));
-  return { body, type: ciphertext.type };
-};
-
-const keysToArrayBuffer = keys => {
-  let preKey = undefined;
-  if (keys.preKey) {
-    preKey = {
-      keyId: keys.preKey.id,
-      publicKey: util.toArrayBufferFromBase64(keys.preKey.publicKey)
-    };
-  }
-  return {
-    identityKey: util.toArrayBufferFromBase64(keys.identityPublicKey),
-    preKey,
-    registrationId: keys.registrationId,
-    signedPreKey: {
-      keyId: keys.signedPreKeyId,
-      publicKey: util.toArrayBufferFromBase64(keys.signedPreKeyPublic),
-      signature: util.toArrayBufferFromBase64(keys.signedPreKeySignature)
-    }
-  };
+  const decryptedText = await res.arrayBuffer();
+  return decryptedText;
 };
 
 const encryptKeyForNewDevice = async ({ recipientId, deviceId, key }) => {
@@ -496,17 +288,52 @@ const encryptKeyForNewDevice = async ({ recipientId, deviceId, key }) => {
     }
     await setTimeout(() => {}, 5000);
   }
-  let arrayBufferKeyBundle = undefined;
-  if (newKeyBundle) {
-    arrayBufferKeyBundle = keysToArrayBuffer(newKeyBundle);
+  const res = await aliceRequestWrapper(() => {
+    return createSession({
+      accountRecipientId: recipientId,
+      keybundles: [
+        {
+          ...newKeyBundle,
+          recipientId:
+            newKeyBundle.domain === appDomain
+              ? newKeyBundle.recipientId
+              : `${newKeyBundle.recipientId}@${newKeyBundle.domain}`
+        }
+      ]
+    });
+  });
+  if (res.status !== 200) {
+    throw CustomError(string.errors.prekeybundleFailed);
   }
-  const { body } = await encryptText(
-    recipientId,
-    deviceId,
-    key,
-    arrayBufferKeyBundle
-  );
-  return body;
+  const encryptRes = await aliceRequestWrapper(() => {
+    return encryptKey({
+      recipientId,
+      deviceId,
+      key
+    });
+  });
+  if (encryptRes.status !== 200) {
+    throw CustomError(string.errors.prekeybundleFailed);
+  }
+
+  const encryptedKey = await encryptRes.text();
+  return encryptedKey;
+};
+
+const aliceRequestWrapper = async func => {
+  let retries = 3;
+  let res;
+  while (retries >= 0) {
+    retries -= 1;
+    try {
+      res = await func();
+      if (res.status === 200) break;
+    } catch (ex) {
+      if (ex.toString() !== 'TypeError: Failed to fetch') break;
+      await restartAlice();
+    }
+  }
+  return res;
 };
 
 export default {
@@ -514,7 +341,6 @@ export default {
   createAccountToDB,
   createAccountWithNewDevice,
   decryptKey,
-  generatePreKeyBundle,
   uploadKeys,
   encryptKeyForNewDevice
 };

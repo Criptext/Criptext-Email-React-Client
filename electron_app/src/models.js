@@ -94,6 +94,24 @@ const cleanDataBase = () => {
     .dropTableIfExists(Table.SETTINGS);
 };
 
+const cleanForAlice = async () => {
+  const [account] = await db.table(Table.ACCOUNT).select('*');
+
+  await db.table(Table.ACCOUNT).del();
+  await db.table(Table.SESSIONRECORD).del();
+  await db.table(Table.PREKEYRECORD).del();
+  await db.table(Table.SIGNEDPREKEYRECORD).del();
+  await db.table(Table.IDENTITYKEYRECORD).del();
+  await db
+    .table(Table.MIGRATIONS)
+    .where('name', 'like', '%addColumnsRecordLength%')
+    .del();
+
+  await db.migrate.latest(migrationConfig);
+
+  return account;
+};
+
 const cleanDataLogout = async recipientId => {
   const params = {
     deviceId: '',
@@ -269,8 +287,8 @@ const createPreKeyRecordColumns = table => {
     .integer('preKeyId')
     .primary()
     .notNullable();
-  table.string('preKeyPrivKey', LARGE_STRING_SIZE).notNullable();
-  table.string('preKeyPubKey', LARGE_STRING_SIZE).notNullable();
+  table.string('record').notNullable();
+  table.integer('recordLength').notNullable();
 };
 
 const createSignedPreKeyRecordColumns = table => {
@@ -278,14 +296,15 @@ const createSignedPreKeyRecordColumns = table => {
     .integer('signedPreKeyId')
     .primary()
     .notNullable();
-  table.string('signedPreKeyPrivKey', LARGE_STRING_SIZE).notNullable();
-  table.string('signedPreKeyPubKey', LARGE_STRING_SIZE).notNullable();
+  table.string('record').notNullable();
+  table.integer('recordLength').notNullable();
 };
 
 const createSessionRecordColumns = table => {
   table.string('recipientId', XSMALL_STRING_SIZE).notNullable();
   table.integer('deviceId').notNullable();
   table.text('record').notNullable();
+  table.integer('recordLength').notNullable();
   table.primary(['recipientId', 'deviceId']);
 };
 
@@ -321,6 +340,10 @@ const createSignalTables = async () => {
       .createTable(Table.SESSIONRECORD, createSessionRecordColumns)
       .createTable(Table.IDENTITYKEYRECORD, createIdentityKeyRecordColumns);
   }
+};
+
+const hasColumnPreKeyRecordLength = () => {
+  return db.schema.hasColumn(Table.PREKEYRECORD, 'record');
 };
 
 const createTables = async () => {
@@ -385,9 +408,11 @@ module.exports = {
   db,
   cleanDataBase,
   cleanDataLogout,
+  cleanForAlice,
   createFileKeyColumns,
   createSignalTables,
   createTables,
+  hasColumnPreKeyRecordLength,
   Table,
   fieldTypes,
   databasePath: myDBPath

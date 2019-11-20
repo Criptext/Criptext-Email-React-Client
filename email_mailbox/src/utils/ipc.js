@@ -14,6 +14,8 @@ export const generateLabelUUID = async () => {
   return await ipc.callMain('generate-label-uuid');
 };
 
+export const getComputerName = () => ipc.callMain('get-computer-name');
+
 export const getOsAndArch = () => ipc.callMain('get-os-and-arch');
 
 export const installUpdate = () => {
@@ -52,6 +54,10 @@ export const processPendingEvents = () => {
 
 export const restartConnection = async jwt => {
   await ipc.callMain('restart-connection', jwt);
+};
+
+export const restartAlice = async () => {
+  return await ipc.callMain('restart-alice');
 };
 
 export const sendEndSyncDevicesEvent = async () => {
@@ -240,6 +246,10 @@ export const cleanDatabase = async () => {
 
 export const cleanDataLogout = async recipientId => {
   return await ipc.callMain('db-clean-data-logout', recipientId);
+};
+
+export const migrateAlice = async () => {
+  return await ipc.callMain('db-migrate-alice');
 };
 
 export const createEmail = async params => {
@@ -534,4 +544,10 @@ export const restoreBackupUnencrypted = async params => {
 ----------------------------- */
 export const reportContentUnencrypted = async error => {
   return await ipc.callMain('nucleups-report-content-unencrypted', error);
+};
+
+/* Migrate
+----------------------------- */
+export const upgradeAccount = async params => {
+  return await ipc.callMain('upgrade-account', params);
 };

@@ -6,6 +6,7 @@ const globalManager = remote.require('./src/globalManager');
 export const myAccount = remote.require('./src/Account');
 
 export const mySettings = remote.require('./src/Settings');
+export const getAlicePort = remote.require('./src/aliceManager').getPort;
 
 export const LabelType = labels;
 

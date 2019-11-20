@@ -14,6 +14,7 @@ global.isWindowsStore = INSTALLER_TYPE === allInstallerTypes.windows.store;
 global.deviceType = getDeviceType(INSTALLER_TYPE, allInstallerTypes);
 global.pendingRestore = false;
 global.backupStatus = null;
+global.needsUpgrade = false;
 
 /*  Composer
 ----------------------------- */
@@ -65,6 +66,19 @@ const setLoadingData = data => {
 };
 const getLoadingData = () => {
   return global.loadingData;
+};
+
+/*  Needs Upgrade
+----------------------------- */
+const enableUpgrade = () => {
+  global.needsUpgrade = true;
+};
+const disableUpgrade = () => {
+  global.needsUpgrade = false;
+};
+
+const getNeedsUpgrade = () => {
+  return global.needsUpgrade;
 };
 
 /*  App Store (Mac & Windows)
@@ -176,6 +190,11 @@ module.exports = {
   },
   deviceType: {
     id: global.deviceType
+  },
+  needsUpgrade: {
+    enable: enableUpgrade,
+    disable: disableUpgrade,
+    getValue: getNeedsUpgrade
   },
   pendingRestore: {
     get: getPendingRestoreStatus,

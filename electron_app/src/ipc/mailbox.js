@@ -19,6 +19,7 @@ const { getUsername, genUUID } = require('./../utils/stringUtils');
 const { showWindows } = require('./../windows/windowUtils');
 const { restartSocket } = require('./../socketClient');
 const { checkAlive } = require('./../reachabilityTask');
+const { restartAlice } = require('./../aliceManager');
 
 ipc.answerRenderer('close-mailbox', () => {
   mailboxWindow.close();
@@ -129,3 +130,5 @@ ipc.answerRenderer('restart-connection', jwt => {
   restartSocket({ jwt });
   checkAlive(true);
 });
+
+ipc.answerRenderer('restart-alice', restartAlice);
