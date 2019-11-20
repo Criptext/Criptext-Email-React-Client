@@ -11,7 +11,6 @@ const {
 } = require('../database/DBEmanager');
 const keytar = require('keytar');
 const globalManager = require('./../globalManager');
-const aliceManager = require('./../aliceManager');
 const { encryptDataBase } = require('./../utils/dataBaseUtils');
 let pinWindow;
 let shouldCloseForce = false;
@@ -115,7 +114,6 @@ const setUpPin = async ({ pin, shouldSave, shouldExport, shouldResetPin }) => {
       });
   }
   globalManager.databaseKey.set(pin);
-  aliceManager.restartAlice(true);
   if (shouldResetPin) {
     await resetKeyDatabase(pin);
   } else {

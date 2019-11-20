@@ -23,7 +23,6 @@ const checkDatabaseStep = async dbManager => {
     await dbManager.createTables();
     needsMigration = !(await dbManager.hasColumnPreKeyRecordLength());
   }
-  console.log('needsMigration', needsMigration);
   if (existsDatabaseEncrypted) return 4;
   if (!existsDatabaseEncrypted && !existsDatabaseNormal) return 3;
   if (!existsDatabaseEncrypted && existsDatabaseNormal && !needsMigration)

@@ -35,7 +35,13 @@ class PinSaved extends Component {
               />
             </div>
             <span>
-              {page_pin_saved.or}&nbsp;<b>{page_pin_saved.download}</b>&nbsp;
+              {page_pin_saved.or}&nbsp;
+              <a
+                download="criptext-pin.txt"
+                href={`data:text/plain,${this.props.pin}`}
+              >
+                <b>{page_pin_saved.download}</b>
+              </a>&nbsp;
               {page_pin_saved.it_in_a_file}
             </span>
           </div>

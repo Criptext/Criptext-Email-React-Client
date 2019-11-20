@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ScreenEnterPin, { step } from './ScreenEnterPin';
 import { upApp } from './../utils/ipc';
-
 import VCHOC from './VCHOC';
 
 const VCSignin = VCHOC(ScreenEnterPin);

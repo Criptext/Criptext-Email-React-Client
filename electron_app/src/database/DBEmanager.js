@@ -18,7 +18,8 @@ const {
   initDatabaseEncrypted,
   resetKeyDatabase,
   Op,
-  Table
+  Table,
+  databasePath
 } = require('./DBEmodel.js');
 const moment = require('moment');
 const { noNulls } = require('../utils/ObjectUtils');
@@ -1267,6 +1268,7 @@ module.exports = {
   Signedprekeyrecord,
   Table,
   Op,
+  databasePath,
   createAccount,
   createContact,
   createContactsIfOrNotStore,

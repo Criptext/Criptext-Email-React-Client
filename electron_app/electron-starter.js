@@ -87,7 +87,7 @@ async function initApp() {
     }
     default:
       break;
-  }
+  } 
 
   // Composer
   ipcMain.on('failed-to-send', () => {

@@ -11,6 +11,7 @@ const wsClient = require('./../socketClient');
 const { initClient, generateEvent } = require('./../clientManager');
 const { initNucleus } = require('./../nucleusManager');
 const globalManager = require('./../globalManager');
+const aliceManager = require('./../aliceManager');
 const { isFromStore, getSystemLanguage } = require('./windowUtils');
 
 const sendAPIevent = async event => {
@@ -57,6 +58,8 @@ const upApp = async ({ shouldSave, pin }) => {
     }
     globalManager.databaseKey.set(pin);
   }
+
+  aliceManager.startAlice();
 
   const [existingAccount] = await dbManager.getAccount();
   if (!existingAccount) {
