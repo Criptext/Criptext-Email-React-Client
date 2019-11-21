@@ -26,8 +26,10 @@ const { formContactsRow } = require('../utils/dataTableUtils.js');
 const { HTMLTagsRegex } = require('../utils/RegexUtils');
 const { parseDate } = require('../utils/TimeUtils');
 const { genUUID } = require('../utils/stringUtils');
+const { setLanguage } = require('../lang');
 const systemLabels = require('../systemLabels');
 const myAccount = require('../Account');
+const mySettings = require('../Settings');
 
 const EMAIL_CONTACT_TYPE_FROM = 'from';
 
@@ -1086,6 +1088,43 @@ const deletePendingEventsByIds = ids => {
   return Pendingevent().destroy({ where: { id: ids } });
 };
 
+/* Settings
+----------------------------- */
+const getSettings = async () => {
+  return (await Settings().findOne()).dataValues;
+};
+
+const updateSettings = async ({
+  language,
+  opened,
+  theme,
+  autoBackupEnable,
+  autoBackupFrequency,
+  autoBackupLastDate,
+  autoBackupLastSize,
+  autoBackupNextDate,
+  autoBackupPath
+}) => {
+  const params = noNulls({
+    language,
+    opened,
+    theme,
+    autoBackupEnable,
+    autoBackupFrequency,
+    autoBackupLastDate,
+    autoBackupLastSize,
+    autoBackupNextDate,
+    autoBackupPath
+  });
+  if (Object.keys(params).length < 1) {
+    return Promise.resolve([1]);
+  }
+  const result = await Settings().update(params, { where: { id: 1 } });
+  mySettings.update(params);
+  if (params.language) setLanguage(params.language);
+  return result;
+};
+
 /* Functions
 ----------------------------- */
 const clearAndFormatDateEmails = emailObjOrArray => {
@@ -1260,6 +1299,7 @@ module.exports = {
   getLabelByUuid,
   getLabelsByText,
   getPendingEvents,
+  getSettings,
   getTrashExpiredEmails,
   initDatabaseEncrypted: InitDatabaseEncrypted,
   resetKeyDatabase,
@@ -1271,5 +1311,6 @@ module.exports = {
   updateFeedItems,
   updateFilesByEmailId,
   updateLabel,
+  updateSettings,
   updateUnreadEmailByThreadIds
 };
