@@ -268,7 +268,17 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
   Feeditem.init(
     {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-      date: Sequelize.DATE,
+      date: {
+        type: Sequelize.DATE,
+        get() {
+          const date = this.getDataValue('date');
+          if (date) return parseDate(date);
+          return null;
+        },
+        set(val) {
+          if (val) this.setDataValue('date', parseDate(val));
+        }
+      },
       type: Sequelize.INTEGER,
       seen: { type: Sequelize.BOOLEAN, defaultValue: false }
     },

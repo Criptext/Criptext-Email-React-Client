@@ -9,7 +9,7 @@ import string from './../lang';
 
 export const defineFeedItems = async () => {
   const allFeeds = await getAllFeedItems();
-  const badge = await getFeedItemsCounterBySeen(0);
+  const badge = await getFeedItemsCounterBySeen(false);
   const feeds = await Promise.all(
     allFeeds.map(async feed => {
       const [emailData] = await getEmailsByArrayParam({ ids: [feed.emailId] });
@@ -26,7 +26,7 @@ export const defineFeedItems = async () => {
     {}
   );
 
-  return { feedItems, badge: badge[0].count };
+  return { feedItems, badge };
 };
 
 const defineFeedAction = type => {
