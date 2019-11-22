@@ -40,7 +40,9 @@ const STEPS = {
   SYNC_COMPLETE: 'sync-complete'
 };
 
-const LINK_DEVICE_EMAIL_ADDRESS = `${remoteData.recipientId}@${appDomain}`;
+const LINK_DEVICE_EMAIL_ADDRESS = remoteData.recipientId.includes('@')
+  ? remoteData.recipientId
+  : `${remoteData.recipientId}@${appDomain}`;
 
 class LoadingWrapper extends Component {
   constructor(props) {
