@@ -1,6 +1,6 @@
 {
   "name": "criptext",
-  "version": "0.26.0",
+  "version": "0.26.2",
   "author": {
     "name": "Criptext Inc",
     "email": "support@criptext.com",
@@ -35,13 +35,6 @@
     "appId": "com.criptext.criptextmail",
     "afterSign": "notarize.js",
     "buildVersion": "1",
-    "extraResources": [{
-      "from": "../signal_interface/build/Release/",
-      "to": "extraResources",
-      "filter": [
-        "**/*"
-      ]
-    }],
     "mac": {
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
@@ -58,7 +51,16 @@
       "publish": [{
         "provider": "generic",
         "url": "https://cdn.criptext.com/Criptext-Email-Desktop/mac"
-      }]
+      }],
+      "extraResources": [
+        {
+          "from": "../signal_interface/build/Release/",
+          "to": "extraResources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
     },
     "mas": {
       "category": "public.app-category.productivity",
@@ -102,7 +104,16 @@
       "publish": [{
         "provider": "generic",
         "url": "https://cdn.criptext.com/Criptext-Email-Desktop/linux"
-      }]
+      }],
+      "extraResources": [
+        {
+          "from": "../signal_interface/build/Image/",
+          "to": "extraResources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
     },
     "win": {
       "target": [
@@ -114,7 +125,16 @@
         "provider": "generic",
         "url": "https://cdn.criptext.com/Criptext-Email-Desktop/windows"
       }],
-      "certificateSubjectName": "Criptext Inc"
+      "certificateSubjectName": "Criptext Inc",
+      "extraResources": [
+        {
+          "from": "../signal_interface/build/Release/",
+          "to": "extraResources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
     },
     "nsis": {
       "oneClick": true,
