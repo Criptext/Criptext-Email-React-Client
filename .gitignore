@@ -40,3 +40,6 @@ binding.gyp
 */yarn-error.log*
 *.db
 .vscode
+
+#Alice
+alice_logs.txt
