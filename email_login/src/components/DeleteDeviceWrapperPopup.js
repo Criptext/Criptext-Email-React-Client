@@ -187,15 +187,21 @@ class DeleteDeviceWrapperPopup extends Component {
 
     const res = await findDevices(params);
     if (res.status === 200) {
-      const devices = res.body.devices.map(device => {
-        return {
-          checked: false,
-          deviceId: device.deviceId,
-          deviceType: device.deviceType,
-          lastActivity: device.lastActivity,
-          name: device.deviceFriendlyName
-        };
-      });
+      const devices = res.body.devices
+        .map(device => {
+          return {
+            checked: false,
+            deviceId: device.deviceId,
+            deviceType: device.deviceType,
+            lastActivity: device.lastActivity,
+            name: device.deviceFriendlyName
+          };
+        })
+        .sort((a, b) => {
+          if (!b.lastActivity.date || !a.lastActivity.date) return 0;
+          return new Date(b.lastActivity.date) - new Date(a.lastActivity.date);
+        });
+
       this.setState(state => ({
         confirmButtonState: ButtonState.ENABLED,
         devices,
