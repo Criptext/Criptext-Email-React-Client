@@ -1,11 +1,13 @@
 import { apiCriptextRequest } from './ApiUtils';
 import { checkExpiredSession } from './ipc';
+import signal from './../libs/signal';
 
 const PENDING_EVENTS_STATUS_OK = 200;
 const PENDING_EVENTS_STATUS_MORE = 201;
 const NO_EVENTS_STATUS = 204;
 const INITIAL_REQUEST_EMPTY_STATUS = 499;
 const EVENTS_BATCH = 25;
+const BODY_NOT_FOUND = 404;
 
 export const fetchEmailBody = async ({ bodyKey, optionalToken }) => {
   const res = await apiCriptextRequest({
@@ -29,6 +31,8 @@ export const fetchEmailBody = async ({ bodyKey, optionalToken }) => {
     }
     return await fetchEmailBody({ bodyKey, optionalToken: newSessionToken });
   }
+  if (expiredResponse.status === BODY_NOT_FOUND)
+    throw new Error(signal.CONTENT_NOT_AVAILABLE);
 };
 
 export const fetchEventAction = async ({ cmd, action, optionalToken }) => {
