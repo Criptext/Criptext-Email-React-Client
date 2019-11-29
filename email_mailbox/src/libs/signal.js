@@ -16,6 +16,7 @@ import { myAccount } from '../utils/electronInterface';
 const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
 const ALICE_ERROR = 'alice unavailable';
+const CONTENT_NOT_AVAILABLE = 'CONTENT_NOT_AVAILABLE';
 const ciphertextType = {
   CIPHERTEXT: 1,
   PREKEY_BUNDLE: 3
@@ -169,6 +170,7 @@ const aliceRequestWrapper = async func => {
 
 export default {
   ALICE_ERROR,
+  CONTENT_NOT_AVAILABLE,
   decryptEmail,
   decryptFileKey,
   decryptKey,
