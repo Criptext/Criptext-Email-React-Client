@@ -1,6 +1,6 @@
 {
   "name": "email_mailbox",
-  "version": "0.26.2",
+  "version": "0.26.3",
   "private": true,
   "dependencies": {
     "@criptext/electron-better-ipc": "^0.7.0-rc1-0.2",
