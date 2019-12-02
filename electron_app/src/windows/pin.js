@@ -131,7 +131,7 @@ const checkPin = async () => {
 const validatePin = async pinToValidate => {
   const credentials = await checkPin();
   if (credentials) {
-    return pinToValidate === credentials.password;
+    return pinToValidate === credentials;
   }
 
   try {

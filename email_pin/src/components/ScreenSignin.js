@@ -27,7 +27,12 @@ const ScreenSignin = props => {
         />
       );
     case step.PIN_NEW:
-      return <PinNew onClickSetPin={props.onClickSetPin} />;
+      return (
+        <PinNew
+          onClickSetPin={props.onClickSetPin}
+          onClickForgotPin={props.onClickForgotPin}
+        />
+      );
     case step.PIN_SAVED:
       return <PinSaved pin={props.pin} onClickSavedIt={props.onClickSavedIt} />;
     case step.COMPLETE:
@@ -48,6 +53,7 @@ ScreenSignin.propTypes = {
   currentStep: PropTypes.number,
   onClickChangeIt: PropTypes.func,
   onClickCompleteIt: PropTypes.func,
+  onClickForgotPin: PropTypes.func,
   onClickKeepIt: PropTypes.func,
   onClickSavedIt: PropTypes.func,
   onClickSetPin: PropTypes.func,

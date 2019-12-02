@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button, { ButtonType } from './Button';
 import string from './../lang';
+import { encryptAndStorePin } from '../utils/AESUtils';
 import './pinsaved.scss';
 
 const { page_pin_saved } = string;
@@ -9,8 +10,14 @@ const { page_pin_saved } = string;
 class PinSaved extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      recoveryKey: undefined
+    };
     this.textArea = undefined;
+  }
+
+  componentDidMount() {
+    this.storeRecoveryKey();
   }
 
   render() {
@@ -24,7 +31,7 @@ class PinSaved extends Component {
             <div className="pin-saved-key-block">
               <div className="icon" />
               <input
-                defaultValue={this.props.pin}
+                defaultValue={this.state.recoveryKey}
                 type="text"
                 ref={textarea => (this.textArea = textarea)}
               />
@@ -38,7 +45,7 @@ class PinSaved extends Component {
               {page_pin_saved.or}&nbsp;
               <a
                 download="criptext-pin.txt"
-                href={`data:text/plain,${this.props.pin}`}
+                href={`data:text/plain,${this.state.recoveryKey}`}
               >
                 <b>{page_pin_saved.download}</b>
               </a>&nbsp;
@@ -55,6 +62,13 @@ class PinSaved extends Component {
       </section>
     );
   }
+
+  storeRecoveryKey = async () => {
+    const recoveryKey = await encryptAndStorePin(this.props.pin);
+    this.setState({
+      recoveryKey
+    });
+  };
 
   copyClipBoard = () => {
     this.textArea.select();

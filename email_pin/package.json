@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@criptext/electron-better-ipc": "^0.7.0-rc1-0.2",
+    "crypto-js": "^3.1.9-1",
     "keytar": "^5.0.0",
     "react": "^16.9.0",
     "react-desktop": "^0.3.9",
@@ -34,8 +35,8 @@
     ]
   },
   "devDependencies": {
-    "@criptext/react-scripts": "^2.0.6-rc1",
     "@criptext/criptext-js-tools": "^0.5.2",
+    "@criptext/react-scripts": "^2.0.6-rc1",
     "node-sass": "^4.13.0"
   }
 }

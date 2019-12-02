@@ -17,7 +17,7 @@ class EnterPin extends Component {
       buttonState: ButtonState.DISABLED,
       value: false
     };
-    this.pin = undefined;
+    this.pin = props.pin || undefined;
   }
 
   render() {
@@ -40,6 +40,7 @@ class EnterPin extends Component {
               onChange={value => this.handleChange(value)}
               onComplete={value => this.handleComplete(value)}
               type={'text'}
+              values={this.pin}
             />
             {this.state.hasError && (
               <span className="error">{page_enter_pin.error}</span>
@@ -72,6 +73,12 @@ class EnterPin extends Component {
     );
   }
 
+  componentDidMount = () => {
+    if (this.pin) {
+      this.handleComplete(this.pin);
+    }
+  };
+
   handleChange = value => {
     if (value.length !== 4) {
       this.setState({ hasError: false, buttonState: ButtonState.DISABLED });
@@ -100,7 +107,8 @@ class EnterPin extends Component {
 EnterPin.propTypes = {
   buttonState: PropTypes.string,
   onClickForgotPin: PropTypes.func,
-  onClickOpen: PropTypes.func
+  onClickOpen: PropTypes.func,
+  pin: PropTypes.string.optional
 };
 
 export default EnterPin;

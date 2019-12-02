@@ -62,7 +62,11 @@
     "or": "or",
     "upload": "upload",
     "recovery_file": "recovery file",
-    "error_file": "File error, please select another file",
-    "button": "Okay"
+    "button": "Okay",
+    "error": {
+      "empty": "Ingrese su clave de recuperación o suba el archivo que lo contiene",
+      "file": "Archivo erroneo, por favor seleccione otro archivo",
+      "key": "Clave de recuperación incorrecta"
+    }
   }
 }

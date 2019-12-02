@@ -27,3 +27,8 @@ export const upApp = ({ shouldSave, pin }) => {
 export const validatePin = async pin => {
   return await callMain('validate-pin', pin);
 };
+
+export const storeRecoveryKey = params =>
+  callMain('store-recovery-key', params);
+
+export const getRecoveryKey = params => callMain('get-recovery-key', params);

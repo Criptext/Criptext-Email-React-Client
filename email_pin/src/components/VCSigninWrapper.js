@@ -30,6 +30,7 @@ class VCSigninWrapper extends Component {
         onClickSavedIt={this.handleClickSavedIt}
         onClickSetPin={this.handleClickSetPin}
         onClickStart={this.handleClickStart}
+        onClickForgot={this.handleClickForgotPin}
         pin={this.pin}
         steps={this.state.steps}
       />

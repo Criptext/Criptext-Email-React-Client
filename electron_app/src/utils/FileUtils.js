@@ -119,6 +119,17 @@ const retrieve = path => {
   });
 };
 
+const retrieveBuffer = path => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, (err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data);
+    });
+  });
+};
+
 const remove = path => {
   return new Promise((resolve, reject) => {
     rimraf(path, err => {
@@ -187,5 +198,7 @@ module.exports = {
   getUserEmailsPath,
   createIfNotExist,
   checkIfExists,
-  createPathRecursive
+  createPathRecursive,
+  store,
+  retrieve: retrieveBuffer
 };

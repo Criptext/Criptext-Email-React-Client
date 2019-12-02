@@ -13,6 +13,7 @@ const ScreenEnterPin = props => {
     case step.ENTER_PIN:
       return (
         <EnterPin
+          pin={props.recoveredPin}
           onClickOpen={props.onClickOpen}
           onClickForgotPin={props.onClickForgotPin}
         />
@@ -28,7 +29,8 @@ ScreenEnterPin.propTypes = {
   currentStep: PropTypes.number,
   onClickForgotPin: PropTypes.func,
   onClickOpen: PropTypes.func,
-  onClickSetPin: PropTypes.func
+  onClickSetPin: PropTypes.func,
+  recoveredPin: PropTypes.string.optional
 };
 
 export default ScreenEnterPin;

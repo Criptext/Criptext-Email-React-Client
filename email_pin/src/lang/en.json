@@ -64,7 +64,11 @@
     "or": "or",
     "upload": "upload",
     "recovery_file": "recovery file",
-    "error_file": "File error, please select another file",
-    "button": "Okay"
+    "button": "Okay",
+    "error": {
+      "empty": "Enter your recovery key or upload the file containing it",
+      "file": "File error, please select another file",
+      "key": "Wrong key, try again"
+    }
   }
 }

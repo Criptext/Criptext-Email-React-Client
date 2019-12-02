@@ -10,7 +10,8 @@ class VCNewPinWrapper extends Component {
     super(props);
     this.state = {
       currentStep: step.ENTER_PIN,
-      steps: [step.ENTER_PIN]
+      steps: [step.ENTER_PIN],
+      recoveredPin: undefined
     };
     this.askKeyChain = false;
   }
@@ -20,8 +21,11 @@ class VCNewPinWrapper extends Component {
       <VCSignin
         askKeyChain={this.askKeyChain}
         currentStep={this.state.currentStep}
-        onClickOpen={this.handleClickOpen}
+        onClickBackView={this.handleClickBackView}
         onClickForgotPin={this.handleClickForgotPin}
+        onClickOpen={this.handleClickOpen}
+        onClickSetPin={this.handleSetPin}
+        recoveredPin={this.state.recoveredPin}
         steps={this.state.steps}
       />
     );
@@ -43,6 +47,14 @@ class VCNewPinWrapper extends Component {
 
   handleClickOpen = ({ shouldSave, pin }) => {
     upApp({ shouldSave, pin });
+  };
+
+  handleSetPin = pin => {
+    this.setState({
+      currentStep: step.ENTER_PIN,
+      steps: [step.ENTER_PIN],
+      recoveredPin: pin
+    });
   };
 
   concat = (array, item) => {
