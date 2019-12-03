@@ -313,6 +313,36 @@ Array [
 ]
 `;
 
+exports[`Load data thread from Email Table: should save a restored draft deleting the previous one 1`] = `
+Object {
+  "bcc": Array [],
+  "cc": Array [],
+  "from": Array [
+    Object {
+      "email": "user@criptext.com",
+      "id": 1,
+      "name": "User me",
+    },
+  ],
+  "to": Array [
+    Object {
+      "email": "userf@criptext.com",
+      "id": 2,
+      "name": null,
+    },
+  ],
+}
+`;
+
+exports[`Load data thread from Email Table: should save a restored draft deleting the previous one 2`] = `
+Object {
+  "bcc": Array [],
+  "cc": Array [],
+  "from": Array [],
+  "to": Array [],
+}
+`;
+
 exports[`Store data email to Email Table: should insert email to database 1`] = `
 Object {
   "content": "<p>Hello there</p>",

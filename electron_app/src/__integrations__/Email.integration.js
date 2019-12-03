@@ -473,6 +473,36 @@ describe('Store relation data to EmailLabel Table: ', () => {
     }
     expect(existsRelation).toBe(false);
   });
+
+  it('Should remove emailLabel relation to database: when label is deleted', async () => {
+    const label = await DBManager.createLabel({
+      color: '1301a1',
+      text: 'Task'
+    });
+    const [email] = await DBManager.getEmailByKey(emailUpdateLabels.email.key);
+    // Add relation emailLabel
+    const emailLabelToAdd = [{ emailId: email.id, labelId: label.id }];
+    const addResponse = await DBManager.createEmailLabel(emailLabelToAdd);
+    expect(addResponse.length).toBe(1);
+    expect(addResponse[0]).toMatchObject({ emailId: 12, id: 18, labelId: 8 });
+    // Delete label
+    const result = await DBManager.deleteLabelById(label.id);
+    expect(result).toBe(1);
+    // Check if exists
+    let existsRelation = false;
+    const remainingEmailLabels = await DBManager.getEmailLabelsByEmailId(
+      email.id
+    );
+    expect(remainingEmailLabels.length).toBe(2);
+    for (const remainingLabel of remainingEmailLabels) {
+      const { labelId } = remainingLabel;
+      if (labelId === label.id) {
+        existsRelation = true;
+        break;
+      }
+    }
+    expect(existsRelation).toBeFalsy;
+  });
 });
 
 describe('Load data emails from Email Table:', () => {
@@ -728,9 +758,17 @@ describe('Load data thread from Email Table:', () => {
     const [oldDraftBeforeReplace] = await DBManager.getEmailByKey(
       emailDraft.email.key
     );
+    expect(oldDraftBeforeReplace.key).toBe(emailDraft.email.key);
     const [newDraftBeforeReplace] = await DBManager.getEmailByKey(
       draftToReplaceOld.email.key
     );
+    expect(newDraftBeforeReplace).toBeUndefined();
+    const emailLabelsOldDraft = await DBManager.getEmailLabelsByEmailId(1);
+    expect(emailLabelsOldDraft.length).toBe(2);
+    expect(emailLabelsOldDraft[0].labelId).toBe(5);
+    expect(emailLabelsOldDraft[1].labelId).toBe(6);
+    const emailContactsOldDraft = await DBManager.getContactsByEmailId(1);
+    expect(emailContactsOldDraft).toMatchSnapshot();
     await DBManager.deleteEmailAndRelations(
       oldDraftBeforeReplace.id,
       draftToReplaceOld
@@ -738,12 +776,18 @@ describe('Load data thread from Email Table:', () => {
     const [oldDraftAfterReplace] = await DBManager.getEmailByKey(
       emailDraft.email.key
     );
+    expect(oldDraftAfterReplace).toBeUndefined();
+    const emailLabelsOldDraftAfterReplace = await DBManager.getEmailLabelsByEmailId(
+      1
+    );
+    expect(emailLabelsOldDraftAfterReplace.length).toBe(0);
+    const emailContactsOldDraftAfterReplace = await DBManager.getContactsByEmailId(
+      1
+    );
+    expect(emailContactsOldDraftAfterReplace).toMatchSnapshot();
     const [newDraftAfterReplace] = await DBManager.getEmailByKey(
       draftToReplaceOld.email.key
     );
-    expect(oldDraftBeforeReplace.key).toBe(emailDraft.email.key);
-    expect(newDraftBeforeReplace).toBeUndefined();
-    expect(oldDraftAfterReplace).toBeUndefined();
     expect(newDraftAfterReplace.key).toBe(draftToReplaceOld.email.key);
   });
 
