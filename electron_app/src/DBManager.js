@@ -18,6 +18,7 @@ const systemLabels = require('./systemLabels');
 const mySettings = require('./Settings');
 const { setLanguage } = require('./lang');
 const { genUUID } = require('./utils/stringUtils');
+const { chunkArray } = require('./utils/ArrayUtils');
 
 const EMAIL_CONTACT_TYPE_FROM = 'from';
 
@@ -225,7 +226,11 @@ const updateContactSpamScore = ({ emailIds, notEmailAddress, value }) => {
 /* EmailContact
 ----------------------------- */
 const createEmailContact = (emailContacts, trx) => {
-  return trx.insert(emailContacts).into(Table.EMAIL_CONTACT);
+  chunkArray(
+    emailContacts,
+    async chunkedArray =>
+      await trx.insert(chunkedArray).into(Table.EMAIL_CONTACT)
+  );
 };
 
 const deleteEmailContactByEmailId = (emailId, trx) => {

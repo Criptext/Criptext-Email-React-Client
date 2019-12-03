@@ -70,7 +70,9 @@ const emailInbox = {
   },
   recipients: {
     from: ['User A <usera@criptext.com>'],
-    to: ['user@criptext.com', 'userb@criptext.com'],
+    to: Array(400)
+      .fill()
+      .map((e, i) => `fake${i}@faker.com`),
     cc: ['userc@criptext.com'],
     bcc: ['userd@criptext.com']
   },
