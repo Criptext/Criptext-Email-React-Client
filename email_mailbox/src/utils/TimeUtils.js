@@ -37,8 +37,10 @@ export const defineTimeByToday = time => {
     return moment(timeLocal).format(`[${momentLocales.yesterdayText}]`);
   } else if (diffDays < 7) {
     return moment(timeLocal).format('dddd');
+  } else if (diffDays < 365) {
+    return moment(timeLocal).format('MMM DD');
   }
-  return moment(timeLocal).format('MMM DD');
+  return moment(timeLocal).format('MMM DD, YYYY');
 };
 
 export const defineLargeTime = time => {
