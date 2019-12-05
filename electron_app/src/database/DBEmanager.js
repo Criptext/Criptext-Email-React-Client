@@ -1070,6 +1070,22 @@ const updateFeedItems = ({ ids, seen }) => {
   return Feeditem().update(params, { where: { id: ids } });
 };
 
+/* Pending Event
+----------------------------- */
+const createPendingEvent = params => {
+  return Pendingevent().create(params);
+};
+
+const getPendingEvents = () => {
+  return Pendingevent()
+    .findAll()
+    .map(event => event.toJSON());
+};
+
+const deletePendingEventsByIds = ids => {
+  return Pendingevent().destroy({ where: { id: ids } });
+};
+
 /* Functions
 ----------------------------- */
 const clearAndFormatDateEmails = emailObjOrArray => {
@@ -1204,6 +1220,7 @@ module.exports = {
   createFeedItem,
   createFile,
   createLabel,
+  createPendingEvent,
   deleteDatabase,
   deleteEmailsByIds,
   deleteEmailByKeys,
@@ -1212,6 +1229,7 @@ module.exports = {
   deleteEmailsByThreadIdAndLabelId,
   deleteFeedItemById,
   deleteLabelById,
+  deletePendingEventsByIds,
   filterEmailLabelIfNotStore,
   getDB,
   getAccount,
@@ -1241,6 +1259,7 @@ module.exports = {
   getLabelById,
   getLabelByUuid,
   getLabelsByText,
+  getPendingEvents,
   getTrashExpiredEmails,
   initDatabaseEncrypted: InitDatabaseEncrypted,
   resetKeyDatabase,
