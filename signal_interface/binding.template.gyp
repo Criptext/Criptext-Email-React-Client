@@ -33,6 +33,7 @@
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       "include_dirs" : [
+        "/usr/local/include/sqlcipher",
         "/usr/local/include",
         "/usr/include"
       ],

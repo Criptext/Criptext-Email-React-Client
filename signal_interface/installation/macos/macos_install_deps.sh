@@ -57,6 +57,28 @@ cd ../..
 
 # ================================================
 
+printf "\n  - Downloading SQLCipher \n";
+git clone "https://github.com/sqlcipher/sqlcipher.git" --quiet
+if [ $? -ne 0 ]; then
+  PEM "    Failed to download SQLCipher    ";
+  removeTempFolder1;
+fi
+printf "  - Creating build directory \n";
+cd ./sqlcipher > /dev/null
+mkdir build && cd build > /dev/null
+printf "  - Configuring SQLCipher \n";
+../configure --enable-tempstore=yes --enable-static=yes  CFLAGS="-L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -DSQLITE_HAS_CODEC -DSQLITE_TEMP_STORE=2" LDFLAGS="-lcrypto" > /dev/null
+printf "  - Making install SQLCipher \n";
+make
+make install > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  PEM "    Failed to make install SQLCipher    ";
+  removeTempFolder3;
+fi
+cd ../..
+
+# ================================================
+
 printf "\n  - Downloading cJSON \n";
 git clone "https://github.com/DaveGamble/cJSON.git" --quiet
 if [ $? -ne 0 ]; then

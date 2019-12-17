@@ -30,7 +30,7 @@ ScreenEnterPin.propTypes = {
   onClickForgotPin: PropTypes.func,
   onClickOpen: PropTypes.func,
   onClickSetPin: PropTypes.func,
-  recoveredPin: PropTypes.string.optional
+  recoveredPin: PropTypes.string
 };
 
 export default ScreenEnterPin;
