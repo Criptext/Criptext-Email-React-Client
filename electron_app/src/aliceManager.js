@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
-const { app } = require('electron');
+const { app, dialog } = require('electron');
 const dbManager = require('./DBManager');
 const portscanner = require('portscanner');
 const http = require('http');
@@ -84,13 +84,24 @@ const startAlice = async () => {
     const dbpath = path.resolve(dbManager.databasePath);
     const logspath = path.resolve(getLogsPath(process.env.NODE_ENV));
     await cleanAliceRemenants();
-    alice = spawn(alicePath, [
-      dbpath,
-      myPort,
-      logspath,
-      password,
-      '--no-sandbox'
-    ]);
+    const options = {
+      shell: true,
+      stdio: ['inherit', 'pipe', 'pipe']
+    };
+    alice = spawn(
+      alicePath,
+      [dbpath, myPort, logspath, password, '--no-sandbox'],
+      options
+    );
+    alice.stderr.setEncoding('utf8');
+    alice.stderr.on('data', data => {
+      dialog.showErrorBox(
+        'Service Error',
+        `Unable to initialize encryption service. ${data}`
+      );
+      console.log(`-----alice-----\nError:\n${data}\n -----end-----`);
+    });
+    alice.stdout.setEncoding('utf8');
     alice.stdout.on('data', data => {
       console.log(`-----alice-----\n${data}\n -----end-----`);
     });
