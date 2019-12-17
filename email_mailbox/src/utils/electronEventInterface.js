@@ -728,11 +728,11 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         e.message === signal.CONTENT_NOT_AVAILABLE
       ) {
         return {
-          rowId: null
+          rowid: null
         };
       }
       body = 'Content unencrypted';
-      reportContentUnencrypted(e);
+      reportContentUnencrypted(e.message);
     }
     if (!fileKeys && fileKey) {
       myFileKeys = files.map(() => myFileKeys[0]);

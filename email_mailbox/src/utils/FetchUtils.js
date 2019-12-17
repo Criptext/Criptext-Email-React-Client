@@ -18,6 +18,8 @@ export const fetchEmailBody = async ({ bodyKey, optionalToken }) => {
   if (res.status === 200) {
     const jsonRes = await res.json();
     return { status: 200, body: jsonRes };
+  } else if (res.status === BODY_NOT_FOUND) {
+    throw new Error(signal.CONTENT_NOT_AVAILABLE);
   }
   const expiredResponse = await checkExpiredSession({
     response: { status: res.status },
@@ -31,8 +33,6 @@ export const fetchEmailBody = async ({ bodyKey, optionalToken }) => {
     }
     return await fetchEmailBody({ bodyKey, optionalToken: newSessionToken });
   }
-  if (expiredResponse.status === BODY_NOT_FOUND)
-    throw new Error(signal.CONTENT_NOT_AVAILABLE);
 };
 
 export const fetchEventAction = async ({ cmd, action, optionalToken }) => {
