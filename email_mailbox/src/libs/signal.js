@@ -17,6 +17,7 @@ const store = new SignalProtocolStore();
 const PREKEY_INITIAL_QUANTITY = 100;
 const ALICE_ERROR = 'alice unavailable';
 const CONTENT_NOT_AVAILABLE = 'CONTENT_NOT_AVAILABLE';
+const CONTENT_UNENCRYPTED = 'Content Unencrypted';
 const ciphertextType = {
   CIPHERTEXT: 1,
   PREKEY_BUNDLE: 3
@@ -30,9 +31,7 @@ const decryptEmail = async ({
   fileKeys
 }) => {
   const { status, body } = await fetchEmailBody({ bodyKey });
-  if (status !== 200) {
-    return;
-  }
+  if (status !== 200) return;
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return { decryptedBody: body.body };
   }
@@ -52,9 +51,7 @@ const decryptEmail = async ({
   if (!res) {
     throw new Error(ALICE_ERROR);
   } else if (res.status === 500) {
-    return {
-      decryptedBody: 'Content Unencrypted'
-    };
+    throw new Error(CONTENT_UNENCRYPTED);
   } else if (res.status !== 200) {
     throw new Error(ALICE_ERROR);
   }
