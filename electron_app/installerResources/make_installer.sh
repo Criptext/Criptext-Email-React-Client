@@ -58,27 +58,6 @@ elif [ "$CURRENT_OS" = "Darwin" ]; then
     # Load environment variables
     source ./.env
     # Update package.json
-    macStoreType=$( cat ./installerResources/installerTypes.json | json "mac.store" )
-    json -I -f ./package.json -e "this.criptextInstallerType=\"${macStoreType}\"" -q
-    json -I -f ./package.json -e "this.nucleusId=\"${PROD_NUCLEUS_ID}\"" -q
-    json -I -f ./package.json -e 'this.build.mac.target=["mas"]' -q
-    printf "    Updated package.json \n";
-    printf "        -> Installer-type:  ${macStoreType} \n";
-    printf "        ->   Nucleus Id  :  ${PROD_NUCLEUS_ID}\n";
-    printf "        -> Current target:  MAS \n";
-    # Building
-    printf "    Executing:    yarn build \n";
-    yarn build > /dev/null;
-    # Move to subfolder
-    printf "    Moving to subfolder... \n";
-    cd ./dist
-    mkdir "${macStoreFolderName}"
-    cp -rf `ls -A | grep -v ${macStoreFolderName}` "./${macStoreFolderName}"
-    rm -rf `ls -A | grep -v ${macStoreFolderName}`
-    cd ..
-    tput setaf 2;tput bold; echo "    Store done"; tput sgr0;
-
-    # Update package.json
     macInstallerType=$( cat ./installerResources/installerTypes.json | json "mac.installer" )
     json -I -f ./package.json -e "this.criptextInstallerType=\"${macInstallerType}\"" -q
     json -I -f ./package.json -e 'this.build.mac.target=["dmg", "zip"]' -q

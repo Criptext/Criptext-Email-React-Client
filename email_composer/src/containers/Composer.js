@@ -294,7 +294,7 @@ class ComposerWrapper extends Component {
     } else {
       parsedEmails = emails;
     }
-    const status = this.checkAndGetSendButtonStatus(
+    const status = this.checkEmptyRecipientsAndGetSendButtonStatus(
       parsedEmails,
       this.state.ccEmails,
       this.state.bccEmails
@@ -319,7 +319,7 @@ class ComposerWrapper extends Component {
     } else {
       parsedEmails = emails;
     }
-    const status = this.checkAndGetSendButtonStatus(
+    const status = this.checkEmptyRecipientsAndGetSendButtonStatus(
       this.state.toEmails,
       parsedEmails,
       this.state.bccEmails
@@ -344,7 +344,7 @@ class ComposerWrapper extends Component {
     } else {
       parsedEmails = emails;
     }
-    const status = this.checkAndGetSendButtonStatus(
+    const status = this.checkEmptyRecipientsAndGetSendButtonStatus(
       this.state.toEmails,
       this.state.ccEmails,
       parsedEmails
@@ -357,10 +357,23 @@ class ComposerWrapper extends Component {
     }
   };
 
-  checkAndGetSendButtonStatus = (toEmails, ccEmails, bccEmails) => {
+  checkEmptyRecipientsAndGetSendButtonStatus = (
+    toEmails,
+    ccEmails,
+    bccEmails
+  ) => {
     return areEmptyAllArrays(toEmails, ccEmails, bccEmails)
       ? Status.DISABLED
       : Status.ENABLED;
+  };
+
+  checkErrorRecipientsAndGetSendButtonStatus = contacts => {
+    const index = contacts.findIndex(contact => {
+      if (typeof contact === 'string') return false;
+      return contact.form === 'tag-error';
+    });
+    const hasError = index >= 0;
+    this.setState({ status: hasError ? Status.DISABLED : Status.ENABLED });
   };
 
   handleGetSubject = text => {
@@ -738,6 +751,13 @@ class ComposerWrapper extends Component {
                   domainToCheck
                 );
               }
+              if (contactToCheck.form !== 'tag-error') {
+                this.checkErrorRecipientsAndGetSendButtonStatus([
+                  ...this.state.toEmails,
+                  ...this.state.ccEmails,
+                  ...this.state.bccEmails
+                ]);
+              }
             }
           );
         }
@@ -765,6 +785,13 @@ class ComposerWrapper extends Component {
                   domainToCheck
                 );
               }
+              if (contactToCheck.form !== 'tag-error') {
+                this.checkErrorRecipientsAndGetSendButtonStatus([
+                  ...this.state.toEmails,
+                  ...this.state.ccEmails,
+                  ...this.state.bccEmails
+                ]);
+              }
             }
           );
         }
@@ -791,6 +818,13 @@ class ComposerWrapper extends Component {
                   contactToCheck,
                   domainToCheck
                 );
+              }
+              if (contactToCheck.form !== 'tag-error') {
+                this.checkErrorRecipientsAndGetSendButtonStatus([
+                  ...this.state.toEmails,
+                  ...this.state.ccEmails,
+                  ...this.state.bccEmails
+                ]);
               }
             }
           );

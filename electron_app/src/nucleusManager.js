@@ -1,17 +1,15 @@
 const { APP_VERSION, NUCLEUS_ID, INSTALLER_TYPE } = require('./utils/const');
 const myAccount = require('./Account');
-const Nucleus = require('nucleus-nodejs');
+let Nucleus;
 
 const initNucleus = ({ userId, language }) => {
   const data = {
-    persist: true,
     onlyMainProcess: true,
     userId: userId || 'unknown',
     version: APP_VERSION,
     language
   };
-  Nucleus.init(NUCLEUS_ID, data);
-  Nucleus.appStarted();
+  Nucleus = require('electron-nucleus')(NUCLEUS_ID, data);
 };
 
 const addEventError = (event, data) => {
