@@ -8,6 +8,8 @@ const MAX_REQUESTS = 5;
 const EXPIRED_SESSION_STATUS = 401;
 const INITIAL_REQUEST_EMPTY_STATUS = 499;
 
+let fileKeyIvs = {};
+
 export const fileManager = new FileManager({
   auth: 'Bearer',
   auth_token: myAccount.jwt,
@@ -56,8 +58,10 @@ export const setDownloadHandler = (token, filename) => {
 
 export const CHUNK_SIZE = 524288;
 
-export const setCryptoInterfaces = (key, iv) => {
+export const setCryptoInterfaces = (ftoken, key, iv) => {
+  fileKeyIvs[ftoken] = { key, iv };
   fileManager.setCryptoInterfaces(null, (filetoken, blob, callback) => {
+    const { key, iv } = fileKeyIvs[filetoken];
     if (!key || !iv) {
       return callback(blob);
     }
@@ -76,4 +80,8 @@ export const setCryptoInterfaces = (key, iv) => {
     });
     reader.readAsArrayBuffer(blob);
   });
+};
+
+export const clearKeys = () => {
+  fileKeyIvs = {};
 };

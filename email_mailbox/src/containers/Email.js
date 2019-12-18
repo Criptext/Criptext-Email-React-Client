@@ -277,7 +277,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           filename
         });
         if (downloadedPath === null) {
-          setCryptoInterfaces(key, iv);
+          setCryptoInterfaces(inlineImg.token, key, iv);
           setDownloadHandler(inlineImg.token);
         } else {
           addFilePathToResponseObject(downloadedPath, cid);
