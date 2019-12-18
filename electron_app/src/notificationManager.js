@@ -3,6 +3,7 @@ const globalManager = require('./globalManager');
 const { isMacOS } = require('./windows/windowUtils');
 const path = require('path');
 
+const notifications = {};
 const iconPath = path.join(__dirname, './../resources/launch-icons/icon.png');
 
 const showNotification = ({
@@ -12,6 +13,7 @@ const showNotification = ({
   closeOnClick,
   forceToShow
 }) => {
+  const id = Symbol();
   const mailboxWindow = require('./windows/mailbox');
   const isSupportedByOS = Notification.isSupported();
   const isVisibleAndFocused = mailboxWindow.isVisibleAndFocused();
@@ -25,13 +27,21 @@ const showNotification = ({
       notifyOptions['icon'] = iconPath;
     }
     const notificationItem = new Notification(notifyOptions);
+    notificationItem.on('close', () => {
+      delete notifications[id];
+    });
     if (closeOnClick) {
       notificationItem.on('click', () => {
         notificationItem.close();
+        delete notifications[id];
       });
     } else if (clickHandler) {
-      notificationItem.on('click', clickHandler);
+      notificationItem.on('click', () => {
+        clickHandler();
+        delete notifications[id];
+      });
     }
+    notifications[id] = notificationItem;
     notificationItem.show();
   }
 };

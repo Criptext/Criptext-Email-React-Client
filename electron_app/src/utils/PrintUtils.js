@@ -158,7 +158,12 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
     // Send to hidden window for print
     const defaultDocumentName = clearSubject.split(' ').join('-');
     if (!workerWin) {
-      workerWin = new BrowserWindow({ show: false });
+      workerWin = new BrowserWindow({
+        show: false,
+        webPreferences: {
+          nodeIntegration: true
+        }
+      });
     }
     workerWin.loadURL(
       path.join('file://', __dirname, '..', 'windows', 'worker.html')
