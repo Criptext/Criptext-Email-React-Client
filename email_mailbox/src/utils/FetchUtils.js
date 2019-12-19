@@ -63,12 +63,21 @@ export const fetchEventAction = async ({ cmd, action, optionalToken }) => {
   }
 };
 
-const formEvents = events =>
-  events.map(event => ({
-    cmd: event.cmd,
-    params: JSON.parse(event.params),
-    rowid: event.rowid
-  }));
+/* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
+const formEvents = events => {
+  const eventsParsed = [];
+  events.forEach(event => {
+    try {
+      const data = {
+        cmd: event.cmd,
+        params: JSON.parse(event.params),
+        rowid: event.rowid
+      };
+      eventsParsed.push(data);
+    } catch (e) {}
+  });
+  return eventsParsed;
+};
 
 export const fetchEvents = async optionalToken => {
   const res = await apiCriptextRequest({
