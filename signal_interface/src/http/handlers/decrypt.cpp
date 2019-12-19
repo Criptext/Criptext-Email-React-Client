@@ -26,8 +26,6 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
     return 400;
   }
 
-  std::cout << cJSON_Print(obj) << std::endl;
-
   cJSON *salt, *iv, *emailKey, *senderId, *deviceId, *type, *recipientId, *body, *headers, *fileKeys, *headersType;
   salt = cJSON_GetObjectItemCaseSensitive(obj, "salt");
   iv = cJSON_GetObjectItemCaseSensitive(obj, "iv");
@@ -56,6 +54,9 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
       uint8_t *plaintext_data = 0;
       size_t plaintext_len = 0;
       int result = signal.decryptText(&plaintext_data, &plaintext_len, body->valuestring, senderId->valuestring, deviceId->valueint, type->valueint);
+      if (result < 0) {
+        throw std::invalid_argument("Unable to decrypt message with error: " + result);
+      }
       string text = std::string(plaintext_data, plaintext_data + plaintext_len);
       cJSON_AddStringToObject(response, "decryptedBody", text.c_str());
     } catch (exception &ex) {
@@ -154,7 +155,6 @@ int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
     mg_send_http_error(conn, 400, "%s", bufferData.c_str());
     return 400;
   }
-  spdlog::info("[{0}] Request -> {1}", endpointId, bufferData);
 
   cJSON *deviceId, *type, *recipientId, *key;
   deviceId = cJSON_GetObjectItemCaseSensitive(obj, "deviceId");
@@ -173,10 +173,9 @@ int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath) {
   uint8_t *plaintext_data = 0;
   size_t plaintext_len = 0;
   int result = signal.decryptText(&plaintext_data, &plaintext_len, key->valuestring, recipientId->valuestring, deviceId->valueint, type->valueint);
-
   if (result < 0) {
     std::string unencrypted = "Content Unencrypted";
-    spdlog::error("[{0}]  {1}", unencrypted.c_str());
+    spdlog::error("[{0}]  {1}", endpointId, unencrypted.c_str());
     mg_send_http_error(conn, 400, "%s", unencrypted.c_str());
     return 400;
   }

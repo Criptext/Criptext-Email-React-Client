@@ -153,20 +153,8 @@ class LoadingWrapper extends Component {
         case DATA_READY_STATUS: {
           const { rowid } = body;
           await acknowledgeEvents([rowid]);
-          const {
-            dataAddress,
-            key,
-            authorizerId,
-            authorizerType,
-            authorizerName
-          } = JSON.parse(body.params);
-          this.downloadAndProcessMailbox(
-            authorizerId,
-            dataAddress,
-            key,
-            authorizerType,
-            authorizerName
-          );
+          const { dataAddress, key, authorizerId } = JSON.parse(body.params);
+          this.downloadAndProcessMailbox(authorizerId, dataAddress, key);
           return;
         }
         default: {
@@ -236,12 +224,13 @@ class LoadingWrapper extends Component {
           },
           async () => {
             this.incrementPercentage();
-            const { recipientId, deviceId } = remoteData;
+            const MESSAGE_PRE_KEY = 3;
+            const { recipientId } = remoteData;
             const decryptedKey = await signal.decryptKey({
               text: key,
               recipientId,
-              deviceId,
-              authorizerId
+              deviceId: authorizerId,
+              messageType: MESSAGE_PRE_KEY
             });
             await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
             await importDatabase();
