@@ -8,6 +8,7 @@ import Label from './Label';
 import Message from '../containers/Message';
 import string from '../lang';
 import './thread.scss';
+import { clearKeys } from './../utils/FileManager';
 
 const MIN_INDEX_TO_COLLAPSE = 3;
 
@@ -71,6 +72,7 @@ class Thread extends Component {
 
   componentDidMount() {
     if (this.props.emails.length !== this.props.thread.emailIds.length) {
+      clearKeys();
       this.props.onLoadEmails(this.props.thread.emailIds);
     } else {
       this.props.onUpdateUnreadEmails(

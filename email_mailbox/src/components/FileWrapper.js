@@ -39,7 +39,11 @@ class FileWrapper extends Component {
     setFileProgressHandler(this.handleDownloadProgess);
     setFileSuccessHandler(this.handleDownloadSuccess);
     setFileErrorHandler(this.handleDownloadError);
-    setCryptoInterfaces(this.props.file.key, this.props.file.iv);
+    setCryptoInterfaces(
+      this.props.file.token,
+      this.props.file.key,
+      this.props.file.iv
+    );
   }
 
   defineFileStatus = fileStatus => {
