@@ -62,6 +62,7 @@ const generatePassword = () => {
 };
 
 let port = 8085;
+let alertShown = false;
 const password = generatePassword();
 let alice = null;
 let aliceStartTimeout = null;
@@ -84,17 +85,19 @@ const startAlice = async () => {
     const dbpath = path.resolve(dbManager.databasePath);
     const logspath = path.resolve(getLogsPath(process.env.NODE_ENV));
     await cleanAliceRemenants();
-    const options = {
-      shell: true,
-      stdio: ['inherit', 'pipe', 'pipe']
-    };
-    alice = spawn(
-      alicePath,
-      [dbpath, myPort, logspath, password, '--no-sandbox'],
-      options
-    );
+    alice = spawn(alicePath, [
+      dbpath,
+      myPort,
+      logspath,
+      password,
+      '--no-sandbox'
+    ]);
     alice.stderr.setEncoding('utf8');
     alice.stderr.on('data', data => {
+      if (alertShown) {
+        return;
+      }
+      alertShown = true;
       dialog.showErrorBox(
         'Service Error',
         `Unable to initialize encryption service. ${data}`

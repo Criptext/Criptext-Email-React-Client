@@ -196,11 +196,12 @@ class ManualSyncProcessPopup extends Component {
           },
           async () => {
             this.incrementPercentage();
+            const MESSAGE_PRE_KEY = 3;
             const decryptedKey = await signal.decryptKey({
               text: key,
               recipientId: myAccount.recipientId,
-              deviceId: myAccount.deviceId,
-              authorizerId
+              deviceId: authorizerId,
+              messageType: MESSAGE_PRE_KEY
             });
             await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
             await importDatabase();
