@@ -97,9 +97,9 @@ const createAccount = async ({
 
 const createAcountAndGetKeyBundle = async ({
   recipientId,
-  deviceId,
   name,
-  deviceType
+  deviceType,
+  deviceId
 }) => {
   const [currentAccount] = await getAccount();
   if (currentAccount && currentAccount.recipientId !== recipientId) {
@@ -109,15 +109,15 @@ const createAcountAndGetKeyBundle = async ({
   const accountRes = await aliceRequestWrapper(() => {
     return createAccountCredentials({
       recipientId,
-      deviceId,
-      name
+      name,
+      deviceId
     });
   });
   if (accountRes.status !== 200) {
     throw CustomError(string.errors.updateAccountData);
   }
   const keybundleRes = await aliceRequestWrapper(() => {
-    return generateKeyBundle({ recipientId, deviceId });
+    return generateKeyBundle({ recipientId });
   });
   if (keybundleRes.status !== 200) {
     throw CustomError(string.errors.prekeybundleFailed);
@@ -175,7 +175,12 @@ const createAccountWithNewDevice = async ({
   return true;
 };
 
-const uploadKeys = async ({ recipientId, name, deviceType, deviceId }) => {
+const generateAccountAndKeys = async ({
+  recipientId,
+  name,
+  deviceType,
+  deviceId
+}) => {
   const [currentAccount] = await getAccount();
   if (currentAccount && currentAccount.recipientId !== recipientId) {
     await cleanDatabase(currentAccount.recipientId);
@@ -187,6 +192,10 @@ const uploadKeys = async ({ recipientId, name, deviceType, deviceId }) => {
     name,
     deviceType
   });
+  return keybundle;
+};
+
+const uploadKeys = async keybundle => {
   const { status, body } = await postKeyBundle(keybundle);
   if (status !== 200) {
     throw CustomError({
@@ -341,6 +350,7 @@ export default {
   createAccountToDB,
   createAccountWithNewDevice,
   decryptKey,
+  generateAccountAndKeys,
   uploadKeys,
   encryptKeyForNewDevice
 };

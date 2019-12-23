@@ -49,6 +49,8 @@ ipc.answerRenderer('db-clean-database', async username => {
   await dbManager.cleanDataBase();
 });
 
+ipc.answerRenderer('db-clean-keys', dbManager.cleanKeys);
+
 ipc.answerRenderer('db-delete-emails-by-ids', async emailIds => {
   const emails = await dbManager.getEmailsByArrayParam({ ids: emailIds });
   await Promise.all(

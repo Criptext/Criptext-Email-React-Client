@@ -7,12 +7,14 @@ import {
 } from '../utils/electronInterface';
 import {
   acknowledgeEvents,
+  cleanKeys,
   clearSyncData,
   closeCreatingKeysLoadingWindow,
   decryptBackupFile,
   downloadBackupFile,
   getDataReady,
   importDatabase,
+  logoutApp,
   openMailboxWindow,
   throwError
 } from './../utils/ipc';
@@ -36,6 +38,7 @@ const STEPS = {
   SEND_KEYS: 'send-keys',
   WAIT_MAILBOX: 'waiting-for-mailbox',
   DOWNLOAD_MAILBOX: 'downloading-mailbox',
+  DECRYPT_KEY: 'decrypting-key',
   PROCESS_MAILBOX: 'processing-mailbox',
   SYNC_COMPLETE: 'sync-complete'
 };
@@ -61,15 +64,20 @@ class LoadingWrapper extends Component {
       showContinueWaitingButton: false
     };
 
-    addEvent(Event.DATA_UPLOADED, this.downloadAndProcessMailbox);
+    addEvent(Event.DATA_UPLOADED, this.downloadMailbox);
   }
 
   componentDidMount() {
     this.setState({ message: messages.sendingKeys, pauseAt: 10 }, async () => {
       this.incrementPercentage();
       await setTimeout(async () => {
-        const { name, recipientId, deviceId, deviceType } = remoteData;
-        await this.uploadKeys({ deviceType, recipientId, deviceId, name });
+        const { name, recipientId, deviceType } = remoteData;
+        await this.generateAccountAndKeys({
+          deviceType,
+          recipientId,
+          deviceId: 0,
+          name
+        });
       }, ANIMATION_DURATION);
     });
   }
@@ -93,7 +101,7 @@ class LoadingWrapper extends Component {
   }
 
   componentWillUnmount() {
-    removeEvent(Event.DATA_UPLOADED, this.downloadAndProcessMailbox);
+    removeEvent(Event.DATA_UPLOADED, this.downloadMailbox);
   }
 
   incrementPercentage = () => {
@@ -106,38 +114,87 @@ class LoadingWrapper extends Component {
     this.tm = setTimeout(this.incrementPercentage, this.state.delay);
   };
 
-  uploadKeys = async params => {
-    try {
-      const accountData = await signal.uploadKeys(params);
-      if (!accountData) {
-        this.linkingDevicesThrowError();
-      } else {
-        startSocket(accountData.jwt);
-        this.setState(
-          {
-            accountData,
-            message: messages.waitingForMailbox,
-            pauseAt: 40,
-            delay: (40 - this.state.percent) / ANIMATION_DURATION,
-            lastStep: STEPS.SEND_KEYS
-          },
-          () => {
-            this.incrementPercentage();
-            this.checkDataStatus();
+  generateAccountAndKeys = params => {
+    this.setState(
+      {
+        message: messages.sendingKeys,
+        pauseAt: 20,
+        delay: (20 - this.state.percent) / ANIMATION_DURATION,
+        retryData: params,
+        lastStep: STEPS.NOT_STARTED
+      },
+      async () => {
+        try {
+          this.incrementPercentage();
+          const keybundle = await signal.generateAccountAndKeys(params);
+          if (!keybundle) {
+            await cleanKeys();
+            this.linkingDevicesThrowError();
+            return;
           }
-        );
+          this.uploadKeys(keybundle);
+        } catch (e) {
+          this.linkingDevicesThrowError();
+        }
       }
-    } catch (e) {
-      if (e.code === 'ECONNREFUSED') {
-        throwError(string.errors.unableToConnect);
-      } else {
-        throwError({
-          name: e.name,
-          description: e.description || e.message
-        });
+    );
+  };
+
+  uploadKeys = keybundle => {
+    this.setState(
+      {
+        message: messages.sendingKeys,
+        pauseAt: 40,
+        delay: (40 - this.state.percent) / ANIMATION_DURATION,
+        lastStep: STEPS.NOT_STARTED
+      },
+      async () => {
+        this.incrementPercentage();
+        try {
+          const accountData = await signal.uploadKeys(keybundle);
+          if (!accountData) {
+            await cleanKeys();
+            this.linkingDevicesThrowError();
+            return;
+          }
+          let isRecipientApp = false;
+          let username = remoteData.recipientId;
+          if (remoteData.recipientId.includes(`@${appDomain}`)) {
+            isRecipientApp = true;
+            [username] = remoteData.recipientId.split('@');
+          }
+          const newAccountData = {
+            ...remoteData,
+            ...accountData,
+            recipientId: username,
+            deviceId: remoteData.deviceId,
+            isRecipientApp
+          };
+          await signal.createAccountToDB(newAccountData);
+          this.setState(
+            {
+              accountData,
+              message: messages.waitingForMailbox
+            },
+            () => {
+              startSocket(accountData.jwt);
+              this.checkDataStatus();
+            }
+          );
+        } catch (e) {
+          if (e.code === 'ECONNREFUSED') {
+            throwError(string.errors.unableToConnect);
+          } else {
+            throwError({
+              name: e.name,
+              description: e.description || e.message
+            });
+          }
+          this.linkingDevicesThrowError();
+          return;
+        }
       }
-      this.linkingDevicesThrowError();
-    }
+    );
   };
 
   checkDataStatus = async () => {
@@ -154,7 +211,7 @@ class LoadingWrapper extends Component {
           const { rowid } = body;
           await acknowledgeEvents([rowid]);
           const { dataAddress, key, authorizerId } = JSON.parse(body.params);
-          this.downloadAndProcessMailbox(authorizerId, dataAddress, key);
+          this.downloadMailbox(authorizerId, dataAddress, key);
           return;
         }
         default: {
@@ -183,74 +240,83 @@ class LoadingWrapper extends Component {
     );
   };
 
-  downloadAndProcessMailbox = (authorizerId, address, key) => {
+  downloadMailbox = (authorizerId, address, key) => {
     clearTimeout(this.dataStatusTimeout);
     this.setState(
       {
         message: messages.downloadingMailbox,
         pauseAt: 70,
         delay: (70 - this.state.percent) / ANIMATION_DURATION,
-        lastStep: STEPS.WAIT_MAILBOX,
+        lastStep: STEPS.SEND_KEYS,
         retryData: { authorizerId, address, key }
       },
       async () => {
         this.incrementPercentage();
-        let isRecipientApp = false;
-        let username = remoteData.recipientId;
-        if (remoteData.recipientId.includes(`@${appDomain}`)) {
-          isRecipientApp = true;
-          [username] = remoteData.recipientId.split('@');
-        }
-        const newAccountData = {
-          ...remoteData,
-          ...this.state.accountData,
-          recipientId: username,
-          isRecipientApp
-        };
-
-        await signal.createAccountToDB(newAccountData);
         const response = await downloadBackupFile(address);
         if (response.statusCode !== 200) {
           this.linkingDevicesThrowError();
           return;
         }
+        this.decryptKey(authorizerId, key);
+      }
+    );
+  };
 
+  decryptKey = (authorizerId, key) => {
+    this.setState(
+      {
+        message: messages.decryptingMailbox,
+        pauseAt: 80,
+        delay: (80 - this.state.percent) / ANIMATION_DURATION,
+        lastStep: STEPS.DOWNLOAD_MAILBOX,
+        retryData: { authorizerId, key }
+      },
+      async () => {
+        this.incrementPercentage();
+        const MESSAGE_PRE_KEY = 3;
+        const { recipientId } = remoteData;
+        try {
+          const decryptedKey = await signal.decryptKey({
+            text: key,
+            recipientId,
+            deviceId: authorizerId,
+            messageType: MESSAGE_PRE_KEY
+          });
+          this.processMailbox(authorizerId, decryptedKey);
+        } catch (ex) {
+          this.linkingDevicesThrowError();
+        }
+      }
+    );
+  };
+
+  processMailbox = (authorizerId, decryptedKey) => {
+    this.setState(
+      {
+        message: messages.decryptingMailbox,
+        pauseAt: 90,
+        delay: (90 - this.state.percent) / ANIMATION_DURATION,
+        lastStep: STEPS.DECRYPT_KEY,
+        retryData: { authorizerId, decryptedKey }
+      },
+      async () => {
+        this.incrementPercentage();
+        await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
+        await importDatabase();
         this.setState(
           {
-            message: messages.decryptingMailbox,
-            pauseAt: 90,
-            delay: (90 - this.state.percent) / ANIMATION_DURATION,
-            lastStep: STEPS.DOWNLOAD_MAILBOX
+            message: messages.syncComplete,
+            pauseAt: 100,
+            delay: (100 - this.state.percent) / ANIMATION_DURATION,
+            lastStep: STEPS.PROCESS_MAILBOX
           },
           async () => {
             this.incrementPercentage();
-            const MESSAGE_PRE_KEY = 3;
-            const { recipientId } = remoteData;
-            const decryptedKey = await signal.decryptKey({
-              text: key,
-              recipientId,
-              deviceId: authorizerId,
-              messageType: MESSAGE_PRE_KEY
-            });
-            await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
-            await importDatabase();
-
-            this.setState(
-              {
-                message: messages.syncComplete,
-                pauseAt: 100,
-                delay: (100 - this.state.percent) / ANIMATION_DURATION,
-                lastStep: STEPS.PROCESS_MAILBOX
-              },
-              async () => {
-                this.incrementPercentage();
-                clearSyncData();
-                await setTimeout(() => {
-                  openMailboxWindow();
-                  closeCreatingKeysLoadingWindow();
-                }, 4000);
-              }
-            );
+            clearSyncData();
+            await setTimeout(() => {
+              openMailboxWindow();
+              closeCreatingKeysLoadingWindow();
+            }, 4000);
           }
         );
       }
@@ -258,10 +324,19 @@ class LoadingWrapper extends Component {
   };
 
   handleClickCancelSync = () => {
-    if (this.state.lastStep === STEPS.WAIT_MAILBOX) {
-      setPendingRestoreStatus(true);
-      openMailboxWindow();
-      closeCreatingKeysLoadingWindow();
+    switch (this.state.lastStep) {
+      case STEPS.DOWNLOAD_MAILBOX:
+      case STEPS.DECRYPT_KEY:
+        setPendingRestoreStatus(true);
+        openMailboxWindow();
+        closeCreatingKeysLoadingWindow();
+        break;
+      default: {
+        cleanKeys();
+        closeCreatingKeysLoadingWindow();
+        logoutApp();
+        break;
+      }
     }
   };
 
@@ -269,26 +344,88 @@ class LoadingWrapper extends Component {
 
   linkingDevicesThrowError = () => {
     clearTimeout(this.tm);
+
+    const step = this.state.lastStep;
+    const progressRollback = {};
+    switch (step) {
+      case STEPS.DOWNLOAD_MAILBOX: {
+        progressRollback.percent = 70;
+        progressRollback.delay = (this.state.percent - 70) / ANIMATION_DURATION;
+        break;
+      }
+      case STEPS.DECRYPT_KEY: {
+        progressRollback.percent = 80;
+        progressRollback.delay = (this.state.percent - 80) / ANIMATION_DURATION;
+        break;
+      }
+      case STEPS.SEND_KEYS: {
+        progressRollback.percent = 40;
+        progressRollback.delay = (this.state.percent - 40) / ANIMATION_DURATION;
+        break;
+      }
+      case STEPS.NOT_STARTED: {
+        progressRollback.percent = 10;
+        progressRollback.delay = (this.state.percent - 10) / ANIMATION_DURATION;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
     this.setState({
+      ...progressRollback,
       failed: true
     });
   };
 
   handleClickRetry = () => {
     const step = this.state.lastStep;
-    const retryData = this.state.retryData;
+    const retryData = { ...this.state.retryData };
     switch (step) {
-      case STEPS.WAIT_MAILBOX: {
+      case STEPS.DOWNLOAD_MAILBOX: {
         this.setState(
           {
             failed: false
           },
           () => {
-            this.downloadAndProcessMailbox(
+            this.decryptKey(retryData.authorizerId, retryData.key);
+          }
+        );
+        return;
+      }
+      case STEPS.DECRYPT_KEY: {
+        this.setState(
+          {
+            failed: false
+          },
+          () => {
+            this.processMailbox(retryData.authorizerId, retryData.decryptKey);
+          }
+        );
+        return;
+      }
+      case STEPS.SEND_KEYS: {
+        this.setState(
+          {
+            failed: false
+          },
+          () => {
+            this.downloadMailbox(
               retryData.authorizerId,
               retryData.address,
               retryData.key
             );
+          }
+        );
+        return;
+      }
+      case STEPS.NOT_STARTED: {
+        this.setState(
+          {
+            failed: false
+          },
+          () => {
+            this.generateAccountAndKeys(retryData);
           }
         );
         return;
