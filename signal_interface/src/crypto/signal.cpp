@@ -160,7 +160,7 @@ int CriptextSignal::createSignedPrekey(char **encodedSignedPublicPreKey, char **
     return result;
 }
 
-int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId, int deviceId) {
+int CriptextSignal::generateKeyBundle(cJSON *bundle, string recipientId) {
     int result = 0;
 
     ec_private_key *identityPrivateKey = 0;

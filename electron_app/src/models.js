@@ -112,6 +112,13 @@ const cleanForAlice = async () => {
   return account;
 };
 
+const cleanKeys = async () => {
+  await db.table(Table.SESSIONRECORD).del();
+  await db.table(Table.PREKEYRECORD).del();
+  await db.table(Table.SIGNEDPREKEYRECORD).del();
+  await db.table(Table.IDENTITYKEYRECORD).del();
+};
+
 const cleanDataLogout = async recipientId => {
   const params = {
     deviceId: '',
@@ -409,6 +416,7 @@ module.exports = {
   cleanDataBase,
   cleanDataLogout,
   cleanForAlice,
+  cleanKeys,
   createFileKeyColumns,
   createSignalTables,
   createTables,

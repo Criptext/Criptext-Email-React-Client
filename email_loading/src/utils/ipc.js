@@ -10,6 +10,10 @@ export const openMailboxWindow = () => {
   ipc.callMain('open-mailbox', { firstOpenApp: true });
 };
 
+export const logoutApp = () => {
+  ipc.callMain('logout-app');
+};
+
 export const throwError = error => {
   ipc.callMain('throwError', error);
 };
@@ -72,6 +76,10 @@ export const syncDeny = async randomId => {
 ----------------------------- */
 export const cleanDatabase = async username => {
   return await ipc.callMain('db-clean-database', username);
+};
+
+export const cleanKeys = async username => {
+  return await ipc.callMain('db-clean-keys', username);
 };
 
 export const createAccount = async params => {
