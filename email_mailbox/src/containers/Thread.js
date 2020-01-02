@@ -19,7 +19,7 @@ const makeMapStateToProps = () => {
   const mapStateToProps = (state, ownProps) => {
     const thread = getThread(state, ownProps);
     const emailIds = thread ? thread.emailIds : [];
-    const { emails, emailKeysUnread } = getEmails(state, {
+    const { emails, emailKeysUnread, emailsUnread } = getEmails(state, {
       emailIds
     });
     const indexFirstUnread = emails.findIndex(email => email.unread);
@@ -29,8 +29,9 @@ const makeMapStateToProps = () => {
       ? thread.allLabels.includes(LabelType.starred.id)
       : undefined;
     return {
-      emails,
       emailKeysUnread,
+      emails,
+      emailsUnread,
       indexFirstUnread,
       labels,
       starred,
@@ -62,10 +63,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         );
       }
     },
-    onUpdateUnreadEmails: (emailKeysUnread, threadId) => {
+    onUpdateUnreadEmails: (emailKeysUnread, emailsUnread, threadId) => {
       if (emailKeysUnread.length) {
         const labelId = ownProps.mailboxSelected.id;
-        dispatch(sendOpenEvent(emailKeysUnread, threadId, labelId));
+        dispatch(
+          sendOpenEvent(emailKeysUnread, emailsUnread, threadId, labelId)
+        );
       }
     }
   };

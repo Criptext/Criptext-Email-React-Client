@@ -61,41 +61,15 @@ export const markEmailUnreadSuccess = (emailId, unread) => {
 export const loadEmails = ({ threadId, emailIds }) => {
   return async dispatch => {
     try {
-      const response = threadId
-        ? await getEmailsByThreadId(threadId)
-        : await getEmailsByIds(emailIds);
-      const data = response.reduce(
-        (result, element) => {
-          element.fromContactIds = element.fromContactIds
-            ? element.fromContactIds.split(',').map(Number)
-            : [];
-          element.to = element.to ? element.to.split(',').map(Number) : [];
-          element.cc = element.cc ? element.cc.split(',').map(Number) : [];
-          element.bcc = element.bcc ? element.bcc.split(',').map(Number) : [];
-          const contactIds = [
-            ...element.fromContactIds,
-            ...element.to,
-            ...element.cc,
-            ...element.bcc
-          ];
-          const fileTokens = element.fileTokens
-            ? element.fileTokens.split(',')
-            : [];
-          return {
-            emails: { ...result.emails, [element.id]: element },
-            fileTokens: new Set([...result.fileTokens, ...fileTokens]),
-            contactIds: new Set([...result.contactIds, ...contactIds])
-          };
-        },
-        { emails: {}, fileTokens: new Set(), contactIds: new Set() }
-      );
-      data.contactIds = Array.from(data.contactIds);
-      data.fileTokens = Array.from(data.fileTokens);
-      const contacts = await defineContacts(data.contactIds);
+      const data = await _loadEmails({ threadId, emailIds });
+      const contactIds = Array.from(data.contactIds);
+      const fileTokens = Array.from(data.fileTokens);
+
+      const contacts = await defineContacts(contactIds);
       const contact = addContacts(contacts);
-      const email = addEmails(data.emails);
-      const files = await defineFiles(data.fileTokens);
+      const files = await defineFiles(fileTokens);
       const file = addFiles(files);
+      const email = addEmails(data.emails);
       dispatch(addDataApp({ contact, email, file }));
     } catch (e) {
       // TO DO
@@ -229,6 +203,11 @@ export const updateEmailOnSuccess = email => ({
   email
 });
 
+export const updateEmailsSuccess = emails => ({
+  type: Email.UPDATE_EMAILS,
+  emails
+});
+
 export const updateEmailLabels = ({
   labelId,
   email,
@@ -294,4 +273,35 @@ export const updateEmailLabels = ({
       sendUpdateThreadLabelsErrorMessage();
     }
   };
+};
+
+export const _loadEmails = async ({ threadId, emailIds }) => {
+  const response = threadId
+    ? await getEmailsByThreadId(threadId)
+    : await getEmailsByIds(emailIds);
+  return response.reduce(
+    (result, element) => {
+      element.fromContactIds = element.fromContactIds
+        ? element.fromContactIds.split(',').map(Number)
+        : [];
+      element.to = element.to ? element.to.split(',').map(Number) : [];
+      element.cc = element.cc ? element.cc.split(',').map(Number) : [];
+      element.bcc = element.bcc ? element.bcc.split(',').map(Number) : [];
+      const contactIds = [
+        ...element.fromContactIds,
+        ...element.to,
+        ...element.cc,
+        ...element.bcc
+      ];
+      const fileTokens = element.fileTokens
+        ? element.fileTokens.split(',')
+        : [];
+      return {
+        emails: { ...result.emails, [element.id]: element },
+        fileTokens: new Set([...result.fileTokens, ...fileTokens]),
+        contactIds: new Set([...result.contactIds, ...contactIds])
+      };
+    },
+    { emails: {}, fileTokens: new Set(), contactIds: new Set() }
+  );
 };

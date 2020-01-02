@@ -368,16 +368,25 @@ class PanelWrapper extends Component {
           else this.props.onStopLoadSync();
         }
       } else if (threadIds && isRenderingThread) {
-        this.props.onLoadThreads(
-          {
-            labelId: Number(currentLabelId),
-            clear: true,
-            limit
-          },
-          hasStopLoad
-        );
         if (threadIds.includes(currentThreadId)) {
-          this.props.onLoadEmails(currentThreadId);
+          this.props.onLoadThreadsAndEmails(
+            {
+              labelId: Number(currentLabelId),
+              clear: true,
+              limit
+            },
+            currentThreadId,
+            hasStopLoad
+          );
+        } else {
+          this.props.onLoadThreads(
+            {
+              labelId: Number(currentLabelId),
+              clear: true,
+              limit
+            },
+            hasStopLoad
+          );
         }
       } else if (threadIds && isRenderingMailbox) {
         this.props.onLoadThreads(
@@ -556,6 +565,7 @@ PanelWrapper.propTypes = {
   onLoadEvents: PropTypes.func,
   onLoadFeedItems: PropTypes.func,
   onLoadThreads: PropTypes.func,
+  onLoadThreadsAndEmails: PropTypes.func,
   onRemoveEmailIdToThread: PropTypes.func,
   onRemoveLabels: PropTypes.func,
   onStopLoadSync: PropTypes.func,

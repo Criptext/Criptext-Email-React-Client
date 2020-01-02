@@ -2,14 +2,18 @@ import { Thread } from './types';
 import {
   addDataApp,
   addContacts,
+  addEmails,
+  addFiles,
   loadFeedItems,
   removeEmails,
   startLoadSync,
   stopLoadThread,
   stopAll,
+  updateEmailsSuccess,
   updateSwitchThreads
 } from './index';
 import { updateBadgeLabels } from './labels';
+import { _loadEmails } from './emails';
 import { LabelType } from '../utils/electronInterface';
 import {
   createEmailLabel,
@@ -36,6 +40,7 @@ import {
 import { SocketCommand } from '../utils/const';
 import { filterTemporalThreadIds } from '../utils/EmailUtils';
 import { defineThreads } from '../utils/ThreadUtils';
+import { defineFiles } from '../utils/FileUtils';
 
 export const addThreads = (labelId, threads, clear) => ({
   type: Thread.ADD_BATCH,
@@ -533,6 +538,37 @@ export const loadThreads = (params, shouldStopAll) => {
   };
 };
 
+export const loadThreadsAndEmails = (params, threadId, shouldStopAll) => {
+  return async dispatch => {
+    try {
+      if (LabelType.trash.id === params.labelId) {
+        const expiredDeletedEmails = await getTrashExpiredEmails();
+        if (expiredDeletedEmails.length) {
+          dispatch(removeEmails(LabelType.trash.id, expiredDeletedEmails));
+        }
+      }
+      const data = await _loadEmails({ threadId });
+      const fileTokens = Array.from(data.fileTokens);
+      const { threads, contacts } = await defineThreads(
+        params,
+        data.contactIds
+      );
+      const contact = contacts ? addContacts(contacts) : undefined;
+      const thread =
+        threads.length || !params.date
+          ? addThreads(params.labelId, threads, params.clear)
+          : undefined;
+      const activity = shouldStopAll ? stopAll() : stopLoadThread();
+      const files = await defineFiles(fileTokens);
+      const file = addFiles(files);
+      const email = addEmails(data.emails);
+      dispatch(addDataApp({ activity, contact, thread, file, email }));
+    } catch (e) {
+      sendFetchEmailsErrorMessage();
+    }
+  };
+};
+
 export const loadEvents = ({ showNotification }) => {
   return async dispatch => {
     dispatch(startLoadSync());
@@ -540,7 +576,12 @@ export const loadEvents = ({ showNotification }) => {
   };
 };
 
-export const sendOpenEvent = (emailKeysUnread, threadId, labelId) => {
+export const sendOpenEvent = (
+  emailKeysUnread,
+  emailsUnread,
+  threadId,
+  labelId
+) => {
   return async dispatch => {
     try {
       if (emailKeysUnread.length) {
@@ -556,7 +597,9 @@ export const sendOpenEvent = (emailKeysUnread, threadId, labelId) => {
             unread: false
           });
           if (response) {
-            dispatch(updateThreadsSuccess(labelId, [threadId], false));
+            const thread = updateThreadsSuccess(labelId, [threadId], false);
+            const email = updateEmailsSuccess(emailsUnread);
+            dispatch(addDataApp({ thread, email }));
           }
         }
       }

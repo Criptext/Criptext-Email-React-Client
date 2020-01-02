@@ -9,10 +9,12 @@ const emails = (state = new Map(), action) => {
         const fileTokens = email.get('fileTokens');
         const labelIds = email.get('labelIds');
         const secure = !!email.get('secure');
+        const unread = !!email.get('unread');
 
         return email.merge({
           fileTokens: Set(fileTokens ? fileTokens.split(',') : []),
           labelIds: Set(labelIds ? labelIds.split(',').map(Number) : []),
+          unread,
           secure
         });
       });
@@ -31,11 +33,12 @@ const emails = (state = new Map(), action) => {
       return state;
     }
     case Email.MARK_UNREAD: {
-      const item = state.get(action.emailId.toString());
+      const emailId = action.emailId;
+      const item = state.get(`${emailId}`);
       if (item === undefined) {
         return state;
       }
-      return state.set(action.emailId.toString(), email(item, action));
+      return state.set(`${emailId}`, email(item, action));
     }
     case Email.REMOVE_EMAILS: {
       const { emailIds } = action;
@@ -66,6 +69,17 @@ const emails = (state = new Map(), action) => {
       if (!emailItem) return state;
       return state.set(`${emailId}`, email(emailItem, action));
     }
+    case Email.UPDATE_EMAILS: {
+      const emails = action.emails;
+      if (!emails || !emails.length) return state;
+      return emails.reduce((state, emailItem) => {
+        const emailId = emailItem.id;
+        const emailState = state.get(`${emailId}`);
+        if (!emailState) return state;
+        const action = { type: Email.UPDATE, email: emailItem };
+        return state.set(`${emailId}`, email(emailState, action));
+      }, state);
+    }
     default:
       return state;
   }
@@ -89,9 +103,10 @@ const email = (state, action) => {
       );
     }
     case Email.UPDATE: {
-      const { content } = action.email;
+      const { content, unread } = action.email;
       return state.merge({
-        content: content || state.get('content')
+        content: content || state.get('content'),
+        unread: typeof unread === 'boolean' ? unread : state.get('unread')
       });
     }
     default:
