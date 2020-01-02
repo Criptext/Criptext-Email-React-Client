@@ -28,10 +28,21 @@ const defineEmails = (emails, contacts, emailIds) => {
         })
         .sort(compareEmailDate)
     : [];
-  const emailKeysUnread = emailsFiltered
+  const { emailKeysUnread, emailsUnread } = emailsFiltered
     .filter(email => email.unread)
-    .map(email => email.key);
-  return { emails: emailsFiltered, emailKeysUnread };
+    .reduce(
+      (result, email) => {
+        return {
+          emailKeysUnread: [...result.emailKeysUnread, email.key],
+          emailsUnread: [
+            ...result.emailsUnread,
+            { id: email.id, unread: false }
+          ]
+        };
+      },
+      { emailKeysUnread: [], emailsUnread: [] }
+    );
+  return { emails: emailsFiltered, emailKeysUnread, emailsUnread };
 };
 
 export const makeGetEmails = () => {

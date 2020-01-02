@@ -19,6 +19,7 @@ import PanelWrapper from '../components/PanelWrapper';
 import { LabelType } from '../utils/electronInterface';
 import { updateSettings } from '../utils/ipc';
 import { defineRejectedLabels } from '../utils/EmailUtils';
+import { loadThreadsAndEmails } from '../actions/threads';
 
 const mapStateToProps = state => {
   const labelIds = state
@@ -69,6 +70,18 @@ const mapDispatchToProps = dispatch => {
       dispatch(
         loadThreads(
           { ...params, rejectedLabelIds, contactTypes },
+          shouldStopAll
+        )
+      );
+    },
+    onLoadThreadsAndEmails: (params, threadId, shouldStopAll) => {
+      const { labelId } = params;
+      const rejectedLabelIds = defineRejectedLabels(labelId);
+      const contactTypes = defineContactType(labelId);
+      dispatch(
+        loadThreadsAndEmails(
+          { ...params, rejectedLabelIds, contactTypes },
+          threadId,
           shouldStopAll
         )
       );

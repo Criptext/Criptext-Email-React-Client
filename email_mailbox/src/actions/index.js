@@ -48,7 +48,8 @@ import {
   unsendEmail,
   unsendEmailOnSuccess,
   updateEmailLabels,
-  updateEmailOnSuccess
+  updateEmailOnSuccess,
+  updateEmailsSuccess
 } from './emails';
 import {
   addLabels,
@@ -135,6 +136,7 @@ export {
   updateEmailIdsThread,
   updateEmailLabels,
   updateEmailOnSuccess,
+  updateEmailsSuccess,
   updateLabel,
   updateLabels,
   updateLabelSuccess,

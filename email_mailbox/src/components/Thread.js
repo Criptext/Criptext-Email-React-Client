@@ -77,6 +77,7 @@ class Thread extends Component {
     } else {
       this.props.onUpdateUnreadEmails(
         this.props.emailKeysUnread,
+        this.props.emailsUnread,
         this.props.thread.threadId
       );
     }
@@ -87,18 +88,17 @@ class Thread extends Component {
       return this.props.onBackOption();
     }
 
-    if (prevProps.thread.id !== this.props.thread.id) {
-      this.props.onLoadEmails(this.props.thread.emailIds);
-    }
-
     if (
       this.props.thread.unread &&
       prevProps.emailKeysUnread.length !== this.props.emailKeysUnread.length
     ) {
       this.props.onUpdateUnreadEmails(
         this.props.emailKeysUnread,
+        this.props.emailsUnread,
         this.props.thread.threadId
       );
+    } else if (prevProps.thread.id !== this.props.thread.id) {
+      this.props.onLoadEmails(this.props.thread.emailIds);
     }
 
     if (
@@ -220,6 +220,7 @@ ExpandView.propTypes = {
 Thread.propTypes = {
   emails: PropTypes.array,
   emailKeysUnread: PropTypes.array,
+  emailsUnread: PropTypes.array,
   indexFirstUnread: PropTypes.number,
   labels: PropTypes.array,
   mailboxSelected: PropTypes.object,

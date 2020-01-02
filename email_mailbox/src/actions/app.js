@@ -21,8 +21,7 @@ export const addDataApp = ({
   file,
   feeditem,
   label,
-  thread,
-  deletedLabels
+  thread
 }) => ({
   type: App.ADD_DATA,
   activity,
@@ -31,8 +30,7 @@ export const addDataApp = ({
   file,
   feeditem,
   label,
-  thread,
-  deletedLabels
+  thread
 });
 
 export const loadApp = params => {

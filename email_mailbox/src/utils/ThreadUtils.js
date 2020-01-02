@@ -1,6 +1,6 @@
 import { getEmailsGroupByThreadByParams, getContactByIds } from './ipc';
 
-export const defineThreads = async params => {
+export const defineThreads = async (params, otherContactIds = []) => {
   const threads = await getEmailsGroupByThreadByParams(params);
   const contactIds = threads.reduce((result, thread) => {
     if (thread.recipientContactIds) {
@@ -8,7 +8,9 @@ export const defineThreads = async params => {
     }
     return result;
   }, []);
-  const uniqueContactsIds = Array.from(new Set(contactIds));
+  const uniqueContactsIds = Array.from(
+    new Set([...contactIds, ...otherContactIds])
+  );
   const response = await getContactByIds(uniqueContactsIds);
   let contacts;
   if (response.length) {
