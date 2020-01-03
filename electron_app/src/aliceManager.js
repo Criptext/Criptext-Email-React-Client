@@ -103,6 +103,7 @@ const startAlice = async () => {
         `Unable to initialize encryption service. ${data}`
       );
       console.log(`-----alice-----\nError:\n${data}\n -----end-----`);
+      app.quit();
     });
     alice.stdout.setEncoding('utf8');
     alice.stdout.on('data', data => {
