@@ -283,6 +283,8 @@ export const getGroupEvents = async ({
     await updateOwnContact();
     if (showNotification) {
       sendNewEmailNotification();
+    } else {
+      newEmailNotificationList = [];
     }
     isGettingEvents = false;
     totalEmailsPending = null;

@@ -49,9 +49,7 @@ class ThreadsWrapper extends Component {
   componentDidUpdate(prevProps) {
     if (
       prevProps.mailboxSelected !== this.props.mailboxSelected ||
-      prevProps.searchParams !== this.props.searchParams ||
-      (this.props.threadItemsChecked.size === 0 &&
-        prevProps.threadItemsChecked.size > 0)
+      prevProps.searchParams !== this.props.searchParams
     ) {
       this.setState({ lastMinDate: undefined });
       this.props.onLoadThreads(
