@@ -36,6 +36,7 @@
         "/usr/include"
       ],
       "libraries": [
+        "-static-libstdc++",
         "-pthread",
         "-ldl",
         "/usr/lib/x86_64-linux-gnu/libssl.a",
