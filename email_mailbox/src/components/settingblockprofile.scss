@@ -150,6 +150,10 @@
         overflow: auto;
         cursor: text;
 
+        * {
+          font-family: inherit;
+        }
+
         &.cptx-signature-editor-disabled {
           cursor: not-allowed;
           background-color: rgba($color: #d3d3d3, $alpha: 0.4);
