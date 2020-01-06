@@ -1,4 +1,4 @@
-const { BrowserWindow } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const { pinUrl } = require('../window_routing');
 const loginWindow = require('./login');
@@ -102,7 +102,13 @@ const toggleMaximize = () => {
   }
 };
 
-const setUpPin = async ({ pin, shouldSave, shouldExport, shouldResetPin }) => {
+const setUpPin = async ({
+  pin,
+  shouldSave,
+  shouldExport,
+  shouldResetPin,
+  shouldOnlySetPIN
+}) => {
   if (shouldSave) {
     keytar
       .setPassword('CriptextMailDesktopApp', 'unique', `${pin}`)
@@ -117,11 +123,22 @@ const setUpPin = async ({ pin, shouldSave, shouldExport, shouldResetPin }) => {
   if (shouldResetPin) {
     await resetKeyDatabase(pin);
   } else {
-    await initDatabaseEncrypted({ key: pin });
+    await initDatabaseEncrypted({
+      key: pin,
+      shouldAddSystemLabels: !shouldExport
+    });
   }
 
-  if (shouldExport) await encryptDataBase();
-  callEvent(EVENTS.Up_app, {});
+  if (shouldExport) {
+    await encryptDataBase();
+  }
+
+  if (shouldExport || shouldResetPin) {
+    app.relaunch();
+    app.exit(0);
+  }
+
+  if (!shouldOnlySetPIN) callEvent(EVENTS.Up_app, {});
 };
 
 const checkPin = async () => {
@@ -135,7 +152,10 @@ const validatePin = async pinToValidate => {
   }
 
   try {
-    await initDatabaseEncrypted({ key: pinToValidate, shouldReset: true });
+    await initDatabaseEncrypted({
+      key: pinToValidate,
+      shouldReset: true
+    });
     return true;
   } catch (error) {
     console.log(error);

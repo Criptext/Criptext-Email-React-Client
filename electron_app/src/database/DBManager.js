@@ -473,7 +473,8 @@ const clearAndFormatDateEmails = emailObjOrArray => {
         : null,
       unsendDate: email.unsentDate
         ? moment(email.unsentDate).format(emailDateFormat)
-        : null
+        : null,
+      isMuted: false
     });
   });
   return isAnEmailArray ? formattedDateEmails : formattedDateEmails[0];

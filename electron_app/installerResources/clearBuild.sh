@@ -1,6 +1,6 @@
 #!/bin/sh
 
-projects="email_composer email_loading email_login email_mailbox"
+projects="email_composer email_loading email_login email_mailbox email_pin"
 
 for project in ${projects}; do
     # Remove previous builds in projects

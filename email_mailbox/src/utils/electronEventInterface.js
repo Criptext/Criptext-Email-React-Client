@@ -931,7 +931,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
           emailId: email.id,
           contactId
         };
-        await createFeedItem([feedItemParams]);
+        await createFeedItem(feedItemParams);
         feedItemAdded = true;
       }
     }

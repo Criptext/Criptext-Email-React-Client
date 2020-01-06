@@ -111,7 +111,7 @@ const show = async ({ firstOpenApp = false }) => {
     mailboxWindow.webContents.on('dom-ready', () => {
       mailboxWindow.show();
       createTrayIcon();
-      callEvent(EVENTS.Up_app, API_TRACKING_EVENT.APP_OPENED);
+      callEvent(EVENTS.API_event_tracking, API_TRACKING_EVENT.APP_OPENED);
       if (firstOpenApp) {
         updateUserData();
         addEventTrack(NUCLEUS_EVENTS.MAILBOX_OPENED);

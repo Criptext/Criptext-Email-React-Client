@@ -91,7 +91,7 @@ class VCSignupWrapper extends Component {
       loadingType: 'signup',
       remoteData
     });
-    closePinWindow();
+    closePinWindow({ forceClose: true });
   };
 
   concat = (array, item) => {

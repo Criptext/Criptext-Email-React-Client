@@ -36,7 +36,7 @@ const openNewComposer = async () => {
   const composer = await createComposerWindow();
   composer.once('ready-to-show', () => {
     composer.show();
-    callEvent(EVENTS.Up_app, API_TRACKING_EVENT.COMPOSER_OPENED);
+    callEvent(EVENTS.API_event_tracking, API_TRACKING_EVENT.COMPOSER_OPENED);
   });
 };
 
@@ -113,7 +113,7 @@ const editDraft = async emailToEdit => {
   globalManager.emailToEdit.set(newComposer.id, emailToEdit);
   newComposer.once('ready-to-show', () => {
     newComposer.show();
-    callEvent(EVENTS.Up_app, API_TRACKING_EVENT.COMPOSER_OPENED);
+    callEvent(EVENTS.API_event_tracking, API_TRACKING_EVENT.COMPOSER_OPENED);
   });
 };
 

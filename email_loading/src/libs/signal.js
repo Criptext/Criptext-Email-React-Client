@@ -1,14 +1,12 @@
 import {
   myAccount,
-  LabelType,
   mySettings,
   isFromStore
 } from './../utils/electronInterface';
 import {
   cleanDatabase,
   createContact,
-  createLabel,
-  createTables,
+  createSettings,
   getAccount,
   getComputerName,
   getKeyBundle,
@@ -16,7 +14,6 @@ import {
   postUser,
   updateAccount,
   getSystemLanguage,
-  getAllLabels,
   getContactByEmails,
   restartAlice
 } from './../utils/ipc';
@@ -44,7 +41,6 @@ const createAccount = async ({
   if (username) {
     await cleanDatabase(username);
   }
-  // await createTables();
   const keybundle = await createAcountAndGetKeyBundle({
     recipientId,
     name,
@@ -84,7 +80,6 @@ const createAccount = async ({
     throw CustomError(string.errors.updateAccountData);
   }
   await setDefaultSettings();
-  await createSystemLabels();
   const email = `${recipientId}@${appDomain}`;
   const [newAccount] = await getAccount();
   await createOwnContact(name, email, newAccount.id);
@@ -104,7 +99,6 @@ const createAcountAndGetKeyBundle = async ({
   const [currentAccount] = await getAccount();
   if (currentAccount && currentAccount.recipientId !== recipientId) {
     await cleanDatabase(currentAccount.recipientId);
-    await createTables();
   }
   const accountRes = await aliceRequestWrapper(() => {
     return createAccountCredentials({
@@ -130,7 +124,6 @@ const createAcountAndGetKeyBundle = async ({
     deviceType,
     ...jsonRes
   };
-
   return keybundle;
 };
 
@@ -163,7 +156,6 @@ const createAccountWithNewDevice = async ({
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
-  await createSystemLabels();
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
   const email = recipientId.includes(`@`)
@@ -180,11 +172,6 @@ const generateAccountAndKeys = async ({
   deviceType,
   deviceId
 }) => {
-  const [currentAccount] = await getAccount();
-  if (currentAccount && currentAccount.recipientId !== recipientId) {
-    await cleanDatabase(currentAccount.recipientId);
-    await createTables();
-  }
   const keybundle = await createAcountAndGetKeyBundle({
     recipientId,
     deviceId,
@@ -227,7 +214,6 @@ const createAccountToDB = async ({
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
-  await createSystemLabels();
   const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
   await createOwnContact(name, email);
   const [newAccount] = await getAccount();
@@ -238,25 +224,12 @@ const createAccountToDB = async ({
 const setDefaultSettings = async () => {
   if (!mySettings.theme) {
     const language = await getSystemLanguage();
+    const data = { language, opened: false, theme: 'light' };
+    await createSettings(data);
     mySettings.initialize({
-      language,
-      opened: false,
-      theme: 'light',
+      ...data,
       isFromStore: isFromStore
     });
-  }
-};
-
-const createSystemLabels = async () => {
-  const prevLabels = await getAllLabels();
-  const prevSystemLabels = prevLabels.map(label => label.type === 'system');
-  if (!prevSystemLabels.length) {
-    const labels = Object.values(LabelType);
-    try {
-      await createLabel(labels);
-    } catch (createLabelsDbError) {
-      throw CustomError(string.errors.saveLabels);
-    }
   }
 };
 

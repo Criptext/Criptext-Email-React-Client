@@ -826,6 +826,7 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
       await Email().destroy({ where: {}, transaction: trx });
       await Label().destroy({ where: { type: 'custom' }, transaction: trx });
       await File().destroy({ where: {}, transaction: trx });
+      await Feeditem().destroy({ where: {}, transaction: trx });
     }
 
     const lineReader = new LineByLineReader(filepath);
@@ -904,8 +905,12 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
               feeditems.push(object);
               if (feeditems.length === FEEDITEM_BATCH) {
                 lineReader.pause();
-                await Feeditem().bulkCreate(feeditems, { transaction: trx });
-                feeditems = [];
+                try {
+                  await Feeditem().bulkCreate(feeditems, { transaction: trx });
+                  feeditems = [];
+                } catch (error) {
+                  console.log(`${Table.FEEDITEM}`, error);
+                }
                 lineReader.resume();
               }
               break;
@@ -990,25 +995,34 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
         })
         .on('error', reject)
         .on('end', async () => {
-          await insertRemainingRows(accounts, Account(), trx);
-          await insertRemainingRows(contacts, Contact(), trx);
-          await insertRemainingRows(labels, Label(), trx);
-          await insertRemainingRows(emails, Email(), trx);
-          await insertRemainingRows(emailContacts, EmailContact(), trx);
-          await insertRemainingRows(emailLabels, EmailLabel(), trx);
-          await insertRemainingRows(feeditems, Feeditem(), trx);
-          await insertRemainingRows(files, File(), trx);
-          await insertRemainingRows(identities, Identitykeyrecord(), trx);
-          await insertRemainingRows(prekeyrecords, Prekeyrecord(), trx);
-          await insertRemainingRows(pendingevents, Pendingevent(), trx);
-          await insertRemainingRows(sessionrecords, Sessionrecord(), trx);
-          await insertRemainingRows(settings, Settings(), trx);
-          await insertRemainingRows(
-            signedprekeyrecords,
-            Signedprekeyrecord(),
-            trx
-          );
-          resolve();
+          try {
+            await insertRemainingRows(accounts, Account(), trx);
+            await insertRemainingRows(contacts, Contact(), trx);
+            await insertRemainingRows(labels, Label(), trx);
+            await insertRemainingRows(emails, Email(), trx);
+            await insertRemainingRows(emailContacts, EmailContact(), trx);
+            await insertRemainingEmailLabelsRows(
+              emailLabels,
+              EmailLabel(),
+              trx
+            );
+            await insertRemainingRows(feeditems, Feeditem(), trx);
+            await insertRemainingRows(files, File(), trx);
+            await insertRemainingRows(identities, Identitykeyrecord(), trx);
+            await insertRemainingRows(prekeyrecords, Prekeyrecord(), trx);
+            await insertRemainingRows(pendingevents, Pendingevent(), trx);
+            await insertRemainingRows(sessionrecords, Sessionrecord(), trx);
+            await insertRemainingRows(settings, Settings(), trx);
+            await insertRemainingRows(
+              signedprekeyrecords,
+              Signedprekeyrecord(),
+              trx
+            );
+            resolve();
+          } catch (error) {
+            const a = new Error(error.name);
+            reject(a);
+          }
         });
     });
   });
@@ -1017,6 +1031,18 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
 const insertRemainingRows = async (rows, Table, trx) => {
   if (rows.length > 0) {
     return await Table.bulkCreate(rows, { transaction: trx });
+  }
+};
+
+const insertRemainingEmailLabelsRows = async (rows, Table, trx) => {
+  if (rows.length > 0) {
+    for (const row of rows) {
+      try {
+        await Table.create(row, { transaction: trx });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 };
 

@@ -108,7 +108,7 @@ EnterPin.propTypes = {
   buttonState: PropTypes.string,
   onClickForgotPin: PropTypes.func,
   onClickOpen: PropTypes.func,
-  pin: PropTypes.string.optional
+  pin: PropTypes.string
 };
 
 export default EnterPin;

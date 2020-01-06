@@ -43,6 +43,11 @@ const encryptDataBase = async () => {
   await deleteFile(outputPath);
 };
 
+const deleteNotEncryptDatabase = async () => {
+  const myOldDBPath = getFilenamePath(process.env.NODE_ENV, 'Criptext.db');
+  await deleteFile(myOldDBPath);
+};
+
 const deleteFile = async filepath => {
   await remove(filepath);
 };
@@ -71,6 +76,7 @@ const getFilenamePath = (node_env, filename) => {
 
 module.exports = {
   checkDatabaseStep,
+  deleteNotEncryptDatabase,
   encryptDataBase,
   existsDatabase
 };

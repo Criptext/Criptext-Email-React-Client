@@ -10,7 +10,9 @@ export const getAlicePort = remote.require('./src/aliceManager').getPort;
 
 export const LabelType = labels;
 
-export const { loadingType, remoteData } = remote.getGlobal('loadingData');
+export const { loadingType, remoteData, shouldResetPIN } = remote.getGlobal(
+  'loadingData'
+);
 
 export const getMailboxGettingEventsStatus = () => {
   return globalManager.isGettingEvents.get();

@@ -103,7 +103,7 @@ Content.propTypes = {
 };
 
 DeleteDevicePopup.propTypes = {
-  confirmButtonState: PropTypes.string,
+  confirmButtonState: PropTypes.number,
   onClickCancel: PropTypes.func,
   onClickConfirm: PropTypes.func,
   step: PropTypes.number,

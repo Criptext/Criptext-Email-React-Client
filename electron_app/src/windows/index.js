@@ -22,6 +22,8 @@ const upStepDBEncryptedWithoutPIN = async () => {
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
     await pinWindow.show();
+  } else {
+    throw new Error('empty not encrytDatabase');
   }
 };
 
@@ -65,6 +67,8 @@ const upApp = async ({ shouldSave, pin }) => {
   if (!existingAccount) {
     const language = await getUserLanguage();
     await initClient();
+    const settings = { isFromStore, language };
+    mySettings.initialize(settings);
     initNucleus({ language });
     createAppMenu();
     loginWindow.show({});

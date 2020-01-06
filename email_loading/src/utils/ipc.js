@@ -10,6 +10,10 @@ export const openMailboxWindow = () => {
   ipc.callMain('open-mailbox', { firstOpenApp: true });
 };
 
+export const openPinWindow = params => {
+  ipc.callMain('open-pin', params);
+};
+
 export const logoutApp = () => {
   ipc.callMain('logout-app');
 };
@@ -100,6 +104,10 @@ export const createPreKeyRecord = async params => {
 
 export const createSessionRecord = async params => {
   return await ipc.callMain('db-create-session-record', params);
+};
+
+export const createSettings = async params => {
+  return await ipc.callMain('db-create-settings', params);
 };
 
 export const createSignedPreKeyRecord = async params => {

@@ -1,9 +1,9 @@
 const DataTransferClient = require('@criptext/data-transfer-client');
 const path = require('path');
 const fs = require('fs');
-const dbExporter = require('./database/dbExporter');
-const { getAccount } = require('./database/DBManager');
-const { databasePath } = require('./database/models');
+const dbExporter = require('./database/DBEexporter');
+const dbManager = require('./database');
+const { databasePath } = require('./database/DBEmodel');
 const { DATA_TRANSFER_URL } = require('./utils/const');
 
 /*  Paths
@@ -44,7 +44,7 @@ const removeDataTransferDirectoryRecursive = pathToDelete => {
 /*  Mathods
 ----------------------------- */
 const checkClient = async () => {
-  const [account] = await getAccount();
+  const [account] = await dbManager.getAccount();
   const token = account ? account.jwt : undefined;
   if (!transferClient.upload || transferClient.token !== token) {
     initializeClient(token);
@@ -133,15 +133,14 @@ const decrypt = async key => {
 const importDatabase = async () => {
   return await dbExporter.importDatabaseFromFile({
     filepath: decryptedFileName,
-    databasePath
+    isStrict: true
   });
 };
 
 const exportDatabase = async () => {
   await checkClient();
   checkDataTransferDirectory();
-  return await dbExporter.exportDatabaseToFile({
-    databasePath,
+  return await dbExporter.exportEncryptDatabaseToFile({
     outputPath: exportedFileName
   });
 };

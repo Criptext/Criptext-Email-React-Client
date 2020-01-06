@@ -3,12 +3,9 @@ import randomcolor from 'randomcolor';
 import SettingsWrapper from './../components/SettingsWrapper';
 import { getCustomeLabels, getSystemLabelToEdit } from './../selectors/labels';
 import { addLabel, updateLabel, removeLabel } from './../actions';
+import { myAccount, mySettings } from '../utils/electronInterface';
 import {
   cleanDataLogout,
-  myAccount,
-  mySettings
-} from '../utils/electronInterface';
-import {
   getUserSettings,
   logout,
   logoutApp,

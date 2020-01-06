@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ScreenSignin, { step } from './ScreenSignin';
 import { closePinWindow, sendPin } from './../utils/ipc';
-import { getPin, remoteData } from './../utils/electronInterface';
+import { getPin } from './../utils/electronInterface';
 
 import VCHOC from './VCHOC';
 
@@ -89,11 +89,7 @@ class VCSigninWrapper extends Component {
       shouldExport: false,
       shouldResetPin: true
     });
-    // openCreateKeysLoadingWindow({
-    //   loadingType: 'signup',
-    //   remoteData
-    // });
-    closePinWindow();
+    closePinWindow({ forceClose: true });
   };
 
   concat = (array, item) => {

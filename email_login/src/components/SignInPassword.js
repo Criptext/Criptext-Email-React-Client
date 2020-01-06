@@ -49,7 +49,7 @@ const renderForm = props => (
       </div>
       <div className="buttons">
         <Button
-          onClick={props.onCLickSignInWithPassword}
+          onClick={props.onClickSignInWithPassword}
           state={props.buttonState}
           text={defineTextButton(props.hasTwoFactorAuth)}
           type={ButtonType.BASIC}
@@ -85,7 +85,7 @@ renderForm.propTypes = {
   hasTwoFactorAuth: PropTypes.bool,
   onChangeField: PropTypes.func,
   onClickForgot: PropTypes.func,
-  onCLickSignInWithPassword: PropTypes.func,
+  onClickSignInWithPassword: PropTypes.func,
   values: PropTypes.object
 };
 

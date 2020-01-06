@@ -2,8 +2,8 @@ import { callMain } from '@criptext/electron-better-ipc/renderer';
 
 /*  Windows call
 ----------------------------- */
-export const closePinWindow = () => {
-  callMain('close-pin');
+export const closePinWindow = params => {
+  callMain('close-pin', params);
 };
 
 export const maximizePinWindow = () => {

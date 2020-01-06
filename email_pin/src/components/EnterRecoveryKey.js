@@ -120,7 +120,6 @@ class EnterRecoveryKey extends Component {
   handleForgotPin = () => {
     if (this.state.recoveryKey) {
       this.handleDecryptPin(this.state.recoveryKey, ERROR_TYPE.INPUT);
-      return;
     } else if (this.state.uploadedFile) {
       const reader = new FileReader();
       reader.addEventListener('loadend', () => {
@@ -128,26 +127,25 @@ class EnterRecoveryKey extends Component {
         this.handleDecryptPin(recoveryKey.trim(), ERROR_TYPE.FILE);
       });
       reader.readAsText(this.state.uploadedFile);
-      return;
+    } else {
+      this.setState({
+        error: {
+          message: page_enter_recovery_key.error.empty,
+          type: ERROR_TYPE.INPUT
+        }
+      });
     }
-
-    this.setState({
-      error: {
-        message: page_enter_recovery_key.error.empty,
-        type: ERROR_TYPE.INPUT
-      }
-    });
   };
 
   handleDecryptPin = async (recoveryKey, source) => {
     try {
       const decryptData = await getRecoveryKey();
-      if (!decryptData) throw 'unable to retrieve data';
+      if (!decryptData) throw new Error('unable to retrieve data');
       const pin = await decryptPin({
         ...decryptData,
         recoveryKey
       });
-      if (!pin) throw 'unable to decrypt pin';
+      if (!pin) throw new Error('unable to decrypt pin');
       this.props.onClickSetPin(pin);
     } catch (ex) {
       this.setState({

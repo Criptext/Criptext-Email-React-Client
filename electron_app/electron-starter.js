@@ -10,7 +10,6 @@ const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { startAlice, closeAlice, checkReachability } = require('./src/aliceManager');
 const { createAppMenu } = require('./src/windows/menu');
-const { API_TRACKING_EVENT } = require('./src/utils/const');
 const {
   showWindows,
   isDev,
@@ -32,13 +31,14 @@ require('./src/ipc/backup.js');
 require('./src/ipc/nucleus.js');
 require('./src/ipc/client.js');
 const ipcUtils = require('./src/ipc/utils.js');
-const { checkDatabaseStep } = require('./src/utils/dataBaseUtils');
-const {initClient} = require('./src/clientManager');
+const { checkDatabaseStep, deleteNotEncryptDatabase } = require('./src/utils/dataBaseUtils');
+const { initClient } = require('./src/clientManager');
 
 globalManager.forcequit.set(false);
 
 async function initApp() {
   const step = await checkDatabaseStep(dbManager);
+  console.log('step', step);
   switch (step) {
     case 1:{
       await startAlice();
@@ -63,6 +63,9 @@ async function initApp() {
       try {
         await upStepDBEncryptedWithoutPIN();
       } catch (ex) {
+        await deleteNotEncryptDatabase();
+        app.relaunch();
+        app.exit(0);
         console.log(ex);
       }
       break;
