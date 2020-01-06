@@ -1125,6 +1125,21 @@ const updateSettings = async ({
   return result;
 };
 
+/* SessionRecord
+----------------------------- */
+const getSessionRecordByRecipientIds = recipientIds => {
+  const sequelize = getDB();
+  return Sessionrecord().findAll({
+    attributes: [
+      'recipientId',
+      [sequelize.fn('GROUP_CONCAT', sequelize.col('deviceId')), 'deviceIds']
+    ],
+    where: { recipientId: recipientIds },
+    group: ['recipientId'],
+    raw: true
+  });
+};
+
 /* Functions
 ----------------------------- */
 const clearAndFormatDateEmails = emailObjOrArray => {
@@ -1299,6 +1314,7 @@ module.exports = {
   getLabelByUuid,
   getLabelsByText,
   getPendingEvents,
+  getSessionRecordByRecipientIds,
   getSettings,
   getTrashExpiredEmails,
   initDatabaseEncrypted: InitDatabaseEncrypted,
