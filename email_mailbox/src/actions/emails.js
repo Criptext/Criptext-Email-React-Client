@@ -18,6 +18,7 @@ import {
   addFiles,
   unsendEmailFiles,
   updateEmailIdsThread,
+  updateBadgeLabels,
   updateThreadsSuccess
 } from './index';
 import { EmailStatus, SocketCommand } from '../utils/const';
@@ -82,18 +83,6 @@ export const muteEmail = (emailId, valueToSet) => {
     try {
       await updateEmail({ id: emailId, isMuted: valueToSet });
       dispatch(muteNotifications(emailId));
-    } catch (e) {
-      // To do
-    }
-  };
-};
-
-export const markEmailUnread = (labelId, threadId, emailId, valueToSet) => {
-  return async dispatch => {
-    try {
-      await updateEmail({ id: emailId, unread: !!valueToSet });
-      dispatch(markEmailUnreadSuccess(emailId, valueToSet));
-      dispatch(updateThreadsSuccess(labelId, [threadId], valueToSet));
     } catch (e) {
       // To do
     }
@@ -197,6 +186,33 @@ export const unsendEmailOnSuccess = (emailId, unsendDate, status) => ({
   unsendDate,
   status
 });
+
+export const updateUnreadEmail = (
+  labelId,
+  threadId,
+  emailId,
+  key,
+  valueToSet
+) => {
+  return async dispatch => {
+    try {
+      const metadataKeys = [key];
+      const eventParams = {
+        cmd: SocketCommand.PEER_EMAIL_READ_UPDATE,
+        params: { metadataKeys, unread: valueToSet ? 1 : 0 }
+      };
+      const { status } = await postPeerEvent(eventParams);
+      if (status === 200) {
+        await updateEmail({ id: emailId, unread: !!valueToSet });
+        dispatch(markEmailUnreadSuccess(emailId, valueToSet));
+        dispatch(updateThreadsSuccess(labelId, [threadId], valueToSet));
+        dispatch(updateBadgeLabels([labelId]));
+      }
+    } catch (e) {
+      // To do
+    }
+  };
+};
 
 export const updateEmailOnSuccess = email => ({
   type: Email.UPDATE,

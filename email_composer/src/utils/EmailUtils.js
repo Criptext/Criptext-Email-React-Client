@@ -330,9 +330,7 @@ const formSignature = () => {
 };
 
 export const formComposerDataWithSignature = () => {
-  const content = formSignature();
-  const htmlBody = content;
-
+  const htmlBody = formSignature();
   return {
     htmlBody
   };

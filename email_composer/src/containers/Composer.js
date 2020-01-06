@@ -72,6 +72,7 @@ class ComposerWrapper extends Component {
     super(props);
     this.emailToEdit = getEmailToEdit();
     this.focusInput = this.defineFocusInput(this.emailToEdit);
+    this.signature = null;
     this.state = {
       bccEmails: [],
       ccEmails: [],
@@ -160,6 +161,7 @@ class ComposerWrapper extends Component {
       };
     } else {
       const composerData = await this.getDefaultComposerWithSignature();
+      this.signature = composerData.htmlBody;
       const status = myAccount.signatureEnabled
         ? Status.ENABLED
         : Status.DISABLED;
@@ -171,7 +173,7 @@ class ComposerWrapper extends Component {
     setCryptoInterfaces(filetoken => {
       return this.state.files.filter(file => file.token === filetoken)[0];
     });
-    await this.setState(state);
+    this.setState(state);
   }
 
   componentWillUnmount() {
@@ -957,7 +959,15 @@ class ComposerWrapper extends Component {
       data['files'] = parseDraftFiles(this.state.files);
     }
     const { emailData } = formOutgoingEmailFromData(data);
-    saveDraftChangesComposerWindow(emailData);
+    const isEmpty = !(
+      emailData.body !== this.signature ||
+      emailData.recipients.to.length ||
+      emailData.recipients.to.cc ||
+      emailData.recipients.bcc.length ||
+      emailData.email.subject
+    );
+    const dataDraft = isEmpty ? { isEmpty } : emailData;
+    saveDraftChangesComposerWindow(dataDraft);
   };
 }
 

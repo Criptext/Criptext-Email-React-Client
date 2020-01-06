@@ -88,13 +88,10 @@ const createComposerWindow = () => {
 
 const isDraftEmpty = composerId => {
   const composerData = globalManager.composerData.get(composerId);
-  if (composerData === {}) {
-    return true;
-  }
-  const { recipients, email } = composerData;
-  if (recipients === undefined || email === undefined) {
-    return true;
-  }
+  if (composerData === {}) return true;
+  const { recipients, email, isEmpty } = composerData;
+  if (isEmpty) return true;
+
   let preview = email.preview;
   const subject = email.subject;
   preview = preview.replace('\n', '');
