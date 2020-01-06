@@ -40,7 +40,6 @@ import {
 import {
   addEmails,
   loadEmails,
-  markEmailUnread,
   muteEmail,
   muteNotifications,
   removeEmails,
@@ -49,7 +48,8 @@ import {
   unsendEmailOnSuccess,
   updateEmailLabels,
   updateEmailOnSuccess,
-  updateEmailsSuccess
+  updateEmailsSuccess,
+  updateUnreadEmail
 } from './emails';
 import {
   addLabels,
@@ -99,7 +99,6 @@ export {
   loadFeedItems,
   loadSuggestions,
   loadThreads,
-  markEmailUnread,
   moveThreads,
   muteEmail,
   muteNotifications,
@@ -144,5 +143,6 @@ export {
   updateSwitchThreads,
   updateThread,
   updateThreadsSuccess,
+  updateUnreadEmail,
   updateUnreadThreads
 };

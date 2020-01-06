@@ -20,11 +20,11 @@ import {
   checkFileDownloaded
 } from './../utils/ipc';
 import {
-  markEmailUnread,
   removeEmails,
   unsendEmail,
   updateEmailLabels,
-  updateEmailOnSuccess
+  updateEmailOnSuccess,
+  updateUnreadEmail
 } from './../actions/index';
 import {
   EmailStatus,
@@ -190,9 +190,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onMarkUnread: ev => {
       ev.stopPropagation();
       const labelId = ownProps.mailboxSelected.id;
-      dispatch(markEmailUnread(labelId, email.threadId, email.id, true)).then(
-        () => ownProps.onBackOption()
-      );
+      dispatch(
+        updateUnreadEmail(labelId, email.threadId, email.id, email.key, true)
+      ).then(() => ownProps.onBackOption());
     },
     onOpenEmailSource: ev => {
       ev.stopPropagation();
