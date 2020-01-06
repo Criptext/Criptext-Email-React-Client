@@ -142,6 +142,7 @@
     "unread": "unread",
     "print_email": "Print",
     "print_thread": "Print All",
+    "report_as_phishing": "Report as Phishing",
     "me": "Me",
     "unsend": "Unsend",
     "email_source": "Show Source",
@@ -233,6 +234,11 @@
     },
     "remove_threads": {
       "description": "Error moving emails. Please try again"
+    },
+    "report_phishing": {
+      "error": {
+        "description": "Unable to report {0}. Try again"
+      }
     },
     "send_open_event": {
       "description": "Failed to send open email. Try again"

@@ -52,7 +52,8 @@ const defineOneThreadSelected = (threads, threadId) => {
   });
   return [
     {
-      threadIdDB: thread ? thread.get('threadId') : null
+      threadIdDB: thread ? thread.get('threadId') : null,
+      fromContactAddresses: thread ? thread.get('fromContactName').toJS() : null
     }
   ];
 };
@@ -63,7 +64,8 @@ const defineSomeThreadsSelected = (threads, itemsChecked) => {
     .toArray()
     .map(thread => ({
       threadIdDB: thread.get('threadId'),
-      emailId: !thread.get('threadId') ? thread.get('id') : null
+      emailId: !thread.get('threadId') ? thread.get('id') : null,
+      fromContactAddresses: thread.get('fromContactName').toJS()
     }));
 };
 

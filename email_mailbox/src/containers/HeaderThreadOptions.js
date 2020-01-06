@@ -8,8 +8,10 @@ import {
 } from '../selectors/threads';
 import * as actions from '../actions/index';
 import HeaderThreadOptionsWrapper from '../components/HeaderThreadOptionsWrapper';
-import { LabelType } from '../utils/electronInterface';
-import { sendPrintThreadEvent } from '../utils/ipc';
+import { LabelType, myAccount } from '../utils/electronInterface';
+import { sendPrintThreadEvent, reportPhishing } from '../utils/ipc';
+import { parseContactRow } from '../utils/EmailUtils';
+import { matchOwnEmail } from '../utils/ContactUtils';
 
 const shouldMarkAsUnread = (threads, itemsChecked) => {
   const hasUnread = threads.find(thread => {
@@ -71,6 +73,23 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const currentLabelId = ownProps.mailboxSelected.id;
       const isTrashCurrentLabelId = currentLabelId === LabelType.trash.id;
       const isSpamLabelIdToAdd = labelId === LabelType.spam.id;
+      if (isSpamLabelIdToAdd) {
+        const spamEmails = threadIds
+          .flatMap(thread => {
+            return thread.fromContactAddresses;
+          })
+          .map(fromAddress => {
+            return parseContactRow(fromAddress).email;
+          })
+          .filter(fromEmail => {
+            return !matchOwnEmail(myAccount.recipientId, fromEmail);
+          });
+        const params = {
+          emails: spamEmails,
+          type: 'spam'
+        };
+        reportPhishing(params);
+      }
       dispatch(
         actions.addMoveLabelIdThreads({
           threadsParams: threadIds,

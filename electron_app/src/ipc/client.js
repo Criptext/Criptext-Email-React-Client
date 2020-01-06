@@ -117,6 +117,8 @@ ipc.answerRenderer('client-remove-device', params =>
   clientManager.removeDevice(params)
 );
 
+ipc.answerRenderer('client-report-phishing', clientManager.reportPhishing);
+
 ipc.answerRenderer('client-resend-confirmation-email', () =>
   clientManager.resendConfirmationEmail()
 );

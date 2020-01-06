@@ -173,6 +173,7 @@ const renderEmailInfoExpand = props => (
               isHidden={props.isHiddenPopOverEmailActions}
               isSpam={props.isSpam}
               isTrash={props.isTrash}
+              isFromMe={props.isFromMe}
               hasBoundary={!!props.email.boundary}
               menuPosition={{ right: '-32px', top: '28px' }}
               onReplyEmail={props.onReplyEmail}
@@ -185,6 +186,7 @@ const renderEmailInfoExpand = props => (
               onToggleMenu={props.onTogglePopOverEmailActions}
               onOpenEmailSource={props.onOpenEmailSource}
               onPrintEmail={props.onPrintEmail}
+              onReportPhishing={props.onReportPhishing}
             />
           </i>
         </div>
@@ -310,6 +312,7 @@ renderEmailInfoExpand.propTypes = {
   onPrintEmail: PropTypes.func,
   onReplyEmail: PropTypes.func,
   onReplyAll: PropTypes.func,
+  onReportPhishing: PropTypes.func,
   onTogglePopOverEmailActions: PropTypes.func,
   onTooglePopOverEmailMoreInfo: PropTypes.func
 };

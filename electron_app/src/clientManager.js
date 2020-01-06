@@ -419,6 +419,13 @@ const removeDevice = async params => {
     : await checkExpiredSession(res, removeDevice, params);
 };
 
+const reportPhishing = async params => {
+  const res = await client.reportContact(params);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, reportPhishing, params);
+};
+
 const resendConfirmationEmail = async () => {
   const res = await client.resendConfirmationEmail();
   return res.status === 200
@@ -600,6 +607,7 @@ module.exports = {
   postUser,
   removeAvatar,
   removeDevice,
+  reportPhishing,
   resendConfirmationEmail,
   resetPassword,
   sendRecoveryCode,
