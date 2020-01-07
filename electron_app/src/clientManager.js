@@ -205,6 +205,10 @@ const findKeyBundles = async params => {
     : await checkExpiredSession(res, findKeyBundles, params);
 };
 
+const generateEvent = async event => {
+  await client.generateUserEvent(event);
+};
+
 const getDataReady = async () => {
   const res = await client.getDataReady();
   return res.status === 200
@@ -583,6 +587,7 @@ module.exports = {
   deleteMyAccount,
   findDevices,
   findKeyBundles,
+  generateEvent,
   getDataReady,
   getEmailBody,
   getEvents,

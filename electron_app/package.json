@@ -150,7 +150,7 @@
     "electron-notarize": "^0.1.1"
   },
   "dependencies": {
-    "@criptext/api": "^0.15.22",
+    "@criptext/api": "^0.15.23",
     "@criptext/data-transfer-client": "^0.1.1",
     "@criptext/electron-better-ipc": "^0.7.0-rc1-0.2",
     "@criptext/electron-push-receiver": "^2.1.2-rc1",

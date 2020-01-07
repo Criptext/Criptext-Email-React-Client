@@ -63,6 +63,8 @@ async function initApp() {
       wsClient.start(myAccount);
       createAppMenu();
       mailboxWindow.show({ firstOpenApp: true });
+      const clientManager = require('./src/clientManager');
+      clientManager.generateEvent(24)
     } else {
       const language = await getUserLanguage();
       initNucleus({language});

@@ -3,6 +3,7 @@ const { BrowserWindow } = require('electron');
 const myAccount = require('../Account');
 const { composerUrl } = require('./../window_routing');
 const dbManager = require('./../DBManager');
+const clientManager = require('../clientManager');
 const globalManager = require('./../globalManager');
 const fileUtils = require('../utils/FileUtils');
 const { APP_DOMAIN } = require('../utils/const');
@@ -17,6 +18,8 @@ const composerSize = {
   minWidth: 785,
   minHeight: 340
 };
+
+const OPEN_COMPOSER_EVENT = 23;
 
 const iconPath = path.join(
   __dirname,
@@ -35,6 +38,7 @@ const openNewComposer = async () => {
   const composer = await createComposerWindow();
   composer.once('ready-to-show', () => {
     composer.show();
+    clientManager.generateEvent(OPEN_COMPOSER_EVENT);
   });
 };
 
@@ -111,6 +115,7 @@ const editDraft = async emailToEdit => {
   globalManager.emailToEdit.set(newComposer.id, emailToEdit);
   newComposer.once('ready-to-show', () => {
     newComposer.show();
+    clientManager.generateEvent(OPEN_COMPOSER_EVENT);
   });
 };
 
