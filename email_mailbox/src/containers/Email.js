@@ -7,17 +7,21 @@ import {
   defineLargeTime,
   defineUnsentText
 } from './../utils/TimeUtils';
+import Messages from './../data/message';
+import { MessageType } from './../components/Message';
 import { getTwoCapitalLetters, hasAnySubstring } from './../utils/StringUtils';
 import { matchOwnEmail } from './../utils/ContactUtils';
 import { addCollapseDiv } from './../utils/EmailUtils';
 import randomcolor from 'randomcolor';
 import { LabelType, myAccount, mySettings } from './../utils/electronInterface';
+import { Event, sendMailboxEvent } from './../utils/electronEventInterface';
 import {
   openFilledComposerWindow,
   sendPrintEmailEvent,
   sendOpenEmailSource,
   downloadFileInFileSystem,
-  checkFileDownloaded
+  checkFileDownloaded,
+  reportPhishing
 } from './../utils/ipc';
 import {
   removeEmails,
@@ -126,6 +130,26 @@ const defineInjectedSrc = imgPath => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const email = ownProps.email;
   const isLast = ownProps.staticOpen;
+  const isTrash = email.labelIds.includes(LabelType.trash.id);
+
+  const onMarkAsSpam = () => {
+    const labelsAdded = [LabelType.spam.text];
+    const labelsRemoved = isTrash ? [LabelType.trash.text] : [];
+    const labelId = ownProps.mailboxSelected.id;
+    dispatch(
+      updateEmailLabels({
+        labelId,
+        email,
+        labelsAdded,
+        labelsRemoved
+      })
+    ).then(() => {
+      if (ownProps.count === 1) {
+        ownProps.onBackOption();
+      }
+    });
+  };
+
   return {
     onEditDraft: () => {
       const key = email.key;
@@ -171,21 +195,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onMarkAsSpam: ev => {
       ev.stopPropagation();
-      const labelsAdded = [LabelType.spam.text];
-      const labelsRemoved = [];
-      const labelId = ownProps.mailboxSelected.id;
-      dispatch(
-        updateEmailLabels({
-          labelId,
-          email,
-          labelsAdded,
-          labelsRemoved
-        })
-      ).then(() => {
-        if (ownProps.count === 1) {
-          ownProps.onBackOption();
-        }
-      });
+      const params = {
+        emails: [email.from[0].email],
+        type: 'spam'
+      };
+      reportPhishing(params);
+      onMarkAsSpam();
     },
     onMarkUnread: ev => {
       ev.stopPropagation();
@@ -226,6 +241,27 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         keyEmailToRespond,
         type: composerEvents.REPLY_ALL
       });
+    },
+    onReportPhishing: async ev => {
+      ev.stopPropagation();
+      const params = {
+        emails: [email.from[0].email],
+        type: 'phishing'
+      };
+      const result = await reportPhishing(params);
+      if (result.statusCode !== 200) {
+        const messageData = {
+          ...Messages.error.reportPhishing,
+          description: string.formatString(
+            `${Messages.error.reportPhishing.description}`,
+            email.from[0].email
+          ),
+          type: MessageType.ERROR
+        };
+        sendMailboxEvent(Event.DISPLAY_MESSAGE, messageData);
+        return;
+      }
+      onMarkAsSpam();
     },
     onUnsendEmail: () => {
       const contactIds = [...email.toIds, ...email.ccIds, ...email.bccIds];

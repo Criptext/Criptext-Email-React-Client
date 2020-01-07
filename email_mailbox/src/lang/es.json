@@ -142,6 +142,7 @@
     "unread": "no leídos",
     "print_email": "Imprimir",
     "print_thread": "Imprimir todo",
+    "report_as_phishing": "Reportar como Phishing",
     "me": "Yo",
     "unsend": "Retractar",
     "email_source": "Mostrar Original",
@@ -233,6 +234,11 @@
     },
     "remove_threads": {
       "description": "Error al mover correos. Inténtalo de nuevo"
+    },
+    "report_phishing": {
+      "error": {
+        "description": "No fue posible reportar a {0}. Inténtalo de nuevo"
+      }
     },
     "send_open_event": {
       "description": "Error al enviar notificación de leído. Inténtalo de nuevo"

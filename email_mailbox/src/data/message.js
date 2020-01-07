@@ -150,6 +150,10 @@ const messagesContent = {
       priority: messagePriorities.MEDIUM,
       description: string.messages.remove_threads.description
     },
+    reportPhishing: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.report_phishing.error.description
+    },
     resetPasswordSendLink: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.reset_password_send_link.error.description

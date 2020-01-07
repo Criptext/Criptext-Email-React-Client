@@ -244,12 +244,12 @@ export const updateEmailLabels = ({
           await createEmailLabel(emailLabelsToAdd);
         }
         if (labelsRemoved.length) {
-          const removedLabels = await getLabelsByText(labelsAdded);
+          const removedLabels = await getLabelsByText(labelsRemoved);
           const removedLabelsIds = removedLabels.map(label => label.id);
-          const emailLabelsToRemove = formEmailLabel({
-            emailId: email.id,
-            labels: removedLabelsIds
-          });
+          const emailLabelsToRemove = {
+            emailIds: [email.id],
+            labelIds: removedLabelsIds
+          };
 
           await deleteEmailLabel(emailLabelsToRemove);
         }

@@ -182,6 +182,10 @@ export const removeDevice = async params => {
   return await ipc.callMain('client-remove-device', params);
 };
 
+export const reportPhishing = async params => {
+  return await ipc.callMain('client-report-phishing', params);
+};
+
 export const resendConfirmationEmail = async () => {
   return await ipc.callMain('client-resend-confirmation-email');
 };

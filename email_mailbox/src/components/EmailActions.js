@@ -87,12 +87,24 @@ const EmailActions = props => {
             <span>{string.mailbox.email_source}</span>
           </li>
         )}
+        {!props.isFromMe &&
+          !props.isSpam && (
+            <li
+              onClick={ev => {
+                props.onReportPhishing(ev);
+                props.onToggleMenu(ev);
+              }}
+            >
+              <span>{string.mailbox.report_as_phishing}</span>
+            </li>
+          )}
       </ul>
     </div>
   );
 };
 
 EmailActions.propTypes = {
+  isFromMe: PropTypes.bool,
   isSpam: PropTypes.bool,
   isTrash: PropTypes.bool,
   hasBoundary: PropTypes.bool,
@@ -105,6 +117,7 @@ EmailActions.propTypes = {
   onPrintEmail: PropTypes.func,
   onReplyAll: PropTypes.func,
   onReplyEmail: PropTypes.func,
+  onReportPhishing: PropTypes.func,
   onToggleMenu: PropTypes.func
 };
 
