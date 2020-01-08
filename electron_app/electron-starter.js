@@ -10,6 +10,7 @@ const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
 const { startAlice, closeAlice, checkReachability } = require('./src/aliceManager');
 const { createAppMenu } = require('./src/windows/menu');
+const { API_TRACKING_EVENT } = require('./src/utils/const');
 const {
   showWindows, 
   isDev, 
@@ -64,7 +65,7 @@ async function initApp() {
       createAppMenu();
       mailboxWindow.show({ firstOpenApp: true });
       const clientManager = require('./src/clientManager');
-      clientManager.generateEvent(24)
+      clientManager.generateEvent(API_TRACKING_EVENT.APP_OPENED);
     } else {
       const language = await getUserLanguage();
       initNucleus({language});
