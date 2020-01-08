@@ -21,7 +21,13 @@ if (isDevelopment) {
   console.log('\x1b[33m%s\x1b[0m', `\n\t Mode: ${process.env.NODE_ENV}\n`);
 }
 
+const API_TRACKING_EVENT = {
+  COMPOSER_OPENED: 23,
+  APP_OPENED: 24
+};
+
 module.exports = {
+  API_TRACKING_EVENT,
   FILE_SERVER_APP_ID,
   FILE_SERVER_KEY,
   APP_DOMAIN: isDevelopment ? process.env.DEV_APP_DOMAIN : PROD_APP_DOMAIN,
