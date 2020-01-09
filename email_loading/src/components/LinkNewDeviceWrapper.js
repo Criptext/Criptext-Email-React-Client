@@ -49,6 +49,13 @@ const LINK_DEVICE_EMAIL_ADDRESS = remoteData.recipientId
     : `${remoteData.recipientId}@${appDomain}`
   : '';
 
+const getRecipientIdFromRemoteData = () => {
+  const { recipientId } = remoteData;
+  return recipientId.includes(`@${appDomain}`)
+    ? recipientId.split('@')[0]
+    : recipientId;
+};
+
 class LoadingWrapper extends Component {
   constructor(props) {
     super(props);
@@ -71,10 +78,10 @@ class LoadingWrapper extends Component {
     this.setState({ message: messages.sendingKeys, pauseAt: 10 }, async () => {
       this.incrementPercentage();
       await setTimeout(async () => {
-        const { name, recipientId, deviceType } = remoteData;
+        const { name, deviceType } = remoteData;
         await this.generateAccountAndKeys({
           deviceType,
-          recipientId,
+          recipientId: getRecipientIdFromRemoteData(),
           deviceId: 0,
           name
         });
@@ -126,6 +133,7 @@ class LoadingWrapper extends Component {
       async () => {
         try {
           this.incrementPercentage();
+          await cleanKeys();
           const keybundle = await signal.generateAccountAndKeys(params);
           if (!keybundle) {
             await cleanKeys();
@@ -157,18 +165,11 @@ class LoadingWrapper extends Component {
             this.linkingDevicesThrowError();
             return;
           }
-          let isRecipientApp = false;
-          let username = remoteData.recipientId;
-          if (remoteData.recipientId.includes(`@${appDomain}`)) {
-            isRecipientApp = true;
-            [username] = remoteData.recipientId.split('@');
-          }
           const newAccountData = {
             ...remoteData,
             ...accountData,
-            recipientId: username,
-            deviceId: remoteData.deviceId,
-            isRecipientApp
+            recipientId: getRecipientIdFromRemoteData(),
+            deviceId: remoteData.deviceId
           };
           await signal.createAccountToDB(newAccountData);
           this.setState(
@@ -274,11 +275,10 @@ class LoadingWrapper extends Component {
       async () => {
         this.incrementPercentage();
         const MESSAGE_PRE_KEY = 3;
-        const { recipientId } = remoteData;
         try {
           const decryptedKey = await signal.decryptKey({
             text: key,
-            recipientId,
+            recipientId: getRecipientIdFromRemoteData(),
             deviceId: authorizerId,
             messageType: MESSAGE_PRE_KEY
           });
