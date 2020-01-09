@@ -138,8 +138,7 @@ const createAccountWithNewDevice = async ({
   recipientId,
   deviceId,
   name,
-  deviceType,
-  isRecipientApp
+  deviceType
 }) => {
   const keybundle = await createAcountAndGetKeyBundle({
     recipientId,
@@ -169,7 +168,9 @@ const createAccountWithNewDevice = async ({
   await createSystemLabels();
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
-  const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
+  const email = recipientId.includes(`@`)
+    ? recipientId
+    : `${recipientId}@${appDomain}`;
   await createOwnContact(name, email, newAccount.id);
   await setDefaultSettings();
   return true;
