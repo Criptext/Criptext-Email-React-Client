@@ -2,6 +2,7 @@ const { SERVER_URL } = require('./utils/const');
 const globalManager = require('./globalManager');
 const mailboxWindow = require('./windows/mailbox');
 const { processEventsQueue } = require('./eventQueueManager');
+const { restartSocketSameJWT } = require('./socketClient');
 const reconnectDelay = 2000;
 const NETWORK_STATUS = {
   ONLINE: 'online',
@@ -12,6 +13,7 @@ const normalPingDelayMs = 15000;
 const failedPingDelayMs = 5000;
 let pingFailedCounter = 0;
 let reachabilityTask = null;
+let hasFailed = false;
 let checkingConnectionToServer = false;
 
 const setConnectionStatus = networkStatus => {
@@ -57,7 +59,12 @@ const checkAlive = async force => {
     if (prevNetworkStatus !== NETWORK_STATUS.ONLINE) {
       setConnectionStatus(NETWORK_STATUS.ONLINE);
     }
+    if (hasFailed) {
+      hasFailed = false;
+      restartSocketSameJWT();
+    }
   } catch (ex) {
+    hasFailed = true;
     pingFailedCounter++;
     delayTime = failedPingDelayMs;
     if (pingFailedCounter > 3 && prevNetworkStatus !== NETWORK_STATUS.OFFLINE) {

@@ -1,6 +1,6 @@
 const { client: WebSocketClient } = require('websocket');
 const { SOCKET_URL } = require('./utils/const');
-let client, reconnect, messageListener, socketConnection;
+let client, reconnect, messageListener, socketConnection, lastJWT;
 let shouldReconnect = true;
 const reconnectDelay = 2000;
 
@@ -21,11 +21,9 @@ const disconnect = () => {
 const start = ({ jwt }) => {
   client = new WebSocketClient();
   client.connect(`${SOCKET_URL}?token=${jwt}`, 'criptext-protocol');
-
+  lastJWT = jwt;
   client.on('connectFailed', error => {
-    if (shouldReconnect) {
-      reconnect();
-    }
+    reconnect();
     log(error);
   });
 
@@ -34,7 +32,7 @@ const start = ({ jwt }) => {
     log('Socket connection opened');
 
     connection.on('error', error => {
-      reconnect();
+      restartSocketSameJWT();
       log(error);
     });
     connection.on('close', () => {
@@ -43,6 +41,11 @@ const start = ({ jwt }) => {
     connection.on('message', data => {
       const message = JSON.parse(data.utf8Data);
       messageListener(message);
+    });
+    connection.socket.setTimeout(30 * 1000);
+    connection.socket.on('timeout', function() {
+      log('Socket timeout');
+      restartSocketSameJWT();
     });
   });
 
@@ -67,6 +70,7 @@ process.on('exit', () => {
 });
 
 const restartSocket = ({ jwt }) => {
+  lastJWT = jwt;
   shouldReconnect = false;
   disconnect();
   client = null;
@@ -76,9 +80,15 @@ const restartSocket = ({ jwt }) => {
   }, reconnectDelay * 2);
 };
 
+const restartSocketSameJWT = () => {
+  if (!shouldReconnect) return;
+  restartSocket({ jwt: lastJWT });
+};
+
 module.exports = {
   start,
   setMessageListener,
   disconnect,
-  restartSocket
+  restartSocket,
+  restartSocketSameJWT
 };
