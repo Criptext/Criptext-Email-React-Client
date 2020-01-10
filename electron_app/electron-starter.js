@@ -41,7 +41,7 @@ async function initApp() {
     console.log(ex);
   }
 
-  await startAlice();
+  await startAlice(true);
   await checkReachability();
 
   const [existingAccount] = await dbManager.getAccount();

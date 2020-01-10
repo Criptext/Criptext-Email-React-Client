@@ -75,7 +75,7 @@ const getPassword = () => {
   return password;
 };
 
-const startAlice = async () => {
+const startAlice = async onAppOpened => {
   aliceStartTimeout = null;
   if (!alice) {
     const myPort = await portscanner.findAPortNotInUse(8085);
@@ -103,7 +103,7 @@ const startAlice = async () => {
         `Unable to initialize encryption service. ${data}`
       );
       console.log(`-----alice-----\nError:\n${data}\n -----end-----`);
-      app.quit();
+      if (onAppOpened) app.quit();
     });
     alice.stdout.setEncoding('utf8');
     alice.stdout.on('data', data => {
@@ -116,7 +116,7 @@ const startAlice = async () => {
         return;
       }
       aliceStartTimeout = setTimeout(() => {
-        startAlice();
+        startAlice(onAppOpened);
       }, 500);
     });
 
