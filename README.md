@@ -66,6 +66,19 @@ CSC_IDENTITY_AUTO_DISCOVERY=true
 DEV_APP_DOMAIN=criptext.com
 ```
 
+Finally, you must build Alice. Alice is the signal protocol encryption service for desktop apps. You must build and run it to use the criptext electron client. For Linux or Mac Os systems follow the following steps to compile it. If you use Windows please refer to [https://github.com/Criptext/Alice-Windows](https://github.com/Criptext/Alice-Windows) instead.
+
+Steps to compile and run alice on Linux or MacOs:
+- enter db_interface
+- run bash ${your_os}_setup.sh
+- after completed, go to signal_interface folder
+- run bash ${your_os}/${your_os}_install_deps.sh
+- generate a binding gyp file. The easiest way is to just copy the ${your-os}/${your_os}_binding.gyp file to the root signal_interface folder and rename it as binding.gyp there.
+- Ensure that all the dependencies in the binding.gyp file exist in those paths. In case of something is wrong, feel free to modify the file.
+- install node-gyp (npm install -g node-gyp or yarn global add node-gyp) with root permissions.
+- run node-gyp configure build.
+
+That would install and run Alice in your system.
 
 ## Contributing Code
 
