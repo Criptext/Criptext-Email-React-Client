@@ -64,11 +64,17 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
             const uint8_t *messageData = reinterpret_cast<const uint8_t*>(textFromB64);
             signal_message *incoming_message = 0;
             signal_message_deserialize(&incoming_message, messageData, decode_len, global_context);
+            if (incoming_message <= 0) {
+                return -2;
+            }
             result = session_cipher_decrypt_signal_message(session_cipher, incoming_message, 0, &plainMessage);
         } else {
             const uint8_t *preKeyMessageData = reinterpret_cast<const uint8_t*>(textFromB64);
             pre_key_signal_message *incoming_message = 0;
             pre_key_signal_message_deserialize(&incoming_message, preKeyMessageData, decode_len, global_context);
+            if (incoming_message <= 0) {
+                return -2;
+            }
             result = session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
         }
 
