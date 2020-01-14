@@ -57,9 +57,9 @@ const Composer = props => (
         }
       />
     )}
-    {(props.status === Status.WAITING || props.isLinkingDevices) && (
-      <div className="composer-disable" />
-    )}
+    {(props.status === Status.WAITING ||
+      props.status === Status.INITIALIZING ||
+      props.isLinkingDevices) && <div className="composer-disable" />}
   </div>
 );
 

@@ -20,6 +20,7 @@ const Body = props => (
       onFocusTextEditor={props.onFocusTextEditor}
       onPauseUploadFile={props.onPauseUploadFile}
       onResumeUploadFile={props.onResumeUploadFile}
+      status={props.status}
     />
     <Control
       onClickDiscardDraft={props.onClickDiscardDraft}
