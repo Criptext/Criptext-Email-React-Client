@@ -111,3 +111,41 @@ export const byteArrayToBase64 = bytearray => {
   const wordArray = byteArrayToWordArray(bytearray);
   return wordArrayToBase64(wordArray);
 };
+
+/* Recovery Key
+--------------------*/
+
+export const AesEncrypt = (data, keyArray, ivArray) => {
+  const encrypted = CryptoJS.AES.encrypt(data, keyArray, { iv: ivArray });
+  return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+};
+
+const generatePassword = () => {
+  return (
+    Math.random()
+      .toString(36)
+      .slice(-8) +
+    Math.random()
+      .toString(36)
+      .slice(-8) +
+    Math.random()
+      .toString(36)
+      .slice(-8)
+  );
+};
+
+export const encryptPin = async pincode => {
+  const recoveryKey = generatePassword();
+  const { salt, iv, key } = generateKeyAndIv(recoveryKey);
+  const content = await AesEncrypt(
+    pincode,
+    base64ToWordArray(key),
+    base64ToWordArray(iv)
+  );
+  return {
+    salt: base64ToByteArray(salt),
+    iv: base64ToByteArray(iv),
+    encryptedPin: base64ToByteArray(content),
+    recoveryKey
+  };
+};

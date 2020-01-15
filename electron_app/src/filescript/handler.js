@@ -15,6 +15,7 @@ const convertFilesInFolder = async (
   password,
   oldPassword
 ) => {
+  let failureCounter = 0;
   try {
     const files = await readDir(inputPath);
     for (let i = 0; i < files.length; i++) {
@@ -22,6 +23,7 @@ const convertFilesInFolder = async (
       const inPath = path.join(inputPath, file);
       const outPath = path.join(outputPath, file);
       const stat = await fileStat(inPath);
+
       if (!fs.existsSync(outputPath)) {
         fs.mkdirSync(outputPath);
       }
@@ -32,12 +34,15 @@ const convertFilesInFolder = async (
         if (stat.size === 0) {
           fs.closeSync(fs.openSync(outPath, 'w'));
         } else if (oldPassword) {
-          await decryptEncryptStreamFile({
+          const result = await decryptEncryptStreamFile({
             inputFile: inPath,
             outputFile: outPath,
             password,
             oldPassword
           });
+          if (!result) failureCounter++;
+          if (failureCounter >= 10)
+            throw new Error('Unable to handle 10 or more email bodies');
         } else {
           await encryptStreamFile({
             inputFile: inPath,
@@ -59,12 +64,11 @@ const createFlagFile = path => {
   writer.write('ready');
 };
 
-const start = async () => {
-  var args = process.argv.slice(2);
-  const inputPath = args[0];
-  const outputPath = args[1];
-  const password = args[2];
-  const oldPassword = args[3];
+const start = async ({ inPath, outPath, pass, oldPass }) => {
+  const inputPath = inPath;
+  const outputPath = outPath;
+  const password = pass;
+  const oldPassword = oldPass;
 
   const success = await convertFilesInFolder(
     inputPath,
@@ -73,12 +77,17 @@ const start = async () => {
     oldPassword
   );
   if (!success) {
+    await remove(outPath);
     sendMessage('abort');
+    return false;
   }
   createFlagFile(`${inputPath}/../flag.txt`);
   await remove(inputPath);
   fs.renameSync(outputPath, inputPath);
   await remove(`${inputPath}/../flag.txt`);
+  return true;
 };
 
-start();
+module.exports = {
+  start
+};

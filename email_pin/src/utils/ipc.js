@@ -32,3 +32,7 @@ export const storeRecoveryKey = params =>
   callMain('store-recovery-key', params);
 
 export const getRecoveryKey = params => callMain('get-recovery-key', params);
+
+export const startResetKey = async () => {
+  return await callMain('reset-key-start');
+};

@@ -53,6 +53,7 @@ const EDITING_MODES = {
 const SETTINGS_POPUP_TYPES = {
   CHANGE_PASSWORD: 'change-password',
   CHANGE_RECOVERY_EMAIL: 'change-recovery-email',
+  CHANGE_SECURITY_PIN: 'change-security-pin',
   DELETE_ACCOUNT: 'delete-account',
   EXPORT_BACKUP: 'export-backup',
   LOGOUT: 'logout',
@@ -202,6 +203,7 @@ class SettingAccountWrapper extends Component {
         onClickChangePasswordButton={this.handleClickChangePasswordButton}
         onClickChangePasswordInputType={this.handleClickChangePasswordInputType}
         onClickChangeRecoveryEmail={this.handleClickChangeRecoveryEmail}
+        onClickChangeSecurityPin={this.handleClickChangeSecurityPin}
         recoveryEmail={this.state.recoveryEmailParams.recoveryEmail}
         recoveryEmailConfirmed={
           this.state.recoveryEmailParams.recoveryEmailConfirmed
@@ -441,6 +443,13 @@ class SettingAccountWrapper extends Component {
     this.setState({
       isHiddenSettingsPopup: false,
       settingsPopupType: SETTINGS_POPUP_TYPES.CHANGE_RECOVERY_EMAIL
+    });
+  };
+
+  handleClickChangeSecurityPin = () => {
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPopupType: SETTINGS_POPUP_TYPES.CHANGE_SECURITY_PIN
     });
   };
 

@@ -31,6 +31,15 @@ const readDir = path => {
   });
 };
 
+const copyFile = (inPath, outPath) => {
+  return new Promise((resolve, reject) => {
+    fs.copyFile(inPath, outPath, err => {
+      if (err) reject();
+      resolve();
+    });
+  });
+};
+
 const readBytesSync = (filePath, filePosition, bytesToRead) => {
   const buf = Buffer.alloc(bytesToRead, 0);
   let fd;
@@ -73,12 +82,14 @@ const decryptEncryptStreamFile = ({
       DEFAULT_SALT_LENGTH,
       DEFAULT_IV_LENGTH
     );
+    if (!fileSalt || !fileIv) {
+      return resolve();
+    }
 
     const result = generateKeyAndIvFromPassword(oldPassword, fileSalt);
     const oldFileKey = result.key;
     const { key } = generateKeyAndIvFromPassword(password, fileSalt);
     const fileKey = key;
-
     const reader = fs.createReadStream(inputFile, {
       start: DEFAULT_SALT_LENGTH + DEFAULT_IV_LENGTH,
       highWaterMark: STREAM_SIZE
@@ -90,7 +101,12 @@ const decryptEncryptStreamFile = ({
 
     reader
       .pipe(crypto.createDecipheriv(CIPHER_ALGORITHM, oldFileKey, fileIv))
+      .on('error', async () => {
+        await copyFile(inputFile, outputFile);
+        resolve();
+      })
       .pipe(crypto.createCipheriv(CIPHER_ALGORITHM, fileKey, fileIv))
+      .on('error', reject)
       .pipe(writer)
       .on('error', reject)
       .on('finish', resolve);

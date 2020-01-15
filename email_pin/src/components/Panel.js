@@ -4,6 +4,7 @@ import VCExportDatabaseWrapper from './VCExportDatabaseWrapper';
 import VCNewPinWrapper from './VCNewPinWrapper';
 import VCSigninWrapper from './VCSigninWrapper';
 import VCSignupWrapper from './VCSignupWrapper';
+import VCResetKeyWrapper from './VCResetKeyWrapper';
 
 const Panel = props => <div className="wrapper">{renderVC(props.type)}</div>;
 
@@ -15,6 +16,8 @@ const renderVC = type => {
       return <VCSigninWrapper />;
     case 'signup':
       return <VCSignupWrapper />;
+    case 'reset':
+      return <VCResetKeyWrapper />;
     default:
       return <VCExportDatabaseWrapper />;
   }

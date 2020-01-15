@@ -4,6 +4,7 @@ const fileUtils = require('./../utils/FileUtils');
 const myAccount = require('../../src/Account');
 const globalManager = require('../globalManager');
 const { APP_DOMAIN } = require('../utils/const');
+const rekeyHandler = require('../rekeyHandler');
 
 const getUsername = () => {
   if (!Object.keys(myAccount)) return '';
@@ -171,4 +172,12 @@ ipc.answerRenderer('upgrade-account', async ({ account, keyBundle }) => {
   globalManager.needsUpgrade.disable();
   globalManager.windowsEvents.enable();
   return true;
+});
+
+ipc.answerRenderer('reset-key-initialize', params => {
+  rekeyHandler.initialize(params);
+});
+
+ipc.answerRenderer('reset-key-start', () => {
+  rekeyHandler.start();
 });

@@ -100,6 +100,10 @@ export const showNotificationApp = ({ title, message, threadId }) => {
   ipc.callMain('show-notification', { title, message, threadId });
 };
 
+export const startRekey = params => {
+  ipc.callMain('reset-key-initialize', params);
+};
+
 export const throwError = error => {
   ipc.callMain('throwError', error);
 };
@@ -137,6 +141,10 @@ export const checkFileDownloaded = async ({ filename, metadataKey, type }) => {
     metadataKey,
     type
   });
+};
+
+export const storeRecoveryKey = async params => {
+  return await ipc.callMain('store-recovery-key', params);
 };
 
 /* Criptext Client

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import PopupHOC from './PopupHOC';
 import ChangePasswordPopup from './ChangePasswordPopup';
 import ChangeRecoveryEmailPopup from './ChangeRecoveryEmailPopup';
+import ChangeSecurityPinPopup from './ChangeSecurityPinPopup';
 import DeleteAccountPopupWrapper from './DeleteAccountPopupWrapper';
 import ExportBackupPopupWrapper from './ExportBackupPopupWrapper';
 import ManualSyncPopup from './ManualSyncPopup';
@@ -14,6 +15,7 @@ import { SETTINGS_POPUP_TYPES } from './SettingAccountWrapper';
 
 const Changepasswordpopup = PopupHOC(ChangePasswordPopup);
 const Changerecoveryemailpopup = PopupHOC(ChangeRecoveryEmailPopup);
+const Changesecuritypinpopup = PopupHOC(ChangeSecurityPinPopup);
 const Twofactorauthenabledpopup = PopupHOC(TwoFactorAuthEnabledPopup);
 const Deleteaccountpopup = PopupHOC(DeleteAccountPopupWrapper);
 const Exportbackuppopup = PopupHOC(ExportBackupPopupWrapper);
@@ -26,6 +28,7 @@ const SettingsPopup = props => {
   const {
     CHANGE_PASSWORD,
     CHANGE_RECOVERY_EMAIL,
+    CHANGE_SECURITY_PIN,
     DELETE_ACCOUNT,
     EXPORT_BACKUP,
     MANUAL_SYNC,
@@ -90,6 +93,16 @@ const SettingsPopup = props => {
           recoveryEmailPopupInputPassword={
             props.changeRecoveryEmailPopupParams.recoveryEmailPasswordInput
           }
+          theme={'dark'}
+        />
+      );
+    }
+    case CHANGE_SECURITY_PIN: {
+      return (
+        <Changesecuritypinpopup
+          isHidden={props.isHidden}
+          onTogglePopup={props.onClosePopup}
+          popupPosition={{ left: '45%', top: '45%' }}
           theme={'dark'}
         />
       );

@@ -558,6 +558,34 @@
       "header": "Restoring",
       "cancelLabel": "Cancel"
     },
+    "security_pin": {
+      "new_pin": {
+        "title": "Create a New Security PIN",
+        "description": "A PIN is the secure way to access your encrypted email",
+        "new_pin": "New PIN",
+        "confirm_pin": "Confirm PIN",
+        "button": "Okay",
+        "error": "PIN codes do not match!"
+      },
+      "recovery_key": {
+        "title": "Your new recovery key",
+        "description": "If you forget your PIN, this code will help you to get back in. Save it in a place you will remember",
+        "copy_code": "Copy Recovery Key",
+        "copy": "Copy",
+        "or": "or",
+        "download": "download",
+        "it_in_a_file": "it in a file",
+        "button": "Okay"
+      },
+      "setup_complete": {
+        "title": "PIN setup complete!",
+        "checkbox": {
+          "title": "Don't require PIN on startup",
+          "description": "Your PIN will be saved in your keychain so you don't have to enter it every time you start Criptext."  
+        },
+        "button": "Done"
+      }
+    },
     "set_reply_to": {
       "title": "Set Reply To Email",
       "paragraph": "When someone replies to one of your emails, they will reply to the address set here.",
@@ -708,6 +736,10 @@
     "reply_to_email": "Reply To",
     "reply_to_not_set": "When someone replies to one of your emails, they will reply to the address set here.",
     "resend_link": "resend link",
+    "security_pin": {
+      "label": "Security Pin",
+      "description": "Files are encrypted so no other apps can access them"
+    },
     "see_more": "See More",
     "set_email": "Set Email",
     "show_in_label_list": "Show in label list",
