@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import EditorWrapper from './EditorWrapper';
 import AttachmentWrapper from './AttachmentWrapper';
 import string from './../lang';
+import { Status } from './Control';
 import './dropfilefield.scss';
 
 const DropfileField = props => (
@@ -16,13 +17,15 @@ const DropfileField = props => (
     onDragOver={e => props.onDragOver(e)}
     onDrop={e => props.onDrop(e)}
   >
-    <EditorWrapper
-      htmlBody={props.htmlBody}
-      isFocusEditorInput={props.isFocusEditorInput}
-      toolbarHidden={props.isToolbarHidden}
-      getHtmlBody={props.getHtmlBody}
-      onFocusTextEditor={props.onFocusTextEditor}
-    />
+    {props.status !== Status.INITIALIZING && (
+      <EditorWrapper
+        htmlBody={props.htmlBody}
+        isFocusEditorInput={props.isFocusEditorInput}
+        toolbarHidden={props.isToolbarHidden}
+        getHtmlBody={props.getHtmlBody}
+        onFocusTextEditor={props.onFocusTextEditor}
+      />
+    )}
     <div className="files-container">
       {renderPreview(
         props.files,
@@ -84,7 +87,8 @@ DropfileField.propTypes = {
   onDrop: PropTypes.func,
   onFocusTextEditor: PropTypes.func,
   onPauseUploadFile: PropTypes.func,
-  onResumeUploadFile: PropTypes.func
+  onResumeUploadFile: PropTypes.func,
+  status: PropTypes.number
 };
 
 export default DropfileField;

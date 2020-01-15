@@ -218,7 +218,6 @@ const parseAndDispatchEvent = async event => {
       labelIds,
       threadIds,
       labels,
-      badgeLabelIds,
       removedLabel,
       updatedLabel
     } = await handleEvent(event);
@@ -228,7 +227,7 @@ const parseAndDispatchEvent = async event => {
       labelIds,
       threadIds,
       labels,
-      badgeLabelIds,
+      badgeLabelIds: labelIds,
       removedLabels: removedLabel ? [removedLabel] : null,
       updatedLabels: updatedLabel ? [updatedLabel] : null
     });

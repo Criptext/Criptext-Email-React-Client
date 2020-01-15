@@ -12,7 +12,9 @@ const Control = props => (
       }
       onClick={props.onClickSendMessage}
       disabled={
-        props.status === Status.WAITING || props.status === Status.DISABLED
+        props.status === Status.WAITING ||
+        props.status === Status.DISABLED ||
+        props.status === Status.INITIALIZING
       }
     >
       {props.status === Status.WAITING
@@ -76,6 +78,7 @@ const renderSendLoadingButton = () => (
 );
 
 export const Status = {
+  INITIALIZING: 0,
   DISABLED: 1,
   ENABLED: 2,
   WAITING: 3

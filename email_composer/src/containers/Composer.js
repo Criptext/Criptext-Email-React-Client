@@ -84,7 +84,7 @@ class ComposerWrapper extends Component {
       newHtmlBody: '',
       nonCriptextRecipientsPassword: '',
       nonCriptextRecipientsVerified: false,
-      status: Status.DISABLED,
+      status: Status.INITIALIZING,
       textSubject: '',
       threadId: null,
       toEmails: [],
@@ -155,17 +155,15 @@ class ComposerWrapper extends Component {
     let state;
     if (this.emailToEdit) {
       const composerData = await this.getComposerDataByType(this.emailToEdit);
+      const composerDataChecked = await this.checkContactDomains(composerData);
       state = {
-        ...composerData,
+        ...composerDataChecked,
         status: composerData.status || Status.ENABLED
       };
     } else {
       const composerData = await this.getDefaultComposerWithSignature();
       this.signature = composerData.htmlBody;
-      const status = myAccount.signatureEnabled
-        ? Status.ENABLED
-        : Status.DISABLED;
-      state = { ...composerData, status };
+      state = { ...composerData, status: Status.DISABLED };
     }
     fileManager.on(FILE_PROGRESS, this.handleUploadProgress);
     fileManager.on(FILE_FINISH, this.handleUploadSuccess);
@@ -189,6 +187,69 @@ class ComposerWrapper extends Component {
       });
     });
   }
+
+  checkContactDomains = async data => {
+    const emails = data.toEmails.concat(data.ccEmails).concat(data.bccEmails);
+    const domains = emails.reduce((array, contact) => {
+      const { contact: contactToCheck, domain } = parseEmailAddress(
+        contact.email
+      );
+      if (contactToCheck.state) {
+        array.push(domain);
+      }
+      return array;
+    }, []);
+
+    if (!domains.length) return data;
+    const res = await isCriptextDomain(domains);
+    if (res.status !== 200) return data;
+
+    res.body.forEach(({ name, isCriptextDomain }) => {
+      if (isCriptextDomain) {
+        temporalCheckedDomaind.is.push(name);
+      } else {
+        temporalCheckedDomaind.not.push(name);
+      }
+    });
+
+    const toEmails = data.toEmails.map(contact => {
+      const { domain } = parseEmailAddress(contact.email);
+      if (temporalCheckedDomaind.is.includes(domain)) {
+        return {
+          ...contact,
+          form: 'tag-app-domain'
+        };
+      }
+      return contact;
+    });
+    const bccEmails = data.bccEmails.map(contact => {
+      const { domain } = parseEmailAddress(contact.email);
+      if (temporalCheckedDomaind.is.includes(domain)) {
+        return {
+          ...contact,
+          form: 'tag-app-domain'
+        };
+      }
+      return contact;
+    });
+    const ccEmails = data.ccEmails.map(contact => {
+      const { domain } = parseEmailAddress(contact.email);
+      if (temporalCheckedDomaind.is.includes(domain)) {
+        return {
+          ...contact,
+          form: 'tag-app-domain'
+        };
+      }
+      return contact;
+    });
+
+    return {
+      ...data,
+      toEmails,
+      ccEmails,
+      bccEmails
+    };
+  };
 
   checkContactDomain = async (stateKey, contactToCheck, domainToCheck) => {
     const isDomainCheckedBefore = temporalCheckedDomaind.is.includes(
