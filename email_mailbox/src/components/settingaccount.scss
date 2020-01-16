@@ -4,6 +4,14 @@
   .forgot-password-link {
     display: flex;
     flex-direction: row-reverse;
+    padding-top: 5px;
+
+    button{
+      font-size: 12px;
+    }
+  }
+  .popup-input{
+    margin-bottom: 12px;
   }
   .section-block{
     .settings-switch {

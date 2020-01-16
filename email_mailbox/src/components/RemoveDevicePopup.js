@@ -55,9 +55,7 @@ const PasswordChangedPopupInput = ({
       placeholder={string.popups.remove_device.input.password.placeholder}
       disabled={isDisabledInput}
     />
-    {type === 'password' && (
-      <i className={icon} onClick={() => onClickChangeInputType()} />
-    )}
+    <i className={icon} onClick={() => onClickChangeInputType()} />
     <PasswordChangedPopupInputErrorMessage
       hasError={hasError}
       errorMessage={errorMessage}
