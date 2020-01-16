@@ -102,8 +102,10 @@ class Thread extends Component {
     }
 
     if (
-      prevProps.emails.length === 0 &&
-      this.props.emails.length > prevProps.emails.length
+      (prevProps.emails.length === 0 &&
+        this.props.emails.length > prevProps.emails.length) ||
+      (this.props.emails.length !== 0 &&
+        prevProps.emails.length > this.props.emails.length)
     ) {
       const groupedIndex =
         this.props.indexFirstUnread < 0
