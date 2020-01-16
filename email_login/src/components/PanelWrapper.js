@@ -357,6 +357,7 @@ class PanelWrapper extends Component {
     const nextMode = this.state.popupContent.successMode;
     this.dismissPopup();
     if (nextMode === mode.SIGNINTOAPPROVE) {
+      this.setState({ buttonSignInState: ButtonState.LOADING });
       await this.initLinkDevice(this.state.values.usernameOrEmailAddress);
       return;
     } else if (nextMode === mode.SIGNUP) {
@@ -466,8 +467,13 @@ class PanelWrapper extends Component {
             errorMessage: errorMessages.USERNAME_INVALID,
             buttonSignInState: ButtonState.DISABLED
           };
-        case 400:
-          return { errorMessage: '', buttonSignInState: ButtonState.ENABLED };
+        case 400: {
+          const buttonSignInState =
+            this.state.buttonSignInState === ButtonState.LOADING
+              ? ButtonState.LOADING
+              : ButtonState.ENABLED;
+          return { errorMessage: '', buttonSignInState };
+        }
         case 410: {
           return {
             errorMessage: errorMessages.USERNAME_NOT_AVAILABLE,

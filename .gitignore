@@ -43,3 +43,4 @@ binding.gyp
 
 #Alice
 alice_logs.txt
+error.log

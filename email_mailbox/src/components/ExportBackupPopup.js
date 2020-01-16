@@ -94,14 +94,14 @@ const renderButtons = props => (
       className="button-a popup-cancel-button"
       onClick={() => props.onTogglePopup()}
     >
-      {buttons.cancel}
+      <span>{buttons.cancel}</span>
     </button>
     <button
       className="button-a popup-confirm-button"
       onClick={() => props.onSubmitForm()}
       disabled={props.disabled}
     >
-      {buttons.send}
+      <span>{buttons.send}</span>
     </button>
   </div>
 );
