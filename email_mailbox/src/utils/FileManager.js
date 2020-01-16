@@ -6,7 +6,6 @@ import { checkExpiredSession } from './ipc';
 
 const MAX_REQUESTS = 5;
 const EXPIRED_SESSION_STATUS = 401;
-const INITIAL_REQUEST_EMPTY_STATUS = 499;
 
 let fileKeyIvs = {};
 
@@ -37,19 +36,16 @@ export const setFileErrorHandler = errorHandler => {
   fileManager.on(FILE_ERROR, errorHandler);
 };
 
-export const setDownloadHandler = (token, filename) => {
+export const setDownloadHandler = token => {
   fileManager.downloadFile(token, async error => {
     if (error) {
       const { status } = error;
       if (status === EXPIRED_SESSION_STATUS) {
-        const expiredResponse = await checkExpiredSession({
+        return await checkExpiredSession({
           response: { status },
           initialRequest: setDownloadHandler,
           requestParams: token
         });
-        if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-          return setDownloadHandler(token, filename);
-        }
       }
       return error;
     }
