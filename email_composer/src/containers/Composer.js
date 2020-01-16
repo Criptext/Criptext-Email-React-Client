@@ -60,7 +60,6 @@ const MAX_RECIPIENTS_AMOUNT = 300;
 const MAX_ATTACMENTS_TOTAL_SIZE = 25 * 1000 * 1000;
 const TOO_BIG_FILE_STATUS = 413;
 const EXPIRED_SESSION_STATUS = 401;
-const INITIAL_REQUEST_EMPTY_STATUS = 499;
 const PENDING_ATTACHMENTS_MODES = [FILE_MODES.UPLOADING, FILE_MODES.FAILED];
 const temporalCheckedDomaind = {
   is: [],
@@ -189,7 +188,10 @@ class ComposerWrapper extends Component {
   }
 
   checkContactDomains = async data => {
-    const emails = data.toEmails.concat(data.ccEmails).concat(data.bccEmails);
+    const emails = data.toEmails
+      .concat(data.ccEmails)
+      .concat(data.bccEmails)
+      .filter(contact => contact);
     const domains = emails.reduce((array, contact) => {
       const { contact: contactToCheck, domain } = parseEmailAddress(
         contact.email
@@ -552,15 +554,11 @@ class ComposerWrapper extends Component {
       }
       // To check
       case EXPIRED_SESSION_STATUS: {
-        const expiredResponse = await checkExpiredSession({
+        return await checkExpiredSession({
           response: { status },
           initialRequest: fileManager.uploadFile,
           requestParams: file
         });
-        if (expiredResponse.status === INITIAL_REQUEST_EMPTY_STATUS) {
-          return fileManager.uploadFile(file, CHUNK_SIZE);
-        }
-        break;
       }
       default:
         return throwError(string.errors.uploadFailed);

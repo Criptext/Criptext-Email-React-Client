@@ -86,7 +86,6 @@ const checkExpiredSession = async (
   const UPDATE_USER_TOKENS = 201;
   const EXPIRED_SESSION_STATUS = 401;
   const CHANGED_PASSWORD_STATUS = 403;
-  const INITIAL_REQUEST_EMPTY_STATUS = 499;
   const SUSPENDED_ACCOUNT_REQ_STATUS = 451;
 
   const status = requirementResponse.status;
@@ -103,20 +102,21 @@ const checkExpiredSession = async (
       let newSessionToken, newRefreshToken, newSessionStatus;
       const [{ recipientId, refreshToken }] = await getAccount();
       if (!refreshToken) {
-        const getRefreshTokenResponse = await upgradeToRefreshToken();
-        newSessionStatus = getRefreshTokenResponse.status;
-        newSessionToken = getRefreshTokenResponse.body.token;
-        newRefreshToken = getRefreshTokenResponse.body.refreshToken;
+        const { status, body } = await upgradeToRefreshToken();
+        newSessionStatus = status;
+        newSessionToken = body.token;
+        newRefreshToken = body.refreshToken;
       } else {
-        const newSessionResponse = await client.refreshSession();
-        newSessionStatus = newSessionResponse.status;
+        const { status, body, text } = await client.refreshSession();
+        newSessionStatus = status;
         if (newSessionStatus === NEW_SESSION_SUCCESS_STATUS) {
-          newSessionToken = newSessionResponse.text;
+          newSessionToken = text;
         } else if (newSessionStatus === UPDATE_USER_TOKENS) {
-          newSessionToken = newSessionResponse.body.token;
-          newRefreshToken = newSessionResponse.body.refreshToken;
+          newSessionToken = body.token;
+          newRefreshToken = body.refreshToken;
         }
       }
+
       if (newSessionStatus === EXPIRED_SESSION_STATUS) {
         return mailboxWindow.send('device-removed', null);
       }
@@ -135,9 +135,8 @@ const checkExpiredSession = async (
         if (initialRequest) {
           return await initialRequest(requestparams);
         }
-        return { status: INITIAL_REQUEST_EMPTY_STATUS, newSessionToken };
       }
-      break;
+      return requirementResponse;
     }
     default: {
       return requirementResponse;

@@ -249,13 +249,16 @@ export const getGroupEvents = async ({
   isGettingEvents = true;
   if (totalEmailsPending === null) {
     totalEmailsHandled = 0;
-    const res = await fetchEventAction({ cmd: 101, action: 'count' });
-    if (!res) {
+    const { status, body } = await fetchEventAction({
+      cmd: 101,
+      action: 'count'
+    });
+    if (status !== 200) {
       stopGettingEvents();
       return;
     }
 
-    const { total } = res;
+    const { total } = body;
     if (total) {
       totalEmailsPending = total;
       emitter.emit(Event.UPDATE_LOADING_SYNC, {
@@ -264,13 +267,13 @@ export const getGroupEvents = async ({
       });
     }
   }
-  const response = await fetchEvents();
-  if (!response) {
+  const { status, body } = await fetchEvents();
+  if (status !== 200) {
     stopGettingEvents();
     return;
   }
 
-  const { events, hasMoreEvents } = response;
+  const { events, hasMoreEvents } = body;
   if (!events.length) {
     stopGettingEvents();
     return;
@@ -1728,11 +1731,13 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
       case NOTIFICATION_ACTIONS.NEW_EMAIL: {
         if (isGettingEvents) return;
         isGettingEvents = true;
-        const eventData = await fetchGetSingleEvent({ rowId: data.rowId });
-        if (eventData) {
-          const [email] = await getEmailByKey(eventData.params.metadataKey);
+        const { status, body } = await fetchGetSingleEvent({
+          rowId: data.rowId
+        });
+        if (status === 200) {
+          const [email] = await getEmailByKey(body.params.metadataKey);
           if (!email) {
-            await parseAndDispatchEvent(eventData);
+            await parseAndDispatchEvent(body);
             sendNewEmailNotification();
             sendLoadEventsEvent({ showNotification: true });
           }
