@@ -3,6 +3,7 @@ const zlib = require('zlib');
 const knex = require('knex');
 const crypto = require('crypto');
 const LineByLineReader = require('line-by-line');
+const globalManager = require('../globalManager');
 const moment = require('moment');
 const {
   Account,
@@ -26,7 +27,13 @@ const {
 const myAccount = require('./../Account');
 const systemLabels = require('./../systemLabels');
 const { APP_DOMAIN, LINK_DEVICES_FILE_VERSION } = require('../utils/const');
-const { getEmailBody, getEmailHeaders } = require('./../utils/FileUtils');
+const {
+  getEmailBody,
+  getEmailHeaders,
+  removeEmailsCopy,
+  replaceEmailsWithCopy,
+  saveEmailBody
+} = require('./../utils/FileUtils');
 
 const CIPHER_ALGORITHM = 'aes-128-cbc';
 const STREAM_SIZE = 512 * 1024;
@@ -75,8 +82,8 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
   const filepath = outputPath;
   const dbConn = await createNotEncryptDatabaseConnection(databasePath);
 
-  const accounts = await _exportAccountTable(dbConn);
-  saveToFile({ data: accounts, filepath, mode: 'w' }, true);
+  const accountsData = await _exportAccountTable(dbConn);
+  saveToFile({ data: accountsData.rowsString, filepath, mode: 'w' }, true);
 
   const contacts = await _exportContactTable(dbConn);
   saveToFile({ data: contacts, filepath, mode: 'a' });
@@ -84,7 +91,18 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
   const labels = await _exportLabelTable(dbConn);
   saveToFile({ data: labels, filepath, mode: 'a' });
 
-  const emails = await _exportEmailTable(dbConn);
+  let userEmail;
+  if (myAccount.recipientId) {
+    userEmail = myAccount.recipientId.includes('@')
+      ? myAccount.recipientId
+      : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  } else {
+    const firstAccount = accountsData.firstAccount;
+    userEmail = firstAccount.recipientId.includes('@')
+      ? firstAccount.recipientId
+      : `${firstAccount.recipientId}@${APP_DOMAIN}`;
+  }
+  const emails = await _exportEmailTable(dbConn, userEmail);
   saveToFile({ data: emails, filepath, mode: 'a' });
 
   const emailContacts = await _exportEmailContactTable(dbConn);
@@ -147,7 +165,10 @@ const _exportAccountTable = async db => {
       offset += SELECT_ALL_BATCH;
     }
   }
-  return formatTableRowsToString(Table.ACCOUNT, accountRows);
+  return {
+    rowsString: formatTableRowsToString(Table.ACCOUNT, accountRows),
+    firstAccount: accountRows[0]
+  };
 };
 
 const _exportContactTable = async db => {
@@ -203,7 +224,7 @@ const _exportLabelTable = async db => {
   return formatTableRowsToString(Table.LABEL, labelRows);
 };
 
-const _exportEmailTable = async db => {
+const _exportEmailTable = async (db, userEmail) => {
   let emailRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -214,7 +235,7 @@ const _exportEmailTable = async db => {
       } WHERE ${whereRawEmailQuery} LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
     );
     const result = await Promise.all(
-      rows.map(row => {
+      rows.map(async row => {
         if (!row.unsendDate) {
           delete row.unsendDate;
         } else {
@@ -236,17 +257,26 @@ const _exportEmailTable = async db => {
           delete row.boundary;
         }
 
-        const body = row.content;
+        const body = await getEmailBody({
+          username: userEmail,
+          metadataKey: row.key
+        });
+        const headers = await getEmailHeaders({
+          username: userEmail,
+          metadataKey: row.key
+        });
         const key = parseInt(row.key);
         return Object.assign(row, {
           unread: !!row.unread,
           secure: !!row.secure,
           content: body,
+          headers: headers,
           key,
           date: parseDate(row.date)
         });
       })
     );
+
     emailRows = [...emailRows, ...result];
     if (rows.length < SELECT_ALL_BATCH) {
       shouldEnd = true;
@@ -604,11 +634,15 @@ const exportEmailTable = async () => {
         if (!newRow.boundary) delete newRow.boundary;
 
         const body =
-          (await getEmailBody({ username, metadataKey: newRow.key })) ||
-          newRow.content;
+          (await getEmailBody({
+            username,
+            metadataKey: newRow.key,
+            password: globalManager.databaseKey.get()
+          })) || newRow.content;
         const headers = await getEmailHeaders({
           username,
-          metadataKey: newRow.key
+          metadataKey: newRow.key,
+          password: globalManager.databaseKey.get()
         });
 
         const key = parseInt(newRow.key);
@@ -829,6 +863,13 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
       await Feeditem().destroy({ where: {}, transaction: trx });
     }
 
+    let userEmail;
+    if (myAccount.recipientId) {
+      userEmail = myAccount.recipientId.includes('@')
+        ? myAccount.recipientId
+        : `${myAccount.recipientId}@${APP_DOMAIN}`;
+    }
+
     const lineReader = new LineByLineReader(filepath);
     return new Promise((resolve, reject) => {
       lineReader
@@ -836,6 +877,11 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
           const { table, object } = JSON.parse(line);
           switch (table) {
             case Table.ACCOUNT: {
+              if (!userEmail) {
+                userEmail = object.recipientId.includes('@')
+                  ? object.recipientId
+                  : `${object.recipientId}@${APP_DOMAIN}`;
+              }
               accounts = [...accounts, object];
               break;
             }
@@ -863,6 +909,7 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
               emails.push(object);
               if (emails.length === EMAILS_BATCH) {
                 lineReader.pause();
+                await storeEmailBodies(emails, userEmail);
                 await Email().bulkCreate(emails, { transaction: trx });
                 emails = [];
                 lineReader.resume();
@@ -999,6 +1046,7 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
             await insertRemainingRows(accounts, Account(), trx);
             await insertRemainingRows(contacts, Contact(), trx);
             await insertRemainingRows(labels, Label(), trx);
+            await storeEmailBodies(emails, userEmail);
             await insertRemainingRows(emails, Email(), trx);
             await insertRemainingRows(emailContacts, EmailContact(), trx);
             await insertRemainingEmailLabelsRows(
@@ -1018,9 +1066,12 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
               Signedprekeyrecord(),
               trx
             );
+            await replaceEmailsWithCopy(userEmail);
             resolve();
           } catch (error) {
+            console.log(error);
             const a = new Error(error.name);
+            await removeEmailsCopy(userEmail);
             reject(a);
           }
         });
@@ -1046,6 +1097,26 @@ const insertRemainingEmailLabelsRows = async (rows, Table, trx) => {
   }
 };
 
+const storeEmailBodies = (emailRows, userEmail) => {
+  if (!userEmail) return;
+  return Promise.all(
+    emailRows.map(email => {
+      const body = email.content;
+      const headers = email.headers;
+      email.content = '';
+      delete email.headers;
+      return saveEmailBody({
+        body,
+        headers,
+        username: userEmail,
+        metadataKey: email.key,
+        password: globalManager.databaseKey.get(),
+        isCopy: true
+      });
+    })
+  );
+};
+
 /* Utils
 ----------------------------- */
 const decryptStreamFile = ({ inputFile, outputFile, key }) => {
@@ -1055,6 +1126,27 @@ const decryptStreamFile = ({ inputFile, outputFile, key }) => {
     const iv = readBytesSync(inputFile, ivStartPosition, ivEndPosition);
     const reader = fs.createReadStream(inputFile, {
       start: DEFAULT_KEY_LENGTH,
+      highWaterMark: STREAM_SIZE
+    });
+    const writer = fs.createWriteStream(outputFile);
+    reader
+      .pipe(crypto.createDecipheriv(CIPHER_ALGORITHM, key, iv))
+      .pipe(zlib.createGunzip())
+      .pipe(writer)
+      .on('error', reject)
+      .on('finish', resolve);
+  });
+};
+
+const decryptStreamFileWithPassword = ({ inputFile, outputFile, password }) => {
+  return new Promise((resolve, reject) => {
+    const saltSize = 8;
+    const ivSize = 16;
+    const salt = readBytesSync(inputFile, 0, saltSize);
+    const iv = readBytesSync(inputFile, saltSize, ivSize);
+    const { key } = generateKeyAndIvFromPassword(password, salt);
+    const reader = fs.createReadStream(inputFile, {
+      start: saltSize + ivSize,
       highWaterMark: STREAM_SIZE
     });
     const writer = fs.createWriteStream(outputFile);
@@ -1104,6 +1196,21 @@ const generateKeyAndIv = (keySize, ivSize) => {
       iv: null
     };
   }
+};
+
+const generateKeyAndIvFromPassword = (password, customSalt) => {
+  const salt = customSalt || crypto.randomBytes(8);
+  const iterations = 10000;
+  const pbkdf2Name = 'sha256';
+  const key = crypto.pbkdf2Sync(
+    Buffer.from(password, 'utf8'),
+    salt,
+    iterations,
+    DEFAULT_KEY_LENGTH,
+    pbkdf2Name
+  );
+  const iv = crypto.randomBytes(DEFAULT_KEY_LENGTH);
+  return { key, iv, salt };
 };
 
 const getCustomLinesByStream = (filename, lineCount, callback) => {
@@ -1166,6 +1273,7 @@ const saveToFile = ({ data, filepath, mode }, isFirstRecord) => {
 
 module.exports = {
   decryptStreamFile,
+  decryptStreamFileWithPassword,
   encryptStreamFile,
   exportNotEncryptDatabaseToFile,
   exportContactTable,
@@ -1176,6 +1284,7 @@ module.exports = {
   exportFileTable,
   exportLabelTable,
   generateKeyAndIv,
+  generateKeyAndIvFromPassword,
   getCustomLinesByStream,
   importDatabaseFromFile
 };

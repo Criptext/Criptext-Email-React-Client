@@ -176,7 +176,9 @@ class SettingsAccountBackupWrapper extends Component {
               backupPath: selectedPath,
               password
             },
-            this.initMailboxBackup
+            () => {
+              this.initMailboxBackup(false);
+            }
           );
         });
       }
@@ -282,13 +284,14 @@ class SettingsAccountBackupWrapper extends Component {
     );
   };
 
-  initMailboxBackup = () => {
+  initMailboxBackup = isAutoBackup => {
     const { backupPath, password } = this.state;
     this.initMailboxBackupListeners();
     if (!password) {
       exportBackupUnencrypted({
         backupPath,
-        notificationParams: export_backup
+        notificationParams: export_backup,
+        isAutoBackup: isAutoBackup !== undefined ? isAutoBackup : true
       });
     } else {
       exportBackupEncrypted({
@@ -349,13 +352,16 @@ class SettingsAccountBackupWrapper extends Component {
     this.setState({ backupPercent });
   };
 
-  localBackupExportFinishedCallback = backupSize => {
+  localBackupExportFinishedCallback = ({ backupSize, isAutoBackup }) => {
     const isExportUnencrypted =
       this.state.exportType === EXPORT_TYPES.UNENCRYPT;
     const backupPercent = isExportUnencrypted ? 70 : 60;
-    this.setState({ backupPercent }, () =>
-      this.updateAutoBackupParams(backupSize)
-    );
+    this.setState({ backupPercent }, () => {
+      if (!isAutoBackup) {
+        return;
+      }
+      this.updateAutoBackupParams(backupSize);
+    });
   };
 
   localBackupEncryptFinishedCallback = () => {

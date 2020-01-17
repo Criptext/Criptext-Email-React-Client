@@ -9,6 +9,7 @@ const {
 } = require('./stringUtils');
 const { formContactsRow } = require('./dataTableUtils');
 const lang = require('./../lang');
+const globalManager = require('../globalManager');
 const dbManager = require('./../database');
 const fileUtils = require('./FileUtils');
 const path = require('path');
@@ -87,7 +88,8 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
         const emailBody =
           (await fileUtils.getEmailBody({
             metadataKey: email.key,
-            username
+            username,
+            password: globalManager.databaseKey.get()
           })) || email.content;
         return Object.assign(email, { content: emailBody });
       })
@@ -135,7 +137,8 @@ const printEmailOrThread = async ({ emailId, threadId }) => {
       const emailBody =
         (await fileUtils.getEmailBody({
           username,
-          metadataKey: rawEmail.key
+          metadataKey: rawEmail.key,
+          password: globalManager.databaseKey.get()
         })) || rawEmail.content;
       const email = Object.assign(rawEmail, { content: emailBody });
       const { to, cc, from } = await dbManager.getContactsByEmailId(email.id);

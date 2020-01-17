@@ -110,9 +110,6 @@ export const updateDockBadgeApp = value => {
 
 /* File System
 ----------------------------- */
-export const saveEmailBody = async params => {
-  return await ipc.callMain('fs-save-email-body', params);
-};
 
 export const deleteEmailContent = async params => {
   return await ipc.callMain('fs-delete-email-content', params);

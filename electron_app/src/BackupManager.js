@@ -2,36 +2,26 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 const { app } = require('electron');
-const copy = require('recursive-copy');
 const myAccount = require('./Account');
 const { databasePath } = require('./database/DBEmodel');
 const { APP_DOMAIN } = require('./utils/const');
 const { backupFilenameRegex } = require('./utils/RegexUtils');
-const { createPathRecursive, getUserEmailsPath } = require('./utils/FileUtils');
+const { createPathRecursive } = require('./utils/FileUtils');
 const {
   decryptStreamFileWithPassword,
   encryptStreamFile,
-  exportDatabaseToFile,
+  exportEncryptDatabaseToFile,
   generateKeyAndIvFromPassword,
   importDatabaseFromFile
-} = require('./database/dbExporter');
+} = require('./database/DBEexporter');
 
 const STREAM_SIZE = 512 * 1024;
 
 /*  Folders & Paths
 ----------------------------- */
 const TempBackupFolderName = 'BackupData';
-const TempDatabaseBackupFileName = 'CriptextBackup.db';
-const TempEmailsBackupFolderName = 'EmailsBackup';
 const TempBackupDirectory = path.join(databasePath, '..', TempBackupFolderName);
-const TempDatabaseBackupPath = path.join(
-  TempBackupDirectory,
-  TempDatabaseBackupFileName
-);
-const TempEmailsBackupPath = path.join(
-  TempBackupDirectory,
-  TempEmailsBackupFolderName
-);
+
 const ExportUnencryptedFilename = path.join(
   TempBackupDirectory,
   'unencrypt.exp'
@@ -108,26 +98,6 @@ const createDefaultBackupFolder = () => {
 
 /*  Methods
 ----------------------------- */
-const createTempDatabaseBackup = () => {
-  return new Promise((resolve, reject) => {
-    fs.copyFile(databasePath, TempDatabaseBackupPath, cpErr => {
-      if (cpErr) reject({ error: 'Preparing backup error' });
-      resolve();
-    });
-  });
-};
-
-const createTempEmailsBackup = () => {
-  const EmailsFolder = getUserEmailsPath(process.env.NODE_ENV, getUsername());
-  return new Promise((resolve, reject) => {
-    try {
-      copy(EmailsFolder, TempEmailsBackupPath, { overwrite: true });
-      resolve();
-    } catch (error) {
-      reject({ error: 'Preparing backup error' });
-    }
-  });
-};
 
 const zipStreamFile = ({ inputFile, outputFile }) => {
   return new Promise((resolve, reject) => {
@@ -155,13 +125,9 @@ const unzipStreamFile = ({ inputFile, outputFile }) => {
   });
 };
 
-const prepareBackupFiles = async ({ backupPrevFiles = true }) => {
+const prepareBackupFiles = () => {
   try {
     checkTempBackupDirectory();
-    if (backupPrevFiles) {
-      await createTempDatabaseBackup();
-      await createTempEmailsBackup();
-    }
   } catch (error) {
     removeTempBackupDirectoryRecursive(TempBackupDirectory);
     return error;
@@ -182,8 +148,7 @@ const getFileSizeInBytes = filename => {
 const exportBackupUnencrypted = async ({ backupPath }) => {
   try {
     try {
-      await exportDatabaseToFile({
-        databasePath: TempDatabaseBackupPath,
+      await exportEncryptDatabaseToFile({
         outputPath: ExportUnencryptedFilename
       });
     } catch (dbErr) {
@@ -217,8 +182,7 @@ const exportBackupEncrypted = async ({ backupPath, password }) => {
   try {
     // Export database
     try {
-      await exportDatabaseToFile({
-        databasePath: TempDatabaseBackupPath,
+      await exportEncryptDatabaseToFile({
         outputPath: ExportUnencryptedFilename
       });
     } catch (dbErr) {
@@ -269,7 +233,7 @@ const restoreUnencryptedBackup = async ({ filePath }) => {
     try {
       await importDatabaseFromFile({
         filepath: RestoreUnzippedFilename,
-        databasePath: databasePath
+        isStrict: true
       });
     } catch (importError) {
       throw new Error('Failed to import into database');
@@ -297,7 +261,7 @@ const restoreEncryptedBackup = async ({ filePath, password }) => {
     try {
       await importDatabaseFromFile({
         filepath: RestoreUnencryptedFilename,
-        databasePath: databasePath
+        isStrict: true
       });
     } catch (importError) {
       throw new Error('Failed to import into database');
@@ -312,9 +276,9 @@ const restoreEncryptedBackup = async ({ filePath, password }) => {
 module.exports = {
   createDefaultBackupFolder,
   getDefaultBackupFolder,
-  prepareBackupFiles,
   exportBackupUnencrypted,
   exportBackupEncrypted,
+  prepareBackupFiles,
   restoreUnencryptedBackup,
   restoreEncryptedBackup
 };

@@ -189,7 +189,8 @@ const saveDraftToDatabase = async (composerId, data) => {
     await fileUtils.saveEmailBody({
       body: content,
       username,
-      metadataKey: parseInt(dataDraft.email.key)
+      metadataKey: parseInt(dataDraft.email.key),
+      password: globalManager.databaseKey.get()
     });
     shouldUpdateBadge = true;
   } else {
@@ -204,7 +205,8 @@ const saveDraftToDatabase = async (composerId, data) => {
     await fileUtils.saveEmailBody({
       body: content,
       username,
-      metadataKey: parseInt(newDataDraft.email.key)
+      metadataKey: parseInt(newDataDraft.email.key),
+      password: globalManager.databaseKey.get()
     });
     if (type === composerEvents.EDIT_DRAFT && newDataDraft.email.threadId) {
       const dataToMailbox = {

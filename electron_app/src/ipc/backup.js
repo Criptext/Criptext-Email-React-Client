@@ -37,16 +37,19 @@ ipc.answerRenderer('create-default-backup-folder', () =>
 );
 
 const doExportBackupUnencrypted = async params => {
-  const { backupPath, notificationParams } = params;
+  const { backupPath, notificationParams, isAutoBackup = true } = params;
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('local-backup-disable-events', 1);
-    await prepareBackupFiles({});
+    prepareBackupFiles();
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', 2);
     const backupSize = await exportBackupUnencrypted({ backupPath });
-    commitBackupStatus('local-backup-export-finished', 3, backupSize);
+    commitBackupStatus('local-backup-export-finished', 3, {
+      backupSize,
+      isAutoBackup
+    });
     await simulatePause(2000);
     commitBackupStatus('local-backup-success', null);
     await simulatePause(2000);
@@ -82,7 +85,7 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('local-backup-disable-events', 1);
-    await prepareBackupFiles({});
+    prepareBackupFiles();
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', 2);
@@ -90,7 +93,10 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
       backupPath,
       password
     });
-    commitBackupStatus('local-backup-export-finished', 3, backupSize);
+    commitBackupStatus('local-backup-export-finished', 3, {
+      backupSize,
+      isAutoBackup: false
+    });
     await simulatePause(2000);
     commitBackupStatus('local-backup-success', null);
     await simulatePause(2000);
@@ -125,7 +131,7 @@ ipc.answerRenderer('restore-backup-unencrypted', async ({ backupPath }) => {
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('restore-backup-disable-events');
-    await prepareBackupFiles({ backupPrevFiles: false });
+    prepareBackupFiles();
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('restore-backup-enable-events');
@@ -146,7 +152,7 @@ ipc.answerRenderer('restore-backup-encrypted', async params => {
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('restore-backup-disable-events');
-    await prepareBackupFiles({ backupPrevFiles: false });
+    prepareBackupFiles();
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('restore-backup-enable-events');

@@ -1788,8 +1788,8 @@ ipcRenderer.on('local-backup-enable-events', (ev, params) => {
   emitter.emit(Event.LOCAL_BACKUP_ENABLE_EVENTS, params);
 });
 
-ipcRenderer.on('local-backup-export-finished', (ev, backupSize) => {
-  emitter.emit(Event.LOCAL_BACKUP_EXPORT_FINISHED, backupSize);
+ipcRenderer.on('local-backup-export-finished', (ev, params) => {
+  emitter.emit(Event.LOCAL_BACKUP_EXPORT_FINISHED, params);
 });
 
 ipcRenderer.on('local-backup-encrypt-finished', () => {

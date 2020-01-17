@@ -23,4 +23,21 @@ describe('File Utils test ', () => {
     expect(savedText).toEqual(textSample);
     done();
   });
+
+  it(' Store encrypted text with a password and retrieve it from filesystem ', async done => {
+    const password = '1234';
+    await fileUtils.saveEmailBody({
+      body: textSample,
+      username,
+      metadataKey: key,
+      password
+    });
+    const savedText = await fileUtils.getEmailBody({
+      username,
+      metadataKey: key,
+      password
+    });
+    expect(savedText).toEqual(textSample);
+    done();
+  });
 });

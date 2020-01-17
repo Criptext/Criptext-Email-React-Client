@@ -402,22 +402,24 @@ const getEmailsByThreadId = threadId => {
 
 const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
   const sequelize = getDB();
-  return Email().findAll({
-    attributes: [
-      'id',
-      'threadId',
-      'trashDate',
-      [sequelize.fn('GROUP_CONCAT', sequelize.col('key')), 'keys']
-    ],
-    include: [
-      {
-        model: EmailLabel(),
-        where: { labelId }
-      }
-    ],
-    where: { threadId: threadIds },
-    group: ['threadId']
-  });
+  return Email()
+    .findAll({
+      attributes: [
+        'id',
+        'threadId',
+        'trashDate',
+        [sequelize.fn('GROUP_CONCAT', sequelize.col('key')), 'keys']
+      ],
+      include: [
+        {
+          model: EmailLabel(),
+          where: { labelId }
+        }
+      ],
+      where: { threadId: threadIds },
+      group: ['threadId']
+    })
+    .map(email => email.toJSON());
 };
 
 const getEmailsCounterByLabelId = labelId => {

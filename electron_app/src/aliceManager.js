@@ -218,7 +218,7 @@ const cleanAliceRemenants = () => {
 
 const killPs = id => {
   return new Promise(resolve => {
-    ps.kill(id, resolve);
+    ps.kill(id, { signal: 9 }, resolve);
   });
 };
 
