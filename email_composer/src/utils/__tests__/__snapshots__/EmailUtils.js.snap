@@ -3,17 +3,32 @@
 exports[`Edit draft:  Should load a draft correctly 1`] = `
 Object {
   "bccEmails": Array [
-    "usuario3@criptext.com",
+    Object {
+      "complete": "<usuario3@criptext.com>",
+      "email": "usuario3@criptext.com",
+      "form": "tag-app-domain",
+      "name": undefined,
+    },
   ],
   "ccEmails": Array [
-    "usuario2@criptext.com",
+    Object {
+      "complete": "<usuario2@criptext.com>",
+      "email": "usuario2@criptext.com",
+      "form": "tag-app-domain",
+      "name": undefined,
+    },
   ],
   "files": Array [],
   "htmlBody": "<p>Modified body content</p>",
   "textSubject": "Email subject 1",
   "threadId": "1",
   "toEmails": Array [
-    "usuario1@criptext.com",
+    Object {
+      "complete": "<usuario1@criptext.com>",
+      "email": "usuario1@criptext.com",
+      "form": "tag-app-domain",
+      "name": undefined,
+    },
   ],
 }
 `;

@@ -14,11 +14,13 @@ const { popups } = string;
 const defineMessageData = (
   mailboxSelected,
   threadsCount,
-  isUpdateAvailable
+  isUpdateAvailable,
+  section
 ) => {
+  const isSectionThread = section && section === 'thread';
   const targetLabelId = mailboxSelected ? mailboxSelected.id : null;
   const isEmpty = threadsCount < 1;
-  if (targetLabelId === LabelType.trash.id && !isEmpty) {
+  if (targetLabelId === LabelType.trash.id && !isEmpty && !isSectionThread) {
     return {
       ...MessageContent.advice.trash,
       type: MessageType.ADVICE,
@@ -43,11 +45,12 @@ const defineMessageData = (
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { threadsCount, mailbox, isUpdateAvailable } = ownProps;
+  const { threadsCount, mailbox, isUpdateAvailable, section } = ownProps;
   const messageData = defineMessageData(
     mailbox,
     threadsCount,
-    isUpdateAvailable
+    isUpdateAvailable,
+    section
   );
   const {
     action,
