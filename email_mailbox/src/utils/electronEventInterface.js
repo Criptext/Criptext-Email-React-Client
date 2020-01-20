@@ -105,7 +105,7 @@ let labelsEvent = {};
 let removedLabels = [];
 let updatedLabels = [];
 let feedItemHasAdded = false;
-let avatarHasChanged = false;
+let profileHasChanged = false;
 
 let newEmailNotificationList = [];
 
@@ -130,7 +130,7 @@ const parseAndStoreEventsBatch = async ({
   labelsEvent = {};
   removedLabels = [];
   updatedLabels = [];
-  avatarHasChanged = false;
+  profileHasChanged = false;
   const rowIds = [];
   const completedTask = events.reduce((count, event) => {
     if (event.cmd === SocketCommand.NEW_EMAIL) {
@@ -143,7 +143,7 @@ const parseAndStoreEventsBatch = async ({
   for (const event of events) {
     try {
       const {
-        avatarChanged,
+        profileChanged,
         feedItemAdded,
         rowid,
         labelIds,
@@ -165,7 +165,7 @@ const parseAndStoreEventsBatch = async ({
       if (labels) labelsEvent = { ...labelsEvent, ...labels };
       if (removedLabel) removedLabels = [...removedLabels, removedLabel];
       if (updatedLabel) updatedLabels = [...updatedLabels, updatedLabel];
-      if (avatarChanged) avatarHasChanged = true;
+      if (profileChanged) profileHasChanged = true;
       if (feedItemAdded) feedItemHasAdded = true;
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -196,7 +196,7 @@ const parseAndStoreEventsBatch = async ({
       : null;
     const hasStopLoad = !hasMoreEvents;
     emitter.emit(Event.STORE_LOAD, {
-      avatarHasChanged,
+      profileHasChanged,
       completedTask: totalEmailsHandled,
       feedItemHasAdded,
       labelIds,
@@ -937,7 +937,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
 };
 
 const handlePeerAvatarChanged = ({ rowid }) => {
-  return { rowid, avatarChanged: true };
+  return { rowid, profileChanged: true };
 };
 
 const handlePeerEmailRead = async ({ rowid, params }) => {
@@ -1217,7 +1217,7 @@ const handlePeerUserNameChanged = async ({ rowid, params }) => {
   const { name } = params;
   const { recipientId } = myAccount;
   await updateAccount({ name, recipientId });
-  return { rowid };
+  return { rowid, profileChanged: true };
 };
 
 const handlePeerPasswordChanged = () => {

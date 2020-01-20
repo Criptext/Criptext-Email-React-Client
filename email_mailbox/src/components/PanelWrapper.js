@@ -306,7 +306,7 @@ class PanelWrapper extends Component {
   };
 
   storeLoadListenerCallback = ({
-    avatarHasChanged,
+    profileHasChanged,
     completedTask,
     feedItemHasAdded,
     labelIds,
@@ -320,7 +320,7 @@ class PanelWrapper extends Component {
     let activity = undefined;
     let label = undefined;
 
-    if (avatarHasChanged) {
+    if (profileHasChanged) {
       activity = setAvatarUpdatedTimestamp(Date.now());
     }
 
