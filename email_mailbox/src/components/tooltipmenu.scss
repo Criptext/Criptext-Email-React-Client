@@ -73,6 +73,10 @@
       border-color: $_BORDER_COLOR_POPOVER;
       color: $_COLOR_TEXT_POPOVER;
 
+      h3{
+        color: white;
+      }
+      
       .tooltip-menu-tip{
         &:after{
           background-color: $_BACKGROUND_COLOR_POPOVER;

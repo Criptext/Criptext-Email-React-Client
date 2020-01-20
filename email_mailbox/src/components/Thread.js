@@ -30,6 +30,7 @@ class Thread extends Component {
     return (
       <div className="thread-container">
         <Message
+          section="thread"
           mailbox={this.props.mailboxSelected}
           onClickSection={this.props.onClickSection}
         />

@@ -66,9 +66,9 @@ export const formDataToEditDraft = async emailKeyToEdit => {
   const htmlBody = emailData.content;
   const textSubject = emailData.subject;
   const threadId = emailData.threadId;
-  const toEmails = contacts.to.map(contact => contact.email);
-  const ccEmails = contacts.cc.map(contact => contact.email);
-  const bccEmails = contacts.bcc.map(contact => contact.email);
+  const toEmails = contacts.to.map(contact => formRecipientObject(contact));
+  const ccEmails = contacts.cc.map(contact => formRecipientObject(contact));
+  const bccEmails = contacts.bcc.map(contact => formRecipientObject(contact));
   const prevFiles = await getFilesByEmailId(emailData.id);
   const files = prevFiles.map(file => {
     return {

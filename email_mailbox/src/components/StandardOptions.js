@@ -20,7 +20,7 @@ const StandardOptions = props => (
         onClick={props.onClickMoveToInbox}
         tip={string.header.move_to_inbox}
         enableTip={true}
-        icon="icon-archive"
+        icon="icon-mailbox"
         targetName="actionToInbox"
       />
     )}
@@ -29,7 +29,16 @@ const StandardOptions = props => (
         onClick={props.onClickRestore}
         tip={string.header.restore}
         enableTip={true}
-        icon="icon-archive"
+        icon="icon-mailbox"
+        targetName="actionRestore"
+      />
+    )}
+    {props.isVisibleNotSpamButton && (
+      <ButtonCircle
+        onClick={props.onClickRestore}
+        tip={string.header.not_spam}
+        enableTip={true}
+        icon="icon-mailbox"
         targetName="actionRestore"
       />
     )}
@@ -56,7 +65,7 @@ const StandardOptions = props => (
         onClick={props.onClickDeleteThread}
         tip={string.header.delete}
         enableTip={true}
-        icon="icon-trash"
+        icon="icon-trash-permanently"
         targetName="actionDelete"
       />
     )}
@@ -97,6 +106,7 @@ StandardOptions.propTypes = {
   isVisibleFolderButton: PropTypes.bool,
   isVisibleMoveToInboxButton: PropTypes.bool,
   isVisibleRestoreButton: PropTypes.bool,
+  isVisibleNotSpamButton: PropTypes.bool,
   isVisibleSpamButton: PropTypes.bool,
   isVisibleTrashButton: PropTypes.bool,
   onClickMoveToArchive: PropTypes.func,

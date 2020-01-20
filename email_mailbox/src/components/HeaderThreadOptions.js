@@ -20,6 +20,7 @@ class HeaderThreadOptions extends Component {
       isVisibleArchiveButton,
       isVisibleMoveToInboxButton,
       isVisibleRestoreButton,
+      isVisibleNotSpamButton,
       isVisibleSpamButton,
       isVisibleTrashButton,
       isVisibleDeleteButton,
@@ -49,6 +50,7 @@ class HeaderThreadOptions extends Component {
           isVisibleDiscardDraftsButton={isVisibleDiscardDraftsButton}
           isVisibleMoveToInboxButton={isVisibleMoveToInboxButton}
           isVisibleRestoreButton={isVisibleRestoreButton}
+          isVisibleNotSpamButton={isVisibleNotSpamButton}
           isVisibleSpamButton={isVisibleSpamButton}
           isVisibleTrashButton={isVisibleTrashButton}
           onClickMoveToArchive={onClickMoveToArchive}
@@ -195,6 +197,7 @@ HeaderThreadOptions.propTypes = {
   isVisibleDiscardDraftsButton: PropTypes.bool,
   isVisibleMoveToInboxButton: PropTypes.bool,
   isVisibleRestoreButton: PropTypes.bool,
+  isVisibleNotSpamButton: PropTypes.bool,
   isVisibleSpamButton: PropTypes.bool,
   isVisibleTrashButton: PropTypes.bool,
   itemsChecked: PropTypes.object,

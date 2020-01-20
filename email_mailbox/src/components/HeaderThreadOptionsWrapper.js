@@ -30,6 +30,7 @@ class HeaderThreadOptionsWrapper extends Component {
         isVisibleArchiveButton={this.isVisibleArchiveButton()}
         isVisibleMoveToInboxButton={this.isVisibleMoveToInboxButton()}
         isVisibleRestoreButton={this.isVisibleRestoreButton()}
+        isVisibleNotSpamButton={this.isVisibleNotSpamButton()}
         isVisibleSpamButton={this.isVisibleSpamButton()}
         isVisibleTrashButton={this.isVisibleTrashButton()}
         isVisibleDeleteButton={this.isVisibleDeleteButton()}
@@ -86,10 +87,12 @@ class HeaderThreadOptionsWrapper extends Component {
 
   isVisibleRestoreButton = () => {
     const currentLabelId = this.props.mailboxSelected.id;
-    return (
-      currentLabelId === LabelType.trash.id ||
-      currentLabelId === LabelType.spam.id
-    );
+    return currentLabelId === LabelType.trash.id;
+  };
+
+  isVisibleNotSpamButton = () => {
+    const currentLabelId = this.props.mailboxSelected.id;
+    return currentLabelId === LabelType.spam.id;
   };
 
   isVisibleSpamButton = () => {
