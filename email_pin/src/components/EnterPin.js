@@ -34,12 +34,12 @@ class EnterPin extends Component {
             }
           >
             <ReactCodeInput
-              autoFocus={false}
+              autoFocus={true}
               fieldWidth={32}
               fields={4}
               onChange={value => this.handleChange(value)}
               onComplete={value => this.handleComplete(value)}
-              type={'text'}
+              type={'password'}
               values={this.pin}
             />
             {this.state.hasError && (
@@ -93,7 +93,7 @@ class EnterPin extends Component {
     this.pin = value;
     const isValidPin = await validatePin(value);
     if (isValidPin) {
-      this.setState({ hasError: false, buttonState: ButtonState.ENABLED });
+      this.setState({ hasError: false, buttonState: ButtonState.SELECT });
     } else {
       this.setState({ hasError: true, buttonState: ButtonState.DISABLED });
     }

@@ -11,8 +11,10 @@ class PinNew extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasError: false,
-      buttonState: ButtonState.DISABLED
+      hasErrorFirst: false,
+      hasErrorSecond: false,
+      buttonState: ButtonState.DISABLED,
+      firstPin: ''
     };
     this.firstPin = undefined;
     this.secondPin = undefined;
@@ -25,7 +27,13 @@ class PinNew extends Component {
           <h1>{page_pin_new.title}</h1>
           <p>{page_pin_new.description}</p>
           <div className="pin-new-code">
-            <div className="pin-code">
+            <div
+              className={
+                this.state.hasErrorFirst
+                  ? 'pin-code pin-code-status-error'
+                  : 'pin-code'
+              }
+            >
               <h2>{page_pin_new.new_pin}</h2>
               <ReactCodeInput
                 autoFocus={true}
@@ -33,12 +41,15 @@ class PinNew extends Component {
                 fields={4}
                 onChange={value => this.handleChange(value)}
                 onComplete={value => this.handleComplete(value, 1)}
-                type={'text'}
+                type={'password'}
               />
+              {this.state.hasErrorFirst && (
+                <span className="error">{page_pin_new.error_number}</span>
+              )}
             </div>
             <div
               className={
-                this.state.hasError
+                this.state.hasErrorSecond
                   ? 'pin-code pin-code-status-error'
                   : 'pin-code'
               }
@@ -50,10 +61,10 @@ class PinNew extends Component {
                 fields={4}
                 onChange={value => this.handleChange(value)}
                 onComplete={value => this.handleComplete(value, 2)}
-                type={'text'}
+                type={'password'}
               />
-              {this.state.hasError && (
-                <span className="error">{page_pin_new.error}</span>
+              {this.state.hasErrorSecond && (
+                <span className="error">{page_pin_new.error_match}</span>
               )}
             </div>
           </div>
@@ -69,6 +80,13 @@ class PinNew extends Component {
   }
 
   handleChange = value => {
+    const n = value.length - 1;
+    const isNumber = Number(value[n]) >= 0;
+    if (!isNumber && value) {
+      this.setState({ hasErrorFirst: true, buttonState: ButtonState.DISABLED });
+    } else {
+      this.setState({ hasErrorFirst: false });
+    }
     if (value.length !== 4) {
       this.setState({ buttonState: ButtonState.DISABLED });
     }
@@ -82,10 +100,16 @@ class PinNew extends Component {
     }
 
     if (this.firstPin && this.secondPin) {
-      if (this.firstPin === this.secondPin) {
-        this.setState({ hasError: false, buttonState: ButtonState.ENABLED });
+      if (this.firstPin === this.secondPin && !this.state.hasErrorFirst) {
+        this.setState({
+          hasErrorSecond: false,
+          buttonState: ButtonState.SELECT
+        });
       } else {
-        this.setState({ hasError: true, buttonState: ButtonState.DISABLED });
+        this.setState({
+          hasErrorSecond: true,
+          buttonState: ButtonState.DISABLED
+        });
       }
     }
   };

@@ -22,7 +22,10 @@
     "title": "Create New PIN",
     "description": "This PIN will encrypt your Criptext database so no other apps can read your emails.",
     "new_pin": "New PIN",
-    "confirm_pin": "Confirm PIN"
+    "confirm_pin": "Confirm PIN",
+    "error_match": "PINs don't match, try again",
+    "error_number": "PINs should be number",
+    "button": "Set PIN"
   },
   "page_pin_saved": {
     "title": "Save your recovery key",
@@ -32,6 +35,7 @@
     "download": "download",
     "it_in_a_file": "it in a file",
     "copy": "Copy",
+    "copied": "Copiado",
     "button": "Okay"
   },
   "page_complete": {

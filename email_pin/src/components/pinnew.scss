@@ -8,11 +8,15 @@
   }
 
   .pin-new-code{
-    margin: 45px auto 0;
+    margin: 30px auto 0;
     width: 180px;
 
-    h2{
-      text-align: left;
+    .pin-code{
+      margin-top: 25px;
+
+      h2{
+        text-align: left;
+      }
     }
   }
 

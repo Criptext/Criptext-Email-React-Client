@@ -30,6 +30,7 @@
       border-radius: 4px;
       display: flex;
       flex-direction: row;
+      position: relative;
 
       .icon{
         background-image: url(../#{$_PATH_TO_IMAGES}/key-light.svg);
@@ -58,6 +59,35 @@
         width: 45px;
 
         span{
+          font-size: 11px;
+        }
+      }
+
+      .toast{
+        background-color: rgba(90, 90, 90, 0.7);
+        border-radius: 3px;
+        padding: 0 5px;
+        position: absolute;
+        right: 3px;
+        top: -30px;
+
+        &.disabled{
+          display: none;
+        }
+
+        &::after{
+          content: "";
+          position: absolute;
+          border-width: 5px;
+          border-style: solid;
+          margin-left: -5px;
+          top: 100%;
+          left: 50%;
+          border-color: rgba(90, 90, 90, 0.7) transparent transparent transparent;
+        }
+
+        span{
+          color: white;
           font-size: 11px;
         }
       }

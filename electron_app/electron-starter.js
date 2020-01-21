@@ -38,7 +38,6 @@ globalManager.forcequit.set(false);
 
 async function initApp() {
   const step = await checkDatabaseStep(dbManager);
-  console.log('step', step);
   switch (step) {
     case 1:{
       await startAlice();

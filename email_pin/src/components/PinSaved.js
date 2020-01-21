@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button, { ButtonType } from './Button';
+import Button, { ButtonType, ButtonState } from './Button';
 import string from './../lang';
 import { encryptAndStorePin } from '../utils/AESUtils';
 import './pinsaved.scss';
@@ -11,7 +11,9 @@ class PinSaved extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      recoveryKey: undefined
+      buttonState: ButtonState.DISABLED,
+      recoveryKey: undefined,
+      showTooltip: false
     };
     this.textArea = undefined;
   }
@@ -40,12 +42,16 @@ class PinSaved extends Component {
                 text={page_pin_saved.copy}
                 type={ButtonType.BASIC}
               />
+              <div className={this.defineClassTooltip()}>
+                <span>{page_pin_saved.copied}</span>
+              </div>
             </div>
             <span>
               {page_pin_saved.or}&nbsp;
               <a
                 download="criptext-pin.txt"
                 href={`data:text/plain,${this.state.recoveryKey}`}
+                onClick={this.onClickDownloadRecoveryKey}
               >
                 <b>{page_pin_saved.download}</b>
               </a>&nbsp;
@@ -54,7 +60,7 @@ class PinSaved extends Component {
           </div>
           <Button
             onClick={this.props.onClickSavedIt}
-            state={this.props.buttonState}
+            state={this.state.buttonState}
             text={page_pin_saved.button}
             type={ButtonType.BASIC}
           />
@@ -62,6 +68,15 @@ class PinSaved extends Component {
       </section>
     );
   }
+
+  defineClassTooltip = () => {
+    const state = this.state.showTooltip ? 'enabled' : 'disabled';
+    return `toast ${state}`;
+  };
+
+  onClickDownloadRecoveryKey = () => {
+    this.setState({ buttonState: ButtonState.SELECT });
+  };
 
   storeRecoveryKey = async () => {
     const recoveryKey = await encryptAndStorePin(this.props.pin);
@@ -73,6 +88,7 @@ class PinSaved extends Component {
   copyClipBoard = () => {
     this.textArea.select();
     document.execCommand('copy');
+    this.setState({ buttonState: ButtonState.SELECT, showTooltip: true });
   };
 }
 
