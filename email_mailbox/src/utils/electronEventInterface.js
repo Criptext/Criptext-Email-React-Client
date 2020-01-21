@@ -640,7 +640,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     fileKey,
     fileKeys,
     files,
-    from,
+    from: rawFrom,
     guestEncryption,
     inReplyTo,
     replyTo,
@@ -659,6 +659,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     boundary
   } = params;
   if (!metadataKey) return { rowid: null };
+  const from = rawFrom.replace(/"/g, '');
   const recipientId = buildSenderRecipientId({
     senderId,
     senderDomain,
@@ -756,7 +757,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       boundary,
       date,
       deviceId,
-      from: from.replace(/"/g, ''),
+      from,
       isFromMe,
       metadataKey,
       messageId,
@@ -865,9 +866,10 @@ const sendNewEmailNotification = () => {
         senderInfo,
         threadId
       } = notificationData;
+      const subject = emailSubject || `(${string.mailbox.empty_subject})`;
       const message = getShowEmailPreviewStatus()
-        ? `${emailSubject}\n${emailPreview}`
-        : `${emailSubject}`;
+        ? `${subject}\n${emailPreview}`
+        : `${subject}`;
       showNotificationApp({ title: senderInfo, message, threadId });
     });
   } else if (newEmailNotificationList.length > 3) {
