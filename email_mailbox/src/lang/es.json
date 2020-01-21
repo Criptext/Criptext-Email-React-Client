@@ -334,6 +334,15 @@
         "header": "Eliminando toda la información..."
       }
     },
+    "password_changed": {
+      "title": "Confirma tu nueva contraseña",
+      "parragraphs": {
+        "password": "Tu contraseña ha cambiado remotamente y debes confirmarla.",
+        "cancel": "Si cancelas",
+        "device": "el dispositivo se cerrara sesión y",
+        "data": "todos los datos locales serán eliminados"
+      }
+    },
     "change_password": {
       "title": "Cambiar Contraseña",
       "paragraphs": {

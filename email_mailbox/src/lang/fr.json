@@ -328,6 +328,15 @@
         "header": "Suppression de toutes les données..."
       }
     },
+    "password_changed": {
+      "title": "Confirm your new password",
+      "parragraphs": {
+        "password": "Your password has changed remotely and you must confirm your new password.",
+        "cancel": "If you Cancel",
+        "device": "the device will log out and",
+        "data": "all local data will be erased"
+      }
+    },
     "change_password": {
       "title": "Modifier le mot de passe",
       "paragraphs": {
