@@ -24,7 +24,7 @@
     .bar {
       background-color: rgba(0, 145, 255, 0.25);
       border-radius: 5px;
-      height: 5px;
+      height: 8px;
       margin: 10px auto 0;
       position: relative;
       width: 100%;
@@ -34,7 +34,7 @@
         opacity: 1;
         border-radius: 5px;
         transition: width 1.5s;
-        height: 100%;
+        height: calc(100% - 1px);
         background-image:
           repeating-linear-gradient(
             -45deg,
@@ -50,6 +50,38 @@
       @keyframes move {
         0% { background-position: 0 0; }
         100% { background-position: 28px 0; }
+      }
+    }
+
+    .percent {
+      height: 22px;
+      margin: 8px auto 0;
+      position: relative;
+      width: 46px;
+
+      &::before{
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #373a45 transparent;
+      }
+      
+      .content {
+        width: 45px;
+        height: 22px;
+        border-radius: 50px;
+        background-color: #373a45;
+        text-align: center;
+
+        span {
+          color: #fff;
+          margin: 0px 6px;
+          font-size: 13px;
+        }
       }
     }
   }

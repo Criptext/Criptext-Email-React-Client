@@ -4,10 +4,18 @@ import './encrypt.scss';
 
 const { page_encrypt } = string;
 
+const animationTypes = {
+  RUNNING: 'running-animation',
+  STOP: 'stop-animation'
+};
+
 class Encrypt extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      animationState: animationTypes.RUNNING,
+      percent: 100
+    };
     this.textArea = undefined;
   }
 
@@ -20,9 +28,14 @@ class Encrypt extends Component {
           <div className="encrypt-loading">
             <div className="bar">
               <div
-                className={`content running-animation`}
-                style={{ width: 100 + '%' }}
+                className={`content ${this.state.animationState}`}
+                style={{ width: this.state.percent + '%' }}
               />
+            </div>
+            <div className="percent">
+              <div className="content">
+                <span className="number">{this.state.percent}%</span>
+              </div>
             </div>
           </div>
         </div>

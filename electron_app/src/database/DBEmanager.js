@@ -311,7 +311,9 @@ const getEmailsByArrayParam = params => {
   const value = params[key];
   const param = key.slice(0, -1);
 
-  return Email().findAll({ where: { [param]: value } });
+  return Email()
+    .findAll({ where: { [param]: value } })
+    .map(email => email.toJSON());
 };
 
 const getEmailsByIds = ids => {
@@ -942,9 +944,11 @@ const getLabelByUuid = uuid => {
 const getLabelsByText = async textArray => {
   let labels = [];
   for (const text of textArray) {
-    const labelsMatched = await Label().findAll({
-      where: { text: { [Op.like]: text } }
-    });
+    const labelsMatched = await Label()
+      .findAll({
+        where: { text: { [Op.like]: text } }
+      })
+      .map(label => label.toJSON());
     labels = labels.concat(labelsMatched);
   }
   return labels;
