@@ -203,7 +203,7 @@ class DeleteDeviceWrapperPopup extends Component {
         });
 
       this.setState(state => ({
-        confirmButtonState: ButtonState.ENABLED,
+        confirmButtonState: ButtonState.DISABLED,
         devices,
         step: state.step + 1
       }));
