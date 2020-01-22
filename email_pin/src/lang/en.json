@@ -61,7 +61,7 @@
   },
   "page_enter_recovery_key": {
     "title": "Enter Recovery Key",
-    "description": "You can also upload the Recovery File which was generated when you otiginally set up your PIN.",
+    "description": "You can also upload the Recovery File which was generated the first time you set up your PIN.",
     "enter_key": "Enter key",
     "or": "or",
     "upload": "upload",

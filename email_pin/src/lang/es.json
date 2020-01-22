@@ -1,75 +1,75 @@
 {
   "page_start": {
-    "title": "Setup PIN to protect your Data",
-    "description": "By setting this PIN your Criptext app files will be encrypted so that no other apps in your computer can access them.",
-    "button": "Okay"
+    "title": "Crea un código PIN para proteger tu información",
+    "description": "Cuando creas un código PIN todos tus archivos de Criptext serán encriptados, de esa manera ninguna otra aplicación tendrá acceso a ellos.",
+    "button": "Ok"
   },
   "page_pin_generated": {
-    "title": "We've generated a PIN for you",
-    "description": "This PIN will enrypt your Criptext database",
+    "title": "Hemos creado un código PIN por ti",
+    "description": "El código PIN encriptará tu base de datos de Criptext",
     "options": {
       "keep_it": {
-        "title": "Keep it",
-        "description": "PIN will be saved in your Keychain and you won't need to enter it each time you start Criptext"
+        "title": "Usarlo",
+        "description": "El código PIN se guardará en tu Acceso a Llaveros y no necesitarás ingresarlo cada vez que abras Criptext"
       },
       "change_it": {
-        "title": "Change it",
-        "description": "Set your own PIN"
+        "title": "Cambiarlo",
+        "description": "Crea tu propio código PIN"
       }
     }
   },
   "page_pin_new": {
-    "title": "Create New PIN",
-    "description": "This PIN will encrypt your Criptext database so no other apps can read your emails.",
-    "new_pin": "New PIN",
-    "confirm_pin": "Confirm PIN",
-    "error_match": "PINs don't match, try again",
-    "error_number": "PINs should be number",
-    "button": "Set PIN"
+    "title": "Crear nuevo código PIN",
+    "description": "El código PIN encriptará tu base de datos de Criptext, de esa manera ninguna otra aplicación podrá leer tus correos.",
+    "new_pin": "Nuevo PIN",
+    "confirm_pin": "Confirmar PIN",
+    "error_match": "Códigos PIN no coinciden, intenta de nuevo",
+    "error_number": "Códigos PIN deben ser números",
+    "button": "Crear PIN"
   },
   "page_pin_saved": {
-    "title": "Save your recovery key",
-    "description": "If you forget your PIN, this recovery key will be your only way in. Save it in where you won't forget it.",
-    "copy_recovery_key": "Copy Recovery Key",
-    "or": "or",
-    "download": "download",
-    "it_in_a_file": "it in a file",
-    "copy": "Copy",
+    "title": "Guardar tu clave de recuperación",
+    "description": "Si olvidas tu código PIN, esta clave de recuperación será tu única forma de entrar. Guardala en un lugar que no vayas a olvidar.",
+    "copy_recovery_key": "Copiar clave de recuperación",
+    "or": "ó",
+    "download": "descárgala",
+    "it_in_a_file": "como archivo",
+    "copy": "Copiar",
     "copied": "Copiado",
-    "button": "Okay"
+    "button": "Ok"
   },
   "page_complete": {
-    "title": "PIN setup complete!",
+    "title": "PIN creado exitosamente!",
     "checkbox": {
-      "title": "Don't require PIN on startup",
-      "description": "Your PIN will be saved in your keychain so you don't have to enter it every time you start Criptext."  
+      "title": "No solicitar código PIN al inicio",
+      "description": "Tu código PIN se guardará en tu Acceso a Llaveros y no necesitarás ingresarlo cada vez que abras Criptext."  
     },
-    "button": "Done"
+    "button": "Listo"
   },
   "page_encrypt": {
-    "title": "Encrypting Database"
+    "title": "Encriptando Base de Datos"
   },
   "page_enter_pin": {
-    "title": "Enter Security PIN",
-    "ask": " Forgot PIN?",
+    "title": "Ingresar código PIN",
+    "ask": " ¿Olvidaste tu PIN?",
     "checkbox": {
-      "title": "Do not request PIN starting the app",
-      "description": "The PIN will be saved in your Keychain Access, so you can get in without being asked."  
+      "title": "No solicitar PIN al entrar a la aplicación",
+      "description": "Tu código PIN se guardará en tu Acceso a Llaveros, de esa manera se podrá obtenerlo automáticamente."  
     },
-    "error": "Wrong PIN, try again",
-    "button": "Done"
+    "error": "PIN incorrecto, intenta de nuevo",
+    "button": "Listo"
   },
   "page_enter_recovery_key": {
-    "title": "Enter Recovery Key",
-    "description": "You can also upload the Recovery File which was generated when you otiginally set up your PIN.",
-    "enter_key": "Enter key",
-    "or": "or",
-    "upload": "upload",
-    "recovery_file": "recovery file",
-    "button": "Okay",
+    "title": "Ingresar clave de recuperación",
+    "description": "También puedes subir tu archivo de recuperación el cual fue generado la primera vez que creaste tu PIN.",
+    "enter_key": "Ingresar clave",
+    "or": "ó",
+    "upload": "subir",
+    "recovery_file": "archivo de recuperación",
+    "button": "Ok",
     "error": {
-      "empty": "Ingrese su clave de recuperación o suba el archivo que lo contiene",
-      "file": "Archivo erroneo, por favor seleccione otro archivo",
+      "empty": "Ingresa tu clave de recuperación o sube el archivo que lo contiene",
+      "file": "Archivo erróneo, por favor selecciona otro archivo",
       "key": "Clave de recuperación incorrecta"
     }
   }
