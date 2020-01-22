@@ -65,7 +65,7 @@ const saveEmailBody = async ({
   const emailPath = `${myPath}/${metadataKey}`;
   await createIfNotExist(emailPath);
 
-  if (!!body) {
+  if (body) {
     const bodyPath = `${emailPath}/body.txt`;
     const bodyToStore = !password
       ? body
@@ -73,7 +73,7 @@ const saveEmailBody = async ({
     await store(bodyPath, bodyToStore);
   }
 
-  if (!!headers) {
+  if (headers) {
     const headersPath = `${emailPath}/headers.txt`;
     const headersToStore = !password
       ? headers

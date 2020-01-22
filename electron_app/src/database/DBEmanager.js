@@ -25,7 +25,7 @@ const moment = require('moment');
 const { noNulls } = require('../utils/ObjectUtils');
 const { formContactsRow } = require('../utils/dataTableUtils.js');
 const { HTMLTagsRegex } = require('../utils/RegexUtils');
-const { parseDate } = require('../utils/TimeUtils');
+const { parseDate, formatDate } = require('../utils/TimeUtils');
 const { genUUID } = require('../utils/stringUtils');
 const { setLanguage } = require('../lang');
 const systemLabels = require('../systemLabels');
@@ -518,7 +518,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
       ${customRejectedLabels}
       ORDER BY ${Table.EMAIL}.date DESC
     )
-    GROUP BY threadId
+    GROUP BY uniqueId
     ${labelId > 0 ? `HAVING myAllLabels LIKE "%L${labelId}L%"` : ''}
     ORDER BY date DESC
     LIMIT ${limit || 22}`;
@@ -1213,7 +1213,6 @@ const cleanKeys = async () => {
 const clearAndFormatDateEmails = emailObjOrArray => {
   let tempArr = [];
   const isAnEmailArray = Array.isArray(emailObjOrArray);
-  const emailDateFormat = 'YYYY-MM-DD HH:mm:ss';
   if (!isAnEmailArray) {
     tempArr.push(emailObjOrArray);
   } else {
@@ -1222,13 +1221,9 @@ const clearAndFormatDateEmails = emailObjOrArray => {
   const formattedDateEmails = tempArr.map(email => {
     return noNulls({
       ...email,
-      date: moment.utc(email.date, emailDateFormat),
-      trashDate: email.trashDate
-        ? moment.utc(email.trashDate, emailDateFormat)
-        : null,
-      unsentDate: email.unsentDate
-        ? moment.utc(email.unsentDate, emailDateFormat)
-        : null
+      date: formatDate(email.date),
+      trashDate: email.trashDate ? formatDate(email.trashDate) : null,
+      unsentDate: email.unsentDate ? formatDate(email.unsentDate) : null
     });
   });
   return isAnEmailArray ? formattedDateEmails : formattedDateEmails[0];
