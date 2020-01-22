@@ -1,20 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import string from '../lang';
 
 const PasswordChangedPopup = props => {
   return (
     <div className="popup-content">
       <div className="popup-title">
-        <h1>Enter your password to continue</h1>
+        <h1>{string.popups.password_changed.title}</h1>
       </div>
       <div className="popup-paragraph">
+        <p>{string.popups.password_changed.parragraphs.password}</p>
         <p>
-          Your password has changed remotely and you must confirm your new
-          password.
-        </p>
-        <p>
-          <strong>If you Cancel</strong> the device will log out and
-          <strong> all local data will be erased</strong>
+          <strong>{string.popups.password_changed.parragraphs.cancel}</strong>{' '}
+          {string.popups.password_changed.parragraphs.device}
+          <strong> {string.popups.password_changed.parragraphs.data}</strong>
         </p>
       </div>
       <div className="popup-inputs">
@@ -71,14 +70,14 @@ const PasswordChangedPopupButtons = props => (
       className="button-a popup-cancel-button"
       onClick={props.onClickCancelPasswordChanged}
     >
-      <span>Cancel</span>
+      <span>{string.popups.change_password.cancelButtonLabel}</span>
     </button>
     <button
       className="button-a popup-confirm-button"
       onClick={props.onConfirmPasswordChanged}
       disabled={props.isDisabledConfirmButton}
     >
-      <span>Confirm</span>
+      <span>{string.popups.change_password.confirmButtonLabel}</span>
     </button>
   </div>
 );
