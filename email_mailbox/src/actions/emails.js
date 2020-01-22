@@ -44,6 +44,12 @@ export const addEmails = emails => {
   };
 };
 
+export const addEmailLabel = (email, labelAdd) => ({
+  type: Email.ADD_LABEL,
+  email,
+  labelAdd
+});
+
 export const muteNotifications = emailId => {
   return {
     type: Email.MUTE,

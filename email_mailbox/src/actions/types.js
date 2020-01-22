@@ -28,6 +28,7 @@ export const Contact = {
 
 export const Email = {
   ADD_BATCH: 'ADD_EMAILS',
+  ADD_LABEL: 'ADD_LABEL',
   MUTE: 'MUTE_EMAIL',
   MARK_UNREAD: 'MARK_UNREAD_EMAIL',
   UNSEND: 'UNSEND_EMAIL',

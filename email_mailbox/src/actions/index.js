@@ -38,6 +38,7 @@ import {
   updateThread
 } from './threads';
 import {
+  addEmailLabel,
   addEmails,
   loadEmails,
   muteEmail,
@@ -75,6 +76,7 @@ import { clearSuggestions, loadSuggestions } from './suggestions';
 import { addDataApp, loadApp } from './app';
 
 export {
+  addEmailLabel,
   addContacts,
   addDataApp,
   addEmails,

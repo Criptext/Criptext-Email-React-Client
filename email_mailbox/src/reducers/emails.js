@@ -80,6 +80,13 @@ const emails = (state = new Map(), action) => {
         return state.set(`${emailId}`, email(emailState, action));
       }, state);
     }
+    case Email.ADD_LABEL: {
+      const emailId = action.email.id;
+      if (!emailId) return state;
+      const emailState = state.get(`${emailId}`);
+      if (!emailState) return state;
+      return state.set(`${emailId}`, email(emailState, action));
+    }
     default:
       return state;
   }
@@ -108,6 +115,13 @@ const email = (state, action) => {
         content: content || state.get('content'),
         unread: typeof unread === 'boolean' ? unread : state.get('unread')
       });
+    }
+    case Email.ADD_LABEL: {
+      const labelIds = state.get('labelIds');
+      if (!labelIds || labelIds.has(action.labelAdd)) return state;
+      const newSet = new Set([action.labelAdd]);
+      const mergedSet = new Set([...labelIds, ...newSet]);
+      return state.set('labelIds', mergedSet);
     }
     default:
       return state;
