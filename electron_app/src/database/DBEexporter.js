@@ -903,7 +903,17 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
               break;
             }
             case Table.EMAIL: {
-              emails.push(object);
+              const emailToStore = {
+                ...object,
+                date: moment.utc(object.date, 'YYYY-MM-DD HH:mm:ss'),
+                unsentDate: object.unsentDate
+                  ? moment.utc(object.unsentDate, 'YYYY-MM-DD HH:mm:ss')
+                  : undefined,
+                trashDate: object.trashDate
+                  ? moment.utc(object.trashDate, 'YYYY-MM-DD HH:mm:ss')
+                  : undefined
+              };
+              emails.push(emailToStore);
               if (emails.length === EMAILS_BATCH) {
                 lineReader.pause();
                 await storeEmailBodies(emails, userEmail);

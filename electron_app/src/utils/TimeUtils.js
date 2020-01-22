@@ -27,12 +27,22 @@ const defineUnitToAppend = frequency => {
 };
 
 const parseDate = date => {
-  return moment(date).format(DateFormat);
+  return moment(date)
+    .tz('UTC')
+    .format(DateFormat);
+};
+
+const formatDate = date => {
+  if (typeof date !== 'string') {
+    return moment().format(DateFormat);
+  }
+  return moment.utc(date, DateFormat);
 };
 
 module.exports = {
   backupDateFormat: DateFormat,
   defineBackupFileName,
   defineUnitToAppend,
+  formatDate,
   parseDate
 };

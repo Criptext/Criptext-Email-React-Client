@@ -7,7 +7,7 @@ const path = require('path');
 const rimraf = require('rimraf');
 const Model = Sequelize.Model;
 const Op = Sequelize.Op;
-const { parseDate } = require('./../utils/TimeUtils');
+const { parseDate, formatDate } = require('./../utils/TimeUtils');
 
 let sequelize;
 
@@ -168,7 +168,11 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
           return null;
         },
         set(val) {
-          if (val) this.setDataValue('trashDate', parseDate(val));
+          if (val) {
+            this.setDataValue('trashDate', formatDate(val));
+          } else {
+            this.setDataValue('trashDate', null);
+          }
         }
       },
       messageId: Sequelize.STRING,
@@ -247,7 +251,7 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
           return null;
         },
         set(val) {
-          if (val) this.setDataValue('date', parseDate(val));
+          if (val) this.setDataValue('date', formatDate(val));
         }
       },
       mimeType: Sequelize.STRING,
@@ -276,7 +280,7 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
           return null;
         },
         set(val) {
-          if (val) this.setDataValue('date', parseDate(val));
+          if (val) this.setDataValue('date', formatDate(val));
         }
       },
       type: Sequelize.INTEGER,

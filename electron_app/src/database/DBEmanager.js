@@ -526,6 +526,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   const threads = await sequelize.query(query, {
     type: sequelize.QueryTypes.SELECT
   });
+
   const emailIds = threads.reduce((result, thread) => {
     const emailIds = thread.emailIds;
     return result ? `${result},${emailIds}` : emailIds;
@@ -1221,12 +1222,12 @@ const clearAndFormatDateEmails = emailObjOrArray => {
   const formattedDateEmails = tempArr.map(email => {
     return noNulls({
       ...email,
-      date: moment(email.date).format(emailDateFormat),
+      date: moment.utc(email.date, emailDateFormat),
       trashDate: email.trashDate
-        ? moment(email.trashDate).format(emailDateFormat)
+        ? moment.utc(email.trashDate, emailDateFormat)
         : null,
       unsentDate: email.unsentDate
-        ? moment(email.unsentDate).format(emailDateFormat)
+        ? moment.utc(email.unsentDate, emailDateFormat)
         : null
     });
   });
