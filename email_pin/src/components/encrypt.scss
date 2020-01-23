@@ -1,6 +1,8 @@
 @import './../styles/index.scss';
 
 .encrypt-content{
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
   text-align: center;
   width: 63%;
@@ -9,7 +11,7 @@
     background-image: url(../#{$_PATH_TO_IMAGES}/lock.png);
     background-size: 100% auto;
     height: 124px;
-    margin: 75px auto 0;
+    margin: 55px auto 0;
     width: 158px;
   }
 
@@ -18,7 +20,7 @@
   }
 
   .encrypt-loading{
-    margin: 40px auto 0;
+    margin: 10px auto 0;
     width: 175px;
 
     .bar {
@@ -84,5 +86,11 @@
         }
       }
     }
+  }
+
+  >span{
+    color: #8d95a5;
+    font-size: 12px;
+    margin-top: 25px;
   }
 }

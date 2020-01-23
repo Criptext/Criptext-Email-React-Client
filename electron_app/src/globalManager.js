@@ -16,6 +16,7 @@ global.pendingRestore = false;
 global.backupStatus = null;
 global.needsUpgrade = false;
 global.databaseKey = '';
+global.progressDBE = { total: 25, current: 0 };
 
 /*  Composer
 ----------------------------- */
@@ -77,7 +78,6 @@ const enableUpgrade = () => {
 const disableUpgrade = () => {
   global.needsUpgrade = false;
 };
-
 const getNeedsUpgrade = () => {
   return global.needsUpgrade;
 };
@@ -87,7 +87,6 @@ const getNeedsUpgrade = () => {
 const getMAS = () => {
   return global.isMAS;
 };
-
 const getWinStore = () => {
   return global.isWindowsStore;
 };
@@ -155,6 +154,16 @@ const getDatabaseKey = () => {
   return global.databaseKey;
 };
 
+const setProgressDBE = ({ current, add }) => {
+  let valueCurrent = current;
+  if (add) valueCurrent = global.progressDBE.current + add;
+  global.progressDBE = { ...global.progressDBE, current: valueCurrent };
+};
+
+const getProgressDBE = () => {
+  return global.progressDBE;
+};
+
 module.exports = {
   composerData: {
     get: getComposerData,
@@ -216,5 +225,9 @@ module.exports = {
   databaseKey: {
     get: getDatabaseKey,
     set: setDatabaseKey
+  },
+  progressDBE: {
+    get: getProgressDBE,
+    set: setProgressDBE
   }
 };

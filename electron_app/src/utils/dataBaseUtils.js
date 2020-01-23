@@ -23,7 +23,17 @@ const checkDatabaseStep = async dbManager => {
     await dbManager.createTables();
     needsMigration = !(await dbManager.hasColumnPreKeyRecordLength());
   }
-  if (existsDatabaseEncrypted) return 4;
+  if (existsDatabaseEncrypted) {
+    if (existsDatabaseNormal) {
+      const myEDBPath = getFilenamePath(
+        process.env.NODE_ENV,
+        'CriptextEncrypt.db'
+      );
+      await deleteFile(myEDBPath);
+      return 2;
+    }
+    return 4;
+  }
   if (!existsDatabaseEncrypted && !existsDatabaseNormal) return 3;
   if (!existsDatabaseEncrypted && existsDatabaseNormal && !needsMigration)
     return 2;

@@ -81,13 +81,10 @@ const createNotEncryptDatabaseConnection = dbPath => {
 const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
   const filepath = outputPath;
   const dbConn = await createNotEncryptDatabaseConnection(databasePath);
-
   const accountsData = await _exportAccountTable(dbConn);
   saveToFile({ data: accountsData.rowsString, filepath, mode: 'w' }, true);
-
   const contacts = await _exportContactTable(dbConn);
   saveToFile({ data: contacts, filepath, mode: 'a' });
-
   const labels = await _exportLabelTable(dbConn);
   saveToFile({ data: labels, filepath, mode: 'a' });
 
@@ -102,36 +99,31 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
       ? firstAccount.recipientId
       : `${firstAccount.recipientId}@${APP_DOMAIN}`;
   }
+  globalManager.progressDBE.set({ add: 1 });
   const emails = await _exportEmailTable(dbConn, userEmail);
   saveToFile({ data: emails, filepath, mode: 'a' });
-
+  globalManager.progressDBE.set({ add: 1 });
   const emailContacts = await _exportEmailContactTable(dbConn);
   saveToFile({ data: emailContacts, filepath, mode: 'a' });
-
+  globalManager.progressDBE.set({ add: 1 });
   const emailLabels = await _exportEmailLabelTable(dbConn);
   saveToFile({ data: emailLabels, filepath, mode: 'a' });
-
   const feeditems = await _exportFeedItemTable(dbConn);
   saveToFile({ data: feeditems, filepath, mode: 'a' });
-
+  globalManager.progressDBE.set({ add: 1 });
   const files = await _exportFileTable(dbConn);
   saveToFile({ data: files, filepath, mode: 'a' });
-
+  globalManager.progressDBE.set({ add: 1 });
   const identities = await _exportIdentitykeyrecordTable(dbConn);
   saveToFile({ data: identities, filepath, mode: 'a' });
-
   const pendingevents = await _exportPendingeventTable(dbConn);
   saveToFile({ data: pendingevents, filepath, mode: 'a' });
-
   const prekeyrecords = await _exportPrekeyrecordTable(dbConn);
   saveToFile({ data: prekeyrecords, filepath, mode: 'a' });
-
   const sessionrecords = await _exportSessionrecordTable(dbConn);
   saveToFile({ data: sessionrecords, filepath, mode: 'a' });
-
   const settings = await _exportSettingsTable(dbConn);
   saveToFile({ data: settings, filepath, mode: 'a' });
-
   const signedprekeyrecords = await _exportSignedprekeyrecordTable(dbConn);
   saveToFile({ data: signedprekeyrecords, filepath, mode: 'a' });
 
@@ -871,10 +863,15 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
     }
 
     const lineReader = new LineByLineReader(filepath);
+    let currentTable = '';
     return new Promise((resolve, reject) => {
       lineReader
         .on('line', async line => {
           const { table, object } = JSON.parse(line);
+          if (currentTable !== table && !isStrict) {
+            currentTable = table;
+            globalManager.progressDBE.set({ add: 1 });
+          }
           switch (table) {
             case Table.ACCOUNT: {
               if (!userEmail) {
@@ -1043,11 +1040,14 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
         .on('error', reject)
         .on('end', async () => {
           try {
+            if (!isStrict) globalManager.progressDBE.set({ add: 1 });
             await insertRemainingRows(accounts, Account(), trx);
             await insertRemainingRows(contacts, Contact(), trx);
             await insertRemainingRows(labels, Label(), trx);
+            if (!isStrict) globalManager.progressDBE.set({ add: 1 });
             await storeEmailBodies(emails, userEmail);
             await insertRemainingRows(emails, Email(), trx);
+            if (!isStrict) globalManager.progressDBE.set({ add: 1 });
             await insertRemainingRows(emailContacts, EmailContact(), trx);
             await insertRemainingEmailLabelsRows(
               emailLabels,
@@ -1067,6 +1067,7 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
               trx
             );
             await replaceEmailsWithCopy(userEmail);
+            if (!isStrict) globalManager.progressDBE.set({ current: 25 });
             resolve();
           } catch (error) {
             console.log(error);
@@ -1099,6 +1100,7 @@ const insertRemainingEmailLabelsRows = async (rows, Table, trx) => {
 
 const storeEmailBodies = (emailRows, userEmail) => {
   if (!userEmail) return;
+  const pin = globalManager.databaseKey.get();
   return Promise.all(
     emailRows.map(email => {
       const body = email.content;
@@ -1110,7 +1112,7 @@ const storeEmailBodies = (emailRows, userEmail) => {
         headers,
         username: userEmail,
         metadataKey: email.key,
-        password: globalManager.databaseKey.get(),
+        password: pin,
         isCopy: true
       });
     })
