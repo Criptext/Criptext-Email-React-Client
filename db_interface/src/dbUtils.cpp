@@ -7,7 +7,7 @@ database initializeDB(string dbPath, string password) {
     return database(dbPath, config);
   }
   sqlcipher_config config;
-  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
+  config.flags = OpenFlags::FULLMUTEX | OpenFlags::PRIVATECACH | OpenFlags::READWRITE;
   config.key = password;
   return sqlcipher_database(dbPath, config);
 }
