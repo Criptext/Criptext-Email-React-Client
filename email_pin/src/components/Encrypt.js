@@ -16,7 +16,8 @@ class Encrypt extends Component {
     super(props);
     this.state = {
       animationState: animationTypes.RUNNING,
-      percent: 0
+      percent: 0,
+      stepTitle: 1
     };
     this.textArea = undefined;
     const { total } = getProgressDBE();
@@ -30,7 +31,7 @@ class Encrypt extends Component {
       <section>
         <div className="encrypt-content">
           <div className="encrypt-icon" />
-          <h1>{page_encrypt.title}</h1>
+          <h1>{page_encrypt.steps[this.state.stepTitle]}</h1>
           <div className="encrypt-loading">
             <div className="bar">
               <div
@@ -44,7 +45,7 @@ class Encrypt extends Component {
               </div>
             </div>
           </div>
-          <span>This may take a while, does not close the window</span>
+          <span>{page_encrypt.paragraph}</span>
         </div>
       </section>
     );
@@ -61,7 +62,13 @@ class Encrypt extends Component {
       this.next = this.current * 100 / this.total;
       if (this.next > this.state.percent) {
         this.setState(state => {
-          return { percent: state.percent + 1 };
+          let stepTitle = state.stepTitle;
+          if (
+            (current >= 2 && current <= 6 && state.stepTitle === 1) ||
+            (current > 6 && state.stepTitle === 2)
+          )
+            stepTitle++;
+          return { percent: state.percent + 1, stepTitle };
         });
       }
     } else if (this.next > this.state.percent) {

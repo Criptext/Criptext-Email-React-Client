@@ -47,7 +47,12 @@
     "button": "Listo"
   },
   "page_encrypt": {
-    "title": "Encriptando Base de Datos"
+    "steps": {
+      "1": "Configurando la base de datos",
+      "2": "Importando datos",
+      "3": "Encriptando correos"
+    },
+    "paragraph": "Esto tomará unos minutos, no cierres la ventana"
   },
   "page_enter_pin": {
     "title": "Ingresar código PIN",

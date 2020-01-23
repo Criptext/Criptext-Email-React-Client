@@ -47,7 +47,12 @@
     "button": "Done"
   },
   "page_encrypt": {
-    "title": "Encrypting Database"
+    "steps": {
+      "1": "Configurating database",
+      "2": "Importing data",
+      "3": "Encrypting emails"
+    },
+    "paragraph": "This may take a while, don't close the window"
   },
   "page_enter_pin": {
     "title": "Enter Security PIN",
