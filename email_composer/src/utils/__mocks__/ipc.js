@@ -72,10 +72,6 @@ export const getContactsByEmailId = id => {
   return id === emailId ? response : emptyResponse;
 };
 
-export const getEmailByKey = key => {
-  return emails.filter(email => email.key === key);
-};
-
 export const getEmailByKeyWithbody = key => {
   return emails.filter(email => email.key === key)[0];
 };
