@@ -138,3 +138,25 @@ describe('Email actions - REMOVE_EMAILS ', () => {
     expect(nextState.get('3')).toBeUndefined();
   });
 });
+
+describe('Email actions - ADD LABEL ', () => {
+  it('Add email label id to emails', () => {
+    const prevState = initState(myEmails);
+    const emailRaw = myEmails[0];
+    const action = actions.addEmailLabel([emailRaw], 2);
+    const nextState = emailReducer(prevState, action);
+    const newEmail = nextState.get('1');
+    expect(newEmail.get('labelIds')).toContain(2);
+  });
+});
+
+describe('Email actions - DELETE LABEL', () => {
+  it('Delete email label id from emails', () => {
+    const prevState = initState(myEmails);
+    const emailRaw = myEmails[1];
+    const action = actions.removeEmailLabel([emailRaw], 2);
+    const nextState = emailReducer(prevState, action);
+    const newEmail = nextState.get('2');
+    expect(newEmail.get('labelIds')).not.toContain(2);
+  });
+});

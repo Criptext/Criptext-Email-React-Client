@@ -3,7 +3,9 @@ import {
   addDataApp,
   addContacts,
   addEmails,
+  addEmailLabel,
   addFiles,
+  removeEmailLabel,
   loadFeedItems,
   removeEmails,
   startLoadSync,
@@ -48,6 +50,16 @@ export const addThreads = (labelId, threads, clear) => ({
   threads: threads,
   clear: clear
 });
+
+const returnEmailIdsFromThreadsIds = async threadIds => {
+  const emails = await Promise.all(
+    threadIds.map(async threadId => {
+      const emailsOfThread = await getEmailsByThreadId(threadId);
+      return emailsOfThread;
+    })
+  );
+  return [].concat.apply([], emails);
+};
 
 export const addLabelIdThread = (currentLabelId, threadId, labelId) => {
   return async dispatch => {
@@ -227,6 +239,10 @@ export const addMoveLabelIdThreads = ({
           labelIds = [...labelIds, labelIdToAdd];
         if (labelIds.length) dispatch(updateBadgeLabels(labelIds));
         dispatch(moveThreads(currentLabelId, threadIds));
+
+        const emails = await returnEmailIdsFromThreadsIds(threadIds);
+
+        dispatch(addEmailLabel(emails, labelIdToAdd));
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -293,6 +309,8 @@ export const removeLabelIdThread = (currentLabelId, threadId, labelId) => {
       const dbResponse = await deleteEmailLabel(params);
       if (dbResponse) {
         dispatch(removeLabelIdThreadSuccess(currentLabelId, threadId, labelId));
+        const emails = await getEmailsByThreadId(threadId);
+        dispatch(removeEmailLabel(emails, labelId));
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -348,6 +366,7 @@ export const removeLabelIdThreads = (
         await postPeerEvent(eventParams);
       }
 
+      const emails = await returnEmailIdsFromThreadsIds(threadIds);
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
           const emails = await getEmailsByThreadId(threadId);
@@ -359,6 +378,7 @@ export const removeLabelIdThreads = (
       dispatch(
         removeLabelIdThreadsSuccess(currentLabelId, threadIds, labelIdToRemove)
       );
+      dispatch(removeEmailLabel(emails, labelIdToRemove));
       let labelToUpdateBadge =
         labelIdToRemove === LabelType.inbox ? LabelType.inbox.id : null;
       labelToUpdateBadge =

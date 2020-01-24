@@ -81,11 +81,27 @@ const emails = (state = new Map(), action) => {
       }, state);
     }
     case Email.ADD_LABEL: {
-      const emailId = action.email.id;
-      if (!emailId) return state;
-      const emailState = state.get(`${emailId}`);
-      if (!emailState) return state;
-      return state.set(`${emailId}`, email(emailState, action));
+      const emails = action.emails;
+      if (!emails || !emails.length) return state;
+      return emails.reduce((state, emailItem) => {
+        const emailId = emailItem.id;
+        if (!emailId) return state;
+        const emailState = state.get(`${emailId}`);
+        if (!emailState) return state;
+        return state.set(`${emailId}`, email(emailState, action));
+      }, state);
+    }
+    case Email.DELETE_LABEL: {
+      const emails = action.emails;
+      if (!emails || !emails.length) return state;
+      return emails.reduce((state, emailItem) => {
+        const emailId = emailItem.id;
+        if (!emailId) return state;
+        const emailState = state.get(`${emailId}`);
+        if (!emailState) return state;
+        // const action = { type: Email.ADD_LABEL, emailId, labelAdd: action.labelAdd}
+        return state.set(`${emailId}`, email(emailState, action));
+      }, state);
     }
     default:
       return state;
@@ -122,6 +138,12 @@ const email = (state, action) => {
       const newSet = new Set([action.labelAdd]);
       const mergedSet = new Set([...labelIds, ...newSet]);
       return state.set('labelIds', mergedSet);
+    }
+    case Email.DELETE_LABEL: {
+      const labelIds = state.get('labelIds');
+      if (!labelIds || !labelIds.has(action.labelDelete)) return state;
+      const newSet = new Set(labelIds.delete(action.labelDelete));
+      return state.set('labelIds', newSet);
     }
     default:
       return state;

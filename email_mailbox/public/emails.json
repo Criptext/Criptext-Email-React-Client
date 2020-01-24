@@ -13,6 +13,7 @@
       "status": 3,
       "unread": 1,
       "secure": 1,
+      "labelIds": "1",
       "isMuted": 0,
       "trashDate": null
     },
@@ -28,6 +29,7 @@
       "status": 3,
       "unread": 1,
       "secure": 1,
+      "labelIds": "1,2",
       "isMuted": 0,
       "trashDate": null
     },
@@ -43,6 +45,7 @@
       "status": 3,
       "unread": 1,
       "secure": 0,
+      "labelIds": "1,2",
       "isMuted": 0,
       "trashDate": null
     }
