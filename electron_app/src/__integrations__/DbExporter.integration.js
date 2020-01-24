@@ -63,7 +63,6 @@ const email = {
   email: {
     threadId: 'threadA',
     key: '1',
-    s3Key: 's3KeyA',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -177,7 +176,7 @@ describe('Parse database: ', () => {
 
   it('Should parse Emails to string', async () => {
     await insertEmail(email);
-    const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"messageId":"messageId1","fromAddress":"Alice <alice@criptext.com>","replyTo":"","unsentDate":"2018-06-14 08:23:20"}}`;
+    const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"messageId":"messageId1","fromAddress":"Alice <alice@criptext.com>","replyTo":"","unsentDate":"2018-06-14 08:23:20"}}`;
     const expectedJSON = JSON.parse(expectedString);
     const emailsString = await exportEmailTable(dbConnection);
     const emailsJSON = JSON.parse(emailsString);

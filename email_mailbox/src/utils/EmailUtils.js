@@ -297,7 +297,6 @@ export const formIncomingEmailFromData = ({
   const email = {
     key: metadataKey,
     threadId,
-    s3Key: metadataKey,
     preview,
     subject,
     date,

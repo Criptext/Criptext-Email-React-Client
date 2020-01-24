@@ -242,6 +242,7 @@ html, html body {
 }
 
 .wrapper{
+  background-color: white;
   display: flex;
   height: 100%;
   width: 100%;
@@ -343,17 +344,3 @@ html, html body {
     }
   }
 }
-
-  /* THEME
-   ----------------------------- */
-@mixin themable($_THEME, $_BACKGROUND_COLOR_MAIN){
-  [data-theme^=#{$_THEME}],
-  [data-theme] [data-theme^=#{$_THEME}] {
-    &.wrapper{
-      background-color: $_BACKGROUND_COLOR_MAIN;
-    }
-  }
-}
-  
-@include themable($_THEME_LIGHT, $_BACKGROUND_COLOR_MAIN_LIGHT);
-@include themable($_THEME_DARK, $_BACKGROUND_COLOR_MAIN_DARK);

@@ -4,7 +4,6 @@ import string from './../lang';
 import './encrypt.scss';
 
 const { page_encrypt } = string;
-const delay = 1000;
 
 const animationTypes = {
   RUNNING: 'running-animation',
@@ -24,6 +23,7 @@ class Encrypt extends Component {
     this.total = total;
     this.current = 0;
     this.next = 0;
+    this.delay = 1000;
   }
 
   render() {
@@ -58,6 +58,7 @@ class Encrypt extends Component {
   increasePercent = () => {
     const { current } = getProgressDBE();
     if (current !== this.current) {
+      if (current >= 6 && this.delay === 1000) this.delay = this.delay * 2;
       this.current = current;
       this.next = this.current * 100 / this.total;
       if (this.next > this.state.percent) {
@@ -79,7 +80,7 @@ class Encrypt extends Component {
       clearTimeout(this.tm);
       return;
     }
-    this.tm = setTimeout(this.increasePercent, delay);
+    this.tm = setTimeout(this.increasePercent, this.delay);
   };
 }
 

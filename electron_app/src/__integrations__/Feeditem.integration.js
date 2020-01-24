@@ -5,7 +5,6 @@ const email = {
   email: {
     threadId: 'threadC',
     key: '3',
-    s3Key: 's3KeyC',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',

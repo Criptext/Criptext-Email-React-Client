@@ -53,12 +53,12 @@ const whereRawEmailQuery = `
 
 /* Batches
 ----------------------------- */
-const CONTACTS_BATCH = 50;
-const EMAIL_CONTACTS_BATCH = 100;
-const EMAIL_LABELS_BATCH = 100;
-const EMAILS_BATCH = 50;
-const FEEDITEM_BATCH = 50;
-const FILES_BATCH = 50;
+const CONTACTS_BATCH = 100;
+const EMAIL_CONTACTS_BATCH = 200;
+const EMAIL_LABELS_BATCH = 200;
+const EMAILS_BATCH = 100;
+const FEEDITEM_BATCH = 100;
+const FILES_BATCH = 100;
 const IDENTITYKEYRECORD_BATCH = 50;
 const LABELS_BATCH = 50;
 const PENDINGEVENT_BATCH = 50;
@@ -113,7 +113,6 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
   globalManager.progressDBE.set({ add: 1 });
   const files = await _exportFileTable(dbConn);
   saveToFile({ data: files, filepath, mode: 'a' });
-  globalManager.progressDBE.set({ add: 1 });
   const identities = await _exportIdentitykeyrecordTable(dbConn);
   saveToFile({ data: identities, filepath, mode: 'a' });
   const pendingevents = await _exportPendingeventTable(dbConn);
@@ -593,15 +592,6 @@ const exportEmailTable = async () => {
       where: {
         [Op.and]: [getDB().literal(`${whereRawEmailQuery}`)]
       },
-      // include: [
-      //   {
-      //     model: EmailLabel(),
-      //     where: { labelId: { [Op.not]: excludedLabels } }
-      //   }
-      // ],
-      // where: {
-      //   status: { [Op.not]: excludedEmailStatus }
-      // },
       offset,
       limit: SELECT_ALL_BATCH
     });
@@ -868,7 +858,15 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
       lineReader
         .on('line', async line => {
           const { table, object } = JSON.parse(line);
-          if (currentTable !== table && !isStrict) {
+          if (
+            currentTable !== table &&
+            !isStrict &&
+            (table === Table.ACCOUNT ||
+              table === Table.EMAIL ||
+              table === 'email_contact' ||
+              table === 'email_label' ||
+              table === Table.FEEDITEM)
+          ) {
             currentTable = table;
             globalManager.progressDBE.set({ add: 1 });
           }
@@ -925,7 +923,7 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
             }
             case 'email_contact': {
               emailContacts.push(object);
-              if (emailContacts.length === EMAIL_CONTACTS_BATCH) {
+              if (emailContacts.length >= EMAIL_CONTACTS_BATCH) {
                 lineReader.pause();
                 try {
                   await EmailContact().bulkCreate(emailContacts, {
@@ -933,6 +931,15 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
                   });
                   emailContacts = [];
                 } catch (error) {
+                  if (contacts.length) {
+                    await Contact().bulkCreate(contacts, { transaction: trx });
+                    contacts = [];
+                  }
+                  if (emails.length) {
+                    await storeEmailBodies(emails, userEmail);
+                    await Email().bulkCreate(emails, { transaction: trx });
+                    emails = [];
+                  }
                   console.log('email_contact', error);
                 }
                 lineReader.resume();
@@ -941,7 +948,7 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
             }
             case 'email_label': {
               emailLabels.push(object);
-              if (emailLabels.length === EMAIL_LABELS_BATCH) {
+              if (emailLabels.length >= EMAIL_LABELS_BATCH) {
                 lineReader.pause();
                 try {
                   await EmailLabel().bulkCreate(emailLabels, {
@@ -949,6 +956,10 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
                   });
                   emailLabels = [];
                 } catch (error) {
+                  if (labels.length) {
+                    await Label().bulkCreate(labels, { transaction: trx });
+                    labels = [];
+                  }
                   console.log('email_label', error);
                 }
                 lineReader.resume();
@@ -1077,7 +1088,7 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
               trx
             );
             await replaceEmailsWithCopy(userEmail);
-            if (!isStrict) globalManager.progressDBE.set({ current: 25 });
+            if (!isStrict) globalManager.progressDBE.set({ current: 12 });
             resolve();
           } catch (error) {
             console.log(error);

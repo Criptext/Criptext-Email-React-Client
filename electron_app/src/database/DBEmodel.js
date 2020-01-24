@@ -139,7 +139,6 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       key: { type: Sequelize.STRING, unique: true },
       threadId: Sequelize.STRING,
-      s3Key: Sequelize.STRING,
       subject: Sequelize.STRING,
       content: Sequelize.STRING,
       preview: Sequelize.STRING,

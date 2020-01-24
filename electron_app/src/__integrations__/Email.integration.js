@@ -6,7 +6,6 @@ const emailDraft = {
   email: {
     threadId: 'threadA',
     key: '1',
-    s3Key: 's3KeyA',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -29,7 +28,6 @@ const emailSent = {
   email: {
     threadId: 'threadB',
     key: '2',
-    s3Key: 's3KeyB',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -54,7 +52,6 @@ const emailInbox = {
   email: {
     threadId: 'threadC',
     key: '3',
-    s3Key: 's3KeyC',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -92,7 +89,6 @@ const emailReply = {
   email: {
     threadId: 'threadC',
     key: '4',
-    s3Key: 's3KeyD',
     subject: 'Greetings',
     content: '<p>RE: Hello there</p>',
     preview: 'RE: Hello there',
@@ -115,7 +111,6 @@ const emailTrash = {
   email: {
     threadId: 'threadD',
     key: '5',
-    s3Key: 's3KeyD',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -138,7 +133,6 @@ const emailSpam = {
   email: {
     threadId: 'threadE',
     key: '6',
-    s3Key: 's3KeyE',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -162,7 +156,6 @@ const emailStarred = {
   email: {
     threadId: 'threadF',
     key: '7',
-    s3Key: 's3KeyF',
     subject: 'Greetings there',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -186,7 +179,6 @@ const emailScore = {
   email: {
     threadId: 'threadG',
     key: '8',
-    s3Key: 's3KeyG',
     subject: 'Greetings there',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -212,7 +204,6 @@ const emailUpdate = {
   email: {
     threadId: 'threadH',
     key: '9',
-    s3Key: 's3KeyH',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -235,7 +226,6 @@ const emailToSearch = {
   email: {
     threadId: 'threadIdSearch',
     key: '10',
-    s3Key: 's3KeyI',
     subject: 'Lorem ipsum is amet',
     content: '<p>Find me!</p>',
     preview: 'Find me!',
@@ -257,7 +247,6 @@ const draftToReplaceOld = {
   email: {
     threadId: 'threadJ',
     key: '11',
-    s3Key: 's3KeyJ',
     subject: 'New Draft',
     content: '<p>I am a edited draft</p>',
     preview: 'I am a edited draft',
@@ -279,7 +268,6 @@ const emailUpdateLabels = {
   email: {
     threadId: 'threadK',
     key: '13',
-    s3Key: 's3KeyK',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -301,7 +289,6 @@ const emailReReply = {
   email: {
     threadId: 'threadC',
     key: '15',
-    s3Key: 's14KeyC',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -324,7 +311,6 @@ const emailNewTrash = {
   email: {
     threadId: 'threadL',
     key: '16',
-    s3Key: 's15KeyK',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -372,7 +358,6 @@ describe('Store data email to Email Table:', () => {
       email: {
         threadId: 'threadId',
         key: '12',
-        s3Key: 's3KeyId',
         subject: 'Greetings',
         content: '<p>Hello there</p>',
         preview: 'Hello there',
@@ -393,7 +378,6 @@ describe('Store data email to Email Table:', () => {
       email: {
         threadId: 'threadB',
         key: '14',
-        s3Key: 's3KeyId',
         subject: 'Greetings',
         content: '<p>Hello there</p>',
         preview: 'Hello there',
