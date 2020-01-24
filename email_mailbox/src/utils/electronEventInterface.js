@@ -746,7 +746,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     }
     const unread = isFromMe && !isToMe ? false : true;
     if (inReplyTo) {
-      const emailWithMessageId = await getEmailByParams({
+      const [emailWithMessageId] = await getEmailByParams({
         messageId: inReplyTo
       });
       if (emailWithMessageId) {

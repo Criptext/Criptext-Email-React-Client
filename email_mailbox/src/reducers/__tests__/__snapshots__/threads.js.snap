@@ -32,7 +32,6 @@ Immutable.Map {
           1,
           2,
         ],
-        "s3Key": "6Za2dcMlE0OSSc9",
         "key": "6Za2dcMlE0OSSc9",
       },
       Immutable.Map {
@@ -60,7 +59,6 @@ Immutable.Map {
         "emailIds": Immutable.List [
           2,
         ],
-        "s3Key": "cuW6ElyoqsR7MMw",
         "key": "cuW6ElyoqsR7MMw",
       },
     ],

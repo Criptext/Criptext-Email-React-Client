@@ -120,22 +120,8 @@ Object {
 
 exports[`Load data emails from Email Table: should load emails by params 1`] = `
 Object {
-  "boundary": null,
-  "content": "<p>Hello there</p>",
-  "date": "2013-10-07 08:23:19",
-  "fromAddress": "<User me> <user@criptext.com>",
-  "id": 1,
-  "key": "1",
-  "messageId": "messageIdA",
-  "preview": "Hello there",
-  "replyTo": null,
-  "secure": true,
-  "status": 0,
-  "subject": "Greetings",
   "threadId": "threadA",
-  "trashDate": null,
   "unread": true,
-  "unsentDate": "2018-06-14 08:23:20",
 }
 `;
 

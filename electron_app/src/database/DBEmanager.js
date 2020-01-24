@@ -303,7 +303,12 @@ const getEmailByKey = key => {
 };
 
 const getEmailByParams = params => {
-  return Email().findAll({ where: params });
+  return Email()
+    .findAll({
+      attributes: ['threadId', 'unread'],
+      where: params
+    })
+    .map(email => email.toJSON());
 };
 
 const getEmailsByArrayParam = params => {
