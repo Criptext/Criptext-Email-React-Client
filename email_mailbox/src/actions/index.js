@@ -38,13 +38,13 @@ import {
   updateThread
 } from './threads';
 import {
-  addEmailLabel,
+  addEmailLabels,
   addEmails,
   loadEmails,
   muteEmail,
   muteNotifications,
   removeEmails,
-  removeEmailLabel,
+  removeEmailLabels,
   removeEmailsOnSuccess,
   unsendEmail,
   unsendEmailOnSuccess,
@@ -77,7 +77,7 @@ import { clearSuggestions, loadSuggestions } from './suggestions';
 import { addDataApp, loadApp } from './app';
 
 export {
-  addEmailLabel,
+  addEmailLabels,
   addContacts,
   addDataApp,
   addEmails,
@@ -107,7 +107,7 @@ export {
   muteNotifications,
   removeAllThreads,
   removeEmails,
-  removeEmailLabel,
+  removeEmailLabels,
   removeEmailsOnSuccess,
   removeLabel,
   removeLabelIdThread,

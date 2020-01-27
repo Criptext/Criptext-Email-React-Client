@@ -80,17 +80,7 @@ const emails = (state = new Map(), action) => {
         return state.set(`${emailId}`, email(emailState, action));
       }, state);
     }
-    case Email.ADD_LABEL: {
-      const emails = action.emails;
-      if (!emails || !emails.length) return state;
-      return emails.reduce((state, emailItem) => {
-        const emailId = emailItem.id;
-        if (!emailId) return state;
-        const emailState = state.get(`${emailId}`);
-        if (!emailState) return state;
-        return state.set(`${emailId}`, email(emailState, action));
-      }, state);
-    }
+    case Email.ADD_LABEL:
     case Email.DELETE_LABEL: {
       const emails = action.emails;
       if (!emails || !emails.length) return state;
@@ -99,7 +89,6 @@ const emails = (state = new Map(), action) => {
         if (!emailId) return state;
         const emailState = state.get(`${emailId}`);
         if (!emailState) return state;
-        // const action = { type: Email.ADD_LABEL, emailId, labelAdd: action.labelAdd}
         return state.set(`${emailId}`, email(emailState, action));
       }, state);
     }
@@ -134,15 +123,20 @@ const email = (state, action) => {
     }
     case Email.ADD_LABEL: {
       const labelIds = state.get('labelIds');
-      if (!labelIds || labelIds.has(action.labelAdd)) return state;
-      const newSet = new Set([action.labelAdd]);
+      if (!labelIds) return state;
+      const newSet = new Set(action.labelsAdd);
       const mergedSet = new Set([...labelIds, ...newSet]);
       return state.set('labelIds', mergedSet);
     }
     case Email.DELETE_LABEL: {
       const labelIds = state.get('labelIds');
-      if (!labelIds || !labelIds.has(action.labelDelete)) return state;
-      const newSet = new Set(labelIds.delete(action.labelDelete));
+      if (!labelIds) return state;
+      const newSet = new Set(
+        Array.from(labelIds).filter(
+          actualLabelId => !action.labelsDelete.includes(actualLabelId)
+        )
+      );
+
       return state.set('labelIds', newSet);
     }
     default:

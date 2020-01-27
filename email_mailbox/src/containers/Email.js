@@ -24,7 +24,6 @@ import {
   reportPhishing
 } from './../utils/ipc';
 import {
-  addEmailLabel,
   removeEmails,
   unsendEmail,
   updateEmailLabels,
@@ -145,7 +144,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         labelsRemoved
       })
     ).then(() => {
-      dispatch(addEmailLabel([email], LabelType.spam.id));
       if (ownProps.count === 1) {
         ownProps.onBackOption();
       }
@@ -173,7 +171,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           labelsRemoved
         })
       ).then(() => {
-        dispatch(addEmailLabel([email], LabelType.trash.id));
         if (ownProps.count === 1) {
           ownProps.onBackOption();
         }
