@@ -1106,6 +1106,14 @@ const deletePendingEventsByIds = ids => {
   return Pendingevent().destroy({ where: { id: ids } });
 };
 
+/* PreKeyRecord
+----------------------------- */
+const getPreKeyRecordIds = () => {
+  return Prekeyrecord()
+    .findAll({ attributes: ['preKeyId'], raw: true })
+    .map(obj => obj.preKeyId);
+};
+
 /* Settings
 ----------------------------- */
 const createSettings = params => {
@@ -1388,6 +1396,7 @@ module.exports = {
   getLabelByUuid,
   getLabelsByText,
   getPendingEvents,
+  getPreKeyRecordIds,
   getSessionRecordByRecipientIds,
   getSettings,
   getTrashExpiredEmails,
