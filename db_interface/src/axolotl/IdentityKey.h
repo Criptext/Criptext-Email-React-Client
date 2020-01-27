@@ -16,8 +16,8 @@ namespace CriptextDB {
     string identityKey;
   };
 
-  IdentityKey getIdentityKey(database db, string password, string recipientId, long int deviceId);
-  bool createIdentityKey(database db, string password, string recipientId, int deviceId, char *identityKey);
+  IdentityKey getIdentityKey(database db, string recipientId, long int deviceId);
+  bool createIdentityKey(database db, string recipientId, int deviceId, char *identityKey);
 } 
 
 #endif

@@ -12,7 +12,7 @@ int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t si
 
     CriptextDB::SignedPreKey signedPreKey;
     try {
-        signedPreKey = CriptextDB::getSignedPreKey(account->getDB(), account->password, signed_pre_key_id);
+        signedPreKey = CriptextDB::getSignedPreKey(account->getDB(), signed_pre_key_id);
     } catch (exception& e){
         std::cout << "ERROR SPK : " << e.what() << std::endl;
         return -1;
@@ -35,7 +35,7 @@ int signed_pre_key_store_store_signed_pre_key(uint32_t signed_pre_key_id, uint8_
     const unsigned char *myRecord = reinterpret_cast<const unsigned char *>(record);
     char *recordBase64 = reinterpret_cast<char *>(base64_encode(myRecord, record_len, &len));
 
-    bool success = CriptextDB::createSignedPreKey(account->getDB(), account->password, signed_pre_key_id, recordBase64, len);
+    bool success = CriptextDB::createSignedPreKey(account->getDB(), signed_pre_key_id, recordBase64, len);
     return success ? 1 : 0;
 }
 
@@ -44,7 +44,7 @@ int signed_pre_key_store_contains_signed_pre_key(uint32_t signed_pre_key_id, voi
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
 
     try {
-        CriptextDB::getSignedPreKey(account->getDB(), account->password, signed_pre_key_id);
+        CriptextDB::getSignedPreKey(account->getDB(), signed_pre_key_id);
     } catch (exception& e){
         return 0;
     }
@@ -55,7 +55,7 @@ int signed_pre_key_store_remove_signed_pre_key(uint32_t signed_pre_key_id, void 
 {
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
 
-    bool success = CriptextDB::deleteSignedPreKey(account->getDB(), account->password, signed_pre_key_id);
+    bool success = CriptextDB::deleteSignedPreKey(account->getDB(), signed_pre_key_id);
     return success ? 1 : 0;
 }
 

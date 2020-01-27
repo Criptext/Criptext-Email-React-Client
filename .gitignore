@@ -13,6 +13,9 @@ electron_app/src/__integrations__/**@criptext.com/
 electron_app/userData/
 electron_app/src/userData/
 valgrind-out.txt
+CriptextEncrypt.db-shm
+CriptextEncrypt.db-wal
+recovery.key
 
 # production
 *_interface/build

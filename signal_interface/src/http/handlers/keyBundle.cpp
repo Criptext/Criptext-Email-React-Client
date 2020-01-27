@@ -77,9 +77,9 @@ int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath, char* 
   char *publicKey;
   char *privKey;
   int regId;
-  string myPassword = string(dbPath).find("Encrypt.db") != string::npos ? password : "";
   int result = CriptextSignal::createAccountCredentials(&publicKey, &privKey, &regId);
-  result = CriptextDB::createAccount(string(dbPath), myPassword, recipientId->valuestring, name->valuestring, deviceId->valueint, publicKey, privKey, regId);
+  database db = initializeDB(dbPath, password);
+  result = CriptextDB::createAccount(db, recipientId->valuestring, name->valuestring, deviceId->valueint, publicKey, privKey, regId);
 
   if (result < 0) {
     mg_send_http_error(conn, 500, "%s", "Unable To Create Account");

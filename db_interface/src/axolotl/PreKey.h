@@ -17,9 +17,9 @@ namespace CriptextDB {
     size_t len;
   };
 
-  PreKey getPreKey(database db, string password, short int id);
-  bool createPreKey(database db, string password, short int id, char *keyRecord, size_t len);
-  bool deletePreKey(database db, string password, short int id);
+  PreKey getPreKey(database db, short int id);
+  bool createPreKey(database db, short int id, char *keyRecord, size_t len);
+  bool deletePreKey(database db, short int id);
 
 } 
 

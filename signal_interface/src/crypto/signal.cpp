@@ -32,8 +32,7 @@ CriptextSignal::CriptextSignal(char *recipientId, database db, string password){
     signal_context_set_crypto_provider(global_context, &provider);
     signal_context_set_locking_functions(global_context, lock_fn, unlock_fn);
     try {
-        //string myPassword = dbPath.find("Encrypt.db") != string::npos ? password : "";
-        account = CriptextDB::getAccount(db, password, recipientId);
+        account = CriptextDB::getAccount(db, recipientId);
     } catch (exception &e) {
         std::cout << "ERROR INITIALIZING SIGNAL : " << e.what() << std::endl;
         return;

@@ -4,7 +4,7 @@
 using namespace std;
 using namespace sqlite;
 
-CriptextDB::Account CriptextDB::getAccount(database db, string password, char *recipientId) {
+CriptextDB::Account CriptextDB::getAccount(database db, char *recipientId) {
   string myPrivKey;
   string myPubKey;
   int regId = 0;
@@ -21,14 +21,12 @@ CriptextDB::Account CriptextDB::getAccount(database db, string password, char *r
     .privKey = myPrivKey, 
     .pubKey = myPubKey, 
     .registrationId = regId,
-    .dbPath = "nope",
-    .password = password,
     .con = con
   };
   return account;
 }
 
-int CriptextDB::createAccount(database db, string password, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
+int CriptextDB::createAccount(database db, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
   try {
     bool hasRow = false;
     

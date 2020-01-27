@@ -3,7 +3,7 @@
 using namespace std;
 using namespace sqlite;
 
-CriptextDB::PreKey CriptextDB::getPreKey(database db, string password, short int id) {
+CriptextDB::PreKey CriptextDB::getPreKey(database db, short int id) {
   string myPreKey;
   size_t myLen = 0;
   db << "Select * from prekeyrecord where preKeyId == ?;"
@@ -24,7 +24,7 @@ CriptextDB::PreKey CriptextDB::getPreKey(database db, string password, short int
   return preKey;
 }
 
-bool CriptextDB::createPreKey(database db, string password, short int id, char *keyRecord, size_t len) {
+bool CriptextDB::createPreKey(database db, short int id, char *keyRecord, size_t len) {
   try {
     db << "insert into prekeyrecord (preKeyId, record, recordLength) values (?,?,?);"
      << id
@@ -37,7 +37,7 @@ bool CriptextDB::createPreKey(database db, string password, short int id, char *
   }
 }
 
-bool CriptextDB::deletePreKey(database db, string password, short int id) {
+bool CriptextDB::deletePreKey(database db, short int id) {
   try {
     db << "delete from prekeyrecord where preKeyId == ?;"
      << id;
