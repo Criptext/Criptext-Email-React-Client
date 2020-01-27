@@ -82,6 +82,7 @@ import {
   fetchGetSingleEvent
 } from './FetchUtils';
 import string from './../lang';
+import { processPendingEvents } from './ipc';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -117,6 +118,7 @@ const stopGettingEvents = () => {
   } else if (!getBackupStatus()) {
     initAutoBackupMonitor();
   }
+  processPendingEvents();
 };
 
 const parseAndStoreEventsBatch = async ({
@@ -737,7 +739,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         };
       }
       body = 'Content unencrypted';
-      reportContentUnencrypted(e.message);
+      reportContentUnencrypted(e.stack);
     }
     if (!fileKeys && fileKey) {
       myFileKeys = files.map(() => myFileKeys[0]);
