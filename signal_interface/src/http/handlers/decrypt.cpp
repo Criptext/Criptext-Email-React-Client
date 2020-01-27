@@ -47,7 +47,8 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
   
   spdlog::info("[{0}] Request -> <RecipientId: {1}, senderId: {2}, EmailKey: {3}>", endpointId, recipientId->valuestring, senderId->valuestring, emailKey->valueint);
   
-  CriptextSignal signal(recipientId->valuestring, dbPath, password);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(recipientId->valuestring, db, password);
   cJSON *response = cJSON_CreateObject();
   if (cJSON_IsString(body)) {
     try {
@@ -168,7 +169,8 @@ int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char*
     return 400;
   }
 
-  CriptextSignal signal(recipientId->valuestring, dbPath, password);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(recipientId->valuestring, db, password);
 
   uint8_t *plaintext_data = 0;
   size_t plaintext_len = 0;

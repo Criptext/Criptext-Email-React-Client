@@ -12,7 +12,7 @@ void unlock_fn(void *user_data){
     global_mutex.unlock();
 }
 
-CriptextSignal::CriptextSignal(char *recipientId, string dbPath, string password){
+CriptextSignal::CriptextSignal(char *recipientId, database db, string password){
     signal_context_create(&global_context, 0);
     signal_crypto_provider provider = {
         .random_func = random_generator,
@@ -32,9 +32,8 @@ CriptextSignal::CriptextSignal(char *recipientId, string dbPath, string password
     signal_context_set_crypto_provider(global_context, &provider);
     signal_context_set_locking_functions(global_context, lock_fn, unlock_fn);
     try {
-        std::cout << dbPath.find("Encrypt.db") << std::endl;
-        string myPassword = dbPath.find("Encrypt.db") != string::npos ? password : "";
-        account = CriptextDB::getAccount(dbPath, myPassword, recipientId);
+        //string myPassword = dbPath.find("Encrypt.db") != string::npos ? password : "";
+        account = CriptextDB::getAccount(db, password, recipientId);
     } catch (exception &e) {
         std::cout << "ERROR INITIALIZING SIGNAL : " << e.what() << std::endl;
         return;

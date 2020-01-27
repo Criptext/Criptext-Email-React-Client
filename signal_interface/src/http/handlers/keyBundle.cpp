@@ -32,7 +32,8 @@ int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, char
     return 400;
   }
 
-  CriptextSignal signal(recipientId->valuestring, dbPath, password);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(recipientId->valuestring, db, password);
   cJSON *bundle = cJSON_CreateObject();
   signal.generateKeyBundle(bundle, recipientId->valuestring);
 
@@ -124,7 +125,8 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, cha
     return 400;
   }
 
-  CriptextSignal signal(accountRecipientId->valuestring, dbPath, password);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(accountRecipientId->valuestring, db, password);
   cJSON *keyBundleObj = NULL;
   cJSON_ArrayForEach(keyBundleObj, keybundleArray) {
 
@@ -204,7 +206,8 @@ int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath, char* 
     return 400;
   }
 
-  CriptextSignal signal(accountId->valuestring, dbPath, password);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(accountId->valuestring, db, password);
   cJSON *bundle = cJSON_CreateObject();
   signal.generateMorePreKeys(bundle, newPreKeys);
   return SendJSON(conn, bundle);

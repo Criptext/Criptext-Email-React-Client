@@ -20,11 +20,11 @@ namespace CriptextDB {
     size_t len;
   };
 
-  SessionRecord getSessionRecord(string dbPath, string password, string recipientId, long int deviceId);
-  vector<SessionRecord> getSessionRecords(string dbPath, string password, string recipientId);
-  bool createSessionRecord(string dbPath, string password, string recipientId, long int deviceId, char* record, size_t len);
-  bool deleteSessionRecord(string dbPath, string password, string recipientId, long int deviceId);
-  bool deleteSessionRecords(string dbPath, string password, string recipientId);
+  SessionRecord getSessionRecord(database db, string password, string recipientId, long int deviceId);
+  vector<SessionRecord> getSessionRecords(database db, string password, string recipientId);
+  bool createSessionRecord(database db, string password, string recipientId, long int deviceId, char* record, size_t len);
+  bool deleteSessionRecord(database db, string password, string recipientId, long int deviceId);
+  bool deleteSessionRecords(database db, string password, string recipientId);
 } 
 
 #endif

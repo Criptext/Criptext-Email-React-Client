@@ -40,7 +40,7 @@ int identity_key_store_save_identity(const signal_protocol_address *address, uin
     const unsigned char *myData = reinterpret_cast<const unsigned char *>(key_data);
     char *dataBase64 = reinterpret_cast<char *>(base64_encode(myData, key_len, &data_len));
 
-    CriptextDB::createIdentityKey(account->dbPath, account->password, recipientId, deviceId, dataBase64);
+    CriptextDB::createIdentityKey(account->getDB(), account->password, recipientId, deviceId, dataBase64);
     return 1;
 }
 
@@ -56,7 +56,7 @@ int identity_key_store_is_trusted_identity(const signal_protocol_address *addres
     string incomingIdentityKey = string(incomingIdentity);
 
     try {
-        CriptextDB::IdentityKey myIdentityKey = CriptextDB::getIdentityKey(account->dbPath, account->password, recipientId, deviceId);
+        CriptextDB::IdentityKey myIdentityKey = CriptextDB::getIdentityKey(account->getDB(), account->password, recipientId, deviceId);
         return myIdentityKey.identityKey == incomingIdentityKey;
     } catch (exception& e){
         std::cout << "Error trusting key : " << e.what() << std::endl;

@@ -38,7 +38,8 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char*
     return 400;
   }
 
-  CriptextSignal signal(recipientId->valuestring, dbPath, password);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(recipientId->valuestring, db, password);
 
   size_t keyLength = 16;
   char *encryptedText = 0;
@@ -132,7 +133,8 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
 
   spdlog::info("[{0}] Request -> <accountId: {1}, recipientId: {2}>", endpointId, accountRecipientId->valuestring, recipientId->valuestring);
 
-  CriptextSignal signal(accountRecipientId->valuestring, dbPath, password);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(accountRecipientId->valuestring, db, password);
 
   cJSON *response = cJSON_CreateObject();
 

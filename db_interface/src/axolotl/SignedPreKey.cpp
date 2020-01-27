@@ -7,8 +7,7 @@
 using namespace std;
 using namespace sqlite;
 
-CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, string password, short int id) {
-  database db = initializeDB(dbPath, password);
+CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(database db, string password, short int id) {
   string mySignedPreKey;
   int myLen = 0;
   db << "Select * from signedprekeyrecord where signedPreKeyId == ?;"
@@ -29,9 +28,8 @@ CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(string dbPath, string passw
   return signedPreKey;
 }
 
-bool CriptextDB::createSignedPreKey(string dbPath, string password, short int id, char *keyRecord, size_t len) {
+bool CriptextDB::createSignedPreKey(database db, string password, short int id, char *keyRecord, size_t len) {
   try {
-    database db = initializeDB(dbPath, password);
     db << "insert into signedprekeyrecord (signedPreKeyId, record, recordLength) values (?,?,?);"
      << id
      << keyRecord
@@ -43,9 +41,8 @@ bool CriptextDB::createSignedPreKey(string dbPath, string password, short int id
   }
 }
 
-bool CriptextDB::deleteSignedPreKey(string dbPath, string password, short int id) {
+bool CriptextDB::deleteSignedPreKey(database db, string password, short int id) {
   try {
-    database db = initializeDB(dbPath, password);
     db << "delete from signedPrekeyrecord where signedPreKeyId == ?;"
      << id;
     return true;

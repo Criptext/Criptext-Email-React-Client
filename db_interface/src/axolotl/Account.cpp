@@ -4,9 +4,7 @@
 using namespace std;
 using namespace sqlite;
 
-CriptextDB::Account CriptextDB::getAccount(string dbPath, string password, char *recipientId) {
-  database db = initializeDB(dbPath, password);
-  
+CriptextDB::Account CriptextDB::getAccount(database db, string password, char *recipientId) {
   string myPrivKey;
   string myPubKey;
   int regId = 0;
@@ -17,21 +15,21 @@ CriptextDB::Account CriptextDB::getAccount(string dbPath, string password, char 
       myPubKey = pubKey;
       regId = registrationId;
   };
+
+  connection_type con = db.connection();
   Account account = { 
     .privKey = myPrivKey, 
     .pubKey = myPubKey, 
     .registrationId = regId,
-    .dbPath = dbPath,
-    .password = password
+    .dbPath = "nope",
+    .password = password,
+    .con = con
   };
   return account;
 }
 
-int CriptextDB::createAccount(string dbPath, string password, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
+int CriptextDB::createAccount(database db, string password, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
   try {
-    std::cout << "DB: " << dbPath << " || pass: " << password << std::endl;
-    database db = initializeDB(dbPath, password);
-
     bool hasRow = false;
     
     db << "begin;";
@@ -40,7 +38,6 @@ int CriptextDB::createAccount(string dbPath, string password, char* recipientId,
      >> [&] (string recipientId) {
         hasRow = true;
     };
-
     if (hasRow) {
       db << "update account set name = ?, deviceId = ?, privKey = ?, pubKey = ?, registrationId = ? where recipientId == ?;"
         << name
