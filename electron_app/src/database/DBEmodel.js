@@ -156,7 +156,15 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
         type: Sequelize.DATE,
         get() {
           const date = this.getDataValue('unsentDate');
-          return parseDate(date);
+          if (date) return parseDate(date);
+          return null;
+        },
+        set(val) {
+          if (val) {
+            this.setDataValue('unsentDate', formatDate(val));
+          } else {
+            this.setDataValue('unsentDate', null);
+          }
         }
       },
       trashDate: {

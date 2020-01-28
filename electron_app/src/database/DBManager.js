@@ -468,12 +468,6 @@ const clearAndFormatDateEmails = emailObjOrArray => {
     return noNulls({
       ...email,
       date: moment(email.date).format(emailDateFormat),
-      trashDate: email.trashDate
-        ? moment(email.trashDate).format(emailDateFormat)
-        : null,
-      unsendDate: email.unsentDate
-        ? moment(email.unsentDate).format(emailDateFormat)
-        : null,
       isMuted: false
     });
   });

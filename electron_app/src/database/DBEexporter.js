@@ -21,7 +21,6 @@ const {
   Settings,
   Signedprekeyrecord,
   getDB,
-  Op,
   Table
 } = require('./DBEmanager');
 const myAccount = require('./../Account');
@@ -41,14 +40,10 @@ const DEFAULT_KEY_LENGTH = 16;
 
 const excludedEmailStatus = [1, 4];
 const excludedLabels = [systemLabels.draft.id];
-const whereRawEmailQuery = `
-  ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')}) AND
-  NOT EXISTS (
-    SELECT * 
-    FROM ${Table.EMAIL_LABEL} 
-    WHERE ${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId 
-    AND ${Table.EMAIL_LABEL}.labelId in (${excludedLabels.join(',')})
-  )
+const whereRawEmailQuery = `LEFT JOIN ${Table.EMAIL_LABEL} 
+    ON ${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId 
+    AND ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
+    WHERE ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
 `;
 
 /* Batches
@@ -221,9 +216,9 @@ const _exportEmailTable = async (db, userEmail) => {
   let offset = 0;
   while (!shouldEnd) {
     const rows = await db.raw(
-      `SELECT * FROM ${
-        Table.EMAIL
-      } WHERE ${whereRawEmailQuery} LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
+      `SELECT email.* FROM ${Table.EMAIL} ${whereRawEmailQuery}
+      GROUP BY ${Table.EMAIL}.id
+      LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
     );
     const result = await Promise.all(
       rows.map(async row => {
@@ -285,11 +280,13 @@ const _exportEmailContactTable = async db => {
   while (!shouldEnd) {
     const result = await db
       .raw(
-        `SELECT * FROM ${Table.EMAIL_CONTACT} WHERE EXISTS (SELECT * FROM ${
+        `SELECT emailContact.* FROM ${Table.EMAIL_CONTACT} LEFT JOIN ${
           Table.EMAIL
-        } WHERE ${Table.EMAIL}.id=${
+        } ON ${Table.EMAIL}.id=${
           Table.EMAIL_CONTACT
-        }.emailId AND ${whereRawEmailQuery}) LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
+        }.emailId ${whereRawEmailQuery}
+        GROUP BY ${Table.EMAIL_CONTACT}.id
+        LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
       )
       .then(rows =>
         rows.map(row => {
@@ -315,11 +312,13 @@ const _exportEmailLabelTable = async db => {
   while (!shouldEnd) {
     const result = await db
       .raw(
-        `SELECT * FROM ${Table.EMAIL_LABEL} WHERE EXISTS (SELECT * FROM ${
+        `SELECT emailLabel.* FROM ${Table.EMAIL_LABEL} LEFT JOIN ${
           Table.EMAIL
-        } WHERE ${Table.EMAIL}.id=${
-          Table.EMAIL_LABEL
-        }.emailId AND ${whereRawEmailQuery}) LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
+        } ON ${Table.EMAIL}.id=${Table.EMAIL_LABEL}.emailId 
+        AND ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
+        AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
+        GROUP BY ${Table.EMAIL_LABEL}.id
+        LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
       )
       .then(rows =>
         rows.map(row =>
@@ -373,11 +372,11 @@ const _exportFileTable = async db => {
   while (!shouldEnd) {
     const result = await db
       .raw(
-        `SELECT * FROM ${Table.FILE} WHERE EXISTS (SELECT * FROM ${
+        `SELECT file.* FROM ${Table.FILE} LEFT JOIN ${Table.EMAIL} ON ${
           Table.EMAIL
-        } WHERE ${Table.EMAIL}.id=${
-          Table.FILE
-        }.emailId AND ${whereRawEmailQuery}) LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
+        }.id=${Table.FILE}.emailId ${whereRawEmailQuery}
+        GROUP BY ${Table.FILE}.id
+        LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
       )
       .then(rows =>
         rows.map(row => {
@@ -588,27 +587,23 @@ const exportEmailTable = async () => {
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
-    const rows = await Email().findAll({
-      where: {
-        [Op.and]: [getDB().literal(`${whereRawEmailQuery}`)]
-      },
-      offset,
-      limit: SELECT_ALL_BATCH
-    });
-
+    const rows = await getDB().query(
+      `SELECT email.* FROM ${Table.EMAIL} ${whereRawEmailQuery}
+      GROUP BY ${Table.EMAIL}.id
+      LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
+      { type: getDB().QueryTypes.SELECT }
+    );
     const result = await Promise.all(
-      rows.map(async row => {
-        let newRow = row.toJSON();
-
+      rows.map(async newRow => {
         if (!newRow.unsentDate) delete newRow.unsentDate;
         else {
-          newRow = { ...newRow, unsentDate: parseDate(row.unsentDate) };
+          newRow = { ...newRow, unsentDate: parseDate(newRow.unsentDate) };
         }
 
         if (!newRow.trashDate) {
           delete newRow.trashDate;
         } else {
-          newRow = { ...newRow, trashDate: parseDate(row.trashDate) };
+          newRow = { ...newRow, trashDate: parseDate(newRow.trashDate) };
         }
 
         if (newRow.replyTo === null) newRow = { ...newRow, replyTo: '' };
@@ -654,23 +649,19 @@ const exportEmailContactTable = async () => {
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
-    const result = await EmailContact()
-      .findAll({
-        where: {
-          [Op.and]: [
-            getDB().literal(
-              `EXISTS (SELECT * FROM ${Table.EMAIL} WHERE ${Table.EMAIL}.id=${
-                Table.EMAIL_CONTACT
-              }.emailId AND ${whereRawEmailQuery})`
-            )
-          ]
-        },
-        offset,
-        limit: SELECT_ALL_BATCH
-      })
+    const result = await getDB()
+      .query(
+        `SELECT emailContact.* FROM ${Table.EMAIL_CONTACT} LEFT JOIN ${
+          Table.EMAIL
+        } ON ${Table.EMAIL}.id=${
+          Table.EMAIL_CONTACT
+        }.emailId ${whereRawEmailQuery}
+        GROUP BY ${Table.EMAIL_CONTACT}.id
+        LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
+        { type: getDB().QueryTypes.SELECT }
+      )
       .then(rows => {
-        return rows.map(item => {
-          const row = item.toJSON();
+        return rows.map(row => {
           return Object.assign(row, {
             emailId: parseInt(row.emailId)
           });
@@ -692,23 +683,19 @@ const exportEmailLabelTable = async () => {
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
-    const result = await EmailLabel()
-      .findAll({
-        where: {
-          [Op.and]: [
-            getDB().literal(
-              `EXISTS (SELECT * FROM ${Table.EMAIL} WHERE ${Table.EMAIL}.id=${
-                Table.EMAIL_LABEL
-              }.emailId AND ${whereRawEmailQuery})`
-            )
-          ]
-        },
-        offset,
-        limit: SELECT_ALL_BATCH
-      })
+    const result = await getDB()
+      .query(
+        `SELECT emailLabel.* FROM ${Table.EMAIL_LABEL} LEFT JOIN ${
+          Table.EMAIL
+        } ON ${Table.EMAIL}.id=${Table.EMAIL_LABEL}.emailId 
+        AND ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
+        AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
+        GROUP BY ${Table.EMAIL_LABEL}.id
+        LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
+        { type: getDB().QueryTypes.SELECT }
+      )
       .then(rows => {
-        return rows.map(item => {
-          const row = item.toJSON();
+        return rows.map(row => {
           return Object.assign(row, {
             emailId: parseInt(row.emailId)
           });
@@ -730,23 +717,17 @@ const exportFileTable = async () => {
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
-    const result = await File()
-      .findAll({
-        where: {
-          [Op.and]: [
-            getDB().literal(
-              `EXISTS (SELECT * FROM ${Table.EMAIL} WHERE ${Table.EMAIL}.id=${
-                Table.FILE
-              }.emailId AND ${whereRawEmailQuery})`
-            )
-          ]
-        },
-        offset,
-        limit: SELECT_ALL_BATCH
-      })
+    const result = await getDB()
+      .query(
+        `SELECT file.* FROM ${Table.FILE} LEFT JOIN ${Table.EMAIL} ON ${
+          Table.EMAIL
+        }.id=${Table.FILE}.emailId ${whereRawEmailQuery}
+        GROUP BY ${Table.FILE}.id
+        LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
+        { type: getDB().QueryTypes.SELECT }
+      )
       .then(rows => {
-        return rows.map(item => {
-          const row = item.toJSON();
+        return rows.map(row => {
           if (!row.cid) delete row.cid;
           return Object.assign(row, {
             emailId: parseInt(row.emailId),
@@ -903,13 +884,7 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
             case Table.EMAIL: {
               const emailToStore = {
                 ...object,
-                date: moment.utc(object.date, 'YYYY-MM-DD HH:mm:ss'),
-                unsentDate: object.unsentDate
-                  ? moment.utc(object.unsentDate, 'YYYY-MM-DD HH:mm:ss')
-                  : undefined,
-                trashDate: object.trashDate
-                  ? moment.utc(object.trashDate, 'YYYY-MM-DD HH:mm:ss')
-                  : undefined
+                date: moment.utc(object.date, 'YYYY-MM-DD HH:mm:ss')
               };
               emails.push(emailToStore);
               if (emails.length === EMAILS_BATCH) {
@@ -1265,7 +1240,7 @@ const getCustomLinesByStream = (filename, lineCount, callback) => {
 };
 
 const parseDate = date => {
-  return moment(date).format('YYYY-MM-DD HH:mm:ss');
+  return moment.utc(date).format('YYYY-MM-DD HH:mm:ss');
 };
 
 const readBytesSync = (filePath, filePosition, bytesToRead) => {

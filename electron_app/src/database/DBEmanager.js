@@ -1234,9 +1234,7 @@ const clearAndFormatDateEmails = emailObjOrArray => {
   const formattedDateEmails = tempArr.map(email => {
     return noNulls({
       ...email,
-      date: formatDate(email.date),
-      trashDate: email.trashDate ? formatDate(email.trashDate) : null,
-      unsentDate: email.unsentDate ? formatDate(email.unsentDate) : null
+      date: formatDate(email.date)
     });
   });
   return isAnEmailArray ? formattedDateEmails : formattedDateEmails[0];
