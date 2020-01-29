@@ -1340,11 +1340,10 @@ ipcRenderer.on(
         break;
       }
       case 'reply': {
-        const { threadId, newEmailId, oldEmailId } = threadData;
-        emitter.emit(Event.UPDATE_THREAD_EMAILS, {
-          threadId,
-          newEmailId,
-          oldEmailId
+        const { threadId } = threadData;
+        emitter.emit(Event.STORE_LOAD, {
+          labelIds: [LabelType.sent.id],
+          threadIds: [threadId]
         });
         break;
       }
