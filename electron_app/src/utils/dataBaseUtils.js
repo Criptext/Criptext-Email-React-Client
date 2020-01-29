@@ -63,6 +63,8 @@ const deleteFile = async filepath => {
 };
 
 const getFilenamePath = (node_env, filename) => {
+  const currentDirToReplace =
+    process.platform === 'win32' ? '\\src\\utils' : '/src/utils';
   switch (node_env) {
     case 'test': {
       return './src/__integrations__/test.db';
@@ -71,7 +73,7 @@ const getFilenamePath = (node_env, filename) => {
       const a = path
         .join(__dirname, `/${filename}`)
         .replace('/app.asar', '')
-        .replace('/src/utils', '');
+        .replace(currentDirToReplace, '');
       return a;
     }
     default: {
@@ -79,7 +81,7 @@ const getFilenamePath = (node_env, filename) => {
       return path
         .join(userDataPath, `/${filename}`)
         .replace('/app.asar', '')
-        .replace('/src/utils', '');
+        .replace(currentDirToReplace, '');
     }
   }
 };

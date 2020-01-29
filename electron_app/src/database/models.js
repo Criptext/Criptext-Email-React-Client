@@ -7,6 +7,8 @@ const { app } = require('electron');
 const knexfile = require('./../knexfile');
 
 const getDbPath = node_env => {
+  const currentDirToReplace =
+    process.platform === 'win32' ? '\\src\\database' : '/src/database';
   switch (node_env) {
     case 'test': {
       return './src/__integrations__/test.db';
@@ -15,14 +17,14 @@ const getDbPath = node_env => {
       return path
         .join(__dirname, '/Criptext.db')
         .replace('/app.asar', '')
-        .replace('/src/database', '');
+        .replace(currentDirToReplace, '');
     }
     default: {
       const userDataPath = app.getPath('userData');
       return path
         .join(userDataPath, '/Criptext.db')
         .replace('/app.asar', '')
-        .replace('/src/database', '');
+        .replace(currentDirToReplace, '');
     }
   }
 };
@@ -35,6 +37,7 @@ const dbConfiguration = {
   },
   useNullAsDefault: false
 };
+
 const migrationConfig = Object.assign(knexfile, dbConfiguration);
 
 const TINY_STRING_SIZE = 8;

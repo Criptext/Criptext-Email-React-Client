@@ -1367,8 +1367,7 @@ const formStringSeparatedByOperator = (array, operator = ',') => {
 };
 
 const closeDB = () => {
-  db.close();
-  db.disconnect();
+  return db.destroy();
 };
 
 module.exports = {

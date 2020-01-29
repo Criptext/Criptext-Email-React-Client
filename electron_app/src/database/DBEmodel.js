@@ -12,6 +12,8 @@ const { parseDate, formatDate } = require('./../utils/TimeUtils');
 let sequelize;
 
 const getDbEncryptPath = node_env => {
+  const currentDirToReplace =
+    process.platform === 'win32' ? '\\src\\database' : '/src/database';
   switch (node_env) {
     case 'test': {
       return './src/__integrations__/test.db';
@@ -20,14 +22,14 @@ const getDbEncryptPath = node_env => {
       return path
         .join(__dirname, '/CriptextEncrypt.db')
         .replace('/app.asar', '')
-        .replace('/src/database', '');
+        .replace(currentDirToReplace, '');
     }
     default: {
       const userDataPath = app.getPath('userData');
       return path
         .join(userDataPath, '/CriptextEncrypt.db')
         .replace('/app.asar', '')
-        .replace('/src/database', '');
+        .replace(currentDirToReplace, '');
     }
   }
 };

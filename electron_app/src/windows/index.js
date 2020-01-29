@@ -22,6 +22,7 @@ const upStepDBEncryptedWithoutPIN = async () => {
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
     await pinWindow.show();
+    await dbManager.closeDB();
   } else {
     throw new Error('empty not encrytDatabase');
   }
