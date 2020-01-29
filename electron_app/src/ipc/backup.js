@@ -171,12 +171,12 @@ ipc.answerRenderer('restore-backup-encrypted', async params => {
 const initAutoBackupMonitor = async () => {
   clearTimeout(global.autoBackupIntervalId);
   const {
+    autoBackupEnable,
     autoBackupPath,
     autoBackupFrequency,
     autoBackupNextDate
   } = await getSettings();
-  if (!autoBackupNextDate) {
-    log('Failed to get next date');
+  if (!autoBackupEnable || !autoBackupNextDate) {
     return;
   }
   const now = moment();
@@ -212,6 +212,10 @@ const initAutoBackupMonitor = async () => {
 };
 
 ipc.answerRenderer('init-autobackup-monitor', initAutoBackupMonitor);
+
+ipc.answerRenderer('disable-auto-backup', () => {
+  clearTimeout(global.autoBackupIntervalId);
+});
 
 const log = message => {
   if (process.env.NODE_ENV === 'development') {

@@ -274,12 +274,9 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const sufix = emailIsForward ? forwardSufix : replySufix;
   const textSubject = sufix + removeActionsFromSubject(emailData.subject);
   const toEmails = formToEmails([from], contacts.to, replyType, myEmailAddress);
-  const previousCcEmails = filterRecipientObject(contacts.cc, myEmailAddress);
-  const othersToEmails = filterRecipientObject(contacts.to, myEmailAddress);
+  const previusCcEmails = filterRecipientObject(contacts.cc, myEmailAddress);
   const ccEmails =
-    replyType === composerEvents.REPLY_ALL
-      ? [...previousCcEmails, ...othersToEmails]
-      : [];
+    replyType === composerEvents.REPLY_ALL ? previusCcEmails : [];
 
   const bccEmails = [];
   return {
@@ -308,7 +305,11 @@ const formToEmails = (from, to, replyType, myEmailAddress) => {
     if (isFromMe) {
       return to.map(contact => formRecipientObject(contact));
     }
-    return from.map(contact => formRecipientObject(contact));
+    const othersToEmails = filterRecipientObject(to, myEmailAddress);
+    const fromContacts = from.map(contact => formRecipientObject(contact));
+    return replyType === composerEvents.REPLY_ALL
+      ? fromContacts.concat(othersToEmails)
+      : fromContacts;
   }
   return [];
 };

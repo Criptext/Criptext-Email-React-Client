@@ -11,7 +11,8 @@ import {
   getDefaultBackupFolder,
   exportBackupEncrypted,
   updateSettings,
-  initAutoBackupMonitor
+  initAutoBackupMonitor,
+  disableAutoBackup
 } from '../utils/ipc';
 import { addEvent, removeEvent, Event } from '../utils/electronEventInterface';
 import string from './../lang';
@@ -241,6 +242,7 @@ class SettingsAccountBackupWrapper extends Component {
         },
         async () => {
           await updateSettings({ autoBackupEnable: false });
+          await disableAutoBackup();
         }
       );
     }
