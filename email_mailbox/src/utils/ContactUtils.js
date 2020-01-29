@@ -20,8 +20,12 @@ const compareContacts = (recipient1, recipient2) => {
         : 0;
 };
 
-export const matchOwnEmail = (myUsername, incomingEmail) =>
-  `${myUsername}@${appDomain}` === incomingEmail;
+export const matchOwnEmail = (theRecipient, incomingEmail) => {
+  const comparableEmail = theRecipient.includes('@')
+    ? theRecipient
+    : `${theRecipient}@${appDomain}`;
+  return comparableEmail === incomingEmail;
+};
 
 export const orderContactsByNameOrEmail = recipients => {
   return recipients.sort(compareContacts);

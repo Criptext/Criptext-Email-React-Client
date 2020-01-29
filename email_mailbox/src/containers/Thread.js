@@ -5,11 +5,14 @@ import {
   removeLabelIdThread,
   sendOpenEvent
 } from '../actions';
+import { reportPhishing } from '../utils/ipc';
+import { parseContactRow } from '../utils/EmailUtils';
+import { matchOwnEmail } from '../utils/ContactUtils';
 import { makeGetEmails } from './../selectors/emails';
 import { makeGetLabels } from './../selectors/labels';
 import { makeGetThread } from './../selectors/threads';
 import ThreadView from '../components/Thread';
-import { LabelType } from '../utils/electronInterface';
+import { LabelType, myAccount } from '../utils/electronInterface';
 
 const makeMapStateToProps = () => {
   const getEmails = makeGetEmails();
@@ -46,12 +49,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onLoadEmails: emailIds => {
       dispatch(loadEmails({ emailIds }));
     },
-    onRemoveLabelIdThread: (threadId, labelId) => {
+    onRemoveLabelIdThread: (thread, labelId) => {
+      const threadId = thread.threadId;
+      if (labelId === LabelType.spam.id) {
+        const notspamEmails = thread.fromContactName
+          .map(fromAddress => {
+            return parseContactRow(fromAddress).email;
+          })
+          .filter(fromEmail => {
+            return !matchOwnEmail(myAccount.recipientId, fromEmail);
+          });
+        const params = {
+          emails: notspamEmails,
+          type: 'notspam'
+        };
+        reportPhishing(params);
+      }
       dispatch(
         removeLabelIdThread(ownProps.mailboxSelected.id, threadId, labelId)
       );
     },
-    onToggleStar: (threadId, isStarred) => {
+    onToggleStar: (thread, isStarred) => {
+      const threadId = thread.threadId;
       const labelId = LabelType.starred.id;
       if (isStarred) {
         dispatch(

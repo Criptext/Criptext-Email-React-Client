@@ -108,6 +108,23 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const currentLabelId = ownProps.mailboxSelected.id;
       const shouldGoBack =
         !ownProps.threadIdSelected || currentLabelId === labelIdToRemove;
+      if (labelIdToRemove === LabelType.spam.id) {
+        const notspamEmails = threadIds
+          .flatMap(thread => {
+            return thread.fromContactAddresses;
+          })
+          .map(fromAddress => {
+            return parseContactRow(fromAddress).email;
+          })
+          .filter(fromEmail => {
+            return !matchOwnEmail(myAccount.recipientId, fromEmail);
+          });
+        const params = {
+          emails: notspamEmails,
+          type: 'notspam'
+        };
+        reportPhishing(params);
+      }
       dispatch(
         actions.removeLabelIdThreads(currentLabelId, threadIds, labelIdToRemove)
       ).then(() => {
