@@ -5,13 +5,18 @@ import PinGenerated from './PinGenerated';
 import PinNew from './PinNew';
 import PinSaved from './PinSaved';
 import Complete from './Complete';
+import Encrypt from './Encrypt';
+import string from './../lang';
+
+const { page_encrypt } = string;
 
 export const step = {
   START: 1,
   PIN_GENERATED: 2,
   PIN_NEW: 3,
   PIN_SAVED: 4,
-  COMPLETE: 5
+  COMPLETE: 5,
+  ENCRYPTION: 6
 };
 
 const ScreenSignin = props => {
@@ -41,6 +46,13 @@ const ScreenSignin = props => {
           askKeyChain={props.askKeyChain}
           pin={props.pin}
           onClickCompleteIt={props.onClickCompleteIt}
+        />
+      );
+    case step.ENCRYPTION:
+      return (
+        <Encrypt
+          title={page_encrypt.steps[3]}
+          paragraph={page_encrypt.paragraph}
         />
       );
     default:

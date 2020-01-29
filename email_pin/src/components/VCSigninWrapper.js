@@ -83,6 +83,10 @@ class VCSigninWrapper extends Component {
   };
 
   handleClickCompleteIt = async value => {
+    this.setState(state => ({
+      steps: this.concat(state.steps, step.ENCRYPTION),
+      currentStep: step.ENCRYPTION
+    }));
     await sendPin({
       pin: this.pin,
       shouldSave: value,

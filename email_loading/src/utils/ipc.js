@@ -172,8 +172,8 @@ export const decryptBackupFile = async key => {
   return await ipc.callMain('data-transfer-decrypt', key);
 };
 
-export const importDatabase = async () => {
-  return await ipc.callMain('data-transfer-import');
+export const importDatabase = async params => {
+  return await ipc.callMain('data-transfer-import', params);
 };
 
 export const clearSyncData = async () => {

@@ -23,6 +23,22 @@ const initialize = params => {
   pinWindow.show();
 };
 
+const setKeyEmailBodies = async pin => {
+  const accountEmail = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const userEmailsPath = fileUtils.getUserEmailsPath(
+    process.env.NODE_ENV,
+    accountEmail
+  );
+  const userEmailsCopyPath = path.join(userEmailsPath, '../emails-copy');
+  await filesScript.start({
+    inPath: userEmailsPath,
+    outPath: userEmailsCopyPath,
+    pass: pin
+  });
+};
+
 const start = async () => {
   const { newPin, recoveryKeyData, saveInKeyChain } = resetKeyParams;
   const oldPin = globalManager.databaseKey.get();
@@ -77,5 +93,6 @@ const start = async () => {
 
 module.exports = {
   initialize,
+  setKeyEmailBodies,
   start
 };

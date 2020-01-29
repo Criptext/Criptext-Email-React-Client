@@ -16,7 +16,7 @@ global.pendingRestore = false;
 global.backupStatus = null;
 global.needsUpgrade = false;
 global.databaseKey = '';
-global.progressDBE = { total: 12, current: 0 };
+global.progressDBE = { total: 13, current: 1 };
 
 /*  Composer
 ----------------------------- */

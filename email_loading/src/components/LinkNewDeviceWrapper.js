@@ -304,7 +304,7 @@ class LinkNewDeviceWrapper extends Component {
       async () => {
         this.incrementPercentage();
         await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
-        await importDatabase()
+        await importDatabase({ withoutBodiesEncryption: true })
           .then(() => {
             this.setState(
               {

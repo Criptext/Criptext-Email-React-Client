@@ -130,10 +130,14 @@ const decrypt = async key => {
   });
 };
 
-const importDatabase = async () => {
+const importDatabase = async params => {
+  const withoutBodiesEncryption = params
+    ? params.withoutBodiesEncryption
+    : undefined;
   return await dbExporter.importDatabaseFromFile({
     filepath: decryptedFileName,
-    isStrict: true
+    isStrict: true,
+    withoutBodiesEncryption
   });
 };
 

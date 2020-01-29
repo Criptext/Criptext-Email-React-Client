@@ -5,7 +5,7 @@ import PinGenerated from './PinGenerated';
 import PinNew from './PinNew';
 import PinSaved from './PinSaved';
 import Complete from './Complete';
-import Encrypt from './Encrypt';
+import EncryptWrapper from './EncryptWrapper';
 
 export const step = {
   START: 1,
@@ -41,7 +41,7 @@ const ScreenExportDatabase = props => {
         />
       );
     case step.ENCRYPT:
-      return <Encrypt />;
+      return <EncryptWrapper />;
     default:
       return null;
   }

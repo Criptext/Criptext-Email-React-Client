@@ -776,7 +776,11 @@ const exportEncryptDatabaseToFile = async ({ outputPath }) => {
   saveToFile({ data: files, filepath, mode: 'a' });
 };
 
-const importDatabaseFromFile = async ({ filepath, isStrict }) => {
+const importDatabaseFromFile = async ({
+  filepath,
+  isStrict,
+  withoutBodiesEncryption
+}) => {
   let accounts = [];
   let contacts = [];
   let labels = [];
@@ -889,7 +893,11 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
               emails.push(emailToStore);
               if (emails.length === EMAILS_BATCH) {
                 lineReader.pause();
-                await storeEmailBodies(emails, userEmail);
+                await storeEmailBodies(
+                  emails,
+                  userEmail,
+                  withoutBodiesEncryption
+                );
                 await Email().bulkCreate(emails, { transaction: trx });
                 emails = [];
                 lineReader.resume();
@@ -911,7 +919,11 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
                     contacts = [];
                   }
                   if (emails.length) {
-                    await storeEmailBodies(emails, userEmail);
+                    await storeEmailBodies(
+                      emails,
+                      userEmail,
+                      withoutBodiesEncryption
+                    );
                     await Email().bulkCreate(emails, { transaction: trx });
                     emails = [];
                   }
@@ -1041,7 +1053,7 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
             await insertRemainingRows(contacts, Contact(), trx);
             await insertRemainingRows(labels, Label(), trx);
             if (!isStrict) globalManager.progressDBE.set({ add: 1 });
-            await storeEmailBodies(emails, userEmail);
+            await storeEmailBodies(emails, userEmail, withoutBodiesEncryption);
             await insertRemainingRows(emails, Email(), trx);
             if (!isStrict) globalManager.progressDBE.set({ add: 1 });
             await insertRemainingRows(emailContacts, EmailContact(), trx);
@@ -1062,11 +1074,11 @@ const importDatabaseFromFile = async ({ filepath, isStrict }) => {
               Signedprekeyrecord(),
               trx
             );
-            await replaceEmailsWithCopy(userEmail);
-            if (!isStrict) globalManager.progressDBE.set({ current: 12 });
+            if (!withoutBodiesEncryption)
+              await replaceEmailsWithCopy(userEmail);
+            if (!isStrict) globalManager.progressDBE.set({ current: 13 });
             resolve();
           } catch (error) {
-            console.log(error);
             const a = new Error(error.name);
             await removeEmailsCopy(userEmail);
             reject(a);
@@ -1094,9 +1106,10 @@ const insertRemainingEmailLabelsRows = async (rows, Table, trx) => {
   }
 };
 
-const storeEmailBodies = (emailRows, userEmail) => {
+const storeEmailBodies = (emailRows, userEmail, withoutEncryption) => {
   if (!userEmail) return;
-  const pin = globalManager.databaseKey.get();
+  const pin = withoutEncryption ? undefined : globalManager.databaseKey.get();
+  const isCopy = !withoutEncryption;
   return Promise.all(
     emailRows.map(email => {
       const body = email.content;
@@ -1109,7 +1122,7 @@ const storeEmailBodies = (emailRows, userEmail) => {
         username: userEmail,
         metadataKey: email.key,
         password: pin,
-        isCopy: true
+        isCopy
       });
     })
   );

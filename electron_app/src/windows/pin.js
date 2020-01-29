@@ -11,6 +11,7 @@ const {
 } = require('../database/DBEmanager');
 const keytar = require('keytar');
 const globalManager = require('./../globalManager');
+const { setKeyEmailBodies } = require('./../rekeyHandler');
 const { encryptDataBase } = require('./../utils/dataBaseUtils');
 let pinWindow;
 let shouldCloseForce = false;
@@ -122,6 +123,7 @@ const setUpPin = async ({
   globalManager.databaseKey.set(pin);
   if (shouldResetPin) {
     await resetKeyDatabase(pin);
+    await setKeyEmailBodies(pin);
   } else {
     await initDatabaseEncrypted({
       key: pin,
