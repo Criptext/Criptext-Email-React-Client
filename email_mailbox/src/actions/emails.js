@@ -44,6 +44,18 @@ export const addEmails = emails => {
   };
 };
 
+export const addEmailLabels = (emails, labelsAdd) => ({
+  type: Email.ADD_LABEL,
+  emails,
+  labelsAdd
+});
+
+export const removeEmailLabels = (emails, labelsDelete) => ({
+  type: Email.DELETE_LABEL,
+  emails,
+  labelsDelete
+});
+
 export const muteNotifications = emailId => {
   return {
     type: Email.MUTE,
@@ -281,6 +293,11 @@ export const updateEmailLabels = ({
               emailIdsToRemove: [email.id]
             })
           );
+          if (labelsAdded.length) {
+            const addedLabels = await getLabelsByText(labelsAdded);
+            const addedLabelsIds = addedLabels.map(label => label.id);
+            dispatch(addEmailLabels([email], addedLabelsIds));
+          }
         } else {
           sendUpdateThreadLabelsErrorMessage();
         }

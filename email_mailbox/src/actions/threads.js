@@ -3,7 +3,9 @@ import {
   addDataApp,
   addContacts,
   addEmails,
+  addEmailLabels,
   addFiles,
+  removeEmailLabels,
   loadFeedItems,
   removeEmails,
   startLoadSync,
@@ -48,6 +50,25 @@ export const addThreads = (labelId, threads, clear) => ({
   threads: threads,
   clear: clear
 });
+
+const returnEmailIdsFromThreadsIds = async (threadIds, labelId) => {
+  const emails = await Promise.all(
+    threadIds.map(async threadId => {
+      const emailsOfThread = await getEmailsByThreadId(threadId);
+
+      return emailsOfThread.filter(mail => {
+        if (!mail.labelIds) return false;
+        return typeof mail.labelIds === 'string'
+          ? mail.labelIds
+              .split(',')
+              .map(Number)
+              .includes(labelId)
+          : mail.labelIds.includes(labelId);
+      });
+    })
+  );
+  return emails.flat();
+};
 
 export const addLabelIdThread = (currentLabelId, threadId, labelId) => {
   return async dispatch => {
@@ -227,6 +248,13 @@ export const addMoveLabelIdThreads = ({
           labelIds = [...labelIds, labelIdToAdd];
         if (labelIds.length) dispatch(updateBadgeLabels(labelIds));
         dispatch(moveThreads(currentLabelId, threadIds));
+
+        const emails = await returnEmailIdsFromThreadsIds(
+          threadIds,
+          labelIdToAdd
+        );
+
+        dispatch(addEmailLabels(emails, [labelIdToAdd]));
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -293,6 +321,8 @@ export const removeLabelIdThread = (currentLabelId, threadId, labelId) => {
       const dbResponse = await deleteEmailLabel(params);
       if (dbResponse) {
         dispatch(removeLabelIdThreadSuccess(currentLabelId, threadId, labelId));
+        const emails = await getEmailsByThreadId(threadId);
+        dispatch(removeEmailLabels(emails, [labelId]));
       }
     } catch (e) {
       sendUpdateThreadLabelsErrorMessage();
@@ -348,6 +378,10 @@ export const removeLabelIdThreads = (
         await postPeerEvent(eventParams);
       }
 
+      const emails = await returnEmailIdsFromThreadsIds(
+        threadIds,
+        labelIdToRemove
+      );
       const dbReponse = await Promise.all(
         threadIds.map(async threadId => {
           const emails = await getEmailsByThreadId(threadId);
@@ -359,6 +393,11 @@ export const removeLabelIdThreads = (
       dispatch(
         removeLabelIdThreadsSuccess(currentLabelId, threadIds, labelIdToRemove)
       );
+      const labelsToRemove =
+        currentLabelId === LabelType.spam.id
+          ? [LabelType.spam.id, LabelType.trash.id]
+          : [labelIdToRemove];
+      dispatch(removeEmailLabels(emails, labelsToRemove));
       let labelToUpdateBadge =
         labelIdToRemove === LabelType.inbox ? LabelType.inbox.id : null;
       labelToUpdateBadge =

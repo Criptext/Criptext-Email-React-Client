@@ -4,7 +4,9 @@ exports[`Email actions - ADD_BATCH  shoul add emails to state 1`] = `
 Immutable.Map {
   "1": Immutable.Map {
     "isMuted": 0,
-    "labelIds": Immutable.Set [],
+    "labelIds": Immutable.Set [
+      1,
+    ],
     "threadId": "fSaznwApj6ilX8U",
     "trashDate": null,
     "preview": "Email content 1",
@@ -26,7 +28,10 @@ Immutable.Map {
   },
   "2": Immutable.Map {
     "isMuted": 0,
-    "labelIds": Immutable.Set [],
+    "labelIds": Immutable.Set [
+      1,
+      2,
+    ],
     "threadId": "k7ZtKjAXYFSwD",
     "trashDate": null,
     "preview": "Email content 2",
@@ -43,7 +48,10 @@ Immutable.Map {
   },
   "3": Immutable.Map {
     "isMuted": 0,
-    "labelIds": Immutable.Set [],
+    "labelIds": Immutable.Set [
+      1,
+      2,
+    ],
     "threadId": "HuviK7TKUVK",
     "trashDate": null,
     "preview": "Email content 3",

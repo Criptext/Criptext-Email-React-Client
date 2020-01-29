@@ -100,7 +100,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               : undefined,
           currentLabelId
         })
-      ).then(() => ownProps.onBackOption());
+      ).then(() => {
+        ownProps.onBackOption();
+      });
     },
     onRemoveLabel: (threadIds, labelIdToRemove) => {
       const currentLabelId = ownProps.mailboxSelected.id;
