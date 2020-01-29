@@ -96,7 +96,8 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
 
   Account.init(
     {
-      recipientId: { type: Sequelize.STRING, primaryKey: true },
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      recipientId: { type: Sequelize.STRING, unique: true },
       deviceId: Sequelize.INTEGER,
       name: Sequelize.STRING,
       jwt: Sequelize.STRING,

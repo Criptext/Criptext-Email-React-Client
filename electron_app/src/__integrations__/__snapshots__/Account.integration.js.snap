@@ -5,6 +5,7 @@ Array [
   Object {
     "deviceId": 1,
     "encryptToExternals": false,
+    "id": 1,
     "jwt": "abc",
     "name": "User One",
     "privKey": "ghi",
