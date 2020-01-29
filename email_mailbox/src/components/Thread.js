@@ -188,11 +188,11 @@ class Thread extends Component {
   };
 
   handleRemoveLabel = labelId => {
-    this.props.onRemoveLabelIdThread(this.props.thread.threadId, labelId);
+    this.props.onRemoveLabelIdThread(this.props.thread, labelId);
   };
 
   handleToggleStar = () => {
-    this.props.onToggleStar(this.props.thread.threadId, this.props.starred);
+    this.props.onToggleStar(this.props.thread, this.props.starred);
   };
 
   onExpandGroup = () => {
