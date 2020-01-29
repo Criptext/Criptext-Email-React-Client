@@ -1,6 +1,6 @@
 const { app } = require('electron');
 const mailboxWindow = require('./windows/mailbox');
-const pinWindow = require('./windows/pin');
+const pinWindow = require('./windows/pin.js');
 const globalManager = require('./globalManager');
 const { resetKeyDatabase } = require('./database/DBEmanager');
 const keytar = require('keytar');

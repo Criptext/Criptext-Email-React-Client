@@ -5,13 +5,16 @@ const loginWindow = require('./login');
 const { EVENTS, callEvent } = require('./events');
 const { isDev } = require('./windowUtils');
 const { isWindows } = require('./../utils/osUtils');
+const fileUtils = require('../utils/FileUtils');
+const filesScript = require('../filescript/handler');
+const { APP_DOMAIN } = require('../utils/const');
+const myAccount = require('../Account');
 const {
   initDatabaseEncrypted,
   resetKeyDatabase
 } = require('../database/DBEmanager');
 const keytar = require('keytar');
 const globalManager = require('./../globalManager');
-const { setKeyEmailBodies } = require('./../rekeyHandler');
 const { encryptDataBase } = require('./../utils/dataBaseUtils');
 let pinWindow;
 let shouldCloseForce = false;
@@ -25,6 +28,22 @@ const iconPath = path.join(
   __dirname,
   './../../resources/launch-icons/icon.png'
 );
+
+const setKeyEmailBodies = async pin => {
+  const accountEmail = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const userEmailsPath = fileUtils.getUserEmailsPath(
+    process.env.NODE_ENV,
+    accountEmail
+  );
+  const userEmailsCopyPath = path.join(userEmailsPath, '../emails-copy');
+  await filesScript.start({
+    inPath: userEmailsPath,
+    outPath: userEmailsCopyPath,
+    pass: pin
+  });
+};
 
 const create = () => {
   pinWindow = new BrowserWindow({

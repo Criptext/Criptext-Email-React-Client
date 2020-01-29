@@ -34,7 +34,7 @@ class ChangeSecurityPin extends Component {
                 fields={4}
                 onChange={value => this.handleChange(value)}
                 onComplete={value => this.handleComplete(value, 1)}
-                type={'number'}
+                type={'password'}
               />
             </div>
             <div
@@ -52,7 +52,7 @@ class ChangeSecurityPin extends Component {
                 fields={4}
                 onChange={value => this.handleChange(value)}
                 onComplete={value => this.handleComplete(value, 2)}
-                type={'number'}
+                type={'password'}
               />
               {this.state.hasError && (
                 <span className="error">{page_pin_new.error}</span>

@@ -1,4 +1,7 @@
 .complete-content{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
   text-align: center;
   width: 300px;
@@ -14,6 +17,7 @@
     $duration: 4.5s;
     height: 130px;
     margin-top: 30px;
+    margin-left: -101px;
     position: relative;
 
     >div{
@@ -133,6 +137,10 @@
 
     .checkmark-container{
       margin-right: 10px;
+
+      .checkmark-checked::after{
+        top: 1px;
+      }
     }
   }
 
@@ -144,9 +152,7 @@
 
   button{
     bottom: 40px;
-    transform: translateX(-50%);
     min-width: 80px;
-    margin: 0 auto;
-    position: absolute;
+    margin: 20px auto 0;
   }
 }

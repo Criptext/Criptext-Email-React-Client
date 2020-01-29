@@ -62,8 +62,18 @@
         padding: 4px;
         width: 45px;
 
+        &.button-a{
+          align-items: center;
+          display: flex;
+
+          i{
+            display: none;
+          }
+        }
+
         span{
           font-size: 11px;
+          top: 0;
         }
       }
     }
