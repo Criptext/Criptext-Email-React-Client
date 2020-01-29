@@ -1159,6 +1159,10 @@ const updateSettings = async ({
 
 /* SessionRecord
 ----------------------------- */
+const deleteSessionRecord = params => {
+  return Sessionrecord().destroy({ where: params });
+};
+
 const getSessionRecordByRecipientIds = recipientIds => {
   const sequelize = getDB();
   return Sessionrecord().findAll({
@@ -1364,6 +1368,7 @@ module.exports = {
   deleteFeedItemById,
   deleteLabelById,
   deletePendingEventsByIds,
+  deleteSessionRecord,
   filterEmailLabelIfNotStore,
   getDB,
   getAccount,
