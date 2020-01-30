@@ -82,6 +82,7 @@ import {
   fetchGetSingleEvent
 } from './FetchUtils';
 import string from './../lang';
+import { processPendingEvents } from './ipc';
 
 const EventEmitter = window.require('events');
 const electron = window.require('electron');
@@ -117,6 +118,7 @@ const stopGettingEvents = () => {
   } else if (!getBackupStatus()) {
     initAutoBackupMonitor();
   }
+  processPendingEvents();
 };
 
 const parseAndStoreEventsBatch = async ({
@@ -737,7 +739,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         };
       }
       body = 'Content unencrypted';
-      reportContentUnencrypted(e.message);
+      reportContentUnencrypted(e.stack);
     }
     if (!fileKeys && fileKey) {
       myFileKeys = files.map(() => myFileKeys[0]);
@@ -1338,11 +1340,10 @@ ipcRenderer.on(
         break;
       }
       case 'reply': {
-        const { threadId, newEmailId, oldEmailId } = threadData;
-        emitter.emit(Event.UPDATE_THREAD_EMAILS, {
-          threadId,
-          newEmailId,
-          oldEmailId
+        const { threadId } = threadData;
+        emitter.emit(Event.STORE_LOAD, {
+          labelIds: [LabelType.sent.id],
+          threadIds: [threadId]
         });
         break;
       }
