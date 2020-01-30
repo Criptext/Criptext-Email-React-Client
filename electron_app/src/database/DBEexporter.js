@@ -42,8 +42,8 @@ const excludedEmailStatus = [1, 4];
 const excludedLabels = [systemLabels.draft.id];
 const whereRawEmailQuery = `LEFT JOIN ${Table.EMAIL_LABEL} 
     ON ${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId 
-    AND ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
-    WHERE ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
+    WHERE ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
+    AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
 `;
 
 /* Batches
@@ -315,7 +315,7 @@ const _exportEmailLabelTable = async db => {
         `SELECT emailLabel.* FROM ${Table.EMAIL_LABEL} LEFT JOIN ${
           Table.EMAIL
         } ON ${Table.EMAIL}.id=${Table.EMAIL_LABEL}.emailId 
-        AND ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
+        WHERE ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
         AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
         GROUP BY ${Table.EMAIL_LABEL}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
@@ -688,7 +688,7 @@ const exportEmailLabelTable = async () => {
         `SELECT emailLabel.* FROM ${Table.EMAIL_LABEL} LEFT JOIN ${
           Table.EMAIL
         } ON ${Table.EMAIL}.id=${Table.EMAIL_LABEL}.emailId 
-        AND ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
+        WHERE ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
         AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
         GROUP BY ${Table.EMAIL_LABEL}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
