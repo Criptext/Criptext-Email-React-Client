@@ -3,9 +3,18 @@
 exports[`Update data account from Account Table: should update account 1`] = `
 Array [
   Object {
+    "autoBackupEnable": false,
+    "autoBackupFrequency": null,
+    "autoBackupLastDate": null,
+    "autoBackupLastSize": null,
+    "autoBackupNextDate": null,
+    "autoBackupPath": null,
     "deviceId": 1,
+    "domain": null,
     "encryptToExternals": false,
     "id": 1,
+    "isActive": true,
+    "isLoggedIn": true,
     "jwt": "abc",
     "name": "User One",
     "privKey": "ghi",

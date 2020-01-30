@@ -2,6 +2,7 @@
 
 exports[`Load data labels from Label Table: Should load all labels 1`] = `
 Object {
+  "accountId": null,
   "color": "0091ff",
   "id": 1,
   "text": "Inbox",
@@ -13,6 +14,7 @@ Object {
 
 exports[`Load data labels from Label Table: Should load label by labelId 1`] = `
 Object {
+  "accountId": null,
   "color": "0091ff",
   "id": 1,
   "text": "Inbox",
@@ -24,6 +26,7 @@ Object {
 
 exports[`Load data labels from Label Table: Should load label by uuid 1`] = `
 Object {
+  "accountId": null,
   "color": "0091ff",
   "id": 1,
   "text": "Inbox",

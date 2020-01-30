@@ -3,11 +3,12 @@
 using namespace std;
 using namespace sqlite;
 
-CriptextDB::PreKey CriptextDB::getPreKey(database db, short int id) {
+CriptextDB::PreKey CriptextDB::getPreKey(database db, int accountId, short int id) {
   string myPreKey;
   size_t myLen = 0;
-  db << "Select * from prekeyrecord where preKeyId == ?;"
+  db << "Select * from prekeyrecord where preKeyId == ? and accountId == ?;"
      << id
+     << accountId
      >> [&] (int preKeyId, string record, int recordLength) {
         myPreKey = record;
         myLen = (size_t)recordLength;
@@ -24,12 +25,13 @@ CriptextDB::PreKey CriptextDB::getPreKey(database db, short int id) {
   return preKey;
 }
 
-bool CriptextDB::createPreKey(database db, short int id, char *keyRecord, size_t len) {
+bool CriptextDB::createPreKey(database db, int accountId, short int id, char *keyRecord, size_t len) {
   try {
-    db << "insert into prekeyrecord (preKeyId, record, recordLength) values (?,?,?);"
+    db << "insert into prekeyrecord (preKeyId, record, recordLength, accountId) values (?,?,?,?);"
      << id
      << keyRecord
-     << static_cast<int>(len);
+     << static_cast<int>(len)
+     << accountId;
     return true;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;
@@ -37,10 +39,11 @@ bool CriptextDB::createPreKey(database db, short int id, char *keyRecord, size_t
   }
 }
 
-bool CriptextDB::deletePreKey(database db, short int id) {
+bool CriptextDB::deletePreKey(database db, int accountId, short int id) {
   try {
-    db << "delete from prekeyrecord where preKeyId == ?;"
-     << id;
+    db << "delete from prekeyrecord where preKeyId == ? and accountId == ?;"
+     << id
+     << accountId;
     return true;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;
