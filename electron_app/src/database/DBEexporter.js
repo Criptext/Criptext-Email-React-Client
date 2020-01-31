@@ -40,20 +40,20 @@ const DEFAULT_KEY_LENGTH = 16;
 
 const excludedEmailStatus = [1, 4];
 const excludedLabels = [systemLabels.draft.id];
-const whereRawEmailQuery = `LEFT JOIN ${Table.EMAIL_LABEL} 
-    ON ${Table.EMAIL}.id = ${Table.EMAIL_LABEL}.emailId 
+const whereRawEmailQuery = id => `INNER JOIN ${Table.EMAIL_LABEL} 
+    ON ${id} = ${Table.EMAIL_LABEL}.emailId 
     WHERE ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
     AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
 `;
 
 /* Batches
 ----------------------------- */
-const CONTACTS_BATCH = 100;
-const EMAIL_CONTACTS_BATCH = 200;
-const EMAIL_LABELS_BATCH = 200;
+const CONTACTS_BATCH = 500;
+const EMAIL_CONTACTS_BATCH = 500;
+const EMAIL_LABELS_BATCH = 500;
 const EMAILS_BATCH = 100;
 const FEEDITEM_BATCH = 100;
-const FILES_BATCH = 100;
+const FILES_BATCH = 200;
 const IDENTITYKEYRECORD_BATCH = 50;
 const LABELS_BATCH = 50;
 const PENDINGEVENT_BATCH = 50;
@@ -216,7 +216,8 @@ const _exportEmailTable = async (db, userEmail) => {
   let offset = 0;
   while (!shouldEnd) {
     const rows = await db.raw(
-      `SELECT email.* FROM ${Table.EMAIL} ${whereRawEmailQuery}
+      `SELECT email.* FROM ${Table.EMAIL}
+      WHERE ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
       GROUP BY ${Table.EMAIL}.id
       LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
     );
@@ -280,11 +281,10 @@ const _exportEmailContactTable = async db => {
   while (!shouldEnd) {
     const result = await db
       .raw(
-        `SELECT emailContact.* FROM ${Table.EMAIL_CONTACT} LEFT JOIN ${
+        `SELECT emailContact.* FROM ${Table.EMAIL_CONTACT} INNER JOIN ${
           Table.EMAIL
-        } ON ${Table.EMAIL}.id=${
-          Table.EMAIL_CONTACT
-        }.emailId ${whereRawEmailQuery}
+        } ON ${Table.EMAIL}.id=${Table.EMAIL_CONTACT}.emailId 
+        WHERE ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
         GROUP BY ${Table.EMAIL_CONTACT}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
       )
@@ -312,11 +312,10 @@ const _exportEmailLabelTable = async db => {
   while (!shouldEnd) {
     const result = await db
       .raw(
-        `SELECT emailLabel.* FROM ${Table.EMAIL_LABEL} LEFT JOIN ${
+        `SELECT emailLabel.* FROM ${Table.EMAIL_LABEL} INNER JOIN ${
           Table.EMAIL
         } ON ${Table.EMAIL}.id=${Table.EMAIL_LABEL}.emailId 
-        WHERE ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
-        AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
+        WHERE ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
         GROUP BY ${Table.EMAIL_LABEL}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
       )
@@ -372,9 +371,10 @@ const _exportFileTable = async db => {
   while (!shouldEnd) {
     const result = await db
       .raw(
-        `SELECT file.* FROM ${Table.FILE} LEFT JOIN ${Table.EMAIL} ON ${
+        `SELECT file.* FROM ${Table.FILE} INNER JOIN ${Table.EMAIL} ON ${
           Table.EMAIL
-        }.id=${Table.FILE}.emailId ${whereRawEmailQuery}
+        }.id=${Table.FILE}.emailId
+        WHERE ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
         GROUP BY ${Table.FILE}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`
       )
@@ -588,7 +588,9 @@ const exportEmailTable = async () => {
   let offset = 0;
   while (!shouldEnd) {
     const rows = await getDB().query(
-      `SELECT email.* FROM ${Table.EMAIL} ${whereRawEmailQuery}
+      `SELECT email.* FROM ${Table.EMAIL} ${whereRawEmailQuery(
+        `${Table.EMAIL}.id`
+      )}
       GROUP BY ${Table.EMAIL}.id
       LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
       { type: getDB().QueryTypes.SELECT }
@@ -651,11 +653,11 @@ const exportEmailContactTable = async () => {
   while (!shouldEnd) {
     const result = await getDB()
       .query(
-        `SELECT emailContact.* FROM ${Table.EMAIL_CONTACT} LEFT JOIN ${
+        `SELECT emailContact.* FROM ${Table.EMAIL_CONTACT} INNER JOIN ${
           Table.EMAIL
         } ON ${Table.EMAIL}.id=${
           Table.EMAIL_CONTACT
-        }.emailId ${whereRawEmailQuery}
+        }.emailId ${whereRawEmailQuery(`${Table.EMAIL_CONTACT}.emailId`)}
         GROUP BY ${Table.EMAIL_CONTACT}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
         { type: getDB().QueryTypes.SELECT }
@@ -685,7 +687,7 @@ const exportEmailLabelTable = async () => {
   while (!shouldEnd) {
     const result = await getDB()
       .query(
-        `SELECT emailLabel.* FROM ${Table.EMAIL_LABEL} LEFT JOIN ${
+        `SELECT emailLabel.* FROM ${Table.EMAIL_LABEL} INNER JOIN ${
           Table.EMAIL
         } ON ${Table.EMAIL}.id=${Table.EMAIL_LABEL}.emailId 
         WHERE ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
@@ -719,9 +721,11 @@ const exportFileTable = async () => {
   while (!shouldEnd) {
     const result = await getDB()
       .query(
-        `SELECT file.* FROM ${Table.FILE} LEFT JOIN ${Table.EMAIL} ON ${
+        `SELECT file.* FROM ${Table.FILE} INNER JOIN ${Table.EMAIL} ON ${
           Table.EMAIL
-        }.id=${Table.FILE}.emailId ${whereRawEmailQuery}
+        }.id=${Table.FILE}.emailId ${whereRawEmailQuery(
+          `${Table.FILE}.emailId`
+        )}
         GROUP BY ${Table.FILE}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
         { type: getDB().QueryTypes.SELECT }
