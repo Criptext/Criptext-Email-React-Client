@@ -4,4 +4,4 @@
 #include <iostream>
 #include <string.h>
 
-int cors(struct mg_connection *conn);
+bool cors(struct mg_connection *conn);

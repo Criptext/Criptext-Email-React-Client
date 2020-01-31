@@ -39,7 +39,7 @@ class CriptextSignal {
         int generatePreKey(cJSON *preKeyJson, int index);
 
     public :
-        CriptextSignal(char *recipientId, database db, string password);
+        CriptextSignal(char *recipientId, database db);
         int decryptText(uint8_t **plaintext_data, size_t *plaintext_len, std::string encryptedText, std::string recipientId, int deviceId, int message_type);
         int encryptText(char **encryptedText, uint8_t *plainText, size_t plainTextLength, char* recipientId, int deviceId);
         int generateKeyBundle(cJSON *bundle, string recipientId);
