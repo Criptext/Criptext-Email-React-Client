@@ -155,8 +155,10 @@ const setUpPin = async ({
   }
 
   if (shouldExport || shouldResetPin) {
-    app.relaunch();
-    app.exit(0);
+    setTimeout(() => {
+      app.relaunch();
+      app.exit(0);
+    }, 5000);
   }
 
   if (!shouldOnlySetPIN) callEvent(EVENTS.Up_app, {});

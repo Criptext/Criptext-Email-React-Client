@@ -19,11 +19,11 @@ class EncryptWrapper extends Component {
       stepTitle: 1
     };
     this.textArea = undefined;
-    const { total } = getProgressDBE();
+    const { total, current } = getProgressDBE();
     this.total = total;
-    this.current = 0;
-    this.next = 0;
-    this.delay = 1000;
+    this.current = current;
+    this.next = current * 100 / total;
+    this.delay = 100;
   }
 
   render() {
@@ -42,27 +42,28 @@ class EncryptWrapper extends Component {
   }
 
   increasePercent = () => {
-    const { current } = getProgressDBE();
-    if (current !== this.current) {
-      if (current >= 6 && this.delay === 1000) this.delay = this.delay * 2;
-      this.current = current;
-      this.next = this.current * 100 / this.total;
-      if (this.next > this.state.percent) {
-        this.setState(state => {
-          let stepTitle = state.stepTitle;
-          if (
-            (current >= 2 && current <= 6 && state.stepTitle === 1) ||
-            (current > 6 && state.stepTitle === 2)
-          )
-            stepTitle++;
-          return { percent: state.percent + 1, stepTitle };
-        });
-      }
-    } else if (this.next > this.state.percent) {
+    if (this.state.percent < this.next) {
       this.setState(state => {
         return { percent: state.percent + 1 };
       });
-    } else if (current >= this.total) {
+      this.delay = 100;
+    } else if (this.current < this.total) {
+      const { current } = getProgressDBE();
+      if (this.current !== current) {
+        this.current = current;
+        this.next = current * 100 / this.total;
+        this.setState(state => {
+          let stepTitle = state.stepTitle;
+          if (
+            (current === 3 && state.stepTitle === 1) ||
+            (current === 4 && state.stepTitle < 3)
+          )
+            stepTitle++;
+          return { stepTitle };
+        });
+      }
+      this.delay = 3000;
+    } else if (this.current >= this.total) {
       clearTimeout(this.tm);
       return;
     }

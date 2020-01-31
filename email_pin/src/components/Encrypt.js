@@ -11,7 +11,7 @@ const Encrypt = props => (
         <div className="bar">
           <div
             className={`content ${props.animationState}`}
-            style={{ width: props.percent || 100 + '%' }}
+            style={{ width: `${props.percent || 100}%` }}
           />
         </div>
         {!!props.percent && (

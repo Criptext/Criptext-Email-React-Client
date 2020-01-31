@@ -77,6 +77,7 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
   const filepath = outputPath;
   const dbConn = await createNotEncryptDatabaseConnection(databasePath);
   const accountsData = await _exportAccountTable(dbConn);
+  globalManager.progressDBE.set({ add: 1 });
   saveToFile({ data: accountsData.rowsString, filepath, mode: 'w' }, true);
   const contacts = await _exportContactTable(dbConn);
   saveToFile({ data: contacts, filepath, mode: 'a' });
@@ -94,18 +95,14 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
       ? firstAccount.recipientId
       : `${firstAccount.recipientId}@${APP_DOMAIN}`;
   }
-  globalManager.progressDBE.set({ add: 1 });
   const emails = await _exportEmailTable(dbConn, userEmail);
   saveToFile({ data: emails, filepath, mode: 'a' });
-  globalManager.progressDBE.set({ add: 1 });
   const emailContacts = await _exportEmailContactTable(dbConn);
   saveToFile({ data: emailContacts, filepath, mode: 'a' });
-  globalManager.progressDBE.set({ add: 1 });
   const emailLabels = await _exportEmailLabelTable(dbConn);
   saveToFile({ data: emailLabels, filepath, mode: 'a' });
   const feeditems = await _exportFeedItemTable(dbConn);
   saveToFile({ data: feeditems, filepath, mode: 'a' });
-  globalManager.progressDBE.set({ add: 1 });
   const files = await _exportFileTable(dbConn);
   saveToFile({ data: files, filepath, mode: 'a' });
   const identities = await _exportIdentitykeyrecordTable(dbConn);
@@ -842,21 +839,11 @@ const importDatabaseFromFile = async ({
     }
 
     const lineReader = new LineByLineReader(filepath);
-    let currentTable = '';
     return new Promise((resolve, reject) => {
       lineReader
         .on('line', async line => {
           const { table, object } = JSON.parse(line);
-          if (
-            currentTable !== table &&
-            !isStrict &&
-            (table === Table.ACCOUNT ||
-              table === Table.EMAIL ||
-              table === 'email_contact' ||
-              table === 'email_label' ||
-              table === Table.FEEDITEM)
-          ) {
-            currentTable = table;
+          if (table === Table.ACCOUNT) {
             globalManager.progressDBE.set({ add: 1 });
           }
           switch (table) {
@@ -1052,14 +1039,12 @@ const importDatabaseFromFile = async ({
         .on('error', reject)
         .on('end', async () => {
           try {
-            if (!isStrict) globalManager.progressDBE.set({ add: 1 });
+            if (!isStrict) globalManager.progressDBE.set({ current: 4 });
             await insertRemainingRows(accounts, Account(), trx);
             await insertRemainingRows(contacts, Contact(), trx);
             await insertRemainingRows(labels, Label(), trx);
-            if (!isStrict) globalManager.progressDBE.set({ add: 1 });
             await storeEmailBodies(emails, userEmail, withoutBodiesEncryption);
             await insertRemainingRows(emails, Email(), trx);
-            if (!isStrict) globalManager.progressDBE.set({ add: 1 });
             await insertRemainingRows(emailContacts, EmailContact(), trx);
             await insertRemainingEmailLabelsRows(
               emailLabels,
@@ -1080,7 +1065,6 @@ const importDatabaseFromFile = async ({
             );
             if (!withoutBodiesEncryption)
               await replaceEmailsWithCopy(userEmail);
-            if (!isStrict) globalManager.progressDBE.set({ current: 13 });
             resolve();
           } catch (error) {
             const a = new Error(error.name);
