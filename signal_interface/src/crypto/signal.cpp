@@ -12,7 +12,7 @@ void unlock_fn(void *user_data){
     global_mutex.unlock();
 }
 
-CriptextSignal::CriptextSignal(char *recipientId, database db, string password){
+CriptextSignal::CriptextSignal(char *recipientId, database db){
     signal_context_create(&global_context, 0);
     signal_crypto_provider provider = {
         .random_func = random_generator,
@@ -64,7 +64,7 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
             signal_message *incoming_message = 0;
             signal_message_deserialize(&incoming_message, messageData, decode_len, global_context);
             if (incoming_message == 0) {
-                return -2;
+                return -1300;
             }
             result = session_cipher_decrypt_signal_message(session_cipher, incoming_message, 0, &plainMessage);
         } else {
@@ -72,13 +72,13 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
             pre_key_signal_message *incoming_message = 0;
             pre_key_signal_message_deserialize(&incoming_message, preKeyMessageData, decode_len, global_context);
             if (incoming_message == 0) {
-                return -2;
+                return -1300;
             }
             result = session_cipher_decrypt_pre_key_signal_message(session_cipher, incoming_message, 0, &plainMessage);
         }
 
         if (result < 0) {
-            return -1;
+            return result;
         }
 
         uint8_t *data = signal_buffer_data(plainMessage);
@@ -96,13 +96,12 @@ int CriptextSignal::decryptText(uint8_t **plaintext_data, size_t *plaintext_len,
 int CriptextSignal::generatePreKey(cJSON *preKeyJson, int index) {
 
     ec_key_pair *preKeyPair = 0;
-    int result = curve_generate_key_pair(global_context, &preKeyPair);
+    curve_generate_key_pair(global_context, &preKeyPair);
 
     session_pre_key *preKeySession = 0;
     session_pre_key_create(&preKeySession, index, preKeyPair);
 
     signal_buffer *buffer = 0;
-    uint32_t id = 0;
 
     session_pre_key_serialize(&buffer, preKeySession);
 
@@ -276,7 +275,7 @@ int CriptextSignal::encryptText(char **encryptedText, uint8_t *plainText, size_t
                 
         if (result < 0) {
             std::cout << "Unable to encrypt : " << result << std::endl;
-            return -1;
+            return result;
         }
 
         size_t len = 0;
@@ -296,5 +295,5 @@ int CriptextSignal::encryptText(char **encryptedText, uint8_t *plainText, size_t
         return -1;
     }
 
-    return 0;
+    return -1;
 }
