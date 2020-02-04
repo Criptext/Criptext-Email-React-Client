@@ -64,12 +64,10 @@ const upApp = async ({ shouldSave, pin }) => {
 
   aliceManager.startAlice();
 
-  const [existingAccount] = await dbManager.getAccount();
-  const hasLogginAccount = existingAccount
-    ? existingAccount.deviceId
-    : undefined;
-
-  if (hasLogginAccount) {
+  const [existingAccount] = await dbManager.getAccountByParams({
+    isActive: true
+  });
+  if (existingAccount) {
     await upMailboxWindow(existingAccount);
   } else {
     const language = await getUserLanguage();

@@ -36,6 +36,7 @@ const createAccount = async ({
   deviceType,
   recoveryEmail
 }) => {
+  // to do: check getAccount
   const [currentAccount] = await getAccount();
   const username = currentAccount ? currentAccount.recipientId : null;
   if (username) {
@@ -81,6 +82,7 @@ const createAccount = async ({
   }
   await setDefaultSettings();
   const email = `${recipientId}@${appDomain}`;
+  // to do: check getAccount
   const [newAccount] = await getAccount();
   await createOwnContact(name, email, newAccount.id);
   if (!newAccount) {
@@ -96,6 +98,7 @@ const createAcountAndGetKeyBundle = async ({
   deviceType,
   deviceId
 }) => {
+  // to do: check getAccount
   const [currentAccount] = await getAccount();
   if (currentAccount && currentAccount.recipientId !== recipientId) {
     await cleanDatabase(currentAccount.recipientId);
@@ -156,6 +159,7 @@ const createAccountWithNewDevice = async ({
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
+  // to do: check getAccount
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
   const email = recipientId.includes(`@`)
@@ -216,6 +220,7 @@ const createAccountToDB = async ({
   }
   const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
   await createOwnContact(name, email);
+  // to do: check getAccount
   const [newAccount] = await getAccount();
   myAccount.initialize(newAccount);
   await setDefaultSettings();

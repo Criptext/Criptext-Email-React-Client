@@ -36,8 +36,33 @@ const EMAIL_CONTACT_TYPE_FROM = 'from';
 
 /* Account
 ----------------------------- */
-const createAccount = params => {
-  return Account().create(params);
+const createAccount = async params => {
+  return await getDB().transaction(async trx => {
+    const shouldUpdate = params.shouldUpdate;
+    const account = { ...params };
+    delete account.shouldUpdate;
+    const [accountCreated] = await Account().findOrCreate({
+      where: { recipientId: params.recipientId },
+      defaults: account,
+      transaction: trx
+    });
+    if (!shouldUpdate) return [accountCreated];
+    const toUpdate = { isActive: false };
+    await Account().update(toUpdate, {
+      where: { recipientId: { [Op.not]: params.recipientId } },
+      transaction: trx
+    });
+    return [accountCreated];
+  });
+};
+
+const getAllAccounts = () => {
+  if (!getDB()) return [];
+  return Account()
+    .findAll({
+      order: [['isActive', 'DESC'], ['isLoggedIn', 'DESC']]
+    })
+    .map(account => account.toJSON());
 };
 
 const getAccount = () => {
@@ -55,6 +80,7 @@ const getAccountByParams = params => {
 };
 
 const updateAccount = ({
+  id,
   deviceId,
   jwt,
   refreshToken,
@@ -68,6 +94,7 @@ const updateAccount = ({
   signFooter
 }) => {
   const params = noNulls({
+    id,
     deviceId,
     jwt,
     refreshToken,
@@ -82,8 +109,9 @@ const updateAccount = ({
   });
 
   myAccount.update(params);
+  const whereParam = id ? { id } : { recipientId };
   return Account().update(params, {
-    where: { recipientId: { [Op.eq]: recipientId } }
+    where: whereParam
   });
 };
 
@@ -1425,6 +1453,7 @@ module.exports = {
   getDB,
   getAccount,
   getAccountByParams,
+  getAllAccounts,
   getAllContacts,
   getAllLabels,
   getAllFeedItems,

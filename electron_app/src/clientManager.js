@@ -4,7 +4,7 @@ const {
   API_CLIENT_VERSION,
   LINK_DEVICES_FILE_VERSION
 } = require('./utils/const');
-const { createPendingEvent, getAccount, updateAccount } = require('./database');
+const dbManager = require('./database');
 const { processEventsQueue } = require('./eventQueueManager');
 const globalManager = require('./globalManager');
 const mailboxWindow = require('./windows/mailbox');
@@ -64,7 +64,7 @@ const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
       os: osInfo
     });
   }
-  const [account] = await getAccount();
+  const [account] = await dbManager.getAccountByParams({ isActive: true });
   const [token, refreshToken] = account
     ? [account.jwt, account.refreshToken]
     : [undefined, undefined];
@@ -102,7 +102,9 @@ const checkExpiredSession = async (
     }
     case EXPIRED_SESSION_STATUS: {
       let newSessionToken, newRefreshToken, newSessionStatus;
-      const [{ recipientId, refreshToken }] = await getAccount();
+      const [
+        { recipientId, refreshToken }
+      ] = await dbManager.getAccountByParams({ isActive: true });
       if (!refreshToken) {
         const { status, body } = await upgradeToRefreshToken();
         newSessionStatus = status;
@@ -127,7 +129,7 @@ const checkExpiredSession = async (
         newSessionStatus === NEW_SESSION_SUCCESS_STATUS ||
         newSessionStatus === UPDATE_USER_TOKENS
       ) {
-        await updateAccount({
+        await dbManager.updateAccount({
           jwt: newSessionToken,
           refreshToken: newRefreshToken,
           recipientId
@@ -382,7 +384,7 @@ const upgradeAccount = async params => {
 
 const postPeerEvent = async params => {
   try {
-    await createPendingEvent({
+    await dbManager.createPendingEvent({
       data: JSON.stringify(params)
     });
     processEventsQueue();

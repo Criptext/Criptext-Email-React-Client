@@ -584,57 +584,52 @@ const exportEmailTable = async () => {
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
-    const rows = await getDB().query(
-      `SELECT email.* FROM ${Table.EMAIL} ${whereRawEmailQuery(
-        `${Table.EMAIL}.id`
-      )}
+    const result = await getDB()
+      .query(
+        `SELECT email.* FROM ${Table.EMAIL} ${whereRawEmailQuery(
+          `${Table.EMAIL}.id`
+        )}
       GROUP BY ${Table.EMAIL}.id
       LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
-      { type: getDB().QueryTypes.SELECT }
-    );
-    const result = await Promise.all(
-      rows.map(async newRow => {
-        if (!newRow.unsentDate) delete newRow.unsentDate;
-        else {
-          newRow = { ...newRow, unsentDate: parseDate(newRow.unsentDate) };
+        {
+          model: Email(),
+          mapToModel: true
         }
+      )
+      .then(async rows => {
+        return await Promise.all(
+          rows.map(async row => {
+            let newRow = row.toJSON();
+            if (!newRow.unsentDate) delete newRow.unsentDate;
+            if (!newRow.trashDate) delete newRow.trashDate;
+            if (newRow.replyTo === null) newRow = { ...newRow, replyTo: '' };
+            if (!newRow.boundary) delete newRow.boundary;
 
-        if (!newRow.trashDate) {
-          delete newRow.trashDate;
-        } else {
-          newRow = { ...newRow, trashDate: parseDate(newRow.trashDate) };
-        }
+            const body =
+              (await getEmailBody({
+                username,
+                metadataKey: newRow.key,
+                password: globalManager.databaseKey.get()
+              })) || newRow.content;
+            const headers = await getEmailHeaders({
+              username,
+              metadataKey: newRow.key,
+              password: globalManager.databaseKey.get()
+            });
 
-        if (newRow.replyTo === null) newRow = { ...newRow, replyTo: '' };
-
-        if (!newRow.boundary) delete newRow.boundary;
-
-        const body =
-          (await getEmailBody({
-            username,
-            metadataKey: newRow.key,
-            password: globalManager.databaseKey.get()
-          })) || newRow.content;
-        const headers = await getEmailHeaders({
-          username,
-          metadataKey: newRow.key,
-          password: globalManager.databaseKey.get()
-        });
-
-        const key = parseInt(newRow.key);
-        return {
-          ...newRow,
-          unread: !!newRow.unread,
-          secure: !!newRow.secure,
-          content: body,
-          key,
-          date: parseDate(newRow.date),
-          headers: headers || undefined
-        };
-      })
-    );
+            const key = parseInt(newRow.key);
+            return {
+              ...newRow,
+              content: body,
+              key,
+              date: parseDate(newRow.date),
+              headers: headers || undefined
+            };
+          })
+        );
+      });
     emailRows = [...emailRows, ...result];
-    if (rows.length < SELECT_ALL_BATCH) {
+    if (emailRows.length < SELECT_ALL_BATCH) {
       shouldEnd = true;
     } else {
       offset += SELECT_ALL_BATCH;
@@ -879,7 +874,7 @@ const importDatabaseFromFile = async ({
             case Table.EMAIL: {
               const emailToStore = {
                 ...object,
-                date: moment.utc(object.date, 'YYYY-MM-DD HH:mm:ss')
+                date: parseDate(object.date)
               };
               emails.push(emailToStore);
               if (emails.length === EMAILS_BATCH) {

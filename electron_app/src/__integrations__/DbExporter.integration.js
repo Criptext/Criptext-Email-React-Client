@@ -97,8 +97,6 @@ const email = {
   ]
 };
 
-let dbConnection;
-
 const insertContacts = async params => {
   return await DBManager.createContact(params);
 };
@@ -170,7 +168,7 @@ describe('Parse database: ', () => {
     const expectedString =
       `{"table":"label","object":{"id":8,"text":"News","color":"000000","type":"custom","visible":true,"uuid":"65a60683-a1c9-21f3-79d5-e57462ca8147"}}\n` +
       `{"table":"label","object":{"id":9,"text":"Shop","color":"111111","type":"custom","visible":true,"uuid":"77b80589-3a4d-171e-a264-e99a07baca27"}}`;
-    const labelsString = await exportLabelTable(dbConnection);
+    const labelsString = await exportLabelTable();
     expect(labelsString).toBe(expectedString);
   });
 
@@ -178,7 +176,7 @@ describe('Parse database: ', () => {
     await insertEmail(email);
     const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"messageId":"messageId1","fromAddress":"Alice <alice@criptext.com>","replyTo":"","unsentDate":"2018-06-14 08:23:20"}}`;
     const expectedJSON = JSON.parse(expectedString);
-    const emailsString = await exportEmailTable(dbConnection);
+    const emailsString = await exportEmailTable();
     const emailsJSON = JSON.parse(emailsString);
     expect(emailsJSON).toMatchObject(expect.objectContaining(expectedJSON));
   });
@@ -188,7 +186,7 @@ describe('Parse database: ', () => {
       `{"table":"email_contact","object":{"id":1,"type":"from","contactId":1,"emailId":1}}\n` +
       `{"table":"email_contact","object":{"id":2,"type":"to","contactId":2,"emailId":1}}\n` +
       `{"table":"email_contact","object":{"id":3,"type":"to","contactId":3,"emailId":1}}`;
-    const emailContactsString = await exportEmailContactTable(dbConnection);
+    const emailContactsString = await exportEmailContactTable();
     expect(emailContactsString).toBe(expectedString);
   });
 
@@ -196,13 +194,13 @@ describe('Parse database: ', () => {
     const expectedString =
       `{"table":"email_label","object":{"id":1,"labelId":1,"emailId":1}}\n` +
       `{"table":"email_label","object":{"id":2,"labelId":2,"emailId":1}}`;
-    const emaillabelsString = await exportEmailLabelTable(dbConnection);
+    const emaillabelsString = await exportEmailLabelTable();
     expect(emaillabelsString).toBe(expectedString);
   });
 
   it('Should parse Files to string', async () => {
     const expectedString = `{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","size":183241,"status":1,"date":"2018-09-03 18:45:57","mimeType":"image/png","key":"fileKeyA","iv":"fileIvA","emailId":1}}`;
-    const filesString = await exportFileTable(dbConnection);
+    const filesString = await exportFileTable();
     expect(filesString).toBe(expectedString);
   });
 });
