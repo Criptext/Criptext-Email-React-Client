@@ -1,6 +1,6 @@
 import { labels } from './systemLabels';
 const { remote } = window.require('electron');
-const socketManager = remote.require('./src/socketClient');
+const socketClient = remote.require('./src/socketClient');
 const globalManager = remote.require('./src/globalManager');
 
 export const myAccount = remote.require('./src/Account');
@@ -23,12 +23,11 @@ export const setRemoteData = data => {
 };
 
 export const startSocket = jwt => {
-  const data = jwt ? { jwt } : myAccount;
-  socketManager.start(data);
+  socketClient.start(jwt);
 };
 
 export const stopSocket = () => {
-  return socketManager.disconnect();
+  return socketClient.disconnect();
 };
 
 export const isFromStore =

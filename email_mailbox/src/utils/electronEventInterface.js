@@ -1315,7 +1315,7 @@ ipcRenderer.on('socket-message', async (ev, message) => {
 });
 
 ipc.answerMain('get-events', async () => {
-  await restartConnection(myAccount.jwt);
+  await restartConnection();
   sendLoadEventsEvent({});
 });
 

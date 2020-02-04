@@ -2,7 +2,7 @@ const { SERVER_URL } = require('./utils/const');
 const globalManager = require('./globalManager');
 const mailboxWindow = require('./windows/mailbox');
 const { processEventsQueue } = require('./eventQueueManager');
-const { restartSocketSameJWT } = require('./socketClient');
+const { restartSocket } = require('./socketClient');
 const reconnectDelay = 2000;
 const NETWORK_STATUS = {
   ONLINE: 'online',
@@ -61,7 +61,7 @@ const checkAlive = async force => {
     }
     if (hasFailed) {
       hasFailed = false;
-      restartSocketSameJWT();
+      restartSocket(true);
     }
   } catch (ex) {
     hasFailed = true;

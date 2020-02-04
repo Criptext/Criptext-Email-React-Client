@@ -1,6 +1,6 @@
 const { app, ipcMain } = require('electron');
 const myAccount = require('./src/Account');
-const wsClient = require('./src/socketClient');
+const socketClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
 const mySettings = require('./src/Settings');
 const { dbManager, upStepDBEncryptedWithoutPIN, upStepCheckPINDBEncrypted } = require('./src/windows');
@@ -53,7 +53,7 @@ async function initApp() {
       mySettings.initialize(settings);
       await initClient();
       initNucleus({language: mySettings.language});
-      wsClient.start(myAccount);
+      socketClient.start(myAccount);
       createAppMenu();
       mailboxWindow.show({ firstOpenApp: true });
     }
@@ -97,7 +97,7 @@ async function initApp() {
   });
 
   // Socket
-  wsClient.setMessageListener(async data => {
+  socketClient.setMessageListener(async data => {
     const SIGNIN_VERIFICATION_REQUEST_COMMAND = 201;
     const MANUAL_SYNC_REQUEST_COMMAND = 211;
     // This validation is for closed-mailbox case

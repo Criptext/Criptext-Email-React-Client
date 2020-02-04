@@ -7,7 +7,7 @@ const mailboxWindow = require('./mailbox');
 const pinWindow = require('./pin');
 const { EVENTS, addEvent } = require('./events');
 const { createAppMenu } = require('./menu');
-const wsClient = require('./../socketClient');
+const socketClient = require('./../socketClient');
 const { initClient, generateEvent } = require('./../clientManager');
 const { initNucleus } = require('./../nucleusManager');
 const globalManager = require('./../globalManager');
@@ -89,7 +89,7 @@ const upMailboxWindow = async existingAccount => {
   mySettings.initialize(settings);
   await initClient();
   initNucleus({ language: mySettings.language });
-  wsClient.start(myAccount);
+  socketClient.add({ jwt: myAccount.jwt, recipientId: myAccount.recipientId });
   createAppMenu();
   mailboxWindow.show({ firstOpenApp: true });
   if (pinWindow) pinWindow.close({ forceClose: true });

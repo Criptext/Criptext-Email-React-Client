@@ -7,7 +7,7 @@ const mailboxWindow = require('../windows/mailbox');
 const { installUpdate, checkForUpdates } = require('./../updater');
 const { showNotification } = require('./../notificationManager');
 const myAccount = require('./../Account');
-const wsClient = require('./../socketClient');
+const socketClient = require('./../socketClient');
 const { printEmailOrThread } = require('./../utils/PrintUtils');
 const { buildEmailSource } = require('../utils/SourceUtils');
 const {
@@ -17,7 +17,6 @@ const {
 } = require('../utils/FileUtils');
 const { getUsername, genUUID } = require('./../utils/stringUtils');
 const { showWindows } = require('./../windows/windowUtils');
-const { restartSocket } = require('./../socketClient');
 const { checkAlive } = require('./../reachabilityTask');
 const { restartAlice } = require('./../aliceManager');
 
@@ -47,7 +46,7 @@ ipc.answerRenderer('open-file-explorer', filename => {
 });
 
 ipc.answerRenderer('open-mailbox', ({ firstOpenApp }) => {
-  wsClient.start(myAccount);
+  socketClient.add({ jwt: myAccount.jwt, recipientId: myAccount.recipientId });
   mailboxWindow.show({ firstOpenApp });
 });
 
@@ -126,8 +125,8 @@ ipc.answerRenderer('check-for-updates', showDialog => {
 
 ipc.answerRenderer('generate-label-uuid', genUUID);
 
-ipc.answerRenderer('restart-connection', jwt => {
-  restartSocket({ jwt });
+ipc.answerRenderer('restart-connection', () => {
+  socketClient.restartSocket();
   checkAlive(true);
 });
 

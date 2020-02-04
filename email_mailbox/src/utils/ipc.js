@@ -66,10 +66,6 @@ export const restartAlice = async () => {
 
 export const restartApp = () => ipc.callMain('restart-app');
 
-export const restartSocket = async jwt => {
-  await ipc.callMain('restart-socket', jwt);
-};
-
 export const sendEndSyncDevicesEvent = async () => {
   await ipc.callMain('close-create-keys-loading');
   return await ipc.callMain('end-sync-mailbox-event');

@@ -5,6 +5,14 @@ let shouldReconnect = true;
 const reconnectDelay = 2000;
 
 const setMessageListener = mListener => (messageListener = mListener);
+let accounts = [];
+
+const concatJWTs = () => {
+  return accounts.reduce((result, account) => {
+    if (!result) return account.jwt;
+    return `${result}%2C${account.jwt}`;
+  }, '');
+};
 
 const disconnect = () => {
   if (!socketConnection) return;
@@ -18,10 +26,34 @@ const disconnect = () => {
   }
 };
 
-const start = ({ jwt }) => {
+const add = ({ jwt, recipientId }) => {
+  if (
+    accounts.some(
+      account => account.recipientId === recipientId && account.jwt === jwt
+    )
+  )
+    return;
+  accounts = accounts.filter(account => account.recipientId === recipientId);
+
+  accounts.push({
+    recipientId,
+    jwt
+  });
+
+  restartSocket();
+};
+
+const remove = recipientId => {
+  accounts = accounts.filter(account => account.recipientId === recipientId);
+  restartSocket();
+};
+
+const start = jwt => {
+  lastJWT = jwt || concatJWTs();
+
   client = new WebSocketClient();
-  client.connect(`${SOCKET_URL}?token=${jwt}`, 'criptext-protocol');
-  lastJWT = jwt;
+  client.connect(`${SOCKET_URL}?token=${lastJWT}`, 'criptext-protocol');
+
   client.on('connectFailed', error => {
     reconnect();
     log(error);
@@ -32,7 +64,7 @@ const start = ({ jwt }) => {
     log('Socket connection opened');
 
     connection.on('error', error => {
-      restartSocketSameJWT();
+      restartSocket(true);
       log(error);
     });
     connection.on('close', () => {
@@ -45,7 +77,7 @@ const start = ({ jwt }) => {
     connection.socket.setTimeout(30 * 1000);
     connection.socket.on('timeout', function() {
       log('Socket timeout');
-      restartSocketSameJWT();
+      restartSocket(true);
     });
   });
 
@@ -53,7 +85,7 @@ const start = ({ jwt }) => {
     if (shouldReconnect) {
       setTimeout(() => {
         log('Websocket reconnecting...');
-        start({ jwt });
+        start(jwt);
       }, reconnectDelay);
     }
   };
@@ -69,26 +101,21 @@ process.on('exit', () => {
   disconnect();
 });
 
-const restartSocket = ({ jwt }) => {
-  lastJWT = jwt;
+const restartSocket = useLastJWT => {
   shouldReconnect = false;
   disconnect();
   client = null;
   setTimeout(() => {
     shouldReconnect = true;
-    start({ jwt });
+    start(useLastJWT ? lastJWT : null);
   }, reconnectDelay * 2);
 };
 
-const restartSocketSameJWT = () => {
-  if (!shouldReconnect) return;
-  restartSocket({ jwt: lastJWT });
-};
-
 module.exports = {
+  add,
   start,
   setMessageListener,
   disconnect,
-  restartSocket,
-  restartSocketSameJWT
+  remove,
+  restartSocket
 };
