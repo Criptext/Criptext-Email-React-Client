@@ -36,7 +36,7 @@ int signed_pre_key_store_store_signed_pre_key(uint32_t signed_pre_key_id, uint8_
     char *recordBase64 = reinterpret_cast<char *>(base64_encode(myRecord, record_len, &len));
 
     bool success = CriptextDB::createSignedPreKey(account->getDB(), signed_pre_key_id, recordBase64, len);
-    return success ? 1 : 0;
+    return success ? 1 : -1;
 }
 
 int signed_pre_key_store_contains_signed_pre_key(uint32_t signed_pre_key_id, void *user_data)
@@ -46,7 +46,7 @@ int signed_pre_key_store_contains_signed_pre_key(uint32_t signed_pre_key_id, voi
     try {
         CriptextDB::getSignedPreKey(account->getDB(), signed_pre_key_id);
     } catch (exception& e){
-        return 0;
+        return -1;
     }
     return 1;
 }
@@ -56,7 +56,7 @@ int signed_pre_key_store_remove_signed_pre_key(uint32_t signed_pre_key_id, void 
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
 
     bool success = CriptextDB::deleteSignedPreKey(account->getDB(), signed_pre_key_id);
-    return success ? 1 : 0;
+    return success ? 1 : -1;
 }
 
 void signed_pre_key_store_destroy(void *user_data)

@@ -7,8 +7,13 @@ int postEncryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char*
     return 201;
   }
   
-  std::cout << "/encrypt/key Receiving Request" << std::endl;
   spdlog::info("[{0}] /encrypt/key Receiving Request", endpointId);
+
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+
   string bufferData = parseBody(conn);
   int readLength = bufferData.length();
 
@@ -77,8 +82,14 @@ int postEncryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
   if (corsResult) {
     return 201;
   }
-  std::cout << "/encrypt/email Receiving Request" << std::endl;
+
   spdlog::info("[{0}] /encrypt/email Receiving Request", endpointId);
+
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+  
   string bufferData = parseBody(conn);
   int readLength = bufferData.length();
 

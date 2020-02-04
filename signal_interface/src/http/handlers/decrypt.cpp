@@ -7,6 +7,11 @@ int postDecryptEmail(struct mg_connection *conn, void *cbdata, char *dbPath, cha
   if (corsResult) {
     return 201;
   }
+
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
   
   spdlog::info("[{0}] /decrypt Receiving Request", endpointId);
   string bufferData = parseBody(conn);
@@ -141,6 +146,11 @@ int postDecryptKey(struct mg_connection *conn, void *cbdata, char *dbPath, char*
   bool corsResult = cors(conn);
   if (corsResult) {
     return 201;
+  }
+
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
   }
   
   spdlog::info("[{0}] /decrypt/key Receiving Request", endpointId);

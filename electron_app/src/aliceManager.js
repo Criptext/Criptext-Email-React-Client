@@ -6,6 +6,7 @@ const portscanner = require('portscanner');
 const http = require('http');
 const ps = require('ps-node');
 const globalManager = require('./globalManager');
+const { encryptTextSimple } = require('./filescript/helpers');
 
 const ALICE_PROJECT_NAME = 'criptext-encryption-service';
 
@@ -66,7 +67,11 @@ let port = 8085;
 let alertShown = false;
 const password = generatePassword();
 let alice = null;
+let starting = false;
 let aliceStartTimeout = null;
+
+const passwordRegex = /^(PASSWORD:)/gm;
+let token = undefined;
 
 const getPort = () => {
   return port;
@@ -78,20 +83,39 @@ const getPassword = () => {
 
 const startAlice = async onAppOpened => {
   aliceStartTimeout = null;
-  if (!alice) {
-    const myPort = await portscanner.findAPortNotInUse(8085);
-    port = myPort;
-    const alicePath = getAlicePath(process.env.NODE_ENV);
-    const dbpath = path.resolve(dbManager.databasePath);
-    const logspath = path.resolve(getLogsPath(process.env.NODE_ENV));
-    await cleanAliceRemenants();
-    alice = spawn(alicePath, [
+  if (alice) return;
+  if (starting) {
+    await waitForAlice();
+    return;
+  }
+  starting = true;
+  const myPort = await portscanner.findAPortNotInUse(8085);
+  port = myPort;
+  const alicePath = getAlicePath(process.env.NODE_ENV);
+  const dbpath = path.resolve(dbManager.databasePath);
+  const logspath = path.resolve(getLogsPath(process.env.NODE_ENV));
+  await cleanAliceRemenants();
+  try {
+    alice = await handShake({
+      alicePath,
       dbpath,
       myPort,
       logspath,
-      getPassword(),
-      '--no-sandbox'
-    ]);
+      onAppOpened
+    });
+  } catch (ex) {
+    if (!ex.retry) return;
+    aliceStartTimeout = setTimeout(() => {
+      startAlice(onAppOpened);
+    }, 500);
+  } finally {
+    starting = false;
+  }
+};
+
+const handShake = ({ alicePath, dbpath, myPort, logspath, onAppOpened }) => {
+  return new Promise((resolve, reject) => {
+    const alice = spawn(alicePath, [dbpath, myPort, logspath, '--no-sandbox']);
     alice.stderr.setEncoding('utf8');
     alice.stderr.on('data', data => {
       if (alertShown) {
@@ -106,25 +130,33 @@ const startAlice = async onAppOpened => {
       if (onAppOpened) app.quit();
     });
     alice.stdout.setEncoding('utf8');
-    alice.stdout.on('data', data => {
-      console.log(`-----alice-----\n${data}\n -----end-----`);
+    alice.stdout.on('data', async data => {
+      if (!passwordRegex.test(data)) {
+        console.log(`-----alice-----\n${data}\n -----end-----`);
+        return;
+      }
+      token = data.replace(passwordRegex, '').replace(/\r?\n|\r/g, '');
+      const isReachable = await checkReachability();
+      if (isReachable) {
+        resolve(alice);
+      } else {
+        reject();
+      }
     });
     alice.on('exit', (code, signal) => {
       console.log(`alice exited with code ${code} and signal ${signal}`);
-      alice = null;
       if (signal !== 'SIGTERM' && signal !== 'SIGABRT') {
+        reject();
         return;
       }
-      aliceStartTimeout = setTimeout(() => {
-        startAlice(onAppOpened);
-      }, 500);
+      reject({ retry: true });
     });
 
     alice.on('close', code => {
       console.log(`alice closed with code ${code}`);
-      alice = null;
+      reject();
     });
-  }
+  });
 };
 
 const closeAlice = () => {
@@ -138,7 +170,10 @@ const closeAlice = () => {
 };
 
 const restartAlice = async force => {
-  console.log('Restarting Alice');
+  if (alice) return;
+  if (starting) {
+    await waitForAlice();
+  }
   const isReachable = await checkReachability();
   if (isReachable && !force) {
     return;
@@ -148,31 +183,42 @@ const restartAlice = async force => {
   await checkReachability();
 };
 
+const waitForAlice = async () => {
+  let retries = 10;
+  while (starting && retries > 0) {
+    await sleep();
+    retries--;
+  }
+};
+
 const isReachable = () => {
   const options = {
     hostname: 'localhost',
     port,
-    path: '/ping',
-    method: 'GET',
+    path: '/password/set',
+    method: 'POST',
     timeout: 500
   };
-
-  return new Promise(resolve => {
+  return new Promise(async resolve => {
+    if (!token) {
+      resolve(false);
+    }
     const req = http.request(options, res => {
       console.log(`statusCode: ${res.statusCode}`);
-
-      res.on('data', body => {
-        console.log(body.toString());
-        resolve(body.toString().trim() === 'pong');
-      });
+      resolve(res.statusCode === 200);
     });
 
     req.on('error', error => {
       console.log(error);
       resolve(false);
     });
-
-    req.end();
+    try {
+      const data = await encryptTextSimple(getPassword(), token);
+      req.write(JSON.stringify(data));
+      req.end();
+    } catch (ex) {
+      console.log(ex);
+    }
   });
 };
 
