@@ -1,7 +1,7 @@
 {
   "page_start": {
-    "title": "Crea un código PIN para proteger tu información",
-    "description": "Cuando creas un código PIN todos tus archivos de Criptext serán encriptados, de esa manera ninguna otra aplicación tendrá acceso a ellos.",
+    "title": "PIN de Encriptación de Base de Datos",
+    "description": "Al establecer este PIN toda tu información del app Criptext estará protegida para que otros apps de tu computadora no puedan accesarlos.",
     "button": "Ok"
   },
   "page_pin_generated": {
@@ -29,7 +29,7 @@
   },
   "page_pin_saved": {
     "title": "Guardar tu clave de recuperación",
-    "description": "Si olvidas tu código PIN, esta clave de recuperación será tu única forma de entrar. Guardala en un lugar que no vayas a olvidar.",
+    "description": "Si olvidas tu código PIN, esta clave de recuperación será tu única forma de entrar. Guárdala en un lugar que no vayas a olvidar.",
     "copy_recovery_key": "Copiar clave de recuperación",
     "or": "ó",
     "download": "descárgala",
@@ -44,7 +44,7 @@
       "title": "No solicitar código PIN al inicio",
       "description": "Tu código PIN se guardará en tu Acceso a Llaveros y no necesitarás ingresarlo cada vez que abras Criptext."  
     },
-    "button": "Listo"
+    "button": "Siguiente"
   },
   "page_encrypt": {
     "steps": {
@@ -52,10 +52,10 @@
       "2": "Importando datos",
       "3": "Encriptando correos"
     },
-    "paragraph": "Esto tomará unos minutos, no cierres la ventana"
+    "paragraph": "No cierres esta ventana. Criptext se reiniciará automáticamente al terminar este proceso."
   },
   "page_enter_pin": {
-    "title": "Ingresar código PIN",
+    "title": "Ingresar PIN de Encriptación",
     "ask": " ¿Olvidaste tu PIN?",
     "checkbox": {
       "title": "No solicitar PIN al entrar a la aplicación",

@@ -1,6 +1,6 @@
 {
   "page_start": {
-    "title": "Setup PIN to protect your Data",
+    "title": "Database encryption PIN",
     "description": "By setting this PIN your Criptext app files will be encrypted so that no other apps in your computer can access them.",
     "button": "Okay"
   },
@@ -29,7 +29,7 @@
   },
   "page_pin_saved": {
     "title": "Save your recovery key",
-    "description": "If you forget your PIN, this recovery key will be your only way in. Save it in where you won't forget it.",
+    "description": "If you forget your PIN, this recovery key will be your only way in. Save it where you won't forget it.",
     "copy_recovery_key": "Copy Recovery Key",
     "or": "or",
     "download": "download",
@@ -44,7 +44,7 @@
       "title": "Don't require PIN on startup",
       "description": "Your PIN will be saved in your keychain so you don't have to enter it every time you start Criptext."  
     },
-    "button": "Done"
+    "button": "Next"
   },
   "page_encrypt": {
     "steps": {
@@ -52,10 +52,10 @@
       "2": "Importing data",
       "3": "Encrypting emails"
     },
-    "paragraph": "This may take a while, don't close the window"
+    "paragraph": "Don't close the window. Criptext will restart automatically once this process is complete."
   },
   "page_enter_pin": {
-    "title": "Enter Security PIN",
+    "title": "Enter Encryption PIN",
     "ask": " Forgot PIN?",
     "checkbox": {
       "title": "Do not request PIN starting the app",

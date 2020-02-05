@@ -558,6 +558,37 @@
       "header": "Restaurando",
       "cancelLabel": "Cancelar"
     },
+    "security_pin": {
+      "new_pin": {
+        "title": "Nuevo PIN de Encriptación",
+        "description": "Esto ayuda a proteger la privacidad de tus correos",
+        "current_pin": "Actual PIN",
+        "new_pin": "Nuevo PIN",
+        "confirm_pin": "Confirmar PIN",
+        "error_match": "Códigos PIN no coinciden, intenta de nuevo",
+        "error_number": "Códigos PIN deben ser números",
+        "error_pin": "PIN incorrecto",
+        "button": "Hecho"
+      },
+      "recovery_key": {
+        "title": "Guardar tu clave de recuperación",
+        "description": "Si olvidas tu código PIN, esta clave de recuperación será tu única forma de entrar. Guardala en un lugar que no vayas a olvidar",
+        "copy_code": "Copiar clave de recuperación",
+        "copy": "Copiar",
+        "or": "o",
+        "download": "descárgala",
+        "it_in_a_file": "como archivo",
+        "button": "Hecho"
+      },
+      "setup_complete": {
+        "title": "PIN creado exitosamente!",
+        "checkbox": {
+          "title": "No solicitar código PIN al inicio",
+          "description": "Tu código PIN se guardará en tu Acceso a Llaveros y no necesitarás ingresarlo cada vez que abras Criptext."  
+        },
+        "button": "Siguiente"
+      }
+    },
     "set_reply_to": {
       "title": "Correo de Respuesta",
       "paragraph": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
@@ -709,8 +740,8 @@
     "reply_to_not_set": "Cuando alguien responde un correo que has enviado, lo hará a esta dirección.",
     "resend_link": "Reenviar enlace",
     "security_pin": {
-      "label": "Pin de seguridad",
-      "description": "Los archivos estan encriptados para que ninguna otra app pueda verlos"
+      "label": "PIN de Encriptación de Base de Datos",
+      "description": "Esto deshabilita otras aplicaciones de accesar tu información de Criptext"
     },
     "see_more": "Ver más",
     "set_email": "Establecer correo",

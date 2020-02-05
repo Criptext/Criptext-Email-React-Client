@@ -560,12 +560,15 @@
     },
     "security_pin": {
       "new_pin": {
-        "title": "Create a New Security PIN",
+        "title": "New Encryption PIN",
         "description": "A PIN is the secure way to access your encrypted email",
+        "current_pin": "Current PIN",
         "new_pin": "New PIN",
         "confirm_pin": "Confirm PIN",
-        "button": "Okay",
-        "error": "PIN codes do not match!"
+        "error_match": "PINs don't match, try again",
+        "error_number": "PINs should be number",
+        "error_pin": "PIN incorrect",
+        "button": "Okay"
       },
       "recovery_key": {
         "title": "Your new recovery key",
@@ -583,7 +586,7 @@
           "title": "Don't require PIN on startup",
           "description": "Your PIN will be saved in your keychain so you don't have to enter it every time you start Criptext."  
         },
-        "button": "Done"
+        "button": "Next"
       }
     },
     "set_reply_to": {
@@ -737,8 +740,8 @@
     "reply_to_not_set": "When someone replies to one of your emails, they will reply to the address set here.",
     "resend_link": "resend link",
     "security_pin": {
-      "label": "Security Pin",
-      "description": "Files are encrypted so no other apps can access them"
+      "label": "Database Encryption PIN",
+      "description": "This disables other apps from accessing Criptext files"
     },
     "see_more": "See More",
     "set_email": "Set Email",
