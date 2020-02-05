@@ -1,0 +1,130 @@
+@import './../styles/index.scss';
+
+.enter-recovery-key-content{
+  margin: 0 auto;
+  text-align: center;
+  width: 63%;
+
+  h1{
+    margin: 35px auto 0;
+  }
+
+  >p{
+    margin: 15px auto 0;
+  }
+
+  .enter-recovery-key{
+    margin-top: 70px;
+
+    h2{
+      text-align: left;
+    }
+    
+    .enter-recovery-key-block{
+      align-items: center;
+      border: 1px solid #e5e2e2;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+
+      .icon{
+        background-image: url(../#{$_PATH_TO_IMAGES}/key-light.svg);
+        background-size: 100% auto;
+        height: 18px;
+        margin-left: 5px;
+        width: 18px;
+      }
+
+      input{
+        border: none;
+        font-size: 12px;
+        flex-grow: 1;
+        height: 31px;
+        margin-left: 3px;
+
+        &:focus{
+          outline: 0;
+        }
+      }
+    }
+
+    >.enter-recovery-key-upload-wrapper {
+      display: block;
+      font-size: 12px;
+      margin-top: 20px;
+      text-align: center;
+
+      div {
+        display: inline-block;
+      }
+
+      b{
+        color: #0091ff;
+        cursor: pointer;
+      }
+    }
+
+    input[type="file"] {
+      position: absolute;
+      display: none;
+    }
+  }
+
+  .enter-recovery-key-error {
+    position: absolute;
+    color: #bf2626;
+    top: 33px;
+    font-size: 11px;
+    width: 100%;
+  }
+
+  .enter-recovery-file {
+    width: 200px;
+    border: 1px solid #e4e9ec;
+    background: #f8f9fa;
+    height: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    position: relative;
+
+    .file-content-icon {
+      align-items: center;
+      border-radius: 3px;
+      display: flex;
+      height: 30px;
+      position: relative;
+      width: 30px;
+      padding-left: 10px;
+
+      i {
+        color: white;
+        background-color: #99ccff; 
+      }
+    }
+
+    .icon-exit { 
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 10px;
+      flex-grow: 1;
+      text-align: left;
+    }
+  }
+
+  >button{
+    bottom: 80px;
+    transform: translateX(-50%);
+    min-width: 80px;
+    margin: 0 auto;
+    position: absolute;
+  }
+}

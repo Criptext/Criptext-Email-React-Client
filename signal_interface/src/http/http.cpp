@@ -6,49 +6,59 @@ struct mg_callbacks callbacks;
 struct mg_context *ctx;
 
 char* db_path;
-char* password;
+string password;
+char* my_token;
 
 int decryptEmail(struct mg_connection *conn, void *cbdata){
-  return postDecryptEmail(conn, cbdata, db_path, password);
+  return postDecryptEmail(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
 
 int decryptKey(struct mg_connection *conn, void *cbdata){
-  return postDecryptKey(conn, cbdata, db_path);
+  return postDecryptKey(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
 
 int encryptKey(struct mg_connection *conn, void *cbdata){
-  return postEncryptKey(conn, cbdata, db_path);
+  return postEncryptKey(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
 
 int encryptEmail(struct mg_connection *conn, void *cbdata){
-  return postEncryptEmail(conn, cbdata, db_path, password);
+  return postEncryptEmail(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
 
 int sessionCreate(struct mg_connection *conn, void *cbdata){
-  return processKeyBundle(conn, cbdata, db_path);
+  return processKeyBundle(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
 
 int accountCreate(struct mg_connection *conn, void *cbdata){
-  return createAccount(conn, cbdata, db_path);
+  return createAccount(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
 
 int keyBundleCreate(struct mg_connection *conn, void *cbdata){
-  return createKeyBundle(conn, cbdata, db_path);
+  return createKeyBundle(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
 
 int preKeysCreate(struct mg_connection *conn, void *cbdata){
-  return createPreKeys(conn, cbdata, db_path);
+  return createPreKeys(conn, cbdata, db_path, const_cast<char *>(password.c_str()));
 }
 
 int pong(struct mg_connection *conn, void *cbdata){
-  mg_send_http_ok( conn, "text/plain", 5);
-  mg_write(conn, "pong\n", 5);
+  mg_send_http_ok( conn, "text/plain", strlen(password.c_str()));
+  mg_write(conn, password.c_str(), strlen(password.c_str()));
   return 1;
 }
 
-void http_init(char *dbPath, char *port, char* pass){
-  db_path = dbPath;
+int setPassword(struct mg_connection *conn, void *cbdata){
+  string pass = decryptPassword(conn, cbdata, my_token, password);
+  if (pass.empty()) {
+    return -1;
+  }
   password = pass;
+  return 1;
+}
+
+void http_init(char *dbPath, char *port, char* token){
+  db_path = dbPath;
+  my_token = token;
 
   const char* civet_options[] = {
     "document_root",
@@ -73,6 +83,7 @@ void http_init(char *dbPath, char *port, char* pass){
   mg_set_request_handler(ctx, "/keybundle", keyBundleCreate, 0);
   mg_set_request_handler(ctx, "/prekey", preKeysCreate, 0);
   mg_set_request_handler(ctx, "/session/create", sessionCreate, 0);
+  mg_set_request_handler(ctx, "/password/set", setPassword, 0);
   mg_set_request_handler(ctx, "/ping", pong, 0);
 }
 

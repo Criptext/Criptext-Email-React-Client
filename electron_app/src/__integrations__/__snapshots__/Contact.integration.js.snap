@@ -3,6 +3,10 @@
 exports[`Load data contact from Contact Table: should load all contacts 1`] = `
 Array [
   Object {
+    "email": "a@domain.com",
+    "name": "A",
+  },
+  Object {
     "email": "user@domain.com",
     "name": "User",
   },

@@ -1,67 +1,76 @@
 #include "keyBundle.h"
 
-int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
-  int corsResult = cors(conn);
-  if (corsResult < 0) {
+int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, char *password) {
+  bool corsResult = cors(conn);
+  if (corsResult) {
     return 201;
   }
 
   std::cout << "/keybundle Receiving Request" << std::endl;
 
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 
-  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
-    mg_send_http_error(conn, 400, "%s", "No request data");
+  if ((dlen < 1) || (dlen >= (int)sizeof(buffer))) {
+    sendError(conn, 400, "Empty Request");
     return 400;
   }
   buffer[dlen] = 0;
   cJSON *obj = cJSON_Parse(buffer);
   
   if (obj == NULL) {
-    mg_send_http_error(conn, 400, "%s", "Not a JSON String");
-    return 400;
+    sendError(conn, 422, "Not a JSON Object");
+    return 422;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
-  cJSON *recipientId, *deviceId;
+  cJSON *recipientId;
   recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
 
   if (!cJSON_IsString(recipientId)) {
-    mg_send_http_error(conn, 400, "%s", "Wrong data format");
+    sendError(conn, 400, "Missing Params");
     return 400;
   }
 
-  CriptextSignal signal(recipientId->valuestring, dbPath);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(recipientId->valuestring, db);
   cJSON *bundle = cJSON_CreateObject();
   signal.generateKeyBundle(bundle, recipientId->valuestring);
 
   return SendJSON(conn, bundle);
 }
 
-int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath) {
-  int corsResult = cors(conn);
-  if (corsResult < 0) {
+int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath, char* password) {
+  bool corsResult = cors(conn);
+  if (corsResult) {
     return 201;
   }
 
   std::cout << "/account Receiving Request" << std::endl;
 
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 
-  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
-    mg_send_http_error(conn, 400, "%s", "No request data");
+  if ((dlen < 1) || (dlen >= (int)sizeof(buffer))) {
+    sendError(conn, 400, "Empty Request");
     return 400;
   }
   buffer[dlen] = 0;
   cJSON *obj = cJSON_Parse(buffer);
   
   if (obj == NULL) {
-    mg_send_http_error(conn, 400, "%s", "Not a JSON String");
-    return 400;
+    sendError(conn, 422, "Not a JSON Object");
+    return 422;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *recipientId, *deviceId, *name;
   recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
@@ -69,7 +78,7 @@ int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath) {
   name = cJSON_GetObjectItemCaseSensitive(obj, "name");
 
   if (!cJSON_IsString(recipientId) || !cJSON_IsNumber(deviceId) || !cJSON_IsString(name)) {
-    mg_send_http_error(conn, 400, "%s", "Wrong data format");
+    sendError(conn, 400, "Missing Params");
     return 400;
   }
 
@@ -77,57 +86,61 @@ int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath) {
   char *privKey;
   int regId;
   int result = CriptextSignal::createAccountCredentials(&publicKey, &privKey, &regId);
-  result = CriptextDB::createAccount(string(dbPath), recipientId->valuestring, name->valuestring, deviceId->valueint, publicKey, privKey, regId);
+  database db = initializeDB(dbPath, password);
+  result = CriptextDB::createAccount(db, recipientId->valuestring, name->valuestring, deviceId->valueint, publicKey, privKey, regId);
 
   if (result < 0) {
-    mg_send_http_error(conn, 500, "%s", "Unable To Create Account");
-    return -1;
+    sendError(conn, 500, "Unable to Create Account");
+    return 500;
   }
 
-  mg_send_http_ok( conn, "text/plain", 4);
-  mg_write(conn, "Done", 4);
+  sendOK(conn, "Done");
   return 1;
 }
 
-int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
-  int corsResult = cors(conn);
-  if (corsResult < 0) {
+int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, char* password) {
+  bool corsResult = cors(conn);
+  if (corsResult) {
     return 201;
   }
 
   std::cout << "/session/create Receiving Request" << std::endl;
 
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+
   string bufferData = parseBody(conn);
   int readLength = bufferData.length();
 
   if (readLength <= 0) {
-    std::cout << "Receiving Request Fail 1" << std::endl;
-    mg_send_http_error(conn, 400, "%s", "Request data too big");
-    return 400;
+    sendError(conn, 413, "Request Data Too Big");
+    return 413;
   }
   
   cJSON *obj = cJSON_Parse(bufferData.c_str());
   
   if (obj == NULL) {
-    mg_send_http_error(conn, 400, "%s", "Not a JSON String");
-    return 400;
+    sendError(conn, 422, "Not a JSON Object");
+    return 422;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *accountRecipientId, *keybundleArray;
   accountRecipientId = cJSON_GetObjectItemCaseSensitive(obj, "accountRecipientId");
   keybundleArray = cJSON_GetObjectItemCaseSensitive(obj, "keybundles");
   
   if (!cJSON_IsString(accountRecipientId) || !cJSON_IsArray(keybundleArray)) {
-    mg_send_http_error(conn, 400, "%s", "Wrong Data");
+    sendError(conn, 400, "Missing Params");
     return 400;
   }
 
-  CriptextSignal signal(accountRecipientId->valuestring, dbPath);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(accountRecipientId->valuestring, db);
   cJSON *keyBundleObj = NULL;
   cJSON_ArrayForEach(keyBundleObj, keybundleArray) {
 
-    cJSON *recipientId, *domain, *deviceId, *registrationId, *signedPreKeyId, *signedPreKey, *signature, *identityKey, *preKeyObj; 
+    cJSON *recipientId, *deviceId, *registrationId, *signedPreKeyId, *signedPreKey, *signature, *identityKey, *preKeyObj; 
     cJSON *preKeyId = 0; 
     cJSON *preKey = 0;
 
@@ -164,34 +177,37 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath) {
     signal.processKeyBundle(&kb);
   }
 
-  mg_send_http_ok( conn, "text/plain", 0);
-  mg_write(conn, "", 0);
+  sendOK(conn, "");
   return 1;
 }
 
-int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath) {
-  int corsResult = cors(conn);
-  if (corsResult < 0) {
+int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath, char* password) {
+  bool corsResult = cors(conn);
+  if (corsResult) {
     return 201;
   }
 
   std::cout << "/prekey Receiving Request" << std::endl;
 
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 
-  if ((dlen < 1) || (dlen >= sizeof(buffer))) {
-    mg_send_http_error(conn, 400, "%s", "No request data");
+  if ((dlen < 1) || (dlen >= (int)sizeof(buffer))) {
+    sendError(conn, 400, "Empty Request");
     return 400;
   }
   buffer[dlen] = 0;
   cJSON *obj = cJSON_Parse(buffer);
   
   if (obj == NULL) {
-    mg_send_http_error(conn, 400, "%s", "Not a JSON String");
-    return 400;
+    sendError(conn, 422, "Not a JSON String");
+    return 422;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *accountId;
   cJSON *newPreKeys;
@@ -199,11 +215,12 @@ int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath) {
   newPreKeys = cJSON_GetObjectItemCaseSensitive(obj, "newPreKeys");
 
   if (!cJSON_IsString(accountId) || !cJSON_IsArray(newPreKeys)) {
-    mg_send_http_error(conn, 400, "%s", "Wrong data format");
+    sendError(conn, 400, "Missing Params");
     return 400;
   }
 
-  CriptextSignal signal(accountId->valuestring, dbPath);
+  database db = initializeDB(dbPath, password);
+  CriptextSignal signal(accountId->valuestring, db);
   cJSON *bundle = cJSON_CreateObject();
   signal.generateMorePreKeys(bundle, newPreKeys);
   return SendJSON(conn, bundle);

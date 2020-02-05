@@ -1,9 +1,10 @@
 const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
-const dbManager = require('./../DBManager');
+const dbManager = require('./../database');
 const fileUtils = require('./../utils/FileUtils');
 const myAccount = require('../../src/Account');
 const globalManager = require('../globalManager');
 const { APP_DOMAIN } = require('../utils/const');
+const rekeyHandler = require('../rekeyHandler');
 
 const getUsername = () => {
   if (!Object.keys(myAccount)) return '';
@@ -17,15 +18,13 @@ const getUsername = () => {
 ipc.answerRenderer(
   'db-delete-emails-by-threadid-and-labelid',
   async ({ threadIds, labelId }) => {
-    const [
-      threadEmails
-    ] = await dbManager.getEmailsToDeleteByThreadIdAndLabelId(
+    const emailKeys = await dbManager.getEmailsToDeleteByThreadIdAndLabelId(
       threadIds,
       labelId
     );
-    if (threadEmails) {
+    if (emailKeys.lenght) {
       await Promise.all(
-        threadEmails.keys.map(key =>
+        emailKeys.map(key =>
           fileUtils.deleteEmailContent({
             metadataKey: parseInt(key),
             username: getUsername()
@@ -68,7 +67,8 @@ ipc.answerRenderer('db-get-email-with-body', async key => {
   const [email] = await dbManager.getEmailByKey(key);
   const body = await fileUtils.getEmailBody({
     username: getUsername(),
-    metadataKey: parseInt(key)
+    metadataKey: parseInt(key),
+    password: globalManager.databaseKey.get()
   });
   if (!body) {
     return email;
@@ -82,7 +82,8 @@ ipc.answerRenderer('db-get-emails-by-ids', async emailIds => {
     emails.map(async email => {
       const body = await fileUtils.getEmailBody({
         username: getUsername(),
-        metadataKey: parseInt(email.key)
+        metadataKey: parseInt(email.key),
+        password: globalManager.databaseKey.get()
       });
       if (!body) {
         return email;
@@ -98,7 +99,8 @@ ipc.answerRenderer('db-get-emails-by-threadid', async threadId => {
     emails.map(async email => {
       const body = await fileUtils.getEmailBody({
         username: getUsername(),
-        metadataKey: parseInt(email.key)
+        metadataKey: parseInt(email.key),
+        password: globalManager.databaseKey.get()
       });
       if (!body) {
         return email;
@@ -124,7 +126,8 @@ ipc.answerRenderer('db-delete-email-by-keys', async keys => {
 ipc.answerRenderer('fs-save-email-body', async params => {
   const newParams = Object.assign(params, {
     metadataKey: parseInt(params.metadataKey),
-    username: getUsername()
+    username: getUsername(),
+    password: globalManager.databaseKey.get()
   });
   await fileUtils.saveEmailBody(newParams);
 });
@@ -142,7 +145,8 @@ ipc.answerRenderer('db-create-email', async params => {
     body: params.body,
     headers: params.headers,
     metadataKey: parseInt(params.email.key),
-    username: getUsername()
+    username: getUsername(),
+    password: globalManager.databaseKey.get()
   });
   return await dbManager.createEmail(params);
 });
@@ -168,4 +172,12 @@ ipc.answerRenderer('upgrade-account', async ({ account, keyBundle }) => {
   globalManager.needsUpgrade.disable();
   globalManager.windowsEvents.enable();
   return true;
+});
+
+ipc.answerRenderer('reset-key-initialize', params => {
+  rekeyHandler.initialize(params);
+});
+
+ipc.answerRenderer('reset-key-start', () => {
+  rekeyHandler.start();
 });

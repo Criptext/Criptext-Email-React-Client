@@ -1,14 +1,10 @@
 const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
-const dbManager = require('./../DBManager');
+const dbManager = require('./../database');
 
 ipc.answerRenderer('db-migrate-alice', () => dbManager.cleanForAlice());
 
 ipc.answerRenderer('db-clean-data-logout', recipientId =>
   dbManager.cleanDataLogout(recipientId)
-);
-
-ipc.answerRenderer('db-create-account', params =>
-  dbManager.createAccount(params)
 );
 
 ipc.answerRenderer('db-create-contact', params =>
@@ -22,8 +18,6 @@ ipc.answerRenderer('db-create-email-label', params =>
 ipc.answerRenderer('db-create-feed-item', params =>
   dbManager.createFeedItem(params)
 );
-
-ipc.answerRenderer('db-create-file', params => dbManager.createFile(params));
 
 ipc.answerRenderer('db-create-identity-key-record', params =>
   dbManager.createIdentityKeyRecord(params)
@@ -39,8 +33,8 @@ ipc.answerRenderer('db-create-session-record', params =>
   dbManager.createSessionRecord(params)
 );
 
-ipc.answerRenderer('db-create-signal-tables', () =>
-  dbManager.createSignalTables()
+ipc.answerRenderer('db-create-settings', params =>
+  dbManager.createSettings(params)
 );
 
 ipc.answerRenderer('db-create-signed-prekey-record', params =>

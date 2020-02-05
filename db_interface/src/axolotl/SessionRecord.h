@@ -5,8 +5,9 @@
 #include <cstring>
 #include <vector>
 #include <stdexcept>
-#include <sqlite_modern_cpp.h>
+#include <sqlite_modern_cpp/sqlcipher.h>
 #include <iostream>
+#include "../dbUtils.h"
 
 using namespace std;
 
@@ -19,11 +20,11 @@ namespace CriptextDB {
     size_t len;
   };
 
-  SessionRecord getSessionRecord(string dbPath, string recipientId, long int deviceId);
-  vector<SessionRecord> getSessionRecords(string dbPath, string recipientId);
-  bool createSessionRecord(string dbPath, string recipientId, long int deviceId, char* record, size_t len);
-  bool deleteSessionRecord(string dbPath, string recipientId, long int deviceId);
-  bool deleteSessionRecords(string dbPath, string recipientId);
+  SessionRecord getSessionRecord(database db, string recipientId, long int deviceId);
+  vector<SessionRecord> getSessionRecords(database db, string recipientId);
+  bool createSessionRecord(database db, string recipientId, long int deviceId, char* record, size_t len);
+  bool deleteSessionRecord(database db, string recipientId, long int deviceId);
+  bool deleteSessionRecords(database db, string recipientId);
 } 
 
 #endif

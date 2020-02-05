@@ -22,6 +22,7 @@
         "src/crypto/protocol_store/SessionStore.cpp",
         "src/crypto/protocol_store/SignedPreKeyStore.cpp",
         "src/crypto/protocol_store/decode_utils.cpp",
+        "../db_interface/src/dbUtils.cpp",
         "../db_interface/src/axolotl/Account.cpp",
         "../db_interface/src/axolotl/IdentityKey.cpp",
         "../db_interface/src/axolotl/PreKey.cpp",
@@ -32,6 +33,7 @@
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       "include_dirs" : [
+        "/usr/local/include/sqlcipher",
         "/usr/local/include",
         "/usr/include"
       ],
@@ -40,7 +42,7 @@
         "<-dl/-ldl>"
         "<libssl>",
         "<libcrypto>",
-        "<libsqlite3>",
+        "<libsqlcipher>",
         "<libsignal-protocol-c>",
         "<libcivetweb>",
         "<libcjson>",

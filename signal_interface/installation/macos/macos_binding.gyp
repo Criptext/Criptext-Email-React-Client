@@ -21,6 +21,7 @@
         "src/crypto/protocol_store/SessionStore.cpp",
         "src/crypto/protocol_store/SignedPreKeyStore.cpp",
         "src/crypto/protocol_store/decode_utils.cpp",
+        "../db_interface/src/dbUtils.cpp",
         "../db_interface/src/axolotl/Account.cpp",
         "../db_interface/src/axolotl/IdentityKey.cpp",
         "../db_interface/src/axolotl/PreKey.cpp",
@@ -31,19 +32,20 @@
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       "include_dirs" : [
+        "/usr/local/include/sqlcipher",
         "/usr/local/include",
         "/usr/include"
       ],
       "libraries": [
         "-pthread",
         "-dl",
-        "/usr/local/Cellar/openssl/1.0.2r/lib/libssl.a",
-        "/usr/local/Cellar/openssl/1.0.2r/lib/libcrypto.a",
-        "/usr/local/Cellar/sqlite/3.28.0/lib/libsqlite3.a",
+        "/usr/local/Cellar/openssl@1.1/1.1.1d/lib/libssl.a",
+        "/usr/local/Cellar/openssl@1.1/1.1.1d/lib/libcrypto.a",
+        "/usr/local/lib/libsqlcipher.a",
         "/usr/local/lib/libsignal-protocol-c.a",
         "/usr/local/lib/libcivetweb.a",
         "/usr/local/lib/libcjson.a",
-        "/usr/local/lib/spdlog/libspdlog.a"
+        "/usr/local/lib/libspdlog.a"
       ],
       'conditions': [
         ['OS=="mac"', {

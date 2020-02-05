@@ -1,4 +1,4 @@
-const { Table } = require('./../models');
+const { Table } = require('./../database/models');
 
 exports.up = (knex, Promise) => {
   return Promise.resolve(true);

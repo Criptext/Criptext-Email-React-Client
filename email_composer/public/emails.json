@@ -4,7 +4,6 @@
       "id": 1,
       "key": "1",
       "threadId": "1",
-      "s3Key": "1",
       "content": "Email content 1",
       "preview": "Email content 1",
       "subject": "Email subject 1",
@@ -12,14 +11,12 @@
       "status": 0,
       "unread": 1,
       "secure": 1,
-      "isMuted": 0,
       "fromAddress": "From1 <from1@criptext.com>"
     },
     {
       "id": 2,
       "key": "2",
       "threadId": "2",
-      "s3Key": "2",
       "content": "Email content 2",
       "preview": "Email content 2",
       "subject": "Email subject 2",
@@ -27,14 +24,12 @@
       "status": 0,
       "unread": 1,
       "secure": 1,
-      "isMuted": 0,
       "fromAddress": "From2 <from2@criptext.com>"
     },
     {
       "id": 3,
       "key": "3",
       "threadId": "3",
-      "s3Key": "3",
       "content": "Email content 3",
       "preview": "Email content 3",
       "subject": "Email subject 3",
@@ -42,7 +37,6 @@
       "status": 0,
       "unread": 1,
       "secure": 1,
-      "isMuted": 0,
       "fromAddress": "From3 <from3@criptext.com>"
     }
   ]

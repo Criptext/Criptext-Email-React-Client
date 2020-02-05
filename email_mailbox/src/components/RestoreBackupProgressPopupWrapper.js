@@ -5,11 +5,9 @@ import {
   addEvent,
   removeEvent,
   Event,
-  sendRefreshThreadsEvent,
-  sendSetSectionTypeEvent
+  sendRefreshMailboxSync
 } from '../utils/electronEventInterface';
 import { restoreBackupEncrypted, restoreBackupUnencrypted } from '../utils/ipc';
-import { SectionType } from './../utils/const';
 
 class RestoreBackupProgressPopupWrapper extends Component {
   constructor(props) {
@@ -111,16 +109,7 @@ class RestoreBackupProgressPopupWrapper extends Component {
       },
       () => {
         setTimeout(() => {
-          const { type } = this.props.sectionSelected;
-          if (type === SectionType.MAILBOX) {
-            sendRefreshThreadsEvent();
-          } else if (type === SectionType.SETTINGS) {
-            const mailboxSelected = {
-              id: 1,
-              text: 'Inbox'
-            };
-            sendSetSectionTypeEvent(SectionType.MAILBOX, mailboxSelected);
-          }
+          sendRefreshMailboxSync();
           this.props.onDismissRestoreBackup();
         }, 1500);
       }

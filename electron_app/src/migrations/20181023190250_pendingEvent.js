@@ -1,4 +1,4 @@
-const { Table } = require('../models');
+const { Table } = require('./../database/models');
 
 const createPendingEventTable = async knex => {
   const tableExists = await knex.schema.hasTable(Table.PENDINGEVENT);

@@ -6,8 +6,9 @@
 #include <signal/session_pre_key.h>
 #include "../../crypto/signal.h"
 #include "helpers.h"
+#include "../../../../db_interface/src/dbUtils.h"
 
-int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath);
-int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath);
-int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath);
-int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath);
+int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, char* password);
+int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath, char* password);
+int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, char* password);
+int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath, char* password);

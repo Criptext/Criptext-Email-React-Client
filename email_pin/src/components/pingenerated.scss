@@ -1,0 +1,61 @@
+#pin-generated-container{
+  position: relative;
+
+  .pin-generated-content{
+    margin: 0 auto;
+    text-align: center;
+    width: 70%;
+  
+    h1{
+      margin: 35px auto 0;
+      width: 70%;
+    }
+  
+    >p{
+      margin: 15px auto 0;
+      width: 70%;
+    }
+  
+    .pin-generated-code{
+      display: block;
+      font-size: 30px;
+      margin-top: 30px;
+      text-align: center;
+      letter-spacing: 13px;
+    }
+    
+    .pin-generated-options{
+      display: flex;
+      flex-direction: column;
+      margin-top: 25px;
+      text-align: left;
+  
+      .pin-generated-option{
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 10px;
+  
+        >div{
+          margin-left: 10px;
+  
+          h2{
+            margin: 2px 0;
+          }
+  
+          p{
+            font-size: 11px;
+            margin: 2px 0;
+          }
+        }
+      }
+    }
+  
+    button{
+      bottom: 80px;
+      transform: translateX(-50%);
+      min-width: 80px;
+      margin: 0 auto;
+      position: absolute;
+    }
+  }
+}

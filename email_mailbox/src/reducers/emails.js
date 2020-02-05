@@ -20,18 +20,6 @@ const emails = (state = new Map(), action) => {
       });
       return state.merge(batch);
     }
-    case Email.MUTE: {
-      const item = state.get(action.emailId);
-      if (item !== undefined) {
-        const prevMutedState = item.get('isMuted');
-        const newItem =
-          prevMutedState === 1
-            ? item.set('isMuted', 0)
-            : item.set('isMuted', 1);
-        return state.set(action.emailId, newItem);
-      }
-      return state;
-    }
     case Email.MARK_UNREAD: {
       const emailId = action.emailId;
       const item = state.get(`${emailId}`);
@@ -48,10 +36,10 @@ const emails = (state = new Map(), action) => {
       return state.deleteAll(emailIds);
     }
     case Email.UNSEND: {
-      const { emailId, unsendDate, status } = action;
+      const { emailId, unsentDate, status } = action;
       if (
         typeof emailId !== 'string' ||
-        !unsendDate ||
+        !unsentDate ||
         typeof status !== 'number'
       ) {
         return state;
@@ -103,14 +91,14 @@ const email = (state, action) => {
       return state.set('unread', action.unread);
     }
     case Email.UNSEND: {
-      const { unsendDate, status } = action;
+      const { unsentDate, status } = action;
       return (
         state &&
         state.merge({
           content: '',
           preview: '',
           status,
-          unsendDate
+          unsentDate
         })
       );
     }

@@ -25,7 +25,7 @@ export const unsendEmailFiles = emailId => {
   return async dispatch => {
     try {
       const status = AttachItemStatus.UNSENT;
-      const dbResponse = await updateFilesByEmailId({
+      const [dbResponse] = await updateFilesByEmailId({
         emailId,
         status
       });

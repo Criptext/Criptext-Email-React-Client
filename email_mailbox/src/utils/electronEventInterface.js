@@ -746,7 +746,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     }
     const unread = isFromMe && !isToMe ? false : true;
     if (inReplyTo) {
-      const emailWithMessageId = await getEmailByParams({
+      const [emailWithMessageId] = await getEmailByParams({
         messageId: inReplyTo
       });
       if (emailWithMessageId) {
@@ -903,13 +903,13 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   if (email) {
     const preview = isUnsend ? '' : null;
     const status = validateEmailStatusToSet(email.status, type);
-    const unsendDate = isUnsend ? date : null;
-    if (status || preview || unsendDate) {
+    const unsentDate = isUnsend ? date : null;
+    if (status || preview || unsentDate) {
       await updateEmail({
         key: String(metadataKey),
         status,
         preview,
-        unsendDate
+        unsentDate
       });
       if (isUnsend) {
         await updateFilesByEmailId({
@@ -931,7 +931,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
           emailId: email.id,
           contactId
         };
-        await createFeedItem([feedItemParams]);
+        await createFeedItem(feedItemParams);
         feedItemAdded = true;
       }
     }
@@ -949,7 +949,7 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
   const emails = await getEmailsByArrayParam({ keys: metadataKeys });
   if (emails.length) {
     const emailKeys = emails.map(email => email.key);
-    const res = await updateEmails({
+    const [res] = await updateEmails({
       keys: emailKeys,
       unread: !!unread
     });
@@ -976,7 +976,7 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
       content: '',
       preview: '',
       status,
-      unsendDate: date
+      unsentDate: date
     });
     await updateFilesByEmailId({
       emailId: email.id,
@@ -1023,7 +1023,7 @@ const handlePeerRemoveDevice = async ({ rowid }) => {
 
 const handlePeerThreadRead = async ({ rowid, params }) => {
   const { threadIds, unread } = params;
-  const res = await updateUnreadEmailByThreadIds({
+  const [res] = await updateUnreadEmailByThreadIds({
     threadIds,
     unread: !!unread
   });
@@ -1183,7 +1183,8 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
   const { text, color, uuid } = params;
   const [label] = await getLabelsByText([text]);
   if (!label) {
-    const [labelId] = await createLabel({ text, color, uuid });
+    const labelCreated = await createLabel({ text, color, uuid });
+    const labelId = labelCreated.id;
     const labels = {
       [labelId]: {
         id: labelId,
@@ -1203,7 +1204,7 @@ const handlePeerLabelUpdate = async ({ rowid, params }) => {
   const { uuid, text } = params;
   const [label] = await getLabelByUuid(uuid);
   if (!label) return { rowid };
-  const response = updateLabelDB({ id: label.id, text });
+  const [response] = updateLabelDB({ id: label.id, text });
   if (!response) return { rowid: null };
   return { rowid, updatedLabel: { id: label.id, text } };
 };
@@ -1294,6 +1295,7 @@ export const sendLoadEventsEvent = params => {
 };
 
 ipcRenderer.on('socket-message', async (ev, message) => {
+  if (needsUpgrade()) return;
   const eventId = message.cmd;
   if (eventId === 400) {
     sendLoadEventsEvent({ showNotification: true });
@@ -1721,6 +1723,7 @@ export const sendManualSyncSuccessMessage = () => {
 /*  Firebase
 ----------------------------- */
 ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, async (_, token) => {
+  if (needsUpgrade()) return;
   await updatePushToken(token);
 });
 
@@ -1785,8 +1788,8 @@ ipcRenderer.on('local-backup-enable-events', (ev, params) => {
   emitter.emit(Event.LOCAL_BACKUP_ENABLE_EVENTS, params);
 });
 
-ipcRenderer.on('local-backup-export-finished', (ev, backupSize) => {
-  emitter.emit(Event.LOCAL_BACKUP_EXPORT_FINISHED, backupSize);
+ipcRenderer.on('local-backup-export-finished', (ev, params) => {
+  emitter.emit(Event.LOCAL_BACKUP_EXPORT_FINISHED, params);
 });
 
 ipcRenderer.on('local-backup-encrypt-finished', () => {

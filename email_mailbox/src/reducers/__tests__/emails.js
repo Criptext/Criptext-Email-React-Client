@@ -28,12 +28,12 @@ describe('Email actions - ADD_BATCH ', () => {
 describe('Email actions - UNSEND: ', () => {
   const emails = [myEmails[0]];
 
-  it('should update email with param: content, preview, status, unsendDate by emailId', () => {
+  it('should update email with param: content, preview, status, unsentDate by emailId', () => {
     const state = initState(emails);
     const emailId = '1';
-    const unsendDate = '2018-08-28T20:14:52.593Z';
+    const unsentDate = '2018-08-28T20:14:52.593Z';
     const status = 6;
-    const action = actions.unsendEmailOnSuccess(emailId, unsendDate, status);
+    const action = actions.unsendEmailOnSuccess(emailId, unsentDate, status);
     const newState = emailReducer(state, action);
     const emailUpdated = newState.get(emailId);
     expect(emailUpdated.toJS()).toMatchObject(
@@ -41,7 +41,7 @@ describe('Email actions - UNSEND: ', () => {
         content: '',
         preview: '',
         status,
-        unsendDate
+        unsentDate
       })
     );
   });
@@ -50,9 +50,9 @@ describe('Email actions - UNSEND: ', () => {
     const state = initState(emails);
     const email = state.get('1');
     const emailId = '10';
-    const unsendDate = '2018-08-28T20:14:52.593Z';
+    const unsentDate = '2018-08-28T20:14:52.593Z';
     const status = 6;
-    const action = actions.unsendEmailOnSuccess(emailId, unsendDate, status);
+    const action = actions.unsendEmailOnSuccess(emailId, unsentDate, status);
     const newState = emailReducer(state, action);
     const emailUpdated = newState.get(emailId);
     expect(emailUpdated).toBe(undefined);
@@ -87,17 +87,6 @@ describe('Email actions - UPDATE ', () => {
     const action = actions.updateEmailOnSuccess({ id, content });
     const nextState = emailReducer(prevState, action);
     expect(prevState).toBe(nextState);
-  });
-});
-
-describe('Email actions - MUTE ', () => {
-  it('Mute email by id', () => {
-    const emailId = '1';
-    const prevState = initState(myEmails);
-    const action = actions.muteNotifications(emailId);
-    const nextState = emailReducer(prevState, action);
-    const mutedEmail = nextState.get(emailId);
-    expect(mutedEmail.get('isMuted')).toBe(1);
   });
 });
 

@@ -18,7 +18,7 @@ const {
   defineUnitToAppend,
   backupDateFormat
 } = require('./../utils/TimeUtils');
-const { getSettings, updateSettings } = require('./../DBManager');
+const { getSettings, updateSettings } = require('./../database');
 global.autoBackupIntervalId = null;
 
 const simulatePause = ms => {
@@ -37,16 +37,19 @@ ipc.answerRenderer('create-default-backup-folder', () =>
 );
 
 const doExportBackupUnencrypted = async params => {
-  const { backupPath, notificationParams } = params;
+  const { backupPath, notificationParams, isAutoBackup = true } = params;
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('local-backup-disable-events', 1);
-    await prepareBackupFiles({});
+    prepareBackupFiles();
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', 2);
     const backupSize = await exportBackupUnencrypted({ backupPath });
-    commitBackupStatus('local-backup-export-finished', 3, backupSize);
+    commitBackupStatus('local-backup-export-finished', 3, {
+      backupSize,
+      isAutoBackup
+    });
     await simulatePause(2000);
     commitBackupStatus('local-backup-success', null);
     await simulatePause(2000);
@@ -82,7 +85,7 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('local-backup-disable-events', 1);
-    await prepareBackupFiles({});
+    prepareBackupFiles();
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', 2);
@@ -90,7 +93,10 @@ ipc.answerRenderer('export-backup-encrypted', async params => {
       backupPath,
       password
     });
-    commitBackupStatus('local-backup-export-finished', 3, backupSize);
+    commitBackupStatus('local-backup-export-finished', 3, {
+      backupSize,
+      isAutoBackup: false
+    });
     await simulatePause(2000);
     commitBackupStatus('local-backup-success', null);
     await simulatePause(2000);
@@ -125,7 +131,7 @@ ipc.answerRenderer('restore-backup-unencrypted', async ({ backupPath }) => {
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('restore-backup-disable-events');
-    await prepareBackupFiles({ backupPrevFiles: false });
+    prepareBackupFiles();
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('restore-backup-enable-events');
@@ -146,7 +152,7 @@ ipc.answerRenderer('restore-backup-encrypted', async params => {
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('restore-backup-disable-events');
-    await prepareBackupFiles({ backupPrevFiles: false });
+    prepareBackupFiles();
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('restore-backup-enable-events');
@@ -165,12 +171,12 @@ ipc.answerRenderer('restore-backup-encrypted', async params => {
 const initAutoBackupMonitor = async () => {
   clearTimeout(global.autoBackupIntervalId);
   const {
+    autoBackupEnable,
     autoBackupPath,
     autoBackupFrequency,
     autoBackupNextDate
   } = await getSettings();
-  if (!autoBackupNextDate) {
-    log('Failed to get next date');
+  if (!autoBackupEnable || !autoBackupNextDate) {
     return;
   }
   const now = moment();
@@ -206,6 +212,10 @@ const initAutoBackupMonitor = async () => {
 };
 
 ipc.answerRenderer('init-autobackup-monitor', initAutoBackupMonitor);
+
+ipc.answerRenderer('disable-auto-backup', () => {
+  clearTimeout(global.autoBackupIntervalId);
+});
 
 const log = message => {
   if (process.env.NODE_ENV === 'development') {

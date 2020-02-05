@@ -28,6 +28,10 @@ export const deleteTemporalAccount = () => {
   return globalManager.temporalAccount.delete();
 };
 
+export const hasPin = () => {
+  return !!globalManager.databaseKey.get();
+};
+
 export const confirmWaitingApprovalLogin = callback => {
   const texts = lang.dialogContent.confirmWaitingApprovalLogin;
   const dialog = remote.dialog;

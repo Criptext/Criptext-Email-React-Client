@@ -18,6 +18,7 @@ jobs:
 
     steps:
       - checkout
+      - run: sudo apt-get install libsecret-1-0
 
       # Download and cache dependencies
       - restore_cache:

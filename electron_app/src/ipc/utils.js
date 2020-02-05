@@ -12,6 +12,7 @@ const {
   getSystemLanguage,
   sendEventToAllWindows
 } = require('./../windows/windowUtils');
+const { upApp } = require('./../windows');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
@@ -23,6 +24,11 @@ ipc.answerRenderer('get-os-and-arch', () => getOsAndArch());
 
 ipc.answerRenderer('process-pending-events', () => {
   processEventsQueue();
+});
+
+ipc.answerRenderer('restart-app', () => {
+  app.relaunch();
+  app.exit(0);
 });
 
 ipc.answerRenderer('throwError', ({ name, description }) => {
@@ -85,6 +91,11 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
   loadingWindow.show({});
   return await clientManager.acknowledgeEvents([data.rowid]);
 };
+
+// Start Up
+ipc.answerRenderer('app-up', ({ shouldSave, pin }) => {
+  upApp({ shouldSave, pin });
+});
 
 module.exports = {
   sendLinkDeviceStartEventToAllWindows,

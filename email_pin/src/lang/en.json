@@ -1,0 +1,81 @@
+{
+  "page_start": {
+    "title": "Database encryption PIN",
+    "description": "By setting this PIN your Criptext app files will be encrypted so that no other apps in your computer can access them.",
+    "button": "Okay"
+  },
+  "page_pin_generated": {
+    "title": "We've generated a PIN for you",
+    "description": "This PIN will enrypt your Criptext database",
+    "options": {
+      "keep_it": {
+        "title": "Keep it",
+        "description": "PIN will be saved in your Keychain and you won't need to enter it each time you start Criptext"
+      },
+      "change_it": {
+        "title": "Change it",
+        "description": "Set your own PIN"
+      }
+    }
+  },
+  "page_pin_new": {
+    "title": "Create New PIN",
+    "description": "This PIN will encrypt your Criptext database so no other apps can read your emails.",
+    "new_pin": "New PIN",
+    "confirm_pin": "Confirm PIN",
+    "error_match": "PINs don't match, try again",
+    "error_number": "PINs should be number",
+    "button": "Set PIN"
+  },
+  "page_pin_saved": {
+    "title": "Save your recovery key",
+    "description": "If you forget your PIN, this recovery key will be your only way in. Save it where you won't forget it.",
+    "copy_recovery_key": "Copy Recovery Key",
+    "or": "or",
+    "download": "download",
+    "it_in_a_file": "it in a file",
+    "copy": "Copy",
+    "copied": "Copied",
+    "button": "Okay"
+  },
+  "page_complete": {
+    "title": "PIN setup complete!",
+    "checkbox": {
+      "title": "Don't require PIN on startup",
+      "description": "Your PIN will be saved in your keychain so you don't have to enter it every time you start Criptext."  
+    },
+    "button": "Next"
+  },
+  "page_encrypt": {
+    "steps": {
+      "1": "Configurating database",
+      "2": "Importing data",
+      "3": "Encrypting emails"
+    },
+    "paragraph": "Don't close the window. Criptext will restart automatically once this process is complete."
+  },
+  "page_enter_pin": {
+    "title": "Enter Encryption PIN",
+    "ask": " Forgot PIN?",
+    "checkbox": {
+      "title": "Do not request PIN starting the app",
+      "description": "The PIN will be saved in your Keychain Access, so you can get in without being asked."  
+    },
+    "error": "Wrong PIN, try again",
+    "button": "Done"
+  },
+  "page_enter_recovery_key": {
+    "title": "Enter Recovery Key",
+    "description": "You can also upload the Recovery File which was generated the first time you set up your PIN.",
+    "enter_key": "Enter key",
+    "or": "or",
+    "upload": "upload",
+    "recovery_file": "recovery file",
+    "button": "Okay",
+    "error": {
+      "empty": "Enter your recovery key or upload the file containing it",
+      "file": "File error, please select another file",
+      "key": "Wrong key, try again"
+    }
+  }
+}

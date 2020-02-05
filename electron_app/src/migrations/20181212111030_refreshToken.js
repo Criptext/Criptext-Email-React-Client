@@ -1,4 +1,4 @@
-const { Table, fieldTypes } = require('./../models');
+const { Table, fieldTypes } = require('./../database/models');
 const { XLARGE_STRING_SIZE } = fieldTypes;
 
 const createRefreshTokenColumn = knex => {

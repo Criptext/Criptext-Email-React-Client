@@ -2,11 +2,9 @@
 
 jest.setTimeout(10000);
 
-const DBManager = require('../DBManager');
+const DBManager = require('../database');
 const fileUtils = require('../utils/FileUtils');
 const {
-  closeDatabaseConnection,
-  createDatabaseConnection,
   decryptStreamFile,
   encryptStreamFile,
   exportContactTable,
@@ -15,17 +13,16 @@ const {
   exportEmailContactTable,
   exportEmailLabelTable,
   exportFileTable,
-  exportDatabaseToFile,
+  exportEncryptDatabaseToFile,
   generateKeyAndIv,
   importDatabaseFromFile
-} = require('./../dbExporter');
+} = require('./../database/DBEexporter');
 const fs = require('fs');
 const myAccount = require('../Account');
 const { APP_DOMAIN } = require('../utils/const');
 
 jest.mock('./../Account.js');
 
-const DATABASE_PATH = `${__dirname}/test.db`;
 const PARSED_SAMPLE_FILEPATH = `${__dirname}/parsed_sample_file.txt`;
 const TEMP_DIRECTORY = '/tmp/criptext-tests';
 
@@ -51,14 +48,14 @@ const contacts = [
 
 const labels = [
   {
-    text: 'Sent',
+    text: 'News',
     color: '000000',
-    uuid: '00000000-0000-0000-0000-000000000001'
+    uuid: '65a60683-a1c9-21f3-79d5-e57462ca8147'
   },
   {
-    text: 'Starred',
+    text: 'Shop',
     color: '111111',
-    uuid: '00000000-0000-0000-0000-000000000002'
+    uuid: '77b80589-3a4d-171e-a264-e99a07baca27'
   }
 ];
 
@@ -66,7 +63,6 @@ const email = {
   email: {
     threadId: 'threadA',
     key: '1',
-    s3Key: 's3KeyA',
     subject: 'Greetings',
     content: '<p>Hello there</p>',
     preview: 'Hello there',
@@ -74,8 +70,7 @@ const email = {
     status: 2,
     unread: false,
     secure: true,
-    isMuted: false,
-    unsendDate: '2018-06-14 08:23:20',
+    unsentDate: '2018-06-14 08:23:20',
     trashDate: null,
     messageId: 'messageId1',
     fromAddress: 'Alice <alice@criptext.com>',
@@ -87,31 +82,29 @@ const email = {
     cc: [],
     bcc: []
   },
-  labels: [1, 2]
-};
-
-const file = {
-  id: 1,
-  token: 'token1',
-  name: 'Criptext_Image_2018_09_03.png',
-  readOnly: false,
-  size: 183241,
-  status: 1,
-  date: '2018-09-03 18:45:57',
-  emailId: '1',
-  mimeType: 'image/png',
-  key: 'fileKeyA',
-  iv: 'fileIvA'
+  labels: [1, 2],
+  files: [
+    {
+      token: 'token1',
+      name: 'Criptext_Image_2018_09_03.png',
+      size: 183241,
+      status: 1,
+      date: '2018-09-03 18:45:57',
+      mimeType: 'image/png',
+      key: 'fileKeyA',
+      iv: 'fileIvA'
+    }
+  ]
 };
 
 let dbConnection;
 
 const insertContacts = async params => {
-  await DBManager.createContact(params);
+  return await DBManager.createContact(params);
 };
 
 const insertLabels = async params => {
-  await DBManager.createLabel(params);
+  return await DBManager.createLabel(params);
 };
 
 const insertEmail = async params => {
@@ -120,11 +113,7 @@ const insertEmail = async params => {
     username,
     body: params.content
   });
-  await DBManager.createEmail(params);
-};
-
-const insertFile = async params => {
-  await DBManager.createFile(params);
+  return await DBManager.createEmail(params);
 };
 
 const createTempDirectory = () => {
@@ -150,54 +139,44 @@ const cleanTempDirectory = () => {
 };
 
 beforeAll(async () => {
-  await DBManager.cleanDataBase();
-  await DBManager.createTables();
-});
-
-beforeEach(async () => {
   await fileUtils.removeUserDir(username);
-  await DBManager.cleanDataBase();
-  await DBManager.createTables();
+  await DBManager.deleteDatabase();
+  await DBManager.initDatabaseEncrypted({
+    key: '1111',
+    shouldAddSystemLabels: true
+  });
 });
 
 afterAll(() => {
   fileUtils.removeUserDir(username);
   cleanTempDirectory();
-  closeDatabaseConnection(dbConnection);
 });
 
-const insertValuesToDatabase = async () => {
-  await insertContacts(contacts);
-  await insertLabels(labels);
-  await insertEmail(email);
-  await insertFile(file);
-};
-
 describe('Parse database: ', () => {
-  dbConnection = createDatabaseConnection(DATABASE_PATH);
-
   it('Should parse Contacts to string', async () => {
-    await insertContacts(contacts);
+    const result = await insertContacts(contacts);
+    expect(result.length).toBe(3);
     const expectedString =
       `{"table":"contact","object":{"id":1,"email":"alice@criptext.com","name":"Alice","isTrusted":false,"spamScore":0}}\n` +
       `{"table":"contact","object":{"id":2,"email":"bob@criptext.com","name":"Bob","isTrusted":false,"spamScore":0}}\n` +
       `{"table":"contact","object":{"id":3,"email":"charlie@criptext.com","name":"Charlie","isTrusted":false,"spamScore":0}}`;
-    const contactsString = await exportContactTable(dbConnection);
+    const contactsString = await exportContactTable();
     expect(contactsString).toBe(expectedString);
   });
 
   it('Should parse Labels to string', async () => {
-    await insertLabels(labels);
+    const result = await insertLabels(labels);
+    expect(result.length).toBe(2);
     const expectedString =
-      `{"table":"label","object":{"id":1,"text":"Sent","color":"000000","type":"custom","visible":true,"uuid":"00000000-0000-0000-0000-000000000001"}}\n` +
-      `{"table":"label","object":{"id":2,"text":"Starred","color":"111111","type":"custom","visible":true,"uuid":"00000000-0000-0000-0000-000000000002"}}`;
+      `{"table":"label","object":{"id":8,"text":"News","color":"000000","type":"custom","visible":true,"uuid":"65a60683-a1c9-21f3-79d5-e57462ca8147"}}\n` +
+      `{"table":"label","object":{"id":9,"text":"Shop","color":"111111","type":"custom","visible":true,"uuid":"77b80589-3a4d-171e-a264-e99a07baca27"}}`;
     const labelsString = await exportLabelTable(dbConnection);
     expect(labelsString).toBe(expectedString);
   });
 
   it('Should parse Emails to string', async () => {
     await insertEmail(email);
-    const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","s3Key":"s3KeyA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"isMuted":false,"messageId":"messageId1","fromAddress":"Alice <alice@criptext.com>","replyTo":"","unsentDate":"2018-06-14 08:23:20"}}`;
+    const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"messageId":"messageId1","fromAddress":"Alice <alice@criptext.com>","replyTo":"","unsentDate":"2018-06-14 08:23:20"}}`;
     const expectedJSON = JSON.parse(expectedString);
     const emailsString = await exportEmailTable(dbConnection);
     const emailsJSON = JSON.parse(emailsString);
@@ -205,17 +184,15 @@ describe('Parse database: ', () => {
   });
 
   it('Should parse relation EmailContact to string', async () => {
-    await insertEmail(email);
     const expectedString =
-      `{"table":"email_contact","object":{"id":1,"contactId":1,"emailId":1,"type":"from"}}\n` +
-      `{"table":"email_contact","object":{"id":2,"contactId":2,"emailId":1,"type":"to"}}\n` +
-      `{"table":"email_contact","object":{"id":3,"contactId":3,"emailId":1,"type":"to"}}`;
+      `{"table":"email_contact","object":{"id":1,"type":"from","contactId":1,"emailId":1}}\n` +
+      `{"table":"email_contact","object":{"id":2,"type":"to","contactId":2,"emailId":1}}\n` +
+      `{"table":"email_contact","object":{"id":3,"type":"to","contactId":3,"emailId":1}}`;
     const emailContactsString = await exportEmailContactTable(dbConnection);
     expect(emailContactsString).toBe(expectedString);
   });
 
   it('Should parse relation EmailLabel to string', async () => {
-    await insertEmail(email);
     const expectedString =
       `{"table":"email_label","object":{"id":1,"labelId":1,"emailId":1}}\n` +
       `{"table":"email_label","object":{"id":2,"labelId":2,"emailId":1}}`;
@@ -224,9 +201,7 @@ describe('Parse database: ', () => {
   });
 
   it('Should parse Files to string', async () => {
-    await insertEmail(email);
-    await insertFile(file);
-    const expectedString = `{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","readOnly":false,"size":183241,"status":1,"date":"2018-09-03 18:45:57","mimeType":"image/png","ephemeral":0,"ephemeralStart":0,"ephemeralTime":0,"emailId":1,"key":"fileKeyA","iv":"fileIvA"}}`;
+    const expectedString = `{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","size":183241,"status":1,"date":"2018-09-03 18:45:57","mimeType":"image/png","key":"fileKeyA","iv":"fileIvA","emailId":1}}`;
     const filesString = await exportFileTable(dbConnection);
     expect(filesString).toBe(expectedString);
   });
@@ -234,15 +209,9 @@ describe('Parse database: ', () => {
 
 describe('Encrypt and Decrypt: ', () => {
   createTempDirectory();
-  const { key, iv } = generateKeyAndIv();
-
   it('Should save database to file: ', async () => {
     const outputPath = `${TEMP_DIRECTORY}/parsed_output.txt`;
-    await DBManager.cleanDataBase();
-    await DBManager.createTables();
-    await insertValuesToDatabase();
-    await exportDatabaseToFile({
-      databasePath: DATABASE_PATH,
+    await exportEncryptDatabaseToFile({
       outputPath
     });
     const sampleFile = fs.readFileSync(PARSED_SAMPLE_FILEPATH);
@@ -251,6 +220,7 @@ describe('Encrypt and Decrypt: ', () => {
   });
 
   it('Should encrypted a parsed file and then decrypt it: ', async () => {
+    const { key, iv } = generateKeyAndIv();
     const encryptedOutputFilepath = `${TEMP_DIRECTORY}/encrypted_output.txt`;
     const decryptedOutputFilepath = `${TEMP_DIRECTORY}/decrypted_output.txt`;
     await encryptStreamFile({
@@ -274,7 +244,7 @@ describe('Import Database: ', () => {
   it('Should save file data in database', async () => {
     await importDatabaseFromFile({
       filepath: PARSED_SAMPLE_FILEPATH,
-      databasePath: DATABASE_PATH
+      isStrict: true
     });
     const [emailChecked1] = await DBManager.getEmailsByThreadIdAndLabelId(
       [email.email.threadId],
@@ -287,7 +257,6 @@ describe('Import Database: ', () => {
     const [rawEmail] = await DBManager.getEmailsByThreadId(
       email.email.threadId
     );
-
     const body =
       (await fileUtils.getEmailBody({
         username,
@@ -303,7 +272,6 @@ describe('Import Database: ', () => {
       ...emailImported.to.split(',').map(Number)
     ];
     const [fileImported] = await DBManager.getFilesByTokens([fileTokens]);
-
     let [
       firstContact,
       secondContact,
@@ -312,10 +280,8 @@ describe('Import Database: ', () => {
     firstContact = { ...firstContact, isTrusted: !!firstContact.isTrusted };
     secondContact = { ...secondContact, isTrusted: !!secondContact.isTrusted };
     thirdContact = { ...thirdContact, isTrusted: !!thirdContact.isTrusted };
-
     const emailResult = {
       ...emailImported,
-      isMuted: !!emailImported.isMuted,
       secure: !!emailImported.secure,
       unread: !!emailImported.unread
     };
@@ -327,7 +293,7 @@ describe('Import Database: ', () => {
       emailChecked1.id === emailChecked2.id && emailChecked1.id === rawEmail.id;
     expect(same).toBe(true);
     expect(emailResult).toMatchObject(expect.objectContaining(email.email));
-    expect(fileResult).toMatchObject(file);
+    expect(fileResult).toMatchObject(email.files[0]);
     expect(firstContact).toMatchObject(contacts[0]);
     expect(secondContact).toMatchObject(contacts[1]);
     expect(thirdContact).toMatchObject(contacts[2]);

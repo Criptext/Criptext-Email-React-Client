@@ -67,6 +67,32 @@ if [ $? -ne 0 ]; then
   removeTempFolder2;
 fi
 
+cd ..
+
+printf "  - Downloading SQLCipher... \n";
+git clone https://github.com/sqlcipher/sqlcipher.git --quiet;
+if [ $? -ne 0 ]; then
+  PEM "    Failed to download SQLite Modern Cpp";
+  removeTempFolder1;
+fi
+
+printf "  - Configurating... \n";
+cd ./sqlcipher > /dev/null;
+./configure --enable-tempstore=yes CFLAGS="-DSQLITE_HAS_CODEC" LDFLAGS="/usr/lib/x86_64-linux-gnu/libcrypto.a";
+
+make > /dev/null;
+if [ $? -ne 0 ]; then
+  PEM "    Failed to make SQLite Modern Cpp";
+  removeTempFolder2;
+fi
+
+sudo make install > /dev/null;
+if [ $? -ne 0 ]; then
+  PEM "    Failed to install SQLite Modern Cpp";
+  removeTempFolder2;
+fi
+
+
 # Exit to tempBuildFolder's parent and remove
 removeTempFolder2;
 PSM "    Done.";

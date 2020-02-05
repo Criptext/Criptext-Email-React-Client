@@ -1,0 +1,158 @@
+.complete-content{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  text-align: center;
+  width: 300px;
+  height: 390px;
+
+  h1{
+    text-align: center;
+  }
+
+  .complete-animation{
+    $curve: cubic-bezier(0.420, 0.000, 0.275, 1.155);
+    $time: 1.4s;
+    $duration: 4.5s;
+    height: 130px;
+    margin-top: 30px;
+    margin-left: -101px;
+    position: relative;
+
+    >div{
+      animation: checkmark infinite $curve both infinite;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    @mixin size($size) {
+      width: $size;
+      height: $size;
+    }
+
+    .spark {
+      animation: grow $time $curve both;
+      fill: #8dcb4a;
+      position: absolute;
+      
+      &:nth-child(1) {
+        @include size(25px);
+        left: 20px;
+        top: 66px;
+      }
+      
+      &:nth-child(2) {
+        @include size(23px);
+        left: 168px;
+        top: 84px;
+      }
+      
+      &:nth-child(3) {
+        @include size(20px);
+        left: 45px;
+        bottom: 2px;
+      }
+      
+      &:nth-child(4) {
+        @include size(30px);
+        right: 30px;
+        top: 18px;
+      }
+      
+      &:nth-child(5) {
+        @include size(24px);
+        left: 125px;
+        bottom: 5px;
+      }
+      
+      &:nth-child(6) {
+        @include size(20px);
+        left: 65px;
+        top: 10px;
+      }
+      
+      @for $i from 1 through 6 {
+        &:nth-child(#{$i}) {
+          animation-delay: $i*($time/2);
+        }
+      }
+    }
+
+    .checkmark-sign {
+      fill: white;
+      left: 98px;
+      position: relative;
+      width: 27px;
+      z-index: 10;
+    }
+
+    .checkmark-background {
+      animation: rotate $duration linear both;
+      height: 90px;
+      width: 90px;
+      fill: #8dcb4a;
+      position: relative;
+      left: 40px;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes grow {
+      0%, 100% {
+        transform: scale(0);
+      }
+      50% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes checkmark {
+      0%, 100% {
+        opacity: 0;
+        transform: scale(0);
+      }
+      
+      10%, 50%, 90% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  }
+
+  .complete-checkbox{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0px 48px;
+
+    .checkmark-container{
+      margin-right: 10px;
+
+      .checkmark-checked::after{
+        top: 1px;
+      }
+    }
+  }
+
+  p{
+    color: #8d95a5;
+    font-size: 11px;
+    margin: 0 40px;
+  }
+
+  button{
+    bottom: 40px;
+    min-width: 80px;
+    margin: 20px auto 0;
+  }
+}

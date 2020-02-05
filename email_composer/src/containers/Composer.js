@@ -11,14 +11,9 @@ import {
 import {
   closeComposerWindow,
   createEmail,
-  createEmailLabel,
-  deleteEmailsByIds,
-  getEmailByKey,
   isCriptextDomain,
   saveDraftChangesComposerWindow,
-  saveEmailBody,
   throwError,
-  updateEmail,
   checkExpiredSession
 } from './../utils/ipc';
 import {
@@ -689,7 +684,7 @@ class ComposerWrapper extends Component {
 
   sendMessage = async secure => {
     this.setState({ status: Status.WAITING });
-    const temporalThreadId = `<criptext-temp-${Date.now()}>`;
+
     const data = {
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,
@@ -697,83 +692,65 @@ class ComposerWrapper extends Component {
       isEnterprise: myAccount.recipientId.includes('@'),
       labelId: LabelType.sent.id,
       secure,
-      status: EmailStatus.SENDING,
+      status: EmailStatus.SENT,
       textSubject: this.state.textSubject,
       toEmails: this.state.toEmails,
-      threadId: this.state.threadId || temporalThreadId
+      threadId: this.state.threadId || undefined
     };
     const {
       bodyWithSign,
       emailData,
       recipientDomains
     } = formOutgoingEmailFromData(data);
-    let emailId, key;
-    try {
-      const files = await getFileParamsToSend(this.state.files);
-      const filesDbParams = formFileParamsToDatabase(files);
-      if (filesDbParams.length) {
-        emailData['files'] = filesDbParams;
-      }
+    const files = await getFileParamsToSend(this.state.files);
 
-      [emailId] = await createEmail(emailData);
-      const [username, domain] = myAccount.recipientId.split('@');
-      const peer = {
-        recipientId: myAccount.recipientId,
-        username: username,
-        domain: domain || appDomain,
-        type: 'peer',
-        deviceId: myAccount.deviceId
-      };
-      const recipients = [...recipientDomains, peer];
-      const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
-      const params = {
-        subject: emailData.email.subject,
-        threadId:
-          emailData.email.threadId === temporalThreadId
-            ? undefined
-            : emailData.email.threadId,
-        recipients,
-        body: emailData.body,
-        bodyWithSign,
-        preview: emailData.email.preview,
-        files,
-        peer,
-        externalEmailPassword
-      };
+    const [username, domain] = myAccount.recipientId.split('@');
+    const peer = {
+      recipientId: myAccount.recipientId,
+      username: username,
+      domain: domain || appDomain,
+      type: 'peer',
+      deviceId: myAccount.deviceId
+    };
+    const recipients = [...recipientDomains, peer];
+    const externalEmailPassword = this.state.nonCriptextRecipientsPassword;
+    const params = {
+      subject: emailData.email.subject,
+      threadId: emailData.email.threadId,
+      recipients,
+      body: emailData.body,
+      bodyWithSign,
+      preview: emailData.email.preview,
+      files,
+      peer,
+      externalEmailPassword
+    };
+    try {
       const res = await encryptPostEmail(params);
       const { metadataKey, date, messageId } = res.body;
       const threadId = res.body.threadId || this.state.threadId;
-      key = metadataKey;
-      const emailParams = {
-        id: emailId,
-        key,
+
+      const filesDbParams = formFileParamsToDatabase(files);
+      if (filesDbParams.length) emailData['files'] = filesDbParams;
+
+      const newEmail = {
+        ...emailData.email,
+        key: metadataKey,
         threadId,
         date,
-        status: EmailStatus.SENT,
         messageId
       };
-      await updateEmail(emailParams);
-      await saveEmailBody({
-        body: data.body,
-        metadataKey: metadataKey,
-        replaceKey: emailData.email.key
-      });
+      const newEmailData = { ...emailData, email: newEmail };
+      const emailCreated = await createEmail(newEmailData);
       closeComposerWindow({
         threadId,
-        emailId,
+        emailId: emailCreated.id,
         hasExternalPassphrase: !!externalEmailPassword
       });
     } catch (e) {
-      if (e.message && e.message.includes('SQLITE_CONSTRAINT')) {
-        // To remove
-        await deleteEmailsByIds([emailId]);
-        const email = await getEmailByKey(key);
-        const emailLabels = [
-          { emailId: email[0].id, labelId: LabelType.sent.id }
-        ];
-        await createEmailLabel(emailLabels);
-        closeComposerWindow({});
-      } else if (e.code === 'ECONNREFUSED') {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      if (e.code === 'ECONNREFUSED') {
         throwError(string.errors.unableToConnect);
       } else {
         const errorToShow = {

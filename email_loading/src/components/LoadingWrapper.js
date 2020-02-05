@@ -2,19 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
 import signal from './../libs/signal';
-import {
-  remoteData,
-  getMailboxGettingEventsStatus
-} from './../utils/electronInterface';
+import { remoteData } from './../utils/electronInterface';
 import {
   closeCreatingKeysLoadingWindow,
   openMailboxWindow,
+  openPinWindow,
   throwError
 } from './../utils/ipc';
 import string from './../lang';
 import { appDomain } from '../utils/const';
-
-const messages = string.loading.messages;
 
 const animationTypes = {
   RUNNING: 'running-animation',
@@ -29,7 +25,6 @@ const loadingTypes = {
 
 const delay = 85;
 const responseMaxDelay = 300;
-const lastMessageDelay = 2000;
 
 class LoadingWrapper extends Component {
   constructor(props) {
@@ -171,9 +166,7 @@ class LoadingWrapper extends Component {
     if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
       this.setState({ percent: 100 }, () => {
-        const accountId = this.accountId;
-        const recipientId = remoteData.recipientId || remoteData.username;
-        this.openMailbox({ accountId, recipientId });
+        this.nextWindow();
       });
     }
     this.setState({
@@ -181,38 +174,12 @@ class LoadingWrapper extends Component {
     });
   };
 
-  // Multiple Accounts Check
-  checkMailboxWindowIsReady = ({ accountId, recipientId }) => {
-    const isGettingEvents = getMailboxGettingEventsStatus();
-    if (isGettingEvents === false) {
-      clearTimeout(this.mailboxIsReadyTimeout);
-      this.setState(
-        {
-          percent: 100,
-          message: messages.mailboxIsReady
-        },
-        async () => {
-          await setTimeout(() => {
-            this.openMailbox({ accountId, recipientId });
-          }, lastMessageDelay);
-        }
-      );
+  nextWindow = () => {
+    if (this.props.shouldResetPIN) {
+      openPinWindow({ pinType: 'signin' });
     } else {
-      this.setState(
-        {
-          message: messages.waitingMailboxIsReady
-        },
-        () => {
-          this.mailboxIsReadyTimeout = setTimeout(() => {
-            this.checkMailboxWindowIsReady({ accountId, recipientId });
-          }, lastMessageDelay);
-        }
-      );
+      openMailboxWindow();
     }
-  };
-
-  openMailbox = ({ accountId, recipientId }) => {
-    openMailboxWindow({ accountId, recipientId });
     closeCreatingKeysLoadingWindow();
   };
 
@@ -243,7 +210,8 @@ class LoadingWrapper extends Component {
 }
 
 LoadingWrapper.propTypes = {
-  loadingType: PropTypes.string
+  loadingType: PropTypes.string,
+  shouldResetPIN: PropTypes.bool
 };
 
 export default LoadingWrapper;

@@ -1,0 +1,114 @@
+@import './../styles/index.scss';
+
+.pin-saved-content{
+  margin: 0 auto;
+  text-align: center;
+  width: 63%;
+
+  h1{
+    margin: 35px auto 0;
+  }
+
+  >p{
+    margin: 15px auto 0;
+  }
+
+  .pin-saved-key{
+    margin-top: 70px;
+
+    h2{
+      text-align: left;
+    }
+    
+    a {
+      text-decoration-color: #0091ff;
+    }
+
+    .pin-saved-key-block{
+      align-items: center;
+      border: 1px solid #e5e2e2;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+
+      .icon{
+        background-image: url(../#{$_PATH_TO_IMAGES}/key-light.svg);
+        background-size: 100% auto;
+        height: 18px;
+        margin-left: 5px;
+        width: 18px;
+      }
+
+      input{
+        border: none;
+        font-size: 12px;
+        flex-grow: 1;
+        margin-left: 3px;
+
+        &:focus{
+          outline: 0;
+        }
+      }
+
+      button{
+        border-radius: 4px;
+        height: 25px;
+        margin: 3px;
+        padding: 4px;
+        width: 45px;
+
+        span{
+          font-size: 11px;
+        }
+      }
+
+      .toast{
+        background-color: rgba(90, 90, 90, 0.7);
+        border-radius: 3px;
+        padding: 0 5px;
+        position: absolute;
+        right: 3px;
+        top: -30px;
+
+        &.disabled{
+          display: none;
+        }
+
+        &::after{
+          content: "";
+          position: absolute;
+          border-width: 5px;
+          border-style: solid;
+          margin-left: -5px;
+          top: 100%;
+          left: 50%;
+          border-color: rgba(90, 90, 90, 0.7) transparent transparent transparent;
+        }
+
+        span{
+          color: white;
+          font-size: 11px;
+        }
+      }
+    }
+
+    >span{
+      display: block;
+      font-size: 12px;
+      text-align: center;
+
+      b{
+        color: #0091ff;
+      }
+    }
+  }
+
+  >button{
+    bottom: 80px;
+    transform: translateX(-50%);
+    min-width: 80px;
+    margin: 0 auto;
+    position: absolute;
+  }
+}

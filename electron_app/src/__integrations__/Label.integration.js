@@ -1,108 +1,94 @@
 /* eslint-env node, jest */
-
-const DBManager = require('../DBManager');
+const DBManager = require('../database');
+const systemLabels = require('../systemLabels');
 
 beforeAll(async () => {
-  await DBManager.cleanDataBase();
-  await DBManager.createTables();
+  await DBManager.deleteDatabase();
+  await DBManager.initDatabaseEncrypted({
+    key: '1111'
+  });
 });
 
-describe('TABLE[Label]:', () => {
-  it('should create label to db', async () => {
-    const labelsToInsert = [
-      {
-        color: '111111',
-        text: 'Inbox',
-        uuid: '00000000-0000-0000-0000-000000000001'
-      },
-      {
-        color: '222222',
-        text: 'Sent',
-        uuid: '00000000-0000-0000-0000-000000000002'
-      }
-    ];
-    await DBManager.createLabel(labelsToInsert);
-    const labels = await DBManager.getAllLabels();
-    expect(labels).toMatchSnapshot();
+let labelToDelete;
+let labelToUpdate;
+describe('Store data label to Label Table:', () => {
+  it('Should create labels to db', async () => {
+    const labels = Object.values(systemLabels);
+    const result = await DBManager.createLabel(labels);
+    expect(result).toMatchSnapshot();
   });
 
-  it('should update label: color and text', async () => {
-    const labelParams = {
-      color: '333333',
-      text: 'Draft',
-      uuid: '00000000-0000-0000-0000-000000000003'
+  it('Should create label to db', async () => {
+    const label = {
+      color: '1311a1',
+      text: 'Task'
     };
-    const [labelId] = await DBManager.createLabel(labelParams);
-    const newColor = '333334';
-    const newText = 'DraftModified';
-    await DBManager.updateLabel({
-      id: labelId,
-      color: newColor,
-      text: newText
+    const result = await DBManager.createLabel(label);
+    labelToDelete = result;
+    const uuidRegex = /([0-9a-z]){8}-([0-9a-z]){4}-([0-9a-z]){4}-([0-9a-z]){4}-([0-9a-z]){12}/;
+    expect(result).toMatchObject({
+      color: label.color,
+      text: label.text,
+      type: 'custom',
+      visible: true
     });
-    const [label] = await DBManager.getLabelById(labelId);
-    expect(label).toMatchObject({
-      text: newText,
-      color: newColor
-    });
+    expect(result.uuid).toMatch(uuidRegex);
+  });
+});
+
+describe('Delete labe from Label Table:', () => {
+  it('Should delete label by labelId', async () => {
+    const result = await DBManager.deleteLabelById(labelToDelete.id);
+    expect(result).toBe(1);
   });
 
-  it('should update label: color', async () => {
-    const [id] = await DBManager.createLabel({
-      color: '444444',
-      text: 'Starred',
-      uuid: '00000000-0000-0000-0000-000000000004'
-    });
-    const newColor = '444555';
-    await DBManager.updateLabel({ id, color: newColor });
-    const [label] = await DBManager.getLabelById(id);
-    expect(label.color).toBe(newColor);
+  it('Should not delete label by labelId', async () => {
+    const result = await DBManager.deleteLabelById(1000);
+    expect(result).toBe(0);
+  });
+});
+
+describe('Load data labels from Label Table:', () => {
+  it('Should load all labels', async () => {
+    const result = await DBManager.getAllLabels();
+    expect(result.length).toBe(6);
+    expect(result[0]).toMatchSnapshot();
   });
 
-  it('should update label: text', async () => {
-    const [id] = await DBManager.createLabel({
-      color: '555555',
-      text: 'Trash',
-      uuid: '00000000-0000-0000-0000-000000000005'
-    });
-    const newText = 'LabelModified2';
-    await DBManager.updateLabel({ id, text: newText });
-    const [label] = await DBManager.getLabelById(id);
-    expect(label.text).toBe(newText);
+  it('Should load label by labelId', async () => {
+    const result = await DBManager.getLabelById(1);
+    expect(result.length).toBe(1);
+    expect(result[0]).toMatchSnapshot();
   });
 
-  it('should update label: visible', async () => {
-    const [id] = await DBManager.createLabel({
-      color: '666666',
-      text: 'Important',
-      uuid: '00000000-0000-0000-0000-000000000006'
-    });
-    const newVisibleValue = false;
-    await DBManager.updateLabel({ id, visible: newVisibleValue });
-    const [label] = await DBManager.getLabelById(id);
-    expect(label.visible).toBeFalsy();
+  it('Should load label by uuid', async () => {
+    const result = await DBManager.getLabelByUuid(
+      '00000000-0000-0000-0000-000000000001'
+    );
+    expect(result.length).toBe(1);
+    expect(result[0]).toMatchSnapshot();
   });
 
-  it('get labels by: text', async () => {
+  it('Should load labels by: text', async () => {
     const label1 = {
       color: '777777',
       text: 'label',
-      uuid: '00000000-0000-0000-0000-000000000007'
+      uuid: '00000000-0000-0000-0000-000000000008'
     };
     const label2 = {
       color: '888888',
       text: 'LABEL',
-      uuid: '00000000-0000-0000-0000-000000000008'
+      uuid: '00000000-0000-0000-0000-000000000009'
     };
     const label3 = {
       color: '999999',
       text: 'AnotherLabel',
-      uuid: '00000000-0000-0000-0000-000000000009'
+      uuid: '00000000-0000-0000-0000-000000000010'
     };
     const label4 = {
       color: '101010',
       text: 'Test',
-      uuid: '00000000-0000-0000-0000-000000000010'
+      uuid: '00000000-0000-0000-0000-000000000011'
     };
     const labelsToInsert = [label1, label2, label3, label4];
     await DBManager.createLabel(labelsToInsert);
@@ -142,5 +128,61 @@ describe('TABLE[Label]:', () => {
       }
     });
     expect(labels).labelArraysAreEqual(expectedLabels);
+  });
+});
+
+describe('Update data label to Label Table:', () => {
+  it('Should update label: color and text', async () => {
+    const label = {
+      color: '333333',
+      text: 'news'
+    };
+    labelToUpdate = await DBManager.createLabel(label);
+    const labelIdCreated = labelToUpdate.id;
+
+    const newColor = '333334';
+    const newText = 'old-news';
+    const result = await DBManager.updateLabel({
+      id: labelIdCreated,
+      color: newColor,
+      text: newText
+    });
+    expect(result).toEqual(expect.arrayContaining([1]));
+    const [labelCheck] = await DBManager.getLabelById(labelIdCreated);
+    expect(labelCheck).toMatchObject({
+      text: newText,
+      color: newColor
+    });
+  });
+
+  it('Should update label: color', async () => {
+    const labelIdCreated = labelToUpdate.id;
+    const newColor = '444555';
+    const labelUpdated = await DBManager.updateLabel({
+      id: labelIdCreated,
+      color: newColor
+    });
+    expect(labelUpdated).toEqual(expect.arrayContaining([1]));
+    const [labelCheck] = await DBManager.getLabelById(labelIdCreated);
+    expect(labelCheck.color).toBe(newColor);
+  });
+
+  it('Should update label: text', async () => {
+    const labelIdCreated = labelToUpdate.id;
+    const newText = 'LabelModified2';
+    await DBManager.updateLabel({ id: labelIdCreated, text: newText });
+    const [labelCheck] = await DBManager.getLabelById(labelIdCreated);
+    expect(labelCheck.text).toBe(newText);
+  });
+
+  it('Should update label: visible', async () => {
+    const labelIdCreated = labelToUpdate.id;
+    const newVisibleValue = false;
+    await DBManager.updateLabel({
+      id: labelIdCreated,
+      visible: newVisibleValue
+    });
+    const [labelCheck] = await DBManager.getLabelById(labelIdCreated);
+    expect(labelCheck.visible).toBeFalsy();
   });
 });

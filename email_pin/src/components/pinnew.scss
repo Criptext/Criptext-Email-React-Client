@@ -1,0 +1,30 @@
+.pin-new-content{
+  margin: 0 auto;
+  text-align: center;
+  width: 75%;
+
+  h1{
+    margin-top: 35px;
+  }
+
+  .pin-new-code{
+    margin: 30px auto 0;
+    width: 180px;
+
+    .pin-code{
+      margin-top: 25px;
+
+      h2{
+        text-align: left;
+      }
+    }
+  }
+
+  button{
+    bottom: 80px;
+    transform: translateX(-50%);
+    min-width: 80px;
+    margin: 0 auto;
+    position: absolute;
+  }
+}

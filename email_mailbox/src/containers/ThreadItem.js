@@ -99,7 +99,7 @@ const formatRecipientsForThreadItem = (
 
 const definePreviewAndStatus = thread => {
   if (thread.get('status') === EmailStatus.UNSEND) {
-    const unsentText = defineUnsentText(thread.get('unsendDate'));
+    const unsentText = defineUnsentText(thread.get('unsentDate'));
     return {
       preview: unsentText,
       isUnsend: true,

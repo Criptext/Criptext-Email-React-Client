@@ -2,9 +2,9 @@ const path = require('path');
 const { BrowserWindow } = require('electron');
 const myAccount = require('../Account');
 const { composerUrl } = require('./../window_routing');
-const dbManager = require('./../DBManager');
-const clientManager = require('../clientManager');
+const dbManager = require('./../database');
 const globalManager = require('./../globalManager');
+const { EVENTS, callEvent } = require('./events');
 const fileUtils = require('../utils/FileUtils');
 const { APP_DOMAIN, API_TRACKING_EVENT } = require('../utils/const');
 const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
@@ -36,7 +36,7 @@ const openNewComposer = async () => {
   const composer = await createComposerWindow();
   composer.once('ready-to-show', () => {
     composer.show();
-    clientManager.generateEvent(API_TRACKING_EVENT.COMPOSER_OPENED);
+    callEvent(EVENTS.API_event_tracking, API_TRACKING_EVENT.COMPOSER_OPENED);
   });
 };
 
@@ -113,7 +113,7 @@ const editDraft = async emailToEdit => {
   globalManager.emailToEdit.set(newComposer.id, emailToEdit);
   newComposer.once('ready-to-show', () => {
     newComposer.show();
-    clientManager.generateEvent(API_TRACKING_EVENT.COMPOSER_OPENED);
+    callEvent(EVENTS.API_event_tracking, API_TRACKING_EVENT.COMPOSER_OPENED);
   });
 };
 
@@ -138,10 +138,7 @@ const destroy = async ({
       const [oldDraftEmail] = await dbManager.getEmailByKey(key);
       if (oldDraftEmail) {
         const oldEmailId = oldDraftEmail.id;
-        await dbManager.deleteEmailLabelAndContactByEmailId(
-          oldEmailId,
-          undefined
-        );
+        await dbManager.deleteEmailAndRelations(oldEmailId, undefined);
       }
       event = 'composer-email-delete';
       params = { threadId };
@@ -192,7 +189,8 @@ const saveDraftToDatabase = async (composerId, data) => {
     await fileUtils.saveEmailBody({
       body: content,
       username,
-      metadataKey: parseInt(dataDraft.email.key)
+      metadataKey: parseInt(dataDraft.email.key),
+      password: globalManager.databaseKey.get()
     });
     shouldUpdateBadge = true;
   } else {
@@ -200,14 +198,15 @@ const saveDraftToDatabase = async (composerId, data) => {
     const newDataDraft = Object.assign(dataDraft, {
       email: Object.assign(dataDraft.email, { key: oldEmail.key })
     });
-    const newEmailId = await dbManager.deleteEmailLabelAndContactByEmailId(
+    const newEmailId = await dbManager.deleteEmailAndRelations(
       oldEmail.id,
       newDataDraft
     );
     await fileUtils.saveEmailBody({
       body: content,
       username,
-      metadataKey: parseInt(newDataDraft.email.key)
+      metadataKey: parseInt(newDataDraft.email.key),
+      password: globalManager.databaseKey.get()
     });
     if (type === composerEvents.EDIT_DRAFT && newDataDraft.email.threadId) {
       const dataToMailbox = {

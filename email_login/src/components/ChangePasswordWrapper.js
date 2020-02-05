@@ -5,6 +5,7 @@ import {
   closeLoginWindow,
   loginFirst,
   openCreateKeysLoadingWindow,
+  sendPin,
   throwError
 } from '../utils/ipc';
 import { hashPassword } from '../utils/HashUtils';
@@ -12,6 +13,7 @@ import {
   validateConfirmPassword,
   validateEnterprisePassword
 } from '../validators/validators';
+import { hasPin } from '../utils/electronInterface';
 import string from '../lang';
 import * as ErrorMsgs from './SignUpErrorMsgs';
 
@@ -114,8 +116,17 @@ class ChangePasswordWrapper extends Component {
       case LOGIN_FIRST_STATUS.SUCCESS: {
         const { token, deviceId, name } = body;
         const recipientId = this.props.emailAddress;
+        const hasPIN = hasPin();
+        if (!hasPIN)
+          await sendPin({
+            pin: '1234',
+            shouldSave: false,
+            shouldExport: false,
+            shouldOnlySetPIN: true
+          });
         openCreateKeysLoadingWindow({
           loadingType: 'signin-new-password',
+          shouldResetPIN: !hasPIN,
           remoteData: {
             recipientId,
             deviceId,

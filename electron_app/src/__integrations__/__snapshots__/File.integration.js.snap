@@ -1,23 +1,52 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Store data file to File Table: should insert file to database 1`] = `
+exports[`Load data file from File Table: Should load file by emailId 1`] = `
+Object {
+  "cid": null,
+  "date": "2018-06-14 23:45:57",
+  "emailId": 1,
+  "id": 1,
+  "iv": "fileIvA",
+  "key": "fileKeyA",
+  "mimeType": "image/png",
+  "name": "Criptext_Image_2018_06_14.png",
+  "size": 183241,
+  "status": 1,
+  "token": "tokenC",
+}
+`;
+
+exports[`Load data file from File Table: should load file by tokens 1`] = `
 Array [
   Object {
-    "cid": "cidA",
-    "date": "2018-06-14T23:45:57.466Z",
-    "emailId": "1",
-    "ephemeral": 0,
-    "ephemeralStart": 0,
-    "ephemeralTime": 0,
+    "cid": null,
+    "date": "2018-06-14 23:45:57",
+    "emailId": 1,
+    "id": 1,
+    "iv": "fileIvA",
+    "key": "fileKeyA",
+    "mimeType": "image/png",
+    "name": "Criptext_Image_2018_06_14.png",
+    "size": 183241,
+    "status": 1,
+    "token": "tokenC",
+  },
+]
+`;
+
+exports[`Store data file to File Table: Should insert file 1`] = `
+Array [
+  Object {
+    "date": "2018-06-14 23:45:57",
+    "emailId": 1,
     "id": 2,
     "iv": "fileIvA",
     "key": "fileKeyA",
     "mimeType": "image/png",
     "name": "Criptext_Image_2018_06_14.png",
-    "readOnly": 0,
     "size": 183241,
     "status": 1,
-    "token": "token2",
+    "token": "tokenC1",
   },
 ]
 `;

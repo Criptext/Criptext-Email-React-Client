@@ -1,0 +1,149 @@
+button {
+  border: none;
+  cursor: pointer;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &.button-a {
+    border-radius: 100px;
+    color: white;
+    height: 31px;
+    padding: inherit;
+    text-transform: uppercase;
+
+    i {
+      font-size: 18px;
+      position: relative;
+      top: 2px;
+    }
+
+    span {
+      font-size: 13px;
+      font-weight: 700;
+      position: relative;
+      top: -1px;
+    }
+  }
+
+  &.button-b {
+    color: #0091ff;
+
+    i {
+      font-size: 14px;
+    }
+
+    span {
+      font-size: 13px;
+    }
+  }
+
+  &.button-c {
+    background-color: #0091ff;
+    border-radius: 20px;
+    height: 35px;
+    padding: 10px;
+
+    span {
+      color: white;
+      font-size: 11px;
+    }
+  }
+
+  &.button-loading {
+    display: flex;
+    padding: 0;
+
+    .loading {
+      height: 32px;
+      margin: 0px auto;
+      padding: 0px;
+      position: relative;
+      width: 32px;
+
+      div {
+        background-color: #ffffff;
+        height: 5px;
+        position: absolute;
+        width: 2px;
+        border-radius: 2px;
+        transform: scale(0.4);
+        animation-name: loading;
+        animation-duration: 1.04s;
+        animation-iteration-count: infinite;
+        animation-direction: linear;
+      }
+
+      div:nth-child(1) {
+        left: 7px;
+        top: 13px;
+        transform: rotate(-90deg);
+        animation-delay: 0.39s;
+      }
+
+      div:nth-child(2) {
+        left: 9px;
+        top: 7px;
+        transform: rotate(-45deg);
+        animation-delay: 0.52s;
+      }
+
+      div:nth-child(3) {
+        left: 15px;
+        top: 5px;
+        transform: rotate(0deg);
+        animation-delay: 0.65s;
+      }
+
+      div:nth-child(4) {
+        right: 8px;
+        top: 7px;
+        transform: rotate(45deg);
+        animation-delay: 0.78s;
+      }
+
+      div:nth-child(5) {
+        right: 7px;
+        top: 13px;
+        transform: rotate(90deg);
+        animation-delay: 0.91s;
+      }
+
+      div:nth-child(6) {
+        right: 8px;
+        bottom: 7px;
+        transform: rotate(135deg);
+        animation-delay: 1.04s;
+      }
+
+      div:nth-child(7) {
+        bottom: 5px;
+        left: 15px;
+        transform: rotate(180deg);
+        animation-delay: 1.17s;
+      }
+
+      div:nth-child(8) {
+        left: 9px;
+        bottom: 7px;
+        transform: rotate(-135deg);
+        animation-delay: 1.3s;
+      }
+    }
+
+    @keyframes loading {
+      0% {
+        background-color: #fff;
+      }
+      100% {
+        background-color: #0091ff;
+      }
+    }
+  }
+}

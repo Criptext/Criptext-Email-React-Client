@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Load data feeditem from Feeditem Table: Should load all feeditems 1`] = `
+Object {
+  "contactId": 1,
+  "date": "2018-06-14 08:23:19",
+  "emailId": 1,
+  "fileId": null,
+  "id": 1,
+  "seen": false,
+  "type": 7,
+}
+`;
+
+exports[`Store data fedditem to Feeditem Table: Should insert feeditem 1`] = `
+Object {
+  "contactId": 1,
+  "date": "2018-06-14 08:23:19",
+  "emailId": 1,
+  "id": 1,
+  "seen": false,
+  "type": 7,
+}
+`;

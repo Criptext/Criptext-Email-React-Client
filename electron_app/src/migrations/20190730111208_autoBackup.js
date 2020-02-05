@@ -1,4 +1,4 @@
-const { Table, fieldTypes } = require('./../models');
+const { Table, fieldTypes } = require('./../database/models');
 const { TINY_STRING_SIZE, XLARGE_STRING_SIZE } = fieldTypes;
 
 const AUTO_BACKUP_COLUMNS = {

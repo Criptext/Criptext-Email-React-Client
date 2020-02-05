@@ -6,7 +6,7 @@ global.composerData = {};
 global.emailToEdit = {};
 global.isMAS = INSTALLER_TYPE === allInstallerTypes.mac.store;
 global.loadingData = {};
-global.modalData = {};
+global.pinData = {};
 global.temporalAccount = {};
 global.windowsEventsDisabled = false;
 global.internetConnection;
@@ -15,6 +15,8 @@ global.deviceType = getDeviceType(INSTALLER_TYPE, allInstallerTypes);
 global.pendingRestore = false;
 global.backupStatus = null;
 global.needsUpgrade = false;
+global.databaseKey = '';
+global.progressDBE = { total: 4, current: 1 };
 
 /*  Composer
 ----------------------------- */
@@ -32,15 +34,6 @@ const setEmailToEdit = (composerId, data) => {
 };
 const getEmailToEdit = composerId => {
   return global.emailToEdit[composerId];
-};
-
-/*  Dialog
------------------------------ */
-const setModalData = data => {
-  global.modalData = data;
-};
-const getModalData = () => {
-  return global.modalData;
 };
 
 /*  Force quit
@@ -68,6 +61,15 @@ const getLoadingData = () => {
   return global.loadingData;
 };
 
+/*  Pin
+----------------------------- */
+const setPinData = data => {
+  global.pinData = data;
+};
+const getPinData = () => {
+  return global.pinData;
+};
+
 /*  Needs Upgrade
 ----------------------------- */
 const enableUpgrade = () => {
@@ -76,7 +78,6 @@ const enableUpgrade = () => {
 const disableUpgrade = () => {
   global.needsUpgrade = false;
 };
-
 const getNeedsUpgrade = () => {
   return global.needsUpgrade;
 };
@@ -86,7 +87,6 @@ const getNeedsUpgrade = () => {
 const getMAS = () => {
   return global.isMAS;
 };
-
 const getWinStore = () => {
   return global.isWindowsStore;
 };
@@ -117,8 +117,6 @@ const checkWindowsEvents = () => {
   return global.windowsEventsDisabled;
 };
 
-/*  Windows Events
------------------------------ */
 const setInternetConnectionStatus = status => {
   global.internetConnection = status;
 };
@@ -146,6 +144,26 @@ const getBackupStatus = () => {
   return global.backupStatus;
 };
 
+/*  Database Encrypted
+----------------------------- */
+const setDatabaseKey = key => {
+  global.databaseKey = key;
+};
+
+const getDatabaseKey = () => {
+  return global.databaseKey;
+};
+
+const setProgressDBE = ({ current, add }) => {
+  let valueCurrent = current;
+  if (add) valueCurrent = global.progressDBE.current + add;
+  global.progressDBE = { ...global.progressDBE, current: valueCurrent };
+};
+
+const getProgressDBE = () => {
+  return global.progressDBE;
+};
+
 module.exports = {
   composerData: {
     get: getComposerData,
@@ -167,9 +185,9 @@ module.exports = {
     get: getLoadingData,
     set: setLoadingData
   },
-  modalData: {
-    get: getModalData,
-    set: setModalData
+  pinData: {
+    get: getPinData,
+    set: setPinData
   },
   temporalAccount: {
     get: getTemporalAccountData,
@@ -203,5 +221,13 @@ module.exports = {
   backupStatus: {
     get: getBackupStatus,
     set: setBackupStatus
+  },
+  databaseKey: {
+    get: getDatabaseKey,
+    set: setDatabaseKey
+  },
+  progressDBE: {
+    get: getProgressDBE,
+    set: setProgressDBE
   }
 };

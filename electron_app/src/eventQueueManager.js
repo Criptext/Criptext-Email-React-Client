@@ -1,4 +1,4 @@
-const { getPendingEvents, deletePendingEventsByIds } = require('./DBManager');
+const { getPendingEvents, deletePendingEventsByIds } = require('./database');
 const { mailformedEventRegex } = require('./utils/RegexUtils');
 let clientManager;
 

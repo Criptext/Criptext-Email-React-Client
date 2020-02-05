@@ -11,6 +11,6 @@ export const defineLabels = async () => {
     }),
     {}
   );
-  labels[LabelType.draft.id].badge = badgeDraft[0].count;
+  labels[LabelType.draft.id].badge = badgeDraft;
   return labels;
 };

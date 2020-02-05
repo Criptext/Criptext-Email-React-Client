@@ -4,11 +4,7 @@
 using namespace std;
 using namespace sqlite;
 
-CriptextDB::Account CriptextDB::getAccount(string dbPath, char *recipientId) {
-  sqlite_config config;
-  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
-  database db(dbPath, config);
-  
+CriptextDB::Account CriptextDB::getAccount(database db, char *recipientId) {
   string myPrivKey;
   string myPubKey;
   int regId = 0;
@@ -19,27 +15,27 @@ CriptextDB::Account CriptextDB::getAccount(string dbPath, char *recipientId) {
       myPubKey = pubKey;
       regId = registrationId;
   };
+
+  connection_type con = db.connection();
   Account account = { 
     .privKey = myPrivKey, 
     .pubKey = myPubKey, 
-    .registrationId = regId 
+    .registrationId = regId,
+    .con = con
   };
   return account;
 }
 
-int CriptextDB::createAccount(string dbPath, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
+int CriptextDB::createAccount(database db, char* recipientId, char* name, int deviceId, char* pubKey, char* privKey, int registrationId) {
   try {
     bool hasRow = false;
-    sqlite_config config;
-    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
-    database db(dbPath, config);
+    
     db << "begin;";
     db << "Select recipientId from account where recipientId == ?;"
      << recipientId
      >> [&] (string recipientId) {
         hasRow = true;
     };
-
     if (hasRow) {
       db << "update account set name = ?, deviceId = ?, privKey = ?, pubKey = ?, registrationId = ? where recipientId == ?;"
         << name

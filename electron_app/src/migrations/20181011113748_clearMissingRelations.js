@@ -1,4 +1,4 @@
-const { Table } = require('./../models');
+const { Table } = require('./../database/models');
 
 const clearMissingEmailLabelRelations = async knex => {
   return await knex

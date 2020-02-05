@@ -10,6 +10,10 @@ export const openMailboxWindow = () => {
   ipc.callMain('open-mailbox', { firstOpenApp: true });
 };
 
+export const openPinWindow = params => {
+  ipc.callMain('open-pin', params);
+};
+
 export const logoutApp = () => {
   ipc.callMain('logout-app');
 };
@@ -82,10 +86,6 @@ export const cleanKeys = async username => {
   return await ipc.callMain('db-clean-keys', username);
 };
 
-export const createAccount = async params => {
-  return await ipc.callMain('db-create-account', params);
-};
-
 export const createContact = async params => {
   return await ipc.callMain('db-create-contact', params);
 };
@@ -104,6 +104,10 @@ export const createPreKeyRecord = async params => {
 
 export const createSessionRecord = async params => {
   return await ipc.callMain('db-create-session-record', params);
+};
+
+export const createSettings = async params => {
+  return await ipc.callMain('db-create-settings', params);
 };
 
 export const createSignedPreKeyRecord = async params => {
@@ -168,8 +172,8 @@ export const decryptBackupFile = async key => {
   return await ipc.callMain('data-transfer-decrypt', key);
 };
 
-export const importDatabase = async () => {
-  return await ipc.callMain('data-transfer-import');
+export const importDatabase = async params => {
+  return await ipc.callMain('data-transfer-import', params);
 };
 
 export const clearSyncData = async () => {

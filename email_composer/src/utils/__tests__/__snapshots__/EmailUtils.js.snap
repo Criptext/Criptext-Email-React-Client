@@ -42,7 +42,6 @@ Object {
       "content": "",
       "date": 1524861748481,
       "fromAddress": "myAccountName <myAccountRecipientId@criptext.com>",
-      "isMuted": false,
       "key": 1524861748481,
       "preview": "Hello",
       "secure": true,
@@ -175,12 +174,6 @@ Object {
       "form": "tag-app-domain",
       "name": undefined,
     },
-    Object {
-      "complete": "<usuario1@criptext.com>",
-      "email": "usuario1@criptext.com",
-      "form": "tag-app-domain",
-      "name": undefined,
-    },
   ],
   "files": Array [],
   "htmlBody": "<p>Modified body content</p>",
@@ -193,6 +186,12 @@ Object {
       "email": "from1@criptext.com",
       "form": "tag-app-domain",
       "name": "From1",
+    },
+    Object {
+      "complete": "<usuario1@criptext.com>",
+      "email": "usuario1@criptext.com",
+      "form": "tag-app-domain",
+      "name": undefined,
     },
   ],
 }

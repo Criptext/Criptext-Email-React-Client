@@ -45,7 +45,7 @@ import string from './../lang';
 
 const definePreviewAndContent = (email, isCollapse, inlineImages) => {
   if (email.status === EmailStatus.UNSEND) {
-    const unsentText = defineUnsentText(email.unsendDate);
+    const unsentText = defineUnsentText(email.unsentDate);
     return {
       preview: unsentText,
       content: unsentText
@@ -265,12 +265,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onUnsendEmail: () => {
       const contactIds = [...email.toIds, ...email.ccIds, ...email.bccIds];
-      const unsendDate = new Date();
+      const unsentDate = new Date();
       const params = {
         key: email.key,
         emailId: email.id,
         contactIds,
-        unsendDate
+        unsentDate
       };
       dispatch(unsendEmail(params));
     },

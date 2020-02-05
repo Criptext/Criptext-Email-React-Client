@@ -3,11 +3,7 @@
 using namespace std;
 using namespace sqlite;
 
-CriptextDB::PreKey CriptextDB::getPreKey(string dbPath, short int id) {
-  sqlite_config config;
-  config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READONLY;
-  database db(dbPath, config);
-
+CriptextDB::PreKey CriptextDB::getPreKey(database db, short int id) {
   string myPreKey;
   size_t myLen = 0;
   db << "Select * from prekeyrecord where preKeyId == ?;"
@@ -28,13 +24,8 @@ CriptextDB::PreKey CriptextDB::getPreKey(string dbPath, short int id) {
   return preKey;
 }
 
-bool CriptextDB::createPreKey(string dbPath, short int id, char *keyRecord, size_t len) {
+bool CriptextDB::createPreKey(database db, short int id, char *keyRecord, size_t len) {
   try {
-
-    sqlite_config config;
-    config.flags = OpenFlags::FULLMUTEX | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
-    database db(dbPath, config);
-
     db << "insert into prekeyrecord (preKeyId, record, recordLength) values (?,?,?);"
      << id
      << keyRecord
@@ -46,11 +37,8 @@ bool CriptextDB::createPreKey(string dbPath, short int id, char *keyRecord, size
   }
 }
 
-bool CriptextDB::deletePreKey(string dbPath, short int id) {
+bool CriptextDB::deletePreKey(database db, short int id) {
   try {
-    sqlite_config config;
-    config.flags = OpenFlags::FULLMUTEX  | OpenFlags::SHAREDCACHE | OpenFlags::READWRITE;
-    database db(dbPath, config);
     db << "delete from prekeyrecord where preKeyId == ?;"
      << id;
     return true;

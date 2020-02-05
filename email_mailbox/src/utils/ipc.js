@@ -6,6 +6,10 @@ export const checkForUpdates = showDialog => {
   ipc.callMain('check-for-updates', showDialog);
 };
 
+export const checkPin = async () => {
+  return await ipc.callMain('check-pin');
+};
+
 export const closeMailboxWindow = () => {
   ipc.callMain('close-mailbox');
 };
@@ -60,6 +64,12 @@ export const restartAlice = async () => {
   return await ipc.callMain('restart-alice');
 };
 
+export const restartApp = () => ipc.callMain('restart-app');
+
+export const restartSocket = async jwt => {
+  await ipc.callMain('restart-socket', jwt);
+};
+
 export const sendEndSyncDevicesEvent = async () => {
   await ipc.callMain('close-create-keys-loading');
   return await ipc.callMain('end-sync-mailbox-event');
@@ -94,6 +104,10 @@ export const showNotificationApp = ({ title, message, threadId }) => {
   ipc.callMain('show-notification', { title, message, threadId });
 };
 
+export const startRekey = params => {
+  ipc.callMain('reset-key-initialize', params);
+};
+
 export const throwError = error => {
   ipc.callMain('throwError', error);
 };
@@ -102,11 +116,12 @@ export const updateDockBadgeApp = value => {
   ipc.callMain('update-dock-badge', value);
 };
 
+export const validatePin = async pin => {
+  return await ipc.callMain('validate-pin', pin);
+};
+
 /* File System
 ----------------------------- */
-export const saveEmailBody = async params => {
-  return await ipc.callMain('fs-save-email-body', params);
-};
 
 export const deleteEmailContent = async params => {
   return await ipc.callMain('fs-delete-email-content', params);
@@ -134,6 +149,10 @@ export const checkFileDownloaded = async ({ filename, metadataKey, type }) => {
     metadataKey,
     type
   });
+};
+
+export const storeRecoveryKey = async params => {
+  return await ipc.callMain('store-recovery-key', params);
 };
 
 /* Criptext Client
@@ -282,10 +301,6 @@ export const createPreKeyRecord = async params => {
 
 export const createSessionRecord = async params => {
   return await ipc.callMain('db-create-session-record', params);
-};
-
-export const createSignalTables = async () => {
-  return await ipc.callMain('db-create-signal-tables');
 };
 
 export const createSignedPreKeyRecord = async params => {
@@ -506,8 +521,8 @@ export const decryptBackupFile = async key => {
   return await ipc.callMain('data-transfer-decrypt', key);
 };
 
-export const importDatabase = async () => {
-  return await ipc.callMain('data-transfer-import');
+export const importDatabase = async params => {
+  return await ipc.callMain('data-transfer-import', params);
 };
 
 export const clearSyncData = async () => {
@@ -542,6 +557,10 @@ export const restoreBackupEncrypted = async params => {
 
 export const restoreBackupUnencrypted = async params => {
   return await ipc.callMain('restore-backup-unencrypted', params);
+};
+
+export const disableAutoBackup = async () => {
+  return await ipc.callMain('disable-auto-backup');
 };
 
 /* Nucleus

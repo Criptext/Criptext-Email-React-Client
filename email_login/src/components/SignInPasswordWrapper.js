@@ -9,8 +9,10 @@ import {
   login,
   openCreateKeysLoadingWindow,
   resetPassword,
+  sendPin,
   throwError
 } from '../utils/ipc';
+import { hasPin } from '../utils/electronInterface';
 import { hashPassword } from '../utils/HashUtils';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 import string from '../lang';
@@ -46,7 +48,7 @@ class SignInPasswordWrapper extends Component {
         {...this.props}
         buttonState={this.state.buttonState}
         onClickForgot={this.handleClickForgot}
-        onCLickSignInWithPassword={this.handleClickSignInWithPassword}
+        onClickSignInWithPassword={this.handleClickSignInWithPassword}
         onChangeField={this.handleChangeField}
         onDismissPopup={this.onDismissPopup}
         popupContent={this.state.popupContent}
@@ -104,16 +106,25 @@ class SignInPasswordWrapper extends Component {
         domain === appDomain
           ? username
           : this.state.values.usernameOrEmailAddress;
-      this.handleLoginStatus(status, body, headers, recipientId);
+      await this.handleLoginStatus(status, body, headers, recipientId);
     }
   };
 
-  handleLoginStatus = (status, body, headers, recipientId) => {
+  handleLoginStatus = async (status, body, headers, recipientId) => {
     switch (status) {
       case LOGIN_STATUS.SUCCESS: {
+        const hasPIN = hasPin();
+        if (!hasPIN)
+          await sendPin({
+            pin: '1234',
+            shouldSave: false,
+            shouldExport: false,
+            shouldOnlySetPIN: true
+          });
         const { deviceId, name } = body;
         openCreateKeysLoadingWindow({
           loadingType: 'signin',
+          shouldResetPIN: !hasPIN,
           remoteData: {
             recipientId,
             deviceId,

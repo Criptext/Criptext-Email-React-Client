@@ -60,10 +60,6 @@ export const postEmail = async params => {
 
 /* File System
    ----------------------------- */
-export const saveEmailBody = async params => {
-  return await ipc.callMain('fs-save-email-body', params);
-};
-
 export const getEmailByKeyWithbody = async params => {
   return await ipc.callMain('db-get-email-with-body', params);
 };
@@ -72,14 +68,6 @@ export const getEmailByKeyWithbody = async params => {
    ----------------------------- */
 export const createEmail = async params => {
   return await ipc.callMain('db-create-email', params);
-};
-
-export const createEmailLabel = async params => {
-  return await ipc.callMain('db-create-email-label', params);
-};
-
-export const createFile = async params => {
-  return await ipc.callMain('db-create-file', params);
 };
 
 export const createIdentityKeyRecord = async params => {
@@ -98,10 +86,6 @@ export const createSignedPreKeyRecord = async params => {
   return await ipc.callMain('db-create-signed-prekey-record', params);
 };
 
-export const deleteEmailsByIds = async ids => {
-  return await ipc.callMain('db-delete-emails-by-ids', ids);
-};
-
 export const deletePreKeyPair = async params => {
   return await ipc.callMain('db-delete-prekey-pair', params);
 };
@@ -116,10 +100,6 @@ export const getAllContacts = async () => {
 
 export const getContactsByEmailId = async emailId => {
   return await ipc.callMain('db-get-contact-by-emailid', emailId);
-};
-
-export const getEmailByKey = async key => {
-  return await ipc.callMain('db-get-email-by-key', key);
 };
 
 export const getFilesByEmailId = async emailId => {
@@ -147,10 +127,6 @@ export const getSessionRecordByRecipientIds = async recipientIds => {
 
 export const getSignedPreKey = async params => {
   return await ipc.callMain('db-get-signed-prekey', params);
-};
-
-export const updateEmail = async params => {
-  return await ipc.callMain('db-update-email', params);
 };
 
 export const updateIdentityKeyRecord = async params => {

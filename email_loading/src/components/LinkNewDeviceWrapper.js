@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import signal from '../libs/signal';
 import {
   remoteData,
@@ -16,6 +17,7 @@ import {
   importDatabase,
   logoutApp,
   openMailboxWindow,
+  openPinWindow,
   throwError
 } from './../utils/ipc';
 import LinkNewDevice from './LinkNewDevice';
@@ -56,7 +58,7 @@ const getRecipientIdFromRemoteData = () => {
     : recipientId;
 };
 
-class LoadingWrapper extends Component {
+class LinkNewDeviceWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -302,23 +304,29 @@ class LoadingWrapper extends Component {
       async () => {
         this.incrementPercentage();
         await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
-        await importDatabase();
-        this.setState(
-          {
-            message: messages.syncComplete,
-            pauseAt: 100,
-            delay: (100 - this.state.percent) / ANIMATION_DURATION,
-            lastStep: STEPS.PROCESS_MAILBOX
-          },
-          async () => {
-            this.incrementPercentage();
-            clearSyncData();
-            await setTimeout(() => {
-              openMailboxWindow();
-              closeCreatingKeysLoadingWindow();
-            }, 4000);
-          }
-        );
+        await importDatabase({
+          withoutBodiesEncryption: this.props.shouldResetPIN
+        })
+          .then(() => {
+            this.setState(
+              {
+                message: messages.syncComplete,
+                pauseAt: 100,
+                delay: (100 - this.state.percent) / ANIMATION_DURATION,
+                lastStep: STEPS.PROCESS_MAILBOX
+              },
+              async () => {
+                this.incrementPercentage();
+                clearSyncData();
+                await setTimeout(() => {
+                  this.nextWindow();
+                }, 4000);
+              }
+            );
+          })
+          .catch(() => {
+            this.linkingDevicesThrowError();
+          });
       }
     );
   };
@@ -328,8 +336,7 @@ class LoadingWrapper extends Component {
       case STEPS.DOWNLOAD_MAILBOX:
       case STEPS.DECRYPT_KEY:
         setPendingRestoreStatus(true);
-        openMailboxWindow();
-        closeCreatingKeysLoadingWindow();
+        this.nextWindow();
         break;
       default: {
         cleanKeys();
@@ -435,6 +442,19 @@ class LoadingWrapper extends Component {
       }
     }
   };
+
+  nextWindow = () => {
+    if (this.props.shouldResetPIN) {
+      openPinWindow({ pinType: 'signin' });
+    } else {
+      openMailboxWindow();
+    }
+    closeCreatingKeysLoadingWindow();
+  };
 }
 
-export { LoadingWrapper as default, STEPS };
+LinkNewDeviceWrapper.propTypes = {
+  shouldResetPIN: PropTypes.bool
+};
+
+export { LinkNewDeviceWrapper as default, STEPS };

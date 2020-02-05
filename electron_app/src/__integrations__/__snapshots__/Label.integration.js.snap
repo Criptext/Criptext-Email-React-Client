@@ -1,22 +1,87 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TABLE[Label]: should create label to db 1`] = `
+exports[`Load data labels from Label Table: Should load all labels 1`] = `
+Object {
+  "color": "0091ff",
+  "id": 1,
+  "text": "Inbox",
+  "type": "system",
+  "uuid": "00000000-0000-0000-0000-000000000001",
+  "visible": true,
+}
+`;
+
+exports[`Load data labels from Label Table: Should load label by labelId 1`] = `
+Object {
+  "color": "0091ff",
+  "id": 1,
+  "text": "Inbox",
+  "type": "system",
+  "uuid": "00000000-0000-0000-0000-000000000001",
+  "visible": true,
+}
+`;
+
+exports[`Load data labels from Label Table: Should load label by uuid 1`] = `
+Object {
+  "color": "0091ff",
+  "id": 1,
+  "text": "Inbox",
+  "type": "system",
+  "uuid": "00000000-0000-0000-0000-000000000001",
+  "visible": true,
+}
+`;
+
+exports[`Store data label to Label Table: Should create labels to db 1`] = `
 Array [
   Object {
-    "color": "111111",
+    "color": "0091ff",
     "id": 1,
     "text": "Inbox",
-    "type": "custom",
+    "type": "system",
     "uuid": "00000000-0000-0000-0000-000000000001",
-    "visible": 1,
+    "visible": true,
   },
   Object {
-    "color": "222222",
+    "color": "ff0000",
     "id": 2,
-    "text": "Sent",
-    "type": "custom",
+    "text": "Spam",
+    "type": "system",
     "uuid": "00000000-0000-0000-0000-000000000002",
-    "visible": 1,
+    "visible": true,
+  },
+  Object {
+    "color": "1a9759",
+    "id": 3,
+    "text": "Sent",
+    "type": "system",
+    "uuid": "00000000-0000-0000-0000-000000000003",
+    "visible": true,
+  },
+  Object {
+    "color": "ffce4b",
+    "id": 5,
+    "text": "Starred",
+    "type": "system",
+    "uuid": "00000000-0000-0000-0000-000000000005",
+    "visible": true,
+  },
+  Object {
+    "color": "666666",
+    "id": 6,
+    "text": "Draft",
+    "type": "system",
+    "uuid": "00000000-0000-0000-0000-000000000006",
+    "visible": true,
+  },
+  Object {
+    "color": "b00e0e",
+    "id": 7,
+    "text": "Trash",
+    "type": "system",
+    "uuid": "00000000-0000-0000-0000-000000000007",
+    "visible": true,
   },
 ]
 `;

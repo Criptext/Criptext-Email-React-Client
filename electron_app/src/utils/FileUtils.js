@@ -3,20 +3,31 @@ const copy = require('recursive-copy');
 const rmdirRecursive = require('rmdir-recursive');
 const path = require('path');
 const rimraf = require('rimraf');
+const { encryptText, decryptText } = require('../filescript/helpers');
 const { app } = require('electron');
 const { removeLast } = require('./stringUtils');
-const { APP_DOMAIN } = require('../utils/const');
+const { APP_DOMAIN } = require('./const');
 
-const getUserEmailsPath = (node_env, user) => {
+const getUserEmailsPath = (node_env, user, isCopy) => {
   switch (node_env) {
     case 'test': {
-      const emailsPath = path.join('./src', '__integrations__', `${user}`);
+      const emailsPath = path.join(
+        './src',
+        '__integrations__',
+        `${user}`,
+        isCopy ? 'emails-copy' : 'emails'
+      );
       createPathRecursive(emailsPath);
       return emailsPath;
     }
     case 'development': {
       const emailsPath = path
-        .join(__dirname, '/../userData', `${user}`, 'emails')
+        .join(
+          __dirname,
+          '/../userData',
+          `${user}`,
+          isCopy ? 'emails-copy' : 'emails'
+        )
         .replace('/src', '');
       const userToReplace = `${user}@${APP_DOMAIN}`;
       createPathRecursive(emailsPath, userToReplace, user);
@@ -28,7 +39,7 @@ const getUserEmailsPath = (node_env, user) => {
         userDataPath,
         'userData',
         `${user}`,
-        'emails'
+        isCopy ? 'emails-copy' : 'emails'
       );
       const userToReplace = `${user}@${APP_DOMAIN}`;
       createPathRecursive(emailsPath, userToReplace, user);
@@ -41,31 +52,50 @@ const saveEmailBody = async ({
   body,
   headers,
   username,
+  password,
   metadataKey,
-  replaceKey
+  replaceKey,
+  isCopy
 }) => {
-  const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
-
+  const myPath = await getUserEmailsPath(
+    process.env.NODE_ENV,
+    username,
+    isCopy
+  );
   const emailPath = `${myPath}/${metadataKey}`;
   await createIfNotExist(emailPath);
 
-  const bodyPath = `${emailPath}/body.txt`;
-  await store(bodyPath, body);
+  if (body) {
+    const bodyPath = `${emailPath}/body.txt`;
+    const bodyToStore = !password
+      ? body
+      : await encryptText({ text: body, password });
+    await store(bodyPath, bodyToStore);
+  }
+
   if (headers) {
     const headersPath = `${emailPath}/headers.txt`;
-    await store(headersPath, headers);
+    const headersToStore = !password
+      ? headers
+      : await encryptText({ text: headers, password });
+    await store(headersPath, headersToStore);
   }
   if (replaceKey) {
     await remove(`${myPath}/${replaceKey}`).catch(console.error);
   }
 };
 
-const getEmailBody = async ({ username, metadataKey }) => {
+const getEmailBody = async ({ username, metadataKey, password }) => {
   const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
 
   const emailPath = `${myPath}/${metadataKey}`;
   const bodyPath = `${emailPath}/body.txt`;
   try {
+    if (password) {
+      const data = await retrieveBuffer(bodyPath);
+      const body = decryptText({ data, password });
+      return body;
+    }
     const body = await retrieve(bodyPath);
     return body;
   } catch (ex) {
@@ -73,13 +103,18 @@ const getEmailBody = async ({ username, metadataKey }) => {
   }
 };
 
-const getEmailHeaders = async ({ username, metadataKey }) => {
+const getEmailHeaders = async ({ username, metadataKey, password }) => {
   const myPath = await getUserEmailsPath(process.env.NODE_ENV, username);
   const emailPath = `${myPath}/${metadataKey}`;
   const headersPath = `${emailPath}/headers.txt`;
   try {
-    const body = await retrieve(headersPath);
-    return body;
+    if (password) {
+      const data = await retrieveBuffer(headersPath);
+      const headers = decryptText({ data, password });
+      return headers;
+    }
+    const headers = await retrieve(headersPath);
+    return headers;
   } catch (ex) {
     return undefined;
   }
@@ -97,6 +132,26 @@ const removeUserDir = async username => {
   await remove(userPath);
 };
 
+const replaceEmailsWithCopy = async username => {
+  const emailsPath = await getUserEmailsPath(process.env.NODE_ENV, username);
+  const emailsCopyPath = await getUserEmailsPath(
+    process.env.NODE_ENV,
+    username,
+    true
+  );
+  await remove(emailsPath);
+  fs.renameSync(emailsCopyPath, emailsPath);
+};
+
+const removeEmailsCopy = async username => {
+  const emailsCopyPath = await getUserEmailsPath(
+    process.env.NODE_ENV,
+    username,
+    true
+  );
+  await remove(emailsCopyPath);
+};
+
 const store = (path, text) => {
   return new Promise((resolve, reject) => {
     fs.writeFile(path, text, err => {
@@ -111,6 +166,17 @@ const store = (path, text) => {
 const retrieve = path => {
   return new Promise((resolve, reject) => {
     fs.readFile(path, { encoding: 'utf-8' }, (err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data);
+    });
+  });
+};
+
+const retrieveBuffer = path => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, (err, data) => {
       if (err) {
         return reject(err);
       }
@@ -182,9 +248,14 @@ module.exports = {
   getEmailBody,
   getEmailHeaders,
   deleteEmailContent,
+  remove,
+  removeEmailsCopy,
   removeUserDir,
+  replaceEmailsWithCopy,
   getUserEmailsPath,
   createIfNotExist,
   checkIfExists,
-  createPathRecursive
+  createPathRecursive,
+  store,
+  retrieve: retrieveBuffer
 };

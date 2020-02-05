@@ -15,7 +15,8 @@ import { SocketCommand } from '../utils/const';
 export const addLabel = label => {
   return async dispatch => {
     try {
-      const [labelId] = await createLabel(label);
+      const labelCreated = await createLabel(label);
+      const labelId = labelCreated.id;
       if (labelId) {
         const { text, color, visible, uuid } = label;
         const labels = {
@@ -82,7 +83,13 @@ export const removeLabelOnSuccess = labelId => {
 export const updateLabel = ({ id, uuid, color, text, visible }) => {
   return async dispatch => {
     try {
-      const response = await updateLabelDB({ id, uuid, color, text, visible });
+      const [response] = await updateLabelDB({
+        id,
+        uuid,
+        color,
+        text,
+        visible
+      });
       if (!response) return;
       dispatch(updateLabelSuccess({ id, uuid, color, text, visible }));
       if (!text) return;
@@ -123,22 +130,20 @@ export const updateBadgeLabels = labelIds => {
       const labels = await Promise.all(
         labelsFiltered.map(async labelId => {
           if (labelId === LabelType.inbox.id) {
-            const [{ totalUnread }] = await getEmailsUnredByLabelId({
+            const badgeInbox = await getEmailsUnredByLabelId({
               labelId,
               rejectedLabelIds: [LabelType.spam.id, LabelType.trash.id]
             });
-            const badgeInbox = totalUnread;
             updateDockBadgeApp(badgeInbox);
             return {
               id: String(labelId),
               badge: badgeInbox
             };
           } else if (labelId === LabelType.spam.id) {
-            const [{ totalUnread }] = await getEmailsUnredByLabelId({
+            const badgeSpam = await getEmailsUnredByLabelId({
               labelId,
               rejectedLabelIds: [LabelType.trash.id]
             });
-            const badgeSpam = totalUnread;
             return {
               id: String(labelId),
               badge: badgeSpam
@@ -147,7 +152,7 @@ export const updateBadgeLabels = labelIds => {
             const badgeDraft = await getEmailsCounterByLabelId(labelId);
             return {
               id: String(labelId),
-              badge: badgeDraft[0].count
+              badge: badgeDraft
             };
           }
         })
