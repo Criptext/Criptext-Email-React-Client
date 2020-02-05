@@ -44,6 +44,21 @@ bool is_number(const std::string& s) {
         s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
 }
 
+std::string random_string( size_t length ) {
+    auto randchar = []() -> char
+    {
+        const char charset[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+        const size_t max_index = (sizeof(charset) - 1);
+        return charset[ rand() % max_index ];
+    };
+    std::string str(length,0);
+    std::generate_n( str.begin(), length, randchar );
+    return str;
+}
+
 int main(int argc, char const *argv[]){
    char *logsPath = "alice_logs.txt";
    if (argc > 3) {
@@ -62,19 +77,11 @@ int main(int argc, char const *argv[]){
 
    char *dbPath = const_cast<char *>(argv[1]);
    char *port = "8085";
-   char *password = 0;
 
    if (argc > 2) {
       char *myPort = const_cast<char *>(argv[2]);
       if (is_number(port)) {
         port = myPort;
-      }
-   }
-
-   if (argc > 4) {
-      char *myPass = const_cast<char *>(argv[4]);
-      if (is_number(port)) {
-        password = myPass;
       }
    }
 
@@ -87,7 +94,9 @@ int main(int argc, char const *argv[]){
    signal(SIGABRT, CrashSignalHandler);
    signal(SIGFPE,  CrashSignalHandler);
 
-   http_init(dbPath, port, password);
+   string token = random_string(32);
+   std::cout << "PASSWORD:" << token << std::endl;
+   http_init(dbPath, port, const_cast<char *>(token.c_str()));
 
    while(1) {
       sleep(1);

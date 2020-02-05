@@ -16,7 +16,6 @@ int session_store_load_session(signal_buffer **record, signal_buffer **user_reco
     try {
         sessionRecord = CriptextDB::getSessionRecord(account->getDB(), recipientId, deviceId);
     } catch (exception& e) {
-        std::cout << "Error Loading Session : " << e.what() << std::endl;
         return 0;
     }
     size_t len = 0;

@@ -177,6 +177,24 @@ const encryptText = ({ text, password }) => {
   });
 };
 
+const encryptTextSimple = (text, password) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const { key, salt, iv } = generateKeyAndIvFromPassword(password);
+      const cipher = crypto.createCipheriv(CIPHER_ALGORITHM, key, iv);
+      const result = Buffer.concat([cipher.update(text), cipher.final()]);
+      const data = {
+        salt: salt.toString('base64'),
+        iv: iv.toString('base64'),
+        password: result.toString('base64')
+      };
+      resolve(data);
+    } catch (ex) {
+      reject(ex);
+    }
+  });
+};
+
 const decryptText = ({ data, password }) => {
   return new Promise(resolve => {
     try {
@@ -229,6 +247,7 @@ module.exports = {
   encryptStreamFile,
   decryptStreamFile,
   encryptText,
+  encryptTextSimple,
   decryptText,
   remove,
   sendMessage

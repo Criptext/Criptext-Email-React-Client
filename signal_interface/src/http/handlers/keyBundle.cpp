@@ -8,6 +8,11 @@ int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, char
 
   std::cout << "/keybundle Receiving Request" << std::endl;
 
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 
@@ -22,7 +27,6 @@ int createKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, char
     sendError(conn, 422, "Not a JSON Object");
     return 422;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *recipientId;
   recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
@@ -48,6 +52,11 @@ int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath, char* 
 
   std::cout << "/account Receiving Request" << std::endl;
 
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 
@@ -62,7 +71,6 @@ int createAccount(struct mg_connection *conn, void *cbdata, char *dbPath, char* 
     sendError(conn, 422, "Not a JSON Object");
     return 422;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *recipientId, *deviceId, *name;
   recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
@@ -98,11 +106,15 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, cha
 
   std::cout << "/session/create Receiving Request" << std::endl;
 
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+
   string bufferData = parseBody(conn);
   int readLength = bufferData.length();
 
   if (readLength <= 0) {
-    std::cout << "Receiving Request Fail 1" << std::endl;
     sendError(conn, 413, "Request Data Too Big");
     return 413;
   }
@@ -113,7 +125,6 @@ int processKeyBundle(struct mg_connection *conn, void *cbdata, char *dbPath, cha
     sendError(conn, 422, "Not a JSON Object");
     return 422;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *accountRecipientId, *keybundleArray;
   accountRecipientId = cJSON_GetObjectItemCaseSensitive(obj, "accountRecipientId");
@@ -178,6 +189,11 @@ int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath, char* 
 
   std::cout << "/prekey Receiving Request" << std::endl;
 
+  if (password == 0) {
+    sendError(conn, 401, "Missing Password Setup");
+    return 401;
+  }
+
   char buffer[1024];
   int dlen = mg_read(conn, buffer, sizeof(buffer) - 1);
 
@@ -192,7 +208,6 @@ int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath, char* 
     sendError(conn, 422, "Not a JSON String");
     return 422;
   }
-  std::cout << "Request -> " << cJSON_Print(obj) << std::endl;
 
   cJSON *accountId;
   cJSON *newPreKeys;
