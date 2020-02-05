@@ -4,6 +4,8 @@ const globalManager = require('../globalManager');
 const recoveryKey = require('../recoveryKey.js');
 const fileUtils = require('../utils/FileUtils');
 
+ipc.answerRenderer('check-pin', () => pinWindow.checkPin());
+
 ipc.answerRenderer('close-pin', ({ forceClose }) => {
   pinWindow.close({ forceClose });
   globalManager.pingData.set({});

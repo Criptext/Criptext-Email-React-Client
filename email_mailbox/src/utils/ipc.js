@@ -6,6 +6,10 @@ export const checkForUpdates = showDialog => {
   ipc.callMain('check-for-updates', showDialog);
 };
 
+export const checkPin = async () => {
+  return await ipc.callMain('check-pin');
+};
+
 export const closeMailboxWindow = () => {
   ipc.callMain('close-mailbox');
 };
@@ -110,6 +114,10 @@ export const throwError = error => {
 
 export const updateDockBadgeApp = value => {
   ipc.callMain('update-dock-badge', value);
+};
+
+export const validatePin = async pin => {
+  return await ipc.callMain('validate-pin', pin);
 };
 
 /* File System

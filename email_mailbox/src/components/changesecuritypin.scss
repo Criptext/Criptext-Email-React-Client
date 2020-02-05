@@ -2,7 +2,7 @@
   margin: 0 auto;
   text-align: center;
   width: 300px;
-  height: 360px;
+  height: 390px;
 
   h1{
     margin-top: 35px;
@@ -16,10 +16,17 @@
   }
 
   .pin-new-code{
-    margin: 30px auto 0;
+    margin: 20px auto 0;
     width: 180px;
 
+    &.expand{
+      .pin-code{
+        margin-top: 40px;
+      }
+    }
+
     h2{
+      margin-bottom: 0;
       text-align: left;
     }
   }
@@ -29,10 +36,15 @@
     transform: translateX(-50%);
     min-width: 80px;
     position: absolute;
+
+    &.button-a{
+      text-transform: none;
+    }
   }
 }
 
 .pin-code{
+  margin-top: 20px;
   position: relative;
 
   .styles_react-code-input-container__tpiKG{
@@ -64,7 +76,7 @@
     }
 
     .error{
-      bottom: -20px;
+      bottom: -15px;
       color: #bf2626;
       left: 0;
       font-size: 11px;
