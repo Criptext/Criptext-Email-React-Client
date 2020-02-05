@@ -3,7 +3,6 @@ import { removeFeedItem, updateFeedItem } from '../actions/index';
 import FeedItemWrapperView from '../components/FeedItemWrapper';
 import { loadContacts } from '../actions/contacts';
 import { myAccount } from './../utils/electronInterface';
-import { appDomain } from './../utils/const';
 import string from './../lang';
 
 const mapStateToProps = (state, ownProps) => {
@@ -12,9 +11,7 @@ const mapStateToProps = (state, ownProps) => {
   const contact = state.get('contacts').get(`${contactId}`);
   const name = contact ? contact.get('name') : '';
   const email = contact ? contact.get('email') : '';
-  const myEmailAddress = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${appDomain}`;
+  const myEmailAddress = myAccount.email;
   const contactName = email === myEmailAddress ? string.activity.someone : name;
   const title = contact ? `${contactName} ${action}` : '';
   const subtitle = subject;

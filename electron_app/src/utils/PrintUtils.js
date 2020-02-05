@@ -14,12 +14,9 @@ const dbManager = require('./../database');
 const fileUtils = require('./FileUtils');
 const path = require('path');
 const myAccount = require('../../src/Account');
-const { APP_DOMAIN } = require('../utils/const');
 
 const getUsername = () => {
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.email;
   return username;
 };
 

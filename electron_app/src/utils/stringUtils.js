@@ -1,7 +1,6 @@
 const moment = require('moment');
 const lang = require('./../lang');
 const myAccount = require('./../Account');
-const { APP_DOMAIN } = require('./../utils/const');
 
 const removeProtocolFromUrl = (protocol, url) => {
   return url.replace(protocol, '');
@@ -102,10 +101,7 @@ const genUUID = () => {
 };
 
 const getUsername = () => {
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
-  return username;
+  return myAccount.email;
 };
 
 module.exports = {

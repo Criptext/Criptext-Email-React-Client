@@ -3,16 +3,13 @@ const dbManager = require('../database');
 const myAccount = require('../Account');
 const mySetting = require('../Settings');
 const globalManager = require('../globalManager');
-const { APP_DOMAIN } = require('./const');
 const { dialog, BrowserWindow } = require('electron');
 const path = require('path');
 const lang = require('./../lang');
 
 const HTMLTagsRegex = /<[^>]*>?/g;
 const getUsername = () => {
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.email;
   return username;
 };
 

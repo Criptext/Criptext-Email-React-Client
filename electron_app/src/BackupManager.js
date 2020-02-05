@@ -4,7 +4,6 @@ const zlib = require('zlib');
 const { app } = require('electron');
 const myAccount = require('./Account');
 const { databasePath } = require('./database/DBEmodel');
-const { APP_DOMAIN } = require('./utils/const');
 const { backupFilenameRegex } = require('./utils/RegexUtils');
 const { createPathRecursive } = require('./utils/FileUtils');
 const {
@@ -77,9 +76,7 @@ const cleanPreviousBackupFilesInFolder = pathToClean => {
 /*  Default Directory
 ----------------------------- */
 function getUsername() {
-  return myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  return myAccount.email;
 }
 
 const getDefaultBackupFolder = () => {

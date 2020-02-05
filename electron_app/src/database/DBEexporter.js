@@ -86,9 +86,7 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
 
   let userEmail;
   if (myAccount.recipientId) {
-    userEmail = myAccount.recipientId.includes('@')
-      ? myAccount.recipientId
-      : `${myAccount.recipientId}@${APP_DOMAIN}`;
+    userEmail = myAccount.email;
   } else {
     const firstAccount = accountsData.firstAccount;
     userEmail = firstAccount.recipientId.includes('@')
@@ -577,9 +575,7 @@ const exportLabelTable = async () => {
 };
 
 const exportEmailTable = async () => {
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.email;
   let emailRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -805,9 +801,7 @@ const importDatabaseFromFile = async ({
 
         if (recipientId && domain) {
           const fileOwner = `${recipientId}@${domain}`;
-          const currentAddress = myAccount.recipientId.includes('@')
-            ? myAccount.recipientId
-            : `${myAccount.recipientId}@${APP_DOMAIN}`;
+          const currentAddress = myAccount.email;
           if (fileOwner !== currentAddress) return;
         }
         if (fileVersion) {
@@ -828,9 +822,7 @@ const importDatabaseFromFile = async ({
 
     let userEmail;
     if (myAccount.recipientId) {
-      userEmail = myAccount.recipientId.includes('@')
-        ? myAccount.recipientId
-        : `${myAccount.recipientId}@${APP_DOMAIN}`;
+      userEmail = myAccount.email;
     }
 
     const lineReader = new LineByLineReader(filepath);

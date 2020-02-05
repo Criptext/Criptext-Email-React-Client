@@ -7,7 +7,6 @@ const { isDev } = require('./windowUtils');
 const { isWindows } = require('./../utils/osUtils');
 const fileUtils = require('../utils/FileUtils');
 const filesScript = require('../filescript/handler');
-const { APP_DOMAIN } = require('../utils/const');
 const myAccount = require('../Account');
 const {
   initDatabaseEncrypted,
@@ -30,9 +29,7 @@ const iconPath = path.join(
 );
 
 const setKeyEmailBodies = async pin => {
-  const accountEmail = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const accountEmail = myAccount.email;
   const userEmailsPath = fileUtils.getUserEmailsPath(
     process.env.NODE_ENV,
     accountEmail

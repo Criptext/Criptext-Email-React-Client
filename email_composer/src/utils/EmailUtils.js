@@ -18,9 +18,7 @@ import { Status } from '../components/Control';
 import { emailRegex, HTMLTagsRegex } from './RegexUtils';
 import string from './../lang';
 
-const myEmailAddress = myAccount.recipientId.includes('@')
-  ? myAccount.recipientId
-  : `${myAccount.recipientId}@${appDomain}`;
+const myEmailAddress = myAccount.email;
 const enterpriseDomain = myAccount.recipientId.split('@')[1];
 
 const formAppSign = () => {

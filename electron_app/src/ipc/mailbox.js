@@ -46,7 +46,7 @@ ipc.answerRenderer('open-file-explorer', filename => {
 });
 
 ipc.answerRenderer('open-mailbox', ({ firstOpenApp }) => {
-  socketClient.add({ jwt: myAccount.jwt, recipientId: myAccount.recipientId });
+  socketClient.add(myAccount.getDataForSocket());
   mailboxWindow.show({ firstOpenApp });
 });
 

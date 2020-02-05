@@ -886,9 +886,7 @@ const sendNewEmailNotification = () => {
 };
 
 const updateOwnContact = async () => {
-  const ownEmail = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${appDomain}`;
+  const ownEmail = myAccount.email;
   const accountName = myAccount.name;
   if (accountName) {
     await updateContactByEmail({ email: ownEmail, name: accountName });
@@ -1062,17 +1060,13 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
 
   const isAddedToSpam = labelIdsToAdd.includes(LabelType.spam.id);
   if (isAddedToSpam) {
-    const notEmailAddress = myAccount.recipientId.includes('@')
-      ? myAccount.recipientId
-      : `${myAccount.recipientId}@${appDomain}`;
+    const notEmailAddress = myAccount.email;
     await updateContactSpamScore({ emailIds, notEmailAddress, value: 1 });
   }
 
   const isRemovedToSpam = labelIdsToRemove.includes(LabelType.spam.id);
   if (isRemovedToSpam) {
-    const notEmailAddress = myAccount.recipientId.includes('@')
-      ? myAccount.recipientId
-      : `${myAccount.recipientId}@${appDomain}`;
+    const notEmailAddress = myAccount.email;
     await updateContactSpamScore({ emailIds, notEmailAddress, value: -1 });
   }
 
@@ -1113,17 +1107,13 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
 
   const isAddedToSpam = labelIdsToAdd.includes(LabelType.spam.id);
   if (isAddedToSpam) {
-    const notEmailAddress = myAccount.recipientId.includes('@')
-      ? myAccount.recipientId
-      : `${myAccount.recipientId}@${appDomain}`;
+    const notEmailAddress = myAccount.email;
     await updateContactSpamScore({ emailIds, notEmailAddress, value: 1 });
   }
 
   const isRemovedToSpam = labelIdsToRemove.includes(LabelType.spam.id);
   if (isRemovedToSpam) {
-    const notEmailAddress = myAccount.recipientId.includes('@')
-      ? myAccount.recipientId
-      : `${myAccount.recipientId}@${appDomain}`;
+    const notEmailAddress = myAccount.email;
     await updateContactSpamScore({ emailIds, notEmailAddress, value: -1 });
   }
 

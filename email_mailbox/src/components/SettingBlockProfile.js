@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { myAccount } from '../utils/electronInterface';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
-import { appDomain } from '../utils/const';
 import { Switch } from 'react-switch-input';
 import { EDITING_MODES } from './SettingAccountWrapper';
 import { Editor } from 'react-draft-wysiwyg';
@@ -68,9 +67,7 @@ const renderBlockAvatar = props => (
 );
 
 const renderBlockEmail = () => {
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${appDomain}`;
+  const username = myAccount.email;
   return (
     <div className="cptx-section-item">
       <span className="cptx-section-item-title">{string.settings.email}</span>

@@ -1,6 +1,7 @@
 export const myAccount = {
   recipientId: 'myAccountRecipientId',
-  name: 'myAccountName'
+  name: 'myAccountName',
+  email: 'myAccountRecipientId@criptext.com'
 };
 
 export const emailKey = '1';

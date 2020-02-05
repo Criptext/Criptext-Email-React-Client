@@ -9,7 +9,6 @@ const socket = require('./socketClient');
 const filesScript = require('./filescript/handler');
 const fileUtils = require('./utils/FileUtils');
 const myAccount = require('./Account');
-const { APP_DOMAIN } = require('./utils/const');
 const recoveryKeyManager = require('./recoveryKey');
 
 let resetKeyParams;
@@ -24,9 +23,7 @@ const initialize = params => {
 };
 
 const setKeyEmailBodies = async pin => {
-  const accountEmail = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const accountEmail = myAccount.email;
   const userEmailsPath = fileUtils.getUserEmailsPath(
     process.env.NODE_ENV,
     accountEmail
@@ -42,9 +39,7 @@ const setKeyEmailBodies = async pin => {
 const start = async () => {
   const { newPin, recoveryKeyData, saveInKeyChain } = resetKeyParams;
   const oldPin = globalManager.databaseKey.get();
-  const accountEmail = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const accountEmail = myAccount.email;
   try {
     const userEmailsPath = fileUtils.getUserEmailsPath(
       process.env.NODE_ENV,

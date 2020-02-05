@@ -9,10 +9,7 @@ const rekeyHandler = require('../rekeyHandler');
 const getUsername = () => {
   if (!Object.keys(myAccount)) return '';
   if (!myAccount.recipientId) return '';
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
-  return username;
+  return myAccount.email;
 };
 
 ipc.answerRenderer(

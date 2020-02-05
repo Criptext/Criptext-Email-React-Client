@@ -130,6 +130,10 @@ export const getAccount = async () => {
   return await ipc.callMain('db-get-account');
 };
 
+export const getAccountByParams = async () => {
+  return await ipc.callMain('db-get-account-by-params');
+};
+
 export const getAllLabels = async () => {
   return await ipc.callMain('db-get-all-labels');
 };

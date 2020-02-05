@@ -64,11 +64,11 @@ const upApp = async ({ shouldSave, pin }) => {
 
   aliceManager.startAlice();
 
-  const [existingAccount] = await dbManager.getAccountByParams({
-    isActive: true
+  const loggedAccounts = await dbManager.getAccountByParams({
+    isLoggedIn: true
   });
-  if (existingAccount) {
-    await upMailboxWindow(existingAccount);
+  if (loggedAccounts.length > 0) {
+    await upMailboxWindow(loggedAccounts);
   } else {
     const language = await getUserLanguage();
     await initClient();
@@ -82,14 +82,14 @@ const upApp = async ({ shouldSave, pin }) => {
   }
 };
 
-const upMailboxWindow = async existingAccount => {
+const upMailboxWindow = async loggedAccounts => {
   const appSettings = await dbManager.getSettings();
   const settings = Object.assign(appSettings, { isFromStore });
-  myAccount.initialize(existingAccount);
+  myAccount.initialize(loggedAccounts);
   mySettings.initialize(settings);
   await initClient();
   initNucleus({ language: mySettings.language });
-  socketClient.add({ jwt: myAccount.jwt, recipientId: myAccount.recipientId });
+  socketClient.add(myAccount.getDataForSocket());
   createAppMenu();
   mailboxWindow.show({ firstOpenApp: true });
   if (pinWindow) pinWindow.close({ forceClose: true });

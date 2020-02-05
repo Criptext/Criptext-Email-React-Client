@@ -127,9 +127,7 @@ const mapDispatchToProps = dispatch => {
       }
     },
     onUpdateContact: async name => {
-      const email = myAccount.recipientId.includes('@')
-        ? myAccount.recipientId
-        : `${myAccount.recipientId}@${appDomain}`;
+      const email = myAccount.recipientId.username;
       await updateContactByEmail({ email, name });
     },
     onUpdateLabel: params => {

@@ -40,9 +40,7 @@ const mapDispatchToProps = dispatch => {
       }
     },
     onUpdateContact: async name => {
-      const email = myAccount.recipientId.includes('@')
-        ? myAccount.recipientId
-        : `${myAccount.recipientId}@${appDomain}`;
+      const email = myAccount.email;
       await updateContactByEmail({ email, name });
     },
     onUploadAvatar: async params => {

@@ -46,10 +46,10 @@ async function initApp() {
       globalManager.windowsEvents.disable()
       globalManager.needsUpgrade.enable()
 
-      const [existingAccount] = await dbManager.getAccount();
+      const existingAccounts = await dbManager.getAccount();
       const appSettings = await dbManager.getSettings();
       const settings = Object.assign(appSettings, { isFromStore });
-      myAccount.initialize(existingAccount);
+      myAccount.initialize(existingAccounts);
       mySettings.initialize(settings);
       await initClient();
       initNucleus({language: mySettings.language});

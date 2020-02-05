@@ -26,20 +26,23 @@ const disconnect = () => {
   }
 };
 
-const add = ({ jwt, recipientId }) => {
-  if (
-    accounts.some(
-      account => account.recipientId === recipientId && account.jwt === jwt
+const add = accountsData => {
+  let accountData;
+  for (accountData of accountsData) {
+    const { jwt, recipientId } = accountData;
+    if (
+      accounts.some(
+        account => account.recipientId === recipientId && account.jwt === jwt
+      )
     )
-  )
-    return;
-  accounts = accounts.filter(account => account.recipientId === recipientId);
+      continue;
+    accounts = accounts.filter(account => account.recipientId !== recipientId);
 
-  accounts.push({
-    recipientId,
-    jwt
-  });
-
+    accounts.push({
+      recipientId,
+      jwt
+    });
+  }
   restartSocket();
 };
 

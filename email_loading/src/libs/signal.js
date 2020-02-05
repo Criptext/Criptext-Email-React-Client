@@ -8,6 +8,7 @@ import {
   createContact,
   createSettings,
   getAccount,
+  getAccountByParams,
   getComputerName,
   getKeyBundle,
   postKeyBundle,
@@ -81,14 +82,15 @@ const createAccount = async ({
     throw CustomError(string.errors.updateAccountData);
   }
   await setDefaultSettings();
-  const email = `${recipientId}@${appDomain}`;
   // to do: check getAccount
-  const [newAccount] = await getAccount();
-  await createOwnContact(name, email, newAccount.id);
-  if (!newAccount) {
+  const loggedAccounts = await getAccountByParams({
+    isLoggedIn: true
+  });
+  myAccount.initialize(loggedAccounts);
+  if (!myAccount.activeAccount) {
     throw CustomError(string.errors.saveLocal);
   }
-  myAccount.initialize(newAccount);
+  await createOwnContact(name, myAccount.email, myAccount.id);
   return true;
 };
 
@@ -160,12 +162,15 @@ const createAccountWithNewDevice = async ({
     throw CustomError(string.errors.updateAccountData);
   }
   // to do: check getAccount
-  const [newAccount] = await getAccount();
-  myAccount.initialize(newAccount);
-  const email = recipientId.includes(`@`)
-    ? recipientId
-    : `${recipientId}@${appDomain}`;
-  await createOwnContact(name, email, newAccount.id);
+  const loggedAccounts = await getAccountByParams({
+    isLoggedIn: true
+  });
+  myAccount.initialize(loggedAccounts);
+  if (!myAccount.activeAccount) {
+    throw CustomError(string.errors.saveLocal);
+  }
+  const email = myAccount.email;
+  await createOwnContact(name, email, myAccount.id);
   await setDefaultSettings();
   return true;
 };
@@ -221,8 +226,10 @@ const createAccountToDB = async ({
   const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
   await createOwnContact(name, email);
   // to do: check getAccount
-  const [newAccount] = await getAccount();
-  myAccount.initialize(newAccount);
+  const loggedAccounts = await getAccountByParams({
+    isLoggedIn: true
+  });
+  myAccount.initialize(loggedAccounts);
   await setDefaultSettings();
 };
 
