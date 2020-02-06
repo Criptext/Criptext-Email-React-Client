@@ -15,7 +15,11 @@ export const getEmailToEdit = () => {
   return globalManager.emailToEdit.get(composerId);
 };
 
-export const myAccount = remote.require('./src/Account');
+const accounts = remote.require('./src/Account');
+export let myAccount = accounts.activeAccount;
+export const setMyAccount = recipientId => {
+  myAccount = accounts.find(account => account.recipientId === recipientId);
+};
 export const mySettings = remote.require('./src/Settings');
 export const LabelType = labels;
 

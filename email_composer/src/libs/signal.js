@@ -24,6 +24,7 @@ const store = new SignalProtocolStore();
 
 const getKeyBundlesOfRecipients = async domains => {
   const res = await findKeyBundles({
+    recipientId: myAccount.recipientId,
     domains
   });
   if (res.status === 451) {
@@ -246,6 +247,7 @@ const encryptPostEmail = async ({
     body: bodyWithSign
   });
   const data = noNulls({
+    recipientId: myAccount.recipientId,
     subject,
     threadId,
     criptextEmails,

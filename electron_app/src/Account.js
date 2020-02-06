@@ -77,6 +77,9 @@ class Account {
   get autoBackupPath() {
     return this.activeAccount.autoBackupPath;
   }
+  get loggedAccounts() {
+    return [this.activeAccount, ...this.inactiveAccounts];
+  }
 
   get email() {
     if (!this.activeAccount) {

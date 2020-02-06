@@ -71,7 +71,7 @@ const upApp = async ({ shouldSave, pin }) => {
     await upMailboxWindow(loggedAccounts);
   } else {
     const language = await getUserLanguage();
-    await initClient();
+    await initClient('@');
     const settings = { isFromStore, language };
     mySettings.initialize(settings);
     initNucleus({ language });
@@ -87,7 +87,7 @@ const upMailboxWindow = async loggedAccounts => {
   const settings = Object.assign(appSettings, { isFromStore });
   myAccount.initialize(loggedAccounts);
   mySettings.initialize(settings);
-  await initClient();
+  await initClient(myAccount.recipientId);
   initNucleus({ language: mySettings.language });
   socketClient.add(myAccount.getDataForSocket());
   createAppMenu();

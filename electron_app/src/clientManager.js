@@ -16,14 +16,20 @@ const { Readable } = require('stream');
 const nativeImage = require('electron').nativeImage;
 const mySettings = require('./Settings');
 let client = undefined;
+const clientsMap = new Map();
 
-const initClient = async () => {
-  if (!client) await checkClient({});
-  return;
+const initClient = async recipientId => {
+  client = await createClient({ recipientId });
 };
 
-const initializeClient = ({ token, refreshToken, language, os }) => {
-  const clientOptions = {
+const initializeClient = ({
+  recipientId,
+  token,
+  refreshToken,
+  language,
+  os
+}) => {
+  client = new ClientAPI({
     os,
     token,
     language,
@@ -33,11 +39,9 @@ const initializeClient = ({ token, refreshToken, language, os }) => {
     timeout: 60 * 1000,
     version: API_CLIENT_VERSION,
     errorCallback: handleClientError
-  };
-  client = new ClientAPI(clientOptions);
-  client.token = token;
-  client.refreshToken = refreshToken;
-  client.language = language;
+  });
+  clientsMap[recipientId] = client;
+  return client;
 };
 
 const handleClientError = err => {
@@ -49,34 +53,33 @@ const handleClientError = err => {
   }
 };
 
-const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
-  client = {};
+const createClient = async ({ recipientId, optionalToken }) => {
+  client = clientsMap[recipientId];
+  if (client) return client;
   const language = mySettings.language;
   const osAndArch = await getOsAndArch();
   const osInfo = Object.values(osAndArch)
     .filter(val => !!val)
     .join(' ');
-  if (optionalSessionToken || optionalRefreshToken) {
+  if (optionalToken) {
     return initializeClient({
-      token: optionalSessionToken,
-      refreshToken: optionalRefreshToken,
+      recipientId,
+      token: optionalToken,
       language,
       os: osInfo
     });
   }
-  const [account] = await dbManager.getAccountByParams({ isActive: true });
+  const [account] = await dbManager.getAccountByParams({ recipientId });
   const [token, refreshToken] = account
     ? [account.jwt, account.refreshToken]
     : [undefined, undefined];
-
-  if (
-    !client.login ||
-    client.token !== token ||
-    client.refreshToken !== refreshToken ||
-    client.language !== language
-  ) {
-    return initializeClient({ token, refreshToken, language, os: osInfo });
-  }
+  return initializeClient({
+    recipientId,
+    token,
+    refreshToken,
+    language,
+    os: osInfo
+  });
 };
 
 const checkExpiredSession = async (
@@ -102,9 +105,12 @@ const checkExpiredSession = async (
     }
     case EXPIRED_SESSION_STATUS: {
       let newSessionToken, newRefreshToken, newSessionStatus;
-      const [
-        { recipientId, refreshToken }
-      ] = await dbManager.getAccountByParams({ isActive: true });
+      const { recipientId: accountRecipientId } = requestparams;
+      const [{ recipientId, refreshToken }] = accountRecipientId
+        ? await dbManager.getAccountByParams({
+            recipientId: accountRecipientId
+          })
+        : await dbManager.getAccountByParams({ isActive: true });
       if (!refreshToken) {
         const { status, body } = await upgradeToRefreshToken();
         newSessionStatus = status;
@@ -147,9 +153,6 @@ const checkExpiredSession = async (
     }
   }
 };
-
-// Auto-init client
-// checkClient({});
 
 const acknowledgeEvents = async eventIds => {
   const res = await client.acknowledgeEvents(eventIds);
@@ -202,6 +205,8 @@ const findDevices = async params => {
 };
 
 const findKeyBundles = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.findKeyBundles(params);
   return res.status === 200
     ? res
@@ -225,31 +230,6 @@ const getEmailBody = async bodyKey => {
     ? { status: res.status, body: res.body }
     : checkExpiredSession(res, getEmailBody, bodyKey);
 };
-
-const getEvents = async () => {
-  const PENDING_EVENTS_STATUS_OK = 200;
-  const PENDING_EVENTS_STATUS_MORE = 201;
-  const NO_EVENTS_STATUS = 204;
-  await checkClient({});
-  const res = await client.getPendingEvents();
-  switch (res.status) {
-    case PENDING_EVENTS_STATUS_OK:
-      return { events: formEvents(res.body) };
-    case PENDING_EVENTS_STATUS_MORE:
-      return { events: formEvents(res.body), hasMoreEvents: true };
-    case NO_EVENTS_STATUS:
-      return { events: [] };
-    default:
-      return await checkExpiredSession(res, getEvents, null);
-  }
-};
-
-const formEvents = events =>
-  events.map(event => ({
-    cmd: event.cmd,
-    params: JSON.parse(event.params),
-    rowid: event.rowid
-  }));
 
 const getKeyBundle = async deviceId => {
   const res = await client.getKeyBundle(deviceId);
@@ -307,12 +287,14 @@ const linkAccept = async randomId => {
 };
 
 const linkAuth = async ({ newDeviceData, jwt }) => {
-  await checkClient({ optionalSessionToken: jwt });
+  const { recipientId } = newDeviceData;
+  const client = await createClient({ recipientId, optionalToken: jwt });
   return await client.linkAuth(newDeviceData);
 };
 
 const linkCancel = async ({ newDeviceData, jwt }) => {
-  await checkClient({ optionalSessionToken: jwt });
+  const { recipientId } = newDeviceData;
+  const client = await createClient({ recipientId, optionalToken: jwt });
   return await client.linkCancel(newDeviceData);
 };
 
@@ -362,6 +344,8 @@ const postDataReady = async params => {
 };
 
 const postEmail = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.postEmail(params);
   return res.status === 200
     ? res
@@ -448,7 +432,8 @@ const resetPassword = async params => {
 };
 
 const sendRecoveryCode = async ({ newDeviceData, jwt }) => {
-  await checkClient({ optionalSessionToken: jwt });
+  const { recipientId } = newDeviceData;
+  const client = await createClient({ recipientId, optionalToken: jwt });
   const res = await client.generateCodeTwoFactorAuth(newDeviceData);
   return res;
 };
@@ -574,7 +559,8 @@ const unsendEmail = async params => {
 };
 
 const validateRecoveryCode = async ({ newDeviceData, jwt }) => {
-  await checkClient({ optionalSessionToken: jwt });
+  const { recipientId } = newDeviceData;
+  const client = await createClient({ recipientId, optionalToken: jwt });
   const res = await client.validateCodeTwoFactorAuth(newDeviceData);
   return res;
 };
@@ -593,7 +579,6 @@ module.exports = {
   generateEvent,
   getDataReady,
   getEmailBody,
-  getEvents,
   getKeyBundle,
   getUserSettings,
   initClient,

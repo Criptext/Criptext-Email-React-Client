@@ -51,7 +51,7 @@ async function initApp() {
       const settings = Object.assign(appSettings, { isFromStore });
       myAccount.initialize(existingAccounts);
       mySettings.initialize(settings);
-      await initClient();
+      await initClient(myAccount.recipientId);
       initNucleus({language: mySettings.language});
       socketClient.start(myAccount);
       createAppMenu();
@@ -75,7 +75,7 @@ async function initApp() {
         initNucleus({language});
         const settings = { isFromStore, language };
         mySettings.initialize(settings);
-        await initClient();
+        await initClient('@');
         createAppMenu();
         loginWindow.show({});
       } catch (ex) {
