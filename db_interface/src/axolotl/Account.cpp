@@ -40,7 +40,7 @@ int CriptextDB::createAccount(database db, char* recipientId, char* name, int de
         hasRow = true;
     };
     if (hasRow) {
-      db << "update account set name = ?, deviceId = ?, privKey = ?, pubKey = ?, registrationId = ? where recipientId == ?;"
+      db << "update account set name = ?, deviceId = ?, privKey = ?, pubKey = ?, registrationId = ?, isLoggedIn = false, isActive = false where recipientId == ?;"
         << name
         << deviceId
         << privKey
@@ -48,7 +48,7 @@ int CriptextDB::createAccount(database db, char* recipientId, char* name, int de
         << registrationId
         << recipientId;
     } else {
-      db << "insert into account (recipientId, name, deviceId, jwt, refreshToken, privKey, pubKey, registrationId) values (?,?,?,?,?,?,?,?);"
+      db << "insert into account (recipientId, name, deviceId, jwt, refreshToken, privKey, pubKey, registrationId, isLoggedIn, isActive) values (?,?,?,?,?,?,?,?,?,?);"
         << recipientId
         << name
         << deviceId
@@ -56,7 +56,9 @@ int CriptextDB::createAccount(database db, char* recipientId, char* name, int de
         << ""
         << privKey
         << pubKey
-        << registrationId;
+        << registrationId
+        << false
+        << false;
     }
     db << "commit;";
   } catch (exception& e) {

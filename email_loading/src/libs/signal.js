@@ -76,7 +76,9 @@ const createAccount = async ({
     updateAccount({
       recipientId,
       refreshToken,
-      jwt: token
+      jwt: token,
+      isLoggedIn: true,
+      isActive: true
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
@@ -87,7 +89,7 @@ const createAccount = async ({
     isLoggedIn: true
   });
   myAccount.initialize(loggedAccounts);
-  if (!myAccount.activeAccount) {
+  if (!myAccount.id) {
     throw CustomError(string.errors.saveLocal);
   }
   await createOwnContact(name, myAccount.email, myAccount.id);
@@ -156,7 +158,9 @@ const createAccountWithNewDevice = async ({
     await updateAccount({
       jwt: token,
       refreshToken,
-      recipientId
+      recipientId,
+      isLoggedIn: true,
+      isActive: true
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
@@ -166,7 +170,7 @@ const createAccountWithNewDevice = async ({
     isLoggedIn: true
   });
   myAccount.initialize(loggedAccounts);
-  if (!myAccount.activeAccount) {
+  if (!myAccount.id) {
     throw CustomError(string.errors.saveLocal);
   }
   const email = myAccount.email;
@@ -210,26 +214,25 @@ const createAccountToDB = async ({
   jwt,
   refreshToken,
   deviceId,
-  recipientId,
-  isRecipientApp
+  recipientId
 }) => {
   try {
     await updateAccount({
       jwt,
       refreshToken,
       deviceId,
-      recipientId
+      recipientId,
+      isLoggedIn: true,
+      isActive: true
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
-  const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
-  await createOwnContact(name, email);
-  // to do: check getAccount
   const loggedAccounts = await getAccountByParams({
     isLoggedIn: true
   });
   myAccount.initialize(loggedAccounts);
+  await createOwnContact(name, myAccount.email);
   await setDefaultSettings();
 };
 

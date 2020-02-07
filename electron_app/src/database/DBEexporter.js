@@ -7,6 +7,7 @@ const globalManager = require('../globalManager');
 const moment = require('moment');
 const {
   Account,
+  AccountContact,
   Contact,
   Email,
   EmailContact,
@@ -773,7 +774,7 @@ const importDatabaseFromFile = async ({
   isStrict,
   withoutBodiesEncryption
 }) => {
-  let accounts = [];
+  let contactEmails = [];
   let contacts = [];
   let labels = [];
   let emails = [];
@@ -820,9 +821,11 @@ const importDatabaseFromFile = async ({
       await Feeditem().destroy({ where: {}, transaction: trx });
     }
 
+    let accountId;
     let userEmail;
     if (myAccount.recipientId) {
       userEmail = myAccount.email;
+      accountId = myAccount.id;
     }
 
     const lineReader = new LineByLineReader(filepath);
@@ -835,26 +838,37 @@ const importDatabaseFromFile = async ({
           }
           switch (table) {
             case Table.ACCOUNT: {
+              const account = await Account()
+                .create(object, { transaction: trx })
+                .then(account => account.toJSON());
               if (!userEmail) {
                 userEmail = object.recipientId.includes('@')
                   ? object.recipientId
                   : `${object.recipientId}@${APP_DOMAIN}`;
               }
-              accounts = [...accounts, object];
+              if (!accountId) {
+                accountId = account.id;
+              }
               break;
             }
             case Table.CONTACT: {
+              contactEmails.push(object.email);
               contacts.push(object);
               if (contacts.length === CONTACTS_BATCH) {
                 lineReader.pause();
                 await Contact().bulkCreate(contacts, { transaction: trx });
+                await insertAccountContacts(contactEmails, accountId, trx);
                 contacts = [];
+                contactEmails = [];
                 lineReader.resume();
               }
               break;
             }
             case Table.LABEL: {
-              labels.push(object);
+              labels.push({
+                ...object,
+                accountId
+              });
               if (labels.length === LABELS_BATCH) {
                 lineReader.pause();
                 await Label().bulkCreate(labels, { transaction: trx });
@@ -866,7 +880,8 @@ const importDatabaseFromFile = async ({
             case Table.EMAIL: {
               const emailToStore = {
                 ...object,
-                date: parseDate(object.date)
+                date: parseDate(object.date),
+                accountId
               };
               emails.push(emailToStore);
               if (emails.length === EMAILS_BATCH) {
@@ -932,7 +947,10 @@ const importDatabaseFromFile = async ({
               break;
             }
             case Table.FEEDITEM: {
-              feeditems.push(object);
+              feeditems.push({
+                ...object,
+                accountId
+              });
               if (feeditems.length === FEEDITEM_BATCH) {
                 lineReader.pause();
                 try {
@@ -956,7 +974,10 @@ const importDatabaseFromFile = async ({
               break;
             }
             case Table.IDENTITYKEYRECORD: {
-              identities.push(object);
+              identities.push({
+                ...object,
+                accountId
+              });
               if (identities.length === IDENTITYKEYRECORD_BATCH) {
                 lineReader.pause();
                 await Identitykeyrecord().bulkCreate(identities, {
@@ -968,7 +989,10 @@ const importDatabaseFromFile = async ({
               break;
             }
             case Table.PENDINGEVENT: {
-              pendingevents.push(object);
+              pendingevents.push({
+                ...object,
+                accountId
+              });
               if (pendingevents.length === PENDINGEVENT_BATCH) {
                 lineReader.pause();
                 await Pendingevent().bulkCreate(pendingevents, {
@@ -980,7 +1004,10 @@ const importDatabaseFromFile = async ({
               break;
             }
             case Table.PREKEYRECORD: {
-              prekeyrecords.push(object);
+              prekeyrecords.push({
+                ...object,
+                accountId
+              });
               if (prekeyrecords.length === PREKEYRECORD_BATCH) {
                 lineReader.pause();
                 await Prekeyrecord().bulkCreate(prekeyrecords, {
@@ -992,7 +1019,10 @@ const importDatabaseFromFile = async ({
               break;
             }
             case Table.SESSIONRECORD: {
-              sessionrecords.push(object);
+              sessionrecords.push({
+                ...object,
+                accountId
+              });
               if (sessionrecords.length === SESSIONRECORD_BATCH) {
                 lineReader.pause();
                 await Sessionrecord().bulkCreate(sessionrecords, {
@@ -1008,7 +1038,10 @@ const importDatabaseFromFile = async ({
               break;
             }
             case Table.SIGNEDPREKEYRECORD: {
-              signedprekeyrecords.push(object);
+              signedprekeyrecords.push({
+                ...object,
+                accountId
+              });
               if (signedprekeyrecords.length === SIGNEDPREKEYRECORD_BATCH) {
                 lineReader.pause();
                 await Signedprekeyrecord().bulkCreate(signedprekeyrecords, {
@@ -1027,8 +1060,8 @@ const importDatabaseFromFile = async ({
         .on('end', async () => {
           try {
             if (!isStrict) globalManager.progressDBE.set({ current: 4 });
-            await insertRemainingRows(accounts, Account(), trx);
             await insertRemainingRows(contacts, Contact(), trx);
+            await insertAccountContacts(contactEmails, accountId, trx);
             await insertRemainingRows(labels, Label(), trx);
             await storeEmailBodies(emails, userEmail, withoutBodiesEncryption);
             await insertRemainingRows(emails, Email(), trx);
@@ -1061,6 +1094,21 @@ const importDatabaseFromFile = async ({
         });
     });
   });
+};
+
+const insertAccountContacts = async (contactEmails, accountId, trx) => {
+  const contactsForAccount = await Contact().findAll({
+    attributes: ['id'],
+    where: {
+      email: contactEmails
+    },
+    raw: true,
+    transaction: trx
+  });
+  const accountContacts = contactsForAccount.map(contact => {
+    return { contactId: contact.id, accountId };
+  });
+  await AccountContact().bulkCreate(accountContacts, { transaction: trx });
 };
 
 const insertRemainingRows = async (rows, Table, trx) => {

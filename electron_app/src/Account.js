@@ -91,6 +91,8 @@ class Account {
   }
 
   update(accountObj) {
+    if (!this.activeAccount) return;
+
     const account =
       this.activeAccount.recipientId === accountObj.recipientId ||
       this.activeAccount.id === accountObj.id

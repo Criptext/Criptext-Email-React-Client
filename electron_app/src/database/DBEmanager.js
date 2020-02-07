@@ -92,7 +92,9 @@ const updateAccount = ({
   registrationId,
   signature,
   signatureEnabled,
-  signFooter
+  signFooter,
+  isLoggedIn,
+  isActive
 }) => {
   const params = noNulls({
     id,
@@ -106,7 +108,9 @@ const updateAccount = ({
     signature,
     signatureEnabled:
       typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined,
-    signFooter: typeof signFooter === 'boolean' ? signFooter : undefined
+    signFooter: typeof signFooter === 'boolean' ? signFooter : undefined,
+    isLoggedIn,
+    isActive
   });
 
   myAccount.update(params);
@@ -1380,7 +1384,9 @@ const cleanDataLogout = async recipientId => {
   const params = {
     deviceId: '',
     jwt: '',
-    refreshToken: ''
+    refreshToken: '',
+    isLoggedIn: false,
+    isActive: false
   };
 
   return await getDB().transaction(async trx => {
@@ -1514,6 +1520,7 @@ const InitDatabaseEncrypted = async ({
 
 module.exports = {
   Account,
+  AccountContact,
   Contact,
   Email,
   EmailContact,

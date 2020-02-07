@@ -147,7 +147,8 @@
       "usernameInvalid": "Usuario no valido",
       "usernameNotExits": "Usuario no existe",
       "statusUnknown": "Error desconocido. Código: ",
-      "usernameNotAvailable": "Usuario no disponible"
+      "usernameNotAvailable": "Usuario no disponible",
+      "userAlreadyLoggedIn": "El usuario ya ha iniciado sesión!"
     },
     "usePassword": {
       "title": "Advertencia",
