@@ -66,7 +66,7 @@ export const updateFeedItems = ({ ids, seen }) => {
   return async dispatch => {
     try {
       await updateFeedItemsDB({ ids, seen });
-      const badge = await getFeedItemsCounterBySeen(false);
+      const badge = await getFeedItemsCounterBySeen({ seen: false });
       dispatch(updateFeedItemsSuccess({ ids, seen, badge }));
     } catch (e) {
       // TO DO

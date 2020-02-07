@@ -339,8 +339,8 @@ export const getAccount = async () => {
   return await ipc.callMain('db-get-account');
 };
 
-export const getAllFeedItems = async () => {
-  return await ipc.callMain('db-get-all-feed-items');
+export const getAllFeedItems = async params => {
+  return await ipc.callMain('db-get-all-feed-items', params);
 };
 
 export const getDataReady = async () => {
@@ -407,8 +407,8 @@ export const getFilesByTokens = async tokens => {
   return await ipc.callMain('db-get-files-by-tokens', tokens);
 };
 
-export const getFeedItemsCounterBySeen = async seen => {
-  return await ipc.callMain('db-get-feeditems-counter-by-seen', seen);
+export const getFeedItemsCounterBySeen = async params => {
+  return await ipc.callMain('db-get-feeditems-counter-by-seen', params);
 };
 
 export const getIdentityKeyRecord = async params => {

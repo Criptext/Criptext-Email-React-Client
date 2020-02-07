@@ -8,8 +8,8 @@ import { defineTimeByToday } from './TimeUtils';
 import string from './../lang';
 
 export const defineFeedItems = async () => {
-  const allFeeds = await getAllFeedItems();
-  const badge = await getFeedItemsCounterBySeen(false);
+  const allFeeds = await getAllFeedItems({});
+  const badge = await getFeedItemsCounterBySeen({ seen: false });
   const feeds = await Promise.all(
     allFeeds.map(async feed => {
       const [emailData] = await getEmailsByArrayParam({

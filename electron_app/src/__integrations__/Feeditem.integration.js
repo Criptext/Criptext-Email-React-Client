@@ -1,6 +1,17 @@
 /* eslint-env node, jest */
 const DBManager = require('../database');
 
+let accountId;
+
+const account = {
+  recipientId: 'user',
+  deviceId: 1,
+  name: 'User One',
+  registrationId: 2,
+  privKey: 'aaa',
+  pubKey: 'bbb'
+};
+
 const email = {
   email: {
     threadId: 'threadC',
@@ -49,8 +60,12 @@ const feeditem2 = {
   contactId: 2
 };
 
-const insertEmail = async () => {
-  await DBManager.createEmail(email);
+const insertAccount = async () => {
+  return await DBManager.createAccount(account);
+};
+
+const insertEmail = async accountId => {
+  await DBManager.createEmail({ ...email, accountId });
 };
 
 beforeAll(async () => {
@@ -59,28 +74,36 @@ beforeAll(async () => {
     key: '1111',
     shouldAddSystemLabels: true
   });
-  await insertEmail();
+  const [account] = await insertAccount();
+  accountId = account.id;
+  await insertEmail(accountId);
 });
 
 describe('Store data fedditem to Feeditem Table:', () => {
   it('Should insert feeditem', async () => {
-    const feeditemCreated = await DBManager.createFeedItem(feeditem);
+    const feeditemCreated = await DBManager.createFeedItem({
+      ...feeditem,
+      accountId
+    });
     expect(feeditemCreated).toMatchSnapshot();
   });
 });
 
 describe('Load data feeditem from Feeditem Table:', () => {
   it('Should load all feeditems', async () => {
-    await DBManager.createFeedItem(feeditem2);
-    const feeditems = await DBManager.getAllFeedItems();
+    await DBManager.createFeedItem({ ...feeditem2, accountId });
+    const feeditems = await DBManager.getAllFeedItems({ accountId });
     expect(feeditems.length).toBe(2);
-    expect(feeditems[0]).toMatchSnapshot();
+    expect(feeditems[1]).toMatchSnapshot();
   });
 
   it('Should load feeditem counter by seen', async () => {
-    const badge = await DBManager.getFeedItemsCounterBySeen();
+    const badge = await DBManager.getFeedItemsCounterBySeen({ accountId });
     expect(badge).toBe(2);
-    const badge_ = await DBManager.getFeedItemsCounterBySeen(true);
+    const badge_ = await DBManager.getFeedItemsCounterBySeen({
+      seen: true,
+      accountId
+    });
     expect(badge_).toBe(0);
   });
 });

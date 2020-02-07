@@ -17,9 +17,10 @@ ipc.answerRenderer('db-create-email-label', params => {
   return dbManager.createEmailLabel(data);
 });
 
-ipc.answerRenderer('db-create-feed-item', params =>
-  dbManager.createFeedItem(params)
-);
+ipc.answerRenderer('db-create-feed-item', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.createFeedItem(data);
+});
 
 ipc.answerRenderer('db-create-identity-key-record', params =>
   dbManager.createIdentityKeyRecord(params)
@@ -74,7 +75,10 @@ ipc.answerRenderer('db-get-account-by-params', params =>
 
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
 
-ipc.answerRenderer('db-get-all-feed-items', () => dbManager.getAllFeedItems());
+ipc.answerRenderer('db-get-all-feed-items', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getAllFeedItems(data);
+});
 
 ipc.answerRenderer('db-get-all-labels', () => dbManager.getAllLabels());
 
@@ -134,9 +138,10 @@ ipc.answerRenderer('db-get-emails-unread-by-labelid', params => {
   return dbManager.getEmailsUnredByLabelId(data);
 });
 
-ipc.answerRenderer('db-get-feeditems-counter-by-seen', seen =>
-  dbManager.getFeedItemsCounterBySeen(seen)
-);
+ipc.answerRenderer('db-get-feeditems-counter-by-seen', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getFeedItemsCounterBySeen(data);
+});
 
 ipc.answerRenderer('db-get-files-by-emailid', emailId =>
   dbManager.getFilesByEmailId(emailId)

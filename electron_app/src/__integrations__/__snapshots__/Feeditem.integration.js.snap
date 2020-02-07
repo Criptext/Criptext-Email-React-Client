@@ -2,11 +2,12 @@
 
 exports[`Load data feeditem from Feeditem Table: Should load all feeditems 1`] = `
 Object {
-  "contactId": 1,
+  "accountId": 1,
+  "contactId": 2,
   "date": "2018-06-14 08:23:19",
   "emailId": 1,
   "fileId": null,
-  "id": 1,
+  "id": 2,
   "seen": false,
   "type": 7,
 }
@@ -14,6 +15,7 @@ Object {
 
 exports[`Store data fedditem to Feeditem Table: Should insert feeditem 1`] = `
 Object {
+  "accountId": 1,
   "contactId": 1,
   "date": "2018-06-14 08:23:19",
   "emailId": 1,
