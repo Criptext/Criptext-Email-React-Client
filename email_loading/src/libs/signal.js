@@ -249,7 +249,7 @@ const createOwnContact = async (name, email) => {
   const [prevOwnContact] = await getContactByEmails([email]);
   if (!prevOwnContact) {
     try {
-      await createContact([{ name, email }]);
+      await createContact({ contacts: [{ name, email }] });
     } catch (createContactDbError) {
       throw CustomError(string.errors.saveOwnContact);
     }

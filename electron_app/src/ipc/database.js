@@ -8,9 +8,10 @@ ipc.answerRenderer('db-clean-data-logout', recipientId =>
   dbManager.cleanDataLogout(recipientId)
 );
 
-ipc.answerRenderer('db-create-contact', params =>
-  dbManager.createContact(params)
-);
+ipc.answerRenderer('db-create-contact', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.createContact(data);
+});
 
 ipc.answerRenderer('db-create-email-label', params => {
   const data = params.accountId ? params : { ...params, accountId };
@@ -73,7 +74,10 @@ ipc.answerRenderer('db-get-account-by-params', params =>
   dbManager.getAccountByParams(params)
 );
 
-ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
+ipc.answerRenderer('db-get-all-contacts', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getAllContacts(data);
+});
 
 ipc.answerRenderer('db-get-all-feed-items', params => {
   const data = params.accountId ? params : { ...params, accountId };

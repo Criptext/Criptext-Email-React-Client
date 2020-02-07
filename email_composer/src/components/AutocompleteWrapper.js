@@ -21,7 +21,7 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
   const loadSuggestions = async () => {
     if (!people && !isConsulting) {
       isConsulting = true;
-      people = await getAllContacts();
+      people = await getAllContacts({});
       isConsulting = !people;
     }
   };

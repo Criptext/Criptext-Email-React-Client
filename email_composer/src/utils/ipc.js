@@ -94,8 +94,8 @@ export const deleteSessionRecord = async params => {
   return await ipc.callMain('db-delete-session-record', params);
 };
 
-export const getAllContacts = async () => {
-  return await ipc.callMain('db-get-all-contacts');
+export const getAllContacts = async params => {
+  return await ipc.callMain('db-get-all-contacts', params);
 };
 
 export const getContactsByEmailId = async emailId => {

@@ -135,7 +135,7 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
   Contact.init(
     {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-      email: Sequelize.STRING,
+      email: { type: Sequelize.STRING, unique: true },
       name: Sequelize.STRING,
       isTrusted: { type: Sequelize.BOOLEAN, defaultValue: false },
       score: { type: Sequelize.INTEGER, defaultValue: 0 },

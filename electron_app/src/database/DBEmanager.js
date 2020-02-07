@@ -118,14 +118,16 @@ const updateAccount = ({
 
 /* Contact
 ----------------------------- */
-const createContact = (params, accountId, prevTrx) => {
+const createContact = ({ contacts, accountId }, prevTrx) => {
   return createOrUseTrx(prevTrx, async trx => {
-    const contacts = await Contact().bulkCreate(params, { transaction: trx });
-    const accountContacts = contacts.reduce((result, contact) => {
+    const contactsCreated = await Contact().bulkCreate(contacts, {
+      transaction: trx
+    });
+    const accountContacts = contactsCreated.reduce((result, contact) => {
       return [...result, { contactId: contact.id, accountId }];
     }, []);
     await AccountContact().bulkCreate(accountContacts, { transaction: trx });
-    return contacts;
+    return contactsCreated;
   });
 };
 
@@ -174,22 +176,20 @@ const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
     },
     { newContacts: [], contactAddressesToSearch: [] }
   );
-
   if (newContacts.length) {
     const accountsExist = await Contact().findAll({
       where: { email: contactAddressesToSearch },
       transaction: trx
     });
-
     if (accountsExist.length) {
       const accountContacts = accountsExist.reduce((result, contact) => {
         return [...result, { contactId: contact.id, accountId }];
       }, []);
       await AccountContact().bulkCreate(accountContacts, { transaction: trx });
+      return await createContactsIfOrNotStore({ accountId, contacts }, trx);
     }
   }
-  await createContact(newContacts, accountId, trx);
-
+  await createContact({ contacts: newContacts, accountId }, trx);
   if (contactsToUpdate.length) {
     await Promise.all(
       contactsToUpdate.map(contact => updateContactByEmail(contact, trx))
@@ -198,12 +198,20 @@ const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
   return emailAddresses;
 };
 
-const getAllContacts = () => {
-  return Contact().findAll({
-    attributes: ['name', 'email'],
-    order: [['score', 'DESC'], ['name']],
-    raw: true
-  });
+const getAllContacts = ({ accountId }) => {
+  return Contact()
+    .findAll({
+      attributes: ['name', 'email'],
+      include: [
+        {
+          model: AccountContact(),
+          attributes: [],
+          where: { accountId }
+        }
+      ],
+      order: [['score', 'DESC'], ['name']]
+    })
+    .map(account => account.toJSON());
 };
 
 const getContactByEmails = ({ accountId, emails }, trx) => {
