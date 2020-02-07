@@ -51,6 +51,7 @@ Array [
 
 exports[`Load data emails from Email Table: should load email by key 1`] = `
 Object {
+  "accountId": 1,
   "boundary": null,
   "content": "<p>Hello there</p>",
   "date": "2013-10-07 08:23:19",
@@ -72,6 +73,7 @@ Object {
 
 exports[`Load data emails from Email Table: should load emails by array params 1`] = `
 Object {
+  "accountId": 1,
   "boundary": null,
   "content": "<p>Hello there</p>",
   "date": "2013-10-07 08:23:19",
@@ -93,6 +95,7 @@ Object {
 
 exports[`Load data emails from Email Table: should load emails by ids 1`] = `
 Object {
+  "accountId": 1,
   "bcc": "6",
   "boundary": null,
   "cc": "5",
@@ -150,6 +153,7 @@ Object {
       "labelId": 3,
     },
   ],
+  "accountId": 1,
   "boundary": null,
   "content": "<p>Hello there</p>",
   "date": "2013-10-07 08:23:19",
@@ -171,6 +175,7 @@ Object {
 
 exports[`Load data thread from Email Table: should load drafts, not save [to] recepient and save the others[cc, bcc] 1`] = `
 Object {
+  "accountId": 1,
   "bcc": null,
   "boundary": null,
   "cc": null,
@@ -199,6 +204,7 @@ Object {
 exports[`Load data thread from Email Table: should load threads from DB with the correct shape: inbox 1`] = `
 Array [
   Object {
+    "accountId": 1,
     "allLabels": "3,1",
     "boundary": null,
     "content": "<p>RE: Hello there</p>",
@@ -232,6 +238,7 @@ Array [
 exports[`Load data thread from Email Table: should load threads from DB with the correct shape: sent 1`] = `
 Array [
   Object {
+    "accountId": 1,
     "allLabels": "3,1",
     "boundary": null,
     "content": "<p>RE: Hello there</p>",
@@ -260,6 +267,7 @@ Array [
     "unsentDate": "2018-06-14 08:23:20.000 +00:00",
   },
   Object {
+    "accountId": 1,
     "allLabels": "3",
     "boundary": null,
     "content": "<p>Hello there</p>",
@@ -322,6 +330,7 @@ Object {
 
 exports[`Store data email to Email Table: should insert email to database 1`] = `
 Object {
+  "accountId": 1,
   "content": "<p>Hello there</p>",
   "date": "2018-06-14 08:23:19",
   "fromAddress": "From Contact <from@criptext.com>",
@@ -341,6 +350,7 @@ Object {
 
 exports[`Store data email to Email Table: should insert email with threadId and File exist to database 1`] = `
 Object {
+  "accountId": 1,
   "content": "<p>Hello there</p>",
   "date": "2018-06-14 08:23:19",
   "fromAddress": "From Contact <usera@criptext.com>",

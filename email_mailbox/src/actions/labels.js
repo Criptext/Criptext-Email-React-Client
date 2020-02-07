@@ -149,7 +149,7 @@ export const updateBadgeLabels = labelIds => {
               badge: badgeSpam
             };
           } else if (labelId === LabelType.draft.id) {
-            const badgeDraft = await getEmailsCounterByLabelId(labelId);
+            const badgeDraft = await getEmailsCounterByLabelId({ labelId });
             return {
               id: String(labelId),
               badge: badgeDraft

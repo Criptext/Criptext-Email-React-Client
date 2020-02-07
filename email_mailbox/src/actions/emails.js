@@ -93,7 +93,7 @@ export const loadEmails = ({ threadId, emailIds }) => {
 export const removeEmails = (labelId, emailsParams) => {
   return async dispatch => {
     try {
-      const allMetadataKeys = emailsParams.map(param => param.key);
+      const keys = emailsParams.map(param => param.key);
       const allEmailIds = emailsParams.map(param => param.id);
       const metadataKeys = emailsParams.reduce((result, item) => {
         if (!eventlessEmailStatuses.includes(item.status)) {
@@ -102,7 +102,7 @@ export const removeEmails = (labelId, emailsParams) => {
         return result;
       }, []);
 
-      const dbResponse = await deleteEmailByKeys(allMetadataKeys);
+      const dbResponse = await deleteEmailByKeys({ keys });
 
       if (dbResponse) {
         if (metadataKeys.length) {
@@ -113,7 +113,7 @@ export const removeEmails = (labelId, emailsParams) => {
           const { status } = await postPeerEvent(eventParams);
 
           if (status === 200) {
-            if (allMetadataKeys.length === 1) {
+            if (keys.length === 1) {
               const [email] = emailsParams;
               dispatch(
                 updateEmailIdsThread({
@@ -242,7 +242,7 @@ export const updateEmailLabels = ({
             labels: addedLabelsIds
           });
 
-          await createEmailLabel(emailLabelsToAdd);
+          await createEmailLabel({ emailLabels: emailLabelsToAdd });
         }
         if (labelsRemoved.length) {
           const removedLabels = await getLabelsByText(labelsRemoved);
@@ -299,8 +299,8 @@ export const updateEmailLabels = ({
 
 export const _loadEmails = async ({ threadId, emailIds }) => {
   const response = threadId
-    ? await getEmailsByThreadId(threadId)
-    : await getEmailsByIds(emailIds);
+    ? await getEmailsByThreadId({ threadId })
+    : await getEmailsByIds({ emailIds });
   return response.reduce(
     (result, element) => {
       element.fromContactIds = element.fromContactIds

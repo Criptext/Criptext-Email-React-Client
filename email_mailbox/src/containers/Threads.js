@@ -185,7 +185,7 @@ const mapDispatchToProps = dispatch => {
     },
     onEmptyTrash: async () => {
       const labelId = LabelType.trash.id;
-      const emails = await getEmailsByLabelIds([labelId]);
+      const emails = await getEmailsByLabelIds({ labelIds: [labelId] });
       const threadsParams = emails.map(email => ({
         threadIdDB: email.threadId
       }));

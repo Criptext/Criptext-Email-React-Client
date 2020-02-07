@@ -1,5 +1,6 @@
 const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const dbManager = require('./../database');
+const accountId = 1;
 
 ipc.answerRenderer('db-migrate-alice', () => dbManager.cleanForAlice());
 
@@ -11,9 +12,10 @@ ipc.answerRenderer('db-create-contact', params =>
   dbManager.createContact(params)
 );
 
-ipc.answerRenderer('db-create-email-label', params =>
-  dbManager.createEmailLabel(params)
-);
+ipc.answerRenderer('db-create-email-label', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.createEmailLabel(data);
+});
 
 ipc.answerRenderer('db-create-feed-item', params =>
   dbManager.createFeedItem(params)
@@ -43,9 +45,10 @@ ipc.answerRenderer('db-create-signed-prekey-record', params =>
 
 ipc.answerRenderer('db-create-tables', () => dbManager.createTables());
 
-ipc.answerRenderer('db-delete-email-label', params =>
-  dbManager.deleteEmailLabel(params)
-);
+ipc.answerRenderer('db-delete-email-label', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.deleteEmailLabel(data);
+});
 
 ipc.answerRenderer('db-delete-feed-item-by-id', feedItemId =>
   dbManager.deleteFeedItemById(feedItemId)
@@ -87,41 +90,49 @@ ipc.answerRenderer('db-get-contact-by-ids', ids =>
   dbManager.getContactByIds(ids)
 );
 
-ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));
+ipc.answerRenderer('db-get-email-by-key', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getEmailByKey(data);
+});
 
-ipc.answerRenderer('db-get-email-by-params', params =>
-  dbManager.getEmailByParams(params)
-);
+ipc.answerRenderer('db-get-email-by-params', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getEmailByParams(data);
+});
 
-ipc.answerRenderer('db-get-emails-by-array-param', params =>
-  dbManager.getEmailsByArrayParam(params)
-);
+ipc.answerRenderer('db-get-emails-by-array-param', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getEmailsByArrayParam(data);
+});
 
-ipc.answerRenderer('db-get-emails-by-labelids', labelIds =>
-  dbManager.getEmailsByLabelIds(labelIds)
-);
+ipc.answerRenderer('db-get-emails-by-labelids', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getEmailsByLabelIds(data);
+});
 
-ipc.answerRenderer(
-  'db-get-emails-by-threadid-and-labelid',
-  ({ threadIds, labelId }) =>
-    dbManager.getEmailsByThreadIdAndLabelId(threadIds, labelId)
-);
+ipc.answerRenderer('db-get-emails-by-threadid-and-labelid', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getEmailsByThreadIdAndLabelId(data);
+});
 
-ipc.answerRenderer('db-get-emails-counter-by-labelid', labelId =>
-  dbManager.getEmailsCounterByLabelId(labelId)
-);
+ipc.answerRenderer('db-get-emails-counter-by-labelid', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getEmailsCounterByLabelId(data);
+});
 
-ipc.answerRenderer('db-get-emails-group-by-thread-by-params', params =>
-  dbManager.getEmailsGroupByThreadByParams(params)
-);
+ipc.answerRenderer('db-get-emails-group-by-thread-by-params', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getEmailsGroupByThreadByParams(data);
+});
 
 ipc.answerRenderer('db-get-email-labels-by-emailid', emailId =>
   dbManager.getEmailLabelsByEmailId(emailId)
 );
 
-ipc.answerRenderer('db-get-emails-unread-by-labelid', params =>
-  dbManager.getEmailsUnredByLabelId(params)
-);
+ipc.answerRenderer('db-get-emails-unread-by-labelid', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getEmailsUnredByLabelId(data);
+});
 
 ipc.answerRenderer('db-get-feeditems-counter-by-seen', seen =>
   dbManager.getFeedItemsCounterBySeen(seen)
@@ -166,7 +177,7 @@ ipc.answerRenderer('db-get-signed-prekey', params =>
 );
 
 ipc.answerRenderer('db-get-trash-expired-emails', () =>
-  dbManager.getTrashExpiredEmails()
+  dbManager.getTrashExpiredEmails(accountId)
 );
 
 ipc.answerRenderer('db-update-account', params =>
@@ -181,11 +192,15 @@ ipc.answerRenderer('db-update-contact-spam-acore', params =>
   dbManager.updateContactSpamScore(params)
 );
 
-ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
+ipc.answerRenderer('db-update-email', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.updateEmail(data);
+});
 
-ipc.answerRenderer('db-update-emails', params =>
-  dbManager.updateEmails(params)
-);
+ipc.answerRenderer('db-update-emails', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.updateEmails(data);
+});
 
 ipc.answerRenderer('db-update-feed-items', params =>
   dbManager.updateFeedItems(params)
@@ -205,8 +220,7 @@ ipc.answerRenderer('db-update-settings', params =>
   dbManager.updateSettings(params)
 );
 
-ipc.answerRenderer(
-  'db-update-unread-email-by-threadids',
-  ({ threadIds, unread }) =>
-    dbManager.updateUnreadEmailByThreadIds({ threadIds, unread })
-);
+ipc.answerRenderer('db-update-unread-email-by-threadids', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.updateUnreadEmailByThreadIds(data);
+});

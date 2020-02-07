@@ -1,5 +1,6 @@
 const {
   Account,
+  AccountContact,
   Contact,
   Email,
   EmailContact,
@@ -117,40 +118,78 @@ const updateAccount = ({
 
 /* Contact
 ----------------------------- */
-const createContact = params => {
-  return Contact().bulkCreate(params);
+const createContact = (params, accountId, prevTrx) => {
+  return createOrUseTrx(prevTrx, async trx => {
+    const contacts = await Contact().bulkCreate(params, { transaction: trx });
+    const accountContacts = contacts.reduce((result, contact) => {
+      return [...result, { contactId: contact.id, accountId }];
+    }, []);
+    await AccountContact().bulkCreate(accountContacts, { transaction: trx });
+    return contacts;
+  });
 };
 
-const createContactsIfOrNotStore = async (contacts, trx) => {
+const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
   const parsedContacts = filterUniqueContacts(formContactsRow(contacts));
   const contactsMap = parsedContacts.reduce((contactsObj, contact) => {
     contactsObj[contact.email] = contact;
     return contactsObj;
   }, {});
   const emailAddresses = Object.keys(contactsMap);
-  const contactsFound = await Contact().findAll({
+  const contactsWithContactIdFound = await Contact().findAll({
+    include: [
+      {
+        model: AccountContact(),
+        where: { accountId }
+      }
+    ],
     where: { email: emailAddresses },
     transaction: trx
   });
-  const contactsToUpdate = contactsFound.reduce((toUpdateArray, contact) => {
-    const email = contact.email;
-    const newName = contactsMap[email].name || contact.name;
-    if (newName !== contact.name) {
-      toUpdateArray.push({ email, name: newName });
-    }
-    return toUpdateArray;
-  }, []);
-
-  const storedEmailAddresses = contactsFound.map(
-    storedContact => storedContact.email
+  const {
+    contactsToUpdate,
+    storedEmailAddresses
+  } = contactsWithContactIdFound.reduce(
+    (result, contact) => {
+      const email = contact.email;
+      const newName = contactsMap[email].name || contact.name;
+      const contactsToUpdate = [...result.contactsToUpdate];
+      const storedEmailAddresses = [...result.storedEmailAddresses, email];
+      if (newName !== contact.name)
+        contactsToUpdate.push({ email, name: newName });
+      return { contactsToUpdate, storedEmailAddresses };
+    },
+    { contactsToUpdate: [], storedEmailAddresses: [] }
   );
-  const newContacts = parsedContacts.filter(
-    contact => !storedEmailAddresses.includes(contact.email)
+
+  const { newContacts, contactAddressesToSearch } = parsedContacts.reduce(
+    (result, contact) => {
+      const contactAddressesToSearch = [...result.contactAddressesToSearch];
+      const newContacts = [...result.newContacts];
+      if (!storedEmailAddresses.includes(contact.email)) {
+        contactAddressesToSearch.push(contact.email);
+        newContacts.push(contact);
+      }
+      return { newContacts, contactAddressesToSearch };
+    },
+    { newContacts: [], contactAddressesToSearch: [] }
   );
 
   if (newContacts.length) {
-    await Contact().bulkCreate(newContacts, { transaction: trx });
+    const accountsExist = await Contact().findAll({
+      where: { email: contactAddressesToSearch },
+      transaction: trx
+    });
+
+    if (accountsExist.length) {
+      const accountContacts = accountsExist.reduce((result, contact) => {
+        return [...result, { contactId: contact.id, accountId }];
+      }, []);
+      await AccountContact().bulkCreate(accountContacts, { transaction: trx });
+    }
   }
+  await createContact(newContacts, accountId, trx);
+
   if (contactsToUpdate.length) {
     await Promise.all(
       contactsToUpdate.map(contact => updateContactByEmail(contact, trx))
@@ -167,9 +206,15 @@ const getAllContacts = () => {
   });
 };
 
-const getContactByEmails = (emails, trx) => {
+const getContactByEmails = ({ accountId, emails }, trx) => {
   return Contact().findAll({
     attributes: ['id', 'email', 'score', 'spamScore'],
+    include: [
+      {
+        model: AccountContact(),
+        where: { accountId }
+      }
+    ],
     where: { email: emails },
     raw: true,
     transaction: trx
@@ -231,13 +276,13 @@ const updateContactSpamScore = ({ emailIds, notEmailAddress, value }) => {
 /* Email
 ----------------------------- */
 const createEmail = (params, prevTrx) => {
-  const { recipients, email } = params;
+  const { recipients, email, accountId } = params;
   if (!recipients) {
     const emailData = Array.isArray(email)
       ? email.map(clearAndFormatDateEmails)
       : clearAndFormatDateEmails(email);
     return Email()
-      .create(emailData, { transaction: prevTrx })
+      .create({ ...emailData, accountId }, { transaction: prevTrx })
       .then(email => email.toJSON());
   }
   const recipientsFrom = recipients.from || [];
@@ -252,9 +297,15 @@ const createEmail = (params, prevTrx) => {
     ...recipientsBcc
   ];
   return createOrUseTrx(prevTrx, async trx => {
-    const emailAddresses = await createContactsIfOrNotStore(emails, trx);
-    const contactStored = await getContactByEmails(emailAddresses, trx);
-    const emailCreated = await createEmail({ email }, trx);
+    const emailAddresses = await createContactsIfOrNotStore(
+      { contacts: emails, accountId },
+      trx
+    );
+    const contactStored = await getContactByEmails(
+      { emails: emailAddresses, accountId },
+      trx
+    );
+    const emailCreated = await createEmail({ email, accountId }, trx);
     const emailId = emailCreated.id;
     const from = formEmailContact({
       emailId,
@@ -287,8 +338,8 @@ const createEmail = (params, prevTrx) => {
       emailId,
       labels: params.labels
     });
-    const emailLabelRow = [...emailLabel];
-    await createEmailLabel(emailLabelRow, trx);
+    const emailLabels = [...emailLabel];
+    await createEmailLabel({ accountId, emailLabels }, trx);
     if (params.labels.includes(systemLabels.sent.id)) {
       await updateContactScore(emailId, trx);
     }
@@ -300,20 +351,20 @@ const createEmail = (params, prevTrx) => {
   });
 };
 
-const getKeys = (keys, trx) => {
+const getKeys = (keys, accountId, trx) => {
   return Email()
     .findAll({
       attributes: ['id'],
-      where: { key: keys },
+      where: { key: keys, accountId },
       raw: true,
       transaction: trx
     })
     .then(list => list);
 };
 
-const deleteEmailByKeys = async keys => {
+const deleteEmailByKeys = async ({ accountId, keys }) => {
   return await getDB().transaction(async trx => {
-    const ids = await getKeys(keys, trx).map(el1 => el1.id);
+    const ids = await getKeys(keys, accountId, trx).map(el1 => el1.id);
     return Feeditem()
       .destroy({ where: { emailId: ids }, transaction: trx })
       .then(() => {
@@ -349,13 +400,18 @@ const deleteEmailsByIds = (ids, trx) => {
   });
 };
 
-const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
+const deleteEmailsByThreadIdAndLabelId = ({
+  accountId,
+  threadIds,
+  labelId
+}) => {
   const labelIdsToDelete = labelId
     ? labelId
     : `${systemLabels.spam.id}, ${systemLabels.trash.id}`;
   return Email().destroy({
     where: {
       threadId: parseSpecialCharacters(threadIds),
+      accountId,
       [Op.and]: [
         getDB().literal(
           `exists (select * from EmailLabel where Email.id = EmailLabel.emailId AND EmailLabel.labelId IN (${labelIdsToDelete}))`
@@ -365,9 +421,9 @@ const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
   });
 };
 
-const getEmailByKey = key => {
+const getEmailByKey = ({ accountId, key }) => {
   return Email()
-    .findAll({ where: { key } })
+    .findAll({ where: { key, accountId } })
     .map(email => email.toJSON());
 };
 
@@ -380,18 +436,18 @@ const getEmailByParams = params => {
     .map(email => email.toJSON());
 };
 
-const getEmailsByArrayParam = params => {
-  const key = Object.keys(params)[0];
-  const value = params[key];
+const getEmailsByArrayParam = ({ accountId, array }) => {
+  const key = Object.keys(array)[0];
+  const value = array[key];
   const param = key.slice(0, -1);
 
   return Email()
-    .findAll({ where: { [param]: value } })
+    .findAll({ where: { [param]: value, accountId } })
     .map(email => email.toJSON());
 };
 
-const getEmailsByIds = ids => {
-  const idsString = formStringSeparatedByOperator(ids);
+const getEmailsByIds = ({ accountId, emailIds }) => {
+  const idsString = formStringSeparatedByOperator(emailIds);
   const query = `SELECT ${Table.EMAIL}.*,
   GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'from' THEN ${
     Table.EMAIL_CONTACT
@@ -415,7 +471,9 @@ const getEmailsByIds = ids => {
   LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL_LABEL}.emailId = ${
     Table.EMAIL
   }.id
-  WHERE ${Table.EMAIL}.id IN (${idsString})
+  WHERE ${Table.EMAIL}.id IN (${idsString}) AND ${
+    Table.EMAIL
+  }.accountId = ${accountId}
   GROUP BY ${Table.EMAIL}.id
   `;
   return getDB().query(query, {
@@ -423,18 +481,19 @@ const getEmailsByIds = ids => {
   });
 };
 
-const getEmailsByLabelIds = labelIds => {
+const getEmailsByLabelIds = ({ accountId, labelIds }) => {
   return Email().findAll({
     include: [
       {
         model: EmailLabel(),
         where: { labelId: labelIds }
       }
-    ]
+    ],
+    where: { accountId }
   });
 };
 
-const getEmailsByThreadId = threadId => {
+const getEmailsByThreadId = ({ accountId, threadId }) => {
   const query = `SELECT ${Table.EMAIL}.*,
   GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'from' THEN ${
     Table.EMAIL_CONTACT
@@ -458,7 +517,7 @@ const getEmailsByThreadId = threadId => {
   LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL_LABEL}.emailId = ${
     Table.EMAIL
   }.id
-  WHERE threadId = '${threadId}'
+  WHERE threadId = '${threadId}' AND accountId = ${accountId}
   GROUP BY ${Table.EMAIL}.id
   `;
   return getDB()
@@ -476,7 +535,7 @@ const getEmailsByThreadId = threadId => {
     });
 };
 
-const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
+const getEmailsByThreadIdAndLabelId = ({ accountId, threadIds, labelId }) => {
   const sequelize = getDB();
   return Email()
     .findAll({
@@ -492,16 +551,17 @@ const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
           where: { labelId }
         }
       ],
-      where: { threadId: threadIds },
+      where: { threadId: threadIds, accountId },
       group: ['threadId']
     })
     .map(email => email.toJSON());
 };
 
-const getEmailsCounterByLabelId = labelId => {
+const getEmailsCounterByLabelId = ({ accountId, labelId }) => {
   return Email().count({
     distinct: 'id',
-    include: [{ model: EmailLabel(), where: { labelId } }]
+    include: [{ model: EmailLabel(), where: { labelId } }],
+    where: { accountId }
   });
 };
 
@@ -510,6 +570,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
     return getEmailsGroupByThreadByParamsToSearch(params);
   const sequelize = getDB();
   const {
+    accountId,
     contactTypes = ['from'],
     date,
     labelId,
@@ -585,6 +646,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   }.id = ${Table.EMAIL_LABEL}.emailId
       ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
       WHERE ${Table.EMAIL}.date < '${date || 'date("now")'}'
+      AND ${Table.EMAIL}.accountId = ${accountId}
       ${textQuery}
       ${subject ? `AND subject LIKE "%${subject}%"` : ''}
       ${unread !== undefined ? `AND unread = ${unread}` : ''}
@@ -657,6 +719,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
 
 const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   const {
+    accountId,
     contactFilter,
     contactTypes = ['from'],
     date,
@@ -771,6 +834,7 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   }.id
       ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
       WHERE ${Table.EMAIL}.date < '${date || 'date("now")'}'
+      AND ${Table.EMAIL}.accountId = ${accountId}
       ${textQuery}
       ${subject ? `AND subject LIKE "%${subject}%"` : ''}
       ${unread !== undefined ? `AND unread = ${unread}` : ''}
@@ -788,7 +852,11 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   return sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
 };
 
-const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
+const getEmailsToDeleteByThreadIdAndLabelId = ({
+  accountId,
+  threadIds,
+  labelId
+}) => {
   const sequelize = getDB();
   const labelIdsToDelete = labelId
     ? [labelId]
@@ -806,7 +874,7 @@ const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
           where: { labelId: labelIdsToDelete }
         }
       ],
-      where: { threadId: threadIds },
+      where: { threadId: threadIds, accountId },
       group: ['threadId']
     })
     .then(rows => {
@@ -817,9 +885,12 @@ const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
     });
 };
 
-const getEmailsUnredByLabelId = async params => {
+const getEmailsUnredByLabelId = async ({
+  labelId,
+  rejectedLabelIds,
+  accountId
+}) => {
   const sequelize = getDB();
-  const { labelId, rejectedLabelIds } = params;
   const excludedLabels = [systemLabels.trash.id, systemLabels.spam.id];
   const isRejectedLabel = excludedLabels.includes(labelId);
 
@@ -844,6 +915,7 @@ const getEmailsUnredByLabelId = async params => {
     Table.EMAIL_LABEL
   }.emailId
      WHERE unread = 1
+     AND accountId = ${accountId}
      GROUP BY uniqueId
      ${havingClause}
   )`;
@@ -855,7 +927,7 @@ const getEmailsUnredByLabelId = async params => {
   return result[0].totalUnread;
 };
 
-const getTrashExpiredEmails = () => {
+const getTrashExpiredEmails = accountId => {
   const labelId = systemLabels.trash.id;
   const daysAgo = 30;
 
@@ -874,12 +946,14 @@ const getTrashExpiredEmails = () => {
         [Op.lte]: moment()
           .subtract(daysAgo, 'days')
           .toDate()
-      }
+      },
+      accountId
     }
   });
 };
 
 const updateEmail = ({
+  accountId,
   id,
   key,
   threadId,
@@ -903,10 +977,10 @@ const updateEmail = ({
     messageId
   });
   const whereParam = id ? { id } : { key };
-  return Email().update(params, { where: whereParam });
+  return Email().update(params, { where: whereParam, accountId });
 };
 
-const updateEmails = ({ ids, keys, unread, trashDate }, trx) => {
+const updateEmails = ({ accountId, ids, keys, unread, trashDate }, trx) => {
   const params = noNulls({
     unread: typeof unread === 'boolean' ? unread : undefined,
     trashDate
@@ -916,16 +990,16 @@ const updateEmails = ({ ids, keys, unread, trashDate }, trx) => {
     : { whereParamName: 'key', whereParamValue: keys };
 
   return Email().update(params, {
-    where: { [whereParamName]: whereParamValue },
+    where: { [whereParamName]: whereParamValue, accountId },
     transaction: trx
   });
 };
 
-const updateUnreadEmailByThreadIds = ({ threadIds, unread }) => {
+const updateUnreadEmailByThreadIds = ({ accountId, threadIds, unread }) => {
   const params = {};
   if (typeof unread === 'boolean') params.unread = unread;
   return Email().update(params, {
-    where: { threadId: parseSpecialCharacters(threadIds) }
+    where: { threadId: parseSpecialCharacters(threadIds), accountId }
   });
 };
 
@@ -1048,17 +1122,22 @@ const updateLabel = ({ id, color, text, visible }) => {
 
 /* EmailLabel
 ----------------------------- */
-const createEmailLabel = (emailLabels, prevTrx) => {
+const createEmailLabel = ({ accountId, emailLabels }, prevTrx) => {
   return createOrUseTrx(prevTrx, async trx => {
     const toInserts = await filterEmailLabelIfNotStore(emailLabels, trx);
     if (toInserts.length) {
-      await filterEmailLabelTrashToUpdateEmail(toInserts, 'create', trx);
+      await filterEmailLabelTrashToUpdateEmail(
+        accountId,
+        toInserts,
+        'create',
+        trx
+      );
       return await EmailLabel().bulkCreate(toInserts, { transaction: trx });
     }
   });
 };
 
-const deleteEmailLabel = ({ emailIds, labelIds }, prevTrx) => {
+const deleteEmailLabel = ({ accountId, emailIds, labelIds }, prevTrx) => {
   const emailLabels = emailIds.map(item => {
     return {
       emailId: item,
@@ -1066,7 +1145,12 @@ const deleteEmailLabel = ({ emailIds, labelIds }, prevTrx) => {
     };
   });
   return createOrUseTrx(prevTrx, async trx => {
-    await filterEmailLabelTrashToUpdateEmail(emailLabels, 'delete', trx);
+    await filterEmailLabelTrashToUpdateEmail(
+      accountId,
+      emailLabels,
+      'delete',
+      trx
+    );
     return await EmailLabel().destroy({
       where: { labelId: labelIds, emailId: emailIds },
       transaction: trx
@@ -1074,13 +1158,20 @@ const deleteEmailLabel = ({ emailIds, labelIds }, prevTrx) => {
   });
 };
 
-const deleteEmailAndRelations = async (id, optionalEmailToSave) => {
+const deleteEmailAndRelations = async ({
+  accountId,
+  id,
+  optionalEmailToSave
+}) => {
   return await getDB().transaction(async trx => {
     await deleteEmailsByIds([id], trx);
     await deleteEmailContactByEmailId(id, trx);
     await deleteEmailLabelsByEmailId(id, trx);
     if (optionalEmailToSave) {
-      const emailCreated = await createEmail(optionalEmailToSave, trx);
+      const emailCreated = await createEmail(
+        { ...optionalEmailToSave, accountId },
+        trx
+      );
       return emailCreated.id;
     }
   });
@@ -1329,13 +1420,18 @@ const createOrUseTrx = (oldTrx, callback) => {
   return getDB().transaction(newTrx => callback(newTrx));
 };
 
-const filterEmailLabelTrashToUpdateEmail = async (emailLabels, action, trx) => {
+const filterEmailLabelTrashToUpdateEmail = async (
+  accountId,
+  emailLabels,
+  action,
+  trx
+) => {
   const ids = emailLabels
     .filter(emailLabel => emailLabel.labelId === systemLabels.trash.id)
     .map(item => item.emailId);
   if (ids.length) {
     const trashDate = action === 'create' ? getDB().fn('NOW') : '';
-    await updateEmails({ ids, trashDate }, trx);
+    await updateEmails({ accountId, ids, trashDate }, trx);
   }
 };
 

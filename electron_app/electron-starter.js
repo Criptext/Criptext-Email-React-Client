@@ -18,7 +18,7 @@ const {
   isFromStore,
   getSystemLanguage
 } = require('./src/windows/windowUtils');
-const {initNucleus} = require('./src/nucleusManager');
+const { initNucleus } = require('./src/nucleusManager');
 require('./src/ipc/composer.js');
 require('./src/ipc/pin.js');
 require('./src/ipc/loading.js');

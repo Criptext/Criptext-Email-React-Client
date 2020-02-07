@@ -2,6 +2,18 @@
 const DBManager = require('../database');
 const systemLabels = require('./../systemLabels');
 
+let accountId;
+let emailIdToDelete;
+
+const account = {
+  recipientId: 'user',
+  deviceId: 1,
+  name: 'User One',
+  registrationId: 2,
+  privKey: 'aaa',
+  pubKey: 'bbb'
+};
+
 const emailDraft = {
   email: {
     threadId: 'threadA',
@@ -329,16 +341,20 @@ const emailNewTrash = {
   labels: [3, 7]
 };
 
-const insertEmails = async () => {
-  await DBManager.createEmail(emailDraft);
-  await DBManager.createEmail(emailSent);
-  await DBManager.createEmail(emailInbox);
-  await DBManager.createEmail(emailReply);
-  await DBManager.createEmail(emailTrash);
-  await DBManager.createEmail(emailSpam);
-  await DBManager.createEmail(emailStarred);
-  await DBManager.createEmail(emailUpdate);
-  await DBManager.createEmail(emailToSearch);
+const insertAccount = async () => {
+  return await DBManager.createAccount(account);
+};
+
+const insertEmails = async accountId => {
+  await DBManager.createEmail({ ...emailDraft, accountId });
+  await DBManager.createEmail({ ...emailSent, accountId });
+  await DBManager.createEmail({ ...emailInbox, accountId });
+  await DBManager.createEmail({ ...emailReply, accountId });
+  await DBManager.createEmail({ ...emailTrash, accountId });
+  await DBManager.createEmail({ ...emailSpam, accountId });
+  await DBManager.createEmail({ ...emailStarred, accountId });
+  await DBManager.createEmail({ ...emailUpdate, accountId });
+  await DBManager.createEmail({ ...emailToSearch, accountId });
 };
 
 beforeAll(async () => {
@@ -347,10 +363,10 @@ beforeAll(async () => {
     key: '1111',
     shouldAddSystemLabels: true
   });
-  await insertEmails();
+  const [account] = await insertAccount();
+  accountId = account.id;
+  await insertEmails(accountId);
 });
-
-let emailIdToDelete;
 
 describe('Store data email to Email Table:', () => {
   it('should insert email to database', async () => {
@@ -368,7 +384,8 @@ describe('Store data email to Email Table:', () => {
         unsentDate: '2018-06-14 08:23:20.000',
         messageId: 'messageId',
         fromAddress: 'From Contact <from@criptext.com>'
-      }
+      },
+      accountId
     });
     expect(email).toMatchSnapshot();
   });
@@ -404,7 +421,8 @@ describe('Store data email to Email Table:', () => {
           date: '2018-06-14T23:45:57.466Z',
           mimeType: 'image/png'
         }
-      ]
+      ],
+      accountId
     });
     emailIdToDelete = email.id;
     expect(email).toMatchSnapshot();
@@ -415,16 +433,25 @@ describe('Store data email to Email Table:', () => {
 
 describe('Store relation data to EmailLabel Table: ', () => {
   it('Should insert emailLabel relation to database: (starred and trash)', async () => {
-    const [email] = await DBManager.getEmailByKey(emailUpdate.email.key);
-    const emailLabelToInsert = [
+    const [email] = await DBManager.getEmailByKey({
+      key: emailUpdate.email.key,
+      accountId
+    });
+    const emailLabels = [
       { emailId: email.id, labelId: systemLabels.starred.id },
       { emailId: email.id, labelId: systemLabels.trash.id }
     ];
-    const response = await DBManager.createEmailLabel(emailLabelToInsert);
+    const response = await DBManager.createEmailLabel({
+      emailLabels,
+      accountId
+    });
     expect(response.length).toBe(2);
     expect(response[0]).toMatchObject({ emailId: 8, id: 13, labelId: 5 });
     expect(response[1]).toMatchObject({ emailId: 8, id: 14, labelId: 7 });
-    const result = await DBManager.getEmailByKey(emailUpdate.email.key);
+    const result = await DBManager.getEmailByKey({
+      key: emailUpdate.email.key,
+      accountId
+    });
     expect(result.length).toBe(1);
     const emailUpdated = result[0];
     expect(email.trashDate).toBeNull();
@@ -432,26 +459,39 @@ describe('Store relation data to EmailLabel Table: ', () => {
   });
 
   it('Should not insert emailLabel relation to database', async () => {
-    const [email] = await DBManager.getEmailByKey(emailDraft.email.key);
+    const [email] = await DBManager.getEmailByKey({
+      key: emailDraft.email.key,
+      accountId
+    });
     const emailLabelDraft = [
       { emailId: email.id, labelId: systemLabels.draft.id }
     ];
-    const response = await DBManager.createEmailLabel(emailLabelDraft);
+    const response = await DBManager.createEmailLabel({
+      emailLabels: emailLabelDraft,
+      accountId
+    });
     expect(response).toBeUndefined();
   });
 
   it('Should Add and Remove emailLabel relation to database: (starred)', async () => {
-    await DBManager.createEmail(emailUpdateLabels);
-    const [email] = await DBManager.getEmailByKey(emailUpdateLabels.email.key);
+    await DBManager.createEmail({ ...emailUpdateLabels, accountId });
+    const [email] = await DBManager.getEmailByKey({
+      key: emailUpdateLabels.email.key,
+      accountId
+    });
     // Add
-    const emailLabelToAdd = [
+    const emailLabels = [
       { emailId: email.id, labelId: systemLabels.starred.id }
     ];
-    const addResponse = await DBManager.createEmailLabel(emailLabelToAdd);
+    const addResponse = await DBManager.createEmailLabel({
+      emailLabels,
+      accountId
+    });
     expect(addResponse.length).toBe(1);
     expect(addResponse[0]).toMatchObject({ emailId: 12, id: 17, labelId: 5 });
     // Remove
     const result = await DBManager.deleteEmailLabel({
+      accountId,
       emailIds: [email.id],
       labelIds: [systemLabels.starred.id]
     });
@@ -476,10 +516,16 @@ describe('Store relation data to EmailLabel Table: ', () => {
       color: '1301a1',
       text: 'Task'
     });
-    const [email] = await DBManager.getEmailByKey(emailUpdateLabels.email.key);
+    const [email] = await DBManager.getEmailByKey({
+      key: emailUpdateLabels.email.key,
+      accountId
+    });
     // Add relation emailLabel
-    const emailLabelToAdd = [{ emailId: email.id, labelId: label.id }];
-    const addResponse = await DBManager.createEmailLabel(emailLabelToAdd);
+    const emailLabels = [{ emailId: email.id, labelId: label.id }];
+    const addResponse = await DBManager.createEmailLabel({
+      emailLabels,
+      accountId
+    });
     expect(addResponse.length).toBe(1);
     expect(addResponse[0]).toMatchObject({ emailId: 12, id: 18, labelId: 8 });
     // Delete label
@@ -505,7 +551,7 @@ describe('Store relation data to EmailLabel Table: ', () => {
 describe('Load data emails from Email Table:', () => {
   it('should load emails from DB with label id: Sent', async () => {
     const labelIds = [3];
-    const emails = await DBManager.getEmailsByLabelIds(labelIds);
+    const emails = await DBManager.getEmailsByLabelIds({ accountId, labelIds });
     expect(emails.length).toBe(5);
     expect(emails[0].key).toBe(emailSent.email.key);
     expect(emails[1].key).toBe(emailReply.email.key);
@@ -516,28 +562,35 @@ describe('Load data emails from Email Table:', () => {
   });
 
   it('should load emails by threadId and labelId', async () => {
-    const emails = await DBManager.getEmailsByThreadIdAndLabelId(
-      [emailSent.email.threadId],
-      systemLabels.inbox.id
-    );
+    const emails = await DBManager.getEmailsByThreadIdAndLabelId({
+      accountId,
+      threadIds: [emailSent.email.threadId],
+      labelId: systemLabels.inbox.id
+    });
     expect(emails.length).toBe(1);
     expect(emails[0]).toMatchSnapshot();
   });
 
   it('should load email by key', async () => {
-    const emails = await DBManager.getEmailByKey(emailSent.email.key);
+    const emails = await DBManager.getEmailByKey({
+      key: emailSent.email.key,
+      accountId
+    });
     expect(emails.length).toBe(1);
     expect(emails[0]).toMatchSnapshot();
   });
 
   it('should load emails by array params', async () => {
-    const emails = await DBManager.getEmailsByArrayParam({ ids: [1] });
+    const emails = await DBManager.getEmailsByArrayParam({
+      array: { ids: [1] },
+      accountId
+    });
     expect(emails.length).toBe(1);
     expect(emails[0]).toMatchSnapshot();
   });
 
   it('should load emails by params', async () => {
-    const params = { messageId: 'messageIdA' };
+    const params = { messageId: 'messageIdA', accountId };
     const emails = await DBManager.getEmailByParams(params);
     expect(emails.length).toBe(1);
     expect(emails[0]).toMatchSnapshot();
@@ -545,29 +598,33 @@ describe('Load data emails from Email Table:', () => {
 
   it('should load emails by ids', async () => {
     const emailIds = [3, 4];
-    const emails = await DBManager.getEmailsByIds(emailIds);
+    const emails = await DBManager.getEmailsByIds({ emailIds, accountId });
     expect(emails.length).toBe(2);
     expect(emails[0]).toMatchSnapshot();
   });
 
   it('should load emailKeys by threadId and labelId', async () => {
     const threadIds = ['threadD', 'threadE'];
-    const emailKeys = await DBManager.getEmailsToDeleteByThreadIdAndLabelId(
+    const emailKeys = await DBManager.getEmailsToDeleteByThreadIdAndLabelId({
+      accountId,
       threadIds
-    );
+    });
     expect(emailKeys).toEqual([5, 6]);
   });
 
   it('should load emails counter by labelId', async () => {
     const labelId = 6;
-    const counter = await DBManager.getEmailsCounterByLabelId(labelId);
+    const counter = await DBManager.getEmailsCounterByLabelId({
+      labelId,
+      accountId
+    });
     expect(counter).toBe(2);
   });
 
   it('should load emails unread counter by labelId', async () => {
     const labelId = 1;
     const rejectedLabelIds = [2, 7];
-    const params = { labelId, rejectedLabelIds };
+    const params = { labelId, rejectedLabelIds, accountId };
     const counter = await DBManager.getEmailsUnredByLabelId(params);
     expect(counter).toBe(2);
   });
@@ -578,10 +635,14 @@ describe('Update data email to Email Table:', () => {
     const id = 3;
     const result = await DBManager.updateEmail({
       id,
-      unread: false
+      unread: false,
+      accountId
     });
     expect(result).toEqual(expect.arrayContaining([1]));
-    const [email] = await DBManager.getEmailsByArrayParam({ ids: [id] });
+    const [email] = await DBManager.getEmailsByArrayParam({
+      array: { ids: [id] },
+      accountId
+    });
     const unread = email.unread;
     expect(unread).toBe(false);
   });
@@ -590,10 +651,14 @@ describe('Update data email to Email Table:', () => {
     const keys = [3, 12];
     const result = await DBManager.updateEmails({
       keys,
-      unread: false
+      unread: false,
+      accountId
     });
     expect(result).toEqual(expect.arrayContaining([2]));
-    const emails = await DBManager.getEmailsByArrayParam({ keys });
+    const emails = await DBManager.getEmailsByArrayParam({
+      array: { keys },
+      accountId
+    });
     expect(emails.length).toBe(2);
     const unreadEmailA = emails[0].unread;
     const unreadEmailB = emails[1].unread;
@@ -604,6 +669,7 @@ describe('Update data email to Email Table:', () => {
   it('should not update emails: unread by keys', async () => {
     const keys = [100, 101];
     const result = await DBManager.updateEmails({
+      accountId,
       keys,
       unread: false
     });
@@ -614,24 +680,32 @@ describe('Update data email to Email Table:', () => {
     const key = 2;
     const result = await DBManager.updateEmail({
       key,
-      status: 6
+      status: 6,
+      accountId
     });
     expect(result).toEqual(expect.arrayContaining([1]));
-    const [email] = await DBManager.getEmailByKey(key);
+    const [email] = await DBManager.getEmailByKey({ key, accountId });
     const status = email.status;
     expect(status).toBe(6);
   });
 
   it('should update emails: trashDate after insert emailLabel trash', async () => {
-    const [email] = await DBManager.getEmailByKey(emailStarred.email.key);
+    const [email] = await DBManager.getEmailByKey({
+      key: emailStarred.email.key,
+      accountId
+    });
     const emailLabelTrash = [
       { emailId: email.id, labelId: systemLabels.trash.id }
     ];
-    await DBManager.createEmailLabel(emailLabelTrash);
-    const updatedEmails = await DBManager.getEmailsByThreadIdAndLabelId(
-      [emailStarred.email.threadId],
-      systemLabels.trash.id
-    );
+    await DBManager.createEmailLabel({
+      emailLabels: emailLabelTrash,
+      accountId
+    });
+    const updatedEmails = await DBManager.getEmailsByThreadIdAndLabelId({
+      threadIds: [emailStarred.email.threadId],
+      labelId: systemLabels.trash.id,
+      accountId
+    });
     const updatedEmail = updatedEmails;
     expect(updatedEmails.length).toBe(1);
     expect(typeof updatedEmail).toBe('object');
@@ -639,15 +713,22 @@ describe('Update data email to Email Table:', () => {
   });
 
   it('should not update emails: trashDate after insert emailLabel trash', async () => {
-    const [email] = await DBManager.getEmailByKey(emailSpam.email.key);
+    const [email] = await DBManager.getEmailByKey({
+      key: emailSpam.email.key,
+      accountId
+    });
     const emailLabelStarred = [
       { emailId: email.id, labelId: systemLabels.starred.id }
     ];
-    await DBManager.createEmailLabel(emailLabelStarred);
-    const updatedEmails = await DBManager.getEmailsByThreadIdAndLabelId(
-      [emailSpam.email.threadId],
-      systemLabels.starred.id
-    );
+    await DBManager.createEmailLabel({
+      emailLabels: emailLabelStarred,
+      accountId
+    });
+    const updatedEmails = await DBManager.getEmailsByThreadIdAndLabelId({
+      threadIds: [emailSpam.email.threadId],
+      labelId: systemLabels.starred.id,
+      accountId
+    });
     const updatedEmail = updatedEmails[0];
     expect(updatedEmails.length).toBe(1);
     expect(typeof updatedEmail).toBe('object');
@@ -657,17 +738,22 @@ describe('Update data email to Email Table:', () => {
   it('should update unread email by threadIds', async () => {
     const threadIds = ['threadC'];
     const unread = true;
-    const emails = await DBManager.getEmailByParams({ threadId: threadIds });
+    const emails = await DBManager.getEmailByParams({
+      threadId: threadIds,
+      accountId
+    });
     expect(emails.length).toBe(2);
     expect(emails[0].unread).toBeFalsy();
     expect(emails[1].unread).toBeTruthy();
     const result = await DBManager.updateUnreadEmailByThreadIds({
       threadIds,
-      unread
+      unread,
+      accountId
     });
     expect(result).toEqual([2]);
     const emailsUpdated = await DBManager.getEmailByParams({
-      threadId: threadIds
+      threadId: threadIds,
+      accountId
     });
     expect(emailsUpdated[0].unread).toBeTruthy();
     expect(emailsUpdated[1].unread).toBeTruthy();
@@ -676,16 +762,22 @@ describe('Update data email to Email Table:', () => {
 
 describe('Delete emails from Email Table:', () => {
   it('Should delete email from DB by key', async () => {
-    const keysToDelete = [emailSpam.email.key];
-    await DBManager.deleteEmailByKeys(keysToDelete);
-
-    const [email] = await DBManager.getEmailByKey(emailSpam.email.key);
+    const keys = [emailSpam.email.key];
+    const result = await DBManager.deleteEmailByKeys({ keys, accountId });
+    expect(result).toBe(1);
+    const [email] = await DBManager.getEmailByKey({
+      key: emailSpam.email.key,
+      accountId
+    });
     expect(email).toBeUndefined();
   });
 
   it('Should not delete email from DB by key', async () => {
     const keysToDelete = [emailSpam.email.key];
-    const result = await DBManager.deleteEmailByKeys(keysToDelete);
+    const result = await DBManager.deleteEmailByKeys({
+      keys: keysToDelete,
+      accountId
+    });
     expect(result).toBe(0);
   });
 
@@ -787,34 +879,45 @@ describe('Delete emails from Email Table:', () => {
   });
 
   it('Should delete emails from DB by threadId and labelId', async () => {
-    await DBManager.createEmail(emailReReply);
+    await DBManager.createEmail({ ...emailReReply, accountId });
     const threadIds = [emailReReply.email.threadId];
     const labelId = 7;
-    const result = await DBManager.deleteEmailsByThreadIdAndLabelId(
+    const result = await DBManager.deleteEmailsByThreadIdAndLabelId({
       threadIds,
-      labelId
-    );
+      labelId,
+      accountId
+    });
     expect(result).toBe(1);
-    const emailDeleted = await DBManager.getEmailByKey(emailReReply.email.key);
+    const emailDeleted = await DBManager.getEmailByKey({
+      key: emailReReply.email.key,
+      accountId
+    });
     expect(emailDeleted).toEqual([]);
   });
 
   it('Should delete emails from DB by only threadId', async () => {
-    await DBManager.createEmail(emailReReply);
+    await DBManager.createEmail({ ...emailReReply, accountId });
     const threadIds = [emailReReply.email.threadId];
-    const result = await DBManager.deleteEmailsByThreadIdAndLabelId(threadIds);
+    const result = await DBManager.deleteEmailsByThreadIdAndLabelId({
+      threadIds,
+      accountId
+    });
     expect(result).toBe(1);
-    const emailDeleted = await DBManager.getEmailByKey(emailReReply.email.key);
+    const emailDeleted = await DBManager.getEmailByKey({
+      key: emailReReply.email.key,
+      accountId
+    });
     expect(emailDeleted).toEqual([]);
   });
 
   it('Should delete emails expired fromDB', async () => {
-    await DBManager.createEmail(emailNewTrash);
+    await DBManager.createEmail({ ...emailNewTrash, accountId });
     await DBManager.updateEmails({
       keys: [emailTrash.email.key],
-      trashDate: emailTrash.email.trashDate
+      trashDate: emailTrash.email.trashDate,
+      accountId
     });
-    const trashExpiredEmails = await DBManager.getTrashExpiredEmails();
+    const trashExpiredEmails = await DBManager.getTrashExpiredEmails(accountId);
     const trashExpiredEmailIds = trashExpiredEmails.map(i => {
       return i.key;
     });
@@ -824,7 +927,10 @@ describe('Delete emails from Email Table:', () => {
 
 describe('Load data thread from Email Table:', () => {
   it('should load drafts, not save [to] recepient and save the others[cc, bcc]', async () => {
-    const emails = await DBManager.getEmailsByThreadId('threadA');
+    const emails = await DBManager.getEmailsByThreadId({
+      threadId: 'threadA',
+      accountId
+    });
     expect(emails.length).toBe(1);
     const email = emails[0];
     const { bcc, cc, to, labelIds } = email;
@@ -837,13 +943,15 @@ describe('Load data thread from Email Table:', () => {
   });
 
   it('should save a restored draft deleting the previous one', async () => {
-    const [oldDraftBeforeReplace] = await DBManager.getEmailByKey(
-      emailDraft.email.key
-    );
+    const [oldDraftBeforeReplace] = await DBManager.getEmailByKey({
+      key: emailDraft.email.key,
+      accountId
+    });
     expect(oldDraftBeforeReplace.key).toBe(emailDraft.email.key);
-    const [newDraftBeforeReplace] = await DBManager.getEmailByKey(
-      draftToReplaceOld.email.key
-    );
+    const [newDraftBeforeReplace] = await DBManager.getEmailByKey({
+      key: draftToReplaceOld.email.key,
+      accountId
+    });
     expect(newDraftBeforeReplace).toBeUndefined();
     const emailLabelsOldDraft = await DBManager.getEmailLabelsByEmailId(1);
     expect(emailLabelsOldDraft.length).toBe(2);
@@ -851,13 +959,15 @@ describe('Load data thread from Email Table:', () => {
     expect(emailLabelsOldDraft[1].labelId).toBe(6);
     const emailContactsOldDraft = await DBManager.getContactsByEmailId(1);
     expect(emailContactsOldDraft).toMatchSnapshot();
-    await DBManager.deleteEmailAndRelations(
-      oldDraftBeforeReplace.id,
-      draftToReplaceOld
-    );
-    const [oldDraftAfterReplace] = await DBManager.getEmailByKey(
-      emailDraft.email.key
-    );
+    await DBManager.deleteEmailAndRelations({
+      id: oldDraftBeforeReplace.id,
+      optionalEmailToSave: draftToReplaceOld,
+      accountId
+    });
+    const [oldDraftAfterReplace] = await DBManager.getEmailByKey({
+      key: emailDraft.email.key,
+      accountId
+    });
     expect(oldDraftAfterReplace).toBeUndefined();
     const emailLabelsOldDraftAfterReplace = await DBManager.getEmailLabelsByEmailId(
       1
@@ -867,14 +977,18 @@ describe('Load data thread from Email Table:', () => {
       1
     );
     expect(emailContactsOldDraftAfterReplace).toMatchSnapshot();
-    const [newDraftAfterReplace] = await DBManager.getEmailByKey(
-      draftToReplaceOld.email.key
-    );
+    const [newDraftAfterReplace] = await DBManager.getEmailByKey({
+      key: draftToReplaceOld.email.key,
+      accountId
+    });
     expect(newDraftAfterReplace.key).toBe(draftToReplaceOld.email.key);
   });
 
   it('should load sent email with recipients', async () => {
-    const emails = await DBManager.getEmailsByThreadId('threadB');
+    const emails = await DBManager.getEmailsByThreadId({
+      threadId: 'threadB',
+      accountId
+    });
     expect(emails.length).toBe(1);
     const email = emails[0];
     const { bcc, cc, to } = email;
@@ -885,7 +999,10 @@ describe('Load data thread from Email Table:', () => {
   });
 
   it('should load inboxs with files', async () => {
-    const emails = await DBManager.getEmailsByThreadId('threadC');
+    const emails = await DBManager.getEmailsByThreadId({
+      threadId: 'threadC',
+      accountId
+    });
     expect(emails.length).toBe(2);
     const email = emails[0];
     const fileTokens = email.fileTokens;
@@ -895,7 +1012,8 @@ describe('Load data thread from Email Table:', () => {
   it('should load threads from DB with the correct shape: inbox', async () => {
     const params = {
       labelId: 1,
-      rejectedLabelIds: [2, 6]
+      rejectedLabelIds: [2, 6],
+      accountId
     };
     const threads = await DBManager.getEmailsGroupByThreadByParams(params);
     expect(threads).toMatchSnapshot();
@@ -904,7 +1022,8 @@ describe('Load data thread from Email Table:', () => {
   it('should load threads from DB with the correct shape: sent', async () => {
     const params = {
       labelId: 3,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const threads = await DBManager.getEmailsGroupByThreadByParams(params);
     expect(threads).toMatchSnapshot();
@@ -914,7 +1033,8 @@ describe('Load data thread from Email Table:', () => {
     const params = {
       labelId: 1,
       rejectedLabelIds: [2, 7],
-      limit: 1
+      limit: 1,
+      accountId
     };
     const [lastThread] = await DBManager.getEmailsGroupByThreadByParams(params);
     const maxDate = lastThread.maxDate;
@@ -930,7 +1050,8 @@ describe('Load data thread from Email Table:', () => {
       rejectedLabelIds: [2, 7],
       limit: 1,
       date: maxDate,
-      threadIdRejected
+      threadIdRejected,
+      accountId
     };
     const moreLastThreads = await DBManager.getEmailsGroupByThreadByParams(
       moreParams
@@ -944,25 +1065,29 @@ describe('Load data thread from Email Table:', () => {
       plain: true,
       text: 'Find me',
       labelId: -2,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const plainParamsPreview = {
       plain: true,
       text: 'Lorem',
       labelId: -2,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const specificParamsFrom = {
       contactFilter: { from: 'Alice' },
       contactTypes: ['from'],
       labelId: -2,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const specificParamsTo = {
       contactFilter: { to: 'bob' },
       contactTypes: ['to'],
       labelId: -2,
-      rejectedLabelIds: [2, 7]
+      rejectedLabelIds: [2, 7],
+      accountId
     };
     const [plainSubjectFound] = await DBManager.getEmailsGroupByThreadByParams(
       plainParamsSubject
@@ -986,22 +1111,28 @@ describe('Load data thread from Email Table:', () => {
 
 describe('Update data contact to Contact Table: ', () => {
   it('Should update contact score to 1 after inserting email', async () => {
-    const contacts = await DBManager.getContactByEmails([
-      ...emailScore.recipients.to,
-      emailScore.recipients.cc,
-      emailScore.recipients.bcc
-    ]);
+    const contacts = await DBManager.getContactByEmails({
+      emails: [
+        ...emailScore.recipients.to,
+        emailScore.recipients.cc,
+        emailScore.recipients.bcc
+      ],
+      accountId
+    });
     expect(contacts.length).toBe(2);
     expect(contacts[0].email).toBe(emailScore.recipients.cc[0]);
     expect(contacts[0].score).toBe(6);
     expect(contacts[1].email).toBe(emailScore.recipients.bcc[0]);
     expect(contacts[1].score).toBe(2);
-    await DBManager.createEmail(emailScore);
-    const contactsUpdated = await DBManager.getContactByEmails([
-      ...emailScore.recipients.to,
-      emailScore.recipients.cc,
-      emailScore.recipients.bcc
-    ]);
+    await DBManager.createEmail({ ...emailScore, accountId });
+    const contactsUpdated = await DBManager.getContactByEmails({
+      emails: [
+        ...emailScore.recipients.to,
+        emailScore.recipients.cc,
+        emailScore.recipients.bcc
+      ],
+      accountId
+    });
     expect(contactsUpdated.length).toBe(3);
     expect(contactsUpdated[0].email).toBe(emailScore.recipients.cc[0]);
     expect(contactsUpdated[0].score).toBe(7);
@@ -1012,20 +1143,27 @@ describe('Update data contact to Contact Table: ', () => {
   });
 
   it('Should update contact spamScore to 1 from email Inbox', async () => {
-    const contacts = await DBManager.getContactByEmails(['usera@criptext.com']);
+    const contacts = await DBManager.getContactByEmails({
+      emails: ['usera@criptext.com'],
+      accountId
+    });
     expect(contacts.length).toBe(1);
     expect(contacts[0].spamScore).toBe(0);
     // Add spamScore
-    const [email] = await DBManager.getEmailByKey(emailInbox.email.key);
+    const [email] = await DBManager.getEmailByKey({
+      key: emailInbox.email.key,
+      accountId
+    });
     const contactsUpdated = await DBManager.updateContactSpamScore({
       emailIds: [email.id, 2, 3, 4],
       notEmailAddress: 'user@criptext.com',
       value: 1
     });
     expect(contactsUpdated).toEqual([1]);
-    const contactUpdated = await DBManager.getContactByEmails([
-      'usera@criptext.com'
-    ]);
+    const contactUpdated = await DBManager.getContactByEmails({
+      emails: ['usera@criptext.com'],
+      accountId
+    });
     expect(contactUpdated[0].spamScore).toBe(1);
     //Less spamScore
     const contactsUpdatedAgain = await DBManager.updateContactSpamScore({
@@ -1034,26 +1172,34 @@ describe('Update data contact to Contact Table: ', () => {
       value: -1
     });
     expect(contactsUpdatedAgain).toEqual([1]);
-    const contactUpdatedAgain = await DBManager.getContactByEmails([
-      'usera@criptext.com'
-    ]);
+    const contactUpdatedAgain = await DBManager.getContactByEmails({
+      emails: ['usera@criptext.com'],
+      accountId
+    });
     expect(contactUpdatedAgain[0].spamScore).toBe(0);
   });
 
   it('Should not update contact spamScore to 1 from sent Inbox', async () => {
-    const contacts = await DBManager.getContactByEmails(['user@criptext.com']);
+    const contacts = await DBManager.getContactByEmails({
+      emails: ['user@criptext.com'],
+      accountId
+    });
     expect(contacts.length).toBe(1);
     expect(contacts[0].spamScore).toBe(0);
-    const [email] = await DBManager.getEmailByKey(emailSent.email.key);
+    const [email] = await DBManager.getEmailByKey({
+      key: emailSent.email.key,
+      accountId
+    });
     const contactsUpdated = await DBManager.updateContactSpamScore({
       emailIds: [email.id],
       notEmailAddress: 'user@criptext.com',
       value: 1
     });
     expect(contactsUpdated).toEqual([0]);
-    const contactUpdated = await DBManager.getContactByEmails([
-      'user@criptext.com'
-    ]);
+    const contactUpdated = await DBManager.getContactByEmails({
+      emails: ['user@criptext.com'],
+      accountId
+    });
     expect(contactUpdated[0].spamScore).toBe(0);
   });
 });

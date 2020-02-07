@@ -674,7 +674,7 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         ? senderDeviceId
         : undefined
       : senderDeviceId;
-  const [prevEmail] = await getEmailByKey(metadataKey);
+  const [prevEmail] = await getEmailByKey({ key: metadataKey });
 
   let isSpam = false;
   if (labels && !!labels.find(label => label === LabelType.spam.text)) {
@@ -820,11 +820,11 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     }
 
     if (labelIds.length) {
-      const emailLabel = formEmailLabel({
+      const emailLabels = formEmailLabel({
         emailId: prevEmail.id,
         labels: labelIds
       });
-      await createEmailLabel(emailLabel);
+      await createEmailLabel(emailLabels);
     }
     notificationPreview = prevEmail.preview;
   }
@@ -895,7 +895,7 @@ const updateOwnContact = async () => {
 
 const handleEmailTrackingUpdate = async ({ rowid, params }) => {
   const { date, metadataKey, type, fromDomain } = params;
-  const [email] = await getEmailByKey(metadataKey);
+  const [email] = await getEmailByKey({ key: metadataKey });
   const isUnsend = type === EmailStatus.UNSEND;
   let feedItemAdded = false;
   if (email) {
@@ -944,7 +944,7 @@ const handlePeerAvatarChanged = ({ rowid }) => {
 
 const handlePeerEmailRead = async ({ rowid, params }) => {
   const { metadataKeys, unread } = params;
-  const emails = await getEmailsByArrayParam({ keys: metadataKeys });
+  const emails = await getEmailsByArrayParam({ array: { keys: metadataKeys } });
   if (emails.length) {
     const emailKeys = emails.map(email => email.key);
     const [res] = await updateEmails({
@@ -966,7 +966,7 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
 const handlePeerEmailUnsend = async ({ rowid, params }) => {
   const type = EmailStatus.UNSEND;
   const { metadataKey, date } = params;
-  const [email] = await getEmailByKey(metadataKey);
+  const [email] = await getEmailByKey({ key: metadataKey });
   if (email) {
     const status = validateEmailStatusToSet(email.status, type);
     await unsendEmail({
@@ -1040,7 +1040,7 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
   const emailIds = [];
   const threadIds = [];
   for (const metadataKey of metadataKeys) {
-    const [email] = await getEmailByKey(metadataKey);
+    const [email] = await getEmailByKey({ key: metadataKey });
     if (email) {
       emailIds.push(email.id);
       threadIds.push(email.threadId);
@@ -1086,7 +1086,7 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
   const { threadIds, labelsRemoved, labelsAdded } = params;
   let allEmailsIdsSet = new Set();
   for (const threadId of threadIds) {
-    const emails = await getEmailsByThreadId(threadId);
+    const emails = await getEmailsByThreadId({ threadId });
     const emailIds = emails.map(email => email.id);
     allEmailsIdsSet = new Set([...allEmailsIdsSet, ...emailIds]);
   }
@@ -1142,7 +1142,7 @@ const formAndSaveEmailLabelsUpdate = async ({
     await deleteEmailLabel({ emailIds, labelIds: labelIdsToRemove });
   }
   if (formattedEmailLabelsToAdd.length) {
-    await createEmailLabel(formattedEmailLabelsToAdd);
+    await createEmailLabel({ emailLabels: formattedEmailLabelsToAdd });
   }
 };
 
@@ -1151,13 +1151,13 @@ const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
   const threadIds = [];
   const keys = [];
   for (const metadataKey of metadataKeys) {
-    const [email] = await getEmailByKey(metadataKey);
+    const [email] = await getEmailByKey({ key: metadataKey });
     if (email) {
       keys.push(email.key);
       threadIds.push(email.threadId);
     }
   }
-  await deleteEmailByKeys(keys);
+  await deleteEmailByKeys({ keys });
   const labelIds = [LabelType.trash.id, LabelType.spam.id];
   return { rowid, threadIds, labelIds };
 };
@@ -1738,7 +1738,7 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
           rowId: data.rowId
         });
         if (status === 200) {
-          const [email] = await getEmailByKey(body.params.metadataKey);
+          const [email] = await getEmailByKey({ key: body.params.metadataKey });
           if (!email) {
             await parseAndDispatchEvent(body);
             sendNewEmailNotification();

@@ -12,7 +12,9 @@ export const defineFeedItems = async () => {
   const badge = await getFeedItemsCounterBySeen(false);
   const feeds = await Promise.all(
     allFeeds.map(async feed => {
-      const [emailData] = await getEmailsByArrayParam({ ids: [feed.emailId] });
+      const [emailData] = await getEmailsByArrayParam({
+        array: { ids: [feed.emailId] }
+      });
       const action = defineFeedAction(feed.type);
       const date = defineTimeByToday(feed.date);
       return { ...feed, action, date, emailData };

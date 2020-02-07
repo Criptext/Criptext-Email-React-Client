@@ -15,7 +15,7 @@ const getUsername = () => {
 
 const buildEmailSource = async ({ metadataKey }) => {
   const username = getUsername();
-  const [email] = await dbManager.getEmailByKey(metadataKey);
+  const [email] = await dbManager.getEmailByKey({ key: metadataKey });
   if (!email || !email.boundary) {
     throw 'Unable to build email source. No boundary found!';
   }
