@@ -119,6 +119,7 @@ const handShake = ({ alicePath, dbpath, myPort, logspath, onAppOpened }) => {
     alice.stderr.setEncoding('utf8');
     alice.stderr.on('data', data => {
       if (alertShown) {
+        reject({ retry: true });
         return;
       }
       alertShown = true;
@@ -146,6 +147,7 @@ const handShake = ({ alicePath, dbpath, myPort, logspath, onAppOpened }) => {
     alice.on('exit', (code, signal) => {
       console.log(`alice exited with code ${code} and signal ${signal}`);
       if (signal !== 'SIGTERM' && signal !== 'SIGABRT') {
+        closeAlice();
         reject();
         return;
       }
@@ -154,6 +156,7 @@ const handShake = ({ alicePath, dbpath, myPort, logspath, onAppOpened }) => {
 
     alice.on('close', code => {
       console.log(`alice closed with code ${code}`);
+      closeAlice();
       reject();
     });
   });
@@ -173,6 +176,7 @@ const restartAlice = async force => {
   if (alice) return;
   if (starting) {
     await waitForAlice();
+    return;
   }
   const isReachable = await checkReachability();
   if (isReachable && !force) {
@@ -180,7 +184,6 @@ const restartAlice = async force => {
   }
   closeAlice();
   await startAlice();
-  await checkReachability();
 };
 
 const waitForAlice = async () => {
