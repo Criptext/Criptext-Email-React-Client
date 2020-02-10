@@ -7,18 +7,23 @@ export const getAlicePort = remote.require('./src/aliceManager').getPort;
 export const getAlicePassword = remote.require('./src/aliceManager')
   .getPassword;
 
-export const { FILE_SERVER_APP_ID, FILE_SERVER_KEY } = remote.require(
-  './src/utils/const'
-);
+export const {
+  FILE_SERVER_APP_ID,
+  FILE_SERVER_KEY,
+  APP_DOMAIN
+} = remote.require('./src/utils/const');
 
 export const getEmailToEdit = () => {
   return globalManager.emailToEdit.get(composerId);
 };
 
-const accounts = remote.require('./src/Account');
-export let myAccount = accounts.activeAccount;
+const account = remote.require('./src/Account');
+export let myAccount = account;
+export const loggedAccounts = account.loggedAccounts;
 export const setMyAccount = recipientId => {
-  myAccount = accounts.find(account => account.recipientId === recipientId);
+  myAccount = loggedAccounts.find(
+    account => account.recipientId === recipientId
+  );
 };
 export const mySettings = remote.require('./src/Settings');
 export const LabelType = labels;

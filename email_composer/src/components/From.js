@@ -1,13 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import string from './../lang';
+import { APP_DOMAIN } from '../utils/electronInterface';
 import './from.scss';
-
-const accounts = [
-  { id: 1, emailAdress: 'erika@criptext.com' },
-  { id: 2, emailAdress: 'erika1@criptext.com' },
-  { id: 3, emailAdress: 'erika2@criptext.com' }
-];
 
 const From = props => (
   <div className="cptx-from-container">
@@ -15,9 +10,7 @@ const From = props => (
       <span className="cptx-recipient-input-label">
         {string.inputLabels.from}
       </span>
-      <span className="cptx-from-address">
-        {props.accountSelected.emailAdress}
-      </span>
+      <span className="cptx-from-address">{props.accountSelected.email}</span>
     </div>
     <div
       className={`cptx-from-more ${
@@ -25,7 +18,7 @@ const From = props => (
       }`}
     >
       <ul>
-        {accounts.map(account => {
+        {props.accounts.map(account => {
           const classItem =
             account.id === props.accountSelected.id ? 'selected' : '';
           return (
@@ -34,7 +27,11 @@ const From = props => (
               className={classItem}
               onClick={() => props.onClick(account)}
             >
-              <span className="cptx-from-address">{account.emailAdress}</span>
+              <span className="cptx-from-address">
+                {account.recipientId.includes('@')
+                  ? account.recipientId
+                  : `${account.recipientId}@${APP_DOMAIN}`}
+              </span>
             </li>
           );
         })}
@@ -51,8 +48,10 @@ const From = props => (
 );
 
 From.propTypes = {
+  accounts: PropTypes.array,
   accountSelected: PropTypes.object,
   isCollapsedMoreFrom: PropTypes.bool,
+  onClick: PropTypes.func,
   onToggleFrom: PropTypes.func
 };
 

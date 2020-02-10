@@ -1,5 +1,6 @@
 {
   "inputLabels": {
+    "from:": "Von:",
     "to": "An:",
     "cc": "Cc:",
     "bcc": "Bcc:"

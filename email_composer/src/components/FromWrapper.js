@@ -6,7 +6,6 @@ class FromWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accountSelected: { id: 1, emailAdress: 'erika@criptext.com' },
       isCollapsedMoreFrom: true
     };
   }
@@ -14,7 +13,8 @@ class FromWrapper extends Component {
   render() {
     return (
       <From
-        accountSelected={this.state.accountSelected}
+        accounts={this.props.accounts}
+        accountSelected={this.props.accountSelected}
         isCollapsedMoreFrom={this.state.isCollapsedMoreFrom}
         onClick={this.handleClick}
         onToggleFrom={this.handleToggleFrom}
@@ -24,7 +24,7 @@ class FromWrapper extends Component {
   }
 
   handleClick = account => {
-    this.setState({ accountSelected: account });
+    this.props.getAccount(account);
     this.handleToggleFrom();
   };
 
@@ -34,6 +34,9 @@ class FromWrapper extends Component {
 }
 
 FromWrapper.propTypes = {
+  accounts: PropTypes.array,
+  accountSelected: PropTypes.object,
+  getAccount: PropTypes.func,
   text: PropTypes.string
 };
 
