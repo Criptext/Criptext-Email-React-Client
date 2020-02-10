@@ -2,15 +2,33 @@
 const DBManager = require('../database');
 const systemLabels = require('../systemLabels');
 
+let accountId;
+
+const account = {
+  recipientId: 'user',
+  deviceId: 1,
+  name: 'User One',
+  registrationId: 2,
+  privKey: 'aaa',
+  pubKey: 'bbb'
+};
+
+const insertAccount = async () => {
+  return await DBManager.createAccount(account);
+};
+
 beforeAll(async () => {
   await DBManager.deleteDatabase();
   await DBManager.initDatabaseEncrypted({
     key: '1111'
   });
+  const [account] = await insertAccount();
+  accountId = account.id;
 });
 
 let labelToDelete;
 let labelToUpdate;
+
 describe('Store data label to Label Table:', () => {
   it('Should create labels to db', async () => {
     const labels = Object.values(systemLabels);
@@ -21,12 +39,14 @@ describe('Store data label to Label Table:', () => {
   it('Should create label to db', async () => {
     const label = {
       color: '1311a1',
-      text: 'Task'
+      text: 'Task',
+      accountId
     };
     const result = await DBManager.createLabel(label);
     labelToDelete = result;
     const uuidRegex = /([0-9a-z]){8}-([0-9a-z]){4}-([0-9a-z]){4}-([0-9a-z]){4}-([0-9a-z]){12}/;
     expect(result).toMatchObject({
+      accountId,
       color: label.color,
       text: label.text,
       type: 'custom',
@@ -36,7 +56,7 @@ describe('Store data label to Label Table:', () => {
   });
 });
 
-describe('Delete labe from Label Table:', () => {
+describe('Delete label from Label Table:', () => {
   it('Should delete label by labelId', async () => {
     const result = await DBManager.deleteLabelById(labelToDelete.id);
     expect(result).toBe(1);
@@ -50,7 +70,7 @@ describe('Delete labe from Label Table:', () => {
 
 describe('Load data labels from Label Table:', () => {
   it('Should load all labels', async () => {
-    const result = await DBManager.getAllLabels();
+    const result = await DBManager.getAllLabels({ accountId });
     expect(result.length).toBe(6);
     expect(result[0]).toMatchSnapshot();
   });
@@ -61,54 +81,55 @@ describe('Load data labels from Label Table:', () => {
     expect(result[0]).toMatchSnapshot();
   });
 
-  it('Should load label by uuid', async () => {
-    const result = await DBManager.getLabelByUuid(
-      '00000000-0000-0000-0000-000000000001'
-    );
-    expect(result.length).toBe(1);
-    expect(result[0]).toMatchSnapshot();
-  });
-
   it('Should load labels by: text', async () => {
     const label1 = {
       color: '777777',
       text: 'label',
-      uuid: '00000000-0000-0000-0000-000000000008'
+      uuid: '00000000-0000-0000-0000-000000000008',
+      accountId
     };
     const label2 = {
       color: '888888',
       text: 'LABEL',
-      uuid: '00000000-0000-0000-0000-000000000009'
+      uuid: '00000000-0000-0000-0000-000000000009',
+      accountId
     };
     const label3 = {
       color: '999999',
       text: 'AnotherLabel',
-      uuid: '00000000-0000-0000-0000-000000000010'
+      uuid: '00000000-0000-0000-0000-000000000010',
+      accountId
     };
     const label4 = {
       color: '101010',
       text: 'Test',
-      uuid: '00000000-0000-0000-0000-000000000011'
+      uuid: '00000000-0000-0000-0000-000000000011',
+      accountId
     };
     const labelsToInsert = [label1, label2, label3, label4];
     await DBManager.createLabel(labelsToInsert);
 
     const textToSearch = ['label', 'Test'];
     const expectedLabels = [label1, label2, label4];
-    const labels = await DBManager.getLabelsByText(textToSearch);
+    const labels = await DBManager.getLabelsByText({
+      text: textToSearch,
+      accountId
+    });
 
     // Custom label matcher
     expect.extend({
       labelArraysAreEqual(received, argument) {
-        const formattedReceived = received
-          .map(labelReceived => ({
-            text: labelReceived.text,
-            color: labelReceived.color,
-            uuid: labelReceived.uuid
-          }))
-          .sort();
-        const sortedArgument = argument.sort();
-        const pass = this.equals(formattedReceived, sortedArgument);
+        const a = received.map((item, index) => {
+          const i = index === 2 ? 3 : index;
+          const aLabel = labelsToInsert[i];
+          return (
+            item.accountId === aLabel.accountId &&
+            item.text === aLabel.text &&
+            item.uuid === aLabel.uuid &&
+            item.type === 'custom'
+          );
+        });
+        const pass = !a.includes(false);
         if (pass) {
           return {
             message: () =>
@@ -129,13 +150,23 @@ describe('Load data labels from Label Table:', () => {
     });
     expect(labels).labelArraysAreEqual(expectedLabels);
   });
+
+  it('Should load label by uuid', async () => {
+    const result = await DBManager.getLabelByUuid({
+      uuid: '00000000-0000-0000-0000-000000000008',
+      accountId
+    });
+    expect(result.length).toBe(1);
+    expect(result[0]).toMatchSnapshot();
+  });
 });
 
 describe('Update data label to Label Table:', () => {
   it('Should update label: color and text', async () => {
     const label = {
       color: '333333',
-      text: 'news'
+      text: 'news',
+      accountId
     };
     labelToUpdate = await DBManager.createLabel(label);
     const labelIdCreated = labelToUpdate.id;

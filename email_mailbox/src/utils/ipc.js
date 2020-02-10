@@ -347,8 +347,8 @@ export const getDataReady = async () => {
   return await ipc.callMain('client-get-data-ready');
 };
 
-export const getAllLabels = async () => {
-  return await ipc.callMain('db-get-all-labels');
+export const getAllLabels = async params => {
+  return await ipc.callMain('db-get-all-labels', params);
 };
 
 export const getContactByEmails = async emails => {
@@ -419,12 +419,12 @@ export const getLabelById = async id => {
   return await ipc.callMain('db-get-labelid', id);
 };
 
-export const getLabelsByText = async text => {
-  return await ipc.callMain('db-get-labesls-by-text', text);
+export const getLabelsByText = async params => {
+  return await ipc.callMain('db-get-labesls-by-text', params);
 };
 
-export const getLabelByUuid = async uuid => {
-  return await ipc.callMain('db-get-label-by-uuid', uuid);
+export const getLabelByUuid = async params => {
+  return await ipc.callMain('db-get-label-by-uuid', params);
 };
 
 export const getPreKeyPair = async params => {

@@ -1089,9 +1089,9 @@ const deleteLabelById = async id => {
   });
 };
 
-const getAllLabels = () => {
+const getAllLabels = ({ accountId }) => {
   return Label()
-    .findAll()
+    .findAll({ where: { accountId: { [Op.or]: [accountId, null] } } })
     .map(label => label.toJSON());
 };
 
@@ -1101,18 +1101,18 @@ const getLabelById = id => {
     .map(label => label.toJSON());
 };
 
-const getLabelByUuid = uuid => {
+const getLabelByUuid = ({ accountId, uuid }) => {
   return Label()
-    .findAll({ where: { uuid } })
+    .findAll({ where: { uuid, accountId } })
     .map(label => label.toJSON());
 };
 
-const getLabelsByText = async textArray => {
+const getLabelsByText = async ({ accountId, text }) => {
   let labels = [];
-  for (const text of textArray) {
+  for (const word of text) {
     const labelsMatched = await Label()
       .findAll({
-        where: { text: { [Op.like]: text } }
+        where: { text: { [Op.like]: word }, accountId }
       })
       .map(label => label.toJSON());
     labels = labels.concat(labelsMatched);

@@ -1,3 +1,4 @@
 module.exports = {
-  recipientId: 'test'
+  recipientId: 'test',
+  update: () => {}
 };

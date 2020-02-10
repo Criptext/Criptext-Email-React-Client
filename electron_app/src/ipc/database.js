@@ -84,7 +84,10 @@ ipc.answerRenderer('db-get-all-feed-items', params => {
   return dbManager.getAllFeedItems(data);
 });
 
-ipc.answerRenderer('db-get-all-labels', () => dbManager.getAllLabels());
+ipc.answerRenderer('db-get-all-labels', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getAllLabels(data);
+});
 
 ipc.answerRenderer('db-get-contact-by-emails', emails =>
   dbManager.getContactByEmails(emails)
@@ -161,11 +164,15 @@ ipc.answerRenderer('db-get-identity-key-record', params =>
 
 ipc.answerRenderer('db-get-labelid', id => dbManager.getLabelById(id));
 
-ipc.answerRenderer('db-get-labesls-by-text', text =>
-  dbManager.getLabelsByText(text)
-);
+ipc.answerRenderer('db-get-labesls-by-text', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getLabelsByText(data);
+});
 
-ipc.answerRenderer('db-get-label-by-uuid', dbManager.getLabelByUuid);
+ipc.answerRenderer('db-get-label-by-uuid', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getLabelByUuid(data);
+});
 
 ipc.answerRenderer('db-get-prekey-pair', params =>
   dbManager.getPreKeyPair(params)

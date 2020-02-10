@@ -235,7 +235,7 @@ export const updateEmailLabels = ({
     try {
       if (email) {
         if (labelsAdded.length) {
-          const addedLabels = await getLabelsByText(labelsAdded);
+          const addedLabels = await getLabelsByText({ text: labelsAdded });
           const addedLabelsIds = addedLabels.map(label => label.id);
           const emailLabelsToAdd = formEmailLabel({
             emailId: email.id,
@@ -245,7 +245,7 @@ export const updateEmailLabels = ({
           await createEmailLabel({ emailLabels: emailLabelsToAdd });
         }
         if (labelsRemoved.length) {
-          const removedLabels = await getLabelsByText(labelsRemoved);
+          const removedLabels = await getLabelsByText({ text: labelsRemoved });
           const removedLabelsIds = removedLabels.map(label => label.id);
           const emailLabelsToRemove = {
             emailIds: [email.id],
@@ -283,7 +283,7 @@ export const updateEmailLabels = ({
             })
           );
           if (labelsAdded.length) {
-            const addedLabels = await getLabelsByText(labelsAdded);
+            const addedLabels = await getLabelsByText({ text: labelsAdded });
             const addedLabelsIds = addedLabels.map(label => label.id);
             dispatch(addEmailLabels([email], addedLabelsIds));
           }

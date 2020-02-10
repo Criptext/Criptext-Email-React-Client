@@ -2,7 +2,7 @@ import { getAllLabels, getEmailsCounterByLabelId } from './ipc';
 import { LabelType } from './electronInterface';
 
 export const defineLabels = async () => {
-  const response = await getAllLabels();
+  const response = await getAllLabels({});
   const badgeDraft = await getEmailsCounterByLabelId({
     labelId: LabelType.draft.id
   });

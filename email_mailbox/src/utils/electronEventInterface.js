@@ -1047,9 +1047,9 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
     }
   }
   if (!emailIds.length) return { rowid: null };
-  const labelsToRemove = await getLabelsByText(labelsRemoved);
+  const labelsToRemove = await getLabelsByText({ text: labelsRemoved });
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
-  const labelsToAdd = await getLabelsByText(labelsAdded);
+  const labelsToAdd = await getLabelsByText({ text: labelsAdded });
   const labelIdsToAdd = labelsToAdd.map(label => label.id);
 
   await formAndSaveEmailLabelsUpdate({
@@ -1093,10 +1093,10 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
   const emailIds = Array.from(allEmailsIdsSet);
   if (!emailIds.length) return { rowid };
 
-  const labelsToRemove = await getLabelsByText(labelsRemoved);
+  const labelsToRemove = await getLabelsByText({ text: labelsRemoved });
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
 
-  const labelsToAdd = await getLabelsByText(labelsAdded);
+  const labelsToAdd = await getLabelsByText({ text: labelsAdded });
   const labelIdsToAdd = labelsToAdd.map(label => label.id);
 
   await formAndSaveEmailLabelsUpdate({
@@ -1171,7 +1171,7 @@ const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
 
 const handlePeerLabelCreated = async ({ rowid, params }) => {
   const { text, color, uuid } = params;
-  const [label] = await getLabelsByText([text]);
+  const [label] = await getLabelsByText({ text: [text] });
   if (!label) {
     const labelCreated = await createLabel({ text, color, uuid });
     const labelId = labelCreated.id;
@@ -1192,7 +1192,7 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
 
 const handlePeerLabelUpdate = async ({ rowid, params }) => {
   const { uuid, text } = params;
-  const [label] = await getLabelByUuid(uuid);
+  const [label] = await getLabelByUuid({ uuid });
   if (!label) return { rowid };
   const [response] = updateLabelDB({ id: label.id, text });
   if (!response) return { rowid: null };
@@ -1201,7 +1201,7 @@ const handlePeerLabelUpdate = async ({ rowid, params }) => {
 
 const handlePeerLabelDelete = async ({ rowid, params }) => {
   const { uuid } = params;
-  const [label] = await getLabelByUuid(uuid);
+  const [label] = await getLabelByUuid({ uuid });
   if (!label) return { rowid };
   const response = await deleteLabelById(label.id);
   if (!response) return { rowid: null };

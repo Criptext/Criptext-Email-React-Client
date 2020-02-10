@@ -1,6 +1,7 @@
 /* eslint-env node, jest */
 
 const DBManager = require('../database');
+jest.mock('./../Account.js');
 
 const account = {
   recipientId: 'user',
