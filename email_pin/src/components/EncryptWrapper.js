@@ -45,7 +45,7 @@ class EncryptWrapper extends Component {
     if (this.state.percent < this.next) {
       this.setState(state => {
         let percent = state.percent + 1;
-        if(percent >= 100){
+        if (percent >= 100) {
           percent = 100;
           this.next = 100;
         }
