@@ -42,8 +42,8 @@ int preKeysCreate(struct mg_connection *conn, void *cbdata){
 }
 
 int pong(struct mg_connection *conn, void *cbdata){
-  mg_send_http_ok( conn, "text/plain", strlen(password.c_str()));
-  mg_write(conn, password.c_str(), strlen(password.c_str()));
+  mg_send_http_ok(conn, "text/plain", 5);
+  mg_write(conn, "pong\n", 5);
   return 1;
 }
 
