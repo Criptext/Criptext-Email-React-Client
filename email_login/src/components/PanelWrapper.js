@@ -91,10 +91,19 @@ const TooManyRequest = PopupHOC(DialogPopup);
 const RecoveryCodePopup = PopupHOC(RecoveryCodeWrapperPopup);
 
 const commitNewUser = validInputData => {
-  openPinWindow({
-    pinType: 'signup',
-    remoteData: validInputData
-  });
+  const hasPIN = hasPin();
+  if (hasPIN) {
+    openCreateKeysLoadingWindow({
+      loadingType: 'signup',
+      shouldResetPIN: !hasPIN,
+      remoteData: validInputData
+    });
+  } else {
+    openPinWindow({
+      pinType: 'signup',
+      remoteData: validInputData
+    });
+  }
   closeLoginWindow({ forceClose: true });
 };
 

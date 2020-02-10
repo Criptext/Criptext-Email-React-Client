@@ -89,6 +89,7 @@ Contributions are welcome. This project contains subdirectories according to eac
 * email_composer: contains the view and code that handles the window that edits new emails.
 * email_login: contains the views and code that handles user sign in and sign up.
 * email_loading: contains the views and code that handles spinners and progress bars between window transitions.
+* email_pin: contains the views and code that set encryption PIN.
 
 
 The main application logic is the `electron_app` dir. 
