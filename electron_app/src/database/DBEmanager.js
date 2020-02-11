@@ -1346,14 +1346,14 @@ const deleteSessionRecord = params => {
   return Sessionrecord().destroy({ where: params });
 };
 
-const getSessionRecordByRecipientIds = recipientIds => {
+const getSessionRecordByRecipientIds = ({ accountId, recipientIds }) => {
   const sequelize = getDB();
   return Sessionrecord().findAll({
     attributes: [
       'recipientId',
       [sequelize.fn('GROUP_CONCAT', sequelize.col('deviceId')), 'deviceIds']
     ],
-    where: { recipientId: recipientIds },
+    where: { recipientId: recipientIds, accountId },
     group: ['recipientId'],
     raw: true
   });

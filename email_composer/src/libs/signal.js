@@ -199,7 +199,7 @@ const encryptPostEmail = async ({
   externalEmailPassword
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
-  const sessions = await getSessionRecordByRecipientIds(recipientIds);
+  const sessions = await getSessionRecordByRecipientIds({ recipientIds });
   let domainAddresses = createObjectRecipientIdDomainByDevices(
     sessions,
     recipients,

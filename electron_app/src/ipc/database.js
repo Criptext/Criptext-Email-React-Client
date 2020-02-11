@@ -64,9 +64,10 @@ ipc.answerRenderer('db-delete-prekey-pair', params =>
   dbManager.deletePreKeyPair(params)
 );
 
-ipc.answerRenderer('db-delete-session-record', params =>
-  dbManager.deleteSessionRecord(params)
-);
+ipc.answerRenderer('db-delete-session-record', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.deleteSessionRecord(data);
+});
 
 ipc.answerRenderer('db-get-account', () => dbManager.getAccount());
 
@@ -188,9 +189,10 @@ ipc.answerRenderer('db-get-session-record', params =>
   dbManager.getSessionRecord(params)
 );
 
-ipc.answerRenderer('db-get-session-record-by-recipientids', recipientIds =>
-  dbManager.getSessionRecordByRecipientIds(recipientIds)
-);
+ipc.answerRenderer('db-get-session-record-by-recipientids', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  return dbManager.getSessionRecordByRecipientIds(data);
+});
 
 ipc.answerRenderer('db-get-signed-prekey', params =>
   dbManager.getSignedPreKey(params)

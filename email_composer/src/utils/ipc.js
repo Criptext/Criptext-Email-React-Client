@@ -118,11 +118,8 @@ export const getSessionRecord = async params => {
   return await ipc.callMain('db-get-session-record', params);
 };
 
-export const getSessionRecordByRecipientIds = async recipientIds => {
-  return await ipc.callMain(
-    'db-get-session-record-by-recipientids',
-    recipientIds
-  );
+export const getSessionRecordByRecipientIds = async params => {
+  return await ipc.callMain('db-get-session-record-by-recipientids', params);
 };
 
 export const getSignedPreKey = async params => {
