@@ -41,9 +41,10 @@ const DEFAULT_KEY_LENGTH = 16;
 
 const excludedEmailStatus = [1, 4];
 const excludedLabels = [systemLabels.draft.id];
-const whereRawEmailQuery = id => `INNER JOIN ${Table.EMAIL_LABEL} 
+const whereRawEmailQuery = (id, accountId) => `INNER JOIN ${Table.EMAIL_LABEL} 
     ON ${id} = ${Table.EMAIL_LABEL}.emailId 
-    WHERE ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
+    WHERE ${Table.EMAIL}.accountId=${accountId} 
+    AND ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')}) 
     AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
 `;
 
@@ -535,13 +536,20 @@ const closeDatabaseConnection = async dbConnection => {
 
 /* Encrypted Database
 ----------------------------- */
-const exportContactTable = async () => {
+const exportContactTable = async accountId => {
   let contactRows = [];
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
     const result = await Contact().findAll({
-      attributes: { exclude: ['score'] },
+      attributes: ['id', 'email', 'name', 'isTrusted', 'spamScore'],
+      include: [
+        {
+          attributes: [],
+          model: AccountContact(),
+          where: { accountId }
+        }
+      ],
       offset,
       limit: SELECT_ALL_BATCH
     });
@@ -555,13 +563,14 @@ const exportContactTable = async () => {
   return formatTableRowsToString(Table.CONTACT, contactRows);
 };
 
-const exportLabelTable = async () => {
+const exportLabelTable = async accountId => {
   let labelRows = [];
   let shouldEnd = false;
   let offset = 0;
   while (!shouldEnd) {
     const result = await Label().findAll({
-      where: { type: 'custom' },
+      attributes: ['id', 'text', 'color', 'type', 'visible', 'uuid'],
+      where: { type: 'custom', accountId },
       offset,
       limit: SELECT_ALL_BATCH
     });
@@ -575,7 +584,7 @@ const exportLabelTable = async () => {
   return formatTableRowsToString(Table.LABEL, labelRows);
 };
 
-const exportEmailTable = async () => {
+const exportEmailTable = async accountId => {
   const username = myAccount.email;
   let emailRows = [];
   let shouldEnd = false;
@@ -583,8 +592,11 @@ const exportEmailTable = async () => {
   while (!shouldEnd) {
     const result = await getDB()
       .query(
-        `SELECT email.* FROM ${Table.EMAIL} ${whereRawEmailQuery(
-          `${Table.EMAIL}.id`
+        `SELECT content, date, fromAddress, email.id, key, messageId, preview, 
+        replyTo, secure, status, subject, threadId, unread, unsentDate 
+        FROM ${Table.EMAIL} ${whereRawEmailQuery(
+          `${Table.EMAIL}.id`,
+          accountId
         )}
       GROUP BY ${Table.EMAIL}.id
       LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
@@ -635,7 +647,7 @@ const exportEmailTable = async () => {
   return formatTableRowsToString(Table.EMAIL, emailRows);
 };
 
-const exportEmailContactTable = async () => {
+const exportEmailContactTable = async accountId => {
   let emailContactRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -646,7 +658,10 @@ const exportEmailContactTable = async () => {
           Table.EMAIL
         } ON ${Table.EMAIL}.id=${
           Table.EMAIL_CONTACT
-        }.emailId ${whereRawEmailQuery(`${Table.EMAIL_CONTACT}.emailId`)}
+        }.emailId ${whereRawEmailQuery(
+          `${Table.EMAIL_CONTACT}.emailId`,
+          accountId
+        )}
         GROUP BY ${Table.EMAIL_CONTACT}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
         { type: getDB().QueryTypes.SELECT }
@@ -669,7 +684,7 @@ const exportEmailContactTable = async () => {
   return formatTableRowsToString('email_contact', emailContactRows);
 };
 
-const exportEmailLabelTable = async () => {
+const exportEmailLabelTable = async accountId => {
   let emailLabelRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -680,6 +695,7 @@ const exportEmailLabelTable = async () => {
           Table.EMAIL
         } ON ${Table.EMAIL}.id=${Table.EMAIL_LABEL}.emailId 
         WHERE ${Table.EMAIL_LABEL}.labelId NOT IN (${excludedLabels.join(',')})
+        AND ${Table.EMAIL}.accountId = ${accountId}
         AND ${Table.EMAIL}.status NOT IN (${excludedEmailStatus.join(',')})
         GROUP BY ${Table.EMAIL_LABEL}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
@@ -703,7 +719,7 @@ const exportEmailLabelTable = async () => {
   return formatTableRowsToString('email_label', emailLabelRows);
 };
 
-const exportFileTable = async () => {
+const exportFileTable = async accountId => {
   let fileRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -713,7 +729,8 @@ const exportFileTable = async () => {
         `SELECT file.* FROM ${Table.FILE} INNER JOIN ${Table.EMAIL} ON ${
           Table.EMAIL
         }.id=${Table.FILE}.emailId ${whereRawEmailQuery(
-          `${Table.FILE}.emailId`
+          `${Table.FILE}.emailId`,
+          accountId
         )}
         GROUP BY ${Table.FILE}.id
         LIMIT ${SELECT_ALL_BATCH} OFFSET ${offset}`,
@@ -750,22 +767,22 @@ const exportEncryptDatabaseToFile = async ({ outputPath }) => {
   });
   saveToFile({ data: fileInformation, filepath, mode: 'w' }, true);
 
-  const contacts = await exportContactTable();
+  const contacts = await exportContactTable(myAccount.id);
   saveToFile({ data: contacts, filepath, mode: 'a' });
 
-  const labels = await exportLabelTable();
+  const labels = await exportLabelTable(myAccount.id);
   saveToFile({ data: labels, filepath, mode: 'a' });
 
-  const emails = await exportEmailTable();
+  const emails = await exportEmailTable(myAccount.id);
   saveToFile({ data: emails, filepath, mode: 'a' });
 
-  const emailContacts = await exportEmailContactTable();
+  const emailContacts = await exportEmailContactTable(myAccount.id);
   saveToFile({ data: emailContacts, filepath, mode: 'a' });
 
-  const emailLabels = await exportEmailLabelTable();
+  const emailLabels = await exportEmailLabelTable(myAccount.id);
   saveToFile({ data: emailLabels, filepath, mode: 'a' });
 
-  const files = await exportFileTable();
+  const files = await exportFileTable(myAccount.id);
   saveToFile({ data: files, filepath, mode: 'a' });
 };
 

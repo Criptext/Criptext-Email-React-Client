@@ -19,14 +19,22 @@ const {
 } = require('./../database/DBEexporter');
 const fs = require('fs');
 const myAccount = require('../Account');
-const { APP_DOMAIN } = require('../utils/const');
-
-jest.mock('./../Account.js');
 
 const PARSED_SAMPLE_FILEPATH = `${__dirname}/parsed_sample_file.txt`;
 const TEMP_DIRECTORY = '/tmp/criptext-tests';
 
-const username = `${myAccount.recipientId}@${APP_DOMAIN}`;
+let accountId;
+let username;
+const account = {
+  recipientId: 'test',
+  deviceId: 1,
+  name: 'Test User',
+  registrationId: 2,
+  privKey: 'aaa',
+  pubKey: 'bbb',
+  isActive: true,
+  isLoggedIn: true
+};
 
 const contacts = [
   {
@@ -97,12 +105,20 @@ const email = {
   ]
 };
 
+const insertAccount = async () => {
+  return await DBManager.createAccount(account);
+};
+
 const insertContacts = async params => {
-  return await DBManager.createContact(params);
+  return await DBManager.createContact({ contacts: params, accountId });
 };
 
 const insertLabels = async params => {
-  return await DBManager.createLabel(params);
+  return await DBManager.createLabel(
+    params.map(label => {
+      return { ...label, accountId };
+    })
+  );
 };
 
 const insertEmail = async params => {
@@ -111,7 +127,10 @@ const insertEmail = async params => {
     username,
     body: params.content
   });
-  return await DBManager.createEmail(params);
+  return await DBManager.createEmail({
+    ...params,
+    accountId
+  });
 };
 
 const createTempDirectory = () => {
@@ -143,6 +162,10 @@ beforeAll(async () => {
     key: '1111',
     shouldAddSystemLabels: true
   });
+  const [account] = await insertAccount();
+  myAccount.initialize([account.dataValues]);
+  accountId = account.dataValues.id;
+  username = myAccount.email;
 });
 
 afterAll(() => {
@@ -158,7 +181,7 @@ describe('Parse database: ', () => {
       `{"table":"contact","object":{"id":1,"email":"alice@criptext.com","name":"Alice","isTrusted":false,"spamScore":0}}\n` +
       `{"table":"contact","object":{"id":2,"email":"bob@criptext.com","name":"Bob","isTrusted":false,"spamScore":0}}\n` +
       `{"table":"contact","object":{"id":3,"email":"charlie@criptext.com","name":"Charlie","isTrusted":false,"spamScore":0}}`;
-    const contactsString = await exportContactTable();
+    const contactsString = await exportContactTable(accountId);
     expect(contactsString).toBe(expectedString);
   });
 
@@ -168,7 +191,7 @@ describe('Parse database: ', () => {
     const expectedString =
       `{"table":"label","object":{"id":8,"text":"News","color":"000000","type":"custom","visible":true,"uuid":"65a60683-a1c9-21f3-79d5-e57462ca8147"}}\n` +
       `{"table":"label","object":{"id":9,"text":"Shop","color":"111111","type":"custom","visible":true,"uuid":"77b80589-3a4d-171e-a264-e99a07baca27"}}`;
-    const labelsString = await exportLabelTable();
+    const labelsString = await exportLabelTable(accountId);
     expect(labelsString).toBe(expectedString);
   });
 
@@ -176,7 +199,7 @@ describe('Parse database: ', () => {
     await insertEmail(email);
     const expectedString = `{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"messageId":"messageId1","fromAddress":"Alice <alice@criptext.com>","replyTo":"","unsentDate":"2018-06-14 08:23:20"}}`;
     const expectedJSON = JSON.parse(expectedString);
-    const emailsString = await exportEmailTable();
+    const emailsString = await exportEmailTable(accountId);
     const emailsJSON = JSON.parse(emailsString);
     expect(emailsJSON).toMatchObject(expect.objectContaining(expectedJSON));
   });
@@ -186,7 +209,7 @@ describe('Parse database: ', () => {
       `{"table":"email_contact","object":{"id":1,"type":"from","contactId":1,"emailId":1}}\n` +
       `{"table":"email_contact","object":{"id":2,"type":"to","contactId":2,"emailId":1}}\n` +
       `{"table":"email_contact","object":{"id":3,"type":"to","contactId":3,"emailId":1}}`;
-    const emailContactsString = await exportEmailContactTable();
+    const emailContactsString = await exportEmailContactTable(accountId);
     expect(emailContactsString).toBe(expectedString);
   });
 
@@ -194,13 +217,13 @@ describe('Parse database: ', () => {
     const expectedString =
       `{"table":"email_label","object":{"id":1,"labelId":1,"emailId":1}}\n` +
       `{"table":"email_label","object":{"id":2,"labelId":2,"emailId":1}}`;
-    const emaillabelsString = await exportEmailLabelTable();
+    const emaillabelsString = await exportEmailLabelTable(accountId);
     expect(emaillabelsString).toBe(expectedString);
   });
 
   it('Should parse Files to string', async () => {
     const expectedString = `{"table":"file","object":{"id":1,"token":"token1","name":"Criptext_Image_2018_09_03.png","size":183241,"status":1,"date":"2018-09-03 18:45:57","mimeType":"image/png","key":"fileKeyA","iv":"fileIvA","emailId":1}}`;
-    const filesString = await exportFileTable();
+    const filesString = await exportFileTable(accountId);
     expect(filesString).toBe(expectedString);
   });
 });
@@ -244,17 +267,20 @@ describe('Import Database: ', () => {
       filepath: PARSED_SAMPLE_FILEPATH,
       isStrict: true
     });
-    const [emailChecked1] = await DBManager.getEmailsByThreadIdAndLabelId(
-      [email.email.threadId],
-      email.labels[0]
-    );
-    const [emailChecked2] = await DBManager.getEmailsByThreadIdAndLabelId(
-      [email.email.threadId],
-      email.labels[1]
-    );
-    const [rawEmail] = await DBManager.getEmailsByThreadId(
-      email.email.threadId
-    );
+    const [emailChecked1] = await DBManager.getEmailsByThreadIdAndLabelId({
+      threadIds: [email.email.threadId],
+      labelId: email.labels[0],
+      accountId
+    });
+    const [emailChecked2] = await DBManager.getEmailsByThreadIdAndLabelId({
+      threadIds: [email.email.threadId],
+      labelId: email.labels[1],
+      accountId
+    });
+    const [rawEmail] = await DBManager.getEmailsByThreadId({
+      threadId: email.email.threadId,
+      accountId
+    });
     const body =
       (await fileUtils.getEmailBody({
         username,
@@ -275,6 +301,7 @@ describe('Import Database: ', () => {
       secondContact,
       thirdContact
     ] = await DBManager.getContactByIds(contactIds);
+
     firstContact = { ...firstContact, isTrusted: !!firstContact.isTrusted };
     secondContact = { ...secondContact, isTrusted: !!secondContact.isTrusted };
     thirdContact = { ...thirdContact, isTrusted: !!thirdContact.isTrusted };
