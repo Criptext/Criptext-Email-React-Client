@@ -48,7 +48,7 @@
   },
   "page_encrypt": {
     "steps": {
-      "1": "Configurating database",
+      "1": "Configuring database",
       "2": "Importing data",
       "3": "Encrypting emails"
     },
