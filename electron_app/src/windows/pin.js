@@ -159,9 +159,9 @@ const setUpPin = async ({
       app.relaunch();
       app.exit(0);
     }, 5000);
+  } else if (!shouldOnlySetPIN) {
+    callEvent(EVENTS.Up_app, {});
   }
-
-  if (!shouldOnlySetPIN) callEvent(EVENTS.Up_app, {});
 };
 
 const checkPin = async () => {

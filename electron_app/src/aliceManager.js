@@ -104,7 +104,7 @@ const startAlice = async onAppOpened => {
       onAppOpened
     });
   } catch (ex) {
-    if (!ex.retry) return;
+    if (!ex || !ex.retry) return;
     aliceStartTimeout = setTimeout(() => {
       startAlice(onAppOpened);
     }, 500);
