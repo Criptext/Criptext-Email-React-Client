@@ -435,8 +435,8 @@ export const getSessionRecord = async params => {
   return await ipc.callMain('db-get-session-record', params);
 };
 
-export const getSessionRecordIds = async () => {
-  return await ipc.callMain('db-get-prekeys-ids');
+export const getSessionRecordIds = async params => {
+  return await ipc.callMain('db-get-prekeys-ids', params);
 };
 
 export const getSignedPreKey = async params => {

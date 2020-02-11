@@ -108,7 +108,7 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
 };
 
 const generateAndInsertMorePreKeys = async () => {
-  const currentPreKeyIds = await getSessionRecordIds();
+  const currentPreKeyIds = await getSessionRecordIds({});
   if (currentPreKeyIds.length === PREKEY_INITIAL_QUANTITY) return;
 
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
