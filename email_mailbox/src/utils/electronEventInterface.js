@@ -118,7 +118,7 @@ const stopGettingEvents = () => {
   } else if (!getBackupStatus()) {
     initAutoBackupMonitor();
   }
-  processPendingEvents();
+  processPendingEvents({});
 };
 
 const parseAndStoreEventsBatch = async ({

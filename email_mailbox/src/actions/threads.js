@@ -84,7 +84,7 @@ export const addLabelIdThread = (currentLabelId, threadId, labelId) => {
             labelsAdded: [label.text]
           }
         };
-        await postPeerEvent(eventParams);
+        await postPeerEvent({ data: eventParams });
       }
       const emails = await getEmailsByThreadId({ threadId });
       const emailLabels = formAddThreadLabelParams(emails, labelId);
@@ -151,7 +151,7 @@ export const addLabelIdThreads = (currentLabelId, threadsParams, labelId) => {
           }
         };
         if (eventParams.params.threadIds.length) {
-          await postPeerEvent(eventParams);
+          await postPeerEvent({ data: eventParams });
         }
       }
 
@@ -219,7 +219,7 @@ export const addMoveLabelIdThreads = ({
         }
       };
       if (eventParams.params.threadIds.length) {
-        await postPeerEvent(eventParams);
+        await postPeerEvent({ data: eventParams });
       }
 
       const dbReponse = await Promise.all(
@@ -317,7 +317,7 @@ export const removeLabelIdThread = (currentLabelId, threadId, labelId) => {
             labelsAdded: []
           }
         };
-        await postPeerEvent(eventParams);
+        await postPeerEvent({ data: eventParams });
       }
       const emails = await getEmailsByThreadId({ threadId });
       const params = formRemoveThreadLabelParams(emails, labelId);
@@ -378,7 +378,7 @@ export const removeLabelIdThreads = (
         }
       };
       if (eventParams.params.threadIds.length) {
-        await postPeerEvent(eventParams);
+        await postPeerEvent({ data: eventParams });
       }
 
       const emails = await returnEmailIdsFromThreadsIds(
@@ -446,7 +446,7 @@ export const removeThreads = (threadsParams, labelId) => {
           cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
           params: { metadataKeys }
         };
-        const { status } = await postPeerEvent(eventParams);
+        const { status } = await postPeerEvent({ data: eventParams });
         if (status === 200) {
           const uniqueIds = emails.map(email => email.threadId);
           await deleteEmailsByThreadIdAndLabelId({ threadIds, labelId });
@@ -540,7 +540,7 @@ export const updateUnreadThreads = (threadsParams, unread, labelId) => {
         cmd: SocketCommand.PEER_THREAD_READ_UPDATE,
         params: { threadIds, unread: unread ? 1 : 0 }
       };
-      const { status } = await postPeerEvent(eventParams);
+      const { status } = await postPeerEvent({ data: eventParams });
       if (status === 200) {
         const [response] = await updateUnreadEmailByThreadIds({
           threadIds,
@@ -633,7 +633,7 @@ export const sendOpenEvent = (
           cmd: SocketCommand.SEND_OPEN_EVENT,
           params: { metadataKeys }
         };
-        const { status } = await postPeerEvent(eventParams);
+        const { status } = await postPeerEvent({ data: eventParams });
         if (status === 200) {
           const response = await updateEmails({
             keys: metadataKeys,

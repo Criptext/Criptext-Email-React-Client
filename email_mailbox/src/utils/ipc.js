@@ -50,9 +50,9 @@ export const openFileExplorer = filename => {
   ipc.callMain('open-file-explorer', filename);
 };
 
-export const processPendingEvents = () => {
+export const processPendingEvents = params => {
   setTimeout(() => {
-    ipc.callMain('process-pending-events');
+    ipc.callMain('process-pending-events', params);
   }, 1000);
 };
 

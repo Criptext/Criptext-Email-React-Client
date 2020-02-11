@@ -7,14 +7,14 @@ const MALFORMED_EVENT_STATUS = 202;
 const SUCCESS_STATUS = 200;
 let isProcessingQueue = false;
 
-const processEventsQueue = async () => {
+const processEventsQueue = async ({ accountId }) => {
   if (isProcessingQueue) return;
   isProcessingQueue = true;
 
   if (!clientManager) {
     clientManager = require('./clientManager');
   }
-  const queuedEvents = await getPendingEvents();
+  const queuedEvents = await getPendingEvents(accountId);
   while (queuedEvents.length > 0) {
     const batch = queuedEvents.splice(0, QUEUE_BATCH);
     const { ids, parsedEvents } = await removeMalformedEvents(batch);

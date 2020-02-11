@@ -1275,9 +1275,9 @@ const createPendingEvent = params => {
   return Pendingevent().create(params);
 };
 
-const getPendingEvents = () => {
+const getPendingEvents = accountId => {
   return Pendingevent()
-    .findAll()
+    .findAll({ where: { accountId } })
     .map(event => event.toJSON());
 };
 

@@ -110,7 +110,7 @@ export const removeEmails = (labelId, emailsParams) => {
             cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
             params: { metadataKeys }
           };
-          const { status } = await postPeerEvent(eventParams);
+          const { status } = await postPeerEvent({ data: eventParams });
 
           if (status === 200) {
             if (keys.length === 1) {
@@ -202,7 +202,7 @@ export const updateUnreadEmail = (
         cmd: SocketCommand.PEER_EMAIL_READ_UPDATE,
         params: { metadataKeys, unread: valueToSet ? 1 : 0 }
       };
-      const { status } = await postPeerEvent(eventParams);
+      const { status } = await postPeerEvent({ data: eventParams });
       if (status === 200) {
         await updateEmail({ id: emailId, unread: !!valueToSet });
         dispatch(markEmailUnreadSuccess(emailId, valueToSet));
@@ -266,7 +266,7 @@ export const updateEmailLabels = ({
             }
           };
 
-          const { status } = await postPeerEvent(eventParams);
+          const { status } = await postPeerEvent({ data: eventParams });
 
           shouldDispatch = status === 200;
         } else {

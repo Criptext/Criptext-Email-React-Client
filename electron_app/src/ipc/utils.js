@@ -14,6 +14,8 @@ const {
 } = require('./../windows/windowUtils');
 const { upApp } = require('./../windows');
 
+const accountId = 1;
+
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
 ipc.answerRenderer('get-computer-name', () => getComputerName());
@@ -22,8 +24,9 @@ ipc.answerRenderer('get-isWindows', () => isWindows());
 
 ipc.answerRenderer('get-os-and-arch', () => getOsAndArch());
 
-ipc.answerRenderer('process-pending-events', () => {
-  processEventsQueue();
+ipc.answerRenderer('process-pending-events', params => {
+  const data = params.accountId ? params : { ...params, accountId };
+  processEventsQueue(data);
 });
 
 ipc.answerRenderer('restart-app', () => {

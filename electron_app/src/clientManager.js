@@ -366,12 +366,13 @@ const upgradeAccount = async params => {
     : await checkExpiredSession(res, upgradeAccount, params);
 };
 
-const postPeerEvent = async params => {
+const postPeerEvent = async ({ data, accountId }) => {
   try {
     await dbManager.createPendingEvent({
-      data: JSON.stringify(params)
+      data: JSON.stringify(data),
+      accountId
     });
-    processEventsQueue();
+    processEventsQueue({ accountId });
     return Promise.resolve({ status: 200 });
   } catch (e) {
     return Promise.reject({ status: 422 });

@@ -33,7 +33,7 @@ export const addLabel = label => {
           cmd: SocketCommand.PEER_LABEL_CREATED,
           params: { text, color, uuid }
         };
-        await postPeerEvent(eventParams);
+        await postPeerEvent({ data: eventParams });
         dispatch(addLabels(labels));
       }
     } catch (e) {
@@ -66,7 +66,7 @@ export const removeLabel = (id, uuid) => {
         cmd: SocketCommand.PEER_LABEL_DELETE,
         params: { uuid }
       };
-      await postPeerEvent(eventParams);
+      await postPeerEvent({ data: eventParams });
     } catch (e) {
       sendUpdateLabelsErrorMessage();
     }
@@ -101,7 +101,7 @@ export const updateLabel = ({ id, uuid, color, text, visible }) => {
           text
         }
       };
-      await postPeerEvent(eventParams);
+      await postPeerEvent({ data: eventParams });
     } catch (e) {
       sendUpdateLabelsErrorMessage();
     }

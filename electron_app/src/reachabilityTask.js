@@ -15,6 +15,7 @@ let pingFailedCounter = 0;
 let reachabilityTask = null;
 let hasFailed = false;
 let checkingConnectionToServer = false;
+const accountId = 1;
 
 const setConnectionStatus = networkStatus => {
   const prevNetworkStatus = globalManager.internetConnection.getStatus();
@@ -25,7 +26,7 @@ const setConnectionStatus = networkStatus => {
         mailboxWindow.send('network-connection-established');
       }
       globalManager.internetConnection.setStatus(true);
-      processEventsQueue();
+      processEventsQueue({ accountId });
       break;
     }
     case NETWORK_STATUS.OFFLINE: {
