@@ -59,17 +59,13 @@ const convertFilesInFolder = async (
   return true;
 };
 
-const createFlagFile = path => {
-  const writer = fs.createWriteStream(path);
-  writer.write('ready');
-};
-
 const start = async ({ inPath, outPath, pass, oldPass }) => {
   const inputPath = inPath;
   const outputPath = outPath;
   const password = pass;
   const oldPassword = oldPass;
 
+  if (!fs.existsSync(inputPath)) return true;
   const success = await convertFilesInFolder(
     inputPath,
     outputPath,
@@ -81,10 +77,8 @@ const start = async ({ inPath, outPath, pass, oldPass }) => {
     sendMessage('abort');
     return false;
   }
-  createFlagFile(`${inputPath}/../flag.txt`);
   await remove(inputPath);
-  fs.renameSync(outputPath, inputPath);
-  await remove(`${inputPath}/../flag.txt`);
+  if (fs.existsSync(outputPath)) fs.renameSync(outputPath, inputPath);
   return true;
 };
 

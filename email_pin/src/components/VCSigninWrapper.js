@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ScreenSignin, { step } from './ScreenSignin';
-import { closePinWindow, sendPin } from './../utils/ipc';
+import { sendPin } from './../utils/ipc';
 import { getPin } from './../utils/electronInterface';
 
 import VCHOC from './VCHOC';
@@ -93,7 +93,6 @@ class VCSigninWrapper extends Component {
       shouldExport: false,
       shouldResetPin: true
     });
-    closePinWindow({ forceClose: true });
   };
 
   concat = (array, item) => {
