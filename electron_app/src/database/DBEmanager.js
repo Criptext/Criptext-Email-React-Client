@@ -94,10 +94,15 @@ const updateAccount = ({
   signatureEnabled,
   signFooter,
   isLoggedIn,
-  isActive
+  isActive,
+  autoBackupEnable,
+  autoBackupFrequency,
+  autoBackupLastDate,
+  autoBackupLastSize,
+  autoBackupNextDate,
+  autoBackupPath
 }) => {
   const params = noNulls({
-    id,
     deviceId,
     jwt,
     refreshToken,
@@ -110,11 +115,17 @@ const updateAccount = ({
       typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined,
     signFooter: typeof signFooter === 'boolean' ? signFooter : undefined,
     isLoggedIn,
-    isActive
+    isActive,
+    autoBackupEnable:
+      typeof autoBackupEnable === 'boolean' ? autoBackupEnable : undefined,
+    autoBackupFrequency,
+    autoBackupLastDate,
+    autoBackupLastSize,
+    autoBackupNextDate,
+    autoBackupPath
   });
-
-  myAccount.update(params);
   const whereParam = id ? { id } : { recipientId };
+  myAccount.update({ ...params, ...whereParam });
   return Account().update(params, {
     where: whereParam
   });
@@ -1309,27 +1320,11 @@ const getSettings = () => {
     .then(setting => setting.toJSON());
 };
 
-const updateSettings = async ({
-  language,
-  opened,
-  theme,
-  autoBackupEnable,
-  autoBackupFrequency,
-  autoBackupLastDate,
-  autoBackupLastSize,
-  autoBackupNextDate,
-  autoBackupPath
-}) => {
+const updateSettings = async ({ language, opened, theme }) => {
   const params = noNulls({
     language,
     opened,
-    theme,
-    autoBackupEnable,
-    autoBackupFrequency,
-    autoBackupLastDate,
-    autoBackupLastSize,
-    autoBackupNextDate,
-    autoBackupPath
+    theme
   });
   if (Object.keys(params).length < 1) {
     return Promise.resolve([1]);

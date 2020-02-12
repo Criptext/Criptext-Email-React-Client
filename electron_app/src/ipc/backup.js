@@ -18,7 +18,8 @@ const {
   defineUnitToAppend,
   backupDateFormat
 } = require('./../utils/TimeUtils');
-const { getSettings, updateSettings } = require('./../database');
+const { updateAccount } = require('./../database');
+const myAccount = require('../Account');
 global.autoBackupIntervalId = null;
 
 const simulatePause = ms => {
@@ -168,14 +169,15 @@ ipc.answerRenderer('restore-backup-encrypted', async params => {
   }
 });
 
-const initAutoBackupMonitor = async () => {
+const initAutoBackupMonitor = () => {
+  const accountId = myAccount.id;
   clearTimeout(global.autoBackupIntervalId);
   const {
     autoBackupEnable,
     autoBackupPath,
     autoBackupFrequency,
     autoBackupNextDate
-  } = await getSettings();
+  } = myAccount.activeAccount;
   if (!autoBackupEnable || !autoBackupNextDate) {
     return;
   }
@@ -195,7 +197,8 @@ const initAutoBackupMonitor = async () => {
       do {
         nextDate.add(1, timeUnit);
       } while (nextDate.isBefore(today));
-      await updateSettings({
+      await updateAccount({
+        id: accountId,
         autoBackupLastDate: pendingDate.format(backupDateFormat),
         autoBackupLastSize: backupSize,
         autoBackupNextDate: nextDate.format(backupDateFormat)

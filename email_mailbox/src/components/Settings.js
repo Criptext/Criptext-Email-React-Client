@@ -24,7 +24,7 @@ const Settings = props => (
   <div className="settings-container">
     <Message onClickSection={props.onClickMailboxSection} />
     <div className="settings-title">
-      <h1>{string.sidebar.settings}</h1>
+      <h1>{props.activeAccount}</h1>
     </div>
     <div className="settings-content">
       <ul className="settings-content-items">
@@ -113,6 +113,7 @@ Items.propTypes = {
 };
 
 Settings.propTypes = {
+  activeAccount: PropTypes.string,
   isHiddenSettingsPopup: PropTypes.bool,
   onClickSection: PropTypes.func,
   onClickMailboxSection: PropTypes.func,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Switch } from 'react-switch-input';
 import string from './../lang';
 import './settingsaccountbackup.scss';
-import { mySettings } from '../utils/electronInterface';
+import { myAccount } from '../utils/electronInterface';
 
 const {
   auto: autoBackup,
@@ -70,7 +70,7 @@ const SettingsAccountBackup = props => (
           </div>
           <div className="item-option-content ctpx-autobackup-path">
             <span className="cptx-section-item-description">
-              {mySettings.autoBackupPath}
+              {myAccount.autoBackupPath}
             </span>
           </div>
           <div

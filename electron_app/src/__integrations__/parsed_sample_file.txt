@@ -4,7 +4,7 @@
 {"table":"contact","object":{"id":3,"email":"charlie@criptext.com","name":"Charlie","isTrusted":false,"spamScore":0}}
 {"table":"label","object":{"id":8,"text":"News","color":"000000","type":"custom","visible":true,"uuid":"65a60683-a1c9-21f3-79d5-e57462ca8147"}}
 {"table":"label","object":{"id":9,"text":"Shop","color":"111111","type":"custom","visible":true,"uuid":"77b80589-3a4d-171e-a264-e99a07baca27"}}
-{"table":"email","object":{"id":1,"key":1,"threadId":"threadA","subject":"Greetings","content":"<p>Hello there</p>","preview":"Hello there","date":"2013-10-07 08:23:19","status":2,"unread":false,"secure":true,"unsentDate":"2018-06-14 08:23:20","messageId":"messageId1","replyTo":"","fromAddress":"Alice <alice@criptext.com>"}}
+{"table":"email","object":{"date":"2013-10-07 08:23:19","unsentDate":"2018-06-14 08:23:20","content":"<p>Hello there</p>","fromAddress":"Alice <alice@criptext.com>","id":1,"key":1,"messageId":"messageId1","preview":"Hello there","replyTo":"","secure":true,"status":2,"subject":"Greetings","threadId":"threadA","unread":false}}
 {"table":"email_contact","object":{"id":1,"type":"from","contactId":1,"emailId":1}}
 {"table":"email_contact","object":{"id":2,"type":"to","contactId":2,"emailId":1}}
 {"table":"email_contact","object":{"id":3,"type":"to","contactId":3,"emailId":1}}

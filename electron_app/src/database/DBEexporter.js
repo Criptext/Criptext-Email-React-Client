@@ -223,14 +223,14 @@ const _exportEmailTable = async (db, userEmail) => {
         if (!row.unsendDate) {
           delete row.unsendDate;
         } else {
-          row['unsentDate'] = parseDate(row.unsendDate);
+          row['unsentDate'] = parseOutgoingDate(row.unsendDate);
           delete row.unsendDate;
         }
 
         if (!row.trashDate) {
           delete row.trashDate;
         } else {
-          row['trashDate'] = parseDate(row.trashDate);
+          row['trashDate'] = parseOutgoingDate(row.trashDate);
         }
 
         if (row.replyTo === null) {
@@ -256,7 +256,7 @@ const _exportEmailTable = async (db, userEmail) => {
           content: body,
           headers: headers,
           key,
-          date: parseDate(row.date)
+          date: parseOutgoingDate(row.date)
         });
       })
     );
@@ -384,7 +384,7 @@ const _exportFileTable = async db => {
           return Object.assign(row, {
             readOnly: !!row.readOnly,
             emailId: parseInt(row.emailId),
-            date: parseDate(row.date)
+            date: parseOutgoingDate(row.date)
           });
         })
       );
@@ -631,7 +631,7 @@ const exportEmailTable = async accountId => {
               ...newRow,
               content: body,
               key,
-              date: parseDate(newRow.date),
+              date: parseOutgoingDate(newRow.date),
               headers: headers || undefined
             };
           })
@@ -741,7 +741,7 @@ const exportFileTable = async accountId => {
           if (!row.cid) delete row.cid;
           return Object.assign(row, {
             emailId: parseInt(row.emailId),
-            date: parseDate(row.date)
+            date: parseOutgoingDate(row.date)
           });
         });
       });
@@ -897,7 +897,7 @@ const importDatabaseFromFile = async ({
             case Table.EMAIL: {
               const emailToStore = {
                 ...object,
-                date: parseDate(object.date),
+                date: parseIncomingDate(object.date),
                 accountId
               };
               emails.push(emailToStore);
@@ -1292,8 +1292,12 @@ const getCustomLinesByStream = (filename, lineCount, callback) => {
   });
 };
 
-const parseDate = date => {
+const parseOutgoingDate = date => {
   return moment.utc(date).format('YYYY-MM-DD HH:mm:ss');
+};
+
+const parseIncomingDate = date => {
+  return moment.utc(date, 'YYYY-MM-DD HH:mm:ss');
 };
 
 const readBytesSync = (filePath, filePosition, bytesToRead) => {

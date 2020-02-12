@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import SettingsAccountBackup from './SettingsAccountBackup';
 import {
   showSaveFileDialog,
-  mySettings,
+  myAccount,
   getBackupStatus
 } from './../utils/electronInterface';
 import {
   exportBackupUnencrypted,
   getDefaultBackupFolder,
   exportBackupEncrypted,
-  updateSettings,
+  updateAccount,
   initAutoBackupMonitor,
   disableAutoBackup
 } from '../utils/ipc';
@@ -87,20 +87,20 @@ class SettingsAccountBackupWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      autoBackupEnable: !!mySettings.autoBackupEnable,
+      autoBackupEnable: !!myAccount.autoBackupEnable,
       backupPath: '',
       backupPercent: 0,
       backupType: '',
       exportType: EXPORT_TYPES.NONE,
       inProgress: false,
       progressMessage: '',
-      selectedFrequency: mySettings.autoBackupFrequency || 'daily'
+      selectedFrequency: myAccount.autoBackupFrequency || 'daily'
     };
   }
 
   render() {
-    const lastDate = formatLastBackupDate(mySettings.autoBackupLastDate);
-    const lastSize = convertToHumanSize(mySettings.autoBackupLastSize, true, 0);
+    const lastDate = formatLastBackupDate(myAccount.autoBackupLastDate);
+    const lastSize = convertToHumanSize(myAccount.autoBackupLastSize, true, 0);
     return (
       <SettingsAccountBackup
         {...this.props}
@@ -212,7 +212,7 @@ class SettingsAccountBackupWrapper extends Component {
   handleChangeSwitchSelectBackupFolder = e => {
     const nextCheckedValue = e.target.checked;
     if (nextCheckedValue === true) {
-      if (!mySettings.autoBackupPath) {
+      if (!myAccount.autoBackupPath) {
         this.props.onShowSelectBackupFolderPopup();
       } else {
         this.setState(
@@ -221,7 +221,7 @@ class SettingsAccountBackupWrapper extends Component {
           },
           () => {
             const filename = defineBackupFileName('db');
-            const backupPath = `${mySettings.autoBackupPath}/${filename}`;
+            const backupPath = `${myAccount.autoBackupPath}/${filename}`;
             this.setState(
               {
                 backupType: 'auto',
@@ -241,7 +241,7 @@ class SettingsAccountBackupWrapper extends Component {
           autoBackupEnable: nextCheckedValue
         },
         async () => {
-          await updateSettings({ autoBackupEnable: false });
+          await updateAccount({ autoBackupEnable: false });
           await disableAutoBackup();
         }
       );
@@ -250,7 +250,7 @@ class SettingsAccountBackupWrapper extends Component {
 
   handleClickBackupNow = () => {
     const filename = defineBackupFileName('db');
-    const backupPath = `${mySettings.autoBackupPath}/${filename}`;
+    const backupPath = `${myAccount.autoBackupPath}/${filename}`;
     this.setState(
       {
         backupType: 'auto',
@@ -265,14 +265,14 @@ class SettingsAccountBackupWrapper extends Component {
 
   handleClickChangeAutoBackupPath = () => {
     const filename = defineBackupFileName('db');
-    const prevAutoBackupPath = `${mySettings.autoBackupPath}/${filename}`;
+    const prevAutoBackupPath = `${myAccount.autoBackupPath}/${filename}`;
     this.handleAutoBackup(prevAutoBackupPath);
   };
 
   handleChangeSelectBackupFrequency = e => {
     const selectedFrequency = e.target.value;
     const filename = defineBackupFileName('db');
-    const backupPath = `${mySettings.autoBackupPath}/${filename}`;
+    const backupPath = `${myAccount.autoBackupPath}/${filename}`;
     this.setState(
       {
         backupType: 'auto',
@@ -394,7 +394,7 @@ class SettingsAccountBackupWrapper extends Component {
     const timeUnit = defineUnitToAppend(selectedFrequency);
     const { nowDate, nextDate } = getAutoBackupDates(Date.now(), 1, timeUnit);
     const autoBackupPath = removeFilenameFromPath(backupPath);
-    await updateSettings({
+    await updateAccount({
       autoBackupEnable: true,
       autoBackupFrequency: selectedFrequency,
       autoBackupLastDate: nowDate,

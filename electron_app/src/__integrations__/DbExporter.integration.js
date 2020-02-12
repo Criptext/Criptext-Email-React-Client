@@ -17,6 +17,7 @@ const {
   generateKeyAndIv,
   importDatabaseFromFile
 } = require('./../database/DBEexporter');
+const globalManager = require('../globalManager');
 const fs = require('fs');
 const myAccount = require('../Account');
 
@@ -121,11 +122,13 @@ const insertLabels = async params => {
   );
 };
 
+const dbKey = '1111';
 const insertEmail = async params => {
   fileUtils.saveEmailBody({
-    metadataKey: params.key,
+    metadataKey: params.email.key,
     username,
-    body: params.content
+    body: params.email.content,
+    password: dbKey
   });
   return await DBManager.createEmail({
     ...params,
@@ -159,9 +162,10 @@ beforeAll(async () => {
   await fileUtils.removeUserDir(username);
   await DBManager.deleteDatabase();
   await DBManager.initDatabaseEncrypted({
-    key: '1111',
+    key: dbKey,
     shouldAddSystemLabels: true
   });
+  globalManager.databaseKey.set(dbKey);
   const [account] = await insertAccount();
   myAccount.initialize([account.dataValues]);
   accountId = account.dataValues.id;
@@ -284,7 +288,8 @@ describe('Import Database: ', () => {
     const body =
       (await fileUtils.getEmailBody({
         username,
-        metadataKey: email.email.key
+        metadataKey: email.email.key,
+        password: dbKey
       })) || rawEmail.content;
     const emailImported = {
       ...rawEmail,

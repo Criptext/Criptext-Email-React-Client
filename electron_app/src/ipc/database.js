@@ -33,7 +33,17 @@ ipc.answerRenderer('db-create-identity-key-record', params =>
   dbManager.createIdentityKeyRecord(params)
 );
 
-ipc.answerRenderer('db-create-label', params => dbManager.createLabel(params));
+ipc.answerRenderer('db-create-label', params => {
+  const data = !Array.isArray(params)
+    ? params.accountId
+      ? params
+      : { ...params, accountId: myAccount.id }
+    : params.map(
+        label =>
+          label.accountId ? label : { ...label, accountId: myAccount.id }
+      );
+  return dbManager.createLabel(data);
+});
 
 ipc.answerRenderer('db-create-prekey-record', params =>
   dbManager.createPreKeyRecord(params)
@@ -244,9 +254,11 @@ ipc.answerRenderer('db-get-trash-expired-emails', () =>
   dbManager.getTrashExpiredEmails(myAccount.id)
 );
 
-ipc.answerRenderer('db-update-account', params =>
-  dbManager.updateAccount(params)
-);
+ipc.answerRenderer('db-update-account', params => {
+  const data =
+    params.recipientId || params.id ? params : { ...params, id: myAccount.id };
+  return dbManager.updateAccount(data);
+});
 
 ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>
   dbManager.updateContactByEmail({ email, name })
