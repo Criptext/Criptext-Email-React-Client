@@ -13,8 +13,7 @@ const globalManager = require('../globalManager');
 const dbManager = require('./../database');
 const fileUtils = require('./FileUtils');
 const path = require('path');
-const myAccount = require('../../src/Account');
-const accountId = 1;
+const myAccount = require('../Account');
 
 const getUsername = () => {
   const username = myAccount.email;
@@ -23,7 +22,7 @@ const getUsername = () => {
 
 const printEmailOrThread = async params => {
   const { emailId, threadId } = params;
-  const _accountId = params.accountId || accountId;
+  const accountId = params.accountId || myAccount.id;
   let workerWin;
   // Refresh lang for document header
   const { language } = require('./../Settings');
@@ -82,7 +81,7 @@ const printEmailOrThread = async params => {
   let clearSubject;
   const username = getUsername();
   if (threadId) {
-    const data = { threadId, accountId: _accountId };
+    const data = { threadId, accountId };
     const rawEmails = await dbManager.getEmailsByThreadId(data);
     const emails = await Promise.all(
       rawEmails.map(async email => {
@@ -131,7 +130,7 @@ const printEmailOrThread = async params => {
         printDocumentTemplateClose;
     }
   } else if (emailId) {
-    const data = { array: { ids: [emailId] }, accountId: _accountId };
+    const data = { array: { ids: [emailId] }, accountId };
     const [rawEmail] = await dbManager.getEmailsByArrayParam(data);
     if (rawEmail) {
       const emailBody =

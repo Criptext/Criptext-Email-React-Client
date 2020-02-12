@@ -1,6 +1,6 @@
 const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const clientManager = require('./../clientManager');
-const accountId = 1;
+const myAccount = require('../Account');
 
 ipc.answerRenderer('client-acknowledge-events', params =>
   clientManager.acknowledgeEvents(params)
@@ -105,7 +105,9 @@ ipc.answerRenderer('client-post-key-bundle', params =>
 );
 
 ipc.answerRenderer('client-post-peer-event', params => {
-  const data = params.accountId ? params : { ...params, accountId };
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
   return clientManager.postPeerEvent(data);
 });
 

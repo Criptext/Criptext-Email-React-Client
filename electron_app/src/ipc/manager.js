@@ -1,11 +1,10 @@
 const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const dbManager = require('./../database');
 const fileUtils = require('./../utils/FileUtils');
-const myAccount = require('../../src/Account');
 const globalManager = require('../globalManager');
 const { APP_DOMAIN } = require('../utils/const');
 const rekeyHandler = require('../rekeyHandler');
-const accountId = 1;
+const myAccount = require('../Account');
 
 const getUsername = () => {
   if (!Object.keys(myAccount)) return '';
@@ -14,7 +13,9 @@ const getUsername = () => {
 };
 
 ipc.answerRenderer('db-delete-emails-by-threadid-and-labelid', async params => {
-  const data = params.accountId ? params : { ...params, accountId };
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
   const emailKeys = await dbManager.getEmailsToDeleteByThreadIdAndLabelId(data);
   if (!emailKeys.length) return;
   await Promise.all(
@@ -47,7 +48,7 @@ ipc.answerRenderer('db-clean-keys', dbManager.cleanKeys);
 
 ipc.answerRenderer('db-delete-emails-by-ids', async params => {
   const { ids } = params;
-  const _accountId = params.accountId || accountId;
+  const _accountId = params.accountId || myAccount.id;
   const emails = await dbManager.getEmailsByArrayParam({
     array: { ids },
     accountId: _accountId
@@ -78,7 +79,7 @@ ipc.answerRenderer('db-get-email-with-body', async key => {
 
 ipc.answerRenderer('db-get-emails-by-ids', async params => {
   const { emailIds } = params;
-  const _accountId = params.accountId || accountId;
+  const _accountId = params.accountId || myAccount.id;
   const emails = await dbManager.getEmailsByIds({
     emailIds,
     accountId: _accountId
@@ -99,7 +100,9 @@ ipc.answerRenderer('db-get-emails-by-ids', async params => {
 });
 
 ipc.answerRenderer('db-get-emails-by-threadid', async params => {
-  const data = params.accountId ? params : { ...params, accountId };
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
   const emails = await dbManager.getEmailsByThreadId(data);
   return await Promise.all(
     emails.map(async email => {
@@ -117,7 +120,9 @@ ipc.answerRenderer('db-get-emails-by-threadid', async params => {
 });
 
 ipc.answerRenderer('db-delete-email-by-keys', async params => {
-  const data = params.accountId ? params : { ...params, accountId };
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
   const res = await dbManager.deleteEmailByKeys(data);
   await Promise.all(
     params.keys.map(key =>
@@ -148,7 +153,9 @@ ipc.answerRenderer('fs-delete-email-content', async params => {
 });
 
 ipc.answerRenderer('db-create-email', async params => {
-  const data = params.accountId ? params : { ...params, accountId };
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
   await fileUtils.saveEmailBody({
     body: params.body,
     headers: params.headers,
@@ -160,7 +167,9 @@ ipc.answerRenderer('db-create-email', async params => {
 });
 
 ipc.answerRenderer('db-unsend-email', async params => {
-  const data = params.accountId ? params : { ...params, accountId };
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
   await dbManager.updateEmail(data);
   await fileUtils.deleteEmailContent({ metadataKey: parseInt(params.key) });
 });

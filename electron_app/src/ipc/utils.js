@@ -13,8 +13,7 @@ const {
   sendEventToAllWindows
 } = require('./../windows/windowUtils');
 const { upApp } = require('./../windows');
-
-const accountId = 1;
+const myAccount = require('../Account');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
@@ -25,7 +24,9 @@ ipc.answerRenderer('get-isWindows', () => isWindows());
 ipc.answerRenderer('get-os-and-arch', () => getOsAndArch());
 
 ipc.answerRenderer('process-pending-events', params => {
-  const data = params.accountId ? params : { ...params, accountId };
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
   processEventsQueue(data);
 });
 
