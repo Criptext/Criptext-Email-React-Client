@@ -19,7 +19,7 @@ export const defineAccounts = accounts => {
   return accounts.reduce((result, element) => {
     const account = {
       id: element.id,
-      badge: element.badge,
+      badge: element.badge || 0,
       isActive: !!element.isActive,
       name: element.name,
       recipientId: element.recipientId
@@ -31,7 +31,9 @@ export const defineAccounts = accounts => {
   }, {});
 };
 
-export const assembleAccounts = async (accounts = myAccount.logged) => {
+export const assembleAccounts = async (
+  accounts = myAccount.inactiveAccounts
+) => {
   const recipientIds = Object.keys(accounts);
   return await Promise.all(
     recipientIds.map(async recipientId => {

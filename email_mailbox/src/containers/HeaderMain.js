@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { getAllLabels } from '../selectors/labels';
+import { getAllAccounts } from '../selectors/accounts';
 import {
   clearSuggestions,
   loadSuggestions,
