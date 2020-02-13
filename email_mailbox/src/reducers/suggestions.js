@@ -1,4 +1,4 @@
-import { Suggestions } from '../actions/types';
+import { Activity, Suggestions } from '../actions/types';
 import { Map, List, Set } from 'immutable';
 import * as TimeUtils from '../utils/TimeUtils';
 
@@ -33,6 +33,8 @@ const suggestions = (state = initSuggestions, action) => {
         error: null
       });
     }
+    case Activity.LOGOUT:
+      return initSuggestions;
     case Suggestions.SET_ERROR_SUGGESTIONS: {
       return state.set('error', action.error);
     }

@@ -1,4 +1,5 @@
 import { Map } from 'immutable';
+import accounts from './accounts';
 import activities from './activity';
 import contacts from './contacts';
 import emails from './emails';
@@ -12,6 +13,7 @@ export const crossReducer = (state = new Map(), action) => {
   switch (action.type) {
     case App.ADD_DATA: {
       const {
+        account,
         activity,
         contact,
         email,
@@ -20,6 +22,7 @@ export const crossReducer = (state = new Map(), action) => {
         label,
         thread
       } = action;
+      const accountsState = state.get('accounts');
       const activitiesState = state.get('activities');
       const contactsState = state.get('contacts');
       const emailsState = state.get('emails');
@@ -28,6 +31,7 @@ export const crossReducer = (state = new Map(), action) => {
       const labelsState = state.get('labels');
       const threadsState = state.get('threads');
       return state.merge({
+        accounts: account ? accounts(accountsState, account) : accountsState,
         activities: activity
           ? activities(activitiesState, activity)
           : activitiesState,

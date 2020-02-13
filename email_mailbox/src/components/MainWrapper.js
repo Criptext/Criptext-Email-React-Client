@@ -18,10 +18,22 @@ class MainWrapper extends Component {
     super(props);
     this.state = {
       isUpdateAvailable: false,
-      threadItemsChecked: Set()
+      threadItemsChecked: Set(),
+      shouldLoadMailbox: false
     };
 
     this.initEventHandlers(props);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.sectionSelected.type !== this.props.sectionSelected.type &&
+      this.props.sectionSelected.type === SectionType.MAILBOX
+    ) {
+      this.setState({ shouldLoadMailbox: true });
+    } else if (this.state.shouldLoadMailbox) {
+      this.setState({ shouldLoadMailbox: false });
+    }
   }
 
   render() {
@@ -54,6 +66,7 @@ class MainWrapper extends Component {
             onClickSection={this.props.onClickSection}
             onToggleActivityPanel={this.props.onToggleActivityPanel}
             sectionSelected={this.props.sectionSelected}
+            onUpdateApp={this.props.onUpdateApp}
           />
         );
       }
@@ -79,6 +92,7 @@ class MainWrapper extends Component {
           <HeaderMain
             onClickSection={this.props.onClickSection}
             onToggleActivityPanel={this.props.onToggleActivityPanel}
+            onUpdateApp={this.props.onUpdateApp}
           />
         );
       }
@@ -90,7 +104,12 @@ class MainWrapper extends Component {
   renderSection = () => {
     switch (this.props.sectionSelected.type) {
       case SectionType.SETTINGS: {
-        return <Settings onClickMailboxSection={this.props.onClickSection} />;
+        return (
+          <Settings
+            onClickMailboxSection={this.props.onClickSection}
+            onUpdateApp={this.props.onUpdateApp}
+          />
+        );
       }
       default:
         return this.renderThreads();
@@ -114,6 +133,7 @@ class MainWrapper extends Component {
             onCheckThreadItem={this.handleCheckThreadItem}
             onCloseUpdateMessage={this.handleCloseUpdateMessage}
             searchParams={this.props.sectionSelected.params.searchParams}
+            shouldInitLoad={this.state.shouldLoadMailbox}
             threadItemsChecked={this.state.threadItemsChecked}
           />
           {isThreadVisible && (
@@ -189,6 +209,7 @@ class MainWrapper extends Component {
 MainWrapper.propTypes = {
   onClickSection: PropTypes.func,
   onToggleActivityPanel: PropTypes.func,
+  onUpdateApp: PropTypes.func,
   sectionSelected: PropTypes.object
 };
 

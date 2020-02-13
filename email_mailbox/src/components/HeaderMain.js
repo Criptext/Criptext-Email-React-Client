@@ -23,16 +23,17 @@ const HeaderMain = props => (
       hints={props.hints}
     />
     <ProfileShortCut
-      avatarUrl={props.avatarUrl}
+      avatarTimestamp={props.avatarTimestamp}
       onClickSettings={props.onClickSection}
       openLogin={props.openLogin}
+      onUpdateApp={props.onUpdateApp}
     />
   </div>
 );
 
 HeaderMain.propTypes = {
   allLabels: PropTypes.array,
-  avatarUrl: PropTypes.string,
+  avatarTimestamp: PropTypes.number,
   getSearchParams: PropTypes.func,
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,
@@ -46,6 +47,7 @@ HeaderMain.propTypes = {
   onToggleMenuSearchHints: PropTypes.func,
   onToggleMenuSearchOptions: PropTypes.func,
   onTriggerSearch: PropTypes.func,
+  onUpdateApp: PropTypes.func,
   searchParams: PropTypes.object,
   threads: PropTypes.object
 };

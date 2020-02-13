@@ -274,6 +274,9 @@
     },
     "manual_sync": {
       "description": "Синхронизация почтового ящика закончена"
+    },
+    "logged_as": {
+      "description": "Logged in as "
     }
   },
   "momentLocales": {
@@ -336,6 +339,10 @@
         "device": "the device will log out and",
         "data": "all local data will be erased"
       }
+    },
+    "change_account": {
+      "title": "Changing account",
+      "description": "Loading your account..."
     },
     "change_password": {
       "title": "Изменить Пароль",

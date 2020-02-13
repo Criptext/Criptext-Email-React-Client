@@ -1,5 +1,6 @@
 import { addAccounts, updateAccounts } from './accounts';
 import {
+  logout,
   setAvatarUpdatedTimestamp,
   startLoadSync,
   startLoadThread,
@@ -102,6 +103,7 @@ export {
   loadFeedItems,
   loadSuggestions,
   loadThreads,
+  logout,
   moveThreads,
   removeAllThreads,
   removeEmails,

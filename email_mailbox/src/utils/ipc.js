@@ -2,6 +2,10 @@ import ipc from '@criptext/electron-better-ipc/renderer';
 
 /*  Windows call
 ----------------------------- */
+export const changeAccountApp = async accountId => {
+  return await ipc.callMain('change-account-app', accountId);
+};
+
 export const checkForUpdates = showDialog => {
   ipc.callMain('check-for-updates', showDialog);
 };

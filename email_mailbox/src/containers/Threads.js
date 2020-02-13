@@ -18,6 +18,10 @@ import { toLowerCaseWithoutSpaces } from './../utils/StringUtils';
 import { storeValue } from '../utils/storage';
 import string from './../lang';
 import { List } from 'immutable';
+import {
+  defineContactType,
+  defineParamsToLoadThread
+} from './../utils/ThreadUtils';
 
 const defineSyncStatus = isSyncing => {
   return isSyncing ? ButtonSyncType.LOAD : ButtonSyncType.STOP;
@@ -26,19 +30,6 @@ const defineSyncStatus = isSyncing => {
 const defineMailboxStatus = (isLoadingThreads, mailboxSize) => {
   if (isLoadingThreads && !mailboxSize) return EmptyMailboxStatus.LOADING;
   return EmptyMailboxStatus.EMPTY;
-};
-
-const defineContactType = (labelId, from, to) => {
-  if (from || to) {
-    if (from && to) return ['from', 'to'];
-    else if (from) return ['from'];
-    return ['to'];
-  }
-
-  if (labelId === LabelType.sent.id || labelId === LabelType.draft.id) {
-    return ['to', 'cc'];
-  }
-  return ['from'];
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -72,59 +63,6 @@ const mapStateToProps = (state, ownProps) => {
     threads: switchChecked ? unreadThreads : threads,
     totalTask
   };
-};
-
-const defineParamsToLoadThread = (
-  mailbox,
-  clear,
-  searchParams,
-  date,
-  threadIdRejected,
-  unread
-) => {
-  const labelId = mailbox.id;
-  const contactTypes = defineContactType(
-    labelId,
-    searchParams ? searchParams.from : null,
-    searchParams ? searchParams.to : null
-  );
-
-  let plain, text, subject, contactFilter, searchInLabelId;
-  if (searchParams) {
-    text = searchParams.text;
-    subject = searchParams.subject;
-    plain = !!searchParams.text;
-    if (searchParams.from) contactFilter = { from: searchParams.from };
-    if (searchParams.to) contactFilter = { to: searchParams.to };
-    if (searchParams.labelId) searchInLabelId = searchParams.labelId;
-  }
-  const rejectedLabelIds = defineRejectedLabels(labelId, searchInLabelId);
-
-  const params =
-    mailbox.text === 'Search'
-      ? {
-          labelId,
-          clear,
-          date,
-          contactTypes,
-          contactFilter,
-          plain,
-          text,
-          subject,
-          rejectedLabelIds,
-          threadIdRejected,
-          searchInLabelId
-        }
-      : {
-          labelId,
-          clear,
-          date,
-          contactTypes,
-          rejectedLabelIds,
-          threadIdRejected,
-          unread
-        };
-  return params;
 };
 
 const mapDispatchToProps = dispatch => {

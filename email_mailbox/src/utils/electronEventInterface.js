@@ -9,6 +9,7 @@ import {
   getBackupStatus
 } from './electronInterface';
 import {
+  changeAccountApp,
   checkForUpdates,
   cleanDatabase,
   createEmail,
@@ -289,6 +290,11 @@ export const getGroupEvents = async ({
     shouldGetMoreEvents: hasMoreEvents,
     showNotification
   });
+};
+
+export const isGettingEventsGet = () => isGettingEvents;
+export const isGettingEventsUpdate = value => {
+  isGettingEvents = value;
 };
 
 export const handleEvent = incomingEvent => {
@@ -1077,6 +1083,10 @@ ipc.answerMain('get-events', async () => {
   sendLoadEventsEvent({});
 });
 
+ipcRenderer.on('refresh-window-logged-as', (ev, { accountId, recipientId }) => {
+  emitter.emit(Event.LOAD_APP, { accountId, recipientId });
+});
+
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
   const labelId = shouldUpdateBadge ? LabelType.draft.id : undefined;
   sendRefreshThreadsEvent({ labelIds: [labelId] });
@@ -1477,6 +1487,11 @@ export const sendManualSyncSuccessMessage = () => {
     type: MessageType.SUCCESS
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
+export const selectAccountAsActive = async ({ accountId, recipientId }) => {
+  await changeAccountApp(accountId);
+  showLoggedAsMessage(recipientId);
 };
 
 export const showLoggedAsMessage = email => {

@@ -281,6 +281,9 @@
     },
     "manual_sync": {
       "description": "Sincronización de Buzón Completa"
+    },
+    "logged_as": {
+      "description": "Conectado como "
     }
   },
   "momentLocales": {
@@ -343,6 +346,10 @@
         "device": "el dispositivo se cerrara sesión y",
         "data": "todos los datos locales serán eliminados"
       }
+    },
+    "change_account": {
+      "title": "Cambiando cuenta",
+      "description": "Cargando tu cuenta..."
     },
     "change_password": {
       "title": "Cambiar Contraseña",
