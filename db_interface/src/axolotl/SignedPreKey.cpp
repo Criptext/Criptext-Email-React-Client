@@ -31,11 +31,28 @@ CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(database db, int accountId,
 
 bool CriptextDB::createSignedPreKey(database db, int accountId, short int id, char *keyRecord, size_t len) {
   try {
-    db << "insert into signedprekeyrecord (signedPreKeyId, record, recordLength, accountId) values (?,?,?,?);"
+    bool hasRow = false;
+    db << "begin;";
+    db << "Select signedPreKeyId from signedprekeyrecord where signedPreKeyId == ? and accountId == ?;"
      << id
-     << keyRecord
-     << static_cast<int>(len)
-     << accountId;
+     << accountId
+     >> [&] (string signedPreKeyId) {
+        hasRow = true;
+    };
+    if (hasRow) {
+      db << "update signedprekeyrecord set record = ?, recordLength = ? where signedPreKeyId == ? and accountId == ?;"
+        << keyRecord
+        << static_cast<int>(len)
+        << id
+        << accountId;
+    } else {
+      db << "insert into signedprekeyrecord (signedPreKeyId, record, recordLength, accountId) values (?,?,?,?);"
+        << id
+        << keyRecord
+        << static_cast<int>(len)
+        << accountId;
+    }
+    db << "commit;";
     return true;
   } catch (exception& e) {
     std::cout << e.what() << std::endl;

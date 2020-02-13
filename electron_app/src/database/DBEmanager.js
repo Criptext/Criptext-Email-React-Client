@@ -1360,9 +1360,9 @@ const cleanDataBase = async () => {
   return await getDB().transaction(async trx => {
     await EmailContact().destroy({ where: {}, transaction: trx });
     await EmailLabel().destroy({ where: {}, transaction: trx });
+    await AccountContact().destroy({ where: {}, transaction: trx });
     await Feeditem().destroy({ where: {}, transaction: trx });
     await Contact().destroy({ where: {}, transaction: trx });
-    await Account().destroy({ where: {}, transaction: trx });
     await Email().destroy({ where: {}, transaction: trx });
     await Label().destroy({ where: { type: 'custom' }, transaction: trx });
     await File().destroy({ where: {}, transaction: trx });
@@ -1372,6 +1372,7 @@ const cleanDataBase = async () => {
     await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
     await Sessionrecord().destroy({ where: {}, transaction: trx });
     await Identitykeyrecord().destroy({ where: {}, transaction: trx });
+    await Account().destroy({ where: {}, transaction: trx });
   });
 };
 
