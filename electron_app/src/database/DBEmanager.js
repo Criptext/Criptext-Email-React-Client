@@ -286,7 +286,7 @@ const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
     : `${systemLabels.spam.id}, ${systemLabels.trash.id}`;
   return Email().destroy({
     where: {
-      threadId: threadIds,
+      threadId: parseSpecialCharacters(threadIds),
       [Op.and]: [
         getDB().literal(
           `exists (select * from EmailLabel where Email.id = EmailLabel.emailId AND EmailLabel.labelId IN (${labelIdsToDelete}))`
@@ -855,8 +855,13 @@ const updateEmails = ({ ids, keys, unread, trashDate }, trx) => {
 const updateUnreadEmailByThreadIds = ({ threadIds, unread }) => {
   const params = {};
   if (typeof unread === 'boolean') params.unread = unread;
-  return Email().update(params, { where: { threadId: threadIds } });
+  return Email().update(params, {
+    where: { threadId: parseSpecialCharacters(threadIds) }
+  });
 };
+
+const parseSpecialCharacters = array =>
+  array.map(element => element.replace(/\$/g, '$$$$'));
 
 /* EmailContact
 ----------------------------- */
