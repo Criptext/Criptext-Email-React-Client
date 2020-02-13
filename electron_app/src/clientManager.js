@@ -359,13 +359,6 @@ const postKeyBundle = async params => {
     : await checkExpiredSession(res, postKeyBundle, params);
 };
 
-const upgradeAccount = async params => {
-  const res = await client.upgradeKeyBundle(params);
-  return res.status === 200
-    ? res
-    : await checkExpiredSession(res, upgradeAccount, params);
-};
-
 const postPeerEvent = async ({ data, accountId }) => {
   try {
     await dbManager.createPendingEvent({
@@ -618,7 +611,6 @@ module.exports = {
   updateDeviceType,
   updateName,
   updatePushToken,
-  upgradeAccount,
   uploadAvatar,
   unsendEmail,
   validateRecoveryCode

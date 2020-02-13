@@ -18,7 +18,7 @@ const sendAPIevent = async event => {
   await generateEvent(event);
 };
 
-const upStepDBEncryptedWithoutPIN = async () => {
+const upStepCreateDBEncrypted = async () => {
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
     await pinWindow.show();
@@ -28,7 +28,7 @@ const upStepDBEncryptedWithoutPIN = async () => {
   }
 };
 
-const upStepCheckPINDBEncrypted = async () => {
+const upStepCheckPIN = async () => {
   const pin = await pinWindow.checkPin();
   if (!pin) {
     globalManager.pinData.set({ pinType: 'new' });
@@ -45,6 +45,16 @@ const upStepCheckPINDBEncrypted = async () => {
   }
 
   await upApp({ pin });
+};
+
+const upStepNewUser = async () => {
+  const language = await getUserLanguage();
+  initNucleus({ language });
+  const settings = { isFromStore, language };
+  mySettings.initialize(settings);
+  await initClient('@');
+  createAppMenu();
+  loginWindow.show({});
 };
 
 const upApp = async ({ shouldSave, pin }) => {
@@ -106,6 +116,7 @@ module.exports = {
   dbManager,
   sendAPIevent,
   upApp,
-  upStepDBEncryptedWithoutPIN,
-  upStepCheckPINDBEncrypted
+  upStepCreateDBEncrypted,
+  upStepCheckPIN,
+  upStepNewUser
 };

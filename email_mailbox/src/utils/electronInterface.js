@@ -60,9 +60,3 @@ export const showSaveFileDialog = (fileName, callback) => {
 export const getNews = ({ code }) => {
   return newsClient.getNews({ code });
 };
-
-/*  DataBase
------------------------------ */
-export const needsUpgrade = () => {
-  return globalManager.needsUpgrade.getValue();
-};

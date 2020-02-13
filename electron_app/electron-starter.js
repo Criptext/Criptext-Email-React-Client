@@ -1,24 +1,18 @@
-const { app, ipcMain } = require('electron');
-const myAccount = require('./src/Account');
+const { app, dialog, ipcMain } = require('electron');
 const socketClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
-const mySettings = require('./src/Settings');
-const { dbManager, upStepDBEncryptedWithoutPIN, upStepCheckPINDBEncrypted } = require('./src/windows');
+const { dbManager, upStepCreateDBEncrypted, upStepCheckPIN, upStepNewUser } = require('./src/windows');
 const loginWindow = require('./src/windows/login');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
-const { startAlice, closeAlice, checkReachability } = require('./src/aliceManager');
-const { createAppMenu } = require('./src/windows/menu');
+const { closeAlice } = require('./src/aliceManager');
 const {
   showWindows,
   isDev,
   isLinux,
-  isWindows,
-  isFromStore,
-  getSystemLanguage
+  isWindows
 } = require('./src/windows/windowUtils');
-const { initNucleus } = require('./src/nucleusManager');
 require('./src/ipc/composer.js');
 require('./src/ipc/pin.js');
 require('./src/ipc/loading.js');
@@ -32,7 +26,6 @@ require('./src/ipc/nucleus.js');
 require('./src/ipc/client.js');
 const ipcUtils = require('./src/ipc/utils.js');
 const { checkDatabaseStep, deleteNotEncryptDatabase } = require('./src/utils/dataBaseUtils');
-const { initClient } = require('./src/clientManager');
 
 globalManager.forcequit.set(false);
 
@@ -40,27 +33,12 @@ async function initApp() {
   const step = await checkDatabaseStep(dbManager);
   switch (step) {
     case 1:{
-      await startAlice();
-      await checkReachability();
-
-      globalManager.windowsEvents.disable()
-      globalManager.needsUpgrade.enable()
-
-      const existingAccounts = await dbManager.getAccount();
-      const appSettings = await dbManager.getSettings();
-      const settings = Object.assign(appSettings, { isFromStore });
-      myAccount.initialize(existingAccounts);
-      mySettings.initialize(settings);
-      await initClient(myAccount.recipientId);
-      initNucleus({language: mySettings.language});
-      socketClient.start(myAccount);
-      createAppMenu();
-      mailboxWindow.show({ firstOpenApp: true });
+      dialog.showErrorBox('Your version is outdated',' Please contact us: support@criptext.com to help you.');
     }
     break;
     case 2:{
       try {
-        await upStepDBEncryptedWithoutPIN();
+        await upStepCreateDBEncrypted();
       } catch (ex) {
         await deleteNotEncryptDatabase();
         app.relaunch();
@@ -71,20 +49,14 @@ async function initApp() {
     }
     case 3:{
       try {
-        const language = await getUserLanguage();
-        initNucleus({language});
-        const settings = { isFromStore, language };
-        mySettings.initialize(settings);
-        await initClient('@');
-        createAppMenu();
-        loginWindow.show({});
+        await upStepNewUser();
       } catch (ex) {
         console.log(ex);
       }
       break;
     }
     case 4:{
-      await upStepCheckPINDBEncrypted();
+      await upStepCheckPIN();
       break; 
     }
     default:
@@ -128,10 +100,6 @@ if ((isWindows || isLinux) && !isDev) {
     })
   }
 }
-
-const getUserLanguage = async () => {
-  return await getSystemLanguage();
-};
 
 app.on('ready', () => {
   initApp();

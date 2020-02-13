@@ -24,7 +24,6 @@ const MAILBOX_POPUP_TYPES = {
   BIG_UPDATE_AVAILABLE: 'big-update-available',
   CREATING_BACKUP_FILE: 'creating-backup-file',
   DEVICE_REMOVED: 'device-removed',
-  MIGRATE_ALICE: 'migrate-alice',
   ONLY_BACKDROP: 'only-backdrop',
   PASSWORD_CHANGED: 'password-changed',
   RESTORE_BACKUP: 'restore-backup',
@@ -235,7 +234,6 @@ class PanelWrapper extends Component {
     );
     addEvent(Event.RESTORE_BACKUP_INIT, this.restoreBackupInitListenerCallback);
     addEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
-    addEvent(Event.MIGRATE_ALICE, this.migrateAliceListenerCallback);
   };
 
   removeEventHandlers = () => {
@@ -271,7 +269,6 @@ class PanelWrapper extends Component {
       this.restoreBackupInitListenerCallback
     );
     removeEvent(Event.REFRESH_MAILBOX_SYNC, this.refreshMailboxSync);
-    removeEvent(Event.MIGRATE_ALICE, this.migrateAliceListenerCallback);
   };
 
   enableWindowListenerCallback = () => {
@@ -568,13 +565,6 @@ class PanelWrapper extends Component {
       LabelType.inbox.id,
       LabelType.spam.id
     ]);
-  };
-
-  migrateAliceListenerCallback = () => {
-    this.setState({
-      isHiddenMailboxPopup: false,
-      mailboxPopupType: MAILBOX_POPUP_TYPES.MIGRATE_ALICE
-    });
   };
 }
 

@@ -8,7 +8,6 @@ import PopupHOC from './PopupHOC';
 import AccountDeletedPopup from './AccountDeletedPopup';
 import CreatingBackupFilePopup from './CreatingBackupFilePopup';
 import DeviceRemovedPopup from './DeviceRemovedPopup';
-import MigrationPopupWrapper from './MigrationPopupWrapper';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import RestoreBackupPopupWrapper from './RestoreBackupPopupWrapper';
 import SuspendedAccountPopup from './SuspendedAccountPopup';
@@ -100,18 +99,6 @@ const renderMailboxPopup = ({ data, type, isHidden, ...props }) => {
         <DeviceRemovedpopup
           isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
-        />
-      );
-    }
-    case MAILBOX_POPUP_TYPES.MIGRATE_ALICE: {
-      const MigrationPopup = PopupHOC(MigrationPopupWrapper);
-      return (
-        <MigrationPopup
-          isHidden={isHidden}
-          isClosable={false}
-          theme={'dark'}
-          popupPosition={{ left: '50%', top: '50%' }}
-          onCloseMailboxPopup={props.onCloseMailboxPopup}
         />
       );
     }

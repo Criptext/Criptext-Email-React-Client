@@ -271,10 +271,6 @@ export const cleanDataLogout = async recipientId => {
   return await ipc.callMain('db-clean-data-logout', recipientId);
 };
 
-export const migrateAlice = async () => {
-  return await ipc.callMain('db-migrate-alice');
-};
-
 export const createEmail = async params => {
   return await ipc.callMain('db-create-email', params);
 };
@@ -555,10 +551,4 @@ export const disableAutoBackup = async () => {
 ----------------------------- */
 export const reportContentUnencrypted = async error => {
   return await ipc.callMain('nucleups-report-content-unencrypted', error);
-};
-
-/* Migrate
------------------------------ */
-export const upgradeAccount = async params => {
-  return await ipc.callMain('upgrade-account', params);
 };

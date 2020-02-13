@@ -174,24 +174,6 @@ ipc.answerRenderer('db-unsend-email', async params => {
   await fileUtils.deleteEmailContent({ metadataKey: parseInt(params.key) });
 });
 
-ipc.answerRenderer('upgrade-account', async ({ account, keyBundle }) => {
-  const clientManager = require('./../clientManager');
-  const res = await clientManager.upgradeAccount(keyBundle);
-  if (res.status !== 200) {
-    return false;
-  }
-  const { token, refreshToken, deviceId } = res.body;
-  await dbManager.updateAccount({
-    ...account,
-    refreshToken,
-    jwt: token,
-    deviceId
-  });
-  globalManager.needsUpgrade.disable();
-  globalManager.windowsEvents.enable();
-  return true;
-});
-
 ipc.answerRenderer('reset-key-initialize', params => {
   rekeyHandler.initialize(params);
 });
