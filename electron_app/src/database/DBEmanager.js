@@ -1393,7 +1393,7 @@ const cleanDataBase = async () => {
   });
 };
 
-const cleanDataLogout = async recipientId => {
+const cleanDataLogout = async ({ recipientId, deleteAll }) => {
   const params = {
     deviceId: '',
     jwt: '',
@@ -1402,17 +1402,27 @@ const cleanDataLogout = async recipientId => {
     isActive: false
   };
 
-  return await getDB().transaction(async trx => {
-    await Account().update(params, {
-      where: { recipientId },
-      transaction: trx
+  if (deleteAll) {
+    await Account().destroy({ where: { recipientId } });
+  } else {
+    await getDB().transaction(async trx => {
+      await Account().update(params, {
+        where: { recipientId },
+        transaction: trx
+      });
+      await Prekeyrecord().destroy({ where: {}, transaction: trx });
+      await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
+      await Sessionrecord().destroy({ where: {}, transaction: trx });
+      await Identitykeyrecord().destroy({ where: {}, transaction: trx });
+      await Settings().destroy({ where: {}, transaction: trx });
     });
-    await Prekeyrecord().destroy({ where: {}, transaction: trx });
-    await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
-    await Sessionrecord().destroy({ where: {}, transaction: trx });
-    await Identitykeyrecord().destroy({ where: {}, transaction: trx });
-    await Settings().destroy({ where: {}, transaction: trx });
-  });
+  }
+
+  return await Account()
+    .findOne({ where: { isLoggedIn: true } })
+    .then(account => {
+      return account ? account.toJSON() : null;
+    });
 };
 
 const cleanKeys = async () => {

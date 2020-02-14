@@ -271,8 +271,8 @@ export const cleanDatabase = async () => {
   return await ipc.callMain('db-clean-database');
 };
 
-export const cleanDataLogout = async recipientId => {
-  return await ipc.callMain('db-clean-data-logout', recipientId);
+export const cleanDataLogout = async params => {
+  return await ipc.callMain('db-clean-data-logout', params);
 };
 
 export const createEmail = async params => {

@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
-import { requiredMinLength } from './../utils/electronInterface';
+import { myAccount, requiredMinLength } from './../utils/electronInterface';
 import DeleteAccountPopup from './DeleteAccountPopup';
+import { cleanDataLogout, deleteMyAccount, logoutApp } from '../utils/ipc';
 import { clearStorage } from '../utils/storage';
-import { cleanDatabase, deleteMyAccount, logoutApp } from '../utils/ipc';
 import string from '../lang';
-import { sendAccountDeletedEvent } from './../utils/electronEventInterface';
+import {
+  deleteAccountData,
+  sendAccountDeletedEvent,
+  selectAccountAsActive
+} from './../utils/electronEventInterface';
 
 const { inputs } = string.popups.delete_account;
 
@@ -82,11 +86,18 @@ class DeleteAccountPopupWrapper extends Component {
     if (status === 200) {
       this.props.onTogglePopup();
       sendAccountDeletedEvent();
-      clearStorage();
-      await cleanDatabase();
-      setTimeout(() => {
-        logoutApp();
-      }, 1500);
+      await deleteAccountData();
+      clearStorage({});
+      const nextAccount = await cleanDataLogout({
+        recipientId: myAccount.recipientId,
+        deleteAll: true
+      });
+      if (nextAccount) {
+        const { id, recipientId } = nextAccount;
+        return await selectAccountAsActive({ accountId: id, recipientId });
+      }
+      clearStorage({ deleteAll: true });
+      await logoutApp();
     } else {
       this.setState({
         hasError: true,

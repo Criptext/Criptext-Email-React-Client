@@ -2,8 +2,8 @@ const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const dbManager = require('../database');
 const myAccount = require('../Account');
 
-ipc.answerRenderer('db-clean-data-logout', recipientId =>
-  dbManager.cleanDataLogout(recipientId)
+ipc.answerRenderer('db-clean-data-logout', params =>
+  dbManager.cleanDataLogout(params)
 );
 
 ipc.answerRenderer('db-create-contact', params => {

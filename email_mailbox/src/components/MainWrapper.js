@@ -106,7 +106,7 @@ class MainWrapper extends Component {
       case SectionType.SETTINGS: {
         return (
           <Settings
-            onClickMailboxSection={this.props.onClickSection}
+            onClickSection={this.props.onClickSection}
             onUpdateApp={this.props.onUpdateApp}
           />
         );
