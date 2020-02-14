@@ -13,10 +13,9 @@ CriptextDB::SignedPreKey CriptextDB::getSignedPreKey(database db, int accountId,
   db << "Select * from signedprekeyrecord where signedPreKeyId == ? and accountId == ?;"
      << id
      << accountId
-     >> [&] (int preKeyId, string record, int recordLength) {
+     >> [&] (int id, int preKeyId, string record, int recordLength) {
         mySignedPreKey = record;
         myLen = (size_t)recordLength;
-        
     };
   if (myLen == 0) {
     throw std::invalid_argument("row not available");

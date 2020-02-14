@@ -789,9 +789,9 @@ const exportEncryptDatabaseToFile = async ({ outputPath }) => {
 const importDatabaseFromFile = async ({
   filepath,
   isStrict,
-  withoutBodiesEncryption
+  withoutBodiesEncryption,
+  accountObj = {}
 }) => {
-  let contactEmails = [];
   let contacts = [];
   let labels = [];
   let emails = [];
@@ -838,12 +838,31 @@ const importDatabaseFromFile = async ({
       await Feeditem().destroy({ where: {}, transaction: trx });
     }
 
-    let accountId;
-    let userEmail;
-    if (myAccount.recipientId) {
+    let accountId = accountObj.id;
+    let userEmail = accountObj.email;
+    if (!accountId && !userEmail && myAccount.recipientId) {
       userEmail = myAccount.email;
       accountId = myAccount.id;
     }
+
+    let labelIdsMap = {
+      1: 1,
+      2: 2,
+      3: 3,
+      5: 5,
+      6: 6,
+      7: 7
+    };
+    let labelUuidToId = {};
+
+    let emailIdsMap = {};
+    let emailKeysToId = {};
+
+    let contactEmailToId = {};
+    let contactIdsMap = {};
+
+    let lastTableRow;
+    let insertRows = false;
 
     const lineReader = new LineByLineReader(filepath);
     return new Promise((resolve, reject) => {
@@ -853,232 +872,267 @@ const importDatabaseFromFile = async ({
           if (table === Table.ACCOUNT) {
             globalManager.progressDBE.set({ add: 1 });
           }
-          switch (table) {
-            case Table.ACCOUNT: {
-              const account = await Account()
-                .create(object, { transaction: trx })
-                .then(account => account.toJSON());
-              if (!userEmail) {
-                userEmail = object.recipientId.includes('@')
-                  ? object.recipientId
-                  : `${object.recipientId}@${APP_DOMAIN}`;
-              }
-              if (!accountId) {
-                accountId = account.id;
-              }
-              break;
-            }
-            case Table.CONTACT: {
-              contactEmails.push(object.email);
-              contacts.push(object);
-              if (contacts.length === CONTACTS_BATCH) {
-                lineReader.pause();
-                await Contact().bulkCreate(contacts, { transaction: trx });
-                await insertAccountContacts(contactEmails, accountId, trx);
-                contacts = [];
-                contactEmails = [];
-                lineReader.resume();
-              }
-              break;
-            }
-            case Table.LABEL: {
-              labels.push({
-                ...object,
-                accountId
-              });
-              if (labels.length === LABELS_BATCH) {
-                lineReader.pause();
-                await Label().bulkCreate(labels, { transaction: trx });
-                labels = [];
-                lineReader.resume();
-              }
-              break;
-            }
-            case Table.EMAIL: {
-              const emailToStore = {
-                ...object,
-                date: parseIncomingDate(object.date),
-                accountId
-              };
-              emails.push(emailToStore);
-              if (emails.length === EMAILS_BATCH) {
-                lineReader.pause();
-                await storeEmailBodies(
-                  emails,
-                  userEmail,
-                  withoutBodiesEncryption
-                );
-                await Email().bulkCreate(emails, { transaction: trx });
-                emails = [];
-                lineReader.resume();
-              }
-              break;
-            }
-            case 'email_contact': {
-              emailContacts.push(object);
-              if (emailContacts.length >= EMAIL_CONTACTS_BATCH) {
-                lineReader.pause();
-                try {
+          try {
+            lineReader.pause();
+            if (lastTableRow !== table || insertRows) {
+              switch (lastTableRow) {
+                case Table.CONTACT: {
+                  const idsMap = await insertContacts(
+                    contacts,
+                    contactEmailToId,
+                    trx
+                  );
+                  await insertAccountContacts(
+                    Object.values(idsMap),
+                    accountId,
+                    trx
+                  );
+                  contactIdsMap = { ...contactIdsMap, ...idsMap };
+                  contacts = [];
+                  contactEmailToId = {};
+                  break;
+                }
+                case Table.LABEL: {
+                  const idsMap = await insertLabels(labels, labelUuidToId, trx);
+                  labelIdsMap = { ...labelIdsMap, ...idsMap };
+                  labelUuidToId = {};
+                  labels = [];
+                  break;
+                }
+                case Table.EMAIL: {
+                  await storeEmailBodies(
+                    emails,
+                    userEmail,
+                    withoutBodiesEncryption
+                  );
+                  const idsMap = await insertEmails(emails, emailKeysToId, trx);
+                  emailIdsMap = { ...emailIdsMap, ...idsMap };
+                  emails = [];
+                  emailKeysToId = {};
+                  break;
+                }
+                case 'email_contact': {
                   await EmailContact().bulkCreate(emailContacts, {
                     transaction: trx
                   });
                   emailContacts = [];
-                } catch (error) {
-                  if (contacts.length) {
-                    await Contact().bulkCreate(contacts, { transaction: trx });
-                    contacts = [];
-                  }
-                  if (emails.length) {
-                    await storeEmailBodies(
-                      emails,
-                      userEmail,
-                      withoutBodiesEncryption
-                    );
-                    await Email().bulkCreate(emails, { transaction: trx });
-                    emails = [];
-                  }
-                  console.log('email_contact', error);
+                  break;
                 }
-                lineReader.resume();
-              }
-              break;
-            }
-            case 'email_label': {
-              emailLabels.push(object);
-              if (emailLabels.length >= EMAIL_LABELS_BATCH) {
-                lineReader.pause();
-                try {
+                case 'email_label': {
                   await EmailLabel().bulkCreate(emailLabels, {
                     transaction: trx
                   });
                   emailLabels = [];
-                } catch (error) {
-                  if (labels.length) {
-                    await Label().bulkCreate(labels, { transaction: trx });
-                    labels = [];
+                  break;
+                }
+                case Table.FEEDITEM: {
+                  try {
+                    await Feeditem().bulkCreate(feeditems, {
+                      transaction: trx
+                    });
+                    feeditems = [];
+                  } catch (error) {
+                    console.log(`${Table.FEEDITEM}`, error);
                   }
-                  console.log('email_label', error);
+                  break;
                 }
-                lineReader.resume();
-              }
-              break;
-            }
-            case Table.FEEDITEM: {
-              feeditems.push({
-                ...object,
-                accountId
-              });
-              if (feeditems.length === FEEDITEM_BATCH) {
-                lineReader.pause();
-                try {
-                  await Feeditem().bulkCreate(feeditems, { transaction: trx });
-                  feeditems = [];
-                } catch (error) {
-                  console.log(`${Table.FEEDITEM}`, error);
+                case Table.FILE: {
+                  await File().bulkCreate(files, { transaction: trx });
+                  files = [];
+                  break;
                 }
-                lineReader.resume();
+                case Table.IDENTITYKEYRECORD: {
+                  await Identitykeyrecord().bulkCreate(identities, {
+                    transaction: trx
+                  });
+                  identities = [];
+                  break;
+                }
+                case Table.PENDINGEVENT: {
+                  await Pendingevent().bulkCreate(pendingevents, {
+                    transaction: trx
+                  });
+                  pendingevents = [];
+                  break;
+                }
+                case Table.PREKEYRECORD: {
+                  await Prekeyrecord().bulkCreate(prekeyrecords, {
+                    transaction: trx
+                  });
+                  prekeyrecords = [];
+                  break;
+                }
+                case Table.SESSIONRECORD: {
+                  await Sessionrecord().bulkCreate(sessionrecords, {
+                    transaction: trx
+                  });
+                  sessionrecords = [];
+                  break;
+                }
+                case Table.SIGNEDPREKEYRECORD: {
+                  await Signedprekeyrecord().bulkCreate(signedprekeyrecords, {
+                    transaction: trx
+                  });
+                  signedprekeyrecords = [];
+                  break;
+                }
+                default:
+                  break;
               }
-              break;
             }
-            case Table.FILE: {
-              files.push(object);
-              if (files.length === FILES_BATCH) {
-                lineReader.pause();
-                await File().bulkCreate(files, { transaction: trx });
-                files = [];
-                lineReader.resume();
+
+            switch (table) {
+              case Table.ACCOUNT: {
+                const account = await Account()
+                  .create(object, { transaction: trx })
+                  .then(account => account.toJSON());
+                if (!userEmail) {
+                  userEmail = object.recipientId.includes('@')
+                    ? object.recipientId
+                    : `${object.recipientId}@${APP_DOMAIN}`;
+                }
+                if (!accountId) {
+                  accountId = account.id;
+                }
+                insertRows = false;
+                break;
               }
-              break;
-            }
-            case Table.IDENTITYKEYRECORD: {
-              identities.push({
-                ...object,
-                accountId
-              });
-              if (identities.length === IDENTITYKEYRECORD_BATCH) {
-                lineReader.pause();
-                await Identitykeyrecord().bulkCreate(identities, {
-                  transaction: trx
+              case Table.CONTACT: {
+                contactEmailToId[object.email] = object.id;
+                delete object.id;
+                contacts.push(object);
+                insertRows = contacts.length > CONTACTS_BATCH;
+                break;
+              }
+              case Table.LABEL: {
+                labelUuidToId[object.uuid] = object.id;
+                delete object.id;
+                labels.push({
+                  ...object,
+                  accountId
                 });
-                identities = [];
-                lineReader.resume();
+                insertRows = labels.length > LABELS_BATCH;
+                break;
               }
-              break;
-            }
-            case Table.PENDINGEVENT: {
-              pendingevents.push({
-                ...object,
-                accountId
-              });
-              if (pendingevents.length === PENDINGEVENT_BATCH) {
-                lineReader.pause();
-                await Pendingevent().bulkCreate(pendingevents, {
-                  transaction: trx
+              case Table.EMAIL: {
+                const emailToStore = {
+                  ...object,
+                  date: parseIncomingDate(object.date),
+                  accountId
+                };
+                delete emailToStore.id;
+                emailKeysToId[object.key] = object.id;
+                emails.push(emailToStore);
+                insertRows = emails.length > EMAILS_BATCH;
+                break;
+              }
+              case 'email_contact': {
+                delete object.id;
+                emailContacts.push({
+                  ...object,
+                  emailId: emailIdsMap[object.emailId],
+                  contactId: contactIdsMap[object.contactId]
                 });
-                pendingevents = [];
-                lineReader.resume();
+                insertRows = emailContacts.length > EMAIL_CONTACTS_BATCH;
+                break;
               }
-              break;
-            }
-            case Table.PREKEYRECORD: {
-              prekeyrecords.push({
-                ...object,
-                accountId
-              });
-              if (prekeyrecords.length === PREKEYRECORD_BATCH) {
-                lineReader.pause();
-                await Prekeyrecord().bulkCreate(prekeyrecords, {
-                  transaction: trx
+              case 'email_label': {
+                delete object.id;
+                emailLabels.push({
+                  ...object,
+                  emailId: emailIdsMap[object.emailId],
+                  labelId: labelIdsMap[object.labelId]
                 });
-                prekeyrecords = [];
-                lineReader.resume();
+                insertRows = emailLabels.length > EMAIL_LABELS_BATCH;
+                break;
               }
-              break;
-            }
-            case Table.SESSIONRECORD: {
-              sessionrecords.push({
-                ...object,
-                accountId
-              });
-              if (sessionrecords.length === SESSIONRECORD_BATCH) {
-                lineReader.pause();
-                await Sessionrecord().bulkCreate(sessionrecords, {
-                  transaction: trx
+              case Table.FEEDITEM: {
+                delete object.id;
+                feeditems.push({
+                  ...object,
+                  emailId: emailIdsMap[object.emailId],
+                  contactId: contactIdsMap[object.contactId],
+                  accountId
                 });
-                sessionrecords = [];
-                lineReader.resume();
+                insertRows = feeditems.length > FEEDITEM_BATCH;
+                break;
               }
-              break;
-            }
-            case Table.SETTINGS: {
-              settings = [...settings, object];
-              break;
-            }
-            case Table.SIGNEDPREKEYRECORD: {
-              signedprekeyrecords.push({
-                ...object,
-                accountId
-              });
-              if (signedprekeyrecords.length === SIGNEDPREKEYRECORD_BATCH) {
-                lineReader.pause();
-                await Signedprekeyrecord().bulkCreate(signedprekeyrecords, {
-                  transaction: trx
+              case Table.FILE: {
+                delete object.id;
+                files.push({
+                  ...object,
+                  emailId: emailIdsMap[object.emailId]
                 });
-                signedprekeyrecords = [];
-                lineReader.resume();
+                insertRows = files.length > FILES_BATCH;
+                break;
               }
-              break;
+              case Table.IDENTITYKEYRECORD: {
+                identities.push({
+                  ...object,
+                  accountId
+                });
+                insertRows = identities.length > IDENTITYKEYRECORD_BATCH;
+                break;
+              }
+              case Table.PENDINGEVENT: {
+                pendingevents.push({
+                  ...object,
+                  accountId
+                });
+                insertRows = pendingevents.length > PENDINGEVENT_BATCH;
+                break;
+              }
+              case Table.PREKEYRECORD: {
+                prekeyrecords.push({
+                  ...object,
+                  accountId
+                });
+                insertRows = prekeyrecords.length > PREKEYRECORD_BATCH;
+                break;
+              }
+              case Table.SESSIONRECORD: {
+                sessionrecords.push({
+                  ...object,
+                  accountId
+                });
+                insertRows = sessionrecords.length > SESSIONRECORD_BATCH;
+                break;
+              }
+              case Table.SETTINGS: {
+                settings = [...settings, object];
+                insertRows = false;
+                break;
+              }
+              case Table.SIGNEDPREKEYRECORD: {
+                signedprekeyrecords.push({
+                  ...object,
+                  accountId
+                });
+                insertRows =
+                  signedprekeyrecords.length > SIGNEDPREKEYRECORD_BATCH;
+                break;
+              }
+              default:
+                insertRows = false;
+                break;
             }
-            default:
-              break;
+            lastTableRow = table;
+            lineReader.resume();
+          } catch (ex) {
+            lineReader.resume();
+            return;
           }
         })
         .on('error', reject)
         .on('end', async () => {
           try {
             if (!isStrict) globalManager.progressDBE.set({ current: 4 });
-            await insertRemainingRows(contacts, Contact(), trx);
-            await insertAccountContacts(contactEmails, accountId, trx);
+            const idsMap = await insertContacts(
+              contacts,
+              contactEmailToId,
+              trx
+            );
+            await insertAccountContacts(Object.values(idsMap), accountId, trx);
             await insertRemainingRows(labels, Label(), trx);
             await storeEmailBodies(emails, userEmail, withoutBodiesEncryption);
             await insertRemainingRows(emails, Email(), trx);
@@ -1113,19 +1167,77 @@ const importDatabaseFromFile = async ({
   });
 };
 
-const insertAccountContacts = async (contactEmails, accountId, trx) => {
-  const contactsForAccount = await Contact().findAll({
-    attributes: ['id'],
-    where: {
-      email: contactEmails
-    },
-    raw: true,
-    transaction: trx
-  });
-  const accountContacts = contactsForAccount.map(contact => {
-    return { contactId: contact.id, accountId };
+const insertAccountContacts = async (contactIds, accountId, trx) => {
+  const accountContacts = contactIds.map(contactId => {
+    return { contactId: contactId, accountId };
   });
   await AccountContact().bulkCreate(accountContacts, { transaction: trx });
+};
+
+const insertContacts = async (contacts, contactsMap, transaction) => {
+  await Contact().bulkCreate(contacts, { transaction, ignoreDuplicates: true });
+  const emails = Object.keys(contactsMap);
+  const insertedContacts = await Contact().findAll({
+    attributes: ['id', 'email'],
+    where: {
+      email: emails
+    },
+    raw: true,
+    transaction
+  });
+  if (insertedContacts.length < contacts.length)
+    throw new Error('Missing Inserted Rows');
+  const oldIdToNewIdMap = {};
+  insertedContacts.forEach(contact => {
+    const oldId = contactsMap[contact.email];
+    const newId = contact.id;
+    oldIdToNewIdMap[oldId] = newId;
+  });
+  return oldIdToNewIdMap;
+};
+
+const insertLabels = async (labels, labelsMap, transaction) => {
+  await Label().bulkCreate(labels, { transaction, ignoreDuplicates: true });
+  const uuids = Object.keys(labelsMap);
+  const insertedLabels = await Label().findAll({
+    attributes: ['id', 'uuid'],
+    where: {
+      uuid: uuids
+    },
+    raw: true,
+    transaction
+  });
+  if (insertedLabels.length < labels.length)
+    throw new Error('Missing Inserted Rows');
+  const oldIdToNewIdMap = {};
+  insertedLabels.forEach(label => {
+    const oldId = labelsMap[label.uuid];
+    const newId = label.id;
+    oldIdToNewIdMap[oldId] = newId;
+  });
+  return oldIdToNewIdMap;
+};
+
+const insertEmails = async (emails, emailsMap, transaction) => {
+  await Email().bulkCreate(emails, { transaction, ignoreDuplicates: true });
+  const keys = Object.keys(emailsMap);
+  const insertedEmails = await Email().findAll({
+    attributes: ['id', 'key'],
+    where: {
+      key: keys
+    },
+    raw: true,
+    transaction
+  });
+  if (insertedEmails.length < emails.length)
+    throw new Error('Missing Inserted Rows');
+  const oldIdToNewIdMap = {};
+  insertedEmails.forEach(email => {
+    const oldId = emailsMap[email.key];
+    const newId = email.id;
+    oldIdToNewIdMap[oldId] = newId;
+  });
+  return oldIdToNewIdMap;
 };
 
 const insertRemainingRows = async (rows, Table, trx) => {
@@ -1156,6 +1268,7 @@ const storeEmailBodies = (emailRows, userEmail, withoutEncryption) => {
       const headers = email.headers;
       email.content = '';
       delete email.headers;
+      delete email.content;
       return saveEmailBody({
         body,
         headers,

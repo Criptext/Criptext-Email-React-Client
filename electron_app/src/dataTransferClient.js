@@ -136,8 +136,9 @@ const importDatabase = async params => {
     : undefined;
   return await dbExporter.importDatabaseFromFile({
     filepath: decryptedFileName,
-    isStrict: true,
-    withoutBodiesEncryption
+    isStrict: false,
+    withoutBodiesEncryption,
+    accountObj: params.accountObj
   });
 };
 

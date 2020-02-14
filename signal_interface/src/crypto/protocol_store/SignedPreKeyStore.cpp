@@ -9,7 +9,6 @@ int signed_pre_key_store_load_signed_pre_key(signal_buffer **record, uint32_t si
 {
     
     CriptextDB::Account *account = (CriptextDB::Account*)user_data;
-
     CriptextDB::SignedPreKey signedPreKey;
     try {
         signedPreKey = CriptextDB::getSignedPreKey(account->getDB(), account->id, signed_pre_key_id);

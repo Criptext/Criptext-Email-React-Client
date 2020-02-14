@@ -10,6 +10,10 @@ export const openMailboxWindow = () => {
   ipc.callMain('open-mailbox', { firstOpenApp: true });
 };
 
+export const swapMailboxAccount = params => {
+  ipc.callMain('swap-account', params);
+};
+
 export const openPinWindow = params => {
   ipc.callMain('open-pin', params);
 };
@@ -130,8 +134,8 @@ export const getAccount = async () => {
   return await ipc.callMain('db-get-account');
 };
 
-export const getAccountByParams = async () => {
-  return await ipc.callMain('db-get-account-by-params');
+export const getAccountByParams = async params => {
+  return await ipc.callMain('db-get-account-by-params', params);
 };
 
 export const getContactByEmails = async emails => {

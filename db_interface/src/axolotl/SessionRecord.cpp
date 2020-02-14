@@ -10,7 +10,7 @@ CriptextDB::SessionRecord CriptextDB::getSessionRecord(database db, int accountI
      << recipientId
      << deviceId
      << accountId
-     >> [&] (string recipientId, int deviceId, string record, int recordLength) {
+     >> [&] (int id, string recipientId, int deviceId, string record, int recordLength) {
         myLen = recordLength;
         myRecord = record;
     };
@@ -34,7 +34,7 @@ vector<CriptextDB::SessionRecord> CriptextDB::getSessionRecords(database db, int
     db << "Select * from sessionrecord where recipientId == ? and accountId == ?;"
      << recipientId
      << accountId
-     >> [&] (string recipientId, int deviceId, string record, int recordLength) {
+     >> [&] (int id, string recipientId, int deviceId, string record, int recordLength) {
         SessionRecord mySessionRecord = { 
           .recipientId = recipientId, 
           .deviceId = deviceId, 

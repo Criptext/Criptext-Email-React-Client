@@ -13,6 +13,13 @@ const tables = [
   Table.FEEDITEM
 ];
 
+const tablesNeedId = [
+  Table.IDENTITYKEYRECORD,
+  Table.PREKEYRECORD,
+  Table.SESSIONRECORD,
+  Table.SIGNEDPREKEYRECORD
+];
+
 const migrateAccountSettings = async (
   queryInterface,
   Sequelize,
@@ -170,6 +177,115 @@ const addAccountIdToTables = async (queryInterface, Sequelize, transaction) => {
   }
 };
 
+const addIdToTables = async (queryInterface, Sequelize, transaction) => {
+  let table;
+  for (table of tablesNeedId) {
+    const tableDef = await queryInterface.describeTable(table);
+    if (tableDef.id !== undefined) continue;
+
+    const backupTable = `${table}_backup`;
+
+    switch (table) {
+      case Table.SESSIONRECORD:
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${backupTable}' ('id' INTEGER PRIMARY KEY, 'recipientId' VARCHAR(255), 'deviceId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${backupTable}' (recipientId, deviceId, record, recordLength, accountId) SELECT * FROM '${table}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
+          transaction
+        });
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${table}' ('id' INTEGER PRIMARY KEY, 'recipientId' VARCHAR(255), 'deviceId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
+          transaction
+        });
+        break;
+      case Table.PREKEYRECORD:
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${backupTable}' ('id' INTEGER PRIMARY KEY, 'preKeyId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${backupTable}' (preKeyId, record, recordLength, accountId) SELECT * FROM '${table}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
+          transaction
+        });
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${table}' ('id' INTEGER PRIMARY KEY, 'preKeyId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
+          transaction
+        });
+        break;
+      case Table.SIGNEDPREKEYRECORD:
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${backupTable}' ('id' INTEGER PRIMARY KEY, 'signedPreKeyId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${backupTable}' (signedPreKeyId, record, recordLength, accountId) SELECT * FROM '${table}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
+          transaction
+        });
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${table}' ('id' INTEGER PRIMARY KEY, 'signedPreKeyId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
+          transaction
+        });
+        break;
+      case Table.IDENTITYKEYRECORD:
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${backupTable}' ('id' INTEGER PRIMARY KEY, 'recipientId' VARCHAR(255), 'deviceId' INTEGER, 'identityKey' VARCHAR(255), 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${backupTable}' (recipientId, deviceId, identityKey, accountId) SELECT * FROM '${table}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
+          transaction
+        });
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${table}' ('id' INTEGER PRIMARY KEY, 'recipientId' VARCHAR(255), 'deviceId' INTEGER, 'identityKey' VARCHAR(255), 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
+          transaction
+        });
+        break;
+    }
+  }
+};
+
 const FillAccountContacts = async (queryInterface, transaction) => {
   const [[account]] = await queryInterface.sequelize.query(
     `select id from ${Table.ACCOUNT}`,
@@ -224,6 +340,7 @@ module.exports = {
       await migrateAccountSettings(queryInterface, Sequelize, transaction);
       await addAccountIdToTables(queryInterface, Sequelize, transaction);
       await FillAccountContacts(queryInterface, transaction);
+      await addIdToTables(queryInterface, Sequelize, transaction);
 
       const [[account]] = await queryInterface.sequelize.query(
         `select recipientId from ${Table.ACCOUNT}`,
@@ -251,6 +368,7 @@ module.exports = {
       await removeAccountIdColumns(queryInterface, transaction);
       await queryInterface.dropTable(Table.AccountContact, { transaction });
       await rollbackAccountSettings(queryInterface, Sequelize, transaction);
+      await removeIdFromTables(queryInterface, transaction);
 
       await transaction.commit();
     } catch (ex) {
@@ -271,6 +389,115 @@ const removeAccountIdColumns = async (queryInterface, transaction) => {
     await queryInterface.removeColumn(Table.EMAIL, 'accountId', {
       transaction
     });
+  }
+};
+
+const removeIdFromTables = async (queryInterface, transaction) => {
+  let table;
+  for (table of tablesNeedId) {
+    const tableDef = await queryInterface.describeTable(table);
+    if (tableDef.id === undefined) continue;
+
+    const backupTable = `${table}_backup`;
+
+    switch (table) {
+      case Table.SESSIONRECORD:
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${backupTable}' ('recipientId' VARCHAR(255), 'deviceId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER, PRIMARY KEY (recipientId, deviceId));`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${backupTable}' (recipientId, deviceId, record, recordLength, accountId) SELECT recipientId, deviceId, record, recordLength, accountId FROM '${table}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
+          transaction
+        });
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${table}' ('recipientId' VARCHAR(255), 'deviceId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER, PRIMARY KEY (recipientId, deviceId));`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
+          transaction
+        });
+        break;
+      case Table.PREKEYRECORD:
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${backupTable}' ('preKeyId' INTEGER PRIMARY KEY, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${backupTable}' (preKeyId, record, recordLength, accountId) SELECT preKeyId, record, recordLength, accountId FROM '${table}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
+          transaction
+        });
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${table}' ('preKeyId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
+          transaction
+        });
+        break;
+      case Table.SIGNEDPREKEYRECORD:
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${backupTable}' ('signedPreKeyId' INTEGER PRIMARY KEY, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${backupTable}' (signedPreKeyId, record, recordLength, accountId) SELECT signedPreKeyId, record, recordLength, accountId FROM '${table}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
+          transaction
+        });
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${table}' ('signedPreKeyId' INTEGER PRIMARY KEY, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
+          transaction
+        });
+        break;
+      case Table.IDENTITYKEYRECORD:
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${backupTable}' ('recipientId' VARCHAR(255), 'deviceId' INTEGER, 'identityKey' VARCHAR(255), 'accountId' INTEGER, PRIMARY KEY (recipientId, deviceId));`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${backupTable}' (recipientId, deviceId, identityKey, accountId) SELECT recipientId, deviceId, identityKey, accountId FROM '${table}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
+          transaction
+        });
+        queryInterface.sequelize.query(
+          `CREATE TABLE IF NOT EXISTS '${table}' ('recipientId' VARCHAR(255), 'deviceId' INTEGER, 'identityKey' VARCHAR(255), 'accountId' INTEGER, PRIMARY KEY (recipientId, deviceId));`,
+          { transaction }
+        );
+        queryInterface.sequelize.query(
+          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
+          { transaction }
+        );
+        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
+          transaction
+        });
+        break;
+    }
   }
 };
 

@@ -11,7 +11,7 @@ CriptextDB::IdentityKey CriptextDB::getIdentityKey(database db, int accountId, s
      << recipientId
      << deviceId
      << accountId
-     >> [&] (string recipientId, int deviceId, string identity) {
+     >> [&] (int id, string recipientId, int deviceId, string identity) {
         identityKey = { 
           .recipientId = recipientId, 
           .deviceId = deviceId, 

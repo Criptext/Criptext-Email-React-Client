@@ -1560,6 +1560,10 @@ ipcRenderer.on('open-thread-by-notification', (ev, { threadId }) => {
   emitter.emit(Event.OPEN_THREAD, { threadId });
 });
 
+ipcRenderer.on('swap-account', (ev, { accountId, recipientId }) => {
+  emitter.emit(Event.LOAD_APP, { accountId, recipientId });
+});
+
 /*  Local backup
 ----------------------------- */
 ipcRenderer.on('local-backup-disable-events', () => {

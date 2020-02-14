@@ -9,7 +9,7 @@ CriptextDB::PreKey CriptextDB::getPreKey(database db, int accountId, short int i
   db << "Select * from prekeyrecord where preKeyId == ? and accountId == ?;"
      << id
      << accountId
-     >> [&] (int preKeyId, string record, int recordLength) {
+     >> [&] (int id, int preKeyId, string record, int recordLength) {
         myPreKey = record;
         myLen = (size_t)recordLength;
     };

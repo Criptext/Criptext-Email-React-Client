@@ -7,7 +7,6 @@ import {
   cleanDatabase,
   createContact,
   createSettings,
-  getAccount,
   getAccountByParams,
   getComputerName,
   getKeyBundle,
@@ -37,12 +36,10 @@ const createAccount = async ({
   deviceType,
   recoveryEmail
 }) => {
-  // to do: check getAccount
-  const [currentAccount] = await getAccount();
-  const username = currentAccount ? currentAccount.recipientId : null;
-  if (username) {
-    await cleanDatabase(username);
-  }
+  const [activeAccount] = await getAccountByParams({
+    isActive: true
+  });
+  await clearOtherAccounts(recipientId);
   const keybundle = await createAcountAndGetKeyBundle({
     recipientId,
     name,
@@ -73,18 +70,17 @@ const createAccount = async ({
   }
   const { token, refreshToken } = body;
   try {
-    updateAccount({
+    await updateAccount({
       recipientId,
       refreshToken,
       jwt: token,
       isLoggedIn: true,
-      isActive: true
+      isActive: !activeAccount
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
   await setDefaultSettings();
-  // to do: check getAccount
   const loggedAccounts = await getAccountByParams({
     isLoggedIn: true
   });
@@ -93,7 +89,23 @@ const createAccount = async ({
     throw CustomError(string.errors.saveLocal);
   }
   await createOwnContact(name, myAccount.email, myAccount.id);
-  return true;
+  return activeAccount
+    ? {
+        recipientId,
+        accountId: loggedAccounts.find(
+          account => account.recipientId === recipientId
+        ).id
+      }
+    : true;
+};
+
+const clearOtherAccounts = async recipientId => {
+  const accounts = (await getAccountByParams({
+    isLoggedIn: 0
+  })).filter(acc => acc.recipientId !== recipientId);
+  if (accounts.length) {
+    await cleanDatabase(accounts.map(acc => acc.recipientId));
+  }
 };
 
 const createAcountAndGetKeyBundle = async ({
@@ -102,11 +114,6 @@ const createAcountAndGetKeyBundle = async ({
   deviceType,
   deviceId
 }) => {
-  // to do: check getAccount
-  const [currentAccount] = await getAccount();
-  if (currentAccount && currentAccount.recipientId !== recipientId) {
-    await cleanDatabase(currentAccount.recipientId);
-  }
   const accountRes = await aliceRequestWrapper(() => {
     return createAccountCredentials({
       recipientId,
@@ -140,6 +147,10 @@ const createAccountWithNewDevice = async ({
   name,
   deviceType
 }) => {
+  const [activeAccount] = await getAccountByParams({
+    isActive: true
+  });
+  await clearOtherAccounts(recipientId);
   const keybundle = await createAcountAndGetKeyBundle({
     recipientId,
     deviceId,
@@ -160,12 +171,11 @@ const createAccountWithNewDevice = async ({
       refreshToken,
       recipientId,
       isLoggedIn: true,
-      isActive: true
+      isActive: !activeAccount
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
-  // to do: check getAccount
   const loggedAccounts = await getAccountByParams({
     isLoggedIn: true
   });
@@ -176,7 +186,14 @@ const createAccountWithNewDevice = async ({
   const email = myAccount.email;
   await createOwnContact(name, email, myAccount.id);
   await setDefaultSettings();
-  return true;
+  return activeAccount
+    ? {
+        recipientId,
+        accountId: loggedAccounts.find(
+          account => account.recipientId === recipientId
+        ).id
+      }
+    : true;
 };
 
 const generateAccountAndKeys = async ({
@@ -216,6 +233,9 @@ const createAccountToDB = async ({
   deviceId,
   recipientId
 }) => {
+  const [activeAccount] = await getAccountByParams({
+    isActive: true
+  });
   try {
     await updateAccount({
       jwt,
@@ -223,7 +243,7 @@ const createAccountToDB = async ({
       deviceId,
       recipientId,
       isLoggedIn: true,
-      isActive: true
+      isActive: !activeAccount
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
@@ -234,6 +254,19 @@ const createAccountToDB = async ({
   myAccount.initialize(loggedAccounts);
   await createOwnContact(name, myAccount.email);
   await setDefaultSettings();
+  if (activeAccount) {
+    const newAccount = loggedAccounts.find(
+      account => account.recipientId === recipientId
+    );
+    return {
+      accountId: newAccount.id,
+      id: newAccount.id,
+      recipientId: newAccount.recipientId,
+      email: newAccount.recipientId.includes('@')
+        ? newAccount.recipientId
+        : `${newAccount.recipientId}@${appDomain}`
+    };
+  }
 };
 
 const setDefaultSettings = async () => {
