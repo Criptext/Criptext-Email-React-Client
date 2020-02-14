@@ -72,7 +72,7 @@ export const getContactsByEmailId = id => {
   return id === emailId ? response : emptyResponse;
 };
 
-export const getEmailByKeyWithbody = key => {
+export const getEmailByKeyWithbody = ({ key }) => {
   return emails.filter(email => email.key === key)[0];
 };
 

@@ -18,9 +18,6 @@ import { Status } from '../components/Control';
 import { emailRegex, HTMLTagsRegex } from './RegexUtils';
 import string from './../lang';
 
-const myEmailAddress = myAccount.email;
-const enterpriseDomain = myAccount.recipientId.split('@')[1];
-
 const formAppSign = () => {
   return `<br/><i style="font-size: 12px;">${
     string.criptextSignature.sent_with
@@ -59,7 +56,10 @@ export const EmailStatus = {
 };
 
 export const formDataToEditDraft = async emailKeyToEdit => {
-  const emailData = await getEmailByKeyWithbody(emailKeyToEdit);
+  const emailData = await getEmailByKeyWithbody({
+    key: emailKeyToEdit,
+    accountId: myAccount.id
+  });
   const contacts = await getContactsByEmailId(emailData.id);
   const htmlBody = emailData.content;
   const textSubject = emailData.subject;
@@ -116,6 +116,9 @@ export const formOutgoingEmailFromData = ({
     ...getRecipientsWithDomain(bcc, 'bcc')
   ];
 
+  const myEmailAddress = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${appDomain}`;
   const email = {
     key: Date.now(),
     subject: textSubject,
@@ -143,6 +146,7 @@ export const formOutgoingEmailFromData = ({
   }
 
   const emailData = {
+    accountId: myAccount.id,
     email,
     recipients,
     labels,
@@ -199,6 +203,7 @@ const formRecipientObject = contact => {
   const email = contact.email || contact;
   const emailTag = `<${email}>`;
   const complete = `${name || ''} ${emailTag}`;
+  const enterpriseDomain = myAccount.recipientId.split('@')[1];
   const form = emailRegex.test(email)
     ? email.includes(`@${appDomain}`) || email.includes(`@${enterpriseDomain}`)
       ? 'tag-app-domain'
@@ -228,7 +233,10 @@ const formReplyForwardContent = (replyType, subject, date, from, to, body) => {
 
 export const formDataToReply = async (emailKeyToEdit, replyType) => {
   const emailIsForward = replyType === composerEvents.FORWARD;
-  const emailData = await getEmailByKeyWithbody(emailKeyToEdit);
+  const emailData = await getEmailByKeyWithbody({
+    key: emailKeyToEdit,
+    accountId: myAccount.id
+  });
   let files = [];
   if (emailIsForward) {
     const prevFiles = await getFilesByEmailId(emailData.id);
@@ -266,6 +274,9 @@ export const formDataToReply = async (emailKeyToEdit, replyType) => {
     contacts.to,
     emailData.content
   );
+  const myEmailAddress = myAccount.recipientId.includes('@')
+    ? myAccount.recipientId
+    : `${myAccount.recipientId}@${appDomain}`;
   const htmlBody = content;
   const replySufix = 'RE: ';
   const forwardSufix = 'FW: ';
@@ -364,6 +375,7 @@ export const parseEmailAddress = emailAddress => {
   const emailTag = isEmailTag ? email : `<${email}>`;
   const complete = `${name || ''} ${emailTag}`;
   const domain = email.split('@')[1];
+  const enterpriseDomain = myAccount.recipientId.split('@')[1];
   const form = emailRegex.test(email)
     ? email.includes(`@${appDomain}`) || email.includes(`@${enterpriseDomain}`)
       ? 'tag-app-domain'

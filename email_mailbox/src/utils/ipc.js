@@ -84,8 +84,8 @@ export const sendEndLinkDevicesEvent = async () => {
   return await ipc.callMain('close-create-keys-loading');
 };
 
-export const sendOpenEmailSource = metadataKey => {
-  ipc.callMain('open-email-source', metadataKey);
+export const sendOpenEmailSource = params => {
+  ipc.callMain('open-email-source', params);
 };
 
 export const sendPrintEmailEvent = emailId => {

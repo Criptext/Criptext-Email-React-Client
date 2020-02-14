@@ -10,7 +10,11 @@ const From = props => (
       <span className="cptx-recipient-input-label">
         {string.inputLabels.from}
       </span>
-      <span className="cptx-from-address">{props.accountSelected.email}</span>
+      <span className="cptx-from-address">
+        {props.accountSelected.recipientId.includes('@')
+          ? props.accountSelected.recipientId
+          : `${props.accountSelected.recipientId}@${APP_DOMAIN}`}
+      </span>
     </div>
     <div
       className={`cptx-from-more ${

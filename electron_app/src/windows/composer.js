@@ -140,7 +140,10 @@ const destroy = async ({
   if (emailToEdit) {
     const { type, key } = emailToEdit;
     if (type === composerEvents.EDIT_DRAFT) {
-      const [oldDraftEmail] = await dbManager.getEmailByKey({ key });
+      const [oldDraftEmail] = await dbManager.getEmailByKey({
+        key,
+        accountId: accountId || myAccount.id
+      });
       if (oldDraftEmail) {
         const oldEmailId = oldDraftEmail.id;
         await dbManager.deleteEmailAndRelations({

@@ -8,7 +8,6 @@ import { cleanDataLogout, deleteMyAccount, logoutApp } from '../utils/ipc';
 import { clearStorage } from '../utils/storage';
 import string from '../lang';
 import {
-  deleteAccountData,
   sendAccountDeletedEvent,
   selectAccountAsActive
 } from './../utils/electronEventInterface';
@@ -86,7 +85,6 @@ class DeleteAccountPopupWrapper extends Component {
     if (status === 200) {
       this.props.onTogglePopup();
       sendAccountDeletedEvent();
-      await deleteAccountData();
       clearStorage({});
       const nextAccount = await cleanDataLogout({
         recipientId: myAccount.recipientId,

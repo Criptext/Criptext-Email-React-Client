@@ -64,11 +64,11 @@ ipc.answerRenderer('db-delete-emails-by-ids', async params => {
   await dbManager.deleteEmailsByIds(ids);
 });
 
-ipc.answerRenderer('db-get-email-with-body', async key => {
-  const [email] = await dbManager.getEmailByKey({ key });
+ipc.answerRenderer('db-get-email-with-body', async params => {
+  const [email] = await dbManager.getEmailByKey(params);
   const body = await fileUtils.getEmailBody({
     username: getUsername(),
-    metadataKey: parseInt(key),
+    metadataKey: parseInt(params.key),
     password: globalManager.databaseKey.get()
   });
   if (!body) {
