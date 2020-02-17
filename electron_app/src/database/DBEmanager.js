@@ -1052,7 +1052,9 @@ const createFile = (files, trx) => {
 };
 
 const getFilesByEmailId = emailId => {
-  return File().findAll({ where: { emailId } });
+  return File()
+    .findAll({ where: { emailId } })
+    .map(file => file.toJSON());
 };
 
 const getFilesByTokens = tokens => {
