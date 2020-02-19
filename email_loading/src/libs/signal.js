@@ -103,8 +103,9 @@ const clearOtherAccounts = async recipientId => {
   const accounts = (await getAccountByParams({
     isLoggedIn: 0
   })).filter(acc => acc.recipientId !== recipientId);
-  if (accounts.length) {
-    await cleanDatabase(accounts.map(acc => acc.recipientId));
+  let acc;
+  for (acc of accounts) {
+    await cleanDatabase(acc.recipientId);
   }
 };
 

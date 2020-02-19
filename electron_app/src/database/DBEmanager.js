@@ -1373,52 +1373,100 @@ const getSessionRecordByRecipientIds = ({ accountId, recipientIds }) => {
 
 /* Functions
 ----------------------------- */
-const cleanDataBase = async () => {
-  return await getDB().transaction(async trx => {
-    await EmailContact().destroy({ where: {}, transaction: trx });
-    await EmailLabel().destroy({ where: {}, transaction: trx });
-    await AccountContact().destroy({ where: {}, transaction: trx });
-    await Feeditem().destroy({ where: {}, transaction: trx });
-    await Contact().destroy({ where: {}, transaction: trx });
-    await Email().destroy({ where: {}, transaction: trx });
-    await Label().destroy({ where: { type: 'custom' }, transaction: trx });
-    await File().destroy({ where: {}, transaction: trx });
-    await Pendingevent().destroy({ where: {}, transaction: trx });
-    await Settings().destroy({ where: {}, transaction: trx });
-    await Prekeyrecord().destroy({ where: {}, transaction: trx });
-    await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
-    await Sessionrecord().destroy({ where: {}, transaction: trx });
-    await Identitykeyrecord().destroy({ where: {}, transaction: trx });
-    await Account().destroy({ where: {}, transaction: trx });
+const cleanDataBase = async recipientId => {
+  await getDB().transaction(async trx => {
+    const account = await Account().findOne({
+      where: { recipientId }
+    });
+    const accountId = account.dataValues.id;
+    if (!account) return;
+    await Prekeyrecord().destroy({
+      where: { accountId: accountId },
+      transaction: trx
+    });
+    await Signedprekeyrecord().destroy({
+      where: { accountId: accountId },
+      transaction: trx
+    });
+    await Sessionrecord().destroy({
+      where: { accountId: accountId },
+      transaction: trx
+    });
+    await Identitykeyrecord().destroy({
+      where: { accountId: accountId },
+      transaction: trx
+    });
+    await AccountContact().destroy({
+      where: { accountId: accountId },
+      transaction: trx
+    });
+    while (account) {
+      const emails = await Email().findAll({
+        attributes: ['id'],
+        where: {
+          accountId: accountId
+        },
+        limit: 500,
+        transaction: trx
+      });
+      if (emails.length === 0) {
+        break;
+      }
+      const emailIds = emails.map(email => email.dataValues.id);
+      await EmailContact().destroy({
+        where: {
+          emailId: emailIds
+        },
+        transaction: trx
+      });
+      await EmailLabel().destroy({
+        where: {
+          emailId: emailIds
+        },
+        transaction: trx
+      });
+      await File().destroy({
+        where: {
+          emailId: emailIds
+        },
+        transaction: trx
+      });
+      await Feeditem().destroy({
+        where: {
+          emailId: emailIds
+        },
+        transaction: trx
+      });
+      await Email().destroy({
+        where: {
+          id: emailIds
+        },
+        transaction: trx
+      });
+    }
+    await Label().destroy({
+      where: {
+        accountId: accountId,
+        type: 'custom'
+      },
+      transaction: trx
+    });
+    await Account().destroy({
+      where: {
+        recipientId
+      },
+      transaction: trx
+    });
   });
+
+  return await Account()
+    .findOne({ where: { isLoggedIn: true } })
+    .then(account => {
+      return account ? account.toJSON() : null;
+    });
 };
 
-const deleteAccount = async recipientId => {
-  const account = await Account().findOne({
-    where: { recipientId },
-    raw: true
-  });
-  if (!account) return;
-  await Prekeyrecord().destroy({
-    where: { accountId: account },
-    transaction: trx
-  });
-  await Signedprekeyrecord().destroy({
-    where: { accountId: account },
-    transaction: trx
-  });
-  await Sessionrecord().destroy({
-    where: { accountId: account },
-    transaction: trx
-  });
-  await Identitykeyrecord().destroy({
-    where: { accountId: account },
-    transaction: trx
-  });
-  await Settings().destroy({ where: { accountId: account }, transaction: trx });
-};
-
-const cleanDataLogout = async ({ recipientId, deleteAll }) => {
+const cleanDataLogout = async ({ recipientId }) => {
   const params = {
     deviceId: '',
     jwt: '',
@@ -1427,21 +1475,16 @@ const cleanDataLogout = async ({ recipientId, deleteAll }) => {
     isActive: false
   };
 
-  if (deleteAll) {
-    await Account().destroy({ where: { recipientId } });
-  } else {
-    await getDB().transaction(async trx => {
-      await Account().update(params, {
-        where: { recipientId },
-        transaction: trx
-      });
-      await Prekeyrecord().destroy({ where: {}, transaction: trx });
-      await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
-      await Sessionrecord().destroy({ where: {}, transaction: trx });
-      await Identitykeyrecord().destroy({ where: {}, transaction: trx });
-      await Settings().destroy({ where: {}, transaction: trx });
+  await getDB().transaction(async trx => {
+    await Account().update(params, {
+      where: { recipientId },
+      transaction: trx
     });
-  }
+    await Prekeyrecord().destroy({ where: {}, transaction: trx });
+    await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
+    await Sessionrecord().destroy({ where: {}, transaction: trx });
+    await Identitykeyrecord().destroy({ where: {}, transaction: trx });
+  });
 
   return await Account()
     .findOne({ where: { isLoggedIn: true } })

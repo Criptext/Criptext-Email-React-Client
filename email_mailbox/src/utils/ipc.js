@@ -267,8 +267,8 @@ export const uploadAvatar = async params => {
 
 /*  DataBase
 ----------------------------- */
-export const cleanDatabase = async () => {
-  return await ipc.callMain('db-clean-database');
+export const cleanDatabase = async params => {
+  return await ipc.callMain('db-clean-database', params);
 };
 
 export const cleanDataLogout = async params => {

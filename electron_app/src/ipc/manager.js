@@ -41,7 +41,8 @@ ipc.answerRenderer('db-clean-database', async username => {
   if (user) {
     await fileUtils.removeUserDir(user);
   }
-  await dbManager.cleanDataBase();
+  const nextAccount = await dbManager.cleanDataBase(username);
+  return nextAccount;
 });
 
 ipc.answerRenderer('db-clean-keys', dbManager.cleanKeys);

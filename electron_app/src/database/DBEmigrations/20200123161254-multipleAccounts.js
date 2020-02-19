@@ -483,7 +483,6 @@ const AddRemoveUniquesDown = async (queryInterface, Sequelize, transaction) => {
   const emailDef = await queryInterface.describeTable(Table.EMAIL, {
     transaction
   });
-  console.log('EMAIL DEF : ', emailDef);
   if (!emailDef.key.unique) {
     await queryInterface.changeColumn(
       Table.EMAIL,
@@ -499,7 +498,6 @@ const AddRemoveUniquesDown = async (queryInterface, Sequelize, transaction) => {
   const contactDef = await queryInterface.describeTable(Table.CONTACT, {
     transaction
   });
-  console.log('CONTACT DEF : ', contactDef);
   if (contactDef.email.unique) {
     await queryInterface.changeColumn(
       Table.CONTACT,

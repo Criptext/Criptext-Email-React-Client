@@ -4,7 +4,7 @@ import { hashPassword } from '../utils/hashUtils';
 import { validatePassword } from '../validators/validators';
 import { myAccount, requiredMinLength } from './../utils/electronInterface';
 import DeleteAccountPopup from './DeleteAccountPopup';
-import { cleanDataLogout, deleteMyAccount, logoutApp } from '../utils/ipc';
+import { cleanDatabase, deleteMyAccount, logoutApp } from '../utils/ipc';
 import { clearStorage } from '../utils/storage';
 import string from '../lang';
 import {
@@ -86,9 +86,8 @@ class DeleteAccountPopupWrapper extends Component {
       this.props.onTogglePopup();
       sendAccountDeletedEvent();
       clearStorage({});
-      const nextAccount = await cleanDataLogout({
-        recipientId: myAccount.recipientId,
-        deleteAll: true
+      const nextAccount = await cleanDatabase({
+        recipientId: myAccount.recipientId
       });
       if (nextAccount) {
         const { id, recipientId } = nextAccount;
