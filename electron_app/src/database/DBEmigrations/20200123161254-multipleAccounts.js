@@ -1,5 +1,12 @@
 'use strict';
-const { Table, AccountContact } = require('../DBEmodel');
+const {
+  Table,
+  AccountContact,
+  Feeditem,
+  EmailContact,
+  EmailLabel,
+  File
+} = require('../DBEmodel');
 
 const TABLE_ACCOUNT_ID_INDEX = '_accountid_index';
 const tables = [
@@ -25,7 +32,9 @@ const migrateAccountSettings = async (
   Sequelize,
   transaction
 ) => {
-  const accountDef = await queryInterface.describeTable(Table.ACCOUNT);
+  const accountDef = await queryInterface.describeTable(Table.ACCOUNT, {
+    transaction
+  });
 
   if (accountDef.autoBackupEnable === undefined) {
     await queryInterface.addColumn(
@@ -84,7 +93,9 @@ const migrateAccountSettings = async (
     );
   }
 
-  const settingsDef = await queryInterface.describeTable(Table.SETTINGS);
+  const settingsDef = await queryInterface.describeTable(Table.SETTINGS, {
+    transaction
+  });
 
   if (settingsDef.autoBackupEnable !== undefined) {
     const [[settings]] = await queryInterface.sequelize.query(
@@ -149,9 +160,11 @@ const migrateAccountSettings = async (
 
 const addAccountIdToTables = async (queryInterface, Sequelize, transaction) => {
   let table;
+  let emailHadAccountId = true;
   for (table of tables) {
-    const tableDef = await queryInterface.describeTable(table);
+    const tableDef = await queryInterface.describeTable(table, { transaction });
     if (tableDef['accountId']) continue;
+    if (table === Table.EMAIL) emailHadAccountId = false;
     await queryInterface.addColumn(
       table,
       'accountId',
@@ -175,12 +188,13 @@ const addAccountIdToTables = async (queryInterface, Sequelize, transaction) => {
       { transaction }
     );
   }
+  return emailHadAccountId;
 };
 
 const addIdToTables = async (queryInterface, Sequelize, transaction) => {
   let table;
   for (table of tablesNeedId) {
-    const tableDef = await queryInterface.describeTable(table);
+    const tableDef = await queryInterface.describeTable(table, { transaction });
     if (tableDef.id !== undefined) continue;
 
     const backupTable = `${table}_backup`;
@@ -198,17 +212,10 @@ const addIdToTables = async (queryInterface, Sequelize, transaction) => {
         await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
           transaction
         });
-        queryInterface.sequelize.query(
-          `CREATE TABLE IF NOT EXISTS '${table}' ('id' INTEGER PRIMARY KEY, 'recipientId' VARCHAR(255), 'deviceId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+        await queryInterface.sequelize.query(
+          `ALTER TABLE '${backupTable}' RENAME TO '${table}'`,
           { transaction }
         );
-        queryInterface.sequelize.query(
-          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
-          { transaction }
-        );
-        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
-          transaction
-        });
         break;
       case Table.PREKEYRECORD:
         queryInterface.sequelize.query(
@@ -222,17 +229,10 @@ const addIdToTables = async (queryInterface, Sequelize, transaction) => {
         await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
           transaction
         });
-        queryInterface.sequelize.query(
-          `CREATE TABLE IF NOT EXISTS '${table}' ('id' INTEGER PRIMARY KEY, 'preKeyId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+        await queryInterface.sequelize.query(
+          `ALTER TABLE '${backupTable}' RENAME TO '${table}'`,
           { transaction }
         );
-        queryInterface.sequelize.query(
-          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
-          { transaction }
-        );
-        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
-          transaction
-        });
         break;
       case Table.SIGNEDPREKEYRECORD:
         queryInterface.sequelize.query(
@@ -246,17 +246,10 @@ const addIdToTables = async (queryInterface, Sequelize, transaction) => {
         await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
           transaction
         });
-        queryInterface.sequelize.query(
-          `CREATE TABLE IF NOT EXISTS '${table}' ('id' INTEGER PRIMARY KEY, 'signedPreKeyId' INTEGER, 'record' VARCHAR(255), 'recordLength' INTEGER, 'accountId' INTEGER);`,
+        await queryInterface.sequelize.query(
+          `ALTER TABLE '${backupTable}' RENAME TO '${table}'`,
           { transaction }
         );
-        queryInterface.sequelize.query(
-          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
-          { transaction }
-        );
-        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
-          transaction
-        });
         break;
       case Table.IDENTITYKEYRECORD:
         queryInterface.sequelize.query(
@@ -270,20 +263,111 @@ const addIdToTables = async (queryInterface, Sequelize, transaction) => {
         await queryInterface.sequelize.query(`DROP TABLE ${table}`, {
           transaction
         });
-        queryInterface.sequelize.query(
-          `CREATE TABLE IF NOT EXISTS '${table}' ('id' INTEGER PRIMARY KEY, 'recipientId' VARCHAR(255), 'deviceId' INTEGER, 'identityKey' VARCHAR(255), 'accountId' INTEGER);`,
+        await queryInterface.sequelize.query(
+          `ALTER TABLE '${backupTable}' RENAME TO '${table}'`,
           { transaction }
         );
-        queryInterface.sequelize.query(
-          `INSERT INTO '${table}' SELECT * FROM '${backupTable}'`,
-          { transaction }
-        );
-        await queryInterface.sequelize.query(`DROP TABLE ${backupTable}`, {
-          transaction
-        });
         break;
     }
   }
+};
+
+const getAllIdsEmailIds = async (table, transaction) => {
+  const BATCH = 500;
+  let offset = 0;
+  let results = [];
+  while (offset >= 0) {
+    const result = await table().findAll({
+      attributes: ['id', 'emailId'],
+      raw: true,
+      transaction,
+      limit: BATCH,
+      offset
+    });
+    results = [...results, ...result];
+    offset += BATCH;
+    if (result.length < BATCH) offset = -1;
+  }
+  return results;
+};
+
+const removeEmailKeyUnique = async (queryInterface, Sequelize, transaction) => {
+  const feedIdsEmailIds = await getAllIdsEmailIds(Feeditem, transaction);
+  const fileIdsEmailIds = await getAllIdsEmailIds(File, transaction);
+  const emailContactIdsEmailIds = await getAllIdsEmailIds(
+    EmailContact,
+    transaction
+  );
+  const emailLabelIdsEmailIds = await getAllIdsEmailIds(
+    EmailLabel,
+    transaction
+  );
+
+  const backupTable = `${Table.EMAIL}_backup`;
+  await queryInterface.sequelize.query(
+    `CREATE TABLE "${backupTable}" (
+      "id"	INTEGER PRIMARY KEY AUTOINCREMENT,
+      "key"	VARCHAR(255),
+      "threadId"	VARCHAR(255),
+      "subject"	VARCHAR(255),
+      "content"	VARCHAR(255),
+      "preview"	VARCHAR(255),
+      "date"	DATETIME,
+      "status"	INTEGER,
+      "unread"	TINYINT(1),
+      "secure"	TINYINT(1),
+      "unsentDate"	DATETIME,
+      "trashDate"	DATETIME,
+      "messageId"	VARCHAR(255),
+      "replyTo"	VARCHAR(255),
+      "fromAddress"	VARCHAR(255) DEFAULT '',
+      "boundary"	VARCHAR(255),
+      "accountId"	INTEGER,
+      FOREIGN KEY("accountId") REFERENCES "account"("id")
+    );`,
+    { transaction }
+  );
+  await queryInterface.sequelize.query(
+    `INSERT INTO '${backupTable}' SELECT * FROM '${Table.EMAIL}';`,
+    { transaction }
+  );
+  await queryInterface.sequelize.query(`DROP TABLE '${Table.EMAIL}';`, {
+    transaction
+  });
+  await queryInterface.sequelize.query(
+    `ALTER TABLE '${backupTable}' RENAME TO '${Table.EMAIL}';`,
+    { transaction }
+  );
+
+  if (feedIdsEmailIds.length)
+    await Feeditem().bulkCreate(feedIdsEmailIds, {
+      updateOnDuplicate: ['emailId'],
+      transaction
+    });
+  if (fileIdsEmailIds.length)
+    await File().bulkCreate(fileIdsEmailIds, {
+      updateOnDuplicate: ['emailId'],
+      transaction
+    });
+  if (emailContactIdsEmailIds)
+    await EmailContact().bulkCreate(emailContactIdsEmailIds, {
+      updateOnDuplicate: ['emailId'],
+      transaction
+    });
+  if (emailLabelIdsEmailIds)
+    await EmailLabel().bulkCreate(emailLabelIdsEmailIds, {
+      updateOnDuplicate: ['emailId'],
+      transaction
+    });
+};
+
+const addContactEmailUnique = async (queryInterface, transaction) => {
+  await queryInterface.sequelize.query(
+    `CREATE UNIQUE INDEX IF NOT EXISTS ${Table.CONTACT}_email_unique ON ${
+      Table.CONTACT
+    } (email)`,
+    { transaction }
+  );
 };
 
 const FillAccountContacts = async (queryInterface, transaction) => {
@@ -292,7 +376,11 @@ const FillAccountContacts = async (queryInterface, transaction) => {
     { transaction }
   );
 
-  if (!account) return;
+  const accountContacts = await AccountContact().findOne({
+    raw: true,
+    transaction
+  });
+  if (!account || (accountContacts && accountContacts.id)) return;
 
   const [contacts] = await queryInterface.sequelize.query(
     `select id from ${Table.CONTACT}`,
@@ -337,10 +425,22 @@ module.exports = {
     const transaction = await queryInterface.sequelize.transaction();
 
     try {
+      const emailHadAccountId = await addAccountIdToTables(
+        queryInterface,
+        Sequelize,
+        transaction
+      );
+
+      if (emailHadAccountId) {
+        await transaction.commit();
+        return;
+      }
+
       await migrateAccountSettings(queryInterface, Sequelize, transaction);
-      await addAccountIdToTables(queryInterface, Sequelize, transaction);
       await FillAccountContacts(queryInterface, transaction);
       await addIdToTables(queryInterface, Sequelize, transaction);
+      await removeEmailKeyUnique(queryInterface, Sequelize, transaction);
+      await addContactEmailUnique(queryInterface, transaction);
 
       const [[account]] = await queryInterface.sequelize.query(
         `select recipientId from ${Table.ACCOUNT}`,
@@ -369,12 +469,44 @@ module.exports = {
       await queryInterface.dropTable(Table.AccountContact, { transaction });
       await rollbackAccountSettings(queryInterface, Sequelize, transaction);
       await removeIdFromTables(queryInterface, transaction);
+      await AddRemoveUniquesDown(queryInterface, Sequelize, transaction);
 
       await transaction.commit();
     } catch (ex) {
       await transaction.rollback();
       throw new Error(ex.toString());
     }
+  }
+};
+
+const AddRemoveUniquesDown = async (queryInterface, Sequelize, transaction) => {
+  const emailDef = await queryInterface.describeTable(Table.EMAIL, {
+    transaction
+  });
+  console.log('EMAIL DEF : ', emailDef);
+  if (!emailDef.key.unique) {
+    await queryInterface.changeColumn(
+      Table.EMAIL,
+      'key',
+      {
+        type: Sequelize.STRING,
+        unique: true
+      },
+      { transaction }
+    );
+  }
+
+  const contactDef = await queryInterface.describeTable(Table.CONTACT, {
+    transaction
+  });
+  console.log('CONTACT DEF : ', contactDef);
+  if (contactDef.email.unique) {
+    await queryInterface.changeColumn(
+      Table.CONTACT,
+      'email',
+      { type: Sequelize.STRING },
+      { transaction }
+    );
   }
 };
 
@@ -395,7 +527,7 @@ const removeAccountIdColumns = async (queryInterface, transaction) => {
 const removeIdFromTables = async (queryInterface, transaction) => {
   let table;
   for (table of tablesNeedId) {
-    const tableDef = await queryInterface.describeTable(table);
+    const tableDef = await queryInterface.describeTable(table, { transaction });
     if (tableDef.id === undefined) continue;
 
     const backupTable = `${table}_backup`;
@@ -506,7 +638,9 @@ const rollbackAccountSettings = async (
   Sequelize,
   transaction
 ) => {
-  const settingsDef = await queryInterface.describeTable(Table.ACCOUNT);
+  const settingsDef = await queryInterface.describeTable(Table.ACCOUNT, {
+    transaction
+  });
 
   if (settingsDef.autoBackupEnable === undefined) {
     await queryInterface.addColumn(
@@ -575,7 +709,9 @@ const rollbackAccountSettings = async (
     );
   }
 
-  const accountDef = await queryInterface.describeTable(Table.ACCOUNT);
+  const accountDef = await queryInterface.describeTable(Table.ACCOUNT, {
+    transaction
+  });
 
   if (accountDef.autoBackupEnable !== undefined) {
     await queryInterface.removeColumn(Table.ACCOUNT, 'autoBackupEnable', {

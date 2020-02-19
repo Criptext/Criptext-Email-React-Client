@@ -1393,6 +1393,31 @@ const cleanDataBase = async () => {
   });
 };
 
+const deleteAccount = async recipientId => {
+  const account = await Account().findOne({
+    where: { recipientId },
+    raw: true
+  });
+  if (!account) return;
+  await Prekeyrecord().destroy({
+    where: { accountId: account },
+    transaction: trx
+  });
+  await Signedprekeyrecord().destroy({
+    where: { accountId: account },
+    transaction: trx
+  });
+  await Sessionrecord().destroy({
+    where: { accountId: account },
+    transaction: trx
+  });
+  await Identitykeyrecord().destroy({
+    where: { accountId: account },
+    transaction: trx
+  });
+  await Settings().destroy({ where: { accountId: account }, transaction: trx });
+};
+
 const cleanDataLogout = async ({ recipientId, deleteAll }) => {
   const params = {
     deviceId: '',
