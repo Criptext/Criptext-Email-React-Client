@@ -677,8 +677,8 @@ describe('Update data email to Email Table:', () => {
 describe('Delete emails from Email Table:', () => {
   it('Should delete email from DB by key', async () => {
     const keysToDelete = [emailSpam.email.key];
-    const result = await DBManager.deleteEmailByKeys(keysToDelete);
-    expect(result).toBe(1);
+    await DBManager.deleteEmailByKeys(keysToDelete);
+
     const [email] = await DBManager.getEmailByKey(emailSpam.email.key);
     expect(email).toBeUndefined();
   });
@@ -693,6 +693,91 @@ describe('Delete emails from Email Table:', () => {
     const idsToDelete = [emailIdToDelete];
     const result = await DBManager.deleteEmailsByIds(idsToDelete);
     expect(result).toBe(1);
+  });
+
+  it('Should delete email from DB by key, its emailLabel, emailContact, its files and feeds', async () => {
+    const emailToDelete = {
+      email: {
+        threadId: 'threadZ',
+        key: '30',
+        subject: 'A email to delete',
+        content: '<p>A email to delete</p>',
+        preview: 'A email to delete',
+        date: '2019-11-14 08:23:19.120',
+        status: 0,
+        unread: true,
+        secure: true,
+        unsentDate: '2019-12-14 08:23:30.000',
+        messageId: 'messageIdZ',
+        fromAddress: 'User Z <userz@criptext.com>'
+      },
+      recipients: {
+        from: ['User Z <userz@criptext.com>'],
+        to: Array(400)
+          .fill()
+          .map((e, i) => `fake${i}@faker.com`),
+        cc: ['userz@criptext.com'],
+        bcc: ['userd@criptext.com']
+      },
+      labels: [1],
+      files: [
+        {
+          token: 'tokenZ',
+          name: 'Criptext_Image_2018_06_14.png',
+          readOnly: false,
+          size: 183241,
+          status: 1,
+          date: '2018-06-14T23:45:57.466Z',
+          mimeType: 'image/png'
+        }
+      ]
+    };
+
+    const theEmail = await DBManager.createEmail(emailToDelete); //this create emailLabel, emailContact, and files
+
+    const feeditem = {
+      date: '2018-06-14 08:23:19.120',
+      type: 7,
+      emailId: theEmail.id,
+      contactId: 1
+    };
+
+    const feedItemCreated = await DBManager.createFeedItem(feeditem);
+    expect(feedItemCreated).toHaveProperty('contactId');
+    expect(feedItemCreated).toHaveProperty('emailId');
+
+    const keyToDelete = [emailToDelete.email.key];
+    const emailContactExist = await DBManager.getContactsByEmailId(theEmail.id);
+    expect(emailContactExist.to).not.toHaveLength(0);
+    expect(emailContactExist.cc).not.toHaveLength(0);
+    expect(emailContactExist.bcc).not.toHaveLength(0);
+    expect(emailContactExist.from).not.toHaveLength(0);
+    const emailLabelsExist = await DBManager.getEmailLabelsByEmailId(
+      theEmail.id
+    );
+    expect(emailLabelsExist).not.toHaveLength(0);
+    const filesExist = await DBManager.getFilesByEmailId(theEmail.id);
+    expect(filesExist).not.toHaveLength(0);
+    await DBManager.deleteEmailByKeys(keyToDelete);
+
+    const [email] = await DBManager.getEmailByKey(emailToDelete.email.key);
+    expect(email).toBeUndefined();
+
+    const feedItemsDeleted = await DBManager.getAllFeedItems();
+    expect(feedItemsDeleted).toHaveLength(0);
+    const emailContactDeleted = await DBManager.getContactsByEmailId(
+      theEmail.id
+    );
+    expect(emailContactDeleted.to).toHaveLength(0);
+    expect(emailContactDeleted.cc).toHaveLength(0);
+    expect(emailContactDeleted.bcc).toHaveLength(0);
+    expect(emailContactDeleted.from).toHaveLength(0);
+    const emailLabelDeleted = await DBManager.getEmailLabelsByEmailId(
+      theEmail.id
+    );
+    expect(emailLabelDeleted).toHaveLength(0);
+    const filesExistDeleted = await DBManager.getFilesByEmailId(theEmail.id);
+    expect(filesExistDeleted).toHaveLength(0);
   });
 
   it('Should not delete emails from DB by ids', async () => {
