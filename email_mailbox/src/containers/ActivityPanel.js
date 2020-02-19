@@ -18,9 +18,11 @@ const mapStateToProps = state => {
   const orderedFeeds = orderFeedsByDate(feeds);
   const { newFeeds, oldFeeds } = clasifyFeeds(orderedFeeds);
   const newFeedsPlain = newFeeds.toJS();
-  const feedItemIds = newFeedsPlain.map(feedItem => feedItem.id);
+  const feedItemIds = newFeedsPlain
+    .filter(feedItem => feedItem.emailData)
+    .map(feedItem => feedItem.id);
   return {
-    newFeeds: newFeedsPlain,
+    newFeeds: newFeedsPlain.filter(item => item.emailData),
     oldFeeds: oldFeeds.toJS(),
     feedItemIds
   };
