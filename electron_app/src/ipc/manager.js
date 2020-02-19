@@ -31,6 +31,7 @@ ipc.answerRenderer(
           })
         )
       );
+      await dbManager.deleteEmailByKeys(emailKeys);
     }
     await dbManager.deleteEmailsByThreadIdAndLabelId(threadIds, labelId);
   }

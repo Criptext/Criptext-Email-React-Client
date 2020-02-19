@@ -272,12 +272,53 @@ const createEmail = (params, prevTrx) => {
   });
 };
 
-const deleteEmailByKeys = keys => {
-  return Email().destroy({ where: { key: keys } });
+const getKeys = (keys, trx) => {
+  return Email()
+    .findAll({
+      attributes: ['id'],
+      where: { key: keys },
+      raw: true,
+      transaction: trx
+    })
+    .then(list => list);
+};
+
+const deleteEmailByKeys = async keys => {
+  return await getDB().transaction(async trx => {
+    const ids = await getKeys(keys, trx).map(el1 => el1.id);
+    return Feeditem()
+      .destroy({ where: { emailId: ids }, transaction: trx })
+      .then(() => {
+        return EmailContact().destroy({
+          where: { emailId: ids },
+          transaction: trx
+        });
+      })
+      .then(() => {
+        return EmailLabel().destroy({
+          where: { emailId: ids },
+          transaction: trx
+        });
+      })
+      .then(() => {
+        return File().destroy({ where: { emailId: ids }, transaction: trx });
+      })
+      .then(() => {
+        return Email().destroy({
+          where: { id: ids },
+          transaction: trx
+        });
+      })
+      .catch(ex => console.log(ex)); //To do
+  });
 };
 
 const deleteEmailsByIds = (ids, trx) => {
-  return Email().destroy({ where: { id: ids }, transaction: trx });
+  return Email().destroy({
+    where: { id: ids },
+    transaction: trx,
+    cascade: true
+  });
 };
 
 const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
