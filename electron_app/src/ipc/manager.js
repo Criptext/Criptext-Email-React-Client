@@ -146,9 +146,10 @@ ipc.answerRenderer('fs-save-email-body', async params => {
 });
 
 ipc.answerRenderer('fs-delete-email-content', async params => {
+  const username = params.accountEmail || getUsername();
   const newParams = Object.assign(params, {
     metadataKey: parseInt(params.metadataKey),
-    username: getUsername()
+    username
   });
   await fileUtils.deleteEmailContent(newParams);
 });
@@ -157,11 +158,12 @@ ipc.answerRenderer('db-create-email', async params => {
   const data = params.accountId
     ? params
     : { ...params, accountId: myAccount.id };
+  const username = params.accountEmail || getUsername();
   await fileUtils.saveEmailBody({
     body: params.body,
     headers: params.headers,
     metadataKey: parseInt(params.email.key),
-    username: getUsername(),
+    username,
     password: globalManager.databaseKey.get()
   });
   return await dbManager.createEmail(data);

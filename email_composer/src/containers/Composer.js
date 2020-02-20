@@ -87,7 +87,8 @@ class ComposerWrapper extends Component {
       threadId: null,
       toEmails: [],
       isLinkingDevices: false,
-      totalFilesSize: 0
+      totalFilesSize: 0,
+      allowChangeFrom: true
     };
 
     addEvent(Event.DISABLE_WINDOW, () => {
@@ -148,6 +149,7 @@ class ComposerWrapper extends Component {
         textSubject={this.state.textSubject}
         toEmails={this.state.toEmails}
         isLinkingDevices={this.state.isLinkingDevices}
+        allowChangeFrom={this.state.allowChangeFrom}
       />
     );
   }
@@ -159,7 +161,8 @@ class ComposerWrapper extends Component {
       const composerDataChecked = await this.checkContactDomains(composerData);
       state = {
         ...composerDataChecked,
-        status: composerData.status || Status.ENABLED
+        status: composerData.status || Status.ENABLED,
+        allowChangeFrom: this.emailToEdit.type !== composerEvents.EDIT_DRAFT
       };
     } else {
       const composerData = await this.getDefaultComposerWithSignature();

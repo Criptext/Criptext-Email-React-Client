@@ -1114,7 +1114,7 @@ const createSystemLabels = () => {
   return createLabel(labels);
 };
 
-const deleteLabelById = async id => {
+const deleteLabelById = async ({ id, accountId }) => {
   return await getDB().transaction(async trx => {
     const ids = await EmailLabel()
       .findAll({
@@ -1128,7 +1128,10 @@ const deleteLabelById = async id => {
       }, []);
     if (ids.length)
       await EmailLabel().destroy({ where: { id: ids }, transaction: trx });
-    return await Label().destroy({ where: { id }, transaction: trx });
+    return await Label().destroy({
+      where: { id, accountId },
+      transaction: trx
+    });
   });
 };
 
@@ -1163,12 +1166,12 @@ const getLabelsByText = async ({ accountId, text }) => {
   return labels;
 };
 
-const updateLabel = ({ id, color, text, visible }) => {
+const updateLabel = ({ id, color, text, visible, accountId }) => {
   const params = {};
   if (color) params.color = color;
   if (text) params.text = text;
   if (typeof visible === 'boolean') params.visible = visible;
-  return Label().update(params, { where: { id } });
+  return Label().update(params, { where: { id, accountId } });
 };
 
 /* EmailLabel

@@ -138,8 +138,8 @@ export const getAccountByParams = async params => {
   return await ipc.callMain('db-get-account-by-params', params);
 };
 
-export const getContactByEmails = async emails => {
-  return await ipc.callMain('db-get-contact-by-emails', emails);
+export const getContactByEmails = async params => {
+  return await ipc.callMain('db-get-contact-by-emails', params);
 };
 
 export const getIdentityKeyRecord = async params => {

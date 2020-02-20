@@ -72,9 +72,12 @@ ipc.answerRenderer('db-delete-feed-item-by-id', feedItemId =>
   dbManager.deleteFeedItemById(feedItemId)
 );
 
-ipc.answerRenderer('db-delete-label-by-id', labelId =>
-  dbManager.deleteLabelById(labelId)
-);
+ipc.answerRenderer('db-delete-label-by-id', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.deleteLabelById(data);
+});
 
 ipc.answerRenderer('db-delete-prekey-pair', params =>
   dbManager.deletePreKeyPair(params)
@@ -114,8 +117,10 @@ ipc.answerRenderer('db-get-all-labels', params => {
   return dbManager.getAllLabels(data);
 });
 
-ipc.answerRenderer('db-get-contact-by-emails', emails => {
-  const data = { emails, accountId: myAccount.id };
+ipc.answerRenderer('db-get-contact-by-emails', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
   return dbManager.getContactByEmails(data);
 });
 
@@ -292,7 +297,12 @@ ipc.answerRenderer('db-update-identity-key-record', params =>
   dbManager.updateIdentityKeyRecord(params)
 );
 
-ipc.answerRenderer('db-update-label', params => dbManager.updateLabel(params));
+ipc.answerRenderer('db-update-label', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.updateLabel(data);
+});
 
 ipc.answerRenderer('db-update-settings', params =>
   dbManager.updateSettings(params)

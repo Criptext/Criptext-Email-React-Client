@@ -283,7 +283,7 @@ const setDefaultSettings = async () => {
 };
 
 const createOwnContact = async (name, email) => {
-  const [prevOwnContact] = await getContactByEmails([email]);
+  const [prevOwnContact] = await getContactByEmails({ emails: [email] });
   if (prevOwnContact) {
     return;
   }

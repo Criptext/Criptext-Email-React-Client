@@ -116,14 +116,26 @@ ipc.answerRenderer(
   }
 );
 
-ipc.answerRenderer('show-notification', ({ title, message, threadId }) => {
-  const onClickNotification = () => {
-    showWindows();
-    if (threadId)
-      mailboxWindow.send('open-thread-by-notification', { threadId });
-  };
-  showNotification({ title, message, clickHandler: onClickNotification });
-});
+ipc.answerRenderer(
+  'show-notification',
+  ({ title, message, threadId, accountId, accountRecipientId }) => {
+    const onClickNotification = () => {
+      showWindows();
+      if (threadId) {
+        if (accountRecipientId === myAccount.recipientId) {
+          mailboxWindow.send('open-thread-by-notification', { threadId });
+        } else {
+          mailboxWindow.send('swap-account', {
+            accountId,
+            recipientId: accountRecipientId,
+            threadId
+          });
+        }
+      }
+    };
+    showNotification({ title, message, clickHandler: onClickNotification });
+  }
+);
 
 ipc.answerRenderer('check-for-updates', showDialog => {
   checkForUpdates(showDialog);

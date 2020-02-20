@@ -58,12 +58,14 @@ describe('Store data label to Label Table:', () => {
 
 describe('Delete label from Label Table:', () => {
   it('Should delete label by labelId', async () => {
-    const result = await DBManager.deleteLabelById(labelToDelete.id);
+    const result = await DBManager.deleteLabelById({
+      id: labelToDelete.id,
+      accountId
+    });
     expect(result).toBe(1);
   });
-
   it('Should not delete label by labelId', async () => {
-    const result = await DBManager.deleteLabelById(1000);
+    const result = await DBManager.deleteLabelById({ id: 1000, accountId });
     expect(result).toBe(0);
   });
 });
@@ -174,6 +176,7 @@ describe('Update data label to Label Table:', () => {
     const newColor = '333334';
     const newText = 'old-news';
     const result = await DBManager.updateLabel({
+      accountId,
       id: labelIdCreated,
       color: newColor,
       text: newText
@@ -190,6 +193,7 @@ describe('Update data label to Label Table:', () => {
     const labelIdCreated = labelToUpdate.id;
     const newColor = '444555';
     const labelUpdated = await DBManager.updateLabel({
+      accountId,
       id: labelIdCreated,
       color: newColor
     });
@@ -201,7 +205,11 @@ describe('Update data label to Label Table:', () => {
   it('Should update label: text', async () => {
     const labelIdCreated = labelToUpdate.id;
     const newText = 'LabelModified2';
-    await DBManager.updateLabel({ id: labelIdCreated, text: newText });
+    await DBManager.updateLabel({
+      accountId,
+      id: labelIdCreated,
+      text: newText
+    });
     const [labelCheck] = await DBManager.getLabelById(labelIdCreated);
     expect(labelCheck.text).toBe(newText);
   });
@@ -210,6 +218,7 @@ describe('Update data label to Label Table:', () => {
     const labelIdCreated = labelToUpdate.id;
     const newVisibleValue = false;
     await DBManager.updateLabel({
+      accountId,
       id: labelIdCreated,
       visible: newVisibleValue
     });

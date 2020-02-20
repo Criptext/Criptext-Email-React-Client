@@ -41,19 +41,27 @@ const From = props => (
         })}
       </ul>
     </div>
-    <div className="cptx-recipient-toggle" onClick={() => props.onToggleFrom()}>
-      <i
-        className={
-          props.isCollapsedMoreFrom ? 'icon-arrow-down' : 'icon-arrow-up'
-        }
-      />
-    </div>
+    {props.allowChangeFrom ? (
+      <div
+        className="cptx-recipient-toggle"
+        onClick={() => props.onToggleFrom()}
+      >
+        <i
+          className={
+            props.isCollapsedMoreFrom ? 'icon-arrow-down' : 'icon-arrow-up'
+          }
+        />
+      </div>
+    ) : (
+      ''
+    )}
   </div>
 );
 
 From.propTypes = {
   accounts: PropTypes.array,
   accountSelected: PropTypes.object,
+  allowChangeFrom: PropTypes.bool,
   isCollapsedMoreFrom: PropTypes.bool,
   onClick: PropTypes.func,
   onToggleFrom: PropTypes.func

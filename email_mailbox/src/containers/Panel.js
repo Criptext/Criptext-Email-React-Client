@@ -7,6 +7,7 @@ import {
   loadFeedItems,
   loadThreads,
   logout,
+  updateUnreadThreads,
   updateBadgeLabels,
   updateEmailIdsThread,
   updateFeedItems,
@@ -57,16 +58,27 @@ const mapDispatchToProps = dispatch => {
     onAddDataApp: data => {
       dispatch(addDataApp(data));
     },
+    onNotificationClicked: async ({ threadId }) => {
+      const labelId = LabelType.inbox.id;
+      const unread = false;
+      const loadThreadsParams = {
+        labelId,
+        rejectedLabelIds: defineRejectedLabels(labelId),
+        contactTypes: defineContactType(labelId)
+      };
+      await dispatch(loadThreads(loadThreadsParams));
+      await dispatch(updateUnreadThreads([threadId], unread, labelId));
+    },
     onUpdateAccountApp: async ({ mailboxSelected, accountId, recipientId }) => {
       if (!isGettingEventsGet()) {
         isGettingEventsUpdate(true);
         await selectAccountAsActive({ accountId, recipientId });
-        dispatch(logout());
+        await dispatch(logout());
+        isGettingEventsUpdate(false);
         if (mailboxSelected) {
           const params = defineParamsToLoadThread(mailboxSelected, true);
-          dispatch(loadApp(params));
+          await dispatch(loadApp(params));
         }
-        isGettingEventsUpdate(false);
       }
     },
     onUpdateLabels: labels => {

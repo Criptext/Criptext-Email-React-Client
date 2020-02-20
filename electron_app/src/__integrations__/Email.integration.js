@@ -513,6 +513,7 @@ describe('Store relation data to EmailLabel Table: ', () => {
 
   it('Should remove emailLabel relation to database: when label is deleted', async () => {
     const label = await DBManager.createLabel({
+      accountId,
       color: '1301a1',
       text: 'Task'
     });
@@ -529,7 +530,7 @@ describe('Store relation data to EmailLabel Table: ', () => {
     expect(addResponse.length).toBe(1);
     expect(addResponse[0]).toMatchObject({ emailId: 12, id: 18, labelId: 8 });
     // Delete label
-    const result = await DBManager.deleteLabelById(label.id);
+    const result = await DBManager.deleteLabelById({ id: label.id, accountId });
     expect(result).toBe(1);
     // Check if exists
     let existsRelation = false;

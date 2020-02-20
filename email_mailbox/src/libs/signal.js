@@ -28,9 +28,11 @@ const decryptEmail = async ({
   recipientId,
   deviceId,
   messageType,
-  fileKeys
+  fileKeys,
+  optionalToken,
+  accountRecipientId
 }) => {
-  const { status, body } = await fetchEmailBody({ bodyKey });
+  const { status, body } = await fetchEmailBody({ bodyKey, optionalToken });
   if (status !== 200) return;
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return { decryptedBody: body.body };
@@ -40,7 +42,7 @@ const decryptEmail = async ({
       emailKey: bodyKey,
       senderId: recipientId,
       deviceId,
-      recipientId: myAccount.recipientId,
+      recipientId: accountRecipientId || myAccount.recipientId,
       messageType,
       body: body.body,
       headers: body.headers,
@@ -121,8 +123,12 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   return decryptedText;
 };
 
-const generateAndInsertMorePreKeys = async () => {
-  const currentPreKeyIds = await getSessionRecordIds({});
+const generateAndInsertMorePreKeys = async (
+  accountId,
+  accountRecipientId,
+  optionalToken
+) => {
+  const currentPreKeyIds = await getSessionRecordIds({ accountId });
   if (currentPreKeyIds.length === PREKEY_INITIAL_QUANTITY) return;
 
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
@@ -132,7 +138,7 @@ const generateAndInsertMorePreKeys = async () => {
   try {
     const res = await aliceRequestWrapper(() => {
       return generateMorePreKeys({
-        accountId: myAccount.recipientId,
+        accountId: accountId || myAccount.recipientId,
         newPreKeys: newPreKeyIds
       });
     });
@@ -142,7 +148,11 @@ const generateAndInsertMorePreKeys = async () => {
       return;
     }
     const resObj = await res.json();
-    await insertPreKeys(resObj.preKeys);
+    await insertPreKeys({
+      preKeys: resObj.preKeys,
+      recipientId: accountRecipientId,
+      optionalToken
+    });
   } catch (newPreKeysError) {
     // eslint-disable-next-line no-console
     console.error(newPreKeysError);

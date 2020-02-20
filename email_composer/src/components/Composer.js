@@ -14,6 +14,7 @@ const Composer = props => (
     <FromWrapper
       accounts={props.accounts}
       accountSelected={props.accountSelected}
+      allowChangeFrom={props.allowChangeFrom}
       getAccount={props.getAccount}
     />
     <RecipientWrapper
@@ -72,6 +73,7 @@ const Composer = props => (
 Composer.propTypes = {
   accounts: PropTypes.array,
   accountSelected: PropTypes.object,
+  allowChangeFrom: PropTypes.bool,
   addFiletoken: PropTypes.func,
   bccEmails: PropTypes.array,
   ccEmails: PropTypes.array,

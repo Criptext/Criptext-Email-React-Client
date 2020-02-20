@@ -104,8 +104,8 @@ export const sendStartSyncDeviceEvent = data => {
   ipc.callMain('start-sync-mailbox-event', data);
 };
 
-export const showNotificationApp = ({ title, message, threadId }) => {
-  ipc.callMain('show-notification', { title, message, threadId });
+export const showNotificationApp = params => {
+  ipc.callMain('show-notification', params);
 };
 
 export const startRekey = params => {
@@ -185,8 +185,8 @@ export const getUserSettings = async () => {
   return await ipc.callMain('client-get-user-settings');
 };
 
-export const insertPreKeys = async preKeys => {
-  return await ipc.callMain('client-insert-prekeys', preKeys);
+export const insertPreKeys = async params => {
+  return await ipc.callMain('client-insert-prekeys', params);
 };
 
 export const logout = async () => {
@@ -327,8 +327,8 @@ export const deleteFeedItemById = async feedItemId => {
   return await ipc.callMain('db-delete-feed-item-by-id', feedItemId);
 };
 
-export const deleteLabelById = async labelId => {
-  return await ipc.callMain('db-delete-label-by-id', labelId);
+export const deleteLabelById = async params => {
+  return await ipc.callMain('db-delete-label-by-id', params);
 };
 
 export const deletePreKeyPair = async params => {
@@ -339,8 +339,8 @@ export const deleteSessionRecord = async params => {
   return await ipc.callMain('db-delete-session-record', params);
 };
 
-export const getAccount = async () => {
-  return await ipc.callMain('db-get-account');
+export const getAccountByParams = async params => {
+  return await ipc.callMain('db-get-account-by-params', params);
 };
 
 export const getAllFeedItems = async params => {
@@ -355,8 +355,8 @@ export const getAllLabels = async params => {
   return await ipc.callMain('db-get-all-labels', params);
 };
 
-export const getContactByEmails = async emails => {
-  return await ipc.callMain('db-get-contact-by-emails', emails);
+export const getContactByEmails = async params => {
+  return await ipc.callMain('db-get-contact-by-emails', params);
 };
 
 export const getContactByIds = async ids => {

@@ -528,14 +528,10 @@ export const updateThreadsSuccess = (labelId, threadIds, unread) => ({
   unread
 });
 
-export const updateUnreadThreads = (threadsParams, unread, labelId) => {
+export const updateUnreadThreads = (threadIds, unread, labelId) => {
   return async dispatch => {
     try {
-      const threadIds = threadsParams
-        .map(param => param.threadIdDB)
-        .filter(item => item !== null);
       if (!threadIds.length) return;
-
       const eventParams = {
         cmd: SocketCommand.PEER_THREAD_READ_UPDATE,
         params: { threadIds, unread: unread ? 1 : 0 }
@@ -612,10 +608,10 @@ export const loadThreadsAndEmails = (params, threadId, shouldStopAll) => {
   };
 };
 
-export const loadEvents = ({ showNotification }) => {
+export const loadEvents = params => {
   return async dispatch => {
     dispatch(startLoadSync());
-    await getGroupEvents({ showNotification });
+    await getGroupEvents(params);
   };
 };
 

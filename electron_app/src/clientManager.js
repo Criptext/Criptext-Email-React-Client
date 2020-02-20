@@ -128,7 +128,8 @@ const checkExpiredSession = async (
       }
 
       if (newSessionStatus === EXPIRED_SESSION_STATUS) {
-        return mailboxWindow.send('device-removed', null);
+        mailboxWindow.send('device-removed', null);
+        return { status: newSessionStatus };
       }
 
       if (
@@ -264,11 +265,9 @@ const parseUserSettings = settings => {
   };
 };
 
-const insertPreKeys = async preKeys => {
-  const res = await client.insertPreKeys(preKeys);
-  return res.status === 200
-    ? res
-    : await checkExpiredSession(res, insertPreKeys, preKeys);
+const insertPreKeys = async ({ preKeys, recipientId, optionalToken }) => {
+  const client = await createClient({ recipientId, optionalToken });
+  return await client.insertPreKeys(preKeys);
 };
 
 const isCriptextDomain = async domains => {

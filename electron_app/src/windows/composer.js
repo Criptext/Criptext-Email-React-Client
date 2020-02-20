@@ -5,7 +5,7 @@ const dbManager = require('./../database');
 const globalManager = require('./../globalManager');
 const { EVENTS, callEvent } = require('./events');
 const fileUtils = require('../utils/FileUtils');
-const { APP_DOMAIN, API_TRACKING_EVENT } = require('../utils/const');
+const { API_TRACKING_EVENT } = require('../utils/const');
 const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
 
 const lang = require('./../lang');
@@ -180,11 +180,7 @@ const sendEventToMailbox = (eventName, data) => {
 };
 
 const saveDraftToDatabase = async (composerId, data) => {
-  const accountId = data.accountId || myAccount.id;
-  const recipientId = myAccount.recipientId;
-  const username = recipientId.includes('@')
-    ? recipientId
-    : `${recipientId}@${APP_DOMAIN}`;
+  const { accountId, accountEmail: username } = data;
   const filteredRecipients = {
     from: data.recipients.from,
     to: filterInvalidEmailAddresses(data.recipients.to),
@@ -193,8 +189,7 @@ const saveDraftToDatabase = async (composerId, data) => {
   };
   const content = data.body;
   const dataDraft = Object.assign(data, {
-    recipients: filteredRecipients,
-    accountId
+    recipients: filteredRecipients
   });
   const emailToEdit = globalManager.emailToEdit.get(composerId);
   const { type, key } = emailToEdit || {};

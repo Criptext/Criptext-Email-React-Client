@@ -15,6 +15,7 @@ class FromWrapper extends Component {
       <From
         accounts={this.props.accounts}
         accountSelected={this.props.accountSelected}
+        allowChangeFrom={this.props.allowChangeFrom}
         isCollapsedMoreFrom={this.state.isCollapsedMoreFrom}
         onClick={this.handleClick}
         onToggleFrom={this.handleToggleFrom}
@@ -29,13 +30,15 @@ class FromWrapper extends Component {
   };
 
   handleToggleFrom = () => {
-    this.setState({ isCollapsedMoreFrom: !this.state.isCollapsedMoreFrom });
+    if (this.props.allowChangeFrom)
+      this.setState({ isCollapsedMoreFrom: !this.state.isCollapsedMoreFrom });
   };
 }
 
 FromWrapper.propTypes = {
   accounts: PropTypes.array,
   accountSelected: PropTypes.object,
+  allowChangeFrom: PropTypes.bool,
   getAccount: PropTypes.func,
   text: PropTypes.string
 };

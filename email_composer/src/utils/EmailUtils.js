@@ -147,6 +147,7 @@ export const formOutgoingEmailFromData = ({
 
   const emailData = {
     accountId: myAccount.id,
+    accountEmail: myEmailAddress,
     email,
     recipients,
     labels,

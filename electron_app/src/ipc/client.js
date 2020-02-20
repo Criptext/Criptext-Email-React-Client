@@ -54,8 +54,8 @@ ipc.answerRenderer('client-get-user-settings', () =>
   clientManager.getUserSettings()
 );
 
-ipc.answerRenderer('client-insert-prekeys', preKeys =>
-  clientManager.insertPreKeys(preKeys)
+ipc.answerRenderer('client-insert-prekeys', params =>
+  clientManager.insertPreKeys(params)
 );
 
 ipc.answerRenderer('client-is-criptext-domain', domains =>
