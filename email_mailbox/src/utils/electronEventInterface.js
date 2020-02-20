@@ -407,6 +407,200 @@ const buildSenderRecipientId = ({ senderId, senderDomain, from, external }) => {
     : getRecipientIdFromEmailAddressTag(from);
 };
 
+const isMailSpam = async params => {
+  const { labels, from } = params;
+  if (labels && !!labels.find(label => label === LabelType.spam.text))
+    return false;
+  const contactObjectSpamToCheck = parseContactRow(from);
+  const contactSpamToCheck = await getContactByEmails([
+    contactObjectSpamToCheck.email
+  ]);
+  return contactSpamToCheck[0] ? contactSpamToCheck[0].spamScore > 1 : false;
+};
+
+const generateEmailThreadId = async params => {
+  const { threadId, inReplyTo } = params;
+
+  const [emailWithMessageId] = await getEmailByParams({
+    messageId: inReplyTo
+  });
+  return emailWithMessageId ? emailWithMessageId.threadId : threadId;
+};
+
+const formEmailIfNotExists = async params => {
+  const {
+    metadataKey,
+    recipientId,
+    deviceId,
+    messageType,
+    fileKeys,
+    fileKey,
+    isFromMe,
+    isToMe,
+    files,
+    inReplyTo,
+    boundary,
+    date,
+    from,
+    messageId,
+    replyTo,
+    subject,
+    threadId,
+    isSpam,
+    recipients,
+    guestEncryption
+  } = params;
+
+  const labelIds = [];
+  let body = '',
+    headers,
+    myFileKeys;
+
+  try {
+    const {
+      decryptedBody,
+      decryptedHeaders,
+      decryptedFileKeys
+    } = await signal.decryptEmail({
+      bodyKey: metadataKey,
+      recipientId,
+      deviceId,
+      messageType,
+      fileKeys: fileKeys || (fileKey ? [fileKey] : null)
+    });
+    body = cleanEmailBody(decryptedBody);
+    headers = decryptedHeaders;
+    myFileKeys = decryptedFileKeys
+      ? decryptedFileKeys.map(fileKey => {
+          const fileKeySplit = fileKey.split(':');
+          return {
+            key: fileKeySplit[0],
+            iv: fileKeySplit[1]
+          };
+        })
+      : null;
+  } catch (e) {
+    if (
+      e.message === signal.ALICE_ERROR ||
+      e.message === signal.CONTENT_NOT_AVAILABLE
+    ) {
+      return {
+        rowid: null
+      };
+    }
+    body = 'Content unencrypted';
+    reportContentUnencrypted(e.stack);
+  }
+
+  if (!fileKeys && fileKey) {
+    myFileKeys = files.map(() => myFileKeys[0]);
+  }
+  const unread = isFromMe && !isToMe ? false : true;
+  const emailThreadId = inReplyTo
+    ? await generateEmailThreadId({
+        threadId,
+        inReplyTo
+      })
+    : threadId;
+
+  const secure = guestEncryption === 1 || guestEncryption === 3;
+  const data = {
+    body,
+    boundary,
+    date,
+    deviceId,
+    from,
+    isFromMe,
+    metadataKey,
+    guestEncryption,
+    messageId,
+    replyTo,
+    secure,
+    subject,
+    threadId: emailThreadId,
+    unread
+  };
+  const email = await formIncomingEmailFromData(data);
+  const notificationPreview = email.preview;
+  const filesData =
+    files && files.length
+      ? await formFilesFromData({
+          files,
+          date,
+          fileKeys: myFileKeys,
+          emailContent: body
+        })
+      : null;
+
+  if (isFromMe) {
+    labelIds.push(LabelType.sent.id);
+    if (isToMe) {
+      labelIds.push(LabelType.inbox.id);
+    }
+  } else {
+    labelIds.push(LabelType.inbox.id);
+  }
+  if (isSpam) {
+    labelIds.push(LabelType.spam.id);
+  }
+  const emailData = {
+    email,
+    labels: labelIds,
+    files: filesData,
+    recipients,
+    body,
+    headers
+  };
+  await createEmail(emailData);
+
+  return {
+    labelIds,
+    notificationPreview,
+    emailThreadId
+  };
+};
+
+const formEmailIfExists = async params => {
+  const { prevEmail, isFromMe, isToMe, isSpam, threadId } = params;
+
+  const labelIds = [];
+  const InboxLabelId = LabelType.inbox.id;
+  const SentLabelId = LabelType.sent.id;
+  const SpamLabelId = LabelType.spam.id;
+
+  const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
+  const prevLabels = prevEmailLabels.map(item => item.labelId);
+
+  const hasSentLabelId = prevLabels.includes(SentLabelId);
+  if (isFromMe && !hasSentLabelId) {
+    labelIds.push(SentLabelId);
+
+    const hasInboxLabelId = prevLabels.includes(InboxLabelId);
+    if (isToMe && !hasInboxLabelId) {
+      labelIds.push(InboxLabelId);
+    }
+  }
+  const hasSpamLabelId = prevLabels.includes(SpamLabelId);
+  if (isSpam && !hasSpamLabelId) {
+    labelIds.push(SpamLabelId);
+  }
+
+  if (labelIds.length) {
+    const emailLabel = formEmailLabel({
+      emailId: prevEmail.id,
+      labels: labelIds
+    });
+    await createEmailLabel(emailLabel);
+  }
+  const notificationPreview = prevEmail.preview;
+
+  return {
+    labelIds,
+    notificationPreview,
+    emailThreadId: threadId
+  };
+};
+
 const handleNewMessageEvent = async ({ rowid, params }) => {
   const {
     bcc,
@@ -451,21 +645,10 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
       : senderDeviceId;
   const [prevEmail] = await getEmailByKey({ key: metadataKey });
 
-  let isSpam = false;
-  if (labels && !!labels.find(label => label === LabelType.spam.text)) {
-    isSpam = true;
-  } else {
-    const contactObjectSpamToCheck = parseContactRow(from);
-    const contactSpamToCheck = await getContactByEmails([
-      contactObjectSpamToCheck.email
-    ]);
-    isSpam = contactSpamToCheck[0]
-      ? contactSpamToCheck[0].spamScore > 1
-      : false;
-  }
-  const InboxLabelId = LabelType.inbox.id;
-  const SentLabelId = LabelType.sent.id;
-  const SpamLabelId = LabelType.spam.id;
+  const isSpam = await isMailSpam({
+    labels,
+    from
+  });
   const isFromMe = myAccount.recipientId === recipientId;
   const recipients = getRecipientsFromData({
     to: to || toArray,
@@ -474,135 +657,36 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
     from
   });
   const isToMe = checkEmailIsTo(recipients);
-  let notificationPreview = '';
-  const labelIds = [];
-  let emailThreadId = threadId;
-  if (!prevEmail) {
-    let body = '',
-      headers,
-      myFileKeys;
-    try {
-      const {
-        decryptedBody,
-        decryptedHeaders,
-        decryptedFileKeys
-      } = await signal.decryptEmail({
-        bodyKey: metadataKey,
+  const { notificationPreview, emailThreadId, labelIds } = !prevEmail
+    ? await formEmailIfNotExists({
+        metadataKey,
         recipientId,
         deviceId,
         messageType,
-        fileKeys: fileKeys || (fileKey ? [fileKey] : null)
+        fileKeys,
+        fileKey,
+        isFromMe,
+        isToMe,
+        files,
+        inReplyTo,
+        boundary,
+        date,
+        from,
+        messageId,
+        replyTo,
+        subject,
+        threadId,
+        isSpam,
+        recipients,
+        guestEncryption
+      })
+    : await formEmailIfExists({
+        prevEmail,
+        isFromMe,
+        isToMe,
+        isSpam,
+        threadId
       });
-      body = cleanEmailBody(decryptedBody);
-      headers = decryptedHeaders;
-      myFileKeys = decryptedFileKeys
-        ? decryptedFileKeys.map(fileKey => {
-            const fileKeySplit = fileKey.split(':');
-            return {
-              key: fileKeySplit[0],
-              iv: fileKeySplit[1]
-            };
-          })
-        : null;
-    } catch (e) {
-      if (
-        e.message === signal.ALICE_ERROR ||
-        e.message === signal.CONTENT_NOT_AVAILABLE
-      ) {
-        return {
-          rowid: null
-        };
-      }
-      body = 'Content unencrypted';
-      reportContentUnencrypted(e.stack);
-    }
-    if (!fileKeys && fileKey) {
-      myFileKeys = files.map(() => myFileKeys[0]);
-    }
-    const unread = isFromMe && !isToMe ? false : true;
-    if (inReplyTo) {
-      const [emailWithMessageId] = await getEmailByParams({
-        messageId: inReplyTo
-      });
-      if (emailWithMessageId) {
-        emailThreadId = emailWithMessageId.threadId;
-      }
-    }
-    const secure = guestEncryption === 1 || guestEncryption === 3;
-    const data = {
-      body,
-      boundary,
-      date,
-      deviceId,
-      from,
-      isFromMe,
-      metadataKey,
-      messageId,
-      replyTo,
-      secure,
-      subject,
-      threadId: emailThreadId,
-      unread
-    };
-    const email = await formIncomingEmailFromData(data);
-    notificationPreview = email.preview;
-    const filesData =
-      files && files.length
-        ? await formFilesFromData({
-            files,
-            date,
-            fileKeys: myFileKeys,
-            emailContent: body
-          })
-        : null;
-
-    if (isFromMe) {
-      labelIds.push(SentLabelId);
-      if (isToMe) {
-        labelIds.push(InboxLabelId);
-      }
-    } else {
-      labelIds.push(InboxLabelId);
-    }
-    if (isSpam) {
-      labelIds.push(SpamLabelId);
-    }
-    const emailData = {
-      email,
-      labels: labelIds,
-      files: filesData,
-      recipients,
-      body,
-      headers
-    };
-    await createEmail(emailData);
-  } else {
-    const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
-    const prevLabels = prevEmailLabels.map(item => item.labelId);
-
-    const hasSentLabelId = prevLabels.includes(SentLabelId);
-    if (isFromMe && !hasSentLabelId) {
-      labelIds.push(SentLabelId);
-
-      const hasInboxLabelId = prevLabels.includes(InboxLabelId);
-      if (isToMe && !hasInboxLabelId) {
-        labelIds.push(InboxLabelId);
-      }
-    }
-    const hasSpamLabelId = prevLabels.includes(SpamLabelId);
-    if (isSpam && !hasSpamLabelId) {
-      labelIds.push(SpamLabelId);
-    }
-
-    if (labelIds.length) {
-      const emailLabels = formEmailLabel({
-        emailId: prevEmail.id,
-        labels: labelIds
-      });
-      await createEmailLabel(emailLabels);
-    }
-    notificationPreview = prevEmail.preview;
-  }
   if (isToMe && !isSpam) {
     const parsedContact = parseContactRow(from);
     addEmailToNotificationList({
