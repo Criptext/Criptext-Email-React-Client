@@ -1376,7 +1376,8 @@ const getSessionRecordByRecipientIds = ({ accountId, recipientIds }) => {
 const cleanDataBase = async recipientId => {
   await getDB().transaction(async trx => {
     const account = await Account().findOne({
-      where: { recipientId }
+      where: { recipientId },
+      transaction: trx
     });
     const accountId = account.dataValues.id;
     if (!account) return;
@@ -1396,61 +1397,7 @@ const cleanDataBase = async recipientId => {
       where: { accountId: accountId },
       transaction: trx
     });
-    await AccountContact().destroy({
-      where: { accountId: accountId },
-      transaction: trx
-    });
-    while (account) {
-      const emails = await Email().findAll({
-        attributes: ['id'],
-        where: {
-          accountId: accountId
-        },
-        limit: 500,
-        transaction: trx
-      });
-      if (emails.length === 0) {
-        break;
-      }
-      const emailIds = emails.map(email => email.dataValues.id);
-      await EmailContact().destroy({
-        where: {
-          emailId: emailIds
-        },
-        transaction: trx
-      });
-      await EmailLabel().destroy({
-        where: {
-          emailId: emailIds
-        },
-        transaction: trx
-      });
-      await File().destroy({
-        where: {
-          emailId: emailIds
-        },
-        transaction: trx
-      });
-      await Feeditem().destroy({
-        where: {
-          emailId: emailIds
-        },
-        transaction: trx
-      });
-      await Email().destroy({
-        where: {
-          id: emailIds
-        },
-        transaction: trx
-      });
-    }
-    await Label().destroy({
-      where: {
-        accountId: accountId,
-        type: 'custom'
-      },
-      transaction: trx
-    });
+    await deleteAccountNotSignalRelatedData(accountId, trx);
     await Account().destroy({
       where: {
         recipientId
@@ -1466,6 +1413,64 @@ const cleanDataBase = async recipientId => {
     });
 };
 
+const deleteAccountNotSignalRelatedData = async (accountId, trx) => {
+  await AccountContact().destroy({
+    where: { accountId: accountId },
+    transaction: trx
+  });
+  while (accountId) {
+    const emails = await Email().findAll({
+      attributes: ['id'],
+      where: {
+        accountId: accountId
+      },
+      limit: 500,
+      transaction: trx
+    });
+    if (emails.length === 0) {
+      break;
+    }
+    const emailIds = emails.map(email => email.dataValues.id);
+    await EmailContact().destroy({
+      where: {
+        emailId: emailIds
+      },
+      transaction: trx
+    });
+    await EmailLabel().destroy({
+      where: {
+        emailId: emailIds
+      },
+      transaction: trx
+    });
+    await File().destroy({
+      where: {
+        emailId: emailIds
+      },
+      transaction: trx
+    });
+    await Feeditem().destroy({
+      where: {
+        emailId: emailIds
+      },
+      transaction: trx
+    });
+    await Email().destroy({
+      where: {
+        id: emailIds
+      },
+      transaction: trx
+    });
+  }
+  await Label().destroy({
+    where: {
+      accountId: accountId,
+      type: 'custom'
+    },
+    transaction: trx
+  });
+};
+
 const cleanDataLogout = async ({ recipientId }) => {
   const params = {
     deviceId: '',
@@ -1476,14 +1481,32 @@ const cleanDataLogout = async ({ recipientId }) => {
   };
 
   await getDB().transaction(async trx => {
+    const account = await Account().findOne({
+      where: { recipientId },
+      raw: true,
+      transaction: trx
+    });
+    if (!account) return;
     await Account().update(params, {
       where: { recipientId },
       transaction: trx
     });
-    await Prekeyrecord().destroy({ where: {}, transaction: trx });
-    await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
-    await Sessionrecord().destroy({ where: {}, transaction: trx });
-    await Identitykeyrecord().destroy({ where: {}, transaction: trx });
+    await Prekeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Signedprekeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Sessionrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Identitykeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
   });
 
   return await Account()
@@ -1493,13 +1516,31 @@ const cleanDataLogout = async ({ recipientId }) => {
     });
 };
 
-const cleanKeys = async () => {
-  if (!getDB()) return [];
+const cleanKeys = async recipientId => {
+  if (!recipientId || !getDB()) return;
   return await getDB().transaction(async trx => {
-    await Prekeyrecord().destroy({ where: {}, transaction: trx });
-    await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
-    await Sessionrecord().destroy({ where: {}, transaction: trx });
-    await Identitykeyrecord().destroy({ where: {}, transaction: trx });
+    const account = await Account().findOne({
+      where: { recipientId },
+      raw: true,
+      transaction: trx
+    });
+    if (!account) return [];
+    await Prekeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Signedprekeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Sessionrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Identitykeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
   });
 };
 
@@ -1641,6 +1682,7 @@ module.exports = {
   createLabel,
   createPendingEvent,
   createSettings,
+  deleteAccountNotSignalRelatedData,
   defineActiveAccountById,
   deleteDatabase,
   deleteEmailsByIds,

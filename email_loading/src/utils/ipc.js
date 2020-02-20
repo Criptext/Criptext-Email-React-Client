@@ -86,8 +86,8 @@ export const cleanDatabase = async username => {
   return await ipc.callMain('db-clean-database', username);
 };
 
-export const cleanKeys = async username => {
-  return await ipc.callMain('db-clean-keys', username);
+export const cleanKeys = async recipientId => {
+  return await ipc.callMain('db-clean-keys', recipientId);
 };
 
 export const createContact = async params => {

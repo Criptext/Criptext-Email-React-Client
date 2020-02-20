@@ -22,7 +22,8 @@ const {
   Settings,
   Signedprekeyrecord,
   getDB,
-  Table
+  Table,
+  deleteAccountNotSignalRelatedData
 } = require('./DBEmanager');
 const myAccount = require('./../Account');
 const systemLabels = require('./../systemLabels');
@@ -619,7 +620,9 @@ const exportEmailTable = async accountId => {
                 username,
                 metadataKey: newRow.key,
                 password: globalManager.databaseKey.get()
-              })) || newRow.content;
+              })) ||
+              newRow.content ||
+              '';
             const headers = await getEmailHeaders({
               username,
               metadataKey: newRow.key,
@@ -809,6 +812,13 @@ const importDatabaseFromFile = async ({
   const sequelize = getDB();
 
   return await sequelize.transaction(async trx => {
+    let accountId = accountObj.id;
+    let userEmail = accountObj.email;
+    if (!accountId && !userEmail && myAccount.recipientId) {
+      userEmail = myAccount.email;
+      accountId = myAccount.id;
+    }
+
     if (isStrict) {
       getCustomLinesByStream(filepath, 1, (err, lines) => {
         if (err) throw new Error('Failed to read file information');
@@ -829,20 +839,9 @@ const importDatabaseFromFile = async ({
         }
       });
 
-      await EmailContact().destroy({ where: {}, transaction: trx });
-      await EmailLabel().destroy({ where: {}, transaction: trx });
-      await Contact().destroy({ where: {}, transaction: trx });
-      await Email().destroy({ where: {}, transaction: trx });
-      await Label().destroy({ where: { type: 'custom' }, transaction: trx });
-      await File().destroy({ where: {}, transaction: trx });
-      await Feeditem().destroy({ where: {}, transaction: trx });
-    }
-
-    let accountId = accountObj.id;
-    let userEmail = accountObj.email;
-    if (!accountId && !userEmail && myAccount.recipientId) {
-      userEmail = myAccount.email;
-      accountId = myAccount.id;
+      if (accountId) {
+        await deleteAccountNotSignalRelatedData(accountId, trx);
+      }
     }
 
     let labelIdsMap = {
@@ -1119,7 +1118,8 @@ const importDatabaseFromFile = async ({
             lastTableRow = table;
             lineReader.resume();
           } catch (ex) {
-            lineReader.resume();
+            lineReader.close();
+            reject(ex);
             return;
           }
         })
@@ -1197,7 +1197,7 @@ const insertContacts = async (contacts, contactsMap, transaction) => {
 };
 
 const insertLabels = async (labels, labelsMap, transaction) => {
-  await Label().bulkCreate(labels, { transaction, ignoreDuplicates: true });
+  await Label().bulkCreate(labels, { transaction });
   const uuids = Object.keys(labelsMap);
   const insertedLabels = await Label().findAll({
     attributes: ['id', 'uuid'],
@@ -1219,7 +1219,7 @@ const insertLabels = async (labels, labelsMap, transaction) => {
 };
 
 const insertEmails = async (emails, emailsMap, transaction) => {
-  await Email().bulkCreate(emails, { transaction, ignoreDuplicates: true });
+  await Email().bulkCreate(emails, { transaction });
   const keys = Object.keys(emailsMap);
   const insertedEmails = await Email().findAll({
     attributes: ['id', 'key'],

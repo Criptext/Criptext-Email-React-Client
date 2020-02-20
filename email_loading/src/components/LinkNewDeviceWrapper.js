@@ -138,7 +138,7 @@ class LinkNewDeviceWrapper extends Component {
           this.incrementPercentage();
           const keybundle = await signal.generateAccountAndKeys(params);
           if (!keybundle) {
-            await cleanKeys();
+            await cleanKeys(getRecipientIdFromRemoteData());
             this.linkingDevicesThrowError();
             return;
           }
@@ -163,7 +163,7 @@ class LinkNewDeviceWrapper extends Component {
         try {
           const accountData = await signal.uploadKeys(keybundle);
           if (!accountData) {
-            await cleanKeys();
+            await cleanKeys(getRecipientIdFromRemoteData());
             this.linkingDevicesThrowError();
             return;
           }
@@ -341,7 +341,7 @@ class LinkNewDeviceWrapper extends Component {
         this.nextWindow();
         break;
       default: {
-        cleanKeys();
+        cleanKeys(getRecipientIdFromRemoteData());
         closeCreatingKeysLoadingWindow();
         logoutApp();
         break;
