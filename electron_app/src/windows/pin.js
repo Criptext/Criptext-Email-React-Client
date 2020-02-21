@@ -169,11 +169,6 @@ const checkPin = async () => {
 };
 
 const validatePin = async pinToValidate => {
-  const credentials = await checkPin();
-  if (credentials) {
-    return pinToValidate === credentials;
-  }
-
   try {
     await initDatabaseEncrypted({
       key: pinToValidate,

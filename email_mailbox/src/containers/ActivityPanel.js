@@ -23,7 +23,7 @@ const mapStateToProps = state => {
     .map(feedItem => feedItem.id);
   return {
     newFeeds: newFeedsPlain.filter(item => item.emailData),
-    oldFeeds: oldFeeds.toJS(),
+    oldFeeds: oldFeeds.toJS().filter(item => item.emailData),
     feedItemIds
   };
 };

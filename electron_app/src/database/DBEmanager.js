@@ -951,7 +951,9 @@ const createLabel = async params => {
     labelsToInsert = Object.assign(params, { uuid: genUUID() });
   }
   labelsToInsert = params;
-  return Label().create(labelsToInsert);
+  return Label()
+    .create(labelsToInsert)
+    .then(label => label.toJSON());
 };
 
 const createSystemLabels = () => {
