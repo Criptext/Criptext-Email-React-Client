@@ -75,6 +75,7 @@ const close = ({ forceClose }) => {
   shouldCloseForce = forceClose;
   if (loginWindow !== undefined) {
     loginWindow.close();
+    loginWindow = null;
   }
 };
 

@@ -547,8 +547,8 @@ export const restoreBackupUnencrypted = async params => {
   return await ipc.callMain('restore-backup-unencrypted', params);
 };
 
-export const disableAutoBackup = async () => {
-  return await ipc.callMain('disable-auto-backup');
+export const disableAutoBackup = async accountId => {
+  return await ipc.callMain('disable-auto-backup', accountId);
 };
 
 /* Nucleus

@@ -20,7 +20,7 @@ const {
 } = require('./../utils/TimeUtils');
 const { updateAccount } = require('./../database');
 const myAccount = require('../Account');
-global.autoBackupIntervalId = null;
+let autoBackupIntervalId = {};
 
 const simulatePause = ms => {
   return new Promise(resolve => {
@@ -38,7 +38,12 @@ ipc.answerRenderer('create-default-backup-folder', () =>
 );
 
 const doExportBackupUnencrypted = async params => {
-  const { backupPath, notificationParams, isAutoBackup = true } = params;
+  const {
+    backupPath,
+    notificationParams,
+    isAutoBackup = true,
+    accountObj
+  } = params;
   try {
     globalManager.windowsEvents.disable();
     commitBackupStatus('local-backup-disable-events', 1);
@@ -46,7 +51,10 @@ const doExportBackupUnencrypted = async params => {
     await simulatePause(2000);
     globalManager.windowsEvents.enable();
     commitBackupStatus('local-backup-enable-events', 2);
-    const backupSize = await exportBackupUnencrypted({ backupPath });
+    const backupSize = await exportBackupUnencrypted({
+      backupPath,
+      accountObj
+    });
     commitBackupStatus('local-backup-export-finished', 3, {
       backupSize,
       isAutoBackup
@@ -170,22 +178,28 @@ ipc.answerRenderer('restore-backup-encrypted', async params => {
 });
 
 const initAutoBackupMonitor = () => {
-  const accountId = myAccount.id;
-  clearTimeout(global.autoBackupIntervalId);
+  let account;
+  for (account of myAccount.loggedAccounts) {
+    startBackupMonitor(account);
+  }
+};
+
+const startBackupMonitor = account => {
+  const accountId = account.id;
+  clearTimeout(autoBackupIntervalId[accountId]);
   const {
     autoBackupEnable,
     autoBackupPath,
     autoBackupFrequency,
     autoBackupNextDate
-  } = myAccount.activeAccount;
+  } = account;
   if (!autoBackupEnable || !autoBackupNextDate) {
     return;
   }
   const now = moment();
   const pendingDate = moment(autoBackupNextDate);
   const timeDiff = pendingDate.diff(now);
-
-  global.autoBackupIntervalId = setTimeout(async () => {
+  autoBackupIntervalId[accountId] = setTimeout(async () => {
     try {
       const backupFileName = defineBackupFileName('db');
       const backupSize = await doExportBackupUnencrypted({
@@ -216,8 +230,8 @@ const initAutoBackupMonitor = () => {
 
 ipc.answerRenderer('init-autobackup-monitor', initAutoBackupMonitor);
 
-ipc.answerRenderer('disable-auto-backup', () => {
-  clearTimeout(global.autoBackupIntervalId);
+ipc.answerRenderer('disable-auto-backup', accountId => {
+  clearTimeout(autoBackupIntervalId[accountId]);
 });
 
 const log = message => {
@@ -227,7 +241,7 @@ const log = message => {
 };
 
 process.on('exit', () => {
-  global.autoBackupIntervalId = null;
+  autoBackupIntervalId = {};
 });
 
 module.exports = {

@@ -284,12 +284,13 @@ const setDefaultSettings = async () => {
 
 const createOwnContact = async (name, email) => {
   const [prevOwnContact] = await getContactByEmails([email]);
-  if (!prevOwnContact) {
-    try {
-      await createContact({ contacts: [{ name, email }] });
-    } catch (createContactDbError) {
-      throw CustomError(string.errors.saveOwnContact);
-    }
+  if (prevOwnContact) {
+    return;
+  }
+  try {
+    await createContact({ contacts: [{ name, email }] });
+  } catch (createContactDbError) {
+    throw CustomError(string.errors.saveOwnContact);
   }
 };
 

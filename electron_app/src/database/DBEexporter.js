@@ -759,10 +759,13 @@ const exportFileTable = async accountId => {
   return formatTableRowsToString(Table.FILE, fileRows);
 };
 
-const exportEncryptDatabaseToFile = async ({ outputPath }) => {
+const exportEncryptDatabaseToFile = async ({ outputPath, accountObj }) => {
   const filepath = outputPath;
 
-  const [recipientId, domain] = myAccount.recipientId.split('@');
+  const [recipientId, domain] = accountObj
+    ? accountObj.recipientId.split('@')
+    : myAccount.recipientId.split('@');
+  const accountId = accountObj ? accountObj.id : myAccount.id;
   const fileInformation = JSON.stringify({
     fileVersion: LINK_DEVICES_FILE_VERSION,
     recipientId: recipientId,
@@ -770,22 +773,22 @@ const exportEncryptDatabaseToFile = async ({ outputPath }) => {
   });
   saveToFile({ data: fileInformation, filepath, mode: 'w' }, true);
 
-  const contacts = await exportContactTable(myAccount.id);
+  const contacts = await exportContactTable(accountId);
   saveToFile({ data: contacts, filepath, mode: 'a' });
 
-  const labels = await exportLabelTable(myAccount.id);
+  const labels = await exportLabelTable(accountId);
   saveToFile({ data: labels, filepath, mode: 'a' });
 
-  const emails = await exportEmailTable(myAccount.id);
+  const emails = await exportEmailTable(accountId);
   saveToFile({ data: emails, filepath, mode: 'a' });
 
-  const emailContacts = await exportEmailContactTable(myAccount.id);
+  const emailContacts = await exportEmailContactTable(accountId);
   saveToFile({ data: emailContacts, filepath, mode: 'a' });
 
-  const emailLabels = await exportEmailLabelTable(myAccount.id);
+  const emailLabels = await exportEmailLabelTable(accountId);
   saveToFile({ data: emailLabels, filepath, mode: 'a' });
 
-  const files = await exportFileTable(myAccount.id);
+  const files = await exportFileTable(accountId);
   saveToFile({ data: files, filepath, mode: 'a' });
 };
 

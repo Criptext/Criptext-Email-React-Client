@@ -152,14 +152,25 @@ const updateAccount = ({
 ----------------------------- */
 const createContact = ({ contacts, accountId }, prevTrx) => {
   return createOrUseTrx(prevTrx, async trx => {
-    const contactsCreated = await Contact().bulkCreate(contacts, {
+    const emails = contacts.map(contact => contact.email);
+    await Contact().bulkCreate(contacts, {
+      transaction: trx,
+      ignoreDuplicates: true
+    });
+    const insertedContacts = await Contact().findAll({
+      where: {
+        email: emails
+      },
+      raw: true,
       transaction: trx
     });
-    const accountContacts = contactsCreated.reduce((result, contact) => {
+    if (insertedContacts.length < contacts.length)
+      throw new Error('Missing Inserted Rows');
+    const accountContacts = insertedContacts.reduce((result, contact) => {
       return [...result, { contactId: contact.id, accountId }];
     }, []);
     await AccountContact().bulkCreate(accountContacts, { transaction: trx });
-    return contactsCreated;
+    return insertedContacts;
   });
 };
 

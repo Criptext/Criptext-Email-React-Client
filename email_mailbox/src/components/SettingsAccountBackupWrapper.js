@@ -242,7 +242,7 @@ class SettingsAccountBackupWrapper extends Component {
         },
         async () => {
           await updateAccount({ autoBackupEnable: false });
-          await disableAutoBackup();
+          await disableAutoBackup(myAccount.id);
         }
       );
     }

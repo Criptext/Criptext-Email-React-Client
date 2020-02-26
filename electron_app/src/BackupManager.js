@@ -142,11 +142,12 @@ const getFileSizeInBytes = filename => {
 
 /*  Export Backup 
 ----------------------------- */
-const exportBackupUnencrypted = async ({ backupPath }) => {
+const exportBackupUnencrypted = async ({ backupPath, accountObj }) => {
   try {
     try {
       await exportEncryptDatabaseToFile({
-        outputPath: ExportUnencryptedFilename
+        outputPath: ExportUnencryptedFilename,
+        accountObj
       });
     } catch (dbErr) {
       throw new Error('Failed to export database');
@@ -175,12 +176,13 @@ const exportBackupUnencrypted = async ({ backupPath }) => {
   }
 };
 
-const exportBackupEncrypted = async ({ backupPath, password }) => {
+const exportBackupEncrypted = async ({ backupPath, password, accountObj }) => {
   try {
     // Export database
     try {
       await exportEncryptDatabaseToFile({
-        outputPath: ExportUnencryptedFilename
+        outputPath: ExportUnencryptedFilename,
+        accountObj
       });
     } catch (dbErr) {
       throw new Error('Failed to export database');
