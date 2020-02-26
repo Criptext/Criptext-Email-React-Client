@@ -823,7 +823,8 @@ describe('Delete emails from Email Table:', () => {
           date: '2018-06-14T23:45:57.466Z',
           mimeType: 'image/png'
         }
-      ]
+      ],
+      accountId
     };
 
     const theEmail = await DBManager.createEmail(emailToDelete); //this create emailLabel, emailContact, and files
@@ -832,7 +833,8 @@ describe('Delete emails from Email Table:', () => {
       date: '2018-06-14 08:23:19.120',
       type: 7,
       emailId: theEmail.id,
-      contactId: 1
+      contactId: 1,
+      accountId
     };
 
     const feedItemCreated = await DBManager.createFeedItem(feeditem);
@@ -851,12 +853,15 @@ describe('Delete emails from Email Table:', () => {
     expect(emailLabelsExist).not.toHaveLength(0);
     const filesExist = await DBManager.getFilesByEmailId(theEmail.id);
     expect(filesExist).not.toHaveLength(0);
-    await DBManager.deleteEmailByKeys(keyToDelete);
+    await DBManager.deleteEmailByKeys({ accountId, keys: keyToDelete });
 
-    const [email] = await DBManager.getEmailByKey(emailToDelete.email.key);
+    const [email] = await DBManager.getEmailByKey({
+      accountId,
+      key: emailToDelete.email.key
+    });
     expect(email).toBeUndefined();
 
-    const feedItemsDeleted = await DBManager.getAllFeedItems();
+    const feedItemsDeleted = await DBManager.getAllFeedItems({ accountId });
     expect(feedItemsDeleted).toHaveLength(0);
     const emailContactDeleted = await DBManager.getContactsByEmailId(
       theEmail.id
