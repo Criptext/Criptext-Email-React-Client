@@ -1,4 +1,4 @@
-import { addAccounts, updateAccounts } from './accounts';
+import { updateBadgeAccounts } from './accounts';
 import {
   logout,
   setAvatarUpdatedTimestamp,
@@ -77,7 +77,6 @@ import { clearSuggestions, loadSuggestions } from './suggestions';
 import { addDataApp, loadApp } from './app';
 
 export {
-  addAccounts,
   addEmailLabels,
   addContacts,
   addDataApp,
@@ -132,7 +131,7 @@ export {
   unsendEmail,
   unsendEmailFiles,
   unsendEmailOnSuccess,
-  updateAccounts,
+  updateBadgeAccounts,
   updateBadgeLabels,
   updateFeedItem,
   updateFeedItems,

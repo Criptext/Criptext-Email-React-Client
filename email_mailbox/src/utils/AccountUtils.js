@@ -31,7 +31,7 @@ export const defineAccounts = accounts => {
   }, {});
 };
 
-export const assembleAccounts = async (
+export const defineBadgeAccounts = async (
   accounts = myAccount.inactiveAccounts
 ) => {
   const recipientIds = Object.keys(accounts);

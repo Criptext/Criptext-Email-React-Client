@@ -8,6 +8,7 @@ import {
   loadThreads,
   logout,
   updateUnreadThreads,
+  updateBadgeAccounts,
   updateBadgeLabels,
   updateEmailIdsThread,
   updateFeedItems,
@@ -21,7 +22,6 @@ import {
 import PanelWrapper from '../components/PanelWrapper';
 import { LabelType } from '../utils/electronInterface';
 import {
-  isGettingEventsGet,
   isGettingEventsUpdate,
   selectAccountAsActive
 } from '../utils/electronEventInterface';
@@ -70,15 +70,13 @@ const mapDispatchToProps = dispatch => {
       await dispatch(updateUnreadThreads([threadId], unread, labelId));
     },
     onUpdateAccountApp: async ({ mailboxSelected, accountId, recipientId }) => {
-      if (!isGettingEventsGet()) {
-        isGettingEventsUpdate(true);
-        await selectAccountAsActive({ accountId, recipientId });
-        await dispatch(logout());
-        isGettingEventsUpdate(false);
-        if (mailboxSelected) {
-          const params = defineParamsToLoadThread(mailboxSelected, true);
-          await dispatch(loadApp(params));
-        }
+      isGettingEventsUpdate(true);
+      await selectAccountAsActive({ accountId, recipientId });
+      await dispatch(logout());
+      isGettingEventsUpdate(false);
+      if (mailboxSelected) {
+        const params = defineParamsToLoadThread(mailboxSelected, true);
+        await dispatch(loadApp(params));
       }
     },
     onUpdateLabels: labels => {
@@ -152,6 +150,7 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateUnreadEmailsBadge: labelIds => {
       dispatch(updateBadgeLabels(labelIds));
+      dispatch(updateBadgeAccounts());
     }
   };
 };

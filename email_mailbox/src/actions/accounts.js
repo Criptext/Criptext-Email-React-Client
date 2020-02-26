@@ -1,15 +1,16 @@
 import { Account } from './types';
-
-export const addAccounts = accounts => {
-  return {
-    type: Account.ADD_BATCH,
-    accounts
-  };
-};
+import { defineBadgeAccounts } from './../utils/AccountUtils';
 
 export const updateAccounts = accounts => {
   return {
     type: Account.UPDATE_ACCOUNTS,
     accounts
+  };
+};
+
+export const updateBadgeAccounts = () => {
+  return async dispatch => {
+    const accounts = await defineBadgeAccounts();
+    dispatch(updateAccounts(accounts));
   };
 };

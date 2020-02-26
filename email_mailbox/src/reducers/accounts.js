@@ -24,10 +24,6 @@ const initAccounts = account => fromJS(defineAccounts(formAccounts(account)));
 
 const accounts = (state = initAccounts(myAccount), action) => {
   switch (action.type) {
-    case Account.ADD_BATCH: {
-      const accounts = fromJS(action.accounts);
-      return state.merge(accounts);
-    }
     case Activity.LOGOUT: {
       return initAccounts(myAccount);
     }
@@ -55,7 +51,7 @@ const account = (state, action) => {
     case Account.UPDATE_ACCOUNTS: {
       const { badge } = action.account;
       return state.merge({
-        badge: badge || state.get('badge')
+        badge
       });
     }
     default:

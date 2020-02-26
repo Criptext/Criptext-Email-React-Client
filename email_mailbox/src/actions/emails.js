@@ -18,6 +18,7 @@ import {
   addFiles,
   unsendEmailFiles,
   updateEmailIdsThread,
+  updateBadgeAccounts,
   updateBadgeLabels,
   updateThreadsSuccess
 } from './index';
@@ -207,6 +208,7 @@ export const updateUnreadEmail = (
         dispatch(markEmailUnreadSuccess(emailId, valueToSet));
         dispatch(updateThreadsSuccess(labelId, [threadId], valueToSet));
         dispatch(updateBadgeLabels([labelId]));
+        dispatch(updateBadgeAccounts());
       }
     } catch (e) {
       // To do

@@ -5,6 +5,7 @@ import {
   addLabels,
   addThreads,
   stopLoadThread,
+  updateBadgeAccounts,
   updateBadgeLabels
 } from './index';
 import { defineLabels } from './../utils/LabelUtils';
@@ -50,6 +51,7 @@ export const loadApp = params => {
     dispatch(addDataApp({ activity, contact, label, feeditem, thread }));
     const labelIds = [LabelType.inbox.id, LabelType.spam.id];
     dispatch(updateBadgeLabels(labelIds));
+    dispatch(updateBadgeAccounts());
     await getGroupEvents({});
   };
 };

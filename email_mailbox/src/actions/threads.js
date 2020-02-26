@@ -11,10 +11,11 @@ import {
   startLoadSync,
   stopLoadThread,
   stopAll,
+  updateBadgeAccounts,
+  updateBadgeLabels,
   updateEmailsSuccess,
   updateSwitchThreads
 } from './index';
-import { updateBadgeLabels } from './labels';
 import { _loadEmails } from './emails';
 import { LabelType } from '../utils/electronInterface';
 import {
@@ -249,7 +250,10 @@ export const addMoveLabelIdThreads = ({
           labelIds = [...labelIds, currentLabelId];
         if (labelIdToAdd === LabelType.spam.id)
           labelIds = [...labelIds, labelIdToAdd];
-        if (labelIds.length) dispatch(updateBadgeLabels(labelIds));
+        if (labelIds.length) {
+          dispatch(updateBadgeLabels(labelIds));
+          dispatch(updateBadgeAccounts());
+        }
         dispatch(moveThreads(currentLabelId, threadIds));
 
         const emails = await returnEmailIdsFromThreadsIds(
@@ -407,7 +411,10 @@ export const removeLabelIdThreads = (
         labelIdToRemove === LabelType.spam.id
           ? LabelType.spam.id
           : labelIdToRemove;
-      if (labelToUpdateBadge) dispatch(updateBadgeLabels([LabelType.inbox.id]));
+      if (labelToUpdateBadge) {
+        dispatch(updateBadgeLabels([LabelType.inbox.id]));
+        dispatch(updateBadgeAccounts());
+      }
       if (labelIdToRemove !== currentLabelId) return;
       dispatch(moveThreads(currentLabelId, threadIds));
     } catch (e) {
@@ -457,6 +464,7 @@ export const removeThreads = (threadsParams, labelId) => {
       }
       if (labelId === LabelType.spam.id) {
         dispatch(updateBadgeLabels([labelId]));
+        dispatch(updateBadgeAccounts());
       }
       dispatch(loadFeedItems(true));
     } catch (e) {
@@ -493,6 +501,7 @@ export const removeThreadsDrafts = (labelId, draftsParams) => {
       const uniqueIds = [...threadIdsDB, ...emailIds];
       dispatch(removeThreadsSuccess(labelId, uniqueIds));
       dispatch(updateBadgeLabels([draftLabelId]));
+      dispatch(updateBadgeAccounts());
     } catch (e) {
       sendRemoveThreadsErrorMessage();
     }
@@ -544,8 +553,10 @@ export const updateUnreadThreads = (threadIds, unread, labelId) => {
         });
         if (response) {
           dispatch(updateThreadsSuccess(labelId, threadIds, unread));
-          if (labelId === LabelType.inbox.id || labelId === LabelType.spam.id)
+          if (labelId === LabelType.inbox.id || labelId === LabelType.spam.id) {
             dispatch(updateBadgeLabels([labelId]));
+            dispatch(updateBadgeAccounts());
+          }
         }
       }
     } catch (e) {
@@ -642,7 +653,10 @@ export const sendOpenEvent = (
           }
         }
       }
-      if (labelId > 0) dispatch(updateBadgeLabels([labelId]));
+      if (labelId > 0) {
+        dispatch(updateBadgeLabels([labelId]));
+        dispatch(updateBadgeAccounts());
+      }
     } catch (e) {
       sendOpenEventErrorMessage();
     }
