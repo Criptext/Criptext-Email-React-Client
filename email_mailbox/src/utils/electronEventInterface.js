@@ -767,14 +767,14 @@ const handleNewMessageEvent = async (
     labels,
     from
   });
-  const isFromMe = myAccount.recipientId === recipientId;
+  const isFromMe = accountRecipientId === recipientId;
   const recipients = getRecipientsFromData({
     to: to || toArray,
     cc: cc || ccArray,
     bcc: bcc || bccArray,
     from
   });
-  const isToMe = checkEmailIsTo(recipients);
+  const isToMe = checkEmailIsTo(recipients, accountRecipientId);
   const { notificationPreview, emailThreadId, labelIds } = !prevEmail
     ? await formEmailIfNotExists({
         accountId,
@@ -1233,7 +1233,7 @@ const handlePeerLabelUpdate = async ({ rowid, params }, accountId) => {
   const { uuid, text } = params;
   const [label] = await getLabelByUuid({ uuid, accountId });
   if (!label) return { rowid };
-  const [response] = updateLabelDB({ id: label.id, text, accountId });
+  const response = updateLabelDB({ id: label.id, text, accountId });
   if (!response) return { rowid: null };
   return { rowid, updatedLabel: { id: label.id, text } };
 };

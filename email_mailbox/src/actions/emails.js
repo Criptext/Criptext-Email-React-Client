@@ -103,7 +103,6 @@ export const removeEmails = (labelId, emailsParams) => {
       }, []);
 
       const dbResponse = await deleteEmailByKeys({ keys });
-
       if (dbResponse) {
         if (metadataKeys.length) {
           const eventParams = {

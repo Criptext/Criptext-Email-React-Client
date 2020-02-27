@@ -28,7 +28,7 @@ ipc.answerRenderer('db-delete-emails-by-threadid-and-labelid', async params => {
   );
   await dbManager.deleteEmailByKeys({
     keys: emailKeys,
-    accountId: params.accountId
+    accountId: data.accountId
   });
 });
 

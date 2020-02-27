@@ -90,9 +90,9 @@ export const updateLabel = ({ id, uuid, color, text, visible }) => {
         text,
         visible
       });
-      if (!response) return;
+      if (!response) return false;
       dispatch(updateLabelSuccess({ id, uuid, color, text, visible }));
-      if (!text) return;
+      if (!text) return false;
       const eventParams = {
         cmd: SocketCommand.PEER_LABEL_UPDATE,
         params: {
@@ -102,8 +102,10 @@ export const updateLabel = ({ id, uuid, color, text, visible }) => {
         }
       };
       await postPeerEvent({ data: eventParams });
+      return true;
     } catch (e) {
       sendUpdateLabelsErrorMessage();
+      return false;
     }
   };
 };

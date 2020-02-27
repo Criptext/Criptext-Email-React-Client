@@ -2,13 +2,17 @@ const { app } = require('electron');
 const mailboxWindow = require('./windows/mailbox');
 const pinWindow = require('./windows/pin.js');
 const globalManager = require('./globalManager');
-const { resetKeyDatabase } = require('./database/DBEmanager');
+const {
+  resetKeyDatabase,
+  getAccountByParams
+} = require('./database/DBEmanager');
 const keytar = require('keytar');
 const path = require('path');
 const socket = require('./socketClient');
 const filesScript = require('./filescript/handler');
 const fileUtils = require('./utils/FileUtils');
 const myAccount = require('./Account');
+const { APP_DOMAIN } = require('./utils/const');
 const recoveryKeyManager = require('./recoveryKey');
 
 let resetKeyParams;
@@ -39,20 +43,29 @@ const setKeyEmailBodies = async pin => {
 const start = async () => {
   const { newPin, recoveryKeyData, saveInKeyChain } = resetKeyParams;
   const oldPin = globalManager.databaseKey.get();
-  const accountEmail = myAccount.email;
-  try {
-    const userEmailsPath = fileUtils.getUserEmailsPath(
+  const registeredAccounts = await getAccountByParams({});
+  let account;
+  const pathsMap = [];
+  for (account of registeredAccounts) {
+    const accountEmail = account.recipientId.includes('@')
+      ? account.recipientId
+      : `${account.recipientId}@${APP_DOMAIN}`;
+    const inputPath = fileUtils.getUserEmailsPath(
       process.env.NODE_ENV,
       accountEmail
     );
-    const userEmailsCopyPath = path.join(userEmailsPath, '../emails-copy');
-    const result = await filesScript.start({
-      inPath: userEmailsPath,
-      outPath: userEmailsCopyPath,
+    const outputPath = path.join(inputPath, '../emails-copy');
+    pathsMap.push({
+      inPath: inputPath,
+      outPath: outputPath
+    });
+  }
+  try {
+    const result = await filesScript.startAll({
+      paths: pathsMap,
       pass: newPin,
       oldPass: oldPin
     });
-
     if (!result) {
       app.relaunch();
       app.exit(0);

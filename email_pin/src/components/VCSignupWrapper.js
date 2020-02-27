@@ -86,7 +86,12 @@ class VCSignupWrapper extends Component {
   };
 
   handleClickCompleteIt = async value => {
-    await sendPin({ pin: this.pin, shouldSave: value, shouldExport: false });
+    await sendPin({
+      pin: this.pin,
+      shouldSave: value,
+      shouldExport: false,
+      shouldOnlySetPIN: true
+    });
     openCreateKeysLoadingWindow({
       loadingType: 'signup',
       remoteData

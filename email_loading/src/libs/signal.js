@@ -13,6 +13,7 @@ import {
   postKeyBundle,
   postUser,
   updateAccount,
+  getSettings,
   getSystemLanguage,
   getContactByEmails,
   restartAlice
@@ -249,12 +250,12 @@ const createAccountToDB = async ({
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
+  await setDefaultSettings();
   const loggedAccounts = await getAccountByParams({
     isLoggedIn: true
   });
   myAccount.initialize(loggedAccounts);
   await createOwnContact(name, myAccount.email);
-  await setDefaultSettings();
   if (activeAccount) {
     const newAccount = loggedAccounts.find(
       account => account.recipientId === recipientId
@@ -271,7 +272,13 @@ const createAccountToDB = async ({
 };
 
 const setDefaultSettings = async () => {
-  if (!mySettings.theme) {
+  const settings = await getSettings();
+  if (settings) {
+    mySettings.initialize({
+      ...settings,
+      isFromStore: isFromStore
+    });
+  } else {
     const language = await getSystemLanguage();
     const data = { language, opened: false, theme: 'light' };
     await createSettings(data);

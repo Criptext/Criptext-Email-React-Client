@@ -114,6 +114,10 @@ export const createSettings = async params => {
   return await ipc.callMain('db-create-settings', params);
 };
 
+export const getSettings = async () => {
+  return await ipc.callMain('db-get-settings');
+};
+
 export const createSignedPreKeyRecord = async params => {
   return await ipc.callMain('db-create-signed-prekey-record', params);
 };

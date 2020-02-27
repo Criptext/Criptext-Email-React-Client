@@ -60,28 +60,47 @@ const convertFilesInFolder = async (
 };
 
 const start = async ({ inPath, outPath, pass, oldPass }) => {
-  const inputPath = inPath;
-  const outputPath = outPath;
-  const password = pass;
-  const oldPassword = oldPass;
-
-  if (!fs.existsSync(inputPath)) return true;
-  const success = await convertFilesInFolder(
-    inputPath,
-    outputPath,
-    password,
-    oldPassword
-  );
+  if (!fs.existsSync(inPath)) return true;
+  const success = await convertFilesInFolder(inPath, outPath, pass, oldPass);
   if (!success) {
     await remove(outPath);
     sendMessage('abort');
     return false;
   }
-  await remove(inputPath);
-  if (fs.existsSync(outputPath)) fs.renameSync(outputPath, inputPath);
+  await remove(inPath);
+  if (fs.existsSync(outPath)) fs.renameSync(outPath, inPath);
+  return true;
+};
+
+const startAll = async ({ paths, pass, oldPass }) => {
+  let pathMap;
+  let success = 0;
+  for (pathMap of paths) {
+    if (!fs.existsSync(pathMap.inPath)) return true;
+    const result = await convertFilesInFolder(
+      pathMap.inPath,
+      pathMap.outPath,
+      pass,
+      oldPass
+    );
+    if (result) success++;
+  }
+
+  if (success !== paths.length) {
+    await Promise.all(paths.map(pathMap => remove(pathMap.outPath)));
+    sendMessage('abort');
+    return false;
+  }
+  await Promise.all(paths.map(pathMap => remove(pathMap.inPath)));
+  for (pathMap of paths) {
+    if (!fs.existsSync(pathMap.outPath)) continue;
+    fs.renameSync(pathMap.outPath, pathMap.inPath);
+  }
+
   return true;
 };
 
 module.exports = {
-  start
+  start,
+  startAll
 };

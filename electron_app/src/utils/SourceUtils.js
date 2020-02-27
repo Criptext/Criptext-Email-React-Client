@@ -13,10 +13,10 @@ const getUsername = () => {
   return username;
 };
 
-const buildEmailSource = async ({ metadataKey, accountId }) => {
+const buildEmailSource = async ({ key, accountId }) => {
   const username = getUsername();
   const [email] = await dbManager.getEmailByKey({
-    key: metadataKey,
+    key,
     accountId
   });
   if (!email || !email.boundary) {
@@ -24,12 +24,12 @@ const buildEmailSource = async ({ metadataKey, accountId }) => {
   }
   const body = await fileUtils.getEmailBody({
     username,
-    metadataKey,
+    metadataKey: key,
     password: globalManager.databaseKey.get()
   });
   const headers = await fileUtils.getEmailHeaders({
     username,
-    metadataKey,
+    metadataKey: key,
     password: globalManager.databaseKey.get()
   });
 

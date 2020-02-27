@@ -1149,7 +1149,7 @@ const getLabelById = id => {
 
 const getLabelByUuid = ({ accountId, uuid }) => {
   return Label()
-    .findAll({ where: { uuid, accountId } })
+    .findAll({ where: { uuid, accountId: { [Op.or]: [accountId, null] } } })
     .map(label => label.toJSON());
 };
 
@@ -1158,7 +1158,10 @@ const getLabelsByText = async ({ accountId, text }) => {
   for (const word of text) {
     const labelsMatched = await Label()
       .findAll({
-        where: { text: { [Op.like]: word }, accountId }
+        where: {
+          text: { [Op.like]: word },
+          accountId: { [Op.or]: [accountId, null] }
+        }
       })
       .map(label => label.toJSON());
     labels = labels.concat(labelsMatched);

@@ -55,6 +55,8 @@ ipc.answerRenderer('db-create-settings', params =>
   dbManager.createSettings(params)
 );
 
+ipc.answerRenderer('db-get-settings', () => dbManager.getSettings());
+
 ipc.answerRenderer('db-create-signed-prekey-record', params =>
   dbManager.createSignedPreKeyRecord(params)
 );

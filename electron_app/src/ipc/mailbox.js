@@ -60,8 +60,8 @@ ipc.answerRenderer('print-to-pdf', async ({ emailId, threadId }) => {
   await printEmailOrThread({ emailId, threadId });
 });
 
-ipc.answerRenderer('open-email-source', async ({ metadataKey, accountId }) => {
-  await buildEmailSource({ metadataKey, accountId });
+ipc.answerRenderer('open-email-source', async ({ key, accountId }) => {
+  await buildEmailSource({ key, accountId });
 });
 
 ipc.answerRenderer(

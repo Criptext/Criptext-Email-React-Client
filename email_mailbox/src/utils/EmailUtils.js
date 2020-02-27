@@ -163,9 +163,9 @@ export const addCollapseDiv = (htmlString, key, isCollapse) => {
 export const compareEmailDate = (emailA, emailB) =>
   emailA.date < emailB.date ? -1 : emailA.date > emailB.date ? 1 : 0;
 
-export const checkEmailIsTo = recipients => {
+export const checkEmailIsTo = (recipients, accountRecipientId) => {
   const emails = getEmailsFromRecipients(recipients);
-  const [recipientId, domain = appDomain] = myAccount.recipientId.split('@');
+  const [recipientId, domain = appDomain] = accountRecipientId.split('@');
   const res = emails.includes(`${recipientId}@${domain}`);
   return res;
 };
