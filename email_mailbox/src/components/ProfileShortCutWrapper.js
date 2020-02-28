@@ -53,8 +53,8 @@ class ProfileShortCutWrapper extends Component {
   };
 
   handleClickItemAccount = async account => {
-    await this.props.onUpdateApp(account);
     this.handleToggleMenuProfilePreview();
+    await this.props.onUpdateApp(account);
   };
 }
 

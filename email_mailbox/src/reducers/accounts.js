@@ -31,8 +31,8 @@ const accounts = (state = initAccounts(myAccount), action) => {
       const { accounts } = action;
       return accounts.reduce((result, item) => {
         const accountId = item.id;
-        const accountItem = state.get(`${accountId}`);
-        return state.set(
+        const accountItem = result.get(`${accountId}`);
+        return result.set(
           `${accountId}`,
           account(accountItem, {
             account: item,
@@ -40,6 +40,9 @@ const accounts = (state = initAccounts(myAccount), action) => {
           })
         );
       }, state);
+    }
+    case Account.RELOAD_ACCOUNTS: {
+      return initAccounts(myAccount);
     }
     default:
       return state;

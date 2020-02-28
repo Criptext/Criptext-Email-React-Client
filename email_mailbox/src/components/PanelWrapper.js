@@ -379,6 +379,7 @@ class PanelWrapper extends Component {
 
     if (profileHasChanged) {
       activity = setAvatarUpdatedTimestamp(Date.now());
+      this.props.onAccountsChanged();
     }
 
     if (feedItemHasAdded) {
@@ -618,6 +619,7 @@ class PanelWrapper extends Component {
 
 PanelWrapper.propTypes = {
   isLoadAppCompleted: PropTypes.bool,
+  onAccountsChanged: PropTypes.func,
   onAddDataApp: PropTypes.func,
   onAddLabels: PropTypes.func,
   onLoadEmails: PropTypes.func,

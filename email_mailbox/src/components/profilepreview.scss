@@ -103,8 +103,23 @@
       }
 
       .cptx-profile-preview-badge{
-
+        display: flex;
+        .cptx-badge{
+          background-color: #56C4FA;
+          border-radius: 13px;
+          color: white;
+          font-size: 11px;
+          font-weight: 500;
+          height: 17px;
+          line-height: 17px;
+          margin: 0;
+          min-width: 24px;
+          padding: 0 2px;
+          text-align: center;
+          width: auto;
+        }
       }
+      
     }
   }
 

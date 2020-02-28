@@ -1,4 +1,4 @@
-import { updateBadgeAccounts } from './accounts';
+import { reloadAccounts, updateBadgeAccounts } from './accounts';
 import {
   logout,
   setAvatarUpdatedTimestamp,
@@ -104,6 +104,7 @@ export {
   loadThreads,
   logout,
   moveThreads,
+  reloadAccounts,
   removeAllThreads,
   removeEmails,
   removeEmailLabels,

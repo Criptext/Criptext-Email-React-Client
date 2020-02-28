@@ -38,6 +38,7 @@ class SettingBlockProfileWrapper extends Component {
         avatarIsLoading={this.state.avatarParams.isLoading}
         showAvatar={this.state.avatarParams.showImage}
         avatarUrl={this.props.avatarUrl}
+        letters={this.props.letters}
         name={this.state.nameParams.name}
         mode={this.state.mode}
         onChangeAvatar={this.handleChangeAvatar}
@@ -227,6 +228,7 @@ class SettingBlockProfileWrapper extends Component {
 
 SettingBlockProfileWrapper.propTypes = {
   avatarUrl: PropTypes.string,
+  letters: PropTypes.string,
   onRemoveAvatar: PropTypes.func,
   onUploadAvatar: PropTypes.func,
   onUpdateAccount: PropTypes.func,

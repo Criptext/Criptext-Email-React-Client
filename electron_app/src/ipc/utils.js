@@ -12,7 +12,7 @@ const {
   getSystemLanguage,
   sendEventToAllWindows
 } = require('./../windows/windowUtils');
-const dbManager = require('./../database/DBEManager');
+const dbManager = require('./../database/DBEmanager');
 const socketClient = require('./../socketClient');
 const { upApp } = require('./../windows');
 const myAccount = require('../Account');

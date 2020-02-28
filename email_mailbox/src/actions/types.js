@@ -3,7 +3,7 @@ export const App = {
 };
 
 export const Account = {
-  ADD_BATCH: 'ADD_ACCOUNTS',
+  RELOAD_ACCOUNTS: 'RELOAD_ACCOUNTS',
   UPDATE_ACCOUNTS: 'UPDATE_ACCOUNTS'
 };
 

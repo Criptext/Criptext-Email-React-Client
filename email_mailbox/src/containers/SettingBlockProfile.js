@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import SettingBlockProfileWrapper from '../components/SettingBlockProfileWrapper';
 import { setAvatarUpdatedTimestamp } from '../actions';
 import { myAccount } from '../utils/electronInterface';
+import { getTwoCapitalLetters } from '../utils/StringUtils';
 import {
   removeAvatar,
   updateAccount,
@@ -15,8 +16,10 @@ const mapStateToProps = state => {
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const [username, domain = appDomain] = myAccount.recipientId.split(`@`);
   const avatarUrl = `${avatarBaseUrl}${domain}/${username}?date=${avatarTimestamp}`;
+  const letters = getTwoCapitalLetters(myAccount.name);
   return {
-    avatarUrl
+    avatarUrl,
+    letters
   };
 };
 

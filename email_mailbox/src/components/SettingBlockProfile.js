@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { myAccount } from '../utils/electronInterface';
-import { getTwoCapitalLetters } from '../utils/StringUtils';
 import { Switch } from 'react-switch-input';
 import { EDITING_MODES } from './SettingAccountWrapper';
 import { Editor } from 'react-draft-wysiwyg';
 import string from '../lang';
+import AvatarImage from './AvatarImage';
 import './settingblockprofile.scss';
 
 const SettingBlockProfile = props => (
@@ -21,17 +21,11 @@ const SettingBlockProfile = props => (
 const renderBlockAvatar = props => (
   <div className="cptx-section-item">
     <div className="cptx-profile-avatar">
-      {props.showAvatar ? (
-        <img
-          src={props.avatarUrl}
-          onError={props.onErrorAvatar}
-          alt="user avatar"
-        />
-      ) : (
-        <div className="cptx-profile-avatar-letters">
-          <span>{getTwoCapitalLetters(myAccount.name)}</span>
-        </div>
-      )}
+      <AvatarImage
+        key={props.avatarUrl}
+        avatarUrl={props.avatarUrl}
+        letters={props.letters}
+      />
       {props.avatarIsLoading && (
         <div className="cptx-profile-avatar-loading-overlay">
           <Loading />
@@ -211,6 +205,7 @@ export const SwitchStatus = {
 renderBlockAvatar.propTypes = {
   avatarIsLoading: PropTypes.bool,
   avatarUrl: PropTypes.string,
+  letters: PropTypes.string,
   onChangeAvatar: PropTypes.func,
   onErrorAvatar: PropTypes.func,
   onRemoveAvatar: PropTypes.func,

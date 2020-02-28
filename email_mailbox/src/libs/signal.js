@@ -141,7 +141,7 @@ const generateAndInsertMorePreKeys = async (
   try {
     const res = await aliceRequestWrapper(() => {
       return generateMorePreKeys({
-        accountId: accountId || myAccount.recipientId,
+        recipientId: accountRecipientId,
         newPreKeys: newPreKeyIds
       });
     });

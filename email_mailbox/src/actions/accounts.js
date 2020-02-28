@@ -8,6 +8,12 @@ export const updateAccounts = accounts => {
   };
 };
 
+export const reloadAccounts = () => {
+  return {
+    type: Account.RELOAD_ACCOUNTS
+  };
+};
+
 export const updateBadgeAccounts = () => {
   return async dispatch => {
     const accounts = await defineBadgeAccounts();

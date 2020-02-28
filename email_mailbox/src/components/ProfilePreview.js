@@ -55,7 +55,9 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
       </div>
       {!!account.badge && (
         <div className="cptx-profile-preview-badge">
-          <span className="cptx-badge">{account.badge}</span>
+          <span className="cptx-badge">
+            {account.badge > 100 ? '99+' : account.badge}
+          </span>
         </div>
       )}
     </li>

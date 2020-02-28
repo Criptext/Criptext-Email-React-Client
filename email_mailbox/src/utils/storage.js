@@ -64,34 +64,6 @@ export const getResendConfirmationTimestamp = () => {
   return isNaN(timestamp) ? null : timestamp;
 };
 
-/*  Two-Factor Switch Last Status
-------------------------------------*/
-export const setTwoFactorAuthStatus = enable => {
-  localStorage.setItem('twoFactorAuthStatus', enable);
-};
-
-export const getTwoFactorAuthStatus = () => {
-  return localStorage.getItem('twoFactorAuthStatus') || undefined;
-};
-
-/*  Recovery Email Last Value
-------------------------------------*/
-export const setLastRecoveryEmail = recoveryEmail => {
-  localStorage.setItem('lastRecoveryEmail', recoveryEmail);
-};
-
-export const getLastRecoveryEmail = () => {
-  return localStorage.getItem('lastRecoveryEmail') || undefined;
-};
-
-export const setLastRecoveryEmailConfirmed = recoveryEmailConfirmed => {
-  localStorage.setItem('lastRecoveryEmailConfirmed', recoveryEmailConfirmed);
-};
-
-export const getLastRecoveryEmailConfirmed = () => {
-  return localStorage.getItem('lastRecoveryEmailConfirmed') || undefined;
-};
-
 /*  Show Email Preview Last Status
 -------------------------------------*/
 export const setShowEmailPreviewStatus = status => {
@@ -108,16 +80,6 @@ const initShowEmailPreviewStatus = () => {
   }
 };
 initShowEmailPreviewStatus();
-
-/*  Read Receipts Last Status
--------------------------------------*/
-export const setReadReceiptsStatus = enable => {
-  localStorage.setItem('readReceiptsStatus', enable);
-};
-
-export const getReadReceiptsStatus = () => {
-  return localStorage.getItem('readReceiptsStatus') || undefined;
-};
 
 /*  User Guide
 -------------------------------------*/

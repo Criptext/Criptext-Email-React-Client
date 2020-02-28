@@ -1812,7 +1812,10 @@ export const selectAccountAsActive = async ({ accountId, recipientId }) => {
   showLoggedAsMessage(recipientId);
 };
 
-export const showLoggedAsMessage = email => {
+export const showLoggedAsMessage = recipientId => {
+  const email = recipientId.includes('@')
+    ? recipientId
+    : `${recipientId}@${appDomain}`;
   const messageData = {
     ...Messages.success.loggedAs,
     description: Messages.success.loggedAs.description + email,

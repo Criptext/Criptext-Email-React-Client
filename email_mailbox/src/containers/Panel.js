@@ -7,6 +7,7 @@ import {
   loadFeedItems,
   loadThreads,
   logout,
+  reloadAccounts,
   updateUnreadThreads,
   updateBadgeAccounts,
   updateBadgeLabels,
@@ -55,6 +56,9 @@ const defineContactType = labelId => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onAccountsChanged: () => {
+      dispatch(reloadAccounts());
+    },
     onAddDataApp: data => {
       dispatch(addDataApp(data));
     },
