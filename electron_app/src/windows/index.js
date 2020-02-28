@@ -13,6 +13,7 @@ const { initNucleus } = require('./../nucleusManager');
 const globalManager = require('./../globalManager');
 const aliceManager = require('./../aliceManager');
 const { isFromStore, getSystemLanguage } = require('./windowUtils');
+const { openLaunchWindow } = require('./launch.js');
 
 const sendAPIevent = async event => {
   await generateEvent(event);
@@ -37,7 +38,7 @@ const upStepCheckPIN = async () => {
   }
 
   try {
-    await dbManager.initDatabaseEncrypted({ key: pin });
+    await dbManager.rawCheckPin(pin);
   } catch (error) {
     globalManager.pinData.set({ pinType: 'new' });
     pinWindow.show();
@@ -74,9 +75,16 @@ const upApp = async ({ shouldSave, pin }) => {
 
   aliceManager.startAlice();
 
+  let launchWindow;
+  await dbManager.initDatabaseEncrypted({ key: pin }, () => {
+    launchWindow = openLaunchWindow();
+    if (pinWindow) pinWindow.close({ forceClose: true });
+  });
+
   const loggedAccounts = await dbManager.getAccountByParams({
     isLoggedIn: true
   });
+
   if (loggedAccounts.length > 0) {
     await upMailboxWindow(loggedAccounts);
   } else {
@@ -88,8 +96,8 @@ const upApp = async ({ shouldSave, pin }) => {
     createAppMenu();
     loginWindow.show({});
     if (pinWindow) pinWindow.close({ forceClose: true });
-    return;
   }
+  if (launchWindow) launchWindow.close();
 };
 
 const upMailboxWindow = async loggedAccounts => {

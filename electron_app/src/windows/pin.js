@@ -10,6 +10,7 @@ const filesScript = require('../filescript/handler');
 const myAccount = require('../Account');
 const {
   initDatabaseEncrypted,
+  rawCheckPin,
   resetKeyDatabase
 } = require('../database/DBEmanager');
 const keytar = require('keytar');
@@ -167,10 +168,7 @@ const checkPin = async () => {
 
 const validatePin = async pinToValidate => {
   try {
-    await initDatabaseEncrypted({
-      key: pinToValidate,
-      shouldReset: true
-    });
+    await rawCheckPin(pinToValidate);
     return true;
   } catch (error) {
     console.log(error);

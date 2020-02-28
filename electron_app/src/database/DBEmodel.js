@@ -47,6 +47,8 @@ const deleteDatabase = () => {
   });
 };
 
+const CURRENT_VERSION = 1;
+
 const Table = {
   ACCOUNT: 'account',
   ACCOUNT_CONTACT: 'accountContact',
@@ -64,7 +66,8 @@ const Table = {
   SESSIONRECORD: 'sessionrecord',
   IDENTITYKEYRECORD: 'identitykeyrecord',
   PENDINGEVENT: 'pendingEvent',
-  SETTINGS: 'settings'
+  SETTINGS: 'settings',
+  VERSION: 'version'
 };
 
 class Contact extends Model {}
@@ -82,6 +85,7 @@ class Prekeyrecord extends Model {}
 class Sessionrecord extends Model {}
 class Settings extends Model {}
 class Signedprekeyrecord extends Model {}
+class Version extends Model {}
 
 const getDB = () => sequelize;
 
@@ -95,7 +99,10 @@ const setConfiguration = key => {
   });
 };
 
-const initDatabaseEncrypted = async ({ key, shouldReset }) => {
+const initDatabaseEncrypted = async (
+  { key, shouldReset },
+  migrationStartCallback
+) => {
   if (shouldReset) sequelize = undefined;
   if (sequelize) return;
   await setConfiguration(key);
@@ -455,8 +462,33 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     foreignKey: 'accountId'
   });
 
+  Version.init(
+    {
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      value: { type: Sequelize.INTEGER }
+    },
+    {
+      sequelize,
+      tableName: Table.VERSION,
+      freezeTableName: true,
+      timestamps: false
+    }
+  );
+
   await sequelize.sync({});
 
+  const [localVersion] = await Version.findOrCreate({
+    where: {
+      id: 1
+    },
+    defaults: {
+      id: 1,
+      value: CURRENT_VERSION
+    }
+  });
+  const emailDef = await Email.describe();
+  if (emailDef.accountId && localVersion.value === CURRENT_VERSION) return;
+  if (migrationStartCallback) migrationStartCallback();
   try {
     const migrationPath = path.join(__dirname, '/DBEmigrations');
     const migrator = new umzug({
@@ -470,6 +502,16 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
       }
     });
     await migrator.up();
+    await Version.update(
+      {
+        value: CURRENT_VERSION
+      },
+      {
+        where: {
+          id: 1
+        }
+      }
+    );
   } catch (ex) {
     console.error(ex);
   }
@@ -477,6 +519,19 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
 
 const resetKeyDatabase = async key => {
   return await sequelize.query(`PRAGMA rekey = "${key}";`);
+};
+
+const rawCheckPin = async pin => {
+  const mySequelize = new Sequelize(null, null, pin, {
+    dialect: 'sqlite',
+    dialectModulePath: '@journeyapps/sqlcipher',
+    storage: myDBEncryptPath(),
+    logging: false
+  });
+
+  const result = await mySequelize.query(`SELECT * from ${Table.ACCOUNT}`);
+
+  return !!result;
 };
 
 module.exports = {
@@ -498,6 +553,7 @@ module.exports = {
   deleteDatabase,
   getDB,
   initDatabaseEncrypted,
+  rawCheckPin,
   Op,
   resetKeyDatabase,
   Table,

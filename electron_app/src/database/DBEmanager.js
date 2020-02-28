@@ -17,6 +17,7 @@ const {
   deleteDatabase,
   getDB,
   initDatabaseEncrypted,
+  rawCheckPin,
   resetKeyDatabase,
   Op,
   Table,
@@ -1351,7 +1352,10 @@ const createSettings = params => {
 const getSettings = () => {
   return Settings()
     .findOne()
-    .then(setting => setting.toJSON());
+    .then(setting => {
+      if (!setting) return;
+      return setting.toJSON();
+    });
 };
 
 const updateSettings = async ({ language, opened, theme }) => {
@@ -1658,12 +1662,11 @@ const getContactsIdByType = (emailContacts, type) => {
     .map(item => item.contactId);
 };
 
-const InitDatabaseEncrypted = async ({
-  key,
-  shouldAddSystemLabels,
-  shouldReset
-}) => {
-  await initDatabaseEncrypted({ key, shouldReset });
+const InitDatabaseEncrypted = async (
+  { key, shouldAddSystemLabels, shouldReset },
+  startMigrationCallback
+) => {
+  await initDatabaseEncrypted({ key, shouldReset }, startMigrationCallback);
   if (shouldAddSystemLabels) await createSystemLabels();
 };
 
@@ -1747,6 +1750,7 @@ module.exports = {
   getSettings,
   getTrashExpiredEmails,
   initDatabaseEncrypted: InitDatabaseEncrypted,
+  rawCheckPin,
   resetKeyDatabase,
   updateAccount,
   updateContactByEmail,
