@@ -219,8 +219,11 @@ class PanelWrapper extends Component {
       isHiddenMailboxPopup: false,
       mailboxPopupType: MAILBOX_POPUP_TYPES.CHANGE_ACCOUNT
     });
-    const mailboxSelected =
-      mailbox || this.state.sectionSelected.params.mailboxSelected;
+    const mailboxSelected = mailbox ||
+      this.state.sectionSelected.params.mailboxSelected || {
+        id: 1,
+        text: 'Inbox'
+      };
     await this.props.onUpdateAccountApp({
       mailboxSelected,
       accountId,

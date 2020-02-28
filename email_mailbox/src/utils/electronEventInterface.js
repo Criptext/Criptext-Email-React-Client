@@ -122,7 +122,12 @@ const stopGettingEvents = () => {
 
 const getAccountInfo = (recipientId, domain) => {
   if (!recipientId || !domain) {
-    return {};
+    return {
+      accountId: myAccount.id,
+      accountRecipientId: myAccount.recipientId,
+      accountEmail: myAccount.email,
+      optionalToken: myAccount.jwt
+    };
   }
   const accountRecipientId =
     domain === appDomain ? recipientId : `${recipientId}@${domain}`;
