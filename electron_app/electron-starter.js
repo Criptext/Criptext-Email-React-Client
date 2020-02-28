@@ -6,6 +6,7 @@ const loginWindow = require('./src/windows/login');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
+const myAccount = require('./src/Account');
 const { closeAlice } = require('./src/aliceManager');
 const {
   showWindows,
@@ -26,6 +27,7 @@ require('./src/ipc/nucleus.js');
 require('./src/ipc/client.js');
 const ipcUtils = require('./src/ipc/utils.js');
 const { checkDatabaseStep, deleteNotEncryptDatabase } = require('./src/utils/dataBaseUtils');
+const { APP_DOMAIN } = require('./src/utils/const');
 
 globalManager.forcequit.set(false);
 
@@ -70,13 +72,17 @@ async function initApp() {
 
   // Socket
   socketClient.setMessageListener(async data => {
+    const { cmd, recipientId, domain } = data;
     const SIGNIN_VERIFICATION_REQUEST_COMMAND = 201;
     const MANUAL_SYNC_REQUEST_COMMAND = 211;
+    const accountRecipientId =
+      domain === APP_DOMAIN ? recipientId : `${recipientId}@${domain}`;
+    const isToMe = accountRecipientId === myAccount.recipientId;
     // This validation is for closed-mailbox case
-    if (data.cmd === SIGNIN_VERIFICATION_REQUEST_COMMAND) {
+    if (isToMe && cmd === SIGNIN_VERIFICATION_REQUEST_COMMAND) {
       await ipcUtils.sendLinkDeviceStartEventToAllWindows(data);
     }
-    else if (data.cmd === MANUAL_SYNC_REQUEST_COMMAND) {
+    else if (isToMe && cmd === MANUAL_SYNC_REQUEST_COMMAND) {
       await ipcUtils.sendSyncMailboxStartEventToAllWindows(data);
     } else {
       mailboxWindow.send('socket-message', data);

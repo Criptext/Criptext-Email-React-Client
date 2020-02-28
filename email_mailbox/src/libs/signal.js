@@ -18,6 +18,7 @@ const PREKEY_INITIAL_QUANTITY = 100;
 const ALICE_ERROR = 'alice unavailable';
 const CONTENT_NOT_AVAILABLE = 'CONTENT_NOT_AVAILABLE';
 const CONTENT_UNENCRYPTED = 'Content Unencrypted';
+const DUPLICATE_MESSAGE = 'Duplicate Message';
 const ciphertextType = {
   CIPHERTEXT: 1,
   PREKEY_BUNDLE: 3
@@ -54,6 +55,8 @@ const decryptEmail = async ({
     throw new Error(ALICE_ERROR);
   } else if (res.status === 500) {
     throw new Error(CONTENT_UNENCRYPTED);
+  } else if (res.status === 409) {
+    throw new Error(DUPLICATE_MESSAGE);
   } else if (res.status !== 200) {
     throw new Error(ALICE_ERROR);
   }
@@ -178,6 +181,7 @@ const aliceRequestWrapper = async func => {
 export default {
   ALICE_ERROR,
   CONTENT_NOT_AVAILABLE,
+  DUPLICATE_MESSAGE,
   decryptEmail,
   decryptFileKey,
   decryptKey,

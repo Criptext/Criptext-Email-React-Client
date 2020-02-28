@@ -120,7 +120,7 @@ const stopGettingEvents = () => {
   processPendingEvents({});
 };
 
-const getAccountInfo = async (recipientId, domain) => {
+const getAccountInfo = (recipientId, domain) => {
   if (!recipientId || !domain) {
     return {};
   }
@@ -130,7 +130,7 @@ const getAccountInfo = async (recipientId, domain) => {
   const account =
     accountRecipientId === myAccount.recipientId
       ? myAccount
-      : await myAccount.loggedAccounts.find(
+      : myAccount.loggedAccounts.find(
           account => account.recipientId === accountRecipientId
         );
 
@@ -173,7 +173,7 @@ const parseAndStoreEventsBatch = async ({
     accountRecipientId,
     accountEmail,
     optionalToken
-  } = await getAccountInfo(recipientId, domain);
+  } = getAccountInfo(recipientId, domain);
 
   for (const event of events) {
     try {
@@ -263,7 +263,7 @@ const parseAndDispatchEvent = async (event, recipientId, domain) => {
     accountRecipientId,
     accountEmail,
     optionalToken
-  } = await getAccountInfo(recipientId, domain);
+  } = getAccountInfo(recipientId, domain);
   try {
     const {
       feedItemAdded,
@@ -465,7 +465,7 @@ export const handleEvent = ({
       return handlePeerLabelDelete(incomingEvent, accountId);
     }
     case SocketCommand.PEER_USER_NAME_CHANGED: {
-      return handlePeerUserNameChanged(incomingEvent, accountId);
+      return handlePeerUserNameChanged(incomingEvent, accountRecipientId);
     }
     case SocketCommand.PEER_PASSWORD_CHANGED: {
       return handlePeerPasswordChanged(accountRecipientId);
@@ -594,7 +594,11 @@ const formEmailIfNotExists = async params => {
       e.message === signal.CONTENT_NOT_AVAILABLE
     ) {
       return {
-        rowid: null
+        error: 1
+      };
+    } else if (e.message === signal.DUPLICATE_MESSAGE) {
+      return {
+        error: 2
       };
     }
     body = 'Content unencrypted';
@@ -775,7 +779,7 @@ const handleNewMessageEvent = async (
     from
   });
   const isToMe = checkEmailIsTo(recipients, accountRecipientId);
-  const { notificationPreview, emailThreadId, labelIds } = !prevEmail
+  const { error, notificationPreview, emailThreadId, labelIds } = !prevEmail
     ? await formEmailIfNotExists({
         accountId,
         accountEmail,
@@ -810,6 +814,13 @@ const handleNewMessageEvent = async (
         isSpam,
         threadId
       });
+
+  if (error) {
+    return {
+      rowid: error === 1 ? null : rowid
+    };
+  }
+
   const isToOneOfMyAccounts = checkEmailsToAllAccounts(recipients);
   if (isToOneOfMyAccounts && !isSpam) {
     const parsedContact = parseContactRow(from);
