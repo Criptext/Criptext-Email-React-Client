@@ -411,7 +411,7 @@ const fillAccountIdToTables = async (queryInterface, transaction) => {
         `update ${table} set accountId='${account.id}' where type='custom';`,
         { transaction }
       );
-      return;
+      continue;
     }
     await queryInterface.sequelize.query(
       `update ${table} set accountId='${account.id}';`,
