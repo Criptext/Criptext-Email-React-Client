@@ -612,8 +612,17 @@ class ComposerWrapper extends Component {
   };
 
   handleClearFile = token => {
+    const fileDeletedSize = this.state.files.find(file => file.token === token);
     const files = this.state.files.filter(file => file.token !== token);
-    this.setState({ files }, this.saveTemporalDraft);
+    this.setState(
+      prevState => ({
+        files,
+        totalFilesSize: prevState.totalFilesSize - fileDeletedSize.fileData.size
+      }),
+      () => {
+        this.saveTemporalDraft();
+      }
+    );
   };
 
   handleDragLeave = () => {
