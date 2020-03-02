@@ -36,11 +36,12 @@ const removeMalformedEvents = async batch => {
   const eventsData = batch
     .map(event => {
       const isMalformed = event.data.match(mailformedEventRegex);
-      if (isMalformed) {
+      const data = JSON.parse(event.data);
+      const metadataKeysMalformed = hasMetadataKeysMalformed(data.params);
+      if (isMalformed || metadataKeysMalformed) {
         invalidIds.push(event.id);
       } else {
         validIds.push(event.id);
-        const data = JSON.parse(event.data);
         if (data.cmd === 500) {
           if (data.params.unread === 0) {
             const params = { metadataKeys: data.params.metadataKeys };
@@ -48,7 +49,7 @@ const removeMalformedEvents = async batch => {
             return d;
           }
         }
-        return JSON.parse(event.data);
+        return data;
       }
     })
     .filter(data => !!data);
@@ -60,6 +61,11 @@ const removeMalformedEvents = async batch => {
     ids: validIds,
     parsedEvents: eventsData
   };
+};
+
+const hasMetadataKeysMalformed = params => {
+  if (!params.metadataKeys) return false;
+  return params.metadataKeys.some(metadataKey => metadataKey.length === 1);
 };
 
 module.exports = {

@@ -436,7 +436,8 @@ export const removeThreads = (threadsParams, labelId) => {
       });
       if (emails.length) {
         const metadataKeys = emails.reduce((result, email) => {
-          return [...result, ...email.keys];
+          const keysArray = email.keys.split(',');
+          return [...result, ...keysArray];
         }, []);
         const eventParams = {
           cmd: SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY,
