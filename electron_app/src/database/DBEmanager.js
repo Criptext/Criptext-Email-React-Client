@@ -986,7 +986,9 @@ const getAllLabels = () => {
 };
 
 const getLabelById = id => {
-  return Label().findAll({ where: { id } });
+  return Label()
+    .findAll({ where: { id } })
+    .map(label => label.toJSON());
 };
 
 const getLabelByUuid = uuid => {
@@ -1201,7 +1203,7 @@ const updateSettings = async ({
   if (Object.keys(params).length < 1) {
     return Promise.resolve([1]);
   }
-  const result = await Settings().update(params, { where: { id: 1 } });
+  const result = await Settings().update(params, { where: {} });
   mySettings.update(params);
   if (params.language) setLanguage(params.language);
   return result;
