@@ -328,8 +328,9 @@ const loginFirst = async data => {
   return await client.loginFirst(data);
 };
 
-const logout = async () => {
+const logout = async recipientId => {
   const res = await client.logout();
+  if (res.status === 200) delete clientsMap[recipientId];
   return res.status === 200
     ? res
     : await checkExpiredSession(res, logout, null);

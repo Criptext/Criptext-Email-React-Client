@@ -90,7 +90,9 @@ ipc.answerRenderer('client-login-first', params =>
   clientManager.loginFirst(params)
 );
 
-ipc.answerRenderer('client-logout', () => clientManager.logout());
+ipc.answerRenderer('client-logout', () => {
+  return clientManager.logout(myAccount.recipientId);
+});
 
 ipc.answerRenderer('client-post-data-ready', params =>
   clientManager.postDataReady(params)
