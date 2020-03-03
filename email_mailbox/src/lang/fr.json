@@ -593,7 +593,18 @@
     "about": "sur",
     "account": "Compte",
     "action": "Action",
+    "addresses": "Addresses",
+    "aliases": {
+      "title": "Aliases",
+      "description": "Create a secondary address for your existing inbox.",
+      "add": "Add Alias"
+    },
     "appearance": "Apparence",
+    "custom_domains": {
+      "title": "Custom Domains",
+      "description": "Send emails from a personal domain that you own.",
+      "add": "Add Domain"
+    },
     "mailbox_backup": {
       "auto": {
         "label": "Sauvegarde automatique",

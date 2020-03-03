@@ -649,7 +649,18 @@
     "about": "Acerca de",
     "account": "Cuenta",
     "action": "Acción",
+    "addresses": "Direcciones",
+    "aliases": {
+      "title": "Aliases",
+      "description": "Crea direcciones de correo secundarias para tu buzón existente.",
+      "add": "Agregar Alias"
+    },
     "appearance": "Apariencia",
+    "custom_domains": {
+      "title": "Dominio Personal",
+      "description": "Envía correos desde un dominio personal que posees.",
+      "add": "Agregar Dominio"
+    },
     "mailbox_backup": {
       "auto": {
         "label": "Auto Respaldo",

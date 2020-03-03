@@ -593,7 +593,18 @@
     "about": "über",
     "account": "Konto",
     "action": "Aktion",
+    "addresses": "Addresses",
+    "aliases": {
+      "title": "Aliases",
+      "description": "Create a secondary address for your existing inbox.",
+      "add": "Add Alias"
+    },
     "appearance": "Aussehen",
+    "custom_domains": {
+      "title": "Custom Domains",
+      "description": "Send emails from a personal domain that you own.",
+      "add": "Add Domain"
+    },
     "mailbox_backup": {
       "auto": {
         "label": "Automatische Sicherung",

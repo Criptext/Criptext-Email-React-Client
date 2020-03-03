@@ -30,6 +30,13 @@ const SettingAccount = props => (
         <SettingBlockProfile {...props} />
       </div>
       <div className="cptx-section-block-title">
+        <h1>{string.settings.addresses}</h1>
+      </div>
+      <div className="cptx-section-block-content">
+        <CustomDomainsBlock {...props} />
+        <AliasesBlock {...props} />
+      </div>
+      <div className="cptx-section-block-title">
         <h1>{string.settings.privacy}</h1>
       </div>
       <div className="cptx-section-block-content">
@@ -82,6 +89,48 @@ const SettingAccount = props => (
       onSelectBackupFolder={props.onSelectBackupFolder}
       type={props.settingsPopupType}
     />
+  </div>
+);
+
+const CustomDomainsBlock = props => (
+  <div id="settings-account-domains" className="cptx-section-item">
+    <span className="cptx-section-item-title">
+      {string.settings.custom_domains.title}
+    </span>
+    <span className="cptx-section-item-description">
+      {string.settings.custom_domains.description}
+    </span>
+    <div className="cptx-section-item-control">
+      <button
+        className="button-b"
+        onClick={() => {
+          props.onChangePanel('custom-domains');
+        }}
+      >
+        <span>{string.settings.custom_domains.add}</span>
+      </button>
+    </div>
+  </div>
+);
+
+const AliasesBlock = props => (
+  <div id="settings-account-domains" className="cptx-section-item">
+    <span className="cptx-section-item-title">
+      {string.settings.aliases.title}
+    </span>
+    <span className="cptx-section-item-description">
+      {string.settings.aliases.description}
+    </span>
+    <div className="cptx-section-item-control">
+      <button
+        className="button-b"
+        onClick={() => {
+          props.onChangePanel('alias');
+        }}
+      >
+        <span>{string.settings.aliases.add}</span>
+      </button>
+    </div>
   </div>
 );
 
@@ -301,6 +350,14 @@ const RecoveryEmailConfirmationMessage = ({
       </div>
     </div>
   );
+};
+
+AliasesBlock.propTypes = {
+  onChangePanel: PropTypes.func
+};
+
+CustomDomainsBlock.propTypes = {
+  onChangePanel: PropTypes.func
 };
 
 PasswordBlock.propTypes = {

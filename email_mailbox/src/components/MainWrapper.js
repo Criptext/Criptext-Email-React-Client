@@ -6,7 +6,7 @@ import HeaderMainBasic from './../containers/HeaderMain';
 import HeaderThreadOptionsBasic from './../containers/HeaderThreadOptions';
 import Threads from '../containers/Threads';
 import Thread from '../containers/Thread';
-import Settings from './../containers/Settings';
+import SettingsContainer from './../containers/SettingsContainer';
 import { SectionType } from '../utils/const';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
 
@@ -93,7 +93,7 @@ class MainWrapper extends Component {
     switch (this.props.sectionSelected.type) {
       case SectionType.SETTINGS: {
         return (
-          <Settings
+          <SettingsContainer
             onClickSection={this.props.onClickSection}
             onUpdateApp={this.props.onUpdateApp}
           />

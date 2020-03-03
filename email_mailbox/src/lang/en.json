@@ -649,7 +649,18 @@
     "about": "about",
     "account": "Account",
     "action": "Action",
+    "addresses": "Addresses",
+    "aliases": {
+      "title": "Aliases",
+      "description": "Create a secondary address for your existing inbox.",
+      "add": "Add Alias"
+    },
     "appearance": "Appearance",
+    "custom_domains": {
+      "title": "Custom Domains",
+      "description": "Send emails from a personal domain that you own.",
+      "add": "Add Domain"
+    },
     "mailbox_backup": {
       "auto": {
         "label": "Auto Backup",
