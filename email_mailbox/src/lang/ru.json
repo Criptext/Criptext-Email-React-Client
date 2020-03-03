@@ -477,6 +477,13 @@
       "cancelSyncLabel": "Отменить синхронизацию",
       "continueLabel": "Продолжить"
     },
+    "new_update": {
+      "title": "New Update",
+      "buttons": {
+        "update": "Update Now",
+        "later": "Maybe Later"
+      }
+    },
     "permanently_delete": {
       "title": "Предупреждение!",
       "message": "Эти элементы будут удалены навсегда и вы не сможете восстановить их. Вы уверены?",

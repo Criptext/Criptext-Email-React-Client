@@ -501,6 +501,13 @@
         "upgrade": "Unable to upgrade account!"
       }
     },
+    "new_update": {
+      "title": "New Update",
+      "buttons": {
+        "update": "Update Now",
+        "later": "Maybe Later"
+      }
+    },
     "permanently_delete": {
       "title": "Warning!",
       "message": "This elements will be permanently deleted and you will not be able to recover them. Are you sure?",

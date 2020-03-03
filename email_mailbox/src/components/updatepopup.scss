@@ -1,0 +1,52 @@
+.update-popup {
+
+  .popup-title {
+    font-size: 18px;
+    margin-top: 15px;
+  }
+
+  .popup-img {
+    margin: 20px 0px 26px 0px;
+
+    > img {
+      width: 100%;
+    }
+  }
+
+  .popup-subtitle {
+    color: #484747;
+    font-size: 18px;
+    height: 35px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+
+    > p {
+      margin: 0px;
+      padding: 0px;
+    }
+  }
+
+  .popup-paragraph {
+    margin-top: 0px !important;
+    margin: 0px;
+
+    > p {
+      margin: 0px;
+    }
+  }
+
+  .popup-buttons {
+    width: 100%;
+    align-items: center;
+    flex-direction: column !important;
+
+    .popup-cancel-button {
+      margin-top: 2px;
+      color: #5d5b5b !important;
+      font-size: 12px !important;
+      font-weight: 600;
+    }
+  }
+
+}
