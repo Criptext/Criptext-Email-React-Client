@@ -156,8 +156,9 @@ const minimize = () => {
 };
 
 const send = (message, data) => {
-  if (!mailboxWindow) return;
-  mailboxWindow.webContents.send(message, data);
+  if (mailboxWindow && !mailboxWindow.isDestroyed()) {
+    mailboxWindow.webContents.send(message, data);
+  }
 };
 
 const openLinkInDefaultBrowser = (ev, url) => {

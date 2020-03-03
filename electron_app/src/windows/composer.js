@@ -63,7 +63,11 @@ const createComposerWindow = () => {
 
   window.on('close', async e => {
     try {
-      if (!window.saved && !isDraftEmpty(window.id)) {
+      if (globalManager.forcequit.get() && window.saved) return;
+      if (
+        globalManager.forcequit.get() ||
+        (!window.saved && !isDraftEmpty(window.id))
+      ) {
         e.preventDefault();
         const dataDraft = globalManager.composerData.get(window.id);
         await saveDraftToDatabase(window.id, dataDraft);
