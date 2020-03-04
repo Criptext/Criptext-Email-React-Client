@@ -26,7 +26,7 @@ import {
   getEmailByParams,
   getEmailLabelsByEmailId,
   getEmailsByArrayParam,
-  getEmailsByThreadId,
+  getEmailsIdsByThreadIds,
   getContactByEmails,
   getLabelsByText,
   getLabelByUuid,
@@ -1125,13 +1125,8 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }, accountId) => {
 
 const handlePeerThreadLabelsUpdate = async ({ rowid, params }, accountId) => {
   const { threadIds, labelsRemoved, labelsAdded } = params;
-  let allEmailsIdsSet = new Set();
-  for (const threadId of threadIds) {
-    const emails = await getEmailsByThreadId({ threadId, accountId });
-    const emailIds = emails.map(email => email.id);
-    allEmailsIdsSet = new Set([...allEmailsIdsSet, ...emailIds]);
-  }
-  const emailIds = Array.from(allEmailsIdsSet);
+  const emails = await getEmailsIdsByThreadIds({ threadIds, accountId });
+  const emailIds = emails.map(email => email.id);
   if (!emailIds.length) return { rowid };
 
   const labelsToRemove = await getLabelsByText({

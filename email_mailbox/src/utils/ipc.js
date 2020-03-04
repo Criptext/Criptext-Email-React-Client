@@ -391,6 +391,10 @@ export const getEmailsByThreadId = async params => {
   return await ipc.callMain('db-get-emails-by-threadid', params);
 };
 
+export const getEmailsIdsByThreadIds = async params => {
+  return await ipc.callMain('db-get-emailsIds-by-threadids', params);
+};
+
 export const getEmailsByThreadIdAndLabelId = async params => {
   return await ipc.callMain('db-get-emails-by-threadid-and-labelid', params);
 };

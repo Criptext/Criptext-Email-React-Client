@@ -18,22 +18,10 @@ class MainWrapper extends Component {
     super(props);
     this.state = {
       isUpdateAvailable: false,
-      threadItemsChecked: Set(),
-      shouldLoadMailbox: false
+      threadItemsChecked: Set()
     };
 
     this.initEventHandlers(props);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.sectionSelected.type !== this.props.sectionSelected.type &&
-      this.props.sectionSelected.type === SectionType.MAILBOX
-    ) {
-      this.setState({ shouldLoadMailbox: true });
-    } else if (this.state.shouldLoadMailbox) {
-      this.setState({ shouldLoadMailbox: false });
-    }
   }
 
   render() {
@@ -133,7 +121,6 @@ class MainWrapper extends Component {
             onCheckThreadItem={this.handleCheckThreadItem}
             onCloseUpdateMessage={this.handleCloseUpdateMessage}
             searchParams={this.props.sectionSelected.params.searchParams}
-            shouldInitLoad={this.state.shouldLoadMailbox}
             threadItemsChecked={this.state.threadItemsChecked}
           />
           {isThreadVisible && (

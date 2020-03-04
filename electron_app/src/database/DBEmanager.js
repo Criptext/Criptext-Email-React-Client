@@ -587,6 +587,16 @@ const getEmailsByThreadId = ({ accountId, threadId }) => {
     });
 };
 
+const getEmailsIdsByThreadIds = ({ accountId, threadIds }) => {
+  return Email()
+    .findAll({
+      attributes: ['id'],
+      where: { threadId: threadIds, accountId },
+      group: ['id']
+    })
+    .map(email => email.toJSON());
+};
+
 const getEmailsByThreadIdAndLabelId = ({ accountId, threadIds, labelId }) => {
   const sequelize = getDB();
   return Email()
@@ -1732,6 +1742,7 @@ module.exports = {
   getEmailsByLabelIds,
   getEmailByParams,
   getEmailsByThreadId,
+  getEmailsIdsByThreadIds,
   getEmailsByThreadIdAndLabelId,
   getEmailsCounterByLabelId,
   getEmailsGroupByThreadByParams,

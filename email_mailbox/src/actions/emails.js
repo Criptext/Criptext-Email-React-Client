@@ -235,6 +235,33 @@ export const updateEmailLabels = ({
   return async dispatch => {
     try {
       if (email) {
+        if (!eventlessEmailStatuses.includes(email.status)) {
+          const eventParams = {
+            cmd: SocketCommand.PEER_EMAIL_LABELS_UPDATE,
+            params: {
+              metadataKeys: [Number(email.key)],
+              labelsAdded,
+              labelsRemoved
+            }
+          };
+          await postPeerEvent({ data: eventParams });
+        }
+
+        dispatch(
+          updateEmailIdsThread({
+            labelId,
+            threadId: email.threadId,
+            emailIdToAdd: null,
+            emailIdsToRemove: [email.id]
+          })
+        );
+
+        if (labelsAdded.length) {
+          const addedLabels = await getLabelsByText({ text: labelsAdded });
+          const addedLabelsIds = addedLabels.map(label => label.id);
+          dispatch(addEmailLabels([email], addedLabelsIds));
+        }
+
         if (labelsAdded.length) {
           const addedLabels = await getLabelsByText({ text: labelsAdded });
           const addedLabelsIds = addedLabels.map(label => label.id);
@@ -254,42 +281,6 @@ export const updateEmailLabels = ({
           };
 
           await deleteEmailLabel(emailLabelsToRemove);
-        }
-
-        let shouldDispatch;
-        if (!eventlessEmailStatuses.includes(email.status)) {
-          const eventParams = {
-            cmd: SocketCommand.PEER_EMAIL_LABELS_UPDATE,
-            params: {
-              metadataKeys: [Number(email.key)],
-              labelsAdded,
-              labelsRemoved
-            }
-          };
-
-          const { status } = await postPeerEvent({ data: eventParams });
-
-          shouldDispatch = status === 200;
-        } else {
-          shouldDispatch = true;
-        }
-
-        if (shouldDispatch) {
-          dispatch(
-            updateEmailIdsThread({
-              labelId,
-              threadId: email.threadId,
-              emailIdToAdd: null,
-              emailIdsToRemove: [email.id]
-            })
-          );
-          if (labelsAdded.length) {
-            const addedLabels = await getLabelsByText({ text: labelsAdded });
-            const addedLabelsIds = addedLabels.map(label => label.id);
-            dispatch(addEmailLabels([email], addedLabelsIds));
-          }
-        } else {
-          sendUpdateThreadLabelsErrorMessage();
         }
       }
     } catch (e) {

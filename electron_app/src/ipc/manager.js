@@ -100,6 +100,13 @@ ipc.answerRenderer('db-get-emails-by-ids', async params => {
   );
 });
 
+ipc.answerRenderer('db-get-emailsIds-by-threadids', async params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return await dbManager.getEmailsIdsByThreadIds(data);
+});
+
 ipc.answerRenderer('db-get-emails-by-threadid', async params => {
   const data = params.accountId
     ? params
