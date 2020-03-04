@@ -477,6 +477,13 @@
       "cancelSyncLabel": "Synchronisation abbrechen",
       "continueLabel": "Fortfahren"
     },
+    "new_update": {
+      "title": "New Update",
+      "buttons": {
+        "update": "Update Now",
+        "later": "Maybe Later"
+      }
+    },
     "permanently_delete": {
       "title": "Warnung!",
       "message": "Diese Elemente werden dauerhaft gelöscht und können nicht wiederhergestellt werden. Sind Sie sicher?",

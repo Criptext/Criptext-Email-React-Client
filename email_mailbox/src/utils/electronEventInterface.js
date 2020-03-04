@@ -1243,11 +1243,18 @@ const handlePeerRecoveryEmailConfirmed = () => {
 
 const handleNewAnnouncementEvent = async ({ rowid, params }) => {
   const { code } = params;
-  const { title } = await getNews({ code });
+  const updateAnnouncement = await getNews({ code });
+  if (!updateAnnouncement) return { rowid };
+  if (updateAnnouncement.largeImageUrl) {
+    emitter.emit(Event.BIG_UPDATE_AVAILABLE, {
+      ...updateAnnouncement
+    });
+    return { rowid };
+  }
   const messageData = {
     ...Messages.news.announcement,
     type: MessageType.ANNOUNCEMENT,
-    description: title
+    description: updateAnnouncement.title
   };
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
   return { rowid };
@@ -1832,6 +1839,7 @@ export const sendMailboxEvent = (eventName, eventData) => {
 
 export const Event = {
   ACCOUNT_DELETED: 'account-deleted',
+  BIG_UPDATE_AVAILABLE: 'big-update-available',
   DEVICE_REMOVED: 'device-removed',
   DISABLE_WINDOW: 'add-window-overlay',
   DISPLAY_MESSAGE: 'display-message',

@@ -501,6 +501,13 @@
         "upgrade": "No fue posible actualizar la cuenta!"
       }
     },
+    "new_update": {
+      "title": "Nueva Actualización",
+      "buttons": {
+        "update": "Actualizar",
+        "later": "Tal vez Después"
+      }
+    },
     "permanently_delete": {
       "title": "Advertencia!",
       "message": "Estos elementos se eliminarán permanentemente y no podrás recuperarlos. ¿Estás seguro?",

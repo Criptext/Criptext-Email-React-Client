@@ -12,6 +12,7 @@ import MigrationPopupWrapper from './MigrationPopupWrapper';
 import PasswordChangedPopupWrapper from './PasswordChangedPopupWrapper';
 import RestoreBackupPopupWrapper from './RestoreBackupPopupWrapper';
 import SuspendedAccountPopup from './SuspendedAccountPopup';
+import UpdatePopup from './UpdatePopup';
 import { MAILBOX_POPUP_TYPES } from './PanelWrapper';
 import { mySettings } from '../utils/electronInterface';
 import UserGuide from './UserGuide';
@@ -48,6 +49,7 @@ const Panel = props => (
       )}
     {!props.isHiddenMailboxPopup &&
       renderMailboxPopup({
+        data: props.mailboxPopupData,
         type: props.mailboxPopupType,
         isHidden: props.isHiddenMailboxPopup,
         ...props
@@ -56,7 +58,7 @@ const Panel = props => (
   </div>
 );
 
-const renderMailboxPopup = ({ type, isHidden, ...props }) => {
+const renderMailboxPopup = ({ data, type, isHidden, ...props }) => {
   switch (type) {
     case MAILBOX_POPUP_TYPES.ACCOUNT_DELETED: {
       const Accountdeletedpopup = PopupHOC(AccountDeletedPopup);
@@ -64,6 +66,20 @@ const renderMailboxPopup = ({ type, isHidden, ...props }) => {
         <Accountdeletedpopup
           isHidden={isHidden}
           popupPosition={{ left: '50%', top: '50%' }}
+        />
+      );
+    }
+    case MAILBOX_POPUP_TYPES.BIG_UPDATE_AVAILABLE: {
+      const BigUpdatePopup = PopupHOC(UpdatePopup);
+      return (
+        <BigUpdatePopup
+          {...data}
+          isHidden={isHidden}
+          popupPosition={{ left: '50%', top: '50%' }}
+          theme={'dark'}
+          onUpdateNow={props.onUpdateNow}
+          onTogglePopup={props.onCloseMailboxPopup}
+          isClosable={true}
         />
       );
     }
@@ -153,7 +169,9 @@ const defineWrapperClass = (isOpenSideBar, isOpenActivityPanel) => {
 };
 
 renderMailboxPopup.propTypes = {
+  data: PropTypes.object,
   onCloseMailboxPopup: PropTypes.func,
+  onUpdateNow: PropTypes.func,
   isHidden: PropTypes.bool,
   props: PropTypes.object,
   type: PropTypes.string
@@ -164,6 +182,7 @@ Panel.propTypes = {
   isOpenActivityPanel: PropTypes.bool,
   isOpenSideBar: PropTypes.bool,
   isOpenWelcome: PropTypes.bool,
+  mailboxPopupData: PropTypes.object,
   mailboxPopupType: PropTypes.string,
   onClickCloseWelcome: PropTypes.func,
   onClickThreadBack: PropTypes.func,

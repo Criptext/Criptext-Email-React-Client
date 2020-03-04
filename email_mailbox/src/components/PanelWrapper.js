@@ -7,7 +7,7 @@ import {
   Event,
   checkUserGuideSteps
 } from '../utils/electronEventInterface';
-import { processPendingEvents } from '../utils/ipc';
+import { checkForUpdates, processPendingEvents } from '../utils/ipc';
 import { LabelType, getPendingRestoreStatus } from '../utils/electronInterface';
 import { SectionType } from '../utils/const';
 import {
@@ -21,6 +21,7 @@ import { USER_GUIDE_STEPS } from './UserGuide';
 
 const MAILBOX_POPUP_TYPES = {
   ACCOUNT_DELETED: 'account-deleted',
+  BIG_UPDATE_AVAILABLE: 'big-update-available',
   CREATING_BACKUP_FILE: 'creating-backup-file',
   DEVICE_REMOVED: 'device-removed',
   MIGRATE_ALICE: 'migrate-alice',
@@ -42,6 +43,7 @@ class PanelWrapper extends Component {
       isOpenSideBar: true,
       isOpenWelcome: true,
       mailboxPopupType: undefined,
+      mailboxPopupData: undefined,
       sectionSelected: {
         type: SectionType.MAILBOX,
         params: {
@@ -72,6 +74,7 @@ class PanelWrapper extends Component {
         isOpenSideBar={this.state.isOpenSideBar}
         isOpenWelcome={this.state.isOpenWelcome}
         mailboxPopupType={this.state.mailboxPopupType}
+        mailboxPopupData={this.state.mailboxPopupData}
         onClickCloseWelcome={this.handleCloseWelcome}
         onClickSection={this.handleClickSection}
         onClickThreadBack={this.handleClickThreadBack}
@@ -79,6 +82,7 @@ class PanelWrapper extends Component {
         onToggleActivityPanel={this.handleToggleActivityPanel}
         onToggleSideBar={this.handleToggleSideBar}
         sectionSelected={this.state.sectionSelected}
+        onUpdateNow={this.handleUpdateNow}
         {...this.props}
       />
     );
@@ -89,6 +93,11 @@ class PanelWrapper extends Component {
     checkUserGuideSteps(steps);
     this.handleCheckRestoreBackup();
   }
+
+  handleUpdateNow = () => {
+    checkForUpdates(true);
+    this.handleCloseMailboxPopup();
+  };
 
   handleClickSection = (type, params) => {
     switch (type) {
@@ -189,7 +198,8 @@ class PanelWrapper extends Component {
   handleCloseMailboxPopup = () => {
     this.setState({
       isHiddenMailboxPopup: true,
-      mailboxPopupType: undefined
+      mailboxPopupType: undefined,
+      mailboxPopupData: undefined
     });
   };
 
@@ -210,6 +220,7 @@ class PanelWrapper extends Component {
     addEvent(Event.ACCOUNT_DELETED, this.accountDeletedListenerCallback);
     addEvent(Event.SET_SECTION_TYPE, this.setSectionTypeListenerCallback);
     addEvent(Event.SUSPENDED_ACCOUNT, this.suspendedAccountListenerCallback);
+    addEvent(Event.BIG_UPDATE_AVAILABLE, this.handleBigUpdateListenerCallback);
     addEvent(
       Event.REACTIVATED_ACCOUNT,
       this.reactivatedAccountListenerCallback
@@ -266,7 +277,8 @@ class PanelWrapper extends Component {
   enableWindowListenerCallback = () => {
     this.setState({
       isHiddenMailboxPopup: true,
-      mailboxPopupType: undefined
+      mailboxPopupType: undefined,
+      mailboxPopupData: undefined
     });
   };
 
@@ -498,6 +510,14 @@ class PanelWrapper extends Component {
     this.setState({
       isHiddenMailboxPopup: false,
       mailboxPopupType: MAILBOX_POPUP_TYPES.SUSPENDED_ACCOUNT
+    });
+  };
+
+  handleBigUpdateListenerCallback = data => {
+    this.setState({
+      isHiddenMailboxPopup: false,
+      mailboxPopupType: MAILBOX_POPUP_TYPES.BIG_UPDATE_AVAILABLE,
+      mailboxPopupData: data
     });
   };
 
