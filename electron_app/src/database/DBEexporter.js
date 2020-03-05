@@ -88,7 +88,7 @@ const exportNotEncryptDatabaseToFile = async ({ databasePath, outputPath }) => {
   saveToFile({ data: labels, filepath, mode: 'a' });
 
   let userEmail;
-  if (myAccount.recipientId) {
+  if (myAccount && myAccount.recipientId) {
     userEmail = myAccount.email;
   } else {
     const firstAccount = accountsData.firstAccount;
@@ -263,7 +263,7 @@ const _exportEmailTable = async (db, userEmail) => {
     );
 
     emailRows = [...emailRows, ...result];
-    if (rows.length < SELECT_ALL_BATCH) {
+    if (result.length < SELECT_ALL_BATCH) {
       shouldEnd = true;
     } else {
       offset += SELECT_ALL_BATCH;
@@ -641,7 +641,7 @@ const exportEmailTable = async accountId => {
         );
       });
     emailRows = [...emailRows, ...result];
-    if (emailRows.length < SELECT_ALL_BATCH) {
+    if (result.length < SELECT_ALL_BATCH) {
       shouldEnd = true;
     } else {
       offset += SELECT_ALL_BATCH;

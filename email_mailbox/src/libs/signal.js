@@ -34,7 +34,9 @@ const decryptEmail = async ({
   accountRecipientId
 }) => {
   const { status, body } = await fetchEmailBody({ bodyKey, optionalToken });
-  if (status !== 200) return;
+  if (status !== 200) {
+    throw new Error(CONTENT_NOT_AVAILABLE);
+  }
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return { decryptedBody: body.body };
   }
@@ -51,10 +53,12 @@ const decryptEmail = async ({
       fileKeys: fileKeys
     });
   });
+
   if (!res) {
     throw new Error(ALICE_ERROR);
   } else if (res.status === 500) {
-    throw new Error(CONTENT_UNENCRYPTED);
+    const aliceError = await res.text();
+    throw new Error(`${CONTENT_UNENCRYPTED} - ${aliceError}`);
   } else if (res.status === 409) {
     throw new Error(DUPLICATE_MESSAGE);
   } else if (res.status !== 200) {

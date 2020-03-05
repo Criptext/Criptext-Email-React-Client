@@ -596,7 +596,8 @@ const formEmailIfNotExists = async params => {
   } catch (e) {
     if (
       e.message === signal.ALICE_ERROR ||
-      e.message === signal.CONTENT_NOT_AVAILABLE
+      e.message === signal.CONTENT_NOT_AVAILABLE ||
+      e instanceof TypeError
     ) {
       return {
         error: 1
