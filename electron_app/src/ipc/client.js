@@ -152,6 +152,10 @@ ipc.answerRenderer('client-reset-password', params =>
   clientManager.resetPassword(params)
 );
 
+ipc.answerRenderer('client-set-address', params =>
+  clientManager.setAddress(params)
+);
+
 ipc.answerRenderer('client-send-recovery-code', params =>
   clientManager.sendRecoveryCode(params)
 );

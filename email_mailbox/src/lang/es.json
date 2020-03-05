@@ -10,6 +10,24 @@
     "opened": "ha abierto",
     "someone": "Alguien"
   },
+  "alias": {
+    "add": {
+      "title": "Nuevo Alias",
+      "description": "Podras enviar y recibir correos con esta nueva dirección.",
+      "cancelButtonLabel": "Cancelar",
+      "saveButtonLabel": "Guardar",
+      "doneButtonLabel": "Listo",
+      "successTitle": "Un nuevo Alias ha sido creado 🎉",
+      "successMessage": "Ahora puedes usar tu nuevo alias “{0}”",
+      "errors": {
+        "invalid": "Nombre de usuario inválido",
+        "timeout": "Error al recibir una respuesta. Por favor intenta de nuevo",
+        "exists": "Esta dirección ya está en uso",
+        "limit": "Has alcanzado el numero máximo de Alias",
+        "unknown": "Error Desconocido ({0}), por favor intenta de nuevo"
+      }
+    }
+  },
   "crash": {
     "title": "¡Ups! Parece que algo falló",
     "counter": {

@@ -10,6 +10,24 @@
     "opened": "opened",
     "someone": "Someone"
   },
+  "alias": {
+    "add": {
+      "title": "New Alias",
+      "description": "You will be able to send and receive emails from this new address.",
+      "cancelButtonLabel": "Cancel",
+      "saveButtonLabel": "Save",
+      "doneButtonLabel": "Done",
+      "successTitle": "A new alias was added 🎉",
+      "successMessage": "You can now use your new alias “{0}”",
+      "errors": {
+        "invalid": "Username not valid",
+        "timeout": "Timeout Error. Please try again",
+        "exists": "This address is already in use",
+        "limit": "You have reached the maximum number of aliases",
+        "unknown": "Uknown Error ({0}), please try again"
+      }
+    }
+  },
   "crash": {
     "title": "Oops! It looks like something went wrong",
     "counter": {

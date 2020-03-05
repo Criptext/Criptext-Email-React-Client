@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Settings from './../containers/Settings';
 import CustomDomains from './CustomDomains';
-import Aliases from './Aliases';
+import AliasesWrapper from './AliasesWrapper';
 import SettingsHOC from './SettingsHOC';
 import { myAccount } from '../utils/electronInterface';
 import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
 
 const Setting = SettingsHOC(Settings);
 const Domains = SettingsHOC(CustomDomains);
-const Alias = SettingsHOC(Aliases);
+const Alias = SettingsHOC(AliasesWrapper);
 
 const PANEL = {
   SETTINGS: 'settings',
@@ -46,6 +46,7 @@ class SettingsContainer extends Component {
           <Alias
             isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
             titlePath={PANEL.ALIAS}
+            onChangePanel={this.handleChangePanel}
           />
         );
       default:

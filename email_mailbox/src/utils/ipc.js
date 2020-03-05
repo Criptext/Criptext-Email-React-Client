@@ -217,6 +217,10 @@ export const resetPassword = async recipientId => {
   return await ipc.callMain('client-reset-password', recipientId);
 };
 
+export const setAddress = async params => {
+  return await ipc.callMain('client-set-address', params);
+};
+
 export const setReadTracking = async enabled => {
   return await ipc.callMain('client-set-read-tracking', enabled);
 };
