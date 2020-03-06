@@ -1,0 +1,42 @@
+.criptext-alias-item-container {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.criptext-alias-item-wrapper {
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+  max-width: 282px;
+
+  .criptext-alias-item-delete {
+    padding: 0px 7px;
+    visibility: hidden;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+  }
+
+  &:hover {
+    background-color: #ccd1e3;
+    
+    .criptext-alias-item-delete {
+      visibility: visible;
+      pointer-events: all;
+      cursor: pointer;
+    }
+  }
+}
+
+.criptext-alias-item-name {
+  font-size: 12px;
+  color: black;
+  display: flex;
+  align-items: center;
+
+  span {
+    color: #b7b7b7;
+  }
+}

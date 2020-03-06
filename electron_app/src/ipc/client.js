@@ -2,6 +2,10 @@ const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const clientManager = require('./../clientManager');
 const myAccount = require('../Account');
 
+ipc.answerRenderer('client-activate-address', params =>
+  clientManager.activateAddress(params)
+);
+
 ipc.answerRenderer('client-acknowledge-events', params =>
   clientManager.acknowledgeEvents(params)
 );

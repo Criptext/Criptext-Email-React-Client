@@ -6,11 +6,25 @@ ipc.answerRenderer('db-clean-data-logout', params =>
   dbManager.cleanDataLogout(params)
 );
 
+ipc.answerRenderer('db-create-alias', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.createAlias(data);
+});
+
 ipc.answerRenderer('db-create-contact', params => {
   const data = params.accountId
     ? params
     : { ...params, accountId: myAccount.id };
   return dbManager.createContact(data);
+});
+
+ipc.answerRenderer('db-create-custom-domain', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.createCustomDomain(data);
 });
 
 ipc.answerRenderer('db-create-email-label', params => {
@@ -63,6 +77,20 @@ ipc.answerRenderer('db-create-signed-prekey-record', params =>
 
 ipc.answerRenderer('db-create-tables', () => dbManager.createTables());
 
+ipc.answerRenderer('db-delete-alias', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.deleteAliases(data);
+});
+
+ipc.answerRenderer('db-delete-custom-domains', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.deleteCustomDomains(data);
+});
+
 ipc.answerRenderer('db-delete-email-label', params => {
   const data = params.accountId
     ? params
@@ -114,6 +142,13 @@ ipc.answerRenderer('db-get-all-labels', params => {
   return dbManager.getAllLabels(data);
 });
 
+ipc.answerRenderer('db-get-alias-by-params', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getAliasByParams(data);
+});
+
 ipc.answerRenderer('db-get-contact-by-emails', params => {
   const data = params.accountId
     ? params
@@ -128,6 +163,13 @@ ipc.answerRenderer('db-get-contact-by-emailid', emailId =>
 ipc.answerRenderer('db-get-contact-by-ids', ids =>
   dbManager.getContactByIds(ids)
 );
+
+ipc.answerRenderer('db-get-custom-domains-by-params', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getCustomDomainByParams(data);
+});
 
 ipc.answerRenderer('db-get-email-by-key', params => {
   const data = params.accountId
@@ -260,6 +302,13 @@ ipc.answerRenderer('db-update-account', params => {
   return dbManager.updateAccount(data);
 });
 
+ipc.answerRenderer('db-update-alias', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.updateAlias(data);
+});
+
 ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>
   dbManager.updateContactByEmail({ email, name })
 );
@@ -267,6 +316,13 @@ ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>
 ipc.answerRenderer('db-update-contact-spam-acore', params =>
   dbManager.updateContactSpamScore(params)
 );
+
+ipc.answerRenderer('db-update-custom-domains', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.updateCustomDomain(data);
+});
 
 ipc.answerRenderer('db-update-email', params => {
   const data = params.accountId

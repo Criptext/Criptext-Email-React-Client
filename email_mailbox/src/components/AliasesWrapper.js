@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Aliases from './Aliases';
-import { setAddress } from '../utils/ipc';
+import { setAddress, createAlias } from '../utils/ipc';
 import { appDomain } from '../utils/const';
 import { usernameRegex } from '../utils/RegexUtils';
 import string from '../lang';
@@ -84,6 +84,15 @@ class AliasesWrapper extends Component {
     }
     switch (response.status) {
       case 200:
+        const addressId = response.body.addressId;
+        const alias = {
+          rowId: addressId,
+          name: username,
+          domain: domain === appDomain ? null : domain,
+          active: true
+        }
+        await createAlias(alias);
+        this.props.onAddAlias(alias)
         this.setState({
           loading: false,
           success: true

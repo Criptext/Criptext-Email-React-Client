@@ -76,6 +76,8 @@ const CURRENT_VERSION = 1;
 const Table = {
   ACCOUNT: 'account',
   ACCOUNT_CONTACT: 'accountContact',
+  ALIAS: 'alias',
+  CUSTOM_DOMAIN: 'customDomain',
   EMAIL: 'email',
   LABEL: 'label',
   EMAIL_LABEL: 'emailLabel',
@@ -97,6 +99,8 @@ const Table = {
 class Contact extends Model {}
 class Account extends Model {}
 class AccountContact extends Model {}
+class Alias extends Model {}
+class CustomDomain extends Model {}
 class Email extends Model {}
 class EmailContact extends Model {}
 class Label extends Model {}
@@ -499,6 +503,47 @@ const initDatabaseEncrypted = async (
     }
   );
 
+  Alias.init(
+    {
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      rowId: { type: Sequelize.INTEGER, unique: true },
+      name: { type: Sequelize.STRING, allowNull: false },
+      domain: { type: Sequelize.INTEGER, allowNull: true },
+      active: { type: Sequelize.BOOLEAN, defaultValue: true }
+    },
+    {
+      sequelize,
+      tableName: Table.ALIAS,
+      freezeTableName: true,
+      timestamps: false
+    }
+  );
+
+  Account.hasMany(Alias, {
+    foreignKey: 'accountId',
+    onDelete: 'CASCADE'
+  });
+
+  CustomDomain.init(
+    {
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      rowId: { type: Sequelize.INTEGER, unique: true },
+      name: { type: Sequelize.STRING, allowNull: false },
+      validated: { type: Sequelize.BOOLEAN }
+    },
+    {
+      sequelize,
+      tableName: Table.CUSTOM_DOMAIN,
+      freezeTableName: true,
+      timestamps: false
+    }
+  );
+
+  Account.hasMany(CustomDomain, {
+    foreignKey: 'accountId',
+    onDelete: 'CASCADE'
+  });
+
   await sequelize.sync({});
 
   const [localVersion] = await Version.findOrCreate({
@@ -566,7 +611,9 @@ const rawCheckPin = async pin => {
 module.exports = {
   Account: () => Account,
   AccountContact: () => AccountContact,
+  Alias: () => Alias,
   Contact: () => Contact,
+  CustomDomain: () => CustomDomain,
   Email: () => Email,
   EmailContact: () => EmailContact,
   EmailLabel: () => EmailLabel,

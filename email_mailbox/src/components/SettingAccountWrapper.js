@@ -161,10 +161,12 @@ class SettingAccountWrapper extends Component {
 
   render() {
     const devicesQuantity = this.props.devices ? this.props.devices.length : 0;
-
+    console.log('PROPS : ', this.props.aliasesByDomain);
     return (
       <SettingAccount
+        aliasesByDomain={this.props.aliasesByDomain}
         onChangePanel={this.props.onChangePanel}
+        onChangeAliasStatus={this.props.onChangeAliasStatus}
         changePasswordPopupParams={this.state.changePasswordPopupParams}
         changeRecoveryEmailPopupParams={
           this.state.changeRecoveryEmailPopupParams

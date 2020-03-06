@@ -69,13 +69,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       const settings = await getUserSettings();
       const {
         devices,
+        addresses,
         recoveryEmail,
         twoFactorAuth,
         recoveryEmailConfirmed,
         readReceiptsEnabled,
         replyTo
       } = settings;
+
+      const aliases = addresses.reduce((result, domainWithAliases) => {
+        const myAliases = domainWithAliases.aliases.map(alias => {
+          return {
+            name: alias.name,
+            active: !!alias.status,
+            rowId: alias.addressId,
+            domain: domainWithAliases.domain
+          };
+        });
+        return [...result, ...myAliases];
+      }, []);
+
       return {
+        aliases,
         devices: formatDevicesData(devices),
         recoveryEmail,
         twoFactorAuth,

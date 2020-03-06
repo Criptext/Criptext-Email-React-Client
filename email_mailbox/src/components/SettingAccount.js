@@ -10,6 +10,7 @@ import SettingBlockManualSync from './SettingBlockManualSync';
 import SettingBlockProfile from '../containers/SettingBlockProfile';
 import SettingsAccountBackupWrapper from './SettingsAccountBackupWrapper';
 import SettingsAccountRestoreBackupc from './SettingsAccountRestoreBackup';
+import AliasesBlock from './SettingAliasBlock';
 import { getResendConfirmationTimestamp } from '../utils/storage';
 import string from './../lang';
 import './settingaccount.scss';
@@ -108,27 +109,6 @@ const CustomDomainsBlock = props => (
         }}
       >
         <span>{string.settings.custom_domains.add}</span>
-      </button>
-    </div>
-  </div>
-);
-
-const AliasesBlock = props => (
-  <div id="settings-account-domains" className="cptx-section-item">
-    <span className="cptx-section-item-title">
-      {string.settings.aliases.title}
-    </span>
-    <span className="cptx-section-item-description">
-      {string.settings.aliases.description}
-    </span>
-    <div className="cptx-section-item-control">
-      <button
-        className="button-b"
-        onClick={() => {
-          props.onChangePanel('alias');
-        }}
-      >
-        <span>{string.settings.aliases.add}</span>
       </button>
     </div>
   </div>
@@ -350,10 +330,6 @@ const RecoveryEmailConfirmationMessage = ({
       </div>
     </div>
   );
-};
-
-AliasesBlock.propTypes = {
-  onChangePanel: PropTypes.func
 };
 
 CustomDomainsBlock.propTypes = {

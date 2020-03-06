@@ -115,10 +115,10 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@criptext/api@^0.15.23":
-  version "0.15.23"
-  resolved "https://registry.yarnpkg.com/@criptext/api/-/api-0.15.23.tgz#b82a160075d3bcadb805589791048fbfdc830297"
-  integrity sha512-IkcOkdtxbEOqjKilFREZ+h4zYaJ2NGxbicsgI9MxuFu2r+GG63Cl1Y4xb51pDQcFSSQPGiiE8zq/UrBTj6YyCw==
+"@criptext/api@^0.15.24":
+  version "0.15.24"
+  resolved "https://registry.yarnpkg.com/@criptext/api/-/api-0.15.24.tgz#861927e06407f4682b71789feabf95c35d46f5f1"
+  integrity sha512-Om2j9lHnP5pKtDHWjSVZzOjM96rN2PQW11dXucjAZxJ0ilOe6Qg2Xm2KtGM9lLIprrWHGuVVwXUXLCldSO7D+A==
   dependencies:
     superagent "^3.8.2"
 
