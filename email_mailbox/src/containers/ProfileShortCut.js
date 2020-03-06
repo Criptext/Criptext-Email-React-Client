@@ -11,11 +11,16 @@ const defineBadgeAccount = accounts => {
 
 const mapStateToProps = state => {
   const accounts = getAllAccounts(state);
+  const easterEgg = accounts.some(account => account.name === 'Tinaquera');
   const accountsLimitReached = accounts.length >= ADDED_ACCOUNTS_LIMIT;
   const badgeAccount = defineBadgeAccount(accounts);
   return {
     accounts,
-    accountsLimitReached,
+    accountsLimitReached: accountsLimitReached
+      ? easterEgg
+        ? false
+        : true
+      : false,
     badgeAccount
   };
 };

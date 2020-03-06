@@ -24,7 +24,7 @@ const HeaderMain = props => (
     />
     <ProfileShortCut
       avatarTimestamp={props.avatarTimestamp}
-      onClickSettings={props.onClickSection}
+      openSettings={props.openSettings}
       openLogin={props.openLogin}
       onUpdateApp={props.onUpdateApp}
     />
@@ -39,11 +39,11 @@ HeaderMain.propTypes = {
   isHiddenMenuSearchHints: PropTypes.bool,
   isHiddenMenuSearchOptions: PropTypes.bool,
   isLoadingSearch: PropTypes.bool,
-  onClickSection: PropTypes.func,
   onClearSearchInput: PropTypes.func,
   onClickSearch: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
   openLogin: PropTypes.func,
+  openSettings: PropTypes.func,
   onToggleMenuSearchHints: PropTypes.func,
   onToggleMenuSearchOptions: PropTypes.func,
   onTriggerSearch: PropTypes.func,

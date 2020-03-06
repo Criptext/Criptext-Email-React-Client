@@ -70,6 +70,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     openLogin: () => {
       openLoginWindow();
+    },
+    openSettings: () => {
+      const type = SectionType.SETTINGS;
+      ownProps.onClickSection(type);
     }
   };
 };

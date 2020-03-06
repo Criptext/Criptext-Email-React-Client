@@ -68,7 +68,7 @@ const deleteDeviceData = async (onUpdateApp, onClickSection) => {
       text: 'Inbox'
     };
     onClickSection(SectionType.MAILBOX, { mailboxSelected: mailbox });
-    onUpdateApp({ mailbox, accountId: id, recipientId });
+    onUpdateApp({ accountId: id, recipientId });
     return;
   }
   await logoutApp();
@@ -139,7 +139,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       }
     },
     onUpdateContact: async name => {
-      const email = myAccount.recipientId.username;
+      const email = myAccount.email;
       await updateContactByEmail({ email, name });
     },
     onUpdateLabel: params => {

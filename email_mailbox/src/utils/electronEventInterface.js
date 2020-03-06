@@ -360,7 +360,6 @@ export const getGroupEvents = async ({
   });
 
   if (!hasMoreEvents) {
-    await updateOwnContact();
     if (showNotification) {
       sendNewEmailNotification(accountId, accountRecipientId);
     } else {
@@ -470,7 +469,11 @@ export const handleEvent = ({
       return handlePeerLabelDelete(incomingEvent, accountId);
     }
     case SocketCommand.PEER_USER_NAME_CHANGED: {
-      return handlePeerUserNameChanged(incomingEvent, accountRecipientId);
+      return handlePeerUserNameChanged(
+        incomingEvent,
+        accountRecipientId,
+        accountEmail
+      );
     }
     case SocketCommand.PEER_PASSWORD_CHANGED: {
       return handlePeerPasswordChanged(accountRecipientId);
@@ -891,14 +894,6 @@ const sendNewEmailNotification = (accountId, accountRecipientId) => {
   newEmailNotificationList = [];
 };
 
-const updateOwnContact = async () => {
-  const ownEmail = myAccount.email;
-  const accountName = myAccount.name;
-  if (accountName) {
-    await updateContactByEmail({ email: ownEmail, name: accountName });
-  }
-};
-
 const handleEmailTrackingUpdate = async (
   { rowid, params },
   accountId,
@@ -1261,11 +1256,14 @@ const handlePeerLabelDelete = async ({ rowid, params }, accountId) => {
 
 const handlePeerUserNameChanged = async (
   { rowid, params },
-  accountRecipientId
+  accountRecipientId,
+  accountEmail
 ) => {
   const { name } = params;
   const recipientId = accountRecipientId || myAccount.recipientId;
+  const email = accountEmail || myAccount.email;
   await updateAccount({ name, recipientId });
+  await updateContactByEmail({ email, name });
   return { rowid, profileChanged: true };
 };
 

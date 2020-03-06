@@ -51,9 +51,9 @@
         "suffix": "."
       }
     },
-    "encrypting": {
-      "name": "Verschlüsselungsfehler",
-      "description": "Beim Verschlüsseln der Nachricht ist ein Fehler aufgetreten.\nCode: "
+    "serverError": {
+      "name": "Server Error",
+      "description": "An error occurred while sending your email.\nCode: "
     },
     "nonExistingUsers": {
       "name": "Nicht existierende Benutzer",
@@ -84,7 +84,7 @@
       "description": "Verbindung zum Server kann nicht hergestellt werden"
     },
     "unauthorized": {
-      "name": "Verschlüsselungsfehler",
+      "name": "Server Error",
       "description": "Bei Ihrer Anfrage ist ein Fehler aufgetreten. \n Bitte versuche es erneut"
     },
     "uploadFailed": {

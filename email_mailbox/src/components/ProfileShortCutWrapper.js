@@ -36,7 +36,7 @@ class ProfileShortCutWrapper extends Component {
     this.setState({
       isHiddenMenuProfilePreview: true
     });
-    this.props.onClickSettings();
+    this.props.openSettings();
   };
 
   handleClickAddAccount = () => {
@@ -64,7 +64,8 @@ ProfileShortCutWrapper.propTypes = {
   onClickSettings: PropTypes.func,
   avatarTimestamp: PropTypes.number,
   onUpdateApp: PropTypes.func,
-  openLogin: PropTypes.func
+  openLogin: PropTypes.func,
+  openSettings: PropTypes.func
 };
 
 export default ProfileShortCutWrapper;

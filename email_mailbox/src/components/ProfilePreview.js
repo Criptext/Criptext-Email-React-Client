@@ -18,10 +18,14 @@ const ProfilePreview = props => (
       ))}
     </ul>
     <div className="cptx-profile-preview-controls">
-      <button className="button-b" onClick={() => props.onClickAddAccount()}>
-        <i className="icon-plus" />
-        <span>{string.header.add_account}</span>
-      </button>
+      {props.accountsLimitReached ? (
+        ''
+      ) : (
+        <button className="button-b" onClick={() => props.onClickAddAccount()}>
+          <i className="icon-plus" />
+          <span>{string.header.add_account}</span>
+        </button>
+      )}
       <button className="button-b" onClick={() => props.onClickSettings()}>
         <i className="icon-settings" />
         <span>{string.sidebar.settings}</span>
@@ -67,6 +71,7 @@ const ProfileItem = ({ account, timestamp, onClick }) => {
 ProfilePreview.propTypes = {
   avatarTimestamp: PropTypes.number,
   avatarUrl: PropTypes.string,
+  accountsLimitReached: PropTypes.bool,
   accounts: PropTypes.array,
   onClickAddAccount: PropTypes.func,
   onClickItemAccount: PropTypes.func,

@@ -214,16 +214,25 @@ class PanelWrapper extends Component {
     });
   };
 
-  handleUpdateApp = async ({ mailbox, accountId, recipientId, threadId }) => {
+  handleUpdateApp = async ({ accountId, recipientId, threadId }) => {
     this.setState({
       isHiddenMailboxPopup: false,
       mailboxPopupType: MAILBOX_POPUP_TYPES.CHANGE_ACCOUNT
     });
-    const mailboxSelected = mailbox ||
-      this.state.sectionSelected.params.mailboxSelected || {
-        id: 1,
-        text: 'Inbox'
+    const defaultMailboxSelected = {
+      id: 1,
+      text: 'Inbox'
+    };
+    const mailboxSelected =
+      this.state.sectionSelected.params.mailboxSelected ||
+      defaultMailboxSelected;
+    if (!this.state.sectionSelected.params.mailboxSelected) {
+      const type = SectionType.MAILBOX;
+      const params = {
+        mailboxSelected: defaultMailboxSelected
       };
+      this.handleClickSection(type, params);
+    }
     await this.props.onUpdateAccountApp({
       mailboxSelected,
       accountId,
@@ -232,10 +241,7 @@ class PanelWrapper extends Component {
     if (threadId) {
       const threadType = SectionType.THREAD;
       const openThreadParams = {
-        mailboxSelected: {
-          id: 1,
-          text: 'Inbox'
-        },
+        mailboxSelected: defaultMailboxSelected,
         threadIdSelected: threadId
       };
       this.handleClickSection(threadType, openThreadParams);

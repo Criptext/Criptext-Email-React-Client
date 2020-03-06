@@ -1,7 +1,6 @@
 const { BrowserWindow, shell } = require('electron');
 const path = require('path');
 const { loginUrl } = require('./../window_routing');
-const globalManager = require('./../globalManager');
 const { addEventTrack, NUCLEUS_EVENTS } = require('./../nucleusManager');
 let loginWindow;
 let shouldCloseForce = false;
@@ -36,15 +35,10 @@ const create = () => {
     loginWindow.webContents.openDevTools({ mode: 'undocked' });
   }
 
-  loginWindow.on('close', e => {
-    const isMacOs = process.platform === 'darwin';
+  loginWindow.on('close', () => {
     if (shouldCloseForce === true) {
       shouldCloseForce = false;
       return;
-    }
-    if (isMacOs && !globalManager.forcequit.get()) {
-      e.preventDefault();
-      hide();
     }
   });
   loginWindow.on('closed', () => {

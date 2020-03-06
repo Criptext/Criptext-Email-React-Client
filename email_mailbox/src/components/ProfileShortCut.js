@@ -30,6 +30,7 @@ const ProfileShortCut = props => (
       </div>
     )}
     <MenuProfilePreview
+      accountsLimitReached={props.accountsLimitReached}
       accounts={props.accounts}
       avatarTimestamp={props.avatarTimestamp}
       arrowPosition={MenuType.TOP_RIGHT}
@@ -48,6 +49,7 @@ ProfileShortCut.propTypes = {
   avatarUrl: PropTypes.string,
   badgeAccount: PropTypes.bool,
   letters: PropTypes.string,
+  accountsLimitReached: PropTypes.bool,
   accounts: PropTypes.array,
   isHiddenMenuProfilePreview: PropTypes.bool,
   onClickAddAccount: PropTypes.func,

@@ -4,7 +4,7 @@ const path = require('path');
 const openLaunchWindow = () => {
   try {
     const workerWin = new BrowserWindow({
-      width: 300,
+      width: 350,
       height: 220,
       frame: false,
       transparent: true,

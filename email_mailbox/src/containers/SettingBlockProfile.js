@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import SettingBlockProfileWrapper from '../components/SettingBlockProfileWrapper';
-import { setAvatarUpdatedTimestamp } from '../actions';
+import { setAvatarUpdatedTimestamp, reloadAccounts } from '../actions';
 import { myAccount } from '../utils/electronInterface';
 import { getTwoCapitalLetters } from '../utils/StringUtils';
 import {
@@ -37,6 +37,7 @@ const mapDispatchToProps = dispatch => {
         const res = await updateNameEvent(params);
         if (res.status === 200) {
           await updateAccount({ ...params, recipientId });
+          dispatch(reloadAccounts());
         }
       } else {
         await updateAccount({ ...params, recipientId });

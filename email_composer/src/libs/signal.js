@@ -267,9 +267,9 @@ const encryptPostEmail = async ({
     throw new CustomError(tooManyRequestErrorMessage);
   } else if (res.status !== 200) {
     throw new CustomError({
-      name: string.errors.encrypting.name,
-      description:
-        string.errors.encrypting.description + `${res.status || 'Unknown'}`
+      name: string.errors.serverError.name,
+      description: `${string.errors.serverError.description}${res.status ||
+        'Unknown'} Message: ${res.text || 'Unknown'}`
     });
   }
   return res;

@@ -51,9 +51,9 @@
         "suffix": "."
       }
     },
-    "encrypting": {
-      "name": "Encrypting error",
-      "description": "An error occurred while encrypting message.\nCode: "
+    "serverError": {
+      "name": "Server error",
+      "description": "An error occurred while sending your email.\nCode: "
     },
     "nonExistingUsers": {
       "name": "Non existing users",
@@ -84,7 +84,7 @@
       "description": "Unable to connect to server"
     },
     "unauthorized": {
-      "name": "Encrypting error",
+      "name": "Server Error",
       "description": "An error occurred in your request.\nPlease try again"
     },
     "uploadFailed": {

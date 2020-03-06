@@ -51,9 +51,9 @@
         "suffix": "."
       }
     },
-    "encrypting": {
-      "name": "Erreur de chiffrement",
-      "description": "Une erreur s'est produite lors du chiffrement du message.\nCode: "
+    "serverError": {
+      "name": "Server Error",
+      "description": "An error occurred while sending your email.\nCode: "
     },
     "nonExistingUsers": {
       "name": "Utilisateurs non existants",
@@ -84,7 +84,7 @@
       "description": "Impossible de se connecter au serveur"
     },
     "unauthorized": {
-      "name": "Erreur de chiffrement",
+      "name": "Server Error",
       "description": "Une erreur est survenue dans votre requête.\nVeuillez réessayer"
     },
     "uploadFailed": {
