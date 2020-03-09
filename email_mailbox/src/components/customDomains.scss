@@ -1,0 +1,136 @@
+
+
+.custom-domains-steps-container {
+  background-color: #f7f7f7;
+  height: 18px;
+  position: relative;
+
+  .custom-domains-steps {
+    padding-left: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #6a707e;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+}
+
+.custom-domains-main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .custom-domains-steps-title {
+    text-align: center;
+    font-size: 20px;
+    color: #000000;
+    font-weight: 600;
+    margin-bottom: 3vh;
+  }
+
+  .custom-domains-steps-text {
+    font-size: 15px;
+    color: #373a45;
+    margin-bottom: 3vh;
+  }
+
+  .custom-domains-steps-button-container{
+    display: flex;
+    justify-content: center;
+    .custom-domains-steps-button {
+      min-width: 60px;
+      align-items: center;
+      border-radius: 12px;
+      background-color: #008efa;
+      font-size: 12px;
+      font-weight: bold;
+      font-family: NunitoSans;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .custom-domains-steps-button-back {
+      margin-right: 20px;
+      min-width: 60px;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+      font-family: NunitoSans;
+      text-align: center;
+      background-color: white;
+      color: black;
+    }
+  }
+
+  .custom-domains-steps-first {
+    margin-top: 20vh;
+
+    .custom-domains-steps-first-text{
+      text-align: center;
+    }
+
+
+    .custom-domains-steps-first-input {
+      margin-bottom: 3vh;
+      min-width: 15vw;
+      input {
+        border-radius: 4px;
+        border: solid 1px #008efa;
+      }
+
+    }
+  }
+
+  .custom-domains-steps-second {
+    margin-top: 20vh;
+
+    .custom-domains-steps-second-text{
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+  }
+
+  .custom-domains-steps-second-2 {
+    margin-top: 20vh;
+
+
+    .custom-domains-steps-table-second-2{
+      display: flex;
+      justify-content: center;
+
+      table {
+        width: 100%;
+        border: solid 1px #d8dbe0;
+
+        tbody {
+          text-align: center;
+          color: #373b45;
+          font-size: 12px;
+        }
+  
+        thead  {
+          background-color: #f7f9fa;
+          border: solid 1px #d8dbe0;
+          text-align: center;
+          font-weight: bold;
+          line-height: 2.25;
+          font-size: 12px;
+          color: #8d95a5;
+        }   
+
+        th {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        td {
+          padding: 10px;
+        }
+      }
+
+    }
+  }
+}
