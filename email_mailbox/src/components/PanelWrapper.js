@@ -99,7 +99,7 @@ class PanelWrapper extends Component {
     checkForUpdates(true);
     this.handleCloseMailboxPopup();
   };
-  
+
   componentDidUpdate(prevProps) {
     if (
       !prevProps.isLoadAppCompleted &&

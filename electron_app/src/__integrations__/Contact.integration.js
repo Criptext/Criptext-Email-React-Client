@@ -105,7 +105,7 @@ describe('Update data contact from Contact Table:', () => {
 
 describe('Load data contact from Contact Table:', () => {
   it('should load all contacts', async () => {
-    const contacts = await DBManager.getAllContacts({ accountId });
+    const contacts = await DBManager.getAllContacts();
     expect(contacts).toMatchSnapshot();
   });
 

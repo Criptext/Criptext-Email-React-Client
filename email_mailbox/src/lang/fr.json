@@ -391,7 +391,7 @@
     "delete_account": {
       "title": "Supprimer mon compte",
       "paragraphs": {
-        "header": "La suppression de votre compte supprimera également tous vos emails dans cet appareil et n'importe quel autre appareil sur lequel votre compte est connecté. Cela permettra en outre à n'importe qui d'enregistrer un compte avec votre adresse email actuelle."
+        "header": "ATTENTION: La suppression de votre compte effacera toutes les données de messagerie et de compte sur tous les appareils, et vous ne pourrez plus utiliser votre nom d'utilisateur à l'avenir"
       },
       "subtitle": "Saisissez votre mot de passe pour confirmer",
       "inputs": {
@@ -407,7 +407,7 @@
         }
       },
       "cancelButtonLabel": "Annuler",
-      "confirmButtonLabel": "Envoyer"
+      "confirmButtonLabel": "Supprimer"
     },
     "export_backup": {
       "title": "Exporter un fichier de sauvegarde",

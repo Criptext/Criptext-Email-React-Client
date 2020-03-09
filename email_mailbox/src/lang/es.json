@@ -398,7 +398,7 @@
     "delete_account": {
       "title": "Eliminar Mi Cuenta",
       "paragraphs": {
-        "header": "Al eliminar tu cuenta se borrarán todos los datos de todos tus dispositivos y se deshabilitará este nombre de usuario permanentemente. ¿Estás seguro de que quieres eliminar tu cuenta?"
+        "header": "ADVERTENCIA: Eliminar tu cuenta borrará todos los datos personales y de tu bandeja de entrada en todos tus dispositivos y a demás deshabilitará el uso de este nombre de usuario."
       },
       "subtitle": "Para confirmar, ingresa tu contraseña",
       "inputs": {
@@ -414,7 +414,7 @@
         }
       },
       "cancelButtonLabel": "Cancelar",
-      "confirmButtonLabel": "Enviar"
+      "confirmButtonLabel": "Eliminar"
     },
     "export_backup": {
       "title": "Exportar Respaldo",

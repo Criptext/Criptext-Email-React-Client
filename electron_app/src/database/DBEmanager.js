@@ -242,17 +242,10 @@ const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
   return emailAddresses;
 };
 
-const getAllContacts = ({ accountId }) => {
+const getAllContacts = () => {
   return Contact()
     .findAll({
       attributes: ['name', 'email'],
-      include: [
-        {
-          model: AccountContact(),
-          attributes: [],
-          where: { accountId }
-        }
-      ],
       order: [['score', 'DESC'], ['name']]
     })
     .map(account => account.toJSON());

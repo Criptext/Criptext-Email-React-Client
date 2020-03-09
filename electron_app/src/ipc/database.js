@@ -98,12 +98,7 @@ ipc.answerRenderer('db-get-account-by-params', params =>
   dbManager.getAccountByParams(params)
 );
 
-ipc.answerRenderer('db-get-all-contacts', params => {
-  const data = params.accountId
-    ? params
-    : { ...params, accountId: myAccount.id };
-  return dbManager.getAllContacts(data);
-});
+ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
 
 ipc.answerRenderer('db-get-all-feed-items', params => {
   const data = params.accountId

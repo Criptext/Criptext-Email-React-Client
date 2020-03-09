@@ -80,7 +80,7 @@ const renderMailboxPopup = ({ data, type, isHidden, ...props }) => {
           theme={'dark'}
           onUpdateNow={props.onUpdateNow}
           onTogglePopup={props.onCloseMailboxPopup}
-          isClosable={true} 
+          isClosable={true}
         />
       );
     }
