@@ -209,18 +209,18 @@ int createPreKeys(struct mg_connection *conn, void *cbdata, char *dbPath, char* 
     return 422;
   }
 
-  cJSON *accountId;
+  cJSON *recipientId;
   cJSON *newPreKeys;
-  accountId = cJSON_GetObjectItemCaseSensitive(obj, "accountId");
+  recipientId = cJSON_GetObjectItemCaseSensitive(obj, "recipientId");
   newPreKeys = cJSON_GetObjectItemCaseSensitive(obj, "newPreKeys");
 
-  if (!cJSON_IsString(accountId) || !cJSON_IsArray(newPreKeys)) {
+  if (!cJSON_IsString(recipientId) || !cJSON_IsArray(newPreKeys)) {
     sendError(conn, 400, "Missing Params");
     return 400;
   }
 
   database db = initializeDB(dbPath, password);
-  CriptextSignal signal(accountId->valuestring, db);
+  CriptextSignal signal(recipientId->valuestring, db);
   cJSON *bundle = cJSON_CreateObject();
   signal.generateMorePreKeys(bundle, newPreKeys);
   return SendJSON(conn, bundle);

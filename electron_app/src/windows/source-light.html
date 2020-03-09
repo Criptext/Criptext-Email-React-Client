@@ -8,6 +8,7 @@
           width: 100%;
           margin: 0px;
           background-color: rgba(242, 242, 242, 1);
+          text-align: center;
         }
         pre {
           white-space: pre-wrap;
@@ -25,7 +26,7 @@
       <script>
         const ipcRenderer = window.require("electron").ipcRenderer;
         ipcRenderer.on("setContent", (ev, content, windowTitle) => {
-          document.getElementById("content").innerText = content;
+          document.getElementById("content").innerHTML = content;
           document.title = windowTitle;
         });
       </script>

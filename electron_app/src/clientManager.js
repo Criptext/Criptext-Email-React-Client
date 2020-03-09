@@ -4,7 +4,7 @@ const {
   API_CLIENT_VERSION,
   LINK_DEVICES_FILE_VERSION
 } = require('./utils/const');
-const { createPendingEvent, getAccount, updateAccount } = require('./database');
+const dbManager = require('./database');
 const { processEventsQueue } = require('./eventQueueManager');
 const globalManager = require('./globalManager');
 const mailboxWindow = require('./windows/mailbox');
@@ -16,14 +16,20 @@ const { Readable } = require('stream');
 const nativeImage = require('electron').nativeImage;
 const mySettings = require('./Settings');
 let client = undefined;
+const clientsMap = new Map();
 
-const initClient = async () => {
-  if (!client) await checkClient({});
-  return;
+const initClient = async recipientId => {
+  client = await createClient({ recipientId });
 };
 
-const initializeClient = ({ token, refreshToken, language, os }) => {
-  const clientOptions = {
+const initializeClient = ({
+  recipientId,
+  token,
+  refreshToken,
+  language,
+  os
+}) => {
+  client = new ClientAPI({
     os,
     token,
     language,
@@ -33,11 +39,9 @@ const initializeClient = ({ token, refreshToken, language, os }) => {
     timeout: 60 * 1000,
     version: API_CLIENT_VERSION,
     errorCallback: handleClientError
-  };
-  client = new ClientAPI(clientOptions);
-  client.token = token;
-  client.refreshToken = refreshToken;
-  client.language = language;
+  });
+  clientsMap[recipientId] = client;
+  return client;
 };
 
 const handleClientError = err => {
@@ -49,34 +53,33 @@ const handleClientError = err => {
   }
 };
 
-const checkClient = async ({ optionalSessionToken, optionalRefreshToken }) => {
-  client = {};
+const createClient = async ({ recipientId, optionalToken }) => {
+  client = clientsMap[recipientId];
+  if (client) return client;
   const language = mySettings.language;
   const osAndArch = await getOsAndArch();
   const osInfo = Object.values(osAndArch)
     .filter(val => !!val)
     .join(' ');
-  if (optionalSessionToken || optionalRefreshToken) {
+  if (optionalToken) {
     return initializeClient({
-      token: optionalSessionToken,
-      refreshToken: optionalRefreshToken,
+      recipientId,
+      token: optionalToken,
       language,
       os: osInfo
     });
   }
-  const [account] = await getAccount();
+  const [account] = await dbManager.getAccountByParams({ recipientId });
   const [token, refreshToken] = account
     ? [account.jwt, account.refreshToken]
     : [undefined, undefined];
-
-  if (
-    !client.login ||
-    client.token !== token ||
-    client.refreshToken !== refreshToken ||
-    client.language !== language
-  ) {
-    return initializeClient({ token, refreshToken, language, os: osInfo });
-  }
+  return initializeClient({
+    recipientId,
+    token,
+    refreshToken,
+    language,
+    os: osInfo
+  });
 };
 
 const checkExpiredSession = async (
@@ -102,7 +105,12 @@ const checkExpiredSession = async (
     }
     case EXPIRED_SESSION_STATUS: {
       let newSessionToken, newRefreshToken, newSessionStatus;
-      const [{ recipientId, refreshToken }] = await getAccount();
+      const { recipientId: accountRecipientId } = requestparams;
+      const [{ recipientId, refreshToken }] = accountRecipientId
+        ? await dbManager.getAccountByParams({
+            recipientId: accountRecipientId
+          })
+        : await dbManager.getAccountByParams({ isActive: true });
       if (!refreshToken) {
         const { status, body } = await upgradeToRefreshToken();
         newSessionStatus = status;
@@ -120,20 +128,21 @@ const checkExpiredSession = async (
       }
 
       if (newSessionStatus === EXPIRED_SESSION_STATUS) {
-        return mailboxWindow.send('device-removed', null);
+        mailboxWindow.send('device-removed', null);
+        return { status: newSessionStatus };
       }
 
       if (
         newSessionStatus === NEW_SESSION_SUCCESS_STATUS ||
         newSessionStatus === UPDATE_USER_TOKENS
       ) {
-        await updateAccount({
+        await dbManager.updateAccount({
           jwt: newSessionToken,
           refreshToken: newRefreshToken,
           recipientId
         });
         if (client.token) client.token = newSessionToken;
-        socketClient.restartSocket({ jwt: newSessionToken });
+        socketClient.add([{ recipientId, jwt: newSessionToken }]);
         if (initialRequest) {
           return await initialRequest(requestparams);
         }
@@ -145,9 +154,6 @@ const checkExpiredSession = async (
     }
   }
 };
-
-// Auto-init client
-// checkClient({});
 
 const acknowledgeEvents = async eventIds => {
   const res = await client.acknowledgeEvents(eventIds);
@@ -200,6 +206,8 @@ const findDevices = async params => {
 };
 
 const findKeyBundles = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.findKeyBundles(params);
   return res.status === 200
     ? res
@@ -223,31 +231,6 @@ const getEmailBody = async bodyKey => {
     ? { status: res.status, body: res.body }
     : checkExpiredSession(res, getEmailBody, bodyKey);
 };
-
-const getEvents = async () => {
-  const PENDING_EVENTS_STATUS_OK = 200;
-  const PENDING_EVENTS_STATUS_MORE = 201;
-  const NO_EVENTS_STATUS = 204;
-  await checkClient({});
-  const res = await client.getPendingEvents();
-  switch (res.status) {
-    case PENDING_EVENTS_STATUS_OK:
-      return { events: formEvents(res.body) };
-    case PENDING_EVENTS_STATUS_MORE:
-      return { events: formEvents(res.body), hasMoreEvents: true };
-    case NO_EVENTS_STATUS:
-      return { events: [] };
-    default:
-      return await checkExpiredSession(res, getEvents, null);
-  }
-};
-
-const formEvents = events =>
-  events.map(event => ({
-    cmd: event.cmd,
-    params: JSON.parse(event.params),
-    rowid: event.rowid
-  }));
 
 const getKeyBundle = async deviceId => {
   const res = await client.getKeyBundle(deviceId);
@@ -282,11 +265,9 @@ const parseUserSettings = settings => {
   };
 };
 
-const insertPreKeys = async preKeys => {
-  const res = await client.insertPreKeys(preKeys);
-  return res.status === 200
-    ? res
-    : await checkExpiredSession(res, insertPreKeys, preKeys);
+const insertPreKeys = async ({ preKeys, recipientId, optionalToken }) => {
+  const client = await createClient({ recipientId, optionalToken });
+  return await client.insertPreKeys(preKeys);
 };
 
 const isCriptextDomain = async domains => {
@@ -305,12 +286,14 @@ const linkAccept = async randomId => {
 };
 
 const linkAuth = async ({ newDeviceData, jwt }) => {
-  await checkClient({ optionalSessionToken: jwt });
+  const { recipientId } = newDeviceData;
+  const client = await createClient({ recipientId, optionalToken: jwt });
   return await client.linkAuth(newDeviceData);
 };
 
 const linkCancel = async ({ newDeviceData, jwt }) => {
-  await checkClient({ optionalSessionToken: jwt });
+  const { recipientId } = newDeviceData;
+  const client = await createClient({ recipientId, optionalToken: jwt });
   return await client.linkCancel(newDeviceData);
 };
 
@@ -345,8 +328,9 @@ const loginFirst = async data => {
   return await client.loginFirst(data);
 };
 
-const logout = async () => {
+const logout = async recipientId => {
   const res = await client.logout();
+  if (res.status === 200) delete clientsMap[recipientId];
   return res.status === 200
     ? res
     : await checkExpiredSession(res, logout, null);
@@ -360,6 +344,8 @@ const postDataReady = async params => {
 };
 
 const postEmail = async params => {
+  const { recipientId } = params;
+  const client = await createClient({ recipientId });
   const res = await client.postEmail(params);
   return res.status === 200
     ? res
@@ -373,19 +359,13 @@ const postKeyBundle = async params => {
     : await checkExpiredSession(res, postKeyBundle, params);
 };
 
-const upgradeAccount = async params => {
-  const res = await client.upgradeKeyBundle(params);
-  return res.status === 200
-    ? res
-    : await checkExpiredSession(res, upgradeAccount, params);
-};
-
-const postPeerEvent = async params => {
+const postPeerEvent = async ({ data, accountId }) => {
   try {
-    await createPendingEvent({
-      data: JSON.stringify(params)
+    await dbManager.createPendingEvent({
+      data: JSON.stringify(data),
+      accountId
     });
-    processEventsQueue();
+    processEventsQueue({ accountId });
     return Promise.resolve({ status: 200 });
   } catch (e) {
     return Promise.reject({ status: 422 });
@@ -446,7 +426,8 @@ const resetPassword = async params => {
 };
 
 const sendRecoveryCode = async ({ newDeviceData, jwt }) => {
-  await checkClient({ optionalSessionToken: jwt });
+  const { recipientId } = newDeviceData;
+  const client = await createClient({ recipientId, optionalToken: jwt });
   const res = await client.generateCodeTwoFactorAuth(newDeviceData);
   return res;
 };
@@ -572,7 +553,8 @@ const unsendEmail = async params => {
 };
 
 const validateRecoveryCode = async ({ newDeviceData, jwt }) => {
-  await checkClient({ optionalSessionToken: jwt });
+  const { recipientId } = newDeviceData;
+  const client = await createClient({ recipientId, optionalToken: jwt });
   const res = await client.validateCodeTwoFactorAuth(newDeviceData);
   return res;
 };
@@ -591,7 +573,6 @@ module.exports = {
   generateEvent,
   getDataReady,
   getEmailBody,
-  getEvents,
   getKeyBundle,
   getUserSettings,
   initClient,
@@ -630,7 +611,6 @@ module.exports = {
   updateDeviceType,
   updateName,
   updatePushToken,
-  upgradeAccount,
   uploadAvatar,
   unsendEmail,
   validateRecoveryCode

@@ -133,9 +133,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onMarkRead: (threadIds, unread) => {
       const labelId = ownProps.mailboxSelected.id;
-      dispatch(actions.updateUnreadThreads(threadIds, unread, labelId)).then(
-        () => ownProps.onBackOption()
-      );
+      const threadIdsFiltered = threadIds
+        .map(param => param.threadIdDB)
+        .filter(item => item !== null);
+      dispatch(
+        actions.updateUnreadThreads(threadIdsFiltered, unread, labelId)
+      ).then(() => ownProps.onBackOption());
     },
     onRemoveThreads: async (threadIds, backFirst) => {
       const labelId = ownProps.mailboxSelected.id;

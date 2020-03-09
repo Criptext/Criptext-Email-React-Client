@@ -18,7 +18,8 @@ import {
   logoutApp,
   openMailboxWindow,
   openPinWindow,
-  throwError
+  throwError,
+  swapMailboxAccount
 } from './../utils/ipc';
 import LinkNewDevice from './LinkNewDevice';
 import { addEvent, Event, removeEvent } from '../utils/electronEventInterface';
@@ -64,7 +65,7 @@ class LinkNewDeviceWrapper extends Component {
     this.state = {
       message: '',
       percent: 0,
-      newAccountData: undefined,
+      newAccount: undefined,
       pauseAt: 0,
       delay: 0,
       failed: false,
@@ -135,10 +136,9 @@ class LinkNewDeviceWrapper extends Component {
       async () => {
         try {
           this.incrementPercentage();
-          await cleanKeys();
           const keybundle = await signal.generateAccountAndKeys(params);
           if (!keybundle) {
-            await cleanKeys();
+            await cleanKeys(getRecipientIdFromRemoteData());
             this.linkingDevicesThrowError();
             return;
           }
@@ -163,7 +163,7 @@ class LinkNewDeviceWrapper extends Component {
         try {
           const accountData = await signal.uploadKeys(keybundle);
           if (!accountData) {
-            await cleanKeys();
+            await cleanKeys(getRecipientIdFromRemoteData());
             this.linkingDevicesThrowError();
             return;
           }
@@ -173,9 +173,10 @@ class LinkNewDeviceWrapper extends Component {
             recipientId: getRecipientIdFromRemoteData(),
             deviceId: remoteData.deviceId
           };
-          await signal.createAccountToDB(newAccountData);
+          const response = await signal.createAccountToDB(newAccountData);
           this.setState(
             {
+              newAccount: response,
               accountData,
               message: messages.waitingForMailbox
             },
@@ -305,7 +306,8 @@ class LinkNewDeviceWrapper extends Component {
         this.incrementPercentage();
         await decryptBackupFile(ArrayBufferToBuffer(decryptedKey));
         await importDatabase({
-          withoutBodiesEncryption: this.props.shouldResetPIN
+          withoutBodiesEncryption: this.props.shouldResetPIN,
+          accountObj: this.state.newAccount
         })
           .then(() => {
             this.setState(
@@ -339,7 +341,7 @@ class LinkNewDeviceWrapper extends Component {
         this.nextWindow();
         break;
       default: {
-        cleanKeys();
+        cleanKeys(getRecipientIdFromRemoteData());
         closeCreatingKeysLoadingWindow();
         logoutApp();
         break;
@@ -444,7 +446,9 @@ class LinkNewDeviceWrapper extends Component {
   };
 
   nextWindow = () => {
-    if (this.props.shouldResetPIN) {
+    if (this.state.newAccount) {
+      swapMailboxAccount(this.state.newAccount);
+    } else if (this.props.shouldResetPIN) {
       openPinWindow({ pinType: 'signin' });
     } else {
       openMailboxWindow();

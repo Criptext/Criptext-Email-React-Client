@@ -73,7 +73,8 @@ const errorMessages = {
   USERNAME_INVALID: signIn.errorMessages.usernameInvalid,
   USERNAME_NOT_EXISTS: signIn.errorMessages.usernameNotExits,
   STATUS_UNKNOWN: signIn.errorMessages.statusUnknown,
-  USERNAME_NOT_AVAILABLE: signIn.errorMessages.usernameNotAvailable
+  USERNAME_NOT_AVAILABLE: signIn.errorMessages.usernameNotAvailable,
+  USERNAME_LOGGED_IN: signIn.errorMessages.userAlreadyLoggedIn
 };
 
 const LINK_STATUS_RETRIES = 12;
@@ -575,11 +576,16 @@ class PanelWrapper extends Component {
     if (!existsAccount) {
       const successMode = mode.SIGNINTOAPPROVE;
       const check = await this.checkLoggedOutAccounts(successMode);
-      if (check === true) {
+      if (check) {
         await this.initLinkDevice(recipientId);
       }
-    } else {
+    } else if (!existsAccount.isLoggedIn) {
       await this.initLinkDevice(recipientId);
+    } else {
+      this.setState({
+        errorMessage: errorMessages.USERNAME_LOGGED_IN,
+        buttonSignInState: ButtonState.DISABLED
+      });
     }
   };
 
@@ -710,7 +716,7 @@ class PanelWrapper extends Component {
             const recipientId =
               domain === appDomain ? username : usernameOrEmailAddress;
             createTemporalAccount({ recipientId });
-            socketClient.start({ jwt: this.state.ephemeralToken });
+            socketClient.start(this.state.ephemeralToken);
             this.checkLinkStatus();
           }
         );

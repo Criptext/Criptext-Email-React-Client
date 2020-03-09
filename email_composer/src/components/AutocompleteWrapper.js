@@ -58,7 +58,7 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
   const inputValue = (props.value && props.value.trim().toLowerCase()) || '';
   const inputLength = inputValue.length;
   const getSuggestions = () => {
-    if (inputLength === 0) return [];
+    if (inputLength < 2) return [];
     if (
       lastTextValue.length > inputLength ||
       inputLength === 0 ||
@@ -76,7 +76,7 @@ const AutocompleteWrapper = ({ addTag, ...props }) => {
         : false;
       return emailHasMatches || nameHasMatches;
     });
-    return filtered;
+    return filtered.slice(0, 50);
   };
   state.filteredSuggestions = getSuggestions();
   const getSuggestionValue = suggestion => suggestion.email;

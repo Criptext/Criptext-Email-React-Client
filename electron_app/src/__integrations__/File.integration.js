@@ -1,6 +1,17 @@
 /* eslint-env node, jest */
 const DBManager = require('../database');
 
+let accountId;
+
+const account = {
+  recipientId: 'user',
+  deviceId: 1,
+  name: 'User One',
+  registrationId: 2,
+  privKey: 'aaa',
+  pubKey: 'bbb'
+};
+
 const email = {
   email: {
     threadId: 'threadC',
@@ -35,8 +46,12 @@ const email = {
   ]
 };
 
-const insertEmail = async () => {
-  await DBManager.createEmail(email);
+const insertAccount = async () => {
+  return await DBManager.createAccount(account);
+};
+
+const insertEmail = async accountId => {
+  await DBManager.createEmail({ ...email, accountId });
 };
 
 beforeAll(async () => {
@@ -45,7 +60,9 @@ beforeAll(async () => {
     key: '1111',
     shouldAddSystemLabels: true
   });
-  await insertEmail();
+  const [account] = await insertAccount();
+  accountId = account.id;
+  await insertEmail(accountId);
 });
 
 describe('Store data file to File Table:', () => {

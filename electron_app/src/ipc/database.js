@@ -1,29 +1,47 @@
 const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
-const dbManager = require('./../database');
+const dbManager = require('../database');
+const myAccount = require('../Account');
 
-ipc.answerRenderer('db-migrate-alice', () => dbManager.cleanForAlice());
-
-ipc.answerRenderer('db-clean-data-logout', recipientId =>
-  dbManager.cleanDataLogout(recipientId)
+ipc.answerRenderer('db-clean-data-logout', params =>
+  dbManager.cleanDataLogout(params)
 );
 
-ipc.answerRenderer('db-create-contact', params =>
-  dbManager.createContact(params)
-);
+ipc.answerRenderer('db-create-contact', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.createContact(data);
+});
 
-ipc.answerRenderer('db-create-email-label', params =>
-  dbManager.createEmailLabel(params)
-);
+ipc.answerRenderer('db-create-email-label', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.createEmailLabel(data);
+});
 
-ipc.answerRenderer('db-create-feed-item', params =>
-  dbManager.createFeedItem(params)
-);
+ipc.answerRenderer('db-create-feed-item', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.createFeedItem(data);
+});
 
 ipc.answerRenderer('db-create-identity-key-record', params =>
   dbManager.createIdentityKeyRecord(params)
 );
 
-ipc.answerRenderer('db-create-label', params => dbManager.createLabel(params));
+ipc.answerRenderer('db-create-label', params => {
+  const data = !Array.isArray(params)
+    ? params.accountId
+      ? params
+      : { ...params, accountId: myAccount.id }
+    : params.map(
+        label =>
+          label.accountId ? label : { ...label, accountId: myAccount.id }
+      );
+  return dbManager.createLabel(data);
+});
 
 ipc.answerRenderer('db-create-prekey-record', params =>
   dbManager.createPreKeyRecord(params)
@@ -37,31 +55,42 @@ ipc.answerRenderer('db-create-settings', params =>
   dbManager.createSettings(params)
 );
 
+ipc.answerRenderer('db-get-settings', () => dbManager.getSettings());
+
 ipc.answerRenderer('db-create-signed-prekey-record', params =>
   dbManager.createSignedPreKeyRecord(params)
 );
 
 ipc.answerRenderer('db-create-tables', () => dbManager.createTables());
 
-ipc.answerRenderer('db-delete-email-label', params =>
-  dbManager.deleteEmailLabel(params)
-);
+ipc.answerRenderer('db-delete-email-label', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.deleteEmailLabel(data);
+});
 
 ipc.answerRenderer('db-delete-feed-item-by-id', feedItemId =>
   dbManager.deleteFeedItemById(feedItemId)
 );
 
-ipc.answerRenderer('db-delete-label-by-id', labelId =>
-  dbManager.deleteLabelById(labelId)
-);
+ipc.answerRenderer('db-delete-label-by-id', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.deleteLabelById(data);
+});
 
 ipc.answerRenderer('db-delete-prekey-pair', params =>
   dbManager.deletePreKeyPair(params)
 );
 
-ipc.answerRenderer('db-delete-session-record', params =>
-  dbManager.deleteSessionRecord(params)
-);
+ipc.answerRenderer('db-delete-session-record', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.deleteSessionRecord(data);
+});
 
 ipc.answerRenderer('db-get-account', () => dbManager.getAccount());
 
@@ -71,13 +100,26 @@ ipc.answerRenderer('db-get-account-by-params', params =>
 
 ipc.answerRenderer('db-get-all-contacts', () => dbManager.getAllContacts());
 
-ipc.answerRenderer('db-get-all-feed-items', () => dbManager.getAllFeedItems());
+ipc.answerRenderer('db-get-all-feed-items', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getAllFeedItems(data);
+});
 
-ipc.answerRenderer('db-get-all-labels', () => dbManager.getAllLabels());
+ipc.answerRenderer('db-get-all-labels', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getAllLabels(data);
+});
 
-ipc.answerRenderer('db-get-contact-by-emails', emails =>
-  dbManager.getContactByEmails(emails)
-);
+ipc.answerRenderer('db-get-contact-by-emails', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getContactByEmails(data);
+});
 
 ipc.answerRenderer('db-get-contact-by-emailid', emailId =>
   dbManager.getContactsByEmailId(emailId)
@@ -87,45 +129,72 @@ ipc.answerRenderer('db-get-contact-by-ids', ids =>
   dbManager.getContactByIds(ids)
 );
 
-ipc.answerRenderer('db-get-email-by-key', key => dbManager.getEmailByKey(key));
+ipc.answerRenderer('db-get-email-by-key', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getEmailByKey(data);
+});
 
-ipc.answerRenderer('db-get-email-by-params', params =>
-  dbManager.getEmailByParams(params)
-);
+ipc.answerRenderer('db-get-email-by-params', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getEmailByParams(data);
+});
 
-ipc.answerRenderer('db-get-emails-by-array-param', params =>
-  dbManager.getEmailsByArrayParam(params)
-);
+ipc.answerRenderer('db-get-emails-by-array-param', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getEmailsByArrayParam(data);
+});
 
-ipc.answerRenderer('db-get-emails-by-labelids', labelIds =>
-  dbManager.getEmailsByLabelIds(labelIds)
-);
+ipc.answerRenderer('db-get-emails-by-labelids', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getEmailsByLabelIds(data);
+});
 
-ipc.answerRenderer(
-  'db-get-emails-by-threadid-and-labelid',
-  ({ threadIds, labelId }) =>
-    dbManager.getEmailsByThreadIdAndLabelId(threadIds, labelId)
-);
+ipc.answerRenderer('db-get-emails-by-threadid-and-labelid', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getEmailsByThreadIdAndLabelId(data);
+});
 
-ipc.answerRenderer('db-get-emails-counter-by-labelid', labelId =>
-  dbManager.getEmailsCounterByLabelId(labelId)
-);
+ipc.answerRenderer('db-get-emails-counter-by-labelid', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getEmailsCounterByLabelId(data);
+});
 
-ipc.answerRenderer('db-get-emails-group-by-thread-by-params', params =>
-  dbManager.getEmailsGroupByThreadByParams(params)
-);
+ipc.answerRenderer('db-get-emails-group-by-thread-by-params', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getEmailsGroupByThreadByParams(data);
+});
 
 ipc.answerRenderer('db-get-email-labels-by-emailid', emailId =>
   dbManager.getEmailLabelsByEmailId(emailId)
 );
 
-ipc.answerRenderer('db-get-emails-unread-by-labelid', params =>
-  dbManager.getEmailsUnredByLabelId(params)
-);
+ipc.answerRenderer('db-get-emails-unread-by-labelid', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getEmailsUnredByLabelId(data);
+});
 
-ipc.answerRenderer('db-get-feeditems-counter-by-seen', seen =>
-  dbManager.getFeedItemsCounterBySeen(seen)
-);
+ipc.answerRenderer('db-get-feeditems-counter-by-seen', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getFeedItemsCounterBySeen(data);
+});
 
 ipc.answerRenderer('db-get-files-by-emailid', emailId =>
   dbManager.getFilesByEmailId(emailId)
@@ -141,37 +210,55 @@ ipc.answerRenderer('db-get-identity-key-record', params =>
 
 ipc.answerRenderer('db-get-labelid', id => dbManager.getLabelById(id));
 
-ipc.answerRenderer('db-get-labesls-by-text', text =>
-  dbManager.getLabelsByText(text)
-);
+ipc.answerRenderer('db-get-labesls-by-text', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getLabelsByText(data);
+});
 
-ipc.answerRenderer('db-get-label-by-uuid', dbManager.getLabelByUuid);
+ipc.answerRenderer('db-get-label-by-uuid', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getLabelByUuid(data);
+});
 
 ipc.answerRenderer('db-get-prekey-pair', params =>
   dbManager.getPreKeyPair(params)
 );
 
-ipc.answerRenderer('db-get-prekeys-ids', () => dbManager.getPreKeyRecordIds());
+ipc.answerRenderer('db-get-prekeys-ids', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getPreKeyRecordIds(data);
+});
 
 ipc.answerRenderer('db-get-session-record', params =>
   dbManager.getSessionRecord(params)
 );
 
-ipc.answerRenderer('db-get-session-record-by-recipientids', recipientIds =>
-  dbManager.getSessionRecordByRecipientIds(recipientIds)
-);
+ipc.answerRenderer('db-get-session-record-by-recipientids', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getSessionRecordByRecipientIds(data);
+});
 
 ipc.answerRenderer('db-get-signed-prekey', params =>
   dbManager.getSignedPreKey(params)
 );
 
 ipc.answerRenderer('db-get-trash-expired-emails', () =>
-  dbManager.getTrashExpiredEmails()
+  dbManager.getTrashExpiredEmails(myAccount.id)
 );
 
-ipc.answerRenderer('db-update-account', params =>
-  dbManager.updateAccount(params)
-);
+ipc.answerRenderer('db-update-account', params => {
+  const data =
+    params.recipientId || params.id ? params : { ...params, id: myAccount.id };
+  return dbManager.updateAccount(data);
+});
 
 ipc.answerRenderer('db-update-contact-by-email', ({ email, name }) =>
   dbManager.updateContactByEmail({ email, name })
@@ -181,11 +268,19 @@ ipc.answerRenderer('db-update-contact-spam-acore', params =>
   dbManager.updateContactSpamScore(params)
 );
 
-ipc.answerRenderer('db-update-email', params => dbManager.updateEmail(params));
+ipc.answerRenderer('db-update-email', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.updateEmail(data);
+});
 
-ipc.answerRenderer('db-update-emails', params =>
-  dbManager.updateEmails(params)
-);
+ipc.answerRenderer('db-update-emails', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.updateEmails(data);
+});
 
 ipc.answerRenderer('db-update-feed-items', params =>
   dbManager.updateFeedItems(params)
@@ -199,14 +294,20 @@ ipc.answerRenderer('db-update-identity-key-record', params =>
   dbManager.updateIdentityKeyRecord(params)
 );
 
-ipc.answerRenderer('db-update-label', params => dbManager.updateLabel(params));
+ipc.answerRenderer('db-update-label', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.updateLabel(data);
+});
 
 ipc.answerRenderer('db-update-settings', params =>
   dbManager.updateSettings(params)
 );
 
-ipc.answerRenderer(
-  'db-update-unread-email-by-threadids',
-  ({ threadIds, unread }) =>
-    dbManager.updateUnreadEmailByThreadIds({ threadIds, unread })
-);
+ipc.answerRenderer('db-update-unread-email-by-threadids', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.updateUnreadEmailByThreadIds(data);
+});

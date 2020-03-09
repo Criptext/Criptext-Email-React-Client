@@ -77,15 +77,15 @@ const defineSideBarItems = labels => {
 };
 
 const defineSystemLabelsToEdit = labels => {
-  return [
-    labels.find(label => {
+  return labels
+    .filter(label => {
       return label.get('id') === LabelType.starred.id;
     })
-  ].map(label => {
-    const text =
-      string.labelsItems[toLowerCaseWithoutSpaces(label.get('text'))];
-    return { id: label.get('id'), text, visible: label.get('visible') };
-  });
+    .map(label => {
+      const text =
+        string.labelsItems[toLowerCaseWithoutSpaces(label.get('text'))];
+      return { id: label.get('id'), text, visible: label.get('visible') };
+    });
 };
 
 const defineVisibleLabels = labels => {

@@ -19,7 +19,7 @@ import {
   checkForUpdates,
   generateLabelUUID
 } from './../utils/ipc';
-import { appDomain } from '../utils/const';
+import { appDomain, SectionType } from '../utils/const';
 import { defineLastDeviceActivity } from '../utils/TimeUtils';
 import { clearStorage } from '../utils/storage';
 import {
@@ -56,13 +56,25 @@ const formatDevicesData = devices => {
     .sort(device => !device.isCurrentDevice);
 };
 
-const deleteDeviceData = async () => {
-  clearStorage();
-  await cleanDataLogout(myAccount.recipientId);
+const deleteDeviceData = async (onUpdateApp, onClickSection) => {
+  clearStorage({});
+  const nextAccount = await cleanDataLogout({
+    recipientId: myAccount.recipientId
+  });
+  if (nextAccount) {
+    const { id, recipientId } = nextAccount;
+    const mailbox = {
+      id: 1,
+      text: 'Inbox'
+    };
+    onClickSection(SectionType.MAILBOX, { mailboxSelected: mailbox });
+    onUpdateApp({ accountId: id, recipientId });
+    return;
+  }
   await logoutApp();
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onAddLabel: async text => {
       const color = randomcolor({
@@ -79,7 +91,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(addLabel(label));
     },
     onDeleteDeviceData: async () => {
-      await deleteDeviceData();
+      await deleteDeviceData(ownProps.onUpdateApp, ownProps.onClickSection);
     },
     onGetUserSettings: async () => {
       const settings = await getUserSettings();
@@ -127,9 +139,7 @@ const mapDispatchToProps = dispatch => {
       }
     },
     onUpdateContact: async name => {
-      const email = myAccount.recipientId.includes('@')
-        ? myAccount.recipientId
-        : `${myAccount.recipientId}@${appDomain}`;
+      const email = myAccount.email;
       await updateContactByEmail({ email, name });
     },
     onUpdateLabel: params => {

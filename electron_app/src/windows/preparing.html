@@ -1,0 +1,137 @@
+<html>
+    <head>
+      <style>
+        @font-face {
+          font-family: "NunitoSans";
+          src:url(https://cdn.criptext.com/Criptext-Email-Desktop/resources/fonts/nunito-sans-v3-latin-regular.eot);
+          src:url(https://cdn.criptext.com/Criptext-Email-Desktop/resources/fonts/nunito-sans-v3-latin-regular.eot?#iefix) format("embedded-opentype"),
+            url(https://cdn.criptext.com/Criptext-Email-Desktop/resources/fonts/nunito-sans-v3-latin-regular.woff) format("woff"),
+            url(https://cdn.criptext.com/Criptext-Email-Desktop/resources/fonts/nunito-sans-v3-latin-regular.ttf) format("truetype"),
+            url(https://cdn.criptext.com/Criptext-Email-Desktop/resources/fonts/nunito-sans-v3-latin-regular.svg) format("svg");
+          font-weight: normal;
+          font-style: normal;
+        }
+
+        html {
+          width: 100%;
+        }  
+        body {
+          width: 350px;
+          height: 220px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          margin: 0px;
+          background-color:white;
+          font-family: NunitoSans;
+        }
+
+        .image-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        img {
+          margin-left: 20px;
+          height: 50px;
+        }
+
+        pre {
+          white-space: pre-wrap;
+          word-break: break-word;
+          word-wrap: break-word;
+          margin: 20px;
+          padding: 10px 20px;
+          background-color: white;
+        }
+
+        .encrypt-loading{
+          margin: 15px auto 0;
+          width: 225px;
+        }
+
+        .bar {
+          background-color: rgba(0, 145, 255, 0.25);
+          border-radius: 5px;
+          height: 8px;
+          margin: 10px auto 0;
+          position: relative;
+          width: 100%;
+        }
+
+        .content {
+          padding: 0.5px;
+          opacity: 1;
+          border-radius: 5px;
+          transition: width 1.5s;
+          height: calc(100% - 1px);
+          background-image:
+            repeating-linear-gradient(
+              -45deg,
+            #74c2fc,
+            #74c2fc 11px,
+            #c7e6fe 10px,
+            #c7e6fe 20px
+            );
+          background-size: 28px 28px;
+          animation: move 1s linear infinite;
+        }
+
+        @keyframes move {
+          0% { background-position: 0 0; }
+          100% { background-position: 28px 0; }
+        }
+            
+        .content {
+          width: 100%;
+          height: 100%;
+          border-radius: 50px;
+          background-color: #373a45;
+          text-align: center;
+        }
+
+        .message {
+          margin-top: 20px;
+          text-align: center;
+        }
+
+        span {
+          color: black;
+          margin: 0px 6px;
+          font-size: 16px;
+          display: block;
+        }
+
+        .title{
+          font-size: 16px;
+          font-weight: 600;
+          color: #000000;
+        }
+
+        .subtitle{
+          font-size: 14px;
+          font-weight: 600;
+          color: #747474;
+          padding: 0 40px;
+          margin-top: 5px;
+        }
+      </style>
+    </head>
+    <body>
+      <div>
+        <img src="https://cdn.criptext.com/Criptext-Email-Desktop/resources/imgs/header-icon.svg">
+      </div>
+      <div class="encrypt-loading">
+        <div class="bar">
+          <div class='content'>
+          </div>
+        </div>
+      </div>
+      <div class="message">
+        <span class="img-container">
+        <span class="title">Migrating Database</span>
+        <span class="subtitle">This may take a while. Please don't close the app!</span>
+    </body>
+</html>

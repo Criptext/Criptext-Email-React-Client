@@ -1,5 +1,11 @@
 import { Activity } from './types';
 
+export const logout = () => {
+  return {
+    type: Activity.LOGOUT
+  };
+};
+
 export const stopAll = () => {
   return {
     type: Activity.STOP_ALL

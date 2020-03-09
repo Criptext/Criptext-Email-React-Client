@@ -3,33 +3,33 @@ const dbManager = require('../database');
 const myAccount = require('../Account');
 const mySetting = require('../Settings');
 const globalManager = require('../globalManager');
-const { APP_DOMAIN } = require('./const');
 const { dialog, BrowserWindow } = require('electron');
 const path = require('path');
 const lang = require('./../lang');
 
 const HTMLTagsRegex = /<[^>]*>?/g;
 const getUsername = () => {
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.email;
   return username;
 };
 
-const buildEmailSource = async ({ metadataKey }) => {
+const buildEmailSource = async ({ key, accountId }) => {
   const username = getUsername();
-  const [email] = await dbManager.getEmailByKey(metadataKey);
+  const [email] = await dbManager.getEmailByKey({
+    key,
+    accountId
+  });
   if (!email || !email.boundary) {
     throw 'Unable to build email source. No boundary found!';
   }
   const body = await fileUtils.getEmailBody({
     username,
-    metadataKey,
+    metadataKey: key,
     password: globalManager.databaseKey.get()
   });
   const headers = await fileUtils.getEmailHeaders({
     username,
-    metadataKey,
+    metadataKey: key,
     password: globalManager.databaseKey.get()
   });
 

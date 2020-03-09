@@ -1,13 +1,40 @@
 /* eslint-env node, jest */
 const DBManager = require('../database');
 
+let accountId;
+let accountId2;
+
+const account = {
+  recipientId: 'user',
+  deviceId: 1,
+  name: 'User One',
+  registrationId: 2,
+  privKey: 'aaa',
+  pubKey: 'bbb'
+};
+
+const account2 = {
+  recipientId: 'user2',
+  deviceId: 1,
+  name: 'User One',
+  registrationId: 2,
+  privKey: 'ccc',
+  pubKey: 'ddd'
+};
+
 const contact = {
   email: 'user@domain.com',
   name: 'User'
 };
 
-const insertContact = async () => {
-  await DBManager.createContact([contact]);
+const insertAccount = async () => {
+  const [accountCreated] = await DBManager.createAccount(account);
+  accountId2 = accountCreated.id;
+  return await DBManager.createAccount(account2);
+};
+
+const insertContact = async accountId => {
+  await DBManager.createContact({ contacts: [contact], accountId });
 };
 
 beforeAll(async () => {
@@ -16,7 +43,9 @@ beforeAll(async () => {
     key: '1111',
     shouldAddSystemLabels: true
   });
-  await insertContact();
+  const [account] = await insertAccount();
+  accountId = account.id;
+  await insertContact(accountId);
 });
 
 describe('Store data contact to Contact Table:', () => {
@@ -25,11 +54,14 @@ describe('Store data contact to Contact Table:', () => {
       email: 'userhello@domain.com',
       name: 'User Hello'
     };
-    const contactCreated = await DBManager.createContact([contact]);
+    const contactCreated = await DBManager.createContact({
+      contacts: [contact],
+      accountId
+    });
     expect(contactCreated.length).toBe(1);
     expect(typeof contactCreated[0]).toBe('object');
     const emails = [contact.email];
-    const [result] = await DBManager.getContactByEmails(emails);
+    const [result] = await DBManager.getContactByEmails({ emails, accountId });
     expect(result).toMatchObject(
       expect.objectContaining({
         email: contact.email
@@ -43,8 +75,20 @@ describe('Store data contact to Contact Table:', () => {
       'userhello@domain.com',
       'a@domain.com'
     ];
-    const result = await DBManager.createContactsIfOrNotStore(contacts);
+    const result = await DBManager.createContactsIfOrNotStore({
+      contacts,
+      accountId
+    });
     expect(result.length).toBe(3);
+  });
+
+  it('should insert relation contact_account to database', async () => {
+    const contacts = ['a@domain.com'];
+    const result = await DBManager.createContactsIfOrNotStore({
+      contacts,
+      accountId: accountId2
+    });
+    expect(result.length).toBe(1);
   });
 });
 

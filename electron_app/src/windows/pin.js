@@ -7,10 +7,10 @@ const { isDev } = require('./windowUtils');
 const { isWindows } = require('./../utils/osUtils');
 const fileUtils = require('../utils/FileUtils');
 const filesScript = require('../filescript/handler');
-const { APP_DOMAIN } = require('../utils/const');
 const myAccount = require('../Account');
 const {
   initDatabaseEncrypted,
+  rawCheckPin,
   resetKeyDatabase
 } = require('../database/DBEmanager');
 const keytar = require('keytar');
@@ -30,9 +30,7 @@ const iconPath = path.join(
 );
 
 const setKeyEmailBodies = async pin => {
-  const accountEmail = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const accountEmail = myAccount.email;
   const userEmailsPath = fileUtils.getUserEmailsPath(
     process.env.NODE_ENV,
     accountEmail
@@ -170,10 +168,7 @@ const checkPin = async () => {
 
 const validatePin = async pinToValidate => {
   try {
-    await initDatabaseEncrypted({
-      key: pinToValidate,
-      shouldReset: true
-    });
+    await rawCheckPin(pinToValidate);
     return true;
   } catch (error) {
     console.log(error);

@@ -1,4 +1,6 @@
+import { reloadAccounts, updateBadgeAccounts } from './accounts';
 import {
+  logout,
   setAvatarUpdatedTimestamp,
   startLoadSync,
   startLoadThread,
@@ -100,7 +102,9 @@ export {
   loadFeedItems,
   loadSuggestions,
   loadThreads,
+  logout,
   moveThreads,
+  reloadAccounts,
   removeAllThreads,
   removeEmails,
   removeEmailLabels,
@@ -128,6 +132,7 @@ export {
   unsendEmail,
   unsendEmailFiles,
   unsendEmailOnSuccess,
+  updateBadgeAccounts,
   updateBadgeLabels,
   updateFeedItem,
   updateFeedItems,

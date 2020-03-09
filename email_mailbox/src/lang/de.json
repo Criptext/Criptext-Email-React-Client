@@ -274,6 +274,9 @@
     },
     "manual_sync": {
       "description": "Postfachsynchronisation abgeschlossen"
+    },
+    "logged_as": {
+      "description": "Logged in as "
     }
   },
   "momentLocales": {
@@ -337,6 +340,10 @@
         "data": "all local data will be erased"
       }
     },
+    "change_account": {
+      "title": "Changing account",
+      "description": "Loading your account..."
+    },
     "change_password": {
       "title": "Passwort ändern",
       "paragraphs": {
@@ -384,7 +391,7 @@
     "delete_account": {
       "title": "Meinen Account löschen",
       "paragraphs": {
-        "header": "Durch das Löschen Ihres Kontos werden auch alle Ihre E-Mails auf diesem und allen anderen Geräten gelöscht, auf denen Ihr Konto angemeldet ist. Ihr Benutzername wird für zukünftige Verwendung deaktivieren."
+        "header": "WARNUNG: Wenn Sie Ihr Konto löschen, werden alle Postfach- und Kontodaten auf allen Geräten gelöscht und Ihr Benutzername kann in Zukunft nicht mehr verwendet werden."
       },
       "subtitle": "Zur Bestätigung geben Sie Ihr Passwort ein",
       "inputs": {
@@ -400,7 +407,7 @@
         }
       },
       "cancelButtonLabel": "Abbrechen",
-      "confirmButtonLabel": "Senden"
+      "confirmButtonLabel": "Löschen"
     },
     "export_backup": {
       "title": "Passphrase eingeben",

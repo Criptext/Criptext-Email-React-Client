@@ -1,4 +1,4 @@
-import { Email } from '../actions/types';
+import { Activity, Email } from '../actions/types';
 import { fromJS, Map, Set } from 'immutable';
 
 const emails = (state = new Map(), action) => {
@@ -20,6 +20,8 @@ const emails = (state = new Map(), action) => {
       });
       return state.merge(batch);
     }
+    case Activity.LOGOUT:
+      return new Map();
     case Email.MARK_UNREAD: {
       const emailId = action.emailId;
       const item = state.get(`${emailId}`);

@@ -1,24 +1,19 @@
-const { app, ipcMain } = require('electron');
-const myAccount = require('./src/Account');
-const wsClient = require('./src/socketClient');
+const { app, dialog, ipcMain } = require('electron');
+const socketClient = require('./src/socketClient');
 const globalManager = require('./src/globalManager');
-const mySettings = require('./src/Settings');
-const { dbManager, upStepDBEncryptedWithoutPIN, upStepCheckPINDBEncrypted } = require('./src/windows');
+const { dbManager, upStepCreateDBEncrypted, upStepCheckPIN, upStepNewUser } = require('./src/windows');
 const loginWindow = require('./src/windows/login');
 const mailboxWindow = require('./src/windows/mailbox');
 const loadingWindow = require('./src/windows/loading');
 const composerWindowManager = require('./src/windows/composer');
-const { startAlice, closeAlice, checkReachability } = require('./src/aliceManager');
-const { createAppMenu } = require('./src/windows/menu');
+const myAccount = require('./src/Account');
+const { closeAlice } = require('./src/aliceManager');
 const {
   showWindows,
   isDev,
   isLinux,
-  isWindows,
-  isFromStore,
-  getSystemLanguage
+  isWindows
 } = require('./src/windows/windowUtils');
-const {initNucleus} = require('./src/nucleusManager');
 require('./src/ipc/composer.js');
 require('./src/ipc/pin.js');
 require('./src/ipc/loading.js');
@@ -32,7 +27,7 @@ require('./src/ipc/nucleus.js');
 require('./src/ipc/client.js');
 const ipcUtils = require('./src/ipc/utils.js');
 const { checkDatabaseStep, deleteNotEncryptDatabase } = require('./src/utils/dataBaseUtils');
-const { initClient } = require('./src/clientManager');
+const { APP_DOMAIN } = require('./src/utils/const');
 
 globalManager.forcequit.set(false);
 
@@ -40,27 +35,12 @@ async function initApp() {
   const step = await checkDatabaseStep(dbManager);
   switch (step) {
     case 1:{
-      await startAlice();
-      await checkReachability();
-
-      globalManager.windowsEvents.disable()
-      globalManager.needsUpgrade.enable()
-
-      const [existingAccount] = await dbManager.getAccount();
-      const appSettings = await dbManager.getSettings();
-      const settings = Object.assign(appSettings, { isFromStore });
-      myAccount.initialize(existingAccount);
-      mySettings.initialize(settings);
-      await initClient();
-      initNucleus({language: mySettings.language});
-      wsClient.start(myAccount);
-      createAppMenu();
-      mailboxWindow.show({ firstOpenApp: true });
+      dialog.showErrorBox('Your version is outdated',' Please contact us: support@criptext.com to help you.');
     }
     break;
     case 2:{
       try {
-        await upStepDBEncryptedWithoutPIN();
+        await upStepCreateDBEncrypted();
       } catch (ex) {
         await deleteNotEncryptDatabase();
         app.relaunch();
@@ -71,20 +51,14 @@ async function initApp() {
     }
     case 3:{
       try {
-        const language = await getUserLanguage();
-        initNucleus({language});
-        const settings = { isFromStore, language };
-        mySettings.initialize(settings);
-        await initClient();
-        createAppMenu();
-        loginWindow.show({});
+        await upStepNewUser();
       } catch (ex) {
         console.log(ex);
       }
       break;
     }
     case 4:{
-      await upStepCheckPINDBEncrypted();
+      await upStepCheckPIN();
       break; 
     }
     default:
@@ -97,14 +71,18 @@ async function initApp() {
   });
 
   // Socket
-  wsClient.setMessageListener(async data => {
+  socketClient.setMessageListener(async data => {
+    const { cmd, recipientId, domain } = data;
     const SIGNIN_VERIFICATION_REQUEST_COMMAND = 201;
     const MANUAL_SYNC_REQUEST_COMMAND = 211;
+    const accountRecipientId =
+      domain === APP_DOMAIN ? recipientId : `${recipientId}@${domain}`;
+    const isToMe = accountRecipientId === myAccount.recipientId;
     // This validation is for closed-mailbox case
-    if (data.cmd === SIGNIN_VERIFICATION_REQUEST_COMMAND) {
+    if (isToMe && cmd === SIGNIN_VERIFICATION_REQUEST_COMMAND) {
       await ipcUtils.sendLinkDeviceStartEventToAllWindows(data);
     }
-    else if (data.cmd === MANUAL_SYNC_REQUEST_COMMAND) {
+    else if (isToMe && cmd === MANUAL_SYNC_REQUEST_COMMAND) {
       await ipcUtils.sendSyncMailboxStartEventToAllWindows(data);
     } else {
       mailboxWindow.send('socket-message', data);
@@ -128,10 +106,6 @@ if ((isWindows || isLinux) && !isDev) {
     })
   }
 }
-
-const getUserLanguage = async () => {
-  return await getSystemLanguage();
-};
 
 app.on('ready', () => {
   initApp();

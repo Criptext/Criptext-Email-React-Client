@@ -37,6 +37,8 @@ exports[`Form outgoing email:  Should form outgoing email from data 1`] = `
 Object {
   "bodyWithSign": "<p>Hello</p>",
   "emailData": Object {
+    "accountEmail": "myAccountRecipientId@criptext.com",
+    "accountId": 1,
     "body": "<p>Hello</p>",
     "email": Object {
       "content": "",

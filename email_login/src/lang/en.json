@@ -147,7 +147,8 @@
       "usernameInvalid": "Invalid username",
       "usernameNotExits": "Username doesn't exist",
       "statusUnknown": "Unknown status code: ",
-      "usernameNotAvailable": "Username not available"
+      "usernameNotAvailable": "Username not available",
+      "userAlreadyLoggedIn": "User already logged in!"
     },
     "usePassword": {
       "title": "Warning",

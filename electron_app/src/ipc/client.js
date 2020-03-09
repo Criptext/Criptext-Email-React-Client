@@ -1,5 +1,6 @@
 const { ipcMain: ipc } = require('@criptext/electron-better-ipc');
 const clientManager = require('./../clientManager');
+const myAccount = require('../Account');
 
 ipc.answerRenderer('client-acknowledge-events', params =>
   clientManager.acknowledgeEvents(params)
@@ -53,8 +54,8 @@ ipc.answerRenderer('client-get-user-settings', () =>
   clientManager.getUserSettings()
 );
 
-ipc.answerRenderer('client-insert-prekeys', preKeys =>
-  clientManager.insertPreKeys(preKeys)
+ipc.answerRenderer('client-insert-prekeys', params =>
+  clientManager.insertPreKeys(params)
 );
 
 ipc.answerRenderer('client-is-criptext-domain', domains =>
@@ -89,7 +90,9 @@ ipc.answerRenderer('client-login-first', params =>
   clientManager.loginFirst(params)
 );
 
-ipc.answerRenderer('client-logout', () => clientManager.logout());
+ipc.answerRenderer('client-logout', () => {
+  return clientManager.logout(myAccount.recipientId);
+});
 
 ipc.answerRenderer('client-post-data-ready', params =>
   clientManager.postDataReady(params)
@@ -103,9 +106,12 @@ ipc.answerRenderer('client-post-key-bundle', params =>
   clientManager.postKeyBundle(params)
 );
 
-ipc.answerRenderer('client-post-peer-event', params =>
-  clientManager.postPeerEvent(params)
-);
+ipc.answerRenderer('client-post-peer-event', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return clientManager.postPeerEvent(data);
+});
 
 ipc.answerRenderer('client-post-user', params =>
   clientManager.postUser(params)

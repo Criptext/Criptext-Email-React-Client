@@ -6,19 +6,17 @@ import {
   removeAllThreads
 } from '../actions/index';
 import HeaderMainWrapper from '../components/HeaderMainWrapper';
-import { SectionType, avatarBaseUrl } from '../utils/const';
-import { LabelType, myAccount } from '../utils/electronInterface';
+import { SectionType } from '../utils/const';
+import { LabelType } from '../utils/electronInterface';
+import { openLoginWindow } from '../utils/ipc';
 
 const mapStateToProps = state => {
   const suggestions = state.get('suggestions');
   const allLabels = getAllLabels(state);
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const isLoadingThreads = state.get('activities').get('isLoadingThreads');
-  const avatarUrl = `${avatarBaseUrl}${
-    myAccount.recipientId
-  }?date=${avatarTimestamp}`;
   return {
-    avatarUrl,
+    avatarTimestamp,
     allLabels,
     hints: suggestions.get('hints'),
     isLoadingThreads,
@@ -69,6 +67,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         searchParams
       };
       ownProps.onClickSection(type, params);
+    },
+    openLogin: () => {
+      openLoginWindow();
+    },
+    openSettings: () => {
+      const type = SectionType.SETTINGS;
+      ownProps.onClickSection(type);
     }
   };
 };

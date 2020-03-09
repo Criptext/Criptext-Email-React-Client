@@ -12,7 +12,10 @@ const {
   getSystemLanguage,
   sendEventToAllWindows
 } = require('./../windows/windowUtils');
+const dbManager = require('./../database/DBEmanager');
+const socketClient = require('./../socketClient');
 const { upApp } = require('./../windows');
+const myAccount = require('../Account');
 
 ipc.answerRenderer('get-system-language', () => getSystemLanguage());
 
@@ -22,8 +25,11 @@ ipc.answerRenderer('get-isWindows', () => isWindows());
 
 ipc.answerRenderer('get-os-and-arch', () => getOsAndArch());
 
-ipc.answerRenderer('process-pending-events', () => {
-  processEventsQueue();
+ipc.answerRenderer('process-pending-events', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  processEventsQueue(data);
 });
 
 ipc.answerRenderer('restart-app', () => {
@@ -95,6 +101,20 @@ const sendSyncMailboxStartEventToAllWindows = async data => {
 // Start Up
 ipc.answerRenderer('app-up', ({ shouldSave, pin }) => {
   upApp({ shouldSave, pin });
+});
+
+ipc.answerRenderer('change-account-app', async accountId => {
+  // Database
+  await dbManager.defineActiveAccountById(accountId);
+  // Socket
+  socketClient.restartSocket();
+  // Client
+  const accounts = await dbManager.getAccountByParams({ isLoggedIn: true });
+  const [activeAccount] = accounts.filter(account => account.isActive);
+  const clientManager = require('./../clientManager');
+  await clientManager.initClient(activeAccount.recipientId);
+  //Account
+  myAccount.initialize(accounts);
 });
 
 module.exports = {

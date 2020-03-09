@@ -10,6 +10,10 @@ export const openMailboxWindow = () => {
   ipc.callMain('open-mailbox', { firstOpenApp: true });
 };
 
+export const swapMailboxAccount = params => {
+  ipc.callMain('swap-account', params);
+};
+
 export const openPinWindow = params => {
   ipc.callMain('open-pin', params);
 };
@@ -82,8 +86,8 @@ export const cleanDatabase = async username => {
   return await ipc.callMain('db-clean-database', username);
 };
 
-export const cleanKeys = async username => {
-  return await ipc.callMain('db-clean-keys', username);
+export const cleanKeys = async recipientId => {
+  return await ipc.callMain('db-clean-keys', recipientId);
 };
 
 export const createContact = async params => {
@@ -110,6 +114,10 @@ export const createSettings = async params => {
   return await ipc.callMain('db-create-settings', params);
 };
 
+export const getSettings = async () => {
+  return await ipc.callMain('db-get-settings');
+};
+
 export const createSignedPreKeyRecord = async params => {
   return await ipc.callMain('db-create-signed-prekey-record', params);
 };
@@ -130,12 +138,12 @@ export const getAccount = async () => {
   return await ipc.callMain('db-get-account');
 };
 
-export const getAllLabels = async () => {
-  return await ipc.callMain('db-get-all-labels');
+export const getAccountByParams = async params => {
+  return await ipc.callMain('db-get-account-by-params', params);
 };
 
-export const getContactByEmails = async emails => {
-  return await ipc.callMain('db-get-contact-by-emails', emails);
+export const getContactByEmails = async params => {
+  return await ipc.callMain('db-get-contact-by-emails', params);
 };
 
 export const getIdentityKeyRecord = async params => {

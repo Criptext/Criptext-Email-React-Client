@@ -24,6 +24,7 @@ class SettingsWrapper extends Component {
     return (
       <Settings
         {...this.props}
+        activeAccount={myAccount.email}
         devices={this.state.devices}
         isFromStore={mySettings.isFromStore}
         isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}

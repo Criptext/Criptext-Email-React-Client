@@ -1,6 +1,5 @@
 import ipc from '@criptext/electron-better-ipc/renderer';
 import signal from './../libs/signal';
-import signalLegacy from './../libs/signal-legacy';
 import {
   LabelType,
   myAccount,
@@ -8,9 +7,10 @@ import {
   getNews,
   getDeviceType,
   getBackupStatus,
-  needsUpgrade
+  getTokenByRecipientId
 } from './electronInterface';
 import {
+  changeAccountApp,
   checkForUpdates,
   cleanDatabase,
   createEmail,
@@ -26,7 +26,7 @@ import {
   getEmailByParams,
   getEmailLabelsByEmailId,
   getEmailsByArrayParam,
-  getEmailsByThreadId,
+  getEmailsIdsByThreadIds,
   getContactByEmails,
   getLabelsByText,
   getLabelByUuid,
@@ -54,6 +54,7 @@ import {
 } from './ipc';
 import {
   checkEmailIsTo,
+  checkEmailsToAllAccounts,
   cleanEmailBody,
   formEmailLabel,
   formFilesFromData,
@@ -113,18 +114,47 @@ let newEmailNotificationList = [];
 const stopGettingEvents = () => {
   isGettingEvents = false;
   emitter.emit(Event.STOP_LOAD_SYNC, {});
-  if (needsUpgrade()) {
-    sendMigrateAliceEvent();
-  } else if (!getBackupStatus()) {
+  if (!getBackupStatus()) {
     initAutoBackupMonitor();
   }
-  processPendingEvents();
+  processPendingEvents({});
+};
+
+const getAccountInfo = (recipientId, domain) => {
+  if (!recipientId || !domain) {
+    return {
+      accountId: myAccount.id,
+      accountRecipientId: myAccount.recipientId,
+      accountEmail: myAccount.email,
+      optionalToken: myAccount.jwt
+    };
+  }
+  const accountRecipientId =
+    domain === appDomain ? recipientId : `${recipientId}@${domain}`;
+
+  const account =
+    accountRecipientId === myAccount.recipientId
+      ? myAccount
+      : myAccount.loggedAccounts.find(
+          account => account.recipientId === accountRecipientId
+        );
+
+  const accountEmail = account.recipientId.includes('@')
+    ? account.recipientId
+    : `${account.recipientId}@${appDomain}`;
+  return {
+    accountId: account.id,
+    accountRecipientId,
+    accountEmail,
+    optionalToken: account.jwt
+  };
 };
 
 const parseAndStoreEventsBatch = async ({
   events,
   hasMoreEvents,
-  useLegacy
+  recipientId,
+  domain
 }) => {
   labelIdsEvent = new Set();
   threadIdsEvent = new Set();
@@ -133,6 +163,7 @@ const parseAndStoreEventsBatch = async ({
   removedLabels = [];
   updatedLabels = [];
   profileHasChanged = false;
+
   const rowIds = [];
   const completedTask = events.reduce((count, event) => {
     if (event.cmd === SocketCommand.NEW_EMAIL) {
@@ -141,6 +172,13 @@ const parseAndStoreEventsBatch = async ({
     return count;
   }, 0);
   totalEmailsHandled = totalEmailsHandled + completedTask;
+
+  const {
+    accountId,
+    accountRecipientId,
+    accountEmail,
+    optionalToken
+  } = getAccountInfo(recipientId, domain);
 
   for (const event of events) {
     try {
@@ -154,7 +192,13 @@ const parseAndStoreEventsBatch = async ({
         badgeLabelIds,
         removedLabel,
         updatedLabel
-      } = await handleEvent(event, useLegacy);
+      } = await handleEvent({
+        incomingEvent: event,
+        accountId,
+        accountRecipientId,
+        accountEmail,
+        optionalToken
+      });
       rowIds.push(rowid);
       if (threadIds)
         threadIdsEvent = new Set([...threadIdsEvent, ...threadIds]);
@@ -184,7 +228,8 @@ const parseAndStoreEventsBatch = async ({
 
   const rowIdsFiltered = rowIds.filter(rowId => !!rowId);
   if (rowIdsFiltered.length || (events.length && !rowIdsFiltered.length)) {
-    if (rowIdsFiltered.length) await setEventAsHandled(rowIdsFiltered);
+    if (rowIdsFiltered.length)
+      await setEventAsHandled(rowIdsFiltered, optionalToken);
 
     const labelIds = labelIdsEvent.size ? Array.from(labelIdsEvent) : null;
     const threadIds = threadIdsEvent.size ? Array.from(threadIdsEvent) : null;
@@ -210,9 +255,20 @@ const parseAndStoreEventsBatch = async ({
       updatedLabels
     });
   }
+
+  return {
+    accountId,
+    accountRecipientId
+  };
 };
 
-const parseAndDispatchEvent = async event => {
+const parseAndDispatchEvent = async (event, recipientId, domain) => {
+  const {
+    accountId,
+    accountRecipientId,
+    accountEmail,
+    optionalToken
+  } = getAccountInfo(recipientId, domain);
   try {
     const {
       feedItemAdded,
@@ -222,7 +278,13 @@ const parseAndDispatchEvent = async event => {
       labels,
       removedLabel,
       updatedLabel
-    } = await handleEvent(event);
+    } = await handleEvent({
+      incomingEvent: event,
+      accountId,
+      accountRecipientId,
+      accountEmail,
+      optionalToken
+    });
     if (rowid) await setEventAsHandled([rowid]);
     emitter.emit(Event.STORE_LOAD, {
       feedItemHasAdded: feedItemAdded,
@@ -238,22 +300,31 @@ const parseAndDispatchEvent = async event => {
     console.error(error);
     sendFetchEmailsErrorMessage();
   }
+  return {
+    accountId,
+    accountRecipientId
+  };
 };
 
 export const getGroupEvents = async ({
   shouldGetMoreEvents,
   showNotification,
-  useLegacy
+  recipientId,
+  domain
 }) => {
-  if (!useLegacy && needsUpgrade()) return;
   if (isGettingEvents && !shouldGetMoreEvents) return;
 
+  let optionalToken;
+  if (recipientId && domain) {
+    optionalToken = getTokenByRecipientId(recipientId, domain);
+  }
   isGettingEvents = true;
   if (totalEmailsPending === null) {
     totalEmailsHandled = 0;
     const { status, body } = await fetchEventAction({
       cmd: 101,
-      action: 'count'
+      action: 'count',
+      optionalToken
     });
     if (status !== 200) {
       stopGettingEvents();
@@ -269,7 +340,7 @@ export const getGroupEvents = async ({
       });
     }
   }
-  const { status, body } = await fetchEvents();
+  const { status, body } = await fetchEvents(optionalToken);
   if (status !== 200) {
     stopGettingEvents();
     return;
@@ -281,12 +352,16 @@ export const getGroupEvents = async ({
     return;
   }
 
-  await parseAndStoreEventsBatch({ events, hasMoreEvents, useLegacy });
+  const { accountId, accountRecipientId } = await parseAndStoreEventsBatch({
+    events,
+    hasMoreEvents,
+    recipientId,
+    domain
+  });
 
   if (!hasMoreEvents) {
-    await updateOwnContact();
     if (showNotification) {
-      sendNewEmailNotification();
+      sendNewEmailNotification(accountId, accountRecipientId);
     } else {
       newEmailNotificationList = [];
     }
@@ -298,41 +373,64 @@ export const getGroupEvents = async ({
   await getGroupEvents({
     shouldGetMoreEvents: hasMoreEvents,
     showNotification,
-    useLegacy
+    recipientId,
+    domain
   });
 };
 
-export const handleEvent = (incomingEvent, useLegacy) => {
+export const isGettingEventsGet = () => isGettingEvents;
+export const isGettingEventsUpdate = value => {
+  isGettingEvents = value;
+};
+
+export const handleEvent = ({
+  incomingEvent,
+  optionalToken,
+  accountRecipientId,
+  accountId,
+  accountEmail
+}) => {
   switch (incomingEvent.cmd) {
     case SocketCommand.NEW_EMAIL: {
-      if (useLegacy) {
-        return handleNewMessageEventLegacy(incomingEvent);
-      }
-      return handleNewMessageEvent(incomingEvent);
+      return handleNewMessageEvent(
+        incomingEvent,
+        optionalToken,
+        accountRecipientId,
+        accountEmail,
+        accountId
+      );
     }
     case SocketCommand.EMAIL_TRACKING_UPDATE: {
-      return handleEmailTrackingUpdate(incomingEvent);
+      return handleEmailTrackingUpdate(incomingEvent, accountId, accountEmail);
     }
     case SocketCommand.SEND_EMAIL_ERROR: {
       return handleSendEmailError(incomingEvent);
     }
     case SocketCommand.LOW_PREKEYS_AVAILABLE: {
-      return handleLowPrekeysAvailable(incomingEvent);
+      return handleLowPrekeysAvailable(
+        incomingEvent,
+        accountId,
+        accountRecipientId,
+        optionalToken
+      );
     }
     case SocketCommand.DEVICE_LINK_AUTHORIZATION_REQUEST: {
-      return handleLinkDeviceRequest(incomingEvent);
+      //TODO: handle link requests from inactive accounts
+      return handleLinkDeviceRequest(incomingEvent, accountRecipientId);
     }
     case SocketCommand.KEYBUNDLE_UPLOADED: {
-      return handleKeybundleUploaded(incomingEvent);
+      //TODO: handle link requests from inactive accounts
+      return handleKeybundleUploaded(incomingEvent, accountRecipientId);
     }
     case SocketCommand.DEVICE_REMOVED: {
-      return handlePeerRemoveDevice(incomingEvent);
+      return handlePeerRemoveDevice(incomingEvent, accountRecipientId);
     }
     case SocketCommand.DEVICE_LINK_REQUEST_RESPONDED: {
       return handleLinkDeviceResquestResponded(incomingEvent);
     }
     case SocketCommand.SYNC_DEVICE_REQUEST: {
-      return handleSyncDeviceRequest(incomingEvent);
+      //TODO: handle synk requests from inactive accounts
+      return handleSyncDeviceRequest(incomingEvent, accountRecipientId);
     }
     case SocketCommand.SYNC_DEVICE_REQUEST_RESPONDED: {
       return handleSyncDeviceRequestResponded(incomingEvent);
@@ -341,46 +439,50 @@ export const handleEvent = (incomingEvent, useLegacy) => {
       return handlePeerAvatarChanged(incomingEvent);
     }
     case SocketCommand.PEER_EMAIL_READ_UPDATE: {
-      return handlePeerEmailRead(incomingEvent);
+      return handlePeerEmailRead(incomingEvent, accountId);
     }
     case SocketCommand.PEER_EMAIL_UNSEND: {
-      return handlePeerEmailUnsend(incomingEvent);
+      return handlePeerEmailUnsend(incomingEvent, accountId, accountEmail);
     }
     case SocketCommand.PEER_THREAD_READ_UPDATE: {
-      return handlePeerThreadRead(incomingEvent);
+      return handlePeerThreadRead(incomingEvent, accountId);
     }
     case SocketCommand.PEER_EMAIL_LABELS_UPDATE: {
-      return handlePeerEmailLabelsUpdate(incomingEvent);
+      return handlePeerEmailLabelsUpdate(incomingEvent, accountId);
     }
     case SocketCommand.PEER_THREAD_LABELS_UPDATE: {
-      return handlePeerThreadLabelsUpdate(incomingEvent);
+      return handlePeerThreadLabelsUpdate(incomingEvent, accountId);
     }
     case SocketCommand.PEER_EMAIL_DELETED_PERMANENTLY: {
-      return handlePeerEmailDeletedPermanently(incomingEvent);
+      return handlePeerEmailDeletedPermanently(incomingEvent, accountId);
     }
     case SocketCommand.PEER_THREAD_DELETED_PERMANENTLY: {
-      return handlePeerThreadDeletedPermanently(incomingEvent);
+      return handlePeerThreadDeletedPermanently(incomingEvent, accountId);
     }
     case SocketCommand.PEER_LABEL_CREATED: {
-      return handlePeerLabelCreated(incomingEvent);
+      return handlePeerLabelCreated(incomingEvent, accountId);
     }
     case SocketCommand.PEER_LABEL_UPDATE: {
-      return handlePeerLabelUpdate(incomingEvent);
+      return handlePeerLabelUpdate(incomingEvent, accountId);
     }
     case SocketCommand.PEER_LABEL_DELETE: {
-      return handlePeerLabelDelete(incomingEvent);
+      return handlePeerLabelDelete(incomingEvent, accountId);
     }
     case SocketCommand.PEER_USER_NAME_CHANGED: {
-      return handlePeerUserNameChanged(incomingEvent);
+      return handlePeerUserNameChanged(
+        incomingEvent,
+        accountRecipientId,
+        accountEmail
+      );
     }
     case SocketCommand.PEER_PASSWORD_CHANGED: {
-      return handlePeerPasswordChanged();
+      return handlePeerPasswordChanged(accountRecipientId);
     }
     case SocketCommand.PEER_RECOVERY_EMAIL_CHANGED: {
-      return handlePeerRecoveryEmailChanged(incomingEvent);
+      return handlePeerRecoveryEmailChanged(incomingEvent, accountRecipientId);
     }
     case SocketCommand.PEER_RECOVERY_EMAIL_CONFIRMED: {
-      return handlePeerRecoveryEmailConfirmed();
+      return handlePeerRecoveryEmailConfirmed(accountRecipientId);
     }
     case SocketCommand.NEW_ANNOUNCEMENT: {
       return handleNewAnnouncementEvent(incomingEvent);
@@ -392,10 +494,10 @@ export const handleEvent = (incomingEvent, useLegacy) => {
       return handleUpdateDeviceTypeEvent(incomingEvent);
     }
     case SocketCommand.SUSPENDED_ACCOUNT_EVENT: {
-      return handleSuspendedAccountEvent(incomingEvent);
+      return handleSuspendedAccountEvent(incomingEvent, accountRecipientId);
     }
     case SocketCommand.REACTIVATED_ACCOUNT_EVENT: {
-      return handleReactivatedAccountEvent(incomingEvent);
+      return handleReactivatedAccountEvent(incomingEvent, accountRecipientId);
     }
     default: {
       return { rowid: null };
@@ -415,224 +517,221 @@ const buildSenderRecipientId = ({ senderId, senderDomain, from, external }) => {
     : getRecipientIdFromEmailAddressTag(from);
 };
 
-const handleNewMessageEventLegacy = async ({ rowid, params }) => {
-  const {
-    bcc,
-    bccArray,
-    cc,
-    ccArray,
-    date,
-    fileKey,
-    fileKeys,
-    files,
-    from,
-    guestEncryption,
-    inReplyTo,
-    replyTo,
-    labels,
-    messageType,
-    metadataKey,
-    senderDomain,
-    senderId,
-    subject,
-    senderDeviceId,
-    threadId,
-    to,
-    toArray,
-    messageId,
-    external,
-    boundary
-  } = params;
-  if (!metadataKey) return { rowid: null };
-  const recipientId = buildSenderRecipientId({
-    senderId,
-    senderDomain,
-    from,
-    external
-  });
-  const deviceId =
-    external === undefined
-      ? typeof messageType === 'number'
-        ? senderDeviceId
-        : undefined
-      : senderDeviceId;
-  const [prevEmail] = await getEmailByKey(metadataKey);
+const isMailSpam = async params => {
+  const { labels, from, accountId } = params;
+  if (labels && !!labels.find(label => label === LabelType.spam.text))
+    return false;
   const contactObjectSpamToCheck = parseContactRow(from);
-  const contactSpamToCheck = await getContactByEmails([
-    contactObjectSpamToCheck.email
-  ]);
-  const isContactSpamer = contactSpamToCheck[0]
-    ? contactSpamToCheck[0].spamScore > 1
-    : false;
-  const isSpam = labels
-    ? labels.find(label => label === LabelType.spam.text) || isContactSpamer
-    : undefined;
-  const InboxLabelId = LabelType.inbox.id;
-  const SentLabelId = LabelType.sent.id;
-  const SpamLabelId = LabelType.spam.id;
-  const isFromMe = myAccount.recipientId === recipientId;
-  const recipients = getRecipientsFromData({
-    to: to || toArray,
-    cc: cc || ccArray,
-    bcc: bcc || bccArray,
-    from
+  const contactSpamToCheck = await getContactByEmails({
+    emails: contactObjectSpamToCheck.email,
+    accountId
   });
-  const isToMe = checkEmailIsTo(recipients);
-  let notificationPreview = '';
+  return contactSpamToCheck[0] ? contactSpamToCheck[0].spamScore > 1 : false;
+};
+
+const generateEmailThreadId = async params => {
+  const { threadId, inReplyTo } = params;
+
+  const [emailWithMessageId] = await getEmailByParams({
+    messageId: inReplyTo
+  });
+  return emailWithMessageId ? emailWithMessageId.threadId : threadId;
+};
+
+const formEmailIfNotExists = async params => {
+  const {
+    accountId,
+    accountEmail,
+    accountRecipientId,
+    optionalToken,
+    metadataKey,
+    recipientId,
+    deviceId,
+    messageType,
+    fileKeys,
+    fileKey,
+    isFromMe,
+    isToMe,
+    files,
+    inReplyTo,
+    boundary,
+    date,
+    from,
+    messageId,
+    replyTo,
+    subject,
+    threadId,
+    isSpam,
+    recipients,
+    guestEncryption
+  } = params;
+
   const labelIds = [];
-  let emailThreadId = threadId;
-  if (!prevEmail) {
-    let body = '',
-      headers;
-    try {
-      const {
-        decryptedBody,
-        decryptedHeaders
-      } = await signalLegacy.decryptEmail({
-        bodyKey: metadataKey,
-        recipientId,
-        deviceId,
-        messageType
-      });
-      body = cleanEmailBody(decryptedBody);
-      headers = decryptedHeaders;
-    } catch (e) {
-      body = 'Content unencrypted';
-    }
-    let myFileKeys;
-    if (fileKeys) {
-      myFileKeys = await Promise.all(
-        fileKeys.map(async fileKey => {
-          try {
-            const decrypted = await signalLegacy.decryptFileKey({
-              fileKey,
-              messageType,
-              recipientId,
-              deviceId
-            });
-            const [key, iv] = decrypted.split(':');
-            return { key, iv };
-          } catch (e) {
-            return { key: undefined, iv: undefined };
-          }
-        })
-      );
-    } else if (fileKey) {
-      try {
-        const decrypted = await signalLegacy.decryptFileKey({
-          fileKey,
-          messageType,
-          recipientId,
-          deviceId
-        });
-        const [key, iv] = decrypted.split(':');
-        myFileKeys = files.map(() => ({ key, iv }));
-      } catch (e) {
-        myFileKeys = undefined;
-      }
-    }
-    const unread = isFromMe && !isToMe ? false : true;
-    if (inReplyTo) {
-      const emailWithMessageId = await getEmailByParams({
-        messageId: inReplyTo
-      });
-      if (emailWithMessageId) {
-        emailThreadId = emailWithMessageId.threadId;
-      }
-    }
-    const secure = guestEncryption === 1 || guestEncryption === 3;
-    const data = {
-      body,
-      boundary,
-      date,
+  let body = '',
+    headers,
+    myFileKeys;
+
+  try {
+    const {
+      decryptedBody,
+      decryptedHeaders,
+      decryptedFileKeys
+    } = await signal.decryptEmail({
+      accountRecipientId,
+      optionalToken,
+      bodyKey: metadataKey,
+      recipientId,
       deviceId,
-      from: from.replace(/"/g, ''),
-      isFromMe,
-      metadataKey,
-      messageId,
-      replyTo,
-      secure,
-      subject,
-      threadId: emailThreadId,
-      unread
-    };
-    const email = await formIncomingEmailFromData(data);
-    notificationPreview = email.preview;
-    const filesData =
-      files && files.length
-        ? await formFilesFromData({
-            files,
-            date,
-            fileKeys: myFileKeys,
-            emailContent: body
-          })
-        : null;
-
-    if (isFromMe) {
-      labelIds.push(SentLabelId);
-      if (isToMe) {
-        labelIds.push(InboxLabelId);
-      }
-    } else {
-      labelIds.push(InboxLabelId);
-    }
-    if (isSpam) {
-      labelIds.push(SpamLabelId);
-    }
-    const emailData = {
-      email,
-      labels: labelIds,
-      files: filesData,
-      recipients,
-      body,
-      headers
-    };
-    await createEmail(emailData);
-  } else {
-    const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
-    const prevLabels = prevEmailLabels.map(item => item.labelId);
-
-    const hasSentLabelId = prevLabels.includes(SentLabelId);
-    if (isFromMe && !hasSentLabelId) {
-      labelIds.push(SentLabelId);
-
-      const hasInboxLabelId = prevLabels.includes(InboxLabelId);
-      if (isToMe && !hasInboxLabelId) {
-        labelIds.push(InboxLabelId);
-      }
-    }
-    const hasSpamLabelId = prevLabels.includes(SpamLabelId);
-    if (isSpam && !hasSpamLabelId) {
-      labelIds.push(SpamLabelId);
-    }
-
-    if (labelIds.length) {
-      const emailLabel = formEmailLabel({
-        emailId: prevEmail.id,
-        labels: labelIds
-      });
-      await createEmailLabel(emailLabel);
-    }
-    notificationPreview = prevEmail.preview;
-  }
-  if (isToMe && !isSpam) {
-    const parsedContact = parseContactRow(from);
-    addEmailToNotificationList({
-      senderInfo: parsedContact.name || parsedContact.email,
-      emailSubject: subject,
-      emailPreview: notificationPreview,
-      threadId: emailThreadId
+      messageType,
+      fileKeys: fileKeys || (fileKey ? [fileKey] : null)
     });
+    body = cleanEmailBody(decryptedBody);
+    headers = decryptedHeaders;
+    myFileKeys = decryptedFileKeys
+      ? decryptedFileKeys.map(fileKey => {
+          const fileKeySplit = fileKey.split(':');
+          return {
+            key: fileKeySplit[0],
+            iv: fileKeySplit[1]
+          };
+        })
+      : null;
+  } catch (e) {
+    if (
+      e.message === signal.ALICE_ERROR ||
+      e.message === signal.CONTENT_NOT_AVAILABLE ||
+      e instanceof TypeError
+    ) {
+      return {
+        error: 1
+      };
+    } else if (e.message === signal.DUPLICATE_MESSAGE) {
+      return {
+        error: 2
+      };
+    }
+    body = 'Content unencrypted';
+    reportContentUnencrypted(e.stack);
   }
-  const mailboxIdsToUpdate = isSpam ? [LabelType.spam.id] : labelIds;
+
+  if (!fileKeys && fileKey) {
+    myFileKeys = files.map(() => myFileKeys[0]);
+  }
+  const unread = isFromMe && !isToMe ? false : true;
+  const emailThreadId = inReplyTo
+    ? await generateEmailThreadId({
+        threadId,
+        inReplyTo
+      })
+    : threadId;
+
+  const secure = guestEncryption === 1 || guestEncryption === 3;
+  const data = {
+    body,
+    boundary,
+    date,
+    deviceId,
+    from,
+    isFromMe,
+    metadataKey,
+    guestEncryption,
+    messageId,
+    replyTo,
+    secure,
+    subject,
+    threadId: emailThreadId,
+    unread
+  };
+  const email = await formIncomingEmailFromData(data);
+  const notificationPreview = email.preview;
+  const filesData =
+    files && files.length
+      ? await formFilesFromData({
+          files,
+          date,
+          fileKeys: myFileKeys,
+          emailContent: body
+        })
+      : null;
+
+  if (isFromMe) {
+    labelIds.push(LabelType.sent.id);
+    if (isToMe) {
+      labelIds.push(LabelType.inbox.id);
+    }
+  } else {
+    labelIds.push(LabelType.inbox.id);
+  }
+  if (isSpam) {
+    labelIds.push(LabelType.spam.id);
+  }
+  const emailData = {
+    accountId,
+    accountEmail,
+    email,
+    labels: labelIds,
+    files: filesData,
+    recipients,
+    body,
+    headers
+  };
+  await createEmail(emailData);
+
   return {
-    rowid,
-    labelIds: mailboxIdsToUpdate,
-    threadIds: threadId ? [threadId] : null
+    labelIds,
+    notificationPreview,
+    emailThreadId
   };
 };
 
-const handleNewMessageEvent = async ({ rowid, params }) => {
+const formEmailIfExists = async params => {
+  const { accountId, prevEmail, isFromMe, isToMe, isSpam, threadId } = params;
+
+  const labelIds = [];
+  const InboxLabelId = LabelType.inbox.id;
+  const SentLabelId = LabelType.sent.id;
+  const SpamLabelId = LabelType.spam.id;
+
+  const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
+  const prevLabels = prevEmailLabels.map(item => item.labelId);
+
+  const hasSentLabelId = prevLabels.includes(SentLabelId);
+  if (isFromMe && !hasSentLabelId) {
+    labelIds.push(SentLabelId);
+
+    const hasInboxLabelId = prevLabels.includes(InboxLabelId);
+    if (isToMe && !hasInboxLabelId) {
+      labelIds.push(InboxLabelId);
+    }
+  }
+  const hasSpamLabelId = prevLabels.includes(SpamLabelId);
+  if (isSpam && !hasSpamLabelId) {
+    labelIds.push(SpamLabelId);
+  }
+
+  if (labelIds.length) {
+    const emailLabel = formEmailLabel({
+      emailId: prevEmail.id,
+      labels: labelIds
+    });
+    await createEmailLabel({ emailLabel, accountId });
+  }
+  const notificationPreview = prevEmail.preview;
+
+  return {
+    labelIds,
+    notificationPreview,
+    emailThreadId: threadId
+  };
+};
+
+const handleNewMessageEvent = async (
+  { rowid, params },
+  optionalToken,
+  accountRecipientId,
+  accountEmail,
+  accountId
+) => {
   const {
     bcc,
     bccArray,
@@ -674,161 +773,65 @@ const handleNewMessageEvent = async ({ rowid, params }) => {
         ? senderDeviceId
         : undefined
       : senderDeviceId;
-  const [prevEmail] = await getEmailByKey(metadataKey);
+  const [prevEmail] = await getEmailByKey({ key: metadataKey, accountId });
 
-  let isSpam = false;
-  if (labels && !!labels.find(label => label === LabelType.spam.text)) {
-    isSpam = true;
-  } else {
-    const contactObjectSpamToCheck = parseContactRow(from);
-    const contactSpamToCheck = await getContactByEmails([
-      contactObjectSpamToCheck.email
-    ]);
-    isSpam = contactSpamToCheck[0]
-      ? contactSpamToCheck[0].spamScore > 1
-      : false;
-  }
-  const InboxLabelId = LabelType.inbox.id;
-  const SentLabelId = LabelType.sent.id;
-  const SpamLabelId = LabelType.spam.id;
-  const isFromMe = myAccount.recipientId === recipientId;
+  const isSpam = await isMailSpam({
+    accountId,
+    labels,
+    from
+  });
+  const isFromMe = accountRecipientId === recipientId;
   const recipients = getRecipientsFromData({
     to: to || toArray,
     cc: cc || ccArray,
     bcc: bcc || bccArray,
     from
   });
-  const isToMe = checkEmailIsTo(recipients);
-  let notificationPreview = '';
-  const labelIds = [];
-  let emailThreadId = threadId;
-  if (!prevEmail) {
-    let body = '',
-      headers,
-      myFileKeys;
-    try {
-      const {
-        decryptedBody,
-        decryptedHeaders,
-        decryptedFileKeys
-      } = await signal.decryptEmail({
-        bodyKey: metadataKey,
+  const isToMe = checkEmailIsTo(recipients, accountRecipientId);
+  const { error, notificationPreview, emailThreadId, labelIds } = !prevEmail
+    ? await formEmailIfNotExists({
+        accountId,
+        accountEmail,
+        accountRecipientId,
+        optionalToken,
+        metadataKey,
         recipientId,
         deviceId,
         messageType,
-        fileKeys: fileKeys || (fileKey ? [fileKey] : null)
+        fileKeys,
+        fileKey,
+        isFromMe,
+        isToMe,
+        files,
+        inReplyTo,
+        boundary,
+        date,
+        from,
+        messageId,
+        replyTo,
+        subject,
+        threadId,
+        isSpam,
+        recipients,
+        guestEncryption
+      })
+    : await formEmailIfExists({
+        accountId,
+        prevEmail,
+        isFromMe,
+        isToMe,
+        isSpam,
+        threadId
       });
-      body = cleanEmailBody(decryptedBody);
-      headers = decryptedHeaders;
-      myFileKeys = decryptedFileKeys
-        ? decryptedFileKeys.map(fileKey => {
-            const fileKeySplit = fileKey.split(':');
-            return {
-              key: fileKeySplit[0],
-              iv: fileKeySplit[1]
-            };
-          })
-        : null;
-    } catch (e) {
-      if (
-        e.message === signal.ALICE_ERROR ||
-        e.message === signal.CONTENT_NOT_AVAILABLE
-      ) {
-        return {
-          rowid: null
-        };
-      }
-      body = 'Content unencrypted';
-      reportContentUnencrypted(e.stack);
-    }
-    if (!fileKeys && fileKey) {
-      myFileKeys = files.map(() => myFileKeys[0]);
-    }
-    const unread = isFromMe && !isToMe ? false : true;
-    if (inReplyTo) {
-      const [emailWithMessageId] = await getEmailByParams({
-        messageId: inReplyTo
-      });
-      if (emailWithMessageId) {
-        emailThreadId = emailWithMessageId.threadId;
-      }
-    }
-    const secure = guestEncryption === 1 || guestEncryption === 3;
-    const data = {
-      body,
-      boundary,
-      date,
-      deviceId,
-      from,
-      isFromMe,
-      metadataKey,
-      messageId,
-      replyTo,
-      secure,
-      subject,
-      threadId: emailThreadId,
-      unread
+
+  if (error) {
+    return {
+      rowid: error === 1 ? null : rowid
     };
-    const email = await formIncomingEmailFromData(data);
-    notificationPreview = email.preview;
-    const filesData =
-      files && files.length
-        ? await formFilesFromData({
-            files,
-            date,
-            fileKeys: myFileKeys,
-            emailContent: body
-          })
-        : null;
-
-    if (isFromMe) {
-      labelIds.push(SentLabelId);
-      if (isToMe) {
-        labelIds.push(InboxLabelId);
-      }
-    } else {
-      labelIds.push(InboxLabelId);
-    }
-    if (isSpam) {
-      labelIds.push(SpamLabelId);
-    }
-    const emailData = {
-      email,
-      labels: labelIds,
-      files: filesData,
-      recipients,
-      body,
-      headers
-    };
-    await createEmail(emailData);
-  } else {
-    const prevEmailLabels = await getEmailLabelsByEmailId(prevEmail.id);
-    const prevLabels = prevEmailLabels.map(item => item.labelId);
-
-    const hasSentLabelId = prevLabels.includes(SentLabelId);
-    if (isFromMe && !hasSentLabelId) {
-      labelIds.push(SentLabelId);
-
-      const hasInboxLabelId = prevLabels.includes(InboxLabelId);
-      if (isToMe && !hasInboxLabelId) {
-        labelIds.push(InboxLabelId);
-      }
-    }
-    const hasSpamLabelId = prevLabels.includes(SpamLabelId);
-    if (isSpam && !hasSpamLabelId) {
-      labelIds.push(SpamLabelId);
-    }
-
-    if (labelIds.length) {
-      const emailLabel = formEmailLabel({
-        emailId: prevEmail.id,
-        labels: labelIds
-      });
-      await createEmailLabel(emailLabel);
-    }
-    notificationPreview = prevEmail.preview;
   }
-  if (isToMe && !isSpam) {
+
+  const isToOneOfMyAccounts = checkEmailsToAllAccounts(recipients);
+  if (isToOneOfMyAccounts && !isSpam) {
     const parsedContact = parseContactRow(from);
     addEmailToNotificationList({
       senderInfo: parsedContact.name || parsedContact.email,
@@ -859,7 +862,7 @@ const addEmailToNotificationList = ({
   });
 };
 
-const sendNewEmailNotification = () => {
+const sendNewEmailNotification = (accountId, accountRecipientId) => {
   if (newEmailNotificationList.length <= 3) {
     newEmailNotificationList.forEach(notificationData => {
       const {
@@ -872,7 +875,13 @@ const sendNewEmailNotification = () => {
       const message = getShowEmailPreviewStatus()
         ? `${subject}\n${emailPreview}`
         : `${subject}`;
-      showNotificationApp({ title: senderInfo, message, threadId });
+      showNotificationApp({
+        title: senderInfo,
+        message,
+        threadId,
+        accountId,
+        accountRecipientId
+      });
     });
   } else if (newEmailNotificationList.length > 3) {
     const title = 'Criptext';
@@ -885,19 +894,13 @@ const sendNewEmailNotification = () => {
   newEmailNotificationList = [];
 };
 
-const updateOwnContact = async () => {
-  const ownEmail = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${appDomain}`;
-  const accountName = myAccount.name;
-  if (accountName) {
-    await updateContactByEmail({ email: ownEmail, name: accountName });
-  }
-};
-
-const handleEmailTrackingUpdate = async ({ rowid, params }) => {
+const handleEmailTrackingUpdate = async (
+  { rowid, params },
+  accountId,
+  accountEmail
+) => {
   const { date, metadataKey, type, fromDomain } = params;
-  const [email] = await getEmailByKey(metadataKey);
+  const [email] = await getEmailByKey({ key: metadataKey, accountId });
   const isUnsend = type === EmailStatus.UNSEND;
   let feedItemAdded = false;
   if (email) {
@@ -906,6 +909,7 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
     const unsentDate = isUnsend ? date : null;
     if (status || preview || unsentDate) {
       await updateEmail({
+        accountId,
         key: String(metadataKey),
         status,
         preview,
@@ -916,16 +920,20 @@ const handleEmailTrackingUpdate = async ({ rowid, params }) => {
           emailId: email.id,
           status: AttachItemStatus.UNSENT
         });
-        await deleteEmailContent({ metadataKey });
+        await deleteEmailContent({ metadataKey, accountEmail });
       }
 
       const { domain, recipientId } = fromDomain;
       const isOpened = type === EmailStatus.READ;
       if (isOpened) {
         const contactEmail = `${recipientId}@${domain}`;
-        const [contact] = await getContactByEmails([contactEmail]);
+        const [contact] = await getContactByEmails({
+          emails: [contactEmail],
+          accountId
+        });
         const contactId = contact.id;
         const feedItemParams = {
+          accountId,
           date,
           type,
           emailId: email.id,
@@ -944,12 +952,16 @@ const handlePeerAvatarChanged = ({ rowid }) => {
   return { rowid, profileChanged: true };
 };
 
-const handlePeerEmailRead = async ({ rowid, params }) => {
+const handlePeerEmailRead = async ({ rowid, params }, accountId) => {
   const { metadataKeys, unread } = params;
-  const emails = await getEmailsByArrayParam({ keys: metadataKeys });
+  const emails = await getEmailsByArrayParam({
+    array: { keys: metadataKeys },
+    accountId
+  });
   if (emails.length) {
     const emailKeys = emails.map(email => email.key);
     const [res] = await updateEmails({
+      accountId,
       keys: emailKeys,
       unread: !!unread
     });
@@ -965,13 +977,18 @@ const handlePeerEmailRead = async ({ rowid, params }) => {
   return { rowid };
 };
 
-const handlePeerEmailUnsend = async ({ rowid, params }) => {
+const handlePeerEmailUnsend = async (
+  { rowid, params },
+  accountId,
+  accountEmail
+) => {
   const type = EmailStatus.UNSEND;
   const { metadataKey, date } = params;
-  const [email] = await getEmailByKey(metadataKey);
+  const [email] = await getEmailByKey({ key: metadataKey, accountId });
   if (email) {
     const status = validateEmailStatusToSet(email.status, type);
     await unsendEmail({
+      accountId,
       key: String(metadataKey),
       content: '',
       preview: '',
@@ -982,11 +999,15 @@ const handlePeerEmailUnsend = async ({ rowid, params }) => {
       emailId: email.id,
       status: AttachItemStatus.UNSENT
     });
+    await deleteEmailContent({ metadataKey, accountEmail });
   }
   return { rowid, threadIds: email ? [email.threadId] : [] };
 };
 
-const handleLinkDeviceRequest = ({ rowid, params }) => {
+const handleLinkDeviceRequest = ({ rowid, params }, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
   sendStartLinkDevicesEvent({ rowid, params });
   return { rowid: null };
 };
@@ -999,11 +1020,17 @@ const handleLinkDeviceResquestResponded = async ({ recipientId, domain }) => {
   return { rowid: null };
 };
 
-const handleKeybundleUploaded = ({ rowid }) => {
+const handleKeybundleUploaded = ({ rowid }, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
   return { rowid };
 };
 
-const handleSyncDeviceRequest = ({ rowid, params }) => {
+const handleSyncDeviceRequest = ({ rowid, params }, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
   sendStartSyncDeviceEvent({ rowid, params });
   return { rowid: null };
 };
@@ -1016,14 +1043,18 @@ const handleSyncDeviceRequestResponded = async ({ recipientId, domain }) => {
   return { rowid: null };
 };
 
-const handlePeerRemoveDevice = async ({ rowid }) => {
+const handlePeerRemoveDevice = async ({ rowid }, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
   await sendDeviceRemovedEvent(rowid);
   return { rowid: null };
 };
 
-const handlePeerThreadRead = async ({ rowid, params }) => {
+const handlePeerThreadRead = async ({ rowid, params }, accountId) => {
   const { threadIds, unread } = params;
   const [res] = await updateUnreadEmailByThreadIds({
+    accountId,
     threadIds,
     unread: !!unread
   });
@@ -1037,24 +1068,28 @@ const handlePeerThreadRead = async ({ rowid, params }) => {
   return { rowid };
 };
 
-const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
+const handlePeerEmailLabelsUpdate = async ({ rowid, params }, accountId) => {
   const { metadataKeys, labelsRemoved, labelsAdded } = params;
   const emailIds = [];
   const threadIds = [];
   for (const metadataKey of metadataKeys) {
-    const [email] = await getEmailByKey(metadataKey);
+    const [email] = await getEmailByKey({ key: metadataKey, accountId });
     if (email) {
       emailIds.push(email.id);
       threadIds.push(email.threadId);
     }
   }
   if (!emailIds.length) return { rowid: null };
-  const labelsToRemove = await getLabelsByText(labelsRemoved);
+  const labelsToRemove = await getLabelsByText({
+    text: labelsRemoved,
+    accountId
+  });
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
-  const labelsToAdd = await getLabelsByText(labelsAdded);
+  const labelsToAdd = await getLabelsByText({ text: labelsAdded, accountId });
   const labelIdsToAdd = labelsToAdd.map(label => label.id);
 
   await formAndSaveEmailLabelsUpdate({
+    accountId,
     emailIds,
     labelIdsToAdd,
     labelIdsToRemove
@@ -1062,17 +1097,13 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
 
   const isAddedToSpam = labelIdsToAdd.includes(LabelType.spam.id);
   if (isAddedToSpam) {
-    const notEmailAddress = myAccount.recipientId.includes('@')
-      ? myAccount.recipientId
-      : `${myAccount.recipientId}@${appDomain}`;
+    const notEmailAddress = myAccount.email;
     await updateContactSpamScore({ emailIds, notEmailAddress, value: 1 });
   }
 
   const isRemovedToSpam = labelIdsToRemove.includes(LabelType.spam.id);
   if (isRemovedToSpam) {
-    const notEmailAddress = myAccount.recipientId.includes('@')
-      ? myAccount.recipientId
-      : `${myAccount.recipientId}@${appDomain}`;
+    const notEmailAddress = myAccount.email;
     await updateContactSpamScore({ emailIds, notEmailAddress, value: -1 });
   }
 
@@ -1088,24 +1119,23 @@ const handlePeerEmailLabelsUpdate = async ({ rowid, params }) => {
   return { rowid, threadIds, badgeLabelIds };
 };
 
-const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
+const handlePeerThreadLabelsUpdate = async ({ rowid, params }, accountId) => {
   const { threadIds, labelsRemoved, labelsAdded } = params;
-  let allEmailsIdsSet = new Set();
-  for (const threadId of threadIds) {
-    const emails = await getEmailsByThreadId(threadId);
-    const emailIds = emails.map(email => email.id);
-    allEmailsIdsSet = new Set([...allEmailsIdsSet, ...emailIds]);
-  }
-  const emailIds = Array.from(allEmailsIdsSet);
+  const emails = await getEmailsIdsByThreadIds({ threadIds, accountId });
+  const emailIds = emails.map(email => email.id);
   if (!emailIds.length) return { rowid };
 
-  const labelsToRemove = await getLabelsByText(labelsRemoved);
+  const labelsToRemove = await getLabelsByText({
+    text: labelsRemoved,
+    accountId
+  });
   const labelIdsToRemove = labelsToRemove.map(label => label.id);
 
-  const labelsToAdd = await getLabelsByText(labelsAdded);
+  const labelsToAdd = await getLabelsByText({ text: labelsAdded, accountId });
   const labelIdsToAdd = labelsToAdd.map(label => label.id);
 
   await formAndSaveEmailLabelsUpdate({
+    accountId,
     emailIds,
     labelIdsToAdd,
     labelIdsToRemove
@@ -1113,17 +1143,13 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
 
   const isAddedToSpam = labelIdsToAdd.includes(LabelType.spam.id);
   if (isAddedToSpam) {
-    const notEmailAddress = myAccount.recipientId.includes('@')
-      ? myAccount.recipientId
-      : `${myAccount.recipientId}@${appDomain}`;
+    const notEmailAddress = myAccount.email;
     await updateContactSpamScore({ emailIds, notEmailAddress, value: 1 });
   }
 
   const isRemovedToSpam = labelIdsToRemove.includes(LabelType.spam.id);
   if (isRemovedToSpam) {
-    const notEmailAddress = myAccount.recipientId.includes('@')
-      ? myAccount.recipientId
-      : `${myAccount.recipientId}@${appDomain}`;
+    const notEmailAddress = myAccount.email;
     await updateContactSpamScore({ emailIds, notEmailAddress, value: -1 });
   }
 
@@ -1139,6 +1165,7 @@ const handlePeerThreadLabelsUpdate = async ({ rowid, params }) => {
 };
 
 const formAndSaveEmailLabelsUpdate = async ({
+  accountId,
   emailIds,
   labelIdsToAdd,
   labelIdsToRemove
@@ -1149,41 +1176,50 @@ const formAndSaveEmailLabelsUpdate = async ({
   }, []);
 
   if (labelIdsToRemove.length) {
-    await deleteEmailLabel({ emailIds, labelIds: labelIdsToRemove });
+    await deleteEmailLabel({ emailIds, labelIds: labelIdsToRemove, accountId });
   }
   if (formattedEmailLabelsToAdd.length) {
-    await createEmailLabel(formattedEmailLabelsToAdd);
+    await createEmailLabel({
+      emailLabels: formattedEmailLabelsToAdd,
+      accountId
+    });
   }
 };
 
-const handlePeerEmailDeletedPermanently = async ({ rowid, params }) => {
+const handlePeerEmailDeletedPermanently = async (
+  { rowid, params },
+  accountId
+) => {
   const { metadataKeys } = params;
   const threadIds = [];
   const keys = [];
   for (const metadataKey of metadataKeys) {
-    const [email] = await getEmailByKey(metadataKey);
+    const [email] = await getEmailByKey({ key: metadataKey, accountId });
     if (email) {
       keys.push(email.key);
       threadIds.push(email.threadId);
     }
   }
-  await deleteEmailByKeys(keys);
+  await deleteEmailByKeys({ keys, accountId });
   const labelIds = [LabelType.trash.id, LabelType.spam.id];
   return { rowid, threadIds, labelIds };
 };
 
-const handlePeerThreadDeletedPermanently = async ({ rowid, params }) => {
+const handlePeerThreadDeletedPermanently = async (
+  { rowid, params },
+  accountId
+) => {
   const { threadIds } = params;
-  await deleteEmailsByThreadIdAndLabelId({ threadIds });
+  await deleteEmailsByThreadIdAndLabelId({ threadIds, accountId });
   const labelIds = [LabelType.trash.id, LabelType.spam.id];
   return { rowid, threadIds, labelIds };
 };
 
-const handlePeerLabelCreated = async ({ rowid, params }) => {
+const handlePeerLabelCreated = async ({ rowid, params }, accountId) => {
   const { text, color, uuid } = params;
-  const [label] = await getLabelsByText([text]);
+  const [label] = await getLabelsByText({ text: [text], accountId });
   if (!label) {
-    const labelCreated = await createLabel({ text, color, uuid });
+    const labelCreated = await createLabel({ text, color, uuid, accountId });
     const labelId = labelCreated.id;
     const labels = {
       [labelId]: {
@@ -1200,43 +1236,58 @@ const handlePeerLabelCreated = async ({ rowid, params }) => {
   return { rowid };
 };
 
-const handlePeerLabelUpdate = async ({ rowid, params }) => {
+const handlePeerLabelUpdate = async ({ rowid, params }, accountId) => {
   const { uuid, text } = params;
-  const [label] = await getLabelByUuid(uuid);
+  const [label] = await getLabelByUuid({ uuid, accountId });
   if (!label) return { rowid };
-  const [response] = updateLabelDB({ id: label.id, text });
+  const response = updateLabelDB({ id: label.id, text, accountId });
   if (!response) return { rowid: null };
   return { rowid, updatedLabel: { id: label.id, text } };
 };
 
-const handlePeerLabelDelete = async ({ rowid, params }) => {
+const handlePeerLabelDelete = async ({ rowid, params }, accountId) => {
   const { uuid } = params;
-  const [label] = await getLabelByUuid(uuid);
+  const [label] = await getLabelByUuid({ uuid, accountId });
   if (!label) return { rowid };
-  const response = await deleteLabelById(label.id);
+  const response = await deleteLabelById({ id: label.id, accountId });
   if (!response) return { rowid: null };
   return { rowid, removedLabel: label.id };
 };
 
-const handlePeerUserNameChanged = async ({ rowid, params }) => {
+const handlePeerUserNameChanged = async (
+  { rowid, params },
+  accountRecipientId,
+  accountEmail
+) => {
   const { name } = params;
-  const { recipientId } = myAccount;
+  const recipientId = accountRecipientId || myAccount.recipientId;
+  const email = accountEmail || myAccount.email;
   await updateAccount({ name, recipientId });
+  await updateContactByEmail({ email, name });
   return { rowid, profileChanged: true };
 };
 
-const handlePeerPasswordChanged = () => {
+const handlePeerPasswordChanged = accountRecipientId => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
   sendPasswordChangedEvent();
   return { rowid: null };
 };
 
-const handlePeerRecoveryEmailChanged = ({ params }) => {
+const handlePeerRecoveryEmailChanged = ({ params }, accountRecipientId) => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
   const { address } = params;
   emitter.emit(Event.RECOVERY_EMAIL_CHANGED, address);
   return { rowid: null };
 };
 
-const handlePeerRecoveryEmailConfirmed = () => {
+const handlePeerRecoveryEmailConfirmed = accountRecipientId => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
   emitter.emit(Event.RECOVERY_EMAIL_CONFIRMED);
   return { rowid: null };
 };
@@ -1272,12 +1323,18 @@ const handleUpdateDeviceTypeEvent = async ({ rowid }) => {
   return status === 200 ? { rowid } : { rowid: null };
 };
 
-const handleSuspendedAccountEvent = () => {
+const handleSuspendedAccountEvent = accountRecipientId => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
   sendSuspendedAccountEvent();
   return { rowid: null };
 };
 
-const handleReactivatedAccountEvent = () => {
+const handleReactivatedAccountEvent = accountRecipientId => {
+  if (accountRecipientId !== myAccount.recipientId) {
+    return { rowid: null };
+  }
   emitter.emit(Event.REACTIVATED_ACCOUNT);
   return { rowid: null };
 };
@@ -1286,13 +1343,22 @@ const handleSendEmailError = ({ rowid }) => {
   return { rowid };
 };
 
-const handleLowPrekeysAvailable = async ({ rowid }) => {
-  await signal.generateAndInsertMorePreKeys();
+const handleLowPrekeysAvailable = async (
+  { rowid },
+  accountId,
+  accountRecipientId,
+  optionalToken
+) => {
+  await signal.generateAndInsertMorePreKeys(
+    accountId,
+    accountRecipientId,
+    optionalToken
+  );
   return { rowid };
 };
 
-const setEventAsHandled = async eventIds => {
-  return await fetchAcknowledgeEvents({ eventIds });
+const setEventAsHandled = async (eventIds, optionalToken) => {
+  return await fetchAcknowledgeEvents({ eventIds, optionalToken });
 };
 
 /*  Window events: listener
@@ -1302,21 +1368,28 @@ export const sendLoadEventsEvent = params => {
 };
 
 ipcRenderer.on('socket-message', async (ev, message) => {
-  if (needsUpgrade()) return;
-  const eventId = message.cmd;
-  if (eventId === 400) {
-    sendLoadEventsEvent({ showNotification: true });
+  const { cmd, recipientId, domain } = message;
+  if (cmd === 400) {
+    sendLoadEventsEvent({
+      showNotification: true,
+      recipientId,
+      domain
+    });
   } else {
     if (isGettingEvents) return;
     isGettingEvents = true;
-    await parseAndDispatchEvent(message);
+    await parseAndDispatchEvent(message, recipientId, domain);
     isGettingEvents = false;
   }
 });
 
 ipc.answerMain('get-events', async () => {
-  await restartConnection(myAccount.jwt);
+  await restartConnection();
   sendLoadEventsEvent({});
+});
+
+ipcRenderer.on('refresh-window-logged-as', (ev, { accountId, recipientId }) => {
+  emitter.emit(Event.LOAD_APP, { accountId, recipientId });
 });
 
 ipcRenderer.on('update-drafts', (ev, shouldUpdateBadge) => {
@@ -1634,15 +1707,9 @@ export const sendRestoreBackupInitEvent = () => {
   emitter.emit(Event.RESTORE_BACKUP_INIT);
 };
 
-export const sendMigrateAliceEvent = () => {
-  setTimeout(() => {
-    emitter.emit(Event.MIGRATE_ALICE);
-  }, 2000);
-};
-
 export const handleDeleteDeviceData = async rowid => {
   return await setTimeout(async () => {
-    await deleteAllDeviceData();
+    await deleteAllDeviceData(myAccount.recipientId);
     if (rowid) {
       return { rowid };
     }
@@ -1650,9 +1717,16 @@ export const handleDeleteDeviceData = async rowid => {
   }, 4000);
 };
 
-export const deleteAllDeviceData = async () => {
-  await cleanDatabase();
-  await logoutApp();
+export const deleteAllDeviceData = async recipientId => {
+  const nextAccount = await cleanDatabase(recipientId);
+  if (!nextAccount) {
+    await logoutApp();
+    return;
+  }
+  emitter.emit(Event.LOAD_APP, {
+    accountId: nextAccount.id,
+    recipientId: nextAccount.recipientId
+  });
 };
 
 export const sendRefreshMailboxSync = () => {
@@ -1727,10 +1801,26 @@ export const sendManualSyncSuccessMessage = () => {
   emitter.emit(Event.DISPLAY_MESSAGE, messageData);
 };
 
+export const selectAccountAsActive = async ({ accountId, recipientId }) => {
+  await changeAccountApp(accountId);
+  showLoggedAsMessage(recipientId);
+};
+
+export const showLoggedAsMessage = recipientId => {
+  const email = recipientId.includes('@')
+    ? recipientId
+    : `${recipientId}@${appDomain}`;
+  const messageData = {
+    ...Messages.success.loggedAs,
+    description: Messages.success.loggedAs.description + email,
+    type: MessageType.SUCCESS
+  };
+  emitter.emit(Event.DISPLAY_MESSAGE, messageData);
+};
+
 /*  Firebase
 ----------------------------- */
 ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, async (_, token) => {
-  if (needsUpgrade()) return;
   await updatePushToken(token);
 });
 
@@ -1748,10 +1838,14 @@ ipcRenderer.on(NOTIFICATION_RECEIVED, async (_, { data }) => {
           rowId: data.rowId
         });
         if (status === 200) {
-          const [email] = await getEmailByKey(body.params.metadataKey);
+          const [email] = await getEmailByKey({ key: body.params.metadataKey });
           if (!email) {
-            await parseAndDispatchEvent(body);
-            sendNewEmailNotification();
+            const { account: recipientId, domain } = data;
+            const {
+              accountId,
+              accountRecipientId
+            } = await parseAndDispatchEvent(body, recipientId, domain);
+            sendNewEmailNotification(accountId, accountRecipientId);
             sendLoadEventsEvent({ showNotification: true });
           }
         }
@@ -1783,6 +1877,10 @@ ipcRenderer.send(START_NOTIFICATION_SERVICE, senderNotificationId);
 
 ipcRenderer.on('open-thread-by-notification', (ev, { threadId }) => {
   emitter.emit(Event.OPEN_THREAD, { threadId });
+});
+
+ipcRenderer.on('swap-account', (ev, { accountId, recipientId, threadId }) => {
+  emitter.emit(Event.LOAD_APP, { accountId, recipientId, threadId });
 });
 
 /*  Local backup
@@ -1856,7 +1954,6 @@ export const Event = {
   LOCAL_BACKUP_EXPORT_FINISHED: 'local-backup-export-finished',
   LOCAL_BACKUP_ENCRYPT_FINISHED: 'local-backup-encrypt-finished',
   LOCAL_BACKUP_SUCCESS: 'local-backup-success',
-  MIGRATE_ALICE: 'migrate-alice',
   OPEN_THREAD: 'open-thread',
   PASSWORD_CHANGED: 'password-changed',
   REACTIVATED_ACCOUNT: 'reactivated-account',

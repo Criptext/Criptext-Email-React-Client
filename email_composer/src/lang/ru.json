@@ -1,5 +1,6 @@
 {
   "inputLabels": {
+    "from": "Из:",
     "to": "Кому:",
     "cc": "Копия:",
     "bcc": "Скрытая копия:"
@@ -50,9 +51,9 @@
         "suffix": "."
       }
     },
-    "encrypting": {
-      "name": "Ошибка шифрования",
-      "description": "Во время шифрования сообщения произошла ошибка.\nКод:"
+    "serverError": {
+      "name": "Server Error",
+      "description": "An error occurred while sending your email.\nCode: "
     },
     "nonExistingUsers": {
       "name": "Несуществующие пользователи",
@@ -83,7 +84,7 @@
       "description": "Не удалось подключиться к серверу"
     },
     "unauthorized": {
-      "name": "Ошибка шифрования",
+      "name": "Server Error",
       "description": "При обработке вашего запроса произошла ошибка.\nПожалуйста, повторите попытку"
     },
     "uploadFailed": {

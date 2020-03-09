@@ -10,7 +10,7 @@ import {
   getRecipientsFromData,
   cleanEmailBody
 } from '../EmailUtils';
-import { LabelType } from '../electronInterface';
+import { LabelType, myAccount } from '../electronInterface';
 import { appDomain } from './../const';
 
 jest.mock('./../../utils/const');
@@ -225,7 +225,7 @@ describe('Check email is: to me or from me', () => {
       from: 'Name Surname <test5@criptext.com>'
     };
     const recipients = getRecipientsFromData(data);
-    const isToMe = checkEmailIsTo(recipients);
+    const isToMe = checkEmailIsTo(recipients, myAccount.recipientId);
     expect(isToMe).toBeTruthy();
   });
 
@@ -241,7 +241,7 @@ describe('Check email is: to me or from me', () => {
       from: 'Name Surname <test5@criptext.com>'
     };
     const recipients = getRecipientsFromData(data);
-    const isToMe = checkEmailIsTo(recipients);
+    const isToMe = checkEmailIsTo(recipients, myAccount.recipientId);
     expect(isToMe).toBeFalsy();
   });
 });

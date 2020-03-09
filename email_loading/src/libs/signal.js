@@ -7,12 +7,13 @@ import {
   cleanDatabase,
   createContact,
   createSettings,
-  getAccount,
+  getAccountByParams,
   getComputerName,
   getKeyBundle,
   postKeyBundle,
   postUser,
   updateAccount,
+  getSettings,
   getSystemLanguage,
   getContactByEmails,
   restartAlice
@@ -36,11 +37,10 @@ const createAccount = async ({
   deviceType,
   recoveryEmail
 }) => {
-  const [currentAccount] = await getAccount();
-  const username = currentAccount ? currentAccount.recipientId : null;
-  if (username) {
-    await cleanDatabase(username);
-  }
+  const [activeAccount] = await getAccountByParams({
+    isActive: true
+  });
+  await clearOtherAccounts(recipientId);
   const keybundle = await createAcountAndGetKeyBundle({
     recipientId,
     name,
@@ -71,23 +71,43 @@ const createAccount = async ({
   }
   const { token, refreshToken } = body;
   try {
-    updateAccount({
+    await updateAccount({
       recipientId,
       refreshToken,
-      jwt: token
+      jwt: token,
+      isLoggedIn: true,
+      isActive: !activeAccount
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
   await setDefaultSettings();
-  const email = `${recipientId}@${appDomain}`;
-  const [newAccount] = await getAccount();
-  await createOwnContact(name, email, newAccount.id);
-  if (!newAccount) {
+  const loggedAccounts = await getAccountByParams({
+    isLoggedIn: true
+  });
+  myAccount.initialize(loggedAccounts);
+  if (!myAccount.id) {
     throw CustomError(string.errors.saveLocal);
   }
-  myAccount.initialize(newAccount);
-  return true;
+  await createOwnContact(name, myAccount.email, myAccount.id);
+  return activeAccount
+    ? {
+        recipientId,
+        accountId: loggedAccounts.find(
+          account => account.recipientId === recipientId
+        ).id
+      }
+    : true;
+};
+
+const clearOtherAccounts = async recipientId => {
+  const accounts = (await getAccountByParams({
+    isLoggedIn: 0
+  })).filter(acc => acc.recipientId !== recipientId);
+  let acc;
+  for (acc of accounts) {
+    await cleanDatabase(acc.recipientId);
+  }
 };
 
 const createAcountAndGetKeyBundle = async ({
@@ -96,10 +116,6 @@ const createAcountAndGetKeyBundle = async ({
   deviceType,
   deviceId
 }) => {
-  const [currentAccount] = await getAccount();
-  if (currentAccount && currentAccount.recipientId !== recipientId) {
-    await cleanDatabase(currentAccount.recipientId);
-  }
   const accountRes = await aliceRequestWrapper(() => {
     return createAccountCredentials({
       recipientId,
@@ -133,6 +149,10 @@ const createAccountWithNewDevice = async ({
   name,
   deviceType
 }) => {
+  const [activeAccount] = await getAccountByParams({
+    isActive: true
+  });
+  await clearOtherAccounts(recipientId);
   const keybundle = await createAcountAndGetKeyBundle({
     recipientId,
     deviceId,
@@ -151,19 +171,31 @@ const createAccountWithNewDevice = async ({
     await updateAccount({
       jwt: token,
       refreshToken,
-      recipientId
+      recipientId,
+      isLoggedIn: true,
+      isActive: !activeAccount
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
-  const [newAccount] = await getAccount();
-  myAccount.initialize(newAccount);
-  const email = recipientId.includes(`@`)
-    ? recipientId
-    : `${recipientId}@${appDomain}`;
-  await createOwnContact(name, email, newAccount.id);
+  const loggedAccounts = await getAccountByParams({
+    isLoggedIn: true
+  });
+  myAccount.initialize(loggedAccounts);
+  if (!myAccount.id) {
+    throw CustomError(string.errors.saveLocal);
+  }
+  const email = myAccount.email;
+  await createOwnContact(name, email, myAccount.id);
   await setDefaultSettings();
-  return true;
+  return activeAccount
+    ? {
+        recipientId,
+        accountId: loggedAccounts.find(
+          account => account.recipientId === recipientId
+        ).id
+      }
+    : true;
 };
 
 const generateAccountAndKeys = async ({
@@ -201,28 +233,52 @@ const createAccountToDB = async ({
   jwt,
   refreshToken,
   deviceId,
-  recipientId,
-  isRecipientApp
+  recipientId
 }) => {
+  const [activeAccount] = await getAccountByParams({
+    isActive: true
+  });
   try {
     await updateAccount({
       jwt,
       refreshToken,
       deviceId,
-      recipientId
+      recipientId,
+      isLoggedIn: true,
+      isActive: !activeAccount
     });
   } catch (createAccountDbError) {
     throw CustomError(string.errors.updateAccountData);
   }
-  const email = isRecipientApp ? `${recipientId}@${appDomain}` : recipientId;
-  await createOwnContact(name, email);
-  const [newAccount] = await getAccount();
-  myAccount.initialize(newAccount);
   await setDefaultSettings();
+  const loggedAccounts = await getAccountByParams({
+    isLoggedIn: true
+  });
+  myAccount.initialize(loggedAccounts);
+  await createOwnContact(name, myAccount.email);
+  if (activeAccount) {
+    const newAccount = loggedAccounts.find(
+      account => account.recipientId === recipientId
+    );
+    return {
+      accountId: newAccount.id,
+      id: newAccount.id,
+      recipientId: newAccount.recipientId,
+      email: newAccount.recipientId.includes('@')
+        ? newAccount.recipientId
+        : `${newAccount.recipientId}@${appDomain}`
+    };
+  }
 };
 
 const setDefaultSettings = async () => {
-  if (!mySettings.theme) {
+  const settings = await getSettings();
+  if (settings) {
+    mySettings.initialize({
+      ...settings,
+      isFromStore: isFromStore
+    });
+  } else {
     const language = await getSystemLanguage();
     const data = { language, opened: false, theme: 'light' };
     await createSettings(data);
@@ -234,13 +290,14 @@ const setDefaultSettings = async () => {
 };
 
 const createOwnContact = async (name, email) => {
-  const [prevOwnContact] = await getContactByEmails([email]);
-  if (!prevOwnContact) {
-    try {
-      await createContact([{ name, email }]);
-    } catch (createContactDbError) {
-      throw CustomError(string.errors.saveOwnContact);
-    }
+  const [prevOwnContact] = await getContactByEmails({ emails: [email] });
+  if (prevOwnContact) {
+    return;
+  }
+  try {
+    await createContact({ contacts: [{ name, email }] });
+  } catch (createContactDbError) {
+    throw CustomError(string.errors.saveOwnContact);
   }
 };
 

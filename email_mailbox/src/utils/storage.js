@@ -64,34 +64,6 @@ export const getResendConfirmationTimestamp = () => {
   return isNaN(timestamp) ? null : timestamp;
 };
 
-/*  Two-Factor Switch Last Status
-------------------------------------*/
-export const setTwoFactorAuthStatus = enable => {
-  localStorage.setItem('twoFactorAuthStatus', enable);
-};
-
-export const getTwoFactorAuthStatus = () => {
-  return localStorage.getItem('twoFactorAuthStatus') || undefined;
-};
-
-/*  Recovery Email Last Value
-------------------------------------*/
-export const setLastRecoveryEmail = recoveryEmail => {
-  localStorage.setItem('lastRecoveryEmail', recoveryEmail);
-};
-
-export const getLastRecoveryEmail = () => {
-  return localStorage.getItem('lastRecoveryEmail') || undefined;
-};
-
-export const setLastRecoveryEmailConfirmed = recoveryEmailConfirmed => {
-  localStorage.setItem('lastRecoveryEmailConfirmed', recoveryEmailConfirmed);
-};
-
-export const getLastRecoveryEmailConfirmed = () => {
-  return localStorage.getItem('lastRecoveryEmailConfirmed') || undefined;
-};
-
 /*  Show Email Preview Last Status
 -------------------------------------*/
 export const setShowEmailPreviewStatus = status => {
@@ -109,16 +81,6 @@ const initShowEmailPreviewStatus = () => {
 };
 initShowEmailPreviewStatus();
 
-/*  Read Receipts Last Status
--------------------------------------*/
-export const setReadReceiptsStatus = enable => {
-  localStorage.setItem('readReceiptsStatus', enable);
-};
-
-export const getReadReceiptsStatus = () => {
-  return localStorage.getItem('readReceiptsStatus') || undefined;
-};
-
 /*  User Guide
 -------------------------------------*/
 export const getUserGuideStepStatus = stepName => {
@@ -132,6 +94,13 @@ export const setUserGuideStepStatus = stepName => {
 
 /*  Clear All Storage
 -------------------------------------*/
-export const clearStorage = () => {
-  localStorage.clear();
+export const clearStorage = ({ deleteAll }) => {
+  if (deleteAll === true) return localStorage.clear();
+
+  const userGuideStepNameRegex = /userGuide.*/g;
+  const allItems = Object.keys(localStorage);
+  for (const item of allItems) {
+    const match = item.match(userGuideStepNameRegex);
+    if (!match) localStorage.removeItem(item);
+  }
 };

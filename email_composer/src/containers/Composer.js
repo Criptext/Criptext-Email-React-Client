@@ -5,8 +5,10 @@ import { Status } from './../components/Control';
 import {
   LabelType,
   myAccount,
+  loggedAccounts,
   getEmailToEdit,
-  sendEventToMailbox
+  sendEventToMailbox,
+  setMyAccount
 } from './../utils/electronInterface';
 import {
   closeComposerWindow,
@@ -68,6 +70,8 @@ class ComposerWrapper extends Component {
     this.focusInput = this.defineFocusInput(this.emailToEdit);
     this.signature = null;
     this.state = {
+      accounts: loggedAccounts,
+      accountSelected: myAccount,
       bccEmails: [],
       ccEmails: [],
       displayNonCriptextPopup: false,
@@ -83,7 +87,8 @@ class ComposerWrapper extends Component {
       threadId: null,
       toEmails: [],
       isLinkingDevices: false,
-      totalFilesSize: 0
+      totalFilesSize: 0,
+      allowChangeFrom: true
     };
 
     addEvent(Event.DISABLE_WINDOW, () => {
@@ -103,6 +108,8 @@ class ComposerWrapper extends Component {
     return (
       <Composer
         {...this.props}
+        accounts={this.state.accounts}
+        accountSelected={this.state.accountSelected}
         bccEmails={this.state.bccEmails}
         ccEmails={this.state.ccEmails}
         disableSendButtonOnInvalidEmail={
@@ -110,6 +117,7 @@ class ComposerWrapper extends Component {
         }
         displayNonCriptextPopup={this.state.displayNonCriptextPopup}
         files={this.state.files}
+        getAccount={this.hangleGetAccount}
         getBccEmails={this.handleGetBccEmail}
         getCcEmails={this.handleGetCcEmail}
         getTextSubject={this.handleGetSubject}
@@ -141,6 +149,7 @@ class ComposerWrapper extends Component {
         textSubject={this.state.textSubject}
         toEmails={this.state.toEmails}
         isLinkingDevices={this.state.isLinkingDevices}
+        allowChangeFrom={this.state.allowChangeFrom}
       />
     );
   }
@@ -152,7 +161,8 @@ class ComposerWrapper extends Component {
       const composerDataChecked = await this.checkContactDomains(composerData);
       state = {
         ...composerDataChecked,
-        status: composerData.status || Status.ENABLED
+        status: composerData.status || Status.ENABLED,
+        allowChangeFrom: this.emailToEdit.type !== composerEvents.EDIT_DRAFT
       };
     } else {
       const composerData = await this.getDefaultComposerWithSignature();
@@ -340,6 +350,11 @@ class ComposerWrapper extends Component {
         return { status: Status.DISABLED };
       }
     });
+  };
+
+  hangleGetAccount = account => {
+    setMyAccount(account.recipientId);
+    this.setState({ accountSelected: account });
   };
 
   handleGetToEmail = async emails => {

@@ -14,7 +14,6 @@ global.isWindowsStore = INSTALLER_TYPE === allInstallerTypes.windows.store;
 global.deviceType = getDeviceType(INSTALLER_TYPE, allInstallerTypes);
 global.pendingRestore = false;
 global.backupStatus = null;
-global.needsUpgrade = false;
 global.databaseKey = '';
 global.progressDBE = { total: 4, current: 1 };
 
@@ -68,18 +67,6 @@ const setPinData = data => {
 };
 const getPinData = () => {
   return global.pinData;
-};
-
-/*  Needs Upgrade
------------------------------ */
-const enableUpgrade = () => {
-  global.needsUpgrade = true;
-};
-const disableUpgrade = () => {
-  global.needsUpgrade = false;
-};
-const getNeedsUpgrade = () => {
-  return global.needsUpgrade;
 };
 
 /*  App Store (Mac & Windows)
@@ -208,11 +195,6 @@ module.exports = {
   },
   deviceType: {
     id: global.deviceType
-  },
-  needsUpgrade: {
-    enable: enableUpgrade,
-    disable: disableUpgrade,
-    getValue: getNeedsUpgrade
   },
   pendingRestore: {
     get: getPendingRestoreStatus,

@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import SettingBlockProfileWrapper from '../components/SettingBlockProfileWrapper';
-import { setAvatarUpdatedTimestamp } from '../actions';
+import { setAvatarUpdatedTimestamp, reloadAccounts } from '../actions';
 import { myAccount } from '../utils/electronInterface';
+import { getTwoCapitalLetters } from '../utils/StringUtils';
 import {
   removeAvatar,
   updateAccount,
@@ -15,8 +16,10 @@ const mapStateToProps = state => {
   const avatarTimestamp = state.get('activities').get('avatarTimestamp');
   const [username, domain = appDomain] = myAccount.recipientId.split(`@`);
   const avatarUrl = `${avatarBaseUrl}${domain}/${username}?date=${avatarTimestamp}`;
+  const letters = getTwoCapitalLetters(myAccount.name);
   return {
-    avatarUrl
+    avatarUrl,
+    letters
   };
 };
 
@@ -34,15 +37,14 @@ const mapDispatchToProps = dispatch => {
         const res = await updateNameEvent(params);
         if (res.status === 200) {
           await updateAccount({ ...params, recipientId });
+          dispatch(reloadAccounts());
         }
       } else {
         await updateAccount({ ...params, recipientId });
       }
     },
     onUpdateContact: async name => {
-      const email = myAccount.recipientId.includes('@')
-        ? myAccount.recipientId
-        : `${myAccount.recipientId}@${appDomain}`;
+      const email = myAccount.email;
       await updateContactByEmail({ email, name });
     },
     onUploadAvatar: async params => {

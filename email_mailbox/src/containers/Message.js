@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { MessageType } from '../components/Message';
 import MessageWrapper from './../components/MessageWrapper';
 import MessageContent, { actionHandlerKeys } from './../data/message';
-import { LabelType, myAccount } from './../utils/electronInterface';
+import { LabelType } from './../utils/electronInterface';
 import { installUpdate, restartConnection } from './../utils/ipc';
 import { SectionType } from '../utils/const';
 import { loadThreads, updateUnreadThreads } from '../actions';
@@ -110,7 +110,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           break;
         }
         case actionHandlerKeys.error.network: {
-          await restartConnection(myAccount.jwt);
+          await restartConnection();
           break;
         }
         default:

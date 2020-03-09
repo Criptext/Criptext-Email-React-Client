@@ -24,6 +24,7 @@ const store = new SignalProtocolStore();
 
 const getKeyBundlesOfRecipients = async domains => {
   const res = await findKeyBundles({
+    recipientId: myAccount.recipientId,
     domains
   });
   if (res.status === 451) {
@@ -198,7 +199,10 @@ const encryptPostEmail = async ({
   externalEmailPassword
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
-  const sessions = await getSessionRecordByRecipientIds(recipientIds);
+  const sessions = await getSessionRecordByRecipientIds({
+    accountId: myAccount.id,
+    recipientIds
+  });
   let domainAddresses = createObjectRecipientIdDomainByDevices(
     sessions,
     recipients,
@@ -246,6 +250,7 @@ const encryptPostEmail = async ({
     body: bodyWithSign
   });
   const data = noNulls({
+    recipientId: myAccount.recipientId,
     subject,
     threadId,
     criptextEmails,
@@ -262,9 +267,9 @@ const encryptPostEmail = async ({
     throw new CustomError(tooManyRequestErrorMessage);
   } else if (res.status !== 200) {
     throw new CustomError({
-      name: string.errors.encrypting.name,
-      description:
-        string.errors.encrypting.description + `${res.status || 'Unknown'}`
+      name: string.errors.serverError.name,
+      description: `${string.errors.serverError.description}${res.status ||
+        'Unknown'} Message: ${res.text || 'Unknown'}`
     });
   }
   return res;

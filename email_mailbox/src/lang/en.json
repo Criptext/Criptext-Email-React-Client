@@ -68,7 +68,8 @@
     },
     "selected": "Selected",
     "selected_plural": "Selected",
-    "print_all": "Print All"
+    "print_all": "Print All",
+    "add_account": "Add Account"
   },
   "labelsItems": {
     "inbox": "Inbox",
@@ -280,6 +281,9 @@
     },
     "manual_sync": {
       "description": "Mailbox Sync Complete"
+    },
+    "logged_as": {
+      "description": "Logged in as "
     }
   },
   "momentLocales": {
@@ -343,6 +347,10 @@
         "data": "all local data will be erased"
       }
     },
+    "change_account": {
+      "title": "Changing account",
+      "description": "Loading your account..."
+    },
     "change_password": {
       "title": "Change Password",
       "paragraphs": {
@@ -390,7 +398,7 @@
     "delete_account": {
       "title": "Delete My Account",
       "paragraphs": {
-        "header": "Deleting your account will also delete all your emails in this and any other device in which your account is logged into. It will also enable anyone to register an account with your current email address."
+        "header": "WARNING: Deleting your account will erase all mailbox and account data on all devices as well as disable your username from being used in the future."
       },
       "subtitle": "To confirm enter your password",
       "inputs": {
@@ -406,7 +414,7 @@
         }
       },
       "cancelButtonLabel": "Cancel",
-      "confirmButtonLabel": "Send"
+      "confirmButtonLabel": "Delete"
     },
     "export_backup": {
       "title": "Export Backup File",

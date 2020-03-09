@@ -72,6 +72,10 @@ const messagesContent = {
       action: string.messages.emailSent.success.action,
       actionHandlerKey: actionHandlerKeys.success.emailSent
     },
+    loggedAs: {
+      priority: messagePriorities.MEDIUM,
+      description: string.messages.logged_as.description
+    },
     recoveryEmailChanged: {
       priority: messagePriorities.MEDIUM,
       description: string.messages.recovery_email_change.success.description

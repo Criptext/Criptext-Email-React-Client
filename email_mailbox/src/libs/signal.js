@@ -18,6 +18,7 @@ const PREKEY_INITIAL_QUANTITY = 100;
 const ALICE_ERROR = 'alice unavailable';
 const CONTENT_NOT_AVAILABLE = 'CONTENT_NOT_AVAILABLE';
 const CONTENT_UNENCRYPTED = 'Content Unencrypted';
+const DUPLICATE_MESSAGE = 'Duplicate Message';
 const ciphertextType = {
   CIPHERTEXT: 1,
   PREKEY_BUNDLE: 3
@@ -28,10 +29,14 @@ const decryptEmail = async ({
   recipientId,
   deviceId,
   messageType,
-  fileKeys
+  fileKeys,
+  optionalToken,
+  accountRecipientId
 }) => {
-  const { status, body } = await fetchEmailBody({ bodyKey });
-  if (status !== 200) return;
+  const { status, body } = await fetchEmailBody({ bodyKey, optionalToken });
+  if (status !== 200) {
+    throw new Error(CONTENT_NOT_AVAILABLE);
+  }
   if (typeof deviceId !== 'number' && typeof messageType !== 'number') {
     return { decryptedBody: body.body };
   }
@@ -40,7 +45,7 @@ const decryptEmail = async ({
       emailKey: bodyKey,
       senderId: recipientId,
       deviceId,
-      recipientId: myAccount.recipientId,
+      recipientId: accountRecipientId || myAccount.recipientId,
       messageType,
       body: body.body,
       headers: body.headers,
@@ -48,10 +53,14 @@ const decryptEmail = async ({
       fileKeys: fileKeys
     });
   });
+
   if (!res) {
     throw new Error(ALICE_ERROR);
   } else if (res.status === 500) {
-    throw new Error(CONTENT_UNENCRYPTED);
+    const aliceError = await res.text();
+    throw new Error(`${CONTENT_UNENCRYPTED} - ${aliceError}`);
+  } else if (res.status === 409) {
+    throw new Error(DUPLICATE_MESSAGE);
   } else if (res.status !== 200) {
     throw new Error(ALICE_ERROR);
   }
@@ -121,8 +130,12 @@ const decryptKey = async ({ text, recipientId, deviceId, messageType = 3 }) => {
   return decryptedText;
 };
 
-const generateAndInsertMorePreKeys = async () => {
-  const currentPreKeyIds = await getSessionRecordIds();
+const generateAndInsertMorePreKeys = async (
+  accountId,
+  accountRecipientId,
+  optionalToken
+) => {
+  const currentPreKeyIds = await getSessionRecordIds({ accountId });
   if (currentPreKeyIds.length === PREKEY_INITIAL_QUANTITY) return;
 
   const preKeyIds = Array.apply(null, { length: PREKEY_INITIAL_QUANTITY }).map(
@@ -132,7 +145,7 @@ const generateAndInsertMorePreKeys = async () => {
   try {
     const res = await aliceRequestWrapper(() => {
       return generateMorePreKeys({
-        accountId: myAccount.recipientId,
+        recipientId: accountRecipientId,
         newPreKeys: newPreKeyIds
       });
     });
@@ -142,7 +155,11 @@ const generateAndInsertMorePreKeys = async () => {
       return;
     }
     const resObj = await res.json();
-    await insertPreKeys(resObj.preKeys);
+    await insertPreKeys({
+      preKeys: resObj.preKeys,
+      recipientId: accountRecipientId,
+      optionalToken
+    });
   } catch (newPreKeysError) {
     // eslint-disable-next-line no-console
     console.error(newPreKeysError);
@@ -168,6 +185,7 @@ const aliceRequestWrapper = async func => {
 export default {
   ALICE_ERROR,
   CONTENT_NOT_AVAILABLE,
+  DUPLICATE_MESSAGE,
   decryptEmail,
   decryptFileKey,
   decryptKey,

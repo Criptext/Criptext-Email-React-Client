@@ -1,5 +1,6 @@
 const {
   Account,
+  AccountContact,
   Contact,
   Email,
   EmailContact,
@@ -16,6 +17,7 @@ const {
   deleteDatabase,
   getDB,
   initDatabaseEncrypted,
+  rawCheckPin,
   resetKeyDatabase,
   Op,
   Table,
@@ -36,8 +38,50 @@ const EMAIL_CONTACT_TYPE_FROM = 'from';
 
 /* Account
 ----------------------------- */
-const createAccount = params => {
-  return Account().create(params);
+const createAccount = async params => {
+  return await getDB().transaction(async trx => {
+    const shouldUpdate = params.shouldUpdate;
+    const account = { ...params };
+    delete account.shouldUpdate;
+    const [accountCreated] = await Account().findOrCreate({
+      where: { recipientId: params.recipientId },
+      defaults: account,
+      transaction: trx
+    });
+    if (!shouldUpdate) return [accountCreated];
+    const toUpdate = { isActive: false };
+    await Account().update(toUpdate, {
+      where: { recipientId: { [Op.not]: params.recipientId } },
+      transaction: trx
+    });
+    return [accountCreated];
+  });
+};
+
+const defineActiveAccountById = async (accountId, prevTrx) => {
+  await Account().update(
+    { isActive: false },
+    {
+      where: { isActive: true },
+      transaction: prevTrx
+    }
+  );
+  await Account().update(
+    { isActive: true },
+    {
+      where: { id: accountId },
+      transaction: prevTrx
+    }
+  );
+};
+
+const getAllAccounts = () => {
+  if (!getDB()) return [];
+  return Account()
+    .findAll({
+      order: [['isActive', 'DESC'], ['isLoggedIn', 'DESC']]
+    })
+    .map(account => account.toJSON());
 };
 
 const getAccount = () => {
@@ -55,6 +99,7 @@ const getAccountByParams = params => {
 };
 
 const updateAccount = ({
+  id,
   deviceId,
   jwt,
   refreshToken,
@@ -65,7 +110,15 @@ const updateAccount = ({
   registrationId,
   signature,
   signatureEnabled,
-  signFooter
+  signFooter,
+  isLoggedIn,
+  isActive,
+  autoBackupEnable,
+  autoBackupFrequency,
+  autoBackupLastDate,
+  autoBackupLastSize,
+  autoBackupNextDate,
+  autoBackupPath
 }) => {
   const params = noNulls({
     deviceId,
@@ -78,51 +131,109 @@ const updateAccount = ({
     signature,
     signatureEnabled:
       typeof signatureEnabled === 'boolean' ? signatureEnabled : undefined,
-    signFooter: typeof signFooter === 'boolean' ? signFooter : undefined
+    signFooter: typeof signFooter === 'boolean' ? signFooter : undefined,
+    isLoggedIn,
+    isActive,
+    autoBackupEnable:
+      typeof autoBackupEnable === 'boolean' ? autoBackupEnable : undefined,
+    autoBackupFrequency,
+    autoBackupLastDate,
+    autoBackupLastSize,
+    autoBackupNextDate,
+    autoBackupPath
   });
-
-  myAccount.update(params);
+  const whereParam = id ? { id } : { recipientId };
+  myAccount.update({ ...params, ...whereParam });
   return Account().update(params, {
-    where: { recipientId: { [Op.eq]: recipientId } }
+    where: whereParam
   });
 };
 
 /* Contact
 ----------------------------- */
-const createContact = params => {
-  return Contact().bulkCreate(params);
+const createContact = ({ contacts, accountId }, prevTrx) => {
+  return createOrUseTrx(prevTrx, async trx => {
+    const emails = contacts.map(contact => contact.email);
+    await Contact().bulkCreate(contacts, {
+      transaction: trx,
+      ignoreDuplicates: true
+    });
+    const insertedContacts = await Contact().findAll({
+      where: {
+        email: emails
+      },
+      raw: true,
+      transaction: trx
+    });
+    if (insertedContacts.length < contacts.length)
+      throw new Error('Missing Inserted Rows');
+    const accountContacts = insertedContacts.reduce((result, contact) => {
+      return [...result, { contactId: contact.id, accountId }];
+    }, []);
+    await AccountContact().bulkCreate(accountContacts, { transaction: trx });
+    return insertedContacts;
+  });
 };
 
-const createContactsIfOrNotStore = async (contacts, trx) => {
+const createContactsIfOrNotStore = async ({ accountId, contacts }, trx) => {
   const parsedContacts = filterUniqueContacts(formContactsRow(contacts));
   const contactsMap = parsedContacts.reduce((contactsObj, contact) => {
     contactsObj[contact.email] = contact;
     return contactsObj;
   }, {});
   const emailAddresses = Object.keys(contactsMap);
-  const contactsFound = await Contact().findAll({
+  const contactsWithContactIdFound = await Contact().findAll({
+    include: [
+      {
+        model: AccountContact(),
+        where: { accountId }
+      }
+    ],
     where: { email: emailAddresses },
     transaction: trx
   });
-  const contactsToUpdate = contactsFound.reduce((toUpdateArray, contact) => {
-    const email = contact.email;
-    const newName = contactsMap[email].name || contact.name;
-    if (newName !== contact.name) {
-      toUpdateArray.push({ email, name: newName });
-    }
-    return toUpdateArray;
-  }, []);
-
-  const storedEmailAddresses = contactsFound.map(
-    storedContact => storedContact.email
+  const {
+    contactsToUpdate,
+    storedEmailAddresses
+  } = contactsWithContactIdFound.reduce(
+    (result, contact) => {
+      const email = contact.email;
+      const newName = contactsMap[email].name || contact.name;
+      const contactsToUpdate = [...result.contactsToUpdate];
+      const storedEmailAddresses = [...result.storedEmailAddresses, email];
+      if (newName !== contact.name)
+        contactsToUpdate.push({ email, name: newName });
+      return { contactsToUpdate, storedEmailAddresses };
+    },
+    { contactsToUpdate: [], storedEmailAddresses: [] }
   );
-  const newContacts = parsedContacts.filter(
-    contact => !storedEmailAddresses.includes(contact.email)
-  );
 
+  const { newContacts, contactAddressesToSearch } = parsedContacts.reduce(
+    (result, contact) => {
+      const contactAddressesToSearch = [...result.contactAddressesToSearch];
+      const newContacts = [...result.newContacts];
+      if (!storedEmailAddresses.includes(contact.email)) {
+        contactAddressesToSearch.push(contact.email);
+        newContacts.push(contact);
+      }
+      return { newContacts, contactAddressesToSearch };
+    },
+    { newContacts: [], contactAddressesToSearch: [] }
+  );
   if (newContacts.length) {
-    await Contact().bulkCreate(newContacts, { transaction: trx });
+    const accountsExist = await Contact().findAll({
+      where: { email: contactAddressesToSearch },
+      transaction: trx
+    });
+    if (accountsExist.length) {
+      const accountContacts = accountsExist.reduce((result, contact) => {
+        return [...result, { contactId: contact.id, accountId }];
+      }, []);
+      await AccountContact().bulkCreate(accountContacts, { transaction: trx });
+      return await createContactsIfOrNotStore({ accountId, contacts }, trx);
+    }
   }
+  await createContact({ contacts: newContacts, accountId }, trx);
   if (contactsToUpdate.length) {
     await Promise.all(
       contactsToUpdate.map(contact => updateContactByEmail(contact, trx))
@@ -132,16 +243,23 @@ const createContactsIfOrNotStore = async (contacts, trx) => {
 };
 
 const getAllContacts = () => {
-  return Contact().findAll({
-    attributes: ['name', 'email'],
-    order: [['score', 'DESC'], ['name']],
-    raw: true
-  });
+  return Contact()
+    .findAll({
+      attributes: ['name', 'email'],
+      order: [['score', 'DESC'], ['name']]
+    })
+    .map(account => account.toJSON());
 };
 
-const getContactByEmails = (emails, trx) => {
+const getContactByEmails = ({ accountId, emails }, trx) => {
   return Contact().findAll({
     attributes: ['id', 'email', 'score', 'spamScore'],
+    include: [
+      {
+        model: AccountContact(),
+        where: { accountId }
+      }
+    ],
     where: { email: emails },
     raw: true,
     transaction: trx
@@ -203,13 +321,13 @@ const updateContactSpamScore = ({ emailIds, notEmailAddress, value }) => {
 /* Email
 ----------------------------- */
 const createEmail = (params, prevTrx) => {
-  const { recipients, email } = params;
+  const { recipients, email, accountId } = params;
   if (!recipients) {
     const emailData = Array.isArray(email)
       ? email.map(clearAndFormatDateEmails)
       : clearAndFormatDateEmails(email);
     return Email()
-      .create(emailData, { transaction: prevTrx })
+      .create({ ...emailData, accountId }, { transaction: prevTrx })
       .then(email => email.toJSON());
   }
   const recipientsFrom = recipients.from || [];
@@ -224,9 +342,15 @@ const createEmail = (params, prevTrx) => {
     ...recipientsBcc
   ];
   return createOrUseTrx(prevTrx, async trx => {
-    const emailAddresses = await createContactsIfOrNotStore(emails, trx);
-    const contactStored = await getContactByEmails(emailAddresses, trx);
-    const emailCreated = await createEmail({ email }, trx);
+    const emailAddresses = await createContactsIfOrNotStore(
+      { contacts: emails, accountId },
+      trx
+    );
+    const contactStored = await getContactByEmails(
+      { emails: emailAddresses, accountId },
+      trx
+    );
+    const emailCreated = await createEmail({ email, accountId }, trx);
     const emailId = emailCreated.id;
     const from = formEmailContact({
       emailId,
@@ -259,8 +383,8 @@ const createEmail = (params, prevTrx) => {
       emailId,
       labels: params.labels
     });
-    const emailLabelRow = [...emailLabel];
-    await createEmailLabel(emailLabelRow, trx);
+    const emailLabels = [...emailLabel];
+    await createEmailLabel({ accountId, emailLabels }, trx);
     if (params.labels.includes(systemLabels.sent.id)) {
       await updateContactScore(emailId, trx);
     }
@@ -272,20 +396,20 @@ const createEmail = (params, prevTrx) => {
   });
 };
 
-const getKeys = (keys, trx) => {
+const getKeys = (keys, accountId, trx) => {
   return Email()
     .findAll({
       attributes: ['id'],
-      where: { key: keys },
+      where: { key: keys, accountId },
       raw: true,
       transaction: trx
     })
     .then(list => list);
 };
 
-const deleteEmailByKeys = async keys => {
+const deleteEmailByKeys = async ({ accountId, keys }) => {
   return await getDB().transaction(async trx => {
-    const ids = await getKeys(keys, trx).map(el1 => el1.id);
+    const ids = await getKeys(keys, accountId, trx).map(el1 => el1.id);
     return Feeditem()
       .destroy({ where: { emailId: ids }, transaction: trx })
       .then(() => {
@@ -321,13 +445,18 @@ const deleteEmailsByIds = (ids, trx) => {
   });
 };
 
-const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
+const deleteEmailsByThreadIdAndLabelId = ({
+  accountId,
+  threadIds,
+  labelId
+}) => {
   const labelIdsToDelete = labelId
     ? labelId
     : `${systemLabels.spam.id}, ${systemLabels.trash.id}`;
   return Email().destroy({
     where: {
       threadId: parseSpecialCharacters(threadIds),
+      accountId,
       [Op.and]: [
         getDB().literal(
           `exists (select * from EmailLabel where Email.id = EmailLabel.emailId AND EmailLabel.labelId IN (${labelIdsToDelete}))`
@@ -337,9 +466,9 @@ const deleteEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
   });
 };
 
-const getEmailByKey = key => {
+const getEmailByKey = ({ accountId, key }) => {
   return Email()
-    .findAll({ where: { key } })
+    .findAll({ where: { key, accountId } })
     .map(email => email.toJSON());
 };
 
@@ -352,18 +481,18 @@ const getEmailByParams = params => {
     .map(email => email.toJSON());
 };
 
-const getEmailsByArrayParam = params => {
-  const key = Object.keys(params)[0];
-  const value = params[key];
+const getEmailsByArrayParam = ({ accountId, array }) => {
+  const key = Object.keys(array)[0];
+  const value = array[key];
   const param = key.slice(0, -1);
 
   return Email()
-    .findAll({ where: { [param]: value } })
+    .findAll({ where: { [param]: value, accountId } })
     .map(email => email.toJSON());
 };
 
-const getEmailsByIds = ids => {
-  const idsString = formStringSeparatedByOperator(ids);
+const getEmailsByIds = ({ accountId, emailIds }) => {
+  const idsString = formStringSeparatedByOperator(emailIds);
   const query = `SELECT ${Table.EMAIL}.*,
   GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'from' THEN ${
     Table.EMAIL_CONTACT
@@ -387,7 +516,9 @@ const getEmailsByIds = ids => {
   LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL_LABEL}.emailId = ${
     Table.EMAIL
   }.id
-  WHERE ${Table.EMAIL}.id IN (${idsString})
+  WHERE ${Table.EMAIL}.id IN (${idsString}) AND ${
+    Table.EMAIL
+  }.accountId = ${accountId}
   GROUP BY ${Table.EMAIL}.id
   `;
   return getDB().query(query, {
@@ -395,18 +526,19 @@ const getEmailsByIds = ids => {
   });
 };
 
-const getEmailsByLabelIds = labelIds => {
+const getEmailsByLabelIds = ({ accountId, labelIds }) => {
   return Email().findAll({
     include: [
       {
         model: EmailLabel(),
         where: { labelId: labelIds }
       }
-    ]
+    ],
+    where: { accountId }
   });
 };
 
-const getEmailsByThreadId = threadId => {
+const getEmailsByThreadId = ({ accountId, threadId }) => {
   const query = `SELECT ${Table.EMAIL}.*,
   GROUP_CONCAT(DISTINCT(CASE WHEN ${Table.EMAIL_CONTACT}.type = 'from' THEN ${
     Table.EMAIL_CONTACT
@@ -430,7 +562,7 @@ const getEmailsByThreadId = threadId => {
   LEFT JOIN ${Table.EMAIL_LABEL} ON ${Table.EMAIL_LABEL}.emailId = ${
     Table.EMAIL
   }.id
-  WHERE threadId = '${threadId}'
+  WHERE threadId = '${threadId}' AND accountId = ${accountId}
   GROUP BY ${Table.EMAIL}.id
   `;
   return getDB()
@@ -448,7 +580,17 @@ const getEmailsByThreadId = threadId => {
     });
 };
 
-const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
+const getEmailsIdsByThreadIds = ({ accountId, threadIds }) => {
+  return Email()
+    .findAll({
+      attributes: ['id'],
+      where: { threadId: threadIds, accountId },
+      group: ['id']
+    })
+    .map(email => email.toJSON());
+};
+
+const getEmailsByThreadIdAndLabelId = ({ accountId, threadIds, labelId }) => {
   const sequelize = getDB();
   return Email()
     .findAll({
@@ -464,16 +606,17 @@ const getEmailsByThreadIdAndLabelId = (threadIds, labelId) => {
           where: { labelId }
         }
       ],
-      where: { threadId: threadIds },
+      where: { threadId: threadIds, accountId },
       group: ['threadId']
     })
     .map(email => email.toJSON());
 };
 
-const getEmailsCounterByLabelId = labelId => {
+const getEmailsCounterByLabelId = ({ accountId, labelId }) => {
   return Email().count({
     distinct: 'id',
-    include: [{ model: EmailLabel(), where: { labelId } }]
+    include: [{ model: EmailLabel(), where: { labelId } }],
+    where: { accountId }
   });
 };
 
@@ -482,6 +625,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
     return getEmailsGroupByThreadByParamsToSearch(params);
   const sequelize = getDB();
   const {
+    accountId,
     contactTypes = ['from'],
     date,
     labelId,
@@ -557,6 +701,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
   }.id = ${Table.EMAIL_LABEL}.emailId
       ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
       WHERE ${Table.EMAIL}.date < '${date || 'date("now")'}'
+      AND ${Table.EMAIL}.accountId = ${accountId}
       ${textQuery}
       ${subject ? `AND subject LIKE "%${subject}%"` : ''}
       ${unread !== undefined ? `AND unread = ${unread}` : ''}
@@ -629,6 +774,7 @@ const getEmailsGroupByThreadByParams = async (params = {}) => {
 
 const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   const {
+    accountId,
     contactFilter,
     contactTypes = ['from'],
     date,
@@ -743,6 +889,7 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   }.id
       ${threadIdRejected ? `AND uniqueId NOT IN ('${threadIdRejected}')` : ''}
       WHERE ${Table.EMAIL}.date < '${date || 'date("now")'}'
+      AND ${Table.EMAIL}.accountId = ${accountId}
       ${textQuery}
       ${subject ? `AND subject LIKE "%${subject}%"` : ''}
       ${unread !== undefined ? `AND unread = ${unread}` : ''}
@@ -760,7 +907,11 @@ const getEmailsGroupByThreadByParamsToSearch = (params = {}) => {
   return sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
 };
 
-const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
+const getEmailsToDeleteByThreadIdAndLabelId = ({
+  accountId,
+  threadIds,
+  labelId
+}) => {
   const sequelize = getDB();
   const labelIdsToDelete = labelId
     ? [labelId]
@@ -778,7 +929,7 @@ const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
           where: { labelId: labelIdsToDelete }
         }
       ],
-      where: { threadId: threadIds },
+      where: { threadId: threadIds, accountId },
       group: ['threadId']
     })
     .then(rows => {
@@ -789,9 +940,12 @@ const getEmailsToDeleteByThreadIdAndLabelId = (threadIds, labelId) => {
     });
 };
 
-const getEmailsUnredByLabelId = async params => {
+const getEmailsUnredByLabelId = async ({
+  labelId,
+  rejectedLabelIds,
+  accountId
+}) => {
   const sequelize = getDB();
-  const { labelId, rejectedLabelIds } = params;
   const excludedLabels = [systemLabels.trash.id, systemLabels.spam.id];
   const isRejectedLabel = excludedLabels.includes(labelId);
 
@@ -816,6 +970,7 @@ const getEmailsUnredByLabelId = async params => {
     Table.EMAIL_LABEL
   }.emailId
      WHERE unread = 1
+     AND accountId = ${accountId}
      GROUP BY uniqueId
      ${havingClause}
   )`;
@@ -827,7 +982,7 @@ const getEmailsUnredByLabelId = async params => {
   return result[0].totalUnread;
 };
 
-const getTrashExpiredEmails = () => {
+const getTrashExpiredEmails = accountId => {
   const labelId = systemLabels.trash.id;
   const daysAgo = 30;
 
@@ -846,12 +1001,14 @@ const getTrashExpiredEmails = () => {
         [Op.lte]: moment()
           .subtract(daysAgo, 'days')
           .toDate()
-      }
+      },
+      accountId
     }
   });
 };
 
 const updateEmail = ({
+  accountId,
   id,
   key,
   threadId,
@@ -875,10 +1032,10 @@ const updateEmail = ({
     messageId
   });
   const whereParam = id ? { id } : { key };
-  return Email().update(params, { where: whereParam });
+  return Email().update(params, { where: whereParam, accountId });
 };
 
-const updateEmails = ({ ids, keys, unread, trashDate }, trx) => {
+const updateEmails = ({ accountId, ids, keys, unread, trashDate }, trx) => {
   const params = noNulls({
     unread: typeof unread === 'boolean' ? unread : undefined,
     trashDate
@@ -888,16 +1045,16 @@ const updateEmails = ({ ids, keys, unread, trashDate }, trx) => {
     : { whereParamName: 'key', whereParamValue: keys };
 
   return Email().update(params, {
-    where: { [whereParamName]: whereParamValue },
+    where: { [whereParamName]: whereParamValue, accountId },
     transaction: trx
   });
 };
 
-const updateUnreadEmailByThreadIds = ({ threadIds, unread }) => {
+const updateUnreadEmailByThreadIds = ({ accountId, threadIds, unread }) => {
   const params = {};
   if (typeof unread === 'boolean') params.unread = unread;
   return Email().update(params, {
-    where: { threadId: parseSpecialCharacters(threadIds) }
+    where: { threadId: parseSpecialCharacters(threadIds), accountId }
   });
 };
 
@@ -961,7 +1118,7 @@ const createSystemLabels = () => {
   return createLabel(labels);
 };
 
-const deleteLabelById = async id => {
+const deleteLabelById = async ({ id, accountId }) => {
   return await getDB().transaction(async trx => {
     const ids = await EmailLabel()
       .findAll({
@@ -975,13 +1132,16 @@ const deleteLabelById = async id => {
       }, []);
     if (ids.length)
       await EmailLabel().destroy({ where: { id: ids }, transaction: trx });
-    return await Label().destroy({ where: { id }, transaction: trx });
+    return await Label().destroy({
+      where: { id, accountId },
+      transaction: trx
+    });
   });
 };
 
-const getAllLabels = () => {
+const getAllLabels = ({ accountId }) => {
   return Label()
-    .findAll()
+    .findAll({ where: { accountId: { [Op.or]: [accountId, null] } } })
     .map(label => label.toJSON());
 };
 
@@ -991,18 +1151,21 @@ const getLabelById = id => {
     .map(label => label.toJSON());
 };
 
-const getLabelByUuid = uuid => {
+const getLabelByUuid = ({ accountId, uuid }) => {
   return Label()
-    .findAll({ where: { uuid } })
+    .findAll({ where: { uuid, accountId: { [Op.or]: [accountId, null] } } })
     .map(label => label.toJSON());
 };
 
-const getLabelsByText = async textArray => {
+const getLabelsByText = async ({ accountId, text }) => {
   let labels = [];
-  for (const text of textArray) {
+  for (const word of text) {
     const labelsMatched = await Label()
       .findAll({
-        where: { text: { [Op.like]: text } }
+        where: {
+          text: { [Op.like]: word },
+          accountId: { [Op.or]: [accountId, null] }
+        }
       })
       .map(label => label.toJSON());
     labels = labels.concat(labelsMatched);
@@ -1010,27 +1173,32 @@ const getLabelsByText = async textArray => {
   return labels;
 };
 
-const updateLabel = ({ id, color, text, visible }) => {
+const updateLabel = ({ id, color, text, visible, accountId }) => {
   const params = {};
   if (color) params.color = color;
   if (text) params.text = text;
   if (typeof visible === 'boolean') params.visible = visible;
-  return Label().update(params, { where: { id } });
+  return Label().update(params, { where: { id, accountId } });
 };
 
 /* EmailLabel
 ----------------------------- */
-const createEmailLabel = (emailLabels, prevTrx) => {
+const createEmailLabel = ({ accountId, emailLabels }, prevTrx) => {
   return createOrUseTrx(prevTrx, async trx => {
     const toInserts = await filterEmailLabelIfNotStore(emailLabels, trx);
     if (toInserts.length) {
-      await filterEmailLabelTrashToUpdateEmail(toInserts, 'create', trx);
+      await filterEmailLabelTrashToUpdateEmail(
+        accountId,
+        toInserts,
+        'create',
+        trx
+      );
       return await EmailLabel().bulkCreate(toInserts, { transaction: trx });
     }
   });
 };
 
-const deleteEmailLabel = ({ emailIds, labelIds }, prevTrx) => {
+const deleteEmailLabel = ({ accountId, emailIds, labelIds }, prevTrx) => {
   const emailLabels = emailIds.map(item => {
     return {
       emailId: item,
@@ -1038,7 +1206,12 @@ const deleteEmailLabel = ({ emailIds, labelIds }, prevTrx) => {
     };
   });
   return createOrUseTrx(prevTrx, async trx => {
-    await filterEmailLabelTrashToUpdateEmail(emailLabels, 'delete', trx);
+    await filterEmailLabelTrashToUpdateEmail(
+      accountId,
+      emailLabels,
+      'delete',
+      trx
+    );
     return await EmailLabel().destroy({
       where: { labelId: labelIds, emailId: emailIds },
       transaction: trx
@@ -1046,13 +1219,20 @@ const deleteEmailLabel = ({ emailIds, labelIds }, prevTrx) => {
   });
 };
 
-const deleteEmailAndRelations = async (id, optionalEmailToSave) => {
+const deleteEmailAndRelations = async ({
+  accountId,
+  id,
+  optionalEmailToSave
+}) => {
   return await getDB().transaction(async trx => {
     await deleteEmailsByIds([id], trx);
     await deleteEmailContactByEmailId(id, trx);
     await deleteEmailLabelsByEmailId(id, trx);
     if (optionalEmailToSave) {
-      const emailCreated = await createEmail(optionalEmailToSave, trx);
+      const emailCreated = await createEmail(
+        { ...optionalEmailToSave, accountId },
+        trx
+      );
       return emailCreated.id;
     }
   });
@@ -1124,15 +1304,15 @@ const deleteFeedItemById = id => {
   return Feeditem().destroy({ where: { id } });
 };
 
-const getAllFeedItems = () => {
+const getAllFeedItems = ({ accountId }) => {
   return Feeditem()
-    .findAll()
+    .findAll({ where: { accountId } })
     .map(feeditem => feeditem.toJSON());
 };
 
-const getFeedItemsCounterBySeen = (seen = false) => {
+const getFeedItemsCounterBySeen = ({ accountId, seen = false }) => {
   return Feeditem().count({
-    where: { seen }
+    where: { seen, accountId }
   });
 };
 
@@ -1148,9 +1328,9 @@ const createPendingEvent = params => {
   return Pendingevent().create(params);
 };
 
-const getPendingEvents = () => {
+const getPendingEvents = accountId => {
   return Pendingevent()
-    .findAll()
+    .findAll({ where: { accountId } })
     .map(event => event.toJSON());
 };
 
@@ -1160,9 +1340,9 @@ const deletePendingEventsByIds = ids => {
 
 /* PreKeyRecord
 ----------------------------- */
-const getPreKeyRecordIds = () => {
+const getPreKeyRecordIds = ({ accountId }) => {
   return Prekeyrecord()
-    .findAll({ attributes: ['preKeyId'], raw: true })
+    .findAll({ where: { accountId }, attributes: ['preKeyId'], raw: true })
     .map(obj => obj.preKeyId);
 };
 
@@ -1175,30 +1355,17 @@ const createSettings = params => {
 const getSettings = () => {
   return Settings()
     .findOne()
-    .then(setting => setting.toJSON());
+    .then(setting => {
+      if (!setting) return;
+      return setting.toJSON();
+    });
 };
 
-const updateSettings = async ({
-  language,
-  opened,
-  theme,
-  autoBackupEnable,
-  autoBackupFrequency,
-  autoBackupLastDate,
-  autoBackupLastSize,
-  autoBackupNextDate,
-  autoBackupPath
-}) => {
+const updateSettings = async ({ language, opened, theme }) => {
   const params = noNulls({
     language,
     opened,
-    theme,
-    autoBackupEnable,
-    autoBackupFrequency,
-    autoBackupLastDate,
-    autoBackupLastSize,
-    autoBackupNextDate,
-    autoBackupPath
+    theme
   });
   if (Object.keys(params).length < 1) {
     return Promise.resolve([1]);
@@ -1215,14 +1382,14 @@ const deleteSessionRecord = params => {
   return Sessionrecord().destroy({ where: params });
 };
 
-const getSessionRecordByRecipientIds = recipientIds => {
+const getSessionRecordByRecipientIds = ({ accountId, recipientIds }) => {
   const sequelize = getDB();
   return Sessionrecord().findAll({
     attributes: [
       'recipientId',
       [sequelize.fn('GROUP_CONCAT', sequelize.col('deviceId')), 'deviceIds']
     ],
-    where: { recipientId: recipientIds },
+    where: { recipientId: recipientIds, accountId },
     group: ['recipientId'],
     raw: true
   });
@@ -1230,52 +1397,174 @@ const getSessionRecordByRecipientIds = recipientIds => {
 
 /* Functions
 ----------------------------- */
-const cleanDataBase = async () => {
-  return await getDB().transaction(async trx => {
-    await EmailContact().destroy({ where: {}, transaction: trx });
-    await EmailLabel().destroy({ where: {}, transaction: trx });
-    await Feeditem().destroy({ where: {}, transaction: trx });
-    await Contact().destroy({ where: {}, transaction: trx });
-    await Account().destroy({ where: {}, transaction: trx });
-    await Email().destroy({ where: {}, transaction: trx });
-    await Label().destroy({ where: { type: 'custom' }, transaction: trx });
-    await File().destroy({ where: {}, transaction: trx });
-    await Pendingevent().destroy({ where: {}, transaction: trx });
-    await Settings().destroy({ where: {}, transaction: trx });
-    await Prekeyrecord().destroy({ where: {}, transaction: trx });
-    await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
-    await Sessionrecord().destroy({ where: {}, transaction: trx });
-    await Identitykeyrecord().destroy({ where: {}, transaction: trx });
+const cleanDataBase = async recipientId => {
+  await getDB().transaction(async trx => {
+    const account = await Account().findOne({
+      where: { recipientId },
+      transaction: trx
+    });
+    const accountId = account.dataValues.id;
+    if (!account) return;
+    await Prekeyrecord().destroy({
+      where: { accountId: accountId },
+      transaction: trx
+    });
+    await Signedprekeyrecord().destroy({
+      where: { accountId: accountId },
+      transaction: trx
+    });
+    await Sessionrecord().destroy({
+      where: { accountId: accountId },
+      transaction: trx
+    });
+    await Identitykeyrecord().destroy({
+      where: { accountId: accountId },
+      transaction: trx
+    });
+    await deleteAccountNotSignalRelatedData(accountId, trx);
+    await Account().destroy({
+      where: {
+        recipientId
+      },
+      transaction: trx
+    });
+  });
+
+  return await Account()
+    .findOne({ where: { isLoggedIn: true } })
+    .then(account => {
+      return account ? account.toJSON() : null;
+    });
+};
+
+const deleteAccountNotSignalRelatedData = async (accountId, trx) => {
+  await AccountContact().destroy({
+    where: { accountId: accountId },
+    transaction: trx
+  });
+  while (accountId) {
+    const emails = await Email().findAll({
+      attributes: ['id'],
+      where: {
+        accountId: accountId
+      },
+      limit: 500,
+      transaction: trx
+    });
+    if (emails.length === 0) {
+      break;
+    }
+    const emailIds = emails.map(email => email.dataValues.id);
+    await EmailContact().destroy({
+      where: {
+        emailId: emailIds
+      },
+      transaction: trx
+    });
+    await EmailLabel().destroy({
+      where: {
+        emailId: emailIds
+      },
+      transaction: trx
+    });
+    await File().destroy({
+      where: {
+        emailId: emailIds
+      },
+      transaction: trx
+    });
+    await Feeditem().destroy({
+      where: {
+        emailId: emailIds
+      },
+      transaction: trx
+    });
+    await Email().destroy({
+      where: {
+        id: emailIds
+      },
+      transaction: trx
+    });
+  }
+  await Label().destroy({
+    where: {
+      accountId: accountId,
+      type: 'custom'
+    },
+    transaction: trx
   });
 };
 
-const cleanDataLogout = async recipientId => {
+const cleanDataLogout = async ({ recipientId }) => {
   const params = {
     deviceId: '',
     jwt: '',
-    refreshToken: ''
+    refreshToken: '',
+    isLoggedIn: false,
+    isActive: false
   };
 
-  return await getDB().transaction(async trx => {
+  await getDB().transaction(async trx => {
+    const account = await Account().findOne({
+      where: { recipientId },
+      raw: true,
+      transaction: trx
+    });
+    if (!account) return;
     await Account().update(params, {
       where: { recipientId },
       transaction: trx
     });
-    await Prekeyrecord().destroy({ where: {}, transaction: trx });
-    await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
-    await Sessionrecord().destroy({ where: {}, transaction: trx });
-    await Identitykeyrecord().destroy({ where: {}, transaction: trx });
-    await Settings().destroy({ where: {}, transaction: trx });
+    await Prekeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Signedprekeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Sessionrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Identitykeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
   });
+
+  return await Account()
+    .findOne({ where: { isLoggedIn: true } })
+    .then(account => {
+      return account ? account.toJSON() : null;
+    });
 };
 
-const cleanKeys = async () => {
-  if (!getDB()) return [];
+const cleanKeys = async recipientId => {
+  if (!recipientId || !getDB()) return;
   return await getDB().transaction(async trx => {
-    await Prekeyrecord().destroy({ where: {}, transaction: trx });
-    await Signedprekeyrecord().destroy({ where: {}, transaction: trx });
-    await Sessionrecord().destroy({ where: {}, transaction: trx });
-    await Identitykeyrecord().destroy({ where: {}, transaction: trx });
+    const account = await Account().findOne({
+      where: { recipientId },
+      raw: true,
+      transaction: trx
+    });
+    if (!account) return [];
+    await Prekeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Signedprekeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Sessionrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
+    await Identitykeyrecord().destroy({
+      where: { accountId: account.id },
+      transaction: trx
+    });
   });
 };
 
@@ -1301,13 +1590,18 @@ const createOrUseTrx = (oldTrx, callback) => {
   return getDB().transaction(newTrx => callback(newTrx));
 };
 
-const filterEmailLabelTrashToUpdateEmail = async (emailLabels, action, trx) => {
+const filterEmailLabelTrashToUpdateEmail = async (
+  accountId,
+  emailLabels,
+  action,
+  trx
+) => {
   const ids = emailLabels
     .filter(emailLabel => emailLabel.labelId === systemLabels.trash.id)
     .map(item => item.emailId);
   if (ids.length) {
     const trashDate = action === 'create' ? getDB().fn('NOW') : '';
-    await updateEmails({ ids, trashDate }, trx);
+    await updateEmails({ accountId, ids, trashDate }, trx);
   }
 };
 
@@ -1371,17 +1665,17 @@ const getContactsIdByType = (emailContacts, type) => {
     .map(item => item.contactId);
 };
 
-const InitDatabaseEncrypted = async ({
-  key,
-  shouldAddSystemLabels,
-  shouldReset
-}) => {
-  await initDatabaseEncrypted({ key, shouldReset });
+const InitDatabaseEncrypted = async (
+  { key, shouldAddSystemLabels, shouldReset },
+  startMigrationCallback
+) => {
+  await initDatabaseEncrypted({ key, shouldReset }, startMigrationCallback);
   if (shouldAddSystemLabels) await createSystemLabels();
 };
 
 module.exports = {
   Account,
+  AccountContact,
   Contact,
   Email,
   EmailContact,
@@ -1411,6 +1705,8 @@ module.exports = {
   createLabel,
   createPendingEvent,
   createSettings,
+  deleteAccountNotSignalRelatedData,
+  defineActiveAccountById,
   deleteDatabase,
   deleteEmailsByIds,
   deleteEmailByKeys,
@@ -1425,6 +1721,7 @@ module.exports = {
   getDB,
   getAccount,
   getAccountByParams,
+  getAllAccounts,
   getAllContacts,
   getAllLabels,
   getAllFeedItems,
@@ -1438,6 +1735,7 @@ module.exports = {
   getEmailsByLabelIds,
   getEmailByParams,
   getEmailsByThreadId,
+  getEmailsIdsByThreadIds,
   getEmailsByThreadIdAndLabelId,
   getEmailsCounterByLabelId,
   getEmailsGroupByThreadByParams,
@@ -1456,6 +1754,7 @@ module.exports = {
   getSettings,
   getTrashExpiredEmails,
   initDatabaseEncrypted: InitDatabaseEncrypted,
+  rawCheckPin,
   resetKeyDatabase,
   updateAccount,
   updateContactByEmail,

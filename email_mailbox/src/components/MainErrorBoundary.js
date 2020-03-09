@@ -65,7 +65,7 @@ const HighOrderBoundarie = AppComponent =>
     }
 
     updateCounter = () => {
-      if (this.state.counter === 1) {
+      if (this.state.counter <= 1) {
         clearTimeout(this.counterTimeout);
         this.restartApp();
         return;

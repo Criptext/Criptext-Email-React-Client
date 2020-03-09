@@ -1,4 +1,4 @@
-import { Thread } from '../actions/types';
+import { Activity, Thread } from '../actions/types';
 import { Map, Set, List } from 'immutable';
 import * as StringUtils from '../utils/StringUtils';
 import { LabelType } from '../utils/electronInterface';
@@ -79,6 +79,8 @@ const mailbox = (state = initThreads, action) => {
         [labelId]: threads(mailbox, action)
       });
     }
+    case Activity.LOGOUT:
+      return initThreads;
     default:
       return state;
   }

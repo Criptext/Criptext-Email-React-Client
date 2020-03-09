@@ -5,6 +5,7 @@ const Sequelize = require('sequelize');
 const { app } = require('electron');
 const path = require('path');
 const rimraf = require('rimraf');
+const umzug = require('umzug');
 const Model = Sequelize.Model;
 const Op = Sequelize.Op;
 const { parseDate, formatDate } = require('./../utils/TimeUtils');
@@ -46,8 +47,11 @@ const deleteDatabase = () => {
   });
 };
 
+const CURRENT_VERSION = 1;
+
 const Table = {
   ACCOUNT: 'account',
+  ACCOUNT_CONTACT: 'accountContact',
   EMAIL: 'email',
   LABEL: 'label',
   EMAIL_LABEL: 'emailLabel',
@@ -62,11 +66,13 @@ const Table = {
   SESSIONRECORD: 'sessionrecord',
   IDENTITYKEYRECORD: 'identitykeyrecord',
   PENDINGEVENT: 'pendingEvent',
-  SETTINGS: 'settings'
+  SETTINGS: 'settings',
+  VERSION: 'version'
 };
 
 class Contact extends Model {}
 class Account extends Model {}
+class AccountContact extends Model {}
 class Email extends Model {}
 class EmailContact extends Model {}
 class Label extends Model {}
@@ -79,6 +85,7 @@ class Prekeyrecord extends Model {}
 class Sessionrecord extends Model {}
 class Settings extends Model {}
 class Signedprekeyrecord extends Model {}
+class Version extends Model {}
 
 const getDB = () => sequelize;
 
@@ -92,7 +99,10 @@ const setConfiguration = key => {
   });
 };
 
-const initDatabaseEncrypted = async ({ key, shouldReset }) => {
+const initDatabaseEncrypted = async (
+  { key, shouldReset },
+  migrationStartCallback
+) => {
   if (shouldReset) sequelize = undefined;
   if (sequelize) return;
   await setConfiguration(key);
@@ -111,7 +121,15 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
       signature: { type: Sequelize.STRING, defaultValue: '' },
       signatureEnabled: { type: Sequelize.BOOLEAN, defaultValue: false },
       encryptToExternals: { type: Sequelize.BOOLEAN, defaultValue: false },
-      signFooter: { type: Sequelize.BOOLEAN, defaultValue: true }
+      signFooter: { type: Sequelize.BOOLEAN, defaultValue: true },
+      autoBackupEnable: { type: Sequelize.BOOLEAN, defaultValue: false },
+      autoBackupFrequency: Sequelize.STRING,
+      autoBackupLastDate: Sequelize.DATE,
+      autoBackupLastSize: Sequelize.INTEGER,
+      autoBackupNextDate: Sequelize.DATE,
+      autoBackupPath: Sequelize.STRING,
+      isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
+      isLoggedIn: { type: Sequelize.BOOLEAN, defaultValue: true }
     },
     {
       sequelize,
@@ -124,7 +142,7 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
   Contact.init(
     {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-      email: Sequelize.STRING,
+      email: { type: Sequelize.STRING, unique: true },
       name: Sequelize.STRING,
       isTrusted: { type: Sequelize.BOOLEAN, defaultValue: false },
       score: { type: Sequelize.INTEGER, defaultValue: 0 },
@@ -138,10 +156,29 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     }
   );
 
+  AccountContact.init(
+    {
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true }
+    },
+    {
+      sequelize,
+      tableName: Table.ACCOUNT_CONTACT,
+      freezeTableName: true,
+      timestamps: false
+    }
+  );
+
+  Account.hasMany(AccountContact, {
+    foreignKey: 'accountId'
+  });
+  Contact.hasMany(AccountContact, {
+    foreignKey: 'contactId'
+  });
+
   Email.init(
     {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-      key: { type: Sequelize.STRING, unique: true },
+      key: { type: Sequelize.STRING },
       threadId: Sequelize.STRING,
       subject: Sequelize.STRING,
       content: Sequelize.STRING,
@@ -199,6 +236,8 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     }
   );
 
+  Account.hasMany(Email, { foreignKey: 'accountId' });
+
   Label.init(
     {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
@@ -216,6 +255,8 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     }
   );
 
+  Account.hasMany(Label, { foreignKey: 'accountId' });
+
   EmailContact.init(
     {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
@@ -229,7 +270,9 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     }
   );
 
-  Contact.hasMany(EmailContact, { foreignKey: 'contactId' });
+  Contact.hasMany(EmailContact, {
+    foreignKey: 'contactId'
+  });
   Email.hasMany(EmailContact, { foreignKey: 'emailId' });
 
   EmailLabel.init(
@@ -305,14 +348,16 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     }
   );
 
+  Account.hasMany(Feeditem, { foreignKey: 'accountId' });
   Feeditem.belongsTo(Email, { foreignKey: 'emailId' });
   Feeditem.belongsTo(Contact, { foreignKey: 'contactId' });
   Feeditem.belongsTo(File, { foreignKey: 'fileId' });
 
   Identitykeyrecord.init(
     {
-      recipientId: { type: Sequelize.STRING, primaryKey: true },
-      deviceId: { type: Sequelize.INTEGER, primaryKey: true },
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      recipientId: { type: Sequelize.STRING },
+      deviceId: { type: Sequelize.INTEGER },
       identityKey: Sequelize.STRING
     },
     {
@@ -322,6 +367,10 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
       timestamps: false
     }
   );
+
+  Account.hasMany(Identitykeyrecord, {
+    foreignKey: 'accountId'
+  });
 
   Pendingevent.init(
     {
@@ -336,9 +385,14 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     }
   );
 
+  Account.hasMany(Pendingevent, {
+    foreignKey: 'accountId'
+  });
+
   Prekeyrecord.init(
     {
-      preKeyId: { type: Sequelize.INTEGER, primaryKey: true },
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      preKeyId: { type: Sequelize.INTEGER },
       record: Sequelize.STRING,
       recordLength: Sequelize.INTEGER
     },
@@ -350,10 +404,15 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     }
   );
 
+  Account.hasMany(Prekeyrecord, {
+    foreignKey: 'accountId'
+  });
+
   Sessionrecord.init(
     {
-      recipientId: { type: Sequelize.STRING, primaryKey: true },
-      deviceId: { type: Sequelize.INTEGER, primaryKey: true },
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      recipientId: { type: Sequelize.STRING },
+      deviceId: { type: Sequelize.INTEGER },
       record: Sequelize.STRING,
       recordLength: Sequelize.INTEGER
     },
@@ -365,18 +424,16 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     }
   );
 
+  Account.hasMany(Sessionrecord, {
+    foreignKey: 'accountId'
+  });
+
   Settings.init(
     {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       language: { type: Sequelize.STRING, defaultValue: 'en' },
       opened: { type: Sequelize.BOOLEAN, defaultValue: false },
-      theme: { type: Sequelize.STRING, defaultValue: 'light' },
-      autoBackupEnable: { type: Sequelize.BOOLEAN, defaultValue: false },
-      autoBackupFrequency: Sequelize.STRING,
-      autoBackupLastDate: Sequelize.DATE,
-      autoBackupLastSize: Sequelize.INTEGER,
-      autoBackupNextDate: Sequelize.DATE,
-      autoBackupPath: Sequelize.STRING
+      theme: { type: Sequelize.STRING, defaultValue: 'light' }
     },
     {
       sequelize,
@@ -388,7 +445,8 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
 
   Signedprekeyrecord.init(
     {
-      signedPreKeyId: { type: Sequelize.INTEGER, primaryKey: true },
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      signedPreKeyId: { type: Sequelize.INTEGER },
       record: Sequelize.STRING,
       recordLength: Sequelize.INTEGER
     },
@@ -400,15 +458,85 @@ const initDatabaseEncrypted = async ({ key, shouldReset }) => {
     }
   );
 
+  Account.hasMany(Signedprekeyrecord, {
+    foreignKey: 'accountId'
+  });
+
+  Version.init(
+    {
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+      value: { type: Sequelize.INTEGER }
+    },
+    {
+      sequelize,
+      tableName: Table.VERSION,
+      freezeTableName: true,
+      timestamps: false
+    }
+  );
+
   await sequelize.sync({});
+
+  const [localVersion] = await Version.findOrCreate({
+    where: {
+      id: 1
+    },
+    defaults: {
+      id: 1,
+      value: CURRENT_VERSION
+    }
+  });
+  const emailDef = await Email.describe();
+  if (emailDef.accountId && localVersion.value === CURRENT_VERSION) return;
+  if (migrationStartCallback) migrationStartCallback();
+  try {
+    const migrationPath = path.join(__dirname, '/DBEmigrations');
+    const migrator = new umzug({
+      storage: 'json',
+      logging: false,
+      upName: 'up',
+      downName: 'down',
+      migrations: {
+        params: [sequelize.getQueryInterface(), sequelize.constructor],
+        path: migrationPath
+      }
+    });
+    await migrator.up();
+    await Version.update(
+      {
+        value: CURRENT_VERSION
+      },
+      {
+        where: {
+          id: 1
+        }
+      }
+    );
+  } catch (ex) {
+    console.error(ex);
+  }
 };
 
 const resetKeyDatabase = async key => {
   return await sequelize.query(`PRAGMA rekey = "${key}";`);
 };
 
+const rawCheckPin = async pin => {
+  const mySequelize = new Sequelize(null, null, pin, {
+    dialect: 'sqlite',
+    dialectModulePath: '@journeyapps/sqlcipher',
+    storage: myDBEncryptPath(),
+    logging: false
+  });
+
+  const result = await mySequelize.query(`SELECT * from ${Table.ACCOUNT}`);
+
+  return !!result;
+};
+
 module.exports = {
   Account: () => Account,
+  AccountContact: () => AccountContact,
   Contact: () => Contact,
   Email: () => Email,
   EmailContact: () => EmailContact,
@@ -425,6 +553,7 @@ module.exports = {
   deleteDatabase,
   getDB,
   initDatabaseEncrypted,
+  rawCheckPin,
   Op,
   resetKeyDatabase,
   Table,

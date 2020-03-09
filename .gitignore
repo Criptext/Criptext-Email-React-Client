@@ -16,6 +16,7 @@ valgrind-out.txt
 CriptextEncrypt.db-shm
 CriptextEncrypt.db-wal
 recovery.key
+umzug.json
 
 # production
 *_interface/build

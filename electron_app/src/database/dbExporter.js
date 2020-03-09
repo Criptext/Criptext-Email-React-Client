@@ -127,9 +127,7 @@ const exportLabelTable = async db => {
 };
 
 const exportEmailTable = async db => {
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.email;
   let emailRows = [];
   let shouldEnd = false;
   let offset = 0;
@@ -384,9 +382,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
 
       if (recipientId && domain) {
         const fileOwner = `${recipientId}@${domain}`;
-        const currentAddress = myAccount.recipientId.includes('@')
-          ? myAccount.recipientId
-          : `${myAccount.recipientId}@${APP_DOMAIN}`;
+        const currentAddress = myAccount.email;
         if (fileOwner !== currentAddress) {
           return trx.rollback();
         }
@@ -510,9 +506,7 @@ const importDatabaseFromFile = async ({ filepath, databasePath }) => {
 };
 
 const storeEmailBodies = emailRows => {
-  const username = myAccount.recipientId.includes('@')
-    ? myAccount.recipientId
-    : `${myAccount.recipientId}@${APP_DOMAIN}`;
+  const username = myAccount.email;
   return Promise.all(
     emailRows.map(email => {
       const body = email.content;

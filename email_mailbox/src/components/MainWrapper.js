@@ -54,6 +54,7 @@ class MainWrapper extends Component {
             onClickSection={this.props.onClickSection}
             onToggleActivityPanel={this.props.onToggleActivityPanel}
             sectionSelected={this.props.sectionSelected}
+            onUpdateApp={this.props.onUpdateApp}
           />
         );
       }
@@ -79,6 +80,7 @@ class MainWrapper extends Component {
           <HeaderMain
             onClickSection={this.props.onClickSection}
             onToggleActivityPanel={this.props.onToggleActivityPanel}
+            onUpdateApp={this.props.onUpdateApp}
           />
         );
       }
@@ -90,7 +92,12 @@ class MainWrapper extends Component {
   renderSection = () => {
     switch (this.props.sectionSelected.type) {
       case SectionType.SETTINGS: {
-        return <Settings onClickMailboxSection={this.props.onClickSection} />;
+        return (
+          <Settings
+            onClickSection={this.props.onClickSection}
+            onUpdateApp={this.props.onUpdateApp}
+          />
+        );
       }
       default:
         return this.renderThreads();
@@ -189,6 +196,7 @@ class MainWrapper extends Component {
 MainWrapper.propTypes = {
   onClickSection: PropTypes.func,
   onToggleActivityPanel: PropTypes.func,
+  onUpdateApp: PropTypes.func,
   sectionSelected: PropTypes.object
 };
 

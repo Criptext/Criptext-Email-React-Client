@@ -8,11 +8,13 @@ import { defineTimeByToday } from './TimeUtils';
 import string from './../lang';
 
 export const defineFeedItems = async () => {
-  const allFeeds = await getAllFeedItems();
-  const badge = await getFeedItemsCounterBySeen(false);
+  const allFeeds = await getAllFeedItems({});
+  const badge = await getFeedItemsCounterBySeen({ seen: false });
   const feeds = await Promise.all(
     allFeeds.map(async feed => {
-      const [emailData] = await getEmailsByArrayParam({ ids: [feed.emailId] });
+      const [emailData] = await getEmailsByArrayParam({
+        array: { ids: [feed.emailId] }
+      });
       const action = defineFeedAction(feed.type);
       const date = defineTimeByToday(feed.date);
       return { ...feed, action, date, emailData };

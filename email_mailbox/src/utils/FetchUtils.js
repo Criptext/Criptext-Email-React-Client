@@ -7,6 +7,7 @@ const PENDING_EVENTS_STATUS_MORE = 201;
 const NO_EVENTS_STATUS = 204;
 const EVENTS_BATCH = 25;
 const NOT_FOUND = 404;
+const EXPIRED_SESSION = 401;
 
 export const fetchEmailBody = async ({ bodyKey, optionalToken }) => {
   const res = await apiCriptextRequest({
@@ -19,15 +20,15 @@ export const fetchEmailBody = async ({ bodyKey, optionalToken }) => {
       const jsonRes = await res.json();
       return { status: STATUS_OK, body: jsonRes };
     }
-    case NOT_FOUND: {
-      throw new Error(signal.CONTENT_NOT_AVAILABLE);
-    }
-    default: {
+    case EXPIRED_SESSION: {
       return await checkExpiredSession({
         response: { status: res.status },
         initialRequest: fetchEmailBody,
         requestParams: { bodyKey, optionalToken }
       });
+    }
+    default: {
+      throw new Error(signal.CONTENT_NOT_AVAILABLE);
     }
   }
 };
@@ -38,15 +39,22 @@ export const fetchEventAction = async ({ cmd, action, optionalToken }) => {
     method: 'GET',
     optionalToken
   });
-  if (res.status === STATUS_OK) {
-    const jsonRes = await res.json();
-    return { status: STATUS_OK, body: jsonRes };
+  switch (res.status) {
+    case STATUS_OK: {
+      const jsonRes = await res.json();
+      return { status: STATUS_OK, body: jsonRes };
+    }
+    case EXPIRED_SESSION: {
+      return await checkExpiredSession({
+        response: { status: res.status },
+        initialRequest: fetchEventAction,
+        requestParams: { cmd, action, optionalToken }
+      });
+    }
+    default: {
+      return { status: res.status };
+    }
   }
-  return await checkExpiredSession({
-    response: { status: res.status },
-    initialRequest: fetchEventAction,
-    requestParams: { cmd, action, optionalToken }
-  });
 };
 
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
@@ -86,12 +94,15 @@ export const fetchEvents = async optionalToken => {
     }
     case NO_EVENTS_STATUS:
       return { status: STATUS_OK, body: { events: [] } };
-    default: {
+    case EXPIRED_SESSION: {
       return await checkExpiredSession({
         response: { status: res.status },
         initialRequest: fetchEvents,
         requestParams: optionalToken
       });
+    }
+    default: {
+      return { status: res.status };
     }
   }
 };
@@ -103,14 +114,21 @@ export const fetchAcknowledgeEvents = async ({ eventIds, optionalToken }) => {
     params: { ids: eventIds },
     optionalToken
   });
-  if (res.status === STATUS_OK) {
-    return { status: STATUS_OK };
+  switch (res.status) {
+    case STATUS_OK: {
+      return { status: STATUS_OK };
+    }
+    case EXPIRED_SESSION: {
+      return await checkExpiredSession({
+        response: { status: res.status },
+        initialRequest: fetchAcknowledgeEvents,
+        requestParams: { eventIds, optionalToken }
+      });
+    }
+    default: {
+      return { status: res.status };
+    }
   }
-  return await checkExpiredSession({
-    response: { status: res.status },
-    initialRequest: fetchAcknowledgeEvents,
-    requestParams: { eventIds, optionalToken }
-  });
 };
 
 export const fetchGetSingleEvent = async ({ rowId, optionalToken }) => {
@@ -132,12 +150,15 @@ export const fetchGetSingleEvent = async ({ rowId, optionalToken }) => {
     case NO_EVENTS_STATUS:
     case NOT_FOUND:
       return { status: res.status };
-    default: {
+    case EXPIRED_SESSION: {
       return await checkExpiredSession({
         response: { status: res.status },
         initialRequest: fetchGetSingleEvent,
         requestParams: { rowId, optionalToken }
       });
+    }
+    default: {
+      return { status: res.status };
     }
   }
 };

@@ -7,7 +7,7 @@ const mailboxWindow = require('../windows/mailbox');
 const { installUpdate, checkForUpdates } = require('./../updater');
 const { showNotification } = require('./../notificationManager');
 const myAccount = require('./../Account');
-const wsClient = require('./../socketClient');
+const socketClient = require('./../socketClient');
 const { printEmailOrThread } = require('./../utils/PrintUtils');
 const { buildEmailSource } = require('../utils/SourceUtils');
 const {
@@ -17,7 +17,6 @@ const {
 } = require('../utils/FileUtils');
 const { getUsername, genUUID } = require('./../utils/stringUtils');
 const { showWindows } = require('./../windows/windowUtils');
-const { restartSocket } = require('./../socketClient');
 const { checkAlive } = require('./../reachabilityTask');
 const { restartAlice } = require('./../aliceManager');
 
@@ -47,16 +46,22 @@ ipc.answerRenderer('open-file-explorer', filename => {
 });
 
 ipc.answerRenderer('open-mailbox', ({ firstOpenApp }) => {
-  wsClient.start(myAccount);
+  socketClient.add(myAccount.getDataForSocket());
   mailboxWindow.show({ firstOpenApp });
+});
+
+ipc.answerRenderer('swap-account', ({ accountId, recipientId }) => {
+  socketClient.add(myAccount.getDataForSocket());
+  mailboxWindow.send('swap-account', { accountId, recipientId });
+  mailboxWindow.show();
 });
 
 ipc.answerRenderer('print-to-pdf', async ({ emailId, threadId }) => {
   await printEmailOrThread({ emailId, threadId });
 });
 
-ipc.answerRenderer('open-email-source', async metadataKey => {
-  await buildEmailSource({ metadataKey });
+ipc.answerRenderer('open-email-source', async ({ key, accountId }) => {
+  await buildEmailSource({ key, accountId });
 });
 
 ipc.answerRenderer(
@@ -111,14 +116,26 @@ ipc.answerRenderer(
   }
 );
 
-ipc.answerRenderer('show-notification', ({ title, message, threadId }) => {
-  const onClickNotification = () => {
-    showWindows();
-    if (threadId)
-      mailboxWindow.send('open-thread-by-notification', { threadId });
-  };
-  showNotification({ title, message, clickHandler: onClickNotification });
-});
+ipc.answerRenderer(
+  'show-notification',
+  ({ title, message, threadId, accountId, accountRecipientId }) => {
+    const onClickNotification = () => {
+      showWindows();
+      if (threadId) {
+        if (accountRecipientId === myAccount.recipientId) {
+          mailboxWindow.send('open-thread-by-notification', { threadId });
+        } else {
+          mailboxWindow.send('swap-account', {
+            accountId,
+            recipientId: accountRecipientId,
+            threadId
+          });
+        }
+      }
+    };
+    showNotification({ title, message, clickHandler: onClickNotification });
+  }
+);
 
 ipc.answerRenderer('check-for-updates', showDialog => {
   checkForUpdates(showDialog);
@@ -126,8 +143,8 @@ ipc.answerRenderer('check-for-updates', showDialog => {
 
 ipc.answerRenderer('generate-label-uuid', genUUID);
 
-ipc.answerRenderer('restart-connection', jwt => {
-  restartSocket({ jwt });
+ipc.answerRenderer('restart-connection', () => {
+  socketClient.restartSocket();
   checkAlive(true);
 });
 

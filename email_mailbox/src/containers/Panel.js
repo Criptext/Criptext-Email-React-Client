@@ -1,10 +1,15 @@
 import { connect } from 'react-redux';
 import {
   addDataApp,
+  loadApp,
   loadEmails,
   loadEvents,
   loadFeedItems,
   loadThreads,
+  logout,
+  reloadAccounts,
+  updateUnreadThreads,
+  updateBadgeAccounts,
   updateBadgeLabels,
   updateEmailIdsThread,
   updateFeedItems,
@@ -17,11 +22,17 @@ import {
 } from '../actions';
 import PanelWrapper from '../components/PanelWrapper';
 import { LabelType } from '../utils/electronInterface';
+import {
+  isGettingEventsUpdate,
+  selectAccountAsActive
+} from '../utils/electronEventInterface';
 import { updateSettings } from '../utils/ipc';
 import { defineRejectedLabels } from '../utils/EmailUtils';
 import { loadThreadsAndEmails } from '../actions/threads';
+import { defineParamsToLoadThread } from '../utils/ThreadUtils';
 
 const mapStateToProps = state => {
+  const isLoadAppCompleted = !!state.get('labels').size;
   const labelIds = state
     .get('threads')
     .keySeq()
@@ -31,7 +42,7 @@ const mapStateToProps = state => {
       .get('threads')
       .get(`${id}`)
       .get('list').size;
-    return { ...result, [id]: size };
+    return { ...result, [id]: size, isLoadAppCompleted };
   }, {});
   return result;
 };
@@ -45,8 +56,32 @@ const defineContactType = labelId => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onAccountsChanged: () => {
+      dispatch(reloadAccounts());
+    },
     onAddDataApp: data => {
       dispatch(addDataApp(data));
+    },
+    onNotificationClicked: async ({ threadId }) => {
+      const labelId = LabelType.inbox.id;
+      const unread = false;
+      const loadThreadsParams = {
+        labelId,
+        rejectedLabelIds: defineRejectedLabels(labelId),
+        contactTypes: defineContactType(labelId)
+      };
+      await dispatch(loadThreads(loadThreadsParams));
+      await dispatch(updateUnreadThreads([threadId], unread, labelId));
+    },
+    onUpdateAccountApp: async ({ mailboxSelected, accountId, recipientId }) => {
+      isGettingEventsUpdate(true);
+      await selectAccountAsActive({ accountId, recipientId });
+      await dispatch(logout());
+      isGettingEventsUpdate(false);
+      if (mailboxSelected) {
+        const params = defineParamsToLoadThread(mailboxSelected, true);
+        await dispatch(loadApp(params));
+      }
     },
     onUpdateLabels: labels => {
       dispatch(updateLabels(labels));
@@ -119,6 +154,7 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateUnreadEmailsBadge: labelIds => {
       dispatch(updateBadgeLabels(labelIds));
+      dispatch(updateBadgeAccounts());
     }
   };
 };

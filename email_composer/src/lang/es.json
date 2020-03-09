@@ -1,5 +1,6 @@
 {
   "inputLabels": {
+    "from": "De:",
     "to": "Para:",
     "cc": "Cc:",
     "bcc": "Cco:"
@@ -50,9 +51,9 @@
         "suffix": " por archivos."
       }
     },
-    "encrypting": {
-      "name": "Error de encriptación",
-      "description": "Ha ocurrido un error durante el proceso de encriptación del mensaje.\nCódigo: "
+    "serverError": {
+      "name": "Error en el servidor",
+      "description": "Ha ocurrido un error durante el proceso de envío del correo.\nCódigo: "
     },
     "nonExistingUsers": {
       "name": "Usuarios no existentes",
@@ -83,7 +84,7 @@
       "description": "No se ha podido establecer una conexión con el servidor."
     },
     "unauthorized": {
-      "name": "Error de encriptación",
+      "name": "Error en el servidor",
       "description": "Ha ocurrido un error en tu solicitud.\nPor favor intenta de nuevo"
     },
     "uploadFailed": {

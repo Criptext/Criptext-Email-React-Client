@@ -5,12 +5,13 @@
 using namespace sqlite;
 using namespace std;
 
-CriptextDB::IdentityKey CriptextDB::getIdentityKey(database db, string recipientId, long int deviceId) {
+CriptextDB::IdentityKey CriptextDB::getIdentityKey(database db, int accountId, string recipientId, long int deviceId) {
   IdentityKey identityKey;
-  db << "Select * from identitykeyrecord where recipientId == ? and deviceId == ?;"
+  db << "Select * from identitykeyrecord where recipientId == ? and deviceId == ? and accountId == ?;"
      << recipientId
      << deviceId
-     >> [&] (string recipientId, int deviceId, string identity) {
+     << accountId
+     >> [&] (int id, string recipientId, int deviceId, string identity) {
         identityKey = { 
           .recipientId = recipientId, 
           .deviceId = deviceId, 
@@ -24,26 +25,29 @@ CriptextDB::IdentityKey CriptextDB::getIdentityKey(database db, string recipient
   return identityKey;
 }
 
-bool CriptextDB::createIdentityKey(database db, string recipientId, int deviceId, char *identityKey) {
+bool CriptextDB::createIdentityKey(database db, int accountId, string recipientId, int deviceId, char *identityKey) {
   try {
     bool hasRow = false;
     db << "begin;";
-    db << "Select * from identitykeyrecord where recipientId == ? and deviceId == ?;"
+    db << "Select * from identitykeyrecord where recipientId == ? and deviceId == ? and accountId == ?;"
      << recipientId
      << deviceId
+     << accountId
      >> [&] (string recipientId, int deviceId, string identity) {
         hasRow = true;
     };
     if (hasRow) {
-      db << "update identitykeyrecord set identityKey = ? where recipientId == ? and deviceId == ?;"
+      db << "update identitykeyrecord set identityKey = ? where recipientId == ? and deviceId == ? and accountId == ?;"
         << identityKey
         << recipientId
-        << deviceId;
+        << deviceId
+        << accountId;
     } else {
-      db << "insert into identitykeyrecord (recipientId, deviceId, identityKey) values (?,?,?);"
+      db << "insert into identitykeyrecord (recipientId, deviceId, identityKey, accountId) values (?,?,?,?);"
         << recipientId
         << deviceId
-        << identityKey;
+        << identityKey
+        << accountId;
     }
     db << "commit;";
   } catch (exception& e) {

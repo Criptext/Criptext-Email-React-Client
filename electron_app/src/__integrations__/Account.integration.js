@@ -1,6 +1,7 @@
 /* eslint-env node, jest */
 
 const DBManager = require('../database');
+jest.mock('./../Account.js');
 
 const account = {
   recipientId: 'user',
@@ -22,6 +23,38 @@ beforeAll(async () => {
     shouldAddSystemLabels: true
   });
   await insertAccount();
+});
+
+describe('Store data account to Account Table:', () => {
+  it('should insert account to database and update old data', async () => {
+    const account = {
+      recipientId: 'user@domain.com',
+      deviceId: 1,
+      name: 'User Domain',
+      registrationId: 2,
+      privKey: 'ghi',
+      pubKey: 'jkl',
+      shouldUpdate: true
+    };
+    const accountCreated = await DBManager.createAccount(account);
+    expect(accountCreated.length).toBe(1);
+    expect(typeof accountCreated[0]).toBe('object');
+    expect(accountCreated[0]).toMatchObject(
+      expect.objectContaining({
+        id: 2,
+        isActive: true,
+        recipientId: account.recipientId
+      })
+    );
+    const [accountUpdated] = await DBManager.getAccountByParams({
+      recipientId: 'user'
+    });
+    expect(accountUpdated).toMatchObject(
+      expect.objectContaining({
+        isActive: false
+      })
+    );
+  });
 });
 
 describe('Update data account from Account Table:', () => {
@@ -50,8 +83,36 @@ describe('Load account contact from Account Table:', () => {
     );
   });
 
+  it('should load account by id', async () => {
+    const [account] = await DBManager.getAccountByParams({
+      id: 2
+    });
+    expect(account).toMatchObject(
+      expect.objectContaining({
+        id: 2
+      })
+    );
+  });
+
   it('should load account by deviceId', async () => {
     const [account] = await DBManager.getAccountByParams({ deviceId: '' });
     expect(account).toBeUndefined;
+  });
+
+  it('should load all accounts by order', async () => {
+    const accounts = await DBManager.getAllAccounts();
+    expect(accounts.length).toBe(2);
+    const firstAccount = accounts[0];
+    expect(firstAccount).toMatchObject(
+      expect.objectContaining({
+        id: 2
+      })
+    );
+    const secondAccount = accounts[1];
+    expect(secondAccount).toMatchObject(
+      expect.objectContaining({
+        id: 1
+      })
+    );
   });
 });

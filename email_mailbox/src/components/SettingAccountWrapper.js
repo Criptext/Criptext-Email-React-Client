@@ -31,17 +31,7 @@ import {
   validateConfirmPassword
 } from '../validators/validators';
 import { hashPassword } from '../utils/hashUtils';
-import {
-  storeResendConfirmationTimestamp,
-  getTwoFactorAuthStatus,
-  setTwoFactorAuthStatus,
-  getLastRecoveryEmail,
-  getLastRecoveryEmailConfirmed,
-  setLastRecoveryEmail,
-  setLastRecoveryEmailConfirmed,
-  setReadReceiptsStatus,
-  getReadReceiptsStatus
-} from '../utils/storage';
+import { storeResendConfirmationTimestamp } from '../utils/storage';
 import { emailRegex } from '../utils/RegexUtils';
 import string from './../lang';
 
@@ -258,18 +248,14 @@ class SettingAccountWrapper extends Component {
         this.setState({
           twoFactorParams: {
             ...this.state.twoFactorParams,
-            twoFactorEnabled: getTwoFactorAuthStatus() === 'true',
             isLoading: false
           },
           recoveryEmailParams: {
             ...this.state.recoveryEmailParams,
-            recoveryEmail: getLastRecoveryEmail(),
-            recoveryEmailConfirmed: getLastRecoveryEmailConfirmed() === 'true',
             isLoading: false
           },
           readReceipts: {
             ...this.state.readReceipts,
-            enabled: getReadReceiptsStatus() === 'true',
             isLoading: false
           },
           replyToParams: {
@@ -293,28 +279,24 @@ class SettingAccountWrapper extends Component {
       this.state.recoveryEmail !== nextProps.recoveryEmail
     ) {
       newRecoveryEmailParams.recoveryEmail = nextProps.recoveryEmail;
-      setLastRecoveryEmail(nextProps.recoveryEmail);
     }
     if (
       this.state.recoveryEmailConfirmed !== nextProps.recoveryEmailConfirmed
     ) {
       newRecoveryEmailParams.recoveryEmailConfirmed =
         nextProps.recoveryEmailConfirmed;
-      setLastRecoveryEmailConfirmed(nextProps.recoveryEmailConfirmed);
     }
     if (
       this.state.twoFactorParams.twoFactorEnabled !== nextProps.twoFactorAuth
     ) {
       newTwoFactorParams.twoFactorEnabled = nextProps.twoFactorAuth;
       newTwoFactorParams.isLoading = false;
-      setTwoFactorAuthStatus(nextProps.twoFactorAuth);
     }
     if (
       nextProps.readReceiptsEnabled &&
       this.state.readReceipts.enabled !== nextProps.readReceiptsEnabled
     ) {
       newReadReceipts.enabled = nextProps.readReceiptsEnabled;
-      setReadReceiptsStatus(nextProps.readReceiptsEnabled);
     }
     if (this.state.replyToParams.replyToEmail !== nextProps.replyToEmail) {
       newReplyToParams.replyToEmail = nextProps.replyToEmail;
@@ -587,7 +569,6 @@ class SettingAccountWrapper extends Component {
             twoFactorParams
           };
           this.setState(newState);
-          setTwoFactorAuthStatus(nextValue);
         } else {
           twoFactorParams['isLoading'] = false;
           this.setState({ twoFactorParams });
@@ -962,7 +943,6 @@ class SettingAccountWrapper extends Component {
         let enabled;
         if (status === 200) {
           enabled = nextValue;
-          setReadReceiptsStatus(nextValue);
         } else {
           enabled = prevValue;
         }

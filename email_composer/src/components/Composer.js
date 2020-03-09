@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FromWrapper from './FromWrapper';
 import RecipientWrapper from './RecipientWrapper';
 import SubjectWrapper from './SubjectWrapper';
 import BodyWrapper from './BodyWrapper';
@@ -10,6 +11,12 @@ import './composer.scss';
 
 const Composer = props => (
   <div className="wrapper" data-theme={mySettings.theme || 'light'}>
+    <FromWrapper
+      accounts={props.accounts}
+      accountSelected={props.accountSelected}
+      allowChangeFrom={props.allowChangeFrom}
+      getAccount={props.getAccount}
+    />
     <RecipientWrapper
       disableSendButton={props.disableSendButtonOnInvalidEmail}
       toEmails={props.toEmails}
@@ -64,12 +71,16 @@ const Composer = props => (
 );
 
 Composer.propTypes = {
+  accounts: PropTypes.array,
+  accountSelected: PropTypes.object,
+  allowChangeFrom: PropTypes.bool,
   addFiletoken: PropTypes.func,
   bccEmails: PropTypes.array,
   ccEmails: PropTypes.array,
   disableSendButtonOnInvalidEmail: PropTypes.func,
   displayNonCriptextPopup: PropTypes.bool,
   files: PropTypes.array,
+  getAccount: PropTypes.func,
   getBccEmails: PropTypes.func,
   getCcEmails: PropTypes.func,
   getHtmlBody: PropTypes.func,

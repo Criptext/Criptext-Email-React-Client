@@ -7,18 +7,19 @@ const mailboxWindow = require('./mailbox');
 const pinWindow = require('./pin');
 const { EVENTS, addEvent } = require('./events');
 const { createAppMenu } = require('./menu');
-const wsClient = require('./../socketClient');
+const socketClient = require('./../socketClient');
 const { initClient, generateEvent } = require('./../clientManager');
 const { initNucleus } = require('./../nucleusManager');
 const globalManager = require('./../globalManager');
 const aliceManager = require('./../aliceManager');
 const { isFromStore, getSystemLanguage } = require('./windowUtils');
+const { openLaunchWindow } = require('./launch.js');
 
 const sendAPIevent = async event => {
   await generateEvent(event);
 };
 
-const upStepDBEncryptedWithoutPIN = async () => {
+const upStepCreateDBEncrypted = async () => {
   const [existingAccount] = await dbManager.getAccount();
   if (existingAccount) {
     await pinWindow.show();
@@ -28,7 +29,7 @@ const upStepDBEncryptedWithoutPIN = async () => {
   }
 };
 
-const upStepCheckPINDBEncrypted = async () => {
+const upStepCheckPIN = async () => {
   const pin = await pinWindow.checkPin();
   if (!pin) {
     globalManager.pinData.set({ pinType: 'new' });
@@ -37,7 +38,7 @@ const upStepCheckPINDBEncrypted = async () => {
   }
 
   try {
-    await dbManager.initDatabaseEncrypted({ key: pin });
+    await dbManager.rawCheckPin(pin);
   } catch (error) {
     globalManager.pinData.set({ pinType: 'new' });
     pinWindow.show();
@@ -45,6 +46,16 @@ const upStepCheckPINDBEncrypted = async () => {
   }
 
   await upApp({ pin });
+};
+
+const upStepNewUser = async () => {
+  const language = await getUserLanguage();
+  initNucleus({ language });
+  const settings = { isFromStore, language };
+  mySettings.initialize(settings);
+  await initClient('@');
+  createAppMenu();
+  loginWindow.show({});
 };
 
 const upApp = async ({ shouldSave, pin }) => {
@@ -64,34 +75,39 @@ const upApp = async ({ shouldSave, pin }) => {
 
   aliceManager.startAlice();
 
-  const [existingAccount] = await dbManager.getAccount();
-  const hasLogginAccount = existingAccount
-    ? existingAccount.deviceId
-    : undefined;
+  let launchWindow;
+  await dbManager.initDatabaseEncrypted({ key: pin }, () => {
+    launchWindow = openLaunchWindow();
+    if (pinWindow) pinWindow.close({ forceClose: true });
+  });
 
-  if (hasLogginAccount) {
-    await upMailboxWindow(existingAccount);
+  const loggedAccounts = await dbManager.getAccountByParams({
+    isLoggedIn: true
+  });
+
+  if (loggedAccounts.length > 0) {
+    await upMailboxWindow(loggedAccounts);
   } else {
     const language = await getUserLanguage();
-    await initClient();
+    await initClient('@');
     const settings = { isFromStore, language };
     mySettings.initialize(settings);
     initNucleus({ language });
     createAppMenu();
     loginWindow.show({});
     if (pinWindow) pinWindow.close({ forceClose: true });
-    return;
   }
+  if (launchWindow) launchWindow.close();
 };
 
-const upMailboxWindow = async existingAccount => {
+const upMailboxWindow = async loggedAccounts => {
   const appSettings = await dbManager.getSettings();
   const settings = Object.assign(appSettings, { isFromStore });
-  myAccount.initialize(existingAccount);
+  myAccount.initialize(loggedAccounts);
   mySettings.initialize(settings);
-  await initClient();
+  await initClient(myAccount.recipientId);
   initNucleus({ language: mySettings.language });
-  wsClient.start(myAccount);
+  socketClient.add(myAccount.getDataForSocket());
   createAppMenu();
   mailboxWindow.show({ firstOpenApp: true });
   if (pinWindow) pinWindow.close({ forceClose: true });
@@ -108,6 +124,7 @@ module.exports = {
   dbManager,
   sendAPIevent,
   upApp,
-  upStepDBEncryptedWithoutPIN,
-  upStepCheckPINDBEncrypted
+  upStepCreateDBEncrypted,
+  upStepCheckPIN,
+  upStepNewUser
 };

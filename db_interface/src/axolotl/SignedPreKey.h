@@ -17,11 +17,11 @@ namespace CriptextDB {
     int len;
   };
 
-  SignedPreKey getSignedPreKey(database db, short int id);
+  SignedPreKey getSignedPreKey(database db, int accountId, short int id);
 
-  bool createSignedPreKey(database db, short int id, char *keyRecord, size_t len);
+  bool createSignedPreKey(database db, int accountId, short int id, char *keyRecord, size_t len);
 
-  bool deleteSignedPreKey(database db, short int id);
+  bool deleteSignedPreKey(database db, int accountId, short int id);
 } 
 
 #endif

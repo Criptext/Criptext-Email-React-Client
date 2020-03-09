@@ -1,16 +1,16 @@
 const path = require('path');
 const { BrowserWindow } = require('electron');
-const myAccount = require('../Account');
 const { composerUrl } = require('./../window_routing');
 const dbManager = require('./../database');
 const globalManager = require('./../globalManager');
 const { EVENTS, callEvent } = require('./events');
 const fileUtils = require('../utils/FileUtils');
-const { APP_DOMAIN, API_TRACKING_EVENT } = require('../utils/const');
+const { API_TRACKING_EVENT } = require('../utils/const');
 const { filterInvalidEmailAddresses } = require('./../utils/EmailUtils');
 
 const lang = require('./../lang');
 const { windowTitle } = lang.strings.windows.composer;
+const myAccount = require('../Account');
 
 const composerSize = {
   width: 785,
@@ -126,7 +126,8 @@ const destroy = async ({
   discard,
   emailId,
   threadId,
-  hasExternalPassphrase
+  hasExternalPassphrase,
+  accountId
 }) => {
   const composer = BrowserWindow.fromId(composerId);
   const emailToEdit = globalManager.emailToEdit.get(composer.id);
@@ -139,10 +140,16 @@ const destroy = async ({
   if (emailToEdit) {
     const { type, key } = emailToEdit;
     if (type === composerEvents.EDIT_DRAFT) {
-      const [oldDraftEmail] = await dbManager.getEmailByKey(key);
+      const [oldDraftEmail] = await dbManager.getEmailByKey({
+        key,
+        accountId: accountId || myAccount.id
+      });
       if (oldDraftEmail) {
         const oldEmailId = oldDraftEmail.id;
-        await dbManager.deleteEmailAndRelations(oldEmailId, undefined);
+        await dbManager.deleteEmailAndRelations({
+          id: oldEmailId,
+          accountId: accountId || myAccount.id
+        });
       }
       event = 'composer-email-delete';
       params = { threadId };
@@ -173,10 +180,7 @@ const sendEventToMailbox = (eventName, data) => {
 };
 
 const saveDraftToDatabase = async (composerId, data) => {
-  const recipientId = myAccount.recipientId;
-  const username = recipientId.includes('@')
-    ? recipientId
-    : `${recipientId}@${APP_DOMAIN}`;
+  const { accountId, accountEmail: username } = data;
   const filteredRecipients = {
     from: data.recipients.from,
     to: filterInvalidEmailAddresses(data.recipients.to),
@@ -184,7 +188,9 @@ const saveDraftToDatabase = async (composerId, data) => {
     bcc: filterInvalidEmailAddresses(data.recipients.bcc)
   };
   const content = data.body;
-  const dataDraft = Object.assign(data, { recipients: filteredRecipients });
+  const dataDraft = Object.assign(data, {
+    recipients: filteredRecipients
+  });
   const emailToEdit = globalManager.emailToEdit.get(composerId);
   const { type, key } = emailToEdit || {};
   let shouldUpdateBadge = false;
@@ -198,14 +204,18 @@ const saveDraftToDatabase = async (composerId, data) => {
     });
     shouldUpdateBadge = true;
   } else {
-    const [oldEmail] = await dbManager.getEmailByKey(key);
+    const [oldEmail] = await dbManager.getEmailByKey({
+      key,
+      accountId
+    });
     const newDataDraft = Object.assign(dataDraft, {
       email: Object.assign(dataDraft.email, { key: oldEmail.key })
     });
-    const newEmailId = await dbManager.deleteEmailAndRelations(
-      oldEmail.id,
-      newDataDraft
-    );
+    const newEmailId = await dbManager.deleteEmailAndRelations({
+      id: oldEmail.id,
+      optionalEmailToSave: newDataDraft,
+      accountId
+    });
     await fileUtils.saveEmailBody({
       body: content,
       username,

@@ -35,7 +35,7 @@ const DeleteAccountPopup = props => {
           <span>{cancelButtonLabel}</span>
         </button>
         <button
-          className="button-a popup-confirm-button"
+          className="button-a popup-delete-button"
           onClick={props.onClickConfirmDeleteAccount}
           disabled={props.isDisabledConfirmButton}
         >

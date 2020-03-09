@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SearchBox from './SearchBox';
-import ProfileShortCutWrapper from './ProfileShortCutWrapper';
+import ProfileShortCut from './../containers/ProfileShortCut';
 import './headermain.scss';
 
 const HeaderMain = props => (
   <div className="header-main">
     <SearchBox
       allLabels={props.allLabels}
-      avatarUrl={props.avatarUrl}
       isHiddenMenuSearchHints={props.isHiddenMenuSearchHints}
       isHiddenMenuSearchOptions={props.isHiddenMenuSearchOptions}
       isLoadingSearch={props.isLoadingSearch}
@@ -23,28 +22,32 @@ const HeaderMain = props => (
       threads={props.threads}
       hints={props.hints}
     />
-    <ProfileShortCutWrapper
-      avatarUrl={props.avatarUrl}
-      onClickSettings={props.onClickSection}
+    <ProfileShortCut
+      avatarTimestamp={props.avatarTimestamp}
+      openSettings={props.openSettings}
+      openLogin={props.openLogin}
+      onUpdateApp={props.onUpdateApp}
     />
   </div>
 );
 
 HeaderMain.propTypes = {
   allLabels: PropTypes.array,
-  avatarUrl: PropTypes.string,
+  avatarTimestamp: PropTypes.number,
   getSearchParams: PropTypes.func,
   hints: PropTypes.object,
   isHiddenMenuSearchHints: PropTypes.bool,
   isHiddenMenuSearchOptions: PropTypes.bool,
   isLoadingSearch: PropTypes.bool,
-  onClickSection: PropTypes.func,
   onClearSearchInput: PropTypes.func,
   onClickSearch: PropTypes.func,
   onSearchSelectThread: PropTypes.func,
+  openLogin: PropTypes.func,
+  openSettings: PropTypes.func,
   onToggleMenuSearchHints: PropTypes.func,
   onToggleMenuSearchOptions: PropTypes.func,
   onTriggerSearch: PropTypes.func,
+  onUpdateApp: PropTypes.func,
   searchParams: PropTypes.object,
   threads: PropTypes.object
 };

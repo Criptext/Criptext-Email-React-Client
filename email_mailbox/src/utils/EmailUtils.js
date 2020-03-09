@@ -163,13 +163,28 @@ export const addCollapseDiv = (htmlString, key, isCollapse) => {
 export const compareEmailDate = (emailA, emailB) =>
   emailA.date < emailB.date ? -1 : emailA.date > emailB.date ? 1 : 0;
 
-export const checkEmailIsTo = recipients => {
+export const checkEmailIsTo = (recipients, accountRecipientId) => {
+  const emails = getEmailsFromRecipients(recipients);
+  const [recipientId, domain = appDomain] = accountRecipientId.split('@');
+  const res = emails.includes(`${recipientId}@${domain}`);
+  return res;
+};
+
+export const checkEmailsToAllAccounts = recipients => {
+  const emails = getEmailsFromRecipients(recipients);
+  return myAccount.loggedAccounts.some(account => {
+    const [recipientId, domain = appDomain] = account.recipientId.split('@');
+    return emails.includes(`${recipientId}@${domain}`);
+  });
+};
+
+const getEmailsFromRecipients = recipients => {
   const recipientsArray = [
     ...recipients.to,
     ...recipients.cc,
     ...recipients.bcc
   ];
-  const emails = recipientsArray.map(recipient => {
+  return recipientsArray.map(recipient => {
     const matchTag = recipient.match(HTMLTagsRegex);
     if (matchTag) {
       const matchSize = matchTag.length;
@@ -178,9 +193,6 @@ export const checkEmailIsTo = recipients => {
     }
     return recipient;
   });
-  const [recipientId, domain = appDomain] = myAccount.recipientId.split('@');
-  const res = emails.includes(`${recipientId}@${domain}`);
-  return res;
 };
 
 export const defineRejectedLabels = (labelId, searchInLabelId) => {

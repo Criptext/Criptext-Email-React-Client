@@ -10,7 +10,7 @@ const MenuProfilePreview = MenuHOC(ProfilePreview);
 const ProfileShortCut = props => (
   <div
     className={
-      'profile-shortcut-container' +
+      'header-profile-shortcut-container' +
       (!props.isHiddenMenuProfilePreview ? ' profile-opened' : '')
     }
   >
@@ -24,28 +24,38 @@ const ProfileShortCut = props => (
         letters={props.letters}
       />
     </span>
+    {props.badgeAccount && (
+      <div className="cptx-header-profile-badge">
+        <div />
+      </div>
+    )}
     <MenuProfilePreview
-      avatarUrl={props.avatarUrl}
-      emailAddress={props.emailAddress}
-      letters={props.letters}
-      name={props.name}
+      accountsLimitReached={props.accountsLimitReached}
+      accounts={props.accounts}
+      avatarTimestamp={props.avatarTimestamp}
       arrowPosition={MenuType.TOP_RIGHT}
       isHidden={props.isHiddenMenuProfilePreview}
       menuPosition={{ top: '48px', right: '-38px' }}
+      onClickAddAccount={props.onClickAddAccount}
       onClickSettings={props.onClickSettings}
       onToggleMenu={props.onToggleMenuProfilePreview}
+      onClickItemAccount={props.onClickItemAccount}
     />
   </div>
 );
 
 ProfileShortCut.propTypes = {
+  avatarTimestamp: PropTypes.number,
   avatarUrl: PropTypes.string,
-  emailAddress: PropTypes.string,
+  badgeAccount: PropTypes.bool,
   letters: PropTypes.string,
-  name: PropTypes.string,
+  accountsLimitReached: PropTypes.bool,
+  accounts: PropTypes.array,
   isHiddenMenuProfilePreview: PropTypes.bool,
+  onClickAddAccount: PropTypes.func,
   onClickSettings: PropTypes.func,
-  onToggleMenuProfilePreview: PropTypes.func
+  onToggleMenuProfilePreview: PropTypes.func,
+  onClickItemAccount: PropTypes.func
 };
 
 export default ProfileShortCut;

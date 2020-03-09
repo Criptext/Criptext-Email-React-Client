@@ -7,6 +7,7 @@ import {
   closeCreatingKeysLoadingWindow,
   openMailboxWindow,
   openPinWindow,
+  swapMailboxAccount,
   throwError
 } from './../utils/ipc';
 import string from './../lang';
@@ -158,20 +159,25 @@ class LoadingWrapper extends Component {
       throwError(string.errors.noResponse);
       this.loadingThrowError();
       return;
-    }
-    if (this.state.accountResponse === false) {
+    } else if (this.state.accountResponse === false) {
       clearTimeout(this.state.timeout);
       this.loadingThrowError();
-    }
-    if (this.state.accountResponse === true) {
+    } else if (this.state.accountResponse === true) {
       clearTimeout(this.state.timeout);
       this.setState({ percent: 100 }, () => {
         this.nextWindow();
       });
+    } else if (typeof this.state.accountResponse === 'object') {
+      clearTimeout(this.state.timeout);
+      this.setState({ percent: 100 }, () => {
+        swapMailboxAccount({ ...this.state.accountResponse });
+        closeCreatingKeysLoadingWindow();
+      });
+    } else {
+      this.setState({
+        timeout: setTimeout(this.checkResult, 1000)
+      });
     }
-    this.setState({
-      timeout: setTimeout(this.checkResult, 1000)
-    });
   };
 
   nextWindow = () => {

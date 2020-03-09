@@ -211,7 +211,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onOpenEmailSource: ev => {
       ev.stopPropagation();
-      sendOpenEmailSource(email.key);
+      sendOpenEmailSource({ key: email.key, accountId: myAccount.id });
     },
     onPrintEmail: ev => {
       ev.stopPropagation();

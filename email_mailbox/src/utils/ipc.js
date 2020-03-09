@@ -2,6 +2,10 @@ import ipc from '@criptext/electron-better-ipc/renderer';
 
 /*  Windows call
 ----------------------------- */
+export const changeAccountApp = async accountId => {
+  return await ipc.callMain('change-account-app', accountId);
+};
+
 export const checkForUpdates = showDialog => {
   ipc.callMain('check-for-updates', showDialog);
 };
@@ -50,9 +54,13 @@ export const openFileExplorer = filename => {
   ipc.callMain('open-file-explorer', filename);
 };
 
-export const processPendingEvents = () => {
+export const openLoginWindow = () => {
+  ipc.callMain('open-login');
+};
+
+export const processPendingEvents = params => {
   setTimeout(() => {
-    ipc.callMain('process-pending-events');
+    ipc.callMain('process-pending-events', params);
   }, 1000);
 };
 
@@ -66,10 +74,6 @@ export const restartAlice = async () => {
 
 export const restartApp = () => ipc.callMain('restart-app');
 
-export const restartSocket = async jwt => {
-  await ipc.callMain('restart-socket', jwt);
-};
-
 export const sendEndSyncDevicesEvent = async () => {
   await ipc.callMain('close-create-keys-loading');
   return await ipc.callMain('end-sync-mailbox-event');
@@ -80,8 +84,8 @@ export const sendEndLinkDevicesEvent = async () => {
   return await ipc.callMain('close-create-keys-loading');
 };
 
-export const sendOpenEmailSource = metadataKey => {
-  ipc.callMain('open-email-source', metadataKey);
+export const sendOpenEmailSource = params => {
+  ipc.callMain('open-email-source', params);
 };
 
 export const sendPrintEmailEvent = emailId => {
@@ -100,8 +104,8 @@ export const sendStartSyncDeviceEvent = data => {
   ipc.callMain('start-sync-mailbox-event', data);
 };
 
-export const showNotificationApp = ({ title, message, threadId }) => {
-  ipc.callMain('show-notification', { title, message, threadId });
+export const showNotificationApp = params => {
+  ipc.callMain('show-notification', params);
 };
 
 export const startRekey = params => {
@@ -181,8 +185,8 @@ export const getUserSettings = async () => {
   return await ipc.callMain('client-get-user-settings');
 };
 
-export const insertPreKeys = async preKeys => {
-  return await ipc.callMain('client-insert-prekeys', preKeys);
+export const insertPreKeys = async params => {
+  return await ipc.callMain('client-insert-prekeys', params);
 };
 
 export const logout = async () => {
@@ -263,16 +267,12 @@ export const uploadAvatar = async params => {
 
 /*  DataBase
 ----------------------------- */
-export const cleanDatabase = async () => {
-  return await ipc.callMain('db-clean-database');
+export const cleanDatabase = async params => {
+  return await ipc.callMain('db-clean-database', params);
 };
 
-export const cleanDataLogout = async recipientId => {
-  return await ipc.callMain('db-clean-data-logout', recipientId);
-};
-
-export const migrateAlice = async () => {
-  return await ipc.callMain('db-migrate-alice');
+export const cleanDataLogout = async params => {
+  return await ipc.callMain('db-clean-data-logout', params);
 };
 
 export const createEmail = async params => {
@@ -307,34 +307,28 @@ export const createSignedPreKeyRecord = async params => {
   return await ipc.callMain('db-create-signed-prekey-record', params);
 };
 
-export const deleteEmailByKeys = async keys => {
-  return await ipc.callMain('db-delete-email-by-keys', keys);
+export const deleteEmailByKeys = async params => {
+  return await ipc.callMain('db-delete-email-by-keys', params);
 };
 
 export const deleteEmailLabel = async params => {
   return await ipc.callMain('db-delete-email-label', params);
 };
 
-export const deleteEmailsByIds = async ids => {
-  return await ipc.callMain('db-delete-emails-by-ids', ids);
+export const deleteEmailsByIds = async params => {
+  return await ipc.callMain('db-delete-emails-by-ids', params);
 };
 
-export const deleteEmailsByThreadIdAndLabelId = async ({
-  threadIds,
-  labelId
-}) => {
-  return await ipc.callMain('db-delete-emails-by-threadid-and-labelid', {
-    threadIds,
-    labelId
-  });
+export const deleteEmailsByThreadIdAndLabelId = async params => {
+  return await ipc.callMain('db-delete-emails-by-threadid-and-labelid', params);
 };
 
 export const deleteFeedItemById = async feedItemId => {
   return await ipc.callMain('db-delete-feed-item-by-id', feedItemId);
 };
 
-export const deleteLabelById = async labelId => {
-  return await ipc.callMain('db-delete-label-by-id', labelId);
+export const deleteLabelById = async params => {
+  return await ipc.callMain('db-delete-label-by-id', params);
 };
 
 export const deletePreKeyPair = async params => {
@@ -345,32 +339,32 @@ export const deleteSessionRecord = async params => {
   return await ipc.callMain('db-delete-session-record', params);
 };
 
-export const getAccount = async () => {
-  return await ipc.callMain('db-get-account');
+export const getAccountByParams = async params => {
+  return await ipc.callMain('db-get-account-by-params', params);
 };
 
-export const getAllFeedItems = async () => {
-  return await ipc.callMain('db-get-all-feed-items');
+export const getAllFeedItems = async params => {
+  return await ipc.callMain('db-get-all-feed-items', params);
 };
 
 export const getDataReady = async () => {
   return await ipc.callMain('client-get-data-ready');
 };
 
-export const getAllLabels = async () => {
-  return await ipc.callMain('db-get-all-labels');
+export const getAllLabels = async params => {
+  return await ipc.callMain('db-get-all-labels', params);
 };
 
-export const getContactByEmails = async emails => {
-  return await ipc.callMain('db-get-contact-by-emails', emails);
+export const getContactByEmails = async params => {
+  return await ipc.callMain('db-get-contact-by-emails', params);
 };
 
 export const getContactByIds = async ids => {
   return await ipc.callMain('db-get-contact-by-ids', ids);
 };
 
-export const getEmailByKey = async key => {
-  return await ipc.callMain('db-get-email-by-key', key);
+export const getEmailByKey = async params => {
+  return await ipc.callMain('db-get-email-by-key', params);
 };
 
 export const getEmailByParams = async params => {
@@ -381,31 +375,32 @@ export const getEmailLabelsByEmailId = async emailId => {
   return await ipc.callMain('db-get-email-labels-by-emailid', emailId);
 };
 
-export const getEmailsByArrayParam = async emailIds => {
-  return await ipc.callMain('db-get-emails-by-array-param', emailIds);
+export const getEmailsByArrayParam = async params => {
+  return await ipc.callMain('db-get-emails-by-array-param', params);
 };
 
-export const getEmailsByIds = async emailIds => {
-  return await ipc.callMain('db-get-emails-by-ids', emailIds);
+export const getEmailsByIds = async params => {
+  return await ipc.callMain('db-get-emails-by-ids', params);
 };
 
-export const getEmailsByLabelIds = async labelIds => {
-  return await ipc.callMain('db-get-emails-by-labelids', labelIds);
+export const getEmailsByLabelIds = async params => {
+  return await ipc.callMain('db-get-emails-by-labelids', params);
 };
 
 export const getEmailsByThreadId = async params => {
   return await ipc.callMain('db-get-emails-by-threadid', params);
 };
 
-export const getEmailsByThreadIdAndLabelId = async ({ threadIds, labelId }) => {
-  return await ipc.callMain('db-get-emails-by-threadid-and-labelid', {
-    threadIds,
-    labelId
-  });
+export const getEmailsIdsByThreadIds = async params => {
+  return await ipc.callMain('db-get-emailsIds-by-threadids', params);
 };
 
-export const getEmailsCounterByLabelId = async labelId => {
-  return await ipc.callMain('db-get-emails-counter-by-labelid', labelId);
+export const getEmailsByThreadIdAndLabelId = async params => {
+  return await ipc.callMain('db-get-emails-by-threadid-and-labelid', params);
+};
+
+export const getEmailsCounterByLabelId = async params => {
+  return await ipc.callMain('db-get-emails-counter-by-labelid', params);
 };
 
 export const getEmailsGroupByThreadByParams = async params => {
@@ -420,8 +415,8 @@ export const getFilesByTokens = async tokens => {
   return await ipc.callMain('db-get-files-by-tokens', tokens);
 };
 
-export const getFeedItemsCounterBySeen = async seen => {
-  return await ipc.callMain('db-get-feeditems-counter-by-seen', seen);
+export const getFeedItemsCounterBySeen = async params => {
+  return await ipc.callMain('db-get-feeditems-counter-by-seen', params);
 };
 
 export const getIdentityKeyRecord = async params => {
@@ -432,12 +427,12 @@ export const getLabelById = async id => {
   return await ipc.callMain('db-get-labelid', id);
 };
 
-export const getLabelsByText = async text => {
-  return await ipc.callMain('db-get-labesls-by-text', text);
+export const getLabelsByText = async params => {
+  return await ipc.callMain('db-get-labesls-by-text', params);
 };
 
-export const getLabelByUuid = async uuid => {
-  return await ipc.callMain('db-get-label-by-uuid', uuid);
+export const getLabelByUuid = async params => {
+  return await ipc.callMain('db-get-label-by-uuid', params);
 };
 
 export const getPreKeyPair = async params => {
@@ -448,8 +443,8 @@ export const getSessionRecord = async params => {
   return await ipc.callMain('db-get-session-record', params);
 };
 
-export const getSessionRecordIds = async () => {
-  return await ipc.callMain('db-get-prekeys-ids');
+export const getSessionRecordIds = async params => {
+  return await ipc.callMain('db-get-prekeys-ids', params);
 };
 
 export const getSignedPreKey = async params => {
@@ -504,11 +499,8 @@ export const updateSettings = async params => {
   return await ipc.callMain('db-update-settings', params);
 };
 
-export const updateUnreadEmailByThreadIds = async ({ threadIds, unread }) => {
-  return await ipc.callMain('db-update-unread-email-by-threadids', {
-    threadIds,
-    unread
-  });
+export const updateUnreadEmailByThreadIds = async params => {
+  return await ipc.callMain('db-update-unread-email-by-threadids', params);
 };
 
 /* DataTransfer
@@ -559,18 +551,12 @@ export const restoreBackupUnencrypted = async params => {
   return await ipc.callMain('restore-backup-unencrypted', params);
 };
 
-export const disableAutoBackup = async () => {
-  return await ipc.callMain('disable-auto-backup');
+export const disableAutoBackup = async accountId => {
+  return await ipc.callMain('disable-auto-backup', accountId);
 };
 
 /* Nucleus
 ----------------------------- */
 export const reportContentUnencrypted = async error => {
   return await ipc.callMain('nucleups-report-content-unencrypted', error);
-};
-
-/* Migrate
------------------------------ */
-export const upgradeAccount = async params => {
-  return await ipc.callMain('upgrade-account', params);
 };

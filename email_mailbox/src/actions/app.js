@@ -5,13 +5,14 @@ import {
   addLabels,
   addThreads,
   stopLoadThread,
+  updateBadgeAccounts,
   updateBadgeLabels
 } from './index';
 import { defineLabels } from './../utils/LabelUtils';
 import { defineThreads } from './../utils/ThreadUtils';
 import { defineFeedItems } from './../utils/FeedItemUtils';
 import { getGroupEvents } from './../utils/electronEventInterface';
-import { LabelType, needsUpgrade } from './../utils/electronInterface';
+import { LabelType } from './../utils/electronInterface';
 const INIT_LIMIT_THREADS = 22;
 
 export const addDataApp = ({
@@ -50,6 +51,7 @@ export const loadApp = params => {
     dispatch(addDataApp({ activity, contact, label, feeditem, thread }));
     const labelIds = [LabelType.inbox.id, LabelType.spam.id];
     dispatch(updateBadgeLabels(labelIds));
-    await getGroupEvents({ useLegacy: needsUpgrade() });
+    dispatch(updateBadgeAccounts());
+    await getGroupEvents({});
   };
 };

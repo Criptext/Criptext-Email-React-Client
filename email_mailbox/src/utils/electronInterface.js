@@ -45,6 +45,14 @@ export const getBackupStatus = () => {
   return globalManager.backupStatus.get();
 };
 
+export const getTokenByRecipientId = (recipientId, domain) => {
+  return myAccount.loggedAccounts.find(
+    account =>
+      account.recipientId === recipientId ||
+      account.recipientId === `${recipientId}@${domain}`
+  ).jwt;
+};
+
 /*  Window events
 ----------------------------- */
 export const reloadWindow = () => {
@@ -59,10 +67,4 @@ export const showSaveFileDialog = (fileName, callback) => {
 ----------------------------- */
 export const getNews = ({ code }) => {
   return newsClient.getNews({ code });
-};
-
-/*  DataBase
------------------------------ */
-export const needsUpgrade = () => {
-  return globalManager.needsUpgrade.getValue();
 };

@@ -44,7 +44,7 @@ const removeDataTransferDirectoryRecursive = pathToDelete => {
 /*  Mathods
 ----------------------------- */
 const checkClient = async () => {
-  const [account] = await dbManager.getAccount();
+  const [account] = await dbManager.getAccountByParams({ isActive: true });
   const token = account ? account.jwt : undefined;
   if (!transferClient.upload || transferClient.token !== token) {
     initializeClient(token);
@@ -134,10 +134,12 @@ const importDatabase = async params => {
   const withoutBodiesEncryption = params
     ? params.withoutBodiesEncryption
     : undefined;
+  const accObj = params ? params.accountObj : undefined;
   return await dbExporter.importDatabaseFromFile({
     filepath: decryptedFileName,
     isStrict: true,
-    withoutBodiesEncryption
+    withoutBodiesEncryption,
+    accountObj: accObj
   });
 };
 

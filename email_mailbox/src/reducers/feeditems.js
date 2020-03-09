@@ -1,4 +1,4 @@
-import { FeedItem } from './../actions/types';
+import { Activity, FeedItem } from './../actions/types';
 import { Map, fromJS } from 'immutable';
 
 const initFeedItems = Map({
@@ -16,6 +16,8 @@ const feeditems = (state = initFeedItems, action) => {
         list: list(state.get('list'), action)
       });
     }
+    case Activity.LOGOUT:
+      return initFeedItems;
     case FeedItem.REMOVE_SUCCESS:
     case FeedItem.UPDATE: {
       return state.merge({ list: list(state.get('list'), action) });

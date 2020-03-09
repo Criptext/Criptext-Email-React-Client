@@ -33,7 +33,7 @@ export const addLabel = label => {
           cmd: SocketCommand.PEER_LABEL_CREATED,
           params: { text, color, uuid }
         };
-        await postPeerEvent(eventParams);
+        await postPeerEvent({ data: eventParams });
         dispatch(addLabels(labels));
       }
     } catch (e) {
@@ -66,7 +66,7 @@ export const removeLabel = (id, uuid) => {
         cmd: SocketCommand.PEER_LABEL_DELETE,
         params: { uuid }
       };
-      await postPeerEvent(eventParams);
+      await postPeerEvent({ data: eventParams });
     } catch (e) {
       sendUpdateLabelsErrorMessage();
     }
@@ -90,9 +90,9 @@ export const updateLabel = ({ id, uuid, color, text, visible }) => {
         text,
         visible
       });
-      if (!response) return;
+      if (!response) return false;
       dispatch(updateLabelSuccess({ id, uuid, color, text, visible }));
-      if (!text) return;
+      if (!text) return false;
       const eventParams = {
         cmd: SocketCommand.PEER_LABEL_UPDATE,
         params: {
@@ -101,9 +101,11 @@ export const updateLabel = ({ id, uuid, color, text, visible }) => {
           text
         }
       };
-      await postPeerEvent(eventParams);
+      await postPeerEvent({ data: eventParams });
+      return true;
     } catch (e) {
       sendUpdateLabelsErrorMessage();
+      return false;
     }
   };
 };
@@ -149,7 +151,7 @@ export const updateBadgeLabels = labelIds => {
               badge: badgeSpam
             };
           } else if (labelId === LabelType.draft.id) {
-            const badgeDraft = await getEmailsCounterByLabelId(labelId);
+            const badgeDraft = await getEmailsCounterByLabelId({ labelId });
             return {
               id: String(labelId),
               badge: badgeDraft
