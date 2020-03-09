@@ -180,6 +180,10 @@ export const checkExpiredSession = async params => {
   return await ipc.callMain('client-check-expired-session', params);
 };
 
+export const deleteAddress = async addressId => {
+  return await ipc.callMain('client-delete-address', addressId);
+};
+
 export const deleteMyAccount = async params => {
   return await ipc.callMain('client-delete-my-account', params);
 };
@@ -324,6 +328,10 @@ export const createSignedPreKeyRecord = async params => {
 
 export const deleteEmailByKeys = async params => {
   return await ipc.callMain('db-delete-email-by-keys', params);
+};
+
+export const deleteAliases = async params => {
+  return await ipc.callMain('db-delete-alias', params);
 };
 
 export const deleteEmailLabel = async params => {

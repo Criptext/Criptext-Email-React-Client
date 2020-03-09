@@ -165,13 +165,12 @@ const checkExpiredSession = async (
   }
 };
 
-const activateAddress = async ({rowId, active}) => {
-  console.log('YAS : ', rowId, active);
+const activateAddress = async ({ rowId, active }) => {
   const res = await client.activateAddress(rowId, active);
   return res.status === 200
     ? res
-    : await checkExpiredSession(res, activateAddress, {rowId, active});
-}
+    : await checkExpiredSession(res, activateAddress, { rowId, active });
+};
 
 const acknowledgeEvents = async params => {
   const { eventIds, recipientId } = params;
@@ -215,6 +214,13 @@ const checkAvailableUsername = async username => {
     optionalToken: '@'
   });
   return await client.checkAvailableUsername(username);
+};
+
+const deleteAddress = async addressId => {
+  const res = await client.deleteAddress(addressId);
+  return res.status === 200
+    ? res
+    : await checkExpiredSession(res, deleteAddress, addressId);
 };
 
 const deleteDeviceToken = async params => {
@@ -690,6 +696,7 @@ module.exports = {
   changeRecoveryEmail,
   checkAvailableUsername,
   checkExpiredSession,
+  deleteAddress,
   deleteDeviceToken,
   deleteMyAccount,
   findDevices,

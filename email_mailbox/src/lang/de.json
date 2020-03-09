@@ -427,6 +427,15 @@
       "cancelButtonLabel": "Abbrechen",
       "confirmButtonLabel": "Löschen"
     },
+    "delete_alias": {
+      "title": "Delete Alias",
+      "description": "If you delete this Alias your emails will remain intact, but you will no longer be able to send or receive emails under that address.",
+      "question": "Are you sure you want to delete {0}?",
+      "buttons": {
+        "cancelLabel": "Cancel",
+        "continueLabel": "Delete"
+      }
+    },
     "export_backup": {
       "title": "Passphrase eingeben",
       "switchLabel": "Sicherung verschlüsseln",

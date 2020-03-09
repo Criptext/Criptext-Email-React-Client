@@ -84,7 +84,9 @@ const SettingAccount = props => (
       onConfirmChangePassword={props.onConfirmChangePassword}
       onConfirmChangeRecoveryEmail={props.onConfirmChangeRecoveryEmail}
       onConfirmSetReplyTo={props.onConfirmSetReplyTo}
+      onConfirmDeleteAlias={props.onConfirmDeleteAlias}
       onShowSettingsPopup={props.onShowSettingsPopup}
+      deleteAliasParams={props.deleteAliasParams}
       setReplyToPopupParams={props.setReplyToPopupParams}
       onSetExportBackupPassword={props.onSetExportBackupPassword}
       onSelectBackupFolder={props.onSelectBackupFolder}
@@ -401,6 +403,7 @@ RecoveryEmailConfirmationMessage.propTypes = {
 SettingAccount.propTypes = {
   changePasswordPopupParams: PropTypes.object,
   changeRecoveryEmailPopupParams: PropTypes.object,
+  deleteAliasParams: PropTypes.object,
   devicesQuantity: PropTypes.number,
   isEnterprise: PropTypes.bool,
   isHiddenSettingsPopup: PropTypes.bool,
@@ -414,6 +417,7 @@ SettingAccount.propTypes = {
   onClosePopup: PropTypes.func,
   onConfirmChangePassword: PropTypes.func,
   onConfirmChangeRecoveryEmail: PropTypes.func,
+  onConfirmDeleteAlias: PropTypes.func,
   onConfirmSetReplyTo: PropTypes.func,
   onSelectBackupFolder: PropTypes.func,
   onSetExportBackupPassword: PropTypes.func,

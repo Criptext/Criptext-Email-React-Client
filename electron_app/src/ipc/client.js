@@ -34,6 +34,10 @@ ipc.answerRenderer(
     clientManager.checkExpiredSession(response, initialRequest, requestParams)
 );
 
+ipc.answerRenderer('client-delete-address', addressId =>
+  clientManager.deleteAddress(addressId)
+);
+
 ipc.answerRenderer('client-delete-device-token', params =>
   clientManager.deleteDeviceToken(params)
 );

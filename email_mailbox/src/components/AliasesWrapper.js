@@ -83,21 +83,22 @@ class AliasesWrapper extends Component {
       return;
     }
     switch (response.status) {
-      case 200:
+      case 200: {
         const addressId = response.body.addressId;
         const alias = {
           rowId: addressId,
           name: username,
           domain: domain === appDomain ? null : domain,
           active: true
-        }
+        };
         await createAlias(alias);
-        this.props.onAddAlias(alias)
+        this.props.onAddAlias(alias);
         this.setState({
           loading: false,
           success: true
         });
         break;
+      }
       case 400:
         this.setState({
           loading: false,
@@ -120,6 +121,7 @@ class AliasesWrapper extends Component {
 }
 
 AliasesWrapper.propTypes = {
+  onAddAlias: PropTypes.func,
   onChangePanel: PropTypes.func,
   onCheckForUpdates: PropTypes.func,
   onGetUserSettings: PropTypes.func,

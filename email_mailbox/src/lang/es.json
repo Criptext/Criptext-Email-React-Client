@@ -434,6 +434,15 @@
       "cancelButtonLabel": "Cancelar",
       "confirmButtonLabel": "Eliminar"
     },
+    "delete_alias": {
+      "title": "Eliminar Alias",
+      "description": "Si eliminas este alias tus correos permanecerán intactos, pero no podrás enviar ni recibir correos a esa dirección.",
+      "question": "Estás seguro que quieres eliminar {0}?",
+      "buttons": {
+        "cancelLabel": "Cancelar",
+        "continueLabel": "Eliminar"
+      }
+    },
     "export_backup": {
       "title": "Exportar Respaldo",
       "switchLabel": "Encriptar respaldo",

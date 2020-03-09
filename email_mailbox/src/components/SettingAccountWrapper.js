@@ -4,6 +4,8 @@ import { myAccount, requiredMinLength } from './../utils/electronInterface';
 import {
   changePassword,
   changeRecoveryEmail,
+  deleteAddress,
+  deleteAliases,
   setReplyTo,
   setTwoFactorAuth,
   createDefaultBackupFolder
@@ -45,6 +47,7 @@ const SETTINGS_POPUP_TYPES = {
   CHANGE_RECOVERY_EMAIL: 'change-recovery-email',
   CHANGE_SECURITY_PIN: 'change-security-pin',
   DELETE_ACCOUNT: 'delete-account',
+  DELETE_ALIAS: 'delete-alias',
   EXPORT_BACKUP: 'export-backup',
   LOGOUT: 'logout',
   MANUAL_SYNC: 'manual-sync',
@@ -105,6 +108,10 @@ class SettingAccountWrapper extends Component {
           hasError: true
         }
       },
+      deleteAliasParams: {
+        addressId: undefined,
+        email: undefined
+      },
       recoveryEmailParams: {
         recoveryEmail: props.recoveryEmail,
         recoveryEmailConfirmed: props.recoveryEmailConfirmed,
@@ -161,12 +168,14 @@ class SettingAccountWrapper extends Component {
 
   render() {
     const devicesQuantity = this.props.devices ? this.props.devices.length : 0;
-    console.log('PROPS : ', this.props.aliasesByDomain);
     return (
       <SettingAccount
         aliasesByDomain={this.props.aliasesByDomain}
         onChangePanel={this.props.onChangePanel}
         onChangeAliasStatus={this.props.onChangeAliasStatus}
+        onConfirmDeleteAlias={this.handleConfirmDeleteAlias}
+        deleteAliasParams={this.state.deleteAliasParams}
+        onClickDeleteAlias={this.handleClickDeleteAlias}
         changePasswordPopupParams={this.state.changePasswordPopupParams}
         changeRecoveryEmailPopupParams={
           this.state.changeRecoveryEmailPopupParams
@@ -410,6 +419,15 @@ class SettingAccountWrapper extends Component {
         };
         break;
       }
+      case SETTINGS_POPUP_TYPES.DELETE_ALIAS: {
+        newState = {
+          deleteAliasParams: {
+            addressId: undefined,
+            email: undefined
+          }
+        };
+        break;
+      }
       default:
         newState = {};
         break;
@@ -421,6 +439,17 @@ class SettingAccountWrapper extends Component {
     this.setState({
       isHiddenSettingsPopup: false,
       settingsPopupType: SETTINGS_POPUP_TYPES.CHANGE_PASSWORD
+    });
+  };
+
+  handleClickDeleteAlias = (rowId, email) => {
+    this.setState({
+      isHiddenSettingsPopup: false,
+      settingsPopupType: SETTINGS_POPUP_TYPES.DELETE_ALIAS,
+      deleteAliasParams: {
+        addressId: rowId,
+        email
+      }
     });
   };
 
@@ -760,6 +789,18 @@ class SettingAccountWrapper extends Component {
     sendChangePasswordErrorMessage();
   };
 
+  handleConfirmDeleteAlias = async () => {
+    if (!this.state.deleteAliasParams) return;
+    const { addressId, email } = this.state.deleteAliasParams;
+    const res = await deleteAddress(addressId);
+    if (!res || res.status !== 200) return;
+
+    this.handleClosePopup();
+    this.handleClearPopupParams(SETTINGS_POPUP_TYPES.DELETE_ALIAS);
+    await deleteAliases({ rowIds: [addressId] });
+    this.props.onRemoveAlias(addressId, email);
+  };
+
   handleConfirmSetReplyTo = async () => {
     const email = this.state.setReplyToPopupParams.replyToInput.email;
     const SUCCESS_STATUS = 200;
@@ -1057,12 +1098,15 @@ class SettingAccountWrapper extends Component {
 }
 
 SettingAccountWrapper.propTypes = {
+  aliasesByDomain: PropTypes.object,
   devices: PropTypes.array,
   isHiddenSettingsPopup: PropTypes.bool,
+  onChangeAliasStatus: PropTypes.func,
   onChangePanel: PropTypes.func,
   onDeleteDeviceData: PropTypes.func,
   onResendConfirmationEmail: PropTypes.func,
   onResetPassword: PropTypes.func,
+  onRemoveAlias: PropTypes.func,
   onSetReadReceiptsTracking: PropTypes.func,
   onUpdateAccount: PropTypes.func,
   readReceiptsEnabled: PropTypes.bool,

@@ -1,3 +1,7 @@
+.cptx-section-item-domain {
+  margin-top: 15px;
+}
+
 .criptext-alias-item-container {
   height: 34px;
   display: flex;
@@ -12,7 +16,8 @@
   max-width: 282px;
 
   .criptext-alias-item-delete {
-    padding: 0px 7px;
+    color: #ff5555;
+    font-size: 26px;
     visibility: hidden;
     pointer-events: none;
     display: flex;

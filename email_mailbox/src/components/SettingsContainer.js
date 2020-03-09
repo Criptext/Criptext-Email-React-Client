@@ -5,7 +5,10 @@ import CustomDomains from './CustomDomains';
 import AliasesWrapper from './AliasesWrapper';
 import SettingsHOC from './SettingsHOC';
 import { myAccount } from '../utils/electronInterface';
-import { sendRemoveDeviceErrorMessage } from '../utils/electronEventInterface';
+import {
+  sendRemoveDeviceErrorMessage,
+  sendAliasSuccessStatusMessage
+} from '../utils/electronEventInterface';
 import { getAlias, updateAlias, activateAddress } from '../utils/ipc';
 import { appDomain } from '../utils/const';
 
@@ -68,6 +71,7 @@ class SettingsContainer extends Component {
             onClickSection={this.handleClickSection}
             onClosePopup={this.handleClosePopup}
             onConfirmLogout={this.handleConfirmLogout}
+            onRemoveAlias={this.handleRemoveAlias}
             onRemoveDevice={this.handleRemoveDevice}
             recoveryEmail={this.state.recoveryEmail}
             recoveryEmailConfirmed={this.state.recoveryEmailConfirmed}
@@ -94,7 +98,13 @@ class SettingsContainer extends Component {
 
     const myAliases = await getAlias({});
     const rowIds = new Set();
-    const aliasesByDomain = [...myAliases, ...aliases].reduce(
+    const aliasesWithDomain = myAliases.map(alias => {
+      return {
+        ...alias,
+        domain: alias.domain || appDomain
+      };
+    });
+    const aliasesByDomain = [...aliasesWithDomain, ...aliases].reduce(
       (result, alias) => {
         if (rowIds.has(alias.rowId)) return result;
         const aliasDomain = alias.domain || appDomain;
@@ -127,8 +137,20 @@ class SettingsContainer extends Component {
     });
   };
 
-  handleChangeAliasStatus = async (rowId, domain, active) => {
-    console.log('ROW ID ' , rowId, domain, active);
+  handleRemoveAlias = (addressId, email) => {
+    const domain = email.split('@')[1];
+    const aliasesByDomain = { ...this.state.aliasesByDomain };
+    if (!aliasesByDomain[domain]) return;
+    aliasesByDomain[domain] = aliasesByDomain[domain].filter(
+      alias => alias.rowId !== addressId
+    );
+    if (aliasesByDomain[domain].length === 0) delete aliasesByDomain[domain];
+    this.setState({
+      aliasesByDomain
+    });
+  };
+
+  handleChangeAliasStatus = (rowId, domain, active) => {
     const aliasDomain = domain || appDomain;
     const aliasesByDomain = { ...this.state.aliasesByDomain };
     if (!aliasesByDomain[aliasDomain]) aliasesByDomain[aliasDomain] = [];
@@ -136,28 +158,30 @@ class SettingsContainer extends Component {
       alias => alias.rowId === rowId
     );
     aliasesByDomain[aliasDomain][index].active = active;
-    this.setState({
-      aliasesByDomain
-    }, async () => {
-      const result = await activateAddress({
-        rowId,
-        active
-      });
-      console.log(result);
-      if (result && result.status === 200) {
-        console.log('RESULT');
-        await updateAlias({
+    this.setState(
+      {
+        aliasesByDomain
+      },
+      async () => {
+        const result = await activateAddress({
           rowId,
           active
         });
-      } else {
-        console.log('FAILURE');
-        aliasesByDomain[aliasDomain][index].active = !active;
-        this.setState({
-          aliasesByDomain
-        })
+        if (result && result.status === 200) {
+          await updateAlias({
+            rowId,
+            active
+          });
+          sendAliasSuccessStatusMessage(active);
+        } else {
+          aliasesByDomain[aliasDomain][index].active = !active;
+          this.setState({
+            aliasesByDomain
+          });
+          sendAliasSuccessStatusMessage(!active);
+        }
       }
-    });
+    );
   };
 
   handleChangePanel = panel => {

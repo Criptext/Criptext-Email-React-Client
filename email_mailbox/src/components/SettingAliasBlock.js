@@ -26,9 +26,11 @@ const AliasesBlock = props => (
       Object.keys(props.aliasesByDomain).map(domain => {
         return (
           <AliasDomainContainer
+            key={domain}
             domain={domain}
             aliases={props.aliasesByDomain[domain]}
             onChangeAliasStatus={props.onChangeAliasStatus}
+            onClickDeleteAlias={props.onClickDeleteAlias}
           />
         );
       })}
@@ -36,16 +38,31 @@ const AliasesBlock = props => (
 );
 
 const AliasDomainContainer = props => (
-  <div>
+  <div className="cptx-section-item-domain">
     <span className="cptx-section-item-title">{props.domain}</span>
-    {props.aliases.map(alias => <AliasItem onChangeAliasStatus={props.onChangeAliasStatus} {...alias} />)}
+    {props.aliases.map(alias => (
+      <AliasItem
+        key={alias.rowId}
+        onChangeAliasStatus={props.onChangeAliasStatus}
+        onClickDeleteAlias={props.onClickDeleteAlias}
+        {...alias}
+      />
+    ))}
   </div>
 );
 
 const AliasItem = props => (
   <div className="criptext-alias-item-container">
     <div className="criptext-alias-item-wrapper">
-      <i className="icon-exit criptext-alias-item-delete" />
+      <i
+        className="icon-exit criptext-alias-item-delete"
+        onClick={() => {
+          props.onClickDeleteAlias(
+            props.rowId,
+            `${props.name}@${props.domain}`
+          );
+        }}
+      />
       <div className="criptext-alias-item-name">
         {props.name}
         {!props.active && <span>&nbsp;(disabled)</span>}
@@ -55,15 +72,34 @@ const AliasItem = props => (
       theme="two"
       name={`aliasItem${props.rowId}`}
       onChange={() => {
-        props.onChangeAliasStatus(props.rowId, props.domain, !props.active)
+        props.onChangeAliasStatus(props.rowId, props.domain, !props.active);
       }}
       checked={props.active}
     />
   </div>
 );
 
+AliasItem.propTypes = {
+  onClickDeleteAlias: PropTypes.func,
+  onChangeAliasStatus: PropTypes.func,
+  rowId: PropTypes.number,
+  domain: PropTypes.string,
+  active: PropTypes.bool,
+  name: PropTypes.string
+};
+
+AliasDomainContainer.propTypes = {
+  domain: PropTypes.string,
+  aliases: PropTypes.array,
+  onChangeAliasStatus: PropTypes.func,
+  onClickDeleteAlias: PropTypes.func
+};
+
 AliasesBlock.propTypes = {
-  onChangePanel: PropTypes.func
+  aliasesByDomain: PropTypes.object,
+  onChangeAliasStatus: PropTypes.func,
+  onChangePanel: PropTypes.func,
+  onClickDeleteAlias: PropTypes.func
 };
 
 export default AliasesBlock;
