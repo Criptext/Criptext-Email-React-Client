@@ -42,7 +42,18 @@ const accounts = (state = initAccounts(myAccount), action) => {
       }, state);
     }
     case Account.RELOAD_ACCOUNTS: {
-      return initAccounts(myAccount);
+      return initAccounts(myAccount).reduce((result, item) => {
+        const accountId = item.get('id');
+        const accountName = item.get('name');
+        const accountItem = result.get(`${accountId}`);
+        return result.set(
+          `${accountId}`,
+          account(accountItem, {
+            accountName,
+            type: action.type
+          })
+        );
+      }, state);
     }
     default:
       return state;
@@ -55,6 +66,12 @@ const account = (state, action) => {
       const { badge } = action.account;
       return state.merge({
         badge
+      });
+    }
+    case Account.RELOAD_ACCOUNTS: {
+      const { accountName: name } = action;
+      return state.merge({
+        name
       });
     }
     default:

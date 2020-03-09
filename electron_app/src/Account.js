@@ -30,6 +30,7 @@ class Account {
     return this.activeAccount.id;
   }
   get recipientId() {
+    if (!this.activeAccount) return;
     return this.activeAccount.recipientId;
   }
   get name() {
