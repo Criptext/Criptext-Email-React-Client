@@ -17,6 +17,7 @@ CriptextEncrypt.db-shm
 CriptextEncrypt.db-wal
 recovery.key
 umzug.json
+migration.json
 
 # production
 *_interface/build

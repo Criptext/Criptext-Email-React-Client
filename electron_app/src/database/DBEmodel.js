@@ -35,6 +35,29 @@ const getDbEncryptPath = node_env => {
   }
 };
 
+const getUmzugPath = node_env => {
+  const currentDirToReplace =
+    process.platform === 'win32' ? '\\src\\database' : '/src/database';
+  switch (node_env) {
+    case 'test': {
+      return './src/__integrations__/umzug.json';
+    }
+    case 'development': {
+      return path
+        .join(__dirname, '/migration.json')
+        .replace('/app.asar', '')
+        .replace(currentDirToReplace, '');
+    }
+    default: {
+      const userDataPath = app.getPath('userData');
+      return path
+        .join(userDataPath, '/migration.json')
+        .replace('/app.asar', '')
+        .replace(currentDirToReplace, '');
+    }
+  }
+};
+
 const myDBEncryptPath = () => getDbEncryptPath(process.env.NODE_ENV);
 
 const deleteDatabase = () => {
@@ -493,6 +516,9 @@ const initDatabaseEncrypted = async (
     const migrationPath = path.join(__dirname, '/DBEmigrations');
     const migrator = new umzug({
       storage: 'json',
+      storageOptions: {
+        path: getUmzugPath(process.env.NODE_ENV)
+      },
       logging: false,
       upName: 'up',
       downName: 'down',
