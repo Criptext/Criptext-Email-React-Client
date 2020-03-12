@@ -43,7 +43,9 @@ export const encryptEmail = async ({
     body: JSON.stringify({
       salt,
       iv,
-      content
+      content,
+      recipientId,
+      deviceId
     })
   };
   return await fetch(requestUrl, options);
