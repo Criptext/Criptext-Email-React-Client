@@ -1,5 +1,6 @@
 import React from 'react';
 import './customDomains.scss';
+import MxLoadingWrapper from './MxLoadingWrapper';
 
 const CustomDomains = props => {
   return (
@@ -98,7 +99,28 @@ const stepsRenderer = props => {
       </div>
     );
   } else if (actualStep === 3) {
-    return;
+    return (
+      <div className="custom-domains-steps-third">
+        <MxLoadingWrapper onClickMinusStep={props.onClickMinusStep} />
+      </div>
+    );
+  } else if (actualStep === 4) {
+    return (
+      <div className="custom-domains-steps-fourth">
+        <div className="custom-domains-steps-title">Domain Setup Complete!</div>
+        <div className="custom-domains-steps-text">
+          You can now add an alias with @liknaru.com
+        </div>
+        <div className="custom-domains-steps-button-container">
+          <button
+            className="custom-domains-steps-button"
+            onClick={() => props.onClickChangeStep(newStep)}
+          >
+            Create Alias
+          </button>
+        </div>
+      </div>
+    );
   }
 };
 

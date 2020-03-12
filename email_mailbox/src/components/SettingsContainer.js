@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Settings from './../containers/Settings';
-import CustomDomains from './CustomDomains';
+import CustomDomainsWrapper from './CustomDomainsWrapper';
 import AliasesWrapper from './AliasesWrapper';
 import SettingsHOC from './SettingsHOC';
 import { myAccount } from '../utils/electronInterface';
@@ -13,7 +13,7 @@ import { getAlias, updateAlias, activateAddress } from '../utils/ipc';
 import { appDomain } from '../utils/const';
 
 const Setting = SettingsHOC(Settings);
-const Domains = SettingsHOC(CustomDomains);
+const Domains = SettingsHOC(CustomDomainsWrapper);
 const Alias = SettingsHOC(AliasesWrapper);
 
 const PANEL = {

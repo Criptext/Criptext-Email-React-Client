@@ -1,0 +1,157 @@
+#loading-container{
+    .dialog-content{
+      width: 330px;
+      
+      .dialog-content-header{
+        .icon-criptext {
+          color: #0091ff;
+          font-size: 40px;
+        }
+      }
+
+      .dialog-title {
+        font-family: AvenirNext;
+        font-size: 20px;
+        font-weight: 600;
+        text-align: center;
+        color: #000000;
+      }
+
+      .dialog-text {
+        object-fit: contain;
+        font-family: AvenirNext;
+        font-size: 12px;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.67;
+        letter-spacing: -0.38px;
+        color: #373a45;
+      }
+
+      .dialog-gray {
+        margin-top: 0;
+        margin-bottom: 0;
+        object-fit: contain;
+        font-family: AvenirNext;
+        font-size: 12px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 2.25;
+        letter-spacing: normal;
+        color: #8d95a5;
+      }
+  
+      .dialog-content-body{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .bar {
+          background-color: #d1d8df;
+          border-radius: 5px;
+          height: 9px;
+          position: relative;
+          width: 100%;
+  
+          .content {
+            border-radius: 5px;
+            height: 100%;
+            opacity: 1;
+          }
+  
+          .running-animation {
+            width: 100%;
+            padding: 0.5px;
+            opacity: 1;
+            border-radius: 5px;
+            transition: width 1.5s;
+            height: calc(100% - 1px);
+            background-image:
+              repeating-linear-gradient(
+                -45deg,
+              #74c2fc,
+              #74c2fc 11px,
+              #c7e6fe 10px,
+              #c7e6fe 20px
+              );
+            background-size: 28px 28px;
+            animation: move 1s linear infinite;
+          }
+  
+          .stop-animation {
+            width: 0%;
+            background-color: red;
+            animation: fadeDown 1s linear;
+          }
+
+          .complete-animation {
+            width: 20%;
+            background-color: green;
+            animation: fadeDown 1s linear;
+          }
+  
+          @keyframes fadeDown {
+            0% { width: 100%; }
+            100% { width: 0%; }
+          }
+        }
+  
+        .percent {
+          height: 22px;
+          margin: 8px auto 0;
+          position: relative;
+          width: 46px;
+          
+          .content {
+            width: 45px;
+            height: 22px;
+            border-radius: 50px;
+            background-color: #373a45;
+            text-align: center;
+  
+            span {
+              color: #fff;
+              margin: 0px 6px;
+              font-size: 13px;
+            }
+          }
+        }
+  
+        .percent::before {
+          content: "";
+          position: absolute;
+          top: -10px;
+          left: 50%;
+          margin-left: -5px;
+          border-width: 5px;
+          border-style: solid;
+          border-color: transparent transparent #373a45 transparent;
+        }
+
+        .dialog-text {
+          align-self: flex-start;
+          width: 100%;
+          text-align: justify;
+        }
+  
+        
+
+
+      }
+      .loading-button {
+        min-width: 60px;
+        border-radius: 12px;
+        background-color: #008efa;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        color: #ffffff;
+
+        .loading-ring {
+          top: -17px !important;
+          left:-13px !important;
+        }
+      }
+      
+    }
+  }

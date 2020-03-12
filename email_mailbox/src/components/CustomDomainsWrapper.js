@@ -14,14 +14,19 @@ class CustomDomainsWrapper extends Component {
       <CustomDomains
         currentStep={this.state.currentStep}
         onClickChangeStep={this.handleOnClickChangeStep}
+        onClickMinusStep={this.handleOnClickMinusStep}
       />
     );
   }
 
-  handleOnClickChangeStep = newState => {
-    console.log(newState);
-    console.log('holi mundo');
-    this.setState({ currentStep: newState });
+  handleOnClickChangeStep = newStep => {
+    this.setState({ currentStep: newStep });
+  };
+
+  handleOnClickMinusStep = () => {
+    const actualState = this.state.currentStep;
+    const previousState = actualState - 1;
+    this.setState({ currentStep: previousState });
   };
 }
 
