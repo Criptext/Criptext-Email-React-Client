@@ -1,6 +1,7 @@
 import React from 'react';
 import './customDomains.scss';
 import MxLoadingWrapper from './MxLoadingWrapper';
+import string from './../lang';
 
 const CustomDomains = props => {
   return (
@@ -24,10 +25,10 @@ const stepsRenderer = props => {
     return (
       <div className="custom-domains-steps-first">
         <div className="custom-domains-steps-title">
-          Let's set up your domain
+          {string.address.add.step1.title}
         </div>
         <div className="custom-domains-steps-text custom-domains-steps-first-text">
-          Enter the custom domain you wish to add.
+          {string.address.add.step1.text}
         </div>
         <div className="custom-domains-steps-first-input">
           <input />
@@ -37,7 +38,7 @@ const stepsRenderer = props => {
             className="custom-domains-steps-button"
             onClick={() => props.onClickChangeStep(newStep)}
           >
-            Next
+            {string.address.add.nextButtonLabel}
           </button>
         </div>
       </div>
@@ -45,14 +46,12 @@ const stepsRenderer = props => {
   } else if (actualStep === 1) {
     return (
       <div className="custom-domains-steps-second">
-        <div className="custom-domains-steps-title">Visit your DNS manager</div>
+        <div className="custom-domains-steps-title">{string.address.add.step2.title} </div>
         <div className="custom-domains-steps-text custom-domains-steps-second-text">
-          <b>1.</b>Go to Go Daddy or whomever your domain provider <br /> is and
-          access the <b>DNS Manager</b> where you can add MX <br />and Text
-          records.
-          <br />
-          <br />
-          <b>2.</b>Delete any existing MX records before proceeding.
+          <b>1. </b> {string.address.add.step2.text1}
+          <br/>
+          <br/>
+          <b>2. </b> {string.address.add.step2.text2}
         </div>
 
         <div className="custom-domains-steps-button-container">
@@ -60,7 +59,7 @@ const stepsRenderer = props => {
             className="custom-domains-steps-button"
             onClick={() => props.onClickChangeStep(newStep)}
           >
-            Next
+            {string.address.add.nextButtonLabel}
           </button>
         </div>
       </div>
@@ -69,12 +68,10 @@ const stepsRenderer = props => {
     return (
       <div className="custom-domains-steps-second-2">
         <div className="custom-domains-steps-title">
-          Add records for Criptext
+          {string.address.add.step2_2.title}
         </div>
         <div className="custom-domains-steps-text custom-domains-steps-second-text">
-          Add the following records in your DNS Manager. This will verify your
-          domain ownership <br /> and configure Criptext email settings. Need
-          help?
+          {string.address.add.step2_2.text} <a href="#"> {string.address.add.need_help}</a>
         </div>
 
         <div className="custom-domains-steps-table-second-2">
@@ -82,18 +79,21 @@ const stepsRenderer = props => {
         </div>
         <br />
         <br />
+        <div className="custom-domains-steps-second-note">
+          {string.address.add.step2_2.note}
+        </div>
         <div className="custom-domains-steps-button-container">
           <button
             className="custom-domains-steps-button-back"
             onClick={() => props.onClickChangeStep(newStep)}
           >
-            Back
+            {string.address.add.backButtonLabel}
           </button>
           <button
             className="custom-domains-steps-button"
             onClick={() => props.onClickChangeStep(newStep)}
           >
-            Next
+            {string.address.add.nextButtonLabel}
           </button>
         </div>
       </div>

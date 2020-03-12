@@ -87,6 +87,7 @@
     margin-top: 20vh;
 
     .custom-domains-steps-second-text{
+      max-width: 40vw;
       text-align: justify;
       text-justify: inter-word;
     }
@@ -95,6 +96,23 @@
 
   .custom-domains-steps-second-2 {
     margin-top: 20vh;
+
+    .custom-domains-steps-second-text{
+      max-width: 40vw;
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+    .custom-domains-steps-second-note{
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      text-align: justify;
+      color: #373a45;
+    }
 
 
     .custom-domains-steps-table-second-2{
