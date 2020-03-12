@@ -710,11 +710,11 @@ const formEmailIfExists = async params => {
   }
 
   if (labelIds.length) {
-    const emailLabel = formEmailLabel({
+    const emailLabels = formEmailLabel({
       emailId: prevEmail.id,
       labels: labelIds
     });
-    await createEmailLabel({ emailLabel, accountId });
+    await createEmailLabel({ emailLabels, accountId });
   }
   const notificationPreview = prevEmail.preview;
 

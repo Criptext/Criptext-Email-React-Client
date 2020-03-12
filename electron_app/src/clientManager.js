@@ -303,6 +303,10 @@ const linkBegin = async ({ username, domain }) => {
     domain,
     version: LINK_DEVICES_FILE_VERSION
   };
+  const client = await createClient({
+    recipientId: username,
+    optionalToken: '@'
+  });
   return await client.linkBegin(data);
 };
 
