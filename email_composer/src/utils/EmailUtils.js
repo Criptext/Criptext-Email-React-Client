@@ -94,6 +94,7 @@ export const formDataToEditDraft = async emailKeyToEdit => {
 };
 
 export const formOutgoingEmailFromData = ({
+  alias,
   bccEmails,
   body,
   ccEmails,
@@ -129,13 +130,13 @@ export const formOutgoingEmailFromData = ({
     secure,
     threadId,
     content: '',
-    fromAddress: `${myAccount.name} <${myEmailAddress}>`
+    fromAddress: `${myAccount.name} <${alias || myEmailAddress}>`
   };
   const recipients = {
     to,
     cc,
     bcc,
-    from: [`${myEmailAddress}`]
+    from: [`${alias || myEmailAddress}`]
   };
   const labels = [labelId];
   const isToMe = recipientDomains.find(

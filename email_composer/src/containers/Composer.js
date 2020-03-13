@@ -13,6 +13,7 @@ import {
 import {
   closeComposerWindow,
   createEmail,
+  getAlias,
   isCriptextDomain,
   saveDraftChangesComposerWindow,
   throwError,
@@ -175,6 +176,17 @@ class ComposerWrapper extends Component {
     setCryptoInterfaces(filetoken => {
       return this.state.files.filter(file => file.token === filetoken)[0];
     });
+    const accounts = this.state.accounts;
+    const allAlias = await getAlias({ accountId: accounts.map(acc => acc.id) });
+    const aliasAccounts = allAlias.map(alias => {
+      const acc = accounts.find(acc => acc.id === alias.accountId);
+      return {
+        ...acc,
+        alias: `${alias.name}@${alias.domain || appDomain}`,
+        fromAddressId: alias.rowId
+      };
+    });
+    state = { ...state, accounts: [...accounts, ...aliasAccounts] };
     this.setState(state);
   }
 
@@ -716,6 +728,7 @@ class ComposerWrapper extends Component {
     this.setState({ status: Status.WAITING });
 
     const data = {
+      alias: this.state.accountSelected.alias,
       bccEmails: this.state.bccEmails,
       body: this.state.newHtmlBody,
       ccEmails: this.state.ccEmails,
@@ -753,7 +766,8 @@ class ComposerWrapper extends Component {
       preview: emailData.email.preview,
       files,
       peer,
-      externalEmailPassword
+      externalEmailPassword,
+      fromAddressId: this.state.accountSelected.fromAddressId
     };
     try {
       const res = await encryptPostEmail(params);

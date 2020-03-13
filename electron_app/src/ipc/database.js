@@ -288,6 +288,13 @@ ipc.answerRenderer('db-get-session-record-by-recipientids', params => {
   return dbManager.getSessionRecordByRecipientIds(data);
 });
 
+ipc.answerRenderer('db-get-session-record-rows-by-recipientids', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.getSessionRecordRowsByRecipientIds(data);
+});
+
 ipc.answerRenderer('db-get-signed-prekey', params =>
   dbManager.getSignedPreKey(params)
 );

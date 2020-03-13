@@ -11,10 +11,18 @@ const From = props => (
         {string.inputLabels.from}
       </span>
       <span className="cptx-from-address">
-        {props.accountSelected.recipientId.includes('@')
-          ? props.accountSelected.recipientId
-          : `${props.accountSelected.recipientId}@${APP_DOMAIN}`}
+        {props.accountSelected.alias ||
+          (props.accountSelected.recipientId.includes('@')
+            ? props.accountSelected.recipientId
+            : `${props.accountSelected.recipientId}@${APP_DOMAIN}`)}
       </span>
+      {props.accountSelected.alias && (
+        <span className="cptx-from-address cptx-alias-origin">
+          ({props.accountSelected.recipientId.includes('@')
+            ? props.accountSelected.recipientId
+            : `${props.accountSelected.recipientId}@${APP_DOMAIN}`})
+        </span>
+      )}
     </div>
     <div
       className={`cptx-from-more ${
@@ -22,20 +30,34 @@ const From = props => (
       }`}
     >
       <ul>
-        {props.accounts.map(account => {
+        {props.accounts.map((account, index) => {
           const classItem =
-            account.id === props.accountSelected.id ? 'selected' : '';
+            account.alias || props.accountSelected.alias
+              ? account.alias === props.accountSelected.alias
+                ? 'selected'
+                : ''
+              : account.id === props.accountSelected.id
+                ? 'selected'
+                : '';
           return (
             <li
-              key={account.id}
+              key={index}
               className={classItem}
               onClick={() => props.onClick(account)}
             >
               <span className="cptx-from-address">
-                {account.recipientId.includes('@')
-                  ? account.recipientId
-                  : `${account.recipientId}@${APP_DOMAIN}`}
+                {account.alias ||
+                  (account.recipientId.includes('@')
+                    ? account.recipientId
+                    : `${account.recipientId}@${APP_DOMAIN}`)}
               </span>
+              {account.alias && (
+                <span className="cptx-from-address cptx-alias-origin">
+                  ({account.recipientId.includes('@')
+                    ? account.recipientId
+                    : `${account.recipientId}@${APP_DOMAIN}`})
+                </span>
+              )}
             </li>
           );
         })}

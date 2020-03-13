@@ -94,6 +94,10 @@ export const deleteSessionRecord = async params => {
   return await ipc.callMain('db-delete-session-record', params);
 };
 
+export const getAlias = async params => {
+  return await ipc.callMain('db-get-alias-by-params', params);
+};
+
 export const getAllContacts = async () => {
   return await ipc.callMain('db-get-all-contacts');
 };
@@ -120,6 +124,13 @@ export const getSessionRecord = async params => {
 
 export const getSessionRecordByRecipientIds = async params => {
   return await ipc.callMain('db-get-session-record-by-recipientids', params);
+};
+
+export const getSessionRecordRowsByRecipientIds = async params => {
+  return await ipc.callMain(
+    'db-get-session-record-rows-by-recipientids',
+    params
+  );
 };
 
 export const getSignedPreKey = async params => {

@@ -2,6 +2,7 @@
 import {
   findKeyBundles,
   getSessionRecordByRecipientIds,
+  getSessionRecordRowsByRecipientIds,
   postEmail,
   restartAlice
 } from './../utils/ipc';
@@ -197,7 +198,8 @@ const encryptPostEmail = async ({
   threadId,
   files,
   peer,
-  externalEmailPassword
+  externalEmailPassword,
+  fromAddressId
 }) => {
   const recipientIds = recipients.map(item => item.recipientId);
   const sessions = await getSessionRecordByRecipientIds({
@@ -295,19 +297,18 @@ const encryptPostEmail = async ({
       }
     };
   });
-  const sessionsFromAlias = await getSessionRecordByRecipientIds({
+  const sessionsFromAlias = await getSessionRecordRowsByRecipientIds({
     accountId: myAccount.id,
     recipientIds: recipientIdsFromAlias
   });
   const trueKeyBundles = keyBundles.filter(keybundle => {
     const index = sessionsFromAlias.findIndex(
       session =>
-        session.recipientId !== keybundle.recipientId ||
-        session.deviceId !== keybundle.deviceId
+        session.recipientId === keybundle.recipientId &&
+        session.deviceId === keybundle.deviceId
     );
     return index <= -1;
   });
-
   const criptextEmails = await createEmails(
     body,
     preview,
@@ -332,7 +333,8 @@ const encryptPostEmail = async ({
     threadId,
     criptextEmails,
     guestEmail,
-    files: files ? files : null
+    files: files ? files : null,
+    fromAddressId: fromAddressId || null
   });
   const res = await postEmail(data);
   if (res.status === 429) {
