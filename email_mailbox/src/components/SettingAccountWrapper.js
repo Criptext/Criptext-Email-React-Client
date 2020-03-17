@@ -36,6 +36,7 @@ import { hashPassword } from '../utils/hashUtils';
 import { storeResendConfirmationTimestamp } from '../utils/storage';
 import { emailRegex } from '../utils/RegexUtils';
 import string from './../lang';
+import { appDomain } from '../utils/const';
 
 const EDITING_MODES = {
   EDITING_NAME: 'editing-name',
@@ -110,7 +111,8 @@ class SettingAccountWrapper extends Component {
       },
       deleteAliasParams: {
         addressId: undefined,
-        email: undefined
+        email: undefined,
+        error: undefined
       },
       recoveryEmailParams: {
         recoveryEmail: props.recoveryEmail,
@@ -423,7 +425,8 @@ class SettingAccountWrapper extends Component {
         newState = {
           deleteAliasParams: {
             addressId: undefined,
-            email: undefined
+            email: undefined,
+            error: undefined
           }
         };
         break;
@@ -448,7 +451,8 @@ class SettingAccountWrapper extends Component {
       settingsPopupType: SETTINGS_POPUP_TYPES.DELETE_ALIAS,
       deleteAliasParams: {
         addressId: rowId,
-        email
+        email,
+        error: undefined
       }
     });
   };
@@ -793,12 +797,48 @@ class SettingAccountWrapper extends Component {
     if (!this.state.deleteAliasParams) return;
     const { addressId, email } = this.state.deleteAliasParams;
     const res = await deleteAddress(addressId);
-    if (!res || res.status !== 200) return;
 
-    this.handleClosePopup();
-    this.handleClearPopupParams(SETTINGS_POPUP_TYPES.DELETE_ALIAS);
-    await deleteAliases({ rowIds: [addressId] });
-    this.props.onRemoveAlias(addressId, email);
+    if (!res) {
+      this.setState({
+        deleteAliasParams: {
+          ...this.state.deleteAliasParams,
+          error: string.popups.delete_alias.errors.timeout
+        }
+      });
+    }
+
+    switch (res.status) {
+      case 200: {
+        this.handleClosePopup();
+        this.handleClearPopupParams(SETTINGS_POPUP_TYPES.DELETE_ALIAS);
+        await deleteAliases({ rowIds: [addressId] });
+        this.props.onRemoveAlias(addressId, email);
+        break;
+      }
+      case 400: {
+        this.setState({
+          deleteAliasParams: {
+            ...this.state.deleteAliasParams,
+            error: string.formatString(
+              string.popups.delete_alias.errors.cannot,
+              appDomain
+            )
+          }
+        });
+        break;
+      }
+      default: {
+        this.setState({
+          deleteAliasParams: {
+            ...this.state.deleteAliasParams,
+            error: string.formatString(
+              string.popups.delete_alias.errors.unknown,
+              res.status
+            )
+          }
+        });
+      }
+    }
   };
 
   handleConfirmSetReplyTo = async () => {

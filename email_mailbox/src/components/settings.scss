@@ -9,9 +9,18 @@
   .settings-title {
     height: 40px;
     margin-left: 40px;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+
+    i {
+      font-size: 26px;
+      margin-top: 5px;
+    }
 
     h1 {
       margin-top: 14px;
+      margin-left: 6px;
       text-transform: uppercase;
     }
   }

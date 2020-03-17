@@ -14,15 +14,21 @@ import {
   checkForUpdates,
   cleanDatabase,
   cleanDataLogout,
+  createAlias,
+  createCustomDomain,
   createEmail,
   createEmailLabel,
   createFeedItem,
   createLabel,
+  deleteAliases,
+  deleteCustomDomainByName,
   deleteEmailByKeys,
   deleteEmailContent,
   deleteEmailLabel,
   deleteEmailsByThreadIdAndLabelId,
   deleteLabelById,
+  getAlias,
+  getCustomDomainByParams,
   getEmailByKey,
   getEmailByParams,
   getEmailLabelsByEmailId,
@@ -42,6 +48,7 @@ import {
   sendStartLinkDevicesEvent,
   unsendEmail,
   updateAccount,
+  updateAlias,
   updateContactByEmail,
   updateContactSpamScore,
   updateEmail,
@@ -501,6 +508,21 @@ export const handleEvent = ({
     }
     case SocketCommand.REACTIVATED_ACCOUNT_EVENT: {
       return handleReactivatedAccountEvent(incomingEvent, accountRecipientId);
+    }
+    case SocketCommand.ADDRESS_CREATED: {
+      return handleAddressCreatedEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.ADDRESS_STATUS_UDATE: {
+      return handleAddressStatusUpdateEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.ADDRESS_DELETED: {
+      return handlesAddressDeletedEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.CUSTOM_DOMAIN_CREATED: {
+      return handleDomainCreatedEvent(incomingEvent, accountId);
+    }
+    case SocketCommand.CUSTOM_DOMAIN_DELETED: {
+      return handleDomainDeletedEvent(incomingEvent, accountId);
     }
     default: {
       return { rowid: null };
@@ -1344,6 +1366,73 @@ const handleReactivatedAccountEvent = accountRecipientId => {
   }
   emitter.emit(Event.REACTIVATED_ACCOUNT);
   return { rowid: null };
+};
+
+const handleAddressCreatedEvent = async ({ rowid, params }, accountId) => {
+  const { addressId, addressName, addressDomain } = params;
+
+  const [existingAlias] = await getAlias({
+    rowId: addressId,
+    accountId
+  });
+  if (existingAlias) return { rowid };
+
+  const alias = {
+    rowId: addressId,
+    name: addressName,
+    domain: addressDomain === appDomain ? null : addressDomain,
+    accountId
+  };
+  await createAlias(alias);
+  return { rowid };
+};
+
+const handleAddressStatusUpdateEvent = async ({ rowid, params }, accountId) => {
+  const { addressId, activate } = params;
+  const alias = {
+    rowId: addressId,
+    active: activate,
+    accountId
+  };
+  await updateAlias(alias);
+  return { rowid };
+};
+
+const handlesAddressDeletedEvent = async ({ rowid, params }, accountId) => {
+  const { addressId } = params;
+  const aliases = {
+    rowIds: [addressId],
+    accountId
+  };
+  await deleteAliases(aliases);
+  return { rowid };
+};
+
+const handleDomainCreatedEvent = async ({ rowid, params }, accountId) => {
+  const { customDomain } = params;
+
+  const [existingDomain] = await getCustomDomainByParams({
+    name: customDomain,
+    accountId
+  });
+  if (existingDomain) return { rowid };
+
+  const domain = {
+    name: customDomain,
+    accountId
+  };
+  await createCustomDomain(domain);
+  return { rowid };
+};
+
+const handleDomainDeletedEvent = async ({ rowid, params }, accountId) => {
+  const { customDomain } = params;
+  const domain = {
+    name: customDomain,
+    accountId
+  };
+  await deleteCustomDomainByName(domain);
+  return { rowid };
 };
 
 const handleSendEmailError = ({ rowid }) => {

@@ -306,8 +306,16 @@ export const createAlias = async params => {
   return await ipc.callMain('db-create-alias', params);
 };
 
+export const createCustomDomain = async params => {
+  return await ipc.callMain('db-create-custom-domain', params);
+};
+
 export const getAlias = async params => {
   return await ipc.callMain('db-get-alias-by-params', params);
+};
+
+export const getCustomDomainByParams = async params => {
+  return await ipc.callMain('db-get-custom-domains-by-params', params);
 };
 
 export const createEmail = async params => {
@@ -348,6 +356,10 @@ export const deleteEmailByKeys = async params => {
 
 export const deleteAliases = async params => {
   return await ipc.callMain('db-delete-alias', params);
+};
+
+export const deleteCustomDomainByName = async params => {
+  return await ipc.callMain('db-delete-custom-domains-by-name', params);
 };
 
 export const deleteEmailLabel = async params => {

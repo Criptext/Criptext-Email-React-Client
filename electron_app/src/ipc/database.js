@@ -91,6 +91,13 @@ ipc.answerRenderer('db-delete-custom-domains', params => {
   return dbManager.deleteCustomDomains(data);
 });
 
+ipc.answerRenderer('db-delete-custom-domains-by-name', params => {
+  const data = params.accountId
+    ? params
+    : { ...params, accountId: myAccount.id };
+  return dbManager.deleteCustomDomainByName(data);
+});
+
 ipc.answerRenderer('db-delete-email-label', params => {
   const data = params.accountId
     ? params

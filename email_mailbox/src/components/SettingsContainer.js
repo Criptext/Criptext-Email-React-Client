@@ -11,6 +11,9 @@ import {
 } from '../utils/electronEventInterface';
 import { getAlias, updateAlias, activateAddress } from '../utils/ipc';
 import { appDomain } from '../utils/const';
+import string from './../lang';
+
+const { sidebar, settings } = string;
 
 const Setting = SettingsHOC(Settings);
 const Domains = SettingsHOC(CustomDomainsWrapper);
@@ -44,14 +47,22 @@ class SettingsContainer extends Component {
         return (
           <Domains
             isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
-            titlePath={PANEL.DOMAIN}
+            titlePath={[
+              sidebar.settings,
+              settings.addresses,
+              settings.custom_domains.title
+            ]}
           />
         );
       case PANEL.ALIAS:
         return (
           <Alias
             isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}
-            titlePath={PANEL.ALIAS}
+            titlePath={[
+              sidebar.settings,
+              settings.addresses,
+              settings.aliases.title
+            ]}
             onChangePanel={this.handleChangePanel}
             onAddAlias={this.handleAddAlias}
           />
@@ -60,7 +71,7 @@ class SettingsContainer extends Component {
         return (
           <Setting
             {...this.props}
-            titlePath={myAccount.email}
+            titlePath={[myAccount.email]}
             devices={this.state.devices}
             aliasesByDomain={this.state.aliasesByDomain}
             isHiddenSettingsPopup={this.state.isHiddenSettingsPopup}

@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import string from './../lang';
 
 const DeleteAliasPopup = props => {
+  if (props.error) return <DeleteAliasError {...props} />;
+  return <DeleteAliasPrompt {...props} />;
+};
+
+const DeleteAliasPrompt = props => {
   return (
     <div className="popup-content">
       <div className="popup-title">
@@ -35,7 +40,37 @@ const DeleteAliasPopup = props => {
   );
 };
 
+const DeleteAliasError = props => {
+  return (
+    <div className="popup-content">
+      <div className="popup-title">
+        <h1>{string.popups.delete_alias.errors.title}</h1>
+      </div>
+      <div className="popup-paragraph">
+        <p>{props.error}</p>
+      </div>
+      <div className="popup-buttons">
+        <button
+          className="button-a popup-confirm-button"
+          onClick={props.onTogglePopup}
+        >
+          <span>{string.popups.delete_alias.buttons.okLabel}</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+DeleteAliasError.propTypes = {
+  error: PropTypes.string,
+  onTogglePopup: PropTypes.func
+};
+
 DeleteAliasPopup.propTypes = {
+  error: PropTypes.string
+};
+
+DeleteAliasPrompt.propTypes = {
   email: PropTypes.string,
   onTogglePopup: PropTypes.func,
   onConfirmDeleteAlias: PropTypes.func

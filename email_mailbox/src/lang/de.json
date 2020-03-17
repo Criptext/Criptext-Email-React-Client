@@ -514,7 +514,14 @@
       "question": "Are you sure you want to delete {0}?",
       "buttons": {
         "cancelLabel": "Cancel",
-        "continueLabel": "Delete"
+        "continueLabel": "Delete",
+        "okLabel": "Ok"
+      },
+      "errors": {
+        "title": "Oops...",
+        "timeout": "Connection Timeout. Please Try Again",
+        "cannot": "Aliases ending in @{0} cannot be deleted within 15 days from the day they were created.",
+        "unknown": "Uknown Error ({0}), please try again"
       }
     },
     "export_backup": {

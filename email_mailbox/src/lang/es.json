@@ -521,7 +521,14 @@
       "question": "Estás seguro que quieres eliminar {0}?",
       "buttons": {
         "cancelLabel": "Cancelar",
-        "continueLabel": "Eliminar"
+        "continueLabel": "Eliminar",
+        "okLabel": "Ok"
+      },
+      "errors": {
+        "title": "Oops...",
+        "timeout": "Error al recibir una respuesta. Por favor intenta de nuevo",
+        "cannot": "Aliases que terminan en @{0} no pueden ser borrados los primeros 15 días desde su creación.",
+        "unknown": "Error Desconocido ({0}), por favor intenta de nuevo"
       }
     },
     "export_backup": {

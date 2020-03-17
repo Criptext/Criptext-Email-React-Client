@@ -7,6 +7,19 @@ import './settings.scss';
 
 const Logoutpopup = PopupHOC(LogoutPopup);
 
+const renderPathSection = titles => {
+  return titles.reduce((result, title, index) => {
+    if (!result.length) {
+      return [...result, <h1 key={index}>{title}</h1>];
+    }
+    return [
+      ...result,
+      <i key={`i-${index}`} className="icon-arrow-right" />,
+      <h1 key={index}>{title}</h1>
+    ];
+  }, []);
+};
+
 const SettingsHOC = InComponent =>
   class Popup extends Component {
     static propTypes = {
@@ -21,7 +34,7 @@ const SettingsHOC = InComponent =>
         <div className="settings-container">
           <Message onClickSection={() => {}} />
           <div className="settings-title">
-            <h1>{this.props.titlePath}</h1>
+            {renderPathSection(this.props.titlePath)}
           </div>
           <InComponent {...this.props} />
           <Logoutpopup
