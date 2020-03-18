@@ -13,7 +13,7 @@ import {
   validateConfirmPassword,
   validateEnterprisePassword
 } from '../validators/validators';
-import { hasPin } from '../utils/electronInterface';
+import { hasPin, DEFAULT_PIN } from '../utils/electronInterface';
 import string from '../lang';
 import * as ErrorMsgs from './SignUpErrorMsgs';
 
@@ -119,7 +119,7 @@ class ChangePasswordWrapper extends Component {
         const hasPIN = hasPin();
         if (!hasPIN)
           await sendPin({
-            pin: '1234',
+            pin: DEFAULT_PIN,
             shouldSave: false,
             shouldExport: false,
             shouldOnlySetPIN: true

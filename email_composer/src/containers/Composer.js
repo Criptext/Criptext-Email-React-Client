@@ -219,36 +219,42 @@ class ComposerWrapper extends Component {
       }
     });
 
-    const toEmails = data.toEmails.map(contact => {
-      const { domain } = parseEmailAddress(contact.email);
-      if (temporalCheckedDomaind.is.includes(domain)) {
-        return {
-          ...contact,
-          form: 'tag-app-domain'
-        };
-      }
-      return contact;
-    });
-    const bccEmails = data.bccEmails.map(contact => {
-      const { domain } = parseEmailAddress(contact.email);
-      if (temporalCheckedDomaind.is.includes(domain)) {
-        return {
-          ...contact,
-          form: 'tag-app-domain'
-        };
-      }
-      return contact;
-    });
-    const ccEmails = data.ccEmails.map(contact => {
-      const { domain } = parseEmailAddress(contact.email);
-      if (temporalCheckedDomaind.is.includes(domain)) {
-        return {
-          ...contact,
-          form: 'tag-app-domain'
-        };
-      }
-      return contact;
-    });
+    const toEmails = !data.toEmails
+      ? []
+      : data.toEmails.map(contact => {
+          const { domain } = parseEmailAddress(contact.email);
+          if (temporalCheckedDomaind.is.includes(domain)) {
+            return {
+              ...contact,
+              form: 'tag-app-domain'
+            };
+          }
+          return contact;
+        });
+    const bccEmails = !data.bccEmails
+      ? []
+      : data.bccEmails.map(contact => {
+          const { domain } = parseEmailAddress(contact.email);
+          if (temporalCheckedDomaind.is.includes(domain)) {
+            return {
+              ...contact,
+              form: 'tag-app-domain'
+            };
+          }
+          return contact;
+        });
+    const ccEmails = !data.ccEmails
+      ? []
+      : data.ccEmails.map(contact => {
+          const { domain } = parseEmailAddress(contact.email);
+          if (temporalCheckedDomaind.is.includes(domain)) {
+            return {
+              ...contact,
+              form: 'tag-app-domain'
+            };
+          }
+          return contact;
+        });
 
     return {
       ...data,

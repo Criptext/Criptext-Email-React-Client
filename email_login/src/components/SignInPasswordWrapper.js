@@ -12,7 +12,7 @@ import {
   sendPin,
   throwError
 } from '../utils/ipc';
-import { hasPin } from '../utils/electronInterface';
+import { hasPin, DEFAULT_PIN } from '../utils/electronInterface';
 import { hashPassword } from '../utils/HashUtils';
 import { parseRateLimitBlockingTime } from '../utils/TimeUtils';
 import string from '../lang';
@@ -116,7 +116,7 @@ class SignInPasswordWrapper extends Component {
         const hasPIN = hasPin();
         if (!hasPIN)
           await sendPin({
-            pin: '1234',
+            pin: DEFAULT_PIN,
             shouldSave: false,
             shouldExport: false,
             shouldOnlySetPIN: true

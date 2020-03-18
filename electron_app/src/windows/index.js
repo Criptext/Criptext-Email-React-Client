@@ -9,11 +9,13 @@ const { EVENTS, addEvent } = require('./events');
 const { createAppMenu } = require('./menu');
 const socketClient = require('./../socketClient');
 const { initClient, generateEvent } = require('./../clientManager');
+const { deleteEncryptedDatabase } = require('./../utils/dataBaseUtils');
 const { initNucleus } = require('./../nucleusManager');
 const globalManager = require('./../globalManager');
 const aliceManager = require('./../aliceManager');
 const { isFromStore, getSystemLanguage } = require('./windowUtils');
 const { openLaunchWindow } = require('./launch.js');
+const { DEFAULT_PIN } = require('./../utils/const');
 
 const sendAPIevent = async event => {
   await generateEvent(event);
@@ -29,7 +31,23 @@ const upStepCreateDBEncrypted = async () => {
   }
 };
 
+/* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
 const upStepCheckPIN = async () => {
+  try {
+    const fallback = await dbManager.rawCheckPin(DEFAULT_PIN);
+    if (fallback) {
+      if (fallback.length) {
+        myAccount.initialize(fallback);
+        globalManager.pinData.set({ pinType: 'signin' });
+        pinWindow.show();
+      } else {
+        await deleteEncryptedDatabase();
+        upStepNewUser();
+      }
+      return;
+    }
+  } catch (error) {}
+
   const pin = await pinWindow.checkPin();
   if (!pin) {
     globalManager.pinData.set({ pinType: 'new' });
